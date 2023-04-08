@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 794EAC77B61
-	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Apr 2023 05:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B780EC77B61
+	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Apr 2023 05:52:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbjDHFwP (ORCPT
+        id S229484AbjDHFwR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 8 Apr 2023 01:52:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60620 "EHLO
+        Sat, 8 Apr 2023 01:52:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229665AbjDHFwO (ORCPT
+        with ESMTP id S230034AbjDHFwQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 8 Apr 2023 01:52:14 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4B69D529
-        for <linux-perf-users@vger.kernel.org>; Fri,  7 Apr 2023 22:52:12 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id e199-20020a2550d0000000b00b8db8a4530dso2896524ybb.5
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Apr 2023 22:52:12 -0700 (PDT)
+        Sat, 8 Apr 2023 01:52:16 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0165F7ED0
+        for <linux-perf-users@vger.kernel.org>; Fri,  7 Apr 2023 22:52:15 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54bfc4e0330so87685847b3.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Apr 2023 22:52:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680933132;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PaCuvDcWhP2cDa4Q6QNDOLtZbZ3fUX/ydwsiXo8AOEQ=;
-        b=ghgDlhmdSf6EDth7OpctKVg9Yoh/tWaSiBhrYQowh9CR2mGkgYU4wXv/JxQMz+2UAs
-         k2Iy4NThdkqwxSfTl7Md3HV/bPw3onn85xQI6OYPoJ3+pdLl3HOB95QIoZSGKnBPoLR1
-         7ASdrjtPr77+nOaXcInGpEoKonO52742HQoL3ExF9xHpa6N7HqK0ZaLIG8QqF3e71Eu9
-         QCPJXi5gmrXPhlQOrR9hxlzXeorK1/ZsLGpSTH/TpVgj1FPaBKrXlCGcqXlMAiSITqiI
-         0M/d+q3EOhjhyuiUurzSzlLz11xfyl8yly8AvBRomw0oi1dkalAd9Xvo7+tOn7uS/yBB
-         zvMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680933132;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20210112; t=1680933134;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PaCuvDcWhP2cDa4Q6QNDOLtZbZ3fUX/ydwsiXo8AOEQ=;
-        b=4ZyBP+1BUVnXxbAopX5fEl5yG/MQ1TFAVxN9rZzZQKeIF8327nspsPDWyL9rBClBPF
-         7ecNtmYIsJgHd35aZQRJZ3nv9UtxoW2ygyiTxUctT92my9cyMbfSkH/MtgCsDUaJUYl/
-         70tg3XvyGo7T7g70ty9BA9x2WVrBIuldYFhwQSxW3iCK4Mfh6da5XB3CzSbnc2rtbIy6
-         Wz2VRHbnvTjxsE2P7trCRVtxAVI5sgPx96prBfQHS+NwyEU3vy+j4bfNTO6XZGAioqaP
-         rTJEMYUaMmE8suj2kWKybqStx6hYUgSpghg2iL/mK258LzFJVLDtf/M8fMMllZiJLpXp
-         +Rkw==
-X-Gm-Message-State: AAQBX9fpyYCRRD6amq6KmZ3kXWxfrV1lo+oiAqOFj5lgxbTOhGXXrIlV
-        cLu7cE+XyzMiypWO0OBeEVPwYTiOjkJb
-X-Google-Smtp-Source: AKy350YOn6EDZcM6g2K/kJ64r7qb7nb1g6AqbF0ZKf3EWu7T9j29NGNrPc5tNzDCHvyOPDHJbuy1IbcWjKVf
+        bh=z2dWon3rHJ1nD139lVaQ1WrnfCqCvaQvEhPXDcZYjwM=;
+        b=T4kCWB3JooK6L8NchDif5VHk4VQ5lliH7Lz9Ifuwebm2kE6RsdT8Fvu7FrnnUI4Twb
+         w8xWnsMr9cHk+6Gw43Fcov8QfAOXzSaORpROP+WxtHVeAQ+Y8BBI13RWv6DjQgj8h+iI
+         aPzBV0PV9cOgVOoMvGjAlAHXyf2ToqnvCkAcHvJQ62O/XI1zRCjaU709aLtFRTHUr2ss
+         +O0NSJbTj8wKI47aaEL+nm/UnpB+eiFyXlQC6noLORyr9g8TyW88UJOVYECivc0QxE7x
+         UGEwPwn/pE5Pd2rrdcSQCjUMMrrmAAvXZm3IhSIrqJPSv4KThFWM98XtuY6cnl+bwIIT
+         Pfqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680933134;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z2dWon3rHJ1nD139lVaQ1WrnfCqCvaQvEhPXDcZYjwM=;
+        b=UwGHhJGFOVylIpr1fJitAZSCTDrI+F2+ibupc9lhxtDHhZNfl8kjyQsaE14ISB1bAN
+         vMrDDvb87tMxyf/uQV/Bdap5cBcxF+ecrSUUa+DJjRY62QJAppzj0gzPPfeeCdQYw6r4
+         eIkzrhf7NoZf871PxQT8KcZxgzRMdIE0CVUvKcnLgmU+sXXsu8s1Abo3LbuE07LoSjbx
+         6MGqJ8c0oFIwHQorMinN4w/5Rt421Wh7l2tOrlkcszF5jbnng989NTGLN+mNA8V9gQOj
+         MuW4ItRMUcH1Drdb0grVg5GZeG7kNEueo6s+dkXbUR91vUNgKzpwQNmtJg0xsq6VQ377
+         QWgw==
+X-Gm-Message-State: AAQBX9flaXO/jrKQYYBuHj6iyKY0MF+9kXAInba6HybWwpN5KbcYpn2q
+        3MCvl4FWXwSDBIpHUQIauenroEmk435F
+X-Google-Smtp-Source: AKy350Z7mK7eScp79F3uWgqZbq7wHnhBRy2d3bczXxjBl3iURo4swsW9rkDpDn/cynJWxcjKuqzwsGHyNbH+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b240:9cdf:7861:b23e])
- (user=irogers job=sendgmr) by 2002:a81:af5d:0:b0:52e:e095:d840 with SMTP id
- x29-20020a81af5d000000b0052ee095d840mr2334348ywj.0.1680933132008; Fri, 07 Apr
- 2023 22:52:12 -0700 (PDT)
-Date:   Fri,  7 Apr 2023 22:52:07 -0700
-Message-Id: <20230408055208.1283832-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:d988:0:b0:997:c919:4484 with SMTP id
+ q130-20020a25d988000000b00997c9194484mr651735ybg.6.1680933134194; Fri, 07 Apr
+ 2023 22:52:14 -0700 (PDT)
+Date:   Fri,  7 Apr 2023 22:52:08 -0700
+In-Reply-To: <20230408055208.1283832-1-irogers@google.com>
+Message-Id: <20230408055208.1283832-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20230408055208.1283832-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v1 1/2] perf lock contention: Support pre-5.14 kernels
+Subject: [PATCH v1 2/2] perf bpf filter: Support pre-5.16 kernels
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -69,50 +71,59 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-struct rq's variable __lock was renamed from lock in 5.14.
+The mem_hops bits were added in 5.16 with no prior equivalent.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/bpf_skel/lock_contention.bpf.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ tools/perf/util/bpf_skel/sample_filter.bpf.c | 28 ++++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 23f6e63544ed..8911e2a077d8 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -418,6 +418,14 @@ int contention_end(u64 *ctx)
+diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+index 57e3c67d6d37..cffe493af1ed 100644
+--- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
++++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+@@ -24,6 +24,24 @@ struct perf_sample_data___new {
+ 	__u64 sample_flags;
+ } __attribute__((preserve_access_index));
  
- extern struct rq runqueues __ksym;
- 
-+struct rq__old {
-+	raw_spinlock_t lock;
-+} __attribute__((preserve_access_index));
++/* new kernel perf_mem_data_src definition */
++union perf_mem_data_src__new {
++	__u64 val;
++	struct {
++		__u64   mem_op:5,	/* type of opcode */
++			mem_lvl:14,	/* memory hierarchy level */
++			mem_snoop:5,	/* snoop mode */
++			mem_lock:2,	/* lock instr */
++			mem_dtlb:7,	/* tlb access */
++			mem_lvl_num:4,	/* memory hierarchy level number */
++			mem_remote:1,   /* remote */
++			mem_snoopx:2,	/* snoop mode, ext */
++			mem_blk:3,	/* access blocked */
++			mem_hops:3,	/* hop level */
++			mem_rsvd:18;
++	};
++};
 +
-+struct rq__new {
-+	raw_spinlock_t __lock;
-+} __attribute__((preserve_access_index));
+ /* helper function to return the given perf sample data */
+ static inline __u64 perf_get_sample(struct bpf_perf_event_data_kern *kctx,
+ 				    struct perf_bpf_filter_entry *entry)
+@@ -89,8 +107,14 @@ static inline __u64 perf_get_sample(struct bpf_perf_event_data_kern *kctx,
+ 			return kctx->data->data_src.mem_dtlb;
+ 		if (entry->part == 7)
+ 			return kctx->data->data_src.mem_blk;
+-		if (entry->part == 8)
+-			return kctx->data->data_src.mem_hops;
++		if (entry->part == 8) {
++			union perf_mem_data_src__new *data = (void *)&kctx->data->data_src;
 +
- SEC("raw_tp/bpf_test_finish")
- int BPF_PROG(collect_lock_syms)
- {
-@@ -426,11 +434,16 @@ int BPF_PROG(collect_lock_syms)
- 
- 	for (int i = 0; i < MAX_CPUS; i++) {
- 		struct rq *rq = bpf_per_cpu_ptr(&runqueues, i);
-+		struct rq__new *rq_new = (void *)rq;
-+		struct rq__old *rq_old = (void *)rq;
- 
- 		if (rq == NULL)
- 			break;
- 
--		lock_addr = (__u64)&rq->__lock;
-+		if (bpf_core_field_exists(rq_new->__lock))
-+			lock_addr = (__u64)&rq_new->__lock;
-+		else
-+			lock_addr = (__u64)&rq_old->lock;
- 		lock_flag = LOCK_CLASS_RQLOCK;
- 		bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
- 	}
++			if (bpf_core_field_exists(data->mem_hops))
++				return data->mem_hops;
++
++			return 0;
++		}
+ 		/* return the whole word */
+ 		return kctx->data->data_src.val;
+ 	default:
 -- 
 2.40.0.577.gac1e443424-goog
 
