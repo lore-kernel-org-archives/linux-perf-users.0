@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF7FC7619A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCDFC77B71
 	for <linux-perf-users@archiver.kernel.org>; Sat,  8 Apr 2023 05:46:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbjDHFpd (ORCPT
+        id S230042AbjDHFpo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 8 Apr 2023 01:45:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57086 "EHLO
+        Sat, 8 Apr 2023 01:45:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229835AbjDHFp3 (ORCPT
+        with ESMTP id S229866AbjDHFpl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 8 Apr 2023 01:45:29 -0400
+        Sat, 8 Apr 2023 01:45:41 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11EA2E046
-        for <linux-perf-users@vger.kernel.org>; Fri,  7 Apr 2023 22:45:27 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id n14-20020a25400e000000b00b6d6655dc35so673346yba.6
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Apr 2023 22:45:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B0AEF95
+        for <linux-perf-users@vger.kernel.org>; Fri,  7 Apr 2023 22:45:36 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 67-20020a250146000000b00b714602d43fso546223ybb.10
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Apr 2023 22:45:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680932727;
+        d=google.com; s=20210112; t=1680932736;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=x0hxgJgqnC0+JsksRdljYIzPrGg+wXpcXiVbKsfF358=;
-        b=qw9MtNcA6TM4Uc404G84F/Bzns60ZkMzlndW0uwAU87+6Dlhc/IZc3HjiIoF1xeU+d
-         U3hUBqNcyzYf2qfjCiz5LuYTujM7tAYuku5tArrCTytWeq+qUvoGOWGfJ3gQFcxKN3SF
-         Zo3rxFWCL4J7VqGgUVzeX4fqRwQ5S9ZSGNmLuHtVDYj/0ILba7DlFJc8VBvCiI6zFPw8
-         QBhWFnmZ5swLMGXSjNxXlO4hXABDdCIZB/ZGHl5wbJsGL57oSKOZc8+2+ml1t9PgUi0H
-         3jwU8UEvErOiHq3d3YhdL3ozNtL/8XLtd3kG7IUMrJWrigWfB+siwFiAJD8Sk11sHWHV
-         lEnw==
+        bh=GDcV3jJAEkDWKL53VhxAD/1zHUw0qGpFJOT1XTjqbho=;
+        b=TuxH/c6dK3cKaVf4R/DMtEzVdMjdMc+MHphlLwfoa/h6eeyccMX7DPnW8PO5Ydu2r+
+         VPjqhVqdPFSre1ZjYor/uEOpPZUvnOdqeUNl9vtMFUa72OrJ8/pegm3z9v1a8jWiKCqj
+         PnuBxFek1q27W9ofEIHTknHe83Nv9u8nREejjrVU1/USIQGajVQlhw4YIYC/hW3JIfhs
+         1f8GHYbk3N8N0W2InEK4tACxgMTHCFRJZ8nEQbF99ytWPyzdFizwcVQw0BpTlUKc8+/R
+         YNtBmCgfkpHiYmR+IKfgYW+O8aSqv6lbABR2/j1gqbVwcx9C9kd09qr4URaucYeSse9V
+         /5aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680932727;
+        d=1e100.net; s=20210112; t=1680932736;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x0hxgJgqnC0+JsksRdljYIzPrGg+wXpcXiVbKsfF358=;
-        b=1+cr59i2tF1LcpVFN3uNZ8j330BtweH/v621GRqJprOifUOx2HmzPElGL0rnWlBMau
-         SdTHboyI5jceUbq/dZACvJAyTELEGDGpGcXb4xAhMLk0OKCscpatJ4eg+Qxo9Qwi/pzB
-         JI2ASvkgE7tixMo11tXskXgwaoXCbCNAR1dGfSy8zuZFk0EZQEANd+QKe+FTVb3JSmZa
-         WXt7Rvn4QX8g9LeELBbMxd3oCDKX2Z/LhBXs9HIpzhKPcFyKZj5J39X5tkbFzXa+oHtV
-         9cD/sTfkUz21BMiWez2f9DzhnSLEFbn3EqPsi/5v/tcglBAU4t+72usEny/9fcXdVnLQ
-         9IRg==
-X-Gm-Message-State: AAQBX9fpqe4ox4iM8GWCHCpbch/RG9wamh7yxiSrOGhSsQBHCRgkdGCN
-        /+AVx15SudbkXaHmNhrXDc5GbvBTT4xe
-X-Google-Smtp-Source: AKy350a2BBosTV8xapP2mnsgztFIQfd2tZnlADXgK9DjzBFWcgpAyK8xa/E0fN6tT9FkBf64x47irVtA5cg/
+        bh=GDcV3jJAEkDWKL53VhxAD/1zHUw0qGpFJOT1XTjqbho=;
+        b=Sx8U1EfGiw42eAUTd0T7McnY07OfHRXqBh+nWiA7aPq75ogsA3AjlO3DIWz/71mqNB
+         QOrfraVuhvFL0DT3+wFA9rwTL6yYBPfQUlrnKezdJov5bHhwlT+wle9TB22KEQ/VdI78
+         1o+ZzTJjYPjykX3iAzWOyJuhhSjyIh/TarlquGyEIerxrW7yutHpF+ujOuQXDE4KPXrs
+         cY/31ielTsOfN377WcPwPg5h1Lm5EbiQ+2iN9Z8pt2YU4yFgKiPi+hZxnOyUvmd3sPnx
+         laE3Fv5ZrjEBYrsQXNB0uqkvuSMr0W98WvXCEDSex53Awrm5L7Xj0v9r6iQntQhoBG9B
+         +5rQ==
+X-Gm-Message-State: AAQBX9f8TLIKtRiVMTr3dbPZQ4aqhet0Cpciv14sYsTp3CiPGRw9mHtb
+        Dku3nAVz8BF5hGTPPI9cwlZ8dgdn3V26
+X-Google-Smtp-Source: AKy350bPlEzEvMR7Lx/aXHf6yrIoEnl/tBSl7gD7KG9Cf8E9zTU0p33sq0AtgXsTzxqSU+xfMborpStdqQMV
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:b240:9cdf:7861:b23e])
- (user=irogers job=sendgmr) by 2002:a81:c54d:0:b0:544:8bc1:a179 with SMTP id
- o13-20020a81c54d000000b005448bc1a179mr2292963ywj.4.1680932727144; Fri, 07 Apr
- 2023 22:45:27 -0700 (PDT)
-Date:   Fri,  7 Apr 2023 22:44:55 -0700
+ (user=irogers job=sendgmr) by 2002:a81:ae51:0:b0:54c:1ab:6aaf with SMTP id
+ g17-20020a81ae51000000b0054c01ab6aafmr2188740ywk.5.1680932736234; Fri, 07 Apr
+ 2023 22:45:36 -0700 (PDT)
+Date:   Fri,  7 Apr 2023 22:44:56 -0700
 In-Reply-To: <20230408054456.3001367-1-irogers@google.com>
-Message-Id: <20230408054456.3001367-3-irogers@google.com>
+Message-Id: <20230408054456.3001367-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20230408054456.3001367-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v2 2/3] perf stat: Don't write "started on" for json output
+Subject: [PATCH v2 3/3] perf test: Write Json output to a file
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -73,31 +73,168 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Json files don't support comments. Disable the "started on" comment
-when writing json output to file.
+Write the Json output to a file, then sanity check this output. This
+avoids problems with debug/warning/error output corrupting the file
+format.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ .../tests/shell/lib/perf_json_output_lint.py  |  3 +-
+ tools/perf/tests/shell/stat+json_output.sh    | 48 ++++++++++++++-----
+ 2 files changed, 38 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 38133afda7fc..40770926a230 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2272,8 +2272,10 @@ int cmd_stat(int argc, const char **argv)
- 			perror("failed to create output file");
- 			return -1;
- 		}
--		clock_gettime(CLOCK_REALTIME, &tm);
--		fprintf(output, "# started on %s\n", ctime(&tm.tv_sec));
-+		if (!stat_config.json_output) {
-+			clock_gettime(CLOCK_REALTIME, &tm);
-+			fprintf(output, "# started on %s\n", ctime(&tm.tv_sec));
-+		}
- 	} else if (output_fd > 0) {
- 		mode = append_file ? "a" : "w";
- 		output = fdopen(output_fd, mode);
+diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+index 97598d14e532..61f3059ca54b 100644
+--- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
++++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+@@ -17,9 +17,10 @@ ap.add_argument('--per-thread', action='store_true')
+ ap.add_argument('--per-die', action='store_true')
+ ap.add_argument('--per-node', action='store_true')
+ ap.add_argument('--per-socket', action='store_true')
++ap.add_argument('--file', type=argparse.FileType('r'), default=sys.stdin)
+ args = ap.parse_args()
+ 
+-Lines = sys.stdin.readlines()
++Lines = args.file.readlines()
+ 
+ def isfloat(num):
+   try:
+diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
+index 2c4212c641ed..f3e4967cc72e 100755
+--- a/tools/perf/tests/shell/stat+json_output.sh
++++ b/tools/perf/tests/shell/stat+json_output.sh
+@@ -23,6 +23,20 @@ then
+ 	fi
+ fi
+ 
++stat_output=$(mktemp /tmp/__perf_test.stat_output.json.XXXXX)
++
++cleanup() {
++  rm -f "${stat_output}"
++
++  trap - EXIT TERM INT
++}
++
++trap_cleanup() {
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
+ # Return true if perf_event_paranoid is > $1 and not running as root.
+ function ParanoidAndNotRoot()
+ {
+@@ -32,7 +46,8 @@ function ParanoidAndNotRoot()
+ check_no_args()
+ {
+ 	echo -n "Checking json output: no args "
+-	perf stat -j true 2>&1 | $PYTHON $pythonchecker --no-args
++	perf stat -j -o "${stat_output}" true
++	$PYTHON $pythonchecker --no-args --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+@@ -44,27 +59,29 @@ check_system_wide()
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j -a true 2>&1 | $PYTHON $pythonchecker --system-wide
++	perf stat -j -a -o "${stat_output}" true
++	$PYTHON $pythonchecker --system-wide --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+ check_system_wide_no_aggr()
+ {
+-	echo -n "Checking json output: system wide "
++	echo -n "Checking json output: system wide no aggregation "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	echo -n "Checking json output: system wide no aggregation "
+-	perf stat -j -A -a --no-merge true 2>&1 | $PYTHON $pythonchecker --system-wide-no-aggr
++	perf stat -j -A -a --no-merge -o "${stat_output}" true
++	$PYTHON $pythonchecker --system-wide-no-aggr --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+ check_interval()
+ {
+ 	echo -n "Checking json output: interval "
+-	perf stat -j -I 1000 true 2>&1 | $PYTHON $pythonchecker --interval
++	perf stat -j -I 1000 -o "${stat_output}" true
++	$PYTHON $pythonchecker --interval --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+@@ -72,7 +89,8 @@ check_interval()
+ check_event()
+ {
+ 	echo -n "Checking json output: event "
+-	perf stat -j -e cpu-clock true 2>&1 | $PYTHON $pythonchecker --event
++	perf stat -j -e cpu-clock -o "${stat_output}" true
++	$PYTHON $pythonchecker --event --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+@@ -84,7 +102,8 @@ check_per_core()
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-core -a true 2>&1 | $PYTHON $pythonchecker --per-core
++	perf stat -j --per-core -a -o "${stat_output}" true
++	$PYTHON $pythonchecker --per-core --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+@@ -96,7 +115,8 @@ check_per_thread()
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-thread -a true 2>&1 | $PYTHON $pythonchecker --per-thread
++	perf stat -j --per-thread -a -o "${stat_output}" true
++	$PYTHON $pythonchecker --per-thread --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+@@ -108,7 +128,8 @@ check_per_die()
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-die -a true 2>&1 | $PYTHON $pythonchecker --per-die
++	perf stat -j --per-die -a -o "${stat_output}" true
++	$PYTHON $pythonchecker --per-die --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+@@ -120,7 +141,8 @@ check_per_node()
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-node -a true 2>&1 | $PYTHON $pythonchecker --per-node
++	perf stat -j --per-node -a -o "${stat_output}" true
++	$PYTHON $pythonchecker --per-node --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+@@ -132,7 +154,8 @@ check_per_socket()
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-socket -a true 2>&1 | $PYTHON $pythonchecker --per-socket
++	perf stat -j --per-socket -a -o "${stat_output}" true
++	$PYTHON $pythonchecker --per-socket --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+@@ -179,4 +202,5 @@ then
+ else
+ 	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
+ fi
++cleanup
+ exit 0
 -- 
 2.40.0.577.gac1e443424-goog
 
