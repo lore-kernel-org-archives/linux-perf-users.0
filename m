@@ -2,129 +2,120 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3BF6C76196
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Apr 2023 15:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B19C4C76196
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Apr 2023 15:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjDJPPz (ORCPT
+        id S230024AbjDJPeG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Apr 2023 11:15:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33442 "EHLO
+        Mon, 10 Apr 2023 11:34:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbjDJPPy (ORCPT
+        with ESMTP id S230010AbjDJPeE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Apr 2023 11:15:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC30A18D;
-        Mon, 10 Apr 2023 08:15:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 616FA60FC6;
-        Mon, 10 Apr 2023 15:15:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85E02C433EF;
-        Mon, 10 Apr 2023 15:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681139751;
-        bh=rNyHz04r9T4fInohogsQtdUfB2r/6rgq5gFr00Es8Gg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qO7nXdPyp5y2xV8+mWQoqOOWEa8g8aVm71wGEEw1QqKt5B65B4ZH/VpOuZWxYkuKK
-         VTNp4ae9/oPs5An1Vi/wIWmlEIV2poZoYKmeLqBi3R0lA24k3J/YkV5BEcVcmfzvws
-         o5rcbL4QH6dlULqTPlMiDm/aNWfP7H9xcqqlzSyhl7t9Z47Acqxmifk/tlThi/uiGk
-         mIe1Tl1u4Ih2xwhaCjLFOrCKXSEQd0p//8QYwJ63LhdCAh0Qxdk92uYORwiD0oi/0m
-         DIn5kNtVd66Dg66LV8DeDd5yJHJnJFLkX1Mrw3KVwMxeHrDB+igJU9iJQsZGkqm3q3
-         JKyicynB9ScCw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 205F740009; Mon, 10 Apr 2023 12:15:48 -0300 (-03)
-Date:   Mon, 10 Apr 2023 12:15:48 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org,
-        mingo@kernel.org, eranian@google.com, kan.liang@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        leo.yan@linaro.org, kjain@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v3 0/9] perf/mem: AMD IBS and generic tools improvements
-Message-ID: <ZDQoJFcyxpF+4Qu+@kernel.org>
-References: <20230407112459.548-1-ravi.bangoria@amd.com>
- <CAM9d7cijvZBsaXTMm8d=sxUWy6s+umCCnWhunD3KVhKbpVp_-A@mail.gmail.com>
- <631876a2-5946-82d5-6f70-bf7734db3992@amd.com>
+        Mon, 10 Apr 2023 11:34:04 -0400
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B471F65A1;
+        Mon, 10 Apr 2023 08:34:03 -0700 (PDT)
+Received: by mail-ua1-f50.google.com with SMTP id t20so16577521uaw.5;
+        Mon, 10 Apr 2023 08:34:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681140842; x=1683732842;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mh/TgqLDoXZo3DSGarUMsnIbppwaEVvC2iIeIHqNcDI=;
+        b=4HDIK8nX0hV65L4BV5h7kfzYYPuExRKRtC0n1yhYTKuCSmn9I8Ffn4DgGSNgAwBRwI
+         J415ylgBTDNqG4qZeDJ5Z9ko0qmT1kENuYh8w33SyDttBI8aaVfJ9hHeXgLhK2K1rZzx
+         v6lxMLlq5oxKBQ7C3bKk7I9DQW0JPOAUwzwvnFpgjS8128UJTrB3IvcarTwEL73UTbo1
+         QEpbKUN7kSJDV8IWqWsuWqWZB1KB55FvnkOl3d1Het27+TxkgpvwvXRGAxkc9lxfEYad
+         mh+9X4XUTRJuNuvdz4Ak12TCKYOpBTNEkk4CJk2YhUyRLeykVh/EEwHIaDJ4TC0AD5HI
+         gaEw==
+X-Gm-Message-State: AAQBX9eT8YLY5UZ0y4KyYVGj3qPxlf1NCPBQTLQLmwgjTpQTWYswUyEj
+        bsuNwEKmduu8V0x49blZ7S+epbWMqgdo3Z3DMHA=
+X-Google-Smtp-Source: AKy350ZsGJ+9GIvXzk8Q5OEPnI+nljD1PKGaCxGl6DorZz+J8X9pc9MB2nElkt2KV0O5eL06vAs0wnc4NdcUymRdW40=
+X-Received: by 2002:a05:6122:1166:b0:436:6a4a:68ab with SMTP id
+ q6-20020a056122116600b004366a4a68abmr2893501vko.7.1681140842607; Mon, 10 Apr
+ 2023 08:34:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <631876a2-5946-82d5-6f70-bf7734db3992@amd.com>
-X-Url:  http://acmel.wordpress.com
+References: <20230408055208.1283832-1-irogers@google.com>
+In-Reply-To: <20230408055208.1283832-1-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 10 Apr 2023 08:33:50 -0700
+Message-ID: <CAM9d7cjn1mxBB5MvrUX=-iyu+FnoHtbMk7wLYi=QiQJ1LyL9KA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf lock contention: Support pre-5.14 kernels
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Apr 10, 2023 at 07:53:57AM +0530, Ravi Bangoria escreveu:
-> On 08-Apr-23 3:14 AM, Namhyung Kim wrote:
-> > Hi Ravi,
-> > 
-> > On Fri, Apr 7, 2023 at 4:25 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> >>
-> >> Kernel IBS driver wasn't using new PERF_MEM_* APIs due to some of its
-> >> limitations. Mainly:
-> >>
-> >> 1. mem_lvl_num doesn't allow setting multiple sources whereas old API
-> >>    allows it. Setting multiple data sources is useful because IBS on
-> >>    pre-zen4 uarch doesn't provide fine granular DataSrc details (there
-> >>    is only one such DataSrc(2h) though).
-> >> 2. perf mem sorting logic (sort__lvl_cmp()) ignores mem_lvl_num. perf
-> >>    c2c (c2c_decode_stats()) does not use mem_lvl_num at all. perf mem
-> >>    prints mem_lvl and mem_lvl_num both if both are set, which is ugly.
-> >>
-> >> Set mem_lvl_num, mem_remote and mem_hops for data_src via IBS. Handle
-> >> first issue using mem_lvl_num = ANY_CACHE | HOPS_0. In addition to
-> >> setting new API fields, convert all individual field assignments to
-> >> compile time wrapper macros built using PERF_MEM_S(). Also convert
-> >> DataSrc conditional code to array lookups.
-> >>
-> >> Interpretation of perf_mem_data_src by perf_mem__lvl_scnprintf() was
-> >> non-intuitive. Make it sane.
-> > 
-> > Looks good, but I think you need to split kernel and user patches.
-> 
-> Patch #1 to #3 are kernel changes. Patch #4 to #9 are userspace changes.
-> Arnaldo, Peter, please let me know if you wants to split the series and
-> resend.
+Hi Ian,
 
-I can always use b4's -P option :-) So no need to resubmit, I can pick
-the tools bits,
+On Fri, Apr 7, 2023 at 10:52 PM Ian Rogers <irogers@google.com> wrote:
+>
+> struct rq's variable __lock was renamed from lock in 5.14.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-- Arnaldo
- 
-> > 
-> >>
-> >> v2: https://lore.kernel.org/r/20230327130851.1565-1-ravi.bangoria%40amd.com
-> >> v2->v3:
-> >>   - IBS: Don't club RmtNode with DataSrc=7 (IO)
-> >>   - Make perf_mem__lvl_scnprintf() more sane
-> >>   - Introduce PERF_MEM_LVLNUM_UNC, set it along with PERF_MEM_LVL_UNC
-> >>     and interpreat it in tool.
-> >>   - Add PERF_MEM_LVLNUM_NA to default data_src value
-> >>   - Change some of the IBS bit description according to latest PPR
-> >>
-> >> Namhyung Kim (1):
-> >>   perf/x86/ibs: Set mem_lvl_num, mem_remote and mem_hops for data_src
-> >>
-> >> Ravi Bangoria (8):
-> >>   perf/mem: Introduce PERF_MEM_LVLNUM_UNC
-> >>   perf/mem: Add PERF_MEM_LVLNUM_NA to PERF_MEM_NA
-> >>   perf headers: Sync uapi/linux/perf_event.h
-> >>   perf mem: Add PERF_MEM_LVLNUM_NA to PERF_MEM_DATA_SRC_NONE
-> >>   perf mem: Add support for printing PERF_MEM_LVLNUM_UNC
-> >>   perf mem: Refactor perf_mem__lvl_scnprintf()
-> >>   perf mem: Increase HISTC_MEM_LVL column size to 39 chars
-> >>   perf script ibs: Change bit description according to latest PPR
-> > 
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Thanks!
+Thanks for fixing this.
 
--- 
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-- Arnaldo
+Thanks,
+Namhyung
+
+
+> ---
+>  tools/perf/util/bpf_skel/lock_contention.bpf.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> index 23f6e63544ed..8911e2a077d8 100644
+> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+> @@ -418,6 +418,14 @@ int contention_end(u64 *ctx)
+>
+>  extern struct rq runqueues __ksym;
+>
+> +struct rq__old {
+> +       raw_spinlock_t lock;
+> +} __attribute__((preserve_access_index));
+> +
+> +struct rq__new {
+> +       raw_spinlock_t __lock;
+> +} __attribute__((preserve_access_index));
+> +
+>  SEC("raw_tp/bpf_test_finish")
+>  int BPF_PROG(collect_lock_syms)
+>  {
+> @@ -426,11 +434,16 @@ int BPF_PROG(collect_lock_syms)
+>
+>         for (int i = 0; i < MAX_CPUS; i++) {
+>                 struct rq *rq = bpf_per_cpu_ptr(&runqueues, i);
+> +               struct rq__new *rq_new = (void *)rq;
+> +               struct rq__old *rq_old = (void *)rq;
+>
+>                 if (rq == NULL)
+>                         break;
+>
+> -               lock_addr = (__u64)&rq->__lock;
+> +               if (bpf_core_field_exists(rq_new->__lock))
+> +                       lock_addr = (__u64)&rq_new->__lock;
+> +               else
+> +                       lock_addr = (__u64)&rq_old->lock;
+>                 lock_flag = LOCK_CLASS_RQLOCK;
+>                 bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
+>         }
+> --
+> 2.40.0.577.gac1e443424-goog
+>
