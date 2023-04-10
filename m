@@ -2,126 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5B6C76196
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Apr 2023 15:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C501BC77B61
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Apr 2023 16:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229805AbjDJPgr convert rfc822-to-8bit (ORCPT
+        id S230029AbjDJQJU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Apr 2023 11:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50668 "EHLO
+        Mon, 10 Apr 2023 12:09:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229773AbjDJPgq (ORCPT
+        with ESMTP id S229626AbjDJQJU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Apr 2023 11:36:46 -0400
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1D14EC7;
-        Mon, 10 Apr 2023 08:36:45 -0700 (PDT)
-Received: by mail-ua1-f50.google.com with SMTP id z23so3627599uav.8;
-        Mon, 10 Apr 2023 08:36:45 -0700 (PDT)
+        Mon, 10 Apr 2023 12:09:20 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D4FD120
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Apr 2023 09:09:18 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 8-20020a250508000000b00b7c653a0a4aso41923241ybf.23
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Apr 2023 09:09:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1681142957;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=hgpNSuwaIz5SOsDrctN1Z4DgOM8CO/tlKIwgfsZ4/ck=;
+        b=KbN+lzS+lcqidjAbQxa0GvXCAbmu1egDuByAETgeMWyb2/CMdMenHNWowg+xUpH1oB
+         QA7VrhCCALf4FouV8PrBU3pWbFqStiTfMYthOzYL8edyh46/hFQ4CCiXDnYrR9xhc2fA
+         GYKMHSIvehSvwJtxThZcxBmK2aQV3rdCDrKz678KucttKrgJyWSQ4agd+zrXFCLqRTKy
+         rI3fzOdO2l8cNcKq9ZyuFKMtUULQbVBORHrIhTcta+LWtGyflnxit5D25QTuU+XUzKEu
+         lZQUicrUwcjApxPLdUCbUbC+w+EWijpvTI42Y5mwbyYyb2JQFm3tqCQyHy5s5uZ2Pxad
+         Wlmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681141005; x=1683733005;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9mZMaZ5yM1oqShI5ecZeTy++LWeRnqrDt5SHNiRc2dw=;
-        b=4h3B48wV9ux9k1pjzAZbdODKjzzLv00gUyGT5kI/tJX/aR+nJSE3rKFoDenYFbFd6U
-         PYtN2EB0qmwDHAgzhV4Mz96fmOeExCRsWD5r0JtB4c3jQT43V/rlpACzwViBQGIZBKpx
-         omqk4+P8bJeyG+5N+tm3+7V0LEoKsfpwlz+fZcOslHCprQc5eYaURBxyJTKKBI57t1e6
-         YbZmAxpgaLlS8NjYeOgHnEhueAQ5F2PtZihyTYn2Hk1+63tIDwUNDH18NXRnTLJpuq0q
-         SCdpZvFH2eCzz6ixe0X/nREkNyCMyDPhnwg6UETy9klDYVTqK3f+WBXQfQU0sqGAC0i6
-         L2GQ==
-X-Gm-Message-State: AAQBX9esjagkCvwrNdB06ZyaH+pADCHD27zyJY0YML+PYeVLyQDeQjaO
-        dR/qN24exjxNiO85BXtgDB7OKv+5oCLZipBRvQY=
-X-Google-Smtp-Source: AKy350bNKl0reJD3SO/DqgLdgKOPJmlAx2JD3JHd6SAqnqPLXa9KyNikKOvfnDIqNJEjZ9U/6Ef3je8q0/I4luvxHx4=
-X-Received: by 2002:a1f:1750:0:b0:43f:cacf:9f08 with SMTP id
- 77-20020a1f1750000000b0043fcacf9f08mr1385800vkx.12.1681141003430; Mon, 10 Apr
- 2023 08:36:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAM9d7cgK-P5KuDy7hkAR4j7oB4ydE6Mw3KexqgwPPhJF6MKtXQ@mail.gmail.com>
- <20230410132239.2062-1-laihangliang1@huawei.com>
-In-Reply-To: <20230410132239.2062-1-laihangliang1@huawei.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 10 Apr 2023 08:36:31 -0700
-Message-ID: <CAM9d7cjy-XivELAgq49YF9RKxFZ3M+H3V6s6zVboenRT3oRFDA@mail.gmail.com>
-Subject: Re: [PATCH v3] perf top: expand the range of multithreaded phase
-To:     Hangliang Lai <laihangliang1@huawei.com>
-Cc:     acme@kernel.org, adrian.hunter@intel.com,
-        alexander.shishkin@linux.intel.com, brauner@kernel.org,
-        hewenliang4@huawei.com, irogers@google.com, jolsa@kernel.org,
-        linfeilong@huawei.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, liuwenyu7@huawei.com,
-        mark.rutland@arm.com, mingo@redhat.com, yeyunfeng@huawei.com
+        d=1e100.net; s=20210112; t=1681142957;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hgpNSuwaIz5SOsDrctN1Z4DgOM8CO/tlKIwgfsZ4/ck=;
+        b=W1Fy5ONHDzM7VIuxZNLpV91xnsOkvLDUqb50iEp7nJ2/zfwGvcXnVAnMnzwjV8YnDQ
+         5/N3mxIP6JPMwH/GljLMLRCS9Eo3HWVmnaBwgWdxbA5vUwOigxEznYOCFPO9OohKeDY9
+         vBw2wZ4kQPL6YrfqOS5sFCsV5iziG85N/IiNYWFTf/re5IUYDJf9nSHNQnP0v7hNZ7J6
+         bbqOsja8VDy53CTTsr7KE11i7t4u9ZmD7KAL1lysNYCE5l1y18ceOH46Ng0D/9vbu7Qc
+         P0EgNAFqQ8tzR6G7DjfdXdydPZfTZOQ6i2EPjZUfVEdsx3/jdVlr0uMGWFzKLTmKNfXb
+         Z8Aw==
+X-Gm-Message-State: AAQBX9fnLnXJLBAgKzLaYHp5nryUt7jCe5my4OW3N44NXSQAFYBtH3rP
+        syEKbcP7sK+Rj8G6PdOhImPjOPu16joA
+X-Google-Smtp-Source: AKy350aqBjJi0MjweR+Koinf0C4KZg04ZAy6t8zBhmoqTxsbnU8+cn0bFgYqbOxeoJJa9GhGP7nsB2ORSjwK
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:fc51:6a03:541d:a18d])
+ (user=irogers job=sendgmr) by 2002:a05:690c:31b:b0:54c:15ad:11e4 with SMTP id
+ bg27-20020a05690c031b00b0054c15ad11e4mr7321151ywb.0.1681142957303; Mon, 10
+ Apr 2023 09:09:17 -0700 (PDT)
+Date:   Mon, 10 Apr 2023 09:09:05 -0700
+Message-Id: <20230410160905.3052640-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
+Subject: [PATCH v2] perf build: Warn for BPF skeletons if endian mismatches
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andrii Nakryiko <andrii@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Done as a warning as I'm not fully confident of the test's robustness
+of comparing the macro definition of __BYTE_ORDER__.
 
-On Mon, Apr 10, 2023 at 6:22 AM Hangliang Lai <laihangliang1@huawei.com> wrote:
->
-> In __cmd_top, perf_set_multithreaded is used to enable pthread_rwlock, thus
-> donw_read and down_write can work to handle concurrency problems. Then top
-> use perf_set_singlethreaded and switch to single threaded phase, assuming
-> that no thread concurrency will happen later.
-> However, a UAF problem could occur in perf top in single threaded phase,
-> The concurrent procedure is like this:
-> display_thread                              process_thread
-> --------------                              --------------
-> thread__comm_len
->   -> thread__comm_str
->     -> __thread__comm_str(thread)
->                                             thread__delete
->                                              -> comm__free
->                                               -> comm_str__put
->                                                -> zfree(&cs->str)
->     -> thread->comm_len = strlen(comm);
-> Since in single thread phase, perf_singlethreaded is true, down_read and
-> down_write can not work to avoid concurrency problems.
-> This patch put perf_set_singlethreaded to the function tail to expand the
-> multithreaded phase range, make display_thread and process_thread run
-> safe.
->
-> Signed-off-by: Hangliang Lai  <laihangliang1@huawei.com>
-> Reviewed-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+v2. Is a rebase following patch 1 being merged.
+---
+ tools/perf/Makefile.config | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-Thanks,
-Namhyung
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 16bea51f0bcd..71442c54c25f 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -663,14 +663,17 @@ ifndef NO_BPF_SKEL
+   $(call feature_check,clang-bpf-co-re)
+   ifeq ($(feature-clang-bpf-co-re), 0)
+     dummy := $(error: ERROR: BPF skeletons unsupported. clang too old/not installed or build with NO_BPF_SKEL=1.)
+-  else
+-    ifeq ($(filter -DHAVE_LIBBPF_SUPPORT, $(CFLAGS)),)
+-      dummy := $(error: ERROR: BPF skeletons unsupported. BPF skeleton support requires libbpf or build with NO_BPF_SKEL=1.)
+-    else
+-      $(call detected,CONFIG_PERF_BPF_SKEL)
+-      CFLAGS += -DHAVE_BPF_SKEL
+-    endif
+   endif
++  ifeq ($(filter -DHAVE_LIBBPF_SUPPORT, $(CFLAGS)),)
++    dummy := $(error: ERROR: BPF skeletons unsupported. BPF skeleton support requires libbpf or build with NO_BPF_SKEL=1.)
++  endif
++  host_byte_order=$(echo ""|$(HOSTCC) -dM -E -|grep __BYTE_ORDER__)
++  target_byte_order=$(echo ""|$(CC) -dM -E -|grep __BYTE_ORDER__)
++  ifneq ($(host_byte_order), $(target_byte_order))
++    $(warning Possibly mismatched host and target endianness may break BPF skeletons)
++  endif
++  $(call detected,CONFIG_PERF_BPF_SKEL)
++  CFLAGS += -DHAVE_BPF_SKEL
+ endif
+ 
+ dwarf-post-unwind := 1
+-- 
+2.40.0.577.gac1e443424-goog
 
-
-> ---
-> v2 -> v3
->  - Sorry for my misunderstanding, patch v3 makes perf_set_multithreaded
->    unconditional after synthesis and set_singlethread in the end.
->
->  tools/perf/builtin-top.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index d4b5b02bab73..ae96ddaf85c4 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1273,8 +1273,7 @@ static int __cmd_top(struct perf_top *top)
->                                     top->evlist->core.threads, true, false,
->                                     top->nr_threads_synthesize);
->
-> -       if (top->nr_threads_synthesize > 1)
-> -               perf_set_singlethreaded();
-> +       perf_set_multithreaded();
->
->         if (perf_hpp_list.socket) {
->                 ret = perf_env__read_cpu_topology_map(&perf_env);
-> @@ -1352,6 +1351,7 @@ static int __cmd_top(struct perf_top *top)
->  out_join_thread:
->         cond_signal(&top->qe.cond);
->         pthread_join(thread_process, NULL);
-> +       perf_set_singlethreaded();
->         return ret;
->  }
->
-> --
-> 2.33.0
->
