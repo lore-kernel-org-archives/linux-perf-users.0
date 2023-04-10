@@ -2,63 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F96C77B61
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Apr 2023 02:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7E1C76196
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Apr 2023 03:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjDJC6Q convert rfc822-to-8bit (ORCPT
+        id S229551AbjDJDiN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 9 Apr 2023 22:58:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55024 "EHLO
+        Sun, 9 Apr 2023 23:38:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbjDJC6Q (ORCPT
+        with ESMTP id S229475AbjDJDiM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 9 Apr 2023 22:58:16 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A698730DD;
-        Sun,  9 Apr 2023 19:58:14 -0700 (PDT)
-Received: from kwepemi500007.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PvtqN3skxz17MGW;
-        Mon, 10 Apr 2023 10:54:40 +0800 (CST)
-Received: from huawei.com (10.174.179.93) by kwepemi500007.china.huawei.com
- (7.221.188.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 10 Apr
- 2023 10:58:10 +0800
-From:   Hangliang Lai <laihangliang1@huawei.com>
-To:     <namhyung@kernel.org>
+        Sun, 9 Apr 2023 23:38:12 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F126269D;
+        Sun,  9 Apr 2023 20:38:11 -0700 (PDT)
+Received: from kwepemm600006.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Pvvj35wCYzSrPg;
+        Mon, 10 Apr 2023 11:34:15 +0800 (CST)
+Received: from [10.174.177.30] (10.174.177.30) by
+ kwepemm600006.china.huawei.com (7.193.23.105) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Mon, 10 Apr 2023 11:38:07 +0800
+Message-ID: <edec17ee-2a10-bdb1-a021-180831bbc57c@huawei.com>
+Date:   Mon, 10 Apr 2023 11:38:07 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2] perf top: expand the range of multithreaded phase
+To:     Hangliang Lai <laihangliang1@huawei.com>, <namhyung@kernel.org>
 CC:     <acme@kernel.org>, <adrian.hunter@intel.com>,
         <alexander.shishkin@linux.intel.com>, <brauner@kernel.org>,
         <hewenliang4@huawei.com>, <irogers@google.com>, <jolsa@kernel.org>,
-        <laihangliang1@huawei.com>, <linfeilong@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <liuwenyu7@huawei.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-        <yeyunfeng@huawei.com>
-Subject: Re: [PATCH v2] perf top: expand the range of multithreaded phase
-Date:   Mon, 10 Apr 2023 10:58:08 +0800
-Message-ID: <20230410025808.2008-1-laihangliang1@huawei.com>
-X-Mailer: git-send-email 2.37.3.windows.1
-In-Reply-To: <CAM9d7cgK-P5KuDy7hkAR4j7oB4ydE6Mw3KexqgwPPhJF6MKtXQ@mail.gmail.com>
+        <linfeilong@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <mark.rutland@arm.com>,
+        <mingo@redhat.com>, <yeyunfeng@huawei.com>
 References: <CAM9d7cgK-P5KuDy7hkAR4j7oB4ydE6Mw3KexqgwPPhJF6MKtXQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain
-X-Originating-IP: [10.174.179.93]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500007.china.huawei.com (7.221.188.207)
+ <20230410025808.2008-1-laihangliang1@huawei.com>
+From:   "Wenyu Liu(D)" <liuwenyu7@huawei.com>
+In-Reply-To: <20230410025808.2008-1-laihangliang1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.30]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600006.china.huawei.com (7.193.23.105)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Thanks for your reply Kim ,
+Hello，I think Namhyung means only make it multi-threaded unconditionally after the synthesize
 
-On 2023-04-07 21:21   you  wrote:
+a patch like this:
 
->  Not always, the synthesis can run in a single thread.
+---
+ tools/perf/builtin-top.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-But I think in machine__synthesize_threads, there are thread_nr threads will be created to do synthesize_threads_worker(tools/perf/util/synthetic-events.c:970)
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index d4b5b02bab73..60d00975b881 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1273,8 +1273,7 @@ static int __cmd_top(struct perf_top *top)
+                                    top->evlist->core.threads, true, false,
+                                    top->nr_threads_synthesize);
 
-It’s not a single thread part. So we're supposed to call perf_set_multithreaded() before synthesize?
+-       if (top->nr_threads_synthesize > 1)
+-               perf_set_singlethreaded();
++       perf_set_multithreaded();
+
+        if (perf_hpp_list.socket) {
+                ret = perf_env__read_cpu_topology_map(&perf_env);
+--
+
+Right?
 
 Thanks,
-Hangliang Lai
+Wenyu
 
+在 2023/4/10 10:58, Hangliang Lai 写道:
+> Thanks for your reply Kim ,
+> 
+> 
+> 
+> On 2023-04-07 21:21   you  wrote:
+> 
+> 
+> 
+>>  Not always, the synthesis can run in a single thread.
+> 
+> 
+> 
+> But I think in machine__synthesize_threads, there are thread_nr threads will be created to do synthesize_threads_worker(tools/perf/util/synthetic-events.c:970)
+> 
+> 
+> 
+> It’s not a single thread part. So we're supposed to call perf_set_multithreaded() before synthesize?
+> 
+> 
+> 
+> Thanks,
+> 
+> Hangliang Lai
+> 
+> 
+> 
