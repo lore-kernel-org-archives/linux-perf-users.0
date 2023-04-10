@@ -2,137 +2,122 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5057CC76196
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Apr 2023 22:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE304C76196
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Apr 2023 23:21:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbjDJWbm (ORCPT
+        id S229722AbjDJXVd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Apr 2023 18:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32796 "EHLO
+        Mon, 10 Apr 2023 19:21:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229843AbjDJWbk (ORCPT
+        with ESMTP id S229727AbjDJXVc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Apr 2023 18:31:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 611501FED;
-        Mon, 10 Apr 2023 15:31:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EEE3F61C9A;
-        Mon, 10 Apr 2023 22:31:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC2EC433EF;
-        Mon, 10 Apr 2023 22:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681165895;
-        bh=ODPUu4XbPkXfqtVifM59v1vcAU5MV/y3Fow3J7M6KfM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dN8+hSwAS9KrTzT4zswys1zsGvx5iSy3DBvXy8/h+Pcs/UTlkzGSRE7TWe/FGBHqn
-         IINC5xbQuqJ3uOf+8tO9A814X541r2ObdNmVQlWWB1L1qDv5+DzqLME2/Q+6qDU/Gx
-         XS20hF6jjRdRZe/BqhfhBDzpZPDiZ7I+SSY0GHOCumlVZ/kNoYLMfxJ594iEvPZH/W
-         sMkf7jLCBbP+2dCIW6Vm7+2rZwBKRWLGFE8HhBS/M6j1k4dtJxjCiFe27+RxfU5hkF
-         GuXP8wPmv0XywIrmC53V/9skcBCYjBMjjXje1GcQu/hTtLm67vwO4Xdxh65TcYafMY
-         JtbJfDFHnAQoA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AAA1940009; Mon, 10 Apr 2023 19:31:32 -0300 (-03)
-Date:   Mon, 10 Apr 2023 19:31:32 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>, peterz@infradead.org,
-        mingo@kernel.org, eranian@google.com, kan.liang@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        leo.yan@linaro.org, kjain@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v3 0/9] perf/mem: AMD IBS and generic tools improvements
-Message-ID: <ZDSORDbkoN0PvfkL@kernel.org>
-References: <20230407112459.548-1-ravi.bangoria@amd.com>
- <CAM9d7cijvZBsaXTMm8d=sxUWy6s+umCCnWhunD3KVhKbpVp_-A@mail.gmail.com>
- <631876a2-5946-82d5-6f70-bf7734db3992@amd.com>
- <ZDQoJFcyxpF+4Qu+@kernel.org>
+        Mon, 10 Apr 2023 19:21:32 -0400
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D912118;
+        Mon, 10 Apr 2023 16:21:09 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id ba16so4410966uab.4;
+        Mon, 10 Apr 2023 16:21:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681168869; x=1683760869;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P4Lc7kTtUKpJq2HePJoO52rNn2Ss3QVKDL6cqFdOw4s=;
+        b=MxBSz9HWyK5hgCi29CGRVBEoPh7dV+/rI4YzgRrAfh7IvMTfh24wF3BDxWQt1/I+PQ
+         mEM4FUxIP1XofKXqMNYwdvNVDDx6Mx7Khitqtk+bsZ3CT8LE+Jv7It9dhFmMMiWHjxWg
+         rsqaiYyHSILt/Gtbs0GxEjbYkxkDFqYsOZWQlu9T3UHJvElqu5I2tw0huiMgt6GU9bFi
+         yhqKJ16yQFr2aYlk4bIIZKafjFOIoJrOaeI7Fj6nxJgFT92c9CfbXSHADBIWFjlTd1yg
+         fUjZ40aOLE1TdfVgYaeXGeTyHzYeGzcQFBznaCQ0FHBzS7gpRfIZuUWII6oLyVc+3BtM
+         K54Q==
+X-Gm-Message-State: AAQBX9fS6ELsN+T5YMoVOuwzox9DFFb//5Kp7hm9HFtCee8cKPFJlkqY
+        Jb9JslmeQi2jlMYk2Mrr0jH/lBBogCwMh2RYE3rBLSll
+X-Google-Smtp-Source: AKy350bxdML3cCqmsj+BIwmFI4dCKsDMnnNSN+bSZSMYEI67lOCP3r3LuK20kJRCM5CIrokpVf0bPnMUN+/nkUAVkYk=
+X-Received: by 2002:a05:6122:1691:b0:43b:ead4:669e with SMTP id
+ 17-20020a056122169100b0043bead4669emr3979285vkl.16.1681168868654; Mon, 10 Apr
+ 2023 16:21:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZDQoJFcyxpF+4Qu+@kernel.org>
-X-Url:  http://acmel.wordpress.com
+References: <20230410205659.3131608-1-irogers@google.com>
+In-Reply-To: <20230410205659.3131608-1-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Mon, 10 Apr 2023 16:20:57 -0700
+Message-ID: <CAM9d7cjuqcwcy+CwAPj8wK4hO2Pzr6xor76+jW-Do443Gr2ENQ@mail.gmail.com>
+Subject: Re: [PATCH v1] perf evsel: Avoid segv if delete is called on NULL
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Apr 10, 2023 at 12:15:48PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Mon, Apr 10, 2023 at 07:53:57AM +0530, Ravi Bangoria escreveu:
-> > On 08-Apr-23 3:14 AM, Namhyung Kim wrote:
-> > > Hi Ravi,
-> > > 
-> > > On Fri, Apr 7, 2023 at 4:25 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> > >>
-> > >> Kernel IBS driver wasn't using new PERF_MEM_* APIs due to some of its
-> > >> limitations. Mainly:
-> > >>
-> > >> 1. mem_lvl_num doesn't allow setting multiple sources whereas old API
-> > >>    allows it. Setting multiple data sources is useful because IBS on
-> > >>    pre-zen4 uarch doesn't provide fine granular DataSrc details (there
-> > >>    is only one such DataSrc(2h) though).
-> > >> 2. perf mem sorting logic (sort__lvl_cmp()) ignores mem_lvl_num. perf
-> > >>    c2c (c2c_decode_stats()) does not use mem_lvl_num at all. perf mem
-> > >>    prints mem_lvl and mem_lvl_num both if both are set, which is ugly.
-> > >>
-> > >> Set mem_lvl_num, mem_remote and mem_hops for data_src via IBS. Handle
-> > >> first issue using mem_lvl_num = ANY_CACHE | HOPS_0. In addition to
-> > >> setting new API fields, convert all individual field assignments to
-> > >> compile time wrapper macros built using PERF_MEM_S(). Also convert
-> > >> DataSrc conditional code to array lookups.
-> > >>
-> > >> Interpretation of perf_mem_data_src by perf_mem__lvl_scnprintf() was
-> > >> non-intuitive. Make it sane.
-> > > 
-> > > Looks good, but I think you need to split kernel and user patches.
-> > 
-> > Patch #1 to #3 are kernel changes. Patch #4 to #9 are userspace changes.
-> > Arnaldo, Peter, please let me know if you wants to split the series and
-> > resend.
-> 
-> I can always use b4's -P option :-) So no need to resubmit, I can pick
->> the tools bits,
+Hi Ian,
 
-Done
- 
-> - Arnaldo
->  
-> > > 
-> > >>
-> > >> v2: https://lore.kernel.org/r/20230327130851.1565-1-ravi.bangoria%40amd.com
-> > >> v2->v3:
-> > >>   - IBS: Don't club RmtNode with DataSrc=7 (IO)
-> > >>   - Make perf_mem__lvl_scnprintf() more sane
-> > >>   - Introduce PERF_MEM_LVLNUM_UNC, set it along with PERF_MEM_LVL_UNC
-> > >>     and interpreat it in tool.
-> > >>   - Add PERF_MEM_LVLNUM_NA to default data_src value
-> > >>   - Change some of the IBS bit description according to latest PPR
-> > >>
-> > >> Namhyung Kim (1):
-> > >>   perf/x86/ibs: Set mem_lvl_num, mem_remote and mem_hops for data_src
-> > >>
-> > >> Ravi Bangoria (8):
-> > >>   perf/mem: Introduce PERF_MEM_LVLNUM_UNC
-> > >>   perf/mem: Add PERF_MEM_LVLNUM_NA to PERF_MEM_NA
-> > >>   perf headers: Sync uapi/linux/perf_event.h
-> > >>   perf mem: Add PERF_MEM_LVLNUM_NA to PERF_MEM_DATA_SRC_NONE
-> > >>   perf mem: Add support for printing PERF_MEM_LVLNUM_UNC
-> > >>   perf mem: Refactor perf_mem__lvl_scnprintf()
-> > >>   perf mem: Increase HISTC_MEM_LVL column size to 39 chars
-> > >>   perf script ibs: Change bit description according to latest PPR
-> > > 
-> > > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> > 
-> > Thanks!
-> 
-> -- 
-> 
-> - Arnaldo
+On Mon, Apr 10, 2023 at 1:57 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Seen in "perf stat --bpf-counters --for-each-cgroup test" running in a
+> container:
+>
+> libbpf: Failed to bump RLIMIT_MEMLOCK (err = -1), you might need to do it explicitly!
+> libbpf: Error in bpf_object__probe_loading():Operation not permitted(1). Couldn't load trivial BPF program. Make sure your kernel supports BPF (CONFIG_BPF_SYSCALL=y) and/or that RLIMIT_MEMLOCK is set to big enough value.
+> libbpf: failed to load object 'bperf_cgroup_bpf'
+> libbpf: failed to load BPF skeleton 'bperf_cgroup_bpf': -1
+> Failed to load cgroup skeleton
+>
+>     #0 0x55f28a650981 in list_empty tools/include/linux/list.h:189
+>     #1 0x55f28a6593b4 in evsel__exit util/evsel.c:1518
+>     #2 0x55f28a6596af in evsel__delete util/evsel.c:1544
+>     #3 0x55f28a89d166 in bperf_cgrp__destroy util/bpf_counter_cgroup.c:283
+>     #4 0x55f28a899e9a in bpf_counter__destroy util/bpf_counter.c:816
+>     #5 0x55f28a659455 in evsel__exit util/evsel.c:1520
+>     #6 0x55f28a6596af in evsel__delete util/evsel.c:1544
+>     #7 0x55f28a640d4d in evlist__purge util/evlist.c:148
+>     #8 0x55f28a640ea6 in evlist__delete util/evlist.c:169
+>     #9 0x55f28a4efbf2 in cmd_stat tools/perf/builtin-stat.c:2598
+>     #10 0x55f28a6050c2 in run_builtin tools/perf/perf.c:330
+>     #11 0x55f28a605633 in handle_internal_command tools/perf/perf.c:384
+>     #12 0x55f28a6059fb in run_argv tools/perf/perf.c:428
+>     #13 0x55f28a6061d3 in main tools/perf/perf.c:562
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
--- 
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-- Arnaldo
+In addition to this, I think bperf code should clear the evsel->bpf_skel
+at the end of the bpf_counter__destroy() to avoid confusion with the
+bpf_filter as they share the fields in a union.
+
+Thanks,
+Namhyung
+
+
+> ---
+>  tools/perf/util/evsel.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index dc3faf005c3b..fe3ce765a4f3 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -1541,6 +1541,9 @@ void evsel__exit(struct evsel *evsel)
+>
+>  void evsel__delete(struct evsel *evsel)
+>  {
+> +       if (!evsel)
+> +               return;
+> +
+>         evsel__exit(evsel);
+>         free(evsel);
+>  }
+> --
+> 2.40.0.577.gac1e443424-goog
+>
