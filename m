@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544C1C77B61
-	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Apr 2023 22:22:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6306C76196
+	for <linux-perf-users@archiver.kernel.org>; Mon, 10 Apr 2023 22:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229644AbjDJWWm (ORCPT
+        id S229736AbjDJWYE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Apr 2023 18:22:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55910 "EHLO
+        Mon, 10 Apr 2023 18:24:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229624AbjDJWWl (ORCPT
+        with ESMTP id S229899AbjDJWX7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Apr 2023 18:22:41 -0400
+        Mon, 10 Apr 2023 18:23:59 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A3F1BD;
-        Mon, 10 Apr 2023 15:22:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0E719AF;
+        Mon, 10 Apr 2023 15:23:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 833B161FB6;
-        Mon, 10 Apr 2023 22:22:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B788AC433D2;
-        Mon, 10 Apr 2023 22:22:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 378EE61FB9;
+        Mon, 10 Apr 2023 22:23:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68ECDC433EF;
+        Mon, 10 Apr 2023 22:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681165359;
-        bh=rtUVIdUmOlFbg2j0AGyb3oC88URwtQrM2BOEnncFZRk=;
+        s=k20201202; t=1681165437;
+        bh=7qpibVH+Bx7rHlHS6P/GVmFU+lfojwvqMbChbkABNfA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j8j2+6xxt6xNVvSVZHH9yOdbhDyVUvnDesEPgT7YMFrh+qsQ1rA9qpg5tjvIoMI4U
-         z2Yww6dkgXoS+wR1quJDreiaXyYYGlhS/mvjCIjGUp/3pHle4ffdAEqeATnvoJakO0
-         WJ6DDWUzMJ0y+dGPTpJKAX8JbYFYETOWCzr/IdtFGrAu2O6wf0gT6M2dtLoAtqxIT9
-         sfh7/53Sh2MY+l4u0AcUyZpCgkV7lg92Gom/J2g7/4J5ufp5X7DD/e8WmxzKiZdKn2
-         unzWW334RXcEW9lOHUa18wi8Mm5jo4tK/5UMidifgkGmQjsw1tMlCCW8ZXuRA1vrdV
-         NZEmOq2/cJmRg==
+        b=ohJ5BA+CQxDTuK4HGpmWsK4adhKm5aQENMUgOeGOkhrBnrm/QqMSggSH9gEcs5VDp
+         9/Hs0xmWlVXYpbzgCmtjEZm7tGPnQ5FfFoZQrew4oGQbPZwb6aNV2ovh9MyYQ7Dmec
+         P3TV6dixgtdmH0qqSUnCOiEUZYkTEfSeAKALdwPmOLCl7WhcUMVP0puC3btjNet6WJ
+         /qJXjEtBc1idTGFHj31hMWRtXggBEyCyq0C8gRAPDpiLKN599eIxOtQEK1AOIgAnlh
+         NjEUnkPaUFlzhoT3rSEM7ueDEDKSaOYlJMesbVJKuZQ/3RDhPCpYKEVNy7oW5jQ6g2
+         L8/k2b1VBW+WA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 644B940009; Mon, 10 Apr 2023 19:22:36 -0300 (-03)
-Date:   Mon, 10 Apr 2023 19:22:36 -0300
+        id CDD6E40009; Mon, 10 Apr 2023 19:23:54 -0300 (-03)
+Date:   Mon, 10 Apr 2023 19:23:54 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -45,99 +45,66 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Raul Silvera <rsilvera@google.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Rob Herring <robh@kernel.org>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Chengdong Li <chengdongli@tencent.com>,
-        Denis Nikitin <denik@chromium.org>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-Subject: Re: [PATCH v2 0/6] Refactor definitions out of perf.h
-Message-ID: <ZDSMLJPsZlaLYnBN@kernel.org>
-References: <20230410162511.3055900-1-irogers@google.com>
+        Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH v2] perf build: Warn for BPF skeletons if endian
+ mismatches
+Message-ID: <ZDSMeui7IEk+D/SO@kernel.org>
+References: <20230410160905.3052640-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230410162511.3055900-1-irogers@google.com>
+In-Reply-To: <20230410160905.3052640-1-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Apr 10, 2023 at 09:25:05AM -0700, Ian Rogers escreveu:
-> Move definitions and declarations for greater consistency.
+Em Mon, Apr 10, 2023 at 09:09:05AM -0700, Ian Rogers escreveu:
+> Done as a warning as I'm not fully confident of the test's robustness
+> of comparing the macro definition of __BYTE_ORDER__.
 > 
-> The original motivation was, when fuzzing something like parse-events,
-> having the main function in perf.c alongside global variables like
-> input_name means that input_name must be redeclared with the fuzzer
-> function's main. However, as the fuzzer is using the tools/perf code
-> as a library this causes backward linking reference that the linker
-> may warn about.
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > 
-> v2. Remove references from commit messages about linking, as Adrian
->     points out we could solve that problem with #ifdefs.
+> v2. Is a rebase following patch 1 being merged.
 
 Thanks, applied.
 
 - Arnaldo
 
- 
-> Ian Rogers (6):
->   perf ui: Move window resize signal functions
->   perf usage: Move usage strings
->   perf header: Move perf_version_string declaration
->   perf version: Use regular verbose flag
->   perf util: Move input_name to util
->   perf util: Move perf_guest/host declarations
+> ---
+>  tools/perf/Makefile.config | 17 ++++++++++-------
+>  1 file changed, 10 insertions(+), 7 deletions(-)
 > 
->  tools/perf/builtin-annotate.c     |  2 +-
->  tools/perf/builtin-buildid-list.c |  2 +-
->  tools/perf/builtin-c2c.c          |  2 +-
->  tools/perf/builtin-data.c         |  2 +-
->  tools/perf/builtin-diff.c         |  2 +-
->  tools/perf/builtin-evlist.c       |  2 +-
->  tools/perf/builtin-help.c         |  1 +
->  tools/perf/builtin-kmem.c         |  2 +-
->  tools/perf/builtin-kvm.c          |  1 +
->  tools/perf/builtin-kwork.c        |  2 +-
->  tools/perf/builtin-mem.c          |  2 +-
->  tools/perf/builtin-sched.c        |  2 +-
->  tools/perf/builtin-stat.c         |  2 +-
->  tools/perf/builtin-timechart.c    |  2 +-
->  tools/perf/builtin-version.c      |  7 +++----
->  tools/perf/builtin.h              |  3 ---
->  tools/perf/perf.c                 | 27 +--------------------------
->  tools/perf/perf.h                 |  9 ---------
->  tools/perf/ui/browsers/hists.c    |  2 +-
->  tools/perf/ui/hist.c              |  2 +-
->  tools/perf/ui/setup.c             | 19 +++++++++++++++++++
->  tools/perf/ui/tui/setup.c         |  1 -
->  tools/perf/ui/ui.h                |  3 +++
->  tools/perf/util/cs-etm.c          |  1 +
->  tools/perf/util/event.c           |  2 +-
->  tools/perf/util/evlist.c          |  1 +
->  tools/perf/util/header.h          |  2 ++
->  tools/perf/util/parse-events.c    |  2 +-
->  tools/perf/util/session.c         |  2 +-
->  tools/perf/util/top.c             |  2 +-
->  tools/perf/util/usage.c           |  6 ++++++
->  tools/perf/util/util.c            |  2 ++
->  tools/perf/util/util.h            |  8 ++++++++
->  33 files changed, 66 insertions(+), 61 deletions(-)
-> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 16bea51f0bcd..71442c54c25f 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -663,14 +663,17 @@ ifndef NO_BPF_SKEL
+>    $(call feature_check,clang-bpf-co-re)
+>    ifeq ($(feature-clang-bpf-co-re), 0)
+>      dummy := $(error: ERROR: BPF skeletons unsupported. clang too old/not installed or build with NO_BPF_SKEL=1.)
+> -  else
+> -    ifeq ($(filter -DHAVE_LIBBPF_SUPPORT, $(CFLAGS)),)
+> -      dummy := $(error: ERROR: BPF skeletons unsupported. BPF skeleton support requires libbpf or build with NO_BPF_SKEL=1.)
+> -    else
+> -      $(call detected,CONFIG_PERF_BPF_SKEL)
+> -      CFLAGS += -DHAVE_BPF_SKEL
+> -    endif
+>    endif
+> +  ifeq ($(filter -DHAVE_LIBBPF_SUPPORT, $(CFLAGS)),)
+> +    dummy := $(error: ERROR: BPF skeletons unsupported. BPF skeleton support requires libbpf or build with NO_BPF_SKEL=1.)
+> +  endif
+> +  host_byte_order=$(echo ""|$(HOSTCC) -dM -E -|grep __BYTE_ORDER__)
+> +  target_byte_order=$(echo ""|$(CC) -dM -E -|grep __BYTE_ORDER__)
+> +  ifneq ($(host_byte_order), $(target_byte_order))
+> +    $(warning Possibly mismatched host and target endianness may break BPF skeletons)
+> +  endif
+> +  $(call detected,CONFIG_PERF_BPF_SKEL)
+> +  CFLAGS += -DHAVE_BPF_SKEL
+>  endif
+>  
+>  dwarf-post-unwind := 1
 > -- 
 > 2.40.0.577.gac1e443424-goog
 > 
