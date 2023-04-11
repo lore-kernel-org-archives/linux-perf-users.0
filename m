@@ -2,292 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 143A4C76196
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 20:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42979C76196
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 21:34:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbjDKU4j (ORCPT
+        id S229452AbjDKVen (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 16:56:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57876 "EHLO
+        Tue, 11 Apr 2023 17:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229573AbjDKU4i (ORCPT
+        with ESMTP id S229606AbjDKVem (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 16:56:38 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A78061984
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Apr 2023 13:56:36 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 184-20020a2515c1000000b009419f64f6afso10238348ybv.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Apr 2023 13:56:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681246596;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FEI6nzWWR+WddKH/7cQsZpyDFQ7PjyBu53tq/lHMWqI=;
-        b=S7YtXkouzCnAbpJtZBh09HWdFYVUcXLmY8KbZ0Ge1slYzdZ8J7G6G+ePc6Gp73cdX9
-         bGcUhueSk/z1gp1+XYdJKMcnY3A+vKPmggQs2rRvpoYkpRJ0ABSw/lNCk2tABR68iiwb
-         rRN4BoEcuAzcBvmsqjSN4IjmBN7/wwPX1f2sriNm1vRqLgzITae4P3M13qFfNN7SguxG
-         EazdkKt1MLfvya/PZU8EBQr6eeEDkBxfmhnSkePAsNTcKh9ASVjnXB/VRV60J9QJ3ZGq
-         MUO8SGnjA+q94/XWfjTMgNb3fzulMnD/8lXqwqeGHE/j3ml8Zp5oA1u6cIFk24IcWnNk
-         8TTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681246596;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FEI6nzWWR+WddKH/7cQsZpyDFQ7PjyBu53tq/lHMWqI=;
-        b=G7XVh16RA3SuwCf6oaf+pwKyh0IbGlfS1n5C01gU3jocsfgDhECHap4Tknb8lSNSg4
-         6A+ZTD8roiLaGN8MEeivqQBvMpHhuU+YzG/9nIw9/CfCvPaWL0LRnPSsMqHJN78BoUQ2
-         5cmNh8tVDJxDBeskcS9MAu9TtUnrwfOGR+o5Xz6jDBasj50e0rjRwfv8G4RVKs9fjWMj
-         VnXjxKymw4CMD7YD/XBERiWxVDXnmMB3UzSAW8+i48t8g5U1t85gMDY7jxqQao5BFFpC
-         H6R/K8yW+y4hp7EGtqiVTub6pjGTNUw/KTEOFU8a5T+dP//xl4tOuw1mYGyiyydaeuXU
-         Mfcw==
-X-Gm-Message-State: AAQBX9dTGpRiBa/SsLvFeADsOskAwNK77f0J2Ndc2PCH1Baj1pNElGo0
-        rniAW4Qb8UqAaLb8CFTJiC5aXNhq/8m0
-X-Google-Smtp-Source: AKy350bjWpS4nJrh1LEEwU/S+eGt0lghXqTqy2iXVDH+JoT/aZt4s0tbX+bITIF3jB0PqqQvGObwuNKuCfCx
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:f663:83e0:f9b2:5a17])
- (user=irogers job=sendgmr) by 2002:a81:b184:0:b0:545:f7cc:f30 with SMTP id
- p126-20020a81b184000000b00545f7cc0f30mr6810565ywh.0.1681246595935; Tue, 11
- Apr 2023 13:56:35 -0700 (PDT)
-Date:   Tue, 11 Apr 2023 13:56:22 -0700
-Message-Id: <20230411205622.3266490-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v1] perf stat: Introduce skippable evsels
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 11 Apr 2023 17:34:42 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4830E449C
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Apr 2023 14:34:41 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-206-zsA8Q_GJNdGPDl24cMCxtg-1; Tue, 11 Apr 2023 22:34:38 +0100
+X-MC-Unique: zsA8Q_GJNdGPDl24cMCxtg-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 11 Apr
+ 2023 22:34:35 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Tue, 11 Apr 2023 22:34:35 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Dave Hansen' <dave.hansen@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>
+CC:     Uros Bizjak <ubizjak@gmail.com>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Richard Henderson" <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Nicholas Piggin" <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        "Peter Zijlstra" <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jun Yi <yijun@loongson.cn>
+Subject: RE: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
+Thread-Topic: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
+Thread-Index: AQHZbHulp5OquwuviUmDAgAFAiF/7K8moCeA
+Date:   Tue, 11 Apr 2023 21:34:35 +0000
+Message-ID: <bd5753622f2f42248495a42593b497f3@AcuMS.aculab.com>
+References: <20230405141710.3551-1-ubizjak@gmail.com>
+ <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
+ <ZDVGFhMwOtpxJtnQ@FVFF77S0Q05N>
+ <1fee0372-3a3b-5e09-38c3-ffb3523fe195@intel.com>
+In-Reply-To: <1fee0372-3a3b-5e09-38c3-ffb3523fe195@intel.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Perf stat with no arguments will use default events and metrics. These
-events may fail to open even with kernel and hypervisor disabled. When
-these fail then the permissions error appears even though they were
-implicitly selected. This is particularly a problem with the automatic
-selection of the TopdownL1 metric group on certain architectures like
-Skylake:
-
-```
-$ perf stat true
-Error:
-Access to performance monitoring and observability operations is limited.
-Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-access to performance monitoring and observability operations for processes
-without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
-More information can be found at 'Perf events and tool security' document:
-https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-perf_event_paranoid setting is 2:
-  -1: Allow use of (almost) all events by all users
-      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->= 0: Disallow raw and ftrace function tracepoint access
->= 1: Disallow CPU event access
->= 2: Disallow kernel profiling
-To make the adjusted perf_event_paranoid setting permanent preserve it
-in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-```
-
-This patch adds skippable evsels that when they fail to open will be
-skipped. The TopdownL1 events are marked as skippable. This turns the
-failure above to:
-
-```
-$ perf stat true
-
- Performance counter stats for 'true':
-
-              1.28 msec task-clock:u                     #    0.323 CPUs utilized
-                 0      context-switches:u               #    0.000 /sec
-                 0      cpu-migrations:u                 #    0.000 /sec
-                48      page-faults:u                    #   37.550 K/sec
-           206,228      cycles:u                         #    0.161 GHz                         (44.07%)
-           122,904      instructions:u                   #    0.60  insn per cycle
-            28,263      branches:u                       #   22.110 M/sec
-             2,461      branch-misses:u                  #    8.71% of all branches
-     <not counted>      CPU_CLK_UNHALTED.REF_XCLK:u
-   <not supported>      INT_MISC.RECOVERY_CYCLES_ANY:u
-     <not counted>      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u
-     <not counted>      CPU_CLK_UNHALTED.THREAD:u
-     <not counted>      UOPS_RETIRED.RETIRE_SLOTS:u
-     <not counted>      UOPS_ISSUED.ANY:u
-     <not counted>      CPU_CLK_UNHALTED.REF_XCLK:u
-     <not counted>      IDQ_UOPS_NOT_DELIVERED.CORE:u
-   <not supported>      INT_MISC.RECOVERY_CYCLES_ANY:u
-     <not counted>      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u
-     <not counted>      CPU_CLK_UNHALTED.THREAD:u
-     <not counted>      UOPS_ISSUED.ANY:u
-
-       0.003958627 seconds time elapsed
-
-       0.000000000 seconds user
-       0.004263000 seconds sys
-
-Some events weren't counted. Try disabling the NMI watchdog:
-        echo 0 > /proc/sys/kernel/nmi_watchdog
-        perf stat ...
-        echo 1 > /proc/sys/kernel/nmi_watchdog
-The events in group usually have to be from the same PMU. Try reorganizing the group.
-```
-
-When the events can have kernel/hypervisor disabled, like on
-Tigerlake, then it continues to succeed as:
-
-```
-$ perf stat true
-
- Performance counter stats for 'true':
-
-              0.57 msec task-clock:u                     #    0.385 CPUs utilized
-                 0      context-switches:u               #    0.000 /sec
-                 0      cpu-migrations:u                 #    0.000 /sec
-                47      page-faults:u                    #   82.329 K/sec
-           287,017      cycles:u                         #    0.503 GHz
-           133,318      instructions:u                   #    0.46  insn per cycle
-            31,396      branches:u                       #   54.996 M/sec
-             2,442      branch-misses:u                  #    7.78% of all branches
-           998,790      TOPDOWN.SLOTS:u                  #     14.5 %  tma_retiring
-                                                  #     27.6 %  tma_backend_bound
-                                                  #     40.9 %  tma_frontend_bound
-                                                  #     17.0 %  tma_bad_speculation
-           144,922      topdown-retiring:u
-           411,266      topdown-fe-bound:u
-           258,510      topdown-be-bound:u
-           184,090      topdown-bad-spec:u
-             2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/sec
-             3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/u #    6.015 M/sec
-
-       0.001480954 seconds time elapsed
-
-       0.000000000 seconds user
-       0.001686000 seconds sys
-```
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-stat.c | 39 ++++++++++++++++++++++++++++++---------
- tools/perf/util/evsel.c   | 15 +++++++++++++--
- tools/perf/util/evsel.h   |  1 +
- 3 files changed, 44 insertions(+), 11 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 38133afda7fc..024fda0dd943 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
- 			evsel_list->core.threads->err_thread = -1;
- 			return COUNTER_RETRY;
- 		}
-+	} else if (counter->skippable) {
-+		if (verbose > 0)
-+			ui__warning("skipping event %s that kernel failed to open .\n",
-+				    evsel__name(counter));
-+		counter->supported = false;
-+		counter->errored = true;
-+		return COUNTER_SKIP;
- 	}
- 
- 	evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
-@@ -1885,15 +1892,29 @@ static int add_default_attributes(void)
- 		 * Add TopdownL1 metrics if they exist. To minimize
- 		 * multiplexing, don't request threshold computation.
- 		 */
--		if (metricgroup__has_metric("TopdownL1") &&
--		    metricgroup__parse_groups(evsel_list, "TopdownL1",
--					    /*metric_no_group=*/false,
--					    /*metric_no_merge=*/false,
--					    /*metric_no_threshold=*/true,
--					    stat_config.user_requested_cpu_list,
--					    stat_config.system_wide,
--					    &stat_config.metric_events) < 0)
--			return -1;
-+		if (metricgroup__has_metric("TopdownL1")) {
-+			struct evlist *metric_evlist = evlist__new();
-+			struct evsel *metric_evsel;
-+
-+			if (!metric_evlist)
-+				return -1;
-+
-+			if (metricgroup__parse_groups(metric_evlist, "TopdownL1",
-+							/*metric_no_group=*/false,
-+							/*metric_no_merge=*/false,
-+							/*metric_no_threshold=*/true,
-+							stat_config.user_requested_cpu_list,
-+							stat_config.system_wide,
-+							&stat_config.metric_events) < 0)
-+				return -1;
-+
-+			evlist__for_each_entry(metric_evlist, metric_evsel) {
-+				metric_evsel->skippable = true;
-+			}
-+			evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
-+			evlist__delete(metric_evlist);
-+		}
-+
- 		/* Platform specific attrs */
- 		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
- 			return -1;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index dc3faf005c3b..a09654ea18ec 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
- 	evsel->per_pkg_mask  = NULL;
- 	evsel->collect_stat  = false;
- 	evsel->pmu_name      = NULL;
-+	evsel->skippable     = false;
- }
- 
- struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
-@@ -1717,9 +1718,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map_idx, int thread)
- 		return -1;
- 
- 	fd = FD(leader, cpu_map_idx, thread);
--	BUG_ON(fd == -1);
-+	BUG_ON(fd == -1 && !leader->skippable);
- 
--	return fd;
-+	/*
-+	 * When the leader has been skipped, return -2 to distinguish from no
-+	 * group leader case.
-+	 */
-+	return fd == -1 ? -2 : fd;
- }
- 
- static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_threads, int thread_idx)
-@@ -2101,6 +2106,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 
- 			group_fd = get_group_fd(evsel, idx, thread);
- 
-+			if (group_fd == -2) {
-+				pr_debug("broken group leader for %s\n", evsel->name);
-+				err = -EINVAL;
-+				goto out_close;
-+			}
-+
- 			test_attr__ready();
- 
- 			/* Debug message used by test scripts */
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 68072ec655ce..98afe3351176 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -95,6 +95,7 @@ struct evsel {
- 		bool			weak_group;
- 		bool			bpf_counter;
- 		bool			use_config_name;
-+		bool			skippable;
- 		int			bpf_fd;
- 		struct bpf_object	*bpf_obj;
- 		struct list_head	config_terms;
--- 
-2.40.0.577.gac1e443424-goog
+RnJvbTogRGF2ZSBIYW5zZW4NCj4gU2VudDogMTEgQXByaWwgMjAyMyAxNDo0NA0KPiANCj4gT24g
+NC8xMS8yMyAwNDozNSwgTWFyayBSdXRsYW5kIHdyb3RlOg0KPiA+IEkgYWdyZWUgaXQnZCBiZSBu
+aWNlIHRvIGhhdmUgcGVyZm9ybWFuY2UgZmlndXJlcywgYnV0IEkgdGhpbmsgdGhvc2Ugd291bGQg
+b25seQ0KPiA+IG5lZWQgdG8gZGVtb25zdHJhdGUgYSBsYWNrIG9mIGEgcmVncmVzc2lvbiByYXRo
+ZXIgdGhhbiBhIHBlcmZvcm1hbmNlDQo+ID4gaW1wcm92ZW1lbnQsIGFuZCBJIHRoaW5rIGl0J3Mg
+ZmFpcmx5IGNsZWFyIGZyb20gZXllYmFsbGluZyB0aGUgZ2VuZXJhdGVkDQo+ID4gaW5zdHJ1Y3Rp
+b25zIHRoYXQgYSByZWdyZXNzaW9uIGlzbid0IGxpa2VseS4NCj4gDQo+IFRoYW5rcyBmb3IgdGhl
+IGFkZGl0aW9uYWwgY29udGV4dC4NCj4gDQo+IEkgdG90YWxseSBhZ3JlZSB0aGF0IHRoZXJlJ3Mg
+emVybyBidXJkZW4gaGVyZSB0byBzaG93IGEgcGVyZm9ybWFuY2UNCj4gaW5jcmVhc2UuICBJZiBh
+bnlvbmUgY2FuIHRoaW5rIG9mIGEgcXVpY2sgd2F5IHRvIGRvIF9zb21lXyBraW5kIG9mDQo+IGJl
+bmNobWFyayBvbiB0aGUgY29kZSBiZWluZyBjaGFuZ2VkIGFuZCBqdXN0IHNob3cgdGhhdCBpdCdz
+IGZyZWUgb2YNCj4gYnJvd24gcGFwZXIgYmFncywgaXQgd291bGQgYmUgYXBwcmVjaWF0ZWQuICBO
+b3RoaW5nIGNyYXp5LCBqdXN0IHRoaW5rIG9mDQo+IG9uZSB3b3JrbG9hZCAoc3ludGhldGljIG9y
+IG5vdCkgdGhhdCB3aWxsIHN0cmVzcyB0aGUgcGF0aHMgYmVpbmcgY2hhbmdlZA0KPiBhbmQgcnVu
+IGl0IHdpdGggYW5kIHdpdGhvdXQgdGhlc2UgY2hhbmdlcy4gIE1ha2Ugc3VyZSB0aGVyZSBhcmUg
+bm90DQo+IHN1cnByaXNlcy4NCj4gDQo+IEkgYWxzbyBhZ3JlZSB0aGF0IGl0J3MgdW5saWtlbHkg
+dG8gYmUgYnJvd24gcGFwZXIgYmFnIG1hdGVyaWFsLg0KDQpUaGUgb25seSB0aGluZyBJIGNhbiB0
+aGluayBvZiBpcyB0aGF0LCBvbiB4ODYsIHRoZSBsb2NrZWQNCnZhcmlhbnQgbWF5IGFjdHVhbGx5
+IGJlIGZhc3RlciENCkJvdGggcmVxdWlyZSBleGNsdXNpdmUgYWNjZXNzIHRvIHRoZSBjYWNoZSBs
+aW5lICh0aGUgdW5sb2NrZWQNCnZhcmlhbnQgYWx3YXlzIGRvZXMgdGhlIHdyaXRlISBbMV0pLg0K
+U28gaWYgdGhlIGNhY2hlIGxpbmUgaXMgY29udGVuZGVkIGJldHdlZW4gY3B1IHRoZSB1bmxvY2tl
+ZA0KdmFyaWFudCBtaWdodCBwaW5nLXBvbmcgdGhlIGNhY2hlIGxpbmUgdHdpY2UhDQpPZiBjb3Vy
+c2UsIGlmIHRoZSBsaW5lIGlzIHNoYXJlZCBsaWtlIHRoYXQgdGhlbiBwZXJmb3JtYW5jZQ0KaXMg
+aG9ycmlkLg0KDQpbMV0gSSBjaGVja2VkIG9uIGFuIHVuY2FjaGVkIFBDSWUgYWRkcmVzcyBvbiB3
+aGljaCBJIGNhbiBtb25pdG9yDQp0aGUgVExQLiBUaGUgd3JpdGUgYWx3YXlzIGhhcHBlbnMgc28g
+eW91IGNhbiB1c2UgY21weGNoZzE4Yg0Kd2l0aCBhICdrbm93biBiYWQgdmFsdWUnIHRvIGRvIGEg
+MTYgYnl0ZSByZWFkIGFzIGEgc2luZ2xlIFRMUA0KKHdpdGhvdXQgdXNpbmcgYW4gU1NFIHJlZ2lz
+dGVyKS4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxl
+eSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0
+aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
