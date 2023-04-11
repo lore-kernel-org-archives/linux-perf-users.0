@@ -2,84 +2,79 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2475C77B6F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 13:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15499C77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 13:05:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229934AbjDKNEI (ORCPT
+        id S230161AbjDKNFJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 09:04:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35754 "EHLO
+        Tue, 11 Apr 2023 09:05:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230288AbjDKNEB (ORCPT
+        with ESMTP id S230373AbjDKNE6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 09:04:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC6246A8;
-        Tue, 11 Apr 2023 06:03:36 -0700 (PDT)
+        Tue, 11 Apr 2023 09:04:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85A444691;
+        Tue, 11 Apr 2023 06:04:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D04162567;
-        Tue, 11 Apr 2023 13:03:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E53ACC433EF;
-        Tue, 11 Apr 2023 13:03:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 068756257C;
+        Tue, 11 Apr 2023 13:04:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 851F9C433EF;
+        Tue, 11 Apr 2023 13:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681218215;
-        bh=w233m1At44CuD4oKEJ9ouw0Upf9V5ee3kLtIQj5vlrU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y5/0JgdS+Qr2qZ7XdcZPhRHpMfesXfjmLBCm3XoA8RgzWD/4lV1oW3sdU23SBX4Qe
-         vPWinCQ3+2feUoPSfyqb85oOWr/ew3ofucTzQ01Qyh5bks8pLd6uAnAwDWmSFDm24E
-         bYRNs2aOZpOlaxUDk6BtX7sE4VWxP43x34DIifWTjHdq8s32eo1HMcmpJjHNKO2YBt
-         Y4/CdQE2bBNHLNXfm4BIlrqXUcUnBDWQdcxe7p/MXSh7NObLj9TdBNnwJOq4z/q1Cm
-         PAqaiMYdfh+2oVEl75aynMukmDf08EQxkfMCB1sRY++LL+EqaVyL8UJQYaS2lmaB0S
-         xbZBHqMe1T33A==
-Date:   Tue, 11 Apr 2023 14:03:29 +0100
+        s=k20201202; t=1681218282;
+        bh=tyTIQwVKdX0/WRB75WkZb/RTdecO4q51O68cOhveqHc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oxSzl16mHxwmf+HYhIFVwvsIpW77K1Bcdv28LYHljKkj+q/kYFBlZJMJH+XO41cX3
+         M8JDOppuX83/32wqcI9OrV0POGJ4VFJzhEV0gljyByHT3LZFdbo1a0QV6rIReYrqel
+         CGJasdD8bZtRIGOenRyeGnPjn0uaW/qAF7w4woDlTBKGQ2gn7QD5qYTom5ZqxH2Rgy
+         zCnQ5BFfvPduLUmenI7cgjBUDY6Kz7uaCW0D9sUQlH9rhXGR5uA6JJ8XxPgyzz6YzU
+         Zco9dHtIch7Bb2R0PU51wsCU3sPBR3h/4m7F/c4cdEUn+NQJrxdS5MlECW0ptOkthX
+         NMGB8StFJRiGA==
 From:   Will Deacon <will@kernel.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, mark.rutland@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V9 00/10] arm64/perf: Enable branch stack sampling
-Message-ID: <20230411130326.GA22736@willie-the-truck>
-References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
+To:     Peter Newman <peternewman@google.com>
+Cc:     catalin.marinas@arm.com, kernel-team@android.com,
+        Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+        jolsa@kernel.org, alexander.shishkin@linux.intel.com,
+        irogers@google.com, peterz@infradead.org, mark.rutland@arm.com,
+        acme@kernel.org, eranian@google.com, adrian.hunter@intel.com,
+        linux-arm-kernel@lists.infradead.org, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, mingo@redhat.com
+Subject: Re: [PATCH v6] arm64: pmuv3: dynamically map PERF_COUNT_HW_BRANCH_INSTRUCTIONS
+Date:   Tue, 11 Apr 2023 14:04:35 +0100
+Message-Id: <168121292090.358997.14432007488088025550.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230411093809.657501-1-peternewman@google.com>
+References: <20230411093809.657501-1-peternewman@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230315051444.1683170-1-anshuman.khandual@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Anshuman
-
-On Wed, Mar 15, 2023 at 10:44:34AM +0530, Anshuman Khandual wrote:
-> This series enables perf branch stack sampling support on arm64 platform
-> via a new arch feature called Branch Record Buffer Extension (BRBE). All
-> relevant register definitions could be accessed here.
+On Tue, 11 Apr 2023 11:38:09 +0200, Peter Newman wrote:
+> From: Stephane Eranian <eranian@google.com>
 > 
-> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
+> The mapping of perf_events generic hardware events to actual PMU events on
+> ARM PMUv3 may not always be correct. This is in particular true for the
+> PERF_COUNT_HW_BRANCH_INSTRUCTIONS event. Although the mapping points to an
+> architected event, it may not always be available. This can be seen with a
+> simple:
 > 
-> This series applies on 6.3-rc1 after applying the following patch from Mark
-> which allows enums in SysregFields blocks in sysreg tools.
-> 
-> https://lore.kernel.org/all/20230306114836.2575432-1-mark.rutland@arm.com/
+> [...]
 
-As mentioned by Mark at:
+Applied to will (for-next/perf), thanks!
 
-https://lore.kernel.org/r/ZB2sGrsbr58ttoWI@FVFF77S0Q05N
+[1/1] arm64: pmuv3: dynamically map PERF_COUNT_HW_BRANCH_INSTRUCTIONS
+      https://git.kernel.org/will/c/a30b87e6bd7d
 
-this conflicts with supporting PMUv3 on AArch32. Please can you rebase onto
-for-next/perf, which will mean moving this driver back into drivers/perf/
-now?
-
-Thanks,
-
+Cheers,
+-- 
 Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
