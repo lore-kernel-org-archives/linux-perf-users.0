@@ -2,134 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F67DC76196
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 01:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5F0C76196
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 01:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229718AbjDKBCf (ORCPT
+        id S229808AbjDKBcb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Apr 2023 21:02:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45020 "EHLO
+        Mon, 10 Apr 2023 21:32:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjDKBCd (ORCPT
+        with ESMTP id S229775AbjDKBca (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Apr 2023 21:02:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A39F5272A;
-        Mon, 10 Apr 2023 18:02:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 30CA66160D;
-        Tue, 11 Apr 2023 01:02:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09BD5C433D2;
-        Tue, 11 Apr 2023 01:02:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681174948;
-        bh=09CCZjy87xxOe0DkfHZpMCRVWG3qG7BLPcmM01KF3pM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TzyxS4VixjI9lOtPrfkEoO3fajNs9bsmroJxpuSjXsga5CB9YSzF5K3lxz/mb4Ig3
-         DsB4rCR1LYHDax46EaDukpgWsUNb9WSgCaBpDm1z3nXu5FekVBGniP8vn402S2Id3K
-         KsMPytgESLrO66OHVwiIcjmT67AkS0HjaDlGskMAVQy3GjB+ik0fD0FH4he02oVRdM
-         fgZ+vXw5U7BukpGJCVriR0ThDMpfYl3ojpHVdp6sMrdELUmuMdoMdCYrgZZ6DFgJSI
-         6716nhnhdPPQDD+yk+qWQdGPigTiAgKTFvKN3Ff6tMD6rIUl1/OWxz/EAgZF/gHUm6
-         TjhWRoZye+6ww==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B49BE40080; Mon, 10 Apr 2023 22:02:25 -0300 (-03)
-Date:   Mon, 10 Apr 2023 22:02:25 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf evsel: Avoid segv if delete is called on NULL
-Message-ID: <ZDSxoUqxij2yJjXX@kernel.org>
-References: <20230410205659.3131608-1-irogers@google.com>
- <CAM9d7cjuqcwcy+CwAPj8wK4hO2Pzr6xor76+jW-Do443Gr2ENQ@mail.gmail.com>
+        Mon, 10 Apr 2023 21:32:30 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A3BE10F7;
+        Mon, 10 Apr 2023 18:32:29 -0700 (PDT)
+Received: from kwepemi500007.china.huawei.com (unknown [172.30.72.53])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PwSxD3mCLzKrtw;
+        Tue, 11 Apr 2023 09:31:44 +0800 (CST)
+Received: from huawei.com (10.174.179.93) by kwepemi500007.china.huawei.com
+ (7.221.188.207) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 11 Apr
+ 2023 09:32:25 +0800
+From:   Hangliang Lai <laihangliang1@huawei.com>
+To:     <namhyung@kernel.org>
+CC:     <acme@kernel.org>, <adrian.hunter@intel.com>,
+        <alexander.shishkin@linux.intel.com>, <brauner@kernel.org>,
+        <hewenliang4@huawei.com>, <irogers@google.com>, <jolsa@kernel.org>,
+        <laihangliang1@huawei.com>, <linfeilong@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        <liuwenyu7@huawei.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
+        <yeyunfeng@huawei.com>
+Subject: [PATCH v4] perf top: expand the range of multithreaded phase
+Date:   Tue, 11 Apr 2023 09:32:24 +0800
+Message-ID: <20230411013224.2079-1-laihangliang1@huawei.com>
+X-Mailer: git-send-email 2.37.3.windows.1
+In-Reply-To: <CAM9d7cjy-XivELAgq49YF9RKxFZ3M+H3V6s6zVboenRT3oRFDA@mail.gmail.com>
+References: <CAM9d7cjy-XivELAgq49YF9RKxFZ3M+H3V6s6zVboenRT3oRFDA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cjuqcwcy+CwAPj8wK4hO2Pzr6xor76+jW-Do443Gr2ENQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.179.93]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemi500007.china.huawei.com (7.221.188.207)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Apr 10, 2023 at 04:20:57PM -0700, Namhyung Kim escreveu:
-> Hi Ian,
-> 
-> On Mon, Apr 10, 2023 at 1:57 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > Seen in "perf stat --bpf-counters --for-each-cgroup test" running in a
-> > container:
-> >
-> > libbpf: Failed to bump RLIMIT_MEMLOCK (err = -1), you might need to do it explicitly!
-> > libbpf: Error in bpf_object__probe_loading():Operation not permitted(1). Couldn't load trivial BPF program. Make sure your kernel supports BPF (CONFIG_BPF_SYSCALL=y) and/or that RLIMIT_MEMLOCK is set to big enough value.
-> > libbpf: failed to load object 'bperf_cgroup_bpf'
-> > libbpf: failed to load BPF skeleton 'bperf_cgroup_bpf': -1
-> > Failed to load cgroup skeleton
-> >
-> >     #0 0x55f28a650981 in list_empty tools/include/linux/list.h:189
-> >     #1 0x55f28a6593b4 in evsel__exit util/evsel.c:1518
-> >     #2 0x55f28a6596af in evsel__delete util/evsel.c:1544
-> >     #3 0x55f28a89d166 in bperf_cgrp__destroy util/bpf_counter_cgroup.c:283
-> >     #4 0x55f28a899e9a in bpf_counter__destroy util/bpf_counter.c:816
-> >     #5 0x55f28a659455 in evsel__exit util/evsel.c:1520
-> >     #6 0x55f28a6596af in evsel__delete util/evsel.c:1544
-> >     #7 0x55f28a640d4d in evlist__purge util/evlist.c:148
-> >     #8 0x55f28a640ea6 in evlist__delete util/evlist.c:169
-> >     #9 0x55f28a4efbf2 in cmd_stat tools/perf/builtin-stat.c:2598
-> >     #10 0x55f28a6050c2 in run_builtin tools/perf/perf.c:330
-> >     #11 0x55f28a605633 in handle_internal_command tools/perf/perf.c:384
-> >     #12 0x55f28a6059fb in run_argv tools/perf/perf.c:428
-> >     #13 0x55f28a6061d3 in main tools/perf/perf.c:562
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+In __cmd_top, perf_set_multithreaded is used to enable pthread_rwlock, thus
+donw_read and down_write can work to handle concurrency problems. Then top
+use perf_set_singlethreaded and switch to single threaded phase, assuming
+that no thread concurrency will happen later.
+However, a UAF problem could occur in perf top in single threaded phase,
+The concurrent procedure is like this:
+display_thread                              process_thread
+--------------                              --------------
+thread__comm_len
+  -> thread__comm_str
+    -> __thread__comm_str(thread)
+                                            thread__delete
+                                             -> comm__free
+                                              -> comm_str__put
+                                               -> zfree(&cs->str)
+    -> thread->comm_len = strlen(comm);
+Since in single thread phase, perf_singlethreaded is true, down_read and
+down_write can not work to avoid concurrency problems.
+This patch put perf_set_singlethreaded to the function tail to expand the
+multithreaded phase range, make display_thread and process_thread run
+safe.
 
-Thanks, applied.
+Signed-off-by: Hangliang Lai  <laihangliang1@huawei.com>
+Co-developed-by: Wenyu Liu <liuwenyu7@huawei.com>
+Reviewed-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+---
+v3 -> v4
+ - Add Acked-by and Co-developed-by. 
 
-- Arnaldo
+ tools/perf/builtin-top.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index d4b5b02bab73..ae96ddaf85c4 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1273,8 +1273,7 @@ static int __cmd_top(struct perf_top *top)
+ 				    top->evlist->core.threads, true, false,
+ 				    top->nr_threads_synthesize);
  
-> In addition to this, I think bperf code should clear the evsel->bpf_skel
-> at the end of the bpf_counter__destroy() to avoid confusion with the
-> bpf_filter as they share the fields in a union.
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-> > ---
-> >  tools/perf/util/evsel.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index dc3faf005c3b..fe3ce765a4f3 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -1541,6 +1541,9 @@ void evsel__exit(struct evsel *evsel)
-> >
-> >  void evsel__delete(struct evsel *evsel)
-> >  {
-> > +       if (!evsel)
-> > +               return;
-> > +
-> >         evsel__exit(evsel);
-> >         free(evsel);
-> >  }
-> > --
-> > 2.40.0.577.gac1e443424-goog
-> >
-
+-	if (top->nr_threads_synthesize > 1)
+-		perf_set_singlethreaded();
++	perf_set_multithreaded();
+ 
+ 	if (perf_hpp_list.socket) {
+ 		ret = perf_env__read_cpu_topology_map(&perf_env);
+@@ -1352,6 +1351,7 @@ static int __cmd_top(struct perf_top *top)
+ out_join_thread:
+ 	cond_signal(&top->qe.cond);
+ 	pthread_join(thread_process, NULL);
++	perf_set_singlethreaded();
+ 	return ret;
+ }
+ 
 -- 
+2.33.0
 
-- Arnaldo
