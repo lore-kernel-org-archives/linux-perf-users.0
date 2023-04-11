@@ -2,108 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5F0C76196
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 01:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F64C7619A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 05:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229808AbjDKBcb (ORCPT
+        id S229946AbjDKFRZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 10 Apr 2023 21:32:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39800 "EHLO
+        Tue, 11 Apr 2023 01:17:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbjDKBca (ORCPT
+        with ESMTP id S229891AbjDKFRY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 10 Apr 2023 21:32:30 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A3BE10F7;
-        Mon, 10 Apr 2023 18:32:29 -0700 (PDT)
-Received: from kwepemi500007.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PwSxD3mCLzKrtw;
-        Tue, 11 Apr 2023 09:31:44 +0800 (CST)
-Received: from huawei.com (10.174.179.93) by kwepemi500007.china.huawei.com
- (7.221.188.207) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 11 Apr
- 2023 09:32:25 +0800
-From:   Hangliang Lai <laihangliang1@huawei.com>
-To:     <namhyung@kernel.org>
-CC:     <acme@kernel.org>, <adrian.hunter@intel.com>,
-        <alexander.shishkin@linux.intel.com>, <brauner@kernel.org>,
-        <hewenliang4@huawei.com>, <irogers@google.com>, <jolsa@kernel.org>,
-        <laihangliang1@huawei.com>, <linfeilong@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-        <liuwenyu7@huawei.com>, <mark.rutland@arm.com>, <mingo@redhat.com>,
-        <yeyunfeng@huawei.com>
-Subject: [PATCH v4] perf top: expand the range of multithreaded phase
-Date:   Tue, 11 Apr 2023 09:32:24 +0800
-Message-ID: <20230411013224.2079-1-laihangliang1@huawei.com>
-X-Mailer: git-send-email 2.37.3.windows.1
-In-Reply-To: <CAM9d7cjy-XivELAgq49YF9RKxFZ3M+H3V6s6zVboenRT3oRFDA@mail.gmail.com>
-References: <CAM9d7cjy-XivELAgq49YF9RKxFZ3M+H3V6s6zVboenRT3oRFDA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.179.93]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500007.china.huawei.com (7.221.188.207)
-X-CFilter-Loop: Reflected
+        Tue, 11 Apr 2023 01:17:24 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01A71FC1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Apr 2023 22:17:23 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-54c08fa9387so147191207b3.10
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Apr 2023 22:17:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1681190243;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qwWwP6LNOw1HacwMQfACM6w++EBrxPV5YikpqYkABv0=;
+        b=MfGlZmeVagcHi9qz+Jz29EdrGWFUYOwRAyvIuZ4I0HUaOwGAcS6vvmgJrJ8Rv4uxFX
+         x3SOvEqTOdx74ZxSDW+FGSI800SsAXTTgvodZiY/ncMUTAcyJ1M7m5o8A4uDke+3MgOL
+         6LgkLpCGkl7cQF0jfBukWgNwQRpN33YKKICoWT+/TSOHfq5JrVMZslcym8wULONLMpXl
+         vv0c1BIFRWvQGOznpTc3aVARZi1Up+fcqepjo5nD7T7pnu/9mJxwpi171JucyanMaLHR
+         qe7NmzteTmD12YGZUT6a/Yw3cTBVFixs8xCAN9UtkqdJwfiRnasacMoOfT6ZvoY6Py6m
+         Xonw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681190243;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qwWwP6LNOw1HacwMQfACM6w++EBrxPV5YikpqYkABv0=;
+        b=FbRUi6V+92HMl6FPF9F2rF8uTSxBWC2sVjRAxNoY87fKT+UfEdC3jZFDZ9fs5nNU9O
+         Pjd9P0uuvTaRu7zCXJ7/cu7S3KmTF8q13cQOBGwJdbsujJvXHx9I5TJ1L51dF53pdXZs
+         jRpOYajaivYYpWCEiABJbEoKFY7sf1EpI1D6vXUdyvaSy7+gsExA5nZQbEGZBiWsbFSp
+         PlZswyYK8xkVhTWxK22uQQB2Bn1406lnbsR/35BkHauZp0US3xLJ6ztPvdKWYlTzIztz
+         2Dk/1KcIdIK8LEHvVnROcLYleQq68idQVZDm3sw/gfg4BaSgtuwKZJSUTs/607gQNSzM
+         y4dA==
+X-Gm-Message-State: AAQBX9e/oDVtkfeFzb7oZ3CbW4vbSKFyzKZVtAO41DZBiJL5j5Cwa8EP
+        ncn/WGKUkANv8Eok3UvGXbX0C/+yp2+S
+X-Google-Smtp-Source: AKy350bDIJ/qq7YfeUGoMG9jSw25F5C6++hFZjG9EZPmeNfkqouU5axoyRXX60lPUMSw9wT3zKn5nXLo8Ufy
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:fc51:6a03:541d:a18d])
+ (user=irogers job=sendgmr) by 2002:a25:7486:0:b0:b8b:f02b:ba20 with SMTP id
+ p128-20020a257486000000b00b8bf02bba20mr4344367ybc.9.1681190243171; Mon, 10
+ Apr 2023 22:17:23 -0700 (PDT)
+Date:   Mon, 10 Apr 2023 22:17:18 -0700
+Message-Id: <20230411051718.267228-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
+Subject: [PATCH] perf bperf: Avoid use after free via union
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In __cmd_top, perf_set_multithreaded is used to enable pthread_rwlock, thus
-donw_read and down_write can work to handle concurrency problems. Then top
-use perf_set_singlethreaded and switch to single threaded phase, assuming
-that no thread concurrency will happen later.
-However, a UAF problem could occur in perf top in single threaded phase,
-The concurrent procedure is like this:
-display_thread                              process_thread
---------------                              --------------
-thread__comm_len
-  -> thread__comm_str
-    -> __thread__comm_str(thread)
-                                            thread__delete
-                                             -> comm__free
-                                              -> comm_str__put
-                                               -> zfree(&cs->str)
-    -> thread->comm_len = strlen(comm);
-Since in single thread phase, perf_singlethreaded is true, down_read and
-down_write can not work to avoid concurrency problems.
-This patch put perf_set_singlethreaded to the function tail to expand the
-multithreaded phase range, make display_thread and process_thread run
-safe.
+If bperf sets leader_skel or follower_skel then it appears bpf_skel is
+set and can trigger the following use-after-free:
 
-Signed-off-by: Hangliang Lai  <laihangliang1@huawei.com>
-Co-developed-by: Wenyu Liu <liuwenyu7@huawei.com>
-Reviewed-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+==13575==ERROR: AddressSanitizer: heap-use-after-free on address 0x60c000014080 at pc 0x55684b939880 bp 0x7ffdfcf30d70 sp 0x7ffdfcf30d68
+READ of size 8 at 0x60c000014080 thread T0
+     #0 0x55684b93987f in sample_filter_bpf__destroy tools/perf/bpf_skel/sample_filter.skel.h:44:11
+     #1 0x55684b93987f in perf_bpf_filter__destroy tools/perf/util/bpf-filter.c:155:2
+     #2 0x55684b98f71e in evsel__exit tools/perf/util/evsel.c:1521:2
+     #3 0x55684b98a352 in evsel__delete tools/perf/util/evsel.c:1547:2
+     #4 0x55684b981918 in evlist__purge tools/perf/util/evlist.c:148:3
+     #5 0x55684b981918 in evlist__delete tools/perf/util/evlist.c:169:2
+     #6 0x55684b887d60 in cmd_stat tools/perf/builtin-stat.c:2598:2
+..
+0x60c000014080 is located 0 bytes inside of 128-byte region [0x60c000014080,0x60c000014100)
+freed by thread T0 here:
+     #0 0x55684b780e86 in free compiler-rt/lib/asan/asan_malloc_linux.cpp:52:3
+     #1 0x55684b9462da in bperf_cgroup_bpf__destroy tools/perf/bpf_skel/bperf_cgroup.skel.h:61:2
+     #2 0x55684b9462da in bperf_cgrp__destroy tools/perf/util/bpf_counter_cgroup.c:282:2
+     #3 0x55684b944c75 in bpf_counter__destroy tools/perf/util/bpf_counter.c:819:2
+     #4 0x55684b98f716 in evsel__exit tools/perf/util/evsel.c:1520:2
+     #5 0x55684b98a352 in evsel__delete tools/perf/util/evsel.c:1547:2
+     #6 0x55684b981918 in evlist__purge tools/perf/util/evlist.c:148:3
+     #7 0x55684b981918 in evlist__delete tools/perf/util/evlist.c:169:2
+     #8 0x55684b887d60 in cmd_stat tools/perf/builtin-stat.c:2598:2
+...
+previously allocated by thread T0 here:
+     #0 0x55684b781338 in calloc compiler-rt/lib/asan/asan_malloc_linux.cpp:77:3
+     #1 0x55684b944e25 in bperf_cgroup_bpf__open_opts tools/perf/bpf_skel/bperf_cgroup.skel.h:73:35
+     #2 0x55684b944e25 in bperf_cgroup_bpf__open tools/perf/bpf_skel/bperf_cgroup.skel.h:97:9
+     #3 0x55684b944e25 in bperf_load_program tools/perf/util/bpf_counter_cgroup.c:55:9
+     #4 0x55684b944e25 in bperf_cgrp__load tools/perf/util/bpf_counter_cgroup.c:178:23
+     #5 0x55684b889289 in __run_perf_stat tools/perf/builtin-stat.c:713:7
+     #6 0x55684b889289 in run_perf_stat tools/perf/builtin-stat.c:949:8
+     #7 0x55684b888029 in cmd_stat tools/perf/builtin-stat.c:2537:12
+
+Resolve by clearing bpf_skel as part of bpf_counter__destroy.
+
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-v3 -> v4
- - Add Acked-by and Co-developed-by. 
+ tools/perf/util/bpf_counter.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- tools/perf/builtin-top.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index d4b5b02bab73..ae96ddaf85c4 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1273,8 +1273,7 @@ static int __cmd_top(struct perf_top *top)
- 				    top->evlist->core.threads, true, false,
- 				    top->nr_threads_synthesize);
- 
--	if (top->nr_threads_synthesize > 1)
--		perf_set_singlethreaded();
-+	perf_set_multithreaded();
- 
- 	if (perf_hpp_list.socket) {
- 		ret = perf_env__read_cpu_topology_map(&perf_env);
-@@ -1352,6 +1351,7 @@ static int __cmd_top(struct perf_top *top)
- out_join_thread:
- 	cond_signal(&top->qe.cond);
- 	pthread_join(thread_process, NULL);
-+	perf_set_singlethreaded();
- 	return ret;
+diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+index bee3fe0905f6..d9677a51eae1 100644
+--- a/tools/perf/util/bpf_counter.c
++++ b/tools/perf/util/bpf_counter.c
+@@ -818,4 +818,5 @@ void bpf_counter__destroy(struct evsel *evsel)
+ 		return;
+ 	evsel->bpf_counter_ops->destroy(evsel);
+ 	evsel->bpf_counter_ops = NULL;
++	evsel->bpf_skel = NULL;
  }
- 
 -- 
-2.33.0
+2.40.0.577.gac1e443424-goog
 
