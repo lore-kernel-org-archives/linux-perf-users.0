@@ -2,104 +2,85 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721C5C77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 13:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A519EC77B6F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 17:35:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230182AbjDKNnn (ORCPT
+        id S229571AbjDKRfM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 09:43:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
+        Tue, 11 Apr 2023 13:35:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230031AbjDKNnm (ORCPT
+        with ESMTP id S229478AbjDKRfL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 09:43:42 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB2661707;
-        Tue, 11 Apr 2023 06:43:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681220621; x=1712756621;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=2GeQQq+KcbTCEU+rXh5JGw+yLkL8a8JmHupdRnaoc8M=;
-  b=chh0jmd4I6VNBC14A5780CVuHTxHv34bO0UjY1fWhG0r+A/g9vuNnnrk
-   E+fR5m5J7LjjjauKWjtM5cDvn/VshNJS7PkdCiRCVmTIhUshEwoVGEG8b
-   wy1Pi7MzUi65BzAmzI0VR+9oQ7q8s3WT3M0V1L5tNCwwunJzcv97RHTzx
-   8Qq1eRnZKzEXBwkocoGx0q2IWHtWIVYVgI46XPRMqoq1DfPfa0JUw94/i
-   wfzMjpmAHVtA+0eunF8M3nQVkiQyBB+wHFH9lRuec31hAZeGU7Aky1Osl
-   AO673s42/mPq2YqPWCRbRKBnog/LYpIYyM7jKV5gjF4yHdc6en+zZzG0n
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="429905385"
-X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
-   d="scan'208";a="429905385"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 06:43:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="812566489"
-X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
-   d="scan'208";a="812566489"
-Received: from gtryonx-mobl.amr.corp.intel.com (HELO [10.209.72.81]) ([10.209.72.81])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 06:43:39 -0700
-Message-ID: <1fee0372-3a3b-5e09-38c3-ffb3523fe195@intel.com>
-Date:   Tue, 11 Apr 2023 06:43:39 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
-Content-Language: en-US
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Uros Bizjak <ubizjak@gmail.com>, linux-alpha@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 11 Apr 2023 13:35:11 -0400
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D96D5B81;
+        Tue, 11 Apr 2023 10:35:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+        bh=9ycQhMAP8bYuSeQBFYr21ByNHZMBYNV4KYFk5ii2JBk=; b=XBv5tjhMDhhsbCSCOI1Dp4ly+K
+        6PNv65eFtmKV2RcE0jUNPkq8KHWuN/svKV4Ps/AOBxwQbEPKHqNWw8k8/rIacSw5PicQ2tz7OXlRa
+        zm0EIiA5bUXIbqJXAuyoWmCrkqAn3BTe4zf6xmlUL6mVURGroj/sMJsYf+bYf1X3iWiZnGvX5hMaD
+        Jq2FpuxlVPElAH/LlHmYMcluX4i66ertxw9sRCEC2EaZw9kXmnZYZg7EvDFWXjiFlfb1U2A2cyb8m
+        OKIZ76CwNIDqKnmQQvj6t+u9TgWpuITrMLXnzdVyKp01vtudA5rBvADHm9/mENVb2c/CGmU+/Bf06
+        WKDoXhXw==;
+Received: from sslproxy02.your-server.de ([78.47.166.47])
+        by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1pmHtW-0007ES-TX; Tue, 11 Apr 2023 19:35:02 +0200
+Received: from [85.1.206.226] (helo=linux.home)
+        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1pmHtW-000Qov-JE; Tue, 11 Apr 2023 19:35:02 +0200
+Subject: Re: [PATCH bpf-next] tools headers: Remove s390 ptrace.h in
+ check-headers.sh
+To:     Jiri Olsa <olsajiri@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jun Yi <yijun@loongson.cn>
-References: <20230405141710.3551-1-ubizjak@gmail.com>
- <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
- <ZDVGFhMwOtpxJtnQ@FVFF77S0Q05N>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <ZDVGFhMwOtpxJtnQ@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8
+        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+References: <1680834090-2322-1-git-send-email-yangtiezhu@loongson.cn>
+ <ZC/wA2NoO7yI/xNm@krava>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <0f77e29c-e384-1d67-a99c-91e6091ec7db@iogearbox.net>
+Date:   Tue, 11 Apr 2023 19:35:02 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <ZC/wA2NoO7yI/xNm@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.8/26872/Tue Apr 11 09:26:30 2023)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 4/11/23 04:35, Mark Rutland wrote:
-> I agree it'd be nice to have performance figures, but I think those would only
-> need to demonstrate a lack of a regression rather than a performance
-> improvement, and I think it's fairly clear from eyeballing the generated
-> instructions that a regression isn't likely.
+On 4/7/23 12:27 PM, Jiri Olsa wrote:
+> On Fri, Apr 07, 2023 at 10:21:30AM +0800, Tiezhu Yang wrote:
+>> After commit 1f265d2aea0d ("selftests/bpf: Remove not used headers"),
+>> tools/arch/s390/include/uapi/asm/ptrace.h has been removed, so remove
+>> it in check-headers.sh too, otherwise we can see the following build
+>> warning:
+>>
+>>    diff: tools/arch/s390/include/uapi/asm/ptrace.h: No such file or directory
+>>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> Link: https://lore.kernel.org/oe-kbuild-all/202304050029.38NdbQPf-lkp@intel.com/
+>> Fixes: 1f265d2aea0d ("selftests/bpf: Remove not used headers")
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> 
+> not sure this should go through Arnaldo's tree instead,
+> either way is fine with me
 
-Thanks for the additional context.
+Agree, perf tree is better given the script is located there, so:
 
-I totally agree that there's zero burden here to show a performance
-increase.  If anyone can think of a quick way to do _some_ kind of
-benchmark on the code being changed and just show that it's free of
-brown paper bags, it would be appreciated.  Nothing crazy, just think of
-one workload (synthetic or not) that will stress the paths being changed
-and run it with and without these changes.  Make sure there are not
-surprises.
-
-I also agree that it's unlikely to be brown paper bag material.
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
