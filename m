@@ -2,116 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10828C77B6F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 13:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 721C5C77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 13:43:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbjDKNd6 (ORCPT
+        id S230182AbjDKNnn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 09:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43244 "EHLO
+        Tue, 11 Apr 2023 09:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229721AbjDKNd6 (ORCPT
+        with ESMTP id S230031AbjDKNnm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 09:33:58 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D0C83C24;
-        Tue, 11 Apr 2023 06:33:57 -0700 (PDT)
+        Tue, 11 Apr 2023 09:43:42 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB2661707;
+        Tue, 11 Apr 2023 06:43:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681220037; x=1712756037;
+  t=1681220621; x=1712756621;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=ACSa9W+8xFJ/wPrK67chyTahAU/o7lM2Wo9G0gI7dRA=;
-  b=Y5CnUt7AxU1G9O3bMZjdrHkQr1tyoAE5Jx7v0vbaz3W6AmLR/0BtcW9O
-   b7zJDiAoi44/PwmpZ50HmEug370bQ+BR0iSm3GRW1X7wys2Q1SU0CnBs5
-   hqKDw7hvx3wm/5RtrI8lWBML4yXheLX57G1z69iqG9Q5hWxjHQp+Ho04G
-   bTSsmzAncSXX3N2qxE7EDt/GiCXzGbCS1ZEOxNhrDV6oPGiqpGK+Ez7zS
-   KNi1XlmLrCPcRg4v7dJkzPXKS7GFc4s+RmJEA0NbXu6h2CxW4bIhHCMuZ
-   50OXflkaGdqOWikoTsIJLUUq6Ste7m3afXqtLXva7KGm+ztteATxT153i
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="343618684"
+  bh=2GeQQq+KcbTCEU+rXh5JGw+yLkL8a8JmHupdRnaoc8M=;
+  b=chh0jmd4I6VNBC14A5780CVuHTxHv34bO0UjY1fWhG0r+A/g9vuNnnrk
+   E+fR5m5J7LjjjauKWjtM5cDvn/VshNJS7PkdCiRCVmTIhUshEwoVGEG8b
+   wy1Pi7MzUi65BzAmzI0VR+9oQ7q8s3WT3M0V1L5tNCwwunJzcv97RHTzx
+   8Qq1eRnZKzEXBwkocoGx0q2IWHtWIVYVgI46XPRMqoq1DfPfa0JUw94/i
+   wfzMjpmAHVtA+0eunF8M3nQVkiQyBB+wHFH9lRuec31hAZeGU7Aky1Osl
+   AO673s42/mPq2YqPWCRbRKBnog/LYpIYyM7jKV5gjF4yHdc6en+zZzG0n
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="429905385"
 X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
-   d="scan'208";a="343618684"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 06:33:57 -0700
+   d="scan'208";a="429905385"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 06:43:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="832339442"
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="812566489"
 X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
-   d="scan'208";a="832339442"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 11 Apr 2023 06:33:56 -0700
-Received: from [10.212.228.7] (kliang2-mobl1.ccr.corp.intel.com [10.212.228.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 3939E580D1F;
-        Tue, 11 Apr 2023 06:33:55 -0700 (PDT)
-Message-ID: <d45c758a-4802-be12-c3a6-c39f76efbb6a@linux.intel.com>
-Date:   Tue, 11 Apr 2023 09:33:54 -0400
+   d="scan'208";a="812566489"
+Received: from gtryonx-mobl.amr.corp.intel.com (HELO [10.209.72.81]) ([10.209.72.81])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 06:43:39 -0700
+Message-ID: <1fee0372-3a3b-5e09-38c3-ffb3523fe195@intel.com>
+Date:   Tue, 11 Apr 2023 06:43:39 -0700
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH] perf tests: Fix tests in 'Parse event definition strings'
-To:     tinghao.zhang@intel.com, acme@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, Yi Ammy <ammy.yi@intel.com>
-References: <20230411094330.653965-1-tinghao.zhang@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
 Content-Language: en-US
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230411094330.653965-1-tinghao.zhang@intel.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Uros Bizjak <ubizjak@gmail.com>, linux-alpha@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jun Yi <yijun@loongson.cn>
+References: <20230405141710.3551-1-ubizjak@gmail.com>
+ <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
+ <ZDVGFhMwOtpxJtnQ@FVFF77S0Q05N>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <ZDVGFhMwOtpxJtnQ@FVFF77S0Q05N>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 4/11/23 04:35, Mark Rutland wrote:
+> I agree it'd be nice to have performance figures, but I think those would only
+> need to demonstrate a lack of a regression rather than a performance
+> improvement, and I think it's fairly clear from eyeballing the generated
+> instructions that a regression isn't likely.
 
+Thanks for the additional context.
 
-On 2023-04-11 5:43 a.m., tinghao.zhang@intel.com wrote:
-> From: Tinghao Zhang <tinghao.zhang@intel.com>
-> 
-> The 'Test event parsing' test set under 'Parse event definion strings'
-> does not apply to hybrid events. Since hybrid events have a dedicated
-> test set 'Test parsing of hybrid CPU events', skip these tests on hybrid
-> platforms.
-> 
-> Fixes: 7741e03e808a ("perf test: Parse events break apart tests")
-> Reported-by: Yi Ammy <ammy.yi@intel.com>
-> Signed-off-by: Tinghao Zhang <tinghao.zhang@intel.com>
+I totally agree that there's zero burden here to show a performance
+increase.  If anyone can think of a quick way to do _some_ kind of
+benchmark on the code being changed and just show that it's free of
+brown paper bags, it would be appreciated.  Nothing crazy, just think of
+one workload (synthetic or not) that will stress the paths being changed
+and run it with and without these changes.  Make sure there are not
+surprises.
 
-
-This patch looks good to me.
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan
-
-> ---
->  tools/perf/tests/parse-events.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index 71a5cb343311..c6949e458e61 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -2146,6 +2146,9 @@ static int test_events(const struct evlist_test *events, int cnt)
->  
->  static int test__events2(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
->  {
-> +	if (perf_pmu__has_hybrid())
-> +		return TEST_SKIP;
-> +
->  	return test_events(test__events, ARRAY_SIZE(test__events));
->  }
->  
-> @@ -2421,7 +2424,7 @@ static int test__pmu_events_alias2(struct test_suite *test __maybe_unused,
->  static struct test_case tests__parse_events[] = {
->  	TEST_CASE_REASON("Test event parsing",
->  			 events2,
-> -			 "permissions"),
-> +			 "permissions or hybrid"),
->  	TEST_CASE_REASON("Test parsing of \"hybrid\" CPU events",
->  			 hybrid,
->  			"not hybrid"),
+I also agree that it's unlikely to be brown paper bag material.
