@@ -2,117 +2,96 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42979C76196
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 21:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BEBC76196
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 23:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229452AbjDKVen (ORCPT
+        id S229530AbjDKXo4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 17:34:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50120 "EHLO
+        Tue, 11 Apr 2023 19:44:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbjDKVem (ORCPT
+        with ESMTP id S229485AbjDKXo4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 17:34:42 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4830E449C
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Apr 2023 14:34:41 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-206-zsA8Q_GJNdGPDl24cMCxtg-1; Tue, 11 Apr 2023 22:34:38 +0100
-X-MC-Unique: zsA8Q_GJNdGPDl24cMCxtg-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 11 Apr
- 2023 22:34:35 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Tue, 11 Apr 2023 22:34:35 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Dave Hansen' <dave.hansen@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     Uros Bizjak <ubizjak@gmail.com>,
-        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
-        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Richard Henderson" <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Nicholas Piggin" <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        "Peter Zijlstra" <peterz@infradead.org>,
+        Tue, 11 Apr 2023 19:44:56 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F5740E1
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Apr 2023 16:44:55 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id c67-20020a254e46000000b00b88f1fd158fso25938265ybb.17
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Apr 2023 16:44:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1681256694;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=62/kNJoA4s2dKsAyEe7r9x7u8uLxGrWSsgePXcOTh20=;
+        b=lZP1yOhZoGumt2nrO84vpDwA0fNmvdxqAjbOWiaovh0uxrxj8UGxz/VE6AacSV8Pm4
+         LqtzfOf/3jexb/l7GEdN/tejlOltJubCJu8bt8Xs5PqV8iKtV3g6SDTeBvDVcrQ/fJqX
+         r43WBT5cB6pYbNQxLSI5qcyMgI8hp/ltHs0EaDaKo/Ppx0YeXekBR61wnMyR/XPcMkXi
+         j+rGU4m1RUCqf/3eW9+SGJp1ufD3Z/hcqpyFRW5+P9c8Qd4Ou/W3nJJUsSJTzNfPhc4z
+         SqrscSBsH3iiReKmRWXHyWuuVOoeipqgCT82GY9Ns604ovIgXE6UX6EnXtaz5REZ5twN
+         sWxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681256694;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=62/kNJoA4s2dKsAyEe7r9x7u8uLxGrWSsgePXcOTh20=;
+        b=VPFcW3e5is3Fimkrq124Pem//NGoMxoTZucbLczTvLQ3V1LYpnVYdM7mwrRD7bz3Aq
+         Pr1RE1Bs4WzIjlgvIts1btiHgG33ZdlL6fc+yyrG5ky4vF6lwGLqq3/3KI1hjHbcNVUL
+         /KRUbyeTl9Pcc+fPBjbMVhesm2mUfObJ0zYnLfAu4KjUWRYqHLLW3R9BkxUGCFH18fpp
+         KxrJ9WIqfxMvBOAMnoILqiVMOwQfgqTd9gszrUkr5/ZLibfur0e+Ykng31IS7S/w4fml
+         VFjWOoYprkXJ3uVUZbB0W64S7g4Yh/dS8RljGVw9cx9nlQDGO2iVf1yzbFYhBKXKz7ql
+         Wgow==
+X-Gm-Message-State: AAQBX9c0yyETtAQS5bNwKZ56XuEnzav5bbe4edgfzDABQCbmcMthi04N
+        yjKBiWCQIvybt+iLVUhLEvt9m3Gr6Phe
+X-Google-Smtp-Source: AKy350Z3iH2clixYdp5klNkpbMbnGGcdw8jBhdTFPopYxKAwEk8ysY2jy6rqmLLm5lMVFIL4YyA69zREHH5a
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:f663:83e0:f9b2:5a17])
+ (user=irogers job=sendgmr) by 2002:a81:a887:0:b0:546:63a:6e23 with SMTP id
+ f129-20020a81a887000000b00546063a6e23mr2900421ywh.0.1681256694649; Tue, 11
+ Apr 2023 16:44:54 -0700 (PDT)
+Date:   Tue, 11 Apr 2023 16:44:37 -0700
+Message-Id: <20230411234440.3313680-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
+Subject: [PATCH v1 0/3] Updates to sapphirerapids, alderlake and icelakex events
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jun Yi <yijun@loongson.cn>
-Subject: RE: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
-Thread-Topic: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
-Thread-Index: AQHZbHulp5OquwuviUmDAgAFAiF/7K8moCeA
-Date:   Tue, 11 Apr 2023 21:34:35 +0000
-Message-ID: <bd5753622f2f42248495a42593b497f3@AcuMS.aculab.com>
-References: <20230405141710.3551-1-ubizjak@gmail.com>
- <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
- <ZDVGFhMwOtpxJtnQ@FVFF77S0Q05N>
- <1fee0372-3a3b-5e09-38c3-ffb3523fe195@intel.com>
-In-Reply-To: <1fee0372-3a3b-5e09-38c3-ffb3523fe195@intel.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-RnJvbTogRGF2ZSBIYW5zZW4NCj4gU2VudDogMTEgQXByaWwgMjAyMyAxNDo0NA0KPiANCj4gT24g
-NC8xMS8yMyAwNDozNSwgTWFyayBSdXRsYW5kIHdyb3RlOg0KPiA+IEkgYWdyZWUgaXQnZCBiZSBu
-aWNlIHRvIGhhdmUgcGVyZm9ybWFuY2UgZmlndXJlcywgYnV0IEkgdGhpbmsgdGhvc2Ugd291bGQg
-b25seQ0KPiA+IG5lZWQgdG8gZGVtb25zdHJhdGUgYSBsYWNrIG9mIGEgcmVncmVzc2lvbiByYXRo
-ZXIgdGhhbiBhIHBlcmZvcm1hbmNlDQo+ID4gaW1wcm92ZW1lbnQsIGFuZCBJIHRoaW5rIGl0J3Mg
-ZmFpcmx5IGNsZWFyIGZyb20gZXllYmFsbGluZyB0aGUgZ2VuZXJhdGVkDQo+ID4gaW5zdHJ1Y3Rp
-b25zIHRoYXQgYSByZWdyZXNzaW9uIGlzbid0IGxpa2VseS4NCj4gDQo+IFRoYW5rcyBmb3IgdGhl
-IGFkZGl0aW9uYWwgY29udGV4dC4NCj4gDQo+IEkgdG90YWxseSBhZ3JlZSB0aGF0IHRoZXJlJ3Mg
-emVybyBidXJkZW4gaGVyZSB0byBzaG93IGEgcGVyZm9ybWFuY2UNCj4gaW5jcmVhc2UuICBJZiBh
-bnlvbmUgY2FuIHRoaW5rIG9mIGEgcXVpY2sgd2F5IHRvIGRvIF9zb21lXyBraW5kIG9mDQo+IGJl
-bmNobWFyayBvbiB0aGUgY29kZSBiZWluZyBjaGFuZ2VkIGFuZCBqdXN0IHNob3cgdGhhdCBpdCdz
-IGZyZWUgb2YNCj4gYnJvd24gcGFwZXIgYmFncywgaXQgd291bGQgYmUgYXBwcmVjaWF0ZWQuICBO
-b3RoaW5nIGNyYXp5LCBqdXN0IHRoaW5rIG9mDQo+IG9uZSB3b3JrbG9hZCAoc3ludGhldGljIG9y
-IG5vdCkgdGhhdCB3aWxsIHN0cmVzcyB0aGUgcGF0aHMgYmVpbmcgY2hhbmdlZA0KPiBhbmQgcnVu
-IGl0IHdpdGggYW5kIHdpdGhvdXQgdGhlc2UgY2hhbmdlcy4gIE1ha2Ugc3VyZSB0aGVyZSBhcmUg
-bm90DQo+IHN1cnByaXNlcy4NCj4gDQo+IEkgYWxzbyBhZ3JlZSB0aGF0IGl0J3MgdW5saWtlbHkg
-dG8gYmUgYnJvd24gcGFwZXIgYmFnIG1hdGVyaWFsLg0KDQpUaGUgb25seSB0aGluZyBJIGNhbiB0
-aGluayBvZiBpcyB0aGF0LCBvbiB4ODYsIHRoZSBsb2NrZWQNCnZhcmlhbnQgbWF5IGFjdHVhbGx5
-IGJlIGZhc3RlciENCkJvdGggcmVxdWlyZSBleGNsdXNpdmUgYWNjZXNzIHRvIHRoZSBjYWNoZSBs
-aW5lICh0aGUgdW5sb2NrZWQNCnZhcmlhbnQgYWx3YXlzIGRvZXMgdGhlIHdyaXRlISBbMV0pLg0K
-U28gaWYgdGhlIGNhY2hlIGxpbmUgaXMgY29udGVuZGVkIGJldHdlZW4gY3B1IHRoZSB1bmxvY2tl
-ZA0KdmFyaWFudCBtaWdodCBwaW5nLXBvbmcgdGhlIGNhY2hlIGxpbmUgdHdpY2UhDQpPZiBjb3Vy
-c2UsIGlmIHRoZSBsaW5lIGlzIHNoYXJlZCBsaWtlIHRoYXQgdGhlbiBwZXJmb3JtYW5jZQ0KaXMg
-aG9ycmlkLg0KDQpbMV0gSSBjaGVja2VkIG9uIGFuIHVuY2FjaGVkIFBDSWUgYWRkcmVzcyBvbiB3
-aGljaCBJIGNhbiBtb25pdG9yDQp0aGUgVExQLiBUaGUgd3JpdGUgYWx3YXlzIGhhcHBlbnMgc28g
-eW91IGNhbiB1c2UgY21weGNoZzE4Yg0Kd2l0aCBhICdrbm93biBiYWQgdmFsdWUnIHRvIGRvIGEg
-MTYgYnl0ZSByZWFkIGFzIGEgc2luZ2xlIFRMUA0KKHdpdGhvdXQgdXNpbmcgYW4gU1NFIHJlZ2lz
-dGVyKS4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxl
-eSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0
-aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+Changes largely stemming from:
+https://github.com/intel/perfmon/pull/68
+
+Changes generated by:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+
+Ian Rogers (3):
+  perf vendor events: Update alderlake to v1.20
+  perf vendor events: Update icelakex to v1.20
+  perf vendor events: Update sapphirerapids to v1.12
+
+ .../pmu-events/arch/x86/alderlake/other.json  |     3 +-
+ .../arch/x86/alderlake/pipeline.json          |     4 +-
+ .../arch/x86/icelakex/uncore-other.json       |     2 +-
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |     8 +-
+ .../arch/x86/sapphirerapids/other.json        |     3 +-
+ .../arch/x86/sapphirerapids/pipeline.json     |     4 +-
+ .../x86/sapphirerapids/uncore-memory.json     |   794 +-
+ .../arch/x86/sapphirerapids/uncore-other.json | 18656 +++++++++++++---
+ .../arch/x86/sapphirerapids/uncore-power.json |   107 +
+ 9 files changed, 16977 insertions(+), 2604 deletions(-)
+
+-- 
+2.40.0.577.gac1e443424-goog
 
