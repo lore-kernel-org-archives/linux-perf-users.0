@@ -2,184 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C7FC77B70
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 13:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10828C77B6F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 13:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229746AbjDKNV6 (ORCPT
+        id S229762AbjDKNd6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 09:21:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60738 "EHLO
+        Tue, 11 Apr 2023 09:33:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjDKNV5 (ORCPT
+        with ESMTP id S229721AbjDKNd6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 09:21:57 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A080A30C8;
-        Tue, 11 Apr 2023 06:21:52 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PwmgV1FTkz6D94g;
-        Tue, 11 Apr 2023 21:20:54 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 11 Apr
- 2023 14:21:49 +0100
-Date:   Tue, 11 Apr 2023 14:21:48 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-CC:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <will@kernel.org>, <linuxarm@huawei.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v4 0/5] CXL 3.0 Performance Monitoring Unit support
-Message-ID: <20230411142148.00003f1e@Huawei.com>
-In-Reply-To: <642b9fb7d6986_29cc2945e@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20230330164556.31533-1-Jonathan.Cameron@huawei.com>
-        <642b9fb7d6986_29cc2945e@dwillia2-xfh.jf.intel.com.notmuch>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        Tue, 11 Apr 2023 09:33:58 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D0C83C24;
+        Tue, 11 Apr 2023 06:33:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681220037; x=1712756037;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ACSa9W+8xFJ/wPrK67chyTahAU/o7lM2Wo9G0gI7dRA=;
+  b=Y5CnUt7AxU1G9O3bMZjdrHkQr1tyoAE5Jx7v0vbaz3W6AmLR/0BtcW9O
+   b7zJDiAoi44/PwmpZ50HmEug370bQ+BR0iSm3GRW1X7wys2Q1SU0CnBs5
+   hqKDw7hvx3wm/5RtrI8lWBML4yXheLX57G1z69iqG9Q5hWxjHQp+Ho04G
+   bTSsmzAncSXX3N2qxE7EDt/GiCXzGbCS1ZEOxNhrDV6oPGiqpGK+Ez7zS
+   KNi1XlmLrCPcRg4v7dJkzPXKS7GFc4s+RmJEA0NbXu6h2CxW4bIhHCMuZ
+   50OXflkaGdqOWikoTsIJLUUq6Ste7m3afXqtLXva7KGm+ztteATxT153i
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="343618684"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="343618684"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 06:33:57 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="832339442"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="832339442"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 11 Apr 2023 06:33:56 -0700
+Received: from [10.212.228.7] (kliang2-mobl1.ccr.corp.intel.com [10.212.228.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 3939E580D1F;
+        Tue, 11 Apr 2023 06:33:55 -0700 (PDT)
+Message-ID: <d45c758a-4802-be12-c3a6-c39f76efbb6a@linux.intel.com>
+Date:   Tue, 11 Apr 2023 09:33:54 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH] perf tests: Fix tests in 'Parse event definition strings'
+To:     tinghao.zhang@intel.com, acme@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, Yi Ammy <ammy.yi@intel.com>
+References: <20230411094330.653965-1-tinghao.zhang@intel.com>
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230411094330.653965-1-tinghao.zhang@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, 3 Apr 2023 20:55:35 -0700
-Dan Williams <dan.j.williams@intel.com> wrote:
 
-> Jonathan Cameron wrote:
-> > Changes since v3: Kan Liang gave feedback on v2 incorporated here.
-> > - All updates in patch 4, see details there.
-> > 
-> > Updated cover letter.
-> > 
-> > The CXL rev 3.0 specification introduces a CXL Performance Monitoring
-> > Unit definition. CXL components may have any number of these blocks. The
-> > definition is highly flexible, but that does bring complexity in the
-> > driver.
-> > 
-> > Notes.
-> > 
-> > 1) The QEMU model against which this was developed needs tidying up.
-> >    Latest tree at https://gitlab.com/jic23/qemu branch cxl-2023-02-28
-> >    It's backed up behind other series that I plan to upstream first.
-> > 2) There are quite a lot of corner cases that will need working through
-> >    with variants of the model, or I'll have to design a pathological
-> >    set of CPMUs to hit all the corner cases in one go. So whilst I believe
-> >    the driver should be fine for what it supports we may find issues
-> >    as those corners of what is allowed are explored.
-> > 3) I'm not sure it makes sense to hang this of the cxl/pci driver but
-> >    couldn't really figure out where else in the current structure we could
-> >    make it fit cleanly.
-> > 4) Driver location. In past perf maintainers have requested perf drivers
-> >    for PCI etc be under drivers/perf. That would require moving some
-> >    CXL headers to be more generally visible, but is certainly possible
-> >    if there is agreement between CXL and perf maintainers on the correct
-> >    location.  
+
+On 2023-04-11 5:43 a.m., tinghao.zhang@intel.com wrote:
+> From: Tinghao Zhang <tinghao.zhang@intel.com>
 > 
-> I am ok the bulk of the logic living under drivers/perf/
+> The 'Test event parsing' test set under 'Parse event definion strings'
+> does not apply to hybrid events. Since hybrid events have a dedicated
+> test set 'Test parsing of hybrid CPU events', skip these tests on hybrid
+> platforms.
 > 
-> Are drivers/perf/ folks ok with a:
+> Fixes: 7741e03e808a ("perf test: Parse events break apart tests")
+> Reported-by: Yi Ammy <ammy.yi@intel.com>
+> Signed-off-by: Tinghao Zhang <tinghao.zhang@intel.com>
+
+
+This patch looks good to me.
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
+> ---
+>  tools/perf/tests/parse-events.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> CFLAGS_cxl.o := -I$(srctree)/drivers/cxl/
-> 
-> ...or similar in their Makefile, because I don't think this by itself is
-> a reason to push CXL headers to include/.
-
-For now I've gone with ../cxl/ which doesn't look too bad.
-If cflags stuff is preferred can change that.
-
-
-> 
-> I say this without having looked at the code yet and whether this driver
-> will need new exports from the cxl/core etc.
-> 
-> > 5) Patch 1 led to a discussion of how to handle the self describing
-> >    and extensible nature of the CPMU counters.  That is likely to involve
-> >    a description in the "caps" sysfs directory and perf tool code that is
-> >    aware of the different event combinations that make sense and can
-> >    establish which sets are available on a given device.
-> >    That is likely to take a while to converge on, so as the driver is useful
-> >    in the current state, I'm looking to upstream this first and deal with
-> >    the more complex handling later.  
-> 
-> What's "this" in this last sentence, a canned set of base counters?
-
-All the counters defined in the CXL spec itself without any summing of
-counters (so you can't do all 'reads' for example without 'guessing' the
-magic numbers).
-
-> 
-> > 6) There is a lot of other functionality that can be added in future
-> >    include allowing for simpler hardware implementations that may not
-> >    support the minimum level of features currently required by the driver
-> >    (freeze, overflow interrupts etc).  
-> 
-> Curious if the the minimal set determined by the specification, like the
-> minimal features a CXL Memory Expander device must implement, or by what
-> you decided was fit to be emulated in QEMU?
-
-There is no specification requirement to implement any particular subset
-of counters or features for those counters.  I think that's considered out
-of scope for the CXL spec itself.  Of course particularly customers or
-industry bodies may define a minimal set of requirements. I don't think anyone
-has done so yet.
-
-Current set of counters is all the ones in the specification itself at their
-finest granularity (summed cases for the configurable counters 'work' but
-aren't advertised - working out sensible choices is a job for perftool +
-an enhanced driver that advertises what combinations it can sum).
-
-Counter features / types include the most generic, fully featured and flexible
-versions.  In many cases it's harder to support the less complex hardware
-because a configuration dance can be needed.
-I'd imagine the remaining 'likely' hardware support will be added over the
-next kernel cycle or two.
-
-Jonathan
-
-> 
-> > 
-> > CXL rev 3.0 specification available from https://www.computeexpresslink.org
-> > 
-> > 
-> > Jonathan Cameron (5):
-> >   cxl: Add function to count regblocks of a given type
-> >   perf: Allow a PMU to have a parent
-> >   cxl/pci: Find and register CXL PMU devices
-> >   cxl: CXL Performance Monitoring Unit driver
-> >   docs: perf: Minimal introduction the the CXL PMU device and driver
-> > 
-> >  Documentation/admin-guide/perf/cxl.rst   |  65 ++
-> >  Documentation/admin-guide/perf/index.rst |   1 +
-> >  drivers/cxl/Kconfig                      |  13 +
-> >  drivers/cxl/Makefile                     |   1 +
-> >  drivers/cxl/core/Makefile                |   1 +
-> >  drivers/cxl/core/core.h                  |   1 +
-> >  drivers/cxl/core/cpmu.c                  |  72 ++
-> >  drivers/cxl/core/pci.c                   |   2 +-
-> >  drivers/cxl/core/port.c                  |   4 +-
-> >  drivers/cxl/core/regs.c                  |  50 +-
-> >  drivers/cxl/cpmu.c                       | 940 +++++++++++++++++++++++
-> >  drivers/cxl/cpmu.h                       |  56 ++
-> >  drivers/cxl/cxl.h                        |  17 +-
-> >  drivers/cxl/cxlpci.h                     |   1 +
-> >  drivers/cxl/pci.c                        |  27 +-
-> >  include/linux/perf_event.h               |   1 +
-> >  kernel/events/core.c                     |   1 +
-> >  17 files changed, 1245 insertions(+), 8 deletions(-)
-> >  create mode 100644 Documentation/admin-guide/perf/cxl.rst
-> >  create mode 100644 drivers/cxl/core/cpmu.c
-> >  create mode 100644 drivers/cxl/cpmu.c
-> >  create mode 100644 drivers/cxl/cpmu.h
-> > 
-> > -- 
-> > 2.37.2
-> >   
-
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+> index 71a5cb343311..c6949e458e61 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -2146,6 +2146,9 @@ static int test_events(const struct evlist_test *events, int cnt)
+>  
+>  static int test__events2(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+>  {
+> +	if (perf_pmu__has_hybrid())
+> +		return TEST_SKIP;
+> +
+>  	return test_events(test__events, ARRAY_SIZE(test__events));
+>  }
+>  
+> @@ -2421,7 +2424,7 @@ static int test__pmu_events_alias2(struct test_suite *test __maybe_unused,
+>  static struct test_case tests__parse_events[] = {
+>  	TEST_CASE_REASON("Test event parsing",
+>  			 events2,
+> -			 "permissions"),
+> +			 "permissions or hybrid"),
+>  	TEST_CASE_REASON("Test parsing of \"hybrid\" CPU events",
+>  			 hybrid,
+>  			"not hybrid"),
