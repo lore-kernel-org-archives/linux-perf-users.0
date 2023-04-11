@@ -2,99 +2,174 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C95C7619A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 09:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C9EEC76196
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 11:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbjDKJtH (ORCPT
+        id S229895AbjDKLKf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 05:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42766 "EHLO
+        Tue, 11 Apr 2023 07:10:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjDKJtG (ORCPT
+        with ESMTP id S229804AbjDKLKe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 05:49:06 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E99810E5;
-        Tue, 11 Apr 2023 02:49:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681206545; x=1712742545;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=dHpcHWqCmfuIUPq8eG8tFeW/285bASnK1zbDtw4BpTc=;
-  b=iXtfGBSDgoKwDSevaFYQtSPQ/WVCIOfxbeyKG6UWDSUXC6U3D6MN+cA7
-   Tf5722Pgr5lBoXpTIoVv8K5cmdFeaDXkRxColVwplNFnnakpFLwdUH2wR
-   67v0bgsQ50bWbnDCILa0DIVInHpSX5anIXcqkaRi+r//hTjMDy3C9Abpg
-   Z/7zYUr/YFMoNf+PPyUjADPGU8bMNk+jnA+pm7es/i8mog6WxLQF1gfDL
-   AmTdZ7PAb2bWFnH//dIZmQko76H0WHUKetq5zU9XrGWXMC9cJ5UeaCO5k
-   DLRcTKVO3CujkBMCsiZDfLxt+fo0OzTtSjFWzPpc5620Klor3E+niuWOT
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10676"; a="343579220"
-X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
-   d="scan'208";a="343579220"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 02:45:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10676"; a="757768815"
-X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
-   d="scan'208";a="757768815"
-Received: from 9049fa088b1f.jf.intel.com ([10.165.154.143])
-  by fmsmga004.fm.intel.com with ESMTP; 11 Apr 2023 02:45:29 -0700
-From:   tinghao.zhang@intel.com
-To:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, adrian.hunter@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, kan.liang@linux.intel.com,
-        Tinghao Zhang <tinghao.zhang@intel.com>,
-        Yi Ammy <ammy.yi@intel.com>
-Subject: [PATCH] perf tests: Fix tests in 'Parse event definition strings'
-Date:   Tue, 11 Apr 2023 02:43:30 -0700
-Message-Id: <20230411094330.653965-1-tinghao.zhang@intel.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 11 Apr 2023 07:10:34 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 17042E62;
+        Tue, 11 Apr 2023 04:10:31 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D18F3D75;
+        Tue, 11 Apr 2023 04:11:15 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.20.166])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 90C313F6C4;
+        Tue, 11 Apr 2023 04:10:29 -0700 (PDT)
+Date:   Tue, 11 Apr 2023 12:10:22 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Uros Bizjak <ubizjak@gmail.com>
+Cc:     linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [PATCH v2 1/5] locking/atomic: Add generic
+ try_cmpxchg{,64}_local support
+Message-ID: <ZDVAHkkbxJOlKFzi@FVFF77S0Q05N>
+References: <20230405141710.3551-1-ubizjak@gmail.com>
+ <20230405141710.3551-2-ubizjak@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230405141710.3551-2-ubizjak@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Tinghao Zhang <tinghao.zhang@intel.com>
+On Wed, Apr 05, 2023 at 04:17:06PM +0200, Uros Bizjak wrote:
+> Add generic support for try_cmpxchg{,64}_local and their falbacks.
+> 
+> These provides the generic try_cmpxchg_local family of functions
+> from the arch_ prefixed version, also adding explicit instrumentation.
+> 
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Boqun Feng <boqun.feng@gmail.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 
-The 'Test event parsing' test set under 'Parse event definion strings'
-does not apply to hybrid events. Since hybrid events have a dedicated
-test set 'Test parsing of hybrid CPU events', skip these tests on hybrid
-platforms.
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Fixes: 7741e03e808a ("perf test: Parse events break apart tests")
-Reported-by: Yi Ammy <ammy.yi@intel.com>
-Signed-off-by: Tinghao Zhang <tinghao.zhang@intel.com>
----
- tools/perf/tests/parse-events.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Mark.
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 71a5cb343311..c6949e458e61 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2146,6 +2146,9 @@ static int test_events(const struct evlist_test *events, int cnt)
- 
- static int test__events2(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
-+	if (perf_pmu__has_hybrid())
-+		return TEST_SKIP;
-+
- 	return test_events(test__events, ARRAY_SIZE(test__events));
- }
- 
-@@ -2421,7 +2424,7 @@ static int test__pmu_events_alias2(struct test_suite *test __maybe_unused,
- static struct test_case tests__parse_events[] = {
- 	TEST_CASE_REASON("Test event parsing",
- 			 events2,
--			 "permissions"),
-+			 "permissions or hybrid"),
- 	TEST_CASE_REASON("Test parsing of \"hybrid\" CPU events",
- 			 hybrid,
- 			"not hybrid"),
--- 
-2.34.1
-
+> ---
+>  include/linux/atomic/atomic-arch-fallback.h | 24 ++++++++++++++++++++-
+>  include/linux/atomic/atomic-instrumented.h  | 20 ++++++++++++++++-
+>  scripts/atomic/gen-atomic-fallback.sh       |  4 ++++
+>  scripts/atomic/gen-atomic-instrumented.sh   |  2 +-
+>  4 files changed, 47 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/atomic/atomic-arch-fallback.h b/include/linux/atomic/atomic-arch-fallback.h
+> index 77bc5522e61c..36c92851cdee 100644
+> --- a/include/linux/atomic/atomic-arch-fallback.h
+> +++ b/include/linux/atomic/atomic-arch-fallback.h
+> @@ -217,6 +217,28 @@
+>  
+>  #endif /* arch_try_cmpxchg64_relaxed */
+>  
+> +#ifndef arch_try_cmpxchg_local
+> +#define arch_try_cmpxchg_local(_ptr, _oldp, _new) \
+> +({ \
+> +	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
+> +	___r = arch_cmpxchg_local((_ptr), ___o, (_new)); \
+> +	if (unlikely(___r != ___o)) \
+> +		*___op = ___r; \
+> +	likely(___r == ___o); \
+> +})
+> +#endif /* arch_try_cmpxchg_local */
+> +
+> +#ifndef arch_try_cmpxchg64_local
+> +#define arch_try_cmpxchg64_local(_ptr, _oldp, _new) \
+> +({ \
+> +	typeof(*(_ptr)) *___op = (_oldp), ___o = *___op, ___r; \
+> +	___r = arch_cmpxchg64_local((_ptr), ___o, (_new)); \
+> +	if (unlikely(___r != ___o)) \
+> +		*___op = ___r; \
+> +	likely(___r == ___o); \
+> +})
+> +#endif /* arch_try_cmpxchg64_local */
+> +
+>  #ifndef arch_atomic_read_acquire
+>  static __always_inline int
+>  arch_atomic_read_acquire(const atomic_t *v)
+> @@ -2456,4 +2478,4 @@ arch_atomic64_dec_if_positive(atomic64_t *v)
+>  #endif
+>  
+>  #endif /* _LINUX_ATOMIC_FALLBACK_H */
+> -// b5e87bdd5ede61470c29f7a7e4de781af3770f09
+> +// 1f49bd4895a4b7a5383906649027205c52ec80ab
+> diff --git a/include/linux/atomic/atomic-instrumented.h b/include/linux/atomic/atomic-instrumented.h
+> index 7a139ec030b0..14a9212cc987 100644
+> --- a/include/linux/atomic/atomic-instrumented.h
+> +++ b/include/linux/atomic/atomic-instrumented.h
+> @@ -2066,6 +2066,24 @@ atomic_long_dec_if_positive(atomic_long_t *v)
+>  	arch_sync_cmpxchg(__ai_ptr, __VA_ARGS__); \
+>  })
+>  
+> +#define try_cmpxchg_local(ptr, oldp, ...) \
+> +({ \
+> +	typeof(ptr) __ai_ptr = (ptr); \
+> +	typeof(oldp) __ai_oldp = (oldp); \
+> +	instrument_atomic_write(__ai_ptr, sizeof(*__ai_ptr)); \
+> +	instrument_atomic_write(__ai_oldp, sizeof(*__ai_oldp)); \
+> +	arch_try_cmpxchg_local(__ai_ptr, __ai_oldp, __VA_ARGS__); \
+> +})
+> +
+> +#define try_cmpxchg64_local(ptr, oldp, ...) \
+> +({ \
+> +	typeof(ptr) __ai_ptr = (ptr); \
+> +	typeof(oldp) __ai_oldp = (oldp); \
+> +	instrument_atomic_write(__ai_ptr, sizeof(*__ai_ptr)); \
+> +	instrument_atomic_write(__ai_oldp, sizeof(*__ai_oldp)); \
+> +	arch_try_cmpxchg64_local(__ai_ptr, __ai_oldp, __VA_ARGS__); \
+> +})
+> +
+>  #define cmpxchg_double(ptr, ...) \
+>  ({ \
+>  	typeof(ptr) __ai_ptr = (ptr); \
+> @@ -2083,4 +2101,4 @@ atomic_long_dec_if_positive(atomic_long_t *v)
+>  })
+>  
+>  #endif /* _LINUX_ATOMIC_INSTRUMENTED_H */
+> -// 764f741eb77a7ad565dc8d99ce2837d5542e8aee
+> +// 456e206c7e4e681126c482e4edcc6f46921ac731
+> diff --git a/scripts/atomic/gen-atomic-fallback.sh b/scripts/atomic/gen-atomic-fallback.sh
+> index 3a07695e3c89..6e853f0dad8d 100755
+> --- a/scripts/atomic/gen-atomic-fallback.sh
+> +++ b/scripts/atomic/gen-atomic-fallback.sh
+> @@ -225,6 +225,10 @@ for cmpxchg in "cmpxchg" "cmpxchg64"; do
+>  	gen_try_cmpxchg_fallbacks "${cmpxchg}"
+>  done
+>  
+> +for cmpxchg in "cmpxchg_local" "cmpxchg64_local"; do
+> +	gen_try_cmpxchg_fallback "${cmpxchg}" ""
+> +done
+> +
+>  grep '^[a-z]' "$1" | while read name meta args; do
+>  	gen_proto "${meta}" "${name}" "atomic" "int" ${args}
+>  done
+> diff --git a/scripts/atomic/gen-atomic-instrumented.sh b/scripts/atomic/gen-atomic-instrumented.sh
+> index 77c06526a574..c8165e9431bf 100755
+> --- a/scripts/atomic/gen-atomic-instrumented.sh
+> +++ b/scripts/atomic/gen-atomic-instrumented.sh
+> @@ -173,7 +173,7 @@ for xchg in "xchg" "cmpxchg" "cmpxchg64" "try_cmpxchg" "try_cmpxchg64"; do
+>  	done
+>  done
+>  
+> -for xchg in "cmpxchg_local" "cmpxchg64_local" "sync_cmpxchg"; do
+> +for xchg in "cmpxchg_local" "cmpxchg64_local" "sync_cmpxchg" "try_cmpxchg_local" "try_cmpxchg64_local" ; do
+>  	gen_xchg "${xchg}" "" ""
+>  	printf "\n"
+>  done
+> -- 
+> 2.39.2
+> 
