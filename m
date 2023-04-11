@@ -2,108 +2,73 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2C5C77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 11:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FAAC76196
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 12:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229504AbjDKLgA (ORCPT
+        id S229884AbjDKMgx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 07:36:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44600 "EHLO
+        Tue, 11 Apr 2023 08:36:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjDKLf7 (ORCPT
+        with ESMTP id S229749AbjDKMgs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 07:35:59 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 887CDE60;
-        Tue, 11 Apr 2023 04:35:58 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96259D75;
-        Tue, 11 Apr 2023 04:36:42 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.20.166])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DAD93F6C4;
-        Tue, 11 Apr 2023 04:35:53 -0700 (PDT)
-Date:   Tue, 11 Apr 2023 12:35:50 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Uros Bizjak <ubizjak@gmail.com>, linux-alpha@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Arnd Bergmann <arnd@arndb.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tue, 11 Apr 2023 08:36:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C78BC3C2A;
+        Tue, 11 Apr 2023 05:36:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6484061F16;
+        Tue, 11 Apr 2023 12:36:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64DA8C433EF;
+        Tue, 11 Apr 2023 12:36:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681216604;
+        bh=AjCxCaXiBfBIIiYEZTEj1eySlj1ybIW13Hqi+EYrbqY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j/e3OLK+kwFI1mRpGIHMJAEVm1iJxFvGLrCDNX5U35e7Mq4eXFJNuvwi9gZCf+8qQ
+         GBYDrSMysuGInpCiMQk2EuVbgWh9yTI0EVXUj3aNAjqx2l6qJLqTHdY2dzReWvbDKe
+         t5cbTl5bsM20ABOy4bo1WeyhL7lIb8zavhj/ZYTcPUUjnODuwTy0C7QMTMP2RHokES
+         dD57VUhDnyTlUlatSSFkQKPk7erT85AFrjosW0MI+9knLNh3rSRZBFWJT8R0Rhf9Ew
+         s9MJb/LrTR7QUqCcOL+a+rHrOnbQZkVhd8rSd3OSaRiFtaFE8UzgnwJ/Ivc33n3bcv
+         WiDU+dHPOf2ZQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3A70C40080; Tue, 11 Apr 2023 09:36:11 -0300 (-03)
+Date:   Tue, 11 Apr 2023 09:36:11 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jun Yi <yijun@loongson.cn>
-Subject: Re: [PATCH v2 0/5] locking: Introduce local{,64}_try_cmpxchg
-Message-ID: <ZDVGFhMwOtpxJtnQ@FVFF77S0Q05N>
-References: <20230405141710.3551-1-ubizjak@gmail.com>
- <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH] perf bperf: Avoid use after free via union
+Message-ID: <ZDVUO/bg8WwnL8V+@kernel.org>
+References: <20230411051718.267228-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7360ffd2-a5aa-1373-8309-93e71ff36cbb@intel.com>
+In-Reply-To: <20230411051718.267228-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 05, 2023 at 09:37:04AM -0700, Dave Hansen wrote:
-> On 4/5/23 07:17, Uros Bizjak wrote:
-> > Add generic and target specific support for local{,64}_try_cmpxchg
-> > and wire up support for all targets that use local_t infrastructure.
-> 
-> I feel like I'm missing some context.
-> 
-> What are the actual end user visible effects of this series?  Is there a
-> measurable decrease in perf overhead?  Why go to all this trouble for
-> perf?  Who else will use local_try_cmpxchg()?
+Em Mon, Apr 10, 2023 at 10:17:18PM -0700, Ian Rogers escreveu:
+> If bperf sets leader_skel or follower_skel then it appears bpf_skel is
+> set and can trigger the following use-after-free:
 
-Overall, the theory is that it can generate slightly better code (e.g. by
-reusing the flags on x86). In practice, that might be in the noise, but as
-demonstrated in prior postings the code generation is no worse than before.
+<SNIP>
+ 
+> Resolve by clearing bpf_skel as part of bpf_counter__destroy.
+ 
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
 
-From my perspective, the more important part is that this aligns local_t with
-the other atomic*_t APIs, which all have ${atomictype}_try_cmpxchg(), and for
-consistency/legibility/maintainability it's nice to be able to use the same
-code patterns, e.g.
+Thanks, applied.
 
-	${inttype} new, old = ${atomictype}_read(ptr);
-	do {
-		...
-		new = do_something_with(old);
-	} while (${atomictype}_try_cmpxvhg(ptr, &oldval, newval);
-
-> I'm all for improving things, and perf is an important user.  But, if
-> the goal here is improving performance, it would be nice to see at least
-> a stab at quantifying the performance delta.
-
-IIUC, Steve's original request for local_try_cmpxchg() was a combination of a
-theoretical performance benefit and a more general preference to use
-try_cmpxchg() for consistency / better structure of the source code:
-
-  https://lore.kernel.org/lkml/20230301131831.6c8d4ff5@gandalf.local.home/
-
-I agree it'd be nice to have performance figures, but I think those would only
-need to demonstrate a lack of a regression rather than a performance
-improvement, and I think it's fairly clear from eyeballing the generated
-instructions that a regression isn't likely.
-
-Thanks,
-Mark.
+- Arnaldo
