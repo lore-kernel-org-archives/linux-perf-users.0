@@ -2,126 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F64C7619A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 05:17:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D4CC77B6F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 09:07:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229946AbjDKFRZ (ORCPT
+        id S229805AbjDKJHQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 01:17:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37714 "EHLO
+        Tue, 11 Apr 2023 05:07:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229891AbjDKFRY (ORCPT
+        with ESMTP id S229817AbjDKJG4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 01:17:24 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01A71FC1
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Apr 2023 22:17:23 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-54c08fa9387so147191207b3.10
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Apr 2023 22:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1681190243;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qwWwP6LNOw1HacwMQfACM6w++EBrxPV5YikpqYkABv0=;
-        b=MfGlZmeVagcHi9qz+Jz29EdrGWFUYOwRAyvIuZ4I0HUaOwGAcS6vvmgJrJ8Rv4uxFX
-         x3SOvEqTOdx74ZxSDW+FGSI800SsAXTTgvodZiY/ncMUTAcyJ1M7m5o8A4uDke+3MgOL
-         6LgkLpCGkl7cQF0jfBukWgNwQRpN33YKKICoWT+/TSOHfq5JrVMZslcym8wULONLMpXl
-         vv0c1BIFRWvQGOznpTc3aVARZi1Up+fcqepjo5nD7T7pnu/9mJxwpi171JucyanMaLHR
-         qe7NmzteTmD12YGZUT6a/Yw3cTBVFixs8xCAN9UtkqdJwfiRnasacMoOfT6ZvoY6Py6m
-         Xonw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681190243;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qwWwP6LNOw1HacwMQfACM6w++EBrxPV5YikpqYkABv0=;
-        b=FbRUi6V+92HMl6FPF9F2rF8uTSxBWC2sVjRAxNoY87fKT+UfEdC3jZFDZ9fs5nNU9O
-         Pjd9P0uuvTaRu7zCXJ7/cu7S3KmTF8q13cQOBGwJdbsujJvXHx9I5TJ1L51dF53pdXZs
-         jRpOYajaivYYpWCEiABJbEoKFY7sf1EpI1D6vXUdyvaSy7+gsExA5nZQbEGZBiWsbFSp
-         PlZswyYK8xkVhTWxK22uQQB2Bn1406lnbsR/35BkHauZp0US3xLJ6ztPvdKWYlTzIztz
-         2Dk/1KcIdIK8LEHvVnROcLYleQq68idQVZDm3sw/gfg4BaSgtuwKZJSUTs/607gQNSzM
-         y4dA==
-X-Gm-Message-State: AAQBX9e/oDVtkfeFzb7oZ3CbW4vbSKFyzKZVtAO41DZBiJL5j5Cwa8EP
-        ncn/WGKUkANv8Eok3UvGXbX0C/+yp2+S
-X-Google-Smtp-Source: AKy350bDIJ/qq7YfeUGoMG9jSw25F5C6++hFZjG9EZPmeNfkqouU5axoyRXX60lPUMSw9wT3zKn5nXLo8Ufy
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:fc51:6a03:541d:a18d])
- (user=irogers job=sendgmr) by 2002:a25:7486:0:b0:b8b:f02b:ba20 with SMTP id
- p128-20020a257486000000b00b8bf02bba20mr4344367ybc.9.1681190243171; Mon, 10
- Apr 2023 22:17:23 -0700 (PDT)
-Date:   Mon, 10 Apr 2023 22:17:18 -0700
-Message-Id: <20230411051718.267228-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH] perf bperf: Avoid use after free via union
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 11 Apr 2023 05:06:56 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 955304C0E;
+        Tue, 11 Apr 2023 02:05:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681203944; x=1712739944;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tO4l5mpv5t8dT99m/4iF2/BD89zicwZ1JuziwCmRYf8=;
+  b=VDvDuoc/iZ0A1Q81zr6IWz4K/+69zZXbc9qM9RB2d0In1z2V1sOYTk3h
+   wSUvsE9Mdb8H6CnAFbP3bBSm6PHKh9dLRms8t3wPL4yZaHijie6TLw1vq
+   lx3plpFwzs+MFol03iDBVQJaeFYI4EM6QAWrfV1hFzpWUehmlHTKBc3wj
+   rgky2JPQas5tlQTIJp4ae9PxwaSbU53TlGLur77rfIhb6cA6FMYaIeTUi
+   B430iVCDgbP4O2dHAS0G05GfsE+9N5S1HK+a731o8HvoiUMLNxAmb3zNz
+   HBKNT38e7qY6phq/uN0UVqWR5hSQaCNPiG1cEw0FZoRK3ow9eW2MjFQjr
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10676"; a="343567435"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="343567435"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 02:05:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10676"; a="753065240"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="753065240"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.44.57])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 02:05:40 -0700
+Message-ID: <27b982f0-22cf-6a74-6ffa-7a3bb58ad3c8@intel.com>
+Date:   Tue, 11 Apr 2023 12:05:40 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.9.1
+Subject: Re: [PATCH v3 1/2] perf script: print raw ip instead of binary offset
+ for callchain
+Content-Language: en-US
+To:     Changbin Du <changbin.du@huawei.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Hui Wang <hw.huiwang@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20230410070858.4051548-1-changbin.du@huawei.com>
+ <20230410070858.4051548-2-changbin.du@huawei.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230410070858.4051548-2-changbin.du@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If bperf sets leader_skel or follower_skel then it appears bpf_skel is
-set and can trigger the following use-after-free:
+On 10/04/23 10:08, Changbin Du wrote:
+> Before this, the raw ip is printed for non-callchain and dso offset for
+> callchain. This inconsistent output for address may confuse people. And
+> mostly what we expect is the raw ip.
 
-==13575==ERROR: AddressSanitizer: heap-use-after-free on address 0x60c000014080 at pc 0x55684b939880 bp 0x7ffdfcf30d70 sp 0x7ffdfcf30d68
-READ of size 8 at 0x60c000014080 thread T0
-     #0 0x55684b93987f in sample_filter_bpf__destroy tools/perf/bpf_skel/sample_filter.skel.h:44:11
-     #1 0x55684b93987f in perf_bpf_filter__destroy tools/perf/util/bpf-filter.c:155:2
-     #2 0x55684b98f71e in evsel__exit tools/perf/util/evsel.c:1521:2
-     #3 0x55684b98a352 in evsel__delete tools/perf/util/evsel.c:1547:2
-     #4 0x55684b981918 in evlist__purge tools/perf/util/evlist.c:148:3
-     #5 0x55684b981918 in evlist__delete tools/perf/util/evlist.c:169:2
-     #6 0x55684b887d60 in cmd_stat tools/perf/builtin-stat.c:2598:2
-..
-0x60c000014080 is located 0 bytes inside of 128-byte region [0x60c000014080,0x60c000014100)
-freed by thread T0 here:
-     #0 0x55684b780e86 in free compiler-rt/lib/asan/asan_malloc_linux.cpp:52:3
-     #1 0x55684b9462da in bperf_cgroup_bpf__destroy tools/perf/bpf_skel/bperf_cgroup.skel.h:61:2
-     #2 0x55684b9462da in bperf_cgrp__destroy tools/perf/util/bpf_counter_cgroup.c:282:2
-     #3 0x55684b944c75 in bpf_counter__destroy tools/perf/util/bpf_counter.c:819:2
-     #4 0x55684b98f716 in evsel__exit tools/perf/util/evsel.c:1520:2
-     #5 0x55684b98a352 in evsel__delete tools/perf/util/evsel.c:1547:2
-     #6 0x55684b981918 in evlist__purge tools/perf/util/evlist.c:148:3
-     #7 0x55684b981918 in evlist__delete tools/perf/util/evlist.c:169:2
-     #8 0x55684b887d60 in cmd_stat tools/perf/builtin-stat.c:2598:2
-...
-previously allocated by thread T0 here:
-     #0 0x55684b781338 in calloc compiler-rt/lib/asan/asan_malloc_linux.cpp:77:3
-     #1 0x55684b944e25 in bperf_cgroup_bpf__open_opts tools/perf/bpf_skel/bperf_cgroup.skel.h:73:35
-     #2 0x55684b944e25 in bperf_cgroup_bpf__open tools/perf/bpf_skel/bperf_cgroup.skel.h:97:9
-     #3 0x55684b944e25 in bperf_load_program tools/perf/util/bpf_counter_cgroup.c:55:9
-     #4 0x55684b944e25 in bperf_cgrp__load tools/perf/util/bpf_counter_cgroup.c:178:23
-     #5 0x55684b889289 in __run_perf_stat tools/perf/builtin-stat.c:713:7
-     #6 0x55684b889289 in run_perf_stat tools/perf/builtin-stat.c:949:8
-     #7 0x55684b888029 in cmd_stat tools/perf/builtin-stat.c:2537:12
+This patch does not apply anymore, refer:
 
-Resolve by clearing bpf_skel as part of bpf_counter__destroy.
+	https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf-tools-next
 
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/bpf_counter.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
-index bee3fe0905f6..d9677a51eae1 100644
---- a/tools/perf/util/bpf_counter.c
-+++ b/tools/perf/util/bpf_counter.c
-@@ -818,4 +818,5 @@ void bpf_counter__destroy(struct evsel *evsel)
- 		return;
- 	evsel->bpf_counter_ops->destroy(evsel);
- 	evsel->bpf_counter_ops = NULL;
-+	evsel->bpf_skel = NULL;
- }
--- 
-2.40.0.577.gac1e443424-goog
+> 
+> 'dso offset' is printed in callchain:
+> $ perf script
+> ...
+> ls 1341034 2739463.008343:    2162417 cycles:
+>         ffffffff99d657a7 [unknown] ([unknown])
+>         ffffffff99e00b67 [unknown] ([unknown])
+>                    235d3 memset+0x53 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)  # dso offset
+>                     a61b _dl_map_object+0x1bb (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
+> 
+> raw ip is printed for non-callchain:
+> $ perf script  -G
+> 	...
+>         ls 1341034 2739463.008876:    2053304 cycles:  ffffffffc1596923 [unknown] ([unknown])
+>         ls 1341034 2739463.009381:    1917049 cycles:      14def8e149e6 __strcoll_l+0xd96 (/usr/lib/x86_64-linux-gnu/libc-2.31.so) # raw ip
+> 
+> Let's have consistent output for it. Later I'll add a new field 'dsoff' to
+> print dso offset.
+> 
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> ---
+>  tools/perf/util/evsel_fprintf.c | 9 ++-------
+>  1 file changed, 2 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+> index bd22c4932d10..1fb8044d402e 100644
+> --- a/tools/perf/util/evsel_fprintf.c
+> +++ b/tools/perf/util/evsel_fprintf.c
+> @@ -153,13 +153,8 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+>  			if (map)
+>  				addr = map->map_ip(map, node->ip);
+>  
+> -			if (print_ip) {
+> -				/* Show binary offset for userspace addr */
+> -				if (map && !map->dso->kernel)
+> -					printed += fprintf(fp, "%c%16" PRIx64, s, addr);
+> -				else
+> -					printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
+> -			}
+> +			if (print_ip)
+> +				printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
+>  
+>  			if (print_sym) {
+>  				printed += fprintf(fp, " ");
 
