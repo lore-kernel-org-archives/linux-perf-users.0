@@ -2,165 +2,292 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12559C76196
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 18:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143A4C76196
+	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 20:56:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbjDKS5e (ORCPT
+        id S229711AbjDKU4j (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 14:57:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47840 "EHLO
+        Tue, 11 Apr 2023 16:56:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjDKS5d (ORCPT
+        with ESMTP id S229573AbjDKU4i (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 14:57:33 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9C618C;
-        Tue, 11 Apr 2023 11:57:27 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pww551qfcz6J70L;
-        Wed, 12 Apr 2023 02:55:05 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 11 Apr 2023 19:57:24 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-        <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <dan.j.williams@intel.com>,
-        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: [PATCH v5 5/5] docs: perf: Minimal introduction the the CXL PMU device and driver
-Date:   Tue, 11 Apr 2023 19:54:52 +0100
-Message-ID: <20230411185452.23387-6-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230411185452.23387-1-Jonathan.Cameron@huawei.com>
-References: <20230411185452.23387-1-Jonathan.Cameron@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+        Tue, 11 Apr 2023 16:56:38 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A78061984
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Apr 2023 13:56:36 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 184-20020a2515c1000000b009419f64f6afso10238348ybv.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Apr 2023 13:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1681246596;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FEI6nzWWR+WddKH/7cQsZpyDFQ7PjyBu53tq/lHMWqI=;
+        b=S7YtXkouzCnAbpJtZBh09HWdFYVUcXLmY8KbZ0Ge1slYzdZ8J7G6G+ePc6Gp73cdX9
+         bGcUhueSk/z1gp1+XYdJKMcnY3A+vKPmggQs2rRvpoYkpRJ0ABSw/lNCk2tABR68iiwb
+         rRN4BoEcuAzcBvmsqjSN4IjmBN7/wwPX1f2sriNm1vRqLgzITae4P3M13qFfNN7SguxG
+         EazdkKt1MLfvya/PZU8EBQr6eeEDkBxfmhnSkePAsNTcKh9ASVjnXB/VRV60J9QJ3ZGq
+         MUO8SGnjA+q94/XWfjTMgNb3fzulMnD/8lXqwqeGHE/j3ml8Zp5oA1u6cIFk24IcWnNk
+         8TTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681246596;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FEI6nzWWR+WddKH/7cQsZpyDFQ7PjyBu53tq/lHMWqI=;
+        b=G7XVh16RA3SuwCf6oaf+pwKyh0IbGlfS1n5C01gU3jocsfgDhECHap4Tknb8lSNSg4
+         6A+ZTD8roiLaGN8MEeivqQBvMpHhuU+YzG/9nIw9/CfCvPaWL0LRnPSsMqHJN78BoUQ2
+         5cmNh8tVDJxDBeskcS9MAu9TtUnrwfOGR+o5Xz6jDBasj50e0rjRwfv8G4RVKs9fjWMj
+         VnXjxKymw4CMD7YD/XBERiWxVDXnmMB3UzSAW8+i48t8g5U1t85gMDY7jxqQao5BFFpC
+         H6R/K8yW+y4hp7EGtqiVTub6pjGTNUw/KTEOFU8a5T+dP//xl4tOuw1mYGyiyydaeuXU
+         Mfcw==
+X-Gm-Message-State: AAQBX9dTGpRiBa/SsLvFeADsOskAwNK77f0J2Ndc2PCH1Baj1pNElGo0
+        rniAW4Qb8UqAaLb8CFTJiC5aXNhq/8m0
+X-Google-Smtp-Source: AKy350bjWpS4nJrh1LEEwU/S+eGt0lghXqTqy2iXVDH+JoT/aZt4s0tbX+bITIF3jB0PqqQvGObwuNKuCfCx
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:f663:83e0:f9b2:5a17])
+ (user=irogers job=sendgmr) by 2002:a81:b184:0:b0:545:f7cc:f30 with SMTP id
+ p126-20020a81b184000000b00545f7cc0f30mr6810565ywh.0.1681246595935; Tue, 11
+ Apr 2023 13:56:35 -0700 (PDT)
+Date:   Tue, 11 Apr 2023 13:56:22 -0700
+Message-Id: <20230411205622.3266490-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
+Subject: [PATCH v1] perf stat: Introduce skippable evsels
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Very basic introduction to the device and the current driver support
-provided. I expect to expand on this in future versions of this patch
-set.
+Perf stat with no arguments will use default events and metrics. These
+events may fail to open even with kernel and hypervisor disabled. When
+these fail then the permissions error appears even though they were
+implicitly selected. This is particularly a problem with the automatic
+selection of the TopdownL1 metric group on certain architectures like
+Skylake:
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+```
+$ perf stat true
+Error:
+Access to performance monitoring and observability operations is limited.
+Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+access to performance monitoring and observability operations for processes
+without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+More information can be found at 'Perf events and tool security' document:
+https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+perf_event_paranoid setting is 2:
+  -1: Allow use of (almost) all events by all users
+      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+>= 0: Disallow raw and ftrace function tracepoint access
+>= 1: Disallow CPU event access
+>= 2: Disallow kernel profiling
+To make the adjusted perf_event_paranoid setting permanent preserve it
+in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
+```
 
---
-v5:
-- Correct final statemnt about sampling support. (Kan)
-- Update CXL PMU MAINTAINERS entry to include this documentation
-- Update device naming to cxl_pmu_memX.Y etc
+This patch adds skippable evsels that when they fail to open will be
+skipped. The TopdownL1 events are marked as skippable. This turns the
+failure above to:
+
+```
+$ perf stat true
+
+ Performance counter stats for 'true':
+
+              1.28 msec task-clock:u                     #    0.323 CPUs utilized
+                 0      context-switches:u               #    0.000 /sec
+                 0      cpu-migrations:u                 #    0.000 /sec
+                48      page-faults:u                    #   37.550 K/sec
+           206,228      cycles:u                         #    0.161 GHz                         (44.07%)
+           122,904      instructions:u                   #    0.60  insn per cycle
+            28,263      branches:u                       #   22.110 M/sec
+             2,461      branch-misses:u                  #    8.71% of all branches
+     <not counted>      CPU_CLK_UNHALTED.REF_XCLK:u
+   <not supported>      INT_MISC.RECOVERY_CYCLES_ANY:u
+     <not counted>      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u
+     <not counted>      CPU_CLK_UNHALTED.THREAD:u
+     <not counted>      UOPS_RETIRED.RETIRE_SLOTS:u
+     <not counted>      UOPS_ISSUED.ANY:u
+     <not counted>      CPU_CLK_UNHALTED.REF_XCLK:u
+     <not counted>      IDQ_UOPS_NOT_DELIVERED.CORE:u
+   <not supported>      INT_MISC.RECOVERY_CYCLES_ANY:u
+     <not counted>      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u
+     <not counted>      CPU_CLK_UNHALTED.THREAD:u
+     <not counted>      UOPS_ISSUED.ANY:u
+
+       0.003958627 seconds time elapsed
+
+       0.000000000 seconds user
+       0.004263000 seconds sys
+
+Some events weren't counted. Try disabling the NMI watchdog:
+        echo 0 > /proc/sys/kernel/nmi_watchdog
+        perf stat ...
+        echo 1 > /proc/sys/kernel/nmi_watchdog
+The events in group usually have to be from the same PMU. Try reorganizing the group.
+```
+
+When the events can have kernel/hypervisor disabled, like on
+Tigerlake, then it continues to succeed as:
+
+```
+$ perf stat true
+
+ Performance counter stats for 'true':
+
+              0.57 msec task-clock:u                     #    0.385 CPUs utilized
+                 0      context-switches:u               #    0.000 /sec
+                 0      cpu-migrations:u                 #    0.000 /sec
+                47      page-faults:u                    #   82.329 K/sec
+           287,017      cycles:u                         #    0.503 GHz
+           133,318      instructions:u                   #    0.46  insn per cycle
+            31,396      branches:u                       #   54.996 M/sec
+             2,442      branch-misses:u                  #    7.78% of all branches
+           998,790      TOPDOWN.SLOTS:u                  #     14.5 %  tma_retiring
+                                                  #     27.6 %  tma_backend_bound
+                                                  #     40.9 %  tma_frontend_bound
+                                                  #     17.0 %  tma_bad_speculation
+           144,922      topdown-retiring:u
+           411,266      topdown-fe-bound:u
+           258,510      topdown-be-bound:u
+           184,090      topdown-bad-spec:u
+             2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/sec
+             3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/u #    6.015 M/sec
+
+       0.001480954 seconds time elapsed
+
+       0.000000000 seconds user
+       0.001686000 seconds sys
+```
+
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- Documentation/admin-guide/perf/cxl.rst   | 68 ++++++++++++++++++++++++
- Documentation/admin-guide/perf/index.rst |  1 +
- MAINTAINERS                              |  1 +
- 3 files changed, 70 insertions(+)
+ tools/perf/builtin-stat.c | 39 ++++++++++++++++++++++++++++++---------
+ tools/perf/util/evsel.c   | 15 +++++++++++++--
+ tools/perf/util/evsel.h   |  1 +
+ 3 files changed, 44 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-new file mode 100644
-index 000000000000..2a1c684603bb
---- /dev/null
-+++ b/Documentation/admin-guide/perf/cxl.rst
-@@ -0,0 +1,68 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================
-+CXL Performance Monitoring Unit (CPMU)
-+======================================
-+
-+The CXL rev 3.0 specification provides a definition of CXL Performance
-+Monitoring Unit in section 13.2: Performance Monitoring.
-+
-+CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-+any number of CPMU instances. CPMU capabilities are fully discoverable from
-+the devices. The specification provides event definitions for all CXL protocol
-+message types and a set of additional events for things commonly counted on
-+CXL devices (e.g. DRAM events).
-+
-+CPMU driver
-+===========
-+
-+The CPMU driver registers a perf PMU with the name pmu_mem<X>.<Y> on the CXL bus
-+representing the Yth CPMU for memX.
-+
-+    /sys/bus/cxl/device/pmu_mem<X>.<Y>
-+
-+The associated PMU is registered as
-+
-+   /sys/bus/event_sources/devices/cxl_pmu_mem<X>.<Y>
-+
-+In common with other CXL bus devices, the id has no specific meaning and the
-+relationship to specific CXL device should be established via the device parent
-+of the device on the CXL bus.
-+
-+PMU driver provides description of available events and filter options in sysfs.
-+
-+The "format" directory describes all formats of the config (event vendor id,
-+group id and mask) config1 (threshold, filter enables) and config2 (filter
-+parameters) fields of the perf_event_attr structure.  The "events" directory
-+describes all documented events show in perf list.
-+
-+The events shown in perf list are the most fine grained events with a single
-+bit of the event mask set. More general events may be enable by setting
-+multiple mask bits in config. For example, all Device to Host Read Requests
-+may be captured on a single counter by setting the bits for all of
-+
-+* d2h_req_rdcurr
-+* d2h_req_rdown
-+* d2h_req_rdshared
-+* d2h_req_rdany
-+* d2h_req_rdownnodata
-+
-+Example of usage::
-+
-+  $#perf list
-+  cxl_pmu_mem0.0/clock_ticks/                        [Kernel PMU event]
-+  cxl_pmu_mem0.0/d2h_req_rdshared/                   [Kernel PMU event]
-+  cxl_pmu_mem0.0/h2d_req_snpcur/                     [Kernel PMU event]
-+  cxl_pmu_mem0.0/h2d_req_snpdata/                    [Kernel PMU event]
-+  cxl_pmu_mem0.0/h2d_req_snpinv/                     [Kernel PMU event]
-+  -----------------------------------------------------------
-+
-+  $# perf stat -e cxl_pmu_mem0.0/clock_ticks/ -e cxl_pmu_mem0.0/d2h_req_rdshared/
-+
-+Vendor specific events may also be available and if so can be used via
-+
-+  $# perf stat -e cxl_pmu_mem0.0/vid=VID,gid=GID,mask=MASK/
-+
-+The driver does not support sampling so "perf record" is unsupported.
-+It only supports system-wide counting so attaching to a task is
-+unsupported.
-diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-index 9de64a40adab..f60be04e4e33 100644
---- a/Documentation/admin-guide/perf/index.rst
-+++ b/Documentation/admin-guide/perf/index.rst
-@@ -21,3 +21,4 @@ Performance monitor support
-    alibaba_pmu
-    nvidia-pmu
-    meson-ddr-pmu
-+   cxl
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 51234eb7858e..29a108afa065 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5178,6 +5178,7 @@ COMPUTE EXPRESS LINK PMU (CPMU)
- M:	Jonathan Cameron <jonathan.cameron@huawei.com>
- L:	linux-cxl@vger.kernel.org
- S:	Maintained
-+F:	Documentation/admin-guide/perf/cxl.rst
- F:	drivers/perf/cxl_pmu.c
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 38133afda7fc..024fda0dd943 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+ 			evsel_list->core.threads->err_thread = -1;
+ 			return COUNTER_RETRY;
+ 		}
++	} else if (counter->skippable) {
++		if (verbose > 0)
++			ui__warning("skipping event %s that kernel failed to open .\n",
++				    evsel__name(counter));
++		counter->supported = false;
++		counter->errored = true;
++		return COUNTER_SKIP;
+ 	}
  
- CONEXANT ACCESSRUNNER USB DRIVER
+ 	evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
+@@ -1885,15 +1892,29 @@ static int add_default_attributes(void)
+ 		 * Add TopdownL1 metrics if they exist. To minimize
+ 		 * multiplexing, don't request threshold computation.
+ 		 */
+-		if (metricgroup__has_metric("TopdownL1") &&
+-		    metricgroup__parse_groups(evsel_list, "TopdownL1",
+-					    /*metric_no_group=*/false,
+-					    /*metric_no_merge=*/false,
+-					    /*metric_no_threshold=*/true,
+-					    stat_config.user_requested_cpu_list,
+-					    stat_config.system_wide,
+-					    &stat_config.metric_events) < 0)
+-			return -1;
++		if (metricgroup__has_metric("TopdownL1")) {
++			struct evlist *metric_evlist = evlist__new();
++			struct evsel *metric_evsel;
++
++			if (!metric_evlist)
++				return -1;
++
++			if (metricgroup__parse_groups(metric_evlist, "TopdownL1",
++							/*metric_no_group=*/false,
++							/*metric_no_merge=*/false,
++							/*metric_no_threshold=*/true,
++							stat_config.user_requested_cpu_list,
++							stat_config.system_wide,
++							&stat_config.metric_events) < 0)
++				return -1;
++
++			evlist__for_each_entry(metric_evlist, metric_evsel) {
++				metric_evsel->skippable = true;
++			}
++			evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
++			evlist__delete(metric_evlist);
++		}
++
+ 		/* Platform specific attrs */
+ 		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
+ 			return -1;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index dc3faf005c3b..a09654ea18ec 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
+ 	evsel->per_pkg_mask  = NULL;
+ 	evsel->collect_stat  = false;
+ 	evsel->pmu_name      = NULL;
++	evsel->skippable     = false;
+ }
+ 
+ struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
+@@ -1717,9 +1718,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map_idx, int thread)
+ 		return -1;
+ 
+ 	fd = FD(leader, cpu_map_idx, thread);
+-	BUG_ON(fd == -1);
++	BUG_ON(fd == -1 && !leader->skippable);
+ 
+-	return fd;
++	/*
++	 * When the leader has been skipped, return -2 to distinguish from no
++	 * group leader case.
++	 */
++	return fd == -1 ? -2 : fd;
+ }
+ 
+ static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_threads, int thread_idx)
+@@ -2101,6 +2106,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 
+ 			group_fd = get_group_fd(evsel, idx, thread);
+ 
++			if (group_fd == -2) {
++				pr_debug("broken group leader for %s\n", evsel->name);
++				err = -EINVAL;
++				goto out_close;
++			}
++
+ 			test_attr__ready();
+ 
+ 			/* Debug message used by test scripts */
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 68072ec655ce..98afe3351176 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -95,6 +95,7 @@ struct evsel {
+ 		bool			weak_group;
+ 		bool			bpf_counter;
+ 		bool			use_config_name;
++		bool			skippable;
+ 		int			bpf_fd;
+ 		struct bpf_object	*bpf_obj;
+ 		struct list_head	config_terms;
 -- 
-2.37.2
+2.40.0.577.gac1e443424-goog
 
