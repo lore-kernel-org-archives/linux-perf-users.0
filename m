@@ -2,97 +2,86 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E26AC77B6E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Apr 2023 13:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3803DC7619A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Apr 2023 13:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbjDLNa7 (ORCPT
+        id S229968AbjDLNeE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Apr 2023 09:30:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32940 "EHLO
+        Wed, 12 Apr 2023 09:34:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229869AbjDLNa6 (ORCPT
+        with ESMTP id S230236AbjDLNeC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Apr 2023 09:30:58 -0400
+        Wed, 12 Apr 2023 09:34:02 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B80077ED2;
-        Wed, 12 Apr 2023 06:30:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725DC5586;
+        Wed, 12 Apr 2023 06:33:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 549A06351F;
-        Wed, 12 Apr 2023 13:30:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B567C433D2;
-        Wed, 12 Apr 2023 13:30:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C66C262C1B;
+        Wed, 12 Apr 2023 13:33:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FE0EC433EF;
+        Wed, 12 Apr 2023 13:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681306226;
-        bh=eUjpHeBe04yzwPH/Y5RkCFF5/1d41e8J/mtF4gC0FRs=;
+        s=k20201202; t=1681306410;
+        bh=jPhZ+vYcELisnUqbTmvB2M/+JoxSxb+g81de7EPVmWk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NXRV1ELpyfSUd/E6dIYDjffmWl5z++YO7IhkAkMHinQhCIFjjRQHhY8kdggBcF2fY
-         p6+c+GXXn5b/ycBROF8PxMx5dm5CCYlnwm512Z1EU/yNQqSRxZJ3Gg6EkIcqSRCtRR
-         tG9WUh40CbKG9DHKKEn8DYTSlfwkAPz5/8Q8pZ1pP2TyO04kmya4hsNSoR3WOh05sw
-         Z0EGnO5oE9oEDLGk7bS49MMSBPyE+hA6g26Er68vPsQP4s0iE/N/hBz5mM+zK+YG3b
-         KZVxk+e34SYaS0wMovFcRI2y6TzvClW5noBSuMuGM83eSogYytBl+wjX+A1DX4QzUV
-         hfu+f7KiyN45A==
+        b=GbgX2UAytswaQofx/YMthWjZh0hxp9/yCU+Dg3xtubw+gUMpn37gJJA7yTTfTegFc
+         LkMizGerMEb1NZ74Z/Y1DfPgQ3OWeY/A09pCddLGMfdJcvqARTY/cOdUr5geRxQonp
+         fN2bLYRQdgwriL1FR1UvG4UCYpydjmk+UWt6VpZOT0fKJ282Azq/zUJPDtBEncPTpg
+         nsUCVvpnjPO/wBTj9gvMX6TGq0itIE56I92qSo38N/qMp31Jy8IOCmlWnoi5q8DxeZ
+         5ARxlujYTSgK2JObsiD5URzL5Qsj6cKTWSVNLRDVuNJYrCCSKDLAkpu/T4Gp+ZgDbq
+         +1EeGLhPneK2A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 7290340080; Wed, 12 Apr 2023 10:30:23 -0300 (-03)
-Date:   Wed, 12 Apr 2023 10:30:23 -0300
+        id CB3DB40080; Wed, 12 Apr 2023 10:33:27 -0300 (-03)
+Date:   Wed, 12 Apr 2023 10:33:27 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 0/3] Updates to sapphirerapids, alderlake and icelakex
- events
-Message-ID: <ZDayb2N/d11N68Fi@kernel.org>
-References: <20230411234440.3313680-1-irogers@google.com>
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH bpf-next] tools headers: Remove s390 ptrace.h in
+ check-headers.sh
+Message-ID: <ZDazJ+Om7RgQwcZO@kernel.org>
+References: <1680834090-2322-1-git-send-email-yangtiezhu@loongson.cn>
+ <ZC/wA2NoO7yI/xNm@krava>
+ <0f77e29c-e384-1d67-a99c-91e6091ec7db@iogearbox.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230411234440.3313680-1-irogers@google.com>
+In-Reply-To: <0f77e29c-e384-1d67-a99c-91e6091ec7db@iogearbox.net>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 11, 2023 at 04:44:37PM -0700, Ian Rogers escreveu:
-> Changes largely stemming from:
-> https://github.com/intel/perfmon/pull/68
+Em Tue, Apr 11, 2023 at 07:35:02PM +0200, Daniel Borkmann escreveu:
+> On 4/7/23 12:27 PM, Jiri Olsa wrote:
+> > On Fri, Apr 07, 2023 at 10:21:30AM +0800, Tiezhu Yang wrote:
+> > > After commit 1f265d2aea0d ("selftests/bpf: Remove not used headers"),
+> > > tools/arch/s390/include/uapi/asm/ptrace.h has been removed, so remove
+> > > it in check-headers.sh too, otherwise we can see the following build
+> > > warning:
+> > > 
+> > >    diff: tools/arch/s390/include/uapi/asm/ptrace.h: No such file or directory
+> > > 
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Link: https://lore.kernel.org/oe-kbuild-all/202304050029.38NdbQPf-lkp@intel.com/
+> > > Fixes: 1f265d2aea0d ("selftests/bpf: Remove not used headers")
+> > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> > 
+> > not sure this should go through Arnaldo's tree instead,
+> > either way is fine with me
 > 
-> Changes generated by:
-> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> Agree, perf tree is better given the script is located there, so:
+> 
+> Acked-by: Daniel Borkmann <daniel@iogearbox.net>
 
 Thanks, applied.
 
 - Arnaldo
 
- 
-> Ian Rogers (3):
->   perf vendor events: Update alderlake to v1.20
->   perf vendor events: Update icelakex to v1.20
->   perf vendor events: Update sapphirerapids to v1.12
-> 
->  .../pmu-events/arch/x86/alderlake/other.json  |     3 +-
->  .../arch/x86/alderlake/pipeline.json          |     4 +-
->  .../arch/x86/icelakex/uncore-other.json       |     2 +-
->  tools/perf/pmu-events/arch/x86/mapfile.csv    |     8 +-
->  .../arch/x86/sapphirerapids/other.json        |     3 +-
->  .../arch/x86/sapphirerapids/pipeline.json     |     4 +-
->  .../x86/sapphirerapids/uncore-memory.json     |   794 +-
->  .../arch/x86/sapphirerapids/uncore-other.json | 18656 +++++++++++++---
->  .../arch/x86/sapphirerapids/uncore-power.json |   107 +
->  9 files changed, 16977 insertions(+), 2604 deletions(-)
-> 
-> -- 
-> 2.40.0.577.gac1e443424-goog
-> 
-
--- 
-
-- Arnaldo
