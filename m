@@ -2,86 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3803DC7619A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Apr 2023 13:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE1A5C77B72
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Apr 2023 13:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbjDLNeE (ORCPT
+        id S229831AbjDLNiF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Apr 2023 09:34:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36444 "EHLO
+        Wed, 12 Apr 2023 09:38:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230236AbjDLNeC (ORCPT
+        with ESMTP id S229521AbjDLNiE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Apr 2023 09:34:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725DC5586;
-        Wed, 12 Apr 2023 06:33:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C66C262C1B;
-        Wed, 12 Apr 2023 13:33:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FE0EC433EF;
-        Wed, 12 Apr 2023 13:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681306410;
-        bh=jPhZ+vYcELisnUqbTmvB2M/+JoxSxb+g81de7EPVmWk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GbgX2UAytswaQofx/YMthWjZh0hxp9/yCU+Dg3xtubw+gUMpn37gJJA7yTTfTegFc
-         LkMizGerMEb1NZ74Z/Y1DfPgQ3OWeY/A09pCddLGMfdJcvqARTY/cOdUr5geRxQonp
-         fN2bLYRQdgwriL1FR1UvG4UCYpydjmk+UWt6VpZOT0fKJ282Azq/zUJPDtBEncPTpg
-         nsUCVvpnjPO/wBTj9gvMX6TGq0itIE56I92qSo38N/qMp31Jy8IOCmlWnoi5q8DxeZ
-         5ARxlujYTSgK2JObsiD5URzL5Qsj6cKTWSVNLRDVuNJYrCCSKDLAkpu/T4Gp+ZgDbq
-         +1EeGLhPneK2A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CB3DB40080; Wed, 12 Apr 2023 10:33:27 -0300 (-03)
-Date:   Wed, 12 Apr 2023 10:33:27 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH bpf-next] tools headers: Remove s390 ptrace.h in
- check-headers.sh
-Message-ID: <ZDazJ+Om7RgQwcZO@kernel.org>
-References: <1680834090-2322-1-git-send-email-yangtiezhu@loongson.cn>
- <ZC/wA2NoO7yI/xNm@krava>
- <0f77e29c-e384-1d67-a99c-91e6091ec7db@iogearbox.net>
+        Wed, 12 Apr 2023 09:38:04 -0400
+Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE2340F2;
+        Wed, 12 Apr 2023 06:38:02 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id bj35so4378019qkb.7;
+        Wed, 12 Apr 2023 06:38:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681306682; x=1683898682;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WWdLpuhyNb11g+2phf0ujfTe5bokf6y5zMA0DxQiBiA=;
+        b=B/jjBNSTypcC+joaCW6KBpHZMJp0zGfpqOXg+zBPIJ4NWlwYrPSMxjdSJy75T7U+3W
+         U3p3HotHjbkZlaRKmFC8qc1Afx6oeTJ5uQpH2hG5w6sceSXtWvhwqD0ty4GTJOrTqqUL
+         idO/30jacGJYN69+SVScPsn3OHD9k8oRdDeFIGHLcMZu3eu8rF9Xwdo+4T1+slcDtYsU
+         YH0NOP8VGLe82rREMYx2QH+7wkX8dWpsJjPbWWLufPzhXmFeBT9DiKG3mgcWZ9nD2lka
+         J4Q7aWlsb6BWQEoFbqY6WJkyrIjqnRCGYJf4CUJlNWaYPJ0je3GRhXlmjShv2pC79kPd
+         uijw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681306682; x=1683898682;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WWdLpuhyNb11g+2phf0ujfTe5bokf6y5zMA0DxQiBiA=;
+        b=b6gBQOYwn0iv6j28deCPgMLLksHtVWvph94bSzJdnLF+eBjV2wF3XjmJ1prFZrdHYU
+         Ac9Fa6HZR3LHWVeJhKeiBG6V1DZ8iBpipYwJVQkgDQPfWcYmKdmIe63FQ28dq99VOFgW
+         a3oxs0sgKdKVhxjubS5iuqkBkJmhLG4hgBwNQ38zte8uuroy1kajWTCk+pFqOtgQzm+y
+         Yw7sTMLu0XTVzVrjTzav8PlihjuCCwGHu9SWNQs0oL4+UjvJelfxqBwMYlhJBn9uZ74+
+         XKFGLGy7nlmcGZHZFvfYZtbWrlVlDifU/zvJaorRO5FrfPeXPMl19toEN4Ut4qiIpZQU
+         R7bA==
+X-Gm-Message-State: AAQBX9dmLvbkbOCHa4I7kp452wdamYNpIBB1ZuEgl0I08sBI5+YjTpIL
+        UuYqCkyVnuicMXHfpa4M+Y11A4uSHw/Pvk9zUYM=
+X-Google-Smtp-Source: AKy350bQZX93U7KKOQF4PJTiOvTycKd+ntmsVru9e/foHUOInkoawqILTSPuq4LXHeg8osg4IFMokyT1/kYfdkvFekQ=
+X-Received: by 2002:a05:620a:4482:b0:746:83cd:8d1d with SMTP id
+ x2-20020a05620a448200b0074683cd8d1dmr2165203qkp.6.1681306681702; Wed, 12 Apr
+ 2023 06:38:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f77e29c-e384-1d67-a99c-91e6091ec7db@iogearbox.net>
-X-Url:  http://acmel.wordpress.com
+References: <20230405141710.3551-1-ubizjak@gmail.com> <20230405141710.3551-4-ubizjak@gmail.com>
+ <20230412113231.GA628377@hirez.programming.kicks-ass.net>
+In-Reply-To: <20230412113231.GA628377@hirez.programming.kicks-ass.net>
+From:   Uros Bizjak <ubizjak@gmail.com>
+Date:   Wed, 12 Apr 2023 15:37:50 +0200
+Message-ID: <CAFULd4aCNNcyQm3Av+KkWVXuU9Cb0G5H5cFmqVR_T5LwCW=YJA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] locking/arch: Wire up local_try_cmpxchg
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jun Yi <yijun@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 11, 2023 at 07:35:02PM +0200, Daniel Borkmann escreveu:
-> On 4/7/23 12:27 PM, Jiri Olsa wrote:
-> > On Fri, Apr 07, 2023 at 10:21:30AM +0800, Tiezhu Yang wrote:
-> > > After commit 1f265d2aea0d ("selftests/bpf: Remove not used headers"),
-> > > tools/arch/s390/include/uapi/asm/ptrace.h has been removed, so remove
-> > > it in check-headers.sh too, otherwise we can see the following build
-> > > warning:
-> > > 
-> > >    diff: tools/arch/s390/include/uapi/asm/ptrace.h: No such file or directory
-> > > 
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Link: https://lore.kernel.org/oe-kbuild-all/202304050029.38NdbQPf-lkp@intel.com/
-> > > Fixes: 1f265d2aea0d ("selftests/bpf: Remove not used headers")
-> > > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > 
-> > not sure this should go through Arnaldo's tree instead,
-> > either way is fine with me
-> 
-> Agree, perf tree is better given the script is located there, so:
-> 
-> Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+On Wed, Apr 12, 2023 at 1:33=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Wed, Apr 05, 2023 at 04:17:08PM +0200, Uros Bizjak wrote:
+> > diff --git a/arch/powerpc/include/asm/local.h b/arch/powerpc/include/as=
+m/local.h
+> > index bc4bd19b7fc2..45492fb5bf22 100644
+> > --- a/arch/powerpc/include/asm/local.h
+> > +++ b/arch/powerpc/include/asm/local.h
+> > @@ -90,6 +90,17 @@ static __inline__ long local_cmpxchg(local_t *l, lon=
+g o, long n)
+> >       return t;
+> >  }
+> >
+> > +static __inline__ bool local_try_cmpxchg(local_t *l, long *po, long n)
+> > +{
+> > +     long o =3D *po, r;
+> > +
+> > +     r =3D local_cmpxchg(l, o, n);
+> > +     if (unlikely(r !=3D o))
+> > +             *po =3D r;
+> > +
+> > +     return likely(r =3D=3D o);
+> > +}
+> > +
+>
+> Why is the ppc one different from the rest? Why can't it use the
+> try_cmpxchg_local() fallback and needs to have it open-coded?
 
-Thanks, applied.
+Please note that ppc directly defines local_cmpxchg that bypasses
+cmpxchg_local/arch_cmpxchg_local machinery. The patch takes the same
+approach for local_try_cmpxchg, because fallbacks are using
+arch_cmpxchg_local definitions.
 
-- Arnaldo
+PPC should be converted to use arch_cmpxchg_local (to also enable
+instrumentation), but this is not the scope of the proposed patchset.
 
+Uros.
