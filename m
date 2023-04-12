@@ -2,115 +2,175 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBFABC7619A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Apr 2023 15:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFB1C77B6E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Apr 2023 15:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230177AbjDLPUo (ORCPT
+        id S229811AbjDLPmA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Apr 2023 11:20:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49128 "EHLO
+        Wed, 12 Apr 2023 11:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbjDLPUo (ORCPT
+        with ESMTP id S230137AbjDLPl7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Apr 2023 11:20:44 -0400
+        Wed, 12 Apr 2023 11:41:59 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEE6193F4;
-        Wed, 12 Apr 2023 08:20:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA56583E3;
+        Wed, 12 Apr 2023 08:41:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9AC1063630;
-        Wed, 12 Apr 2023 15:20:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4162C433EF;
-        Wed, 12 Apr 2023 15:20:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8F3BE62AAA;
+        Wed, 12 Apr 2023 15:41:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6487C433EF;
+        Wed, 12 Apr 2023 15:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681312810;
-        bh=2TlxvyOrCIyB9YsYK1Bw0dLMpDzPG7m8BgTr+ARjzRk=;
+        s=k20201202; t=1681314083;
+        bh=uEXsdxZQV1QfEC1h3A9FFDtHPNZrT00npYRCTSESuAM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RqXcWyUQM+FQApWq4v17krYaFCt6WOe74vHrfUXSaUGARjsuivpUWMOuJTOD4oT4+
-         kRBSBilsF4WNv4SEeyMzCa5cpOIRdldztmSvHTrVgBG9+dbKYPLXdw7Hjbp0JffJ72
-         XPhoA33ug/FQaXQSsOlJmE4VcikTgsKsXCZzcT+ijZYt+ZN9Axv+GHlFGZ1aH/Ol23
-         AULUMyR7tBQ9I/Dlv4/VOC6MsPKKoS7b+UeV76RiRn8OixC+897RgG2phn2S75CWpR
-         527INGXRAkp2JMI4I9j/iP4eRxKDHuR19l4VBRL1Xr5CecZGCpJqUAr6qb197ialHa
-         Qn5uIrirVmxng==
+        b=NWHdlxL1MNgvesIsfYwYbJtQYw7cn/kjAqJJuA2Q3T2rVDTb6Hk255saGxv3fdWSo
+         3eztLhDqFlvO7JoZCrSlnjJBe+VY4cBaYgTsN/h5LWQMJ4knXpH7ZBgZmk71ub4OVQ
+         9Af6DrJQn33hgDEkofpnF7GvO4u82aH8rshXK5kCewvQQo6PZctd/TFXJesruDYfQt
+         Lt2yi7QORfwlaULkSONcnvewCnsFBOVDlLmddhKf9IiC5ewZwvFkN4g+KciiYV54Nl
+         C94IiehfL9R4Ga+7tsCOEtyuOTgKijuOQ4sWvNoEMLZCunfWtyDq4S/1EegzbTvVD8
+         Q/JayVrAOvi5A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A7C2F40080; Wed, 12 Apr 2023 12:20:06 -0300 (-03)
-Date:   Wed, 12 Apr 2023 12:20:06 -0300
+        id 271C940080; Wed, 12 Apr 2023 12:41:20 -0300 (-03)
+Date:   Wed, 12 Apr 2023 12:41:20 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Alexander Pantyukhin <apantykhin@gmail.com>, mingo@redhat.com,
-        namhyung@kernel.org, jolsa@kernel.org, akpm@linux-foundation.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tools:perf:scripts:python:intel-pt-events del
- unusedvar
-Message-ID: <ZDbMJkiJT2rD8MEj@kernel.org>
-References: <20230114130533.2877-1-apantykhin@gmail.com>
- <ae03d3af-02de-0d36-4680-c4ad934da77d@intel.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hao Luo <haoluo@google.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v7 2/5] perf cpumap: Add reference count checking
+Message-ID: <ZDbRIJknafLnDwtO@kernel.org>
+References: <20230407230405.2931830-1-irogers@google.com>
+ <20230407230405.2931830-3-irogers@google.com>
+ <ZDWkmmj/UvuiXSWX@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ae03d3af-02de-0d36-4680-c4ad934da77d@intel.com>
+In-Reply-To: <ZDWkmmj/UvuiXSWX@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jan 16, 2023 at 07:15:01AM +0200, Adrian Hunter escreveu:
-> On 14/01/23 15:05, Alexander Pantyukhin wrote:
-> > The event_attr is never used later, the var is ok be deleted.
-> > Additional code simplification is to substitute string slice comparison
-> > with "substring" function. This case no need to know the length specific
-> > words.
-> > 
-> > Signed-off-by: Alexander Pantyukhin <apantykhin@gmail.com>
-> 
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-Finally picked this one,
-
-- Arnaldo
+Em Tue, Apr 11, 2023 at 03:19:06PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Fri, Apr 07, 2023 at 04:04:02PM -0700, Ian Rogers escreveu:
+> > This change is intended to catch:
+> >  - use after put: using a cpumap after you have put it will cause a
+> >    segv.
+> >  - unbalanced puts: two puts for a get will result in a double free
+> >    that can be captured and reported by tools like address sanitizer,
+> >    including with the associated stack traces of allocation and frees.
+> >  - missing puts: if a put is missing then the get turns into a memory
+> >    leak that can be reported by leak sanitizer, including the stack
+> >    trace at the point the get occurs.
  
-> > ---
-> >  tools/perf/scripts/python/intel-pt-events.py | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/scripts/python/intel-pt-events.py b/tools/perf/scripts/python/intel-pt-events.py
-> > index 08862a2582f4..dfd566369ca4 100644
-> > --- a/tools/perf/scripts/python/intel-pt-events.py
-> > +++ b/tools/perf/scripts/python/intel-pt-events.py
-> > @@ -340,7 +340,6 @@ def print_srccode(comm, param_dict, sample, symbol, dso, with_insn):
-> >  	print(start_str, src_str)
-> >  
-> >  def do_process_event(param_dict):
-> > -	event_attr = param_dict["attr"]
-> >  	sample	   = param_dict["sample"]
-> >  	raw_buf	   = param_dict["raw_buf"]
-> >  	comm	   = param_dict["comm"]
-> > @@ -349,6 +348,7 @@ def do_process_event(param_dict):
-> >  	# callchain  = param_dict["callchain"]
-> >  	# brstack    = param_dict["brstack"]
-> >  	# brstacksym = param_dict["brstacksym"]
-> > +	# event_attr = param_dict["attr"]
-> >  
-> >  	# Symbol and dso info are not always resolved
-> >  	dso    = get_optional(param_dict, "dso")
-> > @@ -359,13 +359,13 @@ def do_process_event(param_dict):
-> >  		print(glb_switch_str[cpu])
-> >  		del glb_switch_str[cpu]
-> >  
-> > -	if name[0:12] == "instructions":
-> > +	if name.startswith("instructions"):
-> >  		if glb_src:
-> >  			print_srccode(comm, param_dict, sample, symbol, dso, True)
-> >  		else:
-> >  			print_instructions_start(comm, sample)
-> >  			print_common_ip(param_dict, sample, symbol, dso)
-> > -	elif name[0:8] == "branches":
-> > +	elif name.startswith("branches"):
-> >  		if glb_src:
-> >  			print_srccode(comm, param_dict, sample, symbol, dso, False)
-> >  		else:
+> I think this should be further split into self contained patches as it
+> does:
 
+> 3. Shouldn't we have a map__refcnt(map) accessor to avoid using those
+> verbose macros outside the object that is having its reference counts
+> checked?
+
+So I added this one, in the end its just to avoid 
+
+From 997a7909789d5b5570dc3cfcd1b9f03877f544bd Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Wed, 12 Apr 2023 12:36:58 -0300
+Subject: [PATCH 1/1] perf map: Add map__refcnt() accessor to use in the maps
+ test
+
+To remove one more direct access to 'struct map' so that we can intecept
+accesses to its instantiations and refcount check it to catch use after
+free, etc.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+Cc: Dmitriy Vyukov <dvyukov@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Riccardo Mancini <rickyman7@gmail.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Stephen Brennan <stephen.s.brennan@oracle.com>
+Link: https://lore.kernel.org/lkml/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/maps.c | 4 ++--
+ tools/perf/util/map.h   | 5 +++++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/tests/maps.c b/tools/perf/tests/maps.c
+index 1c7293476acad2e5..a6278f9c8b713220 100644
+--- a/tools/perf/tests/maps.c
++++ b/tools/perf/tests/maps.c
+@@ -30,7 +30,7 @@ static int check_maps(struct map_def *merged, unsigned int size, struct maps *ma
+ 			if (map__start(map) != merged[i].start ||
+ 			    map__end(map) != merged[i].end ||
+ 			    strcmp(map__dso(map)->name, merged[i].name) ||
+-			    refcount_read(&map->refcnt) != 1) {
++			    refcount_read(map__refcnt(map)) != 1) {
+ 				failed = true;
+ 			}
+ 			i++;
+@@ -50,7 +50,7 @@ static int check_maps(struct map_def *merged, unsigned int size, struct maps *ma
+ 				map__start(map),
+ 				map__end(map),
+ 				map__dso(map)->name,
+-				refcount_read(&map->refcnt));
++				refcount_read(map__refcnt(map)));
+ 		}
+ 	}
+ 	return failed ? TEST_FAIL : TEST_OK;
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index 102485699aa8d7c3..f89ab7c2d3277239 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -97,6 +97,11 @@ static inline bool map__priv(const struct map *map)
+ 	return map->priv;
+ }
+ 
++static inline refcount_t *map__refcnt(struct map *map)
++{
++	return &map->refcnt;
++}
++
+ static inline size_t map__size(const struct map *map)
+ {
+ 	return map__end(map) - map__start(map);
 -- 
+2.39.2
 
-- Arnaldo
