@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFB1C77B6E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Apr 2023 15:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C28EC77B6E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Apr 2023 15:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229811AbjDLPmA (ORCPT
+        id S229516AbjDLPuL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Apr 2023 11:42:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46940 "EHLO
+        Wed, 12 Apr 2023 11:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230137AbjDLPl7 (ORCPT
+        with ESMTP id S229699AbjDLPuK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Apr 2023 11:41:59 -0400
+        Wed, 12 Apr 2023 11:50:10 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA56583E3;
-        Wed, 12 Apr 2023 08:41:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B53E559F0;
+        Wed, 12 Apr 2023 08:50:09 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8F3BE62AAA;
-        Wed, 12 Apr 2023 15:41:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6487C433EF;
-        Wed, 12 Apr 2023 15:41:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4FC9E63583;
+        Wed, 12 Apr 2023 15:50:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50CDBC433D2;
+        Wed, 12 Apr 2023 15:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681314083;
-        bh=uEXsdxZQV1QfEC1h3A9FFDtHPNZrT00npYRCTSESuAM=;
+        s=k20201202; t=1681314608;
+        bh=py3z9HpgKFsgkK9Fic8o4YVTIgR1hDxGNyaU/pbt2JI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NWHdlxL1MNgvesIsfYwYbJtQYw7cn/kjAqJJuA2Q3T2rVDTb6Hk255saGxv3fdWSo
-         3eztLhDqFlvO7JoZCrSlnjJBe+VY4cBaYgTsN/h5LWQMJ4knXpH7ZBgZmk71ub4OVQ
-         9Af6DrJQn33hgDEkofpnF7GvO4u82aH8rshXK5kCewvQQo6PZctd/TFXJesruDYfQt
-         Lt2yi7QORfwlaULkSONcnvewCnsFBOVDlLmddhKf9IiC5ewZwvFkN4g+KciiYV54Nl
-         C94IiehfL9R4Ga+7tsCOEtyuOTgKijuOQ4sWvNoEMLZCunfWtyDq4S/1EegzbTvVD8
-         Q/JayVrAOvi5A==
+        b=vNRd7hdMc13Bgl7TeBLNA48Df/uWyCYgfPg5viZELVHwugJcquo2tgx9145J/rs2W
+         /SSxGdV6Iykvm44ZpdC2sktgczRGEd+Jgm5v/zkNKqRcEpIv6WsAjf0n9+FWmNuL3D
+         Nvd7bzr8kQQ1vNF3Lo+TXjwP1VnCn4pWQjd/mHMtSQe/qqhDH9GDxsEVTei/QJqZhl
+         Xa2vazN0P6ewrIjITHHldUsLcIVoYQ7+fHDZD1pwls9H0iS/NxJMz1hDshh+HR2l0u
+         MwfUiF/kWBlM9ldSuVmr0GagEmhkmaUQoSSMdaPjkJrdU4zrp9TJ0legQthIuVoRfQ
+         W1jxRySoyjAag==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 271C940080; Wed, 12 Apr 2023 12:41:20 -0300 (-03)
-Date:   Wed, 12 Apr 2023 12:41:20 -0300
+        id 94F7F40080; Wed, 12 Apr 2023 12:50:05 -0300 (-03)
+Date:   Wed, 12 Apr 2023 12:50:05 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -73,7 +73,7 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Hao Luo <haoluo@google.com>,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH v7 2/5] perf cpumap: Add reference count checking
-Message-ID: <ZDbRIJknafLnDwtO@kernel.org>
+Message-ID: <ZDbTLbjtJ8mVET8N@kernel.org>
 References: <20230407230405.2931830-1-irogers@google.com>
  <20230407230405.2931830-3-irogers@google.com>
  <ZDWkmmj/UvuiXSWX@kernel.org>
@@ -100,22 +100,29 @@ Em Tue, Apr 11, 2023 at 03:19:06PM -0300, Arnaldo Carvalho de Melo escreveu:
  
 > I think this should be further split into self contained patches as it
 > does:
+ 
+> These are missing convertions that should be in a separate patch, no?
+> 
+> > @@ -239,7 +236,7 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
+> >  {
+> >       int idx;
+> >       struct perf_cpu cpu;
+> > -     struct cpu_aggr_map *c = cpu_aggr_map__empty_new(cpus->nr);
+> > +     struct cpu_aggr_map *c = cpu_aggr_map__empty_new(perf_cpu_map__nr(cpus));
+> >
+> >       if (!c)
+> >               return NULL;
 
-> 3. Shouldn't we have a map__refcnt(map) accessor to avoid using those
-> verbose macros outside the object that is having its reference counts
-> checked?
+Extracted this from your larger patch:
 
-So I added this one, in the end its just to avoid 
+From f8a23fce48400168be0cc078a0b0bd0e7d4a889f Mon Sep 17 00:00:00 2001
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 12 Apr 2023 12:45:45 -0300
+Subject: [PATCH 1/1] perf cpumap: Use perf_cpu_map__nr(cpus) to access
+ cpus->nr
 
-From 997a7909789d5b5570dc3cfcd1b9f03877f544bd Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Wed, 12 Apr 2023 12:36:58 -0300
-Subject: [PATCH 1/1] perf map: Add map__refcnt() accessor to use in the maps
- test
-
-To remove one more direct access to 'struct map' so that we can intecept
-accesses to its instantiations and refcount check it to catch use after
-free, etc.
+So that we can have a single point where to refcount check 'struct perf_cpu_map'
+instances for use after free, etc.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -129,48 +136,61 @@ Cc: Stephen Brennan <stephen.s.brennan@oracle.com>
 Link: https://lore.kernel.org/lkml/
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/maps.c | 4 ++--
- tools/perf/util/map.h   | 5 +++++
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ tools/perf/util/cpumap.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/tests/maps.c b/tools/perf/tests/maps.c
-index 1c7293476acad2e5..a6278f9c8b713220 100644
---- a/tools/perf/tests/maps.c
-+++ b/tools/perf/tests/maps.c
-@@ -30,7 +30,7 @@ static int check_maps(struct map_def *merged, unsigned int size, struct maps *ma
- 			if (map__start(map) != merged[i].start ||
- 			    map__end(map) != merged[i].end ||
- 			    strcmp(map__dso(map)->name, merged[i].name) ||
--			    refcount_read(&map->refcnt) != 1) {
-+			    refcount_read(map__refcnt(map)) != 1) {
- 				failed = true;
- 			}
- 			i++;
-@@ -50,7 +50,7 @@ static int check_maps(struct map_def *merged, unsigned int size, struct maps *ma
- 				map__start(map),
- 				map__end(map),
- 				map__dso(map)->name,
--				refcount_read(&map->refcnt));
-+				refcount_read(map__refcnt(map)));
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 5e564974fba4ffab..c8484b75413ef709 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -239,7 +239,7 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
+ {
+ 	int idx;
+ 	struct perf_cpu cpu;
+-	struct cpu_aggr_map *c = cpu_aggr_map__empty_new(cpus->nr);
++	struct cpu_aggr_map *c = cpu_aggr_map__empty_new(perf_cpu_map__nr(cpus));
+ 
+ 	if (!c)
+ 		return NULL;
+@@ -263,7 +263,7 @@ struct cpu_aggr_map *cpu_aggr_map__new(const struct perf_cpu_map *cpus,
  		}
  	}
- 	return failed ? TEST_FAIL : TEST_OK;
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 102485699aa8d7c3..f89ab7c2d3277239 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -97,6 +97,11 @@ static inline bool map__priv(const struct map *map)
- 	return map->priv;
- }
+ 	/* Trim. */
+-	if (c->nr != cpus->nr) {
++	if (c->nr != perf_cpu_map__nr(cpus)) {
+ 		struct cpu_aggr_map *trimmed_c =
+ 			realloc(c,
+ 				sizeof(struct cpu_aggr_map) + sizeof(struct aggr_cpu_id) * c->nr);
+@@ -582,9 +582,9 @@ size_t cpu_map__snprint(struct perf_cpu_map *map, char *buf, size_t size)
  
-+static inline refcount_t *map__refcnt(struct map *map)
-+{
-+	return &map->refcnt;
-+}
-+
- static inline size_t map__size(const struct map *map)
- {
- 	return map__end(map) - map__start(map);
+ #define COMMA first ? "" : ","
+ 
+-	for (i = 0; i < map->nr + 1; i++) {
++	for (i = 0; i < perf_cpu_map__nr(map) + 1; i++) {
+ 		struct perf_cpu cpu = { .cpu = INT_MAX };
+-		bool last = i == map->nr;
++		bool last = i == perf_cpu_map__nr(map);
+ 
+ 		if (!last)
+ 			cpu = map->map[i];
+@@ -633,7 +633,7 @@ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size)
+ 	int i, cpu;
+ 	char *ptr = buf;
+ 	unsigned char *bitmap;
+-	struct perf_cpu last_cpu = perf_cpu_map__cpu(map, map->nr - 1);
++	struct perf_cpu last_cpu = perf_cpu_map__cpu(map, perf_cpu_map__nr(map) - 1);
+ 
+ 	if (buf == NULL)
+ 		return 0;
+@@ -644,7 +644,7 @@ size_t cpu_map__snprint_mask(struct perf_cpu_map *map, char *buf, size_t size)
+ 		return 0;
+ 	}
+ 
+-	for (i = 0; i < map->nr; i++) {
++	for (i = 0; i < perf_cpu_map__nr(map); i++) {
+ 		cpu = perf_cpu_map__cpu(map, i).cpu;
+ 		bitmap[cpu / 8] |= 1 << (cpu % 8);
+ 	}
 -- 
 2.39.2
 
