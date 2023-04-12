@@ -2,125 +2,378 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C8FC76196
-	for <linux-perf-users@archiver.kernel.org>; Tue, 11 Apr 2023 23:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9363AC7619A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 12 Apr 2023 08:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229701AbjDKXp1 (ORCPT
+        id S231361AbjDLIwO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 11 Apr 2023 19:45:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41168 "EHLO
+        Wed, 12 Apr 2023 04:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbjDKXpW (ORCPT
+        with ESMTP id S231375AbjDLIwL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 11 Apr 2023 19:45:22 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B83D4C1B
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Apr 2023 16:45:12 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id e199-20020a2550d0000000b00b8db8a4530dso12650506ybb.5
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Apr 2023 16:45:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681256711;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=d/T/xU2Yq1vEePI3qmWUebnXaaSA90g08mbqWgT1W7g=;
-        b=kFpOWipksCFKkTuBB67SPcDa84cXE/AcAl5wC7jtN/tR8oVz0EqII+UlF1WKDUSnVL
-         KlF43QwLk4z5PtA7qAdnLjjmAuezxP2zSoEjKP2cu8eJIuPCXjxmTdK0hFIfMfXMIwAN
-         lJ0oCwsW/076uHgz7Ms+0m/uYBmkWuWd7Aa5bo0ouuKyeLVo3gw6MyNQdu/cSuRVmcyH
-         4UOB4C91h1oRlpMKKnMCiwno0nvKW1pGPZiIVKTwmDJKBJ2ZFTvXrUg7rWygJsjU/4P1
-         apSgn3xZreHvd9unH0kkW5QhxDFEhQ6CbfepmQY0opKgJT5EqotDnELC64VNMZDYqIYz
-         TRAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681256711;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=d/T/xU2Yq1vEePI3qmWUebnXaaSA90g08mbqWgT1W7g=;
-        b=r8utTGGL13mNCXjIeENRVu15ifWqKnL/SHG8YUshF/a9LiSDze4J7Un0yROucrAMgT
-         xwTqOyTHdKKK0il+LuAjSzqvJOEDdLygppILJQCgfqnJbqbVagWsMk8soh2bPdLU78rP
-         tLGpu01QbT/jlprZ4JEe+ANjGr4LZBmg5rtdO9JtW3UH7F1EkYPZRFkLr9J+b35AWfnI
-         tJkDtuAry+gVQ/OD2W8148zikSrDh34AS6GpARwj+J0uENOrlqeRSMTT1rSWAaKDIoFE
-         /wx34kgrFmmoTMU2M3RgQu7BRswkOszp9csgk2DNMgc9BilpW/SoMrOzmoyQgQozBbyn
-         +gww==
-X-Gm-Message-State: AAQBX9fWx/9RFogtGP/+tuf/cwvNunjyMTL0ug/T1Kr1ljZoBndTCUgt
-        s3c3sANS30MNMnOoEeigOQaULM3PnYm8
-X-Google-Smtp-Source: AKy350b9Wk2xCPmmLf4lePEkpgpZ7ITKF2nGF7HAaI42QviYndH0AFqfwFszHKGB2NTFLAys0zyYXnyd9Stc
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:f663:83e0:f9b2:5a17])
- (user=irogers job=sendgmr) by 2002:a25:76c7:0:b0:b75:8ac3:d5d2 with SMTP id
- r190-20020a2576c7000000b00b758ac3d5d2mr437284ybc.4.1681256711807; Tue, 11 Apr
- 2023 16:45:11 -0700 (PDT)
-Date:   Tue, 11 Apr 2023 16:44:39 -0700
-In-Reply-To: <20230411234440.3313680-1-irogers@google.com>
-Message-Id: <20230411234440.3313680-3-irogers@google.com>
-Mime-Version: 1.0
-References: <20230411234440.3313680-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v1 2/3] perf vendor events: Update icelakex to v1.20
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 12 Apr 2023 04:52:11 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 972369EDB;
+        Wed, 12 Apr 2023 01:51:44 -0700 (PDT)
+Received: from dggpemm500005.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PxGC20ghWzrb0d;
+        Wed, 12 Apr 2023 16:31:26 +0800 (CST)
+Received: from [10.67.103.232] (10.67.103.232) by
+ dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 12 Apr 2023 16:32:49 +0800
+Message-ID: <3a8ae180-5a0f-7996-58de-edb0e370e4f5@huawei.com>
+Date:   Wed, 12 Apr 2023 16:32:48 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH V9 02/10] arm64/perf: Add BRBE registers and fields
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <will@kernel.org>,
+        <catalin.marinas@arm.com>, <mark.rutland@arm.com>
+CC:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        <linux-perf-users@vger.kernel.org>
+References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
+ <20230315051444.1683170-3-anshuman.khandual@arm.com>
+From:   Yang Shen <shenyang39@huawei.com>
+In-Reply-To: <20230315051444.1683170-3-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.103.232]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500005.china.huawei.com (7.185.36.74)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update from v1.19 to v1.20 affecting the uncore
-UNC_CHA_CORE_SNP.REMOTE_GTONE event's umask.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/pmu-events/arch/x86/icelakex/uncore-other.json | 2 +-
- tools/perf/pmu-events/arch/x86/mapfile.csv                | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/icelakex/uncore-other.json b/to=
-ols/perf/pmu-events/arch/x86/icelakex/uncore-other.json
-index 8210e286eec1..134b54da0869 100644
---- a/tools/perf/pmu-events/arch/x86/icelakex/uncore-other.json
-+++ b/tools/perf/pmu-events/arch/x86/icelakex/uncore-other.json
-@@ -981,7 +981,7 @@
-         "EventName": "UNC_CHA_CORE_SNP.REMOTE_GTONE",
-         "PerPkg": "1",
-         "PublicDescription": "Core Cross Snoops Issued : Multiple Snoop Ta=
-rgets from Remote : Counts the number of transactions that trigger a config=
-urable number of cross snoops.  Cores are snooped if the transaction looks =
-up the cache and determines that it is necessary based on the operation typ=
-e and what CoreValid bits are set.  For example, if 2 CV bits are set on a =
-data read, the cores must have the data in S state so it is not necessary t=
-o snoop them.  However, if only 1 CV bit is set the core my have modified t=
-he data.  If the transaction was an RFO, it would need to invalidate the li=
-nes.  This event can be filtered based on who triggered the initial snoop(s=
-).",
--        "UMask": "0x22",
-+        "UMask": "0x12",
-         "Unit": "CHA"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 9e7545d09b23..58faf18474b5 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -13,7 +13,7 @@ GenuineIntel-6-A[DE],v1.01,graniterapids,core
- GenuineIntel-6-(3C|45|46),v33,haswell,core
- GenuineIntel-6-3F,v27,haswellx,core
- GenuineIntel-6-(7D|7E|A7),v1.17,icelake,core
--GenuineIntel-6-6[AC],v1.19,icelakex,core
-+GenuineIntel-6-6[AC],v1.20,icelakex,core
- GenuineIntel-6-3A,v24,ivybridge,core
- GenuineIntel-6-3E,v23,ivytown,core
- GenuineIntel-6-2D,v23,jaketown,core
---=20
-2.40.0.577.gac1e443424-goog
+在 2023/3/15 13:14, Anshuman Khandual 写道:
+> This adds BRBE related register definitions and various other related field
+> macros there in. These will be used subsequently in a BRBE driver which is
+> being added later on.
+>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Reviewed-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>   arch/arm64/include/asm/sysreg.h | 103 +++++++++++++++++++++
+>   arch/arm64/tools/sysreg         | 159 ++++++++++++++++++++++++++++++++
+>   2 files changed, 262 insertions(+)
+>
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index 9e3ecba3c4e6..b3bc03ee22bd 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -165,6 +165,109 @@
+>   #define SYS_DBGDTRTX_EL0		sys_reg(2, 3, 0, 5, 0)
+>   #define SYS_DBGVCR32_EL2		sys_reg(2, 4, 0, 7, 0)
+>   
+> +#define __SYS_BRBINFO(n)		sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 0))
+> +#define __SYS_BRBSRC(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 1))
+> +#define __SYS_BRBTGT(n)			sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 2))
+> +
+> +#define SYS_BRBINF0_EL1			__SYS_BRBINFO(0)
+> +#define SYS_BRBINF1_EL1			__SYS_BRBINFO(1)
+> +#define SYS_BRBINF2_EL1			__SYS_BRBINFO(2)
+> +#define SYS_BRBINF3_EL1			__SYS_BRBINFO(3)
+> +#define SYS_BRBINF4_EL1			__SYS_BRBINFO(4)
+> +#define SYS_BRBINF5_EL1			__SYS_BRBINFO(5)
+> +#define SYS_BRBINF6_EL1			__SYS_BRBINFO(6)
+> +#define SYS_BRBINF7_EL1			__SYS_BRBINFO(7)
+> +#define SYS_BRBINF8_EL1			__SYS_BRBINFO(8)
+> +#define SYS_BRBINF9_EL1			__SYS_BRBINFO(9)
+> +#define SYS_BRBINF10_EL1		__SYS_BRBINFO(10)
+> +#define SYS_BRBINF11_EL1		__SYS_BRBINFO(11)
+> +#define SYS_BRBINF12_EL1		__SYS_BRBINFO(12)
+> +#define SYS_BRBINF13_EL1		__SYS_BRBINFO(13)
+> +#define SYS_BRBINF14_EL1		__SYS_BRBINFO(14)
+> +#define SYS_BRBINF15_EL1		__SYS_BRBINFO(15)
+> +#define SYS_BRBINF16_EL1		__SYS_BRBINFO(16)
+> +#define SYS_BRBINF17_EL1		__SYS_BRBINFO(17)
+> +#define SYS_BRBINF18_EL1		__SYS_BRBINFO(18)
+> +#define SYS_BRBINF19_EL1		__SYS_BRBINFO(19)
+> +#define SYS_BRBINF20_EL1		__SYS_BRBINFO(20)
+> +#define SYS_BRBINF21_EL1		__SYS_BRBINFO(21)
+> +#define SYS_BRBINF22_EL1		__SYS_BRBINFO(22)
+> +#define SYS_BRBINF23_EL1		__SYS_BRBINFO(23)
+> +#define SYS_BRBINF24_EL1		__SYS_BRBINFO(24)
+> +#define SYS_BRBINF25_EL1		__SYS_BRBINFO(25)
+> +#define SYS_BRBINF26_EL1		__SYS_BRBINFO(26)
+> +#define SYS_BRBINF27_EL1		__SYS_BRBINFO(27)
+> +#define SYS_BRBINF28_EL1		__SYS_BRBINFO(28)
+> +#define SYS_BRBINF29_EL1		__SYS_BRBINFO(29)
+> +#define SYS_BRBINF30_EL1		__SYS_BRBINFO(30)
+> +#define SYS_BRBINF31_EL1		__SYS_BRBINFO(31)
+> +
+> +#define SYS_BRBSRC0_EL1			__SYS_BRBSRC(0)
+> +#define SYS_BRBSRC1_EL1			__SYS_BRBSRC(1)
+> +#define SYS_BRBSRC2_EL1			__SYS_BRBSRC(2)
+> +#define SYS_BRBSRC3_EL1			__SYS_BRBSRC(3)
+> +#define SYS_BRBSRC4_EL1			__SYS_BRBSRC(4)
+> +#define SYS_BRBSRC5_EL1			__SYS_BRBSRC(5)
+> +#define SYS_BRBSRC6_EL1			__SYS_BRBSRC(6)
+> +#define SYS_BRBSRC7_EL1			__SYS_BRBSRC(7)
+> +#define SYS_BRBSRC8_EL1			__SYS_BRBSRC(8)
+> +#define SYS_BRBSRC9_EL1			__SYS_BRBSRC(9)
+> +#define SYS_BRBSRC10_EL1		__SYS_BRBSRC(10)
+> +#define SYS_BRBSRC11_EL1		__SYS_BRBSRC(11)
+> +#define SYS_BRBSRC12_EL1		__SYS_BRBSRC(12)
+> +#define SYS_BRBSRC13_EL1		__SYS_BRBSRC(13)
+> +#define SYS_BRBSRC14_EL1		__SYS_BRBSRC(14)
+> +#define SYS_BRBSRC15_EL1		__SYS_BRBSRC(15)
+> +#define SYS_BRBSRC16_EL1		__SYS_BRBSRC(16)
+> +#define SYS_BRBSRC17_EL1		__SYS_BRBSRC(17)
+> +#define SYS_BRBSRC18_EL1		__SYS_BRBSRC(18)
+> +#define SYS_BRBSRC19_EL1		__SYS_BRBSRC(19)
+> +#define SYS_BRBSRC20_EL1		__SYS_BRBSRC(20)
+> +#define SYS_BRBSRC21_EL1		__SYS_BRBSRC(21)
+> +#define SYS_BRBSRC22_EL1		__SYS_BRBSRC(22)
+> +#define SYS_BRBSRC23_EL1		__SYS_BRBSRC(23)
+> +#define SYS_BRBSRC24_EL1		__SYS_BRBSRC(24)
+> +#define SYS_BRBSRC25_EL1		__SYS_BRBSRC(25)
+> +#define SYS_BRBSRC26_EL1		__SYS_BRBSRC(26)
+> +#define SYS_BRBSRC27_EL1		__SYS_BRBSRC(27)
+> +#define SYS_BRBSRC28_EL1		__SYS_BRBSRC(28)
+> +#define SYS_BRBSRC29_EL1		__SYS_BRBSRC(29)
+> +#define SYS_BRBSRC30_EL1		__SYS_BRBSRC(30)
+> +#define SYS_BRBSRC31_EL1		__SYS_BRBSRC(31)
+> +
+> +#define SYS_BRBTGT0_EL1			__SYS_BRBTGT(0)
+> +#define SYS_BRBTGT1_EL1			__SYS_BRBTGT(1)
+> +#define SYS_BRBTGT2_EL1			__SYS_BRBTGT(2)
+> +#define SYS_BRBTGT3_EL1			__SYS_BRBTGT(3)
+> +#define SYS_BRBTGT4_EL1			__SYS_BRBTGT(4)
+> +#define SYS_BRBTGT5_EL1			__SYS_BRBTGT(5)
+> +#define SYS_BRBTGT6_EL1			__SYS_BRBTGT(6)
+> +#define SYS_BRBTGT7_EL1			__SYS_BRBTGT(7)
+> +#define SYS_BRBTGT8_EL1			__SYS_BRBTGT(8)
+> +#define SYS_BRBTGT9_EL1			__SYS_BRBTGT(9)
+> +#define SYS_BRBTGT10_EL1		__SYS_BRBTGT(10)
+> +#define SYS_BRBTGT11_EL1		__SYS_BRBTGT(11)
+> +#define SYS_BRBTGT12_EL1		__SYS_BRBTGT(12)
+> +#define SYS_BRBTGT13_EL1		__SYS_BRBTGT(13)
+> +#define SYS_BRBTGT14_EL1		__SYS_BRBTGT(14)
+> +#define SYS_BRBTGT15_EL1		__SYS_BRBTGT(15)
+> +#define SYS_BRBTGT16_EL1		__SYS_BRBTGT(16)
+> +#define SYS_BRBTGT17_EL1		__SYS_BRBTGT(17)
+> +#define SYS_BRBTGT18_EL1		__SYS_BRBTGT(18)
+> +#define SYS_BRBTGT19_EL1		__SYS_BRBTGT(19)
+> +#define SYS_BRBTGT20_EL1		__SYS_BRBTGT(20)
+> +#define SYS_BRBTGT21_EL1		__SYS_BRBTGT(21)
+> +#define SYS_BRBTGT22_EL1		__SYS_BRBTGT(22)
+> +#define SYS_BRBTGT23_EL1		__SYS_BRBTGT(23)
+> +#define SYS_BRBTGT24_EL1		__SYS_BRBTGT(24)
+> +#define SYS_BRBTGT25_EL1		__SYS_BRBTGT(25)
+> +#define SYS_BRBTGT26_EL1		__SYS_BRBTGT(26)
+> +#define SYS_BRBTGT27_EL1		__SYS_BRBTGT(27)
+> +#define SYS_BRBTGT28_EL1		__SYS_BRBTGT(28)
+> +#define SYS_BRBTGT29_EL1		__SYS_BRBTGT(29)
+> +#define SYS_BRBTGT30_EL1		__SYS_BRBTGT(30)
+> +#define SYS_BRBTGT31_EL1		__SYS_BRBTGT(31)
+> +
+>   #define SYS_MIDR_EL1			sys_reg(3, 0, 0, 0, 0)
+>   #define SYS_MPIDR_EL1			sys_reg(3, 0, 0, 0, 5)
+>   #define SYS_REVIDR_EL1			sys_reg(3, 0, 0, 0, 6)
+> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+> index dd5a9c7e310f..d74d9dbe18a7 100644
+> --- a/arch/arm64/tools/sysreg
+> +++ b/arch/arm64/tools/sysreg
+> @@ -924,6 +924,165 @@ UnsignedEnum	3:0	BT
+>   EndEnum
+>   EndSysreg
+>   
+> +
+> +SysregFields BRBINFx_EL1
+> +Res0	63:47
+> +Field	46	CCU
+> +Field	45:32	CC
+> +Res0	31:18
+> +Field	17	LASTFAILED
+> +Field	16	T
+> +Res0	15:14
+> +Enum	13:8		TYPE
+
+Hi Anshuman,
+
+I met a problem when built kernel which was based on 6.3-rc1. Here is 
+the error log:
+     GEN     Makefile
+     GEN     arch/arm64/include/generated/asm/sysreg-defs.h
+Error at 936: unexpected Enum (inside SysregFields)
+
+I think this is because the 'SysregFields' doesn't support the 'Enum' 
+type region.
+And this problem can be fixed when I roll back this part to v7.
+
+Do I need to apply some patches or do some other configures?
+
+Thanks,
+Yang
+
+> +	0b000000	UNCOND_DIR
+> +	0b000001	INDIR
+> +	0b000010	DIR_LINK
+> +	0b000011	INDIR_LINK
+> +	0b000101	RET_SUB
+> +	0b000111	RET_EXCPT
+> +	0b001000	COND_DIR
+> +	0b100001	DEBUG_HALT
+> +	0b100010	CALL
+> +	0b100011	TRAP
+> +	0b100100	SERROR
+> +	0b100110	INST_DEBUG
+> +	0b100111	DATA_DEBUG
+> +	0b101010	ALGN_FAULT
+> +	0b101011	INST_FAULT
+> +	0b101100	DATA_FAULT
+> +	0b101110	IRQ
+> +	0b101111	FIQ
+> +	0b111001	DEBUG_EXIT
+> +EndEnum
+> +Enum	7:6	EL
+> +	0b00	EL0
+> +	0b01	EL1
+> +	0b10	EL2
+> +	0b11	EL3
+> +EndEnum
+> +Field	5	MPRED
+> +Res0	4:2
+> +Enum	1:0	VALID
+> +	0b00	NONE
+> +	0b01	TARGET
+> +	0b10	SOURCE
+> +	0b11	FULL
+> +EndEnum
+> +EndSysregFields
+> +
+> +Sysreg	BRBCR_EL1	2	1	9	0	0
+> +Res0	63:24
+> +Field	23 	EXCEPTION
+> +Field	22 	ERTN
+> +Res0	21:9
+> +Field	8 	FZP
+> +Res0	7
+> +Enum	6:5	TS
+> +	0b01	VIRTUAL
+> +	0b10	GST_PHYSICAL
+> +	0b11	PHYSICAL
+> +EndEnum
+> +Field	4	MPRED
+> +Field	3	CC
+> +Res0	2
+> +Field	1	E1BRE
+> +Field	0	E0BRE
+> +EndSysreg
+> +
+> +Sysreg	BRBFCR_EL1	2	1	9	0	1
+> +Res0	63:30
+> +Enum	29:28	BANK
+> +	0b0	FIRST
+> +	0b1	SECOND
+> +EndEnum
+> +Res0	27:23
+> +Field	22	CONDDIR
+> +Field	21	DIRCALL
+> +Field	20	INDCALL
+> +Field	19	RTN
+> +Field	18	INDIRECT
+> +Field	17	DIRECT
+> +Field	16	EnI
+> +Res0	15:8
+> +Field	7	PAUSED
+> +Field	6	LASTFAILED
+> +Res0	5:0
+> +EndSysreg
+> +
+> +Sysreg	BRBTS_EL1	2	1	9	0	2
+> +Field	63:0	TS
+> +EndSysreg
+> +
+> +Sysreg	BRBINFINJ_EL1	2	1	9	1	0
+> +Res0	63:47
+> +Field	46	CCU
+> +Field	45:32	CC
+> +Res0	31:18
+> +Field	17	LASTFAILED
+> +Field	16	T
+> +Res0	15:14
+> +Enum	13:8		TYPE
+> +	0b000000	UNCOND_DIR
+> +	0b000001	INDIR
+> +	0b000010	DIR_LINK
+> +	0b000011	INDIR_LINK
+> +	0b000100	RET_SUB
+> +	0b000100	RET_SUB
+> +	0b000111	RET_EXCPT
+> +	0b001000	COND_DIR
+> +	0b100001	DEBUG_HALT
+> +	0b100010	CALL
+> +	0b100011	TRAP
+> +	0b100100	SERROR
+> +	0b100110	INST_DEBUG
+> +	0b100111	DATA_DEBUG
+> +	0b101010	ALGN_FAULT
+> +	0b101011	INST_FAULT
+> +	0b101100	DATA_FAULT
+> +	0b101110	IRQ
+> +	0b101111	FIQ
+> +	0b111001	DEBUG_EXIT
+> +EndEnum
+> +Enum	7:6	EL
+> +	0b00	EL0
+> +	0b01	EL1
+> +	0b10	EL2
+> +	0b11	EL3
+> +EndEnum
+> +Field	5	MPRED
+> +Res0	4:2
+> +Enum	1:0	VALID
+> +	0b00	NONE
+> +	0b01	TARGET
+> +	0b10	SOURCE
+> +	0b00	FULL
+> +EndEnum
+> +EndSysreg
+> +
+> +Sysreg	BRBSRCINJ_EL1	2	1	9	1	1
+> +Field	63:0 ADDRESS
+> +EndSysreg
+> +
+> +Sysreg	BRBTGTINJ_EL1	2	1	9	1	2
+> +Field	63:0 ADDRESS
+> +EndSysreg
+> +
+> +Sysreg	BRBIDR0_EL1	2	1	9	2	0
+> +Res0	63:16
+> +Enum	15:12	CC
+> +	0b101	20_BIT
+> +EndEnum
+> +Enum	11:8	FORMAT
+> +	0b0	0
+> +EndEnum
+> +Enum	7:0		NUMREC
+> +	0b1000		8
+> +	0b10000		16
+> +	0b100000	32
+> +	0b1000000	64
+> +EndEnum
+> +EndSysreg
+> +
+>   Sysreg	ID_AA64ZFR0_EL1	3	0	0	4	4
+>   Res0	63:60
+>   UnsignedEnum	59:56	F64MM
 
