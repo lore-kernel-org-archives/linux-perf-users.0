@@ -2,281 +2,313 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F4DC77B6C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 05:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED08C77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 06:20:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230151AbjDMFQK (ORCPT
+        id S229683AbjDMGUz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Apr 2023 01:16:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39386 "EHLO
+        Thu, 13 Apr 2023 02:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230206AbjDMFPu (ORCPT
+        with ESMTP id S229506AbjDMGUy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2023 01:15:50 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C81A5CE
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:13:41 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54f1ffb8ccfso113031217b3.9
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681362817; x=1683954817;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D/wMb40ntUrrtEKX0pWRjZNO+TlYXtCqLFbV8EoKRtw=;
-        b=3ll+a4rO/hkzDomcN+uUTdQoNpva3pseryloYnCYlSHRmA5NPoqQybNuqSqdnqdYoz
-         Mls76nTML3+wqQJRH52IxzextN0OIP9zoRZg987/TFPeEROgyo4UpVTD3VlUVbtUFkH5
-         Lwiu66HV5xQMMY41DiHqmKUulODoP5tdAtZjt2Xxy7gcaBjsdETIrZq7Er0ElsZpGODy
-         eHAZsP/UpQL3+Si6GPXa4f64VAbuwusCHzX0uZiCR7a3dgGm/qpA1Qcw5T03LTjbxZuH
-         ENwu4P9I6mcW0AL0HRsS0VNyaTST3xHB8445R6mYeCfjaonJ8qFXpUjLBScTC8VEqSL6
-         YZrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681362817; x=1683954817;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D/wMb40ntUrrtEKX0pWRjZNO+TlYXtCqLFbV8EoKRtw=;
-        b=UJGQVQpYc53IVb1FcwK4AlZsHarSfS/BULkQQCrpWVax57iw3hnYUe7w+e1tma23bB
-         QWs/VREYbk7Jgt2GxaPIU2fjMnEFxKdQb14BUAqsJWF+UZVajzNMFIfck1dIta+t2pdp
-         VX5gY2jXjpchqmR2cntNpoSnq7FFHJGCr1OZkJsNF3e4hsR+H2r3DUgXeXKPPMAEgfu4
-         H8tQzZEuQFZ9+9JAHo1rMYQdqo1GjymsJV7rYe6kkJn9k2ewGShm1LyMNxpurtxfD+3x
-         4wr9QGgtApnelvt1k/k+6am8qceIjLcK2oUJrgkIDa6fufkEzULzL/oX1TVKP8qkcZ1Z
-         PMbA==
-X-Gm-Message-State: AAQBX9cxf1GBgWzQGwFZmoCwMAi02weILEmrp1uqAzC2PwLi7dgOCi2g
-        iQ+SgsJ91jz8upQse4ra0kJsGRHNgXdP
-X-Google-Smtp-Source: AKy350Y/FMQhqiVsOUOR3toB+Av2/hykwYChW5I5bXtqnaRoz1wfRI4WJhQRgnc2CYThQNaDYLpkFl76ub90
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c8fe:b894:ec92:d5cd])
- (user=irogers job=sendgmr) by 2002:a0d:ec02:0:b0:54c:2723:560d with SMTP id
- q2-20020a0dec02000000b0054c2723560dmr636699ywn.3.1681362817559; Wed, 12 Apr
- 2023 22:13:37 -0700 (PDT)
-Date:   Wed, 12 Apr 2023 22:10:11 -0700
-In-Reply-To: <20230413051011.3440849-1-irogers@google.com>
-Message-Id: <20230413051011.3440849-22-irogers@google.com>
-Mime-Version: 1.0
-References: <20230413051011.3440849-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v2 21/21] perf vendor events intel: Fix uncore topics for tigerlake
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Edward Baker <edward.baker@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 13 Apr 2023 02:20:54 -0400
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2065.outbound.protection.outlook.com [40.107.102.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1085461A1;
+        Wed, 12 Apr 2023 23:20:52 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CDMI6+7s4NHEImzSqHZCQlJSFg2NbonyEPzOEZMODnYKb5gDTnDs79EH8V4FV2izisAxuMHrh47fJRhmfCFuKIoXXyegSqpoy7e213oeYT0JrSYXQe50fMKC/ZLUdNjhFv08jgC3lF2C18jSfLGUsKgt9weNfPamMwoUchwwMeSiEzy1IkfkbbBdEOiSVFKZYadbqbn17OoTLWdVISN7VpscRWYel8oP8ZUWyL1HN8eCWtZV/j109d8IgRfG2lgAWoHMkK3Onov0B2BIKdv3/vUtpl/zo48oKPAAXRb1R33ZFVe0yUwhOdEFgmrkVSf/ZfeVtHKlYz39c6sqkqwWZg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=21YHanjLxM0ampZmmLBra4F/ALAss7aoP1ckwCyGPRE=;
+ b=amA/MTAex3BXSHjRJfqaP4AySVefjkgpMSlvzkPhj/2p50kEIQ2YRFTt7hdOmr9F1kxOofv7eo0uFRZZJzVo4pO4bD75mGXBs2G18yrvqqEfcedALKTO8xIxGWDK+Sokiv9pnc7sJh+/2g3UBXba5BMpckcMWjTbiQMFZydKbqECAF6y3sWbw/9odYZgoHI13atocjbAWR5qsEZFMzDM2p4krAbc/gmfHJ1SuPV5iJurjd6+CGLls4/1+QZcaGa6ZU50NWMZS0g0olD8jwZSt3zDichqJ+UNiBxGOmWUu2g3Xg0xnBMeiGl4Ee3brsQZ390RhcAMlMTddzFkAkxubg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=21YHanjLxM0ampZmmLBra4F/ALAss7aoP1ckwCyGPRE=;
+ b=qh0i64Qxs06WrBZvUd7hZ7+1IZGAmKJv74LXBWAuea5bc6s61kOBUw/RnoFEFiC2I17OLyIv7evzUM6rtnTGeBOstaInfydsg7vtKot9I8bbp9YBCzK8WOKCFyb9srfu+O8LOQX803oqqrTNl9F3NRa+L4Wvp3BtmBFXTy5jGfA=
+Received: from MW4P221CA0026.NAMP221.PROD.OUTLOOK.COM (2603:10b6:303:8b::31)
+ by MN2PR12MB4405.namprd12.prod.outlook.com (2603:10b6:208:26d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Thu, 13 Apr
+ 2023 06:20:49 +0000
+Received: from CO1NAM11FT043.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:8b::4) by MW4P221CA0026.outlook.office365.com
+ (2603:10b6:303:8b::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30 via Frontend
+ Transport; Thu, 13 Apr 2023 06:20:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT043.mail.protection.outlook.com (10.13.174.193) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6298.31 via Frontend Transport; Thu, 13 Apr 2023 06:20:48 +0000
+Received: from BLR5CG134614W.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 13 Apr
+ 2023 01:20:19 -0500
+From:   K Prateek Nayak <kprateek.nayak@amd.com>
+To:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <acme@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <sandipan.das@amd.com>,
+        <ananth.narayan@amd.com>, <gautham.shenoy@amd.com>,
+        <eranian@google.com>, <puwen@hygon.cn>
+Subject: [RFC PATCH v3 0/2] perf stat: Add option to aggregate data based on the cache topology
+Date:   Thu, 13 Apr 2023 11:50:04 +0530
+Message-ID: <20230413062006.1056-1-kprateek.nayak@amd.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT043:EE_|MN2PR12MB4405:EE_
+X-MS-Office365-Filtering-Correlation-Id: 41ac79a9-875f-4399-defd-08db3be7393f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: o6iIGkk4k2NqQTq8RBIRetYuH1iun7M1+pbl72wAzhY7TQ/fPoo4WnIr8X3tqs+On7h6ciy09zBVH3OuCvA33wUljptrfhxwdZtGED9X/YI7FdGnGor4K0ZyM20G9n9NBIH0LmtAK570wo3Qc/8ufuiAc0+HzJCvQDD5ijbv27duj1hGi8Ukwmf7tgQ56ecZi0z4qawngkR3mxgfSB0yFKVrMyIe6EcOMVZ50iVQvT2wQsd6ozlWb7Qtebrj1i5VYcVNQVvDHGk6Gxm4cE9kCdypQM7H5NgIwtHtlQb8aHdTpNTPPJPUbdsoNDE8W1lCGhLBwKALE6XcMbdUBnpuXmkp00NOVKTqDIkwH1JpiHjf9kNBcOjJFCufrqK/ZsDflzaHHP8g5B+pnhMAWIggJog5ZvqPiD/kW2Lv8DX7tVfC0FMqtp/BGitBTB1iWlzh52j34m7cslg+n1wcbqj/AxuS4cCQAEt6rqSHcfHgXUDuGxwU9yWBiFjPlv90YsABj5OvoCjJXVoLbJkjQ8PiMfthePDtWZT361eb4yLWWoDttBGg7nlr0BrODjAaceyrjaro47JeMA2xLRw3WdcPHSmBKLQ953AxbGIDv0+YX/p55eIaBhpyTZgHKK6FVkQ8Jf66pfxLm9k9ZSaDL7L5d6mtXDK1CySo3VXPTCImTBZYi468AYFmhHmDOKTtsQV9nxeSmVn6PZ9gRKesjqdOHNbZFA26eTVZqDBAetwZNEs+GvQ86m1J90hOZlEsLUUm
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(136003)(346002)(396003)(451199021)(40470700004)(36840700001)(46966006)(40460700003)(316002)(41300700001)(81166007)(16526019)(1076003)(7696005)(26005)(186003)(86362001)(6666004)(47076005)(356005)(36860700001)(107886003)(2616005)(82310400005)(426003)(336012)(83380400001)(82740400003)(4326008)(54906003)(36756003)(40480700001)(110136005)(70206006)(70586007)(8676002)(8936002)(5660300002)(2906002)(7416002)(478600001)(2101003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Apr 2023 06:20:48.5309
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41ac79a9-875f-4399-defd-08db3be7393f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT043.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4405
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move events from 'uncore-other' topic classification to interconnect.
+Motivation behind this feature is to aggregate the data at the LLC level
+for chiplet based processors which currently do not expose the chiplet
+details in sysfs cpu topology information.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../x86/tigerlake/uncore-interconnect.json    | 90 +++++++++++++++++++
- .../arch/x86/tigerlake/uncore-other.json      | 88 ------------------
- 2 files changed, 90 insertions(+), 88 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
+For the completeness of the feature, the series adds ability to
+aggregate data at any cache level. Following is the example of the
+output on a dual socket Zen3 processor with 2 x 64C/128T containing 8
+chiplet per socket.
 
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
-new file mode 100644
-index 000000000000..eed1b90a2779
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
-@@ -0,0 +1,90 @@
-+[
-+    {
-+        "BriefDescription": "UNC_ARB_COH_TRK_REQUESTS.ALL",
-+        "EventCode": "0x84",
-+        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle counts number of any coherent request at memory controller that were issued by any core.",
-+        "EventCode": "0x85",
-+        "EventName": "UNC_ARB_DAT_OCCUPANCY.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle counts number of coherent reads pending on data return from memory controller that were issued by any core.",
-+        "EventCode": "0x85",
-+        "EventName": "UNC_ARB_DAT_OCCUPANCY.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_REQ_TRK_REQUEST.DRD",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_DAT_REQUESTS.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_DAT_OCCUPANCY.ALL",
-+        "EventCode": "0x85",
-+        "EventName": "UNC_ARB_IFA_OCCUPANCY.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_OCCUPANCY.RD]",
-+        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_REQ_TRK_OCCUPANCY.DRD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_REQUESTS.RD]",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_REQ_TRK_REQUEST.DRD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle count number of all outgoing valid entries in ReqTrk. Such entry is defined as valid from it's allocation in ReqTrk till deallocation. Accounts for Coherent and non-coherent traffic.",
-+        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_OCCUPANCY.DRD]",
-+        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_TRK_OCCUPANCY.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "UNC_ARB_TRK_REQUESTS.ALL",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_TRK_REQUESTS.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_REQUEST.DRD]",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_TRK_REQUESTS.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json
-index 6e43aaf64e28..c6596ba09195 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json
-@@ -1,92 +1,4 @@
- [
--    {
--        "BriefDescription": "UNC_ARB_COH_TRK_REQUESTS.ALL",
--        "EventCode": "0x84",
--        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Each cycle counts number of any coherent request at memory controller that were issued by any core.",
--        "EventCode": "0x85",
--        "EventName": "UNC_ARB_DAT_OCCUPANCY.ALL",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Each cycle counts number of coherent reads pending on data return from memory controller that were issued by any core.",
--        "EventCode": "0x85",
--        "EventName": "UNC_ARB_DAT_OCCUPANCY.RD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_REQ_TRK_REQUEST.DRD",
--        "EventCode": "0x81",
--        "EventName": "UNC_ARB_DAT_REQUESTS.RD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_DAT_OCCUPANCY.ALL",
--        "EventCode": "0x85",
--        "EventName": "UNC_ARB_IFA_OCCUPANCY.ALL",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_OCCUPANCY.RD]",
--        "EventCode": "0x80",
--        "EventName": "UNC_ARB_REQ_TRK_OCCUPANCY.DRD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_REQUESTS.RD]",
--        "EventCode": "0x81",
--        "EventName": "UNC_ARB_REQ_TRK_REQUEST.DRD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Each cycle count number of all outgoing valid entries in ReqTrk. Such entry is defined as valid from it's allocation in ReqTrk till deallocation. Accounts for Coherent and non-coherent traffic.",
--        "EventCode": "0x80",
--        "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_OCCUPANCY.DRD]",
--        "EventCode": "0x80",
--        "EventName": "UNC_ARB_TRK_OCCUPANCY.RD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "UNC_ARB_TRK_REQUESTS.ALL",
--        "EventCode": "0x81",
--        "EventName": "UNC_ARB_TRK_REQUESTS.ALL",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_REQUEST.DRD]",
--        "EventCode": "0x81",
--        "EventName": "UNC_ARB_TRK_REQUESTS.RD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
-     {
-         "BriefDescription": "UNC_CLOCK.SOCKET",
-         "EventCode": "0xff",
+  $ sudo perf stat --per-cache -a -e ls_dmnd_fills_from_sys.ext_cache_remote --\
+    taskset -c 0-15,64-79,128-143,192-207\
+    perf bench sched messaging -p -t -l 100000 -g 8
+
+    # Running 'sched/messaging' benchmark:
+    # 20 sender and receiver threads per group
+    # 8 groups == 320 threads run
+    
+    Total time: 7.648 [sec]
+    
+    Performance counter stats for 'system wide':
+    
+    S0-D0-L3-ID0             16         17,145,912      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID8             16         14,977,628      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID16            16            262,539      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID24            16              3,140      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID32            16             27,403      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID40            16             17,026      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID48            16              7,292      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID56            16              2,464      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID64            16         22,489,306      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID72            16         21,455,257      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID80            16             11,619      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID88            16             30,978      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID96            16             37,628      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID104           16             13,594      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID112           16             10,164      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID120           16             11,259      ls_dmnd_fills_from_sys.ext_cache_remote
+    
+          7.779171484 seconds time elapsed
+
+The series also adds support for perf stat record and perf stat report
+to aggregate data at various cache levels. Following is an example of
+recording with aggregation at L2 level and reporting the same data with
+aggregation at L3 level.
+
+  $ sudo perf stat record --per-cache=L2 -a -e ls_dmnd_fills_from_sys.ext_cache_remote --\
+    taskset -c 0-15,64-79,128-143,192-207\
+    perf bench sched messaging -p -t -l 100000 -g 8
+  
+    # Running 'sched/messaging' benchmark:
+    # 20 sender and receiver threads per group
+    # 8 groups == 320 threads run
+    
+    Total time: 7.318 [sec]
+    
+    Performance counter stats for 'system wide':
+    
+    S0-D0-L2-ID0              2          2,171,980      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L2-ID1              2          2,048,494      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L2-ID2              2          2,120,293      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L2-ID3              2          2,224,725      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L2-ID4              2          2,021,618      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L2-ID5              2          1,995,331      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L2-ID6              2          2,163,029      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L2-ID7              2          2,104,623      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L2-ID8              2          1,948,776      ls_dmnd_fills_from_sys.ext_cache_remote
+    ...
+    S0-D0-L2-ID63             2              2,648      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID64             2          2,963,323      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID65             2          2,856,629      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID66             2          2,901,725      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID67             2          3,046,120      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID68             2          2,637,971      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID69             2          2,680,029      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID70             2          2,672,259      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID71             2          2,638,768      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID72             2          3,308,642      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID73             2          3,064,473      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID74             2          3,023,379      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID75             2          2,975,119      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID76             2          2,952,677      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID77             2          2,981,695      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID78             2          3,455,916      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID79             2          2,959,540      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L2-ID80             2              4,977      ls_dmnd_fills_from_sys.ext_cache_remote
+    ...
+    S1-D1-L2-ID127            2              3,359      ls_dmnd_fills_from_sys.ext_cache_remote
+    
+          7.451725897 seconds time elapsed
+
+  $ sudo perf stat report --per-cache=L3
+
+    Performance counter stats for '...':
+
+    S0-D0-L3-ID0             16         16,850,093      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID8             16         16,001,493      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID16            16            301,011      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID24            16             26,276      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID32            16             48,958      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID40            16             43,799      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID48            16             16,771      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID56            16             12,544      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID64            16         22,396,824      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID72            16         24,721,441      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID80            16             29,426      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID88            16             54,348      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID96            16             41,557      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID104           16             10,084      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID112           16             14,361      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID120           16             24,446      ls_dmnd_fills_from_sys.ext_cache_remote
+    
+           7.451725897 seconds time elapsed
+
+The aggregate at S0-D0-L3-ID0 is the sum of S0-D0-L2-ID0 to S0-D0-L3-ID7
+as L3 containing CPU0 contains the L2 instance of CPU0 to CPU7.
+
+[New in v3 - Handling IDs differently compared to v2]
+Cache IDs are now derived from the shared_cpus_list file in the cache
+topology. This allows for --per-cache aggregation of data on a kernel
+which does not expose the cache instance ID in the sysfs. Running perf
+stat will give the following output on the same system with cache
+instance ID hidden:
+
+  $ ls /sys/devices/system/cpu/cpu0/cache/index0/
+
+    coherency_line_size  level  number_of_sets  physical_line_partition
+    shared_cpu_list  shared_cpu_map  size  type  uevent
+    ways_of_associativity
+
+  $ sudo perf stat --per-cache -a -e ls_dmnd_fills_from_sys.ext_cache_remote --\
+    taskset -c 0-15,64-79,128-143,192-207\
+    perf bench sched messaging -p -t -l 100000 -g 8
+
+    # Running 'sched/messaging' benchmark:
+    # 20 sender and receiver threads per group
+    # 8 groups == 320 threads run
+
+         Total time: 6.949 [sec]
+
+     Performance counter stats for 'system wide':
+
+    S0-D0-L3-ID0             16          5,297,615      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID8             16          4,347,868      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID16            16            416,593      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID24            16              4,346      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID32            16              5,506      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID40            16             15,845      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID48            16             24,164      ls_dmnd_fills_from_sys.ext_cache_remote
+    S0-D0-L3-ID56            16              4,543      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID64            16         41,610,374      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID72            16         38,393,688      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID80            16             22,188      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID88            16             22,918      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID96            16             39,230      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID104           16              6,236      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID112           16             66,846      ls_dmnd_fills_from_sys.ext_cache_remote
+    S1-D1-L3-ID120           16             72,713      ls_dmnd_fills_from_sys.ext_cache_remote
+
+           7.098471410 seconds time elapsed
+
+This series makes breaking change when saving the aggregation details as
+the cache level needs to be saved along with the aggregation method.
+
+This RFC assumes that caches at same level will be shared by same set of
+threads. The implementation will run into an issue if, say L1i is thread
+local, but L1d is shared by the SMT siblings on the core. I'm seeking
+clarification from the community about the same and potential solutions
+if processors where such a scenario exist.
+
+This series cleanly applies on top perf-tool branch from Arnaldo's tree
+(https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=perf-tools)
+at:
+
+commit e8d018dd0257 ("Linux 6.3-rc3")
+
+--
+Changelog:
+o v2->v3:
+  - Dropped patches 1 and 2 that saved and retrieved the cache instance
+    ID when saving the cache data.
+  - The above is unnecessary as the IDs are being derived from the first
+    online CPU in the cache domain for a given cache instance.
+  - Improvements to handling cases where a cache level is not present
+    but the level is allowed by MAX_CACHE_LVL.
+  - Updated details in cover letter.
+
+o v1->v2
+  - Set cache instance ID to 0 if the file cannot be read.
+  - Fix cache level parsing function.
+  - Updated details in cover letter.
+--
+K Prateek Nayak (2):
+  perf: Extract building cache level for a CPU into separate function
+  perf: Add option for --per-cache aggregation
+
+ tools/lib/perf/include/perf/cpumap.h          |   5 +
+ tools/lib/perf/include/perf/event.h           |   3 +-
+ tools/perf/Documentation/perf-stat.txt        |  16 ++
+ tools/perf/builtin-stat.c                     | 144 +++++++++++++++++-
+ .../tests/shell/lib/perf_json_output_lint.py  |   4 +-
+ tools/perf/tests/shell/stat+csv_output.sh     |  14 ++
+ tools/perf/tests/shell/stat+json_output.sh    |  13 ++
+ tools/perf/util/cpumap.c                      | 118 ++++++++++++++
+ tools/perf/util/cpumap.h                      |  28 ++++
+ tools/perf/util/event.c                       |   7 +-
+ tools/perf/util/header.c                      |  62 +++++---
+ tools/perf/util/header.h                      |   4 +
+ tools/perf/util/stat-display.c                |  17 +++
+ tools/perf/util/stat-shadow.c                 |   1 +
+ tools/perf/util/stat.h                        |   2 +
+ tools/perf/util/synthetic-events.c            |   1 +
+ 16 files changed, 409 insertions(+), 30 deletions(-)
+
 -- 
-2.40.0.577.gac1e443424-goog
+2.34.1
 
