@@ -2,112 +2,257 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E9EC7619A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 03:04:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B388DC77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 05:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229989AbjDMDEX (ORCPT
+        id S229716AbjDMFKo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 12 Apr 2023 23:04:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
+        Thu, 13 Apr 2023 01:10:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbjDMDEQ (ORCPT
+        with ESMTP id S229705AbjDMFKn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 12 Apr 2023 23:04:16 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0E97EF1
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 20:04:12 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3f048b144eeso82675e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 20:04:12 -0700 (PDT)
+        Thu, 13 Apr 2023 01:10:43 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DB456E91
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:10:42 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54f69fb5cafso80941717b3.12
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:10:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681355050; x=1683947050;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NTsVS1OLMuTArKSUysXDm7wLuvPWjjl2ejrbWsOgpAM=;
-        b=7QpvhxlRtLqRSQ1tC9pj1NEIf7Qem7NpWJOraiBAkrHREJFw41d3Ezrm9o93AnbRcT
-         wLTsV1oHM+kcrk63gl/rJSolqYrA0Lk3DJq5PRdyo30MBfETYWi2BPwTjy42lVWpfHnK
-         bnXMhsudvS4+v4bVC4j/J/pm2Omu5x64bgPC9Y425/50q3Ybbof9NDt1FA+zgorOZmr5
-         kKtZPCUcQGEAMb600I3Ny8wG9sLiqy6G9e+lY8Nyluc4xil/WEfvkyo8fl7fw7lPlJml
-         jHlroKoRuAWbLmQXgm5dVU/ZlykpG/ZhK6yiX/RBcz2UscjbKIoVNAsGbrT0AthvUWOp
-         1w9Q==
+        d=google.com; s=20221208; t=1681362641; x=1683954641;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=a8BQY7rZPZz/+0hyv4zCG9fgZLYwtSM2Jl91idooeD0=;
+        b=z/CIalceegA0mIBg0Yc5RrBWMzrQb0WMqNOe6sHp/oYBIZ15YAQV/IGXFdczcRkJ/b
+         z4s4tEtGqqTX37RHlYDnCVVgDGKWHCzDiuocrixKGPltdmWDDs2Afq3TfN5/+kDSKrVQ
+         Fwv0pj2NT+CitS2jF7/SszM+F/K4M/oKi78PHraY7ftGvdrm7+4k0FcNPE6J5K0RKR+Z
+         1erP3GiERoA1tYnWJI0n5UnMISe/+ZhSWoRziGEWvpkD2Psm+/KNA/6989cRmwkoZBBO
+         mXNnmrf13ICIfXn/UTWZ/zVKuuEHMTBigfvXORypmO7Jhcz1NXnZ6oE6il1ZI4mX13jK
+         HTPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681355050; x=1683947050;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NTsVS1OLMuTArKSUysXDm7wLuvPWjjl2ejrbWsOgpAM=;
-        b=U/jw8BxT/R/nqLomL7bQB8zlBXrF7gOgYM1rcsZg1+7uoX/Cb5/0ewbDQ4pR/Jak0N
-         R3YpvE8vdsoV3PbH74/rMmnXNHKsB7wnXsVycFFinr+EACBSAGAYnAlkP9jK/a/C96Pw
-         ux0WKlY717jOBr0bVPbJ56rtCPa3bL98DkHlrV/gEeMyNVIPhmB5zBtNEtMEqD71yzNS
-         lSphKcux8LrN8llD+3Ge8joDGLkOtpuZm88Cw3PhH2BBhVoYaSygIGOXEwDq5z3W+KvD
-         wA5TQO+O56jTs7m5issTprOsRT7DlKkh/m2XivVA4CBbQ/NVKHY5rxOh1XrOQAhSrnUE
-         1zmA==
-X-Gm-Message-State: AAQBX9d5AfvKcCvWy/+yiPOp6+w17eV8TqW3sIDMCDr6/32K5FfdedVM
-        EhJCdZbxty2cAltfF2AhonxAIFaZZPA0Kt1VJI4kWA==
-X-Google-Smtp-Source: AKy350a0b2oNd7n2AfYF7OlNIIGzKkr9QxfEEjb/mEKBJSAs8YEveRU4hXsxAgIXmsahQRXa1GNu/2dFqxWQV1NrrE4=
-X-Received: by 2002:a05:600c:4f4a:b0:3f0:44e8:57f3 with SMTP id
- m10-20020a05600c4f4a00b003f044e857f3mr565505wmq.5.1681355050374; Wed, 12 Apr
- 2023 20:04:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230413024125.3082418-1-zenghao@kylinos.cn>
-In-Reply-To: <20230413024125.3082418-1-zenghao@kylinos.cn>
+        d=1e100.net; s=20221208; t=1681362641; x=1683954641;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=a8BQY7rZPZz/+0hyv4zCG9fgZLYwtSM2Jl91idooeD0=;
+        b=GA+3GlZe7Wd1G2clBL8UWHjumW+jCUrb9h/d6IE/HJ37TgK/dQTiGJ+XQzVER/JH9z
+         7N9p470ThnxVB20Ii7+s8x4oUd6DpfxgqUtdqgCP7Iscg5/EgdpNsyYuS5a0K/qAzlYC
+         ReirRJ63IUwSnNUrFfg4ph90d06mEWrm35Cnq8sKmbnRHGezArUhBHVe+++3iKjguXyR
+         I0FJzOs2ZOxsAbQG3cmGfq0KsNbqhdDl/H2+52Gqa96U/gcnDskRKTGOjzkq2crO14mk
+         pa8Z3RkHvFULvh3f5YMce6CUajryPxHbSYiXjd1MG27p6eD/2TMF5ckCFuWfPuIFB61N
+         GqpQ==
+X-Gm-Message-State: AAQBX9co/AtO1m8YLyzU7qkCaxQf9uZg2VEFZ6u5PpIaGrhmhT/8Dm/y
+        YAkagNyoEZncjoTpP6JvE6jYF2nUu8js
+X-Google-Smtp-Source: AKy350YLMHU4oMGIRl8Nc1KYLgU07M71bdnqltd4BSnsB3URbzGc3HsMmUE9Os9SjBgFmirX+bkrMkro+tts
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c8fe:b894:ec92:d5cd])
+ (user=irogers job=sendgmr) by 2002:a81:b64b:0:b0:54f:9718:1d33 with SMTP id
+ h11-20020a81b64b000000b0054f97181d33mr673696ywk.0.1681362641353; Wed, 12 Apr
+ 2023 22:10:41 -0700 (PDT)
+Date:   Wed, 12 Apr 2023 22:09:50 -0700
+Message-Id: <20230413051011.3440849-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
+Subject: [PATCH v2 00/21] Update uncore topics, 3x event updates, 2x new archs.
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 12 Apr 2023 20:03:58 -0700
-Message-ID: <CAP-5=fV9TVxHx1xveQgUbZnyrDNUmkW=c3OX+DEErfZb_3G_ow@mail.gmail.com>
-Subject: Re: [PATCH] perf pmu: Fix resource leaks in pmu_cpumask()
-To:     Hao Zeng <zenghao@kylinos.cn>
-Cc:     linux-perf-users@vger.kernel.org, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, adrian.hunter@intel.com, james.clark@arm.com,
-        suzuki.poulose@arm.com, ravi.bangoria@amd.com, seanjc@google.com,
-        linux-kernel@vger.kernel.org
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Edward Baker <edward.baker@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 12, 2023 at 7:41=E2=80=AFPM Hao Zeng <zenghao@kylinos.cn> wrote=
-:
->
-> The perf_pmu__open_file() and perf_cpu_map__read()
-> are called to process the file,but the file is not closed,
-> which may cause a file handle leak.
->
-> Signed-off-by: Hao Zeng <zenghao@kylinos.cn>
+Update the uncore PMUs and topic classification as created by:
+https://github.com/intel/perfmon/pull/70
 
-Thanks, this was already fixed by Namhyung in:
-https://lore.kernel.org/all/20230331202949.810326-9-namhyung@kernel.org/
-You may want to check for issues like this in Arnaldo's perf-tools-next tre=
-e:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/log/?h=3Dper=
-f-tools-next
-These are the changes planned for Linux 6.4.
+Event updates stem from:
+https://github.com/intel/perfmon/pull/68
+impacting alderlake, icelakex and sapphirerapids.
 
-Thanks,
-Ian
+Grand Ridge and Sierra Forest events stem from:
+https://github.com/intel/perfmon/pull/69
 
-> ---
->  tools/perf/util/pmu.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index c256b29defad..3b4d2f531d83 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -583,6 +583,7 @@ static struct perf_cpu_map *pmu_cpumask(const char *n=
-ame)
->                 if (!file)
->                         continue;
->                 cpus =3D perf_cpu_map__read(file);
-> +               fclose(file);
->                 if (cpus)
->                         return cpus;
->         }
-> --
-> 2.37.2
->
->
-> No virus found
->                 Checked by Hillstone Network AntiVirus
+Changes generated by with PR70 in place:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+
+v2. Adds improvements to uncore topics, uncore PMU name fixes and
+    fixes a trigraph issue from ??? being in the json.
+
+Ian Rogers (21):
+  perf vendor events intel: Update alderlake to v1.20
+  perf vendor events intel: Update icelakex to v1.20
+  perf vendor events intel: Update sapphirerapids to v1.12
+  perf vendor events intel: Add grandridge
+  perf vendor events intel: Add sierraforest
+  perf vendor events intel: Fix uncore topics for broadwell
+  perf vendor events intel: Fix uncore topics for broadwellde
+  perf vendor events intel: Fix uncore topics for broadwellx
+  perf vendor events intel: Fix uncore topics for cascadelakex
+  perf vendor events intel: Fix uncore topics for haswell
+  perf vendor events intel: Fix uncore topics for haswellx
+  perf vendor events intel: Fix uncore topics for icelake
+  perf vendor events intel: Fix uncore topics for ivybridge
+  perf vendor events intel: Fix uncore topics for ivytown
+  perf vendor events intel: Fix uncore topics for jaketown
+  perf vendor events intel: Fix uncore topics for knightslanding
+  perf vendor events intel: Fix uncore topics for sandybridge
+  perf vendor events intel: Fix uncore topics for skylake
+  perf vendor events intel: Fix uncore topics for skylakex
+  perf vendor events intel: Fix uncore topics for snowridgex
+  perf vendor events intel: Fix uncore topics for tigerlake
+
+ .../pmu-events/arch/x86/alderlake/other.json  |     3 +-
+ .../arch/x86/alderlake/pipeline.json          |     4 +-
+ .../x86/alderlake/uncore-interconnect.json    |    90 +
+ .../arch/x86/alderlake/uncore-other.json      |    88 -
+ .../x86/alderlaken/uncore-interconnect.json   |    26 +
+ .../arch/x86/alderlaken/uncore-other.json     |    24 -
+ .../arch/x86/broadwell/uncore-cache.json      |    30 +-
+ .../x86/broadwell/uncore-interconnect.json    |    61 +
+ .../arch/x86/broadwell/uncore-other.json      |    59 -
+ .../arch/x86/broadwellde/uncore-cache.json    |   324 +-
+ .../x86/broadwellde/uncore-interconnect.json  |   614 +
+ .../{uncore-other.json => uncore-io.json}     |   612 -
+ .../arch/x86/broadwellx/uncore-cache.json     |   358 +-
+ .../x86/broadwellx/uncore-interconnect.json   |  4297 +-
+ .../arch/x86/broadwellx/uncore-io.json        |   555 +
+ .../arch/x86/broadwellx/uncore-other.json     |  3242 --
+ .../arch/x86/cascadelakex/uncore-cache.json   | 10764 +++++
+ .../x86/cascadelakex/uncore-interconnect.json | 11334 ++++++
+ .../arch/x86/cascadelakex/uncore-io.json      |  4250 ++
+ .../arch/x86/cascadelakex/uncore-memory.json  |     2 +-
+ .../arch/x86/cascadelakex/uncore-other.json   | 26344 ------------
+ .../pmu-events/arch/x86/grandridge/cache.json |   155 +
+ .../arch/x86/grandridge/frontend.json         |    16 +
+ .../arch/x86/grandridge/memory.json           |    20 +
+ .../pmu-events/arch/x86/grandridge/other.json |    20 +
+ .../arch/x86/grandridge/pipeline.json         |    96 +
+ .../arch/x86/grandridge/virtual-memory.json   |    24 +
+ .../arch/x86/haswell/uncore-cache.json        |    50 +-
+ .../arch/x86/haswell/uncore-interconnect.json |    52 +
+ .../arch/x86/haswell/uncore-other.json        |    50 -
+ .../arch/x86/haswellx/uncore-cache.json       |   360 +-
+ .../x86/haswellx/uncore-interconnect.json     |  4242 +-
+ .../arch/x86/haswellx/uncore-io.json          |   528 +
+ .../arch/x86/haswellx/uncore-other.json       |  3160 --
+ .../arch/x86/icelake/uncore-interconnect.json |    74 +
+ .../arch/x86/icelake/uncore-other.json        |    72 -
+ .../arch/x86/icelakex/uncore-cache.json       |  9860 +++++
+ .../x86/icelakex/uncore-interconnect.json     | 14571 +++++++
+ .../arch/x86/icelakex/uncore-io.json          |  9270 +++++
+ .../arch/x86/icelakex/uncore-other.json       | 33697 ----------------
+ .../arch/x86/ivybridge/uncore-cache.json      |    50 +-
+ ...re-other.json => uncore-interconnect.json} |     0
+ .../arch/x86/ivytown/uncore-cache.json        |   314 +-
+ .../arch/x86/ivytown/uncore-interconnect.json |  2025 +-
+ .../arch/x86/ivytown/uncore-io.json           |   549 +
+ .../arch/x86/ivytown/uncore-other.json        |  2174 -
+ .../arch/x86/jaketown/uncore-cache.json       |   194 +-
+ .../x86/jaketown/uncore-interconnect.json     |  1237 +-
+ .../arch/x86/jaketown/uncore-io.json          |   324 +
+ .../arch/x86/jaketown/uncore-other.json       |  1393 -
+ .../{uncore-other.json => uncore-cache.json}  |   260 -
+ .../arch/x86/knightslanding/uncore-io.json    |   194 +
+ .../x86/knightslanding/uncore-memory.json     |    68 +
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |    10 +-
+ .../arch/x86/sandybridge/uncore-cache.json    |    50 +-
+ ...re-other.json => uncore-interconnect.json} |     0
+ .../arch/x86/sapphirerapids/other.json        |     3 +-
+ .../arch/x86/sapphirerapids/pipeline.json     |     4 +-
+ .../arch/x86/sapphirerapids/uncore-cache.json |  5644 +++
+ .../arch/x86/sapphirerapids/uncore-cxl.json   |   450 +
+ .../sapphirerapids/uncore-interconnect.json   |  6199 +++
+ .../arch/x86/sapphirerapids/uncore-io.json    |  3651 ++
+ .../x86/sapphirerapids/uncore-memory.json     |  3283 +-
+ .../arch/x86/sapphirerapids/uncore-other.json |  4525 ---
+ .../arch/x86/sapphirerapids/uncore-power.json |   107 +
+ .../arch/x86/sierraforest/cache.json          |   155 +
+ .../arch/x86/sierraforest/frontend.json       |    16 +
+ .../arch/x86/sierraforest/memory.json         |    20 +
+ .../arch/x86/sierraforest/other.json          |    20 +
+ .../arch/x86/sierraforest/pipeline.json       |    96 +
+ .../arch/x86/sierraforest/virtual-memory.json |    24 +
+ .../arch/x86/skylake/uncore-cache.json        |    28 +-
+ .../arch/x86/skylake/uncore-interconnect.json |    67 +
+ .../arch/x86/skylake/uncore-other.json        |    65 -
+ .../arch/x86/skylakex/uncore-cache.json       | 10649 +++++
+ .../x86/skylakex/uncore-interconnect.json     | 11248 ++++++
+ .../arch/x86/skylakex/uncore-io.json          |  4250 ++
+ .../arch/x86/skylakex/uncore-memory.json      |     2 +-
+ .../arch/x86/skylakex/uncore-other.json       | 26143 ------------
+ .../arch/x86/snowridgex/uncore-cache.json     |  7100 ++++
+ .../x86/snowridgex/uncore-interconnect.json   |  6016 +++
+ .../arch/x86/snowridgex/uncore-io.json        |  8944 ++++
+ .../arch/x86/snowridgex/uncore-other.json     | 22056 ----------
+ .../x86/tigerlake/uncore-interconnect.json    |    90 +
+ .../arch/x86/tigerlake/uncore-other.json      |    88 -
+ 85 files changed, 142130 insertions(+), 127053 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/alderlake/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/broadwell/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/broadwellde/uncore-interconnect.json
+ rename tools/perf/pmu-events/arch/x86/broadwellde/{uncore-other.json => uncore-io.json} (53%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/uncore-io.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/uncore-other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-io.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/virtual-memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/haswell/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/haswellx/uncore-io.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/haswellx/uncore-other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-io.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-other.json
+ rename tools/perf/pmu-events/arch/x86/ivybridge/{uncore-other.json => uncore-interconnect.json} (100%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/ivytown/uncore-io.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/ivytown/uncore-other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/jaketown/uncore-io.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/jaketown/uncore-other.json
+ rename tools/perf/pmu-events/arch/x86/knightslanding/{uncore-other.json => uncore-cache.json} (91%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/knightslanding/uncore-io.json
+ rename tools/perf/pmu-events/arch/x86/sandybridge/{uncore-other.json => uncore-interconnect.json} (100%)
+ create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cxl.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/frontend.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/virtual-memory.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/skylake/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-io.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-cache.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-io.json
+ delete mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-other.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
+
+-- 
+2.40.0.577.gac1e443424-goog
+
