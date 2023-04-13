@@ -2,60 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3437C77B61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 13:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C7FC77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 13:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231547AbjDMNeD (ORCPT
+        id S231605AbjDMNed (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Apr 2023 09:34:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59354 "EHLO
+        Thu, 13 Apr 2023 09:34:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231408AbjDMNdm (ORCPT
+        with ESMTP id S231583AbjDMNdp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2023 09:33:42 -0400
-Received: from mail-pg1-x54a.google.com (mail-pg1-x54a.google.com [IPv6:2607:f8b0:4864:20::54a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A42AFC155
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 06:32:16 -0700 (PDT)
-Received: by mail-pg1-x54a.google.com with SMTP id s77-20020a632c50000000b0050300a8089aso6381408pgs.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 06:32:16 -0700 (PDT)
+        Thu, 13 Apr 2023 09:33:45 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32A2DB468
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 06:32:23 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54f87e44598so66023317b3.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 06:32:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681392734; x=1683984734;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rZt20Z7hTMj/DUmjIhsYx65tA/VQTBMfCLcsGtkqEtU=;
-        b=6jaHp56gs2RIaosbKVmgBk0trVN0i4zX6ayjEVKDnrvP5Lve7AeQTPW0q9UBGhBCLD
-         rEU1pBAYziHvEsT59Xo7zrubD8gRRmx7aM9ry9SvDn9XyJ1HKcmULpaDfPquRAJH2t61
-         keVKPgiT88dabu48wb87dOr0tIv9FqUQG/ZB/igJQo3y1Xd7Jg5RCUi+25en9O1zxezN
-         eP1bgo4NokZ7S77+XBX0JmXnwy3IswK5Yf57QDOOdyIXblpseNTBPfwM/xzW2dNr5/Cw
-         l4HCoEGZovZajuLjq/lxP3km4jGzmXyD2CPq24ZZBGUUvGlmLqvHGrpQd5kwd3466Q9b
-         gMQg==
+        d=google.com; s=20221208; t=1681392742; x=1683984742;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DjePygWNzjikF1/0wL8IG/xpima8j1eK/Y93rEybJLQ=;
+        b=GS6jV3v+fTQxf304pBmtb2QF6+oAf40aGTJB7CItdb905njsjwjrRvziffQ/PUKkP1
+         rGhSGBUr6RtTfAUEx0YtRvCiMACNYn4aRNtQR2X1CjhaO8HrmJZo7I7dM4FfKmN17vMH
+         F4tk6PW71DGeQ8IwQwQ5AUhnwl1CuEYKVzQD2We2s4f8opAhBkwmiUslE03yCiRBo2Tz
+         pOZtVWQDW5sJ5ZD4zmxyzrrjjQi7G3HXIF8J+dh83HP+Etll7u15paYlOC6QqBP7wPxl
+         AVPDmrKoZRYZp0UNyt63RbMpN14XQo3xwe5aVEHUZqFE6VL4UyQGIDQdU0Poi60MkAaX
+         sj0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681392734; x=1683984734;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rZt20Z7hTMj/DUmjIhsYx65tA/VQTBMfCLcsGtkqEtU=;
-        b=Zgq8vrIhMekNEy08Mok7UBrr9RKV1mZll6vUxlQonl8I0u8DNTsj+9iMrVYkOX2s6D
-         CqIQnbw75fZ8VLMiEt0JpjldykSmVxpdKNBwDeVdcEsge90TQcgJwvdxi0QMOeLk3aO3
-         xbmkafZ5c/kf/w/W2jbxiVY4o3FkQE7PHaXi4FBEkiEB1sg3L0N6371zaXoDsPsGjB51
-         b9yCw0Cx6h6U/AKERg7uKuPIV822dUz//4pQVd+DBCDzxHGShLWW1KqSsvts0X/07Maw
-         wg2M09Aj8nqCMwZwDNTfP5Wfd3n7cRX8aEHtIx2+F+KohNpOPybnsLz9bpm2BKfmtqQT
-         cvxQ==
-X-Gm-Message-State: AAQBX9fPt4hpkm5oBpnE83NP7vjebcOySwuNhvyHKpqh1+sIKQ3/kQ+s
-        u5aZ8f1Ttc5VQqO4BtAtbeTFVkZap+Un
-X-Google-Smtp-Source: AKy350ansSuz41r2u7arlnoYt8KAoGMsAk/8TTI+Ls3Pzt84wdR1NPvMeyhO74xCkjoQj0iSLT9ZBGKHR5WZ
+        d=1e100.net; s=20221208; t=1681392742; x=1683984742;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DjePygWNzjikF1/0wL8IG/xpima8j1eK/Y93rEybJLQ=;
+        b=CINbn47pMQl34xtR4Rz9EDNFEq0te7gzsQxo0DEfia20rcvDFEXkZhKgFTKSApgy2e
+         rocDo1v/BQmuCbhrXQED4woQzeb99D4VjQi4vu2M/EVnIrs7Rsktu74yPm7SwX7pIUfI
+         rfHma05PeRt4xgBnINoasJ1N+E4DkxQIRhI23YS/VWa7qXLHSdzM8DznCqfcC8xEFHFk
+         i7kFjpJ49XrOlc9AdM8NvjHTYvQWw5JYdL1+ud5+WweB0Cl/km9PCHZPJC4tfGFY53AD
+         6w4iL6tyY35mY105jSTS+/Rf9H8I737p00LaR4dO6Iy6INIuRx+6nMl1ZMWHDu1dtFIS
+         jfCw==
+X-Gm-Message-State: AAQBX9e0ZuQeXk/byVhver8v3RQdb9T6WqCPObljtSvznJt9Ts5R4P86
+        rTpaFmgdQFimyJ40U6lETa9M8cSYYJOF
+X-Google-Smtp-Source: AKy350bxdZvQmjXxNMx6pAHLjGhcAaAi1/DkKsTzlpyd3XrnwzP0CUw1FNDebdnn/d16oj0SdSekQhff517X
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c8fe:b894:ec92:d5cd])
- (user=irogers job=sendgmr) by 2002:a17:902:d1d3:b0:1a2:4524:975f with SMTP id
- g19-20020a170902d1d300b001a24524975fmr637262plb.0.1681392734369; Thu, 13 Apr
- 2023 06:32:14 -0700 (PDT)
-Date:   Thu, 13 Apr 2023 06:29:44 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:ec47:0:b0:54e:e490:d190 with SMTP id
+ r7-20020a0dec47000000b0054ee490d190mr1366137ywn.4.1681392742282; Thu, 13 Apr
+ 2023 06:32:22 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 06:29:45 -0700
 In-Reply-To: <20230413132949.3487664-1-irogers@google.com>
-Message-Id: <20230413132949.3487664-17-irogers@google.com>
+Message-Id: <20230413132949.3487664-18-irogers@google.com>
 Mime-Version: 1.0
 References: <20230413132949.3487664-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v3 16/21] perf vendor events intel: Fix uncore topics for knightslanding
+Subject: [PATCH v3 17/21] perf vendor events intel: Fix uncore topics for sandybridge
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -73,670 +71,252 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Remove 'uncore-other' topic classification, move to cache, io and
-memory.
+Remove 'uncore-other' topic classification, move to cache and
+interconnect.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../{uncore-other.json =3D> uncore-cache.json}  | 260 ------------------
- .../arch/x86/knightslanding/uncore-io.json    | 194 +++++++++++++
- .../x86/knightslanding/uncore-memory.json     |  68 +++++
- 3 files changed, 262 insertions(+), 260 deletions(-)
- rename tools/perf/pmu-events/arch/x86/knightslanding/{uncore-other.json =
-=3D> uncore-cache.json} (91%)
- create mode 100644 tools/perf/pmu-events/arch/x86/knightslanding/uncore-io=
-.json
+ .../arch/x86/sandybridge/uncore-cache.json    | 50 +++++++++----------
+ ...re-other.json => uncore-interconnect.json} |  0
+ 2 files changed, 25 insertions(+), 25 deletions(-)
+ rename tools/perf/pmu-events/arch/x86/sandybridge/{uncore-other.json => uncore-interconnect.json} (100%)
 
-diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/uncore-other.jso=
-n b/tools/perf/pmu-events/arch/x86/knightslanding/uncore-cache.json
-similarity index 91%
-rename from tools/perf/pmu-events/arch/x86/knightslanding/uncore-other.json
-rename to tools/perf/pmu-events/arch/x86/knightslanding/uncore-cache.json
-index fc85e0c95318..1b8dcfa5461c 100644
---- a/tools/perf/pmu-events/arch/x86/knightslanding/uncore-other.json
-+++ b/tools/perf/pmu-events/arch/x86/knightslanding/uncore-cache.json
-@@ -55,74 +55,6 @@
-         "UMask": "0x24",
-         "Unit": "CHA"
-     },
--    {
--        "BriefDescription": "Counts the number of read requests and stream=
-ing stores that hit in MCDRAM cache and the data in MCDRAM is clean with re=
-spect to DDR. This event is only valid in cache and hybrid memory mode.",
--        "EventCode": "0x02",
--        "EventName": "UNC_E_EDC_ACCESS.HIT_CLEAN",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "EDC_UCLK"
--    },
--    {
--        "BriefDescription": "Counts the number of read requests and stream=
-ing stores that hit in MCDRAM cache and the data in MCDRAM is dirty with re=
-spect to DDR. This event is only valid in cache and hybrid memory mode.",
--        "EventCode": "0x02",
--        "EventName": "UNC_E_EDC_ACCESS.HIT_DIRTY",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "EDC_UCLK"
--    },
--    {
--        "BriefDescription": "Counts the number of read requests and stream=
-ing stores that miss in MCDRAM cache and the data evicted from the MCDRAM i=
-s clean with respect to DDR. This event is only valid in cache and hybrid m=
-emory mode.",
--        "EventCode": "0x02",
--        "EventName": "UNC_E_EDC_ACCESS.MISS_CLEAN",
--        "PerPkg": "1",
--        "UMask": "0x4",
--        "Unit": "EDC_UCLK"
--    },
--    {
--        "BriefDescription": "Counts the number of read requests and stream=
-ing stores that miss in MCDRAM cache and the data evicted from the MCDRAM i=
-s dirty with respect to DDR. This event is only valid in cache and hybrid m=
-emory mode.",
--        "EventCode": "0x02",
--        "EventName": "UNC_E_EDC_ACCESS.MISS_DIRTY",
--        "PerPkg": "1",
--        "UMask": "0x8",
--        "Unit": "EDC_UCLK"
--    },
--    {
--        "BriefDescription": "Number of EDC Hits or Misses. Miss I",
--        "EventCode": "0x02",
--        "EventName": "UNC_E_EDC_ACCESS.MISS_INVALID",
--        "PerPkg": "1",
--        "UMask": "0x10",
--        "Unit": "EDC_UCLK"
--    },
--    {
--        "BriefDescription": "ECLK count",
--        "EventName": "UNC_E_E_CLOCKTICKS",
--        "PerPkg": "1",
--        "Unit": "EDC_ECLK"
--    },
--    {
--        "BriefDescription": "Counts the number of read requests received b=
-y the MCDRAM controller. This event is valid in all three memory modes: fla=
-t, cache and hybrid. In cache and hybrid memory mode, this event counts all=
- read requests as well as streaming stores that hit or miss in the MCDRAM c=
-ache.",
--        "EventCode": "0x01",
--        "EventName": "UNC_E_RPQ_INSERTS",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "EDC_ECLK"
--    },
--    {
--        "BriefDescription": "UCLK count",
--        "EventName": "UNC_E_U_CLOCKTICKS",
--        "PerPkg": "1",
--        "Unit": "EDC_UCLK"
--    },
--    {
--        "BriefDescription": "Counts the number of write requests received =
-by the MCDRAM controller. This event is valid in all three memory modes: fl=
-at, cache and hybrid. In cache and hybrid memory mode, this event counts al=
-l streaming stores, writebacks and, read requests that miss in MCDRAM cache=
-.",
--        "EventCode": "0x02",
--        "EventName": "UNC_E_WPQ_INSERTS",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "EDC_ECLK"
--    },
-     {
-         "BriefDescription": "CMS Agent0 AD Credits Acquired For Transgress=
- 0",
-         "EventCode": "0x80",
-@@ -3429,197 +3361,5 @@
+diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/uncore-cache.json b/tools/perf/pmu-events/arch/x86/sandybridge/uncore-cache.json
+index c538557ba4c0..be9a3ed1a940 100644
+--- a/tools/perf/pmu-events/arch/x86/sandybridge/uncore-cache.json
++++ b/tools/perf/pmu-events/arch/x86/sandybridge/uncore-cache.json
+@@ -5,7 +5,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_ES",
          "PerPkg": "1",
-         "UMask": "0x1",
-         "Unit": "CHA"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  AD_0",
--        "EventCode": "0x25",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.AD_0",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  AD_1",
--        "EventCode": "0x25",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.AD_1",
--        "PerPkg": "1",
--        "UMask": "0x8",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  AK_0",
--        "EventCode": "0x25",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.AK_0",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  AK_1",
--        "EventCode": "0x25",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.AK_1",
--        "PerPkg": "1",
--        "UMask": "0x10",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  BL_0",
--        "EventCode": "0x25",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.BL_0",
--        "PerPkg": "1",
--        "UMask": "0x4",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  BL_1",
--        "EventCode": "0x25",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.BL_1",
--        "PerPkg": "1",
--        "UMask": "0x20",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  AD_0",
--        "EventCode": "0x23",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.AD_0",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  AD_1",
--        "EventCode": "0x23",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.AD_1",
--        "PerPkg": "1",
--        "UMask": "0x8",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  AK_0",
--        "EventCode": "0x23",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.AK_0",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  AK_1",
--        "EventCode": "0x23",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.AK_1",
--        "PerPkg": "1",
--        "UMask": "0x10",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  BL_0",
--        "EventCode": "0x23",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.BL_0",
--        "PerPkg": "1",
--        "UMask": "0x4",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  BL_1",
--        "EventCode": "0x23",
--        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.BL_1",
--        "PerPkg": "1",
--        "UMask": "0x20",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AD_0",
--        "EventCode": "0x24",
--        "EventName": "UNC_M2P_EGRESS_INSERTS.AD_0",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AD_1",
--        "EventCode": "0x24",
--        "EventName": "UNC_M2P_EGRESS_INSERTS.AD_1",
--        "PerPkg": "1",
--        "UMask": "0x10",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AK_0",
--        "EventCode": "0x24",
--        "EventName": "UNC_M2P_EGRESS_INSERTS.AK_0",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AK_1",
--        "EventCode": "0x24",
--        "EventName": "UNC_M2P_EGRESS_INSERTS.AK_1",
--        "PerPkg": "1",
--        "UMask": "0x20",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AK_CRD_0",
--        "EventCode": "0x24",
--        "EventName": "UNC_M2P_EGRESS_INSERTS.AK_CRD_0",
--        "PerPkg": "1",
--        "UMask": "0x8",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AK_CRD_1",
--        "EventCode": "0x24",
--        "EventName": "UNC_M2P_EGRESS_INSERTS.AK_CRD_1",
--        "PerPkg": "1",
--        "UMask": "0x80",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. BL_0",
--        "EventCode": "0x24",
--        "EventName": "UNC_M2P_EGRESS_INSERTS.BL_0",
--        "PerPkg": "1",
--        "UMask": "0x4",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. BL_1",
--        "EventCode": "0x24",
--        "EventName": "UNC_M2P_EGRESS_INSERTS.BL_1",
--        "PerPkg": "1",
--        "UMask": "0x40",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Ingress Queue Cycles Not Empty. Counts the nu=
-mber of cycles when the M2PCIe Ingress is not empty.ALL",
--        "EventCode": "0x10",
--        "EventName": "UNC_M2P_INGRESS_CYCLES_NE.ALL",
--        "PerPkg": "1",
--        "UMask": "0x80",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Ingress Queue Cycles Not Empty. Counts the nu=
-mber of cycles when the M2PCIe Ingress is not empty.CBO_IDI",
--        "EventCode": "0x10",
--        "EventName": "UNC_M2P_INGRESS_CYCLES_NE.CBO_IDI",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Ingress Queue Cycles Not Empty. Counts the nu=
-mber of cycles when the M2PCIe Ingress is not empty.CBO_NCB",
--        "EventCode": "0x10",
--        "EventName": "UNC_M2P_INGRESS_CYCLES_NE.CBO_NCB",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "M2PCIe"
--    },
--    {
--        "BriefDescription": "Ingress Queue Cycles Not Empty. Counts the nu=
-mber of cycles when the M2PCIe Ingress is not empty.CBO_NCS",
--        "EventCode": "0x10",
--        "EventName": "UNC_M2P_INGRESS_CYCLES_NE.CBO_NCS",
--        "PerPkg": "1",
--        "UMask": "0x4",
--        "Unit": "M2PCIe"
+         "UMask": "0x86",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup any request that access cache and found line in I-state.",
+@@ -13,7 +13,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_I",
+         "PerPkg": "1",
+         "UMask": "0x88",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup any request that access cache and found line in M-state.",
+@@ -21,7 +21,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_M",
+         "PerPkg": "1",
+         "UMask": "0x81",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup any request that access cache and found line in MESI-state.",
+@@ -29,7 +29,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_MESI",
+         "PerPkg": "1",
+         "UMask": "0x8f",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup external snoop request that access cache and found line in E or S-state.",
+@@ -37,7 +37,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.EXTSNP_ES",
+         "PerPkg": "1",
+         "UMask": "0x46",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup external snoop request that access cache and found line in I-state.",
+@@ -45,7 +45,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.EXTSNP_I",
+         "PerPkg": "1",
+         "UMask": "0x48",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup external snoop request that access cache and found line in M-state.",
+@@ -53,7 +53,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.EXTSNP_M",
+         "PerPkg": "1",
+         "UMask": "0x41",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup external snoop request that access cache and found line in MESI-state.",
+@@ -61,7 +61,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.EXTSNP_MESI",
+         "PerPkg": "1",
+         "UMask": "0x4f",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup read request that access cache and found line in E or S-state.",
+@@ -69,7 +69,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.READ_ES",
+         "PerPkg": "1",
+         "UMask": "0x16",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup read request that access cache and found line in I-state.",
+@@ -77,7 +77,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.READ_I",
+         "PerPkg": "1",
+         "UMask": "0x18",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup read request that access cache and found line in M-state.",
+@@ -85,7 +85,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.READ_M",
+         "PerPkg": "1",
+         "UMask": "0x11",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup read request that access cache and found line in any MESI-state.",
+@@ -93,7 +93,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.READ_MESI",
+         "PerPkg": "1",
+         "UMask": "0x1f",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup write request that access cache and found line in E or S-state.",
+@@ -101,7 +101,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_ES",
+         "PerPkg": "1",
+         "UMask": "0x26",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup write request that access cache and found line in I-state.",
+@@ -109,7 +109,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_I",
+         "PerPkg": "1",
+         "UMask": "0x28",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup write request that access cache and found line in M-state.",
+@@ -117,7 +117,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_M",
+         "PerPkg": "1",
+         "UMask": "0x21",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "L3 Lookup write request that access cache and found line in MESI-state.",
+@@ -125,7 +125,7 @@
+         "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_MESI",
+         "PerPkg": "1",
+         "UMask": "0x2f",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "A cross-core snoop resulted from L3 Eviction which hits a modified line in some processor core.",
+@@ -133,7 +133,7 @@
+         "EventName": "UNC_CBO_XSNP_RESPONSE.HITM_EVICTION",
+         "PerPkg": "1",
+         "UMask": "0x88",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "An external snoop hits a modified line in some processor core.",
+@@ -141,7 +141,7 @@
+         "EventName": "UNC_CBO_XSNP_RESPONSE.HITM_EXTERNAL",
+         "PerPkg": "1",
+         "UMask": "0x28",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "A cross-core snoop initiated by this Cbox due to processor core memory request which hits a modified line in some processor core.",
+@@ -149,7 +149,7 @@
+         "EventName": "UNC_CBO_XSNP_RESPONSE.HITM_XCORE",
+         "PerPkg": "1",
+         "UMask": "0x48",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "A cross-core snoop resulted from L3 Eviction which hits a non-modified line in some processor core.",
+@@ -157,7 +157,7 @@
+         "EventName": "UNC_CBO_XSNP_RESPONSE.HIT_EVICTION",
+         "PerPkg": "1",
+         "UMask": "0x84",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "An external snoop hits a non-modified line in some processor core.",
+@@ -165,7 +165,7 @@
+         "EventName": "UNC_CBO_XSNP_RESPONSE.HIT_EXTERNAL",
+         "PerPkg": "1",
+         "UMask": "0x24",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "A cross-core snoop initiated by this Cbox due to processor core memory request which hits a non-modified line in some processor core.",
+@@ -173,7 +173,7 @@
+         "EventName": "UNC_CBO_XSNP_RESPONSE.HIT_XCORE",
+         "PerPkg": "1",
+         "UMask": "0x44",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "A cross-core snoop resulted from L3 Eviction which misses in some processor core.",
+@@ -181,7 +181,7 @@
+         "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_EVICTION",
+         "PerPkg": "1",
+         "UMask": "0x81",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "An external snoop misses in some processor core.",
+@@ -189,7 +189,7 @@
+         "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_EXTERNAL",
+         "PerPkg": "1",
+         "UMask": "0x21",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
+     },
+     {
+         "BriefDescription": "A cross-core snoop initiated by this Cbox due to processor core memory request which misses in some processor core.",
+@@ -197,6 +197,6 @@
+         "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_XCORE",
+         "PerPkg": "1",
+         "UMask": "0x41",
+-        "Unit": "CBO"
++        "Unit": "CBOX"
      }
  ]
-diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/uncore-io.json b=
-/tools/perf/pmu-events/arch/x86/knightslanding/uncore-io.json
-new file mode 100644
-index 000000000000..898f7e425cd4
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/knightslanding/uncore-io.json
-@@ -0,0 +1,194 @@
-+[
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  AD_0",
-+        "EventCode": "0x25",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.AD_0",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  AD_1",
-+        "EventCode": "0x25",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.AD_1",
-+        "PerPkg": "1",
-+        "UMask": "0x8",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  AK_0",
-+        "EventCode": "0x25",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.AK_0",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  AK_1",
-+        "EventCode": "0x25",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.AK_1",
-+        "PerPkg": "1",
-+        "UMask": "0x10",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  BL_0",
-+        "EventCode": "0x25",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.BL_0",
-+        "PerPkg": "1",
-+        "UMask": "0x4",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Full. Counts the numbe=
-r of cycles when the M2PCIe Egress is full.  BL_1",
-+        "EventCode": "0x25",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_FULL.BL_1",
-+        "PerPkg": "1",
-+        "UMask": "0x20",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  AD_0",
-+        "EventCode": "0x23",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.AD_0",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  AD_1",
-+        "EventCode": "0x23",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.AD_1",
-+        "PerPkg": "1",
-+        "UMask": "0x8",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  AK_0",
-+        "EventCode": "0x23",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.AK_0",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  AK_1",
-+        "EventCode": "0x23",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.AK_1",
-+        "PerPkg": "1",
-+        "UMask": "0x10",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  BL_0",
-+        "EventCode": "0x23",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.BL_0",
-+        "PerPkg": "1",
-+        "UMask": "0x4",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Cycles Not Empty. Counts the =
-number of cycles when the M2PCIe Egress is not empty.  BL_1",
-+        "EventCode": "0x23",
-+        "EventName": "UNC_M2P_EGRESS_CYCLES_NE.BL_1",
-+        "PerPkg": "1",
-+        "UMask": "0x20",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AD_0",
-+        "EventCode": "0x24",
-+        "EventName": "UNC_M2P_EGRESS_INSERTS.AD_0",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AD_1",
-+        "EventCode": "0x24",
-+        "EventName": "UNC_M2P_EGRESS_INSERTS.AD_1",
-+        "PerPkg": "1",
-+        "UMask": "0x10",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AK_0",
-+        "EventCode": "0x24",
-+        "EventName": "UNC_M2P_EGRESS_INSERTS.AK_0",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AK_1",
-+        "EventCode": "0x24",
-+        "EventName": "UNC_M2P_EGRESS_INSERTS.AK_1",
-+        "PerPkg": "1",
-+        "UMask": "0x20",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AK_CRD_0",
-+        "EventCode": "0x24",
-+        "EventName": "UNC_M2P_EGRESS_INSERTS.AK_CRD_0",
-+        "PerPkg": "1",
-+        "UMask": "0x8",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. AK_CRD_1",
-+        "EventCode": "0x24",
-+        "EventName": "UNC_M2P_EGRESS_INSERTS.AK_CRD_1",
-+        "PerPkg": "1",
-+        "UMask": "0x80",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. BL_0",
-+        "EventCode": "0x24",
-+        "EventName": "UNC_M2P_EGRESS_INSERTS.BL_0",
-+        "PerPkg": "1",
-+        "UMask": "0x4",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Egress (to CMS) Ingress. Counts the number of=
- number of messages inserted into the  the M2PCIe Egress queue. BL_1",
-+        "EventCode": "0x24",
-+        "EventName": "UNC_M2P_EGRESS_INSERTS.BL_1",
-+        "PerPkg": "1",
-+        "UMask": "0x40",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Ingress Queue Cycles Not Empty. Counts the nu=
-mber of cycles when the M2PCIe Ingress is not empty.ALL",
-+        "EventCode": "0x10",
-+        "EventName": "UNC_M2P_INGRESS_CYCLES_NE.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x80",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Ingress Queue Cycles Not Empty. Counts the nu=
-mber of cycles when the M2PCIe Ingress is not empty.CBO_IDI",
-+        "EventCode": "0x10",
-+        "EventName": "UNC_M2P_INGRESS_CYCLES_NE.CBO_IDI",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Ingress Queue Cycles Not Empty. Counts the nu=
-mber of cycles when the M2PCIe Ingress is not empty.CBO_NCB",
-+        "EventCode": "0x10",
-+        "EventName": "UNC_M2P_INGRESS_CYCLES_NE.CBO_NCB",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "M2PCIe"
-+    },
-+    {
-+        "BriefDescription": "Ingress Queue Cycles Not Empty. Counts the nu=
-mber of cycles when the M2PCIe Ingress is not empty.CBO_NCS",
-+        "EventCode": "0x10",
-+        "EventName": "UNC_M2P_INGRESS_CYCLES_NE.CBO_NCS",
-+        "PerPkg": "1",
-+        "UMask": "0x4",
-+        "Unit": "M2PCIe"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/knightslanding/uncore-memory.js=
-on b/tools/perf/pmu-events/arch/x86/knightslanding/uncore-memory.json
-index 47da947b1a6e..fb752974179b 100644
---- a/tools/perf/pmu-events/arch/x86/knightslanding/uncore-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/knightslanding/uncore-memory.json
-@@ -1,4 +1,72 @@
- [
-+    {
-+        "BriefDescription": "Counts the number of read requests and stream=
-ing stores that hit in MCDRAM cache and the data in MCDRAM is clean with re=
-spect to DDR. This event is only valid in cache and hybrid memory mode.",
-+        "EventCode": "0x02",
-+        "EventName": "UNC_E_EDC_ACCESS.HIT_CLEAN",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "EDC_UCLK"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of read requests and stream=
-ing stores that hit in MCDRAM cache and the data in MCDRAM is dirty with re=
-spect to DDR. This event is only valid in cache and hybrid memory mode.",
-+        "EventCode": "0x02",
-+        "EventName": "UNC_E_EDC_ACCESS.HIT_DIRTY",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "EDC_UCLK"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of read requests and stream=
-ing stores that miss in MCDRAM cache and the data evicted from the MCDRAM i=
-s clean with respect to DDR. This event is only valid in cache and hybrid m=
-emory mode.",
-+        "EventCode": "0x02",
-+        "EventName": "UNC_E_EDC_ACCESS.MISS_CLEAN",
-+        "PerPkg": "1",
-+        "UMask": "0x4",
-+        "Unit": "EDC_UCLK"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of read requests and stream=
-ing stores that miss in MCDRAM cache and the data evicted from the MCDRAM i=
-s dirty with respect to DDR. This event is only valid in cache and hybrid m=
-emory mode.",
-+        "EventCode": "0x02",
-+        "EventName": "UNC_E_EDC_ACCESS.MISS_DIRTY",
-+        "PerPkg": "1",
-+        "UMask": "0x8",
-+        "Unit": "EDC_UCLK"
-+    },
-+    {
-+        "BriefDescription": "Number of EDC Hits or Misses. Miss I",
-+        "EventCode": "0x02",
-+        "EventName": "UNC_E_EDC_ACCESS.MISS_INVALID",
-+        "PerPkg": "1",
-+        "UMask": "0x10",
-+        "Unit": "EDC_UCLK"
-+    },
-+    {
-+        "BriefDescription": "ECLK count",
-+        "EventName": "UNC_E_E_CLOCKTICKS",
-+        "PerPkg": "1",
-+        "Unit": "EDC_ECLK"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of read requests received b=
-y the MCDRAM controller. This event is valid in all three memory modes: fla=
-t, cache and hybrid. In cache and hybrid memory mode, this event counts all=
- read requests as well as streaming stores that hit or miss in the MCDRAM c=
-ache.",
-+        "EventCode": "0x01",
-+        "EventName": "UNC_E_RPQ_INSERTS",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "EDC_ECLK"
-+    },
-+    {
-+        "BriefDescription": "UCLK count",
-+        "EventName": "UNC_E_U_CLOCKTICKS",
-+        "PerPkg": "1",
-+        "Unit": "EDC_UCLK"
-+    },
-+    {
-+        "BriefDescription": "Counts the number of write requests received =
-by the MCDRAM controller. This event is valid in all three memory modes: fl=
-at, cache and hybrid. In cache and hybrid memory mode, this event counts al=
-l streaming stores, writebacks and, read requests that miss in MCDRAM cache=
-.",
-+        "EventCode": "0x02",
-+        "EventName": "UNC_E_WPQ_INSERTS",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "EDC_ECLK"
-+    },
-     {
-         "BriefDescription": "CAS All",
-         "EventCode": "0x03",
---=20
+diff --git a/tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json b/tools/perf/pmu-events/arch/x86/sandybridge/uncore-interconnect.json
+similarity index 100%
+rename from tools/perf/pmu-events/arch/x86/sandybridge/uncore-other.json
+rename to tools/perf/pmu-events/arch/x86/sandybridge/uncore-interconnect.json
+-- 
 2.40.0.577.gac1e443424-goog
 
