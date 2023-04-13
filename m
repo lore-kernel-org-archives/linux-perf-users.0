@@ -2,124 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455ECC77B6E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 15:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F318C77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 16:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230479AbjDMPt3 (ORCPT
+        id S230151AbjDMQRf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Apr 2023 11:49:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35032 "EHLO
+        Thu, 13 Apr 2023 12:17:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230161AbjDMPt2 (ORCPT
+        with ESMTP id S229689AbjDMQRe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2023 11:49:28 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6472F1FD3
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 08:49:27 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3ee6c339cceso105025e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 08:49:27 -0700 (PDT)
+        Thu, 13 Apr 2023 12:17:34 -0400
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4321977F
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 09:17:31 -0700 (PDT)
+Received: by mail-wm1-x330.google.com with SMTP id j16so1489275wms.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 09:17:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681400966; x=1683992966;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A4sn6GCzgTLSVuwjc0X0HwtkDGk6cO+gZHnJUhGaRu4=;
-        b=EU0pNUYyvaYH0BwlANnHHkX7/88t5UnmQ8ob2MJi7m6RdWkkrVdBLB+5ti+wosU8Hp
-         64MCCS5lanIUhUFOrAZTi0HN3M0P9m9uo2Tm8tWX3i9SCC359ROmFb2iV5p5EX5XaTh/
-         S+zIrKyoe+NrjLNsnTVfeAOl8LF5271z8LKbKTxX2HvY5jwiiWisWqZs4qlnMr2oNqKE
-         46WfAjGGPqnB+C5QIjIQIB0EoviWnc/Sj00HoGCrCmeGTsFZ43a0ftc8SGpSV0NodMkk
-         hXfwu9yNnSpEBnhT+fhru2MEf60zUQ9snaxsFzXFpzo/vwH7J3MHgtaM7eRSkzHdv9Z6
-         qwkg==
+        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1681402650; x=1683994650;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=38Yb3K2X39JYdroVCYnZn1iH0zsgOPm1opWg6u9OrnA=;
+        b=FYMc15O2+ikuHwDZXewujBymuKjb0wLG3G9POi/bxOvkCAVqfUklYRLX0godmEWGyl
+         Mb0djbmpWZ0hLSRiWdLcrBCLV45eQOqDXCa0Nc2vK5NzWC60U92C3lcWGqlYAXV/KtCQ
+         rCqtnkk3YhyRaaoUwTApDJTHO7XmmgvmhppYk+Dlp8WGbqjPYJPws+iIgqZTOLr5qqxA
+         ICXBCUnEN9BY+gBFYb06nnH6hPPOnmzEqivs0CbguiSY4J1A6j5dGec27xGTfZ2nKqbp
+         76aOt1t7EtPrYCm14ndD5tk1sxdtnsLnaaLtQ2NHqC8XWn1I6tX1sRe0BuacrDD9WZRx
+         hJ2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681400966; x=1683992966;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A4sn6GCzgTLSVuwjc0X0HwtkDGk6cO+gZHnJUhGaRu4=;
-        b=NWFBx4pW4z2S25gt0UIfyd9vmqm7dffUed/M+L/s+so0DPF6rotrI7g6xHY+iQ192X
-         g3/Bf7HjlkawfsXtbxZJfAKDrdMQ4KK+ybxfzUo77mGAaEIAjW/y3yuRE+Yli9dmGVZ1
-         SBhTj4HGR6XRB7qwgoSZINO8yPL2/MZd2AGvRoZjNzsrlm4Szq7v+LgTdUpnNQu2sJo9
-         eIHanTvUxhmh4xZT9+NNK75skutDtbex9NobMEXHIXuto5WGuBFsdvgZ/O4NlD9N+tqZ
-         ey1NV66Xce8npG0zm4q+ctV22K35Hynyys9FS2HW9y4EBYPXGZwxVkqPXQjiqTKWZCcy
-         4gQg==
-X-Gm-Message-State: AAQBX9ePRjbqjoTNI8/tDMVvtuS5caOIornAdD787yVJeOnfTPVpJNmp
-        KSLyzHrEGn6PPUU3CxIV7yMDMRFG3KdTpi84qHomjg==
-X-Google-Smtp-Source: AKy350avMDVRz9X07td8492agQ2aQWjRLwbxKM4KikLqgoTQEcfN+TUokW8ShUvWj/J1ak4nRePR0dTjMxqcmtegeBg=
-X-Received: by 2002:a05:600c:3b28:b0:3f0:3dd2:8c24 with SMTP id
- m40-20020a05600c3b2800b003f03dd28c24mr750691wms.6.1681400965759; Thu, 13 Apr
- 2023 08:49:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <40c60719-4bfe-b1a4-ead7-724b84637f55@web.de> <1a11455f-ab57-dce0-1677-6beb8492a257@web.de>
- <54a21fea-64e3-de67-82ef-d61b90ffad05@web.de>
-In-Reply-To: <54a21fea-64e3-de67-82ef-d61b90ffad05@web.de>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 13 Apr 2023 08:49:14 -0700
-Message-ID: <CAP-5=fW08PRXst_LdcM442ASGYs48b4B+0PnkLWCUcODB9Ju2w@mail.gmail.com>
-Subject: Re: [PATCH] perf map: Delete two variable initialisations before null
- pointer checks in sort__sym_from_cmp()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     kernel-janitors@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        d=1e100.net; s=20221208; t=1681402650; x=1683994650;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=38Yb3K2X39JYdroVCYnZn1iH0zsgOPm1opWg6u9OrnA=;
+        b=TX2dChyq+AFVOBlwJrMMOOYeUZzKKz6fK5tDNyspkXNdYzgOUWyf5Dss/ylAp02yQT
+         NJFp796WCA9R73Zw8kJm021CbUgfHgZkGEoqoL4uk05CZ16CpKqS3TBs7/Q5z2PSG36v
+         KL8My4kEa33P7zkch1858lc48dY/l8LOzf5xSSRD4Ctw7t7NYk/a9i3ajFiL+yNglQr8
+         udO+OnQkZCsRcUOSDc1iu6Mhcs+2mCecOzf16I3lTEgROiKziYkYBUXPlp96hkJTjZdJ
+         Twp9IyklX964WKYO+sPSPwUU15c+E9rsFC2l7y3lOYMdiuilsTnltTTK1v/5HpVhTOFs
+         JiUw==
+X-Gm-Message-State: AAQBX9eCfGzUENaA/MBC40rlBuCp2QdBorTSgJVXwQXFrWd9Y0BIhkE6
+        bgmuQSy/+0UPWTd6UjciOm1jLw==
+X-Google-Smtp-Source: AKy350bmCsEok/fFa5YgX7ncV0/zToqAzAd+sbPw5hmVDKRgBIpNP0624v+FkMa0rAlXJlrVKb571A==
+X-Received: by 2002:a1c:6a14:0:b0:3f0:7db5:607a with SMTP id f20-20020a1c6a14000000b003f07db5607amr2179470wmc.33.1681402650384;
+        Thu, 13 Apr 2023 09:17:30 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id w16-20020a05600c475000b003f092f0e0a0sm9350624wmo.3.2023.04.13.09.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Apr 2023 09:17:30 -0700 (PDT)
+From:   Alexandre Ghiti <alexghiti@rivosinc.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        German Gomez <german.gomez@arm.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>, cocci@inria.fr,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH 0/4] riscv: Allow userspace to directly access perf counters
+Date:   Thu, 13 Apr 2023 18:17:21 +0200
+Message-Id: <20230413161725.195417-1-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.37.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 13, 2023 at 6:03=E2=80=AFAM Markus Elfring <Markus.Elfring@web.=
-de> wrote:
->
-> Date: Thu, 13 Apr 2023 14:46:39 +0200
->
-> Addresses of two data structure members were determined before
-> corresponding null pointer checks in the implementation of
-> the function =E2=80=9Csort__sym_from_cmp=E2=80=9D.
->
-> Thus avoid the risk for undefined behaviour by removing extra
-> initialisations for the local variables =E2=80=9Cfrom_l=E2=80=9D and =E2=
-=80=9Cfrom_r=E2=80=9D
-> (also because they were already reassigned with the same value
-> behind this pointer check).
->
-> This issue was detected by using the Coccinelle software.
->
-> Fixes: 1b9e97a2a95e4941dcfa968c4b2e04022e9a343e ("perf tools: Fix report =
--F symbol_from for data without branch info")
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+riscv used to allow direct access to cycle/time/instret counters,
+bypassing the perf framework, this patchset intends to allow the user to
+mmap any counter when accessed through perf. But we can't break the
+existing behaviour so we introduce a sysctl perf_user_access like arm64
+does, which defaults to the legacy mode described above.
 
-Acked-by: Ian Rogers <irogers@google.com>
+The core of this patchset lies in patch 4, the first 3 patches are
+simple fixes.
 
-Thanks,
-Ian
+base-commit-tag: v6.3-rc1
 
-> ---
->  tools/perf/util/sort.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index 80c9960c37e5..f2ffaf90648e 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -1020,8 +1020,7 @@ static int hist_entry__dso_to_filter(struct hist_en=
-try *he, int type,
->  static int64_t
->  sort__sym_from_cmp(struct hist_entry *left, struct hist_entry *right)
->  {
-> -       struct addr_map_symbol *from_l =3D &left->branch_info->from;
-> -       struct addr_map_symbol *from_r =3D &right->branch_info->from;
-> +       struct addr_map_symbol *from_l, *from_r;
->
->         if (!left->branch_info || !right->branch_info)
->                 return cmp_null(left->branch_info, right->branch_info);
-> --
-> 2.40.0
->
+Alexandre Ghiti (4):
+  perf: Fix wrong comment about default event_idx
+  include: riscv: Fix wrong include guard in riscv_pmu.h
+  riscv: Make legacy counter enum match the HW numbering
+  riscv: Enable perf counters user access only through perf
+
+ Documentation/admin-guide/sysctl/kernel.rst |  23 +++-
+ arch/riscv/include/asm/perf_event.h         |   3 +
+ arch/riscv/kernel/Makefile                  |   2 +-
+ arch/riscv/kernel/perf_event.c              |  65 +++++++++++
+ drivers/perf/riscv_pmu.c                    |  42 ++++++++
+ drivers/perf/riscv_pmu_legacy.c             |  24 ++++-
+ drivers/perf/riscv_pmu_sbi.c                | 113 ++++++++++++++++++--
+ include/linux/perf/riscv_pmu.h              |   9 +-
+ include/linux/perf_event.h                  |   3 +-
+ tools/lib/perf/mmap.c                       |  65 +++++++++++
+ 10 files changed, 332 insertions(+), 17 deletions(-)
+ create mode 100644 arch/riscv/kernel/perf_event.c
+
+-- 
+2.37.2
+
