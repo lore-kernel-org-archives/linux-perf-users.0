@@ -2,56 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D83C77B61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 13:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF037C77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 13:30:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230394AbjDMNad (ORCPT
+        id S231513AbjDMNay (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Apr 2023 09:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58564 "EHLO
+        Thu, 13 Apr 2023 09:30:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229772AbjDMNaV (ORCPT
+        with ESMTP id S231403AbjDMNan (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2023 09:30:21 -0400
+        Thu, 13 Apr 2023 09:30:43 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11C06A42
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 06:30:04 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id h206-20020a2521d7000000b00b8f3681db1eso5996796ybh.11
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 06:30:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBFCAAD0A
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 06:30:19 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 186-20020a2510c3000000b00b880000325bso32109043ybq.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 06:30:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681392604; x=1683984604;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+yV8sloUnrT1lyqdJVp+HOWtcQAoINm2NMFVYgBITSE=;
-        b=knuc4hbA9DduaJ8I2/WmkjWUF4f22hVv17WJ7kNCPKASlPEgpVg19vkMGsfzoMsTbp
-         gUJC0H47JdTECdigrcWVYwAdtwlL8FWxYZnPB/cnGFRovT8I+xtaiVC6N+eCzTxUEW0U
-         viepqmQ2O0W4T/RFlA0gqFVgAOwWhkL7KgGAJX+nwNEhVTtJnotfO6L8ZQAHKddxNxwF
-         w5BcE75Ui4P0mUdZINis9Vcinr2S7KANfQcNjkLqVc9MP/tho5dYFz+ahcIUxUJ9hBy7
-         7rrFy8t1LY0TGMaFhngdEbeUWzH9O5zNexr3ZSwJEprg3/2d8ku+Y1vG9RoQYjQj0zhe
-         0L0w==
+        d=google.com; s=20221208; t=1681392619; x=1683984619;
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xTPnQm9bXBOZrjOsPaeX+PW/pu2n7sFV4FVI7qhmzso=;
+        b=jkUnltS4TdxLAyH9uRVx3eXFDVrq59dAdNcHEfdE8gUYB5zkxH3RgPJZ/o8rZ1/v/R
+         pUSD+Cp6N4gZ17/mmvp3JFtr8Xbr0LvLG2HDEIykXhMdR+taFaUMdY3fbelb6wYSna4W
+         GAj6aHa84Kwf7h11s9esyeEitijOsCBkeooQZkgdkfUr9sb+iVLNpy8xx5WGn8eRd0Ny
+         NYFNCS19wg2QMTBr7E1JHOYBPFKB2d1rlW4RcincG2nrNpP+IRlyK9zcKf47ZRom5zQI
+         O7YEk13TJgSAQtAL2r7BQE2qnnJ552TiDLCVm+snW30z0tCLNkiC5ZmQXyEPtWmcbrL9
+         mOdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681392604; x=1683984604;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+yV8sloUnrT1lyqdJVp+HOWtcQAoINm2NMFVYgBITSE=;
-        b=LQ6Q5LtYAi5OBb+vIPF6u8UysabJTIfdGEz8hMtQ6ZQM9dOvAN8hruQWU8JTKDyHhm
-         3tlVoMsegr+RHFhtUIcEsgFAvHKtmpcMh0fRegBFnMUPAF++yLTpLUb6A/LQhR2Ztkds
-         saCAvlrTZWxFC3JgDpr7d5/RZ/lbn/oPDot9PP2NcvoYeqdpY8lQrhFSAV4zvHrnEkHS
-         vOQ8C4eslLG2qu/vW4lzDLBJTgvbTFsU1ppb9fJgKkRcLaPKDZasEKzG7MhyIZqjLQWy
-         xlqbaF9V12CLY4etJ/oKlOi+do3r0x/BDIjn8vvVNbdUCywJMQh4Eyv11xqit5rpWknu
-         TKLA==
-X-Gm-Message-State: AAQBX9eNM2XSFPC6A2WJ4SzEyKKrppf9VlMJS3xkSZBLidsCrXflsk1h
-        45ay0l0WWY1EzuIY3RlBtzgMri1ykd7X
-X-Google-Smtp-Source: AKy350aZl/y72uWkYuviI0Pakk5SFC9bZtQ5EPJfLaWFkMxJdZxPvypiyezqvaLzfqCwo67AY6yXfsTdRysZ
+        d=1e100.net; s=20221208; t=1681392619; x=1683984619;
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xTPnQm9bXBOZrjOsPaeX+PW/pu2n7sFV4FVI7qhmzso=;
+        b=RL2J2ZwTpXnDImKY1sLBWhBrycDSozzoxlDGE5gKT/s/gR2CCd3Pdj3h96r7GRQlZG
+         c6OuydmiXyfME3zsmRQx2JFiTCZMPPm3hsfhSmRZJE3HISqOh0oSh/GKZKSWaJA7AH/1
+         hj7/aqJONdarprUQv5eSKrMdCjFdDi4GiPJlULGXLdkQOHP3oQ1FcxeTlYi7UmL3b7AX
+         Fe2/p7hCOyY3yUfg07YIhqPKxfrDFPLVAGCrqVXXXdjc5wvyY0cSsoa87OexIh+RBdxD
+         v1/zDLZDd5l8pIOOOl/+VCLxnWVvh23XMj/wPNg8p5l0disOnoa9mNWVg9aYbW3u0PBm
+         wKQA==
+X-Gm-Message-State: AAQBX9cb9R+dGbe6PDSD46lf0+YyuXcCZUYl7xlSNEmb2WTAV/oSrcuI
+        zP2ZlTK03ICAsjHJUe17IE6Gf/90e07n
+X-Google-Smtp-Source: AKy350a81ruBZT7OlZtvDutS4uUtAVCE3Gp5WylbvG4nG7RdUQzUnpKPSYqkzn6VjWFlyK3mBaXsONDhUWwh
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c8fe:b894:ec92:d5cd])
- (user=irogers job=sendgmr) by 2002:a25:d6d8:0:b0:b8f:5680:7d99 with SMTP id
- n207-20020a25d6d8000000b00b8f56807d99mr1387113ybg.11.1681392604131; Thu, 13
- Apr 2023 06:30:04 -0700 (PDT)
-Date:   Thu, 13 Apr 2023 06:29:28 -0700
-Message-Id: <20230413132949.3487664-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:cc07:0:b0:b8b:fe5f:2eaa with SMTP id
+ l7-20020a25cc07000000b00b8bfe5f2eaamr1152271ybf.2.1681392619121; Thu, 13 Apr
+ 2023 06:30:19 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 06:29:30 -0700
+In-Reply-To: <20230413132949.3487664-1-irogers@google.com>
+Message-Id: <20230413132949.3487664-3-irogers@google.com>
 Mime-Version: 1.0
+References: <20230413132949.3487664-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v3 00/21] Update uncore topics, 1x event updates, 2x new archs.
+Subject: [PATCH v3 02/21] perf vendor events intel: Add grandridge
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -69,189 +73,505 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update the uncore PMUs and topic classification as created by:
-https://github.com/intel/perfmon/pull/70
-
-Event updates stem from:
-https://github.com/intel/perfmon/pull/68
-impacting alderlake, icelakex and sapphirerapids.
-
-Grand Ridge and Sierra Forest events stem from:
+Add v1.00 from:
 https://github.com/intel/perfmon/pull/69
 
-Changes generated by with PR70 in place:
-https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-
-v3. Rebase over the update of alderlake and icelakex events.
-v2. Adds improvements to uncore topics, uncore PMU name fixes and
-    fixes a trigraph issue from ??? being in the json.
-
-Ian Rogers (21):
-  perf vendor events intel: Update sapphirerapids to v1.12
-  perf vendor events intel: Add grandridge
-  perf vendor events intel: Add sierraforest
-  perf vendor events intel: Fix uncore topics for alderlake
-  perf vendor events intel: Fix uncore topics for broadwell
-  perf vendor events intel: Fix uncore topics for broadwellde
-  perf vendor events intel: Fix uncore topics for broadwellx
-  perf vendor events intel: Fix uncore topics for cascadelakex
-  perf vendor events intel: Fix uncore topics for haswell
-  perf vendor events intel: Fix uncore topics for haswellx
-  perf vendor events intel: Fix uncore topics for icelake
-  perf vendor events intel: Fix uncore topics for icelakex
-  perf vendor events intel: Fix uncore topics for ivybridge
-  perf vendor events intel: Fix uncore topics for ivytown
-  perf vendor events intel: Fix uncore topics for jaketown
-  perf vendor events intel: Fix uncore topics for knightslanding
-  perf vendor events intel: Fix uncore topics for sandybridge
-  perf vendor events intel: Fix uncore topics for skylake
-  perf vendor events intel: Fix uncore topics for skylakex
-  perf vendor events intel: Fix uncore topics for snowridgex
-  perf vendor events intel: Fix uncore topics for tigerlake
-
- .../x86/alderlake/uncore-interconnect.json    |    90 +
- .../arch/x86/alderlake/uncore-other.json      |    88 -
- .../x86/alderlaken/uncore-interconnect.json   |    26 +
- .../arch/x86/alderlaken/uncore-other.json     |    24 -
- .../arch/x86/broadwell/uncore-cache.json      |    30 +-
- .../x86/broadwell/uncore-interconnect.json    |    61 +
- .../arch/x86/broadwell/uncore-other.json      |    59 -
- .../arch/x86/broadwellde/uncore-cache.json    |   324 +-
- .../x86/broadwellde/uncore-interconnect.json  |   614 +
- .../{uncore-other.json => uncore-io.json}     |   612 -
- .../arch/x86/broadwellx/uncore-cache.json     |   358 +-
- .../x86/broadwellx/uncore-interconnect.json   |  4297 +-
- .../arch/x86/broadwellx/uncore-io.json        |   555 +
- .../arch/x86/broadwellx/uncore-other.json     |  3242 --
- .../arch/x86/cascadelakex/uncore-cache.json   | 10764 +++++
- .../x86/cascadelakex/uncore-interconnect.json | 11334 ++++++
- .../arch/x86/cascadelakex/uncore-io.json      |  4250 ++
- .../arch/x86/cascadelakex/uncore-memory.json  |     2 +-
- .../arch/x86/cascadelakex/uncore-other.json   | 26344 ------------
- .../pmu-events/arch/x86/grandridge/cache.json |   155 +
- .../arch/x86/grandridge/frontend.json         |    16 +
- .../arch/x86/grandridge/memory.json           |    20 +
- .../pmu-events/arch/x86/grandridge/other.json |    20 +
- .../arch/x86/grandridge/pipeline.json         |    96 +
- .../arch/x86/grandridge/virtual-memory.json   |    24 +
- .../arch/x86/haswell/uncore-cache.json        |    50 +-
- .../arch/x86/haswell/uncore-interconnect.json |    52 +
- .../arch/x86/haswell/uncore-other.json        |    50 -
- .../arch/x86/haswellx/uncore-cache.json       |   360 +-
- .../x86/haswellx/uncore-interconnect.json     |  4242 +-
- .../arch/x86/haswellx/uncore-io.json          |   528 +
- .../arch/x86/haswellx/uncore-other.json       |  3160 --
- .../arch/x86/icelake/uncore-interconnect.json |    74 +
- .../arch/x86/icelake/uncore-other.json        |    72 -
- .../arch/x86/icelakex/uncore-cache.json       |  9860 +++++
- .../x86/icelakex/uncore-interconnect.json     | 14571 +++++++
- .../arch/x86/icelakex/uncore-io.json          |  9270 +++++
- .../arch/x86/icelakex/uncore-other.json       | 33697 ----------------
- .../arch/x86/ivybridge/uncore-cache.json      |    50 +-
- ...re-other.json => uncore-interconnect.json} |     0
- .../arch/x86/ivytown/uncore-cache.json        |   314 +-
- .../arch/x86/ivytown/uncore-interconnect.json |  2025 +-
- .../arch/x86/ivytown/uncore-io.json           |   549 +
- .../arch/x86/ivytown/uncore-other.json        |  2174 -
- .../arch/x86/jaketown/uncore-cache.json       |   194 +-
- .../x86/jaketown/uncore-interconnect.json     |  1237 +-
- .../arch/x86/jaketown/uncore-io.json          |   324 +
- .../arch/x86/jaketown/uncore-other.json       |  1393 -
- .../{uncore-other.json => uncore-cache.json}  |   260 -
- .../arch/x86/knightslanding/uncore-io.json    |   194 +
- .../x86/knightslanding/uncore-memory.json     |    68 +
- tools/perf/pmu-events/arch/x86/mapfile.csv    |     4 +-
- .../arch/x86/sandybridge/uncore-cache.json    |    50 +-
- ...re-other.json => uncore-interconnect.json} |     0
- .../arch/x86/sapphirerapids/other.json        |     3 +-
- .../arch/x86/sapphirerapids/pipeline.json     |     4 +-
- .../arch/x86/sapphirerapids/uncore-cache.json |  5644 +++
- .../arch/x86/sapphirerapids/uncore-cxl.json   |   450 +
- .../sapphirerapids/uncore-interconnect.json   |  6199 +++
- .../arch/x86/sapphirerapids/uncore-io.json    |  3651 ++
- .../x86/sapphirerapids/uncore-memory.json     |  3283 +-
- .../arch/x86/sapphirerapids/uncore-other.json |  4525 ---
- .../arch/x86/sapphirerapids/uncore-power.json |   107 +
- .../arch/x86/sierraforest/cache.json          |   155 +
- .../arch/x86/sierraforest/frontend.json       |    16 +
- .../arch/x86/sierraforest/memory.json         |    20 +
- .../arch/x86/sierraforest/other.json          |    20 +
- .../arch/x86/sierraforest/pipeline.json       |    96 +
- .../arch/x86/sierraforest/virtual-memory.json |    24 +
- .../arch/x86/skylake/uncore-cache.json        |    28 +-
- .../arch/x86/skylake/uncore-interconnect.json |    67 +
- .../arch/x86/skylake/uncore-other.json        |    65 -
- .../arch/x86/skylakex/uncore-cache.json       | 10649 +++++
- .../x86/skylakex/uncore-interconnect.json     | 11248 ++++++
- .../arch/x86/skylakex/uncore-io.json          |  4250 ++
- .../arch/x86/skylakex/uncore-memory.json      |     2 +-
- .../arch/x86/skylakex/uncore-other.json       | 26143 ------------
- .../arch/x86/snowridgex/uncore-cache.json     |  7100 ++++
- .../x86/snowridgex/uncore-interconnect.json   |  6016 +++
- .../arch/x86/snowridgex/uncore-io.json        |  8944 ++++
- .../arch/x86/snowridgex/uncore-other.json     | 22056 ----------
- .../x86/tigerlake/uncore-interconnect.json    |    90 +
- .../arch/x86/tigerlake/uncore-other.json      |    88 -
- 83 files changed, 142122 insertions(+), 127048 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/x86/alderlake/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwell/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwellde/uncore-interconnect.json
- rename tools/perf/pmu-events/arch/x86/broadwellde/{uncore-other.json => uncore-io.json} (53%)
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/uncore-io.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/uncore-other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-io.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../pmu-events/arch/x86/grandridge/cache.json | 155 ++++++++++++++++++
+ .../arch/x86/grandridge/frontend.json         |  16 ++
+ .../arch/x86/grandridge/memory.json           |  20 +++
+ .../pmu-events/arch/x86/grandridge/other.json |  20 +++
+ .../arch/x86/grandridge/pipeline.json         |  96 +++++++++++
+ .../arch/x86/grandridge/virtual-memory.json   |  24 +++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   1 +
+ 7 files changed, 332 insertions(+)
  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/cache.json
  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/frontend.json
  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/memory.json
  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/other.json
  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/pipeline.json
- create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/virtual-memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/haswell/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/haswellx/uncore-io.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/haswellx/uncore-other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-io.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-other.json
- rename tools/perf/pmu-events/arch/x86/ivybridge/{uncore-other.json => uncore-interconnect.json} (100%)
- create mode 100644 tools/perf/pmu-events/arch/x86/ivytown/uncore-io.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/ivytown/uncore-other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/jaketown/uncore-io.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/jaketown/uncore-other.json
- rename tools/perf/pmu-events/arch/x86/knightslanding/{uncore-other.json => uncore-cache.json} (91%)
- create mode 100644 tools/perf/pmu-events/arch/x86/knightslanding/uncore-io.json
- rename tools/perf/pmu-events/arch/x86/sandybridge/{uncore-other.json => uncore-interconnect.json} (100%)
- create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cxl.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/frontend.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/virtual-memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/skylake/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-io.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-io.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/virtual-memor=
+y.json
 
--- 
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/cache.json b/tools/p=
+erf/pmu-events/arch/x86/grandridge/cache.json
+new file mode 100644
+index 000000000000..7f0dc65a55d2
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/grandridge/cache.json
+@@ -0,0 +1,155 @@
++[
++    {
++        "BriefDescription": "Counts the number of cacheable memory request=
+s that miss in the LLC. Counts on a per core basis.",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.MISS",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that miss in the Last Level Cache (LLC). Requests include demand loads, =
+reads for ownership (RFO), instruction fetches and L1 HW prefetches. If the=
+ platform has an L3 cache, the LLC is the L3 cache, otherwise it is the L2 =
+cache. Counts on a per core basis.",
++        "SampleAfterValue": "200003",
++        "UMask": "0x41"
++    },
++    {
++        "BriefDescription": "Counts the number of cacheable memory request=
+s that access the LLC. Counts on a per core basis.",
++        "EventCode": "0x2e",
++        "EventName": "LONGEST_LAT_CACHE.REFERENCE",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that access the Last Level Cache (LLC). Requests include demand loads, r=
+eads for ownership (RFO), instruction fetches and L1 HW prefetches. If the =
+platform has an L3 cache, the LLC is the L3 cache, otherwise it is the L2 c=
+ache. Counts on a per core basis.",
++        "SampleAfterValue": "200003",
++        "UMask": "0x4f"
++    },
++    {
++        "BriefDescription": "Counts the number of load ops retired.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
++        "PEBS": "1",
++        "SampleAfterValue": "200003",
++        "UMask": "0x81"
++    },
++    {
++        "BriefDescription": "Counts the number of store ops retired.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
++        "PEBS": "1",
++        "SampleAfterValue": "200003",
++        "UMask": "0x82"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_1024",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x400",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x80",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x10",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_2048",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x800",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x100",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x20",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x4",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x200",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x40",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
++        "MSRIndex": "0x3F6",
++        "MSRValue": "0x8",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x5"
++    },
++    {
++        "BriefDescription": "Counts the number of  stores uops retired sam=
+e as MEM_UOPS_RETIRED.ALL_STORES",
++        "Data_LA": "1",
++        "EventCode": "0xd0",
++        "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
++        "PEBS": "2",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x6"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/frontend.json b/tool=
+s/perf/pmu-events/arch/x86/grandridge/frontend.json
+new file mode 100644
+index 000000000000..be8f1c7e195c
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/grandridge/frontend.json
+@@ -0,0 +1,16 @@
++[
++    {
++        "BriefDescription": "Counts every time the code stream enters into=
+ a new cache line by walking sequential from the previous line or being red=
+irected by a jump.",
++        "EventCode": "0x80",
++        "EventName": "ICACHE.ACCESSES",
++        "SampleAfterValue": "200003",
++        "UMask": "0x3"
++    },
++    {
++        "BriefDescription": "Counts every time the code stream enters into=
+ a new cache line by walking sequential from the previous line or being red=
+irected by a jump and the instruction cache registers bytes are not present=
+. -",
++        "EventCode": "0x80",
++        "EventName": "ICACHE.MISSES",
++        "SampleAfterValue": "200003",
++        "UMask": "0x2"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/memory.json b/tools/=
+perf/pmu-events/arch/x86/grandridge/memory.json
+new file mode 100644
+index 000000000000..79d8af45100c
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/grandridge/memory.json
+@@ -0,0 +1,20 @@
++[
++    {
++        "BriefDescription": "Counts demand data reads that were not suppli=
+ed by the L3 cache.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FBFC00001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
+ed by the L3 cache.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_RFO.L3_MISS",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x3FBFC00002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/other.json b/tools/p=
+erf/pmu-events/arch/x86/grandridge/other.json
+new file mode 100644
+index 000000000000..2414f6ff53b0
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/grandridge/other.json
+@@ -0,0 +1,20 @@
++[
++    {
++        "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10001",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
+f response.",
++        "EventCode": "0xB7",
++        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
++        "MSRIndex": "0x1a6,0x1a7",
++        "MSRValue": "0x10002",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/grandridge/pipeline.json
+new file mode 100644
+index 000000000000..41212957ef21
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/grandridge/pipeline.json
+@@ -0,0 +1,96 @@
++[
++    {
++        "BriefDescription": "Counts the total number of branch instruction=
+s retired for all branch types.",
++        "EventCode": "0xc4",
++        "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
++        "PEBS": "1",
++        "PublicDescription": "Counts the total number of instructions in w=
+hich the instruction pointer (IP) of the processor is resteered due to a br=
+anch instruction and the branch instruction successfully retires.  All bran=
+ch type instructions are accounted for.",
++        "SampleAfterValue": "200003"
++    },
++    {
++        "BriefDescription": "Counts the total number of mispredicted branc=
+h instructions retired for all branch types.",
++        "EventCode": "0xc5",
++        "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
++        "PEBS": "1",
++        "PublicDescription": "Counts the total number of mispredicted bran=
+ch instructions retired.  All branch type instructions are accounted for.  =
+Prediction of the branch target address enables the processor to begin exec=
+uting instructions before the non-speculative execution path is known. The =
+branch prediction unit (BPU) predicts the target address based on the instr=
+uction pointer (IP) of the branch and on the execution path through which e=
+xecution reached this IP.    A branch misprediction occurs when the predict=
+ion is wrong, and results in discarding all instructions executed in the sp=
+eculative path and re-fetching from the correct path.",
++        "SampleAfterValue": "200003"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+core clock cycles",
++        "EventName": "CPU_CLK_UNHALTED.CORE",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "Counts the number of unhalted core clock cycl=
+es [This event is alias to CPU_CLK_UNHALTED.THREAD_P]",
++        "EventCode": "0x3c",
++        "EventName": "CPU_CLK_UNHALTED.CORE_P",
++        "SampleAfterValue": "2000003"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+reference clock cycles",
++        "EventName": "CPU_CLK_UNHALTED.REF_TSC",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x3"
++    },
++    {
++        "BriefDescription": "Counts the number of unhalted reference clock=
+ cycles at TSC frequency.",
++        "EventCode": "0x3c",
++        "EventName": "CPU_CLK_UNHALTED.REF_TSC_P",
++        "PublicDescription": "Counts the number of reference cycles that t=
+he core is not in a halt state. The core enters the halt state when it is r=
+unning the HLT instruction. This event is not affected by core frequency ch=
+anges and increments at a fixed frequency that is also used for the Time St=
+amp Counter (TSC). This event uses a programmable general purpose performan=
+ce counter.",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+core clock cycles",
++        "EventName": "CPU_CLK_UNHALTED.THREAD",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "Counts the number of unhalted core clock cycl=
+es [This event is alias to CPU_CLK_UNHALTED.CORE_P]",
++        "EventCode": "0x3c",
++        "EventName": "CPU_CLK_UNHALTED.THREAD_P",
++        "SampleAfterValue": "2000003"
++    },
++    {
++        "BriefDescription": "Fixed Counter: Counts the number of instructi=
+ons retired",
++        "EventName": "INST_RETIRED.ANY",
++        "PEBS": "1",
++        "SampleAfterValue": "2000003",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "Counts the number of instructions retired",
++        "EventCode": "0xc0",
++        "EventName": "INST_RETIRED.ANY_P",
++        "PEBS": "1",
++        "SampleAfterValue": "2000003"
++    },
++    {
++        "BriefDescription": "Counts the number of issue slots that were no=
+t consumed by the backend because allocation is stalled due to a mispredict=
+ed jump or a machine clear.",
++        "EventCode": "0x73",
++        "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
++        "PublicDescription": "Counts the total number of issue slots that =
+were not consumed by the backend because allocation is stalled due to a mis=
+predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
+s such as memory ordering nukes are counted. Other nukes are not accounted =
+for. Counts all issue slots blocked during this recovery window, including =
+relevant microcode flows, and while uops are not yet available in the instr=
+uction queue (IQ) or until an FE_BOUND event occurs besides OTHER and CISC.=
+ Also includes the issue slots that were consumed by the backend but were t=
+hrown away because they were younger than the mispredict or machine clear."=
+,
++        "SampleAfterValue": "1000003"
++    },
++    {
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls",
++        "EventCode": "0x74",
++        "EventName": "TOPDOWN_BE_BOUND.ALL",
++        "SampleAfterValue": "1000003"
++    },
++    {
++        "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to front end stalls",
++        "EventCode": "0x71",
++        "EventName": "TOPDOWN_FE_BOUND.ALL",
++        "SampleAfterValue": "1000003"
++    },
++    {
++        "BriefDescription": "Counts the number of consumed retirement slot=
+s.  Similar to UOPS_RETIRED.ALL",
++        "EventCode": "0x72",
++        "EventName": "TOPDOWN_RETIRING.ALL",
++        "PEBS": "1",
++        "SampleAfterValue": "1000003"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/grandridge/virtual-memory.json =
+b/tools/perf/pmu-events/arch/x86/grandridge/virtual-memory.json
+new file mode 100644
+index 000000000000..bd5f2b634c98
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/grandridge/virtual-memory.json
+@@ -0,0 +1,24 @@
++[
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to load DTLB misses to a 1G page.",
++        "EventCode": "0x08",
++        "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
++        "SampleAfterValue": "1000003",
++        "UMask": "0xe"
++    },
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to store DTLB misses to a 1G page.",
++        "EventCode": "0x49",
++        "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
++        "SampleAfterValue": "1000003",
++        "UMask": "0xe"
++    },
++    {
++        "BriefDescription": "Counts the number of page walks completed due=
+ to instruction fetch misses to any page size.",
++        "EventCode": "0x85",
++        "EventName": "ITLB_MISSES.WALK_COMPLETED",
++        "PublicDescription": "Counts the number of page walks completed du=
+e to instruction fetches whose address translations missed in all Translati=
+on Lookaside Buffer (TLB) levels and were mapped to any page size.  Include=
+s page walks that page fault.",
++        "SampleAfterValue": "200003",
++        "UMask": "0xe"
++    }
++]
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index 437eeecfaf64..c2b83cbae225 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -9,6 +9,7 @@ GenuineIntel-6-55-[56789ABCDEF],v1.17,cascadelakex,core
+ GenuineIntel-6-9[6C],v1.03,elkhartlake,core
+ GenuineIntel-6-5[CF],v13,goldmont,core
+ GenuineIntel-6-7A,v1.01,goldmontplus,core
++GenuineIntel-6-B6,v1.00,grandridge,core
+ GenuineIntel-6-A[DE],v1.01,graniterapids,core
+ GenuineIntel-6-(3C|45|46),v33,haswell,core
+ GenuineIntel-6-3F,v27,haswellx,core
+--=20
 2.40.0.577.gac1e443424-goog
 
