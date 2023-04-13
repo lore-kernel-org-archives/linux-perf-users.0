@@ -2,58 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552B7C77B6C
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 05:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322BFC77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 05:13:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230071AbjDMFNQ (ORCPT
+        id S229995AbjDMFNr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Apr 2023 01:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38494 "EHLO
+        Thu, 13 Apr 2023 01:13:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229925AbjDMFM4 (ORCPT
+        with ESMTP id S229617AbjDMFNU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2023 01:12:56 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C8747AB3
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:12:07 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54fba72c1adso14257277b3.18
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:12:07 -0700 (PDT)
+        Thu, 13 Apr 2023 01:13:20 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BB3283EE
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:12:24 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-54efad677cbso132211047b3.6
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:12:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681362725; x=1683954725;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MTujeIVW3qNu49IoS2ASCZLHq+tQ4PP2gRP1Vzk9GeA=;
-        b=KDBXM27qHuFtX6HncA/e+LL1dA4+hEd9V2vDDXaFgNze56OG7Thngj7foufn0uhT1r
-         /YMQD2Tg9KTdLPhoo22stRpRefmUSTa4w3ni89z3d+poXoANSQA26o/K2i1LSFrBjd4G
-         tr2AQQAgU43RUi9giSDAeNqPxqYXs0TyKWbk765n9D+8DpKCk0STojw7a6PHz0DYi4XS
-         +2bVZ5J3Miuvhy2odQiiS8LCuHG9G2nyNBqXmAUCoToLnDrv7F+IpZRBbfmdxJN3Tjnd
-         zmWGsxFubaSz33HQ8HBPRfcTbBnQjXabB5iMTNC8fLdT1qxLJ6eA8ADAyzqOqk9LAPc/
-         l/Vw==
+        d=google.com; s=20221208; t=1681362742; x=1683954742;
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g6L0/on0u5NMowuDk77nSJEhKTRaml/Cx+QEJI6a3/w=;
+        b=sOmxvBnsHqZ4aOr67OViykdsAPpYFBjbQmCjsK9jHyhkDvkbdyxTlPoA4iXjiYrJ2m
+         UWJhzvJNQeE5LtbyD5fLgwTWUXi/gg2wJhxg3neVhtdCwcZ9DuF/EGWN8NAXWd/CPZKL
+         HtPS/HYsg/7E9ULz5jnRN3Pi6xgVkt48FnbQq2GbS1+UAw1LK9RaVE2jW70wrHlvbj3d
+         qFsHNUIxMUkyxjK5QsC9CefadjCmdnwUjauoBAWFsHZGvxKiYFfSNDmYUtr5Z5WQ2+xn
+         P8Vt8bET5pBgMuT5b4i8CRfQZU1r3ai/0mvLtG+PC0FbvCCVFxjUHxur8MASmzcySad4
+         w3iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681362725; x=1683954725;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MTujeIVW3qNu49IoS2ASCZLHq+tQ4PP2gRP1Vzk9GeA=;
-        b=lo5k6/xWmvAy3oNSeb3EmlBUP07TKTU2U6sa1vi9zfMVUZ5aqqo6/U7zvWwG4o4OQO
-         h78n50HCqUEkHHW1zVtS3P9KVzYHeaPdbzqN5/nCQ8aLFKJhfPLFPY73dbwZbRw2guab
-         0u62/e5z/A0zer3shMsCoFMxjbCfDgwMbI7BQtB1cm7ru9oGdyPCmpQ2LvCizlFUOXQr
-         dx2DT6DGSz1eyYY8icjdBkEEt2+5Elzoulrlg+cYJiVFqZwqWo9X+tWs5azcjKVYHfia
-         QlvkpZoH9TY8duA/2FdmnNKQZJbpAa58P70gu54wvLw5iOOBFIOLiL8g9r5O2OGTBWK3
-         FSvg==
-X-Gm-Message-State: AAQBX9c0rQ4dAZY19viERBjAwHHOUtkl4xcTA8MTPrkFuaaHH+cGCvGP
-        OwvVwk5pMAaSq/BgzQAPuuCNt9IzAMgJ
-X-Google-Smtp-Source: AKy350YBjUjjo7t6ed95Un6tf4lAmOEemZI3co2XowP4gyp3DZq/JH6mL5pQYSUU5KuDiszUjxr9qhcllrlJ
+        d=1e100.net; s=20221208; t=1681362742; x=1683954742;
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g6L0/on0u5NMowuDk77nSJEhKTRaml/Cx+QEJI6a3/w=;
+        b=D9ohMujHpPekSXsXBMkvxKcZhuDpjoOf95CN/SRAudKjrBDOI5Stmun2QrEcSSR2yb
+         T7Z7R/mT231jLM+QzVv/Bxd/Qrc5jZ3+dr5fGAn5reZp8+X3JlxIgpTr3OTwiuTdPBhl
+         glpKCaWFisrGJvCzpWLrH7AnFPynvtV+8OCj7XJB2eYXgMFYJCzAc1bKeWNslZDEaWzc
+         fOQDMQH4FZ6bHmEi9eJm2DMp0fJjH+w4bFqQ9FWByKftcJ97xKyddfouT2PyQAc2NVXG
+         lZKP1BQYzPPkMxEbYdb2pSMt9fTsic99sxoyQU6fdQkGnE4jFZG2tW6IccTCuUaJ0yQZ
+         DfoA==
+X-Gm-Message-State: AAQBX9cBMffbC3lCNzZVPIDs9th+PEUnfsY29EZuUQBpZIbZ18odiAYw
+        0RFjVX7JqhB/aZyDMqRZ7/r5mf5Nx6wF
+X-Google-Smtp-Source: AKy350ZcsmfcwQdwkxx01egVxEw1rNtjqoqtcIySw5Uu5mdrPGg1Jnbw3ZLdYGb2JzEZcy4ZE0a6JCaWGrpj
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c8fe:b894:ec92:d5cd])
- (user=irogers job=sendgmr) by 2002:a25:d7ca:0:b0:b8e:ce2d:290a with SMTP id
- o193-20020a25d7ca000000b00b8ece2d290amr483806ybg.11.1681362725804; Wed, 12
- Apr 2023 22:12:05 -0700 (PDT)
-Date:   Wed, 12 Apr 2023 22:10:00 -0700
+ (user=irogers job=sendgmr) by 2002:a25:dad2:0:b0:b8f:485d:9fcc with SMTP id
+ n201-20020a25dad2000000b00b8f485d9fccmr520993ybf.4.1681362742774; Wed, 12 Apr
+ 2023 22:12:22 -0700 (PDT)
+Date:   Wed, 12 Apr 2023 22:10:02 -0700
 In-Reply-To: <20230413051011.3440849-1-irogers@google.com>
-Message-Id: <20230413051011.3440849-11-irogers@google.com>
+Message-Id: <20230413051011.3440849-13-irogers@google.com>
 Mime-Version: 1.0
 References: <20230413051011.3440849-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v2 10/21] perf vendor events intel: Fix uncore topics for haswell
+Subject: [PATCH v2 12/21] perf vendor events intel: Fix uncore topics for icelake
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -71,267 +73,32 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move events from 'uncore-other' topic classification to cache and
-interconnect.
+Move events from 'uncore-other' topic classification to interconnect.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/haswell/uncore-cache.json        | 50 +++++++++---------
- .../arch/x86/haswell/uncore-interconnect.json | 52 +++++++++++++++++++
- .../arch/x86/haswell/uncore-other.json        | 50 ------------------
- 3 files changed, 77 insertions(+), 75 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/x86/haswell/uncore-interconnect.json
+ .../arch/x86/icelake/uncore-interconnect.json | 74 +++++++++++++++++++
+ .../arch/x86/icelake/uncore-other.json        | 72 ------------------
+ 2 files changed, 74 insertions(+), 72 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/uncore-interconn=
+ect.json
 
-diff --git a/tools/perf/pmu-events/arch/x86/haswell/uncore-cache.json b/tools/perf/pmu-events/arch/x86/haswell/uncore-cache.json
-index c538557ba4c0..be9a3ed1a940 100644
---- a/tools/perf/pmu-events/arch/x86/haswell/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/haswell/uncore-cache.json
-@@ -5,7 +5,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_ES",
-         "PerPkg": "1",
-         "UMask": "0x86",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup any request that access cache and found line in I-state.",
-@@ -13,7 +13,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_I",
-         "PerPkg": "1",
-         "UMask": "0x88",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup any request that access cache and found line in M-state.",
-@@ -21,7 +21,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_M",
-         "PerPkg": "1",
-         "UMask": "0x81",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup any request that access cache and found line in MESI-state.",
-@@ -29,7 +29,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.ANY_MESI",
-         "PerPkg": "1",
-         "UMask": "0x8f",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup external snoop request that access cache and found line in E or S-state.",
-@@ -37,7 +37,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.EXTSNP_ES",
-         "PerPkg": "1",
-         "UMask": "0x46",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup external snoop request that access cache and found line in I-state.",
-@@ -45,7 +45,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.EXTSNP_I",
-         "PerPkg": "1",
-         "UMask": "0x48",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup external snoop request that access cache and found line in M-state.",
-@@ -53,7 +53,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.EXTSNP_M",
-         "PerPkg": "1",
-         "UMask": "0x41",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup external snoop request that access cache and found line in MESI-state.",
-@@ -61,7 +61,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.EXTSNP_MESI",
-         "PerPkg": "1",
-         "UMask": "0x4f",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup read request that access cache and found line in E or S-state.",
-@@ -69,7 +69,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.READ_ES",
-         "PerPkg": "1",
-         "UMask": "0x16",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup read request that access cache and found line in I-state.",
-@@ -77,7 +77,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.READ_I",
-         "PerPkg": "1",
-         "UMask": "0x18",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup read request that access cache and found line in M-state.",
-@@ -85,7 +85,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.READ_M",
-         "PerPkg": "1",
-         "UMask": "0x11",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup read request that access cache and found line in any MESI-state.",
-@@ -93,7 +93,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.READ_MESI",
-         "PerPkg": "1",
-         "UMask": "0x1f",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup write request that access cache and found line in E or S-state.",
-@@ -101,7 +101,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_ES",
-         "PerPkg": "1",
-         "UMask": "0x26",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup write request that access cache and found line in I-state.",
-@@ -109,7 +109,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_I",
-         "PerPkg": "1",
-         "UMask": "0x28",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup write request that access cache and found line in M-state.",
-@@ -117,7 +117,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_M",
-         "PerPkg": "1",
-         "UMask": "0x21",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup write request that access cache and found line in MESI-state.",
-@@ -125,7 +125,7 @@
-         "EventName": "UNC_CBO_CACHE_LOOKUP.WRITE_MESI",
-         "PerPkg": "1",
-         "UMask": "0x2f",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "A cross-core snoop resulted from L3 Eviction which hits a modified line in some processor core.",
-@@ -133,7 +133,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.HITM_EVICTION",
-         "PerPkg": "1",
-         "UMask": "0x88",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "An external snoop hits a modified line in some processor core.",
-@@ -141,7 +141,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.HITM_EXTERNAL",
-         "PerPkg": "1",
-         "UMask": "0x28",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "A cross-core snoop initiated by this Cbox due to processor core memory request which hits a modified line in some processor core.",
-@@ -149,7 +149,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.HITM_XCORE",
-         "PerPkg": "1",
-         "UMask": "0x48",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "A cross-core snoop resulted from L3 Eviction which hits a non-modified line in some processor core.",
-@@ -157,7 +157,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.HIT_EVICTION",
-         "PerPkg": "1",
-         "UMask": "0x84",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "An external snoop hits a non-modified line in some processor core.",
-@@ -165,7 +165,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.HIT_EXTERNAL",
-         "PerPkg": "1",
-         "UMask": "0x24",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "A cross-core snoop initiated by this Cbox due to processor core memory request which hits a non-modified line in some processor core.",
-@@ -173,7 +173,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.HIT_XCORE",
-         "PerPkg": "1",
-         "UMask": "0x44",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "A cross-core snoop resulted from L3 Eviction which misses in some processor core.",
-@@ -181,7 +181,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_EVICTION",
-         "PerPkg": "1",
-         "UMask": "0x81",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "An external snoop misses in some processor core.",
-@@ -189,7 +189,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_EXTERNAL",
-         "PerPkg": "1",
-         "UMask": "0x21",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "A cross-core snoop initiated by this Cbox due to processor core memory request which misses in some processor core.",
-@@ -197,6 +197,6 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_XCORE",
-         "PerPkg": "1",
-         "UMask": "0x41",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/haswell/uncore-interconnect.json b/tools/perf/pmu-events/arch/x86/haswell/uncore-interconnect.json
+diff --git a/tools/perf/pmu-events/arch/x86/icelake/uncore-interconnect.jso=
+n b/tools/perf/pmu-events/arch/x86/icelake/uncore-interconnect.json
 new file mode 100644
-index 000000000000..8da28239ebf9
+index 000000000000..8027590f1776
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/haswell/uncore-interconnect.json
-@@ -0,0 +1,52 @@
++++ b/tools/perf/pmu-events/arch/x86/icelake/uncore-interconnect.json
+@@ -0,0 +1,74 @@
 +[
 +    {
-+        "BriefDescription": "Each cycle count number of valid entries in Coherency Tracker queue from allocation till deallocation. Aperture requests (snoops) appear as NC decoded internally and become coherent (snoop L3, access memory)",
-+        "EventCode": "0x83",
-+        "EventName": "UNC_ARB_COH_TRK_OCCUPANCY.All",
-+        "PerPkg": "1",
-+        "PublicDescription": "Each cycle count number of valid entries in Coherency Tracker queue from allocation till deallocation. Aperture requests (snoops) appear as NC decoded internally and become coherent (snoop L3, access memory).",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Number of entries allocated. Account for Any type: e.g. Snoop, Core aperture, etc.",
++        "BriefDescription": "Number of entries allocated. Account for Any =
+type: e.g. Snoop,  etc.",
 +        "EventCode": "0x84",
 +        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
 +        "PerPkg": "1",
@@ -339,7 +106,52 @@ index 000000000000..8da28239ebf9
 +        "Unit": "ARB"
 +    },
 +    {
-+        "BriefDescription": "Each cycle counts number of all Core outgoing valid entries. Such entry is defined as valid from its allocation till first of IDI0 or DRS0 messages is sent out. Accounts for Coherent and non-coherent traffic.",
++        "BriefDescription": "Each cycle counts number of any coherent requ=
+est at memory controller that were issued by any core. This event is not su=
+pported on ICL products but is supported on RKL products.",
++        "EventCode": "0x85",
++        "EventName": "UNC_ARB_DAT_OCCUPANCY.ALL",
++        "PerPkg": "1",
++        "UMask": "0x1",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Each cycle counts number of coherent reads pe=
+nding on data return from memory controller that were issued by any core. T=
+his event is not supported on ICL products but is supported on RKL products=
+.",
++        "EventCode": "0x85",
++        "EventName": "UNC_ARB_DAT_OCCUPANCY.RD",
++        "PerPkg": "1",
++        "UMask": "0x2",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Each cycle count number of 'valid' coherent D=
+ata Read entries . Such entry is defined as valid when it is allocated till=
+ deallocation. Doesn't include prefetches. This event is not supported on I=
+CL products but is supported on RKL products.",
++        "EventCode": "0x80",
++        "EventName": "UNC_ARB_REQ_TRK_OCCUPANCY.DRD",
++        "PerPkg": "1",
++        "UMask": "0x2",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Number of all coherent Data Read entries. Doe=
+sn't include prefetches",
++        "EventCode": "0x81",
++        "EventName": "UNC_ARB_REQ_TRK_REQUEST.DRD",
++        "PerPkg": "1",
++        "UMask": "0x2",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Each cycle counts number of all outgoing vali=
+d entries in ReqTrk. Such entry is defined as valid from its allocation in =
+ReqTrk till deallocation. Accounts for Coherent and non-coherent traffic. T=
+his event is not supported on ICL products but is supported on RKL products=
+.",
 +        "EventCode": "0x80",
 +        "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
 +        "PerPkg": "1",
@@ -347,16 +159,19 @@ index 000000000000..8da28239ebf9
 +        "Unit": "ARB"
 +    },
 +    {
-+        "BriefDescription": "Cycles with at least one request outstanding is waiting for data return from memory controller. Account for coherent and non-coherent requests initiated by IA Cores, Processor Graphics Unit, or LLC.",
-+        "CounterMask": "1",
++        "BriefDescription": "Each cycle count number of 'valid' coherent D=
+ata Read entries . Such entry is defined as valid when it is allocated till=
+ deallocation. Doesn't include prefetches. This event is not supported on I=
+CL products but is supported on RKL products.",
 +        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_TRK_OCCUPANCY.CYCLES_WITH_ANY_REQUEST",
++        "EventName": "UNC_ARB_TRK_OCCUPANCY.RD",
 +        "PerPkg": "1",
-+        "UMask": "0x1",
++        "UMask": "0x2",
 +        "Unit": "ARB"
 +    },
 +    {
-+        "BriefDescription": "Total number of Core outgoing entries allocated. Accounts for Coherent and non-coherent traffic.",
++        "BriefDescription": "Total number of all outgoing entries allocate=
+d. Accounts for Coherent and non-coherent traffic.",
 +        "EventCode": "0x81",
 +        "EventName": "UNC_ARB_TRK_REQUESTS.ALL",
 +        "PerPkg": "1",
@@ -364,31 +179,26 @@ index 000000000000..8da28239ebf9
 +        "Unit": "ARB"
 +    },
 +    {
-+        "BriefDescription": "Number of Writes allocated - any write transactions: full/partials writes and evictions.",
++        "BriefDescription": "Number of all coherent Data Read entries. Doe=
+sn't include prefetches. This event is not supported on ICL products but is=
+ supported on RKL products.",
 +        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_TRK_REQUESTS.WRITES",
++        "EventName": "UNC_ARB_TRK_REQUESTS.RD",
 +        "PerPkg": "1",
-+        "UMask": "0x20",
++        "UMask": "0x2",
 +        "Unit": "ARB"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/haswell/uncore-other.json b/tools/perf/pmu-events/arch/x86/haswell/uncore-other.json
-index 84cc2536de69..2af92e43b28a 100644
---- a/tools/perf/pmu-events/arch/x86/haswell/uncore-other.json
-+++ b/tools/perf/pmu-events/arch/x86/haswell/uncore-other.json
-@@ -1,54 +1,4 @@
+diff --git a/tools/perf/pmu-events/arch/x86/icelake/uncore-other.json b/too=
+ls/perf/pmu-events/arch/x86/icelake/uncore-other.json
+index b27d95b2c857..c6596ba09195 100644
+--- a/tools/perf/pmu-events/arch/x86/icelake/uncore-other.json
++++ b/tools/perf/pmu-events/arch/x86/icelake/uncore-other.json
+@@ -1,76 +1,4 @@
  [
 -    {
--        "BriefDescription": "Each cycle count number of valid entries in Coherency Tracker queue from allocation till deallocation. Aperture requests (snoops) appear as NC decoded internally and become coherent (snoop L3, access memory)",
--        "EventCode": "0x83",
--        "EventName": "UNC_ARB_COH_TRK_OCCUPANCY.All",
--        "PerPkg": "1",
--        "PublicDescription": "Each cycle count number of valid entries in Coherency Tracker queue from allocation till deallocation. Aperture requests (snoops) appear as NC decoded internally and become coherent (snoop L3, access memory).",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Number of entries allocated. Account for Any type: e.g. Snoop, Core aperture, etc.",
+-        "BriefDescription": "Number of entries allocated. Account for Any =
+type: e.g. Snoop,  etc.",
 -        "EventCode": "0x84",
 -        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
 -        "PerPkg": "1",
@@ -396,7 +206,52 @@ index 84cc2536de69..2af92e43b28a 100644
 -        "Unit": "ARB"
 -    },
 -    {
--        "BriefDescription": "Each cycle counts number of all Core outgoing valid entries. Such entry is defined as valid from its allocation till first of IDI0 or DRS0 messages is sent out. Accounts for Coherent and non-coherent traffic.",
+-        "BriefDescription": "Each cycle counts number of any coherent requ=
+est at memory controller that were issued by any core. This event is not su=
+pported on ICL products but is supported on RKL products.",
+-        "EventCode": "0x85",
+-        "EventName": "UNC_ARB_DAT_OCCUPANCY.ALL",
+-        "PerPkg": "1",
+-        "UMask": "0x1",
+-        "Unit": "ARB"
+-    },
+-    {
+-        "BriefDescription": "Each cycle counts number of coherent reads pe=
+nding on data return from memory controller that were issued by any core. T=
+his event is not supported on ICL products but is supported on RKL products=
+.",
+-        "EventCode": "0x85",
+-        "EventName": "UNC_ARB_DAT_OCCUPANCY.RD",
+-        "PerPkg": "1",
+-        "UMask": "0x2",
+-        "Unit": "ARB"
+-    },
+-    {
+-        "BriefDescription": "Each cycle count number of 'valid' coherent D=
+ata Read entries . Such entry is defined as valid when it is allocated till=
+ deallocation. Doesn't include prefetches. This event is not supported on I=
+CL products but is supported on RKL products.",
+-        "EventCode": "0x80",
+-        "EventName": "UNC_ARB_REQ_TRK_OCCUPANCY.DRD",
+-        "PerPkg": "1",
+-        "UMask": "0x2",
+-        "Unit": "ARB"
+-    },
+-    {
+-        "BriefDescription": "Number of all coherent Data Read entries. Doe=
+sn't include prefetches",
+-        "EventCode": "0x81",
+-        "EventName": "UNC_ARB_REQ_TRK_REQUEST.DRD",
+-        "PerPkg": "1",
+-        "UMask": "0x2",
+-        "Unit": "ARB"
+-    },
+-    {
+-        "BriefDescription": "Each cycle counts number of all outgoing vali=
+d entries in ReqTrk. Such entry is defined as valid from its allocation in =
+ReqTrk till deallocation. Accounts for Coherent and non-coherent traffic. T=
+his event is not supported on ICL products but is supported on RKL products=
+.",
 -        "EventCode": "0x80",
 -        "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
 -        "PerPkg": "1",
@@ -404,16 +259,19 @@ index 84cc2536de69..2af92e43b28a 100644
 -        "Unit": "ARB"
 -    },
 -    {
--        "BriefDescription": "Cycles with at least one request outstanding is waiting for data return from memory controller. Account for coherent and non-coherent requests initiated by IA Cores, Processor Graphics Unit, or LLC.",
--        "CounterMask": "1",
+-        "BriefDescription": "Each cycle count number of 'valid' coherent D=
+ata Read entries . Such entry is defined as valid when it is allocated till=
+ deallocation. Doesn't include prefetches. This event is not supported on I=
+CL products but is supported on RKL products.",
 -        "EventCode": "0x80",
--        "EventName": "UNC_ARB_TRK_OCCUPANCY.CYCLES_WITH_ANY_REQUEST",
+-        "EventName": "UNC_ARB_TRK_OCCUPANCY.RD",
 -        "PerPkg": "1",
--        "UMask": "0x1",
+-        "UMask": "0x2",
 -        "Unit": "ARB"
 -    },
 -    {
--        "BriefDescription": "Total number of Core outgoing entries allocated. Accounts for Coherent and non-coherent traffic.",
+-        "BriefDescription": "Total number of all outgoing entries allocate=
+d. Accounts for Coherent and non-coherent traffic.",
 -        "EventCode": "0x81",
 -        "EventName": "UNC_ARB_TRK_REQUESTS.ALL",
 -        "PerPkg": "1",
@@ -421,16 +279,18 @@ index 84cc2536de69..2af92e43b28a 100644
 -        "Unit": "ARB"
 -    },
 -    {
--        "BriefDescription": "Number of Writes allocated - any write transactions: full/partials writes and evictions.",
+-        "BriefDescription": "Number of all coherent Data Read entries. Doe=
+sn't include prefetches. This event is not supported on ICL products but is=
+ supported on RKL products.",
 -        "EventCode": "0x81",
--        "EventName": "UNC_ARB_TRK_REQUESTS.WRITES",
+-        "EventName": "UNC_ARB_TRK_REQUESTS.RD",
 -        "PerPkg": "1",
--        "UMask": "0x20",
+-        "UMask": "0x2",
 -        "Unit": "ARB"
 -    },
      {
-         "BriefDescription": "This 48-bit fixed counter counts the UCLK cycles.",
+         "BriefDescription": "UNC_CLOCK.SOCKET",
          "EventCode": "0xff",
--- 
+--=20
 2.40.0.577.gac1e443424-goog
 
