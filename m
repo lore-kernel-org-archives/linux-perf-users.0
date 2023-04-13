@@ -2,281 +2,97 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94522C77B79
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 13:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97962C77B6E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 13:40:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231203AbjDMNfE (ORCPT
+        id S230176AbjDMNk3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Apr 2023 09:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58880 "EHLO
+        Thu, 13 Apr 2023 09:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231625AbjDMNet (ORCPT
+        with ESMTP id S231786AbjDMNkC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2023 09:34:49 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A43BB46D
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 06:32:57 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-54be7584b28so269890257b3.16
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 06:32:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681392776; x=1683984776;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=D/wMb40ntUrrtEKX0pWRjZNO+TlYXtCqLFbV8EoKRtw=;
-        b=meip9PgF8IZZiyBu0FD+9kxzuz+MDvUH1o6CpbJdGOCKvpJkqZ6hazSJCGAZywHUXO
-         cbKAvLshlEY9FLdMtiuDArcXE1BtKENOWZvyGwNnNUkgr7Dwk61YSK182wTOTmV9/+kV
-         kHGoUcCEnZHcVJ+Ej+drWqn5jADYtFWQVmpr5a5KRMEd9YvccXFW3g3pdy9WlL0qa7w6
-         /Gf5ieDyAkhcsNf7sAfik3l6iIgIF43wZSv5HNsfDN6gIQVIbNmzHiHb0RI1og0Iro0o
-         HLrS6isrgN6o9hsqrwfOoPDFgRNHeIu8DAH9PQXfKTtfcgRyJLcSpeT0o7FHTHkX1dEX
-         LKSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681392776; x=1683984776;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D/wMb40ntUrrtEKX0pWRjZNO+TlYXtCqLFbV8EoKRtw=;
-        b=TnUKIGC5Bq2+BCvtIouHnEv5Mb+j/RqvoOYOdzTuKMK1z4n7Z3Y34mFwOYuPJL8pWF
-         WFoNGTiooZMU4xm/MLL/YfQ+pHgFPgpb5dVbUuiFCdFkDgTTOcggxUVMNNm5t+LVbKg8
-         aH+qSKqnF+Wj1g3eDZHyFgK6UouFMdmVUb05x79NdNUnykizmA5GNJbWDsGpPOYe+9YV
-         o84LArspZ1HZjPL5czWxCI/4KGbudKMtk59j87kKjCMS2nqYI2inBuWFT+ckfL40o+gD
-         PHzg7KZdn1SAPsTfcPfGhjJiW3oLEfIW7C1qtMi7sExvEeJqNnvCSHEBvxryvfu02zFS
-         S71Q==
-X-Gm-Message-State: AAQBX9eoDKDXSFY/5Ifoqq8bfhVQUeMz+pmXmFvXhdASXqoc2kqa+1PN
-        KPoF41Jbype5cO7GikvWy7ZMoQf0yv4+
-X-Google-Smtp-Source: AKy350Z6mxMLtzGWnCheL4tm7o3Tk9j27ZFOMJO97LE6vtyxY2iB37ARs4wdyNNy/55Qwi8LbH59Zvu3E7Vd
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c8fe:b894:ec92:d5cd])
- (user=irogers job=sendgmr) by 2002:a25:ca44:0:b0:b8e:7771:f424 with SMTP id
- a65-20020a25ca44000000b00b8e7771f424mr1461457ybg.0.1681392775967; Thu, 13 Apr
- 2023 06:32:55 -0700 (PDT)
-Date:   Thu, 13 Apr 2023 06:29:49 -0700
-In-Reply-To: <20230413132949.3487664-1-irogers@google.com>
-Message-Id: <20230413132949.3487664-22-irogers@google.com>
-Mime-Version: 1.0
-References: <20230413132949.3487664-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v3 21/21] perf vendor events intel: Fix uncore topics for tigerlake
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 13 Apr 2023 09:40:02 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C71F2B449;
+        Thu, 13 Apr 2023 06:37:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681393049; x=1712929049;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0t90pzuQrjO2+T87L2ET36icPQMGNoD4iJaHuJhNMFs=;
+  b=Lr4i9VEScYDusijg8IJSvNfqz98QijV6TWY5leSIp2GSCcBQi1HTkU/M
+   uz/FE7jJv6iniUoWzzf0uzIKJ9ZyaVjKhGXmLTcuYT82a8I+1tdICMGe+
+   wuuUgfQxYpylzjU2BH57S8MMw57uJSWi3F2E6sQRuNOMl4dH0HAGgHzs3
+   kI20mxiG/+1F8y9Te9p0qXYQQGTKwu5V3NUdtauQCNWGUKH3H4EwaLe1r
+   wXQGXQyfHhtxlBEDgbX/S4wiYwdcV1AYgAguXuvjZfXbImLp0YZSRbXBi
+   N8HRuOElt10SwY4JKDQLD1TI55jClBbCrZcrwrbt2oav1K5LwrRqHtu9u
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="407029602"
+X-IronPort-AV: E=Sophos;i="5.99,193,1677571200"; 
+   d="scan'208";a="407029602"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 06:15:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="753998249"
+X-IronPort-AV: E=Sophos;i="5.99,193,1677571200"; 
+   d="scan'208";a="753998249"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga008.fm.intel.com with ESMTP; 13 Apr 2023 06:15:08 -0700
+Received: from [10.209.83.224] (kliang2-mobl1.ccr.corp.intel.com [10.209.83.224])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id DC0785804FA;
+        Thu, 13 Apr 2023 06:15:06 -0700 (PDT)
+Message-ID: <2a6f6cf3-3de1-33e4-3b51-8c702c270bda@linux.intel.com>
+Date:   Thu, 13 Apr 2023 09:15:05 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v1] perf stat: Introduce skippable evsels
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Edward Baker <edward.baker@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230411205622.3266490-1-irogers@google.com>
+ <aaa41580-e30a-5a3a-7917-042ddaffe9cf@linux.intel.com>
+ <CAP-5=fUnqi3KCEzu8qC8qG+g__qTmCVzc9skNb5yFzz=Fa02QQ@mail.gmail.com>
+ <87eb928a-9c66-f821-0f20-22d21c96b7a5@linux.intel.com>
+ <CAP-5=fUELu6nT8sGjkPvzKOX2qxH-w9q5mJgsjLBoYwAQ5bP6Q@mail.gmail.com>
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fUELu6nT8sGjkPvzKOX2qxH-w9q5mJgsjLBoYwAQ5bP6Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move events from 'uncore-other' topic classification to interconnect.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- .../x86/tigerlake/uncore-interconnect.json    | 90 +++++++++++++++++++
- .../arch/x86/tigerlake/uncore-other.json      | 88 ------------------
- 2 files changed, 90 insertions(+), 88 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
 
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
-new file mode 100644
-index 000000000000..eed1b90a2779
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
-@@ -0,0 +1,90 @@
-+[
-+    {
-+        "BriefDescription": "UNC_ARB_COH_TRK_REQUESTS.ALL",
-+        "EventCode": "0x84",
-+        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle counts number of any coherent request at memory controller that were issued by any core.",
-+        "EventCode": "0x85",
-+        "EventName": "UNC_ARB_DAT_OCCUPANCY.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle counts number of coherent reads pending on data return from memory controller that were issued by any core.",
-+        "EventCode": "0x85",
-+        "EventName": "UNC_ARB_DAT_OCCUPANCY.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_REQ_TRK_REQUEST.DRD",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_DAT_REQUESTS.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_DAT_OCCUPANCY.ALL",
-+        "EventCode": "0x85",
-+        "EventName": "UNC_ARB_IFA_OCCUPANCY.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_OCCUPANCY.RD]",
-+        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_REQ_TRK_OCCUPANCY.DRD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_REQUESTS.RD]",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_REQ_TRK_REQUEST.DRD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle count number of all outgoing valid entries in ReqTrk. Such entry is defined as valid from it's allocation in ReqTrk till deallocation. Accounts for Coherent and non-coherent traffic.",
-+        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_OCCUPANCY.DRD]",
-+        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_TRK_OCCUPANCY.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "UNC_ARB_TRK_REQUESTS.ALL",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_TRK_REQUESTS.ALL",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_REQUEST.DRD]",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_TRK_REQUESTS.RD",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json
-index 6e43aaf64e28..c6596ba09195 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json
-@@ -1,92 +1,4 @@
- [
--    {
--        "BriefDescription": "UNC_ARB_COH_TRK_REQUESTS.ALL",
--        "EventCode": "0x84",
--        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Each cycle counts number of any coherent request at memory controller that were issued by any core.",
--        "EventCode": "0x85",
--        "EventName": "UNC_ARB_DAT_OCCUPANCY.ALL",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Each cycle counts number of coherent reads pending on data return from memory controller that were issued by any core.",
--        "EventCode": "0x85",
--        "EventName": "UNC_ARB_DAT_OCCUPANCY.RD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_REQ_TRK_REQUEST.DRD",
--        "EventCode": "0x81",
--        "EventName": "UNC_ARB_DAT_REQUESTS.RD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_DAT_OCCUPANCY.ALL",
--        "EventCode": "0x85",
--        "EventName": "UNC_ARB_IFA_OCCUPANCY.ALL",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_OCCUPANCY.RD]",
--        "EventCode": "0x80",
--        "EventName": "UNC_ARB_REQ_TRK_OCCUPANCY.DRD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_REQUESTS.RD]",
--        "EventCode": "0x81",
--        "EventName": "UNC_ARB_REQ_TRK_REQUEST.DRD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Each cycle count number of all outgoing valid entries in ReqTrk. Such entry is defined as valid from it's allocation in ReqTrk till deallocation. Accounts for Coherent and non-coherent traffic.",
--        "EventCode": "0x80",
--        "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_OCCUPANCY.DRD]",
--        "EventCode": "0x80",
--        "EventName": "UNC_ARB_TRK_OCCUPANCY.RD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "UNC_ARB_TRK_REQUESTS.ALL",
--        "EventCode": "0x81",
--        "EventName": "UNC_ARB_TRK_REQUESTS.ALL",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_REQUEST.DRD]",
--        "EventCode": "0x81",
--        "EventName": "UNC_ARB_TRK_REQUESTS.RD",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
-     {
-         "BriefDescription": "UNC_CLOCK.SOCKET",
-         "EventCode": "0xff",
--- 
-2.40.0.577.gac1e443424-goog
+On 2023-04-12 2:01 p.m., Ian Rogers wrote:
+>> - We shouldn't only rely on the event list file. We need to do runtime
+>> check on the availability of events. Either perf_event_open() or
+>> /sys/devices/cpu/events/ is fine (althourh personally I prefer sys way,
+>> since I think it's easier).
+> Using perf_event_open is the status quo and the sysfs approach is
+> impractical imo. I think the only thing that is needed in v2 is for
+> <not counted> to be displayed for skippable evsels.
 
+Using perf_event_open is good to check features. If the feature is not
+supported by the kernel, it will be explicitly rejected.
+But I'm not sure about the availability of events. The kernel doesn't
+check every events. For example, on ICL and later platform, we have
+event=0x00,umask=0x8X for all the topdown metrics events. If we open
+them on SKL, the perf_event_open will also success, but return 0 value.
+
+Thanks,
+Kan
