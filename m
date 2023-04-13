@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5024C77B61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 05:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F4DC77B6C
+	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 05:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbjDMFPY (ORCPT
+        id S230151AbjDMFQK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Apr 2023 01:15:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39694 "EHLO
+        Thu, 13 Apr 2023 01:16:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229922AbjDMFOg (ORCPT
+        with ESMTP id S230206AbjDMFPu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2023 01:14:36 -0400
+        Thu, 13 Apr 2023 01:15:50 -0400
 Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76277729B
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:13:12 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54f93850a86so41048747b3.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:13:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5C81A5CE
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:13:41 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54f1ffb8ccfso113031217b3.9
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Apr 2023 22:13:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681362791; x=1683954791;
+        d=google.com; s=20221208; t=1681362817; x=1683954817;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pUfPUvLoShzw1K1BISvJjLxFPJ+s9EqCiRDe+diC2OM=;
-        b=ZgnLNtFk0pgcheTP33sb+2a8TskQLJ67iYFW/1CzK3+nPDqTEso0gsD6y/g+Q3famk
-         kAZpLFy0xWHcqxIpa3scoBGscqSAzpzv+KQQZcy7G9nv3mbAny3oR04b3dUS+88A5mPO
-         Nx2ZeydmGcjD2DFdbfivCEJEFOyBU4AiYUyU69+Tx8MGfvaYN4WdX5XQ1/Tnt/W+jiYD
-         WihjPQHdGm1FaiiieMrjlkrBpcOFo7h1UBtE5rRVp3fBHQz18IVavQqM0uYjhrdFGhCn
-         qpdn7mTv0OSZK5K4y92GMIP7XtWuqqD/cUnKmKiqUomlS7r9UV7WgNN8ANZml3clhu2e
-         9gYA==
+        bh=D/wMb40ntUrrtEKX0pWRjZNO+TlYXtCqLFbV8EoKRtw=;
+        b=3ll+a4rO/hkzDomcN+uUTdQoNpva3pseryloYnCYlSHRmA5NPoqQybNuqSqdnqdYoz
+         Mls76nTML3+wqQJRH52IxzextN0OIP9zoRZg987/TFPeEROgyo4UpVTD3VlUVbtUFkH5
+         Lwiu66HV5xQMMY41DiHqmKUulODoP5tdAtZjt2Xxy7gcaBjsdETIrZq7Er0ElsZpGODy
+         eHAZsP/UpQL3+Si6GPXa4f64VAbuwusCHzX0uZiCR7a3dgGm/qpA1Qcw5T03LTjbxZuH
+         ENwu4P9I6mcW0AL0HRsS0VNyaTST3xHB8445R6mYeCfjaonJ8qFXpUjLBScTC8VEqSL6
+         YZrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681362791; x=1683954791;
+        d=1e100.net; s=20221208; t=1681362817; x=1683954817;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pUfPUvLoShzw1K1BISvJjLxFPJ+s9EqCiRDe+diC2OM=;
-        b=l7gANmg2llCyHDT64CR+SDHU+BQEgiSkOHc9EmfyUqH6cjyVC1lhkg5cEtw12srBqO
-         ljp3qzWCSrZX1BtAh1f7zvY26LO262LURi12KnPVVpzMIC1kIAOOOK+JAJ6BENsfXt/W
-         Z0/jqg/2WiLn6p+VsIy2qrhBvCTxz4EteBLDgR7xXvaM+tIGpuby4odYActSOfMF/63D
-         Ucs9BzEhQqVqFdKa3Bh5MlmAJaYoCbNme3NYeWF1SISyDmfuvF/ZrXVkOMY+bopaZ3Gp
-         Jz57Yo4zF3bUTCZ77m0R1O7Q4YiSAT5G+UqPba2OkTF9QMmfhx5OEfepspt9GJ2f7rkk
-         Geyg==
-X-Gm-Message-State: AAQBX9catTQkw5LfgFfrKW5IyIlqwpItKpBsLaAoEi6UVeiErxd9unJG
-        d4ggIB00fuDQtBs1O8URK2Azq2Y/goqK
-X-Google-Smtp-Source: AKy350aNWWvL8vf8Tdt5v7MW2oMDd4avh3hRSyUoa0SrQ1w1sCTY2qhOyOpCZfpKOfEN0uyckjBB+O557r+a
+        bh=D/wMb40ntUrrtEKX0pWRjZNO+TlYXtCqLFbV8EoKRtw=;
+        b=UJGQVQpYc53IVb1FcwK4AlZsHarSfS/BULkQQCrpWVax57iw3hnYUe7w+e1tma23bB
+         QWs/VREYbk7Jgt2GxaPIU2fjMnEFxKdQb14BUAqsJWF+UZVajzNMFIfck1dIta+t2pdp
+         VX5gY2jXjpchqmR2cntNpoSnq7FFHJGCr1OZkJsNF3e4hsR+H2r3DUgXeXKPPMAEgfu4
+         H8tQzZEuQFZ9+9JAHo1rMYQdqo1GjymsJV7rYe6kkJn9k2ewGShm1LyMNxpurtxfD+3x
+         4wr9QGgtApnelvt1k/k+6am8qceIjLcK2oUJrgkIDa6fufkEzULzL/oX1TVKP8qkcZ1Z
+         PMbA==
+X-Gm-Message-State: AAQBX9cxf1GBgWzQGwFZmoCwMAi02weILEmrp1uqAzC2PwLi7dgOCi2g
+        iQ+SgsJ91jz8upQse4ra0kJsGRHNgXdP
+X-Google-Smtp-Source: AKy350Y/FMQhqiVsOUOR3toB+Av2/hykwYChW5I5bXtqnaRoz1wfRI4WJhQRgnc2CYThQNaDYLpkFl76ub90
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c8fe:b894:ec92:d5cd])
- (user=irogers job=sendgmr) by 2002:a25:d44a:0:b0:b77:676c:773c with SMTP id
- m71-20020a25d44a000000b00b77676c773cmr692889ybf.2.1681362791102; Wed, 12 Apr
- 2023 22:13:11 -0700 (PDT)
-Date:   Wed, 12 Apr 2023 22:10:08 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:ec02:0:b0:54c:2723:560d with SMTP id
+ q2-20020a0dec02000000b0054c2723560dmr636699ywn.3.1681362817559; Wed, 12 Apr
+ 2023 22:13:37 -0700 (PDT)
+Date:   Wed, 12 Apr 2023 22:10:11 -0700
 In-Reply-To: <20230413051011.3440849-1-irogers@google.com>
-Message-Id: <20230413051011.3440849-19-irogers@google.com>
+Message-Id: <20230413051011.3440849-22-irogers@google.com>
 Mime-Version: 1.0
 References: <20230413051011.3440849-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Subject: [PATCH v2 18/21] perf vendor events intel: Fix uncore topics for skylake
+Subject: [PATCH v2 21/21] perf vendor events intel: Fix uncore topics for tigerlake
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,155 +75,24 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Move events from 'uncore-other' topic classification to cache and
-interconnect.
+Move events from 'uncore-other' topic classification to interconnect.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../arch/x86/skylake/uncore-cache.json        | 28 ++++----
- .../arch/x86/skylake/uncore-interconnect.json | 67 +++++++++++++++++++
- .../arch/x86/skylake/uncore-other.json        | 65 ------------------
- 3 files changed, 81 insertions(+), 79 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/x86/skylake/uncore-interconnect.json
+ .../x86/tigerlake/uncore-interconnect.json    | 90 +++++++++++++++++++
+ .../arch/x86/tigerlake/uncore-other.json      | 88 ------------------
+ 2 files changed, 90 insertions(+), 88 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
 
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/uncore-cache.json b/tools/perf/pmu-events/arch/x86/skylake/uncore-cache.json
-index ec9463c94ffe..b4e061477c1a 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/uncore-cache.json
-@@ -6,7 +6,7 @@
-         "PerPkg": "1",
-         "PublicDescription": "L3 Lookup any request that access cache and found line in E or S-state.",
-         "UMask": "0x86",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup any request that access cache and found line in I-state",
-@@ -15,7 +15,7 @@
-         "PerPkg": "1",
-         "PublicDescription": "L3 Lookup any request that access cache and found line in I-state.",
-         "UMask": "0x88",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup any request that access cache and found line in M-state",
-@@ -24,7 +24,7 @@
-         "PerPkg": "1",
-         "PublicDescription": "L3 Lookup any request that access cache and found line in M-state.",
-         "UMask": "0x81",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup any request that access cache and found line in MESI-state",
-@@ -33,7 +33,7 @@
-         "PerPkg": "1",
-         "PublicDescription": "L3 Lookup any request that access cache and found line in MESI-state.",
-         "UMask": "0x8f",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup read request that access cache and found line in E or S-state",
-@@ -42,7 +42,7 @@
-         "PerPkg": "1",
-         "PublicDescription": "L3 Lookup read request that access cache and found line in E or S-state.",
-         "UMask": "0x16",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup read request that access cache and found line in I-state",
-@@ -51,7 +51,7 @@
-         "PerPkg": "1",
-         "PublicDescription": "L3 Lookup read request that access cache and found line in I-state.",
-         "UMask": "0x18",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup read request that access cache and found line in any MESI-state",
-@@ -60,7 +60,7 @@
-         "PerPkg": "1",
-         "PublicDescription": "L3 Lookup read request that access cache and found line in any MESI-state.",
-         "UMask": "0x1f",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup write request that access cache and found line in E or S-state",
-@@ -69,7 +69,7 @@
-         "PerPkg": "1",
-         "PublicDescription": "L3 Lookup write request that access cache and found line in E or S-state.",
-         "UMask": "0x26",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup write request that access cache and found line in M-state",
-@@ -78,7 +78,7 @@
-         "PerPkg": "1",
-         "PublicDescription": "L3 Lookup write request that access cache and found line in M-state.",
-         "UMask": "0x21",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "L3 Lookup write request that access cache and found line in MESI-state",
-@@ -87,7 +87,7 @@
-         "PerPkg": "1",
-         "PublicDescription": "L3 Lookup write request that access cache and found line in MESI-state.",
-         "UMask": "0x2f",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "A cross-core snoop initiated by this Cbox due to processor core memory request which hits a modified line in some processor core.",
-@@ -95,7 +95,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.HITM_XCORE",
-         "PerPkg": "1",
-         "UMask": "0x48",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "A cross-core snoop initiated by this Cbox due to processor core memory request which hits a non-modified line in some processor core.",
-@@ -103,7 +103,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.HIT_XCORE",
-         "PerPkg": "1",
-         "UMask": "0x44",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "A cross-core snoop resulted from L3 Eviction which misses in some processor core.",
-@@ -111,7 +111,7 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_EVICTION",
-         "PerPkg": "1",
-         "UMask": "0x81",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     },
-     {
-         "BriefDescription": "A cross-core snoop initiated by this Cbox due to processor core memory request which misses in some processor core.",
-@@ -119,6 +119,6 @@
-         "EventName": "UNC_CBO_XSNP_RESPONSE.MISS_XCORE",
-         "PerPkg": "1",
-         "UMask": "0x41",
--        "Unit": "CBO"
-+        "Unit": "CBOX"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/uncore-interconnect.json b/tools/perf/pmu-events/arch/x86/skylake/uncore-interconnect.json
+diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
 new file mode 100644
-index 000000000000..fe7e19717371
+index 000000000000..eed1b90a2779
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/skylake/uncore-interconnect.json
-@@ -0,0 +1,67 @@
++++ b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
+@@ -0,0 +1,90 @@
 +[
 +    {
-+        "BriefDescription": "Number of entries allocated. Account for Any type: e.g. Snoop, Core aperture, etc.",
++        "BriefDescription": "UNC_ARB_COH_TRK_REQUESTS.ALL",
 +        "EventCode": "0x84",
 +        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
 +        "PerPkg": "1",
@@ -231,7 +100,55 @@ index 000000000000..fe7e19717371
 +        "Unit": "ARB"
 +    },
 +    {
-+        "BriefDescription": "Number of all Core entries outstanding for the memory controller. The outstanding interval starts after LLC miss till return of first data chunk. Accounts for Coherent and non-coherent traffic.",
++        "BriefDescription": "Each cycle counts number of any coherent request at memory controller that were issued by any core.",
++        "EventCode": "0x85",
++        "EventName": "UNC_ARB_DAT_OCCUPANCY.ALL",
++        "PerPkg": "1",
++        "UMask": "0x1",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Each cycle counts number of coherent reads pending on data return from memory controller that were issued by any core.",
++        "EventCode": "0x85",
++        "EventName": "UNC_ARB_DAT_OCCUPANCY.RD",
++        "PerPkg": "1",
++        "UMask": "0x2",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_REQ_TRK_REQUEST.DRD",
++        "EventCode": "0x81",
++        "EventName": "UNC_ARB_DAT_REQUESTS.RD",
++        "PerPkg": "1",
++        "UMask": "0x2",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_DAT_OCCUPANCY.ALL",
++        "EventCode": "0x85",
++        "EventName": "UNC_ARB_IFA_OCCUPANCY.ALL",
++        "PerPkg": "1",
++        "UMask": "0x1",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_OCCUPANCY.RD]",
++        "EventCode": "0x80",
++        "EventName": "UNC_ARB_REQ_TRK_OCCUPANCY.DRD",
++        "PerPkg": "1",
++        "UMask": "0x2",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_REQUESTS.RD]",
++        "EventCode": "0x81",
++        "EventName": "UNC_ARB_REQ_TRK_REQUEST.DRD",
++        "PerPkg": "1",
++        "UMask": "0x2",
++        "Unit": "ARB"
++    },
++    {
++        "BriefDescription": "Each cycle count number of all outgoing valid entries in ReqTrk. Such entry is defined as valid from it's allocation in ReqTrk till deallocation. Accounts for Coherent and non-coherent traffic.",
 +        "EventCode": "0x80",
 +        "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
 +        "PerPkg": "1",
@@ -239,18 +156,9 @@ index 000000000000..fe7e19717371
 +        "Unit": "ARB"
 +    },
 +    {
-+        "BriefDescription": "Cycles with at least one request outstanding is waiting for data return from memory controller. Account for coherent and non-coherent requests initiated by IA Cores, Processor Graphics Unit, or LLC.",
-+        "CounterMask": "1",
++        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_OCCUPANCY.DRD]",
 +        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_TRK_OCCUPANCY.CYCLES_WITH_ANY_REQUEST",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Number of Core Data Read entries outstanding for the memory controller. The outstanding interval starts after LLC miss till return of first data chunk.",
-+        "EventCode": "0x80",
-+        "EventName": "UNC_ARB_TRK_OCCUPANCY.DATA_READ",
++        "EventName": "UNC_ARB_TRK_OCCUPANCY.RD",
 +        "PerPkg": "1",
 +        "UMask": "0x2",
 +        "Unit": "ARB"
@@ -264,38 +172,22 @@ index 000000000000..fe7e19717371
 +        "Unit": "ARB"
 +    },
 +    {
-+        "BriefDescription": "Number of Core coherent Data Read requests sent to memory controller whose data is returned directly to requesting agent.",
++        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_REQUEST.DRD]",
 +        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_TRK_REQUESTS.DATA_READ",
++        "EventName": "UNC_ARB_TRK_REQUESTS.RD",
 +        "PerPkg": "1",
 +        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Number of Core coherent Data Read requests sent to memory controller whose data is returned directly to requesting agent.",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_TRK_REQUESTS.DRD_DIRECT",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "ARB"
-+    },
-+    {
-+        "BriefDescription": "Number of Writes allocated - any write transactions: full/partials writes and evictions.",
-+        "EventCode": "0x81",
-+        "EventName": "UNC_ARB_TRK_REQUESTS.WRITES",
-+        "PerPkg": "1",
-+        "UMask": "0x20",
 +        "Unit": "ARB"
 +    }
 +]
-diff --git a/tools/perf/pmu-events/arch/x86/skylake/uncore-other.json b/tools/perf/pmu-events/arch/x86/skylake/uncore-other.json
-index ef804df3f41e..58be90d7cc93 100644
---- a/tools/perf/pmu-events/arch/x86/skylake/uncore-other.json
-+++ b/tools/perf/pmu-events/arch/x86/skylake/uncore-other.json
-@@ -1,69 +1,4 @@
+diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json
+index 6e43aaf64e28..c6596ba09195 100644
+--- a/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json
++++ b/tools/perf/pmu-events/arch/x86/tigerlake/uncore-other.json
+@@ -1,92 +1,4 @@
  [
 -    {
--        "BriefDescription": "Number of entries allocated. Account for Any type: e.g. Snoop, Core aperture, etc.",
+-        "BriefDescription": "UNC_ARB_COH_TRK_REQUESTS.ALL",
 -        "EventCode": "0x84",
 -        "EventName": "UNC_ARB_COH_TRK_REQUESTS.ALL",
 -        "PerPkg": "1",
@@ -303,7 +195,55 @@ index ef804df3f41e..58be90d7cc93 100644
 -        "Unit": "ARB"
 -    },
 -    {
--        "BriefDescription": "Number of all Core entries outstanding for the memory controller. The outstanding interval starts after LLC miss till return of first data chunk. Accounts for Coherent and non-coherent traffic.",
+-        "BriefDescription": "Each cycle counts number of any coherent request at memory controller that were issued by any core.",
+-        "EventCode": "0x85",
+-        "EventName": "UNC_ARB_DAT_OCCUPANCY.ALL",
+-        "PerPkg": "1",
+-        "UMask": "0x1",
+-        "Unit": "ARB"
+-    },
+-    {
+-        "BriefDescription": "Each cycle counts number of coherent reads pending on data return from memory controller that were issued by any core.",
+-        "EventCode": "0x85",
+-        "EventName": "UNC_ARB_DAT_OCCUPANCY.RD",
+-        "PerPkg": "1",
+-        "UMask": "0x2",
+-        "Unit": "ARB"
+-    },
+-    {
+-        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_REQ_TRK_REQUEST.DRD",
+-        "EventCode": "0x81",
+-        "EventName": "UNC_ARB_DAT_REQUESTS.RD",
+-        "PerPkg": "1",
+-        "UMask": "0x2",
+-        "Unit": "ARB"
+-    },
+-    {
+-        "BriefDescription": "This event is deprecated. Refer to new event UNC_ARB_DAT_OCCUPANCY.ALL",
+-        "EventCode": "0x85",
+-        "EventName": "UNC_ARB_IFA_OCCUPANCY.ALL",
+-        "PerPkg": "1",
+-        "UMask": "0x1",
+-        "Unit": "ARB"
+-    },
+-    {
+-        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_OCCUPANCY.RD]",
+-        "EventCode": "0x80",
+-        "EventName": "UNC_ARB_REQ_TRK_OCCUPANCY.DRD",
+-        "PerPkg": "1",
+-        "UMask": "0x2",
+-        "Unit": "ARB"
+-    },
+-    {
+-        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_TRK_REQUESTS.RD]",
+-        "EventCode": "0x81",
+-        "EventName": "UNC_ARB_REQ_TRK_REQUEST.DRD",
+-        "PerPkg": "1",
+-        "UMask": "0x2",
+-        "Unit": "ARB"
+-    },
+-    {
+-        "BriefDescription": "Each cycle count number of all outgoing valid entries in ReqTrk. Such entry is defined as valid from it's allocation in ReqTrk till deallocation. Accounts for Coherent and non-coherent traffic.",
 -        "EventCode": "0x80",
 -        "EventName": "UNC_ARB_TRK_OCCUPANCY.ALL",
 -        "PerPkg": "1",
@@ -311,18 +251,9 @@ index ef804df3f41e..58be90d7cc93 100644
 -        "Unit": "ARB"
 -    },
 -    {
--        "BriefDescription": "Cycles with at least one request outstanding is waiting for data return from memory controller. Account for coherent and non-coherent requests initiated by IA Cores, Processor Graphics Unit, or LLC.",
--        "CounterMask": "1",
+-        "BriefDescription": "Each cycle count number of 'valid' coherent Data Read entries . Such entry is defined as valid when it is allocated till deallocation. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_OCCUPANCY.DRD]",
 -        "EventCode": "0x80",
--        "EventName": "UNC_ARB_TRK_OCCUPANCY.CYCLES_WITH_ANY_REQUEST",
--        "PerPkg": "1",
--        "UMask": "0x1",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Number of Core Data Read entries outstanding for the memory controller. The outstanding interval starts after LLC miss till return of first data chunk.",
--        "EventCode": "0x80",
--        "EventName": "UNC_ARB_TRK_OCCUPANCY.DATA_READ",
+-        "EventName": "UNC_ARB_TRK_OCCUPANCY.RD",
 -        "PerPkg": "1",
 -        "UMask": "0x2",
 -        "Unit": "ARB"
@@ -336,31 +267,15 @@ index ef804df3f41e..58be90d7cc93 100644
 -        "Unit": "ARB"
 -    },
 -    {
--        "BriefDescription": "Number of Core coherent Data Read requests sent to memory controller whose data is returned directly to requesting agent.",
+-        "BriefDescription": "Number of all coherent Data Read entries. Doesn't include prefetches [This event is alias to UNC_ARB_REQ_TRK_REQUEST.DRD]",
 -        "EventCode": "0x81",
--        "EventName": "UNC_ARB_TRK_REQUESTS.DATA_READ",
+-        "EventName": "UNC_ARB_TRK_REQUESTS.RD",
 -        "PerPkg": "1",
 -        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Number of Core coherent Data Read requests sent to memory controller whose data is returned directly to requesting agent.",
--        "EventCode": "0x81",
--        "EventName": "UNC_ARB_TRK_REQUESTS.DRD_DIRECT",
--        "PerPkg": "1",
--        "UMask": "0x2",
--        "Unit": "ARB"
--    },
--    {
--        "BriefDescription": "Number of Writes allocated - any write transactions: full/partials writes and evictions.",
--        "EventCode": "0x81",
--        "EventName": "UNC_ARB_TRK_REQUESTS.WRITES",
--        "PerPkg": "1",
--        "UMask": "0x20",
 -        "Unit": "ARB"
 -    },
      {
-         "BriefDescription": "This 48-bit fixed counter counts the UCLK cycles",
+         "BriefDescription": "UNC_CLOCK.SOCKET",
          "EventCode": "0xff",
 -- 
 2.40.0.577.gac1e443424-goog
