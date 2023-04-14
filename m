@@ -2,264 +2,294 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 543B8C77B6E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 03:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E86CC77B6E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 05:19:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229722AbjDND0M (ORCPT
+        id S229804AbjDNFTi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Apr 2023 23:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44296 "EHLO
+        Fri, 14 Apr 2023 01:19:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbjDND0L (ORCPT
+        with ESMTP id S229907AbjDNFTg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2023 23:26:11 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 321FC2D78;
-        Thu, 13 Apr 2023 20:26:09 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PyMJB3CHYzrZqr;
-        Fri, 14 Apr 2023 11:24:42 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 14 Apr 2023 11:26:06 +0800
-From:   Changbin Du <changbin.du@huawei.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
+        Fri, 14 Apr 2023 01:19:36 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9393B1FDC
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 22:19:34 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id e6-20020a25e706000000b00b7c653a0a4aso10248185ybh.23
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 22:19:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1681449574; x=1684041574;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZN0KrSk1AKnFNSB72kcX62XgJdFVwOXUb3M1gO+VdvI=;
+        b=JtoN07lzy/LWocNk3YQqBERH0B9EdumYsWPH5coxtsoyrMSjPikTt1UYNWGVUczEJg
+         lfG70iYPPYQjPj7iQ79fZKBVbeaNO8wdKOdp0QkER6lv2XSAp9e4MWB5qCRjg6ntcZTU
+         lTYjcGzk11127kpSRdSx7evOGuORZdmWg7PC7iMynzfXgkUSMLPsMH/g6iOcRGkULVSl
+         1tBqPDg+TCYlgnvXr9YuSp3MObthROWjc5VtBgvTtVE4i3B2FdDVdgW1/+f6J9a98iVk
+         xrts7QOd/K+dBNZ3cvGcnBbcz1VohgHknmFcn8YRcEIRf0yzFg/JeBlq0gUgYUjTdXDp
+         GuSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681449574; x=1684041574;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZN0KrSk1AKnFNSB72kcX62XgJdFVwOXUb3M1gO+VdvI=;
+        b=lmQvLrlUXhjXyJLbnegB9nMXWTkhZHKbFfa+/gyrvEA01PO2J4gDm6yG7TF4mdFKgq
+         igUKDm7m7DnM/ABAcjQ5qV0oOI88fDsb2oWJASLeEX4qaO2aRd0h6aW+et3XQmacgg30
+         G1CYT3TGns++I+LlK6sQO0IdtbieQVod+uKgR8kF2UhfE9T5j579jaTZ8mlGVP6FKzbt
+         lDRFLUIl3RryfFuRMjnAHfE01yBvwjVR8i7ORNOvv/S74Z0uKriOdI9H8dg4rW6qioaA
+         bONHk6IUrWfU9xwDNh35ef5/a5KePK6vkElLxYSfhZAQ0ntvgnv00mGjRY5WshkBdLfx
+         2tLw==
+X-Gm-Message-State: AAQBX9fsZ0hEHIH4RPeGCt7NmxO/9H76xi/YZTNakX2vdIdhZHhV6oYo
+        j2+00iapjd1+IZT+AO9JQKrPZK+NGTcc
+X-Google-Smtp-Source: AKy350aYq0+BLH6Jltmyi1HYzgATy/bKlvzbweWSUN/AzmlAT3+34tCvXPAHZj8c0uFmsNm3ZIhzfb8U2mh2
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bf01:5cd6:80d7:abdf])
+ (user=irogers job=sendgmr) by 2002:a81:b667:0:b0:54f:cc40:cf68 with SMTP id
+ h39-20020a81b667000000b0054fcc40cf68mr2300082ywk.7.1681449573850; Thu, 13 Apr
+ 2023 22:19:33 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 22:19:22 -0700
+Message-Id: <20230414051922.3625666-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
+Subject: [PATCH v2] perf stat: Introduce skippable evsels
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hui Wang <hw.huiwang@huawei.com>,
-        Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v4 2/2] perf: script: add new output field 'dsoff' to print dso offset
-Date:   Fri, 14 Apr 2023 11:25:47 +0800
-Message-ID: <20230414032547.2767909-3-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230414032547.2767909-1-changbin.du@huawei.com>
-References: <20230414032547.2767909-1-changbin.du@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+        Kan Liang <kan.liang@linux.intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This adds a new 'dsoff' field to print dso offset for resolved symbols,
-and the offset is appended to dso name.
+Perf stat with no arguments will use default events and metrics. These
+events may fail to open even with kernel and hypervisor disabled. When
+these fail then the permissions error appears even though they were
+implicitly selected. This is particularly a problem with the automatic
+selection of the TopdownL1 metric group on certain architectures like
+Skylake:
 
-Default output:
-$ perf script
-       ls 2695501 3011030.487017:     500000 cycles:      152cc73ef4b5 get_common_indices.constprop.0+0x155 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff99045b3e [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968e107 [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffffc1f54afb [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968382f [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:  ffffffff99e00094 [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:      152cc718a8d0 __errno_location@plt+0x0 (/usr/lib/x86_64-linux-gnu/libselinux.so.1)
+```
+$ perf stat true
+Error:
+Access to performance monitoring and observability operations is limited.
+Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+access to performance monitoring and observability operations for processes
+without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+More information can be found at 'Perf events and tool security' document:
+https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+perf_event_paranoid setting is 2:
+  -1: Allow use of (almost) all events by all users
+      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+>= 0: Disallow raw and ftrace function tracepoint access
+>= 1: Disallow CPU event access
+>= 2: Disallow kernel profiling
+To make the adjusted perf_event_paranoid setting permanent preserve it
+in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
+```
 
-Display 'dsoff' field:
-$ perf script -F +dsoff
-       ls 2695501 3011030.487017:     500000 cycles:      152cc73ef4b5 get_common_indices.constprop.0+0x155 (/usr/lib/x86_64-linux-gnu/ld-2.31.so+0x1c4b5)
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff99045b3e [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968e107 [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffffc1f54afb [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968382f [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:  ffffffff99e00094 [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:      152cc718a8d0 __errno_location@plt+0x0 (/usr/lib/x86_64-linux-gnu/libselinux.so.1+0x68d0)
-       ls 2695501 3011030.487019:     500000 cycles:  ffffffff992a6db0 [unknown] ([unknown])
+This patch adds skippable evsels that when they fail to open won't
+fail and won't appear in output. The TopdownL1 events, from the metric
+group, are marked as skippable. This turns the failure above to:
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
+```
+$ perf stat true
+
+ Performance counter stats for 'true':
+
+              1.26 msec task-clock:u                     #    0.328 CPUs utilized
+                 0      context-switches:u               #    0.000 /sec
+                 0      cpu-migrations:u                 #    0.000 /sec
+                49      page-faults:u                    #   38.930 K/sec
+           176,449      cycles:u                         #    0.140 GHz                         (48.99%)
+           122,905      instructions:u                   #    0.70  insn per cycle
+            28,264      branches:u                       #   22.456 M/sec
+             2,405      branch-misses:u                  #    8.51% of all branches
+
+       0.003834565 seconds time elapsed
+
+       0.000000000 seconds user
+       0.004130000 seconds sys
+```
+
+When the events can have kernel/hypervisor disabled, like on
+Tigerlake, then it continues to succeed as:
+
+```
+$ perf stat true
+
+ Performance counter stats for 'true':
+
+              0.57 msec task-clock:u                     #    0.385 CPUs utilized
+                 0      context-switches:u               #    0.000 /sec
+                 0      cpu-migrations:u                 #    0.000 /sec
+                47      page-faults:u                    #   82.329 K/sec
+           287,017      cycles:u                         #    0.503 GHz
+           133,318      instructions:u                   #    0.46  insn per cycle
+            31,396      branches:u                       #   54.996 M/sec
+             2,442      branch-misses:u                  #    7.78% of all branches
+           998,790      TOPDOWN.SLOTS:u                  #     14.5 %  tma_retiring
+                                                  #     27.6 %  tma_backend_bound
+                                                  #     40.9 %  tma_frontend_bound
+                                                  #     17.0 %  tma_bad_speculation
+           144,922      topdown-retiring:u
+           411,266      topdown-fe-bound:u
+           258,510      topdown-be-bound:u
+           184,090      topdown-bad-spec:u
+             2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/sec
+             3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/u #    6.015 M/sec
+
+       0.001480954 seconds time elapsed
+
+       0.000000000 seconds user
+       0.001686000 seconds sys
+```
+
+And this likewise works if paranoia allows or running as root.
+
+v2. Don't display the skipped events as <not counted> or <not supported>.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/Documentation/perf-script.txt |  2 +-
- tools/perf/builtin-script.c              | 25 +++++++++++++++++++++++-
- tools/perf/util/evsel_fprintf.c          |  6 ++++++
- tools/perf/util/evsel_fprintf.h          |  1 +
- 4 files changed, 32 insertions(+), 2 deletions(-)
+ tools/perf/builtin-stat.c      | 39 ++++++++++++++++++++++++++--------
+ tools/perf/util/evsel.c        | 15 +++++++++++--
+ tools/perf/util/evsel.h        |  1 +
+ tools/perf/util/stat-display.c |  4 ++++
+ 4 files changed, 48 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 68e37de5fae4..20a1558c555f 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -130,7 +130,7 @@ OPTIONS
- -F::
- --fields::
-         Comma separated list of fields to print. Options are:
--        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
-+        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
-         brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
-         phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 69394ac0a20d..95dd6d650c21 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -130,6 +130,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_BRSTACKINSNLEN  = 1ULL << 36,
- 	PERF_OUTPUT_MACHINE_PID     = 1ULL << 37,
- 	PERF_OUTPUT_VCPU            = 1ULL << 38,
-+	PERF_OUTPUT_DSOFF           = 1ULL << 39,
- };
- 
- struct perf_script {
-@@ -171,6 +172,7 @@ struct output_option {
- 	{.str = "ip",    .field = PERF_OUTPUT_IP},
- 	{.str = "sym",   .field = PERF_OUTPUT_SYM},
- 	{.str = "dso",   .field = PERF_OUTPUT_DSO},
-+	{.str = "dsoff", .field = PERF_OUTPUT_DSOFF},
- 	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
- 	{.str = "symoff", .field = PERF_OUTPUT_SYMOFFSET},
- 	{.str = "srcline", .field = PERF_OUTPUT_SRCLINE},
-@@ -559,6 +561,9 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
- 	if (PRINT_FIELD(DSO))
- 		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
- 
-+	if (PRINT_FIELD(DSOFF))
-+		output[type].print_ip_opts |= EVSEL__PRINT_DSOFF;
-+
- 	if (PRINT_FIELD(SYMOFFSET))
- 		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
- 
-@@ -612,6 +617,10 @@ static int perf_session__check_output_opt(struct perf_session *session)
- 		if (evsel == NULL)
- 			continue;
- 
-+		/* 'dsoff' implys 'dso' field */
-+		if (output[j].fields & PERF_OUTPUT_DSOFF)
-+			output[j].fields |= PERF_OUTPUT_DSO;
-+
- 		set_print_ip_opts(&evsel->core.attr);
- 		tod |= output[j].fields & PERF_OUTPUT_TOD;
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index d3cbee7460fc..7a641a67486d 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+ 			evsel_list->core.threads->err_thread = -1;
+ 			return COUNTER_RETRY;
+ 		}
++	} else if (counter->skippable) {
++		if (verbose > 0)
++			ui__warning("skipping event %s that kernel failed to open .\n",
++				    evsel__name(counter));
++		counter->supported = false;
++		counter->errored = true;
++		return COUNTER_SKIP;
  	}
-@@ -916,6 +925,8 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
- 		if (PRINT_FIELD(DSO)) {
- 			printed += fprintf(fp, "(");
- 			printed += map__fprintf_dsoname(alf.map, fp);
-+			if (PRINT_FIELD(DSOFF) && alf.map && alf.map->dso)
-+				printed += fprintf(fp, "+0x%lx", alf.addr);
- 			printed += fprintf(fp, ")");
- 		}
  
-@@ -923,6 +934,8 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
- 		if (PRINT_FIELD(DSO)) {
- 			printed += fprintf(fp, "(");
- 			printed += map__fprintf_dsoname(alt.map, fp);
-+			if (PRINT_FIELD(DSOFF) && alt.map && alt.map->dso)
-+				printed += fprintf(fp, "+0x%lx", alt.addr);
- 			printed += fprintf(fp, ")");
- 		}
+ 	evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
+@@ -1885,15 +1892,29 @@ static int add_default_attributes(void)
+ 		 * Add TopdownL1 metrics if they exist. To minimize
+ 		 * multiplexing, don't request threshold computation.
+ 		 */
+-		if (metricgroup__has_metric("TopdownL1") &&
+-		    metricgroup__parse_groups(evsel_list, "TopdownL1",
+-					    /*metric_no_group=*/false,
+-					    /*metric_no_merge=*/false,
+-					    /*metric_no_threshold=*/true,
+-					    stat_config.user_requested_cpu_list,
+-					    stat_config.system_wide,
+-					    &stat_config.metric_events) < 0)
+-			return -1;
++		if (metricgroup__has_metric("TopdownL1")) {
++			struct evlist *metric_evlist = evlist__new();
++			struct evsel *metric_evsel;
++
++			if (!metric_evlist)
++				return -1;
++
++			if (metricgroup__parse_groups(metric_evlist, "TopdownL1",
++							/*metric_no_group=*/false,
++							/*metric_no_merge=*/false,
++							/*metric_no_threshold=*/true,
++							stat_config.user_requested_cpu_list,
++							stat_config.system_wide,
++							&stat_config.metric_events) < 0)
++				return -1;
++
++			evlist__for_each_entry(metric_evlist, metric_evsel) {
++				metric_evsel->skippable = true;
++			}
++			evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
++			evlist__delete(metric_evlist);
++		}
++
+ 		/* Platform specific attrs */
+ 		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
+ 			return -1;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index a85a987128aa..83a65f771666 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
+ 	evsel->per_pkg_mask  = NULL;
+ 	evsel->collect_stat  = false;
+ 	evsel->pmu_name      = NULL;
++	evsel->skippable     = false;
+ }
  
-@@ -959,6 +972,8 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
- 		if (PRINT_FIELD(DSO)) {
- 			printed += fprintf(fp, "(");
- 			printed += map__fprintf_dsoname(alf.map, fp);
-+			if (PRINT_FIELD(DSOFF) && alf.map && alf.map->dso)
-+				printed += fprintf(fp, "+0x%lx", alf.addr);
- 			printed += fprintf(fp, ")");
- 		}
- 		printed += fprintf(fp, "%c", '/');
-@@ -966,6 +981,8 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
- 		if (PRINT_FIELD(DSO)) {
- 			printed += fprintf(fp, "(");
- 			printed += map__fprintf_dsoname(alt.map, fp);
-+			if (PRINT_FIELD(DSOFF) && alt.map && alt.map->dso)
-+				printed += fprintf(fp, "+0x%lx", alt.addr);
- 			printed += fprintf(fp, ")");
- 		}
- 		printed += print_bstack_flags(fp, entries + i);
-@@ -1006,12 +1023,16 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
- 		if (PRINT_FIELD(DSO)) {
- 			printed += fprintf(fp, "(");
- 			printed += map__fprintf_dsoname(alf.map, fp);
-+			if (PRINT_FIELD(DSOFF) && alf.map && alf.map->dso)
-+				printed += fprintf(fp, "+0x%lx", alf.addr);
- 			printed += fprintf(fp, ")");
- 		}
- 		printed += fprintf(fp, "/0x%"PRIx64, to);
- 		if (PRINT_FIELD(DSO)) {
- 			printed += fprintf(fp, "(");
- 			printed += map__fprintf_dsoname(alt.map, fp);
-+			if (PRINT_FIELD(DSOFF) && alt.map && alt.map->dso)
-+				printed += fprintf(fp, "+0x%lx", alt.addr);
- 			printed += fprintf(fp, ")");
- 		}
- 		printed += print_bstack_flags(fp, entries + i);
-@@ -1378,6 +1399,8 @@ static int perf_sample__fprintf_addr(struct perf_sample *sample,
- 	if (PRINT_FIELD(DSO)) {
- 		printed += fprintf(fp, " (");
- 		printed += map__fprintf_dsoname(al.map, fp);
-+		if (PRINT_FIELD(DSOFF) && al.map && al.map->dso)
-+			printed += fprintf(fp, "+0x%lx", al.addr);
- 		printed += fprintf(fp, ")");
- 	}
- out:
-@@ -3851,7 +3874,7 @@ int cmd_script(int argc, const char **argv)
- 		     "comma separated output fields prepend with 'type:'. "
- 		     "+field to add and -field to remove."
- 		     "Valid types: hw,sw,trace,raw,synth. "
--		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
-+		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff"
- 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
- 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
- 		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
-diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-index 1fb8044d402e..ae8333772c76 100644
---- a/tools/perf/util/evsel_fprintf.c
-+++ b/tools/perf/util/evsel_fprintf.c
-@@ -116,6 +116,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 	int print_ip = print_opts & EVSEL__PRINT_IP;
- 	int print_sym = print_opts & EVSEL__PRINT_SYM;
- 	int print_dso = print_opts & EVSEL__PRINT_DSO;
-+	int print_dsoff = print_opts & EVSEL__PRINT_DSOFF;
- 	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
- 	int print_oneline = print_opts & EVSEL__PRINT_ONELINE;
- 	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
-@@ -174,6 +175,8 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 			if (print_dso && (!sym || !sym->inlined)) {
- 				printed += fprintf(fp, " (");
- 				printed += map__fprintf_dsoname(map, fp);
-+				if (print_dsoff && map && map->dso)
-+					printed += fprintf(fp, "+0x%lx", addr);
- 				printed += fprintf(fp, ")");
- 			}
+ struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
+@@ -1720,9 +1721,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map_idx, int thread)
+ 		return -1;
  
-@@ -209,6 +212,7 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
- 	int print_ip = print_opts & EVSEL__PRINT_IP;
- 	int print_sym = print_opts & EVSEL__PRINT_SYM;
- 	int print_dso = print_opts & EVSEL__PRINT_DSO;
-+	int print_dsoff = print_opts & EVSEL__PRINT_DSOFF;
- 	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
- 	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
- 	int print_unknown_as_addr = print_opts & EVSEL__PRINT_UNKNOWN_AS_ADDR;
-@@ -237,6 +241,8 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
- 		if (print_dso) {
- 			printed += fprintf(fp, " (");
- 			printed += map__fprintf_dsoname(al->map, fp);
-+			if (print_dsoff && al->map && al->map->dso)
-+				printed += fprintf(fp, "+0x%lx", al->addr);
- 			printed += fprintf(fp, ")");
- 		}
+ 	fd = FD(leader, cpu_map_idx, thread);
+-	BUG_ON(fd == -1);
++	BUG_ON(fd == -1 && !leader->skippable);
  
-diff --git a/tools/perf/util/evsel_fprintf.h b/tools/perf/util/evsel_fprintf.h
-index 3093d096c29f..c8a9fac2f2dd 100644
---- a/tools/perf/util/evsel_fprintf.h
-+++ b/tools/perf/util/evsel_fprintf.h
-@@ -26,6 +26,7 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE
- #define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<6)
- #define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<7)
- #define EVSEL__PRINT_SKIP_IGNORED	(1<<8)
-+#define EVSEL__PRINT_DSOFF		(1<<9)
+-	return fd;
++	/*
++	 * When the leader has been skipped, return -2 to distinguish from no
++	 * group leader case.
++	 */
++	return fd == -1 ? -2 : fd;
+ }
  
- struct addr_location;
- struct perf_event_attr;
+ static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_threads, int thread_idx)
+@@ -2104,6 +2109,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 
+ 			group_fd = get_group_fd(evsel, idx, thread);
+ 
++			if (group_fd == -2) {
++				pr_debug("broken group leader for %s\n", evsel->name);
++				err = -EINVAL;
++				goto out_close;
++			}
++
+ 			test_attr__ready();
+ 
+ 			/* Debug message used by test scripts */
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 68072ec655ce..98afe3351176 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -95,6 +95,7 @@ struct evsel {
+ 		bool			weak_group;
+ 		bool			bpf_counter;
+ 		bool			use_config_name;
++		bool			skippable;
+ 		int			bpf_fd;
+ 		struct bpf_object	*bpf_obj;
+ 		struct list_head	config_terms;
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index e6035ecbeee8..6b46bbb3d322 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -810,6 +810,10 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+ 	struct perf_cpu cpu;
+ 	int idx;
+ 
++	/* Skip counters that were speculatively/default enabled rather than requested. */
++	if (counter->skippable)
++		return true;
++
+ 	/*
+ 	 * Skip value 0 when enabling --per-thread globally,
+ 	 * otherwise it will have too many 0 output.
 -- 
-2.25.1
+2.40.0.634.g4ca3ef3211-goog
 
