@@ -2,259 +2,143 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4A9C77B6E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 12:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3C8C77B72
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 12:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229793AbjDNMaK (ORCPT
+        id S229799AbjDNM4t (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Apr 2023 08:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49172 "EHLO
+        Fri, 14 Apr 2023 08:56:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229908AbjDNMaJ (ORCPT
+        with ESMTP id S229689AbjDNM4s (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Apr 2023 08:30:09 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D75A19A8
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Apr 2023 05:30:06 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id q5so10223269wmo.4
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Apr 2023 05:30:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1681475405; x=1684067405;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lcdXn+gQ2Fdms6yQMDsaRg+lsr216xu+/ri8K2zsM9k=;
-        b=gJallV+FicPk3ve0MWABmYUWan01QVdpDotFpUpPF4dU6tgnxV3Lh1UuvaeA9iBtwW
-         Ocz6oCHjkRiMUjk5w2/6yEN6KD6HbBVT015IXNz+63hiNY4yI3ix+MYDGCdCDImvXW+f
-         uPirb9N56y1ADd24Ux8pt9SdbB1ugn4yHsCJ/kIhDwjYyH/T/QeutiipoNVox5rAsWjO
-         glNPYHP3zWDa6DrBBCR3zjvul+J2OiztRCVi9h2gSjbxfadWnkajCJHwAT8UF1VQCTpV
-         4PQPReSNfTVazRXP97Z5nFHLL6f5sEk6nhmer3zJB2RU/e306HM/ufbKXS+6WK9QTsXJ
-         U2Rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681475405; x=1684067405;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lcdXn+gQ2Fdms6yQMDsaRg+lsr216xu+/ri8K2zsM9k=;
-        b=LBfc0vDErdtH6CL62901xd3hsvLqfpafq2piLN54TSCNAtRzw2SuauPMbG42bivLxZ
-         NbGrlgzsgI/Afx6/Kg2f79jPriXhaReesfI1JqYo11RWDKtxwmfML9u9iTgZSMbXevoU
-         kLvNVhmKKRaCyKE7wUuQMjCwBSMOsG7DzodYeRPoIQxpnaKcutqG5BZyaLeUYm+SdiKf
-         hTnRym12hUQtPwkZ6GxGqbRC128UNP/nuzSM1CNY41jE5HIuanRhkTkcSuRj4QSyg9ek
-         pPsdXlGS/Lo0HXtVhJY+ZDu9bdbn/GPwcvU1Ly3X0RDsd3yTUbfnKvp8IcJkUcazDEhm
-         I4uQ==
-X-Gm-Message-State: AAQBX9eC4IXZ1nJkPcx/fePc6vaKH7tRc8pEALl+ukiF98TAEXrtG1e/
-        ZjpCv1UnUl0JmWjKy7zLhJ+vzA==
-X-Google-Smtp-Source: AKy350YhJ9EsbBANF41KU0JsrgYKESkaxSwSkyYsvYeVp6K8XmpXWkVNrn4s2xKlYA0SpK2Y+jar6g==
-X-Received: by 2002:a7b:c404:0:b0:3f0:a785:f0e0 with SMTP id k4-20020a7bc404000000b003f0a785f0e0mr4243117wmi.40.1681475405010;
-        Fri, 14 Apr 2023 05:30:05 -0700 (PDT)
-Received: from ?IPV6:2a02:8011:e80c:0:d040:969c:6e8e:e95d? ([2a02:8011:e80c:0:d040:969c:6e8e:e95d])
-        by smtp.gmail.com with ESMTPSA id v22-20020a7bcb56000000b003f049a42689sm4207490wmj.25.2023.04.14.05.30.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 14 Apr 2023 05:30:04 -0700 (PDT)
-Message-ID: <b933fad3-7759-00d4-94cb-f20dd363b794@isovalent.com>
-Date:   Fri, 14 Apr 2023 13:30:02 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
-Content-Language: en-GB
-To:     =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
-Cc:     Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
-        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
+        Fri, 14 Apr 2023 08:56:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED93AD24
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Apr 2023 05:55:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1681476951;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=T997QlX8ulRak2Xfd7UnKYdetFcqQN7kWdIRh6IkroE=;
+        b=Le59vJFeScCLIQ5si5heeVOuSrBFGJc+NUwT9CV6DEjyuUrGE2gQ6tABMRMjDRxfdBdZAl
+        Y+2TyVdW1ZouL9VYqxKkShC7GfCEN9fKZnrwD0fmo45at7luXQZQUjrx19mA8mLW1oHYCI
+        JcDKHzGRD0ClZ2f+7YGw2z9Fs/+zE8U=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-423-WmKRPv8DMrCu00hGWtGdsw-1; Fri, 14 Apr 2023 08:55:49 -0400
+X-MC-Unique: WmKRPv8DMrCu00hGWtGdsw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id ECF8D88F479;
+        Fri, 14 Apr 2023 12:55:45 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.22.9.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1793406AA66;
+        Fri, 14 Apr 2023 12:55:37 +0000 (UTC)
+From:   Wander Lairson Costa <wander@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Mahe Tardy <mahe.tardy@gmail.com>
-References: <ZDfKBPXDQxH8HeX9@syu-laptop>
- <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
- <20230414095007.GF63923@kunlun.suse.cz>
-From:   Quentin Monnet <quentin@isovalent.com>
-In-Reply-To: <20230414095007.GF63923@kunlun.suse.cz>
-Content-Type: text/plain; charset=UTF-8
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Wander Lairson Costa <wander@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guo Ren <guoren@kernel.org>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christian Brauner <brauner@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS
+        SUBSYSTEM)
+Subject: [PATCH v6 0/3] Introduce put_task_struct_atomic_sleep()
+Date:   Fri, 14 Apr 2023 09:55:26 -0300
+Message-Id: <20230414125532.14958-1-wander@redhat.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-2023-04-14 11:50 UTC+0200 ~ Michal Suchánek <msuchanek@suse.de>
-> Hello,
-> 
-> On Fri, Apr 14, 2023 at 01:35:20AM +0100, Quentin Monnet wrote:
->> Hi Shung-Hsi,
->>
->> On Thu, 13 Apr 2023 at 10:23, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
->>>
->>> Hi,
->>>
->>> I'm considering switch to bpftool's mirror on GitHub for packaging (instead
->>> of using the source found in kernel), but realize that it should goes
->>> hand-in-hand with how libbpf is packaged, which eventually leads these
->>> questions:
->>>
->>>   What is the suggested approach for packaging bpftool and libbpf?
->>>   Which source is preferred, GitHub or kernel?
->>
->> As you can see from the previous discussions, the suggested approach
->> would be to package from the GitHub mirror, with libbpf and bpftool in
->> sync.
->>
->> My main argument for the mirror is that it keeps things simpler, and
->> there's no need to deal with the rest of the kernel sources for these
->> packages. Download from the mirrors, build, ship. But then I have
->> limited experience at packaging for distros, and I can understand
->> Toke's point of view, too. So ultimately, the call is yours.
-> 
-> Things get only ever more complex when submodules are involved.
+The put_task_struct() function reduces a usage counter and invokes
+__put_task_struct() when the counter reaches zero.
 
-I understand the generic pain points from your other email. But could
-you be more specific for the case of bpftool? It's not like we're
-shipping all lib dependencies as submodules. Sync-ups are specifically
-aligned to the same commit used to sync the libbpf mirror, so that it's
-pretty much as if we had the right version of the library shipped in the
-repository - only, it's one --recurse-submodules away.
+In the case of __put_task_struct(), it indirectly acquires a spinlock,
+which operates as a sleeping lock under the PREEMPT_RT configuration.
+As a result, invoking put_task_struct() within an atomic context is
+not feasible for real-time (RT) kernels.
 
-> 
->>>   Does bpftool work on older kernel?
->>
->> It should, although it's not perfect. Most features from current
->> bpftool should work as expected on older kernels. However, if I
->> remember correctly you would have trouble loading programs on pre-BTF
->> kernels, because bpftool relies on libbpf >= 1.0 and only accepts map
->> definitions with BTF info, and attempts to create these maps with BTF,
->> which fails and blocks the load process.
->>
->> But we're trying to keep backward-compatibility, so if we're only
->> talking of kernels recent enough to support BTF, then I'd expect
->> bpftool to work. If this is not the case, please report on this list.
-> 
-> It won't build:
-> https://lore.kernel.org/bpf/20220421003152.339542-3-alobakin@pm.me/
+To address this issue, this patch series introduces a new function
+called put_task_struct_atomic_safe(). When compiled with the
+PREEMPT_RT configuration, this function defers the call to
+__put_task_struct() to a process context.
 
-True in this case, and this is something that needs to get fixed. Thanks
-for reopening that thread! Are you building bpftool on kernels older
-than 5.15? (genuine curiosity)
+Additionally, the patch series rectifies known problematic call sites
+to ensure smooth functioning.
 
-> 
->>> Our current approach is that we (openSUSE/SLES) essentially have two version
->>> of libbpf: a public shared library that uses GitHub mirror as source, which
->>> the general userspace sees and links to; and a private static library built
->>> from kernel source used by bpftool, perf, resolve_btfids, selftests, etc.
->>> A survey of other distros (Arch, Debian, Fedora, Ubuntu) suggest that they
->>> took similar approach.
->>
->> I would like them to reconsider this choice eventually. Sounds like
->> for RHEL, this will be a tough sell :). At least, I'd love Ubuntu to
->> have a real bpftool package instead of having to install
->> linux-tools-common + linux-tools-generic, or to have distros in
->> general (Ubuntu/Debian at least) stop compiling out the JIT
->> disassembler, although this is not strictly related to the location of
->> the sources. I've not found the time to reach out to package
->> maintainers yet.
->>
->>>
->>> This approach means that the version of bpftool and libbpf are _not_ always
->>> in sync[1], which I read may causes problem since libbpf and bpftool depends
->>> on specific version of each other[2].
->>
->> Whatever source you use, I would strongly recommend finding a way to
->> keep both in sync. Libbpf has stabilised its API when reaching 1.0,
->> but bpftool taps into some of the internals of the library. Features
->> or new definitions are usually added at the same time to libbpf and
->> bpftool, and if you get a mismatch between the two, you're taking
->> risks to get build issues.
-> 
-> In other words no API exists.
+Changelog
+=========
 
-Of course it does. Libbpf exposes a specific set of functions to user
-applications.
+v1:
+* Initial implementation fixing the splat.
 
-But correct, from bpftool's perspective, there are a few locations where
-we accept to derogate and to access to the internals directly, making it
-more dependent on a specific version, or commit, of libbpf, and blurring
-the notion of API.
+v2:
+* Isolate the logic in its own function.
+* Fix two more cases caught in review.
 
-This special relationship is nothing new though, and it has been
-discussed before. It derives from both tools being developed in the same
-repository, and bpftool being so tightly linked to libbpf - it has been
-qualified of command-line interface for libbpf in the past. Bpftool's
-version number itself is aligned on libbpf's. (As a side note, bpftool
-used to pull libbpf's headers directly from libbpf's dir instead of
-installing them locally, which facilitated this mix-in for
-public/internal headers in the first place.)
+v3:
+* Change __put_task_struct() to handle the issue internally.
 
-I know you advocated making the required functions part of the API,
-given that some users (such as bpftool) need them. These functions are
-not exposed, by choice. They are not judged relevant to generic user
-space application (I'm sure libbpf's maintainers are opened to
-discussion if use cases come up). Some of the internals we get from
-libbpf are also mostly to avoid re-implementing things, such as netlink
-attributes processing, or implementing hash maps. These have nothing to
-do in libbpf's API.
+v4:
+* Explain why call_rcu() is safe to call from interrupt context.
 
-> 
->>> Using the GitHub mirror of bpftool to package both libbpf and bpftool would
->>> kept their version in sync, and was suggested[3]. Although the same could be
->>> said if we switch back to packaging libbpf from kernel source, an additional
->>> appeal for using GitHub mirrors is that it decouples bpftool from kernel,
->>> making it easily upgradable and with a clearer changelog (the latter is
->>> quite important for enterprise users) like libbpf.
->>
->> Happy to read these changelogs I write are useful to someone :). Yes,
->> this is my point.
-> 
-> Yes, publishing the changelog in a usable way relieves others of the
-> need to write thier own, usually with less understanding of the changes
-> in question. That's generally the idea of opensource - not endlessly
-> repeating what has already been done :)
+v5:
+* Explain why __put_task_struct() doesn't conflict with
+  put_task_sruct_rcu_user.
 
-Not discussing that - My point is that I've received little feedback on
-the mirror so far, so it's hard for me to figure out who's using it or
-whether anyone has been reading the changelogs.
+v6:
+* As per Sebastian's review, revert back the implementation of v2
+  with a distinct function.
+* Add a check in put_task_struct() to warning when called from a
+  non-sleepable context.
+* Address more call sites.
 
-> 
->>> The main concern with using GitHub mirror is that bpftool may be updated far
->>> beyond the version that comes with the runtime kernel. AFAIK bpftool should
->>> work on older kernel since CO-RE is used for built-in BPF iterators and the
->>> underlying libbpf work on older kernel itself. Nonetheless, it would be nice
->>> to get a confirmation from the maintainers.
->>
->> As explained above - Mostly, it should work. Otherwise, we can look
->> into fixing it.
->>
->> As a side note, I'm open to suggestions/contributions to make life
->> easier for packaging for the mirror. For example, Mahé and I recently
->> added GitHub workflows to ship statically-built binaries for amd64 and
->> arm64 on releases, as well as tarballs with both bpftool+libbpf
->> sources. If there's something else to make packaging easier, I'm happy
->> to talk about it.
-> 
-> Make it possible to build with system-installed libbpf. If it's released
-> it should have versioned dependency on a libbpf release, and libbpf from
-> that version on should be good enough to build it.
-> 
-> I tried copying those 'private' headers into a separate directory, and
-> link against static libbpf, and it seems to work. Of course, having
-> an actual API would be much better.
+Wander Lairson Costa (3):
+  sched/core: warn on call put_task_struct in invalid context
+  sched/task: Add the put_task_struct_atomic_safe() function
+  treewide: replace put_task_struct() witht the atomic safe version
 
-Just as you said yourself, the missing stability is in the way. I don't
-see this happening as long as bpftool is using libbpf's internals. I do
-expect builds to work most of the time by copying the headers as you
-did, but as soon as something changes and it no longer does, everyone
-will start filing issues on GitHub instead of using the version that
-works, and I don't want that.
+ include/linux/sched/task.h | 45 ++++++++++++++++++++++++++++++++++++++
+ kernel/events/core.c       |  6 ++---
+ kernel/fork.c              |  8 +++++++
+ kernel/locking/rtmutex.c   | 10 ++++-----
+ kernel/sched/core.c        |  6 ++---
+ kernel/sched/deadline.c    | 16 +++++++-------
+ kernel/sched/rt.c          |  4 ++--
+ 7 files changed, 74 insertions(+), 21 deletions(-)
 
-As for decoupling from the internal: making the functions part of the
-API is not an option. One option could be to move this code into further
-dependencies shared between libbpf and bpftool - although I guess libbpf
-developers will have little appetite for that. We could also duplicate
-the necessary code in bpftool, which doesn't sound optimal, but might be
-one solution. Other options have been discussed before, such as moving
-bpftool into libbpf's directory/mirror and shipping both together, but
-there was no consensus at the time, and I don't expect libbpf to ship
-with bpftool any time soon.
+-- 
+2.39.2
+
