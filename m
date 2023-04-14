@@ -2,43 +2,43 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BBCBC77B72
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 12:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42901C77B6E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 12:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbjDNM47 (ORCPT
+        id S229689AbjDNM5A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Apr 2023 08:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40038 "EHLO
+        Fri, 14 Apr 2023 08:57:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229766AbjDNM46 (ORCPT
+        with ESMTP id S229907AbjDNM46 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 14 Apr 2023 08:56:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87B03A277
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Apr 2023 05:56:06 -0700 (PDT)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B089A276
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Apr 2023 05:56:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681476965;
+        s=mimecast20190719; t=1681476974;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=YrYqlnliydYiAyvEAuZGBKT9tvoR1n5A0ejNaepolyI=;
-        b=MEoYqQu7ntP/3MehFRf7DWKG3DEwzCnPC2Qh8Me8jQHWOP9VFiT4RXpOCISAgUUY0zY6iM
-        WM0bS80qqKZmqh3CJE58pTcvPNDhu2WcPYQlkqyrLwuZJTpDDBuGyTz01CrchPNf2GymLY
-        MXmGYSl0rGH26Xhzo3VUgqMq6P8OED4=
+        bh=vWFEUBEXcCftzEc0hD+kF0Un2IVbNKstSMRg6ONrT+s=;
+        b=Bu1QQ1gzXI5UIYpSfxRKfb1qZ767MXaaDbkeC5kMak8l4aN4Sm6r0LM2WMc0zUTIrzg93L
+        X1hqim0RAKVoJWmLxOo9X/xeOEkrP0HpXFQvOo8Ez5CBZTLO8JLDbtRx2Ztrhfy5YdMFXE
+        um2Ll2iGPv2CDL/hYmrgQSCdqRsjIaU=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-286-6Oqx-tBnN12S4UgBWipkuQ-1; Fri, 14 Apr 2023 08:55:57 -0400
-X-MC-Unique: 6Oqx-tBnN12S4UgBWipkuQ-1
+ us-mta-265-7T0V0wkQOSK6KOzPfQ9_AQ-1; Fri, 14 Apr 2023 08:56:07 -0400
+X-MC-Unique: 7T0V0wkQOSK6KOzPfQ9_AQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C39D4185A791;
-        Fri, 14 Apr 2023 12:55:55 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3B6FA185A790;
+        Fri, 14 Apr 2023 12:56:06 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.22.9.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4FE9E406AA66;
-        Fri, 14 Apr 2023 12:55:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 28918406AA66;
+        Fri, 14 Apr 2023 12:55:59 +0000 (UTC)
 From:   Wander Lairson Costa <wander@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -61,21 +61,23 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Valentin Schneider <vschneid@redhat.com>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Wander Lairson Costa <wander@redhat.com>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
         "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <brauner@kernel.org>,
         Andrei Vagin <avagin@gmail.com>,
         Shakeel Butt <shakeelb@google.com>,
         linux-kernel@vger.kernel.org (open list),
         linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS
         SUBSYSTEM)
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [PATCH v6 1/3] sched/core: warn on call put_task_struct in invalid context
-Date:   Fri, 14 Apr 2023 09:55:27 -0300
-Message-Id: <20230414125532.14958-2-wander@redhat.com>
+Cc:     Hu Chunyu <chuhu@redhat.com>, Paul McKenney <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v6 2/3] sched/task: Add the put_task_struct_atomic_safe() function
+Date:   Fri, 14 Apr 2023 09:55:28 -0300
+Message-Id: <20230414125532.14958-3-wander@redhat.com>
 In-Reply-To: <20230414125532.14958-1-wander@redhat.com>
 References: <20230414125532.14958-1-wander@redhat.com>
 MIME-Version: 1.0
@@ -85,52 +87,90 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Under PREEMPT_RT, spinlocks become sleepable locks. put_task_struct()
-indirectly acquires a spinlock. Therefore, it can't be called in
-atomic/interrupt context in RT kernels.
+Due to the possibility of indirectly acquiring sleeping locks, it is
+unsafe to call put_task_struct() in atomic contexts when the kernel is
+compiled with PREEMPT_RT.
 
-To prevent such conditions, add a check for atomic/interrupt context
-before calling put_task_struct().
+To mitigate this issue, this commit introduces
+put_task_struct_atomic_safe(), which schedules __put_task_struct()
+through call_rcu() when PREEMPT_RT is enabled. While a workqueue would
+be a more natural approach, we cannot allocate dynamic memory from
+atomic context in PREEMPT_RT, making the code more complex.
+
+This implementation ensures safe execution in atomic contexts and
+avoids any potential issues that may arise from using the non-atomic
+version.
 
 Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Reported-by: Hu Chunyu <chuhu@redhat.com>
+Cc: Paul McKenney <paulmck@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 ---
- include/linux/sched/task.h | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ include/linux/sched/task.h | 31 +++++++++++++++++++++++++++++++
+ kernel/fork.c              |  8 ++++++++
+ 2 files changed, 39 insertions(+)
 
 diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-index 357e0068497c..b597b97b1f8f 100644
+index b597b97b1f8f..5c13b83d7008 100644
 --- a/include/linux/sched/task.h
 +++ b/include/linux/sched/task.h
-@@ -113,14 +113,28 @@ static inline struct task_struct *get_task_struct(struct task_struct *t)
+@@ -141,6 +141,37 @@ static inline void put_task_struct_many(struct task_struct *t, int nr)
  
- extern void __put_task_struct(struct task_struct *t);
+ void put_task_struct_rcu_user(struct task_struct *task);
  
-+#define PUT_TASK_RESCHED_OFFSETS \
-+	(rcu_preempt_depth() << MIGHT_RESCHED_RCU_SHIFT)
++extern void __delayed_put_task_struct(struct rcu_head *rhp);
 +
-+#define __put_task_might_resched() \
-+	__might_resched(__FILE__, __LINE__, PUT_TASK_RESCHED_OFFSETS)
++static inline void put_task_struct_atomic_safe(struct task_struct *task)
++{
++	if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
++		/*
++		 * Decrement the refcount explicitly to avoid unnecessarily
++		 * calling call_rcu.
++		 */
++		if (refcount_dec_and_test(&task->usage))
++			/*
++			 * under PREEMPT_RT, we can't call put_task_struct
++			 * in atomic context because it will indirectly
++			 * acquire sleeping locks.
++			 * call_rcu() will schedule delayed_put_task_struct_rcu()
++			 * to be called in process context.
++			 *
++			 * __put_task_struct() is called called when
++			 * refcount_dec_and_test(&t->usage) succeeds.
++			 *
++			 * This means that it can't "conflict" with
++			 * put_task_struct_rcu_user() which abuses ->rcu the same
++			 * way; rcu_users has a reference so task->usage can't be
++			 * zero after rcu_users 1 -> 0 transition.
++			 */
++			call_rcu(&task->rcu, __delayed_put_task_struct);
++	} else {
++		put_task_struct(task);
++	}
++}
 +
-+#define put_task_might_resched()			\
-+	do {						\
-+		if (IS_ENABLED(CONFIG_PREEMPT_RT))	\
-+			__put_task_might_resched();	\
-+	} while (0)
-+
- static inline void put_task_struct(struct task_struct *t)
- {
-+	put_task_might_resched();
- 	if (refcount_dec_and_test(&t->usage))
- 		__put_task_struct(t);
+ /* Free all architecture-specific resources held by a thread. */
+ void release_thread(struct task_struct *dead_task);
+ 
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 0c92f224c68c..9884794fe4b8 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -854,6 +854,14 @@ void __put_task_struct(struct task_struct *tsk)
  }
+ EXPORT_SYMBOL_GPL(__put_task_struct);
  
- static inline void put_task_struct_many(struct task_struct *t, int nr)
- {
-+	put_task_might_resched();
- 	if (refcount_sub_and_test(nr, &t->usage))
- 		__put_task_struct(t);
- }
++void __delayed_put_task_struct(struct rcu_head *rhp)
++{
++	struct task_struct *task = container_of(rhp, struct task_struct, rcu);
++
++	__put_task_struct(task);
++}
++EXPORT_SYMBOL_GPL(__delayed_put_task_struct);
++
+ void __init __weak arch_task_cache_init(void) { }
+ 
+ /*
 -- 
 2.39.2
 
