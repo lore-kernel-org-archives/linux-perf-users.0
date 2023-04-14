@@ -2,94 +2,131 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A8CC77B6E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 08:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDADDC77B6E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 09:33:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229546AbjDNIYz (ORCPT
+        id S229656AbjDNJdJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Apr 2023 04:24:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34538 "EHLO
+        Fri, 14 Apr 2023 05:33:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbjDNIYl (ORCPT
+        with ESMTP id S229448AbjDNJdI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Apr 2023 04:24:41 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 525C36E9D;
-        Fri, 14 Apr 2023 01:24:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=23TvM9bAd6O+vHiDc7KhaDWib6wc5fh99kV9pfSTlzs=; b=U89+tYLRZHqGWm+mumhNbqHQSE
-        B09d69SBqhsesq8phfol9XQLQm1RrREFVN6wJvUq/k/lr0ernylbw1flFlK7nKiuR1csanCgBRbkw
-        eBS+b62GEd+lIRC4j7ln8WYBywKM6SRS31kqWL2QVK4bGGb/UerGlSX0IauBq/rBREfpbEWsuoNt2
-        5oUBr3qM5YAIEIV2keuV6L738xZimulw47fZn5YFaqBpRFQCMz+jvcvMvZY7Ai/8CZoHhxnTUQQRq
-        H6Ck5u0N44+F095zyUDfeyeg7Nb4YzygHLnD80ml9S3AQbacWcJO/SYO+eSuScTcV2u5gCoEZ6PLa
-        gSpVjmXA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pnEiV-008aEj-G0; Fri, 14 Apr 2023 08:23:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 089903001E4;
-        Fri, 14 Apr 2023 10:23:35 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DA50320248CE4; Fri, 14 Apr 2023 10:23:34 +0200 (CEST)
-Date:   Fri, 14 Apr 2023 10:23:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, eranian@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3] perf/core: Fix hardlockup failure caused by
- perf throttle
-Message-ID: <20230414082334.GU4253@hirez.programming.kicks-ass.net>
-References: <20230227023508.102230-1-yangjihong1@huawei.com>
+        Fri, 14 Apr 2023 05:33:08 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F274EFB;
+        Fri, 14 Apr 2023 02:33:07 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 462C31FD93;
+        Fri, 14 Apr 2023 09:33:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1681464786; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=anqanL63WzuuA9OTxdiLBvl46hTjKTc57YdQQgadd/o=;
+        b=wI2sOsws/cqozSHTbYsvf8p7/178t/09nwrSCD3YknFaOZsJlSrl56FMu5dI+8lrj2vBgD
+        ArUkAR2Papy1w+DijTuDEb07vK3XtSyymKpCiQydUTjGNC0FMwNUR4zM5s2oL+iYL7V4Zv
+        PIVNAOCRy8elJRda0qdrWWNzzQf0A54=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1681464786;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=anqanL63WzuuA9OTxdiLBvl46hTjKTc57YdQQgadd/o=;
+        b=UVoCOv8xtrWLrmFnzvFTAMyKVOxL9TIH1CKL0P9VLX5vXSeacUQsignMRTVoQFU6C1eW2U
+        DQy6SmKonVkPPXCw==
+Received: from kunlun.suse.cz (unknown [10.100.128.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id A6DE52C143;
+        Fri, 14 Apr 2023 09:33:05 +0000 (UTC)
+Date:   Fri, 14 Apr 2023 11:33:04 +0200
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Quentin Monnet <quentin@isovalent.com>
+Cc:     Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
+        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        David Miller <davem@davemloft.net>
+Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
+Message-ID: <20230414093304.GE63923@kunlun.suse.cz>
+References: <ZDfKBPXDQxH8HeX9@syu-laptop>
+ <ZDfQYHJyJOrR5pcB@syu-laptop>
+ <CACdoK4JemtGV9m=kuddE4eZQgfTNj1OqhwfhLpDcsspTvfZx7A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230227023508.102230-1-yangjihong1@huawei.com>
+In-Reply-To: <CACdoK4JemtGV9m=kuddE4eZQgfTNj1OqhwfhLpDcsspTvfZx7A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Feb 27, 2023 at 10:35:08AM +0800, Yang Jihong wrote:
-> commit e050e3f0a71bf ("perf: Fix broken interrupt rate throttling")
-> introduces a change in throttling threshold judgment. Before this,
-> compare hwc->interrupts and max_samples_per_tick, then increase
-> hwc->interrupts by 1, but this commit reverses order of these two
-> behaviors, causing the semantics of max_samples_per_tick to change.
-> In literal sense of "max_samples_per_tick", if hwc->interrupts ==
-> max_samples_per_tick, it should not be throttled, therefore, the judgment
-> condition should be changed to "hwc->interrupts > max_samples_per_tick".
-> 
-> In fact, this may cause the hardlockup to fail, The minimum value of
-> max_samples_per_tick may be 1, in this case, the return value of
-> __perf_event_account_interrupt function is 1.
-> As a result, nmi_watchdog gets throttled, which would stop PMU (Use x86
-> architecture as an example, see x86_pmu_handle_irq).
-> 
-> Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  kernel/events/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f79fd8b87f75..0540a8653906 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -9434,7 +9434,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
->  	} else {
->  		hwc->interrupts++;
->  		if (unlikely(throttle
-> -			     && hwc->interrupts >= max_samples_per_tick)) {
-> +			     && hwc->interrupts > max_samples_per_tick)) {
->  			__this_cpu_inc(perf_throttled_count);
->  			tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
->  			hwc->interrupts = MAX_INTERRUPTS;
+Hello,
 
-Thanks, I've made a slight edit to fix the && placement.
+On Fri, Apr 14, 2023 at 02:12:40AM +0100, Quentin Monnet wrote:
+> On Thu, 13 Apr 2023 at 10:50, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
+> >
+> > On Thu, Apr 13, 2023 at 05:23:16PM +0800, Shung-Hsi Yu wrote:
+> > > Hi,
+> > >
+> > > I'm considering switch to bpftool's mirror on GitHub for packaging (instead
+> > > of using the source found in kernel), but realize that it should goes
+> > > hand-in-hand with how libbpf is packaged, which eventually leads these
+> > > questions:
+> > >
+> > >   What is the suggested approach for packaging bpftool and libbpf?
+> > >   Which source is preferred, GitHub or kernel?
+
+...
+
+> > But I wonder whether packaging one of the motives to create the mirrors
+> > initially? Can't seem to find anything in this regard.
+> >
+> >
+> > 1: https://github.com/acmel/dwarves/tree/master/lib
+> > 2: https://lore.kernel.org/bpf/CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com/
+> 
+> It seems like you haven't come across this one?:
+> https://lore.kernel.org/bpf/267a35a6-a045-c025-c2d9-78afbf6fc325@isovalent.com/t/
+> 
+> Yes, easing packaging was one of the motivations for the mirror. As
+> mentioned in my other answer, I've not taken the time to reach out to
+> package maintainers yet, so this hasn't really materialised at this
+> point.
+
+For me as a package maintainer submodules are a major pain. They always
+need special handling, break down, get out of sync between different
+projects using them, etc.
+
+Somehow in the past it was possible to build and install development
+versions of libraries during development of tools using them, and
+release both when a feature was finished.
+
+Arguably using submodules for development may work for some people. For
+most it would cause having the wrong submodule code when switching
+branches, stray submodule changes in patches, etc.
+
+Using submodules as a general method of distributing dependencies is
+hell.
+
+The usual methods of downloading and releasing the source code don't
+work, the submodules have to be specifically bundled.
+
+If the dependency in question has a bug each tool author has to be
+coaxed to update to a fixed version and re-release, or each tool patched
+separately.
+
+Over time API bitrots and is given up, each tool requiring specific and
+different release or git SHA of the dependency. We can see that
+happening a lot in ecosystems where vendoring is the norm.
+
+Thanks
+
+Michal
