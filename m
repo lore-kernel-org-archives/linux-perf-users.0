@@ -2,111 +2,254 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9A6C77B6E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 08:23:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52148C77B73
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 08:23:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230176AbjDNIXa (ORCPT
+        id S230178AbjDNIXb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Apr 2023 04:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33030 "EHLO
+        Fri, 14 Apr 2023 04:23:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229836AbjDNIX2 (ORCPT
+        with ESMTP id S230003AbjDNIX2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Fri, 14 Apr 2023 04:23:28 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D646E1BC9;
-        Fri, 14 Apr 2023 01:23:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4/OedsHNECWMdb1O/5CmBXIMhKWxTMAD8xpCzvQiWk4=; b=cJt80wV5U63xn0tju0Jh0AUTJp
-        AW758NvMDPN4Eh2BgK4wm+ZoWVv7qdmVGZ2/4ZXuB6mHDoMACsiJfOlyVp3ZDgra439Vn/DR+wzMY
-        GUKXVlFDW+LuV1S61mOEQVTYdXdwkM+2rN1CMvRIjwhtLZTnlXuUrl6yr9fkfX79nD3bD2nY86Rji
-        PxYrYjrNcb6vNav4NU3sjbKOCk23dY4MnRGB90RFbCNk1Yzn5OUVrjfWCLFZzLYLMQOEUU3WcAox7
-        PC/XwRv88/y5GK/P4jno8z/sfwzPbwH3lHDJs1lFQFa6/K1LhOrMCo1busLSiZpK1d9k+9YTN57Mo
-        HG1G36nQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pnEfg-00FWn9-0h;
-        Fri, 14 Apr 2023 08:22:42 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2598430002F;
-        Fri, 14 Apr 2023 10:20:39 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0BC1520248CE4; Fri, 14 Apr 2023 10:20:39 +0200 (CEST)
-Date:   Fri, 14 Apr 2023 10:20:39 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Liang Kan <kan.liang@linux.intel.com>, linux-cxl@vger.kernel.org,
-        mark.rutland@arm.com, will@kernel.org, mingo@redhat.com,
-        acme@kernel.org, dan.j.williams@intel.com, linuxarm@huawei.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>
-Subject: Re: [PATCH v6 1/5] perf: Allow a PMU to have a parent
-Message-ID: <20230414082039.GT4253@hirez.programming.kicks-ass.net>
-References: <20230413142617.15995-1-Jonathan.Cameron@huawei.com>
- <20230413142617.15995-2-Jonathan.Cameron@huawei.com>
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF6B6E9D;
+        Fri, 14 Apr 2023 01:23:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681460607; x=1712996607;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Xhw2PFI44xhxatWgOY9IkkDtUpBt0VWfQQBb/Lx2E8k=;
+  b=ahgM5qkA4p9/HBmOgo2SAuiCLd3kduResrfoGooNywsBgx5l1JM8Q9i1
+   xjQyu2bcqAUEQO8YfujHtZ7omMlZNBB/l+43gAv7mww2ICgi8nA49vh4a
+   D3bQWHbdWm2SWI02cjBeVq2e3jnnPDFyFBOGk18P8jjrQ72/jr32sYIHi
+   HhRZP5SjH3DAg8l0UOuPc+loFyRXBfX3DzdVTHXyZOsz00VzywDwKCkWR
+   mrHGFH84mR167vx+mm5WhcqDOHZGDaqTaZwYLkigygkxH101+cZ6RINcr
+   uGPJ7jXBSkWjw8s8A/iID5IwkabT0UAwOjIqRbk+6pGBN2JiUCEorDUV6
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="430708106"
+X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
+   d="scan'208";a="430708106"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 01:23:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="683267482"
+X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
+   d="scan'208";a="683267482"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.249.34.252])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 01:23:23 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RFC 2/5] perf: Add fork to the sideband ioctl
+Date:   Fri, 14 Apr 2023 11:22:57 +0300
+Message-Id: <20230414082300.34798-3-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230414082300.34798-1-adrian.hunter@intel.com>
+References: <20230414082300.34798-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230413142617.15995-2-Jonathan.Cameron@huawei.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 13, 2023 at 03:26:13PM +0100, Jonathan Cameron wrote:
-> Some PMUs have well defined parents such as PCI devices.
-> As the device_initialize() and device_add() are all within
-> pmu_dev_alloc() which is called from perf_pmu_register()
-> there is no opportunity to set the parent from within a driver.
-> 
-> Add a struct device *parent field to struct pmu and use that
-> to set the parent.
-> 
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Support the case of output to an active event, and return an error if
+output is not possible in that case. Set PERF_RECORD_MISC_STATUS_ONLY to
+differentiate the ioctl status-only sideband event from a "real" sideband
+event.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Set the fork parent pid/tid to the real parent for a thread group leader,
+or to the thread group leader otherwise.
 
-> ---
-> v6: No change
-> v5: Move to head of series as may merge as part of:
-> https://lore.kernel.org/all/20230404134225.13408-1-Jonathan.Cameron@huawei.com/
-> ---
->  include/linux/perf_event.h | 1 +
->  kernel/events/core.c       | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index d5628a7b5eaa..b99db1eda72c 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -303,6 +303,7 @@ struct pmu {
->  
->  	struct module			*module;
->  	struct device			*dev;
-> +	struct device			*parent;
->  	const struct attribute_group	**attr_groups;
->  	const struct attribute_group	**attr_update;
->  	const char			*name;
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 435815d3be3f..32079a332480 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11367,6 +11367,7 @@ static int pmu_dev_alloc(struct pmu *pmu)
->  
->  	dev_set_drvdata(pmu->dev, pmu);
->  	pmu->dev->bus = &pmu_bus;
-> +	pmu->dev->parent = pmu->parent;
->  	pmu->dev->release = pmu_dev_release;
->  
->  	ret = dev_set_name(pmu->dev, "%s", pmu->name);
-> -- 
-> 2.37.2
-> 
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ kernel/events/core.c | 88 ++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 73 insertions(+), 15 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 5cbcc6851587..4e76596d3bfb 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7948,6 +7948,54 @@ perf_iterate_sb(perf_iterate_f output, void *data,
+ 	rcu_read_unlock();
+ }
+ 
++typedef int (perf_output_f)(struct perf_event *event, void *data);
++
++static int perf_event_output_sb(struct perf_event *event, perf_output_f output, void *data)
++{
++	int err = -ENOENT;
++
++	preempt_disable();
++
++	if (event->state != PERF_EVENT_STATE_ACTIVE ||
++	    !event_filter_match(event) ||
++	    READ_ONCE(event->oncpu) != smp_processor_id())
++		goto out;
++
++	err = output(event, data);
++out:
++	preempt_enable();
++	return err;
++}
++
++struct perf_output_f_data {
++	perf_output_f *func;
++	void *data;
++};
++
++void perf_output_f_wrapper(struct perf_event *event, void *data)
++{
++	struct perf_output_f_data *f_data = data;
++
++	f_data->func(event, f_data->data);
++}
++
++static int perf_output_sb(perf_output_f output, void *data,
++			  struct perf_event_context *task_ctx,
++			  struct perf_event *event)
++{
++	struct perf_output_f_data f_data = {
++		.func = output,
++		.data = data,
++	};
++
++	if (event)
++		return perf_event_output_sb(event, output, data);
++
++	perf_iterate_sb(perf_output_f_wrapper, &f_data, task_ctx);
++
++	return 0;
++}
++
+ /*
+  * Clear all file-based filters at exec, they'll have to be
+  * re-instated when/if these objects are mmapped again.
+@@ -8107,8 +8155,7 @@ static int perf_event_task_match(struct perf_event *event)
+ 	       event->attr.task;
+ }
+ 
+-static void perf_event_task_output(struct perf_event *event,
+-				   void *data)
++static int perf_event_task_output(struct perf_event *event, void *data)
+ {
+ 	struct perf_task_event *task_event = data;
+ 	struct perf_output_handle handle;
+@@ -8117,7 +8164,7 @@ static void perf_event_task_output(struct perf_event *event,
+ 	int ret, size = task_event->event_id.header.size;
+ 
+ 	if (!perf_event_task_match(event))
+-		return;
++		return -ENOENT;
+ 
+ 	perf_event_header__init_id(&task_event->event_id.header, &sample, event);
+ 
+@@ -8134,6 +8181,14 @@ static void perf_event_task_output(struct perf_event *event,
+ 							task->real_parent);
+ 		task_event->event_id.ptid = perf_event_pid(event,
+ 							task->real_parent);
++	} else if (task_event->event_id.header.misc & PERF_RECORD_MISC_STATUS_ONLY) {
++		if (thread_group_leader(task)) {
++			task_event->event_id.ppid = perf_event_pid(event, task->real_parent);
++			task_event->event_id.ptid = perf_event_tid(event, task->real_parent);
++		} else {
++			task_event->event_id.ppid = perf_event_pid(event, task);
++			task_event->event_id.ptid = perf_event_pid(event, task);
++		}
+ 	} else {  /* PERF_RECORD_FORK */
+ 		task_event->event_id.ppid = perf_event_pid(event, current);
+ 		task_event->event_id.ptid = perf_event_tid(event, current);
+@@ -8148,18 +8203,19 @@ static void perf_event_task_output(struct perf_event *event,
+ 	perf_output_end(&handle);
+ out:
+ 	task_event->event_id.header.size = size;
++	return ret;
+ }
+ 
+-static void perf_event_task(struct task_struct *task,
+-			      struct perf_event_context *task_ctx,
+-			      int new)
++static int perf_event_task(struct task_struct *task,
++			   struct perf_event_context *task_ctx,
++			   int new, struct perf_event *event)
+ {
+ 	struct perf_task_event task_event;
+ 
+ 	if (!atomic_read(&nr_comm_events) &&
+ 	    !atomic_read(&nr_mmap_events) &&
+ 	    !atomic_read(&nr_task_events))
+-		return;
++		return -ENOENT;
+ 
+ 	task_event = (struct perf_task_event){
+ 		.task	  = task,
+@@ -8167,7 +8223,7 @@ static void perf_event_task(struct task_struct *task,
+ 		.event_id    = {
+ 			.header = {
+ 				.type = new ? PERF_RECORD_FORK : PERF_RECORD_EXIT,
+-				.misc = 0,
++				.misc = event ? PERF_RECORD_MISC_STATUS_ONLY : 0,
+ 				.size = sizeof(task_event.event_id),
+ 			},
+ 			/* .pid  */
+@@ -8178,14 +8234,12 @@ static void perf_event_task(struct task_struct *task,
+ 		},
+ 	};
+ 
+-	perf_iterate_sb(perf_event_task_output,
+-		       &task_event,
+-		       task_ctx);
++	return perf_output_sb(perf_event_task_output, &task_event, task_ctx, event);
+ }
+ 
+ void perf_event_fork(struct task_struct *task)
+ {
+-	perf_event_task(task, NULL, 1);
++	perf_event_task(task, NULL, 1, NULL);
+ 	perf_event_namespaces(task);
+ }
+ 
+@@ -12817,7 +12871,11 @@ EXPORT_SYMBOL_GPL(perf_event_create_kernel_counter);
+ 
+ static int perf_event_emit_fork(struct perf_event *event, struct task_struct *task)
+ {
+-	return -EINVAL;
++	if (!event->attr.comm && !event->attr.mmap && !event->attr.mmap2 &&
++	    !event->attr.mmap_data && !event->attr.task)
++		return -EINVAL;
++
++	return perf_event_task(task, NULL, 1, event);
+ }
+ 
+ static int perf_event_emit_namespaces(struct perf_event *event, struct task_struct *task)
+@@ -13115,7 +13173,7 @@ static void perf_event_exit_task_context(struct task_struct *child)
+ 	 * won't get any samples after PERF_RECORD_EXIT. We can however still
+ 	 * get a few PERF_RECORD_READ events.
+ 	 */
+-	perf_event_task(child, child_ctx, 0);
++	perf_event_task(child, child_ctx, 0, NULL);
+ 
+ 	list_for_each_entry_safe(child_event, next, &child_ctx->event_list, event_entry)
+ 		perf_event_exit_event(child_event, child_ctx);
+@@ -13157,7 +13215,7 @@ void perf_event_exit_task(struct task_struct *child)
+ 	 * child contexts and sets child->perf_event_ctxp[] to NULL.
+ 	 * At this point we need to send EXIT events to cpu contexts.
+ 	 */
+-	perf_event_task(child, NULL, 0);
++	perf_event_task(child, NULL, 0, NULL);
+ }
+ 
+ static void perf_free_event(struct perf_event *event,
+-- 
+2.34.1
+
