@@ -2,270 +2,94 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC414C77B73
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 08:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A8CC77B6E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 08:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229775AbjDNIX7 (ORCPT
+        id S229546AbjDNIYz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Apr 2023 04:23:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34104 "EHLO
+        Fri, 14 Apr 2023 04:24:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230177AbjDNIXv (ORCPT
+        with ESMTP id S229832AbjDNIYl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Apr 2023 04:23:51 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BBEA83F6;
-        Fri, 14 Apr 2023 01:23:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681460618; x=1712996618;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=KlLl00c1BkbXcaNS+veMVCoA8VHv6YdBHnPGvXsCuZw=;
-  b=GCDCeErIVi60cfi8c5dY0oJLqOLNo1xxN5TNGX0GdZQWxZZNnbR2F/eq
-   JTrJ0P7HUaEQtt+FfZ/VTDCRLMMxs53/YJL6WN4/3/M66gDo9E/ldDQC8
-   sOTeWzBPONk5TsUWGgSPQLMnbMXpsgo+A9l8W7Z0g8U1Aeh2mOYKvg8YV
-   baSO2n0LknY1XLaMmPgMqMeAmDTh0sCjE27RFlMof/fMYxVdlDYutZYln
-   O3TfRSE97yak4jwRFPy48pO1q0GN/cCSFtDNJFOUSfr3WaJSfZC0BLLyi
-   BzTsKpwwt4+1LCxmktTqqDQvahaQ8uA4URbjLelJES0i6FV++gkaNWoaG
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="430708155"
-X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
-   d="scan'208";a="430708155"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 01:23:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="683267565"
-X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
-   d="scan'208";a="683267565"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.249.34.252])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 01:23:34 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Fri, 14 Apr 2023 04:24:41 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 525C36E9D;
+        Fri, 14 Apr 2023 01:24:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=23TvM9bAd6O+vHiDc7KhaDWib6wc5fh99kV9pfSTlzs=; b=U89+tYLRZHqGWm+mumhNbqHQSE
+        B09d69SBqhsesq8phfol9XQLQm1RrREFVN6wJvUq/k/lr0ernylbw1flFlK7nKiuR1csanCgBRbkw
+        eBS+b62GEd+lIRC4j7ln8WYBywKM6SRS31kqWL2QVK4bGGb/UerGlSX0IauBq/rBREfpbEWsuoNt2
+        5oUBr3qM5YAIEIV2keuV6L738xZimulw47fZn5YFaqBpRFQCMz+jvcvMvZY7Ai/8CZoHhxnTUQQRq
+        H6Ck5u0N44+F095zyUDfeyeg7Nb4YzygHLnD80ml9S3AQbacWcJO/SYO+eSuScTcV2u5gCoEZ6PLa
+        gSpVjmXA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pnEiV-008aEj-G0; Fri, 14 Apr 2023 08:23:35 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 089903001E4;
+        Fri, 14 Apr 2023 10:23:35 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DA50320248CE4; Fri, 14 Apr 2023 10:23:34 +0200 (CEST)
+Date:   Fri, 14 Apr 2023 10:23:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, eranian@google.com,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 5/5] perf: Add mmap to the sideband ioctl
-Date:   Fri, 14 Apr 2023 11:23:00 +0300
-Message-Id: <20230414082300.34798-6-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230414082300.34798-1-adrian.hunter@intel.com>
-References: <20230414082300.34798-1-adrian.hunter@intel.com>
+Subject: Re: [PATCH RESEND v3] perf/core: Fix hardlockup failure caused by
+ perf throttle
+Message-ID: <20230414082334.GU4253@hirez.programming.kicks-ass.net>
+References: <20230227023508.102230-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230227023508.102230-1-yangjihong1@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Support the case of output to an active event, and return an error if
-output is not possible in that case. Set PERF_RECORD_MISC_STATUS_ONLY to
-differentiate the ioctl status-only sideband event from a "real" sideband
-event.
+On Mon, Feb 27, 2023 at 10:35:08AM +0800, Yang Jihong wrote:
+> commit e050e3f0a71bf ("perf: Fix broken interrupt rate throttling")
+> introduces a change in throttling threshold judgment. Before this,
+> compare hwc->interrupts and max_samples_per_tick, then increase
+> hwc->interrupts by 1, but this commit reverses order of these two
+> behaviors, causing the semantics of max_samples_per_tick to change.
+> In literal sense of "max_samples_per_tick", if hwc->interrupts ==
+> max_samples_per_tick, it should not be throttled, therefore, the judgment
+> condition should be changed to "hwc->interrupts > max_samples_per_tick".
+> 
+> In fact, this may cause the hardlockup to fail, The minimum value of
+> max_samples_per_tick may be 1, in this case, the return value of
+> __perf_event_account_interrupt function is 1.
+> As a result, nmi_watchdog gets throttled, which would stop PMU (Use x86
+> architecture as an example, see x86_pmu_handle_irq).
+> 
+> Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  kernel/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index f79fd8b87f75..0540a8653906 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -9434,7 +9434,7 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
+>  	} else {
+>  		hwc->interrupts++;
+>  		if (unlikely(throttle
+> -			     && hwc->interrupts >= max_samples_per_tick)) {
+> +			     && hwc->interrupts > max_samples_per_tick)) {
+>  			__this_cpu_inc(perf_throttled_count);
+>  			tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
+>  			hwc->interrupts = MAX_INTERRUPTS;
 
-Set the mmap pid/tid from the appropriate task.
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- kernel/events/core.c | 91 +++++++++++++++++++++++++++++++++++---------
- 1 file changed, 73 insertions(+), 18 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index cddc02c2e411..317bdf5f919a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -8584,6 +8584,7 @@ static void perf_event_cgroup(struct cgroup *cgrp)
- 
- struct perf_mmap_event {
- 	struct vm_area_struct	*vma;
-+	struct task_struct	*task;
- 
- 	const char		*file_name;
- 	int			file_size;
-@@ -8605,19 +8606,25 @@ struct perf_mmap_event {
- 	} event_id;
- };
- 
-+static int perf_event_mmap_match_vma(struct perf_event *event,
-+				     struct vm_area_struct *vma)
-+{
-+	int executable = vma->vm_flags & VM_EXEC;
-+
-+	return (!executable && event->attr.mmap_data) ||
-+	       (executable && (event->attr.mmap || event->attr.mmap2));
-+}
-+
- static int perf_event_mmap_match(struct perf_event *event,
- 				 void *data)
- {
- 	struct perf_mmap_event *mmap_event = data;
- 	struct vm_area_struct *vma = mmap_event->vma;
--	int executable = vma->vm_flags & VM_EXEC;
- 
--	return (!executable && event->attr.mmap_data) ||
--	       (executable && (event->attr.mmap || event->attr.mmap2));
-+	return perf_event_mmap_match_vma(event, vma);
- }
- 
--static void perf_event_mmap_output(struct perf_event *event,
--				   void *data)
-+static int perf_event_mmap_output(struct perf_event *event, void *data)
- {
- 	struct perf_mmap_event *mmap_event = data;
- 	struct perf_output_handle handle;
-@@ -8628,7 +8635,7 @@ static void perf_event_mmap_output(struct perf_event *event,
- 	int ret;
- 
- 	if (!perf_event_mmap_match(event, data))
--		return;
-+		return -ENOENT;
- 
- 	if (event->attr.mmap2) {
- 		mmap_event->event_id.header.type = PERF_RECORD_MMAP2;
-@@ -8646,8 +8653,8 @@ static void perf_event_mmap_output(struct perf_event *event,
- 	if (ret)
- 		goto out;
- 
--	mmap_event->event_id.pid = perf_event_pid(event, current);
--	mmap_event->event_id.tid = perf_event_tid(event, current);
-+	mmap_event->event_id.pid = perf_event_pid(event, mmap_event->task);
-+	mmap_event->event_id.tid = perf_event_tid(event, mmap_event->task);
- 
- 	use_build_id = event->attr.build_id && mmap_event->build_id_size;
- 
-@@ -8681,9 +8688,10 @@ static void perf_event_mmap_output(struct perf_event *event,
- out:
- 	mmap_event->event_id.header.size = size;
- 	mmap_event->event_id.header.type = type;
-+	return ret;
- }
- 
--static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
-+static int perf_event_mmap_event(struct perf_mmap_event *mmap_event, struct perf_event *event)
- {
- 	struct vm_area_struct *vma = mmap_event->vma;
- 	struct file *file = vma->vm_file;
-@@ -8694,6 +8702,7 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 	char tmp[16];
- 	char *buf = NULL;
- 	char *name;
-+	int ret;
- 
- 	if (vma->vm_flags & VM_READ)
- 		prot |= PROT_READ;
-@@ -8795,11 +8804,10 @@ static void perf_event_mmap_event(struct perf_mmap_event *mmap_event)
- 	if (atomic_read(&nr_build_id_events))
- 		build_id_parse(vma, mmap_event->build_id, &mmap_event->build_id_size);
- 
--	perf_iterate_sb(perf_event_mmap_output,
--		       mmap_event,
--		       NULL);
-+	ret = perf_output_sb(perf_event_mmap_output, mmap_event, NULL, event);
- 
- 	kfree(buf);
-+	return ret;
- }
- 
- /*
-@@ -8899,21 +8907,25 @@ static void perf_addr_filters_adjust(struct vm_area_struct *vma)
- 	rcu_read_unlock();
- }
- 
--void perf_event_mmap(struct vm_area_struct *vma)
-+static int __perf_event_mmap(struct vm_area_struct *vma,
-+			     struct perf_event *event,
-+			     struct task_struct *task)
- {
- 	struct perf_mmap_event mmap_event;
- 
- 	if (!atomic_read(&nr_mmap_events))
--		return;
-+		return -ENOENT;
- 
- 	mmap_event = (struct perf_mmap_event){
- 		.vma	= vma,
-+		.task	= task ?: current,
- 		/* .file_name */
- 		/* .file_size */
- 		.event_id  = {
- 			.header = {
- 				.type = PERF_RECORD_MMAP,
--				.misc = PERF_RECORD_MISC_USER,
-+				.misc = PERF_RECORD_MISC_USER |
-+					(event ? PERF_RECORD_MISC_STATUS_ONLY : 0),
- 				/* .size */
- 			},
- 			/* .pid */
-@@ -8930,8 +8942,14 @@ void perf_event_mmap(struct vm_area_struct *vma)
- 		/* .flags (attr_mmap2 only) */
- 	};
- 
--	perf_addr_filters_adjust(vma);
--	perf_event_mmap_event(&mmap_event);
-+	if (!event)
-+		perf_addr_filters_adjust(vma);
-+	return perf_event_mmap_event(&mmap_event, event);
-+}
-+
-+void perf_event_mmap(struct vm_area_struct *vma)
-+{
-+	__perf_event_mmap(vma, NULL, NULL);
- }
- 
- void perf_event_aux_event(struct perf_event *event, unsigned long head,
-@@ -12901,9 +12919,46 @@ static int perf_event_emit_comm(struct perf_event *event, struct task_struct *ta
- 	return __perf_event_comm(task, false, event);
- }
- 
-+static int perf_event_mm_emit_mmap(struct perf_event *event,
-+				   struct task_struct *task,
-+				   struct mm_struct *mm)
-+{
-+	struct vm_area_struct *vma;
-+	VMA_ITERATOR(vmi, mm, 0);
-+	int err;
-+
-+	for_each_vma(vmi, vma) {
-+		if (!perf_event_mmap_match_vma(event, vma))
-+			continue;
-+		err = __perf_event_mmap(vma, event, task);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
- static int perf_event_emit_mmap(struct perf_event *event, struct task_struct *task)
- {
--	return -EINVAL;
-+	struct mm_struct *mm;
-+	int err;
-+
-+	if (!event->attr.mmap_data && !event->attr.mmap && !event->attr.mmap2)
-+		return -EINVAL;
-+
-+	mm = get_task_mm(task);
-+	if (!mm)
-+		return 0;
-+
-+	mmap_read_lock(mm);
-+
-+	err = perf_event_mm_emit_mmap(event, task, mm);
-+
-+	mmap_read_unlock(mm);
-+
-+	mmput(mm);
-+
-+	return err;
- }
- 
- static int perf_event_emit_sideband(struct perf_event *event, void __user *arg)
--- 
-2.34.1
-
+Thanks, I've made a slight edit to fix the && placement.
