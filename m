@@ -2,94 +2,90 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB72C77B70
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 08:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8F3C77B6E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 08:23:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbjDNIUo (ORCPT
+        id S229542AbjDNIX2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Apr 2023 04:20:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58428 "EHLO
+        Fri, 14 Apr 2023 04:23:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbjDNIUn (ORCPT
+        with ESMTP id S230103AbjDNIXY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Apr 2023 04:20:43 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C68F30EA;
-        Fri, 14 Apr 2023 01:20:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kdFcWL/2CdoU/pjcyz85l0kcofXKNlxtadF8DUNS0CI=; b=BL/DmGmgZZvTtenuk2dHqfixGV
-        h5lj5lk49VIydyseMenJz633+HVyaH2oq/6AKN5buVhM9CorBCWO9otDwvCnntnOSFkviASdfl5Td
-        va+XVvVRTB3ynrg2/mUzlXOhq2I0wtq4PEGNkLGqCp8J3tHjgO1VHOyIoWRdLbN9JTPAelLeJDe/q
-        CCANUurjbkgIvl2dfQA3pzcGm9zb2nHud7KC1QQnymY88nBlLauTCsstKqbLomkZzoyaI2snYzrbn
-        UHTQJyUm80yIwI1uWGdTiawV2n1sDX550VC8fZPlYNnSkrIv6mPAlCutSt75IdkY+g4J7Qt22lNcN
-        JAK2LDnQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pnEdO-00FWlu-1h;
-        Fri, 14 Apr 2023 08:20:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0DFF93001E4;
-        Fri, 14 Apr 2023 10:18:16 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BAE5020D0CF47; Fri, 14 Apr 2023 10:18:16 +0200 (CEST)
-Date:   Fri, 14 Apr 2023 10:18:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Fri, 14 Apr 2023 04:23:24 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CAF95B9F;
+        Fri, 14 Apr 2023 01:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681460602; x=1712996602;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IR3enTULW+0dSiranrN8ej6IJa0hU4y3yttWFJiFMng=;
+  b=N4IhTVO/7jObHl/8HIZGX3wzi4lDwHtiMS/oRc5UGtvUX6Vrep1abd17
+   ryLnFdzGo7dJNyYJCeVCaJ2lvq7Fbqs5N8ukTaaCRId1gJHsG2Ms83/ig
+   1+ivbjD4wnF+lKyth1yasmasvuCfRNwdzqyj1ZNkqB5/Pkv/kCU7WEyte
+   I8EDuq4Zr+1Cf/peSm+x3Pg/L9so6Ot1VhfIMIGrKrJbCANRD0HZUWuTA
+   dUluisUxj5byJaeOuOAeID5MEHNVlqq18RiFPNuQfQgF5256eckxYYoFv
+   QKmv+tBqLBzJUOhXK/R8qGJeqqZh3lFzdlHLluG3G7AvgO31OOr+I8SYk
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="430708078"
+X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
+   d="scan'208";a="430708078"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 01:23:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="683267437"
+X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
+   d="scan'208";a="683267437"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.249.34.252])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 01:23:16 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Edward Baker <edward.baker@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 00/21] Update uncore topics, 1x event updates, 2x new
- archs.
-Message-ID: <20230414081816.GS4253@hirez.programming.kicks-ass.net>
-References: <20230413132949.3487664-1-irogers@google.com>
- <ZDgL1Qca7N+Wilm6@kernel.org>
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH RFC 0/5] perf: Add ioctl to emit sideband events
+Date:   Fri, 14 Apr 2023 11:22:55 +0300
+Message-Id: <20230414082300.34798-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZDgL1Qca7N+Wilm6@kernel.org>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 13, 2023 at 11:04:05AM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, Apr 13, 2023 at 06:29:28AM -0700, Ian Rogers escreveu:
-> > Update the uncore PMUs and topic classification as created by:
-> > https://github.com/intel/perfmon/pull/70
-> > 
-> > Event updates stem from:
-> > https://github.com/intel/perfmon/pull/68
-> > impacting alderlake, icelakex and sapphirerapids.
-> > 
-> > Grand Ridge and Sierra Forest events stem from:
-> > https://github.com/intel/perfmon/pull/69
-> > 
-> > Changes generated by with PR70 in place:
-> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
-> > 
-> > v3. Rebase over the update of alderlake and icelakex events.
-> > v2. Adds improvements to uncore topics, uncore PMU name fixes and
-> >     fixes a trigraph issue from ??? being in the json.
-> 
-> b4 isn't liking it:
+Hi
 
-Fwiw, the way I've set up b4 it takes the patches from my local
-mailstore and it doesn't matter what made it out to lkml. Specifically,
-I pipe the patches from mutt directly into b4.
+Here is a stab at adding an ioctl for sideband events.
 
-I think there's some information in the b4 docs on how to set that up,
-but let me know if you want more info.
+This is to overcome races when reading the same information
+from /proc.
+
+To keep it simple, the ioctl is limited to emitting existing
+sideband events (fork, namespaces, comm, mmap) to an already
+active context.
+
+There are not yet any perf tools patches at this stage.
+
+
+Adrian Hunter (5):
+      perf: Add ioctl to emit sideband events
+      perf: Add fork to the sideband ioctl
+      perf: Add namespaces to the sideband ioctl
+      perf: Add comm to the sideband ioctl
+      perf: Add mmap to the sideband ioctl
+
+ include/uapi/linux/perf_event.h |  19 ++-
+ kernel/events/core.c            | 315 +++++++++++++++++++++++++++++++++-------
+ 2 files changed, 280 insertions(+), 54 deletions(-)
+
+
+Regards
+Adrian
