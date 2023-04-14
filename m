@@ -2,130 +2,94 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 893E9C77B70
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 07:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB72C77B70
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 08:20:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbjDNHET (ORCPT
+        id S229907AbjDNIUo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Apr 2023 03:04:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42552 "EHLO
+        Fri, 14 Apr 2023 04:20:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229663AbjDNHER (ORCPT
+        with ESMTP id S229924AbjDNIUn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Apr 2023 03:04:17 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6BF93A84;
-        Fri, 14 Apr 2023 00:04:15 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PyS6R54MLzKxvD;
-        Fri, 14 Apr 2023 15:01:35 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 14 Apr 2023 15:04:11 +0800
-Subject: Re: [PATCH RESEND v3] perf/core: Fix hardlockup failure caused by
- perf throttle
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <eranian@google.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230227023508.102230-1-yangjihong1@huawei.com>
- <12782722-103e-88a9-df3e-6815b4734bc3@huawei.com>
- <37d019af-191c-9955-2417-b7cfa5e5efa3@huawei.com>
-Message-ID: <56cc5b4f-3cbd-c265-36fc-fedab16b8cff@huawei.com>
-Date:   Fri, 14 Apr 2023 15:04:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Fri, 14 Apr 2023 04:20:43 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C68F30EA;
+        Fri, 14 Apr 2023 01:20:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kdFcWL/2CdoU/pjcyz85l0kcofXKNlxtadF8DUNS0CI=; b=BL/DmGmgZZvTtenuk2dHqfixGV
+        h5lj5lk49VIydyseMenJz633+HVyaH2oq/6AKN5buVhM9CorBCWO9otDwvCnntnOSFkviASdfl5Td
+        va+XVvVRTB3ynrg2/mUzlXOhq2I0wtq4PEGNkLGqCp8J3tHjgO1VHOyIoWRdLbN9JTPAelLeJDe/q
+        CCANUurjbkgIvl2dfQA3pzcGm9zb2nHud7KC1QQnymY88nBlLauTCsstKqbLomkZzoyaI2snYzrbn
+        UHTQJyUm80yIwI1uWGdTiawV2n1sDX550VC8fZPlYNnSkrIv6mPAlCutSt75IdkY+g4J7Qt22lNcN
+        JAK2LDnQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pnEdO-00FWlu-1h;
+        Fri, 14 Apr 2023 08:20:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0DFF93001E4;
+        Fri, 14 Apr 2023 10:18:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BAE5020D0CF47; Fri, 14 Apr 2023 10:18:16 +0200 (CEST)
+Date:   Fri, 14 Apr 2023 10:18:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Edward Baker <edward.baker@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v3 00/21] Update uncore topics, 1x event updates, 2x new
+ archs.
+Message-ID: <20230414081816.GS4253@hirez.programming.kicks-ass.net>
+References: <20230413132949.3487664-1-irogers@google.com>
+ <ZDgL1Qca7N+Wilm6@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <37d019af-191c-9955-2417-b7cfa5e5efa3@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZDgL1Qca7N+Wilm6@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Thu, Apr 13, 2023 at 11:04:05AM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Apr 13, 2023 at 06:29:28AM -0700, Ian Rogers escreveu:
+> > Update the uncore PMUs and topic classification as created by:
+> > https://github.com/intel/perfmon/pull/70
+> > 
+> > Event updates stem from:
+> > https://github.com/intel/perfmon/pull/68
+> > impacting alderlake, icelakex and sapphirerapids.
+> > 
+> > Grand Ridge and Sierra Forest events stem from:
+> > https://github.com/intel/perfmon/pull/69
+> > 
+> > Changes generated by with PR70 in place:
+> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+> > 
+> > v3. Rebase over the update of alderlake and icelakex events.
+> > v2. Adds improvements to uncore topics, uncore PMU name fixes and
+> >     fixes a trigraph issue from ??? being in the json.
+> 
+> b4 isn't liking it:
 
-PING again.
-Look forward the review.
+Fwiw, the way I've set up b4 it takes the patches from my local
+mailstore and it doesn't matter what made it out to lkml. Specifically,
+I pipe the patches from mutt directly into b4.
 
-Thanks,
-Yang.
-
-On 2023/3/22 15:36, Yang Jihong wrote:
-> Hello,
-> 
-> PING.
-> 
-> This patch has not been responded.
-> Please take time to check whether the fix solution is OK.
-> Look forward to reviewing the patch. Thanks :)
-> 
-> Thanks,
-> Yang.
-> 
-> On 2023/3/6 9:14, Yang Jihong wrote:
->> Hello,
->>
->> PING.
->>
->> Thanks,
->> Yang.
->>
->> On 2023/2/27 10:35, Yang Jihong wrote:
->>> commit e050e3f0a71bf ("perf: Fix broken interrupt rate throttling")
->>> introduces a change in throttling threshold judgment. Before this,
->>> compare hwc->interrupts and max_samples_per_tick, then increase
->>> hwc->interrupts by 1, but this commit reverses order of these two
->>> behaviors, causing the semantics of max_samples_per_tick to change.
->>> In literal sense of "max_samples_per_tick", if hwc->interrupts ==
->>> max_samples_per_tick, it should not be throttled, therefore, the 
->>> judgment
->>> condition should be changed to "hwc->interrupts > max_samples_per_tick".
->>>
->>> In fact, this may cause the hardlockup to fail, The minimum value of
->>> max_samples_per_tick may be 1, in this case, the return value of
->>> __perf_event_account_interrupt function is 1.
->>> As a result, nmi_watchdog gets throttled, which would stop PMU (Use x86
->>> architecture as an example, see x86_pmu_handle_irq).
->>>
->>> Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
->>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->>> ---
->>>
->>> Changes since v2:
->>>    - Add fixed commit.
->>>
->>> Changes since v1:
->>>    - Modify commit title.
->>>
->>>   kernel/events/core.c | 2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>> index f79fd8b87f75..0540a8653906 100644
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -9434,7 +9434,7 @@ __perf_event_account_interrupt(struct 
->>> perf_event *event, int throttle)
->>>       } else {
->>>           hwc->interrupts++;
->>>           if (unlikely(throttle
->>> -                 && hwc->interrupts >= max_samples_per_tick)) {
->>> +                 && hwc->interrupts > max_samples_per_tick)) {
->>>               __this_cpu_inc(perf_throttled_count);
->>>               tick_dep_set_cpu(smp_processor_id(), 
->>> TICK_DEP_BIT_PERF_EVENTS);
->>>               hwc->interrupts = MAX_INTERRUPTS;
->>>
->>
->> .
-> 
-> .
+I think there's some information in the b4 docs on how to set that up,
+but let me know if you want more info.
