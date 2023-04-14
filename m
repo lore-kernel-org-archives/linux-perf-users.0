@@ -2,259 +2,302 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74B4C77B71
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 16:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF36C77B71
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 18:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbjDNQPZ (ORCPT
+        id S229870AbjDNSHn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Apr 2023 12:15:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
+        Fri, 14 Apr 2023 14:07:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229446AbjDNQPZ (ORCPT
+        with ESMTP id S229479AbjDNSHm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Apr 2023 12:15:25 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84835188;
-        Fri, 14 Apr 2023 09:15:23 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 3940D1FDAC;
-        Fri, 14 Apr 2023 16:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1681488922; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NQr3pcc3xCz9vRhuLlOqvVhOjVzkpREyXxWnCb+3Lwk=;
-        b=BbYFdQeE645tCM/hTz0LsfuNffdBFSytxLTswZLXJG8a6iMCWKY8iX8k5bV9V/bG4tWYFu
-        tXvqtlsNIUeX5VAjMC0AjlCmKNU16B/kde8nnM6uVAMlBYr3woEwoQOtt/aT8K/YZLXg3k
-        4a+nFTY8g2NnQT+HpbfuQGED5lpbXu4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1681488922;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NQr3pcc3xCz9vRhuLlOqvVhOjVzkpREyXxWnCb+3Lwk=;
-        b=nWm+Deb9xph8iZfN9Gy/G7S1rfe+4EA2ENuajUyefuiv5AfhY91wme/yIdWNt1e6tHAhNB
-        0OVU4KXyLr1Z0YBg==
-Received: from kunlun.suse.cz (unknown [10.100.128.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 14 Apr 2023 14:07:42 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37BD686BD;
+        Fri, 14 Apr 2023 11:07:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681495661; x=1713031661;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=7tTpzM/lDVa6aZlma82A4SMFIlDqCPVcOdu9hJS6FWw=;
+  b=bnwv0VhnH8KTur278BqYCzJSY9oWYC35FqchtfcHiTe5D6Eg6+XGVO5d
+   pRHe0SSPyOhSAHW3i3Vvak6JOlWq+rTFB2Lw+QWNXKYKpZOLt0Yr0eknK
+   yXraArbgoNInDsjABSMhB5mwq5xlRpf4orjZ+p0vrEPvyJTbgEUKQhZuP
+   GkVkcIkEit5yEqwnlj1iCsLh5Yf2cJwCsEY4ugI54dSXGnPhsLhSfcZiB
+   PJ8Yly1g+7tHVcWCqyFFUtlC0N2+kCXJiEc4cjHqpjoZjwuzIkVmlDEpx
+   Avormx3xmbwT36iwYAlk0OhdSMMwrGNspgFxur/CBJTqfueuegVrLQ5hQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="344530169"
+X-IronPort-AV: E=Sophos;i="5.99,197,1677571200"; 
+   d="scan'208";a="344530169"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Apr 2023 11:02:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10680"; a="692509923"
+X-IronPort-AV: E=Sophos;i="5.99,197,1677571200"; 
+   d="scan'208";a="692509923"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga007.fm.intel.com with ESMTP; 14 Apr 2023 11:02:52 -0700
+Received: from [10.212.165.245] (kliang2-mobl1.ccr.corp.intel.com [10.212.165.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 75EE82C143;
-        Fri, 14 Apr 2023 16:15:21 +0000 (UTC)
-Date:   Fri, 14 Apr 2023 18:15:20 +0200
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Quentin Monnet <quentin@isovalent.com>
-Cc:     Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Mahe Tardy <mahe.tardy@gmail.com>
-Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
-Message-ID: <20230414161520.GJ63923@kunlun.suse.cz>
-References: <ZDfKBPXDQxH8HeX9@syu-laptop>
- <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
- <20230414095007.GF63923@kunlun.suse.cz>
- <b933fad3-7759-00d4-94cb-f20dd363b794@isovalent.com>
+        by linux.intel.com (Postfix) with ESMTPS id 9F56B5805CB;
+        Fri, 14 Apr 2023 11:02:51 -0700 (PDT)
+Message-ID: <56ac61a0-ccf0-210e-e429-11062a07b8bf@linux.intel.com>
+Date:   Fri, 14 Apr 2023 14:02:50 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b933fad3-7759-00d4-94cb-f20dd363b794@isovalent.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2] perf stat: Introduce skippable evsels
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230414051922.3625666-1-irogers@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230414051922.3625666-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 01:30:02PM +0100, Quentin Monnet wrote:
-> 2023-04-14 11:50 UTC+0200 ~ Michal Suchánek <msuchanek@suse.de>
-> > Hello,
-> > 
-> > On Fri, Apr 14, 2023 at 01:35:20AM +0100, Quentin Monnet wrote:
-> >> Hi Shung-Hsi,
-> >>
-> >> On Thu, 13 Apr 2023 at 10:23, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
-> >>>
-> >>> Hi,
-> >>>
-> >>> I'm considering switch to bpftool's mirror on GitHub for packaging (instead
-> >>> of using the source found in kernel), but realize that it should goes
-> >>> hand-in-hand with how libbpf is packaged, which eventually leads these
-> >>> questions:
-> >>>
-> >>>   What is the suggested approach for packaging bpftool and libbpf?
-> >>>   Which source is preferred, GitHub or kernel?
-> >>
-> >> As you can see from the previous discussions, the suggested approach
-> >> would be to package from the GitHub mirror, with libbpf and bpftool in
-> >> sync.
-> >>
-> >> My main argument for the mirror is that it keeps things simpler, and
-> >> there's no need to deal with the rest of the kernel sources for these
-> >> packages. Download from the mirrors, build, ship. But then I have
-> >> limited experience at packaging for distros, and I can understand
-> >> Toke's point of view, too. So ultimately, the call is yours.
-> > 
-> > Things get only ever more complex when submodules are involved.
+
+
+On 2023-04-14 1:19 a.m., Ian Rogers wrote:
+> Perf stat with no arguments will use default events and metrics. These
+> events may fail to open even with kernel and hypervisor disabled. When
+> these fail then the permissions error appears even though they were
+> implicitly selected. This is particularly a problem with the automatic
+> selection of the TopdownL1 metric group on certain architectures like
+> Skylake:
 > 
-> I understand the generic pain points from your other email. But could
-> you be more specific for the case of bpftool? It's not like we're
-> shipping all lib dependencies as submodules. Sync-ups are specifically
-> aligned to the same commit used to sync the libbpf mirror, so that it's
-> pretty much as if we had the right version of the library shipped in the
-> repository - only, it's one --recurse-submodules away.
-
-It's so in every project that uses submodules. Except git does not
-recurse into submodules by default, you have to fix it up by hand.
-Forges don't support submodules so you will not get the submodule when
-downloading the project archive, and won't see it the the project tree.
-
-After previous experience with submodules I did not even try, I just
-patched the makefile to use system libbpf before attempting anything
-else.
-
-> >>>   Does bpftool work on older kernel?
-> >>
-> >> It should, although it's not perfect. Most features from current
-> >> bpftool should work as expected on older kernels. However, if I
-> >> remember correctly you would have trouble loading programs on pre-BTF
-> >> kernels, because bpftool relies on libbpf >= 1.0 and only accepts map
-> >> definitions with BTF info, and attempts to create these maps with BTF,
-> >> which fails and blocks the load process.
-> >>
-> >> But we're trying to keep backward-compatibility, so if we're only
-> >> talking of kernels recent enough to support BTF, then I'd expect
-> >> bpftool to work. If this is not the case, please report on this list.
-> > 
-> > It won't build:
-> > https://lore.kernel.org/bpf/20220421003152.339542-3-alobakin@pm.me/
+> ```
+> $ perf stat true
+> Error:
+> Access to performance monitoring and observability operations is limited.
+> Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+> access to performance monitoring and observability operations for processes
+> without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+> More information can be found at 'Perf events and tool security' document:
+> https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+> perf_event_paranoid setting is 2:
+>   -1: Allow use of (almost) all events by all users
+>       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+>> = 0: Disallow raw and ftrace function tracepoint access
+>> = 1: Disallow CPU event access
+>> = 2: Disallow kernel profiling
+> To make the adjusted perf_event_paranoid setting permanent preserve it
+> in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
+> ```
 > 
-> True in this case, and this is something that needs to get fixed. Thanks
-> for reopening that thread! Are you building bpftool on kernels older
-> than 5.15? (genuine curiosity)
-
-Yes, 5.14 and 5.3. I would not be able to notice this particular
-breakage otherwise.
-
-> >>> Our current approach is that we (openSUSE/SLES) essentially have two version
-> >>> of libbpf: a public shared library that uses GitHub mirror as source, which
-> >>> the general userspace sees and links to; and a private static library built
-> >>> from kernel source used by bpftool, perf, resolve_btfids, selftests, etc.
-> >>> A survey of other distros (Arch, Debian, Fedora, Ubuntu) suggest that they
-> >>> took similar approach.
-> >>
-> >> I would like them to reconsider this choice eventually. Sounds like
-> >> for RHEL, this will be a tough sell :). At least, I'd love Ubuntu to
-> >> have a real bpftool package instead of having to install
-> >> linux-tools-common + linux-tools-generic, or to have distros in
-> >> general (Ubuntu/Debian at least) stop compiling out the JIT
-> >> disassembler, although this is not strictly related to the location of
-> >> the sources. I've not found the time to reach out to package
-> >> maintainers yet.
-> >>
-> >>>
-> >>> This approach means that the version of bpftool and libbpf are _not_ always
-> >>> in sync[1], which I read may causes problem since libbpf and bpftool depends
-> >>> on specific version of each other[2].
-> >>
-> >> Whatever source you use, I would strongly recommend finding a way to
-> >> keep both in sync. Libbpf has stabilised its API when reaching 1.0,
-> >> but bpftool taps into some of the internals of the library. Features
-> >> or new definitions are usually added at the same time to libbpf and
-> >> bpftool, and if you get a mismatch between the two, you're taking
-> >> risks to get build issues.
-> > 
-> > In other words no API exists.
+> This patch adds skippable evsels that when they fail to open won't
+> fail and won't appear in output. The TopdownL1 events, from the metric
+> group, are marked as skippable. This turns the failure above to:
 > 
-> Of course it does. Libbpf exposes a specific set of functions to user
-> applications.
+> ```
+> $ perf stat true
 > 
-> But correct, from bpftool's perspective, there are a few locations where
-> we accept to derogate and to access to the internals directly, making it
-> more dependent on a specific version, or commit, of libbpf, and blurring
-> the notion of API.
+>  Performance counter stats for 'true':
 > 
-> This special relationship is nothing new though, and it has been
-> discussed before. It derives from both tools being developed in the same
-> repository, and bpftool being so tightly linked to libbpf - it has been
-> qualified of command-line interface for libbpf in the past. Bpftool's
+>               1.26 msec task-clock:u                     #    0.328 CPUs utilized
+>                  0      context-switches:u               #    0.000 /sec
+>                  0      cpu-migrations:u                 #    0.000 /sec
+>                 49      page-faults:u                    #   38.930 K/sec
+>            176,449      cycles:u                         #    0.140 GHz                         (48.99%)
 
-If bpftool is a commandline interface for libbpf maybe the best choice
-is to just dump both into the same repository, and provide make targets
-for building one, the other, and both.
+Multiplexing?
 
-> version number itself is aligned on libbpf's. (As a side note, bpftool
-> used to pull libbpf's headers directly from libbpf's dir instead of
-> installing them locally, which facilitated this mix-in for
-> public/internal headers in the first place.)
+Thanks,
+Kan
+
+>            122,905      instructions:u                   #    0.70  insn per cycle
+>             28,264      branches:u                       #   22.456 M/sec
+>              2,405      branch-misses:u                  #    8.51% of all branches
 > 
-> I know you advocated making the required functions part of the API,
-> given that some users (such as bpftool) need them. These functions are
-> not exposed, by choice. They are not judged relevant to generic user
-> space application (I'm sure libbpf's maintainers are opened to
-> discussion if use cases come up). Some of the internals we get from
-> libbpf are also mostly to avoid re-implementing things, such as netlink
-> attributes processing, or implementing hash maps. These have nothing to
-> do in libbpf's API.
-
-And we do not have microframeworks for implementing reusable hashmaps or
-netlink parsers. I am sure that bpftool is not the first nor last tool
-that needs a hashmap or parse netlink but the ecosystem for small
-single-purpose C libraries never really took off.
-
-> >>> The main concern with using GitHub mirror is that bpftool may be updated far
-> >>> beyond the version that comes with the runtime kernel. AFAIK bpftool should
-> >>> work on older kernel since CO-RE is used for built-in BPF iterators and the
-> >>> underlying libbpf work on older kernel itself. Nonetheless, it would be nice
-> >>> to get a confirmation from the maintainers.
-> >>
-> >> As explained above - Mostly, it should work. Otherwise, we can look
-> >> into fixing it.
-> >>
-> >> As a side note, I'm open to suggestions/contributions to make life
-> >> easier for packaging for the mirror. For example, Mahé and I recently
-> >> added GitHub workflows to ship statically-built binaries for amd64 and
-> >> arm64 on releases, as well as tarballs with both bpftool+libbpf
-> >> sources. If there's something else to make packaging easier, I'm happy
-> >> to talk about it.
-> > 
-> > Make it possible to build with system-installed libbpf. If it's released
-> > it should have versioned dependency on a libbpf release, and libbpf from
-> > that version on should be good enough to build it.
-> > 
-> > I tried copying those 'private' headers into a separate directory, and
-> > link against static libbpf, and it seems to work. Of course, having
-> > an actual API would be much better.
+>        0.003834565 seconds time elapsed
 > 
-> Just as you said yourself, the missing stability is in the way. I don't
-> see this happening as long as bpftool is using libbpf's internals. I do
-> expect builds to work most of the time by copying the headers as you
-> did, but as soon as something changes and it no longer does, everyone
-> will start filing issues on GitHub instead of using the version that
-> works, and I don't want that.
-
-So these are not really separate projects, they should ship together.
-
-> As for decoupling from the internal: making the functions part of the
-> API is not an option. One option could be to move this code into further
-> dependencies shared between libbpf and bpftool - although I guess libbpf
-> developers will have little appetite for that. We could also duplicate
-> the necessary code in bpftool, which doesn't sound optimal, but might be
-> one solution. Other options have been discussed before, such as moving
-> bpftool into libbpf's directory/mirror and shipping both together, but
-> there was no consensus at the time, and I don't expect libbpf to ship
-> with bpftool any time soon.
-
-Why is that? Is there any speciffic reason for the sepaaration if
-bpftool needs specific libbpf anyway?
-
-Thanks
-
-Michal
+>        0.000000000 seconds user
+>        0.004130000 seconds sys
+> ```
+> 
+> When the events can have kernel/hypervisor disabled, like on
+> Tigerlake, then it continues to succeed as:
+> 
+> ```
+> $ perf stat true
+> 
+>  Performance counter stats for 'true':
+> 
+>               0.57 msec task-clock:u                     #    0.385 CPUs utilized
+>                  0      context-switches:u               #    0.000 /sec
+>                  0      cpu-migrations:u                 #    0.000 /sec
+>                 47      page-faults:u                    #   82.329 K/sec
+>            287,017      cycles:u                         #    0.503 GHz
+>            133,318      instructions:u                   #    0.46  insn per cycle
+>             31,396      branches:u                       #   54.996 M/sec
+>              2,442      branch-misses:u                  #    7.78% of all branches
+>            998,790      TOPDOWN.SLOTS:u                  #     14.5 %  tma_retiring
+>                                                   #     27.6 %  tma_backend_bound
+>                                                   #     40.9 %  tma_frontend_bound
+>                                                   #     17.0 %  tma_bad_speculation
+>            144,922      topdown-retiring:u
+>            411,266      topdown-fe-bound:u
+>            258,510      topdown-be-bound:u
+>            184,090      topdown-bad-spec:u
+>              2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/sec
+>              3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/u #    6.015 M/sec
+> 
+>        0.001480954 seconds time elapsed
+> 
+>        0.000000000 seconds user
+>        0.001686000 seconds sys
+> ```
+> 
+> And this likewise works if paranoia allows or running as root.
+> 
+> v2. Don't display the skipped events as <not counted> or <not supported>.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-stat.c      | 39 ++++++++++++++++++++++++++--------
+>  tools/perf/util/evsel.c        | 15 +++++++++++--
+>  tools/perf/util/evsel.h        |  1 +
+>  tools/perf/util/stat-display.c |  4 ++++
+>  4 files changed, 48 insertions(+), 11 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index d3cbee7460fc..7a641a67486d 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+>  			evsel_list->core.threads->err_thread = -1;
+>  			return COUNTER_RETRY;
+>  		}
+> +	} else if (counter->skippable) {
+> +		if (verbose > 0)
+> +			ui__warning("skipping event %s that kernel failed to open .\n",
+> +				    evsel__name(counter));
+> +		counter->supported = false;
+> +		counter->errored = true;
+> +		return COUNTER_SKIP;
+>  	}
+>  
+>  	evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
+> @@ -1885,15 +1892,29 @@ static int add_default_attributes(void)
+>  		 * Add TopdownL1 metrics if they exist. To minimize
+>  		 * multiplexing, don't request threshold computation.
+>  		 */
+> -		if (metricgroup__has_metric("TopdownL1") &&
+> -		    metricgroup__parse_groups(evsel_list, "TopdownL1",
+> -					    /*metric_no_group=*/false,
+> -					    /*metric_no_merge=*/false,
+> -					    /*metric_no_threshold=*/true,
+> -					    stat_config.user_requested_cpu_list,
+> -					    stat_config.system_wide,
+> -					    &stat_config.metric_events) < 0)
+> -			return -1;
+> +		if (metricgroup__has_metric("TopdownL1")) {
+> +			struct evlist *metric_evlist = evlist__new();
+> +			struct evsel *metric_evsel;
+> +
+> +			if (!metric_evlist)
+> +				return -1;
+> +
+> +			if (metricgroup__parse_groups(metric_evlist, "TopdownL1",
+> +							/*metric_no_group=*/false,
+> +							/*metric_no_merge=*/false,
+> +							/*metric_no_threshold=*/true,
+> +							stat_config.user_requested_cpu_list,
+> +							stat_config.system_wide,
+> +							&stat_config.metric_events) < 0)
+> +				return -1;
+> +
+> +			evlist__for_each_entry(metric_evlist, metric_evsel) {
+> +				metric_evsel->skippable = true;
+> +			}
+> +			evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
+> +			evlist__delete(metric_evlist);
+> +		}
+> +
+>  		/* Platform specific attrs */
+>  		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
+>  			return -1;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index a85a987128aa..83a65f771666 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
+>  	evsel->per_pkg_mask  = NULL;
+>  	evsel->collect_stat  = false;
+>  	evsel->pmu_name      = NULL;
+> +	evsel->skippable     = false;
+>  }
+>  
+>  struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
+> @@ -1720,9 +1721,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map_idx, int thread)
+>  		return -1;
+>  
+>  	fd = FD(leader, cpu_map_idx, thread);
+> -	BUG_ON(fd == -1);
+> +	BUG_ON(fd == -1 && !leader->skippable);
+>  
+> -	return fd;
+> +	/*
+> +	 * When the leader has been skipped, return -2 to distinguish from no
+> +	 * group leader case.
+> +	 */
+> +	return fd == -1 ? -2 : fd;
+>  }
+>  
+>  static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_threads, int thread_idx)
+> @@ -2104,6 +2109,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  
+>  			group_fd = get_group_fd(evsel, idx, thread);
+>  
+> +			if (group_fd == -2) {
+> +				pr_debug("broken group leader for %s\n", evsel->name);
+> +				err = -EINVAL;
+> +				goto out_close;
+> +			}
+> +
+>  			test_attr__ready();
+>  
+>  			/* Debug message used by test scripts */
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 68072ec655ce..98afe3351176 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -95,6 +95,7 @@ struct evsel {
+>  		bool			weak_group;
+>  		bool			bpf_counter;
+>  		bool			use_config_name;
+> +		bool			skippable;
+>  		int			bpf_fd;
+>  		struct bpf_object	*bpf_obj;
+>  		struct list_head	config_terms;
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index e6035ecbeee8..6b46bbb3d322 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -810,6 +810,10 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+>  	struct perf_cpu cpu;
+>  	int idx;
+>  
+> +	/* Skip counters that were speculatively/default enabled rather than requested. */
+> +	if (counter->skippable)
+> +		return true;
+> +
+>  	/*
+>  	 * Skip value 0 when enabling --per-thread globally,
+>  	 * otherwise it will have too many 0 output.
