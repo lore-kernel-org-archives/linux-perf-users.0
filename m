@@ -2,294 +2,130 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E86CC77B6E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 05:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893E9C77B70
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 07:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229804AbjDNFTi (ORCPT
+        id S229547AbjDNHET (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Apr 2023 01:19:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48132 "EHLO
+        Fri, 14 Apr 2023 03:04:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbjDNFTg (ORCPT
+        with ESMTP id S229663AbjDNHER (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Apr 2023 01:19:36 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9393B1FDC
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 22:19:34 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id e6-20020a25e706000000b00b7c653a0a4aso10248185ybh.23
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 22:19:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681449574; x=1684041574;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZN0KrSk1AKnFNSB72kcX62XgJdFVwOXUb3M1gO+VdvI=;
-        b=JtoN07lzy/LWocNk3YQqBERH0B9EdumYsWPH5coxtsoyrMSjPikTt1UYNWGVUczEJg
-         lfG70iYPPYQjPj7iQ79fZKBVbeaNO8wdKOdp0QkER6lv2XSAp9e4MWB5qCRjg6ntcZTU
-         lTYjcGzk11127kpSRdSx7evOGuORZdmWg7PC7iMynzfXgkUSMLPsMH/g6iOcRGkULVSl
-         1tBqPDg+TCYlgnvXr9YuSp3MObthROWjc5VtBgvTtVE4i3B2FdDVdgW1/+f6J9a98iVk
-         xrts7QOd/K+dBNZ3cvGcnBbcz1VohgHknmFcn8YRcEIRf0yzFg/JeBlq0gUgYUjTdXDp
-         GuSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681449574; x=1684041574;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZN0KrSk1AKnFNSB72kcX62XgJdFVwOXUb3M1gO+VdvI=;
-        b=lmQvLrlUXhjXyJLbnegB9nMXWTkhZHKbFfa+/gyrvEA01PO2J4gDm6yG7TF4mdFKgq
-         igUKDm7m7DnM/ABAcjQ5qV0oOI88fDsb2oWJASLeEX4qaO2aRd0h6aW+et3XQmacgg30
-         G1CYT3TGns++I+LlK6sQO0IdtbieQVod+uKgR8kF2UhfE9T5j579jaTZ8mlGVP6FKzbt
-         lDRFLUIl3RryfFuRMjnAHfE01yBvwjVR8i7ORNOvv/S74Z0uKriOdI9H8dg4rW6qioaA
-         bONHk6IUrWfU9xwDNh35ef5/a5KePK6vkElLxYSfhZAQ0ntvgnv00mGjRY5WshkBdLfx
-         2tLw==
-X-Gm-Message-State: AAQBX9fsZ0hEHIH4RPeGCt7NmxO/9H76xi/YZTNakX2vdIdhZHhV6oYo
-        j2+00iapjd1+IZT+AO9JQKrPZK+NGTcc
-X-Google-Smtp-Source: AKy350aYq0+BLH6Jltmyi1HYzgATy/bKlvzbweWSUN/AzmlAT3+34tCvXPAHZj8c0uFmsNm3ZIhzfb8U2mh2
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bf01:5cd6:80d7:abdf])
- (user=irogers job=sendgmr) by 2002:a81:b667:0:b0:54f:cc40:cf68 with SMTP id
- h39-20020a81b667000000b0054fcc40cf68mr2300082ywk.7.1681449573850; Thu, 13 Apr
- 2023 22:19:33 -0700 (PDT)
-Date:   Thu, 13 Apr 2023 22:19:22 -0700
-Message-Id: <20230414051922.3625666-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
-Subject: [PATCH v2] perf stat: Introduce skippable evsels
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Apr 2023 03:04:17 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6BF93A84;
+        Fri, 14 Apr 2023 00:04:15 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PyS6R54MLzKxvD;
+        Fri, 14 Apr 2023 15:01:35 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Fri, 14 Apr 2023 15:04:11 +0800
+Subject: Re: [PATCH RESEND v3] perf/core: Fix hardlockup failure caused by
+ perf throttle
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <eranian@google.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230227023508.102230-1-yangjihong1@huawei.com>
+ <12782722-103e-88a9-df3e-6815b4734bc3@huawei.com>
+ <37d019af-191c-9955-2417-b7cfa5e5efa3@huawei.com>
+Message-ID: <56cc5b4f-3cbd-c265-36fc-fedab16b8cff@huawei.com>
+Date:   Fri, 14 Apr 2023 15:04:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
+MIME-Version: 1.0
+In-Reply-To: <37d019af-191c-9955-2417-b7cfa5e5efa3@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Perf stat with no arguments will use default events and metrics. These
-events may fail to open even with kernel and hypervisor disabled. When
-these fail then the permissions error appears even though they were
-implicitly selected. This is particularly a problem with the automatic
-selection of the TopdownL1 metric group on certain architectures like
-Skylake:
+Hello,
 
-```
-$ perf stat true
-Error:
-Access to performance monitoring and observability operations is limited.
-Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-access to performance monitoring and observability operations for processes
-without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
-More information can be found at 'Perf events and tool security' document:
-https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-perf_event_paranoid setting is 2:
-  -1: Allow use of (almost) all events by all users
-      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->= 0: Disallow raw and ftrace function tracepoint access
->= 1: Disallow CPU event access
->= 2: Disallow kernel profiling
-To make the adjusted perf_event_paranoid setting permanent preserve it
-in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-```
+PING again.
+Look forward the review.
 
-This patch adds skippable evsels that when they fail to open won't
-fail and won't appear in output. The TopdownL1 events, from the metric
-group, are marked as skippable. This turns the failure above to:
+Thanks,
+Yang.
 
-```
-$ perf stat true
-
- Performance counter stats for 'true':
-
-              1.26 msec task-clock:u                     #    0.328 CPUs utilized
-                 0      context-switches:u               #    0.000 /sec
-                 0      cpu-migrations:u                 #    0.000 /sec
-                49      page-faults:u                    #   38.930 K/sec
-           176,449      cycles:u                         #    0.140 GHz                         (48.99%)
-           122,905      instructions:u                   #    0.70  insn per cycle
-            28,264      branches:u                       #   22.456 M/sec
-             2,405      branch-misses:u                  #    8.51% of all branches
-
-       0.003834565 seconds time elapsed
-
-       0.000000000 seconds user
-       0.004130000 seconds sys
-```
-
-When the events can have kernel/hypervisor disabled, like on
-Tigerlake, then it continues to succeed as:
-
-```
-$ perf stat true
-
- Performance counter stats for 'true':
-
-              0.57 msec task-clock:u                     #    0.385 CPUs utilized
-                 0      context-switches:u               #    0.000 /sec
-                 0      cpu-migrations:u                 #    0.000 /sec
-                47      page-faults:u                    #   82.329 K/sec
-           287,017      cycles:u                         #    0.503 GHz
-           133,318      instructions:u                   #    0.46  insn per cycle
-            31,396      branches:u                       #   54.996 M/sec
-             2,442      branch-misses:u                  #    7.78% of all branches
-           998,790      TOPDOWN.SLOTS:u                  #     14.5 %  tma_retiring
-                                                  #     27.6 %  tma_backend_bound
-                                                  #     40.9 %  tma_frontend_bound
-                                                  #     17.0 %  tma_bad_speculation
-           144,922      topdown-retiring:u
-           411,266      topdown-fe-bound:u
-           258,510      topdown-be-bound:u
-           184,090      topdown-bad-spec:u
-             2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/sec
-             3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/u #    6.015 M/sec
-
-       0.001480954 seconds time elapsed
-
-       0.000000000 seconds user
-       0.001686000 seconds sys
-```
-
-And this likewise works if paranoia allows or running as root.
-
-v2. Don't display the skipped events as <not counted> or <not supported>.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-stat.c      | 39 ++++++++++++++++++++++++++--------
- tools/perf/util/evsel.c        | 15 +++++++++++--
- tools/perf/util/evsel.h        |  1 +
- tools/perf/util/stat-display.c |  4 ++++
- 4 files changed, 48 insertions(+), 11 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index d3cbee7460fc..7a641a67486d 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
- 			evsel_list->core.threads->err_thread = -1;
- 			return COUNTER_RETRY;
- 		}
-+	} else if (counter->skippable) {
-+		if (verbose > 0)
-+			ui__warning("skipping event %s that kernel failed to open .\n",
-+				    evsel__name(counter));
-+		counter->supported = false;
-+		counter->errored = true;
-+		return COUNTER_SKIP;
- 	}
- 
- 	evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
-@@ -1885,15 +1892,29 @@ static int add_default_attributes(void)
- 		 * Add TopdownL1 metrics if they exist. To minimize
- 		 * multiplexing, don't request threshold computation.
- 		 */
--		if (metricgroup__has_metric("TopdownL1") &&
--		    metricgroup__parse_groups(evsel_list, "TopdownL1",
--					    /*metric_no_group=*/false,
--					    /*metric_no_merge=*/false,
--					    /*metric_no_threshold=*/true,
--					    stat_config.user_requested_cpu_list,
--					    stat_config.system_wide,
--					    &stat_config.metric_events) < 0)
--			return -1;
-+		if (metricgroup__has_metric("TopdownL1")) {
-+			struct evlist *metric_evlist = evlist__new();
-+			struct evsel *metric_evsel;
-+
-+			if (!metric_evlist)
-+				return -1;
-+
-+			if (metricgroup__parse_groups(metric_evlist, "TopdownL1",
-+							/*metric_no_group=*/false,
-+							/*metric_no_merge=*/false,
-+							/*metric_no_threshold=*/true,
-+							stat_config.user_requested_cpu_list,
-+							stat_config.system_wide,
-+							&stat_config.metric_events) < 0)
-+				return -1;
-+
-+			evlist__for_each_entry(metric_evlist, metric_evsel) {
-+				metric_evsel->skippable = true;
-+			}
-+			evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
-+			evlist__delete(metric_evlist);
-+		}
-+
- 		/* Platform specific attrs */
- 		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
- 			return -1;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index a85a987128aa..83a65f771666 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
- 	evsel->per_pkg_mask  = NULL;
- 	evsel->collect_stat  = false;
- 	evsel->pmu_name      = NULL;
-+	evsel->skippable     = false;
- }
- 
- struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
-@@ -1720,9 +1721,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map_idx, int thread)
- 		return -1;
- 
- 	fd = FD(leader, cpu_map_idx, thread);
--	BUG_ON(fd == -1);
-+	BUG_ON(fd == -1 && !leader->skippable);
- 
--	return fd;
-+	/*
-+	 * When the leader has been skipped, return -2 to distinguish from no
-+	 * group leader case.
-+	 */
-+	return fd == -1 ? -2 : fd;
- }
- 
- static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_threads, int thread_idx)
-@@ -2104,6 +2109,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 
- 			group_fd = get_group_fd(evsel, idx, thread);
- 
-+			if (group_fd == -2) {
-+				pr_debug("broken group leader for %s\n", evsel->name);
-+				err = -EINVAL;
-+				goto out_close;
-+			}
-+
- 			test_attr__ready();
- 
- 			/* Debug message used by test scripts */
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 68072ec655ce..98afe3351176 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -95,6 +95,7 @@ struct evsel {
- 		bool			weak_group;
- 		bool			bpf_counter;
- 		bool			use_config_name;
-+		bool			skippable;
- 		int			bpf_fd;
- 		struct bpf_object	*bpf_obj;
- 		struct list_head	config_terms;
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index e6035ecbeee8..6b46bbb3d322 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -810,6 +810,10 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
- 	struct perf_cpu cpu;
- 	int idx;
- 
-+	/* Skip counters that were speculatively/default enabled rather than requested. */
-+	if (counter->skippable)
-+		return true;
-+
- 	/*
- 	 * Skip value 0 when enabling --per-thread globally,
- 	 * otherwise it will have too many 0 output.
--- 
-2.40.0.634.g4ca3ef3211-goog
-
+On 2023/3/22 15:36, Yang Jihong wrote:
+> Hello,
+> 
+> PING.
+> 
+> This patch has not been responded.
+> Please take time to check whether the fix solution is OK.
+> Look forward to reviewing the patch. Thanks :)
+> 
+> Thanks,
+> Yang.
+> 
+> On 2023/3/6 9:14, Yang Jihong wrote:
+>> Hello,
+>>
+>> PING.
+>>
+>> Thanks,
+>> Yang.
+>>
+>> On 2023/2/27 10:35, Yang Jihong wrote:
+>>> commit e050e3f0a71bf ("perf: Fix broken interrupt rate throttling")
+>>> introduces a change in throttling threshold judgment. Before this,
+>>> compare hwc->interrupts and max_samples_per_tick, then increase
+>>> hwc->interrupts by 1, but this commit reverses order of these two
+>>> behaviors, causing the semantics of max_samples_per_tick to change.
+>>> In literal sense of "max_samples_per_tick", if hwc->interrupts ==
+>>> max_samples_per_tick, it should not be throttled, therefore, the 
+>>> judgment
+>>> condition should be changed to "hwc->interrupts > max_samples_per_tick".
+>>>
+>>> In fact, this may cause the hardlockup to fail, The minimum value of
+>>> max_samples_per_tick may be 1, in this case, the return value of
+>>> __perf_event_account_interrupt function is 1.
+>>> As a result, nmi_watchdog gets throttled, which would stop PMU (Use x86
+>>> architecture as an example, see x86_pmu_handle_irq).
+>>>
+>>> Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
+>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>>> ---
+>>>
+>>> Changes since v2:
+>>>    - Add fixed commit.
+>>>
+>>> Changes since v1:
+>>>    - Modify commit title.
+>>>
+>>>   kernel/events/core.c | 2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>>> index f79fd8b87f75..0540a8653906 100644
+>>> --- a/kernel/events/core.c
+>>> +++ b/kernel/events/core.c
+>>> @@ -9434,7 +9434,7 @@ __perf_event_account_interrupt(struct 
+>>> perf_event *event, int throttle)
+>>>       } else {
+>>>           hwc->interrupts++;
+>>>           if (unlikely(throttle
+>>> -                 && hwc->interrupts >= max_samples_per_tick)) {
+>>> +                 && hwc->interrupts > max_samples_per_tick)) {
+>>>               __this_cpu_inc(perf_throttled_count);
+>>>               tick_dep_set_cpu(smp_processor_id(), 
+>>> TICK_DEP_BIT_PERF_EVENTS);
+>>>               hwc->interrupts = MAX_INTERRUPTS;
+>>>
+>>
+>> .
+> 
+> .
