@@ -2,256 +2,191 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9FAC77B61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 13 Apr 2023 21:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E37C77B6E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 00:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229596AbjDMV5t (ORCPT
+        id S229457AbjDNAff (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Apr 2023 17:57:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33718 "EHLO
+        Thu, 13 Apr 2023 20:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjDMV5s (ORCPT
+        with ESMTP id S229593AbjDNAff (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2023 17:57:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EBEB5BA2;
-        Thu, 13 Apr 2023 14:57:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 15FE960B41;
-        Thu, 13 Apr 2023 21:57:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0214BC433EF;
-        Thu, 13 Apr 2023 21:57:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681423065;
-        bh=1pPvUOxywGTO44J7xT9Smvn+LkgN4FSSXGN9uBkTURQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PASZcrol2jPLZYpHsHNs6D67WzFWT8n+2eAuYPkgOGXItZL7Ur68ikmuWOljxWZ1D
-         6+VPPcE1tRU3sn5iC2UbARgA0qGiAgn+5aViDk9Q6HJYl3wb9Gi8Y0Zk3kEqNPKzOI
-         M1gk2xnMg66lcU+vhHEiKkPVFDB86xdbez+nIEdLrr1OgUyPLBBuA7xHtypQjnG/c8
-         UC+A0/t5SZeluk54m6VFoIEOqNmp3T28Ph83lG60fcTmHcsmZ7j9OPHCmwHxWkJ5qs
-         ZUfO6Y+rSdAx2hHfIbCNVML2MZImMTKIteX4gwYyP12MYVL1gFlhAPhTvGRYIAKoX3
-         f/WpWWxo9m2Xg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EAC1E403B5; Thu, 13 Apr 2023 18:57:41 -0300 (-03)
-Date:   Thu, 13 Apr 2023 18:57:41 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Edward Baker <edward.baker@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 00/21] Update uncore topics, 1x event updates, 2x new
- archs.
-Message-ID: <ZDh61aQCR/yrD8xx@kernel.org>
-References: <20230413132949.3487664-1-irogers@google.com>
+        Thu, 13 Apr 2023 20:35:35 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB5F9E4
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 17:35:32 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id rp27so4685439ejb.12
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 17:35:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent.com; s=google; t=1681432531; x=1684024531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/zlmFVugnU65/zhL8tn3LzJOUJcKg2eSx3ENwKcL4ng=;
+        b=gSpdxnl39+MoOBmh+26J9R0lMYAURsxdgyLp6IcFKgZHWGFLePXZuNcPNu1jZj8Nl+
+         X2263A4asvnIQyauWu5/Oxnt7NecfbB9oRMOXjAd7AhugNOUlvj8HVPCUCUdvSCaw2iL
+         DHeqgk56Hew3oDfdC+SXMRMDBiMr1mE/zhCUOVk8xoiNN8KNjSArGJ41OhCc9aYXv3VA
+         9t0rwSj6x49R0UEAklkONSBYl/4qfIGKph7R30mZ18VlU1Y+zDjYYWAFzH9l6ZBiO3Gn
+         0i8D1bL487DMBzqJFvNWzApFkRvAl8GjyKVtFD6sip0bi2b35zhpacmudQ1/2VY89mWJ
+         QRqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681432531; x=1684024531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/zlmFVugnU65/zhL8tn3LzJOUJcKg2eSx3ENwKcL4ng=;
+        b=gltTqovgrZsAp1n5YeBgz2T1R4RminRB9h5QMfFe/blLbYdPfBSL5TSKKIFdhEyvHz
+         MWyD5toen3jTCk5IkN8UjZ7dD29p6YPRXv692i4gYPq9LEwBK+zIDhFpNpKXusxO962X
+         CHNYQbjLHktxnjc4c2998qVR0fFn5flP7RPHQc9DjDatxv/tn4gQYbOLKWV7Pl0xm+d1
+         cjb6sRV99IBXA67ukV/VInJFRrE1+bBKlXajMyR40P7Pri8VvccP01xRANfBSMYgZTgR
+         IDrKswxOw7MpE/QEC1DqY/fvFetOn/mFn8dp1WC/PDSAEr/6LC8SstPn+BJ4oYY6SlsU
+         9Z7w==
+X-Gm-Message-State: AAQBX9cgnirNDtpmNsXUWms5zbeDHB0nNWdCeINZZD3MsHYPBvCy2kCi
+        HaHPEIZfufYofS86OXgpfn6IQ0PDu6DtUKAibHW3MA==
+X-Google-Smtp-Source: AKy350Y3F1LS3wyEWzeS2FrvbcMwTarHydpWBl55Xl1+fnhr8PMjX34SeJnuFHiAmMm23yrJ49d2r8uWktJA0G0NAk8=
+X-Received: by 2002:a17:906:80c:b0:92e:a234:110a with SMTP id
+ e12-20020a170906080c00b0092ea234110amr2155080ejd.3.1681432531367; Thu, 13 Apr
+ 2023 17:35:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230413132949.3487664-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+References: <ZDfKBPXDQxH8HeX9@syu-laptop>
+In-Reply-To: <ZDfKBPXDQxH8HeX9@syu-laptop>
+From:   Quentin Monnet <quentin@isovalent.com>
+Date:   Fri, 14 Apr 2023 01:35:20 +0100
+Message-ID: <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
+Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
+To:     Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Cc:     bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
+        Michal Suchanek <msuchanek@suse.de>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Mahe Tardy <mahe.tardy@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Apr 13, 2023 at 06:29:28AM -0700, Ian Rogers escreveu:
-> Update the uncore PMUs and topic classification as created by:
-> https://github.com/intel/perfmon/pull/70
-> 
-> Event updates stem from:
-> https://github.com/intel/perfmon/pull/68
-> impacting alderlake, icelakex and sapphirerapids.
-> 
-> Grand Ridge and Sierra Forest events stem from:
-> https://github.com/intel/perfmon/pull/69
-> 
-> Changes generated by with PR70 in place:
-> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+Hi Shung-Hsi,
 
-Thanks, pulling teeth but applied,
+On Thu, 13 Apr 2023 at 10:23, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
+>
+> Hi,
+>
+> I'm considering switch to bpftool's mirror on GitHub for packaging (inste=
+ad
+> of using the source found in kernel), but realize that it should goes
+> hand-in-hand with how libbpf is packaged, which eventually leads these
+> questions:
+>
+>   What is the suggested approach for packaging bpftool and libbpf?
+>   Which source is preferred, GitHub or kernel?
 
-- Arnaldo
- 
-> v3. Rebase over the update of alderlake and icelakex events.
-> v2. Adds improvements to uncore topics, uncore PMU name fixes and
->     fixes a trigraph issue from ??? being in the json.
-> 
-> Ian Rogers (21):
->   perf vendor events intel: Update sapphirerapids to v1.12
->   perf vendor events intel: Add grandridge
->   perf vendor events intel: Add sierraforest
->   perf vendor events intel: Fix uncore topics for alderlake
->   perf vendor events intel: Fix uncore topics for broadwell
->   perf vendor events intel: Fix uncore topics for broadwellde
->   perf vendor events intel: Fix uncore topics for broadwellx
->   perf vendor events intel: Fix uncore topics for cascadelakex
->   perf vendor events intel: Fix uncore topics for haswell
->   perf vendor events intel: Fix uncore topics for haswellx
->   perf vendor events intel: Fix uncore topics for icelake
->   perf vendor events intel: Fix uncore topics for icelakex
->   perf vendor events intel: Fix uncore topics for ivybridge
->   perf vendor events intel: Fix uncore topics for ivytown
->   perf vendor events intel: Fix uncore topics for jaketown
->   perf vendor events intel: Fix uncore topics for knightslanding
->   perf vendor events intel: Fix uncore topics for sandybridge
->   perf vendor events intel: Fix uncore topics for skylake
->   perf vendor events intel: Fix uncore topics for skylakex
->   perf vendor events intel: Fix uncore topics for snowridgex
->   perf vendor events intel: Fix uncore topics for tigerlake
-> 
->  .../x86/alderlake/uncore-interconnect.json    |    90 +
->  .../arch/x86/alderlake/uncore-other.json      |    88 -
->  .../x86/alderlaken/uncore-interconnect.json   |    26 +
->  .../arch/x86/alderlaken/uncore-other.json     |    24 -
->  .../arch/x86/broadwell/uncore-cache.json      |    30 +-
->  .../x86/broadwell/uncore-interconnect.json    |    61 +
->  .../arch/x86/broadwell/uncore-other.json      |    59 -
->  .../arch/x86/broadwellde/uncore-cache.json    |   324 +-
->  .../x86/broadwellde/uncore-interconnect.json  |   614 +
->  .../{uncore-other.json => uncore-io.json}     |   612 -
->  .../arch/x86/broadwellx/uncore-cache.json     |   358 +-
->  .../x86/broadwellx/uncore-interconnect.json   |  4297 +-
->  .../arch/x86/broadwellx/uncore-io.json        |   555 +
->  .../arch/x86/broadwellx/uncore-other.json     |  3242 --
->  .../arch/x86/cascadelakex/uncore-cache.json   | 10764 +++++
->  .../x86/cascadelakex/uncore-interconnect.json | 11334 ++++++
->  .../arch/x86/cascadelakex/uncore-io.json      |  4250 ++
->  .../arch/x86/cascadelakex/uncore-memory.json  |     2 +-
->  .../arch/x86/cascadelakex/uncore-other.json   | 26344 ------------
->  .../pmu-events/arch/x86/grandridge/cache.json |   155 +
->  .../arch/x86/grandridge/frontend.json         |    16 +
->  .../arch/x86/grandridge/memory.json           |    20 +
->  .../pmu-events/arch/x86/grandridge/other.json |    20 +
->  .../arch/x86/grandridge/pipeline.json         |    96 +
->  .../arch/x86/grandridge/virtual-memory.json   |    24 +
->  .../arch/x86/haswell/uncore-cache.json        |    50 +-
->  .../arch/x86/haswell/uncore-interconnect.json |    52 +
->  .../arch/x86/haswell/uncore-other.json        |    50 -
->  .../arch/x86/haswellx/uncore-cache.json       |   360 +-
->  .../x86/haswellx/uncore-interconnect.json     |  4242 +-
->  .../arch/x86/haswellx/uncore-io.json          |   528 +
->  .../arch/x86/haswellx/uncore-other.json       |  3160 --
->  .../arch/x86/icelake/uncore-interconnect.json |    74 +
->  .../arch/x86/icelake/uncore-other.json        |    72 -
->  .../arch/x86/icelakex/uncore-cache.json       |  9860 +++++
->  .../x86/icelakex/uncore-interconnect.json     | 14571 +++++++
->  .../arch/x86/icelakex/uncore-io.json          |  9270 +++++
->  .../arch/x86/icelakex/uncore-other.json       | 33697 ----------------
->  .../arch/x86/ivybridge/uncore-cache.json      |    50 +-
->  ...re-other.json => uncore-interconnect.json} |     0
->  .../arch/x86/ivytown/uncore-cache.json        |   314 +-
->  .../arch/x86/ivytown/uncore-interconnect.json |  2025 +-
->  .../arch/x86/ivytown/uncore-io.json           |   549 +
->  .../arch/x86/ivytown/uncore-other.json        |  2174 -
->  .../arch/x86/jaketown/uncore-cache.json       |   194 +-
->  .../x86/jaketown/uncore-interconnect.json     |  1237 +-
->  .../arch/x86/jaketown/uncore-io.json          |   324 +
->  .../arch/x86/jaketown/uncore-other.json       |  1393 -
->  .../{uncore-other.json => uncore-cache.json}  |   260 -
->  .../arch/x86/knightslanding/uncore-io.json    |   194 +
->  .../x86/knightslanding/uncore-memory.json     |    68 +
->  tools/perf/pmu-events/arch/x86/mapfile.csv    |     4 +-
->  .../arch/x86/sandybridge/uncore-cache.json    |    50 +-
->  ...re-other.json => uncore-interconnect.json} |     0
->  .../arch/x86/sapphirerapids/other.json        |     3 +-
->  .../arch/x86/sapphirerapids/pipeline.json     |     4 +-
->  .../arch/x86/sapphirerapids/uncore-cache.json |  5644 +++
->  .../arch/x86/sapphirerapids/uncore-cxl.json   |   450 +
->  .../sapphirerapids/uncore-interconnect.json   |  6199 +++
->  .../arch/x86/sapphirerapids/uncore-io.json    |  3651 ++
->  .../x86/sapphirerapids/uncore-memory.json     |  3283 +-
->  .../arch/x86/sapphirerapids/uncore-other.json |  4525 ---
->  .../arch/x86/sapphirerapids/uncore-power.json |   107 +
->  .../arch/x86/sierraforest/cache.json          |   155 +
->  .../arch/x86/sierraforest/frontend.json       |    16 +
->  .../arch/x86/sierraforest/memory.json         |    20 +
->  .../arch/x86/sierraforest/other.json          |    20 +
->  .../arch/x86/sierraforest/pipeline.json       |    96 +
->  .../arch/x86/sierraforest/virtual-memory.json |    24 +
->  .../arch/x86/skylake/uncore-cache.json        |    28 +-
->  .../arch/x86/skylake/uncore-interconnect.json |    67 +
->  .../arch/x86/skylake/uncore-other.json        |    65 -
->  .../arch/x86/skylakex/uncore-cache.json       | 10649 +++++
->  .../x86/skylakex/uncore-interconnect.json     | 11248 ++++++
->  .../arch/x86/skylakex/uncore-io.json          |  4250 ++
->  .../arch/x86/skylakex/uncore-memory.json      |     2 +-
->  .../arch/x86/skylakex/uncore-other.json       | 26143 ------------
->  .../arch/x86/snowridgex/uncore-cache.json     |  7100 ++++
->  .../x86/snowridgex/uncore-interconnect.json   |  6016 +++
->  .../arch/x86/snowridgex/uncore-io.json        |  8944 ++++
->  .../arch/x86/snowridgex/uncore-other.json     | 22056 ----------
->  .../x86/tigerlake/uncore-interconnect.json    |    90 +
->  .../arch/x86/tigerlake/uncore-other.json      |    88 -
->  83 files changed, 142122 insertions(+), 127048 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/x86/alderlake/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/broadwell/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/broadwellde/uncore-interconnect.json
->  rename tools/perf/pmu-events/arch/x86/broadwellde/{uncore-other.json => uncore-io.json} (53%)
->  create mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/uncore-io.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/uncore-other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-io.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/uncore-other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/frontend.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/pipeline.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/virtual-memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/haswell/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/haswellx/uncore-io.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/haswellx/uncore-other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/icelake/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-io.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/icelakex/uncore-other.json
->  rename tools/perf/pmu-events/arch/x86/ivybridge/{uncore-other.json => uncore-interconnect.json} (100%)
->  create mode 100644 tools/perf/pmu-events/arch/x86/ivytown/uncore-io.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/ivytown/uncore-other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/jaketown/uncore-io.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/jaketown/uncore-other.json
->  rename tools/perf/pmu-events/arch/x86/knightslanding/{uncore-other.json => uncore-cache.json} (91%)
->  create mode 100644 tools/perf/pmu-events/arch/x86/knightslanding/uncore-io.json
->  rename tools/perf/pmu-events/arch/x86/sandybridge/{uncore-other.json => uncore-interconnect.json} (100%)
->  create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-cxl.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-io.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/uncore-other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/frontend.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/virtual-memory.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/skylake/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-io.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/skylakex/uncore-other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-cache.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-interconnect.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-io.json
->  delete mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/uncore-other.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/uncore-interconnect.json
-> 
-> -- 
-> 2.40.0.577.gac1e443424-goog
-> 
+As you can see from the previous discussions, the suggested approach
+would be to package from the GitHub mirror, with libbpf and bpftool in
+sync.
 
--- 
+My main argument for the mirror is that it keeps things simpler, and
+there's no need to deal with the rest of the kernel sources for these
+packages. Download from the mirrors, build, ship. But then I have
+limited experience at packaging for distros, and I can understand
+Toke's point of view, too. So ultimately, the call is yours.
 
-- Arnaldo
+>   Does bpftool work on older kernel?
+
+It should, although it's not perfect. Most features from current
+bpftool should work as expected on older kernels. However, if I
+remember correctly you would have trouble loading programs on pre-BTF
+kernels, because bpftool relies on libbpf >=3D 1.0 and only accepts map
+definitions with BTF info, and attempts to create these maps with BTF,
+which fails and blocks the load process.
+
+But we're trying to keep backward-compatibility, so if we're only
+talking of kernels recent enough to support BTF, then I'd expect
+bpftool to work. If this is not the case, please report on this list.
+
+>
+> Our current approach is that we (openSUSE/SLES) essentially have two vers=
+ion
+> of libbpf: a public shared library that uses GitHub mirror as source, whi=
+ch
+> the general userspace sees and links to; and a private static library bui=
+lt
+> from kernel source used by bpftool, perf, resolve_btfids, selftests, etc.
+> A survey of other distros (Arch, Debian, Fedora, Ubuntu) suggest that the=
+y
+> took similar approach.
+
+I would like them to reconsider this choice eventually. Sounds like
+for RHEL, this will be a tough sell :). At least, I'd love Ubuntu to
+have a real bpftool package instead of having to install
+linux-tools-common + linux-tools-generic, or to have distros in
+general (Ubuntu/Debian at least) stop compiling out the JIT
+disassembler, although this is not strictly related to the location of
+the sources. I've not found the time to reach out to package
+maintainers yet.
+
+>
+> This approach means that the version of bpftool and libbpf are _not_ alwa=
+ys
+> in sync[1], which I read may causes problem since libbpf and bpftool depe=
+nds
+> on specific version of each other[2].
+
+Whatever source you use, I would strongly recommend finding a way to
+keep both in sync. Libbpf has stabilised its API when reaching 1.0,
+but bpftool taps into some of the internals of the library. Features
+or new definitions are usually added at the same time to libbpf and
+bpftool, and if you get a mismatch between the two, you're taking
+risks to get build issues.
+
+>
+> Using the GitHub mirror of bpftool to package both libbpf and bpftool wou=
+ld
+> kept their version in sync, and was suggested[3]. Although the same could=
+ be
+> said if we switch back to packaging libbpf from kernel source, an additio=
+nal
+> appeal for using GitHub mirrors is that it decouples bpftool from kernel,
+> making it easily upgradable and with a clearer changelog (the latter is
+> quite important for enterprise users) like libbpf.
+
+Happy to read these changelogs I write are useful to someone :). Yes,
+this is my point.
+
+>
+> The main concern with using GitHub mirror is that bpftool may be updated =
+far
+> beyond the version that comes with the runtime kernel. AFAIK bpftool shou=
+ld
+> work on older kernel since CO-RE is used for built-in BPF iterators and t=
+he
+> underlying libbpf work on older kernel itself. Nonetheless, it would be n=
+ice
+> to get a confirmation from the maintainers.
+
+As explained above - Mostly, it should work. Otherwise, we can look
+into fixing it.
+
+As a side note, I'm open to suggestions/contributions to make life
+easier for packaging for the mirror. For example, Mah=C3=A9 and I recently
+added GitHub workflows to ship statically-built binaries for amd64 and
+arm64 on releases, as well as tarballs with both bpftool+libbpf
+sources. If there's something else to make packaging easier, I'm happy
+to talk about it.
+
+>
+> Are there any other downsides to switching to GitHub mirror for bpftool?
+
+Nothing else comes to mind, but again I'm not packaging for distros.
+See Toke's message.
+
+I hope this helps,
+Quentin
