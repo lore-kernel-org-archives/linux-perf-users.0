@@ -2,151 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22CFC77B6E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 01:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B035FC77B6E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 02:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229736AbjDNBM6 (ORCPT
+        id S229628AbjDNCKY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 13 Apr 2023 21:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43516 "EHLO
+        Thu, 13 Apr 2023 22:10:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbjDNBM5 (ORCPT
+        with ESMTP id S229799AbjDNCKX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 13 Apr 2023 21:12:57 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C4E930FD
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 18:12:53 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id j17so32181390ejs.5
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Apr 2023 18:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1681434772; x=1684026772;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wcplw41LBfJXP8hUr9XGdVk7vhV6LbpO0EMg2XPC8VE=;
-        b=az68cK04jwzuYx32bsPk2B8rX61mccW5wj++etdo/AIBD82882ezECAt0gKGj20mcq
-         jA5F0BiwKrbF06FMPQ76lIv6pFtjCULMgSvG8nNyWgJnXl4U9Z32FtCv+YW/VniXz8yC
-         gbmJgZXGj1B1ESPTNLC1Xrdsg2SrQiXnrPQrLIp3zMHVQH2zwo4CxI8y3LoQBgavWYzQ
-         ZSVvj/jeW1YURgax1y9db5POdqzmccxd33+L/0jeRxF6xHkcrmUsVGXRap46UH42Q4vl
-         TWzI1KZakJi7VTT3ntKeBJ3ou31+jUWYGUPfh4Ck5b05C6y8l4iOUHMzh9zHWF335O3M
-         r4RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681434772; x=1684026772;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wcplw41LBfJXP8hUr9XGdVk7vhV6LbpO0EMg2XPC8VE=;
-        b=cfn6NG7fNcRBAth/edY1JwUxw5ZglGX84+J71JWoN/M7r2dioagXqW1fGxZyJ4/9GJ
-         UXEcrh/jQvaD74tO8eZBpZGydoadvO1mFEH/IIcphd2ptn21x97riddHgSw6BmTQ6Lqn
-         u2t0XWUlXqaH6tAtUpKkf2FTZie3YN/zZmLyAxCNtXeORG6sem0SKZgumETW09qf8FYb
-         hMaTUz/oCMl4AvoZ6AjwFSU960IeNjxi+WY371ooPu10KcjBegnUJTzd6wG8uhtGJ3UJ
-         dKcB/3SIJR4aAf9gbD6ZyiFla0y6UVmxsX/JdgDkldl/AU9RgxRg0iOWO1skBwdxNHvN
-         2v4Q==
-X-Gm-Message-State: AAQBX9fwbHbAqPJGF/PhMKvh6NvvpLEexWIiIddslC1xbkHxSxwbk9MG
-        WZ80Gj5UyCkp/zQ+K64+lCzs2obsLRMwfZ46LQsQRw==
-X-Google-Smtp-Source: AKy350ZINmTS4NdHqVS9IwLjAWEA7ghxO8OVwCxQuuWqxFLfNWLI+HCGcYbi8GjYU0ooMgrq4Elj1HHUPc3GTNrMgVQ=
-X-Received: by 2002:a17:906:80c:b0:92e:a234:110a with SMTP id
- e12-20020a170906080c00b0092ea234110amr2190683ejd.3.1681434771687; Thu, 13 Apr
- 2023 18:12:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <ZDfKBPXDQxH8HeX9@syu-laptop> <ZDfQYHJyJOrR5pcB@syu-laptop>
-In-Reply-To: <ZDfQYHJyJOrR5pcB@syu-laptop>
-From:   Quentin Monnet <quentin@isovalent.com>
-Date:   Fri, 14 Apr 2023 02:12:40 +0100
-Message-ID: <CACdoK4JemtGV9m=kuddE4eZQgfTNj1OqhwfhLpDcsspTvfZx7A@mail.gmail.com>
-Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
-To:     Shung-Hsi Yu <shung-hsi.yu@suse.com>
-Cc:     bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
-        Michal Suchanek <msuchanek@suse.de>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
+        Thu, 13 Apr 2023 22:10:23 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ECF9469F;
+        Thu, 13 Apr 2023 19:10:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681438219; x=1712974219;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IeRnQ+CQcJwGbjz4GOR0Cyk0yJ9hc73wDuZH6+tv/hs=;
+  b=VVh5p2RbrIAjo6tMF+mJPdfARgoKhekd7hod6ZelYODYXzZVmz546dW5
+   p24eJOussYsgk/0qrTZvsYAO1LMo/m/48X3NayRYmyJsOzmXJ1IBjDd4f
+   UJPJydPvr1rQHE3lXOpc8byGJfNaAaILFDCWn/j70QlI0yYI26qlLWcZD
+   HbWyE8VJJgUbXksrDTbGxyPzQgW9nnSe8V7B9Jy0RTOzo1Fy96hgBXiY+
+   2aEas+MNdEcHPPIuBdoulp2UoqrHc4mVgS6Q5dmMa25udtlMLV/ZQGxGS
+   1Ym8FfJBCQAmD4MZOnsAyWs0umkxwVQASDrq/WzJK5nXFWPzONLFSEUXm
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="372222356"
+X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
+   d="scan'208";a="372222356"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 19:10:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="720102853"
+X-IronPort-AV: E=Sophos;i="5.99,195,1677571200"; 
+   d="scan'208";a="720102853"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 13 Apr 2023 19:10:11 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pn8t8-000Z8D-0o;
+        Fri, 14 Apr 2023 02:10:10 +0000
+Date:   Fri, 14 Apr 2023 10:09:43 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Alexandre Ghiti <alexghiti@rivosinc.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Miller <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: Re: [PATCH 4/4] riscv: Enable perf counters user access only through
+ perf
+Message-ID: <202304140904.9oAVhFHu-lkp@intel.com>
+References: <20230413161725.195417-5-alexghiti@rivosinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230413161725.195417-5-alexghiti@rivosinc.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 13 Apr 2023 at 10:50, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
->
-> On Thu, Apr 13, 2023 at 05:23:16PM +0800, Shung-Hsi Yu wrote:
-> > Hi,
-> >
-> > I'm considering switch to bpftool's mirror on GitHub for packaging (instead
-> > of using the source found in kernel), but realize that it should goes
-> > hand-in-hand with how libbpf is packaged, which eventually leads these
-> > questions:
-> >
-> >   What is the suggested approach for packaging bpftool and libbpf?
-> >   Which source is preferred, GitHub or kernel?
->
-> An off-topic, yet somewhat related question that I also tried to figure out
-> is "why the GitHub mirror for libbpf and bpftool exist at the first place?".
-> It is a non-trivial amount of work for the maintainers after all.
->
-> For libbpf, the main uses case for GitHub seem to be for it to be used as
-> submodule for other projects (e.g. pahole[1]), and that alone seem to suffice.
+Hi Alexandre,
 
-Then it should be enough for bpftool, too :) The bcc repository uses
-it as a submodule, for example.
+kernel test robot noticed the following build errors:
 
-The work is non-trivial, but when compared to libbpf, I managed to
-preserve most of the Makefile from the kernel tree and all of the C
-code, and bpftool also gets patches less often.
+[auto build test ERROR on tip/perf/core]
+[also build test ERROR on acme/perf/core tip/master tip/auto-latest linus/master v6.3-rc6]
+[cannot apply to next-20230413]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
->
-> For bpftool the reason seems to be less clear[2]. From what I can tell right
-> now its mainly use for CI (this applies to libbpf as well), which is
-> definitely useful.
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexandre-Ghiti/perf-Fix-wrong-comment-about-default-event_idx/20230414-002232
+patch link:    https://lore.kernel.org/r/20230413161725.195417-5-alexghiti%40rivosinc.com
+patch subject: [PATCH 4/4] riscv: Enable perf counters user access only through perf
+config: riscv-randconfig-r036-20230412 (https://download.01.org/0day-ci/archive/20230414/202304140904.9oAVhFHu-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 9638da200e00bd069e6dd63604e14cbafede9324)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install riscv cross compiling tool for clang build
+        # apt-get install binutils-riscv64-linux-gnu
+        # https://github.com/intel-lab-lkp/linux/commit/8ca9b21cbf2c0b91ee35356c01aef9da7d874e55
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Alexandre-Ghiti/perf-Fix-wrong-comment-about-default-event_idx/20230414-002232
+        git checkout 8ca9b21cbf2c0b91ee35356c01aef9da7d874e55
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv SHELL=/bin/bash arch/riscv/kernel/
 
-Yes. At the moment, the CI present on bpftool's mirror is more limited
-than libbpf's. But it allows me to test some compilation variants:
-regular builds, static builds, cross-compiling (to some extent). Some
-additional checks that would make little sense to have in the kernel
-repo, too. It's mostly for checking that none of these build
-configurations break when I sync from the kernel, and helped me find
-and fix several issues in the build system on the mirror.
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304140904.9oAVhFHu-lkp@intel.com/
 
-This CI on the mirror doesn't cover bpftool's features, but these
-should be tested in the BPF CI itself, so we can catch regressions
-before patches are merged. There are some tests already, not many, I'd
-like to improve that someday. Anyway.
+All errors (new ones prefixed by >>):
 
->
-> But I wonder whether packaging one of the motives to create the mirrors
-> initially? Can't seem to find anything in this regard.
->
->
-> 1: https://github.com/acmel/dwarves/tree/master/lib
-> 2: https://lore.kernel.org/bpf/CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com/
+>> arch/riscv/kernel/perf_event.c:8:28: error: call to undeclared function 'to_riscv_pmu'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+           struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
+                                     ^
+>> arch/riscv/kernel/perf_event.c:8:20: error: incompatible integer to pointer conversion initializing 'struct riscv_pmu *' with an expression of type 'int' [-Wint-conversion]
+           struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
+                             ^       ~~~~~~~~~~~~~~~~~~~~~~~~
+>> arch/riscv/kernel/perf_event.c:24:27: error: incomplete definition of type 'struct riscv_pmu'
+           userpg->pmc_width = rvpmu->ctr_get_width(event->hw.idx) + 1;
+                               ~~~~~^
+   arch/riscv/kernel/perf_event.c:8:9: note: forward declaration of 'struct riscv_pmu'
+           struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
+                  ^
+   3 errors generated.
 
-It seems like you haven't come across this one?:
-https://lore.kernel.org/bpf/267a35a6-a045-c025-c2d9-78afbf6fc325@isovalent.com/t/
 
-Yes, easing packaging was one of the motivations for the mirror. As
-mentioned in my other answer, I've not taken the time to reach out to
-package maintainers yet, so this hasn't really materialised at this
-point.
+vim +/to_riscv_pmu +8 arch/riscv/kernel/perf_event.c
 
-CI, indeed, was another motivation.
+     4	
+     5	void arch_perf_update_userpage(struct perf_event *event,
+     6				       struct perf_event_mmap_page *userpg, u64 now)
+     7	{
+   > 8		struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
+     9		struct clock_read_data *rd;
+    10		unsigned int seq;
+    11		u64 ns;
+    12	
+    13		userpg->cap_user_time = 0;
+    14		userpg->cap_user_time_zero = 0;
+    15		userpg->cap_user_time_short = 0;
+    16		userpg->cap_user_rdpmc =
+    17			!!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
+    18	
+    19		/*
+    20		 * The counters are 64-bit but the priv spec doesn't mandate all the
+    21		 * bits to be implemented: that's why, counter width can vary based on
+    22		 * the cpu vendor.
+    23		 */
+  > 24		userpg->pmc_width = rvpmu->ctr_get_width(event->hw.idx) + 1;
 
-Submodules, or simply making it easier to hack with bpftool's code,
-was yet another thing. Microsoft folks intend to make bpftool
-compatible with eBPF for Windows. It's quite simpler to work on that
-from a repo which is mostly uncoupled from the Linux tree.
-
-Perhaps the most important was to make it easier to just download,
-build and use bpftool, for all users who need to get the latest
-version, or to patch it, or to create static builds, or to
-cross-compile, or whatever reason might cause you to compile it from
-the sources. For all those cases, getting the mirror is faster and
-requires less space than getting the kernel repo. This makes a nice
-difference when periodically rebuilding images in automated workflows,
-for example.
-
-Does this answer your questions?
-Quentin
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
