@@ -2,45 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDADDC77B6E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 09:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86360C77B6F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 14 Apr 2023 09:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229656AbjDNJdJ (ORCPT
+        id S229994AbjDNJuM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 14 Apr 2023 05:33:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49518 "EHLO
+        Fri, 14 Apr 2023 05:50:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjDNJdI (ORCPT
+        with ESMTP id S229790AbjDNJuM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 14 Apr 2023 05:33:08 -0400
+        Fri, 14 Apr 2023 05:50:12 -0400
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90F274EFB;
-        Fri, 14 Apr 2023 02:33:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F0955FD3;
+        Fri, 14 Apr 2023 02:50:10 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 462C31FD93;
-        Fri, 14 Apr 2023 09:33:06 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTP id E0A5C1FD93;
+        Fri, 14 Apr 2023 09:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1681464786; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1681465808; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=anqanL63WzuuA9OTxdiLBvl46hTjKTc57YdQQgadd/o=;
-        b=wI2sOsws/cqozSHTbYsvf8p7/178t/09nwrSCD3YknFaOZsJlSrl56FMu5dI+8lrj2vBgD
-        ArUkAR2Papy1w+DijTuDEb07vK3XtSyymKpCiQydUTjGNC0FMwNUR4zM5s2oL+iYL7V4Zv
-        PIVNAOCRy8elJRda0qdrWWNzzQf0A54=
+        bh=4+DxuhQaSafHmB0fnTETPui1QWhu4dvKLY9o0ZuxF1E=;
+        b=n6qxxvSTWZuBBKfPup45D5i3TFHuFyR5VcGgIRmoT3/L5uNpnEuoR+076GHIHgDoTKLD69
+        6RjsTfYOSNkS5g2ELbgoJnA3pnaWBoPBFkbvSUr9jwXlugkeAAp06j9a3+u00W2NsS0p7u
+        yhsohI/Ba+/dnaQ1p/fm9vqScf/52VU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1681464786;
+        s=susede2_ed25519; t=1681465808;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=anqanL63WzuuA9OTxdiLBvl46hTjKTc57YdQQgadd/o=;
-        b=UVoCOv8xtrWLrmFnzvFTAMyKVOxL9TIH1CKL0P9VLX5vXSeacUQsignMRTVoQFU6C1eW2U
-        DQy6SmKonVkPPXCw==
+        bh=4+DxuhQaSafHmB0fnTETPui1QWhu4dvKLY9o0ZuxF1E=;
+        b=3GuUFBpfm4beD6p9zjYmB4muj6M66sUy4pHawP4F/fgLWcpIc04ot/L9dzSUeNAv2dYYni
+        8NBhUAylDhMqJqAQ==
 Received: from kunlun.suse.cz (unknown [10.100.128.76])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id A6DE52C143;
-        Fri, 14 Apr 2023 09:33:05 +0000 (UTC)
-Date:   Fri, 14 Apr 2023 11:33:04 +0200
+        by relay2.suse.de (Postfix) with ESMTPS id 5A70B2C143;
+        Fri, 14 Apr 2023 09:50:08 +0000 (UTC)
+Date:   Fri, 14 Apr 2023 11:50:07 +0200
 From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
 To:     Quentin Monnet <quentin@isovalent.com>
 Cc:     Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
@@ -53,16 +55,17 @@ Cc:     Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
         Jesper Dangaard Brouer <brouer@redhat.com>,
         Jakub Sitnicki <jakub@cloudflare.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Miller <davem@davemloft.net>
+        David Miller <davem@davemloft.net>,
+        Mahe Tardy <mahe.tardy@gmail.com>
 Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
-Message-ID: <20230414093304.GE63923@kunlun.suse.cz>
+Message-ID: <20230414095007.GF63923@kunlun.suse.cz>
 References: <ZDfKBPXDQxH8HeX9@syu-laptop>
- <ZDfQYHJyJOrR5pcB@syu-laptop>
- <CACdoK4JemtGV9m=kuddE4eZQgfTNj1OqhwfhLpDcsspTvfZx7A@mail.gmail.com>
+ <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CACdoK4JemtGV9m=kuddE4eZQgfTNj1OqhwfhLpDcsspTvfZx7A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
@@ -70,62 +73,117 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On Fri, Apr 14, 2023 at 02:12:40AM +0100, Quentin Monnet wrote:
-> On Thu, 13 Apr 2023 at 10:50, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
-> >
-> > On Thu, Apr 13, 2023 at 05:23:16PM +0800, Shung-Hsi Yu wrote:
-> > > Hi,
-> > >
-> > > I'm considering switch to bpftool's mirror on GitHub for packaging (instead
-> > > of using the source found in kernel), but realize that it should goes
-> > > hand-in-hand with how libbpf is packaged, which eventually leads these
-> > > questions:
-> > >
-> > >   What is the suggested approach for packaging bpftool and libbpf?
-> > >   Which source is preferred, GitHub or kernel?
-
-...
-
-> > But I wonder whether packaging one of the motives to create the mirrors
-> > initially? Can't seem to find anything in this regard.
-> >
-> >
-> > 1: https://github.com/acmel/dwarves/tree/master/lib
-> > 2: https://lore.kernel.org/bpf/CAEf4BzZ+0XpH_zJ0P78vjzmFAH3kGZ21w3-LcSEG=B=+ZQWJ=w@mail.gmail.com/
+On Fri, Apr 14, 2023 at 01:35:20AM +0100, Quentin Monnet wrote:
+> Hi Shung-Hsi,
 > 
-> It seems like you haven't come across this one?:
-> https://lore.kernel.org/bpf/267a35a6-a045-c025-c2d9-78afbf6fc325@isovalent.com/t/
+> On Thu, 13 Apr 2023 at 10:23, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
+> >
+> > Hi,
+> >
+> > I'm considering switch to bpftool's mirror on GitHub for packaging (instead
+> > of using the source found in kernel), but realize that it should goes
+> > hand-in-hand with how libbpf is packaged, which eventually leads these
+> > questions:
+> >
+> >   What is the suggested approach for packaging bpftool and libbpf?
+> >   Which source is preferred, GitHub or kernel?
 > 
-> Yes, easing packaging was one of the motivations for the mirror. As
-> mentioned in my other answer, I've not taken the time to reach out to
-> package maintainers yet, so this hasn't really materialised at this
-> point.
+> As you can see from the previous discussions, the suggested approach
+> would be to package from the GitHub mirror, with libbpf and bpftool in
+> sync.
+> 
+> My main argument for the mirror is that it keeps things simpler, and
+> there's no need to deal with the rest of the kernel sources for these
+> packages. Download from the mirrors, build, ship. But then I have
+> limited experience at packaging for distros, and I can understand
+> Toke's point of view, too. So ultimately, the call is yours.
 
-For me as a package maintainer submodules are a major pain. They always
-need special handling, break down, get out of sync between different
-projects using them, etc.
+Things get only ever more complex when submodules are involved.
 
-Somehow in the past it was possible to build and install development
-versions of libraries during development of tools using them, and
-release both when a feature was finished.
+> >   Does bpftool work on older kernel?
+> 
+> It should, although it's not perfect. Most features from current
+> bpftool should work as expected on older kernels. However, if I
+> remember correctly you would have trouble loading programs on pre-BTF
+> kernels, because bpftool relies on libbpf >= 1.0 and only accepts map
+> definitions with BTF info, and attempts to create these maps with BTF,
+> which fails and blocks the load process.
+> 
+> But we're trying to keep backward-compatibility, so if we're only
+> talking of kernels recent enough to support BTF, then I'd expect
+> bpftool to work. If this is not the case, please report on this list.
 
-Arguably using submodules for development may work for some people. For
-most it would cause having the wrong submodule code when switching
-branches, stray submodule changes in patches, etc.
+It won't build:
+https://lore.kernel.org/bpf/20220421003152.339542-3-alobakin@pm.me/
 
-Using submodules as a general method of distributing dependencies is
-hell.
+> > Our current approach is that we (openSUSE/SLES) essentially have two version
+> > of libbpf: a public shared library that uses GitHub mirror as source, which
+> > the general userspace sees and links to; and a private static library built
+> > from kernel source used by bpftool, perf, resolve_btfids, selftests, etc.
+> > A survey of other distros (Arch, Debian, Fedora, Ubuntu) suggest that they
+> > took similar approach.
+> 
+> I would like them to reconsider this choice eventually. Sounds like
+> for RHEL, this will be a tough sell :). At least, I'd love Ubuntu to
+> have a real bpftool package instead of having to install
+> linux-tools-common + linux-tools-generic, or to have distros in
+> general (Ubuntu/Debian at least) stop compiling out the JIT
+> disassembler, although this is not strictly related to the location of
+> the sources. I've not found the time to reach out to package
+> maintainers yet.
+> 
+> >
+> > This approach means that the version of bpftool and libbpf are _not_ always
+> > in sync[1], which I read may causes problem since libbpf and bpftool depends
+> > on specific version of each other[2].
+> 
+> Whatever source you use, I would strongly recommend finding a way to
+> keep both in sync. Libbpf has stabilised its API when reaching 1.0,
+> but bpftool taps into some of the internals of the library. Features
+> or new definitions are usually added at the same time to libbpf and
+> bpftool, and if you get a mismatch between the two, you're taking
+> risks to get build issues.
 
-The usual methods of downloading and releasing the source code don't
-work, the submodules have to be specifically bundled.
+In other words no API exists.
 
-If the dependency in question has a bug each tool author has to be
-coaxed to update to a fixed version and re-release, or each tool patched
-separately.
+> > Using the GitHub mirror of bpftool to package both libbpf and bpftool would
+> > kept their version in sync, and was suggested[3]. Although the same could be
+> > said if we switch back to packaging libbpf from kernel source, an additional
+> > appeal for using GitHub mirrors is that it decouples bpftool from kernel,
+> > making it easily upgradable and with a clearer changelog (the latter is
+> > quite important for enterprise users) like libbpf.
+> 
+> Happy to read these changelogs I write are useful to someone :). Yes,
+> this is my point.
 
-Over time API bitrots and is given up, each tool requiring specific and
-different release or git SHA of the dependency. We can see that
-happening a lot in ecosystems where vendoring is the norm.
+Yes, publishing the changelog in a usable way relieves others of the
+need to write thier own, usually with less understanding of the changes
+in question. That's generally the idea of opensource - not endlessly
+repeating what has already been done :)
+
+> > The main concern with using GitHub mirror is that bpftool may be updated far
+> > beyond the version that comes with the runtime kernel. AFAIK bpftool should
+> > work on older kernel since CO-RE is used for built-in BPF iterators and the
+> > underlying libbpf work on older kernel itself. Nonetheless, it would be nice
+> > to get a confirmation from the maintainers.
+> 
+> As explained above - Mostly, it should work. Otherwise, we can look
+> into fixing it.
+> 
+> As a side note, I'm open to suggestions/contributions to make life
+> easier for packaging for the mirror. For example, Mahé and I recently
+> added GitHub workflows to ship statically-built binaries for amd64 and
+> arm64 on releases, as well as tarballs with both bpftool+libbpf
+> sources. If there's something else to make packaging easier, I'm happy
+> to talk about it.
+
+Make it possible to build with system-installed libbpf. If it's released
+it should have versioned dependency on a libbpf release, and libbpf from
+that version on should be good enough to build it.
+
+I tried copying those 'private' headers into a separate directory, and
+link against static libbpf, and it seems to work. Of course, having
+an actual API would be much better.
 
 Thanks
 
