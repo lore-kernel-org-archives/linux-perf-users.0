@@ -2,120 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F81C77B72
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 11:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7A5C77B77
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 12:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230125AbjDQLq6 (ORCPT
+        id S230429AbjDQMaV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 07:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
+        Mon, 17 Apr 2023 08:30:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230158AbjDQLq5 (ORCPT
+        with ESMTP id S230377AbjDQMaT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Apr 2023 07:46:57 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063F49F;
-        Mon, 17 Apr 2023 04:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=euqFyJ5D5EZ1z4Bo2J06MIkQP2iXlSqQQupLUBYhVqM=; b=aPcrZ46ynB7zUL/Qy+XlM2Op3u
-        JHQ4DEQ8rAmR/vD5AMWPQM7dGv1tN77w9/9GHhWblSScKnVmb+tpfmrNkKrpVVkSqnodRrhAWk/RX
-        RZ3CR4qxp1Yezm1tnqe+J9CoTlLbRebkW7yQcDhlNmrKzwRjsYdR6Bg/+RJ1JiaapcPu1pLivfOOB
-        Crek56RUCUMvBMZRDqIJ4UqY9AuuPRsMxeuxeSJYd/pVCYxXeCf4q8+ybr1mMGaP1Oasifytp+B0j
-        zmXKSZub0w8PIOzMSH5b50nZ0xswntJXSlIP15+pQNLQSoYLpa69pj03eH4NLdIWPXgVsbczP+wFe
-        wKDIcyWw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1poNIK-00BIsx-4T; Mon, 17 Apr 2023 11:45:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D3586300338;
-        Mon, 17 Apr 2023 13:45:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 782C024248737; Mon, 17 Apr 2023 13:45:12 +0200 (CEST)
-Date:   Mon, 17 Apr 2023 13:45:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/core: Fix perf_sample_data not properly initialized
- for different swevents in perf_tp_event()
-Message-ID: <20230417114512.GK83892@hirez.programming.kicks-ass.net>
-References: <20230412095240.181516-1-yangjihong1@huawei.com>
+        Mon, 17 Apr 2023 08:30:19 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBA440D1
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Apr 2023 05:30:13 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2a8b082d6feso13239641fa.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Apr 2023 05:30:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681734612; x=1684326612;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G/JB5DRDshib4Tz8g7yVBW+9lQnfgBzFAQIBePQQwSg=;
+        b=vCxJdFhdT+WCdGm7iu3cW5J4HK1ht+4ta0pd6M/4Mx/Jr+uAZq31KR0AYIxFlYex10
+         nrmTFjSLjZKAKIadFTbS2ZPZvGno4TuQAUNY6xOyAR+rqoLdzLJqFpzk5w2QnY0zrU0B
+         z9AUV+qXvtTi8r9hE0+HDTLzryfade54+QIUZcG+C94fqFyfOjTiRFU21BCEnWtGuTMh
+         zdrSYa86ucUMDuuQtx7ESPaBvN/3LOQjI1uu5zpBTwkZFCPGx6fNgbrLg9HvFWqJlfJc
+         i2F1r6ZshEcXDi6HRd4xOgP7ACrmFah9b3JDhVbOVwL5H/NtQzGHKVXVXZf1UfSl9s9+
+         ipCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681734612; x=1684326612;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G/JB5DRDshib4Tz8g7yVBW+9lQnfgBzFAQIBePQQwSg=;
+        b=BJVaeXnKpc/LBPAAB+uF3zuYtpddrP0FO12ygCeWqoN3N3DYN9FNqsjfamrExzaLF1
+         Wl6/TuKeda7FgJ15ZYrFsDx2iN3f/3oMqy9pEUx6iQYjYAi90SyPnKtLg0LaGEvHjTI9
+         zv2kk2Vz6mnD4uXRZS7Zu3Y+MzGSc2JFgiTX4ieHmWvVBrlV2V+i5V2kGaO2N6ZBU3R+
+         IObY3B51+kOfoIBuezwbIcHBGW5FInrWTunA5gkbIsQoztyBVyxn1kHwSmzNaql0siwM
+         MdDs2Gn0C0zF7m4nUuXtggwbL9H27TawT6eBl0qtQ1XEw+H+iUvAEPbTBzeAhHkscPjA
+         eQVQ==
+X-Gm-Message-State: AAQBX9dmCmHjWl0ohAr8X3LEaV1E0Qm6qxrvKsA//tQKpENIu8tD2xTp
+        EPRmPfF5XcL1xIGAfUwc/tCPbA==
+X-Google-Smtp-Source: AKy350asj3McUx7cd43SB9wv7K+s/l9AmPs16fLHun2t6r4FImgn7a2GqXnKPqh6TsP4gy2ji6dEKA==
+X-Received: by 2002:ac2:4210:0:b0:4ea:f5dd:8aa1 with SMTP id y16-20020ac24210000000b004eaf5dd8aa1mr1972414lfh.18.1681734611756;
+        Mon, 17 Apr 2023 05:30:11 -0700 (PDT)
+Received: from localhost (c-9b0ee555.07-21-73746f28.bbcust.telenor.se. [85.229.14.155])
+        by smtp.gmail.com with ESMTPSA id m10-20020ac2428a000000b004cb23904bd9sm2020078lfh.144.2023.04.17.05.30.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Apr 2023 05:30:11 -0700 (PDT)
+From:   Anders Roxell <anders.roxell@linaro.org>
+To:     stable@vger.kernel.org
+Cc:     acme@redhat.com, andres@anarazel.de, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: [backport PATCH 0/2] stable v5.15, v5.10 and v5.4: fix perf build errors
+Date:   Mon, 17 Apr 2023 14:29:41 +0200
+Message-Id: <20230417122943.2155502-1-anders.roxell@linaro.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230412095240.181516-1-yangjihong1@huawei.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 12, 2023 at 09:52:40AM +0000, Yang Jihong wrote:
-> data->sample_flags may be modified in perf_prepare_sample(),
-> in perf_tp_event(), different swevents use the same on-stack
-> perf_sample_data, the previous swevent may change sample_flags in
-> perf_prepare_sample(), as a result, some members of perf_sample_data are
-> not correctly initialized when next swevent_event preparing sample
-> (for example data->id, the value varies according to swevent).
-> 
-> A simple scenario triggers this problem is as follows:
-> 
->   # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
->   [ perf record: dump data: Woken up 0 times ]
->   [ perf record: Dump perf.data.2023041209014396 ]
->   [ perf record: dump data: Woken up 0 times ]
->   [ perf record: Dump perf.data.2023041209014662 ]
->   [ perf record: dump data: Woken up 0 times ]
->   [ perf record: Dump perf.data.2023041209014910 ]
->   [ perf record: Woken up 0 times to write data ]
->   [ perf record: Dump perf.data.2023041209015164 ]
->   [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
->   # ls -l
->   total 860
->   -rw------- 1 root root  95694 Apr 12 09:01 perf.data.2023041209014396
->   -rw------- 1 root root 606430 Apr 12 09:01 perf.data.2023041209014662
->   -rw------- 1 root root  82246 Apr 12 09:01 perf.data.2023041209014910
->   -rw------- 1 root root  82342 Apr 12 09:01 perf.data.2023041209015164
->   # perf script -i perf.data.2023041209014396
->   0x11d58 [0x80]: failed to process type: 9 [Bad address]
-> 
-> Solution: Add perf_sample_data_flags_{save, restore} helpers to save and
-> restore sample_flags when processing different swevents
-> 
-> After fix:
-> 
->   # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
->   [ perf record: dump data: Woken up 0 times ]
->   [ perf record: Dump perf.data.2023041209442259 ]
->   [ perf record: dump data: Woken up 0 times ]
->   [ perf record: Dump perf.data.2023041209442514 ]
->   [ perf record: dump data: Woken up 0 times ]
->   [ perf record: Dump perf.data.2023041209442760 ]
->   [ perf record: Woken up 0 times to write data ]
->   [ perf record: Dump perf.data.2023041209443003 ]
->   [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
->   # ls -l
->   total 864
->   -rw------- 1 root root 100166 Apr 12 09:44 perf.data.2023041209442259
->   -rw------- 1 root root 606438 Apr 12 09:44 perf.data.2023041209442514
->   -rw------- 1 root root  82246 Apr 12 09:44 perf.data.2023041209442760
->   -rw------- 1 root root  82342 Apr 12 09:44 perf.data.2023041209443003
->   # perf script -i perf.data.2023041209442259 | head -n 5
->               perf   232 [000]    66.846217: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=D ==> next_comm=perf next_pid=234 next_prio=120
->               perf   234 [000]    66.846449: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
->               perf   232 [000]    66.846546: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
->               perf   234 [000]    66.846606: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
->               perf   232 [000]    66.846646: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
+Hi,
 
-This seems a little bit short on analysis; what actual flags are the
-problem? Much of the data will in fact be identical between these
-invocations and endlessly re-computing that is wasteful.
+I would like to see these patches backported. They are needed so perf
+can be cross compiled with gcc on v5.15, v5.10 and v5.4.
+I built it with tuxmake [1] here are two example commandlines:
+tuxmake --runtime podman --target-arch arm64 --toolchain gcc-12 --kconfig defconfig perf
+tuxmake --runtime podman --target-arch x86_64 --toolchain gcc-12 --kconfig defconfig perf
 
-I'm thinking perhaps those flags that update ->dyn_size are the problem?
-At the same time, Should you not also then clear dyn_size?
+Tried to build perf with both gcc-11 and gcc-12.
+
+Patch 'tools perf: Fix compilation error with new binutils'
+and 'tools build: Add feature test for init_disassemble_info API changes'
+didn't apply cleanly, thats why I send these in a patchset.
+
+When apply 'tools build: Add feature test for
+init_disassemble_info API changes' to 5.4 it will be a minor merge
+conflict, do you want me to send this patch in two separate patches one
+for 5.4 and another for v5.10?
+
+The sha for these two patches in mainline are.
+cfd59ca91467 tools build: Add feature test for init_disassemble_info API changes
+83aa0120487e tools perf: Fix compilation error with new binutils
+
+The above patches solves these:
+util/annotate.c: In function 'symbol__disassemble_bpf':
+util/annotate.c:1729:9: error: too few arguments to function 'init_disassemble_info'
+ 1729 |         init_disassemble_info(&info, s,
+      |         ^~~~~~~~~~~~~~~~~~~~~
+
+
+Please apply these to v5.10 and v5.4
+a45b3d692623 tools include: add dis-asm-compat.h to handle version differences
+d08c84e01afa perf sched: Cast PTHREAD_STACK_MIN to int as it may turn into sysconf(__SC_THREAD_STACK>
+
+The above patches solves these:
+/home/anders/src/kernel/stable-5.10/tools/include/linux/kernel.h:43:24: error: comparison of distinct pointer types lacks a cast [-Werror]
+   43 |         (void) (&_max1 == &_max2);              \
+      |                        ^~
+builtin-sched.c:673:34: note: in expansion of macro 'max'
+  673 |                         (size_t) max(16 * 1024, PTHREAD_STACK_MIN));
+      |                                  ^~~
+
+
+Please apply these to v5.15, v5.10 and v5.4
+8e8bf60a6754 perf build: Fixup disabling of -Wdeprecated-declarations for the python scripting engine
+4ee3c4da8b1b perf scripting python: Do not build fail on deprecation warnings
+63a4354ae75c perf scripting perl: Ignore some warnings to keep building with perl headers
+
+Build error that the above 3 patches solves are:
+/usr/lib/x86_64-linux-gnu/perl/5.36/CORE/handy.h:125:23: error: cast from function call of type 'STRLEN' {aka 'long unsigned int'} to non-matching type '_Bool' [-Werror=bad-function-cast]
+  125 | #define cBOOL(cbool) ((bool) (cbool))
+      |                       ^
+
+Cheers,
+Anders
+[1] https://tuxmake.org/
+
+Andres Freund (2):
+  tools perf: Fix compilation error with new binutils
+  tools build: Add feature test for init_disassemble_info API changes
+
+ tools/build/Makefile.feature                        |  1 +
+ tools/build/feature/Makefile                        |  4 ++++
+ tools/build/feature/test-all.c                      |  4 ++++
+ tools/build/feature/test-disassembler-init-styled.c | 13 +++++++++++++
+ tools/perf/Makefile.config                          |  8 ++++++++
+ tools/perf/util/annotate.c                          |  7 ++++---
+ 6 files changed, 34 insertions(+), 3 deletions(-)
+ create mode 100644 tools/build/feature/test-disassembler-init-styled.c
+
+--
+2.39.2
+
