@@ -2,121 +2,208 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBE5C77B76
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 16:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9528DC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 17:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbjDQQh4 (ORCPT
+        id S229863AbjDQRPI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 12:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52826 "EHLO
+        Mon, 17 Apr 2023 13:15:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbjDQQhz (ORCPT
+        with ESMTP id S229587AbjDQRPI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Apr 2023 12:37:55 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F29256A7C
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Apr 2023 09:37:53 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f08b6a9f8aso229555e9.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Apr 2023 09:37:53 -0700 (PDT)
+        Mon, 17 Apr 2023 13:15:08 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695EC4C37
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Apr 2023 10:15:06 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3f08b6a9f8aso231685e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Apr 2023 10:15:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681749472; x=1684341472;
+        d=google.com; s=20221208; t=1681751705; x=1684343705;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y12t8FRkoyEyk0bMe914lw6E/czb3SRxw59S8iZC1Uc=;
-        b=rxk+Nn8PufS+81nHUs0I+UFtsIkcSBXz1RKFi5fJB965/TPvLrweGYeLPOTXZ02XKT
-         OEOmwfqB0XI8VvZPHCRurH11Z/mogCp1qS/TxBmUVHdxwJx8lnmcYpE25TGkn4uBWHxK
-         LwOm7NzW9Hplzq2bTSzt4d52ivZct0TKdb07VqrDcOVL05YyfplHoFaYZHH7ospcATEK
-         QE3IJnFkRqyHWboxfG0bY8tDwTE7nHpqldYkzNBDIf9os4FouvX0EPbEjqz3TNnLczBu
-         wlDUSbje1v/HBKqyMdFFas+Y2QX06wSEqfXx9Jy1tV6nVXfV++JEt41h14hnITy3XKuB
-         qpwA==
+        bh=a3stGmteRzeKnj1XWwcELOuoYuh13a22U1AyLn+AXFA=;
+        b=USlKOpbDldphAUyai69TJ//1HRVKA+ShayAbY7sLGbOvQEvKIz5naSn8kFIiDcr28/
+         NIQJbOHZ8t3qCBFz3xrGTiZzjZeb3edXdAxv576q7gp/guq8USCQw3xlKGcIgm2F9wlh
+         czvyeui5XMogGuzZFqFg3RkSzMKnnDBMXFJ++iSePFy3yf5ijT7DBL196+/BykIq58yB
+         mCV0EAz3oaws1Mx2yyICHKgCqo+opOlSsTFGz2C9YDQXIbqoTXT9QDfJfo/feuB7Qelk
+         K1jUJryuv9g3iU2g0t9KSxnLF5jTTdFowzqOPr/k9fHkohYrGxSyWDWgs/u1KLsxaF5+
+         F59w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681749472; x=1684341472;
+        d=1e100.net; s=20221208; t=1681751705; x=1684343705;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y12t8FRkoyEyk0bMe914lw6E/czb3SRxw59S8iZC1Uc=;
-        b=abJ648HXc8iMh+iOzzBc4zGnU7piZ7rb406+3IdSpTei4t8qM8ywLmrPFrW8Ig0Xl0
-         Z/tvX9bxwex7HajOh4DmA/jMwCh/5KXocp57zmlJz6SQBIPi96grLFYelV8SK7fBsiw2
-         TCf1v2YxTGDfLfcEKe81nf8YAWP4LVpVN1ong9dCj7IgvZQXrdoOJuj0VngCWMEgUOEX
-         Yj7zXXheXm9jqiTsGWutp8qgs4Js4oKGtBaRQTOMa947PqJ8FEsmYtUwiGZFYcL3hjnV
-         oqRNtqO/sjJcc9nSySZYBf51hxM1Zf6AqLAikgDhXRGj8zX6Vd6pUd0WflJPfQ+LVuTL
-         GTXQ==
-X-Gm-Message-State: AAQBX9ckNJrzQzfjAljwvnVzYuxL65mEB4HYDImk3znVq6rNtr9YpsjR
-        HxkRTO9OP6P1NM1Bul6XbSQlqdawR4TEQTLMO+DyQw==
-X-Google-Smtp-Source: AKy350b/PcbvwgUXhKj6FKeyq2/NAraVnaIx3D3A7ebH0CLGWn7aqmil2UrIQTjqxwwrE6wNX+7RY2IZF63wyGwJEjs=
-X-Received: by 2002:a05:600c:c13:b0:3f1:6fe9:4a98 with SMTP id
- fm19-20020a05600c0c1300b003f16fe94a98mr412681wmb.5.1681749472307; Mon, 17 Apr
- 2023 09:37:52 -0700 (PDT)
+        bh=a3stGmteRzeKnj1XWwcELOuoYuh13a22U1AyLn+AXFA=;
+        b=l0zYo4OlTuijPkIR9LonziF6lOwxMrDZaNajp+qsIVWVDoGXdX1tim+ou/YGp5W1VG
+         SOcpdQIJaAT0k4iVrLXGZ8AGfKF99oUdBscS/e/3PkImR+VLfvykHXp9J83uG0cbMUzN
+         ZuQlbsNoDKkL69GCZCN0wF5K7Nj4HHUzWwOY9i6BF67BIUkg69vFxSEdpll1IBo0ShPz
+         aaIMMikuiaHksmNie+Blhc5IlAuGYDfM4+aFKc/UmLPsWH3+ejrhGh+jn9YnCyyAT9uJ
+         1lQC2p39ejOLq9xgEE+jlqEqDBkjZS3CdOHoHbri9Fn2f7NiHN6X0sBx1cvWKIV1Fsc8
+         evHw==
+X-Gm-Message-State: AAQBX9cvsUMIZla4GZtfxjOLyv7wFOZq5M/xaOR5UccjBVGEPJYe6vwM
+        11Vd1ulmOOta3mupNKpLc+sYcsIKNogdHPXheusLDA==
+X-Google-Smtp-Source: AKy350Z7GLpgZB4nWfaWROBdqmPEACzgMPzNNdQCuM59lX1IGltn277CXYX21QobH4mjsaKVJbsxhora8Sr1e5fDRRg=
+X-Received: by 2002:a05:600c:5122:b0:3f1:70d1:21a6 with SMTP id
+ o34-20020a05600c512200b003f170d121a6mr4313wms.0.1681751704759; Mon, 17 Apr
+ 2023 10:15:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230414082300.34798-1-adrian.hunter@intel.com> <20230417110221.GH83892@hirez.programming.kicks-ass.net>
-In-Reply-To: <20230417110221.GH83892@hirez.programming.kicks-ass.net>
+References: <20230417122943.2155502-1-anders.roxell@linaro.org> <20230417122943.2155502-2-anders.roxell@linaro.org>
+In-Reply-To: <20230417122943.2155502-2-anders.roxell@linaro.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 17 Apr 2023 09:37:37 -0700
-Message-ID: <CAP-5=fUD=RNqD-7229J5fgaUCMtNiu-urp-9B3LDq8JnP2sGBg@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/5] perf: Add ioctl to emit sideband events
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 17 Apr 2023 10:14:51 -0700
+Message-ID: <CAP-5=fWUevSnyn5MtVO1p6cEVE8MvBTq4Qgth7RcPYueRERQKA@mail.gmail.com>
+Subject: Re: [backport PATCH 1/2] tools perf: Fix compilation error with new binutils
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     stable@vger.kernel.org, acme@redhat.com, andres@anarazel.de,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Quentin Monnet <quentin@isovalent.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Ben Hutchings <benh@debian.org>, Jiri Olsa <jolsa@kernel.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 17, 2023 at 4:02=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Mon, Apr 17, 2023 at 5:30=E2=80=AFAM Anders Roxell <anders.roxell@linaro=
+.org> wrote:
 >
-> On Fri, Apr 14, 2023 at 11:22:55AM +0300, Adrian Hunter wrote:
-> > Hi
-> >
-> > Here is a stab at adding an ioctl for sideband events.
-> >
-> > This is to overcome races when reading the same information
-> > from /proc.
+> From: Andres Freund <andres@anarazel.de>
 >
-> What races? Are you talking about reading old state in /proc the kernel
-> delivering a sideband event for the new state, and then you writing the
-> old state out?
+> binutils changed the signature of init_disassemble_info(), which now caus=
+es
+> compilation failures for tools/perf/util/annotate.c, e.g. on debian
+> unstable.
+
+Thanks, I believe the compilation issue may well be resolved by:
+https://lore.kernel.org/lkml/20230311065753.3012826-8-irogers@google.com/
+where binutils is made opt-in rather than opt-out.
+
+> Relevant binutils commit:
 >
-> Surely that's something perf tool can fix without kernel changes?
+>   https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommit;h=3D60a3da0=
+0bd5407f07
+>
+> Wire up the feature test and switch to init_disassemble_info_compat(),
+> which were introduced in prior commits, fixing the compilation failure.
 
-So my reading is that during event synthesis there are races between
-reading the different /proc files. There is still, I believe, a race
-in with perf record/top with uid filtering which reminds me of this.
-The uid filtering race is that we scan /proc to find processes (pids)
-for a uid, we then synthesize the maps for each of these pids but if a
-pid starts or exits we either error out or don't sample that pid. I
-believe the error out behavior is easy to hit 100% of the time making
-uid mode of limited use.
-
-This may be for something other than synthesis, but for synthesis a
-few points are:
- - as servers get bigger and consequently more jobs get consolidated
-on them, synthesis is slow (hence --num-thread-synthesize) and also
-the events dominate the perf.data file - perhaps >90% of the file
-size, and a lot of that will be for processes with no samples in them.
-Another issue here is that all those file descriptors don't come for
-free in the kernel.
- - BPF has buildid+offset stack traces that remove the need for
-synthesis by having more expensive stack generation. I believe this is
-unpopular as adding this as a variant for every kind of event would be
-hard, but perhaps we can do some low-hanging fruit like instructions
-and cycles.
- - I believe Jiri looked at doing synthesis with BPF. Perhaps we could
-do something similar to the off-cpu and tail-synthesize, where more
-things happen at the tail end of perf. Off-cpu records data in maps
-that it then synthesizes into samples.
-
-There is also a long standing issue around not sampling munmap (or
-mremap) that causes plenty of issues. Perhaps if we had less mmap in
-the perf.data file we could add these.
+I was kind of surprised to see no version check ifdef. Is
+init_disassemble_info_compat is supported in older binutils?
 
 Thanks,
 Ian
+
+> I verified that perf can still disassemble bpf programs by using bpftrace
+> under load, recording a perf trace, and then annotating the bpf "function=
+"
+> with and without the changes. With old binutils there's no change in outp=
+ut
+> before/after this patch. When comparing the output from old binutils (2.3=
+5)
+> to new bintuils with the patch (upstream snapshot) there are a few output
+> differences, but they are unrelated to this patch. An example hunk is:
+>
+>        1.15 :   55:mov    %rbp,%rdx
+>        0.00 :   58:add    $0xfffffffffffffff8,%rdx
+>        0.00 :   5c:xor    %ecx,%ecx
+>   -    1.03 :   5e:callq  0xffffffffe12aca3c
+>   +    1.03 :   5e:call   0xffffffffe12aca3c
+>        0.00 :   63:xor    %eax,%eax
+>   -    2.18 :   65:leaveq
+>   -    2.82 :   66:retq
+>   +    2.18 :   65:leave
+>   +    2.82 :   66:ret
+>
+> Signed-off-by: Andres Freund <andres@anarazel.de>
+> Acked-by: Quentin Monnet <quentin@isovalent.com>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Ben Hutchings <benh@debian.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Sedat Dilek <sedat.dilek@gmail.com>
+> Cc: bpf@vger.kernel.org
+> Link: http://lore.kernel.org/lkml/20220622181918.ykrs5rsnmx3og4sv@alap3.a=
+narazel.de
+> Link: https://lore.kernel.org/r/20220801013834.156015-5-andres@anarazel.d=
+e
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> ---
+>  tools/perf/Makefile.config | 8 ++++++++
+>  tools/perf/util/annotate.c | 7 ++++---
+>  2 files changed, 12 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 3e7706c251e9..55905571f87b 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -281,6 +281,7 @@ FEATURE_CHECK_LDFLAGS-libpython :=3D $(PYTHON_EMBED_L=
+DOPTS)
+>  FEATURE_CHECK_LDFLAGS-libaio =3D -lrt
+>
+>  FEATURE_CHECK_LDFLAGS-disassembler-four-args =3D -lbfd -lopcodes -ldl
+> +FEATURE_CHECK_LDFLAGS-disassembler-init-styled =3D -lbfd -lopcodes -ldl
+>
+>  CORE_CFLAGS +=3D -fno-omit-frame-pointer
+>  CORE_CFLAGS +=3D -ggdb3
+> @@ -838,13 +839,16 @@ else
+>    ifeq ($(feature-libbfd-liberty), 1)
+>      EXTLIBS +=3D -lbfd -lopcodes -liberty
+>      FEATURE_CHECK_LDFLAGS-disassembler-four-args +=3D -liberty -ldl
+> +    FEATURE_CHECK_LDFLAGS-disassembler-init-styled +=3D -liberty -ldl
+>    else
+>      ifeq ($(feature-libbfd-liberty-z), 1)
+>        EXTLIBS +=3D -lbfd -lopcodes -liberty -lz
+>        FEATURE_CHECK_LDFLAGS-disassembler-four-args +=3D -liberty -lz -ld=
+l
+> +      FEATURE_CHECK_LDFLAGS-disassembler-init-styled +=3D -liberty -ldl
+>      endif
+>    endif
+>    $(call feature_check,disassembler-four-args)
+> +  $(call feature_check,disassembler-init-styled)
+>  endif
+>
+>  ifeq ($(feature-libbfd-buildid), 1)
+> @@ -957,6 +961,10 @@ ifeq ($(feature-disassembler-four-args), 1)
+>      CFLAGS +=3D -DDISASM_FOUR_ARGS_SIGNATURE
+>  endif
+>
+> +ifeq ($(feature-disassembler-init-styled), 1)
+> +    CFLAGS +=3D -DDISASM_INIT_STYLED
+> +endif
+> +
+>  ifeq (${IS_64_BIT}, 1)
+>    ifndef NO_PERF_READ_VDSO32
+>      $(call feature_check,compile-32)
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 308189454788..f2d1741b7610 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -1684,6 +1684,7 @@ static int dso__disassemble_filename(struct dso *ds=
+o, char *filename, size_t fil
+>  #define PACKAGE "perf"
+>  #include <bfd.h>
+>  #include <dis-asm.h>
+> +#include <tools/dis-asm-compat.h>
+>
+>  static int symbol__disassemble_bpf(struct symbol *sym,
+>                                    struct annotate_args *args)
+> @@ -1726,9 +1727,9 @@ static int symbol__disassemble_bpf(struct symbol *s=
+ym,
+>                 ret =3D errno;
+>                 goto out;
+>         }
+> -       init_disassemble_info(&info, s,
+> -                             (fprintf_ftype) fprintf);
+> -
+> +       init_disassemble_info_compat(&info, s,
+> +                                    (fprintf_ftype) fprintf,
+> +                                    fprintf_styled);
+>         info.arch =3D bfd_get_arch(bfdf);
+>         info.mach =3D bfd_get_mach(bfdf);
+>
+> --
+> 2.39.2
+>
