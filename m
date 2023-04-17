@@ -2,226 +2,257 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A32DC77B76
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 15:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9DFC77B76
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 15:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbjDQPOw (ORCPT
+        id S229750AbjDQPt7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 11:14:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39314 "EHLO
+        Mon, 17 Apr 2023 11:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230052AbjDQPOu (ORCPT
+        with ESMTP id S231563AbjDQPti (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Apr 2023 11:14:50 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EA40FB;
-        Mon, 17 Apr 2023 08:14:37 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3f09b9ac51dso44003695e9.0;
-        Mon, 17 Apr 2023 08:14:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681744475; x=1684336475;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e047zcn20dpW+BVxg6WrLYEA74ZTRhvYR9ivWfzVffI=;
-        b=J6mNTdjJXRwthJ2zCT9NEY6Z9hezMuH8x4BK/1R4BCVgk7Ci/HPN+jrcwQsKcCuTkI
-         I1UPqwJz5ABCTk7X5opTEZxdgNLtiV+gU4ZZA1u010mlWUCYGH/bChtn7BAwLYDZ3JHk
-         RTI8uWQsSY0HbGSVWTcygeXA3TlQzhMwGYmt3V1Id6ozIaB9PWoHyCMpAq+wrBMf57z1
-         SGYdFjrENk4shHH5MXl7JnDBNcBGd0m9BV/6PlyFsgA6iVj6APNfSGWyjUQ/JZLa59nc
-         mSzqI9Ijxbahm/QxlPpW5/WVK0DYMNibbaiJENbR3l7PJJ/9luB7VdSEH8WgJVZjnIyE
-         roWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681744475; x=1684336475;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e047zcn20dpW+BVxg6WrLYEA74ZTRhvYR9ivWfzVffI=;
-        b=WBcBkbbaQqQNO2EzqeDrWHWVJ212chCFO1VLfgN9SH6RSufnjrVHf6kiHrFPn0rV9K
-         +tRHipe2oMx8fjZlW8fxbMn/dR5vEgfXYdHLbikX1/aYwG46hCF7I2qSQgbm+3qU4HyM
-         2E9v5S7P/aMWBUGsJQJBE2ZzaOKO41pxOf37dAeVcIU9G4tsiMpHPNVhEZcFkEcMl6BW
-         n70KqLWMoiq96NDGFZKo6ERrX0Ii8wyckT1OEIiDZoWYaBgEHc8kHgGc4i57suqip30T
-         YMhzvnES5C+KEMpHZS3qI0fjRFVeQ3G+PxjiQQXD5JQJJWjR6f051VB+PCh5wc2hA9GB
-         SF7A==
-X-Gm-Message-State: AAQBX9ecJRV9oOfUDy+O+OB3DaT5DTrt2iQDK3qlyQMXCWlGHAyywTHR
-        uLaJ/LOAR4cN9pQdIo0C+nE=
-X-Google-Smtp-Source: AKy350YbK9Uk+W2I0O+WB4raZRtNy4HfgrcXDXV+XwhnLO6MAXE8TxKBQdwImQWHd3Rphf8UasdaGw==
-X-Received: by 2002:adf:cf01:0:b0:2fa:abcd:59a2 with SMTP id o1-20020adfcf01000000b002faabcd59a2mr2273209wrj.30.1681744475252;
-        Mon, 17 Apr 2023 08:14:35 -0700 (PDT)
-Received: from localhost (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
-        by smtp.gmail.com with ESMTPSA id i4-20020a5d55c4000000b002f74578f494sm8341442wrw.41.2023.04.17.08.14.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Apr 2023 08:14:34 -0700 (PDT)
-Date:   Mon, 17 Apr 2023 16:14:33 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Mon, 17 Apr 2023 11:49:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC2094EF1;
+        Mon, 17 Apr 2023 08:49:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A7F2627A9;
+        Mon, 17 Apr 2023 15:49:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21B58C433EF;
+        Mon, 17 Apr 2023 15:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681746552;
+        bh=bysd5IIwjuAO5DVbyKkP3vq1Dzslza6Brvsl5Bx0PiY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AXfabgYn7VYJ3lC6sDxGBEH5kk2GtBVJgHl3jmB7e02U1nroOZst3dYz8idbTFqkL
+         Kl/sI7SQebiL1OX8thzlho6i5vSI5F8jG1f6rNxlhcXTrcAC3viEMYyl9fropxPi8J
+         AZfTfsWTIDbtvGlFucWz6IOC/W+5pLMfeAAkw/oiTsGggYTVl89qZrOoEDcsKQwlLX
+         yv9UkL8lsj9UYgw3YYD/U/VmkF6a7BlNxuX5B/Ff4GkGIl+s7XPxgLTURtaBamtcVT
+         ns4EKUoCBVHHlmSmZQw+HjCkAg9mTQwoOttp00adAQYIGmgUjucJsjCQqYGO1MnNnt
+         DefUXMbw09V6w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 62287403B5; Mon, 17 Apr 2023 12:49:09 -0300 (-03)
+Date:   Mon, 17 Apr 2023 12:49:09 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        James Clark <james.clark@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Riccardo Mancini <rickyman7@gmail.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 3/7] mm/gup: remove vmas parameter from
- get_user_pages_remote()
-Message-ID: <d663673d-f9f7-444a-9cf8-b33d450e356a@lucifer.local>
-References: <cover.1681508038.git.lstoakes@gmail.com>
- <5a4cf1ebf1c6cdfabbf2f5209facb0180dd20006.1681508038.git.lstoakes@gmail.com>
- <ZD1FECftWekha6Do@nvidia.com>
- <9be77e7e-4531-4e1c-9e0d-4edbb5ad3bd5@lucifer.local>
- <ZD1GrBezHrJTo6x2@nvidia.com>
- <241f0c22-f3d6-436e-a0d8-be04e281ed2f@lucifer.local>
- <87cz427diu.fsf@email.froward.int.ebiederm.org>
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
+        Song Liu <song@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Miaoqian Lin <linmq006@gmail.com>,
+        Stephen Brennan <stephen.s.brennan@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Hao Luo <haoluo@google.com>,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v7 2/5] perf cpumap: Add reference count checking
+Message-ID: <ZD1qdYjG+DL6KOfP@kernel.org>
+References: <20230407230405.2931830-1-irogers@google.com>
+ <20230407230405.2931830-3-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87cz427diu.fsf@email.froward.int.ebiederm.org>
+In-Reply-To: <20230407230405.2931830-3-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 17, 2023 at 10:07:53AM -0500, Eric W. Biederman wrote:
-> Lorenzo Stoakes <lstoakes@gmail.com> writes:
->
-> > On Mon, Apr 17, 2023 at 10:16:28AM -0300, Jason Gunthorpe wrote:
-> >> On Mon, Apr 17, 2023 at 02:13:39PM +0100, Lorenzo Stoakes wrote:
-> >> > On Mon, Apr 17, 2023 at 10:09:36AM -0300, Jason Gunthorpe wrote:
-> >> > > On Sat, Apr 15, 2023 at 12:27:31AM +0100, Lorenzo Stoakes wrote:
-> >> > > > The only instances of get_user_pages_remote() invocations which used the
-> >> > > > vmas parameter were for a single page which can instead simply look up the
-> >> > > > VMA directly. In particular:-
-> >> > > >
-> >> > > > - __update_ref_ctr() looked up the VMA but did nothing with it so we simply
-> >> > > >   remove it.
-> >> > > >
-> >> > > > - __access_remote_vm() was already using vma_lookup() when the original
-> >> > > >   lookup failed so by doing the lookup directly this also de-duplicates the
-> >> > > >   code.
-> >> > > >
-> >> > > > This forms part of a broader set of patches intended to eliminate the vmas
-> >> > > > parameter altogether.
-> >> > > >
-> >> > > > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
-> >> > > > ---
-> >> > > >  arch/arm64/kernel/mte.c   |  5 +++--
-> >> > > >  arch/s390/kvm/interrupt.c |  2 +-
-> >> > > >  fs/exec.c                 |  2 +-
-> >> > > >  include/linux/mm.h        |  2 +-
-> >> > > >  kernel/events/uprobes.c   | 10 +++++-----
-> >> > > >  mm/gup.c                  | 12 ++++--------
-> >> > > >  mm/memory.c               |  9 +++++----
-> >> > > >  mm/rmap.c                 |  2 +-
-> >> > > >  security/tomoyo/domain.c  |  2 +-
-> >> > > >  virt/kvm/async_pf.c       |  3 +--
-> >> > > >  10 files changed, 23 insertions(+), 26 deletions(-)
-> >> > > >
-> >> > > > diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-> >> > > > index f5bcb0dc6267..74d8d4007dec 100644
-> >> > > > --- a/arch/arm64/kernel/mte.c
-> >> > > > +++ b/arch/arm64/kernel/mte.c
-> >> > > > @@ -437,8 +437,9 @@ static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
-> >> > > >  		struct page *page = NULL;
-> >> > > >
-> >> > > >  		ret = get_user_pages_remote(mm, addr, 1, gup_flags, &page,
-> >> > > > -					    &vma, NULL);
-> >> > > > -		if (ret <= 0)
-> >> > > > +					    NULL);
-> >> > > > +		vma = vma_lookup(mm, addr);
-> >> > > > +		if (ret <= 0 || !vma)
-> >> > > >  			break;
-> >> > >
-> >> > > Given the slightly tricky error handling, it would make sense to turn
-> >> > > this pattern into a helper function:
-> >> > >
-> >> > > page = get_single_user_page_locked(mm, addr, gup_flags, &vma);
-> >> > > if (IS_ERR(page))
-> >> > >   [..]
-> >> > >
-> >> > > static inline struct page *get_single_user_page_locked(struct mm_struct *mm,
-> >> > >    unsigned long addr, int gup_flags, struct vm_area_struct **vma)
-> >> > > {
-> >> > > 	struct page *page;
-> >> > > 	int ret;
-> >> > >
-> >> > > 	ret = get_user_pages_remote(*mm, addr, 1, gup_flags, &page, NULL, NULL);
-> >> > > 	if (ret < 0)
-> >> > > 	   return ERR_PTR(ret);
-> >> > > 	if (WARN_ON(ret == 0))
-> >> > > 	   return ERR_PTR(-EINVAL);
-> >> > >         *vma = vma_lookup(mm, addr);
-> >> > > 	if (WARN_ON(!*vma) {
-> >> > > 	   put_user_page(page);
-> >> > > 	   return ERR_PTR(-EINVAL);
-> >> > >         }
-> >> > > 	return page;
-> >> > > }
-> >> > >
-> >> > > It could be its own patch so this change was just a mechanical removal
-> >> > > of NULL
-> >> > >
-> >> > > Jason
-> >> > >
-> >> >
-> >> > Agreed, I think this would work better as a follow up patch however so as
-> >> > not to distract too much from the core change.
-> >>
-> >> I don't think you should open code sketchy error handling in several
-> >> places and then clean it up later. Just do it right from the start.
-> >>
-> >
-> > Intent was to do smallest change possible (though through review that grew
-> > of course), but I see your point, in this instance this is fiddly stuff and
-> > probably better to abstract it to enforce correct handling.
-> >
-> > I'll respin + add something like this.
->
-> Could you include in your description why looking up the vma after
-> getting the page does not introduce a race?
->
-> I am probably silly and just looking at this quickly but it does not
-> seem immediately obvious why the vma and the page should match.
->
-> I would not be surprised if you hold the appropriate mutex over the
-> entire operation but it just isn't apparent from the diff.
->
-> I am concerned because it is an easy mistake to refactor something into
-> two steps and then discover you have introduced a race.
->
-> Eric
->
+Em Fri, Apr 07, 2023 at 04:04:02PM -0700, Ian Rogers escreveu:
+> Enabled when REFCNT_CHECKING is defined. The change adds a memory
+> allocated pointer that is interposed between the reference counted
+> cpu map at a get and freed by a put. The pointer replaces the original
+> perf_cpu_map struct, so use of the perf_cpu_map via APIs remains
+> unchanged. Any use of the cpu map without the API requires two versions,
+> handled via the RC_CHK_ACCESS macro.
+> 
+> This change is intended to catch:
+>  - use after put: using a cpumap after you have put it will cause a
+>    segv.
+>  - unbalanced puts: two puts for a get will result in a double free
+>    that can be captured and reported by tools like address sanitizer,
+>    including with the associated stack traces of allocation and frees.
+>  - missing puts: if a put is missing then the get turns into a memory
+>    leak that can be reported by leak sanitizer, including the stack
+>    trace at the point the get occurs.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/perf/Makefile                  |  2 +-
+>  tools/lib/perf/cpumap.c                  | 94 +++++++++++++-----------
+>  tools/lib/perf/include/internal/cpumap.h |  4 +-
+>  tools/perf/tests/cpumap.c                |  4 +-
+>  tools/perf/util/cpumap.c                 | 40 +++++-----
+>  tools/perf/util/pmu.c                    |  8 +-
+>  6 files changed, 81 insertions(+), 71 deletions(-)
+> 
+> diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+> index d8cad124e4c5..3a9b2140aa04 100644
+> --- a/tools/lib/perf/Makefile
+> +++ b/tools/lib/perf/Makefile
+> @@ -188,7 +188,7 @@ install_lib: libs
+>  		cp -fpR $(LIBPERF_ALL) $(DESTDIR)$(libdir_SQ)
+>  
+>  HDRS := bpf_perf.h core.h cpumap.h threadmap.h evlist.h evsel.h event.h mmap.h
+> -INTERNAL_HDRS := cpumap.h evlist.h evsel.h lib.h mmap.h threadmap.h xyarray.h
+> +INTERNAL_HDRS := cpumap.h evlist.h evsel.h lib.h mmap.h rc_check.h threadmap.h xyarray.h
+>  
+>  INSTALL_HDRS_PFX := $(DESTDIR)$(prefix)/include/perf
+>  INSTALL_HDRS := $(addprefix $(INSTALL_HDRS_PFX)/, $(HDRS))
+> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> index 6cd0be7c1bb4..56eed1ac80d9 100644
+> --- a/tools/lib/perf/cpumap.c
+> +++ b/tools/lib/perf/cpumap.c
+> @@ -10,16 +10,16 @@
+>  #include <ctype.h>
+>  #include <limits.h>
+>  
+> -static struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
+> +struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
+>  {
+> -	struct perf_cpu_map *cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
+> -
+> -	if (cpus != NULL) {
+> +	struct perf_cpu_map *result;
+> +	RC_STRUCT(perf_cpu_map) *cpus =
+> +		malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
+> +	if (ADD_RC_CHK(result, cpus)) {
+>  		cpus->nr = nr_cpus;
+>  		refcount_set(&cpus->refcnt, 1);
+> -
+>  	}
+> -	return cpus;
+> +	return result;
+>  }
+>  
+>  struct perf_cpu_map *perf_cpu_map__dummy_new(void)
+> @@ -27,7 +27,7 @@ struct perf_cpu_map *perf_cpu_map__dummy_new(void)
+>  	struct perf_cpu_map *cpus = perf_cpu_map__alloc(1);
+>  
+>  	if (cpus)
+> -		cpus->map[0].cpu = -1;
+> +		RC_CHK_ACCESS(cpus)->map[0].cpu = -1;
 
-The mmap_lock is held so VMAs cannot be altered and no such race can
-occur. get_user_pages_remote() requires that the user calls it under the
-lock so it is implicitly assured that this cannot happen.
+One more:
 
-I'll update the description to make this clear on the next spin!
+From 93bbe2e90194f70df537e0ea4836277c316b3050 Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Mon, 17 Apr 2023 12:47:49 -0300
+Subject: [PATCH 1/1] libperf: Add perf_cpu_map__refcnt() interanl accessor to
+ use in the maps test
 
-(side-note: here is another irritating issue with GUP, we don't suffix with
-_locked() consistently)
+To remove one more direct access to 'struct perf_cpu_map' so that we can
+intercept accesses to its instantiations and refcount check it to catch
+use after free, etc.
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>
+Cc: Dmitriy Vyukov <dvyukov@google.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Riccardo Mancini <rickyman7@gmail.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Stephen Brennan <stephen.s.brennan@oracle.com>
+Link: https://lore.kernel.org/lkml/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/lib/perf/cpumap.c                  | 6 +++---
+ tools/lib/perf/include/internal/cpumap.h | 4 ++++
+ tools/perf/tests/cpumap.c                | 4 ++--
+ 3 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+index 6bbcbb83eb14cc45..27c3e73c6db29b57 100644
+--- a/tools/lib/perf/cpumap.c
++++ b/tools/lib/perf/cpumap.c
+@@ -40,7 +40,7 @@ struct perf_cpu_map *perf_cpu_map__dummy_new(void)
+ static void cpu_map__delete(struct perf_cpu_map *map)
+ {
+ 	if (map) {
+-		WARN_ONCE(refcount_read(&map->refcnt) != 0,
++		WARN_ONCE(refcount_read(perf_cpu_map__refcnt(map)) != 0,
+ 			  "cpu_map refcnt unbalanced\n");
+ 		free(map);
+ 	}
+@@ -49,13 +49,13 @@ static void cpu_map__delete(struct perf_cpu_map *map)
+ struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map)
+ {
+ 	if (map)
+-		refcount_inc(&map->refcnt);
++		refcount_inc(perf_cpu_map__refcnt(map));
+ 	return map;
+ }
+ 
+ void perf_cpu_map__put(struct perf_cpu_map *map)
+ {
+-	if (map && refcount_dec_and_test(&map->refcnt))
++	if (map && refcount_dec_and_test(perf_cpu_map__refcnt(map)))
+ 		cpu_map__delete(map);
+ }
+ 
+diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
+index b82fd6607a00e3dc..1e840dd53a11adc6 100644
+--- a/tools/lib/perf/include/internal/cpumap.h
++++ b/tools/lib/perf/include/internal/cpumap.h
+@@ -30,4 +30,8 @@ bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu
+ 
+ void perf_cpu_map__set_nr(struct perf_cpu_map *map, int nr_cpus);
+ 
++static inline refcount_t *perf_cpu_map__refcnt(struct perf_cpu_map *map)
++{
++	return &map->refcnt;
++}
+ #endif /* __LIBPERF_INTERNAL_CPUMAP_H */
+diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+index 3150fc1fed6f503b..b1a924314e095b0d 100644
+--- a/tools/perf/tests/cpumap.c
++++ b/tools/perf/tests/cpumap.c
+@@ -68,7 +68,7 @@ static int process_event_cpus(struct perf_tool *tool __maybe_unused,
+ 	TEST_ASSERT_VAL("wrong nr",  perf_cpu_map__nr(map) == 2);
+ 	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, 0).cpu == 1);
+ 	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, 1).cpu == 256);
+-	TEST_ASSERT_VAL("wrong refcnt", refcount_read(&map->refcnt) == 1);
++	TEST_ASSERT_VAL("wrong refcnt", refcount_read(perf_cpu_map__refcnt(map)) == 1);
+ 	perf_cpu_map__put(map);
+ 	return 0;
+ }
+@@ -94,7 +94,7 @@ static int process_event_range_cpus(struct perf_tool *tool __maybe_unused,
+ 	TEST_ASSERT_VAL("wrong nr",  perf_cpu_map__nr(map) == 256);
+ 	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__cpu(map, 0).cpu == 1);
+ 	TEST_ASSERT_VAL("wrong cpu", perf_cpu_map__max(map).cpu == 256);
+-	TEST_ASSERT_VAL("wrong refcnt", refcount_read(&map->refcnt) == 1);
++	TEST_ASSERT_VAL("wrong refcnt", refcount_read(perf_cpu_map__refcnt(map)) == 1);
+ 	perf_cpu_map__put(map);
+ 	return 0;
+ }
+-- 
+2.39.2
+
