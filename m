@@ -2,381 +2,311 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DD8C77B76
-	for <linux-perf-users@archiver.kernel.org>; Sat, 15 Apr 2023 12:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8237EC77B70
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 05:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230046AbjDOMJh (ORCPT
+        id S229693AbjDQFmD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 15 Apr 2023 08:09:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43568 "EHLO
+        Mon, 17 Apr 2023 01:42:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230044AbjDOMJe (ORCPT
+        with ESMTP id S229754AbjDQFmB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 15 Apr 2023 08:09:34 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4497059FE;
-        Sat, 15 Apr 2023 05:09:29 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id n42-20020a05600c3baa00b003f0b12814aaso2287249wms.0;
-        Sat, 15 Apr 2023 05:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681560567; x=1684152567;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W0l2+WhOTuhsjrgo5218GoveeiorDwRw7Vzzp86RCdQ=;
-        b=ldmw31RqwDsq19kNUyAGwCe6feARcBsKOWHer9UDyhHpXBW86bINZ4rpI99CYQXM3+
-         JERVDUA0BVrG5md+jDxa0acQWcQavONMHScc6SB/3xaQzbenQK0QpbQbIkLpaLP9jAfG
-         e/8lzW37JCyFs7Z17XxvJnEXXn7RIxRDv594gU7u7JgSZMJp9Uy9WDSppvCABKPg9q6P
-         6lgN2qvP2iE7QGZPWYRob5VjTGLMpqT1ukkX4auc09mbz9UYoKDOMgZczOt3ZuXY57kC
-         GvCT2JFtQmnaasrqUJ6+X5DcdjMmScBCDHnK/ROGEGVUOw13vr7fvIAtwDo3nrFrASqg
-         40qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681560567; x=1684152567;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W0l2+WhOTuhsjrgo5218GoveeiorDwRw7Vzzp86RCdQ=;
-        b=BKWXoOEa9ndBXj8HrZT0P7lohYLgeCH+08eLYPjmTh8aSZ/5DvVhdnwKZzBIwq65CB
-         86H0JF3M6psVMRAE0WjA6Mzy1nvjcL33hqHr4ndXXS9x65ekWxNj+DQlDMoWFV3KI1oU
-         Ef9LLY/ig7gjQbsrng/1fAZ7EMTE9hx7PihchW6TKsf294MBAFasPcVzJGsXxyRFewGW
-         SRdVUorLIR80lzryLHO+3lvRilFWhCRNjYEG6Jh/7JuZ6G7/YWeThIxFQC7jBldEKaME
-         ZmysX2ROmWl7lqGa079dt8dlen4lTmsf6NFJabMj4eSGO1pbSDd+dpsq/dE73GPbFnJx
-         K65Q==
-X-Gm-Message-State: AAQBX9fz64U5JLNkZxvZGYRz/5DfslXIsKhQ+atT5VbWQ5aEOamHY3sI
-        7dGr9srfg66t4P/kAjnAEMw=
-X-Google-Smtp-Source: AKy350a3KTToXZy6mk4WHVMLQX+oM6Sg5f2Asfiie67hTn0jXqMQSjIUSB1JD5MwmpH2ws8BySgnig==
-X-Received: by 2002:a7b:c7c9:0:b0:3f1:6ecf:537 with SMTP id z9-20020a7bc7c9000000b003f16ecf0537mr672424wmk.33.1681560567358;
-        Sat, 15 Apr 2023 05:09:27 -0700 (PDT)
-Received: from lucifer.home ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
-        by smtp.googlemail.com with ESMTPSA id q21-20020a05600c46d500b003f03d483966sm10428181wmo.44.2023.04.15.05.09.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 15 Apr 2023 05:09:26 -0700 (PDT)
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mon, 17 Apr 2023 01:42:01 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7091935B3;
+        Sun, 16 Apr 2023 22:41:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681710119; x=1713246119;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RJMiBHhWXS/CTaGMp1qpFdE1UFN+kNutJ+cfgf5SjVQ=;
+  b=VF2guojU+QmqbxaXw0/Iv3OSmYpQut/RUMqFEl9+siOOdwzIqUnkJlZJ
+   Nuke3q0c0hKFucy8SH+6bCFMiNGrnwpn9oeeqST2OlwdArZj8tpbuGNxU
+   nEMVd1cnBzj0HS8iPGy66U+O4ODYEtJA3qO0llwXTMhzPItHtZ5zXRH8Y
+   ePWdvRhXcpjUpDRPeyabyt0+i+4G/XSFfNlbr4lLB8PDij7SfWtuGh69W
+   uXlATBUy2KpTWtFWOZhMbUaMUet4so6zVm1JreL3XpXvANiPoRa3vRyj2
+   B7D7J+cSKwD7/zmLYD/YWF/UlTbUcP3n4/sJ9kVEmZpmxg1oFfXH4eLq1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10682"; a="346654895"
+X-IronPort-AV: E=Sophos;i="5.99,203,1677571200"; 
+   d="scan'208";a="346654895"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2023 22:40:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10682"; a="720997059"
+X-IronPort-AV: E=Sophos;i="5.99,203,1677571200"; 
+   d="scan'208";a="720997059"
+Received: from fgarrona-mobl.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.212.228])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2023 22:40:41 -0700
+Message-ID: <7f629f24-d98a-8a7d-e464-46b0237adf96@intel.com>
+Date:   Mon, 17 Apr 2023 08:40:37 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH v4 2/2] perf: script: add new output field 'dsoff' to
+ print dso offset
+To:     Changbin Du <changbin.du@huawei.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>
-Subject: [PATCH v3 3/7] mm/gup: remove vmas parameter from get_user_pages_remote()
-Date:   Sat, 15 Apr 2023 13:09:24 +0100
-Message-Id: <523f0764f4979276a6d4b89cbad9af9124e4bf0a.1681558407.git.lstoakes@gmail.com>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <cover.1681558407.git.lstoakes@gmail.com>
-References: <cover.1681558407.git.lstoakes@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hui Wang <hw.huiwang@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+References: <20230414032547.2767909-1-changbin.du@huawei.com>
+ <20230414032547.2767909-3-changbin.du@huawei.com>
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230414032547.2767909-3-changbin.du@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The only instances of get_user_pages_remote() invocations which used the
-vmas parameter were for a single page which can instead simply look up the
-VMA directly. In particular:-
+On 14/04/23 06:25, Changbin Du wrote:
+> This adds a new 'dsoff' field to print dso offset for resolved symbols,
+> and the offset is appended to dso name.
+> 
+> Default output:
+> $ perf script
+>        ls 2695501 3011030.487017:     500000 cycles:      152cc73ef4b5 get_common_indices.constprop.0+0x155 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
+>        ls 2695501 3011030.487018:     500000 cycles:  ffffffff99045b3e [unknown] ([unknown])
+>        ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968e107 [unknown] ([unknown])
+>        ls 2695501 3011030.487018:     500000 cycles:  ffffffffc1f54afb [unknown] ([unknown])
+>        ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968382f [unknown] ([unknown])
+>        ls 2695501 3011030.487019:     500000 cycles:  ffffffff99e00094 [unknown] ([unknown])
+>        ls 2695501 3011030.487019:     500000 cycles:      152cc718a8d0 __errno_location@plt+0x0 (/usr/lib/x86_64-linux-gnu/libselinux.so.1)
+> 
+> Display 'dsoff' field:
+> $ perf script -F +dsoff
+>        ls 2695501 3011030.487017:     500000 cycles:      152cc73ef4b5 get_common_indices.constprop.0+0x155 (/usr/lib/x86_64-linux-gnu/ld-2.31.so+0x1c4b5)
+>        ls 2695501 3011030.487018:     500000 cycles:  ffffffff99045b3e [unknown] ([unknown])
+>        ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968e107 [unknown] ([unknown])
+>        ls 2695501 3011030.487018:     500000 cycles:  ffffffffc1f54afb [unknown] ([unknown])
+>        ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968382f [unknown] ([unknown])
+>        ls 2695501 3011030.487019:     500000 cycles:  ffffffff99e00094 [unknown] ([unknown])
+>        ls 2695501 3011030.487019:     500000 cycles:      152cc718a8d0 __errno_location@plt+0x0 (/usr/lib/x86_64-linux-gnu/libselinux.so.1+0x68d0)
+>        ls 2695501 3011030.487019:     500000 cycles:  ffffffff992a6db0 [unknown] ([unknown])
+> 
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
 
-- __update_ref_ctr() looked up the VMA but did nothing with it so we simply
-  remove it.
+Looks good, but patches do not apply to:
 
-- __access_remote_vm() was already using vma_lookup() when the original
-  lookup failed so by doing the lookup directly this also de-duplicates the
-  code.
+	git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-tools-next
 
-This forms part of a broader set of patches intended to eliminate the vmas
-parameter altogether.
+Note the use of map__dso(map) now.
 
-Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
----
- arch/arm64/kernel/mte.c   |  7 ++++---
- arch/s390/kvm/interrupt.c |  2 +-
- fs/exec.c                 |  2 +-
- include/linux/mm.h        |  2 +-
- kernel/events/uprobes.c   | 14 +++++++++-----
- mm/gup.c                  | 12 ++++--------
- mm/memory.c               |  8 ++++++--
- mm/rmap.c                 |  2 +-
- security/tomoyo/domain.c  |  2 +-
- virt/kvm/async_pf.c       |  3 +--
- 10 files changed, 29 insertions(+), 25 deletions(-)
+Also the repeated dso printing code:
 
-diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-index f5bcb0dc6267..904785697e91 100644
---- a/arch/arm64/kernel/mte.c
-+++ b/arch/arm64/kernel/mte.c
-@@ -419,7 +419,6 @@ long get_mte_ctrl(struct task_struct *task)
- static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
- 				struct iovec *kiov, unsigned int gup_flags)
- {
--	struct vm_area_struct *vma;
- 	void __user *buf = kiov->iov_base;
- 	size_t len = kiov->iov_len;
- 	int ret;
-@@ -432,12 +431,13 @@ static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
- 		return -EIO;
- 
- 	while (len) {
-+		struct vm_area_struct *vma;
- 		unsigned long tags, offset;
- 		void *maddr;
- 		struct page *page = NULL;
- 
- 		ret = get_user_pages_remote(mm, addr, 1, gup_flags, &page,
--					    &vma, NULL);
-+					    NULL);
- 		if (ret <= 0)
- 			break;
- 
-@@ -448,7 +448,8 @@ static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
- 		 * would cause the existing tags to be cleared if the page
- 		 * was never mapped with PROT_MTE.
- 		 */
--		if (!(vma->vm_flags & VM_MTE)) {
-+		vma = vma_lookup(mm, addr);
-+		if (WARN_ON_ONCE(!vma) || !(vma->vm_flags & VM_MTE)) {
- 			ret = -EOPNOTSUPP;
- 			put_page(page);
- 			break;
-diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-index 9250fde1f97d..c19d0cb7d2f2 100644
---- a/arch/s390/kvm/interrupt.c
-+++ b/arch/s390/kvm/interrupt.c
-@@ -2777,7 +2777,7 @@ static struct page *get_map_page(struct kvm *kvm, u64 uaddr)
- 
- 	mmap_read_lock(kvm->mm);
- 	get_user_pages_remote(kvm->mm, uaddr, 1, FOLL_WRITE,
--			      &page, NULL, NULL);
-+			      &page, NULL);
- 	mmap_read_unlock(kvm->mm);
- 	return page;
- }
-diff --git a/fs/exec.c b/fs/exec.c
-index 87cf3a2f0e9a..d8d48ee15aac 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -219,7 +219,7 @@ static struct page *get_arg_page(struct linux_binprm *bprm, unsigned long pos,
- 	 */
- 	mmap_read_lock(bprm->mm);
- 	ret = get_user_pages_remote(bprm->mm, pos, 1, gup_flags,
--			&page, NULL, NULL);
-+			&page, NULL);
- 	mmap_read_unlock(bprm->mm);
- 	if (ret <= 0)
- 		return NULL;
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index ec9875c59f6d..1bfe73a2b6d3 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2374,7 +2374,7 @@ extern int __access_remote_vm(struct mm_struct *mm, unsigned long addr,
- long get_user_pages_remote(struct mm_struct *mm,
- 			    unsigned long start, unsigned long nr_pages,
- 			    unsigned int gup_flags, struct page **pages,
--			    struct vm_area_struct **vmas, int *locked);
-+			    int *locked);
- long pin_user_pages_remote(struct mm_struct *mm,
- 			   unsigned long start, unsigned long nr_pages,
- 			   unsigned int gup_flags, struct page **pages,
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 59887c69d54c..c5ed6bb340f7 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -365,7 +365,6 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
- {
- 	void *kaddr;
- 	struct page *page;
--	struct vm_area_struct *vma;
- 	int ret;
- 	short *ptr;
- 
-@@ -373,7 +372,7 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
- 		return -EINVAL;
- 
- 	ret = get_user_pages_remote(mm, vaddr, 1,
--			FOLL_WRITE, &page, &vma, NULL);
-+				    FOLL_WRITE, &page, NULL);
- 	if (unlikely(ret <= 0)) {
- 		/*
- 		 * We are asking for 1 page. If get_user_pages_remote() fails,
-@@ -475,10 +474,16 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
- 		gup_flags |= FOLL_SPLIT_PMD;
- 	/* Read the page with vaddr into memory */
- 	ret = get_user_pages_remote(mm, vaddr, 1, gup_flags,
--				    &old_page, &vma, NULL);
-+				    &old_page, NULL);
- 	if (ret <= 0)
- 		return ret;
- 
-+	vma = vma_lookup(mm, vaddr);
-+	if (WARN_ON_ONCE(!vma)) {
-+		ret = -EINVAL;
-+		goto put_old;
-+	}
-+
- 	ret = verify_opcode(old_page, vaddr, &opcode);
- 	if (ret <= 0)
- 		goto put_old;
-@@ -2027,8 +2032,7 @@ static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr)
- 	 * but we treat this as a 'remote' access since it is
- 	 * essentially a kernel access to the memory.
- 	 */
--	result = get_user_pages_remote(mm, vaddr, 1, FOLL_FORCE, &page,
--			NULL, NULL);
-+	result = get_user_pages_remote(mm, vaddr, 1, FOLL_FORCE, &page, NULL);
- 	if (result < 0)
- 		return result;
- 
-diff --git a/mm/gup.c b/mm/gup.c
-index 931c805bc32b..9440aa54c741 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2165,8 +2165,6 @@ static bool is_valid_gup_args(struct page **pages, struct vm_area_struct **vmas,
-  * @pages:	array that receives pointers to the pages pinned.
-  *		Should be at least nr_pages long. Or NULL, if caller
-  *		only intends to ensure the pages are faulted in.
-- * @vmas:	array of pointers to vmas corresponding to each page.
-- *		Or NULL if the caller does not require them.
-  * @locked:	pointer to lock flag indicating whether lock is held and
-  *		subsequently whether VM_FAULT_RETRY functionality can be
-  *		utilised. Lock must initially be held.
-@@ -2181,8 +2179,6 @@ static bool is_valid_gup_args(struct page **pages, struct vm_area_struct **vmas,
-  *
-  * The caller is responsible for releasing returned @pages, via put_page().
-  *
-- * @vmas are valid only as long as mmap_lock is held.
-- *
-  * Must be called with mmap_lock held for read or write.
-  *
-  * get_user_pages_remote walks a process's page tables and takes a reference
-@@ -2219,15 +2215,15 @@ static bool is_valid_gup_args(struct page **pages, struct vm_area_struct **vmas,
- long get_user_pages_remote(struct mm_struct *mm,
- 		unsigned long start, unsigned long nr_pages,
- 		unsigned int gup_flags, struct page **pages,
--		struct vm_area_struct **vmas, int *locked)
-+		int *locked)
- {
- 	int local_locked = 1;
- 
--	if (!is_valid_gup_args(pages, vmas, locked, &gup_flags,
-+	if (!is_valid_gup_args(pages, NULL, locked, &gup_flags,
- 			       FOLL_TOUCH | FOLL_REMOTE))
- 		return -EINVAL;
- 
--	return __get_user_pages_locked(mm, start, nr_pages, pages, vmas,
-+	return __get_user_pages_locked(mm, start, nr_pages, pages, NULL,
- 				       locked ? locked : &local_locked,
- 				       gup_flags);
- }
-@@ -2237,7 +2233,7 @@ EXPORT_SYMBOL(get_user_pages_remote);
- long get_user_pages_remote(struct mm_struct *mm,
- 			   unsigned long start, unsigned long nr_pages,
- 			   unsigned int gup_flags, struct page **pages,
--			   struct vm_area_struct **vmas, int *locked)
-+			   int *locked)
- {
- 	return 0;
- }
-diff --git a/mm/memory.c b/mm/memory.c
-index 8ddb10199e8d..310bfb910378 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -5591,7 +5591,9 @@ int __access_remote_vm(struct mm_struct *mm, unsigned long addr, void *buf,
- 		struct page *page = NULL;
- 
- 		ret = get_user_pages_remote(mm, addr, 1,
--				gup_flags, &page, &vma, NULL);
-+				gup_flags, &page, NULL);
-+		vma = vma_lookup(mm, addr);
-+
- 		if (ret <= 0) {
- #ifndef CONFIG_HAVE_IOREMAP_PROT
- 			break;
-@@ -5600,7 +5602,6 @@ int __access_remote_vm(struct mm_struct *mm, unsigned long addr, void *buf,
- 			 * Check if this is a VM_IO | VM_PFNMAP VMA, which
- 			 * we can access using slightly different code.
- 			 */
--			vma = vma_lookup(mm, addr);
- 			if (!vma)
- 				break;
- 			if (vma->vm_ops && vma->vm_ops->access)
-@@ -5610,6 +5611,9 @@ int __access_remote_vm(struct mm_struct *mm, unsigned long addr, void *buf,
- 				break;
- 			bytes = ret;
- #endif
-+		} else if (unlikely(!vma)) {
-+			VM_WARN_ON_ONCE(1);
-+			break;
- 		} else {
- 			bytes = len;
- 			offset = addr & (PAGE_SIZE-1);
-diff --git a/mm/rmap.c b/mm/rmap.c
-index ba901c416785..756ea8a9bb90 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -2324,7 +2324,7 @@ int make_device_exclusive_range(struct mm_struct *mm, unsigned long start,
- 
- 	npages = get_user_pages_remote(mm, start, npages,
- 				       FOLL_GET | FOLL_WRITE | FOLL_SPLIT_PMD,
--				       pages, NULL, NULL);
-+				       pages, NULL);
- 	if (npages < 0)
- 		return npages;
- 
-diff --git a/security/tomoyo/domain.c b/security/tomoyo/domain.c
-index 31af29f669d2..ac20c0bdff9d 100644
---- a/security/tomoyo/domain.c
-+++ b/security/tomoyo/domain.c
-@@ -916,7 +916,7 @@ bool tomoyo_dump_page(struct linux_binprm *bprm, unsigned long pos,
- 	 */
- 	mmap_read_lock(bprm->mm);
- 	ret = get_user_pages_remote(bprm->mm, pos, 1,
--				    FOLL_FORCE, &page, NULL, NULL);
-+				    FOLL_FORCE, &page, NULL);
- 	mmap_read_unlock(bprm->mm);
- 	if (ret <= 0)
- 		return false;
-diff --git a/virt/kvm/async_pf.c b/virt/kvm/async_pf.c
-index 9bfe1d6f6529..e033c79d528e 100644
---- a/virt/kvm/async_pf.c
-+++ b/virt/kvm/async_pf.c
-@@ -61,8 +61,7 @@ static void async_pf_execute(struct work_struct *work)
- 	 * access remotely.
- 	 */
- 	mmap_read_lock(mm);
--	get_user_pages_remote(mm, addr, 1, FOLL_WRITE, NULL, NULL,
--			&locked);
-+	get_user_pages_remote(mm, addr, 1, FOLL_WRITE, NULL, &locked);
- 	if (locked)
- 		mmap_read_unlock(mm);
- 
--- 
-2.40.0
+	printed += fprintf(fp, "(");
+	printed += map__fprintf_dsoname(map, fp);
+	if (PRINT_FIELD(DSOFF) && map && map__dso(map))
+		printed += fprintf(fp, "+0x%" PRIx64, alf.addr);
+	printed += fprintf(fp, ")");
+
+is begging to be replaced by a helper function e.g.
+
+	if (PRINT_FIELD(DSO))
+		map__fprintf_dsoname_dsoff(map, PRINT_FIELD(DSOFF), addr, fp);
+
+Perhaps another patch for that.
+
+Also see comment further below.
+
+> ---
+>  tools/perf/Documentation/perf-script.txt |  2 +-
+>  tools/perf/builtin-script.c              | 25 +++++++++++++++++++++++-
+>  tools/perf/util/evsel_fprintf.c          |  6 ++++++
+>  tools/perf/util/evsel_fprintf.h          |  1 +
+>  4 files changed, 32 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+> index 68e37de5fae4..20a1558c555f 100644
+> --- a/tools/perf/Documentation/perf-script.txt
+> +++ b/tools/perf/Documentation/perf-script.txt
+> @@ -130,7 +130,7 @@ OPTIONS
+>  -F::
+>  --fields::
+>          Comma separated list of fields to print. Options are:
+> -        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
+> +        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
+>          srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
+>          brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
+>          phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 69394ac0a20d..95dd6d650c21 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -130,6 +130,7 @@ enum perf_output_field {
+>  	PERF_OUTPUT_BRSTACKINSNLEN  = 1ULL << 36,
+>  	PERF_OUTPUT_MACHINE_PID     = 1ULL << 37,
+>  	PERF_OUTPUT_VCPU            = 1ULL << 38,
+> +	PERF_OUTPUT_DSOFF           = 1ULL << 39,
+>  };
+>  
+>  struct perf_script {
+> @@ -171,6 +172,7 @@ struct output_option {
+>  	{.str = "ip",    .field = PERF_OUTPUT_IP},
+>  	{.str = "sym",   .field = PERF_OUTPUT_SYM},
+>  	{.str = "dso",   .field = PERF_OUTPUT_DSO},
+> +	{.str = "dsoff", .field = PERF_OUTPUT_DSOFF},
+>  	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
+>  	{.str = "symoff", .field = PERF_OUTPUT_SYMOFFSET},
+>  	{.str = "srcline", .field = PERF_OUTPUT_SRCLINE},
+> @@ -559,6 +561,9 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
+>  	if (PRINT_FIELD(DSO))
+>  		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
+>  
+> +	if (PRINT_FIELD(DSOFF))
+> +		output[type].print_ip_opts |= EVSEL__PRINT_DSOFF;
+> +
+>  	if (PRINT_FIELD(SYMOFFSET))
+>  		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
+>  
+> @@ -612,6 +617,10 @@ static int perf_session__check_output_opt(struct perf_session *session)
+>  		if (evsel == NULL)
+>  			continue;
+>  
+> +		/* 'dsoff' implys 'dso' field */
+> +		if (output[j].fields & PERF_OUTPUT_DSOFF)
+> +			output[j].fields |= PERF_OUTPUT_DSO;
+> +
+>  		set_print_ip_opts(&evsel->core.attr);
+>  		tod |= output[j].fields & PERF_OUTPUT_TOD;
+>  	}
+> @@ -916,6 +925,8 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+>  		if (PRINT_FIELD(DSO)) {
+>  			printed += fprintf(fp, "(");
+>  			printed += map__fprintf_dsoname(alf.map, fp);
+> +			if (PRINT_FIELD(DSOFF) && alf.map && alf.map->dso)
+> +				printed += fprintf(fp, "+0x%lx", alf.addr);
+
+Here and elsewhere, addr is a u64 so you
+need to use PRIx64 e.g.
+
+	printed += fprintf(fp, "+0x%" PRIx64, alf.addr);
+
+>  			printed += fprintf(fp, ")");
+>  		}
+>  
+> @@ -923,6 +934,8 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+>  		if (PRINT_FIELD(DSO)) {
+>  			printed += fprintf(fp, "(");
+>  			printed += map__fprintf_dsoname(alt.map, fp);
+> +			if (PRINT_FIELD(DSOFF) && alt.map && alt.map->dso)
+> +				printed += fprintf(fp, "+0x%lx", alt.addr);
+>  			printed += fprintf(fp, ")");
+>  		}
+>  
+> @@ -959,6 +972,8 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+>  		if (PRINT_FIELD(DSO)) {
+>  			printed += fprintf(fp, "(");
+>  			printed += map__fprintf_dsoname(alf.map, fp);
+> +			if (PRINT_FIELD(DSOFF) && alf.map && alf.map->dso)
+> +				printed += fprintf(fp, "+0x%lx", alf.addr);
+>  			printed += fprintf(fp, ")");
+>  		}
+>  		printed += fprintf(fp, "%c", '/');
+> @@ -966,6 +981,8 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+>  		if (PRINT_FIELD(DSO)) {
+>  			printed += fprintf(fp, "(");
+>  			printed += map__fprintf_dsoname(alt.map, fp);
+> +			if (PRINT_FIELD(DSOFF) && alt.map && alt.map->dso)
+> +				printed += fprintf(fp, "+0x%lx", alt.addr);
+>  			printed += fprintf(fp, ")");
+>  		}
+>  		printed += print_bstack_flags(fp, entries + i);
+> @@ -1006,12 +1023,16 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
+>  		if (PRINT_FIELD(DSO)) {
+>  			printed += fprintf(fp, "(");
+>  			printed += map__fprintf_dsoname(alf.map, fp);
+> +			if (PRINT_FIELD(DSOFF) && alf.map && alf.map->dso)
+> +				printed += fprintf(fp, "+0x%lx", alf.addr);
+>  			printed += fprintf(fp, ")");
+>  		}
+>  		printed += fprintf(fp, "/0x%"PRIx64, to);
+>  		if (PRINT_FIELD(DSO)) {
+>  			printed += fprintf(fp, "(");
+>  			printed += map__fprintf_dsoname(alt.map, fp);
+> +			if (PRINT_FIELD(DSOFF) && alt.map && alt.map->dso)
+> +				printed += fprintf(fp, "+0x%lx", alt.addr);
+>  			printed += fprintf(fp, ")");
+>  		}
+>  		printed += print_bstack_flags(fp, entries + i);
+> @@ -1378,6 +1399,8 @@ static int perf_sample__fprintf_addr(struct perf_sample *sample,
+>  	if (PRINT_FIELD(DSO)) {
+>  		printed += fprintf(fp, " (");
+>  		printed += map__fprintf_dsoname(al.map, fp);
+> +		if (PRINT_FIELD(DSOFF) && al.map && al.map->dso)
+> +			printed += fprintf(fp, "+0x%lx", al.addr);
+>  		printed += fprintf(fp, ")");
+>  	}
+>  out:
+> @@ -3851,7 +3874,7 @@ int cmd_script(int argc, const char **argv)
+>  		     "comma separated output fields prepend with 'type:'. "
+>  		     "+field to add and -field to remove."
+>  		     "Valid types: hw,sw,trace,raw,synth. "
+> -		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
+> +		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff"
+>  		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
+>  		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
+>  		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
+> diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+> index 1fb8044d402e..ae8333772c76 100644
+> --- a/tools/perf/util/evsel_fprintf.c
+> +++ b/tools/perf/util/evsel_fprintf.c
+> @@ -116,6 +116,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+>  	int print_ip = print_opts & EVSEL__PRINT_IP;
+>  	int print_sym = print_opts & EVSEL__PRINT_SYM;
+>  	int print_dso = print_opts & EVSEL__PRINT_DSO;
+> +	int print_dsoff = print_opts & EVSEL__PRINT_DSOFF;
+>  	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
+>  	int print_oneline = print_opts & EVSEL__PRINT_ONELINE;
+>  	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
+> @@ -174,6 +175,8 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+>  			if (print_dso && (!sym || !sym->inlined)) {
+>  				printed += fprintf(fp, " (");
+>  				printed += map__fprintf_dsoname(map, fp);
+> +				if (print_dsoff && map && map->dso)
+> +					printed += fprintf(fp, "+0x%lx", addr);
+>  				printed += fprintf(fp, ")");
+>  			}
+>  
+> @@ -209,6 +212,7 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
+>  	int print_ip = print_opts & EVSEL__PRINT_IP;
+>  	int print_sym = print_opts & EVSEL__PRINT_SYM;
+>  	int print_dso = print_opts & EVSEL__PRINT_DSO;
+> +	int print_dsoff = print_opts & EVSEL__PRINT_DSOFF;
+>  	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
+>  	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
+>  	int print_unknown_as_addr = print_opts & EVSEL__PRINT_UNKNOWN_AS_ADDR;
+> @@ -237,6 +241,8 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
+>  		if (print_dso) {
+>  			printed += fprintf(fp, " (");
+>  			printed += map__fprintf_dsoname(al->map, fp);
+> +			if (print_dsoff && al->map && al->map->dso)
+> +				printed += fprintf(fp, "+0x%lx", al->addr);
+>  			printed += fprintf(fp, ")");
+>  		}
+>  
+> diff --git a/tools/perf/util/evsel_fprintf.h b/tools/perf/util/evsel_fprintf.h
+> index 3093d096c29f..c8a9fac2f2dd 100644
+> --- a/tools/perf/util/evsel_fprintf.h
+> +++ b/tools/perf/util/evsel_fprintf.h
+> @@ -26,6 +26,7 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE
+>  #define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<6)
+>  #define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<7)
+>  #define EVSEL__PRINT_SKIP_IGNORED	(1<<8)
+> +#define EVSEL__PRINT_DSOFF		(1<<9)
+>  
+>  struct addr_location;
+>  struct perf_event_attr;
 
