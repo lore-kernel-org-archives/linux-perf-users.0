@@ -2,54 +2,52 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF231C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 18:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79482C77B76
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 18:52:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230280AbjDQSdk (ORCPT
+        id S229842AbjDQSwp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 14:33:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46050 "EHLO
+        Mon, 17 Apr 2023 14:52:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230146AbjDQSdj (ORCPT
+        with ESMTP id S229664AbjDQSwo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Apr 2023 14:33:39 -0400
-X-Greylist: delayed 1484 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 17 Apr 2023 11:33:33 PDT
-Received: from out02.mta.xmission.com (out02.mta.xmission.com [166.70.13.232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B7A10DD;
-        Mon, 17 Apr 2023 11:33:32 -0700 (PDT)
-Received: from in02.mta.xmission.com ([166.70.13.52]:41666)
-        by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1poQSt-00AYUx-8R; Mon, 17 Apr 2023 09:08:23 -0600
-Received: from ip68-110-29-46.om.om.cox.net ([68.110.29.46]:35070 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1poQSs-004oqS-3G; Mon, 17 Apr 2023 09:08:22 -0600
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
+        Mon, 17 Apr 2023 14:52:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08E0D3594
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Apr 2023 11:51:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1681757514;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=L+Zz2A4a6oXCi75vniy0YiXcn3MLhYcxpdDk4A6UviE=;
+        b=Sa0lcI+UbnpSCJt3AboNEmTeYvT3whkdCJus6tZwAAgnwwmHS/PM742XA2XApLOQed4yRn
+        fztY/0lirPbH4d5OK8N3wYmdyAdDZcy3vdiHZdfNvRECSYJV3+xSDbFAXZlIJQ0AjGxiCS
+        5KUhsX4x8fqVgHL4AouG7C56Ur2Xbxs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-664-YWgog8K5O76cVU0Sa94r2w-1; Mon, 17 Apr 2023 14:51:50 -0400
+X-MC-Unique: YWgog8K5O76cVU0Sa94r2w-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5E9BF101A531;
+        Mon, 17 Apr 2023 18:51:48 +0000 (UTC)
+Received: from [10.18.17.153] (dhcp-17-153.bos.redhat.com [10.18.17.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 848D9492B03;
+        Mon, 17 Apr 2023 18:51:45 +0000 (UTC)
+Message-ID: <e197ad4d-a60b-f773-dd74-ba91ad66a617@redhat.com>
+Date:   Mon, 17 Apr 2023 14:51:45 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v6 2/3] sched/task: Add the put_task_struct_atomic_safe()
+ function
+Content-Language: en-US
+To:     Wander Lairson Costa <wander@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -59,141 +57,106 @@ Cc:     Jason Gunthorpe <jgg@nvidia.com>, linux-mm@kvack.org,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <cover.1681508038.git.lstoakes@gmail.com>
-        <5a4cf1ebf1c6cdfabbf2f5209facb0180dd20006.1681508038.git.lstoakes@gmail.com>
-        <ZD1FECftWekha6Do@nvidia.com>
-        <9be77e7e-4531-4e1c-9e0d-4edbb5ad3bd5@lucifer.local>
-        <ZD1GrBezHrJTo6x2@nvidia.com>
-        <241f0c22-f3d6-436e-a0d8-be04e281ed2f@lucifer.local>
-Date:   Mon, 17 Apr 2023 10:07:53 -0500
-In-Reply-To: <241f0c22-f3d6-436e-a0d8-be04e281ed2f@lucifer.local> (Lorenzo
-        Stoakes's message of "Mon, 17 Apr 2023 14:23:52 +0100")
-Message-ID: <87cz427diu.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1poQSs-004oqS-3G;;;mid=<87cz427diu.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.110.29.46;;;frm=ebiederm@xmission.com;;;spf=pass
-X-XM-AID: U2FsdGVkX1/hlfhbMYdh8TSwqCEEto245myqDJhBbl8=
-X-SA-Exim-Connect-IP: 68.110.29.46
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH 3/7] mm/gup: remove vmas parameter from
- get_user_pages_remote()
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+        Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>
+Cc:     Hu Chunyu <chuhu@redhat.com>, Paul McKenney <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <20230414125532.14958-1-wander@redhat.com>
+ <20230414125532.14958-3-wander@redhat.com>
+From:   Waiman Long <longman@redhat.com>
+In-Reply-To: <20230414125532.14958-3-wander@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Lorenzo Stoakes <lstoakes@gmail.com> writes:
 
-> On Mon, Apr 17, 2023 at 10:16:28AM -0300, Jason Gunthorpe wrote:
->> On Mon, Apr 17, 2023 at 02:13:39PM +0100, Lorenzo Stoakes wrote:
->> > On Mon, Apr 17, 2023 at 10:09:36AM -0300, Jason Gunthorpe wrote:
->> > > On Sat, Apr 15, 2023 at 12:27:31AM +0100, Lorenzo Stoakes wrote:
->> > > > The only instances of get_user_pages_remote() invocations which used the
->> > > > vmas parameter were for a single page which can instead simply look up the
->> > > > VMA directly. In particular:-
->> > > >
->> > > > - __update_ref_ctr() looked up the VMA but did nothing with it so we simply
->> > > >   remove it.
->> > > >
->> > > > - __access_remote_vm() was already using vma_lookup() when the original
->> > > >   lookup failed so by doing the lookup directly this also de-duplicates the
->> > > >   code.
->> > > >
->> > > > This forms part of a broader set of patches intended to eliminate the vmas
->> > > > parameter altogether.
->> > > >
->> > > > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
->> > > > ---
->> > > >  arch/arm64/kernel/mte.c   |  5 +++--
->> > > >  arch/s390/kvm/interrupt.c |  2 +-
->> > > >  fs/exec.c                 |  2 +-
->> > > >  include/linux/mm.h        |  2 +-
->> > > >  kernel/events/uprobes.c   | 10 +++++-----
->> > > >  mm/gup.c                  | 12 ++++--------
->> > > >  mm/memory.c               |  9 +++++----
->> > > >  mm/rmap.c                 |  2 +-
->> > > >  security/tomoyo/domain.c  |  2 +-
->> > > >  virt/kvm/async_pf.c       |  3 +--
->> > > >  10 files changed, 23 insertions(+), 26 deletions(-)
->> > > >
->> > > > diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
->> > > > index f5bcb0dc6267..74d8d4007dec 100644
->> > > > --- a/arch/arm64/kernel/mte.c
->> > > > +++ b/arch/arm64/kernel/mte.c
->> > > > @@ -437,8 +437,9 @@ static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
->> > > >  		struct page *page = NULL;
->> > > >
->> > > >  		ret = get_user_pages_remote(mm, addr, 1, gup_flags, &page,
->> > > > -					    &vma, NULL);
->> > > > -		if (ret <= 0)
->> > > > +					    NULL);
->> > > > +		vma = vma_lookup(mm, addr);
->> > > > +		if (ret <= 0 || !vma)
->> > > >  			break;
->> > >
->> > > Given the slightly tricky error handling, it would make sense to turn
->> > > this pattern into a helper function:
->> > >
->> > > page = get_single_user_page_locked(mm, addr, gup_flags, &vma);
->> > > if (IS_ERR(page))
->> > >   [..]
->> > >
->> > > static inline struct page *get_single_user_page_locked(struct mm_struct *mm,
->> > >    unsigned long addr, int gup_flags, struct vm_area_struct **vma)
->> > > {
->> > > 	struct page *page;
->> > > 	int ret;
->> > >
->> > > 	ret = get_user_pages_remote(*mm, addr, 1, gup_flags, &page, NULL, NULL);
->> > > 	if (ret < 0)
->> > > 	   return ERR_PTR(ret);
->> > > 	if (WARN_ON(ret == 0))
->> > > 	   return ERR_PTR(-EINVAL);
->> > >         *vma = vma_lookup(mm, addr);
->> > > 	if (WARN_ON(!*vma) {
->> > > 	   put_user_page(page);
->> > > 	   return ERR_PTR(-EINVAL);
->> > >         }
->> > > 	return page;
->> > > }
->> > >
->> > > It could be its own patch so this change was just a mechanical removal
->> > > of NULL
->> > >
->> > > Jason
->> > >
->> >
->> > Agreed, I think this would work better as a follow up patch however so as
->> > not to distract too much from the core change.
->>
->> I don't think you should open code sketchy error handling in several
->> places and then clean it up later. Just do it right from the start.
->>
+On 4/14/23 08:55, Wander Lairson Costa wrote:
+> Due to the possibility of indirectly acquiring sleeping locks, it is
+> unsafe to call put_task_struct() in atomic contexts when the kernel is
+> compiled with PREEMPT_RT.
 >
-> Intent was to do smallest change possible (though through review that grew
-> of course), but I see your point, in this instance this is fiddly stuff and
-> probably better to abstract it to enforce correct handling.
+> To mitigate this issue, this commit introduces
+> put_task_struct_atomic_safe(), which schedules __put_task_struct()
+> through call_rcu() when PREEMPT_RT is enabled. While a workqueue would
+> be a more natural approach, we cannot allocate dynamic memory from
+> atomic context in PREEMPT_RT, making the code more complex.
 >
-> I'll respin + add something like this.
+> This implementation ensures safe execution in atomic contexts and
+> avoids any potential issues that may arise from using the non-atomic
+> version.
+>
+> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+> Reported-by: Hu Chunyu <chuhu@redhat.com>
+> Cc: Paul McKenney <paulmck@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   include/linux/sched/task.h | 31 +++++++++++++++++++++++++++++++
+>   kernel/fork.c              |  8 ++++++++
+>   2 files changed, 39 insertions(+)
+>
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> index b597b97b1f8f..5c13b83d7008 100644
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -141,6 +141,37 @@ static inline void put_task_struct_many(struct task_struct *t, int nr)
+>   
+>   void put_task_struct_rcu_user(struct task_struct *task);
+>   
+> +extern void __delayed_put_task_struct(struct rcu_head *rhp);
+> +
+> +static inline void put_task_struct_atomic_safe(struct task_struct *task)
+> +{
+> +	if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
+> +		/*
+> +		 * Decrement the refcount explicitly to avoid unnecessarily
+> +		 * calling call_rcu.
+> +		 */
+> +		if (refcount_dec_and_test(&task->usage))
+> +			/*
+> +			 * under PREEMPT_RT, we can't call put_task_struct
+> +			 * in atomic context because it will indirectly
+> +			 * acquire sleeping locks.
+> +			 * call_rcu() will schedule delayed_put_task_struct_rcu()
+delayed_put_task_struct_rcu()?
+> +			 * to be called in process context.
+> +			 *
+> +			 * __put_task_struct() is called called when
+"called called"?
+> +			 * refcount_dec_and_test(&t->usage) succeeds.
+> +			 *
+> +			 * This means that it can't "conflict" with
+> +			 * put_task_struct_rcu_user() which abuses ->rcu the same
+> +			 * way; rcu_users has a reference so task->usage can't be
+> +			 * zero after rcu_users 1 -> 0 transition.
 
-Could you include in your description why looking up the vma after
-getting the page does not introduce a race?
+Note that put_task_struct_rcu_user() isn't the only user of task->rcu. 
+delayed_free_task() in kernel/fork.c also uses it, though it is only 
+called in the error case. Still you may need to take a look to make sure 
+that there is no conflict.
 
-I am probably silly and just looking at this quickly but it does not
-seem immediately obvious why the vma and the page should match.
+Cheers,
+Longman
 
-I would not be surprised if you hold the appropriate mutex over the
-entire operation but it just isn't apparent from the diff.
-
-I am concerned because it is an easy mistake to refactor something into
-two steps and then discover you have introduced a race.
-
-Eric
