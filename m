@@ -2,199 +2,368 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3106C77B70
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 13:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A567C77B76
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 13:58:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230127AbjDQNYF (ORCPT
+        id S229655AbjDQN6l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 09:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51850 "EHLO
+        Mon, 17 Apr 2023 09:58:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229898AbjDQNYC (ORCPT
+        with ESMTP id S229573AbjDQN6k (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Apr 2023 09:24:02 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 510F549FF;
-        Mon, 17 Apr 2023 06:23:56 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-2f625d52275so1550487f8f.3;
-        Mon, 17 Apr 2023 06:23:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681737835; x=1684329835;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RKAAc3ZsjOsQZpjk6XJI6NMJzVbDtqI98XsTFMuJ8w4=;
-        b=oNOvCHGNkSBvUbh4ERh8j/DqJtUwbQoII2LGqZbVAhWFWfbbcnRnf+8UhdDzO/d1ET
-         i21AXWRsFFh1RWrHvwHpOF6isEiP2D2zO1ON4sIutL4dtw2gJaEBVtjK+ZX1jqOwfXxe
-         bVmx0wrpYw1yojVfAmWruLcF69lFlLHUEQKj/58zZKf6DmefiuCIzxxqH4DJID8yaXbt
-         urENc2lY29lF4j2ZupatM9Uz2p8FmREaiqOOYw7xEoUPXmJhrPFMpD8ihomU3gxN+/no
-         nX01agI2B5Q0NxrW9XatoyAzGuOV0xtn3Regsk8O0VTAdr+YKUHGHmxJzeZsjHXbaZ7u
-         1r4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681737835; x=1684329835;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RKAAc3ZsjOsQZpjk6XJI6NMJzVbDtqI98XsTFMuJ8w4=;
-        b=FSSFwy/LXp1yxMfUHZds9iHh9uVVd9SMbz4BvAJ6OylEtIyPLs/MI4HyaGarwz2Kel
-         aJTg3iaMENh6AEZI4CSI9GfJ22EcVbHtZrYG8DjKbOJ99KlJtACG18g9RgBzUV43UtcN
-         OVEDxHUtoWYbTbWrel4tlp/eJ10mS7c+YkWro7DPRA/amM28+xOxgUIQd8GC1/5ft84k
-         0iUxiWDBdXFEhegYO3p1cLi31bclAYk6ZBGxotkKupqXT5UW3+J+AOArtlqJdwv6JGcv
-         dhaNWDpC47kng0W4qUPGLDHHNxcjdtu7dSREooy6d0fqMTL+TgPZ4SJ3d8CalcYOsI3d
-         iQow==
-X-Gm-Message-State: AAQBX9cxtwIfd2bfg8RTtISqu9GkCF3uK2agGjGSGIfkdHRLLvOqOaTS
-        /MkDroe32/oMe3mRyR3jXq4=
-X-Google-Smtp-Source: AKy350ZgGhmNdbORfcWWT3+kEaLh1DjBGO2Qr9T2OkuqSkpU4KmNaszZ8mszkHwAUCbDgkdgFsooIQ==
-X-Received: by 2002:adf:dd4b:0:b0:2ef:eb54:4dc0 with SMTP id u11-20020adfdd4b000000b002efeb544dc0mr6790292wrm.51.1681737834522;
-        Mon, 17 Apr 2023 06:23:54 -0700 (PDT)
-Received: from localhost (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
-        by smtp.gmail.com with ESMTPSA id k14-20020a5d66ce000000b002f103ca90cdsm10571529wrw.101.2023.04.17.06.23.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Apr 2023 06:23:53 -0700 (PDT)
-Date:   Mon, 17 Apr 2023 14:23:52 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Mon, 17 Apr 2023 09:58:40 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44E3A49DD;
+        Mon, 17 Apr 2023 06:58:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681739919; x=1713275919;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ycOj8d9/Pr4vcjdNCSy9/ZXkP5RXvNgBPlZwX1ZckNQ=;
+  b=U8FSJ1dw5VFYGSMaQnFwAUVEHJir4mN+4Ct6QovGuxjqr6ErxStBAzAY
+   e7nOryOQWrL7qsBZimxdfEEMERr4a5pIkLws9sJ/gzt8BKPsaSRdQW8O0
+   i2kQNyB95eBfnQnyDMyKVrzCfcnY4Rv6g4zxL7GOYPJf23f8C5MQEvcN8
+   M0CeYUL7j/62jtIWP8cTJqTaed8KhW9PsPMdf3sJvoKre6Myugnt1vYWk
+   KUyzbndNq0RzrzKmvdiHbimAMGBoqnflifEVqp6doQc/YLwDoGiwBILxP
+   D2OXSD6kO+l8YlBstjNuG1+u0zi8D3pILMOBiKL/n4ZATcwTqh5FV2fzW
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="342391327"
+X-IronPort-AV: E=Sophos;i="5.99,204,1677571200"; 
+   d="scan'208";a="342391327"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 06:58:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="780079368"
+X-IronPort-AV: E=Sophos;i="5.99,204,1677571200"; 
+   d="scan'208";a="780079368"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Apr 2023 06:58:38 -0700
+Received: from [10.212.231.244] (kliang2-mobl1.ccr.corp.intel.com [10.212.231.244])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id C0C8F580BF1;
+        Mon, 17 Apr 2023 06:58:36 -0700 (PDT)
+Message-ID: <5031f492-9734-be75-3283-5961771d87c8@linux.intel.com>
+Date:   Mon, 17 Apr 2023 09:58:35 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2] perf stat: Introduce skippable evsels
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 3/7] mm/gup: remove vmas parameter from
- get_user_pages_remote()
-Message-ID: <241f0c22-f3d6-436e-a0d8-be04e281ed2f@lucifer.local>
-References: <cover.1681508038.git.lstoakes@gmail.com>
- <5a4cf1ebf1c6cdfabbf2f5209facb0180dd20006.1681508038.git.lstoakes@gmail.com>
- <ZD1FECftWekha6Do@nvidia.com>
- <9be77e7e-4531-4e1c-9e0d-4edbb5ad3bd5@lucifer.local>
- <ZD1GrBezHrJTo6x2@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZD1GrBezHrJTo6x2@nvidia.com>
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230414051922.3625666-1-irogers@google.com>
+ <56ac61a0-ccf0-210e-e429-11062a07b8bf@linux.intel.com>
+ <CAP-5=fXz1vw48A2tWgcNDSZsnvnOO7_jA+py3p_Khi_igz0hJw@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fXz1vw48A2tWgcNDSZsnvnOO7_jA+py3p_Khi_igz0hJw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 17, 2023 at 10:16:28AM -0300, Jason Gunthorpe wrote:
-> On Mon, Apr 17, 2023 at 02:13:39PM +0100, Lorenzo Stoakes wrote:
-> > On Mon, Apr 17, 2023 at 10:09:36AM -0300, Jason Gunthorpe wrote:
-> > > On Sat, Apr 15, 2023 at 12:27:31AM +0100, Lorenzo Stoakes wrote:
-> > > > The only instances of get_user_pages_remote() invocations which used the
-> > > > vmas parameter were for a single page which can instead simply look up the
-> > > > VMA directly. In particular:-
-> > > >
-> > > > - __update_ref_ctr() looked up the VMA but did nothing with it so we simply
-> > > >   remove it.
-> > > >
-> > > > - __access_remote_vm() was already using vma_lookup() when the original
-> > > >   lookup failed so by doing the lookup directly this also de-duplicates the
-> > > >   code.
-> > > >
-> > > > This forms part of a broader set of patches intended to eliminate the vmas
-> > > > parameter altogether.
-> > > >
-> > > > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
-> > > > ---
-> > > >  arch/arm64/kernel/mte.c   |  5 +++--
-> > > >  arch/s390/kvm/interrupt.c |  2 +-
-> > > >  fs/exec.c                 |  2 +-
-> > > >  include/linux/mm.h        |  2 +-
-> > > >  kernel/events/uprobes.c   | 10 +++++-----
-> > > >  mm/gup.c                  | 12 ++++--------
-> > > >  mm/memory.c               |  9 +++++----
-> > > >  mm/rmap.c                 |  2 +-
-> > > >  security/tomoyo/domain.c  |  2 +-
-> > > >  virt/kvm/async_pf.c       |  3 +--
-> > > >  10 files changed, 23 insertions(+), 26 deletions(-)
-> > > >
-> > > > diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-> > > > index f5bcb0dc6267..74d8d4007dec 100644
-> > > > --- a/arch/arm64/kernel/mte.c
-> > > > +++ b/arch/arm64/kernel/mte.c
-> > > > @@ -437,8 +437,9 @@ static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
-> > > >  		struct page *page = NULL;
-> > > >
-> > > >  		ret = get_user_pages_remote(mm, addr, 1, gup_flags, &page,
-> > > > -					    &vma, NULL);
-> > > > -		if (ret <= 0)
-> > > > +					    NULL);
-> > > > +		vma = vma_lookup(mm, addr);
-> > > > +		if (ret <= 0 || !vma)
-> > > >  			break;
-> > >
-> > > Given the slightly tricky error handling, it would make sense to turn
-> > > this pattern into a helper function:
-> > >
-> > > page = get_single_user_page_locked(mm, addr, gup_flags, &vma);
-> > > if (IS_ERR(page))
-> > >   [..]
-> > >
-> > > static inline struct page *get_single_user_page_locked(struct mm_struct *mm,
-> > >    unsigned long addr, int gup_flags, struct vm_area_struct **vma)
-> > > {
-> > > 	struct page *page;
-> > > 	int ret;
-> > >
-> > > 	ret = get_user_pages_remote(*mm, addr, 1, gup_flags, &page, NULL, NULL);
-> > > 	if (ret < 0)
-> > > 	   return ERR_PTR(ret);
-> > > 	if (WARN_ON(ret == 0))
-> > > 	   return ERR_PTR(-EINVAL);
-> > >         *vma = vma_lookup(mm, addr);
-> > > 	if (WARN_ON(!*vma) {
-> > > 	   put_user_page(page);
-> > > 	   return ERR_PTR(-EINVAL);
-> > >         }
-> > > 	return page;
-> > > }
-> > >
-> > > It could be its own patch so this change was just a mechanical removal
-> > > of NULL
-> > >
-> > > Jason
-> > >
-> >
-> > Agreed, I think this would work better as a follow up patch however so as
-> > not to distract too much from the core change.
->
-> I don't think you should open code sketchy error handling in several
-> places and then clean it up later. Just do it right from the start.
->
 
-Intent was to do smallest change possible (though through review that grew
-of course), but I see your point, in this instance this is fiddly stuff and
-probably better to abstract it to enforce correct handling.
 
-I'll respin + add something like this.
+On 2023-04-14 7:03 p.m., Ian Rogers wrote:
+> On Fri, Apr 14, 2023 at 11:07 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2023-04-14 1:19 a.m., Ian Rogers wrote:
+>>> Perf stat with no arguments will use default events and metrics. These
+>>> events may fail to open even with kernel and hypervisor disabled. When
+>>> these fail then the permissions error appears even though they were
+>>> implicitly selected. This is particularly a problem with the automatic
+>>> selection of the TopdownL1 metric group on certain architectures like
+>>> Skylake:
+>>>
+>>> ```
+>>> $ perf stat true
+>>> Error:
+>>> Access to performance monitoring and observability operations is limited.
+>>> Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+>>> access to performance monitoring and observability operations for processes
+>>> without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+>>> More information can be found at 'Perf events and tool security' document:
+>>> https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+>>> perf_event_paranoid setting is 2:
+>>>   -1: Allow use of (almost) all events by all users
+>>>       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+>>>> = 0: Disallow raw and ftrace function tracepoint access
+>>>> = 1: Disallow CPU event access
+>>>> = 2: Disallow kernel profiling
+>>> To make the adjusted perf_event_paranoid setting permanent preserve it
+>>> in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
+>>> ```
+>>>
+>>> This patch adds skippable evsels that when they fail to open won't
+>>> fail and won't appear in output. The TopdownL1 events, from the metric
+>>> group, are marked as skippable. This turns the failure above to:
+>>>
+>>> ```
+>>> $ perf stat true
+>>>
+>>>  Performance counter stats for 'true':
+>>>
+>>>               1.26 msec task-clock:u                     #    0.328 CPUs utilized
+>>>                  0      context-switches:u               #    0.000 /sec
+>>>                  0      cpu-migrations:u                 #    0.000 /sec
+>>>                 49      page-faults:u                    #   38.930 K/sec
+>>>            176,449      cycles:u                         #    0.140 GHz                         (48.99%)
+>>
+>> Multiplexing?
+>>
+>> Thanks,
+>> Kan
+> 
+> I may have been running a test in the background otherwise I can't
+> explain it. Repeating the test yields no multiplexing:
 
-> Jason
+
+The above multiplexing should be on a Skylake (since there is no
+topdownL1 printed), but the test which you repeat seems on a Tigerlake
+(has topdownL1). Could you please double check on a Skylake?
+
+
+Thanks,
+Kan
+> 
+> ```
+> $ perf stat true
+> 
+> Performance counter stats for 'true':
+> 
+>              0.78 msec task-clock:u                     #    0.383
+> CPUs utilized
+>                 0      context-switches:u               #    0.000
+> /sec
+>                 0      cpu-migrations:u                 #    0.000
+> /sec
+>                47      page-faults:u                    #   60.174
+> K/sec
+>           233,420      cycles:u                         #    0.299 GHz
+>           133,318      instructions:u                   #    0.57
+> insn per cycle
+>            31,396      branches:u                       #   40.196
+> M/sec
+>             2,334      branch-misses:u                  #    7.43% of
+> all branches
+>         1,167,100      TOPDOWN.SLOTS:u                  #     12.2 %
+> tma_retiring
+>                                                  #     28.9 %
+> tma_backend_bound
+>                                                  #     41.0 %
+> tma_frontend_bound
+>                                                  #     18.0 %
+> tma_bad_speculation
+>           141,882      topdown-retiring:u
+>           480,570      topdown-fe-bound:u
+>           320,380      topdown-be-bound:u
+>           224,266      topdown-bad-spec:u
+>             2,173      INT_MISC.UOP_DROPPING:u          #    2.782
+> M/sec
+>             3,323      cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/u #
+>  4.254 M/sec
+> 
+> 
+>       0.002036744 seconds time elapsed
+> 
+>       0.002252000 seconds user
+>       0.000000000 seconds sys
+> ```
+> 
+> Thanks,
+> Ian
+> 
+>>>            122,905      instructions:u                   #    0.70  insn per cycle
+>>>             28,264      branches:u                       #   22.456 M/sec
+>>>              2,405      branch-misses:u                  #    8.51% of all branches
+>>>
+>>>        0.003834565 seconds time elapsed
+>>>
+>>>        0.000000000 seconds user
+>>>        0.004130000 seconds sys
+>>> ```
+>>>
+>>> When the events can have kernel/hypervisor disabled, like on
+>>> Tigerlake, then it continues to succeed as:
+>>>
+>>> ```
+>>> $ perf stat true
+>>>
+>>>  Performance counter stats for 'true':
+>>>
+>>>               0.57 msec task-clock:u                     #    0.385 CPUs utilized
+>>>                  0      context-switches:u               #    0.000 /sec
+>>>                  0      cpu-migrations:u                 #    0.000 /sec
+>>>                 47      page-faults:u                    #   82.329 K/sec
+>>>            287,017      cycles:u                         #    0.503 GHz
+>>>            133,318      instructions:u                   #    0.46  insn per cycle
+>>>             31,396      branches:u                       #   54.996 M/sec
+>>>              2,442      branch-misses:u                  #    7.78% of all branches
+>>>            998,790      TOPDOWN.SLOTS:u                  #     14.5 %  tma_retiring
+>>>                                                   #     27.6 %  tma_backend_bound
+>>>                                                   #     40.9 %  tma_frontend_bound
+>>>                                                   #     17.0 %  tma_bad_speculation
+>>>            144,922      topdown-retiring:u
+>>>            411,266      topdown-fe-bound:u
+>>>            258,510      topdown-be-bound:u
+>>>            184,090      topdown-bad-spec:u
+>>>              2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/sec
+>>>              3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=1,edge/u #    6.015 M/sec
+>>>
+>>>        0.001480954 seconds time elapsed
+>>>
+>>>        0.000000000 seconds user
+>>>        0.001686000 seconds sys
+>>> ```
+>>>
+>>> And this likewise works if paranoia allows or running as root.
+>>>
+>>> v2. Don't display the skipped events as <not counted> or <not supported>.
+>>>
+>>> Signed-off-by: Ian Rogers <irogers@google.com>
+>>> ---
+>>>  tools/perf/builtin-stat.c      | 39 ++++++++++++++++++++++++++--------
+>>>  tools/perf/util/evsel.c        | 15 +++++++++++--
+>>>  tools/perf/util/evsel.h        |  1 +
+>>>  tools/perf/util/stat-display.c |  4 ++++
+>>>  4 files changed, 48 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+>>> index d3cbee7460fc..7a641a67486d 100644
+>>> --- a/tools/perf/builtin-stat.c
+>>> +++ b/tools/perf/builtin-stat.c
+>>> @@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+>>>                       evsel_list->core.threads->err_thread = -1;
+>>>                       return COUNTER_RETRY;
+>>>               }
+>>> +     } else if (counter->skippable) {
+>>> +             if (verbose > 0)
+>>> +                     ui__warning("skipping event %s that kernel failed to open .\n",
+>>> +                                 evsel__name(counter));
+>>> +             counter->supported = false;
+>>> +             counter->errored = true;
+>>> +             return COUNTER_SKIP;
+>>>       }
+>>>
+>>>       evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
+>>> @@ -1885,15 +1892,29 @@ static int add_default_attributes(void)
+>>>                * Add TopdownL1 metrics if they exist. To minimize
+>>>                * multiplexing, don't request threshold computation.
+>>>                */
+>>> -             if (metricgroup__has_metric("TopdownL1") &&
+>>> -                 metricgroup__parse_groups(evsel_list, "TopdownL1",
+>>> -                                         /*metric_no_group=*/false,
+>>> -                                         /*metric_no_merge=*/false,
+>>> -                                         /*metric_no_threshold=*/true,
+>>> -                                         stat_config.user_requested_cpu_list,
+>>> -                                         stat_config.system_wide,
+>>> -                                         &stat_config.metric_events) < 0)
+>>> -                     return -1;
+>>> +             if (metricgroup__has_metric("TopdownL1")) {
+>>> +                     struct evlist *metric_evlist = evlist__new();
+>>> +                     struct evsel *metric_evsel;
+>>> +
+>>> +                     if (!metric_evlist)
+>>> +                             return -1;
+>>> +
+>>> +                     if (metricgroup__parse_groups(metric_evlist, "TopdownL1",
+>>> +                                                     /*metric_no_group=*/false,
+>>> +                                                     /*metric_no_merge=*/false,
+>>> +                                                     /*metric_no_threshold=*/true,
+>>> +                                                     stat_config.user_requested_cpu_list,
+>>> +                                                     stat_config.system_wide,
+>>> +                                                     &stat_config.metric_events) < 0)
+>>> +                             return -1;
+>>> +
+>>> +                     evlist__for_each_entry(metric_evlist, metric_evsel) {
+>>> +                             metric_evsel->skippable = true;
+>>> +                     }
+>>> +                     evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
+>>> +                     evlist__delete(metric_evlist);
+>>> +             }
+>>> +
+>>>               /* Platform specific attrs */
+>>>               if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
+>>>                       return -1;
+>>> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>>> index a85a987128aa..83a65f771666 100644
+>>> --- a/tools/perf/util/evsel.c
+>>> +++ b/tools/perf/util/evsel.c
+>>> @@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
+>>>       evsel->per_pkg_mask  = NULL;
+>>>       evsel->collect_stat  = false;
+>>>       evsel->pmu_name      = NULL;
+>>> +     evsel->skippable     = false;
+>>>  }
+>>>
+>>>  struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
+>>> @@ -1720,9 +1721,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map_idx, int thread)
+>>>               return -1;
+>>>
+>>>       fd = FD(leader, cpu_map_idx, thread);
+>>> -     BUG_ON(fd == -1);
+>>> +     BUG_ON(fd == -1 && !leader->skippable);
+>>>
+>>> -     return fd;
+>>> +     /*
+>>> +      * When the leader has been skipped, return -2 to distinguish from no
+>>> +      * group leader case.
+>>> +      */
+>>> +     return fd == -1 ? -2 : fd;
+>>>  }
+>>>
+>>>  static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_threads, int thread_idx)
+>>> @@ -2104,6 +2109,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>>>
+>>>                       group_fd = get_group_fd(evsel, idx, thread);
+>>>
+>>> +                     if (group_fd == -2) {
+>>> +                             pr_debug("broken group leader for %s\n", evsel->name);
+>>> +                             err = -EINVAL;
+>>> +                             goto out_close;
+>>> +                     }
+>>> +
+>>>                       test_attr__ready();
+>>>
+>>>                       /* Debug message used by test scripts */
+>>> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+>>> index 68072ec655ce..98afe3351176 100644
+>>> --- a/tools/perf/util/evsel.h
+>>> +++ b/tools/perf/util/evsel.h
+>>> @@ -95,6 +95,7 @@ struct evsel {
+>>>               bool                    weak_group;
+>>>               bool                    bpf_counter;
+>>>               bool                    use_config_name;
+>>> +             bool                    skippable;
+>>>               int                     bpf_fd;
+>>>               struct bpf_object       *bpf_obj;
+>>>               struct list_head        config_terms;
+>>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+>>> index e6035ecbeee8..6b46bbb3d322 100644
+>>> --- a/tools/perf/util/stat-display.c
+>>> +++ b/tools/perf/util/stat-display.c
+>>> @@ -810,6 +810,10 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+>>>       struct perf_cpu cpu;
+>>>       int idx;
+>>>
+>>> +     /* Skip counters that were speculatively/default enabled rather than requested. */
+>>> +     if (counter->skippable)
+>>> +             return true;
+>>> +
+>>>       /*
+>>>        * Skip value 0 when enabling --per-thread globally,
+>>>        * otherwise it will have too many 0 output.
