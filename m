@@ -2,97 +2,97 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DC2C77B70
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 10:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B12DC77B72
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 11:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230476AbjDQK4P (ORCPT
+        id S229789AbjDQLAs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 06:56:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54418 "EHLO
+        Mon, 17 Apr 2023 07:00:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230227AbjDQKzn (ORCPT
+        with ESMTP id S229992AbjDQLAo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Apr 2023 06:55:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 196701737;
-        Mon, 17 Apr 2023 03:54:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D84AC6223B;
-        Mon, 17 Apr 2023 10:52:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75C41C433EF;
-        Mon, 17 Apr 2023 10:52:36 +0000 (UTC)
-Date:   Mon, 17 Apr 2023 11:52:33 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Mon, 17 Apr 2023 07:00:44 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4037ED;
+        Mon, 17 Apr 2023 03:59:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qAwfrPnNclTtYIr2T/WtfaYPceP7Audmu+SG7iP0hiY=; b=XFJZfNir+HHYcVnr91cef5KybD
+        AFLuToNXZo4xhu6058jHimjaxx0DHbxStXUWvwKjdNg8Nm/KhmvEfiKdxhNK9M5OZh6m+Ohu9je10
+        wbLF0nlauqkCH50ncll7d5Ka8bBHL1vZm8tX+XY+mjeM2OcryOdBR9ObZmb1qgaz+1Zv/ZcdXFVMR
+        ZdU8ht/KAIOFvJ5yqRDJPlAgBFn3MVfCjh3Q7WquD1yW3zplLbLsOS6FDTi01Fikid9AxAQ2WJnnb
+        4XwfWe/ruE8dmimQGaL6xRe+ccPp3WWw+p2WjNYvzUBBLJJ8vPpYFSv9R8nIUS50QdY8vcwRPFkhI
+        55o3Yp2Q==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1poMY4-00HIUt-2L;
+        Mon, 17 Apr 2023 10:57:29 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 66D103001E5;
+        Mon, 17 Apr 2023 12:57:27 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 201D424248704; Mon, 17 Apr 2023 12:57:27 +0200 (CEST)
+Date:   Mon, 17 Apr 2023 12:57:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH v3 3/7] mm/gup: remove vmas parameter from
- get_user_pages_remote()
-Message-ID: <ZD0k8dMm+6E75Kzu@arm.com>
-References: <cover.1681558407.git.lstoakes@gmail.com>
- <523f0764f4979276a6d4b89cbad9af9124e4bf0a.1681558407.git.lstoakes@gmail.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 1/5] perf: Add ioctl to emit sideband events
+Message-ID: <20230417105727.GG83892@hirez.programming.kicks-ass.net>
+References: <20230414082300.34798-1-adrian.hunter@intel.com>
+ <20230414082300.34798-2-adrian.hunter@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <523f0764f4979276a6d4b89cbad9af9124e4bf0a.1681558407.git.lstoakes@gmail.com>
+In-Reply-To: <20230414082300.34798-2-adrian.hunter@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Apr 15, 2023 at 01:09:24PM +0100, Lorenzo Stoakes wrote:
-> The only instances of get_user_pages_remote() invocations which used the
-> vmas parameter were for a single page which can instead simply look up the
-> VMA directly. In particular:-
+On Fri, Apr 14, 2023 at 11:22:56AM +0300, Adrian Hunter wrote:
+> perf tools currently read /proc to get this information, but that
+> races with changes made by the kernel.
 > 
-> - __update_ref_ctr() looked up the VMA but did nothing with it so we simply
->   remove it.
+> Add an ioctl to output status-only sideband events for a currently
+> active event on the current CPU. Using timestamps, these status-only
+> sideband events will be correctly ordered with respect to "real"
+> sideband events.
 > 
-> - __access_remote_vm() was already using vma_lookup() when the original
->   lookup failed so by doing the lookup directly this also de-duplicates the
->   code.
+> The assumption is a user will:
+> 	- open and enable a dummy event to track sideband events
+> 	- call the new ioctl to get sideband information for currently
+> 	  running processes as needed
+> 	- enable the remaining selected events
 > 
-> This forms part of a broader set of patches intended to eliminate the vmas
-> parameter altogether.
+> The initial sideband events to be supported will be: fork, namespaces, comm
+> and mmap.
 > 
-> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
-> ---
->  arch/arm64/kernel/mte.c   |  7 ++++---
+> Add a new misc flag PERF_RECORD_MISC_STATUS_ONLY to differentiate "real"
+> sideband events from status-only sideband events.
+> 
+> The limitation that the event must be active is significant. The ioctl
+> caller must either:
+> 	i)  For a CPU context, set CPU affinity to the correct CPU.
+> 	    Note, obviously that would not need to be done for system-wide
+> 	    tracing on all CPUs. It would also only need to be done for the
+> 	    period of tracing when the ioctl is to be used.
+> 	ii) Use an event opened for the current process on all CPUs.
+> 	    Note, if such an additional event is needed, it would also use
+> 	    additional memory from the user's perf_event_mlock_kb /
+> 	    RLIMIT_MEMLOCK limit.
 
-For arm64:
-
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+Why would a single per-task event not work? I see nothing in the code
+that would require a per-task-per-cpu setup. Or am I just having trouble
+reading again?
