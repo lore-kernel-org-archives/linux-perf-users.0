@@ -2,142 +2,120 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3B2C77B72
-	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 11:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F81C77B72
+	for <linux-perf-users@archiver.kernel.org>; Mon, 17 Apr 2023 11:46:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbjDQLaY (ORCPT
+        id S230125AbjDQLq6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 07:30:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51222 "EHLO
+        Mon, 17 Apr 2023 07:46:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229878AbjDQLaW (ORCPT
+        with ESMTP id S230158AbjDQLq5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Apr 2023 07:30:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A77E11FDA
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Apr 2023 04:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681730838;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oVc9uxy2kIdreOR/jYYEkHBdj+2RYiJitTncQTj92Ak=;
-        b=NanM95DIf6UqjG2Vx5RF7ykf0oZmfTs/2USLb19AXJCGj+zVOHGy9cSV2QghmE+K5qo87U
-        qzqBOFXZ0PgBHYGDwQ5N3yrClRiR7CQFCcnmMLRBQX91F/5zVnjiYosuoqmja2QAitRaHU
-        LDcF0eQkZnNUwADKchhrd4Jv61QWPi0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-607-L1fMpgNMPgKv93yYRSYDRg-1; Mon, 17 Apr 2023 07:01:23 -0400
-X-MC-Unique: L1fMpgNMPgKv93yYRSYDRg-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-2efbab2e7ffso389712f8f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Apr 2023 04:01:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681729281; x=1684321281;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oVc9uxy2kIdreOR/jYYEkHBdj+2RYiJitTncQTj92Ak=;
-        b=ZUKy0g4dMpsFc4v4TylYNQQjz4vQvfiqYfO4iA9C6ppNbezAm6Mvk1F+ylrPXgHWVV
-         f3SxZFn5OK3aADsHKuYLRzCoG0coe6WIF/k/ECQKmrTVFPU7kk/uZatdF2DAP5YMTDHy
-         VpQ+4rD7566Ak0fXBQpGbJy2tWfODmvwGz6cf7TLHv1sbqVGkeomjLykFu8YtVEv0y9n
-         Le/4pTk4bhXBwMVDuB8UOwuF37A9QSTf4t0Va0vVSongFFOgdlRmmYhUllxzjRv3ItVI
-         syvIYFSGejPyaLi4RirboPr7MmalhPB6AO43ka35wOwFmDzfGknNO60AlTPlQPBzhZ4S
-         WZEw==
-X-Gm-Message-State: AAQBX9dcFmCIrj9oRlhpzp8/+Zz13yyAO9kY7Xnh88gx4rWLtcuLd5jD
-        9RERVRfySn+xtK/wNWuQ7xdTtubjyyoHaM47TZHlOXDJe6RkbGEX/GGJbNmaCgxZwE7lxxc4eLp
-        R4zaU9Knx6/Vau9jl4NqqzC3jYHRMLg==
-X-Received: by 2002:a05:6000:1376:b0:2f7:fb78:9694 with SMTP id q22-20020a056000137600b002f7fb789694mr5066284wrz.17.1681729281619;
-        Mon, 17 Apr 2023 04:01:21 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZQIa4sVrexrjBGWt+x2dl05vD2C7OxIO4qZKWXoX9kbiyotAMI/EdKnSlVTtQjGuOSPjILbQ==
-X-Received: by 2002:a05:6000:1376:b0:2f7:fb78:9694 with SMTP id q22-20020a056000137600b002f7fb789694mr5066215wrz.17.1681729280958;
-        Mon, 17 Apr 2023 04:01:20 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c700:fc00:db07:68a9:6af5:ecdf? (p200300cbc700fc00db0768a96af5ecdf.dip0.t-ipconnect.de. [2003:cb:c700:fc00:db07:68a9:6af5:ecdf])
-        by smtp.gmail.com with ESMTPSA id h12-20020a5d4fcc000000b002f22c44e974sm10214704wrw.102.2023.04.17.04.01.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Apr 2023 04:01:20 -0700 (PDT)
-Message-ID: <8a323d9f-f54e-065d-d611-0a07aea170c8@redhat.com>
-Date:   Mon, 17 Apr 2023 13:01:18 +0200
+        Mon, 17 Apr 2023 07:46:57 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 063F49F;
+        Mon, 17 Apr 2023 04:46:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=euqFyJ5D5EZ1z4Bo2J06MIkQP2iXlSqQQupLUBYhVqM=; b=aPcrZ46ynB7zUL/Qy+XlM2Op3u
+        JHQ4DEQ8rAmR/vD5AMWPQM7dGv1tN77w9/9GHhWblSScKnVmb+tpfmrNkKrpVVkSqnodRrhAWk/RX
+        RZ3CR4qxp1Yezm1tnqe+J9CoTlLbRebkW7yQcDhlNmrKzwRjsYdR6Bg/+RJ1JiaapcPu1pLivfOOB
+        Crek56RUCUMvBMZRDqIJ4UqY9AuuPRsMxeuxeSJYd/pVCYxXeCf4q8+ybr1mMGaP1Oasifytp+B0j
+        zmXKSZub0w8PIOzMSH5b50nZ0xswntJXSlIP15+pQNLQSoYLpa69pj03eH4NLdIWPXgVsbczP+wFe
+        wKDIcyWw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1poNIK-00BIsx-4T; Mon, 17 Apr 2023 11:45:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D3586300338;
+        Mon, 17 Apr 2023 13:45:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 782C024248737; Mon, 17 Apr 2023 13:45:12 +0200 (CEST)
+Date:   Mon, 17 Apr 2023 13:45:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/core: Fix perf_sample_data not properly initialized
+ for different swevents in perf_tp_event()
+Message-ID: <20230417114512.GK83892@hirez.programming.kicks-ass.net>
+References: <20230412095240.181516-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH v3 3/7] mm/gup: remove vmas parameter from
- get_user_pages_remote()
-Content-Language: en-US
-To:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kentaro Takeda <takedakn@nttdata.co.jp>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-References: <cover.1681558407.git.lstoakes@gmail.com>
- <523f0764f4979276a6d4b89cbad9af9124e4bf0a.1681558407.git.lstoakes@gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <523f0764f4979276a6d4b89cbad9af9124e4bf0a.1681558407.git.lstoakes@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230412095240.181516-1-yangjihong1@huawei.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 15.04.23 14:09, Lorenzo Stoakes wrote:
-> The only instances of get_user_pages_remote() invocations which used the
-> vmas parameter were for a single page which can instead simply look up the
-> VMA directly. In particular:-
+On Wed, Apr 12, 2023 at 09:52:40AM +0000, Yang Jihong wrote:
+> data->sample_flags may be modified in perf_prepare_sample(),
+> in perf_tp_event(), different swevents use the same on-stack
+> perf_sample_data, the previous swevent may change sample_flags in
+> perf_prepare_sample(), as a result, some members of perf_sample_data are
+> not correctly initialized when next swevent_event preparing sample
+> (for example data->id, the value varies according to swevent).
 > 
-> - __update_ref_ctr() looked up the VMA but did nothing with it so we simply
->    remove it.
+> A simple scenario triggers this problem is as follows:
 > 
-> - __access_remote_vm() was already using vma_lookup() when the original
->    lookup failed so by doing the lookup directly this also de-duplicates the
->    code.
+>   # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
+>   [ perf record: dump data: Woken up 0 times ]
+>   [ perf record: Dump perf.data.2023041209014396 ]
+>   [ perf record: dump data: Woken up 0 times ]
+>   [ perf record: Dump perf.data.2023041209014662 ]
+>   [ perf record: dump data: Woken up 0 times ]
+>   [ perf record: Dump perf.data.2023041209014910 ]
+>   [ perf record: Woken up 0 times to write data ]
+>   [ perf record: Dump perf.data.2023041209015164 ]
+>   [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
+>   # ls -l
+>   total 860
+>   -rw------- 1 root root  95694 Apr 12 09:01 perf.data.2023041209014396
+>   -rw------- 1 root root 606430 Apr 12 09:01 perf.data.2023041209014662
+>   -rw------- 1 root root  82246 Apr 12 09:01 perf.data.2023041209014910
+>   -rw------- 1 root root  82342 Apr 12 09:01 perf.data.2023041209015164
+>   # perf script -i perf.data.2023041209014396
+>   0x11d58 [0x80]: failed to process type: 9 [Bad address]
 > 
-> This forms part of a broader set of patches intended to eliminate the vmas
-> parameter altogether.
+> Solution: Add perf_sample_data_flags_{save, restore} helpers to save and
+> restore sample_flags when processing different swevents
 > 
-> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
-> ---
+> After fix:
+> 
+>   # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
+>   [ perf record: dump data: Woken up 0 times ]
+>   [ perf record: Dump perf.data.2023041209442259 ]
+>   [ perf record: dump data: Woken up 0 times ]
+>   [ perf record: Dump perf.data.2023041209442514 ]
+>   [ perf record: dump data: Woken up 0 times ]
+>   [ perf record: Dump perf.data.2023041209442760 ]
+>   [ perf record: Woken up 0 times to write data ]
+>   [ perf record: Dump perf.data.2023041209443003 ]
+>   [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
+>   # ls -l
+>   total 864
+>   -rw------- 1 root root 100166 Apr 12 09:44 perf.data.2023041209442259
+>   -rw------- 1 root root 606438 Apr 12 09:44 perf.data.2023041209442514
+>   -rw------- 1 root root  82246 Apr 12 09:44 perf.data.2023041209442760
+>   -rw------- 1 root root  82342 Apr 12 09:44 perf.data.2023041209443003
+>   # perf script -i perf.data.2023041209442259 | head -n 5
+>               perf   232 [000]    66.846217: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=D ==> next_comm=perf next_pid=234 next_prio=120
+>               perf   234 [000]    66.846449: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
+>               perf   232 [000]    66.846546: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
+>               perf   234 [000]    66.846606: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
+>               perf   232 [000]    66.846646: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
 
-I guess we should never drop the mmap lock temporarily in these cases, 
-so it's fine.
+This seems a little bit short on analysis; what actual flags are the
+problem? Much of the data will in fact be identical between these
+invocations and endlessly re-computing that is wasteful.
 
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
-Thanks,
-
-David / dhildenb
-
+I'm thinking perhaps those flags that update ->dyn_size are the problem?
+At the same time, Should you not also then clear dyn_size?
