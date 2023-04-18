@@ -2,293 +2,93 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 967D7C77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 03:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3C2C77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 06:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230113AbjDRDTF (ORCPT
+        id S229619AbjDRGS6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 23:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49144 "EHLO
+        Tue, 18 Apr 2023 02:18:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230248AbjDRDS4 (ORCPT
+        with ESMTP id S229568AbjDRGS5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Apr 2023 23:18:56 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7026E6;
-        Mon, 17 Apr 2023 20:18:50 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [7.221.188.120])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Q0pxq3z4hzsR8C;
-        Tue, 18 Apr 2023 11:17:19 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 18 Apr 2023 11:18:47 +0800
-From:   Changbin Du <changbin.du@huawei.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
+        Tue, 18 Apr 2023 02:18:57 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2368469D;
+        Mon, 17 Apr 2023 23:18:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681798736; x=1713334736;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6JBGljYazrmRSE6RvTQW+cpQVI0fUGbUG2iNAadpTAA=;
+  b=P+wyJ2O4kZz3e3izmI4EZWWgC2X87wSE1Q53cuHhf4/h0RobLyzFBtnf
+   mcMDsEjP9It6fZJBZCoSSBktm2ZrwVEmrnXjKhXLliBi7dWl0D4wiO5/L
+   HY9WvnIzDmXLtYQYzGeWTnAdthODN6SLGfXLpNBQmLUH2LppX9Sez/gnf
+   tIJoNKZpPJC4+S4kBniwu8McHhfGWN6J9t68zgs/VDuxeOQabkERisL1G
+   GvdDbb92jn4pyMQiCt6KVPz706Ym4GwWFcBCO2zQf7rBBQuLIxi3gbky0
+   AfOUapCFtwx/45iBUt4QoCwZlvLpqFw454rDVo8Tpk3LN0ttRLxdZ5DgN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="372966305"
+X-IronPort-AV: E=Sophos;i="5.99,206,1677571200"; 
+   d="scan'208";a="372966305"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 23:18:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="723524722"
+X-IronPort-AV: E=Sophos;i="5.99,206,1677571200"; 
+   d="scan'208";a="723524722"
+Received: from choiwony-mobl.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.90])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 23:18:53 -0700
+Message-ID: <89733d35-0b71-615f-4fb8-55183585c67a@intel.com>
+Date:   Tue, 18 Apr 2023 09:18:49 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH RFC 0/5] perf: Add ioctl to emit sideband events
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Hui Wang <hw.huiwang@huawei.com>,
-        Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v5 3/3] perf: script: add new output field 'dsoff' to print dso offset
-Date:   Tue, 18 Apr 2023 11:18:25 +0800
-Message-ID: <20230418031825.1262579-4-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230418031825.1262579-1-changbin.du@huawei.com>
-References: <20230418031825.1262579-1-changbin.du@huawei.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500013.china.huawei.com (7.221.188.120)
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230414082300.34798-1-adrian.hunter@intel.com>
+ <20230417110221.GH83892@hirez.programming.kicks-ass.net>
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230417110221.GH83892@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This adds a new 'dsoff' field to print dso offset for resolved symbols,
-and the offset is appended to dso name.
+On 17/04/23 14:02, Peter Zijlstra wrote:
+> On Fri, Apr 14, 2023 at 11:22:55AM +0300, Adrian Hunter wrote:
+>> Hi
+>>
+>> Here is a stab at adding an ioctl for sideband events.
+>>
+>> This is to overcome races when reading the same information
+>> from /proc.
+> 
+> What races? Are you talking about reading old state in /proc the kernel
+> delivering a sideband event for the new state, and then you writing the
+> old state out?
+> 
+> Surely that's something perf tool can fix without kernel changes?
 
-Default output:
-$ perf script
-       ls 2695501 3011030.487017:     500000 cycles:      152cc73ef4b5 get_common_indices.constprop.0+0x155 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff99045b3e [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968e107 [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffffc1f54afb [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968382f [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:  ffffffff99e00094 [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:      152cc718a8d0 __errno_location@plt+0x0 (/usr/lib/x86_64-linux-gnu/libselinux.so.1)
+Yes, and it was a bit of a brain fart not to realise that.
 
-Display 'dsoff' field:
-$ perf script -F +dsoff
-       ls 2695501 3011030.487017:     500000 cycles:      152cc73ef4b5 get_common_indices.constprop.0+0x155 (/usr/lib/x86_64-linux-gnu/ld-2.31.so+0x1c4b5)
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff99045b3e [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968e107 [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffffc1f54afb [unknown] ([unknown])
-       ls 2695501 3011030.487018:     500000 cycles:  ffffffff9968382f [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:  ffffffff99e00094 [unknown] ([unknown])
-       ls 2695501 3011030.487019:     500000 cycles:      152cc718a8d0 __errno_location@plt+0x0 (/usr/lib/x86_64-linux-gnu/libselinux.so.1+0x68d0)
-       ls 2695501 3011030.487019:     500000 cycles:  ffffffff992a6db0 [unknown] ([unknown])
+There may still be corner cases, where different kinds of events are
+interdependent, perhaps NAMESPACES events vs MMAP events could
+have ordering issues.
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/Documentation/perf-script.txt |  2 +-
- tools/perf/builtin-script.c              | 60 ++++++++++--------------
- tools/perf/util/evsel_fprintf.c          | 16 +++----
- tools/perf/util/evsel_fprintf.h          |  1 +
- 4 files changed, 32 insertions(+), 47 deletions(-)
-
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 777a0d8ba7d1..ff9a52e44688 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -130,7 +130,7 @@ OPTIONS
- -F::
- --fields::
-         Comma separated list of fields to print. Options are:
--        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
-+        comm, tid, pid, time, cpu, event, trace, ip, sym, dso, dsoff, addr, symoff,
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
-         brstackinsn, brstackinsnlen, brstackoff, callindent, insn, insnlen, synth,
-         phys_addr, metric, misc, srccode, ipc, data_page_size, code_page_size, ins_lat,
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 8fba247b798c..e7cb8d904eb5 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -133,6 +133,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_VCPU            = 1ULL << 38,
- 	PERF_OUTPUT_CGROUP          = 1ULL << 39,
- 	PERF_OUTPUT_RETIRE_LAT      = 1ULL << 40,
-+	PERF_OUTPUT_DSOFF           = 1ULL << 41,
- };
- 
- struct perf_script {
-@@ -174,6 +175,7 @@ struct output_option {
- 	{.str = "ip",    .field = PERF_OUTPUT_IP},
- 	{.str = "sym",   .field = PERF_OUTPUT_SYM},
- 	{.str = "dso",   .field = PERF_OUTPUT_DSO},
-+	{.str = "dsoff", .field = PERF_OUTPUT_DSOFF},
- 	{.str = "addr",  .field = PERF_OUTPUT_ADDR},
- 	{.str = "symoff", .field = PERF_OUTPUT_SYMOFFSET},
- 	{.str = "srcline", .field = PERF_OUTPUT_SRCLINE},
-@@ -574,6 +576,9 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
- 	if (PRINT_FIELD(DSO))
- 		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
- 
-+	if (PRINT_FIELD(DSOFF))
-+		output[type].print_ip_opts |= EVSEL__PRINT_DSOFF;
-+
- 	if (PRINT_FIELD(SYMOFFSET))
- 		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
- 
-@@ -627,6 +632,10 @@ static int perf_session__check_output_opt(struct perf_session *session)
- 		if (evsel == NULL)
- 			continue;
- 
-+		/* 'dsoff' implys 'dso' field */
-+		if (output[j].fields & PERF_OUTPUT_DSOFF)
-+			output[j].fields |= PERF_OUTPUT_DSO;
-+
- 		set_print_ip_opts(&evsel->core.attr);
- 		tod |= output[j].fields & PERF_OUTPUT_TOD;
- 	}
-@@ -929,18 +938,12 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
- 		}
- 
- 		printed += fprintf(fp, " 0x%"PRIx64, from);
--		if (PRINT_FIELD(DSO)) {
--			printed += fprintf(fp, "(");
--			printed += map__fprintf_dsoname(alf.map, fp);
--			printed += fprintf(fp, ")");
--		}
-+		if (PRINT_FIELD(DSO))
-+			printed += map__fprintf_dsoname_dsoff(alf.map, PRINT_FIELD(DSOFF), alf.addr, fp);
- 
- 		printed += fprintf(fp, "/0x%"PRIx64, to);
--		if (PRINT_FIELD(DSO)) {
--			printed += fprintf(fp, "(");
--			printed += map__fprintf_dsoname(alt.map, fp);
--			printed += fprintf(fp, ")");
--		}
-+		if (PRINT_FIELD(DSO))
-+			printed += map__fprintf_dsoname_dsoff(alt.map, PRINT_FIELD(DSOFF), alt.addr, fp);
- 
- 		printed += print_bstack_flags(fp, entries + i);
- 	}
-@@ -972,18 +975,12 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
- 		thread__find_symbol_fb(thread, sample->cpumode, to, &alt);
- 
- 		printed += symbol__fprintf_symname_offs(alf.sym, &alf, fp);
--		if (PRINT_FIELD(DSO)) {
--			printed += fprintf(fp, "(");
--			printed += map__fprintf_dsoname(alf.map, fp);
--			printed += fprintf(fp, ")");
--		}
-+		if (PRINT_FIELD(DSO))
-+			printed += map__fprintf_dsoname_dsoff(alf.map, PRINT_FIELD(DSOFF), alf.addr, fp);
- 		printed += fprintf(fp, "%c", '/');
- 		printed += symbol__fprintf_symname_offs(alt.sym, &alt, fp);
--		if (PRINT_FIELD(DSO)) {
--			printed += fprintf(fp, "(");
--			printed += map__fprintf_dsoname(alt.map, fp);
--			printed += fprintf(fp, ")");
--		}
-+		if (PRINT_FIELD(DSO))
-+			printed += map__fprintf_dsoname_dsoff(alt.map, PRINT_FIELD(DSOFF), alt.addr, fp);
- 		printed += print_bstack_flags(fp, entries + i);
- 	}
- 
-@@ -1019,17 +1016,11 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
- 			to = map__dso_map_ip(alt.map, to);
- 
- 		printed += fprintf(fp, " 0x%"PRIx64, from);
--		if (PRINT_FIELD(DSO)) {
--			printed += fprintf(fp, "(");
--			printed += map__fprintf_dsoname(alf.map, fp);
--			printed += fprintf(fp, ")");
--		}
-+		if (PRINT_FIELD(DSO))
-+			printed += map__fprintf_dsoname_dsoff(alf.map, PRINT_FIELD(DSOFF), alf.addr, fp);
- 		printed += fprintf(fp, "/0x%"PRIx64, to);
--		if (PRINT_FIELD(DSO)) {
--			printed += fprintf(fp, "(");
--			printed += map__fprintf_dsoname(alt.map, fp);
--			printed += fprintf(fp, ")");
--		}
-+		if (PRINT_FIELD(DSO))
-+			printed += map__fprintf_dsoname_dsoff(alt.map, PRINT_FIELD(DSOFF), alt.addr, fp);
- 		printed += print_bstack_flags(fp, entries + i);
- 	}
- 
-@@ -1394,11 +1385,8 @@ static int perf_sample__fprintf_addr(struct perf_sample *sample,
- 			printed += symbol__fprintf_symname(al.sym, fp);
- 	}
- 
--	if (PRINT_FIELD(DSO)) {
--		printed += fprintf(fp, " (");
--		printed += map__fprintf_dsoname(al.map, fp);
--		printed += fprintf(fp, ")");
--	}
-+	if (PRINT_FIELD(DSO))
-+		printed += map__fprintf_dsoname_dsoff(al.map, PRINT_FIELD(DSOFF), al.addr, fp);
- out:
- 	return printed;
- }
-@@ -3877,7 +3865,7 @@ int cmd_script(int argc, const char **argv)
- 		     "comma separated output fields prepend with 'type:'. "
- 		     "+field to add and -field to remove."
- 		     "Valid types: hw,sw,trace,raw,synth. "
--		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
-+		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,dsoff"
- 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
- 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
- 		     "brstackinsnlen,brstackoff,callindent,insn,insnlen,synth,"
-diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-index cc80ec554c0a..79e42d66f55b 100644
---- a/tools/perf/util/evsel_fprintf.c
-+++ b/tools/perf/util/evsel_fprintf.c
-@@ -116,6 +116,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 	int print_ip = print_opts & EVSEL__PRINT_IP;
- 	int print_sym = print_opts & EVSEL__PRINT_SYM;
- 	int print_dso = print_opts & EVSEL__PRINT_DSO;
-+	int print_dsoff = print_opts & EVSEL__PRINT_DSOFF;
- 	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
- 	int print_oneline = print_opts & EVSEL__PRINT_ONELINE;
- 	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
-@@ -171,11 +172,8 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
- 				}
- 			}
- 
--			if (print_dso && (!sym || !sym->inlined)) {
--				printed += fprintf(fp, " (");
--				printed += map__fprintf_dsoname(map, fp);
--				printed += fprintf(fp, ")");
--			}
-+			if (print_dso && (!sym || !sym->inlined))
-+				printed += map__fprintf_dsoname_dsoff(map, print_dsoff, addr, fp);
- 
- 			if (print_srcline)
- 				printed += map__fprintf_srcline(map, addr, "\n  ", fp);
-@@ -209,6 +207,7 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
- 	int print_ip = print_opts & EVSEL__PRINT_IP;
- 	int print_sym = print_opts & EVSEL__PRINT_SYM;
- 	int print_dso = print_opts & EVSEL__PRINT_DSO;
-+	int print_dsoff = print_opts & EVSEL__PRINT_DSOFF;
- 	int print_symoffset = print_opts & EVSEL__PRINT_SYMOFFSET;
- 	int print_srcline = print_opts & EVSEL__PRINT_SRCLINE;
- 	int print_unknown_as_addr = print_opts & EVSEL__PRINT_UNKNOWN_AS_ADDR;
-@@ -234,11 +233,8 @@ int sample__fprintf_sym(struct perf_sample *sample, struct addr_location *al,
- 			}
- 		}
- 
--		if (print_dso) {
--			printed += fprintf(fp, " (");
--			printed += map__fprintf_dsoname(al->map, fp);
--			printed += fprintf(fp, ")");
--		}
-+		if (print_dso)
-+			printed += map__fprintf_dsoname_dsoff(al->map, print_dsoff, al->addr, fp);
- 
- 		if (print_srcline)
- 			printed += map__fprintf_srcline(al->map, al->addr, "\n  ", fp);
-diff --git a/tools/perf/util/evsel_fprintf.h b/tools/perf/util/evsel_fprintf.h
-index 3093d096c29f..c8a9fac2f2dd 100644
---- a/tools/perf/util/evsel_fprintf.h
-+++ b/tools/perf/util/evsel_fprintf.h
-@@ -26,6 +26,7 @@ int evsel__fprintf(struct evsel *evsel, struct perf_attr_details *details, FILE
- #define EVSEL__PRINT_UNKNOWN_AS_ADDR	(1<<6)
- #define EVSEL__PRINT_CALLCHAIN_ARROW	(1<<7)
- #define EVSEL__PRINT_SKIP_IGNORED	(1<<8)
-+#define EVSEL__PRINT_DSOFF		(1<<9)
- 
- struct addr_location;
- struct perf_event_attr;
--- 
-2.25.1
+Putting that aside, the ioctl may be quicker than reading from
+/proc.  I could get some numbers and see what people think.
 
