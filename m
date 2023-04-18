@@ -2,126 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2306C77B71
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 07:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329D4C77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 09:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229963AbjDRHDz (ORCPT
+        id S230440AbjDRJGG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Apr 2023 03:03:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56108 "EHLO
+        Tue, 18 Apr 2023 05:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjDRHDy (ORCPT
+        with ESMTP id S231281AbjDRJFp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Apr 2023 03:03:54 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C18C10FA;
-        Tue, 18 Apr 2023 00:03:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681801433; x=1713337433;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=x7Uu3N5QkafQkge6vp0KSOnHXwk6jftMqow55HlSYc4=;
-  b=FeQIFYA9h/lo6gXy3V+ERW4Gf4eBTtYl3guVVAyRTAQ0t6BW17QnjhyU
-   MLRaBu/I+cX0Q+yvH+zYZJr1ElpFi7ppIPAhnsI0KtFEWJdp7ft9O7fyp
-   kvta7UAcHRa0f7lmcVWmefG1O3qR/54w/8uyrUIb9KWzfF5feJBFD6nMo
-   D7dLuln6+hCoYwPL98IMq2m9KQu1bUddzqLOSS+Uymzv/DA+NenPl7xlF
-   H+Qgui5qxFXhAzdGCrKLIIWUs5aouGjTWmnuqbMpkYAYYSjwzrUxLGqYa
-   dbIlLX5eOkDbEfIaT8QUwLoYVy70OGIC9F5qRD01UZKVb44pAfDX/SYnz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="407991827"
-X-IronPort-AV: E=Sophos;i="5.99,206,1677571200"; 
-   d="scan'208";a="407991827"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2023 00:03:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="690977399"
-X-IronPort-AV: E=Sophos;i="5.99,206,1677571200"; 
-   d="scan'208";a="690977399"
-Received: from choiwony-mobl.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.90])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2023 00:03:48 -0700
-Message-ID: <e7409ef9-0a80-9874-ef60-0fab0abb9711@intel.com>
-Date:   Tue, 18 Apr 2023 10:03:44 +0300
+        Tue, 18 Apr 2023 05:05:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DCBA7A87;
+        Tue, 18 Apr 2023 02:04:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2184761B1C;
+        Tue, 18 Apr 2023 09:04:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34F46C433EF;
+        Tue, 18 Apr 2023 09:04:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1681808693;
+        bh=MpxhFy15fg9ehTSkmmlcWUhl1nltRQKJK4b0qUxbzVc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0FdWpY0wbd/esAH99iz+uAYJZ1bkH0F96NCmBYwuAzp/BcLQBYtVWdgigCugXMuAU
+         Y6jRCj3J+71Fuz8M9/dLqg7uiiJdzaYRclEmEle4XLg1gnkjIGHxhYpmQ0Omu/ZiY4
+         /ffm/IU6mylBDlYPQBuwkD+xKIxsTS2n4sZSj1Ps=
+Date:   Tue, 18 Apr 2023 11:04:50 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     stable@vger.kernel.org, acme@redhat.com, andres@anarazel.de,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [backport PATCH 0/2] stable v5.15, v5.10 and v5.4: fix perf
+ build errors
+Message-ID: <2023041848-basil-plop-145c@gregkh>
+References: <20230417122943.2155502-1-anders.roxell@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH RFC 0/5] perf: Add ioctl to emit sideband events
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230414082300.34798-1-adrian.hunter@intel.com>
- <20230417110221.GH83892@hirez.programming.kicks-ass.net>
- <CAP-5=fUD=RNqD-7229J5fgaUCMtNiu-urp-9B3LDq8JnP2sGBg@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <CAP-5=fUD=RNqD-7229J5fgaUCMtNiu-urp-9B3LDq8JnP2sGBg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230417122943.2155502-1-anders.roxell@linaro.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 17/04/23 19:37, Ian Rogers wrote:
-> On Mon, Apr 17, 2023 at 4:02 AM Peter Zijlstra <peterz@infradead.org> wrote:
->>
->> On Fri, Apr 14, 2023 at 11:22:55AM +0300, Adrian Hunter wrote:
->>> Hi
->>>
->>> Here is a stab at adding an ioctl for sideband events.
->>>
->>> This is to overcome races when reading the same information
->>> from /proc.
->>
->> What races? Are you talking about reading old state in /proc the kernel
->> delivering a sideband event for the new state, and then you writing the
->> old state out?
->>
->> Surely that's something perf tool can fix without kernel changes?
+On Mon, Apr 17, 2023 at 02:29:41PM +0200, Anders Roxell wrote:
+> Hi,
 > 
-> So my reading is that during event synthesis there are races between
-> reading the different /proc files. There is still, I believe, a race
-> in with perf record/top with uid filtering which reminds me of this.
-> The uid filtering race is that we scan /proc to find processes (pids)
-> for a uid, we then synthesize the maps for each of these pids but if a
-> pid starts or exits we either error out or don't sample that pid. I
-> believe the error out behavior is easy to hit 100% of the time making
-> uid mode of limited use.
+> I would like to see these patches backported. They are needed so perf
+> can be cross compiled with gcc on v5.15, v5.10 and v5.4.
+> I built it with tuxmake [1] here are two example commandlines:
+> tuxmake --runtime podman --target-arch arm64 --toolchain gcc-12 --kconfig defconfig perf
+> tuxmake --runtime podman --target-arch x86_64 --toolchain gcc-12 --kconfig defconfig perf
 > 
-> This may be for something other than synthesis, but for synthesis a
-> few points are:
->  - as servers get bigger and consequently more jobs get consolidated
-> on them, synthesis is slow (hence --num-thread-synthesize) and also
-> the events dominate the perf.data file - perhaps >90% of the file
-> size, and a lot of that will be for processes with no samples in them.
+> Tried to build perf with both gcc-11 and gcc-12.
+> 
+> Patch 'tools perf: Fix compilation error with new binutils'
+> and 'tools build: Add feature test for init_disassemble_info API changes'
+> didn't apply cleanly, thats why I send these in a patchset.
+> 
+> When apply 'tools build: Add feature test for
+> init_disassemble_info API changes' to 5.4 it will be a minor merge
+> conflict, do you want me to send this patch in two separate patches one
+> for 5.4 and another for v5.10?
+> 
+> The sha for these two patches in mainline are.
+> cfd59ca91467 tools build: Add feature test for init_disassemble_info API changes
+> 83aa0120487e tools perf: Fix compilation error with new binutils
+> 
+> The above patches solves these:
+> util/annotate.c: In function 'symbol__disassemble_bpf':
+> util/annotate.c:1729:9: error: too few arguments to function 'init_disassemble_info'
+>  1729 |         init_disassemble_info(&info, s,
+>       |         ^~~~~~~~~~~~~~~~~~~~~
+> 
+> 
+> Please apply these to v5.10 and v5.4
+> a45b3d692623 tools include: add dis-asm-compat.h to handle version differences
+> d08c84e01afa perf sched: Cast PTHREAD_STACK_MIN to int as it may turn into sysconf(__SC_THREAD_STACK>
+> 
+> The above patches solves these:
+> /home/anders/src/kernel/stable-5.10/tools/include/linux/kernel.h:43:24: error: comparison of distinct pointer types lacks a cast [-Werror]
+>    43 |         (void) (&_max1 == &_max2);              \
+>       |                        ^~
+> builtin-sched.c:673:34: note: in expansion of macro 'max'
+>   673 |                         (size_t) max(16 * 1024, PTHREAD_STACK_MIN));
+>       |                                  ^~~
+> 
+> 
+> Please apply these to v5.15, v5.10 and v5.4
+> 8e8bf60a6754 perf build: Fixup disabling of -Wdeprecated-declarations for the python scripting engine
+> 4ee3c4da8b1b perf scripting python: Do not build fail on deprecation warnings
+> 63a4354ae75c perf scripting perl: Ignore some warnings to keep building with perl headers
 
-Note also, for hardware tracing, it isn't generally possible to know
-that during tracing, and figuring it out afterwards and working
-backwards may not be feasible.
+Can you please provide patch series of these upstream commits backported
+to the relevant branchs that you wish to see them in?  You have 2
+patches in this series without git commit ids, and I have no idea where
+to apply them, or not apply them...
 
-> Another issue here is that all those file descriptors don't come for
-> free in the kernel.
->  - BPF has buildid+offset stack traces that remove the need for
-> synthesis by having more expensive stack generation. I believe this is
-> unpopular as adding this as a variant for every kind of event would be
-> hard, but perhaps we can do some low-hanging fruit like instructions
-> and cycles.
->  - I believe Jiri looked at doing synthesis with BPF. Perhaps we could
-> do something similar to the off-cpu and tail-synthesize, where more
-> things happen at the tail end of perf. Off-cpu records data in maps
-> that it then synthesizes into samples.
-> 
-> There is also a long standing issue around not sampling munmap (or
-> mremap) that causes plenty of issues. Perhaps if we had less mmap in
-> the perf.data file we could add these.
-> 
-> Thanks,
-> Ian
+Or better yet, just use the latest version of perf as was pointed out,
+on these old kernel releases.
 
+thanks,
+
+greg k-h
