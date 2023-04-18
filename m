@@ -2,157 +2,83 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19FFC77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 13:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F05C77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 14:12:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbjDRNgu (ORCPT
+        id S232174AbjDROMd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Apr 2023 09:36:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54358 "EHLO
+        Tue, 18 Apr 2023 10:12:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbjDRNgt (ORCPT
+        with ESMTP id S232254AbjDROMa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Apr 2023 09:36:49 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41C8119;
-        Tue, 18 Apr 2023 06:36:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681825008; x=1713361008;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=LnHhmuXGI0CClqpjUThEBNxCWaVO/ww+TLeqkhOZt5M=;
-  b=ZnwbFSvbONA3RTOvKIG6cVXEWje0vZ1g96zFp+E+lRGuRaezphSOjJir
-   EaizJ/609K0xDF1FaFIS8yrabXAOEPWecLVgwrAXOJQAvibKFaSNkJ1mx
-   WSgBsqe5sWEtNDUfV1u3HIK0Y3hnBEBB5CENNoP8kORuMxHoSfm2zbP/r
-   hoKLHS+exiCkmYiFd9sR3e4D/VLchChAQ7+XK/n2pQ1DAx1n+XLftyDR2
-   5B7LHB/yCZRjEoFa/AhsUozIk6YrxHk+bcekBCzuaMPkZhzXg75dyb2lM
-   C1sO1BXXOZ9JfbJiCGmapZgpxB0Efv9YodTshkL7odN8KDl0JLDsz2KGK
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="347018434"
-X-IronPort-AV: E=Sophos;i="5.99,207,1677571200"; 
-   d="scan'208";a="347018434"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2023 06:36:23 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="691089280"
-X-IronPort-AV: E=Sophos;i="5.99,207,1677571200"; 
-   d="scan'208";a="691089280"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.90])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2023 06:36:20 -0700
-Message-ID: <d7d6cbc8-1f5f-d0f4-6656-f0cc8ab3a118@intel.com>
-Date:   Tue, 18 Apr 2023 16:36:11 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH RFC 0/5] perf: Add ioctl to emit sideband events
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Tue, 18 Apr 2023 10:12:30 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 372BD146E7;
+        Tue, 18 Apr 2023 07:12:19 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 468C12F4;
+        Tue, 18 Apr 2023 07:13:02 -0700 (PDT)
+Received: from e127643.broadband (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E7B9B3F587;
+        Tue, 18 Apr 2023 07:12:15 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, acme@kernel.org
+Cc:     James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230414082300.34798-1-adrian.hunter@intel.com>
- <20230417110221.GH83892@hirez.programming.kicks-ass.net>
- <89733d35-0b71-615f-4fb8-55183585c67a@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <89733d35-0b71-615f-4fb8-55183585c67a@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Adrian Hunter <adrian.hunter@intel.com>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf: cs-etm: Fix segfault in dso lookup
+Date:   Tue, 18 Apr 2023 15:12:03 +0100
+Message-Id: <20230418141203.673465-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 18/04/23 09:18, Adrian Hunter wrote:
-> On 17/04/23 14:02, Peter Zijlstra wrote:
->> On Fri, Apr 14, 2023 at 11:22:55AM +0300, Adrian Hunter wrote:
->>> Hi
->>>
->>> Here is a stab at adding an ioctl for sideband events.
->>>
->>> This is to overcome races when reading the same information
->>> from /proc.
->>
->> What races? Are you talking about reading old state in /proc the kernel
->> delivering a sideband event for the new state, and then you writing the
->> old state out?
->>
->> Surely that's something perf tool can fix without kernel changes?
-> 
-> Yes, and it was a bit of a brain fart not to realise that.
-> 
-> There may still be corner cases, where different kinds of events are
-> interdependent, perhaps NAMESPACES events vs MMAP events could
-> have ordering issues.
-> 
-> Putting that aside, the ioctl may be quicker than reading from
-> /proc.  I could get some numbers and see what people think.
-> 
+map__dso() is called before thread__find_map() which always results in a
+null pointer dereference. Fix it by finding first, then checking if it
+exists.
 
-Here's a result with a quick hack to use the ioctl but without
-handling the buffer becoming full (hence the -m4M)
+Fixes: 63df0e4bc368 ("perf map: Add accessor for dso")
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/util/cs-etm.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-# ps -e | wc -l
-1171
-# perf.old stat -- perf.old record -o old.data --namespaces -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 1.095 MB old.data (100 samples) ]
-
- Performance counter stats for 'perf.old record -o old.data --namespaces -a true':
-
-            498.15 msec task-clock                       #    0.987 CPUs utilized             
-               126      context-switches                 #  252.935 /sec                      
-                64      cpu-migrations                   #  128.475 /sec                      
-              4396      page-faults                      #    8.825 K/sec                     
-        1927096347      cycles                           #    3.868 GHz                       
-        4563059399      instructions                     #    2.37  insn per cycle            
-         914232559      branches                         #    1.835 G/sec                     
-           6618052      branch-misses                    #    0.72% of all branches           
-        9633787105      slots                            #   19.339 G/sec                     
-        4394300990      topdown-retiring                 #     38.8% Retiring                 
-        3693815286      topdown-bad-spec                 #     32.6% Bad Speculation          
-        1692356927      topdown-fe-bound                 #     14.9% Frontend Bound           
-        1544151518      topdown-be-bound                 #     13.6% Backend Bound            
-
-       0.504636742 seconds time elapsed
-
-       0.158237000 seconds user
-       0.340625000 seconds sys
-
-# perf.old stat -- perf.new record -o new.data -m4M --namespaces -a true
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 1.095 MB new.data (103 samples) ]
-
- Performance counter stats for 'perf.new record -o new.data -m4M --namespaces -a true':
-
-            386.61 msec task-clock                       #    0.988 CPUs utilized             
-               100      context-switches                 #  258.658 /sec                      
-                65      cpu-migrations                   #  168.128 /sec                      
-              4935      page-faults                      #   12.765 K/sec                     
-        1495905137      cycles                           #    3.869 GHz                       
-        3647660473      instructions                     #    2.44  insn per cycle            
-         735822370      branches                         #    1.903 G/sec                     
-           5765668      branch-misses                    #    0.78% of all branches           
-        7477722620      slots                            #   19.342 G/sec                     
-        3415835954      topdown-retiring                 #     39.5% Retiring                 
-        2748625759      topdown-bad-spec                 #     31.8% Bad Speculation          
-        1221594670      topdown-fe-bound                 #     14.1% Frontend Bound           
-        1256150733      topdown-be-bound                 #     14.5% Backend Bound            
-
-       0.391472763 seconds time elapsed
-
-       0.141207000 seconds user
-       0.246277000 seconds sys
-
-# ls -lh old.data
--rw------- 1 root root 1.2M Apr 18 13:19 old.data
-# ls -lh new.data
--rw------- 1 root root 1.2M Apr 18 13:19 new.data
-# 
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 103865968700..8dd81ddd9e4e 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -885,9 +885,11 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
+ 		thread = etmq->etm->unknown_thread;
+ 	}
+ 
+-	dso = map__dso(al.map);
++	if (!thread__find_map(thread, cpumode, address, &al))
++		return 0;
+ 
+-	if (!thread__find_map(thread, cpumode, address, &al) || !dso)
++	dso = map__dso(al.map);
++	if (!dso)
+ 		return 0;
+ 
+ 	if (dso->data.status == DSO_DATA_STATUS_ERROR &&
+-- 
+2.34.1
 
