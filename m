@@ -2,150 +2,266 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B962EC77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 19:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5999C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 20:09:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230202AbjDRT4u (ORCPT
+        id S230526AbjDRUJT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Apr 2023 15:56:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55076 "EHLO
+        Tue, 18 Apr 2023 16:09:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbjDRT4t (ORCPT
+        with ESMTP id S232554AbjDRUJS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Apr 2023 15:56:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC5219776;
-        Tue, 18 Apr 2023 12:56:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8F7F46389D;
-        Tue, 18 Apr 2023 19:56:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3BFBC433EF;
-        Tue, 18 Apr 2023 19:56:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681847806;
-        bh=1baWnnsOYQNcfQ6JgaY1FCV+Q/yFo/OKljnAUA/yo7o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=HZQV0UbOYlRa2PnvGE07lApoerEcvPIhcWcQONv420DovZx7ssFaWMFrjt2l2KKx3
-         5qgMQar8iwxUAXeviM9IiuUpzHODBU2bN0tSQ2IzaVEPPWUL2nEb9P3CBbhfhiaRx+
-         XRc7so7gItC0l8SogyzWCGGKPBwBsHT2oUmqn42+p9+Cauu/hltf6nLk1sYVmip4dx
-         kJyEtw1WMQA7F2JWdUmb2plBWA8UgjaZYIy/iCO+5CjwA9e1baJv0Rqf8w6j0BtqL9
-         c6mN2uDJvZGwJMF11/3IRVJZiJKtS8QYG86VM859dHT3hQU1lw99bfKESrt4Gl2Dx1
-         76znlPOtpsDsQ==
-Received: by mail-yb1-f182.google.com with SMTP id k39so8449793ybj.8;
-        Tue, 18 Apr 2023 12:56:46 -0700 (PDT)
-X-Gm-Message-State: AAQBX9eot/H9NtWHhvRdAyEUY6xLJSg5XWvtGbO29rU3syOYQHpCDKl4
-        CkYlBbrWcLsmbrwhG+xiiMAwsnX0r3iYtkQbyg==
-X-Google-Smtp-Source: AKy350b2kwnFHC8moys3w7DzqeW537uNq+2dpf8DUVz7knHxiYvUG+d4B+vNSo1Jz96Xk/6CnCJb3hf6L09XNwv3be4=
-X-Received: by 2002:a25:76ce:0:b0:b95:e649:34b6 with SMTP id
- r197-20020a2576ce000000b00b95e64934b6mr1344329ybc.1.1681847805973; Tue, 18
- Apr 2023 12:56:45 -0700 (PDT)
+        Tue, 18 Apr 2023 16:09:18 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A3E6A44
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 13:09:15 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f048b144eeso75855e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 13:09:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1681848554; x=1684440554;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d1525zsWKnr1EkonUnoaIf64nmGsw4cC1+D1LMBheRA=;
+        b=n+Idjg/y1pbkN7j2m2Lv99yYdcRAfyDeb3cYqV53JBjge/QBOHhzhciaG4ao1Z6khP
+         ftL5jfisWDCft+4gzrjdQ0GLuBI9kke6wvh8gcaFdqs4906AcnxtHqoBrV66qVAjmYgw
+         KrAWjxqYyu867vIhZbjBO+oXJwM/7FJVsldl7/CgCRoUA3/GOaVf032oDnw2Llh67evi
+         f3PQEvGNd9cDTiec0aMBHa6GZ5yO1OS61DVhSPazQGv5Cu3WFfoN+4MAKIGV6whbGl1U
+         6xEhNLOb9gPh9qNvNqNyqYrLjcsGZoJvJ3efixAbvakrRLjXZMjyJa/xWrzjxpH7+7p6
+         8T6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681848554; x=1684440554;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=d1525zsWKnr1EkonUnoaIf64nmGsw4cC1+D1LMBheRA=;
+        b=SW4CBlLJytLsjxwVCUePpwtCN2g7KcZYU76QMvOK36MWg2lSbLPiHpMud1JH68/W5S
+         l+bPnosnerv2klAtDQ9hq/SaGEh15695Lx3KqHqBHXbWIdhNftdjsGDY1YaAR1hsF60c
+         EgQ03hxK4a5QlKeds7MljuwerJL6/74EUO5YpNcFP+CQexA2pQaYH736raFbyJL1GIya
+         on800NasNxsvEW3LhNUN0UPNoBsWkwLGLS2E1HplHmWYkibQG/XZTPgRKvbh67fOcMCE
+         91jVIVoyBkGcHT3KE0kZ3gwVOXRx11lPo4Vj0A7tdin19+u/tAi8uZYVYY5QQ9feDZY/
+         yJLw==
+X-Gm-Message-State: AAQBX9fD3rvhfXjuUqjhhK6OQDK/aP0ebgE/IUFju/ceRNS1H+IyZp70
+        +OoaoaR+BGpq59STcUavcTOmlnoKzzVA+cN+vQWtCA==
+X-Google-Smtp-Source: AKy350ZVUytotLnLt0sUSZ7AO7sR44xZeAzCQSHqBqKY2oPIivb4Q8AkFXs+PyF987dTDqt1oslksnMe9NuM7tYJOxY=
+X-Received: by 2002:a05:600c:4f03:b0:3f1:664a:9a52 with SMTP id
+ l3-20020a05600c4f0300b003f1664a9a52mr32652wmq.7.1681848554192; Tue, 18 Apr
+ 2023 13:09:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230315121303.3358416-1-tmricht@linux.ibm.com>
-In-Reply-To: <20230315121303.3358416-1-tmricht@linux.ibm.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 18 Apr 2023 14:56:34 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJo14uLmz5n4gSEf0gjEcODCMrsNEZKj_EnZoVPGFfDQw@mail.gmail.com>
-Message-ID: <CAL_JsqJo14uLmz5n4gSEf0gjEcODCMrsNEZKj_EnZoVPGFfDQw@mail.gmail.com>
-Subject: Re: [PATCH] perf/test: Fix wrong size for perf test Setup struct perf_event_attr
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, jolsa@kernel.org, svens@linux.ibm.com,
-        gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
+References: <20230414051922.3625666-1-irogers@google.com> <56ac61a0-ccf0-210e-e429-11062a07b8bf@linux.intel.com>
+ <CAP-5=fXz1vw48A2tWgcNDSZsnvnOO7_jA+py3p_Khi_igz0hJw@mail.gmail.com>
+ <5031f492-9734-be75-3283-5961771d87c8@linux.intel.com> <CAP-5=fW2aAijt8tqydszQHQFmsfeQO2S0hb7Z27RtXxG4Zmm-w@mail.gmail.com>
+ <ce92dd1b-23f6-ea52-a47d-fccc24fa20ea@linux.intel.com> <CAP-5=fWRy4NEqhB6-b98+m7SV5=oyBOMVuOHwmvKZCJuXcsQEg@mail.gmail.com>
+ <d1fe801a-22d0-1f9b-b127-227b21635bd5@linux.intel.com> <CAP-5=fXCmKAUn24r0YYHaO63mabZCXae-hAT2WCtk+YYmvS9xg@mail.gmail.com>
+ <99150cb1-fe50-97cf-ad80-cceb9194eb9a@linux.intel.com>
+In-Reply-To: <99150cb1-fe50-97cf-ad80-cceb9194eb9a@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 18 Apr 2023 13:08:59 -0700
+Message-ID: <CAP-5=fXZSACj=kGM5t3pBHkQ-W1i0eJayAQ77_ToEp4zXWzJnw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf stat: Introduce skippable evsels
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Mar 15, 2023 at 7:13=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
+On Tue, Apr 18, 2023 at 11:19=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
+com> wrote:
 >
-> The test case ./perf test 'Setup struct perf_event_attr' fails.
-> On s390 this output is observed:
 >
->  # ./perf test -Fvvvv 17
->  17: Setup struct perf_event_attr                                    :
->  --- start ---
->  running './tests/attr/test-stat-C0'
->  Using CPUID IBM,8561,703,T01,3.6,002f
->  .....
->  Event event:base-stat
->       fd =3D 1
->       group_fd =3D -1
->       flags =3D 0|8
->       cpu =3D *
->       type =3D 0
->       size =3D 128     <<<--- wrong, specified in file base-stat
->       config =3D 0
->       sample_period =3D 0
->       sample_type =3D 65536
->       ...
->  'PERF_TEST_ATTR=3D/tmp/tmpgw574wvg ./perf stat -o \
->         /tmp/tmpgw574wvg/perf.data -e cycles -C 0 kill >/dev/null \
->         2>&1 ret '1', expected '1'
->   loading result events
->     Event event-0-0-4
->       fd =3D 4
->       group_fd =3D -1
->       cpu =3D 0
->       pid =3D -1
->       flags =3D 8
->       type =3D 0
->       size =3D 136     <<<--- actual size used in system call
->       .....
->   compare
->     matching [event-0-0-4]
->       to [event:base-stat]
->       [cpu] 0 *
->       [flags] 8 0|8
->       [type] 0 0
->       [size] 136 128
->     ->FAIL
->     match: [event-0-0-4] matches []
->   expected size=3D136, got 128
->   FAILED './tests/attr/test-stat-C0' - match failure
 >
-> This mismatch is caused by
-> commit 09519ec3b19e ("perf: Add perf_event_attr::config3")
-> which enlarges the structure perf_event_attr by 8 bytes.
+> On 2023-04-18 11:43 a.m., Ian Rogers wrote:
+> > On Tue, Apr 18, 2023 at 6:03=E2=80=AFAM Liang, Kan <kan.liang@linux.int=
+el.com> wrote:
+> >>
+> >>
+> >>
+> >> On 2023-04-17 2:13 p.m., Ian Rogers wrote:
+> >>> The json TopdownL1 is enabled if present unconditionally for perf sta=
+t
+> >>> default. Enabling it on Skylake has multiplexing as TopdownL1 on
+> >>> Skylake has multiplexing unrelated to this change - at least on the
+> >>> machine I was testing on. We can remove the metric group TopdownL1 on
+> >>> Skylake so that we don't enable it by default, there is still the
+> >>> group TmaL1. To me, disabling TopdownL1 seems less desirable than
+> >>> running with multiplexing - previously to get into topdown analysis
+> >>> there has to be knowledge that "perf stat -M TopdownL1" is the way to
+> >>> do this.
+> >>
+> >> To be honest, I don't think it's a good idea to remove the TopdownL1. =
+We
+> >> cannot remove it just because the new way cannot handle it. The perf
+> >> stat default works well until 6.3-rc7. It's a regression issue of the
+> >> current perf-tools-next.
+> >
+> > I'm not so clear it is a regression to consistently add TopdownL1 for
+> > all architectures supporting it.
 >
-> Fix this by adjusting the expected value of size.
 >
-> Output after:
->  # ./perf test -Fvvvv 17
->  17: Setup struct perf_event_attr                                    :
->  --- start ---
->  running './tests/attr/test-stat-C0'
->  Using CPUID IBM,8561,703,T01,3.6,002f
->  ...
->   matched
->   compare
->     matching [event-0-0-4]
->       to [event:base-stat]
->       [cpu] 0 *
->       [flags] 8 0|8
->       [type] 0 0
->       [size] 136 136
->       ....
->    ->OK
->    match: [event-0-0-4] matches ['event:base-stat']
->  matched
->
-> Fixes: 09519ec3b19e ("perf: Add perf_event_attr::config3")
+> Breaking the perf stat default is a regression.
 
-Shouldn't a kernel with this change work with an old version of perf withou=
-t?
+Breaking is overstating the use of multiplexing. The impact is less
+accuracy in the IPC and branch misses default metrics, if multiplexing
+is necessary on your Intel architecture. I believe TopdownL1 is more
+useful than either of these metrics and so having TopdownL1 be a
+default is an improvement. We can add a patch, as I keep repeating
+this is off-topic for this patch, to make it so that TopdownL1 isn't
+enabled on Intel CPUs pre-Icelake, but I would discourage this.
 
-Anyways, looks like the change is needed regardless.
+> The reason we once added the TopdownL1 for ICL and later platform is
+> that it doesn't break the original design (a *clean* output).
 
-Acked-by: Rob Herring <robh@kernel.org>
+Right, and in 6.3-rc7 the aggregation of counts was broken because of
+duplicated counts and hard coded metrics (I did a last minute partial
+fix). In perf-tools-next aggregation was fixed and we switched to the
+json metrics, that are accurate and up-to-date with the latest TMA
+metrics, so that we wouldn't need to maintain a duplicate code path.
+What keys enabling TopdownL1 in 6.3 is the presence of topdown events
+whilst in perf-tools-next it is the presence of TopdownL1 metric
+group, as this is a more consistent approach and had first been
+proposed by ARM.
 
+> > The assertion is that because
+> > TopdownL1 has multiplexing and multiplexing is global then we've
+> > lowered the accuracy of other metrics, but the only other hardware
+> > metrics in the default output pre-Icelake are IPC and branch miss
+> > rate. Having TopdownL1 is a way of drilling into performance issues,
+> > while IPC and branch miss rate are putting your finger in the air to
+> > see which way the wind is blowing. Perhaps we should drop these if
+> > TopdownL1 is present.
+> >
+> >> But I'm OK to add some flags with the metrics to assist the perf tool =
+to
+> >> specially handle the case if you prefer to modify the event list.
+> >
+> > We've already removed thresholds from the default output, we could
+> > remove groups.
+> >
+> >>>
+> >>> This doesn't relate to this change which is about making it so that
+> >>> failing to set up TopdownL1 doesn't cause an early exit. The reason I
+> >>> showed TigerLake output was that on TigerLake the skip/fallback
+> >>> approach works while Skylake just needs the events disabled/skipped
+> >>> unless it has sufficient permissions. Note the :u on the events in:
+> >>
+> >> The perf_event_open() should be good to detect the insufficient
+> >> permission, but it doesn't work to detect an existing of an event.
+> >> That's because the kernel only checks the features not specific events=
+.
+> >> It's not a reliable way to rely on the output of the perf_event_open()=
+ here.
+> >
+> > I'm unclear why not as not having perf_event_open fail seems like a
+> > kernel bug. I can see there is little motivation to fix this on older
+> > architectures like Skylake.
 >
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> ---
->  tools/perf/tests/attr/base-record       | 2 +-
->  tools/perf/tests/attr/base-stat         | 2 +-
->  tools/perf/tests/attr/system-wide-dummy | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+> Updating kernel may not be an option here. Because
+> - There is no issue with the existing perf tool until 6.3-rc7. It
+> doesn't sound like a defect of the kernel.
+> - The kernel for the SKL has been there for many years. It's impossible
+> to change all the kernels to support a new requirement from the perf tool=
+.
+
+This isn't a new behavior in the perf tool, the expectation that
+perf_event_open fails is one that is present in the implementation of
+weak event groups.
+
+> > We do attempt to workaround it with the
+> > errata flags on the metrics introduced here:
+> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py#=
+L1296
+> >
+> If so, I would still suggest to check the slots and topdown events in
+> sysfs and decide whether to append the TopdownL1 to perf stat default.
+>
+> So we probably need a ARCH specific is_event_available(), before
+> appending the events.
+
+This can be done, but is a feature request. I think we should enable
+TopdownL1 by default as the way to avoid multiplexing, if you care or
+are affected, is to choose the specific event or metric of interest
+and profile with just that. I suspect for branch miss-rate and IPC,
+the numbers wanting to do that will be small. Educating that TopdownL1
+exists is a harder problem and shouldn't just be something present for
+Intel Icelake+ users or those who've read through the wiki.
+
+Thanks,
+Ian
+
+> >>>> From your test result in the v2 description, we can see that there i=
+s no
+> >>>> TopdownL1, which is good and expected. However, there is a (48.99%) =
+with
+> >>>> cycles:u event, which implies multiplexing. Could you please check
+> >>>> what's the problem here?
+> >>>> Also, if it's because of the backgroud, all the events should be
+> >>>> multiplexing. But it looks like only cycle:u has multiplexing. Other
+> >>>> events, instructions:u, branches:u and branch-misses:u work without
+> >>>> multiplexing. That's very strange.
+> >>> I wasn't able to reproduce it and suspect it was a transient thing. I
+> >>> think there are multiplexing things to look into, 2 events on a fixed
+> >>> counter on Icelake+ will trigger multiplexing on all counters, and
+> >>> Skylake's 3 fixed and 4 generic should fit TopdownL1.
+> >>
+> >> Just found a cascade lake. With this patch + the current
+> >> perf-tools-next, partial of the TopdownL1 and multiplexing can still b=
+e
+> >> observed.
+> >>
+> >> $ sudo ./perf stat true
+> >>
+> >>  Performance counter stats for 'true':
+> >>
+> >>               2.91 msec task-clock                       #    0.316 CP=
+Us
+> >> utilized
+> >>                  0      context-switches                 #    0.000 /s=
+ec
+> >>                  0      cpu-migrations                   #    0.000 /s=
+ec
+> >>                 45      page-faults                      #   15.474 K/=
+sec
+> >>          2,819,972      cycles                           #    0.970 GH=
+z
+> >>                        (60.14%)
+> >>          5,391,406      instructions                     #    1.91  in=
+sn
+> >> per cycle
+> >>          1,068,575      branches                         #  367.442 M/=
+sec
+> >>              8,455      branch-misses                    #    0.79% of
+> >> all branches
+> >>             70,283      CPU_CLK_UNHALTED.REF_XCLK        #   24.168
+> >> M/sec
+> >>             48,806      INT_MISC.RECOVERY_CYCLES_ANY     #   16.783
+> >> M/sec                       (39.86%)
+> >>
+> >>        0.009204517 seconds time elapsed
+> >>
+> >>        0.000000000 seconds user
+> >>        0.009614000 seconds sys
+> >
+> > The issue here is that 'true' ran very quickly and so we skipped the
+> > output of the events with 0 counts, no metrics were computed due to
+> > the zero counts. Cascade lake has the same TopdownL1 multiplexing
+> > issues as Skylake.
+> >
+>
+> I tried other benchmark. I can still observe the multiplexing. But my
+> remote machine just crashed. I'm asking the tech support. So I cannot do
+> more tests.
+>
+> Thanks,
+> Kan
