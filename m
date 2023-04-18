@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD2AEC77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 03:16:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04513C77B71
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 03:17:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229714AbjDRDQ5 (ORCPT
+        id S229930AbjDRDQ6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 23:16:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47192 "EHLO
+        Mon, 17 Apr 2023 23:16:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229619AbjDRDQ4 (ORCPT
+        with ESMTP id S229685AbjDRDQ4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Mon, 17 Apr 2023 23:16:56 -0400
 Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26DE23595;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 635244685;
         Mon, 17 Apr 2023 20:16:55 -0700 (PDT)
 Received: from kwepemi500013.china.huawei.com (unknown [7.221.188.120])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Q0pwM2BMhzKs73;
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Q0pwM4LgdzKs8m;
         Tue, 18 Apr 2023 11:16:03 +0800 (CST)
 Received: from M910t.huawei.com (10.110.54.157) by
  kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 18 Apr 2023 11:15:34 +0800
+ 15.1.2507.23; Tue, 18 Apr 2023 11:15:35 +0800
 From:   Changbin Du <changbin.du@huawei.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -36,10 +36,12 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Hui Wang <hw.huiwang@huawei.com>,
         Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v5 0/2] perf script: Have consistent output for symbol address
-Date:   Tue, 18 Apr 2023 11:15:17 +0800
-Message-ID: <20230418031519.1261310-1-changbin.du@huawei.com>
+Subject: [PATCH v5 1/2] perf: add helper map__fprintf_dsoname_dsoff
+Date:   Tue, 18 Apr 2023 11:15:18 +0800
+Message-ID: <20230418031519.1261310-2-changbin.du@huawei.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230418031519.1261310-1-changbin.du@huawei.com>
+References: <20230418031519.1261310-1-changbin.du@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -50,38 +52,52 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The goal of this change is to achieve consistent output for symbol address.
-Before this, the raw ip is printed for non-callchain and dso offset for
-callchain. Mostly what we expect is the raw ip.
+This adds a helper function map__fprintf_dsoname_dsoff() to print dsoname
+with optional dso offset.
 
-This patch does two changes:
-  - Always print raw ip for resolved symbols.
-  - Add a new 'dsoff' field if we really need the dso offset, and the
-    offset is appended to dso name.
+Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/util/map.c | 13 +++++++++++++
+ tools/perf/util/map.h |  1 +
+ 2 files changed, 14 insertions(+)
 
-v5:
-  o add helper map__fprintf_dsoname_dsoff() to eliminate repeated dso printing code. (Adrian)
-  o do not print offset for kernel dso (a.k.a [kernel.kallsyms])
-v4:
-  o also print 'dsoff' for brstack,brstacksym,brstackoff,etc.
-v3:
-  o 'dsoff' implys 'dso' field. (Namhyung)
-v2:
-  o split into two patches. (Adrian)
-  o do not print offset for unresolved symbols. (Adrian)
-
-Changbin Du (2):
-  perf: add helper map__fprintf_dsoname_dsoff
-  perf: script: add new output field 'dsoff' to print dso offset
-
- tools/perf/Documentation/perf-script.txt |  2 +-
- tools/perf/builtin-script.c              | 60 ++++++++++--------------
- tools/perf/util/evsel_fprintf.c          | 16 +++----
- tools/perf/util/evsel_fprintf.h          |  1 +
- tools/perf/util/map.c                    | 13 +++++
- tools/perf/util/map.h                    |  1 +
- 6 files changed, 46 insertions(+), 47 deletions(-)
-
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index d81b6ca18ee9..7da96b41100f 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -445,6 +445,19 @@ size_t map__fprintf_dsoname(struct map *map, FILE *fp)
+ 	return fprintf(fp, "%s", dsoname);
+ }
+ 
++size_t map__fprintf_dsoname_dsoff(struct map *map, bool print_off, u64 addr, FILE *fp)
++{
++	int printed = 0;
++
++	printed += fprintf(fp, " (");
++	printed += map__fprintf_dsoname(map, fp);
++	if (print_off && map && map__dso(map) && !map__dso(map)->kernel)
++		printed += fprintf(fp, "+0x%" PRIx64, addr);
++	printed += fprintf(fp, ")");
++
++	return printed;
++}
++
+ char *map__srcline(struct map *map, u64 addr, struct symbol *sym)
+ {
+ 	if (map == NULL)
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index f89ab7c2d327..4cca211b6e66 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -175,6 +175,7 @@ static inline void __map__zput(struct map **map)
+ 
+ size_t map__fprintf(struct map *map, FILE *fp);
+ size_t map__fprintf_dsoname(struct map *map, FILE *fp);
++size_t map__fprintf_dsoname_dsoff(struct map *map, bool print_off, u64 addr, FILE *fp);
+ char *map__srcline(struct map *map, u64 addr, struct symbol *sym);
+ int map__fprintf_srcline(struct map *map, u64 addr, const char *prefix,
+ 			 FILE *fp);
 -- 
 2.25.1
 
