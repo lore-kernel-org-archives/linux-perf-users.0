@@ -2,186 +2,234 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C46AC6FD18
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 15:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9865C77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 16:38:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232448AbjDRPzW (ORCPT
+        id S231262AbjDRQi5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Apr 2023 11:55:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40742 "EHLO
+        Tue, 18 Apr 2023 12:38:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232218AbjDRPzV (ORCPT
+        with ESMTP id S231635AbjDRQi5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Apr 2023 11:55:21 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1283D6E9D
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 08:55:20 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f04275b2bdso57225e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 08:55:19 -0700 (PDT)
+        Tue, 18 Apr 2023 12:38:57 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 360DB974C;
+        Tue, 18 Apr 2023 09:38:34 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-94a35b0ec77so677658766b.3;
+        Tue, 18 Apr 2023 09:38:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681833318; x=1684425318;
+        d=gmail.com; s=20221208; t=1681835912; x=1684427912;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pY9pHq2dLU+St3NtjkMXoaWK13Cg/WiXep4UpYBIrPw=;
-        b=mm8wh/FA5a4YQFZ/iAjX7fNpwhPH2eRnAfJLRjxFmcE1yFZ9rVIyc4VoANT2TORCvd
-         piR+Xj7jxuJz9T2yG/+bgMA74j11th+pwpc/X7Biiduw+HK9hqZsYAVrMfQl6xzh1xkv
-         kfeUehN6KNSTG/ef8Ia+GQzfZ47axFK1Alfbb+IvzHlikbVujTOFWMVYnrDgzMnfO47k
-         17VauL27vMldDTQk9YUFIGkbwpeEvKByF9wXiXm4FkpX6BMTbVBoyzuONCnlGlBHLXIE
-         0vf1hJPt5d/HUlcnI7H2SKTQY8PZjlVtbOyPlrGiC+YhWKg6P9JUc2KdoPoGnrrlkuNZ
-         ntLQ==
+        bh=Sw10kcaau1ppZSeiQ6y8o4ntvcL42o09SfowW0BsPd0=;
+        b=FEKt/kqiRwzrscLDly4Dof4+7zfHN+rsXB5tHg8FACrvz7ZyethLOtTfKCRDxxPQqX
+         4u1EDW1rDApi5rX6VtdtZd+/GKrw7KQmoe002F7uHotpTmDJjlaUmlr7r/Yno+J6dqG/
+         HcnVFiUpoBSSEg7F+eBrSd/QUAlLHyJNbcPg1etYOaIWEpvvGxNZToqlAt8+XFTyVXCg
+         6fIjguou6m/jRDDgZSVzlc1rDFfky77At/6gEASb/b6dJpsaXkPISwmfs9alNKnLyWik
+         619TJPltbAbTy1CX5TxgQQgRxSpjTVWGyvlakJpcc/fNYKQy7sufvhTQhji5yse8J4W8
+         FNrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681833318; x=1684425318;
+        d=1e100.net; s=20221208; t=1681835912; x=1684427912;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pY9pHq2dLU+St3NtjkMXoaWK13Cg/WiXep4UpYBIrPw=;
-        b=DKgmoo+ztr0CbyKdSQ4RtEg8qzfVgsPP2DWjTKsvxNZw2owAuyKgzGYd60ieH5uiNK
-         lmvTc+7ZYLPHcTyr6dlzptddlaA7GnrcWiu3H6T8nfi00q5O3zayVJP2p+KeZOmJWqVu
-         D0oHmWcwxJ9YTVqwvkWYWsEmUtmmoHkWuYt8otmvCUNuSr8bORNpI3yFLWwAGYiyKs6l
-         fuajJaG9gDZmPtYtBEgFE5gTseqk04Tr5oYe9MJ7crfAMZUH4Fbfw5knsRLZkCMBGP27
-         4DXWafqrfCu9JsSKcZj/aN7H9NuOmrQmLO5vOrHKEMzXv73QnDhbZHtT6WBn5Y8R5KxI
-         FGkA==
-X-Gm-Message-State: AAQBX9eddLRolHmpELTwTuGC3Ep2Xk8E2HAQOfj0WFSuDAOSQi7N6IX6
-        IW1Ve0+g3rcyEtkJh4Uedwz+cMK99ygD45dMB/+Eqw==
-X-Google-Smtp-Source: AKy350bJQ5DYzvXJKpTEBvO2yIbqvTi0KxkrimYpzhxKffSt3yNKaKZCVEYlf4iOu3eMnvQ1FTZRWAuTH58moz688qI=
-X-Received: by 2002:a05:600c:470b:b0:3f0:aeef:e2da with SMTP id
- v11-20020a05600c470b00b003f0aeefe2damr174184wmo.3.1681833318274; Tue, 18 Apr
- 2023 08:55:18 -0700 (PDT)
+        bh=Sw10kcaau1ppZSeiQ6y8o4ntvcL42o09SfowW0BsPd0=;
+        b=j5cFKloDDtZbftrFJLQ78QJC318ZY46gCJGLYdOvP2q+UbafkfN4bMDN13x9eapbAQ
+         7vj3qPdDHzimpnUM0PSL7mow9eDVLDUPfiU/j3E/Lz89zfHt4XkZmJ30D1eEsZAlDJrq
+         W0dfG4u6k8qlpj7IQsJVtec4oKmtisaNJgolFOtMHKl+ZTRJgeBtP6aizMkubFbmyz5l
+         iQvx6t1pWcfaOHYTyAhi6LwAapLstCriSkS20/s50kjWofyEl5gBmNIcyZ4CIilDcgCZ
+         rNCwRAJMruRaln9W/HjywyZAEp54NlLdXIFIpb5EgdkpucNf23DGeFMugHD3sY//BViQ
+         L4cg==
+X-Gm-Message-State: AAQBX9dLqivWQFW1ei9XSMo27T6DsWGGWKjFSIwX2ma3w5Y+uXmmKtnI
+        NMk15VzimkAKXPLKwI8VLc6E+Zdn1CEH8CqXfnM=
+X-Google-Smtp-Source: AKy350alXFUzzbCET0wbJ1lSAAgWpShd3nm6ksWajKjHo/A3JKOJQneLg/ggjfe8pHfC2Bnlndu7aJV1o/Z3kQIrEes=
+X-Received: by 2002:aa7:cd95:0:b0:502:61d8:233b with SMTP id
+ x21-20020aa7cd95000000b0050261d8233bmr3368146edv.19.1681835912405; Tue, 18
+ Apr 2023 09:38:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <ZD68RYCVT8hqPuxr@kernel.org>
-In-Reply-To: <ZD68RYCVT8hqPuxr@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 18 Apr 2023 08:55:04 -0700
-Message-ID: <CAP-5=fXr6Nc9qkaN+yHJRDNsg6nMxJiV9p7o9OR5cByeey-w0w@mail.gmail.com>
-Subject: Re: [PATCH] perf tools: Fix use before NULL check introduced by
- map__dso() introduction
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     James Clark <james.clark@arm.com>,
+References: <ZDfKBPXDQxH8HeX9@syu-laptop> <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
+ <20230414095007.GF63923@kunlun.suse.cz> <b933fad3-7759-00d4-94cb-f20dd363b794@isovalent.com>
+ <20230414161520.GJ63923@kunlun.suse.cz> <CAEf4Bzaw6DBHn=S9zKCXTSh7jW8xL9K6bzi1Q-e8j93thi2hmg@mail.gmail.com>
+ <20230418112454.GA15906@kitsune.suse.cz>
+In-Reply-To: <20230418112454.GA15906@kitsune.suse.cz>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 18 Apr 2023 09:38:20 -0700
+Message-ID: <CAEf4BzZf50fX7T9k47u+9YQrMbSLxLeA1qWwrdWToCZkMhynjg@mail.gmail.com>
+Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
+To:     =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>
+Cc:     Quentin Monnet <quentin@isovalent.com>,
+        Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Mahe Tardy <mahe.tardy@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 8:50=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Tue, Apr 18, 2023 at 4:24=E2=80=AFAM Michal Such=C3=A1nek <msuchanek@sus=
+e.de> wrote:
 >
-> James Clark noticed that the recent 63df0e4bc368adbd ("perf map: Add
-> accessor for dso") patch accessed map->dso before the 'map' variable was
-> NULL checked, which is a change in logic that leads to segmentation
-> faults, so comb thru that patch to fix similar cases.
+> On Mon, Apr 17, 2023 at 05:20:03PM -0700, Andrii Nakryiko wrote:
+> > On Fri, Apr 14, 2023 at 9:15=E2=80=AFAM Michal Such=C3=A1nek <msuchanek=
+@suse.de> wrote:
+> > >
+> > > On Fri, Apr 14, 2023 at 01:30:02PM +0100, Quentin Monnet wrote:
+> > > > 2023-04-14 11:50 UTC+0200 ~ Michal Such=C3=A1nek <msuchanek@suse.de=
 >
-> Fixes: 63df0e4bc368adbd ("perf map: Add accessor for dso")
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: John Garry <john.g.garry@oracle.com>
-> Cc: Leo Yan <leo.yan@linaro.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Mike Leach <mike.leach@linaro.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> To: James Clark <james.clark@arm.com>
-> Link: https://lore.kernel.org/lkml/
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > > Hello,
+> > > > >
+> > > > > On Fri, Apr 14, 2023 at 01:35:20AM +0100, Quentin Monnet wrote:
+> > > > >> Hi Shung-Hsi,
+> > > > >>
+> > > > >> On Thu, 13 Apr 2023 at 10:23, Shung-Hsi Yu <shung-hsi.yu@suse.co=
+m> wrote:
+> > > > >>>
+> > > > >>> Hi,
+> > > > >>>
+> > > > >>> I'm considering switch to bpftool's mirror on GitHub for packag=
+ing (instead
+> > > > >>> of using the source found in kernel), but realize that it shoul=
+d goes
+> > > > >>> hand-in-hand with how libbpf is packaged, which eventually lead=
+s these
+> > > > >>> questions:
+> > > > >>>
+> > > > >>>   What is the suggested approach for packaging bpftool and libb=
+pf?
+> > > > >>>   Which source is preferred, GitHub or kernel?
+> > > > >>
+> > > > >> As you can see from the previous discussions, the suggested appr=
+oach
+> > > > >> would be to package from the GitHub mirror, with libbpf and bpft=
+ool in
+> > > > >> sync.
+> > > > >>
+> > > > >> My main argument for the mirror is that it keeps things simpler,=
+ and
+> > > > >> there's no need to deal with the rest of the kernel sources for =
+these
+> > > > >> packages. Download from the mirrors, build, ship. But then I hav=
+e
+> > > > >> limited experience at packaging for distros, and I can understan=
+d
+> > > > >> Toke's point of view, too. So ultimately, the call is yours.
+> > > > >
+> > > > > Things get only ever more complex when submodules are involved.
+> > > >
+> > > > I understand the generic pain points from your other email. But cou=
+ld
+> > > > you be more specific for the case of bpftool? It's not like we're
+> > > > shipping all lib dependencies as submodules. Sync-ups are specifica=
+lly
+> > > > aligned to the same commit used to sync the libbpf mirror, so that =
+it's
+> > > > pretty much as if we had the right version of the library shipped i=
+n the
+> > > > repository - only, it's one --recurse-submodules away.
+> > >
+> > > It's so in every project that uses submodules. Except git does not
+> > > recurse into submodules by default, you have to fix it up by hand.
+> > > Forges don't support submodules so you will not get the submodule whe=
+n
+> > > downloading the project archive, and won't see it the the project tre=
+e.
+> >
+> > git submodule update --init --recursive didn't work?
+>
+> That's one part of the manual fixup.
+>
+> The other part is after each git operation that could possibly cause the
+> submodules to go out of sync, basically any operation that changes the
+> checked-out commit.
+>
+> Of course, you can make some shell aliases that append whatever submodule
+> chicanery to whatever git command you might issue, and tell everyone
+> else to do that, and then it will work in that one shell, and not in any
+> other shell nor any tool that invokes git directly.
 
-Sorry for the breakage!
-Acked-by: Ian Rogers <irogers@google.com>
+Are we discussing a *standard* Git submodule feature and argue that
+because it might be cumbersome or unfamiliar to some engineers that
+projects should avoid using Git submodules?
 
-Thanks,
-Ian
+For one, I don't have any special aliases for dealing with Git
+submodules and it works fine. If I jump between branches or tags which
+update Git submodule reference, I do above `git submodule update
+--init --recursive` explicitly if I see that Git status shows
+out-of-sync Git submodule state. If I want to update a Git submodule,
+I update the submodule's Git repo, and then git add it in the repo
+that uses this submodule. I haven't run into any other issues with
+this.
 
-> ---
->  tools/perf/builtin-script.c    | 7 +++----
->  tools/perf/ui/browsers/hists.c | 4 ++--
->  tools/perf/util/sort.c         | 2 +-
->  3 files changed, 6 insertions(+), 7 deletions(-)
+Having said that, I do realize that some build systems have more
+troubles with Git submodules (this was a complaint from Fedora
+packagers), and I empathize with this, which is why I do the archiving
+of submodule sources when cutting releases. If you'd prefer some other
+way of dealing with this, please let's have a constructive discussion
+about that. Suggesting projects to stop using Git submodules isn't
+that, IMO.
+
 >
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 8fba247b798ca307..006f522d0e7f6a18 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -1075,8 +1075,7 @@ static int grab_bb(u8 *buffer, u64 start, u64 end,
->                 return 0;
->         }
+> > > After previous experience with submodules I did not even try, I just
+> > > patched the makefile to use system libbpf before attempting anything
+> > > else.
+> >
+> > Quentin mentioned that he's packaging (or will package) libbpf sources
+> > as part of bpftool release on Github. I've been this for other
+> > libbpf-using tools as well, and it works pretty well (at least for
+> > Fedora and ArchLinux). E.g., srcs-full-* archives for veristat ([0])
+> >
+> > By switching up actual libbpf used to compile with bpftool, you are
+> > potentially introducing subtle problems that your users will be quite
+> > unhappy about, if they run into them. Let's work together to make it
+> > easier for you to package bpftool properly. We can't switch bpftool to
+> > reliably use system-wide libbpf (either static or shared, doesn't
+> > matter) because of dependency on internal functionality.
+> >
+> >
+> >   [0] https://github.com/libbpf/veristat/releases/tag/v0.1
 >
-> -       dso =3D map__dso(al.map);
-> -       if (!thread__find_map(thread, *cpumode, start, &al) || !dso) {
-> +       if (!thread__find_map(thread, *cpumode, start, &al) || (dso =3D m=
-ap__dso(al.map)) =3D=3D NULL) {
->                 pr_debug("\tcannot resolve %" PRIx64 "-%" PRIx64 "\n", st=
-art, end);
->                 return 0;
->         }
-> @@ -1106,9 +1105,9 @@ static int map__fprintf_srccode(struct map *map, u6=
-4 addr, FILE *fp, struct srcc
->         unsigned line;
->         int len;
->         char *srccode;
-> -       struct dso *dso =3D map__dso(map);
-> +       struct dso *dso;
+> So how many copies of libbpf do I need for having a CO-RE toolchain?
+
+What do you mean by "CO-RE toolchain"? bpftool, veristat, retsnoop,
+etc are tools. The fact they are using statically linked libbpf
+through Git submodule is irrelevant to end users. You need one libbpf
+in the system (for those who link dynamically against libbpf), the
+rest are just tools.
+
 >
-> -       if (!map || !dso)
-> +       if (!map || (dso =3D map__dso(map)) =3D=3D NULL)
->                 return 0;
->         srcfile =3D get_srcline_split(dso,
->                                     map__rip_2objdump(map, addr),
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hist=
-s.c
-> index ab70e5f5fad236e5..69c81759a64f938f 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -2499,9 +2499,9 @@ add_annotate_opt(struct hist_browser *browser __may=
-be_unused,
->                  struct map_symbol *ms,
->                  u64 addr)
->  {
-> -       struct dso *dso =3D map__dso(ms->map);
-> +       struct dso *dso;
+> Will different tools have different view of the kernel because they each
+> use different private copy of libbpf with different features?
+
+That's up to tools, not libbpf. You are over pivoting on libbpf here.
+There is one view of the kernel, it depends on what features the
+kernel supports. If the tool requires some specific functionality of
+libbpf, it will update its Git submodule reference to get a version of
+libbpf that provides that feature. That's the point, an
+application/tool is in control of what kind of features it gets from
+libbpf.
+
 >
-> -       if (!ms->map || !dso || dso->annotate_warned)
-> +       if (!ms->map || (dso =3D map__dso(ms->map)) =3D=3D NULL || dso->a=
-nnotate_warned)
->                 return 0;
+> When there is a bug in libbpf how many places need to be patched to fix
+> it?
+
+That's up to tools, again. If the bug is affecting them, they should
+cut a new version of their *tool*, using a patched version of libbpf
+from Github. If it doesn't affect them, then it doesn't matter *to
+them*.
+
 >
->         if (!ms->sym)
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index f2ffaf90648e469e..31b1cd0935e277ba 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -1568,7 +1568,7 @@ static int hist_entry__dcacheline_snprintf(struct h=
-ist_entry *he, char *bf,
+> Thanks
 >
->         if (he->mem_info) {
->                 struct map *map =3D he->mem_info->daddr.ms.map;
-> -               struct dso *dso =3D map__dso(map);
-> +               struct dso *dso =3D map ? map__dso(map) : NULL;
->
->                 addr =3D cl_address(he->mem_info->daddr.al_addr, chk_doub=
-le_cl);
->                 ms =3D &he->mem_info->daddr.ms;
-> --
-> 2.39.2
->
+> Michal
