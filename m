@@ -2,140 +2,197 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC41C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 18:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546DAC77B7D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 18:16:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232521AbjDRSE4 (ORCPT
+        id S231671AbjDRSQP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Apr 2023 14:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40986 "EHLO
+        Tue, 18 Apr 2023 14:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232450AbjDRSEz (ORCPT
+        with ESMTP id S230390AbjDRSQO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Apr 2023 14:04:55 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80EE740EE
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 11:04:51 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3f048b144eeso67575e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 11:04:51 -0700 (PDT)
+        Tue, 18 Apr 2023 14:16:14 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F66749F2
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 11:16:12 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3f04275b2bdso66895e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 11:16:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681841090; x=1684433090;
+        d=google.com; s=20221208; t=1681841771; x=1684433771;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bVo7ErolbBsB3vbOoqmPHuRczZ4pjL/sGStpYzTmAxM=;
-        b=ZU5RGYlhPrrm3RUw1BAJD4ultlC7dOla6Lr/381b9LpQqBWglBq0ppKxwlU9+VwW2M
-         msjDDhP3G6FP/MJDlvw9WHNWoycAFQEK1CG2E+AxoRClYltCV0ke/P6Mp/bSZ9tg8sVf
-         s7kFlG7VZVRqpnP1CauObtccey3KhAJUwE/IlnQwXPdVJ8Rfwhx2WcvDSo8I7XBf2c+E
-         3FDWG6WCqT/xBrYcz57O2Unf215gtdpwlDaCTpY//bSDI82W9wr8KLyVA3XBzdIDYuJC
-         AQX0LuH73IcR+OEC9L+kBCdnN2DFePLw18BAbA+0j5sWsfiJiZvQokxB5ziUnLfkEX+f
-         Bm+Q==
+        bh=Uzk00VVwAMnUgl8nqdf7G+u1lGlONN9yY2/sgJWoENw=;
+        b=nVANayyNWQEEcixXLqV58hlA44rj6vtMwQer5ALpXD+J7VO5ysQutiY7HHiuVoz8F+
+         yORfLruneACibPMnxRaVgKWwcMZVcMD9oFIhFI67ivS4lcNI+4TRMk9rtITgyWkXMNNd
+         PlCuhCVu8rfB3QxBCZQCgaDOC1FDvoVj1H5R5FnFIc1PqdCrK/uiOqLTVShiSQ7M170d
+         VEdup8js/MK8j0kVW+RDn+EEyfkMLCIX7k1ylHxCZlM1YJnlk7+R1enDl3Iq+wHyzLDa
+         deRchW644KPY6XyWgOy4AczDdGW3MUgxI3c4nJ7bH6UddtzrMLoK7+huqXWBBoG+hvlf
+         zj4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681841090; x=1684433090;
+        d=1e100.net; s=20221208; t=1681841771; x=1684433771;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bVo7ErolbBsB3vbOoqmPHuRczZ4pjL/sGStpYzTmAxM=;
-        b=luAwfcGKBKmUHVAw/MLnOD8WZ9AVzXS7l04ovjoUUpQ4DPRDkuDed1wlM3ZYgClqDQ
-         02PuT2AZTh4uqvOdjuFBYstph0rhZMaeEGsbG7DHNeWW3E83KNTDLehN5fY27h4fsGPy
-         kJOXhHv3AOSVsaq7a0/DVKzsHGPgW8SXkYbY+8rqEQK1INRUHVnSdHfxJ/FDFCiI4pNc
-         +1HqpJXUALDhkhrEaCNHk+dc3W9tWMYR07nRvmADGXb55e2EYdddkLOUH6uu4RrGLxLA
-         cUDfOkGXjN0GM9FlKF4izcVFA/x2tJ9I840B2a+0mxy0kTENUqrSCnC1O6ur+nBAx9/d
-         r9PA==
-X-Gm-Message-State: AAQBX9eb3KuMHCX0hTrIO6Klt4gc+whlTM0+XzbcUgR0+gbDpEva4PoO
-        AfmXe449w3tf+mLoxAnaMQoKo5ApaXd+OsESz0RZJQ==
-X-Google-Smtp-Source: AKy350a2qGvbYaY2rIFNyUnYbU0oiNOCuTWBN2WMAQLltFtgZZpkczBs4IU4AxO4IcKD/c5XRH1zdF6YZte2RTXgYl8=
-X-Received: by 2002:a05:600c:3c97:b0:3f1:73b8:b5fe with SMTP id
- bg23-20020a05600c3c9700b003f173b8b5femr7640wmb.3.1681841089846; Tue, 18 Apr
- 2023 11:04:49 -0700 (PDT)
+        bh=Uzk00VVwAMnUgl8nqdf7G+u1lGlONN9yY2/sgJWoENw=;
+        b=WkXIsdAge9y9lcKKDp8jcuXxA9CXTv3NhOKJf/uoeCou3DerWzXFDHjg+V/Yg3uQmU
+         Ocm7fv86llIXCu2HS2ipoSM/xaxcVjdFmEynvNumug374VXPATqazBdwySvDxkTavu77
+         xwR2Z+SxuEPAI90gDpQxUR/jWWHqZrSplwd96anA/2Mc34nrOcxgr14bukNqWoWSZVtP
+         CJR99BNfYXXpE9ovHKEOg/OcwBPvUJQEJUaexXV0B+Q115HRq59fGsJdbp7QE8baCClJ
+         nR5G2CT6/uEn0aFtaXODfCIxed2U+uy44pFAH/i9E18tahIlYm14wi7Q9gq+dXNipqzY
+         LYuw==
+X-Gm-Message-State: AAQBX9dbXxVvufZl+9AzetWave+P4P1EMf2Sm3rlEvflCG0YExYnhPma
+        OeCEOY6ENx5mIPGYhrVpbz/YKin0ORi3CvyCnz7gaw==
+X-Google-Smtp-Source: AKy350YlrlOxmvzog0f3D5uEtE7OfRYpZXxq6H5LRCHAsI0piErrBw4HBLPgJ3F/vVAjjDRqNTs1wro+Od2+A+R7Nms=
+X-Received: by 2002:a05:600c:22c8:b0:3f1:758c:dd23 with SMTP id
+ 8-20020a05600c22c800b003f1758cdd23mr10353wmg.7.1681841770657; Tue, 18 Apr
+ 2023 11:16:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230417122943.2155502-1-anders.roxell@linaro.org>
- <20230417122943.2155502-2-anders.roxell@linaro.org> <CAP-5=fWUevSnyn5MtVO1p6cEVE8MvBTq4Qgth7RcPYueRERQKA@mail.gmail.com>
- <d940f802-8aab-140d-7a87-9cf0b3a8ac9f@isovalent.com>
-In-Reply-To: <d940f802-8aab-140d-7a87-9cf0b3a8ac9f@isovalent.com>
+References: <20230413161725.195417-1-alexghiti@rivosinc.com>
+ <CAOnJCU+72PV1=o1c_TpogkmBT36278BneVWEMr1=tqX0CZi+ag@mail.gmail.com>
+ <aadca595b4a24e36932ba41e61f4e263@AcuMS.aculab.com> <CAOnJCUJ7mY+fh9VqE4dRntnVAEAc26=NnOCPUqkXk6ky__cUZQ@mail.gmail.com>
+In-Reply-To: <CAOnJCUJ7mY+fh9VqE4dRntnVAEAc26=NnOCPUqkXk6ky__cUZQ@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 18 Apr 2023 11:04:35 -0700
-Message-ID: <CAP-5=fVh=zNuwcQM++KFxt6ETv-Z6GpY9pWDQ=RbvnuSGUhT8g@mail.gmail.com>
-Subject: Re: [backport PATCH 1/2] tools perf: Fix compilation error with new binutils
-To:     Quentin Monnet <quentin@isovalent.com>
-Cc:     Anders Roxell <anders.roxell@linaro.org>, stable@vger.kernel.org,
-        acme@redhat.com, andres@anarazel.de, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Ben Hutchings <benh@debian.org>, Jiri Olsa <jolsa@kernel.org>,
-        Sedat Dilek <sedat.dilek@gmail.com>, bpf@vger.kernel.org
+Date:   Tue, 18 Apr 2023 11:15:56 -0700
+Message-ID: <CAP-5=fUYJEecmhQVuvbM4ZoDP_Hj=2RKOgR4cKepU072Uy3xyw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] riscv: Allow userspace to directly access perf counters
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Alexandre Ghiti <alexghiti@rivosinc.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        paranlee <p4ranlee@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 9:43=E2=80=AFAM Quentin Monnet <quentin@isovalent.c=
-om> wrote:
+On Tue, Apr 18, 2023 at 9:43=E2=80=AFAM Atish Patra <atishp@atishpatra.org>=
+ wrote:
 >
-> 2023-04-17 10:14 UTC-0700 ~ Ian Rogers <irogers@google.com>
-> > On Mon, Apr 17, 2023 at 5:30=E2=80=AFAM Anders Roxell <anders.roxell@li=
-naro.org> wrote:
-> >>
-> >> From: Andres Freund <andres@anarazel.de>
-> >>
-> >> binutils changed the signature of init_disassemble_info(), which now c=
-auses
-> >> compilation failures for tools/perf/util/annotate.c, e.g. on debian
-> >> unstable.
+> On Fri, Apr 14, 2023 at 2:40=E2=80=AFAM David Laight <David.Laight@aculab=
+.com> wrote:
 > >
-> > Thanks, I believe the compilation issue may well be resolved by:
-> > https://lore.kernel.org/lkml/20230311065753.3012826-8-irogers@google.co=
-m/
-> > where binutils is made opt-in rather than opt-out.
+> > From: Atish Patra
+> > > Sent: 13 April 2023 20:18
+> > >
+> > > On Thu, Apr 13, 2023 at 9:47=E2=80=AFPM Alexandre Ghiti <alexghiti@ri=
+vosinc.com> wrote:
+> > > >
+> > > > riscv used to allow direct access to cycle/time/instret counters,
+> > > > bypassing the perf framework, this patchset intends to allow the us=
+er to
+> > > > mmap any counter when accessed through perf. But we can't break the
+> > > > existing behaviour so we introduce a sysctl perf_user_access like a=
+rm64
+> > > > does, which defaults to the legacy mode described above.
+> > > >
+> > >
+> > > It would be good provide additional direction for user space packages=
+:
+> > >
+> > > The legacy behavior is supported for now in order to avoid breaking
+> > > existing software.
+> > > However, reading counters directly without perf interaction may
+> > > provide incorrect values which
+> > > the userspace software must avoid. We are hoping that the user space
+> > > packages which
+> > > read the cycle/instret directly, will move to the proper interface
+> > > eventually if they actually need it.
+> > > Most of the users are supposed to read "time" instead of "cycle" if
+> > > they intend to read timestamps.
+> >
+> > If you are trying to measure the performance of short code
+> > fragments then you need pretty much raw access directly to
+> > the cycle/clock count register.
+> >
+> > I've done this on x86 to compare the actual cycle times
+> > of different implementations of the IP checksum loop
+> > (and compare them to the theoretical limit).
+> > The perf framework just added far too much latency,
+> > only directly reading the cpu registers gave anything
+> > like reliable (and consistent) answers.
+> >
 >
-> Hi,
-> These commits are to make it possible to build against recent binutils,
-> without having to leave it out at compile time, so as I understand they
-> address a different issue?
+> This series allows direct access to the counters once configured
+> through the perf.
+> Earlier the cycle/instret counters are directly exposed to the
+> userspace without kernel/perf frameworking knowing
+> when/which user space application is reading it. That has security implic=
+ations.
+>
+> With this series applied, the user space application just needs to
+> configure the event (cycle/instret) through perf syscall.
+> Once configured, the userspace application can find out the counter
+> information from the mmap & directly
+> read the counter. There is no latency while reading the counters.
+>
+> This mechanism allows stop/clear the counters when the requesting task
+> is not running. It also takes care of context switching
+> which may result in invalid values as you mentioned below. This is
+> nothing new and all other arch (x86, ARM64) allow user space
+> counter read through the same mechanism.
+>
+> Here is the relevant upstream discussion:
+> https://lore.kernel.org/lkml/Y7wLa7I2hlz3rKw%2F@hirez.programming.kicks-a=
+ss.net/T/
+>
+> ARM64:
+> https://docs.kernel.org/arm64/perf.html?highlight=3Dperf_user_access#perf=
+-userspace-pmu-hardware-counter-access
+>
+> example usage in x86:
+> https://github.com/andikleen/pmu-tools/blob/master/jevents/rdpmc.c
 
-Kind of. We don't want the Linux perf build to break. Previously if
-binutils were installed then Linux perf would default to linking with
-it and break your build were binutils to change its API. That is no
-longer the case as we don't default to linking against binutils. This
-was motivated by distributions not being able to link Linux perf with
-binutils due to the license incompatibilities. I don't see a problem
-supporting linking against newer and older binutils if people want to
-on non-distributed binaries. We'll probably need more build
-tests/containers to cover the possibilities of this. I'm not sure
-what's motivating binutils support other than personal experimentation
-though.
+The canonical implementation of this should be:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
+ls/lib/perf/mmap.c#n400
+which is updated in these patches but the tests are not:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
+ls/perf/tests/mmap-basic.c#n287
+Which appears to be an oversight. The tests display some differences
+between x86 and aarch64 that have assumed userspace hardware counter
+access, and everything else that it is assumed don't.
 
 Thanks,
 Ian
 
-
+> > Clearly process switches (especially cpu migrations) cause
+> > problems, but they are obviously invalid values and can
+> > be ignored.
 > >
-> >> Relevant binutils commit:
-> >>
-> >>   https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommit;h=3D60a3=
-da00bd5407f07
-> >>
-> >> Wire up the feature test and switch to init_disassemble_info_compat(),
-> >> which were introduced in prior commits, fixing the compilation failure=
-.
+> > So while a lot of uses may be 'happy' with the values the
+> > perf framework gives, sometimes you do need to directly
+> > read the relevant registers.
 > >
-> > I was kind of surprised to see no version check ifdef. Is
-> > init_disassemble_info_compat is supported in older binutils?
+> >         David
+> >
+> > -
+> > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, M=
+K1 1PT, UK
+> > Registration No: 1397386 (Wales)
 >
-> It is not part of binutils, it was introduced in commit a45b3d692623
-> ("tools include: add dis-asm-compat.h to handle version differences"),
-> which should likely be backported alongside these ones if it hasn't been
-> already. Possibly the others from the same series [0], as well?
 >
-> I think all 5 patches from Andres' series were backported to 5.15 [1].
 >
-> [0]
-> https://lore.kernel.org/all/20220703212551.1114923-1-andres@anarazel.de/t=
-/#m999a44663894e235b523ffc41ce87e956019ea72
-> [1]
-> https://lore.kernel.org/all/e6e2df31-6327-f2ad-3049-0cbfa214ae5c@hauke-m.=
-de/t/#u
->
-> Best regards,
-> Quentin
+> --
+> Regards,
+> Atish
