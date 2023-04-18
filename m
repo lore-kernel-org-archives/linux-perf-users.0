@@ -2,50 +2,51 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3C2C77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 06:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C00C77B71
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 06:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbjDRGS6 (ORCPT
+        id S229915AbjDRGaJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Apr 2023 02:18:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52786 "EHLO
+        Tue, 18 Apr 2023 02:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjDRGS5 (ORCPT
+        with ESMTP id S229454AbjDRGaJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Apr 2023 02:18:57 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2368469D;
-        Mon, 17 Apr 2023 23:18:56 -0700 (PDT)
+        Tue, 18 Apr 2023 02:30:09 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 937B6119;
+        Mon, 17 Apr 2023 23:30:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681798736; x=1713334736;
+  t=1681799406; x=1713335406;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=6JBGljYazrmRSE6RvTQW+cpQVI0fUGbUG2iNAadpTAA=;
-  b=P+wyJ2O4kZz3e3izmI4EZWWgC2X87wSE1Q53cuHhf4/h0RobLyzFBtnf
-   mcMDsEjP9It6fZJBZCoSSBktm2ZrwVEmrnXjKhXLliBi7dWl0D4wiO5/L
-   HY9WvnIzDmXLtYQYzGeWTnAdthODN6SLGfXLpNBQmLUH2LppX9Sez/gnf
-   tIJoNKZpPJC4+S4kBniwu8McHhfGWN6J9t68zgs/VDuxeOQabkERisL1G
-   GvdDbb92jn4pyMQiCt6KVPz706Ym4GwWFcBCO2zQf7rBBQuLIxi3gbky0
-   AfOUapCFtwx/45iBUt4QoCwZlvLpqFw454rDVo8Tpk3LN0ttRLxdZ5DgN
+  bh=nDNhe3Tsv85RglO2DALJKYqrP8C4vKN59/PeHUPKaHU=;
+  b=Yxq8hxop4lvETvYPt0/uyzQy5WJP5K/NlMuA2b+nr8RU9RfoTz1+AVRB
+   QebcQaH/K5jFwfCCsKwxJMtTpW95Q7dS/z8uXhYj4aAt0bs3hLbgFS/8d
+   nGy0uErt8Mf5mRIINn626TbB7bQ2KuqIoHQXR6E8lRqYU3nm558R7Vvkx
+   5Ab/nJaS/snEz8gJ4BRtPOceS9BFvKRCjMNZePsKvVhS5BTWWos1zjesn
+   TTryVgqcGZWxzc0fFjHQBC8qdJc4/8iXfzYsxkrSlil/9QWpKJFHd1xw0
+   U82KaPNTOjnbBgwYPnW9wxKn+Ed17v8xmJ3zp+KzXxj+X2nZKfk/0ZpBn
    Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="372966305"
+X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="325429177"
 X-IronPort-AV: E=Sophos;i="5.99,206,1677571200"; 
-   d="scan'208";a="372966305"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 23:18:56 -0700
+   d="scan'208";a="325429177"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 23:30:06 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="723524722"
+X-IronPort-AV: E=McAfee;i="6600,9927,10683"; a="721416375"
 X-IronPort-AV: E=Sophos;i="5.99,206,1677571200"; 
-   d="scan'208";a="723524722"
+   d="scan'208";a="721416375"
 Received: from choiwony-mobl.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.32.90])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 23:18:53 -0700
-Message-ID: <89733d35-0b71-615f-4fb8-55183585c67a@intel.com>
-Date:   Tue, 18 Apr 2023 09:18:49 +0300
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 23:30:03 -0700
+Message-ID: <d6a66fd3-b70a-3649-e13e-b3bd891de853@intel.com>
+Date:   Tue, 18 Apr 2023 09:29:59 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH RFC 0/5] perf: Add ioctl to emit sideband events
+Subject: Re: [PATCH RFC 1/5] perf: Add ioctl to emit sideband events
+Content-Language: en-US
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -56,39 +57,54 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20230414082300.34798-1-adrian.hunter@intel.com>
- <20230417110221.GH83892@hirez.programming.kicks-ass.net>
-Content-Language: en-US
+ <20230414082300.34798-2-adrian.hunter@intel.com>
+ <20230417105727.GG83892@hirez.programming.kicks-ass.net>
 From:   Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
  Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230417110221.GH83892@hirez.programming.kicks-ass.net>
+In-Reply-To: <20230417105727.GG83892@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 17/04/23 14:02, Peter Zijlstra wrote:
-> On Fri, Apr 14, 2023 at 11:22:55AM +0300, Adrian Hunter wrote:
->> Hi
+On 17/04/23 13:57, Peter Zijlstra wrote:
+> On Fri, Apr 14, 2023 at 11:22:56AM +0300, Adrian Hunter wrote:
+>> perf tools currently read /proc to get this information, but that
+>> races with changes made by the kernel.
 >>
->> Here is a stab at adding an ioctl for sideband events.
+>> Add an ioctl to output status-only sideband events for a currently
+>> active event on the current CPU. Using timestamps, these status-only
+>> sideband events will be correctly ordered with respect to "real"
+>> sideband events.
 >>
->> This is to overcome races when reading the same information
->> from /proc.
+>> The assumption is a user will:
+>> 	- open and enable a dummy event to track sideband events
+>> 	- call the new ioctl to get sideband information for currently
+>> 	  running processes as needed
+>> 	- enable the remaining selected events
+>>
+>> The initial sideband events to be supported will be: fork, namespaces, comm
+>> and mmap.
+>>
+>> Add a new misc flag PERF_RECORD_MISC_STATUS_ONLY to differentiate "real"
+>> sideband events from status-only sideband events.
+>>
+>> The limitation that the event must be active is significant. The ioctl
+>> caller must either:
+>> 	i)  For a CPU context, set CPU affinity to the correct CPU.
+>> 	    Note, obviously that would not need to be done for system-wide
+>> 	    tracing on all CPUs. It would also only need to be done for the
+>> 	    period of tracing when the ioctl is to be used.
+>> 	ii) Use an event opened for the current process on all CPUs.
+>> 	    Note, if such an additional event is needed, it would also use
+>> 	    additional memory from the user's perf_event_mlock_kb /
+>> 	    RLIMIT_MEMLOCK limit.
 > 
-> What races? Are you talking about reading old state in /proc the kernel
-> delivering a sideband event for the new state, and then you writing the
-> old state out?
-> 
-> Surely that's something perf tool can fix without kernel changes?
+> Why would a single per-task event not work? I see nothing in the code
+> that would require a per-task-per-cpu setup. Or am I just having trouble
+> reading again?
 
-Yes, and it was a bit of a brain fart not to realise that.
-
-There may still be corner cases, where different kinds of events are
-interdependent, perhaps NAMESPACES events vs MMAP events could
-have ordering issues.
-
-Putting that aside, the ioctl may be quicker than reading from
-/proc.  I could get some numbers and see what people think.
+Sorry, "all CPUS" should have been "cpu=-1"
 
