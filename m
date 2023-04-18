@@ -2,266 +2,214 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5999C6FD18
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 20:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93937C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 20:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230526AbjDRUJT (ORCPT
+        id S230408AbjDRUad (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Apr 2023 16:09:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59162 "EHLO
+        Tue, 18 Apr 2023 16:30:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232554AbjDRUJS (ORCPT
+        with ESMTP id S230153AbjDRUac (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Apr 2023 16:09:18 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A3E6A44
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 13:09:15 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f048b144eeso75855e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 13:09:15 -0700 (PDT)
+        Tue, 18 Apr 2023 16:30:32 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 541BB1BE
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 13:30:31 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-2470e93ea71so1730695a91.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 13:30:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681848554; x=1684440554;
+        d=atishpatra.org; s=google; t=1681849831; x=1684441831;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d1525zsWKnr1EkonUnoaIf64nmGsw4cC1+D1LMBheRA=;
-        b=n+Idjg/y1pbkN7j2m2Lv99yYdcRAfyDeb3cYqV53JBjge/QBOHhzhciaG4ao1Z6khP
-         ftL5jfisWDCft+4gzrjdQ0GLuBI9kke6wvh8gcaFdqs4906AcnxtHqoBrV66qVAjmYgw
-         KrAWjxqYyu867vIhZbjBO+oXJwM/7FJVsldl7/CgCRoUA3/GOaVf032oDnw2Llh67evi
-         f3PQEvGNd9cDTiec0aMBHa6GZ5yO1OS61DVhSPazQGv5Cu3WFfoN+4MAKIGV6whbGl1U
-         6xEhNLOb9gPh9qNvNqNyqYrLjcsGZoJvJ3efixAbvakrRLjXZMjyJa/xWrzjxpH7+7p6
-         8T6g==
+        bh=758KJFnubLFSsZj7NLSbl2wQ+MQOeQGEXb82zXsrHA8=;
+        b=JKWc07Hsa1AIwKVKIMzXI4sw331w8kX1TDKqtQB//KSPOSUQN+tk39Ofo87lgk87cs
+         A++4AkL4VO7Zo172B6EmKiVr7FrbMePdElPSloCsouI2E/r/+XOY/fDC60aCptlCrI9z
+         Pj+V02e4O7mTkISl5wP8rj3Y1EWU2fzkx9GVY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681848554; x=1684440554;
+        d=1e100.net; s=20221208; t=1681849831; x=1684441831;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d1525zsWKnr1EkonUnoaIf64nmGsw4cC1+D1LMBheRA=;
-        b=SW4CBlLJytLsjxwVCUePpwtCN2g7KcZYU76QMvOK36MWg2lSbLPiHpMud1JH68/W5S
-         l+bPnosnerv2klAtDQ9hq/SaGEh15695Lx3KqHqBHXbWIdhNftdjsGDY1YaAR1hsF60c
-         EgQ03hxK4a5QlKeds7MljuwerJL6/74EUO5YpNcFP+CQexA2pQaYH736raFbyJL1GIya
-         on800NasNxsvEW3LhNUN0UPNoBsWkwLGLS2E1HplHmWYkibQG/XZTPgRKvbh67fOcMCE
-         91jVIVoyBkGcHT3KE0kZ3gwVOXRx11lPo4Vj0A7tdin19+u/tAi8uZYVYY5QQ9feDZY/
-         yJLw==
-X-Gm-Message-State: AAQBX9fD3rvhfXjuUqjhhK6OQDK/aP0ebgE/IUFju/ceRNS1H+IyZp70
-        +OoaoaR+BGpq59STcUavcTOmlnoKzzVA+cN+vQWtCA==
-X-Google-Smtp-Source: AKy350ZVUytotLnLt0sUSZ7AO7sR44xZeAzCQSHqBqKY2oPIivb4Q8AkFXs+PyF987dTDqt1oslksnMe9NuM7tYJOxY=
-X-Received: by 2002:a05:600c:4f03:b0:3f1:664a:9a52 with SMTP id
- l3-20020a05600c4f0300b003f1664a9a52mr32652wmq.7.1681848554192; Tue, 18 Apr
- 2023 13:09:14 -0700 (PDT)
+        bh=758KJFnubLFSsZj7NLSbl2wQ+MQOeQGEXb82zXsrHA8=;
+        b=LCA19juk2DLPf1Dh9farkyUNBMQIt+cYdmH1F6J3Y/nqKunkw4m0F8oOSw1pEGcOAw
+         mcy+1D9rXuiX+9fi+ALZZ0xHJU9JzNvi9uo7+rSnGJKNGhTX3JIx74ZEN4M5uGOgdIQ0
+         xZxDaVgG9sD96i8vCd3/yU+0FpnSxV93wDTPad5cmLXN/uCfN3dT+DMKfEc/XRFg65LE
+         C7mCb0RWIpJIJvnUExuixkGb7Pf45LnwCmp1ptkArkPOpbBQSk3yHIUHOTD3cUvB0Um8
+         eg4jXoCQQWiYO6Cr8fDQIO0kJoj3KwgiY/qoZ4LMpR3JUtk9NYGbNyv6vdmROb6fARaE
+         HSow==
+X-Gm-Message-State: AAQBX9dD2pV6upYFRcK0o6Pn/fLoBp0oXcvLW7AUxEo89m+gxi8bAp4i
+        081avf6i38ogbOehn0t30cz9qt4tUgkQyKG+k+5c
+X-Google-Smtp-Source: AKy350ZIg+M7FnY7uohsy0MLIS1rdUP3e5Y8mF0C/rJh0Ab5JDC3yj3RoFOx5gy5nC7akfL3LOBt0QioDaAyr1DFD3g=
+X-Received: by 2002:a17:90a:4706:b0:23d:1121:f211 with SMTP id
+ h6-20020a17090a470600b0023d1121f211mr293761pjg.5.1681849830738; Tue, 18 Apr
+ 2023 13:30:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230414051922.3625666-1-irogers@google.com> <56ac61a0-ccf0-210e-e429-11062a07b8bf@linux.intel.com>
- <CAP-5=fXz1vw48A2tWgcNDSZsnvnOO7_jA+py3p_Khi_igz0hJw@mail.gmail.com>
- <5031f492-9734-be75-3283-5961771d87c8@linux.intel.com> <CAP-5=fW2aAijt8tqydszQHQFmsfeQO2S0hb7Z27RtXxG4Zmm-w@mail.gmail.com>
- <ce92dd1b-23f6-ea52-a47d-fccc24fa20ea@linux.intel.com> <CAP-5=fWRy4NEqhB6-b98+m7SV5=oyBOMVuOHwmvKZCJuXcsQEg@mail.gmail.com>
- <d1fe801a-22d0-1f9b-b127-227b21635bd5@linux.intel.com> <CAP-5=fXCmKAUn24r0YYHaO63mabZCXae-hAT2WCtk+YYmvS9xg@mail.gmail.com>
- <99150cb1-fe50-97cf-ad80-cceb9194eb9a@linux.intel.com>
-In-Reply-To: <99150cb1-fe50-97cf-ad80-cceb9194eb9a@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 18 Apr 2023 13:08:59 -0700
-Message-ID: <CAP-5=fXZSACj=kGM5t3pBHkQ-W1i0eJayAQ77_ToEp4zXWzJnw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf stat: Introduce skippable evsels
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+References: <20230413161725.195417-1-alexghiti@rivosinc.com>
+ <CAOnJCU+72PV1=o1c_TpogkmBT36278BneVWEMr1=tqX0CZi+ag@mail.gmail.com>
+ <aadca595b4a24e36932ba41e61f4e263@AcuMS.aculab.com> <CAOnJCUJ7mY+fh9VqE4dRntnVAEAc26=NnOCPUqkXk6ky__cUZQ@mail.gmail.com>
+ <CAP-5=fUYJEecmhQVuvbM4ZoDP_Hj=2RKOgR4cKepU072Uy3xyw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUYJEecmhQVuvbM4ZoDP_Hj=2RKOgR4cKepU072Uy3xyw@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Wed, 19 Apr 2023 02:00:18 +0530
+Message-ID: <CAOnJCULJfSN79MzAwhCrbVzG1rYyrPB3OraFmoZFBxuRCwq01w@mail.gmail.com>
+Subject: Re: [PATCH 0/4] riscv: Allow userspace to directly access perf counters
+To:     Ian Rogers <irogers@google.com>
+Cc:     David Laight <David.Laight@aculab.com>,
+        Alexandre Ghiti <alexghiti@rivosinc.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        paranlee <p4ranlee@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 11:19=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
-com> wrote:
+On Tue, Apr 18, 2023 at 11:46=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
 >
->
->
-> On 2023-04-18 11:43 a.m., Ian Rogers wrote:
-> > On Tue, Apr 18, 2023 at 6:03=E2=80=AFAM Liang, Kan <kan.liang@linux.int=
-el.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2023-04-17 2:13 p.m., Ian Rogers wrote:
-> >>> The json TopdownL1 is enabled if present unconditionally for perf sta=
-t
-> >>> default. Enabling it on Skylake has multiplexing as TopdownL1 on
-> >>> Skylake has multiplexing unrelated to this change - at least on the
-> >>> machine I was testing on. We can remove the metric group TopdownL1 on
-> >>> Skylake so that we don't enable it by default, there is still the
-> >>> group TmaL1. To me, disabling TopdownL1 seems less desirable than
-> >>> running with multiplexing - previously to get into topdown analysis
-> >>> there has to be knowledge that "perf stat -M TopdownL1" is the way to
-> >>> do this.
-> >>
-> >> To be honest, I don't think it's a good idea to remove the TopdownL1. =
-We
-> >> cannot remove it just because the new way cannot handle it. The perf
-> >> stat default works well until 6.3-rc7. It's a regression issue of the
-> >> current perf-tools-next.
+> On Tue, Apr 18, 2023 at 9:43=E2=80=AFAM Atish Patra <atishp@atishpatra.or=
+g> wrote:
 > >
-> > I'm not so clear it is a regression to consistently add TopdownL1 for
-> > all architectures supporting it.
->
->
-> Breaking the perf stat default is a regression.
-
-Breaking is overstating the use of multiplexing. The impact is less
-accuracy in the IPC and branch misses default metrics, if multiplexing
-is necessary on your Intel architecture. I believe TopdownL1 is more
-useful than either of these metrics and so having TopdownL1 be a
-default is an improvement. We can add a patch, as I keep repeating
-this is off-topic for this patch, to make it so that TopdownL1 isn't
-enabled on Intel CPUs pre-Icelake, but I would discourage this.
-
-> The reason we once added the TopdownL1 for ICL and later platform is
-> that it doesn't break the original design (a *clean* output).
-
-Right, and in 6.3-rc7 the aggregation of counts was broken because of
-duplicated counts and hard coded metrics (I did a last minute partial
-fix). In perf-tools-next aggregation was fixed and we switched to the
-json metrics, that are accurate and up-to-date with the latest TMA
-metrics, so that we wouldn't need to maintain a duplicate code path.
-What keys enabling TopdownL1 in 6.3 is the presence of topdown events
-whilst in perf-tools-next it is the presence of TopdownL1 metric
-group, as this is a more consistent approach and had first been
-proposed by ARM.
-
-> > The assertion is that because
-> > TopdownL1 has multiplexing and multiplexing is global then we've
-> > lowered the accuracy of other metrics, but the only other hardware
-> > metrics in the default output pre-Icelake are IPC and branch miss
-> > rate. Having TopdownL1 is a way of drilling into performance issues,
-> > while IPC and branch miss rate are putting your finger in the air to
-> > see which way the wind is blowing. Perhaps we should drop these if
-> > TopdownL1 is present.
-> >
-> >> But I'm OK to add some flags with the metrics to assist the perf tool =
-to
-> >> specially handle the case if you prefer to modify the event list.
-> >
-> > We've already removed thresholds from the default output, we could
-> > remove groups.
-> >
-> >>>
-> >>> This doesn't relate to this change which is about making it so that
-> >>> failing to set up TopdownL1 doesn't cause an early exit. The reason I
-> >>> showed TigerLake output was that on TigerLake the skip/fallback
-> >>> approach works while Skylake just needs the events disabled/skipped
-> >>> unless it has sufficient permissions. Note the :u on the events in:
-> >>
-> >> The perf_event_open() should be good to detect the insufficient
-> >> permission, but it doesn't work to detect an existing of an event.
-> >> That's because the kernel only checks the features not specific events=
-.
-> >> It's not a reliable way to rely on the output of the perf_event_open()=
- here.
-> >
-> > I'm unclear why not as not having perf_event_open fail seems like a
-> > kernel bug. I can see there is little motivation to fix this on older
-> > architectures like Skylake.
->
-> Updating kernel may not be an option here. Because
-> - There is no issue with the existing perf tool until 6.3-rc7. It
-> doesn't sound like a defect of the kernel.
-> - The kernel for the SKL has been there for many years. It's impossible
-> to change all the kernels to support a new requirement from the perf tool=
-.
-
-This isn't a new behavior in the perf tool, the expectation that
-perf_event_open fails is one that is present in the implementation of
-weak event groups.
-
-> > We do attempt to workaround it with the
-> > errata flags on the metrics introduced here:
-> > https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py#=
-L1296
-> >
-> If so, I would still suggest to check the slots and topdown events in
-> sysfs and decide whether to append the TopdownL1 to perf stat default.
->
-> So we probably need a ARCH specific is_event_available(), before
-> appending the events.
-
-This can be done, but is a feature request. I think we should enable
-TopdownL1 by default as the way to avoid multiplexing, if you care or
-are affected, is to choose the specific event or metric of interest
-and profile with just that. I suspect for branch miss-rate and IPC,
-the numbers wanting to do that will be small. Educating that TopdownL1
-exists is a harder problem and shouldn't just be something present for
-Intel Icelake+ users or those who've read through the wiki.
-
-Thanks,
-Ian
-
-> >>>> From your test result in the v2 description, we can see that there i=
-s no
-> >>>> TopdownL1, which is good and expected. However, there is a (48.99%) =
-with
-> >>>> cycles:u event, which implies multiplexing. Could you please check
-> >>>> what's the problem here?
-> >>>> Also, if it's because of the backgroud, all the events should be
-> >>>> multiplexing. But it looks like only cycle:u has multiplexing. Other
-> >>>> events, instructions:u, branches:u and branch-misses:u work without
-> >>>> multiplexing. That's very strange.
-> >>> I wasn't able to reproduce it and suspect it was a transient thing. I
-> >>> think there are multiplexing things to look into, 2 events on a fixed
-> >>> counter on Icelake+ will trigger multiplexing on all counters, and
-> >>> Skylake's 3 fixed and 4 generic should fit TopdownL1.
-> >>
-> >> Just found a cascade lake. With this patch + the current
-> >> perf-tools-next, partial of the TopdownL1 and multiplexing can still b=
+> > On Fri, Apr 14, 2023 at 2:40=E2=80=AFAM David Laight <David.Laight@acul=
+ab.com> wrote:
+> > >
+> > > From: Atish Patra
+> > > > Sent: 13 April 2023 20:18
+> > > >
+> > > > On Thu, Apr 13, 2023 at 9:47=E2=80=AFPM Alexandre Ghiti <alexghiti@=
+rivosinc.com> wrote:
+> > > > >
+> > > > > riscv used to allow direct access to cycle/time/instret counters,
+> > > > > bypassing the perf framework, this patchset intends to allow the =
+user to
+> > > > > mmap any counter when accessed through perf. But we can't break t=
+he
+> > > > > existing behaviour so we introduce a sysctl perf_user_access like=
+ arm64
+> > > > > does, which defaults to the legacy mode described above.
+> > > > >
+> > > >
+> > > > It would be good provide additional direction for user space packag=
+es:
+> > > >
+> > > > The legacy behavior is supported for now in order to avoid breaking
+> > > > existing software.
+> > > > However, reading counters directly without perf interaction may
+> > > > provide incorrect values which
+> > > > the userspace software must avoid. We are hoping that the user spac=
 e
-> >> observed.
-> >>
-> >> $ sudo ./perf stat true
-> >>
-> >>  Performance counter stats for 'true':
-> >>
-> >>               2.91 msec task-clock                       #    0.316 CP=
-Us
-> >> utilized
-> >>                  0      context-switches                 #    0.000 /s=
-ec
-> >>                  0      cpu-migrations                   #    0.000 /s=
-ec
-> >>                 45      page-faults                      #   15.474 K/=
-sec
-> >>          2,819,972      cycles                           #    0.970 GH=
-z
-> >>                        (60.14%)
-> >>          5,391,406      instructions                     #    1.91  in=
-sn
-> >> per cycle
-> >>          1,068,575      branches                         #  367.442 M/=
-sec
-> >>              8,455      branch-misses                    #    0.79% of
-> >> all branches
-> >>             70,283      CPU_CLK_UNHALTED.REF_XCLK        #   24.168
-> >> M/sec
-> >>             48,806      INT_MISC.RECOVERY_CYCLES_ANY     #   16.783
-> >> M/sec                       (39.86%)
-> >>
-> >>        0.009204517 seconds time elapsed
-> >>
-> >>        0.000000000 seconds user
-> >>        0.009614000 seconds sys
+> > > > packages which
+> > > > read the cycle/instret directly, will move to the proper interface
+> > > > eventually if they actually need it.
+> > > > Most of the users are supposed to read "time" instead of "cycle" if
+> > > > they intend to read timestamps.
+> > >
+> > > If you are trying to measure the performance of short code
+> > > fragments then you need pretty much raw access directly to
+> > > the cycle/clock count register.
+> > >
+> > > I've done this on x86 to compare the actual cycle times
+> > > of different implementations of the IP checksum loop
+> > > (and compare them to the theoretical limit).
+> > > The perf framework just added far too much latency,
+> > > only directly reading the cpu registers gave anything
+> > > like reliable (and consistent) answers.
+> > >
 > >
-> > The issue here is that 'true' ran very quickly and so we skipped the
-> > output of the events with 0 counts, no metrics were computed due to
-> > the zero counts. Cascade lake has the same TopdownL1 multiplexing
-> > issues as Skylake.
+> > This series allows direct access to the counters once configured
+> > through the perf.
+> > Earlier the cycle/instret counters are directly exposed to the
+> > userspace without kernel/perf frameworking knowing
+> > when/which user space application is reading it. That has security impl=
+ications.
 > >
+> > With this series applied, the user space application just needs to
+> > configure the event (cycle/instret) through perf syscall.
+> > Once configured, the userspace application can find out the counter
+> > information from the mmap & directly
+> > read the counter. There is no latency while reading the counters.
+> >
+> > This mechanism allows stop/clear the counters when the requesting task
+> > is not running. It also takes care of context switching
+> > which may result in invalid values as you mentioned below. This is
+> > nothing new and all other arch (x86, ARM64) allow user space
+> > counter read through the same mechanism.
+> >
+> > Here is the relevant upstream discussion:
+> > https://lore.kernel.org/lkml/Y7wLa7I2hlz3rKw%2F@hirez.programming.kicks=
+-ass.net/T/
+> >
+> > ARM64:
+> > https://docs.kernel.org/arm64/perf.html?highlight=3Dperf_user_access#pe=
+rf-userspace-pmu-hardware-counter-access
+> >
+> > example usage in x86:
+> > https://github.com/andikleen/pmu-tools/blob/master/jevents/rdpmc.c
 >
-> I tried other benchmark. I can still observe the multiplexing. But my
-> remote machine just crashed. I'm asking the tech support. So I cannot do
-> more tests.
+> The canonical implementation of this should be:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
+ools/lib/perf/mmap.c#n400
+
+Thanks for sharing the libperf implementation.
+
+> which is updated in these patches but the tests are not:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
+ools/perf/tests/mmap-basic.c#n287
+> Which appears to be an oversight. The tests display some differences
+
+Yes. It's an oversight. We should make sure that perf mmap tests pass
+for RISC-V as well.
+
+
+> between x86 and aarch64 that have assumed userspace hardware counter
+> access, and everything else that it is assumed don't.
 >
 > Thanks,
-> Kan
+> Ian
+>
+> > > Clearly process switches (especially cpu migrations) cause
+> > > problems, but they are obviously invalid values and can
+> > > be ignored.
+> > >
+> > > So while a lot of uses may be 'happy' with the values the
+> > > perf framework gives, sometimes you do need to directly
+> > > read the relevant registers.
+> > >
+> > >         David
+> > >
+> > > -
+> > > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes,=
+ MK1 1PT, UK
+> > > Registration No: 1397386 (Wales)
+> >
+> >
+> >
+> > --
+> > Regards,
+> > Atish
+
+
+
+--
+Regards,
+Atish
