@@ -2,79 +2,181 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F28C77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 01:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CE38C77B72
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 01:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230290AbjDRBY6 (ORCPT
+        id S229903AbjDRBfo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 21:24:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
+        Mon, 17 Apr 2023 21:35:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230317AbjDRBYx (ORCPT
+        with ESMTP id S229887AbjDRBfn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Apr 2023 21:24:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2988F46A8;
-        Mon, 17 Apr 2023 18:24:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BD23962B8C;
-        Tue, 18 Apr 2023 01:24:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0851CC433EF;
-        Tue, 18 Apr 2023 01:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681781091;
-        bh=32K0Q1HerQG3csJxlpFXO/0Ud2VIwzHH5+OXkXOd0/U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HOF+vm+sF4UcDMoaPWRO321Tj0buTOVFxEOsOk49qppbLCqvQoFqhbW8dFAwYobgj
-         unEcgvnMNVectQ6qFCjDLIZNdjGzBAo8o1UFmAz3Sdf9DoEBFyM1YST3QSnSBTUCp3
-         Sxgl5s9bW/SrjnoRWJcTtof5FjR8izX28SnNc/s9M3R1mpZ5qdsSv5uEAhTpOPh5cu
-         M8ajK9Q7Tn4nR4ocPDoktgyBC5dijh0at4zF0C1yDS8FsrnUSnFb3ApPq6GeY3ytNM
-         Fg93i/N5zvMUjOk3F255vIAT2/FS/Vi1V6J4R29r6Xr+mIiJSuGw28LnSqnbQqzlty
-         vm8UZDYaMZ+oA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 87605403B5; Mon, 17 Apr 2023 22:24:48 -0300 (-03)
-Date:   Mon, 17 Apr 2023 22:24:48 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Hagen Paul Pfeifer <hagen@jauu.net>
-Cc:     Colin Ian King <colin.i.king@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Petar Gligoric <petar.gligoric@rohde-schwarz.com>,
-        linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] perf script: task-analyzer: Fix spelling mistake
- "miliseconds" -> "millseconds"
-Message-ID: <ZD3xYFRrdjEdzQJC@kernel.org>
-References: <20230417174826.52963-1-colin.i.king@gmail.com>
- <20230417182707.bgvx2os4bbihjamb@ic1101>
+        Mon, 17 Apr 2023 21:35:43 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E831A6;
+        Mon, 17 Apr 2023 18:35:41 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Q0mdR2MWqzL0NK;
+        Tue, 18 Apr 2023 09:32:59 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 18 Apr 2023 09:35:23 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+Subject: Re: [PATCH] perf/core: Fix perf_sample_data not properly initialized
+ for different swevents in perf_tp_event()
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230412095240.181516-1-yangjihong1@huawei.com>
+ <20230417114512.GK83892@hirez.programming.kicks-ass.net>
+Message-ID: <15805714-27c0-b8ff-143a-8f768704a673@huawei.com>
+Date:   Tue, 18 Apr 2023 09:35:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230417182707.bgvx2os4bbihjamb@ic1101>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20230417114512.GK83892@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Apr 17, 2023 at 08:27:07PM +0200, Hagen Paul Pfeifer escreveu:
-> * Colin Ian King | 2023-04-17 18:48:26 [+0100]:
-> 
-> >There is a spelling mistake in the help for the --ms option. Fix it.
-> >
-> >Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> 
-> Good catch - thank you Colin!
-> 
-> Acked-by: Hagen Paul Pfeifer <hagen@jauu.net>
+Hello,
 
-Thanks, applied, and fixed the subject line typo.
+On 2023/4/17 19:45, Peter Zijlstra wrote:
+> On Wed, Apr 12, 2023 at 09:52:40AM +0000, Yang Jihong wrote:
+>> data->sample_flags may be modified in perf_prepare_sample(),
+>> in perf_tp_event(), different swevents use the same on-stack
+>> perf_sample_data, the previous swevent may change sample_flags in
+>> perf_prepare_sample(), as a result, some members of perf_sample_data are
+>> not correctly initialized when next swevent_event preparing sample
+>> (for example data->id, the value varies according to swevent).
+>>
+>> A simple scenario triggers this problem is as follows:
+>>
+>>    # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
+>>    [ perf record: dump data: Woken up 0 times ]
+>>    [ perf record: Dump perf.data.2023041209014396 ]
+>>    [ perf record: dump data: Woken up 0 times ]
+>>    [ perf record: Dump perf.data.2023041209014662 ]
+>>    [ perf record: dump data: Woken up 0 times ]
+>>    [ perf record: Dump perf.data.2023041209014910 ]
+>>    [ perf record: Woken up 0 times to write data ]
+>>    [ perf record: Dump perf.data.2023041209015164 ]
+>>    [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
+>>    # ls -l
+>>    total 860
+>>    -rw------- 1 root root  95694 Apr 12 09:01 perf.data.2023041209014396
+>>    -rw------- 1 root root 606430 Apr 12 09:01 perf.data.2023041209014662
+>>    -rw------- 1 root root  82246 Apr 12 09:01 perf.data.2023041209014910
+>>    -rw------- 1 root root  82342 Apr 12 09:01 perf.data.2023041209015164
+>>    # perf script -i perf.data.2023041209014396
+>>    0x11d58 [0x80]: failed to process type: 9 [Bad address]
+>>
+>> Solution: Add perf_sample_data_flags_{save, restore} helpers to save and
+>> restore sample_flags when processing different swevents
+>>
+>> After fix:
+>>
+>>    # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
+>>    [ perf record: dump data: Woken up 0 times ]
+>>    [ perf record: Dump perf.data.2023041209442259 ]
+>>    [ perf record: dump data: Woken up 0 times ]
+>>    [ perf record: Dump perf.data.2023041209442514 ]
+>>    [ perf record: dump data: Woken up 0 times ]
+>>    [ perf record: Dump perf.data.2023041209442760 ]
+>>    [ perf record: Woken up 0 times to write data ]
+>>    [ perf record: Dump perf.data.2023041209443003 ]
+>>    [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
+>>    # ls -l
+>>    total 864
+>>    -rw------- 1 root root 100166 Apr 12 09:44 perf.data.2023041209442259
+>>    -rw------- 1 root root 606438 Apr 12 09:44 perf.data.2023041209442514
+>>    -rw------- 1 root root  82246 Apr 12 09:44 perf.data.2023041209442760
+>>    -rw------- 1 root root  82342 Apr 12 09:44 perf.data.2023041209443003
+>>    # perf script -i perf.data.2023041209442259 | head -n 5
+>>                perf   232 [000]    66.846217: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=D ==> next_comm=perf next_pid=234 next_prio=120
+>>                perf   234 [000]    66.846449: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
+>>                perf   232 [000]    66.846546: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
+>>                perf   234 [000]    66.846606: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
+>>                perf   232 [000]    66.846646: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
+> 
+> This seems a little bit short on analysis; what actual flags are the
+> problem? Much of the data will in fact be identical between these
+> invocations and endlessly re-computing that is wasteful.
+> 
+In the preceding example, data->id is incorrectly initialized,
+that is, PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER
+The detailed process is as follows:
+1. In the example of perf record, create two swevents evt1 and evt2,
+and attach to sched:sched_switch, assume that the IDs are 10 and 11
+2. In perf_tp_event():
+struct perf_sample_data data // on-stack value
+hlist_for_each_entry_rcu
+  -> perf_swevent_event(evt1, &data)
+   -> perf_swevent_overflow(evt1, &data)
+    -> ...
+     -> perf_prepare_sample(evt1, &data)
+      -> __perf_event_header__init_id(evt1, &data)
+       -> data->sample_flags |= data->type & PERF_SAMPLE_ID_ALL
+          // data->sample_flags set PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER
+       -> if (sample_type & (PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER))
+                   data->id = primary_event_id(event);
+          // for evt1, the if condition is met,
+          // and data->id can be correctly initialized.
+...
+  -> perf_swevent_event(evt2, &data)
+   -> perf_swevent_overflow(evt2, &data)
+    -> ...
+     -> perf_prepare_sample(evt2, &data)
+      -> __perf_event_header__init_id(evt2, &data)
+       -> if (sample_type & (PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER))
+                   data->id = primary_event_id(event);
+          // data->sample_flags set PERF_SAMPLE_ID | 
+PERF_SAMPLE_IDENTIFIER in evt1,
+          // therefore, the condition is not met for evt2.
+          // As a result, the ID of evt2 is not assigned to data-id.
 
-- Arnaldo
+> I'm thinking perhaps those flags that update ->dyn_size are the problem?
+> At the same time, Should you not also then clear dyn_size?
+Yes, according to the code, dyn_size should also be cleared.
+Maybe we need to change it to the following, which would be more 
+appropriate?
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10144,14 +10144,14 @@ void perf_tp_event(u16 event_type, u64 count, 
+void *record, int entry_size,
+                 },
+         };
+
+-       perf_sample_data_init(&data, 0, 0);
+-       perf_sample_save_raw_data(&data, &raw);
+-
+         perf_trace_buf_update(record, event_type);
+
+         hlist_for_each_entry_rcu(event, head, hlist_entry) {
+-               if (perf_tp_event_match(event, &data, regs))
++               if (perf_tp_event_match(event, &data, regs)) {
++                       perf_sample_data_init(&data, 0, 0);
++                       perf_sample_save_raw_data(&data, &raw);
+                         perf_swevent_event(event, count, &data, regs);
++               }
+         }
+
+Thanks,
+Yang.
+
+
+> 
+> .
+> 
