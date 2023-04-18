@@ -2,337 +2,198 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E77BC77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 00:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B6FC77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 01:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229825AbjDRAUU (ORCPT
+        id S230186AbjDRBPJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 17 Apr 2023 20:20:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47686 "EHLO
+        Mon, 17 Apr 2023 21:15:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjDRAUT (ORCPT
+        with ESMTP id S229619AbjDRBPH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 17 Apr 2023 20:20:19 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94DF53AB3;
-        Mon, 17 Apr 2023 17:20:17 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id fy21so25789923ejb.9;
-        Mon, 17 Apr 2023 17:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681777216; x=1684369216;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oVC6/jCCxTExzUCln9j4tkKXKwBDg1tiD0MMR3Xnd4A=;
-        b=nL7gaGcFcfYvx7XJuz86iMuGzxW69/QIeasqnkfjDmUsgtAuJ6bY7pU+t0MRQLPVnO
-         I5WDbr7G7nbVHs12dVITyM0YEaZrsD1weYnpqb0cLVmC6uzBf0ZgTUKy3Z3FIfF9Alp/
-         JgoGEbVEHRhAgiFmpOm9aq76rBZJtCG54g9lhKLbhI8zFkiUceKjsA8zQhHk9Sv/qIT1
-         mdWXnSPsjRowowqDfiIv9Lq38ati9ClXPnFShlJGchYPQPwGCmEtcAgjiAObSlG3qn7e
-         IUtqwRUw0THQboavl89lDNBtGVlBAS5LXjoofA6EnbgbMDmCiYfuTLUs2ZpYsLBP+Xie
-         SCxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681777216; x=1684369216;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oVC6/jCCxTExzUCln9j4tkKXKwBDg1tiD0MMR3Xnd4A=;
-        b=ITrU1Vfv0C1Oa0mNmVRPBjsiQzqVT+InRePB0+UYjTFSqNONqYpHbN10qrxTTrNm4Z
-         GQosT56udV5vcfaA5t0RFaZglUrYfvSxx7m+Q/ZXaC2IUNRzhMsWr/Crx4U6gjFEfKCG
-         UrwdHejqlDnUJByvXVudUhH6V86fpZxJMqb5lWpt9aycwbngVsWgpA/rCkm4AROTNFlJ
-         6VGheA7y8x8H5VTIfuyafXhXLU9ws39EVcEKkPj2fSUBMcUnY/l7d4oPUVzVgDYd49Ii
-         GVfitxlealAviXckuTknIWdnv+VZd/S13gSe+HD3dYaQA4/MwjD/AG2VJrTyhDENQBVx
-         TTsg==
-X-Gm-Message-State: AAQBX9f5OpfwQi2F8dWMsD+FBOTj7XcjwsLERI6A2af1sSXLtn4RfE83
-        6m+ds3L7CZzlsSvJxfMLnMo64hbuML4BHV3OSlA=
-X-Google-Smtp-Source: AKy350bT+8645PkiGO5jlr236pQGQKSYFZbx+3Hoy35S0cyUyARSOhzZb3LC07+XnlOCRY2y1LTS88e1JPLrVTW2Zh4=
-X-Received: by 2002:a17:906:b817:b0:94a:7c21:6ade with SMTP id
- dv23-20020a170906b81700b0094a7c216ademr3631486ejb.5.1681777215959; Mon, 17
- Apr 2023 17:20:15 -0700 (PDT)
+        Mon, 17 Apr 2023 21:15:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C40A83C0D;
+        Mon, 17 Apr 2023 18:15:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EAC9E6182F;
+        Tue, 18 Apr 2023 01:15:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FBAAC433A7;
+        Tue, 18 Apr 2023 01:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681780505;
+        bh=jsS1F46hAQbhHVpD+vXSY2C2u6Z+ww/kmcB8nSA4RKg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ManG2OfNtk/zGAtRVUTd1eGyebp0k9xtlGagHt9sOeG/HWiCDHWd28EPCXQb2dezj
+         GldNZndaDjzYwt/1u5nPVrKt0qc1ZM7/76yzJYzWOcHfhq5kYwNt9webhWCzDT6Pjp
+         4j4ZrIwaB4cCeaCmA7I/rPy4ObCLcDKbmFM+5CaVi8CjJm90Fi24gHVft5vb3ddy27
+         igvJZfYVxw+HatzH7KVV8kK0dMf8yWhtHMxdY76uJqpv67HR63uYvfWU8q0TirYFbw
+         LyCjV05r+NZmNFlcIlMJathLXomrf8S6lhklYMsy02NwZJIryFntYba8okwDI3hshh
+         +90IzBVz4R4kA==
+Received: by mail-ej1-f46.google.com with SMTP id a5so12504296ejb.6;
+        Mon, 17 Apr 2023 18:15:05 -0700 (PDT)
+X-Gm-Message-State: AAQBX9dfnWMGB9xAndXLEGsFA/tfGo4DmcppWbly+QZpK9P6L9C8csAu
+        9RYW4356S00uNld//tVugRP38b3tpBg3JsDT+94=
+X-Google-Smtp-Source: AKy350Yv7c0ey003enetxa4tjEVr2HZE1ag9Xgcg8Xk15eWDUpN2lh4W6w3Ix+T1adES7c0pru0HDx6KP6MW1F8YPdk=
+X-Received: by 2002:a17:906:5e12:b0:92d:878e:8566 with SMTP id
+ n18-20020a1709065e1200b0092d878e8566mr4631793eju.10.1681780503472; Mon, 17
+ Apr 2023 18:15:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <ZDfKBPXDQxH8HeX9@syu-laptop> <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
- <20230414095007.GF63923@kunlun.suse.cz> <b933fad3-7759-00d4-94cb-f20dd363b794@isovalent.com>
- <20230414161520.GJ63923@kunlun.suse.cz>
-In-Reply-To: <20230414161520.GJ63923@kunlun.suse.cz>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 17 Apr 2023 17:20:03 -0700
-Message-ID: <CAEf4Bzaw6DBHn=S9zKCXTSh7jW8xL9K6bzi1Q-e8j93thi2hmg@mail.gmail.com>
-Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
-To:     =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>
-Cc:     Quentin Monnet <quentin@isovalent.com>,
-        Shung-Hsi Yu <shung-hsi.yu@suse.com>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
+References: <20230410111823.2538831-1-chenhuacai@loongson.cn>
+ <0a278ab5-751a-9433-3d1f-19a5a6b99d39@loongson.cn> <CAAhV-H5sxLDS7+MOaC_Y+gd-=Qrog7gzidKDkYa=DWC2Ci_5_Q@mail.gmail.com>
+ <d50d7779-3bff-1a83-2641-36abdb077ac1@loongson.cn> <b1cdd754-fa38-4b2e-0a93-b13d9cfd7a8a@loongson.cn>
+In-Reply-To: <b1cdd754-fa38-4b2e-0a93-b13d9cfd7a8a@loongson.cn>
+From:   Huacai Chen <chenhuacai@kernel.org>
+Date:   Tue, 18 Apr 2023 09:14:51 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5EMaobTNrCX5FthD6zPLwZB6c46M0Y=kTqEUetRpwo3w@mail.gmail.com>
+Message-ID: <CAAhV-H5EMaobTNrCX5FthD6zPLwZB6c46M0Y=kTqEUetRpwo3w@mail.gmail.com>
+Subject: Re: [PATCH V2] tools/perf: Add basic support for LoongArch
+To:     Youling Tang <tangyouling@loongson.cn>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Mahe Tardy <mahe.tardy@gmail.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, loongarch@lists.linux.dev,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Xuerui Wang <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn,
+        Ming Wang <wangming01@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 9:15=E2=80=AFAM Michal Such=C3=A1nek <msuchanek@sus=
-e.de> wrote:
+On Mon, Apr 17, 2023 at 5:22=E2=80=AFPM Youling Tang <tangyouling@loongson.=
+cn> wrote:
 >
-> On Fri, Apr 14, 2023 at 01:30:02PM +0100, Quentin Monnet wrote:
-> > 2023-04-14 11:50 UTC+0200 ~ Michal Such=C3=A1nek <msuchanek@suse.de>
-> > > Hello,
-> > >
-> > > On Fri, Apr 14, 2023 at 01:35:20AM +0100, Quentin Monnet wrote:
-> > >> Hi Shung-Hsi,
-> > >>
-> > >> On Thu, 13 Apr 2023 at 10:23, Shung-Hsi Yu <shung-hsi.yu@suse.com> w=
-rote:
-> > >>>
-> > >>> Hi,
-> > >>>
-> > >>> I'm considering switch to bpftool's mirror on GitHub for packaging =
-(instead
-> > >>> of using the source found in kernel), but realize that it should go=
-es
-> > >>> hand-in-hand with how libbpf is packaged, which eventually leads th=
-ese
-> > >>> questions:
-> > >>>
-> > >>>   What is the suggested approach for packaging bpftool and libbpf?
-> > >>>   Which source is preferred, GitHub or kernel?
-> > >>
-> > >> As you can see from the previous discussions, the suggested approach
-> > >> would be to package from the GitHub mirror, with libbpf and bpftool =
-in
-> > >> sync.
-> > >>
-> > >> My main argument for the mirror is that it keeps things simpler, and
-> > >> there's no need to deal with the rest of the kernel sources for thes=
-e
-> > >> packages. Download from the mirrors, build, ship. But then I have
-> > >> limited experience at packaging for distros, and I can understand
-> > >> Toke's point of view, too. So ultimately, the call is yours.
-> > >
-> > > Things get only ever more complex when submodules are involved.
+> /* snip */
+>
+> >>>> --- /dev/null
+> >>>> +++ b/tools/perf/arch/loongarch/util/dwarf-regs.c
+> >>>> @@ -0,0 +1,44 @@
+> >>>> +// SPDX-License-Identifier: GPL-2.0
+> >>>> +/*
+> >>>> + * dwarf-regs.c : Mapping of DWARF debug register numbers into
+> >>>> register names.
+> >>>> + *
+> >>>> + * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+> >>>> + */
+> >>>> +
+> >>>> +#include <stdio.h>
+> >>>> +#include <errno.h> /* for EINVAL */
+> >>>> +#include <string.h> /* for strcmp */
+> >>>> +#include <dwarf-regs.h>
+> >>>> +
+> >>>> +struct pt_regs_dwarfnum {
+> >>>> +     const char *name;
+> >>>> +     unsigned int dwarfnum;
+> >>>> +};
+> >>>> +
+> >>>> +static struct pt_regs_dwarfnum loongarch_gpr_table[] =3D {
+> >>>> +     {"$0", 0}, {"$1", 1}, {"$2", 2}, {"$3", 3},
+> >>>> +     {"$4", 4}, {"$5", 5}, {"$6", 6}, {"$7", 7},
+> >>>> +     {"$8", 8}, {"$9", 9}, {"$10", 10}, {"$11", 11},
+> >>>> +     {"$12", 12}, {"$13", 13}, {"$14", 14}, {"$15", 15},
+> >>>> +     {"$16", 16}, {"$17", 17}, {"$18", 18}, {"$19", 19},
+> >>>> +     {"$20", 20}, {"$21", 21}, {"$22", 22}, {"$23", 23},
+> >>>> +     {"$24", 24}, {"$25", 25}, {"$26", 26}, {"$27", 27},
+> >>>> +     {"$28", 28}, {"$29", 29}, {"$30", 30}, {"$31", 31},
+> >>>> +     {NULL, 0}
+> >>>> +};
+> >>> Do you need to change it to the following:
+> >>>
+> >>> #define GPR_DWARFNUM_NAME(num) {.name =3D __stringify($r##num), .dwar=
+fnum
+> >>> =3D num}
+> >>> #define REG_DWARFNUM_END {.name =3D NULL, .dwarfnum =3D 0}
+> >>>
+> >>> static const struct pt_regs_dwarfnum regdwarfnum_table[] =3D {
+> >>>          GPR_DWARFNUM_NAME(0),
+> >>>          GPR_DWARFNUM_NAME(1),
+> >>>          GPR_DWARFNUM_NAME(2),
+> >>>          GPR_DWARFNUM_NAME(3),
+> >>>          GPR_DWARFNUM_NAME(4),
+> >>>          GPR_DWARFNUM_NAME(5),
+> >>>          GPR_DWARFNUM_NAME(6),
+> >>>          GPR_DWARFNUM_NAME(7),
+> >>>          GPR_DWARFNUM_NAME(8),
+> >>>          GPR_DWARFNUM_NAME(9),
+> >>>          GPR_DWARFNUM_NAME(10),
+> >>>          GPR_DWARFNUM_NAME(11),
+> >>>          GPR_DWARFNUM_NAME(12),
+> >>>          GPR_DWARFNUM_NAME(13),
+> >>>          GPR_DWARFNUM_NAME(14),
+> >>>          GPR_DWARFNUM_NAME(15),
+> >>>          GPR_DWARFNUM_NAME(16),
+> >>>          GPR_DWARFNUM_NAME(17),
+> >>>          GPR_DWARFNUM_NAME(18),
+> >>>          GPR_DWARFNUM_NAME(19),
+> >>>          GPR_DWARFNUM_NAME(20),
+> >>>          GPR_DWARFNUM_NAME(21),
+> >>>          GPR_DWARFNUM_NAME(22),
+> >>>          GPR_DWARFNUM_NAME(23),
+> >>>          GPR_DWARFNUM_NAME(24),
+> >>>          GPR_DWARFNUM_NAME(25),
+> >>>          GPR_DWARFNUM_NAME(26),
+> >>>          GPR_DWARFNUM_NAME(27),
+> >>>          GPR_DWARFNUM_NAME(28),
+> >>>          GPR_DWARFNUM_NAME(29),
+> >>>          REG_DWARFNUM_NAME(30),
+> >>>          REG_DWARFNUM_NAME(31),
+> >>>          REG_DWARFNUM_END,
+> >>> };
+> >>>
+> >>> At the same time, "$rx" is used in __perf_reg_name_loongarch and
+> >>> loongarch_regstr_tbl, which is consistent with assembly.
+> >> OK, I will use the "$rx" format, but I don't want to use macros.
+> > Use the "rx" format to make regs_query_register_offset consistent with
+> > arch/loongarch/kernel/ptrace.c (that is, the names in
+> > loongarch_gpr_table and regoffset_table are consistent)
+>
+> If we want to be consistent with the usage of `trace probe`, we should
+> use "%rx".
+OK, make sense.
+
+Huacai
+>
+> eg:
+>     # echo "p:myuprobe /tmp/test:0x4194 %r4 %r5" > uprobe_events
+>
+> parse_probe_arg()
+>           case '%': regs_query_register_offset()
+>
+> Youling.
 > >
-> > I understand the generic pain points from your other email. But could
-> > you be more specific for the case of bpftool? It's not like we're
-> > shipping all lib dependencies as submodules. Sync-ups are specifically
-> > aligned to the same commit used to sync the libbpf mirror, so that it's
-> > pretty much as if we had the right version of the library shipped in th=
-e
-> > repository - only, it's one --recurse-submodules away.
->
-> It's so in every project that uses submodules. Except git does not
-> recurse into submodules by default, you have to fix it up by hand.
-> Forges don't support submodules so you will not get the submodule when
-> downloading the project archive, and won't see it the the project tree.
-
-git submodule update --init --recursive didn't work?
-
->
-> After previous experience with submodules I did not even try, I just
-> patched the makefile to use system libbpf before attempting anything
-> else.
-
-Quentin mentioned that he's packaging (or will package) libbpf sources
-as part of bpftool release on Github. I've been this for other
-libbpf-using tools as well, and it works pretty well (at least for
-Fedora and ArchLinux). E.g., srcs-full-* archives for veristat ([0])
-
-By switching up actual libbpf used to compile with bpftool, you are
-potentially introducing subtle problems that your users will be quite
-unhappy about, if they run into them. Let's work together to make it
-easier for you to package bpftool properly. We can't switch bpftool to
-reliably use system-wide libbpf (either static or shared, doesn't
-matter) because of dependency on internal functionality.
-
-
-  [0] https://github.com/libbpf/veristat/releases/tag/v0.1
-
->
-> > >>>   Does bpftool work on older kernel?
-> > >>
-> > >> It should, although it's not perfect. Most features from current
-> > >> bpftool should work as expected on older kernels. However, if I
-> > >> remember correctly you would have trouble loading programs on pre-BT=
-F
-> > >> kernels, because bpftool relies on libbpf >=3D 1.0 and only accepts =
-map
-> > >> definitions with BTF info, and attempts to create these maps with BT=
-F,
-> > >> which fails and blocks the load process.
-> > >>
-> > >> But we're trying to keep backward-compatibility, so if we're only
-> > >> talking of kernels recent enough to support BTF, then I'd expect
-> > >> bpftool to work. If this is not the case, please report on this list=
-.
-> > >
-> > > It won't build:
-> > > https://lore.kernel.org/bpf/20220421003152.339542-3-alobakin@pm.me/
+> > Youling.
+> >>
+> >> Huacai
+> >>>
+> >>>> +
+> >>>> +const char *get_arch_regstr(unsigned int n)
+> >>>> +{
+> >>>> +     n %=3D 32;
+> >>>> +     return loongarch_gpr_table[n].name;
+> >>>> +}
+> >>>> +
+> >>>> +int regs_query_register_offset(const char *name)
+> >>>> +{
+> >>>> +     const struct pt_regs_dwarfnum *roff;
+> >>>> +
+> >>>> +     for (roff =3D loongarch_gpr_table; roff->name !=3D NULL; roff+=
++)
+> >>>> +             if (!strcmp(roff->name, name))
+> >>>> +                     return roff->dwarfnum;
+> >>>> +     return -EINVAL;
+> >>>> +}
 > >
-> > True in this case, and this is something that needs to get fixed. Thank=
-s
-> > for reopening that thread! Are you building bpftool on kernels older
-> > than 5.15? (genuine curiosity)
 >
-> Yes, 5.14 and 5.3. I would not be able to notice this particular
-> breakage otherwise.
 >
-> > >>> Our current approach is that we (openSUSE/SLES) essentially have tw=
-o version
-> > >>> of libbpf: a public shared library that uses GitHub mirror as sourc=
-e, which
-> > >>> the general userspace sees and links to; and a private static libra=
-ry built
-> > >>> from kernel source used by bpftool, perf, resolve_btfids, selftests=
-, etc.
-> > >>> A survey of other distros (Arch, Debian, Fedora, Ubuntu) suggest th=
-at they
-> > >>> took similar approach.
-> > >>
-> > >> I would like them to reconsider this choice eventually. Sounds like
-> > >> for RHEL, this will be a tough sell :). At least, I'd love Ubuntu to
-> > >> have a real bpftool package instead of having to install
-> > >> linux-tools-common + linux-tools-generic, or to have distros in
-> > >> general (Ubuntu/Debian at least) stop compiling out the JIT
-> > >> disassembler, although this is not strictly related to the location =
-of
-> > >> the sources. I've not found the time to reach out to package
-> > >> maintainers yet.
-> > >>
-> > >>>
-> > >>> This approach means that the version of bpftool and libbpf are _not=
-_ always
-> > >>> in sync[1], which I read may causes problem since libbpf and bpftoo=
-l depends
-> > >>> on specific version of each other[2].
-> > >>
-> > >> Whatever source you use, I would strongly recommend finding a way to
-> > >> keep both in sync. Libbpf has stabilised its API when reaching 1.0,
-> > >> but bpftool taps into some of the internals of the library. Features
-> > >> or new definitions are usually added at the same time to libbpf and
-> > >> bpftool, and if you get a mismatch between the two, you're taking
-> > >> risks to get build issues.
-> > >
-> > > In other words no API exists.
-> >
-> > Of course it does. Libbpf exposes a specific set of functions to user
-> > applications.
-> >
-> > But correct, from bpftool's perspective, there are a few locations wher=
-e
-> > we accept to derogate and to access to the internals directly, making i=
-t
-> > more dependent on a specific version, or commit, of libbpf, and blurrin=
-g
-> > the notion of API.
-> >
-> > This special relationship is nothing new though, and it has been
-> > discussed before. It derives from both tools being developed in the sam=
-e
-> > repository, and bpftool being so tightly linked to libbpf - it has been
-> > qualified of command-line interface for libbpf in the past. Bpftool's
->
-> If bpftool is a commandline interface for libbpf maybe the best choice
-> is to just dump both into the same repository, and provide make targets
-> for building one, the other, and both.
-
-bpftool is way more than just an interface to libbpf, so it doesn't
-make sense to bundle them in one repo. Yes, we take advantage of them
-being developed together to give it more and better features, which
-otherwise we probably just wouldn't add to either libbpf or bpftool
-(like BTFgen, for example).
-
-This whole submodule vs shared library has been discussed so many
-times. We are open to making your life easier as a packager where
-possible, if you can be specific about the issues that are hurting
-you. But this relationship between bpftool and libbpf and use of
-internal APIs was a conscious decision and it has its big benefits,
-which definitely outweigh git submodule inconvenience. We are not
-changing it, it's pretty fundamental for bpftool.
-
->
-> > version number itself is aligned on libbpf's. (As a side note, bpftool
-> > used to pull libbpf's headers directly from libbpf's dir instead of
-> > installing them locally, which facilitated this mix-in for
-> > public/internal headers in the first place.)
-> >
-> > I know you advocated making the required functions part of the API,
-> > given that some users (such as bpftool) need them. These functions are
-> > not exposed, by choice. They are not judged relevant to generic user
-> > space application (I'm sure libbpf's maintainers are opened to
-> > discussion if use cases come up). Some of the internals we get from
-> > libbpf are also mostly to avoid re-implementing things, such as netlink
-> > attributes processing, or implementing hash maps. These have nothing to
-> > do in libbpf's API.
->
-> And we do not have microframeworks for implementing reusable hashmaps or
-> netlink parsers. I am sure that bpftool is not the first nor last tool
-> that needs a hashmap or parse netlink but the ecosystem for small
-> single-purpose C libraries never really took off.
->
-> > >>> The main concern with using GitHub mirror is that bpftool may be up=
-dated far
-> > >>> beyond the version that comes with the runtime kernel. AFAIK bpftoo=
-l should
-> > >>> work on older kernel since CO-RE is used for built-in BPF iterators=
- and the
-> > >>> underlying libbpf work on older kernel itself. Nonetheless, it woul=
-d be nice
-> > >>> to get a confirmation from the maintainers.
-> > >>
-> > >> As explained above - Mostly, it should work. Otherwise, we can look
-> > >> into fixing it.
-> > >>
-> > >> As a side note, I'm open to suggestions/contributions to make life
-> > >> easier for packaging for the mirror. For example, Mah=C3=A9 and I re=
-cently
-> > >> added GitHub workflows to ship statically-built binaries for amd64 a=
-nd
-> > >> arm64 on releases, as well as tarballs with both bpftool+libbpf
-> > >> sources. If there's something else to make packaging easier, I'm hap=
-py
-> > >> to talk about it.
-> > >
-> > > Make it possible to build with system-installed libbpf. If it's relea=
-sed
-> > > it should have versioned dependency on a libbpf release, and libbpf f=
-rom
-> > > that version on should be good enough to build it.
-> > >
-> > > I tried copying those 'private' headers into a separate directory, an=
-d
-> > > link against static libbpf, and it seems to work. Of course, having
-> > > an actual API would be much better.
-> >
-> > Just as you said yourself, the missing stability is in the way. I don't
-> > see this happening as long as bpftool is using libbpf's internals. I do
-> > expect builds to work most of the time by copying the headers as you
-> > did, but as soon as something changes and it no longer does, everyone
-> > will start filing issues on GitHub instead of using the version that
-> > works, and I don't want that.
->
-> So these are not really separate projects, they should ship together.
->
-> > As for decoupling from the internal: making the functions part of the
-> > API is not an option. One option could be to move this code into furthe=
-r
-> > dependencies shared between libbpf and bpftool - although I guess libbp=
-f
-> > developers will have little appetite for that. We could also duplicate
-> > the necessary code in bpftool, which doesn't sound optimal, but might b=
-e
-> > one solution. Other options have been discussed before, such as moving
-> > bpftool into libbpf's directory/mirror and shipping both together, but
-> > there was no consensus at the time, and I don't expect libbpf to ship
-> > with bpftool any time soon.
->
-> Why is that? Is there any speciffic reason for the sepaaration if
-> bpftool needs specific libbpf anyway?
->
-> Thanks
->
-> Michal
