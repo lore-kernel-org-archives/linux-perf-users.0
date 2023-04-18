@@ -2,110 +2,190 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BCCC77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 15:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DCCC77B78
+	for <linux-perf-users@archiver.kernel.org>; Tue, 18 Apr 2023 15:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231764AbjDRP0g (ORCPT
+        id S232241AbjDRPns (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Apr 2023 11:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43940 "EHLO
+        Tue, 18 Apr 2023 11:43:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232240AbjDRP0e (ORCPT
+        with ESMTP id S229978AbjDRPnq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Apr 2023 11:26:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2611F13F83;
-        Tue, 18 Apr 2023 08:26:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B610A635D0;
-        Tue, 18 Apr 2023 15:26:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E09D4C433EF;
-        Tue, 18 Apr 2023 15:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681831568;
-        bh=3D8Pa3erTkp9cKyukAUmfiAfX+D6cPFyYo1IyB4VYsQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vobw8tftxLbNaE+3MzVTaI1eiuNb5OeSX2m8iSPINoQGSVG7xhf+jL7v0ukpNT6Gp
-         IPVVPjmSp8zkzg/Vk7JX5QTypT0xzoH4qGE96LuFRHQfmsVXATGmmyGDkwBghPpctk
-         cMXlnpI2uGEytU6NxiBl1fy6vhZljsvksM9wXidScyHUJL3z7uEU2uvclAj1eTAXh2
-         iUJF+xcFgD4JuUp/URvZbSMmym6mbMSZfS3bFOGUMP6/YWZovVla+aWeb6pCBUrdOA
-         ZFILn+CCFLGqLLi6qezml25EdGvsiufoJHqjh39fg9VwKhjnsq/OetEHBp4kRFzCM5
-         hGcvF4z1IF99Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EFA67403B5; Tue, 18 Apr 2023 12:26:04 -0300 (-03)
-Date:   Tue, 18 Apr 2023 12:26:04 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 18 Apr 2023 11:43:46 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79CE37A94
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 08:43:44 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3f04275b2bdso56245e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 08:43:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1681832623; x=1684424623;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SomTtqeiIbTcMS5+NxXIxRdA8/4RoWbjrsah9okDzFc=;
+        b=fnfHd/26tvhLm4K7nQfhU/fIZ6oKBdafTuXWW5UeF76VCr+ha76Fhs/V3fsOApJtkQ
+         euk7mG2F9RqWa8dHbyNtXgRlrJZD1z3g87KdtH1A0IH+ROQJy2dtM7Cx9bIKMabOaxDY
+         34qi4O4RGFnNFlFPjWcOVnWtPe3oSPawf0KZL1mH/P9rfwJBFmQl707fQs7hOh22p54U
+         YMHZUvDAT1ey/2DFZtDNwdPqLAvSqTE42ptafzIYRJZFByDO942rZJwD1d80vaCa1IkA
+         uMjvdAtciAI1cd31a8B4Tkkb1DTXgyurFdvuUNh4mY22QTY9HculzEATHWuASKWgpeD/
+         mQDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681832623; x=1684424623;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SomTtqeiIbTcMS5+NxXIxRdA8/4RoWbjrsah9okDzFc=;
+        b=Ak7150G2eZ6CBnOQ6XLWTYB1u2AD45Twucy3hL+2yG4TysE5rG7SFuNdU/vFkrfEKU
+         PGqJrL5iIRV0L59Jr+bI+Oa9yIHcqO+zNkuuBa6Ts1ObMckF9vBzNUbQyx/559Nh9/jx
+         9Xkorj6eK0x+hltrxG9/RyC77T8wNjByuGi0DIHcX5tRvsR55WBTSBFGoA0AmMCMM3tE
+         KV2GdO2nT1WgxN/WsZWolAwaNJMTfYBhe9pm8HhFKMXLoA37TzHESR/TgAYj88jYDJ7I
+         pB7by9mt+qurhtpJ6samXxBB8kyBW71G0ElTLTaIW7RXeXIQj3aUuvP9SS19WVZ2WB2I
+         DKwQ==
+X-Gm-Message-State: AAQBX9c/nide6n5dIYvzFDZKUvkz5qVg9lGd7QTmlc2ed6QqJaUNPZYV
+        YqBFtJNdX0125KbYmXRvo+jwLGoLlgVi7DBIPB1sQA==
+X-Google-Smtp-Source: AKy350aH2uIv5rB5bwRkKqjdtAXoUNJ3RIfftfhxbO2P1EwXYalERS4s8XRe9gPERMIV+KcyoM/S/0RbD//AKfdNkpM=
+X-Received: by 2002:a05:600c:4446:b0:3f1:6f35:f677 with SMTP id
+ v6-20020a05600c444600b003f16f35f677mr174227wmn.1.1681832622724; Tue, 18 Apr
+ 2023 08:43:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230414051922.3625666-1-irogers@google.com> <56ac61a0-ccf0-210e-e429-11062a07b8bf@linux.intel.com>
+ <CAP-5=fXz1vw48A2tWgcNDSZsnvnOO7_jA+py3p_Khi_igz0hJw@mail.gmail.com>
+ <5031f492-9734-be75-3283-5961771d87c8@linux.intel.com> <CAP-5=fW2aAijt8tqydszQHQFmsfeQO2S0hb7Z27RtXxG4Zmm-w@mail.gmail.com>
+ <ce92dd1b-23f6-ea52-a47d-fccc24fa20ea@linux.intel.com> <CAP-5=fWRy4NEqhB6-b98+m7SV5=oyBOMVuOHwmvKZCJuXcsQEg@mail.gmail.com>
+ <d1fe801a-22d0-1f9b-b127-227b21635bd5@linux.intel.com>
+In-Reply-To: <d1fe801a-22d0-1f9b-b127-227b21635bd5@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 18 Apr 2023 08:43:28 -0700
+Message-ID: <CAP-5=fXCmKAUn24r0YYHaO63mabZCXae-hAT2WCtk+YYmvS9xg@mail.gmail.com>
+Subject: Re: [PATCH v2] perf stat: Introduce skippable evsels
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: cs-etm: Fix segfault in dso lookup
-Message-ID: <ZD62jJiGaKmqcWom@kernel.org>
-References: <20230418141203.673465-1-james.clark@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230418141203.673465-1-james.clark@arm.com>
-X-Url:  http://acmel.wordpress.com
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 18, 2023 at 03:12:03PM +0100, James Clark escreveu:
-> map__dso() is called before thread__find_map() which always results in a
-> null pointer dereference. Fix it by finding first, then checking if it
-> exists.
-> 
-> Fixes: 63df0e4bc368 ("perf map: Add accessor for dso")
+On Tue, Apr 18, 2023 at 6:03=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2023-04-17 2:13 p.m., Ian Rogers wrote:
+> > The json TopdownL1 is enabled if present unconditionally for perf stat
+> > default. Enabling it on Skylake has multiplexing as TopdownL1 on
+> > Skylake has multiplexing unrelated to this change - at least on the
+> > machine I was testing on. We can remove the metric group TopdownL1 on
+> > Skylake so that we don't enable it by default, there is still the
+> > group TmaL1. To me, disabling TopdownL1 seems less desirable than
+> > running with multiplexing - previously to get into topdown analysis
+> > there has to be knowledge that "perf stat -M TopdownL1" is the way to
+> > do this.
+>
+> To be honest, I don't think it's a good idea to remove the TopdownL1. We
+> cannot remove it just because the new way cannot handle it. The perf
+> stat default works well until 6.3-rc7. It's a regression issue of the
+> current perf-tools-next.
 
-Thanks, applied, checking if another such pattern slipped by in that
-cset.
+I'm not so clear it is a regression to consistently add TopdownL1 for
+all architectures supporting it. The assertion is that because
+TopdownL1 has multiplexing and multiplexing is global then we've
+lowered the accuracy of other metrics, but the only other hardware
+metrics in the default output pre-Icelake are IPC and branch miss
+rate. Having TopdownL1 is a way of drilling into performance issues,
+while IPC and branch miss rate are putting your finger in the air to
+see which way the wind is blowing. Perhaps we should drop these if
+TopdownL1 is present.
 
-- Arnaldo
+> But I'm OK to add some flags with the metrics to assist the perf tool to
+> specially handle the case if you prefer to modify the event list.
 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/util/cs-etm.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 103865968700..8dd81ddd9e4e 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -885,9 +885,11 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
->  		thread = etmq->etm->unknown_thread;
->  	}
->  
-> -	dso = map__dso(al.map);
-> +	if (!thread__find_map(thread, cpumode, address, &al))
-> +		return 0;
->  
-> -	if (!thread__find_map(thread, cpumode, address, &al) || !dso)
-> +	dso = map__dso(al.map);
-> +	if (!dso)
->  		return 0;
->  
->  	if (dso->data.status == DSO_DATA_STATUS_ERROR &&
-> -- 
-> 2.34.1
-> 
+We've already removed thresholds from the default output, we could
+remove groups.
 
--- 
+> >
+> > This doesn't relate to this change which is about making it so that
+> > failing to set up TopdownL1 doesn't cause an early exit. The reason I
+> > showed TigerLake output was that on TigerLake the skip/fallback
+> > approach works while Skylake just needs the events disabled/skipped
+> > unless it has sufficient permissions. Note the :u on the events in:
+>
+> The perf_event_open() should be good to detect the insufficient
+> permission, but it doesn't work to detect an existing of an event.
+> That's because the kernel only checks the features not specific events.
+> It's not a reliable way to rely on the output of the perf_event_open() he=
+re.
 
-- Arnaldo
+I'm unclear why not as not having perf_event_open fail seems like a
+kernel bug. I can see there is little motivation to fix this on older
+architectures like Skylake. We do attempt to workaround it with the
+errata flags on the metrics introduced here:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py#L129=
+6
+
+> >> From your test result in the v2 description, we can see that there is =
+no
+> >> TopdownL1, which is good and expected. However, there is a (48.99%) wi=
+th
+> >> cycles:u event, which implies multiplexing. Could you please check
+> >> what's the problem here?
+> >> Also, if it's because of the backgroud, all the events should be
+> >> multiplexing. But it looks like only cycle:u has multiplexing. Other
+> >> events, instructions:u, branches:u and branch-misses:u work without
+> >> multiplexing. That's very strange.
+> > I wasn't able to reproduce it and suspect it was a transient thing. I
+> > think there are multiplexing things to look into, 2 events on a fixed
+> > counter on Icelake+ will trigger multiplexing on all counters, and
+> > Skylake's 3 fixed and 4 generic should fit TopdownL1.
+>
+> Just found a cascade lake. With this patch + the current
+> perf-tools-next, partial of the TopdownL1 and multiplexing can still be
+> observed.
+>
+> $ sudo ./perf stat true
+>
+>  Performance counter stats for 'true':
+>
+>               2.91 msec task-clock                       #    0.316 CPUs
+> utilized
+>                  0      context-switches                 #    0.000 /sec
+>                  0      cpu-migrations                   #    0.000 /sec
+>                 45      page-faults                      #   15.474 K/sec
+>          2,819,972      cycles                           #    0.970 GHz
+>                        (60.14%)
+>          5,391,406      instructions                     #    1.91  insn
+> per cycle
+>          1,068,575      branches                         #  367.442 M/sec
+>              8,455      branch-misses                    #    0.79% of
+> all branches
+>             70,283      CPU_CLK_UNHALTED.REF_XCLK        #   24.168
+> M/sec
+>             48,806      INT_MISC.RECOVERY_CYCLES_ANY     #   16.783
+> M/sec                       (39.86%)
+>
+>        0.009204517 seconds time elapsed
+>
+>        0.000000000 seconds user
+>        0.009614000 seconds sys
+
+The issue here is that 'true' ran very quickly and so we skipped the
+output of the events with 0 counts, no metrics were computed due to
+the zero counts. Cascade lake has the same TopdownL1 multiplexing
+issues as Skylake.
+
+Thanks,
+Ian
+
+>
+> Thanks,
+> Kan
