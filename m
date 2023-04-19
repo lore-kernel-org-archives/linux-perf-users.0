@@ -2,96 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C63C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 01:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162D1C77B75
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 02:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231226AbjDSBrK (ORCPT
+        id S230027AbjDSCuk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Apr 2023 21:47:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38316 "EHLO
+        Tue, 18 Apr 2023 22:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbjDSBrJ (ORCPT
+        with ESMTP id S231349AbjDSCuj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Apr 2023 21:47:09 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346327AB9;
-        Tue, 18 Apr 2023 18:47:08 -0700 (PDT)
+        Tue, 18 Apr 2023 22:50:39 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05EC6E66;
+        Tue, 18 Apr 2023 19:50:33 -0700 (PDT)
 Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Q1NpW3cNNzSswL;
-        Wed, 19 Apr 2023 09:42:59 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Q1QGh6HrjzsRNd;
+        Wed, 19 Apr 2023 10:49:00 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 19 Apr 2023 09:47:05 +0800
-Subject: Re: [PATCH] perf/core: Fix perf_sample_data not properly initialized
- for different swevents in perf_tp_event()
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <irogers@google.com>,
+ 15.1.2507.23; Wed, 19 Apr 2023 10:50:30 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
         <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-References: <20230412095240.181516-1-yangjihong1@huawei.com>
- <20230417114512.GK83892@hirez.programming.kicks-ass.net>
- <15805714-27c0-b8ff-143a-8f768704a673@huawei.com>
- <20230418102545.GX4253@hirez.programming.kicks-ass.net>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <e01e3e5c-0a48-2394-ac59-2c0541fa181a@huawei.com>
-Date:   Wed, 19 Apr 2023 09:47:04 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH v2] perf/core: Fix perf_sample_data not properly initialized for different swevents in perf_tp_event()
+Date:   Wed, 19 Apr 2023 02:48:32 +0000
+Message-ID: <20230419024832.181874-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-In-Reply-To: <20230418102545.GX4253@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
 X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+data->sample_flags may be modified in perf_prepare_sample(),
+in perf_tp_event(), different swevents use the same on-stack
+perf_sample_data, the previous swevent may change sample_flags in
+perf_prepare_sample(), as a result, some members of perf_sample_data are
+not correctly initialized when next swevent_event preparing sample
+(for example data->id, the value varies according to swevent).
 
-On 2023/4/18 18:25, Peter Zijlstra wrote:
-> On Tue, Apr 18, 2023 at 09:35:23AM +0800, Yang Jihong wrote:
-> 
->>> I'm thinking perhaps those flags that update ->dyn_size are the problem?
->>> At the same time, Should you not also then clear dyn_size?
-> 
->> Yes, according to the code, dyn_size should also be cleared.
->> Maybe we need to change it to the following, which would be more
->> appropriate?
->>
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -10144,14 +10144,14 @@ void perf_tp_event(u16 event_type, u64 count, void
->> *record, int entry_size,
->>                  },
->>          };
->>
->> -       perf_sample_data_init(&data, 0, 0);
->> -       perf_sample_save_raw_data(&data, &raw);
->> -
->>          perf_trace_buf_update(record, event_type);
->>
->>          hlist_for_each_entry_rcu(event, head, hlist_entry) {
->> -               if (perf_tp_event_match(event, &data, regs))
->> +               if (perf_tp_event_match(event, &data, regs)) {
->> +                       perf_sample_data_init(&data, 0, 0);
->> +                       perf_sample_save_raw_data(&data, &raw);
->>                          perf_swevent_event(event, count, &data, regs);
->> +               }
->>          }
-> 
-> That is certainly the safe option. I just went through the list and
-> while there's certainly a number of options we'll recompute for naught,
-> most of them are indeed either dyn_size or event specific :/
-> 
-> So yeah, please send the above as v2.
-> 
-OK, will send v2 according to above fix solution.
+A simple scenario triggers this problem is as follows:
 
-Thanks,
-Yang.
+  # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
+  [ perf record: dump data: Woken up 0 times ]
+  [ perf record: Dump perf.data.2023041209014396 ]
+  [ perf record: dump data: Woken up 0 times ]
+  [ perf record: Dump perf.data.2023041209014662 ]
+  [ perf record: dump data: Woken up 0 times ]
+  [ perf record: Dump perf.data.2023041209014910 ]
+  [ perf record: Woken up 0 times to write data ]
+  [ perf record: Dump perf.data.2023041209015164 ]
+  [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
+  # ls -l
+  total 860
+  -rw------- 1 root root  95694 Apr 12 09:01 perf.data.2023041209014396
+  -rw------- 1 root root 606430 Apr 12 09:01 perf.data.2023041209014662
+  -rw------- 1 root root  82246 Apr 12 09:01 perf.data.2023041209014910
+  -rw------- 1 root root  82342 Apr 12 09:01 perf.data.2023041209015164
+  # perf script -i perf.data.2023041209014396
+  0x11d58 [0x80]: failed to process type: 9 [Bad address]
+
+Solution: Re-initialize perf_sample_data before processing different swevents.
+
+After fix:
+
+  # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
+  [ perf record: dump data: Woken up 0 times ]
+  [ perf record: Dump perf.data.2023041209442259 ]
+  [ perf record: dump data: Woken up 0 times ]
+  [ perf record: Dump perf.data.2023041209442514 ]
+  [ perf record: dump data: Woken up 0 times ]
+  [ perf record: Dump perf.data.2023041209442760 ]
+  [ perf record: Woken up 0 times to write data ]
+  [ perf record: Dump perf.data.2023041209443003 ]
+  [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
+  # ls -l
+  total 864
+  -rw------- 1 root root 100166 Apr 12 09:44 perf.data.2023041209442259
+  -rw------- 1 root root 606438 Apr 12 09:44 perf.data.2023041209442514
+  -rw------- 1 root root  82246 Apr 12 09:44 perf.data.2023041209442760
+  -rw------- 1 root root  82342 Apr 12 09:44 perf.data.2023041209443003
+  # perf script -i perf.data.2023041209442259 | head -n 5
+              perf   232 [000]    66.846217: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=D ==> next_comm=perf next_pid=234 next_prio=120
+              perf   234 [000]    66.846449: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
+              perf   232 [000]    66.846546: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
+              perf   234 [000]    66.846606: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
+              perf   232 [000]    66.846646: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
+
+Fixes: bb447c27a467 ("perf/core: Set data->sample_flags in perf_prepare_sample()")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ kernel/events/core.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 435815d3be3f..6c4356ad453f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10144,14 +10144,22 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
+ 		},
+ 	};
+ 
+-	perf_sample_data_init(&data, 0, 0);
+-	perf_sample_save_raw_data(&data, &raw);
+-
+ 	perf_trace_buf_update(record, event_type);
+ 
+ 	hlist_for_each_entry_rcu(event, head, hlist_entry) {
+-		if (perf_tp_event_match(event, &data, regs))
++		if (perf_tp_event_match(event, &data, regs)) {
++			/*
++			 * Here use the same on-stack perf_sample_data,
++			 * some members in data are event-specific and
++			 * need to be re-computed for different sweveents.
++			 * Re-initialize data->sample_flags each time safely
++			 * to avoid the problem that next event skips preparing
++			 * data because data->sample_flags is set.
++			 */
++			perf_sample_data_init(&data, 0, 0);
++			perf_sample_save_raw_data(&data, &raw);
+ 			perf_swevent_event(event, count, &data, regs);
++		}
+ 	}
+ 
+ 	/*
+-- 
+2.30.GIT
+
