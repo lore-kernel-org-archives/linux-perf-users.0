@@ -2,140 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162D1C77B75
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 02:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2CAC6FD18
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 03:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230027AbjDSCuk (ORCPT
+        id S231881AbjDSDle (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 18 Apr 2023 22:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36304 "EHLO
+        Tue, 18 Apr 2023 23:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231349AbjDSCuj (ORCPT
+        with ESMTP id S231836AbjDSDlY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 18 Apr 2023 22:50:39 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05EC6E66;
-        Tue, 18 Apr 2023 19:50:33 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Q1QGh6HrjzsRNd;
-        Wed, 19 Apr 2023 10:49:00 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 19 Apr 2023 10:50:30 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v2] perf/core: Fix perf_sample_data not properly initialized for different swevents in perf_tp_event()
-Date:   Wed, 19 Apr 2023 02:48:32 +0000
-Message-ID: <20230419024832.181874-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+        Tue, 18 Apr 2023 23:41:24 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3406F40DB
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 20:41:23 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id p8so28321770plk.9
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Apr 2023 20:41:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20221208.gappssmtp.com; s=20221208; t=1681875682; x=1684467682;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H6mgm3Di7gHIXRR1b3Pr408Mz+NLzzONCXm1uh+AKO4=;
+        b=clblKm9O1VpWESzYzftaKLkgtzkFRl4IoswnIWWfM+vYZDxcGdGxNSGPSXXSgLim4o
+         aqoJ7QSFVUk4be0sAXrzdjnOqF12e3GdDl+d27cg/ulipwcj0KMuHVTKPXHzxqSpbL+3
+         d7+BG/6ZumIdlKEk57i3uJOxyTlSEtHjynHkqukj7yTrpJT1CxWM2zuZlp3n4WSbYjMm
+         TpXt/MG267ECLIyBg/y1RfRmCClASzhpwZQ/V7L8GJsmAc2+Ytm+rCNXFsI4qQoCxr5A
+         EvYYZWU8hjsztoWKvpNdXTFvmqgbARYHPrkXll9nxVDJluJ1nl3cVfCL1G0HXUvo3t41
+         kNfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681875682; x=1684467682;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H6mgm3Di7gHIXRR1b3Pr408Mz+NLzzONCXm1uh+AKO4=;
+        b=QPopS1rWhJAtzVex2cm0Cg0x3NexCKN8p4QexSptoHLaaS+gLWc9RFefnikuNLfGcB
+         f22hAkPuAGm4WOTBk/zCWWEfeqagAWxiuV+Tfj/NMkKGsrHKH4XI9TaNG9L3O1fpJ0do
+         HbvvQdwjFPJ558PCFXXVzItjzCUSwEih1iuRQAuGiZpbKAW9UO5Kgho3sLFP8ZSDdD9c
+         KrE5+qtq6PbjkK9kltyeR0uingRvMDXiH3LbpHzI98OofRrv6Pk7IW+n0h5K0cpuaqyS
+         pk+itK4nDR1qK6B29FNTUKQcA+fdvsfOgEJva6ldyw+jAo/F24tqx7OeqMApZOxWcXiQ
+         1Jng==
+X-Gm-Message-State: AAQBX9dOpCKw1uxl59mQrjOhe9D23WCI85VYxswpp5jUjAKwjBn4aciU
+        fULjrRBFtj+JoEIOtMZGcERLGg==
+X-Google-Smtp-Source: AKy350aFSnjy9GBus6W4i7rBmh5kAse78TXrksJiRFcdAUesKxA80OaYasCBI85Hv8XTlxGQAU0oPA==
+X-Received: by 2002:a05:6a20:4423:b0:ee:e922:6747 with SMTP id ce35-20020a056a20442300b000eee9226747mr1933679pzb.56.1681875682524;
+        Tue, 18 Apr 2023 20:41:22 -0700 (PDT)
+Received: from localhost ([135.180.227.0])
+        by smtp.gmail.com with ESMTPSA id 190-20020a6308c7000000b00513cc8c9597sm9278189pgi.10.2023.04.18.20.41.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Apr 2023 20:41:21 -0700 (PDT)
+Date:   Tue, 18 Apr 2023 20:41:21 -0700 (PDT)
+X-Google-Original-Date: Tue, 18 Apr 2023 20:40:54 PDT (-0700)
+Subject:     Re: [PATCH v2] perf tools riscv: Add support for riscv lookup_binutils_path
+In-Reply-To: <20230315051500.13064-1-p4ranlee@gmail.com>
+CC:     jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, acme@redhat.com, anton@ozlabs.org,
+        dja@axtens.net, mpe@ellerman.id.au,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, p4ranlee@gmail.com
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     p4ranlee@gmail.com
+Message-ID: <mhng-534349ae-0594-455c-bc27-da0d8a70d0be@palmer-ri-x1c9>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-data->sample_flags may be modified in perf_prepare_sample(),
-in perf_tp_event(), different swevents use the same on-stack
-perf_sample_data, the previous swevent may change sample_flags in
-perf_prepare_sample(), as a result, some members of perf_sample_data are
-not correctly initialized when next swevent_event preparing sample
-(for example data->id, the value varies according to swevent).
+On Tue, 14 Mar 2023 22:15:01 PDT (-0700), p4ranlee@gmail.com wrote:
+> Add RISC-V binutils path on lookup triplets.
+>
+> Signed-off-by: Paran Lee <p4ranlee@gmail.com>
+> ---
+>  tools/perf/arch/common.c | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>
+> diff --git a/tools/perf/arch/common.c b/tools/perf/arch/common.c
+> index 59dd875fd5e4..e80d4d22cabf 100644
+> --- a/tools/perf/arch/common.c
+> +++ b/tools/perf/arch/common.c
+> @@ -43,6 +43,20 @@ const char *const powerpc_triplets[] = {
+>  	NULL
+>  };
+>
+> +const char *const riscv32_triplets[] = {
+> +	"riscv32-unknown-linux-gnu-",
+> +	"riscv32-linux-android-",
+> +	"riscv32-linux-gnu-",
+> +	NULL
+> +};
+> +
+> +const char *const riscv64_triplets[] = {
+> +	"riscv64-unknown-linux-gnu-",
+> +	"riscv64-linux-android-",
+> +	"riscv64-linux-gnu-",
+> +	NULL
+> +};
+> +
+>  const char *const s390_triplets[] = {
+>  	"s390-ibm-linux-",
+>  	"s390x-linux-gnu-",
+> @@ -166,6 +180,10 @@ static int perf_env__lookup_binutils_path(struct perf_env *env,
+>  		path_list = arm64_triplets;
+>  	else if (!strcmp(arch, "powerpc"))
+>  		path_list = powerpc_triplets;
+> +	else if (!strcmp(arch, "riscv32"))
+> +		path_list = riscv32_triplets;
+> +	else if (!strcmp(arch, "riscv64"))
+> +		path_list = riscv64_triplets;
+>  	else if (!strcmp(arch, "sh"))
+>  		path_list = sh_triplets;
+>  	else if (!strcmp(arch, "s390"))
 
-A simple scenario triggers this problem is as follows:
-
-  # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
-  [ perf record: dump data: Woken up 0 times ]
-  [ perf record: Dump perf.data.2023041209014396 ]
-  [ perf record: dump data: Woken up 0 times ]
-  [ perf record: Dump perf.data.2023041209014662 ]
-  [ perf record: dump data: Woken up 0 times ]
-  [ perf record: Dump perf.data.2023041209014910 ]
-  [ perf record: Woken up 0 times to write data ]
-  [ perf record: Dump perf.data.2023041209015164 ]
-  [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
-  # ls -l
-  total 860
-  -rw------- 1 root root  95694 Apr 12 09:01 perf.data.2023041209014396
-  -rw------- 1 root root 606430 Apr 12 09:01 perf.data.2023041209014662
-  -rw------- 1 root root  82246 Apr 12 09:01 perf.data.2023041209014910
-  -rw------- 1 root root  82342 Apr 12 09:01 perf.data.2023041209015164
-  # perf script -i perf.data.2023041209014396
-  0x11d58 [0x80]: failed to process type: 9 [Bad address]
-
-Solution: Re-initialize perf_sample_data before processing different swevents.
-
-After fix:
-
-  # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
-  [ perf record: dump data: Woken up 0 times ]
-  [ perf record: Dump perf.data.2023041209442259 ]
-  [ perf record: dump data: Woken up 0 times ]
-  [ perf record: Dump perf.data.2023041209442514 ]
-  [ perf record: dump data: Woken up 0 times ]
-  [ perf record: Dump perf.data.2023041209442760 ]
-  [ perf record: Woken up 0 times to write data ]
-  [ perf record: Dump perf.data.2023041209443003 ]
-  [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
-  # ls -l
-  total 864
-  -rw------- 1 root root 100166 Apr 12 09:44 perf.data.2023041209442259
-  -rw------- 1 root root 606438 Apr 12 09:44 perf.data.2023041209442514
-  -rw------- 1 root root  82246 Apr 12 09:44 perf.data.2023041209442760
-  -rw------- 1 root root  82342 Apr 12 09:44 perf.data.2023041209443003
-  # perf script -i perf.data.2023041209442259 | head -n 5
-              perf   232 [000]    66.846217: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=D ==> next_comm=perf next_pid=234 next_prio=120
-              perf   234 [000]    66.846449: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
-              perf   232 [000]    66.846546: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
-              perf   234 [000]    66.846606: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
-              perf   232 [000]    66.846646: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
-
-Fixes: bb447c27a467 ("perf/core: Set data->sample_flags in perf_prepare_sample()")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- kernel/events/core.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 435815d3be3f..6c4356ad453f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10144,14 +10144,22 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
- 		},
- 	};
- 
--	perf_sample_data_init(&data, 0, 0);
--	perf_sample_save_raw_data(&data, &raw);
--
- 	perf_trace_buf_update(record, event_type);
- 
- 	hlist_for_each_entry_rcu(event, head, hlist_entry) {
--		if (perf_tp_event_match(event, &data, regs))
-+		if (perf_tp_event_match(event, &data, regs)) {
-+			/*
-+			 * Here use the same on-stack perf_sample_data,
-+			 * some members in data are event-specific and
-+			 * need to be re-computed for different sweveents.
-+			 * Re-initialize data->sample_flags each time safely
-+			 * to avoid the problem that next event skips preparing
-+			 * data because data->sample_flags is set.
-+			 */
-+			perf_sample_data_init(&data, 0, 0);
-+			perf_sample_save_raw_data(&data, &raw);
- 			perf_swevent_event(event, count, &data, regs);
-+		}
- 	}
- 
- 	/*
--- 
-2.30.GIT
-
+Reviewed-by: Palmer Dabbelt <palmer@rivosinc.com>
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
