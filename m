@@ -2,324 +2,277 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D76FC77B75
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 14:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435D6C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 14:17:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232906AbjDSOPs (ORCPT
+        id S232383AbjDSORV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Apr 2023 10:15:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39872 "EHLO
+        Wed, 19 Apr 2023 10:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232588AbjDSOPa (ORCPT
+        with ESMTP id S232847AbjDSOQ5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Apr 2023 10:15:30 -0400
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2082.outbound.protection.outlook.com [40.107.20.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65DF117918;
-        Wed, 19 Apr 2023 07:14:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RUNxl3JpiJs8oziT9sHTBPraDLbw6hyMJYZRJx2HaTBW/z/2QUNdiMpQ96nR3lXoRjAC5BgKNvzfoeim2z6BnzIFewX7QjMU3/B55mt5qAEaKDybN9njrNNVStrjvAUoJn4C8dK5bAgUW403pqBXMPBqkbwOi7NplC5quJ8RFIzRFIz5EbHfp+g24MO6mV7Li82YG/Ip/6I8UhBk9kVuOHRpJ5ZTxqzlLx1AA6n8S9/vJXHol6ZjbjFoPQRJxN2LGKfWWPF1ecrigakmMPBqzIJyl3ZJ7nsv2iD5OAsZVSkiek22aZY2aFjer/qEhXq5FYa/CQIvJMpnrnmCrqjHcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cmYGcJi/ivHXMWjXa6gcuKF3+bHWHhyH4ebYmtpgXtY=;
- b=hzVKsSXcK3Ys0SorXlKwyZt7Ma0N6bNXF4BYSYeI9cCX6h7352RcyhceoHQlvBf+c8VF+Sbb6NqA2BW9nKl8uqunmFhPuMQEGxniRHnW3bElU+GyMOJhmLaO29UXpak1O8Q7/99IMlnLjiVUQenqKFS7RyJkFByRF8p7KDWLRuBDn14tnWUdC+b2fc/D5HlX8zXKbkWALUtEs8NEP41rW6Lfr43cjuVkSgatC2WAxvqDfXHCF86Wo7TzzmWLRj80YfDk7knRUC5SibQ6TIKMDuWW9vwVkXUVXvu+dJSlssF+4AWW2MbZnW50ZfvF1fZnW7pEPPpwu5UqYZ858M4LtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cmYGcJi/ivHXMWjXa6gcuKF3+bHWHhyH4ebYmtpgXtY=;
- b=xIyzIqUHzDC8/AQ3qohz/9VSCfoF2FyIRkfkxkehKcfkGZKV65lwIkI/xg3tqz7V6qTxICbbGBoFXJ/M0xgfhEvlKJyPe75XqoCvzWgTMW4Q6XkbWnOXxB8/velAIXyA6ncC6aH49Hb3vJzcdTWOm194kHehFpa3ZLTSZxCoBjSDBuIGWfAf8vPqVbaiRlKG2vpIC4AJGqDbwDzJJQHmhQzkqNnurJb4dRe39/yqX9cH9OtmH6+A5h49pGSV9YBnzcvnJp7JXBikRMA91+suRfF3u5ucTXpjIqVCK8FV+LgyoWiymSFo2Vqb6A0tEai9MjmRTINkTz9LhA0yJKZtlg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from AS8PR04MB9510.eurprd04.prod.outlook.com (2603:10a6:20b:44a::11)
- by AS4PR04MB9690.eurprd04.prod.outlook.com (2603:10a6:20b:4fd::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.20; Wed, 19 Apr
- 2023 14:14:21 +0000
-Received: from AS8PR04MB9510.eurprd04.prod.outlook.com
- ([fe80::e4c4:247e:4a08:7ed2]) by AS8PR04MB9510.eurprd04.prod.outlook.com
- ([fe80::e4c4:247e:4a08:7ed2%2]) with mapi id 15.20.6298.045; Wed, 19 Apr 2023
- 14:14:21 +0000
-Date:   Wed, 19 Apr 2023 22:14:06 +0800
-From:   Shung-Hsi Yu <shung-hsi.yu@suse.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Quentin Monnet <quentin@isovalent.com>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
-        Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Mahe Tardy <mahe.tardy@gmail.com>,
-        Michal =?utf-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
-Message-ID: <ZD/3Ll7UPucyOYkk@syu-laptop.lan>
-References: <ZDfKBPXDQxH8HeX9@syu-laptop>
- <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
- <20230414095007.GF63923@kunlun.suse.cz>
- <b933fad3-7759-00d4-94cb-f20dd363b794@isovalent.com>
- <20230414161520.GJ63923@kunlun.suse.cz>
- <CAEf4Bzaw6DBHn=S9zKCXTSh7jW8xL9K6bzi1Q-e8j93thi2hmg@mail.gmail.com>
- <20230418112454.GA15906@kitsune.suse.cz>
- <CAEf4BzZf50fX7T9k47u+9YQrMbSLxLeA1qWwrdWToCZkMhynjg@mail.gmail.com>
- <20230418174132.GE15906@kitsune.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230418174132.GE15906@kitsune.suse.cz>
-X-ClientProxiedBy: TYCP286CA0099.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b4::17) To AS8PR04MB9510.eurprd04.prod.outlook.com
- (2603:10a6:20b:44a::11)
+        Wed, 19 Apr 2023 10:16:57 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE9CF1B4;
+        Wed, 19 Apr 2023 07:16:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681913796; x=1713449796;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=IV0n4/rkVEdJYzohLV5j0qEktEX8ATK9WtKvknQGQ3g=;
+  b=SgPeQXAKz50iPk2MmrByWWB9aLyVPl8KiYrTH3efpX2QNziRvqORDJvF
+   JNwuYecxNtrSVfbTvAP7DCUx+xQuKPcF1DYMt06WnkkQCcUOv3APit5yT
+   mFL37w05U7w/fMwxRHaBi3xX+n97xbqluXr8WFRXpMzLA39k5zHddMXQ9
+   iSUy5GbplnowqVOhkBw0U4YqyxnAUoF+9uMgOyxo9tPxkYIpStr9hhmuG
+   kusyJFTT9VPo4J6BMnepDKFoXNZnXO3ixGwT3IuCxSAbNxLOfUxGYaxGb
+   OFMx5+daHRjv/nOoUMlW57aDt9A4I+wj5maAh2B6puqojtLnEslWxph/Z
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="329633983"
+X-IronPort-AV: E=Sophos;i="5.99,208,1677571200"; 
+   d="scan'208";a="329633983"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 07:16:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="815642367"
+X-IronPort-AV: E=Sophos;i="5.99,208,1677571200"; 
+   d="scan'208";a="815642367"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga004.jf.intel.com with ESMTP; 19 Apr 2023 07:16:35 -0700
+Received: from [10.209.41.10] (kliang2-mobl1.ccr.corp.intel.com [10.209.41.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 70877580505;
+        Wed, 19 Apr 2023 07:16:34 -0700 (PDT)
+Message-ID: <201a2ad6-3fb4-4b2a-d8a4-34d924e680c3@linux.intel.com>
+Date:   Wed, 19 Apr 2023 10:16:33 -0400
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB9510:EE_|AS4PR04MB9690:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0cdbf60e-a89c-4e06-3f89-08db40e05ecd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ohvOX1QlO6d4LPatiO+z2j1GTkt4L5+jsvw9mqtg632M3aiXiShUulnztIETGtWFKYIS7+M41wlvjeVPgY2iI8SeLUy68qMcRBWE9haLDz/NJ7FpVRX9s19Dt+5zIJbiXv+ju/+BTVqW1UyXY+uc34Oe05CaiBwQ9a5mpPdzB3vpokUCJEZ1XGJSOE3xGbCpW7NR2wq1IbDUI35232sPETYqv3p7GlOMNs1YOljDnagKQDEtb7ohsh94LjW/ziGOpe7ul31LXpCMsS6oA3P+Dea83dVLrZV9hryB87QYJkMLonbLAyMvzFUGpS/pPG0BHE1Dt3HDml+wJqvNspxMdnvnI8ACzU2AEw/aFm/SMhyp+ufDiRBOc4dZF5ANx3whXuHYH38cXTtK+bLq1iWCDjVUxxSjdCsTeVqzNnyOC8MfSMZVsiN8gifV81kHDgfhuxAAlE4sWYKhK0mb+vizB15l49MIjLlkgTekms/FynUsgkeDZeK1M34bLKswLPkJ8gJyryT/1VYGBqS/IZgcnEfSU3yQ3z1PLrdCEBEiKqs=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB9510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(376002)(366004)(39860400002)(346002)(136003)(451199021)(66899021)(2906002)(478600001)(6666004)(86362001)(966005)(26005)(53546011)(6512007)(6506007)(9686003)(6486002)(36756003)(186003)(41300700001)(54906003)(38100700002)(8676002)(8936002)(4326008)(66556008)(66476007)(66574015)(83380400001)(66946007)(316002)(6916009)(7416002)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Z3l3di9TbjBiNTg5eFYzeUJMR2gyY1BLSFhzMW5KOFBXSVJpNmsxUGFzb1U1?=
- =?utf-8?B?dFBLUDd1ZTlIdFk4bHZucWNvUm9NZ0hXLy9oM1J0cGRnRGVKTEhSSEZjSXFl?=
- =?utf-8?B?UFJ4WHgxRnZvSWloeTBIUXR0N1NCaDdnNzA4TlNJa0x1ZEN5eG1sVG5waTRD?=
- =?utf-8?B?dUt2NTFlUUN5STcwMmhQVkNhV1ZqOG1vdld1SjVuMGQyRVI1dGdXT01LYmho?=
- =?utf-8?B?RmNsZTR4Q2lEcmthelRRNU90VTN1TW9uRUJ5b2hxUEdNUytDUGlJKy8wNlNl?=
- =?utf-8?B?d0wxS202WjFPbk5QbHVEU0YvaFh2WEhpa1JxOFlIK2g5UXRSQ1VmZGhlQUV0?=
- =?utf-8?B?cmxqeUJtTnR5bEhRek1Yc2VvY1pacUk4dGpQQm5ubk45L0JXNzh6OVRJZnJ2?=
- =?utf-8?B?YVUyNzc5UmFLcmpLZmZ2dWo2NmNQYWJlTmJqaHgzd0JrRVJCUVZWSnM1STVZ?=
- =?utf-8?B?eXVyY0gyWjJZOHFURE8yOWlEZktNVFJ4enFyeVc1NzZvcm5Ra0c4dFBqN1Vn?=
- =?utf-8?B?ajVSaFBzN2l2dC80WVR0SFYvWVdVRnJtZEtZQ0VLa0ZlNWdmT2YzUHlkcVNm?=
- =?utf-8?B?eWVER2ZrdFVwZ3g5YjJXT3pnZWU5OUNBVDk3SjVUU2xkMlRvVjNqMUpmNnNT?=
- =?utf-8?B?K3FHdVZQQ1BCcVpKb0JVMkxzZUhZREJ5V1JGUzIxbHp5QUxHNDNCZ0NoRys2?=
- =?utf-8?B?ano5UXFpM3VENkhhcG5OamttVFpNcHVmWnUwVWFUL3lYT3BjRzErU2JoNmk0?=
- =?utf-8?B?SDFyZlB3WEcyWEk2bmlsdkRjNkppdDRNMlNEc1pmSjBkRmkvSlZJblFCN3R6?=
- =?utf-8?B?V3U1eGZLSExsR0ZUOGRrQklYcGVaV3JTRjdHZ2RjVzFXMjFVNDV2TzVjejZB?=
- =?utf-8?B?bVFtbC9CUTVvdVlPcEd3Z2pVVU9MV05SaHhaQjM0UThnWWlWekI5M05KN3BL?=
- =?utf-8?B?Wjkyc1NEVjM0eXlTelFRNkc3UDZSYjBuYm5RVFZrRUFTZmZuQndrYTJ1RllN?=
- =?utf-8?B?cHR1cUI4bE9hTkZzUDNIUVM3aVZaeTRxd2VIYzVRVjNsc2ttUVFFSFREUGdj?=
- =?utf-8?B?OXpRTVY0S2tqbzlnc2RobXpveFlmcjl5ZUxVcVV1MlJObjB0U1ZPeGtyTC8x?=
- =?utf-8?B?dU15UW1uMStQMUNZRFRXSHZJMGlYU0lYWi8rSzBTb3NsNmFWS0dKcWd2aGFE?=
- =?utf-8?B?OWhzM3p6VFJGRk8rdW1UZkhvUnhSSTE3bGtudzdGc3RJOHRUS1JQVUgydUM0?=
- =?utf-8?B?QmFkeTdEZ0hwN294R2VTRVJvaHl0N3RzaVpWZU12MExhcnFvSFV3aW84aElH?=
- =?utf-8?B?c1NqWFZUWU45UEhISXNZamFoNU50TUtrUWhmdEZwOXpaTEpUaUZNYWg4NlpM?=
- =?utf-8?B?TFJ6aThneENFK0hVK093SlRZRDZyeU9EdUw0VXB3ZUtkUjI3NXV6b1Z4UG8y?=
- =?utf-8?B?ODlzVVlWbmdVcytndVE4TXRsbXNYVDVNRTE5WXdjZVZray9pVFVMdGFYdEhX?=
- =?utf-8?B?ODdWbUltZCtSYVBpR3FLRTFIUjMrak9DZERtMDgzOUlqS2R4TVIzZzFzS05t?=
- =?utf-8?B?SVQyei9vSDVxeGNrdnIzbHRjbjYrbzRHNlNvbEtkTmNvQ1plelRpR3J4aFRh?=
- =?utf-8?B?SU5YUVl0Wkk5YURUWEZkOTBMcVU1K1J1TlV2VnU3MVFsY2FaTHZGYmJXdEla?=
- =?utf-8?B?SktaTkZDSlVmbFJDOUg0RjZCQnFXTW03WXYwWWtDaHc2aDBNanJHeU9mKzUv?=
- =?utf-8?B?TGNoNGNuYm0zMWd0ZG15Tlp6Wk9UL0VQdWIxTE1MTVhZZjFoV3pVRGdFendH?=
- =?utf-8?B?S3NOQy9xOUIvWkdNcTVZY2Y0RVNuUmpPdHUweEFibXhTSEU1NkVDaGpKbWkz?=
- =?utf-8?B?SmRMd1pvZlBGU2dhcnZQcTdaVW9BZk1Rbk1WNEVKWEJxQkFsWjQ0d3RlQlNu?=
- =?utf-8?B?a09QUndCcDJsNWtIZERJK1JjUCtiR1JPd0ZOTEFuMWtxenpiVnErT0dLcUZN?=
- =?utf-8?B?dlJoUVJYUnJ2RXprd0JsWWRFZ3loRXlPdmc3Nm9SaW5ocE1qV2wwNVhuUzFj?=
- =?utf-8?B?NGRtYzRld21PRzhrRkQxMUJiTmRZRCtpcVVpRFk5Q1U0QVkxeUJoSnR6c3Bv?=
- =?utf-8?Q?kgjvAOKSq/AgNQpk8mKbQ6DrS?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0cdbf60e-a89c-4e06-3f89-08db40e05ecd
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB9510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2023 14:14:21.4590
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b7Og6cQKpvB1OZ1ZNK5wXFfr/U7e24+koy5kzT3G5NlDCdjLpWvuEDMsfG7CtuA/GTWoNGb4jcV+8zTQbDvDGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR04MB9690
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2] perf stat: Introduce skippable evsels
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230414051922.3625666-1-irogers@google.com>
+ <56ac61a0-ccf0-210e-e429-11062a07b8bf@linux.intel.com>
+ <CAP-5=fXz1vw48A2tWgcNDSZsnvnOO7_jA+py3p_Khi_igz0hJw@mail.gmail.com>
+ <5031f492-9734-be75-3283-5961771d87c8@linux.intel.com>
+ <CAP-5=fW2aAijt8tqydszQHQFmsfeQO2S0hb7Z27RtXxG4Zmm-w@mail.gmail.com>
+ <ce92dd1b-23f6-ea52-a47d-fccc24fa20ea@linux.intel.com>
+ <CAP-5=fWRy4NEqhB6-b98+m7SV5=oyBOMVuOHwmvKZCJuXcsQEg@mail.gmail.com>
+ <d1fe801a-22d0-1f9b-b127-227b21635bd5@linux.intel.com>
+ <CAP-5=fXCmKAUn24r0YYHaO63mabZCXae-hAT2WCtk+YYmvS9xg@mail.gmail.com>
+ <99150cb1-fe50-97cf-ad80-cceb9194eb9a@linux.intel.com>
+ <CAP-5=fXZSACj=kGM5t3pBHkQ-W1i0eJayAQ77_ToEp4zXWzJnw@mail.gmail.com>
+ <ea899096-0599-f2a0-04a3-d90a3aa7d45d@linux.intel.com>
+ <CAP-5=fVVFjKgUGV8zVurd99BOhASQ9mMaZqOyw13PYLhZWpsOA@mail.gmail.com>
+ <CAP-5=fW_JwabjEUqSLaJn+tuHXLoyRWqJVVCh_z1dhXJ6On=MQ@mail.gmail.com>
+ <84b19053-2e9f-5251-6816-26d2475894c0@linux.intel.com>
+ <CAP-5=fWJKmo4eLKe9+=3pKGe7g+xfA+YxOz7AOgqLfcRNzNaLw@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fWJKmo4eLKe9+=3pKGe7g+xfA+YxOz7AOgqLfcRNzNaLw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 07:41:32PM +0200, Michal Suchánek wrote:
-> On Tue, Apr 18, 2023 at 09:38:20AM -0700, Andrii Nakryiko wrote:
-> > On Tue, Apr 18, 2023 at 4:24 AM Michal Suchánek <msuchanek@suse.de> wrote:
-> > >
-> > > On Mon, Apr 17, 2023 at 05:20:03PM -0700, Andrii Nakryiko wrote:
-> > > > On Fri, Apr 14, 2023 at 9:15 AM Michal Suchánek <msuchanek@suse.de> wrote:
-> > > > > On Fri, Apr 14, 2023 at 01:30:02PM +0100, Quentin Monnet wrote:
-> > > > > > 2023-04-14 11:50 UTC+0200 ~ Michal Suchánek <msuchanek@suse.de>
-> > > > > > > Hello,
-> > > > > > >
-> > > > > > > On Fri, Apr 14, 2023 at 01:35:20AM +0100, Quentin Monnet wrote:
-> > > > > > >> Hi Shung-Hsi,
-> > > > > > >>
-> > > > > > >> On Thu, 13 Apr 2023 at 10:23, Shung-Hsi Yu <shung-hsi.yu@suse.com> wrote:
-> > > > > > >>>
-> > > > > > >>> Hi,
-> > > > > > >>>
-> > > > > > >>> I'm considering switch to bpftool's mirror on GitHub for packaging (instead
-> > > > > > >>> of using the source found in kernel), but realize that it should goes
-> > > > > > >>> hand-in-hand with how libbpf is packaged, which eventually leads these
-> > > > > > >>> questions:
-> > > > > > >>>
-> > > > > > >>>   What is the suggested approach for packaging bpftool and libbpf?
-> > > > > > >>>   Which source is preferred, GitHub or kernel?
-> > > > > > >>
-> > > > > > >> As you can see from the previous discussions, the suggested approach
-> > > > > > >> would be to package from the GitHub mirror, with libbpf and bpftool in
-> > > > > > >> sync.
-> > > > > > >>
-> > > > > > >> My main argument for the mirror is that it keeps things simpler, and
-> > > > > > >> there's no need to deal with the rest of the kernel sources for these
-> > > > > > >> packages. Download from the mirrors, build, ship. But then I have
-> > > > > > >> limited experience at packaging for distros, and I can understand
-> > > > > > >> Toke's point of view, too. So ultimately, the call is yours.
-> > > > > > >
-> > > > > > > Things get only ever more complex when submodules are involved.
-> > > > > >
-> > > > > > I understand the generic pain points from your other email. But could
-> > > > > > you be more specific for the case of bpftool? It's not like we're
-> > > > > > shipping all lib dependencies as submodules. Sync-ups are specifically
-> > > > > > aligned to the same commit used to sync the libbpf mirror, so that it's
-> > > > > > pretty much as if we had the right version of the library shipped in the
-> > > > > > repository - only, it's one --recurse-submodules away.
-> > > > >
-> > > > > It's so in every project that uses submodules. Except git does not
-> > > > > recurse into submodules by default, you have to fix it up by hand.
-> > > > > Forges don't support submodules so you will not get the submodule when
-> > > > > downloading the project archive, and won't see it the the project tree.
-> > > >
-> > > > git submodule update --init --recursive didn't work?
-> > >
-> > > That's one part of the manual fixup.
-> > >
-> > > The other part is after each git operation that could possibly cause the
-> > > submodules to go out of sync, basically any operation that changes the
-> > > checked-out commit.
-> > >
-> > > Of course, you can make some shell aliases that append whatever submodule
-> > > chicanery to whatever git command you might issue, and tell everyone
-> > > else to do that, and then it will work in that one shell, and not in any
-> > > other shell nor any tool that invokes git directly.
-> > 
-> > Are we discussing a *standard* Git submodule feature and argue that
-> > because it might be cumbersome or unfamiliar to some engineers that
-> > projects should avoid using Git submodules?
-> 
-> As far as I am aware they are unfamiliar to *most* engineers, and for
-> good reasons.
-> 
-> > For one, I don't have any special aliases for dealing with Git
-> > submodules and it works fine. If I jump between branches or tags which
-> > update Git submodule reference, I do above `git submodule update
-> > --init --recursive` explicitly if I see that Git status shows
-> > out-of-sync Git submodule state. If I want to update a Git submodule,
-> > I update the submodule's Git repo, and then git add it in the repo
-> > that uses this submodule. I haven't run into any other issues with
-> > this.
-> 
-> You know, git could just handle submodules automagically. As you say,
-> it's not rocket science. For historical reasons it does not.
-> 
-> With that working with submodules is cumbersome, and it's additional
-> thing that can break down that the engineer needs to be constantly aware
-> of increasing the mental overhead of working with such projects.
-> 
-> It may not be much of a problem for people who work with such projects
-> daily but not everyone does. Those who don't need to do the mental
-> switch whenever submodules are encountered, and are prone to getting
-> issues when they forget that they have to go that extra mile for this
-> specific project.
 
-For me it's less about having to go through the extra loop. It's that
-submodules would require git to be installed, network access, which all adds
-extra moving parts compared to a tarball...
 
-> > > > > After previous experience with submodules I did not even try, I just
-> > > > > patched the makefile to use system libbpf before attempting anything
-> > > > > else.
-> > > >
-> > > > Quentin mentioned that he's packaging (or will package) libbpf sources
-> > > > as part of bpftool release on Github. I've been this for other
-> > > > libbpf-using tools as well, and it works pretty well (at least for
-> > > > Fedora and ArchLinux). E.g., srcs-full-* archives for veristat ([0])
+On 2023-04-19 9:19 a.m., Ian Rogers wrote:
+> On Wed, Apr 19, 2023 at 5:31 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2023-04-18 9:00 p.m., Ian Rogers wrote:
+>>> On Tue, Apr 18, 2023 at 5:12 PM Ian Rogers <irogers@google.com> wrote:
+>>>>
+>>>> On Tue, Apr 18, 2023 at 2:51 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 2023-04-18 4:08 p.m., Ian Rogers wrote:
+>>>>>> On Tue, Apr 18, 2023 at 11:19 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>>>>
+>>>>>>>
+>>>>>>>
+>>>>>>> On 2023-04-18 11:43 a.m., Ian Rogers wrote:
+>>>>>>>> On Tue, Apr 18, 2023 at 6:03 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> On 2023-04-17 2:13 p.m., Ian Rogers wrote:
+>>>>>>>>>> The json TopdownL1 is enabled if present unconditionally for perf stat
+>>>>>>>>>> default. Enabling it on Skylake has multiplexing as TopdownL1 on
+>>>>>>>>>> Skylake has multiplexing unrelated to this change - at least on the
+>>>>>>>>>> machine I was testing on. We can remove the metric group TopdownL1 on
+>>>>>>>>>> Skylake so that we don't enable it by default, there is still the
+>>>>>>>>>> group TmaL1. To me, disabling TopdownL1 seems less desirable than
+>>>>>>>>>> running with multiplexing - previously to get into topdown analysis
+>>>>>>>>>> there has to be knowledge that "perf stat -M TopdownL1" is the way to
+>>>>>>>>>> do this.
+>>>>>>>>>
+>>>>>>>>> To be honest, I don't think it's a good idea to remove the TopdownL1. We
+>>>>>>>>> cannot remove it just because the new way cannot handle it. The perf
+>>>>>>>>> stat default works well until 6.3-rc7. It's a regression issue of the
+>>>>>>>>> current perf-tools-next.
+>>>>>>>>
+>>>>>>>> I'm not so clear it is a regression to consistently add TopdownL1 for
+>>>>>>>> all architectures supporting it.
+>>>>>>>
+>>>>>>>
+>>>>>>> Breaking the perf stat default is a regression.
+>>>>>>
+>>>>>> Breaking is overstating the use of multiplexing. The impact is less
+>>>>>> accuracy in the IPC and branch misses default metrics,
+>>>>>
+>>>>> Inaccuracy is a breakage for the default.
+>>>>
+>>>> Can you present a case where this matters? The events are already not
+>>>> grouped and so inaccurate for metrics.
+>>>
+>>> Removing CPUs without perf metrics from the TopdownL1 metric group is
+>>> implemented here:
+>>> https://lore.kernel.org/lkml/20230419005423.343862-6-irogers@google.com/
+>>> Note, this applies to pre-Icelake and atom CPUs as these also lack
+>>> perf metric (aka topdown) events.
+>>>
+>>
+>> That may give the end user the impression that the pre-Icelake doesn't
+>> support the Topdown Level1 events, which is not true.
+>>
+>> I think perf should either keep it for all Intel platforms which
+>> supports tma_L1_group, or remove the TopdownL1 name entirely for Intel
+>> platform (let the end user use the tma_L1_group and the name exposed by
+>> the kernel as before.).
+> 
+> How does this work on hybrid systems? We will enable TopdownL1 because
+> of the presence of perf metric (aka topdown) events but this will also
+> enable TopdownL1 on the atom core.
 
-and having libbpf included in bpftool release means the complain above no
-longer holds. Though I have yet test build the mirror version of libbpf and
-bpftool like Michal has done.
 
-> > > > By switching up actual libbpf used to compile with bpftool, you are
-> > > > potentially introducing subtle problems that your users will be quite
-> > > > unhappy about, if they run into them. Let's work together to make it
-> > > > easier for you to package bpftool properly. We can't switch bpftool to
-> > > > reliably use system-wide libbpf (either static or shared, doesn't
-> > > > matter) because of dependency on internal functionality.
-> > > >
-> > > >
-> > > >   [0] https://github.com/libbpf/veristat/releases/tag/v0.1
-> > >
-> > > So how many copies of libbpf do I need for having a CO-RE toolchain?
-> > 
-> > What do you mean by "CO-RE toolchain"? bpftool, veristat, retsnoop,
-> > etc are tools. The fact they are using statically linked libbpf
-> > through Git submodule is irrelevant to end users. You need one libbpf
-> > in the system (for those who link dynamically against libbpf), the
-> > rest are just tools.
-> > 
-> > >
-> > > Will different tools have different view of the kernel because they each
-> > > use different private copy of libbpf with different features?
-> > 
-> > That's up to tools, not libbpf. You are over pivoting on libbpf here.
-> > There is one view of the kernel, it depends on what features the
-> > kernel supports. If the tool requires some specific functionality of
-> > libbpf, it will update its Git submodule reference to get a version of
-> > libbpf that provides that feature. That's the point, an
-> > application/tool is in control of what kind of features it gets from
-> > libbpf.
+This is the output from a hybrid system with current 6.3-rc7.
 
-Since libbpf has a stable API & ABI, is it theoretically possible for
-bpftool, veristat, retsnoop, etc. all share the same version of libbpf?
+As you can see that the Topdown L1 and L2 are displayed for the big
+core. No Topdown events are displayed for the atom core.
 
-What I'd like to do it build libbpf and bpftool out of bpftool GitHub
-mirror's release tarball (w/ submodule included, which exists now for
-snapshot). For the rest of the tool that does not depends on libbpf private
-function, have them dynamically link to the libbpf built from bpftool's
-source, just like how libelf is dynamically linked.
+(BTW: The 99.15% is not multiplexing. I think it's because the perf stat
+may starts from the big core and it takes a little bit time to run
+something on the small core.)
 
-I'm not saying that those tools should not have libbpf as submodule; as
-submodule do look useful. But for packaging I really would like to have the
-option of choosing the exact version of libbpf being used.
 
-> > > When there is a bug in libbpf how many places need to be patched to fix
-> > > it?
-> > 
-> > That's up to tools, again. If the bug is affecting them, they should
-> > cut a new version of their *tool*, using a patched version of libbpf
-> > from Github. If it doesn't affect them, then it doesn't matter *to
-> > them*.
+$perf stat ./hybrid_triad_loop.sh
+
+ Performance counter stats for './hybrid_triad_loop.sh':
+
+            211.80 msec task-clock                       #    0.996 CPUs
+utilized
+                 5      context-switches                 #   23.608 /sec
+                 3      cpu-migrations                   #   14.165 /sec
+               652      page-faults                      #    3.078 K/sec
+       411,470,713      cpu_core/cycles/                 #    1.943 G/sec
+       607,566,483      cpu_atom/cycles/                 #    2.869
+G/sec                       (99.15%)
+     1,613,379,362      cpu_core/instructions/           #    7.618 G/sec
+     1,616,816,312      cpu_atom/instructions/           #    7.634
+G/sec                       (99.15%)
+       202,876,952      cpu_core/branches/               #  957.884 M/sec
+       202,367,829      cpu_atom/branches/               #  955.480
+M/sec                       (99.15%)
+            56,740      cpu_core/branch-misses/          #  267.898 K/sec
+            19,033      cpu_atom/branch-misses/          #   89.864
+K/sec                       (99.15%)
+     2,468,765,562      cpu_core/slots/                  #   11.656 G/sec
+     1,411,184,398      cpu_core/topdown-retiring/       #     57.4%
+Retiring
+         4,671,159      cpu_core/topdown-bad-spec/       #      0.2% Bad
+Speculation
+        92,222,378      cpu_core/topdown-fe-bound/       #      3.7%
+Frontend Bound
+       952,516,107      cpu_core/topdown-be-bound/       #     38.7%
+Backend Bound
+         2,696,347      cpu_core/topdown-heavy-ops/      #      0.1%
+Heavy Operations          #     57.2% Light Operations
+         4,460,659      cpu_core/topdown-br-mispredict/  #      0.2%
+Branch Mispredict         #      0.0% Machine Clears
+        19,538,486      cpu_core/topdown-fetch-lat/      #      0.8%
+Fetch Latency             #      3.0% Fetch Bandwidth
+        24,170,592      cpu_core/topdown-mem-bound/      #      1.0%
+Memory Bound              #     37.7% Core Bound
+
+       0.212598999 seconds time elapsed
+
+       0.212525000 seconds user
+       0.000000000 seconds sys
+
+
 > 
-> I don't share your optimism about this happening in the real world.
+>>
+>>> With that change I don't have a case that requires skippable evsels,
+>>> and so we can take that series with patch 6 over the v1 of that series
+>>> with this change.
+>>>
+>>
+>> I'm afraid this is not the only problem the commit 94b1a603fca7 ("perf
+>> stat: Add TopdownL1 metric as a default if present") in the
+>> perf-tools-next branch introduced.
+>>
+>> The topdown L2 in the perf stat default on SPR and big core of the ADL
+>> is still missed. I don't see a possible fix for this on the current
+>> perf-tools-next branch.
 > 
-> For one the issue that the github tarballs do not contain the submodule
-> and thus cannot be built was raised nearly two months ago, and while a
-> test snapshot that does include the submodule is released, a release
-> does not exist yet.
+> I thought in its current state the json metrics for TopdownL2 on SPR
+> have multiplexing. Given L1 is used to drill down to L2, it seems odd
+> to start on L2, but given L1 is used to compute the thresholds for L2,
+> this should be to have both L1 and L2 on these platforms. However,
+> that doesn't work as you don't want multiplexing.
 > 
-> For people to make use of the repository without a release cut they need
-> to replicate that submodule support - that is add support for submodules
-> in their development tooling. Otherwise you personally cutting a release
-> becomes a single point of failure.
+> This all seems backward to avoid potential multiplexing on branch miss
+> rate and IPC, just always having TopdownL1 seems cleanest with the
+> skippable evsels working around the permissions issue - as put forward
+> in this patch. Possibly adding L2 metrics on ADL/SPR, but only once
+> the multiplexing issue is resolved.
 > 
-> Because there is no API it's not really advisable to just apply patches
-> on top of the last release either. Applying patches may cause the main
-> project and the submodule to go out of sync, the submodule would not get
-> updated by applying a patch to the main project, and the other way
-> around.
-> 
-> Suppose a severe security bug that requires patching libbpf is found.
-> Now there is a number of tools that are each tied to one specific
-> version of libbpf, and cannot be upgraded to up-to-date fixed version
-> because that would break them. I would hope that never happens.
-> Nonetheless, libbpf is used to generate code, and if the code is
-> generated wrong worst case it can have severe security implications.
-> 
-> Thanks
-> 
-> Michal
+
+No, not just that issue. Based to what I tested these days, perf stat
+default has issues/regressions on most of the Intel platforms with the
+current perf-tools-next and perf/core branch of acme's repo.
+
+For the pre-ICL platforms:
+- The permission issue. (This patch tried to address.)
+- Unclean perf stat default. (This patch failed to address.)
+  Unnecessary multiplexing for cycles.
+  Display partial of the TopdownL1
+
+https://lore.kernel.org/lkml/d1fe801a-22d0-1f9b-b127-227b21635bd5@linux.intel.com/
+
+For SPR platforms
+- Topdown L2 metrics is missed, while it works with the current 6.3-rc7.
+
+For ADL/RPL platforms
+- Segmentation fault which I just found this morning.
+# ./perf stat true
+Segmentation fault (core dumped)
+
+
+After the test on a hybrid machine, I incline to revert the commit
+94b1a603fca7 ("perf stat: Add TopdownL1 metric as a default if present")
+and related patches for now.
+
+To clarify, I do not object a generic solution for the Topdown on
+different ARCHs. But the current generic solution aka TopdownL1 has all
+kinds of problems on most of Intel platforms. We should fix them first
+before applying to the mainline.
+
+Thanks,
+Kan
