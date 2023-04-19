@@ -2,225 +2,236 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C687BC77B78
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 08:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B659AC6FD18
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 09:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232070AbjDSIBa (ORCPT
+        id S232806AbjDSJWB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Apr 2023 04:01:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
+        Wed, 19 Apr 2023 05:22:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232035AbjDSIB2 (ORCPT
+        with ESMTP id S232819AbjDSJV7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Apr 2023 04:01:28 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E34E959DE;
-        Wed, 19 Apr 2023 01:01:25 -0700 (PDT)
-Received: from dggpeml500019.china.huawei.com (unknown [7.185.36.137])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Q1Y9P2rwDzsRT3;
-        Wed, 19 Apr 2023 15:59:53 +0800 (CST)
-Received: from [10.67.101.98] (10.67.101.98) by dggpeml500019.china.huawei.com
- (7.185.36.137) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 19 Apr
- 2023 16:01:23 +0800
-Message-ID: <4266f5da-13e5-7732-8ee2-5f231baee0a2@hisilicon.com>
-Date:   Wed, 19 Apr 2023 16:01:23 +0800
+        Wed, 19 Apr 2023 05:21:59 -0400
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E6827EF5
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 02:21:58 -0700 (PDT)
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-3f17fdb520dso3826375e9.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 02:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1681896116; x=1684488116;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wAmu28kxLfR9NTfen8lHbOqBR0jDTxdhWjN1lCSkxww=;
+        b=qWvcZD73Z6cOha96J3xLud8w5LQTe6iScTpVZFAPXvGLo0CnNN2dehEAXwaBIO3eok
+         XIc6PcDg9XXobUFHr9efZeKcYdlrg8srbqjND0jGsJlJAZ4dTtcIVFXTFuhz7AIBQvEg
+         ZZVGkOudvVLfFTdXxb2Jd9XiDTdVZ5nVIteGKUuUYdpCgCNj8LS8NISEpRcnoW47g8Kr
+         QCLnR0ufv7AaHwPv8mIHoKK8U+FeW68U43gohfAdwa905Q+NgPfEUn9v8z4Rpoc2GeZl
+         VY8USDNsGy2k+wd7tEhTYxE08TvDrwrrIXfwlmNRDIG8cp5hWe1J/AaFMuAToObpTndD
+         b6IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681896116; x=1684488116;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wAmu28kxLfR9NTfen8lHbOqBR0jDTxdhWjN1lCSkxww=;
+        b=MvWv3L/g4cVTIjCx/TXRBhmT6C8t0g5D1GdQItLBFNLM5UGBi7fDy/sseBrn/gWihE
+         1ncx23NzY5Q1PsMbFcaICNeTh59fCuQ7K3QmzKimVgVVbXaSkEDW353JFmZkb2MRsoU6
+         B/gT79pKM+YKwtMISgnMzJKm/JRz2i82/Pblphz5RKh29tzBuEFftrPyWqG1UpESwG5Z
+         dXTwIB5dTQckZO5eUJWRVyPpThqi65KmfPRc/5nmMhoPiZiA60WI9MXJl6UQZbvLFDkl
+         JyOkYDSP9OP8cVDIxkyqJPVX/rwwrJgymoZ6hv8o+8znf5NIwen6y8lKwcngovD+WgeP
+         chUw==
+X-Gm-Message-State: AAQBX9eMW2sOv+e+Yui7sfJSMWGHOmPY/qd1Q+t0DIvsmxedxKNHdv5y
+        1xy+UHbejnQO1IrCL/MGkpD1XzHj9toeR/GWK5+zOQ==
+X-Google-Smtp-Source: AKy350b9MkaNChMF/AjQaCfRI1fZFovklEGmb+podkO111Slr+0lmRQslEdedi7oC6DvmLa1dCn56Gj7l/AUZ4rU7zQ=
+X-Received: by 2002:a5d:4811:0:b0:2f8:2d4:74ef with SMTP id
+ l17-20020a5d4811000000b002f802d474efmr4221973wrq.43.1681896116610; Wed, 19
+ Apr 2023 02:21:56 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.2
-Subject: Re: [RFC PATCH v1 0/4] HiSilicon Performance Monitor Control Unit
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <john.g.garry@oracle.com>, <james.clark@arm.com>,
-        <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <corbet@lwn.net>, <zhangshaokun@hisilicon.com>,
-        <shenyang39@huawei.com>, <hejunhao3@huawei.com>,
-        <yangyicong@hisilicon.com>, <prime.zeng@huawei.com>,
-        <suntao25@huawei.com>, <jiazhao4@hisilicon.com>,
-        <linuxarm@huawei.com>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
+References: <20230413161725.195417-1-alexghiti@rivosinc.com>
+ <CAOnJCU+72PV1=o1c_TpogkmBT36278BneVWEMr1=tqX0CZi+ag@mail.gmail.com>
+ <aadca595b4a24e36932ba41e61f4e263@AcuMS.aculab.com> <CAOnJCUJ7mY+fh9VqE4dRntnVAEAc26=NnOCPUqkXk6ky__cUZQ@mail.gmail.com>
+ <CAP-5=fUYJEecmhQVuvbM4ZoDP_Hj=2RKOgR4cKepU072Uy3xyw@mail.gmail.com> <CAOnJCULJfSN79MzAwhCrbVzG1rYyrPB3OraFmoZFBxuRCwq01w@mail.gmail.com>
+In-Reply-To: <CAOnJCULJfSN79MzAwhCrbVzG1rYyrPB3OraFmoZFBxuRCwq01w@mail.gmail.com>
+From:   Alexandre Ghiti <alexghiti@rivosinc.com>
+Date:   Wed, 19 Apr 2023 11:21:45 +0200
+Message-ID: <CAHVXubjhORBEDok_Zhq5p_Yv4Ty4Hct84dWJZXzo48+40N=CGg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] riscv: Allow userspace to directly access perf counters
+To:     Atish Patra <atishp@atishpatra.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        David Laight <David.Laight@aculab.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, Rob Herring <robh@kernel.org>
-References: <20230206065146.645505-1-zhanjie9@hisilicon.com>
- <75a1b477-5325-bec9-5750-b09bf0e5dfb0@hisilicon.com>
- <20230317131131.00005817@Huawei.com>
-From:   Jie Zhan <zhanjie9@hisilicon.com>
-In-Reply-To: <20230317131131.00005817@Huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.101.98]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500019.china.huawei.com (7.185.36.137)
+        paranlee <p4ranlee@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Ian,
 
-
-On 17/03/2023 21:11, Jonathan Cameron wrote:
-> On Mon, 27 Feb 2023 16:49:46 +0800
-> Jie Zhan <zhanjie9@hisilicon.com> wrote:
+On Tue, Apr 18, 2023 at 10:30=E2=80=AFPM Atish Patra <atishp@atishpatra.org=
+> wrote:
 >
->> Please can anyone have a look at this PMCU patchset and provide some
->> comments?
->>
->> It is much related to the ARM PMU.
->>
->> We are looking forward to the feedback.
->>
->> Any relevant comments/questions, with respect to software or hardware
->> design, use cases, coding, are welcome.
->>
->> Kind regards,
->>
->> Jie
->>
->>
->> On 06/02/2023 14:51, Jie Zhan wrote:
->>> HiSilicon Performance Monitor Control Unit (PMCU) is a device that offloads
->>> PMU accesses from CPUs, handling the configuration, event switching, and
->>> counter reading of core PMUs on Kunpeng SoC. It facilitates fine-grained
->>> and multi-PMU-event CPU profiling, in which scenario the current 'perf'
->>> scheme may lose events or drop sampling frequency. With PMCU, users can
->>> reliably obtain the data of up to 240 PMU events with the sample interval
->>> of events down to 1ms, while the software overhead of accessing PMUs, as
->>> well as its impact on target workloads, is reduced.
->>>
->>> This patchset contains the documentation, driver, and user perf tool
->>> support to enable using PMCU with the 'perf_event' framework.
->>>
->>> Here are two key questions requested for comments:
->>>
->>> - How do we make it compatible with arm_pmu drivers?
->>>
->>>     Hardware-wise, PMCU uses the existing core PMUs, so PMUs can be accessed
->>>     from CPU and PMCU simultaneously. The current hardware can't guarantee
->>>     mutual exclusive accesses. Hence, scheduling arm_pmu and PMCU events at
->>>     the same time may mess up the operation of PMUs, delivering incorrect
->>>     data for both events, e.g. unexpected events or sample periods.
->>>     Software-wise, we probably need to prevent the two types of events from
->>>     running at the same time, but currently there isn't a clear solution.
-Hi Jonathan,
-
-Sorry for a late reply on this, but I have thought a bit more on this 
-issue recently.
-> I've been thinking about this a bit and don't have a good answer yet.
+> On Tue, Apr 18, 2023 at 11:46=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > On Tue, Apr 18, 2023 at 9:43=E2=80=AFAM Atish Patra <atishp@atishpatra.=
+org> wrote:
+> > >
+> > > On Fri, Apr 14, 2023 at 2:40=E2=80=AFAM David Laight <David.Laight@ac=
+ulab.com> wrote:
+> > > >
+> > > > From: Atish Patra
+> > > > > Sent: 13 April 2023 20:18
+> > > > >
+> > > > > On Thu, Apr 13, 2023 at 9:47=E2=80=AFPM Alexandre Ghiti <alexghit=
+i@rivosinc.com> wrote:
+> > > > > >
+> > > > > > riscv used to allow direct access to cycle/time/instret counter=
+s,
+> > > > > > bypassing the perf framework, this patchset intends to allow th=
+e user to
+> > > > > > mmap any counter when accessed through perf. But we can't break=
+ the
+> > > > > > existing behaviour so we introduce a sysctl perf_user_access li=
+ke arm64
+> > > > > > does, which defaults to the legacy mode described above.
+> > > > > >
+> > > > >
+> > > > > It would be good provide additional direction for user space pack=
+ages:
+> > > > >
+> > > > > The legacy behavior is supported for now in order to avoid breaki=
+ng
+> > > > > existing software.
+> > > > > However, reading counters directly without perf interaction may
+> > > > > provide incorrect values which
+> > > > > the userspace software must avoid. We are hoping that the user sp=
+ace
+> > > > > packages which
+> > > > > read the cycle/instret directly, will move to the proper interfac=
+e
+> > > > > eventually if they actually need it.
+> > > > > Most of the users are supposed to read "time" instead of "cycle" =
+if
+> > > > > they intend to read timestamps.
+> > > >
+> > > > If you are trying to measure the performance of short code
+> > > > fragments then you need pretty much raw access directly to
+> > > > the cycle/clock count register.
+> > > >
+> > > > I've done this on x86 to compare the actual cycle times
+> > > > of different implementations of the IP checksum loop
+> > > > (and compare them to the theoretical limit).
+> > > > The perf framework just added far too much latency,
+> > > > only directly reading the cpu registers gave anything
+> > > > like reliable (and consistent) answers.
+> > > >
+> > >
+> > > This series allows direct access to the counters once configured
+> > > through the perf.
+> > > Earlier the cycle/instret counters are directly exposed to the
+> > > userspace without kernel/perf frameworking knowing
+> > > when/which user space application is reading it. That has security im=
+plications.
+> > >
+> > > With this series applied, the user space application just needs to
+> > > configure the event (cycle/instret) through perf syscall.
+> > > Once configured, the userspace application can find out the counter
+> > > information from the mmap & directly
+> > > read the counter. There is no latency while reading the counters.
+> > >
+> > > This mechanism allows stop/clear the counters when the requesting tas=
+k
+> > > is not running. It also takes care of context switching
+> > > which may result in invalid values as you mentioned below. This is
+> > > nothing new and all other arch (x86, ARM64) allow user space
+> > > counter read through the same mechanism.
+> > >
+> > > Here is the relevant upstream discussion:
+> > > https://lore.kernel.org/lkml/Y7wLa7I2hlz3rKw%2F@hirez.programming.kic=
+ks-ass.net/T/
+> > >
+> > > ARM64:
+> > > https://docs.kernel.org/arm64/perf.html?highlight=3Dperf_user_access#=
+perf-userspace-pmu-hardware-counter-access
+> > >
+> > > example usage in x86:
+> > > https://github.com/andikleen/pmu-tools/blob/master/jevents/rdpmc.c
+> >
+> > The canonical implementation of this should be:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/tools/lib/perf/mmap.c#n400
 >
-> So some thoughts that might get some discussion going (some are here
-> mostly to be shot down ;)
+> Thanks for sharing the libperf implementation.
 >
-> 1. I suspect adding a hook into the specific pmu driver to reserve a counter is going
->     to be controversial for this usecase.  But maybe there is a more generic
->     way...  There are lock up detectors that use PMU counters and ensure the counters
->     aren't also used for other purposes and that leads me to wonder if you can use
-> https://elixir.bootlin.com/linux/latest/source/kernel/events/core.c#L12700
-> perf_event_create_kernel_counter()
-> to do the same as opening a counter from userspace but then not use it.
-> I have no idea if this will work though or if enabling the event would be necessary
-> to prevent it being used elsewhere.
-KVM is actually doing a similar thing. KVM inserts a call in 
-armpmu_register() to save
-a reference to struct arm_pmu, so as to get some information of arm_pmu, 
-e.g. its pmu
-type. With the pmu type, it can issue arm_pmu events through 
-perf_event_create_kernel_counter().
-Now we can make a general interface of this (supposed to be read-only), 
-enabling other
-kernel code to get the data of arm_pmu, not just for kvm.
-
-In addition, PMCU needs to occupy certain counters, while the arm_pmu 
-driver currently
-gets the first free counter it finds in the counter bitmap (see 
-armv8pmu_get_event_idx()).
-Thus, we may have to add a mechanism to optionally specify a counter 
-index that an event
-wants to use. Adding a config field and adapting 
-armv8pmu_get_event_idx() should work.
-
-A more tricky work would be preventing the "occupying" events from being 
-scheduled out.
-I don't think this is a friendly action, and the perf_event framework 
-doesn't seem to
-support so (even if we add the "pinned" attribute, the event would also 
-be switched out
-when there comes another "pinned" event). However, any "occupying" 
-events being scheduled
-out should cause PMCU to stop, and I think this would undermine the 
-advantage of PMCU.
-> 2. It might be possible to reuse any of the infrastructure that exists
->     for userspace PMU counter access or maybe Rob Herring (+CC) has a suggestion based on
->     his work on that feature.
+> > which is updated in these patches but the tests are not:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree=
+/tools/perf/tests/mmap-basic.c#n287
+> > Which appears to be an oversight. The tests display some differences
 >
-> 3. It's not nice, but maybe could enforce this constraint just in userspace?
->     We'd have to make sure that both drivers didn't do anything beyond not working
->     correctly if the other driver is messing with the hardware.
-I actually think this is fine? So far, we haven't identified or found 
-any problem from
-running PMCU and ARM_PMU simultaneously beyond getting wrong readings. 
-PMCU is designed
-for system administrative use only. PMCU can also use a subset of PMU 
-counters with higher
-indices, and the reset of counters with lower indices can still be 
-exposed to EL0 or EL1.
-Thus, this approach should also work, providing that: a) EL0 or EL1 can 
-only access a subset
-of counters with the lower indices, and b) system administrative 
-programs don't use ARM_PMU
-and PMCU at the same time, or don't do anything harmful when getting 
-abnormal PMU readings.
+> Yes. It's an oversight. We should make sure that perf mmap tests pass
+> for RISC-V as well.
+
+Yes, that's an oversight, I had a local test adapted from this one but
+forgot to update it afterwards, I'll do that in the next version.
+
+Thanks for your quick feedbacks and sorry for being late,
+
+Alex
+
+
 >
-> 4. We can't do the nasty trick of providing a second driver that binds to the
->     PMU hardware to prevent it being used because I think the main arm PMU
->     driver has suppress_bind_attrs = true.  Maybe we can make remove work?
->     (original patch for this in 2018 added that line because of a crash on remove
->      - not sure anyone looked at fixing the crash).
-We still prefer to keep at least part of ARM PMU counters in service 
-while running PMCU
-in some scenarios. Unbinding the ARM PMU driver would go against that.
-
-Thanks!
-Jie Zhan
-
->>> - Currently we reply on a sysfs file for users to input event numbers. Is
->>>     there a better way to pass many events?
->>>
->>>     The perf framework only allows three 64-bit config fields for custom PMU
->>>     configs. Obviously, this can't satisfy our need for passing many events
->>>     at a time. As an event number is 16-bit wide, the config fields can only
->>>     take up to 12 events at a time, or up to 192 events even if we do a
->>>     bitmap of events (and there are more than 192 available event numbers).
->>>     Hence, the current design takes an array of event numbers from a sysfs
->>>     file before starting profiling. However, this may go against the common
->>>     way to schedule perf events through perf commands.
->>>
->>> Jie Zhan (4):
->>>     docs: perf: Add documentation for HiSilicon PMCU
->>>     drivers/perf: hisi: Add driver support for HiSilicon PMCU
->>>     perf tool: Add HiSilicon PMCU data recording support
->>>     perf tool: Add HiSilicon PMCU data decoding support
->>>
->>>    Documentation/admin-guide/perf/hisi-pmcu.rst |  183 +++
->>>    Documentation/admin-guide/perf/index.rst     |    1 +
->>>    drivers/perf/hisilicon/Kconfig               |   15 +
->>>    drivers/perf/hisilicon/Makefile              |    1 +
->>>    drivers/perf/hisilicon/hisi_pmcu.c           | 1096 ++++++++++++++++++
->>>    tools/perf/arch/arm/util/auxtrace.c          |   61 +
->>>    tools/perf/arch/arm64/util/Build             |    2 +-
->>>    tools/perf/arch/arm64/util/hisi-pmcu.c       |  145 +++
->>>    tools/perf/util/Build                        |    1 +
->>>    tools/perf/util/auxtrace.c                   |    4 +
->>>    tools/perf/util/auxtrace.h                   |    1 +
->>>    tools/perf/util/hisi-pmcu.c                  |  305 +++++
->>>    tools/perf/util/hisi-pmcu.h                  |   19 +
->>>    13 files changed, 1833 insertions(+), 1 deletion(-)
->>>    create mode 100644 Documentation/admin-guide/perf/hisi-pmcu.rst
->>>    create mode 100644 drivers/perf/hisilicon/hisi_pmcu.c
->>>    create mode 100644 tools/perf/arch/arm64/util/hisi-pmcu.c
->>>    create mode 100644 tools/perf/util/hisi-pmcu.c
->>>    create mode 100644 tools/perf/util/hisi-pmcu.h
->>>
->>>
->>> base-commit: 830b3c68c1fb1e9176028d02ef86f3cf76aa2476
-
+>
+> > between x86 and aarch64 that have assumed userspace hardware counter
+> > access, and everything else that it is assumed don't.
+> >
+> > Thanks,
+> > Ian
+> >
+> > > > Clearly process switches (especially cpu migrations) cause
+> > > > problems, but they are obviously invalid values and can
+> > > > be ignored.
+> > > >
+> > > > So while a lot of uses may be 'happy' with the values the
+> > > > perf framework gives, sometimes you do need to directly
+> > > > read the relevant registers.
+> > > >
+> > > >         David
+> > > >
+> > > > -
+> > > > Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keyne=
+s, MK1 1PT, UK
+> > > > Registration No: 1397386 (Wales)
+> > >
+> > >
+> > >
+> > > --
+> > > Regards,
+> > > Atish
+>
+>
+>
+> --
+> Regards,
+> Atish
