@@ -2,201 +2,155 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1705C77B73
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 10:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1335DC77B73
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 12:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232560AbjDSKzY (ORCPT
+        id S232987AbjDSMGX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Apr 2023 06:55:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56294 "EHLO
+        Wed, 19 Apr 2023 08:06:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232725AbjDSKzS (ORCPT
+        with ESMTP id S230141AbjDSMGW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Apr 2023 06:55:18 -0400
-Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2045.outbound.protection.outlook.com [40.107.249.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82EBD13C32;
-        Wed, 19 Apr 2023 03:54:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KklcQbJI6OUrxDuUbCkiQNP69sqKVuvMjPjRfDituPsP7kdKey5qvQekpVGWfpcJRDvFZu8ozIdyBUoh7BvjK2toe4vTx9Zw4dy3Y6WCp86CKFZdVwjrD3eNeNAfD4DQ0+A6Rno7X8yP2HPF8J6ODLCdkIzCVph4USvLqbuUDpLfa55A7iuvGsgt6Xv0jtJCKuutMyRhAwW4XDVxSRwTRdrvdM/yEa9twru2IZH/lNPZS/JrnXtS9KTJmTCOOaj4lUdSiBoaZJ13uclAc/yVBVPDvTPHUMtGY8Aocyr/2ig501B6Vnuw1ogiruQC9RvQRGvLOawMeGSwtZFD+HVK1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vaeXb3vdDKmXEKS+yDhiRxeTm06Q+y29UEBbsWxyffk=;
- b=kInIcsiuBwRVGr8oKy7sYwWN+z7ZnZRd/pO+VqDfrZ17Pqy2TT2bjkVS401uvbD7ySV8nERjq8SJAQSiWoIsVllHtHgRzJybHQ4l5B/G9ZnEt/tAehe6Hz0JhHneRsiq6U7MW41NCIo4BHEl1STCHKchsAITtIfBL5iIvIhBPRVwO0dmw9CIuOjIQS+6MiT34SXyLzhHiXgVoBPFo7BdLrafTk8Mf4SwIrkr/jofzBSV3dIAUHxHTtvWF+DXvpFP9AHej6HG+bu8MJAa1nbGVtbdnJV61q7T2YVn1WtxIb+U88ZV9ZoyYroqAdy96V7o2haL6ddkwmBPsKBgTEQokQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vaeXb3vdDKmXEKS+yDhiRxeTm06Q+y29UEBbsWxyffk=;
- b=z2CzmDglT1850DI7Kc92nipdq4RHAlqlXwTsN/ok65rS+Lb7x6R/qsrfju/odpFKqAC8gavUzCFBGZVGplL+27ZYszOKXDOAmO8C4XGvkuBij0D7QA8BN7d5xaYgSG0QISEGChpgNKhkWbUcUfGntD+oU6TyGQaxH8sd5GexcvFZ97kYLOwRN5k+ORd3kgA/96mcVvA0tB9u86Yt8EqZ5iLRNKSmu8lOjkJwRZ1JK92J1a/d5h1+ZBb7DzVwGJKw2plyBwZ/QaA2PYbstXoWfBq3p1Iw3cFzs7IeV6puJKQVGNmLGNhd3p4oJhgUSxyzw/IBGyT1gDKVg5ZTy/EqGQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from AS8PR04MB9510.eurprd04.prod.outlook.com (2603:10a6:20b:44a::11)
- by PAWPR04MB9911.eurprd04.prod.outlook.com (2603:10a6:102:38b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.45; Wed, 19 Apr
- 2023 10:54:56 +0000
-Received: from AS8PR04MB9510.eurprd04.prod.outlook.com
- ([fe80::e4c4:247e:4a08:7ed2]) by AS8PR04MB9510.eurprd04.prod.outlook.com
- ([fe80::e4c4:247e:4a08:7ed2%2]) with mapi id 15.20.6298.045; Wed, 19 Apr 2023
- 10:54:56 +0000
-Date:   Wed, 19 Apr 2023 18:54:40 +0800
-From:   Shung-Hsi Yu <shung-hsi.yu@suse.com>
-To:     Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andrii@kernel.org>
-Cc:     bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Miller <davem@davemloft.net>
-Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
-Message-ID: <ZD/IcBvVxtFtOhUC@syu-laptop.lan>
-References: <ZDfKBPXDQxH8HeX9@syu-laptop>
- <87leiw11yz.fsf@toke.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87leiw11yz.fsf@toke.dk>
-X-ClientProxiedBy: FR3P281CA0086.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:1f::13) To AS8PR04MB9510.eurprd04.prod.outlook.com
- (2603:10a6:20b:44a::11)
+        Wed, 19 Apr 2023 08:06:22 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 583F21991;
+        Wed, 19 Apr 2023 05:06:21 -0700 (PDT)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33JBmiVs034942;
+        Wed, 19 Apr 2023 12:05:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=XxQyWGNU20y3Wnv7oBYdxQVoyeJRqhv7cvwcPncLqqk=;
+ b=MaUkKBXx8iVhZnQfi2RDt8faEETMnMKAbEzNZO+lpYZA4Qzm/42cfcABcujSIwghRV0X
+ 3PeqNDRd4IaTppWUkLe9WhVR7DHaK67napzSWb0/fyAY5su8TJWCvhMrkWNBKYnZzWpL
+ nrZow2Y7r/vmn90Ku0+11UMeCHt4krQqymOUrwysBfKhQ3gB8XVNTfmR2AisCvruWOoC
+ HGrgnECisFQCMRlF+rKjlvt0AJiiXkbKhxoPOW9SAl/j9H94nYFHqgnk9sLjyUqIjTb9
+ M4kh5I4Iraa1TWc6fPCqKtgixwG8fAM688OISqzSFuM22pbbenILF8ksGHq+DRGoNVxP lg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q2apmt6hp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Apr 2023 12:05:38 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33JBoDWh003607;
+        Wed, 19 Apr 2023 12:05:37 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q2apmt6g9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Apr 2023 12:05:37 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33J0WAFx000870;
+        Wed, 19 Apr 2023 12:05:34 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3pykj6jqcr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Apr 2023 12:05:34 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33JC5V2D45941078
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Apr 2023 12:05:31 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4647620040;
+        Wed, 19 Apr 2023 12:05:31 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91F6F20043;
+        Wed, 19 Apr 2023 12:05:27 +0000 (GMT)
+Received: from [9.171.27.132] (unknown [9.171.27.132])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Apr 2023 12:05:27 +0000 (GMT)
+Message-ID: <ab586b59-7d62-2ea1-a617-ffbcf91f4037@linux.ibm.com>
+Date:   Wed, 19 Apr 2023 14:05:26 +0200
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB9510:EE_|PAWPR04MB9911:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7a87129f-b159-43b8-2832-08db40c482f2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ruVQuflHGZKAu9WeDKvTGoDexR2nmdaqzA4YFwWdlKWiZN5HnSgudQWP14EKe9Bl6NueiSNrPljCNvZBUP351/1lfiAIdYLayV0m4oneXslMth4OetIbc7Bs4A+q6LCqScD/NZzK+hP2BnDY1AVLp2X1ll2615jhJRJsTLRWy9QeVWSVuEvW2myh0XTxeqyDWb6PNR70uMfndPODAK5QmUxH7+zYlndKJyNDYPP22BX9OY4Z4NVavtfcTu+qhq9WcaROn53HtTZLOsvnMn8nYDSxzuAqh++gKP4p4HD5CQDCsuWvswwoJrKCscKGUzhFsdIE50lFABujzMsygANgyT1POuEOQRKkH2iu6AYyxwDP4n2yVzw/7av3HNRcnalf5o7vjd+4uQajrOjJ+ubzoAD3dw/YnFGKIjrNTi3mrOWiXw8q26axh3mZrdY1DcbdvW5Kog+OedzCnlFgh5jspu5L4r7PMYedwsRN7Tkg+gnGLR9Ty/COkSzA/1k3mY9ak29ASqvZp9+3Q9esxCVTg9mhGzTPEZCyJUPZYQL+OPQyS1Fw0ymhYAjWfrofNAQ1
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB9510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(346002)(136003)(366004)(396003)(376002)(451199021)(4326008)(110136005)(66946007)(54906003)(316002)(66476007)(66556008)(478600001)(6666004)(6486002)(8676002)(5660300002)(41300700001)(2906002)(186003)(36756003)(8936002)(7416002)(86362001)(6506007)(6512007)(38100700002)(26005)(9686003)(83380400001)(66574015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TjFLYkZWVEkrWFY1V0Y2cVAvZFB0UWxYbjQ2TnQ2dzdydEJobnNIanJwQmVk?=
- =?utf-8?B?NHNtL1QyS2wvclFRZVEwd3M5c3VKSTEwT2pkY3FTK2FyQndOZi9uRWZKdEsr?=
- =?utf-8?B?QmkrSzVDZmx3VVl5WTVUTUUvTE5nMGc2S0JSSWwvVjdkcVo4ZHFyMms1Z2xx?=
- =?utf-8?B?YlRyeml6Vkt3VzBPNFkwWjNxMXVDWEl4QWhERGo1aGNsS1pvUGo1dzBxcGVt?=
- =?utf-8?B?Z0F0dEVwTE1uOHAvRUcyTFJGd2VnZlJ5N3NVbWZiQVV4Qi9rZjkwTGMwYjAw?=
- =?utf-8?B?RXV2ZlZjOEs1bHdSK0dZak5yMVNxdTZDWlJkMTdlWllrVDMzL2tlNnBvNTNs?=
- =?utf-8?B?eGdEYlgxRVIwdlpFYU1OdGV1a2dHdkJic0VaeGxyM1NWQ1J1UFpwY1N5TXFR?=
- =?utf-8?B?UDhxTEFkUFJoblJBVnpkVFErTmFhaW9TMytYWUhYcWZndUtJM004Q1lMdmky?=
- =?utf-8?B?a3pZeWlMYlkxY0d6Ly84NnpyeGlKR2JzQUJrSUJmbzEzeCtieVdrZzZMUldN?=
- =?utf-8?B?ZWUrbyt4N2dEWmJlM2lXM2VJbWVoTW5LdW4zSkdiRzNMV3lrd1o2ZTM1bmRu?=
- =?utf-8?B?ZHg2emp0S3NUWkcveXlXUTMyN2hmaGY0UXVQUzZOVGF5S3NlZFJpZ3A2Tkhh?=
- =?utf-8?B?Ti9nRzNiTDNBUVVXVFV2dXdXV3dVVFhGWWVBMWZveUVvT2czR0xITWxLSitS?=
- =?utf-8?B?RFFGVUc5cU11YVc5ODA5M2ZaWXloeGJTTzJJN2ZaSTFIbVpkT2lmSVhmOGFR?=
- =?utf-8?B?MFovU3ZnOEhXRHVwc0xKbVdQU0NjYVYwRHNvM21CQXhROTI0d0ZDZHFuYWta?=
- =?utf-8?B?YVVtSXpDTG9DR1ZEdWMyLzk3SmhtVDNmb1RSY2NyanlUY1pMYStqVFNmclBU?=
- =?utf-8?B?RDlaTDJJUlpDUDR0V2duVnNSU2NaQS8yZ2x5SldLYWs1MGpKVmtvNlhiNW9C?=
- =?utf-8?B?dTY0aVNSRnJ6bmdOUWdLVDVoSXE2SkVybjR3QVp1SHBsYVR2MGYraXlDMTR3?=
- =?utf-8?B?T0ExNkV4ekJ1SWxPeHprMFpxU3JIaGE5ajVzZzd5clovemZsT01IQTdiVmhL?=
- =?utf-8?B?SjZTYzBidWt1Vjk0NGRtUDJGWXdicmZjQVJrOHlOdUsxRVgvMCt3NmhHSTZL?=
- =?utf-8?B?eGNXcGlGa2NoelRqczhMbXVaS1AxSWNVNmxNbk1VTW1iM0J4TmVvUC8wSmlD?=
- =?utf-8?B?ckxGOEFOYWxVNjl2ZVJDckxiMUpvY3Mvd3BLV3lIYnNuRXZBZlExNnVNNXRo?=
- =?utf-8?B?bzdHYWlwWDdXV2kzZHdncHFUdkIrV204R0R2UlVqdG9HNDZtSG1Nd2ZJb21k?=
- =?utf-8?B?aGNESlh3RkFFVXEyblBIcnE5UTFaU1lTU0hSZllqTkZxUWtOZlk3MUpaYzVU?=
- =?utf-8?B?VnZXYnVYLy9OWGdhTFlEa2dWd1E1NUppaHZKeHcvWnJvODJ4R3hKS3BYbmJ0?=
- =?utf-8?B?cnVRWmdkNDFwa2FBZUZzTkY5eFdmSmVyOE5sQ05rZFJ0ZUhRV0llRjJvblM3?=
- =?utf-8?B?Z1VVcmxOdnhZRVFyS0tqcVJ0TytlM1lGejNkenFucWdhMnZ6K3VXYlN5N1Ey?=
- =?utf-8?B?UWlnM1FOdHRrYkZjY3JvRXdUN0FoVkYrMUNKTHROM2wyZ0IwTzVGTGttZ2Rp?=
- =?utf-8?B?L2tONkJCZTlvd1ZUUjdjT3dlQWtuYlREVXYxSEY4UVI1YnJjN2RDdGxRd1Nw?=
- =?utf-8?B?cVJRZ0hCNWhCYisvZm45QnYyRzlnQ3F1U00rcW1MMmN5ZTVMalFHTkZwcUpn?=
- =?utf-8?B?Q1VJNlpCb0tnNU1EaExUdlc5M1hXbzRIaW50WGh6SzhDSUZUdWZGbXpDa05N?=
- =?utf-8?B?SUx2akZyMWNBODNKWFFxdWlZTmFLOXpacUZDVmxXbU9hZEtTdk44VU5UaDE0?=
- =?utf-8?B?K29HS2dSdk81MXh6RDVwSzBQK0thS202ODNDd1V0dDUzZ3A5ektrWXZYbkZX?=
- =?utf-8?B?S3laKzJNY3RNMkRpVmpJODNjYmN0RGw0Yk1ZWVZ0NUEzeFVQQmFNa09STXJR?=
- =?utf-8?B?K2tXa2Mwbzh6dHZNcjkvY3hMWXdTOHhsbHlsUW9NQW1zN1JDQjdlN1F6OWVa?=
- =?utf-8?B?emkxVzhENHBjdUdsa3Q2aHRyYVBhTzNrcVJvWmNkSDc4MFBmU0xEVndxaWtw?=
- =?utf-8?Q?syGTSHovgNKd+QA2HAYOd4Bj8?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a87129f-b159-43b8-2832-08db40c482f2
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB9510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2023 10:54:55.9945
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4N6US37hji4OqKjdQom6g4ynytt6eMicM4RWx0NH+LNFKLYq96uf2NoDgvNIh3mq7QhPM9grKJZZ6LNaHQtQiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9911
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 3/6] mm/gup: remove vmas parameter from
+ get_user_pages_remote()
+Content-Language: en-US
+To:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1681831798.git.lstoakes@gmail.com>
+ <7c6f1ae88320bf11d2f583178a3d9e653e06ac63.1681831798.git.lstoakes@gmail.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+In-Reply-To: <7c6f1ae88320bf11d2f583178a3d9e653e06ac63.1681831798.git.lstoakes@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: YoUBdd5kWLHDb-6WjYvIk2NpjLH1WX8c
+X-Proofpoint-GUID: aezbm9zbIzDKmcuHzP9oULlrIcksYyaJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-19_06,2023-04-18_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ suspectscore=0 priorityscore=1501 mlxlogscore=566 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 bulkscore=0 malwarescore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304190108
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Thanks for sharing! I though I'd expands on what you said to draw a clearer
-picture of the challenges.
-
-On Thu, Apr 13, 2023 at 01:00:20PM +0200, Toke Høiland-Jørgensen wrote:
-> Shung-Hsi Yu <shung-hsi.yu@suse.com> writes:
+On 4/18/23 17:49, Lorenzo Stoakes wrote:
+> The only instances of get_user_pages_remote() invocations which used the
+> vmas parameter were for a single page which can instead simply look up the
+> VMA directly. In particular:-
 > 
-> > A side note: if we want all userspace visible libbpf to have a coherent
-> > version, perf needs to use the shared libbpf library as well (either
-> > autodetected or forced with LIBBPF_DYNAMIC=1 like Fedora[4]). But having to
-> > backport patches to kernel source to keep up with userspace package (libbpf)
-> > changes could be a pain.
-
-Here some more context for completeness. Kernel source changes are published
-at a much slower pace than userspace. When an application in the kernel
-source (e.g. perf) depends on the userspace library, it's kind of like
-trying to catchup a car on a bike, which is doable, as evident by the
-plethora of userspace libraries perf already depends on. While I don't
-having experience maintaining perf, judging by tools/perf/Makefile.config
-that does not seem like an easy feat.
-
-For perf to use libbpf in kernel would mean that it's just depending on
-something that moves at the same pace.
-
-That said, maybe perf won't need additional backport to keep up with libbpf
-as long as we keep it within that same major version (and disable
-deprecation warning)? @Andrii
-
-Now that We've got pass libbpf 1.0 it seems like a good time to reconsider.
-
-> So basically, this here is the reason we're building libbpf from the
-> kernel tree for the RHEL package: If we use the github version we'd need
-> to juggle two different versions of libbpf, one for the in-kernel-tree
-> users (perf as you mention, but also the BPF selftests), and one for the
-> userspace packages. Also, having libbpf in the kernel tree means we can
-> just backport patches to it along with the BPF-related kernel patches
-> (we do quite extensive BPF backports for each RHEL version).
-
-> Finally, building from the kernel tree means we can use the existing
-> kernel-related procedures for any out of order hotfixes (since AFAIK none
-> of the github repositories have any concept of stable branches that
-> receive fixes).
-
-+1
-
-Got something similar in place as well and being able to stick with existing
-procedure is appealing. 
-
-> YMMV of course, but figured I'd share our reasoning. To be clear,
-> building from the kernel tree is not without its own pain points (mostly
-> related to how the build scripts are structured for our kernel builds).
-> We've discussed moving to the github version of libbpf multiple times,
-> but every time we've concluded that it would be more, not less, painful
-> than having the kernel tree be the single source of truth.
-
-We package maintainer are certainly quite hard to please :)
-
-Just having an individual package easy to work with is not enough, we want
-it to be easier for most packages before jumping on the bandwagon, which is
-why this email ended up talking about perf despite it started as a
-discussion on packaging libbpf and bpftool.
-
-I suppose the mileage depends on the build system & scripts in use and how
-much backporting is done; the more kernel backporting (along with more
-established processes in place), the more painful it'd be to move to the
-GitHub version. My gut feeling is that SLES do less backporting compared to
-RHEL when it comes to BPF, and that probably placed us closer to the middle
-ground.
-
-Thanks,
-Shung-Hsi
-
-> -Toke
+> - __update_ref_ctr() looked up the VMA but did nothing with it so we simply
+>    remove it.
 > 
+> - __access_remote_vm() was already using vma_lookup() when the original
+>    lookup failed so by doing the lookup directly this also de-duplicates the
+>    code.
+> 
+> We are able to perform these VMA operations as we already hold the
+> mmap_lock in order to be able to call get_user_pages_remote().
+> 
+> As part of this work we add get_user_page_vma_remote() which abstracts the
+> VMA lookup, error handling and decrementing the page reference count should
+> the VMA lookup fail.
+> 
+> This forms part of a broader set of patches intended to eliminate the vmas
+> parameter altogether.
+> 
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com> (for arm64)
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+> ---
+
+For the s390 part:
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+
