@@ -2,52 +2,52 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D9E2C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 22:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C7AC6FD18
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 22:58:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233702AbjDSW56 (ORCPT
+        id S233747AbjDSW6L (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Apr 2023 18:57:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58058 "EHLO
+        Wed, 19 Apr 2023 18:58:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233776AbjDSW5i (ORCPT
+        with ESMTP id S232731AbjDSW5s (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Apr 2023 18:57:38 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF7057A9F
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 15:57:22 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-63b60365f53so514402b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 15:57:22 -0700 (PDT)
+        Wed, 19 Apr 2023 18:57:48 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CA7493DD
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 15:57:25 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-52079a12451so232324a12.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 15:57:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1681945042; x=1684537042;
+        d=chromium.org; s=google; t=1681945044; x=1684537044;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HWZTrwd5TxmiYLg/mD/63PXcodsl+Y0F8uDPTGYpPFY=;
-        b=ENMXPNPKpUB8x1TeX9CInNTf6Pzm3ER8KeB8ofn5pxz8+lYuSyslgYS+81+WV7V/1A
-         LEf1UqVF5i1wcOYXFEEwNvpTG7LVOyK7V5Mhz7v0lcNNeXQSBJN/9y2kPBa/eges+Jb3
-         b6xm1J9kPVn558DdKvWhugxeLv8noIfLhyE0A=
+        bh=E4z5GDt+xM87DteGPLwbziaQRjegx46K8N8SblpggcI=;
+        b=lc6v/s63EfbX00zVBBvJow9kK2OWQHb1m041wnlXgjL4xvvZO/7aM1krXhOpZ+8FaO
+         S7q+1SLxn3DdIZc+V5hfAlV4WjCb55HFzJDRyln3Irp6M3XCvR3EpDqv602NSOH5HNEg
+         AHLZ0H0gG03A78NxoByf2kyaW6GKVrkQRI+dQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681945042; x=1684537042;
+        d=1e100.net; s=20221208; t=1681945044; x=1684537044;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HWZTrwd5TxmiYLg/mD/63PXcodsl+Y0F8uDPTGYpPFY=;
-        b=EzKNdh0VhLGofzGztmuL29btNPxd8sAZ1XU8ZyNm2JRpaKLY1W7vq8PzkQJ2DTrG4R
-         szHHA7UKxmsb9d8UHLtoIZWHEW2GLBkEJY/OMoX3a1sk05vTVt5uxcCUlNsqJ0dHMPXj
-         jmQsIXgYKb7eSuNIfZzFAnDQdygA470gotUXgFN3yGQ4GTk+aMIYb6CW8g4vbrQnA+oe
-         DdicB99Ytxs9VIEU/Fa+/Qsj/oGsdpELtrdyiFxyk14sgjMJxVpD4OS/MHFaiTC8Sf6h
-         34I60MIG7XY70kOY2Hk94i9GdL1FXQjStUDtedlbtusJDcODPVHiCj9z3/wfMZSiRb0L
-         YalA==
-X-Gm-Message-State: AAQBX9c9YrwBf3nHXFAoUDm+zEIONq7b2IQ4vZqKSDCCLCy8KbWeoSKl
-        ozztkIdEerHinZXQcxXXedi6W4Rbmh7ww6QrmE4=
-X-Google-Smtp-Source: AKy350bzal91TPSNwTZw0WiWqcU5p5zvcdk0BkVsNFuBNbks1jS5AwavXMPCBAcH6HwZUkYAxgIWew==
-X-Received: by 2002:a05:6a20:8b2f:b0:cc:5f27:d003 with SMTP id l47-20020a056a208b2f00b000cc5f27d003mr42212pzh.56.1681945041867;
-        Wed, 19 Apr 2023 15:57:21 -0700 (PDT)
+        bh=E4z5GDt+xM87DteGPLwbziaQRjegx46K8N8SblpggcI=;
+        b=Z3IYJg1C4vTPsie0Znvf54JAiHSfSzuMKWAZAQ5zK4w070AEM8Bo5HRhnzwQvWq9tb
+         SLemsrBA23AzRUd/QUxffoHMKxWtq8yR2hVystGb78zD8cHRS3/PYpxWlQxFUfp2lMlf
+         e10+gijtdomsDLYfmmo5ElQc9gY8E88iIN/YxQsnOARnI6W0O5q8Hw1rpmPVn9ioWcIm
+         yNvCyok4vkZIdID78SWIl5fJH0HkqQoMR00WzetUmSLVSf/E6AAFhxTdJ+rhGpr5ioXH
+         qY7v9aTeATHJkDCZPXZ52cNX2COM6Ox72EjTue0njf7AWGIpwC3Em/rK2tedS3yqEgR2
+         0tkQ==
+X-Gm-Message-State: AAQBX9fqILsryCZH6p7ZXgMcOjZmH2RVO82F34d1yNSeKLu2CFs+xgE0
+        X+oTO9VMpy84mmPo4QnM7FjTwA==
+X-Google-Smtp-Source: AKy350aIOHfPbowBDglSQr5Ur+c9Q9vdVJvKvaRSc+zSrfA52Pfz++ZHTr6h2HiJKmK6NXRBfzJ5NQ==
+X-Received: by 2002:a17:90a:5a82:b0:23f:83de:7e4a with SMTP id n2-20020a17090a5a8200b0023f83de7e4amr4268789pji.7.1681945044116;
+        Wed, 19 Apr 2023 15:57:24 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:8b1:fa03:670e:b784])
-        by smtp.gmail.com with ESMTPSA id h15-20020a17090aea8f00b00246ea338c96sm1847101pjz.53.2023.04.19.15.57.20
+        by smtp.gmail.com with ESMTPSA id h15-20020a17090aea8f00b00246ea338c96sm1847101pjz.53.2023.04.19.15.57.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Apr 2023 15:57:21 -0700 (PDT)
+        Wed, 19 Apr 2023 15:57:23 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
@@ -67,12 +67,11 @@ Cc:     ito-yuichi@fujitsu.com, kgdb-bugreport@lists.sourceforge.net,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-perf-users@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
         Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v8 09/10] arm64: kgdb: Roundup cpus using IPI as NMI
-Date:   Wed, 19 Apr 2023 15:56:03 -0700
-Message-ID: <20230419155341.v8.9.I2ef26d1b3bfbed2d10a281942b0da7d9854de05e@changeid>
+Subject: [PATCH v8 10/10] arm64: ipi_nmi: Fallback to a regular IPI if NMI isn't enabled
+Date:   Wed, 19 Apr 2023 15:56:04 -0700
+Message-ID: <20230419155341.v8.10.Ic3659997d6243139d0522fc3afcdfd88d7a5f030@changeid>
 X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
 In-Reply-To: <20230419225604.21204-1-dianders@chromium.org>
 References: <20230419225604.21204-1-dianders@chromium.org>
@@ -82,87 +81,94 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Sumit Garg <sumit.garg@linaro.org>
+The current ipi_nmi implementation relies on the arm64 pseudo-NMI
+support. This needs to be enabled in both the kernel config with
+CONFIG_ARM64_PSEUDO_NMI and on the kernel command line with
+"irqchip.gicv3_pseudo_nmi=1".
 
-arm64 platforms with GICv3 or later supports pseudo NMIs which can be
-leveraged to roundup CPUs which are stuck in hard lockup state with
-interrupts disabled that wouldn't be possible with a normal IPI.
+Let's add a fallback of using a regular IPI if the NMI isn't
+enabled. The fallback mechanism of using a regular IPI matches what
+arm32 does all the time since there is no NMI there.
 
-So instead switch to roundup CPUs using IPI turned as NMI. And in
-case a particular arm64 platform doesn't supports pseudo NMIs,
-it will switch back to default kgdb CPUs roundup mechanism.
+The reason for doing this is to make the trigger_all_cpu_backtrace()
+class of functions work. While those functions all return a bool
+indicating that the caller should try a fallback upon failure, an
+inspection of the callers shows that nearly nobody implements a
+fallback. It's better to at least provide something here.
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Tested-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
+I dunno what people think of this patch. If it's great, we could
+actually drop some of the patches out of this series since some of
+them are to account for the fact that we might not be able to register
+an "ipi_nmi". If it's awful, it could simply be dropped.
 
-(no changes since v1)
+Changes in v8:
+- "Fallback to a regular IPI if NMI isn't enabled" new for v8
 
- arch/arm64/kernel/ipi_nmi.c |  5 +++++
- arch/arm64/kernel/kgdb.c    | 18 ++++++++++++++++++
- 2 files changed, 23 insertions(+)
+ arch/arm64/kernel/ipi_nmi.c | 31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
 diff --git a/arch/arm64/kernel/ipi_nmi.c b/arch/arm64/kernel/ipi_nmi.c
-index c592e92b8cbf..2adaaf1519e5 100644
+index 2adaaf1519e5..02868752845c 100644
 --- a/arch/arm64/kernel/ipi_nmi.c
 +++ b/arch/arm64/kernel/ipi_nmi.c
-@@ -8,6 +8,7 @@
+@@ -16,6 +16,7 @@
  
- #include <linux/interrupt.h>
- #include <linux/irq.h>
-+#include <linux/kgdb.h>
- #include <linux/nmi.h>
- #include <linux/smp.h>
+ static struct irq_desc *ipi_nmi_desc __read_mostly;
+ static int ipi_nmi_id __read_mostly;
++static bool is_nmi;
  
-@@ -45,10 +46,14 @@ bool arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
- static irqreturn_t ipi_nmi_handler(int irq, void *data)
+ bool arm64_supports_nmi(void)
  {
- 	irqreturn_t ret = IRQ_NONE;
-+	unsigned int cpu = smp_processor_id();
+@@ -62,8 +63,12 @@ void dynamic_ipi_setup(void)
+ 	if (!ipi_nmi_desc)
+ 		return;
  
- 	if (nmi_cpu_backtrace(get_irq_regs()))
- 		ret = IRQ_HANDLED;
- 
-+	if (!kgdb_nmicallback(cpu, get_irq_regs()))
-+		ret = IRQ_HANDLED;
-+
- 	return ret;
- }
- 
-diff --git a/arch/arm64/kernel/kgdb.c b/arch/arm64/kernel/kgdb.c
-index cda9c1e9864f..2c85bc1df013 100644
---- a/arch/arm64/kernel/kgdb.c
-+++ b/arch/arm64/kernel/kgdb.c
-@@ -17,6 +17,7 @@
- 
- #include <asm/debug-monitors.h>
- #include <asm/insn.h>
-+#include <asm/nmi.h>
- #include <asm/patching.h>
- #include <asm/traps.h>
- 
-@@ -354,3 +355,20 @@ int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt)
- 	return aarch64_insn_write((void *)bpt->bpt_addr,
- 			*(u32 *)bpt->saved_instr);
- }
-+
-+void kgdb_roundup_cpus(void)
-+{
-+	struct cpumask mask;
-+
-+	if (!arm64_supports_nmi()) {
-+		kgdb_smp_call_nmi_hook();
-+		return;
+-	if (!prepare_percpu_nmi(ipi_nmi_id))
+-		enable_percpu_nmi(ipi_nmi_id, IRQ_TYPE_NONE);
++	if (is_nmi) {
++		if (!prepare_percpu_nmi(ipi_nmi_id))
++			enable_percpu_nmi(ipi_nmi_id, IRQ_TYPE_NONE);
++	} else {
++		enable_percpu_irq(ipi_nmi_id, IRQ_TYPE_NONE);
 +	}
+ }
+ 
+ void dynamic_ipi_teardown(void)
+@@ -71,14 +76,28 @@ void dynamic_ipi_teardown(void)
+ 	if (!ipi_nmi_desc)
+ 		return;
+ 
+-	disable_percpu_nmi(ipi_nmi_id);
+-	teardown_percpu_nmi(ipi_nmi_id);
++	if (is_nmi) {
++		disable_percpu_nmi(ipi_nmi_id);
++		teardown_percpu_nmi(ipi_nmi_id);
++	} else {
++		disable_percpu_irq(ipi_nmi_id);
++	}
+ }
+ 
+ void __init set_smp_dynamic_ipi(int ipi)
+ {
++	int err;
 +
-+	cpumask_copy(&mask, cpu_online_mask);
-+	cpumask_clear_cpu(raw_smp_processor_id(), &mask);
-+	if (cpumask_empty(&mask))
-+		return;
+ 	if (!request_percpu_nmi(ipi, ipi_nmi_handler, "IPI", &cpu_number)) {
+-		ipi_nmi_desc = irq_to_desc(ipi);
+-		ipi_nmi_id = ipi;
++		is_nmi = true;
++	} else {
++		err = request_percpu_irq(ipi, ipi_nmi_handler, "IPI", &cpu_number);
++		if (WARN_ON(err))
++			return;
 +
-+	arm64_send_nmi(&mask);
-+}
++		irq_set_status_flags(ipi, IRQ_HIDDEN);
+ 	}
++
++	ipi_nmi_desc = irq_to_desc(ipi);
++	ipi_nmi_id = ipi;
+ }
 -- 
 2.40.0.634.g4ca3ef3211-goog
 
