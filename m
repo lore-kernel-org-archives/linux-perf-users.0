@@ -2,105 +2,211 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373D8C6FD18
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 22:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2D9C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 22:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233683AbjDSW13 (ORCPT
+        id S232681AbjDSW5D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Apr 2023 18:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49088 "EHLO
+        Wed, 19 Apr 2023 18:57:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232047AbjDSW1F (ORCPT
+        with ESMTP id S232659AbjDSW5B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Apr 2023 18:27:05 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4771BCC19;
-        Wed, 19 Apr 2023 15:25:42 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 1FCE0219D8;
-        Wed, 19 Apr 2023 22:23:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1681943023; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vY8XN3Sn3K1YcDvAR1zsIPMfvzeTloMrq3UeYNL0QaE=;
-        b=W4RZg/5wedj4o/nehxu1JkvbBXwjUR1CQtUu+DigmwIBHJc4x1KAwp8WVeqFwpsMTjB9wK
-        xjh4KzW3dLI4MVyVZsKpUjxoMAtTkz6TT8yuuF3jYQ1ltg81qSh2zmij51XuTCiJ2Oyqvw
-        8aUfEclQ2AS4kRhDjtRdTwnWh8LpKK4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1681943023;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vY8XN3Sn3K1YcDvAR1zsIPMfvzeTloMrq3UeYNL0QaE=;
-        b=Ih4T4Lt0LjXvm5m12QXGbyk8agAG49M4S2b0KrSwIKidzJ7CpEqgDlrPyBnwvw38+2ChNU
-        7trsWXwVU6dURqAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AFD311390E;
-        Wed, 19 Apr 2023 22:23:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id uRZcIOtpQGSUUgAAMHmgww
-        (envelope-from <tonyj@suse.de>); Wed, 19 Apr 2023 22:23:39 +0000
-Date:   Wed, 19 Apr 2023 15:23:36 -0700
-From:   tonyj@suse.de
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+        Wed, 19 Apr 2023 18:57:01 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FBB11706
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 15:56:59 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1a68d61579bso4335045ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 15:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1681945019; x=1684537019;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EfHs6iQcu6f/xzGNIRNs/Y6zNI7wkCv1JLv9sFf5g1M=;
+        b=Hf8STPeTqcCEMBqR/MDrmp1HtnPk6GIH5PFNOTsUN7tPgWqWR1ZyBP8GwDsJkkLKG8
+         AYhZdFrgwCV8MqXtRmCQi31cmL6jiSjz3Nhdqbn+Ydb7KtggmVC0mWLgTkV8h5LrocTx
+         JMSiKPmPNqI9PaMzeCfkSLedwLBMwC/49yavs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681945019; x=1684537019;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EfHs6iQcu6f/xzGNIRNs/Y6zNI7wkCv1JLv9sFf5g1M=;
+        b=lEr4z6tA1mrtBFxn7V+DhhVwLzj5uqQExIQ3r7dRDWRB0EX+bH9Bw+mflIslU0Bx0S
+         7WMqwRt0hiqOPmxgLBi5Jl+prbQMeK9wR5cgVmPj2A5545hx3eSW3ebpNd2JvOidIHIq
+         bfZDU9gfI5XTht0ZTXLF4XiMZ++t1moltmkZatdeEQsbkvuZBbfTT4UPR1v0mINvmNSi
+         KaLYQMonUn7DOj5UNybsSuSglfcUm8jHSDz0bXhp5pBE5mu5ruFyo15bQOwZJvHb/Z4X
+         /3+qYRt1QbrftIv65+fa15r1qVE1KyOpu9I5H8WWalewfG/96TBc3eMzG50APSjy5VUF
+         RADg==
+X-Gm-Message-State: AAQBX9cHBgcz0a93WMoIYJ9CdacX6gK3JI5bkqC5NZ0bna2INa5ESG54
+        Oa6d+gAtJx5z5hSvdeLxpNn4iA==
+X-Google-Smtp-Source: AKy350ZiPT69ec5g7FHlxHkgLJsXu49t1r2PGDTeEGKpYVM7Qe0rm8s8+T+i58n9/utMvufCZU7NAA==
+X-Received: by 2002:a17:902:e74a:b0:1a6:46d7:77dc with SMTP id p10-20020a170902e74a00b001a646d777dcmr7987289plf.43.1681945018669;
+        Wed, 19 Apr 2023 15:56:58 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:8b1:fa03:670e:b784])
+        by smtp.gmail.com with ESMTPSA id h15-20020a17090aea8f00b00246ea338c96sm1847101pjz.53.2023.04.19.15.56.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Apr 2023 15:56:57 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     ito-yuichi@fujitsu.com, kgdb-bugreport@lists.sourceforge.net,
+        Chen-Yu Tsai <wens@csie.org>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
         linux-perf-users@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Michal Suchanek <msuchanek@suse.de>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        David Miller <davem@davemloft.net>
-Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
-Message-ID: <ZEBp6C9zqDnM1PfT@suse.de>
-References: <ZDfKBPXDQxH8HeX9@syu-laptop>
- <87leiw11yz.fsf@toke.dk>
- <ZD/IcBvVxtFtOhUC@syu-laptop.lan>
- <CAEf4BzbxfvR4Ji1q4wJCFHOxQgFzHr8t7TMK1VJj9sJ+a0srVQ@mail.gmail.com>
+        Douglas Anderson <dianders@chromium.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Ben Dooks <ben-linux@fluff.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jinyang He <hejinyang@loongson.cn>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Pierre Gondois <Pierre.Gondois@arm.com>,
+        Qing Zhang <zhangqing@loongson.cn>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
+        x86@kernel.org
+Subject: [PATCH v8 00/10] arm64: Add framework to turn an IPI as NMI
+Date:   Wed, 19 Apr 2023 15:55:54 -0700
+Message-ID: <20230419225604.21204-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzbxfvR4Ji1q4wJCFHOxQgFzHr8t7TMK1VJj9sJ+a0srVQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 19, 2023 at 12:42:39PM -0700, Andrii Nakryiko wrote:
+This is an attempt to resurrect Sumit's old patch series [1] that
+allowed us to use the arm64 pseudo-NMI to get backtraces of CPUs and
+also to round up CPUs in kdb/kgdb. The last post from Sumit that I
+could find was v7, so I called this series v8. I haven't copied all of
+his old changelongs here, but you can find them from the link.
 
-> I won't claim anything for perf, maybe Arnaldo can clarify, but I
-> suspect that perf is also meant to be relatively independent from
-> specific kernel and work on wide variety of kernels.
+Since v7, I have:
+* Addressed the small amount of feedback that was there for v7.
+* Rebased.
+* Added a new patch that prevents us from spamming the logs with idle
+  tasks.
+* Added an extra patch to gracefully fall back to regular IPIs if
+  pseudo-NMIs aren't there.
 
-Supposedly it is though I've never been able to convince myself to
-decouple (and ship the latest perf) for SLE. One reason is documented 
-userspace functionality that has no backing kernel support which for 
-an Enterprise distro opens us up to bug reports.
+Since there appear to be a few different patches series related to
+being able to use NMIs to get stack traces of crashed systems, let me
+try to organize them to the best of my understanding:
 
-For a while Vince was maintaining a page documenting breakage in the 
-perf_event ABI but last I checked it ended at V4.0.  Not sure if he 
-just stopped updating, or that's where breakage ended :)
+a) This series. On its own, a) will (among other things) enable stack
+   traces of all running processes with the soft lockup detector if
+   you've enabled the sysctl "kernel.softlockup_all_cpu_backtrace". On
+   its own, a) doesn't give a hard lockup detector.
 
-I know how Fedora maintains perf but I keep meaning to look at how
-RHEL maintains it.  As Michal said our code base is V5.14 for SLE15*
-and due to the frequent code-refactoring in perf, backporting perf
-userspace fixes for SLE is a real chore unless we agressively maintain
-forward porting ("forklifting").
+b) A different recently-posted series [2] that adds a hard lockup
+   detector based on perf. On its own, b) gives a stack crawl of the
+   locked up CPU but no stack crawls of other CPUs (even if they're
+   locked too). Together with a) + b) we get everything (full lockup
+   detect, full ability to get stack crawls).
 
-Tony
+c) The old Android "buddy" hard lockup detector [3] that I'm
+   considering trying to upstream. If b) lands then I believe c) would
+   be redundant (at least for arm64). c) on its own is really only
+   useful on arm64 for platforms that can print CPU_DBGPCSR somehow
+   (see [4]). a) + c) is roughly as good as a) + b).
+
+[1] https://lore.kernel.org/linux-arm-kernel/1604317487-14543-1-git-send-email-sumit.garg@linaro.org/
+[2] https://lore.kernel.org/linux-arm-kernel/20220903093415.15850-1-lecopzer.chen@mediatek.com/
+[3] https://issuetracker.google.com/172213097
+[4] https://issuetracker.google.com/172213129
+
+Changes in v8:
+- dynamic_ipi_setup() and dynamic_ipi_teardown() no longer take cpu param
+- dynamic_ipi_setup() and dynamic_ipi_teardown() no longer take cpu param
+- Add loongarch support, too
+- Removed "#ifdef CONFIG_SMP" since arm64 is always SMP
+- "Tag the arm64 idle functions as __cpuidle" new for v8
+- "Provide a stub kgdb_nmicallback() if !CONFIG_KGDB" new for v8
+- "Fallback to a regular IPI if NMI isn't enabled" new for v8
+
+Douglas Anderson (3):
+  arm64: idle: Tag the arm64 idle functions as __cpuidle
+  kgdb: Provide a stub kgdb_nmicallback() if !CONFIG_KGDB
+  arm64: ipi_nmi: Fallback to a regular IPI if NMI isn't enabled
+
+Sumit Garg (7):
+  arm64: Add framework to turn IPI as NMI
+  irqchip/gic-v3: Enable support for SGIs to act as NMIs
+  arm64: smp: Assign and setup an IPI as NMI
+  nmi: backtrace: Allow runtime arch specific override
+  arm64: ipi_nmi: Add support for NMI backtrace
+  kgdb: Expose default CPUs roundup fallback mechanism
+  arm64: kgdb: Roundup cpus using IPI as NMI
+
+ arch/arm/include/asm/irq.h       |   2 +-
+ arch/arm/kernel/smp.c            |   3 +-
+ arch/arm64/include/asm/irq.h     |   4 ++
+ arch/arm64/include/asm/nmi.h     |  17 +++++
+ arch/arm64/kernel/Makefile       |   2 +-
+ arch/arm64/kernel/idle.c         |   4 +-
+ arch/arm64/kernel/ipi_nmi.c      | 103 +++++++++++++++++++++++++++++++
+ arch/arm64/kernel/kgdb.c         |  18 ++++++
+ arch/arm64/kernel/smp.c          |   8 +++
+ arch/loongarch/include/asm/irq.h |   2 +-
+ arch/loongarch/kernel/process.c  |   3 +-
+ arch/mips/include/asm/irq.h      |   2 +-
+ arch/mips/kernel/process.c       |   3 +-
+ arch/powerpc/include/asm/nmi.h   |   2 +-
+ arch/powerpc/kernel/stacktrace.c |   3 +-
+ arch/sparc/include/asm/irq_64.h  |   2 +-
+ arch/sparc/kernel/process_64.c   |   4 +-
+ arch/x86/include/asm/irq.h       |   2 +-
+ arch/x86/kernel/apic/hw_nmi.c    |   3 +-
+ drivers/irqchip/irq-gic-v3.c     |  29 ++++++---
+ include/linux/kgdb.h             |  13 ++++
+ include/linux/nmi.h              |  12 ++--
+ kernel/debug/debug_core.c        |   8 ++-
+ 23 files changed, 217 insertions(+), 32 deletions(-)
+ create mode 100644 arch/arm64/include/asm/nmi.h
+ create mode 100644 arch/arm64/kernel/ipi_nmi.c
 
 -- 
-Tony Jones
-SUSE Kernel Performance Team
+2.40.0.634.g4ca3ef3211-goog
+
