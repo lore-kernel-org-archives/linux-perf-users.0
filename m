@@ -2,116 +2,188 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091A0C6FD18
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 19:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BF3C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 19:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbjDSTgr (ORCPT
+        id S229781AbjDSTmz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Apr 2023 15:36:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46530 "EHLO
+        Wed, 19 Apr 2023 15:42:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjDSTgp (ORCPT
+        with ESMTP id S231368AbjDSTmy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Apr 2023 15:36:45 -0400
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF774C25;
-        Wed, 19 Apr 2023 12:36:44 -0700 (PDT)
-Received: by mail-ot1-x335.google.com with SMTP id 46e09a7af769-6a606135408so155446a34.0;
-        Wed, 19 Apr 2023 12:36:44 -0700 (PDT)
+        Wed, 19 Apr 2023 15:42:54 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDDD71FC3;
+        Wed, 19 Apr 2023 12:42:52 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-94a35b0ec77so12188066b.3;
+        Wed, 19 Apr 2023 12:42:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681933003; x=1684525003;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TVCZIlNhtdCXAt4hoR3tnnBgtwHzJao5D1y0UvS0R0Q=;
-        b=GrYZqph7PqaNy/epNrxJAewS4RVu6uFuF/gL805TnO8xF9W3fkm6Gssax0fUCNeZq/
-         whNdIU4l8TJIiy7rHXeXtLIzAsG9u6v5Jn8/Su06LM/lP4bEwN2dw5a0AVIr6K+jc9Cu
-         /VjCV55I5JjHw3nTa27Ib+hsb9T3ZDrajAA1dHtpOFeNvfjznBxZDgoDVqLhhcbBusAd
-         2iHeQtnu9MKJvsX2KeRmRZAWQzChZUGr/5dtPZNu0bbfnY8+2ZUgO7kR9IIp6Tcjc1e5
-         1WHcodKdTa2l6fkCq4bAFHpKdA0ZAljVFwNA900jPU68IdcheREo7wZfqP7ECiyUjklM
-         BH1Q==
+        d=gmail.com; s=20221208; t=1681933371; x=1684525371;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KeCHwVewXxRQz7uBVuRx5dFaTKKHPE5z4kRpEwoyUeA=;
+        b=kk/1v5jVqjsWAepyn9pVnIwWRBdIiJdlkA2ya/l9RzSg/SWlDwo2y0uOmgKePRhHJ7
+         OF47aho92ag3t6DazNniWrHQfers9nshefUWWYWB8GoJWIs4tV/4o0yFCINQEFTU5tdw
+         H+gFuifSnduPsWDYbkrxJJu1vgF04JUveZ/+hL1VWR3tGM1FyHz7B4Oh1qNimAvmskG0
+         w/23MNzNcKXZDu+mDCtZXlMhaxtNEX9qTTNb0NKihPAc+jcrOQdFx1pV5YtQoBBfsh3S
+         uzmQ5jobvSpBtjmwlaGx1vcd36K1s4r0P3yhTuwTLD3dIHT24IXaILryCIpA/1GnZMOC
+         423w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681933003; x=1684525003;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TVCZIlNhtdCXAt4hoR3tnnBgtwHzJao5D1y0UvS0R0Q=;
-        b=Ts9bdSSDDCcKwCvVVZxavCcMakhftY2VoZXR2QcAWk5JhNoSerQMzcUZM5cybzebHY
-         JPmcCmO7DBWa7Z9VVD1DZpvboKycytlyB4mICjL6nBZvV5vfwfr2H7VZB898Pec7WOPV
-         2+Ur0PS7qCJfHR1sqA8yQSp5TEvgwqszOz0qFTQ3e/YqaC1w79nnIgoQQkxKgAf8B+wt
-         LLCcildBsXlmAN5wGS/9sH9YipOj5PgA5TdAVA9/adYAaPEuzUbsqF4wUx7NxMmwPZ4X
-         qYTDr+tHxz5BLTRA4c6niuVejvS6MaT57yQ7dYzVhWbYVp5w6oZQS02MYhH19/UnR4Df
-         VLfg==
-X-Gm-Message-State: AAQBX9d8VmIKGaqVZvgokggY8PSX5J2hWa+Da4dF9qZPqMfigSRprgAP
-        53Uz6M/1YPoYFBLDsYMDnutCjYNxOhw=
-X-Google-Smtp-Source: AKy350Y2v74z8xy4JM/OptdxSfm9Nk1VvXMee/J10OwXUF6B5zxsYYTnaJF7kunpRP2O02Xd77AylQ==
-X-Received: by 2002:a05:6830:1dab:b0:6a5:e673:1243 with SMTP id z11-20020a0568301dab00b006a5e6731243mr323743oti.31.1681933003649;
-        Wed, 19 Apr 2023 12:36:43 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([187.19.238.117])
-        by smtp.gmail.com with ESMTPSA id y6-20020a9d6346000000b006a17bbe32f8sm6971849otk.51.2023.04.19.12.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Apr 2023 12:36:43 -0700 (PDT)
-From:   arnaldo.melo@gmail.com
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4A05F403B5; Wed, 19 Apr 2023 16:36:40 -0300 (-03)
-Date:   Wed, 19 Apr 2023 16:36:40 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf probe: Add missing 0x prefix for addresses printed
- in hexadecimal
-Message-ID: <ZEBCyFu2GjTw6qOi@kernel.org>
+        d=1e100.net; s=20221208; t=1681933371; x=1684525371;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KeCHwVewXxRQz7uBVuRx5dFaTKKHPE5z4kRpEwoyUeA=;
+        b=TE/qGDpJkKSKksMYbfXHq7XLPnMCAL9UBRYm8ouGjcb9BybfBmDAEVp3VJ4jHfTa4J
+         foNpo5pAVUJT1xbm3JQgJhu/2KIq+68cEn1+lptwpCKGVdbXr2SzetX2qaRXISiYCsi3
+         TPhcBXyOud1CGZl6WsVIhr6OWmhKnncfzBI42LDgWEapVzRqAoLSFDGgw+6USgf7DFu5
+         YqaxPXkTwvTTPvbehPPZms2OoGrZN8pQXER8WWSss3g+5nc/ivTI7zWqSDcknT2uyyIm
+         uEYiOTCzT4qTcIaWB51EFlhcHxW02ssBXomiUTvRKZ8qbz0doO50hGXUBtVi+BPb6xC9
+         tA8w==
+X-Gm-Message-State: AAQBX9fHSsmEupVrDfsmpwlSUG+RT+bvKk3gnpHFwoU0E2FeOdgbwg8i
+        QXiUTsjMmobLVHDZY0uJTw+oTHarsj8gT8Cx618=
+X-Google-Smtp-Source: AKy350ZM9nb3arhvy1ZwfCGMamb4jTRoFRMWEwYpqDknKBtTgCnjs+7cSjv3SBzbavMqzughupbESt1jJfUT2Wj8XxE=
+X-Received: by 2002:aa7:c999:0:b0:506:77e5:fbb3 with SMTP id
+ c25-20020aa7c999000000b0050677e5fbb3mr6647622edt.35.1681933371182; Wed, 19
+ Apr 2023 12:42:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <ZDfKBPXDQxH8HeX9@syu-laptop> <87leiw11yz.fsf@toke.dk> <ZD/IcBvVxtFtOhUC@syu-laptop.lan>
+In-Reply-To: <ZD/IcBvVxtFtOhUC@syu-laptop.lan>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 19 Apr 2023 12:42:39 -0700
+Message-ID: <CAEf4BzbxfvR4Ji1q4wJCFHOxQgFzHr8t7TMK1VJj9sJ+a0srVQ@mail.gmail.com>
+Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
+To:     Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        David Miller <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Masami,
+On Wed, Apr 19, 2023 at 3:55=E2=80=AFAM Shung-Hsi Yu <shung-hsi.yu@suse.com=
+> wrote:
+>
+> Thanks for sharing! I though I'd expands on what you said to draw a clear=
+er
+> picture of the challenges.
+>
+> On Thu, Apr 13, 2023 at 01:00:20PM +0200, Toke H=C3=B8iland-J=C3=B8rgense=
+n wrote:
+> > Shung-Hsi Yu <shung-hsi.yu@suse.com> writes:
+> >
+> > > A side note: if we want all userspace visible libbpf to have a cohere=
+nt
+> > > version, perf needs to use the shared libbpf library as well (either
+> > > autodetected or forced with LIBBPF_DYNAMIC=3D1 like Fedora[4]). But h=
+aving to
+> > > backport patches to kernel source to keep up with userspace package (=
+libbpf)
+> > > changes could be a pain.
+>
+> Here some more context for completeness. Kernel source changes are publis=
+hed
+> at a much slower pace than userspace. When an application in the kernel
+> source (e.g. perf) depends on the userspace library, it's kind of like
+> trying to catchup a car on a bike, which is doable, as evident by the
+> plethora of userspace libraries perf already depends on. While I don't
+> having experience maintaining perf, judging by tools/perf/Makefile.config
+> that does not seem like an easy feat.
+>
+> For perf to use libbpf in kernel would mean that it's just depending on
+> something that moves at the same pace.
+>
+> That said, maybe perf won't need additional backport to keep up with libb=
+pf
+> as long as we keep it within that same major version (and disable
+> deprecation warning)? @Andrii
+>
+> Now that We've got pass libbpf 1.0 it seems like a good time to reconside=
+r.
 
-	I'm carrying this one in my tree, FYI.
+I'm not sure what the proposal is, but I'll delegate to Arnaldo.
 
-- Arnaldo
+>
+> > So basically, this here is the reason we're building libbpf from the
+> > kernel tree for the RHEL package: If we use the github version we'd nee=
+d
+> > to juggle two different versions of libbpf, one for the in-kernel-tree
+> > users (perf as you mention, but also the BPF selftests), and one for th=
+e
+> > userspace packages. Also, having libbpf in the kernel tree means we can
+> > just backport patches to it along with the BPF-related kernel patches
+> > (we do quite extensive BPF backports for each RHEL version).
+>
+> > Finally, building from the kernel tree means we can use the existing
+> > kernel-related procedures for any out of order hotfixes (since AFAIK no=
+ne
+> > of the github repositories have any concept of stable branches that
+> > receive fixes).
+>
+> +1
+>
+> Got something similar in place as well and being able to stick with exist=
+ing
+> procedure is appealing.
+>
+> > YMMV of course, but figured I'd share our reasoning. To be clear,
+> > building from the kernel tree is not without its own pain points (mostl=
+y
+> > related to how the build scripts are structured for our kernel builds).
+> > We've discussed moving to the github version of libbpf multiple times,
+> > but every time we've concluded that it would be more, not less, painful
+> > than having the kernel tree be the single source of truth.
+>
+> We package maintainer are certainly quite hard to please :)
+>
+> Just having an individual package easy to work with is not enough, we wan=
+t
+> it to be easier for most packages before jumping on the bandwagon, which =
+is
+> why this email ended up talking about perf despite it started as a
+> discussion on packaging libbpf and bpftool.
+>
+> I suppose the mileage depends on the build system & scripts in use and ho=
+w
+> much backporting is done; the more kernel backporting (along with more
+> established processes in place), the more painful it'd be to move to the
+> GitHub version. My gut feeling is that SLES do less backporting compared =
+to
+> RHEL when it comes to BPF, and that probably placed us closer to the midd=
+le
+> ground.
 
----
+Even though libbpf source is developed in kernel repo, it's not tied
+to specific kernel. So any kernel backports have no relevance to
+libbpf itself. It's yet another reason to switch to Github mirror.
+Github is merging libbpf-related fixes from both bpf and bpf-next
+trees during sync, and is meant to always be the latest and best
+version with all fixes included.
 
-To fix this confusing warning:
+I won't claim anything for perf, maybe Arnaldo can clarify, but I
+suspect that perf is also meant to be relatively independent from
+specific kernel and work on wide variety of kernels.
 
-  # perf probe -l
-  Failed to find debug information for address 798240
-    probe_main:prometheus_new_counter__return (on github.com/prometheus/client_golang/prometheus.NewCounter%return in /home/acme/git/prometheus-uprobes/main with counter)
-  #
+As for stable branches. For libbpf, we don't have it because we didn't
+need it yet. We did have bug fix patch releases that seem to be
+working out fine, though.
 
-As that 798240 is printed with PRIx64 but has no letters, better print
-the 0x prefix to disambiguate.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/lkml/
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/probe-finder.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 54b49ce85c9f2214..f171360b0ef4db06 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1729,7 +1729,7 @@ int debuginfo__find_probe_point(struct debuginfo *dbg, u64 addr,
- 		addr += baseaddr;
- 	/* Find cu die */
- 	if (!dwarf_addrdie(dbg->dbg, (Dwarf_Addr)addr, &cudie)) {
--		pr_warning("Failed to find debug information for address %" PRIx64 "\n",
-+		pr_warning("Failed to find debug information for address %#" PRIx64 "\n",
- 			   addr);
- 		ret = -EINVAL;
- 		goto end;
--- 
-2.39.2
-
+>
+> Thanks,
+> Shung-Hsi
+>
+> > -Toke
+> >
