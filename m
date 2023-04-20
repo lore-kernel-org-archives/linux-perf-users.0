@@ -2,298 +2,210 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1851DC77B73
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Apr 2023 13:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A43CEC77B73
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Apr 2023 14:47:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231200AbjDTNEF (ORCPT
+        id S232455AbjDTOrG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Apr 2023 09:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52344 "EHLO
+        Thu, 20 Apr 2023 10:47:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231205AbjDTNED (ORCPT
+        with ESMTP id S231607AbjDTOrF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Apr 2023 09:04:03 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5833B1701;
-        Thu, 20 Apr 2023 06:04:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681995841; x=1713531841;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rs9hGpL9hZ7PY6bMFzqPctc6xPuvDUhoDEmOgEq2GRg=;
-  b=FLwtsbClaUNC2F14tPHDmvvsy7cX+/I8R2zoeXqlq+kWS147KO/qItgg
-   ebp5OkVHZCcV6N6obv1hYlljrO9HyCdQlVzDCzlG13MBQmsxe40MsDEzN
-   ZhbKzFLKNOT2zpZ6p6mMfd7SVb7Ny1Pr5+vy5w4OBCMUFhmCFNqUFRi/x
-   3FCeYTxIjfLoEHS8ikLfSS9VTi9gXV7O72CYwCjgQ1Mw82EK09c8QssmE
-   5MQeOIoQxYaw921KuAW7JATFeUf5nu7ZY77CZms2PY/jiUEe40t8oucMz
-   9elfDzwWJiLOkt6o0raROJ7JGlg4xrmIg9ydquxw88ufRt1sayCZyVcUf
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="345733852"
-X-IronPort-AV: E=Sophos;i="5.99,212,1677571200"; 
-   d="scan'208";a="345733852"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 06:03:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="781232441"
-X-IronPort-AV: E=Sophos;i="5.99,212,1677571200"; 
-   d="scan'208";a="781232441"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Apr 2023 06:02:59 -0700
-Received: from [10.255.228.114] (kliang2-mobl1.ccr.corp.intel.com [10.255.228.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 6F591580BBE;
-        Thu, 20 Apr 2023 06:02:57 -0700 (PDT)
-Message-ID: <46508ba1-6bd5-a28e-5ae8-bc69a679b2c5@linux.intel.com>
-Date:   Thu, 20 Apr 2023 09:02:56 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2] perf stat: Introduce skippable evsels
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Yasin, Ahmad" <ahmad.yasin@intel.com>,
-        "Taylor, Perry" <perry.taylor@intel.com>,
-        "Alt, Samantha" <samantha.alt@intel.com>,
-        "Biggers, Caleb" <caleb.biggers@intel.com>,
-        "Wang, Weilin" <weilin.wang@intel.com>,
-        Edward <edward.baker@intel.com>,
+        Thu, 20 Apr 2023 10:47:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AD940EE
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Apr 2023 07:46:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1682001980;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UuarXWhrCLw27r1idqrDlI5FLRv5+VGgQS+BQN+kySE=;
+        b=XflsG2H3LtaDDIrBlrUnlrlqwt0KiKDMGqx7MXlTfsvGomH1hV1pd20wgqao+JUZ6hcNyZ
+        owSSxPGMQNM8GejlbS+Zw2lr8Ej3Ylfu5B3KuB4jCY9S/zXUNG0gBNm8ApdLeSyj757wOM
+        fvz16FnOugTEyCOFIYJHo/zD0TTHL60=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-357-KQOQxOIsNmq9e8U2aDkjgg-1; Thu, 20 Apr 2023 10:46:19 -0400
+X-MC-Unique: KQOQxOIsNmq9e8U2aDkjgg-1
+Received: by mail-ed1-f71.google.com with SMTP id a5-20020a509e85000000b0050504899d78so1651264edf.16
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Apr 2023 07:46:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682001978; x=1684593978;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UuarXWhrCLw27r1idqrDlI5FLRv5+VGgQS+BQN+kySE=;
+        b=c855ZbkQPL2c2f3AjgIvaHvmJVrMBnDvhpStCZ806ejkTAKUwDkW2VR8Wc4ncQ15CF
+         zidu0l9MD9co4YfpxDhXsGsLorzKuIhE7uQfWTqGxJn9985lgik6kLiNkKTJgKBFSzRR
+         uH58PrZkZeukZwPLs7oqV++cRhH+SbWL3CUokcvTtPq2JszPsLwySnacZws4tVQ7hBZg
+         9y612pROBNxmypSjwyqLZN6DOGNpEW75CFm7BmipZ4QlTfPjZmLFzZ25ki4Rf8HreF5Z
+         JfDennE8OP2FlLi/Zp5Qravw3B1JMW68tYRnMTrp3jquQuPhHNjN9m8U7dlFZR+JOOHi
+         YQDA==
+X-Gm-Message-State: AAQBX9frB9BGH5aN7rXaaAmmowABNMgD5re1QHZQ41snD0/5Rihr0OG7
+        5zBl0GFe9YFFKmsLAGiwudukLv1NMYKgDoR6PiXECBijpko63RoN57AdkyBQCAlDx/qVmI8w55S
+        mKnzi75glNdjX0FsFdftCRBqjnsgzj9U5qZIneS+I
+X-Received: by 2002:a17:906:111b:b0:94f:3b29:e0a5 with SMTP id h27-20020a170906111b00b0094f3b29e0a5mr1943157eja.20.1682001977144;
+        Thu, 20 Apr 2023 07:46:17 -0700 (PDT)
+X-Google-Smtp-Source: AKy350bVKyRQEQS1oQMnyp1eKSRd3tU543f3P9723XA6YozXKkR6Y2hnYcF7OayZptFCnUqdPKZ6IQ==
+X-Received: by 2002:a17:906:111b:b0:94f:3b29:e0a5 with SMTP id h27-20020a170906111b00b0094f3b29e0a5mr1943092eja.20.1682001976345;
+        Thu, 20 Apr 2023 07:46:16 -0700 (PDT)
+Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
+        by smtp.gmail.com with ESMTPSA id d20-20020a05640208d400b00504ecc4fa96sm815127edz.95.2023.04.20.07.46.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Apr 2023 07:46:15 -0700 (PDT)
+Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
+        id 23388AA8E17; Thu, 20 Apr 2023 16:46:15 +0200 (CEST)
+From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+        Quentin Monnet <quentin@isovalent.com>, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230414051922.3625666-1-irogers@google.com>
- <ce92dd1b-23f6-ea52-a47d-fccc24fa20ea@linux.intel.com>
- <CAP-5=fWRy4NEqhB6-b98+m7SV5=oyBOMVuOHwmvKZCJuXcsQEg@mail.gmail.com>
- <d1fe801a-22d0-1f9b-b127-227b21635bd5@linux.intel.com>
- <CAP-5=fXCmKAUn24r0YYHaO63mabZCXae-hAT2WCtk+YYmvS9xg@mail.gmail.com>
- <99150cb1-fe50-97cf-ad80-cceb9194eb9a@linux.intel.com>
- <CAP-5=fXZSACj=kGM5t3pBHkQ-W1i0eJayAQ77_ToEp4zXWzJnw@mail.gmail.com>
- <ea899096-0599-f2a0-04a3-d90a3aa7d45d@linux.intel.com>
- <CAP-5=fVVFjKgUGV8zVurd99BOhASQ9mMaZqOyw13PYLhZWpsOA@mail.gmail.com>
- <CAP-5=fW_JwabjEUqSLaJn+tuHXLoyRWqJVVCh_z1dhXJ6On=MQ@mail.gmail.com>
- <84b19053-2e9f-5251-6816-26d2475894c0@linux.intel.com>
- <CAP-5=fWJKmo4eLKe9+=3pKGe7g+xfA+YxOz7AOgqLfcRNzNaLw@mail.gmail.com>
- <201a2ad6-3fb4-4b2a-d8a4-34d924e680c3@linux.intel.com>
- <CAP-5=fVWN5=URg0Og7KW7f7L4LSw6D8ghOKjP7La=0c+MkXFCg@mail.gmail.com>
- <2b8768bf-de24-946f-62da-6ed171a5c324@linux.intel.com>
- <CAP-5=fU9WeBga_tQKi6QKX1-t=C1w5CoPc8Rn9myR=1CxeQuMg@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fU9WeBga_tQKi6QKX1-t=C1w5CoPc8Rn9myR=1CxeQuMg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        David Miller <davem@davemloft.net>,
+        Mahe Tardy <mahe.tardy@gmail.com>,
+        Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>
+Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
+In-Reply-To: <CAEf4BzY9Hr2M7dZXaTZCP4SRat+KpN42c89LG1Msn4PB+1O1YA@mail.gmail.com>
+References: <ZDfKBPXDQxH8HeX9@syu-laptop>
+ <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
+ <20230414095007.GF63923@kunlun.suse.cz>
+ <b933fad3-7759-00d4-94cb-f20dd363b794@isovalent.com>
+ <20230414161520.GJ63923@kunlun.suse.cz>
+ <CAEf4Bzaw6DBHn=S9zKCXTSh7jW8xL9K6bzi1Q-e8j93thi2hmg@mail.gmail.com>
+ <20230418112454.GA15906@kitsune.suse.cz>
+ <CAEf4BzZf50fX7T9k47u+9YQrMbSLxLeA1qWwrdWToCZkMhynjg@mail.gmail.com>
+ <20230418174132.GE15906@kitsune.suse.cz> <ZD/3Ll7UPucyOYkk@syu-laptop.lan>
+ <CAEf4BzZfGewUgYsNNqCgES5Y5-pqbSRDbhtKiuSC7=G_83tyig@mail.gmail.com>
+ <87zg73tvm1.fsf@toke.dk>
+ <CAEf4BzY9Hr2M7dZXaTZCP4SRat+KpN42c89LG1Msn4PB+1O1YA@mail.gmail.com>
+X-Clacks-Overhead: GNU Terry Pratchett
+Date:   Thu, 20 Apr 2023 16:46:15 +0200
+Message-ID: <878remtxvs.fsf@toke.dk>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
 
-
-On 2023-04-19 8:23 p.m., Ian Rogers wrote:
-> On Wed, Apr 19, 2023 at 11:57 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>> >> > > > > By switching up actual libbpf used to compile with bpftool, you are
+>> >> > > > > potentially introducing subtle problems that your users will be quite
+>> >> > > > > unhappy about, if they run into them. Let's work together to make it
+>> >> > > > > easier for you to package bpftool properly. We can't switch bpftool to
+>> >> > > > > reliably use system-wide libbpf (either static or shared, doesn't
+>> >> > > > > matter) because of dependency on internal functionality.
+>> >> > > > >
+>> >> > > > >
+>> >> > > > >   [0] https://github.com/libbpf/veristat/releases/tag/v0.1
+>> >> > > >
+>> >> > > > So how many copies of libbpf do I need for having a CO-RE toolchain?
+>> >> > >
+>> >> > > What do you mean by "CO-RE toolchain"? bpftool, veristat, retsnoop,
+>> >> > > etc are tools. The fact they are using statically linked libbpf
+>> >> > > through Git submodule is irrelevant to end users. You need one libbpf
+>> >> > > in the system (for those who link dynamically against libbpf), the
+>> >> > > rest are just tools.
+>> >> > >
+>> >> > > >
+>> >> > > > Will different tools have different view of the kernel because they each
+>> >> > > > use different private copy of libbpf with different features?
+>> >> > >
+>> >> > > That's up to tools, not libbpf. You are over pivoting on libbpf here.
+>> >> > > There is one view of the kernel, it depends on what features the
+>> >> > > kernel supports. If the tool requires some specific functionality of
+>> >> > > libbpf, it will update its Git submodule reference to get a version of
+>> >> > > libbpf that provides that feature. That's the point, an
+>> >> > > application/tool is in control of what kind of features it gets from
+>> >> > > libbpf.
+>> >>
+>> >> Since libbpf has a stable API & ABI, is it theoretically possible for
+>> >> bpftool, veristat, retsnoop, etc. all share the same version of libbpf?
+>> >
+>> > No, because libbpf is not just a set of APIs. Newer libbpf versions
+>> > support more BPF-side features, more kernel features, etc, etc. Libbpf
+>> > is not a typical user-space library, it is a BPF loader, and even if
+>> > user-visible API doesn't change, libbpf's support for various BPF-side
+>> > features is extended. Which is important for tools like bpftool,
+>> > retsnoop, veristat which rely on loading and working with BPF object
+>> > files.
 >>
->>
->> On 2023-04-19 12:51 p.m., Ian Rogers wrote:
->>>>>>> With that change I don't have a case that requires skippable evsels,
->>>>>>> and so we can take that series with patch 6 over the v1 of that series
->>>>>>> with this change.
->>>>>>>
->>>>>>
->>>>>> I'm afraid this is not the only problem the commit 94b1a603fca7 ("perf
->>>>>> stat: Add TopdownL1 metric as a default if present") in the
->>>>>> perf-tools-next branch introduced.
->>>>>>
->>>>>> The topdown L2 in the perf stat default on SPR and big core of the ADL
->>>>>> is still missed. I don't see a possible fix for this on the current
->>>>>> perf-tools-next branch.
->>>>>
->>>>> I thought in its current state the json metrics for TopdownL2 on SPR
->>>>> have multiplexing. Given L1 is used to drill down to L2, it seems odd
->>>>> to start on L2, but given L1 is used to compute the thresholds for L2,
->>>>> this should be to have both L1 and L2 on these platforms. However,
->>>>> that doesn't work as you don't want multiplexing.
->>>>>
->>>>> This all seems backward to avoid potential multiplexing on branch miss
->>>>> rate and IPC, just always having TopdownL1 seems cleanest with the
->>>>> skippable evsels working around the permissions issue - as put forward
->>>>> in this patch. Possibly adding L2 metrics on ADL/SPR, but only once
->>>>> the multiplexing issue is resolved.
->>>>>
->>>>
->>>> No, not just that issue. Based to what I tested these days, perf stat
->>>> default has issues/regressions on most of the Intel platforms with the
->>>> current perf-tools-next and perf/core branch of acme's repo.
->>>>
->>>> For the pre-ICL platforms:
->>>> - The permission issue. (This patch tried to address.)
->>>> - Unclean perf stat default. (This patch failed to address.)
->>>>   Unnecessary multiplexing for cycles.
->>>>   Display partial of the TopdownL1
->>>>
->>>> https://lore.kernel.org/lkml/d1fe801a-22d0-1f9b-b127-227b21635bd5@linux.intel.com/
->>>>
->>>> For SPR platforms
->>>> - Topdown L2 metrics is missed, while it works with the current 6.3-rc7.
->>>>
->>>> For ADL/RPL platforms
->>>> - Segmentation fault which I just found this morning.
->>>> # ./perf stat true
->>>> Segmentation fault (core dumped)
->>>
->>> This may also stem from the reference count checking work that Arnaldo
->>> is currently merging. It is hard to test hybrid because it uses
->>> non-generic code paths.
->>
->> There are two places which causes the Segmentation fault.
->> One place is the TopdownL1.
->>
->> After I disable the TopdownL1 and add !counter->name as below, there are
->> no errors for the ./perf stat true.
->>
->> (The below is just for test purpose.)
->> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->> index 7a641a67486d..8e12ed1141e0 100644
->> --- a/tools/perf/builtin-stat.c
->> +++ b/tools/perf/builtin-stat.c
->> @@ -1892,7 +1892,7 @@ static int add_default_attributes(void)
->>                  * Add TopdownL1 metrics if they exist. To minimize
->>                  * multiplexing, don't request threshold computation.
->>                  */
->> -               if (metricgroup__has_metric("TopdownL1")) {
->> +               if (0 && metricgroup__has_metric("TopdownL1")) {
-> 
-> So hybrid has something different that causes this. Can you provide
-> the information to solve?
+>> The converse of this is also true: if your system is upgraded to a new
+>> kernel version with new BPF features, the libbpf version should follow
+>> it, and all applications linked against it will automatically take
+>> advantage of any bugfixes regardless without having to wait for each
+>> application to be updated.
+>
+> No, if my application was not developed to take advantage of a new
+> kernel feature, newer libbpf will do nothing for me. If my application
+> wants to support that feature, I'll update my application and
+> correspondingly update libbpf embedded in it. If my application is
+> affected by some bug fix, I'll update libbpf even faster than distros
+> will get to it.
 
-Here is the backtrace.
+You may do that, but you're also someone who is following the
+development of libbpf closely and pay attention to when bugs appear. Not
+all applications developers have the same vigilance for all the
+libraries they rely on. Which is the reason distros generally take on
+the responsibility of ensuring their users receive timely library
+updates.
 
-#0  get_group_fd (thread=0, cpu_map_idx=<optimized out>,
-evsel=0x555556015af0) at util/evsel.c:1722
-#1  evsel__open_cpu (evsel=<optimized out>, cpus=<optimized out>,
-threads=<optimized out>,
-    start_cpu_map_idx=<optimized out>, end_cpu_map_idx=<optimized out>)
-at util/evsel.c:2105
-#2  0x000055555561dd9e in __run_perf_stat (run_idx=<optimized out>,
-argv=0x7fffffffe1d0, argc=1)
-    at builtin-stat.c:734
-#3  run_perf_stat (run_idx=<optimized out>, argv=0x7fffffffe1d0, argc=1)
-at builtin-stat.c:949
-#4  cmd_stat (argc=1, argv=0x7fffffffe1d0) at builtin-stat.c:2537
-#5  0x00005555556b56a0 in run_builtin (p=p@entry=0x555555f84450
-<commands+336>, argc=argc@entry=2,
-    argv=argv@entry=0x7fffffffe1d0) at perf.c:323
-#6  0x00005555555fe2d9 in handle_internal_command (argv=0x7fffffffe1d0,
-argc=2) at perf.c:377
-#7  run_argv (argv=<synthetic pointer>, argcp=<synthetic pointer>) at
-perf.c:421
-#8  main (argc=2, argv=0x7fffffffe1d0) at perf.c:537
+> I've heard all such arguments over the last few years. They are not
+> convincing and my own practical experience shows irrelevance of the
+> above argument.
 
-> 
->>                         struct evlist *metric_evlist = evlist__new();
->>                         struct evsel *metric_evsel;
->>
->> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
->> index 6b46bbb3d322..072fa56744b4 100644
->> --- a/tools/perf/util/stat-display.c
->> +++ b/tools/perf/util/stat-display.c
->> @@ -747,7 +747,7 @@ static void uniquify_event_name(struct evsel *counter)
->>         int ret = 0;
->>
->>         if (counter->uniquified_name || counter->use_config_name ||
->> -           !counter->pmu_name || !strncmp(counter->name, counter->pmu_name,
->> +           !counter->pmu_name || !counter->name ||
->> !strncmp(counter->name, counter->pmu_name,
->>                                            strlen(counter->pmu_name)))
->>                 return;
-> 
-> Is this a pre-existing hybrid bug? It is a real shame hybrid shows so
-> few common code paths. In general evsel__name should be preferred over
-> directly accessing name.
+I don't doubt your personal experience, I'm just objecting to you
+dismissing other points of view just because you haven't experienced
+them yourself.
 
+>> Libbpf is really no different from any other library here, and I really
+>> don't get why you keep insisting it's "special"...
+>
+> It's special in the sense that it provides two sets of APIs -- for
+> user-space (typical libraries) and BPF object files. Besides that, for
+> BPF-side it's not even a set of APIs (headers, helpers, etc), it also
+> provides some set of functionality that can improve or be extended
+> over time. E.g., libbpf used to not support non-inlined BPF
+> subprograms, and then it started supporting them. In terms of API/ABI
+> -- nothing changed. Yet the change is very important.
 
-I don't think so.
+Lots of libraries do that. File format libraries support new format
+features without changing their API, networking libraries support new
+protocol features, etc. So again, libbpf is not special in this
+respect.
 
-I haven't dig into the bug yet. But from the source code I can tell that
-the check is the same as the current 6.3-rc7.
+> Now, I build a tool that is using libbpf and some BPF functionality,
+> e.g., retsnoop. Libbpf just got SEC("ksyscall") support. Retsnoop
+> wants to take advantage of it. I just go and use SEC("ksyscall")
+> programs in .bpf.c files that are embedded inside retsnoop.
+> I don't have to *and don't want to* do feature detection of whether a
+> particular libbpf version that happens to be installed/packaged on the
+> system supports this version. I *know* it does, because I control it,
+> through a submodule. That's what I care about.
 
-For the current 6.3-rc7, perf stat true works.
-The perf stat -M TopdownL1 --metric-no-group can work as well.
+Right, so just require a minimum version of the library where the API
+you want to use is available. That is pretty standard and distros deal
+with this all the time. This is not an argument for static linking or
+vendoring...
 
-But with the current perf-tools-next branch, perf stat true gives a
-Segmentation fault.
+> Whether some distro insists on libbpf being shared across any
+> libbpf-using application or not is none of my concern. Libbpf is an
+> implementation detail of my application (retsnoop), it's not for the
+> packager to decide how I develop and structure my tool.
 
-The TopdownL1 doesn't work either.
+Right, well, you don't *have* to be cooperative with the wider
+ecosystem, of course. Just as packagers don't have to follow your
+recommendations if they have good reasons not to. I believe we've had
+this discussion before, and I don't think we're going to agree this time
+around either, so let's not waste any more virtual ink on rehashing it :)
 
-# ./perf stat -M TopdownL1 --metric-no-group
-Error:
-The sys_perf_event_open() syscall returned with 22 (Invalid argument)
-for event (topdown-retiring).
-/bin/dmesg | grep -i perf may provide additional information.
+-Toke
 
-
-
-> 
->>>
->>>> After the test on a hybrid machine, I incline to revert the commit
->>>> 94b1a603fca7 ("perf stat: Add TopdownL1 metric as a default if present")
->>>> and related patches for now.
->>>>
->>>> To clarify, I do not object a generic solution for the Topdown on
->>>> different ARCHs. But the current generic solution aka TopdownL1 has all
->>>> kinds of problems on most of Intel platforms. We should fix them first
->>>> before applying to the mainline.
->>>
->>> No, 6.3 has many issues as do the default events/metrics:
->>
->> To be honest, I don't think they are real critical issues. For the first
->> one, I think there was already a temporary fix. For the others, they are
->> there for years.
-> 
-> This isn't true. The aggregation bug was raised to me by Intel and
-> stems from aggregation refactoring in per-thread mode done by
-> Namhyung.
-> 
->> However, the solution you proposed in the huge patch set
->> (https://lore.kernel.org/lkml/20230219092848.639226-37-irogers@google.com/)
->> brings many critical issues on different Intel platforms, crashes,
->> Missing features, etc.
->> Also, I was just told that many of our existing tools which on top of
->> the perf tool will also be broken, because all the annotations of the
->> kernel top-down metrics event disappeared.
->>
->> So we really should revert the patches. I don't think patches 39 to 51
->> are well-tested and reviewed.
-> 
-> The only issue I'm aware of is that hard coded use of the inaccurate
-> hard coded metrics now needs to switch to json metrics. This seems a
-> worthwhile update anyway, and not one that would justify breaking perf
-> stat metrics.
-> 
-
-I have pointed out many issues (crash, missing features, user-visible
-changes which breaking existing tools) many times in the previous reply,
-I will not repeat the details again here.
-
-The json metrics in the current perf-tools-next branch which you want to
-switch to also has many bugs based on my recent test.
-- The TopdownL2 triggers unnecessary multiplexing on SPR.
-- Doesn't work on hybrid platforms while the current 6.3-rc7 can.
-
-The difference between the hard coded kernel metrics and the json
-metrics is that the json metrics just collect two more events, e.g., on
-Tigerlake. The core metrics is exactly the same. It's good enough for a
-initial judgement with core metrics.
-
-I don't think the switching is a good choice and necessary based on all
-of the above issues.
-
-Thanks,
-Kan
