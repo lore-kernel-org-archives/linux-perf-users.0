@@ -2,306 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18215C77B73
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Apr 2023 00:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4F9C77B73
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Apr 2023 02:55:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231860AbjDTAcO (ORCPT
+        id S233448AbjDTCzc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Apr 2023 20:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39838 "EHLO
+        Wed, 19 Apr 2023 22:55:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231882AbjDTAcL (ORCPT
+        with ESMTP id S231334AbjDTCzc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Apr 2023 20:32:11 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94D376199
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 17:32:08 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-3f048b144eeso171425e9.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 17:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681950727; x=1684542727;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cpHsbQZOI2szya5getePPbZFizdtNLAvh8GmFlwAN1M=;
-        b=ysPLUsQMbedXCyQYZr6Zc+fSt8NWoLdVDcqcVZDHhCrCDaB2sk6rhO14ftB7Jzggai
-         cVizcqRRor6XZZATBcC+Q5hAviYJW6j84oNJYMS9tlWqa54/Pl+veZlWD37xLZk3abmk
-         gpO4AFFVZuCznXvk946oY0x/ygmv4NsGux2cbs+vd0xuZ8EljM6IzQUd37HOvFZcJ2i0
-         5S3EnekxS0JmeXrrTdh0WIw/79II6znLakNv9k9n/OvrhR9O18k2UGFvYZ4gT9wZDVhW
-         StRsYpOeMeYj+Yv0Th1ngB3fz+qDAknM0kw1O7NtNRq99eyDTfj4vP12sDUbhJl+foEI
-         ep0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681950727; x=1684542727;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cpHsbQZOI2szya5getePPbZFizdtNLAvh8GmFlwAN1M=;
-        b=U5cxaIQZTsf23xL0AdwnwIw5u4ScdgpbF9BIttEVyxwDmYlh7nNNH4fCbW3TbeLi31
-         6WGnvZGGuzpXNICzN8Z4m8B015EjVYzN9rEW6BrGhhsDsCe8OB7yZE3hsaSs0NUxlNwK
-         9mzSW8NCV4MUf7Iym3FhAv8doGfErDEWda5gGMTZqghRluXH3nHeGsYOcmoQByDCwvCR
-         IXGQ8tCSkNio0CmuGYJNN+VQ6Z4sbvxGQNb76vcos2UCCmOdW9ZFNUyXYLhLDyR5xnSq
-         OmAGBnAKmZ4z7rOrp+716/QKtWFL4wke3kkB6wDPrhhM2eYk8RtJx5SHGw1+oCowrzio
-         eRLg==
-X-Gm-Message-State: AAQBX9cFx47VWefIhktgUbuwLU8kL16iKLNUxsHKkq87SgQe3kQSVQJU
-        lO5jFwU5HUXnO085XcddZ5TUgDLOhdzhPT69MpcU4A==
-X-Google-Smtp-Source: AKy350aBel/7MtmlYCMSjJPTLJNrhcBDWM1l1EErpsirii/9U3cgHvYfQURMqtj3yNFdf/eUjBr+4QIODnFlFBR70+I=
-X-Received: by 2002:a05:600c:314c:b0:3f1:7490:e5a4 with SMTP id
- h12-20020a05600c314c00b003f17490e5a4mr90071wmo.6.1681950726866; Wed, 19 Apr
- 2023 17:32:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230413161725.195417-1-alexghiti@rivosinc.com>
- <CAOnJCU+72PV1=o1c_TpogkmBT36278BneVWEMr1=tqX0CZi+ag@mail.gmail.com>
- <aadca595b4a24e36932ba41e61f4e263@AcuMS.aculab.com> <CAOnJCUJ7mY+fh9VqE4dRntnVAEAc26=NnOCPUqkXk6ky__cUZQ@mail.gmail.com>
- <CAP-5=fUYJEecmhQVuvbM4ZoDP_Hj=2RKOgR4cKepU072Uy3xyw@mail.gmail.com>
- <CAOnJCULJfSN79MzAwhCrbVzG1rYyrPB3OraFmoZFBxuRCwq01w@mail.gmail.com>
- <CAHVXubjhORBEDok_Zhq5p_Yv4Ty4Hct84dWJZXzo48+40N=CGg@mail.gmail.com>
- <CAP-5=fX6kaZt68UbMMZzW-zs0RyRWoOS-Tq5NwekWj8k9Shx6g@mail.gmail.com> <CAOnJCU+5EQp-AqrwJpBo6ZPWfybwaGyD3zcC0YrCAsSY4=fqdw@mail.gmail.com>
-In-Reply-To: <CAOnJCU+5EQp-AqrwJpBo6ZPWfybwaGyD3zcC0YrCAsSY4=fqdw@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 19 Apr 2023 17:31:50 -0700
-Message-ID: <CAP-5=fUrTSXZwR2rV34AXbNCYcV1wnFyfzhNuRgBLXofsjnE_g@mail.gmail.com>
-Subject: Re: [PATCH 0/4] riscv: Allow userspace to directly access perf counters
-To:     Atish Patra <atishp@atishpatra.org>
-Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>,
-        paranlee <p4ranlee@gmail.com>,
-        David Laight <David.Laight@aculab.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Wed, 19 Apr 2023 22:55:32 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B83198E;
+        Wed, 19 Apr 2023 19:55:30 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Q22Kw2QpxzsR6g;
+        Thu, 20 Apr 2023 10:53:56 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
+ (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 20 Apr
+ 2023 10:55:26 +0800
+Date:   Thu, 20 Apr 2023 10:55:11 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+CC:     Changbin Du <changbin.du@huawei.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ian Rogers <irogers@google.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hui Wang <hw.huiwang@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v5 2/3] perf: add helper map__fprintf_dsoname_dsoff
+Message-ID: <20230420025511.fkd7upvuoxfz2xih@M910t>
+References: <20230418031825.1262579-1-changbin.du@huawei.com>
+ <20230418031825.1262579-3-changbin.du@huawei.com>
+ <3001bde2-b010-3c00-17de-1c78ef4b589b@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <3001bde2-b010-3c00-17de-1c78ef4b589b@intel.com>
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 19, 2023 at 4:22=E2=80=AFPM Atish Patra <atishp@atishpatra.org>=
- wrote:
+On Wed, Apr 19, 2023 at 09:58:10PM +0300, Adrian Hunter wrote:
+> On 18/04/23 06:18, Changbin Du wrote:
+> > This adds a helper function map__fprintf_dsoname_dsoff() to print dsoname
+> > with optional dso offset.
+> > 
+> > Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> > ---
+> >  tools/perf/util/map.c | 13 +++++++++++++
+> >  tools/perf/util/map.h |  1 +
+> >  2 files changed, 14 insertions(+)
+> > 
+> > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> > index d81b6ca18ee9..7da96b41100f 100644
+> > --- a/tools/perf/util/map.c
+> > +++ b/tools/perf/util/map.c
+> > @@ -445,6 +445,19 @@ size_t map__fprintf_dsoname(struct map *map, FILE *fp)
+> >  	return fprintf(fp, "%s", dsoname);
+> >  }
+> >  
+> > +size_t map__fprintf_dsoname_dsoff(struct map *map, bool print_off, u64 addr, FILE *fp)
+> > +{
+> > +	int printed = 0;
+> > +
+> > +	printed += fprintf(fp, " (");
+> > +	printed += map__fprintf_dsoname(map, fp);
+> > +	if (print_off && map && map__dso(map) && !map__dso(map)->kernel)
+> 
+> That will also block vmlinux offsets not just [kernel.kallsyms]
+> Is that what was intended?
 >
-> On Wed, Apr 19, 2023 at 11:13=E2=80=AFPM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > On Wed, Apr 19, 2023 at 2:21=E2=80=AFAM Alexandre Ghiti <alexghiti@rivo=
-sinc.com> wrote:
-> > >
-> > > Hi Ian,
-> > >
-> > > On Tue, Apr 18, 2023 at 10:30=E2=80=AFPM Atish Patra <atishp@atishpat=
-ra.org> wrote:
-> > > >
-> > > > On Tue, Apr 18, 2023 at 11:46=E2=80=AFPM Ian Rogers <irogers@google=
-.com> wrote:
-> > > > >
-> > > > > On Tue, Apr 18, 2023 at 9:43=E2=80=AFAM Atish Patra <atishp@atish=
-patra.org> wrote:
-> > > > > >
-> > > > > > On Fri, Apr 14, 2023 at 2:40=E2=80=AFAM David Laight <David.Lai=
-ght@aculab.com> wrote:
-> > > > > > >
-> > > > > > > From: Atish Patra
-> > > > > > > > Sent: 13 April 2023 20:18
-> > > > > > > >
-> > > > > > > > On Thu, Apr 13, 2023 at 9:47=E2=80=AFPM Alexandre Ghiti <al=
-exghiti@rivosinc.com> wrote:
-> > > > > > > > >
-> > > > > > > > > riscv used to allow direct access to cycle/time/instret c=
-ounters,
-> > > > > > > > > bypassing the perf framework, this patchset intends to al=
-low the user to
-> > > > > > > > > mmap any counter when accessed through perf. But we can't=
- break the
-> > > > > > > > > existing behaviour so we introduce a sysctl perf_user_acc=
-ess like arm64
-> > > > > > > > > does, which defaults to the legacy mode described above.
-> > > > > > > > >
-> > > > > > > >
-> > > > > > > > It would be good provide additional direction for user spac=
-e packages:
-> > > > > > > >
-> > > > > > > > The legacy behavior is supported for now in order to avoid =
-breaking
-> > > > > > > > existing software.
-> > > > > > > > However, reading counters directly without perf interaction=
- may
-> > > > > > > > provide incorrect values which
-> > > > > > > > the userspace software must avoid. We are hoping that the u=
-ser space
-> > > > > > > > packages which
-> > > > > > > > read the cycle/instret directly, will move to the proper in=
-terface
-> > > > > > > > eventually if they actually need it.
-> > > > > > > > Most of the users are supposed to read "time" instead of "c=
-ycle" if
-> > > > > > > > they intend to read timestamps.
-> > > > > > >
-> > > > > > > If you are trying to measure the performance of short code
-> > > > > > > fragments then you need pretty much raw access directly to
-> > > > > > > the cycle/clock count register.
-> > > > > > >
-> > > > > > > I've done this on x86 to compare the actual cycle times
-> > > > > > > of different implementations of the IP checksum loop
-> > > > > > > (and compare them to the theoretical limit).
-> > > > > > > The perf framework just added far too much latency,
-> > > > > > > only directly reading the cpu registers gave anything
-> > > > > > > like reliable (and consistent) answers.
-> > > > > > >
-> > > > > >
-> > > > > > This series allows direct access to the counters once configure=
-d
-> > > > > > through the perf.
-> > > > > > Earlier the cycle/instret counters are directly exposed to the
-> > > > > > userspace without kernel/perf frameworking knowing
-> > > > > > when/which user space application is reading it. That has secur=
-ity implications.
-> > > > > >
-> > > > > > With this series applied, the user space application just needs=
- to
-> > > > > > configure the event (cycle/instret) through perf syscall.
-> > > > > > Once configured, the userspace application can find out the cou=
-nter
-> > > > > > information from the mmap & directly
-> > > > > > read the counter. There is no latency while reading the counter=
-s.
-> > > > > >
-> > > > > > This mechanism allows stop/clear the counters when the requesti=
-ng task
-> > > > > > is not running. It also takes care of context switching
-> > > > > > which may result in invalid values as you mentioned below. This=
- is
-> > > > > > nothing new and all other arch (x86, ARM64) allow user space
-> > > > > > counter read through the same mechanism.
-> > > > > >
-> > > > > > Here is the relevant upstream discussion:
-> > > > > > https://lore.kernel.org/lkml/Y7wLa7I2hlz3rKw%2F@hirez.programmi=
-ng.kicks-ass.net/T/
-> > > > > >
-> > > > > > ARM64:
-> > > > > > https://docs.kernel.org/arm64/perf.html?highlight=3Dperf_user_a=
-ccess#perf-userspace-pmu-hardware-counter-access
-> > > > > >
-> > > > > > example usage in x86:
-> > > > > > https://github.com/andikleen/pmu-tools/blob/master/jevents/rdpm=
-c.c
-> > > > >
-> > > > > The canonical implementation of this should be:
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t/tree/tools/lib/perf/mmap.c#n400
-> > > >
-> > > > Thanks for sharing the libperf implementation.
-> > > >
-> > > > > which is updated in these patches but the tests are not:
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.gi=
-t/tree/tools/perf/tests/mmap-basic.c#n287
-> > > > > Which appears to be an oversight. The tests display some differen=
-ces
-> > > >
-> > > > Yes. It's an oversight. We should make sure that perf mmap tests pa=
-ss
-> > > > for RISC-V as well.
-> > >
-> > > Yes, that's an oversight, I had a local test adapted from this one bu=
-t
-> > > forgot to update it afterwards, I'll do that in the next version.
-> > >
-> > > Thanks for your quick feedbacks and sorry for being late,
-> > >
-> > > Alex
-> >
-> > Thanks Alex, there was an equally likely chance that I wasn't
-> > understanding things :-) Is there any information on RISC-V PMU
-> > testing? I know ParanLee is interested. It'd be awesome to have
->
-> Are you looking for something specific to RISC-V general or perf on RISC-=
-V?
-> All the RISC-V PMU patches have been upstream for a while (both in the
-> Qemu & Linux kernel).
-> Perf should work out-of-the box when you boot the latest kernel in the
-> latest version of the Qemu.
->
-> Initial KVM[1] patches support got merged during the last merge
-> window. It doesn't support
-> event sampling yet. We are working on that.
->
-> [1] https://lore.kernel.org/lkml/20230207095529.1787260-1-atishp@rivosinc=
-.com/
+Not only vmlinux, modules are also blocked. We'd better print offset for
+vmlinux and modules.
 
-Cool, it'd be nice to have a recipe for this from x86 Linux :-)
+$ sudo perf script -k vmlinux -F +dsoff
+       perf-exec 2531039 4120893.685967:          1 cycles:  ffffffff99094ec4 [unknown] (vmlinux)
+       perf-exec 2531039 4120893.685970:          1 cycles:  ffffffff99094ec4 [unknown] (vmlinux)
+       perf-exec 2531039 4120893.685972:          9 cycles:  ffffffff99094ec4 [unknown] (vmlinux)
+       perf-exec 2531039 4120893.685973:        194 cycles:  ffffffff99094ec6 [unknown] (vmlinux)
+       perf-exec 2531039 4120893.685974:       4605 cycles:  ffffffff99094ec4 [unknown] (vmlinux)
+       perf-exec 2531039 4120893.685976:     108083 cycles:  ffffffff9928e8d0 [unknown] (vmlinux)
+              ls 2531039 4120893.686003:    2197682 cycles:  ffffffff993c92bc [unknown] (vmlinux)
+              ls 2531039 4120893.686554:    4497190 cycles:  ffffffffc159692b strcasestr+0x7b (/lib/modules/5.15.0-60-generic/extra/isac_ipc.ko)
+              ls 2531039 4120893.687700:    4189758 cycles:  ffffffffc18a5d66 delete_net_reject_cache+0x76 (/lib/modules/5.15.0-60-generic/extra/isac_networkfilter.ko)
+              ls 2531039 4120893.688786:    3780376 cycles:  ffffffffc18a67de delete_net_process_info+0x5e (/lib/modules/5.15.0-60-generic/extra/isac_networkfilter.ko)
+              ls 2531039 4120893.689716:    3416607 cycles:  ffffffffc18a67de delete_net_process_info+0x5e (/lib/modules/5.15.0-60-generic/extra/isac_networkfilter.ko)
 
-> > something say on:
-> > https://perf.wiki.kernel.org/index.php/Main_Page
-> > on how to run tests, perhaps on QEMU or known to work boards. We can
-> > also just drop a link on there if there is information. We can also
-> > add the RISC-V PMU information to the links here:
-> > https://perf.wiki.kernel.org/index.php/Useful_Links
-> >
->
-> I did not see any arch specific information there. Let us know what
-> would be good to
-> add there and we would be happy to add.
+But I found addr returned by map__dso_map_ip() for 'vmlinux' is not a 'dso
+offset'.
 
-I was specifically thinking under Manuals where the Intel, AMD and ARM
-manuals are, links to the RISC-V documentation could be added.
+$ sudo perf script -k vmlinux -F +dsoff
+       perf-exec 2531039 4120893.685967:          1 cycles:  ffffffff99094ec4 [unknown] (vmlinux+0xffffffff99094ec4)
+       perf-exec 2531039 4120893.685970:          1 cycles:  ffffffff99094ec4 [unknown] (vmlinux+0xffffffff99094ec4)
+       perf-exec 2531039 4120893.685972:          9 cycles:  ffffffff99094ec4 [unknown] (vmlinux+0xffffffff99094ec4)
+       perf-exec 2531039 4120893.685973:        194 cycles:  ffffffff99094ec6 [unknown] (vmlinux+0xffffffff99094ec6)
 
-Thanks,
-Ian
+Do you have better idea?
 
-> > Thanks,
-> > Ian
-> >
-> > >
-> > > >
-> > > >
-> > > > > between x86 and aarch64 that have assumed userspace hardware coun=
-ter
-> > > > > access, and everything else that it is assumed don't.
-> > > > >
-> > > > > Thanks,
-> > > > > Ian
-> > > > >
-> > > > > > > Clearly process switches (especially cpu migrations) cause
-> > > > > > > problems, but they are obviously invalid values and can
-> > > > > > > be ignored.
-> > > > > > >
-> > > > > > > So while a lot of uses may be 'happy' with the values the
-> > > > > > > perf framework gives, sometimes you do need to directly
-> > > > > > > read the relevant registers.
-> > > > > > >
-> > > > > > >         David
-> > > > > > >
-> > > > > > > -
-> > > > > > > Registered Address Lakeside, Bramley Road, Mount Farm, Milton=
- Keynes, MK1 1PT, UK
-> > > > > > > Registration No: 1397386 (Wales)
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Regards,
-> > > > > > Atish
-> > > >
-> > > >
-> > > >
-> > > > --
-> > > > Regards,
-> > > > Atish
->
->
->
-> --
-> Regards,
-> Atish
+-- 
+Cheers,
+Changbin Du
