@@ -2,419 +2,300 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2ED5C6FD18
-	for <linux-perf-users@archiver.kernel.org>; Wed, 19 Apr 2023 23:42:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EF7C77B73
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Apr 2023 00:24:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231442AbjDSXmz (ORCPT
+        id S230081AbjDTAYU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 19 Apr 2023 19:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51190 "EHLO
+        Wed, 19 Apr 2023 20:24:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjDSXmy (ORCPT
+        with ESMTP id S230043AbjDTAYT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 19 Apr 2023 19:42:54 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F65110C2;
-        Wed, 19 Apr 2023 16:42:52 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-5083bd8e226so356080a12.3;
-        Wed, 19 Apr 2023 16:42:52 -0700 (PDT)
+        Wed, 19 Apr 2023 20:24:19 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 652B530F4
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 17:24:17 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3f048b144eeso170825e9.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Apr 2023 17:24:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681947771; x=1684539771;
+        d=google.com; s=20221208; t=1681950256; x=1684542256;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Tw9VM9KUGkZj01MxwzeB9PPrMpaYXSZVF7gL2fEFefg=;
-        b=Wgg3xcCHXwl8+yIriCQXBjQFDOkMn0q8H+ScIjWpKu9ibYXBxAjbdMVEWe/dV+EkZ7
-         U9FWDTwWNorQdqL2CHQDS3ta/flUC087Y0Sb3sKEqGDEcpLBHT+Bk3wjYPqHvLiEchYB
-         HFXLWw0HZpzzYmS14N14Xf3Cl62Z5csoWSAyw+bGqZMti+5I5PE1BoBKhSaQrZAnbA1G
-         wOC/AT6hsSjeauaIMdqEIyKWalgsj6lSXUlrgCMAnH2USpR/nlq3PD5Zn3r5r3ILktbh
-         4v3wAlfTIPvBF0FT9a3/uV3cdJe5Id5ma3IRaoEp+6X9lF9j8EsqiLYn5X+NhpPtwH2z
-         L3JA==
+        bh=QqGcf8Q8AMmC7oOcsPB/iJiWlLsvY6WzwmZ51rksy8A=;
+        b=QN1b3fE0Iss/LbTs2l+/Zu4FCmuh0kDTzyOIr4TkUQlNZUsqQP+COAtAW93V84w0ar
+         9Vu1PjWaRC83Lhirl16Q5Cr5nDi9hsXP5ib5ZCUhgqi1S6YLrdZlMou7w/q7xzaYelbR
+         TFbfkkwPMEX9qmZkakWs2om8w1zksfqObbkUh3754JQydTA74gMouvP/DEhTLYrSZJlb
+         GwXiDg245SwKT22c1jT1DU/Dn3lVSIxD5ntHN3Dp7fn4948eLNnGpZSd8DIp00u84qY8
+         lGIfFdw4LbqhwMosPIV1IVAqxGBrKfgRMPsF4nY55wKGbeAF5abiAloTNY+wBHn3pOEw
+         rgvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681947771; x=1684539771;
+        d=1e100.net; s=20221208; t=1681950256; x=1684542256;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Tw9VM9KUGkZj01MxwzeB9PPrMpaYXSZVF7gL2fEFefg=;
-        b=Dbh7ctNweQb5guVw+3WVXdjFnuL3UWNRWJm+PJ33bAp5r7XvdU4MuVDm5jblHi2exU
-         FViYt31QOZShzsCnpyZztJmyCOt4/4qqdFFiZnQv8jPUInCOkVcBt5cEL63u9ZIcPFBt
-         2ypuNg/UrKVrdR5JOG16PeWReZKXsHlkgIql1Dxs8xFZw/Pl6sZpn5q0tsBiMN7MEMXl
-         yElI/2/K6EVpn1kbGceZx1xyuOgsPd+vP2t0sj+GegKeJskOBrtyTprX09qHBrL159Xl
-         n6f9Ina98uXBjgoNHR/YsaenUyXvMzC53b3+J9rN2wsOzhLZTpTvDFp+xfYk9oSpGGLq
-         w92A==
-X-Gm-Message-State: AAQBX9fgr4vx6tKYfK1wsLu/vq5S6CX1HIfgqPjPOZ6j7KbzD32UQnl8
-        HOkbxspai8WFE1Xpp18hXieR8VnQLobOSz7XZ4y8ktaY
-X-Google-Smtp-Source: AKy350aNcefGMSDkhAE/CcDzv20Ov6rIxQZPuxDaqfyPWwapxealwtmmaHkCKenYUyw0iq6dCww7Y0DSBVQDBZhHkw4=
-X-Received: by 2002:aa7:cb84:0:b0:504:8c1a:70db with SMTP id
- r4-20020aa7cb84000000b005048c1a70dbmr7261342edt.32.1681947770548; Wed, 19 Apr
- 2023 16:42:50 -0700 (PDT)
+        bh=QqGcf8Q8AMmC7oOcsPB/iJiWlLsvY6WzwmZ51rksy8A=;
+        b=faK1PF7SYER4jL9dEcqyelPQ6TjF4g3e8rF203zIjI24u6mVTnInUh3WXGYG9lWL7T
+         BOLjZq8RAWoFBJNxlX4OX6xKlSDFA8CaS7fjl0V0I6YuPGMxNO1PvBrrUbt8+CtMOV5d
+         CHYzNMoJuOzy+rYzfKK1uqAHlnmGBZOMf6wssXlNyPqRt2SSSOmMFL2FvC7jYWDzjDIU
+         XuLOr/waD2kr0lH3nQwaWgeADPgBtcWD4P8Mn0cC4IqLnMO4NSchAN+YS1+NwDK7AfFC
+         N8oNcFlJPD/Okm2AXJgL4Ilt0U+yaPQZoODTDyvaMfLT0O4DMlpW6y4u9tY7BGBO9kNC
+         w81g==
+X-Gm-Message-State: AAQBX9caVGNa+V/7VZubiZ7WmfUdUGQEDKGIVezZc1RLDH2+ntKiPrmh
+        NcbCTsTapEV74MNf5GpsGzytFKEz4lLlykr0dEJ6mQ==
+X-Google-Smtp-Source: AKy350ZwOHHTeD9xIJKaBWxqZN/9O6koNSG9/oXCE0dHxnvPPQs7erM1DB7WB+o8m7vjFFExGnloZKYUeNtSqTI0UZY=
+X-Received: by 2002:a05:600c:3c95:b0:3f1:74cf:8563 with SMTP id
+ bg21-20020a05600c3c9500b003f174cf8563mr40742wmb.5.1681950255601; Wed, 19 Apr
+ 2023 17:24:15 -0700 (PDT)
 MIME-Version: 1.0
-References: <ZDfKBPXDQxH8HeX9@syu-laptop> <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
- <20230414095007.GF63923@kunlun.suse.cz> <b933fad3-7759-00d4-94cb-f20dd363b794@isovalent.com>
- <20230414161520.GJ63923@kunlun.suse.cz> <CAEf4Bzaw6DBHn=S9zKCXTSh7jW8xL9K6bzi1Q-e8j93thi2hmg@mail.gmail.com>
- <20230418112454.GA15906@kitsune.suse.cz> <CAEf4BzZf50fX7T9k47u+9YQrMbSLxLeA1qWwrdWToCZkMhynjg@mail.gmail.com>
- <20230418174132.GE15906@kitsune.suse.cz> <ZD/3Ll7UPucyOYkk@syu-laptop.lan>
- <CAEf4BzZfGewUgYsNNqCgES5Y5-pqbSRDbhtKiuSC7=G_83tyig@mail.gmail.com> <87zg73tvm1.fsf@toke.dk>
-In-Reply-To: <87zg73tvm1.fsf@toke.dk>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 19 Apr 2023 16:42:38 -0700
-Message-ID: <CAEf4BzY9Hr2M7dZXaTZCP4SRat+KpN42c89LG1Msn4PB+1O1YA@mail.gmail.com>
-Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
-To:     =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc:     Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-        Quentin Monnet <quentin@isovalent.com>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
+References: <20230414051922.3625666-1-irogers@google.com> <5031f492-9734-be75-3283-5961771d87c8@linux.intel.com>
+ <CAP-5=fW2aAijt8tqydszQHQFmsfeQO2S0hb7Z27RtXxG4Zmm-w@mail.gmail.com>
+ <ce92dd1b-23f6-ea52-a47d-fccc24fa20ea@linux.intel.com> <CAP-5=fWRy4NEqhB6-b98+m7SV5=oyBOMVuOHwmvKZCJuXcsQEg@mail.gmail.com>
+ <d1fe801a-22d0-1f9b-b127-227b21635bd5@linux.intel.com> <CAP-5=fXCmKAUn24r0YYHaO63mabZCXae-hAT2WCtk+YYmvS9xg@mail.gmail.com>
+ <99150cb1-fe50-97cf-ad80-cceb9194eb9a@linux.intel.com> <CAP-5=fXZSACj=kGM5t3pBHkQ-W1i0eJayAQ77_ToEp4zXWzJnw@mail.gmail.com>
+ <ea899096-0599-f2a0-04a3-d90a3aa7d45d@linux.intel.com> <CAP-5=fVVFjKgUGV8zVurd99BOhASQ9mMaZqOyw13PYLhZWpsOA@mail.gmail.com>
+ <CAP-5=fW_JwabjEUqSLaJn+tuHXLoyRWqJVVCh_z1dhXJ6On=MQ@mail.gmail.com>
+ <84b19053-2e9f-5251-6816-26d2475894c0@linux.intel.com> <CAP-5=fWJKmo4eLKe9+=3pKGe7g+xfA+YxOz7AOgqLfcRNzNaLw@mail.gmail.com>
+ <201a2ad6-3fb4-4b2a-d8a4-34d924e680c3@linux.intel.com> <CAP-5=fVWN5=URg0Og7KW7f7L4LSw6D8ghOKjP7La=0c+MkXFCg@mail.gmail.com>
+ <2b8768bf-de24-946f-62da-6ed171a5c324@linux.intel.com>
+In-Reply-To: <2b8768bf-de24-946f-62da-6ed171a5c324@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 19 Apr 2023 17:23:54 -0700
+Message-ID: <CAP-5=fU9WeBga_tQKi6QKX1-t=C1w5CoPc8Rn9myR=1CxeQuMg@mail.gmail.com>
+Subject: Re: [PATCH v2] perf stat: Introduce skippable evsels
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Yasin, Ahmad" <ahmad.yasin@intel.com>,
+        "Taylor, Perry" <perry.taylor@intel.com>,
+        "Alt, Samantha" <samantha.alt@intel.com>,
+        "Biggers, Caleb" <caleb.biggers@intel.com>,
+        "Wang, Weilin" <weilin.wang@intel.com>,
+        Edward <edward.baker@intel.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Mahe Tardy <mahe.tardy@gmail.com>,
-        =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 19, 2023 at 2:23=E2=80=AFPM Toke H=C3=B8iland-J=C3=B8rgensen <t=
-oke@redhat.com> wrote:
+On Wed, Apr 19, 2023 at 11:57=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
+com> wrote:
 >
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
 >
-> > On Wed, Apr 19, 2023 at 7:14=E2=80=AFAM Shung-Hsi Yu <shung-hsi.yu@suse=
-.com> wrote:
-> >>
-> >> On Tue, Apr 18, 2023 at 07:41:32PM +0200, Michal Such=C3=A1nek wrote:
-> >> > On Tue, Apr 18, 2023 at 09:38:20AM -0700, Andrii Nakryiko wrote:
-> >> > > On Tue, Apr 18, 2023 at 4:24=E2=80=AFAM Michal Such=C3=A1nek <msuc=
-hanek@suse.de> wrote:
-> >> > > >
-> >> > > > On Mon, Apr 17, 2023 at 05:20:03PM -0700, Andrii Nakryiko wrote:
-> >> > > > > On Fri, Apr 14, 2023 at 9:15=E2=80=AFAM Michal Such=C3=A1nek <=
-msuchanek@suse.de> wrote:
-> >> > > > > > On Fri, Apr 14, 2023 at 01:30:02PM +0100, Quentin Monnet wro=
-te:
-> >> > > > > > > 2023-04-14 11:50 UTC+0200 ~ Michal Such=C3=A1nek <msuchane=
-k@suse.de>
-> >> > > > > > > > Hello,
-> >> > > > > > > >
-> >> > > > > > > > On Fri, Apr 14, 2023 at 01:35:20AM +0100, Quentin Monnet=
- wrote:
-> >> > > > > > > >> Hi Shung-Hsi,
-> >> > > > > > > >>
-> >> > > > > > > >> On Thu, 13 Apr 2023 at 10:23, Shung-Hsi Yu <shung-hsi.y=
-u@suse.com> wrote:
-> >> > > > > > > >>>
-> >> > > > > > > >>> Hi,
-> >> > > > > > > >>>
-> >> > > > > > > >>> I'm considering switch to bpftool's mirror on GitHub f=
-or packaging (instead
-> >> > > > > > > >>> of using the source found in kernel), but realize that=
- it should goes
-> >> > > > > > > >>> hand-in-hand with how libbpf is packaged, which eventu=
-ally leads these
-> >> > > > > > > >>> questions:
-> >> > > > > > > >>>
-> >> > > > > > > >>>   What is the suggested approach for packaging bpftool=
- and libbpf?
-> >> > > > > > > >>>   Which source is preferred, GitHub or kernel?
-> >> > > > > > > >>
-> >> > > > > > > >> As you can see from the previous discussions, the sugge=
-sted approach
-> >> > > > > > > >> would be to package from the GitHub mirror, with libbpf=
- and bpftool in
-> >> > > > > > > >> sync.
-> >> > > > > > > >>
-> >> > > > > > > >> My main argument for the mirror is that it keeps things=
- simpler, and
-> >> > > > > > > >> there's no need to deal with the rest of the kernel sou=
-rces for these
-> >> > > > > > > >> packages. Download from the mirrors, build, ship. But t=
-hen I have
-> >> > > > > > > >> limited experience at packaging for distros, and I can =
-understand
-> >> > > > > > > >> Toke's point of view, too. So ultimately, the call is y=
-ours.
-> >> > > > > > > >
-> >> > > > > > > > Things get only ever more complex when submodules are in=
-volved.
-> >> > > > > > >
-> >> > > > > > > I understand the generic pain points from your other email=
-. But could
-> >> > > > > > > you be more specific for the case of bpftool? It's not lik=
-e we're
-> >> > > > > > > shipping all lib dependencies as submodules. Sync-ups are =
-specifically
-> >> > > > > > > aligned to the same commit used to sync the libbpf mirror,=
- so that it's
-> >> > > > > > > pretty much as if we had the right version of the library =
-shipped in the
-> >> > > > > > > repository - only, it's one --recurse-submodules away.
-> >> > > > > >
-> >> > > > > > It's so in every project that uses submodules. Except git do=
-es not
-> >> > > > > > recurse into submodules by default, you have to fix it up by=
- hand.
-> >> > > > > > Forges don't support submodules so you will not get the subm=
-odule when
-> >> > > > > > downloading the project archive, and won't see it the the pr=
-oject tree.
-> >> > > > >
-> >> > > > > git submodule update --init --recursive didn't work?
-> >> > > >
-> >> > > > That's one part of the manual fixup.
-> >> > > >
-> >> > > > The other part is after each git operation that could possibly c=
-ause the
-> >> > > > submodules to go out of sync, basically any operation that chang=
-es the
-> >> > > > checked-out commit.
-> >> > > >
-> >> > > > Of course, you can make some shell aliases that append whatever =
-submodule
-> >> > > > chicanery to whatever git command you might issue, and tell ever=
-yone
-> >> > > > else to do that, and then it will work in that one shell, and no=
-t in any
-> >> > > > other shell nor any tool that invokes git directly.
-> >> > >
-> >> > > Are we discussing a *standard* Git submodule feature and argue tha=
-t
-> >> > > because it might be cumbersome or unfamiliar to some engineers tha=
-t
-> >> > > projects should avoid using Git submodules?
-> >> >
-> >> > As far as I am aware they are unfamiliar to *most* engineers, and fo=
-r
-> >> > good reasons.
-> >> >
-> >> > > For one, I don't have any special aliases for dealing with Git
-> >> > > submodules and it works fine. If I jump between branches or tags w=
-hich
-> >> > > update Git submodule reference, I do above `git submodule update
-> >> > > --init --recursive` explicitly if I see that Git status shows
-> >> > > out-of-sync Git submodule state. If I want to update a Git submodu=
-le,
-> >> > > I update the submodule's Git repo, and then git add it in the repo
-> >> > > that uses this submodule. I haven't run into any other issues with
-> >> > > this.
-> >> >
-> >> > You know, git could just handle submodules automagically. As you say=
+> On 2023-04-19 12:51 p.m., Ian Rogers wrote:
+> >>>>> With that change I don't have a case that requires skippable evsels=
 ,
-> >> > it's not rocket science. For historical reasons it does not.
-> >> >
-> >> > With that working with submodules is cumbersome, and it's additional
-> >> > thing that can break down that the engineer needs to be constantly a=
-ware
-> >> > of increasing the mental overhead of working with such projects.
-> >> >
-> >> > It may not be much of a problem for people who work with such projec=
-ts
-> >> > daily but not everyone does. Those who don't need to do the mental
-> >> > switch whenever submodules are encountered, and are prone to getting
-> >> > issues when they forget that they have to go that extra mile for thi=
-s
-> >> > specific project.
-> >>
-> >> For me it's less about having to go through the extra loop. It's that
-> >> submodules would require git to be installed, network access, which al=
-l adds
-> >> extra moving parts compared to a tarball...
-> >>
-> >> > > > > > After previous experience with submodules I did not even try=
-, I just
-> >> > > > > > patched the makefile to use system libbpf before attempting =
-anything
-> >> > > > > > else.
-> >> > > > >
-> >> > > > > Quentin mentioned that he's packaging (or will package) libbpf=
- sources
-> >> > > > > as part of bpftool release on Github. I've been this for other
-> >> > > > > libbpf-using tools as well, and it works pretty well (at least=
- for
-> >> > > > > Fedora and ArchLinux). E.g., srcs-full-* archives for veristat=
- ([0])
-> >>
-> >> and having libbpf included in bpftool release means the complain above=
- no
-> >> longer holds. Though I have yet test build the mirror version of libbp=
-f and
-> >> bpftool like Michal has done.
-> >
-> > Great. This seems to work well for other tools that use libbpf through
-> > submodule (anakryiko/retsnoop and libbpf/veristat on Github)
-> >
-> >>
-> >> > > > > By switching up actual libbpf used to compile with bpftool, yo=
-u are
-> >> > > > > potentially introducing subtle problems that your users will b=
-e quite
-> >> > > > > unhappy about, if they run into them. Let's work together to m=
-ake it
-> >> > > > > easier for you to package bpftool properly. We can't switch bp=
-ftool to
-> >> > > > > reliably use system-wide libbpf (either static or shared, does=
-n't
-> >> > > > > matter) because of dependency on internal functionality.
-> >> > > > >
-> >> > > > >
-> >> > > > >   [0] https://github.com/libbpf/veristat/releases/tag/v0.1
-> >> > > >
-> >> > > > So how many copies of libbpf do I need for having a CO-RE toolch=
-ain?
-> >> > >
-> >> > > What do you mean by "CO-RE toolchain"? bpftool, veristat, retsnoop=
+> >>>>> and so we can take that series with patch 6 over the v1 of that ser=
+ies
+> >>>>> with this change.
+> >>>>>
+> >>>>
+> >>>> I'm afraid this is not the only problem the commit 94b1a603fca7 ("pe=
+rf
+> >>>> stat: Add TopdownL1 metric as a default if present") in the
+> >>>> perf-tools-next branch introduced.
+> >>>>
+> >>>> The topdown L2 in the perf stat default on SPR and big core of the A=
+DL
+> >>>> is still missed. I don't see a possible fix for this on the current
+> >>>> perf-tools-next branch.
+> >>>
+> >>> I thought in its current state the json metrics for TopdownL2 on SPR
+> >>> have multiplexing. Given L1 is used to drill down to L2, it seems odd
+> >>> to start on L2, but given L1 is used to compute the thresholds for L2=
 ,
-> >> > > etc are tools. The fact they are using statically linked libbpf
-> >> > > through Git submodule is irrelevant to end users. You need one lib=
-bpf
-> >> > > in the system (for those who link dynamically against libbpf), the
-> >> > > rest are just tools.
-> >> > >
-> >> > > >
-> >> > > > Will different tools have different view of the kernel because t=
-hey each
-> >> > > > use different private copy of libbpf with different features?
-> >> > >
-> >> > > That's up to tools, not libbpf. You are over pivoting on libbpf he=
-re.
-> >> > > There is one view of the kernel, it depends on what features the
-> >> > > kernel supports. If the tool requires some specific functionality =
-of
-> >> > > libbpf, it will update its Git submodule reference to get a versio=
-n of
-> >> > > libbpf that provides that feature. That's the point, an
-> >> > > application/tool is in control of what kind of features it gets fr=
-om
-> >> > > libbpf.
+> >>> this should be to have both L1 and L2 on these platforms. However,
+> >>> that doesn't work as you don't want multiplexing.
+> >>>
+> >>> This all seems backward to avoid potential multiplexing on branch mis=
+s
+> >>> rate and IPC, just always having TopdownL1 seems cleanest with the
+> >>> skippable evsels working around the permissions issue - as put forwar=
+d
+> >>> in this patch. Possibly adding L2 metrics on ADL/SPR, but only once
+> >>> the multiplexing issue is resolved.
+> >>>
 > >>
-> >> Since libbpf has a stable API & ABI, is it theoretically possible for
-> >> bpftool, veristat, retsnoop, etc. all share the same version of libbpf=
-?
+> >> No, not just that issue. Based to what I tested these days, perf stat
+> >> default has issues/regressions on most of the Intel platforms with the
+> >> current perf-tools-next and perf/core branch of acme's repo.
+> >>
+> >> For the pre-ICL platforms:
+> >> - The permission issue. (This patch tried to address.)
+> >> - Unclean perf stat default. (This patch failed to address.)
+> >>   Unnecessary multiplexing for cycles.
+> >>   Display partial of the TopdownL1
+> >>
+> >> https://lore.kernel.org/lkml/d1fe801a-22d0-1f9b-b127-227b21635bd5@linu=
+x.intel.com/
+> >>
+> >> For SPR platforms
+> >> - Topdown L2 metrics is missed, while it works with the current 6.3-rc=
+7.
+> >>
+> >> For ADL/RPL platforms
+> >> - Segmentation fault which I just found this morning.
+> >> # ./perf stat true
+> >> Segmentation fault (core dumped)
 > >
-> > No, because libbpf is not just a set of APIs. Newer libbpf versions
-> > support more BPF-side features, more kernel features, etc, etc. Libbpf
-> > is not a typical user-space library, it is a BPF loader, and even if
-> > user-visible API doesn't change, libbpf's support for various BPF-side
-> > features is extended. Which is important for tools like bpftool,
-> > retsnoop, veristat which rely on loading and working with BPF object
-> > files.
+> > This may also stem from the reference count checking work that Arnaldo
+> > is currently merging. It is hard to test hybrid because it uses
+> > non-generic code paths.
 >
-> The converse of this is also true: if your system is upgraded to a new
-> kernel version with new BPF features, the libbpf version should follow
-> it, and all applications linked against it will automatically take
-> advantage of any bugfixes regardless without having to wait for each
-> application to be updated.
-
-No, if my application was not developed to take advantage of a new
-kernel feature, newer libbpf will do nothing for me. If my application
-wants to support that feature, I'll update my application and
-correspondingly update libbpf embedded in it. If my application is
-affected by some bug fix, I'll update libbpf even faster than distros
-will get to it.
-
-I've heard all such arguments over the last few years. They are not
-convincing and my own practical experience shows irrelevance of the
-above argument.
-
+> There are two places which causes the Segmentation fault.
+> One place is the TopdownL1.
 >
-> Libbpf is really no different from any other library here, and I really
-> don't get why you keep insisting it's "special"...
-
-It's special in the sense that it provides two sets of APIs -- for
-user-space (typical libraries) and BPF object files. Besides that, for
-BPF-side it's not even a set of APIs (headers, helpers, etc), it also
-provides some set of functionality that can improve or be extended
-over time. E.g., libbpf used to not support non-inlined BPF
-subprograms, and then it started supporting them. In terms of API/ABI
--- nothing changed. Yet the change is very important.
-
-Now, I build a tool that is using libbpf and some BPF functionality,
-e.g., retsnoop. Libbpf just got SEC("ksyscall") support. Retsnoop
-wants to take advantage of it. I just go and use SEC("ksyscall")
-programs in .bpf.c files that are embedded inside retsnoop. I don't
-have to *and don't want to* do feature detection of whether a
-particular libbpf version that happens to be installed/packaged on the
-system supports this version. I *know* it does, because I control it,
-through a submodule. That's what I care about.
-
-Whether some distro insists on libbpf being shared across any
-libbpf-using application or not is none of my concern. Libbpf is an
-implementation detail of my application (retsnoop), it's not for the
-packager to decide how I develop and structure my tool.
-
+> After I disable the TopdownL1 and add !counter->name as below, there are
+> no errors for the ./perf stat true.
 >
-> >> What I'd like to do it build libbpf and bpftool out of bpftool GitHub
-> >> mirror's release tarball (w/ submodule included, which exists now for
-> >> snapshot). For the rest of the tool that does not depends on libbpf pr=
-ivate
-> >> function, have them dynamically link to the libbpf built from bpftool'=
-s
-> >> source, just like how libelf is dynamically linked.
+> (The below is just for test purpose.)
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 7a641a67486d..8e12ed1141e0 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -1892,7 +1892,7 @@ static int add_default_attributes(void)
+>                  * Add TopdownL1 metrics if they exist. To minimize
+>                  * multiplexing, don't request threshold computation.
+>                  */
+> -               if (metricgroup__has_metric("TopdownL1")) {
+> +               if (0 && metricgroup__has_metric("TopdownL1")) {
+
+So hybrid has something different that causes this. Can you provide
+the information to solve?
+
+>                         struct evlist *metric_evlist =3D evlist__new();
+>                         struct evsel *metric_evsel;
+>
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
+y.c
+> index 6b46bbb3d322..072fa56744b4 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -747,7 +747,7 @@ static void uniquify_event_name(struct evsel *counter=
+)
+>         int ret =3D 0;
+>
+>         if (counter->uniquified_name || counter->use_config_name ||
+> -           !counter->pmu_name || !strncmp(counter->name, counter->pmu_na=
+me,
+> +           !counter->pmu_name || !counter->name ||
+> !strncmp(counter->name, counter->pmu_name,
+>                                            strlen(counter->pmu_name)))
+>                 return;
+
+Is this a pre-existing hybrid bug? It is a real shame hybrid shows so
+few common code paths. In general evsel__name should be preferred over
+directly accessing name.
+
 > >
-> > Please don't do it, let applications control which libbpf versions
-> > they are using. It's not just about user space APIs, I can't emphasize
-> > this enough. Don't think you know better than developers of respective
-> > applications, don't try to dictate how those applications should be
-> > organized and developed.
->
-> A well-behaved application will detect which features are available in
-
-No, a well-behaved application will provide a reliable functionality
-without necessarily paying maintenance and development cost of a maze
-of #ifdef-ery just to satisfy arbitrary distro requirements of linking
-with some shared library ("because security").
-
-> the system version of the libraries they use, and if something is
-> missing that it needs, either work around it or refuse to build. We do
-> this with libbpf in xdp-tools and the only issues we've had with it has
-> been the changing API in pre-1.0 libbpf...
->
-> > One good example is iproute2, which chose to link (or not) with libbpf
-> > dynamically. Now users periodically report various issues where their
-> > BPF object files are not loaded, and it often comes down to unexpected
-> > version of libbpf (or lack of libbpf support altogether) which which
-> > iproute2 was built/deployed. This is just putting a burden on iproute2
-> > users, and accidentally libbpf maintainers, for no good reason.
->
-> How would this have been any different if iproute2 was statically linked
-> against libbpf?
-
-iproute2 version would determine what BPF features are supported, and
-it would be consistent across distros and end user systems, regardless
-of what libbpf shared library happens to be packaged and installed.
-And users would know that starting from version X iproute2 is
-libbpf-1.0+ compatible in what sort of BPF object file features are
-supported by iproute2 when loading BPF programs.
-
->
-> >> I'm not saying that those tools should not have libbpf as submodule; a=
-s
-> >> submodule do look useful. But for packaging I really would like to hav=
-e the
-> >> option of choosing the exact version of libbpf being used.
+> >> After the test on a hybrid machine, I incline to revert the commit
+> >> 94b1a603fca7 ("perf stat: Add TopdownL1 metric as a default if present=
+")
+> >> and related patches for now.
+> >>
+> >> To clarify, I do not object a generic solution for the Topdown on
+> >> different ARCHs. But the current generic solution aka TopdownL1 has al=
+l
+> >> kinds of problems on most of Intel platforms. We should fix them first
+> >> before applying to the mainline.
 > >
-> > The exact version of libbpf used by bpftool, retsnoop, veristat, etc
-> > *is not relevant* to you as a packager. If you want happy users, use
-> > *exact* version of libbpf from submodule to build them, with which
-> > application was developed, tested, and advertised supported BPF
-> > features. There is no reuse to be done here, they all can be on
-> > different (and sometimes not yet released) libbpf version. For good
-> > reasons, which are outside of your control as a packager.
+> > No, 6.3 has many issues as do the default events/metrics:
 >
-> This is... just not how distributions work. As a user I trust my
-> distribution to provide me with a coherent system where critical system
-> libraries are maintained and receive timely updates. And I absolutely
-> trust the distribution more to do this over application developers who
-> just vendor in some version as a submodule and leave it there until they
-> need a new feature...
+> To be honest, I don't think they are real critical issues. For the first
+> one, I think there was already a temporary fix. For the others, they are
+> there for years.
 
-Ok.
+This isn't true. The aggregation bug was raised to me by Intel and
+stems from aggregation refactoring in per-thread mode done by
+Namhyung.
 
+> However, the solution you proposed in the huge patch set
+> (https://lore.kernel.org/lkml/20230219092848.639226-37-irogers@google.com=
+/)
+> brings many critical issues on different Intel platforms, crashes,
+> Missing features, etc.
+> Also, I was just told that many of our existing tools which on top of
+> the perf tool will also be broken, because all the annotations of the
+> kernel top-down metrics event disappeared.
 >
-> -Toke
+> So we really should revert the patches. I don't think patches 39 to 51
+> are well-tested and reviewed.
+
+The only issue I'm aware of is that hard coded use of the inaccurate
+hard coded metrics now needs to switch to json metrics. This seems a
+worthwhile update anyway, and not one that would justify breaking perf
+stat metrics.
+
+Thanks,
+Ian
+
+> Thanks,
+> Kan
 >
+> >  - in 6.3 aggregation is wrong for metrics, specifically double
+> > counting happens as the summary gets applied to the saved value under
+> > certain conditions like repeat runs. This is solved in perf-tools-next
+> > by removing the duplicated aggregation and using a single set of
+> > counters. The "shadow" code is both simpler and more correct than in
+> > 6.3, reverting it would be a massive regression - tbh, if it wasn't
+> > for the size of the patches I think we should cherry-pick what is in
+> > perf-tools-next back to 6.3 due to the size of the errors.
+> >  - the default events for IPC and branch miss rate lack groups and so
+> > are inaccurate when multiplexing happens - but multiplexing inaccuracy
+> > has historically not been an issue for the default events/metrics.
+> >  - the previous default topdown metrics were inaccurate compared to
+> > the TMA metrics spreadsheet, specifically they lacked events to
+> > correct for errors and the thresholds differed. This is why TopdownL2
+> > is a challenge because the json metrics do things properly causing the
+> > event groups not to be trivially shared.
+> >  - the topdown event solution is not generic, it is not only Intel
+> > specific but Intel model specific. Solving the problem via the json is
+> > the most consistent way to do this and is what I suggest we move to
+> > in:
+> > https://lore.kernel.org/lkml/20230419005423.343862-6-irogers@google.com=
+/
+> > but you can keep pushing that perf should do something special for
+> > Intel and for every Intel model. It also pushes a need into the metric
+> > code to do hybrid specific things so we can ignore atom TopdownL1. In
+> > this vein, hybrid is a giant mess that the code base needs cleaning up
+> > from; take the recent patch to just disable generic event parsing
+> > tests for MTL:
+> > https://lore.kernel.org/lkml/20230411094330.653965-1-tinghao.zhang@inte=
+l.com/
+> > We need to stop doing this, and have generic code, not least because
+> > of complaints like:
+> > https://www.kernel.org/doc/html/latest/gpu/i915.html#issues-hit-with-fi=
+rst-prototype-based-on-core-perf
+> > and because of the crash you are reporting on ADL/RPL.
+> >
+> > What has motivated you here is a concern over multiplexing on branch
+> > miss rate and IPC on pre-Icelake architectures that I find hard to
+> > understand and is trivially remedied in time honored fashions, ie
+> > profile the metrics you care about separately. A far more egregious
+> > multiplexing problem is that on Icelake+ architectures we multiplex
+> > fixed and generic counters unnecessarily when the same fixed counter
+> > is needed or there are insufficient generic counters. This is
+> > egregious as there is no user workaround and the kernel fix, to
+> > iterate all hardware events the same way we do for all software
+> > events, is both obvious and trivial. We've lived with this
+> > multiplexing problem since Icelake and I think we can live with a
+> > possible multiplexing problem, on legacy architectures, with what is
+> > in perf-tools-next. The permissions problem tackled here means we
+> > should merge this.
+> >
+> > Thanks,
+> > Ian
+> >
+> >> Thanks,
+> >> Kan
