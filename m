@@ -2,125 +2,99 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BD1C77B72
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Apr 2023 11:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC06C77B73
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Apr 2023 11:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234252AbjDTLZd (ORCPT
+        id S231390AbjDTLfK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Apr 2023 07:25:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53556 "EHLO
+        Thu, 20 Apr 2023 07:35:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234232AbjDTLZL (ORCPT
+        with ESMTP id S234541AbjDTLev (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Apr 2023 07:25:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DDFD7EE2;
-        Thu, 20 Apr 2023 04:24:06 -0700 (PDT)
+        Thu, 20 Apr 2023 07:34:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97FCF30D4;
+        Thu, 20 Apr 2023 04:34:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A9F4615C8;
-        Thu, 20 Apr 2023 11:23:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EEEC433D2;
-        Thu, 20 Apr 2023 11:23:47 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5616561752;
+        Thu, 20 Apr 2023 11:34:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D4F5C433EF;
+        Thu, 20 Apr 2023 11:34:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681989827;
-        bh=jXACc+L1gNDsC8WHEpEt3sv4ju+THNheaCP19iu7+kc=;
+        s=k20201202; t=1681990440;
+        bh=oDJTkprPHFF+WkngHmEuygFBMq5jaTaNLT3SVigoIe4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VDfaP9sMJBv4XZlDvCF+L3NIL8S0vLhEDyxGW5wPDHc4W4FtG39RQiMN+ueGJm/aX
-         Z8vtacFBJgR/bIjS/WNirtwYl8Pt/bz03XnLbEBnoepIxn9mg0uIVXSWSj0cdwlqtx
-         S1Dw4FCIgN94ybquFSoEs4pnncjfvmZO2eHnK6ojBpjNbOmmA+jCqQq4enF/GjoqDZ
-         P1I4jsW+SZced8lVKZ7RiXBbCZ2pU2RzWyEDc0jjORk2UQ9eq8y+i4YEjNL58urSFs
-         AQaoa3UbwIvijNgRGgOWRyl8YGBbpLLPLE9eeeaX+8hPjfrYC3Pi61s1YfrO2AOsE/
-         OoIDI/efGgEbw==
+        b=hWEut89UpPOUpEKMCDRbDia3adPLuifHtXT674ypZE6Dl3s3WjmWZb+jJ+J8msNUH
+         etHvok8h8dwpmw2DhtS4iyPkzKZIi32w9KQrGYPMGdrPFBu0Az0YlSnUTNKSdGD8M3
+         NZ8xsD4zdDv+uXYj9FOqup0BMvE9b5zkAGO9JuCbt7STIJIHPP0VakKlwS6rPi2FiC
+         H0HVRFs4UyEH7jl/psioaDeOekCkUi4d4ILvTw+KaktVE9ohm8bCTcMJuie9NdM1/H
+         3w1iNJW5/2AKdWV6wAx0qM3ddyF5qMynusIONtHuhITjHdKC/CQSzCnpQoFmazHnII
+         Gacll48h+Azaw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D6D99403B5; Thu, 20 Apr 2023 08:23:44 -0300 (-03)
-Date:   Thu, 20 Apr 2023 08:23:44 -0300
+        id AFEBA403B5; Thu, 20 Apr 2023 08:33:57 -0300 (-03)
+Date:   Thu, 20 Apr 2023 08:33:57 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Yasin, Ahmad" <ahmad.yasin@intel.com>,
+        "Taylor, Perry" <perry.taylor@intel.com>,
+        "Alt, Samantha" <samantha.alt@intel.com>,
+        "Biggers, Caleb" <caleb.biggers@intel.com>,
+        "Wang, Weilin" <weilin.wang@intel.com>,
+        Edward <edward.baker@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf test: Fix maps use after put
-Message-ID: <ZEEgwKYMaA9iTgFA@kernel.org>
-References: <20230420030430.489243-1-irogers@google.com>
+Subject: Re: [PATCH v2] perf stat: Introduce skippable evsels
+Message-ID: <ZEEjJVTIcXvsV4Fh@kernel.org>
+References: <CAP-5=fXCmKAUn24r0YYHaO63mabZCXae-hAT2WCtk+YYmvS9xg@mail.gmail.com>
+ <99150cb1-fe50-97cf-ad80-cceb9194eb9a@linux.intel.com>
+ <CAP-5=fXZSACj=kGM5t3pBHkQ-W1i0eJayAQ77_ToEp4zXWzJnw@mail.gmail.com>
+ <ea899096-0599-f2a0-04a3-d90a3aa7d45d@linux.intel.com>
+ <CAP-5=fVVFjKgUGV8zVurd99BOhASQ9mMaZqOyw13PYLhZWpsOA@mail.gmail.com>
+ <CAP-5=fW_JwabjEUqSLaJn+tuHXLoyRWqJVVCh_z1dhXJ6On=MQ@mail.gmail.com>
+ <84b19053-2e9f-5251-6816-26d2475894c0@linux.intel.com>
+ <CAP-5=fWJKmo4eLKe9+=3pKGe7g+xfA+YxOz7AOgqLfcRNzNaLw@mail.gmail.com>
+ <201a2ad6-3fb4-4b2a-d8a4-34d924e680c3@linux.intel.com>
+ <CAP-5=fVWN5=URg0Og7KW7f7L4LSw6D8ghOKjP7La=0c+MkXFCg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230420030430.489243-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVWN5=URg0Og7KW7f7L4LSw6D8ghOKjP7La=0c+MkXFCg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Apr 19, 2023 at 08:04:30PM -0700, Ian Rogers escreveu:
-> Fix a use after put reference count issue. maps is copied from leader,
-> but the leader is put on line 79 and then maps is used to read the
-> reference count below - so a use after put, with the put of maps
-> happening within thread__put. Fix by reversing the order of puts so
-> that the leader is put last.
-> 
-> To explain the reference count checker, I wrote this up as a little
-> example here:
-> https://perf.wiki.kernel.org/index.php/Reference_Count_Checking
-> 
-> Note, the bug was introduced by the committer and wasn't present in
-> the original reference count patch set.
-
-Yes, the bug predated your patch and is detected by the reference count
-checking you contributed. 
-
-This was just part of splitting up your series into smaller chunks, in
-this case either we fix the problem detected while developing this
-reference counting infrastructure or fix it later after the merged
-infrastructure, when built with EXTRA_CFLAGS="-DREFCNT_CHECKING=1"
-detects it when running 'perf test'.
-
-Thanks for providing the separate patch fixing it.
-
-Applied.
-
-- Arnaldo
+Em Wed, Apr 19, 2023 at 09:51:20AM -0700, Ian Rogers escreveu:
+> On Wed, Apr 19, 2023 at 7:16 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> > For ADL/RPL platforms
+> > - Segmentation fault which I just found this morning.
+> > # ./perf stat true
+> > Segmentation fault (core dumped)
  
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/thread-maps-share.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/tests/thread-maps-share.c b/tools/perf/tests/thread-maps-share.c
-> index 75ce8aedfc78..858e725318a9 100644
-> --- a/tools/perf/tests/thread-maps-share.c
-> +++ b/tools/perf/tests/thread-maps-share.c
-> @@ -76,16 +76,16 @@ static int test__thread_maps_share(struct test_suite *test __maybe_unused, int s
->  	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(other_maps) == RC_CHK_ACCESS(other_leader->maps));
->  
->  	/* release thread group */
-> -	thread__put(leader);
-> +	thread__put(t3);
->  	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(maps__refcnt(maps)), 3);
->  
-> -	thread__put(t1);
-> +	thread__put(t2);
->  	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(maps__refcnt(maps)), 2);
->  
-> -	thread__put(t2);
-> +	thread__put(t1);
->  	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(maps__refcnt(maps)), 1);
->  
-> -	thread__put(t3);
-> +	thread__put(leader);
->  
->  	/* release other group  */
->  	thread__put(other_leader);
-> -- 
-> 2.40.0.634.g4ca3ef3211-goog
-> 
+> This may also stem from the reference count checking work that Arnaldo
+> is currently merging. It is hard to test hybrid because it uses
+> non-generic code paths.
 
--- 
+Hey, could you please try this under gdb and provide a backtrace? It may
+indeed be related to this refcount checking work, there was a bug fixed
+by the ARM guys for cs-etm and I combed thru and fixed some other use
+before check for NULL cases, maybe one more slipped up.
+
+Here I couldn't reproduce, but I don't have a Intel hybrid system, will
+check with an ARM, but unsure if it will exercise the same code paths...
 
 - Arnaldo
