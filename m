@@ -2,210 +2,99 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A43CEC77B73
-	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Apr 2023 14:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419B4C77B73
+	for <linux-perf-users@archiver.kernel.org>; Thu, 20 Apr 2023 17:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232455AbjDTOrG (ORCPT
+        id S229964AbjDTRSe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 20 Apr 2023 10:47:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40176 "EHLO
+        Thu, 20 Apr 2023 13:18:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231607AbjDTOrF (ORCPT
+        with ESMTP id S231395AbjDTRS2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 20 Apr 2023 10:47:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AD940EE
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Apr 2023 07:46:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682001980;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UuarXWhrCLw27r1idqrDlI5FLRv5+VGgQS+BQN+kySE=;
-        b=XflsG2H3LtaDDIrBlrUnlrlqwt0KiKDMGqx7MXlTfsvGomH1hV1pd20wgqao+JUZ6hcNyZ
-        owSSxPGMQNM8GejlbS+Zw2lr8Ej3Ylfu5B3KuB4jCY9S/zXUNG0gBNm8ApdLeSyj757wOM
-        fvz16FnOugTEyCOFIYJHo/zD0TTHL60=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-357-KQOQxOIsNmq9e8U2aDkjgg-1; Thu, 20 Apr 2023 10:46:19 -0400
-X-MC-Unique: KQOQxOIsNmq9e8U2aDkjgg-1
-Received: by mail-ed1-f71.google.com with SMTP id a5-20020a509e85000000b0050504899d78so1651264edf.16
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Apr 2023 07:46:19 -0700 (PDT)
+        Thu, 20 Apr 2023 13:18:28 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0743C44AE
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Apr 2023 10:18:25 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-555d8c556faso27388887b3.5
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Apr 2023 10:18:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1682011104; x=1684603104;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=YdIqMyPsEr0gHs4l/llP+kkiN7mlxuAb3vlVBqEI0dg=;
+        b=VZBVK9Wk4NuIbFIFJxytyMlkljzYTpCwXmlMNhlTQJBgio03D0Ga6j7Vaa0Qh64f8q
+         9ioPsZhH1NMX7ra+cqxLo5JZ/T4/t6XHcdMhnH/c/f8c11+7yt4NKZViQiO1trsLhwGi
+         f/lJsZEiiUtlkkiXQQFn35RH9zMlWIMr9T80uN3MMIx2zMx+MbblSYD0Bv/AgeEnKJN4
+         HV3iICnx3TISDRfQQRINqpOjKDpGK7Oq7TVnZP/WEAIvyz0B+gs1VeJmjcpahmsCpb0S
+         FPHr00arqpKItk3RKnD+AhfK3QDtXeMt7jHDof5rgrbJyznuNxkcYafMsFMmQNcAEvFm
+         ZsGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682001978; x=1684593978;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UuarXWhrCLw27r1idqrDlI5FLRv5+VGgQS+BQN+kySE=;
-        b=c855ZbkQPL2c2f3AjgIvaHvmJVrMBnDvhpStCZ806ejkTAKUwDkW2VR8Wc4ncQ15CF
-         zidu0l9MD9co4YfpxDhXsGsLorzKuIhE7uQfWTqGxJn9985lgik6kLiNkKTJgKBFSzRR
-         uH58PrZkZeukZwPLs7oqV++cRhH+SbWL3CUokcvTtPq2JszPsLwySnacZws4tVQ7hBZg
-         9y612pROBNxmypSjwyqLZN6DOGNpEW75CFm7BmipZ4QlTfPjZmLFzZ25ki4Rf8HreF5Z
-         JfDennE8OP2FlLi/Zp5Qravw3B1JMW68tYRnMTrp3jquQuPhHNjN9m8U7dlFZR+JOOHi
-         YQDA==
-X-Gm-Message-State: AAQBX9frB9BGH5aN7rXaaAmmowABNMgD5re1QHZQ41snD0/5Rihr0OG7
-        5zBl0GFe9YFFKmsLAGiwudukLv1NMYKgDoR6PiXECBijpko63RoN57AdkyBQCAlDx/qVmI8w55S
-        mKnzi75glNdjX0FsFdftCRBqjnsgzj9U5qZIneS+I
-X-Received: by 2002:a17:906:111b:b0:94f:3b29:e0a5 with SMTP id h27-20020a170906111b00b0094f3b29e0a5mr1943157eja.20.1682001977144;
-        Thu, 20 Apr 2023 07:46:17 -0700 (PDT)
-X-Google-Smtp-Source: AKy350bVKyRQEQS1oQMnyp1eKSRd3tU543f3P9723XA6YozXKkR6Y2hnYcF7OayZptFCnUqdPKZ6IQ==
-X-Received: by 2002:a17:906:111b:b0:94f:3b29:e0a5 with SMTP id h27-20020a170906111b00b0094f3b29e0a5mr1943092eja.20.1682001976345;
-        Thu, 20 Apr 2023 07:46:16 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a0c:4d80:42:443::2])
-        by smtp.gmail.com with ESMTPSA id d20-20020a05640208d400b00504ecc4fa96sm815127edz.95.2023.04.20.07.46.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 07:46:15 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id 23388AA8E17; Thu, 20 Apr 2023 16:46:15 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-        Quentin Monnet <quentin@isovalent.com>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Tony Jones <tonyj@suse.de>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
+        d=1e100.net; s=20221208; t=1682011104; x=1684603104;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YdIqMyPsEr0gHs4l/llP+kkiN7mlxuAb3vlVBqEI0dg=;
+        b=PRIvlomrHg/G51z4mYYW0g/+9oah+dI+auJBZiUfxeFC/41a1dr/Ezc24GLUL02DUr
+         pxFVY5T//xOLlhfmkxQcVDA7w59aGiUmgODkB5QOE1+7ZCB4DvHUlShxVL+++ry4yA3M
+         wPXnUf0RUrf19IALfmI66RpuxI1ci0orSV5stSIXKVdHRdkae0fObzgUqSdPVR6CTDTm
+         S4zbD6QMtxJJVE27oY0ebHGjtEmEjdOOoC9jgbK+YrFJUQZ0JeYt3QV2vNYc7bFCHxTB
+         vG0n/yxio2WI+6ORdYeCDdTy9abAvLzn9rWx2mtN8GFMZ1NrS/Rw2WJhWj48MUjheaVj
+         zP/A==
+X-Gm-Message-State: AAQBX9eMxxKV1rd5EsULmAxkwOMu6WssBnd1t52ZD1suQfV0hh8Esvsq
+        yf3/vaP9Se6jfA5m8TfTDURzsUkIXHdP
+X-Google-Smtp-Source: AKy350YCsMObkz9XUCyBTT8b9NxzuVD1AGbQwwdZ2MIHTkJGkMlbZEVeV1X6z7bNzUnxUrlqxy4evNWM4NvG
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:2265:b6ce:fba4:80e6])
+ (user=irogers job=sendgmr) by 2002:a25:76d1:0:b0:b76:ceb2:661b with SMTP id
+ r200-20020a2576d1000000b00b76ceb2661bmr1502922ybc.3.1682011104229; Thu, 20
+ Apr 2023 10:18:24 -0700 (PDT)
+Date:   Thu, 20 Apr 2023 10:18:12 -0700
+Message-Id: <20230420171812.561603-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
+Subject: [PATCH v1] libperf rc_check: Enable implicitly with sanitizers
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Mahe Tardy <mahe.tardy@gmail.com>,
-        Michal =?utf-8?Q?Such=C3=A1nek?= <msuchanek@suse.de>
-Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
-In-Reply-To: <CAEf4BzY9Hr2M7dZXaTZCP4SRat+KpN42c89LG1Msn4PB+1O1YA@mail.gmail.com>
-References: <ZDfKBPXDQxH8HeX9@syu-laptop>
- <CACdoK4L5A-qdUyQwVbe-KE+0NBPbgqYC1v0uf0i1U_S7KSnmuw@mail.gmail.com>
- <20230414095007.GF63923@kunlun.suse.cz>
- <b933fad3-7759-00d4-94cb-f20dd363b794@isovalent.com>
- <20230414161520.GJ63923@kunlun.suse.cz>
- <CAEf4Bzaw6DBHn=S9zKCXTSh7jW8xL9K6bzi1Q-e8j93thi2hmg@mail.gmail.com>
- <20230418112454.GA15906@kitsune.suse.cz>
- <CAEf4BzZf50fX7T9k47u+9YQrMbSLxLeA1qWwrdWToCZkMhynjg@mail.gmail.com>
- <20230418174132.GE15906@kitsune.suse.cz> <ZD/3Ll7UPucyOYkk@syu-laptop.lan>
- <CAEf4BzZfGewUgYsNNqCgES5Y5-pqbSRDbhtKiuSC7=G_83tyig@mail.gmail.com>
- <87zg73tvm1.fsf@toke.dk>
- <CAEf4BzY9Hr2M7dZXaTZCP4SRat+KpN42c89LG1Msn4PB+1O1YA@mail.gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Thu, 20 Apr 2023 16:46:15 +0200
-Message-ID: <878remtxvs.fsf@toke.dk>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Andrii Nakryiko <andrii.nakryiko@gmail.com> writes:
+If using leak sanitizer then implicitly enable reference count
+checking.
 
->> >> > > > > By switching up actual libbpf used to compile with bpftool, you are
->> >> > > > > potentially introducing subtle problems that your users will be quite
->> >> > > > > unhappy about, if they run into them. Let's work together to make it
->> >> > > > > easier for you to package bpftool properly. We can't switch bpftool to
->> >> > > > > reliably use system-wide libbpf (either static or shared, doesn't
->> >> > > > > matter) because of dependency on internal functionality.
->> >> > > > >
->> >> > > > >
->> >> > > > >   [0] https://github.com/libbpf/veristat/releases/tag/v0.1
->> >> > > >
->> >> > > > So how many copies of libbpf do I need for having a CO-RE toolchain?
->> >> > >
->> >> > > What do you mean by "CO-RE toolchain"? bpftool, veristat, retsnoop,
->> >> > > etc are tools. The fact they are using statically linked libbpf
->> >> > > through Git submodule is irrelevant to end users. You need one libbpf
->> >> > > in the system (for those who link dynamically against libbpf), the
->> >> > > rest are just tools.
->> >> > >
->> >> > > >
->> >> > > > Will different tools have different view of the kernel because they each
->> >> > > > use different private copy of libbpf with different features?
->> >> > >
->> >> > > That's up to tools, not libbpf. You are over pivoting on libbpf here.
->> >> > > There is one view of the kernel, it depends on what features the
->> >> > > kernel supports. If the tool requires some specific functionality of
->> >> > > libbpf, it will update its Git submodule reference to get a version of
->> >> > > libbpf that provides that feature. That's the point, an
->> >> > > application/tool is in control of what kind of features it gets from
->> >> > > libbpf.
->> >>
->> >> Since libbpf has a stable API & ABI, is it theoretically possible for
->> >> bpftool, veristat, retsnoop, etc. all share the same version of libbpf?
->> >
->> > No, because libbpf is not just a set of APIs. Newer libbpf versions
->> > support more BPF-side features, more kernel features, etc, etc. Libbpf
->> > is not a typical user-space library, it is a BPF loader, and even if
->> > user-visible API doesn't change, libbpf's support for various BPF-side
->> > features is extended. Which is important for tools like bpftool,
->> > retsnoop, veristat which rely on loading and working with BPF object
->> > files.
->>
->> The converse of this is also true: if your system is upgraded to a new
->> kernel version with new BPF features, the libbpf version should follow
->> it, and all applications linked against it will automatically take
->> advantage of any bugfixes regardless without having to wait for each
->> application to be updated.
->
-> No, if my application was not developed to take advantage of a new
-> kernel feature, newer libbpf will do nothing for me. If my application
-> wants to support that feature, I'll update my application and
-> correspondingly update libbpf embedded in it. If my application is
-> affected by some bug fix, I'll update libbpf even faster than distros
-> will get to it.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/lib/perf/include/internal/rc_check.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-You may do that, but you're also someone who is following the
-development of libbpf closely and pay attention to when bugs appear. Not
-all applications developers have the same vigilance for all the
-libraries they rely on. Which is the reason distros generally take on
-the responsibility of ensuring their users receive timely library
-updates.
-
-> I've heard all such arguments over the last few years. They are not
-> convincing and my own practical experience shows irrelevance of the
-> above argument.
-
-I don't doubt your personal experience, I'm just objecting to you
-dismissing other points of view just because you haven't experienced
-them yourself.
-
->> Libbpf is really no different from any other library here, and I really
->> don't get why you keep insisting it's "special"...
->
-> It's special in the sense that it provides two sets of APIs -- for
-> user-space (typical libraries) and BPF object files. Besides that, for
-> BPF-side it's not even a set of APIs (headers, helpers, etc), it also
-> provides some set of functionality that can improve or be extended
-> over time. E.g., libbpf used to not support non-inlined BPF
-> subprograms, and then it started supporting them. In terms of API/ABI
-> -- nothing changed. Yet the change is very important.
-
-Lots of libraries do that. File format libraries support new format
-features without changing their API, networking libraries support new
-protocol features, etc. So again, libbpf is not special in this
-respect.
-
-> Now, I build a tool that is using libbpf and some BPF functionality,
-> e.g., retsnoop. Libbpf just got SEC("ksyscall") support. Retsnoop
-> wants to take advantage of it. I just go and use SEC("ksyscall")
-> programs in .bpf.c files that are embedded inside retsnoop.
-> I don't have to *and don't want to* do feature detection of whether a
-> particular libbpf version that happens to be installed/packaged on the
-> system supports this version. I *know* it does, because I control it,
-> through a submodule. That's what I care about.
-
-Right, so just require a minimum version of the library where the API
-you want to use is available. That is pretty standard and distros deal
-with this all the time. This is not an argument for static linking or
-vendoring...
-
-> Whether some distro insists on libbpf being shared across any
-> libbpf-using application or not is none of my concern. Libbpf is an
-> implementation detail of my application (retsnoop), it's not for the
-> packager to decide how I develop and structure my tool.
-
-Right, well, you don't *have* to be cooperative with the wider
-ecosystem, of course. Just as packagers don't have to follow your
-recommendations if they have good reasons not to. I believe we've had
-this discussion before, and I don't think we're going to agree this time
-around either, so let's not waste any more virtual ink on rehashing it :)
-
--Toke
+diff --git a/tools/lib/perf/include/internal/rc_check.h b/tools/lib/perf/include/internal/rc_check.h
+index c0626d8beb59..d5d771ccdc7b 100644
+--- a/tools/lib/perf/include/internal/rc_check.h
++++ b/tools/lib/perf/include/internal/rc_check.h
+@@ -5,6 +5,14 @@
+ #include <stdlib.h>
+ #include <linux/zalloc.h>
+ 
++/*
++ * Enable reference count checking implicitly with leak checking, which is
++ * integrated into address sanitizer.
++ */
++#if defined(LEAK_SANITIZER) || defined(ADDRESS_SANITIZER)
++#define REFCNT_CHECKING 1
++#endif
++
+ /*
+  * Shared reference count checking macros.
+  *
+-- 
+2.40.0.634.g4ca3ef3211-goog
 
