@@ -2,366 +2,202 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C11C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Apr 2023 07:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99CD0C77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Apr 2023 13:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230483AbjDUHb0 (ORCPT
+        id S229712AbjDUNc0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Apr 2023 03:31:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39812 "EHLO
+        Fri, 21 Apr 2023 09:32:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbjDUHbU (ORCPT
+        with ESMTP id S231739AbjDUNcZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Apr 2023 03:31:20 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449F6974D;
-        Fri, 21 Apr 2023 00:30:56 -0700 (PDT)
+        Fri, 21 Apr 2023 09:32:25 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE015FEB;
+        Fri, 21 Apr 2023 06:32:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682062257; x=1713598257;
+  t=1682083944; x=1713619944;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=VNhAvEhsbcV4Xr6H54fgsWS0U0EqR+GogVoxKkGLfyE=;
-  b=T+Nk+glXEdodAVTEMjsdT6A4xJe3qcbFkba22N8w19OAXd/BWb8f3Wjq
-   McDqv0DH6pQW7nJ09XRHJ6pk1NQvphsY13QgE1QKxEC2G4riQuvuynvV5
-   nG0Mpr22cEJB1+lSFx6ZPRrqDrrRkR5g3AYE1YcacwykBgHkK32S/9Lmi
-   t8mRVNZaprht0y/LN1zh/c9wIV6ePJn40nYCyjE4KIjPkDqdOQmdct7Mp
-   eZUqDruwgY9Xb2QEq70Nlzt0kEwC49JfmZpo7v6MAbtheMW0BX1PBZ851
-   lko6Ri/Ds+zOBbA0Dan8W0eJM9zluMtDfKQKYIvzJCHfC/QNKZqnIhku/
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="334810183"
+  bh=NtyfpIlTv6Ni+PZyZAPunQZ3Tw6PSQnyx4LyiZxXNpw=;
+  b=RpWn5CUZisYIfD6F7szy+wL1lFAMjz9Tgs29xyPNWzW476RR5ZPaZqAs
+   H7FXI86iF754+PW82vwOgeFk66XrtddGXrfAJBUZmFTUoJfdR8ECkxhCd
+   1VFTA4ybRjg1noUNDlH6FpeLoh0dn0BeA4nRHOEOlic1wdAbD1XoXv7q8
+   TTPkQvdHbg5kj05rRQl6jp1tT1QwVHlhaQ4KizOPYBQyjo9FEDyouxVNQ
+   N0hzG1AZfnhgmy0kw3PaboFY1AIpb0uByrSKC7hFk3ys2a6smBEe/w5Jo
+   an+sfEFXaQHVjnmcQzWxPO5X3hjv+Dhx2uKtTTvcPJllLHACjqPMTNt9g
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="330189867"
 X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
-   d="scan'208";a="334810183"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 00:30:54 -0700
+   d="scan'208";a="330189867"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 06:32:23 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="724719152"
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="669725954"
 X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
-   d="scan'208";a="724719152"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.35.35])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 00:30:50 -0700
-Message-ID: <03753b17-f380-94fc-d6eb-c5dfb1edb5d5@intel.com>
-Date:   Fri, 21 Apr 2023 10:30:45 +0300
+   d="scan'208";a="669725954"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga006.jf.intel.com with ESMTP; 21 Apr 2023 06:32:23 -0700
+Received: from [10.212.170.184] (kliang2-mobl1.ccr.corp.intel.com [10.212.170.184])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 20602580960;
+        Fri, 21 Apr 2023 06:32:21 -0700 (PDT)
+Message-ID: <7836c3c0-75bb-7c66-d6b1-ee6ff1201117@linux.intel.com>
+Date:   Fri, 21 Apr 2023 09:32:19 -0400
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH v5 2/3] perf: add helper map__fprintf_dsoname_dsoff
-To:     Changbin Du <changbin.du@huawei.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2] perf stat: Introduce skippable evsels
+To:     Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Yasin, Ahmad" <ahmad.yasin@intel.com>,
+        "Taylor, Perry" <perry.taylor@intel.com>,
+        "Alt, Samantha" <samantha.alt@intel.com>,
+        "Biggers, Caleb" <caleb.biggers@intel.com>,
+        "Wang, Weilin" <weilin.wang@intel.com>,
+        Edward <edward.baker@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Hui Wang <hw.huiwang@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <20230418031825.1262579-1-changbin.du@huawei.com>
- <20230418031825.1262579-3-changbin.du@huawei.com>
- <3001bde2-b010-3c00-17de-1c78ef4b589b@intel.com>
- <20230420025511.fkd7upvuoxfz2xih@M910t>
- <ff8bc134-853d-a9d9-901b-2c20beed8d05@intel.com>
- <20230421050456.qnwzj2kl47i6ahto@M910t>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230414051922.3625666-1-irogers@google.com>
+ <d1fe801a-22d0-1f9b-b127-227b21635bd5@linux.intel.com>
+ <CAP-5=fXCmKAUn24r0YYHaO63mabZCXae-hAT2WCtk+YYmvS9xg@mail.gmail.com>
+ <99150cb1-fe50-97cf-ad80-cceb9194eb9a@linux.intel.com>
+ <CAP-5=fXZSACj=kGM5t3pBHkQ-W1i0eJayAQ77_ToEp4zXWzJnw@mail.gmail.com>
+ <ea899096-0599-f2a0-04a3-d90a3aa7d45d@linux.intel.com>
+ <CAP-5=fVVFjKgUGV8zVurd99BOhASQ9mMaZqOyw13PYLhZWpsOA@mail.gmail.com>
+ <CAP-5=fW_JwabjEUqSLaJn+tuHXLoyRWqJVVCh_z1dhXJ6On=MQ@mail.gmail.com>
+ <84b19053-2e9f-5251-6816-26d2475894c0@linux.intel.com>
+ <CAP-5=fWJKmo4eLKe9+=3pKGe7g+xfA+YxOz7AOgqLfcRNzNaLw@mail.gmail.com>
+ <201a2ad6-3fb4-4b2a-d8a4-34d924e680c3@linux.intel.com>
+ <CAP-5=fVWN5=URg0Og7KW7f7L4LSw6D8ghOKjP7La=0c+MkXFCg@mail.gmail.com>
+ <2b8768bf-de24-946f-62da-6ed171a5c324@linux.intel.com>
+ <CAP-5=fU9WeBga_tQKi6QKX1-t=C1w5CoPc8Rn9myR=1CxeQuMg@mail.gmail.com>
+ <46508ba1-6bd5-a28e-5ae8-bc69a679b2c5@linux.intel.com>
+ <CAP-5=fWeBN0gzCzk3_gh=bd_H+q5B+1KqofG5q-JGTaFk7akog@mail.gmail.com>
 Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230421050456.qnwzj2kl47i6ahto@M910t>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fWeBN0gzCzk3_gh=bd_H+q5B+1KqofG5q-JGTaFk7akog@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 21/04/23 08:04, Changbin Du wrote:
->> What do you get if you try below diff on top of
->> your patches:
+
+
+On 2023-04-20 8:19 p.m., Ian Rogers wrote:
+>>>>                         struct evlist *metric_evlist = evlist__new();
+>>>>                         struct evsel *metric_evsel;
+>>>>
+>>>> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+>>>> index 6b46bbb3d322..072fa56744b4 100644
+>>>> --- a/tools/perf/util/stat-display.c
+>>>> +++ b/tools/perf/util/stat-display.c
+>>>> @@ -747,7 +747,7 @@ static void uniquify_event_name(struct evsel *counter)
+>>>>         int ret = 0;
+>>>>
+>>>>         if (counter->uniquified_name || counter->use_config_name ||
+>>>> -           !counter->pmu_name || !strncmp(counter->name, counter->pmu_name,
+>>>> +           !counter->pmu_name || !counter->name ||
+>>>> !strncmp(counter->name, counter->pmu_name,
+>>>>                                            strlen(counter->pmu_name)))
+>>>>                 return;
+>>>
+>>> Is this a pre-existing hybrid bug? It is a real shame hybrid shows so
+>>> few common code paths. In general evsel__name should be preferred over
+>>> directly accessing name.
 >>
->> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
->> index c7bf1ac14e90..df0d21141185 100644
->> --- a/tools/perf/builtin-script.c
->> +++ b/tools/perf/builtin-script.c
->> @@ -576,8 +576,11 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
->>  	if (PRINT_FIELD(DSO))
->>  		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
->>  
->> -	if (PRINT_FIELD(DSOFF))
->> +	if (PRINT_FIELD(DSOFF)) {
->>  		output[type].print_ip_opts |= EVSEL__PRINT_DSOFF;
->> +		/* DSO offset is relative to dso->longname */
->> +		symbol_conf.show_kernel_path = true;
->> +	}
->>  
->>  	if (PRINT_FIELD(SYMOFFSET))
->>  		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
->> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
->> index a86614599269..19ebfd3468cc 100644
->> --- a/tools/perf/util/dso.c
->> +++ b/tools/perf/util/dso.c
->> @@ -67,6 +67,42 @@ char dso__symtab_origin(const struct dso *dso)
->>  	return origin[dso->symtab_type];
->>  }
->>  
->> +bool dso__is_file(const struct dso *dso)
->> +{
->> +	switch (dso->binary_type) {
->> +	case DSO_BINARY_TYPE__KALLSYMS:
->> +	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
->> +		return false;
->> +	case DSO_BINARY_TYPE__VMLINUX:
->> +	case DSO_BINARY_TYPE__GUEST_VMLINUX:
->> +		return true;
->> +	case DSO_BINARY_TYPE__JAVA_JIT:
->> +		return false;
->> +	case DSO_BINARY_TYPE__DEBUGLINK:
->> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
->> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
->> +	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
->> +	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
->> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
->> +	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
->> +	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
->> +	case DSO_BINARY_TYPE__GUEST_KMODULE:
->> +	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
->> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
->> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
->> +	case DSO_BINARY_TYPE__KCORE:
->> +	case DSO_BINARY_TYPE__GUEST_KCORE:
->> +	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
->> +		return true;
->> +	case DSO_BINARY_TYPE__BPF_PROG_INFO:
->> +	case DSO_BINARY_TYPE__BPF_IMAGE:
->> +	case DSO_BINARY_TYPE__OOL:
->> +	case DSO_BINARY_TYPE__NOT_FOUND:
->> +	default:
->> +		return false;
->> +	}
->> +}
->> +
->>  int dso__read_binary_type_filename(const struct dso *dso,
->>  				   enum dso_binary_type type,
->>  				   char *root_dir, char *filename, size_t size)
->> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
->> index 0b7c7633b9f6..fb33f5224fb6 100644
->> --- a/tools/perf/util/dso.h
->> +++ b/tools/perf/util/dso.h
->> @@ -396,6 +396,8 @@ static inline bool dso__is_kallsyms(struct dso *dso)
->>  	return dso->kernel && dso->long_name[0] != '/';
->>  }
->>  
->> +bool dso__is_file(const struct dso *dso);
->> +
->>  void dso__free_a2l(struct dso *dso);
->>  
->>  enum dso_type dso__type(struct dso *dso, struct machine *machine);
->> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
->> index 7da96b41100f..9b79f88d371c 100644
->> --- a/tools/perf/util/map.c
->> +++ b/tools/perf/util/map.c
->> @@ -447,11 +447,12 @@ size_t map__fprintf_dsoname(struct map *map, FILE *fp)
->>  
->>  size_t map__fprintf_dsoname_dsoff(struct map *map, bool print_off, u64 addr, FILE *fp)
->>  {
->> +	const struct dso *dso = map ? map__dso(map) : NULL;
->>  	int printed = 0;
->>  
->>  	printed += fprintf(fp, " (");
->>  	printed += map__fprintf_dsoname(map, fp);
->> -	if (print_off && map && map__dso(map) && !map__dso(map)->kernel)
->> +	if (print_off && dso && dso__is_file(dso))
->>  		printed += fprintf(fp, "+0x%" PRIx64, addr);
->>  	printed += fprintf(fp, ")");
->>  
 >>
+>> I don't think so.
+>>
+>> I haven't dig into the bug yet. But from the source code I can tell that
+>> the check is the same as the current 6.3-rc7.
+>>
+>> For the current 6.3-rc7, perf stat true works.
+>> The perf stat -M TopdownL1 --metric-no-group can work as well.
+>>
+>> But with the current perf-tools-next branch, perf stat true gives a
+>> Segmentation fault.
+>>
+>> The TopdownL1 doesn't work either.
+>>
+>> # ./perf stat -M TopdownL1 --metric-no-group
+>> Error:
+>> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+>> for event (topdown-retiring).
+>> /bin/dmesg | grep -i perf may provide additional information.
 > 
-> Here are the outputs with above change.
+> I see hybrid failing basic sanity tests both for 6.3 and in
+> perf-tools-next. For metrics I see:
 > 
-> For elf in build-id cache, it works as expected.
-> $ sudo perf script -F +dsoff
->        perf-exec 12768   135.648023:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee44)
->        perf-exec 12768   135.648028:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee44)
->        perf-exec 12768   135.648030:         11 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee44)
->        perf-exec 12768   135.648031:        295 cycles:  ffffffff96c8ee46 native_write_msr+0x6 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee46)
->        perf-exec 12768   135.648032:       8850 cycles:  ffffffff96c4c686 native_sched_clock+0x66 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x24c686)
+> ```
+> $ git status
+> ...
+> Your branch is up to date with 'linus/master'
+> ...
+> $ git describe
+> v6.3-rc7-139-gb7bc77e2f2c7
+> $ sudo perf stat -M TopdownL1 -a sleep 1
 
-A bit messy though.  User can use option --show-kernel-path
-so let's not force that after all.
+Try the --metric-no-group.
 
->               ls 27521   501.120978:    4309123 cycles:      7f31cb51c591 _dl_sort_maps+0x301 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
+
+> WARNING: events in group from different hybrid PMUs!
+> WARNING: grouped events cpus do not match, disabling group:
+>  anon group { topdown-retiring, topdown-retiring,
+> INT_MISC.UOP_DROPPING, topdown-fe-bound, topdown-fe-bound,
+> CPU_CLK_UNHALTED.CORE, topdown-be-bound, topdown-be-bound,
+> topdown-bad-spec, topdown-bad-spec }
+> Error:
+> The sys_perf_event_open() syscall returned with 22 (Invalid argument)
+> for event (topdown-retiring).
+> /bin/dmesg | grep -i perf may provide additional information.
+> ```
 > 
-> But when I specify my vmlinux: (the binary_type is DSO_BINARY_TYPE__SYSTEM_PATH_DSO)
-> $ sudo perf script -k linux/vmlinux -F +dsoff
->        perf-exec 12768   135.648023:          1 cycles:  ffffffff96c8ee44 [unknown] (/lib/modules/6.2.12/build/vmlinux)
->        perf-exec 12768   135.648028:          1 cycles:  ffffffff96c8ee44 [unknown] (/lib/modules/6.2.12/build/vmlinux+0xffffffff96c8ee44)
->        perf-exec 12768   135.648030:         11 cycles:  ffffffff96c8ee44 [unknown] (/lib/modules/6.2.12/build/vmlinux+0xffffffff96c8ee44)
->        perf-exec 12768   135.648031:        295 cycles:  ffffffff96c8ee46 [unknown] (/lib/modules/6.2.12/build/vmlinux+0xffffffff96c8ee46)
+> It seems perf on hybrid is quite broken in 6.3, but I doubt we can fix
+> 6.3 given the late stage of the release cycle. As perf-tools-next
+> enables TopdownL1 metrics when no events or metric are specified and
+> when the metric group is present, on hybrid this will cause the
+> pre-existing bug to appear for the no events/metrics case. I suspect
+> this is the cause of the crashes you see, but I'm seeing assertion
+> failures and similar as I'm using a debug build.
 > 
-> This is for kcore file:
-> $ sudo perf script --kallsyms /proc/kallsyms -F +dsoff
->        perf-exec 18922   267.284368:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/proc/kcore+0x7fff96c91e44)
->        perf-exec 18922   267.284372:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/proc/kcore+0x7fff96c91e44)
->        perf-exec 18922   267.284374:         11 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/proc/kcore+0x7fff96c91e44)
+> I'm looking into fixing perf-tools-next and not 6.3. Maybe there will
+> be something we can cherry-pick back to fix up 6.3. It hasn't been
+> easy to find hardware to test on, and if the machine I'm remotely
+> using falls over then I have no means to test, so fingers crossed.
 > 
-> For ko, it's wierd that the binary_type of first one is DSO_BINARY_TYPE__NOT_FOUND.
-> $ sudo perf script -F +dsoff | grep '.ko'
->            gedit 37410   769.927194:     199304 cycles:  ffffffffc0a3d050 ipt_do_table+0x0 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko)
->            gedit 37410   770.459667:     271035 cycles:  ffffffffc0a3d050 ipt_do_table+0x0 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0xf0)
->            gedit 37410   770.649838:     271878 cycles:  ffffffffc0a3d050 ipt_do_table+0x0 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0xf0)
->            gedit 37410   771.239221:     216084 cycles:  ffffffffc0a3d13b ipt_do_table+0xeb (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x1db)
->            gedit 37410   771.257816:     219469 cycles:  ffffffffc0a3d165 ipt_do_table+0x115 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x205)
->            gedit 37410   771.531158:     288970 cycles:  ffffffffc0a3d151 ipt_do_table+0x101 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x1f1)
->            gedit 37410   771.816916:     321215 cycles:  ffffffffc0a3d151 ipt_do_table+0x101 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x1f1)
->            gedit 37410   773.624786:     332528 cycles:  ffffffffc0a3d2ea ipt_do_table+0x29a (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x38a)
-> 
-> Maybe we can just filter by name? e.g. '[kernel.kallsyms]', '[guest.kernel.kallsyms]'.
 
-Using the dso->binary_type deals with other cases also.
-We can just change case DSO_BINARY_TYPE__NOT_FOUND to return
-true.
+OK. So the json metric thing is buggy on both 6.3 and perf-tools-next. I
+think it is even worse in the perf-tools-next.
+Besides the bugs, the json metric also changes the output layout of perf
+stat default. The tools, which are on top of perf, are all impacted.
 
-How about this:
+The question is why we are in such a rush to move the default of perf
+stat from reliable kernel metric to json metric?
 
-commit abaf1cbf5be5d50b1b3682511b92794394b72178
-Author: Adrian Hunter <adrian.hunter@intel.com>
-Date:   Fri Apr 21 10:15:14 2023 +0300
+Can we take a step back? Create a perf/json_metric or whatever branch,
+fix all the issues thoroughly, and then merge to the mainline.
 
-    perf script: Refine printing of dso offset
-    
-    Print dso offset only for object files, and in those cases force using the
-    dso->long_name if the dso->name starts with '[' or the dso is kcore, in
-    order to avoid special names such as [vdso], or mixing up kcore with
-    vmlinux.
-    
-    Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+I think the default of perf stat is frequently used by not only the
+newbees but also the veterans. That could have a big user-visible impact.
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index a86614599269..046fbfcfdaab 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -67,6 +67,39 @@ char dso__symtab_origin(const struct dso *dso)
- 	return origin[dso->symtab_type];
- }
- 
-+bool dso__is_object_file(const struct dso *dso)
-+{
-+	switch (dso->binary_type) {
-+	case DSO_BINARY_TYPE__KALLSYMS:
-+	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
-+	case DSO_BINARY_TYPE__JAVA_JIT:
-+	case DSO_BINARY_TYPE__BPF_PROG_INFO:
-+	case DSO_BINARY_TYPE__BPF_IMAGE:
-+	case DSO_BINARY_TYPE__OOL:
-+		return false;
-+	case DSO_BINARY_TYPE__VMLINUX:
-+	case DSO_BINARY_TYPE__GUEST_VMLINUX:
-+	case DSO_BINARY_TYPE__DEBUGLINK:
-+	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
-+	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
-+	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
-+	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
-+	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
-+	case DSO_BINARY_TYPE__GUEST_KMODULE:
-+	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
-+	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
-+	case DSO_BINARY_TYPE__KCORE:
-+	case DSO_BINARY_TYPE__GUEST_KCORE:
-+	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
-+	case DSO_BINARY_TYPE__NOT_FOUND:
-+	default:
-+		return true;
-+	}
-+}
-+
- int dso__read_binary_type_filename(const struct dso *dso,
- 				   enum dso_binary_type type,
- 				   char *root_dir, char *filename, size_t size)
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index 0b7c7633b9f6..b23a157c914d 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -379,23 +379,25 @@ void dso__reset_find_symbol_cache(struct dso *dso);
- size_t dso__fprintf_symbols_by_name(struct dso *dso, FILE *fp);
- size_t dso__fprintf(struct dso *dso, FILE *fp);
- 
--static inline bool dso__is_vmlinux(struct dso *dso)
-+static inline bool dso__is_vmlinux(const struct dso *dso)
- {
- 	return dso->binary_type == DSO_BINARY_TYPE__VMLINUX ||
- 	       dso->binary_type == DSO_BINARY_TYPE__GUEST_VMLINUX;
- }
- 
--static inline bool dso__is_kcore(struct dso *dso)
-+static inline bool dso__is_kcore(const struct dso *dso)
- {
- 	return dso->binary_type == DSO_BINARY_TYPE__KCORE ||
- 	       dso->binary_type == DSO_BINARY_TYPE__GUEST_KCORE;
- }
- 
--static inline bool dso__is_kallsyms(struct dso *dso)
-+static inline bool dso__is_kallsyms(const struct dso *dso)
- {
- 	return dso->kernel && dso->long_name[0] != '/';
- }
- 
-+bool dso__is_object_file(const struct dso *dso);
-+
- void dso__free_a2l(struct dso *dso);
- 
- enum dso_type dso__type(struct dso *dso, struct machine *machine);
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 7da96b41100f..5e7808b0bc87 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -424,14 +424,21 @@ size_t map__fprintf(struct map *map, FILE *fp)
- 		       map__start(map), map__end(map), map__pgoff(map), dso->name);
- }
- 
--size_t map__fprintf_dsoname(struct map *map, FILE *fp)
-+static bool prefer_dso_long_name(const struct dso *dso, bool print_off)
-+{
-+	return dso->long_name &&
-+	       (symbol_conf.show_kernel_path ||
-+		(print_off && (dso->name[0] == '[' || dso__is_kcore(dso))));
-+}
-+
-+static size_t __map__fprintf_dsoname(struct map *map, bool print_off, FILE *fp)
- {
- 	char buf[symbol_conf.pad_output_len_dso + 1];
- 	const char *dsoname = "[unknown]";
- 	const struct dso *dso = map ? map__dso(map) : NULL;
- 
- 	if (dso) {
--		if (symbol_conf.show_kernel_path && dso->long_name)
-+		if (prefer_dso_long_name(dso, print_off))
- 			dsoname = dso->long_name;
- 		else
- 			dsoname = dso->name;
-@@ -445,13 +452,21 @@ size_t map__fprintf_dsoname(struct map *map, FILE *fp)
- 	return fprintf(fp, "%s", dsoname);
- }
- 
-+size_t map__fprintf_dsoname(struct map *map, FILE *fp)
-+{
-+	return __map__fprintf_dsoname(map, false, fp);
-+}
-+
- size_t map__fprintf_dsoname_dsoff(struct map *map, bool print_off, u64 addr, FILE *fp)
- {
-+	const struct dso *dso = map ? map__dso(map) : NULL;
- 	int printed = 0;
- 
-+	if (print_off && (!dso || !dso__is_object_file(dso)))
-+		print_off = false;
- 	printed += fprintf(fp, " (");
--	printed += map__fprintf_dsoname(map, fp);
--	if (print_off && map && map__dso(map) && !map__dso(map)->kernel)
-+	printed += __map__fprintf_dsoname(map, print_off, fp);
-+	if (print_off)
- 		printed += fprintf(fp, "+0x%" PRIx64, addr);
- 	printed += fprintf(fp, ")");
- 
+The 6.4 merge window is approaching. Can we at least revert the patches
+for 6.4?
 
+Arnaldo, what do you think?
+
+Thanks,
+Kan
