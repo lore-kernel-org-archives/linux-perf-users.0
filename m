@@ -2,293 +2,366 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A7FC7618E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Apr 2023 06:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C11C77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Apr 2023 07:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230105AbjDUGlF (ORCPT
+        id S230483AbjDUHb0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Apr 2023 02:41:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39918 "EHLO
+        Fri, 21 Apr 2023 03:31:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjDUGlE (ORCPT
+        with ESMTP id S229540AbjDUHbU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Apr 2023 02:41:04 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3150171B
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Apr 2023 23:41:00 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f08b6a9f8aso270885e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Apr 2023 23:41:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682059259; x=1684651259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=316PSvUrUKNHsSOcln92fYW/lkHL8aHVx/JN9HDPWyQ=;
-        b=xUaGVOB4Zx8ESteX5NhC4DiFYJPRs58V2PwikDSOs0jUvhuLnsXuUzdWEsH2Xk9xGL
-         q0M+2JRlcIleQOZP939O0hppcUw0FXEi67ENbbUgWJ6bmz9eXpjgb6GLSQElnFVVXSzI
-         bYMb7kZiYyNypn0SidpdfYdfCGRvKuMT/N1MIzf1i4NpSjQjMJ17e0NNKDIt6v+Z8xsH
-         oKlzXa83M8J2h/Mh8JQUfnIlBJSCq8jm94LOS/io8CoXjl/T7rCnQzs3x4uDZiUqe/3r
-         A80lVokXD/MRcpBCDUXrY1UORhxH1d0l98k9/5cYCJZ/pl1KaiMU7M6eWlqpKPIo0Y0U
-         FyAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682059259; x=1684651259;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=316PSvUrUKNHsSOcln92fYW/lkHL8aHVx/JN9HDPWyQ=;
-        b=QUZLrwSfKzMSlfrZrOSL9F/ICdSy3PSzSMmXVwWEBysJ6nNyFuEEQZETvQkQcKdRjy
-         wdeIz41aPoGwFn/H/gdcJC/oetjigS8h7QqaK1GAV+MgU5+m2MlD2eI6UmNkKdTYEnw+
-         a6gqKb6T4suPD2Ny7K3ROED4CdZp5pBsDkLS52fa7udxKN+RZy9JL3TMEdsKffX0Vhwv
-         j61xRFooUfKx37nRL/4syO+zpZSoM9uhSfnbi+wTRcgs88M5PX9GNpHfZl9i+PP5E+nY
-         JX8+2hwRbRXU7wlUpcM+OJTmG+mWMDD0t5f/rHR8j8SWhXsOh8sACEJkSpA0+s3aghU4
-         1Jgw==
-X-Gm-Message-State: AAQBX9fXH5iWQLnYVPoPIYnl9jNGLeSaqcKGdyhs386LFXd+dVRU2XzX
-        gQWqAkij4gFpjXmYMSKB3kCkuiqZmvDcro1sKhiv2Q==
-X-Google-Smtp-Source: AKy350af+oza398YkDzKpX/Cf/o+A7YiWDEi3iTwJQbqCWefw38qn0EYgefTUPrbfygG6iO4ffJx8F5LSvEU/FFIkyI=
-X-Received: by 2002:a05:600c:5574:b0:3f0:aeef:e2da with SMTP id
- ja20-20020a05600c557400b003f0aeefe2damr78138wmb.3.1682059258941; Thu, 20 Apr
- 2023 23:40:58 -0700 (PDT)
+        Fri, 21 Apr 2023 03:31:20 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449F6974D;
+        Fri, 21 Apr 2023 00:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682062257; x=1713598257;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VNhAvEhsbcV4Xr6H54fgsWS0U0EqR+GogVoxKkGLfyE=;
+  b=T+Nk+glXEdodAVTEMjsdT6A4xJe3qcbFkba22N8w19OAXd/BWb8f3Wjq
+   McDqv0DH6pQW7nJ09XRHJ6pk1NQvphsY13QgE1QKxEC2G4riQuvuynvV5
+   nG0Mpr22cEJB1+lSFx6ZPRrqDrrRkR5g3AYE1YcacwykBgHkK32S/9Lmi
+   t8mRVNZaprht0y/LN1zh/c9wIV6ePJn40nYCyjE4KIjPkDqdOQmdct7Mp
+   eZUqDruwgY9Xb2QEq70Nlzt0kEwC49JfmZpo7v6MAbtheMW0BX1PBZ851
+   lko6Ri/Ds+zOBbA0Dan8W0eJM9zluMtDfKQKYIvzJCHfC/QNKZqnIhku/
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="334810183"
+X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
+   d="scan'208";a="334810183"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 00:30:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="724719152"
+X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
+   d="scan'208";a="724719152"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.35.35])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 00:30:50 -0700
+Message-ID: <03753b17-f380-94fc-d6eb-c5dfb1edb5d5@intel.com>
+Date:   Fri, 21 Apr 2023 10:30:45 +0300
 MIME-Version: 1.0
-References: <202304211253.cbcd33b7-oliver.sang@intel.com>
-In-Reply-To: <202304211253.cbcd33b7-oliver.sang@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 20 Apr 2023 23:40:25 -0700
-Message-ID: <CAP-5=fV2592hai4wGhOrCBYFwTxDnre7wdJwBRHgdPf6KXYfTA@mail.gmail.com>
-Subject: Re: [acme:tmp.perf/core] [perf map] ec417ad4c6: perf-sanity-tests.Test_dwarf_unwind.fail
-To:     kernel test robot <oliver.sang@intel.com>
-Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexey Bayduraev <alexey.v.bayduraev@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        German Gomez <german.gomez@arm.com>,
-        Hao Luo <haoluo@google.com>, Ingo Molnar <mingo@redhat.com>,
-        James Clark <james.clark@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH v5 2/3] perf: add helper map__fprintf_dsoname_dsoff
+To:     Changbin Du <changbin.du@huawei.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Miaoqian Lin <linmq006@gmail.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Hui Wang <hw.huiwang@huawei.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Riccardo Mancini <rickyman7@gmail.com>,
-        Shunsuke Nakamura <nakamura.shun@fujitsu.com>,
-        Song Liu <song@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Yury Norov <yury.norov@gmail.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ingo Molnar <mingo@redhat.com>
+References: <20230418031825.1262579-1-changbin.du@huawei.com>
+ <20230418031825.1262579-3-changbin.du@huawei.com>
+ <3001bde2-b010-3c00-17de-1c78ef4b589b@intel.com>
+ <20230420025511.fkd7upvuoxfz2xih@M910t>
+ <ff8bc134-853d-a9d9-901b-2c20beed8d05@intel.com>
+ <20230421050456.qnwzj2kl47i6ahto@M910t>
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230421050456.qnwzj2kl47i6ahto@M910t>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Apr 20, 2023 at 11:02=E2=80=AFPM kernel test robot
-<oliver.sang@intel.com> wrote:
->
->
-> Hello,
->
-> kernel test robot noticed "perf-sanity-tests.Test_dwarf_unwind.fail" on:
->
-> commit: ec417ad4c691b5d90ab13cf26789e8719468ae39 ("perf map: Changes to r=
-eference counting")
-> https://git.kernel.org/cgit/linux/kernel/git/acme/linux.git tmp.perf/core
->
-> [test failed on linux-next/master 44bf136283e567b2b62653be7630e7511da41da=
-2]
->
-> in testcase: perf-sanity-tests
-> version: perf-x86_64-00c7b5f4ddc5-1_20230402
-> with following parameters:
->
->         perf_compiler: gcc
->
->
->
-> compiler: gcc-11
-> test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz=
- (Kaby Lake) with 32G memory
->
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
->
->
-> we also noticed below test failed on this commit but pass on parent:
->
-> 392cf49ec54f0c7b ec417ad4c691b5d90ab13cf2678
-> ---------------- ---------------------------
->        fail:runs  %reproduction    fail:runs
->            |             |             |
->            :6           33%           2:2     perf-sanity-tests.Check_bra=
-nch_stack_sampling.fail
->            :6           33%           2:2     perf-sanity-tests.Test_dwar=
-f_unwind.fail
->            :6           33%           2:2     perf-sanity-tests.perf_reco=
-rd_tests.fail
->
->
->
-> If you fix the issue, kindly add following tag
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Link: https://lore.kernel.org/oe-lkp/202304211253.cbcd33b7-oliver.sang@=
-intel.com
->
->
->
-> 2023-04-20 17:08:51 sudo /usr/src/perf_selftests-x86_64-rhel-8.3-func-ec4=
-17ad4c691b5d90ab13cf26789e8719468ae39/tools/perf/perf test 76
->  76: Test dwarf unwind                                               : FA=
-ILED!
->
-> ...
->
-> 2023-04-20 17:09:39 sudo /usr/src/perf_selftests-x86_64-rhel-8.3-func-ec4=
-17ad4c691b5d90ab13cf26789e8719468ae39/tools/perf/perf test 94
->  94: perf record tests                                               : FA=
-ILED!
->
-> ...
->
-> 2023-04-20 17:16:40 sudo /usr/src/perf_selftests-x86_64-rhel-8.3-func-ec4=
-17ad4c691b5d90ab13cf26789e8719468ae39/tools/perf/perf test 110
-> 110: Check branch stack sampling                                     : FA=
-ILED!
->
->
->
-> To reproduce:
->
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         sudo bin/lkp install job.yaml           # job file is attached in=
- this email
->         bin/lkp split-job --compatible job.yaml # generate the yaml file =
-for lkp run
->         sudo bin/lkp run generated-yaml-file
->
->         # if come across any failure that blocks the test,
->         # please remove ~/.lkp and /lkp dir to run from a clean state.
+On 21/04/23 08:04, Changbin Du wrote:
+>> What do you get if you try below diff on top of
+>> your patches:
+>>
+>> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+>> index c7bf1ac14e90..df0d21141185 100644
+>> --- a/tools/perf/builtin-script.c
+>> +++ b/tools/perf/builtin-script.c
+>> @@ -576,8 +576,11 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
+>>  	if (PRINT_FIELD(DSO))
+>>  		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
+>>  
+>> -	if (PRINT_FIELD(DSOFF))
+>> +	if (PRINT_FIELD(DSOFF)) {
+>>  		output[type].print_ip_opts |= EVSEL__PRINT_DSOFF;
+>> +		/* DSO offset is relative to dso->longname */
+>> +		symbol_conf.show_kernel_path = true;
+>> +	}
+>>  
+>>  	if (PRINT_FIELD(SYMOFFSET))
+>>  		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
+>> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+>> index a86614599269..19ebfd3468cc 100644
+>> --- a/tools/perf/util/dso.c
+>> +++ b/tools/perf/util/dso.c
+>> @@ -67,6 +67,42 @@ char dso__symtab_origin(const struct dso *dso)
+>>  	return origin[dso->symtab_type];
+>>  }
+>>  
+>> +bool dso__is_file(const struct dso *dso)
+>> +{
+>> +	switch (dso->binary_type) {
+>> +	case DSO_BINARY_TYPE__KALLSYMS:
+>> +	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
+>> +		return false;
+>> +	case DSO_BINARY_TYPE__VMLINUX:
+>> +	case DSO_BINARY_TYPE__GUEST_VMLINUX:
+>> +		return true;
+>> +	case DSO_BINARY_TYPE__JAVA_JIT:
+>> +		return false;
+>> +	case DSO_BINARY_TYPE__DEBUGLINK:
+>> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
+>> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
+>> +	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+>> +	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
+>> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+>> +	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
+>> +	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+>> +	case DSO_BINARY_TYPE__GUEST_KMODULE:
+>> +	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
+>> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
+>> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
+>> +	case DSO_BINARY_TYPE__KCORE:
+>> +	case DSO_BINARY_TYPE__GUEST_KCORE:
+>> +	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+>> +		return true;
+>> +	case DSO_BINARY_TYPE__BPF_PROG_INFO:
+>> +	case DSO_BINARY_TYPE__BPF_IMAGE:
+>> +	case DSO_BINARY_TYPE__OOL:
+>> +	case DSO_BINARY_TYPE__NOT_FOUND:
+>> +	default:
+>> +		return false;
+>> +	}
+>> +}
+>> +
+>>  int dso__read_binary_type_filename(const struct dso *dso,
+>>  				   enum dso_binary_type type,
+>>  				   char *root_dir, char *filename, size_t size)
+>> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+>> index 0b7c7633b9f6..fb33f5224fb6 100644
+>> --- a/tools/perf/util/dso.h
+>> +++ b/tools/perf/util/dso.h
+>> @@ -396,6 +396,8 @@ static inline bool dso__is_kallsyms(struct dso *dso)
+>>  	return dso->kernel && dso->long_name[0] != '/';
+>>  }
+>>  
+>> +bool dso__is_file(const struct dso *dso);
+>> +
+>>  void dso__free_a2l(struct dso *dso);
+>>  
+>>  enum dso_type dso__type(struct dso *dso, struct machine *machine);
+>> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+>> index 7da96b41100f..9b79f88d371c 100644
+>> --- a/tools/perf/util/map.c
+>> +++ b/tools/perf/util/map.c
+>> @@ -447,11 +447,12 @@ size_t map__fprintf_dsoname(struct map *map, FILE *fp)
+>>  
+>>  size_t map__fprintf_dsoname_dsoff(struct map *map, bool print_off, u64 addr, FILE *fp)
+>>  {
+>> +	const struct dso *dso = map ? map__dso(map) : NULL;
+>>  	int printed = 0;
+>>  
+>>  	printed += fprintf(fp, " (");
+>>  	printed += map__fprintf_dsoname(map, fp);
+>> -	if (print_off && map && map__dso(map) && !map__dso(map)->kernel)
+>> +	if (print_off && dso && dso__is_file(dso))
+>>  		printed += fprintf(fp, "+0x%" PRIx64, addr);
+>>  	printed += fprintf(fp, ")");
+>>  
+>>
+> 
+> Here are the outputs with above change.
+> 
+> For elf in build-id cache, it works as expected.
+> $ sudo perf script -F +dsoff
+>        perf-exec 12768   135.648023:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee44)
+>        perf-exec 12768   135.648028:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee44)
+>        perf-exec 12768   135.648030:         11 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee44)
+>        perf-exec 12768   135.648031:        295 cycles:  ffffffff96c8ee46 native_write_msr+0x6 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee46)
+>        perf-exec 12768   135.648032:       8850 cycles:  ffffffff96c4c686 native_sched_clock+0x66 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x24c686)
 
-The important detail missing here is that these tests are failing with
-address sanitizer. Here is the first failure:
+A bit messy though.  User can use option --show-kernel-path
+so let's not force that after all.
 
-=3D=3D742187=3D=3DERROR: AddressSanitizer: stack-buffer-underflow on addres=
-s
-0x7fffe253b430 at pc 0x7f2f2cc4814b bp 0x7fffe253b360 sp
-0x7fffe253ab10
-READ of size 8192 at 0x7fffe253b430 thread T0
-    #0 0x7f2f2cc4814a in __interceptor_memcpy
-libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:827
-    #1 0x561de4706b25 in sample_ustack arch/x86/tests/dwarf-unwind.c:39
-    #2 0x561de4706cf7 in test__arch_unwind_sample
-arch/x86/tests/dwarf-unwind.c:77
-    #3 0x561de43d8832 in test_dwarf_unwind__thread tests/dwarf-unwind.c:120
-    #4 0x561de43d8b08 in test_dwarf_unwind__compare tests/dwarf-unwind.c:15=
-2
-    #5 0x7f2f2bc5c47b in __GI_bsearch ../bits/stdlib-bsearch.h:33
-    #6 0x7f2f2cc4a4ac in __interceptor_bsearch
-libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:10155
-    #7 0x7f2f2cc4a4ac in __interceptor_bsearch
-libsanitizer/sanitizer_common/sanitizer_common_interceptors.inc:10150
-    #8 0x561de43d8cc9 in test_dwarf_unwind__krava_3 tests/dwarf-unwind.c:17=
-6
-    #9 0x561de43d8d4f in test_dwarf_unwind__krava_2 tests/dwarf-unwind.c:18=
-5
-    #10 0x561de43d8d92 in test_dwarf_unwind__krava_1 tests/dwarf-unwind.c:1=
-94
-    #11 0x561de43d90b5 in test__dwarf_unwind tests/dwarf-unwind.c:234
-    #12 0x561de434fe6c in run_test tests/builtin-test.c:238
-    #13 0x561de4350111 in test_and_print tests/builtin-test.c:267
-    #14 0x561de4350f40 in __cmd_test tests/builtin-test.c:404
-    #15 0x561de435240f in cmd_test tests/builtin-test.c:561
-    #16 0x561de43db29a in run_builtin tools/perf/perf.c:323
-    #17 0x561de43db80b in handle_internal_command tools/perf/perf.c:377
-    #18 0x561de43dbbd3 in run_argv tools/perf/perf.c:421
-    #19 0x561de43dc13b in main tools/perf/perf.c:537
+>               ls 27521   501.120978:    4309123 cycles:      7f31cb51c591 _dl_sort_maps+0x301 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
+> 
+> But when I specify my vmlinux: (the binary_type is DSO_BINARY_TYPE__SYSTEM_PATH_DSO)
+> $ sudo perf script -k linux/vmlinux -F +dsoff
+>        perf-exec 12768   135.648023:          1 cycles:  ffffffff96c8ee44 [unknown] (/lib/modules/6.2.12/build/vmlinux)
+>        perf-exec 12768   135.648028:          1 cycles:  ffffffff96c8ee44 [unknown] (/lib/modules/6.2.12/build/vmlinux+0xffffffff96c8ee44)
+>        perf-exec 12768   135.648030:         11 cycles:  ffffffff96c8ee44 [unknown] (/lib/modules/6.2.12/build/vmlinux+0xffffffff96c8ee44)
+>        perf-exec 12768   135.648031:        295 cycles:  ffffffff96c8ee46 [unknown] (/lib/modules/6.2.12/build/vmlinux+0xffffffff96c8ee46)
+> 
+> This is for kcore file:
+> $ sudo perf script --kallsyms /proc/kallsyms -F +dsoff
+>        perf-exec 18922   267.284368:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/proc/kcore+0x7fff96c91e44)
+>        perf-exec 18922   267.284372:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/proc/kcore+0x7fff96c91e44)
+>        perf-exec 18922   267.284374:         11 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/proc/kcore+0x7fff96c91e44)
+> 
+> For ko, it's wierd that the binary_type of first one is DSO_BINARY_TYPE__NOT_FOUND.
+> $ sudo perf script -F +dsoff | grep '.ko'
+>            gedit 37410   769.927194:     199304 cycles:  ffffffffc0a3d050 ipt_do_table+0x0 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko)
+>            gedit 37410   770.459667:     271035 cycles:  ffffffffc0a3d050 ipt_do_table+0x0 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0xf0)
+>            gedit 37410   770.649838:     271878 cycles:  ffffffffc0a3d050 ipt_do_table+0x0 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0xf0)
+>            gedit 37410   771.239221:     216084 cycles:  ffffffffc0a3d13b ipt_do_table+0xeb (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x1db)
+>            gedit 37410   771.257816:     219469 cycles:  ffffffffc0a3d165 ipt_do_table+0x115 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x205)
+>            gedit 37410   771.531158:     288970 cycles:  ffffffffc0a3d151 ipt_do_table+0x101 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x1f1)
+>            gedit 37410   771.816916:     321215 cycles:  ffffffffc0a3d151 ipt_do_table+0x101 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x1f1)
+>            gedit 37410   773.624786:     332528 cycles:  ffffffffc0a3d2ea ipt_do_table+0x29a (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x38a)
+> 
+> Maybe we can just filter by name? e.g. '[kernel.kallsyms]', '[guest.kernel.kallsyms]'.
 
-Address 0x7fffe253b430 is located in stack of thread T0 at offset 0 in fram=
-e
-    #0 0x561de43d8716 in test_dwarf_unwind__thread tests/dwarf-unwind.c:113
+Using the dso->binary_type deals with other cases also.
+We can just change case DSO_BINARY_TYPE__NOT_FOUND to return
+true.
 
-  This frame has 2 object(s):
-    [32, 40) 'cnt' (line 115) <=3D=3D Memory access at offset 0 partially
-underflows this variable
-    [64, 1440) 'sample' (line 114) <=3D=3D Memory access at offset 0
-partially underflows this variable
-HINT: this may be a false positive if your program uses some custom
-stack unwind mechanism, swapcontext or vfork
-      (longjmp and C++ exceptions *are* supported)
-SUMMARY: AddressSanitizer: stack-buffer-underflow
-../../../../src/libsanitizer/sanitizer_common/sanitizer_common_interceptors=
-.inc:827
-in __interceptor_memcpy
-Shadow bytes around the buggy address:
-  0x10007c49f630: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x10007c49f640: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x10007c49f650: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x10007c49f660: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x10007c49f670: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-=3D>0x10007c49f680: 00 00 00 00 00 00[f1]f1 f1 f1 00 f2 f2 f2 00 00
-  0x10007c49f690: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x10007c49f6a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x10007c49f6b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x10007c49f6c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  0x10007c49f6d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-Shadow byte legend (one shadow byte represents 8 application bytes):
-  Addressable:           00
-  Partially addressable: 01 02 03 04 05 06 07
-  Heap left redzone:       fa
-  Freed heap region:       fd
-  Stack left redzone:      f1
-  Stack mid redzone:       f2
-  Stack right redzone:     f3
-  Stack after return:      f5
-  Stack use after scope:   f8
-  Global redzone:          f9
-  Global init order:       f6
-  Poisoned by user:        f7
-  Container overflow:      fc
-  Array cookie:            ac
-  Intra object redzone:    bb
-  ASan internal:           fe
-  Left alloca redzone:     ca
-  Right alloca redzone:    cb
-=3D=3D742187=3D=3DABORTING
+How about this:
 
-Which corresponds to:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
-erf/arch/x86/tests/dwarf-unwind.c?h=3Dperf-tools-next#n39
-sp =3D (unsigned long) regs[PERF_REG_X86_SP];
-...
-memcpy(buf, (void *) sp, stack_size);
+commit abaf1cbf5be5d50b1b3682511b92794394b72178
+Author: Adrian Hunter <adrian.hunter@intel.com>
+Date:   Fri Apr 21 10:15:14 2023 +0300
 
-ie address sanitizer is failing because of reading non-data values
-from the stack, which is an inherent property of the test. So what's
-confusing in this report isn't that we see failures, but why the
-failures are being reported now. Presumably because code changed and
-there is some effort to correlate the two things.
+    perf script: Refine printing of dso offset
+    
+    Print dso offset only for object files, and in those cases force using the
+    dso->long_name if the dso->name starts with '[' or the dso is kcore, in
+    order to avoid special names such as [vdso], or mixing up kcore with
+    vmlinux.
+    
+    Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Thanks,
-Ian
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index a86614599269..046fbfcfdaab 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -67,6 +67,39 @@ char dso__symtab_origin(const struct dso *dso)
+ 	return origin[dso->symtab_type];
+ }
+ 
++bool dso__is_object_file(const struct dso *dso)
++{
++	switch (dso->binary_type) {
++	case DSO_BINARY_TYPE__KALLSYMS:
++	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
++	case DSO_BINARY_TYPE__JAVA_JIT:
++	case DSO_BINARY_TYPE__BPF_PROG_INFO:
++	case DSO_BINARY_TYPE__BPF_IMAGE:
++	case DSO_BINARY_TYPE__OOL:
++		return false;
++	case DSO_BINARY_TYPE__VMLINUX:
++	case DSO_BINARY_TYPE__GUEST_VMLINUX:
++	case DSO_BINARY_TYPE__DEBUGLINK:
++	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
++	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
++	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
++	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
++	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
++	case DSO_BINARY_TYPE__GUEST_KMODULE:
++	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
++	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
++	case DSO_BINARY_TYPE__KCORE:
++	case DSO_BINARY_TYPE__GUEST_KCORE:
++	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
++	case DSO_BINARY_TYPE__NOT_FOUND:
++	default:
++		return true;
++	}
++}
++
+ int dso__read_binary_type_filename(const struct dso *dso,
+ 				   enum dso_binary_type type,
+ 				   char *root_dir, char *filename, size_t size)
+diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+index 0b7c7633b9f6..b23a157c914d 100644
+--- a/tools/perf/util/dso.h
++++ b/tools/perf/util/dso.h
+@@ -379,23 +379,25 @@ void dso__reset_find_symbol_cache(struct dso *dso);
+ size_t dso__fprintf_symbols_by_name(struct dso *dso, FILE *fp);
+ size_t dso__fprintf(struct dso *dso, FILE *fp);
+ 
+-static inline bool dso__is_vmlinux(struct dso *dso)
++static inline bool dso__is_vmlinux(const struct dso *dso)
+ {
+ 	return dso->binary_type == DSO_BINARY_TYPE__VMLINUX ||
+ 	       dso->binary_type == DSO_BINARY_TYPE__GUEST_VMLINUX;
+ }
+ 
+-static inline bool dso__is_kcore(struct dso *dso)
++static inline bool dso__is_kcore(const struct dso *dso)
+ {
+ 	return dso->binary_type == DSO_BINARY_TYPE__KCORE ||
+ 	       dso->binary_type == DSO_BINARY_TYPE__GUEST_KCORE;
+ }
+ 
+-static inline bool dso__is_kallsyms(struct dso *dso)
++static inline bool dso__is_kallsyms(const struct dso *dso)
+ {
+ 	return dso->kernel && dso->long_name[0] != '/';
+ }
+ 
++bool dso__is_object_file(const struct dso *dso);
++
+ void dso__free_a2l(struct dso *dso);
+ 
+ enum dso_type dso__type(struct dso *dso, struct machine *machine);
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 7da96b41100f..5e7808b0bc87 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -424,14 +424,21 @@ size_t map__fprintf(struct map *map, FILE *fp)
+ 		       map__start(map), map__end(map), map__pgoff(map), dso->name);
+ }
+ 
+-size_t map__fprintf_dsoname(struct map *map, FILE *fp)
++static bool prefer_dso_long_name(const struct dso *dso, bool print_off)
++{
++	return dso->long_name &&
++	       (symbol_conf.show_kernel_path ||
++		(print_off && (dso->name[0] == '[' || dso__is_kcore(dso))));
++}
++
++static size_t __map__fprintf_dsoname(struct map *map, bool print_off, FILE *fp)
+ {
+ 	char buf[symbol_conf.pad_output_len_dso + 1];
+ 	const char *dsoname = "[unknown]";
+ 	const struct dso *dso = map ? map__dso(map) : NULL;
+ 
+ 	if (dso) {
+-		if (symbol_conf.show_kernel_path && dso->long_name)
++		if (prefer_dso_long_name(dso, print_off))
+ 			dsoname = dso->long_name;
+ 		else
+ 			dsoname = dso->name;
+@@ -445,13 +452,21 @@ size_t map__fprintf_dsoname(struct map *map, FILE *fp)
+ 	return fprintf(fp, "%s", dsoname);
+ }
+ 
++size_t map__fprintf_dsoname(struct map *map, FILE *fp)
++{
++	return __map__fprintf_dsoname(map, false, fp);
++}
++
+ size_t map__fprintf_dsoname_dsoff(struct map *map, bool print_off, u64 addr, FILE *fp)
+ {
++	const struct dso *dso = map ? map__dso(map) : NULL;
+ 	int printed = 0;
+ 
++	if (print_off && (!dso || !dso__is_object_file(dso)))
++		print_off = false;
+ 	printed += fprintf(fp, " (");
+-	printed += map__fprintf_dsoname(map, fp);
+-	if (print_off && map && map__dso(map) && !map__dso(map)->kernel)
++	printed += __map__fprintf_dsoname(map, print_off, fp);
++	if (print_off)
+ 		printed += fprintf(fp, "+0x%" PRIx64, addr);
+ 	printed += fprintf(fp, ")");
+ 
 
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests
->
->
