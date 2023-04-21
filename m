@@ -2,85 +2,90 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 400BAC77B76
-	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Apr 2023 20:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED7DC7618E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 21 Apr 2023 21:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232300AbjDUU7M (ORCPT
+        id S233573AbjDUVP7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Apr 2023 16:59:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48120 "EHLO
+        Fri, 21 Apr 2023 17:15:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233465AbjDUU7B (ORCPT
+        with ESMTP id S229843AbjDUVP6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Apr 2023 16:59:01 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57F6A2114
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Apr 2023 13:58:31 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-506b2a08877so3579582a12.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Apr 2023 13:58:31 -0700 (PDT)
+        Fri, 21 Apr 2023 17:15:58 -0400
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E80188
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Apr 2023 14:15:57 -0700 (PDT)
+Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-5ef6ddd0498so23186686d6.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Apr 2023 14:15:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682110710; x=1684702710;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mYproC0FUmFm/EQBdwibgZJS5ZeYo9POxZK2lapAI5s=;
-        b=pAvRPNhrbfzAfdjsHi7AZSDAP7LY7CVW9VPWniRl+nvQ83MxRHLDjnxUTEP7bnckAp
-         D+9tNiJjUz8BCl+601haRaESlcEg9d4AeLPhU6FnXHiTUFQGjbCgOy/aw96lnWQXOy9j
-         aCwZBy+c7gwvhpKZpw0JMxpgRI9pG2RNkYrQTZl2SIq+mts9zS0g/gjbD0dhhUv+dQUu
-         Mxz1EbKJFA4hfiYd1XASlneriM6Z50KV7+pxevlBFOnl1Qw+GZ3YJ2fpe6YdtQEhzzmN
-         bPgjL/vvU/i4LYNk6Ry9oHgyDM30WPgWj0KpYJfyBatNSG8HiW6o1BSp/R+nswXtNsoR
-         7RCg==
+        d=maine.edu; s=google; t=1682111756; x=1684703756;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q3+H/qensK44hOTIPI3S5vnMSCnftxuei3KDvIQCSYI=;
+        b=aGy+OgAlhu9DwPfrqd6FOL0rlWj3aDqfhT+D84yu7tLbe+9BBfJZCWqyajPUmzO3ND
+         8DOfeGkGt77XFiBZLUYxgl/w5sgdlTGdUBqlHtalopbntgaj2dyi35PubKusob4FSdf6
+         Zsxru2IRNLPLxkuQvqKAc08h/rm+ZgVHlKSzU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682110710; x=1684702710;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mYproC0FUmFm/EQBdwibgZJS5ZeYo9POxZK2lapAI5s=;
-        b=OUWXbjCHKrLafKKO1C0jL17o/AH0KqzmU3E1UoU9bBwxFFrBeyGX5WRwWgBGuVxfZ7
-         LNAXFL/rCbh84s7DX2UO6RrP7qJ+P090zy75ynuOQSS/E/WkuXgVVzPSW2p4/UenAsCE
-         0TNoRNaxRPvFx5nhNdJiG3mPrOcrO/GGcAlq9GH4TaJdwQdh+BWEGC5aVM3R6J95vZ/5
-         x5LymJvDgX3va4F73eMfn2HnijinD6KTGYQUc9FT2YTxQpXloCq3Ym06wqftLhhofcBR
-         f1jURnjKI0Q31LTOH+nAL/Cpu0NMnM6+QM0EPvOqGSJEuSLdA5OkhwKah3iqMu8zGf1y
-         yqlA==
-X-Gm-Message-State: AAQBX9fSldvZpAeUnk7hCQ37X2J7OmF6l2jOkarwgmedwM1bemCwypoD
-        6eAnWYXDUegGL3HMp6vdFJED5iqXKWY=
-X-Google-Smtp-Source: AKy350auyCzt7YHqwXsPmmSBppuLNoUiqbpdu6gpFcbDxCG3HgOMwBoWKclFtluvrLbKbRSyRCTCsQ==
-X-Received: by 2002:aa7:d94b:0:b0:508:3b21:7cbb with SMTP id l11-20020aa7d94b000000b005083b217cbbmr6089334eds.19.1682110709444;
-        Fri, 21 Apr 2023 13:58:29 -0700 (PDT)
-Received: from erthalion.local (dslb-094-222-027-023.094.222.pools.vodafone-ip.de. [94.222.27.23])
-        by smtp.gmail.com with ESMTPSA id e17-20020aa7d7d1000000b00508480633bdsm2202774eds.74.2023.04.21.13.58.28
+        d=1e100.net; s=20221208; t=1682111756; x=1684703756;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:date
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q3+H/qensK44hOTIPI3S5vnMSCnftxuei3KDvIQCSYI=;
+        b=NwLCMLccQbsqllzf1APKEOYHXzfGeeiiiLpqH7tA8FiLDAQJ3grcJkiqz4NhLvCOjJ
+         R9O354hRPtMRFVZnIEEZxJLE+qxC0Z1PCV9aTrFSY9Pb7TMUQGzisEJ12TRo+9GgOf/H
+         TEnFejybBoCYzlYKZKInyrCx93hUfFXPwOSw6QjKLSIU0SpK5Ig7bTRBbEAIfPbu9glY
+         vp3rChZxyWPMIBWEEbxjN6I4AbC+bsOLheb/jRwOYCNT2VYmfKDE0VZgZ8gzmvpTjXl+
+         zC02o4nOZ7oqdZcX4xLw2P7zYTYKzlnzdZC5ig0PPxIQNZpBKoRY/frg/vRx5ebk4BnY
+         eQJQ==
+X-Gm-Message-State: AAQBX9czCPNhlP8FHVQ+LBPsXgn4ktHXIS22MzyUXvzoAhVs5ZHT3IE2
+        qsHeY1CDsW9Ftfl39r6+/qnPuQ==
+X-Google-Smtp-Source: AKy350a48jgg8eLMs+HkO+YfU7DCSp0Beo94CosWVRQgGEDxrJUau9+rDp3x+Ce5iT6fdSRp+FUWZw==
+X-Received: by 2002:a05:6214:761:b0:5a2:63a1:ecb2 with SMTP id f1-20020a056214076100b005a263a1ecb2mr9155219qvz.43.1682111756685;
+        Fri, 21 Apr 2023 14:15:56 -0700 (PDT)
+Received: from macbook-air.local (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id v3-20020a0c8e03000000b005eab96abc9esm1412762qvb.140.2023.04.21.14.15.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Apr 2023 13:58:28 -0700 (PDT)
-Date:   Fri, 21 Apr 2023 22:56:10 +0200
-From:   Dmitry Dolgov <9erthalion6@gmail.com>
-To:     linux-perf-users@vger.kernel.org, acme@kernel.org,
-        mingo@redhat.com, jolsa@kernel.org, namhyung@kernel.org,
-        irogers@google.com
-Subject: Re: [RFC PATCH] perf stat: Separate bperf from bpf_profiler
-Message-ID: <20230421205610.xawzzfy36iskcoyx@erthalion.local>
-References: <20230412182316.11628-1-9erthalion6@gmail.com>
+        Fri, 21 Apr 2023 14:15:56 -0700 (PDT)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Fri, 21 Apr 2023 17:15:54 -0400 (EDT)
+To:     tonyj@suse.de
+cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        =?ISO-8859-15?Q?Toke_H=F8iland-J=F8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Michal Suchanek <msuchanek@suse.de>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        David Miller <davem@davemloft.net>
+Subject: Re: Packaging bpftool and libbpf: GitHub or kernel?
+In-Reply-To: <ZEBp6C9zqDnM1PfT@suse.de>
+Message-ID: <c341b9af-748a-23f9-afaf-301dc8d4ab8f@maine.edu>
+References: <ZDfKBPXDQxH8HeX9@syu-laptop> <87leiw11yz.fsf@toke.dk> <ZD/IcBvVxtFtOhUC@syu-laptop.lan> <CAEf4BzbxfvR4Ji1q4wJCFHOxQgFzHr8t7TMK1VJj9sJ+a0srVQ@mail.gmail.com> <ZEBp6C9zqDnM1PfT@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230412182316.11628-1-9erthalion6@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-> On Wed, Apr 12, 2023 at 08:23:16PM +0200, Dmitrii Dolgov wrote:
-> It seems that perf stat -b <prog id> doesn't produce any results:
->
->     $ perf stat -e cycles -b 4 -I 10000 -vvv
->     Control descriptor is not initialized
->     cycles: 0 0 0
->                 time        counts unit      events
-> 	10.007641640    <not supported>      cycles
->
-> Looks like this happens because fentry/fexit progs are getting loaded, but the
-> corresponding perf event is not enabled and not added into the events bpf map.
-> I think there is some mixing up between two type of bpf support, one for bperf
-> and one for bpf_profiler. Both are identified via evsel__is_bpf, based on which
-> perf events are enabled, but for the latter (bpf_profiler) a perf event is
-> required. Using evsel__is_bperf to check only bperf produces expected results:
+On Wed, 19 Apr 2023, tonyj@suse.de wrote:
+> 
+> For a while Vince was maintaining a page documenting breakage in the 
+> perf_event ABI but last I checked it ended at V4.0.  Not sure if he 
+> just stopped updating, or that's where breakage ended :)
 
-Any thoughts on this? I would appreciate clarifications if I'm missing
-something.
+I actually still try to keep an eye on things.  I originally tracked 
+things because we had to work around a lot of those breakages in PAPI.  
+
+There have been a few breakages since then, mostly in rdpmc support and 
+also some weird things on ARM64.  I stopped documenting things as 
+thoroughly in part because despite the common wisdom I don't think the 
+kernel devs care much about ABI breaks at least with the perf interface.
+
+Vince
