@@ -2,336 +2,187 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6100C6FD18
-	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Apr 2023 13:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBDDC7618E
+	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Apr 2023 22:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229869AbjDVNhQ (ORCPT
+        id S229747AbjDVWb3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 22 Apr 2023 09:37:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40528 "EHLO
+        Sat, 22 Apr 2023 18:31:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjDVNhP (ORCPT
+        with ESMTP id S229587AbjDVWb2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 22 Apr 2023 09:37:15 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7AA310CE;
-        Sat, 22 Apr 2023 06:37:13 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-2f3fe12de15so1646829f8f.3;
-        Sat, 22 Apr 2023 06:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682170632; x=1684762632;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=gnwJLjD0mpAfVttDUCdGrQcVkgdH6DAn7nSYaiDmbQQ=;
-        b=g9DzSVV+s3dsQ0CZ12wgomHZxPZCi6KRqJu31pNLH9iK4yJCeIaTKev5yZr/ghu5uy
-         YrrMKXMlYbL/oR7oLhiXn0O8t/o+gF4j5WdtLODggN1Fp6/55bzoxfOB5d8Crk6xKQAJ
-         GEXXI+Wxr5z7/czxS9DNEKvZSMS39tsA9Zv6dScoU+w3yOujIRfaYRLWMECR7dBEq2Zq
-         jv/4wZuLH+9Uzzxb8SuoO8vQBeiZ1cxr549HE2MuzLZRulzvjt6o6g+wLo1Ks+fOJZr9
-         fNXIR7i3b8H+WUh8fRCfZd6pB/7ESuN+IUehy7To+U3LbiLkVWl43q30lCWXmmvSGJ90
-         FkVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682170632; x=1684762632;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gnwJLjD0mpAfVttDUCdGrQcVkgdH6DAn7nSYaiDmbQQ=;
-        b=H4oCXHZTtenxbxZHAiV5cmPWCnDxeyX3PfAYBxjIvwdxq0iE8IUYLvps9fn8JGTo/c
-         PqKJOmlXwq2DomJdoDFQeTJYAku/U06XfDNF8OLqMmPkeGJhSPX9K07z6J2/FcOSUsyA
-         zw7Jrj9hImZoZIf+e/9YBme8XYxVoXwxeZW0HZ/YuMRhqPRcXndErFXcxdhCXSW8/XDw
-         qYNAAtwpU3p5fqPFILBhOVMt9nSjEqRXWUKV/Kp46a1Fbfcjo8yKfGveqf04H21nhQjb
-         pJS+RjQxq8FHHo2cNpsHj5t319+LBc4beEoJpG3Ilr4gter+HZbGVF8b4yNzB74ll71M
-         RNNQ==
-X-Gm-Message-State: AAQBX9e/aqBcA0O/k8evpSrdHsacWG6DOcHZ1UdJEdE317Vz/tSGTQ1I
-        EzSlzdfMPx7FKqOdxUlSfoY=
-X-Google-Smtp-Source: AKy350aRpNt7PPsQp5pwgbs0odvmGkkk8HJV5sUUSgJqq+a4sIeW5U5xoMxdQtwIKS/ekb824L6onQ==
-X-Received: by 2002:adf:ec46:0:b0:2ce:9fb8:b560 with SMTP id w6-20020adfec46000000b002ce9fb8b560mr6358547wrn.8.1682170631853;
-        Sat, 22 Apr 2023 06:37:11 -0700 (PDT)
-Received: from lucifer.home ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
-        by smtp.googlemail.com with ESMTPSA id m10-20020a5d56ca000000b002c54c9bd71fsm6558612wrw.93.2023.04.22.06.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Apr 2023 06:37:10 -0700 (PDT)
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Lorenzo Stoakes <lstoakes@gmail.com>
-Subject: [PATCH] mm/gup: disallow GUP writing to file-backed mappings by default
-Date:   Sat, 22 Apr 2023 14:37:05 +0100
-Message-Id: <f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com>
-X-Mailer: git-send-email 2.40.0
+        Sat, 22 Apr 2023 18:31:28 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D094E2700;
+        Sat, 22 Apr 2023 15:31:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682202686; x=1713738686;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=5RDnE9mjkUIxArdNIgngSZTyp70v7Gp0eED0wqH5aos=;
+  b=e7utqgg6un1ue8s3OQxQfHDXklj0Vs3hfgW+vkw7g/jVfX7MbcNqGGP3
+   gSKa+CTnyPd5NsGrEj/Ag3X+02VOYpjexPU2MsqEZn+amBt1AWJgIVBNS
+   TJHMeFXyzclCF0aZb+MGWQvNILTPdpI06WGOCQVZpecKxys4UhKTgZXgx
+   IXcX9rRKpj+zvaHgRenIus6HVRgfzTCXxAdIBUVYD4O6veOUXfhJFd7Mj
+   gGXBTMhdg52kQdy0qzOY7gDQkCOjKXoWe2AU8P0JtxVDEAJg7/hdvTBRW
+   tZfQhWvtQBVuWa9U6cRxbTaL/ZN106QzJOPNN1Z1210lP+O5V2xEDBQAl
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10688"; a="335092926"
+X-IronPort-AV: E=Sophos;i="5.99,219,1677571200"; 
+   d="scan'208";a="335092926"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2023 15:31:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10688"; a="781947059"
+X-IronPort-AV: E=Sophos;i="5.99,219,1677571200"; 
+   d="scan'208";a="781947059"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Apr 2023 15:31:25 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Sat, 22 Apr 2023 15:31:25 -0700
+Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Sat, 22 Apr 2023 15:31:25 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Sat, 22 Apr 2023 15:31:25 -0700
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.176)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Sat, 22 Apr 2023 15:31:25 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mpasE63KsAnhAnhUbMdjPfVVJuxa0FaqA/Kjr2BbgX9biaEPV3IVI2m2u+1uP0cCe2soqUQmBYz8HnNAE9I3RZsVnxPHJF0DPYgileUR9Xi0QIwLvveJmv2v8aN+XdmMQk8+k1e+SCOYKF1MZ/hm3Zv7e5VMA6SO5Yv8Iy4je+XGVkXfJST0xgTj1sdq353gYDmeFpN3K30Q0T7tZDgtGwNEmvG96uwtUhbsBscFaYjwYZYepN3PaJnq0UtZBIDJdKgPdJdGBiQORdhLDW05MFvhjGZXDALaDEF1zI4E8ESey2b/pZOp1EH7UDv6rRvFqVtplNwkr0eoSq4YENWYeQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6MOIxWnFZO2pnioNeWU3oB3IoXqdEjp0iX/YrLVbaZQ=;
+ b=XjQlYPvhSDCQxAHN27a3w9ApilaR/leNBcnaqw7/7IKY8+gka34KSa5feaPoj43F0xyuVd94ELIIGYtsVKMwTbLrmnw2H7CnUDm1J+75kM/4i3we9RioeNhSTxSqBsED8Fah2rIGfpFYzUkXQN6fshX48DZOCCmy8UXtHRlZQeSVb+c21M4Fq8r5Oc5MgkwIg00vCwescR5UamdvsjY/vT7jt/4yWkXmIF1EfQbvBLZNBBNRrTM7ybOdsRLBSOVBO4tg+esepc8I+x911TuOcvkHWPCMjkkiy8gK9qrfMfnltJQQ4tlTNjxZt5NvNmqzcSphk7W8xvokLchixkm7Gw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by BN9PR11MB5308.namprd11.prod.outlook.com (2603:10b6:408:119::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.31; Sat, 22 Apr
+ 2023 22:31:22 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::95c6:c77e:733b:eee5%3]) with mapi id 15.20.6319.032; Sat, 22 Apr 2023
+ 22:31:22 +0000
+Date:   Sat, 22 Apr 2023 15:31:18 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Liang Kan <kan.liang@linux.intel.com>,
+        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
+        <mark.rutland@arm.com>, <will@kernel.org>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Dave Jiang" <dave.jiang@intel.com>
+Subject: RE: [PATCH v6 4/5] perf: CXL Performance Monitoring Unit driver
+Message-ID: <6444603653882_1b41629414@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+References: <20230413142617.15995-1-Jonathan.Cameron@huawei.com>
+ <20230413142617.15995-5-Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230413142617.15995-5-Jonathan.Cameron@huawei.com>
+X-ClientProxiedBy: BY5PR04CA0016.namprd04.prod.outlook.com
+ (2603:10b6:a03:1d0::26) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BN9PR11MB5308:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5fe763ee-e52b-42cb-711b-08db43814c71
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HQESAQVE2GqrjmbNl2aEPo7cJhcbHYY/LzJfyYTfZzyjzie5ArhgTVaUB199Lwb9dxxZWXVqdVeTL6inXzfgPsLq394KiuWbrHMVtjhH5CrvVBOcpCR+D7IxqdHakBwPLHKajItZe9SSrn+zIqLRX29z6bqaYuZOG37WrxKVW0Hbd1Q4cQdWhYfq6Wq43kHTpFM3CTD/BIZS+ClrblDjyQFvuD+AX4r0P7NZ0yMUN6qUY80t72iQ+Pc6OrUrXNXWB4cb/GISGzuq5A9n5hCNK1hRiByezGnQIP+0JegLcxD8kL2/GUKv/d/FVhheuL6Buv07eFOBufMoCjIIeToZy6agE9F1IXojJiDfgsy6wARRJ1ErPqe0n2Zh6nU9A+0Nm/cGBShv+ayRlyc0vpR88PCH7ip+ZC9zcv7i0MbRuzdAYPNYODVtDLXTuNR/xZDSx0OHUpIDHupqzNz2lrrQY0GwqJda+wM6h6YJI//RvVyB3kknCWQClyNTeCBozodZdLa+u+TyB8ygQ+2NZslOJBU162doRAfWu2vP/NOh4gzFD/DN8DK3ugYn5mCGuDwd
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(366004)(396003)(346002)(39860400002)(376002)(451199021)(66946007)(66476007)(66556008)(4326008)(186003)(82960400001)(316002)(6486002)(478600001)(6666004)(110136005)(54906003)(86362001)(6512007)(9686003)(6506007)(26005)(5660300002)(2906002)(8936002)(8676002)(38100700002)(7416002)(41300700001)(83380400001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BF/NjelJmsE6I6P0PVRaki8UW2tZntKq7ElQqw6ShILWj1osrHHV/UEKDz/L?=
+ =?us-ascii?Q?KrCvFGHqbOt/4d4QhfKc3x6FLVSNvWvEEeyWmnjkpW/PeuSd5aHJvLgV9NWL?=
+ =?us-ascii?Q?0mKQ19ANtjJnyz6mIacsXA7neFtUw2p+CrBHDPLMdQc0pfh5Ok2PcWf24LRE?=
+ =?us-ascii?Q?h/ZPAfJQJ+8eHm2fqa9v62hHscqqrB9XQs3y+SNvACqKpHAyWdZC2bowqro1?=
+ =?us-ascii?Q?QQ/qcDzLFAQ5r2FTMuKMhseqi5yXczPkYSURJedAfHB3UfverB3etd1jmzwp?=
+ =?us-ascii?Q?9upyj7dbPt70YzPQz7yvswiGj7/17SRWnVD/wA4LGqa9BAznIv2DYR6hCF60?=
+ =?us-ascii?Q?vktTa0TdD30g7CEPffRuRTeCB6QpzpCLhoRUwnAO0QAu6wWq+2O7cfy4lhwk?=
+ =?us-ascii?Q?ufxZsp7nVzzWuLsE0+dlEMKLoQeXWYPQkhRucLIZqCuk6b2Wwocxiay6q5Ed?=
+ =?us-ascii?Q?pMs8do8N2IRUJVr4buBWFweAS/epX+veb/XfPhw/s2fD7G9FNnSLQDG+P/Mc?=
+ =?us-ascii?Q?oaQiRc8Pe358NQtBDeYP0qgN3qsQbrTWXD4edXxLI21UR8FN0I2//NeGcYnw?=
+ =?us-ascii?Q?ruuvWAsJiCwQbtwRK3en/9ZpZt2nmFWEc+SJSvtU4ACHmjNY9fKoQP6/v2iA?=
+ =?us-ascii?Q?IG1pgZn+PueAtiZG73FiG11rNwYqO8dIMiLWyJVmVBtvCmUNF6W9jHWQUiFt?=
+ =?us-ascii?Q?q7jTmYwIrSqPe/gmtmMheppJutMcNNxNEX22tl0wINIkk1JlMRIeYk+ZBr0R?=
+ =?us-ascii?Q?IFOhdRTFXX5ogVVHP3D1c1MQ3NfttRSeeu7BpNa2YEoD3gsh3iga8ZZ+O0Af?=
+ =?us-ascii?Q?4b3ehtFnzfOgHJ60hy81+wIkCnvd44kEDxKbUtnZUCWnGXHlRWInMwqlDhlg?=
+ =?us-ascii?Q?pmweB2wT4QIbOl1U8PWpLSzEKWhR0XJyCbR/bKp/u0wVpR6U3vjLgY8+BqIZ?=
+ =?us-ascii?Q?RXM2kx3E3DVW/hd4ptWJK5NusV474+rGRt727eIZe/NN3inIm61lJDDU5R+8?=
+ =?us-ascii?Q?YTTlsb4hkXmRyM3drKv2QZGMcMrQfm4TBJ4pOYWWefuobR9MZQly6oZAQIm6?=
+ =?us-ascii?Q?PCv6A1sN7HUufcOfs7xLtz0HkOEjgg3TXI2khEaO9GwNXucu7yvkKRPAmLzw?=
+ =?us-ascii?Q?WDi7HaviGiHxEodOQBCZaK8JDzT3X/xU3zGVA2kMP/jIioBzAR6G1jRK8s7/?=
+ =?us-ascii?Q?fy1YujOhODYl6hfuzynkn8YeipytChEP62IqKNZrfBmahsYs/SNijCJboJ2Y?=
+ =?us-ascii?Q?1Msu2O3OHB/7Sr3BE/ecJl3o7TMmHKP3bS3HuRXomK+iiJGqD5gmKZ+hf6SR?=
+ =?us-ascii?Q?WBM7u9OFYNc8wpni4KGHzhIYYWIr2c97fFIUtxIxsfDrNCTsL5AVSgXotPr9?=
+ =?us-ascii?Q?miT/eMT+MZpsftBkE338l+M+nWN0tK6G9Ptm3VgBmCGSKVXzNsp3Z0eCmuOO?=
+ =?us-ascii?Q?ajFJIIQ0NVjBX7JxXKfLyg9Oe7o3E5XUPJ7LhjS/frRBoFwU/IInDXenTnK4?=
+ =?us-ascii?Q?uTf2nJGt3fM7h9cVzPEsyimJa7Gx8C7nf5h2ReiUGFTb+fSO//u9YCAt8pnN?=
+ =?us-ascii?Q?MMSPqk6yV1nFQwpThpja8tRrZxNYtTYzSTDotN/u8/xh7T74bnGzgxUcUNKs?=
+ =?us-ascii?Q?0w=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fe763ee-e52b-42cb-711b-08db43814c71
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2023 22:31:21.8945
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AF/5flQWDCcXbh/huvFzW5SSiSs3z36L/N3/s/+lFDooF55/49Pr25QUcS1oPrKOelR4P0dWeE2zLytV/vN6ygUpqdZrCwK/tdnS+jgLtb8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5308
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It isn't safe to write to file-backed mappings as GUP does not ensure that
-the semantics associated with such a write are performed correctly, for
-instance filesystems which rely upon write-notify will not be correctly
-notified.
+Jonathan Cameron wrote:
+> CXL rev 3.0 introduces a standard performance monitoring hardware
+> block to CXL. Instances are discovered using CXL Register Locator DVSEC
+> entries. Each CXL component may have multiple PMUs.
+> 
+> This initial driver supports a subset of types of counter.
+> It supports counters that are either fixed or configurable, but requires
+> that they support the ability to freeze and write value whilst frozen.
+> 
+> Development done with QEMU model which will be posted shortly.
+> 
+> Example:
+> 
+> $ perf stat -e cxl_pmu_mem0.0/h2d_req_snpcur/ -e cpmu0/h2d_req_snpdata/ -e cpmu0/clock_ticks/ sleep 1
+> 
+> Performance counter stats for 'system wide':
+> 
+> 96,757,023,244,321      cxl_pmu_mem0.0/h2d_req_snpcur/
+> 96,757,023,244,365      cxl_pmu_mem0.0/h2d_req_snpdata/
+> 193,514,046,488,653      cxl_pmu_mem0.0/clock_ticks/
+> 
+>        1.090539600 seconds time elapsed
+> 
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-There are exceptions to this - shmem and hugetlb mappings are (in effect)
-anonymous mappings by other names so we do permit this operation in these
-cases.
+Jonathan, I was awaiting a "perf maintainer ack" before applying this,
+only to now realize there is no maintainer entry for drivers/perf/ in
+general, only "ARM PMU PROFILING AND DEBUGGING". Were you waiting on any
+additional acks from perf folks for this?
 
-In addition, if no pinning takes place (neither FOLL_GET nor FOLL_PIN is
-specified and neither flags gets implicitly set) then no writing can occur
-so we do not perform the check in this instance.
-
-This is an important exception, as populate_vma_page_range() invokes
-__get_user_pages() in this way (and thus so does __mm_populate(), used by
-MAP_POPULATE mmap() and mlock() invocations).
-
-There are GUP users within the kernel that do nevertheless rely upon this
-behaviour, so we introduce the FOLL_ALLOW_BROKEN_FILE_MAPPING flag to
-explicitly permit this kind of GUP access.
-
-This is required in order to not break userspace in instances where the
-uAPI might permit file-mapped addresses - a number of RDMA users require
-this for instance, as do the process_vm_[read/write]v() system calls,
-/proc/$pid/mem, ptrace and SDT uprobes. Each of these callers have been
-updated to use this flag.
-
-Making this change is an important step towards a more reliable GUP, and
-explicitly indicates which callers might encouter issues moving forward.
-
-Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
----
- drivers/infiniband/hw/qib/qib_user_pages.c |  3 +-
- drivers/infiniband/hw/usnic/usnic_uiom.c   |  2 +-
- drivers/infiniband/sw/siw/siw_mem.c        |  3 +-
- fs/proc/base.c                             |  3 +-
- include/linux/mm_types.h                   |  8 +++++
- kernel/events/uprobes.c                    |  3 +-
- mm/gup.c                                   | 36 +++++++++++++++++++++-
- mm/memory.c                                |  3 +-
- mm/process_vm_access.c                     |  2 +-
- net/xdp/xdp_umem.c                         |  2 +-
- 10 files changed, 56 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/infiniband/hw/qib/qib_user_pages.c b/drivers/infiniband/hw/qib/qib_user_pages.c
-index f693bc753b6b..b9019dad8008 100644
---- a/drivers/infiniband/hw/qib/qib_user_pages.c
-+++ b/drivers/infiniband/hw/qib/qib_user_pages.c
-@@ -110,7 +110,8 @@ int qib_get_user_pages(unsigned long start_page, size_t num_pages,
- 	for (got = 0; got < num_pages; got += ret) {
- 		ret = pin_user_pages(start_page + got * PAGE_SIZE,
- 				     num_pages - got,
--				     FOLL_LONGTERM | FOLL_WRITE,
-+				     FOLL_LONGTERM | FOLL_WRITE |
-+				     FOLL_ALLOW_BROKEN_FILE_MAPPING,
- 				     p + got, NULL);
- 		if (ret < 0) {
- 			mmap_read_unlock(current->mm);
-diff --git a/drivers/infiniband/hw/usnic/usnic_uiom.c b/drivers/infiniband/hw/usnic/usnic_uiom.c
-index 2a5cac2658ec..33cf79b248a9 100644
---- a/drivers/infiniband/hw/usnic/usnic_uiom.c
-+++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
-@@ -85,7 +85,7 @@ static int usnic_uiom_get_pages(unsigned long addr, size_t size, int writable,
- 				int dmasync, struct usnic_uiom_reg *uiomr)
- {
- 	struct list_head *chunk_list = &uiomr->chunk_list;
--	unsigned int gup_flags = FOLL_LONGTERM;
-+	unsigned int gup_flags = FOLL_LONGTERM | FOLL_ALLOW_BROKEN_FILE_MAPPING;
- 	struct page **page_list;
- 	struct scatterlist *sg;
- 	struct usnic_uiom_chunk *chunk;
-diff --git a/drivers/infiniband/sw/siw/siw_mem.c b/drivers/infiniband/sw/siw/siw_mem.c
-index f51ab2ccf151..bc3e8c0898e5 100644
---- a/drivers/infiniband/sw/siw/siw_mem.c
-+++ b/drivers/infiniband/sw/siw/siw_mem.c
-@@ -368,7 +368,8 @@ struct siw_umem *siw_umem_get(u64 start, u64 len, bool writable)
- 	struct mm_struct *mm_s;
- 	u64 first_page_va;
- 	unsigned long mlock_limit;
--	unsigned int foll_flags = FOLL_LONGTERM;
-+	unsigned int foll_flags =
-+		FOLL_LONGTERM | FOLL_ALLOW_BROKEN_FILE_MAPPING;
- 	int num_pages, num_chunks, i, rv = 0;
- 
- 	if (!can_do_mlock())
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index 96a6a08c8235..3e3f5ea9849f 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -855,7 +855,8 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
- 	if (!mmget_not_zero(mm))
- 		goto free;
- 
--	flags = FOLL_FORCE | (write ? FOLL_WRITE : 0);
-+	flags = FOLL_FORCE | FOLL_ALLOW_BROKEN_FILE_MAPPING |
-+		(write ? FOLL_WRITE : 0);
- 
- 	while (count > 0) {
- 		size_t this_len = min_t(size_t, count, PAGE_SIZE);
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 3fc9e680f174..e76637b4c78f 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -1185,6 +1185,14 @@ enum {
- 	FOLL_PCI_P2PDMA = 1 << 10,
- 	/* allow interrupts from generic signals */
- 	FOLL_INTERRUPTIBLE = 1 << 11,
-+	/*
-+	 * By default we disallow write access to known broken file-backed
-+	 * memory mappings (i.e. anything other than hugetlb/shmem
-+	 * mappings). Some code may rely upon being able to access this
-+	 * regardless for legacy reasons, thus we provide a flag to indicate
-+	 * this.
-+	 */
-+	FOLL_ALLOW_BROKEN_FILE_MAPPING = 1 << 12,
- 
- 	/* See also internal only FOLL flags in mm/internal.h */
- };
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 59887c69d54c..ec330d3b0218 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -373,7 +373,8 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
- 		return -EINVAL;
- 
- 	ret = get_user_pages_remote(mm, vaddr, 1,
--			FOLL_WRITE, &page, &vma, NULL);
-+				    FOLL_WRITE | FOLL_ALLOW_BROKEN_FILE_MAPPING,
-+				    &page, &vma, NULL);
- 	if (unlikely(ret <= 0)) {
- 		/*
- 		 * We are asking for 1 page. If get_user_pages_remote() fails,
-diff --git a/mm/gup.c b/mm/gup.c
-index 1f72a717232b..68d5570c0bae 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -959,16 +959,46 @@ static int faultin_page(struct vm_area_struct *vma,
- 	return 0;
- }
- 
-+/*
-+ * Writing to file-backed mappings using GUP is a fundamentally broken operation
-+ * as kernel write access to GUP mappings may not adhere to the semantics
-+ * expected by a file system.
-+ *
-+ * In most instances we disallow this broken behaviour, however there are some
-+ * exceptions to this enforced here.
-+ */
-+static inline bool can_write_file_mapping(struct vm_area_struct *vma,
-+					  unsigned long gup_flags)
-+{
-+	struct file *file = vma->vm_file;
-+
-+	/* If we aren't pinning then no problematic write can occur. */
-+	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
-+		return true;
-+
-+	/* Special mappings should pose no problem. */
-+	if (!file)
-+		return true;
-+
-+	/* Has the caller explicitly indicated this case is acceptable? */
-+	if (gup_flags & FOLL_ALLOW_BROKEN_FILE_MAPPING)
-+		return true;
-+
-+	/* shmem and hugetlb mappings do not have problematic semantics. */
-+	return vma_is_shmem(vma) || is_file_hugepages(file);
-+}
-+
- static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
- {
- 	vm_flags_t vm_flags = vma->vm_flags;
- 	int write = (gup_flags & FOLL_WRITE);
- 	int foreign = (gup_flags & FOLL_REMOTE);
-+	bool vma_anon = vma_is_anonymous(vma);
- 
- 	if (vm_flags & (VM_IO | VM_PFNMAP))
- 		return -EFAULT;
- 
--	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
-+	if ((gup_flags & FOLL_ANON) && !vma_anon)
- 		return -EFAULT;
- 
- 	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
-@@ -978,6 +1008,10 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
- 		return -EFAULT;
- 
- 	if (write) {
-+		if (!vma_anon &&
-+		    WARN_ON_ONCE(!can_write_file_mapping(vma, gup_flags)))
-+			return -EFAULT;
-+
- 		if (!(vm_flags & VM_WRITE)) {
- 			if (!(gup_flags & FOLL_FORCE))
- 				return -EFAULT;
-diff --git a/mm/memory.c b/mm/memory.c
-index 146bb94764f8..e3d535991548 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -5683,7 +5683,8 @@ int access_process_vm(struct task_struct *tsk, unsigned long addr,
- 	if (!mm)
- 		return 0;
- 
--	ret = __access_remote_vm(mm, addr, buf, len, gup_flags);
-+	ret = __access_remote_vm(mm, addr, buf, len,
-+				 gup_flags | FOLL_ALLOW_BROKEN_FILE_MAPPING);
- 
- 	mmput(mm);
- 
-diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
-index 78dfaf9e8990..ef126c08e89c 100644
---- a/mm/process_vm_access.c
-+++ b/mm/process_vm_access.c
-@@ -81,7 +81,7 @@ static int process_vm_rw_single_vec(unsigned long addr,
- 	ssize_t rc = 0;
- 	unsigned long max_pages_per_loop = PVM_MAX_KMALLOC_PAGES
- 		/ sizeof(struct pages *);
--	unsigned int flags = 0;
-+	unsigned int flags = FOLL_ALLOW_BROKEN_FILE_MAPPING;
- 
- 	/* Work out address and page range required */
- 	if (len == 0)
-diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
-index 02207e852d79..b93cfcaccb0d 100644
---- a/net/xdp/xdp_umem.c
-+++ b/net/xdp/xdp_umem.c
-@@ -93,7 +93,7 @@ void xdp_put_umem(struct xdp_umem *umem, bool defer_cleanup)
- 
- static int xdp_umem_pin_pages(struct xdp_umem *umem, unsigned long address)
- {
--	unsigned int gup_flags = FOLL_WRITE;
-+	unsigned int gup_flags = FOLL_WRITE | FOLL_ALLOW_BROKEN_FILE_MAPPING;
- 	long npgs;
- 	int err;
- 
--- 
-2.40.0
-
+If there are no objections I think this can be included in the back half
+of the merge window for v6.4, as it stands now I was still awaiting the
+final go ahead.
