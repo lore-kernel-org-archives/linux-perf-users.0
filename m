@@ -2,559 +2,336 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F144C7618E
-	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Apr 2023 01:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6100C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Apr 2023 13:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231297AbjDVBUG (ORCPT
+        id S229869AbjDVNhQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 21 Apr 2023 21:20:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40766 "EHLO
+        Sat, 22 Apr 2023 09:37:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjDVBUE (ORCPT
+        with ESMTP id S229479AbjDVNhP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 21 Apr 2023 21:20:04 -0400
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3FCE1BFD
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Apr 2023 18:20:01 -0700 (PDT)
-Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-3ef34c49cb9so1272281cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Apr 2023 18:20:01 -0700 (PDT)
+        Sat, 22 Apr 2023 09:37:15 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7AA310CE;
+        Sat, 22 Apr 2023 06:37:13 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-2f3fe12de15so1646829f8f.3;
+        Sat, 22 Apr 2023 06:37:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682126401; x=1684718401;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P/iCWeU91/N/hNqkm6X/hoi99NW0IedfoKNdPVAxV6Y=;
-        b=MBhwnMbsz+9NhQnDN8VZVxfIJ9lVcvUtYURUKSNjEEm2GFbEzoIAhuy3Tl9X4iaPKz
-         rQ6LPmvLGncxHkv0mxMzBgA3RyY04i+33j2LKbsberT7pk81zMQKVzqPIDYTf0MaZpqc
-         gAovFp/von7xNfkAjgDA2xUy8c368FhPCpjj52qmdmZN2MeRAX3VhdYMInUwEV+Cl9lI
-         emMFPyV02XI7AItMVTj+cJSHCNgVk+oJnYDoq7hS3cFhvUdIDk3DsrRjP3vDUW31Zk0t
-         lglD6WE/iSVxdsNRaP82y3qGuptZtwR2S/S6FePXyxubYKXNQ3LsMvLwJRVzfxEJYACl
-         uluQ==
+        d=gmail.com; s=20221208; t=1682170632; x=1684762632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gnwJLjD0mpAfVttDUCdGrQcVkgdH6DAn7nSYaiDmbQQ=;
+        b=g9DzSVV+s3dsQ0CZ12wgomHZxPZCi6KRqJu31pNLH9iK4yJCeIaTKev5yZr/ghu5uy
+         YrrMKXMlYbL/oR7oLhiXn0O8t/o+gF4j5WdtLODggN1Fp6/55bzoxfOB5d8Crk6xKQAJ
+         GEXXI+Wxr5z7/czxS9DNEKvZSMS39tsA9Zv6dScoU+w3yOujIRfaYRLWMECR7dBEq2Zq
+         jv/4wZuLH+9Uzzxb8SuoO8vQBeiZ1cxr549HE2MuzLZRulzvjt6o6g+wLo1Ks+fOJZr9
+         fNXIR7i3b8H+WUh8fRCfZd6pB/7ESuN+IUehy7To+U3LbiLkVWl43q30lCWXmmvSGJ90
+         FkVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682126401; x=1684718401;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P/iCWeU91/N/hNqkm6X/hoi99NW0IedfoKNdPVAxV6Y=;
-        b=Yb56ruu8qkUOLa6oXgWh7F8r815sb6HKC8fyyRq16ezo5+BpXHjMzZHlfnq00MRMjy
-         BV/zsJp40pzU7VyJL/QJv+Whytef1CDQpM2+h2viV9cTY8v7zMGLPefwI3ddC+FoNt4D
-         rrDYNEpGuixR0WB8mauqKUGMeTvOblmE/nGoSTwoX+9DnRi+xypVK9J/J5ABPONdj9Z5
-         MYRkwst2cOpcAEi0PcK0QoHBpZ3+S0WTvyI1mH3K0ljOXTov3mbNRdzrel0vkTDCFaAW
-         GGNUbGKqd5XlP1BDhRCa4/ySi0ZpMpIH6yqhWe2dqeHgWpgmU9Y+gCu3t70nv4Gs7m44
-         50Fw==
-X-Gm-Message-State: AAQBX9fkxCjsyE5qrcBP9UcKn1Z9MarkglrcuLDYEPJ0abjlWYqHhG+G
-        Ol8vYMUSmY5qfGvbn6W6t+Wc5D1QGFdrU55NS1v62A==
-X-Google-Smtp-Source: AKy350ZVlGmktAM9jIpG8WL1NTNySfQv4A9YeAnh/JOh1qlXMWhGGyxfc/andsyBF93XQasFFFNNWBL+PSXZXQB5r8g=
-X-Received: by 2002:ac8:5c0c:0:b0:3ef:19fe:230d with SMTP id
- i12-20020ac85c0c000000b003ef19fe230dmr68201qti.17.1682126400789; Fri, 21 Apr
- 2023 18:20:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230421155255.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
-In-Reply-To: <20230421155255.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 21 Apr 2023 18:19:46 -0700
-Message-ID: <CAP-5=fUB1e=bJk-w0i8+MEo4sLOZtb_Eb7FMy4u7ky7D2AZm6A@mail.gmail.com>
-Subject: Re: [PATCH] hardlockup: detect hard lockups using secondary (buddy) cpus
-To:     Douglas Anderson <dianders@chromium.org>, ravi.v.shankar@intel.com,
-        Andi Kleen <ak@linux.intel.com>, ricardo.neri@intel.com,
-        Stephane Eranian <eranian@google.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        Marc Zyngier <maz@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Will Deacon <will@kernel.org>, ito-yuichi@fujitsu.com,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Colin Cross <ccross@android.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ingo Molnar <mingo@kernel.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Marco Elver <elver@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+        d=1e100.net; s=20221208; t=1682170632; x=1684762632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gnwJLjD0mpAfVttDUCdGrQcVkgdH6DAn7nSYaiDmbQQ=;
+        b=H4oCXHZTtenxbxZHAiV5cmPWCnDxeyX3PfAYBxjIvwdxq0iE8IUYLvps9fn8JGTo/c
+         PqKJOmlXwq2DomJdoDFQeTJYAku/U06XfDNF8OLqMmPkeGJhSPX9K07z6J2/FcOSUsyA
+         zw7Jrj9hImZoZIf+e/9YBme8XYxVoXwxeZW0HZ/YuMRhqPRcXndErFXcxdhCXSW8/XDw
+         qYNAAtwpU3p5fqPFILBhOVMt9nSjEqRXWUKV/Kp46a1Fbfcjo8yKfGveqf04H21nhQjb
+         pJS+RjQxq8FHHo2cNpsHj5t319+LBc4beEoJpG3Ilr4gter+HZbGVF8b4yNzB74ll71M
+         RNNQ==
+X-Gm-Message-State: AAQBX9e/aqBcA0O/k8evpSrdHsacWG6DOcHZ1UdJEdE317Vz/tSGTQ1I
+        EzSlzdfMPx7FKqOdxUlSfoY=
+X-Google-Smtp-Source: AKy350aRpNt7PPsQp5pwgbs0odvmGkkk8HJV5sUUSgJqq+a4sIeW5U5xoMxdQtwIKS/ekb824L6onQ==
+X-Received: by 2002:adf:ec46:0:b0:2ce:9fb8:b560 with SMTP id w6-20020adfec46000000b002ce9fb8b560mr6358547wrn.8.1682170631853;
+        Sat, 22 Apr 2023 06:37:11 -0700 (PDT)
+Received: from lucifer.home ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
+        by smtp.googlemail.com with ESMTPSA id m10-20020a5d56ca000000b002c54c9bd71fsm6558612wrw.93.2023.04.22.06.37.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Apr 2023 06:37:10 -0700 (PDT)
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Lorenzo Stoakes <lstoakes@gmail.com>
+Subject: [PATCH] mm/gup: disallow GUP writing to file-backed mappings by default
+Date:   Sat, 22 Apr 2023 14:37:05 +0100
+Message-Id: <f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com>
+X-Mailer: git-send-email 2.40.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Apr 21, 2023 at 3:54=E2=80=AFPM Douglas Anderson <dianders@chromium=
-.org> wrote:
->
-> From: Colin Cross <ccross@android.com>
->
-> Implement a hardlockup detector that can be enabled on SMP systems
-> that don't have an arch provided one or one implemented atop perf by
-> using interrupts on other cpus. Each cpu will use its softlockup
-> hrtimer to check that the next cpu is processing hrtimer interrupts by
-> verifying that a counter is increasing.
->
-> NOTE: unlike the other hard lockup detectors, the buddy one can't
-> easily provide a backtrace on the CPU that locked up. It relies on
-> some other mechanism in the system to get information about the locked
-> up CPUs. This could be support for NMI backtraces like [1], it could
-> be a mechanism for printing the PC of locked CPUs like [2], or it
-> could be something else.
->
-> This style of hardlockup detector originated in some downstream
-> Android trees and has been rebased on / carried in ChromeOS trees for
-> quite a long time for use on arm and arm64 boards. Historically on
-> these boards we've leveraged mechanism [2] to get information about
-> hung CPUs, but we could move to [1].
->
-> NOTE: the buddy system is not really useful to enable on any
-> architectures that have a better mechanism. On arm64 folks have been
-> trying to get a better mechanism for years and there has even been
-> recent posts of patches adding support [3]. However, nothing about the
-> buddy system is tied to arm64 and several archs (even arm32, where it
-> was originally developed) could find it useful.
->
-> [1] https://lore.kernel.org/r/20230419225604.21204-1-dianders@chromium.or=
-g
-> [2] https://issuetracker.google.com/172213129
-> [3] https://lore.kernel.org/linux-arm-kernel/20220903093415.15850-1-lecop=
-zer.chen@mediatek.com/
+It isn't safe to write to file-backed mappings as GUP does not ensure that
+the semantics associated with such a write are performed correctly, for
+instance filesystems which rely upon write-notify will not be correctly
+notified.
 
-There is another proposal to use timers for lockup detection but not
-the buddy system:
-https://lore.kernel.org/lkml/20230413035844.GA31620@ranerica-svr.sc.intel.c=
-om/
-It'd be very good to free up the counter used by the current NMI watchdog.
+There are exceptions to this - shmem and hugetlb mappings are (in effect)
+anonymous mappings by other names so we do permit this operation in these
+cases.
 
-Thanks,
-Ian
+In addition, if no pinning takes place (neither FOLL_GET nor FOLL_PIN is
+specified and neither flags gets implicitly set) then no writing can occur
+so we do not perform the check in this instance.
 
-> Signed-off-by: Colin Cross <ccross@android.com>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Signed-off-by: Guenter Roeck <groeck@chromium.org>
-> Signed-off-by: Tzung-Bi Shih <tzungbi@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> This patch has been rebased in ChromeOS kernel trees many times, and
-> each time someone had to do work on it they added their
-> Signed-off-by. I've included those here. I've also left the author as
-> Colin Cross since the core code is still his.
->
-> I'll also note that the CC list is pretty giant, but that's what
-> get_maintainers came up with (plus a few other folks I thought would
-> be interested). As far as I can tell, there's no true MAINTAINER
-> listed for the existing watchdog code. Assuming people don't hate
-> this, maybe it would go through Andrew Morton's tree?
->
->  include/linux/nmi.h         |  18 ++++-
->  kernel/Makefile             |   1 +
->  kernel/watchdog.c           |  24 ++++--
->  kernel/watchdog_buddy_cpu.c | 141 ++++++++++++++++++++++++++++++++++++
->  lib/Kconfig.debug           |  19 ++++-
->  5 files changed, 192 insertions(+), 11 deletions(-)
->  create mode 100644 kernel/watchdog_buddy_cpu.c
->
-> diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-> index 048c0b9aa623..35f6c5c2378b 100644
-> --- a/include/linux/nmi.h
-> +++ b/include/linux/nmi.h
-> @@ -45,6 +45,8 @@ extern void touch_softlockup_watchdog(void);
->  extern void touch_softlockup_watchdog_sync(void);
->  extern void touch_all_softlockup_watchdogs(void);
->  extern unsigned int  softlockup_panic;
-> +DECLARE_PER_CPU(unsigned long, hrtimer_interrupts);
-> +DECLARE_PER_CPU(unsigned long, hrtimer_interrupts_saved);
->
->  extern int lockup_detector_online_cpu(unsigned int cpu);
->  extern int lockup_detector_offline_cpu(unsigned int cpu);
-> @@ -81,14 +83,14 @@ static inline void reset_hung_task_detector(void) { }
->  #define NMI_WATCHDOG_ENABLED      (1 << NMI_WATCHDOG_ENABLED_BIT)
->  #define SOFT_WATCHDOG_ENABLED     (1 << SOFT_WATCHDOG_ENABLED_BIT)
->
-> -#if defined(CONFIG_HARDLOCKUP_DETECTOR)
-> +#if defined(CONFIG_HARDLOCKUP_DETECTOR_CORE)
->  extern void hardlockup_detector_disable(void);
->  extern unsigned int hardlockup_panic;
->  #else
->  static inline void hardlockup_detector_disable(void) {}
->  #endif
->
-> -#if defined(CONFIG_HAVE_NMI_WATCHDOG) || defined(CONFIG_HARDLOCKUP_DETEC=
-TOR)
-> +#if defined(CONFIG_HAVE_NMI_WATCHDOG) || defined(CONFIG_HARDLOCKUP_DETEC=
-TOR_CORE)
->  # define NMI_WATCHDOG_SYSCTL_PERM      0644
->  #else
->  # define NMI_WATCHDOG_SYSCTL_PERM      0444
-> @@ -124,6 +126,14 @@ void watchdog_nmi_disable(unsigned int cpu);
->
->  void lockup_detector_reconfigure(void);
->
-> +#ifdef CONFIG_HARDLOCKUP_DETECTOR_BUDDY_CPU
-> +void buddy_cpu_touch_watchdog(void);
-> +void watchdog_check_hardlockup(void);
-> +#else
-> +static inline void buddy_cpu_touch_watchdog(void) {}
-> +static inline void watchdog_check_hardlockup(void) {}
-> +#endif
-> +
->  /**
->   * touch_nmi_watchdog - restart NMI watchdog timeout.
->   *
-> @@ -134,6 +144,7 @@ void lockup_detector_reconfigure(void);
->  static inline void touch_nmi_watchdog(void)
->  {
->         arch_touch_nmi_watchdog();
-> +       buddy_cpu_touch_watchdog();
->         touch_softlockup_watchdog();
->  }
->
-> @@ -196,8 +207,7 @@ static inline bool trigger_single_cpu_backtrace(int c=
-pu)
->  u64 hw_nmi_get_sample_period(int watchdog_thresh);
->  #endif
->
-> -#if defined(CONFIG_HARDLOCKUP_CHECK_TIMESTAMP) && \
-> -    defined(CONFIG_HARDLOCKUP_DETECTOR)
-> +#if defined(CONFIG_HARDLOCKUP_CHECK_TIMESTAMP) && defined(CONFIG_HARDLOC=
-KUP_DETECTOR_PERF)
->  void watchdog_update_hrtimer_threshold(u64 period);
->  #else
->  static inline void watchdog_update_hrtimer_threshold(u64 period) { }
-> diff --git a/kernel/Makefile b/kernel/Makefile
-> index 10ef068f598d..a2054f16f9f4 100644
-> --- a/kernel/Makefile
-> +++ b/kernel/Makefile
-> @@ -91,6 +91,7 @@ obj-$(CONFIG_FAIL_FUNCTION) +=3D fail_function.o
->  obj-$(CONFIG_KGDB) +=3D debug/
->  obj-$(CONFIG_DETECT_HUNG_TASK) +=3D hung_task.o
->  obj-$(CONFIG_LOCKUP_DETECTOR) +=3D watchdog.o
-> +obj-$(CONFIG_HARDLOCKUP_DETECTOR_BUDDY_CPU) +=3D watchdog_buddy_cpu.o
->  obj-$(CONFIG_HARDLOCKUP_DETECTOR_PERF) +=3D watchdog_hld.o
->  obj-$(CONFIG_SECCOMP) +=3D seccomp.o
->  obj-$(CONFIG_RELAY) +=3D relay.o
-> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-> index 8e61f21e7e33..1199043689ae 100644
-> --- a/kernel/watchdog.c
-> +++ b/kernel/watchdog.c
-> @@ -29,7 +29,7 @@
->
->  static DEFINE_MUTEX(watchdog_mutex);
->
-> -#if defined(CONFIG_HARDLOCKUP_DETECTOR) || defined(CONFIG_HAVE_NMI_WATCH=
-DOG)
-> +#if defined(CONFIG_HARDLOCKUP_DETECTOR_CORE) || defined(CONFIG_HAVE_NMI_=
-WATCHDOG)
->  # define WATCHDOG_DEFAULT      (SOFT_WATCHDOG_ENABLED | NMI_WATCHDOG_ENA=
-BLED)
->  # define NMI_WATCHDOG_DEFAULT  1
->  #else
-> @@ -47,7 +47,7 @@ static int __read_mostly nmi_watchdog_available;
->  struct cpumask watchdog_cpumask __read_mostly;
->  unsigned long *watchdog_cpumask_bits =3D cpumask_bits(&watchdog_cpumask)=
-;
->
-> -#ifdef CONFIG_HARDLOCKUP_DETECTOR
-> +#ifdef CONFIG_HARDLOCKUP_DETECTOR_CORE
->
->  # ifdef CONFIG_SMP
->  int __read_mostly sysctl_hardlockup_all_cpu_backtrace;
-> @@ -85,7 +85,9 @@ static int __init hardlockup_panic_setup(char *str)
->  }
->  __setup("nmi_watchdog=3D", hardlockup_panic_setup);
->
-> -#endif /* CONFIG_HARDLOCKUP_DETECTOR */
-> +#endif /* CONFIG_HARDLOCKUP_DETECTOR_CORE */
-> +
-> +#ifdef CONFIG_HARDLOCKUP_DETECTOR
->
->  /*
->   * These functions can be overridden if an architecture implements its
-> @@ -106,6 +108,13 @@ void __weak watchdog_nmi_disable(unsigned int cpu)
->         hardlockup_detector_perf_disable();
->  }
->
-> +#else
-> +
-> +int __weak watchdog_nmi_enable(unsigned int cpu) { return 0; }
-> +void __weak watchdog_nmi_disable(unsigned int cpu) { return; }
-> +
-> +#endif /* CONFIG_HARDLOCKUP_DETECTOR */
-> +
->  /* Return 0, if a NMI watchdog is available. Error code otherwise */
->  int __weak __init watchdog_nmi_probe(void)
->  {
-> @@ -179,8 +188,8 @@ static DEFINE_PER_CPU(unsigned long, watchdog_touch_t=
-s);
->  static DEFINE_PER_CPU(unsigned long, watchdog_report_ts);
->  static DEFINE_PER_CPU(struct hrtimer, watchdog_hrtimer);
->  static DEFINE_PER_CPU(bool, softlockup_touch_sync);
-> -static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts);
-> -static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts_saved);
-> +DEFINE_PER_CPU(unsigned long, hrtimer_interrupts);
-> +DEFINE_PER_CPU(unsigned long, hrtimer_interrupts_saved);
->  static unsigned long soft_lockup_nmi_warn;
->
->  static int __init nowatchdog_setup(char *str)
-> @@ -364,6 +373,9 @@ static enum hrtimer_restart watchdog_timer_fn(struct =
-hrtimer *hrtimer)
->         /* kick the hardlockup detector */
->         watchdog_interrupt_count();
->
-> +       /* test for hardlockups */
-> +       watchdog_check_hardlockup();
-> +
->         /* kick the softlockup detector */
->         if (completion_done(this_cpu_ptr(&softlockup_completion))) {
->                 reinit_completion(this_cpu_ptr(&softlockup_completion));
-> @@ -820,7 +832,7 @@ static struct ctl_table watchdog_sysctls[] =3D {
->         },
->  #endif /* CONFIG_SMP */
->  #endif
-> -#ifdef CONFIG_HARDLOCKUP_DETECTOR
-> +#ifdef CONFIG_HARDLOCKUP_DETECTOR_CORE
->         {
->                 .procname       =3D "hardlockup_panic",
->                 .data           =3D &hardlockup_panic,
-> diff --git a/kernel/watchdog_buddy_cpu.c b/kernel/watchdog_buddy_cpu.c
-> new file mode 100644
-> index 000000000000..db813b00e6ef
-> --- /dev/null
-> +++ b/kernel/watchdog_buddy_cpu.c
-> @@ -0,0 +1,141 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/cpu.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/kernel.h>
-> +#include <linux/nmi.h>
-> +#include <linux/percpu-defs.h>
-> +
-> +static DEFINE_PER_CPU(bool, watchdog_touch);
-> +static DEFINE_PER_CPU(bool, hard_watchdog_warn);
-> +static cpumask_t __read_mostly watchdog_cpus;
-> +
-> +static unsigned long hardlockup_allcpu_dumped;
-> +
-> +int __init watchdog_nmi_probe(void)
-> +{
-> +       return 0;
-> +}
-> +
-> +notrace void buddy_cpu_touch_watchdog(void)
-> +{
-> +       /*
-> +        * Using __raw here because some code paths have
-> +        * preemption enabled.  If preemption is enabled
-> +        * then interrupts should be enabled too, in which
-> +        * case we shouldn't have to worry about the watchdog
-> +        * going off.
-> +        */
-> +       raw_cpu_write(watchdog_touch, true);
-> +}
-> +EXPORT_SYMBOL_GPL(buddy_cpu_touch_watchdog);
-> +
-> +static unsigned int watchdog_next_cpu(unsigned int cpu)
-> +{
-> +       cpumask_t cpus =3D watchdog_cpus;
-> +       unsigned int next_cpu;
-> +
-> +       next_cpu =3D cpumask_next(cpu, &cpus);
-> +       if (next_cpu >=3D nr_cpu_ids)
-> +               next_cpu =3D cpumask_first(&cpus);
-> +
-> +       if (next_cpu =3D=3D cpu)
-> +               return nr_cpu_ids;
-> +
-> +       return next_cpu;
-> +}
-> +
-> +int watchdog_nmi_enable(unsigned int cpu)
-> +{
-> +       /*
-> +        * The new cpu will be marked online before the first hrtimer int=
-errupt
-> +        * runs on it.  If another cpu tests for a hardlockup on the new =
-cpu
-> +        * before it has run its first hrtimer, it will get a false posit=
-ive.
-> +        * Touch the watchdog on the new cpu to delay the first check for=
- at
-> +        * least 3 sampling periods to guarantee one hrtimer has run on t=
-he new
-> +        * cpu.
-> +        */
-> +       per_cpu(watchdog_touch, cpu) =3D true;
-> +       /* Match with smp_rmb() in watchdog_check_hardlockup() */
-> +       smp_wmb();
-> +       cpumask_set_cpu(cpu, &watchdog_cpus);
-> +       return 0;
-> +}
-> +
-> +void watchdog_nmi_disable(unsigned int cpu)
-> +{
-> +       unsigned int next_cpu =3D watchdog_next_cpu(cpu);
-> +
-> +       /*
-> +        * Offlining this cpu will cause the cpu before this one to start
-> +        * checking the one after this one.  If this cpu just finished ch=
-ecking
-> +        * the next cpu and updating hrtimer_interrupts_saved, and then t=
-he
-> +        * previous cpu checks it within one sample period, it will trigg=
-er a
-> +        * false positive.  Touch the watchdog on the next cpu to prevent=
- it.
-> +        */
-> +       if (next_cpu < nr_cpu_ids)
-> +               per_cpu(watchdog_touch, next_cpu) =3D true;
-> +       /* Match with smp_rmb() in watchdog_check_hardlockup() */
-> +       smp_wmb();
-> +       cpumask_clear_cpu(cpu, &watchdog_cpus);
-> +}
-> +
-> +static int is_hardlockup_buddy_cpu(unsigned int cpu)
-> +{
-> +       unsigned long hrint =3D per_cpu(hrtimer_interrupts, cpu);
-> +
-> +       if (per_cpu(hrtimer_interrupts_saved, cpu) =3D=3D hrint)
-> +               return 1;
-> +
-> +       per_cpu(hrtimer_interrupts_saved, cpu) =3D hrint;
-> +       return 0;
-> +}
-> +
-> +void watchdog_check_hardlockup(void)
-> +{
-> +       unsigned int next_cpu;
-> +
-> +       /*
-> +        * Test for hardlockups every 3 samples.  The sample period is
-> +        *  watchdog_thresh * 2 / 5, so 3 samples gets us back to slightl=
-y over
-> +        *  watchdog_thresh (over by 20%).
-> +        */
-> +       if (__this_cpu_read(hrtimer_interrupts) % 3 !=3D 0)
-> +               return;
-> +
-> +       /* check for a hardlockup on the next cpu */
-> +       next_cpu =3D watchdog_next_cpu(smp_processor_id());
-> +       if (next_cpu >=3D nr_cpu_ids)
-> +               return;
-> +
-> +       /* Match with smp_wmb() in watchdog_nmi_enable() / watchdog_nmi_d=
-isable() */
-> +       smp_rmb();
-> +
-> +       if (per_cpu(watchdog_touch, next_cpu) =3D=3D true) {
-> +               per_cpu(watchdog_touch, next_cpu) =3D false;
-> +               return;
-> +       }
-> +
-> +       if (is_hardlockup_buddy_cpu(next_cpu)) {
-> +               /* only warn once */
-> +               if (per_cpu(hard_watchdog_warn, next_cpu) =3D=3D true)
-> +                       return;
-> +
-> +               /*
-> +                * Perform all-CPU dump only once to avoid multiple hardl=
-ockups
-> +                * generating interleaving traces
-> +                */
-> +               if (sysctl_hardlockup_all_cpu_backtrace &&
-> +                               !test_and_set_bit(0, &hardlockup_allcpu_d=
-umped))
-> +                       trigger_allbutself_cpu_backtrace();
-> +
-> +               if (hardlockup_panic)
-> +                       panic("Watchdog detected hard LOCKUP on cpu %u", =
-next_cpu);
-> +               else
-> +                       WARN(1, "Watchdog detected hard LOCKUP on cpu %u"=
-, next_cpu);
-> +
-> +               per_cpu(hard_watchdog_warn, next_cpu) =3D true;
-> +       } else {
-> +               per_cpu(hard_watchdog_warn, next_cpu) =3D false;
-> +       }
-> +}
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index 39d1d93164bd..9eb86bc9f5ee 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1036,6 +1036,9 @@ config HARDLOCKUP_DETECTOR_PERF
->  config HARDLOCKUP_CHECK_TIMESTAMP
->         bool
->
-> +config HARDLOCKUP_DETECTOR_CORE
-> +       bool
-> +
->  #
->  # arch/ can define HAVE_HARDLOCKUP_DETECTOR_ARCH to provide their own ha=
-rd
->  # lockup detector rather than the perf based detector.
-> @@ -1045,6 +1048,7 @@ config HARDLOCKUP_DETECTOR
->         depends on DEBUG_KERNEL && !S390
->         depends on HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETEC=
-TOR_ARCH
->         select LOCKUP_DETECTOR
-> +       select HARDLOCKUP_DETECTOR_CORE
->         select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF
->         help
->           Say Y here to enable the kernel to act as a watchdog to detect
-> @@ -1055,9 +1059,22 @@ config HARDLOCKUP_DETECTOR
->           chance to run.  The current stack trace is displayed upon detec=
-tion
->           and the system will stay locked up.
->
-> +config HARDLOCKUP_DETECTOR_BUDDY_CPU
-> +       bool "Buddy CPU hardlockup detector"
-> +       depends on DEBUG_KERNEL && SMP
-> +       depends on !HARDLOCKUP_DETECTOR && !HAVE_NMI_WATCHDOG
-> +       depends on !S390
-> +       select HARDLOCKUP_DETECTOR_CORE
-> +       select SOFTLOCKUP_DETECTOR
-> +       help
-> +         Say Y here to enable a hardlockup detector where CPUs check
-> +         each other for lockup. Each cpu uses its softlockup hrtimer
-> +         to check that the next cpu is processing hrtimer interrupts by
-> +         verifying that a counter is increasing.
-> +
->  config BOOTPARAM_HARDLOCKUP_PANIC
->         bool "Panic (Reboot) On Hard Lockups"
-> -       depends on HARDLOCKUP_DETECTOR
-> +       depends on HARDLOCKUP_DETECTOR_CORE
->         help
->           Say Y here to enable the kernel to panic on "hard lockups",
->           which are bugs that cause the kernel to loop in kernel
-> --
-> 2.40.0.634.g4ca3ef3211-goog
->
+This is an important exception, as populate_vma_page_range() invokes
+__get_user_pages() in this way (and thus so does __mm_populate(), used by
+MAP_POPULATE mmap() and mlock() invocations).
+
+There are GUP users within the kernel that do nevertheless rely upon this
+behaviour, so we introduce the FOLL_ALLOW_BROKEN_FILE_MAPPING flag to
+explicitly permit this kind of GUP access.
+
+This is required in order to not break userspace in instances where the
+uAPI might permit file-mapped addresses - a number of RDMA users require
+this for instance, as do the process_vm_[read/write]v() system calls,
+/proc/$pid/mem, ptrace and SDT uprobes. Each of these callers have been
+updated to use this flag.
+
+Making this change is an important step towards a more reliable GUP, and
+explicitly indicates which callers might encouter issues moving forward.
+
+Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+---
+ drivers/infiniband/hw/qib/qib_user_pages.c |  3 +-
+ drivers/infiniband/hw/usnic/usnic_uiom.c   |  2 +-
+ drivers/infiniband/sw/siw/siw_mem.c        |  3 +-
+ fs/proc/base.c                             |  3 +-
+ include/linux/mm_types.h                   |  8 +++++
+ kernel/events/uprobes.c                    |  3 +-
+ mm/gup.c                                   | 36 +++++++++++++++++++++-
+ mm/memory.c                                |  3 +-
+ mm/process_vm_access.c                     |  2 +-
+ net/xdp/xdp_umem.c                         |  2 +-
+ 10 files changed, 56 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/infiniband/hw/qib/qib_user_pages.c b/drivers/infiniband/hw/qib/qib_user_pages.c
+index f693bc753b6b..b9019dad8008 100644
+--- a/drivers/infiniband/hw/qib/qib_user_pages.c
++++ b/drivers/infiniband/hw/qib/qib_user_pages.c
+@@ -110,7 +110,8 @@ int qib_get_user_pages(unsigned long start_page, size_t num_pages,
+ 	for (got = 0; got < num_pages; got += ret) {
+ 		ret = pin_user_pages(start_page + got * PAGE_SIZE,
+ 				     num_pages - got,
+-				     FOLL_LONGTERM | FOLL_WRITE,
++				     FOLL_LONGTERM | FOLL_WRITE |
++				     FOLL_ALLOW_BROKEN_FILE_MAPPING,
+ 				     p + got, NULL);
+ 		if (ret < 0) {
+ 			mmap_read_unlock(current->mm);
+diff --git a/drivers/infiniband/hw/usnic/usnic_uiom.c b/drivers/infiniband/hw/usnic/usnic_uiom.c
+index 2a5cac2658ec..33cf79b248a9 100644
+--- a/drivers/infiniband/hw/usnic/usnic_uiom.c
++++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
+@@ -85,7 +85,7 @@ static int usnic_uiom_get_pages(unsigned long addr, size_t size, int writable,
+ 				int dmasync, struct usnic_uiom_reg *uiomr)
+ {
+ 	struct list_head *chunk_list = &uiomr->chunk_list;
+-	unsigned int gup_flags = FOLL_LONGTERM;
++	unsigned int gup_flags = FOLL_LONGTERM | FOLL_ALLOW_BROKEN_FILE_MAPPING;
+ 	struct page **page_list;
+ 	struct scatterlist *sg;
+ 	struct usnic_uiom_chunk *chunk;
+diff --git a/drivers/infiniband/sw/siw/siw_mem.c b/drivers/infiniband/sw/siw/siw_mem.c
+index f51ab2ccf151..bc3e8c0898e5 100644
+--- a/drivers/infiniband/sw/siw/siw_mem.c
++++ b/drivers/infiniband/sw/siw/siw_mem.c
+@@ -368,7 +368,8 @@ struct siw_umem *siw_umem_get(u64 start, u64 len, bool writable)
+ 	struct mm_struct *mm_s;
+ 	u64 first_page_va;
+ 	unsigned long mlock_limit;
+-	unsigned int foll_flags = FOLL_LONGTERM;
++	unsigned int foll_flags =
++		FOLL_LONGTERM | FOLL_ALLOW_BROKEN_FILE_MAPPING;
+ 	int num_pages, num_chunks, i, rv = 0;
+ 
+ 	if (!can_do_mlock())
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index 96a6a08c8235..3e3f5ea9849f 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -855,7 +855,8 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
+ 	if (!mmget_not_zero(mm))
+ 		goto free;
+ 
+-	flags = FOLL_FORCE | (write ? FOLL_WRITE : 0);
++	flags = FOLL_FORCE | FOLL_ALLOW_BROKEN_FILE_MAPPING |
++		(write ? FOLL_WRITE : 0);
+ 
+ 	while (count > 0) {
+ 		size_t this_len = min_t(size_t, count, PAGE_SIZE);
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 3fc9e680f174..e76637b4c78f 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -1185,6 +1185,14 @@ enum {
+ 	FOLL_PCI_P2PDMA = 1 << 10,
+ 	/* allow interrupts from generic signals */
+ 	FOLL_INTERRUPTIBLE = 1 << 11,
++	/*
++	 * By default we disallow write access to known broken file-backed
++	 * memory mappings (i.e. anything other than hugetlb/shmem
++	 * mappings). Some code may rely upon being able to access this
++	 * regardless for legacy reasons, thus we provide a flag to indicate
++	 * this.
++	 */
++	FOLL_ALLOW_BROKEN_FILE_MAPPING = 1 << 12,
+ 
+ 	/* See also internal only FOLL flags in mm/internal.h */
+ };
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 59887c69d54c..ec330d3b0218 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -373,7 +373,8 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
+ 		return -EINVAL;
+ 
+ 	ret = get_user_pages_remote(mm, vaddr, 1,
+-			FOLL_WRITE, &page, &vma, NULL);
++				    FOLL_WRITE | FOLL_ALLOW_BROKEN_FILE_MAPPING,
++				    &page, &vma, NULL);
+ 	if (unlikely(ret <= 0)) {
+ 		/*
+ 		 * We are asking for 1 page. If get_user_pages_remote() fails,
+diff --git a/mm/gup.c b/mm/gup.c
+index 1f72a717232b..68d5570c0bae 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -959,16 +959,46 @@ static int faultin_page(struct vm_area_struct *vma,
+ 	return 0;
+ }
+ 
++/*
++ * Writing to file-backed mappings using GUP is a fundamentally broken operation
++ * as kernel write access to GUP mappings may not adhere to the semantics
++ * expected by a file system.
++ *
++ * In most instances we disallow this broken behaviour, however there are some
++ * exceptions to this enforced here.
++ */
++static inline bool can_write_file_mapping(struct vm_area_struct *vma,
++					  unsigned long gup_flags)
++{
++	struct file *file = vma->vm_file;
++
++	/* If we aren't pinning then no problematic write can occur. */
++	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
++		return true;
++
++	/* Special mappings should pose no problem. */
++	if (!file)
++		return true;
++
++	/* Has the caller explicitly indicated this case is acceptable? */
++	if (gup_flags & FOLL_ALLOW_BROKEN_FILE_MAPPING)
++		return true;
++
++	/* shmem and hugetlb mappings do not have problematic semantics. */
++	return vma_is_shmem(vma) || is_file_hugepages(file);
++}
++
+ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+ {
+ 	vm_flags_t vm_flags = vma->vm_flags;
+ 	int write = (gup_flags & FOLL_WRITE);
+ 	int foreign = (gup_flags & FOLL_REMOTE);
++	bool vma_anon = vma_is_anonymous(vma);
+ 
+ 	if (vm_flags & (VM_IO | VM_PFNMAP))
+ 		return -EFAULT;
+ 
+-	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
++	if ((gup_flags & FOLL_ANON) && !vma_anon)
+ 		return -EFAULT;
+ 
+ 	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
+@@ -978,6 +1008,10 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+ 		return -EFAULT;
+ 
+ 	if (write) {
++		if (!vma_anon &&
++		    WARN_ON_ONCE(!can_write_file_mapping(vma, gup_flags)))
++			return -EFAULT;
++
+ 		if (!(vm_flags & VM_WRITE)) {
+ 			if (!(gup_flags & FOLL_FORCE))
+ 				return -EFAULT;
+diff --git a/mm/memory.c b/mm/memory.c
+index 146bb94764f8..e3d535991548 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -5683,7 +5683,8 @@ int access_process_vm(struct task_struct *tsk, unsigned long addr,
+ 	if (!mm)
+ 		return 0;
+ 
+-	ret = __access_remote_vm(mm, addr, buf, len, gup_flags);
++	ret = __access_remote_vm(mm, addr, buf, len,
++				 gup_flags | FOLL_ALLOW_BROKEN_FILE_MAPPING);
+ 
+ 	mmput(mm);
+ 
+diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+index 78dfaf9e8990..ef126c08e89c 100644
+--- a/mm/process_vm_access.c
++++ b/mm/process_vm_access.c
+@@ -81,7 +81,7 @@ static int process_vm_rw_single_vec(unsigned long addr,
+ 	ssize_t rc = 0;
+ 	unsigned long max_pages_per_loop = PVM_MAX_KMALLOC_PAGES
+ 		/ sizeof(struct pages *);
+-	unsigned int flags = 0;
++	unsigned int flags = FOLL_ALLOW_BROKEN_FILE_MAPPING;
+ 
+ 	/* Work out address and page range required */
+ 	if (len == 0)
+diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+index 02207e852d79..b93cfcaccb0d 100644
+--- a/net/xdp/xdp_umem.c
++++ b/net/xdp/xdp_umem.c
+@@ -93,7 +93,7 @@ void xdp_put_umem(struct xdp_umem *umem, bool defer_cleanup)
+ 
+ static int xdp_umem_pin_pages(struct xdp_umem *umem, unsigned long address)
+ {
+-	unsigned int gup_flags = FOLL_WRITE;
++	unsigned int gup_flags = FOLL_WRITE | FOLL_ALLOW_BROKEN_FILE_MAPPING;
+ 	long npgs;
+ 	int err;
+ 
+-- 
+2.40.0
+
