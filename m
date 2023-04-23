@@ -2,187 +2,358 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBDDC7618E
-	for <linux-perf-users@archiver.kernel.org>; Sat, 22 Apr 2023 22:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A332C77B73
+	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Apr 2023 04:33:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229747AbjDVWb3 (ORCPT
+        id S229874AbjDWEdE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 22 Apr 2023 18:31:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41594 "EHLO
+        Sun, 23 Apr 2023 00:33:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbjDVWb2 (ORCPT
+        with ESMTP id S229580AbjDWEdE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 22 Apr 2023 18:31:28 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D094E2700;
-        Sat, 22 Apr 2023 15:31:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682202686; x=1713738686;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=5RDnE9mjkUIxArdNIgngSZTyp70v7Gp0eED0wqH5aos=;
-  b=e7utqgg6un1ue8s3OQxQfHDXklj0Vs3hfgW+vkw7g/jVfX7MbcNqGGP3
-   gSKa+CTnyPd5NsGrEj/Ag3X+02VOYpjexPU2MsqEZn+amBt1AWJgIVBNS
-   TJHMeFXyzclCF0aZb+MGWQvNILTPdpI06WGOCQVZpecKxys4UhKTgZXgx
-   IXcX9rRKpj+zvaHgRenIus6HVRgfzTCXxAdIBUVYD4O6veOUXfhJFd7Mj
-   gGXBTMhdg52kQdy0qzOY7gDQkCOjKXoWe2AU8P0JtxVDEAJg7/hdvTBRW
-   tZfQhWvtQBVuWa9U6cRxbTaL/ZN106QzJOPNN1Z1210lP+O5V2xEDBQAl
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10688"; a="335092926"
-X-IronPort-AV: E=Sophos;i="5.99,219,1677571200"; 
-   d="scan'208";a="335092926"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Apr 2023 15:31:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10688"; a="781947059"
-X-IronPort-AV: E=Sophos;i="5.99,219,1677571200"; 
-   d="scan'208";a="781947059"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Apr 2023 15:31:25 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sat, 22 Apr 2023 15:31:25 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sat, 22 Apr 2023 15:31:25 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Sat, 22 Apr 2023 15:31:25 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.176)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Sat, 22 Apr 2023 15:31:25 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mpasE63KsAnhAnhUbMdjPfVVJuxa0FaqA/Kjr2BbgX9biaEPV3IVI2m2u+1uP0cCe2soqUQmBYz8HnNAE9I3RZsVnxPHJF0DPYgileUR9Xi0QIwLvveJmv2v8aN+XdmMQk8+k1e+SCOYKF1MZ/hm3Zv7e5VMA6SO5Yv8Iy4je+XGVkXfJST0xgTj1sdq353gYDmeFpN3K30Q0T7tZDgtGwNEmvG96uwtUhbsBscFaYjwYZYepN3PaJnq0UtZBIDJdKgPdJdGBiQORdhLDW05MFvhjGZXDALaDEF1zI4E8ESey2b/pZOp1EH7UDv6rRvFqVtplNwkr0eoSq4YENWYeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6MOIxWnFZO2pnioNeWU3oB3IoXqdEjp0iX/YrLVbaZQ=;
- b=XjQlYPvhSDCQxAHN27a3w9ApilaR/leNBcnaqw7/7IKY8+gka34KSa5feaPoj43F0xyuVd94ELIIGYtsVKMwTbLrmnw2H7CnUDm1J+75kM/4i3we9RioeNhSTxSqBsED8Fah2rIGfpFYzUkXQN6fshX48DZOCCmy8UXtHRlZQeSVb+c21M4Fq8r5Oc5MgkwIg00vCwescR5UamdvsjY/vT7jt/4yWkXmIF1EfQbvBLZNBBNRrTM7ybOdsRLBSOVBO4tg+esepc8I+x911TuOcvkHWPCMjkkiy8gK9qrfMfnltJQQ4tlTNjxZt5NvNmqzcSphk7W8xvokLchixkm7Gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by BN9PR11MB5308.namprd11.prod.outlook.com (2603:10b6:408:119::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.31; Sat, 22 Apr
- 2023 22:31:22 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::95c6:c77e:733b:eee5%3]) with mapi id 15.20.6319.032; Sat, 22 Apr 2023
- 22:31:22 +0000
-Date:   Sat, 22 Apr 2023 15:31:18 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
-        <mark.rutland@arm.com>, <will@kernel.org>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <dan.j.williams@intel.com>,
-        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "Dave Jiang" <dave.jiang@intel.com>
-Subject: RE: [PATCH v6 4/5] perf: CXL Performance Monitoring Unit driver
-Message-ID: <6444603653882_1b41629414@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20230413142617.15995-1-Jonathan.Cameron@huawei.com>
- <20230413142617.15995-5-Jonathan.Cameron@huawei.com>
+        Sun, 23 Apr 2023 00:33:04 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A153A1737;
+        Sat, 22 Apr 2023 21:33:00 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Q3wJN6nBQz17TsB;
+        Sun, 23 Apr 2023 12:29:08 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
+ (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Sun, 23 Apr
+ 2023 12:32:55 +0800
+Date:   Sun, 23 Apr 2023 12:32:42 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+CC:     Changbin Du <changbin.du@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hui Wang <hw.huiwang@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH v5 2/3] perf: add helper map__fprintf_dsoname_dsoff
+Message-ID: <20230423043242.bjoqrkdztl3snaj4@M910t>
+References: <20230418031825.1262579-1-changbin.du@huawei.com>
+ <20230418031825.1262579-3-changbin.du@huawei.com>
+ <3001bde2-b010-3c00-17de-1c78ef4b589b@intel.com>
+ <20230420025511.fkd7upvuoxfz2xih@M910t>
+ <ff8bc134-853d-a9d9-901b-2c20beed8d05@intel.com>
+ <20230421050456.qnwzj2kl47i6ahto@M910t>
+ <03753b17-f380-94fc-d6eb-c5dfb1edb5d5@intel.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230413142617.15995-5-Jonathan.Cameron@huawei.com>
-X-ClientProxiedBy: BY5PR04CA0016.namprd04.prod.outlook.com
- (2603:10b6:a03:1d0::26) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|BN9PR11MB5308:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5fe763ee-e52b-42cb-711b-08db43814c71
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HQESAQVE2GqrjmbNl2aEPo7cJhcbHYY/LzJfyYTfZzyjzie5ArhgTVaUB199Lwb9dxxZWXVqdVeTL6inXzfgPsLq394KiuWbrHMVtjhH5CrvVBOcpCR+D7IxqdHakBwPLHKajItZe9SSrn+zIqLRX29z6bqaYuZOG37WrxKVW0Hbd1Q4cQdWhYfq6Wq43kHTpFM3CTD/BIZS+ClrblDjyQFvuD+AX4r0P7NZ0yMUN6qUY80t72iQ+Pc6OrUrXNXWB4cb/GISGzuq5A9n5hCNK1hRiByezGnQIP+0JegLcxD8kL2/GUKv/d/FVhheuL6Buv07eFOBufMoCjIIeToZy6agE9F1IXojJiDfgsy6wARRJ1ErPqe0n2Zh6nU9A+0Nm/cGBShv+ayRlyc0vpR88PCH7ip+ZC9zcv7i0MbRuzdAYPNYODVtDLXTuNR/xZDSx0OHUpIDHupqzNz2lrrQY0GwqJda+wM6h6YJI//RvVyB3kknCWQClyNTeCBozodZdLa+u+TyB8ygQ+2NZslOJBU162doRAfWu2vP/NOh4gzFD/DN8DK3ugYn5mCGuDwd
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(366004)(396003)(346002)(39860400002)(376002)(451199021)(66946007)(66476007)(66556008)(4326008)(186003)(82960400001)(316002)(6486002)(478600001)(6666004)(110136005)(54906003)(86362001)(6512007)(9686003)(6506007)(26005)(5660300002)(2906002)(8936002)(8676002)(38100700002)(7416002)(41300700001)(83380400001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?BF/NjelJmsE6I6P0PVRaki8UW2tZntKq7ElQqw6ShILWj1osrHHV/UEKDz/L?=
- =?us-ascii?Q?KrCvFGHqbOt/4d4QhfKc3x6FLVSNvWvEEeyWmnjkpW/PeuSd5aHJvLgV9NWL?=
- =?us-ascii?Q?0mKQ19ANtjJnyz6mIacsXA7neFtUw2p+CrBHDPLMdQc0pfh5Ok2PcWf24LRE?=
- =?us-ascii?Q?h/ZPAfJQJ+8eHm2fqa9v62hHscqqrB9XQs3y+SNvACqKpHAyWdZC2bowqro1?=
- =?us-ascii?Q?QQ/qcDzLFAQ5r2FTMuKMhseqi5yXczPkYSURJedAfHB3UfverB3etd1jmzwp?=
- =?us-ascii?Q?9upyj7dbPt70YzPQz7yvswiGj7/17SRWnVD/wA4LGqa9BAznIv2DYR6hCF60?=
- =?us-ascii?Q?vktTa0TdD30g7CEPffRuRTeCB6QpzpCLhoRUwnAO0QAu6wWq+2O7cfy4lhwk?=
- =?us-ascii?Q?ufxZsp7nVzzWuLsE0+dlEMKLoQeXWYPQkhRucLIZqCuk6b2Wwocxiay6q5Ed?=
- =?us-ascii?Q?pMs8do8N2IRUJVr4buBWFweAS/epX+veb/XfPhw/s2fD7G9FNnSLQDG+P/Mc?=
- =?us-ascii?Q?oaQiRc8Pe358NQtBDeYP0qgN3qsQbrTWXD4edXxLI21UR8FN0I2//NeGcYnw?=
- =?us-ascii?Q?ruuvWAsJiCwQbtwRK3en/9ZpZt2nmFWEc+SJSvtU4ACHmjNY9fKoQP6/v2iA?=
- =?us-ascii?Q?IG1pgZn+PueAtiZG73FiG11rNwYqO8dIMiLWyJVmVBtvCmUNF6W9jHWQUiFt?=
- =?us-ascii?Q?q7jTmYwIrSqPe/gmtmMheppJutMcNNxNEX22tl0wINIkk1JlMRIeYk+ZBr0R?=
- =?us-ascii?Q?IFOhdRTFXX5ogVVHP3D1c1MQ3NfttRSeeu7BpNa2YEoD3gsh3iga8ZZ+O0Af?=
- =?us-ascii?Q?4b3ehtFnzfOgHJ60hy81+wIkCnvd44kEDxKbUtnZUCWnGXHlRWInMwqlDhlg?=
- =?us-ascii?Q?pmweB2wT4QIbOl1U8PWpLSzEKWhR0XJyCbR/bKp/u0wVpR6U3vjLgY8+BqIZ?=
- =?us-ascii?Q?RXM2kx3E3DVW/hd4ptWJK5NusV474+rGRt727eIZe/NN3inIm61lJDDU5R+8?=
- =?us-ascii?Q?YTTlsb4hkXmRyM3drKv2QZGMcMrQfm4TBJ4pOYWWefuobR9MZQly6oZAQIm6?=
- =?us-ascii?Q?PCv6A1sN7HUufcOfs7xLtz0HkOEjgg3TXI2khEaO9GwNXucu7yvkKRPAmLzw?=
- =?us-ascii?Q?WDi7HaviGiHxEodOQBCZaK8JDzT3X/xU3zGVA2kMP/jIioBzAR6G1jRK8s7/?=
- =?us-ascii?Q?fy1YujOhODYl6hfuzynkn8YeipytChEP62IqKNZrfBmahsYs/SNijCJboJ2Y?=
- =?us-ascii?Q?1Msu2O3OHB/7Sr3BE/ecJl3o7TMmHKP3bS3HuRXomK+iiJGqD5gmKZ+hf6SR?=
- =?us-ascii?Q?WBM7u9OFYNc8wpni4KGHzhIYYWIr2c97fFIUtxIxsfDrNCTsL5AVSgXotPr9?=
- =?us-ascii?Q?miT/eMT+MZpsftBkE338l+M+nWN0tK6G9Ptm3VgBmCGSKVXzNsp3Z0eCmuOO?=
- =?us-ascii?Q?ajFJIIQ0NVjBX7JxXKfLyg9Oe7o3E5XUPJ7LhjS/frRBoFwU/IInDXenTnK4?=
- =?us-ascii?Q?uTf2nJGt3fM7h9cVzPEsyimJa7Gx8C7nf5h2ReiUGFTb+fSO//u9YCAt8pnN?=
- =?us-ascii?Q?MMSPqk6yV1nFQwpThpja8tRrZxNYtTYzSTDotN/u8/xh7T74bnGzgxUcUNKs?=
- =?us-ascii?Q?0w=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fe763ee-e52b-42cb-711b-08db43814c71
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Apr 2023 22:31:21.8945
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AF/5flQWDCcXbh/huvFzW5SSiSs3z36L/N3/s/+lFDooF55/49Pr25QUcS1oPrKOelR4P0dWeE2zLytV/vN6ygUpqdZrCwK/tdnS+jgLtb8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR11MB5308
-X-OriginatorOrg: intel.com
+In-Reply-To: <03753b17-f380-94fc-d6eb-c5dfb1edb5d5@intel.com>
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Jonathan Cameron wrote:
-> CXL rev 3.0 introduces a standard performance monitoring hardware
-> block to CXL. Instances are discovered using CXL Register Locator DVSEC
-> entries. Each CXL component may have multiple PMUs.
+On Fri, Apr 21, 2023 at 10:30:45AM +0300, Adrian Hunter wrote:
+> On 21/04/23 08:04, Changbin Du wrote:
+> >> What do you get if you try below diff on top of
+> >> your patches:
+> >>
+> >> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> >> index c7bf1ac14e90..df0d21141185 100644
+> >> --- a/tools/perf/builtin-script.c
+> >> +++ b/tools/perf/builtin-script.c
+> >> @@ -576,8 +576,11 @@ static void set_print_ip_opts(struct perf_event_attr *attr)
+> >>  	if (PRINT_FIELD(DSO))
+> >>  		output[type].print_ip_opts |= EVSEL__PRINT_DSO;
+> >>  
+> >> -	if (PRINT_FIELD(DSOFF))
+> >> +	if (PRINT_FIELD(DSOFF)) {
+> >>  		output[type].print_ip_opts |= EVSEL__PRINT_DSOFF;
+> >> +		/* DSO offset is relative to dso->longname */
+> >> +		symbol_conf.show_kernel_path = true;
+> >> +	}
+> >>  
+> >>  	if (PRINT_FIELD(SYMOFFSET))
+> >>  		output[type].print_ip_opts |= EVSEL__PRINT_SYMOFFSET;
+> >> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> >> index a86614599269..19ebfd3468cc 100644
+> >> --- a/tools/perf/util/dso.c
+> >> +++ b/tools/perf/util/dso.c
+> >> @@ -67,6 +67,42 @@ char dso__symtab_origin(const struct dso *dso)
+> >>  	return origin[dso->symtab_type];
+> >>  }
+> >>  
+> >> +bool dso__is_file(const struct dso *dso)
+> >> +{
+> >> +	switch (dso->binary_type) {
+> >> +	case DSO_BINARY_TYPE__KALLSYMS:
+> >> +	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
+> >> +		return false;
+> >> +	case DSO_BINARY_TYPE__VMLINUX:
+> >> +	case DSO_BINARY_TYPE__GUEST_VMLINUX:
+> >> +		return true;
+> >> +	case DSO_BINARY_TYPE__JAVA_JIT:
+> >> +		return false;
+> >> +	case DSO_BINARY_TYPE__DEBUGLINK:
+> >> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
+> >> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
+> >> +	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+> >> +	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
+> >> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+> >> +	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
+> >> +	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+> >> +	case DSO_BINARY_TYPE__GUEST_KMODULE:
+> >> +	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
+> >> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
+> >> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
+> >> +	case DSO_BINARY_TYPE__KCORE:
+> >> +	case DSO_BINARY_TYPE__GUEST_KCORE:
+> >> +	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+> >> +		return true;
+> >> +	case DSO_BINARY_TYPE__BPF_PROG_INFO:
+> >> +	case DSO_BINARY_TYPE__BPF_IMAGE:
+> >> +	case DSO_BINARY_TYPE__OOL:
+> >> +	case DSO_BINARY_TYPE__NOT_FOUND:
+> >> +	default:
+> >> +		return false;
+> >> +	}
+> >> +}
+> >> +
+> >>  int dso__read_binary_type_filename(const struct dso *dso,
+> >>  				   enum dso_binary_type type,
+> >>  				   char *root_dir, char *filename, size_t size)
+> >> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> >> index 0b7c7633b9f6..fb33f5224fb6 100644
+> >> --- a/tools/perf/util/dso.h
+> >> +++ b/tools/perf/util/dso.h
+> >> @@ -396,6 +396,8 @@ static inline bool dso__is_kallsyms(struct dso *dso)
+> >>  	return dso->kernel && dso->long_name[0] != '/';
+> >>  }
+> >>  
+> >> +bool dso__is_file(const struct dso *dso);
+> >> +
+> >>  void dso__free_a2l(struct dso *dso);
+> >>  
+> >>  enum dso_type dso__type(struct dso *dso, struct machine *machine);
+> >> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> >> index 7da96b41100f..9b79f88d371c 100644
+> >> --- a/tools/perf/util/map.c
+> >> +++ b/tools/perf/util/map.c
+> >> @@ -447,11 +447,12 @@ size_t map__fprintf_dsoname(struct map *map, FILE *fp)
+> >>  
+> >>  size_t map__fprintf_dsoname_dsoff(struct map *map, bool print_off, u64 addr, FILE *fp)
+> >>  {
+> >> +	const struct dso *dso = map ? map__dso(map) : NULL;
+> >>  	int printed = 0;
+> >>  
+> >>  	printed += fprintf(fp, " (");
+> >>  	printed += map__fprintf_dsoname(map, fp);
+> >> -	if (print_off && map && map__dso(map) && !map__dso(map)->kernel)
+> >> +	if (print_off && dso && dso__is_file(dso))
+> >>  		printed += fprintf(fp, "+0x%" PRIx64, addr);
+> >>  	printed += fprintf(fp, ")");
+> >>  
+> >>
+> > 
+> > Here are the outputs with above change.
+> > 
+> > For elf in build-id cache, it works as expected.
+> > $ sudo perf script -F +dsoff
+> >        perf-exec 12768   135.648023:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee44)
+> >        perf-exec 12768   135.648028:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee44)
+> >        perf-exec 12768   135.648030:         11 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee44)
+> >        perf-exec 12768   135.648031:        295 cycles:  ffffffff96c8ee46 native_write_msr+0x6 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x28ee46)
+> >        perf-exec 12768   135.648032:       8850 cycles:  ffffffff96c4c686 native_sched_clock+0x66 (/home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf+0x24c686)
 > 
-> This initial driver supports a subset of types of counter.
-> It supports counters that are either fixed or configurable, but requires
-> that they support the ability to freeze and write value whilst frozen.
+> A bit messy though.  User can use option --show-kernel-path
+> so let's not force that after all.
 > 
-> Development done with QEMU model which will be posted shortly.
+> >               ls 27521   501.120978:    4309123 cycles:      7f31cb51c591 _dl_sort_maps+0x301 (/usr/lib/x86_64-linux-gnu/ld-2.31.so)
+> > 
+> > But when I specify my vmlinux: (the binary_type is DSO_BINARY_TYPE__SYSTEM_PATH_DSO)
+> > $ sudo perf script -k linux/vmlinux -F +dsoff
+> >        perf-exec 12768   135.648023:          1 cycles:  ffffffff96c8ee44 [unknown] (/lib/modules/6.2.12/build/vmlinux)
+> >        perf-exec 12768   135.648028:          1 cycles:  ffffffff96c8ee44 [unknown] (/lib/modules/6.2.12/build/vmlinux+0xffffffff96c8ee44)
+> >        perf-exec 12768   135.648030:         11 cycles:  ffffffff96c8ee44 [unknown] (/lib/modules/6.2.12/build/vmlinux+0xffffffff96c8ee44)
+> >        perf-exec 12768   135.648031:        295 cycles:  ffffffff96c8ee46 [unknown] (/lib/modules/6.2.12/build/vmlinux+0xffffffff96c8ee46)
+> > 
+> > This is for kcore file:
+> > $ sudo perf script --kallsyms /proc/kallsyms -F +dsoff
+> >        perf-exec 18922   267.284368:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/proc/kcore+0x7fff96c91e44)
+> >        perf-exec 18922   267.284372:          1 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/proc/kcore+0x7fff96c91e44)
+> >        perf-exec 18922   267.284374:         11 cycles:  ffffffff96c8ee44 native_write_msr+0x4 (/proc/kcore+0x7fff96c91e44)
+> > 
+> > For ko, it's wierd that the binary_type of first one is DSO_BINARY_TYPE__NOT_FOUND.
+> > $ sudo perf script -F +dsoff | grep '.ko'
+> >            gedit 37410   769.927194:     199304 cycles:  ffffffffc0a3d050 ipt_do_table+0x0 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko)
+> >            gedit 37410   770.459667:     271035 cycles:  ffffffffc0a3d050 ipt_do_table+0x0 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0xf0)
+> >            gedit 37410   770.649838:     271878 cycles:  ffffffffc0a3d050 ipt_do_table+0x0 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0xf0)
+> >            gedit 37410   771.239221:     216084 cycles:  ffffffffc0a3d13b ipt_do_table+0xeb (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x1db)
+> >            gedit 37410   771.257816:     219469 cycles:  ffffffffc0a3d165 ipt_do_table+0x115 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x205)
+> >            gedit 37410   771.531158:     288970 cycles:  ffffffffc0a3d151 ipt_do_table+0x101 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x1f1)
+> >            gedit 37410   771.816916:     321215 cycles:  ffffffffc0a3d151 ipt_do_table+0x101 (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x1f1)
+> >            gedit 37410   773.624786:     332528 cycles:  ffffffffc0a3d2ea ipt_do_table+0x29a (/lib/modules/6.2.12/kernel/net/ipv4/netfilter/ip_tables.ko+0x38a)
+> > 
+> > Maybe we can just filter by name? e.g. '[kernel.kallsyms]', '[guest.kernel.kallsyms]'.
 > 
-> Example:
+> Using the dso->binary_type deals with other cases also.
+> We can just change case DSO_BINARY_TYPE__NOT_FOUND to return
+> true.
 > 
-> $ perf stat -e cxl_pmu_mem0.0/h2d_req_snpcur/ -e cpmu0/h2d_req_snpdata/ -e cpmu0/clock_ticks/ sleep 1
+> How about this:
 > 
-> Performance counter stats for 'system wide':
+> commit abaf1cbf5be5d50b1b3682511b92794394b72178
+> Author: Adrian Hunter <adrian.hunter@intel.com>
+> Date:   Fri Apr 21 10:15:14 2023 +0300
 > 
-> 96,757,023,244,321      cxl_pmu_mem0.0/h2d_req_snpcur/
-> 96,757,023,244,365      cxl_pmu_mem0.0/h2d_req_snpdata/
-> 193,514,046,488,653      cxl_pmu_mem0.0/clock_ticks/
+>     perf script: Refine printing of dso offset
+>     
+>     Print dso offset only for object files, and in those cases force using the
+>     dso->long_name if the dso->name starts with '[' or the dso is kcore, in
+>     order to avoid special names such as [vdso], or mixing up kcore with
+>     vmlinux.
+>     
+>     Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > 
->        1.090539600 seconds time elapsed
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index a86614599269..046fbfcfdaab 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -67,6 +67,39 @@ char dso__symtab_origin(const struct dso *dso)
+>  	return origin[dso->symtab_type];
+>  }
+>  
+> +bool dso__is_object_file(const struct dso *dso)
+> +{
+> +	switch (dso->binary_type) {
+> +	case DSO_BINARY_TYPE__KALLSYMS:
+> +	case DSO_BINARY_TYPE__GUEST_KALLSYMS:
+> +	case DSO_BINARY_TYPE__JAVA_JIT:
+> +	case DSO_BINARY_TYPE__BPF_PROG_INFO:
+> +	case DSO_BINARY_TYPE__BPF_IMAGE:
+> +	case DSO_BINARY_TYPE__OOL:
+> +		return false;
+> +	case DSO_BINARY_TYPE__VMLINUX:
+> +	case DSO_BINARY_TYPE__GUEST_VMLINUX:
+> +	case DSO_BINARY_TYPE__DEBUGLINK:
+> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE:
+> +	case DSO_BINARY_TYPE__BUILD_ID_CACHE_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__MIXEDUP_UBUNTU_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__BUILDID_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_DSO:
+> +	case DSO_BINARY_TYPE__GUEST_KMODULE:
+> +	case DSO_BINARY_TYPE__GUEST_KMODULE_COMP:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE:
+> +	case DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP:
+> +	case DSO_BINARY_TYPE__KCORE:
+> +	case DSO_BINARY_TYPE__GUEST_KCORE:
+> +	case DSO_BINARY_TYPE__OPENEMBEDDED_DEBUGINFO:
+> +	case DSO_BINARY_TYPE__NOT_FOUND:
+> +	default:
+> +		return true;
+> +	}
+> +}
+> +
+>  int dso__read_binary_type_filename(const struct dso *dso,
+>  				   enum dso_binary_type type,
+>  				   char *root_dir, char *filename, size_t size)
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index 0b7c7633b9f6..b23a157c914d 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
+> @@ -379,23 +379,25 @@ void dso__reset_find_symbol_cache(struct dso *dso);
+>  size_t dso__fprintf_symbols_by_name(struct dso *dso, FILE *fp);
+>  size_t dso__fprintf(struct dso *dso, FILE *fp);
+>  
+> -static inline bool dso__is_vmlinux(struct dso *dso)
+> +static inline bool dso__is_vmlinux(const struct dso *dso)
+>  {
+>  	return dso->binary_type == DSO_BINARY_TYPE__VMLINUX ||
+>  	       dso->binary_type == DSO_BINARY_TYPE__GUEST_VMLINUX;
+>  }
+>  
+> -static inline bool dso__is_kcore(struct dso *dso)
+> +static inline bool dso__is_kcore(const struct dso *dso)
+>  {
+>  	return dso->binary_type == DSO_BINARY_TYPE__KCORE ||
+>  	       dso->binary_type == DSO_BINARY_TYPE__GUEST_KCORE;
+>  }
+>  
+> -static inline bool dso__is_kallsyms(struct dso *dso)
+> +static inline bool dso__is_kallsyms(const struct dso *dso)
+>  {
+>  	return dso->kernel && dso->long_name[0] != '/';
+>  }
+>  
+> +bool dso__is_object_file(const struct dso *dso);
+> +
+>  void dso__free_a2l(struct dso *dso);
+>  
+>  enum dso_type dso__type(struct dso *dso, struct machine *machine);
+> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> index 7da96b41100f..5e7808b0bc87 100644
+> --- a/tools/perf/util/map.c
+> +++ b/tools/perf/util/map.c
+> @@ -424,14 +424,21 @@ size_t map__fprintf(struct map *map, FILE *fp)
+>  		       map__start(map), map__end(map), map__pgoff(map), dso->name);
+>  }
+>  
+> -size_t map__fprintf_dsoname(struct map *map, FILE *fp)
+> +static bool prefer_dso_long_name(const struct dso *dso, bool print_off)
+> +{
+> +	return dso->long_name &&
+> +	       (symbol_conf.show_kernel_path ||
+> +		(print_off && (dso->name[0] == '[' || dso__is_kcore(dso))));
+> +}
+> +
+> +static size_t __map__fprintf_dsoname(struct map *map, bool print_off, FILE *fp)
+>  {
+>  	char buf[symbol_conf.pad_output_len_dso + 1];
+>  	const char *dsoname = "[unknown]";
+>  	const struct dso *dso = map ? map__dso(map) : NULL;
+>  
+>  	if (dso) {
+> -		if (symbol_conf.show_kernel_path && dso->long_name)
+> +		if (prefer_dso_long_name(dso, print_off))
+>  			dsoname = dso->long_name;
+>  		else
+>  			dsoname = dso->name;
+> @@ -445,13 +452,21 @@ size_t map__fprintf_dsoname(struct map *map, FILE *fp)
+>  	return fprintf(fp, "%s", dsoname);
+>  }
+>  
+> +size_t map__fprintf_dsoname(struct map *map, FILE *fp)
+> +{
+> +	return __map__fprintf_dsoname(map, false, fp);
+> +}
+> +
+>  size_t map__fprintf_dsoname_dsoff(struct map *map, bool print_off, u64 addr, FILE *fp)
+>  {
+> +	const struct dso *dso = map ? map__dso(map) : NULL;
+>  	int printed = 0;
+>  
+> +	if (print_off && (!dso || !dso__is_object_file(dso)))
+> +		print_off = false;
+>  	printed += fprintf(fp, " (");
+> -	printed += map__fprintf_dsoname(map, fp);
+> -	if (print_off && map && map__dso(map) && !map__dso(map)->kernel)
+> +	printed += __map__fprintf_dsoname(map, print_off, fp);
+> +	if (print_off)
+>  		printed += fprintf(fp, "+0x%" PRIx64, addr);
+>  	printed += fprintf(fp, ")");
+>  
 > 
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+I am fine with this polish patch. So will send this standalone or append to this
+thread?
 
-Jonathan, I was awaiting a "perf maintainer ack" before applying this,
-only to now realize there is no maintainer entry for drivers/perf/ in
-general, only "ARM PMU PROFILING AND DEBUGGING". Were you waiting on any
-additional acks from perf folks for this?
-
-If there are no objections I think this can be included in the back half
-of the merge window for v6.4, as it stands now I was still awaiting the
-final go ahead.
+-- 
+Cheers,
+Changbin Du
