@@ -2,130 +2,124 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B551C77B60
-	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Apr 2023 20:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE2EC6FD18
+	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Apr 2023 21:56:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbjDWUCZ (ORCPT
+        id S230020AbjDWV4z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 23 Apr 2023 16:02:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
+        Sun, 23 Apr 2023 17:56:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjDWUCY (ORCPT
+        with ESMTP id S229507AbjDWV4y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 23 Apr 2023 16:02:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C098E63;
-        Sun, 23 Apr 2023 13:02:23 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 28D4D60F77;
-        Sun, 23 Apr 2023 20:02:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD654C433D2;
-        Sun, 23 Apr 2023 20:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682280142;
-        bh=MXq/43kCze2RO9lP4ptWyt16cAC97gbSKdjUyiZkGe0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TeydC14vXjAcezSvOpLJ6lAgoD7kv4M6u2qpkMik63uNVRdyPydMRXOgOZl8horI+
-         dPMUTeoPcKNY3usBHvTn9wt3MN+OugsRnGr0IsC1oFmhWdpfSaV1Z2ZOlTUucNyFnI
-         Dc7xJ3MsVgfv/9IzUKl8JIOxIGjmFLwo53Sw9q11W9QUhGzAN8aJtxFQ6cy32G+/6J
-         sPWBqLbzeBzmMfJt637Yg3UjirQwtj3SDotLldKjhF9Q47+El15XA9ePt5cvIKvHTl
-         ZLtLr/8hQ5GEStE0bg3XDleDq07tryjP50bYayKFt8JtmZOdkh1eS+Qu0bUY77irUf
-         0LMKZJajGU/pQ==
-Date:   Sun, 23 Apr 2023 22:02:11 +0200
-From:   Simon Horman <horms@kernel.org>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     Simon Horman <simon.horman@corigine.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Sun, 23 Apr 2023 17:56:54 -0400
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5519FE76;
+        Sun, 23 Apr 2023 14:56:53 -0700 (PDT)
+Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-63b51fd2972so3090804b3a.3;
+        Sun, 23 Apr 2023 14:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682287013; x=1684879013;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=GSgAcoXgSDnWS/7yo+J3yz1PI9CqV55UTloz7w6JFJg=;
+        b=mI8g70FtRaOn0BDc513vRcKXtM2bIrOVEJBBwwqGUpjE+COcmbbHdqgvYmWHKoT3Cl
+         lSYv0Le0/hihWHj6WuI9eyKL1MFAnjX4LMqgj06Vkdot3yc3QwxpcdXUi9crt5ehbdua
+         6Q8ROTyKY6tR5A6vU0zkEcBd7YybPV5OdClqACO+Y4LpYo8awTI97SDHBbuNKW3otXdr
+         NgmoAmdQScalAl1q4r4O1ukXAadbyPf4s15pF8va6zVoqsf/TAXNXuvSq1PGTTyeNx5H
+         Ofptob2i/KM7178cRUcXiOhSc05QtnkoDCFllQJN1WHJiGcy0phED6mgpjBKr77VJqOQ
+         /0fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682287013; x=1684879013;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GSgAcoXgSDnWS/7yo+J3yz1PI9CqV55UTloz7w6JFJg=;
+        b=T0bQh/nQfXLLleZS5p7bbBJ8hjyNkzI1r8defNurHeb9jE5IRjmSCgTlqMCKhd/K9M
+         vArEcxXECqMMe+Zo/P99fapQzENP2rTuGzB/xBUa4mAS6VPc6OcmUq0tGEr7dQZAyh76
+         +PbPqoFOpk/zTtt7Fnl5RLptyUEBvFC2bYidRUF0mc2FdqDgC7bp+tP5Vt2MXZIYfc4s
+         nP6sNHWvmnQOGAICabyHXDHsjdIacxojs0YYItl1UXPOUJFmVsMsqURKCZFays+e3J+M
+         nFcz9txTOQF9c6UiD/Zo+W/w/GF/iXmFwRugn6+PrHdeZqZQ+xENbidN38Vw/PsaxKrD
+         1wzA==
+X-Gm-Message-State: AAQBX9c6N966aUIBktxnbUpKHGflLU/6tpf6/mzkR90OhtbCv+FDg7cU
+        GNouAJqDxDwobPIYtIJslso=
+X-Google-Smtp-Source: AKy350bxTKCgkE0vmaTH9OzhX0yQCdIJm/bTBrn2ymbEUGtlBxpehl5opTmCv0u/D+Z+pqvYAoS3ig==
+X-Received: by 2002:a05:6a00:1ad1:b0:63b:89a2:d624 with SMTP id f17-20020a056a001ad100b0063b89a2d624mr15378143pfv.12.1682287012528;
+        Sun, 23 Apr 2023 14:56:52 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6700:7f00:2833:1d0a:7988:4146])
+        by smtp.gmail.com with ESMTPSA id 123-20020a621881000000b00627df85cd72sm5990230pfy.199.2023.04.23.14.56.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Apr 2023 14:56:52 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] mm/gup: disallow GUP writing to file-backed mappings by
- default
-Message-ID: <ZEWOwz/82AKHGrXW@kernel.org>
-References: <f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com>
- <ZEWHsbxhQlrSqnSC@corigine.com>
- <a6ceb82a-1766-4229-ba33-b6f25e111561@lucifer.local>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+        Song Liu <song@kernel.org>
+Subject: [PATCH] perf lock contention: Fix struct rq lock access
+Date:   Sun, 23 Apr 2023 14:56:50 -0700
+Message-ID: <20230423215650.287812-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6ceb82a-1766-4229-ba33-b6f25e111561@lucifer.local>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Apr 23, 2023 at 08:40:53PM +0100, Lorenzo Stoakes wrote:
-> On Sun, Apr 23, 2023 at 09:32:01PM +0200, Simon Horman wrote:
-> > On Sat, Apr 22, 2023 at 02:37:05PM +0100, Lorenzo Stoakes wrote:
-> > > It isn't safe to write to file-backed mappings as GUP does not ensure that
-> > > the semantics associated with such a write are performed correctly, for
-> > > instance filesystems which rely upon write-notify will not be correctly
-> > > notified.
-> > >
-> > > There are exceptions to this - shmem and hugetlb mappings are (in effect)
-> > > anonymous mappings by other names so we do permit this operation in these
-> > > cases.
-> > >
-> > > In addition, if no pinning takes place (neither FOLL_GET nor FOLL_PIN is
-> > > specified and neither flags gets implicitly set) then no writing can occur
-> > > so we do not perform the check in this instance.
-> > >
-> > > This is an important exception, as populate_vma_page_range() invokes
-> > > __get_user_pages() in this way (and thus so does __mm_populate(), used by
-> > > MAP_POPULATE mmap() and mlock() invocations).
-> > >
-> > > There are GUP users within the kernel that do nevertheless rely upon this
-> > > behaviour, so we introduce the FOLL_ALLOW_BROKEN_FILE_MAPPING flag to
-> > > explicitly permit this kind of GUP access.
-> > >
-> > > This is required in order to not break userspace in instances where the
-> > > uAPI might permit file-mapped addresses - a number of RDMA users require
-> > > this for instance, as do the process_vm_[read/write]v() system calls,
-> > > /proc/$pid/mem, ptrace and SDT uprobes. Each of these callers have been
-> > > updated to use this flag.
-> > >
-> > > Making this change is an important step towards a more reliable GUP, and
-> > > explicitly indicates which callers might encouter issues moving forward.
-> >
-> > nit: s/encouter/encounter/
-> >
-> 
-> Ack, I always seem to leave at least one or two easter egg spelling
-> mistakes in :)
+The BPF CO-RE's ignore suffix rule requires three underscores.
+Otherwise it'd fail like below:
 
-:)
+  $ sudo perf lock contention -ab
+  libbpf: prog 'collect_lock_syms': BPF program load failed: Invalid argument
+  libbpf: prog 'collect_lock_syms': -- BEGIN PROG LOAD LOG --
+  reg type unsupported for arg#0 function collect_lock_syms#380
+  ; int BPF_PROG(collect_lock_syms)
+  0: (b7) r6 = 0                        ; R6_w=0
+  1: (b7) r7 = 0                        ; R7_w=0
+  2: (b7) r9 = 1                        ; R9_w=1
+  3: <invalid CO-RE relocation>
+  failed to resolve CO-RE relocation <byte_off> [381] struct rq__new.__lock (0:0 @ offset 0)
 
-> Will fix up on next respin (in unlikely event of no further review,
-> hopefully Andrew would pick up!)
-> 
+Fixes: 0c1228486bef ("perf lock contention: Support pre-5.14 kernels")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_skel/lock_contention.bpf.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+index 8911e2a077d8..30c193078bdb 100644
+--- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
++++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
+@@ -418,11 +418,11 @@ int contention_end(u64 *ctx)
+ 
+ extern struct rq runqueues __ksym;
+ 
+-struct rq__old {
++struct rq___old {
+ 	raw_spinlock_t lock;
+ } __attribute__((preserve_access_index));
+ 
+-struct rq__new {
++struct rq___new {
+ 	raw_spinlock_t __lock;
+ } __attribute__((preserve_access_index));
+ 
+@@ -434,8 +434,8 @@ int BPF_PROG(collect_lock_syms)
+ 
+ 	for (int i = 0; i < MAX_CPUS; i++) {
+ 		struct rq *rq = bpf_per_cpu_ptr(&runqueues, i);
+-		struct rq__new *rq_new = (void *)rq;
+-		struct rq__old *rq_old = (void *)rq;
++		struct rq___new *rq_new = (void *)rq;
++		struct rq___old *rq_old = (void *)rq;
+ 
+ 		if (rq == NULL)
+ 			break;
+-- 
+2.40.0.634.g4ca3ef3211-goog
+
