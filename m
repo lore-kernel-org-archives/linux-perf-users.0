@@ -2,36 +2,67 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCF2C77B61
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 13:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75FEC77B78
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 14:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232761AbjDXNtg (ORCPT
+        id S230526AbjDXOaD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Apr 2023 09:49:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55000 "EHLO
+        Mon, 24 Apr 2023 10:30:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232806AbjDXNtC (ORCPT
+        with ESMTP id S229907AbjDXOaC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Apr 2023 09:49:02 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 21A02A246;
-        Mon, 24 Apr 2023 06:48:38 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C211EFEC;
-        Mon, 24 Apr 2023 06:49:21 -0700 (PDT)
-Received: from e127643.arm.com (unknown [10.57.58.229])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6BFCB3F64C;
-        Mon, 24 Apr 2023 06:48:34 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
-        shy828301@gmail.com
-Cc:     denik@google.com, James Clark <james.clark@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
+        Mon, 24 Apr 2023 10:30:02 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB66D1708;
+        Mon, 24 Apr 2023 07:30:00 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f19323259dso34206845e9.3;
+        Mon, 24 Apr 2023 07:30:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682346599; x=1684938599;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ALXzGJ5JvLTy0+4F2uq1xRRPXqqALEamM+dBHIwr4DU=;
+        b=jN6OPjaHPR+35RVu5HjWm806ZMgHf01oApnLVzOoITrD4+H3+33xZ6dZ5oRf6qOZUP
+         D8hA3Wt44+/uTDeVRl8Ov5vr+CJfATx0OLo0X1EW5HpwpfUNG+UJik3wBieB7KEjsimQ
+         y1HCZNLKGyA7om63+beqZU93mzJXtP5mOtlZ6xytdf2q3oM+pAkAGAUnopDzvWh322W1
+         4P+KbO6x4luVrUwPFIY3Kz+NJFvZi9mRoQERFsgyWpa7xNiB+Kl9hiYh2UGYR8newEsb
+         nNPRnYDg7clTomT3WnhQfQKHmrFMU6VtI4ds5fP3IX5FZTm3u1VX+ZmjErAMXFNfLvTc
+         Gtzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682346599; x=1684938599;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ALXzGJ5JvLTy0+4F2uq1xRRPXqqALEamM+dBHIwr4DU=;
+        b=ByQe8uW8hNfq7uYCLF8fGjkAL/ZJDy4u+j4MsyP69zgWvp8O/uctIleoMvcck6KEYf
+         x5/OxMB1BHdjGkrf4wqgA2sTYbVnYU4s+a22oil/ju15f3xqK2L0d35ZNn0ttQpsuCAo
+         O2iuVRWz1Jow+fNgWMX5flycrvOuzYsLBdgW7tpH5yHAekE8y55LRxRAGH72cSYOhcqM
+         fnlgwNNJeugjOKZaRTCzxcTEPkpzBLsESyJVViweI57B2WpDPAsTE8R9wIsIzSkhffci
+         aTCoq0Huo8zhg93b95jOSRuvZGVNtiMxIrnGcKkxzM7eLhMbZHPlVf8CUqJ04nSOAxSy
+         ixRg==
+X-Gm-Message-State: AAQBX9fPmuFe46T++835Srvcs1VLtQ4zu1hGPLX8wcBSYme8/IdzLwZG
+        nsNlvPkDEjwpXyd2OtoAZyw=
+X-Google-Smtp-Source: AKy350b0rBDMlMKwXgslvzplbT1eTTOv7dxTLMhpCvOuA79NqOaO/7KznoKPY9xRsZr4W2xUpEdJIw==
+X-Received: by 2002:a05:600c:2214:b0:3f1:98bd:acec with SMTP id z20-20020a05600c221400b003f198bdacecmr5257735wml.11.1682346598884;
+        Mon, 24 Apr 2023 07:29:58 -0700 (PDT)
+Received: from localhost (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
+        by smtp.gmail.com with ESMTPSA id y21-20020a05600c365500b003f182a10106sm12424385wmq.8.2023.04.24.07.29.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Apr 2023 07:29:57 -0700 (PDT)
+Date:   Mon, 24 Apr 2023 15:29:57 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -41,363 +72,100 @@ Cc:     denik@google.com, James Clark <james.clark@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] perf: cs-etm: Add separate decode paths for timeless and per-thread modes
-Date:   Mon, 24 Apr 2023 14:47:47 +0100
-Message-Id: <20230424134748.228137-8-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230424134748.228137-1-james.clark@arm.com>
-References: <20230424134748.228137-1-james.clark@arm.com>
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v2] mm/gup: disallow GUP writing to file-backed mappings
+ by default
+Message-ID: <cd488979-d257-42b9-937f-470cc3c57f5e@lucifer.local>
+References: <c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com>
+ <ZEZPXHN4OXIYhP+V@infradead.org>
+ <90a54439-5d30-4711-8a86-eba816782a66@lucifer.local>
+ <ZEZ117OMCi0dFXqY@nvidia.com>
+ <c8fff8b3-ead6-4f52-bf17-f2ef2e752b57@lucifer.local>
+ <ZEaGjad50lqRNTWD@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZEaGjad50lqRNTWD@nvidia.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Timeless and per-thread are orthogonal concepts that are currently
-treated as if they are the same (per-thread == timeless). This breaks
-when you modify the command line or itrace options to something that the
-current logic doesn't expect.
+On Mon, Apr 24, 2023 at 10:39:25AM -0300, Jason Gunthorpe wrote:
+> On Mon, Apr 24, 2023 at 01:38:49PM +0100, Lorenzo Stoakes wrote:
+>
+> > I was being fairly conservative in that list, though we certainly need to
+> > set the flag for /proc/$pid/mem and ptrace to avoid breaking this
+> > functionality (I observed breakpoints breaking without it which obviously
+> > is a no go :). I'm not sure if there's a more general way we could check
+> > for this though?
+>
+> More broadly we should make sure these usages of GUP safe somehow so
+> that it can reliably write to those types of pages without breaking
+> the current FS contract..
+>
+> I forget exactly, but IIRC, don't you have to hold some kind of page
+> spinlock while writing to the page memory?
+>
 
-For example:
+I think perhaps you're thinking of the mm->mmap_lock? Which will be held
+for the FOLL_GET cases and simply prevent the VMA from disappearing below
+us but not do much else.
 
-  # Force timeless with Z
-  --itrace=Zi10i
+> So, users that do this, or can be fixed to do this, can get file
+> backed pages. It suggests that a flag name is more like
+> FOLL_CALLER_USES_FILE_WRITE_LOCKING
+>
 
-  # Or inconsistent record options
-  -e cs_etm/timestamp=1/ --per-thread
+As stated above, I'm not sure what locking you're referring to, but seems
+to me that FOLL_GET already implies what you're thinking?
 
-Adding Z for decoding in per-cpu mode is particularly bad because in
-per-thread mode trace channel IDs are discarded and all assumed to be 0,
-which would mix trace from different CPUs in per-cpu mode.
+I wonder whether we should do this check purely for FOLL_PIN to be honest?
+As this indicates medium to long-term access without mmap_lock held. This
+would exclude the /proc/$pid/mem and ptrace paths which use gup_remote().
 
-Although the results might not be perfect in all scenarios, if the user
-requests no timestamps, it should still be possible to decode in either
-mode. Especially if the relative times of samples in different processes
-aren't interesting, quite a bit of space can be saved by turning off
-timestamps in per-cpu mode.
+That and a very specific use of uprobes are the only places that use
+FOLL_GET in this instance and each of them are careful in any case to
+handle setting the dirty page flag.
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/tests/shell/test_arm_coresight.sh |  24 +++
- tools/perf/util/cs-etm.c                     | 162 ++++++++++++++-----
- 2 files changed, 148 insertions(+), 38 deletions(-)
+All PUP cases that do not specify FOLL_LONGTERM also do this, so we could
+atually go so far as to reduce the patch to simply performing the
+vma_wants_writenotify() check if (FOLL_PIN | FOLL_LONGTERM) is specified,
+which covers the io_uring case.
 
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index 565ce525c40b..482009e17bda 100755
---- a/tools/perf/tests/shell/test_arm_coresight.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -150,6 +150,8 @@ arm_cs_etm_system_wide_test() {
- 	echo "Recording trace with system wide mode"
- 	perf record -o ${perfdata} -e cs_etm// -a -- ls > /dev/null 2>&1
- 
-+	# System-wide mode should include perf samples so test for that
-+	# instead of ls
- 	perf_script_branch_samples perf &&
- 	perf_report_branch_samples perf &&
- 	perf_report_instruction_samples perf
-@@ -182,7 +184,29 @@ arm_cs_etm_snapshot_test() {
- 	arm_cs_report "CoreSight snapshot testing" $err
- }
- 
-+arm_cs_etm_basic_test() {
-+	echo "Recording trace with '$*'"
-+	perf record -o ${perfdata} "$@" -- ls > /dev/null 2>&1
-+
-+	perf_script_branch_samples ls &&
-+	perf_report_branch_samples ls &&
-+	perf_report_instruction_samples ls
-+
-+	err=$?
-+	arm_cs_report "CoreSight basic testing with '$*'" $err
-+}
-+
- arm_cs_etm_traverse_path_test
- arm_cs_etm_system_wide_test
- arm_cs_etm_snapshot_test
-+
-+# Test all combinations of per-thread, system-wide and normal mode with
-+# and without timestamps
-+arm_cs_etm_basic_test -e cs_etm/timestamp=0/ --per-thread
-+arm_cs_etm_basic_test -e cs_etm/timestamp=1/ --per-thread
-+arm_cs_etm_basic_test -e cs_etm/timestamp=0/ -a
-+arm_cs_etm_basic_test -e cs_etm/timestamp=1/ -a
-+arm_cs_etm_basic_test -e cs_etm/timestamp=0/
-+arm_cs_etm_basic_test -e cs_etm/timestamp=1/
-+
- exit $glb_err
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index e048949bf655..456994564d6e 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -50,7 +50,22 @@ struct cs_etm_auxtrace {
- 	struct thread *unknown_thread;
- 	struct perf_tsc_conversion tc;
- 
-+	/*
-+	 * Timeless has no timestamps in the trace so overlapping mmap lookups
-+	 * are less accurate but produces smaller trace data. We use context IDs
-+	 * in the trace instead of matching timestamps with fork records so
-+	 * they're not really needed in the general case. Overlapping mmaps
-+	 * happen in cases like between a fork and an exec.
-+	 */
- 	bool timeless_decoding;
-+
-+	/*
-+	 * Per-thread ignores the trace channel ID and instead assumes that
-+	 * everything in a buffer comes from the same process regardless of
-+	 * which CPU it ran on. It also implies no context IDs so the TID is
-+	 * taken from the auxtrace buffer.
-+	 */
-+	bool per_thread_decoding;
- 	bool snapshot_mode;
- 	bool data_queued;
- 	bool has_virtual_ts; /* Virtual/Kernel timestamps in the trace. */
-@@ -98,7 +113,7 @@ struct cs_etm_queue {
- /* RB tree for quick conversion between traceID and metadata pointers */
- static struct intlist *traceid_list;
- 
--static int cs_etm__process_queues(struct cs_etm_auxtrace *etm);
-+static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm);
- static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 					   pid_t tid);
- static int cs_etm__get_data_block(struct cs_etm_queue *etmq);
-@@ -492,7 +507,7 @@ static struct cs_etm_traceid_queue
- 	struct cs_etm_traceid_queue *tidq, **traceid_queues;
- 	struct cs_etm_auxtrace *etm = etmq->etm;
- 
--	if (etm->timeless_decoding)
-+	if (etm->per_thread_decoding)
- 		trace_chan_id = CS_ETM_PER_THREAD_TRACEID;
- 
- 	traceid_queues_list = etmq->traceid_queues_list;
-@@ -731,10 +746,15 @@ static int cs_etm__flush_events(struct perf_session *session,
- 	if (!tool->ordered_events)
- 		return -EINVAL;
- 
--	if (etm->timeless_decoding)
-+	if (etm->timeless_decoding) {
-+		/*
-+		 * Pass tid = -1 to process all queues. But likely they will have
-+		 * already been processed on PERF_RECORD_EXIT anyway.
-+		 */
- 		return cs_etm__process_timeless_queues(etm, -1);
-+	}
- 
--	return cs_etm__process_queues(etm);
-+	return cs_etm__process_timestamped_queues(etm);
- }
- 
- static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
-@@ -1066,7 +1086,7 @@ static int cs_etm__queue_first_cs_timestamp(struct cs_etm_auxtrace *etm,
- 	 * chronological order.
- 	 *
- 	 * Note that packets decoded above are still in the traceID's packet
--	 * queue and will be processed in cs_etm__process_queues().
-+	 * queue and will be processed in cs_etm__process_timestamped_queues().
- 	 */
- 	cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
- 	ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, cs_timestamp);
-@@ -1347,9 +1367,7 @@ static inline u64 cs_etm__resolve_sample_time(struct cs_etm_queue *etmq,
- 	struct cs_etm_auxtrace *etm = etmq->etm;
- 	struct cs_etm_packet_queue *packet_queue = &tidq->packet_queue;
- 
--	if (etm->timeless_decoding)
--		return 0;
--	else if (etm->has_virtual_ts)
-+	if (!etm->timeless_decoding && etm->has_virtual_ts)
- 		return packet_queue->cs_timestamp;
- 	else
- 		return etm->latest_kernel_timestamp;
-@@ -2329,7 +2347,7 @@ static void cs_etm__clear_all_traceid_queues(struct cs_etm_queue *etmq)
- 	}
- }
- 
--static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
-+static int cs_etm__run_per_thread_timeless_decoder(struct cs_etm_queue *etmq)
- {
- 	int err = 0;
- 	struct cs_etm_traceid_queue *tidq;
-@@ -2367,6 +2385,51 @@ static int cs_etm__run_decoder(struct cs_etm_queue *etmq)
- 	return err;
- }
- 
-+static int cs_etm__run_per_cpu_timeless_decoder(struct cs_etm_queue *etmq)
-+{
-+	int idx, err = 0;
-+	struct cs_etm_traceid_queue *tidq;
-+	struct int_node *inode;
-+
-+	/* Go through each buffer in the queue and decode them one by one */
-+	while (1) {
-+		err = cs_etm__get_data_block(etmq);
-+		if (err <= 0)
-+			return err;
-+
-+		/* Run trace decoder until buffer consumed or end of trace */
-+		do {
-+			err = cs_etm__decode_data_block(etmq);
-+			if (err)
-+				return err;
-+
-+			/*
-+			 * cs_etm__run_per_thread_timeless_decoder() runs on a
-+			 * single traceID queue because each TID has a separate
-+			 * buffer. But here in per-cpu mode we need to iterate
-+			 * over each channel instead.
-+			 */
-+			intlist__for_each_entry(inode,
-+						etmq->traceid_queues_list) {
-+				idx = (int)(intptr_t)inode->priv;
-+				tidq = etmq->traceid_queues[idx];
-+				cs_etm__process_traceid_queue(etmq, tidq);
-+			}
-+		} while (etmq->buf_len);
-+
-+		intlist__for_each_entry(inode, etmq->traceid_queues_list) {
-+			idx = (int)(intptr_t)inode->priv;
-+			tidq = etmq->traceid_queues[idx];
-+			/* Flush any remaining branch stack entries */
-+			err = cs_etm__end_block(etmq, tidq);
-+			if (err)
-+				return err;
-+		}
-+	}
-+
-+	return err;
-+}
-+
- static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 					   pid_t tid)
- {
-@@ -2381,22 +2444,30 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 		if (!etmq)
- 			continue;
- 
--		tidq = cs_etm__etmq_get_traceid_queue(etmq,
--						CS_ETM_PER_THREAD_TRACEID);
-+		/*
-+		 * Per-cpu mode has contextIDs in the trace and the decoder
-+		 * calls cs_etm__set_pid_tid_cpu() automatically so no need
-+		 * to do this here
-+		 */
-+		if (etm->per_thread_decoding) {
-+			tidq = cs_etm__etmq_get_traceid_queue(
-+				etmq, CS_ETM_PER_THREAD_TRACEID);
- 
--		if (!tidq)
--			continue;
-+			if (!tidq)
-+				continue;
- 
--		if ((tid == -1) || (tidq->tid == tid)) {
--			cs_etm__set_pid_tid_cpu(etm, tidq);
--			cs_etm__run_decoder(etmq);
--		}
-+			if ((tid == -1) || (tidq->tid == tid)) {
-+				cs_etm__set_pid_tid_cpu(etm, tidq);
-+				cs_etm__run_per_thread_timeless_decoder(etmq);
-+			}
-+		} else
-+			cs_etm__run_per_cpu_timeless_decoder(etmq);
- 	}
- 
- 	return 0;
- }
- 
--static int cs_etm__process_queues(struct cs_etm_auxtrace *etm)
-+static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
- {
- 	int ret = 0;
- 	unsigned int cs_queue_nr, queue_nr, i;
-@@ -2573,7 +2644,6 @@ static int cs_etm__process_event(struct perf_session *session,
- 				 struct perf_sample *sample,
- 				 struct perf_tool *tool)
- {
--	u64 sample_kernel_timestamp;
- 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
- 						   struct cs_etm_auxtrace,
- 						   auxtrace);
-@@ -2586,33 +2656,39 @@ static int cs_etm__process_event(struct perf_session *session,
- 		return -EINVAL;
- 	}
- 
--	if (sample->time && (sample->time != (u64) -1))
--		sample_kernel_timestamp = sample->time;
--	else
--		sample_kernel_timestamp = 0;
--
--	/*
--	 * Don't wait for cs_etm__flush_events() in per-thread/timeless mode to start the decode. We
--	 * need the tid of the PERF_RECORD_EXIT event to assign to the synthesised samples because
--	 * ETM_OPT_CTXTID is not enabled.
--	 */
--	if (etm->timeless_decoding &&
--	    event->header.type == PERF_RECORD_EXIT)
--		return cs_etm__process_timeless_queues(etm,
--						       event->fork.tid);
-+	switch (event->header.type) {
-+	case PERF_RECORD_EXIT:
-+		/*
-+		 * Don't need to wait for cs_etm__flush_events() in per-thread mode to
-+		 * start the decode because we know there will be no more trace from
-+		 * this thread. All this does is emit samples earlier than waiting for
-+		 * the flush in other modes, but with timestamps it makes sense to wait
-+		 * for flush so that events from different threads are interleaved
-+		 * properly.
-+		 */
-+		if (etm->per_thread_decoding && etm->timeless_decoding)
-+			return cs_etm__process_timeless_queues(etm,
-+							       event->fork.tid);
-+		break;
- 
--	if (event->header.type == PERF_RECORD_ITRACE_START)
-+	case PERF_RECORD_ITRACE_START:
- 		return cs_etm__process_itrace_start(etm, event);
--	else if (event->header.type == PERF_RECORD_SWITCH_CPU_WIDE)
-+
-+	case PERF_RECORD_SWITCH_CPU_WIDE:
- 		return cs_etm__process_switch_cpu_wide(etm, event);
- 
--	if (!etm->timeless_decoding && event->header.type == PERF_RECORD_AUX) {
-+	case PERF_RECORD_AUX:
- 		/*
- 		 * Record the latest kernel timestamp available in the header
- 		 * for samples so that synthesised samples occur from this point
- 		 * onwards.
- 		 */
--		etm->latest_kernel_timestamp = sample_kernel_timestamp;
-+		if (sample->time && (sample->time != (u64)-1))
-+			etm->latest_kernel_timestamp = sample->time;
-+		break;
-+
-+	default:
-+		break;
- 	}
- 
- 	return 0;
-@@ -2821,10 +2897,20 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 	 * Return 'not found' if mismatch.
- 	 */
- 	if (auxtrace_event->cpu == (__u32) -1) {
-+		etm->per_thread_decoding = true;
- 		if (auxtrace_event->tid != sample->tid)
- 			return 1;
--	} else if (auxtrace_event->cpu != sample->cpu)
-+	} else if (auxtrace_event->cpu != sample->cpu) {
-+		if (etm->per_thread_decoding) {
-+			/*
-+			 * Found a per-cpu buffer after a per-thread one was
-+			 * already found
-+			 */
-+			pr_err("CS ETM: Inconsistent per-thread/per-cpu mode.\n");
-+			return -EINVAL;
-+		}
- 		return 1;
-+	}
- 
- 	if (aux_event->flags & PERF_AUX_FLAG_OVERWRITE) {
- 		/*
--- 
-2.34.1
+Alternatively if we wanted to be safer, we could add a FOLL_ALLOW_FILE_PIN
+that is checked on FOLL_PIN and ignored on FOLL_LONGTERM?
 
+> > I wouldn't be totally opposed to dropping it for RDMA too, because I
+> > suspect accessing file-backed mappings for that is pretty iffy.
+> >
+> > Do you have a sense of which in the list you feel could be pared back?
+>
+> Anything using FOLL_LONGTERM should not set the flag, GUP should even
+> block the combination.
+
+OK
+
+>
+> And we need to have in mind that the flag indicates the code is
+> buggy, so if you set it then we should understand how is that caller
+> expected to be fixed.
+>
+> Jason
+
+I think we are working towards a much simpler solution in any case!
