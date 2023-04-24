@@ -2,85 +2,130 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484F5C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 09:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FA4C77B76
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 10:18:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231207AbjDXJol (ORCPT
+        id S231156AbjDXKSB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Apr 2023 05:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
+        Mon, 24 Apr 2023 06:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231270AbjDXJok (ORCPT
+        with ESMTP id S231131AbjDXKSA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Apr 2023 05:44:40 -0400
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DCB26B0;
-        Mon, 24 Apr 2023 02:44:37 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0VgsU8kx_1682329472;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VgsU8kx_1682329472)
-          by smtp.aliyun-inc.com;
-          Mon, 24 Apr 2023 17:44:33 +0800
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        Mon, 24 Apr 2023 06:18:00 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE03B7;
+        Mon, 24 Apr 2023 03:17:58 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-2f3fe12de15so2499252f8f.3;
+        Mon, 24 Apr 2023 03:17:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682331477; x=1684923477;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=sFd3GouLvmJwZXxGkUryj0wCtEPdyUrIZGRi3VcHFcY=;
+        b=TqsT5bDLQhdBasdYkLmm+ue2xSgsEVBAjc5YTj++1vp6A3jb/eAm2ISqbClYNA/bN3
+         Bm0Qobi1sk/79zsr5IujFFPFlbsGzbAi1EJzMSmku+dNUifDgkAbCbcM8YUtWcBVvZOy
+         SVPpWE5OWQfTe1GQr8ZTxOp6tt3VCUbd2OuOAC/DfDigTp0Uj1Rx+xCoGvzmour5y5R+
+         4Hu3Tw5p+fFJfRaY5cfLbeLqTcGzpFGk6nHgmtiTQqRoAbl4T73JR4lVcu+fut660/g4
+         rcTw4Qo24E64xvf+zM2d8K0I3IEMc/kusIdXVd5+7w3YBNQEVSY8dQymZOSt9O+uppQ5
+         sLHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682331477; x=1684923477;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sFd3GouLvmJwZXxGkUryj0wCtEPdyUrIZGRi3VcHFcY=;
+        b=KZaSb58DixHsITFjpPEvqU4J0LBuP7xZMkG3CbbRBKM0SJKRExNXRphnSRCcX1abvc
+         41oYyyUWrBATXhImhA6s725xOeMTBQlTJqrHy6nE3h+ZUfHjXpjP95s8DjytFolKE3qC
+         cBpD2xdt1vWvaRneEAQTlwJ7yFfjotElTX3VgwWWy5I/cUugozQ1L2xGcbV3ckWsNDqS
+         MRvUNRPQa9bN8FlvDO6GZ/9LUiP0WbX4WagwjWudFQEsLSBAhFrc6R3EnX6rVuOmY1kS
+         uIi5UUs1ZZoTF7lO9b4hyITfkXMP0CUW9u0MoRk5zmM2MYpvyBL0xnasHSrtw14PH9XJ
+         CDAg==
+X-Gm-Message-State: AAQBX9dwqPpNnEJRgCJWwK2GhFORrF+JPh2WF/K5ZhpYolM0LPRLdwyj
+        m1zyH32GKWYI4NAFTokEiuiOpsiAuHGGVw==
+X-Google-Smtp-Source: AKy350as+uWvZB1UDA0rClSPEJZ9KJctRGU6UJ7yZVRqXBfMpnr1bm8yMh1ziKuQa5ocG0CjKQw7XQ==
+X-Received: by 2002:adf:ec46:0:b0:2ce:9fb8:b560 with SMTP id w6-20020adfec46000000b002ce9fb8b560mr9761836wrn.8.1682331476919;
+        Mon, 24 Apr 2023 03:17:56 -0700 (PDT)
+Received: from localhost (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
+        by smtp.gmail.com with ESMTPSA id a14-20020adfe5ce000000b002fbe0772ab1sm10448840wrn.16.2023.04.24.03.17.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Apr 2023 03:17:55 -0700 (PDT)
+Date:   Mon, 24 Apr 2023 11:17:55 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH v2 5/5] perf vendor events: Add JSON metrics for Yitian 710 DDR
-Date:   Mon, 24 Apr 2023 17:44:16 +0800
-Message-Id: <1682329456-19418-6-git-send-email-renyu.zj@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
-References: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>
+Subject: Re: [PATCH v2] mm/gup: disallow GUP writing to file-backed mappings
+ by default
+Message-ID: <90a54439-5d30-4711-8a86-eba816782a66@lucifer.local>
+References: <c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com>
+ <ZEZPXHN4OXIYhP+V@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZEZPXHN4OXIYhP+V@infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add JSON metrics for T-HEAD Yitian 710 SoC DDR.
+On Mon, Apr 24, 2023 at 02:43:56AM -0700, Christoph Hellwig wrote:
+> I'm pretty sure DIRECT I/O reads that write into file backed mappings
+> are out there in the wild.
+>
+> So while I wish we had never allowed this, the exercise seems futile and
+> instead we need to work on supporting this usecase, with the FOLL_PIN
+> infrastructure being a big step toward that.
 
-Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
----
- .../arch/arm64/freescale/yitian710/sys/metrics.json  | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json
+It's not entirely futile, there's at least one specific use case, which is
+io_uring which is currently open coding an equivalent check themselves. By
+introducing this change we prevent them from having to do so and provide a
+means by which other callers who implicitly need this do not have to do so
+either.
 
-diff --git a/tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json b/tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json
-new file mode 100644
-index 0000000..1a92477
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json
-@@ -0,0 +1,20 @@
-+[
-+	{
-+		"MetricName": "ddr_read_bandwidth.all",
-+		"BriefDescription": "The ddr read bandwidth(MB/s).",
-+		"MetricGroup": "ddr",
-+		"MetricExpr": "hif_rd * 64 / 1e6 / duration_time",
-+		"ScaleUnit": "1MB/s",
-+		"Unit": "ali_drw",
-+		"Compat": "ali_drw_pmu"
-+	},
-+	{
-+		"MetricName": "ddr_write_bandwidth.all",
-+		"BriefDescription": "The ddr write bandwidth(MB/s).",
-+		"MetricGroup": "ddr",
-+		"MetricExpr": "(hif_wr + hif_rmw) * 64 / 1e6 / duration_time",
-+		"ScaleUnit": "1MB/s",
-+		"Unit": "ali_drw",
-+		"Compat": "ali_drw_pmu"
-+	}
-+]
--- 
-1.8.3.1
+In addition, this change frees up a blocked patch series intending to clean
+up GUP which should help open the door to further improvements across the
+system.
 
+So I would argue certainly not futile.
+
+In addition, I think it's useful to explicitly document that this is a
+broken case and, through use of the flag, highlight places which are
+problematic (although perhaps not exhaustively).
+
+I know Jason is keen on fixing this at a fundamental level and this flag is
+ultimately his suggestion, so it certainly doesn't stand in the way of this
+work moving forward.
