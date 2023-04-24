@@ -2,72 +2,43 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD641C77B78
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 18:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F02FC7618E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 18:09:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232272AbjDXSAL (ORCPT
+        id S231325AbjDXSJX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Apr 2023 14:00:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
+        Mon, 24 Apr 2023 14:09:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229906AbjDXSAK (ORCPT
+        with ESMTP id S229688AbjDXSJV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Apr 2023 14:00:10 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 687747A8D
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Apr 2023 11:00:08 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3ef112cab37so42389081cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Apr 2023 11:00:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1682359207; x=1684951207;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LlRkGSdEXncwM0PBf9n/N1FPqEniuAvpiADhOOV7oaU=;
-        b=Nc/htkEIM7gLjkyElNiu0ClSDaT8ixeMNVYverT4Tm8Q9Q9OmUiTTzNCWfTYN3JY4i
-         V+5bdaILYV6CWcO+gcFbABYnFng3LljWEKwwI+QzYlCIhXwg6DldQAkO93ckNzLB1ndd
-         txWe/8B/8qNJZHYbklf5BIvpG55Gm2ZBYc25jV33zJYpdshOJSHN3VEJQXFOxXfVcgd9
-         M8Ctfeoo5HB1UvFSdoWFVz4TMkfR+Xyw/8uaFHMdlWD+U2QfZld7gZQRo4owmGeVDOXF
-         HSieHPxrfK5TlCfDK6e46UiFFsvGPA8bod8EDk6cBA9CxCj0fQUqfun/MS+9n7fGuFn3
-         /Fyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682359207; x=1684951207;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LlRkGSdEXncwM0PBf9n/N1FPqEniuAvpiADhOOV7oaU=;
-        b=kd8aM7Fcj7i2R4tZY39dNtruAQH34Dkjj+cqrGHxpyGwI9CETE6vUo38vb0GkDlHIQ
-         M2fqFUWrFbJGEPtUniBHXVBVGBKPpPn2Bol5lr2KZn4aKYdPHqz84oEu0yj+e3FMoruw
-         J7ye5WzAE0SfJsF1UhIizDJ83GZii5jSThAJx2Ny3cmsETQsyKf2TUBVBOyqKVOmj3rP
-         sIjzO18ciQyZOMjc7LdHtP1dn6HvMP2uEyiILvrWELw0BBCr/sJ3gFWOHH+nMGZhEpUF
-         BdBCDNwckDsDej+lnPX5YUEgoP8tQhIby0vHs8AD20jCyxGsXpBBiyMedNUQeYDWMhIA
-         b0OA==
-X-Gm-Message-State: AAQBX9cF31/efpNsRxHJdswXIRrfwS+NOng8Aosx5cCcr/Z6wDPOffeh
-        zkZOnvTmuxwG3CNYrqWYXe2E1w==
-X-Google-Smtp-Source: AKy350bpnv/TpaRXAb+ndcpC76lPNYkO86R3kHlzwtU+DD/DIjuKQqPWiuJnS63KYsdheQg9wYpiLQ==
-X-Received: by 2002:ac8:5cc8:0:b0:3ef:4da0:a1fc with SMTP id s8-20020ac85cc8000000b003ef4da0a1fcmr24514049qta.50.1682359207561;
-        Mon, 24 Apr 2023 11:00:07 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id u28-20020a05622a199c00b003c034837d8fsm3812578qtc.33.2023.04.24.11.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Apr 2023 11:00:07 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1pr0Tn-001VxD-Q2;
-        Mon, 24 Apr 2023 14:59:59 -0300
-Date:   Mon, 24 Apr 2023 14:59:59 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Mon, 24 Apr 2023 14:09:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D93D86E91;
+        Mon, 24 Apr 2023 11:09:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 73B2C622EC;
+        Mon, 24 Apr 2023 18:09:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8417C433D2;
+        Mon, 24 Apr 2023 18:09:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682359759;
+        bh=DCPhmzjXeq8Lo44Zu22jyvJqFljz6eHBBKLb+VcR4h8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=bz3XKFtgJK/4SHg5scRNDEawqSH+rwy+/+N0pE2HH+hvD7acuajV2zGUCNYwwENxx
+         bXHiZJV3KsaoFcF7pcjaqkzN9QBFB4vTIoIXDap3eAFrYavW1CinS77iPtR8Ga0knG
+         gVfg4HyYq6rD0Bil+T2ZdEbOwbvlaEP4HY2O9APbrngyfZmK4Q+XGYkFMN/2DEAMnH
+         8kwmcyoXqA0Q+WB4rIwAOPCXI4WypsacITSB+qAmJFAa+KvV6cVuEAYfISvcuomA+W
+         DJWNSwYu4Iwtkb66oO7/ZOw+ZhhwZGC7HNpuxoiSIPXiqQA71nsD0wp44s113eici6
+         8LkmgE8FzyFcw==
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5C48315404E7; Mon, 24 Apr 2023 11:09:19 -0700 (PDT)
+Date:   Mon, 24 Apr 2023 11:09:19 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Wander Lairson Costa <wander@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -76,64 +47,135 @@ Cc:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Kees Cook <keescook@chromium.org>,
         Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] mm/gup: disallow GUP writing to file-backed mappings by
- default
-Message-ID: <ZEbDn8fVRvm5XeEl@ziepe.ca>
-References: <f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com>
- <20230424120247.k7cjmncmov32yv5r@box.shutemov.name>
- <3273f5f3-65d9-4366-9424-c688264992f9@lucifer.local>
- <20230424134026.di6nf2an3a2g63a6@box.shutemov.name>
+        Andrei Vagin <avagin@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>, Hu Chunyu <chuhu@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v6 2/3] sched/task: Add the put_task_struct_atomic_safe()
+ function
+Message-ID: <9ff7ea3a-b48b-4cff-851e-179713393531@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20230414125532.14958-1-wander@redhat.com>
+ <20230414125532.14958-3-wander@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230424134026.di6nf2an3a2g63a6@box.shutemov.name>
+In-Reply-To: <20230414125532.14958-3-wander@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 04:40:26PM +0300, Kirill A. Shutemov wrote:
-> > Something more general would be preferable, however I believe there were
-> > concerns broader than write notify, for instance not correctly marking the
-> > folio dirty after writing to it, though arguably the caller should
-> > certainly be ensuring that (and in many cases, do).
+On Fri, Apr 14, 2023 at 09:55:28AM -0300, Wander Lairson Costa wrote:
+> Due to the possibility of indirectly acquiring sleeping locks, it is
+> unsafe to call put_task_struct() in atomic contexts when the kernel is
+> compiled with PREEMPT_RT.
 > 
-> It doesn't make much sense to me.
+> To mitigate this issue, this commit introduces
+> put_task_struct_atomic_safe(), which schedules __put_task_struct()
+> through call_rcu() when PREEMPT_RT is enabled. While a workqueue would
+> be a more natural approach, we cannot allocate dynamic memory from
+> atomic context in PREEMPT_RT, making the code more complex.
 > 
-> Shared writable mapping without page_mkwrite (or pfn_write) will setup
-> writeable PTE even on read faults[1], so you will not get the page dirty,
-> unless you scan page table entries for dirty bit.
+> This implementation ensures safe execution in atomic contexts and
+> avoids any potential issues that may arise from using the non-atomic
+> version.
+> 
+> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+> Reported-by: Hu Chunyu <chuhu@redhat.com>
+> Cc: Paul McKenney <paulmck@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  include/linux/sched/task.h | 31 +++++++++++++++++++++++++++++++
+>  kernel/fork.c              |  8 ++++++++
+>  2 files changed, 39 insertions(+)
+> 
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> index b597b97b1f8f..5c13b83d7008 100644
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -141,6 +141,37 @@ static inline void put_task_struct_many(struct task_struct *t, int nr)
+>  
+>  void put_task_struct_rcu_user(struct task_struct *task);
+>  
+> +extern void __delayed_put_task_struct(struct rcu_head *rhp);
+> +
+> +static inline void put_task_struct_atomic_safe(struct task_struct *task)
+> +{
+> +	if (IS_ENABLED(CONFIG_PREEMPT_RT)) {
+> +		/*
+> +		 * Decrement the refcount explicitly to avoid unnecessarily
+> +		 * calling call_rcu.
+> +		 */
+> +		if (refcount_dec_and_test(&task->usage))
+> +			/*
+> +			 * under PREEMPT_RT, we can't call put_task_struct
+> +			 * in atomic context because it will indirectly
+> +			 * acquire sleeping locks.
+> +			 * call_rcu() will schedule delayed_put_task_struct_rcu()
+> +			 * to be called in process context.
+> +			 *
+> +			 * __put_task_struct() is called called when
+> +			 * refcount_dec_and_test(&t->usage) succeeds.
+> +			 *
+> +			 * This means that it can't "conflict" with
+> +			 * put_task_struct_rcu_user() which abuses ->rcu the same
+> +			 * way; rcu_users has a reference so task->usage can't be
+> +			 * zero after rcu_users 1 -> 0 transition.
+> +			 */
+> +			call_rcu(&task->rcu, __delayed_put_task_struct);
 
-The general statement for supporting GUP is that the VMA owner never
-relies on write protect, either explicitly through removing the write
-bit in the PTE or implicitly through zapping the inode and removing
-all PTEs.
+This will invoke __delayed_put_task_struct() with softirqs disabled.
+Or do softirq-disabled contexts count as non-atomic in PREEMPT_RT?
 
-The general bug we have is that the FS does some action to prevent
-writes and then becomes surprised that the page was made dirty.
+							Thanx, Paul
 
-GUP allows write access to the page to continue past any write protect
-action the FS takes.
-
-AFAIK all GUP users do correctly do mkdirty and we have helpers to
-support this during unpin, that is not the bug.
-
-So, I don't know about page_mkwrite, if it correlates with the abvoe
-then great :)
-
-Jason
+> +	} else {
+> +		put_task_struct(task);
+> +	}
+> +}
+> +
+>  /* Free all architecture-specific resources held by a thread. */
+>  void release_thread(struct task_struct *dead_task);
+>  
+> diff --git a/kernel/fork.c b/kernel/fork.c
+> index 0c92f224c68c..9884794fe4b8 100644
+> --- a/kernel/fork.c
+> +++ b/kernel/fork.c
+> @@ -854,6 +854,14 @@ void __put_task_struct(struct task_struct *tsk)
+>  }
+>  EXPORT_SYMBOL_GPL(__put_task_struct);
+>  
+> +void __delayed_put_task_struct(struct rcu_head *rhp)
+> +{
+> +	struct task_struct *task = container_of(rhp, struct task_struct, rcu);
+> +
+> +	__put_task_struct(task);
+> +}
+> +EXPORT_SYMBOL_GPL(__delayed_put_task_struct);
+> +
+>  void __init __weak arch_task_cache_init(void) { }
+>  
+>  /*
+> -- 
+> 2.39.2
+> 
