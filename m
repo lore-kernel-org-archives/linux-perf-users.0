@@ -2,67 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75FEC77B78
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 14:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8603C7618E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 15:14:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230526AbjDXOaD (ORCPT
+        id S231169AbjDXPOs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Apr 2023 10:30:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56394 "EHLO
+        Mon, 24 Apr 2023 11:14:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229907AbjDXOaC (ORCPT
+        with ESMTP id S230515AbjDXPOr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Apr 2023 10:30:02 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB66D1708;
-        Mon, 24 Apr 2023 07:30:00 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f19323259dso34206845e9.3;
-        Mon, 24 Apr 2023 07:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682346599; x=1684938599;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ALXzGJ5JvLTy0+4F2uq1xRRPXqqALEamM+dBHIwr4DU=;
-        b=jN6OPjaHPR+35RVu5HjWm806ZMgHf01oApnLVzOoITrD4+H3+33xZ6dZ5oRf6qOZUP
-         D8hA3Wt44+/uTDeVRl8Ov5vr+CJfATx0OLo0X1EW5HpwpfUNG+UJik3wBieB7KEjsimQ
-         y1HCZNLKGyA7om63+beqZU93mzJXtP5mOtlZ6xytdf2q3oM+pAkAGAUnopDzvWh322W1
-         4P+KbO6x4luVrUwPFIY3Kz+NJFvZi9mRoQERFsgyWpa7xNiB+Kl9hiYh2UGYR8newEsb
-         nNPRnYDg7clTomT3WnhQfQKHmrFMU6VtI4ds5fP3IX5FZTm3u1VX+ZmjErAMXFNfLvTc
-         Gtzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682346599; x=1684938599;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ALXzGJ5JvLTy0+4F2uq1xRRPXqqALEamM+dBHIwr4DU=;
-        b=ByQe8uW8hNfq7uYCLF8fGjkAL/ZJDy4u+j4MsyP69zgWvp8O/uctIleoMvcck6KEYf
-         x5/OxMB1BHdjGkrf4wqgA2sTYbVnYU4s+a22oil/ju15f3xqK2L0d35ZNn0ttQpsuCAo
-         O2iuVRWz1Jow+fNgWMX5flycrvOuzYsLBdgW7tpH5yHAekE8y55LRxRAGH72cSYOhcqM
-         fnlgwNNJeugjOKZaRTCzxcTEPkpzBLsESyJVViweI57B2WpDPAsTE8R9wIsIzSkhffci
-         aTCoq0Huo8zhg93b95jOSRuvZGVNtiMxIrnGcKkxzM7eLhMbZHPlVf8CUqJ04nSOAxSy
-         ixRg==
-X-Gm-Message-State: AAQBX9fPmuFe46T++835Srvcs1VLtQ4zu1hGPLX8wcBSYme8/IdzLwZG
-        nsNlvPkDEjwpXyd2OtoAZyw=
-X-Google-Smtp-Source: AKy350b0rBDMlMKwXgslvzplbT1eTTOv7dxTLMhpCvOuA79NqOaO/7KznoKPY9xRsZr4W2xUpEdJIw==
-X-Received: by 2002:a05:600c:2214:b0:3f1:98bd:acec with SMTP id z20-20020a05600c221400b003f198bdacecmr5257735wml.11.1682346598884;
-        Mon, 24 Apr 2023 07:29:58 -0700 (PDT)
-Received: from localhost (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
-        by smtp.gmail.com with ESMTPSA id y21-20020a05600c365500b003f182a10106sm12424385wmq.8.2023.04.24.07.29.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Apr 2023 07:29:57 -0700 (PDT)
-Date:   Mon, 24 Apr 2023 15:29:57 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+        Mon, 24 Apr 2023 11:14:47 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0788110D3;
+        Mon, 24 Apr 2023 08:14:42 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 508F74B3;
+        Mon, 24 Apr 2023 08:15:26 -0700 (PDT)
+Received: from [10.57.56.16] (unknown [10.57.56.16])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A26C53F64C;
+        Mon, 24 Apr 2023 08:14:39 -0700 (PDT)
+Message-ID: <8acae291-2c3f-6010-de66-d4e54781d21f@arm.com>
+Date:   Mon, 24 Apr 2023 16:14:38 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.10.0
+Subject: Re: [PATCH 1/7] perf: cs-etm: Fix timeless decode mode detection
+To:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+        shy828301@gmail.com
+Cc:     denik@google.com, Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -72,100 +45,96 @@ Cc:     Christoph Hellwig <hch@infradead.org>, linux-mm@kvack.org,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>
-Subject: Re: [PATCH v2] mm/gup: disallow GUP writing to file-backed mappings
- by default
-Message-ID: <cd488979-d257-42b9-937f-470cc3c57f5e@lucifer.local>
-References: <c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com>
- <ZEZPXHN4OXIYhP+V@infradead.org>
- <90a54439-5d30-4711-8a86-eba816782a66@lucifer.local>
- <ZEZ117OMCi0dFXqY@nvidia.com>
- <c8fff8b3-ead6-4f52-bf17-f2ef2e752b57@lucifer.local>
- <ZEaGjad50lqRNTWD@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZEaGjad50lqRNTWD@nvidia.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230424134748.228137-1-james.clark@arm.com>
+ <20230424134748.228137-2-james.clark@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20230424134748.228137-2-james.clark@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 10:39:25AM -0300, Jason Gunthorpe wrote:
-> On Mon, Apr 24, 2023 at 01:38:49PM +0100, Lorenzo Stoakes wrote:
->
-> > I was being fairly conservative in that list, though we certainly need to
-> > set the flag for /proc/$pid/mem and ptrace to avoid breaking this
-> > functionality (I observed breakpoints breaking without it which obviously
-> > is a no go :). I'm not sure if there's a more general way we could check
-> > for this though?
->
-> More broadly we should make sure these usages of GUP safe somehow so
-> that it can reliably write to those types of pages without breaking
-> the current FS contract..
->
-> I forget exactly, but IIRC, don't you have to hold some kind of page
-> spinlock while writing to the page memory?
->
+On 24/04/2023 14:47, James Clark wrote:
+> In this context, timeless refers to the trace data rather than the perf
+> event data. But when detecting whether there are timestamps in the trace
+> data or not, the presence of a timestamp flag on any perf event is used.
+> 
+> Since commit f42c0ce573df ("perf record: Always get text_poke events
+> with --kcore option") timestamps were added to a tracking event when
+> --kcore is used which breaks this detection mechanism. Fix it by
+> detecting if trace timestamps exist by looking at the ETM config flags.
+> This would have always been a more accurate way of doing it anyway.
+> 
+> This fixes the following error message when using --kcore with
+> Coresight:
+> 
+>    $ perf record --kcore -e cs_etm// --per-thread
+>    $ perf report
+>    The perf.data/data data has no samples!
+> 
+> Fixes: f42c0ce573df ("perf record: Always get text_poke events with --kcore option")
+> Reported-by: Yang Shi <shy828301@gmail.com>
+> Link: https://lore.kernel.org/lkml/CAHbLzkrJQTrYBtPkf=jf3OpQ-yBcJe7XkvQstX9j2frz4WF-SQ@mail.gmail.com/
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>   tools/perf/util/cs-etm.c | 30 ++++++++++++++++++------------
+>   1 file changed, 18 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 8dd81ddd9e4e..50593289d53c 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -2684,26 +2684,29 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
+>   	return 0;
+>   }
+>   
+> -static bool cs_etm__is_timeless_decoding(struct cs_etm_auxtrace *etm)
+> +static int cs_etm__setup_timeless_decoding(struct cs_etm_auxtrace *etm)
 
-I think perhaps you're thinking of the mm->mmap_lock? Which will be held
-for the FOLL_GET cases and simply prevent the VMA from disappearing below
-us but not do much else.
+minor nit: "setup" sound more like prepare to do what is required to
+do a timeless decoding, while we are doing more like, check if we
+have to do a timeless decoding. So may be:
 
-> So, users that do this, or can be fixed to do this, can get file
-> backed pages. It suggests that a flag name is more like
-> FOLL_CALLER_USES_FILE_WRITE_LOCKING
->
+cs_etm_check_timeless_decoding() ?
 
-As stated above, I'm not sure what locking you're referring to, but seems
-to me that FOLL_GET already implies what you're thinking?
+>   {
+>   	struct evsel *evsel;
+>   	struct evlist *evlist = etm->session->evlist;
+> -	bool timeless_decoding = true;
+>   
+>   	/* Override timeless mode with user input from --itrace=Z */
+> -	if (etm->synth_opts.timeless_decoding)
+> -		return true;
+> +	if (etm->synth_opts.timeless_decoding) {
+> +		etm->timeless_decoding = true;
+> +		return 0;
+> +	}
+>   
+>   	/*
+> -	 * Circle through the list of event and complain if we find one
+> -	 * with the time bit set.
+> +	 * Find the cs_etm evsel and look at what its timestamp setting was
+>   	 */
+> -	evlist__for_each_entry(evlist, evsel) {
+> -		if ((evsel->core.attr.sample_type & PERF_SAMPLE_TIME))
+> -			timeless_decoding = false;
+> -	}
+> +	evlist__for_each_entry(evlist, evsel)
 
-I wonder whether we should do this check purely for FOLL_PIN to be honest?
-As this indicates medium to long-term access without mmap_lock held. This
-would exclude the /proc/$pid/mem and ptrace paths which use gup_remote().
+minor nit: please retain the braces
 
-That and a very specific use of uprobes are the only places that use
-FOLL_GET in this instance and each of them are careful in any case to
-handle setting the dirty page flag.
+> +		if (cs_etm__evsel_is_auxtrace(etm->session, evsel)) {
+> +			etm->timeless_decoding =
+> +				!(evsel->core.attr.config & BIT(ETM_OPT_TS));
 
-All PUP cases that do not specify FOLL_LONGTERM also do this, so we could
-atually go so far as to reduce the patch to simply performing the
-vma_wants_writenotify() check if (FOLL_PIN | FOLL_LONGTERM) is specified,
-which covers the io_uring case.
 
-Alternatively if we wanted to be safer, we could add a FOLL_ALLOW_FILE_PIN
-that is checked on FOLL_PIN and ignored on FOLL_LONGTERM?
+> +			return 0;
+> +		}
 
-> > I wouldn't be totally opposed to dropping it for RDMA too, because I
-> > suspect accessing file-backed mappings for that is pretty iffy.
-> >
-> > Do you have a sense of which in the list you feel could be pared back?
->
-> Anything using FOLL_LONGTERM should not set the flag, GUP should even
-> block the combination.
+Otherwise, looks good to me
 
-OK
+Suzuki
 
->
-> And we need to have in mind that the flag indicates the code is
-> buggy, so if you set it then we should understand how is that caller
-> expected to be fixed.
->
-> Jason
 
-I think we are working towards a much simpler solution in any case!
