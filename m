@@ -2,81 +2,36 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9F68C7618E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 13:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46557C77B61
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 13:48:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232769AbjDXNlI (ORCPT
+        id S231960AbjDXNsC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Apr 2023 09:41:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43124 "EHLO
+        Mon, 24 Apr 2023 09:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232791AbjDXNkw (ORCPT
+        with ESMTP id S231695AbjDXNsB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Apr 2023 09:40:52 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D686902E;
-        Mon, 24 Apr 2023 06:40:33 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2A7675C0109;
-        Mon, 24 Apr 2023 09:40:31 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 24 Apr 2023 09:40:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-         h=cc:cc:content-type:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm1; t=1682343631; x=
-        1682430031; bh=Ae/BNl3LeeeGteor4m6cLa4HqXB1SG9Nq2ztdS5OqH8=; b=Z
-        IEUFOnDXaFpaAbVZW/zEe8y7Z/TuozWTuA3mFbj46/Ot5wmR6YkgHbgZG56Qe3Ja
-        91zRF2Y9tzrsHu48HVkhD0ofMy4iuFHuNGFNpHddSyHSz7SzEbKj5QsxdAC/qB+A
-        T5vwPSPeLnuhBSbM5ZeXZfcgxO0UW1HiROj+8rwdh2T3gb4CTr1714mKBZoA/RlQ
-        5uLbkxe8wYOABGzZofN1kQ4vHVum2IiwDhFe64bjDk89dsaSdGVW3M+gysx/y/aj
-        /yAV85ZruGyscTM6RRz9v5IUAIh37rFUJBBSCzBFOoErcMYcjobfwKZVLPcs6IDh
-        oe1uQRj3DLmJOXEc2L89w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1682343631; x=1682430031; bh=Ae/BNl3LeeeGt
-        eor4m6cLa4HqXB1SG9Nq2ztdS5OqH8=; b=gOOdk0uBtKcnNXlTtdMxOXqPxiRJo
-        TprOv1B+Vjm071ggSgIPpTomPFhjjWCJ3b95faKZ0ZzQQT7NqWPhWwRBm2trenyd
-        slmophLu7fzj2SYyI9b6X/MgKe8lpSBfoAjthMIqa4XewrP6squLQJD2NcNhpgGr
-        ceMq9mz6YyLe+sPiJAMlEa0kUmhrAhNrii0+MYEQQfyKWtH4FyIzfeWeCQegdPnh
-        CatvVjKKk707PQGAXqIqOlex23j4OnzwbrMzgjDDU+vK6on1/ZbY8LwW8J6UtJmG
-        g7Xl3Yb2BHPt6sAEOqtTMT0q7fOglrViLtupF14NahGJILW2V12WoruFA==
-X-ME-Sender: <xms:zoZGZMJWEHh-xWSXHgqgWJR8qSmtAqGxIW1pA66PxTh1RamsCD62Fw>
-    <xme:zoZGZMJYtUscyz1-oYVGniu6HFZbM9X_wyhmY40ipdYl7nt3C89Xee0Lx5M4Ws8kT
-    tWKlkWsTfFOMaVNaLM>
-X-ME-Received: <xmr:zoZGZMtuLTBIcVPNeJbbHcmH22HpqB_QNeAz-JgAVJ9vEfQDRDQJaIYP2J0rK92L-SvXDA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedutddgieejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdttddttddtvdenucfhrhhomhepfdfmihhr
-    ihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilhhlsehshhhuthgvmhhovhdrnh
-    grmhgvqeenucggtffrrghtthgvrhhnpefhieeghfdtfeehtdeftdehgfehuddtvdeuheet
-    tddtheejueekjeegueeivdektdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghmohhvrdhnrghmvg
-X-ME-Proxy: <xmx:zoZGZJb66cZrEaOcrtCgEniVhsaTFRGXGMw7YoiKtOruJ1s28m-FZw>
-    <xmx:zoZGZDY6TjvTwCGtb2BC7PwTQL8fRgq7rSJeM8-d1lZ6wkWlREMVbw>
-    <xmx:zoZGZFDpSYfJ2B1m-OTha04bM7EYrEQ7v0BmbiFyRjoJaWZufIRVpQ>
-    <xmx:z4ZGZJsXMJX1gE76TFCnD77NSSxjjS78xpvd3XUZxV6wS3DHMDmctw>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 24 Apr 2023 09:40:29 -0400 (EDT)
-Received: by box.shutemov.name (Postfix, from userid 1000)
-        id E05E310A0FA; Mon, 24 Apr 2023 16:40:26 +0300 (+03)
-Date:   Mon, 24 Apr 2023 16:40:26 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+        Mon, 24 Apr 2023 09:48:01 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 123F17AA4;
+        Mon, 24 Apr 2023 06:48:00 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA890D75;
+        Mon, 24 Apr 2023 06:48:43 -0700 (PDT)
+Received: from e127643.arm.com (unknown [10.57.58.229])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 943673F64C;
+        Mon, 24 Apr 2023 06:47:56 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+        shy828301@gmail.com
+Cc:     denik@google.com, James Clark <james.clark@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -86,86 +41,49 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] mm/gup: disallow GUP writing to file-backed mappings by
- default
-Message-ID: <20230424134026.di6nf2an3a2g63a6@box.shutemov.name>
-References: <f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com>
- <20230424120247.k7cjmncmov32yv5r@box.shutemov.name>
- <3273f5f3-65d9-4366-9424-c688264992f9@lucifer.local>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] perf: cs-etm: Fixes around timestamped and timeless decoding
+Date:   Mon, 24 Apr 2023 14:47:40 +0100
+Message-Id: <20230424134748.228137-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3273f5f3-65d9-4366-9424-c688264992f9@lucifer.local>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 01:31:56PM +0100, Lorenzo Stoakes wrote:
-> On Mon, Apr 24, 2023 at 03:02:47PM +0300, Kirill A. Shutemov wrote:
-> > On Sat, Apr 22, 2023 at 02:37:05PM +0100, Lorenzo Stoakes wrote:
-> > > @@ -959,16 +959,46 @@ static int faultin_page(struct vm_area_struct *vma,
-> > >  	return 0;
-> > >  }
-> > >
-> > > +/*
-> > > + * Writing to file-backed mappings using GUP is a fundamentally broken operation
-> > > + * as kernel write access to GUP mappings may not adhere to the semantics
-> > > + * expected by a file system.
-> > > + *
-> > > + * In most instances we disallow this broken behaviour, however there are some
-> > > + * exceptions to this enforced here.
-> > > + */
-> > > +static inline bool can_write_file_mapping(struct vm_area_struct *vma,
-> > > +					  unsigned long gup_flags)
-> > > +{
-> > > +	struct file *file = vma->vm_file;
-> > > +
-> > > +	/* If we aren't pinning then no problematic write can occur. */
-> > > +	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
-> > > +		return true;
-> > > +
-> > > +	/* Special mappings should pose no problem. */
-> > > +	if (!file)
-> > > +		return true;
-> > > +
-> > > +	/* Has the caller explicitly indicated this case is acceptable? */
-> > > +	if (gup_flags & FOLL_ALLOW_BROKEN_FILE_MAPPING)
-> > > +		return true;
-> > > +
-> > > +	/* shmem and hugetlb mappings do not have problematic semantics. */
-> > > +	return vma_is_shmem(vma) || is_file_hugepages(file);
-> >
-> > Can this be generalized to any fs that doesn't have vm_ops->page_mkwrite()?
-> >
-> 
-> Something more general would be preferable, however I believe there were
-> concerns broader than write notify, for instance not correctly marking the
-> folio dirty after writing to it, though arguably the caller should
-> certainly be ensuring that (and in many cases, do).
+The first commit contains a fix for a recently introduced regression,
+but was always a shortcoming in the Coresight code anyway.
 
-It doesn't make much sense to me.
+The following commits are a tidyup in preparation for the last commit,
+which is a fairly major change to the decode logic that's also
+indirectly related to the regression so I thought it would be good time
+to fix that now.
 
-Shared writable mapping without page_mkwrite (or pfn_write) will setup
-writeable PTE even on read faults[1], so you will not get the page dirty,
-unless you scan page table entries for dirty bit.
+Applies to perf/core (9be6ab181b7b)
 
-[1] See logic around vm_page_prot vs. vma_wants_writenotify().
+James Clark (7):
+  perf: cs-etm: Fix timeless decode mode detection
+  perf tools: Add util function for overriding user set config values
+  perf: cs-etm: Don't test full_auxtrace because it's always set
+  perf: cs-etm: Validate options after applying them
+  perf: cs-etm: Allow user to override timestamp and contextid settings
+  perf: cs-etm: Use bool type for boolean values
+  perf: cs-etm: Add separate decode paths for timeless and per-thread
+    modes
+
+ tools/perf/arch/arm/util/cs-etm.c             | 223 +++++++++---------
+ tools/perf/arch/arm/util/pmu.c                |   2 +
+ tools/perf/arch/arm64/util/arm-spe.c          |  26 +-
+ tools/perf/arch/x86/util/intel-pt.c           |  22 +-
+ tools/perf/tests/shell/test_arm_coresight.sh  |  24 ++
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.h |   8 +-
+ tools/perf/util/cs-etm.c                      | 200 +++++++++++-----
+ tools/perf/util/cs-etm.h                      |   6 +-
+ tools/perf/util/evsel.c                       |  29 +++
+ tools/perf/util/evsel.h                       |   3 +
+ 10 files changed, 325 insertions(+), 218 deletions(-)
 
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.34.1
+
