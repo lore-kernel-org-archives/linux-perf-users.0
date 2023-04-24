@@ -2,122 +2,163 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2ADDC77B78
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 17:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9A3C7618E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 17:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232138AbjDXRxG (ORCPT
+        id S232281AbjDXRxr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Apr 2023 13:53:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40732 "EHLO
+        Mon, 24 Apr 2023 13:53:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231945AbjDXRxF (ORCPT
+        with ESMTP id S231959AbjDXRxh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Apr 2023 13:53:05 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845E26A59
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Apr 2023 10:53:03 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1a92369761cso38994715ad.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Apr 2023 10:53:03 -0700 (PDT)
+        Mon, 24 Apr 2023 13:53:37 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98BA676B3
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Apr 2023 10:53:35 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id e9e14a558f8ab-32abc2e7da8so13241275ab.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Apr 2023 10:53:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1682358783; x=1684950783;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0MKUvioDFym51E51dk6ySi5zEPkblTDJdgaK3QIKchw=;
-        b=pU0zLUiEMqXNhNeDmdJkzerLQjfaVU6ziVMZ5aBW6/8vN8a4a4aaz0CGYe1VWpkXdS
-         E3TAxastF2Qi8dfdy3CivEZaZAyEEqPau4V5u7GLpGIWazqDGhMvtqXwcOJk/18GWq9l
-         NfYdflAXc2r5Pfs/8SKAQovKxj0V372VR5uqG12EHP3WUXy+vP1g+SEh7+pO/YgPVrGQ
-         dPeNBCPwbJ55mq/jXw1ApR+87m2LRk772pjV+8HKvXMpUlsBub3G6yz+igtpk6UZgAfP
-         g8+ZGHmlL+iVDIoopHyR1q0mzoLuVMgm6DEf8g3nyX83DG+CllSTCU7ZAFrebqwbyNCa
-         gjZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682358783; x=1684950783;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1682358814; x=1684950814;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0MKUvioDFym51E51dk6ySi5zEPkblTDJdgaK3QIKchw=;
-        b=JKFK0Q6iqaWwUzt4sNKViQn/2bdH7B3nDYdJCoGiNQ1cGCFbKfrrukWXBStIGVLI4g
-         BNIPk1aJOrnCQyaabHjZ577mVI/9odpBGi/+qXU7V3WUBUECl0GhOfVk0DK3kYoUDPku
-         FsxUiLoAiXX+B2oZzEngkE2wnhhr3R30ycK1jyeslwVW1wB3oyw4jQChzPgU4onMiMGq
-         DmyKN1hoWzxXKSCa2rLXR9hTA6idaPDkmXJtoHsGA/HDaDJyTQgvio6HmZw4ZVZ/1OwK
-         QjgNKxrDmDZ7drOh1soVhPINXMPUROQa3voZ2MP0sQCh9ROnX4XDVcWPWsCXxoGd77I7
-         ioNg==
-X-Gm-Message-State: AAQBX9fMhGKGYXpa1+DYbLbU11F2jfaZHwd8T0R9GlyB6NQV/iCGSj0t
-        8bEkabnpAPDQ1Ik+DiBit6Pqdw==
-X-Google-Smtp-Source: AKy350b8QftlmzAgdTpofeaGKzAiPoEQxlMD0oxWHc4aD9JJLcqXlXiU+XTwREVgYXPzaSKrvzQzlA==
-X-Received: by 2002:a17:90b:1c87:b0:24b:2b9a:7fd2 with SMTP id oo7-20020a17090b1c8700b0024b2b9a7fd2mr13857171pjb.9.1682358782987;
-        Mon, 24 Apr 2023 10:53:02 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id fs21-20020a17090af29500b002470e095920sm6824171pjb.40.2023.04.24.10.53.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Apr 2023 10:53:02 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1pr0N2-001Vs1-FA;
-        Mon, 24 Apr 2023 14:53:00 -0300
-Date:   Mon, 24 Apr 2023 14:53:00 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: Re: [PATCH] mm/gup: disallow GUP writing to file-backed mappings by
- default
-Message-ID: <ZEbB/LGw8UoSKJiX@ziepe.ca>
-References: <f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com>
- <20230424160952.bvii2ahgxss2chev@quack3>
+        bh=7A/OOVQszAo19NkFFicWYt7Qdu7ANiP0rHvHX9DAp1s=;
+        b=YXyZXPuan65k2exNkU1OkBX8BGPMg4YcP+xuPT/rLcfyRSQOkTHFXuBhpjd10NVrHc
+         OGN9rSZ0BBfNWxveqJ4+4vTYzoO7Y2Q4JOpzWmMs/C48UA6jbBZTtxPjMX5DD48+7X9h
+         LLOEV5bFuJyccwRhAUdJCMnmG3licMp3k33kM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682358814; x=1684950814;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7A/OOVQszAo19NkFFicWYt7Qdu7ANiP0rHvHX9DAp1s=;
+        b=IJOcG6jq1BqzeiNDn4P47B6EFODbF9IhI9QUBnOHDVoLouSTlA30smzajs/X2xATdh
+         QEZfLK4hXR1VMRexcKLjFi2DyLYAUMt+tiI33dwq+zZhYMuoxz2Uqz20Y2qA/NbpeatN
+         ugzPlYe4EJlc58zInbc2m5nNExqA2Z+1mSZ60fA0bxDSu2w+lLJ9Nm+818gkrlv63Z06
+         AzYdjUCPGp2fQr/jWFxn7XT4BUA+QfoWBJ5Mc9IfUIQ8coOlK1Pr6Ze8DsRoP8ivAYav
+         dcOUm6ZVMf52zfcreIBj58tJs8YM5IbJ2kcShrkTz7h4PTo0sPWWCli8VYhNUjPhVmD/
+         iW+Q==
+X-Gm-Message-State: AAQBX9enK+CV6SRKOOXjc97uSwwsuirw40kXrTp3dLq+o+e9jfGeIOHa
+        cxDDWefBgiZdzUisi8b2IyrSE3TW1Y1BznA5z+8=
+X-Google-Smtp-Source: AKy350ZQczDEYXlRjHGmwf1hTE4bqYyD4V30ceTxnELv9hueVJtIu4rh7nMe8o1uiaiXCxe/MQhIsA==
+X-Received: by 2002:a92:d410:0:b0:328:715f:987a with SMTP id q16-20020a92d410000000b00328715f987amr6295936ilm.27.1682358814145;
+        Mon, 24 Apr 2023 10:53:34 -0700 (PDT)
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com. [209.85.166.182])
+        by smtp.gmail.com with ESMTPSA id y68-20020a02954a000000b0040fa2395ad5sm3597021jah.178.2023.04.24.10.53.32
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Apr 2023 10:53:33 -0700 (PDT)
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-328cb023b1dso1090285ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Apr 2023 10:53:32 -0700 (PDT)
+X-Received: by 2002:a05:6e02:1bcd:b0:315:8e3a:f546 with SMTP id
+ x13-20020a056e021bcd00b003158e3af546mr23458ilv.6.1682358812275; Mon, 24 Apr
+ 2023 10:53:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230424160952.bvii2ahgxss2chev@quack3>
+References: <20230419225604.21204-1-dianders@chromium.org> <20230419155341.v8.3.I6d7f7d5fa0aa293c8c3374194947254b93114d37@changeid>
+In-Reply-To: <20230419155341.v8.3.I6d7f7d5fa0aa293c8c3374194947254b93114d37@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 24 Apr 2023 10:53:20 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WWkott-nuPtV56PGGJdaYqSK5zf_DLGjG_AzGb9vHAoA@mail.gmail.com>
+Message-ID: <CAD=FV=WWkott-nuPtV56PGGJdaYqSK5zf_DLGjG_AzGb9vHAoA@mail.gmail.com>
+Subject: Re: [PATCH v8 03/10] arm64: smp: Assign and setup an IPI as NMI
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     ito-yuichi@fujitsu.com, kgdb-bugreport@lists.sourceforge.net,
+        Chen-Yu Tsai <wens@csie.org>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-perf-users@vger.kernel.org,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Ben Dooks <ben-linux@fluff.org>,
+        Pierre Gondois <Pierre.Gondois@arm.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 06:09:52PM +0200, Jan Kara wrote:
+Hi,
 
-> So I'm maybe missing a bigger picture why we would like a change like this.
-> Because we still need to teach filesystems to handle pinned pages for the
-> usecases you don't forbid and for which we know there are users and then
-> what's the benefit of this patch?
+On Wed, Apr 19, 2023 at 3:57=E2=80=AFPM Douglas Anderson <dianders@chromium=
+.org> wrote:
+>
+> From: Sumit Garg <sumit.garg@linaro.org>
+>
+> Assign an unused IPI which can be turned as NMI using ipi_nmi framework.
+> Also, invoke corresponding dynamic IPI setup/teardown APIs.
+>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Reviewed-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> Tested-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v8:
+> - dynamic_ipi_setup() and dynamic_ipi_teardown() no longer take cpu param
+>
+>  arch/arm64/kernel/smp.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 4e8327264255..94ff063527c6 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -43,6 +43,7 @@
+>  #include <asm/daifflags.h>
+>  #include <asm/kvm_mmu.h>
+>  #include <asm/mmu_context.h>
+> +#include <asm/nmi.h>
+>  #include <asm/numa.h>
+>  #include <asm/processor.h>
+>  #include <asm/smp_plat.h>
+> @@ -938,6 +939,8 @@ static void ipi_setup(int cpu)
+>
+>         for (i =3D 0; i < nr_ipi; i++)
+>                 enable_percpu_irq(ipi_irq_base + i, 0);
+> +
+> +       dynamic_ipi_setup();
+>  }
+>
+>  #ifdef CONFIG_HOTPLUG_CPU
+> @@ -950,6 +953,8 @@ static void ipi_teardown(int cpu)
+>
+>         for (i =3D 0; i < nr_ipi; i++)
+>                 disable_percpu_irq(ipi_irq_base + i);
+> +
+> +       dynamic_ipi_teardown();
+>  }
+>  #endif
+>
+> @@ -971,6 +976,9 @@ void __init set_smp_ipi_range(int ipi_base, int n)
+>                 irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
+>         }
+>
+> +       if (n > nr_ipi)
+> +               set_smp_dynamic_ipi(ipi_base + nr_ipi);
 
-It immediately closes a security hole we have been talking about
-fixing for years already and still don't have a full fix for.
+From thinking about this patch more, I'm guessing that the biggest
+objection someone could have is that this uses up the "last" IPI slot
+in any systems that are stuck with only 8. Is that the reason that
+this patch series stagnated in the past, or was it something else?
 
-An acknowledgment that this is not going to go away and starting to
-clamp down on the insecurity may motivate some investment in the
-proper fix. :)
+If this is truly the concern that people have, it doesn't look like it
+would be terribly hard to combine the existing IPI_CPU_STOP and
+IPI_CPU_CRASH_STOP. Presumably we could just get rid of the "crash
+stop" IPI and have the normal "stop" IPI do the crash if
+"waiting_for_crash_ipi" is non-zero. If that's the thing blocking the
+series from moving forward then I can add that to the series, or we
+could just wait until someone actually needs another IPI. ;-)
 
-Jason
+-Doug
