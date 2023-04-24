@@ -2,60 +2,73 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B6FC6FD18
-	for <linux-perf-users@archiver.kernel.org>; Sun, 23 Apr 2023 22:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD44C7618E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 03:44:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbjDWW4z (ORCPT
+        id S229458AbjDXDoM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 23 Apr 2023 18:56:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36882 "EHLO
+        Sun, 23 Apr 2023 23:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjDWW4x (ORCPT
+        with ESMTP id S230381AbjDXDoB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 23 Apr 2023 18:56:53 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56360E7C;
-        Sun, 23 Apr 2023 15:56:52 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3f09b4a1527so39198315e9.0;
-        Sun, 23 Apr 2023 15:56:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682290611; x=1684882611;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FySrqR3I9d2HCqC1MT7U/tQkVY+ilau9mLcrZc6QcIY=;
-        b=mZT7t8bzo16wHQRVA8V4NkONZ6iLIScE5PMAGD/1ZThj5o5tvY6c0aR23RyV47Na5v
-         C2ucjU2s7HX+Cm5ykpK4CZzExQaeEDfEaDLJBOTb2LxBhznZ/9DHrOxfB3pQXD/nUhxj
-         vpuIixxNzcT+GmZoZSj4M5bHWeFXg4ZK0isnDzgkTGU2Abs4UU081rSvp3+C9jGHem1O
-         9uZ4tn/P6ryrVDM48/tLSf1jS5x0n2NS5BCxPX2td7APmh8p+SdCE+DlUErBq1Jj62XJ
-         gPUG4HQYSty3Mb3k5mIsSDU6ix7zk/F78x1cRISue3UiCbAARPpvzD/wkUBQ0S0ZUGuv
-         Qw1A==
+        Sun, 23 Apr 2023 23:44:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12872684
+        for <linux-perf-users@vger.kernel.org>; Sun, 23 Apr 2023 20:42:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1682307704;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=x0/Gqmlp5F3e84VZzqWw27RJ/qxOUG7Vcqc9AjwjGKg=;
+        b=KYyv99JZmktWbjUthqTGeoSPYMVkY4AVnxfgd8DkjupbY7IXN4cF3sj3kQbZX+AVy4CBfX
+        Z2nqyFeuy0jR3R5CUqyEhDOiuiThNuAgQJ9/ugnxbzwGZX+vm0yNPdvEJCCNy9RY7E+jJh
+        lhNA/WtjOhZhHm842Vq9ekaHXnNXF/Y=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-567-NsJK-iwAMtanE6i5eNtFJA-1; Sun, 23 Apr 2023 23:41:42 -0400
+X-MC-Unique: NsJK-iwAMtanE6i5eNtFJA-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-4ecb06abc1aso1715341e87.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 23 Apr 2023 20:41:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682290611; x=1684882611;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FySrqR3I9d2HCqC1MT7U/tQkVY+ilau9mLcrZc6QcIY=;
-        b=LZ9+/Wph3dsatxtmEemfv6TnBqVYiwvs6Eg61EKB9GL8VencbHM/g6WARsHm9n3H4C
-         ksKRwj1h+ayYItGfeGnrK/1TYWjRVUPUBPWUgJD5y2+vf47vETrf/DBAILrT4xtQa1so
-         7VHFt3ync3XeC1j6ir89eMksUPqhkJqE9gM2bbCiaV+RZfT3kyVluJ37maT5vEyzugWG
-         aBexsPdtqjvga8RCCKby92I58CsIkhcCMele2iP+oGN1VwJe/eMYHJ3/Q4621E5ReAJH
-         EmAVPLYQGKQ/NNmPnXYFnGIWcNYLca7y+Ytw6KMB2rMGhD43mJ1QTSyksOI4bi3igiHh
-         XZJw==
-X-Gm-Message-State: AAQBX9d/WpFpHayaP2HUNspPB+JDsuYoZvRSeaXSuPlxspHdDOPNB+LL
-        X7EHxUhFWAqRznucAal1Xe8=
-X-Google-Smtp-Source: AKy350b82f+U7u9J6kn0j7kDyXpFIBXu+ByS2Jos5JwWTL0rqSZb8T8t659h3+NCD45oLu9KUIqrgA==
-X-Received: by 2002:a7b:c5d4:0:b0:3f0:a0bb:58ef with SMTP id n20-20020a7bc5d4000000b003f0a0bb58efmr6224103wmk.25.1682290610521;
-        Sun, 23 Apr 2023 15:56:50 -0700 (PDT)
-Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
-        by smtp.gmail.com with ESMTPSA id p17-20020a056000019100b002fda1b12a0bsm9585766wrx.2.2023.04.23.15.56.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Apr 2023 15:56:49 -0700 (PDT)
-Date:   Sun, 23 Apr 2023 23:56:48 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        d=1e100.net; s=20221208; t=1682307701; x=1684899701;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=x0/Gqmlp5F3e84VZzqWw27RJ/qxOUG7Vcqc9AjwjGKg=;
+        b=Ba/OXHfA0fFJrZfPNobjSf4oofD32n0jIJWS00c0Qe1N1iwVbsBVsgeZHyYiQA25av
+         lYEyXm9gqtj7krMKoD4+3ITlMUXd+828JAOOzChovK/Jime5MiRFA90tAsOImhPArvzB
+         Ra1zaMXm2yli90NwXlpcImTLxG8MAhCREkce8TfYVnt1F85QUoIRvSm/PYxIivRV9Xck
+         /3qcwsgcNoem6B5DxwwNbMimL2IKDkaHMTpT7FDuzPTV3ontjnVnWV2qy5bGAd6aXBHV
+         knIxpJ+gtJEYlS2UVlzK9WglkjSj/6Bsh2ktuZwpYQajK9lZ9A0OUppoYrFg4pIQ68A9
+         UaQg==
+X-Gm-Message-State: AAQBX9eVsGxx5xIXHXNAq5NOV4oePb3+1GnntvZAjmBbPF8DOWhccEMZ
+        q/e2mvp6FA7+f66KaSced2LA3v5EeJaBhgyoO0F+d7usSBSgD086d+eKtwFlpLd25TkNBPhf9Ur
+        VbFAmaCQ3rDXJgrVe4vzm1p0isOG9
+X-Received: by 2002:a19:c503:0:b0:4db:513b:6ef4 with SMTP id w3-20020a19c503000000b004db513b6ef4mr2801683lfe.11.1682307701256;
+        Sun, 23 Apr 2023 20:41:41 -0700 (PDT)
+X-Google-Smtp-Source: AKy350akLmVLz77aNwLtIlKSi4nJUWSFQY6BgoD/WOht8xio4frsi16eCfgOgUB/LaSrLLzhy5Ej9A==
+X-Received: by 2002:a19:c503:0:b0:4db:513b:6ef4 with SMTP id w3-20020a19c503000000b004db513b6ef4mr2801666lfe.11.1682307700896;
+        Sun, 23 Apr 2023 20:41:40 -0700 (PDT)
+Received: from [192.168.1.121] (85-23-48-202.bb.dnainternet.fi. [85.23.48.202])
+        by smtp.gmail.com with ESMTPSA id a5-20020a056512374500b004db3d57c3a8sm1510791lfs.96.2023.04.23.20.41.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 23 Apr 2023 20:41:40 -0700 (PDT)
+Message-ID: <4b599782-3512-a177-c5b5-c562a22886c7@redhat.com>
+Date:   Mon, 24 Apr 2023 06:41:38 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] mm/gup: disallow GUP writing to file-backed mappings by
+ default
+Content-Language: en-US
+To:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
         Matthew Wilcox <willy@infradead.org>,
         Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
         Leon Romanovsky <leon@kernel.org>,
@@ -87,127 +100,261 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         John Fastabend <john.fastabend@gmail.com>,
         linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] mm/gup: disallow GUP writing to file-backed mappings by
- default
-Message-ID: <14c6f0f3-0747-4800-8718-4f109f7321ea@lucifer.local>
 References: <f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com>
- <20230423222941.GR447837@dread.disaster.area>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230423222941.GR447837@dread.disaster.area>
+From:   =?UTF-8?Q?Mika_Penttil=c3=a4?= <mpenttil@redhat.com>
+In-Reply-To: <f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 08:29:41AM +1000, Dave Chinner wrote:
-> On Sat, Apr 22, 2023 at 02:37:05PM +0100, Lorenzo Stoakes wrote:
-> > +/*
-> > + * Writing to file-backed mappings using GUP is a fundamentally broken operation
-> > + * as kernel write access to GUP mappings may not adhere to the semantics
-> > + * expected by a file system.
-> > + *
-> > + * In most instances we disallow this broken behaviour, however there are some
-> > + * exceptions to this enforced here.
-> > + */
-> > +static inline bool can_write_file_mapping(struct vm_area_struct *vma,
-> > +					  unsigned long gup_flags)
-> > +{
-> > +	struct file *file = vma->vm_file;
-> > +
-> > +	/* If we aren't pinning then no problematic write can occur. */
-> > +	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
-> > +		return true;
-> > +
-> > +	/* Special mappings should pose no problem. */
-> > +	if (!file)
-> > +		return true;
->
-> Ok...
->
-> > +
-> > +	/* Has the caller explicitly indicated this case is acceptable? */
-> > +	if (gup_flags & FOLL_ALLOW_BROKEN_FILE_MAPPING)
-> > +		return true;
-> > +
-> > +	/* shmem and hugetlb mappings do not have problematic semantics. */
-> > +	return vma_is_shmem(vma) || is_file_hugepages(file);
-> > +}
->
-> This looks backwards. We only want the override to occur when the
-> target won't otherwise allow it. i.e.  This should be:
->
-> 	if (vma_is_shmem(vma))
-> 		return true;
-> 	if (is_file_hugepages(vma)
-> 		return true;
->
-> 	/*
-> 	 * Issue a warning only if we are allowing a write to a mapping
-> 	 * that does not support what we are attempting to do functionality.
-> 	 */
-> 	if (WARN_ON_ONCE(gup_flags & FOLL_ALLOW_BROKEN_FILE_MAPPING))
-> 		return true;
-> 	return false;
->
-> i.e. we only want the warning to fire when the override is
-> triggered - indicating that the caller is actually using a file
-> mapping in a broken way, not when it is being used on
-> file/filesystem that actually supports file mappings in this way.
->
-> >  static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
-> >  {
-> >  	vm_flags_t vm_flags = vma->vm_flags;
-> >  	int write = (gup_flags & FOLL_WRITE);
-> >  	int foreign = (gup_flags & FOLL_REMOTE);
-> > +	bool vma_anon = vma_is_anonymous(vma);
-> >
-> >  	if (vm_flags & (VM_IO | VM_PFNMAP))
-> >  		return -EFAULT;
-> >
-> > -	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
-> > +	if ((gup_flags & FOLL_ANON) && !vma_anon)
-> >  		return -EFAULT;
-> >
-> >  	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
-> > @@ -978,6 +1008,10 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
-> >  		return -EFAULT;
-> >
-> >  	if (write) {
-> > +		if (!vma_anon &&
-> > +		    WARN_ON_ONCE(!can_write_file_mapping(vma, gup_flags)))
-> > +			return -EFAULT;
->
-> Yeah, the warning definitely belongs in the check function when the
-> override triggers allow broken behaviour to proceed, not when we
-> disallow a write fault because the underlying file/filesystem does
-> not support the operation being attempted.
 
-I disagree for two reasons:-
+Hi,
 
-1. There are places in the kernel that rely on this broken behaviour, most
-   notably ptrace (and /proc/$pid/mem), but also the other places where you
-   can see I've added this flag. I'm not sure spamming warnings for
-   ordinary cases would be useful.
 
-2. The purpose of putting a warning here is to catch any case I might have
-   missed where broken behaviour is required, but now disallowed, because it
-   might actually be hard for a GUP user to track down that this is why the
-   GUP is no longer functioning (since all they'll see is an -EFAULT).
+On 22.4.2023 16.37, Lorenzo Stoakes wrote:
+> It isn't safe to write to file-backed mappings as GUP does not ensure that
+> the semantics associated with such a write are performed correctly, for
+> instance filesystems which rely upon write-notify will not be correctly
+> notified.
+> 
+> There are exceptions to this - shmem and hugetlb mappings are (in effect)
+> anonymous mappings by other names so we do permit this operation in these
+> cases.
+> 
+> In addition, if no pinning takes place (neither FOLL_GET nor FOLL_PIN is
+> specified and neither flags gets implicitly set) then no writing can occur
+> so we do not perform the check in this instance.
+> 
+> This is an important exception, as populate_vma_page_range() invokes
+> __get_user_pages() in this way (and thus so does __mm_populate(), used by
+> MAP_POPULATE mmap() and mlock() invocations).
+> 
+> There are GUP users within the kernel that do nevertheless rely upon this
+> behaviour, so we introduce the FOLL_ALLOW_BROKEN_FILE_MAPPING flag to
+> explicitly permit this kind of GUP access.
+> 
+> This is required in order to not break userspace in instances where the
+> uAPI might permit file-mapped addresses - a number of RDMA users require
+> this for instance, as do the process_vm_[read/write]v() system calls,
+> /proc/$pid/mem, ptrace and SDT uprobes. Each of these callers have been
+> updated to use this flag.
+> 
+> Making this change is an important step towards a more reliable GUP, and
+> explicitly indicates which callers might encouter issues moving forward.
+> 
+> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+> ---
+>   drivers/infiniband/hw/qib/qib_user_pages.c |  3 +-
+>   drivers/infiniband/hw/usnic/usnic_uiom.c   |  2 +-
+>   drivers/infiniband/sw/siw/siw_mem.c        |  3 +-
+>   fs/proc/base.c                             |  3 +-
+>   include/linux/mm_types.h                   |  8 +++++
+>   kernel/events/uprobes.c                    |  3 +-
+>   mm/gup.c                                   | 36 +++++++++++++++++++++-
+>   mm/memory.c                                |  3 +-
+>   mm/process_vm_access.c                     |  2 +-
+>   net/xdp/xdp_umem.c                         |  2 +-
+>   10 files changed, 56 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/infiniband/hw/qib/qib_user_pages.c b/drivers/infiniband/hw/qib/qib_user_pages.c
+> index f693bc753b6b..b9019dad8008 100644
+> --- a/drivers/infiniband/hw/qib/qib_user_pages.c
+> +++ b/drivers/infiniband/hw/qib/qib_user_pages.c
+> @@ -110,7 +110,8 @@ int qib_get_user_pages(unsigned long start_page, size_t num_pages,
+>   	for (got = 0; got < num_pages; got += ret) {
+>   		ret = pin_user_pages(start_page + got * PAGE_SIZE,
+>   				     num_pages - got,
+> -				     FOLL_LONGTERM | FOLL_WRITE,
+> +				     FOLL_LONGTERM | FOLL_WRITE |
+> +				     FOLL_ALLOW_BROKEN_FILE_MAPPING,
+>   				     p + got, NULL);
+>   		if (ret < 0) {
+>   			mmap_read_unlock(current->mm);
+> diff --git a/drivers/infiniband/hw/usnic/usnic_uiom.c b/drivers/infiniband/hw/usnic/usnic_uiom.c
+> index 2a5cac2658ec..33cf79b248a9 100644
+> --- a/drivers/infiniband/hw/usnic/usnic_uiom.c
+> +++ b/drivers/infiniband/hw/usnic/usnic_uiom.c
+> @@ -85,7 +85,7 @@ static int usnic_uiom_get_pages(unsigned long addr, size_t size, int writable,
+>   				int dmasync, struct usnic_uiom_reg *uiomr)
+>   {
+>   	struct list_head *chunk_list = &uiomr->chunk_list;
+> -	unsigned int gup_flags = FOLL_LONGTERM;
+> +	unsigned int gup_flags = FOLL_LONGTERM | FOLL_ALLOW_BROKEN_FILE_MAPPING;
+>   	struct page **page_list;
+>   	struct scatterlist *sg;
+>   	struct usnic_uiom_chunk *chunk;
+> diff --git a/drivers/infiniband/sw/siw/siw_mem.c b/drivers/infiniband/sw/siw/siw_mem.c
+> index f51ab2ccf151..bc3e8c0898e5 100644
+> --- a/drivers/infiniband/sw/siw/siw_mem.c
+> +++ b/drivers/infiniband/sw/siw/siw_mem.c
+> @@ -368,7 +368,8 @@ struct siw_umem *siw_umem_get(u64 start, u64 len, bool writable)
+>   	struct mm_struct *mm_s;
+>   	u64 first_page_va;
+>   	unsigned long mlock_limit;
+> -	unsigned int foll_flags = FOLL_LONGTERM;
+> +	unsigned int foll_flags =
+> +		FOLL_LONGTERM | FOLL_ALLOW_BROKEN_FILE_MAPPING;
+>   	int num_pages, num_chunks, i, rv = 0;
+>   
+>   	if (!can_do_mlock())
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index 96a6a08c8235..3e3f5ea9849f 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -855,7 +855,8 @@ static ssize_t mem_rw(struct file *file, char __user *buf,
+>   	if (!mmget_not_zero(mm))
+>   		goto free;
+>   
+> -	flags = FOLL_FORCE | (write ? FOLL_WRITE : 0);
+> +	flags = FOLL_FORCE | FOLL_ALLOW_BROKEN_FILE_MAPPING |
+> +		(write ? FOLL_WRITE : 0);
+>   
+>   	while (count > 0) {
+>   		size_t this_len = min_t(size_t, count, PAGE_SIZE);
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 3fc9e680f174..e76637b4c78f 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -1185,6 +1185,14 @@ enum {
+>   	FOLL_PCI_P2PDMA = 1 << 10,
+>   	/* allow interrupts from generic signals */
+>   	FOLL_INTERRUPTIBLE = 1 << 11,
+> +	/*
+> +	 * By default we disallow write access to known broken file-backed
+> +	 * memory mappings (i.e. anything other than hugetlb/shmem
+> +	 * mappings). Some code may rely upon being able to access this
+> +	 * regardless for legacy reasons, thus we provide a flag to indicate
+> +	 * this.
+> +	 */
+> +	FOLL_ALLOW_BROKEN_FILE_MAPPING = 1 << 12,
+>   
+>   	/* See also internal only FOLL flags in mm/internal.h */
+>   };
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 59887c69d54c..ec330d3b0218 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -373,7 +373,8 @@ __update_ref_ctr(struct mm_struct *mm, unsigned long vaddr, short d)
+>   		return -EINVAL;
+>   
+>   	ret = get_user_pages_remote(mm, vaddr, 1,
+> -			FOLL_WRITE, &page, &vma, NULL);
+> +				    FOLL_WRITE | FOLL_ALLOW_BROKEN_FILE_MAPPING,
+> +				    &page, &vma, NULL);
+>   	if (unlikely(ret <= 0)) {
+>   		/*
+>   		 * We are asking for 1 page. If get_user_pages_remote() fails,
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 1f72a717232b..68d5570c0bae 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -959,16 +959,46 @@ static int faultin_page(struct vm_area_struct *vma,
+>   	return 0;
+>   }
+>   
+> +/*
+> + * Writing to file-backed mappings using GUP is a fundamentally broken operation
+> + * as kernel write access to GUP mappings may not adhere to the semantics
+> + * expected by a file system.
+> + *
+> + * In most instances we disallow this broken behaviour, however there are some
+> + * exceptions to this enforced here.
+> + */
+> +static inline bool can_write_file_mapping(struct vm_area_struct *vma,
+> +					  unsigned long gup_flags)
+> +{
+> +	struct file *file = vma->vm_file;
+> +
+> +	/* If we aren't pinning then no problematic write can occur. */
+> +	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
+> +		return true;
+> +
+> +	/* Special mappings should pose no problem. */
+> +	if (!file)
+> +		return true;
+> +
+> +	/* Has the caller explicitly indicated this case is acceptable? */
+> +	if (gup_flags & FOLL_ALLOW_BROKEN_FILE_MAPPING)
+> +		return true;
+> +
+> +	/* shmem and hugetlb mappings do not have problematic semantics. */
+> +	return vma_is_shmem(vma) || is_file_hugepages(file);
+> +}
+> +
+>   static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+>   {
+>   	vm_flags_t vm_flags = vma->vm_flags;
+>   	int write = (gup_flags & FOLL_WRITE);
+>   	int foreign = (gup_flags & FOLL_REMOTE);
+> +	bool vma_anon = vma_is_anonymous(vma);
+>   
+>   	if (vm_flags & (VM_IO | VM_PFNMAP))
+>   		return -EFAULT;
+>   
+> -	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
+> +	if ((gup_flags & FOLL_ANON) && !vma_anon)
+>   		return -EFAULT;
+>   
+>   	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
+> @@ -978,6 +1008,10 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+>   		return -EFAULT;
+>   
+>   	if (write) {
+> +		if (!vma_anon &&
+> +		    WARN_ON_ONCE(!can_write_file_mapping(vma, gup_flags)))
+> +			return -EFAULT;
+> +
+>   		if (!(vm_flags & VM_WRITE)) {
+>   			if (!(gup_flags & FOLL_FORCE))
+>   				return -EFAULT;
+> diff --git a/mm/memory.c b/mm/memory.c
+> index 146bb94764f8..e3d535991548 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -5683,7 +5683,8 @@ int access_process_vm(struct task_struct *tsk, unsigned long addr,
+>   	if (!mm)
+>   		return 0;
+>   
+> -	ret = __access_remote_vm(mm, addr, buf, len, gup_flags);
+> +	ret = __access_remote_vm(mm, addr, buf, len,
+> +				 gup_flags | FOLL_ALLOW_BROKEN_FILE_MAPPING);
+>   
+>   	mmput(mm);
+>   
+> diff --git a/mm/process_vm_access.c b/mm/process_vm_access.c
+> index 78dfaf9e8990..ef126c08e89c 100644
+> --- a/mm/process_vm_access.c
+> +++ b/mm/process_vm_access.c
+> @@ -81,7 +81,7 @@ static int process_vm_rw_single_vec(unsigned long addr,
+>   	ssize_t rc = 0;
+>   	unsigned long max_pages_per_loop = PVM_MAX_KMALLOC_PAGES
+>   		/ sizeof(struct pages *);
+> -	unsigned int flags = 0;
+> +	unsigned int flags = FOLL_ALLOW_BROKEN_FILE_MAPPING;
+>   
+>   	/* Work out address and page range required */
+>   	if (len == 0)
+> diff --git a/net/xdp/xdp_umem.c b/net/xdp/xdp_umem.c
+> index 02207e852d79..b93cfcaccb0d 100644
+> --- a/net/xdp/xdp_umem.c
+> +++ b/net/xdp/xdp_umem.c
+> @@ -93,7 +93,7 @@ void xdp_put_umem(struct xdp_umem *umem, bool defer_cleanup)
+>   
+>   static int xdp_umem_pin_pages(struct xdp_umem *umem, unsigned long address)
+>   {
+> -	unsigned int gup_flags = FOLL_WRITE;
+> +	unsigned int gup_flags = FOLL_WRITE | FOLL_ALLOW_BROKEN_FILE_MAPPING;
+>   	long npgs;
+>   	int err;
+>   
 
-This warned upon check should in reality not occur, because it implies the
-GUP user is trying to do something broken and is _not_ explicitly telling
-GUP that it knows it's doing it and can live with the consequences. And on
-that basis, is worthy of a warning so we know we have to go put this flag
-in that place (and know it is a source of problematic GUP usage), or fix
-the caller.
+Not sure about this in general, but seemss at least ptrace 
+(ptrace_access_vm()) seems to be broken here..
 
-An example case is placing breakpoints in gdb, without the flag being set
-for /proc/$pid/mem this will just fail. Raising a kernel warning when a
-user places a breakpoint seems... unhelpful :)
 
->
-> -Dave.
-> --
-> Dave Chinner
-> david@fromorbit.com
+--Mika
+
+
