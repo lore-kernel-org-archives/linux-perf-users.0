@@ -2,57 +2,72 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FA4C77B76
-	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 10:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718E9C77B61
+	for <linux-perf-users@archiver.kernel.org>; Mon, 24 Apr 2023 12:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231156AbjDXKSB (ORCPT
+        id S231642AbjDXMC4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 24 Apr 2023 06:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
+        Mon, 24 Apr 2023 08:02:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231131AbjDXKSA (ORCPT
+        with ESMTP id S230319AbjDXMCz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 24 Apr 2023 06:18:00 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EE03B7;
-        Mon, 24 Apr 2023 03:17:58 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id ffacd0b85a97d-2f3fe12de15so2499252f8f.3;
-        Mon, 24 Apr 2023 03:17:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682331477; x=1684923477;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sFd3GouLvmJwZXxGkUryj0wCtEPdyUrIZGRi3VcHFcY=;
-        b=TqsT5bDLQhdBasdYkLmm+ue2xSgsEVBAjc5YTj++1vp6A3jb/eAm2ISqbClYNA/bN3
-         Bm0Qobi1sk/79zsr5IujFFPFlbsGzbAi1EJzMSmku+dNUifDgkAbCbcM8YUtWcBVvZOy
-         SVPpWE5OWQfTe1GQr8ZTxOp6tt3VCUbd2OuOAC/DfDigTp0Uj1Rx+xCoGvzmour5y5R+
-         4Hu3Tw5p+fFJfRaY5cfLbeLqTcGzpFGk6nHgmtiTQqRoAbl4T73JR4lVcu+fut660/g4
-         rcTw4Qo24E64xvf+zM2d8K0I3IEMc/kusIdXVd5+7w3YBNQEVSY8dQymZOSt9O+uppQ5
-         sLHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682331477; x=1684923477;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sFd3GouLvmJwZXxGkUryj0wCtEPdyUrIZGRi3VcHFcY=;
-        b=KZaSb58DixHsITFjpPEvqU4J0LBuP7xZMkG3CbbRBKM0SJKRExNXRphnSRCcX1abvc
-         41oYyyUWrBATXhImhA6s725xOeMTBQlTJqrHy6nE3h+ZUfHjXpjP95s8DjytFolKE3qC
-         cBpD2xdt1vWvaRneEAQTlwJ7yFfjotElTX3VgwWWy5I/cUugozQ1L2xGcbV3ckWsNDqS
-         MRvUNRPQa9bN8FlvDO6GZ/9LUiP0WbX4WagwjWudFQEsLSBAhFrc6R3EnX6rVuOmY1kS
-         uIi5UUs1ZZoTF7lO9b4hyITfkXMP0CUW9u0MoRk5zmM2MYpvyBL0xnasHSrtw14PH9XJ
-         CDAg==
-X-Gm-Message-State: AAQBX9dwqPpNnEJRgCJWwK2GhFORrF+JPh2WF/K5ZhpYolM0LPRLdwyj
-        m1zyH32GKWYI4NAFTokEiuiOpsiAuHGGVw==
-X-Google-Smtp-Source: AKy350as+uWvZB1UDA0rClSPEJZ9KJctRGU6UJ7yZVRqXBfMpnr1bm8yMh1ziKuQa5ocG0CjKQw7XQ==
-X-Received: by 2002:adf:ec46:0:b0:2ce:9fb8:b560 with SMTP id w6-20020adfec46000000b002ce9fb8b560mr9761836wrn.8.1682331476919;
-        Mon, 24 Apr 2023 03:17:56 -0700 (PDT)
-Received: from localhost (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
-        by smtp.gmail.com with ESMTPSA id a14-20020adfe5ce000000b002fbe0772ab1sm10448840wrn.16.2023.04.24.03.17.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Apr 2023 03:17:55 -0700 (PDT)
-Date:   Mon, 24 Apr 2023 11:17:55 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     Christoph Hellwig <hch@infradead.org>
+        Mon, 24 Apr 2023 08:02:55 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F50CE65;
+        Mon, 24 Apr 2023 05:02:54 -0700 (PDT)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id BEBF35C01A8;
+        Mon, 24 Apr 2023 08:02:51 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Mon, 24 Apr 2023 08:02:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+         h=cc:cc:content-type:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm1; t=1682337771; x=
+        1682424171; bh=CRvO6aIzOksETinFwGWymGxM2N+ncqpqbziqE4P90jE=; b=K
+        s8mDDYXrnRqjqrU5BW4+OV7zVGUbFLVjLriun4tmAFCJELjr4REGLRVSHgHjhkjh
+        Xep4y/SqEidGausW58qWVR8jV0yGSvhN/Pkl61At06FSgniI8CibRUvR+YD1b+dh
+        noEgKtRqS7jqcbClfTrEG7qKpk/BLsPKrBL/8wNaYeGng0lPT93tpRlmm5nMvkRO
+        wi4gcS9PXeZGCx7SXYH1LjxMAn79yIinR33/dmBUHCf0uiBgYFB0tfc2MxYSEOY2
+        7f2skw3npSzI0p7FU8AxwJFFqhgj6O9HvOrMi402nmPpIQ/Mrbm5HNknsJC0uGXy
+        pf9CcxKfMg0SPZ/y5z/Gw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1682337771; x=1682424171; bh=CRvO6aIzOksET
+        inFwGWymGxM2N+ncqpqbziqE4P90jE=; b=fExb4HuszmPiaoxHgs+cKxDIwLQU+
+        eEdwK2PqGEzrWcrFhpexicu42iT/FXcS1JopTEEOIjoC+XdgRDkrxeInk89/akXe
+        PgZ1PUW+MjIVtohFqSGh+/6W/f9JBBeF1B0vOX/z/0GNNKp8ybiJa/cvEWXD5Bh6
+        uqco/RnE0UyicwnzNTOr80Z6fKImcXU7a35zhWmi2s3LmSL0L9C9dklH/TShrowR
+        VrxsvxS7B30zdia8qb5kzgQhhFD0DSYAr4joSMPH4te8KQoir0o/UxY4XNrXUS+r
+        YHmdaKH+NHa3fUXEZ/GmZqCCZxTQUgUj2/cyvklGRoPFG59SjlT1zPIIA==
+X-ME-Sender: <xms:6m9GZANNYr6TGHymmAD1-8ch6CPDymdpqrqJCHFrWSvrXbg0y9_PAA>
+    <xme:6m9GZG-YxUHkJl6fztunDYkp2nnOQJAM7lEvUe-hY_Yw7_1-wOLbr63PYJNA00LF5
+    HQyk1__Q98Gxh__uCY>
+X-ME-Received: <xmr:6m9GZHT5yUcDaIuEjNwYi078xTrEsa0hHkih8eBHuRE4wyAXL-_SQD3kdB35IUUhS_bu2w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedutddggeejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdttddttddtvdenucfhrhhomhepfdfmihhr
+    ihhllhcutedrucfuhhhuthgvmhhovhdfuceokhhirhhilhhlsehshhhuthgvmhhovhdrnh
+    grmhgvqeenucggtffrrghtthgvrhhnpefhieeghfdtfeehtdeftdehgfehuddtvdeuheet
+    tddtheejueekjeegueeivdektdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehkihhrihhllhesshhhuhhtvghmohhvrdhnrghmvg
+X-ME-Proxy: <xmx:6m9GZIva8NohubvE-CE0B9aBb6EAGLY58ZvjYHuVRLj-oFgK1r9VUA>
+    <xmx:6m9GZIezTduoYrFkQgeKd--0ZG2lvutgkn4yvHHLo4oWPRIxucHJpg>
+    <xmx:6m9GZM1Wu0LH7Uws3qx8n4fbr0wRPFxLbnj7kTuKLgmA7gzKUDZp2w>
+    <xmx:629GZADcnXNbrlZmost-ak_0YFJdISlmSeeG4Rh7NaAM9e0Zo7Vnzg>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 24 Apr 2023 08:02:49 -0400 (EDT)
+Received: by box.shutemov.name (Postfix, from userid 1000)
+        id 1FE9F10A0FA; Mon, 24 Apr 2023 15:02:47 +0300 (+03)
+Date:   Mon, 24 Apr 2023 15:02:47 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Lorenzo Stoakes <lstoakes@gmail.com>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
@@ -86,46 +101,53 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Jesper Dangaard Brouer <hawk@kernel.org>,
         John Fastabend <john.fastabend@gmail.com>,
         linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Subject: Re: [PATCH v2] mm/gup: disallow GUP writing to file-backed mappings
- by default
-Message-ID: <90a54439-5d30-4711-8a86-eba816782a66@lucifer.local>
-References: <c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com>
- <ZEZPXHN4OXIYhP+V@infradead.org>
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] mm/gup: disallow GUP writing to file-backed mappings by
+ default
+Message-ID: <20230424120247.k7cjmncmov32yv5r@box.shutemov.name>
+References: <f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZEZPXHN4OXIYhP+V@infradead.org>
+In-Reply-To: <f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 02:43:56AM -0700, Christoph Hellwig wrote:
-> I'm pretty sure DIRECT I/O reads that write into file backed mappings
-> are out there in the wild.
->
-> So while I wish we had never allowed this, the exercise seems futile and
-> instead we need to work on supporting this usecase, with the FOLL_PIN
-> infrastructure being a big step toward that.
+On Sat, Apr 22, 2023 at 02:37:05PM +0100, Lorenzo Stoakes wrote:
+> @@ -959,16 +959,46 @@ static int faultin_page(struct vm_area_struct *vma,
+>  	return 0;
+>  }
+>  
+> +/*
+> + * Writing to file-backed mappings using GUP is a fundamentally broken operation
+> + * as kernel write access to GUP mappings may not adhere to the semantics
+> + * expected by a file system.
+> + *
+> + * In most instances we disallow this broken behaviour, however there are some
+> + * exceptions to this enforced here.
+> + */
+> +static inline bool can_write_file_mapping(struct vm_area_struct *vma,
+> +					  unsigned long gup_flags)
+> +{
+> +	struct file *file = vma->vm_file;
+> +
+> +	/* If we aren't pinning then no problematic write can occur. */
+> +	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
+> +		return true;
+> +
+> +	/* Special mappings should pose no problem. */
+> +	if (!file)
+> +		return true;
+> +
+> +	/* Has the caller explicitly indicated this case is acceptable? */
+> +	if (gup_flags & FOLL_ALLOW_BROKEN_FILE_MAPPING)
+> +		return true;
+> +
+> +	/* shmem and hugetlb mappings do not have problematic semantics. */
+> +	return vma_is_shmem(vma) || is_file_hugepages(file);
 
-It's not entirely futile, there's at least one specific use case, which is
-io_uring which is currently open coding an equivalent check themselves. By
-introducing this change we prevent them from having to do so and provide a
-means by which other callers who implicitly need this do not have to do so
-either.
+Can this be generalized to any fs that doesn't have vm_ops->page_mkwrite()?
 
-In addition, this change frees up a blocked patch series intending to clean
-up GUP which should help open the door to further improvements across the
-system.
-
-So I would argue certainly not futile.
-
-In addition, I think it's useful to explicitly document that this is a
-broken case and, through use of the flag, highlight places which are
-problematic (although perhaps not exhaustively).
-
-I know Jason is keen on fixing this at a fundamental level and this flag is
-ultimately his suggestion, so it certainly doesn't stand in the way of this
-work moving forward.
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
