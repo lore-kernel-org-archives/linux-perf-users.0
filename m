@@ -2,62 +2,64 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5BCC6FD18
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 17:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71661C77B61
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 23:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234908AbjDYRkw (ORCPT
+        id S236372AbjDYXPq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Apr 2023 13:40:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43854 "EHLO
+        Tue, 25 Apr 2023 19:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234762AbjDYRku (ORCPT
+        with ESMTP id S232211AbjDYXPo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Apr 2023 13:40:50 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C36DB17A2F
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Apr 2023 10:40:29 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3f0a2f8216fso176241cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Apr 2023 10:40:29 -0700 (PDT)
+        Tue, 25 Apr 2023 19:15:44 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3454EBD;
+        Tue, 25 Apr 2023 16:15:42 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3f178da21b5so43991775e9.3;
+        Tue, 25 Apr 2023 16:15:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682444426; x=1685036426;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sE5LEcqfiBv4mIeB9VkSoLWTQxOUSgKZK6VAk/PRnk4=;
-        b=3NrCpSc8/XjqneMXMYPytaKrcRh2J1hyXdu2y+FeJo+aweNmRyF90b2ESPl6XTLo9E
-         6lXVSLg9q0MsIbLgf0v4+vj4tnFOJxWYMwZyEjy4Jq/wrRbI2rnyazjRMJrhsSQOotQG
-         EeWFMblgWmTPZpKEXQLqTEiYUKHijxkudbMgPBN4DdnqYllXgleCoZ5lxRi28wOpvvnS
-         fnNdKN7fGyIMhYl7LbAGO/6YWza6KFo2OMKPPLhExSg/ZsLyo8X1vug+/m08gtsI4IBk
-         fvyg+UlEVSJnceQwRRz57yGhuxHqn9Pdt9oCrKHV31Xi5GOxiL4M23jg2gR1e2f04rCy
-         Uzlw==
+        d=gmail.com; s=20221208; t=1682464540; x=1685056540;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZepthuyfXWO/R7g3gyOdstMJqp904AnhCOVcdOoCQb0=;
+        b=P/ZgbjiORZxfSpThRX4OlzffNCX8Ybcr1lBmTad9NQf7+dexFazlUkuxqanlqMWSjh
+         jKJffLtWMQxKhG1CwTJwCEPfdZkkDQt3XiNqXg8s49c5JHiMVO89913P9zfMplKGt94d
+         I+U8HApgNC+zXFC38f4veYPb0l0xJFoLMT2yq2Tr1qI5CXQu/qTxxN+TMmC1tqmDei4w
+         6Hf1+XWAYtPVTMpHYmqLX+wAiGha6NIUv26p33Z9n0DfnkU7STnjTwu36Zzz/UWY+Wfp
+         eJo9yW6IsTAlmoCJs6j2D1wQav0ZAnawZf2Cvx2N3nO4EjmtUWCQazmwwbqMu6GNaCtB
+         TQQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682444426; x=1685036426;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sE5LEcqfiBv4mIeB9VkSoLWTQxOUSgKZK6VAk/PRnk4=;
-        b=Cqjr5xr3I0ukCe8U1/8Z990DgqfyV3U39TEqIpUhviUXG8ZluslFUnj40OxlU9u7Dd
-         MBbRve0mB08L1PiMS0QiZpfEabtyz09uK33W8L8FrG1otiuNiv/0rBDQ9aNcd/Mq10cw
-         TqcN9kQvvK+IcwOqITylXtSI/5iKAeTHxIkXQC5wGTyzddeJDbPWVCunrxMmao44fbnI
-         cJQtAyW9F/UUDW8x1cTq6cX2vawnigBDRCKw+oxtNGlh6HI7ahNf6uSluCdl+S/Lx6MY
-         vSbmMul70hwuzptfYpGNVuhjsEoIjuCy04OnujKOZrQIvmCyxDu8WMPGDSG8zStNDmVW
-         CgKA==
-X-Gm-Message-State: AAQBX9ctMjfeqh+WXSvUyEoQeyEqDVl4M12lhqbKhgzLGXJeeIPCD86Q
-        SgZSo7ox6DYIIyz2FJoQP/C42E+uAzzn+9HJOBHo/g==
-X-Google-Smtp-Source: AKy350a/le6QBqVasegHtBez39G12Z42IfmF3VOI7c6nqWUNFzt2dNc/wXcqZRx9VUsgldTI6aY0vYBIralDZjapjgw=
-X-Received: by 2002:a05:622a:1822:b0:3ed:210b:e698 with SMTP id
- t34-20020a05622a182200b003ed210be698mr354819qtc.7.1682444425991; Tue, 25 Apr
- 2023 10:40:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <87sfcn7uot.fsf@oldenburg.str.redhat.com>
-In-Reply-To: <87sfcn7uot.fsf@oldenburg.str.redhat.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 25 Apr 2023 10:40:14 -0700
-Message-ID: <CAP-5=fXZv+KCdCN05wVUcAwDCZAgXjWunoaviGBQEiUPqNwOmg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf: Avoid implicit function declarations in
- lexer/parse interface
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        d=1e100.net; s=20221208; t=1682464540; x=1685056540;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZepthuyfXWO/R7g3gyOdstMJqp904AnhCOVcdOoCQb0=;
+        b=kDH1WlKjYtTQ148nJKpfFR8ba7219XOC2rQibp1rox0RxP7c8EhDEVDvn8wBjoyuuk
+         /+vgTKpaVaI6YHn2KvCB6VGIkPgsX4lcljvdQDKm39YsyWJYQFcaB3wTgTlI7FSJOd3E
+         RNlpnazZJ+FHiV9EavW1AQKNeYkxdbXBwepknjAsl20Qq9QNTFgN5jBNElthRtJHjmMS
+         SKzuT7GBXu0shLbPXKQYkS60yhJ7tIDYxf5Hj/CRC8QwfKAF15lEU26Hk8xkMaOjkZ48
+         wfAfcsEJw9igtgSxfJ0217NH/BZcSsIsfi+wTHSS2taK7J3t+lqcxw4Qh9Cs4jIAvQIl
+         36wQ==
+X-Gm-Message-State: AAQBX9drheVXs1mmXOY4fw51/YvYJq9EHlmdS0mCoyp87QLh35xJODLZ
+        W+G+IIq2aIP2PHLSyGstoDg=
+X-Google-Smtp-Source: AKy350Ynyb1uELx6zdIeynzAV1Y2Sqtuf7HOOmHPp7XqvNiP1RB8Z0vy1Oihgn31ZuCxpVCumCQrvQ==
+X-Received: by 2002:a05:600c:2212:b0:3f1:6ead:34fe with SMTP id z18-20020a05600c221200b003f16ead34femr11542501wml.26.1682464540470;
+        Tue, 25 Apr 2023 16:15:40 -0700 (PDT)
+Received: from lucifer.home ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
+        by smtp.googlemail.com with ESMTPSA id x24-20020a1c7c18000000b003f183127434sm16220321wmc.30.2023.04.25.16.15.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Apr 2023 16:15:39 -0700 (PDT)
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -65,115 +67,232 @@ Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        "Justin M. Forbes" <jforbes@fedoraproject.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>
+Subject: [PATCH v4] mm/gup: disallow GUP writing to file-backed mappings by default
+Date:   Wed, 26 Apr 2023 00:15:36 +0100
+Message-Id: <3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com>
+X-Mailer: git-send-email 2.40.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 25, 2023 at 10:12=E2=80=AFAM Florian Weimer <fweimer@redhat.com=
-> wrote:
->
-> In future compilers, -Wno-implicit-function-declaration may not bring
-> back support for implicit function declarations, a feature that was
-> removed from the C language in C99.  Instead of relying on implicit
-> declarations, include the flex-generated header from the
-> bison-generated C code.
->
-> he expr-flex.h header needs to be included later than the others
+GUP does not correctly implement write-notify semantics, nor does it
+guarantee that the underlying pages are correctly dirtied, which could lead
+to a kernel oops or data corruption when writing to file-backed mappings.
 
-nit: s/he/The/
+This is only relevant when the mappings are file-backed and the underlying
+file system requires folio dirty tracking. File systems which do not, such
+as shmem or hugetlb, are not at risk and therefore can be written to
+without issue.
 
-> because at the early point, the definition of YYSTYPE is not yet
-> available.
->
-> Signed-off-by: Florian Weimer <fweimer@redhat.com>
+Unfortunately this limitation of GUP has been present for some time and
+requires future rework of the GUP API in order to provide correct write
+access to such mappings.
 
-Acked-by: Ian Rogers <irogers@google.com>
+In the meantime, we add a check for the most broken GUP case -
+FOLL_LONGTERM - which really under no circumstances can safely access
+dirty-tracked file mappings.
 
-Thanks for fighting the build wrt parallel dependencies!
-Ian
+As part of this change we separate out vma_needs_dirty_tracking() as a
+helper function to determine this, which is distinct from
+vma_wants_writenotify() which is specific to determining which PTE flags to
+set.
 
-> ---
-> v2: Include the flex-generated files instead of manually-written prototyp=
-es.
->
->  tools/perf/util/Build          | 10 +++++++++-
->  tools/perf/util/expr.y         |  2 ++
->  tools/perf/util/parse-events.y |  1 +
->  tools/perf/util/pmu.y          |  1 +
->  4 files changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 918b501f9bd8..92897068c362 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -283,7 +283,7 @@ CFLAGS_expr-flex.o          +=3D $(flex_flags)
->  bison_flags :=3D -DYYENABLE_NLS=3D0
->  BISON_GE_35 :=3D $(shell expr $(shell $(BISON) --version | grep bison | =
-sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\)/\1\2/g') \>\=3D 35)
->  ifeq ($(BISON_GE_35),1)
-> -  bison_flags +=3D -Wno-unused-parameter -Wno-nested-externs -Wno-implic=
-it-function-declaration -Wno-switch-enum -Wno-unused-but-set-variable -Wno-=
-unknown-warning-option
-> +  bison_flags +=3D -Wno-unused-parameter -Wno-nested-externs -Wno-switch=
--enum -Wno-unused-but-set-variable -Wno-unknown-warning-option
->  else
->    bison_flags +=3D -w
->  endif
-> @@ -340,3 +340,11 @@ $(OUTPUT)util/vsprintf.o: ../lib/vsprintf.c FORCE
->  $(OUTPUT)util/list_sort.o: ../lib/list_sort.c FORCE
->         $(call rule_mkdir)
->         $(call if_changed_dep,cc_o_c)
-> +
-> +# These dependencies ensure that the flex-generated .h file is
-> +# available at the time the bison-generated .c sources are compiled.
-> +# Do not depend on the generated .h file to prevent triggering
-> +# parallel flex invocations for the same two output files.
-> +$(OUTPUT)util/expr-bison.o : $(OUTPUT)util/expr-flex.c
-> +$(OUTPUT)util/parse-events-bison.o : $(OUTPUT)util/parse-events-flex.c
-> +$(OUTPUT)util/pmu-bison.o : $(OUTPUT)util/pmu-flex.c
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 635e562350c5..99581193ca4c 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -53,6 +53,8 @@
->  %destructor { ids__free($$.ids); } <ids>
->
->  %{
-> +#include "expr-flex.h"
-> +
->  static void expr_error(double *final_val __maybe_unused,
->                        struct expr_parse_ctx *ctx __maybe_unused,
->                        bool compute_ids __maybe_unused,
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-event=
-s.y
-> index be8c51770051..67a7f70c4767 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -17,6 +17,7 @@
->  #include "evsel.h"
->  #include "parse-events.h"
->  #include "parse-events-bison.h"
-> +#include "parse-events-flex.h"
->
->  void parse_events_error(YYLTYPE *loc, void *parse_state, void *scanner, =
-char const *msg);
->
-> diff --git a/tools/perf/util/pmu.y b/tools/perf/util/pmu.y
-> index e675d79a0274..2170f1ac7b74 100644
-> --- a/tools/perf/util/pmu.y
-> +++ b/tools/perf/util/pmu.y
-> @@ -9,6 +9,7 @@
->  #include <linux/bitmap.h>
->  #include <string.h>
->  #include "pmu.h"
-> +#include "pmu-flex.h"
->
->  #define ABORT_ON(val) \
->  do { \
->
-> base-commit: 173ea743bf7a9eef04460e03b00ba267cc52aee2
->
+Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+---
+v4:
+- Split out vma_needs_dirty_tracking() from vma_wants_writenotify() to reduce
+  duplication and update to use this in the GUP check. Note that both separately
+  check vm_ops_needs_writenotify() as the latter needs to test this before the
+  vm_pgprot_modify() test, resulting in vma_wants_writenotify() checking this
+  twice, however it is such a small check this should not be egregious.
+
+v3:
+- Rebased on latest mm-unstable as of 24th April 2023.
+- Explicitly check whether file system requires folio dirtying. Note that
+  vma_wants_writenotify() could not be used directly as it is very much focused
+  on determining if the PTE r/w should be set (e.g. assuming private mapping
+  does not require it as already set, soft dirty considerations).
+- Tested code against shmem and hugetlb mappings - confirmed that these are not
+  disallowed by the check.
+- Eliminate FOLL_ALLOW_BROKEN_FILE_MAPPING flag and instead perform check only
+  for FOLL_LONGTERM pins.
+- As a result, limit check to internal GUP code.
+ https://lore.kernel.org/all/23c19e27ef0745f6d3125976e047ee0da62569d4.1682406295.git.lstoakes@gmail.com/
+
+v2:
+- Add accidentally excluded ptrace_access_vm() use of
+  FOLL_ALLOW_BROKEN_FILE_MAPPING.
+- Tweak commit message.
+https://lore.kernel.org/all/c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com/
+
+v1:
+https://lore.kernel.org/all/f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com/
+
+ include/linux/mm.h |  1 +
+ mm/gup.c           | 26 +++++++++++++++++++++++++-
+ mm/mmap.c          | 37 ++++++++++++++++++++++++++++---------
+ 3 files changed, 54 insertions(+), 10 deletions(-)
+
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 37554b08bb28..f7da02fc89c6 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2433,6 +2433,7 @@ extern unsigned long move_page_tables(struct vm_area_struct *vma,
+ #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
+ 					    MM_CP_UFFD_WP_RESOLVE)
+ 
++bool vma_needs_dirty_tracking(struct vm_area_struct *vma);
+ int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot);
+ static inline bool vma_wants_manual_pte_write_upgrade(struct vm_area_struct *vma)
+ {
+diff --git a/mm/gup.c b/mm/gup.c
+index 1f72a717232b..53652453037c 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -959,16 +959,37 @@ static int faultin_page(struct vm_area_struct *vma,
+ 	return 0;
+ }
+ 
++/*
++ * Writing to file-backed mappings which require folio dirty tracking using GUP
++ * is a fundamentally broken operation as kernel write access to GUP mappings
++ * may not adhere to the semantics expected by a file system.
++ */
++static inline bool can_write_file_mapping(struct vm_area_struct *vma,
++					  unsigned long gup_flags)
++{
++	/* If we aren't pinning then no problematic write can occur. */
++	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
++		return true;
++
++	/* We limit this check to the most egregious case - a long term pin. */
++	if (!(gup_flags & FOLL_LONGTERM))
++		return true;
++
++	/* If the VMA requires dirty tracking then GUP will be problematic. */
++	return vma_needs_dirty_tracking(vma);
++}
++
+ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+ {
+ 	vm_flags_t vm_flags = vma->vm_flags;
+ 	int write = (gup_flags & FOLL_WRITE);
+ 	int foreign = (gup_flags & FOLL_REMOTE);
++	bool vma_anon = vma_is_anonymous(vma);
+ 
+ 	if (vm_flags & (VM_IO | VM_PFNMAP))
+ 		return -EFAULT;
+ 
+-	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
++	if ((gup_flags & FOLL_ANON) && !vma_anon)
+ 		return -EFAULT;
+ 
+ 	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
+@@ -978,6 +999,9 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+ 		return -EFAULT;
+ 
+ 	if (write) {
++		if (!vma_anon && !can_write_file_mapping(vma, gup_flags))
++			return -EFAULT;
++
+ 		if (!(vm_flags & VM_WRITE)) {
+ 			if (!(gup_flags & FOLL_FORCE))
+ 				return -EFAULT;
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 536bbb8fa0ae..aac638dd22cf 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1475,6 +1475,32 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
+ }
+ #endif /* __ARCH_WANT_SYS_OLD_MMAP */
+ 
++/* Do VMA operations imply write notify is required? */
++static inline bool vm_ops_needs_writenotify(
++	const struct vm_operations_struct *vm_ops)
++{
++	return vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite);
++}
++
++/*
++ * Does this VMA require the underlying folios to have their dirty state
++ * tracked?
++ */
++bool vma_needs_dirty_tracking(struct vm_area_struct *vma)
++{
++	/* Does the filesystem need to be notified? */
++	if (vm_ops_needs_writenotify(vma->vm_ops))
++		return true;
++
++	/* Specialty mapping? */
++	if (vma->vm_flags & VM_PFNMAP)
++		return false;
++
++	/* Can the mapping track the dirty pages? */
++	return vma->vm_file && vma->vm_file->f_mapping &&
++		mapping_can_writeback(vma->vm_file->f_mapping);
++}
++
+ /*
+  * Some shared mappings will want the pages marked read-only
+  * to track write events. If so, we'll downgrade vm_page_prot
+@@ -1484,14 +1510,13 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
+ int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
+ {
+ 	vm_flags_t vm_flags = vma->vm_flags;
+-	const struct vm_operations_struct *vm_ops = vma->vm_ops;
+ 
+ 	/* If it was private or non-writable, the write bit is already clear */
+ 	if ((vm_flags & (VM_WRITE|VM_SHARED)) != ((VM_WRITE|VM_SHARED)))
+ 		return 0;
+ 
+ 	/* The backer wishes to know when pages are first written to? */
+-	if (vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite))
++	if (vm_ops_needs_writenotify(vma->vm_ops))
+ 		return 1;
+ 
+ 	/* The open routine did something to the protections that pgprot_modify
+@@ -1511,13 +1536,7 @@ int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
+ 	if (userfaultfd_wp(vma))
+ 		return 1;
+ 
+-	/* Specialty mapping? */
+-	if (vm_flags & VM_PFNMAP)
+-		return 0;
+-
+-	/* Can the mapping track the dirty pages? */
+-	return vma->vm_file && vma->vm_file->f_mapping &&
+-		mapping_can_writeback(vma->vm_file->f_mapping);
++	return vma_needs_dirty_tracking(vma);
+ }
+ 
+ /*
+-- 
+2.40.0
+
