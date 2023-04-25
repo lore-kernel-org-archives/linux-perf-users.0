@@ -2,86 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCF8C77B61
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 10:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E78C77B61
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 11:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233839AbjDYKpD (ORCPT
+        id S233516AbjDYLDp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Apr 2023 06:45:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44996 "EHLO
+        Tue, 25 Apr 2023 07:03:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233822AbjDYKpB (ORCPT
+        with ESMTP id S230195AbjDYLDp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Apr 2023 06:45:01 -0400
+        Tue, 25 Apr 2023 07:03:45 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C380213E;
-        Tue, 25 Apr 2023 03:44:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AB7985274;
+        Tue, 25 Apr 2023 04:03:43 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 600852F4;
-        Tue, 25 Apr 2023 03:45:43 -0700 (PDT)
-Received: from localhost.localdomain (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 960D03F5A1;
-        Tue, 25 Apr 2023 03:44:57 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     linux-perf-users@vger.kernel.org
-Cc:     James Clark <james.clark@arm.com>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58A124B3;
+        Tue, 25 Apr 2023 04:04:27 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1E233F5A1;
+        Tue, 25 Apr 2023 04:03:40 -0700 (PDT)
+Message-ID: <6a55956e-4218-4e11-4d7b-841761430a42@arm.com>
+Date:   Tue, 25 Apr 2023 12:03:28 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 2/7] perf tools: Add util function for overriding user set
+ config values
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+        shy828301@gmail.com, denik@google.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH] perf build: Fix unescaped # in perf build-test
-Date:   Tue, 25 Apr 2023 11:44:13 +0100
-Message-Id: <20230425104414.1723571-1-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230424134748.228137-1-james.clark@arm.com>
+ <20230424134748.228137-3-james.clark@arm.com>
+ <a7940a4a-fc62-17ca-834b-73628a54cc2a@intel.com>
+ <ZEbAS2yx2fguW60w@kernel.org>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <ZEbAS2yx2fguW60w@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-With the following bash and make versions:
 
-  $ make --version
-  GNU Make 4.2.1
-  Built for aarch64-unknown-linux-gnu
 
-  $ bash --version
-  GNU bash, version 5.0.17(1)-release (aarch64-unknown-linux-gnu)
+On 24/04/2023 18:45, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Apr 24, 2023 at 06:36:14PM +0300, Adrian Hunter escreveu:
+>> On 24/04/23 16:47, James Clark wrote:
+>>> There is some duplicated code to only override config values if they
+>>> haven't already been set by the user so make a util function for this.
+>>>
+>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>
+>> One minor comment, nevertheless:
+>>
+>> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> 
+> I just moved to  evsel__set_config_if_unset() to util/pmu.c, next to
+> some other evsel__ functions to not break the python.so binding, before
+> I was getting:
+> 
+> [acme@quaco perf-tools-next]$ perf test -v python
+> Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
+>  19: 'import perf' in python                                         :
+> --- start ---
+> test child forked, pid 500086
+> python usage test: "echo "import sys ; sys.path.append('/tmp/build/perf-tools-next/python'); import perf" | '/usr/bin/python3' "
+> Traceback (most recent call last):
+>   File "<stdin>", line 1, in <module>
+> ImportError: /tmp/build/perf-tools-next/python/perf.cpython-311-x86_64-linux-gnu.so: undefined symbol: perf_pmu__format_bits
+> test child finished with -1
+> ---- end ----
+> 'import perf' in python: FAILED!
+> [acme@quaco perf-tools-next]$
+> 
+> Please run 'perf test' and 'make -C tools/perf build-test' prior to
+> sending pull requests,
+> 
+> Thanks, applied.
+> 
 
-This error is encountered when running the build-test target:
+Ah sorry! I ran it from an in source build and got the python import
+error so I ignored that test. I see the new error if I run it from
+tools/perf instead.
 
-  $ make -C tools/perf build-test
-  tests/make:181: *** unterminated call to function 'shell': missing ')'.  Stop.
-  make: *** [Makefile:103: build-test] Error 2
+Interestingly with an out of source build it doesn't matter which cwd
+you run the Python test from because $OUTPUT is an absolute path.
+Normally I do an out of source build, but the Coresight tests don't
+currently work with that. Which I will submit another fix for...
 
-Fix it by escaping the # which was causing make to interpret the rest of
-the line as a comment leaving the unclosed opening bracket.
+I don't know if it's worth getting rid of that edge by making sure
+PYTHONPATH is always absolute even for in source builds or if it will
+break something else like a make install? It's because of this line:
 
-Fixes: 56d5229471ee ("tools build: Pass libbpf feature only if libbpf 1.0+")
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/tests/make | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+  -DPYTHONPATH="BUILD_STR($(OUTPUT)python)"
 
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index d75876126631..8dd3f8090352 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -178,7 +178,7 @@ run += make_install_prefix_slash
- # run += make_install_pdf
- run += make_minimal
- 
--old_libbpf := $(shell echo "#include <bpf/libbpf.h>" | $(CC) -E -dM -x c -| egrep -q "define[[:space:]]+LIBBPF_MAJOR_VERSION[[:space:]]+0{1}")
-+old_libbpf := $(shell echo '\#include <bpf/libbpf.h>' | $(CC) -E -dM -x c -| egrep -q "define[[:space:]]+LIBBPF_MAJOR_VERSION[[:space:]]+0{1}")
- 
- ifneq ($(old_libbpf),)
- run += make_libbpf_dynamic
--- 
-2.34.1
+Will make sure that they all pass next time. I also sent a fix for the
+build-test target on my platform.
 
+> - Arnaldo
+> 
