@@ -2,313 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F2BAC77B61
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 11:45:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D08E0C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 14:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233967AbjDYLpM (ORCPT
+        id S233801AbjDYOWn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Apr 2023 07:45:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45260 "EHLO
+        Tue, 25 Apr 2023 10:22:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233975AbjDYLpJ (ORCPT
+        with ESMTP id S233743AbjDYOWm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Apr 2023 07:45:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B28A459DA
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Apr 2023 04:44:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682423048;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EIn6jOD/NeIKj2oP7nKtWE4+cRY7zlmSfjRegYEWY78=;
-        b=ax849FGDvTkBxMgQYOKSbbvTMibWZpSVMwRYTgXcjHmGvPy/ZxmlnFtcCOAk6vDZDZzkmY
-        TnZfW9LrfcgM8iCNaTmMbGOWZHCmEqnfmVeCdArrNiqFigboRafzQqel4NwPYsGpuu0uN6
-        Muh3qdreM+JjJyk1xAo8KlEIVcLst6E=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-620-k5AQPd14OvSQiUNg_thmAA-1; Tue, 25 Apr 2023 07:44:04 -0400
-X-MC-Unique: k5AQPd14OvSQiUNg_thmAA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 85060884EC0;
-        Tue, 25 Apr 2023 11:44:03 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.22.32.181])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A3A30C15BA0;
-        Tue, 25 Apr 2023 11:43:56 +0000 (UTC)
-From:   Wander Lairson Costa <wander@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Wander Lairson Costa <wander@redhat.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrei Vagin <avagin@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS
-        SUBSYSTEM)
-Subject: [PATCH v7 3/3] treewide: replace put_task_struct() with the atomic safe version
-Date:   Tue, 25 Apr 2023 08:43:03 -0300
-Message-Id: <20230425114307.36889-4-wander@redhat.com>
-In-Reply-To: <20230425114307.36889-1-wander@redhat.com>
-References: <20230425114307.36889-1-wander@redhat.com>
+        Tue, 25 Apr 2023 10:22:42 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2075.outbound.protection.outlook.com [40.107.94.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2411265BC;
+        Tue, 25 Apr 2023 07:22:41 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T/HpuL95x2lWkLnG/atLXvEKZsybobFyX3f9UPGUls/YBIRkh8gLy/kp6qtmcZy0JYmlRj5FFUzY2RsUCA5uG3opdLuXq5FfrabAe2S48b8YuQ37DcfdAPMJlsI8qV9DZzBNlQxlB4P+i2c+wf8L6GXeiEBiHIerj3gSHq4/7e/Hryu82w2sIeejvZT7TvXYDBFfxhS4ZcD61hk5FrNsb7fUMN8+VcBVGsappgqtY38tQa0bEJt1SIwhR2D4atV/B2kcvrh+aI3wU9wwN+AmF4/Xn/yDvTIbTeNiP+0EpVb48bBBO3h5vJF4pUzHk7ymgduoo4JSMG2iLj2RNbf8CQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QN78BLLCyDmGHLPVgA5FQmv700T6UqF8zzywe1Y8+mY=;
+ b=bJH9d+H/3uZCsj/f9LZv/zR2zfkhKFPbBn/bEUTvCb/ygBjZMdmMxLaB4vohdbwoW2J6+053b1dJcxJ7vb5DqZPWcT0KjPis8XFDoOwWdDybBttrqdiWbd6S2dNGMNKaKAMu130/0qezA/ErIio00mwGa+joUFJEeRv09KaSG0wsm/n7v4iYhCSLloAE9R+vPg6QR95v+3512jwQBy2aTr1KypziIbeKH0TU8+8N1qhTD0sLEeWg52Sv4dmWjVsxpjlb5vB+qcZtz/mJgaXEr/UWikiphvJ0+FBn1pw2aSvDnYPg8qv5fcvU1MUKcIz9gniz4Rj1iahlBl/dLH9Xjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QN78BLLCyDmGHLPVgA5FQmv700T6UqF8zzywe1Y8+mY=;
+ b=G93U0okn5NbsUenzzCU4OCK2sfRtb72WaFVDUwGTzJj88KQC+kS0ei3VDw+t6s9e5gN3rafYhZ78SiJMAS63CyH/nnBE3HCRylHvsraZCFuXt1LcpJhj6BnVGxRqMH7v5s0jpdKVSN2E3SFzRjCnwGHvIkT9pNBAF3CukvN7SfI=
+Received: from BN9PR03CA0346.namprd03.prod.outlook.com (2603:10b6:408:f6::21)
+ by CH0PR12MB5218.namprd12.prod.outlook.com (2603:10b6:610:d1::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.34; Tue, 25 Apr
+ 2023 14:22:38 +0000
+Received: from BN8NAM11FT099.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:f6:cafe::eb) by BN9PR03CA0346.outlook.office365.com
+ (2603:10b6:408:f6::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.20 via Frontend
+ Transport; Tue, 25 Apr 2023 14:22:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT099.mail.protection.outlook.com (10.13.177.197) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6340.21 via Frontend Transport; Tue, 25 Apr 2023 14:22:37 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 25 Apr
+ 2023 09:22:31 -0500
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <peterz@infradead.org>
+CC:     <ravi.bangoria@amd.com>, <namhyung@kernel.org>,
+        <eranian@google.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <jolsa@kernel.org>, <irogers@google.com>, <bp@alien8.de>,
+        <kan.liang@linux.intel.com>, <adrian.hunter@intel.com>,
+        <maddy@linux.ibm.com>, <x86@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
+        <santosh.shukla@amd.com>
+Subject: [PATCH v3 0/3] perf: Rework event forwarding logic
+Date:   Tue, 25 Apr 2023 19:52:02 +0530
+Message-ID: <20230425142205.762-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT099:EE_|CH0PR12MB5218:EE_
+X-MS-Office365-Filtering-Correlation-Id: f4ee4e29-4364-4007-350e-08db45988575
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XcEHdLjFcTlAsZijEiVFEjiA4eX0Nk9RdMsyqZCU+5NiZpSklYlIcN/VUeG9R6Gt7DowCYOZGFPlzIPo3XSWpl4SDEKDCQKtNUkgqlFvUaEUOuiEG6YRh68HHtp2Pn2kShfzvKJIU2pKV5g/V/qXRBV3kvF1wMczVtxJ9we0JH1bEzAkpSQ00Y3/OSD8707l7O68AEzmsmy4bwkoUGoWT7fx2xkwdxoREt4x00KVT/Xtnqn3c6p27Av5SBAzU6rrkz57E+FBUddjIXH9rjH0bQOCgrzcc/pgLv6QqNuyjF2qH1v5rlBaL0SSgY60rMZ1hUm9drvAUe9SmQF2nQtr/OU8Ss/aRFIhXxRpbPWcZLKpDQ1BtDy2RwLzZVTI16Bt6ncDZLsoLETQUauxPTAHpgBP/aZSM5/ONzbsWldH6VhiT+xAQwn0T9cCelBhl3BCLfnYzTtNa6bid8rZGCGth9lhVkI3WYd6zdn7Ytyb2+s8hvcJddwoDhAokrSPTs1p9IbZZb8Zt7mIzLt98uKlhU6BDfj1A29Lmg/y2sZ/BBM4EdTNZNJx8WVBX3Gcqo9J+Eis17RN4knluYDOUjv5/vyyEItKdtOLbIuYqzMb4UKNqYhZpJeJLyiQL5gbHlH9d0vQywq8thQW9bGczZ5rvyYV4VV5gY4Kj6wkLJ+x67Zb2ZcuBScjIf2SMx57XsgeUzYVuDVR607+RxP7E1ItOO+YiH7kmMr7T02DpSsYdpc=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(376002)(39860400002)(346002)(451199021)(40470700004)(46966006)(36840700001)(40460700003)(36756003)(54906003)(82310400005)(86362001)(478600001)(41300700001)(81166007)(8936002)(8676002)(7416002)(44832011)(2906002)(6916009)(40480700001)(4326008)(316002)(356005)(82740400003)(70586007)(70206006)(5660300002)(16526019)(186003)(1076003)(26005)(966005)(336012)(426003)(83380400001)(47076005)(2616005)(36860700001)(7696005)(6666004)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Apr 2023 14:22:37.8985
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4ee4e29-4364-4007-350e-08db45988575
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT099.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5218
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In places where put_task_struct() is called in a non-sleepable context,
-we replace those calls by put_task_struct_atomic_safe().
+Usually events are opened on the same pmu as requested by user via
+perf_event_attr->type argument. But certain special events are
+internally redirected to different pmu. Currently such pmus needs to
+be treated specially and thus requires some gruesome hacks.
 
-These call sites were found by running internal regression tests and
-looking for warnings generated by put_task_might_resched().
+An approach, suggested by Peter Zijlstra, to get rid of these hacks
+was to overwrite event attributes with new pmu's attribute values
+within the kernel and let perf_event_init() retry opening the event
+with overwritten values. This patch series implements it.
 
-Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-Cc: Valentin Schneider <vschneid@redhat.com>
----
- kernel/events/core.c     |  6 +++---
- kernel/locking/rtmutex.c | 10 +++++-----
- kernel/sched/core.c      |  6 +++---
- kernel/sched/deadline.c  | 16 ++++++++--------
- kernel/sched/rt.c        |  4 ++--
- 5 files changed, 21 insertions(+), 21 deletions(-)
+v2: https://lore.kernel.org/r/20230309101111.444-1-ravi.bangoria@amd.com
+v2->v3:
+ - Both uses different approach to solve the problem. v2 was using new
+   error value -ESRCH to let perf_event_init() try opening event with
+   all pmus, hoping that the event will get forwarded to right pmu.
+   OTOH, v3 uses different approach as described in the description.
+ - v3 also fixes SW pmu to task-clock/cpu-clock pmu event forwarding.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 435815d3be3f..8f823da02324 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1181,7 +1181,7 @@ static void put_ctx(struct perf_event_context *ctx)
- 		if (ctx->parent_ctx)
- 			put_ctx(ctx->parent_ctx);
- 		if (ctx->task && ctx->task != TASK_TOMBSTONE)
--			put_task_struct(ctx->task);
-+			put_task_struct_atomic_safe(ctx->task);
- 		call_rcu(&ctx->rcu_head, free_ctx);
- 	}
- }
-@@ -13019,7 +13019,7 @@ static void perf_event_exit_task_context(struct task_struct *child)
- 	RCU_INIT_POINTER(child->perf_event_ctxp, NULL);
- 	put_ctx(child_ctx); /* cannot be last */
- 	WRITE_ONCE(child_ctx->task, TASK_TOMBSTONE);
--	put_task_struct(current); /* cannot be last */
-+	put_task_struct_atomic_safe(current); /* cannot be last */
- 
- 	clone_ctx = unclone_ctx(child_ctx);
- 	raw_spin_unlock_irq(&child_ctx->lock);
-@@ -13124,7 +13124,7 @@ void perf_event_free_task(struct task_struct *task)
- 	 */
- 	RCU_INIT_POINTER(task->perf_event_ctxp, NULL);
- 	WRITE_ONCE(ctx->task, TASK_TOMBSTONE);
--	put_task_struct(task); /* cannot be last */
-+	put_task_struct_atomic_safe(task); /* cannot be last */
- 	raw_spin_unlock_irq(&ctx->lock);
- 
- 
-diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
-index 728f434de2bb..3ecb8d6ae039 100644
---- a/kernel/locking/rtmutex.c
-+++ b/kernel/locking/rtmutex.c
-@@ -509,7 +509,7 @@ static __always_inline void rt_mutex_wake_up_q(struct rt_wake_q_head *wqh)
- {
- 	if (IS_ENABLED(CONFIG_PREEMPT_RT) && wqh->rtlock_task) {
- 		wake_up_state(wqh->rtlock_task, TASK_RTLOCK_WAIT);
--		put_task_struct(wqh->rtlock_task);
-+		put_task_struct_atomic_safe(wqh->rtlock_task);
- 		wqh->rtlock_task = NULL;
- 	}
- 
-@@ -649,7 +649,7 @@ static int __sched rt_mutex_adjust_prio_chain(struct task_struct *task,
- 			       "task: %s (%d)\n", max_lock_depth,
- 			       top_task->comm, task_pid_nr(top_task));
- 		}
--		put_task_struct(task);
-+		put_task_struct_atomic_safe(task);
- 
- 		return -EDEADLK;
- 	}
-@@ -817,7 +817,7 @@ static int __sched rt_mutex_adjust_prio_chain(struct task_struct *task,
- 		 * No requeue[7] here. Just release @task [8]
- 		 */
- 		raw_spin_unlock(&task->pi_lock);
--		put_task_struct(task);
-+		put_task_struct_atomic_safe(task);
- 
- 		/*
- 		 * [9] check_exit_conditions_3 protected by lock->wait_lock.
-@@ -886,7 +886,7 @@ static int __sched rt_mutex_adjust_prio_chain(struct task_struct *task,
- 
- 	/* [8] Release the task */
- 	raw_spin_unlock(&task->pi_lock);
--	put_task_struct(task);
-+	put_task_struct_atomic_safe(task);
- 
- 	/*
- 	 * [9] check_exit_conditions_3 protected by lock->wait_lock.
-@@ -990,7 +990,7 @@ static int __sched rt_mutex_adjust_prio_chain(struct task_struct *task,
-  out_unlock_pi:
- 	raw_spin_unlock_irq(&task->pi_lock);
-  out_put_task:
--	put_task_struct(task);
-+	put_task_struct_atomic_safe(task);
- 
- 	return ret;
- }
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0d18c3969f90..a4783f0c9f01 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1007,7 +1007,7 @@ void wake_up_q(struct wake_q_head *head)
- 		 * the queueing in wake_q_add() so as not to miss wakeups.
- 		 */
- 		wake_up_process(task);
--		put_task_struct(task);
-+		put_task_struct_atomic_safe(task);
- 	}
- }
- 
-@@ -2528,7 +2528,7 @@ int push_cpu_stop(void *arg)
- 	raw_spin_rq_unlock(rq);
- 	raw_spin_unlock_irq(&p->pi_lock);
- 
--	put_task_struct(p);
-+	put_task_struct_atomic_safe(p);
- 	return 0;
- }
- 
-@@ -9316,7 +9316,7 @@ static int __balance_push_cpu_stop(void *arg)
- 	rq_unlock(rq, &rf);
- 	raw_spin_unlock_irq(&p->pi_lock);
- 
--	put_task_struct(p);
-+	put_task_struct_atomic_safe(p);
- 
- 	return 0;
- }
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 71b24371a6f7..0f8b8a490dc0 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -327,7 +327,7 @@ static void dl_change_utilization(struct task_struct *p, u64 new_bw)
- 		 * so we are still safe.
- 		 */
- 		if (hrtimer_try_to_cancel(&p->dl.inactive_timer) == 1)
--			put_task_struct(p);
-+			put_task_struct_atomic_safe(p);
- 	}
- 	__sub_rq_bw(p->dl.dl_bw, &rq->dl);
- 	__add_rq_bw(new_bw, &rq->dl);
-@@ -467,7 +467,7 @@ static void task_contending(struct sched_dl_entity *dl_se, int flags)
- 		 * so we are still safe.
- 		 */
- 		if (hrtimer_try_to_cancel(&dl_se->inactive_timer) == 1)
--			put_task_struct(dl_task_of(dl_se));
-+			put_task_struct_atomic_safe(dl_task_of(dl_se));
- 	} else {
- 		/*
- 		 * Since "dl_non_contending" is not set, the
-@@ -1207,7 +1207,7 @@ static enum hrtimer_restart dl_task_timer(struct hrtimer *timer)
- 	 * This can free the task_struct, including this hrtimer, do not touch
- 	 * anything related to that after this.
- 	 */
--	put_task_struct(p);
-+	put_task_struct_atomic_safe(p);
- 
- 	return HRTIMER_NORESTART;
- }
-@@ -1442,7 +1442,7 @@ static enum hrtimer_restart inactive_task_timer(struct hrtimer *timer)
- 	dl_se->dl_non_contending = 0;
- unlock:
- 	task_rq_unlock(rq, p, &rf);
--	put_task_struct(p);
-+	put_task_struct_atomic_safe(p);
- 
- 	return HRTIMER_NORESTART;
- }
-@@ -1899,7 +1899,7 @@ static void migrate_task_rq_dl(struct task_struct *p, int new_cpu __maybe_unused
- 		 * so we are still safe.
- 		 */
- 		if (hrtimer_try_to_cancel(&p->dl.inactive_timer) == 1)
--			put_task_struct(p);
-+			put_task_struct_atomic_safe(p);
- 	}
- 	sub_rq_bw(&p->dl, &rq->dl);
- 	rq_unlock(rq, &rf);
-@@ -2351,7 +2351,7 @@ static int push_dl_task(struct rq *rq)
- 			/* No more tasks */
- 			goto out;
- 
--		put_task_struct(next_task);
-+		put_task_struct_atomic_safe(next_task);
- 		next_task = task;
- 		goto retry;
- 	}
-@@ -2366,7 +2366,7 @@ static int push_dl_task(struct rq *rq)
- 	double_unlock_balance(rq, later_rq);
- 
- out:
--	put_task_struct(next_task);
-+	put_task_struct_atomic_safe(next_task);
- 
- 	return ret;
- }
-@@ -2633,7 +2633,7 @@ static void switched_from_dl(struct rq *rq, struct task_struct *p)
- static void switched_to_dl(struct rq *rq, struct task_struct *p)
- {
- 	if (hrtimer_try_to_cancel(&p->dl.inactive_timer) == 1)
--		put_task_struct(p);
-+		put_task_struct_atomic_safe(p);
- 
- 	/* If p is not queued we will update its parameters at next wakeup. */
- 	if (!task_on_rq_queued(p)) {
-diff --git a/kernel/sched/rt.c b/kernel/sched/rt.c
-index 0a11f44adee5..e58a84535f61 100644
---- a/kernel/sched/rt.c
-+++ b/kernel/sched/rt.c
-@@ -2150,7 +2150,7 @@ static int push_rt_task(struct rq *rq, bool pull)
- 		/*
- 		 * Something has shifted, try again.
- 		 */
--		put_task_struct(next_task);
-+		put_task_struct_atomic_safe(next_task);
- 		next_task = task;
- 		goto retry;
- 	}
-@@ -2163,7 +2163,7 @@ static int push_rt_task(struct rq *rq, bool pull)
- 
- 	double_unlock_balance(rq, lowest_rq);
- out:
--	put_task_struct(next_task);
-+	put_task_struct_atomic_safe(next_task);
- 
- 	return ret;
- }
+Patches are prepared on v6.3.
+
+Ravi Bangoria (3):
+  perf/core: Rework forwarding of {task|cpu}-clock events
+  perf/ibs: Fix interface via core pmu events
+  perf test: Add selftest to test IBS invocation via core pmu events
+
+ arch/x86/events/amd/core.c              |  2 +-
+ arch/x86/events/amd/ibs.c               | 53 ++++++++---------
+ arch/x86/include/asm/perf_event.h       |  2 +
+ include/linux/perf_event.h              | 11 ++++
+ kernel/events/core.c                    | 79 +++++++++++--------------
+ tools/perf/tests/Build                  |  1 +
+ tools/perf/tests/amd-ibs-via-core-pmu.c | 72 ++++++++++++++++++++++
+ tools/perf/tests/builtin-test.c         |  1 +
+ tools/perf/tests/tests.h                |  1 +
+ 9 files changed, 151 insertions(+), 71 deletions(-)
+ create mode 100644 tools/perf/tests/amd-ibs-via-core-pmu.c
+
 -- 
 2.40.0
 
