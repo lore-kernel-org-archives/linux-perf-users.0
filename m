@@ -2,119 +2,75 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E78C77B61
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 11:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97BC8C6FD18
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 11:20:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233516AbjDYLDp (ORCPT
+        id S233511AbjDYLUT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Apr 2023 07:03:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52674 "EHLO
+        Tue, 25 Apr 2023 07:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230195AbjDYLDp (ORCPT
+        with ESMTP id S233451AbjDYLUT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Apr 2023 07:03:45 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AB7985274;
-        Tue, 25 Apr 2023 04:03:43 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58A124B3;
-        Tue, 25 Apr 2023 04:04:27 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1E233F5A1;
-        Tue, 25 Apr 2023 04:03:40 -0700 (PDT)
-Message-ID: <6a55956e-4218-4e11-4d7b-841761430a42@arm.com>
-Date:   Tue, 25 Apr 2023 12:03:28 +0100
+        Tue, 25 Apr 2023 07:20:19 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43DD8196;
+        Tue, 25 Apr 2023 04:20:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=WYHkmc6gK/GgjTHZCT7HG42OoUHKVnX5JUVMg0hbRso=; b=QfNLhB5DzekLEkai9G6ZF7BUOm
+        rQv3+I3XgNSEw7nvwc9WNDionRYGlF9vk8vrQscnfDFJ2/K3Co8XBTPNqkc8s6sX6deOARg6TAYF8
+        xq+8BWEsobA86UyX+9n4CW1Imth1Fb3xWkH+cEwG6/8jxULJA9y4kO9eeCQnagW8X+Fd7aDGKXzMo
+        7A5AIoGuUfcKyPJC623/r0rGxC9eM+XI1hvcLkX0ezWwmPNApOp28NbbX9m+1u+2YTYybQovSoKyH
+        ZsMRYRHUyJ86HM56eZkpjxyk3qNhCqrBte3jgepxUuoF0zICPQ+x3kE+3q+MaYn555wOk3rfopS7g
+        uH9Yr3fA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1prGiE-001Ntn-2s; Tue, 25 Apr 2023 11:19:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3114C300380;
+        Tue, 25 Apr 2023 13:19:56 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 09882241B9566; Tue, 25 Apr 2023 13:19:56 +0200 (CEST)
+Date:   Tue, 25 Apr 2023 13:19:55 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kernel test robot <yujie.liu@intel.com>
+Cc:     kan.liang@linux.intel.com, oe-lkp@lists.linux.dev, lkp@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mingo@redhat.com, eranian@google.com, ak@linux.intel.com
+Subject: Re: [PATCH V4 2/2] perf/x86/intel/ds: Delay the threshold update
+Message-ID: <20230425111955.GB1335080@hirez.programming.kicks-ass.net>
+References: <20230421184529.3320912-2-kan.liang@linux.intel.com>
+ <202304251457.d108dbb3-yujie.liu@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 2/7] perf tools: Add util function for overriding user set
- config values
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
-        shy828301@gmail.com, denik@google.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230424134748.228137-1-james.clark@arm.com>
- <20230424134748.228137-3-james.clark@arm.com>
- <a7940a4a-fc62-17ca-834b-73628a54cc2a@intel.com>
- <ZEbAS2yx2fguW60w@kernel.org>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <ZEbAS2yx2fguW60w@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202304251457.d108dbb3-yujie.liu@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 24/04/2023 18:45, Arnaldo Carvalho de Melo wrote:
-> Em Mon, Apr 24, 2023 at 06:36:14PM +0300, Adrian Hunter escreveu:
->> On 24/04/23 16:47, James Clark wrote:
->>> There is some duplicated code to only override config values if they
->>> haven't already been set by the user so make a util function for this.
->>>
->>> Signed-off-by: James Clark <james.clark@arm.com>
->>
->> One minor comment, nevertheless:
->>
->> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+On Tue, Apr 25, 2023 at 03:16:29PM +0800, kernel test robot wrote:
+> Hello,
 > 
-> I just moved to  evsel__set_config_if_unset() to util/pmu.c, next to
-> some other evsel__ functions to not break the python.so binding, before
-> I was getting:
+> kernel test robot noticed "Kernel_panic-not_syncing:Timeout:Not_all_CPUs_entered_broadcast_exception_handler" on:
 > 
-> [acme@quaco perf-tools-next]$ perf test -v python
-> Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
->  19: 'import perf' in python                                         :
-> --- start ---
-> test child forked, pid 500086
-> python usage test: "echo "import sys ; sys.path.append('/tmp/build/perf-tools-next/python'); import perf" | '/usr/bin/python3' "
-> Traceback (most recent call last):
->   File "<stdin>", line 1, in <module>
-> ImportError: /tmp/build/perf-tools-next/python/perf.cpython-311-x86_64-linux-gnu.so: undefined symbol: perf_pmu__format_bits
-> test child finished with -1
-> ---- end ----
-> 'import perf' in python: FAILED!
-> [acme@quaco perf-tools-next]$
-> 
-> Please run 'perf test' and 'make -C tools/perf build-test' prior to
-> sending pull requests,
-> 
-> Thanks, applied.
+> commit: a17c97370d1fb9b2eac75c85136a1f70ec44eded ("[PATCH V4 2/2] perf/x86/intel/ds: Delay the threshold update")
+> url: https://github.com/intel-lab-lkp/linux/commits/kan-liang-linux-intel-com/perf-x86-intel-ds-Delay-the-threshold-update/20230422-024743
+> base: https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git 15def34e2635ab7e0e96f1bc32e1b69609f14942
+> patch link: https://lore.kernel.org/all/20230421184529.3320912-2-kan.liang@linux.intel.com/
+> patch subject: [PATCH V4 2/2] perf/x86/intel/ds: Delay the threshold update
 > 
 
-Ah sorry! I ran it from an in source build and got the python import
-error so I ignored that test. I see the new error if I run it from
-tools/perf instead.
+> [  224.064675][   C84] mce: CPUs not responding to MCE broadcast (may include false positives): 0-83,85-223
+> [  224.064681][   C84] Kernel panic - not syncing: Timeout: Not all CPUs entered broadcast exception handler
+> [  225.089881][   C84] Shutting down cpus with NMI
+> [  225.129381][   C84] Kernel Offset: disabled
 
-Interestingly with an out of source build it doesn't matter which cwd
-you run the Python test from because $OUTPUT is an absolute path.
-Normally I do an out of source build, but the Coresight tests don't
-currently work with that. Which I will submit another fix for...
-
-I don't know if it's worth getting rid of that edge by making sure
-PYTHONPATH is always absolute even for in source builds or if it will
-break something else like a make install? It's because of this line:
-
-  -DPYTHONPATH="BUILD_STR($(OUTPUT)python)"
-
-Will make sure that they all pass next time. I also sent a fix for the
-build-test target on my platform.
-
-> - Arnaldo
-> 
+That seems very unrelated to the patch at hand; was this bisect double
+checked?
