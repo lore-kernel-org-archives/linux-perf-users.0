@@ -2,162 +2,230 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06218C6FD18
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 04:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04C98C77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 07:14:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232473AbjDYE6S (ORCPT
+        id S233495AbjDYHOW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Apr 2023 00:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40418 "EHLO
+        Tue, 25 Apr 2023 03:14:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232302AbjDYE6Q (ORCPT
+        with ESMTP id S233311AbjDYHOV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Apr 2023 00:58:16 -0400
-Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A25AA7EF1
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Apr 2023 21:58:13 -0700 (PDT)
-Received: by mail-ua1-x932.google.com with SMTP id a1e0cc1a2514c-779701b7265so1801375241.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Apr 2023 21:58:13 -0700 (PDT)
+        Tue, 25 Apr 2023 03:14:21 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 748A69001;
+        Tue, 25 Apr 2023 00:14:20 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3f178da21afso35364495e9.1;
+        Tue, 25 Apr 2023 00:14:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1682398692; x=1684990692;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vKKkeNYy26t1TjKVwBgMLbds1eKVkw1hMyFByHcDzQ8=;
-        b=dClWn8nq9rhEMd87NqePK0FRmC3PDIyZw3hNI4Y6kWzhsoOdCrl23hkYVmMtLxs0eB
-         BAsWynnRwqY4Uo2vZFhLHqfVcBHwutaEM3DB0UweV6tlcoX/qc9tPAOSt26d7bl6hIsE
-         hUu9Hw6PAg8ceY58RXg9Sl/hl1RlCY7CY8vhw=
+        d=gmail.com; s=20221208; t=1682406859; x=1684998859;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yjgzdqrbPo7+Td+Wlne0g57m41H7q9g5vLYpPDzT+qw=;
+        b=H6uBR9WAiN3nmtRogzKnpHyF+tj7CFYbFApxatJP1VLKGlPzsCJ25finM3hrSD0TEB
+         XfOldeEJUhs/ALeP7EP6+mTWtQrLcql/7gRagSd2UsEVk6dOtOVqwu+fHLSYibPjJ6sb
+         lfh1f+YYWcf4GP7VXXXzEejq9r0Co3wq2ip3LqUMigGlznjo31/lUKWLuIIc0IlTJIDb
+         dL+v/hGG5bbSSG9J0HDhLj+KsUrvRopsq2vI0ls5gl/cgjerlsF9u86OWWWjJDtKmUdV
+         IFPEkfr3t8/hkfk2cywUJTNAy1Ngjcu0MDpEQ4OwgZG18kbtqh1YdMWEM5VVO0i0Srmw
+         cGGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682398692; x=1684990692;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vKKkeNYy26t1TjKVwBgMLbds1eKVkw1hMyFByHcDzQ8=;
-        b=GbYx+5TAMPua5W6rk9erJWE6aKQ9eg05eGSXJDco1lYIT5weZ4nFSbggs7RIGNljmM
-         QM3yi+vdWTZnOGOIvN3YMGC9tIjeHHDI5LHsJ9SSmcK0cZu6TvDiEvc4Y+AiaQDg9RcH
-         hnSuww5la7wfG7Px5Klr3vsnmWf2brvh8HL2cdkV0t3vjRUFeG07ABqKrYnr6U3mgdY7
-         hcu2ngAOpKyE0K5woseFPbBOQdkc8M4JvtE4ZXZAAao1pPavjAHmjOEw4R6MkX9/7ubs
-         AjvDQQgk2qj4DYR7q9b3V5r3eVZal6tc8yMBfpUIw1EUrh4vy6WZE63D4nCKOrQEX7y6
-         xv9A==
-X-Gm-Message-State: AAQBX9epZEIEqB5slehEFCN9tVSvZIJ7L6/vLRy68k4b3FkkpRvhIrts
-        3RyIYA8+jjW+sp8oH7ou7s+yJJZ+z76YdxYo3grYr3FMDkn9miWOkzA=
-X-Google-Smtp-Source: AKy350YV9yq/BYIVC0vQ1BiX8lbq0Q/kk/Y+qtOenk4wtXVHcFqYgVVennu93j8KBIiSa0redLYnm3nczDpo6ZTYECw=
-X-Received: by 2002:a1f:cb02:0:b0:43f:a097:5e8c with SMTP id
- b2-20020a1fcb02000000b0043fa0975e8cmr3429523vkg.16.1682398692723; Mon, 24 Apr
- 2023 21:58:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230421155255.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
- <20230424125355.GA4054@aspen.lan> <CAD=FV=W2f37XUSWgSrr9AjGZ5WLBm-+6EkGx6YiOEPDsyYQn=w@mail.gmail.com>
-In-Reply-To: <CAD=FV=W2f37XUSWgSrr9AjGZ5WLBm-+6EkGx6YiOEPDsyYQn=w@mail.gmail.com>
-From:   Chen-Yu Tsai <wenst@chromium.org>
-Date:   Tue, 25 Apr 2023 12:58:01 +0800
-Message-ID: <CAGXv+5Gbph1r0u_NVBS7Lg8w8X4Qw0Q=yxmEkJDs4ptOJu2NVA@mail.gmail.com>
-Subject: Re: [PATCH] hardlockup: detect hard lockups using secondary (buddy) cpus
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        linux-arm-kernel@lists.infradead.org,
-        kgdb-bugreport@lists.sourceforge.net,
-        Marc Zyngier <maz@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Will Deacon <will@kernel.org>, ito-yuichi@fujitsu.com,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Colin Cross <ccross@android.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Ingo Molnar <mingo@kernel.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Marco Elver <elver@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
+        d=1e100.net; s=20221208; t=1682406859; x=1684998859;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yjgzdqrbPo7+Td+Wlne0g57m41H7q9g5vLYpPDzT+qw=;
+        b=HgSjYlBjnf3j6bjUP3fCF7i4Lte/biafaYzP5t/Druz1cGsIOijX84BW13D10JDqob
+         fiiaT3F5gUAUGQZROeVRR3/3qA2zWRuNh7mHOrgttYh49nsqIUyUpEFR6941Bval7dIi
+         N4h3o2EvCQGDcB/qIGZLhltiigVzlcXWt5sS726TQkdM6Aj7DrwJ5nE5zJeEREge+62Y
+         Qq7iIe9hq5MYMgc/JfqL+Xl5H0IAgFI73XxPJSKbCz84cCVTEaLF/LD+btyubVJXs7lF
+         ZJoSJ4tJuT9hS+v/L3Dl9NI7F/tZ3GaKS1h+7vdBnZnd55VuXzH1DWQej/dMfdggNiRa
+         zwbQ==
+X-Gm-Message-State: AAQBX9f5st0yzFymCtCwCnLx9uGHXzTWQoV6HrEAlDp+/0oEWtU0FxGN
+        GdS4RufH3Nb9gLfEjnuhfT0=
+X-Google-Smtp-Source: AKy350aSZ0ogFp8y55zCmLsghq92v+eab4GmjRhmzl2lUP7Ai4SILM+68B2FMmp0r+I/N2CUHcFWng==
+X-Received: by 2002:a7b:cd09:0:b0:3f1:6980:2d2e with SMTP id f9-20020a7bcd09000000b003f169802d2emr9984982wmj.22.1682406858687;
+        Tue, 25 Apr 2023 00:14:18 -0700 (PDT)
+Received: from lucifer.home (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
+        by smtp.googlemail.com with ESMTPSA id c16-20020a05600c0ad000b003f198dfbbfcsm8382138wmr.19.2023.04.25.00.14.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Apr 2023 00:14:17 -0700 (PDT)
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>
+Subject: [PATCH v3] mm/gup: disallow GUP writing to file-backed mappings by default
+Date:   Tue, 25 Apr 2023 08:14:14 +0100
+Message-Id: <23c19e27ef0745f6d3125976e047ee0da62569d4.1682406295.git.lstoakes@gmail.com>
+X-Mailer: git-send-email 2.40.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 11:42=E2=80=AFPM Doug Anderson <dianders@chromium.o=
-rg> wrote:
->
-> Hi,
->
-> On Mon, Apr 24, 2023 at 5:54=E2=80=AFAM Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
-> >
-> > On Fri, Apr 21, 2023 at 03:53:30PM -0700, Douglas Anderson wrote:
-> > > From: Colin Cross <ccross@android.com>
-> > >
-> > > Implement a hardlockup detector that can be enabled on SMP systems
-> > > that don't have an arch provided one or one implemented atop perf by
-> > > using interrupts on other cpus. Each cpu will use its softlockup
-> > > hrtimer to check that the next cpu is processing hrtimer interrupts b=
-y
-> > > verifying that a counter is increasing.
-> > >
-> > > NOTE: unlike the other hard lockup detectors, the buddy one can't
-> > > easily provide a backtrace on the CPU that locked up. It relies on
-> > > some other mechanism in the system to get information about the locke=
-d
-> > > up CPUs. This could be support for NMI backtraces like [1], it could
-> > > be a mechanism for printing the PC of locked CPUs like [2], or it
-> > > could be something else.
-> > >
-> > > This style of hardlockup detector originated in some downstream
-> > > Android trees and has been rebased on / carried in ChromeOS trees for
-> > > quite a long time for use on arm and arm64 boards. Historically on
-> > > these boards we've leveraged mechanism [2] to get information about
-> > > hung CPUs, but we could move to [1].
-> >
-> > On the Arm platforms is this code able to leverage the existing
-> > infrastructure to extract status from stuck CPUs:
-> > https://docs.kernel.org/trace/coresight/coresight-cpu-debug.html
->
-> Yup! I wasn't explicit about this, but that's where you end up if you
-> follow the whole bug tracker item that was linked as [2].
-> Specifically, we used to have downstream patches in the ChromeOS that
-> just reached into the coresight range from a SoC specific driver and
-> printed out the CPU_DBGPCSR. When Brian was uprevving rk3399
-> Chromebooks he found that the equivalent functionality had made it
-> upstream in a generic way through the coresight framework. Brian
-> confirmed it was working on rk3399 and made all of the device tree
-> changes needed to get it all hooked up, so (at least for that SoC) it
-> should work on that SoC.
->
-> [2] https://issuetracker.google.com/172213129
+GUP does not correctly implement write-notify semantics, nor does it
+guarantee that the underlying pages are correctly dirtied, which could lead
+to a kernel oops or data corruption when writing to file-backed mappings.
 
-IIRC with the coresight CPU debug driver enabled and the proper DT nodes
-added, the panic handler does dump out information from the hardware.
-I don't think it's wired up for hung tasks though.
+This is only relevant when the mappings are file-backed and the underlying
+file system requires folio dirty tracking. File systems which do not, such
+as shmem or hugetlb, are not at risk and therefore can be written to
+without issue.
 
-ChenYu
+Unfortunately this limitation of GUP has been present for some time and
+requires future rework of the GUP API in order to provide correct write
+access to such mappings.
+
+In the meantime, we add a check for the most broken GUP case -
+FOLL_LONGTERM - which really under no circumstances can safely access
+dirty-tracked file mappings.
+
+Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+---
+v3:
+- Rebased on latest mm-unstable as of 24th April 2023.
+- Explicitly check whether file system requires folio dirtying. Note that
+  vma_wants_writenotify() could not be used directly as it is very much focused
+  on determining if the PTE r/w should be set (e.g. assuming private mapping
+  does not require it as already set, soft dirty considerations).
+- Tested code against shmem and hugetlb mappings - confirmed that these are not
+  disallowed by the check.
+- Eliminate FOLL_ALLOW_BROKEN_FILE_MAPPING flag and instead perform check only
+  for FOLL_LONGTERM pins.
+- As a result, limit check to internal GUP code.
+
+v2:
+- Add accidentally excluded ptrace_access_vm() use of
+  FOLL_ALLOW_BROKEN_FILE_MAPPING.
+- Tweak commit message.
+https://lore.kernel.org/all/c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com/
+
+v1:
+https://lore.kernel.org/all/f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com/
+
+ mm/gup.c | 48 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
+
+diff --git a/mm/gup.c b/mm/gup.c
+index 1f72a717232b..f77810ee8a9f 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -4,6 +4,7 @@
+ #include <linux/err.h>
+ #include <linux/spinlock.h>
+
++#include <linux/backing-dev.h>
+ #include <linux/mm.h>
+ #include <linux/memremap.h>
+ #include <linux/pagemap.h>
+@@ -959,16 +960,58 @@ static int faultin_page(struct vm_area_struct *vma,
+ 	return 0;
+ }
+
++/*
++ * Writing to file-backed mappings which require folio dirty tracking using GUP
++ * is a fundamentally broken operation as kernel write access to GUP mappings
++ * may not adhere to the semantics expected by a file system.
++ */
++static inline bool can_write_file_mapping(struct vm_area_struct *vma,
++					  unsigned long gup_flags)
++{
++	const struct vm_operations_struct *vm_ops = vma->vm_ops;
++	const struct file *file = vma->vm_file;
++
++	/* If we aren't pinning then no problematic write can occur. */
++	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
++		return true;
++
++	/* We limit this check to the most egregious case - a long term pin. */
++	if (!(gup_flags & FOLL_LONGTERM))
++		return true;
++
++	/*
++	 * If the underlying file system needs to be notified of writes, then it
++	 * requires correct dirty tracking which we cannot guarantee.
++	 */
++	if (vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite))
++		return false;
++
++	/*
++	 * If no pfn_mkwrite() is specified, no dirty tracking is required for a
++	 * PFN map.
++	 */
++	if (vma->vm_flags & VM_PFNMAP)
++		return true;
++
++	/*
++	 * Even if the file system does not require write notification, if its
++	 * underlying mapping can writeback, dirty tracking will be required.
++	 */
++	return !file || !file->f_mapping ||
++		!mapping_can_writeback(file->f_mapping);
++}
++
+ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+ {
+ 	vm_flags_t vm_flags = vma->vm_flags;
+ 	int write = (gup_flags & FOLL_WRITE);
+ 	int foreign = (gup_flags & FOLL_REMOTE);
++	bool vma_anon = vma_is_anonymous(vma);
+
+ 	if (vm_flags & (VM_IO | VM_PFNMAP))
+ 		return -EFAULT;
+
+-	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
++	if ((gup_flags & FOLL_ANON) && !vma_anon)
+ 		return -EFAULT;
+
+ 	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
+@@ -978,6 +1021,9 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+ 		return -EFAULT;
+
+ 	if (write) {
++		if (!vma_anon && !can_write_file_mapping(vma, gup_flags))
++			return -EFAULT;
++
+ 		if (!(vm_flags & VM_WRITE)) {
+ 			if (!(gup_flags & FOLL_FORCE))
+ 				return -EFAULT;
+--
+2.40.0
