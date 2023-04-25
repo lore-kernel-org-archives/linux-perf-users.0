@@ -2,153 +2,185 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF97C6FD18
-	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 10:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0626CC77B61
+	for <linux-perf-users@archiver.kernel.org>; Tue, 25 Apr 2023 10:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233663AbjDYKMI (ORCPT
+        id S233329AbjDYKbq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Apr 2023 06:12:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56396 "EHLO
+        Tue, 25 Apr 2023 06:31:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233615AbjDYKMH (ORCPT
+        with ESMTP id S233655AbjDYKbo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Apr 2023 06:12:07 -0400
-Received: from wnew1-smtp.messagingengine.com (wnew1-smtp.messagingengine.com [64.147.123.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 044CDC15B;
-        Tue, 25 Apr 2023 03:12:05 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.west.internal (Postfix) with ESMTP id 1B7DD2B0671D;
-        Tue, 25 Apr 2023 06:12:02 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Tue, 25 Apr 2023 06:12:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-         h=cc:cc:content-type:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm1; t=1682417521; x=
-        1682424721; bh=6ykmRoJ2ViKku45z63OOrhQO86nvESrAdiWG+K7bYwg=; b=c
-        TDVrrJwJKmBSLCZheZhCKbfhHj89iyuDI9vXtVPgz7Ym9svXdHwoke8YmZXCqthh
-        Dw/yM/Yh6/Jv7G+J6l6Hz8flfXI8blB1z1RdOTyprn4atgk5r/DyuW3RMbxU5w5R
-        Si1LutW9YV4Ae12xbcNxhUZ6Z0mRfVihmRIuRAt3clBMGEoo68fwSqrMZtChKUZD
-        vtUDX/Ybm48ar48ml6553kpg21Diy6e3UNUHLcKlx+Wmw0n6bt/9aNBmpO2rsJ2g
-        9jb58e80XBwgakjaHtHw/nkJ0wasVCDg+Kvn6VcIvfTlQ/NiJJyWfBkmhvmETTEj
-        zHTqFHPh2Hhe3XEIN54aw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1682417521; x=1682424721; bh=6ykmRoJ2ViKku
-        45z63OOrhQO86nvESrAdiWG+K7bYwg=; b=WJYj4cV/CB4Wt++zgV0y3XLrBW2V8
-        IdDYNBmyW2TZ1BrHyTSM9xB23HAFhIxnRPIIfMUl4cwi3LitMeI4niSUQDfl9LDx
-        OPYbWpYhJlZmJg03JnqcJmvWCtPqpqA/6HouMN/xIHvYuPM5P5dx0vYavhlOn8Tm
-        5LsAwNBieltv76YqxmRogvh50Xm6vyEAdzjio6lCgUIoZsNnqvgWFgioK8zPaaKw
-        hMhwsBKgdekr/gn033pJNRMzyaELXGIdSWOA4MneADwWnj/xsxdsheSx2jvrh+oG
-        UnZN4Re0NkR2JE7gRX8TD+r9w+ApJAQWuqc3dDXd9mB2rjvlwdtOVKDMw==
-X-ME-Sender: <xms:badHZHZYeUEJENgpRE-Mpgrt1Kvgbk2MbTmcyCjfaBtU_2hp4c4IQA>
-    <xme:badHZGbK4g4wsD9GCgR3WiRiO_Iia6kZTZANxPHNHZF7XueO7yYEp0ernSM95mBun
-    XnNqO-UuaPRKcTMugA>
-X-ME-Received: <xmr:badHZJ8p0BmVMjsWocvSADfdKF8pvgWXCejORpFkadjfYUkLpzXhOisfhMbwrbdPYMUaVw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeduvddgvdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdttddttddtvdenucfhrhhomhepfdfmihhr
-    ihhllhcutecurdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhesshhhuhhtvghmohhvrd
-    hnrghmvgeqnecuggftrfgrthhtvghrnhepgfdtveeugeethfffffeklefgkeelgfekfedt
-    heeileetuefhkeefleduvddtkeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgv
-X-ME-Proxy: <xmx:badHZNr-fYgDaMsdl0i06VFTXfz4uwQu1qn-h1U2NkURVghgIOZnjA>
-    <xmx:badHZCoj2YlNzXGd--O7PUdLSPYnUr9pSyEqOofDPvkdLLGnyL_tTA>
-    <xmx:badHZDRRqh6NXkdKb-2c7-BTlI6SRGXQ9rU1uFuPtofbAfFpt2ZXzQ>
-    <xmx:cadHZPqdozY9VQMi-DJd91YwjAyNau4zQj66k-gSVvDIlBKXdE7pyUOlFp8>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 25 Apr 2023 06:11:57 -0400 (EDT)
-Received: by box.shutemov.name (Postfix, from userid 1000)
-        id F3F9D10BAC9; Tue, 25 Apr 2023 13:11:53 +0300 (+03)
-Date:   Tue, 25 Apr 2023 13:11:53 +0300
-From:   "Kirill A . Shutemov" <kirill@shutemov.name>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Subject: Re: [PATCH v3] mm/gup: disallow GUP writing to file-backed mappings
- by default
-Message-ID: <20230425101153.xxi4arpwkz7ijnvm@box.shutemov.name>
-References: <23c19e27ef0745f6d3125976e047ee0da62569d4.1682406295.git.lstoakes@gmail.com>
+        Tue, 25 Apr 2023 06:31:44 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9B5719AB;
+        Tue, 25 Apr 2023 03:31:42 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Q5JDf42SQzKtLX;
+        Tue, 25 Apr 2023 18:30:42 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 25 Apr 2023 18:31:39 +0800
+Subject: Re: [PATCH v2] perf/core: Fix perf_sample_data not properly
+ initialized for different swevents in perf_tp_event()
+To:     <peterz@infradead.org>
+CC:     <oe-lkp@lists.linux.dev>, <lkp@intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, kernel test robot <yujie.liu@intel.com>
+References: <202304250929.efef2caa-yujie.liu@intel.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <0701d0b2-1cf4-6485-8566-1be8bfee82f5@huawei.com>
+Date:   Tue, 25 Apr 2023 18:31:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23c19e27ef0745f6d3125976e047ee0da62569d4.1682406295.git.lstoakes@gmail.com>
+In-Reply-To: <202304250929.efef2caa-yujie.liu@intel.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 25, 2023 at 08:14:14AM +0100, Lorenzo Stoakes wrote:
-> GUP does not correctly implement write-notify semantics, nor does it
-> guarantee that the underlying pages are correctly dirtied, which could lead
-> to a kernel oops or data corruption when writing to file-backed mappings.
-> 
-> This is only relevant when the mappings are file-backed and the underlying
-> file system requires folio dirty tracking. File systems which do not, such
-> as shmem or hugetlb, are not at risk and therefore can be written to
-> without issue.
-> 
-> Unfortunately this limitation of GUP has been present for some time and
-> requires future rework of the GUP API in order to provide correct write
-> access to such mappings.
-> 
-> In the meantime, we add a check for the most broken GUP case -
-> FOLL_LONGTERM - which really under no circumstances can safely access
-> dirty-tracked file mappings.
-> 
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
-> ---
-> v3:
-> - Rebased on latest mm-unstable as of 24th April 2023.
-> - Explicitly check whether file system requires folio dirtying. Note that
->   vma_wants_writenotify() could not be used directly as it is very much focused
->   on determining if the PTE r/w should be set (e.g. assuming private mapping
->   does not require it as already set, soft dirty considerations).
+Hello,
 
-Hm. Okay. Have you considered having a common base for your case and
-vma_wants_writenotify()? Code duplication doesn't look good.
+On 2023/4/25 9:30, kernel test robot wrote:
+> Hello,
+> 
+> kernel test robot noticed "BUG:kernel_NULL_pointer_dereference,address" on:
+> 
+> commit: 05c59c1290536838e52ecc12022d49421edd596c ("[PATCH v2] perf/core: Fix perf_sample_data not properly initialized for different swevents in perf_tp_event()")
+> url: https://github.com/intel-lab-lkp/linux/commits/Yang-Jihong/perf-core-Fix-perf_sample_data-not-properly-initialized-for-different-swevents-in-perf_tp_event/20230419-105225
+> base: https://git.kernel.org/cgit/linux/kernel/git/acme/linux.git perf/core
+> patch link: https://lore.kernel.org/all/20230419024832.181874-1-yangjihong1@huawei.com/
+> patch subject: [PATCH v2] perf/core: Fix perf_sample_data not properly initialized for different swevents in perf_tp_event()
+> 
+> in testcase: phoronix-test-suite
+> version:
+> with following parameters:
+> 
+> 	need_x: true
+> 	test: jxrendermark-1.2.4
+> 	option_a: Transformed Texture Paint
+> 	option_b: 1024x1024
+> 	cpufreq_governor: performance
+> 
+> test-description: The Phoronix Test Suite is the most comprehensive testing and benchmarking platform available that provides an extensible framework for which new tests can be easily added.
+> test-url: http://www.phoronix-test-suite.com/
+> 
+> compiler: gcc-11
+> test machine: 12 threads 1 sockets Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz (Coffee Lake) with 32G memory
+> 
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+> 
+> 
+> If you fix the issue, kindly add following tag
+> | Reported-by: kernel test robot <yujie.liu@intel.com>
+> | Link: https://lore.kernel.org/oe-lkp/202304250929.efef2caa-yujie.liu@intel.com
+> 
+> 
+> [   68.743429][ T1498] BUG: kernel NULL pointer dereference, address: 0000000000000402
+> [   68.751129][ T1498] #PF: supervisor read access in kernel mode
+> [   68.756992][ T1498] #PF: error_code(0x0000) - not-present page
+> [   68.762853][ T1498] PGD 0 P4D 0
+> [   68.766101][ T1498] Oops: 0000 [#1] SMP PTI
+> [   68.770307][ T1498] CPU: 0 PID: 1498 Comm: wait Tainted: G S                 6.3.0-rc1-00525-g05c59c129053 #1
+> [   68.780261][ T1498] Hardware name: Dell Inc. OptiPlex 7060/0C96W1, BIOS 1.4.2 06/11/2019
+> [ 68.788385][ T1498] RIP: 0010:perf_tp_event (kernel/events/core.c:10049 kernel/events/core.c:10072 kernel/events/core.c:10060 kernel/events/core.c:10150)
+> [ 68.793552][ T1498] Code: e0 01 00 00 01 0f 85 c5 00 00 00 41 f6 87 00 01 00 00 20 74 0d f6 83 88 00 00 00 03 0f 84 ae 00 00 00 48 8b 84 24 90 00 00 00 <48> 8b 70 10 49 8b 87 80 02 00 00 48 85 c0 49 0f 44 c7 48 8b b8 00
+> All code
+> ========
+>     0:	e0 01                	loopne 0x3
+>     2:	00 00                	add    %al,(%rax)
+>     4:	01 0f                	add    %ecx,(%rdi)
+>     6:	85 c5                	test   %eax,%ebp
+>     8:	00 00                	add    %al,(%rax)
+>     a:	00 41 f6             	add    %al,-0xa(%rcx)
+>     d:	87 00                	xchg   %eax,(%rax)
+>     f:	01 00                	add    %eax,(%rax)
+>    11:	00 20                	add    %ah,(%rax)
+>    13:	74 0d                	je     0x22
+>    15:	f6 83 88 00 00 00 03 	testb  $0x3,0x88(%rbx)
+>    1c:	0f 84 ae 00 00 00    	je     0xd0
+>    22:	48 8b 84 24 90 00 00 	mov    0x90(%rsp),%rax
+>    29:	00
+>    2a:*	48 8b 70 10          	mov    0x10(%rax),%rsi		<-- trapping instruction
+>    2e:	49 8b 87 80 02 00 00 	mov    0x280(%r15),%rax
+>    35:	48 85 c0             	test   %rax,%rax
+>    38:	49 0f 44 c7          	cmove  %r15,%rax
+>    3c:	48                   	rex.W
+>    3d:	8b                   	.byte 0x8b
+>    3e:	b8                   	.byte 0xb8
+> 	...
+> 
+> Code starting with the faulting instruction
+> ===========================================
+>     0:	48 8b 70 10          	mov    0x10(%rax),%rsi
+>     4:	49 8b 87 80 02 00 00 	mov    0x280(%r15),%rax
+>     b:	48 85 c0             	test   %rax,%rax
+>     e:	49 0f 44 c7          	cmove  %r15,%rax
+>    12:	48                   	rex.W
+>    13:	8b                   	.byte 0x8b
+>    14:	b8                   	.byte 0xb8
+> 	...
+> [   68.813083][ T1498] RSP: 0018:ffffc90002693c00 EFLAGS: 00010046
+> [   68.819031][ T1498] RAX: 00000000000003f2 RBX: ffff888853e29cc0 RCX: 000000000000000f
+> [   68.826894][ T1498] RDX: 00000000000005da RSI: 0000000000000000 RDI: 0000000000010000
+> [   68.834758][ T1498] RBP: ffffc90002693db0 R08: ffff888853e29cc0 R09: ffffe8ffffa0dca8
+> [   68.842621][ T1498] R10: 00000000000003f2 R11: 0000000000000000 R12: 0000000000000001
+> [   68.850484][ T1498] R13: ffffe8ffffa1f120 R14: 0000000000000000 R15: ffff88811b247020
+> [   68.858348][ T1498] FS:  0000000000000000(0000) GS:ffff888853e00000(0000) knlGS:0000000000000000
+> [   68.867169][ T1498] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   68.873637][ T1498] CR2: 0000000000000402 CR3: 000000087b418004 CR4: 00000000003706f0
+> [   68.881501][ T1498] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   68.889366][ T1498] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   68.897233][ T1498] Call Trace:
+> [   68.900395][ T1498]  <TASK>
+> [ 68.903206][ T1498] ? perf_trace_sched_wakeup_template (include/trace/events/sched.h:141 (discriminator 11))
+> [ 68.909330][ T1498] ? ttwu_do_activate (arch/x86/include/asm/preempt.h:85 include/trace/events/sched.h:178 kernel/sched/core.c:3685 kernel/sched/core.c:3712)
+> [ 68.914232][ T1498] ? try_to_wake_up (kernel/sched/core.c:4279)
+> [ 68.918962][ T1498] ? update_load_avg (kernel/sched/fair.c:3863 kernel/sched/fair.c:4198)
+> [ 68.923689][ T1498] perf_trace_sched_switch (include/trace/events/sched.h:222)
+> [ 68.929032][ T1498] __schedule (arch/x86/include/asm/preempt.h:85 include/trace/events/sched.h:222 kernel/sched/core.c:6619)
+> [ 68.933246][ T1498] do_task_dead (kernel/sched/core.c:6641)
+> [ 68.937456][ T1498] do_exit (include/trace/events/sched.h:333 kernel/exit.c:860)
+> [ 68.941410][ T1498] ? do_sys_openat2 (fs/open.c:1358)
+> [ 68.946056][ T1498] do_group_exit (kernel/exit.c:1001)
+> [ 68.950358][ T1498] __x64_sys_exit_group (kernel/exit.c:1030)
+> [ 68.955267][ T1498] do_syscall_64 (arch/x86/entry/common.c:50 arch/x86/entry/common.c:80)
+> [ 68.959565][ T1498] entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:120)
+> [   68.965340][ T1498] RIP: 0033:0x43dc26
+> [ 68.969110][ T1498] Code: Unable to access opcode bytes at 0x43dbfc.
+> 
+> Code starting with the faulting instruction
+> ===========================================
+> [   68.975489][ T1498] RSP: 002b:00007ffcbf3b4fd8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+> [   68.983788][ T1498] RAX: ffffffffffffffda RBX: 00000000004a93d0 RCX: 000000000043dc26
+> [   68.991652][ T1498] RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
+> [   68.999515][ T1498] RBP: 0000000000000000 R08: 00000000000000e7 R09: ffffffffffffffc0
+> [   69.007379][ T1498] R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004a93d0
+> [   69.015242][ T1498] R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000001
+> [   69.023109][ T1498]  </TASK>
+> [   69.026010][ T1498] Modules linked in: sg ip_tables overlay rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver btrfs blake2b_generic xor raid6_pq libcrc32c intel_rapl_msr intel_rapl_common x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm sd_mod t10_pi irqbypass crct10dif_pclmul crc64_rocksoft_generic crc32_pclmul crc64_rocksoft crc32c_intel crc64 ghash_clmulni_intel i915 sha512_ssse3 drm_buddy intel_gtt drm_display_helper rapl drm_kms_helper mei_wdt syscopyarea ahci sysfillrect intel_cstate libahci sysimgblt mei_me wmi_bmof intel_wmi_thunderbolt ttm i2c_designware_platform intel_uncore video mei idma64 libata i2c_designware_core drm intel_pch_thermal wmi intel_pmc_core acpi_pad
+> [   69.086955][ T1498] CR2: 0000000000000402
+> [   69.090993][ T1498] ---[ end trace 0000000000000000 ]---
+> 
+> 
 
+data->raw->frag.data may be accessed in perf_tp_event_match().
+we may need to init sample_data and then go through swevent hlist to 
+prevent reference of NULL pointer.
 
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+I will send the v3 version. Please check whether the solution is OK.
+
+Thanks,
+Yang
