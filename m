@@ -2,65 +2,67 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D6BC77B60
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 05:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A0EC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 07:01:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239144AbjDZFme (ORCPT
+        id S239684AbjDZHBS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Apr 2023 01:42:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52144 "EHLO
+        Wed, 26 Apr 2023 03:01:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230435AbjDZFmd (ORCPT
+        with ESMTP id S239664AbjDZHBL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Apr 2023 01:42:33 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4CAE10E
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Apr 2023 22:42:32 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-3f19ab99540so42897445e9.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Apr 2023 22:42:32 -0700 (PDT)
+        Wed, 26 Apr 2023 03:01:11 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF652102;
+        Wed, 26 Apr 2023 00:00:57 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-2f55ffdbaedso4196550f8f.2;
+        Wed, 26 Apr 2023 00:00:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1682487751; x=1685079751;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QAlKjkZlYiS/M9sDjOvQPaGX1RECu1oiyZsTxZm3cVA=;
-        b=BRHvhopr81XtR7ioaSYEpa2HHVUfKy2XIJgfQkOh5R3eyLnIgReyaYbXi55SgKRkvQ
-         2x4NeWvfP+m0NvQpaxTrXyJTEWKmXVNM76rhmKwDO39WgKR2IqppA90ssp77cW7l+sMh
-         X1APAlakl/4i8OhjpSvaczkMLlHA3JH65oT2s=
+        d=gmail.com; s=20221208; t=1682492456; x=1685084456;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7/YWmwgvXwDCheOphPVsxeQwjXr2X0sXbZUbiV8/qiY=;
+        b=Y0C7ltP0MmwYGVOj6/3WhOxUn/325ozQ8Ule72oKYnXxtERDk5+GyiV+7wTDdc5Xvf
+         spsIpcZ2d8vhPriSlMN0AFd5ayiPbKuv9ZgcaMlhmtguNx//Dj1XH5BtP3GfDqQroHfv
+         T3l3kqKPhJtkg68e8GYONnIDkoXY1AUeZbbPTdfg2QreGEnlWHjJ+cgFhwbSyuP5dYPP
+         FiUh64wygVHIG77LmDu+JjGv339aib6vMOSkF7RurhMQRgOdTUgQ0GLH9HdrG65PLScq
+         x/5hoas/Gehy/WEV+GYqMfaIul+dfsFAnz4tOh5I5+iMehGf3Ovk8TAciNgu4ZRiABop
+         Fq2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682487751; x=1685079751;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QAlKjkZlYiS/M9sDjOvQPaGX1RECu1oiyZsTxZm3cVA=;
-        b=db4elqp6MSTPvX6j0ysd2HQMGZ3xDMlgOgLrFyaAwCnFnBHl55rx0tPMJVphgT/K0u
-         aQNyzSGfj4/v6OlmJ6Ox6jdEDYmRnH69oE3WHoTy8QbAXZKVFsEQr0v5y3QGma4CyWPB
-         SgzQPx/Y4N1SyljW+hPNlOTxGymNzbC/U/k0m8Gm44wfWquLBx0fBL/cqoEcfNAabJlI
-         6iKWVAWGOFKXO4MwlZJDuC+IIzQbYzNy/HR5O2Sp5p876Mou/0k+Y2ReesBfaf/24JNW
-         2ye7o/y3KDh8PqDNUzqL2pgoIOBPloeCrUSAIcL2z+HpZnPZW2+K2Wl/wyris4FxVJq7
-         vYMw==
-X-Gm-Message-State: AAQBX9c9b02sLEplfexAIZ3YXuFmOVEUlXsr4ijqxcmnwE8BsuiMnszs
-        YqS8/P5xp5uodx7mTuWMvPJSvODsG+JaS/vF38c//A==
-X-Google-Smtp-Source: AKy350azTF5Cz+YsYzhDQEbaSC7fCbwPbNUtEK2fGWS87SlSCUAcRZmsRWGupgYd2zEybhGkEGy7+LIkyrw02QCxj6I=
-X-Received: by 2002:a7b:cb8a:0:b0:3f1:7368:ccc6 with SMTP id
- m10-20020a7bcb8a000000b003f17368ccc6mr11173389wmi.25.1682487751190; Tue, 25
- Apr 2023 22:42:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230424134748.228137-1-james.clark@arm.com> <20230424134748.228137-2-james.clark@arm.com>
- <8acae291-2c3f-6010-de66-d4e54781d21f@arm.com>
-In-Reply-To: <8acae291-2c3f-6010-de66-d4e54781d21f@arm.com>
-From:   Denis Nikitin <denik@chromium.org>
-Date:   Tue, 25 Apr 2023 22:42:19 -0700
-Message-ID: <CADDJ8CWdKQR_-hgLqYdB6QyMZwzkZMtZ5gkoth3Uj7O7i3Cfvg@mail.gmail.com>
-Subject: Re: [PATCH 1/7] perf: cs-etm: Fix timeless decode mode detection
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
-        shy828301@gmail.com, denik@google.com,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
+        d=1e100.net; s=20221208; t=1682492456; x=1685084456;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7/YWmwgvXwDCheOphPVsxeQwjXr2X0sXbZUbiV8/qiY=;
+        b=M0yuXsxarG+OKNo3RFwTnnMLiaR/qQkixGrrIxzvM9AMDunV7qzlipwXa5YOMFNqDH
+         QSfUK08thc6PmC0tVDu0y0orWzJrRlAuUZahMgJcwH3QZmFjxUpP6odBzsM7/G4Jhk7b
+         TzP0nAAaguSHcGcQjusSjSgg/Z34MYd2J4RAj32rvdhFqSLlK9hNSsvI81GKUorFo4fN
+         T0NLujr7yVu3q/HNmU6I6iQU3LYhliQU/BegOXec4DMLT7jMAhtqh5MavsvjnyL8KxNe
+         XNgwfnpVpw02Zjsb/ZGuuYW0Shw4wr05Zeqs6bCdLaGcQT93eFWYPkKhw4uwkDeEuYeA
+         oC+g==
+X-Gm-Message-State: AAQBX9cBIYLWB65nycRh0Z9oV3h07SWarQeOnc1mjrlaX/BuYSMpN9z+
+        dB/OX5OoQHjS+L3cMwXjJPo=
+X-Google-Smtp-Source: AKy350bY4MEOjK1YDo3fYvDL+vTKok3nznnxqs8hfDObulF1FU+17WKszasxGr5S5JXMNPiLy4hyFw==
+X-Received: by 2002:adf:f7c5:0:b0:2fb:87f7:3812 with SMTP id a5-20020adff7c5000000b002fb87f73812mr13025211wrq.1.1682492455885;
+        Wed, 26 Apr 2023 00:00:55 -0700 (PDT)
+Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
+        by smtp.gmail.com with ESMTPSA id m7-20020adfe0c7000000b003048477729asm4738407wri.81.2023.04.26.00.00.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Apr 2023 00:00:54 -0700 (PDT)
+Date:   Wed, 26 Apr 2023 08:00:53 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     Mika =?iso-8859-1?Q?Penttil=E4?= <mpenttil@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -70,82 +72,263 @@ Cc:     James Clark <james.clark@arm.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v4] mm/gup: disallow GUP writing to file-backed mappings
+ by default
+Message-ID: <5ffd7f32-d236-4da4-93f7-c2fe39a6e035@lucifer.local>
+References: <3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com>
+ <a68fa8f2-8619-63ff-3525-ede7ed1f0a9f@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a68fa8f2-8619-63ff-3525-ede7ed1f0a9f@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 8:14=E2=80=AFAM Suzuki K Poulose <suzuki.poulose@ar=
-m.com> wrote:
+On Wed, Apr 26, 2023 at 06:18:38AM +0300, Mika Penttilä wrote:
+> Hi,
 >
-> On 24/04/2023 14:47, James Clark wrote:
-> > In this context, timeless refers to the trace data rather than the perf
-> > event data. But when detecting whether there are timestamps in the trac=
-e
-> > data or not, the presence of a timestamp flag on any perf event is used=
-.
+>
+> On 26.4.2023 2.15, Lorenzo Stoakes wrote:
+> > GUP does not correctly implement write-notify semantics, nor does it
+> > guarantee that the underlying pages are correctly dirtied, which could lead
+> > to a kernel oops or data corruption when writing to file-backed mappings.
 > >
-> > Since commit f42c0ce573df ("perf record: Always get text_poke events
-> > with --kcore option") timestamps were added to a tracking event when
-> > --kcore is used which breaks this detection mechanism. Fix it by
-> > detecting if trace timestamps exist by looking at the ETM config flags.
-> > This would have always been a more accurate way of doing it anyway.
+> > This is only relevant when the mappings are file-backed and the underlying
+> > file system requires folio dirty tracking. File systems which do not, such
+> > as shmem or hugetlb, are not at risk and therefore can be written to
+> > without issue.
 > >
-> > This fixes the following error message when using --kcore with
-> > Coresight:
+> > Unfortunately this limitation of GUP has been present for some time and
+> > requires future rework of the GUP API in order to provide correct write
+> > access to such mappings.
 > >
-> >    $ perf record --kcore -e cs_etm// --per-thread
-> >    $ perf report
-> >    The perf.data/data data has no samples!
+> > In the meantime, we add a check for the most broken GUP case -
+> > FOLL_LONGTERM - which really under no circumstances can safely access
+> > dirty-tracked file mappings.
 > >
-> > Fixes: f42c0ce573df ("perf record: Always get text_poke events with --k=
-core option")
-> > Reported-by: Yang Shi <shy828301@gmail.com>
-> > Link: https://lore.kernel.org/lkml/CAHbLzkrJQTrYBtPkf=3Djf3OpQ-yBcJe7Xk=
-vQstX9j2frz4WF-SQ@mail.gmail.com/
-> > Signed-off-by: James Clark <james.clark@arm.com>
+> > As part of this change we separate out vma_needs_dirty_tracking() as a
+> > helper function to determine this, which is distinct from
+> > vma_wants_writenotify() which is specific to determining which PTE flags to
+> > set.
+> >
+> > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
 > > ---
-> >   tools/perf/util/cs-etm.c | 30 ++++++++++++++++++------------
-> >   1 file changed, 18 insertions(+), 12 deletions(-)
+> > v4:
+> > - Split out vma_needs_dirty_tracking() from vma_wants_writenotify() to reduce
+> >    duplication and update to use this in the GUP check. Note that both separately
+> >    check vm_ops_needs_writenotify() as the latter needs to test this before the
+> >    vm_pgprot_modify() test, resulting in vma_wants_writenotify() checking this
+> >    twice, however it is such a small check this should not be egregious.
 > >
-> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> > index 8dd81ddd9e4e..50593289d53c 100644
-> > --- a/tools/perf/util/cs-etm.c
-> > +++ b/tools/perf/util/cs-etm.c
-> > @@ -2684,26 +2684,29 @@ static int cs_etm__process_auxtrace_event(struc=
-t perf_session *session,
-> >       return 0;
+> > v3:
+> > - Rebased on latest mm-unstable as of 24th April 2023.
+> > - Explicitly check whether file system requires folio dirtying. Note that
+> >    vma_wants_writenotify() could not be used directly as it is very much focused
+> >    on determining if the PTE r/w should be set (e.g. assuming private mapping
+> >    does not require it as already set, soft dirty considerations).
+> > - Tested code against shmem and hugetlb mappings - confirmed that these are not
+> >    disallowed by the check.
+> > - Eliminate FOLL_ALLOW_BROKEN_FILE_MAPPING flag and instead perform check only
+> >    for FOLL_LONGTERM pins.
+> > - As a result, limit check to internal GUP code.
+> >   https://lore.kernel.org/all/23c19e27ef0745f6d3125976e047ee0da62569d4.1682406295.git.lstoakes@gmail.com/
+> >
+> > v2:
+> > - Add accidentally excluded ptrace_access_vm() use of
+> >    FOLL_ALLOW_BROKEN_FILE_MAPPING.
+> > - Tweak commit message.
+> > https://lore.kernel.org/all/c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com/
+> >
+> > v1:
+> > https://lore.kernel.org/all/f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com/
+> >
+> >   include/linux/mm.h |  1 +
+> >   mm/gup.c           | 26 +++++++++++++++++++++++++-
+> >   mm/mmap.c          | 37 ++++++++++++++++++++++++++++---------
+> >   3 files changed, 54 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > index 37554b08bb28..f7da02fc89c6 100644
+> > --- a/include/linux/mm.h
+> > +++ b/include/linux/mm.h
+> > @@ -2433,6 +2433,7 @@ extern unsigned long move_page_tables(struct vm_area_struct *vma,
+> >   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
+> >   					    MM_CP_UFFD_WP_RESOLVE)
+> > +bool vma_needs_dirty_tracking(struct vm_area_struct *vma);
+> >   int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot);
+> >   static inline bool vma_wants_manual_pte_write_upgrade(struct vm_area_struct *vma)
+> >   {
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index 1f72a717232b..53652453037c 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -959,16 +959,37 @@ static int faultin_page(struct vm_area_struct *vma,
+> >   	return 0;
 > >   }
-> >
-> > -static bool cs_etm__is_timeless_decoding(struct cs_etm_auxtrace *etm)
-> > +static int cs_etm__setup_timeless_decoding(struct cs_etm_auxtrace *etm=
-)
+> > +/*
+> > + * Writing to file-backed mappings which require folio dirty tracking using GUP
+> > + * is a fundamentally broken operation as kernel write access to GUP mappings
+> > + * may not adhere to the semantics expected by a file system.
+> > + */
+> > +static inline bool can_write_file_mapping(struct vm_area_struct *vma,
+> > +					  unsigned long gup_flags)
+> > +{
+> > +	/* If we aren't pinning then no problematic write can occur. */
+> > +	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
+> > +		return true;
+> > +
+> > +	/* We limit this check to the most egregious case - a long term pin. */
+> > +	if (!(gup_flags & FOLL_LONGTERM))
+> > +		return true;
+> > +
+> > +	/* If the VMA requires dirty tracking then GUP will be problematic. */
+> > +	return vma_needs_dirty_tracking(vma);
+> > +}
+> > +
+> >   static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+> >   {
+> >   	vm_flags_t vm_flags = vma->vm_flags;
+> >   	int write = (gup_flags & FOLL_WRITE);
+> >   	int foreign = (gup_flags & FOLL_REMOTE);
+> > +	bool vma_anon = vma_is_anonymous(vma);
+> >   	if (vm_flags & (VM_IO | VM_PFNMAP))
+> >   		return -EFAULT;
+> > -	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
+> > +	if ((gup_flags & FOLL_ANON) && !vma_anon)
+> >   		return -EFAULT;
+> >   	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
+> > @@ -978,6 +999,9 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+> >   		return -EFAULT;
+> >   	if (write) {
+> > +		if (!vma_anon && !can_write_file_mapping(vma, gup_flags))
+> > +			return -EFAULT;
+> > +
+> >   		if (!(vm_flags & VM_WRITE)) {
+> >   			if (!(gup_flags & FOLL_FORCE))
+> >   				return -EFAULT;
+> > diff --git a/mm/mmap.c b/mm/mmap.c
+> > index 536bbb8fa0ae..aac638dd22cf 100644
+> > --- a/mm/mmap.c
+> > +++ b/mm/mmap.c
+> > @@ -1475,6 +1475,32 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
+> >   }
+> >   #endif /* __ARCH_WANT_SYS_OLD_MMAP */
+> > +/* Do VMA operations imply write notify is required? */
+> > +static inline bool vm_ops_needs_writenotify(
+> > +	const struct vm_operations_struct *vm_ops)
+> > +{
+> > +	return vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite);
+> > +}
+> > +
+> > +/*
+> > + * Does this VMA require the underlying folios to have their dirty state
+> > + * tracked?
+> > + */
+> > +bool vma_needs_dirty_tracking(struct vm_area_struct *vma)
+> > +{
+> > +	/* Does the filesystem need to be notified? */
+> > +	if (vm_ops_needs_writenotify(vma->vm_ops))
+> > +		return true;
+> > +
+> > +	/* Specialty mapping? */
+> > +	if (vma->vm_flags & VM_PFNMAP)
+> > +		return false;
+> > +
+> > +	/* Can the mapping track the dirty pages? */
+> > +	return vma->vm_file && vma->vm_file->f_mapping &&
+> > +		mapping_can_writeback(vma->vm_file->f_mapping);
+> > +}
+> > +
 >
-> minor nit: "setup" sound more like prepare to do what is required to
-> do a timeless decoding, while we are doing more like, check if we
-> have to do a timeless decoding. So may be:
->
-> cs_etm_check_timeless_decoding() ?
->
+> What would be the exact reproducer of the problem? AFAIK writenotify is
+> handled (by handle_mm_fault()) for non cow mappings (shared), where it only
+> matters.
 
-I didn't catch that "setup_timeless_decoding" can be treated as the
-initialization
-of the timeless decoding. On the other hand _check_ doesn't imply that
-it changes
-the flag.
-Maybe "_setup_timeless_decoding_flag" will be more specific about its inten=
-tion?
+The issue is reproduced simply by page_to_virt(pinned_page)[0] = 'x' :)
 
-- Denis
+The problem is that no faulting actually occurs, so no writenotify, and no
+PG_dirty tracking does either. Unexpected page dirtying can occur even
+after they are cleaned in folio_clear_dirty_for_io(), because the caller
+might manually mark the page dirty at an unexpected time as with the
+unpin_*dirty*() helpers.
+
+I think the long-term solution is to provide a different interface where
+pages are passed back briefly with locks held and with a manual invocation
+of writeprotect, or perhaps some kthread_use_mm() thing so we actually
+trigger the faulting logic, but in the meantime this change helps restore
+some sanity.
 
 >
-> Otherwise, looks good to me
+> GUP will only allow FOLL_FORCE without faulting for PageAnonExclusive pages.
+> So if you want something beyond normal cow semantics you have custom vm_ops
+> (and mmap() and fault())
+
+This has nothing to do with FOLL_FORCE.
+
 >
-> Suzuki
+> Also for longterm pinning gups vs fork vs swap there has been fixes by david
+> recently.
+
+I don't think these are relevant in any way to this issue.
+
 >
 >
-> _______________________________________________
-> CoreSight mailing list -- coresight@lists.linaro.org
-> To unsubscribe send an email to coresight-leave@lists.linaro.org
+>
+> >   /*
+> >    * Some shared mappings will want the pages marked read-only
+> >    * to track write events. If so, we'll downgrade vm_page_prot
+> > @@ -1484,14 +1510,13 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
+> >   int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
+> >   {
+> >   	vm_flags_t vm_flags = vma->vm_flags;
+> > -	const struct vm_operations_struct *vm_ops = vma->vm_ops;
+> >   	/* If it was private or non-writable, the write bit is already clear */
+> >   	if ((vm_flags & (VM_WRITE|VM_SHARED)) != ((VM_WRITE|VM_SHARED)))
+> >   		return 0;
+> >   	/* The backer wishes to know when pages are first written to? */
+> > -	if (vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite))
+> > +	if (vm_ops_needs_writenotify(vma->vm_ops))
+> >   		return 1;
+> >   	/* The open routine did something to the protections that pgprot_modify
+> > @@ -1511,13 +1536,7 @@ int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
+> >   	if (userfaultfd_wp(vma))
+> >   		return 1;
+> > -	/* Specialty mapping? */
+> > -	if (vm_flags & VM_PFNMAP)
+> > -		return 0;
+> > -
+> > -	/* Can the mapping track the dirty pages? */
+> > -	return vma->vm_file && vma->vm_file->f_mapping &&
+> > -		mapping_can_writeback(vma->vm_file->f_mapping);
+> > +	return vma_needs_dirty_tracking(vma);
+> >   }
+> >   /*
+>
+>
+> --Mika
+>
