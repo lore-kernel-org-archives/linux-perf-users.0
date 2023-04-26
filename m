@@ -2,49 +2,63 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E469C77B78
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 10:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CD4C7618E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 12:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240046AbjDZKmB (ORCPT
+        id S240267AbjDZMGu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Apr 2023 06:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37308 "EHLO
+        Wed, 26 Apr 2023 08:06:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229937AbjDZKmA (ORCPT
+        with ESMTP id S240805AbjDZMGr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Apr 2023 06:42:00 -0400
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2134.outbound.protection.outlook.com [40.107.21.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CFD646BC;
-        Wed, 26 Apr 2023 03:41:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LG8+Eoz4WPIpCgZj8OhYZlMsziInJJtSOwPuTOsJ8bGVo6YLyINiZJNZL+Ypl2Biz18Ia4J2D/rwJPaFBxhZVxeZCkaAtao3GEz4roMoTqOkmfQAZIH825CFzwfXXSyast/3iy6Ny1rqTiyhDT8GBgQm8T7PcvdD1pphhec9U2jB+UHiStb9o+XWPTySeJ4ZI7uUNcFZ20cgJYYyF19BGCO5JCjsrJGK2CYP7B/KMgob/cW96c52OK+lb0zixCedBh2y79fCqxsktqkm5WK907ph2Y3WW/NY6x4AYnhajFIWZXB0+qiTtMQUuiwfAiF//OmE93eQ35Cl2lwF8qtbZA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Qu8USnRP+LQisbAxv7nzB6SeUzWZUbFaw7Y1TAMLR10=;
- b=PsL6jpS5hrKx1v8gQbXH0Y6I4sanx6kqiAzmBBWYTGPevIPoh0LyuADtzeOp1H593aiBGnCrpLeLZIhXe6sMzDwEme30rbCFUuHOiSciWSi3cBv9b4v4ygvjw5skvJdJvuavO4pYHiMstjG7ClxG2A+hFLYCDzRqKt1O6XERGHdTOyGsGMdIbTHa8GKSOaDXfUpqPC401Mrx28wazBqyh2SVzZ8BaVoZjYovllnEbUWnDGhG30cLyaJDJ6HsbAR9GBXJztIEPrNGDufHKj74lLDt+vs2e+oh9xPBm1X/0Xcf+Hamj3TG7UwO1iWZnlNt9SKBjMeh694pG4FL7tUE+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=est.tech; dmarc=pass action=none header.from=est.tech;
- dkim=pass header.d=est.tech; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=estab.onmicrosoft.com;
- s=selector2-estab-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qu8USnRP+LQisbAxv7nzB6SeUzWZUbFaw7Y1TAMLR10=;
- b=g1Kw38m+wbw+hI3nUIiemJenybKgtTmyCjvZnuoU0UpA60BbBJg/fWCXJ4oX6GFfSd+0AZ5iYmpGBaMrgkFF+/NapHGeAjv/v/0HbPnLtWB5sKyeV0tCm7stf7Gd2hekT6g754Tr3lI2wsUT04jbKM8GdpBCBq/pzCTQxOTwcMw=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=est.tech;
-Received: from DBBP189MB1433.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:1e7::15)
- by DB8P189MB1062.EURP189.PROD.OUTLOOK.COM (2603:10a6:10:166::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.21; Wed, 26 Apr
- 2023 10:41:53 +0000
-Received: from DBBP189MB1433.EURP189.PROD.OUTLOOK.COM
- ([fe80::c697:dbef:e1d6:c2b5]) by DBBP189MB1433.EURP189.PROD.OUTLOOK.COM
- ([fe80::c697:dbef:e1d6:c2b5%6]) with mapi id 15.20.6340.021; Wed, 26 Apr 2023
- 10:41:53 +0000
-From:   Sriram Yagnaraman <sriram.yagnaraman@est.tech>
-To:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 26 Apr 2023 08:06:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0B0DF3
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 05:06:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1682510764;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jFDSH4WwHCXG1GZOi2Gdi1eMYEtRupeUCnIDZyXD4QU=;
+        b=f0zyf71BiSgyDSzVtW1oqysJFAeb2ThgHaCmdFnOCWig0ObYDzcAP2PkSwyYQT8vwmq2Ug
+        KGT4NV5cbUNc/zyIAb5ZrnGZHpetjQJb55P69mCdZoaFNfwLgQFadcdiuShjWpLQczA67l
+        vnDPTxvs1xanmEHMbn4mrb4f/ax1Yao=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-655-9lkehW4-N6Skd8RmUFTwSQ-1; Wed, 26 Apr 2023 08:06:03 -0400
+X-MC-Unique: 9lkehW4-N6Skd8RmUFTwSQ-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f17afcf99cso25802675e9.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 05:06:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682510761; x=1685102761;
+        h=mime-version:message-id:date:references:in-reply-to:subject:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jFDSH4WwHCXG1GZOi2Gdi1eMYEtRupeUCnIDZyXD4QU=;
+        b=azxY4gLpdXoZWSgbg1WPDDlE6wGhcDC9xyU/+LnGzJw0tsLUVuXAPXN0jjh2+VN+Je
+         x67ySt5f81iwF6xFEr+61OsywV/Vp8O0GBjrXmf0WJ2b5XqrQAbtIuEEUrAiYsCWdyUp
+         pN9r1IBrhYMcoRHH8R3E6WUbsGfiGX3wGpexX82/VImO9RdGWYhKrXHgk/7aB14ynXIm
+         ecGGd+sLcL7DmtA6zPCUqAxevA2iqZHq4V42WX1twtjOhjC2mACiMc63Cs8nXMrGE6to
+         Wam0fuqWF2qwZ7AWdK6SDDygKqM5LCs1m55hPg7qQUrhXnsUmomF2OVMl7D+/OcANXH8
+         toMQ==
+X-Gm-Message-State: AAQBX9fj0XZqj6gneuPiBcbhSMSw4nTBGaXVnHrNlah50YD7ydw5PItY
+        b75TwitnjEFCFsb+Y5u/yte2DDWSWTc7a/BtOtL7kixH/M+GH35U4v+c6glykZKS2uo67V6QhGa
+        d+NQPL9Ipt/sdF7GoJBnqVTz4fJsFftOhdCyfAZPvgihwFVZWawDgpM0tyDd2K+CzTFQ36gSs4j
+        DwfgfHy/XlPeWfjw==
+X-Received: by 2002:a1c:4b05:0:b0:3f0:3d47:2cc5 with SMTP id y5-20020a1c4b05000000b003f03d472cc5mr12547174wma.10.1682510761453;
+        Wed, 26 Apr 2023 05:06:01 -0700 (PDT)
+X-Google-Smtp-Source: AKy350ZsW7afX9U8TokFcMXHHOCb5VbUOoq4RrK+iCDSXz+T2Nzq9KLP7DhOBkxolgKVvGBQwhoFzg==
+X-Received: by 2002:a1c:4b05:0:b0:3f0:3d47:2cc5 with SMTP id y5-20020a1c4b05000000b003f03d472cc5mr12547127wma.10.1682510761116;
+        Wed, 26 Apr 2023 05:06:01 -0700 (PDT)
+Received: from vschneid.remote.csb ([154.57.232.159])
+        by smtp.gmail.com with ESMTPSA id i1-20020a05600011c100b002cff06039d7sm15603734wrx.39.2023.04.26.05.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Apr 2023 05:06:00 -0700 (PDT)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     Wander Lairson Costa <wander@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -53,123 +67,97 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Sriram Yagnaraman <sriram.yagnaraman@est.tech>
-Subject: [PATCH] perf script: Align kfree_skb tracepoint parameters
-Date:   Wed, 26 Apr 2023 12:41:49 +0200
-Message-Id: <20230426104149.14089-1-sriram.yagnaraman@est.tech>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: GV2PEPF000000F8.SWEP280.PROD.OUTLOOK.COM
- (2603:10a6:144:1:0:1:0:22) To DBBP189MB1433.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:10:1e7::15)
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Wander Lairson Costa <wander@redhat.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH v7 0/3] Introduce put_task_struct_atomic_sleep()
+In-Reply-To: <20230425114307.36889-1-wander@redhat.com>
+References: <20230425114307.36889-1-wander@redhat.com>
+Date:   Wed, 26 Apr 2023 13:05:59 +0100
+Message-ID: <xhsmhr0s6kfvc.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DBBP189MB1433:EE_|DB8P189MB1062:EE_
-X-MS-Office365-Filtering-Correlation-Id: c92558ba-5ce3-4d44-2aed-08db4642d919
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bmUHEJQs5UjcscZ+OyRE5GqARLpdZk4cnXtRmfWgmFmKLFCE+GF+7ht4T2W2gQbBiLet01wWKRikfM8ip/COoMrCP9jQloNZHaKv4oVHQowgJ/NciR97gDjehkdVWU5EovWwq2JP7V1KLW/3KvRQJaH0Umvi7F5U7PIrx4CunhFiawAYFX8+d3anzh9pPNdCwFYKWY+p3EefIdUUaQR9KxoI+MpQgwwl91UJA/fygROKyPr1dJKD11E60j9qbYhN5IE5zq+qabRXu4b6hqSeLp05ggLi8mfqwKfgqI0TV2ai6a5zddCwlr7J87LhyIYAoDSMiwNYT3TIay4guHuKkzdBMojsLqohY9tQ5Ej2PoA+VdJR5LFiqp3NeH9GbQ73B7WhX9BR3sGJGxjBuXygSF0hwXG08BVjJbI0x9Fanb6TjbNEVeR09QaLi7KqZ57p+hzs4JT3xQLP1dZdDaW42ePf3o0ux3ELpju32KT85Sz5HCHTjMKHYEZv4JmDnyFqj+MxN4hnF/aNxAaHTFeQotfgzMvLvlbba4p06jWV4dadN0SYiR42ED3vLRXcZjAulA/SkS1EkKIlNbmL3Uh+RXLcOcQFlga6oJNocqCyfRVCxQskbK8XF6150kCkI8aF
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBP189MB1433.EURP189.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(39840400004)(396003)(136003)(376002)(346002)(451199021)(1076003)(26005)(6506007)(6512007)(186003)(2616005)(83380400001)(36756003)(6486002)(6666004)(41300700001)(316002)(5660300002)(44832011)(54906003)(2906002)(478600001)(7416002)(38100700002)(86362001)(8936002)(8676002)(66476007)(66556008)(66946007)(4326008)(70586007)(37730700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?yQX2awOa5FYC/x2fWXiJ9dXOoxcD09xAtwNSAwye+7TZgZjJY40GDgJH/xm9?=
- =?us-ascii?Q?SS6nN52Mdkw5gXrIuNc81NZkYXzqI+LPh4Bv0vaE2MavwNbQiSLrtk5ROgq4?=
- =?us-ascii?Q?K2sikPITRM3KXboWrnKTDHhQ7gs95xhZIUVLnlhSopmuu2frD7/DQtWhTGto?=
- =?us-ascii?Q?YgcL/cNPgt/7JS8mcaQXedmFuQ/UySjxBzTwpX8SpxpZVSs/8I3Vn9UA3bRF?=
- =?us-ascii?Q?AEi/u+NaunSgdSP3XdNsOOILaHS65AD/woANM7DPQs0L9JVn4ZL9l0dKnIWZ?=
- =?us-ascii?Q?cvNSLT8IVqxBAFjmLCYkTmIGvU408E8ViRKWU6xA8ShOWeRllc5kQjIzt+C9?=
- =?us-ascii?Q?LDckEZRnuVxRduGEi3bkqrT8i9Kw4JlZNYPIO5Lf/IzZgoUjEx6PI7n6b1go?=
- =?us-ascii?Q?FXivaDsPlHOspcx3sFu485i5AxFOdQJPYXbgvcETeDwIjX0hGnPMMeMDXnD3?=
- =?us-ascii?Q?tHZbv2xp5D53asAeUr28jlER6zDwp+qaDSDHe4uTL8peUn183w7PyOE8T31S?=
- =?us-ascii?Q?vFV8vo8w+/c4N5TL+gkkJAhOM7JQ2Rf+D1aWFwpFTKP5vFprurs3/+ZvIrZ0?=
- =?us-ascii?Q?hpLQv7JAvfJZQPY03b5qIixPT3AWVT+OMcb7G01L0p1mKcuopysX2y8gyWAA?=
- =?us-ascii?Q?+FFFdRgG95QwqkQcQ0prW9nO3hET+FR45JNBUBqcS1unamWU5ZKHPFfc7Kxt?=
- =?us-ascii?Q?FtdQI2jEEgKuVF0ASkGw6QB2+DLgtY7+qIrWB1QEk7Z+B/UsH378Nkml1zJc?=
- =?us-ascii?Q?X9gFBl7bztWbnZonPSKJfxmZNio8A00UbGs/dEPIoGBdnOyaSiZwg8ET9dm0?=
- =?us-ascii?Q?4Qzi0f2B7r+CcRvYzd9Ska0JvsIs8o2QwiJ+MLrj6W/lERc3oCFcYazAkJMd?=
- =?us-ascii?Q?3dw+NZDdhr0yukxADDTNZPi8BJlB1SoEFn8pJOMnDu7RijGIHOhDjsmJrSRZ?=
- =?us-ascii?Q?RunDPgfsHxAAzQqSVGVcfQQ4Gr+9a6Tiw+8+wdjNIZpIUVhUWk2SKq5LG8Tr?=
- =?us-ascii?Q?Z9yAzk8rJd1I2KAXGuglMq9bkvwTSKd0mbOllM2Hl54+m20trXynuS+kfU3T?=
- =?us-ascii?Q?2FWSs8ocKI0lex/8fy1SI750LyDO+kBCLe/oiXgNHrPmyf0InozhCqWjenhm?=
- =?us-ascii?Q?GclMffOJSmBHDNMz0K7M0ziuOuJIwHqJaAC611VWeIqF3bkU6sS3PHnEJad2?=
- =?us-ascii?Q?Y5jd894Mw0s57KTQ77ZUnWu0pEDNCARqY9yMS2sINoBDrYgoPLG4zwUUk+Xk?=
- =?us-ascii?Q?m9vzWlbws0HNWynPRLjmVWEpmNSUhjsPI1SBzT2YO0dK7ZPfIvaPVaaoi/Sv?=
- =?us-ascii?Q?cMsuvZX53fe0uLIICnPj1DxQ41j8viEkGZCtfjy0wiS+VvhMnV1ZCiHv7pI1?=
- =?us-ascii?Q?xF24iqXJvxgIIFewlF+LreiaTl/P+pOQOIAJ/kPdkO1PJq+zF2Lo0lnqXopF?=
- =?us-ascii?Q?sPGwfFjHZo/3lrk97ANThMhX4vlyrc6VY2Z0DmdiElNKHAyUcwg1WY3OKsLF?=
- =?us-ascii?Q?i4diFDFbMly3Bj0UsbOVd9oVXzTdsNLAKFZg1E5yPdg/XXROaoyfw9+G7V+O?=
- =?us-ascii?Q?H08H3ewC7xMMlHfYcLfR+V5wyklRbwpjHCXZYgU8Py9F5xig1qckz8TR7LIm?=
- =?us-ascii?Q?cA=3D=3D?=
-X-OriginatorOrg: est.tech
-X-MS-Exchange-CrossTenant-Network-Message-Id: c92558ba-5ce3-4d44-2aed-08db4642d919
-X-MS-Exchange-CrossTenant-AuthSource: DBBP189MB1433.EURP189.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Apr 2023 10:41:52.9830
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d2585e63-66b9-44b6-a76e-4f4b217d97fd
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GO5wHtZQ1qJP3aL56EGb6VJCpaMQdRqnJIJk4p+7l4F0b0LdE9LtkrJ1PFFaNh3iVvBlKGov8bZJ3ONKHRS7uGYhu3abI9pSAgHw4svcfMM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8P189MB1062
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Not sure if the scripts changed in this patch are used, but nevertheless
-here is a patch with a minor bug fix.
----
+On 25/04/23 08:43, Wander Lairson Costa wrote:
+> The put_task_struct() function reduces a usage counter and invokes
+> __put_task_struct() when the counter reaches zero.
+>
+> In the case of __put_task_struct(), it indirectly acquires a spinlock,
+> which operates as a sleeping lock under the PREEMPT_RT configuration.
+> As a result, invoking put_task_struct() within an atomic context is
+> not feasible for real-time (RT) kernels.
+>
+> One practical example is a splat inside inactive_task_timer(), which is
+> called in a interrupt context:
+>
+> CPU: 1 PID: 2848 Comm: life Kdump: loaded Tainted: G W ---------
+> Hardware name: HP ProLiant DL388p Gen8, BIOS P70 07/15/2012
+> Call Trace:
+>  dump_stack_lvl+0x57/0x7d
+>  mark_lock_irq.cold+0x33/0xba
+>  ? stack_trace_save+0x4b/0x70
+>  ? save_trace+0x55/0x150
+>  mark_lock+0x1e7/0x400
+>  mark_usage+0x11d/0x140
+>  __lock_acquire+0x30d/0x930
+>  lock_acquire.part.0+0x9c/0x210
+>  ? refill_obj_stock+0x3d/0x3a0
+>  ? rcu_read_lock_sched_held+0x3f/0x70
+>  ? trace_lock_acquire+0x38/0x140
+>  ? lock_acquire+0x30/0x80
+>  ? refill_obj_stock+0x3d/0x3a0
+>  rt_spin_lock+0x27/0xe0
+>  ? refill_obj_stock+0x3d/0x3a0
+>  refill_obj_stock+0x3d/0x3a0
+>  ? inactive_task_timer+0x1ad/0x340
+>  kmem_cache_free+0x357/0x560
+>  inactive_task_timer+0x1ad/0x340
+>  ? switched_from_dl+0x2d0/0x2d0
+>  __run_hrtimer+0x8a/0x1a0
+>  __hrtimer_run_queues+0x91/0x130
+>  hrtimer_interrupt+0x10f/0x220
+>  __sysvec_apic_timer_interrupt+0x7b/0xd0
+>  sysvec_apic_timer_interrupt+0x4f/0xd0
+>  ? asm_sysvec_apic_timer_interrupt+0xa/0x20
+>  asm_sysvec_apic_timer_interrupt+0x12/0x20
+> RIP: 0033:0x7fff196bf6f5
+>
+> To address this issue, this patch series introduces a new function
+> called put_task_struct_atomic_safe(). When compiled with the
+> PREEMPT_RT configuration, this function defers the call to
+> __put_task_struct() to a process context.
+>
+> Additionally, the patch series rectifies known problematic call sites
+> to ensure smooth functioning.
+>
 
-Include reason parameter that was added in
-commit c504e5c2f964 ("net: skb: introduce kfree_skb_reason()")
+It took me a bit of time to grok the put_task_struct_rcu_user() vs
+delayed_free_task() vs put_task_struct_atomic_safe() situation, but other
+than that the patches LGTM.
 
-Signed-off-by: Sriram Yagnaraman <sriram.yagnaraman@est.tech>
----
- tools/perf/scripts/python/net_dropmonitor.py | 4 ++--
- tools/perf/scripts/python/netdev-times.py    | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/scripts/python/net_dropmonitor.py b/tools/perf/scripts/python/net_dropmonitor.py
-index 101059971738..a97e7a6e0940 100755
---- a/tools/perf/scripts/python/net_dropmonitor.py
-+++ b/tools/perf/scripts/python/net_dropmonitor.py
-@@ -68,9 +68,9 @@ def trace_end():
- 	get_kallsyms_table()
- 	print_drop_table()
- 
--# called from perf, when it finds a correspoinding event
-+# called from perf, when it finds a corresponding event
- def skb__kfree_skb(name, context, cpu, sec, nsec, pid, comm, callchain,
--		   skbaddr, location, protocol):
-+		   skbaddr, location, protocol, reason):
- 	slocation = str(location)
- 	try:
- 		drop_log[slocation] = drop_log[slocation] + 1
-diff --git a/tools/perf/scripts/python/netdev-times.py b/tools/perf/scripts/python/netdev-times.py
-index a0cfc7fe5908..00552eeb7178 100644
---- a/tools/perf/scripts/python/netdev-times.py
-+++ b/tools/perf/scripts/python/netdev-times.py
-@@ -288,9 +288,9 @@ def net__net_dev_xmit(name, context, cpu, sec, nsec, pid, comm, callchain,
- 	all_event_list.append(event_info)
- 
- def skb__kfree_skb(name, context, cpu, sec, nsec, pid, comm, callchain,
--			skbaddr, protocol, location):
-+			skbaddr, location, protocol, reason):
- 	event_info = (name, context, cpu, nsecs(sec, nsec), pid, comm,
--			skbaddr, protocol, location)
-+			skbaddr, location, protocol, reason)
- 	all_event_list.append(event_info)
- 
- def skb__consume_skb(name, context, cpu, sec, nsec, pid, comm, callchain, skbaddr):
-@@ -430,7 +430,7 @@ def handle_net_dev_xmit(event_info):
- 
- def handle_kfree_skb(event_info):
- 	(name, context, cpu, time, pid, comm,
--		skbaddr, protocol, location) = event_info
-+		skbaddr, location, protocol, reason) = event_info
- 	for i in range(len(tx_queue_list)):
- 		skb = tx_queue_list[i]
- 		if skb['skbaddr'] == skbaddr:
--- 
-2.34.1
+Reviewed-by: Valentin Schneider <vschneid@redhat.com>
 
