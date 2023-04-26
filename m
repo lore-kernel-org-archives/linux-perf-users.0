@@ -2,333 +2,739 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A0EC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 07:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EB3C77B60
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 07:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239684AbjDZHBS (ORCPT
+        id S239716AbjDZHBr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Apr 2023 03:01:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39300 "EHLO
+        Wed, 26 Apr 2023 03:01:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239664AbjDZHBL (ORCPT
+        with ESMTP id S239678AbjDZHBQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Apr 2023 03:01:11 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDF652102;
-        Wed, 26 Apr 2023 00:00:57 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-2f55ffdbaedso4196550f8f.2;
-        Wed, 26 Apr 2023 00:00:57 -0700 (PDT)
+        Wed, 26 Apr 2023 03:01:16 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CD533AA5
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 00:01:08 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-555f6759323so107902177b3.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 00:01:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682492456; x=1685084456;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7/YWmwgvXwDCheOphPVsxeQwjXr2X0sXbZUbiV8/qiY=;
-        b=Y0C7ltP0MmwYGVOj6/3WhOxUn/325ozQ8Ule72oKYnXxtERDk5+GyiV+7wTDdc5Xvf
-         spsIpcZ2d8vhPriSlMN0AFd5ayiPbKuv9ZgcaMlhmtguNx//Dj1XH5BtP3GfDqQroHfv
-         T3l3kqKPhJtkg68e8GYONnIDkoXY1AUeZbbPTdfg2QreGEnlWHjJ+cgFhwbSyuP5dYPP
-         FiUh64wygVHIG77LmDu+JjGv339aib6vMOSkF7RurhMQRgOdTUgQ0GLH9HdrG65PLScq
-         x/5hoas/Gehy/WEV+GYqMfaIul+dfsFAnz4tOh5I5+iMehGf3Ovk8TAciNgu4ZRiABop
-         Fq2A==
+        d=google.com; s=20221208; t=1682492467; x=1685084467;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=t78lbwuLHpo6hPInNJpQ2OMez2icKF4DN2Dc5uwQ2+U=;
+        b=2clcjP6BMFF96YWZCNloRnXoSBVqoWJ0dGouxzWsvIgkdrFVkhkfIfppQKq8ap72Cd
+         VQ2qd4p3jjkQjTjDCwCeVJ4E+HjlZryohu0bm3Bc1nm5ao75oWeA7/uyftryH2hivjca
+         Yzo9HHiY/P1FbAF7UqPZ0S2jJUrBpSvNQewNSUHO3VZVP8EfrRzOzbzuf+xzus7YH2d3
+         mYM8PpZ7Q28xfyWw+NnKeJwPRgWVRRacK3td+qtnZ6qK9GhFjjpGbfoCoeCjQJFcMDeo
+         JfiZmewMzBJ9SLqwbd+hXdcnA3rLgeWZxjIPmiGJydUII0w13tpzVz31JMy0Pny6uq+C
+         CZyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682492456; x=1685084456;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7/YWmwgvXwDCheOphPVsxeQwjXr2X0sXbZUbiV8/qiY=;
-        b=M0yuXsxarG+OKNo3RFwTnnMLiaR/qQkixGrrIxzvM9AMDunV7qzlipwXa5YOMFNqDH
-         QSfUK08thc6PmC0tVDu0y0orWzJrRlAuUZahMgJcwH3QZmFjxUpP6odBzsM7/G4Jhk7b
-         TzP0nAAaguSHcGcQjusSjSgg/Z34MYd2J4RAj32rvdhFqSLlK9hNSsvI81GKUorFo4fN
-         T0NLujr7yVu3q/HNmU6I6iQU3LYhliQU/BegOXec4DMLT7jMAhtqh5MavsvjnyL8KxNe
-         XNgwfnpVpw02Zjsb/ZGuuYW0Shw4wr05Zeqs6bCdLaGcQT93eFWYPkKhw4uwkDeEuYeA
-         oC+g==
-X-Gm-Message-State: AAQBX9cBIYLWB65nycRh0Z9oV3h07SWarQeOnc1mjrlaX/BuYSMpN9z+
-        dB/OX5OoQHjS+L3cMwXjJPo=
-X-Google-Smtp-Source: AKy350bY4MEOjK1YDo3fYvDL+vTKok3nznnxqs8hfDObulF1FU+17WKszasxGr5S5JXMNPiLy4hyFw==
-X-Received: by 2002:adf:f7c5:0:b0:2fb:87f7:3812 with SMTP id a5-20020adff7c5000000b002fb87f73812mr13025211wrq.1.1682492455885;
-        Wed, 26 Apr 2023 00:00:55 -0700 (PDT)
-Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
-        by smtp.gmail.com with ESMTPSA id m7-20020adfe0c7000000b003048477729asm4738407wri.81.2023.04.26.00.00.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Apr 2023 00:00:54 -0700 (PDT)
-Date:   Wed, 26 Apr 2023 08:00:53 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     Mika =?iso-8859-1?Q?Penttil=E4?= <mpenttil@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+        d=1e100.net; s=20221208; t=1682492467; x=1685084467;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=t78lbwuLHpo6hPInNJpQ2OMez2icKF4DN2Dc5uwQ2+U=;
+        b=bltc8XNQDGanD3nx24bQVLpfMSBbvMjBGH3IvinSztJ88AGIwe5qDoO9EzQKT1LtWd
+         dyq7jnwnIx4cxH+L/Cw8yYGZw7KhwX9j6FL0lfjPFOm5kt5N0WAY2nCGnNAhBR6H+jIT
+         eCR4DbIODbt0Bpjzad8Qkgb33WIxo14e7PYrVZWk6hhOIUxMpCZCelT4tSzWDrmTQ5GJ
+         F5HgqjVFeSVmXYx0tUHlGp/9zfX5/Dw164Up0lBQKHn0JczLGplbLSFY0AX9PRfeOQDj
+         NhlzWdtsA4WCgbndUwcAoUo4pOzQ3Lc7FZ2ZY8oUjGuQTYCD+4GfpUIKDPvHkySOOSMG
+         z5LA==
+X-Gm-Message-State: AAQBX9e2fqAMXUMyrffZLdVFu4ugjh7BESLO5LPzBpMEsVc5La3zlf9u
+        ytEGNOl2xh6SsiwqNLdQsYcwjm+q66T9
+X-Google-Smtp-Source: AKy350ZBGK5YXfTVcCOd8fakUSTjmx2pXZqJnvmSV/mGWTneaLihKdyOf9j8GXjFU93pqj+hQ7vRMHDXzjiq
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:144f:e890:2b29:48d9])
+ (user=irogers job=sendgmr) by 2002:a81:b725:0:b0:54f:8f2e:a03 with SMTP id
+ v37-20020a81b725000000b0054f8f2e0a03mr9691867ywh.1.1682492467469; Wed, 26 Apr
+ 2023 00:01:07 -0700 (PDT)
+Date:   Wed, 26 Apr 2023 00:00:10 -0700
+Message-Id: <20230426070050.1315519-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
+Subject: [PATCH v1 00/40] Fix perf on Intel hybrid CPUs
+From:   Ian Rogers <irogers@google.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v4] mm/gup: disallow GUP writing to file-backed mappings
- by default
-Message-ID: <5ffd7f32-d236-4da4-93f7-c2fe39a6e035@lucifer.local>
-References: <3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com>
- <a68fa8f2-8619-63ff-3525-ede7ed1f0a9f@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a68fa8f2-8619-63ff-3525-ede7ed1f0a9f@redhat.com>
+        Florian Fischer <florian.fischer@muhq.space>,
+        Rob Herring <robh@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 26, 2023 at 06:18:38AM +0300, Mika Penttilä wrote:
-> Hi,
->
->
-> On 26.4.2023 2.15, Lorenzo Stoakes wrote:
-> > GUP does not correctly implement write-notify semantics, nor does it
-> > guarantee that the underlying pages are correctly dirtied, which could lead
-> > to a kernel oops or data corruption when writing to file-backed mappings.
-> >
-> > This is only relevant when the mappings are file-backed and the underlying
-> > file system requires folio dirty tracking. File systems which do not, such
-> > as shmem or hugetlb, are not at risk and therefore can be written to
-> > without issue.
-> >
-> > Unfortunately this limitation of GUP has been present for some time and
-> > requires future rework of the GUP API in order to provide correct write
-> > access to such mappings.
-> >
-> > In the meantime, we add a check for the most broken GUP case -
-> > FOLL_LONGTERM - which really under no circumstances can safely access
-> > dirty-tracked file mappings.
-> >
-> > As part of this change we separate out vma_needs_dirty_tracking() as a
-> > helper function to determine this, which is distinct from
-> > vma_wants_writenotify() which is specific to determining which PTE flags to
-> > set.
-> >
-> > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> > Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
-> > ---
-> > v4:
-> > - Split out vma_needs_dirty_tracking() from vma_wants_writenotify() to reduce
-> >    duplication and update to use this in the GUP check. Note that both separately
-> >    check vm_ops_needs_writenotify() as the latter needs to test this before the
-> >    vm_pgprot_modify() test, resulting in vma_wants_writenotify() checking this
-> >    twice, however it is such a small check this should not be egregious.
-> >
-> > v3:
-> > - Rebased on latest mm-unstable as of 24th April 2023.
-> > - Explicitly check whether file system requires folio dirtying. Note that
-> >    vma_wants_writenotify() could not be used directly as it is very much focused
-> >    on determining if the PTE r/w should be set (e.g. assuming private mapping
-> >    does not require it as already set, soft dirty considerations).
-> > - Tested code against shmem and hugetlb mappings - confirmed that these are not
-> >    disallowed by the check.
-> > - Eliminate FOLL_ALLOW_BROKEN_FILE_MAPPING flag and instead perform check only
-> >    for FOLL_LONGTERM pins.
-> > - As a result, limit check to internal GUP code.
-> >   https://lore.kernel.org/all/23c19e27ef0745f6d3125976e047ee0da62569d4.1682406295.git.lstoakes@gmail.com/
-> >
-> > v2:
-> > - Add accidentally excluded ptrace_access_vm() use of
-> >    FOLL_ALLOW_BROKEN_FILE_MAPPING.
-> > - Tweak commit message.
-> > https://lore.kernel.org/all/c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com/
-> >
-> > v1:
-> > https://lore.kernel.org/all/f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com/
-> >
-> >   include/linux/mm.h |  1 +
-> >   mm/gup.c           | 26 +++++++++++++++++++++++++-
-> >   mm/mmap.c          | 37 ++++++++++++++++++++++++++++---------
-> >   3 files changed, 54 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/include/linux/mm.h b/include/linux/mm.h
-> > index 37554b08bb28..f7da02fc89c6 100644
-> > --- a/include/linux/mm.h
-> > +++ b/include/linux/mm.h
-> > @@ -2433,6 +2433,7 @@ extern unsigned long move_page_tables(struct vm_area_struct *vma,
-> >   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
-> >   					    MM_CP_UFFD_WP_RESOLVE)
-> > +bool vma_needs_dirty_tracking(struct vm_area_struct *vma);
-> >   int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot);
-> >   static inline bool vma_wants_manual_pte_write_upgrade(struct vm_area_struct *vma)
-> >   {
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index 1f72a717232b..53652453037c 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -959,16 +959,37 @@ static int faultin_page(struct vm_area_struct *vma,
-> >   	return 0;
-> >   }
-> > +/*
-> > + * Writing to file-backed mappings which require folio dirty tracking using GUP
-> > + * is a fundamentally broken operation as kernel write access to GUP mappings
-> > + * may not adhere to the semantics expected by a file system.
-> > + */
-> > +static inline bool can_write_file_mapping(struct vm_area_struct *vma,
-> > +					  unsigned long gup_flags)
-> > +{
-> > +	/* If we aren't pinning then no problematic write can occur. */
-> > +	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
-> > +		return true;
-> > +
-> > +	/* We limit this check to the most egregious case - a long term pin. */
-> > +	if (!(gup_flags & FOLL_LONGTERM))
-> > +		return true;
-> > +
-> > +	/* If the VMA requires dirty tracking then GUP will be problematic. */
-> > +	return vma_needs_dirty_tracking(vma);
-> > +}
-> > +
-> >   static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
-> >   {
-> >   	vm_flags_t vm_flags = vma->vm_flags;
-> >   	int write = (gup_flags & FOLL_WRITE);
-> >   	int foreign = (gup_flags & FOLL_REMOTE);
-> > +	bool vma_anon = vma_is_anonymous(vma);
-> >   	if (vm_flags & (VM_IO | VM_PFNMAP))
-> >   		return -EFAULT;
-> > -	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
-> > +	if ((gup_flags & FOLL_ANON) && !vma_anon)
-> >   		return -EFAULT;
-> >   	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
-> > @@ -978,6 +999,9 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
-> >   		return -EFAULT;
-> >   	if (write) {
-> > +		if (!vma_anon && !can_write_file_mapping(vma, gup_flags))
-> > +			return -EFAULT;
-> > +
-> >   		if (!(vm_flags & VM_WRITE)) {
-> >   			if (!(gup_flags & FOLL_FORCE))
-> >   				return -EFAULT;
-> > diff --git a/mm/mmap.c b/mm/mmap.c
-> > index 536bbb8fa0ae..aac638dd22cf 100644
-> > --- a/mm/mmap.c
-> > +++ b/mm/mmap.c
-> > @@ -1475,6 +1475,32 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
-> >   }
-> >   #endif /* __ARCH_WANT_SYS_OLD_MMAP */
-> > +/* Do VMA operations imply write notify is required? */
-> > +static inline bool vm_ops_needs_writenotify(
-> > +	const struct vm_operations_struct *vm_ops)
-> > +{
-> > +	return vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite);
-> > +}
-> > +
-> > +/*
-> > + * Does this VMA require the underlying folios to have their dirty state
-> > + * tracked?
-> > + */
-> > +bool vma_needs_dirty_tracking(struct vm_area_struct *vma)
-> > +{
-> > +	/* Does the filesystem need to be notified? */
-> > +	if (vm_ops_needs_writenotify(vma->vm_ops))
-> > +		return true;
-> > +
-> > +	/* Specialty mapping? */
-> > +	if (vma->vm_flags & VM_PFNMAP)
-> > +		return false;
-> > +
-> > +	/* Can the mapping track the dirty pages? */
-> > +	return vma->vm_file && vma->vm_file->f_mapping &&
-> > +		mapping_can_writeback(vma->vm_file->f_mapping);
-> > +}
-> > +
->
-> What would be the exact reproducer of the problem? AFAIK writenotify is
-> handled (by handle_mm_fault()) for non cow mappings (shared), where it only
-> matters.
+TL;DR: hybrid doesn't crash, json metrics work on hybrid on both PMUs
+or individually, event parsing doesn't always scan all PMUs, more and
+new tests that also run without hybrid, less code.
 
-The issue is reproduced simply by page_to_virt(pinned_page)[0] = 'x' :)
+The first patches were previously posted to improve metrics here:
+"perf stat: Introduce skippable evsels"
+https://lore.kernel.org/all/20230414051922.3625666-1-irogers@google.com/
+"perf vendor events intel: Add xxx metric constraints"
+https://lore.kernel.org/all/20230419005423.343862-1-irogers@google.com/
 
-The problem is that no faulting actually occurs, so no writenotify, and no
-PG_dirty tracking does either. Unexpected page dirtying can occur even
-after they are cleaned in folio_clear_dirty_for_io(), because the caller
-might manually mark the page dirty at an unexpected time as with the
-unpin_*dirty*() helpers.
+Next are some general test improvements.
 
-I think the long-term solution is to provide a different interface where
-pages are passed back briefly with locks held and with a manual invocation
-of writeprotect, or perhaps some kthread_use_mm() thing so we actually
-trigger the faulting logic, but in the meantime this change helps restore
-some sanity.
+Next event parsing is rewritten to not scan all PMUs for the benefit
+of raw and legacy cache parsing, instead these are handled by the
+lexer and a new term type. This ultimately removes the need for the
+event parser for hybrid to be recursive as legacy cache can be just a
+term. Tests are re-enabled for events with hyphens, so AMD's
+branch-brs event is now parsable.
 
->
-> GUP will only allow FOLL_FORCE without faulting for PageAnonExclusive pages.
-> So if you want something beyond normal cow semantics you have custom vm_ops
-> (and mmap() and fault())
+The cputype option is made a generic pmu filter flag and is tested
+even on non-hybrid systems.
 
-This has nothing to do with FOLL_FORCE.
+The final patches address specific json metric issues on hybrid, in
+both the json metrics and the metric code. They also bring in a new
+json option to not group events when matching a metricgroup, this
+helps reduce counter pressure for TopdownL1 and TopdownL2 metric
+groups. The updates to the script that updates the json are posted in:
+https://github.com/intel/perfmon/pull/73
 
->
-> Also for longterm pinning gups vs fork vs swap there has been fixes by david
-> recently.
+The patches add slightly more code than they remove, in areas like
+better json metric constraints and tests, but in the core util code,
+the removal of hybrid is a net reduction:
+ 20 files changed, 631 insertions(+), 951 deletions(-)
 
-I don't think these are relevant in any way to this issue.
+There's specific detail with each patch, but for now here is the 6.3
+output followed by that from perf-tools-next with the patch series
+applied. The tool is running on an Alderlake CPU on an elderly 5.15
+kernel:
 
->
->
->
-> >   /*
-> >    * Some shared mappings will want the pages marked read-only
-> >    * to track write events. If so, we'll downgrade vm_page_prot
-> > @@ -1484,14 +1510,13 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
-> >   int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
-> >   {
-> >   	vm_flags_t vm_flags = vma->vm_flags;
-> > -	const struct vm_operations_struct *vm_ops = vma->vm_ops;
-> >   	/* If it was private or non-writable, the write bit is already clear */
-> >   	if ((vm_flags & (VM_WRITE|VM_SHARED)) != ((VM_WRITE|VM_SHARED)))
-> >   		return 0;
-> >   	/* The backer wishes to know when pages are first written to? */
-> > -	if (vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite))
-> > +	if (vm_ops_needs_writenotify(vma->vm_ops))
-> >   		return 1;
-> >   	/* The open routine did something to the protections that pgprot_modify
-> > @@ -1511,13 +1536,7 @@ int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
-> >   	if (userfaultfd_wp(vma))
-> >   		return 1;
-> > -	/* Specialty mapping? */
-> > -	if (vm_flags & VM_PFNMAP)
-> > -		return 0;
-> > -
-> > -	/* Can the mapping track the dirty pages? */
-> > -	return vma->vm_file && vma->vm_file->f_mapping &&
-> > -		mapping_can_writeback(vma->vm_file->f_mapping);
-> > +	return vma_needs_dirty_tracking(vma);
-> >   }
-> >   /*
->
->
-> --Mika
->
+Events on hybrid that parse and pass tests:
+'''
+$ perf-6.3 version
+perf version 6.3.rc7.gb7bc77e2f2c7
+$ perf-6.3 test
+...
+  6.1: Test event parsing                       : FAILED!
+...
+$ perf test
+...
+  6: Parse event definition strings             :
+  6.1: Test event parsing                       : Ok
+  6.2: Parsing of all PMU events from sysfs     : Ok
+  6.3: Parsing of given PMU events from sysfs   : Ok
+  6.4: Parsing of aliased events from sysfs     : Skip (no aliases in sysfs)
+  6.5: Parsing of aliased events                : Ok
+  6.6: Parsing of terms (event modifiers)       : Ok
+...
+'''
+
+No event/metric running with json metrics and TopdownL1 on both PMUs:
+'''
+$ perf-6.3 stat -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+         24,073.58 msec cpu-clock                        #   23.975 CPUs utilized             
+               350      context-switches                 #   14.539 /sec                      
+                25      cpu-migrations                   #    1.038 /sec                      
+                66      page-faults                      #    2.742 /sec                      
+        21,257,199      cpu_core/cycles/                 #  883.009 K/sec                     
+         2,162,192      cpu_atom/cycles/                 #   89.816 K/sec                     
+         6,679,379      cpu_core/instructions/           #  277.457 K/sec                     
+           753,197      cpu_atom/instructions/           #   31.287 K/sec                     
+         1,300,647      cpu_core/branches/               #   54.028 K/sec                     
+           148,652      cpu_atom/branches/               #    6.175 K/sec                     
+           117,429      cpu_core/branch-misses/          #    4.878 K/sec                     
+            14,396      cpu_atom/branch-misses/          #  598.000 /sec                      
+       123,097,644      cpu_core/slots/                  #    5.113 M/sec                     
+         9,241,207      cpu_core/topdown-retiring/       #      7.5% Retiring                 
+         8,903,288      cpu_core/topdown-bad-spec/       #      7.2% Bad Speculation          
+        66,590,029      cpu_core/topdown-fe-bound/       #     54.1% Frontend Bound           
+        38,397,500      cpu_core/topdown-be-bound/       #     31.2% Backend Bound            
+         3,294,283      cpu_core/topdown-heavy-ops/      #      2.7% Heavy Operations          #      4.8% Light Operations         
+         8,855,769      cpu_core/topdown-br-mispredict/  #      7.2% Branch Mispredict         #      0.0% Machine Clears           
+        57,695,714      cpu_core/topdown-fetch-lat/      #     46.9% Fetch Latency             #      7.2% Fetch Bandwidth          
+        12,823,926      cpu_core/topdown-mem-bound/      #     10.4% Memory Bound              #     20.8% Core Bound               
+
+       1.004093622 seconds time elapsed
+
+$ perf stat -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+         24,064.65 msec cpu-clock                        #   23.973 CPUs utilized             
+               384      context-switches                 #   15.957 /sec                      
+                24      cpu-migrations                   #    0.997 /sec                      
+                71      page-faults                      #    2.950 /sec                      
+        19,737,646      cpu_core/cycles/                 #  820.192 K/sec                     
+       122,018,505      cpu_atom/cycles/                 #    5.070 M/sec                       (63.32%)
+         7,636,653      cpu_core/instructions/           #  317.339 K/sec                     
+        16,266,629      cpu_atom/instructions/           #  675.955 K/sec                       (72.50%)
+         1,552,995      cpu_core/branches/               #   64.534 K/sec                     
+         3,208,143      cpu_atom/branches/               #  133.314 K/sec                       (72.50%)
+           132,151      cpu_core/branch-misses/          #    5.491 K/sec                     
+           547,285      cpu_atom/branch-misses/          #   22.742 K/sec                       (72.49%)
+        32,110,597      cpu_atom/TOPDOWN_RETIRING.ALL/   #    1.334 M/sec                     
+                                                  #     18.4 %  tma_bad_speculation      (72.48%)
+       228,006,765      cpu_atom/TOPDOWN_FE_BOUND.ALL/   #    9.475 M/sec                     
+                                                  #     38.1 %  tma_frontend_bound       (72.47%)
+       225,866,251      cpu_atom/TOPDOWN_BE_BOUND.ALL/   #    9.386 M/sec                     
+                                                  #     37.7 %  tma_backend_bound      
+                                                  #     37.7 %  tma_backend_bound_aux    (72.73%)
+       119,748,254      cpu_atom/CPU_CLK_UNHALTED.CORE/  #    4.976 M/sec                     
+                                                  #      5.2 %  tma_retiring             (73.14%)
+        31,363,579      cpu_atom/TOPDOWN_RETIRING.ALL/   #    1.303 M/sec                       (73.37%)
+       227,907,321      cpu_atom/TOPDOWN_FE_BOUND.ALL/   #    9.471 M/sec                       (63.95%)
+       228,803,268      cpu_atom/TOPDOWN_BE_BOUND.ALL/   #    9.508 M/sec                       (63.55%)
+       113,357,334      cpu_core/TOPDOWN.SLOTS/          #     30.5 %  tma_backend_bound      
+                                                  #      9.2 %  tma_retiring           
+                                                  #      8.7 %  tma_bad_speculation    
+                                                  #     51.6 %  tma_frontend_bound     
+        10,451,044      cpu_core/topdown-retiring/                                            
+         9,687,449      cpu_core/topdown-bad-spec/                                            
+        58,703,214      cpu_core/topdown-fe-bound/                                            
+        34,540,660      cpu_core/topdown-be-bound/                                            
+           154,902      cpu_core/INT_MISC.UOP_DROPPING/  #    6.437 K/sec                     
+
+       1.003818397 seconds time elapsed
+'''
+
+Json metrics that don't crash:
+'''
+$ perf-6.3 stat -M TopdownL1 -a sleep 1
+WARNING: events in group from different hybrid PMUs!
+WARNING: grouped events cpus do not match, disabling group:
+  anon group { topdown-retiring, topdown-retiring, INT_MISC.UOP_DROPPING, topdown-fe-bound, topdown-fe-bound, CPU_CLK_UNHALTED.CORE, topdown-be-bound, topdown-be-bound, topdown-bad-spec, topdown-bad-spec }
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-retiring).
+/bin/dmesg | grep -i perf may provide additional information.
+
+$ perf stat -M TopdownL1 -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+           811,810      cpu_atom/TOPDOWN_RETIRING.ALL/   #     26.6 %  tma_bad_speculation    
+         3,239,281      cpu_atom/TOPDOWN_FE_BOUND.ALL/   #     38.8 %  tma_frontend_bound     
+         2,037,667      cpu_atom/TOPDOWN_BE_BOUND.ALL/   #     24.4 %  tma_backend_bound      
+                                                  #     24.4 %  tma_backend_bound_aux  
+         1,670,438      cpu_atom/CPU_CLK_UNHALTED.CORE/  #      9.7 %  tma_retiring           
+           808,138      cpu_atom/TOPDOWN_RETIRING.ALL/                                        
+         3,234,707      cpu_atom/TOPDOWN_FE_BOUND.ALL/                                        
+         2,081,420      cpu_atom/TOPDOWN_BE_BOUND.ALL/                                        
+       122,795,280      cpu_core/TOPDOWN.SLOTS/          #     31.7 %  tma_backend_bound      
+                                                  #      7.0 %  tma_bad_speculation    
+                                                  #     54.1 %  tma_frontend_bound     
+                                                  #      7.2 %  tma_retiring           
+         8,817,636      cpu_core/topdown-retiring/                                            
+         8,480,817      cpu_core/topdown-bad-spec/                                            
+         3,108,926      cpu_core/topdown-heavy-ops/                                           
+        66,566,215      cpu_core/topdown-fe-bound/                                            
+        38,958,811      cpu_core/topdown-be-bound/                                            
+           134,194      cpu_core/INT_MISC.UOP_DROPPING/                                       
+
+       1.003607796 seconds time elapsed
+
+$ perf stat -M TopdownL2 -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+       162,334,218      cpu_atom/TOPDOWN_FE_BOUND.FRONTEND_LATENCY/ #     27.7 %  tma_fetch_latency        (38.99%)
+        16,191,486      cpu_atom/INST_RETIRED.ANY/                                              (45.76%)
+        68,443,205      cpu_atom/TOPDOWN_BE_BOUND.MEM_SCHEDULER/ #     32.2 %  tma_memory_bound       
+                                                  #      5.8 %  tma_core_bound           (45.77%)
+        14,920,109      cpu_atom/UOPS_RETIRED.MS/        #      2.9 %  tma_base                 (45.92%)
+        14,829,879      cpu_atom/UOPS_RETIRED.MS/        #      2.5 %  tma_ms_uops              (46.31%)
+        31,860,520      cpu_atom/TOPDOWN_RETIRING.ALL/                                          (46.71%)
+       117,323,055      cpu_atom/CPU_CLK_UNHALTED.CORE/  #     18.7 %  tma_branch_mispredicts 
+                                                  #     11.5 %  tma_fetch_bandwidth    
+                                                  #      0.3 %  tma_machine_clears     
+                                                  #     37.9 %  tma_resource_bound       (53.49%)
+       222,579,768      cpu_atom/TOPDOWN_BE_BOUND.ALL/                                          (53.90%)
+        13,672,174      cpu_atom/MEM_SCHEDULER_BLOCK.ST_BUF/                                        (54.23%)
+        24,264,262      cpu_atom/LD_HEAD.ANY_AT_RET/                                            (47.46%)
+        13,872,813      cpu_atom/MEM_SCHEDULER_BLOCK.ALL/                                        (47.45%)
+       223,722,007      cpu_atom/TOPDOWN_BE_BOUND.ALL/                                          (47.31%)
+         2,005,972      cpu_atom/TOPDOWN_BAD_SPECULATION.MACHINE_CLEARS/                                        (46.91%)
+       109,423,013      cpu_atom/TOPDOWN_BAD_SPECULATION.MISPREDICT/                                        (39.72%)
+        67,420,790      cpu_atom/TOPDOWN_FE_BOUND.FRONTEND_BANDWIDTH/                                        (39.33%)
+        92,790,312      cpu_core/TOPDOWN.SLOTS/          #     24.3 %  tma_core_bound         
+                                                  #      3.0 %  tma_heavy_operations   
+                                                  #      5.6 %  tma_light_operations   
+                                                  #     10.8 %  tma_memory_bound       
+                                                  #      7.8 %  tma_branch_mispredicts 
+                                                  #     40.4 %  tma_fetch_latency      
+                                                  #      0.2 %  tma_machine_clears     
+                                                  #      7.8 %  tma_fetch_bandwidth    
+         8,041,595      cpu_core/topdown-retiring/                                            
+        10,060,500      cpu_core/topdown-mem-bound/                                           
+         7,314,344      cpu_core/topdown-bad-spec/                                            
+         2,824,600      cpu_core/topdown-heavy-ops/                                           
+        37,630,164      cpu_core/topdown-fetch-lat/                                           
+         7,278,843      cpu_core/topdown-br-mispredict/                                       
+        44,863,148      cpu_core/topdown-fe-bound/                                            
+        32,573,458      cpu_core/topdown-be-bound/                                            
+         5,785,074      cpu_core/INST_RETIRED.ANY/                                            
+         2,325,424      cpu_core/UOPS_RETIRED.MS/                                             
+        15,972,774      cpu_core/CPU_CLK_UNHALTED.THREAD/                                      
+           117,750      cpu_core/INT_MISC.UOP_DROPPING/                                       
+
+       1.003519749 seconds time elapsed
+'''
+
+Note, flags are added below to reduce the size of the output by
+removing event groups and threshold printing support:
+'''
+$ perf stat --metric-no-threshold --metric-no-group -M TopdownL3 -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+         3,506,641      cpu_atom/TOPDOWN_BE_BOUND.ALLOC_RESTRICTIONS/ #      0.6 %  tma_alloc_restriction    (17.14%)
+       133,962,390      cpu_atom/TOPDOWN_BE_BOUND.SERIALIZATION/ #     22.2 %  tma_serialization        (17.48%)
+        11,201,207      cpu_atom/TOPDOWN_FE_BOUND.ITLB/  #      1.9 %  tma_itlb_misses          (17.88%)
+        63,876,838      cpu_atom/TOPDOWN_BE_BOUND.MEM_SCHEDULER/ #     10.6 %  tma_mem_scheduler      
+                                                  #     10.5 %  tma_store_bound        
+                                                  #      2.4 %  tma_other_load_store     (18.28%)
+        14,386,940      cpu_atom/UOPS_RETIRED.MS/                                               (18.68%)
+        14,432,493      cpu_atom/UOPS_RETIRED.MS/        #      2.7 %  tma_other_ret            (19.09%)
+        81,582,687      cpu_atom/TOPDOWN_FE_BOUND.ICACHE/ #     13.5 %  tma_icache_misses        (19.14%)
+        30,467,546      cpu_atom/TOPDOWN_RETIRING.ALL/                                          (19.14%)
+        16,788,753      cpu_atom/MEM_BOUND_STALLS.LOAD/  #      4.2 %  tma_dram_bound         
+                                                  #      3.7 %  tma_l2_bound           
+                                                  #      6.7 %  tma_l3_bound             (19.14%)
+        14,514,040      cpu_atom/TOPDOWN_FE_BOUND.DECODE/ #      2.4 %  tma_decode               (19.14%)
+           688,307      cpu_atom/TOPDOWN_BAD_SPECULATION.NUKE/ #      0.1 %  tma_nuke                 (19.13%)
+                 0      cpu_atom/UOPS_RETIRED.FPDIV/                                            (19.12%)
+         4,408,466      cpu_atom/MEM_BOUND_STALLS.LOAD_L2_HIT/                                        (19.12%)
+       120,556,998      cpu_atom/CPU_CLK_UNHALTED.CORE/  #      9.3 %  tma_branch_detect      
+                                                  #      1.0 %  tma_branch_resteer     
+                                                  #      5.8 %  tma_cisc               
+                                                  #      0.3 %  tma_fast_nuke          
+                                                  #      0.0 %  tma_fpdiv_uops         
+                                                  #      4.3 %  tma_l1_bound           
+                                                  #      3.2 %  tma_non_mem_scheduler  
+                                                  #      1.9 %  tma_other_fb           
+                                                  #      1.1 %  tma_predecode          
+                                                  #      0.1 %  tma_register           
+                                                  #      0.1 %  tma_reorder_buffer       (22.30%)
+        34,773,106      cpu_atom/TOPDOWN_FE_BOUND.CISC/                                         (22.30%)
+           591,112      cpu_atom/TOPDOWN_BE_BOUND.REGISTER/                                        (22.30%)
+        11,286,706      cpu_atom/TOPDOWN_FE_BOUND.OTHER/                                        (22.30%)
+         5,082,636      cpu_atom/MEM_BOUND_STALLS.LOAD_DRAM_HIT/                                        (22.30%)
+        14,146,185      cpu_atom/MEM_SCHEDULER_BLOCK.ST_BUF/                                        (22.31%)
+        55,833,686      cpu_atom/TOPDOWN_FE_BOUND.BRANCH_DETECT/                                        (22.30%)
+        25,714,051      cpu_atom/LD_HEAD.ANY_AT_RET/                                            (19.12%)
+           456,549      cpu_atom/TOPDOWN_BE_BOUND.REORDER_BUFFER/                                        (19.12%)
+         1,616,862      cpu_atom/TOPDOWN_BAD_SPECULATION.FASTNUKE/                                        (19.12%)
+         6,680,782      cpu_atom/TOPDOWN_FE_BOUND.PREDECODE/                                        (19.12%)
+        14,229,195      cpu_atom/MEM_SCHEDULER_BLOCK.ALL/                                        (19.12%)
+         8,128,921      cpu_atom/MEM_BOUND_STALLS.LOAD_LLC_HIT/                                        (19.12%)
+        20,941,725      cpu_atom/LD_HEAD.L1_MISS_AT_RET/                                        (19.11%)
+         6,177,125      cpu_atom/TOPDOWN_FE_BOUND.BRANCH_RESTEER/                                        (18.78%)
+       228,066,346      cpu_atom/TOPDOWN_BE_BOUND.ALL/                                          (18.38%)
+         5,204,897      cpu_atom/LD_HEAD.L1_BOUND_AT_RET/                                        (17.99%)
+        19,060,104      cpu_atom/TOPDOWN_BE_BOUND.NON_MEM_SCHEDULER/                                        (17.58%)
+                 0      cpu_atom/UOPS_RETIRED.FPDIV/                                            (17.19%)
+       864,565,692      cpu_core/TOPDOWN.SLOTS/          #      4.7 %  tma_microcode_sequencer
+                                                  #      0.4 %  tma_few_uops_instructions
+                                                  #      0.3 %  tma_fused_instructions 
+                                                  #      1.8 %  tma_memory_operations  
+                                                  #      0.1 %  tma_nop_instructions   
+                                                  #      8.9 %  tma_ms_switches        
+                                                  #      0.4 %  tma_non_fused_branches 
+                                                  #      0.0 %  tma_fp_arith           
+                                                  #      0.0 %  tma_int_operations     
+                                                  #     35.7 %  tma_ports_utilization  
+                                                  #      3.8 %  tma_other_light_ops      (18.03%)
+       100,519,954      cpu_core/topdown-retiring/                                              (18.03%)
+        68,964,454      cpu_core/topdown-bad-spec/                                              (18.03%)
+        44,732,021      cpu_core/topdown-heavy-ops/                                             (18.03%)
+       435,618,316      cpu_core/topdown-fe-bound/                                              (18.03%)
+       262,842,804      cpu_core/topdown-be-bound/                                              (18.03%)
+        10,368,608      cpu_core/BR_INST_RETIRED.ALL_BRANCHES/                                        (18.43%)
+        55,947,727      cpu_core/RESOURCE_STALLS.SCOREBOARD/                                        (18.84%)
+       125,718,255      cpu_core/UOPS_ISSUED.ANY/                                               (19.24%)
+        23,178,652      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/                                        (19.65%)
+                 0      cpu_core/INT_VEC_RETIRED.ADD_256/                                        (20.05%)
+         1,119,514      cpu_core/DSB2MITE_SWITCHES.PENALTY_CYCLES/ #      0.5 %  tma_dsb_switches         (20.46%)
+        27,684,795      cpu_core/MEMORY_ACTIVITY.STALLS_L1D_MISS/ #     10.6 %  tma_l1_bound           
+                                                  #      0.7 %  tma_l2_bound             (20.86%)
+       108,813,079      cpu_core/UOPS_EXECUTED.THREAD/                                          (21.27%)
+        16,563,036      cpu_core/IDQ.MITE_CYCLES_ANY/    #      5.2 %  tma_mite                 (19.14%)
+        53,037,471      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/                                        (19.14%)
+        41,005,510      cpu_core/UOPS_RETIRED.MS/                                               (19.14%)
+           575,534      cpu_core/ARITH.DIV_ACTIVE/       #      0.2 %  tma_divider              (19.14%)
+                 0      cpu_core/FP_ARITH_INST_RETIRED.SCALAR_SINGLE,umask=0x03/                                        (19.14%)
+         2,207,021      cpu_core/EXE_ACTIVITY.BOUND_ON_STORES/ #      0.9 %  tma_store_bound          (19.13%)
+         5,685,032      cpu_core/UOPS_RETIRED.MS,cmask=1,edge/                                        (19.13%)
+            25,523      cpu_core/DECODE.LCP/             #      0.0 %  tma_lcp                  (19.12%)
+        26,095,298      cpu_core/MEMORY_ACTIVITY.STALLS_L2_MISS/ #     10.8 %  tma_l3_bound             (19.13%)
+           108,516      cpu_core/MEMORY_ACTIVITY.STALLS_L3_MISS/ #      0.0 %  tma_dram_bound           (19.13%)
+       192,239,590      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/                                        (19.12%)
+             5,978      cpu_core/LSD.CYCLES_ACTIVE/      #     -0.0 %  tma_lsd                  (19.12%)
+                 0      cpu_core/INT_VEC_RETIRED.VNNI_128/                                        (19.13%)
+       137,530,949      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/ #      0.1 %  tma_dsb                  (19.12%)
+       240,070,549      cpu_core/CPU_CLK_UNHALTED.THREAD/ #     17.5 %  tma_icache_misses      
+                                                  #      6.1 %  tma_itlb_misses        
+                                                  #     40.3 %  tma_branch_resteers      (21.52%)
+                 0      cpu_core/FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE,umask=0x3c/                                        (21.51%)
+           595,051      cpu_core/ARITH.DIV_ACTIVE/                                              (21.52%)
+           461,041      cpu_core/IDQ.DSB_CYCLES_ANY/                                            (21.51%)
+                 0      cpu_core/INT_VEC_RETIRED.MUL_256/                                        (21.52%)
+                 0      cpu_core/UOPS_EXECUTED.X87/                                             (21.52%)
+           237,196      cpu_core/IDQ.DSB_CYCLES_OK/                                             (21.52%)
+           125,009      cpu_core/LSD.CYCLES_OK/                                                 (21.52%)
+                 0      cpu_core/INT_VEC_RETIRED.ADD_128/                                        (21.40%)
+        28,388,778      cpu_core/MEM_UOP_RETIRED.ANY/                                           (18.61%)
+         1,806,629      cpu_core/INST_RETIRED.NOP/                                              (18.21%)
+        41,928,018      cpu_core/ICACHE_DATA.STALLS/                                            (17.81%)
+                 0      cpu_core/INT_VEC_RETIRED.VNNI_256/                                        (17.41%)
+        18,230,137      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL,umask=0xc/                                        (17.02%)
+        28,052,001      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=0x80/                                        (16.61%)
+         4,073,568      cpu_core/INST_RETIRED.MACRO_FUSED/                                        (16.20%)
+        66,509,871      cpu_core/INT_MISC.UNKNOWN_BRANCH_CYCLES/                                        (15.92%)
+         2,307,447      cpu_core/IDQ.MITE_CYCLES_OK/                                            (15.91%)
+        30,345,769      cpu_core/INT_MISC.CLEAR_RESTEER_CYCLES/                                        (15.91%)
+                 0      cpu_core/INT_VEC_RETIRED.SHUFFLES/                                        (15.91%)
+        14,722,079      cpu_core/ICACHE_TAG.STALLS/                                             (15.90%)
+
+       1.004474469 seconds time elapsed
+
+$ perf stat --metric-no-threshold --metric-no-group -M TopdownL4 -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+     1,004,834,399 ns   duration_time                    #      0.3 %  tma_false_sharing      
+                                                  #     40.2 %  tma_l3_hit_latency     
+                                                  #      4.4 %  tma_contested_accesses 
+                                                  #      1.6 %  tma_data_sharing       
+         3,762,410      cpu_atom/LD_HEAD.PGWALK_AT_RET/  #      3.1 %  tma_stlb_miss            (33.58%)
+                10      cpu_atom/MACHINE_CLEARS.SMC/     #      0.0 %  tma_smc                  (33.98%)
+        66,500,689      cpu_atom/TOPDOWN_BE_BOUND.MEM_SCHEDULER/ #      0.0 %  tma_ld_buffer          
+                                                  #      0.0 %  tma_rsv                
+                                                  #     11.0 %  tma_st_buffer            (29.60%)
+         1,051,312      cpu_atom/LD_HEAD.OTHER_AT_RET/   #      0.9 %  tma_other_l1             (30.00%)
+        14,740,093      cpu_atom/UOPS_RETIRED.MS/                                               (30.39%)
+           117,899      cpu_atom/LD_HEAD.DTLB_MISS_AT_RET/ #      0.1 %  tma_stlb_hit             (30.79%)
+           701,548      cpu_atom/TOPDOWN_BAD_SPECULATION.NUKE/ #      0.0 %  tma_disambiguation     
+                                                  #      0.0 %  tma_fp_assist          
+                                                  #      0.1 %  tma_memory_ordering    
+                                                  #      0.0 %  tma_page_fault           (31.08%)
+            12,873      cpu_atom/MACHINE_CLEARS.MEMORY_ORDERING/                                        (31.07%)
+            58,321      cpu_atom/MEM_SCHEDULER_BLOCK.LD_BUF/                                        (31.07%)
+            43,458      cpu_atom/MEM_SCHEDULER_BLOCK.RSV/                                        (31.07%)
+        14,256,005      cpu_atom/MEM_SCHEDULER_BLOCK.ALL/                                        (31.06%)
+       122,156,534      cpu_atom/CPU_CLK_UNHALTED.CORE/  #      0.0 %  tma_store_fwd_blk        (36.16%)
+                 0      cpu_atom/MACHINE_CLEARS.FP_ASSIST/                                        (35.76%)
+            13,804      cpu_atom/MACHINE_CLEARS.SLOW/                                           (35.35%)
+        14,388,300      cpu_atom/MEM_SCHEDULER_BLOCK.ST_BUF/                                        (34.95%)
+       493,070,443      cpu_atom/CPU_CLK_UNHALTED.REF_TSC/                                        (39.73%)
+                 2      cpu_atom/MACHINE_CLEARS.PAGE_FAULT/                                        (39.33%)
+             1,101      cpu_atom/LD_HEAD.ST_ADDR_AT_RET/                                        (38.93%)
+               929      cpu_atom/MACHINE_CLEARS.DISAMBIGUATION/                                        (38.55%)
+        14,241,213      cpu_atom/MEM_SCHEDULER_BLOCK.ALL/                                        (33.45%)
+     1,010,981,054      cpu_core/TOPDOWN.SLOTS/          #      0.0 %  tma_assists            
+                                                  #      4.3 %  tma_cisc               
+                                                  #      0.0 %  tma_fp_scalar          
+                                                  #      0.0 %  tma_fp_vector          
+                                                  #      0.0 %  tma_shuffles           
+                                                  #      0.0 %  tma_int_vector_128b    
+                                                  #      0.0 %  tma_x87_use            
+                                                  #      0.0 %  tma_int_vector_256b    
+                                                  #      0.7 %  tma_clears_resteers    
+                                                  #     12.4 %  tma_mispredicts_resteers  (8.14%)
+       132,375,316      cpu_core/topdown-retiring/                                              (8.14%)
+        88,303,327      cpu_core/topdown-bad-spec/                                              (8.14%)
+        85,519,216      cpu_core/topdown-br-mispredict/                                         (8.14%)
+       495,722,455      cpu_core/topdown-fe-bound/                                              (8.14%)
+       298,147,134      cpu_core/topdown-be-bound/                                              (8.14%)
+        21,418,803      cpu_core/UOPS_EXECUTED.CYCLES_GE_3/ #      8.8 %  tma_ports_utilized_3m    (10.12%)
+        35,208,716      cpu_core/OFFCORE_REQUESTS_OUTSTANDING.ALL_DATA_RD,cmask=4/ #     14.5 %  tma_mem_bandwidth      
+                                                  #     33.3 %  tma_mem_latency          (10.52%)
+            17,358      cpu_core/OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM/                                        (10.91%)
+        55,883,811      cpu_core/RESOURCE_STALLS.SCOREBOARD/ #     24.1 %  tma_ports_utilized_0     (12.91%)
+                 0      cpu_core/INT_VEC_RETIRED.ADD_256/                                        (14.89%)
+           139,890      cpu_core/DTLB_STORE_MISSES.STLB_HIT,cmask=1/ #      2.8 %  tma_dtlb_store           (15.30%)
+           216,886      cpu_core/MEM_INST_RETIRED.LOCK_LOADS/ #      3.8 %  tma_store_latency      
+                                                  #      0.1 %  tma_lock_latency         (15.71%)
+       115,948,790      cpu_core/UOPS_EXECUTED.THREAD/                                          (17.69%)
+        52,155,508      cpu_core/EXE_ACTIVITY.BOUND_ON_LOADS/                                        (15.93%)
+                 6      cpu_core/ASSISTS.ANY,umask=0x1B/                                        (15.93%)
+        87,422,517      cpu_core/CYCLE_ACTIVITY.CYCLES_MEM_ANY/ #      5.2 %  tma_dtlb_load            (15.81%)
+        37,420,652      cpu_core/MEMORY_ACTIVITY.CYCLES_L1D_MISS/                                        (15.44%)
+        43,527,357      cpu_core/UOPS_RETIRED.MS/                                               (15.04%)
+        31,787,227      cpu_core/INT_MISC.CLEAR_RESTEER_CYCLES/                                        (14.64%)
+                 0      cpu_core/FP_ARITH_INST_RETIRED.SCALAR_SINGLE,umask=0x03/                                        (14.24%)
+         4,899,130      cpu_core/XQ.FULL_CYCLES/         #      2.0 %  tma_sq_full              (13.84%)
+             1,365      cpu_core/OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM/                                        (13.44%)
+        23,904,338      cpu_core/EXE_ACTIVITY.1_PORTS_UTIL/ #      9.9 %  tma_ports_utilized_1     (13.05%)
+           251,479      cpu_core/L2_RQSTS.ALL_RFO/                                              (12.76%)
+       188,701,010      cpu_core/CYCLE_ACTIVITY.STALLS_TOTAL/                                        (12.74%)
+             6,909      cpu_core/MEM_INST_RETIRED.SPLIT_STORES/ #      0.0 %  tma_split_stores         (12.74%)
+           619,775      cpu_core/MEM_LOAD_RETIRED.L1_MISS/                                        (9.56%)
+       136,716,345      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/ #      0.9 %  tma_decoder0_alone       (11.15%)
+                 0      cpu_core/INT_VEC_RETIRED.VNNI_128/                                        (12.74%)
+           605,850      cpu_core/L1D_PEND_MISS.FB_FULL/  #      0.2 %  tma_fb_full              (12.73%)
+            60,079      cpu_core/MEM_STORE_RETIRED.L2_HIT/                                        (11.14%)
+       242,508,080      cpu_core/CPU_CLK_UNHALTED.THREAD/ #      4.2 %  tma_ports_utilized_2   
+                                                  #      0.2 %  tma_store_fwd_blk      
+                                                  #      0.0 %  tma_streaming_stores   
+                                                  #     27.5 %  tma_unknown_branches   
+                                                  #      0.0 %  tma_split_loads          (12.74%)
+                 0      cpu_core/FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE,umask=0x3c/                                        (14.33%)
+            32,573      cpu_core/LD_BLOCKS.STORE_FORWARD/                                        (12.74%)
+             1,130      cpu_core/OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD/                                        (12.74%)
+             4,029      cpu_core/MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS/                                        (9.56%)
+         4,844,548      cpu_core/INST_DECODED.DECODERS,cmask=1/                                        (9.56%)
+             5,266      cpu_core/MEM_LOAD_L3_HIT_RETIRED.XSNP_NO_FWD/                                        (6.37%)
+                 0      cpu_core/UOPS_EXECUTED.X87/                                             (7.96%)
+                 0      cpu_core/INT_VEC_RETIRED.MUL_256/                                        (9.56%)
+         2,786,473      cpu_core/DTLB_STORE_MISSES.WALK_ACTIVE/                                        (9.56%)
+       961,614,001      cpu_core/CPU_CLK_UNHALTED.REF_TSC/                                        (11.15%)
+         2,433,107      cpu_core/INST_DECODED.DECODERS,cmask=2/                                        (11.15%)
+                 0      cpu_core/INT_VEC_RETIRED.ADD_128/                                        (12.74%)
+         9,058,046      cpu_core/OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO/                                        (12.74%)
+         6,399,992      cpu_core/MEM_INST_RETIRED.ALL_STORES/                                        (12.74%)
+        45,519,749      cpu_core/L1D_PEND_MISS.PENDING/                                         (9.56%)
+        12,200,559      cpu_core/DTLB_LOAD_MISSES.WALK_ACTIVE/                                        (7.97%)
+       115,944,190      cpu_core/OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD/                                        (6.37%)
+                 0      cpu_core/INT_VEC_RETIRED.VNNI_256/                                        (7.96%)
+         1,885,278      cpu_core/INT_MISC.UOP_DROPPING/                                         (9.56%)
+           524,819      cpu_core/MEM_LOAD_RETIRED.FB_HIT/                                        (9.56%)
+        26,866,872      cpu_core/EXE_ACTIVITY.3_PORTS_UTIL,umask=0x80/                                        (11.15%)
+        10,265,977      cpu_core/EXE_ACTIVITY.2_PORTS_UTIL/                                        (12.74%)
+        66,662,934      cpu_core/INT_MISC.UNKNOWN_BRANCH_CYCLES/                                        (12.74%)
+                 0      cpu_core/OCR.STREAMING_WR.ANY_RESPONSE/                                        (12.74%)
+            12,499      cpu_core/MEM_LOAD_L3_HIT_RETIRED.XSNP_FWD/                                        (12.74%)
+                 0      cpu_core/INT_VEC_RETIRED.SHUFFLES/                                        (12.74%)
+            47,649      cpu_core/DTLB_LOAD_MISSES.STLB_HIT,cmask=1/                                        (12.74%)
+           106,424      cpu_core/L2_RQSTS.RFO_HIT/                                              (12.74%)
+                 0      cpu_core/LD_BLOCKS.NO_SR/                                               (7.97%)
+         1,343,692      cpu_core/MEM_LOAD_COMPLETED.L1_MISS_ANY/                                        (7.96%)
+            28,517      cpu_core/L1D_PEND_MISS.L2_STALLS/                                        (6.37%)
+           394,101      cpu_core/MEM_LOAD_RETIRED.L3_HIT/                                        (6.36%)
+    76,860,165,929      TSC                                                                   
+
+       1.004834399 seconds time elapsed
+
+$ perf stat --metric-no-threshold --metric-no-group -M TopdownL5 -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+       839,538,302      cpu_core/TOPDOWN.SLOTS/          #      0.0 %  tma_avx_assists        
+                                                  #      0.0 %  tma_fp_assists         
+                                                  #      0.0 %  tma_page_faults        
+                                                  #      0.0 %  tma_fp_vector_128b     
+                                                  #      0.0 %  tma_fp_vector_256b       (32.40%)
+       100,274,045      cpu_core/topdown-retiring/                                              (32.40%)
+        77,425,642      cpu_core/topdown-bad-spec/                                              (32.40%)
+       424,563,652      cpu_core/topdown-fe-bound/                                              (32.40%)
+       245,420,564      cpu_core/topdown-be-bound/                                              (32.40%)
+                 0      cpu_core/FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE/                                        (32.79%)
+        54,372,921      cpu_core/RESOURCE_STALLS.SCOREBOARD/ #     22.2 %  tma_serializing_operation  (33.20%)
+        23,018,585      cpu_core/UOPS_DISPATCHED.PORT_6/ #      8.0 %  tma_alu_op_utilization   (33.61%)
+        17,748,101      cpu_core/UOPS_DISPATCHED.PORT_2_3_10/ #      4.2 %  tma_load_op_utilization  (34.02%)
+                 0      cpu_core/FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE/                                        (34.43%)
+         7,616,700      cpu_core/UOPS_DISPATCHED.PORT_0/                                        (34.83%)
+            96,571      cpu_core/DTLB_STORE_MISSES.STLB_HIT,cmask=1/ #      0.6 %  tma_store_stlb_hit       (35.25%)
+        84,909,672      cpu_core/CYCLE_ACTIVITY.CYCLES_MEM_ANY/ #      0.2 %  tma_load_stlb_hit        (35.66%)
+        32,935,744      cpu_core/MEMORY_ACTIVITY.CYCLES_L1D_MISS/                                        (31.95%)
+        16,597,385      cpu_core/UOPS_DISPATCHED.PORT_5_11/                                        (31.95%)
+         9,452,844      cpu_core/UOPS_DISPATCHED.PORT_1/                                        (31.94%)
+         2,620,695      cpu_core/DTLB_STORE_MISSES.WALK_ACTIVE/ #      1.8 %  tma_store_stlb_miss      (31.95%)
+        15,699,364      cpu_core/UOPS_DISPATCHED.PORT_7_8/ #      5.7 %  tma_store_op_utilization  (31.95%)
+                 0      cpu_core/FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE/                                        (31.94%)
+       142,096,670      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/                                        (31.95%)
+       244,591,239      cpu_core/CPU_CLK_UNHALTED.THREAD/ #      5.2 %  tma_load_stlb_miss     
+                                                  #      0.0 %  tma_mixing_vectors       (35.92%)
+         2,728,385      cpu_core/DTLB_STORE_MISSES.WALK_ACTIVE/                                        (35.66%)
+                 0      cpu_core/ASSISTS.SSE_AVX_MIX/                                           (35.27%)
+                 0      cpu_core/FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE/                                        (34.86%)
+        12,664,768      cpu_core/DTLB_LOAD_MISSES.WALK_ACTIVE/                                        (34.46%)
+        12,629,733      cpu_core/DTLB_LOAD_MISSES.WALK_ACTIVE/                                        (34.04%)
+                 0      cpu_core/ASSISTS.FP/                                                    (33.63%)
+                12      cpu_core/ASSISTS.PAGE_FAULT/                                            (33.23%)
+        16,704,699      cpu_core/UOPS_DISPATCHED.PORT_4_9/                                        (32.81%)
+            48,386      cpu_core/DTLB_LOAD_MISSES.STLB_HIT,cmask=1/                                        (28.68%)
+
+       1.002806967 seconds time elapsed
+
+$ perf stat --metric-no-threshold --metric-no-group -M TopdownL6 -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+           743,684      cpu_core/UOPS_DISPATCHED.PORT_0/ #      4.6 %  tma_port_0             
+             1,514      cpu_core/MISC2_RETIRED.LFENCE/   #      0.1 %  tma_memory_fence       
+            22,120      cpu_core/CPU_CLK_UNHALTED.PAUSE/ #      0.1 %  tma_slow_pause         
+        16,187,637      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/ #      4.5 %  tma_port_1             
+                                                  #     12.6 %  tma_port_6             
+        16,754,672      cpu_core/CPU_CLK_UNHALTED.THREAD/                                      
+           728,805      cpu_core/UOPS_DISPATCHED.PORT_1/                                      
+         2,040,181      cpu_core/UOPS_DISPATCHED.PORT_6/                                      
+
+       1.002727371 seconds time elapse
+'''
+
+Using --cputype:
+'''
+$ perf stat --cputype=core -M TopdownL1 -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+        90,542,172      cpu_core/TOPDOWN.SLOTS/          #     31.3 %  tma_backend_bound      
+                                                  #      7.0 %  tma_bad_speculation    
+                                                  #     54.0 %  tma_frontend_bound     
+                                                  #      7.6 %  tma_retiring           
+         6,917,885      cpu_core/topdown-retiring/                                            
+         6,242,227      cpu_core/topdown-bad-spec/                                            
+         2,353,956      cpu_core/topdown-heavy-ops/                                           
+        49,034,945      cpu_core/topdown-fe-bound/                                            
+        28,390,484      cpu_core/topdown-be-bound/                                            
+            98,299      cpu_core/INT_MISC.UOP_DROPPING/                                       
+
+       1.002395582 seconds time elapsed
+
+$ perf stat --cputype=atom -M TopdownL1 -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+           645,836      cpu_atom/TOPDOWN_RETIRING.ALL/   #     26.4 %  tma_bad_speculation    
+         2,404,468      cpu_atom/TOPDOWN_FE_BOUND.ALL/   #     38.9 %  tma_frontend_bound     
+         1,455,604      cpu_atom/TOPDOWN_BE_BOUND.ALL/   #     23.6 %  tma_backend_bound      
+                                                  #     23.6 %  tma_backend_bound_aux  
+         1,235,109      cpu_atom/CPU_CLK_UNHALTED.CORE/  #     10.4 %  tma_retiring           
+           642,124      cpu_atom/TOPDOWN_RETIRING.ALL/                                        
+         2,398,892      cpu_atom/TOPDOWN_FE_BOUND.ALL/                                        
+         1,503,157      cpu_atom/TOPDOWN_BE_BOUND.ALL/                                        
+
+       1.002061651 seconds time elapsed
+'''
+
+Ian Rogers (40):
+  perf stat: Introduce skippable evsels
+  perf vendor events intel: Add alderlake metric constraints
+  perf vendor events intel: Add icelake metric constraints
+  perf vendor events intel: Add icelakex metric constraints
+  perf vendor events intel: Add sapphirerapids metric constraints
+  perf vendor events intel: Add tigerlake metric constraints
+  perf stat: Avoid segv on counter->name
+  perf test: Test more sysfs events
+  perf test: Use valid for PMU tests
+  perf test: Mask config then test
+  perf test: Test more with config_cache
+  perf test: Roundtrip name, don't assume 1 event per name
+  perf parse-events: Set attr.type to PMU type early
+  perf print-events: Avoid unnecessary strlist
+  perf parse-events: Avoid scanning PMUs before parsing
+  perf test: Validate events with hyphens in
+  perf evsel: Modify group pmu name for software events
+  perf test: Move x86 hybrid tests to arch/x86
+  perf test x86 hybrid: Don't assume evlist order
+  perf parse-events: Support PMUs for legacy cache events
+  perf parse-events: Wildcard legacy cache events
+  perf print-events: Print legacy cache events for each PMU
+  perf parse-events: Support wildcards on raw events
+  perf parse-events: Remove now unused hybrid logic
+  perf parse-events: Minor type safety cleanup
+  perf parse-events: Add pmu filter
+  perf stat: Make cputype filter generic
+  perf test: Add cputype testing to perf stat
+  perf test: Fix parse-events tests for >1 core PMU
+  perf parse-events: Support hardware events as terms
+  perf parse-events: Avoid error when assigning a term
+  perf parse-events: Avoid error when assigning a legacy cache term
+  perf parse-events: Don't auto merge hybrid wildcard events
+  perf parse-events: Don't reorder atom cpu events
+  perf metrics: Be PMU specific for referenced metrics.
+  perf metric: Json flag to not group events if gathering a metric group
+  perf stat: Command line PMU metric filtering
+  perf vendor events intel: Correct alderlake metrics
+  perf jevents: Don't rewrite metrics across PMUs
+  perf metrics: Be PMU specific in event match
+
+ tools/perf/arch/x86/include/arch-tests.h      |   1 +
+ tools/perf/arch/x86/tests/Build               |   1 +
+ tools/perf/arch/x86/tests/arch-tests.c        |  10 +
+ tools/perf/arch/x86/tests/hybrid.c            | 275 ++++++
+ tools/perf/arch/x86/util/evlist.c             |   4 +-
+ tools/perf/builtin-list.c                     |  19 +-
+ tools/perf/builtin-record.c                   |  13 +-
+ tools/perf/builtin-stat.c                     |  73 +-
+ tools/perf/builtin-top.c                      |   5 +-
+ tools/perf/builtin-trace.c                    |   5 +-
+ .../arch/x86/alderlake/adl-metrics.json       | 275 +++---
+ .../arch/x86/alderlaken/adln-metrics.json     |  20 +-
+ .../arch/x86/broadwell/bdw-metrics.json       |  12 +
+ .../arch/x86/broadwellde/bdwde-metrics.json   |  12 +
+ .../arch/x86/broadwellx/bdx-metrics.json      |  12 +
+ .../arch/x86/cascadelakex/clx-metrics.json    |  12 +
+ .../arch/x86/haswell/hsw-metrics.json         |  12 +
+ .../arch/x86/haswellx/hsx-metrics.json        |  12 +
+ .../arch/x86/icelake/icl-metrics.json         |  23 +
+ .../arch/x86/icelakex/icx-metrics.json        |  23 +
+ .../arch/x86/ivybridge/ivb-metrics.json       |  12 +
+ .../arch/x86/ivytown/ivt-metrics.json         |  12 +
+ .../arch/x86/jaketown/jkt-metrics.json        |  12 +
+ .../arch/x86/sandybridge/snb-metrics.json     |  12 +
+ .../arch/x86/sapphirerapids/spr-metrics.json  |  23 +
+ .../arch/x86/skylake/skl-metrics.json         |  12 +
+ .../arch/x86/skylakex/skx-metrics.json        |  12 +
+ .../arch/x86/tigerlake/tgl-metrics.json       |  23 +
+ tools/perf/pmu-events/jevents.py              |  10 +-
+ tools/perf/pmu-events/metric.py               |  28 +-
+ tools/perf/pmu-events/metric_test.py          |   6 +-
+ tools/perf/pmu-events/pmu-events.h            |   2 +
+ tools/perf/tests/evsel-roundtrip-name.c       | 119 ++-
+ tools/perf/tests/parse-events.c               | 826 +++++++++---------
+ tools/perf/tests/pmu-events.c                 |  12 +-
+ tools/perf/tests/shell/stat.sh                |  44 +
+ tools/perf/util/Build                         |   1 -
+ tools/perf/util/evlist.h                      |   1 -
+ tools/perf/util/evsel.c                       |  30 +-
+ tools/perf/util/evsel.h                       |   1 +
+ tools/perf/util/metricgroup.c                 | 111 ++-
+ tools/perf/util/metricgroup.h                 |   3 +-
+ tools/perf/util/parse-events-hybrid.c         | 214 -----
+ tools/perf/util/parse-events-hybrid.h         |  25 -
+ tools/perf/util/parse-events.c                | 646 ++++++--------
+ tools/perf/util/parse-events.h                |  61 +-
+ tools/perf/util/parse-events.l                | 108 +--
+ tools/perf/util/parse-events.y                | 222 ++---
+ tools/perf/util/pmu-hybrid.c                  |  20 -
+ tools/perf/util/pmu-hybrid.h                  |   1 -
+ tools/perf/util/pmu.c                         |  16 +-
+ tools/perf/util/pmu.h                         |   3 +
+ tools/perf/util/pmus.c                        |  25 +-
+ tools/perf/util/pmus.h                        |   3 +
+ tools/perf/util/print-events.c                |  85 +-
+ tools/perf/util/stat-display.c                |   6 +-
+ 56 files changed, 1939 insertions(+), 1627 deletions(-)
+ create mode 100644 tools/perf/arch/x86/tests/hybrid.c
+ delete mode 100644 tools/perf/util/parse-events-hybrid.c
+ delete mode 100644 tools/perf/util/parse-events-hybrid.h
+
+-- 
+2.40.1.495.gc816e09b53d-goog
+
