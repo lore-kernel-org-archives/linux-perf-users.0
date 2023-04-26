@@ -2,171 +2,298 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B598C7618E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 08:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ECC4C77B60
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 10:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240139AbjDZI6b (ORCPT
+        id S239790AbjDZKL4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Apr 2023 04:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58514 "EHLO
+        Wed, 26 Apr 2023 06:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239416AbjDZI63 (ORCPT
+        with ESMTP id S239464AbjDZKLz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Apr 2023 04:58:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2382F40E7
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 01:57:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682499464;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qRhtGeXRPBB+p4cr9w0INOAc893fzDgBw6gSZ9r4K6o=;
-        b=JoRWawAkr2qdXKQ1xrRm+umgLcVYbfJAzeP9qJXcW4YQt2XOqo+mnYDPfWYHvpZQ5v7fMF
-        i0wOkXv7iMerZgkC7e5/aYKvdP17Sx9eYvLd9GWoeOFCk2YVnkFYLgR/k1XUx2dHyWTyzy
-        cnUVvI6xj2SPEOKDyS0LShyXIOB77Qg=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-265-geDB3qGwM_ym6htXJeKdiw-1; Wed, 26 Apr 2023 04:57:41 -0400
-X-MC-Unique: geDB3qGwM_ym6htXJeKdiw-1
-Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ab26301bc6so8211801fa.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 01:57:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682499459; x=1685091459;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qRhtGeXRPBB+p4cr9w0INOAc893fzDgBw6gSZ9r4K6o=;
-        b=QNIvv8BvIcDR1pNI3WgoJ/bDCgQYNx0abDyU8sl3AJ/FmtBuVpZcIBvpK+vIG1RIjC
-         wxLgTtehGC5k0I2POFlcYH7o9otRw1jBbB+7SvOb1B/n+ZCHO0aPhu0tpPBIQlRfTt0O
-         M2y4UwIsqfhkznutUoZRV9QyJMEIFcgt53LQaIvUz3H9dzGHeSw+TXndFt4YpHJEGEtT
-         sZ5X1SmlW1c7mDE6kqGNahn28AuZt2WW7weW3Z8E7hGf/o4Fvf2b9smmbKCC+gVkcmH5
-         G/I3Ul+pNDQlAZMqDPxgmMLzIvMuO/v1AOze38N6PHkmD45qt7rT/R1+Apc4Mg5iAB+r
-         czvQ==
-X-Gm-Message-State: AAQBX9cc7OWtHjQZgo9AwqjBtFz9J+x8EYRZ0/LWlYIDs9DdRzmNikX+
-        jRPPzguaB6pCbhuXss45VnjZrHYwzxoxeKN5oo1aGq20ALvSdUoj+d1Khi63Z0gz1IqXYf+fLJj
-        Qt8BLt9kH6ZUxLd49OwcUiXanFmFG
-X-Received: by 2002:a2e:6a14:0:b0:29b:d2f1:de9b with SMTP id f20-20020a2e6a14000000b0029bd2f1de9bmr4142456ljc.47.1682499458889;
-        Wed, 26 Apr 2023 01:57:38 -0700 (PDT)
-X-Google-Smtp-Source: AKy350Yx9BB81vQR6fLd3lXwJ35Cz4Jj1Udt07gGaFpg1cOTHMdrnGmkcWc2ganLveGb7dCQC1foHQ==
-X-Received: by 2002:a2e:6a14:0:b0:29b:d2f1:de9b with SMTP id f20-20020a2e6a14000000b0029bd2f1de9bmr4142423ljc.47.1682499458568;
-        Wed, 26 Apr 2023 01:57:38 -0700 (PDT)
-Received: from [192.168.1.121] (85-23-48-202.bb.dnainternet.fi. [85.23.48.202])
-        by smtp.gmail.com with ESMTPSA id y4-20020a2e9d44000000b002aa4713b925sm1793633ljj.21.2023.04.26.01.57.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Apr 2023 01:57:37 -0700 (PDT)
-Message-ID: <3562046e-1625-8536-910c-111d38acc346@redhat.com>
-Date:   Wed, 26 Apr 2023 11:57:36 +0300
+        Wed, 26 Apr 2023 06:11:55 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 64D4C3C1F;
+        Wed, 26 Apr 2023 03:11:53 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F5874B3;
+        Wed, 26 Apr 2023 03:12:37 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F8AB3F5A1;
+        Wed, 26 Apr 2023 03:11:49 -0700 (PDT)
+Message-ID: <6396e5dc-bf53-ce0d-15ea-0a1aedecf691@arm.com>
+Date:   Wed, 26 Apr 2023 11:11:39 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4] mm/gup: disallow GUP writing to file-backed mappings
- by default
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v1 21/40] perf parse-events: Wildcard legacy cache events
+To:     Ian Rogers <irogers@google.com>
+References: <20230426070050.1315519-1-irogers@google.com>
+ <20230426070050.1315519-22-irogers@google.com>
 Content-Language: en-US
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        David Hildenbrand <david@redhat.com>
-References: <3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com>
- <a68fa8f2-8619-63ff-3525-ede7ed1f0a9f@redhat.com>
- <5ffd7f32-d236-4da4-93f7-c2fe39a6e035@lucifer.local>
- <aa0d9a98-7dd1-0188-d382-5835cf1ddf3a@redhat.com>
- <b7f8daba-1250-4a45-895e-cbb20cc6c2dd@lucifer.local>
- <831f0d02-7671-97bf-a968-e2e5bf92dfd7@redhat.com> <ZEjjz_zqynWj0Kcc@murray>
-From:   =?UTF-8?Q?Mika_Penttil=c3=a4?= <mpenttil@redhat.com>
-In-Reply-To: <ZEjjz_zqynWj0Kcc@murray>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Florian Fischer <florian.fischer@muhq.space>,
+        Rob Herring <robh@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230426070050.1315519-22-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 26.4.2023 11.41, Lorenzo Stoakes wrote:
-> On Wed, Apr 26, 2023 at 10:30:03AM +0300, Mika Penttilä wrote:
+On 26/04/2023 08:00, Ian Rogers wrote:
+> It is inconsistent that "perf stat -e instructions-retired" wildcard
+> opens on all PMUs while legacy cache events like "perf stat -e
+> L1-dcache-load-miss" do not. A behavior introduced by hybrid is that a
+> legacy cache event like L1-dcache-load-miss should wildcard open on
+> all hybrid PMUs. A call to is_event_supported is necessary for each
+> PMU, a failure of which results in the event not being added. Rather
+> than special case that logic, move it into the main legacy cache event
+> case and attempt to open legacy cache events on all PMUs.
 > 
-> [snip]
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/parse-events-hybrid.c | 33 -------------
+>  tools/perf/util/parse-events-hybrid.h |  7 ---
+>  tools/perf/util/parse-events.c        | 70 ++++++++++++++-------------
+>  tools/perf/util/parse-events.h        |  3 +-
+>  tools/perf/util/parse-events.y        |  2 +-
+>  5 files changed, 39 insertions(+), 76 deletions(-)
 > 
->>> The issue is how dirtying works. Typically for a dirty-tracking mapping the
->>> kernel makes the mapping read-only, then when a write fault occurs,
->>> writenotify is called and the folio is marked dirty. This way the file
->>> system knows which files to writeback, then after writeback it 'cleans'
->>> them, restoring the read-only mapping and relying on the NEXT write marking
->>> write notifying and marking the folio dirty again.
->>>
->>
->> I know how the dirty tracking works :). And gup itself actually triggers the
->> _first_ fault on a read only pte.
-> 
-> I'm sure you don't mean to, but this comes off as sarcastic, 'I know how X
-> works :)' is not a helpful comment. However, equally apologies if I seemed
-> patronising, not intentional, I am just trying to be as clear as possible,
-> which always risks sounding that way :)
+> diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/parse-events-hybrid.c
+> index 7c9f9150bad5..d2c0be051d46 100644
+> --- a/tools/perf/util/parse-events-hybrid.c
+> +++ b/tools/perf/util/parse-events-hybrid.c
+> @@ -179,36 +179,3 @@ int parse_events__add_numeric_hybrid(struct parse_events_state *parse_state,
+>  	return add_raw_hybrid(parse_state, list, attr, name, metric_id,
+>  			      config_terms);
+>  }
+> -
+> -int parse_events__add_cache_hybrid(struct list_head *list, int *idx,
+> -				   struct perf_event_attr *attr,
+> -				   const char *name,
+> -				   const char *metric_id,
+> -				   struct list_head *config_terms,
+> -				   bool *hybrid,
+> -				   struct parse_events_state *parse_state)
+> -{
+> -	struct perf_pmu *pmu;
+> -	int ret;
+> -
+> -	*hybrid = false;
+> -	if (!perf_pmu__has_hybrid())
+> -		return 0;
+> -
+> -	*hybrid = true;
+> -	perf_pmu__for_each_hybrid_pmu(pmu) {
+> -		LIST_HEAD(terms);
+> -
+> -		if (pmu_cmp(parse_state, pmu))
+> -			continue;
+> -
+> -		copy_config_terms(&terms, config_terms);
+> -		ret = create_event_hybrid(PERF_TYPE_HW_CACHE, idx, list,
+> -					  attr, name, metric_id, &terms, pmu);
+> -		free_config_terms(&terms);
+> -		if (ret)
+> -			return ret;
+> -	}
+> -
+> -	return 0;
+> -}
+> diff --git a/tools/perf/util/parse-events-hybrid.h b/tools/perf/util/parse-events-hybrid.h
+> index cbc05fec02a2..bc2966e73897 100644
+> --- a/tools/perf/util/parse-events-hybrid.h
+> +++ b/tools/perf/util/parse-events-hybrid.h
+> @@ -15,11 +15,4 @@ int parse_events__add_numeric_hybrid(struct parse_events_state *parse_state,
+>  				     struct list_head *config_terms,
+>  				     bool *hybrid);
+>  
+> -int parse_events__add_cache_hybrid(struct list_head *list, int *idx,
+> -				   struct perf_event_attr *attr,
+> -				   const char *name, const char *metric_id,
+> -				   struct list_head *config_terms,
+> -				   bool *hybrid,
+> -				   struct parse_events_state *parse_state);
+> -
+>  #endif /* __PERF_PARSE_EVENTS_HYBRID_H */
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 9b2d7b6572c2..e007b2bc1ab4 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -471,46 +471,50 @@ static int parse_events__decode_legacy_cache(const char *name, int pmu_type, __u
+>  
+>  int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
+>  			   struct parse_events_error *err,
+> -			   struct list_head *head_config,
+> -			   struct parse_events_state *parse_state)
+> +			   struct list_head *head_config)
+>  {
+> -	struct perf_event_attr attr;
+> -	LIST_HEAD(config_terms);
+> -	const char *config_name, *metric_id;
+> -	int ret;
+> -	bool hybrid;
+> +	struct perf_pmu *pmu = NULL;
+> +	bool found_supported = false;
+> +	const char *config_name = get_config_name(head_config);
+> +	const char *metric_id = get_config_metric_id(head_config);
+>  
+> +	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+> +		LIST_HEAD(config_terms);
+> +		struct perf_event_attr attr;
+> +		int ret;
+>  
+> -	memset(&attr, 0, sizeof(attr));
+> -	attr.type = PERF_TYPE_HW_CACHE;
+> -	ret = parse_events__decode_legacy_cache(name, /*pmu_type=*/0, &attr.config);
+> -	if (ret)
+> -		return ret;
+> +		/*
+> +		 * Skip uncore PMUs for performance. Software PMUs can open
+> +		 * PERF_TYPE_HW_CACHE, so skip.
+> +		 */
+> +		if (pmu->is_uncore || pmu->type == PERF_TYPE_SOFTWARE)
+> +			continue;
+>  
+> -	if (head_config) {
+> -		if (config_attr(&attr, head_config, err,
+> -				config_term_common))
+> -			return -EINVAL;
+> +		memset(&attr, 0, sizeof(attr));
+> +		attr.type = PERF_TYPE_HW_CACHE;
+>  
+> -		if (get_config_terms(head_config, &config_terms))
+> -			return -ENOMEM;
+> -	}
+> +		ret = parse_events__decode_legacy_cache(name, pmu->type, &attr.config);
+> +		if (ret)
+> +			return ret;
+>  
+> -	config_name = get_config_name(head_config);
+> -	metric_id = get_config_metric_id(head_config);
+> -	ret = parse_events__add_cache_hybrid(list, idx, &attr,
+> -					     config_name ? : name,
+> -					     metric_id,
+> -					     &config_terms,
+> -					     &hybrid, parse_state);
+> -	if (hybrid)
+> -		goto out_free_terms;
+> +		if (!is_event_supported(PERF_TYPE_HW_CACHE, attr.config))
+> +			continue;
 
-Absolutely didn't mean that way, and thanks for being clear here!
-> 
-> Regardless, this is a very good point! I think I was a little too implicit
-> in the whole 'at any time the kernel chooses to write to this writenotify
-> won't happen', and you are absolutely right in that we are not clear enough
-> about that.
-> 
->>
->> So the problem is accessing the page after that, somewehere in future. I
->> think this is something you should write on the description. Because,
->> technically, GUP itself works and does invoke the write notify. So the
->> misleading part is you say in the description it doesn't. While you mean a
->> later write, from a driver or such, doesn't.
->>
-> 
-> Ack, agreed this would be a useful improvement. Will fix on next spin!
+Hi Ian,
 
-Yes thanks, think so, at least found myself going thru and wondering 
-what's wrong with the gup code itself, and not the later usage scenario...
+I get a test failure on Arm from this commit. I think it's related to
+this check for support that's failing but I'm not sure what the
+resolution should be. I also couldn't see why the metrics in
+test_soc/cpu/metrics.json aren't run on x86 (assuming they're generic
+'test anywhere' type metrics?).
 
-> 
-> [snip]
-> 
+  $ perf test -vvv "parsing of PMU event table metrics with fake"
+  ...
+  parsing 'dcache_miss_cpi': 'l1d\-loads\-misses / inst_retired.any'
+  parsing metric: l1d\-loads\-misses / inst_retired.any
+  Attempting to add event pmu 'inst_retired.any' with
+'inst_retired.any,' that may result in non-fatal errors
+  After aliases, add event pmu 'inst_retired.any' with
+'inst_retired.any,' that may result in non-fatal errors
+  inst_retired.any -> fake_pmu/inst_retired.any/
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             3
+    config                           0x800010000
+    disabled                         1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
+  sys_perf_event_open failed, error -2
 
+  check_parse_fake failed
+  test child finished with -1
+  ---- end ----
+  PMU events subtest 4: FAILED!
 
---Mika
-
+>  
+> -	ret = add_event(list, idx, &attr, config_name ? : name, metric_id,
+> -			&config_terms);
+> -out_free_terms:
+> -	free_config_terms(&config_terms);
+> -	return ret;
+> +		found_supported = true;
+> +
+> +		if (head_config) {
+> +			if (config_attr(&attr, head_config, err,
+> +						config_term_common))
+> +				return -EINVAL;
+> +
+> +			if (get_config_terms(head_config, &config_terms))
+> +				return -ENOMEM;
+> +		}
+> +
+> +		ret = add_event(list, idx, &attr, config_name ? : name, metric_id, &config_terms);
+> +		free_config_terms(&config_terms);
+> +	}
+> +	return found_supported ? 0: -EINVAL;
+>  }
+>  
+>  #ifdef HAVE_LIBTRACEEVENT
+> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+> index 5acb62c2e00a..0c26303f7f63 100644
+> --- a/tools/perf/util/parse-events.h
+> +++ b/tools/perf/util/parse-events.h
+> @@ -172,8 +172,7 @@ int parse_events_add_tool(struct parse_events_state *parse_state,
+>  			  int tool_event);
+>  int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
+>  			   struct parse_events_error *error,
+> -			   struct list_head *head_config,
+> -			   struct parse_events_state *parse_state);
+> +			   struct list_head *head_config);
+>  int parse_events_add_breakpoint(struct list_head *list, int *idx,
+>  				u64 addr, char *type, u64 len);
+>  int parse_events_add_pmu(struct parse_events_state *parse_state,
+> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> index f84fa1b132b3..cc7528558845 100644
+> --- a/tools/perf/util/parse-events.y
+> +++ b/tools/perf/util/parse-events.y
+> @@ -476,7 +476,7 @@ PE_LEGACY_CACHE opt_event_config
+>  
+>  	list = alloc_list();
+>  	ABORT_ON(!list);
+> -	err = parse_events_add_cache(list, &parse_state->idx, $1, error, $2, parse_state);
+> +	err = parse_events_add_cache(list, &parse_state->idx, $1, error, $2);
+>  
+>  	parse_events_terms__delete($2);
+>  	free($1);
