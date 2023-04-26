@@ -2,126 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802EDC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 02:14:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDD1C77B61
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 03:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239029AbjDZCOX (ORCPT
+        id S231377AbjDZDQa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Apr 2023 22:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59544 "EHLO
+        Tue, 25 Apr 2023 23:16:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238459AbjDZCOW (ORCPT
+        with ESMTP id S232378AbjDZDQ3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Apr 2023 22:14:22 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06EBE46A1;
-        Tue, 25 Apr 2023 19:14:20 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Q5j4z0mJdz18KLb;
-        Wed, 26 Apr 2023 10:10:27 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 26 Apr 2023 10:14:18 +0800
-Subject: Re: Bug: "perf record" reporting buffer overflow when writing data
-To:     Will Ochowicz <Will.Ochowicz@genusplc.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <CWLP265MB497033A5B448268D677F03DD9C649@CWLP265MB4970.GBRP265.PROD.OUTLOOK.COM>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <6c88ac58-a2c8-0b15-a106-9c8b0e26b3ac@huawei.com>
-Date:   Wed, 26 Apr 2023 10:14:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Tue, 25 Apr 2023 23:16:29 -0400
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C1C410C
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Apr 2023 20:16:28 -0700 (PDT)
+Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-3f178da219bso65377895e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Apr 2023 20:16:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1682478986; x=1685070986;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AVir08Cbf9wJskp2wop7rm5AfA4zMnJc8JlkRWqm+pY=;
+        b=lcqbSU1bG+4NDu22Nfl5xbh11Rzsat+yZY+zXVIK7uSCeYcmpb1ALuZkXGpRd43C9/
+         a4B4ON8ASn0+nVAgJrptnG8PaMw54nQvpwQ/Rgw/tFPUXylSWrgRYvLcnl8qsGSqMTKj
+         2nm2/eXv8QIOX7us8XIKhPgJxpClghibDTNJI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682478986; x=1685070986;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AVir08Cbf9wJskp2wop7rm5AfA4zMnJc8JlkRWqm+pY=;
+        b=MkxE0SYQpRlSo+Km7LjGe1kerTEZK7fLOPkdgls59vwzY9iZ0JaBWrTukloRPNUqOr
+         v9W4fG9trAea9E5c425sow0vD2LFTRVT/fzjz19XVUeepTfht1H0yoe9fc37j2r/qpW/
+         7hiDOnZ0wn/AMZKzJWya4UYZmuUCFD6MXmBDJvnDre3fYxqFLt2OCK1MJUG6GQAa9m2F
+         9RRj3T1DMp9qVNWJ5sY0j3Dnukg2SA5bh5Y4aqN1bE7pj9Ie6yoWuSsiIQP/CSmqYyf2
+         5O2Ap23EyemPP6q5CYyodA98ik+Aub4bYRGaL7vYOZsLnzv64Jn0ItIbKAWzPsUhblK9
+         ot4w==
+X-Gm-Message-State: AAQBX9ecWaqQmFwyTqRX61FvJXaOSQIs3EDRmLK2xAwUj1fE+bMc+py8
+        RgT7o4FDh0V+dkIOz2fKPKOFmE6yP6NBElRcacOoDA==
+X-Google-Smtp-Source: AKy350az8IbhcGBd7M9fx/5G0HwKYLQxJAuJVtA4T2RNIoYB9S/nrMIvwBLz99M0cEIbP+r0+2Fg1+jEkkHj/maNbYY=
+X-Received: by 2002:a5d:560e:0:b0:2ef:ae66:c0e3 with SMTP id
+ l14-20020a5d560e000000b002efae66c0e3mr12991855wrv.12.1682478986478; Tue, 25
+ Apr 2023 20:16:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CWLP265MB497033A5B448268D677F03DD9C649@CWLP265MB4970.GBRP265.PROD.OUTLOOK.COM>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+References: <20230424134748.228137-1-james.clark@arm.com>
+In-Reply-To: <20230424134748.228137-1-james.clark@arm.com>
+From:   Denis Nikitin <denik@chromium.org>
+Date:   Tue, 25 Apr 2023 20:16:15 -0700
+Message-ID: <CADDJ8CXxR6_SHLpeX=hxZg9SbBBQ7EoN0RySATjwaSZoK2k68g@mail.gmail.com>
+Subject: Re: [PATCH 0/7] perf: cs-etm: Fixes around timestamped and timeless decoding
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+        shy828301@gmail.com, denik@google.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Thanks James!
 
-On 2023/4/26 0:54, Will Ochowicz wrote:
-> Hi all,
-> 
-> [1.] One line summary of the problem: "perf record" reporting buffer overflow when writing data
-> [2.] Full description of the problem/report:
-> I was using perf to monitor the performance of a node server, and when I stopped the server, perf crashed while writing the data with a message of
-> 
->> [ perf record: Woken up 96 times to write data ]
->> *** buffer overflow detected ***: terminated
-> 
-> I downloaded perf version 5.10.158 (the same version that caused the issue) and compiled with debug symbols, but did not run into issues. However, after I started adding libraries to enable additional features, the buffer overflow began again.
-> Below is the stack trace from where the crash occurred:
->       
-> Thread 1 "perf" received signal SIGABRT, Aborted.
-> __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0)
->      at ./nptl/pthread_kill.c:44
-> 44      ./nptl/pthread_kill.c: No such file or directory.
-> (gdb) bt
-> #0  __pthread_kill_implementation (threadid=<optimized out>, signo=signo@entry=6, no_tid=no_tid@entry=0)
->      at ./nptl/pthread_kill.c:44
-> #1  0x00007ffff72d4d2f in __pthread_kill_internal (signo=6, threadid=<optimized out>) at ./nptl/pthread_kill.c:78
-> #2  0x00007ffff7285ef2 in __GI_raise (sig=sig@entry=6) at ../sysdeps/posix/raise.c:26
-> #3  0x00007ffff7270472 in __GI_abort () at ./stdlib/abort.c:79
-> #4  0x00007ffff72c92d0 in __libc_message (action=action@entry=do_abort,
->      fmt=fmt@entry=0x7ffff73e3210 "*** %s ***: terminated\n") at ../sysdeps/posix/libc_fatal.c:155
-> #5  0x00007ffff7361e82 in __GI___fortify_fail (msg=msg@entry=0x7ffff73e31b6 "buffer overflow detected")
->      at ./debug/fortify_fail.c:26
-> #6  0x00007ffff7360990 in __GI___chk_fail () at ./debug/chk_fail.c:28
-> #7  0x00005555557e7ddd in memcpy (__len=40, __src=0x555556a28b38, __dest=0x7fffffff843c)
->      at /usr/include/x86_64-linux-gnu/bits/string_fortified.h:29
-> #8  write_buildid (fd=0x7fffffff8590, misc=<optimized out>, pid=-1, bid=0x555556a28b38,
->      name_len=<optimized out>, name=0x555556a28c0c "/opt/pylon/lib/libpylonbase-6.1.1.so") at util/build-id.c:312
-> #9  machine__write_buildid_table (machine=machine@entry=0x555555d9bef0, fd=fd@entry=0x7fffffff8590)
->      at util/build-id.c:361
-> #10 0x00005555557e865e in perf_session__write_buildid_table (session=session@entry=0x555555d9bd00,
->      fd=fd@entry=0x7fffffff8590) at util/build-id.c:374
-> #11 0x000055555581c4b9 in write_build_id (ff=ff@entry=0x7fffffff8590, evlist=evlist@entry=0x555555d96d60)
->      at util/header.c:320
-> #12 0x0000555555824fa3 in do_write_feat (evlist=0x555555d96d60, p=<synthetic pointer>, type=2, ff=0x7fffffff8590)
->      at util/header.c:3224
-> #13 perf_header__adds_write (fd=3, evlist=0x555555d96d60, header=<optimized out>) at util/header.c:3269
-> #14 perf_session__write_header (session=<optimized out>, evlist=0x555555d96d60, fd=3, at_exit=at_exit@entry=true)
->      at util/header.c:3353
-> #15 0x0000555555760777 in record__finish_output (rec=0x555555b9bb40 <record>) at builtin-record.c:1236
-> #16 0x0000555555763560 in __cmd_record (rec=0x555555b9bb40 <record>, argv=<optimized out>, argc=<optimized out>)
->      at builtin-record.c:2026
-> #17 cmd_record (argc=<optimized out>, argv=<optimized out>) at builtin-record.c:2835
-> #18 0x00005555557dc8a3 in run_builtin (p=p@entry=0x555555ba6cb8 <commands+216>, argc=argc@entry=8,
->      argv=argv@entry=0x7fffffffdb90) at perf.c:312
-> #19 0x000055555574af48 in handle_internal_command (argv=0x7fffffffdb90, argc=8) at perf.c:364
-> #20 run_argv (argv=<synthetic pointer>, argcp=<synthetic pointer>) at perf.c:408
-> #21 main (argc=8, argv=0x7fffffffdb90) at perf.c:538
+Some of the patches failed to apply on ToT.
 
+Acked-by: Denis Nikitin <denik@chromium.org>
 
-Can you confirm the following two questions on your environment?
-1. readelf -n /opt/pylon/lib/libpylonbase-6.1.1.so
-Let's see what the output is.
+- Denis
 
-2. Patch the following fix and check whether the problem recurs:
-
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 41882ae8452e..059f88eca630 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -903,7 +903,7 @@ static int elf_read_build_id(Elf *elf, void *bf, 
-size_t size)
-                                 size_t sz = min(size, descsz);
-                                 memcpy(bf, ptr, sz);
-                                 memset(bf + sz, 0, size - sz);
--                               err = descsz;
-+                               err = sz;
-                                 break;
-                         }
-                 }
-
-Thanks,
-Yang.
+On Mon, Apr 24, 2023 at 6:48=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
+>
+> The first commit contains a fix for a recently introduced regression,
+> but was always a shortcoming in the Coresight code anyway.
+>
+> The following commits are a tidyup in preparation for the last commit,
+> which is a fairly major change to the decode logic that's also
+> indirectly related to the regression so I thought it would be good time
+> to fix that now.
+>
+> Applies to perf/core (9be6ab181b7b)
+>
+> James Clark (7):
+>   perf: cs-etm: Fix timeless decode mode detection
+>   perf tools: Add util function for overriding user set config values
+>   perf: cs-etm: Don't test full_auxtrace because it's always set
+>   perf: cs-etm: Validate options after applying them
+>   perf: cs-etm: Allow user to override timestamp and contextid settings
+>   perf: cs-etm: Use bool type for boolean values
+>   perf: cs-etm: Add separate decode paths for timeless and per-thread
+>     modes
+>
+>  tools/perf/arch/arm/util/cs-etm.c             | 223 +++++++++---------
+>  tools/perf/arch/arm/util/pmu.c                |   2 +
+>  tools/perf/arch/arm64/util/arm-spe.c          |  26 +-
+>  tools/perf/arch/x86/util/intel-pt.c           |  22 +-
+>  tools/perf/tests/shell/test_arm_coresight.sh  |  24 ++
+>  .../perf/util/cs-etm-decoder/cs-etm-decoder.h |   8 +-
+>  tools/perf/util/cs-etm.c                      | 200 +++++++++++-----
+>  tools/perf/util/cs-etm.h                      |   6 +-
+>  tools/perf/util/evsel.c                       |  29 +++
+>  tools/perf/util/evsel.h                       |   3 +
+>  10 files changed, 325 insertions(+), 218 deletions(-)
+>
+> --
+> 2.34.1
+>
+> _______________________________________________
+> CoreSight mailing list -- coresight@lists.linaro.org
+> To unsubscribe send an email to coresight-leave@lists.linaro.org
