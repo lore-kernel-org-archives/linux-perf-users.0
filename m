@@ -2,59 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1EBC7618E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 07:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C733BC77B78
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 07:07:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239954AbjDZHHs (ORCPT
+        id S239873AbjDZHHx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Apr 2023 03:07:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46446 "EHLO
+        Wed, 26 Apr 2023 03:07:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239449AbjDZHHL (ORCPT
+        with ESMTP id S239936AbjDZHHQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Apr 2023 03:07:11 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 966394C11
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 00:05:45 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b9a25f6aa0eso1476620276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 00:05:45 -0700 (PDT)
+        Wed, 26 Apr 2023 03:07:16 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152A240F1
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 00:05:55 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5562978fe63so75324257b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 00:05:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682492727; x=1685084727;
+        d=google.com; s=20221208; t=1682492737; x=1685084737;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mQ0x6N0RNGSt0AF/fHZKh2i20S0O9mJpVpnE3xtP9Qs=;
-        b=dLfPuoZPECVNAa8PJubrzET3fdMuNPpnEJhZwWXqjBenElR9cXO6ly6IIczs/OfWFq
-         8zQ0iFqlh+vakxj7BJ+u+aB8MWOX5vie45jmde2bTaJglKhPaaeN/JpYQSTP6CpW19Cf
-         qsuOvULaFoWvN82XLXCYcH6+QgybmOwh+qxAky2avg0CHNN76ooZ5qHCyY+S3uzK7ZlO
-         ZtQn7E3q1D4kf86EnVcWhbF/zq+gLO381XLBr+rPYfPl2ZtRxrPh/jONbn+++HhZJfgF
-         9jSccJ+XSOxtHZq1yMMH0uPYZ9zqxrSuDfcxcs1aVmpRf4cbjimlWfDB8REZCwk6dNA0
-         JlKQ==
+        bh=hQLtw5RMB3Daw/2/bml2TpAPLMkiCqaBNsV2CgoJXks=;
+        b=B5KI0A9KFlYxcY+7k1D7CUDFZvprNXA/okbjoAqOhSuauCGJZ5b07igWWW7E4jq/tm
+         mZVH2hMLBFESMUOz5Xd+aKqrOfdewmKFgg7MAQVhe+gle01u1BFOMGwYv0jEQA83aPEZ
+         ftkWXWafkTEhLxvP7dyb+UF0TT3g9MXnMyOGVACYEr10+zbpuCmJEXJjOstzbPcTZSZK
+         JzXrmjxKE8sO0n1ZmTCpCa9s3CF+KEV+hpQPZrDV+T/EJni3d4WgJB+S1E6xJYt8OMxj
+         t9KvpchghLLXp056Ssqn5bPldItVr8r3cgKtTfkKSV1PyH8lBaZKUrSiXdKjKb/5/E02
+         UaaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682492727; x=1685084727;
+        d=1e100.net; s=20221208; t=1682492737; x=1685084737;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mQ0x6N0RNGSt0AF/fHZKh2i20S0O9mJpVpnE3xtP9Qs=;
-        b=Zz1tePICiKbFU/Qj+1JV3BF7fNVfnVB7ibxncLqxhXkjXrbPRb4k5mNAzlj3FOuNID
-         lfELsA+kEUNF6oK4HaepvceD9LUEqI95oZdSV420IogxLNSuTmEJst938nQP693EGeHs
-         9kuHFEg1025cJf3P9zO1H2EqIgeNYIyQMLKXV8H+e0AaXPgj8DSQJZwpqXHLsloXEPFg
-         peZ6rWvsRhpB6ozPdKLd9FwR6L4KaB5AaRi3+/7SychRmMz3JbtaZqwJXrBfXTGEajU8
-         SvJu/XoRwMKC0XwH7Fpdm/XYsYbeVw5J7EPUyJvwLMxtKr325m0Y/dKoze3hfL4raI4r
-         q2jA==
-X-Gm-Message-State: AAQBX9dBnW8uxXNTBbqE7z7rSuyrn0MdzUZ+SAJWhGTKhkuMKXQ2eOaa
-        iS7sXWzONmk46YIvYxLwnhhU482jtYAE
-X-Google-Smtp-Source: AKy350a+sScxF4h4rmGICB8SVQvSJ8OaNlw1N3UYC3rgi0avDPGMbp+Zo/s/ohkk0badWy0fLCwZbdQ9GbCB
+        bh=hQLtw5RMB3Daw/2/bml2TpAPLMkiCqaBNsV2CgoJXks=;
+        b=Q2yDIj/XDVedVi1Ke7L6PR4PQLQ2KsPAG8SeiRNjC44bjwSc84J7F5paEPHkdmM8P6
+         8gtd2Xchd7NoP7d3zUoKG9qvsExNyWeWu7Fx9eYPG5MoRygCFEPY64jgFIIx+fWwGJtB
+         J8ihnO13kegkXoK0veWXF111A47UYxaHy+E8FkkDCo08YGFJsBU2AOPaCnieal3U2xQf
+         zqwS1j59JQ7umbAFG5c854I9ZXB04DXcKGQlyC98dcI6qSIN1MxrBRq20qFvOZWLI2Eh
+         0Q/XDgpyGzt/Flx9yj0NtqZ7vjVbZeK3kMO4MaApUPiP4bKGSnIDC3lQK4p7/SA76+WZ
+         M7hw==
+X-Gm-Message-State: AAQBX9dOPSmrV2WVp3pF1WA7mwYM1jv+mdsPStmGGMelPfCfAI8yDGvr
+        Z/Up6ON84HCAfwK0R/HA3+J/THa1bS9Z
+X-Google-Smtp-Source: AKy350apWTU9HkhOaCBsCC7bZbmli/pO0tdxpBoo4po1yUZ6tk74U1W6It++yGs+Htsw8VyVXAfYW1zipfqO
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:144f:e890:2b29:48d9])
- (user=irogers job=sendgmr) by 2002:a25:ccd6:0:b0:b8b:fe5f:2eaa with SMTP id
- l205-20020a25ccd6000000b00b8bfe5f2eaamr7789005ybf.2.1682492727239; Wed, 26
- Apr 2023 00:05:27 -0700 (PDT)
-Date:   Wed, 26 Apr 2023 00:00:42 -0700
+ (user=irogers job=sendgmr) by 2002:a81:a843:0:b0:54f:68a1:b406 with SMTP id
+ f64-20020a81a843000000b0054f68a1b406mr9571080ywh.2.1682492736855; Wed, 26 Apr
+ 2023 00:05:36 -0700 (PDT)
+Date:   Wed, 26 Apr 2023 00:00:43 -0700
 In-Reply-To: <20230426070050.1315519-1-irogers@google.com>
-Message-Id: <20230426070050.1315519-33-irogers@google.com>
+Message-Id: <20230426070050.1315519-34-irogers@google.com>
 Mime-Version: 1.0
 References: <20230426070050.1315519-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v1 32/40] perf parse-events: Avoid error when assigning a
- legacy cache term
+Subject: [PATCH v1 33/40] perf parse-events: Don't auto merge hybrid wildcard events
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -95,114 +94,87 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Avoid the parser error:
-'''
-$ perf stat -e 'cycles/name=l1d/' true
-event syntax error: 'cycles/name=l1d/'
-                                \___ parser error
-'''
-by combining the name and legacy cache cases in the parser.
+Bring back the behavior of not auto-merging hybrid events by
+delegating to a test in pmu.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/parse-events.c | 21 +++++++++++++++++++++
- tools/perf/util/parse-events.y  | 10 ++++++----
- 2 files changed, 27 insertions(+), 4 deletions(-)
+ tools/perf/util/parse-events.c | 5 ++++-
+ tools/perf/util/parse-events.y | 4 +++-
+ tools/perf/util/pmu.c          | 5 +++++
+ tools/perf/util/pmu.h          | 1 +
+ 4 files changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 06042f450ece..c44f0ffa51c5 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -1495,6 +1495,16 @@ static int test__term_equal_term(struct evlist *evlist)
- 	return TEST_OK;
- }
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 98e424257278..b62dcc51b22f 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1718,16 +1718,19 @@ int parse_events_multi_pmu_add(struct parse_events_state *parse_state,
  
-+static int test__term_equal_legacy(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
+ 	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+ 		struct perf_pmu_alias *alias;
++		bool auto_merge_stats;
+ 
+ 		if (parse_events__filter_pmu(parse_state, pmu))
+ 			continue;
+ 
++		auto_merge_stats = perf_pmu__auto_merge_stats(pmu);
 +
-+	TEST_ASSERT_VAL("wrong type", evsel->core.attr.type == PERF_TYPE_HARDWARE);
-+	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
-+	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "l1d") == 0);
-+	return TEST_OK;
-+}
-+
- #ifdef HAVE_LIBTRACEEVENT
- static int count_tracepoints(void)
- {
-@@ -1872,6 +1882,11 @@ static const struct evlist_test test__events[] = {
- 		.check = test__term_equal_term,
- 		/* 8 */
- 	},
-+	{
-+		.name  = "cycles/name=l1d/",
-+		.check = test__term_equal_legacy,
-+		/* 9 */
-+	},
- };
- 
- static const struct evlist_test test__events_pmu[] = {
-@@ -2059,6 +2074,12 @@ static const struct evlist_test test__events_pmu[] = {
- 		.check = test__term_equal_term,
- 		/* 0 */
- 	},
-+	{
-+		.name  = "cpu/cycles,name=l1d/",
-+		.valid = test__pmu_cpu_valid,
-+		.check = test__term_equal_legacy,
-+		/* 1 */
-+	},
- };
- 
- struct terms_test {
+ 		list_for_each_entry(alias, &pmu->aliases, list) {
+ 			if (!strcasecmp(alias->name, str)) {
+ 				parse_events_copy_term_list(head, &orig_head);
+ 				if (!parse_events_add_pmu(parse_state, list,
+ 							  pmu->name, orig_head,
+-							  /*auto_merge_stats=*/true)) {
++							  auto_merge_stats)) {
+ 					pr_debug("%s -> %s/%s/\n", str,
+ 						 pmu->name, alias->str);
+ 					ok++;
 diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 0aaebc57748e..f4ee03b5976b 100644
+index f4ee03b5976b..4e1f5de35be8 100644
 --- a/tools/perf/util/parse-events.y
 +++ b/tools/perf/util/parse-events.y
-@@ -82,7 +82,7 @@ static void free_list_evsel(struct list_head* list_evsel)
- %type <str> PE_EVENT_NAME
- %type <str> PE_KERNEL_PMU_EVENT PE_PMU_EVENT_FAKE
- %type <str> PE_DRV_CFG_TERM
--%type <str> name_or_raw
-+%type <str> name_or_raw name_or_legacy
- %destructor { free ($$); } <str>
- %type <term> event_term
- %destructor { parse_events_term__delete ($$); } <term>
-@@ -739,6 +739,8 @@ event_term
- 
- name_or_raw: PE_RAW | PE_NAME | PE_LEGACY_CACHE
- 
-+name_or_legacy: PE_NAME | PE_LEGACY_CACHE
+@@ -327,10 +327,12 @@ PE_NAME opt_pmu_config
+ 				name += 7;
+ 			if (!perf_pmu__match(pattern, name, $1) ||
+ 			    !perf_pmu__match(pattern, pmu->alias_name, $1)) {
++				bool auto_merge_stats = perf_pmu__auto_merge_stats(pmu);
 +
- event_term:
- PE_RAW
- {
-@@ -752,7 +754,7 @@ PE_RAW
- 	$$ = term;
+ 				if (parse_events_copy_term_list(orig_terms, &terms))
+ 					CLEANUP_YYABORT;
+ 				if (!parse_events_add_pmu(parse_state, list, pmu->name, terms,
+-							  /*auto_merge_stats=*/true)) {
++							  auto_merge_stats)) {
+ 					ok++;
+ 					parse_state->wild_card_pmus = true;
+ 				}
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index cd4247a379d4..f4f0afbc391c 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1660,6 +1660,11 @@ bool perf_pmu__supports_wildcard_numeric(const struct perf_pmu *pmu)
+ 	return is_pmu_core(pmu->name) || perf_pmu__is_hybrid(pmu->name);
  }
- |
--name_or_raw '=' PE_NAME
-+name_or_raw '=' name_or_legacy
- {
- 	struct parse_events_term *term;
  
-@@ -826,7 +828,7 @@ PE_TERM_HW
- 	$$ = term;
- }
- |
--PE_TERM '=' PE_NAME
-+PE_TERM '=' name_or_legacy
++bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
++{
++	return !perf_pmu__is_hybrid(pmu->name);
++}
++
+ static bool pmu_alias_is_duplicate(struct sevent *alias_a,
+ 				   struct sevent *alias_b)
  {
- 	struct parse_events_term *term;
- 
-@@ -872,7 +874,7 @@ PE_TERM
- 	$$ = term;
- }
- |
--name_or_raw array '=' PE_NAME
-+name_or_raw array '=' name_or_legacy
- {
- 	struct parse_events_term *term;
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 5a19536a5449..0e0cb6283594 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -222,6 +222,7 @@ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
+ bool is_pmu_core(const char *name);
+ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
+ bool perf_pmu__supports_wildcard_numeric(const struct perf_pmu *pmu);
++bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu);
+ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state);
+ bool pmu_have_event(const char *pname, const char *name);
  
 -- 
 2.40.1.495.gc816e09b53d-goog
