@@ -2,58 +2,70 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03795C77B60
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 08:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B598C7618E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 08:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjDZIl7 (ORCPT
+        id S240139AbjDZI6b (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Apr 2023 04:41:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53040 "EHLO
+        Wed, 26 Apr 2023 04:58:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239464AbjDZIl5 (ORCPT
+        with ESMTP id S239416AbjDZI63 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Apr 2023 04:41:57 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576793C1F;
-        Wed, 26 Apr 2023 01:41:55 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3f1cfed93e2so40348445e9.3;
-        Wed, 26 Apr 2023 01:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682498514; x=1685090514;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ArnfC+A36KVaoJFRoRkLOWAFxiyb01QcwAzoyNZQfrk=;
-        b=n9wa3FOCIYkEV0LwxjD7q+MJsqrZ/xLRGpZrfpm1L41Qr0+7o4/6/ZYD3BlbEcftEO
-         TWzgVeMf+XcQ9HsFH1vuDYssuU38PJbkjpIsGzwFEbwFCxKe2ZxojqC72bKxomHDmIz1
-         ay801JAtzkZglQqSXez+EB2JvaC/I7cUlvzIIvgZSWJZs9weW1ABvcyD5u63Q7mIkki6
-         NRPaCiSqUjxrZoe54A9PXGWESh3VCD77XzFDvAwQdpuwjTppXlqu1YvSuLi/m5BtM6YY
-         xlJl3a4CxRtLkhLlWSNRXKvWu1vgt+ugy9vY0Wy2ASvgNice9SZVxwotBJabFXuk4qjl
-         bI5w==
+        Wed, 26 Apr 2023 04:58:29 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2382F40E7
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 01:57:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1682499464;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qRhtGeXRPBB+p4cr9w0INOAc893fzDgBw6gSZ9r4K6o=;
+        b=JoRWawAkr2qdXKQ1xrRm+umgLcVYbfJAzeP9qJXcW4YQt2XOqo+mnYDPfWYHvpZQ5v7fMF
+        i0wOkXv7iMerZgkC7e5/aYKvdP17Sx9eYvLd9GWoeOFCk2YVnkFYLgR/k1XUx2dHyWTyzy
+        cnUVvI6xj2SPEOKDyS0LShyXIOB77Qg=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-265-geDB3qGwM_ym6htXJeKdiw-1; Wed, 26 Apr 2023 04:57:41 -0400
+X-MC-Unique: geDB3qGwM_ym6htXJeKdiw-1
+Received: by mail-lj1-f197.google.com with SMTP id 38308e7fff4ca-2ab26301bc6so8211801fa.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 01:57:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682498514; x=1685090514;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20221208; t=1682499459; x=1685091459;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ArnfC+A36KVaoJFRoRkLOWAFxiyb01QcwAzoyNZQfrk=;
-        b=YDzQ8taQ/HxY7KP1222ajKQ7hRqmvKGiNq7SgPDaDenvfQJaCD+Qmz66aBifskidli
-         AN0kwt3Cg7w5o9W2cPWz8yWHIw3GMga9ILzgn12jXlXRBHCu4qxUPUpUWGZkkxfCTFPw
-         kMmMX1kWqI5HWgsWVC7QHWPZIelnqikxiqSQJduHOumrZJD3geoS0Q1YLIjGUYJizJSr
-         9YOqiK/RHCL69TCdIDcTg3hnxruSAqsQLctuC3bwbgfT6WQP5WQv5lpT/GCmXy+wZEn6
-         Ff7eIX5JRWfi3MJioiYhpDNcYpS8afRkIcjHyLqOmqcnK0ee7RqzfcfB7cKpmq88Kquc
-         XqEQ==
-X-Gm-Message-State: AAQBX9cmd5cVsly/BEnpoynABUkHpVkJvfMep395e1KzyHVGT4/kVInq
-        9GLhVonkrFh3cHEa3TLGcYw=
-X-Google-Smtp-Source: AKy350Z5NR02Z8oNrVzXCbdERtnNyDO/QN/D6Phr2ymfd0ldQFATBh9gLJnkGVzoLJVNHjNxs5dl8A==
-X-Received: by 2002:a05:600c:2201:b0:3f1:806d:33ad with SMTP id z1-20020a05600c220100b003f1806d33admr11101118wml.6.1682498513622;
-        Wed, 26 Apr 2023 01:41:53 -0700 (PDT)
-Received: from localhost (ip-185-104-136-48.ptr.icomera.net. [185.104.136.48])
-        by smtp.gmail.com with ESMTPSA id t13-20020a7bc3cd000000b003f173c566b5sm17344264wmj.5.2023.04.26.01.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Apr 2023 01:41:52 -0700 (PDT)
-Date:   Wed, 26 Apr 2023 09:41:51 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     Mika =?iso-8859-1?Q?Penttil=E4?= <mpenttil@redhat.com>
+        bh=qRhtGeXRPBB+p4cr9w0INOAc893fzDgBw6gSZ9r4K6o=;
+        b=QNIvv8BvIcDR1pNI3WgoJ/bDCgQYNx0abDyU8sl3AJ/FmtBuVpZcIBvpK+vIG1RIjC
+         wxLgTtehGC5k0I2POFlcYH7o9otRw1jBbB+7SvOb1B/n+ZCHO0aPhu0tpPBIQlRfTt0O
+         M2y4UwIsqfhkznutUoZRV9QyJMEIFcgt53LQaIvUz3H9dzGHeSw+TXndFt4YpHJEGEtT
+         sZ5X1SmlW1c7mDE6kqGNahn28AuZt2WW7weW3Z8E7hGf/o4Fvf2b9smmbKCC+gVkcmH5
+         G/I3Ul+pNDQlAZMqDPxgmMLzIvMuO/v1AOze38N6PHkmD45qt7rT/R1+Apc4Mg5iAB+r
+         czvQ==
+X-Gm-Message-State: AAQBX9cc7OWtHjQZgo9AwqjBtFz9J+x8EYRZ0/LWlYIDs9DdRzmNikX+
+        jRPPzguaB6pCbhuXss45VnjZrHYwzxoxeKN5oo1aGq20ALvSdUoj+d1Khi63Z0gz1IqXYf+fLJj
+        Qt8BLt9kH6ZUxLd49OwcUiXanFmFG
+X-Received: by 2002:a2e:6a14:0:b0:29b:d2f1:de9b with SMTP id f20-20020a2e6a14000000b0029bd2f1de9bmr4142456ljc.47.1682499458889;
+        Wed, 26 Apr 2023 01:57:38 -0700 (PDT)
+X-Google-Smtp-Source: AKy350Yx9BB81vQR6fLd3lXwJ35Cz4Jj1Udt07gGaFpg1cOTHMdrnGmkcWc2ganLveGb7dCQC1foHQ==
+X-Received: by 2002:a2e:6a14:0:b0:29b:d2f1:de9b with SMTP id f20-20020a2e6a14000000b0029bd2f1de9bmr4142423ljc.47.1682499458568;
+        Wed, 26 Apr 2023 01:57:38 -0700 (PDT)
+Received: from [192.168.1.121] (85-23-48-202.bb.dnainternet.fi. [85.23.48.202])
+        by smtp.gmail.com with ESMTPSA id y4-20020a2e9d44000000b002aa4713b925sm1793633ljj.21.2023.04.26.01.57.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Apr 2023 01:57:37 -0700 (PDT)
+Message-ID: <3562046e-1625-8536-910c-111d38acc346@redhat.com>
+Date:   Wed, 26 Apr 2023 11:57:36 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4] mm/gup: disallow GUP writing to file-backed mappings
+ by default
+Content-Language: en-US
+To:     Lorenzo Stoakes <lstoakes@gmail.com>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
@@ -94,57 +106,67 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         Pavel Begunkov <asml.silence@gmail.com>,
         David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH v4] mm/gup: disallow GUP writing to file-backed mappings
- by default
-Message-ID: <ZEjjz_zqynWj0Kcc@murray>
 References: <3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com>
  <a68fa8f2-8619-63ff-3525-ede7ed1f0a9f@redhat.com>
  <5ffd7f32-d236-4da4-93f7-c2fe39a6e035@lucifer.local>
  <aa0d9a98-7dd1-0188-d382-5835cf1ddf3a@redhat.com>
  <b7f8daba-1250-4a45-895e-cbb20cc6c2dd@lucifer.local>
- <831f0d02-7671-97bf-a968-e2e5bf92dfd7@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+ <831f0d02-7671-97bf-a968-e2e5bf92dfd7@redhat.com> <ZEjjz_zqynWj0Kcc@murray>
+From:   =?UTF-8?Q?Mika_Penttil=c3=a4?= <mpenttil@redhat.com>
+In-Reply-To: <ZEjjz_zqynWj0Kcc@murray>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <831f0d02-7671-97bf-a968-e2e5bf92dfd7@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 26, 2023 at 10:30:03AM +0300, Mika Penttilä wrote:
 
-[snip]
 
-> > The issue is how dirtying works. Typically for a dirty-tracking mapping the
-> > kernel makes the mapping read-only, then when a write fault occurs,
-> > writenotify is called and the folio is marked dirty. This way the file
-> > system knows which files to writeback, then after writeback it 'cleans'
-> > them, restoring the read-only mapping and relying on the NEXT write marking
-> > write notifying and marking the folio dirty again.
-> >
->
-> I know how the dirty tracking works :). And gup itself actually triggers the
-> _first_ fault on a read only pte.
+On 26.4.2023 11.41, Lorenzo Stoakes wrote:
+> On Wed, Apr 26, 2023 at 10:30:03AM +0300, Mika PenttilÃ¤ wrote:
+> 
+> [snip]
+> 
+>>> The issue is how dirtying works. Typically for a dirty-tracking mapping the
+>>> kernel makes the mapping read-only, then when a write fault occurs,
+>>> writenotify is called and the folio is marked dirty. This way the file
+>>> system knows which files to writeback, then after writeback it 'cleans'
+>>> them, restoring the read-only mapping and relying on the NEXT write marking
+>>> write notifying and marking the folio dirty again.
+>>>
+>>
+>> I know how the dirty tracking works :). And gup itself actually triggers the
+>> _first_ fault on a read only pte.
+> 
+> I'm sure you don't mean to, but this comes off as sarcastic, 'I know how X
+> works :)' is not a helpful comment. However, equally apologies if I seemed
+> patronising, not intentional, I am just trying to be as clear as possible,
+> which always risks sounding that way :)
 
-I'm sure you don't mean to, but this comes off as sarcastic, 'I know how X
-works :)' is not a helpful comment. However, equally apologies if I seemed
-patronising, not intentional, I am just trying to be as clear as possible,
-which always risks sounding that way :)
+Absolutely didn't mean that way, and thanks for being clear here!
+> 
+> Regardless, this is a very good point! I think I was a little too implicit
+> in the whole 'at any time the kernel chooses to write to this writenotify
+> won't happen', and you are absolutely right in that we are not clear enough
+> about that.
+> 
+>>
+>> So the problem is accessing the page after that, somewehere in future. I
+>> think this is something you should write on the description. Because,
+>> technically, GUP itself works and does invoke the write notify. So the
+>> misleading part is you say in the description it doesn't. While you mean a
+>> later write, from a driver or such, doesn't.
+>>
+> 
+> Ack, agreed this would be a useful improvement. Will fix on next spin!
 
-Regardless, this is a very good point! I think I was a little too implicit
-in the whole 'at any time the kernel chooses to write to this writenotify
-won't happen', and you are absolutely right in that we are not clear enough
-about that.
+Yes thanks, think so, at least found myself going thru and wondering 
+what's wrong with the gup code itself, and not the later usage scenario...
 
->
-> So the problem is accessing the page after that, somewehere in future. I
-> think this is something you should write on the description. Because,
-> technically, GUP itself works and does invoke the write notify. So the
-> misleading part is you say in the description it doesn't. While you mean a
-> later write, from a driver or such, doesn't.
->
+> 
+> [snip]
+> 
 
-Ack, agreed this would be a useful improvement. Will fix on next spin!
 
-[snip]
+--Mika
+
