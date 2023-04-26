@@ -2,329 +2,77 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AB6C77B61
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 03:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 255FAC77B73
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 03:23:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239313AbjDZDTr (ORCPT
+        id S239218AbjDZDXO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 25 Apr 2023 23:19:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45656 "EHLO
+        Tue, 25 Apr 2023 23:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239160AbjDZDTf (ORCPT
+        with ESMTP id S239146AbjDZDXJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 25 Apr 2023 23:19:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75A0AF2
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Apr 2023 20:18:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682479126;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KtkS8QZe/o00VB0DHK7QzgrrGugl8akH2mYVPDK5a8k=;
-        b=fivxKvNgWf0g2bgyxHA2tFYFa07Hp6qrNQdnIyJ1g+CJEnqSeuTFTSMloty1xKO2DwgxKW
-        OItv1IH63/1CoCg5EzkRAHLXXgJ9yeLZcIft0ArxUYQy0jO1BPyp9s0ki+N5xHqHM8bNC8
-        XKHI7WfEVs0oofCrgZr7s+g6jRPW0Q0=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-2YiEFa_PN0eaYAlsdR673w-1; Tue, 25 Apr 2023 23:18:42 -0400
-X-MC-Unique: 2YiEFa_PN0eaYAlsdR673w-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-4edd5a7cddeso7924608e87.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Apr 2023 20:18:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682479121; x=1685071121;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KtkS8QZe/o00VB0DHK7QzgrrGugl8akH2mYVPDK5a8k=;
-        b=LwysYER1Jh8VTV6BE1ks4/V8o7PrvnQG/pXTBL9LlPErzrrppShB6F3iQPqugLhXig
-         LSFs7ojOUk8wysp9JF/Pno5pqdr2hnLCHFOOKlu7hFFKLi3g4LqvF1HnF9PLCCqyfn5H
-         ibnDRDUaeyLyKHsLHzclStRvFsDv69wGXeSOpUR2kSxbbCNYSBVi23/l46e3bhUsWk9j
-         jf5Manj+RZCs1UOnpdBZtWH30Z8nuKGnM5D0W1Lx7zQHFzQvQx0aCc2o2ScIKYLs+8B4
-         FqKoaUG//R/jUI2gI+VwlUZPoF7IDmtordhg0zEzvo/aQwaP7s7w8r3+hH/yhuCRDuXg
-         56pQ==
-X-Gm-Message-State: AC+VfDyDrsILWDyxHZGPWd7bNc5cbN6gtTUqGpOaU/qYSHbN62sBGEgZ
-        H3mD3yp0s/gmLW9m6lefwKOhtHaufm68IcCTtogYW2cgOjr6q+Z0jdm7Cm7Z9/vzkJ1e9tmwLJk
-        KlSC4z7zLti9XNcXWVF1gOXIlQlCv
-X-Received: by 2002:a05:6512:11ec:b0:4ef:ed90:1f3a with SMTP id p12-20020a05651211ec00b004efed901f3amr210390lfs.0.1682479120964;
-        Tue, 25 Apr 2023 20:18:40 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6Dw3RqruaPelklsbGwUGKPyyyX+X2gawZomjV+ANDWFBwBLmycH3J29SHyb3v8a+8L3O6asg==
-X-Received: by 2002:a05:6512:11ec:b0:4ef:ed90:1f3a with SMTP id p12-20020a05651211ec00b004efed901f3amr210375lfs.0.1682479120575;
-        Tue, 25 Apr 2023 20:18:40 -0700 (PDT)
-Received: from [192.168.1.121] (85-23-48-202.bb.dnainternet.fi. [85.23.48.202])
-        by smtp.gmail.com with ESMTPSA id p13-20020a19f00d000000b004efd57c198dsm1779335lfc.53.2023.04.25.20.18.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Apr 2023 20:18:39 -0700 (PDT)
-Message-ID: <a68fa8f2-8619-63ff-3525-ede7ed1f0a9f@redhat.com>
-Date:   Wed, 26 Apr 2023 06:18:38 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v4] mm/gup: disallow GUP writing to file-backed mappings
- by default
-Content-Language: en-US
-To:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 25 Apr 2023 23:23:09 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 912B71FE2;
+        Tue, 25 Apr 2023 20:23:08 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.56])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Q5kcL367Fz18KJN;
+        Wed, 26 Apr 2023 11:19:14 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 26 Apr 2023 11:23:05 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>
-References: <3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com>
-From:   =?UTF-8?Q?Mika_Penttil=c3=a4?= <mpenttil@redhat.com>
-In-Reply-To: <3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Hui Wang <hw.huiwang@huawei.com>,
+        Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH] perf: unwind: suppress massive unsupported target platform errors
+Date:   Wed, 26 Apr 2023 11:22:46 +0800
+Message-ID: <20230426032246.3608596-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+When cross-analyzing perf data recorded on an another platform, massive
+unsupported target platform errors are printed. So let's show this message
+as warning and only once.
 
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/util/unwind-libunwind.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 26.4.2023 2.15, Lorenzo Stoakes wrote:
-> GUP does not correctly implement write-notify semantics, nor does it
-> guarantee that the underlying pages are correctly dirtied, which could lead
-> to a kernel oops or data corruption when writing to file-backed mappings.
-> 
-> This is only relevant when the mappings are file-backed and the underlying
-> file system requires folio dirty tracking. File systems which do not, such
-> as shmem or hugetlb, are not at risk and therefore can be written to
-> without issue.
-> 
-> Unfortunately this limitation of GUP has been present for some time and
-> requires future rework of the GUP API in order to provide correct write
-> access to such mappings.
-> 
-> In the meantime, we add a check for the most broken GUP case -
-> FOLL_LONGTERM - which really under no circumstances can safely access
-> dirty-tracked file mappings.
-> 
-> As part of this change we separate out vma_needs_dirty_tracking() as a
-> helper function to determine this, which is distinct from
-> vma_wants_writenotify() which is specific to determining which PTE flags to
-> set.
-> 
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
-> ---
-> v4:
-> - Split out vma_needs_dirty_tracking() from vma_wants_writenotify() to reduce
->    duplication and update to use this in the GUP check. Note that both separately
->    check vm_ops_needs_writenotify() as the latter needs to test this before the
->    vm_pgprot_modify() test, resulting in vma_wants_writenotify() checking this
->    twice, however it is such a small check this should not be egregious.
-> 
-> v3:
-> - Rebased on latest mm-unstable as of 24th April 2023.
-> - Explicitly check whether file system requires folio dirtying. Note that
->    vma_wants_writenotify() could not be used directly as it is very much focused
->    on determining if the PTE r/w should be set (e.g. assuming private mapping
->    does not require it as already set, soft dirty considerations).
-> - Tested code against shmem and hugetlb mappings - confirmed that these are not
->    disallowed by the check.
-> - Eliminate FOLL_ALLOW_BROKEN_FILE_MAPPING flag and instead perform check only
->    for FOLL_LONGTERM pins.
-> - As a result, limit check to internal GUP code.
->   https://lore.kernel.org/all/23c19e27ef0745f6d3125976e047ee0da62569d4.1682406295.git.lstoakes@gmail.com/
-> 
-> v2:
-> - Add accidentally excluded ptrace_access_vm() use of
->    FOLL_ALLOW_BROKEN_FILE_MAPPING.
-> - Tweak commit message.
-> https://lore.kernel.org/all/c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com/
-> 
-> v1:
-> https://lore.kernel.org/all/f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com/
-> 
->   include/linux/mm.h |  1 +
->   mm/gup.c           | 26 +++++++++++++++++++++++++-
->   mm/mmap.c          | 37 ++++++++++++++++++++++++++++---------
->   3 files changed, 54 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 37554b08bb28..f7da02fc89c6 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2433,6 +2433,7 @@ extern unsigned long move_page_tables(struct vm_area_struct *vma,
->   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
->   					    MM_CP_UFFD_WP_RESOLVE)
->   
-> +bool vma_needs_dirty_tracking(struct vm_area_struct *vma);
->   int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot);
->   static inline bool vma_wants_manual_pte_write_upgrade(struct vm_area_struct *vma)
->   {
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 1f72a717232b..53652453037c 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -959,16 +959,37 @@ static int faultin_page(struct vm_area_struct *vma,
->   	return 0;
->   }
->   
-> +/*
-> + * Writing to file-backed mappings which require folio dirty tracking using GUP
-> + * is a fundamentally broken operation as kernel write access to GUP mappings
-> + * may not adhere to the semantics expected by a file system.
-> + */
-> +static inline bool can_write_file_mapping(struct vm_area_struct *vma,
-> +					  unsigned long gup_flags)
-> +{
-> +	/* If we aren't pinning then no problematic write can occur. */
-> +	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
-> +		return true;
-> +
-> +	/* We limit this check to the most egregious case - a long term pin. */
-> +	if (!(gup_flags & FOLL_LONGTERM))
-> +		return true;
-> +
-> +	/* If the VMA requires dirty tracking then GUP will be problematic. */
-> +	return vma_needs_dirty_tracking(vma);
-> +}
-> +
->   static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
->   {
->   	vm_flags_t vm_flags = vma->vm_flags;
->   	int write = (gup_flags & FOLL_WRITE);
->   	int foreign = (gup_flags & FOLL_REMOTE);
-> +	bool vma_anon = vma_is_anonymous(vma);
->   
->   	if (vm_flags & (VM_IO | VM_PFNMAP))
->   		return -EFAULT;
->   
-> -	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
-> +	if ((gup_flags & FOLL_ANON) && !vma_anon)
->   		return -EFAULT;
->   
->   	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
-> @@ -978,6 +999,9 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
->   		return -EFAULT;
->   
->   	if (write) {
-> +		if (!vma_anon && !can_write_file_mapping(vma, gup_flags))
-> +			return -EFAULT;
-> +
->   		if (!(vm_flags & VM_WRITE)) {
->   			if (!(gup_flags & FOLL_FORCE))
->   				return -EFAULT;
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 536bbb8fa0ae..aac638dd22cf 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1475,6 +1475,32 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
->   }
->   #endif /* __ARCH_WANT_SYS_OLD_MMAP */
->   
-> +/* Do VMA operations imply write notify is required? */
-> +static inline bool vm_ops_needs_writenotify(
-> +	const struct vm_operations_struct *vm_ops)
-> +{
-> +	return vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite);
-> +}
-> +
-> +/*
-> + * Does this VMA require the underlying folios to have their dirty state
-> + * tracked?
-> + */
-> +bool vma_needs_dirty_tracking(struct vm_area_struct *vma)
-> +{
-> +	/* Does the filesystem need to be notified? */
-> +	if (vm_ops_needs_writenotify(vma->vm_ops))
-> +		return true;
-> +
-> +	/* Specialty mapping? */
-> +	if (vma->vm_flags & VM_PFNMAP)
-> +		return false;
-> +
-> +	/* Can the mapping track the dirty pages? */
-> +	return vma->vm_file && vma->vm_file->f_mapping &&
-> +		mapping_can_writeback(vma->vm_file->f_mapping);
-> +}
-> +
-
-What would be the exact reproducer of the problem? AFAIK writenotify is 
-handled (by handle_mm_fault()) for non cow mappings (shared), where it 
-only matters.
-
-GUP will only allow FOLL_FORCE without faulting for PageAnonExclusive 
-pages. So if you want something beyond normal cow semantics you have 
-custom vm_ops (and mmap() and fault())
-
-Also for longterm pinning gups vs fork vs swap there has been fixes by 
-david recently.
-
-
-
->   /*
->    * Some shared mappings will want the pages marked read-only
->    * to track write events. If so, we'll downgrade vm_page_prot
-> @@ -1484,14 +1510,13 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
->   int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
->   {
->   	vm_flags_t vm_flags = vma->vm_flags;
-> -	const struct vm_operations_struct *vm_ops = vma->vm_ops;
->   
->   	/* If it was private or non-writable, the write bit is already clear */
->   	if ((vm_flags & (VM_WRITE|VM_SHARED)) != ((VM_WRITE|VM_SHARED)))
->   		return 0;
->   
->   	/* The backer wishes to know when pages are first written to? */
-> -	if (vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite))
-> +	if (vm_ops_needs_writenotify(vma->vm_ops))
->   		return 1;
->   
->   	/* The open routine did something to the protections that pgprot_modify
-> @@ -1511,13 +1536,7 @@ int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
->   	if (userfaultfd_wp(vma))
->   		return 1;
->   
-> -	/* Specialty mapping? */
-> -	if (vm_flags & VM_PFNMAP)
-> -		return 0;
-> -
-> -	/* Can the mapping track the dirty pages? */
-> -	return vma->vm_file && vma->vm_file->f_mapping &&
-> -		mapping_can_writeback(vma->vm_file->f_mapping);
-> +	return vma_needs_dirty_tracking(vma);
->   }
->   
->   /*
-
-
---Mika
+diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
+index 509c287ee762..e95adbedf6ed 100644
+--- a/tools/perf/util/unwind-libunwind.c
++++ b/tools/perf/util/unwind-libunwind.c
+@@ -54,7 +54,7 @@ int unwind__prepare_access(struct maps *maps, struct map *map, bool *initialized
+ 	}
+ 
+ 	if (!ops) {
+-		pr_err("unwind: target platform=%s is not supported\n", arch);
++		pr_warning_once("unwind: target platform=%s is not supported\n", arch);
+ 		return 0;
+ 	}
+ out_register:
+-- 
+2.25.1
 
