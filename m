@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B2FC77B60
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 07:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5365C77B60
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 07:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239773AbjDZHCy (ORCPT
+        id S239789AbjDZHD2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Apr 2023 03:02:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40318 "EHLO
+        Wed, 26 Apr 2023 03:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239749AbjDZHC0 (ORCPT
+        with ESMTP id S239790AbjDZHCo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Apr 2023 03:02:26 -0400
+        Wed, 26 Apr 2023 03:02:44 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E594231
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 00:02:00 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-b98c7a854b9so7474217276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 00:02:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEC651FF2
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 00:02:07 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-b98ef5b557fso11905217276.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 00:02:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682492520; x=1685084520;
+        d=google.com; s=20221208; t=1682492527; x=1685084527;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hiBqu+eAww97O/97VLe65d9bhhVAzSpreWJRIJD1hF8=;
-        b=qCPTKPAkdd6ZDSLxXMEWiEVWcpRIA0sE7KzQdiC4ar3/yxSYEfLe7V8tr7EOFED32y
-         kG/PqUXqo7he3VlQ6BqiG5yZxyjRHGYRAjOK4Ipa5hfQ4djJJy7NlI2D/n3Wrj05b9JY
-         ImcEXQs9e90GKrGkRN5cxuOF/vP42NOre5fwKDTfwWQ1jS37sh7S4tdET/EPXDhKg+b6
-         pAyCDWvfXJB6X7GrrthEucOOJUgtSJRI53ExcTivYx8gFV1W8W0IuJcJbXFUy4P53kFu
-         mLVFMmeEa+vjK2Ovw/pFufBsKIan4i6Rf9jHbvwGg0ENsovNtjyAcuX2eCEx8Ia9FAhd
-         a2ww==
+        bh=Hq0rkxZ+nzigWeul/fQuTIxJ14+0rSKTHQhzwukpkHY=;
+        b=Wz5+bOP4poXGvDFuRQ90lq8R1aluz/0G9u+ErkTJ0ioEr+nlJ9oiliW4mYtD65TY/t
+         FFtpm/W7NfDKodNa84YATE7RvBKry00RZczZK0vScGvW+vJgUBCxPzBM3sql/EN3l16z
+         sW5FeGp0tFflf2OLSmv7noYWqd15zuQeH4aQpGU994RD4idq3f6jWApPMm5F1snGRL4f
+         vVXYRzhXPwnd0D4yW3hOy3y4/pLkmxmDaBtK4LvLx4RpLN0lNXcFBtFRKoeQvNSmtwgq
+         jaJ3tyHymdm2H/zcV3VMqI9igrXxPnkX2m9/MzKJ1DPlacL2KhDS9M4sw3jvSt4aLi5T
+         wTNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682492520; x=1685084520;
+        d=1e100.net; s=20221208; t=1682492527; x=1685084527;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hiBqu+eAww97O/97VLe65d9bhhVAzSpreWJRIJD1hF8=;
-        b=W9BmZMvhOLWagJ8Vgbf0oChNVrEGKZ/JjDAd3XXMP5dcS6CZzkSFpXDhAA9bxWQsf+
-         wmISr4lnBtIz66SSAaB76I1CR5zubc+0ApkTwdxoJEA1vgaqeLaBvdudPL9Au6c8Aouz
-         qb/ZQF53gueV7oN3cKIXr6e4e3+FKIuaVekiuz07h0PAXBwDhwhEN5roxZ0Zm0rtf/MB
-         dVoDF3opUZyX0r2pZpNQd9/Sr9qDSrc7u/Qsyni+VTKFvge+ofV+tT+0hufY/YpJwwiD
-         ra7aTpSTONTPj/gxMOnspQ8JtGTZPWnqE0TbBKaiZB9v5HKr0OYHB3mFH/LqOtQhZUz5
-         9Q7Q==
-X-Gm-Message-State: AC+VfDzetyeKc5pD/O0bD9Fw3gMZsx0679E24ezB9Kw9PksLNNHygqZZ
-        wd866RavUvArmnqwybBcnMYtyANBC5w/
-X-Google-Smtp-Source: ACHHUZ7XboWPDRNvVt+K/ZmYBPeDghLrO9PAzCKwPDUwIqHVeFa+nhpDM6XBmwmgStp9qdPYGid/1Slk4xdN
+        bh=Hq0rkxZ+nzigWeul/fQuTIxJ14+0rSKTHQhzwukpkHY=;
+        b=eZ0MIu0QQq8vxK3peAZIBu6V6nJaC3x/WzgJYqvYkifuvo6aoM4QpRmfk6D/AUW+sZ
+         LD9R5VVV8B/ySF/kJjcREk60TQu7/LUZRmlPBlH5IEctWZ3C6IL/VEWpM3SfF7TpkyBR
+         bJbr+7zVSa+5YYqHURTqhEcQctS/SNe5NrGSCTapitwvdggrwxvzEOTG6RRK//HeGd9I
+         QR4K/b1jds0MudzpzkpJcB7RJGpyrc2R9EFsNZNtRP5AY5JDikRmzm0fg8Uhoindppln
+         oQiKE3uJJ3u7CClnCQs4jMu8vYnqaKSGRHVOebR5rzExtBcHrk27S25FymHA3CRtCUZH
+         o4Ug==
+X-Gm-Message-State: AC+VfDwf1dOBO69lf/mMCvE6naLYoLW/gLqq04r4f1mcVDJhdRrukleO
+        ldPUoSkgE6QrFS2gaCcG79I8syeECbF4
+X-Google-Smtp-Source: ACHHUZ5v2Ejn/Bj7HpudP7hkJxO2DT5BN+Vz8IjHKYpG17aSw7aVvJaQGRzoc10Rx9irrgVmqKdcxB3v9KOM
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:144f:e890:2b29:48d9])
- (user=irogers job=sendgmr) by 2002:a25:dfd4:0:b0:b99:a54e:a61 with SMTP id
- w203-20020a25dfd4000000b00b99a54e0a61mr5606896ybg.1.1682492520044; Wed, 26
- Apr 2023 00:02:00 -0700 (PDT)
-Date:   Wed, 26 Apr 2023 00:00:17 -0700
+ (user=irogers job=sendgmr) by 2002:a25:d091:0:b0:b99:b753:342d with SMTP id
+ h139-20020a25d091000000b00b99b753342dmr5249850ybg.7.1682492526946; Wed, 26
+ Apr 2023 00:02:06 -0700 (PDT)
+Date:   Wed, 26 Apr 2023 00:00:18 -0700
 In-Reply-To: <20230426070050.1315519-1-irogers@google.com>
-Message-Id: <20230426070050.1315519-8-irogers@google.com>
+Message-Id: <20230426070050.1315519-9-irogers@google.com>
 Mime-Version: 1.0
 References: <20230426070050.1315519-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v1 07/40] perf stat: Avoid segv on counter->name
+Subject: [PATCH v1 08/40] perf test: Test more sysfs events
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,26 +94,147 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Switch to use evsel__name that doesn't return NULL for hardware and
-similar events.
+Parse events for all PMUs, and not just cpu, in test "Parsing of all
+PMU events from sysfs".
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/stat-display.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/parse-events.c | 103 +++++++++++++++++---------------
+ 1 file changed, 55 insertions(+), 48 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 6b46bbb3d322..71dd6cb83918 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -747,7 +747,7 @@ static void uniquify_event_name(struct evsel *counter)
- 	int ret = 0;
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 8068cfd89b84..385bbbc4a409 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -7,6 +7,7 @@
+ #include "debug.h"
+ #include "pmu.h"
+ #include "pmu-hybrid.h"
++#include "pmus.h"
+ #include <dirent.h>
+ #include <errno.h>
+ #include "fncache.h"
+@@ -2225,49 +2226,24 @@ static int test_pmu(void)
  
- 	if (counter->uniquified_name || counter->use_config_name ||
--	    !counter->pmu_name || !strncmp(counter->name, counter->pmu_name,
-+	    !counter->pmu_name || !strncmp(evsel__name(counter), counter->pmu_name,
- 					   strlen(counter->pmu_name)))
- 		return;
+ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+ {
+-	struct stat st;
+-	char path[PATH_MAX];
+-	struct dirent *ent;
+-	DIR *dir;
+-	int ret;
+-
+-	if (!test_pmu())
+-		return TEST_SKIP;
+-
+-	snprintf(path, PATH_MAX, "%s/bus/event_source/devices/cpu/events/",
+-		 sysfs__mountpoint());
+-
+-	ret = stat(path, &st);
+-	if (ret) {
+-		pr_debug("omitting PMU cpu events tests: %s\n", path);
+-		return TEST_OK;
+-	}
++	struct perf_pmu *pmu;
++	int ret = TEST_OK;
+ 
+-	dir = opendir(path);
+-	if (!dir) {
+-		pr_debug("can't open pmu event dir: %s\n", path);
+-		return TEST_FAIL;
+-	}
++	perf_pmus__for_each_pmu(pmu) {
++		struct stat st;
++		char path[PATH_MAX];
++		struct dirent *ent;
++		DIR *dir;
++		int err;
+ 
+-	ret = TEST_OK;
+-	while ((ent = readdir(dir))) {
+-		struct evlist_test e = { .name = NULL, };
+-		char name[2 * NAME_MAX + 1 + 12 + 3];
+-		int test_ret;
++		snprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/events/",
++			sysfs__mountpoint(), pmu->name);
+ 
+-		/* Names containing . are special and cannot be used directly */
+-		if (strchr(ent->d_name, '.'))
++		err = stat(path, &st);
++		if (err) {
++			pr_debug("skipping PMU %s events tests: %s\n", pmu->name, path);
++			ret = combine_test_results(ret, TEST_SKIP);
+ 			continue;
+-
+-		snprintf(name, sizeof(name), "cpu/event=%s/u", ent->d_name);
+-
+-		e.name  = name;
+-		e.check = test__checkevent_pmu_events;
+-
+-		test_ret = test_event(&e);
+-		if (test_ret != TEST_OK) {
+-			pr_debug("Test PMU event failed for '%s'", name);
+-			ret = combine_test_results(ret, test_ret);
+ 		}
+ 		/*
+ 		 * Names containing '-' are recognized as prefixes and suffixes
+@@ -2282,17 +2258,48 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+ 		if (strchr(ent->d_name, '-'))
+ 			continue;
+ 
+-		snprintf(name, sizeof(name), "%s:u,cpu/event=%s/u", ent->d_name, ent->d_name);
+-		e.name  = name;
+-		e.check = test__checkevent_pmu_events_mix;
+-		test_ret = test_event(&e);
+-		if (test_ret != TEST_OK) {
+-			pr_debug("Test PMU event failed for '%s'", name);
+-			ret = combine_test_results(ret, test_ret);
++		dir = opendir(path);
++		if (!dir) {
++			pr_debug("can't open pmu event dir: %s\n", path);
++			ret = combine_test_results(ret, TEST_SKIP);
++			continue;
+ 		}
+-	}
+ 
+-	closedir(dir);
++		while ((ent = readdir(dir))) {
++			struct evlist_test e = { .name = NULL, };
++			char name[2 * NAME_MAX + 1 + 12 + 3];
++			int test_ret;
++
++			/* Names containing . are special and cannot be used directly */
++			if (strchr(ent->d_name, '.'))
++				continue;
++
++			snprintf(name, sizeof(name), "%s/event=%s/u", pmu->name, ent->d_name);
++
++			e.name  = name;
++			e.check = test__checkevent_pmu_events;
++
++			test_ret = test_event(&e);
++			if (test_ret != TEST_OK) {
++				pr_debug("Test PMU event failed for '%s'", name);
++				ret = combine_test_results(ret, test_ret);
++			}
++
++			if (!is_pmu_core(pmu->name))
++				continue;
++
++			snprintf(name, sizeof(name), "%s:u,%s/event=%s/u", ent->d_name, pmu->name, ent->d_name);
++			e.name  = name;
++			e.check = test__checkevent_pmu_events_mix;
++			test_ret = test_event(&e);
++			if (test_ret != TEST_OK) {
++				pr_debug("Test PMU event failed for '%s'", name);
++				ret = combine_test_results(ret, test_ret);
++			}
++		}
++
++		closedir(dir);
++	}
+ 	return ret;
+ }
  
 -- 
 2.40.1.495.gc816e09b53d-goog
