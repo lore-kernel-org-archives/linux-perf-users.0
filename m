@@ -2,67 +2,51 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF60C77B78
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 16:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA20C77B78
+	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 17:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241179AbjDZQGg (ORCPT
+        id S239060AbjDZRpZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Apr 2023 12:06:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60134 "EHLO
+        Wed, 26 Apr 2023 13:45:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232584AbjDZQGg (ORCPT
+        with ESMTP id S239049AbjDZRpY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Apr 2023 12:06:36 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 157DA4EFA;
-        Wed, 26 Apr 2023 09:06:35 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-2472dc49239so6499378a91.1;
-        Wed, 26 Apr 2023 09:06:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682525194; x=1685117194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OmeuUjmTVHz2Yf3DbVVtEASiC3LP8S4Uh5jt1O7CKaA=;
-        b=XpP1D+BavyO5pihIZh7D7K9mcD0OB78LI+QzlBwEsEZ69MrpboL7VDwvDii2ihT74z
-         DB3P2X4qx9v6Rx2bMjE5SVZ4H6HHAvR+upOun8dPdTXXAkcl7nJd4lZEGzW0tdau3M76
-         VbL4TwNVbA+1TZFDoLnRrX4HUQUE3fNfy0JDmQdp+Fjm9ySAOCed2BACkJfrRnyGJoDd
-         WW0Hm+gIX5khCx/OMuKvg+zKFMaa4rZTA5KBNzNXyvQab0CFEyzo35dpVF8VrxVm/MRj
-         Gy8Kztp02DuM9qg8slGBTRLjA846XTKpHbbrydU6MCx41DSrL0skxtaLoVcO9/zv8w41
-         Bc2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682525194; x=1685117194;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OmeuUjmTVHz2Yf3DbVVtEASiC3LP8S4Uh5jt1O7CKaA=;
-        b=PjM35z3kIlnXxlmWIQQ7veDnqF/benCrNuwyEtX0lcYn4HkDBBs80NuqX61jk6BlmU
-         LkCOFkZ3X6dcNO1QgtiUaAycihCw0P5GGlwJThF4s5Uk3h5wlxetKA1XQpwZQzbWAiR5
-         /Z/S7IGCbZcKUMlIHFamFague7YGMFQHf9eWCPqCUNPxz/7N/V2DTUZLjKCkYru2vxlC
-         FL+irKOIY0cPu7tCEXEIqSRbEcJhUm6DekfCZVIi5T1EN2aOT+9+nqTuiu5Y1e+5gSjh
-         WqUOVL8q597ltd1mD/UX3gt9+B9O3oy+WLXqbNVdWAc5MFJW62Q7fZB/AQYHAOBwC0KV
-         6HGA==
-X-Gm-Message-State: AAQBX9cVJph7FJFh8w2r0Vt8+Qw+6Lxf2d2NkiRkb1THIr6uNq2SJsbm
-        RxnLb+w9PXZSkRJVHpCxvXDvpH2xBEJujQm53HQ=
-X-Google-Smtp-Source: AKy350YrZy3rlTruwcHri22uBGC5UDj9ur2CGvC1s1k0XJ3Rq5ZTdpYdXtLMgNUUas9wnuXrXBRasCNto+oXfeHg+DA=
-X-Received: by 2002:a17:90a:17e4:b0:239:ea16:5b13 with SMTP id
- q91-20020a17090a17e400b00239ea165b13mr21103730pja.14.1682525194409; Wed, 26
- Apr 2023 09:06:34 -0700 (PDT)
+        Wed, 26 Apr 2023 13:45:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4A735A3
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 10:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1682531080;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PFOLtpyLHj3LQRxvCiN2SdOhFROyPdkOD9iReg1b+zE=;
+        b=dDx/Bnd86VE+gX5p2JNBgBWUCWXAMSuixKz2qa6UgWphrT0mHfcP9prmMAAMuTPsW7vVU8
+        0L+0jMhX51hjTBiwybdD6kNlALFmKSiwTBV/rhQQ/25uDMs7s7ltSavt01//RYBPGZzCS/
+        9+Lu0ykYpfYNLG8tSjKTJkPl1lNWM9s=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-345-uMUD12DJNoaicn7Sa1VlPg-1; Wed, 26 Apr 2023 13:44:37 -0400
+X-MC-Unique: uMUD12DJNoaicn7Sa1VlPg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F2A75101A550;
+        Wed, 26 Apr 2023 17:44:35 +0000 (UTC)
+Received: from [10.22.18.92] (unknown [10.22.18.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 12DA0492C13;
+        Wed, 26 Apr 2023 17:44:34 +0000 (UTC)
+Message-ID: <1ec831dd-1070-d1f0-1502-5b8e493caab0@redhat.com>
+Date:   Wed, 26 Apr 2023 13:44:33 -0400
 MIME-Version: 1.0
-References: <20230424134748.228137-1-james.clark@arm.com>
-In-Reply-To: <20230424134748.228137-1-james.clark@arm.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Wed, 26 Apr 2023 09:06:23 -0700
-Message-ID: <CAHbLzkq2WCy_vf0cXNvRT8GYZpymVRHF0J22Dfbrav6+dsusGA@mail.gmail.com>
-Subject: Re: [PATCH 0/7] perf: cs-etm: Fixes around timestamped and timeless decoding
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
-        denik@google.com, Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v7 0/3] Introduce put_task_struct_atomic_sleep()
+Content-Language: en-US
+To:     Wander Lairson Costa <wander@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -72,54 +56,147 @@ Cc:     linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Will Deacon <will@kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>
+References: <20230425114307.36889-1-wander@redhat.com>
+From:   Waiman Long <longman@redhat.com>
+In-Reply-To: <20230425114307.36889-1-wander@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 6:48=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
+On 4/25/23 07:43, Wander Lairson Costa wrote:
+> The put_task_struct() function reduces a usage counter and invokes
+> __put_task_struct() when the counter reaches zero.
 >
-> The first commit contains a fix for a recently introduced regression,
-> but was always a shortcoming in the Coresight code anyway.
+> In the case of __put_task_struct(), it indirectly acquires a spinlock,
+> which operates as a sleeping lock under the PREEMPT_RT configuration.
+> As a result, invoking put_task_struct() within an atomic context is
+> not feasible for real-time (RT) kernels.
 >
-> The following commits are a tidyup in preparation for the last commit,
-> which is a fairly major change to the decode logic that's also
-> indirectly related to the regression so I thought it would be good time
-> to fix that now.
+> One practical example is a splat inside inactive_task_timer(), which is
+> called in a interrupt context:
 >
-> Applies to perf/core (9be6ab181b7b)
+> CPU: 1 PID: 2848 Comm: life Kdump: loaded Tainted: G W ---------
+> Hardware name: HP ProLiant DL388p Gen8, BIOS P70 07/15/2012
+> Call Trace:
+>   dump_stack_lvl+0x57/0x7d
+>   mark_lock_irq.cold+0x33/0xba
+>   ? stack_trace_save+0x4b/0x70
+>   ? save_trace+0x55/0x150
+>   mark_lock+0x1e7/0x400
+>   mark_usage+0x11d/0x140
+>   __lock_acquire+0x30d/0x930
+>   lock_acquire.part.0+0x9c/0x210
+>   ? refill_obj_stock+0x3d/0x3a0
+>   ? rcu_read_lock_sched_held+0x3f/0x70
+>   ? trace_lock_acquire+0x38/0x140
+>   ? lock_acquire+0x30/0x80
+>   ? refill_obj_stock+0x3d/0x3a0
+>   rt_spin_lock+0x27/0xe0
+>   ? refill_obj_stock+0x3d/0x3a0
+>   refill_obj_stock+0x3d/0x3a0
+>   ? inactive_task_timer+0x1ad/0x340
+>   kmem_cache_free+0x357/0x560
+>   inactive_task_timer+0x1ad/0x340
+>   ? switched_from_dl+0x2d0/0x2d0
+>   __run_hrtimer+0x8a/0x1a0
+>   __hrtimer_run_queues+0x91/0x130
+>   hrtimer_interrupt+0x10f/0x220
+>   __sysvec_apic_timer_interrupt+0x7b/0xd0
+>   sysvec_apic_timer_interrupt+0x4f/0xd0
+>   ? asm_sysvec_apic_timer_interrupt+0xa/0x20
+>   asm_sysvec_apic_timer_interrupt+0x12/0x20
+> RIP: 0033:0x7fff196bf6f5
+>
+> To address this issue, this patch series introduces a new function
+> called put_task_struct_atomic_safe(). When compiled with the
+> PREEMPT_RT configuration, this function defers the call to
+> __put_task_struct() to a process context.
+>
+> Additionally, the patch series rectifies known problematic call sites
+> to ensure smooth functioning.
+>
+> Changelog
+> =========
+>
+> v1:
+> * Initial implementation fixing the splat.
+>
+> v2:
+> * Isolate the logic in its own function.
+> * Fix two more cases caught in review.
+>
+> v3:
+> * Change __put_task_struct() to handle the issue internally.
+>
+> v4:
+> * Explain why call_rcu() is safe to call from interrupt context.
+>
+> v5:
+> * Explain why __put_task_struct() doesn't conflict with
+>    put_task_sruct_rcu_user.
+>
+> v6:
+> * As per Sebastian's review, revert back the implementation of v2
+>    with a distinct function.
+> * Add a check in put_task_struct() to warning when called from a
+>    non-sleepable context.
+> * Address more call sites.
+>
+> v7:
+> * Fix typos.
+> * Add an explanation why the new function doesn't conflict with
+>    delayed_free_task().
+>
+> Wander Lairson Costa (3):
+>    sched/core: warn on call put_task_struct in invalid context
+>    sched/task: Add the put_task_struct_atomic_safe() function
+>    treewide: replace put_task_struct() with the atomic safe version
+>
+>   include/linux/sched/task.h | 49 ++++++++++++++++++++++++++++++++++++++
+>   kernel/events/core.c       |  6 ++---
+>   kernel/fork.c              |  8 +++++++
+>   kernel/locking/rtmutex.c   | 10 ++++----
+>   kernel/sched/core.c        |  6 ++---
+>   kernel/sched/deadline.c    | 16 ++++++-------
+>   kernel/sched/rt.c          |  4 ++--
+>   7 files changed, 78 insertions(+), 21 deletions(-)
 
-Thanks for working on this. I tested with perf/core branch on acme
-tree, it does solve the "no samples" problem.
+This patch series looks good to me.
 
-Please feel free to add: Tested-by: Yang Shi <shy828301@gmail.com>
+Acked-by: Waiman Long <longman@redhat.com>
 
->
-> James Clark (7):
->   perf: cs-etm: Fix timeless decode mode detection
->   perf tools: Add util function for overriding user set config values
->   perf: cs-etm: Don't test full_auxtrace because it's always set
->   perf: cs-etm: Validate options after applying them
->   perf: cs-etm: Allow user to override timestamp and contextid settings
->   perf: cs-etm: Use bool type for boolean values
->   perf: cs-etm: Add separate decode paths for timeless and per-thread
->     modes
->
->  tools/perf/arch/arm/util/cs-etm.c             | 223 +++++++++---------
->  tools/perf/arch/arm/util/pmu.c                |   2 +
->  tools/perf/arch/arm64/util/arm-spe.c          |  26 +-
->  tools/perf/arch/x86/util/intel-pt.c           |  22 +-
->  tools/perf/tests/shell/test_arm_coresight.sh  |  24 ++
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.h |   8 +-
->  tools/perf/util/cs-etm.c                      | 200 +++++++++++-----
->  tools/perf/util/cs-etm.h                      |   6 +-
->  tools/perf/util/evsel.c                       |  29 +++
->  tools/perf/util/evsel.h                       |   3 +
->  10 files changed, 325 insertions(+), 218 deletions(-)
->
-> --
-> 2.34.1
->
+I notice that __put_task_struct() invokes quite a bit of cleanup works 
+from different subsystems. So it may burn quite a bit of cpu cycles to 
+complete. This may not be something we want in an atomic context, maybe 
+we should call call_rcu() irrespective of the PREEMPT_RT setting. 
+Anyway, this can be a follow-up patch if we want to do that.
+
+Cheers,
+Longman
+
