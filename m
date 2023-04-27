@@ -2,494 +2,360 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBFEC77B61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 12:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3278CC77B73
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 15:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243412AbjD0M1Q (ORCPT
+        id S244145AbjD0PNR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Apr 2023 08:27:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43882 "EHLO
+        Thu, 27 Apr 2023 11:13:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243974AbjD0M1P (ORCPT
+        with ESMTP id S244149AbjD0PNO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Apr 2023 08:27:15 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1ED4497;
-        Thu, 27 Apr 2023 05:27:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682598433; x=1714134433;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fMf/Ag53l4nctL0mZQcMqcXBVUf15HgaqDz0oxDIWcI=;
-  b=MmNaOzD+2pTohHjSGoMMzgN65geq1+H46tRbZDBNWMpzQ2h9M5tB8aFA
-   YWvVlrlNgzNMwgb5eaoWf2dVAZseZCghGGP5Hm2eIZxCERf6ynQNBq63s
-   xzosemTk+V9YdggM9Va/pvpfacy9GiOHnHp+h2SUQqdVxKUlqqdoctl9s
-   xfI1Uzz6g6oVm16U7iRGE+Ob8kVsp4YYuIIThH+LnsEUq1u0TN7llb+Vq
-   OXiSnXaSBEcBCad3QVdB8GDk/Rj35p6U4/VrMhjS+kd+RPf0cGsRoVSRE
-   fPlsmMssMZKJWYhoGZhAGq12ygfGXV4k46MTupHvjMRTikAPc5Pky6Uwl
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10692"; a="344869614"
-X-IronPort-AV: E=Sophos;i="5.99,230,1677571200"; 
-   d="scan'208";a="344869614"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 05:27:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10692"; a="644677915"
-X-IronPort-AV: E=Sophos;i="5.99,230,1677571200"; 
-   d="scan'208";a="644677915"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.252.60.162])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 05:27:10 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/1] perf tools: Allow config terms with breakpoints
-Date:   Thu, 27 Apr 2023 15:26:56 +0300
-Message-Id: <20230427122656.42473-2-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230427122656.42473-1-adrian.hunter@intel.com>
-References: <20230427122656.42473-1-adrian.hunter@intel.com>
+        Thu, 27 Apr 2023 11:13:14 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D47249E1
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 08:13:08 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-5058181d58dso15193197a12.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 08:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1682608387; x=1685200387;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NeBk/Yk/tCKSm9zlw8XBLS3MyuzxPAzmRgBGwCvp8c8=;
+        b=sexcVZfa88+7XgOsY4DtZg3NpDOi0YOBTqZE/lAAqHKwozNF+1DWWNuym2Om7Vyojp
+         R1jVGP1BQJxreqE5SRU9T0wNuObDian/4lLoVQIv47juXcgFkhKUIlle7By7XRjfIo4u
+         r6Kzj5maGCzrfaqZZICpAazcOUV7pye3eneTrxrefBqy4xNu64siMmTxnmNO/o7n5sWj
+         8AWHTN3bhtdSMp6oyGN8PZuIRRRRwiyqPeBFMYkeHGXBgykypQz+2Zjlq7rIV3LR9f5o
+         v7z47KfhC5OdjLI5qr26oga5R4jLLNJmpqz42FP19Nx2OYX1oNhOuVl3mh6SonhpPsrY
+         mJqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682608387; x=1685200387;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NeBk/Yk/tCKSm9zlw8XBLS3MyuzxPAzmRgBGwCvp8c8=;
+        b=aBkT71B0gxjRBQEu4WQvEHty4mhwjLh/db3eKKMruTixtFT+7uLKtB2JqnC43sVFik
+         ZNc4fx6WlXFL2x17eR7zHRTN1RWY+p6D4s7FbUf+lzXczVm572LLzV4xlXiF7rZjtF+6
+         aZxsXQuRewz5GBUciwjw+ezhX3APbqKHoVt1kDJVkoHF+XbDOWVEqHY77YAneTesTAwv
+         UpCPMWYEQIM2/ijkyv2my4eTR9/bzvMMXyfXt+tqfhKNSDW3IqOi96tmJV1Hmkg2Kp8Z
+         zz5L72Lt+V2tOvXcYrOKPAAkA4++6819STWr8JC+H9bMtWrL7rCpBxesbZwmboxAM7nW
+         UolA==
+X-Gm-Message-State: AC+VfDzsGSTdLrUG1w2Pd3hX5nFQCww+AHt8IwkNyTmP0O06K9kS4H7i
+        B6HA+YtMFG1jIu/DpDahYPRlkg==
+X-Google-Smtp-Source: ACHHUZ63/NlO7m1YriYCSLQPoie926jmdL+ZNo65Jn2E8If3ralnqSvBORtWtKCIRx2jAAUJibk9Fw==
+X-Received: by 2002:a17:907:7b92:b0:94f:1c90:cb70 with SMTP id ne18-20020a1709077b9200b0094f1c90cb70mr2064124ejc.66.1682608386610;
+        Thu, 27 Apr 2023 08:13:06 -0700 (PDT)
+Received: from leoy-huanghe ([195.167.132.10])
+        by smtp.gmail.com with ESMTPSA id bc28-20020a056402205c00b00506c3c0d393sm8130857edb.78.2023.04.27.08.12.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Apr 2023 08:12:40 -0700 (PDT)
+Date:   Thu, 27 Apr 2023 23:12:28 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+        shy828301@gmail.com, denik@google.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] perf: cs-etm: Validate options after applying
+ themperf_pmu__format_bits
+Message-ID: <20230427151228.GA152865@leoy-huanghe>
+References: <20230424134748.228137-1-james.clark@arm.com>
+ <20230424134748.228137-5-james.clark@arm.com>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230424134748.228137-5-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add config terms to the parsing of breakpoint events. Extend "Test event
-parsing" to also cover using a confg term.
+Hi James,
 
-This makes breakpoint events consistent with other events which already
-support config terms.
+On Mon, Apr 24, 2023 at 02:47:44PM +0100, James Clark wrote:
+> Currently the cs_etm_set_option() function both validates and applies
+> the config options. Because it's only called when they are added
+> automatically, there are some paths where the user can apply the option
+> on the command line and skip the validation. By moving it to the end it
+> covers both cases.
+> 
+> Also, options don't need to be re-applied anyway, Perf handles parsing
+> and applying the config terms automatically.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/arch/arm/util/cs-etm.c | 152 +++++++++++++-----------------
+>  1 file changed, 68 insertions(+), 84 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index f9b9ebf7fffc..af0a2400c655 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -69,21 +69,29 @@ static const char * const metadata_ete_ro[] = {
+>  static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
+>  static bool cs_etm_is_ete(struct auxtrace_record *itr, int cpu);
+>  
+> -static int cs_etm_set_context_id(struct auxtrace_record *itr,
+> -				 struct evsel *evsel, int cpu)
+> +static int cs_etm_validate_context_id(struct auxtrace_record *itr,
+> +				      struct evsel *evsel, int cpu)
+>  {
+> -	struct cs_etm_recording *ptr;
+> -	struct perf_pmu *cs_etm_pmu;
+> +	struct cs_etm_recording *ptr =
+> +		container_of(itr, struct cs_etm_recording, itr);
+> +	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+>  	char path[PATH_MAX];
+> -	int err = -EINVAL;
+> +	int err;
+>  	u32 val;
+> -	u64 contextid;
+> +	u64 contextid =
+> +		evsel->core.attr.config &
+> +		(perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1") |
+> +		 perf_pmu__format_bits(&cs_etm_pmu->format, "contextid2"));
 
-Example:
+Seems to me, this would break backward compability.
 
-  $ cat dr_test.c
-  #include <unistd.h>
-  #include <stdio.h>
+The old kernel (before 5.11) doesn't provide 'contextid1' and
+'contextid2', so we always check the entry 'contextid' rather than
+'contextid1' and 'contextid2'.
 
-  void func0(void)
-  {
-  }
+With this change, if a kernel doesn't contain 'contextid1' and
+'contextid2' formats, will perf tool never trace for contexid?
 
-  int main()
-  {
-          printf("func0 %p\n", &func0);
-          while (1) {
-                  func0();
-                  usleep(100000);
-          }
-          return 0;
-  }
-  $ gcc -g -O0 -o dr_test dr_test.c
-  $ ./dr_test &
-  [2] 19646
-  func0 0x55feb98dd169
-  $ perf record -e mem:0x55feb98dd169:x/name=breakpoint/ -p 19646 -- sleep 0.5
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.017 MB perf.data (5 samples) ]
-  $ perf script
-      dr_test 19646  5632.956628:          1 breakpoint:      55feb98dd169 func0+0x0 (/home/ahunter/git/work/dr_test)
-      dr_test 19646  5633.056866:          1 breakpoint:      55feb98dd169 func0+0x0 (/home/ahunter/git/work/dr_test)
-      dr_test 19646  5633.157084:          1 breakpoint:      55feb98dd169 func0+0x0 (/home/ahunter/git/work/dr_test)
-      dr_test 19646  5633.257309:          1 breakpoint:      55feb98dd169 func0+0x0 (/home/ahunter/git/work/dr_test)
-      dr_test 19646  5633.357532:          1 breakpoint:      55feb98dd169 func0+0x0 (/home/ahunter/git/work/dr_test)
-  $ sudo perf test "Test event parsing"
-    6: Parse event definition strings                                  :
-    6.1: Test event parsing                                            : Ok
-  $ sudo perf test -v "Test event parsing" |& grep mem
-  running test 8 'mem:0'
-  running test 9 'mem:0:x'
-  running test 10 'mem:0:r'
-  running test 11 'mem:0:w'
-  running test 19 'mem:0:u'
-  running test 20 'mem:0:x:k'
-  running test 21 'mem:0:r:hp'
-  running test 22 'mem:0:w:up'
-  running test 26 'mem:0:rw'
-  running test 27 'mem:0:rw:kp'
-  running test 42 'mem:0/1'
-  running test 43 'mem:0/2:w'
-  running test 44 'mem:0/4:rw:u'
-  running test 58 'mem:0/name=breakpoint/'
-  running test 59 'mem:0:x/name=breakpoint/'
-  running test 60 'mem:0:r/name=breakpoint/'
-  running test 61 'mem:0:w/name=breakpoint/'
-  running test 62 'mem:0/name=breakpoint/u'
-  running test 63 'mem:0:x/name=breakpoint/k'
-  running test 64 'mem:0:r/name=breakpoint/hp'
-  running test 65 'mem:0:w/name=breakpoint/up'
-  running test 66 'mem:0:rw/name=breakpoint/'
-  running test 67 'mem:0:rw/name=breakpoint/kp'
-  running test 68 'mem:0/1/name=breakpoint/'
-  running test 69 'mem:0/2:w/name=breakpoint/'
-  running test 70 'mem:0/4:rw/name=breakpoint/u'
+Thanks,
+Leo
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/tests/parse-events.c | 135 ++++++++++++++++++++++++++++++++
- tools/perf/util/parse-events.c  |  23 +++++-
- tools/perf/util/parse-events.h  |   6 +-
- tools/perf/util/parse-events.l  |   7 +-
- tools/perf/util/parse-events.y  |  42 +++++-----
- 5 files changed, 187 insertions(+), 26 deletions(-)
-
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 8068cfd89b84..f424ad77da60 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -439,6 +439,76 @@ static int test__checkevent_breakpoint_rw_modifier(struct evlist *evlist)
- 	return test__checkevent_breakpoint_rw(evlist);
- }
- 
-+static int test__checkevent_breakpoint_modifier_name(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
-+	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
-+	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-+	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
-+	TEST_ASSERT_VAL("wrong name",
-+			!strcmp(evsel__name(evsel), "breakpoint"));
-+
-+	return test__checkevent_breakpoint(evlist);
-+}
-+
-+static int test__checkevent_breakpoint_x_modifier_name(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
-+	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
-+	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-+	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
-+	TEST_ASSERT_VAL("wrong name",
-+			!strcmp(evsel__name(evsel), "breakpoint"));
-+
-+	return test__checkevent_breakpoint_x(evlist);
-+}
-+
-+static int test__checkevent_breakpoint_r_modifier_name(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
-+	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
-+	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
-+	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
-+	TEST_ASSERT_VAL("wrong name",
-+			!strcmp(evsel__name(evsel), "breakpoint"));
-+
-+	return test__checkevent_breakpoint_r(evlist);
-+}
-+
-+static int test__checkevent_breakpoint_w_modifier_name(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
-+	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
-+	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-+	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
-+	TEST_ASSERT_VAL("wrong name",
-+			!strcmp(evsel__name(evsel), "breakpoint"));
-+
-+	return test__checkevent_breakpoint_w(evlist);
-+}
-+
-+static int test__checkevent_breakpoint_rw_modifier_name(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
-+	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
-+	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-+	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
-+	TEST_ASSERT_VAL("wrong name",
-+			!strcmp(evsel__name(evsel), "breakpoint"));
-+
-+	return test__checkevent_breakpoint_rw(evlist);
-+}
-+
- static int test__checkevent_pmu(struct evlist *evlist)
- {
- 
-@@ -1973,6 +2043,71 @@ static const struct evlist_test test__events[] = {
- 		.check = test__exclusive_group,
- 		/* 7 */
- 	},
-+	{
-+		.name  = "mem:0/name=breakpoint/",
-+		.check = test__checkevent_breakpoint,
-+		/* 8 */
-+	},
-+	{
-+		.name  = "mem:0:x/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_x,
-+		/* 9 */
-+	},
-+	{
-+		.name  = "mem:0:r/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_r,
-+		/* 0 */
-+	},
-+	{
-+		.name  = "mem:0:w/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_w,
-+		/* 1 */
-+	},
-+	{
-+		.name  = "mem:0/name=breakpoint/u",
-+		.check = test__checkevent_breakpoint_modifier_name,
-+		/* 2 */
-+	},
-+	{
-+		.name  = "mem:0:x/name=breakpoint/k",
-+		.check = test__checkevent_breakpoint_x_modifier_name,
-+		/* 3 */
-+	},
-+	{
-+		.name  = "mem:0:r/name=breakpoint/hp",
-+		.check = test__checkevent_breakpoint_r_modifier_name,
-+		/* 4 */
-+	},
-+	{
-+		.name  = "mem:0:w/name=breakpoint/up",
-+		.check = test__checkevent_breakpoint_w_modifier_name,
-+		/* 5 */
-+	},
-+	{
-+		.name  = "mem:0:rw/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_rw,
-+		/* 6 */
-+	},
-+	{
-+		.name  = "mem:0:rw/name=breakpoint/kp",
-+		.check = test__checkevent_breakpoint_rw_modifier_name,
-+		/* 7 */
-+	},
-+	{
-+		.name  = "mem:0/1/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_len,
-+		/* 8 */
-+	},
-+	{
-+		.name  = "mem:0/2:w/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_len_w,
-+		/* 9 */
-+	},
-+	{
-+		.name  = "mem:0/4:rw/name=breakpoint/u",
-+		.check = test__checkevent_breakpoint_len_rw_modifier,
-+		/* 0 */
-+	},
- };
- 
- static const struct evlist_test test__events_pmu[] = {
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d71019dcd614..4f4901753f25 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -896,10 +896,14 @@ do {					\
- 	return 0;
- }
- 
--int parse_events_add_breakpoint(struct list_head *list, int *idx,
--				u64 addr, char *type, u64 len)
-+int parse_events_add_breakpoint(struct parse_events_state *parse_state,
-+				struct list_head *list,
-+				u64 addr, char *type, u64 len,
-+				struct list_head *head_config __maybe_unused)
- {
- 	struct perf_event_attr attr;
-+	LIST_HEAD(config_terms);
-+	const char *name;
- 
- 	memset(&attr, 0, sizeof(attr));
- 	attr.bp_addr = addr;
-@@ -920,8 +924,19 @@ int parse_events_add_breakpoint(struct list_head *list, int *idx,
- 	attr.type = PERF_TYPE_BREAKPOINT;
- 	attr.sample_period = 1;
- 
--	return add_event(list, idx, &attr, /*name=*/NULL, /*mertic_id=*/NULL,
--			 /*config_terms=*/NULL);
-+	if (head_config) {
-+		if (config_attr(&attr, head_config, parse_state->error,
-+				config_term_common))
-+			return -EINVAL;
-+
-+		if (get_config_terms(head_config, &config_terms))
-+			return -ENOMEM;
-+	}
-+
-+	name = get_config_name(head_config);
-+
-+	return add_event(list, &parse_state->idx, &attr, name, /*mertic_id=*/NULL,
-+			 &config_terms);
- }
- 
- static int check_type_val(struct parse_events_term *term,
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 86ad4438a2aa..6cb2076f1577 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -179,8 +179,10 @@ int parse_events_add_cache(struct list_head *list, int *idx,
- 			   struct parse_events_error *error,
- 			   struct list_head *head_config,
- 			   struct parse_events_state *parse_state);
--int parse_events_add_breakpoint(struct list_head *list, int *idx,
--				u64 addr, char *type, u64 len);
-+int parse_events_add_breakpoint(struct parse_events_state *parse_state,
-+				struct list_head *list,
-+				u64 addr, char *type, u64 len,
-+				struct list_head *head_config);
- int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			 struct list_head *list, char *name,
- 			 struct list_head *head_config,
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 51fe0a9fb3de..0d05594e7890 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -218,6 +218,8 @@ drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
- /* If you add a modifier you need to update check_modifier() */
- modifier_event	[ukhpPGHSDIWeb]+
- modifier_bp	[rwx]{1,3}
-+digit		[0-9]
-+non_digit	[^0-9]
- 
- %%
- 
-@@ -315,8 +317,9 @@ r0x{num_raw_hex}	{ return raw(yyscanner); }
- 
- <mem>{
- {modifier_bp}		{ return str(yyscanner, PE_MODIFIER_BP); }
--:			{ return ':'; }
--"/"			{ return '/'; }
-+":"/{modifier_bp}	{ return str(yyscanner, PE_BP_COLON); }
-+"/"/{digit}		{ return str(yyscanner, PE_BP_SLASH); }
-+"/"/{non_digit}		{ BEGIN(config); return '/'; }
- {num_dec}		{ return value(yyscanner, 10); }
- {num_hex}		{ return value(yyscanner, 16); }
- 	/*
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 4488443e506e..cfdb99537d07 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -57,7 +57,7 @@ static void free_list_evsel(struct list_head* list_evsel)
- %token PE_EVENT_NAME
- %token PE_NAME
- %token PE_BPF_OBJECT PE_BPF_SOURCE
--%token PE_MODIFIER_EVENT PE_MODIFIER_BP
-+%token PE_MODIFIER_EVENT PE_MODIFIER_BP PE_BP_COLON PE_BP_SLASH
- %token PE_NAME_CACHE_TYPE PE_NAME_CACHE_OP_RESULT
- %token PE_PREFIX_MEM PE_PREFIX_RAW PE_PREFIX_GROUP
- %token PE_ERROR
-@@ -78,6 +78,8 @@ static void free_list_evsel(struct list_head* list_evsel)
- %type <str> PE_NAME_CACHE_OP_RESULT
- %type <str> PE_MODIFIER_EVENT
- %type <str> PE_MODIFIER_BP
-+%type <str> PE_BP_COLON
-+%type <str> PE_BP_SLASH
- %type <str> PE_EVENT_NAME
- %type <str> PE_PMU_EVENT_PRE PE_PMU_EVENT_SUF PE_PMU_EVENT_SUF2 PE_KERNEL_PMU_EVENT PE_PMU_EVENT_FAKE
- %type <str> PE_DRV_CFG_TERM
-@@ -267,7 +269,7 @@ event_def
- event_def: event_pmu |
- 	   event_legacy_symbol |
- 	   event_legacy_cache sep_dc |
--	   event_legacy_mem |
-+	   event_legacy_mem sep_dc |
- 	   event_legacy_tracepoint sep_dc |
- 	   event_legacy_numeric sep_dc |
- 	   event_legacy_raw sep_dc |
-@@ -540,16 +542,16 @@ PE_NAME_CACHE_TYPE opt_event_config
- }
- 
- event_legacy_mem:
--PE_PREFIX_MEM PE_VALUE '/' PE_VALUE ':' PE_MODIFIER_BP sep_dc
-+PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
- {
--	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
- 	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	err = parse_events_add_breakpoint(list, &parse_state->idx,
--					  $2, $6, $4);
-+	err = parse_events_add_breakpoint(_parse_state, list,
-+					  $2, $6, $4, $7);
-+	parse_events_terms__delete($7);
- 	free($6);
- 	if (err) {
- 		free(list);
-@@ -558,31 +560,33 @@ PE_PREFIX_MEM PE_VALUE '/' PE_VALUE ':' PE_MODIFIER_BP sep_dc
- 	$$ = list;
- }
- |
--PE_PREFIX_MEM PE_VALUE '/' PE_VALUE sep_dc
-+PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE opt_event_config
- {
--	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	if (parse_events_add_breakpoint(list, &parse_state->idx,
--					$2, NULL, $4)) {
-+	err = parse_events_add_breakpoint(_parse_state, list,
-+					  $2, NULL, $4, $5);
-+	parse_events_terms__delete($5);
-+	if (err) {
- 		free(list);
- 		YYABORT;
- 	}
- 	$$ = list;
- }
- |
--PE_PREFIX_MEM PE_VALUE ':' PE_MODIFIER_BP sep_dc
-+PE_PREFIX_MEM PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
- {
--	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
- 	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	err = parse_events_add_breakpoint(list, &parse_state->idx,
--					  $2, $4, 0);
-+	err = parse_events_add_breakpoint(_parse_state, list,
-+					  $2, $4, 0, $5);
-+	parse_events_terms__delete($5);
- 	free($4);
- 	if (err) {
- 		free(list);
-@@ -591,15 +595,17 @@ PE_PREFIX_MEM PE_VALUE ':' PE_MODIFIER_BP sep_dc
- 	$$ = list;
- }
- |
--PE_PREFIX_MEM PE_VALUE sep_dc
-+PE_PREFIX_MEM PE_VALUE opt_event_config
- {
--	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	if (parse_events_add_breakpoint(list, &parse_state->idx,
--					$2, NULL, 0)) {
-+	err = parse_events_add_breakpoint(_parse_state, list,
-+					  $2, NULL, 0, $3);
-+	parse_events_terms__delete($3);
-+	if (err) {
- 		free(list);
- 		YYABORT;
- 	}
--- 
-2.34.1
-
+>  
+> -	ptr = container_of(itr, struct cs_etm_recording, itr);
+> -	cs_etm_pmu = ptr->cs_etm_pmu;
+> +	if (!contextid)
+> +		return 0;
+>  
+> -	if (!cs_etm_is_etmv4(itr, cpu))
+> -		goto out;
+> +	/* Not supported in etmv3 */
+> +	if (!cs_etm_is_etmv4(itr, cpu)) {
+> +		pr_err("%s: contextid not supported in ETMv3, disable with %s/contextid=0/\n",
+> +		       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+> +		return -EINVAL;
+> +	}
+>  
+>  	/* Get a handle on TRCIDR2 */
+>  	snprintf(path, PATH_MAX, "cpu%d/%s",
+> @@ -92,27 +100,13 @@ static int cs_etm_set_context_id(struct auxtrace_record *itr,
+>  
+>  	/* There was a problem reading the file, bailing out */
+>  	if (err != 1) {
+> -		pr_err("%s: can't read file %s\n",
+> -		       CORESIGHT_ETM_PMU_NAME, path);
+> -		goto out;
+> +		pr_err("%s: can't read file %s\n", CORESIGHT_ETM_PMU_NAME,
+> +		       path);
+> +		return err;
+>  	}
+>  
+> -	/* User has configured for PID tracing, respects it. */
+> -	contextid = evsel->core.attr.config &
+> -			(BIT(ETM_OPT_CTXTID) | BIT(ETM_OPT_CTXTID2));
+> -
+> -	/*
+> -	 * If user doesn't configure the contextid format, parse PMU format and
+> -	 * enable PID tracing according to the "contextid" format bits:
+> -	 *
+> -	 *   If bit ETM_OPT_CTXTID is set, trace CONTEXTIDR_EL1;
+> -	 *   If bit ETM_OPT_CTXTID2 is set, trace CONTEXTIDR_EL2.
+> -	 */
+> -	if (!contextid)
+> -		contextid = perf_pmu__format_bits(&cs_etm_pmu->format,
+> -						  "contextid");
+> -
+> -	if (contextid & BIT(ETM_OPT_CTXTID)) {
+> +	if (contextid &
+> +	    perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1")) {
+>  		/*
+>  		 * TRCIDR2.CIDSIZE, bit [9-5], indicates whether contextID
+>  		 * tracing is supported:
+> @@ -122,14 +116,14 @@ static int cs_etm_set_context_id(struct auxtrace_record *itr,
+>  		 */
+>  		val = BMVAL(val, 5, 9);
+>  		if (!val || val != 0x4) {
+> -			pr_err("%s: CONTEXTIDR_EL1 isn't supported\n",
+> -			       CORESIGHT_ETM_PMU_NAME);
+> -			err = -EINVAL;
+> -			goto out;
+> +			pr_err("%s: CONTEXTIDR_EL1 isn't supported, disable with %s/contextid1=0/\n",
+> +			       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+> +			return -EINVAL;
+>  		}
+>  	}
+>  
+> -	if (contextid & BIT(ETM_OPT_CTXTID2)) {
+> +	if (contextid &
+> +	    perf_pmu__format_bits(&cs_etm_pmu->format, "contextid2")) {
+>  		/*
+>  		 * TRCIDR2.VMIDOPT[30:29] != 0 and
+>  		 * TRCIDR2.VMIDSIZE[14:10] == 0b00100 (32bit virtual contextid)
+> @@ -138,35 +132,34 @@ static int cs_etm_set_context_id(struct auxtrace_record *itr,
+>  		 * Any value of VMIDSIZE >= 4 (i.e, > 32bit) is fine for us.
+>  		 */
+>  		if (!BMVAL(val, 29, 30) || BMVAL(val, 10, 14) < 4) {
+> -			pr_err("%s: CONTEXTIDR_EL2 isn't supported\n",
+> -			       CORESIGHT_ETM_PMU_NAME);
+> -			err = -EINVAL;
+> -			goto out;
+> +			pr_err("%s: CONTEXTIDR_EL2 isn't supported, disable with %s/contextid2=0/\n",
+> +			       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+> +			return -EINVAL;
+>  		}
+>  	}
+>  
+> -	/* All good, let the kernel know */
+> -	evsel->core.attr.config |= contextid;
+> -	err = 0;
+> -
+> -out:
+> -	return err;
+> +	return 0;
+>  }
+>  
+> -static int cs_etm_set_timestamp(struct auxtrace_record *itr,
+> -				struct evsel *evsel, int cpu)
+> +static int cs_etm_validate_timestamp(struct auxtrace_record *itr,
+> +				     struct evsel *evsel, int cpu)
+>  {
+> -	struct cs_etm_recording *ptr;
+> -	struct perf_pmu *cs_etm_pmu;
+> +	struct cs_etm_recording *ptr =
+> +		container_of(itr, struct cs_etm_recording, itr);
+> +	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
+>  	char path[PATH_MAX];
+> -	int err = -EINVAL;
+> +	int err;
+>  	u32 val;
+>  
+> -	ptr = container_of(itr, struct cs_etm_recording, itr);
+> -	cs_etm_pmu = ptr->cs_etm_pmu;
+> +	if (!(evsel->core.attr.config &
+> +	      perf_pmu__format_bits(&cs_etm_pmu->format, "timestamp")))
+> +		return 0;
+>  
+> -	if (!cs_etm_is_etmv4(itr, cpu))
+> -		goto out;
+> +	if (!cs_etm_is_etmv4(itr, cpu)) {
+> +		pr_err("%s: timestamp not supported in ETMv3, disable with %s/timestamp=0/\n",
+> +		       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+> +		return -EINVAL;
+> +	}
+>  
+>  	/* Get a handle on TRCIRD0 */
+>  	snprintf(path, PATH_MAX, "cpu%d/%s",
+> @@ -177,7 +170,7 @@ static int cs_etm_set_timestamp(struct auxtrace_record *itr,
+>  	if (err != 1) {
+>  		pr_err("%s: can't read file %s\n",
+>  		       CORESIGHT_ETM_PMU_NAME, path);
+> -		goto out;
+> +		return err;
+>  	}
+>  
+>  	/*
+> @@ -189,24 +182,21 @@ static int cs_etm_set_timestamp(struct auxtrace_record *itr,
+>  	 */
+>  	val &= GENMASK(28, 24);
+>  	if (!val) {
+> -		err = -EINVAL;
+> -		goto out;
+> +		return -EINVAL;
+>  	}
+>  
+> -	/* All good, let the kernel know */
+> -	evsel->core.attr.config |= (1 << ETM_OPT_TS);
+> -	err = 0;
+> -
+> -out:
+> -	return err;
+> +	return 0;
+>  }
+>  
+> -#define ETM_SET_OPT_CTXTID	(1 << 0)
+> -#define ETM_SET_OPT_TS		(1 << 1)
+> -#define ETM_SET_OPT_MASK	(ETM_SET_OPT_CTXTID | ETM_SET_OPT_TS)
+> -
+> -static int cs_etm_set_option(struct auxtrace_record *itr,
+> -			     struct evsel *evsel, u32 option)
+> +/*
+> + * Check whether the requested timestamp and contextid options should be
+> + * available on all requested CPUs and if not, tell the user how to override.
+> + * The kernel will silently disable any unavailable options so a warning here
+> + * first is better. In theory the kernel could still disable the option for
+> + * some other reason so this is best effort only.
+> + */
+> +static int cs_etm_validate_config(struct auxtrace_record *itr,
+> +				  struct evsel *evsel)
+>  {
+>  	int i, err = -EINVAL;
+>  	struct perf_cpu_map *event_cpus = evsel->evlist->core.user_requested_cpus;
+> @@ -220,18 +210,11 @@ static int cs_etm_set_option(struct auxtrace_record *itr,
+>  		    !perf_cpu_map__has(online_cpus, cpu))
+>  			continue;
+>  
+> -		if (option & BIT(ETM_OPT_CTXTID)) {
+> -			err = cs_etm_set_context_id(itr, evsel, i);
+> -			if (err)
+> -				goto out;
+> -		}
+> -		if (option & BIT(ETM_OPT_TS)) {
+> -			err = cs_etm_set_timestamp(itr, evsel, i);
+> -			if (err)
+> -				goto out;
+> -		}
+> -		if (option & ~(BIT(ETM_OPT_CTXTID) | BIT(ETM_OPT_TS)))
+> -			/* Nothing else is currently supported */
+> +		err = cs_etm_validate_context_id(itr, evsel, i);
+> +		if (err)
+> +			goto out;
+> +		err = cs_etm_validate_timestamp(itr, evsel, i);
+> +		if (err)
+>  			goto out;
+>  	}
+>  
+> @@ -447,10 +430,10 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>  	 * when a context switch happened.
+>  	 */
+>  	if (!perf_cpu_map__empty(cpus)) {
+> -		err = cs_etm_set_option(itr, cs_etm_evsel,
+> -					BIT(ETM_OPT_CTXTID) | BIT(ETM_OPT_TS));
+> -		if (err)
+> -			goto out;
+> +		cs_etm_evsel->core.attr.config |=
+> +			perf_pmu__format_bits(&cs_etm_pmu->format, "timestamp");
+> +		cs_etm_evsel->core.attr.config |=
+> +			perf_pmu__format_bits(&cs_etm_pmu->format, "contextid");
+>  	}
+>  
+>  	/* Add dummy event to keep tracking */
+> @@ -466,6 +449,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+>  	if (!perf_cpu_map__empty(cpus))
+>  		evsel__set_sample_bit(evsel, TIME);
+>  
+> +	err = cs_etm_validate_config(itr, cs_etm_evsel);
+>  out:
+>  	return err;
+>  }
+> -- 
+> 2.34.1
+> 
