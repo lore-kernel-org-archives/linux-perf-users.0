@@ -2,494 +2,388 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37414C7618E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 00:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BFBC7618E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 00:52:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242701AbjD0Aha (ORCPT
+        id S242740AbjD0Aw1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Apr 2023 20:37:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55476 "EHLO
+        Wed, 26 Apr 2023 20:52:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240499AbjD0Ah3 (ORCPT
+        with ESMTP id S236396AbjD0Aw0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Apr 2023 20:37:29 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 550F930C5
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 17:37:27 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-3ef34c49cb9so573941cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 17:37:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682555846; x=1685147846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dtpbYg47MRBFbPma5G4Rl0iDpKzymK6csYe1V0e2k3w=;
-        b=fjarVsT4m4//eQKvpKCMrv+k+J4/QwkksLbrLayg/9sIoSpxGJkeqWo+QKCKcTNyCe
-         nxeyDVUVSDs/GID0edmdUJKdQBbzSZBTeDCMmZbh7HCkaFjlRPwsrJY+lgnh3cBbKrtg
-         yaC34PRRwjLjDrg24IIkV6uiWUmCrb4z0RMJ1ZpFWuXSQudtLuJnlvQYD+81hilE+w46
-         gt/FieNQVe6fBnnnvHFchwy4NI7f56uTxn+IP63q6G0w/bm0SyLKgd3voy6nDLPqMto5
-         MytYAySEklkxCDqHcEmr4LZPzpCStXQB9EIsZDAPjpCNLWW+X/G70qKxdsm1nVEDwFv4
-         daNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682555846; x=1685147846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dtpbYg47MRBFbPma5G4Rl0iDpKzymK6csYe1V0e2k3w=;
-        b=YvLebcXbkL5FuUFC+3mN7tjaUnBLhjhacbDVibgjYQGwSiiT5eDbLfS6ph3UNGnWkb
-         pcQniGfYJN1UD8Sdhu6ArrBRgSpWVfDTm3qHz2mVtF0B6PiNyBbOPawBZkLwJtqVJYL8
-         BOrQ47ps6nzOaBe9Jfe4VatkN/D3m07WEm5i8PCNXi5yF2NT66XbYsz5yMLY8lcAgjE+
-         D4qxIa0im/OMrCRQfQzFqpD6b9QqS0d8AYYzW1Nd1vUd17+OiR5Qo8siWgoII0e9GkVO
-         qkqiASK8Yvv1tHggAZVJmRQ3vdEpkyBlzeMTxE4iYXHbLzDeaYEh/GubnGf0RFevctGW
-         XVHQ==
-X-Gm-Message-State: AC+VfDyRz8tgP15exj8tS7IwSyYT9Syht10+Xtu573DsETP7Sy6mSAoc
-        YcOsllcSXgn54QnMZ4b+Jqb3DCVgwFrPRlFG+Zzquw==
-X-Google-Smtp-Source: ACHHUZ6lnJIHWqOGgunGlZ56M0yGtPHialXaA2rolExRCAx+mDniUvDphCESX6b1QkDtghBxc/f2jMIW7atpvWCZH4k=
-X-Received: by 2002:ac8:7d4e:0:b0:3bf:e4e0:26a0 with SMTP id
- h14-20020ac87d4e000000b003bfe4e026a0mr31707qtb.14.1682555846265; Wed, 26 Apr
- 2023 17:37:26 -0700 (PDT)
+        Wed, 26 Apr 2023 20:52:26 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10hn2230.outbound.protection.outlook.com [52.100.156.230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B34C3586;
+        Wed, 26 Apr 2023 17:52:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=g+BaAp+2Ogpt9Fnp5tw/DVFrmk3peOIA3dqrFrcUiGxaiU/c2zB5FmhczvBcaAXpDmaQr7orPFHNFakxoSPlKcMJGn88B+jSNOyt/O6vSPcX3c/zxRjQXXFnEk31k7Eq+24BiJKMX6+Ee2nFCFyH+BifRrH7QDqgO4OT4mPRTvGEiTR/c3991bB/dg27QoJj7lmN6ZGZnJBEix0ONt79hWwF9ck/gf1we3NsIyhyuQSJi+gc6+4R7vdOibQKtz00B5PEXOSrXNy8O1d45HVyb63Ex+9uXdpztxiP7oVXfkKS6XRZGwP2aZVwt9mMoG1cy1UH4utXL2eBy4fCdibn6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5x+4oQat2Vr/yleJ0s6BYivX97KVHihy98lhz54kId8=;
+ b=PucXDqT49E+mjeiBOO9zkpfR6weUk/Fh6PR1YrrYI5fHCjDR9ePXFT7yySP9jwXYqAay//k6a8CL/ynbbSbxbSzxlhfQuSFTqSNJv3cbcuKeXAlLTDdp0lMl8OsDfoG3j2FrR8moLxlXS+43NwO/DclJ/Rjs926bSvBSgqvrAEz6kvMp+6snsvO8FxlhAkEQSBu4NfjlENXOX5lcI74UJpALhabxZw192YpOXzSULwhh/f2tmArtWEZWbuB2FDTiXtX8i1yk7AIWzE875fUdq3JZk4BrAs5PYIVS2XK+TZaQ7LsjU7NG/VRBVYs62osu70kWXYzMQlddd1lZu99jzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5x+4oQat2Vr/yleJ0s6BYivX97KVHihy98lhz54kId8=;
+ b=I2uiDoPX+aw/mNyubavFX1udZDnh8w++PEZrSHoHx/3E++XzxKEFDT/ww66LqLisMRk8OOv6V5vfmPg3ulQzI8y3UrUPSwhzWAb8mk5GCpA1x0L7W+yelyPH0zWFuhK7xCH4tbFOuNPqMw2//cttpxhveMJD26yKBGO0w+yspMPTcYsh9OltwyzgGCqMqUihZwHYEFXJmjEfRTkDxK9j2HmkA9H1O16SuAdv77CFiM4P0Dtg4J3dUIAdBYvmYAIb/+oq0D2oEyT2JVV32tzDowE+tw1JhO5azZHVAUCRvTn33/YdzfzNMzItSmmNI/Kg0ddgxwzBz0iRlBrHQg4CUw==
+Received: from DS7PR07CA0003.namprd07.prod.outlook.com (2603:10b6:5:3af::11)
+ by BL1PR12MB5319.namprd12.prod.outlook.com (2603:10b6:208:317::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.21; Thu, 27 Apr
+ 2023 00:52:21 +0000
+Received: from DM6NAM11FT055.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3af:cafe::c9) by DS7PR07CA0003.outlook.office365.com
+ (2603:10b6:5:3af::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.21 via Frontend
+ Transport; Thu, 27 Apr 2023 00:52:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ DM6NAM11FT055.mail.protection.outlook.com (10.13.173.103) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6340.22 via Frontend Transport; Thu, 27 Apr 2023 00:52:21 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Wed, 26 Apr 2023
+ 17:52:11 -0700
+Received: from [10.110.48.28] (10.126.230.37) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Wed, 26 Apr
+ 2023 17:52:09 -0700
+Message-ID: <7a3ff186-09c4-1059-9cdf-9e793f985251@nvidia.com>
+Date:   Wed, 26 Apr 2023 17:52:09 -0700
 MIME-Version: 1.0
-References: <20230426070050.1315519-1-irogers@google.com> <20230426070050.1315519-2-irogers@google.com>
- <BYAPR11MB2807A842BCDCE8111D457378EC659@BYAPR11MB2807.namprd11.prod.outlook.com>
-In-Reply-To: <BYAPR11MB2807A842BCDCE8111D457378EC659@BYAPR11MB2807.namprd11.prod.outlook.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 26 Apr 2023 17:37:11 -0700
-Message-ID: <CAP-5=fWfAxmcTPoxBjg64q0Es=052itWZy1EXpUh5NG7bXFnnw@mail.gmail.com>
-Subject: Re: [PATCH v1 01/40] perf stat: Introduce skippable evsels
-To:     "Yasin, Ahmad" <ahmad.yasin@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4] mm/gup: disallow GUP writing to file-backed mappings
+ by default
+Content-Language: en-US
+To:     Lorenzo Stoakes <lstoakes@gmail.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+CC:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        "Matthew Wilcox" <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        "Eranian, Stephane" <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Taylor, Perry" <perry.taylor@intel.com>,
-        "Alt, Samantha" <samantha.alt@intel.com>,
-        "Biggers, Caleb" <caleb.biggers@intel.com>,
-        "Wang, Weilin" <weilin.wang@intel.com>,
-        "Baker, Edward" <edward.baker@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Hunter, Adrian" <adrian.hunter@intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Rob Herring <robh@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        "Namhyung Kim" <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "Christian Brauner" <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        <linux-fsdevel@vger.kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>
+References: <3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.230.37]
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT055:EE_|BL1PR12MB5319:EE_
+X-MS-Office365-Filtering-Correlation-Id: 81b74ad8-eba5-4de9-0b15-08db46b9a8ba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VS7Oo1edcy0UiinXZql8rpv7LZMPi+XSExH28uDbIkiZHriBJQrxF8FRuhLPqTmcDV3yYQdzYhjS07NtKO5eIu4rVHJIZf+T8f3m4ivrDZcVk/ySwd2XiUV5NlFPAnbYe1DFxisH/4eMwOANAq3M2Q5ktO7mhG6I2SZBLh7n/zIbDUsLna8wCvNdWX3QyjTupDuKlIEGwTPu8vg29kMzMVHVSo5ENwl6QJQFKcPmWykLl7Nd9ABXhKQoTgwUWq1ccs/Zbb5+pkhuskRzyMKukAPxf4wlJLHHoXuNabzvpm4Si2YhsFbynfpHIMjnMqnH+iLc7gwzRrQXT4LYJ/VdZlv8+JcflCyovYLHZFq5u1+03bml8ol8H9rZRMThaGZPYhT3ZQexfa1LQH61j48yzcpSnch10sb+rifK0imM4/y7SRAOE3WzekTNOaN13fYFJauRqAeUNB6jZq9mD04LKi+ripZiQbt9kI4xIlRs4TcQiJ9HPY3GURv8Kn5dZrcrYI+DT+o9sy6E1nuYsP1cpjzcr7psoZ5EBI9yI2PxvYfRVUSsO2p5iiRpk+BwpINhsKmOFGyBV4ons/pY3h15HKTIxPim9RgX327fOUYDeBY1I6jn/87nJTRKkd4XUX2Gs8eRB1WPKd9iCy5SqAgxWB7G/PNgAa3rSJHl+nppiwy+/mfOA7Qq6vk2v7LEjokQoZq9W4Z6VYuvqyWAkBZI+HipyJhqwUzQ04iSc4+ay0RNYIYzs4JZ0jxih31tfhNydBZBs/z47+8+w9176IUttnNywji9uqXo2XoexGgnV3vMeOE3yXfYMKVYz4ddeq0O5GtS1HRqOerOHo0+KaI7UcKEjwI+7OW8JH6tCKb2pzz6vpm4759FYSj4IHXzzNldw2JHAcW9xPzg0mDp/U1FtA==
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(396003)(39860400002)(136003)(451199021)(5400799015)(36840700001)(40470700004)(46966006)(7636003)(356005)(82740400003)(36756003)(40480700001)(86362001)(82310400005)(31696002)(40460700003)(966005)(7416002)(5660300002)(7406005)(26005)(2906002)(16526019)(31686004)(186003)(4326008)(2616005)(70206006)(110136005)(54906003)(16576012)(70586007)(478600001)(316002)(53546011)(41300700001)(8676002)(8936002)(47076005)(36860700001)(426003)(34020700004)(83380400001)(336012)(2101003)(43740500002)(12100799030);DIR:OUT;SFP:1501;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Apr 2023 00:52:21.5153
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 81b74ad8-eba5-4de9-0b15-08db46b9a8ba
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT055.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5319
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 26, 2023 at 4:26=E2=80=AFPM Yasin, Ahmad <ahmad.yasin@intel.com=
-> wrote:
->
-> The output got needlessly lengthened with recent changes from Ian.
->
-> These four metrics:
->                   #     14.5 %  tma_retiring
->                                                   #     27.6 %  tma_backe=
-nd_bound
->                                                   #     40.9 %  tma_front=
-end_bound
->                                                   #     17.0 %  tma_bad_s=
-peculation
-> better be appended on the right hand side of these four events (as curren=
-t perf-stat does):
->            144,922      topdown-retiring:u
->            411,266      topdown-fe-bound:u
->            258,510      topdown-be-bound:u
->            184,090      topdown-bad-spec:u
->
-> Also, I think we should not bother the default perf-stat users with the l=
-ast two events:
->              2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/sec
->              3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/u #  =
-  6.015 M/sec
->
-> (yes, there are meant to increase accuracy of the previous tma_* level1 m=
-etrics, but the underlying event vary from model to model, e.g. SKL to ICL =
-to SPR).
->
-> Besides, I can think on better metrics to append on the top-most TMA even=
-t (TOPDOWN.SLOTS). tma_retiring does not belong there.
->
-> Ahmad
+On 4/25/23 16:15, Lorenzo Stoakes wrote:
+> GUP does not correctly implement write-notify semantics, nor does it
+> guarantee that the underlying pages are correctly dirtied, which could lead
+> to a kernel oops or data corruption when writing to file-backed mappings.
+> 
+> This is only relevant when the mappings are file-backed and the underlying
+> file system requires folio dirty tracking. File systems which do not, such
+> as shmem or hugetlb, are not at risk and therefore can be written to
+> without issue.
+> 
+> Unfortunately this limitation of GUP has been present for some time and
+> requires future rework of the GUP API in order to provide correct write
+> access to such mappings.
+> 
+> In the meantime, we add a check for the most broken GUP case -
+> FOLL_LONGTERM - which really under no circumstances can safely access
+> dirty-tracked file mappings.
+> 
 
-Hi Ahmad,
+Hi Lorenzo,
 
-when running perf without events and metrics you get a set of events
-and metrics added for you. Previously this meant hard coded metrics
-and these are just wrong. Their formulas are wrong, their thresholds
-are wrong, they don't use groups correctly, they are inconsistent
-between hybrid core types (appearing for one and not the other) and
-there is more. When there is a hard coded metric then as they are
-implicit from events being enabled, if I gather topdown level 3
-metrics, topdown level 1 hard coded metrics may appear. So if I
-generate CSV output I may or may not get implicitly added columns from
-hard coded metrics. This bug was  introduced by Intel and we've
-consistently requested a fix, including at our last face-to-face. On
-top of this the hard coded metrics in Linux 6.3 use "saved values" for
-aggregation and this is broken, counts are at least doubled in some
-cases meaning depending on flags you get wildly wrong figures for, for
-example, memory bandwidth. So everything is wrong in Linux 6.3 and
-needed fixing - this is something that Intel have been testing since
-February, for a bug introduced in October, but these complaints came
-up 2 weeks ago. Note, ARM pointed out an issue with this patch series
-in less than a day, which is awesome testing work!
+As I mentioned in a sub-thread [1], it would be a nice touch to include
+your more detailed write-up, and a link to Jan Kara's original report,
+here.
 
-The switch to json metrics is both documented in the code base as
-being the desired route and also in presentations we have worked with
-Intel on giving (over years). But anyway, the complaint keeps coming
-back to the perf output when running without events or metrics. The
-output of what are called "shadow stats" in perf is tied to the output
-of events, for metrics it is tied to a "leading" event ie the first
-event parsed. For perf metric (cpu or cpu_core topdown-*) events there
-is a requirement that the group leader is slots, and so when there are
-topdown events in a metric it follows that the metrics are all output
-with the slots event. We could look to change this behavior but why?
-The complaint is that the output is hard to read, but it is hard to
-read regardless of json metrics. In the meeting today, "slots" is a
-classic example of what users don't understand. This is a separate
-problem than fixing bugs in aggregation, hybrid, etc. The naming
-decision to use "tma_bad_speculation" rather than "Bad Speculation" as
-used in Linux 6.3 was one that I recall you personally approving.
 
-Adding back the hard coded metrics and output for 6.4 is a regression:
- - it will break CSV output when moving across architectures
- - there is no testing unlike the json metrics that are tested as part
-of project Valkyrie
- - grouping, formulas, thresholds, etc. are broken.
- - the only compelling reason could be to avoid hybrid crashes, but
-that is something far better solved with this patch series.
+> As part of this change we separate out vma_needs_dirty_tracking() as a
+> helper function to determine this, which is distinct from
+> vma_wants_writenotify() which is specific to determining which PTE flags to
+> set.
 
-I understand toplev is using this output for the timed pebs work. It
-should not! There are no tests on the text output of perf, but what
-there are tests on are the CSV and Json output - that's why they
-exist. Tools should be using the CSV and Json output, if text were to
-be required tool output then there should be tests on it. I've asked
-for toplev to be added to the shell tests every time this has come up
-in the past. It is far better to fix toplev not to use text output.
+This, I think should go in a separate cleanup patch, because it is
+(nearly) the same behavior. More notes below on this.
 
-These changes are about fixing hybrid not about the output format of
-the perf tool. At no point during 6.4 development has the json metric
-output changed. Complaining that a tool, toplev, needs fixing because
-of this is the fault of the tool that was doing something wrong. Once
-tools are not using the text output then we can fix it and make it
-more human readable. There is no reason, for example, to include
-events *at all* when displaying metrics. At the same time as cleaning
-this up we can question whether IPC and branch miss rate should be
-gathered, as these contribute to multiplexing - another reason to run
-the tool with CSV or Json output with a named metric, metric group or
-event.
+More notes below:
 
-I acknowledge your point but it is wrong. I can share today's slide
-deck with you if it is useful, Sam said she would be following up
-inside of Intel. The only proposed fix for 6.4 is to not enable the
-TopdownL1 group on hybrid. This patch series is the proposed long-term
-hybrid fix and for 6.5. Testing, reviews, etc. all very much
-appreciated.
-
-Thanks,
-Ian
-
-> -----Original Message-----
-> From: Ian Rogers <irogers@google.com>
-> Sent: Wednesday, April 26, 2023 10:00
-> To: Arnaldo Carvalho de Melo <acme@kernel.org>; Kan Liang <kan.liang@linu=
-x.intel.com>; Yasin, Ahmad <ahmad.yasin@intel.com>; Peter Zijlstra <peterz@=
-infradead.org>; Ingo Molnar <mingo@redhat.com>; Eranian, Stephane <eranian@=
-google.com>; Andi Kleen <ak@linux.intel.com>; Taylor, Perry <perry.taylor@i=
-ntel.com>; Alt, Samantha <samantha.alt@intel.com>; Biggers, Caleb <caleb.bi=
-ggers@intel.com>; Wang, Weilin <weilin.wang@intel.com>; Baker, Edward <edwa=
-rd.baker@intel.com>; Mark Rutland <mark.rutland@arm.com>; Alexander Shishki=
-n <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Namhy=
-ung Kim <namhyung@kernel.org>; Hunter, Adrian <adrian.hunter@intel.com>; Fl=
-orian Fischer <florian.fischer@muhq.space>; Rob Herring <robh@kernel.org>; =
-Zhengjun Xing <zhengjun.xing@linux.intel.com>; John Garry <john.g.garry@ora=
-cle.com>; Kajol Jain <kjain@linux.ibm.com>; Sumanth Korikkar <sumanthk@linu=
-x.ibm.com>; Thomas Richter <tmricht@linux.ibm.com>; Tiezhu Yang <yangtiezhu=
-@loongson.cn>; Ravi Bangoria <ravi.bangoria@amd.com>; Leo Yan <leo.yan@lina=
-ro.org>; Yang Jihong <yangjihong1@huawei.com>; James Clark <james.clark@arm=
-.com>; Suzuki Poulouse <suzuki.poulose@arm.com>; Kang Minchul <tegongkang@g=
-mail.com>; Athira Rajeev <atrajeev@linux.vnet.ibm.com>; linux-perf-users@vg=
-er.kernel.org; linux-kernel@vger.kernel.org
-> Cc: Ian Rogers <irogers@google.com>
-> Subject: [PATCH v1 01/40] perf stat: Introduce skippable evsels
->
-> Perf stat with no arguments will use default events and metrics. These ev=
-ents may fail to open even with kernel and hypervisor disabled. When these =
-fail then the permissions error appears even though they were implicitly se=
-lected. This is particularly a problem with the automatic selection of the =
-TopdownL1 metric group on certain architectures like
-> Skylake:
->
-> ```
-> $ perf stat true
-> Error:
-> Access to performance monitoring and observability operations is limited.
-> Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open a=
-ccess to performance monitoring and observability operations for processes =
-without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
-> More information can be found at 'Perf events and tool security' document=
-:
-> https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-> perf_event_paranoid setting is 2:
->   -1: Allow use of (almost) all events by all users
->       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-> >=3D 0: Disallow raw and ftrace function tracepoint access =3D 1: Disallo=
-w
-> >CPU event access =3D 2: Disallow kernel profiling
-> To make the adjusted perf_event_paranoid setting permanent preserve it in=
- /etc/sysctl.conf (e.g. kernel.perf_event_paranoid =3D <setting>) ```
->
-> This patch adds skippable evsels that when they fail to open won't fail a=
-nd won't appear in output. The TopdownL1 events, from the metric group, are=
- marked as skippable. This turns the failure above to:
->
-> ```
-> $ perf stat true
->
->  Performance counter stats for 'true':
->
->               1.26 msec task-clock:u                     #    0.328 CPUs =
-utilized
->                  0      context-switches:u               #    0.000 /sec
->                  0      cpu-migrations:u                 #    0.000 /sec
->                 49      page-faults:u                    #   38.930 K/sec
->            176,449      cycles:u                         #    0.140 GHz  =
-                       (48.99%)
->            122,905      instructions:u                   #    0.70  insn =
-per cycle
->             28,264      branches:u                       #   22.456 M/sec
->              2,405      branch-misses:u                  #    8.51% of al=
-l branches
->
->        0.003834565 seconds time elapsed
->
->        0.000000000 seconds user
->        0.004130000 seconds sys
-> ```
->
-> When the events can have kernel/hypervisor disabled, like on Tigerlake, t=
-hen it continues to succeed as:
->
-> ```
-> $ perf stat true
->
->  Performance counter stats for 'true':
->
->               0.57 msec task-clock:u                     #    0.385 CPUs =
-utilized
->                  0      context-switches:u               #    0.000 /sec
->                  0      cpu-migrations:u                 #    0.000 /sec
->                 47      page-faults:u                    #   82.329 K/sec
->            287,017      cycles:u                         #    0.503 GHz
->            133,318      instructions:u                   #    0.46  insn =
-per cycle
->             31,396      branches:u                       #   54.996 M/sec
->              2,442      branch-misses:u                  #    7.78% of al=
-l branches
->            998,790      TOPDOWN.SLOTS:u                  #     14.5 %  tm=
-a_retiring
->                                                   #     27.6 %  tma_backe=
-nd_bound
->                                                   #     40.9 %  tma_front=
-end_bound
->                                                   #     17.0 %  tma_bad_s=
-peculation
->            144,922      topdown-retiring:u
->            411,266      topdown-fe-bound:u
->            258,510      topdown-be-bound:u
->            184,090      topdown-bad-spec:u
->              2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/sec
->              3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/u #  =
-  6.015 M/sec
->
->        0.001480954 seconds time elapsed
->
->        0.000000000 seconds user
->        0.001686000 seconds sys
-> ```
->
-> And this likewise works if paranoia allows or running as root.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
 > ---
->  tools/perf/builtin-stat.c      | 39 ++++++++++++++++++++++++++--------
->  tools/perf/util/evsel.c        | 15 +++++++++++--
->  tools/perf/util/evsel.h        |  1 +
->  tools/perf/util/stat-display.c |  4 ++++
->  4 files changed, 48 insertions(+), 11 deletions(-)
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c index =
-efda63f6bf32..eb34f5418ad3 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struc=
-t evsel *counter)
->                         evsel_list->core.threads->err_thread =3D -1;
->                         return COUNTER_RETRY;
->                 }
-> +       } else if (counter->skippable) {
-> +               if (verbose > 0)
-> +                       ui__warning("skipping event %s that kernel failed=
- to open .\n",
-> +                                   evsel__name(counter));
-> +               counter->supported =3D false;
-> +               counter->errored =3D true;
-> +               return COUNTER_SKIP;
->         }
->
->         evsel__open_strerror(counter, &target, errno, msg, sizeof(msg)); =
-@@ -1885,15 +1892,29 @@ static int add_default_attributes(void)
->                  * Add TopdownL1 metrics if they exist. To minimize
->                  * multiplexing, don't request threshold computation.
->                  */
-> -               if (metricgroup__has_metric("TopdownL1") &&
-> -                   metricgroup__parse_groups(evsel_list, "TopdownL1",
-> -                                           /*metric_no_group=3D*/false,
-> -                                           /*metric_no_merge=3D*/false,
-> -                                           /*metric_no_threshold=3D*/tru=
-e,
-> -                                           stat_config.user_requested_cp=
-u_list,
-> -                                           stat_config.system_wide,
-> -                                           &stat_config.metric_events) <=
- 0)
-> -                       return -1;
-> +               if (metricgroup__has_metric("TopdownL1")) {
-> +                       struct evlist *metric_evlist =3D evlist__new();
-> +                       struct evsel *metric_evsel;
+> v4:
+> - Split out vma_needs_dirty_tracking() from vma_wants_writenotify() to reduce
+>    duplication and update to use this in the GUP check. Note that both separately
+>    check vm_ops_needs_writenotify() as the latter needs to test this before the
+>    vm_pgprot_modify() test, resulting in vma_wants_writenotify() checking this
+>    twice, however it is such a small check this should not be egregious.
+> 
+> v3:
+> - Rebased on latest mm-unstable as of 24th April 2023.
+> - Explicitly check whether file system requires folio dirtying. Note that
+>    vma_wants_writenotify() could not be used directly as it is very much focused
+>    on determining if the PTE r/w should be set (e.g. assuming private mapping
+>    does not require it as already set, soft dirty considerations).
+> - Tested code against shmem and hugetlb mappings - confirmed that these are not
+>    disallowed by the check.
+> - Eliminate FOLL_ALLOW_BROKEN_FILE_MAPPING flag and instead perform check only
+>    for FOLL_LONGTERM pins.
+> - As a result, limit check to internal GUP code.
+>   https://lore.kernel.org/all/23c19e27ef0745f6d3125976e047ee0da62569d4.1682406295.git.lstoakes@gmail.com/
+> 
+> v2:
+> - Add accidentally excluded ptrace_access_vm() use of
+>    FOLL_ALLOW_BROKEN_FILE_MAPPING.
+> - Tweak commit message.
+> https://lore.kernel.org/all/c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com/
+> 
+> v1:
+> https://lore.kernel.org/all/f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com/
+> 
+>   include/linux/mm.h |  1 +
+>   mm/gup.c           | 26 +++++++++++++++++++++++++-
+>   mm/mmap.c          | 37 ++++++++++++++++++++++++++++---------
+>   3 files changed, 54 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 37554b08bb28..f7da02fc89c6 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2433,6 +2433,7 @@ extern unsigned long move_page_tables(struct vm_area_struct *vma,
+>   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
+>   					    MM_CP_UFFD_WP_RESOLVE)
+>   
+> +bool vma_needs_dirty_tracking(struct vm_area_struct *vma);
+>   int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot);
+>   static inline bool vma_wants_manual_pte_write_upgrade(struct vm_area_struct *vma)
+>   {
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 1f72a717232b..53652453037c 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -959,16 +959,37 @@ static int faultin_page(struct vm_area_struct *vma,
+>   	return 0;
+>   }
+>   
+> +/*
+> + * Writing to file-backed mappings which require folio dirty tracking using GUP
+> + * is a fundamentally broken operation as kernel write access to GUP mappings
+> + * may not adhere to the semantics expected by a file system.
+> + */
+> +static inline bool can_write_file_mapping(struct vm_area_struct *vma,
+> +					  unsigned long gup_flags)
+
+Perhaps name this:
+  
+         writeable_file_mapping_allowed()
+
+? "can" is more about "is this possible", whereas the goal here is
+to express, "should this be allowed".
+
+Also a silly tiny nit: let's omit the "inline" keyword, down here in this
+.c file, and let the compiler work that out instead. "static" should suffice.
+
+> +{
+> +	/* If we aren't pinning then no problematic write can occur. */
+> +	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
+> +		return true;
 > +
-> +                       if (!metric_evlist)
-> +                               return -1;
+> +	/* We limit this check to the most egregious case - a long term pin. */
+> +	if (!(gup_flags & FOLL_LONGTERM))
+> +		return true;
 > +
-> +                       if (metricgroup__parse_groups(metric_evlist, "Top=
-downL1",
-> +                                                       /*metric_no_group=
-=3D*/false,
-> +                                                       /*metric_no_merge=
-=3D*/false,
-> +                                                       /*metric_no_thres=
-hold=3D*/true,
-> +                                                       stat_config.user_=
-requested_cpu_list,
-> +                                                       stat_config.syste=
-m_wide,
-> +                                                       &stat_config.metr=
-ic_events) < 0)
-> +                               return -1;
+> +	/* If the VMA requires dirty tracking then GUP will be problematic. */
+> +	return vma_needs_dirty_tracking(vma);
+> +}
 > +
-> +                       evlist__for_each_entry(metric_evlist, metric_evse=
-l) {
-> +                               metric_evsel->skippable =3D true;
-> +                       }
-> +                       evlist__splice_list_tail(evsel_list, &metric_evli=
-st->core.entries);
-> +                       evlist__delete(metric_evlist);
-> +               }
+>   static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+>   {
+>   	vm_flags_t vm_flags = vma->vm_flags;
+>   	int write = (gup_flags & FOLL_WRITE);
+>   	int foreign = (gup_flags & FOLL_REMOTE);
+> +	bool vma_anon = vma_is_anonymous(vma);
+
+This name:
+
+        bool file_backed = !vma_is_anonymous(vma);
+
+would lead to a slightly better reading experience below.
+
+Sorry for the small naming and documentation comments here,
+it's just what I do. :)
+
+
+>   
+>   	if (vm_flags & (VM_IO | VM_PFNMAP))
+>   		return -EFAULT;
+>   
+> -	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
+> +	if ((gup_flags & FOLL_ANON) && !vma_anon)
+>   		return -EFAULT;
+>   
+>   	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
+> @@ -978,6 +999,9 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+>   		return -EFAULT;
+>   
+>   	if (write) {
+> +		if (!vma_anon && !can_write_file_mapping(vma, gup_flags))
+> +			return -EFAULT;
 > +
->                 /* Platform specific attrs */
->                 if (evlist__add_default_attrs(evsel_list, default_null_at=
-trs) < 0)
->                         return -1;
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c index 356c=
-07f03be6..1cd04b5998d2 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
->         evsel->per_pkg_mask  =3D NULL;
->         evsel->collect_stat  =3D false;
->         evsel->pmu_name      =3D NULL;
-> +       evsel->skippable     =3D false;
->  }
->
->  struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx) @@ -=
-1725,9 +1726,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map=
-_idx, int thread)
->                 return -1;
->
->         fd =3D FD(leader, cpu_map_idx, thread);
-> -       BUG_ON(fd =3D=3D -1);
-> +       BUG_ON(fd =3D=3D -1 && !leader->skippable);
->
-> -       return fd;
-> +       /*
-> +        * When the leader has been skipped, return -2 to distinguish fro=
-m no
-> +        * group leader case.
-> +        */
-> +       return fd =3D=3D -1 ? -2 : fd;
->  }
->
->  static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_thre=
-ads, int thread_idx) @@ -2109,6 +2114,12 @@ static int evsel__open_cpu(stru=
-ct evsel *evsel, struct perf_cpu_map *cpus,
->
->                         group_fd =3D get_group_fd(evsel, idx, thread);
->
-> +                       if (group_fd =3D=3D -2) {
-> +                               pr_debug("broken group leader for %s\n", =
-evsel->name);
-> +                               err =3D -EINVAL;
-> +                               goto out_close;
-> +                       }
+>   		if (!(vm_flags & VM_WRITE)) {
+>   			if (!(gup_flags & FOLL_FORCE))
+>   				return -EFAULT;
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 536bbb8fa0ae..aac638dd22cf 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -1475,6 +1475,32 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
+>   }
+>   #endif /* __ARCH_WANT_SYS_OLD_MMAP */
+>   
+> +/* Do VMA operations imply write notify is required? */
+> +static inline bool vm_ops_needs_writenotify(
+
+This "inline" should also be omitted, imho.
+
+> +	const struct vm_operations_struct *vm_ops)
+> +{
+> +	return vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite);
+> +}
 > +
->                         test_attr__ready();
->
->                         /* Debug message used by test scripts */ diff --g=
-it a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h index 35805dcdb1b9..=
-bf8f01af1c0b 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -95,6 +95,7 @@ struct evsel {
->                 bool                    weak_group;
->                 bool                    bpf_counter;
->                 bool                    use_config_name;
-> +               bool                    skippable;
->                 int                     bpf_fd;
->                 struct bpf_object       *bpf_obj;
->                 struct list_head        config_terms;
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
-y.c index e6035ecbeee8..6b46bbb3d322 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -810,6 +810,10 @@ static bool should_skip_zero_counter(struct perf_sta=
-t_config *config,
->         struct perf_cpu cpu;
->         int idx;
->
-> +       /* Skip counters that were speculatively/default enabled rather t=
-han requested. */
-> +       if (counter->skippable)
-> +               return true;
+> +/*
+> + * Does this VMA require the underlying folios to have their dirty state
+> + * tracked?
+> + */
+> +bool vma_needs_dirty_tracking(struct vm_area_struct *vma)
+> +{
+> +	/* Does the filesystem need to be notified? */
+> +	if (vm_ops_needs_writenotify(vma->vm_ops))
+> +		return true;
 > +
->         /*
->          * Skip value 0 when enabling --per-thread globally,
->          * otherwise it will have too many 0 output.
-> --
-> 2.40.1.495.gc816e09b53d-goog
->
-> ---------------------------------------------------------------------
-> Intel Israel (74) Limited
->
-> This e-mail and any attachments may contain confidential material for
-> the sole use of the intended recipient(s). Any review or distribution
-> by others is strictly prohibited. If you are not the intended
-> recipient, please contact the sender and delete all copies.
+> +	/* Specialty mapping? */
+> +	if (vma->vm_flags & VM_PFNMAP)
+> +		return false;
+> +
+> +	/* Can the mapping track the dirty pages? */
+> +	return vma->vm_file && vma->vm_file->f_mapping &&
+> +		mapping_can_writeback(vma->vm_file->f_mapping);
+> +}
+> +
+>   /*
+>    * Some shared mappings will want the pages marked read-only
+>    * to track write events. If so, we'll downgrade vm_page_prot
+> @@ -1484,14 +1510,13 @@ SYSCALL_DEFINE1(old_mmap, struct mmap_arg_struct __user *, arg)
+>   int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
+>   {
+>   	vm_flags_t vm_flags = vma->vm_flags;
+> -	const struct vm_operations_struct *vm_ops = vma->vm_ops;
+>   
+>   	/* If it was private or non-writable, the write bit is already clear */
+>   	if ((vm_flags & (VM_WRITE|VM_SHARED)) != ((VM_WRITE|VM_SHARED)))
+>   		return 0;
+>   
+>   	/* The backer wishes to know when pages are first written to? */
+> -	if (vm_ops && (vm_ops->page_mkwrite || vm_ops->pfn_mkwrite))
+> +	if (vm_ops_needs_writenotify(vma->vm_ops))
+
+OK, so here we are calling vm_ops_needs_writenotify(), that's the
+first call. And then...
+
+>   		return 1;
+>   
+>   	/* The open routine did something to the protections that pgprot_modify
+> @@ -1511,13 +1536,7 @@ int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot)
+>   	if (userfaultfd_wp(vma))
+>   		return 1;
+>   
+> -	/* Specialty mapping? */
+> -	if (vm_flags & VM_PFNMAP)
+> -		return 0;
+> -
+> -	/* Can the mapping track the dirty pages? */
+> -	return vma->vm_file && vma->vm_file->f_mapping &&
+> -		mapping_can_writeback(vma->vm_file->f_mapping);
+> +	return vma_needs_dirty_tracking(vma);
+
+...and now we call it again. I think once should be enough, though.
+
+Also, with the exception of that double call to
+vm_ops_needs_writenotify(), these changes to mmap.c are code cleanup
+that has the same behavior as before. As such, it's better to separate
+them out from this patch whose goal is very much to change behavior.
+
+
+[1] https://lore.kernel.org/all/1b9e3406-c08e-b97c-d46f-22f36535d9e5@nvidia.com/
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+
