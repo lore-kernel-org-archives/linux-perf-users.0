@@ -2,70 +2,92 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50DC6C77B61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 05:27:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F0E6C77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 05:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242777AbjD0F15 (ORCPT
+        id S242891AbjD0FuY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Apr 2023 01:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48104 "EHLO
+        Thu, 27 Apr 2023 01:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242755AbjD0F14 (ORCPT
+        with ESMTP id S229455AbjD0FuX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Apr 2023 01:27:56 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C26572701
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 22:27:54 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-3f0a2f8216fso611821cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 22:27:54 -0700 (PDT)
+        Thu, 27 Apr 2023 01:50:23 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1802A3583
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 22:50:21 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3ef36d814a5so609861cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 22:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682573274; x=1685165274;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=google.com; s=20221208; t=1682574620; x=1685166620;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=23QIJrDsy807vEXvSlFJsuoFWGU4ASBz3D+3MQdJY40=;
-        b=Zyn++CYE6cBSUwDBPpgqEABiOUVP8zvfiUH+57ZvMKwWOjhbng0GiC2QCvFFkMeUOL
-         Nc5YNEYvAncFDSg0mSyv59rgGRnuF2LKTswphvsVVHmuHtMVQHdgAf6rCsXYdYpxj4qS
-         fhWY7d2uw3z0lXXPCp1ZIQ8j/jYNM1bYgj/umCw3Cpuf3xmCG9WM8C+GPlObRYoNu9H0
-         i+thJSJP9ptQ3M1lZAfAuk7gzghjifSL0RH/8xlBWJE3wNeNUcCRfjV1Nl2PpoC8W9pp
-         xAnzA9qhHDia/aKpJRyrzPPd9a2vpZ9JqmlQM7A5LqsbpRlnke3uRv5NXB16fQcNJP/y
-         m1mg==
+        bh=TvAmsB0U1zjcl0mMmKaE9Rwnuys46y4OR/qHV5cYjdk=;
+        b=JP8qJKcRMcdqagWws8l12FJ2oq9VQBqt9Qk6zTmRAg0ayQGmMrxB3JPV+H3Ovyo4Os
+         myLxKuXXDXFDwPQdePk4QL0e1+ns6mvXFxdleQpdvE3YkjZJXLqW1po+nsQxEmomuEgy
+         A9IqxH0B23MrgOeUfFzHLP0s5pUNGV1Qs+5FtYDmRiN8AMLHk6gkkrq4elzCHDoGWRqn
+         z5VSEWnZuY9W0g97eAD8CqfY5VIF87UjgJxkgp/rk5k6SJdGUgb6Nd4Pr4ZiDVVZcHkh
+         HRhqeGYccP4KTOlG/H06wgczjblevmitiaU9JsdCqQIwl+dUaltSjlQ8vAXEbGadfsdx
+         e/0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682573274; x=1685165274;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20221208; t=1682574620; x=1685166620;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=23QIJrDsy807vEXvSlFJsuoFWGU4ASBz3D+3MQdJY40=;
-        b=S+gUVwyon2ykMtju/BMbyt/pwQeRXlo8/5pEIhQuJ0sVzTKEv1+1sdMwPThTUROgiV
-         xontQ4ddtbPSDd48lAYHyG4UDEzzOAXektSDgPZ/BnXIkzV4MGbw4vunW4ZT5V1TFEDx
-         avdn2471vS7p3nP9ciznh4psEEUeaWBFva63mYmdKIGjfhenO53Gs/t/7Pux9mqizuLx
-         83kn3QJeHrXIDgWlz+C8j0MP/CHTs9CqHLQ4b+x5ZDCS/VRX3Cu9VpqjvwWuUt49jpty
-         +8iGcVNLS4BWX5MkMAIWysysGMGOIHU0nwjkU78UH505UPVVvIO8rTHxMPY0xHk3WYYW
-         uh5A==
-X-Gm-Message-State: AC+VfDw7pt8OsAD7vvh05zAXUa8m78+JgDLUYWu1wJcSjFpL3/FSd1qm
-        xlwijxFZOm8T++1qjGWRJUQG/SEp1AK/8pc75Hklsw==
-X-Google-Smtp-Source: ACHHUZ4Ls6hc+7PsjQ+5GCwX/1eTjXsTfbCrxj2NCTg8nBoSgTz82iuYlUsSxIMbNt4ltlJv36elL79FABAg8vO5F7U=
-X-Received: by 2002:a05:622a:120a:b0:3f0:af20:1a37 with SMTP id
- y10-20020a05622a120a00b003f0af201a37mr92351qtx.15.1682573273743; Wed, 26 Apr
- 2023 22:27:53 -0700 (PDT)
+        bh=TvAmsB0U1zjcl0mMmKaE9Rwnuys46y4OR/qHV5cYjdk=;
+        b=H6vu6JNXJxfhNoxrNyRDemY/ctF9QwCx45WvtPIJKMKemvbAKP5pnU1tAA6o/Tw9+6
+         hY8Jy9tBASF3C+TKBQXP9rtOSz+aqzm/s4QxRb86lMO47isHmJTreMhwQawcU0cWbDsi
+         0LuFhw6HZNcndVUKOKXyY3FBgj4Dt+di1zMtZN4quRJjn6szE5dCXDOb39XJloXsFE3v
+         4CrzO4Dwt9F5zDuMzLp9fKvODGSgdnSkAnFq86pjkMzl3F1enF7xPwJ6wT8++NYHEddf
+         F7zB9u/VAYP/tda9SycYvaMTyh3pk7naY4xcyxaGkg1nDh5DN3MlB52cSRnzphq9kTaR
+         MHbA==
+X-Gm-Message-State: AC+VfDxsKQufueNzGy+OpVNpK2w1S79RsoRjiQ15/TMX/zHnTFAlzAZa
+        fDpl5HKwy9QWTmvu75vwj03nc6TtygUoLwvVa3gecA==
+X-Google-Smtp-Source: ACHHUZ4t2fxpb5fTfitXy+bI0upOdjlPnkcVaICFy/1gbDJTJ6fDJ7FCKPFv/cOgNgof5GAiE2wtKtbTTBVImMiYI7U=
+X-Received: by 2002:ac8:5c82:0:b0:3ef:a55:7f39 with SMTP id
+ r2-20020ac85c82000000b003ef0a557f39mr124309qta.12.1682574619970; Wed, 26 Apr
+ 2023 22:50:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230417192546.99923-1-irogers@google.com>
-In-Reply-To: <20230417192546.99923-1-irogers@google.com>
+References: <20230426070050.1315519-1-irogers@google.com> <20230426070050.1315519-22-irogers@google.com>
+ <6396e5dc-bf53-ce0d-15ea-0a1aedecf691@arm.com>
+In-Reply-To: <6396e5dc-bf53-ce0d-15ea-0a1aedecf691@arm.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 26 Apr 2023 22:27:42 -0700
-Message-ID: <CAP-5=fXuKqU=ZD4G3t1H=dD1SMghiVXHj5YTFhX+Jj98jAiVUg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf build: Don't compile demangle-cxx.cpp if not necessary
-To:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Wed, 26 Apr 2023 22:50:08 -0700
+Message-ID: <CAP-5=fXwn43dFLhhXzpd3WWxc2-Vb0uOxhbZvDn9yg5-U_gffg@mail.gmail.com>
+Subject: Re: [PATCH v1 21/40] perf parse-events: Wildcard legacy cache events
+To:     James Clark <james.clark@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Rob Herring <robh@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
-        Qi Liu <liuqi115@huawei.com>, Leo Yan <leo.yan@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -73,105 +95,295 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Apr 17, 2023 at 12:25=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
+On Wed, Apr 26, 2023 at 3:11=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
 >
-> demangle-cxx.cpp requires a C++ compiler, but feature checks may fail
-> because of the absence of this. Add a CONFIG_CXX_DEMANGLE so that the
-> source isn't built if not supported. Copy libbfd and cplus demangle
-> variants to a weak symbol-elf.c version so they aren't dependent on
-> C++. These variants are only built with the build option
-> BUILD_NONDISTRO=3D1.
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
+>
+> On 26/04/2023 08:00, Ian Rogers wrote:
+> > It is inconsistent that "perf stat -e instructions-retired" wildcard
+> > opens on all PMUs while legacy cache events like "perf stat -e
+> > L1-dcache-load-miss" do not. A behavior introduced by hybrid is that a
+> > legacy cache event like L1-dcache-load-miss should wildcard open on
+> > all hybrid PMUs. A call to is_event_supported is necessary for each
+> > PMU, a failure of which results in the event not being added. Rather
+> > than special case that logic, move it into the main legacy cache event
+> > case and attempt to open legacy cache events on all PMUs.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/parse-events-hybrid.c | 33 -------------
+> >  tools/perf/util/parse-events-hybrid.h |  7 ---
+> >  tools/perf/util/parse-events.c        | 70 ++++++++++++++-------------
+> >  tools/perf/util/parse-events.h        |  3 +-
+> >  tools/perf/util/parse-events.y        |  2 +-
+> >  5 files changed, 39 insertions(+), 76 deletions(-)
+> >
+> > diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/pa=
+rse-events-hybrid.c
+> > index 7c9f9150bad5..d2c0be051d46 100644
+> > --- a/tools/perf/util/parse-events-hybrid.c
+> > +++ b/tools/perf/util/parse-events-hybrid.c
+> > @@ -179,36 +179,3 @@ int parse_events__add_numeric_hybrid(struct parse_=
+events_state *parse_state,
+> >       return add_raw_hybrid(parse_state, list, attr, name, metric_id,
+> >                             config_terms);
+> >  }
+> > -
+> > -int parse_events__add_cache_hybrid(struct list_head *list, int *idx,
+> > -                                struct perf_event_attr *attr,
+> > -                                const char *name,
+> > -                                const char *metric_id,
+> > -                                struct list_head *config_terms,
+> > -                                bool *hybrid,
+> > -                                struct parse_events_state *parse_state=
+)
+> > -{
+> > -     struct perf_pmu *pmu;
+> > -     int ret;
+> > -
+> > -     *hybrid =3D false;
+> > -     if (!perf_pmu__has_hybrid())
+> > -             return 0;
+> > -
+> > -     *hybrid =3D true;
+> > -     perf_pmu__for_each_hybrid_pmu(pmu) {
+> > -             LIST_HEAD(terms);
+> > -
+> > -             if (pmu_cmp(parse_state, pmu))
+> > -                     continue;
+> > -
+> > -             copy_config_terms(&terms, config_terms);
+> > -             ret =3D create_event_hybrid(PERF_TYPE_HW_CACHE, idx, list=
+,
+> > -                                       attr, name, metric_id, &terms, =
+pmu);
+> > -             free_config_terms(&terms);
+> > -             if (ret)
+> > -                     return ret;
+> > -     }
+> > -
+> > -     return 0;
+> > -}
+> > diff --git a/tools/perf/util/parse-events-hybrid.h b/tools/perf/util/pa=
+rse-events-hybrid.h
+> > index cbc05fec02a2..bc2966e73897 100644
+> > --- a/tools/perf/util/parse-events-hybrid.h
+> > +++ b/tools/perf/util/parse-events-hybrid.h
+> > @@ -15,11 +15,4 @@ int parse_events__add_numeric_hybrid(struct parse_ev=
+ents_state *parse_state,
+> >                                    struct list_head *config_terms,
+> >                                    bool *hybrid);
+> >
+> > -int parse_events__add_cache_hybrid(struct list_head *list, int *idx,
+> > -                                struct perf_event_attr *attr,
+> > -                                const char *name, const char *metric_i=
+d,
+> > -                                struct list_head *config_terms,
+> > -                                bool *hybrid,
+> > -                                struct parse_events_state *parse_state=
+);
+> > -
+> >  #endif /* __PERF_PARSE_EVENTS_HYBRID_H */
+> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
+nts.c
+> > index 9b2d7b6572c2..e007b2bc1ab4 100644
+> > --- a/tools/perf/util/parse-events.c
+> > +++ b/tools/perf/util/parse-events.c
+> > @@ -471,46 +471,50 @@ static int parse_events__decode_legacy_cache(cons=
+t char *name, int pmu_type, __u
+> >
+> >  int parse_events_add_cache(struct list_head *list, int *idx, const cha=
+r *name,
+> >                          struct parse_events_error *err,
+> > -                        struct list_head *head_config,
+> > -                        struct parse_events_state *parse_state)
+> > +                        struct list_head *head_config)
+> >  {
+> > -     struct perf_event_attr attr;
+> > -     LIST_HEAD(config_terms);
+> > -     const char *config_name, *metric_id;
+> > -     int ret;
+> > -     bool hybrid;
+> > +     struct perf_pmu *pmu =3D NULL;
+> > +     bool found_supported =3D false;
+> > +     const char *config_name =3D get_config_name(head_config);
+> > +     const char *metric_id =3D get_config_metric_id(head_config);
+> >
+> > +     while ((pmu =3D perf_pmu__scan(pmu)) !=3D NULL) {
+> > +             LIST_HEAD(config_terms);
+> > +             struct perf_event_attr attr;
+> > +             int ret;
+> >
+> > -     memset(&attr, 0, sizeof(attr));
+> > -     attr.type =3D PERF_TYPE_HW_CACHE;
+> > -     ret =3D parse_events__decode_legacy_cache(name, /*pmu_type=3D*/0,=
+ &attr.config);
+> > -     if (ret)
+> > -             return ret;
+> > +             /*
+> > +              * Skip uncore PMUs for performance. Software PMUs can op=
+en
+> > +              * PERF_TYPE_HW_CACHE, so skip.
+> > +              */
+> > +             if (pmu->is_uncore || pmu->type =3D=3D PERF_TYPE_SOFTWARE=
+)
+> > +                     continue;
+> >
+> > -     if (head_config) {
+> > -             if (config_attr(&attr, head_config, err,
+> > -                             config_term_common))
+> > -                     return -EINVAL;
+> > +             memset(&attr, 0, sizeof(attr));
+> > +             attr.type =3D PERF_TYPE_HW_CACHE;
+> >
+> > -             if (get_config_terms(head_config, &config_terms))
+> > -                     return -ENOMEM;
+> > -     }
+> > +             ret =3D parse_events__decode_legacy_cache(name, pmu->type=
+, &attr.config);
+> > +             if (ret)
+> > +                     return ret;
+> >
+> > -     config_name =3D get_config_name(head_config);
+> > -     metric_id =3D get_config_metric_id(head_config);
+> > -     ret =3D parse_events__add_cache_hybrid(list, idx, &attr,
+> > -                                          config_name ? : name,
+> > -                                          metric_id,
+> > -                                          &config_terms,
+> > -                                          &hybrid, parse_state);
+> > -     if (hybrid)
+> > -             goto out_free_terms;
+> > +             if (!is_event_supported(PERF_TYPE_HW_CACHE, attr.config))
+> > +                     continue;
+>
+> Hi Ian,
+>
+> I get a test failure on Arm from this commit. I think it's related to
+> this check for support that's failing but I'm not sure what the
+> resolution should be.
 
-Testing on arm and noticed we hadn't picked this one up.
+Yes, I brought in a behavior from hybrid to fail at parse time if a
+legacy cache event isn't supported. The issue is the perf_event_open
+may fail because of permissions and I think we probably need to
+special case that and allow the parsing to succeed otherwise tests
+like this will need to skip. I naively tested on a raspberry pi, which
+has no metrics, and so I'll try again tomorrow on a neoverse.
+
+> I also couldn't see why the metrics in
+> test_soc/cpu/metrics.json aren't run on x86 (assuming they're generic
+> 'test anywhere' type metrics?).
+
+The testing code is split into a bunch of places for historical
+reasons, but the test_soc is here:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
+ls/perf/tests/pmu-events.c?h=3Dv6.3#n1031
+'''
+$ gdb --args perf test -vv -F 10
+(gdb) b test__pmu_event_table
+Breakpoint 1 at 0x199d7c: file tests/pmu-events.c, line 467.
+(gdb) r
+Starting program: /tmp/perf/perf test -vv -F 10
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+10: PMU events                                                      :
+10.1: PMU event table sanity                                        :
+--- start ---
+
+Breakpoint 1, test__pmu_event_table (test=3D0x5555560bd080
+<suite.pmu_events>, subtest=3D0) at tes
+ts/pmu-events.c:467
+467                     find_sys_events_table("pmu_events__test_soc_sys");
+'''
+
+Something I observed is that tests/parse-events.c isn't testing
+against an ARM PMU and so skips a lot of testing. There should likely
+be a helper so that the string in that test can be dependent on the
+test platform. I worry this may expose some latent ARM issues with
+things like obscure modifiers.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/Makefile.config   |  1 +
->  tools/perf/util/Build        |  2 +-
->  tools/perf/util/symbol-elf.c | 27 +++++++++++++++++++++++++++
->  3 files changed, 29 insertions(+), 1 deletion(-)
+>   $ perf test -vvv "parsing of PMU event table metrics with fake"
+>   ...
+>   parsing 'dcache_miss_cpi': 'l1d\-loads\-misses / inst_retired.any'
+>   parsing metric: l1d\-loads\-misses / inst_retired.any
+>   Attempting to add event pmu 'inst_retired.any' with
+> 'inst_retired.any,' that may result in non-fatal errors
+>   After aliases, add event pmu 'inst_retired.any' with
+> 'inst_retired.any,' that may result in non-fatal errors
+>   inst_retired.any -> fake_pmu/inst_retired.any/
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             3
+>     config                           0x800010000
+>     disabled                         1
+>   ------------------------------------------------------------
+>   sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
+>   sys_perf_event_open failed, error -2
 >
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 71442c54c25f..5f0f24b56f50 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -923,6 +923,7 @@ ifndef NO_DEMANGLE
->      EXTLIBS +=3D -lstdc++
->      CFLAGS +=3D -DHAVE_CXA_DEMANGLE_SUPPORT
->      CXXFLAGS +=3D -DHAVE_CXA_DEMANGLE_SUPPORT
-> +    $(call detected,CONFIG_CXX_DEMANGLE)
->    endif
->    ifdef BUILD_NONDISTRO
->      ifeq ($(filter -liberty,$(EXTLIBS)),)
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index bd18fe5f2719..f9df1df1eec0 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -214,7 +214,7 @@ perf-$(CONFIG_ZSTD) +=3D zstd.o
+>   check_parse_fake failed
+>   test child finished with -1
+>   ---- end ----
+>   PMU events subtest 4: FAILED!
 >
->  perf-$(CONFIG_LIBCAP) +=3D cap.o
->
-> -perf-y +=3D demangle-cxx.o
-> +perf-$(CONFIG_CXX_DEMANGLE) +=3D demangle-cxx.o
->  perf-y +=3D demangle-ocaml.o
->  perf-y +=3D demangle-java.o
->  perf-y +=3D demangle-rust.o
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index 35724f6a84fa..cd08bdb9824f 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -31,6 +31,13 @@
->  #include <bfd.h>
->  #endif
->
-> +#if defined(HAVE_LIBBFD_SUPPORT) || defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
-> +#ifndef DMGL_PARAMS
-> +#define DMGL_PARAMS     (1 << 0)  /* Include function args */
-> +#define DMGL_ANSI       (1 << 1)  /* Include const, volatile, etc */
-> +#endif
-> +#endif
-> +
->  #ifndef EM_AARCH64
->  #define EM_AARCH64     183  /* ARM 64 bit */
->  #endif
-> @@ -271,6 +278,26 @@ static bool want_demangle(bool is_kernel_sym)
->         return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.=
-demangle;
->  }
->
-> +/*
-> + * Demangle C++ function signature, typically replaced by demangle-cxx.c=
-pp
-> + * version.
-> + */
-> +__weak char *cxx_demangle_sym(const char *str __maybe_unused, bool param=
-s __maybe_unused,
-> +                             bool modifiers __maybe_unused)
-> +{
-> +#ifdef HAVE_LIBBFD_SUPPORT
-> +       int flags =3D (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI=
- : 0);
-> +
-> +       return bfd_demangle(NULL, str, flags);
-> +#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
-> +       int flags =3D (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI=
- : 0);
-> +
-> +       return cplus_demangle(str, flags);
-> +#else
-> +       return NULL;
-> +#endif
-> +}
-> +
->  static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_=
-name)
->  {
->         char *demangled =3D NULL;
-> --
-> 2.40.0.634.g4ca3ef3211-goog
->
+> >
+> > -     ret =3D add_event(list, idx, &attr, config_name ? : name, metric_=
+id,
+> > -                     &config_terms);
+> > -out_free_terms:
+> > -     free_config_terms(&config_terms);
+> > -     return ret;
+> > +             found_supported =3D true;
+> > +
+> > +             if (head_config) {
+> > +                     if (config_attr(&attr, head_config, err,
+> > +                                             config_term_common))
+> > +                             return -EINVAL;
+> > +
+> > +                     if (get_config_terms(head_config, &config_terms))
+> > +                             return -ENOMEM;
+> > +             }
+> > +
+> > +             ret =3D add_event(list, idx, &attr, config_name ? : name,=
+ metric_id, &config_terms);
+> > +             free_config_terms(&config_terms);
+> > +     }
+> > +     return found_supported ? 0: -EINVAL;
+> >  }
+> >
+> >  #ifdef HAVE_LIBTRACEEVENT
+> > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-eve=
+nts.h
+> > index 5acb62c2e00a..0c26303f7f63 100644
+> > --- a/tools/perf/util/parse-events.h
+> > +++ b/tools/perf/util/parse-events.h
+> > @@ -172,8 +172,7 @@ int parse_events_add_tool(struct parse_events_state=
+ *parse_state,
+> >                         int tool_event);
+> >  int parse_events_add_cache(struct list_head *list, int *idx, const cha=
+r *name,
+> >                          struct parse_events_error *error,
+> > -                        struct list_head *head_config,
+> > -                        struct parse_events_state *parse_state);
+> > +                        struct list_head *head_config);
+> >  int parse_events_add_breakpoint(struct list_head *list, int *idx,
+> >                               u64 addr, char *type, u64 len);
+> >  int parse_events_add_pmu(struct parse_events_state *parse_state,
+> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-eve=
+nts.y
+> > index f84fa1b132b3..cc7528558845 100644
+> > --- a/tools/perf/util/parse-events.y
+> > +++ b/tools/perf/util/parse-events.y
+> > @@ -476,7 +476,7 @@ PE_LEGACY_CACHE opt_event_config
+> >
+> >       list =3D alloc_list();
+> >       ABORT_ON(!list);
+> > -     err =3D parse_events_add_cache(list, &parse_state->idx, $1, error=
+, $2, parse_state);
+> > +     err =3D parse_events_add_cache(list, &parse_state->idx, $1, error=
+, $2);
+> >
+> >       parse_events_terms__delete($2);
+> >       free($1);
