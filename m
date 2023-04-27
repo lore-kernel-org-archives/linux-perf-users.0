@@ -2,77 +2,77 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A85D4C77B61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 21:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C99C77B7F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 21:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230037AbjD0VCw (ORCPT
+        id S1344214AbjD0VJ0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Apr 2023 17:02:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49496 "EHLO
+        Thu, 27 Apr 2023 17:09:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbjD0VCv (ORCPT
+        with ESMTP id S1344210AbjD0VJY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Apr 2023 17:02:51 -0400
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68EB21FF3
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 14:02:49 -0700 (PDT)
-Received: by mail-il1-x12d.google.com with SMTP id e9e14a558f8ab-32ec968434eso504415ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 14:02:49 -0700 (PDT)
+        Thu, 27 Apr 2023 17:09:24 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B312F420C
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 14:09:22 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-32f4e0f42a7so46895ab.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 14:09:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682629369; x=1685221369;
+        d=google.com; s=20221208; t=1682629762; x=1685221762;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ouBq30mUFSEiOBYVUCCDbv8YsA/H6ZIZmXUDEO6WZA0=;
-        b=Z410b/UI/Ebkt4WXElqI2T957mJsD2OY4HaAeYeSGMsTtYEBzImJTZcIx7A5kybzcd
-         8q9AlVHvadcDoCMd3zpKVZHSJvKN1vl4oXIUm8eqbP5vGKbneCFM8Raz7KkWtwqkWJR+
-         fzHI6cLbluuWEO6z1EkAwJR/3fW1cVGAsdQ3jSGo38Yh+fxn5T219pv/cLXDOaflMQmX
-         +cWyCK50IpdPwMT6tmHwYKZe7IYWjFgo8aSjt9cMHFfhVBMhvyOjWMiLIeJ2prRrq1fW
-         UFu2VW29+eyMkTi/jbN3dPFGKp94p1rpt1kNEBoBycWsxKuxgXPYUjUhXRDy6KvuEGNh
-         3LIA==
+        bh=uNUhSGOlXP2sdNxBSWwV4k/Iqeo2iP8PrrbPJhY7BuA=;
+        b=wdrykeXtE4MEGJSCAdNM+35N3D3ulWTKp7nfUItwvMgj867RAazdQ0WP6nwJvSqwjW
+         +QM3PZjin9M/7aXmvaz0WieW8KBMAFlEwEVFHbmJm/l66xDl5ySzV71mMSxTYVDtr6WB
+         7VIdrFhX6dvO6BeCWggjDB5XRK7XV7b1/1V3VD2HlBSbbLrp8GSs9fkl6M/jxBKcegxW
+         /gyhdzDBNyu6D1FKSdEFybUyUXp1kH4U5b4oeTQ4D7DBhP+vcaGhfso0Aj9C0pN1oJCt
+         9BQIATT7S0f2rgDWADgHUxHDtBiAcD+/Af7YVJZAKwV9RPC8ihakq+R7sIb+eHOn8L/j
+         Vdqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682629369; x=1685221369;
+        d=1e100.net; s=20221208; t=1682629762; x=1685221762;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ouBq30mUFSEiOBYVUCCDbv8YsA/H6ZIZmXUDEO6WZA0=;
-        b=NkanhpJXR0Mqjx0vU8LWVRgvb66L238iw4AnvoFqr+T/mt10ryrZgnpzyGxE4QDtWS
-         RCDnaQpIWB4fhKraXWFVqq/JioHpR8wnmadWYLwXwJK9xpIhR4stmFntxm8RGDuDcJwa
-         GAqVNEDIFMKC7aq146y9ikkwo4MjNfb4QbZ5kD9uPBdHzo25+nSeZfBPTHv1Xu9K/UoV
-         bvVbEcJD789jFVzX9NZDDDJ6oygSWjrtwlBPNdVkZdLVZjmgxgM7Nvq0d35ghAF0A3vB
-         wtwBovRfJSutbBsAWRM5loFEEsVasLiakmLC26v3ZcoPs91Bzx2tQ2yugOlcrIFxp0s0
-         FSmw==
-X-Gm-Message-State: AC+VfDw+egSisHwRW7JiTbddr6zbrTQeeT8HRtlApICGbXLSm3quH2KQ
-        fmQizFG08pKFEYmE9p+p7oPY11plRgSY9vGjqip3Tw==
-X-Google-Smtp-Source: ACHHUZ7I0WSMkds9FDVzlmllkA0ORVSKEvWRCV/QSciMXWtk5wwkGdySbM0xQIPO4qBmZQfOgr1Zsz5HYfL4oE6IvUU=
-X-Received: by 2002:a05:6e02:152c:b0:322:c2fc:5e47 with SMTP id
- i12-20020a056e02152c00b00322c2fc5e47mr91271ilu.4.1682629368467; Thu, 27 Apr
- 2023 14:02:48 -0700 (PDT)
+        bh=uNUhSGOlXP2sdNxBSWwV4k/Iqeo2iP8PrrbPJhY7BuA=;
+        b=bP7Qj+PN4LDGQmZNRetEzEqo/eCZCG6gMfoVzJ+XaHsfTrOWmkBJo54ernPdFkC3QW
+         XoYfHa1Kkr0oG21PZqZKYcnzEIYFQKNLy7bvjaa7hhpSKdM13NFY2EcQuktRV4FUQBWf
+         Dw80LKAejQJghhSypYbBPjz2NFbw2008TkqoOiwqQW546RV7AKkbwzCzXb661V2p6vTK
+         DjWtmGBVe4KU4PdtHuzAYEDPDZPiwKAWeXV5M1y59XRafQTLnJiwEK+BF7/uWjfTHAT9
+         6lew1g+rQRoSlfPThgFjegjxZniwXBdJNYAue5p4wQ54OJizbDGdxwpNFFqL2Nw7FxVl
+         UPeg==
+X-Gm-Message-State: AC+VfDxSS5oWKLS9qnivOqDFQeWzlzPTbsyY4oyzX7WrFtcS5SdNAtIc
+        tnKyH/eCvvyrwHkPoFd6Iat65/J7EWAhGflhu9DGfQ==
+X-Google-Smtp-Source: ACHHUZ70nHtb/GdGztyCGnd62tftQGgL5sON6LnoOc13TW+JSLhGkMPmGz8uDvtCd0K7k7YlBVzUtb4hb8ENsGKM6wo=
+X-Received: by 2002:a05:6e02:1bab:b0:326:3219:85df with SMTP id
+ n11-20020a056e021bab00b00326321985dfmr87066ili.14.1682629761851; Thu, 27 Apr
+ 2023 14:09:21 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230426070050.1315519-1-irogers@google.com> <20230426070050.1315519-22-irogers@google.com>
- <6396e5dc-bf53-ce0d-15ea-0a1aedecf691@arm.com> <CAP-5=fXwn43dFLhhXzpd3WWxc2-Vb0uOxhbZvDn9yg5-U_gffg@mail.gmail.com>
-In-Reply-To: <CAP-5=fXwn43dFLhhXzpd3WWxc2-Vb0uOxhbZvDn9yg5-U_gffg@mail.gmail.com>
+References: <20230426070050.1315519-1-irogers@google.com> <20230426070050.1315519-2-irogers@google.com>
+ <77dd1ab3-9c94-c04a-24de-f8c192a6c8d2@linux.intel.com> <CAP-5=fVBFjnmCuzSud=oGj6nGCs7haMkALGS+ZGJEyD4dSYqTA@mail.gmail.com>
+ <CAM9d7chavGHmtKiVkAo7fpUm=B3r3xNYgW__6dZe9D+3nmy7dA@mail.gmail.com>
+In-Reply-To: <CAM9d7chavGHmtKiVkAo7fpUm=B3r3xNYgW__6dZe9D+3nmy7dA@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 27 Apr 2023 14:02:32 -0700
-Message-ID: <CAP-5=fXqd+ja15PHrRkSNXg92nQ2Y_8rujht-Quj4rmR26caEw@mail.gmail.com>
-Subject: Re: [PATCH v1 21/40] perf parse-events: Wildcard legacy cache events
-To:     James Clark <james.clark@arm.com>,
-        Stephane Eranian <eranian@google.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+Date:   Thu, 27 Apr 2023 14:09:04 -0700
+Message-ID: <CAP-5=fU+E9hFR5SP9oG6kOKecR02fGvcqtFHKwDvHG3GYKLa1w@mail.gmail.com>
+Subject: Re: [PATCH v1 01/40] perf stat: Introduce skippable evsels
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ahmad Yasin <ahmad.yasin@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
         Andi Kleen <ak@linux.intel.com>,
         Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
         Caleb Biggers <caleb.biggers@intel.com>,
         Weilin Wang <weilin.wang@intel.com>,
         Edward Baker <edward.baker@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Florian Fischer <florian.fischer@muhq.space>,
         Rob Herring <robh@kernel.org>,
@@ -85,6 +85,7 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
         Leo Yan <leo.yan@linaro.org>,
         Yang Jihong <yangjihong1@huawei.com>,
+        James Clark <james.clark@arm.com>,
         Suzuki Poulouse <suzuki.poulose@arm.com>,
         Kang Minchul <tegongkang@gmail.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
@@ -95,316 +96,158 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Apr 26, 2023 at 10:50=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
+On Thu, Apr 27, 2023 at 2:00=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> On Wed, Apr 26, 2023 at 3:11=E2=80=AFAM James Clark <james.clark@arm.com>=
- wrote:
+> Hello,
+>
+> On Thu, Apr 27, 2023 at 1:21=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
 > >
-> >
-> >
-> > On 26/04/2023 08:00, Ian Rogers wrote:
-> > > It is inconsistent that "perf stat -e instructions-retired" wildcard
-> > > opens on all PMUs while legacy cache events like "perf stat -e
-> > > L1-dcache-load-miss" do not. A behavior introduced by hybrid is that =
-a
-> > > legacy cache event like L1-dcache-load-miss should wildcard open on
-> > > all hybrid PMUs. A call to is_event_supported is necessary for each
-> > > PMU, a failure of which results in the event not being added. Rather
-> > > than special case that logic, move it into the main legacy cache even=
-t
-> > > case and attempt to open legacy cache events on all PMUs.
+> > On Thu, Apr 27, 2023 at 11:54=E2=80=AFAM Liang, Kan <kan.liang@linux.in=
+tel.com> wrote:
 > > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/util/parse-events-hybrid.c | 33 -------------
-> > >  tools/perf/util/parse-events-hybrid.h |  7 ---
-> > >  tools/perf/util/parse-events.c        | 70 ++++++++++++++-----------=
---
-> > >  tools/perf/util/parse-events.h        |  3 +-
-> > >  tools/perf/util/parse-events.y        |  2 +-
-> > >  5 files changed, 39 insertions(+), 76 deletions(-)
 > > >
-> > > diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/=
-parse-events-hybrid.c
-> > > index 7c9f9150bad5..d2c0be051d46 100644
-> > > --- a/tools/perf/util/parse-events-hybrid.c
-> > > +++ b/tools/perf/util/parse-events-hybrid.c
-> > > @@ -179,36 +179,3 @@ int parse_events__add_numeric_hybrid(struct pars=
-e_events_state *parse_state,
-> > >       return add_raw_hybrid(parse_state, list, attr, name, metric_id,
-> > >                             config_terms);
-> > >  }
-> > > -
-> > > -int parse_events__add_cache_hybrid(struct list_head *list, int *idx,
-> > > -                                struct perf_event_attr *attr,
-> > > -                                const char *name,
-> > > -                                const char *metric_id,
-> > > -                                struct list_head *config_terms,
-> > > -                                bool *hybrid,
-> > > -                                struct parse_events_state *parse_sta=
-te)
-> > > -{
-> > > -     struct perf_pmu *pmu;
-> > > -     int ret;
-> > > -
-> > > -     *hybrid =3D false;
-> > > -     if (!perf_pmu__has_hybrid())
-> > > -             return 0;
-> > > -
-> > > -     *hybrid =3D true;
-> > > -     perf_pmu__for_each_hybrid_pmu(pmu) {
-> > > -             LIST_HEAD(terms);
-> > > -
-> > > -             if (pmu_cmp(parse_state, pmu))
-> > > -                     continue;
-> > > -
-> > > -             copy_config_terms(&terms, config_terms);
-> > > -             ret =3D create_event_hybrid(PERF_TYPE_HW_CACHE, idx, li=
-st,
-> > > -                                       attr, name, metric_id, &terms=
-, pmu);
-> > > -             free_config_terms(&terms);
-> > > -             if (ret)
-> > > -                     return ret;
-> > > -     }
-> > > -
-> > > -     return 0;
-> > > -}
-> > > diff --git a/tools/perf/util/parse-events-hybrid.h b/tools/perf/util/=
-parse-events-hybrid.h
-> > > index cbc05fec02a2..bc2966e73897 100644
-> > > --- a/tools/perf/util/parse-events-hybrid.h
-> > > +++ b/tools/perf/util/parse-events-hybrid.h
-> > > @@ -15,11 +15,4 @@ int parse_events__add_numeric_hybrid(struct parse_=
-events_state *parse_state,
-> > >                                    struct list_head *config_terms,
-> > >                                    bool *hybrid);
 > > >
-> > > -int parse_events__add_cache_hybrid(struct list_head *list, int *idx,
-> > > -                                struct perf_event_attr *attr,
-> > > -                                const char *name, const char *metric=
-_id,
-> > > -                                struct list_head *config_terms,
-> > > -                                bool *hybrid,
-> > > -                                struct parse_events_state *parse_sta=
-te);
-> > > -
-> > >  #endif /* __PERF_PARSE_EVENTS_HYBRID_H */
-> > > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-e=
-vents.c
-> > > index 9b2d7b6572c2..e007b2bc1ab4 100644
-> > > --- a/tools/perf/util/parse-events.c
-> > > +++ b/tools/perf/util/parse-events.c
-> > > @@ -471,46 +471,50 @@ static int parse_events__decode_legacy_cache(co=
-nst char *name, int pmu_type, __u
-> > >
-> > >  int parse_events_add_cache(struct list_head *list, int *idx, const c=
-har *name,
-> > >                          struct parse_events_error *err,
-> > > -                        struct list_head *head_config,
-> > > -                        struct parse_events_state *parse_state)
-> > > +                        struct list_head *head_config)
-> > >  {
-> > > -     struct perf_event_attr attr;
-> > > -     LIST_HEAD(config_terms);
-> > > -     const char *config_name, *metric_id;
-> > > -     int ret;
-> > > -     bool hybrid;
-> > > +     struct perf_pmu *pmu =3D NULL;
-> > > +     bool found_supported =3D false;
-> > > +     const char *config_name =3D get_config_name(head_config);
-> > > +     const char *metric_id =3D get_config_metric_id(head_config);
-> > >
-> > > +     while ((pmu =3D perf_pmu__scan(pmu)) !=3D NULL) {
-> > > +             LIST_HEAD(config_terms);
-> > > +             struct perf_event_attr attr;
-> > > +             int ret;
-> > >
-> > > -     memset(&attr, 0, sizeof(attr));
-> > > -     attr.type =3D PERF_TYPE_HW_CACHE;
-> > > -     ret =3D parse_events__decode_legacy_cache(name, /*pmu_type=3D*/=
-0, &attr.config);
-> > > -     if (ret)
-> > > -             return ret;
-> > > +             /*
-> > > +              * Skip uncore PMUs for performance. Software PMUs can =
+> > > On 2023-04-26 3:00 a.m., Ian Rogers wrote:
+> > > > Perf stat with no arguments will use default events and metrics. Th=
+ese
+> > > > events may fail to open even with kernel and hypervisor disabled. W=
+hen
+> > > > these fail then the permissions error appears even though they were
+> > > > implicitly selected. This is particularly a problem with the automa=
+tic
+> > > > selection of the TopdownL1 metric group on certain architectures li=
+ke
+> > > > Skylake:
+> > > >
+> > > > ```
+> > > > $ perf stat true
+> > > > Error:
+> > > > Access to performance monitoring and observability operations is li=
+mited.
+> > > > Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to =
 open
-> > > +              * PERF_TYPE_HW_CACHE, so skip.
-> > > +              */
-> > > +             if (pmu->is_uncore || pmu->type =3D=3D PERF_TYPE_SOFTWA=
-RE)
-> > > +                     continue;
+> > > > access to performance monitoring and observability operations for p=
+rocesses
+> > > > without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capabili=
+ty.
+> > > > More information can be found at 'Perf events and tool security' do=
+cument:
+> > > > https://www.kernel.org/doc/html/latest/admin-guide/perf-security.ht=
+ml
+> > > > perf_event_paranoid setting is 2:
+> > > >   -1: Allow use of (almost) all events by all users
+> > > >       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_=
+LOCK
+> > > >> =3D 0: Disallow raw and ftrace function tracepoint access
+> > > >> =3D 1: Disallow CPU event access
+> > > >> =3D 2: Disallow kernel profiling
+> > > > To make the adjusted perf_event_paranoid setting permanent preserve=
+ it
+> > > > in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid =3D <setting>)
+> > > > ```
+> > > >
+> > > > This patch adds skippable evsels that when they fail to open won't
+> > > > fail and won't appear in output. The TopdownL1 events, from the met=
+ric
+> > > > group, are marked as skippable. This turns the failure above to:
+> > > >
+> > > > ```
+> > > > $ perf stat true
+> > > >
+> > > >  Performance counter stats for 'true':
+> > > >
+> > > >               1.26 msec task-clock:u                     #    0.328=
+ CPUs utilized
+> > > >                  0      context-switches:u               #    0.000=
+ /sec
+> > > >                  0      cpu-migrations:u                 #    0.000=
+ /sec
+> > > >                 49      page-faults:u                    #   38.930=
+ K/sec
+> > > >            176,449      cycles:u                         #    0.140=
+ GHz                         (48.99%)
+> > > >            122,905      instructions:u                   #    0.70 =
+ insn per cycle
+> > > >             28,264      branches:u                       #   22.456=
+ M/sec
+> > > >              2,405      branch-misses:u                  #    8.51%=
+ of all branches
+> > > >
+> > > >        0.003834565 seconds time elapsed
+> > > >
+> > > >        0.000000000 seconds user
+> > > >        0.004130000 seconds sys
+> > > > ```
 > > >
-> > > -     if (head_config) {
-> > > -             if (config_attr(&attr, head_config, err,
-> > > -                             config_term_common))
-> > > -                     return -EINVAL;
-> > > +             memset(&attr, 0, sizeof(attr));
-> > > +             attr.type =3D PERF_TYPE_HW_CACHE;
+> > > If the same command runs with root permission, a different output wil=
+l
+> > > be displayed as below:
 > > >
-> > > -             if (get_config_terms(head_config, &config_terms))
-> > > -                     return -ENOMEM;
-> > > -     }
-> > > +             ret =3D parse_events__decode_legacy_cache(name, pmu->ty=
-pe, &attr.config);
-> > > +             if (ret)
-> > > +                     return ret;
+> > > $ sudo ./perf stat sleep 1
 > > >
-> > > -     config_name =3D get_config_name(head_config);
-> > > -     metric_id =3D get_config_metric_id(head_config);
-> > > -     ret =3D parse_events__add_cache_hybrid(list, idx, &attr,
-> > > -                                          config_name ? : name,
-> > > -                                          metric_id,
-> > > -                                          &config_terms,
-> > > -                                          &hybrid, parse_state);
-> > > -     if (hybrid)
-> > > -             goto out_free_terms;
-> > > +             if (!is_event_supported(PERF_TYPE_HW_CACHE, attr.config=
-))
-> > > +                     continue;
+> > >  Performance counter stats for 'sleep 1':
+> > >
+> > >               0.97 msec task-clock                       #    0.001 C=
+PUs
+> > > utilized
+> > >                  1      context-switches                 #    1.030 K=
+/sec
+> > >                  0      cpu-migrations                   #    0.000 /=
+sec
+> > >                 67      page-faults                      #   69.043 K=
+/sec
+> > >          1,135,552      cycles                           #    1.170 G=
+Hz
+> > >                        (50.51%)
+> > >          1,126,446      instructions                     #    0.99  i=
+nsn
+> > > per cycle
+> > >            252,904      branches                         #  260.615 M=
+/sec
+> > >              7,297      branch-misses                    #    2.89% o=
+f
+> > > all branches
+> > >             22,518      CPU_CLK_UNHALTED.REF_XCLK        #   23.205
+> > > M/sec
+> > >             56,994      INT_MISC.RECOVERY_CYCLES_ANY     #   58.732 M=
+/sec
+> > >
+> > > The last two events are useless.
 > >
-> > Hi Ian,
+> > You missed the system wide (-a) flag.
 > >
-> > I get a test failure on Arm from this commit. I think it's related to
-> > this check for support that's failing but I'm not sure what the
-> > resolution should be.
+> > Thanks,
+> > Ian
+> >
+> > > It's not reliable to rely on perf_event_open()/kernel to tell whether
+> > > an event is available or skippable. Kernel wouldn't check a specific =
+event.
+> > >
+> > > The patch works for the non-root mode is just because the event requi=
+res
+> > > root permission. It's rejected by the kernel because of lacking
+> > > permission. But if the same command runs with root privileges, the tr=
+ash
+> > > events are printed as above.
+> > >
+> > > I think a better way is to check the HW capability and decided whethe=
+r
+> > > to append the TopdownL1 metrics.
+> > >
+> > > https://lore.kernel.org/lkml/20230427182906.3411695-1-kan.liang@linux=
+.intel.com/
 >
-> Yes, I brought in a behavior from hybrid to fail at parse time if a
-> legacy cache event isn't supported. The issue is the perf_event_open
-> may fail because of permissions and I think we probably need to
-> special case that and allow the parsing to succeed otherwise tests
-> like this will need to skip. I naively tested on a raspberry pi, which
-> has no metrics, and so I'll try again tomorrow on a neoverse.
+> Maybe we can also check if the event is actually enabled like
+> checking the enabled_time.  Then skip the skippable and not
+> enabled ones.
 
-So, following discussion with Stephane we think the right approach is
-to not use a "is_event_supported" test at parse time. The event parser
-should take an event name and create a perf_event_attr only. Removing
-the is_event_supported test will change Intel hybrid behavior.
-Wildcarded events will always try to open on both PMUs, the
-expectation is that the event that failed to open will report "<not
-counted>". I'll add this change in v2.
+Good idea, and I think that addresses Kan's concern over missing
+output. I'll add it in v2.
 
 Thanks,
 Ian
 
-> > I also couldn't see why the metrics in
-> > test_soc/cpu/metrics.json aren't run on x86 (assuming they're generic
-> > 'test anywhere' type metrics?).
->
-> The testing code is split into a bunch of places for historical
-> reasons, but the test_soc is here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
-ools/perf/tests/pmu-events.c?h=3Dv6.3#n1031
-> '''
-> $ gdb --args perf test -vv -F 10
-> (gdb) b test__pmu_event_table
-> Breakpoint 1 at 0x199d7c: file tests/pmu-events.c, line 467.
-> (gdb) r
-> Starting program: /tmp/perf/perf test -vv -F 10
-> [Thread debugging using libthread_db enabled]
-> Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1"=
-.
-> 10: PMU events                                                      :
-> 10.1: PMU event table sanity                                        :
-> --- start ---
->
-> Breakpoint 1, test__pmu_event_table (test=3D0x5555560bd080
-> <suite.pmu_events>, subtest=3D0) at tes
-> ts/pmu-events.c:467
-> 467                     find_sys_events_table("pmu_events__test_soc_sys")=
-;
-> '''
->
-> Something I observed is that tests/parse-events.c isn't testing
-> against an ARM PMU and so skips a lot of testing. There should likely
-> be a helper so that the string in that test can be dependent on the
-> test platform. I worry this may expose some latent ARM issues with
-> things like obscure modifiers.
->
 > Thanks,
-> Ian
->
-> >   $ perf test -vvv "parsing of PMU event table metrics with fake"
-> >   ...
-> >   parsing 'dcache_miss_cpi': 'l1d\-loads\-misses / inst_retired.any'
-> >   parsing metric: l1d\-loads\-misses / inst_retired.any
-> >   Attempting to add event pmu 'inst_retired.any' with
-> > 'inst_retired.any,' that may result in non-fatal errors
-> >   After aliases, add event pmu 'inst_retired.any' with
-> > 'inst_retired.any,' that may result in non-fatal errors
-> >   inst_retired.any -> fake_pmu/inst_retired.any/
-> >   ------------------------------------------------------------
-> >   perf_event_attr:
-> >     type                             3
-> >     config                           0x800010000
-> >     disabled                         1
-> >   ------------------------------------------------------------
-> >   sys_perf_event_open: pid 0  cpu -1  group_fd -1  flags 0x8
-> >   sys_perf_event_open failed, error -2
-> >
-> >   check_parse_fake failed
-> >   test child finished with -1
-> >   ---- end ----
-> >   PMU events subtest 4: FAILED!
-> >
-> > >
-> > > -     ret =3D add_event(list, idx, &attr, config_name ? : name, metri=
-c_id,
-> > > -                     &config_terms);
-> > > -out_free_terms:
-> > > -     free_config_terms(&config_terms);
-> > > -     return ret;
-> > > +             found_supported =3D true;
-> > > +
-> > > +             if (head_config) {
-> > > +                     if (config_attr(&attr, head_config, err,
-> > > +                                             config_term_common))
-> > > +                             return -EINVAL;
-> > > +
-> > > +                     if (get_config_terms(head_config, &config_terms=
-))
-> > > +                             return -ENOMEM;
-> > > +             }
-> > > +
-> > > +             ret =3D add_event(list, idx, &attr, config_name ? : nam=
-e, metric_id, &config_terms);
-> > > +             free_config_terms(&config_terms);
-> > > +     }
-> > > +     return found_supported ? 0: -EINVAL;
-> > >  }
-> > >
-> > >  #ifdef HAVE_LIBTRACEEVENT
-> > > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-e=
-vents.h
-> > > index 5acb62c2e00a..0c26303f7f63 100644
-> > > --- a/tools/perf/util/parse-events.h
-> > > +++ b/tools/perf/util/parse-events.h
-> > > @@ -172,8 +172,7 @@ int parse_events_add_tool(struct parse_events_sta=
-te *parse_state,
-> > >                         int tool_event);
-> > >  int parse_events_add_cache(struct list_head *list, int *idx, const c=
-har *name,
-> > >                          struct parse_events_error *error,
-> > > -                        struct list_head *head_config,
-> > > -                        struct parse_events_state *parse_state);
-> > > +                        struct list_head *head_config);
-> > >  int parse_events_add_breakpoint(struct list_head *list, int *idx,
-> > >                               u64 addr, char *type, u64 len);
-> > >  int parse_events_add_pmu(struct parse_events_state *parse_state,
-> > > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-e=
-vents.y
-> > > index f84fa1b132b3..cc7528558845 100644
-> > > --- a/tools/perf/util/parse-events.y
-> > > +++ b/tools/perf/util/parse-events.y
-> > > @@ -476,7 +476,7 @@ PE_LEGACY_CACHE opt_event_config
-> > >
-> > >       list =3D alloc_list();
-> > >       ABORT_ON(!list);
-> > > -     err =3D parse_events_add_cache(list, &parse_state->idx, $1, err=
-or, $2, parse_state);
-> > > +     err =3D parse_events_add_cache(list, &parse_state->idx, $1, err=
-or, $2);
-> > >
-> > >       parse_events_terms__delete($2);
-> > >       free($1);
+> Namhyung
