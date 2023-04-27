@@ -2,55 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF24C77B61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 20:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F40EC77B7E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 20:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344105AbjD0UIY (ORCPT
+        id S1344192AbjD0UNN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Apr 2023 16:08:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46406 "EHLO
+        Thu, 27 Apr 2023 16:13:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344103AbjD0UIX (ORCPT
+        with ESMTP id S1344185AbjD0UNJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Apr 2023 16:08:23 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3761359D;
-        Thu, 27 Apr 2023 13:08:21 -0700 (PDT)
+        Thu, 27 Apr 2023 16:13:09 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1677F46A5;
+        Thu, 27 Apr 2023 13:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682626101; x=1714162101;
+  t=1682626366; x=1714162366;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=6RNOiOLxUgmR5lRPnykiNi9TDJ7c0tPX7x1Po6A2slY=;
-  b=DtVQ7gDFuhyrQ1eHEBcskko5BsT5EEw4BVtjExYsuYoild4SRy4xtJKQ
-   k2nNG/Br9S9Q/IxVv7tZzElImCiLJFC26FI10GhyCYSJfsyclShTw/rTB
-   YVrK6VS8WPJMe12UhYlMRX+Zk2YdlB/S5b/3nyaGLwFn0eLHXx0eFUq/J
-   B2xam1Enk83nqroI/KOjdg6CHq2c6RwAsDn6rLqIYnyG3NXqoGy/tmgZK
-   XtZLDCGynWdkQvf/zQEOkpko+le6yEeaI1K7XrN4UtvX7P4Z6GbNG3t1s
-   1LwbsSUwL5QG4zHvKJ5U2dwxSW5cf/OH1DDsu6BKbEwTwaHCIIM116vmm
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="331844868"
+  bh=gkgzXX7acwSBnuJ9bdx4m5R1AVWdzJYvB7t1tP5cDvg=;
+  b=ga9laUOlFSTypI2r0ajwWoZ+EaBwaKXXSB2V3UVcMeYZAnNQyqaU/m6/
+   fOQYMojH1iImLK4ynzJrJkKVEBZNf2WxMFZjMeYkLJT1Mk2rQeuCZXFMH
+   vdvXkCx4tUrI20tFxM2O6+AYnoI6OZxXNhydhP1kgrqCeevg5P1NkSTcJ
+   od4ulSSSm3+E0ChPNJRtCGYhyk0jP6TQBs4iudGXkuqdYdPrKUo4GSwxR
+   ywHLFk/+Z4q7cRl08eddgjC8V7uVUWnrWV0RflQ+XHgo28uvPKmqN6hEo
+   gjTaCkJlK4yCuOScwR6HcVGzweSdDOJP/XR+kGlJ1f1ygilJQEdDZEm5E
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="410619736"
 X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
-   d="scan'208";a="331844868"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 13:08:20 -0700
+   d="scan'208";a="410619736"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 13:12:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="1024257335"
+X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="671906819"
 X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
-   d="scan'208";a="1024257335"
+   d="scan'208";a="671906819"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 27 Apr 2023 13:08:20 -0700
+  by orsmga006.jf.intel.com with ESMTP; 27 Apr 2023 13:12:45 -0700
 Received: from [10.209.41.222] (kliang2-mobl1.ccr.corp.intel.com [10.209.41.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 8E793580CD0;
-        Thu, 27 Apr 2023 13:08:16 -0700 (PDT)
-Message-ID: <5ec89b32-4713-1c28-7dbb-5146de744afa@linux.intel.com>
-Date:   Thu, 27 Apr 2023 16:08:15 -0400
+        by linux.intel.com (Postfix) with ESMTPS id 76609580377;
+        Thu, 27 Apr 2023 13:12:41 -0700 (PDT)
+Message-ID: <e0532c12-e682-a72c-baa0-11b208a639e4@linux.intel.com>
+Date:   Thu, 27 Apr 2023 16:12:40 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v1 16/40] perf test: Validate events with hyphens in
+Subject: Re: [PATCH v1 17/40] perf evsel: Modify group pmu name for software
+ events
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -86,9 +87,9 @@ To:     Ian Rogers <irogers@google.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20230426070050.1315519-1-irogers@google.com>
- <20230426070050.1315519-17-irogers@google.com>
+ <20230426070050.1315519-18-irogers@google.com>
 From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230426070050.1315519-17-irogers@google.com>
+In-Reply-To: <20230426070050.1315519-18-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -98,43 +99,63 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 2023-04-26 3:00 a.m., Ian Rogers wrote:
-> Rewritten event parsing can handle event names that contain components
-> of legacy events.
+> If we have a group of {cycles,faults} then we need the faults software
+> event to appear to be on the same PMU as cycles so that we don't split
+> the group in parse_events__sort_events_and_fix_groups. This case is
+> relatively easy as cycles is the leader and will have a PMU name. In
+> the reverse case, {faults,cycles} we still need faults to appear to
+> have the PMU name of cycles but the old behavior is just to return
+> "cpu". For hybrid this fails as cycles will be on "cpu_core" or
+> "cpu_atom", causing faults to be split into a different group.
+> 
+> Change the behavior for software events so that the whole group is
+> searched for the named PMU.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-
-Run the test on Cascade Lake and Alder Lake. It looks good.
-
-Tested-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
 Thanks,
 Kan
 
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/tests/parse-events.c | 12 ------------
->  1 file changed, 12 deletions(-)
+>  tools/perf/util/evsel.c | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
 > 
-> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-> index 6eadb8a47dbf..cb976765b8b0 100644
-> --- a/tools/perf/tests/parse-events.c
-> +++ b/tools/perf/tests/parse-events.c
-> @@ -2198,18 +2198,6 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
->  			ret = combine_test_results(ret, TEST_SKIP);
->  			continue;
->  		}
-> -		/*
-> -		 * Names containing '-' are recognized as prefixes and suffixes
-> -		 * due to '-' being a legacy PMU separator. This fails when the
-> -		 * prefix or suffix collides with an existing legacy token. For
-> -		 * example, branch-brs has a prefix (branch) that collides with
-> -		 * a PE_NAME_CACHE_TYPE token causing a parse error as a suffix
-> -		 * isn't expected after this. As event names in the config
-> -		 * slashes are allowed a '-' in the name we check this works
-> -		 * above.
-> -		 */
-> -		if (strchr(ent->d_name, '-'))
-> -			continue;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 1cd04b5998d2..63522322e118 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -829,23 +829,26 @@ bool evsel__name_is(struct evsel *evsel, const char *name)
 >  
->  		dir = opendir(path);
->  		if (!dir) {
+>  const char *evsel__group_pmu_name(const struct evsel *evsel)
+>  {
+> -	const struct evsel *leader;
+> +	struct evsel *leader, *pos;
+>  
+>  	/* If the pmu_name is set use it. pmu_name isn't set for CPU and software events. */
+>  	if (evsel->pmu_name)
+>  		return evsel->pmu_name;
+>  	/*
+>  	 * Software events may be in a group with other uncore PMU events. Use
+> -	 * the pmu_name of the group leader to avoid breaking the software event
+> -	 * out of the group.
+> +	 * the pmu_name of the first non-software event to avoid breaking the
+> +	 * software event out of the group.
+>  	 *
+>  	 * Aux event leaders, like intel_pt, expect a group with events from
+>  	 * other PMUs, so substitute the AUX event's PMU in this case.
+>  	 */
+>  	leader  = evsel__leader(evsel);
+> -	if ((evsel->core.attr.type == PERF_TYPE_SOFTWARE || evsel__is_aux_event(leader)) &&
+> -	    leader->pmu_name) {
+> -		return leader->pmu_name;
+> +	if (evsel->core.attr.type == PERF_TYPE_SOFTWARE || evsel__is_aux_event(leader)) {
+> +		/* Starting with the leader, find the first event with a named PMU. */
+> +		for_each_group_evsel(pos, leader) {
+> +			if (pos->pmu_name)
+> +				return pos->pmu_name;
+> +		}
+>  	}
+>  
+>  	return "cpu";
