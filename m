@@ -2,58 +2,43 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA2CC77B61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 19:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FA7C77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 19:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244200AbjD0TMS (ORCPT
+        id S244701AbjD0Tei (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Apr 2023 15:12:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43134 "EHLO
+        Thu, 27 Apr 2023 15:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229539AbjD0TMQ (ORCPT
+        with ESMTP id S245559AbjD0TeR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Apr 2023 15:12:16 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F06114;
-        Thu, 27 Apr 2023 12:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682622735; x=1714158735;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=pnW5qMLh79Dl32TPLXe6aP7KhsJKvNpI6UV1iCK3VYQ=;
-  b=jYC5V37d9Bw8T6jrIKoknlDS/HtdKzUvaeL8PPtXqn9uIm4LjeeNmdi8
-   pIdbhIND6GYnGC+TYlkmGqtNYapyjVRG9IhJ0wR6oE/eSs44j8yGPwfk5
-   +oJTf7JE7nZJ27PnqksTxe/l6fHMWknhzudOl14Fpep9KfKDbBbDb9Zos
-   0qp+5+ipKbY5Wv3hNTTPYO7L7oT/99TvjzqDZFsGJxg7SnsNvK8NrxpHW
-   +syZyJa1SwGs2UgrD+yqdJI1ocv08PyvH5/uwt3GRwDdhSH6Zbyx6fWzu
-   8lUf+B923ZXRsco/pwQkYVRE/XqXULl448PDQ+cIGPc2xLBJtOduVq9iF
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="336540560"
-X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
-   d="scan'208";a="336540560"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 12:11:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="688540380"
-X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
-   d="scan'208";a="688540380"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 27 Apr 2023 12:11:54 -0700
-Received: from [10.209.41.222] (kliang2-mobl1.ccr.corp.intel.com [10.209.41.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 27 Apr 2023 15:34:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6FB01FF5;
+        Thu, 27 Apr 2023 12:34:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 74010580377;
-        Thu, 27 Apr 2023 12:11:50 -0700 (PDT)
-Message-ID: <15ca8bed-db47-182e-1ae3-33e273027776@linux.intel.com>
-Date:   Thu, 27 Apr 2023 15:11:49 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v1 07/40] perf stat: Avoid segv on counter->name
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5202B63D93;
+        Thu, 27 Apr 2023 19:34:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7555AC433EF;
+        Thu, 27 Apr 2023 19:34:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682624054;
+        bh=QneEEMrg5/ckBfmlDuKf2iDhBWq5sLbjAXtXQz9r3TI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=je8Ob7SlbIhT1icwkOj0Q36pTWd9cBGaIhiqbtkkHJCEdDCdzx4y497vBLZka4biJ
+         0XKz5Xdb+GjaCP1H6Si4XQ7eqP2kw/5CPcP4RWwRF8Cb/lyTyF+1T0QO2ELie5FWBm
+         XEAbvZNM/wRXEUOdisnfgz2IIgmQgKZJjqljayOzvXywp/a7jnXD9lltUHu+hq0OL9
+         tOaY32ZRegZIStYvF7O7yLWW7/g1J/lDEJvD2uPfFkvI5obCl8zLgD8Z5tWTYfwvUO
+         icuQb9W/SCRyHwA1BDmjRPimRZbVIKTdEXicaw+G/oqcCWNfHODzuIungspDLRGN9i
+         o6vskMrIcOLog==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C6B07403B5; Thu, 27 Apr 2023 16:34:11 -0300 (-03)
+Date:   Thu, 27 Apr 2023 16:34:11 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>,
         Ahmad Yasin <ahmad.yasin@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -85,48 +70,37 @@ To:     Ian Rogers <irogers@google.com>,
         Kang Minchul <tegongkang@gmail.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 07/40] perf stat: Avoid segv on counter->name
+Message-ID: <ZErOMy8X2+dE4AKR@kernel.org>
 References: <20230426070050.1315519-1-irogers@google.com>
  <20230426070050.1315519-8-irogers@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230426070050.1315519-8-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <15ca8bed-db47-182e-1ae3-33e273027776@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <15ca8bed-db47-182e-1ae3-33e273027776@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 2023-04-26 3:00 a.m., Ian Rogers wrote:
-> Switch to use evsel__name that doesn't return NULL for hardware and
-> similar events.
-
-This one should be backport to 6.4. It helps to fix the Segmentation
-fault with default mode.
-https://lore.kernel.org/lkml/2b8768bf-de24-946f-62da-6ed171a5c324@linux.intel.com/
-
-
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Em Thu, Apr 27, 2023 at 03:11:49PM -0400, Liang, Kan escreveu:
+> On 2023-04-26 3:00 a.m., Ian Rogers wrote:
+> > Switch to use evsel__name that doesn't return NULL for hardware and
+> > similar events.
+ 
+> This one should be backport to 6.4. It helps to fix the Segmentation
+> fault with default mode.
+> https://lore.kernel.org/lkml/2b8768bf-de24-946f-62da-6ed171a5c324@linux.intel.com/
+ 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+ 
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
 Thanks,
-Kan
 
-> ---
->  tools/perf/util/stat-display.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 6b46bbb3d322..71dd6cb83918 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -747,7 +747,7 @@ static void uniquify_event_name(struct evsel *counter)
->  	int ret = 0;
->  
->  	if (counter->uniquified_name || counter->use_config_name ||
-> -	    !counter->pmu_name || !strncmp(counter->name, counter->pmu_name,
-> +	    !counter->pmu_name || !strncmp(evsel__name(counter), counter->pmu_name,
->  					   strlen(counter->pmu_name)))
->  		return;
->  
+I'll pick those before pushing to Linus, I'm mostly waiting for you guys
+to come to a resolution on moving forward, which I hope has been reached
+with that patch you sent.
+
+- Arnaldo
