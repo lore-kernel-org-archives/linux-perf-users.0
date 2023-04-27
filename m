@@ -2,59 +2,62 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F40EC77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 20:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E20C77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 20:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344192AbjD0UNN (ORCPT
+        id S1344190AbjD0UVo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Apr 2023 16:13:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49486 "EHLO
+        Thu, 27 Apr 2023 16:21:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344185AbjD0UNJ (ORCPT
+        with ESMTP id S1344168AbjD0UVm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Apr 2023 16:13:09 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1677F46A5;
-        Thu, 27 Apr 2023 13:12:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682626366; x=1714162366;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=gkgzXX7acwSBnuJ9bdx4m5R1AVWdzJYvB7t1tP5cDvg=;
-  b=ga9laUOlFSTypI2r0ajwWoZ+EaBwaKXXSB2V3UVcMeYZAnNQyqaU/m6/
-   fOQYMojH1iImLK4ynzJrJkKVEBZNf2WxMFZjMeYkLJT1Mk2rQeuCZXFMH
-   vdvXkCx4tUrI20tFxM2O6+AYnoI6OZxXNhydhP1kgrqCeevg5P1NkSTcJ
-   od4ulSSSm3+E0ChPNJRtCGYhyk0jP6TQBs4iudGXkuqdYdPrKUo4GSwxR
-   ywHLFk/+Z4q7cRl08eddgjC8V7uVUWnrWV0RflQ+XHgo28uvPKmqN6hEo
-   gjTaCkJlK4yCuOScwR6HcVGzweSdDOJP/XR+kGlJ1f1ygilJQEdDZEm5E
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="410619736"
-X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
-   d="scan'208";a="410619736"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 13:12:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="671906819"
-X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
-   d="scan'208";a="671906819"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga006.jf.intel.com with ESMTP; 27 Apr 2023 13:12:45 -0700
-Received: from [10.209.41.222] (kliang2-mobl1.ccr.corp.intel.com [10.209.41.222])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 76609580377;
-        Thu, 27 Apr 2023 13:12:41 -0700 (PDT)
-Message-ID: <e0532c12-e682-a72c-baa0-11b208a639e4@linux.intel.com>
-Date:   Thu, 27 Apr 2023 16:12:40 -0400
+        Thu, 27 Apr 2023 16:21:42 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D8E4680
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 13:21:38 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3ef36d814a5so818351cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 13:21:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1682626898; x=1685218898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Tv9hPro3OSS46Q/f2tjpHHoxuBPTiIMR9w3i55Rdxcc=;
+        b=0yZ2Oyw2bblQbKhlgfyipR78kkpVUdvDIN0T/I4lnzugopXvEVUZrvW+kadcMwbzTB
+         7qF9w77P1VD+kRTn1fZNsznCGmY6qzjK8Odku5g1bbx9YhC/cmBf6fNgRGwtsHhe7MKl
+         fylSi5+InEPbgmCtepIZBX+h00LfI/t+QO99Nf/ywO/SiiE4gIKt1RL8mkYc4zv458tv
+         PhPyzhhtjmugiY5RUibgl3Dk7pQpCiVCYrWJSVKl9EC4GcqkjyGPPmv9mf/JfDYFMg+i
+         eaky+NLd0JNJaovy6hQlsq4NTauY8HkGPrK4UJzUjp2V60M6RIasnG1LLQRROcWWJobb
+         7c8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682626898; x=1685218898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Tv9hPro3OSS46Q/f2tjpHHoxuBPTiIMR9w3i55Rdxcc=;
+        b=bGqJ4fRdbel6D85nqBhxC+wlFZM27MT/i+cjVRudLck1BFiCf8Z4hpMBOWbQ98/0kd
+         3hWWJBw17MhGY4YDtwX1PNurXBtaarU8yt39JrkFCxCRK/5vie+oNpfyVrmkLXgYvwck
+         +F3aYmdpqhJZ8DAkkj9oQdeymawPCh7a/0HWSJMyCDpOQfOMKbaJLr+l5UebmcaPjKXi
+         0YCiJWLJJNoqJc+ZHvZ83gkBY1TRKTT30uNGoqbTGg3Oi9FHE9LW+YwRgjYHMijnean0
+         ZdT6GYoebmKKu2VWuqJo7iYIlaRENzmnNma2UGaMLRPs77DcslYwyRdfdIHv4K+yAER4
+         pH6g==
+X-Gm-Message-State: AC+VfDxZVfuXkqQUXskuuHRkIhrqXigeHwjcA2YYxIUHugyCbi6+vTuZ
+        QSfCwM7XLCQJBUmlKhdHe5pVM9/rJ4JTvYDrFFlV3w==
+X-Google-Smtp-Source: ACHHUZ6U+BkVoWvcvT7HGuTLRPwQfYt6isypBwcrWa5uqaXETipZ4bHzM57zGwA0G5r8XnvN3heRvCRCxrPfGM6fZkk=
+X-Received: by 2002:a05:622a:188:b0:3ef:a55:7f39 with SMTP id
+ s8-20020a05622a018800b003ef0a557f39mr83207qtw.12.1682626897716; Thu, 27 Apr
+ 2023 13:21:37 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v1 17/40] perf evsel: Modify group pmu name for software
- events
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+References: <20230426070050.1315519-1-irogers@google.com> <20230426070050.1315519-2-irogers@google.com>
+ <77dd1ab3-9c94-c04a-24de-f8c192a6c8d2@linux.intel.com>
+In-Reply-To: <77dd1ab3-9c94-c04a-24de-f8c192a6c8d2@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 27 Apr 2023 13:21:25 -0700
+Message-ID: <CAP-5=fVBFjnmCuzSud=oGj6nGCs7haMkALGS+ZGJEyD4dSYqTA@mail.gmail.com>
+Subject: Re: [PATCH v1 01/40] perf stat: Introduce skippable evsels
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ahmad Yasin <ahmad.yasin@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -86,76 +89,331 @@ To:     Ian Rogers <irogers@google.com>,
         Kang Minchul <tegongkang@gmail.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230426070050.1315519-1-irogers@google.com>
- <20230426070050.1315519-18-irogers@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230426070050.1315519-18-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Thu, Apr 27, 2023 at 11:54=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
+com> wrote:
+>
+>
+>
+> On 2023-04-26 3:00 a.m., Ian Rogers wrote:
+> > Perf stat with no arguments will use default events and metrics. These
+> > events may fail to open even with kernel and hypervisor disabled. When
+> > these fail then the permissions error appears even though they were
+> > implicitly selected. This is particularly a problem with the automatic
+> > selection of the TopdownL1 metric group on certain architectures like
+> > Skylake:
+> >
+> > ```
+> > $ perf stat true
+> > Error:
+> > Access to performance monitoring and observability operations is limite=
+d.
+> > Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+> > access to performance monitoring and observability operations for proce=
+sses
+> > without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+> > More information can be found at 'Perf events and tool security' docume=
+nt:
+> > https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+> > perf_event_paranoid setting is 2:
+> >   -1: Allow use of (almost) all events by all users
+> >       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+> >> =3D 0: Disallow raw and ftrace function tracepoint access
+> >> =3D 1: Disallow CPU event access
+> >> =3D 2: Disallow kernel profiling
+> > To make the adjusted perf_event_paranoid setting permanent preserve it
+> > in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid =3D <setting>)
+> > ```
+> >
+> > This patch adds skippable evsels that when they fail to open won't
+> > fail and won't appear in output. The TopdownL1 events, from the metric
+> > group, are marked as skippable. This turns the failure above to:
+> >
+> > ```
+> > $ perf stat true
+> >
+> >  Performance counter stats for 'true':
+> >
+> >               1.26 msec task-clock:u                     #    0.328 CPU=
+s utilized
+> >                  0      context-switches:u               #    0.000 /se=
+c
+> >                  0      cpu-migrations:u                 #    0.000 /se=
+c
+> >                 49      page-faults:u                    #   38.930 K/s=
+ec
+> >            176,449      cycles:u                         #    0.140 GHz=
+                         (48.99%)
+> >            122,905      instructions:u                   #    0.70  ins=
+n per cycle
+> >             28,264      branches:u                       #   22.456 M/s=
+ec
+> >              2,405      branch-misses:u                  #    8.51% of =
+all branches
+> >
+> >        0.003834565 seconds time elapsed
+> >
+> >        0.000000000 seconds user
+> >        0.004130000 seconds sys
+> > ```
+>
+> If the same command runs with root permission, a different output will
+> be displayed as below:
+>
+> $ sudo ./perf stat sleep 1
+>
+>  Performance counter stats for 'sleep 1':
+>
+>               0.97 msec task-clock                       #    0.001 CPUs
+> utilized
+>                  1      context-switches                 #    1.030 K/sec
+>                  0      cpu-migrations                   #    0.000 /sec
+>                 67      page-faults                      #   69.043 K/sec
+>          1,135,552      cycles                           #    1.170 GHz
+>                        (50.51%)
+>          1,126,446      instructions                     #    0.99  insn
+> per cycle
+>            252,904      branches                         #  260.615 M/sec
+>              7,297      branch-misses                    #    2.89% of
+> all branches
+>             22,518      CPU_CLK_UNHALTED.REF_XCLK        #   23.205
+> M/sec
+>             56,994      INT_MISC.RECOVERY_CYCLES_ANY     #   58.732 M/sec
+>
+> The last two events are useless.
 
-
-On 2023-04-26 3:00 a.m., Ian Rogers wrote:
-> If we have a group of {cycles,faults} then we need the faults software
-> event to appear to be on the same PMU as cycles so that we don't split
-> the group in parse_events__sort_events_and_fix_groups. This case is
-> relatively easy as cycles is the leader and will have a PMU name. In
-> the reverse case, {faults,cycles} we still need faults to appear to
-> have the PMU name of cycles but the old behavior is just to return
-> "cpu". For hybrid this fails as cycles will be on "cpu_core" or
-> "cpu_atom", causing faults to be split into a different group.
-> 
-> Change the behavior for software events so that the whole group is
-> searched for the named PMU.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+You missed the system wide (-a) flag.
 
 Thanks,
-Kan
+Ian
 
-> ---
->  tools/perf/util/evsel.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 1cd04b5998d2..63522322e118 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -829,23 +829,26 @@ bool evsel__name_is(struct evsel *evsel, const char *name)
->  
->  const char *evsel__group_pmu_name(const struct evsel *evsel)
->  {
-> -	const struct evsel *leader;
-> +	struct evsel *leader, *pos;
->  
->  	/* If the pmu_name is set use it. pmu_name isn't set for CPU and software events. */
->  	if (evsel->pmu_name)
->  		return evsel->pmu_name;
->  	/*
->  	 * Software events may be in a group with other uncore PMU events. Use
-> -	 * the pmu_name of the group leader to avoid breaking the software event
-> -	 * out of the group.
-> +	 * the pmu_name of the first non-software event to avoid breaking the
-> +	 * software event out of the group.
->  	 *
->  	 * Aux event leaders, like intel_pt, expect a group with events from
->  	 * other PMUs, so substitute the AUX event's PMU in this case.
->  	 */
->  	leader  = evsel__leader(evsel);
-> -	if ((evsel->core.attr.type == PERF_TYPE_SOFTWARE || evsel__is_aux_event(leader)) &&
-> -	    leader->pmu_name) {
-> -		return leader->pmu_name;
-> +	if (evsel->core.attr.type == PERF_TYPE_SOFTWARE || evsel__is_aux_event(leader)) {
-> +		/* Starting with the leader, find the first event with a named PMU. */
-> +		for_each_group_evsel(pos, leader) {
-> +			if (pos->pmu_name)
-> +				return pos->pmu_name;
-> +		}
->  	}
->  
->  	return "cpu";
+> It's not reliable to rely on perf_event_open()/kernel to tell whether
+> an event is available or skippable. Kernel wouldn't check a specific even=
+t.
+>
+> The patch works for the non-root mode is just because the event requires
+> root permission. It's rejected by the kernel because of lacking
+> permission. But if the same command runs with root privileges, the trash
+> events are printed as above.
+>
+> I think a better way is to check the HW capability and decided whether
+> to append the TopdownL1 metrics.
+>
+> https://lore.kernel.org/lkml/20230427182906.3411695-1-kan.liang@linux.int=
+el.com/
+>
+>
+> Thanks,
+> Kan
+>
+>
+> >
+> > When the events can have kernel/hypervisor disabled, like on
+> > Tigerlake, then it continues to succeed as:
+> >
+> > ```
+> > $ perf stat true
+> >
+> >  Performance counter stats for 'true':
+> >
+> >               0.57 msec task-clock:u                     #    0.385 CPU=
+s utilized
+> >                  0      context-switches:u               #    0.000 /se=
+c
+> >                  0      cpu-migrations:u                 #    0.000 /se=
+c
+> >                 47      page-faults:u                    #   82.329 K/s=
+ec
+> >            287,017      cycles:u                         #    0.503 GHz
+> >            133,318      instructions:u                   #    0.46  ins=
+n per cycle
+> >             31,396      branches:u                       #   54.996 M/s=
+ec
+> >              2,442      branch-misses:u                  #    7.78% of =
+all branches
+> >            998,790      TOPDOWN.SLOTS:u                  #     14.5 %  =
+tma_retiring
+> >                                                   #     27.6 %  tma_bac=
+kend_bound
+> >                                                   #     40.9 %  tma_fro=
+ntend_bound
+> >                                                   #     17.0 %  tma_bad=
+_speculation
+> >            144,922      topdown-retiring:u
+> >            411,266      topdown-fe-bound:u
+> >            258,510      topdown-be-bound:u
+> >            184,090      topdown-bad-spec:u
+> >              2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/s=
+ec
+> >              3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/u #=
+    6.015 M/sec
+> >
+> >        0.001480954 seconds time elapsed
+> >
+> >        0.000000000 seconds user
+> >        0.001686000 seconds sys
+> > ```
+> >
+> > And this likewise works if paranoia allows or running as root.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/builtin-stat.c      | 39 ++++++++++++++++++++++++++--------
+> >  tools/perf/util/evsel.c        | 15 +++++++++++--
+> >  tools/perf/util/evsel.h        |  1 +
+> >  tools/perf/util/stat-display.c |  4 ++++
+> >  4 files changed, 48 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> > index efda63f6bf32..eb34f5418ad3 100644
+> > --- a/tools/perf/builtin-stat.c
+> > +++ b/tools/perf/builtin-stat.c
+> > @@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(str=
+uct evsel *counter)
+> >                       evsel_list->core.threads->err_thread =3D -1;
+> >                       return COUNTER_RETRY;
+> >               }
+> > +     } else if (counter->skippable) {
+> > +             if (verbose > 0)
+> > +                     ui__warning("skipping event %s that kernel failed=
+ to open .\n",
+> > +                                 evsel__name(counter));
+> > +             counter->supported =3D false;
+> > +             counter->errored =3D true;
+> > +             return COUNTER_SKIP;
+> >       }
+> >
+> >       evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
+> > @@ -1885,15 +1892,29 @@ static int add_default_attributes(void)
+> >                * Add TopdownL1 metrics if they exist. To minimize
+> >                * multiplexing, don't request threshold computation.
+> >                */
+> > -             if (metricgroup__has_metric("TopdownL1") &&
+> > -                 metricgroup__parse_groups(evsel_list, "TopdownL1",
+> > -                                         /*metric_no_group=3D*/false,
+> > -                                         /*metric_no_merge=3D*/false,
+> > -                                         /*metric_no_threshold=3D*/tru=
+e,
+> > -                                         stat_config.user_requested_cp=
+u_list,
+> > -                                         stat_config.system_wide,
+> > -                                         &stat_config.metric_events) <=
+ 0)
+> > -                     return -1;
+> > +             if (metricgroup__has_metric("TopdownL1")) {
+> > +                     struct evlist *metric_evlist =3D evlist__new();
+> > +                     struct evsel *metric_evsel;
+> > +
+> > +                     if (!metric_evlist)
+> > +                             return -1;
+> > +
+> > +                     if (metricgroup__parse_groups(metric_evlist, "Top=
+downL1",
+> > +                                                     /*metric_no_group=
+=3D*/false,
+> > +                                                     /*metric_no_merge=
+=3D*/false,
+> > +                                                     /*metric_no_thres=
+hold=3D*/true,
+> > +                                                     stat_config.user_=
+requested_cpu_list,
+> > +                                                     stat_config.syste=
+m_wide,
+> > +                                                     &stat_config.metr=
+ic_events) < 0)
+> > +                             return -1;
+> > +
+> > +                     evlist__for_each_entry(metric_evlist, metric_evse=
+l) {
+> > +                             metric_evsel->skippable =3D true;
+> > +                     }
+> > +                     evlist__splice_list_tail(evsel_list, &metric_evli=
+st->core.entries);
+> > +                     evlist__delete(metric_evlist);
+> > +             }
+> > +
+> >               /* Platform specific attrs */
+> >               if (evlist__add_default_attrs(evsel_list, default_null_at=
+trs) < 0)
+> >                       return -1;
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index 356c07f03be6..1cd04b5998d2 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
+> >       evsel->per_pkg_mask  =3D NULL;
+> >       evsel->collect_stat  =3D false;
+> >       evsel->pmu_name      =3D NULL;
+> > +     evsel->skippable     =3D false;
+> >  }
+> >
+> >  struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
+> > @@ -1725,9 +1726,13 @@ static int get_group_fd(struct evsel *evsel, int=
+ cpu_map_idx, int thread)
+> >               return -1;
+> >
+> >       fd =3D FD(leader, cpu_map_idx, thread);
+> > -     BUG_ON(fd =3D=3D -1);
+> > +     BUG_ON(fd =3D=3D -1 && !leader->skippable);
+> >
+> > -     return fd;
+> > +     /*
+> > +      * When the leader has been skipped, return -2 to distinguish fro=
+m no
+> > +      * group leader case.
+> > +      */
+> > +     return fd =3D=3D -1 ? -2 : fd;
+> >  }
+> >
+> >  static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_th=
+reads, int thread_idx)
+> > @@ -2109,6 +2114,12 @@ static int evsel__open_cpu(struct evsel *evsel, =
+struct perf_cpu_map *cpus,
+> >
+> >                       group_fd =3D get_group_fd(evsel, idx, thread);
+> >
+> > +                     if (group_fd =3D=3D -2) {
+> > +                             pr_debug("broken group leader for %s\n", =
+evsel->name);
+> > +                             err =3D -EINVAL;
+> > +                             goto out_close;
+> > +                     }
+> > +
+> >                       test_attr__ready();
+> >
+> >                       /* Debug message used by test scripts */
+> > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> > index 35805dcdb1b9..bf8f01af1c0b 100644
+> > --- a/tools/perf/util/evsel.h
+> > +++ b/tools/perf/util/evsel.h
+> > @@ -95,6 +95,7 @@ struct evsel {
+> >               bool                    weak_group;
+> >               bool                    bpf_counter;
+> >               bool                    use_config_name;
+> > +             bool                    skippable;
+> >               int                     bpf_fd;
+> >               struct bpf_object       *bpf_obj;
+> >               struct list_head        config_terms;
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-disp=
+lay.c
+> > index e6035ecbeee8..6b46bbb3d322 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -810,6 +810,10 @@ static bool should_skip_zero_counter(struct perf_s=
+tat_config *config,
+> >       struct perf_cpu cpu;
+> >       int idx;
+> >
+> > +     /* Skip counters that were speculatively/default enabled rather t=
+han requested. */
+> > +     if (counter->skippable)
+> > +             return true;
+> > +
+> >       /*
+> >        * Skip value 0 when enabling --per-thread globally,
+> >        * otherwise it will have too many 0 output.
