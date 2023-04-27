@@ -2,82 +2,62 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BCBDC7618E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 26 Apr 2023 23:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37414C7618E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 00:37:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234016AbjDZX0y (ORCPT
+        id S242701AbjD0Aha (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 26 Apr 2023 19:26:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43874 "EHLO
+        Wed, 26 Apr 2023 20:37:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231631AbjDZX0w (ORCPT
+        with ESMTP id S240499AbjD0Ah3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 26 Apr 2023 19:26:52 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C361A3A90;
-        Wed, 26 Apr 2023 16:26:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682551609; x=1714087609;
-  h=from:to:subject:date:message-id:references:in-reply-to:
-   mime-version:content-transfer-encoding;
-  bh=Em3OmpGYRr9IZM356jnv23fKloiO4oe4xvFuadTKFBw=;
-  b=hEE2E8/EkNTqTV6DwJHF//Iu6DvDnZrez8iEzqwWQR97XoePShldv7hG
-   PCZzK0A8bV5ohFD+4aYyGHzyKmh49nBrEuRTJzbsebP1vbOk3INAIYoUx
-   FHs8pNGK3/RHX7LFdXOtklcsjIN6//T71Dr+5vOzTSOsi9zxril+gmxKZ
-   QY6Uacf1Dx1NBjwCwiaSnBAXC76cVG5q995Hhyo7BS7utrs4Zh+HA9MCn
-   xacl6pxnuceBkMqIsrHrR+KDzP3SjIN2bIlZEkHUKGsGhDAnLFnaFEyUl
-   l0AR7oQ72CyzujLqOTMbWB/l1qqzXDZ28wjf5AmokDAtipaIqo8v8cgHa
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10692"; a="433554770"
-X-IronPort-AV: E=Sophos;i="5.99,229,1677571200"; 
-   d="scan'208";a="433554770"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Apr 2023 16:26:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10692"; a="940438603"
-X-IronPort-AV: E=Sophos;i="5.99,229,1677571200"; 
-   d="scan'208";a="940438603"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga006.fm.intel.com with ESMTP; 26 Apr 2023 16:26:48 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 26 Apr 2023 16:26:48 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 26 Apr 2023 16:26:47 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Wed, 26 Apr 2023 16:26:47 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Wed, 26 Apr 2023 16:26:47 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DDejtVurMylS3i6UsffWVY58G+NVVHZYR0ND7s10wKszAFrGMi/fI/kWGML6HKrMbLxCofOOKkjhfxaP0JfqaGnRxm24Oft7CcHMMH5aTGx7Hf+5UIUemhbMhQV37FTugxFGXwAwRxWmXtvNW6+81TZ2ZVpEepYbOKQWLBd/0BQXTKwWN8aie16pqui2L4LfxNorCZzgy91NnivQDvKejeJojJNYCmpOdXj4diPiGCh4/2xz7O1qEVXfh4aP7mBgeECvVyBHAyBimzyqKyukiYHSj7RV5+teF5WVvxoMN3VrLCYBED6uVUbK7b+ymNC4qE5CJkrHuJr3GF3LUGuV9w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=M3kQw2fkDXwSe9wzWvkhoq/tGROeJz2zt8dOFHVoB0Y=;
- b=Y0XBz2llhOYvhjPx666UG/Z2LrJDJbFFm/2tw/6jBzudRlyGkfwpIYjip3Wj9YHw1jhctPYdHkd8EAz67PDzSAy7PCHUoJy/JVsYZeU5L3bWuT4DyGJslbmrP/6HP0cS3Hm67P25pp0zqbQAZBmmBhenQXMlxJ1uUzLBo1+7MY5fnhC1Gjgj65HuzSaD+z+fXYdhl/oC+W9B96BSQmfbNmgvnnqzjdVVKN1dXMMKFE3svFm9xfbqCJRGZoLi2tRMaiNRlO0XIfjBXmXisv8WB7WV0LMhcinZc6RYNQF0FJk9PYj8OuqeXZEPOATPdD/GS4DeLQ29g+qmQu89sR183A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from BYAPR11MB2807.namprd11.prod.outlook.com (2603:10b6:a02:c3::29)
- by IA1PR11MB6122.namprd11.prod.outlook.com (2603:10b6:208:3ee::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.21; Wed, 26 Apr
- 2023 23:26:44 +0000
-Received: from BYAPR11MB2807.namprd11.prod.outlook.com
- ([fe80::4b65:ff3c:be4:40a0]) by BYAPR11MB2807.namprd11.prod.outlook.com
- ([fe80::4b65:ff3c:be4:40a0%7]) with mapi id 15.20.6319.034; Wed, 26 Apr 2023
- 23:26:44 +0000
-From:   "Yasin, Ahmad" <ahmad.yasin@intel.com>
-To:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Wed, 26 Apr 2023 20:37:29 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 550F930C5
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 17:37:27 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-3ef34c49cb9so573941cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Apr 2023 17:37:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1682555846; x=1685147846;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dtpbYg47MRBFbPma5G4Rl0iDpKzymK6csYe1V0e2k3w=;
+        b=fjarVsT4m4//eQKvpKCMrv+k+J4/QwkksLbrLayg/9sIoSpxGJkeqWo+QKCKcTNyCe
+         nxeyDVUVSDs/GID0edmdUJKdQBbzSZBTeDCMmZbh7HCkaFjlRPwsrJY+lgnh3cBbKrtg
+         yaC34PRRwjLjDrg24IIkV6uiWUmCrb4z0RMJ1ZpFWuXSQudtLuJnlvQYD+81hilE+w46
+         gt/FieNQVe6fBnnnvHFchwy4NI7f56uTxn+IP63q6G0w/bm0SyLKgd3voy6nDLPqMto5
+         MytYAySEklkxCDqHcEmr4LZPzpCStXQB9EIsZDAPjpCNLWW+X/G70qKxdsm1nVEDwFv4
+         daNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682555846; x=1685147846;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dtpbYg47MRBFbPma5G4Rl0iDpKzymK6csYe1V0e2k3w=;
+        b=YvLebcXbkL5FuUFC+3mN7tjaUnBLhjhacbDVibgjYQGwSiiT5eDbLfS6ph3UNGnWkb
+         pcQniGfYJN1UD8Sdhu6ArrBRgSpWVfDTm3qHz2mVtF0B6PiNyBbOPawBZkLwJtqVJYL8
+         BOrQ47ps6nzOaBe9Jfe4VatkN/D3m07WEm5i8PCNXi5yF2NT66XbYsz5yMLY8lcAgjE+
+         D4qxIa0im/OMrCRQfQzFqpD6b9QqS0d8AYYzW1Nd1vUd17+OiR5Qo8siWgoII0e9GkVO
+         qkqiASK8Yvv1tHggAZVJmRQ3vdEpkyBlzeMTxE4iYXHbLzDeaYEh/GubnGf0RFevctGW
+         XVHQ==
+X-Gm-Message-State: AC+VfDyRz8tgP15exj8tS7IwSyYT9Syht10+Xtu573DsETP7Sy6mSAoc
+        YcOsllcSXgn54QnMZ4b+Jqb3DCVgwFrPRlFG+Zzquw==
+X-Google-Smtp-Source: ACHHUZ6lnJIHWqOGgunGlZ56M0yGtPHialXaA2rolExRCAx+mDniUvDphCESX6b1QkDtghBxc/f2jMIW7atpvWCZH4k=
+X-Received: by 2002:ac8:7d4e:0:b0:3bf:e4e0:26a0 with SMTP id
+ h14-20020ac87d4e000000b003bfe4e026a0mr31707qtb.14.1682555846265; Wed, 26 Apr
+ 2023 17:37:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230426070050.1315519-1-irogers@google.com> <20230426070050.1315519-2-irogers@google.com>
+ <BYAPR11MB2807A842BCDCE8111D457378EC659@BYAPR11MB2807.namprd11.prod.outlook.com>
+In-Reply-To: <BYAPR11MB2807A842BCDCE8111D457378EC659@BYAPR11MB2807.namprd11.prod.outlook.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 26 Apr 2023 17:37:11 -0700
+Message-ID: <CAP-5=fWfAxmcTPoxBjg64q0Es=052itWZy1EXpUh5NG7bXFnnw@mail.gmail.com>
+Subject: Re: [PATCH v1 01/40] perf stat: Introduce skippable evsels
+To:     "Yasin, Ahmad" <ahmad.yasin@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -91,7 +71,7 @@ To:     Ian Rogers <irogers@google.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         "Hunter, Adrian" <adrian.hunter@intel.com>,
         Florian Fischer <florian.fischer@muhq.space>,
         Rob Herring <robh@kernel.org>,
@@ -110,288 +90,406 @@ To:     Ian Rogers <irogers@google.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v1 01/40] perf stat: Introduce skippable evsels
-Thread-Topic: [PATCH v1 01/40] perf stat: Introduce skippable evsels
-Thread-Index: AQHZeAz6yLqke2DhGUe204PiGAliVK8+Oyfw
-Date:   Wed, 26 Apr 2023 23:26:44 +0000
-Message-ID: <BYAPR11MB2807A842BCDCE8111D457378EC659@BYAPR11MB2807.namprd11.prod.outlook.com>
-References: <20230426070050.1315519-1-irogers@google.com>
- <20230426070050.1315519-2-irogers@google.com>
-In-Reply-To: <20230426070050.1315519-2-irogers@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR11MB2807:EE_|IA1PR11MB6122:EE_
-x-ms-office365-filtering-correlation-id: b900fb3a-4750-44ef-86ee-08db46adb2bb
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q3sslEz+gdDQikH2aX6c0yKbZHwU9SYQ0RMEWm98JocNG6QFNP+DH1Nvs1dyPiqMlOto45twkk/Kar/1mJNniBX6dkNWA2EZeNJYXm9Da+IgNRCeOSiq/Q2jfMznqop5iQx36YrXJHG/jnWTHzReI1p7+QubD8ZkhqimPKmJ9Wxx2soUDGO3/1wkNUbH5je5ybeOpKj7qsrCF2ooO42dGVsvXPxX9oQezRMcA66eeGTb4A0pjaFW5vzqo6UIi8xSHw/39SR/jVbeLtsO7PA61VBysszrKkSr8i6i95+ILz0JUBol4ElOh+0p0spkyqMul839i3LAXAzZnjz1Dwom5FoLGf8Q/bIIj+qBIdO67Us2IdTWpm3B+xJ9/w2nFl5fmHgSp5fNEgxcSnIAxtOqKYZKs9s/wjxiip0we0k9kuCLs4pMKsDoDhpu7HuywqBoYHX38NSAla/gYgz+Kz8QDZYn1cY7ovkXTKjsdiFUlxE89HES6sS1gvBdWQBcHu4JQg2jNvGusDwKQCSk8pNU550RgZIhzzz4vhcViiMdZAviCXZ4xt72LBEQocD0pnh4iQ3rkupGiZhlbBSMO1la+x5NArqY/nqiIqUCosf71mtdzP4KULM6gB+36jMUdmfw
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB2807.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(396003)(136003)(39860400002)(346002)(376002)(451199021)(83380400001)(478600001)(7696005)(71200400001)(55016003)(26005)(6506007)(9686003)(966005)(66476007)(66446008)(66556008)(64756008)(41300700001)(110136005)(82960400001)(316002)(921005)(53546011)(186003)(76116006)(66946007)(5660300002)(7416002)(8936002)(52536014)(2906002)(38070700005)(122000001)(38100700002)(86362001)(33656002)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TmpMN0Q0ZVM0dVNvZ3FtSjRKYWlmUVFZeDhtb3REbm93RUtaNzZQTWFtQTlK?=
- =?utf-8?B?blN3akNVTUlsUzV5MC85S00remNiRUhlOEFYZkRneWZhL0hpcWZnQ3FPU3c3?=
- =?utf-8?B?QWtOdGxHK0FnQ0hoQVFhNkh1Z3Awa2gyTUYrNHBLOXdGdkVhazE2ekJ4TzVi?=
- =?utf-8?B?VXMwUW56MEtaeExZbWNxS3lxL01UeVRoOWVyaXZBcFh0WitNM0hUZzB6L3Qw?=
- =?utf-8?B?ajhxQ2tDWkQ5djI2S2EyUFVyUzhjVmsrL29abXVYeDRqbG54cEJaYUxvVy8x?=
- =?utf-8?B?MnMvL1k3TE1wTDdQeGxsTjFSc1hYLzNrY2l4VWtkRk1kNTFYeVo1aWxCYjg0?=
- =?utf-8?B?YUtJOWM1U0svTGpQZWhwM2psQUNKY0ozSnFqWms4Ri96cGl1TnF0dlV0cVQy?=
- =?utf-8?B?ZHE3ZkcwaFN1Z056RHRlYkh3akNJaHlRWmZpY1M0ZkVBWTBXSnNrY281OG5j?=
- =?utf-8?B?MlVXWVVab2N6VU0yZ0FMRk14aW45RjQ0NE1BejBWazU2TFhMbm5wV1hPNDJ6?=
- =?utf-8?B?a0Nhb0U5UFh1eTVQU3p1UlJvSVRhSnE1cTlNRld1bm1KVHdrMVhLcEJBd2RP?=
- =?utf-8?B?ZkxhRkVEbjQxM0RKL3RNZ1Rnc2I3cHFmZkpqVVliSVl3d0s3M3pZcDRLZnlZ?=
- =?utf-8?B?N1N4VGlEQmoxeWR0cmVmazhqWDVlemw1MHFxRWxSbUN1NGVNOGhOSEF5Y1Jy?=
- =?utf-8?B?RkJpZEh1ckM3MEVpRzJhQkNTOTc0NDhjYitkdGFvQU5mSmh6dnkybzJ2WFN0?=
- =?utf-8?B?WmlXenFDTDF4dk8rNTFOY2lPckxZMnR3d0FLNTZ5MVhGT1FybnRMaGxuUDJG?=
- =?utf-8?B?K2RMQlhEOVFEcTlTZ2dUbVNXZjRBQ3Uvb3dvTTJObXNDb0lVb09ZYjRMWHE0?=
- =?utf-8?B?QURNakp1ZitFZ0liTzU5RDA4YkFFOUZJK0pkTmZQaEtJTXNvMFhZYS9aZFVy?=
- =?utf-8?B?V01EbHBmeFBLR0l1aDB3bDFYRFBINHZRUGhhM25TeThWNElDU0liNTB5S2hB?=
- =?utf-8?B?bWZabXVQYnpWNXBHRG5YL3NIaHh1clZUQk5BTzJwc3IxdHVzZldHcG15c0xu?=
- =?utf-8?B?N0RoS0ZycGdwblJocTJNbmJ1QmNXVk45WUlxM2lYWGx0enJWeUpGWHFLQ2pH?=
- =?utf-8?B?Q1kwN29oL0VLUkR0YkNsUytEV2Z2UUVBQU1jd0lzVFR2aUVQREZySmx0bGFG?=
- =?utf-8?B?eFdFUkgxd2FjVHhXZFZCUml2Y1lKekc3NXBBQys0b2FLbzNQUUgxRCt0WUtC?=
- =?utf-8?B?bUtJUmZMTStIYjEzRnFTZlBwcFZJSFBhT1dlY3B1bDlCYmJDNEtyeEpYRW5I?=
- =?utf-8?B?UlhaUHBFbjhqeXZHRytqem94eklzRmI0cmMwWHlnVjVBeUhkR3J5QklZWFNx?=
- =?utf-8?B?T3pEd1g0NTVBWncxeWJHb2d3a1ZuYTNLc3FSQ0JNR3lNeGt0Rmdxc0V0bGtG?=
- =?utf-8?B?TnorQU9QVkhiL3ZnTC9ZTktjeWNzWGpDL2xVNFJXaVFKL2gwRENyK25BUW5I?=
- =?utf-8?B?a2tibGFQSHAwMFJQYkZpTHdQNm5rVWV1Y3R6N1R6aG1waUFTNEZuUnVwWnA4?=
- =?utf-8?B?UFVORVUzT3YxdnBsRTI3Y3VGVU8xZFBYNXprWHR2MFpJdnNlQUJwNmd6cnE2?=
- =?utf-8?B?SkszcFBJdzhlRDBaVDZmdG5zWW1QMENZOXI1NW42UVhNbmRSUVR0c09VbzFG?=
- =?utf-8?B?ekd0UjVGUWJQWVQzcnFxazcva0JISnhmY1JSakJIR3pFV1dodHQ4MGpIa0h2?=
- =?utf-8?B?MnZQaitTemVxZ0dTNmtIZGdjbDFBdHNHN0VjNE9rd0JrYm1Ud2s0TVE3Si93?=
- =?utf-8?B?L0hDb1ZaMkoyN3NsODNnYy8vRWhIQ0JTaWdRVVEwNWdoSFNvMElyTUdKbkRs?=
- =?utf-8?B?RTBFZFQzeUovYktXWm9HR3Z0R01McXN1RHBJOW43emJqd3dsYkZEUHcwcFRm?=
- =?utf-8?B?NFJEUGpzY3R5ZGtZVEU3bXpBNjIzOGtLaEhYaTh4cUxTaTBsaUdyUVZ3dHl3?=
- =?utf-8?B?NmdMWXRLQ1crN3V5MmRJUlVWYzFlQmJJVGEwdEtDbGN1WHd0alVtVVdEQXZW?=
- =?utf-8?B?bDBKVG1VYkJ6ZGFnVk80ZmVueGNCQ1ZNdjhmV1V2dXdJNi9XK2JwU1UwZWJN?=
- =?utf-8?Q?Kx6xYtF/TRcPnlwG78I2Z9kWH?=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB2807.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b900fb3a-4750-44ef-86ee-08db46adb2bb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Apr 2023 23:26:44.4769
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tJcLPJL2/MrtQAXsdZKM4fZeyOaqpltNSO4T5lH6mCU9aB89PxlCFfuKWkLQstkZuwE9JBaXbMG04b4oZB4aCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6122
-X-OriginatorOrg: intel.com
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-VGhlIG91dHB1dCBnb3QgbmVlZGxlc3NseSBsZW5ndGhlbmVkIHdpdGggcmVjZW50IGNoYW5nZXMg
-ZnJvbSBJYW4uDQoNClRoZXNlIGZvdXIgbWV0cmljczoNCiAgICAgICAgICAgICAgICAgICMgICAg
-IDE0LjUgJSAgdG1hX3JldGlyaW5nDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICMgICAgIDI3LjYgJSAgdG1hX2JhY2tlbmRfYm91bmQNCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyAgICAgNDAuOSAlICB0
-bWFfZnJvbnRlbmRfYm91bmQNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIyAgICAgMTcuMCAlICB0bWFfYmFkX3NwZWN1bGF0aW9uDQpiZXR0ZXIgYmUg
-YXBwZW5kZWQgb24gdGhlIHJpZ2h0IGhhbmQgc2lkZSBvZiB0aGVzZSBmb3VyIGV2ZW50cyAoYXMg
-Y3VycmVudCBwZXJmLXN0YXQgZG9lcyk6DQogICAgICAgICAgIDE0NCw5MjIgICAgICB0b3Bkb3du
-LXJldGlyaW5nOnUNCiAgICAgICAgICAgNDExLDI2NiAgICAgIHRvcGRvd24tZmUtYm91bmQ6dQ0K
-ICAgICAgICAgICAyNTgsNTEwICAgICAgdG9wZG93bi1iZS1ib3VuZDp1DQogICAgICAgICAgIDE4
-NCwwOTAgICAgICB0b3Bkb3duLWJhZC1zcGVjOnUNCg0KQWxzbywgSSB0aGluayB3ZSBzaG91bGQg
-bm90IGJvdGhlciB0aGUgZGVmYXVsdCBwZXJmLXN0YXQgdXNlcnMgd2l0aCB0aGUgbGFzdCB0d28g
-ZXZlbnRzOg0KICAgICAgICAgICAgIDIsNTg1ICAgICAgSU5UX01JU0MuVU9QX0RST1BQSU5HOnUg
-ICAgICAgICAgIyAgICA0LjUyOCBNL3NlYw0KICAgICAgICAgICAgIDMsNDM0ICAgICAgY3B1L0lO
-VF9NSVNDLlJFQ09WRVJZX0NZQ0xFUyxjbWFzaz0xLGVkZ2UvdSAjICAgIDYuMDE1IE0vc2VjDQoN
-Cih5ZXMsIHRoZXJlIGFyZSBtZWFudCB0byBpbmNyZWFzZSBhY2N1cmFjeSBvZiB0aGUgcHJldmlv
-dXMgdG1hXyogbGV2ZWwxIG1ldHJpY3MsIGJ1dCB0aGUgdW5kZXJseWluZyBldmVudCB2YXJ5IGZy
-b20gbW9kZWwgdG8gbW9kZWwsIGUuZy4gU0tMIHRvIElDTCB0byBTUFIpLg0KDQpCZXNpZGVzLCBJ
-IGNhbiB0aGluayBvbiBiZXR0ZXIgbWV0cmljcyB0byBhcHBlbmQgb24gdGhlIHRvcC1tb3N0IFRN
-QSBldmVudCAoVE9QRE9XTi5TTE9UUykuIHRtYV9yZXRpcmluZyBkb2VzIG5vdCBiZWxvbmcgdGhl
-cmUuDQoNCkFobWFkDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBJYW4gUm9n
-ZXJzIDxpcm9nZXJzQGdvb2dsZS5jb20+IA0KU2VudDogV2VkbmVzZGF5LCBBcHJpbCAyNiwgMjAy
-MyAxMDowMA0KVG86IEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbyA8YWNtZUBrZXJuZWwub3JnPjsg
-S2FuIExpYW5nIDxrYW4ubGlhbmdAbGludXguaW50ZWwuY29tPjsgWWFzaW4sIEFobWFkIDxhaG1h
-ZC55YXNpbkBpbnRlbC5jb20+OyBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+
-OyBJbmdvIE1vbG5hciA8bWluZ29AcmVkaGF0LmNvbT47IEVyYW5pYW4sIFN0ZXBoYW5lIDxlcmFu
-aWFuQGdvb2dsZS5jb20+OyBBbmRpIEtsZWVuIDxha0BsaW51eC5pbnRlbC5jb20+OyBUYXlsb3Is
-IFBlcnJ5IDxwZXJyeS50YXlsb3JAaW50ZWwuY29tPjsgQWx0LCBTYW1hbnRoYSA8c2FtYW50aGEu
-YWx0QGludGVsLmNvbT47IEJpZ2dlcnMsIENhbGViIDxjYWxlYi5iaWdnZXJzQGludGVsLmNvbT47
-IFdhbmcsIFdlaWxpbiA8d2VpbGluLndhbmdAaW50ZWwuY29tPjsgQmFrZXIsIEVkd2FyZCA8ZWR3
-YXJkLmJha2VyQGludGVsLmNvbT47IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+
-OyBBbGV4YW5kZXIgU2hpc2hraW4gPGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb20+
-OyBKaXJpIE9sc2EgPGpvbHNhQGtlcm5lbC5vcmc+OyBOYW1oeXVuZyBLaW0gPG5hbWh5dW5nQGtl
-cm5lbC5vcmc+OyBIdW50ZXIsIEFkcmlhbiA8YWRyaWFuLmh1bnRlckBpbnRlbC5jb20+OyBGbG9y
-aWFuIEZpc2NoZXIgPGZsb3JpYW4uZmlzY2hlckBtdWhxLnNwYWNlPjsgUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz47IFpoZW5nanVuIFhpbmcgPHpoZW5nanVuLnhpbmdAbGludXguaW50ZWwu
-Y29tPjsgSm9obiBHYXJyeSA8am9obi5nLmdhcnJ5QG9yYWNsZS5jb20+OyBLYWpvbCBKYWluIDxr
-amFpbkBsaW51eC5pYm0uY29tPjsgU3VtYW50aCBLb3Jpa2thciA8c3VtYW50aGtAbGludXguaWJt
-LmNvbT47IFRob21hcyBSaWNodGVyIDx0bXJpY2h0QGxpbnV4LmlibS5jb20+OyBUaWV6aHUgWWFu
-ZyA8eWFuZ3RpZXpodUBsb29uZ3Nvbi5jbj47IFJhdmkgQmFuZ29yaWEgPHJhdmkuYmFuZ29yaWFA
-YW1kLmNvbT47IExlbyBZYW4gPGxlby55YW5AbGluYXJvLm9yZz47IFlhbmcgSmlob25nIDx5YW5n
-amlob25nMUBodWF3ZWkuY29tPjsgSmFtZXMgQ2xhcmsgPGphbWVzLmNsYXJrQGFybS5jb20+OyBT
-dXp1a2kgUG91bG91c2UgPHN1enVraS5wb3Vsb3NlQGFybS5jb20+OyBLYW5nIE1pbmNodWwgPHRl
-Z29uZ2thbmdAZ21haWwuY29tPjsgQXRoaXJhIFJhamVldiA8YXRyYWplZXZAbGludXgudm5ldC5p
-Ym0uY29tPjsgbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmcNCkNjOiBJYW4gUm9nZXJzIDxpcm9nZXJzQGdvb2dsZS5jb20+DQpTdWJq
-ZWN0OiBbUEFUQ0ggdjEgMDEvNDBdIHBlcmYgc3RhdDogSW50cm9kdWNlIHNraXBwYWJsZSBldnNl
-bHMNCg0KUGVyZiBzdGF0IHdpdGggbm8gYXJndW1lbnRzIHdpbGwgdXNlIGRlZmF1bHQgZXZlbnRz
-IGFuZCBtZXRyaWNzLiBUaGVzZSBldmVudHMgbWF5IGZhaWwgdG8gb3BlbiBldmVuIHdpdGgga2Vy
-bmVsIGFuZCBoeXBlcnZpc29yIGRpc2FibGVkLiBXaGVuIHRoZXNlIGZhaWwgdGhlbiB0aGUgcGVy
-bWlzc2lvbnMgZXJyb3IgYXBwZWFycyBldmVuIHRob3VnaCB0aGV5IHdlcmUgaW1wbGljaXRseSBz
-ZWxlY3RlZC4gVGhpcyBpcyBwYXJ0aWN1bGFybHkgYSBwcm9ibGVtIHdpdGggdGhlIGF1dG9tYXRp
-YyBzZWxlY3Rpb24gb2YgdGhlIFRvcGRvd25MMSBtZXRyaWMgZ3JvdXAgb24gY2VydGFpbiBhcmNo
-aXRlY3R1cmVzIGxpa2UNClNreWxha2U6DQoNCmBgYA0KJCBwZXJmIHN0YXQgdHJ1ZQ0KRXJyb3I6
-DQpBY2Nlc3MgdG8gcGVyZm9ybWFuY2UgbW9uaXRvcmluZyBhbmQgb2JzZXJ2YWJpbGl0eSBvcGVy
-YXRpb25zIGlzIGxpbWl0ZWQuDQpDb25zaWRlciBhZGp1c3RpbmcgL3Byb2Mvc3lzL2tlcm5lbC9w
-ZXJmX2V2ZW50X3BhcmFub2lkIHNldHRpbmcgdG8gb3BlbiBhY2Nlc3MgdG8gcGVyZm9ybWFuY2Ug
-bW9uaXRvcmluZyBhbmQgb2JzZXJ2YWJpbGl0eSBvcGVyYXRpb25zIGZvciBwcm9jZXNzZXMgd2l0
-aG91dCBDQVBfUEVSRk1PTiwgQ0FQX1NZU19QVFJBQ0Ugb3IgQ0FQX1NZU19BRE1JTiBMaW51eCBj
-YXBhYmlsaXR5Lg0KTW9yZSBpbmZvcm1hdGlvbiBjYW4gYmUgZm91bmQgYXQgJ1BlcmYgZXZlbnRz
-IGFuZCB0b29sIHNlY3VyaXR5JyBkb2N1bWVudDoNCmh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9j
-L2h0bWwvbGF0ZXN0L2FkbWluLWd1aWRlL3BlcmYtc2VjdXJpdHkuaHRtbA0KcGVyZl9ldmVudF9w
-YXJhbm9pZCBzZXR0aW5nIGlzIDI6DQogIC0xOiBBbGxvdyB1c2Ugb2YgKGFsbW9zdCkgYWxsIGV2
-ZW50cyBieSBhbGwgdXNlcnMNCiAgICAgIElnbm9yZSBtbG9jayBsaW1pdCBhZnRlciBwZXJmX2V2
-ZW50X21sb2NrX2tiIHdpdGhvdXQgQ0FQX0lQQ19MT0NLDQo+PSAwOiBEaXNhbGxvdyByYXcgYW5k
-IGZ0cmFjZSBmdW5jdGlvbiB0cmFjZXBvaW50IGFjY2VzcyA9IDE6IERpc2FsbG93IA0KPkNQVSBl
-dmVudCBhY2Nlc3MgPSAyOiBEaXNhbGxvdyBrZXJuZWwgcHJvZmlsaW5nDQpUbyBtYWtlIHRoZSBh
-ZGp1c3RlZCBwZXJmX2V2ZW50X3BhcmFub2lkIHNldHRpbmcgcGVybWFuZW50IHByZXNlcnZlIGl0
-IGluIC9ldGMvc3lzY3RsLmNvbmYgKGUuZy4ga2VybmVsLnBlcmZfZXZlbnRfcGFyYW5vaWQgPSA8
-c2V0dGluZz4pIGBgYA0KDQpUaGlzIHBhdGNoIGFkZHMgc2tpcHBhYmxlIGV2c2VscyB0aGF0IHdo
-ZW4gdGhleSBmYWlsIHRvIG9wZW4gd29uJ3QgZmFpbCBhbmQgd29uJ3QgYXBwZWFyIGluIG91dHB1
-dC4gVGhlIFRvcGRvd25MMSBldmVudHMsIGZyb20gdGhlIG1ldHJpYyBncm91cCwgYXJlIG1hcmtl
-ZCBhcyBza2lwcGFibGUuIFRoaXMgdHVybnMgdGhlIGZhaWx1cmUgYWJvdmUgdG86DQoNCmBgYA0K
-JCBwZXJmIHN0YXQgdHJ1ZQ0KDQogUGVyZm9ybWFuY2UgY291bnRlciBzdGF0cyBmb3IgJ3RydWUn
-Og0KDQogICAgICAgICAgICAgIDEuMjYgbXNlYyB0YXNrLWNsb2NrOnUgICAgICAgICAgICAgICAg
-ICAgICAjICAgIDAuMzI4IENQVXMgdXRpbGl6ZWQNCiAgICAgICAgICAgICAgICAgMCAgICAgIGNv
-bnRleHQtc3dpdGNoZXM6dSAgICAgICAgICAgICAgICMgICAgMC4wMDAgL3NlYw0KICAgICAgICAg
-ICAgICAgICAwICAgICAgY3B1LW1pZ3JhdGlvbnM6dSAgICAgICAgICAgICAgICAgIyAgICAwLjAw
-MCAvc2VjDQogICAgICAgICAgICAgICAgNDkgICAgICBwYWdlLWZhdWx0czp1ICAgICAgICAgICAg
-ICAgICAgICAjICAgMzguOTMwIEsvc2VjDQogICAgICAgICAgIDE3Niw0NDkgICAgICBjeWNsZXM6
-dSAgICAgICAgICAgICAgICAgICAgICAgICAjICAgIDAuMTQwIEdIeiAgICAgICAgICAgICAgICAg
-ICAgICAgICAoNDguOTklKQ0KICAgICAgICAgICAxMjIsOTA1ICAgICAgaW5zdHJ1Y3Rpb25zOnUg
-ICAgICAgICAgICAgICAgICAgIyAgICAwLjcwICBpbnNuIHBlciBjeWNsZQ0KICAgICAgICAgICAg
-MjgsMjY0ICAgICAgYnJhbmNoZXM6dSAgICAgICAgICAgICAgICAgICAgICAgIyAgIDIyLjQ1NiBN
-L3NlYw0KICAgICAgICAgICAgIDIsNDA1ICAgICAgYnJhbmNoLW1pc3Nlczp1ICAgICAgICAgICAg
-ICAgICAgIyAgICA4LjUxJSBvZiBhbGwgYnJhbmNoZXMNCg0KICAgICAgIDAuMDAzODM0NTY1IHNl
-Y29uZHMgdGltZSBlbGFwc2VkDQoNCiAgICAgICAwLjAwMDAwMDAwMCBzZWNvbmRzIHVzZXINCiAg
-ICAgICAwLjAwNDEzMDAwMCBzZWNvbmRzIHN5cw0KYGBgDQoNCldoZW4gdGhlIGV2ZW50cyBjYW4g
-aGF2ZSBrZXJuZWwvaHlwZXJ2aXNvciBkaXNhYmxlZCwgbGlrZSBvbiBUaWdlcmxha2UsIHRoZW4g
-aXQgY29udGludWVzIHRvIHN1Y2NlZWQgYXM6DQoNCmBgYA0KJCBwZXJmIHN0YXQgdHJ1ZQ0KDQog
-UGVyZm9ybWFuY2UgY291bnRlciBzdGF0cyBmb3IgJ3RydWUnOg0KDQogICAgICAgICAgICAgIDAu
-NTcgbXNlYyB0YXNrLWNsb2NrOnUgICAgICAgICAgICAgICAgICAgICAjICAgIDAuMzg1IENQVXMg
-dXRpbGl6ZWQNCiAgICAgICAgICAgICAgICAgMCAgICAgIGNvbnRleHQtc3dpdGNoZXM6dSAgICAg
-ICAgICAgICAgICMgICAgMC4wMDAgL3NlYw0KICAgICAgICAgICAgICAgICAwICAgICAgY3B1LW1p
-Z3JhdGlvbnM6dSAgICAgICAgICAgICAgICAgIyAgICAwLjAwMCAvc2VjDQogICAgICAgICAgICAg
-ICAgNDcgICAgICBwYWdlLWZhdWx0czp1ICAgICAgICAgICAgICAgICAgICAjICAgODIuMzI5IEsv
-c2VjDQogICAgICAgICAgIDI4NywwMTcgICAgICBjeWNsZXM6dSAgICAgICAgICAgICAgICAgICAg
-ICAgICAjICAgIDAuNTAzIEdIeg0KICAgICAgICAgICAxMzMsMzE4ICAgICAgaW5zdHJ1Y3Rpb25z
-OnUgICAgICAgICAgICAgICAgICAgIyAgICAwLjQ2ICBpbnNuIHBlciBjeWNsZQ0KICAgICAgICAg
-ICAgMzEsMzk2ICAgICAgYnJhbmNoZXM6dSAgICAgICAgICAgICAgICAgICAgICAgIyAgIDU0Ljk5
-NiBNL3NlYw0KICAgICAgICAgICAgIDIsNDQyICAgICAgYnJhbmNoLW1pc3Nlczp1ICAgICAgICAg
-ICAgICAgICAgIyAgICA3Ljc4JSBvZiBhbGwgYnJhbmNoZXMNCiAgICAgICAgICAgOTk4LDc5MCAg
-ICAgIFRPUERPV04uU0xPVFM6dSAgICAgICAgICAgICAgICAgICMgICAgIDE0LjUgJSAgdG1hX3Jl
-dGlyaW5nDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICMgICAgIDI3LjYgJSAgdG1hX2JhY2tlbmRfYm91bmQNCiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIyAgICAgNDAuOSAlICB0bWFfZnJvbnRlbmRfYm91
-bmQNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIyAg
-ICAgMTcuMCAlICB0bWFfYmFkX3NwZWN1bGF0aW9uDQogICAgICAgICAgIDE0NCw5MjIgICAgICB0
-b3Bkb3duLXJldGlyaW5nOnUNCiAgICAgICAgICAgNDExLDI2NiAgICAgIHRvcGRvd24tZmUtYm91
-bmQ6dQ0KICAgICAgICAgICAyNTgsNTEwICAgICAgdG9wZG93bi1iZS1ib3VuZDp1DQogICAgICAg
-ICAgIDE4NCwwOTAgICAgICB0b3Bkb3duLWJhZC1zcGVjOnUNCiAgICAgICAgICAgICAyLDU4NSAg
-ICAgIElOVF9NSVNDLlVPUF9EUk9QUElORzp1ICAgICAgICAgICMgICAgNC41MjggTS9zZWMNCiAg
-ICAgICAgICAgICAzLDQzNCAgICAgIGNwdS9JTlRfTUlTQy5SRUNPVkVSWV9DWUNMRVMsY21hc2s9
-MSxlZGdlL3UgIyAgICA2LjAxNSBNL3NlYw0KDQogICAgICAgMC4wMDE0ODA5NTQgc2Vjb25kcyB0
-aW1lIGVsYXBzZWQNCg0KICAgICAgIDAuMDAwMDAwMDAwIHNlY29uZHMgdXNlcg0KICAgICAgIDAu
-MDAxNjg2MDAwIHNlY29uZHMgc3lzDQpgYGANCg0KQW5kIHRoaXMgbGlrZXdpc2Ugd29ya3MgaWYg
-cGFyYW5vaWEgYWxsb3dzIG9yIHJ1bm5pbmcgYXMgcm9vdC4NCg0KU2lnbmVkLW9mZi1ieTogSWFu
-IFJvZ2VycyA8aXJvZ2Vyc0Bnb29nbGUuY29tPg0KLS0tDQogdG9vbHMvcGVyZi9idWlsdGluLXN0
-YXQuYyAgICAgIHwgMzkgKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLQ0KIHRvb2xz
-L3BlcmYvdXRpbC9ldnNlbC5jICAgICAgICB8IDE1ICsrKysrKysrKysrLS0NCiB0b29scy9wZXJm
-L3V0aWwvZXZzZWwuaCAgICAgICAgfCAgMSArDQogdG9vbHMvcGVyZi91dGlsL3N0YXQtZGlzcGxh
-eS5jIHwgIDQgKysrKw0KIDQgZmlsZXMgY2hhbmdlZCwgNDggaW5zZXJ0aW9ucygrKSwgMTEgZGVs
-ZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS90b29scy9wZXJmL2J1aWx0aW4tc3RhdC5jIGIvdG9v
-bHMvcGVyZi9idWlsdGluLXN0YXQuYyBpbmRleCBlZmRhNjNmNmJmMzIuLmViMzRmNTQxOGFkMyAx
-MDA2NDQNCi0tLSBhL3Rvb2xzL3BlcmYvYnVpbHRpbi1zdGF0LmMNCisrKyBiL3Rvb2xzL3BlcmYv
-YnVpbHRpbi1zdGF0LmMNCkBAIC02NjcsNiArNjY3LDEzIEBAIHN0YXRpYyBlbnVtIGNvdW50ZXJf
-cmVjb3Zlcnkgc3RhdF9oYW5kbGVfZXJyb3Ioc3RydWN0IGV2c2VsICpjb3VudGVyKQ0KIAkJCWV2
-c2VsX2xpc3QtPmNvcmUudGhyZWFkcy0+ZXJyX3RocmVhZCA9IC0xOw0KIAkJCXJldHVybiBDT1VO
-VEVSX1JFVFJZOw0KIAkJfQ0KKwl9IGVsc2UgaWYgKGNvdW50ZXItPnNraXBwYWJsZSkgew0KKwkJ
-aWYgKHZlcmJvc2UgPiAwKQ0KKwkJCXVpX193YXJuaW5nKCJza2lwcGluZyBldmVudCAlcyB0aGF0
-IGtlcm5lbCBmYWlsZWQgdG8gb3BlbiAuXG4iLA0KKwkJCQkgICAgZXZzZWxfX25hbWUoY291bnRl
-cikpOw0KKwkJY291bnRlci0+c3VwcG9ydGVkID0gZmFsc2U7DQorCQljb3VudGVyLT5lcnJvcmVk
-ID0gdHJ1ZTsNCisJCXJldHVybiBDT1VOVEVSX1NLSVA7DQogCX0NCiANCiAJZXZzZWxfX29wZW5f
-c3RyZXJyb3IoY291bnRlciwgJnRhcmdldCwgZXJybm8sIG1zZywgc2l6ZW9mKG1zZykpOyBAQCAt
-MTg4NSwxNSArMTg5MiwyOSBAQCBzdGF0aWMgaW50IGFkZF9kZWZhdWx0X2F0dHJpYnV0ZXModm9p
-ZCkNCiAJCSAqIEFkZCBUb3Bkb3duTDEgbWV0cmljcyBpZiB0aGV5IGV4aXN0LiBUbyBtaW5pbWl6
-ZQ0KIAkJICogbXVsdGlwbGV4aW5nLCBkb24ndCByZXF1ZXN0IHRocmVzaG9sZCBjb21wdXRhdGlv
-bi4NCiAJCSAqLw0KLQkJaWYgKG1ldHJpY2dyb3VwX19oYXNfbWV0cmljKCJUb3Bkb3duTDEiKSAm
-Jg0KLQkJICAgIG1ldHJpY2dyb3VwX19wYXJzZV9ncm91cHMoZXZzZWxfbGlzdCwgIlRvcGRvd25M
-MSIsDQotCQkJCQkgICAgLyptZXRyaWNfbm9fZ3JvdXA9Ki9mYWxzZSwNCi0JCQkJCSAgICAvKm1l
-dHJpY19ub19tZXJnZT0qL2ZhbHNlLA0KLQkJCQkJICAgIC8qbWV0cmljX25vX3RocmVzaG9sZD0q
-L3RydWUsDQotCQkJCQkgICAgc3RhdF9jb25maWcudXNlcl9yZXF1ZXN0ZWRfY3B1X2xpc3QsDQot
-CQkJCQkgICAgc3RhdF9jb25maWcuc3lzdGVtX3dpZGUsDQotCQkJCQkgICAgJnN0YXRfY29uZmln
-Lm1ldHJpY19ldmVudHMpIDwgMCkNCi0JCQlyZXR1cm4gLTE7DQorCQlpZiAobWV0cmljZ3JvdXBf
-X2hhc19tZXRyaWMoIlRvcGRvd25MMSIpKSB7DQorCQkJc3RydWN0IGV2bGlzdCAqbWV0cmljX2V2
-bGlzdCA9IGV2bGlzdF9fbmV3KCk7DQorCQkJc3RydWN0IGV2c2VsICptZXRyaWNfZXZzZWw7DQor
-DQorCQkJaWYgKCFtZXRyaWNfZXZsaXN0KQ0KKwkJCQlyZXR1cm4gLTE7DQorDQorCQkJaWYgKG1l
-dHJpY2dyb3VwX19wYXJzZV9ncm91cHMobWV0cmljX2V2bGlzdCwgIlRvcGRvd25MMSIsDQorCQkJ
-CQkJCS8qbWV0cmljX25vX2dyb3VwPSovZmFsc2UsDQorCQkJCQkJCS8qbWV0cmljX25vX21lcmdl
-PSovZmFsc2UsDQorCQkJCQkJCS8qbWV0cmljX25vX3RocmVzaG9sZD0qL3RydWUsDQorCQkJCQkJ
-CXN0YXRfY29uZmlnLnVzZXJfcmVxdWVzdGVkX2NwdV9saXN0LA0KKwkJCQkJCQlzdGF0X2NvbmZp
-Zy5zeXN0ZW1fd2lkZSwNCisJCQkJCQkJJnN0YXRfY29uZmlnLm1ldHJpY19ldmVudHMpIDwgMCkN
-CisJCQkJcmV0dXJuIC0xOw0KKw0KKwkJCWV2bGlzdF9fZm9yX2VhY2hfZW50cnkobWV0cmljX2V2
-bGlzdCwgbWV0cmljX2V2c2VsKSB7DQorCQkJCW1ldHJpY19ldnNlbC0+c2tpcHBhYmxlID0gdHJ1
-ZTsNCisJCQl9DQorCQkJZXZsaXN0X19zcGxpY2VfbGlzdF90YWlsKGV2c2VsX2xpc3QsICZtZXRy
-aWNfZXZsaXN0LT5jb3JlLmVudHJpZXMpOw0KKwkJCWV2bGlzdF9fZGVsZXRlKG1ldHJpY19ldmxp
-c3QpOw0KKwkJfQ0KKw0KIAkJLyogUGxhdGZvcm0gc3BlY2lmaWMgYXR0cnMgKi8NCiAJCWlmIChl
-dmxpc3RfX2FkZF9kZWZhdWx0X2F0dHJzKGV2c2VsX2xpc3QsIGRlZmF1bHRfbnVsbF9hdHRycykg
-PCAwKQ0KIAkJCXJldHVybiAtMTsNCmRpZmYgLS1naXQgYS90b29scy9wZXJmL3V0aWwvZXZzZWwu
-YyBiL3Rvb2xzL3BlcmYvdXRpbC9ldnNlbC5jIGluZGV4IDM1NmMwN2YwM2JlNi4uMWNkMDRiNTk5
-OGQyIDEwMDY0NA0KLS0tIGEvdG9vbHMvcGVyZi91dGlsL2V2c2VsLmMNCisrKyBiL3Rvb2xzL3Bl
-cmYvdXRpbC9ldnNlbC5jDQpAQCAtMjkwLDYgKzI5MCw3IEBAIHZvaWQgZXZzZWxfX2luaXQoc3Ry
-dWN0IGV2c2VsICpldnNlbCwNCiAJZXZzZWwtPnBlcl9wa2dfbWFzayAgPSBOVUxMOw0KIAlldnNl
-bC0+Y29sbGVjdF9zdGF0ICA9IGZhbHNlOw0KIAlldnNlbC0+cG11X25hbWUgICAgICA9IE5VTEw7
-DQorCWV2c2VsLT5za2lwcGFibGUgICAgID0gZmFsc2U7DQogfQ0KIA0KIHN0cnVjdCBldnNlbCAq
-ZXZzZWxfX25ld19pZHgoc3RydWN0IHBlcmZfZXZlbnRfYXR0ciAqYXR0ciwgaW50IGlkeCkgQEAg
-LTE3MjUsOSArMTcyNiwxMyBAQCBzdGF0aWMgaW50IGdldF9ncm91cF9mZChzdHJ1Y3QgZXZzZWwg
-KmV2c2VsLCBpbnQgY3B1X21hcF9pZHgsIGludCB0aHJlYWQpDQogCQlyZXR1cm4gLTE7DQogDQog
-CWZkID0gRkQobGVhZGVyLCBjcHVfbWFwX2lkeCwgdGhyZWFkKTsNCi0JQlVHX09OKGZkID09IC0x
-KTsNCisJQlVHX09OKGZkID09IC0xICYmICFsZWFkZXItPnNraXBwYWJsZSk7DQogDQotCXJldHVy
-biBmZDsNCisJLyoNCisJICogV2hlbiB0aGUgbGVhZGVyIGhhcyBiZWVuIHNraXBwZWQsIHJldHVy
-biAtMiB0byBkaXN0aW5ndWlzaCBmcm9tIG5vDQorCSAqIGdyb3VwIGxlYWRlciBjYXNlLg0KKwkg
-Ki8NCisJcmV0dXJuIGZkID09IC0xID8gLTIgOiBmZDsNCiB9DQogDQogc3RhdGljIHZvaWQgZXZz
-ZWxfX3JlbW92ZV9mZChzdHJ1Y3QgZXZzZWwgKnBvcywgaW50IG5yX2NwdXMsIGludCBucl90aHJl
-YWRzLCBpbnQgdGhyZWFkX2lkeCkgQEAgLTIxMDksNiArMjExNCwxMiBAQCBzdGF0aWMgaW50IGV2
-c2VsX19vcGVuX2NwdShzdHJ1Y3QgZXZzZWwgKmV2c2VsLCBzdHJ1Y3QgcGVyZl9jcHVfbWFwICpj
-cHVzLA0KIA0KIAkJCWdyb3VwX2ZkID0gZ2V0X2dyb3VwX2ZkKGV2c2VsLCBpZHgsIHRocmVhZCk7
-DQogDQorCQkJaWYgKGdyb3VwX2ZkID09IC0yKSB7DQorCQkJCXByX2RlYnVnKCJicm9rZW4gZ3Jv
-dXAgbGVhZGVyIGZvciAlc1xuIiwgZXZzZWwtPm5hbWUpOw0KKwkJCQllcnIgPSAtRUlOVkFMOw0K
-KwkJCQlnb3RvIG91dF9jbG9zZTsNCisJCQl9DQorDQogCQkJdGVzdF9hdHRyX19yZWFkeSgpOw0K
-IA0KIAkJCS8qIERlYnVnIG1lc3NhZ2UgdXNlZCBieSB0ZXN0IHNjcmlwdHMgKi8gZGlmZiAtLWdp
-dCBhL3Rvb2xzL3BlcmYvdXRpbC9ldnNlbC5oIGIvdG9vbHMvcGVyZi91dGlsL2V2c2VsLmggaW5k
-ZXggMzU4MDVkY2RiMWI5Li5iZjhmMDFhZjFjMGIgMTAwNjQ0DQotLS0gYS90b29scy9wZXJmL3V0
-aWwvZXZzZWwuaA0KKysrIGIvdG9vbHMvcGVyZi91dGlsL2V2c2VsLmgNCkBAIC05NSw2ICs5NSw3
-IEBAIHN0cnVjdCBldnNlbCB7DQogCQlib29sCQkJd2Vha19ncm91cDsNCiAJCWJvb2wJCQlicGZf
-Y291bnRlcjsNCiAJCWJvb2wJCQl1c2VfY29uZmlnX25hbWU7DQorCQlib29sCQkJc2tpcHBhYmxl
-Ow0KIAkJaW50CQkJYnBmX2ZkOw0KIAkJc3RydWN0IGJwZl9vYmplY3QJKmJwZl9vYmo7DQogCQlz
-dHJ1Y3QgbGlzdF9oZWFkCWNvbmZpZ190ZXJtczsNCmRpZmYgLS1naXQgYS90b29scy9wZXJmL3V0
-aWwvc3RhdC1kaXNwbGF5LmMgYi90b29scy9wZXJmL3V0aWwvc3RhdC1kaXNwbGF5LmMgaW5kZXgg
-ZTYwMzVlY2JlZWU4Li42YjQ2YmJiM2QzMjIgMTAwNjQ0DQotLS0gYS90b29scy9wZXJmL3V0aWwv
-c3RhdC1kaXNwbGF5LmMNCisrKyBiL3Rvb2xzL3BlcmYvdXRpbC9zdGF0LWRpc3BsYXkuYw0KQEAg
-LTgxMCw2ICs4MTAsMTAgQEAgc3RhdGljIGJvb2wgc2hvdWxkX3NraXBfemVyb19jb3VudGVyKHN0
-cnVjdCBwZXJmX3N0YXRfY29uZmlnICpjb25maWcsDQogCXN0cnVjdCBwZXJmX2NwdSBjcHU7DQog
-CWludCBpZHg7DQogDQorCS8qIFNraXAgY291bnRlcnMgdGhhdCB3ZXJlIHNwZWN1bGF0aXZlbHkv
-ZGVmYXVsdCBlbmFibGVkIHJhdGhlciB0aGFuIHJlcXVlc3RlZC4gKi8NCisJaWYgKGNvdW50ZXIt
-PnNraXBwYWJsZSkNCisJCXJldHVybiB0cnVlOw0KKw0KIAkvKg0KIAkgKiBTa2lwIHZhbHVlIDAg
-d2hlbiBlbmFibGluZyAtLXBlci10aHJlYWQgZ2xvYmFsbHksDQogCSAqIG90aGVyd2lzZSBpdCB3
-aWxsIGhhdmUgdG9vIG1hbnkgMCBvdXRwdXQuDQotLQ0KMi40MC4xLjQ5NS5nYzgxNmUwOWI1M2Qt
-Z29vZw0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0KSW50ZWwgSXNyYWVsICg3NCkgTGltaXRlZAoKVGhpcyBlLW1h
-aWwgYW5kIGFueSBhdHRhY2htZW50cyBtYXkgY29udGFpbiBjb25maWRlbnRpYWwgbWF0ZXJpYWwg
-Zm9yCnRoZSBzb2xlIHVzZSBvZiB0aGUgaW50ZW5kZWQgcmVjaXBpZW50KHMpLiBBbnkgcmV2aWV3
-IG9yIGRpc3RyaWJ1dGlvbgpieSBvdGhlcnMgaXMgc3RyaWN0bHkgcHJvaGliaXRlZC4gSWYgeW91
-IGFyZSBub3QgdGhlIGludGVuZGVkCnJlY2lwaWVudCwgcGxlYXNlIGNvbnRhY3QgdGhlIHNlbmRl
-ciBhbmQgZGVsZXRlIGFsbCBjb3BpZXMuCg==
+On Wed, Apr 26, 2023 at 4:26=E2=80=AFPM Yasin, Ahmad <ahmad.yasin@intel.com=
+> wrote:
+>
+> The output got needlessly lengthened with recent changes from Ian.
+>
+> These four metrics:
+>                   #     14.5 %  tma_retiring
+>                                                   #     27.6 %  tma_backe=
+nd_bound
+>                                                   #     40.9 %  tma_front=
+end_bound
+>                                                   #     17.0 %  tma_bad_s=
+peculation
+> better be appended on the right hand side of these four events (as curren=
+t perf-stat does):
+>            144,922      topdown-retiring:u
+>            411,266      topdown-fe-bound:u
+>            258,510      topdown-be-bound:u
+>            184,090      topdown-bad-spec:u
+>
+> Also, I think we should not bother the default perf-stat users with the l=
+ast two events:
+>              2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/sec
+>              3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/u #  =
+  6.015 M/sec
+>
+> (yes, there are meant to increase accuracy of the previous tma_* level1 m=
+etrics, but the underlying event vary from model to model, e.g. SKL to ICL =
+to SPR).
+>
+> Besides, I can think on better metrics to append on the top-most TMA even=
+t (TOPDOWN.SLOTS). tma_retiring does not belong there.
+>
+> Ahmad
 
+Hi Ahmad,
+
+when running perf without events and metrics you get a set of events
+and metrics added for you. Previously this meant hard coded metrics
+and these are just wrong. Their formulas are wrong, their thresholds
+are wrong, they don't use groups correctly, they are inconsistent
+between hybrid core types (appearing for one and not the other) and
+there is more. When there is a hard coded metric then as they are
+implicit from events being enabled, if I gather topdown level 3
+metrics, topdown level 1 hard coded metrics may appear. So if I
+generate CSV output I may or may not get implicitly added columns from
+hard coded metrics. This bug was  introduced by Intel and we've
+consistently requested a fix, including at our last face-to-face. On
+top of this the hard coded metrics in Linux 6.3 use "saved values" for
+aggregation and this is broken, counts are at least doubled in some
+cases meaning depending on flags you get wildly wrong figures for, for
+example, memory bandwidth. So everything is wrong in Linux 6.3 and
+needed fixing - this is something that Intel have been testing since
+February, for a bug introduced in October, but these complaints came
+up 2 weeks ago. Note, ARM pointed out an issue with this patch series
+in less than a day, which is awesome testing work!
+
+The switch to json metrics is both documented in the code base as
+being the desired route and also in presentations we have worked with
+Intel on giving (over years). But anyway, the complaint keeps coming
+back to the perf output when running without events or metrics. The
+output of what are called "shadow stats" in perf is tied to the output
+of events, for metrics it is tied to a "leading" event ie the first
+event parsed. For perf metric (cpu or cpu_core topdown-*) events there
+is a requirement that the group leader is slots, and so when there are
+topdown events in a metric it follows that the metrics are all output
+with the slots event. We could look to change this behavior but why?
+The complaint is that the output is hard to read, but it is hard to
+read regardless of json metrics. In the meeting today, "slots" is a
+classic example of what users don't understand. This is a separate
+problem than fixing bugs in aggregation, hybrid, etc. The naming
+decision to use "tma_bad_speculation" rather than "Bad Speculation" as
+used in Linux 6.3 was one that I recall you personally approving.
+
+Adding back the hard coded metrics and output for 6.4 is a regression:
+ - it will break CSV output when moving across architectures
+ - there is no testing unlike the json metrics that are tested as part
+of project Valkyrie
+ - grouping, formulas, thresholds, etc. are broken.
+ - the only compelling reason could be to avoid hybrid crashes, but
+that is something far better solved with this patch series.
+
+I understand toplev is using this output for the timed pebs work. It
+should not! There are no tests on the text output of perf, but what
+there are tests on are the CSV and Json output - that's why they
+exist. Tools should be using the CSV and Json output, if text were to
+be required tool output then there should be tests on it. I've asked
+for toplev to be added to the shell tests every time this has come up
+in the past. It is far better to fix toplev not to use text output.
+
+These changes are about fixing hybrid not about the output format of
+the perf tool. At no point during 6.4 development has the json metric
+output changed. Complaining that a tool, toplev, needs fixing because
+of this is the fault of the tool that was doing something wrong. Once
+tools are not using the text output then we can fix it and make it
+more human readable. There is no reason, for example, to include
+events *at all* when displaying metrics. At the same time as cleaning
+this up we can question whether IPC and branch miss rate should be
+gathered, as these contribute to multiplexing - another reason to run
+the tool with CSV or Json output with a named metric, metric group or
+event.
+
+I acknowledge your point but it is wrong. I can share today's slide
+deck with you if it is useful, Sam said she would be following up
+inside of Intel. The only proposed fix for 6.4 is to not enable the
+TopdownL1 group on hybrid. This patch series is the proposed long-term
+hybrid fix and for 6.5. Testing, reviews, etc. all very much
+appreciated.
+
+Thanks,
+Ian
+
+> -----Original Message-----
+> From: Ian Rogers <irogers@google.com>
+> Sent: Wednesday, April 26, 2023 10:00
+> To: Arnaldo Carvalho de Melo <acme@kernel.org>; Kan Liang <kan.liang@linu=
+x.intel.com>; Yasin, Ahmad <ahmad.yasin@intel.com>; Peter Zijlstra <peterz@=
+infradead.org>; Ingo Molnar <mingo@redhat.com>; Eranian, Stephane <eranian@=
+google.com>; Andi Kleen <ak@linux.intel.com>; Taylor, Perry <perry.taylor@i=
+ntel.com>; Alt, Samantha <samantha.alt@intel.com>; Biggers, Caleb <caleb.bi=
+ggers@intel.com>; Wang, Weilin <weilin.wang@intel.com>; Baker, Edward <edwa=
+rd.baker@intel.com>; Mark Rutland <mark.rutland@arm.com>; Alexander Shishki=
+n <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Namhy=
+ung Kim <namhyung@kernel.org>; Hunter, Adrian <adrian.hunter@intel.com>; Fl=
+orian Fischer <florian.fischer@muhq.space>; Rob Herring <robh@kernel.org>; =
+Zhengjun Xing <zhengjun.xing@linux.intel.com>; John Garry <john.g.garry@ora=
+cle.com>; Kajol Jain <kjain@linux.ibm.com>; Sumanth Korikkar <sumanthk@linu=
+x.ibm.com>; Thomas Richter <tmricht@linux.ibm.com>; Tiezhu Yang <yangtiezhu=
+@loongson.cn>; Ravi Bangoria <ravi.bangoria@amd.com>; Leo Yan <leo.yan@lina=
+ro.org>; Yang Jihong <yangjihong1@huawei.com>; James Clark <james.clark@arm=
+.com>; Suzuki Poulouse <suzuki.poulose@arm.com>; Kang Minchul <tegongkang@g=
+mail.com>; Athira Rajeev <atrajeev@linux.vnet.ibm.com>; linux-perf-users@vg=
+er.kernel.org; linux-kernel@vger.kernel.org
+> Cc: Ian Rogers <irogers@google.com>
+> Subject: [PATCH v1 01/40] perf stat: Introduce skippable evsels
+>
+> Perf stat with no arguments will use default events and metrics. These ev=
+ents may fail to open even with kernel and hypervisor disabled. When these =
+fail then the permissions error appears even though they were implicitly se=
+lected. This is particularly a problem with the automatic selection of the =
+TopdownL1 metric group on certain architectures like
+> Skylake:
+>
+> ```
+> $ perf stat true
+> Error:
+> Access to performance monitoring and observability operations is limited.
+> Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open a=
+ccess to performance monitoring and observability operations for processes =
+without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+> More information can be found at 'Perf events and tool security' document=
+:
+> https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+> perf_event_paranoid setting is 2:
+>   -1: Allow use of (almost) all events by all users
+>       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+> >=3D 0: Disallow raw and ftrace function tracepoint access =3D 1: Disallo=
+w
+> >CPU event access =3D 2: Disallow kernel profiling
+> To make the adjusted perf_event_paranoid setting permanent preserve it in=
+ /etc/sysctl.conf (e.g. kernel.perf_event_paranoid =3D <setting>) ```
+>
+> This patch adds skippable evsels that when they fail to open won't fail a=
+nd won't appear in output. The TopdownL1 events, from the metric group, are=
+ marked as skippable. This turns the failure above to:
+>
+> ```
+> $ perf stat true
+>
+>  Performance counter stats for 'true':
+>
+>               1.26 msec task-clock:u                     #    0.328 CPUs =
+utilized
+>                  0      context-switches:u               #    0.000 /sec
+>                  0      cpu-migrations:u                 #    0.000 /sec
+>                 49      page-faults:u                    #   38.930 K/sec
+>            176,449      cycles:u                         #    0.140 GHz  =
+                       (48.99%)
+>            122,905      instructions:u                   #    0.70  insn =
+per cycle
+>             28,264      branches:u                       #   22.456 M/sec
+>              2,405      branch-misses:u                  #    8.51% of al=
+l branches
+>
+>        0.003834565 seconds time elapsed
+>
+>        0.000000000 seconds user
+>        0.004130000 seconds sys
+> ```
+>
+> When the events can have kernel/hypervisor disabled, like on Tigerlake, t=
+hen it continues to succeed as:
+>
+> ```
+> $ perf stat true
+>
+>  Performance counter stats for 'true':
+>
+>               0.57 msec task-clock:u                     #    0.385 CPUs =
+utilized
+>                  0      context-switches:u               #    0.000 /sec
+>                  0      cpu-migrations:u                 #    0.000 /sec
+>                 47      page-faults:u                    #   82.329 K/sec
+>            287,017      cycles:u                         #    0.503 GHz
+>            133,318      instructions:u                   #    0.46  insn =
+per cycle
+>             31,396      branches:u                       #   54.996 M/sec
+>              2,442      branch-misses:u                  #    7.78% of al=
+l branches
+>            998,790      TOPDOWN.SLOTS:u                  #     14.5 %  tm=
+a_retiring
+>                                                   #     27.6 %  tma_backe=
+nd_bound
+>                                                   #     40.9 %  tma_front=
+end_bound
+>                                                   #     17.0 %  tma_bad_s=
+peculation
+>            144,922      topdown-retiring:u
+>            411,266      topdown-fe-bound:u
+>            258,510      topdown-be-bound:u
+>            184,090      topdown-bad-spec:u
+>              2,585      INT_MISC.UOP_DROPPING:u          #    4.528 M/sec
+>              3,434      cpu/INT_MISC.RECOVERY_CYCLES,cmask=3D1,edge/u #  =
+  6.015 M/sec
+>
+>        0.001480954 seconds time elapsed
+>
+>        0.000000000 seconds user
+>        0.001686000 seconds sys
+> ```
+>
+> And this likewise works if paranoia allows or running as root.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-stat.c      | 39 ++++++++++++++++++++++++++--------
+>  tools/perf/util/evsel.c        | 15 +++++++++++--
+>  tools/perf/util/evsel.h        |  1 +
+>  tools/perf/util/stat-display.c |  4 ++++
+>  4 files changed, 48 insertions(+), 11 deletions(-)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c index =
+efda63f6bf32..eb34f5418ad3 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struc=
+t evsel *counter)
+>                         evsel_list->core.threads->err_thread =3D -1;
+>                         return COUNTER_RETRY;
+>                 }
+> +       } else if (counter->skippable) {
+> +               if (verbose > 0)
+> +                       ui__warning("skipping event %s that kernel failed=
+ to open .\n",
+> +                                   evsel__name(counter));
+> +               counter->supported =3D false;
+> +               counter->errored =3D true;
+> +               return COUNTER_SKIP;
+>         }
+>
+>         evsel__open_strerror(counter, &target, errno, msg, sizeof(msg)); =
+@@ -1885,15 +1892,29 @@ static int add_default_attributes(void)
+>                  * Add TopdownL1 metrics if they exist. To minimize
+>                  * multiplexing, don't request threshold computation.
+>                  */
+> -               if (metricgroup__has_metric("TopdownL1") &&
+> -                   metricgroup__parse_groups(evsel_list, "TopdownL1",
+> -                                           /*metric_no_group=3D*/false,
+> -                                           /*metric_no_merge=3D*/false,
+> -                                           /*metric_no_threshold=3D*/tru=
+e,
+> -                                           stat_config.user_requested_cp=
+u_list,
+> -                                           stat_config.system_wide,
+> -                                           &stat_config.metric_events) <=
+ 0)
+> -                       return -1;
+> +               if (metricgroup__has_metric("TopdownL1")) {
+> +                       struct evlist *metric_evlist =3D evlist__new();
+> +                       struct evsel *metric_evsel;
+> +
+> +                       if (!metric_evlist)
+> +                               return -1;
+> +
+> +                       if (metricgroup__parse_groups(metric_evlist, "Top=
+downL1",
+> +                                                       /*metric_no_group=
+=3D*/false,
+> +                                                       /*metric_no_merge=
+=3D*/false,
+> +                                                       /*metric_no_thres=
+hold=3D*/true,
+> +                                                       stat_config.user_=
+requested_cpu_list,
+> +                                                       stat_config.syste=
+m_wide,
+> +                                                       &stat_config.metr=
+ic_events) < 0)
+> +                               return -1;
+> +
+> +                       evlist__for_each_entry(metric_evlist, metric_evse=
+l) {
+> +                               metric_evsel->skippable =3D true;
+> +                       }
+> +                       evlist__splice_list_tail(evsel_list, &metric_evli=
+st->core.entries);
+> +                       evlist__delete(metric_evlist);
+> +               }
+> +
+>                 /* Platform specific attrs */
+>                 if (evlist__add_default_attrs(evsel_list, default_null_at=
+trs) < 0)
+>                         return -1;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c index 356c=
+07f03be6..1cd04b5998d2 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
+>         evsel->per_pkg_mask  =3D NULL;
+>         evsel->collect_stat  =3D false;
+>         evsel->pmu_name      =3D NULL;
+> +       evsel->skippable     =3D false;
+>  }
+>
+>  struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx) @@ -=
+1725,9 +1726,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map=
+_idx, int thread)
+>                 return -1;
+>
+>         fd =3D FD(leader, cpu_map_idx, thread);
+> -       BUG_ON(fd =3D=3D -1);
+> +       BUG_ON(fd =3D=3D -1 && !leader->skippable);
+>
+> -       return fd;
+> +       /*
+> +        * When the leader has been skipped, return -2 to distinguish fro=
+m no
+> +        * group leader case.
+> +        */
+> +       return fd =3D=3D -1 ? -2 : fd;
+>  }
+>
+>  static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_thre=
+ads, int thread_idx) @@ -2109,6 +2114,12 @@ static int evsel__open_cpu(stru=
+ct evsel *evsel, struct perf_cpu_map *cpus,
+>
+>                         group_fd =3D get_group_fd(evsel, idx, thread);
+>
+> +                       if (group_fd =3D=3D -2) {
+> +                               pr_debug("broken group leader for %s\n", =
+evsel->name);
+> +                               err =3D -EINVAL;
+> +                               goto out_close;
+> +                       }
+> +
+>                         test_attr__ready();
+>
+>                         /* Debug message used by test scripts */ diff --g=
+it a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h index 35805dcdb1b9..=
+bf8f01af1c0b 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -95,6 +95,7 @@ struct evsel {
+>                 bool                    weak_group;
+>                 bool                    bpf_counter;
+>                 bool                    use_config_name;
+> +               bool                    skippable;
+>                 int                     bpf_fd;
+>                 struct bpf_object       *bpf_obj;
+>                 struct list_head        config_terms;
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
+y.c index e6035ecbeee8..6b46bbb3d322 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -810,6 +810,10 @@ static bool should_skip_zero_counter(struct perf_sta=
+t_config *config,
+>         struct perf_cpu cpu;
+>         int idx;
+>
+> +       /* Skip counters that were speculatively/default enabled rather t=
+han requested. */
+> +       if (counter->skippable)
+> +               return true;
+> +
+>         /*
+>          * Skip value 0 when enabling --per-thread globally,
+>          * otherwise it will have too many 0 output.
+> --
+> 2.40.1.495.gc816e09b53d-goog
+>
+> ---------------------------------------------------------------------
+> Intel Israel (74) Limited
+>
+> This e-mail and any attachments may contain confidential material for
+> the sole use of the intended recipient(s). Any review or distribution
+> by others is strictly prohibited. If you are not the intended
+> recipient, please contact the sender and delete all copies.
