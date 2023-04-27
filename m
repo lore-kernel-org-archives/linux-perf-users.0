@@ -2,116 +2,192 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76829C77B73
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 20:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACEEC77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 21:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344025AbjD0UiQ (ORCPT
+        id S229832AbjD0VAy convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Apr 2023 16:38:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
+        Thu, 27 Apr 2023 17:00:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344161AbjD0UiK (ORCPT
+        with ESMTP id S229508AbjD0VAx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Apr 2023 16:38:10 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5059423A;
-        Thu, 27 Apr 2023 13:38:08 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-95f4c5cb755so458248566b.0;
-        Thu, 27 Apr 2023 13:38:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682627887; x=1685219887;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=REjZ46P60cqFHRGabjrEsGAi5GtYTwnrASydrK+kdp0=;
-        b=RekVHokdfbsBvWn+uuP7JVr7tESdEYeQ7bbZ8pH3UiOVMoYeH09PK97guifASfAWI4
-         gFIwBAmam+sWpS+r01eE7pgbXmWkoYVToUExADA35WGndydyBEctFMx17CcpxA4uVI77
-         zXY58QJriuDrQx176dlyUqSFfsv9mSyKUzBIdN78AfltReUkbp6WA4iVvScUixTo/1qM
-         HVnkeXUZ5Zy5ESYGkBm5K1QRpXc7iq5b9kH/hRHvWOuQa6z9B8eC54pw+7qcvU8qJW8h
-         QJe10pW9HK71g2pz7AyPqtHko05O1Lj13R2YaOkZJEjZ+HlSTwA9KpUtiohazztkPegs
-         82dQ==
+        Thu, 27 Apr 2023 17:00:53 -0400
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D52C91FCF;
+        Thu, 27 Apr 2023 14:00:51 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-b9246a5f3feso15938328276.1;
+        Thu, 27 Apr 2023 14:00:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682627887; x=1685219887;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=REjZ46P60cqFHRGabjrEsGAi5GtYTwnrASydrK+kdp0=;
-        b=Net21/MF+Yb5FsAdgXeXzSx8Xrt//06KDn7sqc8/Q/QfVeUjmSXNYhw0PLDI4WRTAO
-         Ip+sOpifc3AEadDsRXscLj4HAIjPJH1lsqdr/rZz95gRomOxq2DNaHywijEtkH8pMBqs
-         O46glB6omkBmnLU2Hb9hhgChWPdmifkHlNre33m9lLGxJcORD+jItNxYFQguoyVv+iZQ
-         2JpyJphJChUQPVPBJgpxhHEt/FgpcGHxFo7v8OZ6YBThS6N7YFogF2KSsOD2fYJLOjvc
-         3A7uoKVj7/jcu3bHRTKJEgkKZg65XabHHhi/Tr5iD4OHybfL7KlCkjYPZXOExKDNlqmw
-         KZIg==
-X-Gm-Message-State: AC+VfDzZRSbfMg8ZBaN7HwHf1pIhBiH6HT+cBa5ZEyW/Evpmy+3+GyCR
-        bya6JsAoJOpRb1eM0+kX5SE=
-X-Google-Smtp-Source: ACHHUZ4K52G2eDlOMYXCveyy7GRZS982zkfIdGrva69OjHY5Xt2w2P7CViwWODH4g+lCbN1d5TfD4w==
-X-Received: by 2002:a17:907:7b93:b0:958:4870:8d09 with SMTP id ne19-20020a1709077b9300b0095848708d09mr2878334ejc.37.1682627887262;
-        Thu, 27 Apr 2023 13:38:07 -0700 (PDT)
-Received: from gmail.com (1F2EF38A.nat.pool.telekom.hu. [31.46.243.138])
-        by smtp.gmail.com with ESMTPSA id k9-20020a170906970900b009534211cc97sm10237726ejx.159.2023.04.27.13.38.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Apr 2023 13:38:06 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date:   Thu, 27 Apr 2023 22:38:04 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [GIT PULL] perf event updates for v6.4
-Message-ID: <ZErdLD+FWUjx08ey@gmail.com>
+        d=1e100.net; s=20221208; t=1682629251; x=1685221251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4kvYxpjeLPo7WDMrzQZYkWfCYagia5wd3uIpVtMajJE=;
+        b=Ll03KH4f0DkA/YO7rDLoRaA4RvqAc8oVh/i8sYiSQXgNa0kAyPxCouxU7/wR/aI6f7
+         7qrXV+V9x/igzMdeV1fCzsLIN4PeCRxsHfrcau26fgL7NpWNOTeOOPUrS1ZDB2S9arJD
+         lynlBkkkznfiMzqJMaFnGAvvqrm4G+4BdGsTLBPLD8Y5NuCkX0SZGoXQijCVVP2soFpZ
+         zgexOXE9REaypbDqVAT6cmrNVSNXu3UKsULHFkUnbwZGTfM4mYrs1cjj9iXni8ls0+Lq
+         e6+vQ48G8Q67bhoIP4ridw0FJOjlPmemr/ouJLDV7l27hGYpvE8mMoUmTWkKVr72krqK
+         /xaA==
+X-Gm-Message-State: AC+VfDwHKi5KLJuKPjGjBTgIN+3jjUiMcS8AvP4DIl3afvq3PVH+lT59
+        6/Xx23/pZX1OQiv+v2a2qQsn6tQMZh6LJ/B7uh1UiMST
+X-Google-Smtp-Source: ACHHUZ5kVD5gERQXzSBOXyhV079FHn4ViQgX/oMFP1P3ERlbBzWOrMhQB7zIgrJtOzwXz9iUymQ9fW5GpLWs63mD2Bk=
+X-Received: by 2002:a25:ad12:0:b0:b99:4af6:185d with SMTP id
+ y18-20020a25ad12000000b00b994af6185dmr2138029ybi.6.1682629250755; Thu, 27 Apr
+ 2023 14:00:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20230426070050.1315519-1-irogers@google.com> <20230426070050.1315519-2-irogers@google.com>
+ <77dd1ab3-9c94-c04a-24de-f8c192a6c8d2@linux.intel.com> <CAP-5=fVBFjnmCuzSud=oGj6nGCs7haMkALGS+ZGJEyD4dSYqTA@mail.gmail.com>
+In-Reply-To: <CAP-5=fVBFjnmCuzSud=oGj6nGCs7haMkALGS+ZGJEyD4dSYqTA@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 27 Apr 2023 14:00:39 -0700
+Message-ID: <CAM9d7chavGHmtKiVkAo7fpUm=B3r3xNYgW__6dZe9D+3nmy7dA@mail.gmail.com>
+Subject: Re: [PATCH v1 01/40] perf stat: Introduce skippable evsels
+To:     Ian Rogers <irogers@google.com>
+Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Rob Herring <robh@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
 
-Linus,
+On Thu, Apr 27, 2023 at 1:21 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Thu, Apr 27, 2023 at 11:54 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+> >
+> >
+> >
+> > On 2023-04-26 3:00 a.m., Ian Rogers wrote:
+> > > Perf stat with no arguments will use default events and metrics. These
+> > > events may fail to open even with kernel and hypervisor disabled. When
+> > > these fail then the permissions error appears even though they were
+> > > implicitly selected. This is particularly a problem with the automatic
+> > > selection of the TopdownL1 metric group on certain architectures like
+> > > Skylake:
+> > >
+> > > ```
+> > > $ perf stat true
+> > > Error:
+> > > Access to performance monitoring and observability operations is limited.
+> > > Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+> > > access to performance monitoring and observability operations for processes
+> > > without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+> > > More information can be found at 'Perf events and tool security' document:
+> > > https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+> > > perf_event_paranoid setting is 2:
+> > >   -1: Allow use of (almost) all events by all users
+> > >       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+> > >> = 0: Disallow raw and ftrace function tracepoint access
+> > >> = 1: Disallow CPU event access
+> > >> = 2: Disallow kernel profiling
+> > > To make the adjusted perf_event_paranoid setting permanent preserve it
+> > > in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
+> > > ```
+> > >
+> > > This patch adds skippable evsels that when they fail to open won't
+> > > fail and won't appear in output. The TopdownL1 events, from the metric
+> > > group, are marked as skippable. This turns the failure above to:
+> > >
+> > > ```
+> > > $ perf stat true
+> > >
+> > >  Performance counter stats for 'true':
+> > >
+> > >               1.26 msec task-clock:u                     #    0.328 CPUs utilized
+> > >                  0      context-switches:u               #    0.000 /sec
+> > >                  0      cpu-migrations:u                 #    0.000 /sec
+> > >                 49      page-faults:u                    #   38.930 K/sec
+> > >            176,449      cycles:u                         #    0.140 GHz                         (48.99%)
+> > >            122,905      instructions:u                   #    0.70  insn per cycle
+> > >             28,264      branches:u                       #   22.456 M/sec
+> > >              2,405      branch-misses:u                  #    8.51% of all branches
+> > >
+> > >        0.003834565 seconds time elapsed
+> > >
+> > >        0.000000000 seconds user
+> > >        0.004130000 seconds sys
+> > > ```
+> >
+> > If the same command runs with root permission, a different output will
+> > be displayed as below:
+> >
+> > $ sudo ./perf stat sleep 1
+> >
+> >  Performance counter stats for 'sleep 1':
+> >
+> >               0.97 msec task-clock                       #    0.001 CPUs
+> > utilized
+> >                  1      context-switches                 #    1.030 K/sec
+> >                  0      cpu-migrations                   #    0.000 /sec
+> >                 67      page-faults                      #   69.043 K/sec
+> >          1,135,552      cycles                           #    1.170 GHz
+> >                        (50.51%)
+> >          1,126,446      instructions                     #    0.99  insn
+> > per cycle
+> >            252,904      branches                         #  260.615 M/sec
+> >              7,297      branch-misses                    #    2.89% of
+> > all branches
+> >             22,518      CPU_CLK_UNHALTED.REF_XCLK        #   23.205
+> > M/sec
+> >             56,994      INT_MISC.RECOVERY_CYCLES_ANY     #   58.732 M/sec
+> >
+> > The last two events are useless.
+>
+> You missed the system wide (-a) flag.
+>
+> Thanks,
+> Ian
+>
+> > It's not reliable to rely on perf_event_open()/kernel to tell whether
+> > an event is available or skippable. Kernel wouldn't check a specific event.
+> >
+> > The patch works for the non-root mode is just because the event requires
+> > root permission. It's rejected by the kernel because of lacking
+> > permission. But if the same command runs with root privileges, the trash
+> > events are printed as above.
+> >
+> > I think a better way is to check the HW capability and decided whether
+> > to append the TopdownL1 metrics.
+> >
+> > https://lore.kernel.org/lkml/20230427182906.3411695-1-kan.liang@linux.intel.com/
 
-Please pull the latest perf/core git tree from:
+Maybe we can also check if the event is actually enabled like
+checking the enabled_time.  Then skip the skippable and not
+enabled ones.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf-core-2023-04-27
-
-   # HEAD: 743767d6f6b8f28228be181fe369657f7ecd1eb2 perf/x86/intel/uncore: Add events for Intel SPR IMC PMU
-
-Perf changes for v6.4:
-
- - Add Intel Granite Rapids support
-
- - Add uncore events for Intel SPR IMC PMU
-
- - Fix perf IRQ throttling bug
-
- Thanks,
-
-	Ingo
-
------------------->
-Artem Bityutskiy (1):
-      perf/x86/cstate: Add Granite Rapids support
-
-Kan Liang (2):
-      perf/x86/intel: Add Granite Rapids
-      perf/x86/msr: Add Granite Rapids
-
-Stephane Eranian (1):
-      perf/x86/intel/uncore: Add events for Intel SPR IMC PMU
-
-Yang Jihong (1):
-      perf/core: Fix hardlockup failure caused by perf throttle
-
-
- arch/x86/events/intel/core.c         | 16 ++++++++++++++--
- arch/x86/events/intel/cstate.c       |  2 ++
- arch/x86/events/intel/uncore_snbep.c | 12 ++++++++++++
- arch/x86/events/msr.c                |  2 ++
- kernel/events/core.c                 |  4 ++--
- 5 files changed, 32 insertions(+), 4 deletions(-)
+Thanks,
+Namhyung
