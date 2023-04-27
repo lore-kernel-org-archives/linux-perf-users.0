@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C20BC77B61
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 19:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADD1C77B61
+	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 20:02:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245352AbjD0Tol (ORCPT
+        id S244781AbjD0UCT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Apr 2023 15:44:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37208 "EHLO
+        Thu, 27 Apr 2023 16:02:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244781AbjD0Toj (ORCPT
+        with ESMTP id S229750AbjD0UCS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Apr 2023 15:44:39 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A6A1FE5;
-        Thu, 27 Apr 2023 12:44:38 -0700 (PDT)
+        Thu, 27 Apr 2023 16:02:18 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1960F2D74;
+        Thu, 27 Apr 2023 13:02:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682624678; x=1714160678;
+  t=1682625737; x=1714161737;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=TfdZjLC3L1K1UQ20FaYx9/guFNEG5drzopZYjyBO0pg=;
-  b=koyaQpzpfR+Kwv73xHdLxdsUbuSRdV54ygQCUiI1RsEvtNxk1cOSH18w
-   e10iGcE93fUFR8+lsh/9gb4+VElHgYGLQ8VKOmRX+80uG7WhrPwtHE0X0
-   5Gv9fQiJpdYQCZH0AGcSMvnrSxIRaBrhUikJK7ovc/1LYURsdBRWtQ9Be
-   lO0usNFTpinJq5HFubekPm9JPZOjGg0bhDM4v4+mW6lKlFwfWOG7/zq/k
-   f3w1n8+24l7arPjVcKfTzQanIWiYV5vq+QBQOE9Bp8Pvbr/zsdXaT0Dq7
-   VENjNeNzueL/QCCILI6G8gdmhZC9KF+u6D6YbDrFnsvrAzUhbG3hTHe6V
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="345006052"
+  bh=cj+IzPjwDDjU0dEpBGzoC7xu4ot/pyj5P09xXcocUfs=;
+  b=YjhsGScNmGxGVc7TaZL7EPR1D9iViimzD1lGckgQ4tHZ6nN4ojecEJH2
+   tJmC3OlV441hyBkckG29NwqbMdMYgLmpn9VUiqBz4Iw3+0mfnyb/f6j7+
+   48sJESFK1IY0GlPn/TwbdmpplrUrMvR4c5mihPYhw5VeFaBM9fPDd0K2n
+   0y8RYX8cE40Nw9a5FKhh8WALQb8TId4QzOUSBvAcbuqvCgsH5VL2FqTIn
+   1734QV3Pbrwnf12AqJAyMKvRy9Z9abiG7098J6WljbJvEmQ/31IlThkj8
+   wmFY8H29Y9wBw5fyF7rm5qyO1cITBP/uvUNSf7SSYnU5bwu8E+iUBqfCb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="331842814"
 X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
-   d="scan'208";a="345006052"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 12:44:37 -0700
+   d="scan'208";a="331842814"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 13:00:53 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="868853506"
+X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="1024254941"
 X-IronPort-AV: E=Sophos;i="5.99,232,1677571200"; 
-   d="scan'208";a="868853506"
+   d="scan'208";a="1024254941"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 27 Apr 2023 12:44:37 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 27 Apr 2023 13:00:53 -0700
 Received: from [10.209.41.222] (kliang2-mobl1.ccr.corp.intel.com [10.209.41.222])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id B04DB580CD0;
-        Thu, 27 Apr 2023 12:44:33 -0700 (PDT)
-Message-ID: <c38a0098-bc3d-8c82-c32d-98bb14f7de34@linux.intel.com>
-Date:   Thu, 27 Apr 2023 15:44:32 -0400
+        by linux.intel.com (Postfix) with ESMTPS id 91DB3580377;
+        Thu, 27 Apr 2023 13:00:49 -0700 (PDT)
+Message-ID: <329abaf5-8c21-c7a9-30e4-fec2a3c38e3c@linux.intel.com>
+Date:   Thu, 27 Apr 2023 16:00:48 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v1 12/40] perf test: Roundtrip name, don't assume 1 event
- per name
+Subject: Re: [PATCH v1 13/40] perf parse-events: Set attr.type to PMU type
+ early
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -87,9 +87,9 @@ To:     Ian Rogers <irogers@google.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20230426070050.1315519-1-irogers@google.com>
- <20230426070050.1315519-13-irogers@google.com>
+ <20230426070050.1315519-14-irogers@google.com>
 From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230426070050.1315519-13-irogers@google.com>
+In-Reply-To: <20230426070050.1315519-14-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -99,192 +99,47 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 2023-04-26 3:00 a.m., Ian Rogers wrote:
-> Opening hardware names and a legacy cache event on a hybrid PMU opens
-> it on each PMU. Parsing and checking indexes fails, as the parsed
-> index is double the expected. Avoid checking the index by just
-> comparing the names immediately after the parse.
-> 
-> This change removes hard coded hybrid logic and removes assumptions
-> about the expansion of an event. On hybrid the PMUs may or may not
-> support an event and so using a distance isn't a consistent solution.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Set attr.type to PMU type early so that later terms can override the
+> value. Setting the value in perf_pmu__config means that earlier steps,
+> like config_term_pmu, can override the value.
+>
 
-Run the test on Cascade Lake and Alder Lake. It looks good.
+Looks good to me.
 
-Tested-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
 Thanks,
 Kan
-> ---
->  tools/perf/tests/evsel-roundtrip-name.c | 119 ++++++++++--------------
->  1 file changed, 49 insertions(+), 70 deletions(-)
+
+> Signed-off-by: Ian Rogers <irogers@google.com> ---
+>  tools/perf/util/parse-events.c | 2 +-
+>  tools/perf/util/pmu.c          | 1 -
+>  2 files changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/tests/evsel-roundtrip-name.c b/tools/perf/tests/evsel-roundtrip-name.c
-> index e94fed901992..15ff86f9da0b 100644
-> --- a/tools/perf/tests/evsel-roundtrip-name.c
-> +++ b/tools/perf/tests/evsel-roundtrip-name.c
-> @@ -4,114 +4,93 @@
->  #include "parse-events.h"
->  #include "tests.h"
->  #include "debug.h"
-> -#include "pmu.h"
-> -#include "pmu-hybrid.h"
-> -#include <errno.h>
->  #include <linux/kernel.h>
->  
->  static int perf_evsel__roundtrip_cache_name_test(void)
->  {
-> -	char name[128];
-> -	int type, op, err = 0, ret = 0, i, idx;
-> -	struct evsel *evsel;
-> -	struct evlist *evlist = evlist__new();
-> +	int ret = TEST_OK;
->  
-> -        if (evlist == NULL)
-> -                return -ENOMEM;
-> -
-> -	for (type = 0; type < PERF_COUNT_HW_CACHE_MAX; type++) {
-> -		for (op = 0; op < PERF_COUNT_HW_CACHE_OP_MAX; op++) {
-> +	for (int type = 0; type < PERF_COUNT_HW_CACHE_MAX; type++) {
-> +		for (int op = 0; op < PERF_COUNT_HW_CACHE_OP_MAX; op++) {
->  			/* skip invalid cache type */
->  			if (!evsel__is_cache_op_valid(type, op))
->  				continue;
->  
-> -			for (i = 0; i < PERF_COUNT_HW_CACHE_RESULT_MAX; i++) {
-> -				__evsel__hw_cache_type_op_res_name(type, op, i, name, sizeof(name));
-> -				err = parse_event(evlist, name);
-> -				if (err)
-> -					ret = err;
-> -			}
-> -		}
-> -	}
-> -
-> -	idx = 0;
-> -	evsel = evlist__first(evlist);
-> +			for (int res = 0; res < PERF_COUNT_HW_CACHE_RESULT_MAX; res++) {
-> +				char name[128];
-> +				struct evlist *evlist = evlist__new();
-> +				struct evsel *evsel;
-> +				int err;
->  
-> -	for (type = 0; type < PERF_COUNT_HW_CACHE_MAX; type++) {
-> -		for (op = 0; op < PERF_COUNT_HW_CACHE_OP_MAX; op++) {
-> -			/* skip invalid cache type */
-> -			if (!evsel__is_cache_op_valid(type, op))
-> -				continue;
-> +				if (evlist == NULL) {
-> +					pr_debug("Failed to alloc evlist");
-> +					return TEST_FAIL;
-> +				}
-> +				__evsel__hw_cache_type_op_res_name(type, op, res,
-> +								name, sizeof(name));
->  
-> -			for (i = 0; i < PERF_COUNT_HW_CACHE_RESULT_MAX; i++) {
-> -				__evsel__hw_cache_type_op_res_name(type, op, i, name, sizeof(name));
-> -				if (evsel->core.idx != idx)
-> +				err = parse_event(evlist, name);
-> +				if (err) {
-> +					pr_debug("Failure to parse cache event '%s' possibly as PMUs don't support it",
-> +						name);
-> +					evlist__delete(evlist);
->  					continue;
-> -
-> -				++idx;
-> -
-> -				if (strcmp(evsel__name(evsel), name)) {
-> -					pr_debug("%s != %s\n", evsel__name(evsel), name);
-> -					ret = -1;
->  				}
-> -
-> -				evsel = evsel__next(evsel);
-> +				evlist__for_each_entry(evlist, evsel) {
-> +					if (strcmp(evsel__name(evsel), name)) {
-> +						pr_debug("%s != %s\n", evsel__name(evsel), name);
-> +						ret = TEST_FAIL;
-> +					}
-> +				}
-> +				evlist__delete(evlist);
->  			}
->  		}
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index d71019dcd614..4ba01577618e 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1492,9 +1492,9 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+>  	} else {
+>  		memset(&attr, 0, sizeof(attr));
 >  	}
-> -
-> -	evlist__delete(evlist);
->  	return ret;
->  }
+> +	attr.type = pmu->type;
 >  
-> -static int __perf_evsel__name_array_test(const char *const names[], int nr_names,
-> -					 int distance)
-> +static int perf_evsel__name_array_test(const char *const names[], int nr_names)
+>  	if (!head_config) {
+> -		attr.type = pmu->type;
+>  		evsel = __add_event(list, &parse_state->idx, &attr,
+>  				    /*init_attr=*/true, /*name=*/NULL,
+>  				    /*metric_id=*/NULL, pmu,
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index ad209c88a124..cb33d869f1ed 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1398,7 +1398,6 @@ int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
 >  {
-> -	int i, err;
-> -	struct evsel *evsel;
-> -	struct evlist *evlist = evlist__new();
-> +	int ret = TEST_OK;
+>  	bool zero = !!pmu->default_config;
 >  
-> -        if (evlist == NULL)
-> -                return -ENOMEM;
-> +	for (int i = 0; i < nr_names; ++i) {
-> +		struct evlist *evlist = evlist__new();
-> +		struct evsel *evsel;
-> +		int err;
->  
-> -	for (i = 0; i < nr_names; ++i) {
-> +		if (evlist == NULL) {
-> +			pr_debug("Failed to alloc evlist");
-> +			return TEST_FAIL;
-> +		}
->  		err = parse_event(evlist, names[i]);
->  		if (err) {
->  			pr_debug("failed to parse event '%s', err %d\n",
->  				 names[i], err);
-> -			goto out_delete_evlist;
-> +			evlist__delete(evlist);
-> +			ret = TEST_FAIL;
-> +			continue;
->  		}
-> -	}
-> -
-> -	err = 0;
-> -	evlist__for_each_entry(evlist, evsel) {
-> -		if (strcmp(evsel__name(evsel), names[evsel->core.idx / distance])) {
-> -			--err;
-> -			pr_debug("%s != %s\n", evsel__name(evsel), names[evsel->core.idx / distance]);
-> +		evlist__for_each_entry(evlist, evsel) {
-> +			if (strcmp(evsel__name(evsel), names[i])) {
-> +				pr_debug("%s != %s\n", evsel__name(evsel), names[i]);
-> +				ret = TEST_FAIL;
-> +			}
->  		}
-> +		evlist__delete(evlist);
->  	}
-> -
-> -out_delete_evlist:
-> -	evlist__delete(evlist);
-> -	return err;
-> +	return ret;
+> -	attr->type = pmu->type;
+>  	return perf_pmu__config_terms(pmu->name, &pmu->format, attr,
+>  				      head_terms, zero, err);
 >  }
->  
-> -#define perf_evsel__name_array_test(names, distance) \
-> -	__perf_evsel__name_array_test(names, ARRAY_SIZE(names), distance)
-> -
->  static int test__perf_evsel__roundtrip_name_test(struct test_suite *test __maybe_unused,
->  						 int subtest __maybe_unused)
->  {
-> -	int err = 0, ret = 0;
-> -
-> -	if (perf_pmu__has_hybrid() && perf_pmu__hybrid_mounted("cpu_atom"))
-> -		return perf_evsel__name_array_test(evsel__hw_names, 2);
-> +	int err = 0, ret = TEST_OK;
->  
-> -	err = perf_evsel__name_array_test(evsel__hw_names, 1);
-> +	err = perf_evsel__name_array_test(evsel__hw_names, PERF_COUNT_HW_MAX);
->  	if (err)
->  		ret = err;
->  
-> -	err = __perf_evsel__name_array_test(evsel__sw_names, PERF_COUNT_SW_DUMMY + 1, 1);
-> +	err = perf_evsel__name_array_test(evsel__sw_names, PERF_COUNT_SW_DUMMY + 1);
->  	if (err)
->  		ret = err;
->  
