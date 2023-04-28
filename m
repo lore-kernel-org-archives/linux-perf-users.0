@@ -2,236 +2,330 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED58DC77B61
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 13:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831EAC77B61
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 14:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346211AbjD1N6B (ORCPT
+        id S1345696AbjD1OVf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Apr 2023 09:58:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55504 "EHLO
+        Fri, 28 Apr 2023 10:21:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345489AbjD1N6A (ORCPT
+        with ESMTP id S229997AbjD1OVe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Apr 2023 09:58:00 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4091735;
-        Fri, 28 Apr 2023 06:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682690278; x=1714226278;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=2cFTGUgH6DYAueSg1ZpME3M2eE79DKcm9o+rk82ncp4=;
-  b=ad+U27Qsh2JKJtAsybVT3n5VIdm5Hw37z59f65GBjalPXarOgJUg23ne
-   zH+VVDCGK+kiwaeRm60xC32fHYJXvmKNPs1Rv1IlDIriiFzf5IxX5cUUS
-   7Pfbuy5hUfwuIT7mIdB+gEc/uGwsoI6t4M3SjNw+IHA3fQ55Dy6hBS0LQ
-   L3hpRjFYowTktrUVtiuFVm3uX0sEZBP/jCJS25r662aUtb07eodKjolUd
-   Lc9q6lZ3GgOQ8tKav4QPA0yFFlgR4FYhhwT1GJSWWKKui/PkvsUkPUIQg
-   JhYAiIvmQD5S1uxOgnKhybeRRmg/OdUUaVh4QdJZ4gfgUW3L+VVT3FAq7
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="413142410"
-X-IronPort-AV: E=Sophos;i="5.99,234,1677571200"; 
-   d="scan'208";a="413142410"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 06:57:57 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="727542613"
-X-IronPort-AV: E=Sophos;i="5.99,234,1677571200"; 
-   d="scan'208";a="727542613"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga001.jf.intel.com with ESMTP; 28 Apr 2023 06:57:56 -0700
-Received: from [10.212.155.101] (kliang2-mobl1.ccr.corp.intel.com [10.212.155.101])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id AA177580C99;
-        Fri, 28 Apr 2023 06:57:53 -0700 (PDT)
-Message-ID: <2ab4e5b6-25ee-5eb4-5e06-5194c67369b5@linux.intel.com>
-Date:   Fri, 28 Apr 2023 09:57:52 -0400
+        Fri, 28 Apr 2023 10:21:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4620DB5
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 07:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1682691652;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gv0P60I1m+zx490TNpqDLMm/gN26L3C73hsWxl2z9Eg=;
+        b=iiCCUadkPcoHCAmusq2UFHJqdrLoh1ix7KmFtueZBbgXqo0SHtLqc1wQzbpcSMsU3Hc4wU
+        0970vXEhcr0tMEsVovpTOBP5s8XjJy1xow3WzUtExkE7qXy/V2Gf7NOHPy83OkmkctI/9Y
+        XBWpB0D8bILScZV9lO0lfwFrmEN9qJg=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-630-p4peiYMQOOGIbG5rEYbGTg-1; Fri, 28 Apr 2023 10:20:51 -0400
+X-MC-Unique: p4peiYMQOOGIbG5rEYbGTg-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3f171d38db3so60979755e9.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 07:20:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682691650; x=1685283650;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :content-language:references:cc:to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gv0P60I1m+zx490TNpqDLMm/gN26L3C73hsWxl2z9Eg=;
+        b=XR3Yj5T/Zkuy2IUJltXhVCyGoxn6drYcjg3/QUPTzzl92181WdjOpaed5a++4pLU1A
+         y07K2TzJab16CRhU8U2EmnNByAEztm9QDfAjB3Q7myOOjDgHW4wY84l5vdaJPsUv8ZIy
+         2GmD/X6DEDcrz/GsGyXc6JUUoQ3IUiFlAeiaSD2zdUhZhRGm5waMq+MoAQAPywjZJHVs
+         kXqLOyb8HR0Kl2TwefQoZW/XFj+Tgs2omuKizIPg8nnxoP2tb4mqa7SGYhzUYlb/rLNe
+         vrRtI4fstMscEX+0tZ/237a88qJuGyXdHFH0NhoYQExdE2L5gND4b5DDDMAVs9wZ1tO1
+         3wfQ==
+X-Gm-Message-State: AC+VfDxy0xiZ3V7IOKIMS/iykXvBmrUcFIxdFyebn6ZQSUTuP9Uv2Nyj
+        MurJimHmdYvMMGNqy9NtTjgZkF4sVFdi8z533hNrfjCl4u9bOeDbM+smUCMjfd07pwFfeM6hiEP
+        1g/sT9hD1aqZDABr6S6si4v3dzF4BjA==
+X-Received: by 2002:a1c:f706:0:b0:3f2:5028:a54d with SMTP id v6-20020a1cf706000000b003f25028a54dmr4286868wmh.0.1682691649676;
+        Fri, 28 Apr 2023 07:20:49 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5Ef+6JXTWHdAiFME6ae0mlQwifNq9sneotXxTQMRQu6YRP1y3jjdZfpGN/dZmsrEadhA0T1g==
+X-Received: by 2002:a1c:f706:0:b0:3f2:5028:a54d with SMTP id v6-20020a1cf706000000b003f25028a54dmr4286805wmh.0.1682691649225;
+        Fri, 28 Apr 2023 07:20:49 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c726:9300:1711:356:6550:7502? (p200300cbc72693001711035665507502.dip0.t-ipconnect.de. [2003:cb:c726:9300:1711:356:6550:7502])
+        by smtp.gmail.com with ESMTPSA id z4-20020a05600c0a0400b003ef4cd057f5sm28589070wmp.4.2023.04.28.07.20.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 28 Apr 2023 07:20:48 -0700 (PDT)
+Message-ID: <afcc124e-7a9b-879c-dfdf-200426b84e24@redhat.com>
+Date:   Fri, 28 Apr 2023 16:20:46 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v2 21/43] perf test x86 hybrid: Update test expectations
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
+To:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Rob Herring <robh@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230428073809.1803624-1-irogers@google.com>
- <20230428073809.1803624-22-irogers@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230428073809.1803624-22-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Mika Penttila <mpenttil@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+References: <6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com>
+Content-Language: en-US
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH v5] mm/gup: disallow GUP writing to file-backed mappings
+ by default
+In-Reply-To: <6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Sorry for jumping in late, I'm on vacation :)
+
+On 28.04.23 01:42, Lorenzo Stoakes wrote:
+> Writing to file-backed mappings which require folio dirty tracking using
+> GUP is a fundamentally broken operation, as kernel write access to GUP
+> mappings do not adhere to the semantics expected by a file system.
+> 
+> A GUP caller uses the direct mapping to access the folio, which does not
+> cause write notify to trigger, nor does it enforce that the caller marks
+> the folio dirty.
+
+How should we enforce it? It would be a BUG in the GUP user.
+
+> 
+> The problem arises when, after an initial write to the folio, writeback
+> results in the folio being cleaned and then the caller, via the GUP
+> interface, writes to the folio again.
+> 
+> As a result of the use of this secondary, direct, mapping to the folio no
+> write notify will occur, and if the caller does mark the folio dirty, this
+> will be done so unexpectedly.
+
+Right, in mprotect() code we only allow upgrading write permissions in 
+this case if the pte is dirty, so we always go via the pagefault path.
+
+> 
+> For example, consider the following scenario:-
+> 
+> 1. A folio is written to via GUP which write-faults the memory, notifying
+>     the file system and dirtying the folio.
+> 2. Later, writeback is triggered, resulting in the folio being cleaned and
+>     the PTE being marked read-only.
 
 
-On 2023-04-28 3:37 a.m., Ian Rogers wrote:
-> Don't assume evlist order. Switch to a loop rather than depend on
-> evlist order for raw events test.
+How would that be triggered? Would that writeback triggered by e.g., 
+fsync that Jan tried to tackle recently?
+
+
+> 3. The GUP caller writes to the folio, as it is mapped read/write via the
+>     direct mapping.
+> 4. The GUP caller, now done with the page, unpins it and sets it dirty
+>     (though it does not have to).
 > 
-> Update hybrid event expectations. Previous values were based on
-> parsing legacy hardware events from sysfs, update to the correct PMU
-> specific legacy values.
+> This results in both data being written to a folio without writenotify, and
+> the folio being dirtied unexpectedly (if the caller decides to do so).
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> This issue was first reported by Jan Kara [1] in 2018, where the problem
+> resulted in file system crashes.
+> 
+> This is only relevant when the mappings are file-backed and the underlying
+> file system requires folio dirty tracking. File systems which do not, such
+> as shmem or hugetlb, are not at risk and therefore can be written to
+> without issue.
+> 
+> Unfortunately this limitation of GUP has been present for some time and
+> requires future rework of the GUP API in order to provide correct write
+> access to such mappings.
+> 
+> However, for the time being we introduce this check to prevent the most
+> egregious case of this occurring, use of the FOLL_LONGTERM pin.
+> 
+> These mappings are considerably more likely to be written to after
+> folios are cleaned and thus simply must not be permitted to do so.
+> 
+> As part of this change we separate out vma_needs_dirty_tracking() as a
+> helper function to determine this which is distinct from
+> vma_wants_writenotify() which is specific to determining which PTE flags to
+> set.
+> 
+> [1]:https://lore.kernel.org/linux-mm/20180103100430.GE4911@quack2.suse.cz/
+> 
+
+
+This change has the potential to break existing setups. Simple example: 
+libvirt domains configured for file-backed VM memory that also has a 
+vfio device configured. It can easily be configured by users (evolving 
+VM configuration, copy-paste etc.). And it works from a VM perspective, 
+because the guest memory is essentially stale once the VM is shutdown 
+and the pages were unpinned. At least we're not concerned about stale 
+data on disk.
+
+With your changes, such VMs would no longer start, breaking existing 
+user setups with a kernel update.
+
+I don't really see a lot of reasons to perform this change now. It's 
+been known to be problematic for a long time. People are working on a 
+fix (I see Jan is already CCed, CCing Dave and Christop). FOLL_LONGTERM 
+check is only handling some of the problematic cases, so it's not even a 
+complete blocker.
+
+I know, Jason und John will disagree, but I don't think we want to be 
+very careful with changing the default.
+
+Sure, we could warn, or convert individual users using a flag 
+(io_uring). But maybe we should invest more energy on a fix?
+
+
+
+
+> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
 > ---
->  tools/perf/arch/x86/tests/hybrid.c | 54 ++++++++++++++----------------
->  1 file changed, 26 insertions(+), 28 deletions(-)
+>   include/linux/mm.h |  1 +
+>   mm/gup.c           | 41 ++++++++++++++++++++++++++++++++++++++++-
+>   mm/mmap.c          | 36 +++++++++++++++++++++++++++---------
+>   3 files changed, 68 insertions(+), 10 deletions(-)
 > 
-> diff --git a/tools/perf/arch/x86/tests/hybrid.c b/tools/perf/arch/x86/tests/hybrid.c
-> index 0f99cfd116ee..d2a173ba3db9 100644
-> --- a/tools/perf/arch/x86/tests/hybrid.c
-> +++ b/tools/perf/arch/x86/tests/hybrid.c
-> @@ -11,13 +11,18 @@ static bool test_config(const struct evsel *evsel, __u64 expected_config)
->  	return (evsel->core.attr.config & PERF_HW_EVENT_MASK) == expected_config;
->  }
->  
-> +static bool test_perf_config(const struct perf_evsel *evsel, __u64 expected_config)
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 37554b08bb28..f7da02fc89c6 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -2433,6 +2433,7 @@ extern unsigned long move_page_tables(struct vm_area_struct *vma,
+>   #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
+>   					    MM_CP_UFFD_WP_RESOLVE)
+> 
+> +bool vma_needs_dirty_tracking(struct vm_area_struct *vma);
+>   int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot);
+>   static inline bool vma_wants_manual_pte_write_upgrade(struct vm_area_struct *vma)
+>   {
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 1f72a717232b..d36a5db9feb1 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -959,16 +959,51 @@ static int faultin_page(struct vm_area_struct *vma,
+>   	return 0;
+>   }
+> 
+> +/*
+> + * Writing to file-backed mappings which require folio dirty tracking using GUP
+> + * is a fundamentally broken operation, as kernel write access to GUP mappings
+> + * do not adhere to the semantics expected by a file system.
+> + *
+> + * Consider the following scenario:-
+> + *
+> + * 1. A folio is written to via GUP which write-faults the memory, notifying
+> + *    the file system and dirtying the folio.
+> + * 2. Later, writeback is triggered, resulting in the folio being cleaned and
+> + *    the PTE being marked read-only.
+> + * 3. The GUP caller writes to the folio, as it is mapped read/write via the
+> + *    direct mapping.
+> + * 4. The GUP caller, now done with the page, unpins it and sets it dirty
+> + *    (though it does not have to).
+> + *
+> + * This results in both data being written to a folio without writenotify, and
+> + * the folio being dirtied unexpectedly (if the caller decides to do so).
+> + */
+> +static bool writeable_file_mapping_allowed(struct vm_area_struct *vma,
+> +					   unsigned long gup_flags)
 > +{
-> +	return (evsel->attr.config & PERF_HW_EVENT_MASK) == expected_config;
+> +	/* If we aren't pinning then no problematic write can occur. */
+> +	if (!(gup_flags & (FOLL_GET | FOLL_PIN)))
+> +		return true;
+
+FOLL_LONGTERM only applies to FOLL_PIN. This check can be dropped.
+
+> +
+> +	/* We limit this check to the most egregious case - a long term pin. */
+> +	if (!(gup_flags & FOLL_LONGTERM))
+> +		return true;
+> +
+> +	/* If the VMA requires dirty tracking then GUP will be problematic. */
+> +	return vma_needs_dirty_tracking(vma);
 > +}
 > +
->  static int test__hybrid_hw_event_with_pmu(struct evlist *evlist)
->  {
->  	struct evsel *evsel = evlist__first(evlist);
->  
->  	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
-> -	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x3c));
-> +	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-> +	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+>   static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+>   {
+>   	vm_flags_t vm_flags = vma->vm_flags;
+>   	int write = (gup_flags & FOLL_WRITE);
+>   	int foreign = (gup_flags & FOLL_REMOTE);
+> +	bool vma_anon = vma_is_anonymous(vma);
+> 
+>   	if (vm_flags & (VM_IO | VM_PFNMAP))
+>   		return -EFAULT;
+> 
+> -	if (gup_flags & FOLL_ANON && !vma_is_anonymous(vma))
+> +	if ((gup_flags & FOLL_ANON) && !vma_anon)
+>   		return -EFAULT;
+> 
+>   	if ((gup_flags & FOLL_LONGTERM) && vma_is_fsdax(vma))
+> @@ -978,6 +1013,10 @@ static int check_vma_flags(struct vm_area_struct *vma, unsigned long gup_flags)
+>   		return -EFAULT;
+> 
+>   	if (write) {
+> +		if (!vma_anon &&
+> +		    !writeable_file_mapping_allowed(vma, gup_flags))
+> +			return -EFAULT;
+> +
+>   		if (!(vm_flags & VM_WRITE)) {
+>   			if (!(gup_flags & FOLL_FORCE))
+>   				return -EFAULT;
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index 536bbb8fa0ae..7b6344d1832a 100644
+> --- a/mm/mmap.c
 
-Can you please add the "hybrid type" check as well?
 
-https://lore.kernel.org/lkml/4fbbe5bf-2f7d-8aa3-62b1-72829f75e009@linux.intel.com/
+I'm probably missing something, why don't we have to handle GUP-fast 
+(having said that, it's hard to handle ;) )? The sequence you describe 
+above should apply to GUP-fast as well, no?
 
-It's part of the attr.config layout design. We should test it as well.
+1) Pin writable mapped page using GUP-fast
+2) Trigger writeback
+3) Write to page via pin
+4) Unpin and set dirty
 
+
+-- 
 Thanks,
-Kan
 
->  	return TEST_OK;
->  }
->  
-> @@ -27,13 +32,13 @@ static int test__hybrid_hw_group_event(struct evlist *evlist)
->  
->  	evsel = leader = evlist__first(evlist);
->  	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
-> -	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x3c));
-> +	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-> +	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
->  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
->  
->  	evsel = evsel__next(evsel);
-> -	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0xc0));
-> +	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-> +	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
->  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
->  	return TEST_OK;
->  }
-> @@ -48,8 +53,8 @@ static int test__hybrid_sw_hw_group_event(struct evlist *evlist)
->  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
->  
->  	evsel = evsel__next(evsel);
-> -	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x3c));
-> +	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-> +	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
->  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
->  	return TEST_OK;
->  }
-> @@ -60,8 +65,8 @@ static int test__hybrid_hw_sw_group_event(struct evlist *evlist)
->  
->  	evsel = leader = evlist__first(evlist);
->  	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
-> -	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x3c));
-> +	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-> +	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
->  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
->  
->  	evsel = evsel__next(evsel);
-> @@ -76,15 +81,15 @@ static int test__hybrid_group_modifier1(struct evlist *evlist)
->  
->  	evsel = leader = evlist__first(evlist);
->  	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
-> -	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x3c));
-> +	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-> +	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
->  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
->  	TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
->  	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
->  
->  	evsel = evsel__next(evsel);
-> -	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0xc0));
-> +	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-> +	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
->  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
->  	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
->  	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
-> @@ -93,22 +98,15 @@ static int test__hybrid_group_modifier1(struct evlist *evlist)
->  
->  static int test__hybrid_raw1(struct evlist *evlist)
->  {
-> -	struct evsel *evsel = evlist__first(evlist);
-> +	struct perf_evsel *evsel;
->  
-> -	if (!perf_pmu__hybrid_mounted("cpu_atom")) {
-> -		TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
-> -		TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-> -		TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x1a));
-> -		return TEST_OK;
-> -	}
-> -
-> -	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
-> -	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x1a));
-> +	perf_evlist__for_each_evsel(&evlist->core, evsel) {
-> +		struct perf_pmu *pmu = perf_pmu__find_by_type(evsel->attr.type);
->  
-> -	/* The type of second event is randome value */
-> -	evsel = evsel__next(evsel);
-> -	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x1a));
-> +		TEST_ASSERT_VAL("missing pmu", pmu);
-> +		TEST_ASSERT_VAL("unexpected pmu", !strncmp(pmu->name, "cpu_", 4));
-> +		TEST_ASSERT_VAL("wrong config", test_perf_config(evsel, 0x1a));
-> +	}
->  	return TEST_OK;
->  }
->  
+David / dhildenb
+
