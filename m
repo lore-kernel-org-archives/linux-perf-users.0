@@ -2,58 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E2CC77B60
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 07:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62CF1C77B60
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 07:39:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345510AbjD1Hiw (ORCPT
+        id S1345575AbjD1Hj3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Apr 2023 03:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46560 "EHLO
+        Fri, 28 Apr 2023 03:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345533AbjD1Hiv (ORCPT
+        with ESMTP id S1345581AbjD1HjZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Apr 2023 03:38:51 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1484C18
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 00:38:45 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b9a7ba919dcso3015023276.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 00:38:45 -0700 (PDT)
+        Fri, 28 Apr 2023 03:39:25 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5154046AB
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 00:39:04 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-555d93630e7so134777247b3.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 00:39:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682667525; x=1685259525;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hlP1+jkLJwX0MTPH0YShpJosym8eHMXRN6UqFdBME8k=;
-        b=mHP7EGGLFqbtvlDTG7cGSiHJYzO/cgT2Z/oELq4fv6SDDwPz7NVxKwGbcXwzdabaTz
-         kkvgxIMXi2E6pfNEsNIxziROrZ3Hatx0j5oVLL5wOF+JZ8/wdbx5wRNJneKW3caalrcD
-         /oTqruCPi5Jm5FVCZB28BLhaqGCMWxhCqYGRnBr/Yi+O8C0oxF6Sxhjc9uquhBJDZrqf
-         g04mKcbfOxj76aj1uB+I0pibOTgdQ41Jh9OtgmocPZv308d7lb9M6t7xfuojiRNj+zul
-         yHlFNVBiiQgr4CEsy0AP8cM+YjkQYn9T2oGfDVxSbXSHUGYDOQQg04iP5Y0SfFZpY+By
-         dl/Q==
+        d=google.com; s=20221208; t=1682667544; x=1685259544;
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pu+qnvO2EIt8egj2Q0XgeZXFcabh0X5taGysX92E8Pc=;
+        b=yRqFChEp0zqS+YMSby6B8w4gY7Mc/CKdo+YKezRkUdwW+N2ytiML9zi1HV2AJslEW9
+         zcAbuCyzc7cxiLxL3nl1f/znLQapjbp2tFZrz7pLfEHNFY21yPDZW0GlyrDfvZ1tnWsT
+         c35KigQZbePjYc+Lx03CtO6XteIsHCOp0zfsfxL+5Yy5+AESmx5w6Bl6ZP+qosFLMdiI
+         0vSNxasjMZJn+mXhYR+mIs21cO9JOwp71nzRZOopbzjhAYxeGg5B24J5fwxrk93EvYT+
+         E2W/uGbkBqDr+ykX8bHI6Wa9QjHs4n0q/F550iqi/TnLncXRbjJJtMVwKsVSfek3MLtx
+         1n9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682667525; x=1685259525;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hlP1+jkLJwX0MTPH0YShpJosym8eHMXRN6UqFdBME8k=;
-        b=AR3OOzP66Oz2njKrcF0KhiBNUtlm9kYhV/RxT/9JgfqTaWYB4MSjEHTcx1edoaKpCW
-         oo3f7APcAJaM4a1yNMaicatCvlQgG1DkzopFUVzjOI3YgNUezyp5c9VFm9NfJ/SPDd8J
-         1zuYoTDAdY0+fg1Xwgz1f6/GtaJbYK9v6opX3LHfn7qhccE8g1Q8uepy4Lf4DSnW+Pb4
-         dUsRxFtv/HzIlbGuHfF5/FEj1oXjGxJqcTgeWXPzQOVyNtvb6ZGKCXzl1ou9DImbGOZB
-         ZaW118UWZXcAI3Q2No4iv2ZVKalG9dI6j9U/XJORkVhMshHtYGKRdZiUcR1a1AoQ7QoI
-         BoXA==
-X-Gm-Message-State: AC+VfDxX/36nVcQqxN29wyeIRm+G1q/Gj5c8Uu0vllRJdM6/u4fjoqCx
-        hXEjbDehZXfk4uIQNA0y1GjnM1XRhp0s
-X-Google-Smtp-Source: ACHHUZ65GmVRRdA+IjgMR2OyQucpZPoqt9RqJcIb5vyJnPhlePbJtLeGf7VQpImiyqn1wqfvygOr7Tu8kkch
+        d=1e100.net; s=20221208; t=1682667544; x=1685259544;
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pu+qnvO2EIt8egj2Q0XgeZXFcabh0X5taGysX92E8Pc=;
+        b=UN28KMT+QyGSL6nK8kXNn3pTD4e7f3lKoQL4ONq9QF9s9bW5o+glwpOWf6uSJNcuiK
+         S7av1HgovisoZbtxhEg9EOhHVGWWA01aFMtD+ZGWolhJ6l+/pqVZPhEeJ8IaNHRAhTdq
+         uuljchWPontod14Ou1rt22P5dfsPwMov+c6Vhre3lYgHZjB66iklLHPJJhyEI4QtXKVC
+         zCuVceDSAEe6PA0DD1+Wx1j16erZDqC4DCPjteTlmB8bCMBjZ/HOIxhsgXGg5Tsa/YAR
+         UUl0/1ajpopigN91KOxekiygXHVYh4Op2+8poiPjxYJt2H3PeL9GgVbJbfrR9O7gEOwn
+         qPzA==
+X-Gm-Message-State: AC+VfDzVRtIu77q64lVmiAbCk6Dcc1p+HfZXCXhEvMn1ufYia5XuSoGG
+        BO3VgeY6KwUJV574FQuNFSLhrkOf4u4e
+X-Google-Smtp-Source: ACHHUZ7fbrfuMZGI5wrNxZtGXmUQ8jzDNpVUbRoRfbLS48720JU0FdPmStLhnemZh1R63SppVEZ7i9IHCFp1
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:24a7:aeb5:5de4:c29b])
- (user=irogers job=sendgmr) by 2002:a25:1183:0:b0:b8f:4f1d:be06 with SMTP id
- 125-20020a251183000000b00b8f4f1dbe06mr2410763ybr.11.1682667524749; Fri, 28
- Apr 2023 00:38:44 -0700 (PDT)
-Date:   Fri, 28 Apr 2023 00:37:28 -0700
+ (user=irogers job=sendgmr) by 2002:a81:bd0a:0:b0:556:e1e0:e542 with SMTP id
+ b10-20020a81bd0a000000b00556e1e0e542mr2542205ywi.8.1682667543906; Fri, 28 Apr
+ 2023 00:39:03 -0700 (PDT)
+Date:   Fri, 28 Apr 2023 00:37:30 -0700
 In-Reply-To: <20230428073809.1803624-1-irogers@google.com>
-Message-Id: <20230428073809.1803624-3-irogers@google.com>
+Message-Id: <20230428073809.1803624-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20230428073809.1803624-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v2 02/43] perf stat: Introduce skippable evsels
+Subject: [PATCH v2 04/43] perf vendor events intel: Add alderlake metric constraints
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -90,277 +92,162 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Perf stat with no arguments will use default events and metrics. These
-events may fail to open even with kernel and hypervisor disabled. When
-these fail then the permissions error appears even though they were
-implicitly selected. This is particularly a problem with the automatic
-selection of the TopdownL1 metric group on certain architectures like
-Skylake:
+Previously these constraints were disabled as they contained topdown
+events. Since:
+https://lore.kernel.org/all/20230312021543.3060328-9-irogers@google.com/
+the topdown events are correctly grouped even if no group exists.
 
-'''
-$ perf stat true
-Error:
-Access to performance monitoring and observability operations is limited.
-Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-access to performance monitoring and observability operations for processes
-without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
-More information can be found at 'Perf events and tool security' document:
-https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-perf_event_paranoid setting is 2:
-  -1: Allow use of (almost) all events by all users
-      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->= 0: Disallow raw and ftrace function tracepoint access
->= 1: Disallow CPU event access
->= 2: Disallow kernel profiling
-To make the adjusted perf_event_paranoid setting permanent preserve it
-in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-'''
-
-This patch adds skippable evsels that when they fail to open won't
-fail and won't appear in output. The TopdownL1 events, from the metric
-group, are marked as skippable. This turns the failure above to:
-
-'''
-$ perf stat true
-
- Performance counter stats for 'true':
-
-              1.26 msec task-clock:u                     #    0.389 CPUs utilized
-                 0      context-switches:u               #    0.000 /sec
-                 0      cpu-migrations:u                 #    0.000 /sec
-                48      page-faults:u                    #   38.068 K/sec
-           264,719      cycles:u                         #    0.210 GHz                         (78.34%)
-           122,746      instructions:u                   #    0.46  insn per cycle
-            28,219      branches:u                       #   22.380 M/sec
-             2,526      branch-misses:u                  #    8.95% of all branches
-             4,712      CPU_CLK_UNHALTED.REF_XCLK:u      #    3.737 M/sec
-           350,040      IDQ_UOPS_NOT_DELIVERED.CORE:u    #  277.610 M/sec
-     <not counted>      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u                                        (0.00%)
-     <not counted>      CPU_CLK_UNHALTED.THREAD:u                                               (0.00%)
-     <not counted>      UOPS_RETIRED.RETIRE_SLOTS:u                                             (0.00%)
-     <not counted>      UOPS_ISSUED.ANY:u                                                       (0.00%)
-
-       0.003238907 seconds time elapsed
-
-       0.000000000 seconds user
-       0.003412000 seconds sys
-'''
-
-Some events aren't counted leading to <not counted>/0 counts which
-then lead to divides by zero in the metric and no display - running a
-longer running program corrects that and is shown next. The event
-INT_MISC.RECOVERY_CYCLES_ANY:u is skipped as it can't be opened with
-paranoia 2 on Skylake.
-
-'''
-$ perf stat perf bench internals synthesize
-Computing performance of single threaded perf event synthesis by
-synthesizing events on the perf process itself:
-  Average synthesis took: 49.840 usec (+- 0.084 usec)
-  Average num. events: 3.000 (+- 0.000)
-  Average time per event 16.613 usec
-  Average data synthesis took: 50.131 usec (+- 0.087 usec)
-  Average num. events: 11.000 (+- 0.000)
-  Average time per event 4.557 usec
-
- Performance counter stats for '/tmp/perf/perf bench internals synthesize':
-
-          1,232.99 msec task-clock:u                     #    0.993 CPUs utilized
-                 0      context-switches:u               #    0.000 /sec
-                 0      cpu-migrations:u                 #    0.000 /sec
-               162      page-faults:u                    #  131.388 /sec
-       786,004,400      cycles:u                         #    0.637 GHz                         (50.05%)
-     1,640,825,583      instructions:u                   #    2.09  insn per cycle              (60.01%)
-       301,257,667      branches:u                       #  244.330 M/sec                       (60.02%)
-         1,808,506      branch-misses:u                  #    0.60% of all branches             (59.99%)
-         5,321,529      CPU_CLK_UNHALTED.REF_XCLK:u      #    4.316 M/sec
-                                                  #     16.5 %  tma_frontend_bound
-                                                  #     55.0 %  tma_retiring
-                                                  #     22.5 %  tma_backend_bound
-                                                  #      6.0 %  tma_bad_speculation      (59.99%)
-       523,301,560      IDQ_UOPS_NOT_DELIVERED.CORE:u    #  424.416 M/sec                       (60.05%)
-         5,373,764      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u #    4.358 M/sec                       (39.98%)
-       789,470,378      CPU_CLK_UNHALTED.THREAD:u        #  640.288 M/sec                       (49.93%)
-     1,744,823,827      UOPS_RETIRED.RETIRE_SLOTS:u      #    1.415 G/sec                       (50.06%)
-     1,934,825,111      UOPS_ISSUED.ANY:u                #    1.569 G/sec                       (49.91%)
-
-       1.242166915 seconds time elapsed
-
-       0.274824000 seconds user
-       0.959892000 seconds sys
-'''
-
-And this likewise works if paranoia allows or running as root.
+This change was created by PR:
+https://github.com/intel/perfmon/pull/71
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c      | 38 ++++++++++++++++++++++++++--------
- tools/perf/util/evsel.c        | 15 ++++++++++++--
- tools/perf/util/evsel.h        |  1 +
- tools/perf/util/stat-display.c | 11 +++++++++-
- 4 files changed, 53 insertions(+), 12 deletions(-)
+ .../pmu-events/arch/x86/alderlake/adl-metrics.json    | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index be9677aa642f..ffb47b166098 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
- 			evsel_list->core.threads->err_thread = -1;
- 			return COUNTER_RETRY;
- 		}
-+	} else if (counter->skippable) {
-+		if (verbose > 0)
-+			ui__warning("skipping event %s that kernel failed to open .\n",
-+				    evsel__name(counter));
-+		counter->supported = false;
-+		counter->errored = true;
-+		return COUNTER_SKIP;
- 	}
- 
- 	evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
-@@ -1890,15 +1897,28 @@ static int add_default_attributes(void)
- 		 * caused by exposing latent bugs. This is fixed properly in:
- 		 * https://lore.kernel.org/lkml/bff481ba-e60a-763f-0aa0-3ee53302c480@linux.intel.com/
- 		 */
--		if (metricgroup__has_metric("TopdownL1") && !perf_pmu__has_hybrid() &&
--		    metricgroup__parse_groups(evsel_list, "TopdownL1",
--					    /*metric_no_group=*/false,
--					    /*metric_no_merge=*/false,
--					    /*metric_no_threshold=*/true,
--					    stat_config.user_requested_cpu_list,
--					    stat_config.system_wide,
--					    &stat_config.metric_events) < 0)
--			return -1;
-+		if (metricgroup__has_metric("TopdownL1") && !perf_pmu__has_hybrid()) {
-+			struct evlist *metric_evlist = evlist__new();
-+			struct evsel *metric_evsel;
-+
-+			if (!metric_evlist)
-+				return -1;
-+
-+			if (metricgroup__parse_groups(metric_evlist, "TopdownL1",
-+							/*metric_no_group=*/false,
-+							/*metric_no_merge=*/false,
-+							/*metric_no_threshold=*/true,
-+							stat_config.user_requested_cpu_list,
-+							stat_config.system_wide,
-+							&stat_config.metric_events) < 0)
-+				return -1;
-+
-+			evlist__for_each_entry(metric_evlist, metric_evsel) {
-+				metric_evsel->skippable = true;
-+			}
-+			evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
-+			evlist__delete(metric_evlist);
-+		}
- 
- 		/* Platform specific attrs */
- 		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 356c07f03be6..1cd04b5998d2 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
- 	evsel->per_pkg_mask  = NULL;
- 	evsel->collect_stat  = false;
- 	evsel->pmu_name      = NULL;
-+	evsel->skippable     = false;
- }
- 
- struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
-@@ -1725,9 +1726,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map_idx, int thread)
- 		return -1;
- 
- 	fd = FD(leader, cpu_map_idx, thread);
--	BUG_ON(fd == -1);
-+	BUG_ON(fd == -1 && !leader->skippable);
- 
--	return fd;
-+	/*
-+	 * When the leader has been skipped, return -2 to distinguish from no
-+	 * group leader case.
-+	 */
-+	return fd == -1 ? -2 : fd;
- }
- 
- static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_threads, int thread_idx)
-@@ -2109,6 +2114,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 
- 			group_fd = get_group_fd(evsel, idx, thread);
- 
-+			if (group_fd == -2) {
-+				pr_debug("broken group leader for %s\n", evsel->name);
-+				err = -EINVAL;
-+				goto out_close;
-+			}
-+
- 			test_attr__ready();
- 
- 			/* Debug message used by test scripts */
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 35805dcdb1b9..bf8f01af1c0b 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -95,6 +95,7 @@ struct evsel {
- 		bool			weak_group;
- 		bool			bpf_counter;
- 		bool			use_config_name;
-+		bool			skippable;
- 		int			bpf_fd;
- 		struct bpf_object	*bpf_obj;
- 		struct list_head	config_terms;
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index e6035ecbeee8..df6337f2480b 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -7,6 +7,7 @@
- #include <perf/cpumap.h>
- #include "color.h"
- #include "counts.h"
-+#include "debug.h"
- #include "evlist.h"
- #include "evsel.h"
- #include "stat.h"
-@@ -791,6 +792,7 @@ static void uniquify_counter(struct perf_stat_config *config, struct evsel *coun
-  * should_skip_zero_count() - Check if the event should print 0 values.
-  * @config: The perf stat configuration (including aggregation mode).
-  * @counter: The evsel with its associated cpumap.
-+ * @ena: The enabled time for the counter.
-  * @id: The aggregation id that is being queried.
-  *
-  * Due to mismatch between the event cpumap or thread-map and the
-@@ -805,11 +807,18 @@ static void uniquify_counter(struct perf_stat_config *config, struct evsel *coun
-  */
- static bool should_skip_zero_counter(struct perf_stat_config *config,
- 				     struct evsel *counter,
-+				     u64 ena,
- 				     const struct aggr_cpu_id *id)
- {
- 	struct perf_cpu cpu;
- 	int idx;
- 
-+	/* Skip counters that were speculatively/default enabled rather than requested. */
-+	if (ena == 0 && counter->skippable) {
-+		pr_debug("Skipping counter '%s'\n", evsel__name(counter));
-+		return true;
-+	}
-+
- 	/*
- 	 * Skip value 0 when enabling --per-thread globally,
- 	 * otherwise it will have too many 0 output.
-@@ -859,7 +868,7 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 	ena = aggr->counts.ena;
- 	run = aggr->counts.run;
- 
--	if (val == 0 && should_skip_zero_counter(config, counter, &id))
-+	if (val == 0 && should_skip_zero_counter(config, counter, ena, &id))
- 		return;
- 
- 	if (!metric_only) {
--- 
+diff --git a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json b/to=
+ols/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+index 1f9047553942..4c2a14ea5a1c 100644
+--- a/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/alderlake/adl-metrics.json
+@@ -1077,6 +1077,7 @@
+     },
+     {
+         "BriefDescription": "This metric represents overall arithmetic flo=
+ating-point (FP) operations fraction the CPU has executed (retired)",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "tma_x87_use + tma_fp_scalar + tma_fp_vector",
+         "MetricGroup": "HPC;TopdownL3;tma_L3_group;tma_light_operations_gr=
+oup",
+         "MetricName": "tma_fp_arith",
+@@ -1203,6 +1204,7 @@
+     },
+     {
+         "BriefDescription": "Branch Misprediction Cost: Fraction of TMA sl=
+ots wasted per non-speculative branch misprediction (retired JEClear)",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "(tma_branch_mispredicts + tma_fetch_latency * tma_m=
+ispredicts_resteers / (tma_branch_resteers + tma_dsb_switches + tma_icache_=
+misses + tma_itlb_misses + tma_lcp + tma_ms_switches)) * tma_info_slots / B=
+R_MISP_RETIRED.ALL_BRANCHES",
+         "MetricGroup": "Bad;BrMispredicts;tma_issueBM",
+         "MetricName": "tma_info_branch_misprediction_cost",
+@@ -1255,6 +1257,7 @@
+     },
+     {
+         "BriefDescription": "Probability of Core Bound bottleneck hidden b=
+y SMT-profiling artifacts",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "(100 * (1 - tma_core_bound / tma_ports_utilization =
+if tma_core_bound < tma_ports_utilization else 1) if tma_info_smt_2t_utiliz=
+ation > 0.5 else 0)",
+         "MetricGroup": "Cor;SMT",
+         "MetricName": "tma_info_core_bound_likely",
+@@ -1315,6 +1318,7 @@
+     },
+     {
+         "BriefDescription": "Total pipeline cost of DSB (uop cache) misses=
+ - subset of the Instruction_Fetch_BW Bottleneck",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "100 * (tma_fetch_latency * tma_dsb_switches / (tma_=
+branch_resteers + tma_dsb_switches + tma_icache_misses + tma_itlb_misses + =
+tma_lcp + tma_ms_switches) + tma_fetch_bandwidth * tma_mite / (tma_dsb + tm=
+a_lsd + tma_mite))",
+         "MetricGroup": "DSBmiss;Fed;tma_issueFB",
+         "MetricName": "tma_info_dsb_misses",
+@@ -1408,6 +1412,7 @@
+     },
+     {
+         "BriefDescription": "Total pipeline cost of instruction fetch band=
+width related bottlenecks",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "100 * (tma_frontend_bound - tma_fetch_latency * tma=
+_mispredicts_resteers / (tma_branch_resteers + tma_dsb_switches + tma_icach=
+e_misses + tma_itlb_misses + tma_lcp + tma_ms_switches)) - tma_info_big_cod=
+e",
+         "MetricGroup": "Fed;FetchBW;Frontend",
+         "MetricName": "tma_info_instruction_fetch_bw",
+@@ -1827,6 +1832,7 @@
+     },
+     {
+         "BriefDescription": "Total pipeline cost of Memory Address Transla=
+tion related bottlenecks (data-side TLBs)",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "100 * tma_memory_bound * (tma_l1_bound / max(tma_me=
+mory_bound, tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + t=
+ma_store_bound) * (tma_dtlb_load / max(tma_l1_bound, tma_dtlb_load + tma_fb=
+_full + tma_lock_latency + tma_split_loads + tma_store_fwd_blk)) + tma_stor=
+e_bound / (tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tm=
+a_store_bound) * (tma_dtlb_store / (tma_dtlb_store + tma_false_sharing + tm=
+a_split_stores + tma_store_latency + tma_streaming_stores)))",
+         "MetricGroup": "Mem;MemoryTLB;Offcore;tma_issueTLB",
+         "MetricName": "tma_info_memory_data_tlbs",
+@@ -1836,6 +1842,7 @@
+     },
+     {
+         "BriefDescription": "Total pipeline cost of Memory Latency related=
+ bottlenecks (external memory and off-core caches)",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "100 * tma_memory_bound * (tma_dram_bound / (tma_dra=
+m_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bound) * (=
+tma_mem_latency / (tma_mem_bandwidth + tma_mem_latency)) + tma_l3_bound / (=
+tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bou=
+nd) * (tma_l3_hit_latency / (tma_contested_accesses + tma_data_sharing + tm=
+a_l3_hit_latency + tma_sq_full)) + tma_l2_bound / (tma_dram_bound + tma_l1_=
+bound + tma_l2_bound + tma_l3_bound + tma_store_bound))",
+         "MetricGroup": "Mem;MemoryLat;Offcore;tma_issueLat",
+         "MetricName": "tma_info_memory_latency",
+@@ -1845,6 +1852,7 @@
+     },
+     {
+         "BriefDescription": "Total pipeline cost of Branch Misprediction r=
+elated bottlenecks",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "100 * (tma_branch_mispredicts + tma_fetch_latency *=
+ tma_mispredicts_resteers / (tma_branch_resteers + tma_dsb_switches + tma_i=
+cache_misses + tma_itlb_misses + tma_lcp + tma_ms_switches))",
+         "MetricGroup": "Bad;BadSpec;BrMispredicts;tma_issueBM",
+         "MetricName": "tma_info_mispredictions",
+@@ -1877,6 +1885,7 @@
+     },
+     {
+         "BriefDescription": "Average number of Uops retired in cycles wher=
+e at least one uop has retired.",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "tma_retiring * tma_info_slots / cpu_core@UOPS_RETIR=
+ED.SLOTS\\,cmask\\=3D1@",
+         "MetricGroup": "Pipeline;Ret",
+         "MetricName": "tma_info_retire",
+@@ -2152,6 +2161,7 @@
+     },
+     {
+         "BriefDescription": "This metric represents fraction of slots wher=
+e the CPU was retiring memory operations -- uops for memory load or store a=
+ccesses.",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "tma_light_operations * MEM_UOP_RETIRED.ANY / (tma_r=
+etiring * tma_info_slots)",
+         "MetricGroup": "Pipeline;TopdownL3;tma_L3_group;tma_light_operatio=
+ns_group",
+         "MetricName": "tma_memory_operations",
+@@ -2231,6 +2241,7 @@
+     },
+     {
+         "BriefDescription": "This metric represents the remaining light uo=
+ps fraction the CPU has executed - remaining means not covered by other sib=
+ling nodes",
++        "MetricConstraint": "NO_GROUP_EVENTS",
+         "MetricExpr": "max(0, tma_light_operations - (tma_fp_arith + tma_i=
+nt_operations + tma_memory_operations + tma_fused_instructions + tma_non_fu=
+sed_branches + tma_nop_instructions))",
+         "MetricGroup": "Pipeline;TopdownL3;tma_L3_group;tma_light_operatio=
+ns_group",
+         "MetricName": "tma_other_light_ops",
+--=20
 2.40.1.495.gc816e09b53d-goog
 
