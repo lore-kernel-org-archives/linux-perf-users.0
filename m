@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C365C77B60
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 07:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43624C77B60
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 07:44:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345675AbjD1Hny (ORCPT
+        id S1345622AbjD1HoU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Apr 2023 03:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48900 "EHLO
+        Fri, 28 Apr 2023 03:44:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345673AbjD1Hni (ORCPT
+        with ESMTP id S1345714AbjD1Hnr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Apr 2023 03:43:38 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64BC95FCD
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 00:42:35 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5560116959fso87297517b3.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 00:42:35 -0700 (PDT)
+        Fri, 28 Apr 2023 03:43:47 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9375FEB
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 00:42:49 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b9a79db4e7fso1965310276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 00:42:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682667720; x=1685259720;
+        d=google.com; s=20221208; t=1682667728; x=1685259728;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GL5a69/3p/sYFbtBmudKJ5l2nYH24ZT/ENio0Maec6Y=;
-        b=yfBDPauVZr9Fyug5ebjvUlXuRWXzs5iOS2NecaPOWJwpsV/E/Oly2wdMyl5liD+540
-         KIlxhhBeYKf+I01ldqGr+ZlhkbQleLMxl+Bz1r6Z5I2dbOxmUdQMkYulJUCpE/luwv33
-         VWLzKoggx45gwD9QfRTUS526H20WUIvUkIM92qjECxsAL2iTPIMSuErGtutOfagfVCIO
-         OCmExeJXLEqGNqtNNCyxrPtMQQCcK+v6PlB9FwA/QmlBPpHyVGxZNXQ6x3Zc3/agUZXV
-         s7iHopCeTb5EqV4s2Iu90jNZ7ZyAIxdvhEz/mJHibMLWUBjWdqGVNyF08Hxr1QKNoRsY
-         N1ow==
+        bh=VtvZcWesW8Mm8rvH5HZ5XKI28WhNCgFXQkrV9l3sIAI=;
+        b=BrLkYSwCSfUmKbI6B/AfT2HWhBTzYowcZlHhH2xqjrdwsGm8J2xmafRi37pBVszUQ7
+         6OTN+N6vs1/TvCbv86pCjrXF+O3AdodXuXzBY/jdiX8K//K/102fzVDiVheW3/BBPVbs
+         glZs5YFCZQ5OyTwDNtMSsA1MkvO/GJ9a2bI0pxYgPeyWL2+iv6Q7N2vJPsDYwbbx3pP5
+         MPEVDytkhKVFDJyzxZg40nOzFJz4I1E+S8TNCTVr+RZxG0bVJUDk5blbpOCL1vqE5lH+
+         FVr5bAkkMVHRQjzhHqxyJt1ELZo/7x/xn+sagF1HM8ALtrvGw2M/FJpSPV3m5hHojNlO
+         IqmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682667720; x=1685259720;
+        d=1e100.net; s=20221208; t=1682667728; x=1685259728;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GL5a69/3p/sYFbtBmudKJ5l2nYH24ZT/ENio0Maec6Y=;
-        b=UOhSDmp3V24wEn8o1MudV08CsMt3K3lphAr/PJxqCJ2ADVr4vDpbTakOaLeTYpk1Pf
-         0wkOR2Hhb3gPgippHrj6Yg9Y74y1Rlnj4RWc1xSp2Sv0t8R9S3HoSIfqQnI4CLbFSOXL
-         EsDd1IJjNLjdyhx+TmA539LHazJa39ifRyJV1ohKmyBhhyr+uW2KJMLjNeNFW8Rrzyp0
-         l1l91jXVrvmQRgWLIwhujld81W2HFh2wd9ZHOGkrQLHTa6tUjBw5FZwFKv94u8du5KYx
-         G6/3Y6GuirBV4u4gIb+oQQxBMKCvW4q1h//b/I+YS5UHlnUQirZjpOR+sdZZEIEkAyCz
-         vtyQ==
-X-Gm-Message-State: AC+VfDztvoodhuzlzNtv68VbyENKnHUo1zrHnLDaD7cCAbwmsbCpyTrQ
-        IW2+5jdCgi40SFyOznUKljz8ZjS3H1zG
-X-Google-Smtp-Source: ACHHUZ6NnKbtsy3wjYV+4ihroKGTUD+Rsx5JnmOXc1oM9jZh25AU8h8KTqzYxZC3slyfcHy5V+a24o6KP/ic
+        bh=VtvZcWesW8Mm8rvH5HZ5XKI28WhNCgFXQkrV9l3sIAI=;
+        b=I2UjF27099Zyppn3BCXIQ5EqTYZJxfbpAQhCjhLnlCyEKTb4dsj4zxrBmQErKzk4D2
+         xhCRMalf2F1H4ZXibDJjozjBu3X8km+KVT9M3GDO5VgjF/nBDU6tcueReuv/ToxQGlfG
+         wOG4+gGRRO4wvgqdjqtctDUGEgOhHBolWKN8q9AU342jRAkcTAJOp4CuKygFr0Tumbyl
+         rEYFg6yHBT1hlc84dIhXP5Snjv6DNfcuhoAKqGrAZbkGaF0NXqk7uoRfV08Bf2IxLmBt
+         xznG0wXBlr6Bm540iaPKuJftF5FuHGaFL+JCLxVVllBYCrKEpqWKg1Q0Xy8GnEnwXP3N
+         wmsg==
+X-Gm-Message-State: AC+VfDypqoq0/89iml3PwDLmixTRHCkoTqGvDiiNKHuqH97uvqzbvePK
+        sa4H//PG4slY7BRyDtiXamam0DUaBgwp
+X-Google-Smtp-Source: ACHHUZ5oX85r+qrjtw47GQpfj+cDPrLcfmUeOsIIrMDslToxio9pZtjURd1cBW+v90U9hLWgsDQLMZH2XWLX
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:24a7:aeb5:5de4:c29b])
- (user=irogers job=sendgmr) by 2002:a81:b109:0:b0:552:b607:634b with SMTP id
- p9-20020a81b109000000b00552b607634bmr2691445ywh.4.1682667720004; Fri, 28 Apr
- 2023 00:42:00 -0700 (PDT)
-Date:   Fri, 28 Apr 2023 00:37:51 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:72d:b0:b6c:2d28:b3e7 with SMTP id
+ l13-20020a056902072d00b00b6c2d28b3e7mr2598000ybt.9.1682667728085; Fri, 28 Apr
+ 2023 00:42:08 -0700 (PDT)
+Date:   Fri, 28 Apr 2023 00:37:52 -0700
 In-Reply-To: <20230428073809.1803624-1-irogers@google.com>
-Message-Id: <20230428073809.1803624-26-irogers@google.com>
+Message-Id: <20230428073809.1803624-27-irogers@google.com>
 Mime-Version: 1.0
 References: <20230428073809.1803624-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v2 25/43] perf parse-events: Support wildcards on raw events
+Subject: [PATCH v2 26/43] perf parse-events: Remove now unused hybrid logic
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,192 +94,386 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Legacy raw events like r1a open as PERF_TYPE_RAW on non-hybrid systems
-and on each hybrid PMU on hybrid systems. Rather than iterate hybrid
-PMUs add a perf_pmu__supports_wildcard_numeric function that says when
-a numeric event should be opened upon it. If the parsed event
-specifies the type of the PMU then don't wildcard match PMUs, use the
-specified PMU type.
+The event parser no longer needs to recurse in case of a legacy cache
+event in a PMU, the necessary wild card logic has moved to
+perf_pmu__supports_legacy_cache and
+perf_pmu__supports_wildcard_numeric.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 50 ++++++++++++++++++++++++----------
- tools/perf/util/parse-events.h |  3 +-
- tools/perf/util/parse-events.y | 13 ++++++---
- tools/perf/util/pmu.c          |  5 ++++
- tools/perf/util/pmu.h          |  1 +
- 5 files changed, 52 insertions(+), 20 deletions(-)
+ tools/perf/util/Build                 |   1 -
+ tools/perf/util/parse-events-hybrid.c | 181 --------------------------
+ tools/perf/util/parse-events-hybrid.h |  18 ---
+ tools/perf/util/parse-events.c        |  74 -----------
+ tools/perf/util/parse-events.h        |   8 --
+ 5 files changed, 282 deletions(-)
+ delete mode 100644 tools/perf/util/parse-events-hybrid.c
+ delete mode 100644 tools/perf/util/parse-events-hybrid.h
 
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index bd18fe5f2719..c146736ead19 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -24,7 +24,6 @@ perf-y += llvm-utils.o
+ perf-y += mmap.o
+ perf-y += memswap.o
+ perf-y += parse-events.o
+-perf-y += parse-events-hybrid.o
+ perf-y += print-events.o
+ perf-y += tracepoint.o
+ perf-y += perf_regs.o
+diff --git a/tools/perf/util/parse-events-hybrid.c b/tools/perf/util/parse-events-hybrid.c
+deleted file mode 100644
+index d2c0be051d46..000000000000
+--- a/tools/perf/util/parse-events-hybrid.c
++++ /dev/null
+@@ -1,181 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-#include <linux/err.h>
+-#include <linux/zalloc.h>
+-#include <errno.h>
+-#include <sys/types.h>
+-#include <sys/stat.h>
+-#include <fcntl.h>
+-#include <sys/param.h>
+-#include "evlist.h"
+-#include "evsel.h"
+-#include "parse-events.h"
+-#include "parse-events-hybrid.h"
+-#include "debug.h"
+-#include "pmu.h"
+-#include "pmu-hybrid.h"
+-#include "perf.h"
+-
+-static void config_hybrid_attr(struct perf_event_attr *attr,
+-			       int type, int pmu_type)
+-{
+-	/*
+-	 * attr.config layout for type PERF_TYPE_HARDWARE and
+-	 * PERF_TYPE_HW_CACHE
+-	 *
+-	 * PERF_TYPE_HARDWARE:                 0xEEEEEEEE000000AA
+-	 *                                     AA: hardware event ID
+-	 *                                     EEEEEEEE: PMU type ID
+-	 * PERF_TYPE_HW_CACHE:                 0xEEEEEEEE00DDCCBB
+-	 *                                     BB: hardware cache ID
+-	 *                                     CC: hardware cache op ID
+-	 *                                     DD: hardware cache op result ID
+-	 *                                     EEEEEEEE: PMU type ID
+-	 * If the PMU type ID is 0, the PERF_TYPE_RAW will be applied.
+-	 */
+-	attr->type = type;
+-	attr->config = (attr->config & PERF_HW_EVENT_MASK) |
+-			((__u64)pmu_type << PERF_PMU_TYPE_SHIFT);
+-}
+-
+-static int create_event_hybrid(__u32 config_type, int *idx,
+-			       struct list_head *list,
+-			       struct perf_event_attr *attr, const char *name,
+-			       const char *metric_id,
+-			       struct list_head *config_terms,
+-			       struct perf_pmu *pmu)
+-{
+-	struct evsel *evsel;
+-	__u32 type = attr->type;
+-	__u64 config = attr->config;
+-
+-	config_hybrid_attr(attr, config_type, pmu->type);
+-
+-	/*
+-	 * Some hybrid hardware cache events are only available on one CPU
+-	 * PMU. For example, the 'L1-dcache-load-misses' is only available
+-	 * on cpu_core, while the 'L1-icache-loads' is only available on
+-	 * cpu_atom. We need to remove "not supported" hybrid cache events.
+-	 */
+-	if (attr->type == PERF_TYPE_HW_CACHE
+-	    && !is_event_supported(attr->type, attr->config))
+-		return 0;
+-
+-	evsel = parse_events__add_event_hybrid(list, idx, attr, name, metric_id,
+-					       pmu, config_terms);
+-	if (evsel) {
+-		evsel->pmu_name = strdup(pmu->name);
+-		if (!evsel->pmu_name)
+-			return -ENOMEM;
+-	} else
+-		return -ENOMEM;
+-	attr->type = type;
+-	attr->config = config;
+-	return 0;
+-}
+-
+-static int pmu_cmp(struct parse_events_state *parse_state,
+-		   struct perf_pmu *pmu)
+-{
+-	if (parse_state->evlist && parse_state->evlist->hybrid_pmu_name)
+-		return strcmp(parse_state->evlist->hybrid_pmu_name, pmu->name);
+-
+-	if (parse_state->hybrid_pmu_name)
+-		return strcmp(parse_state->hybrid_pmu_name, pmu->name);
+-
+-	return 0;
+-}
+-
+-static int add_hw_hybrid(struct parse_events_state *parse_state,
+-			 struct list_head *list, struct perf_event_attr *attr,
+-			 const char *name, const char *metric_id,
+-			 struct list_head *config_terms)
+-{
+-	struct perf_pmu *pmu;
+-	int ret;
+-
+-	perf_pmu__for_each_hybrid_pmu(pmu) {
+-		LIST_HEAD(terms);
+-
+-		if (pmu_cmp(parse_state, pmu))
+-			continue;
+-
+-		copy_config_terms(&terms, config_terms);
+-		ret = create_event_hybrid(PERF_TYPE_HARDWARE,
+-					  &parse_state->idx, list, attr, name,
+-					  metric_id, &terms, pmu);
+-		free_config_terms(&terms);
+-		if (ret)
+-			return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static int create_raw_event_hybrid(int *idx, struct list_head *list,
+-				   struct perf_event_attr *attr,
+-				   const char *name,
+-				   const char *metric_id,
+-				   struct list_head *config_terms,
+-				   struct perf_pmu *pmu)
+-{
+-	struct evsel *evsel;
+-
+-	attr->type = pmu->type;
+-	evsel = parse_events__add_event_hybrid(list, idx, attr, name, metric_id,
+-					       pmu, config_terms);
+-	if (evsel)
+-		evsel->pmu_name = strdup(pmu->name);
+-	else
+-		return -ENOMEM;
+-
+-	return 0;
+-}
+-
+-static int add_raw_hybrid(struct parse_events_state *parse_state,
+-			  struct list_head *list, struct perf_event_attr *attr,
+-			  const char *name, const char *metric_id,
+-			  struct list_head *config_terms)
+-{
+-	struct perf_pmu *pmu;
+-	int ret;
+-
+-	perf_pmu__for_each_hybrid_pmu(pmu) {
+-		LIST_HEAD(terms);
+-
+-		if (pmu_cmp(parse_state, pmu))
+-			continue;
+-
+-		copy_config_terms(&terms, config_terms);
+-		ret = create_raw_event_hybrid(&parse_state->idx, list, attr,
+-					      name, metric_id, &terms, pmu);
+-		free_config_terms(&terms);
+-		if (ret)
+-			return ret;
+-	}
+-
+-	return 0;
+-}
+-
+-int parse_events__add_numeric_hybrid(struct parse_events_state *parse_state,
+-				     struct list_head *list,
+-				     struct perf_event_attr *attr,
+-				     const char *name, const char *metric_id,
+-				     struct list_head *config_terms,
+-				     bool *hybrid)
+-{
+-	*hybrid = false;
+-	if (attr->type == PERF_TYPE_SOFTWARE)
+-		return 0;
+-
+-	if (!perf_pmu__has_hybrid())
+-		return 0;
+-
+-	*hybrid = true;
+-	if (attr->type != PERF_TYPE_RAW) {
+-		return add_hw_hybrid(parse_state, list, attr, name, metric_id,
+-				     config_terms);
+-	}
+-
+-	return add_raw_hybrid(parse_state, list, attr, name, metric_id,
+-			      config_terms);
+-}
+diff --git a/tools/perf/util/parse-events-hybrid.h b/tools/perf/util/parse-events-hybrid.h
+deleted file mode 100644
+index bc2966e73897..000000000000
+--- a/tools/perf/util/parse-events-hybrid.h
++++ /dev/null
+@@ -1,18 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
+-#ifndef __PERF_PARSE_EVENTS_HYBRID_H
+-#define __PERF_PARSE_EVENTS_HYBRID_H
+-
+-#include <linux/list.h>
+-#include <stdbool.h>
+-#include <linux/types.h>
+-#include <linux/perf_event.h>
+-#include <string.h>
+-
+-int parse_events__add_numeric_hybrid(struct parse_events_state *parse_state,
+-				     struct list_head *list,
+-				     struct perf_event_attr *attr,
+-				     const char *name, const char *metric_id,
+-				     struct list_head *config_terms,
+-				     bool *hybrid);
+-
+-#endif /* __PERF_PARSE_EVENTS_HYBRID_H */
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d95135115d7f..e9515e46a140 100644
+index e9515e46a140..c8484fa63696 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
 @@ -25,7 +25,6 @@
  #include "util/parse-branch-options.h"
  #include "util/evsel_config.h"
  #include "util/event.h"
--#include "util/parse-events-hybrid.h"
- #include "util/pmu-hybrid.h"
+-#include "util/pmu-hybrid.h"
  #include "util/bpf-filter.h"
  #include "util/util.h"
-@@ -1448,15 +1447,14 @@ int parse_events_add_tracepoint(struct list_head *list, int *idx,
- #endif
+ #include "tracepoint.h"
+@@ -39,9 +38,6 @@ extern int parse_events_debug;
+ int parse_events_parse(void *parse_state, void *scanner);
+ static int get_config_terms(struct list_head *head_config,
+ 			    struct list_head *head_terms __maybe_unused);
+-static int parse_events__with_hybrid_pmu(struct parse_events_state *parse_state,
+-					 const char *str, char *pmu_name,
+-					 struct list_head *list);
+ 
+ struct event_symbol event_symbols_hw[PERF_COUNT_HW_MAX] = {
+ 	[PERF_COUNT_HW_CPU_CYCLES] = {
+@@ -1526,33 +1522,6 @@ static bool config_term_percore(struct list_head *config_terms)
+ 	return false;
  }
  
--int parse_events_add_numeric(struct parse_events_state *parse_state,
--			     struct list_head *list,
--			     u32 type, u64 config,
--			     struct list_head *head_config)
-+static int __parse_events_add_numeric(struct parse_events_state *parse_state,
-+				struct list_head *list,
-+				struct perf_pmu *pmu, u32 type, u64 config,
-+				struct list_head *head_config)
- {
- 	struct perf_event_attr attr;
- 	LIST_HEAD(config_terms);
- 	const char *name, *metric_id;
--	bool hybrid;
- 	int ret;
- 
- 	memset(&attr, 0, sizeof(attr));
-@@ -1474,19 +1472,41 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
- 
- 	name = get_config_name(head_config);
- 	metric_id = get_config_metric_id(head_config);
--	ret = parse_events__add_numeric_hybrid(parse_state, list, &attr,
--					       name, metric_id,
--					       &config_terms, &hybrid);
--	if (hybrid)
--		goto out_free_terms;
+-static int parse_events__inside_hybrid_pmu(struct parse_events_state *parse_state,
+-					   struct list_head *list, char *name,
+-					   struct list_head *head_config)
+-{
+-	struct parse_events_term *term;
+-	int ret = -1;
 -
--	ret = add_event(list, &parse_state->idx, &attr, name, metric_id,
--			&config_terms);
--out_free_terms:
-+	ret = __add_event(list, &parse_state->idx, &attr, /*init_attr*/true, name,
-+			metric_id, pmu, &config_terms, /*auto_merge_stats=*/false,
-+			/*cpu_list=*/NULL) ? 0 : -ENOMEM;
- 	free_config_terms(&config_terms);
+-	if (parse_state->fake_pmu || !head_config || list_empty(head_config) ||
+-	    !perf_pmu__is_hybrid(name)) {
+-		return -1;
+-	}
+-
+-	/*
+-	 * More than one term in list.
+-	 */
+-	if (head_config->next && head_config->next->next != head_config)
+-		return -1;
+-
+-	term = list_first_entry(head_config, struct parse_events_term, list);
+-	if (term && term->config && strcmp(term->config, "event")) {
+-		ret = parse_events__with_hybrid_pmu(parse_state, term->config,
+-						    name, list);
+-	}
+-
+-	return ret;
+-}
+-
+ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 			 struct list_head *list, char *name,
+ 			 struct list_head *head_config,
+@@ -1642,11 +1611,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	if (pmu->default_config && get_config_chgs(pmu, head_config, &config_terms))
+ 		return -ENOMEM;
+ 
+-	if (!parse_events__inside_hybrid_pmu(parse_state, list, name,
+-					     head_config)) {
+-		return 0;
+-	}
+-
+ 	if (!parse_state->fake_pmu && perf_pmu__config(pmu, &attr, head_config, parse_state->error)) {
+ 		free_config_terms(&config_terms);
+ 		return -EINVAL;
+@@ -2023,32 +1987,6 @@ int parse_events_terms(struct list_head *terms, const char *str)
  	return ret;
  }
  
-+int parse_events_add_numeric(struct parse_events_state *parse_state,
-+			     struct list_head *list,
-+			     u32 type, u64 config,
-+			     struct list_head *head_config,
-+			     bool wildcard)
-+{
-+	struct perf_pmu *pmu = NULL;
-+	bool found_supported = false;
-+
-+	if (!wildcard)
-+		return __parse_events_add_numeric(parse_state, list, /*pmu=*/NULL,
-+						  type, config, head_config);
-+
-+	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
-+		int ret;
-+
-+		if (!perf_pmu__supports_wildcard_numeric(pmu))
-+			continue;
-+
-+		found_supported = true;
-+		ret = __parse_events_add_numeric(parse_state, list, pmu, pmu->type,
-+						 config, head_config);
-+		if (ret)
-+			return ret;
-+	}
-+	return found_supported ? 0 : -EINVAL;
-+}
-+
- int parse_events_add_tool(struct parse_events_state *parse_state,
- 			  struct list_head *list,
- 			  int tool_event)
+-static int parse_events__with_hybrid_pmu(struct parse_events_state *parse_state,
+-					 const char *str, char *pmu_name,
+-					 struct list_head *list)
+-{
+-	struct parse_events_state ps = {
+-		.list            = LIST_HEAD_INIT(ps.list),
+-		.stoken          = PE_START_EVENTS,
+-		.hybrid_pmu_name = pmu_name,
+-		.idx             = parse_state->idx,
+-	};
+-	int ret;
+-
+-	ret = parse_events__scanner(str, &ps);
+-
+-	if (!ret) {
+-		if (!list_empty(&ps.list)) {
+-			list_splice(&ps.list, list);
+-			parse_state->idx = ps.idx;
+-			return 0;
+-		} else
+-			return -1;
+-	}
+-
+-	return ret;
+-}
+-
+ __weak int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+ {
+ 	/* Order by insertion index. */
+@@ -2772,15 +2710,3 @@ char *parse_events_formats_error_string(char *additional_terms)
+ fail:
+ 	return NULL;
+ }
+-
+-struct evsel *parse_events__add_event_hybrid(struct list_head *list, int *idx,
+-					     struct perf_event_attr *attr,
+-					     const char *name,
+-					     const char *metric_id,
+-					     struct perf_pmu *pmu,
+-					     struct list_head *config_terms)
+-{
+-	return __add_event(list, idx, attr, /*init_attr=*/true, name, metric_id,
+-			   pmu, config_terms, /*auto_merge_stats=*/false,
+-			   /*cpu_list=*/NULL);
+-}
 diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 4e49be290209..831cd1ff4702 100644
+index 831cd1ff4702..77b8f7efdb94 100644
 --- a/tools/perf/util/parse-events.h
 +++ b/tools/perf/util/parse-events.h
-@@ -166,7 +166,8 @@ int parse_events_load_bpf_obj(struct parse_events_state *parse_state,
- int parse_events_add_numeric(struct parse_events_state *parse_state,
- 			     struct list_head *list,
- 			     u32 type, u64 config,
--			     struct list_head *head_config);
-+			     struct list_head *head_config,
-+			     bool wildcard);
- int parse_events_add_tool(struct parse_events_state *parse_state,
- 			  struct list_head *list,
- 			  int tool_event);
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index cc7528558845..5055a29a448f 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -435,7 +435,8 @@ value_sym '/' event_config '/'
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	err = parse_events_add_numeric(_parse_state, list, type, config, $3);
-+	err = parse_events_add_numeric(_parse_state, list, type, config, $3,
-+				       /*wildcard=*/false);
- 	parse_events_terms__delete($3);
- 	if (err) {
- 		free_list_evsel(list);
-@@ -452,7 +453,9 @@ value_sym sep_slash_slash_dc
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	ABORT_ON(parse_events_add_numeric(_parse_state, list, type, config, NULL));
-+	ABORT_ON(parse_events_add_numeric(_parse_state, list, type, config,
-+					  /*head_config=*/NULL,
-+					  /*wildcard=*/false));
- 	$$ = list;
+@@ -122,7 +122,6 @@ struct parse_events_state {
+ 	struct list_head	  *terms;
+ 	int			   stoken;
+ 	struct perf_pmu		  *fake_pmu;
+-	char			  *hybrid_pmu_name;
+ 	/* Should PE_LEGACY_NAME tokens be generated for config terms? */
+ 	bool			   match_legacy_cache_terms;
+ 	bool			   wild_card_pmus;
+@@ -235,11 +234,4 @@ static inline bool is_sdt_event(char *str __maybe_unused)
  }
- |
-@@ -596,7 +599,8 @@ PE_VALUE ':' PE_VALUE opt_event_config
+ #endif /* HAVE_LIBELF_SUPPORT */
  
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	err = parse_events_add_numeric(_parse_state, list, (u32)$1, $3, $4);
-+	err = parse_events_add_numeric(_parse_state, list, (u32)$1, $3, $4,
-+				       /*wildcard=*/false);
- 	parse_events_terms__delete($4);
- 	if (err) {
- 		free(list);
-@@ -618,7 +622,8 @@ PE_RAW opt_event_config
- 	num = strtoull($1 + 1, NULL, 16);
- 	ABORT_ON(errno);
- 	free($1);
--	err = parse_events_add_numeric(_parse_state, list, PERF_TYPE_RAW, num, $2);
-+	err = parse_events_add_numeric(_parse_state, list, PERF_TYPE_RAW, num, $2,
-+				       /*wildcard=*/true);
- 	parse_events_terms__delete($2);
- 	if (err) {
- 		free(list);
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 63071d876190..cd4247a379d4 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1655,6 +1655,11 @@ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
- 	return is_pmu_core(pmu->name) || perf_pmu__is_hybrid(pmu->name);
- }
- 
-+bool perf_pmu__supports_wildcard_numeric(const struct perf_pmu *pmu)
-+{
-+	return is_pmu_core(pmu->name) || perf_pmu__is_hybrid(pmu->name);
-+}
-+
- static bool pmu_alias_is_duplicate(struct sevent *alias_a,
- 				   struct sevent *alias_b)
- {
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 05702bc4bcf8..5a19536a5449 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -221,6 +221,7 @@ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
- 
- bool is_pmu_core(const char *name);
- bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
-+bool perf_pmu__supports_wildcard_numeric(const struct perf_pmu *pmu);
- void print_pmu_events(const struct print_callbacks *print_cb, void *print_state);
- bool pmu_have_event(const char *pname, const char *name);
- 
+-struct evsel *parse_events__add_event_hybrid(struct list_head *list, int *idx,
+-					     struct perf_event_attr *attr,
+-					     const char *name,
+-					     const char *metric_id,
+-					     struct perf_pmu *pmu,
+-					     struct list_head *config_terms);
+-
+ #endif /* __PERF_PARSE_EVENTS_H */
 -- 
 2.40.1.495.gc816e09b53d-goog
 
