@@ -2,124 +2,143 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B724C7EE21
-	for <linux-perf-users@archiver.kernel.org>; Thu, 27 Apr 2023 23:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE7EC77B73
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 00:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344184AbjD0Xs4 (ORCPT
+        id S1344032AbjD1A2F (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Apr 2023 19:48:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49996 "EHLO
+        Thu, 27 Apr 2023 20:28:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344235AbjD0Xsj (ORCPT
+        with ESMTP id S1343716AbjD1A2D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Apr 2023 19:48:39 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336E61FF5;
-        Thu, 27 Apr 2023 16:48:39 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-63b7b54642cso6491808b3a.0;
-        Thu, 27 Apr 2023 16:48:39 -0700 (PDT)
+        Thu, 27 Apr 2023 20:28:03 -0400
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97FE32D50
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 17:28:02 -0700 (PDT)
+Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-3f0a2f8216fso868511cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 17:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682639318; x=1685231318;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1682641681; x=1685233681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZNOWzjzDN8/IL6kFuuC3MOAdiIjEwK+a4rVMlscXpEU=;
-        b=Dy7KxEsSsT4BcpH9K6b7Bs+cMCFyYE7TTBHgYFYjQ+mDHmmEDEU9IOttf5pPaZ1bJ5
-         z8m5jSGjO573huyo5zG7pA4Q14nWilvb35KzW6HFdRPALYZEnCqpt/YeXb61HwrsWVyR
-         P2LgiH92QNwB5cLsxbzcJb7dQD8oTmqkoSVmjAb4aosfoQP7AvrsHOovgixa6Ui00hRj
-         XhIcXf78a7NBr8mZW4u2pFW35l4UjEkXFuQ1pouT6JzfZmAE0x5QXhWgz38qhLmz2gQN
-         7LpHDF/hjaBqtaPrnESEriRZzn6gawMAkamuNwHq+V3Xw2zc4xPCxJuRqQBqz8su1rbH
-         u5GQ==
+        bh=kHkXe29J0rH8JTdbNwSRd8QPJhbLRY43ryyovIJGnsM=;
+        b=hgdsAO6uMrKNw2z6LsvZgPvbnSKIfLf7zoTS4QxqdYtQEGgQC0dm7qlPV+zlHFkGPY
+         skPeyJ99yRfgNsWydkwncjcTZveFiA3JxHgYbCVxCdsQQdBGQFqwC5f0xnbpeOTzAZua
+         5gCpwgssgA0XZ40bB6PU+Mpsq0QhoFPav4JX/Ra5Xr19C5kgHcAVFMTlnxs+FlqWMZnH
+         jkYbKynFHQ/Bd0c3s07U9bJVfcg/5P4BGWhQBco5+tW2NAs/ZqC7dak9bWMod6+NIQgR
+         xmuaJjASiIDNpB4jaD3abUU9wWy0URSq95LWJMbGWoGa7DLOB7rkvUe3xvx/OZRwiZ5/
+         /gcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682639318; x=1685231318;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZNOWzjzDN8/IL6kFuuC3MOAdiIjEwK+a4rVMlscXpEU=;
-        b=GgE2b5KOuP2Csv05tVln/FZuO2uh7ayktKswz5m1mD+Ke+JY71/QES+RaJHsF+80JX
-         yG72AbBfbL9JTB0ypbFxLbW9gUvV09jFSHGcmfd9azjYK3AuZO9jsrycP8uWA7k/PCnC
-         lf0k3G5vl2kDZzHvObRNHpgvvOxNU6roLI+m+Hvqyzlc8ObyJEgT3E+pBiH2vMmupVhN
-         dP69X8AWVQ96M4est5v0X8pV8xtDuCcAj5psbS/K7BhG60FzJiVkAQVPvzVEZBMd5nrK
-         or94XVt2ptKAkyxeVeCa2dQ2Xan/CaUSM1m5Easph7FwVJp/n8xaHYaApbj+AEHlqn57
-         W2Zg==
-X-Gm-Message-State: AC+VfDzcU6dFE72FM0+hCuyzZveohXWdKn0aztvJvSJyDs7qlrP/qiGr
-        8GlHmFddqsbAo+dP+H1GtY8=
-X-Google-Smtp-Source: ACHHUZ4loax0r2ryQ/NZLnyN+uRJNYa/sl5VGC+6EMy431qxGiQy5fee6GUa+agQ7duwis9GuJGimA==
-X-Received: by 2002:a05:6a00:24c4:b0:640:f220:d16e with SMTP id d4-20020a056a0024c400b00640f220d16emr5154594pfv.11.1682639318519;
-        Thu, 27 Apr 2023 16:48:38 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:55cd:594d:edb:e780])
-        by smtp.gmail.com with ESMTPSA id p5-20020a056a000b4500b0062a56e51fd7sm13769425pfo.188.2023.04.27.16.48.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Apr 2023 16:48:38 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
+        d=1e100.net; s=20221208; t=1682641681; x=1685233681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kHkXe29J0rH8JTdbNwSRd8QPJhbLRY43ryyovIJGnsM=;
+        b=Kwn6ZguJl6H0XiG+gnF2y6jVBnkxHniTWqfLJ8t9u4dD0hncjrleoA82eVOEU+FsO6
+         W53KyVfvY1FFsa8aC7TgWOEq6gvQOsBmKoUmhmqkdlFbVv+HCnYudp18cE1pUHrl0wS8
+         7Ftzlr2XWTtgu4fCTJvPagEQ6RYkUEltWkoJgE/xmiD0Mu98oXDDRzR2deuXMkOxTovU
+         qNidhC0oJ2rg4MtK+SO7Y90XdNMWYJvwKFR+fqYiZz+z7a5Fygai8sn5i+wORZaCmUaI
+         q7Uz6nvR2LWCLXi441HAdrPeUTYiLsBgXnTNyMHvc0eMOSNMB9F81XXfi4J1BhWW4gwI
+         OWSA==
+X-Gm-Message-State: AC+VfDwMD/qtvH3Qnr++YLWnNp9MppPU3sINCpDiIIEpTFYGdS2Qw3Rc
+        DjinnhIpzt3wRzSzK7Qre9ltcU42rUp9tgBlB0id9jxEVmDS/LqZ8EQ=
+X-Google-Smtp-Source: ACHHUZ7e+gtNGqUY0Us2JQuPzoAFOc54z7qsE4n4ASaCnlqteYLhb7K23F8WHD1MYYV7YKDMkAeIFxwvlTigifKrgK8=
+X-Received: by 2002:ac8:57d3:0:b0:3d6:5f1b:1e7c with SMTP id
+ w19-20020ac857d3000000b003d65f1b1e7cmr74403qta.9.1682641681488; Thu, 27 Apr
+ 2023 17:28:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230427230502.1526136-1-namhyung@kernel.org>
+In-Reply-To: <20230427230502.1526136-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 27 Apr 2023 17:27:50 -0700
+Message-ID: <CAP-5=fUYfVDfi_+JGqU=o_TcPRNVboMwZewuhU6q+K3md6nUkA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf list: Fix memory leaks in print_tracepoint_events()
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>, Song Liu <song@kernel.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Subject: [PATCH 2/2] perf lock contention: Rework offset calculation with BPF CO-RE
-Date:   Thu, 27 Apr 2023 16:48:33 -0700
-Message-ID: <20230427234833.1576130-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-In-Reply-To: <20230427234833.1576130-1-namhyung@kernel.org>
-References: <20230427234833.1576130-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It seems BPF CO-RE reloc doesn't work well with the pattern that gets
-the field-offset only.  Use offsetof() to make it explicit so that
-the compiler would generate the correct code.
+On Thu, Apr 27, 2023 at 4:05=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> It should free entries (not only the array) filled by scandirat()
+> after use.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Fixes: 0c1228486bef ("perf lock contention: Support pre-5.14 kernels")
-Co-developed-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_skel/lock_contention.bpf.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-index 30c193078bdb..8d3cfbb3cc65 100644
---- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-+++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-@@ -429,21 +429,21 @@ struct rq___new {
- SEC("raw_tp/bpf_test_finish")
- int BPF_PROG(collect_lock_syms)
- {
--	__u64 lock_addr;
-+	__u64 lock_addr, lock_off;
- 	__u32 lock_flag;
- 
-+	if (bpf_core_field_exists(struct rq___new, __lock))
-+		lock_off = offsetof(struct rq___new, __lock);
-+	else
-+		lock_off = offsetof(struct rq___old, lock);
-+
- 	for (int i = 0; i < MAX_CPUS; i++) {
- 		struct rq *rq = bpf_per_cpu_ptr(&runqueues, i);
--		struct rq___new *rq_new = (void *)rq;
--		struct rq___old *rq_old = (void *)rq;
- 
- 		if (rq == NULL)
- 			break;
- 
--		if (bpf_core_field_exists(rq_new->__lock))
--			lock_addr = (__u64)&rq_new->__lock;
--		else
--			lock_addr = (__u64)&rq_old->lock;
-+		lock_addr = (__u64)(void *)rq + lock_off;
- 		lock_flag = LOCK_CLASS_RQLOCK;
- 		bpf_map_update_elem(&lock_syms, &lock_addr, &lock_flag, BPF_ANY);
- 	}
--- 
-2.40.1.495.gc816e09b53d-goog
+Thanks,
+Ian
 
+> ---
+>  tools/perf/util/print-events.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-event=
+s.c
+> index d416c5484cd5..0a97912fd894 100644
+> --- a/tools/perf/util/print-events.c
+> +++ b/tools/perf/util/print-events.c
+> @@ -83,11 +83,11 @@ void print_tracepoint_events(const struct print_callb=
+acks *print_cb __maybe_unus
+>                 if (sys_dirent->d_type !=3D DT_DIR ||
+>                     !strcmp(sys_dirent->d_name, ".") ||
+>                     !strcmp(sys_dirent->d_name, ".."))
+> -                       continue;
+> +                       goto next_sys;
+>
+>                 dir_fd =3D openat(events_fd, sys_dirent->d_name, O_PATH);
+>                 if (dir_fd < 0)
+> -                       continue;
+> +                       goto next_sys;
+>
+>                 evt_items =3D scandirat(events_fd, sys_dirent->d_name, &e=
+vt_namelist, NULL, alphasort);
+>                 for (int j =3D 0; j < evt_items; j++) {
+> @@ -98,12 +98,12 @@ void print_tracepoint_events(const struct print_callb=
+acks *print_cb __maybe_unus
+>                         if (evt_dirent->d_type !=3D DT_DIR ||
+>                             !strcmp(evt_dirent->d_name, ".") ||
+>                             !strcmp(evt_dirent->d_name, ".."))
+> -                               continue;
+> +                               goto next_evt;
+>
+>                         snprintf(evt_path, sizeof(evt_path), "%s/id", evt=
+_dirent->d_name);
+>                         evt_fd =3D openat(dir_fd, evt_path, O_RDONLY);
+>                         if (evt_fd < 0)
+> -                               continue;
+> +                               goto next_evt;
+>                         close(evt_fd);
+>
+>                         snprintf(evt_path, MAXPATHLEN, "%s:%s",
+> @@ -119,9 +119,13 @@ void print_tracepoint_events(const struct print_call=
+backs *print_cb __maybe_unus
+>                                         /*desc=3D*/NULL,
+>                                         /*long_desc=3D*/NULL,
+>                                         /*encoding_desc=3D*/NULL);
+> +next_evt:
+> +                       free(evt_namelist[j]);
+>                 }
+>                 close(dir_fd);
+>                 free(evt_namelist);
+> +next_sys:
+> +               free(sys_namelist[i]);
+>         }
+>
+>         free(sys_namelist);
+> --
+> 2.40.1.495.gc816e09b53d-goog
+>
