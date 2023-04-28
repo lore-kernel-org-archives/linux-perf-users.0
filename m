@@ -2,43 +2,85 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43831C77B60
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 16:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A69C77B61
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 16:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346196AbjD1QSM (ORCPT
+        id S1345847AbjD1QWR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Apr 2023 12:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46748 "EHLO
+        Fri, 28 Apr 2023 12:22:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346135AbjD1QSI (ORCPT
+        with ESMTP id S230162AbjD1QWQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Apr 2023 12:18:08 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA06855AD;
-        Fri, 28 Apr 2023 09:18:02 -0700 (PDT)
-Date:   Fri, 28 Apr 2023 18:17:58 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1682698680;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mzS+nASlzJJ71hOUETyldjCAo0rPcFGVD/ziZrVHrC0=;
-        b=XykYgAUDaIogjvrWDIlXmT35362xw49kmEHMI5mKG+jSKXgXguBBep5kaYcUDsm0GR0cCD
-        GCz0K8a0/QNSq1N1BHd7uSaBCR3HfU+0mPLTiKDQbZEf6wfbvgpaNWozOpTQYaVOm2u7CC
-        TimNLl+y5/Tl03z4hNzfSfkOJ2O17oJb/5uzCTRpAr1GLmTbDDFsiDSxvoh0cQNWlmI+E4
-        C4h9/veUDUhg4RvscuVPhLBM03AeFGC0zmkNjGfhGK27rlkVoCrQ9uICa4HMr1vPm3gaL2
-        YxtKtPYEETqJvpZubSYlymZDkJpXjLF4kO694WautuLAMiUOKZeAH8I9sRyn3Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1682698680;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mzS+nASlzJJ71hOUETyldjCAo0rPcFGVD/ziZrVHrC0=;
-        b=vhS8VxmDgeTTyWX5t4uB6QfcMnbQuw8lhHiBw/mUtZyn1O9XvduAnqXvubA27PfIF7E/NI
-        tgmxMxKul5pxV8BQ==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Wander Lairson Costa <wander@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 28 Apr 2023 12:22:16 -0400
+Received: from wnew2-smtp.messagingengine.com (wnew2-smtp.messagingengine.com [64.147.123.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C3BD212B;
+        Fri, 28 Apr 2023 09:22:15 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.west.internal (Postfix) with ESMTP id 2F0942B067C8;
+        Fri, 28 Apr 2023 12:22:11 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 28 Apr 2023 12:22:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
+         h=cc:cc:content-type:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm1; t=1682698930; x=
+        1682706130; bh=tc/c0D7U8ETwsNDMrZwM89VUkG6eKTLveO1shy7R8WQ=; b=F
+        aVdXUXs7BHEshWDR1t9DmVdcz/a7pXjtXkZcmxd1hjIShFpLYxzLgVLG686+73Qc
+        of4PFdV3je6LwtOAkGO/DH5/aykBZPfdEhkPQyIbJrjefzpfbGz7+mqisWeqGInt
+        VuXv0cOAyYEsTwzcAmLr3g5K3xSRxE44WibLW0OGFmdddNDY/MH6AXDiMFvcwybp
+        PxiKDvDN/GE391o5fHY/4PuDpQexHpH6rqA5/MbNR8i2C1CXq4X14evJP0s+3+A9
+        HOVb4HuOLjoYL3Q1IQcw40wv5MAwQ57zWL1ZohtuWMhuZvF6lvcvzUizWsONdMR3
+        J17lik8t5icGEyq75tfQQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1682698930; x=1682706130; bh=tc/c0D7U8ETws
+        NDMrZwM89VUkG6eKTLveO1shy7R8WQ=; b=IpTYPQtf6dKxJYY3dT5aWcPMxcIu7
+        ke5tWK+NX06E0AtCsk9VIvHMOhC+bDf8Qh9oBl9X7cV3/Yp9wr/SjQpBp/5fe+j/
+        iMi57vaAex13P+UMRLDz9su3xcRW++35J26cZut7MZz150tkgG4zVvYOXN3fYzjb
+        2HBdwq6aoS4QJDOAVG5MxdJW1VthtPQVFQDzsX6WVC8bF9tdYNbi90Mt1VCzhFbH
+        1kYC/PlnThsXUC/buP3VJ/nM9n9eCMv649W5JuuAR8uq4aJ0qO2E9/fr7NcfHLHn
+        hgmeswbf4K0ArIj1hsZ3KElrZidZBLRR6X2JElCGP5CWEQ+alZFoiFDzA==
+X-ME-Sender: <xms:sfJLZOb9fw4m45lVfCrI5yRA2q4RtVb3jqGw-0KRR__6EVrRDOwMSg>
+    <xme:sfJLZBbbmfbG8QRFLjKo2C_nq0ZnYekBAE9Ma7pebGZBGxJr4_vT4rIbNSg0wLOCx
+    D-c3KVqSM34iYk4a4I>
+X-ME-Received: <xmr:sfJLZI9kAD7zqnXweiEGGcfpxAf0r6nFeJooP7hy89wKKBCyJDAExJZ12_MOhnu68Cvv-g>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedukedguddttdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttddttddttddvnecuhfhrohhmpedfmfhi
+    rhhilhhlucetucdrucfuhhhuthgvmhhovhdfuceokhhirhhilhhlsehshhhuthgvmhhovh
+    drnhgrmhgvqeenucggtffrrghtthgvrhhnpeeufefhveefffeiveekgeffhfejhfeiheei
+    ieefgffhveeggfeuvdehvdevudevudenucffohhmrghinhepghhuphdrhhhmnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepkhhirhhilhhlsehs
+    hhhuthgvmhhovhdrnhgrmhgv
+X-ME-Proxy: <xmx:sfJLZAq3OrvcGOBtHIlBmHG63fl3BAZG4L58HDxrL1OZ7-JrtyVIfw>
+    <xmx:sfJLZJqv7h1_CpWLfAN3tKoyzB62PbRw9aZpL3vtjxDp1fh8a2-f6Q>
+    <xmx:sfJLZOS8Qx_FL0NaVuvs-kpBvLoYoc6Iq5VVy6cQPRVe6W7wHLlfRQ>
+    <xmx:svJLZMHDrhWXJPioXCYEqZ9t2Z9TtZwIe4rhYdx2KgJl9W-9EZZPORpYF64>
+Feedback-ID: ie3994620:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 28 Apr 2023 12:22:08 -0400 (EDT)
+Received: by box.shutemov.name (Postfix, from userid 1000)
+        id 28C2E1041AE; Fri, 28 Apr 2023 19:22:07 +0300 (+03)
+Date:   Fri, 28 Apr 2023 19:22:07 +0300
+From:   "Kirill A . Shutemov" <kirill@shutemov.name>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Lorenzo Stoakes <lstoakes@gmail.com>,
+        Jason Gunthorpe <jgg@nvidia.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -47,109 +89,111 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
         Christian Brauner <brauner@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v7 1/3] sched/core: warn on call put_task_struct in
- invalid context
-Message-ID: <20230428161758.xN5vwuUq@linutronix.de>
-References: <20230425114307.36889-1-wander@redhat.com>
- <20230425114307.36889-2-wander@redhat.com>
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Mika Penttila <mpenttil@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v5] mm/gup: disallow GUP writing to file-backed mappings
+ by default
+Message-ID: <20230428162207.o3ejmcz7rzezpt6n@box.shutemov.name>
+References: <6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com>
+ <afcc124e-7a9b-879c-dfdf-200426b84e24@redhat.com>
+ <ZEvZtIb2EDb/WudP@nvidia.com>
+ <094d2074-5b69-5d61-07f7-9f962014fa68@redhat.com>
+ <400da248-a14e-46a4-420a-a3e075291085@redhat.com>
+ <077c4b21-8806-455f-be98-d7052a584259@lucifer.local>
+ <62ec50da-5f73-559c-c4b3-bde4eb215e08@redhat.com>
+ <6ddc7ac4-4091-632a-7b2c-df2005438ec4@redhat.com>
+ <20230428160925.5medjfxkyvmzfyhq@box.shutemov.name>
+ <39cc0f26-8fc2-79dd-2e84-62238d27fd98@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230425114307.36889-2-wander@redhat.com>
+In-Reply-To: <39cc0f26-8fc2-79dd-2e84-62238d27fd98@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2023-04-25 08:43:01 [-0300], Wander Lairson Costa wrote:
-> Under PREEMPT_RT, spinlocks become sleepable locks. put_task_struct()
-> indirectly acquires a spinlock. Therefore, it can't be called in
-> atomic/interrupt context in RT kernels.
+On Fri, Apr 28, 2023 at 06:13:03PM +0200, David Hildenbrand wrote:
+> On 28.04.23 18:09, Kirill A . Shutemov wrote:
+> > On Fri, Apr 28, 2023 at 05:43:52PM +0200, David Hildenbrand wrote:
+> > > On 28.04.23 17:34, David Hildenbrand wrote:
+> > > > On 28.04.23 17:33, Lorenzo Stoakes wrote:
+> > > > > On Fri, Apr 28, 2023 at 05:23:29PM +0200, David Hildenbrand wrote:
+> > > > > > > > 
+> > > > > > > > Security is the primary case where we have historically closed uAPI
+> > > > > > > > items.
+> > > > > > > 
+> > > > > > > As this patch
+> > > > > > > 
+> > > > > > > 1) Does not tackle GUP-fast
+> > > > > > > 2) Does not take care of !FOLL_LONGTERM
+> > > > > > > 
+> > > > > > > I am not convinced by the security argument in regard to this patch.
+> > > > > > > 
+> > > > > > > 
+> > > > > > > If we want to sells this as a security thing, we have to block it
+> > > > > > > *completely* and then CC stable.
+> > > > > > 
+> > > > > > Regarding GUP-fast, to fix the issue there as well, I guess we could do
+> > > > > > something similar as I did in gup_must_unshare():
+> > > > > > 
+> > > > > > If we're in GUP-fast (no VMA), and want to pin a !anon page writable,
+> > > > > > fallback to ordinary GUP. IOW, if we don't know, better be safe.
+> > > > > 
+> > > > > How do we determine it's non-anon in the first place? The check is on the
+> > > > > VMA. We could do it by following page tables down to folio and checking
+> > > > > folio->mapping for PAGE_MAPPING_ANON I suppose?
+> > > > 
+> > > > PageAnon(page) can be called from GUP-fast after grabbing a reference.
+> > > > See gup_must_unshare().
+> > > 
+> > > IIRC, PageHuge() can also be called from GUP-fast and could special-case
+> > > hugetlb eventually, as it's table while we hold a (temporary) reference.
+> > > Shmem might be not so easy ...
+> > 
+> > page->mapping->a_ops should be enough to whitelist whatever fs you want.
+> > 
 > 
-> To prevent such conditions, add a check for atomic/interrupt context
-> before calling put_task_struct().
+> The issue is how to stabilize that from GUP-fast, such that we can safely
+> dereference the mapping. Any idea?
 > 
-> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
-> Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> At least for anon page I know that page->mapping only gets cleared when
+> freeing the page, and we don't dereference the mapping but only check a
+> single flag stored alongside the mapping. Therefore, PageAnon() is fine in
+> GUP-fast context.
 
-Been only CCed here.
+What codepath you are worry about that clears ->mapping on pages with
+non-zero refcount?
 
-I asked to not special case PREEMPT_RT but doing this (clean up via RCU)
-unconditionally. I don't remember that someone said "this is a bad
-because $reason".
+I can only think of truncate (and punch hole). READ_ONCE(page->mapping)
+and fail GUP_fast if it is NULL should be fine, no?
 
-Lockdep will complain about this on !RT.
+I guess we should consider if the inode can be freed from under us and the
+mapping pointer becomes dangling. But I think we should be fine here too:
+VMA pins inode and VMA cannot go away from under GUP.
 
-The below open codes rtlock_might_resched() with no explanation on why
-it works or where it comes from.
+Hm?
 
-The function is named put_task_struct_atomic_safe() yet it behaves it
-differently on PREEMPT_RT otherwise it remains put_task_struct().
+(I didn't look close at GUP for a while and my reasoning might be off.)
 
-Not good.
-
-> ---
->  include/linux/sched/task.h | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
-> index 357e0068497c..b597b97b1f8f 100644
-> --- a/include/linux/sched/task.h
-> +++ b/include/linux/sched/task.h
-> @@ -113,14 +113,28 @@ static inline struct task_struct *get_task_struct(struct task_struct *t)
->  
->  extern void __put_task_struct(struct task_struct *t);
->  
-> +#define PUT_TASK_RESCHED_OFFSETS \
-> +	(rcu_preempt_depth() << MIGHT_RESCHED_RCU_SHIFT)
-> +
-> +#define __put_task_might_resched() \
-> +	__might_resched(__FILE__, __LINE__, PUT_TASK_RESCHED_OFFSETS)
-> +
-> +#define put_task_might_resched()			\
-> +	do {						\
-> +		if (IS_ENABLED(CONFIG_PREEMPT_RT))	\
-> +			__put_task_might_resched();	\
-> +	} while (0)
-> +
->  static inline void put_task_struct(struct task_struct *t)
->  {
-> +	put_task_might_resched();
->  	if (refcount_dec_and_test(&t->usage))
->  		__put_task_struct(t);
->  }
->  
->  static inline void put_task_struct_many(struct task_struct *t, int nr)
->  {
-> +	put_task_might_resched();
->  	if (refcount_sub_and_test(nr, &t->usage))
->  		__put_task_struct(t);
->  }
-> -- 
-> 2.40.0
-> 
-
-Sebastian
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
