@@ -2,83 +2,43 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243DCC77B7E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 16:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43831C77B60
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 16:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229453AbjD1QNz (ORCPT
+        id S1346196AbjD1QSM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Apr 2023 12:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43426 "EHLO
+        Fri, 28 Apr 2023 12:18:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230481AbjD1QNy (ORCPT
+        with ESMTP id S1346135AbjD1QSI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Apr 2023 12:13:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99DA5E4E
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 09:13:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682698389;
+        Fri, 28 Apr 2023 12:18:08 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA06855AD;
+        Fri, 28 Apr 2023 09:18:02 -0700 (PDT)
+Date:   Fri, 28 Apr 2023 18:17:58 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1682698680;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5xkaTJLSgSiHWckTCCg+jkvg+cPl3tpnSAiaPo9ljdQ=;
-        b=i47nY2Cy9nsaHdAnEFs1AeIls3yWA6cxKzOluVQuM9pwuqT18HY59BWL7MeGo3X+yLTl7s
-        VurQBwKplCQMco/4gHpxh9wTVbZuknGtQAGiOrC7lr9EbJBtUibgsRvvOJYcOh7ioBbrSL
-        I0l9mATPm7kNEvs0bFGODIYveBSOZws=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-277-gXwftLDBMb-tNvJGQaHhEQ-1; Fri, 28 Apr 2023 12:13:08 -0400
-X-MC-Unique: gXwftLDBMb-tNvJGQaHhEQ-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-3f1793d6363so36401425e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 09:13:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682698387; x=1685290387;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5xkaTJLSgSiHWckTCCg+jkvg+cPl3tpnSAiaPo9ljdQ=;
-        b=JMdIiD3XwCdWaqyWZh66hQDmywe79HQeyB8dolNEHSzum2j2ybYKvtcjySO320b5tg
-         K3PL8veLczKBwNmNUzCxU+EwbKBFMiPoaurQU0Hx5X+zRqeQgWm43ALednRAUEHC/xkb
-         G14+3s8D9YGYNyMu7H6XJ8HMfLyESnSax8macQRuLmAN4le2IiBMpSRHZCXaAoXetSLv
-         ufEn4Elt71KzpsqG9VfLIBayUcAbiS+V3QYJLyC/GSuCwcu1EtMXtuyvrk7XJytkI/hs
-         kPyOaVb6GQjnE86jMOFfUV1A0CtB43iX6EfWEVDqLQn1jf1r4FWGR1ZguHmecadV6pl5
-         FndQ==
-X-Gm-Message-State: AC+VfDzdeiSMEirXamuG5YiIEHBG+Pg8g9UT/+BLWDedAaFZzjBZLUwm
-        7Y0ZSSsU+NnmG9JSHyF9XiJtRdekf4CYFr8B2RIOeuF76AXDwMrZWeixmqxN9DKWR2yaKMTz33z
-        6Ewkf3IHVL/FAAEj2UOIrAHXsy60mdg==
-X-Received: by 2002:a1c:cc0f:0:b0:3f1:718d:a21c with SMTP id h15-20020a1ccc0f000000b003f1718da21cmr4546955wmb.31.1682698386877;
-        Fri, 28 Apr 2023 09:13:06 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5UcVnruZKFM610WaYbD7KosGHJuT9juitvMObOnL1WWik01k7wINU0BT60S4IoSquURMFEKg==
-X-Received: by 2002:a1c:cc0f:0:b0:3f1:718d:a21c with SMTP id h15-20020a1ccc0f000000b003f1718da21cmr4546897wmb.31.1682698386533;
-        Fri, 28 Apr 2023 09:13:06 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c726:9300:1711:356:6550:7502? (p200300cbc72693001711035665507502.dip0.t-ipconnect.de. [2003:cb:c726:9300:1711:356:6550:7502])
-        by smtp.gmail.com with ESMTPSA id c21-20020a7bc855000000b003f17300c7dcsm24667685wml.48.2023.04.28.09.13.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Apr 2023 09:13:06 -0700 (PDT)
-Message-ID: <39cc0f26-8fc2-79dd-2e84-62238d27fd98@redhat.com>
-Date:   Fri, 28 Apr 2023 18:13:03 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v5] mm/gup: disallow GUP writing to file-backed mappings
- by default
-Content-Language: en-US
-To:     "Kirill A . Shutemov" <kirill@shutemov.name>
-Cc:     Lorenzo Stoakes <lstoakes@gmail.com>,
-        Jason Gunthorpe <jgg@nvidia.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        bh=mzS+nASlzJJ71hOUETyldjCAo0rPcFGVD/ziZrVHrC0=;
+        b=XykYgAUDaIogjvrWDIlXmT35362xw49kmEHMI5mKG+jSKXgXguBBep5kaYcUDsm0GR0cCD
+        GCz0K8a0/QNSq1N1BHd7uSaBCR3HfU+0mPLTiKDQbZEf6wfbvgpaNWozOpTQYaVOm2u7CC
+        TimNLl+y5/Tl03z4hNzfSfkOJ2O17oJb/5uzCTRpAr1GLmTbDDFsiDSxvoh0cQNWlmI+E4
+        C4h9/veUDUhg4RvscuVPhLBM03AeFGC0zmkNjGfhGK27rlkVoCrQ9uICa4HMr1vPm3gaL2
+        YxtKtPYEETqJvpZubSYlymZDkJpXjLF4kO694WautuLAMiUOKZeAH8I9sRyn3Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1682698680;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mzS+nASlzJJ71hOUETyldjCAo0rPcFGVD/ziZrVHrC0=;
+        b=vhS8VxmDgeTTyWX5t4uB6QfcMnbQuw8lhHiBw/mUtZyn1O9XvduAnqXvubA27PfIF7E/NI
+        tgmxMxKul5pxV8BQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Wander Lairson Costa <wander@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -87,96 +47,109 @@ Cc:     Lorenzo Stoakes <lstoakes@gmail.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Oleg Nesterov <oleg@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com>
- <afcc124e-7a9b-879c-dfdf-200426b84e24@redhat.com>
- <ZEvZtIb2EDb/WudP@nvidia.com>
- <094d2074-5b69-5d61-07f7-9f962014fa68@redhat.com>
- <400da248-a14e-46a4-420a-a3e075291085@redhat.com>
- <077c4b21-8806-455f-be98-d7052a584259@lucifer.local>
- <62ec50da-5f73-559c-c4b3-bde4eb215e08@redhat.com>
- <6ddc7ac4-4091-632a-7b2c-df2005438ec4@redhat.com>
- <20230428160925.5medjfxkyvmzfyhq@box.shutemov.name>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <20230428160925.5medjfxkyvmzfyhq@box.shutemov.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v7 1/3] sched/core: warn on call put_task_struct in
+ invalid context
+Message-ID: <20230428161758.xN5vwuUq@linutronix.de>
+References: <20230425114307.36889-1-wander@redhat.com>
+ <20230425114307.36889-2-wander@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230425114307.36889-2-wander@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 28.04.23 18:09, Kirill A . Shutemov wrote:
-> On Fri, Apr 28, 2023 at 05:43:52PM +0200, David Hildenbrand wrote:
->> On 28.04.23 17:34, David Hildenbrand wrote:
->>> On 28.04.23 17:33, Lorenzo Stoakes wrote:
->>>> On Fri, Apr 28, 2023 at 05:23:29PM +0200, David Hildenbrand wrote:
->>>>>>>
->>>>>>> Security is the primary case where we have historically closed uAPI
->>>>>>> items.
->>>>>>
->>>>>> As this patch
->>>>>>
->>>>>> 1) Does not tackle GUP-fast
->>>>>> 2) Does not take care of !FOLL_LONGTERM
->>>>>>
->>>>>> I am not convinced by the security argument in regard to this patch.
->>>>>>
->>>>>>
->>>>>> If we want to sells this as a security thing, we have to block it
->>>>>> *completely* and then CC stable.
->>>>>
->>>>> Regarding GUP-fast, to fix the issue there as well, I guess we could do
->>>>> something similar as I did in gup_must_unshare():
->>>>>
->>>>> If we're in GUP-fast (no VMA), and want to pin a !anon page writable,
->>>>> fallback to ordinary GUP. IOW, if we don't know, better be safe.
->>>>
->>>> How do we determine it's non-anon in the first place? The check is on the
->>>> VMA. We could do it by following page tables down to folio and checking
->>>> folio->mapping for PAGE_MAPPING_ANON I suppose?
->>>
->>> PageAnon(page) can be called from GUP-fast after grabbing a reference.
->>> See gup_must_unshare().
->>
->> IIRC, PageHuge() can also be called from GUP-fast and could special-case
->> hugetlb eventually, as it's table while we hold a (temporary) reference.
->> Shmem might be not so easy ...
+On 2023-04-25 08:43:01 [-0300], Wander Lairson Costa wrote:
+> Under PREEMPT_RT, spinlocks become sleepable locks. put_task_struct()
+> indirectly acquires a spinlock. Therefore, it can't be called in
+> atomic/interrupt context in RT kernels.
 > 
-> page->mapping->a_ops should be enough to whitelist whatever fs you want.
+> To prevent such conditions, add a check for atomic/interrupt context
+> before calling put_task_struct().
+> 
+> Signed-off-by: Wander Lairson Costa <wander@redhat.com>
+> Suggested-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+
+Been only CCed here.
+
+I asked to not special case PREEMPT_RT but doing this (clean up via RCU)
+unconditionally. I don't remember that someone said "this is a bad
+because $reason".
+
+Lockdep will complain about this on !RT.
+
+The below open codes rtlock_might_resched() with no explanation on why
+it works or where it comes from.
+
+The function is named put_task_struct_atomic_safe() yet it behaves it
+differently on PREEMPT_RT otherwise it remains put_task_struct().
+
+Not good.
+
+> ---
+>  include/linux/sched/task.h | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/include/linux/sched/task.h b/include/linux/sched/task.h
+> index 357e0068497c..b597b97b1f8f 100644
+> --- a/include/linux/sched/task.h
+> +++ b/include/linux/sched/task.h
+> @@ -113,14 +113,28 @@ static inline struct task_struct *get_task_struct(struct task_struct *t)
+>  
+>  extern void __put_task_struct(struct task_struct *t);
+>  
+> +#define PUT_TASK_RESCHED_OFFSETS \
+> +	(rcu_preempt_depth() << MIGHT_RESCHED_RCU_SHIFT)
+> +
+> +#define __put_task_might_resched() \
+> +	__might_resched(__FILE__, __LINE__, PUT_TASK_RESCHED_OFFSETS)
+> +
+> +#define put_task_might_resched()			\
+> +	do {						\
+> +		if (IS_ENABLED(CONFIG_PREEMPT_RT))	\
+> +			__put_task_might_resched();	\
+> +	} while (0)
+> +
+>  static inline void put_task_struct(struct task_struct *t)
+>  {
+> +	put_task_might_resched();
+>  	if (refcount_dec_and_test(&t->usage))
+>  		__put_task_struct(t);
+>  }
+>  
+>  static inline void put_task_struct_many(struct task_struct *t, int nr)
+>  {
+> +	put_task_might_resched();
+>  	if (refcount_sub_and_test(nr, &t->usage))
+>  		__put_task_struct(t);
+>  }
+> -- 
+> 2.40.0
 > 
 
-The issue is how to stabilize that from GUP-fast, such that we can 
-safely dereference the mapping. Any idea?
-
-At least for anon page I know that page->mapping only gets cleared when 
-freeing the page, and we don't dereference the mapping but only check a 
-single flag stored alongside the mapping. Therefore, PageAnon() is fine 
-in GUP-fast context.
-
--- 
-Thanks,
-
-David / dhildenb
-
+Sebastian
