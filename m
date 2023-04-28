@@ -2,77 +2,74 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277EEC77B73
-	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 02:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B279AC77B61
+	for <linux-perf-users@archiver.kernel.org>; Fri, 28 Apr 2023 04:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344623AbjD1CGn (ORCPT
+        id S1345260AbjD1EVx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 27 Apr 2023 22:06:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33888 "EHLO
+        Fri, 28 Apr 2023 00:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbjD1CGl (ORCPT
+        with ESMTP id S229686AbjD1EVw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 27 Apr 2023 22:06:41 -0400
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02hn2200.outbound.protection.outlook.com [52.100.159.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 464253A86;
-        Thu, 27 Apr 2023 19:06:39 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RbjkH2vREhraryIFs37Ff5HiEpUIKxcpXc+XGRKYsapF9LhkLHGfjl5rhDYV5eAVk4hC9B4eZObj1wcxXZ4cbArMkbIFcPEY7TzDITq3Ure2jotiZAoDis1rMPzf5uCrKuwI1zTAexA5lGupS3FXxq4No0S9/0KczXNVbSqjYtIvXFiTr/AUJJfLgP2dJ9w1Oo/8kktUAbuA8nQXT1mFepSROP3Wg8fqNfxwYSNIrap7uQ+pdUXlBZAdnC5pduP8iCXqg37fivT1LkZLj92zWcbqpcqrEDpyMPI+DitnqsL/FNGrp8bsTzQe+ySqutqbWRt+SBKLCMbt2zwWfHUIKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kjDqfl1rsKwvXN4xEu7JighzoW2/rXyrDsnlvlddb6E=;
- b=hEhUptH2l9C04g3HPngu7mrYKgEDSw5huFom6kzRHtkTuE3He+DkODe6ara+8uMix2YLeh6M4YtZiFc4d4m/EgSwPn7pNOuy9T9Sia44PQQX1daw7Hd3kHeiY/HQPzpaGPu2TU5rc1OgQwCEjFntic8EdB+HARYxkSqQfZWzuY9P6Gs81ydwQShOh+3wRWyWbO+MgTeYdtsIJCdArdfyiKCpbG7/PlGO1N0lkO1icma2gQ0yjZ8X5+9qxprS3CazN8W19rjYDUnajfDyAzqx7OKA9tpsoaCdIAoPYkY/SOkr7GNGU1Ey/Y9Y4JWWSOhuV6DA306mG7gAfdwbksncFA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kjDqfl1rsKwvXN4xEu7JighzoW2/rXyrDsnlvlddb6E=;
- b=LzG/caiFzsJ1tFmBWO5YLv8yWfB6ozPGuNjhqKqgMlkDWU3y2SJuNLDOMeTn5nsvPKujl5Rh3c8CEs4x0UdSQjlMvwaJCbc/c3SmtoQG24dMqDj3+lvIqLG80N83eyvRu379LpRQ2ZDiw/s66JKX36oJVcDchoaUDUrUin3846ibueGP0xTVeKsXVFKSTmnpttk1SA5/PrfKpkD2v1yWHzKSYyGyCfXnaTLVIZeM/Q0N3N1bHZe3ssYnYGMZmU1Fcuskx0IPhuPUPESeMhI2ra2BIJVqduqWZlWGiox2qqRBO3QzSu2quqSUnYApHHNnsm1oJefBUGha3QXO+vf8lw==
-Received: from DS7PR03CA0187.namprd03.prod.outlook.com (2603:10b6:5:3b6::12)
- by CY8PR12MB8316.namprd12.prod.outlook.com (2603:10b6:930:7a::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.22; Fri, 28 Apr
- 2023 02:06:36 +0000
-Received: from DM6NAM11FT089.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:3b6:cafe::a5) by DS7PR03CA0187.outlook.office365.com
- (2603:10b6:5:3b6::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.24 via Frontend
- Transport; Fri, 28 Apr 2023 02:06:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- DM6NAM11FT089.mail.protection.outlook.com (10.13.173.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6340.23 via Frontend Transport; Fri, 28 Apr 2023 02:06:36 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Thu, 27 Apr 2023
- 19:06:32 -0700
-Received: from [10.110.48.28] (10.126.231.37) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Thu, 27 Apr
- 2023 19:06:31 -0700
-Message-ID: <6d418a81-7c09-deb3-ef74-090a0749470a@nvidia.com>
-Date:   Thu, 27 Apr 2023 19:06:31 -0700
+        Fri, 28 Apr 2023 00:21:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB302736
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 21:21:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1682655670;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HUpymbe2RGMA86yPaoLtY13w/BGrFU5diMfKlivoc0Q=;
+        b=QGUiAcKgR8rRzEofNB2zJi5OJ5aeJz0B/ZFghU8niLpgU61m7YHPaPNxaiIr/slqRH4Qy5
+        LXmgvT02Qq69o8g0ZbkFgkRDCeRb5PMoPyk1798oDkIuvVpB3mijvbhBCl3qoau9R4lAe8
+        oGyhpMkxaC2QGMaVKmKWsfIPIS7T0Dk=
+Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
+ [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-323-ulUoiZvrPsSMpCgjMKY0MA-1; Fri, 28 Apr 2023 00:21:08 -0400
+X-MC-Unique: ulUoiZvrPsSMpCgjMKY0MA-1
+Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-4f00d3f91a3so4096428e87.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Apr 2023 21:21:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682655667; x=1685247667;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HUpymbe2RGMA86yPaoLtY13w/BGrFU5diMfKlivoc0Q=;
+        b=esYs7EXGB4jLadBR0jU7hzMy5kefTjE/ogRNBkoNr6DSZEhddmPNMP1y0cZKqAC3Wi
+         objZRvtqR6OEtH+09SrOS966jIkrBpS4YbiMBEyJxADUTMw8qgClgDYEgDzatuRm32gi
+         I4b6f6C8bhb7ILa0XAFRzybtu4q6YQONcb3eCvUiU9qz7b0da1HIMaMoITROgz5+3ubk
+         q57wQgwpNt/fe8ONWuno6inIF+4IHxRV7Xh3AlWHj/UKc/HM6v9zqRUD+9VKgTkZyR4X
+         sbZITtph00NXU4uGDDwogOEFLcmf2sg+Ip9bvKw+CFQ29KJQdxiLvyG2wUalw5vro0X9
+         JPLQ==
+X-Gm-Message-State: AC+VfDziF+XBkjgAQx4RBSsdBWOX5P/f3N2RoqmBznJCLXp35iflI/rI
+        pJA76rzZtRI6jRAJUx7VL7JVa6vEjLXHzMFbzQ9/4HC8oazdTMHDDKDwT4p27ByMxVVqWfnasgT
+        50owCocW7TKh6OQ+4Ou3vWUVOj6q0
+X-Received: by 2002:a2e:9f05:0:b0:2ab:2c7c:507f with SMTP id u5-20020a2e9f05000000b002ab2c7c507fmr1057055ljk.15.1682655667264;
+        Thu, 27 Apr 2023 21:21:07 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4xYYyesjptJcHcm8yBwlV8SIBaW191/q6NabvCec2b1etZ3S1kKdDOZy7gcBfgds3uQvPBSw==
+X-Received: by 2002:a2e:9f05:0:b0:2ab:2c7c:507f with SMTP id u5-20020a2e9f05000000b002ab2c7c507fmr1057046ljk.15.1682655666887;
+        Thu, 27 Apr 2023 21:21:06 -0700 (PDT)
+Received: from [192.168.1.121] (85-23-48-202.bb.dnainternet.fi. [85.23.48.202])
+        by smtp.gmail.com with ESMTPSA id j21-20020a2e8255000000b002ab0d1c9412sm1953021ljh.139.2023.04.27.21.21.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Apr 2023 21:21:06 -0700 (PDT)
+Message-ID: <3024df40-4c20-867d-8b88-b32aaa04501d@redhat.com>
+Date:   Fri, 28 Apr 2023 07:21:04 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
 Subject: Re: [PATCH v5] mm/gup: disallow GUP writing to file-backed mappings
  by default
 Content-Language: en-US
-To:     Lorenzo Stoakes <lstoakes@gmail.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>,
+To:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>
-CC:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        "Matthew Wilcox" <willy@infradead.org>,
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
         Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
         Leon Romanovsky <leon@kernel.org>,
         Christian Benvenuti <benve@cisco.com>,
@@ -84,7 +81,7 @@ CC:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Bjorn Topel <bjorn@kernel.org>,
@@ -95,51 +92,31 @@ CC:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        "Christian Brauner" <brauner@kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
         Richard Cochran <richardcochran@gmail.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Jesper Dangaard Brouer <hawk@kernel.org>,
         John Fastabend <john.fastabend@gmail.com>,
-        <linux-fsdevel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>, Jan Kara <jack@suse.cz>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        "Mika Penttila" <mpenttil@redhat.com>
+        Pavel Begunkov <asml.silence@gmail.com>
 References: <6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
+From:   =?UTF-8?Q?Mika_Penttil=c3=a4?= <mpenttil@redhat.com>
 In-Reply-To: <6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.231.37]
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT089:EE_|CY8PR12MB8316:EE_
-X-MS-Office365-Filtering-Correlation-Id: fcba6790-006d-4f4d-8640-08db478d3290
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PAcU3SWWImE6OI46lXwPCGNLx4ow4zgYxJRN0xK4Fc0A2THYdVin7/0bV4ECwsjgz9Watou+opOZO7mK+YSKNmnp7fQnBjz5m6h1UL20X6BaHmOGQUpDOqzSVXk+YNlVjd7ydASZp9yb89I2ApgDq1tfEryqtghPifRvEujCdaUITVrn+QWbQS6A1VXTAOlyaxo/CNpdtyvlTaJces2cykHOqM5z69rPGmrPyb/D0VvUwZTDY83A0BD9P78ZDgUdKTYlOH7uc+C0FrWmOKmnGHtDCBJMskTuZRNRB87mlfuOl/L+c2VJQpGpHipjXjy+GxX1BdbX1UF23lzHFkpUKXVpQ9xg5YtQDdwufkc+RRDOiWxs5W0Q37/mm4qclL+R0bKCetxiWpCr6+0IVFe5JKTxYV9nsmKqLu40jFzqc/C37d8oTZKcar31yFgjhaN691X/oH30fV3qMH5kS3VukYWjZBxJVQcRlMWyddZ/ZbHT0ytQtgegihjyB4dK18z5T+MlOleEy4k1q9Ef8+NQeEG99jtR5DSOohkZ9IIvG4TN2ILTnFx73j5jSLkHwAtaiS59dyosvGscc0PcLcpllIpKvynfyGpQWTcAnKSn4EGBKbx1tq9Dz3ZrQTyiEQVyNSagzffUCRcJuH+5pAxz8+bLl6SPEMxdq2tI878ADetjf/0eBZSz/S/AOOf8JX/3SiDAYrfa7TyF43RRKLXe6F2AG0f/6VbFyFZN0FlPLJFjBaV38HFWBg82VUnu6rBqYioEk2vuAGC1niCLCJOGxyHywil65JpIckvRhMebn7GvRVHsBRxMmIiCqqKUcFHcUKeu57pgDa4uccY3DgHSapfxJp9d7+LW9ljfIgYiQ8Q=
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(136003)(39860400002)(376002)(346002)(396003)(5400799015)(451199021)(36840700001)(46966006)(40470700004)(82740400003)(16576012)(31686004)(478600001)(83380400001)(356005)(7636003)(34020700004)(54906003)(110136005)(186003)(16526019)(316002)(2616005)(70586007)(70206006)(36860700001)(82310400005)(4326008)(41300700001)(26005)(53546011)(86362001)(36756003)(336012)(8936002)(40480700001)(8676002)(40460700003)(7406005)(7416002)(31696002)(426003)(2906002)(47076005)(5660300002)(43740500002)(2101003)(12100799030);DIR:OUT;SFP:1501;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Apr 2023 02:06:36.5787
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fcba6790-006d-4f4d-8640-08db478d3290
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT089.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8316
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 4/27/23 16:42, Lorenzo Stoakes wrote:
+
+
+On 28.4.2023 2.42, Lorenzo Stoakes wrote:
 > Writing to file-backed mappings which require folio dirty tracking using
 > GUP is a fundamentally broken operation, as kernel write access to GUP
 > mappings do not adhere to the semantics expected by a file system.
@@ -203,16 +180,11 @@ On 4/27/23 16:42, Lorenzo Stoakes wrote:
 >   mm/mmap.c          | 36 +++++++++++++++++++++++++++---------
 >   3 files changed, 68 insertions(+), 10 deletions(-)
 > 
+Thanks Lorenzo for the added patch descriptions!
 
-Looks good.
-
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Mika Penttilä <mpenttil@redhat.com>
 
 
-thanks,
--- 
-John Hubbard
-NVIDIA
 
 > diff --git a/include/linux/mm.h b/include/linux/mm.h
 > index 37554b08bb28..f7da02fc89c6 100644
@@ -363,5 +335,5 @@ NVIDIA
 >   /*
 > --
 > 2.40.0
-
+> 
 
