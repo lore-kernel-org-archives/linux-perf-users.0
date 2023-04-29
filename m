@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E01BCC77B60
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 01:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D12AC77B60
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 01:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347249AbjD2B1r (ORCPT
+        id S1347152AbjD2BaK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Apr 2023 21:27:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40664 "EHLO
+        Fri, 28 Apr 2023 21:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347074AbjD2B1q (ORCPT
+        with ESMTP id S230338AbjD2BaH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Apr 2023 21:27:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75B48E7A;
-        Fri, 28 Apr 2023 18:27:45 -0700 (PDT)
+        Fri, 28 Apr 2023 21:30:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08A00E7A;
+        Fri, 28 Apr 2023 18:30:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0FD74614AD;
-        Sat, 29 Apr 2023 01:27:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37002C433D2;
-        Sat, 29 Apr 2023 01:27:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5A96F61592;
+        Sat, 29 Apr 2023 01:30:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83C46C4339B;
+        Sat, 29 Apr 2023 01:30:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682731664;
-        bh=ZRDTKQMp+p7TvmVO01meyOc6q5mUqaXyAqx63RFLezc=;
+        s=k20201202; t=1682731804;
+        bh=H1cUVZloMIMgPmyVATWNTj1bXJbmgcmWRMx4csgzg9s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kH51t25Nv9/QlCnFMxvjJEZTIvlN4IdUxvigW0bQr4wYmjxzbzR6efFqQ4o9aXX6h
-         OlHCeAmgwEJDt1dDnSoPI+7iuZylBzBqmXifY3oJ95DKoGPwNYKL4zV0mS/XaIysKF
-         683w0BqCv/SJL+ulP0udxr//8DAWLF+qUd5QTiGAN2UaI2gegOxD1Fr/y12JWNeUCW
-         YlzctBaZx5PaQLUqz5GXuD1b6zhSeWjoV+/F8G9R2r7l78LIEwPPblVeG/IAdn9UUv
-         rRukjxPNPxfFo9NaKcYc7UUrv3ngkTyHevUg85qoiiazT/TUxIHCgPpCmu5ybY14Em
-         7fq2M2/nGy0tg==
+        b=VruZ9vwomrjap0GaYFrqDzIJX9CjBi7wGIWNr+9ZNlTauB7K3vwwL698PvA2nQvVg
+         XRt5btcIG4aWmkRxtGYqHJuzO/xuXZTlWxCkq0SXWIcd59qWS254KsYQmP2LTx9d3R
+         1J05jNZIpioTdJr7eH4rULGzKVOR1ph5PBfKfa6SqoGLYbbYX3aSm6CngFqT38ZvzF
+         oW65Q49XxT+GiZ3cI7FdXGjtxkiLJ31OCaf5jkf4o1R7Fq0mEY+OgYAihE+r9/OdvB
+         Gx1gB9Nd47GiHC8jspgk1b0BTj6HI4wfZZjxIgN3+isunZuyfX6LOcqwzoCfGgI/tx
+         jbw9Y+NoUUswA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 45BE6403B5; Fri, 28 Apr 2023 22:27:41 -0300 (-03)
-Date:   Fri, 28 Apr 2023 22:27:41 -0300
+        id BA120403B5; Fri, 28 Apr 2023 22:30:01 -0300 (-03)
+Date:   Fri, 28 Apr 2023 22:30:01 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
@@ -43,86 +43,91 @@ Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Hao Luo <haoluo@google.com>, Song Liu <song@kernel.org>
-Subject: Re: [PATCH 1/2] perf lock contention: Fix struct rq lock access
-Message-ID: <ZExyjXm6OF5oScGU@kernel.org>
-References: <20230427234833.1576130-1-namhyung@kernel.org>
- <CAP-5=fX3pmozMci+hSSV3Nve6H6RUzusPY2_S7HeEtRJnZH7nA@mail.gmail.com>
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf list: Fix memory leaks in
+ print_tracepoint_events()
+Message-ID: <ZExzGWIm98lfPUKI@kernel.org>
+References: <20230427230502.1526136-1-namhyung@kernel.org>
+ <CAP-5=fUYfVDfi_+JGqU=o_TcPRNVboMwZewuhU6q+K3md6nUkA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fX3pmozMci+hSSV3Nve6H6RUzusPY2_S7HeEtRJnZH7nA@mail.gmail.com>
+In-Reply-To: <CAP-5=fUYfVDfi_+JGqU=o_TcPRNVboMwZewuhU6q+K3md6nUkA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Apr 27, 2023 at 05:32:08PM -0700, Ian Rogers escreveu:
-> On Thu, Apr 27, 2023 at 4:48 PM Namhyung Kim <namhyung@kernel.org> wrote:
+Em Thu, Apr 27, 2023 at 05:27:50PM -0700, Ian Rogers escreveu:
+> On Thu, Apr 27, 2023 at 4:05 PM Namhyung Kim <namhyung@kernel.org> wrote:
 > >
-> > The BPF CO-RE's ignore suffix rule requires three underscores.
-> > Otherwise it'd fail like below:
+> > It should free entries (not only the array) filled by scandirat()
+> > after use.
 > >
-> >   $ sudo perf lock contention -ab
-> >   libbpf: prog 'collect_lock_syms': BPF program load failed: Invalid argument
-> >   libbpf: prog 'collect_lock_syms': -- BEGIN PROG LOAD LOG --
-> >   reg type unsupported for arg#0 function collect_lock_syms#380
-> >   ; int BPF_PROG(collect_lock_syms)
-> >   0: (b7) r6 = 0                        ; R6_w=0
-> >   1: (b7) r7 = 0                        ; R7_w=0
-> >   2: (b7) r9 = 1                        ; R9_w=1
-> >   3: <invalid CO-RE relocation>
-> >   failed to resolve CO-RE relocation <byte_off> [381] struct rq__new.__lock (0:0 @ offset 0)
-> >
-> > Fixes: 0c1228486bef ("perf lock contention: Support pre-5.14 kernels")
 > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> Acked-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+ 
 
 Thanks, applied the series.
 
 - Arnaldo
 
- 
 > Thanks,
 > Ian
 > 
 > > ---
-> >  tools/perf/util/bpf_skel/lock_contention.bpf.c | 8 ++++----
-> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> >  tools/perf/util/print-events.c | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
 > >
-> > diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > index 8911e2a077d8..30c193078bdb 100644
-> > --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> > @@ -418,11 +418,11 @@ int contention_end(u64 *ctx)
+> > diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+> > index d416c5484cd5..0a97912fd894 100644
+> > --- a/tools/perf/util/print-events.c
+> > +++ b/tools/perf/util/print-events.c
+> > @@ -83,11 +83,11 @@ void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unus
+> >                 if (sys_dirent->d_type != DT_DIR ||
+> >                     !strcmp(sys_dirent->d_name, ".") ||
+> >                     !strcmp(sys_dirent->d_name, ".."))
+> > -                       continue;
+> > +                       goto next_sys;
 > >
-> >  extern struct rq runqueues __ksym;
+> >                 dir_fd = openat(events_fd, sys_dirent->d_name, O_PATH);
+> >                 if (dir_fd < 0)
+> > -                       continue;
+> > +                       goto next_sys;
 > >
-> > -struct rq__old {
-> > +struct rq___old {
-> >         raw_spinlock_t lock;
-> >  } __attribute__((preserve_access_index));
+> >                 evt_items = scandirat(events_fd, sys_dirent->d_name, &evt_namelist, NULL, alphasort);
+> >                 for (int j = 0; j < evt_items; j++) {
+> > @@ -98,12 +98,12 @@ void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unus
+> >                         if (evt_dirent->d_type != DT_DIR ||
+> >                             !strcmp(evt_dirent->d_name, ".") ||
+> >                             !strcmp(evt_dirent->d_name, ".."))
+> > -                               continue;
+> > +                               goto next_evt;
 > >
-> > -struct rq__new {
-> > +struct rq___new {
-> >         raw_spinlock_t __lock;
-> >  } __attribute__((preserve_access_index));
+> >                         snprintf(evt_path, sizeof(evt_path), "%s/id", evt_dirent->d_name);
+> >                         evt_fd = openat(dir_fd, evt_path, O_RDONLY);
+> >                         if (evt_fd < 0)
+> > -                               continue;
+> > +                               goto next_evt;
+> >                         close(evt_fd);
 > >
-> > @@ -434,8 +434,8 @@ int BPF_PROG(collect_lock_syms)
+> >                         snprintf(evt_path, MAXPATHLEN, "%s:%s",
+> > @@ -119,9 +119,13 @@ void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unus
+> >                                         /*desc=*/NULL,
+> >                                         /*long_desc=*/NULL,
+> >                                         /*encoding_desc=*/NULL);
+> > +next_evt:
+> > +                       free(evt_namelist[j]);
+> >                 }
+> >                 close(dir_fd);
+> >                 free(evt_namelist);
+> > +next_sys:
+> > +               free(sys_namelist[i]);
+> >         }
 > >
-> >         for (int i = 0; i < MAX_CPUS; i++) {
-> >                 struct rq *rq = bpf_per_cpu_ptr(&runqueues, i);
-> > -               struct rq__new *rq_new = (void *)rq;
-> > -               struct rq__old *rq_old = (void *)rq;
-> > +               struct rq___new *rq_new = (void *)rq;
-> > +               struct rq___old *rq_old = (void *)rq;
-> >
-> >                 if (rq == NULL)
-> >                         break;
+> >         free(sys_namelist);
 > > --
 > > 2.40.1.495.gc816e09b53d-goog
 > >
