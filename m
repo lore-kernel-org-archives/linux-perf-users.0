@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D41C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 05:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A766FC77B60
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 05:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347256AbjD2Fhw (ORCPT
+        id S230448AbjD2FiD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 Apr 2023 01:37:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
+        Sat, 29 Apr 2023 01:38:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347134AbjD2Fhm (ORCPT
+        with ESMTP id S1347284AbjD2Fhv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 Apr 2023 01:37:42 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C71A44B3
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:37:08 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-b9a7553f95dso995006276.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:37:08 -0700 (PDT)
+        Sat, 29 Apr 2023 01:37:51 -0400
+Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A79A240F0
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:37:21 -0700 (PDT)
+Received: by mail-pf1-x44a.google.com with SMTP id d2e1a72fcca58-64115e69e1eso13818329b3a.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:37:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682746625; x=1685338625;
+        d=google.com; s=20221208; t=1682746640; x=1685338640;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qq4G/Esc0Oue6FYAx7cV0j1FiAAwFCfIaU2APuStCt4=;
-        b=zF7VN5xIg/Xls/P70nXNmlMvwt8It/YyYoobszVrtva9rBrXtP8z0xKGNoEL5pr/nD
-         9Oy3Iog+9mZWB3p1ESqM6eWUvXDmIBsWKnyGod3Q3zoJQWxEDnMuR/04H+dmYquUuakQ
-         mfHoNvPS+fM6Nzf7/E1D9SI//wIrjEQnucNbh+4RqnkbRmu7Sp1PvF0xfQUJwDNamR+Q
-         MsIGsX6L033DKxskwa47W82x+ONRhTo0Uo/ZLNZ3Moy4XVUB+w1bNYtayA574gp9apa4
-         93jp6VBkV3qQsixhuHr4rX6akTEasJgFK7RIJHQa41s1kiT8iB2Uljv6SF3FQZk8qYxV
-         XVFQ==
+        bh=6Z2X7LmFVQauBlgGsGcOl9/drZBMwRT7E40p+z8ki8E=;
+        b=Lki4BFoU0wJhrm6qPyBdhy7Hwi1vzisA++fBdRnnaU17YpmlddWwsS48JzwhPseNyT
+         rgmodnRw4UOXQNpJxtInoEbORsbI/JGDSXJloX0Qb/VwGoDCC/TjGBUo2WoKQVY1hat7
+         Ckfhn8ftwjPdsixTKYoYDTB3xGaB4cM3KTHynxciEqGVniOdgPoLZ/xrBzia3wh1USqJ
+         It9YYj5f+PXoHasMxo87ZEVObcFEl9cEM/hVCefN9tI3rEY1HhAU7RbA345LR5QFoR94
+         5DjzqlQcvUzj2xVZ2MOJWkVE3obYcG3wzHhhsAY5u4AaNTAjNMunbxJldBeAB08KXMJg
+         u+6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682746625; x=1685338625;
+        d=1e100.net; s=20221208; t=1682746640; x=1685338640;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qq4G/Esc0Oue6FYAx7cV0j1FiAAwFCfIaU2APuStCt4=;
-        b=K+WbTZgt18sJPs5pseQs7DyTVbJc2ByrxaxTFDaKJkv3xF9pSDNAhKc1olZUwd6si3
-         Kg5Ige+czH+BHI1pjbeWMus8UpoCRZu6gZTsfRTvJwGeKbVRXXb4Nn475bXcDxLQgwVR
-         2cpI/UNQSs2Oe+5WFfEWQaXoMudcVgtjRCqHLY8kr7vWmzMq9G8uqHuPGs9saxLodm4C
-         ODNUoDICpM4VU7Mg4EuTPdzQi7GouJZRcphsEtOw1i0FNb5HitT2NmgzfJawPqNZX/JT
-         jji8g9gN77AQbacWZS4MEvoZ56lH8q9KgTGf1gPtElh/cmQjzri2RjcLwpZiIgo5qy6y
-         Aznw==
-X-Gm-Message-State: AC+VfDyaYGMN1c7JS/jsvvFrlmifByQEPR3CO3sXfwUQkU3bsjKLMm9S
-        5bAhFiLPi5sfYL3/gz1Ba6oUaB733P+J
-X-Google-Smtp-Source: ACHHUZ5n59FgbcH2rhCiSNafqEqAfWsNzgQwBKfmroVvhkKjF7s6+OraaFq9NKh3lNG5yJBUOs+dCsZdR6Gh
+        bh=6Z2X7LmFVQauBlgGsGcOl9/drZBMwRT7E40p+z8ki8E=;
+        b=Hebmt7RFPC51NhekFn3l8Zso5rE7G+UXgE9BAT4eVsKQ1vugJe0jH++v1TfVOvUdO9
+         0NM3qE+ea3To3gnaDdq6Pgg/iuMDjg/oTr+5Ll0tVTaVQM1S8Lemtqs/0xTMVnaYfwZ9
+         AZtErtKCVPOmzV4QAquXwZnMjPcOBCcEExEQusvTyibO3DzYqB4wouvAJsr/tHctGFRO
+         FEk6aGiNwYC7pwa+3pO6eCWVq94/wIR/a9BqXjRwOvt4agLgz5ZcQzv3F2OTpMQgR+Gj
+         87hKyBkBvShb8GKjzWWX+LCo7cCL8jhegXWMNscWTeBDq5Tddkx/deF1y4gSjSXQYM0f
+         DKPw==
+X-Gm-Message-State: AC+VfDxcJBcNYoAGX4Tq8yWyG7PuHeQZbAj2PlKLKzgZPoF5NzvojB3/
+        r2vHrAheY+/fKyYgUPtTFUbAJ16iZ1VL
+X-Google-Smtp-Source: ACHHUZ7z+60JLxib2gP6eFfUI/PCkaYhkcAAkzD8U3O/q7R7A79USR9kQbfy65FsGW+0TJ8AdoQ2ABZFj54D
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c563:7e28:fb7c:bce3])
- (user=irogers job=sendgmr) by 2002:a25:aea5:0:b0:b9a:78bf:1a4d with SMTP id
- b37-20020a25aea5000000b00b9a78bf1a4dmr4022294ybj.10.1682746625479; Fri, 28
- Apr 2023 22:37:05 -0700 (PDT)
-Date:   Fri, 28 Apr 2023 22:34:33 -0700
+ (user=irogers job=sendgmr) by 2002:a17:902:eb81:b0:1a1:f9f5:4dac with SMTP id
+ q1-20020a170902eb8100b001a1f9f54dacmr4057585plg.5.1682746640037; Fri, 28 Apr
+ 2023 22:37:20 -0700 (PDT)
+Date:   Fri, 28 Apr 2023 22:34:35 -0700
 In-Reply-To: <20230429053506.1962559-1-irogers@google.com>
-Message-Id: <20230429053506.1962559-14-irogers@google.com>
+Message-Id: <20230429053506.1962559-16-irogers@google.com>
 Mime-Version: 1.0
 References: <20230429053506.1962559-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v3 13/46] perf test: Use valid for PMU tests
+Subject: [PATCH v3 15/46] perf test: Test more with config_cache
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,90 +94,30 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Rather than skip all tests in test__events_pmu if PMU cpu isn't
-present, use the per-test valid test. This allows the running of
-software PMU tests on hybrid and arm systems.
+test__checkevent_config_cache checks the parsing of
+"L1-dcache-misses/name=cachepmu/". Don't just check that the name is
+set correctly, also validate the rest of the perf_event_attr for
+L1-dcache-misses.
 
 Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/parse-events.c | 27 +++++++++------------------
- 1 file changed, 9 insertions(+), 18 deletions(-)
+ tools/perf/tests/parse-events.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 35b35a5c795c..767b296b91e4 100644
+index 4ff1d70e8375..1b9513ef6aea 100644
 --- a/tools/perf/tests/parse-events.c
 +++ b/tools/perf/tests/parse-events.c
-@@ -1430,6 +1430,11 @@ static int test__checkevent_config_cache(struct evlist *evlist)
- 	return TEST_OK;
+@@ -1394,7 +1394,7 @@ static int test__checkevent_config_cache(struct evlist *evlist)
+ 	struct evsel *evsel = evlist__first(evlist);
+ 
+ 	TEST_ASSERT_VAL("wrong name setting", evsel__name_is(evsel, "cachepmu"));
+-	return TEST_OK;
++	return test__checkevent_genhw(evlist);
  }
  
-+static bool test__pmu_cpu_valid(void)
-+{
-+	return !!perf_pmu__find("cpu");
-+}
-+
- static bool test__intel_pt_valid(void)
- {
- 	return !!perf_pmu__find("intel_pt");
-@@ -1979,21 +1984,25 @@ static const struct evlist_test test__events[] = {
- static const struct evlist_test test__events_pmu[] = {
- 	{
- 		.name  = "cpu/config=10,config1,config2=3,period=1000/u",
-+		.valid = test__pmu_cpu_valid,
- 		.check = test__checkevent_pmu,
- 		/* 0 */
- 	},
- 	{
- 		.name  = "cpu/config=1,name=krava/u,cpu/config=2/u",
-+		.valid = test__pmu_cpu_valid,
- 		.check = test__checkevent_pmu_name,
- 		/* 1 */
- 	},
- 	{
- 		.name  = "cpu/config=1,call-graph=fp,time,period=100000/,cpu/config=2,call-graph=no,time=0,period=2000/",
-+		.valid = test__pmu_cpu_valid,
- 		.check = test__checkevent_pmu_partial_time_callgraph,
- 		/* 2 */
- 	},
- 	{
- 		.name  = "cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp",
-+		.valid = test__pmu_cpu_valid,
- 		.check = test__checkevent_complex_name,
- 		/* 3 */
- 	},
-@@ -2209,21 +2218,6 @@ static int test__terms2(struct test_suite *test __maybe_unused, int subtest __ma
- 	return test_terms(test__terms, ARRAY_SIZE(test__terms));
- }
- 
--static int test_pmu(void)
--{
--	struct stat st;
--	char path[PATH_MAX];
--	int ret;
--
--	snprintf(path, PATH_MAX, "%s/bus/event_source/devices/cpu/format/",
--		 sysfs__mountpoint());
--
--	ret = stat(path, &st);
--	if (ret)
--		pr_debug("omitting PMU cpu tests\n");
--	return !ret;
--}
--
- static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
- 	struct perf_pmu *pmu;
-@@ -2307,9 +2301,6 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
- 
- static int test__pmu_events2(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
--	if (!test_pmu())
--		return TEST_SKIP;
--
- 	return test_events(test__events_pmu, ARRAY_SIZE(test__events_pmu));
- }
- 
+ static bool test__pmu_cpu_valid(void)
 -- 
 2.40.1.495.gc816e09b53d-goog
 
