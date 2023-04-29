@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06DDC77B60
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 05:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 290DEC7618E
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 05:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347535AbjD2Fnl (ORCPT
+        id S1347468AbjD2Fnq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 Apr 2023 01:43:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47142 "EHLO
+        Sat, 29 Apr 2023 01:43:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347527AbjD2Fna (ORCPT
+        with ESMTP id S1347469AbjD2Fnf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 Apr 2023 01:43:30 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47CBB2D65
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:42:50 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-556011695d1so10727537b3.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:42:50 -0700 (PDT)
+        Sat, 29 Apr 2023 01:43:35 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E023AAF
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:42:55 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b922aa3725fso1024373276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:42:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682746902; x=1685338902;
+        d=google.com; s=20221208; t=1682746911; x=1685338911;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=udIESTQJWghJ0eXfw1zjkQa1ohgrnaNqFMimydoVXZk=;
-        b=S7NAdMt/BLILu3k9cqlhzRidxjuY8lPnMt9sI+f7V2WnoL0rxhIkGSZbMkNXRfehPv
-         5TPdUIB0O+pIIqNJVeoQHIqeLHdKnubmejL5VoddsDUULbDGIMPX1pvwM6yU06ZFwrQC
-         0eXx+8aYwje6WrjerTb2LqIO9f52ufMyswrjFggR7oKPCkP48oaqYCu/R8K8JIRFgkSZ
-         +HFtXojLsja1GXQtRnMhcQ3JfR3PLQbsgqaq6q3opqfKF6AOcHzH4KX1Ku6AcICuzCEb
-         IC2Nt0douaEw6NzsuPzD+GLN4s4QEv9KyLJCP0fOzB4wXNJGtjSxVDJfH92Cu3jvRarf
-         FnKA==
+        bh=o4SKd/CJbMehjFA4/0WT2Vhwmic4WPB0Bd/AZr+QkNA=;
+        b=HqxxFW863z9kObQDKYyNFQqc2S6kpA+czhR44/WPixwnrwHfzrmfKFksGNOiAhPOen
+         9zOu5D3/Ei2fMfTqMloPzRwxmliKe8JRTxZmuGaXB8IQbWtT9+bbxjBFwwGN8hP57e4I
+         xpkjtIF4lhX8ibLP5BzvjdMZ9DBiG+s3/ElaGHqcCdZrSXwEv6dvoeuEBiVnnih1VJvd
+         iTBsZ69Tijzdjcs361glyutVjMiIt6H8WnPxnMuOHL0la2FXMb0V2sF/vHg6t+n3h8CX
+         xFBXQkET1/Z+6GyJcqlUCeYcUFH2DLj8DCbWKuivBmBmy77MeNoFLRrsWfZOlon6mmm5
+         Mnpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682746902; x=1685338902;
+        d=1e100.net; s=20221208; t=1682746911; x=1685338911;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=udIESTQJWghJ0eXfw1zjkQa1ohgrnaNqFMimydoVXZk=;
-        b=U0F2/09ix3E6goMYwVBM/4aWq8Kmu4B5//UG1x+LUj6M8KMoT6uV4pWgY81jkS+kMC
-         DduIyTHt7l/ERvc/raxRab2orfJi4Ogh6UrtwEfp4o/i/Erj5T5HdO0W1NJIFGvgfVyQ
-         Hu2zHktFL5HTWvX2pmPCEEp1PSomjz2PrWTzn1sxmc3xtRZDAjt/I+dBae997ahOJNMv
-         T9ytQQwsn5CXf+mte2fR4BwiJkdupBZhKlD/zmTIqvOPSZB1sXUUWEel0cgYe6lDYObG
-         eNsQQFsALs55H5LiMu1Qaq9kVv4dGOk+ce+ChCKMv0A/zYx/AX2Qob/jU97aaPrbY48r
-         aRmQ==
-X-Gm-Message-State: AC+VfDy/zlosG9RfQ2Pkx+d/l0loW2sedZxX9L36TvWo9ShpgEdlS135
-        uD7wcrnfaaE/TEpffIqTiXor9cQmmY4u
-X-Google-Smtp-Source: ACHHUZ7k8C4QVLDrdXyiVNZRg12JQxu+fF1LLzI0V9ATuIhg9IT4+BweogTF3zAsKr75lqULh/D5/nYRSg8q
+        bh=o4SKd/CJbMehjFA4/0WT2Vhwmic4WPB0Bd/AZr+QkNA=;
+        b=I2T9PlbAw+meJrL8zgatk7q933/ymYKmqj1huBvfxmGvX+hWKqFHLFlPiZGsxBRr+O
+         kLN9/ylalQ3DYK2mjyHbVIbV1KOgOgf7eghGTa2ymooqLrcnO0oJweD64ybTMoe6xiwJ
+         iDhTDn25uECFfrED4Ev4VmdpdsobLPqDtH+yEch1FyCIdhruqloJ6rglXs1lrSrxtxFg
+         yI6jp1UzgBNMZHEzC8t6Uk6cbW5DfZ8H9lmgMLrPsZeFAWagORKcso7ugvj5HBIdt1I6
+         SBi0kFrLs/c3pRpUFrIWDd044KuDwNTqLdiYQ+gN6g9ADM7NNVQkwBDvUWs59eHTP8eU
+         ZtqQ==
+X-Gm-Message-State: AC+VfDxHLFHHJG0sYdqats01QqiGwXy7zAxfQuEMdWRgkVdb08dC9e+A
+        FK61OIUIXWA07qyMHdmlXRpy6OhE4dSe
+X-Google-Smtp-Source: ACHHUZ5T1FyiQtj54RQxnVPHBfNHUoiYHWMMi2PaPLxOMMcrvjLBw+LIisUrL8ibrtgCntSvD3QnbJUicJm6
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c563:7e28:fb7c:bce3])
- (user=irogers job=sendgmr) by 2002:a81:ad07:0:b0:556:2da0:fc6 with SMTP id
- l7-20020a81ad07000000b005562da00fc6mr4244919ywh.7.1682746902557; Fri, 28 Apr
- 2023 22:41:42 -0700 (PDT)
-Date:   Fri, 28 Apr 2023 22:35:05 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:154b:b0:b8f:6ab7:9328 with SMTP
+ id r11-20020a056902154b00b00b8f6ab79328mr4539016ybu.2.1682746911354; Fri, 28
+ Apr 2023 22:41:51 -0700 (PDT)
+Date:   Fri, 28 Apr 2023 22:35:06 -0700
 In-Reply-To: <20230429053506.1962559-1-irogers@google.com>
-Message-Id: <20230429053506.1962559-46-irogers@google.com>
+Message-Id: <20230429053506.1962559-47-irogers@google.com>
 Mime-Version: 1.0
 References: <20230429053506.1962559-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v3 45/46] perf stat: Don't disable TopdownL1 metric on hybrid
+Subject: [PATCH v3 46/46] perf parse-events: Reduce scope of is_event_supported
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,32 +94,142 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that hybrid bugs are fixed sufficient to run TopdownL1 metrics,
-don't implicitly disable them for hybrid.
+Move to print-events.c and make static.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ tools/perf/util/parse-events.c | 39 ----------------------------------
+ tools/perf/util/parse-events.h |  2 --
+ tools/perf/util/print-events.c | 39 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 39 insertions(+), 41 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index f4e572f9de6b..67dc69270ae4 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1900,12 +1900,7 @@ static int add_default_attributes(void)
- 		 * Add TopdownL1 metrics if they exist. To minimize
- 		 * multiplexing, don't request threshold computation.
- 		 */
--		/*
--		 * TODO: TopdownL1 is disabled on hybrid CPUs to avoid a crashes
--		 * caused by exposing latent bugs. This is fixed properly in:
--		 * https://lore.kernel.org/lkml/bff481ba-e60a-763f-0aa0-3ee53302c480@linux.intel.com/
--		 */
--		if (metricgroup__has_metric(pmu, "TopdownL1") && !perf_pmu__has_hybrid()) {
-+		if (metricgroup__has_metric(pmu, "TopdownL1")) {
- 			struct evlist *metric_evlist = evlist__new();
- 			struct evsel *metric_evsel;
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 2dad88a6bf19..b93264f8a37c 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -28,7 +28,6 @@
+ #include "util/bpf-filter.h"
+ #include "util/util.h"
+ #include "tracepoint.h"
+-#include "thread_map.h"
  
+ #define MAX_NAME_LEN 100
+ 
+@@ -133,44 +132,6 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
+ 	},
+ };
+ 
+-bool is_event_supported(u8 type, u64 config)
+-{
+-	bool ret = true;
+-	int open_return;
+-	struct evsel *evsel;
+-	struct perf_event_attr attr = {
+-		.type = type,
+-		.config = config,
+-		.disabled = 1,
+-	};
+-	struct perf_thread_map *tmap = thread_map__new_by_tid(0);
+-
+-	if (tmap == NULL)
+-		return false;
+-
+-	evsel = evsel__new(&attr);
+-	if (evsel) {
+-		open_return = evsel__open(evsel, NULL, tmap);
+-		ret = open_return >= 0;
+-
+-		if (open_return == -EACCES) {
+-			/*
+-			 * This happens if the paranoid value
+-			 * /proc/sys/kernel/perf_event_paranoid is set to 2
+-			 * Re-run with exclude_kernel set; we don't do that
+-			 * by default as some ARM machines do not support it.
+-			 *
+-			 */
+-			evsel->core.attr.exclude_kernel = 1;
+-			ret = evsel__open(evsel, NULL, tmap) >= 0;
+-		}
+-		evsel__delete(evsel);
+-	}
+-
+-	perf_thread_map__put(tmap);
+-	return ret;
+-}
+-
+ const char *event_type(int type)
+ {
+ 	switch (type) {
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 2a8cafe0ee8f..2021fe145410 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -18,8 +18,6 @@ struct parse_events_error;
+ struct option;
+ struct perf_pmu;
+ 
+-bool is_event_supported(u8 type, u64 config);
+-
+ const char *event_type(int type);
+ 
+ /* Arguments encoded in opt->value. */
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index d416c5484cd5..45a625ab4e1a 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -27,6 +27,7 @@
+ #include "tracepoint.h"
+ #include "pfm.h"
+ #include "pmu-hybrid.h"
++#include "thread_map.h"
+ 
+ #define MAX_NAME_LEN 100
+ 
+@@ -224,6 +225,44 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
+ 	strlist__delete(sdtlist);
+ }
+ 
++static bool is_event_supported(u8 type, u64 config)
++{
++	bool ret = true;
++	int open_return;
++	struct evsel *evsel;
++	struct perf_event_attr attr = {
++		.type = type,
++		.config = config,
++		.disabled = 1,
++	};
++	struct perf_thread_map *tmap = thread_map__new_by_tid(0);
++
++	if (tmap == NULL)
++		return false;
++
++	evsel = evsel__new(&attr);
++	if (evsel) {
++		open_return = evsel__open(evsel, NULL, tmap);
++		ret = open_return >= 0;
++
++		if (open_return == -EACCES) {
++			/*
++			 * This happens if the paranoid value
++			 * /proc/sys/kernel/perf_event_paranoid is set to 2
++			 * Re-run with exclude_kernel set; we don't do that
++			 * by default as some ARM machines do not support it.
++			 *
++			 */
++			evsel->core.attr.exclude_kernel = 1;
++			ret = evsel__open(evsel, NULL, tmap) >= 0;
++		}
++		evsel__delete(evsel);
++	}
++
++	perf_thread_map__put(tmap);
++	return ret;
++}
++
+ int print_hwcache_events(const struct print_callbacks *print_cb, void *print_state)
+ {
+ 	struct perf_pmu *pmu = NULL;
 -- 
 2.40.1.495.gc816e09b53d-goog
 
