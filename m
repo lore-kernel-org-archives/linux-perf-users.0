@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DFDC77B61
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 01:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 666C3C77B61
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 01:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230316AbjD2Bec (ORCPT
+        id S230328AbjD2BhP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 28 Apr 2023 21:34:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43244 "EHLO
+        Fri, 28 Apr 2023 21:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230338AbjD2Beb (ORCPT
+        with ESMTP id S1347248AbjD2BhO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 28 Apr 2023 21:34:31 -0400
+        Fri, 28 Apr 2023 21:37:14 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 452462134;
-        Fri, 28 Apr 2023 18:34:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A351720;
+        Fri, 28 Apr 2023 18:37:13 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D0D0F6327E;
-        Sat, 29 Apr 2023 01:34:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD3B0C433D2;
-        Sat, 29 Apr 2023 01:34:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AFECA63517;
+        Sat, 29 Apr 2023 01:37:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2BBFC433D2;
+        Sat, 29 Apr 2023 01:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682732068;
-        bh=kCC4iEEf5RF+THve+YJpPhq/LRRoIrDbIu25AAEMQzk=;
+        s=k20201202; t=1682732232;
+        bh=safyuNki+N1k88yCxEEMHpvARQypKYxX3S+zh9xS0Z4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t3w9EMaTfEnlV0yFJttk6b8csUC0fYZ9mmPXp79RLzG+uTR0KJZOdXT/tAo2GF0kh
-         lnGlAbvqCTjs8EKsTzK1kxUH/M4OR7tXdMe8e3O0VsiKCg8p9IJ5HQl2b3JO3itQ2y
-         B4uOyOjutZAnJOhMjdp+RanmPMsSxgxwH31x+3Jzu+jbkM/z7KgeebopscNGBdIzf/
-         /KoqKvUhTwBCz3IiwhIlKN7wC7N7BeNqLLwuuUOO3As9BuLh3fNLuNQ/qh//tsd7tx
-         MiLACUeCDIMEHogrjjjAXH/tbDbq8c0fnsXiKFxx4UI7mmvrWRW9V3tFBA8e9cbRlk
-         hVDnxTLJzZPXQ==
+        b=Wtb+eZ4zClQ5SF3L7/BbnC+QlTqO+lKH/H9Oa2SofOZOz5GIcllupthfvpl8T4mIs
+         1OGtpkKKaDAzxGo1plRnVQhqNbmVlaztQiNRNliIZ/8QD6rXlFd64gqNFwjnXxQcaq
+         +VN5wKcx5k83dNVc5DV0HGasdT6Dz7dUBklFu4WNXi8HXaaF0du6oRpJZPBg2p5T7i
+         Sh8fO1cdf0iDRsVHJFf4MFyEovfmZtuK/E87mRpbcMzy70YcSkmT4wgjs4laqglduE
+         6vlp40EG19uQlG5mbltBSX3UjD9mWPNP73YBMC+4xFw4xAAMIOF0K/gG6EoJAw65IZ
+         tu7n2ZIy5A33g==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 35E0E403B5; Fri, 28 Apr 2023 22:34:25 -0300 (-03)
-Date:   Fri, 28 Apr 2023 22:34:25 -0300
+        id 1277B403B5; Fri, 28 Apr 2023 22:37:09 -0300 (-03)
+Date:   Fri, 28 Apr 2023 22:37:08 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Florian Weimer <fweimer@redhat.com>,
@@ -50,135 +50,125 @@ Cc:     Florian Weimer <fweimer@redhat.com>,
         "Justin M. Forbes" <jforbes@fedoraproject.org>
 Subject: Re: [PATCH v2] perf: Avoid implicit function declarations in
  lexer/parse interface
-Message-ID: <ZEx0IQAtBatrRDCR@kernel.org>
+Message-ID: <ZEx0xAamEl66qk2w@kernel.org>
 References: <87sfcn7uot.fsf@oldenburg.str.redhat.com>
  <CAP-5=fXZv+KCdCN05wVUcAwDCZAgXjWunoaviGBQEiUPqNwOmg@mail.gmail.com>
+ <ZEx0IQAtBatrRDCR@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXZv+KCdCN05wVUcAwDCZAgXjWunoaviGBQEiUPqNwOmg@mail.gmail.com>
+In-Reply-To: <ZEx0IQAtBatrRDCR@kernel.org>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Apr 25, 2023 at 10:40:14AM -0700, Ian Rogers escreveu:
-> On Tue, Apr 25, 2023 at 10:12 AM Florian Weimer <fweimer@redhat.com> wrote:
-> >
-> > In future compilers, -Wno-implicit-function-declaration may not bring
-> > back support for implicit function declarations, a feature that was
-> > removed from the C language in C99.  Instead of relying on implicit
-> > declarations, include the flex-generated header from the
-> > bison-generated C code.
-> >
-> > he expr-flex.h header needs to be included later than the others
+Em Fri, Apr 28, 2023 at 10:34:25PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Tue, Apr 25, 2023 at 10:40:14AM -0700, Ian Rogers escreveu:
+> > On Tue, Apr 25, 2023 at 10:12 AM Florian Weimer <fweimer@redhat.com> wrote:
+> > >
+> > > In future compilers, -Wno-implicit-function-declaration may not bring
+> > > back support for implicit function declarations, a feature that was
+> > > removed from the C language in C99.  Instead of relying on implicit
+> > > declarations, include the flex-generated header from the
+> > > bison-generated C code.
+> > >
+> > > he expr-flex.h header needs to be included later than the others
+> > 
+> > nit: s/he/The/
+> > 
+> > > because at the early point, the definition of YYSTYPE is not yet
+> > > available.
+> > >
+> > > Signed-off-by: Florian Weimer <fweimer@redhat.com>
+> > 
+> > Acked-by: Ian Rogers <irogers@google.com>
+> > 
+> > Thanks for fighting the build wrt parallel dependencies!
+> > Ian
 > 
-> nit: s/he/The/
 > 
-> > because at the early point, the definition of YYSTYPE is not yet
-> > available.
-> >
-> > Signed-off-by: Florian Weimer <fweimer@redhat.com>
+> Thanks, applied. BTW b4 coulnd't find this message (nor the original):
 > 
-> Acked-by: Ian Rogers <irogers@google.com>
+> ⬢[acme@toolbox perf-tools-next]$ b4 am -ctsl --cc-trailers 87sfcn7uot.fsf@oldenburg.str.redhat.com
+> Grabbing thread from lore.kernel.org/all/87sfcn7uot.fsf%40oldenburg.str.redhat.com/t.mbox.gz
+> That message-id is not known.
+> ⬢[acme@toolbox perf-tools-next]$ b4 am -ctsl --cc-trailers CAP-5=fXZv+KCdCN05wVUcAwDCZAgXjWunoaviGBQEiUPqNwOmg@mail.gmail.com
+> Grabbing thread from lore.kernel.org/all/CAP-5%3DfXZv%2BKCdCN05wVUcAwDCZAgXjWunoaviGBQEiUPqNwOmg%40mail.gmail.com/t.mbox.gz
+> Analyzing 1 messages in the thread
+> No patches found.
+> ⬢[acme@toolbox perf-tools-next]$
 > 
-> Thanks for fighting the build wrt parallel dependencies!
-> Ian
+> I applied it in the old fashion.
+
+Not so fast, removed it for now:
+
+  CC      /tmp/build/perf-tools-next/util/parse-events-bison.o
+In file included from util/pmu.y:14:
+/tmp/build/perf-tools-next/util/pmu-flex.h:496:1: error: unknown type name ‘YYSTYPE’
+  496 |
+      | ^
+/tmp/build/perf-tools-next/util/pmu-flex.h:498:19: error: unknown type name ‘YYSTYPE’
+  498 |
+      |                   ^
+/tmp/build/perf-tools-next/util/pmu-flex.h:546:17: error: unknown type name ‘YYSTYPE’
+  546 | extern int yylex \
+      |                 ^~
+util/pmu-bison.c: In function ‘perf_pmu_parse’:
+/tmp/build/perf-tools-next/util/pmu-bison.c:69:25: error: implicit declaration of function ‘perf_pmu_lex’; did you mean ‘perf_pmu_free’? [-Werror=implicit-function-declaration]
+   69 | #define yylex           perf_pmu_lex
+      |                         ^~~~~~~~~~~~
+util/pmu-bison.c:1007:16: note: in expansion of macro ‘yylex’
+At top level:
+cc1: note: unrecognized command-line option ‘-Wno-unknown-warning-option’ may have been intended to silence earlier diagnostics
+cc1: all warnings being treated as errors
+make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/pmu-bison.o] Error 1
+make[4]: *** Waiting for unfinished jobs....
+util/bpf-filter-bison.c: In function ‘perf_bpf_filter_parse’:
+/tmp/build/perf-tools-next/util/bpf-filter-bison.c:69:25: error: implicit declaration of function ‘perf_bpf_filter_lex’; did you mean ‘perf_bpf_filter_parse’? [-Werror=implicit-function-declaration]
+   69 | #define yylex           perf_bpf_filter_lex
+      |                         ^~~~~~~~~~~~~~~~~~~
+util/bpf-filter-bison.c:1283:16: note: in expansion of macro ‘yylex’
+At top level:
+cc1: note: unrecognized command-line option ‘-Wno-unknown-warning-option’ may have been intended to silence earlier diagnostics
+cc1: all warnings being treated as errors
+make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/bpf-filter-bison.o] Error 1
+make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:140: util] Error 2
+make[2]: *** [Makefile.perf:676: /tmp/build/perf-tools-next/perf-in.o] Error 2
+make[2]: *** Waiting for unfinished jobs....
+  CC      /tmp/build/perf-tools-next/pmu-events/pmu-events.o
+  LD      /tmp/build/perf-tools-next/pmu-events/pmu-events-in.o
+make[1]: *** [Makefile.perf:236: sub-make] Error 2
+make: *** [Makefile:113: install-bin] Error 2
+make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
+
+ Performance counter stats for 'make -k CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin':
+
+       40330976311      cycles:u
+       73953066660      instructions:u                   #    1.83  insn per cycle
+
+       9.268030835 seconds time elapsed
+
+       9.546339000 seconds user
+       7.391844000 seconds sys
 
 
-Thanks, applied. BTW b4 coulnd't find this message (nor the original):
+⬢[acme@toolbox perf-tools-next]$ cat /etc/redhat-release
+Fedora release 37 (Thirty Seven)
+⬢[acme@toolbox perf-tools-next]$ rpm -q bison flex
+bison-3.8.2-3.fc37.x86_64
+flex-2.6.4-11.fc37.x86_64
+⬢[acme@toolbox perf-tools-next]$ gcc --version
+gcc (GCC) 12.2.1 20221121 (Red Hat 12.2.1-4)
+Copyright (C) 2022 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-⬢[acme@toolbox perf-tools-next]$ b4 am -ctsl --cc-trailers 87sfcn7uot.fsf@oldenburg.str.redhat.com
-Grabbing thread from lore.kernel.org/all/87sfcn7uot.fsf%40oldenburg.str.redhat.com/t.mbox.gz
-That message-id is not known.
-⬢[acme@toolbox perf-tools-next]$ b4 am -ctsl --cc-trailers CAP-5=fXZv+KCdCN05wVUcAwDCZAgXjWunoaviGBQEiUPqNwOmg@mail.gmail.com
-Grabbing thread from lore.kernel.org/all/CAP-5%3DfXZv%2BKCdCN05wVUcAwDCZAgXjWunoaviGBQEiUPqNwOmg%40mail.gmail.com/t.mbox.gz
-Analyzing 1 messages in the thread
-No patches found.
 ⬢[acme@toolbox perf-tools-next]$
 
-I applied it in the old fashion.
 
 
-- Arnaldo
-
- 
-> > ---
-> > v2: Include the flex-generated files instead of manually-written prototypes.
-> >
-> >  tools/perf/util/Build          | 10 +++++++++-
-> >  tools/perf/util/expr.y         |  2 ++
-> >  tools/perf/util/parse-events.y |  1 +
-> >  tools/perf/util/pmu.y          |  1 +
-> >  4 files changed, 13 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> > index 918b501f9bd8..92897068c362 100644
-> > --- a/tools/perf/util/Build
-> > +++ b/tools/perf/util/Build
-> > @@ -283,7 +283,7 @@ CFLAGS_expr-flex.o          += $(flex_flags)
-> >  bison_flags := -DYYENABLE_NLS=0
-> >  BISON_GE_35 := $(shell expr $(shell $(BISON) --version | grep bison | sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\)/\1\2/g') \>\= 35)
-> >  ifeq ($(BISON_GE_35),1)
-> > -  bison_flags += -Wno-unused-parameter -Wno-nested-externs -Wno-implicit-function-declaration -Wno-switch-enum -Wno-unused-but-set-variable -Wno-unknown-warning-option
-> > +  bison_flags += -Wno-unused-parameter -Wno-nested-externs -Wno-switch-enum -Wno-unused-but-set-variable -Wno-unknown-warning-option
-> >  else
-> >    bison_flags += -w
-> >  endif
-> > @@ -340,3 +340,11 @@ $(OUTPUT)util/vsprintf.o: ../lib/vsprintf.c FORCE
-> >  $(OUTPUT)util/list_sort.o: ../lib/list_sort.c FORCE
-> >         $(call rule_mkdir)
-> >         $(call if_changed_dep,cc_o_c)
-> > +
-> > +# These dependencies ensure that the flex-generated .h file is
-> > +# available at the time the bison-generated .c sources are compiled.
-> > +# Do not depend on the generated .h file to prevent triggering
-> > +# parallel flex invocations for the same two output files.
-> > +$(OUTPUT)util/expr-bison.o : $(OUTPUT)util/expr-flex.c
-> > +$(OUTPUT)util/parse-events-bison.o : $(OUTPUT)util/parse-events-flex.c
-> > +$(OUTPUT)util/pmu-bison.o : $(OUTPUT)util/pmu-flex.c
-> > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> > index 635e562350c5..99581193ca4c 100644
-> > --- a/tools/perf/util/expr.y
-> > +++ b/tools/perf/util/expr.y
-> > @@ -53,6 +53,8 @@
-> >  %destructor { ids__free($$.ids); } <ids>
-> >
-> >  %{
-> > +#include "expr-flex.h"
-> > +
-> >  static void expr_error(double *final_val __maybe_unused,
-> >                        struct expr_parse_ctx *ctx __maybe_unused,
-> >                        bool compute_ids __maybe_unused,
-> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> > index be8c51770051..67a7f70c4767 100644
-> > --- a/tools/perf/util/parse-events.y
-> > +++ b/tools/perf/util/parse-events.y
-> > @@ -17,6 +17,7 @@
-> >  #include "evsel.h"
-> >  #include "parse-events.h"
-> >  #include "parse-events-bison.h"
-> > +#include "parse-events-flex.h"
-> >
-> >  void parse_events_error(YYLTYPE *loc, void *parse_state, void *scanner, char const *msg);
-> >
-> > diff --git a/tools/perf/util/pmu.y b/tools/perf/util/pmu.y
-> > index e675d79a0274..2170f1ac7b74 100644
-> > --- a/tools/perf/util/pmu.y
-> > +++ b/tools/perf/util/pmu.y
-> > @@ -9,6 +9,7 @@
-> >  #include <linux/bitmap.h>
-> >  #include <string.h>
-> >  #include "pmu.h"
-> > +#include "pmu-flex.h"
-> >
-> >  #define ABORT_ON(val) \
-> >  do { \
-> >
-> > base-commit: 173ea743bf7a9eef04460e03b00ba267cc52aee2
-> >
-
--- 
+I tried rm -rf the O= build dir, etc.
 
 - Arnaldo
