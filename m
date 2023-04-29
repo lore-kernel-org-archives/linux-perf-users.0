@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48478C77B60
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 05:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC4FC7618E
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 05:38:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347285AbjD2FiZ (ORCPT
+        id S229535AbjD2Fic (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 Apr 2023 01:38:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
+        Sat, 29 Apr 2023 01:38:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347276AbjD2FiJ (ORCPT
+        with ESMTP id S1347334AbjD2FiT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 Apr 2023 01:38:09 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4756C46B1
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:37:43 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b9a753ce33cso1005613276.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:37:43 -0700 (PDT)
+        Sat, 29 Apr 2023 01:38:19 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09B04ECA
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:37:50 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-559ea6b1065so2065787b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:37:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682746657; x=1685338657;
+        d=google.com; s=20221208; t=1682746665; x=1685338665;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qB7CrIho8sUs4uqST1FvQg7dTPewP8sCTz3Jefkl1h4=;
-        b=7gxKY/CXr66YpcHpzLZE2nsQ7TZrubJwCdqtd2TR9kfo1sD5akgNOPK4YrdA4XcK/x
-         jLE4EPEwYK+C38VKN93Huvo8z30gwGjl+Dx7XDf2LXOtk0ffRww+TxoJS/5b1sUfrGYd
-         y4DWtE33wbxwHVHmQtDW/KDsS1YxOSmfmWRgJIsh2H8peRCWEPRpKyIdt9p10d5E5Xvx
-         eeYXTc1VWWnI9hGpTfUJOr0q/MUVjiDC/q0mdr5qejd4EkLOZ6miPm8MagodLwREHeEz
-         AcIf8v+IlpQil8C9aYCqcrkTAKtFrvG1OFkHQqrk7OsSSlNXECp1BvEUu0RFtOfJgfGj
-         oCQA==
+        bh=Qf6Qd+fJp/raw+o0EdprpNNrlfsXq40MPV/2YI8RBqA=;
+        b=Xbe1r6m7L5chppeUxtUtY3oVfViIOH8okQf+Pwr6lV9rshLhEV1Iw/1AjnR5O3ud0v
+         y1g86fK5wXBJv2zc0b3cGczYoTmorczJP7p2MDWfOinYlWpFpP5eiWmokFiN04f9Q2HL
+         H7uRozZ9pDXVLxZX/2zPVPdaEusK+RhFuqHPet0FDKCt/7sBG231fizW5NmvEYOCczO8
+         /Ye4J3KdOI/9cMH5gdJTTIh4++b+/QJxw0JAotgnA78cmFRR2yXtU5v+7+na2RSKYEDa
+         Y7JBdzRMLTmbTJ418zygZ5Ti7Gk+t+Ko6sy0jI7vCjGVh2EeR690CjOGeiWB176DDzpV
+         Rn0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682746657; x=1685338657;
+        d=1e100.net; s=20221208; t=1682746665; x=1685338665;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qB7CrIho8sUs4uqST1FvQg7dTPewP8sCTz3Jefkl1h4=;
-        b=k0faiSFWmpMOp+pNaFyJy9HiltzykgOvQqpqOnXZyg89NUOEcPJkmw5OQwjKv/FxHe
-         A8liWpJDW/rCG4KKTZZs0pCdST50HYBvTMSPRunpIYOhyp8UIvGWnVuSLlR3OuKGllaP
-         6obA+6p4oaNV4ky6OXb1po7rpcTr0BCOTgZQ1uJV3Ibjg0Fh/9kg8mhrnxeaZtnjHWDG
-         2rFw9vdx3IbBeOiyuTpbVwgxorBkJ78xwyZKMDk2m9QsV254akElyW8uvFTwEI1NWFWx
-         Z3XUFsjsJBIOG0/G6w6ZNy0o31u9MkrzuT26z6n/BYZZck/+oyUAlYS+pFJ7A8YxRkl1
-         jnWQ==
-X-Gm-Message-State: AC+VfDy8uNVaw0/USO2xH/YY+qpntgwyizBqKRSHD0cc8ha979+j9XcZ
-        MAnFtFmEvqBpchH2cGJV2bZadZTWDPCa
-X-Google-Smtp-Source: ACHHUZ6vNySFlcMODgCnig3lQZyAoM6qXdID05lwe4DrriZsJrlozcR43ce5m25/RCiZAtzPVNi70WGqvciq
+        bh=Qf6Qd+fJp/raw+o0EdprpNNrlfsXq40MPV/2YI8RBqA=;
+        b=NwGQXVJRd6FuFTnwpXcrGLJbpD6AunqShqWF+66eUAAR70b/OpZoSkFVamVIvWCgnD
+         KU1ZKzGpJrFfxkFQw1yNeh/yUdncHZgwIJWhe/+qTHwR5kSb/dwZURxGIOhk7JU6SOUq
+         N7Vtj7g3Ysz1PEruKnSe1zzjWOlBCXnpCJepnFAdFITW/eNUfKULVYMhxT6K5nw4syfY
+         YbA6UHwqwCel0yuMWkqPOjj+5URNhZJ47y8Ys19EchXTgfTMrLrYTk03OGCDJuWMryfE
+         /1NVsc4YziI4ovJ+CCB5gTlLNZhNrtyG0TYuTNxgxLnWEjRSMwBjb6h/Edc7r8Xyswjb
+         ninQ==
+X-Gm-Message-State: AC+VfDwhZhHWJPdmKrJmDl3wjwJP3z07/gV3jmw/okEVMZ+jovpQ315/
+        jok/tqtAeOyQb6Iydz4SLoVf0rZkt4O1
+X-Google-Smtp-Source: ACHHUZ5OVe+qR1/gmMQaZaUudaLVwFiM0V2XjxlR46DODEVoqqQgrnYk37WUInGkm78gGuaZrHfxLB+h0OF2
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c563:7e28:fb7c:bce3])
- (user=irogers job=sendgmr) by 2002:a25:7495:0:b0:b68:7a4a:5258 with SMTP id
- p143-20020a257495000000b00b687a4a5258mr4265164ybc.3.1682746656744; Fri, 28
- Apr 2023 22:37:36 -0700 (PDT)
-Date:   Fri, 28 Apr 2023 22:34:37 -0700
+ (user=irogers job=sendgmr) by 2002:a81:ac28:0:b0:559:d9a5:c6bd with SMTP id
+ k40-20020a81ac28000000b00559d9a5c6bdmr738971ywh.5.1682746665423; Fri, 28 Apr
+ 2023 22:37:45 -0700 (PDT)
+Date:   Fri, 28 Apr 2023 22:34:38 -0700
 In-Reply-To: <20230429053506.1962559-1-irogers@google.com>
-Message-Id: <20230429053506.1962559-18-irogers@google.com>
+Message-Id: <20230429053506.1962559-19-irogers@google.com>
 Mime-Version: 1.0
 References: <20230429053506.1962559-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v3 17/46] perf parse-events: Set attr.type to PMU type early
+Subject: [PATCH v3 18/46] perf parse-events: Set pmu_name whenever a pmu is given
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,43 +94,49 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Set attr.type to PMU type early so that later terms can override the
-value. Setting the value in perf_pmu__config means that earlier steps,
-like config_term_pmu, can override the value.
+Change add_event to always set pmu_name when possible as not all code
+checks both pmu->name and evsel->pmu_name, for example,
+uniquify_counter in stat-display.c.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 2 +-
- tools/perf/util/pmu.c          | 1 -
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ tools/perf/util/parse-events.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 34ba840ae19a..707c53f1be09 100644
+index 707c53f1be09..9cb5f040a74c 100644
 --- a/tools/perf/util/parse-events.c
 +++ b/tools/perf/util/parse-events.c
-@@ -1492,9 +1492,9 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
- 	} else {
- 		memset(&attr, 0, sizeof(attr));
- 	}
-+	attr.type = pmu->type;
+@@ -269,6 +269,7 @@ __add_event(struct list_head *list, int *idx,
+ 	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
+ 	evsel->auto_merge_stats = auto_merge_stats;
+ 	evsel->pmu = pmu;
++	evsel->pmu_name = pmu && pmu->name ? strdup(pmu->name) : NULL;
  
- 	if (!head_config) {
--		attr.type = pmu->type;
- 		evsel = __add_event(list, &parse_state->idx, &attr,
- 				    /*init_attr=*/true, /*name=*/NULL,
+ 	if (name)
+ 		evsel->name = strdup(name);
+@@ -1500,12 +1501,7 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
  				    /*metric_id=*/NULL, pmu,
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index ad209c88a124..cb33d869f1ed 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1398,7 +1398,6 @@ int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
- {
- 	bool zero = !!pmu->default_config;
+ 				    /*config_terms=*/NULL, auto_merge_stats,
+ 				    /*cpu_list=*/NULL);
+-		if (evsel) {
+-			evsel->pmu_name = name ? strdup(name) : NULL;
+-			return 0;
+-		} else {
+-			return -ENOMEM;
+-		}
++		return evsel ? 0 : -ENOMEM;
+ 	}
  
--	attr->type = pmu->type;
- 	return perf_pmu__config_terms(pmu->name, &pmu->format, attr,
- 				      head_terms, zero, err);
- }
+ 	if (!parse_state->fake_pmu && perf_pmu__check_alias(pmu, head_config, &info))
+@@ -1561,7 +1557,6 @@ int parse_events_add_pmu(struct parse_events_state *parse_state,
+ 	if (evsel->name)
+ 		evsel->use_config_name = true;
+ 
+-	evsel->pmu_name = name ? strdup(name) : NULL;
+ 	evsel->percore = config_term_percore(&evsel->config_terms);
+ 
+ 	if (parse_state->fake_pmu)
 -- 
 2.40.1.495.gc816e09b53d-goog
 
