@@ -2,231 +2,150 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84156C77B60
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 06:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E33BC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 21:02:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230318AbjD2Guf (ORCPT
+        id S229580AbjD2VCL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 Apr 2023 02:50:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40632 "EHLO
+        Sat, 29 Apr 2023 17:02:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbjD2Gue (ORCPT
+        with ESMTP id S229489AbjD2VCK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 Apr 2023 02:50:34 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9372696
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 23:50:31 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-5144043d9d1so411472a12.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 23:50:31 -0700 (PDT)
+        Sat, 29 Apr 2023 17:02:10 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 296D8199A
+        for <linux-perf-users@vger.kernel.org>; Sat, 29 Apr 2023 14:02:06 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-32f4e0f42a7so295075ab.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 29 Apr 2023 14:02:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google; t=1682751031; x=1685343031;
+        d=google.com; s=20221208; t=1682802125; x=1685394125;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2UhLj8G0RcQUtsKhKUXfnhL7zuYYyQ7vxUKRWYdX3To=;
-        b=kl5IGW/Q3ziJZox5rl+u6Pls+orvxgrZh7dIcOOMrHC3T+7UehfcLxH/5OXNGM61OK
-         LeNapk1MFK9ZdPD+3yGP8whyGPsLJvuM/JdqjpVdy3soAh0+inT2wfUcCbvKGF/byerP
-         uViGf7E40KXqnWzIXzvuPPnVBhiSor/hPtMoM=
+        bh=WpzsyG65Q6wbW3VKw2zdL/sAWMWDjU/AwwPSbLiyPYw=;
+        b=gr2sv8uFyYuMOKVwad4npbupff+oa4Xobk3nrQWpMBqulnGRrllbD1k3bOtbXNOHOk
+         819SCSgaLcbKcnnr0356lMMFT+xo8fR8H97qgi1kKo2T+Mb2BGKeDdHBZd+1wy3uL6zD
+         G1DrSuVVU4gbSngUaWrENnSWIzaYQRx4HmSjAGs0faq3drdEmilhUEh1xpoZVVCJ5Moa
+         YMR0ucuwdG9kcOBFJU6E0zjgIjFUDNtZyqTOw9rYt2vaiT6DFSe3g2Uxh8CWJXkgDyMN
+         8fBjN8Bnor6qyI7QxfVCPKftWV60wtd1AIhrb+emyxSX531lStNScCoKvL2vKr61X38A
+         aIiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682751031; x=1685343031;
+        d=1e100.net; s=20221208; t=1682802125; x=1685394125;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2UhLj8G0RcQUtsKhKUXfnhL7zuYYyQ7vxUKRWYdX3To=;
-        b=M0CvA0X/XOhN3hHVm8yHH403PJnKAN6Z1HqFNryeWL59iHk/n/cIfn5NAIXz9dXq+y
-         YomYtJdIGc1MOfHs1LIIug/XHKxrUUqoknJM2sLQvWXHhA86uWlVcd3gAGN1Ksz/zhHZ
-         R2jPbnmUNtLZh8NByQSUhYFnA2AV/Rmf54yQn4gwQ9wYtlUECWvfrsMRF7vIfi4Cht9f
-         u7XtF2UCbgbJPM/nWikTsgqlrk7FB1Ccq76LHEZTAmlVbEfdP2IBAw7nL87nRh3UZ2SZ
-         88g1YHl+9qjTD2auuf2Tc8f/zPCyOAlGDaEzdbTp2hPwYn99yR4I0j0cejL4XSmCC8Nu
-         OgtA==
-X-Gm-Message-State: AC+VfDxsHNi3R9+Gefvm47p80yOukPOSg3NOJi3tyb0LlIzzYfzPZ9od
-        Ynol6vdipCsHfQujN/39w7Z64OQxmXeX9n6gfDMl
-X-Google-Smtp-Source: ACHHUZ696dIE7IrwvV8BtWc5TacXtKoiSXfv7kuAMvB8aDSVSFFnBuVQsWCP5AhdIJRoTLbNGit9a3My/X0+KaY2+2g=
-X-Received: by 2002:a05:6a21:1706:b0:ef:a31b:af8e with SMTP id
- nv6-20020a056a21170600b000efa31baf8emr8535949pzb.25.1682751031206; Fri, 28
- Apr 2023 23:50:31 -0700 (PDT)
+        bh=WpzsyG65Q6wbW3VKw2zdL/sAWMWDjU/AwwPSbLiyPYw=;
+        b=O+QldmJJxkao1DIS1bBgyvKpjpSE2hz/DjWwOST+3VeT7shmk9B5HTDJwy6m7YfOcd
+         OEA4/awHjJ0xiSjqQ2Tj5R19ngaDxEMXgKezpqhVKq+2O4s4ZS+iHWwV3v9BdKNjpnEn
+         rs1ylWQwggce8klYiP1RHvrczWH84eES9Ub66kO9S73B4XFYMjUIo0Iwf3joTvd8uvdz
+         yHYidZEtpR+HSaI9RjPSPDA97WmrluVSrsH+ZPlZKE/enmt/45ZXRm04QZ6KEo0GbPvt
+         DKSSwwEa2hDF+WIXKlAZ+JP5kjo7IfC3wq7JXSOkiW1G/y/gb2tY2/RqJCHW9n5lFU9t
+         BiXA==
+X-Gm-Message-State: AC+VfDwpYidGD1te1yrjb7CRJXiTD8AZMUND2aL6vKSsltYysVP/UE1j
+        OgIhS6On6CZ8bwCTdOHiZ2kZmOVL8dyIPbcHlqsRPg==
+X-Google-Smtp-Source: ACHHUZ6/QErfgNLoYp0FQiQuiCfqJnBan2fToPNDl9aCZG3QeLYwipqJ1dP6etYKjx3rhGQB34DTY+n2a+kimFb8bvw=
+X-Received: by 2002:a05:6e02:1a2e:b0:32b:1de1:17de with SMTP id
+ g14-20020a056e021a2e00b0032b1de117demr208219ile.2.1682802125210; Sat, 29 Apr
+ 2023 14:02:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230413161725.195417-1-alexghiti@rivosinc.com>
- <20230413161725.195417-5-alexghiti@rivosinc.com> <kwvrls2m6swp443brn27jwcsdhovtc4kxrkqustxpqgf7zqltw@xlhsrndkf4om>
- <CAHVXubh_y9Uw2xsgsQrVZEcb9bCLBLUCo74GOm-czsSawHxk4g@mail.gmail.com>
- <3bwxedsrovutzhlmlnozeuvz4zqnr32kuef2mdzmnbniajh6vb@we6jzlwkfuof> <CAOnJCU+xL1qP0zj9rD0d9nix-tSd-yfQnToDXCdHveTKQN_rUA@mail.gmail.com>
-In-Reply-To: <CAOnJCU+xL1qP0zj9rD0d9nix-tSd-yfQnToDXCdHveTKQN_rUA@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Sat, 29 Apr 2023 12:20:19 +0530
-Message-ID: <CAOnJCUK+cXPDMiA=x7sCTt=K7rCjr7q_6aj04VR8fZUUKbrkPA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] riscv: Enable perf counters user access only through perf
-To:     Andrew Jones <ajones@ventanamicro.com>
-Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+References: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
+In-Reply-To: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Sat, 29 Apr 2023 14:01:52 -0700
+Message-ID: <CAP-5=fX1E_qZwmch-gKcarLGkWwmxZj9dM2XuQKrBLeDRfqg7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Add JSON metrics for arm CMN and Yitian710 DDR
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        David Abdurachmanov <davidlt@rivosinc.com>,
-        Heinrich Schuchardt <heinrich.schuchardt@canonical.com>,
-        Andreas Schwab <schwab@suse.de>, mafm@debian.org,
-        aurel32@debian.org
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Apr 29, 2023 at 11:49=E2=80=AFAM Atish Patra <atishp@atishpatra.org=
-> wrote:
+On Mon, Apr 24, 2023 at 2:44=E2=80=AFAM Jing Zhang <renyu.zj@linux.alibaba.=
+com> wrote:
 >
-> On Wed, Apr 26, 2023 at 6:55=E2=80=AFPM Andrew Jones <ajones@ventanamicro=
-.com> wrote:
-> >
-> > On Wed, Apr 26, 2023 at 03:17:01PM +0200, Alexandre Ghiti wrote:
-> > > On Wed, Apr 26, 2023 at 2:57=E2=80=AFPM Andrew Jones <ajones@ventanam=
-icro.com> wrote:
-> > > >
-> > > > On Thu, Apr 13, 2023 at 06:17:25PM +0200, Alexandre Ghiti wrote:
-> > > > > We used to unconditionnally expose the cycle and instret csrs to
-> > > > > userspace, which gives rise to security concerns.
-> > > > >
-> > > > > So only allow access to hw counters from userspace through the pe=
-rf
-> > > > > framework which will handle context switchs, per-task events...et=
-c. But
-> > > > > as we cannot break userspace, we give the user the choice to go b=
-ack to
-> > > > > the previous behaviour by setting the sysctl perf_user_access.
-> > > > >
-> > > > > We also introduce a means to directly map the hardware counters t=
-o
-> > > > > userspace, thus avoiding the need for syscalls whenever an applic=
-ation
-> > > > > wants to access counters values.
-> > > > >
-> > > > > Note that arch_perf_update_userpage is a copy of arm64 code.
-> > > > >
-> > > > > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > > > > ---
-> > > > >  Documentation/admin-guide/sysctl/kernel.rst |  23 +++-
-> > > > >  arch/riscv/include/asm/perf_event.h         |   3 +
-> > > > >  arch/riscv/kernel/Makefile                  |   2 +-
-> > > > >  arch/riscv/kernel/perf_event.c              |  65 +++++++++++
-> > > > >  drivers/perf/riscv_pmu.c                    |  42 ++++++++
-> > > > >  drivers/perf/riscv_pmu_legacy.c             |  17 +++
-> > > > >  drivers/perf/riscv_pmu_sbi.c                | 113 ++++++++++++++=
-++++--
-> > > > >  include/linux/perf/riscv_pmu.h              |   3 +
-> > > > >  tools/lib/perf/mmap.c                       |  65 +++++++++++
-> > > > >  9 files changed, 322 insertions(+), 11 deletions(-)
-> > > > >  create mode 100644 arch/riscv/kernel/perf_event.c
-> > > > >
-> > > > > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Docume=
-ntation/admin-guide/sysctl/kernel.rst
-> > > > > index 4b7bfea28cd7..02b2a40a3647 100644
-> > > > > --- a/Documentation/admin-guide/sysctl/kernel.rst
-> > > > > +++ b/Documentation/admin-guide/sysctl/kernel.rst
-> > > > > @@ -941,16 +941,31 @@ enabled, otherwise writing to this file wil=
-l return ``-EBUSY``.
-> > > > >  The default value is 8.
-> > > > >
-> > > > >
-> > > > > -perf_user_access (arm64 only)
-> > > > > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > > +perf_user_access (arm64 and riscv only)
-> > > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > > +
-> > > > > +Controls user space access for reading perf event counters.
-> > > > >
-> > > > > -Controls user space access for reading perf event counters. When=
- set to 1,
-> > > > > -user space can read performance monitor counter registers direct=
-ly.
-> > > > > +arm64
-> > > > > +=3D=3D=3D=3D=3D
-> > > > >
-> > > > >  The default value is 0 (access disabled).
-> > > > > +When set to 1, user space can read performance monitor counter r=
-egisters
-> > > > > +directly.
-> > > > >
-> > > > >  See Documentation/arm64/perf.rst for more information.
-> > > > >
-> > > > > +riscv
-> > > > > +=3D=3D=3D=3D=3D
-> > > > > +
-> > > > > +When set to 0, user access is disabled.
-> > > > > +
-> > > > > +When set to 1, user space can read performance monitor counter r=
-egisters
-> > > > > +directly only through perf, any direct access without perf inter=
-vention will
-> > > > > +trigger an illegal instruction.
-> > > > > +
-> > > > > +The default value is 2, it enables the legacy mode, that is user=
- space has
-> > > > > +direct access to cycle, time and insret CSRs only.
-> > > >
-> > > > I think this default value should be a Kconfig symbol, allowing ker=
-nels to
-> > > > be built with a secure default.
-> > >
-> > > Actually I was more in favor of having the default to 1 (ie the secur=
-e
-> > > option) and let the distros deal with the legacy mode (via a sysctl
-> > > parameter on the command line) as long as user-space has not been
-> > > fixed: does that make sense?
-> >
-> > Yes, I'd prefer that too. I assumed the default was 2 in this patch
-> > because we couldn't set it to 1 for some reason.
-> >
+> Changes since RFC:
+> - Refact arm-cmn PMU identifier.
+> - Not add arm-cmn PMU aliasing currently because it's Eventcode is
+>   difficult to define.
+> - Rename ali_drw PMU identifier and Unit name.
+> - Divide ali_drw PMU metric and aliasing into two patches.
 >
-> I would prefer that too. However, it was set to 2 because it would break
-> the user space application depending on the legacy behavior as soon as th=
-e
-> patches are upstream. That is the reason
-> palmer suggested keeping the default value to 2 in order to avoid that.
+> Add an identifier sysfs file for the yitian710 SoC DDR and arm CMN to
+> allow userspace to identify the specific implementation of the device,
+> so that the perf tool can match the corresponding uncore events and
+> metrics through the identifier. Then added several general CMN700 metrics
+> and yitian710 soc DDR metrics.
 >
-> +distro folks (cc'd)
-> If the distro maintainer can confirm that this would be a non-issue, I am=
- okay
-> with setting the default to 1.
+> $perf list:
+> ...
+> ali_drw:
+>   hif_rmw
+>        [A Read-Modify-Write Op at HIF interface. 64B. Unit: ali_drw]
+>   hif_hi_pri_rd
+>        [A high priority Read at HIF interface. 64B. Unit: ali_drw]
+>   hif_rd
+>        [A Read Op at HIF interface. 64B. Unit: ali_drw]
+>   hif_rd_or_wr
+>        [A Write or Read Op at HIF interface. 64B. Unit: ali_drw]
+>   hif_wr
+>        [A Write Op at HIF interface. 64B. Unit: ali_drw]
+> ...
 >
+> $perf stat -M ddr_read_bandwidth.all ./test
+>
+> Performance counter stats for 'system wide':
+>
+>             38,150      hif_rd        #  2.4 MB/s  ddr_read_bandwidth.all
+>      1,000,957,941 ns   duration_time
+>
+>        1.000957941 seconds time elapsed
+>
+> Jing Zhang (5):
+>   driver/perf: Add identifier sysfs file for CMN
+>   perf vendor events: Add JSON metrics for CMN-700
+>   driver/perf: Add identifier sysfs file for Yitian 710 DDR
+>   perf jevents: Add support for Yitian 710 DDR PMU aliasing
+>   perf vendor events: Add JSON metrics for Yitian 710 DDR
 
-@David Abdurachmanov reminds me of ARM64 code where it is set to zero.
-The upstream kernel doesn't even enable userspace via perf. The
-default in x86 is 1 though.
+The perf tool changes all make sense. John Garry is more of an expert
+on the ARM part of this than me though.
+Acked-by: Ian Rogers <irogers@google.com>
 
-+Rob Herring (who enabled the ARM64 support[1])
-@Rob: If you can shed some light on the reasoning behind setting to
-disabled, that would help
-us make a more informed decision.
+Thanks,
+Ian
 
-https://github.com/torvalds/linux/commit/e2012600810c9ded81f6f63a8d04781be3=
-c300ad
-
->
-> > Thanks,
-> > drew
->
->
+>  drivers/perf/alibaba_uncore_drw_pmu.c              |  27 ++
+>  drivers/perf/arm-cmn.c                             |  49 +++
+>  .../arch/arm64/arm/cmn700/sys/metrics.json         |  74 ++++
+>  .../arm64/freescale/yitian710/sys/ali_drw.json     | 373 +++++++++++++++=
+++++++
+>  .../arm64/freescale/yitian710/sys/metrics.json     |  20 ++
+>  tools/perf/pmu-events/jevents.py                   |   2 +
+>  6 files changed, 545 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn700/sys/metri=
+cs.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/=
+sys/ali_drw.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/=
+sys/metrics.json
 >
 > --
-> Regards,
-> Atish
-
-
-
---=20
-Regards,
-Atish
+> 1.8.3.1
+>
