@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 382C5C7618E
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 05:39:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8040AC77B60
+	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 05:39:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347340AbjD2Fjp (ORCPT
+        id S1347311AbjD2Fjx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 Apr 2023 01:39:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41492 "EHLO
+        Sat, 29 Apr 2023 01:39:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347359AbjD2Fj1 (ORCPT
+        with ESMTP id S1347328AbjD2Fjn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 Apr 2023 01:39:27 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C406530CB
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:38:58 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-559d30ec7fcso11681067b3.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:38:58 -0700 (PDT)
+        Sat, 29 Apr 2023 01:39:43 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F10549F5
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:39:13 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-51b7810ec2cso284953a12.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Apr 2023 22:39:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682746710; x=1685338710;
+        d=google.com; s=20221208; t=1682746720; x=1685338720;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ub3nsWvIc7LdAE08OZJfmvPZS6krUrWnEa75g5zW2eY=;
-        b=1aEYutTMfRzVodFc3v+e1Nt7HOypko9OaKx/tFQE5Vm1H4q61qiCnOjxvuxSJmTVH2
-         1z37K3+2wMmwEDNte/mBbTmeuvRZipZjjZUP5E1f0l87r6Aix4LW3je0rjRdEkSwF00B
-         3xOYMnn+QCTJdplR/HvdTqDJiLAS6/I3CiZy9y3ZgrOKQMeDlwg1DBGVc9ze6XsyxZKm
-         oX2ARUROMkkL6qkDjZfEUuLphAWbgtgcA7oPjKeJ1+x4RlliXDvDfYKB0hOp+oDU7VcZ
-         xPRTEGJOaJWvPmQV0FqQEjPAZCY4MXfuIIyVBnebJITB1ODV5tfW1RG8hmvuKFzk6aq2
-         jEpw==
+        bh=l4ljR53ZCaGFcHXQHUCt//riNKiVKOYfs1jr6/UH5IU=;
+        b=UAc6SXrtnFTY83/rMvqoBKMPD0Lh1HWWdc24pY5d64Xi/8ExI92X4lw1mAVZSurOm3
+         dGFRQUzXlcRa0sDbET/B1TvF4XLqIGXwlBND3xzgKRPGfFJ58zeVzetE8e2PlRvuzJZu
+         69ZRw9qFNlpExlBUKCCaCDdUOxjBAgDDAr6vKiTYQO1n5nUY7cGpyW7R+zQmFVjNrsz3
+         snkNbpXcxicj5aAkPyuWKoeiVnTuaiOP+77UQeYJOdiMrlp/vQltGzXNmeKYI2ygGCcO
+         RTPAPelNJ26UIyWaDLiEyczDpQPNe09EHd579GoVjBhr66bw/Eax/1NbjJviN6FLl6WQ
+         LsAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682746710; x=1685338710;
+        d=1e100.net; s=20221208; t=1682746720; x=1685338720;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ub3nsWvIc7LdAE08OZJfmvPZS6krUrWnEa75g5zW2eY=;
-        b=LhE++twtjeumU1tXxOqxykMZ9ZDt42S32Us/iHh/UIuAJ1lhghaRwt2vtCgOnQYVF4
-         N08hNswO41O+d3SHhKUBsfZBOaZ7crmBLJvE/ZEofHx2EvUEMxdTneS3xeSjePS6mtD1
-         WABoegwQKev/CZBv42E/hJPjKrltM12wwVu9qspmgto/Y2CF2v+OaaLjvuhn+jPsijwf
-         WHYoQj5yJrw9Ee9RuFQvb5baFS8JgUbrg/kCIPNhY55dt9UoY1u8DmPpS9QFqbFAtksf
-         wgTLSE2OqP6TGM5B0INu2D3zr/rLkRJlVMOlOxSETkxENamOviYAJk5FWKcF0SREzhpR
-         8qFA==
-X-Gm-Message-State: AC+VfDwgv3fNbiQg2ipXJXTWTpcrOv4mosziv9FPaqxwcTyQfeIU83uD
-        12kbr+FW82Q4QwciBc3VI/M3ByhfIFt7
-X-Google-Smtp-Source: ACHHUZ5g+Vv29kqxX5S9sbvQ3rlnuSASSDI5P6Pb1r7XqLDhJHiUO29mkgT6oXqgSaIB5Qdz+ez2USGGZfSB
+        bh=l4ljR53ZCaGFcHXQHUCt//riNKiVKOYfs1jr6/UH5IU=;
+        b=jEEYLHlEr2blOmR7G/vT+PnPS4RsnndZKFqYI8IQTjEt2nAg81UFlEW/bo2w1dLDBJ
+         5USLpXBOcrTQvIF8GhnuADIl4N6WwV0OI9Q4MEq1u+Aiyi/ckjiSv2of2LkHJoXX4BwN
+         mdj1DmVUTp2sERIrwDpDK/iYnYUiaHplhUpABbPCfrtVh+/Z+6fyCC0H9Z80gLsA3Xoj
+         pfKIK9qcWz5++LdECu4Mq9Gt7Z5pUXLsv4bN+I3lSyZ8deSf5AHIFYG7BQH1dHO0zCEW
+         4FNK66BeJc56or1UdgotKf5qAyUbi/jxachMU4CzUdzsI5n3aUFDhb9evRpZVvlpEViR
+         7uNQ==
+X-Gm-Message-State: AC+VfDyraNqEXWJ+OuFp5CxfXvYE7Eb7BMJqI5wX5S7F1jlW4OMSSYey
+        RaCnxW8FikmJnXSU+BxLbNY7lohM8kMy
+X-Google-Smtp-Source: ACHHUZ4gbCdIO0vL6epL3e/zGTsvTKh5iYEOxuj/cYNW2aDkIoLKWW6PLICMMDKgvakdU2CN/LyZn+vBRZ8A
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c563:7e28:fb7c:bce3])
- (user=irogers job=sendgmr) by 2002:a81:a745:0:b0:545:f7cc:f30 with SMTP id
- e66-20020a81a745000000b00545f7cc0f30mr4654652ywh.0.1682746710152; Fri, 28 Apr
- 2023 22:38:30 -0700 (PDT)
-Date:   Fri, 28 Apr 2023 22:34:43 -0700
+ (user=irogers job=sendgmr) by 2002:a63:7:0:b0:51f:343e:7df8 with SMTP id
+ 7-20020a630007000000b0051f343e7df8mr1874845pga.8.1682746719916; Fri, 28 Apr
+ 2023 22:38:39 -0700 (PDT)
+Date:   Fri, 28 Apr 2023 22:34:44 -0700
 In-Reply-To: <20230429053506.1962559-1-irogers@google.com>
-Message-Id: <20230429053506.1962559-24-irogers@google.com>
+Message-Id: <20230429053506.1962559-25-irogers@google.com>
 Mime-Version: 1.0
 References: <20230429053506.1962559-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v3 23/46] perf test x86 hybrid: Update test expectations
+Subject: [PATCH v3 24/46] perf test x86 hybrid: Add hybrid extended type checks
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,29 +94,24 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Don't assume evlist order. Switch to a loop rather than depend on
-evlist order for raw events test.
-
-Update hybrid event expectations. Previous values were based on
-parsing legacy hardware events from sysfs, update to the correct PMU
-specific legacy values.
+Assert hybrid extended types are as expected.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/tests/hybrid.c | 54 ++++++++++++++----------------
- 1 file changed, 26 insertions(+), 28 deletions(-)
+ tools/perf/arch/x86/tests/hybrid.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/tools/perf/arch/x86/tests/hybrid.c b/tools/perf/arch/x86/tests/hybrid.c
-index 0f99cfd116ee..d2a173ba3db9 100644
+index d2a173ba3db9..941a9edfed4e 100644
 --- a/tools/perf/arch/x86/tests/hybrid.c
 +++ b/tools/perf/arch/x86/tests/hybrid.c
-@@ -11,13 +11,18 @@ static bool test_config(const struct evsel *evsel, __u64 expected_config)
- 	return (evsel->core.attr.config & PERF_HW_EVENT_MASK) == expected_config;
+@@ -16,12 +16,18 @@ static bool test_perf_config(const struct perf_evsel *evsel, __u64 expected_conf
+ 	return (evsel->attr.config & PERF_HW_EVENT_MASK) == expected_config;
  }
  
-+static bool test_perf_config(const struct perf_evsel *evsel, __u64 expected_config)
++static bool test_hybrid_type(const struct evsel *evsel, __u64 expected_config)
 +{
-+	return (evsel->attr.config & PERF_HW_EVENT_MASK) == expected_config;
++	return (evsel->core.attr.config >> PERF_PMU_TYPE_SHIFT) == expected_config;
 +}
 +
  static int test__hybrid_hw_event_with_pmu(struct evlist *evlist)
@@ -124,103 +119,57 @@ index 0f99cfd116ee..d2a173ba3db9 100644
  	struct evsel *evsel = evlist__first(evlist);
  
  	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x3c));
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
++	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+ 	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
  	return TEST_OK;
  }
- 
-@@ -27,13 +32,13 @@ static int test__hybrid_hw_group_event(struct evlist *evlist)
- 
+@@ -33,11 +39,13 @@ static int test__hybrid_hw_group_event(struct evlist *evlist)
  	evsel = leader = evlist__first(evlist);
  	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x3c));
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
++	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+ 	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
  
  	evsel = evsel__next(evsel);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0xc0));
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
++	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+ 	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
  	return TEST_OK;
- }
-@@ -48,8 +53,8 @@ static int test__hybrid_sw_hw_group_event(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
+@@ -54,6 +62,7 @@ static int test__hybrid_sw_hw_group_event(struct evlist *evlist)
  
  	evsel = evsel__next(evsel);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x3c));
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
++	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+ 	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
  	return TEST_OK;
- }
-@@ -60,8 +65,8 @@ static int test__hybrid_hw_sw_group_event(struct evlist *evlist)
- 
+@@ -66,6 +75,7 @@ static int test__hybrid_hw_sw_group_event(struct evlist *evlist)
  	evsel = leader = evlist__first(evlist);
  	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x3c));
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
++	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+ 	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
  
- 	evsel = evsel__next(evsel);
-@@ -76,15 +81,15 @@ static int test__hybrid_group_modifier1(struct evlist *evlist)
- 
+@@ -82,6 +92,7 @@ static int test__hybrid_group_modifier1(struct evlist *evlist)
  	evsel = leader = evlist__first(evlist);
  	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x3c));
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
++	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+ 	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
  	TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
- 	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+@@ -89,6 +100,7 @@ static int test__hybrid_group_modifier1(struct evlist *evlist)
  
  	evsel = evsel__next(evsel);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0xc0));
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
+ 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_HARDWARE == evsel->core.attr.type);
++	TEST_ASSERT_VAL("wrong hybrid type", test_hybrid_type(evsel, PERF_TYPE_RAW));
+ 	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_INSTRUCTIONS));
  	TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
  	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
- 	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
-@@ -93,22 +98,15 @@ static int test__hybrid_group_modifier1(struct evlist *evlist)
- 
- static int test__hybrid_raw1(struct evlist *evlist)
- {
--	struct evsel *evsel = evlist__first(evlist);
-+	struct perf_evsel *evsel;
- 
--	if (!perf_pmu__hybrid_mounted("cpu_atom")) {
--		TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
--		TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
--		TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x1a));
--		return TEST_OK;
--	}
--
--	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
--	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x1a));
-+	perf_evlist__for_each_evsel(&evlist->core, evsel) {
-+		struct perf_pmu *pmu = perf_pmu__find_by_type(evsel->attr.type);
- 
--	/* The type of second event is randome value */
--	evsel = evsel__next(evsel);
--	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x1a));
-+		TEST_ASSERT_VAL("missing pmu", pmu);
-+		TEST_ASSERT_VAL("unexpected pmu", !strncmp(pmu->name, "cpu_", 4));
-+		TEST_ASSERT_VAL("wrong config", test_perf_config(evsel, 0x1a));
-+	}
- 	return TEST_OK;
- }
- 
 -- 
 2.40.1.495.gc816e09b53d-goog
 
