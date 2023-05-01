@@ -2,212 +2,211 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C7A1C77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 May 2023 12:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36F9C77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 May 2023 14:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232476AbjEAMkY (ORCPT
+        id S231779AbjEAOFH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 May 2023 08:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33670 "EHLO
+        Mon, 1 May 2023 10:05:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232376AbjEAMkW (ORCPT
+        with ESMTP id S230114AbjEAOFG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 May 2023 08:40:22 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2076.outbound.protection.outlook.com [40.107.94.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE66170C;
-        Mon,  1 May 2023 05:39:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EJ48wp/CUdFXnn6SIhlyAr3BZT+A97TX5T65pK3uWLMuiOCjRnsKIS/w9VhZynX99dQwBHnIx8QdKwdkU9htWD3aHaIetRoTnhtq13gSLO1F5pNPkMNd8hxss1ORUxxiK6mSzqKvVzEp46kuaQYUUcQA+wId0Zag+saTwoeFRXPEsEmFhLaJXmMWHYUR6Q41+IPMdkTLFhQiVWdYZYIzZy9tQMT0y/RCHl+fKOocDPl5VIdcSYNzwrpDZjDLOPCwF35N7DO73NICQNGD0IbWHLLub4nbGhcWC2oCJzLaZaU5NUhwFa6ua3Vx9okmV0FecEs3OhmO6OzyemlVFoZ8ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=B1PoxOSEquA9qIXW1fp+FUMyyKxLWU/aCjbM6epURWQ=;
- b=lo6BNozabH86NzdPpuupea1+w9CetbvKPAWqdg2dKAzc+Ntwohh+dcGl+FioLp9BDu7cKhIQ/whzwKK1dN1BaVjiVNjXBS00/kjQJTdjRSXpc4EtOkrNZ9wf0LnBXCLRSDb1f4tCEoJPQ5bULRc+ZiUbxwSfMAcF8KX/Si12ZxtmJkj12NhbXIaODa6DhxdRg/TFyW+Dj5oG9nmkFBxPZEVmP0w2/XBtKFUI84O/6fx114T/foI3M0wsjEDu3IZXhDiD4Zp+vyO++BXxvOFb7B6JYzQ5SezE0mHElXzGDa5PUJa/kiFmX0Ie8mVFQU36DGF0Kef1/C/w2ka5u/ydqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B1PoxOSEquA9qIXW1fp+FUMyyKxLWU/aCjbM6epURWQ=;
- b=OzI3OgQGG6nHGQJPyjvEXpXFxSh7zEhqZXRUhl4mW1iVKweQTfprSSmImeoxTTmlVbwPCGt3Ix0sEBzg3iug1JlYwbFw9kY6qdva/tm55pqv5oXIOPUSDnO/Z8zrUwzKJgcANljFaGyjeylsYfIDKMmEdLP3B77B6J5nNcp4MjJ1/9HypJHGWzFn/OGjUORKBVdN9t9vbbFUDPPYbwr+UW0xK8iLZP5+NR9G0gaVOUpgRQid5D6bQ0x/JyaO3B52s+N5FwUfzrR2Tg0vlj80Wm+1w7f2zd679bna5P95hRg89PMKERNr9Fv637aW4EDGIkTI7KGh9Bj5cnPQtaWpZQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by PH7PR12MB6908.namprd12.prod.outlook.com (2603:10b6:510:1ba::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.30; Mon, 1 May
- 2023 12:39:24 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f7a7:a561:87e9:5fab]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f7a7:a561:87e9:5fab%6]) with mapi id 15.20.6340.030; Mon, 1 May 2023
- 12:39:24 +0000
-Date:   Mon, 1 May 2023 09:39:22 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        David Hildenbrand <david@redhat.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v5] mm/gup: disallow GUP writing to file-backed mappings
- by default
-Message-ID: <ZE+y+rA7BCNzV41J@nvidia.com>
-References: <6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com>
- <afcc124e-7a9b-879c-dfdf-200426b84e24@redhat.com>
- <ZEvZtIb2EDb/WudP@nvidia.com>
- <ZEwPscQu68kx32zF@mit.edu>
- <ZEwVbPM2OPSeY21R@nvidia.com>
- <ZEybNZ7Rev+XM4GU@mit.edu>
- <ZE2ht9AGx321j0+s@nvidia.com>
- <20230501072718.GF2155823@dread.disaster.area>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230501072718.GF2155823@dread.disaster.area>
-X-ClientProxiedBy: BL1PR13CA0419.namprd13.prod.outlook.com
- (2603:10b6:208:2c2::34) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
+        Mon, 1 May 2023 10:05:06 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5711B7
+        for <linux-perf-users@vger.kernel.org>; Mon,  1 May 2023 07:05:05 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-50a14564d17so39885392a12.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 May 2023 07:05:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1682949903; x=1685541903;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uz6FJXzkJkqPDcrEIjMfZPfzlnpS0r8oHDAuwuJCMM8=;
+        b=dhYWbUYPPk2jVkyznNfyoYMQOnEvFsCXYywYgNl+WvGgtHMmkHQ9tp5StpFkaewAHR
+         sRgjkmEDf/oaYTzoN+mFfa9YMPOvLJzUmw8U78cFcW1457uDsyanGycGgTJkf4FPJ8gs
+         qhbBjZlLPxZkowA4xmaZMZUO4OmRQ3BtjuygM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682949903; x=1685541903;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Uz6FJXzkJkqPDcrEIjMfZPfzlnpS0r8oHDAuwuJCMM8=;
+        b=FlDkplTdkelqTh6eCGTt5sd2aIDM7KSIwKuNJmlWigQlxp6Q2MZ2lTMMuRPIWOdwPj
+         UfWcbOqZ719hk2bQUBtWWAIzbWPiEpHN+7e2rwPAZhJxKhMEjiSyeqN/pX2d8T/tcKgN
+         MXCuxBJxV5eqrL5nXV+1KcABQ7KUTG3O05SG/BONuhgpivU1DL3K3A4lOPc1HY0wSW/Y
+         Xgl1MpQL2cmX6ZxrN7vrlFmiTOw+vxHqryIPqClznSQiZS6z4QLyAPeUgXIlofmWuNZ5
+         leQpIokSA66BPEWYmGzcQWufKVzsjE8w5uyVpJKUlhKDGh26kOMIcpUBe4Ler0Rx1sjU
+         UTWA==
+X-Gm-Message-State: AC+VfDwamMbsdcC1pElYfQOvNLny6kzDEftKhyut7218tO2Vasjxf3Yi
+        X0mpVltvWoD/lFZxnXZ+Kox0Ns8Oh16+rweD+ZR+Uw==
+X-Google-Smtp-Source: ACHHUZ4eE1XHP3MS7Ms8caitttINZrqkYrciZKkySGwTZz6P7XQz4+oWumTIz2Fs/JYVlU1+HGFppw==
+X-Received: by 2002:a17:907:988:b0:933:4d47:55b7 with SMTP id bf8-20020a170907098800b009334d4755b7mr11657929ejc.2.1682949903075;
+        Mon, 01 May 2023 07:05:03 -0700 (PDT)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
+        by smtp.gmail.com with ESMTPSA id c5-20020a170906d18500b0094e96e46cc0sm14745987ejz.69.2023.05.01.07.04.59
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 May 2023 07:04:59 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-3f256b84f14so277915e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 May 2023 07:04:59 -0700 (PDT)
+X-Received: by 2002:a05:600c:3c84:b0:3f1:9396:6fbf with SMTP id
+ bg4-20020a05600c3c8400b003f193966fbfmr531828wmb.4.1682949899295; Mon, 01 May
+ 2023 07:04:59 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|PH7PR12MB6908:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7799b4a8-41c4-4ddf-8ae1-08db4a4117b7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: wDcAgxJA9yBHwmKZKiCW7VNOk1Gc7HjA+Cb3lBl9ejwfnyy8V5SdUUq2w5Uy9JHqB/5tixoMCIRNVnhxFsfBg4ekvC5Q7YdcM+sokxCfkfiD8w8KlAteoZ84qbA1n5DEJYHDVeL01M5D9rrYKswiRtEMehRfBqK6C+6+BMYMAbvMMKaGYdTsqjdNo3FRmE3dLUff6YoVHoByqXuOYhITpvX0IJ2Tc+Zlosbe14V58Cnj+CR9P51hGyP3VG7wDHKNENOO62DKZ8to1JHkIXWc7fNGCPdXEcY47JnqwSEXWAg7YseaK034EQdxsZsBiUxCE5MMfiTRzhF/x7YwWFUJbKc3PaCrT2Ttcq9ziH8RMMD4a/f6U1aYtnqJSyMfy22R29oxplJ2EzJJNWndWOuGiC9qJSC79QIxYDAkKUNxFqzI6YO8Dekh52YVXRSaaIEcdpVvWCwq+lcr6qdZNsGmczlt3E0b0DAMc4d2DljrpsVaLw8cgPnqUgDT23re26h2G7ILAT2UZicU62yjJtq5gdnfUOinyv+a8pXP6svNzQduDOkNVwUj4I7m3g4M6w6h
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(346002)(396003)(376002)(39860400002)(136003)(451199021)(6486002)(83380400001)(36756003)(2616005)(86362001)(38100700002)(186003)(6506007)(6512007)(26005)(54906003)(41300700001)(6916009)(66946007)(66476007)(66556008)(2906002)(4326008)(478600001)(316002)(8936002)(8676002)(7406005)(7416002)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lMY2WZ7AjcOyPjanL2qEDnEw/PJvTiWtRUAXIyovmLFxFvAc3BZQLueUCcz7?=
- =?us-ascii?Q?DhILEa/KNK1AB1/PvupCpS41vrgAKcr5pr5tUEPRwIPsEZkE5a2HVQyQQIR3?=
- =?us-ascii?Q?GHsHsdya3kYEx5mogsEmczmZLU2zKLFf1aexPK0xzTkbzcDwmPbHliwFa6CI?=
- =?us-ascii?Q?H7LDIcL0LQgi8/FG2JNnmvFMSKHqew0KB6/nwK1ZJsjx/7iuU52cmngdiw6a?=
- =?us-ascii?Q?wMKoD6XnRf3kyp4UzXqDnFLPvhAjzkaaTX57MSOOQvsWCN+d0biHw8IeHnFR?=
- =?us-ascii?Q?w8rmR6fBeKe28rkx16V1F+2JCbK+75AZSA3nqFHKwV7MSJ2OerJeMs9ikrDZ?=
- =?us-ascii?Q?U73L1qi5KBwzRdXjXNT91GY30g3xMm7u9eIhC5VaZmRhphnJFFbfM2hgR28k?=
- =?us-ascii?Q?AgV1uhTlSN3p1Mv4xEfjxzInpvcEcfrohoUmf1ZEG/SNHnTEJhQTAViK6OZr?=
- =?us-ascii?Q?/ZYcGRdAx7qhXtL76R6xhBgj8BrPicZ9SNKbg4PuXnFBTSJLbVycYIRQF8HL?=
- =?us-ascii?Q?4t0rT2AozQDf1LAVyAY+ZPTb3r6GN1tMY+8C67BtDociLy/u6ZGzNgbc6CKo?=
- =?us-ascii?Q?us8RknXxPmmD/kMAqqfCNeOISbO7juatBl3RslTQZmvffvb9+eb1HbNybpOj?=
- =?us-ascii?Q?ZujT8hLKFssxmyKoQ8r8rUcOWITx5AIwulpBfRvwCSaAROZLnHIholUdI2Cu?=
- =?us-ascii?Q?+9N0Pi73UoWA2DakaF8ccD6jvPlxSLfjxewjF+/5/+2Ck+Iy5aDS4VFDhvF8?=
- =?us-ascii?Q?SwCRZ7vkE/RzesQLv/cEE9R+cRc+Ojk9pPRkGYk6OPHDeDzP/L9qjor9qjvQ?=
- =?us-ascii?Q?LP+cXYoTPqihgyhjetuElKlBu3A98xtZnN7iTXCSXVV1Zlc56QtDSFOBybjT?=
- =?us-ascii?Q?C1ggBmJLh7DNepmZnz8CVXcuIT0wRW/GHUhBdYQYbX16XZR2vLDQDInG9ju+?=
- =?us-ascii?Q?p45p50F+SEIRHwKg5fST9rVYOXDElHn8NVevpc48255D5438fpMRj5bjcZ8y?=
- =?us-ascii?Q?1GnY3RYo0OBf3onJYbWu893IluVPiLmDNO6MegUY9bsXxa/FL0736JRzddCD?=
- =?us-ascii?Q?0L3ltGD5Co6DG33v7+mg8DvzIiG/cP3lHMsYBsuT1mRYNo1BGzkG7MN0lZ/6?=
- =?us-ascii?Q?4IsnHD7RwNuiKlDVC2ciZpUdOPPBjpfLDX2e+DpZkCR4Gz8x6f+E+LDPxzJF?=
- =?us-ascii?Q?jwFA5HmNut5/0CYlIYGvKQ9yLj6fCW3a9NdwQQl/EUHV3PRDtgQJA740gKqw?=
- =?us-ascii?Q?palZYtOzZY9POuXpWRjVYovOdiVhT1fXuF7HPWw9qZza3ZFShUqp8hZOJYV6?=
- =?us-ascii?Q?AkZe7PCaa8gqD6Q3SPq24D5+0r1fCeacGpoel/HaU93cyvPDX545JTgY/xIN?=
- =?us-ascii?Q?wkBq1x6nUzDbtgNR7kUGjGznSQoEXMQbdXIarawI/1srH2WKviyf8Y65wgri?=
- =?us-ascii?Q?DTJlAhbCtyFtckM6ozi15WyXUuPSMaVvt3kCQ0NBrzvBA8pIfmBgyIaOJ8nQ?=
- =?us-ascii?Q?lSxOaiDRzQp2d3l3FtrwRcot2bKQpQE7+iAeBZgCE8OrxfKm5il8cENHivCe?=
- =?us-ascii?Q?9hokNmMHkNmzLw3Fcac=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7799b4a8-41c4-4ddf-8ae1-08db4a4117b7
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2023 12:39:23.9384
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: avPS72XQqgYv1Jm8ogPc8m4Zi38D5WHEAObZRkf5L9TLvpmhrbMEk2XwwbUnIClc
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6908
+References: <20230428163507.v2.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
+ <217e697c-ad13-96ca-3829-a046469fd86a@infradead.org>
+In-Reply-To: <217e697c-ad13-96ca-3829-a046469fd86a@infradead.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 1 May 2023 07:04:46 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V0tzeqCrFUrytbe0OByYkC23i61H+jdgZRXfMKbShMcA@mail.gmail.com>
+Message-ID: <CAD=FV=V0tzeqCrFUrytbe0OByYkC23i61H+jdgZRXfMKbShMcA@mail.gmail.com>
+Subject: Re: [PATCH v2] hardlockup: detect hard lockups using secondary
+ (buddy) CPUs
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Stephane Eranian <eranian@google.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-perf-users@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net, ito-yuichi@fujitsu.com,
+        ravi.v.shankar@intel.com, Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        ricardo.neri@intel.com, Ian Rogers <irogers@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Colin Cross <ccross@android.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Alexander Potapenko <glider@google.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        David Gow <davidgow@google.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Ingo Molnar <mingo@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 01, 2023 at 05:27:18PM +1000, Dave Chinner wrote:
-> On Sat, Apr 29, 2023 at 08:01:11PM -0300, Jason Gunthorpe wrote:
-> > On Sat, Apr 29, 2023 at 12:21:09AM -0400, Theodore Ts'o wrote:
-> > 
-> > > In any case, the file system maintainers' position (mine and I doubt
-> > > Dave Chinner's position has changed) is that if you write to
-> > > file-backed mappings via GUP/RDMA/process_vm_writev, and it causes
-> > > silent data corruption, you get to keep both pieces, and don't go
-> > > looking for us for anything other than sympathy...
-> > 
-> > This alone is enough reason to block it. I'm tired of this round and
-> > round and I think we should just say enough, the mm will work to
-> > enforce this view point. Files can only be written through PTEs.
-> 
-> It has to be at least 5 years ago now that we were told that the
-> next-gen RDMA hardware would be able to trigger hardware page faults
-> when remote systems dirtied local pages.  This would enable
-> ->page-mkwrite to be run on file backed pages mapped pages just like
-> local CPU write faults and everything would be fine.
+Hi,
 
-Things are progressing, but I'm not as optimistic as I once was..
 
-- Today mlx5 has ODP which allows this to work using hmm_range_fault()
-  techniques. I know of at least one deployment using this with a DAX
-  configuration. This is now at least 5 years old stuff. The downside
-  is that HMM approaches yield poor wost case performance, and have
-  weird caching corner cases. This is still only one vendor, in the
-  past 5 years nobody else stepped up to implement it.
+On Fri, Apr 28, 2023 at 5:36=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org=
+> wrote:
+>
+> Hi--
+>
+> On 4/28/23 16:37, Douglas Anderson wrote:
+> > From: Colin Cross <ccross@android.com>
+> >
+> > Implement a hardlockup detector that doesn't doesn't need any extra
+> > arch-specific support code to detect lockups. Instead of using
+> > something arch-specific we will use the buddy system, where each CPU
+> > watches out for another one. Specifically, each CPU will use its
+> > softlockup hrtimer to check that the next CPU is processing hrtimer
+> > interrupts by verifying that a counter is increasing.
+> >
+> > NOTE: unlike the other hard lockup detectors, the buddy one can't
+> > easily show what's happening on the CPU that locked up just by doing a
+> > simple backtrace. It relies on some other mechanism in the system to
+> > get information about the locked up CPUs. This could be support for
+> > NMI backtraces like [1], it could be a mechanism for printing the PC
+> > of locked CPUs at panic time like [2] / [3], or it could be something
+> > else. Even though that means we still rely on arch-specific code, this
+> > arch-specific code seems to often be implemented even on architectures
+> > that don't have a hardlockup detector.
+> >
+> > This style of hardlockup detector originated in some downstream
+> > Android trees and has been rebased on / carried in ChromeOS trees for
+> > quite a long time for use on arm and arm64 boards. Historically on
+> > these boards we've leveraged mechanism [2] / [3] to get information
+> > about hung CPUs, but we could move to [1].
+> >
+> > Although the original motivation for the buddy system was for use on
+> > systems without an arch-specific hardlockup detector, it can still be
+> > useful to use even on systems that _do_ have an arch-specific
+> > hardlockup detector. On x86, for instance, there is a 24-part patch
+> > series [4] in progress switching the arch-specific hard lockup
+> > detector from a scarce perf counter to a less-scarce hardware
+> > resource. Potentially the buddy system could be a simpler alternative
+> > to free up the perf counter but still get hard lockup detection.
+> >
+> > Overall, pros (+) and cons (-) of the buddy system compared to an
+> > arch-specific hardlockup detector:
+> > + Usable on systems that don't have an arch-specific hardlockup
+> >   detector, like arm32 and arm64 (though it's being worked on for
+> >   arm64 [5]).
+> > + May free up scarce hardware resources.
+> > + If a CPU totally goes out to lunch (can't process NMIs) the buddy
+> >   system could still detect the problem (though it would be unlikely
+> >   to be able to get a stack trace).
+> > - If all CPUs are hard locked up at the same time the buddy system
+> >   can't detect it.
+> > - If we don't have SMP we can't use the buddy system.
+> > - The buddy system needs an arch-specific mechanism (possibly NMI
+> >   backtrace) to get info about the locked up CPU.
+> >
+> > [1] https://lore.kernel.org/r/20230419225604.21204-1-dianders@chromium.=
+org
+> > [2] https://issuetracker.google.com/172213129
+> > [3] https://docs.kernel.org/trace/coresight/coresight-cpu-debug.html
+> > [4] https://lore.kernel.org/lkml/20230301234753.28582-1-ricardo.neri-ca=
+lderon@linux.intel.com/
+> > [5] https://lore.kernel.org/linux-arm-kernel/20220903093415.15850-1-lec=
+opzer.chen@mediatek.com/
+> >
+> > Signed-off-by: Colin Cross <ccross@android.com>
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > Signed-off-by: Guenter Roeck <groeck@chromium.org>
+> > Signed-off-by: Tzung-Bi Shih <tzungbi@chromium.org>
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> > This patch has been rebased in ChromeOS kernel trees many times, and
+> > each time someone had to do work on it they added their
+> > Signed-off-by. I've included those here. I've also left the author as
+> > Colin Cross since the core code is still his.
+> >
+> > I'll also note that the CC list is pretty giant, but that's what
+> > get_maintainers came up with (plus a few other folks I thought would
+> > be interested). As far as I can tell, there's no true MAINTAINER
+> > listed for the existing watchdog code. Assuming people don't hate
+> > this, maybe it would go through Andrew Morton's tree?
+> >
+> > Changes in v2:
+> > - cpu =3D> CPU.
+> > - Reworked description and Kconfig based on v1 discussion.
+>
+> or at least some of the comments from v1. :(
 
-- Intel Sapphire Rapids chips have ATS/PRI support and we are doing
-  research on integrating mlx5 with that. In Linux this is called
-  "IOMMU SVA".
+Oh no! My email program confused me and I thought all of your cpu=3D>CPU
+stuff was in the patch description, not in the Kconfig. I'll whip up a
+quick v3.
 
-  However, performance is wonky - in the best case it is worse
-  than ODP but it removes ODP's worst case corners. It also makes the
-  entire MM notably slower for processes that turn it on. Who knows
-  when or what this will turn out to be useful for.
-
-- Full cache coherence with CXL. CXL has taken a long time to really
-  reach the mainstream market - maybe next gen of server CPUs. I'm not
-  aware of anyone doing work here in the RDMA space, it is difficult
-  to see the benefit. This seems likely to be very popular in the GPU
-  space, I already see some products announced. This is a big topic on
-  its own for FSs..
-
-So, basically, you can make it work on the most popular HW, but at the
-cost of top performance. Which makes it unpopular.
-
-I don't expect anything on the horizon to subtantially change this
-calculus, the latency cost of doing ATS like things is an inherent
-performance penalty that can't be overcome
-
-Jason
+-Doug
