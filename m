@@ -2,72 +2,64 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C3F6C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 May 2023 07:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2E5C77B61
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 May 2023 07:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbjEAH11 (ORCPT
+        id S229679AbjEAHfL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 May 2023 03:27:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36972 "EHLO
+        Mon, 1 May 2023 03:35:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229688AbjEAH1Z (ORCPT
+        with ESMTP id S232243AbjEAHfI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 May 2023 03:27:25 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BC791B4
-        for <linux-perf-users@vger.kernel.org>; Mon,  1 May 2023 00:27:22 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-64115e652eeso25127186b3a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 May 2023 00:27:22 -0700 (PDT)
+        Mon, 1 May 2023 03:35:08 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B4F610C4
+        for <linux-perf-users@vger.kernel.org>; Mon,  1 May 2023 00:35:04 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-24ddf274039so1040790a91.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 May 2023 00:35:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1682926042; x=1685518042;
+        d=linaro.org; s=google; t=1682926504; x=1685518504;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ibXuk7FbYrowdFzsiIEHtgPKzlyAO+Sfsye0fqZ102E=;
-        b=IKlhLUer77vP+NjL6egKLZ4SBjsZvxj/D3clB+asMNMvxbEKZVyD67jL8L+HgQcTZP
-         bx2+VCvjy6HeCWRCAKSjdVeCtOUPiNZOnarnxDf2Ay6KT0thLI2fnISAw3lEGAFT3jl2
-         kDsM3kvKxVx4yCWkUsfVNm1hwj4coNk2oyMCtjatrEV3EX4+4UoJMiPf3zbEvc9Jjg1m
-         0bcMJvDlbUEMRKu34+4Ed5M78tX9h6w4sQUUsnBU8Gli1HsSt1NKbMvyBp/4K2SrmTSi
-         DEZoHLZVnAjL+yBP9KaRc6NDRzIuI950QrEuS8Jegk9aH6BmTEHBRYboZ8q0GghNqhi2
-         OyTA==
+        bh=1wQrzKEZuX3/5Eef7KYCRXhJKEAjq0AaAjZ6GxmmUQA=;
+        b=pz6OmxP6Fg7Vb4oJk0JZFeQ+MTDUHyPTrS/XaaO/HIdZRNFns/MsY2sRHWMXintVHn
+         t+M3tkRSn55imwLUUniv4dxD9C5df5uptXLGHHknGuyGPyqnMHkX6Ws9QBlEwU+rV2Wl
+         p8RSHV9DpzPkzAqVjEIp8WJbPrTlBCuNI7gU/RMvw9VkWuBxmQxZFg16NYgJ4TGTxJ00
+         DbDh2d1OH2GrvL0uEa+VoeXxKImM4LwPVv3CFiRmPO6Naii89aEQYJNWlMX13BQjVonl
+         WUg1jYj7mdR3gcelvz+B7MddNbvBwS9JSCcXca2RiPTE9PfwimO2Waq52C1RjGAeVH54
+         ZBRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682926042; x=1685518042;
+        d=1e100.net; s=20221208; t=1682926504; x=1685518504;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ibXuk7FbYrowdFzsiIEHtgPKzlyAO+Sfsye0fqZ102E=;
-        b=R5xgb7s8aTcBTwwiXYfOlSBmfk9CQK+1S/UfCkHtyMFYtB7aoFFRQ69u1hO3GQhTNp
-         pfpvt4WuCdRwoQBRYVY0nR9JgMExbhYVXb1FWS0bqym3uoQVX0iKUn3lYvV2mBifCXlS
-         YsB/JeRkBDX9/x8ySc8UU1DVGiUxLQbgTslbU+Jjs3zq65mR4ix4TcbwjMigWNxi/C/B
-         K7v+MpODpLQbWzAqGW+/VNvxBsdvaGrwxjL0yNZRyWMpUJLpw/IU0tKoRyn1uYGQXoZR
-         PKuR8Cl04EkjNZjE8Ng8NicI9nu5w3gbZ4eSq4QnFd8eTZVquO4zTqyYShP9ACU5mk/4
-         hrVQ==
-X-Gm-Message-State: AC+VfDxcU0WomCVFqH9D+JSt06IaPhY3FUXZJho5BTq5iGG5ZSES9mH6
-        llEuC+OUe/wY5wZ6eGHV0hqScg==
-X-Google-Smtp-Source: ACHHUZ4UvG80mxUfpvf1acfCnS2H3KC6jDEcSFVNzFYuXXy+v/xi65gkE5IdZ0bX/96Zq1X5x+FUpg==
-X-Received: by 2002:a05:6a00:a16:b0:63d:3c39:ecc2 with SMTP id p22-20020a056a000a1600b0063d3c39ecc2mr17292848pfh.12.1682926041931;
-        Mon, 01 May 2023 00:27:21 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-88-204.pa.nsw.optusnet.com.au. [49.181.88.204])
-        by smtp.gmail.com with ESMTPSA id t40-20020a056a0013a800b0063d29df1589sm19371079pfg.136.2023.05.01.00.27.21
+        bh=1wQrzKEZuX3/5Eef7KYCRXhJKEAjq0AaAjZ6GxmmUQA=;
+        b=aermwUC72NYM4R4LTsfwV+CwhzLZkd/UVg3e6YGW8mYlXFD6CioZeUW1aLd1EoZCoJ
+         TD3AInA5fzqlOkrTo+IG0bNz26FFfl3lsfqg85S3Vao5srjVHb9nob2CrQCScXPd9CrN
+         QBpyUnrSdg893/vT3Fc4gGmzYSVVT+kTvUC7MUx/LFDn+OSVUBIgysm8xOaztep8CeF2
+         pHCkBOIQFyIz2BKGDmkmpAk5drr7skoxVNq/cSOz7LC/5QnyELPRWQnp7dyQKVtUOchE
+         Tt/dIQYicMHuLCIrHNpRgQmwSXTscg2CzePslgGh9olqE2oYLrY4X83Caelu5lgkQnNf
+         6lWA==
+X-Gm-Message-State: AC+VfDx4E11CZYNhhtkOMb54XEho3BAjlKx6B7H1rI74quBDmlZ/EXSO
+        n731pjGQXHhkgQhqOXL0F841kA==
+X-Google-Smtp-Source: ACHHUZ5t9aChF+EmTsZGawIyA2f+eNOqT6Sz8TCl4+O9Y7OcJ6pgRQb4NvOOcYnrIyx8drmrmh/Wnw==
+X-Received: by 2002:a17:90b:954:b0:24d:fb2c:1ae0 with SMTP id dw20-20020a17090b095400b0024dfb2c1ae0mr2722814pjb.17.1682926503957;
+        Mon, 01 May 2023 00:35:03 -0700 (PDT)
+Received: from leoy-yangtze.lan ([107.151.177.135])
+        by smtp.gmail.com with ESMTPSA id h24-20020a17090adb9800b0024df0e14479sm2013816pjv.5.2023.05.01.00.34.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 May 2023 00:27:21 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ptNwM-009yXy-1S; Mon, 01 May 2023 17:27:18 +1000
-Date:   Mon, 1 May 2023 17:27:18 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        David Hildenbrand <david@redhat.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+        Mon, 01 May 2023 00:35:03 -0700 (PDT)
+Date:   Mon, 1 May 2023 15:34:52 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, coresight@lists.linaro.org,
+        shy828301@gmail.com, denik@google.com,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -77,73 +69,119 @@ Cc:     Theodore Ts'o <tytso@mit.edu>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v5] mm/gup: disallow GUP writing to file-backed mappings
- by default
-Message-ID: <20230501072718.GF2155823@dread.disaster.area>
-References: <6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com>
- <afcc124e-7a9b-879c-dfdf-200426b84e24@redhat.com>
- <ZEvZtIb2EDb/WudP@nvidia.com>
- <ZEwPscQu68kx32zF@mit.edu>
- <ZEwVbPM2OPSeY21R@nvidia.com>
- <ZEybNZ7Rev+XM4GU@mit.edu>
- <ZE2ht9AGx321j0+s@nvidia.com>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] perf: cs-etm: Validate options after applying
+ themperf_pmu__format_bits
+Message-ID: <20230501073452.GA4660@leoy-yangtze.lan>
+References: <20230424134748.228137-1-james.clark@arm.com>
+ <20230424134748.228137-5-james.clark@arm.com>
+ <20230427151228.GA152865@leoy-huanghe>
+ <dac76dd5-d5f0-61dd-fafe-f939f1ebc413@arm.com>
+ <20230427221047.GA174797@leoy-huanghe>
+ <15217b55-8a80-fbe9-7b7f-997939f42d0d@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZE2ht9AGx321j0+s@nvidia.com>
+In-Reply-To: <15217b55-8a80-fbe9-7b7f-997939f42d0d@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Apr 29, 2023 at 08:01:11PM -0300, Jason Gunthorpe wrote:
-> On Sat, Apr 29, 2023 at 12:21:09AM -0400, Theodore Ts'o wrote:
+On Fri, Apr 28, 2023 at 01:33:16PM +0100, James Clark wrote:
+
+[...]
+
+> > ETMv4 uses 'contextid' as well, since the user space needs to know which
+> > exception level's PID should be traced, e.g. when CPU runs in EL2
+> > 'contextid' is set as ETM_OPT_CTXTID2, the perf tool will set 'contextid2'
+> > to tell driver to trace CONTEXTIDR_EL2.
+> > 
 > 
-> > In any case, the file system maintainers' position (mine and I doubt
-> > Dave Chinner's position has changed) is that if you write to
-> > file-backed mappings via GUP/RDMA/process_vm_writev, and it causes
-> > silent data corruption, you get to keep both pieces, and don't go
-> > looking for us for anything other than sympathy...
+> That's still working because it reads the config term in the setup
+> function rather than setting any one bit manually:
 > 
-> This alone is enough reason to block it. I'm tired of this round and
-> round and I think we should just say enough, the mm will work to
-> enforce this view point. Files can only be written through PTEs.
+>   if (!perf_cpu_map__empty(cpus)) {
+>     evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
+>                                "timestamp", 1);
+>     evsel__set_config_if_unset(cs_etm_pmu, cs_etm_evsel,
+>                                "contextid", 1);
+>   }
 
-It has to be at least 5 years ago now that we were told that the
-next-gen RDMA hardware would be able to trigger hardware page faults
-when remote systems dirtied local pages.  This would enable
-->page-mkwrite to be run on file backed pages mapped pages just like
-local CPU write faults and everything would be fine.
+Okay, yeah, this change can set CTXTID or CTXTID2 bit if user doesn't
+set anything.
 
-Whatever happened to that? Are we still waiting for hardware that
-can trigger page faults from remote DMA transfers, or have hardware
-vendors given up on this?
+> > We can only verify 'contextid', and set 'contextid1' or 'contextid2' based
+> > on CPU running exception level, finally driver knows how to trace PID.
+> > 
+> > Thanks,
+> > Leo
+> > 
+> 
+> I'm not 100% sure what you mean by this. But previously the validation
+> was looking at both contextid1 and contextid2 options and checking if
+> either were supported if either were set.
+> 
+> I have the following change in mind, it fixes the backwards
+> compatibility issue. And the validation should be exactly the same as it
+> was before. Except for one bug that I found when both bits are requested
+> which I've also fixed here:
+> 
+> From f1b9f56df29dfb4f2a7be25f009c79c86335587a Mon Sep 17 00:00:00 2001
+> From: James Clark <james.clark@arm.com>
+> Date: Fri, 28 Apr 2023 10:29:52 +0100
+> Subject: [PATCH] perf cs-etm: Fix contextid validation
+> 
+> Pre 5.11 kernels don't support 'contextid1' and 'contextid2' so
+> validation would be skipped. By adding an additional check for
+> 'contextid', old kernels will still have validation done even though
+> contextid would either be contextid1 or contextid2.
+> 
+> Additionally now that it's possible to override options, an existing bug
+> in the validation is revealed. 'val' is overwritten by the contextid1
+> validation, and re-used for contextid2 validation causing it to always
+> fail. '!val || val != 0x4' is the same as 'val != 0x4' because 0 is also
+> != 4, so that expression can be simplified and the temp variable not
+> overwritten.
+> 
+> Fixes: 35c51f83dd1e ("perf cs-etm: Validate options after applying them")
+> Signed-off-by: James Clark <james.clark@arm.com>
 
-Cheers,
+LGTM:
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Reviewed-by: Leo Yan <leo.yan@linaro.org
+
+Thanks for the fixing!
+
+> ---
+>  tools/perf/arch/arm/util/cs-etm.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+> index 77cb03e6ff87..9ca040bfb1aa 100644
+> --- a/tools/perf/arch/arm/util/cs-etm.c
+> +++ b/tools/perf/arch/arm/util/cs-etm.c
+> @@ -78,9 +78,9 @@ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
+>  	char path[PATH_MAX];
+>  	int err;
+>  	u32 val;
+> -	u64 contextid =
+> -		evsel->core.attr.config &
+> -		(perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1") |
+> +	u64 contextid = evsel->core.attr.config &
+> +		(perf_pmu__format_bits(&cs_etm_pmu->format, "contextid") |
+> +		 perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1") |
+>  		 perf_pmu__format_bits(&cs_etm_pmu->format, "contextid2"));
+>  
+>  	if (!contextid)
+> @@ -114,8 +114,7 @@ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
+>  		 *  0b00100 Maximum of 32-bit Context ID size.
+>  		 *  All other values are reserved.
+>  		 */
+> -		val = BMVAL(val, 5, 9);
+> -		if (!val || val != 0x4) {
+> +		if (BMVAL(val, 5, 9) != 0x4) {
+>  			pr_err("%s: CONTEXTIDR_EL1 isn't supported, disable with %s/contextid1=0/\n",
+>  			       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
+>  			return -EINVAL;
+> -- 
+> 2.34.1
