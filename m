@@ -2,61 +2,57 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E3FC77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon,  1 May 2023 15:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A03C77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 May 2023 20:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232064AbjEAPaK (ORCPT
+        id S229627AbjEAUZr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 1 May 2023 11:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54628 "EHLO
+        Mon, 1 May 2023 16:25:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230401AbjEAPaJ (ORCPT
+        with ESMTP id S233036AbjEAUZp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 1 May 2023 11:30:09 -0400
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C62F8D2
-        for <linux-perf-users@vger.kernel.org>; Mon,  1 May 2023 08:30:07 -0700 (PDT)
-Received: by mail-il1-x129.google.com with SMTP id e9e14a558f8ab-330ec047d3bso67575ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 May 2023 08:30:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1682955007; x=1685547007;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XoLH4MoVzWMKPmuaWwNpwbaq4+1Ny7M8bJ2SpA3CcL4=;
-        b=DmI7HG5EBEIEK3reaDygTCNrN8k7T1UISGQ3x6UQdiotEs4tNi43PXUbGX6LJn5l3U
-         1+TI+iszRtmvlr0fihUDa5ECLxYujRvcUVYVMaH/WK3BLo2Ba1xgAeRJgIa0JaGuvdej
-         6hzTSYECWbnVAGXJW5DoAsWmxbWrdVJudi0RGWKIF3OmEMlYDr/0ZjK+4T4qdjByHNac
-         MMuWQnsOuHgg0C/+S2OFLu9A1u/xWWSv5tAbAcZMFqvJEP9CLGsmkJmsRHTx2Zx4q4hL
-         YN4eH5qcWogZm/hgxX5RtBxMRQuk3kisJR9ic5iJ2N+7uCIOLrJls8UhJWxhYOkQ7Z7d
-         pGXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682955007; x=1685547007;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XoLH4MoVzWMKPmuaWwNpwbaq4+1Ny7M8bJ2SpA3CcL4=;
-        b=lbDW5juEQ4PSXhbF//qb+eCdCzyS6xXLJzziGEc9MhTmN3a7KbkwmP76d6Bc6Ddzfz
-         +/Ig76R+tZZXRjnmLfCMH8Qt6RPgzvQzxqE2wqbynAY9qpJcdt51LUQgdn8Vu3GXNzpa
-         /otSqj4SAVWZaPS5oe3f1fmHsfOtDC7hr7jDK/OfttHzVmG1ssPvkjfMsHluyapDUdnK
-         gMBKEORk1ohWQgiklmW64KPTu7OVO+e2SEmxUCfPlXCjiJmjzhilKxdauKVd0LvADCHL
-         cd/OhCfquBnzaVdUkqPtZo4sF8MHn5BfRTPol06bvXWWWoZR7CZ7lQZy6QxT+K9Kg/5w
-         Vhyg==
-X-Gm-Message-State: AC+VfDwcRBwgXekfgJjwKLUQJKGmb0nqRpz7JHwvRZOUIkVp8lml8bNo
-        3VRqWq863tkUZK+b9mQsH1aKLKpJfXNfG9IBVZKvOg==
-X-Google-Smtp-Source: ACHHUZ5yAMYBlomuJ6X58K1WP4jk7f1ilBSbeIyMcUKZdbAEHH1dNuwKJ4GrsPXHMXFxdo8d8FY/LVV7H2d6cH2e798=
-X-Received: by 2002:a05:6e02:b49:b0:32a:642d:2a13 with SMTP id
- f9-20020a056e020b4900b0032a642d2a13mr498768ilu.6.1682955006738; Mon, 01 May
- 2023 08:30:06 -0700 (PDT)
+        Mon, 1 May 2023 16:25:45 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CAF61FFD;
+        Mon,  1 May 2023 13:25:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682972744; x=1714508744;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dSSFE7f/P6PcmnsEIgLI171TfEpCJk8AuOfpR+9LNgA=;
+  b=gtd56SSStCo0oP5AuyRgCuoGTteZMtvkU5RaMbJ3IKQ3bH5iD6xl1XUE
+   Onu7vp1WEbeooIdlNnQv+cN84sec6JRMHi6SkNGHP4qzPC1FZUlMdxu/B
+   8vRy4LGlByii5ze1XI2cNpYr9n9RW1UHzx5AHqS0RkcdeLyCsHyWhGKGF
+   dGTqPV++2udHaczV+cvtnwfZoui6yq1gNU/EXMh8ixyyg4m0wC8EQ1tOS
+   9TTkpFCpBOUtBb9QntVqsORlktB+adbLA8DjMm223UVwpnj7/zG4MT8Qk
+   eyNciVH7EQz0kzrz2AJ+P9TMb+XPiMJqRsSM9ob+VuOl4aimKZmNgivkA
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10697"; a="347039466"
+X-IronPort-AV: E=Sophos;i="5.99,242,1677571200"; 
+   d="scan'208";a="347039466"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2023 13:25:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10697"; a="695901959"
+X-IronPort-AV: E=Sophos;i="5.99,242,1677571200"; 
+   d="scan'208";a="695901959"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 01 May 2023 13:25:40 -0700
+Received: from [10.209.15.48] (kliang2-mobl1.ccr.corp.intel.com [10.209.15.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 288A9580692;
+        Mon,  1 May 2023 13:25:37 -0700 (PDT)
+Message-ID: <a7020f11-3915-58e9-9d9e-792672ecbd61@linux.intel.com>
+Date:   Mon, 1 May 2023 16:25:35 -0400
 MIME-Version: 1.0
-References: <20230429053506.1962559-1-irogers@google.com> <20230429053506.1962559-4-irogers@google.com>
- <d6784858-2a5f-7920-f1ac-d7ec9ed89605@linux.intel.com>
-In-Reply-To: <d6784858-2a5f-7920-f1ac-d7ec9ed89605@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 1 May 2023 08:29:55 -0700
-Message-ID: <CAP-5=fUtgEvgburjhE6HpazDh9dtn=DiSOwHaVnoE3N7sBynEw@mail.gmail.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
 Subject: Re: [PATCH v3 03/46] perf stat: Introduce skippable evsels
-To:     "Liang, Kan" <kan.liang@linux.intel.com>,
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
         Weilin Wang <weilin.wang@intel.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ahmad Yasin <ahmad.yasin@intel.com>,
@@ -89,248 +85,81 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kang Minchul <tegongkang@gmail.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20230429053506.1962559-1-irogers@google.com>
+ <20230429053506.1962559-4-irogers@google.com>
+ <d6784858-2a5f-7920-f1ac-d7ec9ed89605@linux.intel.com>
+ <CAP-5=fUtgEvgburjhE6HpazDh9dtn=DiSOwHaVnoE3N7sBynEw@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fUtgEvgburjhE6HpazDh9dtn=DiSOwHaVnoE3N7sBynEw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 1, 2023 at 7:56=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.co=
-m> wrote:
->
->
->
-> On 2023-04-29 1:34 a.m., Ian Rogers wrote:
-> > Perf stat with no arguments will use default events and metrics. These
-> > events may fail to open even with kernel and hypervisor disabled. When
-> > these fail then the permissions error appears even though they were
-> > implicitly selected. This is particularly a problem with the automatic
-> > selection of the TopdownL1 metric group on certain architectures like
-> > Skylake:
-> >
-> > '''
-> > $ perf stat true
-> > Error:
-> > Access to performance monitoring and observability operations is limite=
-d.
-> > Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-> > access to performance monitoring and observability operations for proce=
-sses
-> > without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
-> > More information can be found at 'Perf events and tool security' docume=
-nt:
-> > https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-> > perf_event_paranoid setting is 2:
-> >   -1: Allow use of (almost) all events by all users
-> >       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
-> >> =3D 0: Disallow raw and ftrace function tracepoint access
-> >> =3D 1: Disallow CPU event access
-> >> =3D 2: Disallow kernel profiling
-> > To make the adjusted perf_event_paranoid setting permanent preserve it
-> > in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid =3D <setting>)
-> > '''
-> >
-> > This patch adds skippable evsels that when they fail to open won't
-> > cause termination and will appear as "<not supported>" in output. The
-> > TopdownL1 events, from the metric group, are marked as skippable. This
-> > turns the failure above to:
-> >
-> > '''
-> > $ perf stat perf bench internals synthesize
-> > Computing performance of single threaded perf event synthesis by
-> > synthesizing events on the perf process itself:
-> >   Average synthesis took: 49.287 usec (+- 0.083 usec)
-> >   Average num. events: 3.000 (+- 0.000)
-> >   Average time per event 16.429 usec
-> >   Average data synthesis took: 49.641 usec (+- 0.085 usec)
-> >   Average num. events: 11.000 (+- 0.000)
-> >   Average time per event 4.513 usec
-> >
-> >  Performance counter stats for 'perf bench internals synthesize':
-> >
-> >           1,222.38 msec task-clock:u                     #    0.993 CPU=
-s utilized
-> >                  0      context-switches:u               #    0.000 /se=
-c
-> >                  0      cpu-migrations:u                 #    0.000 /se=
-c
-> >                162      page-faults:u                    #  132.529 /se=
-c
-> >        774,445,184      cycles:u                         #    0.634 GHz=
-                         (49.61%)
-> >      1,640,969,811      instructions:u                   #    2.12  ins=
-n per cycle              (59.67%)
-> >        302,052,148      branches:u                       #  247.102 M/s=
-ec                       (59.69%)
-> >          1,807,718      branch-misses:u                  #    0.60% of =
-all branches             (59.68%)
-> >          5,218,927      CPU_CLK_UNHALTED.REF_XCLK:u      #    4.269 M/s=
-ec
-> >                                                   #     17.3 %  tma_fro=
-ntend_bound
-> >                                                   #     56.4 %  tma_ret=
-iring
-> >                                                   #      nan %  tma_bac=
-kend_bound
-> >                                                   #      nan %  tma_bad=
-_speculation      (60.01%)
-> >        536,580,469      IDQ_UOPS_NOT_DELIVERED.CORE:u    #  438.965 M/s=
-ec                       (60.33%)
-> >    <not supported>      INT_MISC.RECOVERY_CYCLES_ANY:u
-> >          5,223,936      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u #    4.274=
- M/sec                       (40.31%)
-> >        774,127,250      CPU_CLK_UNHALTED.THREAD:u        #  633.297 M/s=
-ec                       (50.34%)
-> >      1,746,579,518      UOPS_RETIRED.RETIRE_SLOTS:u      #    1.429 G/s=
-ec                       (50.12%)
-> >      1,940,625,702      UOPS_ISSUED.ANY:u                #    1.588 G/s=
-ec                       (49.70%)
-> >
-> >        1.231055525 seconds time elapsed
-> >
-> >        0.258327000 seconds user
-> >        0.965749000 seconds sys
->
->
-> Which branch is this patch series based on?
->
-> I still cannot get the same output as the examples.
->
-> I'm using the latest perf-tools-next (The latest commit ID is
-> 5d27a645f609 ("perf tracepoint: Fix memory leak in is_valid_tracepoint()"=
-)).
-> I only applied patch 2 and patch 3, since the patch 1 is already merged.
->
-> It's a single socket Cascade Lake. with kernel 5.19-8.
-> $ uname -r
-> 5.19.8-100.fc35.x86_64
->
-> As you can see, all the topdown related events are displayed twice.
->
-> With root permission,
->
-> $ sudo ./perf stat perf bench internals synthesize
-> # Running 'internals/synthesize' benchmark:
-> Computing performance of single threaded perf event synthesis by
-> synthesizing events on the perf process itself:
->   Average synthesis took: 91.487 usec (+- 0.050 usec)
->   Average num. events: 47.000 (+- 0.000)
->   Average time per event 1.947 usec
->   Average data synthesis took: 97.720 usec (+- 0.059 usec)
->   Average num. events: 245.000 (+- 0.000)
->   Average time per event 0.399 usec
->
->  Performance counter stats for 'perf bench internals synthesize':
->
->           2,077.81 msec task-clock                       #    0.998 CPUs
-> utilized
->                466      context-switches                 #  224.274 /sec
->                  4      cpu-migrations                   #    1.925 /sec
->                775      page-faults                      #  372.988 /sec
->      9,561,957,326      cycles                           #    4.602 GHz
->                        (31.17%)
->     24,466,854,021      instructions                     #    2.56  insn
-> per cycle              (37.42%)
->      5,547,892,196      branches                         #    2.670
-> G/sec                       (37.48%)
->         37,880,526      branch-misses                    #    0.68% of
-> all branches             (37.52%)
->         49,576,109      CPU_CLK_UNHALTED.REF_XCLK        #   23.860 M/sec
->                                                   #     59.9 %  tma_retir=
-ing
->                                                   #      4.6 %
-> tma_bad_speculation      (37.47%)
->        228,406,003      INT_MISC.RECOVERY_CYCLES_ANY     #  109.926
-> M/sec                       (37.52%)
->         49,591,815      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE #   23.867
-> M/sec                       (24.99%)
->      9,553,472,893      CPU_CLK_UNHALTED.THREAD          #    4.598
-> G/sec                       (31.25%)
->     22,893,372,651      UOPS_RETIRED.RETIRE_SLOTS        #   11.018
-> G/sec                       (31.23%)
->     24,180,375,299      UOPS_ISSUED.ANY                  #   11.637
-> G/sec                       (31.25%)
->         49,562,300      CPU_CLK_UNHALTED.REF_XCLK        #   23.853 M/sec
->                                                   #     28.1 %
-> tma_frontend_bound
->                                                   #      7.2 %
-> tma_backend_bound        (31.24%)
->     10,735,205,084      IDQ_UOPS_NOT_DELIVERED.CORE      #    5.167
-> G/sec                       (31.30%)
->        228,798,426      INT_MISC.RECOVERY_CYCLES_ANY     #  110.115
-> M/sec                       (25.04%)
->         49,559,962      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE #   23.852
-> M/sec                       (25.00%)
->      9,538,354,333      CPU_CLK_UNHALTED.THREAD          #    4.591
-> G/sec                       (31.29%)
->     24,207,967,071      UOPS_ISSUED.ANY                  #   11.651
-> G/sec                       (31.24%)
->
->        2.082670856 seconds time elapsed
->
->        0.812763000 seconds user
->        1.252387000 seconds sys
 
-The events are displayed twice as there are 2 groups of events. This
-is changed by:
-https://lore.kernel.org/lkml/20230429053506.1962559-5-irogers@google.com/
-where the events are no longer grouped.
 
-> With non-root, nothing is counted for the topdownL1 events.
->
-> $ ./perf stat perf bench internals synthesize
-> # Running 'internals/synthesize' benchmark:
-> Computing performance of single threaded perf event synthesis by
-> synthesizing events on the perf process itself:
->   Average synthesis took: 91.852 usec (+- 0.139 usec)
->   Average num. events: 47.000 (+- 0.000)
->   Average time per event 1.954 usec
->   Average data synthesis took: 96.230 usec (+- 0.046 usec)
->   Average num. events: 245.000 (+- 0.000)
->   Average time per event 0.393 usec
->
->  Performance counter stats for 'perf bench internals synthesize':
->
->           2,051.95 msec task-clock:u                     #    0.997 CPUs
-> utilized
->                  0      context-switches:u               #    0.000 /sec
->                  0      cpu-migrations:u                 #    0.000 /sec
->                765      page-faults:u                    #  372.816 /sec
->      3,601,662,523      cycles:u                         #    1.755 GHz
->                        (16.72%)
->      9,241,811,003      instructions:u                   #    2.57  insn
-> per cycle              (33.43%)
->      2,238,848,485      branches:u                       #    1.091
-> G/sec                       (50.06%)
->         19,966,181      branch-misses:u                  #    0.89% of
-> all branches             (66.77%)
->      <not counted>      CPU_CLK_UNHALTED.REF_XCLK:u
->    <not supported>      INT_MISC.RECOVERY_CYCLES_ANY:u
->      <not counted>      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u
->      <not counted>      CPU_CLK_UNHALTED.THREAD:u
->      <not counted>      UOPS_RETIRED.RETIRE_SLOTS:u
->      <not counted>      UOPS_ISSUED.ANY:u
->      <not counted>      CPU_CLK_UNHALTED.REF_XCLK:u
->      <not counted>      IDQ_UOPS_NOT_DELIVERED.CORE:u
->    <not supported>      INT_MISC.RECOVERY_CYCLES_ANY:u
->      <not counted>      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u
->      <not counted>      CPU_CLK_UNHALTED.THREAD:u
->      <not counted>      UOPS_ISSUED.ANY:u
->
->        2.057691297 seconds time elapsed
->
->        0.766640000 seconds user
->        1.275170000 seconds sys
+On 2023-05-01 11:29 a.m., Ian Rogers wrote:
+> The events are displayed twice as there are 2 groups of events. This
+> is changed by:
+> https://lore.kernel.org/lkml/20230429053506.1962559-5-irogers@google.com/
+> where the events are no longer grouped.
 
-The reason nothing is counted is that all the metrics are trying to
-share groups with the event INT_MISC.RECOVERY_CYCLES_ANY in them,
-which means the whole group ends up being not supported. Again, the
-patch above that removes the groups for TopdownL1 and TopdownL2, as
-requested by Weilin, will address the issue.
+The trick seems don't work on a hybrid machine. I still got the
+duplicate Topdown events on e-core.
+
+
+         38,841.16 msec cpu-clock                        #   32.009 CPUs
+utilized
+               256      context-switches                 #    6.591 /sec
+                33      cpu-migrations                   #    0.850 /sec
+                84      page-faults                      #    2.163 /sec
+        21,910,584      cpu_core/cycles/                 #  564.107 K/sec
+       248,153,249      cpu_atom/cycles/                 #    6.389
+M/sec                       (53.85%)
+        27,463,908      cpu_core/instructions/           #  707.083 K/sec
+       118,661,014      cpu_atom/instructions/           #    3.055
+M/sec                       (63.06%)
+         4,652,941      cpu_core/branches/               #  119.794 K/sec
+        20,173,082      cpu_atom/branches/               #  519.374
+K/sec                       (63.18%)
+            72,727      cpu_core/branch-misses/          #    1.872 K/sec
+         1,143,187      cpu_atom/branch-misses/          #   29.432
+K/sec                       (63.51%)
+       125,630,586      cpu_core/TOPDOWN.SLOTS/          #      nan %
+tma_backend_bound
+                                                  #      nan %  tma_retiring
+                                                  #      0.0 %
+tma_bad_speculation
+                                                  #      nan %
+tma_frontend_bound
+        30,254,701      cpu_core/topdown-retiring/
+       149,075,726      cpu_atom/TOPDOWN_RETIRING.ALL/   #    3.838 M/sec
+                                                  #     14.8 %
+tma_bad_speculation      (63.82%)
+   <not supported>      cpu_core/topdown-bad-spec/
+       523,614,383      cpu_atom/TOPDOWN_FE_BOUND.ALL/   #   13.481 M/sec
+                                                  #     42.0 %
+tma_frontend_bound       (64.15%)
+       385,502,477      cpu_atom/TOPDOWN_BE_BOUND.ALL/   #    9.925 M/sec
+                                                  #     30.9 %
+tma_backend_bound
+                                                  #     30.9 %
+tma_backend_bound_aux    (64.39%)
+       249,534,488      cpu_atom/CPU_CLK_UNHALTED.CORE/  #    6.424 M/sec
+                                                  #     12.2 %
+tma_retiring             (64.18%)
+       151,729,465      cpu_atom/TOPDOWN_RETIRING.ALL/   #    3.906
+M/sec                       (54.67%)
+       530,621,769      cpu_atom/TOPDOWN_FE_BOUND.ALL/   #   13.661
+M/sec                       (54.30%)
+   <not supported>      cpu_core/topdown-fe-bound/
+       383,694,745      cpu_atom/TOPDOWN_BE_BOUND.ALL/   #    9.879
+M/sec                       (53.96%)
+   <not supported>      cpu_core/topdown-be-bound/
+           105,850      cpu_core/INT_MISC.UOP_DROPPING/  #    2.725 K/sec
+
+       1.213449538 seconds time elapsed
 
 Thanks,
-Ian
-
-> Thanks,
-> Kan
->
+Kan
