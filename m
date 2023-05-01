@@ -2,68 +2,64 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE381C77B60
-	for <linux-perf-users@archiver.kernel.org>; Sat, 29 Apr 2023 23:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B4DC77B60
+	for <linux-perf-users@archiver.kernel.org>; Mon,  1 May 2023 02:09:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231210AbjD2XJn (ORCPT
+        id S230127AbjEACJt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 29 Apr 2023 19:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43086 "EHLO
+        Sun, 30 Apr 2023 22:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231192AbjD2XJm (ORCPT
+        with ESMTP id S229531AbjEACJs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 29 Apr 2023 19:09:42 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EDED1BEE;
-        Sat, 29 Apr 2023 16:09:39 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f178da21afso6427875e9.1;
-        Sat, 29 Apr 2023 16:09:39 -0700 (PDT)
+        Sun, 30 Apr 2023 22:09:48 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93607E48;
+        Sun, 30 Apr 2023 19:09:47 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-63b733fd00bso1474742b3a.0;
+        Sun, 30 Apr 2023 19:09:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682809778; x=1685401778;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=F3yt7UWon4YwEktTTztF8j+ALULlII1l8bpdeotbMIE=;
-        b=aM/o79DZGGXZspHFc4p8GMX+nu7QMX99JKJhhxXKo61f3MrWXsOdN707iEKFkIbMGC
-         OKY3gvOkEMlcn+HYHQi9nyd3DteDCKvE1BXdeXWWP2BMENxGQzfIcISgJ1PVhjAeUtOu
-         yrGdS4iHcNOSgiAQFjChwtBWIbLtqlzdii4S//Zh5uO8z4bwuFNTn1rkKGIpyjRkO+4O
-         KdJq7iyPkR3CooD9QB/2GcD7Gwn3CiLoCbiRUjNeeQtVRSFFdX4msVJOkeGGklmB3025
-         t1QM4nVsGcB9gDv93CD5m68kkPhTWhLTLqYJ1WKWu80HVJEAIPwlxwycB2mQcsWFnwAe
-         6pMg==
+        d=gmail.com; s=20221208; t=1682906987; x=1685498987;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5Eyk0PLYhUbjWE4n42jdym7EnheKNlKKYg75uVcYf1E=;
+        b=ej2DORolgq6APTgaWGF1rTxecNFSAGY5zNWHqwVAspQ+BEOHZDJl9TcpsOppeV1lAq
+         0NUUH7Q+8cV6fMf4exeSQFzbHTefqWRHGfI4I3pS5D5G1B+eAW3KHLMnTY8bRBiH2ksU
+         ICcFD4USx3vGd6v3ZKhIPPB1hbPTuyYL0JGin8RwiDqupEd/m0INjonmUH8Udg4KZdmM
+         7GNUjQTo614dgYHJyj7Ir67CVRNezwK/NGzh/FdvrLHIkGf/o7N7v28oCEBTDI1Gsqti
+         KaWgnbSf6nc1iaFsCd9ZiEB+Mr7zxsQw/xKFyAD/kGm9m+6fhsyENX8wl97fnsCOVCGP
+         P3PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682809778; x=1685401778;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=F3yt7UWon4YwEktTTztF8j+ALULlII1l8bpdeotbMIE=;
-        b=kUbaK++bh2zbixwklASaZNhuQ2jUVYg9cLRhwnSeftqyihw7+2y1yMLP+SBtFlu8tB
-         tscO4MtTtOvCM/KOPerE/cT1uPAqD7nFyy4lQDUUd+dp63aHMcCUPsyyBc/Ru7yX/ZBi
-         3NroEXvTXivdrGh175ziuyG+w5Uv9rpSIj4OfIhcljR+B5qho7wzc8B8YLsY0wMPX4dh
-         P8Q14ZQkNc40+r0JpAVloEF/uQisog9Uwl76d8hpgfqfOJfZi8TUZ9/jf+80fhMt4sp+
-         k/deGhGBYjJkQsu8EHhkk+wvfj/5j2i9LK6Tl7eq7ZPYGVJSpeJDRpGzCFaPTi8KOE1B
-         ru3g==
-X-Gm-Message-State: AC+VfDxJWKqsrTAJwJKhgXotdMRHnPVbi/hiUKxxs6I+m2d+7zExFywb
-        aMKkLKBNvED0forN9dqUJOFhyXePRhzSRw==
-X-Google-Smtp-Source: ACHHUZ7Z4WHld4Risglrn3ZR0XC+6byvRHKMG+s3r0djAjM2ZZ1g4RneczYz1ypDalKVc6ebQ+bOjg==
-X-Received: by 2002:a7b:c4c2:0:b0:3f1:9a5a:b444 with SMTP id g2-20020a7bc4c2000000b003f19a5ab444mr7334384wmk.15.1682809777551;
-        Sat, 29 Apr 2023 16:09:37 -0700 (PDT)
-Received: from localhost ([2a00:23c5:dc8c:8701:1663:9a35:5a7b:1d76])
-        by smtp.gmail.com with ESMTPSA id k36-20020a05600c1ca400b003f1733feb3dsm32301239wms.0.2023.04.29.16.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Apr 2023 16:09:36 -0700 (PDT)
-Date:   Sun, 30 Apr 2023 00:09:35 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+        d=1e100.net; s=20221208; t=1682906987; x=1685498987;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Eyk0PLYhUbjWE4n42jdym7EnheKNlKKYg75uVcYf1E=;
+        b=AtDjeH8ceShkKC1dZoYIwHmP5kqnmT0OenPx1M4s78omQeojXH01SLcWT5IeoZJObj
+         vo6DiSCCslkpXL2ET4i5JZV6gV8HoO1liYVigu5ZCYjxUoUfiayCA/80GqHUv6FsELJf
+         ntsIb1lnI4jidtQky57PQFj1+z9HZESP96KY3FbEHQag7HNKWfBuvC+w1KW+Pxc4YyIK
+         9pzrStj7Aglh0rZu4Iz/tz/TmsvA12ZvpMCdM2/iGPy0TtG3u2j04rmIK2JFB4sKWtsA
+         0DdAsOl70u5YeyJeSs2t8btXn/sLgV+vACn4a60EbjGriGQLDTJe6LJeJH/zuZ5JbO9O
+         Ezfw==
+X-Gm-Message-State: AC+VfDwrLO+Iv6Lz8T8WV44vty6rEB9AgKFrlZQ07fIJT3xdT9hXnKYF
+        Q9EPxTk/7nOSOytITy1Z1QU=
+X-Google-Smtp-Source: ACHHUZ69nIYLcyx16E+QD4v/GxJx1YWnJb6Yvw3BH6GzJZBaGWcw5IirZSSt9zK4kdUWwtnp2goVqg==
+X-Received: by 2002:a05:6a20:7f97:b0:f3:67da:9db5 with SMTP id d23-20020a056a207f9700b000f367da9db5mr16782949pzj.38.1682906986948;
+        Sun, 30 Apr 2023 19:09:46 -0700 (PDT)
+Received: from [192.168.43.80] (subs02-180-214-232-13.three.co.id. [180.214.232.13])
+        by smtp.gmail.com with ESMTPSA id w132-20020a62828a000000b00639eb4480f3sm18879586pfd.76.2023.04.30.19.09.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Apr 2023 19:09:46 -0700 (PDT)
+Message-ID: <87275ef5-11bd-0574-5178-ad6119f3fa33@gmail.com>
+Date:   Mon, 1 May 2023 09:09:38 +0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 4/4] riscv: Enable perf counters user access only through
+ perf
+To:     Alexandre Ghiti <alexghiti@rivosinc.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -72,69 +68,34 @@ Cc:     Theodore Ts'o <tytso@mit.edu>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v5] mm/gup: disallow GUP writing to file-backed mappings
- by default
-Message-ID: <08ff7961-7e86-40b3-8e25-1592526c94d4@lucifer.local>
-References: <6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com>
- <afcc124e-7a9b-879c-dfdf-200426b84e24@redhat.com>
- <ZEvZtIb2EDb/WudP@nvidia.com>
- <ZEwPscQu68kx32zF@mit.edu>
- <ZEwVbPM2OPSeY21R@nvidia.com>
- <ZEybNZ7Rev+XM4GU@mit.edu>
- <ZE2ht9AGx321j0+s@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZE2ht9AGx321j0+s@nvidia.com>
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20230413161725.195417-1-alexghiti@rivosinc.com>
+ <20230413161725.195417-5-alexghiti@rivosinc.com>
+Content-Language: en-US
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <20230413161725.195417-5-alexghiti@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Apr 29, 2023 at 08:01:11PM -0300, Jason Gunthorpe wrote:
-> On Sat, Apr 29, 2023 at 12:21:09AM -0400, Theodore Ts'o wrote:
->
-> > In any case, the file system maintainers' position (mine and I doubt
-> > Dave Chinner's position has changed) is that if you write to
-> > file-backed mappings via GUP/RDMA/process_vm_writev, and it causes
-> > silent data corruption, you get to keep both pieces, and don't go
-> > looking for us for anything other than sympathy...
->
-> This alone is enough reason to block it. I'm tired of this round and
-> round and I think we should just say enough, the mm will work to
-> enforce this view point. Files can only be written through PTEs.
->
-> If this upsets people they can work on fixing it, but at least we
-> don't have these kernel problems and inconsistencies to deal with.
->
+On 4/13/23 23:17, Alexandre Ghiti wrote:
+> +The default value is 2, it enables the legacy mode, that is user space has
+> +direct access to cycle, time and insret CSRs only.
+>  
 
-Indeed, I think there is a broad consensus that FOLL_LONGTERM is such an
-egregious case that this is the way forward.
+"The default value is 2, which enables legacy mode (user space has direct
+access to cycle, time, and insret CSRs only)."
 
-I will respin with the discussed GUP-fast changes relatively soon and then
-we can see where that takes us :)
+-- 
+An old man doll... just what I always wanted! - Clara
 
-> Jason
