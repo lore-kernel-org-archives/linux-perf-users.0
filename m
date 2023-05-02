@@ -2,166 +2,179 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689E4C77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 16:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DA3C77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 16:33:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229945AbjEBQT4 (ORCPT
+        id S234051AbjEBQdR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 12:19:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48764 "EHLO
+        Tue, 2 May 2023 12:33:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233926AbjEBQTv (ORCPT
+        with ESMTP id S234043AbjEBQdQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 12:19:51 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 964191FDE
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 09:19:45 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-33124b0dd85so111605ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 09:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683044385; x=1685636385;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6CMyijs+XNrKux/SQRcQVuldFctn4dvQkkq0tZYcvyY=;
-        b=rzKBaXoDGM+0wyev7OMKFK8+fyj11vVAS2euLP3VSuPPGHa22qBjScIViNWdXSF6WC
-         K4yFjq9NKBWaY+WQi6Erw7TSLPH0bsj4U91NxkRbTzWym61W5rQMK/MMkjWFQk8zm8+Z
-         JGSYPIDoMCaUoaBBy6PRLEGDpbHKCk/uMt468odXDcB0Ndbejsrh30URbB7L4k9Jd8i8
-         KlEP08EQuTV6pD2R0TZ9r4XIAr3Wg9P9QYwf+7UO4xrKt8WnqFGnrjkgTA+9eKD+ZyWy
-         TtEpPt0L+OnHjwbFuvCyg6s3ZiXmJCchRVuJc5tzQd9SNX5VxZ72LtaOKNsdjxah6TVW
-         hNQQ==
+        Tue, 2 May 2023 12:33:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890711992
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 09:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683045148;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=r1Y9ZHlSDmHQJFAVnELAl0311AMMIMNb4a19zH7pdjw=;
+        b=aZnEMVy2ON04KkIJ15XUluAz6pjsdVA7dTc3D49oG/cYw/t4q07mwSXRHtdQSAjBqZMshF
+        tAbIFtiPqXfGyrqPVTxBJCAfc6MjPVtk20dWo6n/+hPa0+PNRSlcedwfGWhVY3+VLdFq8y
+        G1XDiQ7lBOXFH1iKQ+SYIEuNxIFmusw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-17-5upJ7HTYMwyiFPD23i5aGg-1; Tue, 02 May 2023 12:32:27 -0400
+X-MC-Unique: 5upJ7HTYMwyiFPD23i5aGg-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f168827701so14467125e9.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 09:32:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683044385; x=1685636385;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6CMyijs+XNrKux/SQRcQVuldFctn4dvQkkq0tZYcvyY=;
-        b=Po/JIHMT1cqZfXjgS941ehtUbRjw3YmPSdGd5VEZ4mILlZecxlK+ouBCuMyvY9zT2x
-         vQnxN2BuKQHyZ5trTLbTNSfrRsZXTjZIbsCtbcK+Ay+uq98RSYq3at8Xr+Zf/VP8gAHj
-         Zx1/VXqc/3iXilvvaV9SS05jBko2qFLwvAG9DXTZjgHOwdKAPE1M2eaT1H6TiA7d1LmN
-         7WgQpOyRzWAPIIVhpIpDrgGgp/E/daD/2N8CISR7DmLzQrEVpthVL7PdoF0pwj2gWoE6
-         YTS9ZCl3DAA+YiecVq+nfM4BJqg/QYv/QJrd6miPq9wjxXeYt1ivmeQrx4Gt2O0bGIQk
-         7Uhw==
-X-Gm-Message-State: AC+VfDyrVfH13KX0dmNRkRwfqwtSpdcYg/r+wNnXRkCz3xdmfD1+79Yu
-        2npkkRWEBWCyLj4m2HUdTAs3Jeqp0GeYIu+W49Guew==
-X-Google-Smtp-Source: ACHHUZ7FLgkyhcnnIXkXfwOL6Q9i02uNPMkVWwVsmOFu/Du+tyrnxMHiS1Tdp0RijGB97br0MjJbrKVwAGN9k5QpjM0=
-X-Received: by 2002:a05:6e02:1ba6:b0:330:eb79:91ad with SMTP id
- n6-20020a056e021ba600b00330eb7991admr254048ili.9.1683044384639; Tue, 02 May
- 2023 09:19:44 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683045146; x=1685637146;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r1Y9ZHlSDmHQJFAVnELAl0311AMMIMNb4a19zH7pdjw=;
+        b=P5/1MY4L5GV1yB+m/gyP8tFhvczhbD2Mh6zLHRVUIX4/gNh4RuNMaSD9ripx2zhJMH
+         vaOXeqt7pXB50kuLkWKWVWZ7tN6jdqob0dP60HqIUrjyZohrOlgX+vZ+fpiyk/NSIJDx
+         UFg6eCKrhibud7W3IAjmDaTMpbuo0KeNdTfCll8f1HF0wzfjgt/i0mW4cbgBdSYBXN3g
+         uv3lX2hWigKOwvDONGI96KsTbeXtKdjfJqsNf9TMJp5CzR0E/rIennkm60pGzMGEhnz7
+         g6xRSdDc5uhNYpi4tMtUIXcRfQPIoxM34sFEYXNPKdWmCE4AMtDw7Tlfy5wDs/faQLQ9
+         CHbw==
+X-Gm-Message-State: AC+VfDxIYzGdZGH5VmBLbR7ld7SrWy26VifrA7O37nazJ4hKM8K5jVav
+        zW4tJv6Ty0IbQOhWvyE5QMxStf7aVR4Ino6lRDpuIh5D5NbeQJvea0da0iLkhzpoR8BPWmZgb6s
+        HbxGZYuTwXgHaLuP3IykVkK+PDL+Pcw==
+X-Received: by 2002:a1c:ed13:0:b0:3f1:70a2:ceb5 with SMTP id l19-20020a1ced13000000b003f170a2ceb5mr12419704wmh.13.1683045146469;
+        Tue, 02 May 2023 09:32:26 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7p+ImTRga1SD1m+KPY+ssu9CtAR9wKLd9W6rRm22/MRxLwFhs/WFpL//bdAy4L2m8Bf5dmkg==
+X-Received: by 2002:a1c:ed13:0:b0:3f1:70a2:ceb5 with SMTP id l19-20020a1ced13000000b003f170a2ceb5mr12419652wmh.13.1683045146112;
+        Tue, 02 May 2023 09:32:26 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c700:2400:6b79:2aa:9602:7016? (p200300cbc70024006b7902aa96027016.dip0.t-ipconnect.de. [2003:cb:c700:2400:6b79:2aa:9602:7016])
+        by smtp.gmail.com with ESMTPSA id m36-20020a05600c3b2400b003edc4788fa0sm40176251wms.2.2023.05.02.09.32.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 May 2023 09:32:25 -0700 (PDT)
+Message-ID: <6681789f-f70e-820d-a185-a17e638dfa53@redhat.com>
+Date:   Tue, 2 May 2023 18:32:23 +0200
 MIME-Version: 1.0
-References: <20230429053506.1962559-1-irogers@google.com> <20230429053506.1962559-15-irogers@google.com>
- <e3a87977-02a1-eb34-593e-844adc6669b7@amd.com>
-In-Reply-To: <e3a87977-02a1-eb34-593e-844adc6669b7@amd.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 2 May 2023 09:19:32 -0700
-Message-ID: <CAP-5=fWY2SYdiogQoxEkAMAc8+_S5Mt3PgO1_=AhbKY3aicgYg@mail.gmail.com>
-Subject: Re: [PATCH v3 14/46] perf test: Mask config then test
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Peter Xu <peterx@redhat.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Rob Herring <robh@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Leo Yan <leo.yan@linaro.org>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Mika Penttila <mpenttil@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Theodore Ts'o <tytso@mit.edu>
+References: <1ffbbfb7-6bca-0ab0-1a96-9ca81d5fa373@redhat.com>
+ <ZFEYblElll3pWtn5@nvidia.com>
+ <f0acd8e4-8df8-dfae-b6b2-30eea3b14609@redhat.com>
+ <3c17e07a-a7f9-18fc-fa99-fa55a5920803@linux.ibm.com>
+ <ZFEqTo+l/S8IkBQm@nvidia.com> <ZFEtKe/XcnC++ACZ@x1n>
+ <ZFEt/ot6VKOgW1mT@nvidia.com>
+ <4fd5f74f-3739-f469-fd8a-ad0ea22ec966@redhat.com>
+ <ZFE07gfyp0aTsSmL@nvidia.com>
+ <1f29fe90-1482-7435-96bd-687e991a4e5b@redhat.com>
+ <ZFE4A7HbM9vGhACI@nvidia.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH v6 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing to
+ file-backed mappings
+In-Reply-To: <ZFE4A7HbM9vGhACI@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 2, 2023 at 3:44=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.com=
-> wrote:
->
-> > @@ -87,7 +92,7 @@ static int test__checkevent_raw(struct evlist *evlist=
-)
-> >
-> >       TEST_ASSERT_VAL("wrong number of entries", 1 =3D=3D evlist->core.=
-nr_entries);
-> >       TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
-tr.type);
-> > -     TEST_ASSERT_VAL("wrong config", 0x1a =3D=3D evsel->core.attr.conf=
-ig);
-> > +     TEST_ASSERT_VAL("wrong config", test_config(evsel, 0x1a));
->
-> Extended 'type' via 'config' is applicable only to HW and HW_CACHE types.
-> I think we should not apply test_config() for other types. Even if they
-> are ineffective in these tests (because we are not setting upper bits),
-> they are semantically wrong IMO.
->
-> In fact, AMD EventSelect is 12 bits and upper 4 bits are located at 35:32
-> in PerfEvtSel register. So for RAW events, upper bits MUST NOT be ignored=
-.
+On 02.05.23 18:19, Jason Gunthorpe wrote:
+> On Tue, May 02, 2023 at 06:12:39PM +0200, David Hildenbrand wrote:
+> 
+>>> It missses the general architectural point why we have all these
+>>> shootdown mechanims in other places - plares are not supposed to make
+>>> these kinds of assumptions. When the userspace unplugs the memory from
+>>> KVM or unmaps it from VFIO it is not still being accessed by the
+>>> kernel.
+>>
+>> Yes. Like having memory in a vfio iommu v1 and doing the same (mremap,
+>> munmap, MADV_DONTNEED, ...). Which is why we disable MADV_DONTNEED (e.g.,
+>> virtio-balloon) in QEMU with vfio.
+> 
+> That is different, VFIO has it's own contract how it consumes the
+> memory from the MM and VFIO breaks all this stuff.
+> 
+> But when you tell VFIO to unmap the memory it doesn't keep accessing
+> it in the background like this does.
 
-Thanks Ravi, this is important and I'll update the tests as you
-suggest. I'd been iterating on this, which is why the test is this
-way. We have two parsing cases, one where the type is explicitly given
-like:
-$ perf stat -e '4:0xC0' true
-and another where the raw config is wildcard applied like:
-$ perf stat -e 'rC0' true
-The question is which PMUs should the 0xC0 raw event be opened on? The
-answer in the code is to ignore all PMUs that aren't the "core" PMUs,
-so cpu, cpu_atom, cpu_core, armv8... This matches existing behavior
-but it wasn't clear to me that this was intentional. I think in the
-future the wildcard application can be made more efficient to ignore
-unnecessary PMUs and avoid the sysfs scan. Something that is a bit of
-an issue in the event parsing is what exactly should be applied by
-wildcard matching and there are inconsistencies.
+To me, this is similar to when QEMU (user space) triggers 
+KVM_S390_ZPCIOP_DEREG_AEN, to tell KVM to disable AIF and stop using the 
+page (1) When triggered by the guest explicitly (2) when resetting the 
+VM (3) when resetting the virtual PCI device / configuration.
 
+Interrupt gets unregistered from HW (which stops using the page), the 
+pages get unpinned. Pages get no longer used.
+
+I guess I am still missing (a) how this is fundamentally different (b) 
+how it could be done differently.
+
+I'd really be happy to learn how a better approach would look like that 
+does not use longterm pinnings.
+
+I don't see an easy way to not use longterm pinnings. When using mmu 
+notifiers and getting notified about unmapping of a page (for whatever 
+reason ... migration, swapout, unmap), you'd have to disable aif. But 
+when to reenable it (maybe there would be a way)? Also, I'm not sure if 
+this could even be visible by the guest, if it's suddenly no longer enabled.
+
+Something for the s390x people to explore ... if HW would be providing a 
+way to deal with that somehow.
+
+-- 
 Thanks,
-Ian
 
-> > @@ -139,8 +142,7 @@ static int test__checkevent_symbolic_alias(struct e=
-vlist *evlist)
-> >
-> >       TEST_ASSERT_VAL("wrong number of entries", 1 =3D=3D evlist->core.=
-nr_entries);
-> >       TEST_ASSERT_VAL("wrong type", PERF_TYPE_SOFTWARE =3D=3D evsel->co=
-re.attr.type);
-> > -     TEST_ASSERT_VAL("wrong config",
-> > -                     PERF_COUNT_SW_PAGE_FAULTS =3D=3D evsel->core.attr=
-.config);
-> > +     TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_SW_=
-PAGE_FAULTS));
->
-> Ditto for PERF_TYPE_SOFTWARE. We should not use test_config().
->
->
-> > @@ -160,7 +162,7 @@ static int test__checkevent_breakpoint(struct evlis=
-t *evlist)
-> >
-> >       TEST_ASSERT_VAL("wrong number of entries", 1 =3D=3D evlist->core.=
-nr_entries);
-> >       TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT =3D=3D evsel->=
-core.attr.type);
-> > -     TEST_ASSERT_VAL("wrong config", 0 =3D=3D evsel->core.attr.config)=
-;
-> > +     TEST_ASSERT_VAL("wrong config", test_config(evsel, 0));
->
-> Ditto for PERF_TYPE_BREAKPOINT.
+David / dhildenb
+
