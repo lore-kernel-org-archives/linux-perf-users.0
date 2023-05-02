@@ -2,128 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E4BC77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 15:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44D9C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 15:46:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233289AbjEBPhg (ORCPT
+        id S234377AbjEBPqg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 11:37:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52132 "EHLO
+        Tue, 2 May 2023 11:46:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231728AbjEBPhf (ORCPT
+        with ESMTP id S234562AbjEBPqf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 11:37:35 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BD04E7;
-        Tue,  2 May 2023 08:37:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=IN2XFj5wbX0SEj5WPNdCLS4YOUJ8lCRfIxHwS3n4SLM=; b=UvuPnIHH2ZyTeqEaGBAbZmphIi
-        KcpDfy+hpLBTVcWQ7wLzysRwgLAudR+uL1BjCQXdNFPJczSrebqoqBZYsbsnGVf3FvhY6ZHyIGOfh
-        cgr0vb95jSA/lnHogagj3dKhkvKuALD/+nhCiZrNww0+Zz12rwTWOUuOu4q4vy8ZqPgbn4AYh9ctP
-        hzBKIhAjRlrKWEfmNN8Ddm/HjEUDx5AGwqbwrP/8U/jOFlrkUuAOTngENxnFvpm+unxat/5nHqYMM
-        HMrPx7w4yT6/3up9pMZIWT1TgDrBq7LLS2lQC1o6TwHm1/qNGZKSxH5OMTEbTbMwmz5rZotvPskAh
-        /YH6kYZQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pts3r-00GLIL-0i;
-        Tue, 02 May 2023 15:37:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2B2CD3002BF;
-        Tue,  2 May 2023 17:37:02 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1250530375740; Tue,  2 May 2023 17:37:02 +0200 (CEST)
-Date:   Tue, 2 May 2023 17:37:01 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     namhyung@kernel.org, eranian@google.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
-        bp@alien8.de, kan.liang@linux.intel.com, adrian.hunter@intel.com,
-        maddy@linux.ibm.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v3 2/3] perf/ibs: Fix interface via core pmu events
-Message-ID: <20230502153701.GF1597538@hirez.programming.kicks-ass.net>
-References: <20230425142205.762-1-ravi.bangoria@amd.com>
- <20230425142205.762-3-ravi.bangoria@amd.com>
+        Tue, 2 May 2023 11:46:35 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8E5A1FEA
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 08:45:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683042346;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/jXCvdd7DNygReOZu9LsiaslZNiW9u3JpZSmEUHzOZk=;
+        b=BRDgSKTa7nEr1bdpIOCLfMzyYKhcvH67DYXXiOtVdse65imeItlGx7cPyskdmJrDhtUxSx
+        VShIzmQG6kdkGrYEMu2AfQB3BQOzWFWF9jLSeXsOv5mwaf1gkvt9MdUPwHcUJ8mNWtDaZo
+        HLLzommqUg5nvKfIH/iccKV8E99Fj1Y=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-652-5oEnfouIOYakISS65wEaPg-1; Tue, 02 May 2023 11:45:45 -0400
+X-MC-Unique: 5oEnfouIOYakISS65wEaPg-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3f16f50aeb5so13148915e9.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 08:45:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683042344; x=1685634344;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/jXCvdd7DNygReOZu9LsiaslZNiW9u3JpZSmEUHzOZk=;
+        b=O+4Eu0d+dB1oyZ4pxKeH0cjsjvvxbA+GxxHg7sYvHoxcOmGC3jVwQ8tATMFrMht4Dj
+         L6Lm7RAAj8Igj5p7VD+p11wJnG/Pxsznuh//4JolUkSMBr1CxzXJ2JlhWBib877BMzok
+         39P++trXJY0RCPNQaa46uGY40kBG+LeGzyDcNeMiCv/UelUd/h9FsBKvaqPGAW5eaWlp
+         L76t3RrsbPQe3GYQkeyDYj5c/t/3toAJIZKBbNzuYfpdODNH7NNORxy6yJ+V7HEGmA+G
+         hgei/UYWxzWjLNZNRydBnPAbBaSBxge33T0u6lg1rP9G3Fr+Nc0aG4z4CQT1XOHDaEx3
+         t7Qg==
+X-Gm-Message-State: AC+VfDwTgyQ+drg9Amcl+l4WatJScV9zqjpt8pVZ2THb1BFWJ8yMblWF
+        bJHzuoyKyD22ybxyv00nyLIGSdiWrZ1CSNZYdALC6Xdcz/y1uSzRYS0+v2UFiQHftXzxnvaJY7T
+        /q87xaUIFN0+l95iuPRQTcDNWSW1xjw==
+X-Received: by 2002:a7b:c3c4:0:b0:3f3:3a81:32b with SMTP id t4-20020a7bc3c4000000b003f33a81032bmr5684929wmj.15.1683042343897;
+        Tue, 02 May 2023 08:45:43 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6iCnNxLty4fpwGjWmlTk0Cw9dYjc5Qp9Xj7jiPRTTMbQu6pqQFr0IF1EjCkXU8IZxvcKndbQ==
+X-Received: by 2002:a7b:c3c4:0:b0:3f3:3a81:32b with SMTP id t4-20020a7bc3c4000000b003f33a81032bmr5684921wmj.15.1683042343556;
+        Tue, 02 May 2023 08:45:43 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c700:2400:6b79:2aa:9602:7016? (p200300cbc70024006b7902aa96027016.dip0.t-ipconnect.de. [2003:cb:c700:2400:6b79:2aa:9602:7016])
+        by smtp.gmail.com with ESMTPSA id f25-20020a7bc8d9000000b003f0b1b8cd9bsm35846962wml.4.2023.05.02.08.45.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 May 2023 08:45:42 -0700 (PDT)
+Message-ID: <4fd5f74f-3739-f469-fd8a-ad0ea22ec966@redhat.com>
+Date:   Tue, 2 May 2023 17:45:40 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230425142205.762-3-ravi.bangoria@amd.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US
+To:     Jason Gunthorpe <jgg@nvidia.com>, Peter Xu <peterx@redhat.com>
+Cc:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Mika Penttila <mpenttil@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Theodore Ts'o <tytso@mit.edu>
+References: <ce3aa7b9-723c-6ad3-3f03-3f1736e1c253@redhat.com>
+ <ff99f2d8-804d-924f-3c60-b342ffc2173c@linux.ibm.com>
+ <ad60d5d2-cfdf-df9f-aef1-7a0d3facbece@redhat.com>
+ <ZFEVQmFGL3GxZMaf@nvidia.com>
+ <1ffbbfb7-6bca-0ab0-1a96-9ca81d5fa373@redhat.com>
+ <ZFEYblElll3pWtn5@nvidia.com>
+ <f0acd8e4-8df8-dfae-b6b2-30eea3b14609@redhat.com>
+ <3c17e07a-a7f9-18fc-fa99-fa55a5920803@linux.ibm.com>
+ <ZFEqTo+l/S8IkBQm@nvidia.com> <ZFEtKe/XcnC++ACZ@x1n>
+ <ZFEt/ot6VKOgW1mT@nvidia.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH v6 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing to
+ file-backed mappings
+In-Reply-To: <ZFEt/ot6VKOgW1mT@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Apr 25, 2023 at 07:52:04PM +0530, Ravi Bangoria wrote:
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 151299940d9a..232121a6d1e2 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11648,16 +11648,6 @@ static struct pmu *perf_init_event(struct perf_event *event)
->  		goto unlock;
->  	}
->  
-> -	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
-> -		ret = perf_try_init_event(pmu, event);
-> -		if (!ret)
-> -			goto unlock;
-> -
-> -		if (ret != -ENOENT) {
-> -			pmu = ERR_PTR(ret);
-> -			goto unlock;
-> -		}
-> -	}
->  fail:
->  	pmu = ERR_PTR(-ENOENT);
->  unlock:
+On 02.05.23 17:36, Jason Gunthorpe wrote:
+> On Tue, May 02, 2023 at 11:32:57AM -0400, Peter Xu wrote:
+>>> How does s390 avoid mmu notifiers without having lots of problems?? It
+>>> is not really optional to hook the invalidations if you need to build
+>>> a shadow page table..
+>>
+>> Totally no idea on s390 details, but.. per my read above, if the firmware
+>> needs to make sure the page is always available (so no way to fault it in
+>> on demand), which means a longterm pinning seems appropriate here.
+>>
+>> Then if pinned a must, there's no need for mmu notifiers (as the page will
+>> simply not be invalidated anyway)?
+> 
+> And what if someone deliberately changes the mapping?  memory hotplug
+> in the VM, or whatever?
 
-Would it make sense to put the above and the below cleanup in a separate
-patch after this?
+Besides s390 not supporting memory hotplug in VMs (yet): if the guest 
+wants a different guest physical address, I guess that's the problem of 
+the guest, and it can update it:
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11631,25 +11631,24 @@ static struct pmu *perf_init_event(struc
- 	rcu_read_lock();
- 	pmu = idr_find(&pmu_idr, type);
- 	rcu_read_unlock();
--	if (pmu) {
--		if (event->attr.type != type && type != PERF_TYPE_RAW &&
--		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
--			goto fail;
--
--		ret = perf_try_init_event(pmu, event);
--		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
--			type = event->attr.type;
--			goto again;
--		}
-+	if (!pmu)
-+		goto unlock;
- 
--		if (ret)
--			pmu = ERR_PTR(ret);
-+	ret = -ENOENT;
-+	if (event->attr.type != type && type != PERF_TYPE_RAW &&
-+	    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-+		goto fail;
- 
--		goto unlock;
-+	ret = perf_try_init_event(pmu, event);
-+	if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-+		type = event->attr.type;
-+		goto again;
- 	}
- 
- fail:
--	pmu = ERR_PTR(-ENOENT);
-+	if (ret)
-+		pmu = ERR_PTR(ret);
-+
- unlock:
- 	srcu_read_unlock(&pmus_srcu, idx);
- 
+KVM_S390_ZPCIOP_REG_AEN is triggered from QEMU via 
+s390_pci_kvm_aif_enable(), triggered by the guest via a special instruction.
+
+If the hypervisor changes the mapping, it's just the same thing as 
+mixing e.g. MADV_DONTNEED with longterm pinning in vfio: don't do it. 
+And if you do it, you get to keep the mess you created for your VM.
+
+Linux will make sure to not change the mapping: for example, page 
+migration of a pinned page will fail.
+
+But maybe I am missing something important here.
+
+-- 
+Thanks,
+
+David / dhildenb
+
