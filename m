@@ -2,163 +2,208 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9FCEC77B7E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 15:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80646C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 15:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233986AbjEBPJy (ORCPT
+        id S234429AbjEBPQs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 11:09:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33588 "EHLO
+        Tue, 2 May 2023 11:16:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233771AbjEBPJx (ORCPT
+        with ESMTP id S234133AbjEBPQq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 11:09:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E06A6
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 08:09:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683040152;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bRYNJVFhwseCiL0jjUQStKX5TCOrfxvVONgPXFtg6uM=;
-        b=U6Tlpe1QEyLPp0YTIahZfoo/tsYkUv/lvras/iPK2A2wP625/6bWXq5DVf9gLJpVta+Yvm
-        nYwctwY16+CNUVrR1V9UoK0Lb9dFIWKxcCVB303G9N93x1mWmSOwbGewrA4s6NeeFG/p7R
-        zh5xFT66VZJKOeR4AhqkNB49KU6I2KQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-292-bqYKY0A4O4-pPe1ufRjL_w-1; Tue, 02 May 2023 11:09:10 -0400
-X-MC-Unique: bqYKY0A4O4-pPe1ufRjL_w-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f16ef3bf06so12356595e9.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 08:09:10 -0700 (PDT)
+        Tue, 2 May 2023 11:16:46 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC3C72118
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 08:16:41 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id e9e14a558f8ab-330ec047d3bso103795ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 08:16:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683040601; x=1685632601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AgQf3REMzYOuZ+1ZgyK5fke9Ps2GU4rRNicGysnK8q8=;
+        b=w7GM7waiay/9nYQEzXai6Q33QVggtJKJtr/BmXdF7Xyn+io6TAGYRFbCi9L6RhHN61
+         WnRiX9dkSAOKpLjRCpPMlzGjaCc57ikCX+Ba6i+HyBMhEmw2C9fWbeBNJ79/lzbp/tEZ
+         pnWIOHKwt5sIWw0F9kHPATghH2gBX/P2mVQlB6olKQNDHtGtAh84zS6FP7skKNLWc9zD
+         2XKEmbUChNIzuWxdo1aZiQW0XXpjT4HeDTEPCKDcwDPDQh5xmC8Zc4eXzIFZIhE7KIsp
+         /45yRUnDzYPf6Mr5LZ627TGYh8r9s2tM4lQqWwlsKdBRBfvE/8O4QUktgPDVO/WEPklo
+         hZtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683040150; x=1685632150;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bRYNJVFhwseCiL0jjUQStKX5TCOrfxvVONgPXFtg6uM=;
-        b=CK8/rRe+UrCdLTmDE2HiXT8MZImlQrECRCMqOUgO24hXZ61fH+3twVfAFe6MXCZDh3
-         095cHbW+J3IZLUVseSBooYZqCgCPmTfdIzFxZGt6e0DI01jaHPZLHniQrxiuMGBk5unQ
-         pcIMqYZ66LWJE5+foyQ11bGc1WiCIMsf1sW5sI3/dVmXn8mSQ2c7bKpK/twGEOkQJ3o1
-         atQqPD9AlSleAOM3PLxwA14TIG6FhlNxsLeQ6UXvbiZMTDWHUA9LVCvEN4RtLOoLbAjJ
-         5EoiXS+F73MKN/q8gGA4kF2i8kRa4AqtMSJBL/BZdLAztckKPo2QUpjTKJ7L7HaZeKz3
-         shBg==
-X-Gm-Message-State: AC+VfDy/OVN551hn0Et6jUJ81JPA4XoSyxBGrGLqkDeRR9vvVjlC1Tn1
-        ZL6tetUHofiP/U3ZghwKd1q+XltB1uQJZVIbG+m8Pwa0B0uM7hSYU+gjMzOGy0dNisjplqw4lth
-        TigrleE6Y2ywUzdG6HzPJDc+NxvNIIg==
-X-Received: by 2002:a1c:7710:0:b0:3f1:6527:df05 with SMTP id t16-20020a1c7710000000b003f16527df05mr13078887wmi.22.1683040149571;
-        Tue, 02 May 2023 08:09:09 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6fWNjXb+x1RTqs+C4cbBtsb27FdAaquHZ29RbX4irITUmwGCH1YeZ2ULrHO1qwL0l1qzelew==
-X-Received: by 2002:a1c:7710:0:b0:3f1:6527:df05 with SMTP id t16-20020a1c7710000000b003f16527df05mr13078837wmi.22.1683040149211;
-        Tue, 02 May 2023 08:09:09 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c700:2400:6b79:2aa:9602:7016? (p200300cbc70024006b7902aa96027016.dip0.t-ipconnect.de. [2003:cb:c700:2400:6b79:2aa:9602:7016])
-        by smtp.gmail.com with ESMTPSA id d23-20020a1c7317000000b003f325f0e020sm13416157wmb.47.2023.05.02.08.09.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 May 2023 08:09:08 -0700 (PDT)
-Message-ID: <1f3231c0-34b2-1e78-0bf0-f32d5b67811d@redhat.com>
-Date:   Tue, 2 May 2023 17:09:06 +0200
+        d=1e100.net; s=20221208; t=1683040601; x=1685632601;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AgQf3REMzYOuZ+1ZgyK5fke9Ps2GU4rRNicGysnK8q8=;
+        b=Q1q8MZSMGCbjniV6knvzOY0FIrsp55Zyb+gwsVG8KaqhtaBUPfyFOqOSNJIowNaxj3
+         AgIJIrG8+xv42BwTSEgiSxINSmPNwbheerpfBEHUB5n7hHOVy5UZdgEx4FabsUPEvZ3v
+         Tb1cpv7QZ+FxREU82OEeTLY6EATc0x82yyvCir2iMVTNHUkHMvTJ7eiyULiAZro290uL
+         BNGTUxsSfutNdfT9LhgJucACNp3eyga36AIxpzl6EXeIUH6monSJTDW9oT9nQoxzMEIn
+         bmNgRQDAIbDHjJmkQoTGivVrnskG22VQQyYDFLaqcWl5mv5esBDi3YwjZdOEARAxvSZx
+         qwaA==
+X-Gm-Message-State: AC+VfDzwhg3dnhjEeUURw85LYOIDLsl2CPP2lj7P2Is6nzINA5bGHAJD
+        lslO/KidL1JqiTIgHcF9AllboeUpBms5oIzIJD0jXg==
+X-Google-Smtp-Source: ACHHUZ46mgBYrXBlaTeoysijxAWvTxG1SGEBbaAaXuoLdNO5yxk1lOSH37DFUd5fFTDSabscRV9HchLEmLA5qtlQ304=
+X-Received: by 2002:a05:6e02:1c21:b0:32a:f2a9:d1b7 with SMTP id
+ m1-20020a056e021c2100b0032af2a9d1b7mr364329ilh.10.1683040600719; Tue, 02 May
+ 2023 08:16:40 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v6 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing to
- file-backed mappings
-Content-Language: en-US
-To:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+References: <20230429053506.1962559-1-irogers@google.com> <20230429053506.1962559-13-irogers@google.com>
+ <31dbae6c-4cbe-d7e2-bc78-beed959cbddc@amd.com>
+In-Reply-To: <31dbae6c-4cbe-d7e2-bc78-beed959cbddc@amd.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 2 May 2023 08:16:29 -0700
+Message-ID: <CAP-5=fW-_2OxYFTVuZgSPAPEH7DLGm1xS_Nijb0cTj3YKBQ7-A@mail.gmail.com>
+Subject: Re: [PATCH v3 12/46] perf test: Test more sysfs events
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>
-References: <dee4f4ad6532b0f94d073da263526de334d5d7e0.1682981880.git.lstoakes@gmail.com>
- <fbad9e18-f727-9703-33cf-545a2d33af76@linux.ibm.com>
- <7d56b424-ba79-4b21-b02c-c89705533852@lucifer.local>
- <a6bb0334-9aba-9fd8-6a9a-9d4a931b6da2@linux.ibm.com>
- <ZFEL20GQdomXGxko@nvidia.com>
- <c4f790fb-b18a-341a-6965-455163ec06d1@redhat.com>
- <ZFER5ROgCUyywvfe@nvidia.com>
- <ce3aa7b9-723c-6ad3-3f03-3f1736e1c253@redhat.com>
- <ff99f2d8-804d-924f-3c60-b342ffc2173c@linux.ibm.com>
- <ad60d5d2-cfdf-df9f-aef1-7a0d3facbece@redhat.com>
- <ZFEVQmFGL3GxZMaf@nvidia.com>
- <1d4c9258-9423-7411-e722-8f6865b18886@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <1d4c9258-9423-7411-e722-8f6865b18886@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Florian Fischer <florian.fischer@muhq.space>,
+        Rob Herring <robh@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 02.05.23 15:56, Matthew Rosato wrote:
-> On 5/2/23 9:50 AM, Jason Gunthorpe wrote:
->> On Tue, May 02, 2023 at 03:47:43PM +0200, David Hildenbrand wrote:
->>>> Eventually we want to implement a mechanism where we can dynamically pin in response to RPCIT.
->>>
->>> Okay, so IIRC we'll fail starting the domain early, that's good. And if we
->>> pin all guest memory (instead of small pieces dynamically), there is little
->>> existing use for file-backed RAM in such zPCI configurations (because memory
->>> cannot be reclaimed either way if it's all pinned), so likely there are no
->>> real existing users.
->>
->> Right, this is VFIO, the physical HW can't tolerate not having pinned
->> memory, so something somewhere is always pinning it.
-> 
-> I might have mis-explained above.
-> 
-> With iommufd nesting, we will pin everything upfront as a starting point.
-> 
-> The current usage of vfio type1 iommu for s390 does not pin the entirety of guest memory upfront, it happens as guest RPCITs occur / type1 mappings are made.
+On Tue, May 2, 2023 at 3:27=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.com=
+> wrote:
+>
+> > @@ -2225,74 +2226,82 @@ static int test_pmu(void)
+> >
+> >  static int test__pmu_events(struct test_suite *test __maybe_unused, in=
+t subtest __maybe_unused)
+> >  {
+> > -     struct stat st;
+> > -     char path[PATH_MAX];
+> > -     struct dirent *ent;
+> > -     DIR *dir;
+> > -     int ret;
+> > +     struct perf_pmu *pmu;
+> > +     int ret =3D TEST_OK;
+> >
+> > -     if (!test_pmu())
+> > -             return TEST_SKIP;
+> > +     perf_pmus__for_each_pmu(pmu) {
+>
+> 'pmus' list might be empty and, if so, we need to fill it first with:
+>
+>         if (list_empty(&pmus))
+>                 perf_pmu__scan(NULL);
+>
+> before iterating over it. Other option is to add this code to
+> perf_pmus__for_each_pmu() macro itself.
+>
+> With that, the test fails for me:
+>
+> $ sudo ./perf test 6
+>   6: Parse event definition strings                                  :
+>   6.1: Test event parsing                                            : Ok
+>   6.2: Test parsing of "hybrid" CPU events                           : Sk=
+ip (not hybrid)
+>   6.3: Parsing of all PMU events from sysfs                          : FA=
+ILED!
+>
+> > +             struct stat st;
+> > +             char path[PATH_MAX];
+> > +             struct dirent *ent;
+> > +             DIR *dir;
+> > +             int err;
+> >
+> > -     snprintf(path, PATH_MAX, "%s/bus/event_source/devices/cpu/events/=
+",
+> > -              sysfs__mountpoint());
+> > +             snprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/=
+events/",
+> > +                     sysfs__mountpoint(), pmu->name);
+> >
+> > -     ret =3D stat(path, &st);
+> > -     if (ret) {
+> > -             pr_debug("omitting PMU cpu events tests: %s\n", path);
+> > -             return TEST_OK;
+> > -     }
+> > +             err =3D stat(path, &st);
+> > +             if (err) {
+> > +                     pr_debug("skipping PMU %s events tests: %s\n", pm=
+u->name, path);
+> > +                     ret =3D combine_test_results(ret, TEST_SKIP);
+>
+> combine_test_results(ret, TEST_OK); probably? Since many pmus don't expos=
+e
+> events via sysfs.
 
-... so, after the domain started successfully on the libvirt/QEMU side ? :/
+Thanks Ravi! The following looks to address the issues and I'll add it to v=
+4.
 
-It would be great to confirm that. There might be a BUG in patch #2 (see 
-my reply to patch #2) that might not allow you to reproduce it right now.
+'''
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-event=
+s.c
+index 35b35a5c795c..2ff61ee8f970 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -559,7 +559,8 @@ static int test__checkevent_pmu_events(struct
+evlist *evlist)
+       struct evsel *evsel =3D evlist__first(evlist);
 
--- 
-Thanks,
+       TEST_ASSERT_VAL("wrong number of entries", 1 =3D=3D evlist->core.nr_=
+entries);
+-       TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.attr=
+.type);
++       TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.attr=
+.type ||
++                                     strncmp(evsel->pmu_name, "cpu/", 4));
+       TEST_ASSERT_VAL("wrong exclude_user",
+                       !evsel->core.attr.exclude_user);
+       TEST_ASSERT_VAL("wrong exclude_kernel",
+@@ -2229,6 +2230,9 @@ static int test__pmu_events(struct test_suite
+*test __maybe_unused, int subtes
+t
+       struct perf_pmu *pmu;
+       int ret =3D TEST_OK;
 
-David / dhildenb
-
++       if (list_empty(&pmus))
++                perf_pmu__scan(NULL);
++
+       perf_pmus__for_each_pmu(pmu) {
+               struct stat st;
+               char path[PATH_MAX];
+@@ -2242,7 +2246,6 @@ static int test__pmu_events(struct test_suite
+*test __maybe_unused, int subtes
+t
+               err =3D stat(path, &st);
+               if (err) {
+                       pr_debug("skipping PMU %s events tests: %s\n",
+pmu->name, path);
+-                       ret =3D combine_test_results(ret, TEST_SKIP);
+                       continue;
+               }
+'''
