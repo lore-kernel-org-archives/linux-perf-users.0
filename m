@@ -2,286 +2,270 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76647C77B78
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 20:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD92CC77B78
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 21:34:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbjEBUhX (ORCPT
+        id S229528AbjEBVeX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 16:37:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59796 "EHLO
+        Tue, 2 May 2023 17:34:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbjEBUhW (ORCPT
+        with ESMTP id S229496AbjEBVeX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 16:37:22 -0400
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D028F19A2
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 13:37:20 -0700 (PDT)
-Received: by mail-il1-x12f.google.com with SMTP id e9e14a558f8ab-3311833ba3dso156665ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 13:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683059840; x=1685651840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Cl+EqDeYwpTNeDyJZ31cWxa2e7SIFMBY+Z+r+9CTeM=;
-        b=RoE+6ObKk+Ofk7Ps/wn5WI10EqZLQwmhPRozbE2ZSakrN7Xaq0YaERAw0+rOd7Stoc
-         3ojazmjJ8k2LZwNBmsH/62gjYAF1gMzbrkvs5GwP/0ZuI0RjhR7PMmPZMq9jDqOzF4aq
-         PccfjEK87WMbnLPlwOM0rckBIJbaduL2jC8q9KuFjMRti2ry+x40B7WmvgMwdIbqfhYn
-         t4Wb25WZYvgbyKpq37O/s8HavFjMEHY8g+CyEykP8X+czykNQ41CJTO+NsFelff75ljl
-         j/JnuBHoWW/0og7moMOKss3F9ExA8JVMUP2AL6iuFDnoUsFl7HiIladdEm2+DO0f75NF
-         6tww==
+        Tue, 2 May 2023 17:34:23 -0400
+X-Greylist: delayed 3744 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 02 May 2023 14:34:21 PDT
+Received: from mx0b-00256a01.pphosted.com (mx0a-00256a01.pphosted.com [148.163.150.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D247170B
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 14:34:21 -0700 (PDT)
+Received: from pps.filterd (m0142701.ppops.net [127.0.0.1])
+        by mx0b-00256a01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 342HeA24017633
+        for <linux-perf-users@vger.kernel.org>; Tue, 2 May 2023 16:31:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nyu.edu; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding;
+ s=20180315; bh=wp9qLLSPZ5o0mSKK6LhGAR9ze3MtsABv/8Wd7xrHKBA=;
+ b=bIt/V3ZOdnrAEUAWttjS4IT3KxBalchsQRLXczHmu2JAnlGYJjbnN/72ZY4gMvGgR/py
+ KvgoYKGmf9v/lublovxzse2V90kVYyXUgiv21OSmy53mypY80wPHXj/zIkbgQ0DPZYJg
+ 1XrDtqGWjc1WJZkMAT4Z2KAhiTwj03WvVlecnWzg8QH0sdBexjMwQjBoJyzrL1Tplgju
+ wMQul/gicohM20r15EEvUEavux2G9UEsC7id2EpJ6sZDrepKx3LIUOEb64GkX8zkmW4x
+ Nh1EcJ/q2/lMhJyafX3bdcm2UEQMyfwuFxY1XJ6H/+bXitBY+pyHAl29HUkzNk+757qZ VQ== 
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+        by mx0b-00256a01.pphosted.com (PPS) with ESMTPS id 3qaqaa3fmn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 16:31:57 -0400
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-61a66010dd7so16766976d6.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 13:31:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683059840; x=1685651840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3Cl+EqDeYwpTNeDyJZ31cWxa2e7SIFMBY+Z+r+9CTeM=;
-        b=aI8Ggsv7SCUdFu0o4M++vPH7B7n+sqNv1nufjTIbcG03XXbvcUIr8P/sauqUxXXtKe
-         aNZzR/yGrCmBlIhggh/f9oKo80j56fkf79XFbKFV0AXExgDSDOEL5IZF08Tysqmfwbow
-         m9nTiQjlK+dGn+UHVNp6f1iDsmgmSltWPRVGu7IYEIH6hJsyLWYP84ApznYimsOhY5/p
-         PbWqyUdsMz07iibSI9aq4cx6kzCoPrkE85bOIN6ivk3od/OduCevsz9OJBrt2OL+LUO0
-         NrqOQ0dOxLOeuplukXUloZ00AUn9pH0zPYOWULFySn7rsuqsuYLOYwsgdhKGOnsBmG7y
-         N1Wg==
-X-Gm-Message-State: AC+VfDzFyUFMnQrIpk633eh0DU6qGdHGI8yNjB1p/xVZynnC/Jb8lIbO
-        tojWeEhkWyVo4YK5GtWMDCUJuRJhnlizDByb0Y2BWw==
-X-Google-Smtp-Source: ACHHUZ75SsGaI9x5mLnHNfrvwr3lXTjJQxO+5cZDVkg8RLDJbVmEjlQf6e4l6ixWHvLHNMXWECbK55bHC57ZYECbiSY=
-X-Received: by 2002:a05:6e02:178d:b0:326:55d0:efad with SMTP id
- y13-20020a056e02178d00b0032655d0efadmr76821ilu.12.1683059839895; Tue, 02 May
- 2023 13:37:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230502203135.24794-1-jinli.xiao@nyu.edu>
-In-Reply-To: <20230502203135.24794-1-jinli.xiao@nyu.edu>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 2 May 2023 13:37:04 -0700
-Message-ID: <CAP-5=fV-RZGwcM8+dMCsqwK_1aFERrvQ1sLJfUCA+kBFMEdoDw@mail.gmail.com>
-Subject: Re: [PATCH] perf python: Set error messages on call failure
-To:     Jinli Xiao <jinli.xiao@nyu.edu>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        d=1e100.net; s=20221208; t=1683059516; x=1685651516;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wp9qLLSPZ5o0mSKK6LhGAR9ze3MtsABv/8Wd7xrHKBA=;
+        b=CyxDZSGLJCxnqdl92Gaz6/VGAjI290nqapAA8ho1KtnyXGHrSDj5SBXsdmdsRp6Aaw
+         o2wMwMPoWqAdaHFMXlhO/bBqJ/S/okG+2dR7g9wUlUvG6Z9y10ySEXol36WnTEYZkehe
+         QsfDGKvKVZdPr8/ipH/7KiXBVjVRiV68N33eLABHlte4tglemQZz7lSpcrXxI88BZHHa
+         Z28yaNbMM8bS/4z/f/7YgVlJq/gN3HWF+7s92C5HJ+VAnpoklMJhzdngi5ISeTrAVD2G
+         cFt2fW3r5T0ssxQI47UFvbuTiVNf5xwknUTIQWu/gBXeuBPHM5Nftp+t0mxlFcDFWE1Z
+         FX6w==
+X-Gm-Message-State: AC+VfDzA1MpY+STEOV8tMhu/3DnbY2Ii/bRoKa/XWbci+MhGmfy/E8oz
+        5BomWPDb9Wp2DC7wUWgT2qmKJ4SZnGBj/REPIj7qYinzzwUFwpQiSEi03bRsc+l5cOthci1WyTi
+        RhJU7AN+hbilo9PELWlE9bh7GDZgY
+X-Received: by 2002:a05:6214:21ef:b0:5f0:f0c3:59a8 with SMTP id p15-20020a05621421ef00b005f0f0c359a8mr6152927qvj.22.1683059515850;
+        Tue, 02 May 2023 13:31:55 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4e/aybbIYFMxDsNzm9j7Q5eDJsxYucYe8IAC0y/ZHiMjLyKfkyZyEvwMLSSAn4kotNVtvY1Q==
+X-Received: by 2002:a05:6214:21ef:b0:5f0:f0c3:59a8 with SMTP id p15-20020a05621421ef00b005f0f0c359a8mr6152906qvj.22.1683059515556;
+        Tue, 02 May 2023 13:31:55 -0700 (PDT)
+Received: from nyu-lexis.net.nyu.edu (216-165-95-191.natpool.nyu.edu. [216.165.95.191])
+        by smtp.gmail.com with ESMTPSA id w12-20020ac857cc000000b003f20ec69b1asm3359380qta.17.2023.05.02.13.31.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 May 2023 13:31:55 -0700 (PDT)
+From:   Jinli Xiao <jinli.xiao@nyu.edu>
+Cc:     Jinli Xiao <jinli.xiao@nyu.edu>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Leo Yan <leo.yan@linaro.org>,
         Suzuki Poulouse <suzuki.poulose@arm.com>,
         James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH] perf python: Set error messages on call failure
+Date:   Tue,  2 May 2023 16:31:34 -0400
+Message-Id: <20230502203135.24794-1-jinli.xiao@nyu.edu>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-ORIG-GUID: 44C1v8ubmxefx6S0-_3nsWfks-9ouJ8o
+X-Proofpoint-GUID: 44C1v8ubmxefx6S0-_3nsWfks-9ouJ8o
+X-Orig-IP: 209.85.219.69
+X-Proofpoint-Spam-Details: rule=outbound_bp_notspam policy=outbound_bp score=0 mlxlogscore=999
+ lowpriorityscore=0 malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0
+ adultscore=0 impostorscore=0 phishscore=0 clxscore=1011 mlxscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305020174
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 2, 2023 at 1:31=E2=80=AFPM Jinli Xiao <jinli.xiao@nyu.edu> wrot=
-e:
->
-> Updates the perf python binding to provide more informative error
-> messages to the user when there is a call failure. The changes include
-> setting error messages on several different scenarios when the package
-> needs to return -1 or NULL.
->
-> Signed-off-by: Jinli Xiao <jinli.xiao@nyu.edu>
+Updates the perf python binding to provide more informative error
+messages to the user when there is a call failure. The changes include
+setting error messages on several different scenarios when the package
+needs to return -1 or NULL.
 
-Nice! Would it be possible to test this? We could do a shell test:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
-ls/perf/tests/shell
+Signed-off-by: Jinli Xiao <jinli.xiao@nyu.edu>
+---
+ tools/perf/util/python.c | 61 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 46 insertions(+), 15 deletions(-)
 
-Thanks,
-Ian
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 42e8b813d010..7e6b12e87744 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -635,12 +635,16 @@ static int pyrf_cpu_map__init(struct pyrf_cpu_map *pcpus,
+ 	char *cpustr = NULL;
+ 
+ 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|s",
+-					 kwlist, &cpustr))
++					 kwlist, &cpustr)) {
++		PyErr_BadArgument();
+ 		return -1;
++	}
+ 
+ 	pcpus->cpus = perf_cpu_map__new(cpustr);
+-	if (pcpus->cpus == NULL)
++	if (pcpus->cpus == NULL) {
++		PyErr_SetFromErrno(PyExc_OSError);
+ 		return -1;
++	}
+ 	return 0;
+ }
+ 
+@@ -704,12 +708,16 @@ static int pyrf_thread_map__init(struct pyrf_thread_map *pthreads,
+ 	int pid = -1, tid = -1, uid = UINT_MAX;
+ 
+ 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|iii",
+-					 kwlist, &pid, &tid, &uid))
++					 kwlist, &pid, &tid, &uid)) {
++		PyErr_BadArgument();
+ 		return -1;
++	}
+ 
+ 	pthreads->threads = thread_map__new(pid, tid, uid);
+-	if (pthreads->threads == NULL)
++	if (pthreads->threads == NULL) {
++		PyErr_SetFromErrno(PyExc_OSError);
+ 		return -1;
++	}
+ 	return 0;
+ }
+ 
+@@ -839,13 +847,18 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevsel,
+ 					 &enable_on_exec, &task, &watermark,
+ 					 &precise_ip, &mmap_data, &sample_id_all,
+ 					 &attr.wakeup_events, &attr.bp_type,
+-					 &attr.bp_addr, &attr.bp_len, &idx))
++					 &attr.bp_addr, &attr.bp_len, &idx)) {
++		PyErr_BadArgument();
+ 		return -1;
++	}
+ 
+ 	/* union... */
+ 	if (sample_period != 0) {
+-		if (attr.sample_freq != 0)
+-			return -1; /* FIXME: throw right exception */
++		if (attr.sample_freq != 0) {
++			PyErr_SetString(PyExc_ValueError,
++					"perf: sample_freq and sample_period are mutually exclusive");
++			return -1;
++		}
+ 		attr.sample_period = sample_period;
+ 	}
+ 
+@@ -892,8 +905,10 @@ static PyObject *pyrf_evsel__open(struct pyrf_evsel *pevsel,
+ 	static char *kwlist[] = { "cpus", "threads", "group", "inherit", NULL };
+ 
+ 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|OOii", kwlist,
+-					 &pcpus, &pthreads, &group, &inherit))
++					 &pcpus, &pthreads, &group, &inherit)) {
++		PyErr_BadArgument();
+ 		return NULL;
++	}
+ 
+ 	if (pthreads != NULL)
+ 		threads = ((struct pyrf_thread_map *)pthreads)->threads;
+@@ -957,8 +972,10 @@ static int pyrf_evlist__init(struct pyrf_evlist *pevlist,
+ 	struct perf_cpu_map *cpus;
+ 	struct perf_thread_map *threads;
+ 
+-	if (!PyArg_ParseTuple(args, "OO", &pcpus, &pthreads))
++	if (!PyArg_ParseTuple(args, "OO", &pcpus, &pthreads)) {
++		PyErr_BadArgument();
+ 		return -1;
++	}
+ 
+ 	threads = ((struct pyrf_thread_map *)pthreads)->threads;
+ 	cpus = ((struct pyrf_cpu_map *)pcpus)->cpus;
+@@ -980,8 +997,10 @@ static PyObject *pyrf_evlist__mmap(struct pyrf_evlist *pevlist,
+ 	int pages = 128, overwrite = false;
+ 
+ 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|ii", kwlist,
+-					 &pages, &overwrite))
++					 &pages, &overwrite)) {
++		PyErr_BadArgument();
+ 		return NULL;
++	}
+ 
+ 	if (evlist__mmap(evlist, pages) < 0) {
+ 		PyErr_SetFromErrno(PyExc_OSError);
+@@ -999,8 +1018,10 @@ static PyObject *pyrf_evlist__poll(struct pyrf_evlist *pevlist,
+ 	static char *kwlist[] = { "timeout", NULL };
+ 	int timeout = -1, n;
+ 
+-	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|i", kwlist, &timeout))
++	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|i", kwlist, &timeout)) {
++		PyErr_BadArgument();
+ 		return NULL;
++	}
+ 
+ 	n = evlist__poll(evlist, timeout);
+ 	if (n < 0) {
+@@ -1057,8 +1078,10 @@ static PyObject *pyrf_evlist__add(struct pyrf_evlist *pevlist,
+ 	PyObject *pevsel;
+ 	struct evsel *evsel;
+ 
+-	if (!PyArg_ParseTuple(args, "O", &pevsel))
++	if (!PyArg_ParseTuple(args, "O", &pevsel)) {
++		PyErr_BadArgument();
+ 		return NULL;
++	}
+ 
+ 	Py_INCREF(pevsel);
+ 	evsel = &((struct pyrf_evsel *)pevsel)->evsel;
+@@ -1093,12 +1116,16 @@ static PyObject *pyrf_evlist__read_on_cpu(struct pyrf_evlist *pevlist,
+ 	int err;
+ 
+ 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|i", kwlist,
+-					 &cpu, &sample_id_all))
++					 &cpu, &sample_id_all)) {
++		PyErr_BadArgument();
+ 		return NULL;
++	}
+ 
+ 	md = get_md(evlist, cpu);
+-	if (!md)
++	if (!md) {
++		PyErr_SetFromErrno(PyExc_OSError);
+ 		return NULL;
++	}
+ 
+ 	if (perf_mmap__read_init(&md->core) < 0)
+ 		goto end;
+@@ -1324,6 +1351,8 @@ static PyObject *pyrf__tracepoint(struct pyrf_evsel *pevsel,
+ 				  PyObject *args, PyObject *kwargs)
+ {
+ #ifndef HAVE_LIBTRACEEVENT
++	PyErr_SetString(PyExc_OSError,
++			"perf: tracepoint support not compiled in");
+ 	return NULL;
+ #else
+ 	struct tep_event *tp_format;
+@@ -1332,8 +1361,10 @@ static PyObject *pyrf__tracepoint(struct pyrf_evsel *pevsel,
+ 	char *name = NULL;
+ 
+ 	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|ss", kwlist,
+-					 &sys, &name))
++					 &sys, &name)) {
++		PyErr_BadArgument();
+ 		return NULL;
++	}
+ 
+ 	tp_format = trace_event__tp_format(sys, name);
+ 	if (IS_ERR(tp_format))
+-- 
+2.39.2
 
-> ---
->  tools/perf/util/python.c | 61 ++++++++++++++++++++++++++++++----------
->  1 file changed, 46 insertions(+), 15 deletions(-)
->
-> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> index 42e8b813d010..7e6b12e87744 100644
-> --- a/tools/perf/util/python.c
-> +++ b/tools/perf/util/python.c
-> @@ -635,12 +635,16 @@ static int pyrf_cpu_map__init(struct pyrf_cpu_map *=
-pcpus,
->         char *cpustr =3D NULL;
->
->         if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|s",
-> -                                        kwlist, &cpustr))
-> +                                        kwlist, &cpustr)) {
-> +               PyErr_BadArgument();
->                 return -1;
-> +       }
->
->         pcpus->cpus =3D perf_cpu_map__new(cpustr);
-> -       if (pcpus->cpus =3D=3D NULL)
-> +       if (pcpus->cpus =3D=3D NULL) {
-> +               PyErr_SetFromErrno(PyExc_OSError);
->                 return -1;
-> +       }
->         return 0;
->  }
->
-> @@ -704,12 +708,16 @@ static int pyrf_thread_map__init(struct pyrf_thread=
-_map *pthreads,
->         int pid =3D -1, tid =3D -1, uid =3D UINT_MAX;
->
->         if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|iii",
-> -                                        kwlist, &pid, &tid, &uid))
-> +                                        kwlist, &pid, &tid, &uid)) {
-> +               PyErr_BadArgument();
->                 return -1;
-> +       }
->
->         pthreads->threads =3D thread_map__new(pid, tid, uid);
-> -       if (pthreads->threads =3D=3D NULL)
-> +       if (pthreads->threads =3D=3D NULL) {
-> +               PyErr_SetFromErrno(PyExc_OSError);
->                 return -1;
-> +       }
->         return 0;
->  }
->
-> @@ -839,13 +847,18 @@ static int pyrf_evsel__init(struct pyrf_evsel *pevs=
-el,
->                                          &enable_on_exec, &task, &waterma=
-rk,
->                                          &precise_ip, &mmap_data, &sample=
-_id_all,
->                                          &attr.wakeup_events, &attr.bp_ty=
-pe,
-> -                                        &attr.bp_addr, &attr.bp_len, &id=
-x))
-> +                                        &attr.bp_addr, &attr.bp_len, &id=
-x)) {
-> +               PyErr_BadArgument();
->                 return -1;
-> +       }
->
->         /* union... */
->         if (sample_period !=3D 0) {
-> -               if (attr.sample_freq !=3D 0)
-> -                       return -1; /* FIXME: throw right exception */
-> +               if (attr.sample_freq !=3D 0) {
-> +                       PyErr_SetString(PyExc_ValueError,
-> +                                       "perf: sample_freq and sample_per=
-iod are mutually exclusive");
-> +                       return -1;
-> +               }
->                 attr.sample_period =3D sample_period;
->         }
->
-> @@ -892,8 +905,10 @@ static PyObject *pyrf_evsel__open(struct pyrf_evsel =
-*pevsel,
->         static char *kwlist[] =3D { "cpus", "threads", "group", "inherit"=
-, NULL };
->
->         if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|OOii", kwlist,
-> -                                        &pcpus, &pthreads, &group, &inhe=
-rit))
-> +                                        &pcpus, &pthreads, &group, &inhe=
-rit)) {
-> +               PyErr_BadArgument();
->                 return NULL;
-> +       }
->
->         if (pthreads !=3D NULL)
->                 threads =3D ((struct pyrf_thread_map *)pthreads)->threads=
-;
-> @@ -957,8 +972,10 @@ static int pyrf_evlist__init(struct pyrf_evlist *pev=
-list,
->         struct perf_cpu_map *cpus;
->         struct perf_thread_map *threads;
->
-> -       if (!PyArg_ParseTuple(args, "OO", &pcpus, &pthreads))
-> +       if (!PyArg_ParseTuple(args, "OO", &pcpus, &pthreads)) {
-> +               PyErr_BadArgument();
->                 return -1;
-> +       }
->
->         threads =3D ((struct pyrf_thread_map *)pthreads)->threads;
->         cpus =3D ((struct pyrf_cpu_map *)pcpus)->cpus;
-> @@ -980,8 +997,10 @@ static PyObject *pyrf_evlist__mmap(struct pyrf_evlis=
-t *pevlist,
->         int pages =3D 128, overwrite =3D false;
->
->         if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|ii", kwlist,
-> -                                        &pages, &overwrite))
-> +                                        &pages, &overwrite)) {
-> +               PyErr_BadArgument();
->                 return NULL;
-> +       }
->
->         if (evlist__mmap(evlist, pages) < 0) {
->                 PyErr_SetFromErrno(PyExc_OSError);
-> @@ -999,8 +1018,10 @@ static PyObject *pyrf_evlist__poll(struct pyrf_evli=
-st *pevlist,
->         static char *kwlist[] =3D { "timeout", NULL };
->         int timeout =3D -1, n;
->
-> -       if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|i", kwlist, &tim=
-eout))
-> +       if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|i", kwlist, &tim=
-eout)) {
-> +               PyErr_BadArgument();
->                 return NULL;
-> +       }
->
->         n =3D evlist__poll(evlist, timeout);
->         if (n < 0) {
-> @@ -1057,8 +1078,10 @@ static PyObject *pyrf_evlist__add(struct pyrf_evli=
-st *pevlist,
->         PyObject *pevsel;
->         struct evsel *evsel;
->
-> -       if (!PyArg_ParseTuple(args, "O", &pevsel))
-> +       if (!PyArg_ParseTuple(args, "O", &pevsel)) {
-> +               PyErr_BadArgument();
->                 return NULL;
-> +       }
->
->         Py_INCREF(pevsel);
->         evsel =3D &((struct pyrf_evsel *)pevsel)->evsel;
-> @@ -1093,12 +1116,16 @@ static PyObject *pyrf_evlist__read_on_cpu(struct =
-pyrf_evlist *pevlist,
->         int err;
->
->         if (!PyArg_ParseTupleAndKeywords(args, kwargs, "i|i", kwlist,
-> -                                        &cpu, &sample_id_all))
-> +                                        &cpu, &sample_id_all)) {
-> +               PyErr_BadArgument();
->                 return NULL;
-> +       }
->
->         md =3D get_md(evlist, cpu);
-> -       if (!md)
-> +       if (!md) {
-> +               PyErr_SetFromErrno(PyExc_OSError);
->                 return NULL;
-> +       }
->
->         if (perf_mmap__read_init(&md->core) < 0)
->                 goto end;
-> @@ -1324,6 +1351,8 @@ static PyObject *pyrf__tracepoint(struct pyrf_evsel=
- *pevsel,
->                                   PyObject *args, PyObject *kwargs)
->  {
->  #ifndef HAVE_LIBTRACEEVENT
-> +       PyErr_SetString(PyExc_OSError,
-> +                       "perf: tracepoint support not compiled in");
->         return NULL;
->  #else
->         struct tep_event *tp_format;
-> @@ -1332,8 +1361,10 @@ static PyObject *pyrf__tracepoint(struct pyrf_evse=
-l *pevsel,
->         char *name =3D NULL;
->
->         if (!PyArg_ParseTupleAndKeywords(args, kwargs, "|ss", kwlist,
-> -                                        &sys, &name))
-> +                                        &sys, &name)) {
-> +               PyErr_BadArgument();
->                 return NULL;
-> +       }
->
->         tp_format =3D trace_event__tp_format(sys, name);
->         if (IS_ERR(tp_format))
-> --
-> 2.39.2
->
