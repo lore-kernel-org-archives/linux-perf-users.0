@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 447C7C77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247ADC19F20
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230146AbjEBWpf (ORCPT
+        id S230334AbjEBWpk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 18:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33872 "EHLO
+        Tue, 2 May 2023 18:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230263AbjEBWpW (ORCPT
+        with ESMTP id S230338AbjEBWpZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 18:45:22 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 090AD30FD
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:45:01 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b9a7e65b34aso7803320276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:45:00 -0700 (PDT)
+        Tue, 2 May 2023 18:45:25 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 734303C0A
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:45:04 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-55a9614c154so24550247b3.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:45:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683067417; x=1685659417;
+        d=google.com; s=20221208; t=1683067432; x=1685659432;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z5la9qJcqL6gBH6h4UORwyXdD/ZlzmqtItJD5+R0Siw=;
-        b=o+yo5QO2m0Arr3Ssf8bJlRG++UZNEHFNdoC52cVkU6VcrPtyd85tgK2ep2b4NIR1F7
-         svxp4QSwm/55im0KW8ePdCqUQNIqdMYhEfFhoWAmhXQ3nQHIpCJZhm1DnKcGq7swhlbL
-         TYIbA/aX+U5TLZl5eyVfKQF97J1Saf9gw+MaR6S33C7d25zbuWJjOdocSz2DR+AHbij0
-         NWpmhzTFaAbQYMqMunjTlnqbLKs95kiXbWB52wUS559hByrHHYdvLq8haSpSnPSDVw2R
-         GJPg8BfZSgpGrprpblYrBHWyWQAgyP9VKEyuhBCAlLErW3VTrcUkvFe4R+t+eHcI2DRi
-         mxag==
+        bh=9J7avGu03QLF3OzvxpAd+rFmIiyVUKJL1J9REWiEeQ0=;
+        b=08tXE7YwmZ5Zzxd9BAlqC1LukNL7m13wC3KLBDxKxpCYXC+ZnMUVOchpY1ZAPh9p6K
+         WhE99u+/MKrl5F6qjjb0iBX28XHoqBeJ+OlAO2+Q29LM86c57fQ2CtTkVYDpcgnC8g9+
+         gCxV2AHiueRuM46ZiOg2xmsAa6UGcS14PLlTCkb/jC2NbtRz6xRjs0gqycFOa3kEQ+UA
+         rHzRd/gGi+NnpCNHoGuiiG0LhRvcMutvaWkS2OAbvnnxcSriqOIIYERou9o3TbDwAIej
+         081rjgH+Try4yw8K0teDlhNplvRrBBVSd2Y0hPS2X67xIqPRTu/CwhCDlM+sQOE0QxrI
+         6Vog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683067417; x=1685659417;
+        d=1e100.net; s=20221208; t=1683067432; x=1685659432;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z5la9qJcqL6gBH6h4UORwyXdD/ZlzmqtItJD5+R0Siw=;
-        b=CWkYIXWilhGa4wuFs1ENeV+TYQW9nq6VcYZtz8zcZO+GxMs8PBWgaSrbjv+bjkQXED
-         8aXQ1HRabYYcuiaqH9zqK98TBmBwIpyL3BPUUp8DW9Y6EL6IqJkrgYxKxpAvxpMZpt8P
-         OChQG6LGfbXK6S5N+kVg/OieUZIwfqz/5bFUD61/hic/EYvG6pk49f45qccDwPdtXqZi
-         mHYM9o1yy8jKrUgYX28KEXnreyep1ALVYyGfM/M0LnEbUGxq3R1XkgxfIYPsuVnrayow
-         nkzr8ED4i9NpsaiJej4/on8SjEvhTRtX3VS3G+H3anlZVjyO+jmpicuij5/8M/vAvu1/
-         kQ6w==
-X-Gm-Message-State: AC+VfDyaVLqcus6C+KsKSXtVz339I0Nh0o0Jq7H+waLjDVE45DjluvCl
-        sHHF1KmdYXIl7M7wtirfX72LLrI/KyKs
-X-Google-Smtp-Source: ACHHUZ7R624gU7PAQPBwrYcf7FXoTBGq+e/cbUC9fM+4MWzco4gFBqz9uOkKNurXZKUOfK60Mtf/IBgIVwfT
+        bh=9J7avGu03QLF3OzvxpAd+rFmIiyVUKJL1J9REWiEeQ0=;
+        b=l17hjaAt5r1UKmzfI1073qjWyrxUKv0TxGBeLi6Ay78DlmlWf8Ysl12yWsvklvpBx8
+         3NtyjrNWrcZ9Ov/NO8ey0tHi8tXPb9M/148uRmeVPPkY1VESOA8XmX0cr7OIQWXRgK98
+         4W/Dltb/+mNAmhx3OFttjOI0tsd+GJ9Z18yXPBDAc/X93qKISjt2rO8ox2y05/BIw6z7
+         8ZvpMd4uv/ewMFEp6nV5sUsAKPr2k1KA1a8PtUt4rSU0npv5hg2skC4+/fPIhhVxxT15
+         D+jjNR1HVd/EuC8X19U7S2DUuk4O/tWZVz9PFaYxjoxZ26tdBl0SN7hNC70Ts/lkoy3z
+         4DKQ==
+X-Gm-Message-State: AC+VfDxVKZNRX4X4FzksvZtNoCQ6T5mVT2K3KCYAI4VEd29ag8j+flJa
+        XruClMMPSTyCaDBgaN6RzZCXdyjI/tvc
+X-Google-Smtp-Source: ACHHUZ4QqfkYLMIGE+StYfSBmF8j9IPJCRIVeVN8WAvZ4mBnyhVVIj7f9bLqCCSJ7IF+tmsC7clNc56jJFW4
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:e70c:446b:d23b:982e])
- (user=irogers job=sendgmr) by 2002:a25:13c1:0:b0:b39:b0d3:9a7f with SMTP id
- 184-20020a2513c1000000b00b39b0d39a7fmr7344538ybt.7.1683067417109; Tue, 02 May
- 2023 15:43:37 -0700 (PDT)
-Date:   Tue,  2 May 2023 15:38:44 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:ec4c:0:b0:55a:20a3:5ce3 with SMTP id
+ r12-20020a0dec4c000000b0055a20a35ce3mr5260768ywn.3.1683067431876; Tue, 02 May
+ 2023 15:43:51 -0700 (PDT)
+Date:   Tue,  2 May 2023 15:38:46 -0700
 In-Reply-To: <20230502223851.2234828-1-irogers@google.com>
-Message-Id: <20230502223851.2234828-38-irogers@google.com>
+Message-Id: <20230502223851.2234828-40-irogers@google.com>
 Mime-Version: 1.0
 References: <20230502223851.2234828-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v4 37/44] perf parse-events: Don't reorder atom cpu events
+Subject: [PATCH v4 39/44] perf stat: Command line PMU metric filtering
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,37 +94,130 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On hybrid systems the topdown events don't share a fixed counter on
-the atom core, so they don't require the sorting the perf metric
-supporting PMUs do.
+Wire up the --cputype value to limit which metrics are parsed.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/x86/util/evlist.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-stat.c     | 20 ++++++++++++--------
+ tools/perf/util/metricgroup.c |  3 ++-
+ tools/perf/util/metricgroup.h |  1 +
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index d4193479a364..1b6065841fb0 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -6,6 +6,7 @@
- #include "util/event.h"
- #include "util/pmu-hybrid.h"
- #include "topdown.h"
-+#include "evsel.h"
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index bb1a4ecd7558..f4e572f9de6b 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1783,6 +1783,7 @@ static int add_default_attributes(void)
+ };
  
- static int ___evlist__add_default_attrs(struct evlist *evlist,
- 					struct perf_event_attr *attrs,
-@@ -67,8 +68,7 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
+ 	struct perf_event_attr default_null_attrs[] = {};
++	const char *pmu = parse_events_option_args.pmu_filter ?: "all";
  
- int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- {
--	if (topdown_sys_has_perf_metrics() &&
--	    (!lhs->pmu_name || !strncmp(lhs->pmu_name, "cpu", 3))) {
-+	if (topdown_sys_has_perf_metrics() && evsel__sys_has_perf_metrics(lhs)) {
- 		/* Ensure the topdown slots comes first. */
- 		if (strcasestr(lhs->name, "slots"))
+ 	/* Set attrs if no event is selected and !null_run: */
+ 	if (stat_config.null_run)
+@@ -1794,11 +1795,11 @@ static int add_default_attributes(void)
+ 		 * will use this approach. To determine transaction support
+ 		 * on an architecture test for such a metric name.
+ 		 */
+-		if (!metricgroup__has_metric("all", "transaction")) {
++		if (!metricgroup__has_metric(pmu, "transaction")) {
+ 			pr_err("Missing transaction metrics");
  			return -1;
+ 		}
+-		return metricgroup__parse_groups(evsel_list, "transaction",
++		return metricgroup__parse_groups(evsel_list, pmu, "transaction",
+ 						stat_config.metric_no_group,
+ 						stat_config.metric_no_merge,
+ 						stat_config.metric_no_threshold,
+@@ -1823,7 +1824,7 @@ static int add_default_attributes(void)
+ 			smi_reset = true;
+ 		}
+ 
+-		if (!metricgroup__has_metric("all", "smi")) {
++		if (!metricgroup__has_metric(pmu, "smi")) {
+ 			pr_err("Missing smi metrics");
+ 			return -1;
+ 		}
+@@ -1831,7 +1832,7 @@ static int add_default_attributes(void)
+ 		if (!force_metric_only)
+ 			stat_config.metric_only = true;
+ 
+-		return metricgroup__parse_groups(evsel_list, "smi",
++		return metricgroup__parse_groups(evsel_list, pmu, "smi",
+ 						stat_config.metric_no_group,
+ 						stat_config.metric_no_merge,
+ 						stat_config.metric_no_threshold,
+@@ -1864,7 +1865,8 @@ static int add_default_attributes(void)
+ 				"Please print the result regularly, e.g. -I1000\n");
+ 		}
+ 		str[8] = stat_config.topdown_level + '0';
+-		if (metricgroup__parse_groups(evsel_list, str,
++		if (metricgroup__parse_groups(evsel_list,
++						pmu, str,
+ 						/*metric_no_group=*/false,
+ 						/*metric_no_merge=*/false,
+ 						/*metric_no_threshold=*/true,
+@@ -1903,14 +1905,14 @@ static int add_default_attributes(void)
+ 		 * caused by exposing latent bugs. This is fixed properly in:
+ 		 * https://lore.kernel.org/lkml/bff481ba-e60a-763f-0aa0-3ee53302c480@linux.intel.com/
+ 		 */
+-		if (metricgroup__has_metric("all", "TopdownL1") && !perf_pmu__has_hybrid()) {
++		if (metricgroup__has_metric(pmu, "TopdownL1") && !perf_pmu__has_hybrid()) {
+ 			struct evlist *metric_evlist = evlist__new();
+ 			struct evsel *metric_evsel;
+ 
+ 			if (!metric_evlist)
+ 				return -1;
+ 
+-			if (metricgroup__parse_groups(metric_evlist, "TopdownL1",
++			if (metricgroup__parse_groups(metric_evlist, pmu, "TopdownL1",
+ 							/*metric_no_group=*/false,
+ 							/*metric_no_merge=*/false,
+ 							/*metric_no_threshold=*/true,
+@@ -2434,7 +2436,9 @@ int cmd_stat(int argc, const char **argv)
+ 	 * knowing the target is system-wide.
+ 	 */
+ 	if (metrics) {
+-		metricgroup__parse_groups(evsel_list, metrics,
++		const char *pmu = parse_events_option_args.pmu_filter ?: "all";
++
++		metricgroup__parse_groups(evsel_list, pmu, metrics,
+ 					stat_config.metric_no_group,
+ 					stat_config.metric_no_merge,
+ 					stat_config.metric_no_threshold,
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 17478eb33bdc..4245b23d8efe 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1648,6 +1648,7 @@ static int parse_groups(struct evlist *perf_evlist,
+ }
+ 
+ int metricgroup__parse_groups(struct evlist *perf_evlist,
++			      const char *pmu,
+ 			      const char *str,
+ 			      bool metric_no_group,
+ 			      bool metric_no_merge,
+@@ -1661,7 +1662,7 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+ 	if (!table)
+ 		return -EINVAL;
+ 
+-	return parse_groups(perf_evlist, "all", str, metric_no_group, metric_no_merge,
++	return parse_groups(perf_evlist, pmu, str, metric_no_group, metric_no_merge,
+ 			    metric_no_threshold, user_requested_cpu_list, system_wide,
+ 			    /*fake_pmu=*/NULL, metric_events, table);
+ }
+diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+index 08e9b9e953ec..bf18274c15df 100644
+--- a/tools/perf/util/metricgroup.h
++++ b/tools/perf/util/metricgroup.h
+@@ -67,6 +67,7 @@ struct metric_event *metricgroup__lookup(struct rblist *metric_events,
+ 					 struct evsel *evsel,
+ 					 bool create);
+ int metricgroup__parse_groups(struct evlist *perf_evlist,
++			      const char *pmu,
+ 			      const char *str,
+ 			      bool metric_no_group,
+ 			      bool metric_no_merge,
 -- 
 2.40.1.495.gc816e09b53d-goog
 
