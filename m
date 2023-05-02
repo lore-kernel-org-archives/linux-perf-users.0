@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAF0C19F20
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86149C19F20
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:40:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230040AbjEBWk1 (ORCPT
+        id S229997AbjEBWkh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 18:40:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56576 "EHLO
+        Tue, 2 May 2023 18:40:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229974AbjEBWkV (ORCPT
+        with ESMTP id S229983AbjEBWk0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 18:40:21 -0400
+        Tue, 2 May 2023 18:40:26 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B53359C
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:39:52 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-b9a7df507c5so8699862276.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:39:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D52F835BF
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:40:01 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-b9a829a3de0so9854337276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:40:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683067191; x=1685659191;
+        d=google.com; s=20221208; t=1683067201; x=1685659201;
         h=content-transfer-encoding:cc:to:from:subject:references
          :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kUqIzU74xlE5Kx3pMTtUAqqI2RU8Dst3dNg1w1BZSyA=;
-        b=699XHwHFOrTyqrqqXUTthTiAjZ7RR07G4qFqKRtY3g9JDgyNi3xuKCnNkFkq7ROLX3
-         u1vK/JSl8d60HAl9wytToNq4DjObukhnvQhJxwyaU00d2gospNMsmBDvUNioK5MDVS4/
-         qMGCUkPh2Kf4iMbzhUI5PE4E61ZnUABZOxBrv9TTFrsot0giEqSEMb0K8cRS5DL3tLU/
-         UmPQW6cbkmqunbmO5V9B6blP2KDPssqxWbShbSYfKS+gWs/4BBMdBO5Brx/Knr2ZD95q
-         eE9nSgsxqJTwy/XOyHd2Ya1rWOIwv/T1v/0sVBdhE72J/N78damNLfs4wgwszaZubzFN
-         1+aQ==
+        bh=ACILkomP7xAnicp1B5oS0CzcGm3M1w5NGLrNqaEc+zg=;
+        b=tYjziJIxpgtzUb1ACwnwv3T65Z8EuGwcFRX5+OKiiIO3OnE/6PxghV1axLr1nQ65kr
+         hgtHhSib5zckAcFOFQgmFSUTzNLvnrwMFQV+NsOPeQmJZezi1bIBOEsDyQJ0AVQcU12Z
+         TuLSfpuJtsD0d/qNrcWlbUCRRI2FVZJO70r0F9RxOi2mJsjgYrvEt5ptbc9Xj6jCvxEs
+         EiGK+iJwceYrMiixLuLLWdm5dpMIKcHl61TL5Yy2crj6fVWUxtO68b8ne6UyZ/21w+my
+         1qEoFOp0fq9a6N/pPWVUUq+iE6FSAuoPJgwp07kANVeDapZEYCi2SghAwNnJBWCVQoWY
+         8EhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683067191; x=1685659191;
+        d=1e100.net; s=20221208; t=1683067201; x=1685659201;
         h=content-transfer-encoding:cc:to:from:subject:references
          :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=kUqIzU74xlE5Kx3pMTtUAqqI2RU8Dst3dNg1w1BZSyA=;
-        b=jjKznP8G69DdD6VI4X1BM2INq1HnJ6LeO8FEGAvyW2NYEKIhsc1DntZIA42z+EENAO
-         gpfXupSHYZfUKBlxVhYejRTFQIHtUOyFz4vHo2ELz/8IXyZ/L6T6frpJjZce7R3WL7Tf
-         MwJ8IpkagJNuAsq2r5iy1KUb+0GqVEEzhd9onh3kMFN3vlfs7Ob2ms9vOjJRDUsAS+Cr
-         z5PcNw4EaoFQACHEwqEa38U5Fr/crASD7C+bobKbkjQveKJoXN+5r1fvPotAVubiO80G
-         vSMzN7rdb4mtdW8r0mURlT5D2GrYTfd0++UD2aFOt+8qj0yvNYRy41Wqwhe2S5msEyRD
-         MPeA==
-X-Gm-Message-State: AC+VfDzRK666mvhabqGcxhrkk1LJ34PbfgfqcJBI25NFESvmYiAHMvS8
-        UQo/gWQZ12MwKreW6DAwsGcUGYUxTPti
-X-Google-Smtp-Source: ACHHUZ7Qhs3u/9GYCotzoJXOHdwSFpTuCv6DFkueBX6gHHDWQ/FEsoQVc2ew48Bwh/7kiymxm1Yupx2TSVPv
+        bh=ACILkomP7xAnicp1B5oS0CzcGm3M1w5NGLrNqaEc+zg=;
+        b=buosrE+Crl5rJ1oJFgoG5sAOSHy1o9NhDmTc4y34+akaprlNMSOgdoq8F/8DsO4thQ
+         Et6Mb329wByXZi/IIGGwgNlvuuYS/BN9iGyWGbiA/+Ii/Q1/bEJ8b/31sWcbOXXyIILy
+         JZq8ZSr8cnNY9X4GIbUKgdhkqr576O6XUKCCFAvkcMslUD0Sqd+0g3Ych20pbQyT0ESo
+         14018xPI9VHIqU5TDjIRh7X8bG0iWBvf4tDrOdQ1KxTGUpSgpc0XsBQ0XHeD4Fj28Jrf
+         yW4ryXxtNIUv48fKb3b1KciCOvA2/P4/YJfkJok9Gjtm9D34cMCBdOkBtZ3DYdhK3bgH
+         pT4w==
+X-Gm-Message-State: AC+VfDxlbvAZd1bb7k1nud13/4uBADHX1iP66krKaCh9jLaCCqo2+dvg
+        OzbJRea2f/IjpBh9Z3o9Hd4PHDwXPbNO
+X-Google-Smtp-Source: ACHHUZ7/kKX8MrTdGJZgJi2PzFaLkuoZ5T+GrHlfUID2mQhiBXg4pa6ojG+XPWavtVF0873za8Dof2556KLk
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:e70c:446b:d23b:982e])
- (user=irogers job=sendgmr) by 2002:a05:6902:100e:b0:b8f:47c4:58ed with SMTP
- id w14-20020a056902100e00b00b8f47c458edmr11376660ybt.9.1683067190869; Tue, 02
- May 2023 15:39:50 -0700 (PDT)
-Date:   Tue,  2 May 2023 15:38:13 -0700
+ (user=irogers job=sendgmr) by 2002:a25:8250:0:b0:b9d:d623:1960 with SMTP id
+ d16-20020a258250000000b00b9dd6231960mr3989197ybn.0.1683067201142; Tue, 02 May
+ 2023 15:40:01 -0700 (PDT)
+Date:   Tue,  2 May 2023 15:38:14 -0700
 In-Reply-To: <20230502223851.2234828-1-irogers@google.com>
-Message-Id: <20230502223851.2234828-7-irogers@google.com>
+Message-Id: <20230502223851.2234828-8-irogers@google.com>
 Mime-Version: 1.0
 References: <20230502223851.2234828-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v4 06/44] perf vendor events intel: Add icelake metric constraints
+Subject: [PATCH v4 07/44] perf vendor events intel: Add icelakex metric constraints
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -107,15 +107,15 @@ https://github.com/intel/perfmon/pull/71
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../perf/pmu-events/arch/x86/icelake/icl-metrics.json | 11 +++++++++++
+ .../pmu-events/arch/x86/icelakex/icx-metrics.json     | 11 +++++++++++
  1 file changed, 11 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json b/tool=
-s/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-index 1a2154f28b7b..ae8a96ec7fa5 100644
---- a/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/icelake/icl-metrics.json
-@@ -317,6 +317,7 @@
+diff --git a/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json b/too=
+ls/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
+index 1ef772b40e04..b736fec164d0 100644
+--- a/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/icelakex/icx-metrics.json
+@@ -282,6 +282,7 @@
      },
      {
          "BriefDescription": "This metric represents overall arithmetic flo=
@@ -125,7 +125,7 @@ ating-point (FP) operations fraction the CPU has executed (retired)",
          "MetricGroup": "HPC;TopdownL3;tma_L3_group;tma_light_operations_gr=
 oup",
          "MetricName": "tma_fp_arith",
-@@ -421,6 +422,7 @@
+@@ -386,6 +387,7 @@
      },
      {
          "BriefDescription": "Branch Misprediction Cost: Fraction of TMA sl=
@@ -137,7 +137,7 @@ misses + tma_itlb_misses + tma_lcp + tma_ms_switches)) * tma_info_slots / B=
 R_MISP_RETIRED.ALL_BRANCHES",
          "MetricGroup": "Bad;BrMispredicts;tma_issueBM",
          "MetricName": "tma_info_branch_misprediction_cost",
-@@ -466,6 +468,7 @@
+@@ -431,6 +433,7 @@
      },
      {
          "BriefDescription": "Probability of Core Bound bottleneck hidden b=
@@ -148,7 +148,7 @@ if tma_core_bound < tma_ports_utilization else 1) if tma_info_smt_2t_utiliz=
 ation > 0.5 else 0)",
          "MetricGroup": "Cor;SMT",
          "MetricName": "tma_info_core_bound_likely",
-@@ -518,6 +521,7 @@
+@@ -483,6 +486,7 @@
      },
      {
          "BriefDescription": "Total pipeline cost of DSB (uop cache) misses=
@@ -157,10 +157,10 @@ ation > 0.5 else 0)",
          "MetricExpr": "100 * (tma_fetch_latency * tma_dsb_switches / (tma_=
 branch_resteers + tma_dsb_switches + tma_icache_misses + tma_itlb_misses + =
 tma_lcp + tma_ms_switches) + tma_fetch_bandwidth * tma_mite / (tma_dsb + tm=
-a_lsd + tma_mite))",
+a_mite))",
          "MetricGroup": "DSBmiss;Fed;tma_issueFB",
          "MetricName": "tma_info_dsb_misses",
-@@ -599,6 +603,7 @@
+@@ -564,6 +568,7 @@
      },
      {
          "BriefDescription": "Total pipeline cost of instruction fetch band=
@@ -172,7 +172,7 @@ e_misses + tma_itlb_misses + tma_lcp + tma_ms_switches)) - tma_info_big_cod=
 e",
          "MetricGroup": "Fed;FetchBW;Frontend",
          "MetricName": "tma_info_instruction_fetch_bw",
-@@ -937,6 +942,7 @@
+@@ -948,6 +953,7 @@
      },
      {
          "BriefDescription": "Total pipeline cost of Memory Address Transla=
@@ -180,30 +180,31 @@ tion related bottlenecks (data-side TLBs)",
 +        "MetricConstraint": "NO_GROUP_EVENTS",
          "MetricExpr": "100 * tma_memory_bound * (tma_l1_bound / max(tma_me=
 mory_bound, tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + t=
-ma_store_bound) * (tma_dtlb_load / max(tma_l1_bound, tma_4k_aliasing + tma_=
-dtlb_load + tma_fb_full + tma_lock_latency + tma_split_loads + tma_store_fw=
-d_blk)) + tma_store_bound / (tma_dram_bound + tma_l1_bound + tma_l2_bound +=
- tma_l3_bound + tma_store_bound) * (tma_dtlb_store / (tma_dtlb_store + tma_=
-false_sharing + tma_split_stores + tma_store_latency + tma_streaming_stores=
-)))",
+ma_pmm_bound + tma_store_bound) * (tma_dtlb_load / max(tma_l1_bound, tma_4k=
+_aliasing + tma_dtlb_load + tma_fb_full + tma_lock_latency + tma_split_load=
+s + tma_store_fwd_blk)) + tma_store_bound / (tma_dram_bound + tma_l1_bound =
++ tma_l2_bound + tma_l3_bound + tma_pmm_bound + tma_store_bound) * (tma_dtl=
+b_store / (tma_dtlb_store + tma_false_sharing + tma_split_stores + tma_stor=
+e_latency + tma_streaming_stores)))",
          "MetricGroup": "Mem;MemoryTLB;Offcore;tma_issueTLB",
          "MetricName": "tma_info_memory_data_tlbs",
-@@ -945,6 +951,7 @@
+@@ -956,6 +962,7 @@
      },
      {
          "BriefDescription": "Total pipeline cost of Memory Latency related=
  bottlenecks (external memory and off-core caches)",
 +        "MetricConstraint": "NO_GROUP_EVENTS",
          "MetricExpr": "100 * tma_memory_bound * (tma_dram_bound / (tma_dra=
-m_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bound) * (=
-tma_mem_latency / (tma_mem_bandwidth + tma_mem_latency)) + tma_l3_bound / (=
-tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bou=
-nd) * (tma_l3_hit_latency / (tma_contested_accesses + tma_data_sharing + tm=
-a_l3_hit_latency + tma_sq_full)) + tma_l2_bound / (tma_dram_bound + tma_l1_=
-bound + tma_l2_bound + tma_l3_bound + tma_store_bound))",
+m_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_pmm_bound + tma_=
+store_bound) * (tma_mem_latency / (tma_mem_bandwidth + tma_mem_latency)) + =
+tma_l3_bound / (tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound=
+ + tma_pmm_bound + tma_store_bound) * (tma_l3_hit_latency / (tma_contested_=
+accesses + tma_data_sharing + tma_l3_hit_latency + tma_sq_full)) + tma_l2_b=
+ound / (tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_p=
+mm_bound + tma_store_bound))",
          "MetricGroup": "Mem;MemoryLat;Offcore;tma_issueLat",
          "MetricName": "tma_info_memory_latency",
-@@ -953,6 +960,7 @@
+@@ -964,6 +971,7 @@
      },
      {
          "BriefDescription": "Total pipeline cost of Branch Misprediction r=
@@ -214,7 +215,7 @@ elated bottlenecks",
 cache_misses + tma_itlb_misses + tma_lcp + tma_ms_switches))",
          "MetricGroup": "Bad;BadSpec;BrMispredicts;tma_issueBM",
          "MetricName": "tma_info_mispredictions",
-@@ -1004,6 +1012,7 @@
+@@ -1027,6 +1035,7 @@
      },
      {
          "BriefDescription": "Average number of Uops retired in cycles wher=
@@ -224,7 +225,7 @@ e at least one uop has retired.",
 OTS\\,cmask\\=3D1@",
          "MetricGroup": "Pipeline;Ret",
          "MetricName": "tma_info_retire"
-@@ -1207,6 +1216,7 @@
+@@ -1230,6 +1239,7 @@
      },
      {
          "BriefDescription": "This metric represents fraction of slots wher=
@@ -236,7 +237,7 @@ RETIRED.ANY",
          "MetricGroup": "Pipeline;TopdownL3;tma_L3_group;tma_light_operatio=
 ns_group",
          "MetricName": "tma_memory_operations",
-@@ -1277,6 +1287,7 @@
+@@ -1300,6 +1310,7 @@
      },
      {
          "BriefDescription": "This metric represents the remaining light uo=
