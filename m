@@ -2,527 +2,228 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5796EC19F20
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08E31C19F20
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:53:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbjEBWrG (ORCPT
+        id S230316AbjEBWxf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 18:47:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36432 "EHLO
+        Tue, 2 May 2023 18:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230398AbjEBWqq (ORCPT
+        with ESMTP id S229713AbjEBWxe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 18:46:46 -0400
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 005AF3AB5
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:46:12 -0700 (PDT)
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-556f4e20131so93635377b3.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:46:12 -0700 (PDT)
+        Tue, 2 May 2023 18:53:34 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 386FF3C3F;
+        Tue,  2 May 2023 15:52:59 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-306281edf15so3737224f8f.1;
+        Tue, 02 May 2023 15:52:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683067425; x=1685659425;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+u0fif1vqEW0/J+d1lw722skZP4Uon5UbkaqbwSy+30=;
-        b=Q4zTcsdmA2DZnQaI4yinZojAyvDnycTbYavNcwKkCZEDKv3zr9OC3ZR2HNS4l7XQn4
-         Wk5xZe7MPleFDXSIinUgNSAyNpFTHRxJxXBaFFe67qYv0T7XAPCfIesQEoyEef2d4+C5
-         zxuwEyaiy0Nc01WhCk9oUsi1WYFd7ccL/QhvVlWu10OhMfiJxpq7M/PiTgUMf9HpwvvD
-         Stj+E/AQHkYrILDnUAcU1oKEOepjo/Iq6857UrlCv7pRDgNejTn0fulIFGirlGBcMXqL
-         LZFnmUNsTQ3Wtmwhub3GI/kCJlZCCJCKoYo4UdQHT7MW36KxnDxb11GLv+bDpQ8REA4i
-         TEfw==
+        d=gmail.com; s=20221208; t=1683067901; x=1685659901;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0RFhupXU1bVDFi2Y2FIy6WlZs49rrUCoImKiEbU0jvo=;
+        b=KbXfX1YpJ3tkmT8YtdRC9HoMl1YE/eK+LnhF5IbskCq9S7Qr5LqD7EFO8WnchX8nXP
+         /4S96bW4EGUKAWkr3ZI8rGsKueU31xL4nABuldtbsbFrB9igBXq3mN9Yacp6KP8obs1G
+         A24s1xvtrIw+vufOrF0ROpZ2bM2yDMEg5ml0HRVwLYe+h06f8yHOrmN+jxyvhSOejJyX
+         zcl2CWSDEy18B8+atq8HACVJAJVDdnxFDiC+fC5oI/JpwvvYsp8GsL3YL1ftq/Yf5Wht
+         IjQx1mYdQZRNYDawu5lMk2ySbsjyWjLCbTXlEsVcRFt1lJLuCbRRoUViRj1rV0t3luYM
+         qKrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683067425; x=1685659425;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+u0fif1vqEW0/J+d1lw722skZP4Uon5UbkaqbwSy+30=;
-        b=aYYhEzzF+I8tNKv0He5eOinvWuasS8ahyn29S00ARFWNk4w5WuFuUeSvYMl+dwFm+d
-         rSIrZMuc5d4arwN2aqE17cFO5iZrjsIlOR72jkb71Q1ZyBNxr20u/d4cLyIthT9tcErs
-         Jq8LWq0n3KrguvOu2RXvWhd86zbZjMwVFBypk7a+/yJAUUYgZ2JueVCfbSXn44kI5LWx
-         +WJ1cxo9Ey6rIAluOkaKMFc4f1/m1hNK5zDxmPf4t661ylqFsKXzQQk3Pjd+OGDzUTWr
-         WpBrpti13piK0qCBSlNIRPSGD6IpGmHOQB3p2nrGvP8qNnbDYPekTd5PS6GAoyuSSH0G
-         b2gA==
-X-Gm-Message-State: AC+VfDxp7pI6SjbkiuYfAv5X8dxEcV5RlMYv5f3V273H/o4BSIkBBEUU
-        wHKLxx7L2OIjOfyVWmKVmp6wcAljQmwP
-X-Google-Smtp-Source: ACHHUZ71/u2ByJA/xBRV82K5e9QUs1aUmfSldDJJJJbHoXvIas+/dVi9n+nEZhLjBsObp1H5sPtkZpVrojnX
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:e70c:446b:d23b:982e])
- (user=irogers job=sendgmr) by 2002:a05:690c:725:b0:54f:bb71:c7b3 with SMTP id
- bt5-20020a05690c072500b0054fbb71c7b3mr11277965ywb.9.1683067425138; Tue, 02
- May 2023 15:43:45 -0700 (PDT)
-Date:   Tue,  2 May 2023 15:38:45 -0700
-In-Reply-To: <20230502223851.2234828-1-irogers@google.com>
-Message-Id: <20230502223851.2234828-39-irogers@google.com>
-Mime-Version: 1.0
-References: <20230502223851.2234828-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v4 38/44] perf metrics: Be PMU specific for referenced metrics.
-From:   Ian Rogers <irogers@google.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
+        d=1e100.net; s=20221208; t=1683067901; x=1685659901;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0RFhupXU1bVDFi2Y2FIy6WlZs49rrUCoImKiEbU0jvo=;
+        b=VXIP+4Bbd6JIqN7hFDu0gNHsKgFEYbjfaQPiKuLWLnGA8W7yBJxJxpsUZbwT9r1TBs
+         mpuYHPofbwm1t0x5ooGH/6opRvFOZuXm9M+GiMznqoM3rsWxlAHQJBRpx8eNYsmBg83V
+         CMjURueZyAOEeRH+o/Aaop8v+4au0CeThoRCzIgSd7xbX9EuNeC+CdBRDyIJXfGWxS2p
+         C1wsJOQnPGKT5Bw0PVeNOtcNr8FB7pqns1xAcgSlYvhgiqQmlkYXSM8o+YsVtFM55mxf
+         SbN1egmb+6+CaZdOxQgPaInY44UsbJEBgCHlVPmFImazKq12I413j+ETQJJiIoFn2I0p
+         2nUw==
+X-Gm-Message-State: AC+VfDxwGLUx0Gm6Tgxuyj2VQvZEkI6zL1gSC3hpgRT7kzBMjBdg9UMR
+        s+Ihc01X00OyIVXWsOkJW0Q=
+X-Google-Smtp-Source: ACHHUZ4aNEsEcnXg6h3ToPZJd5Ca5o5oFljNZdZ5oOlNez9c4dOziY2F3dUyGU2FAp1Sp0P0Ez9ihw==
+X-Received: by 2002:a5d:4b0e:0:b0:304:a40c:43c6 with SMTP id v14-20020a5d4b0e000000b00304a40c43c6mr14850153wrq.11.1683067900566;
+        Tue, 02 May 2023 15:51:40 -0700 (PDT)
+Received: from lucifer.home (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
+        by smtp.googlemail.com with ESMTPSA id o18-20020a05600c379200b003f17300c7dcsm58143wmr.48.2023.05.02.15.51.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 May 2023 15:51:39 -0700 (PDT)
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Rob Herring <robh@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Mika Penttila <mpenttil@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>
+Subject: [PATCH v8 0/3] mm/gup: disallow GUP writing to file-backed mappings by default
+Date:   Tue,  2 May 2023 23:51:32 +0100
+Message-Id: <cover.1683067198.git.lstoakes@gmail.com>
+X-Mailer: git-send-email 2.40.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hybrid systems may define the same metric for different PMUs, this can
-cause confusion of events. To avoid this make the referenced metric
-searches PMU specific, matching that in the table.
+Writing to file-backed mappings which require folio dirty tracking using
+GUP is a fundamentally broken operation, as kernel write access to GUP
+mappings do not adhere to the semantics expected by a file system.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-stat.c          |  6 +-
- tools/perf/pmu-events/jevents.py   |  4 +-
- tools/perf/pmu-events/pmu-events.h |  1 +
- tools/perf/util/metricgroup.c      | 94 +++++++++++++++++++++---------
- tools/perf/util/metricgroup.h      |  2 +-
- 5 files changed, 75 insertions(+), 32 deletions(-)
+A GUP caller uses the direct mapping to access the folio, which does not
+cause write notify to trigger, nor does it enforce that the caller marks
+the folio dirty.
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 06a1d71a49a5..bb1a4ecd7558 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1794,7 +1794,7 @@ static int add_default_attributes(void)
- 		 * will use this approach. To determine transaction support
- 		 * on an architecture test for such a metric name.
- 		 */
--		if (!metricgroup__has_metric("transaction")) {
-+		if (!metricgroup__has_metric("all", "transaction")) {
- 			pr_err("Missing transaction metrics");
- 			return -1;
- 		}
-@@ -1823,7 +1823,7 @@ static int add_default_attributes(void)
- 			smi_reset = true;
- 		}
- 
--		if (!metricgroup__has_metric("smi")) {
-+		if (!metricgroup__has_metric("all", "smi")) {
- 			pr_err("Missing smi metrics");
- 			return -1;
- 		}
-@@ -1903,7 +1903,7 @@ static int add_default_attributes(void)
- 		 * caused by exposing latent bugs. This is fixed properly in:
- 		 * https://lore.kernel.org/lkml/bff481ba-e60a-763f-0aa0-3ee53302c480@linux.intel.com/
- 		 */
--		if (metricgroup__has_metric("TopdownL1") && !perf_pmu__has_hybrid()) {
-+		if (metricgroup__has_metric("all", "TopdownL1") && !perf_pmu__has_hybrid()) {
- 			struct evlist *metric_evlist = evlist__new();
- 			struct evsel *metric_evsel;
- 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index f57a8f274025..b18dd2fcbf04 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -51,8 +51,8 @@ _json_event_attributes = [
- 
- # Attributes that are in pmu_metric rather than pmu_event.
- _json_metric_attributes = [
--    'metric_name', 'metric_group', 'metric_expr', 'metric_threshold', 'desc',
--    'long_desc', 'unit', 'compat', 'metricgroup_no_group', 'aggr_mode',
-+    'pmu', 'metric_name', 'metric_group', 'metric_expr', 'metric_threshold',
-+    'desc', 'long_desc', 'unit', 'compat', 'metricgroup_no_group', 'aggr_mode',
-     'event_grouping'
- ]
- # Attributes that are bools or enum int values, encoded as '0', '1',...
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index 80349685cf4d..3549e6971a4d 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -51,6 +51,7 @@ struct pmu_event {
- };
- 
- struct pmu_metric {
-+	const char *pmu;
- 	const char *metric_name;
- 	const char *metric_group;
- 	const char *metric_expr;
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 1afc8d7a5838..17478eb33bdc 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -123,6 +123,7 @@ struct metric {
- 	 * within the expression.
- 	 */
- 	struct expr_parse_ctx *pctx;
-+	const char *pmu;
- 	/** The name of the metric such as "IPC". */
- 	const char *metric_name;
- 	/** Modifier on the metric such as "u" or NULL for none. */
-@@ -216,6 +217,7 @@ static struct metric *metric__new(const struct pmu_metric *pm,
- 	if (!m->pctx)
- 		goto out_err;
- 
-+	m->pmu = pm->pmu ?: "cpu";
- 	m->metric_name = pm->metric_name;
- 	m->modifier = NULL;
- 	if (modifier) {
-@@ -259,11 +261,12 @@ static bool contains_metric_id(struct evsel **metric_events, int num_events,
- /**
-  * setup_metric_events - Find a group of events in metric_evlist that correspond
-  *                       to the IDs from a parsed metric expression.
-+ * @pmu: The PMU for the IDs.
-  * @ids: the metric IDs to match.
-  * @metric_evlist: the list of perf events.
-  * @out_metric_events: holds the created metric events array.
-  */
--static int setup_metric_events(struct hashmap *ids,
-+static int setup_metric_events(const char *pmu, struct hashmap *ids,
- 			       struct evlist *metric_evlist,
- 			       struct evsel ***out_metric_events)
- {
-@@ -271,6 +274,7 @@ static int setup_metric_events(struct hashmap *ids,
- 	const char *metric_id;
- 	struct evsel *ev;
- 	size_t ids_size, matched_events, i;
-+	bool all_pmus = !strcmp(pmu, "all");
- 
- 	*out_metric_events = NULL;
- 	ids_size = hashmap__size(ids);
-@@ -283,6 +287,8 @@ static int setup_metric_events(struct hashmap *ids,
- 	evlist__for_each_entry(metric_evlist, ev) {
- 		struct expr_id_data *val_ptr;
- 
-+		if (!all_pmus && strcmp(ev->pmu_name, pmu))
-+			continue;
- 		/*
- 		 * Check for duplicate events with the same name. For
- 		 * example, uncore_imc/cas_count_read/ will turn into 6
-@@ -355,8 +361,13 @@ static bool match_metric(const char *n, const char *list)
- 	return false;
- }
- 
--static bool match_pm_metric(const struct pmu_metric *pm, const char *metric)
-+static bool match_pm_metric(const struct pmu_metric *pm, const char *pmu, const char *metric)
- {
-+	const char *pm_pmu = pm->pmu ?: "cpu";
-+
-+	if (strcmp(pmu, "all") && strcmp(pm_pmu, pmu))
-+		return false;
-+
- 	return match_metric(pm->metric_group, metric) ||
- 	       match_metric(pm->metric_name, metric);
- }
-@@ -766,6 +777,7 @@ struct visited_metric {
- 
- struct metricgroup_add_iter_data {
- 	struct list_head *metric_list;
-+	const char *pmu;
- 	const char *metric_name;
- 	const char *modifier;
- 	int *ret;
-@@ -779,7 +791,8 @@ struct metricgroup_add_iter_data {
- 	const struct pmu_metrics_table *table;
- };
- 
--static bool metricgroup__find_metric(const char *metric,
-+static bool metricgroup__find_metric(const char *pmu,
-+				     const char *metric,
- 				     const struct pmu_metrics_table *table,
- 				     struct pmu_metric *pm);
- 
-@@ -798,6 +811,7 @@ static int add_metric(struct list_head *metric_list,
-  * resolve_metric - Locate metrics within the root metric and recursively add
-  *                    references to them.
-  * @metric_list: The list the metric is added to.
-+ * @pmu: The PMU name to resolve metrics on, or "all" for all PMUs.
-  * @modifier: if non-null event modifiers like "u".
-  * @metric_no_group: Should events written to events be grouped "{}" or
-  *                   global. Grouping is the default but due to multiplexing the
-@@ -813,6 +827,7 @@ static int add_metric(struct list_head *metric_list,
-  *       architecture perf is running upon.
-  */
- static int resolve_metric(struct list_head *metric_list,
-+			  const char *pmu,
- 			  const char *modifier,
- 			  bool metric_no_group,
- 			  bool metric_no_threshold,
-@@ -842,7 +857,7 @@ static int resolve_metric(struct list_head *metric_list,
- 	hashmap__for_each_entry(root_metric->pctx->ids, cur, bkt) {
- 		struct pmu_metric pm;
- 
--		if (metricgroup__find_metric(cur->pkey, table, &pm)) {
-+		if (metricgroup__find_metric(pmu, cur->pkey, table, &pm)) {
- 			pending = realloc(pending,
- 					(pending_cnt + 1) * sizeof(struct to_resolve));
- 			if (!pending)
-@@ -993,9 +1008,12 @@ static int __add_metric(struct list_head *metric_list,
- 	}
- 	if (!ret) {
- 		/* Resolve referenced metrics. */
--		ret = resolve_metric(metric_list, modifier, metric_no_group,
-+		const char *pmu = pm->pmu ?: "cpu";
-+
-+		ret = resolve_metric(metric_list, pmu, modifier, metric_no_group,
- 				     metric_no_threshold, user_requested_cpu_list,
--				     system_wide, root_metric, &visited_node, table);
-+				     system_wide, root_metric, &visited_node,
-+				     table);
- 	}
- 	if (ret) {
- 		if (is_root)
-@@ -1008,6 +1026,7 @@ static int __add_metric(struct list_head *metric_list,
- }
- 
- struct metricgroup__find_metric_data {
-+	const char *pmu;
- 	const char *metric;
- 	struct pmu_metric *pm;
- };
-@@ -1017,6 +1036,10 @@ static int metricgroup__find_metric_callback(const struct pmu_metric *pm,
- 					     void *vdata)
- {
- 	struct metricgroup__find_metric_data *data = vdata;
-+	const char *pm_pmu = pm->pmu ?: "cpu";
-+
-+	if (strcmp(data->pmu, "all") && strcmp(pm_pmu, data->pmu))
-+		return 0;
- 
- 	if (!match_metric(pm->metric_name, data->metric))
- 		return 0;
-@@ -1025,11 +1048,13 @@ static int metricgroup__find_metric_callback(const struct pmu_metric *pm,
- 	return 1;
- }
- 
--static bool metricgroup__find_metric(const char *metric,
-+static bool metricgroup__find_metric(const char *pmu,
-+				     const char *metric,
- 				     const struct pmu_metrics_table *table,
- 				     struct pmu_metric *pm)
- {
- 	struct metricgroup__find_metric_data data = {
-+		.pmu = pmu,
- 		.metric = metric,
- 		.pm = pm,
- 	};
-@@ -1083,7 +1108,7 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
- 	struct metricgroup_add_iter_data *d = data;
- 	int ret;
- 
--	if (!match_pm_metric(pm, d->metric_name))
-+	if (!match_pm_metric(pm, d->pmu, d->metric_name))
- 		return 0;
- 
- 	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
-@@ -1128,6 +1153,7 @@ static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
- 
- struct metricgroup__add_metric_data {
- 	struct list_head *list;
-+	const char *pmu;
- 	const char *metric_name;
- 	const char *modifier;
- 	const char *user_requested_cpu_list;
-@@ -1144,7 +1170,7 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
- 	struct metricgroup__add_metric_data *data = vdata;
- 	int ret = 0;
- 
--	if (pm->metric_expr && match_pm_metric(pm, data->metric_name)) {
-+	if (pm->metric_expr && match_pm_metric(pm, data->pmu, data->metric_name)) {
- 		bool metric_no_group = data->metric_no_group ||
- 			match_metric(data->metric_name, pm->metricgroup_no_group);
- 
-@@ -1159,6 +1185,7 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
- 
- /**
-  * metricgroup__add_metric - Find and add a metric, or a metric group.
-+ * @pmu: The PMU name to search for metrics on, or "all" for all PMUs.
-  * @metric_name: The name of the metric or metric group. For example, "IPC"
-  *               could be the name of a metric and "TopDownL1" the name of a
-  *               metric group.
-@@ -1172,7 +1199,7 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
-  * @table: The table that is searched for metrics, most commonly the table for the
-  *       architecture perf is running upon.
-  */
--static int metricgroup__add_metric(const char *metric_name, const char *modifier,
-+static int metricgroup__add_metric(const char *pmu, const char *metric_name, const char *modifier,
- 				   bool metric_no_group, bool metric_no_threshold,
- 				   const char *user_requested_cpu_list,
- 				   bool system_wide,
-@@ -1186,6 +1213,7 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
- 	{
- 		struct metricgroup__add_metric_data data = {
- 			.list = &list,
-+			.pmu = pmu,
- 			.metric_name = metric_name,
- 			.modifier = modifier,
- 			.metric_no_group = metric_no_group,
-@@ -1210,6 +1238,7 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
- 			.fn = metricgroup__add_metric_sys_event_iter,
- 			.data = (void *) &(struct metricgroup_add_iter_data) {
- 				.metric_list = &list,
-+				.pmu = pmu,
- 				.metric_name = metric_name,
- 				.modifier = modifier,
- 				.metric_no_group = metric_no_group,
-@@ -1239,6 +1268,7 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
- /**
-  * metricgroup__add_metric_list - Find and add metrics, or metric groups,
-  *                                specified in a list.
-+ * @pmu: A pmu to restrict the metrics to, or "all" for all PMUS.
-  * @list: the list of metrics or metric groups. For example, "IPC,CPI,TopDownL1"
-  *        would match the IPC and CPI metrics, and TopDownL1 would match all
-  *        the metrics in the TopDownL1 group.
-@@ -1251,7 +1281,8 @@ static int metricgroup__add_metric(const char *metric_name, const char *modifier
-  * @table: The table that is searched for metrics, most commonly the table for the
-  *       architecture perf is running upon.
-  */
--static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
-+static int metricgroup__add_metric_list(const char *pmu, const char *list,
-+					bool metric_no_group,
- 					bool metric_no_threshold,
- 					const char *user_requested_cpu_list,
- 					bool system_wide, struct list_head *metric_list,
-@@ -1270,7 +1301,7 @@ static int metricgroup__add_metric_list(const char *list, bool metric_no_group,
- 		if (modifier)
- 			*modifier++ = '\0';
- 
--		ret = metricgroup__add_metric(metric_name, modifier,
-+		ret = metricgroup__add_metric(pmu, metric_name, modifier,
- 					      metric_no_group, metric_no_threshold,
- 					      user_requested_cpu_list,
- 					      system_wide, metric_list, table);
-@@ -1460,7 +1491,8 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 	return ret;
- }
- 
--static int parse_groups(struct evlist *perf_evlist, const char *str,
-+static int parse_groups(struct evlist *perf_evlist,
-+			const char *pmu, const char *str,
- 			bool metric_no_group,
- 			bool metric_no_merge,
- 			bool metric_no_threshold,
-@@ -1478,7 +1510,7 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 
- 	if (metric_events_list->nr_entries == 0)
- 		metricgroup__rblist_init(metric_events_list);
--	ret = metricgroup__add_metric_list(str, metric_no_group, metric_no_threshold,
-+	ret = metricgroup__add_metric_list(pmu, str, metric_no_group, metric_no_threshold,
- 					   user_requested_cpu_list,
- 					   system_wide, &metric_list, table);
- 	if (ret)
-@@ -1535,6 +1567,11 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 					    strcmp(m->modifier, n->modifier)))
- 					continue;
- 
-+				if ((!m->pmu && n->pmu) ||
-+				    (m->pmu && !n->pmu) ||
-+				    (m->pmu && n->pmu && strcmp(m->pmu, n->pmu)))
-+					continue;
-+
- 				if (expr__subset_of_ids(n->pctx, m->pctx)) {
- 					pr_debug("Events in '%s' fully contained within '%s'\n",
- 						 m->metric_name, n->metric_name);
-@@ -1552,7 +1589,8 @@ static int parse_groups(struct evlist *perf_evlist, const char *str,
- 
- 			metric_evlist = m->evlist;
- 		}
--		ret = setup_metric_events(m->pctx->ids, metric_evlist, &metric_events);
-+		ret = setup_metric_events(fake_pmu ? "all" : m->pmu, m->pctx->ids,
-+					  metric_evlist, &metric_events);
- 		if (ret) {
- 			pr_debug("Cannot resolve IDs for %s: %s\n",
- 				m->metric_name, m->metric_expr);
-@@ -1623,7 +1661,7 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
- 	if (!table)
- 		return -EINVAL;
- 
--	return parse_groups(perf_evlist, str, metric_no_group, metric_no_merge,
-+	return parse_groups(perf_evlist, "all", str, metric_no_group, metric_no_merge,
- 			    metric_no_threshold, user_requested_cpu_list, system_wide,
- 			    /*fake_pmu=*/NULL, metric_events, table);
- }
-@@ -1633,7 +1671,7 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
- 				   const char *str,
- 				   struct rblist *metric_events)
- {
--	return parse_groups(evlist, str,
-+	return parse_groups(evlist, "all", str,
- 			    /*metric_no_group=*/false,
- 			    /*metric_no_merge=*/false,
- 			    /*metric_no_threshold=*/false,
-@@ -1642,28 +1680,32 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
- 			    &perf_pmu__fake, metric_events, table);
- }
- 
-+struct metricgroup__has_metric_data {
-+	const char *pmu;
-+	const char *metric;
-+};
- static int metricgroup__has_metric_callback(const struct pmu_metric *pm,
- 					    const struct pmu_metrics_table *table __maybe_unused,
- 					    void *vdata)
- {
--	const char *metric = vdata;
--
--	if (match_metric(pm->metric_name, metric) ||
--	    match_metric(pm->metric_group, metric))
--		return 1;
-+	struct metricgroup__has_metric_data *data = vdata;
- 
--	return 0;
-+	return match_pm_metric(pm, data->pmu, data->metric) ? 1 : 0;
- }
- 
--bool metricgroup__has_metric(const char *metric)
-+bool metricgroup__has_metric(const char *pmu, const char *metric)
- {
- 	const struct pmu_metrics_table *table = pmu_metrics_table__find();
-+	struct metricgroup__has_metric_data data = {
-+		.pmu = pmu,
-+		.metric = metric,
-+	};
- 
- 	if (!table)
- 		return false;
- 
--	return pmu_metrics_table_for_each_metric(table, metricgroup__has_metric_callback,
--						(void *)metric) ? true : false;
-+	return pmu_metrics_table_for_each_metric(table, metricgroup__has_metric_callback, &data)
-+		? true : false;
- }
- 
- static int metricgroup__topdown_max_level_callback(const struct pmu_metric *pm,
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index 77472e35705e..08e9b9e953ec 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -80,7 +80,7 @@ int metricgroup__parse_groups_test(struct evlist *evlist,
- 				   struct rblist *metric_events);
- 
- void metricgroup__print(const struct print_callbacks *print_cb, void *print_state);
--bool metricgroup__has_metric(const char *metric);
-+bool metricgroup__has_metric(const char *pmu, const char *metric);
- unsigned int metricgroups__topdown_max_level(void);
- int arch_get_runtimeparam(const struct pmu_metric *pm);
- void metricgroup__rblist_exit(struct rblist *metric_events);
--- 
-2.40.1.495.gc816e09b53d-goog
+The problem arises when, after an initial write to the folio, writeback
+results in the folio being cleaned and then the caller, via the GUP
+interface, writes to the folio again.
 
+As a result of the use of this secondary, direct, mapping to the folio no
+write notify will occur, and if the caller does mark the folio dirty, this
+will be done so unexpectedly.
+
+For example, consider the following scenario:-
+
+1. A folio is written to via GUP which write-faults the memory, notifying
+   the file system and dirtying the folio.
+2. Later, writeback is triggered, resulting in the folio being cleaned and
+   the PTE being marked read-only.
+3. The GUP caller writes to the folio, as it is mapped read/write via the
+   direct mapping.
+4. The GUP caller, now done with the page, unpins it and sets it dirty
+   (though it does not have to).
+
+This change updates both the PUP FOLL_LONGTERM slow and fast APIs. As
+pin_user_pages_fast_only() does not exist, we can rely on a slightly
+imperfect whitelisting in the PUP-fast case and fall back to the slow case
+should this fail.
+
+v8:
+- Fixed typo writeable -> writable.
+- Fixed bug in writable_file_mapping_allowed() - must check combination of
+  FOLL_PIN AND FOLL_LONGTERM not either/or.
+- Updated vma_needs_dirty_tracking() to include write/shared to account for
+  MAP_PRIVATE mappings.
+- Move to open-coding the checks in folio_pin_allowed() so we can
+  READ_ONCE() the mapping and avoid unexpected compiler loads. Rename to
+  account for fact we now check flags here.
+- Disallow mapping == NULL or mapping & PAGE_MAPPING_FLAGS other than
+  anon. Defer to slow path.
+- Perform GUP-fast check _after_ the lowest page table level is confirmed to
+  be stable.
+- Updated comments and commit message for final patch as per Jason's
+  suggestions.
+
+v7:
+- Fixed very silly bug in writeable_file_mapping_allowed() inverting the
+  logic.
+- Removed unnecessary RCU lock code and replaced with adaptation of Peter's
+  idea.
+- Removed unnecessary open-coded folio_test_anon() in
+  folio_longterm_write_pin_allowed() and restructured to generally permit
+  NULL folio_mapping().
+https://lore.kernel.org/all/cover.1683044162.git.lstoakes@gmail.com/
+
+v6:
+- Rebased on latest mm-unstable as of 28th April 2023.
+- Add PUP-fast check with handling for rcu-locked TLB shootdown to synchronise
+  correctly.
+- Split patch series into 3 to make it more digestible.
+https://lore.kernel.org/all/cover.1682981880.git.lstoakes@gmail.com/
+
+v5:
+- Rebased on latest mm-unstable as of 25th April 2023.
+- Some small refactorings suggested by John.
+- Added an extended description of the problem in the comment around
+  writeable_file_mapping_allowed() for clarity.
+- Updated commit message as suggested by Mika and John.
+https://lore.kernel.org/all/6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com/
+
+v4:
+- Split out vma_needs_dirty_tracking() from vma_wants_writenotify() to
+  reduce duplication and update to use this in the GUP check. Note that
+  both separately check vm_ops_needs_writenotify() as the latter needs to
+  test this before the vm_pgprot_modify() test, resulting in
+  vma_wants_writenotify() checking this twice, however it is such a small
+  check this should not be egregious.
+https://lore.kernel.org/all/3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com/
+
+v3:
+- Rebased on latest mm-unstable as of 24th April 2023.
+- Explicitly check whether file system requires folio dirtying. Note that
+  vma_wants_writenotify() could not be used directly as it is very much focused
+  on determining if the PTE r/w should be set (e.g. assuming private mapping
+  does not require it as already set, soft dirty considerations).
+- Tested code against shmem and hugetlb mappings - confirmed that these are not
+  disallowed by the check.
+- Eliminate FOLL_ALLOW_BROKEN_FILE_MAPPING flag and instead perform check only
+  for FOLL_LONGTERM pins.
+- As a result, limit check to internal GUP code.
+ https://lore.kernel.org/all/23c19e27ef0745f6d3125976e047ee0da62569d4.1682406295.git.lstoakes@gmail.com/
+
+v2:
+- Add accidentally excluded ptrace_access_vm() use of
+  FOLL_ALLOW_BROKEN_FILE_MAPPING.
+- Tweak commit message.
+https://lore.kernel.org/all/c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com/
+
+v1:
+https://lore.kernel.org/all/f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com/
+
+Lorenzo Stoakes (3):
+  mm/mmap: separate writenotify and dirty tracking logic
+  mm/gup: disallow FOLL_LONGTERM GUP-nonfast writing to file-backed
+    mappings
+  mm/gup: disallow FOLL_LONGTERM GUP-fast writing to file-backed
+    mappings
+
+ include/linux/mm.h |   1 +
+ mm/gup.c           | 146 ++++++++++++++++++++++++++++++++++++++++++++-
+ mm/mmap.c          |  53 ++++++++++++----
+ 3 files changed, 186 insertions(+), 14 deletions(-)
+
+--
+2.40.1
