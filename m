@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245A1C19F20
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE3BC19F20
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:40:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229922AbjEBWja (ORCPT
+        id S229947AbjEBWkH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 18:39:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55678 "EHLO
+        Tue, 2 May 2023 18:40:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229911AbjEBWj3 (ORCPT
+        with ESMTP id S229994AbjEBWkD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 18:39:29 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC37030D3
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:39:23 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-b9a6eeea78cso647770276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:39:23 -0700 (PDT)
+        Tue, 2 May 2023 18:40:03 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30FDE26A9
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:39:38 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b9a7550dca3so7674248276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:39:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683067162; x=1685659162;
+        d=google.com; s=20221208; t=1683067177; x=1685659177;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3DVy621GYiHB+6fU/268WLthwNlggN6c1xnlL0X7vU8=;
-        b=F6p59By143t7B3onb48y5PrfMz0WvsnIWHgCmD9MSxEWtEoyWMZBByqL8R6C+3OA+6
-         GYmETQATKFApIE3MqIC3PpZSbayv4fLLr5HSedHZKt+vl49KkesehX9831R2t7hBR12M
-         p3PLLquC+0/l7r56IqqF/iE8M13faTyrWpUrOLh4XFHIIHjkJV1eW5L2JewOM8VBAOca
-         n8pGb4GlejDAL/Um+ht/lPCtrgM/fCHSkkRXcBkvGO6b+Lq/CBKPHUn7t57NYpFHtvJ6
-         O0rA+gv5ki5084ux2LkRMoyYOJl7zmsri5HMJETxlsbcSUojA3Z8R0tJkVi6x9IUmi8l
-         69Cg==
+        bh=dIl1kUAo9IYD/UhzcgxFmKKCjB+AQPORsd+rIG9tHuw=;
+        b=vlmuRJR29pht0Gp3pNW+5EH0OUu/iLD4+LrJjhclGh+ZyS7JovyFHhS4SNpxGnSS1N
+         x892EOk8Wi/p6/5ZpEQEmLXWRhDiM0F2E+3W95Dg4DMllizoLNxZvxxFltLWct8Q8jls
+         ezVuzXoF46wy31d5zCVf8OGKlqQaGVFSCfr5xTFyx4I8VSqqAOlw1mcjZhEs9q+CD2Kk
+         gpeGdlWr2A6MXpDa4h5iSK54Dpua0MVOnlwKzHIULOnuQsy2xmLnS3zRNATvW9iNn3H0
+         nu7FYfNvLyf4IqU+uYkUAhtEzlyizYHtAhHw8DEuHVAVGWpEwa+/3jU7QCpfL0NYySo8
+         hBUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683067162; x=1685659162;
+        d=1e100.net; s=20221208; t=1683067177; x=1685659177;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3DVy621GYiHB+6fU/268WLthwNlggN6c1xnlL0X7vU8=;
-        b=a/rDX4Lz3jv1wkHZeSV5BDs0JNcj9UaBC3HLgvrRqCE7aGcRSHuig7fShBhu2FtSYm
-         +cCFPLuczjSka6UuRmSsLFU6N2MzN1RQVvqMo+bVGPEEHzSWsIUSh/bE0PtIoye17MKL
-         CZa93mkEZ9EHyOrl0WD8/uTKj0aaUSAXLBaXbT4fiTSqd4HP7MdinsxotJTp0XlBNFhr
-         17cf3ICEmRb7d3eFqzXVMt0JOlSiJuf1HGMBnMOq+TvcO7/IxPgv8wYnabj4SA39RnbB
-         8NX0VpQ3LNEg0b5VcC/J6UUO9QaujrHzT/FXx9Bpqsy1AVrJDaRF+Y+lMzjh2tt47rzL
-         Dc6A==
-X-Gm-Message-State: AC+VfDxv2VxvsN5Rq45o7ir/3+HUqKerLHvD+W5K3yjponmZSDoslhOP
-        JlA1FxeyzSWrbTpe+5lek489wNDdcHag
-X-Google-Smtp-Source: ACHHUZ6cVYw3nZo5XIGdjainuFtVO48FoXiCiFFHyRkiYuxelQ7ivnKAP1bI1zNMiXDo9Hr9UN9E3qkTu8gh
+        bh=dIl1kUAo9IYD/UhzcgxFmKKCjB+AQPORsd+rIG9tHuw=;
+        b=bTm8u95sMwhrFCWmTnSVChg7LqX+9Q3IT8RMvsTojYR6KQM+JM2Ic+Q/s9OAJ5jYDK
+         oLROz+kotWjyiW/PhPg6oubBS2UWWKe/MUf8AAjvMXA6m/OlOZnJkGUKwtOpWTTaJjlB
+         Wb0lB+mNMeRsa6eoHfeM7cwqogfi2IrZetUIdVz5w5B/wyTLk3lXi8MeVbUl/yD8a11V
+         ljF7I34pK2uzLXwS0GlAJ+CcQHGu05u0JVt1U8rS5HeFX8AjPpaMPgAEVbMgIL9LcQJL
+         PgyEJ7z1PV0BkYxnW4NTXUPddXPaBAZsWTRzqgHIpuMVkUIlu9uArVafrUSHp/bwC4vr
+         mfkw==
+X-Gm-Message-State: AC+VfDw5NaBDx+EpwZeAmY5v7Ot7nV79g2x7/QWd0rCH1OShtAMWCBbE
+        EzkFblOFs54saYJMaYbqbW+K1tDAbkrd
+X-Google-Smtp-Source: ACHHUZ658OJAc3DqZHBjuqUr7dv/cjG8MEsPVkZxQ9G6ZD7qckXXN4VR4ZUDntaQKmJ1CB1SF4RKb3ZyaXI+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:e70c:446b:d23b:982e])
- (user=irogers job=sendgmr) by 2002:a05:690c:2887:b0:544:bbd2:74be with SMTP
- id ee7-20020a05690c288700b00544bbd274bemr84312ywb.4.1683067162600; Tue, 02
- May 2023 15:39:22 -0700 (PDT)
-Date:   Tue,  2 May 2023 15:38:09 -0700
+ (user=irogers job=sendgmr) by 2002:a25:ea53:0:b0:b99:3b72:39a with SMTP id
+ o19-20020a25ea53000000b00b993b72039amr6857243ybe.7.1683067177345; Tue, 02 May
+ 2023 15:39:37 -0700 (PDT)
+Date:   Tue,  2 May 2023 15:38:11 -0700
 In-Reply-To: <20230502223851.2234828-1-irogers@google.com>
-Message-Id: <20230502223851.2234828-3-irogers@google.com>
+Message-Id: <20230502223851.2234828-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20230502223851.2234828-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v4 02/44] perf stat: Introduce skippable evsels
+Subject: [PATCH v4 04/44] perf parse-events: Don't reorder ungrouped events by pmu
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,196 +94,62 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Perf stat with no arguments will use default events and metrics. These
-events may fail to open even with kernel and hypervisor disabled. When
-these fail then the permissions error appears even though they were
-implicitly selected. This is particularly a problem with the automatic
-selection of the TopdownL1 metric group on certain architectures like
-Skylake:
-
-'''
-$ perf stat true
-Error:
-Access to performance monitoring and observability operations is limited.
-Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
-access to performance monitoring and observability operations for processes
-without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
-More information can be found at 'Perf events and tool security' document:
-https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
-perf_event_paranoid setting is 2:
-  -1: Allow use of (almost) all events by all users
-      Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
->= 0: Disallow raw and ftrace function tracepoint access
->= 1: Disallow CPU event access
->= 2: Disallow kernel profiling
-To make the adjusted perf_event_paranoid setting permanent preserve it
-in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
-'''
-
-This patch adds skippable evsels that when they fail to open won't
-cause termination and will appear as "<not supported>" in output. The
-TopdownL1 events, from the metric group, are marked as skippable. This
-turns the failure above to:
-
-'''
-$ perf stat perf bench internals synthesize
-Computing performance of single threaded perf event synthesis by
-synthesizing events on the perf process itself:
-  Average synthesis took: 49.287 usec (+- 0.083 usec)
-  Average num. events: 3.000 (+- 0.000)
-  Average time per event 16.429 usec
-  Average data synthesis took: 49.641 usec (+- 0.085 usec)
-  Average num. events: 11.000 (+- 0.000)
-  Average time per event 4.513 usec
-
- Performance counter stats for 'perf bench internals synthesize':
-
-          1,222.38 msec task-clock:u                     #    0.993 CPUs utilized
-                 0      context-switches:u               #    0.000 /sec
-                 0      cpu-migrations:u                 #    0.000 /sec
-               162      page-faults:u                    #  132.529 /sec
-       774,445,184      cycles:u                         #    0.634 GHz                         (49.61%)
-     1,640,969,811      instructions:u                   #    2.12  insn per cycle              (59.67%)
-       302,052,148      branches:u                       #  247.102 M/sec                       (59.69%)
-         1,807,718      branch-misses:u                  #    0.60% of all branches             (59.68%)
-         5,218,927      CPU_CLK_UNHALTED.REF_XCLK:u      #    4.269 M/sec
-                                                  #     17.3 %  tma_frontend_bound
-                                                  #     56.4 %  tma_retiring
-                                                  #      nan %  tma_backend_bound
-                                                  #      nan %  tma_bad_speculation      (60.01%)
-       536,580,469      IDQ_UOPS_NOT_DELIVERED.CORE:u    #  438.965 M/sec                       (60.33%)
-   <not supported>      INT_MISC.RECOVERY_CYCLES_ANY:u
-         5,223,936      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u #    4.274 M/sec                       (40.31%)
-       774,127,250      CPU_CLK_UNHALTED.THREAD:u        #  633.297 M/sec                       (50.34%)
-     1,746,579,518      UOPS_RETIRED.RETIRE_SLOTS:u      #    1.429 G/sec                       (50.12%)
-     1,940,625,702      UOPS_ISSUED.ANY:u                #    1.588 G/sec                       (49.70%)
-
-       1.231055525 seconds time elapsed
-
-       0.258327000 seconds user
-       0.965749000 seconds sys
-'''
-
-The event INT_MISC.RECOVERY_CYCLES_ANY:u is skipped as it can't be
-opened with paranoia 2 on Skylake. With a lower paranoia, or as root,
-all events/metrics are computed.
+The pmu_group_name by default returns "cpu" which on non-hybrid/ARM
+means that ungrouped software, and hardware events are all going to
+sort by the original insertion index. However, on hybrid and ARM
+wildcard expansion may mean the PMU name is set and events will be
+unnecessarily reordered - triggering the reordering warning.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 38 +++++++++++++++++++++++++++++---------
- tools/perf/util/evsel.c   | 15 +++++++++++++--
- tools/perf/util/evsel.h   |  1 +
- 3 files changed, 43 insertions(+), 11 deletions(-)
+ tools/perf/util/parse-events.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index be9677aa642f..ffb47b166098 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
- 			evsel_list->core.threads->err_thread = -1;
- 			return COUNTER_RETRY;
- 		}
-+	} else if (counter->skippable) {
-+		if (verbose > 0)
-+			ui__warning("skipping event %s that kernel failed to open .\n",
-+				    evsel__name(counter));
-+		counter->supported = false;
-+		counter->errored = true;
-+		return COUNTER_SKIP;
- 	}
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index d71019dcd614..34ba840ae19a 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -2140,25 +2140,32 @@ static int evlist__cmp(void *state, const struct list_head *l, const struct list
+ 	int *leader_idx = state;
+ 	int lhs_leader_idx = *leader_idx, rhs_leader_idx = *leader_idx, ret;
+ 	const char *lhs_pmu_name, *rhs_pmu_name;
++	bool lhs_has_group = false, rhs_has_group = false;
  
- 	evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
-@@ -1890,15 +1897,28 @@ static int add_default_attributes(void)
- 		 * caused by exposing latent bugs. This is fixed properly in:
- 		 * https://lore.kernel.org/lkml/bff481ba-e60a-763f-0aa0-3ee53302c480@linux.intel.com/
- 		 */
--		if (metricgroup__has_metric("TopdownL1") && !perf_pmu__has_hybrid() &&
--		    metricgroup__parse_groups(evsel_list, "TopdownL1",
--					    /*metric_no_group=*/false,
--					    /*metric_no_merge=*/false,
--					    /*metric_no_threshold=*/true,
--					    stat_config.user_requested_cpu_list,
--					    stat_config.system_wide,
--					    &stat_config.metric_events) < 0)
--			return -1;
-+		if (metricgroup__has_metric("TopdownL1") && !perf_pmu__has_hybrid()) {
-+			struct evlist *metric_evlist = evlist__new();
-+			struct evsel *metric_evsel;
-+
-+			if (!metric_evlist)
-+				return -1;
-+
-+			if (metricgroup__parse_groups(metric_evlist, "TopdownL1",
-+							/*metric_no_group=*/false,
-+							/*metric_no_merge=*/false,
-+							/*metric_no_threshold=*/true,
-+							stat_config.user_requested_cpu_list,
-+							stat_config.system_wide,
-+							&stat_config.metric_events) < 0)
-+				return -1;
-+
-+			evlist__for_each_entry(metric_evlist, metric_evsel) {
-+				metric_evsel->skippable = true;
-+			}
-+			evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
-+			evlist__delete(metric_evlist);
-+		}
+ 	/*
+ 	 * First sort by grouping/leader. Read the leader idx only if the evsel
+ 	 * is part of a group, as -1 indicates no group.
+ 	 */
+-	if (lhs_core->leader != lhs_core || lhs_core->nr_members > 1)
++	if (lhs_core->leader != lhs_core || lhs_core->nr_members > 1) {
++		lhs_has_group = true;
+ 		lhs_leader_idx = lhs_core->leader->idx;
+-	if (rhs_core->leader != rhs_core || rhs_core->nr_members > 1)
++	}
++	if (rhs_core->leader != rhs_core || rhs_core->nr_members > 1) {
++		rhs_has_group = true;
+ 		rhs_leader_idx = rhs_core->leader->idx;
++	}
  
- 		/* Platform specific attrs */
- 		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 356c07f03be6..1cd04b5998d2 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
- 	evsel->per_pkg_mask  = NULL;
- 	evsel->collect_stat  = false;
- 	evsel->pmu_name      = NULL;
-+	evsel->skippable     = false;
- }
+ 	if (lhs_leader_idx != rhs_leader_idx)
+ 		return lhs_leader_idx - rhs_leader_idx;
  
- struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
-@@ -1725,9 +1726,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map_idx, int thread)
- 		return -1;
+-	/* Group by PMU. Groups can't span PMUs. */
+-	lhs_pmu_name = evsel__group_pmu_name(lhs);
+-	rhs_pmu_name = evsel__group_pmu_name(rhs);
+-	ret = strcmp(lhs_pmu_name, rhs_pmu_name);
+-	if (ret)
+-		return ret;
++	/* Group by PMU if there is a group. Groups can't span PMUs. */
++	if (lhs_has_group && rhs_has_group) {
++		lhs_pmu_name = evsel__group_pmu_name(lhs);
++		rhs_pmu_name = evsel__group_pmu_name(rhs);
++		ret = strcmp(lhs_pmu_name, rhs_pmu_name);
++		if (ret)
++			return ret;
++	}
  
- 	fd = FD(leader, cpu_map_idx, thread);
--	BUG_ON(fd == -1);
-+	BUG_ON(fd == -1 && !leader->skippable);
- 
--	return fd;
-+	/*
-+	 * When the leader has been skipped, return -2 to distinguish from no
-+	 * group leader case.
-+	 */
-+	return fd == -1 ? -2 : fd;
- }
- 
- static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_threads, int thread_idx)
-@@ -2109,6 +2114,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 
- 			group_fd = get_group_fd(evsel, idx, thread);
- 
-+			if (group_fd == -2) {
-+				pr_debug("broken group leader for %s\n", evsel->name);
-+				err = -EINVAL;
-+				goto out_close;
-+			}
-+
- 			test_attr__ready();
- 
- 			/* Debug message used by test scripts */
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 35805dcdb1b9..bf8f01af1c0b 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -95,6 +95,7 @@ struct evsel {
- 		bool			weak_group;
- 		bool			bpf_counter;
- 		bool			use_config_name;
-+		bool			skippable;
- 		int			bpf_fd;
- 		struct bpf_object	*bpf_obj;
- 		struct list_head	config_terms;
+ 	/* Architecture specific sorting. */
+ 	return arch_evlist__cmp(lhs, rhs);
 -- 
 2.40.1.495.gc816e09b53d-goog
 
