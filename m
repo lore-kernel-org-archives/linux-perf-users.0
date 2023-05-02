@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35749C7EE21
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A8EC19F20
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229441AbjEBWq3 (ORCPT
+        id S230294AbjEBWqy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 18:46:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34988 "EHLO
+        Tue, 2 May 2023 18:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230395AbjEBWqB (ORCPT
+        with ESMTP id S230263AbjEBWqa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 18:46:01 -0400
-Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A7093ABC
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:45:38 -0700 (PDT)
-Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-51b51394f32so2337490a12.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:45:38 -0700 (PDT)
+        Tue, 2 May 2023 18:46:30 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1EE710E5
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:45:57 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-55a04468981so75142757b3.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:45:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683067453; x=1685659453;
+        d=google.com; s=20221208; t=1683067466; x=1685659466;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zMkOwzwif+XT0+nBV5mOmwMnUg0kBSArT43+8IsF+QA=;
-        b=DiVr58NKnqrNa0PQ4s2HvZYJODLIFvfXb8It+Z4M5+iCIdFJl7S7DAEMKsQ69BcuSf
-         bYCLu0BHbbJQLd77EJSH/gAjXR/uE9dl+P49sOB0DUsD6hy7B3RcRtyXcRd8LoTulUGX
-         crklksll2IrovGv52zukTueeu2ssNuKvDU2+2uFy32gLhv5zaXAR/MGgu/CeJ8bk81Zs
-         LYuK6W0utDlAPgW4EsrwYLrBFdoyj1YB+Zo8jNjv8sQ6m3lwmtLZ9J+s3zOKRAAl4RmL
-         QMny6ECo4pJZ4eM5axsLEZn4fvwHTrJw3P5pAEGTqZXepeUJ6HHwTtE0hSBM/+NMrkqU
-         nuwA==
+        bh=vEgpbeTkYS2FHMjnmLxMSY6ngIlZOzdEJwjzo/4s4WU=;
+        b=zDU+pSASufVWghTYSMWfCyp/NuoaY2uQPb+xbqo7jEZTf7q7rUzRObbNa7nozh1B2D
+         pkt/qAks76U+MY4r6KseH/YAc5wsapS3QnBAN4/TSloJEvXH89nfsvdX/4lU2T3xwWcE
+         1i901RXh6ZFLx1iieyfVXKQA0ZgaSlU8Cjb92d+HGxt4a/Jm8GRu5DeGoLEoeDFmF1Vb
+         GHL64DQ+m7S1qh+hTiwZGSvl8AW0BnM6n8eFJ6fe4m/wlCbI8Q1TCLutM327SU0r3Uac
+         X+SFjSRfSlvPBypkPBxqVP/6qqxDOGN1mhkOicx1Gx1DcJzzaZ5GwpxkMNxDppnjLBvE
+         81oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683067453; x=1685659453;
+        d=1e100.net; s=20221208; t=1683067466; x=1685659466;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zMkOwzwif+XT0+nBV5mOmwMnUg0kBSArT43+8IsF+QA=;
-        b=ihiyS09iFmfdEX47XyJiwqTZkPUnpqEtf/j/VkhiDC6KH4RVppHu9l/NikBECoxF6p
-         LpYnrvENA7w04QSJ3P9oLs67rwfJmpcobvM9koxGwQRyV9Xz6ea/OGOQ+22PvMHTZQAV
-         wQOnlNZ+LL9AfTwKOiv7PuWj1i5MdbDJMrIRnjF+XUZ6jWtwk7OWREZ60f9/cNNeoQe3
-         s+Y0tC68Og+TGbXUOdC4ND6c+aZ03acqMqKj4GqudaLPZmwPk7b15i7OdZa27bnBzvL6
-         FDnSWOXq+bIgpQiu0wnLjKpl8Np5J64042BE3+pfrz5/zr6XCfHyZIoJbMHCNamySwC2
-         Iu1g==
-X-Gm-Message-State: AC+VfDzHCap9QIb6FBZhau/2Q/IAOBIoxWDz/+OgEV4GllzZ6UdN6n5x
-        Y7sq9MBJmzVBg0hDIKnc7dHHRp89zEp+
-X-Google-Smtp-Source: ACHHUZ7ap0xtN41qtnwK/fzVQw9n9WtCXHcFSd4DNZI35fUjtZVM5Xpb1//5i3q2RLMUaEOVVhPNP2dYHZv8
+        bh=vEgpbeTkYS2FHMjnmLxMSY6ngIlZOzdEJwjzo/4s4WU=;
+        b=BCcHzr7uTPWwxqKEj098POWGlVSXPSzNT5agYDj2a0Y3IwmYzqNsk+d774V7f6i0uj
+         +wYqikeeMkYVZosi4DsvC4HehTSseMrr6MOnLo3qxjs9x/AbCV6uXOvO2bX5MBqpnqHz
+         tkxL560DDwjZvZUqRI2dBppocSUXQhrLFP1zzdh4jPAyyMGqV8dQFqc3mdVbs7QiGzOK
+         PHS6zfoFSnNmILbQIcMieBtheZbFo5Vn14nEcYvKem4yuTcgKdgIYJf/qIDv4HyIoYZj
+         utm8JUj+RlJZpbl3VVTSVa7F5/lvi5qzYx3K62pl6iSvCY2lzp0lk8xTMXeu6aAg1Ioo
+         RW6w==
+X-Gm-Message-State: AC+VfDyMfX/VDRI2kdu6/cB+Fr9vKeAlSVAAiZeZjK0y6dAQoVVArmw7
+        YT4deDkCVlEBNYswWTiAXGUSTWPcAH+H
+X-Google-Smtp-Source: ACHHUZ7iAK7rWgSBX+DL5Qb5w89koRRW8YSxJzIwr8QMxTu7l35yOhMQy7ytDbOexlY9ioNBFJwmz0SHhJO1
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:e70c:446b:d23b:982e])
- (user=irogers job=sendgmr) by 2002:a63:2aca:0:b0:51f:54dc:1646 with SMTP id
- q193-20020a632aca000000b0051f54dc1646mr17578pgq.7.1683067453102; Tue, 02 May
- 2023 15:44:13 -0700 (PDT)
-Date:   Tue,  2 May 2023 15:38:49 -0700
+ (user=irogers job=sendgmr) by 2002:a81:a745:0:b0:545:f7cc:f30 with SMTP id
+ e66-20020a81a745000000b00545f7cc0f30mr11393988ywh.0.1683067466155; Tue, 02
+ May 2023 15:44:26 -0700 (PDT)
+Date:   Tue,  2 May 2023 15:38:51 -0700
 In-Reply-To: <20230502223851.2234828-1-irogers@google.com>
-Message-Id: <20230502223851.2234828-43-irogers@google.com>
+Message-Id: <20230502223851.2234828-45-irogers@google.com>
 Mime-Version: 1.0
 References: <20230502223851.2234828-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v4 42/44] perf metrics: Be PMU specific in event match
+Subject: [PATCH v4 44/44] perf parse-events: Reduce scope of is_event_supported
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,60 +94,142 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Ids/events from a metric are turned into an event string and parsed;
-setup_metric_events matches the id back to the parsed evsel. With
-hybrid the same event may exist on both PMUs with the same name and be
-being used by metrics at the same time. A metric on cpu_core therefore
-shouldn't match against evsels on cpu_atom, or the metric will compute
-the wrong value. Make the matching sensitive to the PMU being parsed.
+Move to print-events.c and make static.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/metricgroup.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ tools/perf/util/parse-events.c | 39 ----------------------------------
+ tools/perf/util/parse-events.h |  2 --
+ tools/perf/util/print-events.c | 39 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 39 insertions(+), 41 deletions(-)
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 4245b23d8efe..490561f430f2 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -274,7 +274,7 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
- 	const char *metric_id;
- 	struct evsel *ev;
- 	size_t ids_size, matched_events, i;
--	bool all_pmus = !strcmp(pmu, "all");
-+	bool all_pmus = !strcmp(pmu, "all") || !perf_pmu__is_hybrid(pmu);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 2dad88a6bf19..b93264f8a37c 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -28,7 +28,6 @@
+ #include "util/bpf-filter.h"
+ #include "util/util.h"
+ #include "tracepoint.h"
+-#include "thread_map.h"
  
- 	*out_metric_events = NULL;
- 	ids_size = hashmap__size(ids);
-@@ -287,7 +287,10 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
- 	evlist__for_each_entry(metric_evlist, ev) {
- 		struct expr_id_data *val_ptr;
+ #define MAX_NAME_LEN 100
  
--		if (!all_pmus && strcmp(ev->pmu_name, pmu))
-+		/* Don't match events for the wrong hybrid PMU. */
-+		if (!all_pmus && ev->pmu_name &&
-+		    perf_pmu__is_hybrid(ev->pmu_name) &&
-+		    strcmp(ev->pmu_name, pmu))
- 			continue;
- 		/*
- 		 * Check for duplicate events with the same name. For
-@@ -304,6 +307,7 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
- 		 * about this event.
- 		 */
- 		if (hashmap__find(ids, metric_id, &val_ptr)) {
-+			pr_debug("Matched metric-id %s to %s\n", metric_id, evsel__name(ev));
- 			metric_events[matched_events++] = ev;
+@@ -133,44 +132,6 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
+ 	},
+ };
  
- 			if (matched_events >= ids_size)
-@@ -1592,7 +1596,7 @@ static int parse_groups(struct evlist *perf_evlist,
- 		ret = setup_metric_events(fake_pmu ? "all" : m->pmu, m->pctx->ids,
- 					  metric_evlist, &metric_events);
- 		if (ret) {
--			pr_debug("Cannot resolve IDs for %s: %s\n",
-+			pr_err("Cannot resolve IDs for %s: %s\n",
- 				m->metric_name, m->metric_expr);
- 			goto out;
- 		}
+-bool is_event_supported(u8 type, u64 config)
+-{
+-	bool ret = true;
+-	int open_return;
+-	struct evsel *evsel;
+-	struct perf_event_attr attr = {
+-		.type = type,
+-		.config = config,
+-		.disabled = 1,
+-	};
+-	struct perf_thread_map *tmap = thread_map__new_by_tid(0);
+-
+-	if (tmap == NULL)
+-		return false;
+-
+-	evsel = evsel__new(&attr);
+-	if (evsel) {
+-		open_return = evsel__open(evsel, NULL, tmap);
+-		ret = open_return >= 0;
+-
+-		if (open_return == -EACCES) {
+-			/*
+-			 * This happens if the paranoid value
+-			 * /proc/sys/kernel/perf_event_paranoid is set to 2
+-			 * Re-run with exclude_kernel set; we don't do that
+-			 * by default as some ARM machines do not support it.
+-			 *
+-			 */
+-			evsel->core.attr.exclude_kernel = 1;
+-			ret = evsel__open(evsel, NULL, tmap) >= 0;
+-		}
+-		evsel__delete(evsel);
+-	}
+-
+-	perf_thread_map__put(tmap);
+-	return ret;
+-}
+-
+ const char *event_type(int type)
+ {
+ 	switch (type) {
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 2a8cafe0ee8f..2021fe145410 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -18,8 +18,6 @@ struct parse_events_error;
+ struct option;
+ struct perf_pmu;
+ 
+-bool is_event_supported(u8 type, u64 config);
+-
+ const char *event_type(int type);
+ 
+ /* Arguments encoded in opt->value. */
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index d148842b205a..69492cbd6921 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -27,6 +27,7 @@
+ #include "tracepoint.h"
+ #include "pfm.h"
+ #include "pmu-hybrid.h"
++#include "thread_map.h"
+ 
+ #define MAX_NAME_LEN 100
+ 
+@@ -228,6 +229,44 @@ void print_sdt_events(const struct print_callbacks *print_cb, void *print_state)
+ 	strlist__delete(sdtlist);
+ }
+ 
++static bool is_event_supported(u8 type, u64 config)
++{
++	bool ret = true;
++	int open_return;
++	struct evsel *evsel;
++	struct perf_event_attr attr = {
++		.type = type,
++		.config = config,
++		.disabled = 1,
++	};
++	struct perf_thread_map *tmap = thread_map__new_by_tid(0);
++
++	if (tmap == NULL)
++		return false;
++
++	evsel = evsel__new(&attr);
++	if (evsel) {
++		open_return = evsel__open(evsel, NULL, tmap);
++		ret = open_return >= 0;
++
++		if (open_return == -EACCES) {
++			/*
++			 * This happens if the paranoid value
++			 * /proc/sys/kernel/perf_event_paranoid is set to 2
++			 * Re-run with exclude_kernel set; we don't do that
++			 * by default as some ARM machines do not support it.
++			 *
++			 */
++			evsel->core.attr.exclude_kernel = 1;
++			ret = evsel__open(evsel, NULL, tmap) >= 0;
++		}
++		evsel__delete(evsel);
++	}
++
++	perf_thread_map__put(tmap);
++	return ret;
++}
++
+ int print_hwcache_events(const struct print_callbacks *print_cb, void *print_state)
+ {
+ 	struct perf_pmu *pmu = NULL;
 -- 
 2.40.1.495.gc816e09b53d-goog
 
