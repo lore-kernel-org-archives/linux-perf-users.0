@@ -2,160 +2,199 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC234C77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 19:45:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED50C77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 20:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjEBTp2 (ORCPT
+        id S229864AbjEBUJz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 15:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57608 "EHLO
+        Tue, 2 May 2023 16:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjEBTp1 (ORCPT
+        with ESMTP id S229849AbjEBUJz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 15:45:27 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EAFA11B;
-        Tue,  2 May 2023 12:45:25 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-3062d764455so1899863f8f.3;
-        Tue, 02 May 2023 12:45:25 -0700 (PDT)
+        Tue, 2 May 2023 16:09:55 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B1419BE
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 13:09:52 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-32f4e0f42a7so151725ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 13:09:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683056724; x=1685648724;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WEozocFtC1MF/eLKX6k60Tc4cyy/cZXp+rUuv759qKQ=;
-        b=KZxln+oq3LImf+LRQFD0qCtu0AGSzG9KubXRD4Q1Gt470PKWTvPO46MkvYdANnDfot
-         WMCQBXBgzJOU5SuTc0nXZDekxwER2q70iXjYkDIft41htRddfCiBrbeyPJhS9KTxbxhm
-         Rw1Wh6X34LNKhiCODiYNzteLUt8HJSjqzkU6H9SHuTZDm0yVtMmfXC8bMbsq8LyYtWZT
-         TISJEBgqXIO/tUfJtqG4tbXbKetuph1sJqI+cL2fLt3oid5sjpVht6WM6UImaT915aIp
-         BiokOY1tlqo1e1QRqTXlcNaiNx3EfCN0++cfyFZLy42mdPJqiMo20waAOZISMRNpvhQ9
-         2lXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683056724; x=1685648724;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1683058192; x=1685650192;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WEozocFtC1MF/eLKX6k60Tc4cyy/cZXp+rUuv759qKQ=;
-        b=hvL/7UVvnG7rJPQL9zS7+Ib5CcmImNWe7A9ArnAr99aK11wLSwwUyovGd/kqMwpJ87
-         dU83Ac23Z/JD3Q2oeVFfP9dkqRk6oWSqeHViqBrVeKJe3Ki05ngR6Yw1icmUzt1SibCe
-         yTnM6TbvLrswlEtpFqb0iboR5IWZ4apgAILZFsnuLxbcG5WuPThgR8542BrEa7AFXCnK
-         rcz2qnd3PnqDrqLj8O20GTUY6enuMJjYG5wOs/sA4KM0/a0jIHqe4dtuRwbNHu6mH0Ve
-         r4r6ETt5LM8JUnVtJdGb8baLiuKukX+f0eTFtfSxmJ5lQSgj6+8GhlddDzDbBTt/CD7W
-         bpsg==
-X-Gm-Message-State: AC+VfDyvgbS5niHkIQIZq0MswM4fMzxlNDJdjU+qnLEE/TFVAMwoKeMh
-        YCqCRaPxSFvPImA/HUS51aE=
-X-Google-Smtp-Source: ACHHUZ7giPh3fJflokbwuOw6F1c/R5MgKKjdAh0Buc08SMS5g5jeGTWiITv4rffr9WhhPRfzUnNUeA==
-X-Received: by 2002:a5d:5384:0:b0:2fe:562c:c0dc with SMTP id d4-20020a5d5384000000b002fe562cc0dcmr13408438wrv.40.1683056723727;
-        Tue, 02 May 2023 12:45:23 -0700 (PDT)
-Received: from localhost (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
-        by smtp.gmail.com with ESMTPSA id bl13-20020adfe24d000000b003062d3daf79sm6288950wrb.107.2023.05.02.12.45.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 May 2023 12:45:23 -0700 (PDT)
-Date:   Tue, 2 May 2023 20:45:22 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+        bh=813DkMObVqAM93FFVGWHCCH8FioK14LS5zdDr6BTj+E=;
+        b=cVkde0VGivBrUYaejgu8ZwEzjZzdCv8XscNE1zxihTCtyTI0zFWw8/OzNlS0Dbu058
+         8BSnSbUjxGlo4P4lSdJNtMpVbjB0Zca3vycKWBz1Lox9WKh507yA9cXnJoPPuvWSMex7
+         ELj16xq6hCgMI56ZdU500t4N8smU+oyF5JU/s9vyaHNAwO1jsyfaMxY6W4oRFTv69wUw
+         aLbFp/jFV12V2f1mgpHKBsj/JEO02gssz9BKxoDp6rBx85vOtY46KlKw/AkpdPAVkVC2
+         T2aGL096XyISN13XS+SWE489dZb0hrteWMumdXlsk/NdU8GB5eeQkCnMrQ5M73Q6KERf
+         cZmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683058192; x=1685650192;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=813DkMObVqAM93FFVGWHCCH8FioK14LS5zdDr6BTj+E=;
+        b=GSgnTO5CtveWoq86lL3S6bOgeegYw2Z+loNUmNc8mnuGLdRte+GPvez6N885uctuBc
+         AO0C4iQIHuoU5jOtdUu4RqYI2HCY6Ygwz3n99YbAFHM7+z5tbIvrWOU53FoSHeWBVhp6
+         Ct1wABei/IAoLhG72Le83v4J2RB0GAjHuA+F8yWBkVMTfs8Jn4jJzdyCK9RBG21ansUV
+         gUXFkyQyI2+eUAHqzl6Y1FZy9LjPGgh+mdGMwnxnXzjLZZh/L/ScNr9O4Ufut19XXHeo
+         8xWuB9KL+OEjzpztw7w64+QfTDHfnN+Ne/qaIvEj9myOS4QWdLbzeEc0xhU64TlgEVGD
+         xtow==
+X-Gm-Message-State: AC+VfDx/JxdwHdgdV0VpknrfcjXy3Q4JVckdrVyxcZvb3nre4yLGk63J
+        qUAMoQg0p2zQlIp19nSqiWDu3SzwTBta25tPLYIdrw==
+X-Google-Smtp-Source: ACHHUZ4Q3i+mCqTUQgzum2pwURp+OqBha0yZh50wmkHPi2KfD+PQuKICDnLb7L7UbqiSnERIxYcdM5b4hiof8m3FmLc=
+X-Received: by 2002:a05:6e02:1aa7:b0:32f:7715:4482 with SMTP id
+ l7-20020a056e021aa700b0032f77154482mr74904ilv.4.1683058191787; Tue, 02 May
+ 2023 13:09:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230429053506.1962559-1-irogers@google.com> <20230429053506.1962559-33-irogers@google.com>
+ <a5153c87-044a-655d-acb4-aff9c33ab686@amd.com>
+In-Reply-To: <a5153c87-044a-655d-acb4-aff9c33ab686@amd.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 2 May 2023 13:09:40 -0700
+Message-ID: <CAP-5=fW28bBVuTbpF_5bwHw39=Kct5w1UjjBuVeLe_o+-6AWXA@mail.gmail.com>
+Subject: Re: [PATCH v3 32/46] perf stat: Make cputype filter generic
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: Re: [PATCH v7 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing
- to file-backed mappings
-Message-ID: <bd75a53d-d461-488c-af8c-b7e483c22e41@lucifer.local>
-References: <cover.1683044162.git.lstoakes@gmail.com>
- <b3a4441cade9770e00d24f5ecb75c8f4481785a4.1683044162.git.lstoakes@gmail.com>
- <505b7df8-bb60-7564-af28-b99875eea12a@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <505b7df8-bb60-7564-af28-b99875eea12a@redhat.com>
+        Florian Fischer <florian.fischer@muhq.space>,
+        Rob Herring <robh@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 02, 2023 at 09:17:53PM +0200, David Hildenbrand wrote:
-> > +static bool folio_longterm_write_pin_allowed(struct folio *folio)
+On Tue, May 2, 2023 at 3:52=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.com=
+> wrote:
+>
+> On 29-Apr-23 11:04 AM, Ian Rogers wrote:
+> > Rather than limit the --cputype argument for "perf list" and "perf
+> > stat" to hybrid PMUs of just cpu_atom and cpu_core, allow any PMU.
+>
+> I've couple of doubts:
+>
+> 1. Can you please explain intention to do this esp for perf list. Since, =
+IIUC,
+>    `perf list --unit` option provide the same functionality.
+
+I agree with you. The option already exists and I think we should just
+move this option to being deprecated/hidden:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
+ls/lib/subcmd/parse-options.h#n46
+
+> 2. Since we are already specifying pmu name for non-standerd/arch-specifi=
+c
+>    events like `pmu/attributes/`, I'm not sure where `perf stat --cputype=
+=3Dpmu`
+>    is useful. Can you please explain perf stat usability aspect for non-h=
+ybrid
+>    pmus.
+
+Completely agreed. This patch series is trying to remove the
+duplicated code introduced by the hybrid changes. In this case I
+didn't want to remove an option, and potentially break users of that
+option, as part of fixing things up. A lot of what you are saying here
+I added as comments to the original patch series.
+
+> 3. What am I missing here:
+>
+>    $ sudo ./perf stat --cputype=3Damd_df -e amd_l3/event=3D0x4,umask=3D0x=
+ff/ -C 0 -- sleep 1
+>     Performance counter stats for 'CPU(s) 0':
+>
+>            108,267      amd_l3/event=3D0x4,umask=3D0xff/
+>
+>        1.061290167 seconds time elapsed
+
+The cputype applies to wildcard-ed events. So on hybrid:
+$ perf stat -e cycles true
+will open cycles on cpu_atom and cpu_core, the
+parse_events__filter_pmu function is used skip PMUs based on cputype.
+
+> 3. Also, IMHO, using --cputype option to specify _pmu name_ is bit odd.
+
+Right, when the "feature" was added I would have preferred it as PMU
+rather than CPU.
+
+> >
+> > Note, that if cpu_atom isn't mounted but a filter of cpu_atom is
+> > requested, then this will now fail. As such a filter would never
+> > succeed, no events can come from that unmounted PMU, then this
+> > behavior could never have been useful and failing is clearer.
+>
+> I'm hitting a segfault if I use non-existing pmu:
+>
+> $ sudo ./perf list --cputype=3Drandom
+> WARNING: cputype is not supported!
+> Segmentation fault
+
+Will fix in v4. The warning should be fatal/exit rather than try to
+read the PMU's name.
+
+Thanks,
+Ian
+
+> > @@ -443,8 +443,8 @@ int cmd_list(int argc, const char **argv)
+> >                           "Print information on the perf event names an=
+d expressions used internally by events."),
+> >               OPT_BOOLEAN(0, "deprecated", &default_ps.deprecated,
+> >                           "Print deprecated events."),
+> > -             OPT_STRING(0, "cputype", &hybrid_name, "hybrid cpu type",
+> > -                        "Limit PMU or metric printing to the given hyb=
+rid PMU (e.g. core or atom)."),
+> > +             OPT_STRING(0, "cputype", &cputype, "cpu type",
+> > +                        "Limit PMU or metric printing to the given PMU=
+ (e.g. cpu, core or atom)."),
+>
+> man perf-list does not describe --cputype. I think we should add it as pa=
+rt
+> of this patch?
+>
+> Similarly, man perf-stat also needs to be updated.
+>
+>
+> > +const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
 > > +{
-> > +	struct address_space *mapping;
+> > +     struct perf_pmu *pmu =3D NULL;
 > > +
-> > +	/*
-> > +	 * GUP-fast disables IRQs - this prevents IPIs from causing page tables
-> > +	 * to disappear from under us, as well as preventing RCU grace periods
-> > +	 * from making progress (i.e. implying rcu_read_lock()).
-> > +	 *
-> > +	 * This means we can rely on the folio remaining stable for all
-> > +	 * architectures, both those that set CONFIG_MMU_GATHER_RCU_TABLE_FREE
-> > +	 * and those that do not.
-> > +	 *
-> > +	 * We get the added benefit that given inodes, and thus address_space,
-> > +	 * objects are RCU freed, we can rely on the mapping remaining stable
-> > +	 * here with no risk of a truncation or similar race.
-> > +	 */
-> > +	lockdep_assert_irqs_disabled();
-> > +
-> > +	/*
-> > +	 * If no mapping can be found, this implies an anonymous or otherwise
-> > +	 * non-file backed folio so in this instance we permit the pin.
-> > +	 *
-> > +	 * shmem and hugetlb mappings do not require dirty-tracking so we
-> > +	 * explicitly whitelist these.
-> > +	 *
-> > +	 * Other non dirty-tracked folios will be picked up on the slow path.
-> > +	 */
-> > +	mapping = folio_mapping(folio);
-> > +	return !mapping || shmem_mapping(mapping) || folio_test_hugetlb(folio);
-> > +}
+> > +     while ((pmu =3D perf_pmu__scan(pmu)) !=3D NULL) {
+> > +             if (!strcmp(pmu->name, str))
+> > +                     return pmu;
+> > +             /* Ignore "uncore_" prefix. */
+> > +             if (!strncmp(pmu->name, "uncore_", 7)) {
+> > +                     if (!strcmp(pmu->name + 7, str))
+> > +                             return pmu;
 >
-> BTW, try_grab_folio() is also called from follow_hugetlb_page(), which is
-> ordinary GUP and has interrupts enabled if I am not wrong.
-
-It does hold the PTL though, so can't fiddle with the entry.
-
-But that does suggest folio_test_hugetlb() should be put _before_ the irq
-disabled assertion then :)
-
->
-> --
-> Thanks,
->
-> David / dhildenb
->
+> Any specific reason to ignore "uncore_"? IMHO, ignoring prefix of some
+> pmus and not of others is bit confusing for naive user.
