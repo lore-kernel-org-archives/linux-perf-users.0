@@ -2,362 +2,221 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D975C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 15:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D211C77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 15:30:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234545AbjEBP01 (ORCPT
+        id S234455AbjEBPaN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 11:26:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43186 "EHLO
+        Tue, 2 May 2023 11:30:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234556AbjEBP0Y (ORCPT
+        with ESMTP id S234279AbjEBPaL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 11:26:24 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F1026BC;
-        Tue,  2 May 2023 08:26:21 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id A531421B0D;
-        Tue,  2 May 2023 15:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1683041179; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CXWn7FssbrSs8MRrutlOtshdeBbrP/crYQCwv1Iexd0=;
-        b=XxDdHFZlQui1F2WlF8bhbf41oWW6Fr9rAfk13WKktw/+Jtw97yL5A1Sttz4uqgqOcjRNii
-        pj4J+Cp+HRg6BC0SrBdlXBmUXIj6XkAHYUWf0RbaKYkK6ZbWB8Cclv6Li0bhCJwINGjccy
-        EBYuacjqAOW4uoLsHujhtJf/7MKOnXE=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id AA2872C141;
-        Tue,  2 May 2023 15:26:18 +0000 (UTC)
-Date:   Tue, 2 May 2023 17:26:18 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Ian Rogers <irogers@google.com>, ravi.v.shankar@intel.com,
-        Marc Zyngier <maz@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        kgdb-bugreport@lists.sourceforge.net, ito-yuichi@fujitsu.com,
-        linux-arm-kernel@lists.infradead.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        ricardo.neri@intel.com, Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Chen-Yu Tsai <wens@csie.org>, Andi Kleen <ak@linux.intel.com>,
-        Colin Cross <ccross@android.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: shared code: was: Re: [PATCH v3] hardlockup: detect hard lockups
- using secondary (buddy) CPUs
-Message-ID: <ZFErmshcrcikrSU1@alley>
-References: <20230501082341.v3.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
+        Tue, 2 May 2023 11:30:11 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9AD42D43
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 08:30:08 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id e9e14a558f8ab-3311833ba3dso104915ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 08:30:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683041407; x=1685633407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UZx06idcsC+EaYZQXKoSd4jywVamtp3q4gWRtfyTqgg=;
+        b=xAs0rTT2QFWK99x8lOrIpGnrlln4Mlhai3kbLqnDZbDQnrq70VBST4DjGw43P5uk1A
+         K5i/aHRYjxz3AXWbPfQegJkXdfy20+u4LUdhn8BpWyVETCDkCfxB4EvfTnQB5j+wLb3u
+         jworDFcgWU40GR2YWfqN+PvvWIS+mvIn7VBheywB4qMEBB4RTzVRnIP3WqP7TKaspb7l
+         hSAymP5M9Sk9Gj9ojI0l8yLaxjuLKQA5EbU1cbbe0I30w91E0uyJqcaencz6MsuJc2HU
+         IWKA9qiIlaDLWv7J6MkHF2sfSuKJCW92GSwSOJrg5dvGy35qmwMig77W7Wb4h3d1pj7F
+         LBUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683041407; x=1685633407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UZx06idcsC+EaYZQXKoSd4jywVamtp3q4gWRtfyTqgg=;
+        b=MABWaxWcRj/MFmfUHf/2tofIRpOgN2tQEaVVAB8JcHZVcrglRCdanxD/QbvvRsIM5+
+         UYRuis2weiEaQUuTtU2vXWc7m0yeGgNlzXUVNEgZKCVDBZZJtRlI520I6hlAO+QBetsN
+         Kj0DE4bqEOvsrWF2QFqtlNRuPS+X45HtI0D4gJz6+acuBjBjtBPhGuHSBBxFl531TVwQ
+         JS00TVPHXTNdIEmA6je5sx3OvyPvMor5xoKHA/5+nZo4dUaW3H8hiE/Fuo9AeWM8HuwS
+         gumybM8pLtRDMsgrqaIda5ej7ezjUFAJheLGas+JlJQh4m9CQ26eWrxUmt3vAlUdItza
+         pkDw==
+X-Gm-Message-State: AC+VfDzVYplBKcxi1OeVqhQQxXgXdU7AaXqs8g6aTpum31UY8gbuDBzb
+        zYZeddEAdY/sdRxNlTf8BgI26asIS95QOhcNz36ltQ==
+X-Google-Smtp-Source: ACHHUZ5eaSJQDXEHiQ+36CcSzlqC/Gcfm8EGUpky83nDzDApu5gY75S68WkDGMC1iUTLWnzTXzhxWI9SDhvdXE6/RQM=
+X-Received: by 2002:a05:6e02:2189:b0:315:8e3a:f546 with SMTP id
+ j9-20020a056e02218900b003158e3af546mr366020ila.6.1683041406792; Tue, 02 May
+ 2023 08:30:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230501082341.v3.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
+References: <20230429053506.1962559-1-irogers@google.com> <20230429053506.1962559-13-irogers@google.com>
+ <31dbae6c-4cbe-d7e2-bc78-beed959cbddc@amd.com> <CAP-5=fW-_2OxYFTVuZgSPAPEH7DLGm1xS_Nijb0cTj3YKBQ7-A@mail.gmail.com>
+In-Reply-To: <CAP-5=fW-_2OxYFTVuZgSPAPEH7DLGm1xS_Nijb0cTj3YKBQ7-A@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 2 May 2023 08:29:55 -0700
+Message-ID: <CAP-5=fX2ya1eLs-3bVk0f-CwqYvx06XOrPD87mNE4WRmfMKUJw@mail.gmail.com>
+Subject: Re: [PATCH v3 12/46] perf test: Test more sysfs events
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Florian Fischer <florian.fischer@muhq.space>,
+        Rob Herring <robh@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon 2023-05-01 08:24:46, Douglas Anderson wrote:
-> From: Colin Cross <ccross@android.com>
-> 
-> Implement a hardlockup detector that doesn't doesn't need any extra
-> arch-specific support code to detect lockups. Instead of using
-> something arch-specific we will use the buddy system, where each CPU
-> watches out for another one. Specifically, each CPU will use its
-> softlockup hrtimer to check that the next CPU is processing hrtimer
-> interrupts by verifying that a counter is increasing.
-> 
-> --- a/include/linux/nmi.h
-> +++ b/include/linux/nmi.h
-> @@ -134,6 +144,7 @@ void lockup_detector_reconfigure(void);
->  static inline void touch_nmi_watchdog(void)
->  {
->  	arch_touch_nmi_watchdog();
-> +	buddy_cpu_touch_watchdog();
+On Tue, May 2, 2023 at 8:16=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Tue, May 2, 2023 at 3:27=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.c=
+om> wrote:
+> >
+> > > @@ -2225,74 +2226,82 @@ static int test_pmu(void)
+> > >
+> > >  static int test__pmu_events(struct test_suite *test __maybe_unused, =
+int subtest __maybe_unused)
+> > >  {
+> > > -     struct stat st;
+> > > -     char path[PATH_MAX];
+> > > -     struct dirent *ent;
+> > > -     DIR *dir;
+> > > -     int ret;
+> > > +     struct perf_pmu *pmu;
+> > > +     int ret =3D TEST_OK;
+> > >
+> > > -     if (!test_pmu())
+> > > -             return TEST_SKIP;
+> > > +     perf_pmus__for_each_pmu(pmu) {
+> >
+> > 'pmus' list might be empty and, if so, we need to fill it first with:
+> >
+> >         if (list_empty(&pmus))
+> >                 perf_pmu__scan(NULL);
+> >
+> > before iterating over it. Other option is to add this code to
+> > perf_pmus__for_each_pmu() macro itself.
+> >
+> > With that, the test fails for me:
+> >
+> > $ sudo ./perf test 6
+> >   6: Parse event definition strings                                  :
+> >   6.1: Test event parsing                                            : =
+Ok
+> >   6.2: Test parsing of "hybrid" CPU events                           : =
+Skip (not hybrid)
+> >   6.3: Parsing of all PMU events from sysfs                          : =
+FAILED!
+> >
+> > > +             struct stat st;
+> > > +             char path[PATH_MAX];
+> > > +             struct dirent *ent;
+> > > +             DIR *dir;
+> > > +             int err;
+> > >
+> > > -     snprintf(path, PATH_MAX, "%s/bus/event_source/devices/cpu/event=
+s/",
+> > > -              sysfs__mountpoint());
+> > > +             snprintf(path, PATH_MAX, "%s/bus/event_source/devices/%=
+s/events/",
+> > > +                     sysfs__mountpoint(), pmu->name);
+> > >
+> > > -     ret =3D stat(path, &st);
+> > > -     if (ret) {
+> > > -             pr_debug("omitting PMU cpu events tests: %s\n", path);
+> > > -             return TEST_OK;
+> > > -     }
+> > > +             err =3D stat(path, &st);
+> > > +             if (err) {
+> > > +                     pr_debug("skipping PMU %s events tests: %s\n", =
+pmu->name, path);
+> > > +                     ret =3D combine_test_results(ret, TEST_SKIP);
+> >
+> > combine_test_results(ret, TEST_OK); probably? Since many pmus don't exp=
+ose
+> > events via sysfs.
+>
+> Thanks Ravi! The following looks to address the issues and I'll add it to=
+ v4.
+>
+> '''
+> diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-eve=
+nts.c
+> index 35b35a5c795c..2ff61ee8f970 100644
+> --- a/tools/perf/tests/parse-events.c
+> +++ b/tools/perf/tests/parse-events.c
+> @@ -559,7 +559,8 @@ static int test__checkevent_pmu_events(struct
+> evlist *evlist)
+>        struct evsel *evsel =3D evlist__first(evlist);
+>
+>        TEST_ASSERT_VAL("wrong number of entries", 1 =3D=3D evlist->core.n=
+r_entries);
+> -       TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
+tr.type);
+> +       TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW =3D=3D evsel->core.at=
+tr.type ||
+> +                                     strncmp(evsel->pmu_name, "cpu/", 4)=
+);
 
-	touch_buddy_watchdog();    ??? to follow the naming scheme?
+This should be strcmp(evsel->pmu_name, "cpu"). Or we could drop the
+assert. I'll try to keep what's covered currently by the test while
+extending the PMUs.
 
->  	touch_softlockup_watchdog();
->  }
->  
-> --- a/kernel/watchdog.c
-> +++ b/kernel/watchdog.c
-> @@ -106,6 +108,13 @@ void __weak watchdog_nmi_disable(unsigned int cpu)
->  	hardlockup_detector_perf_disable();
->  }
->  
-> +#else
+Thanks,
+Ian
+
+>        TEST_ASSERT_VAL("wrong exclude_user",
+>                        !evsel->core.attr.exclude_user);
+>        TEST_ASSERT_VAL("wrong exclude_kernel",
+> @@ -2229,6 +2230,9 @@ static int test__pmu_events(struct test_suite
+> *test __maybe_unused, int subtes
+> t
+>        struct perf_pmu *pmu;
+>        int ret =3D TEST_OK;
+>
+> +       if (list_empty(&pmus))
+> +                perf_pmu__scan(NULL);
 > +
-> +int __weak watchdog_nmi_enable(unsigned int cpu) { return 0; }
-> +void __weak watchdog_nmi_disable(unsigned int cpu) { return; }
-
-Honestly, the mix of softlockup and hardlockup code was a hard to
-follow even before this patch. And it is going to be worse.
-
-Anyway, the buddy watchdog is not using NMI at all. It should not
-get enable using a function called *_nmi_enabled().
-
-Also some comments are not longer valid, for example:
-
-static void watchdog_enable(unsigned int cpu)
-{
-[...]
-	/* Enable the perf event */
-	if (watchdog_enabled & NMI_WATCHDOG_ENABLED)
-		watchdog_nmi_enable(cpu);
-
-
-I do not know. Maybe, fixing the mess is beyond any hope.
-But we shold not make it worse.
-
-I suggest to rename/shuffle at least functions touched
-by this patchset to improve the meaning.
-
-Sigh, it is hard to find a reasonable names. The code
-already uses:
-
-    + watchdog_*
-    + watchdog_nmi_
-
-    + softlockup_*
-
-    + lockup_detector_*
-    + hardlockup_detector_perf_*
-
-and sysctl:
-
-		.procname       = "watchdog",
-		.procname	= "watchdog_thresh",
-		.procname       = "nmi_watchdog",
-		.procname	= "watchdog_cpumask",
-		.procname       = "soft_watchdog",
-		.procname	= "softlockup_panic",
-		.procname	= "softlockup_all_cpu_backtrace",
-		.procname	= "hardlockup_panic",
-		.procname	= "hardlockup_all_cpu_backtrace",
-
-
-So, I suggest, to use the names:
-
-
-    + watchdog_*
-
-	+ for the common infrastructure
-	+ keep it in watchdog.c
-
-    + hardlockup_detector_* or
-      hardlockup_watchdog_* or
-      watchdog_hld_*
-
-	+ for the common hardlockup stuff.
-	+ it t can stay in watchdog.c to keep shuffling bearable
-
-
-    + hardlockup_detector_nmi_* or
-      hardlockup_watchdog_nmi_* or
-      watchdog_hld_nmi_* or
-      watchdog_nmi_*
-
-	+ for the arch specific hardlockup stuff that is
-	  using NMI interrupts.
-
-	+ it might either stay in watchdog_hld.c
-	  or be moved to watchdog_nmi.c or
-	  watchdog_hld_nmi.c
-
-    + hardlockup_detector_buddy_* or
-      hardlockup_watchdog_buddy_* or
-      watchdog_hld_buddy_*
-      watchdog_buddy_*
-
-	+ for the arch specific hardlockup stuff that is
-	  using buddy monitoring
-
-	+ it might either be added to watchdog_hld.c
-	  or be moved to watchdog_buddy.c or
-	  watchdog_hld_buddy.c
-
-
-Opinion:
-
-     The buddy watchdog might actually be used also for
-     softlockup detector. So, watchdog_buddy_* API
-     and watchdog_buddy.c might make sense.
-
-
-> +
-> +#endif /* CONFIG_HARDLOCKUP_DETECTOR */
-> +
->  /* Return 0, if a NMI watchdog is available. Error code otherwise */
->  int __weak __init watchdog_nmi_probe(void)
->  {
-> @@ -364,6 +373,9 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
->  	/* kick the hardlockup detector */
->  	watchdog_interrupt_count();
->  
-> +	/* test for hardlockups */
-> +	watchdog_check_hardlockup();
-
-  rename watchdog_buddy_check_hardlockup(); ???
-
-> +
->  	/* kick the softlockup detector */
->  	if (completion_done(this_cpu_ptr(&softlockup_completion))) {
->  		reinit_completion(this_cpu_ptr(&softlockup_completion));
-> --- /dev/null
-> +++ b/kernel/watchdog_buddy_cpu.c
-> @@ -0,0 +1,141 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/cpu.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/kernel.h>
-> +#include <linux/nmi.h>
-> +#include <linux/percpu-defs.h>
-> +
-> +static DEFINE_PER_CPU(bool, watchdog_touch);
-> +static DEFINE_PER_CPU(bool, hard_watchdog_warn);
-> +static cpumask_t __read_mostly watchdog_cpus;
-> +
-> +static unsigned long hardlockup_allcpu_dumped;
-> +
-> +int __init watchdog_nmi_probe(void)
-> +{
-> +	return 0;
-> +}
-
-This is pretty strange. It shows that it was added a hacky way.
-
-> +
-> +notrace void buddy_cpu_touch_watchdog(void)
-> +{
-> +	/*
-> +	 * Using __raw here because some code paths have
-> +	 * preemption enabled.  If preemption is enabled
-> +	 * then interrupts should be enabled too, in which
-> +	 * case we shouldn't have to worry about the watchdog
-> +	 * going off.
-> +	 */
-> +	raw_cpu_write(watchdog_touch, true);
-> +}
-> +EXPORT_SYMBOL_GPL(buddy_cpu_touch_watchdog);
-
-Cut&pasted arch_touch_nmi_watchdog().
-
-> +
-> +static unsigned int watchdog_next_cpu(unsigned int cpu)
-> +{
-> +	cpumask_t cpus = watchdog_cpus;
-> +	unsigned int next_cpu;
-> +
-> +	next_cpu = cpumask_next(cpu, &cpus);
-> +	if (next_cpu >= nr_cpu_ids)
-> +		next_cpu = cpumask_first(&cpus);
-> +
-> +	if (next_cpu == cpu)
-> +		return nr_cpu_ids;
-> +
-> +	return next_cpu;
-> +}
-> +
-[...]
-> +static int is_hardlockup_buddy_cpu(unsigned int cpu)
-> +{
-> +	unsigned long hrint = per_cpu(hrtimer_interrupts, cpu);
-> +
-> +	if (per_cpu(hrtimer_interrupts_saved, cpu) == hrint)
-> +		return 1;
-> +
-> +	per_cpu(hrtimer_interrupts_saved, cpu) = hrint;
-> +	return 0;
-
-This is cut&pasted is_hardlockup(). And the __this_cpu_* API
-is replaced by per_cpu_* API.
-
-> +}
-> +
-> +void watchdog_check_hardlockup(void)
-> +{
-> +	unsigned int next_cpu;
-> +
-> +	/*
-> +	 * Test for hardlockups every 3 samples. The sample period is
-> +	 *  watchdog_thresh * 2 / 5, so 3 samples gets us back to slightly over
-> +	 *  watchdog_thresh (over by 20%).
-> +	 */
-> +	if (__this_cpu_read(hrtimer_interrupts) % 3 != 0)
-> +		return;
-> +
-> +	/* check for a hardlockup on the next CPU */
-> +	next_cpu = watchdog_next_cpu(smp_processor_id());
-> +	if (next_cpu >= nr_cpu_ids)
-> +		return;
-> +
-> +	/* Match with smp_wmb() in watchdog_nmi_enable() / watchdog_nmi_disable() */
-> +	smp_rmb();
-> +
-> +	if (per_cpu(watchdog_touch, next_cpu) == true) {
-> +		per_cpu(watchdog_touch, next_cpu) = false;
-> +		return;
-> +	}
-> +
-> +	if (is_hardlockup_buddy_cpu(next_cpu)) {
-> +		/* only warn once */
-> +		if (per_cpu(hard_watchdog_warn, next_cpu) == true)
-> +			return;
-> +
-> +		/*
-> +		 * Perform all-CPU dump only once to avoid multiple hardlockups
-> +		 * generating interleaving traces
-> +		 */
-> +		if (sysctl_hardlockup_all_cpu_backtrace &&
-> +				!test_and_set_bit(0, &hardlockup_allcpu_dumped))
-> +			trigger_allbutself_cpu_backtrace();
-> +
-> +		if (hardlockup_panic)
-> +			panic("Watchdog detected hard LOCKUP on cpu %u", next_cpu);
-> +		else
-> +			WARN(1, "Watchdog detected hard LOCKUP on cpu %u", next_cpu);
-> +
-> +		per_cpu(hard_watchdog_warn, next_cpu) = true;
-> +	} else {
-> +		per_cpu(hard_watchdog_warn, next_cpu) = false;
-
-Also this cut&pastes a lots of code from watchdog_overflow_callback().
-
-I wonder if we could somehow share the code between the two hardlockup
-detectors. It would be win-win. It might help a lot with maintenance.
-
-Best Regards,
-Petr
+>        perf_pmus__for_each_pmu(pmu) {
+>                struct stat st;
+>                char path[PATH_MAX];
+> @@ -2242,7 +2246,6 @@ static int test__pmu_events(struct test_suite
+> *test __maybe_unused, int subtes
+> t
+>                err =3D stat(path, &st);
+>                if (err) {
+>                        pr_debug("skipping PMU %s events tests: %s\n",
+> pmu->name, path);
+> -                       ret =3D combine_test_results(ret, TEST_SKIP);
+>                        continue;
+>                }
+> '''
