@@ -2,50 +2,51 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFA5C7EE21
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 10:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604A1C77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 10:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233795AbjEBKwZ (ORCPT
+        id S233578AbjEBK4R (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 06:52:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49416 "EHLO
+        Tue, 2 May 2023 06:56:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233455AbjEBKwW (ORCPT
+        with ESMTP id S229703AbjEBK4Q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 06:52:22 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2052.outbound.protection.outlook.com [40.107.223.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E98F4686;
-        Tue,  2 May 2023 03:52:17 -0700 (PDT)
+        Tue, 2 May 2023 06:56:16 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2085.outbound.protection.outlook.com [40.107.243.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B3610F9;
+        Tue,  2 May 2023 03:56:14 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SsJ//6XchCACDSOX+wA9+KuV7gR3HfuU4yaFxEMXswJY7lHBS2lpdDJzZdiPm9yAABWV2oaUHcbjiCKFwTU5mwEb28rc7KjMgPecozry/ifxXes93LTNxwMwZX73i5iJWUswTZIa/hH4Gc/I6K/sA2lxWc8pzG/9W6yjs6YHv13Crqy7tyLsY4ERK6WdlUG+GxYA2nUPM+AHXWXycm6jNknxO27/paFbMq1tdkuGQeMgazZlymBwnBywdoH79Uz1TwRtB9JCdIq9+712l6AMMBXSAPmgfcTjz0dbY63wGmSm9vi5J685hsDXmR1tn0mjBfQQoLX0V94KF3NCR6IUfQ==
+ b=fGWLTqDk+2PTxIDLr2Dj4uvir0xHr4xj81tW/r19K4dPkhxQXwAyrNtAqg02VbOT3Q+DxE4QBaYA6yzU6W5tyxcsULtIgilea53Rge8FjC7metSvEpAoNYyMYk14Wmo534NDzACdPMVT+HQYqlbNFy+V3wCx24cxe1cxbWunDr+CHlno93DT8s1z1wuYkgsTNYcwspluB1qTrettLxehYMWLD+KDa29vEr0KZPZlBHl9vxwZpai5WAukhQhw5k2Wih/Z3i8I31nVf2pRJb2aCnQUOLDIu92Kk9aFFBMpMt3vVgT49+zkHdYViO4PzbxEsAFM/s9hlhBH1QjUF6owew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=W3GamwK2l3w+XKJmOZnjsU14jmVIzvEfdJ/r95wQ8SY=;
- b=VHTx2dThYgg9BZHhuDDxCAH5flk51NXuvcfTTLTSQ3me+lerW1fF6km/kiXPBz4CHscBIt97PE3j1XRRQb7bEhRcxMTJyp95IoS6loAX6Pf35Pqs79gwC9/G0bDRI4X8H3UFNYIUQsy+nBBg71iXXk/FWm8vBixSIWM8yDQoK76g8xWvDhLCROW9hePlqrbWWxd2YkhE+wTqd2nq9fDwX0ex3NKY7joTRTFERYAECKJze8eiVcmLRZpeYithgFeAvB9AD/Djl0BTimXM6gOupkL8s8RrgsV1Tf9NtQ/zgpJ3e+Jv81lW/FjajeMu6Nbjju6Kyg3dOi5f5vGKFPNvAw==
+ bh=Fa0ZMX+ZqObQLpax97eQsxJyWp+62KNwOzkMua0w2QU=;
+ b=JD6P4lA21yRBS/nc9vUQGcDSyAX4pnwI3TKMmvcHrUN1cVUE3qCWUFVNXlbw6ZcoF3dCXTHnMF6OZWXCyyLMCojfVrHBZk6lvlhE+z6byQEHXPoMRgTP1DqJ8wowjHb8xO/VR6to5+05196XgT+onzgYPLeAA6o23smE9SZ1r2x/AWBUkrJH8j/d9bimt/X8V1XV+NqATKInoJghNgfZtPP9KIM8HlaTaursH6RZUVlgMU8e34WQY4rXAgQOeg3XlW/m8XswI82AWT2OLAAwTtRbinvJS7DtOEeuP4U7rDIyJNGwjzdi60d2Ru98L7rKhIuezsgkD+u/VIyV0ldllA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=W3GamwK2l3w+XKJmOZnjsU14jmVIzvEfdJ/r95wQ8SY=;
- b=gQgRdY5SfHMG3+hYn+DvD8I/5JA1HX05hCunwsZ0MRsZ/ddr4CXSamP3u+MT55jgM1CJdLwOdNAnza4YueZONEtX2ID2KZLPLnR0y65PB/2N7Yed5PXhjctikOg/fVO9bVbL/JYYzdpbz9f7PMjWbxGsPwAX6aHryaiYWg5htc4=
+ bh=Fa0ZMX+ZqObQLpax97eQsxJyWp+62KNwOzkMua0w2QU=;
+ b=yZRFcbi5HhQqsCguox8aWTZmZkVPIihDhiUojj4N0U1z/ve6WjYeT03XZm4uk6Wyxr4ZKq3YvYT9voqoBzuJUIiKSNLa4C27nHUR1igUqdesvpAFo5b2zxLqttieRkDySbJ+cZL5qzb0uDKhxi8Ty3W/PPAkHWXIJwZ+L/LNBmw=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by PH7PR12MB7377.namprd12.prod.outlook.com (2603:10b6:510:20c::12) with
+ by SJ0PR12MB6880.namprd12.prod.outlook.com (2603:10b6:a03:485::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.30; Tue, 2 May
- 2023 10:52:14 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.21; Tue, 2 May
+ 2023 10:56:12 +0000
 Received: from PH7PR12MB6588.namprd12.prod.outlook.com
  ([fe80::b4a6:94bb:6895:645]) by PH7PR12MB6588.namprd12.prod.outlook.com
  ([fe80::b4a6:94bb:6895:645%7]) with mapi id 15.20.6340.030; Tue, 2 May 2023
- 10:52:14 +0000
-Message-ID: <a5153c87-044a-655d-acb4-aff9c33ab686@amd.com>
-Date:   Tue, 2 May 2023 16:21:55 +0530
+ 10:56:12 +0000
+Message-ID: <91b218e9-1650-a032-3b23-be6134c33e4f@amd.com>
+Date:   Tue, 2 May 2023 16:25:45 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH v3 32/46] perf stat: Make cputype filter generic
+Subject: Re: [PATCH v3 35/46] perf parse-events: Support hardware events as
+ terms
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -82,139 +83,130 @@ To:     Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Ravi Bangoria <ravi.bangoria@amd.com>
 References: <20230429053506.1962559-1-irogers@google.com>
- <20230429053506.1962559-33-irogers@google.com>
+ <20230429053506.1962559-36-irogers@google.com>
 From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <20230429053506.1962559-33-irogers@google.com>
+In-Reply-To: <20230429053506.1962559-36-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0196.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:e9::8) To PH7PR12MB6588.namprd12.prod.outlook.com
+X-ClientProxiedBy: PN3PR01CA0173.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:de::17) To PH7PR12MB6588.namprd12.prod.outlook.com
  (2603:10b6:510:210::10)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|PH7PR12MB7377:EE_
-X-MS-Office365-Filtering-Correlation-Id: ba186619-0b95-49fe-0dbd-08db4afb4a04
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|SJ0PR12MB6880:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b2fb9be-fb28-4f50-d4b3-08db4afbd74e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Ygio6Xwf9O79Kiv7QnD4tn2RWPGcA0oGGSzYTPcyf9dmtqG+BxveKNWkIMW04cpqY2n4nErDFY2SUkwJ0Q17DuzPJ9fT532UoWBsQBRgYafPfFmoySJ2SdQUmfnLSITxTD04DUntoCknDLnKSQhVBNW9z3xXm7w3HAL8L6q43J/l69ggV4sA0OyubMkgUtYNOtoDHvnsCcImzLAsUTCvqt4wHZk0KgKBAPa0mqYfwzR7M7PmHII58aRlxi2dlMag1SGXUu9kuAx0dI4esLXVfoUm3hAEO/Jy9aEQkf1T1jkQWQKk+grgCbX6KekJ8MGgUOoMTHOva2PrcakJPWF06wuA4JeLJyWb8Br1IkpXjqmE+kIyP1iTY52lubS5z529+CY5tTOByOoNbZZ508wFuzz3TqAvFEFsAiG1cuZyIX8ow70CdqNlzCUPVrlqEwubzwkC368nIhRhJXoMvVFkOBl+/JkLDVhywr/DfksaHqRhrUWp9rbWenMEUJ5ccYjCiFP9os1fMwV1DdHsO/d32zVn19Na0uAPamze3mgLNN1rLEfGfVrgogOoJbgVdyPGkqZ8JdDsMim4QoeGTsW7Y20n2Gp1+EtxNP7z17MWLhAnOdrfCs432R4EKRPpO13+mBeyjLD55hVnUcuAikxMyFFj0j5fZr3tcmX6RKND4NrzKQP7euLTXioKvDh7A+7n
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(39860400002)(396003)(136003)(346002)(451199021)(186003)(66556008)(66476007)(66946007)(921005)(316002)(478600001)(6486002)(110136005)(31696002)(86362001)(36756003)(6666004)(6512007)(26005)(6506007)(2906002)(2616005)(38100700002)(53546011)(7406005)(7416002)(31686004)(83380400001)(5660300002)(8676002)(44832011)(8936002)(41300700001)(41533002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: caQqY0+gD0/WMDjZB934Vw8oJIuWO6AzVn2xLcXIw6d3Wao8ZdE2zk2YoKP+XNasyG0ASHQ+OxxSRweaS6+7pNz/zQFvQW6WqU7wdbW4yPXk7hseihBIzNGAcESmCeresnMWcj6w6wAK5XGLaKgS1R+fBQdV+4vWHAEeYHr2qNsIt7qKTE2Qw1L5jSLrSgk/waqPgIfMzOyixMXTTYlsx8Lgg7Y/hLZw+rIf9G3oMNIGmRlvpbPYSgV4esE3PafPylj7RYo01USBXP5hTg5B3JgDrdEa4CzMWdmgbMPxnDK+pi5K4iLBEEsrxLePN+Jw6rvfm7TYxUF62OPSKxhCfhD+U2X+tDvVMmoadNOCqBPjcphHK9fvkP19MYrDRPsN3rYnjToLjXnlMp1DHo3ZM3h/IVtj4U34yDQF50g7s6+DoYeZ7bjBkrIIfQ2Ui6gd6xjAcsRUpqUoZnYCh/lrRgYyBgsrBdII0B+rn6HGr2U+qX+2QF7SyChrsZscjfBMIBTkP9lgR1z9Usu2xbeWopa/FPaKV2jhoq8JMiy3okiazQNS2Qd1tQ5XGyU9qKieKIM9g3JS2PIPjsV4HH+CvYlAzFnhSk33BRlLUOlEAvZRKiHJryqv+fXZGYG38U6hFmXOnyv8nVThfjJ2kfoGzgOwgDPF0nHz1f/W0ovO06s=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(136003)(39860400002)(396003)(346002)(451199021)(38100700002)(2906002)(41300700001)(8936002)(8676002)(921005)(7416002)(7406005)(44832011)(5660300002)(36756003)(31696002)(86362001)(31686004)(2616005)(6486002)(6666004)(478600001)(26005)(6512007)(6506007)(186003)(316002)(66476007)(66556008)(83380400001)(66946007)(110136005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZGxMbDJMUVJqMFZIRUU3emMyRUxSUmhoTDdBeDhHdTJLYlg5WEhyQ3BJT0FD?=
- =?utf-8?B?eGxYZzZveGlaVWRFeTBtNUZveHFDTHVwMzNXTU42Mk9ndDlnYVpTSzQ1S2tG?=
- =?utf-8?B?TXd3a1VlRXB6aHUxSCtuSUhjak1sNkNCK1owL1BwY3Q2Vlk5cWxFemJHc1cv?=
- =?utf-8?B?U3JyU1RudGNrenJDZzgxd3lwYTA4Zm9XK2x2MCtPT3E2cXBsOUtDNjhnaklD?=
- =?utf-8?B?Szk4VFlsclNweTN6OE1FUmczalRpODNhVnJjOXpDUmVvSWQrdVY0bmZTK3dP?=
- =?utf-8?B?MEYybEdoVEpDNzlzR1Z6N2MwYVVZdnh4MmVoTG90aGxtZDZ3QXcwK2tZOFJ4?=
- =?utf-8?B?UjE1bU90aXZiaWJ0Wko1STUyOVMwOHFLdEdRWTlBQWZEazdFUi9RZkYzY1pp?=
- =?utf-8?B?bXJBVjFxNlpUMVhzTU9CSDMvY2ZvT0ZRVEdHUVVlZnZHRCt6UUdHUzc1Z04w?=
- =?utf-8?B?SUY5Q084R2NhK09xbktBQkNtc2o5dVZDcm1qNEczeWdWMTVlV0VYVm01aDNx?=
- =?utf-8?B?TzNaa0o3SzhVN2N4c0JUU2d2Q3JvV3BoMGhMSzFETlFRQjFjZzBRUENUS0tt?=
- =?utf-8?B?NC9heXoxZktVRUMvQ1JIV3RJWS94ZFNwbUZ1SDIvMkFHM2p1QkVNR0NHT2lh?=
- =?utf-8?B?RUlpTXZwQTE3ZlFzNEdVTWk5UUhLMDE0dG9NWnErTHRKUE5BSG40cjEwNFp5?=
- =?utf-8?B?S1lzUXU0Z2JQRGNHVjA5dXVaOUE1d0MrQXplT0RSYXI1ODY3WXE4bTd3eWt1?=
- =?utf-8?B?c04vZVVPeFIvOVhDTFN4TGxvL2sveVMwM0JMMk1QR0g5ZG9UbWxTWXBvUWZC?=
- =?utf-8?B?NUVTb2hWVWFDNTVaRFV4Q0xGOVorT2FhbmtidmlFcVZWNEE5OXZuRnZjUThr?=
- =?utf-8?B?U2ZEeEF4T3ZvMnBUc0pFcVk1amErbnhVVlhTS0RVeWxpZ1h3dHJpYTBHR1Fh?=
- =?utf-8?B?Rmsvb2lwcElMR1dwMlFqY1cremxoTW4rcUtrTnNKWS91TFREL0VkRTQ5YlVh?=
- =?utf-8?B?dllwVGF5SldWZWt1MFMrM01iSjVyb2FSUHpLSzJVVTl0NDY0V0M2akhwREpW?=
- =?utf-8?B?aHFOdkpDS0RybWNYVmFZU1Q4SE9SWUxGR04wRUFtNW8wOENVWmM4c2tIdXhQ?=
- =?utf-8?B?Nkp2V0pScDVJMk5qMFl5SVVXb0VmSzZJd1FNL29jbFhhai9NSkpmM2V2a1Jl?=
- =?utf-8?B?VEdON0xCamVBVnJCWXdWNmhnTjM3enhPR0hjV1VlaE82YmVEUy9UTkxRcEVp?=
- =?utf-8?B?ZUM5QzZqZldwQitWdjJpOGsvQllXZ05kYVRlWTdEeWIyOVNuUVZOUXhJQTd6?=
- =?utf-8?B?ZldQOXFOTUE4MXREbkpwdnloS0J1dGoxeGlid2c3Snlrd0NmbGVyVmNESURC?=
- =?utf-8?B?RzVXbzRWVmt3SUx2NS83WWdkcENvT2hrQ0NFa25ZVnBrMTN4VjQzaXI2bmU5?=
- =?utf-8?B?RlNaYnIxaEVzekdCT3RBS2NkMHZaZFdPR21uK2l6T2w1QXZ6U2NEZjlvSGwy?=
- =?utf-8?B?K0hsdkEySFpUeVhWTE82UkNQMnJUMGZ1clJnSk9UR2YwSGl2WXZhZXNJSTBl?=
- =?utf-8?B?OW5jM0dwTkJGNG0rdWYrSncxSHA5SURQaXVWWkU4cXROclB3Rzl4SUdteXp4?=
- =?utf-8?B?b1JHV1dha0tNd1ZZTzdkK2xVMXRxRVhwS3I2a0duUnB5bmIwV1BKS2FHNWdP?=
- =?utf-8?B?QXpvcm9idVRSajYwNWpEZHcyMkNGdkpxOE1nWWRlWDArOTVCTW9YOFlNem55?=
- =?utf-8?B?akdPZzVsQjN3TGR1enltZlQ1ZzhvUGNFdlhYUVRtc0lOeTg5Z0hBOEVlVE5L?=
- =?utf-8?B?VmVwU2p0WmhsN1M2WHRva2lCZC9wOE83UkZ1alVTSjBpQU5URWxtcUNvdURD?=
- =?utf-8?B?L3hwSHIvWjRiTjZqQ0Fzem9Ud1FZNHVwMW5BbCsyWGpKYXM3dDlGa0tYanQy?=
- =?utf-8?B?eXdhNmdzV2tLWXNqcFlWWU11SngwS25yN1JPZFhhYXIzbFkzb3VETTRLRDgw?=
- =?utf-8?B?QVdUS1QwOFNSYzU2R1FXeTFHTzhHMEhJZUhjUGxBR0dyUE5nQnFTOWpKMjVF?=
- =?utf-8?B?REpxd0JZbEs3YVBXeWk1WUp6Y2M3bGtiUFVCSnM0aHpGZm5qb0NTRno1aWNr?=
- =?utf-8?Q?3IdBNloqhKkgL7B6aNOckNTZJ?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dnRMV1FXVWcyUytMM0NLVmMxTlFFREFZRWc3NU9PL0FpaEdTcjA2bkZkTGt1?=
+ =?utf-8?B?YUFqL2x6NUZLVTdTR2lMOERDWnJmVnBPMS83enovL24zOEQ0YmZLNXROakNu?=
+ =?utf-8?B?ZVd6VVNac2hzK2hDZGJGUmJQUXEzd2RGZkR1V2JmTWlGVjhmcmFmdHE1T1NO?=
+ =?utf-8?B?Ry85QkRjNVN6K3dvN2hTdjUzNmJxQXhuRmRpT1dZNmFNTmg5K0pvaGZKSUdU?=
+ =?utf-8?B?L3kybW1ScVpHY0tsU2ZpQzRYd1huTVdFdXVaanhTb01qcEwwbXBpRlYyMzAw?=
+ =?utf-8?B?QmNzQzkwbDlnM2Z0a2tqcWFJVU1BZDd2K1BQbE41dkpjNThSS2JtSy9hN2hB?=
+ =?utf-8?B?clZCakovYmg2MjRpQkIrTEsyeE5uckVUb0U0OGtMSFgwY1NBVERhS0lkaDha?=
+ =?utf-8?B?ei9PTHkvNU53emVQVFJMMWlZb09jL0YwSWd1MVczdDZNSnBpL2hnTGdCRWJS?=
+ =?utf-8?B?TlBTanp3S1lGWStzUndCNU9wUlFQcFJSM0pkbm1qVTJUQTcwamIxRW82Zmd3?=
+ =?utf-8?B?RE5saXFBd2tVczFtdkJjZHVoMWtQbnE4NDlESDd2UXBpRmNTRzNFazJpdm84?=
+ =?utf-8?B?dUVqUzhaMTRFR2JBaTRTMW82bW12QmdBVU53VWJGK1lBd3hLZ0RTQVRQdkxK?=
+ =?utf-8?B?Qk1LTC9oUnF0bFlqUmNJazVxMjB4NGl3TXNtZU9nSVZsUUhYRFZoVjcrNnp2?=
+ =?utf-8?B?QUJOZFBSckJYcm03NXpuNzg3T1FkeDFVbjkrVmJQR2hyTGlZbklBb1FJcVNs?=
+ =?utf-8?B?eFcyTEFVbDJtWlJ4UHVPa2lNZmIvVG5iRzhFYWl6QiswelZnRlN3ZSt6TlR3?=
+ =?utf-8?B?ZlNPYkRwbnNlc1Zsdm92OU5ON0djN1VtTCtSMW84dHRia1NaVm9CM21mKzJM?=
+ =?utf-8?B?M1B3aGNvRmpMQkY4VjlZVXEwQTBqdit2eERVRStDRlhYaVpMLzZ1K1d3MmJ6?=
+ =?utf-8?B?UGc4Y2d4Wlo2VU1JcWhrcUJhUDNUeWZJVjR2aFJHdHZiNVkwL1dmdFBidXAx?=
+ =?utf-8?B?RVljeWpzVitFbEZKdnZqUW1VYVlKSFpkVmtlUVVLaitENDlnd2VTUUREUHRB?=
+ =?utf-8?B?ZzlsblZsM1h5OTIyWGt3U05kbmVBMENBR0NTVitPVUdZYktQSU9OVGtwV0ZW?=
+ =?utf-8?B?YWxjOG1aSVJjaHRhSmc2Qi94UTEyQ3NkU0FSR3ZQT2Z2cll5K2pUbnpEYUFs?=
+ =?utf-8?B?d0YyVGVucmxoeGJiNUtMclB4Z3pCWUFlRXRmdGRSUFFJdkFHOFhMZDBXUnNZ?=
+ =?utf-8?B?S2JWQzIybCs3a2pld2VqZHIwdTZraWpwM0dKS2pvMDlEMFl5c2UzcUlrR2xN?=
+ =?utf-8?B?RUtBY1BQaG9GVkRJQ0FVOUlwSkRTK2x5M2FaUWVBQWdMdDl4QjZFRGdlOFI5?=
+ =?utf-8?B?OHN6TXU3dDNLVUJuU0xXL21OdUxsZ0RFZ1RUVWxBbWw4N0QyOUxKbjJEaHUv?=
+ =?utf-8?B?Vy81aHdXS0pGdGk0bkZVbHBOd0FxS2pwUEdrb2JDZjRVZXNtOWM2STd3NFEw?=
+ =?utf-8?B?TUE5dXJUKzQ3bFZVU3ZBMGRJL2JkMms4SXZ6alk3blUreERmR3A5MlEvSmhE?=
+ =?utf-8?B?SHJCclg4ZllWNit6QUVaeHJueUJGQllGanI3WVRPcXZKMXIxQWVobFVRVmRQ?=
+ =?utf-8?B?WlI5L2ZFOGNsLy9qTUN6RWhvSWlrYzhlUE94b2ttYmUwY0Q4R2FJWlBzSTIv?=
+ =?utf-8?B?YzJsUXgxMG5QYnppYkc3aTQ5SlY0Nlc5VzVxajJGZ0hleU1GTTlUK2RhYmpO?=
+ =?utf-8?B?UUpqRjFSQi8rMG1tZlJkZEg2TksxL09qTElJVStvOXJVMHJwdjZadWlHM0w2?=
+ =?utf-8?B?Vk1SVWNzUGY2YmFWZnl5VlUzQmlwZFQzTkNoWXN2c0FaN04zZUszcURmYkRy?=
+ =?utf-8?B?emtSSlVKbkRRdGpMaFJTREtrM2RDd1BOY1F2cjY0dExzdjlsY01raTRUS01G?=
+ =?utf-8?B?R2MzYjdONzRhZWcyUnkzanB6SEVsWGVQN1AwUU9LNnJ6eTNOeUF6bktESHZr?=
+ =?utf-8?B?YlhDdGZudUg5L1BJcW9mWm1YRFBZUElucmcydlNxaVYyVnFnSkxrOXhPZ3Mz?=
+ =?utf-8?B?cExoZDJraGVBWGxuemVBNldwWTZReW44NzgzWWhDWnRFSWJJSStwSXpRVk1h?=
+ =?utf-8?Q?yGgGgXIXsW99Vu1VAx/UdXcyk?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba186619-0b95-49fe-0dbd-08db4afb4a04
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b2fb9be-fb28-4f50-d4b3-08db4afbd74e
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2023 10:52:14.5574
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2023 10:56:11.6547
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7x8+XOpvyaKDiBeiNm8UsRzb6GeDWRU1JOesEGYOs/TeY9C5a7RAgvluU6i+JKe6fcpC/l8heDEWP0gs+vdi1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7377
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5rP2AFRmUtyQctlF6rNlEQYO0ZOvs8eg9THK7lTXwSwmERBcvdAUx+vP6ECXxFQmXqYpYEXD0E/6uXZ/RtfaQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6880
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 29-Apr-23 11:04 AM, Ian Rogers wrote:
-> Rather than limit the --cputype argument for "perf list" and "perf
-> stat" to hybrid PMUs of just cpu_atom and cpu_core, allow any PMU.
+> @@ -269,6 +279,16 @@ percore			{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_PERCORE); }
+>  aux-output		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_OUTPUT); }
+>  aux-sample-size		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_AUX_SAMPLE_SIZE); }
+>  metric-id		{ return term(yyscanner, PARSE_EVENTS__TERM_TYPE_METRIC_ID); }
+> +cpu-cycles|cycles				{ return hw_term(yyscanner, PERF_COUNT_HW_CPU_CYCLES); }
+> +stalled-cycles-frontend|idle-cycles-frontend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
+> +stalled-cycles-backend|idle-cycles-backend	{ return hw_term(yyscanner, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
+> +instructions					{ return hw_term(yyscanner, PERF_COUNT_HW_INSTRUCTIONS); }
+> +cache-references				{ return hw_term(yyscanner, PERF_COUNT_HW_CACHE_REFERENCES); }
+> +cache-misses					{ return hw_term(yyscanner, PERF_COUNT_HW_CACHE_MISSES); }
+> +branch-instructions|branches			{ return hw_term(yyscanner, PERF_COUNT_HW_BRANCH_INSTRUCTIONS); }
+> +branch-misses					{ return hw_term(yyscanner, PERF_COUNT_HW_BRANCH_MISSES); }
+> +bus-cycles					{ return hw_term(yyscanner, PERF_COUNT_HW_BUS_CYCLES); }
+> +ref-cycles					{ return hw_term(yyscanner, PERF_COUNT_HW_REF_CPU_CYCLES); }
 
-I've couple of doubts:
+These are generic terms and thus can be added to _any_ pmus. Ex:
 
-1. Can you please explain intention to do this esp for perf list. Since, IIUC,
-   `perf list --unit` option provide the same functionality.
+Before:
+```
+$ sudo ./perf stat -e amd_l3/cycles/ -C 0 -- sleep 1
+event syntax error: 'amd_l3/cycles/'
+                            \___ unknown term 'cycles' for pmu 'amd_l3'
+```
 
-2. Since we are already specifying pmu name for non-standerd/arch-specific
-   events like `pmu/attributes/`, I'm not sure where `perf stat --cputype=pmu`
-   is useful. Can you please explain perf stat usability aspect for non-hybrid
-   pmus.
+After:
+```
+$ sudo ./perf stat -e amd_l3/cycles/ -C 0 -vv -- sleep 1
+Control descriptor is not initialized
+------------------------------------------------------------
+perf_event_attr:
+  size                             136
+  config                           0xb00000000
+  sample_type                      IDENTIFIER
+  read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+  disabled                         1
+  inherit                          1
+  exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8
+sys_perf_event_open failed, error -2
+Warning:
+amd_l3/cycles/ event is not supported by the kernel.
+failed to read counter amd_l3/cycles/
 
-3. What am I missing here:
+ Performance counter stats for 'CPU(s) 0':
 
-   $ sudo ./perf stat --cputype=amd_df -e amd_l3/event=0x4,umask=0xff/ -C 0 -- sleep 1
-    Performance counter stats for 'CPU(s) 0':
+   <not supported>      amd_l3/cycles/
 
-           108,267      amd_l3/event=0x4,umask=0xff/                                         
+       1.059391819 seconds time elapsed
+```
 
-       1.061290167 seconds time elapsed
+Here `type=0` which means perf is trying to open event on HW pmu instead
+of amd_l3//. `config` is 0xb00000000 where 0xb is amd_l3 pmu type:
 
-3. Also, IMHO, using --cputype option to specify _pmu name_ is bit odd.
+$ cat /sys/bus/event_source/devices/amd_l3/type
+11
 
-> 
-> Note, that if cpu_atom isn't mounted but a filter of cpu_atom is
-> requested, then this will now fail. As such a filter would never
-> succeed, no events can come from that unmounted PMU, then this
-> behavior could never have been useful and failing is clearer.
-
-I'm hitting a segfault if I use non-existing pmu:
-
-$ sudo ./perf list --cputype=random
-WARNING: cputype is not supported!
-Segmentation fault
-
-
-> @@ -443,8 +443,8 @@ int cmd_list(int argc, const char **argv)
->  			    "Print information on the perf event names and expressions used internally by events."),
->  		OPT_BOOLEAN(0, "deprecated", &default_ps.deprecated,
->  			    "Print deprecated events."),
-> -		OPT_STRING(0, "cputype", &hybrid_name, "hybrid cpu type",
-> -			   "Limit PMU or metric printing to the given hybrid PMU (e.g. core or atom)."),
-> +		OPT_STRING(0, "cputype", &cputype, "cpu type",
-> +			   "Limit PMU or metric printing to the given PMU (e.g. cpu, core or atom)."),
-
-man perf-list does not describe --cputype. I think we should add it as part
-of this patch?
-
-Similarly, man perf-stat also needs to be updated.
-
-
-> +const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
-> +{
-> +	struct perf_pmu *pmu = NULL;
-> +
-> +	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
-> +		if (!strcmp(pmu->name, str))
-> +			return pmu;
-> +		/* Ignore "uncore_" prefix. */
-> +		if (!strncmp(pmu->name, "uncore_", 7)) {
-> +			if (!strcmp(pmu->name + 7, str))
-> +				return pmu;
-
-Any specific reason to ignore "uncore_"? IMHO, ignoring prefix of some
-pmus and not of others is bit confusing for naive user.
+Not sure if this is expected behavior.
