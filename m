@@ -2,201 +2,208 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF27C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 17:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E2AC77B7E
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 18:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234147AbjEBR5V (ORCPT
+        id S233930AbjEBSAV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 13:57:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43678 "EHLO
+        Tue, 2 May 2023 14:00:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233914AbjEBR5Q (ORCPT
+        with ESMTP id S233331AbjEBSAU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 13:57:16 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6437810FF
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 10:57:13 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-330ec047d3bso132075ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 10:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683050232; x=1685642232;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rScdh7dUaDcvbRbmVDEX55qD+T0dpr5owrV8N/eD0dA=;
-        b=01egEKqpVQq3zMLOyDcrYh0xrwtLFhJxd0dNhdA8A56VPaKEqtGAKIZjwVIHLzPPHA
-         dmudT5pfDN9Tl0DsX17OlYUVajjN4MQ6EEL+Vgbws/Tw+oXkyDlfxO0ujN0iDaFsN5wu
-         8aFpf/YG59WLV8cObSr3NRu5XPdKwmqV4999AakiPqFyUbsUT/7VeOc8Sw6YXgxOF48d
-         u9NVLZIrskWynhbziBKh3ZZadTXZH4vxJGta9XMs0EQiAzAwH9dWfKbJCjkdpfsXKKIL
-         ZVqfYWL2jCAWyG3m9dFeZuiiGxm1wXisXJEE5Lpes/1si3GTPhiwESnZO5ogUOh5AlpX
-         VxsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683050232; x=1685642232;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rScdh7dUaDcvbRbmVDEX55qD+T0dpr5owrV8N/eD0dA=;
-        b=YzGAc8J/++tal3HiPKGjenO7yzXRUcjW4orD0HY5ty/3l4cXZC4ICooUgDhehwXcZn
-         f3lnFDqVjp+iVayrY3LPEPmUIuVqqGPvBAXzd0SJrDLz7k/6+XU3TPx+zPrmd7KEX+ow
-         CoBBwWWZGikCqvTVQpqHWy7tQK+k9PFxmjRgX0bgMRc0AX15yyAQiM4ZmIUSfx+xgCsh
-         Yao7KGPBr1ZurNX5Gjbl1+lTb8ZQhQzNAQOMqv42y1Dx0o7sqGi1vo5kP70OxN2+FaU7
-         5r9s8v+rjdmscLhCoHlXsUkSzVe+f8uX/5EnE2lLFqCC8XfbjFG2X0kVXEC4po5G5EjV
-         mnpA==
-X-Gm-Message-State: AC+VfDxOgQn7FDGw1lheI2siTewoHpGXOOd5G/BnNuCO4U9nNxV+nI+O
-        i33QPEfKqRkvt/J1sJLEFDmeXeBrpPWiz/k66x4Plg==
-X-Google-Smtp-Source: ACHHUZ4HFL8j2FPxLAmqZpis463KY+tfMVTDTzPHNZCq8y3Xim++M3nzIcH1RbFRUNHdbHQrGCiihL8OzrbggI9E1OM=
-X-Received: by 2002:a05:6e02:1bcc:b0:32b:1332:3d08 with SMTP id
- x12-20020a056e021bcc00b0032b13323d08mr30204ilv.0.1683050232085; Tue, 02 May
- 2023 10:57:12 -0700 (PDT)
+        Tue, 2 May 2023 14:00:20 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CF0B19A5;
+        Tue,  2 May 2023 10:59:59 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 342HtCfP018285;
+        Tue, 2 May 2023 17:59:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=tKOcmURnemGD3X9MwKKbA1wBzSOBFjask02rGsHEkFI=;
+ b=pGW42QcU4OvHnRCzuZyz+bp8b0W5Bpprkj+RsYymzNlLzXNDg/gWYkLPY7NhtKi4FA0B
+ zHqLzMOPGJfyXTlOBipxG+bC1ot2mXLX87mF76LlXelLTOfgjhykuI8RWrHNAI2rSoOp
+ OCuEIUa38azH84QaUER6qhyDyqyWKrkcwjwsj7aMsYFV8+1c8LmKHcKg9YVXFT0VkM41
+ 8OMzxtH0w/tfs/MZV/h2i9i9HyYgG6EV4T1bfswB0WbCYOaOs7dxviKKGR0IWQCLfH8p
+ L9n6UBCmEikHSdghZrXsEkVnoTqJVKAMe64P5f2cXUGp7trdHWfzA2TnEhEg01mvvPsK bg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qb7bar2y2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 May 2023 17:59:23 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 342HwaH5031083;
+        Tue, 2 May 2023 17:59:22 GMT
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qb7bar2wx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 May 2023 17:59:22 +0000
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 342GGd9D009976;
+        Tue, 2 May 2023 17:59:20 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([9.208.130.98])
+        by ppma02dal.us.ibm.com (PPS) with ESMTPS id 3q8tv7vn30-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 May 2023 17:59:20 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+        by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 342HxHXd42664280
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 May 2023 17:59:17 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0286D58056;
+        Tue,  2 May 2023 17:59:17 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6800558060;
+        Tue,  2 May 2023 17:59:10 +0000 (GMT)
+Received: from [9.60.89.243] (unknown [9.60.89.243])
+        by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Tue,  2 May 2023 17:59:10 +0000 (GMT)
+Message-ID: <2d023b34-643f-33f7-af5e-7e6dce2eed46@linux.ibm.com>
+Date:   Tue, 2 May 2023 13:59:09 -0400
 MIME-Version: 1.0
-References: <20230429053506.1962559-1-irogers@google.com> <20230429053506.1962559-36-irogers@google.com>
- <91b218e9-1650-a032-3b23-be6134c33e4f@amd.com>
-In-Reply-To: <91b218e9-1650-a032-3b23-be6134c33e4f@amd.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 2 May 2023 10:57:00 -0700
-Message-ID: <CAP-5=fVj5QxOvLHMetc00e=c7B24uOX50ormxVivWtzvYupddw@mail.gmail.com>
-Subject: Re: [PATCH v3 35/46] perf parse-events: Support hardware events as terms
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v6 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing to
+ file-backed mappings
+Content-Language: en-US
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        David Hildenbrand <david@redhat.com>
+Cc:     Peter Xu <peterx@redhat.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Rob Herring <robh@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Leo Yan <leo.yan@linaro.org>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Mika Penttila <mpenttil@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        "Theodore Ts'o" <tytso@mit.edu>
+References: <f0acd8e4-8df8-dfae-b6b2-30eea3b14609@redhat.com>
+ <3c17e07a-a7f9-18fc-fa99-fa55a5920803@linux.ibm.com>
+ <ZFEqTo+l/S8IkBQm@nvidia.com> <ZFEtKe/XcnC++ACZ@x1n>
+ <ZFEt/ot6VKOgW1mT@nvidia.com>
+ <4fd5f74f-3739-f469-fd8a-ad0ea22ec966@redhat.com>
+ <ZFE07gfyp0aTsSmL@nvidia.com>
+ <1f29fe90-1482-7435-96bd-687e991a4e5b@redhat.com>
+ <ZFE4A7HbM9vGhACI@nvidia.com>
+ <6681789f-f70e-820d-a185-a17e638dfa53@redhat.com>
+ <ZFFMXswUwsQ6lRi5@nvidia.com>
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+In-Reply-To: <ZFFMXswUwsQ6lRi5@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: SfvWhzu5WAhhXbJnJtyFvuzAckGDG6lf
+X-Proofpoint-ORIG-GUID: uR7mojU5kWzIiwCQMRwlrZc2zx-Sg8rX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-02_10,2023-04-27_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 impostorscore=0 mlxscore=0 bulkscore=0
+ suspectscore=0 mlxlogscore=999 adultscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2303200000 definitions=main-2305020151
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 2, 2023 at 3:56=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.com=
-> wrote:
->
-> > @@ -269,6 +279,16 @@ percore                  { return term(yyscanner, =
-PARSE_EVENTS__TERM_TYPE_PERCORE); }
-> >  aux-output           { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
-AUX_OUTPUT); }
-> >  aux-sample-size              { return term(yyscanner, PARSE_EVENTS__TE=
-RM_TYPE_AUX_SAMPLE_SIZE); }
-> >  metric-id            { return term(yyscanner, PARSE_EVENTS__TERM_TYPE_=
-METRIC_ID); }
-> > +cpu-cycles|cycles                            { return hw_term(yyscanne=
-r, PERF_COUNT_HW_CPU_CYCLES); }
-> > +stalled-cycles-frontend|idle-cycles-frontend { return hw_term(yyscanne=
-r, PERF_COUNT_HW_STALLED_CYCLES_FRONTEND); }
-> > +stalled-cycles-backend|idle-cycles-backend   { return hw_term(yyscanne=
-r, PERF_COUNT_HW_STALLED_CYCLES_BACKEND); }
-> > +instructions                                 { return hw_term(yyscanne=
-r, PERF_COUNT_HW_INSTRUCTIONS); }
-> > +cache-references                             { return hw_term(yyscanne=
-r, PERF_COUNT_HW_CACHE_REFERENCES); }
-> > +cache-misses                                 { return hw_term(yyscanne=
-r, PERF_COUNT_HW_CACHE_MISSES); }
-> > +branch-instructions|branches                 { return hw_term(yyscanne=
-r, PERF_COUNT_HW_BRANCH_INSTRUCTIONS); }
-> > +branch-misses                                        { return hw_term(=
-yyscanner, PERF_COUNT_HW_BRANCH_MISSES); }
-> > +bus-cycles                                   { return hw_term(yyscanne=
-r, PERF_COUNT_HW_BUS_CYCLES); }
-> > +ref-cycles                                   { return hw_term(yyscanne=
-r, PERF_COUNT_HW_REF_CPU_CYCLES); }
->
-> These are generic terms and thus can be added to _any_ pmus. Ex:
->
-> Before:
-> ```
-> $ sudo ./perf stat -e amd_l3/cycles/ -C 0 -- sleep 1
-> event syntax error: 'amd_l3/cycles/'
->                             \___ unknown term 'cycles' for pmu 'amd_l3'
-> ```
->
-> After:
-> ```
-> $ sudo ./perf stat -e amd_l3/cycles/ -C 0 -vv -- sleep 1
-> Control descriptor is not initialized
-> ------------------------------------------------------------
-> perf_event_attr:
->   size                             136
->   config                           0xb00000000
->   sample_type                      IDENTIFIER
->   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->   disabled                         1
->   inherit                          1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8
-> sys_perf_event_open failed, error -2
-> Warning:
-> amd_l3/cycles/ event is not supported by the kernel.
-> failed to read counter amd_l3/cycles/
->
->  Performance counter stats for 'CPU(s) 0':
->
->    <not supported>      amd_l3/cycles/
->
->        1.059391819 seconds time elapsed
-> ```
->
-> Here `type=3D0` which means perf is trying to open event on HW pmu instea=
-d
-> of amd_l3//. `config` is 0xb00000000 where 0xb is amd_l3 pmu type:
->
-> $ cat /sys/bus/event_source/devices/amd_l3/type
-> 11
->
-> Not sure if this is expected behavior.
+On 5/2/23 1:46 PM, Jason Gunthorpe wrote:
+> On Tue, May 02, 2023 at 06:32:23PM +0200, David Hildenbrand wrote:
+>> On 02.05.23 18:19, Jason Gunthorpe wrote:
+>>> On Tue, May 02, 2023 at 06:12:39PM +0200, David Hildenbrand wrote:
+>>>
+>>>>> It missses the general architectural point why we have all these
+>>>>> shootdown mechanims in other places - plares are not supposed to make
+>>>>> these kinds of assumptions. When the userspace unplugs the memory from
+>>>>> KVM or unmaps it from VFIO it is not still being accessed by the
+>>>>> kernel.
+>>>>
+>>>> Yes. Like having memory in a vfio iommu v1 and doing the same (mremap,
+>>>> munmap, MADV_DONTNEED, ...). Which is why we disable MADV_DONTNEED (e.g.,
+>>>> virtio-balloon) in QEMU with vfio.
+>>>
+>>> That is different, VFIO has it's own contract how it consumes the
+>>> memory from the MM and VFIO breaks all this stuff.
+>>>
+>>> But when you tell VFIO to unmap the memory it doesn't keep accessing
+>>> it in the background like this does.
+>>
+>> To me, this is similar to when QEMU (user space) triggers
+>> KVM_S390_ZPCIOP_DEREG_AEN, to tell KVM to disable AIF and stop using the
+>> page (1) When triggered by the guest explicitly (2) when resetting the VM
+>> (3) when resetting the virtual PCI device / configuration.
+>>
+>> Interrupt gets unregistered from HW (which stops using the page), the pages
+>> get unpinned. Pages get no longer used.
+>>
+>> I guess I am still missing (a) how this is fundamentally different (b) how
+>> it could be done differently.
+> 
+> It uses an address that is already scoped within the KVM memory map
+> and uses KVM's gpa_to_gfn() to translate it to some pinnable page
+> 
+> It is not some independent thing like VFIO, it is explicitly scoped
+> within the existing KVM structure and it does not follow any mutations
+> that are done to the gpa map through the usual KVM APIs.
+> 
+>> I'd really be happy to learn how a better approach would look like that does
+>> not use longterm pinnings.
+> 
+> Sounds like the FW sadly needs pinnings. This is why I said it looks
+> like DMA. If possible it would be better to get the pinning through
+> VFIO, eg as a mdev
 
-I agree this is definitely a change, I'm not sure what we can do to
-handle this better. Firstly, let's not be overly negative, the code
-fixes it so that "branch-brs" (an AMD sysfs event) is now a valid
-event name rather than a parse error. For the example above we have
-the case of an unsupported event now not giving a parse error, only
-possible as all PMUs were scanned, but giving an open error as the
-event name matches in the list of hardware events but the extended
-type encoding of the PMU yields a PMU that can't handle it.
+Hrm, these are today handled as a vfio-pci device (e.g. no mdev) so that would be a pretty significant change.
 
-I think parsing should be concerned with taking information to yield a
-struct perf_event_attr. When it gets into the game of testing PMUs for
-support then we easily get test regressions, as the test system may
-lack the PMUs that are part of the test. We also get issues on hybrid
-like PERF_TYPE_HW_CACHE events being supported by one PMU and not the
-other. The existing hybrid behavior is to silently skip the events
-that aren't supported - tested with a perf_event_open. The behavior
-after these patches is to open the event on both PMUs but display not
-supported/counted generally on the atom PMU. So the coding decision
-there was to say parsing and opening are separate stages, and the
-correct place to fail was in the open.
+> 
+> Otherwise, it would have been cleaner if this was divorced from KVM
+> and took in a direct user pointer, then maybe you could make the
+> argument is its own thing with its own lifetime rules. (then you are
+> kind of making your own mdev)
 
-We could change the event parsing for this case, have different parser
-notions of core PMU and every PMU, then only allow the hardware events
-on the core PMU. This would require hard coding a core PMU list into
-the parser and I'm not keen on that.
+Problem there is that firmware needs both the location (where to indicate the event) and the identity of the KVM instance (what guest to ship the GISA alert to) so I don't think we can completely divorce them.
 
-Thanks,
-Ian
+> 
+> Or, perhaps, this is really part of some radical "irqfd" that we've
+> been on and off talking about specifically to get this area of
+> interrupt bypass uAPI'd properly..
+
+I investigated that at one point and could not seem to get it to fit; I'll have another look there.
+
+
+
