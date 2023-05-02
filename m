@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DED50C77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 20:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE6C5C77B78
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 20:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229864AbjEBUJz (ORCPT
+        id S229924AbjEBURJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 16:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43270 "EHLO
+        Tue, 2 May 2023 16:17:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229849AbjEBUJz (ORCPT
+        with ESMTP id S229502AbjEBURE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 16:09:55 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B1419BE
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 13:09:52 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-32f4e0f42a7so151725ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 13:09:52 -0700 (PDT)
+        Tue, 2 May 2023 16:17:04 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0CFC2683
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 13:16:50 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-33124b0dd85so150485ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 13:16:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683058192; x=1685650192;
+        d=google.com; s=20221208; t=1683058610; x=1685650610;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=813DkMObVqAM93FFVGWHCCH8FioK14LS5zdDr6BTj+E=;
-        b=cVkde0VGivBrUYaejgu8ZwEzjZzdCv8XscNE1zxihTCtyTI0zFWw8/OzNlS0Dbu058
-         8BSnSbUjxGlo4P4lSdJNtMpVbjB0Zca3vycKWBz1Lox9WKh507yA9cXnJoPPuvWSMex7
-         ELj16xq6hCgMI56ZdU500t4N8smU+oyF5JU/s9vyaHNAwO1jsyfaMxY6W4oRFTv69wUw
-         aLbFp/jFV12V2f1mgpHKBsj/JEO02gssz9BKxoDp6rBx85vOtY46KlKw/AkpdPAVkVC2
-         T2aGL096XyISN13XS+SWE489dZb0hrteWMumdXlsk/NdU8GB5eeQkCnMrQ5M73Q6KERf
-         cZmw==
+        bh=Rld5ybTKQ6TnPbSfs5BNPMPd6l7llksJVQ7eLenv4TY=;
+        b=hcUfAjSFSEHsDi5Xg7PaULZGb74SHlouCuI7bp5i8RylqblFX+wGW3P697iZfG42kR
+         jPyF+9wT6l28WsF3+oiqXxX6vJqBt1XJKpqj4pguoZamuJ5rXESZco+UL0Y4vBNWwlu7
+         jFIPH3/Fqo+dmFIN4aOvn1E4JsjZBmAdX8gpcaYHea4F339SSnJ3WmjLtdV/rJZdP6En
+         HKnvCMP7B1Qdd8Dg0CEsrEV/MHWLWlAw8mG9YpsRK+FSVVGT0g8mMgDu21/kKQGe4nHO
+         ZL2DKN3v2kqOtS/h0A2huEr4QZWRpTiXmIL0Z8jsbOUFO0mIY7bGkIqWh/JUF4UsbXAg
+         9d0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683058192; x=1685650192;
+        d=1e100.net; s=20221208; t=1683058610; x=1685650610;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=813DkMObVqAM93FFVGWHCCH8FioK14LS5zdDr6BTj+E=;
-        b=GSgnTO5CtveWoq86lL3S6bOgeegYw2Z+loNUmNc8mnuGLdRte+GPvez6N885uctuBc
-         AO0C4iQIHuoU5jOtdUu4RqYI2HCY6Ygwz3n99YbAFHM7+z5tbIvrWOU53FoSHeWBVhp6
-         Ct1wABei/IAoLhG72Le83v4J2RB0GAjHuA+F8yWBkVMTfs8Jn4jJzdyCK9RBG21ansUV
-         gUXFkyQyI2+eUAHqzl6Y1FZy9LjPGgh+mdGMwnxnXzjLZZh/L/ScNr9O4Ufut19XXHeo
-         8xWuB9KL+OEjzpztw7w64+QfTDHfnN+Ne/qaIvEj9myOS4QWdLbzeEc0xhU64TlgEVGD
-         xtow==
-X-Gm-Message-State: AC+VfDx/JxdwHdgdV0VpknrfcjXy3Q4JVckdrVyxcZvb3nre4yLGk63J
-        qUAMoQg0p2zQlIp19nSqiWDu3SzwTBta25tPLYIdrw==
-X-Google-Smtp-Source: ACHHUZ4Q3i+mCqTUQgzum2pwURp+OqBha0yZh50wmkHPi2KfD+PQuKICDnLb7L7UbqiSnERIxYcdM5b4hiof8m3FmLc=
-X-Received: by 2002:a05:6e02:1aa7:b0:32f:7715:4482 with SMTP id
- l7-20020a056e021aa700b0032f77154482mr74904ilv.4.1683058191787; Tue, 02 May
- 2023 13:09:51 -0700 (PDT)
+        bh=Rld5ybTKQ6TnPbSfs5BNPMPd6l7llksJVQ7eLenv4TY=;
+        b=IcVstlXZVXKgzeK6I+NixLQbptKbhIBx+fiz624Bji7Si/xFjq647GFZrV8rbOyObn
+         rUss2nUchBCdhMhf6QS7LHrHr7cdfgk5El5GjKW/Z1u51pkZc7fsqULuCoX1oT76JTxe
+         DJLKi7TonNRJqxhKkhYSbOAkVo0Bhjk55QBAgZkBeSBX7h5lW+uk0S5CkE+1gLaYGwIh
+         6y3vj0nRQttBBGwjwvwoNML5QUXz05OuY2T65ZGuaPf9RE7idukbZQ/+7tDa5/dqDafq
+         JocW2paK3UQM6pQZ5PJMfIkYsNgO4Ne3QvCUK0HJNxVKcDzybxLrh1wZg0Fu27Z+ssAI
+         m6ZQ==
+X-Gm-Message-State: AC+VfDyjtRMi52zKKYFe9VAitJB7r35X+jr4riy62lLqw77t4dU4cnrl
+        socJCblBsgo50HEqV4rsHskLTPKOxckfLIHWU5SIDg==
+X-Google-Smtp-Source: ACHHUZ5TeqJNjsrq9npV6a4cuF9kIkKkKG7+MLjwQOL/lHh4sbdYaXRcgHLsZuOMMAaRKkiGkXdF7muyXn0BWvYj+UI=
+X-Received: by 2002:a05:6e02:1c0e:b0:32f:7703:63bb with SMTP id
+ l14-20020a056e021c0e00b0032f770363bbmr46519ilh.19.1683058609755; Tue, 02 May
+ 2023 13:16:49 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230429053506.1962559-1-irogers@google.com> <20230429053506.1962559-33-irogers@google.com>
  <a5153c87-044a-655d-acb4-aff9c33ab686@amd.com>
 In-Reply-To: <a5153c87-044a-655d-acb4-aff9c33ab686@amd.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 2 May 2023 13:09:40 -0700
-Message-ID: <CAP-5=fW28bBVuTbpF_5bwHw39=Kct5w1UjjBuVeLe_o+-6AWXA@mail.gmail.com>
+Date:   Tue, 2 May 2023 13:16:38 -0700
+Message-ID: <CAP-5=fVBB2b8WdUhcsPph=W5YzgdXcj13qcOxEGh5+h918whFQ@mail.gmail.com>
 Subject: Re: [PATCH v3 32/46] perf stat: Make cputype filter generic
 To:     Ravi Bangoria <ravi.bangoria@amd.com>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -107,12 +107,7 @@ On Tue, May 2, 2023 at 3:52=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.com=
 > 1. Can you please explain intention to do this esp for perf list. Since, =
 IIUC,
 >    `perf list --unit` option provide the same functionality.
-
-I agree with you. The option already exists and I think we should just
-move this option to being deprecated/hidden:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
-ls/lib/subcmd/parse-options.h#n46
-
+>
 > 2. Since we are already specifying pmu name for non-standerd/arch-specifi=
 c
 >    events like `pmu/attributes/`, I'm not sure where `perf stat --cputype=
@@ -120,13 +115,7 @@ c
 >    is useful. Can you please explain perf stat usability aspect for non-h=
 ybrid
 >    pmus.
-
-Completely agreed. This patch series is trying to remove the
-duplicated code introduced by the hybrid changes. In this case I
-didn't want to remove an option, and potentially break users of that
-option, as part of fixing things up. A lot of what you are saying here
-I added as comments to the original patch series.
-
+>
 > 3. What am I missing here:
 >
 >    $ sudo ./perf stat --cputype=3Damd_df -e amd_l3/event=3D0x4,umask=3D0x=
@@ -136,17 +125,9 @@ ff/ -C 0 -- sleep 1
 >            108,267      amd_l3/event=3D0x4,umask=3D0xff/
 >
 >        1.061290167 seconds time elapsed
-
-The cputype applies to wildcard-ed events. So on hybrid:
-$ perf stat -e cycles true
-will open cycles on cpu_atom and cpu_core, the
-parse_events__filter_pmu function is used skip PMUs based on cputype.
-
+>
 > 3. Also, IMHO, using --cputype option to specify _pmu name_ is bit odd.
-
-Right, when the "feature" was added I would have preferred it as PMU
-rather than CPU.
-
+>
 > >
 > > Note, that if cpu_atom isn't mounted but a filter of cpu_atom is
 > > requested, then this will now fail. As such a filter would never
@@ -158,13 +139,8 @@ rather than CPU.
 > $ sudo ./perf list --cputype=3Drandom
 > WARNING: cputype is not supported!
 > Segmentation fault
-
-Will fix in v4. The warning should be fatal/exit rather than try to
-read the PMU's name.
-
-Thanks,
-Ian
-
+>
+>
 > > @@ -443,8 +443,8 @@ int cmd_list(int argc, const char **argv)
 > >                           "Print information on the perf event names an=
 d expressions used internally by events."),
@@ -182,8 +158,11 @@ rt
 > of this patch?
 >
 > Similarly, man perf-stat also needs to be updated.
->
->
+
+Ok, these changes are just keeping existing functionality. I don't
+disagree with making these changes but I think we can follow up with
+them. Or probably just deprecate the option.
+
 > > +const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
 > > +{
 > > +     struct perf_pmu *pmu =3D NULL;
@@ -198,3 +177,13 @@ rt
 >
 > Any specific reason to ignore "uncore_"? IMHO, ignoring prefix of some
 > pmus and not of others is bit confusing for naive user.
+
+It is trying to be consistent with the event parser:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/too=
+ls/perf/util/parse-events.y#n326
+where uncore is consumed. Fun fact, as numbers are consumed after a
+PMU name and the underscore is optional, i915 as a PMU can be matched
+in parsing with a PMU name of just "i".
+
+Thanks,
+Ian
