@@ -2,45 +2,71 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5B0C77B78
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 19:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C126C77B78
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 19:06:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229584AbjEBTAR (ORCPT
+        id S229528AbjEBTGT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 15:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40650 "EHLO
+        Tue, 2 May 2023 15:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229511AbjEBTAQ (ORCPT
+        with ESMTP id S229491AbjEBTGR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 15:00:16 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0628510C6;
-        Tue,  2 May 2023 12:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FvSMqnwpZ7YArJ7yAdLPKVO6ucbLedkU0RVbReJGMsg=; b=im1a3K9i2SW/qcYQ+dg7YIx54R
-        rqscrI7KXcuedVTnRv1n+NvojKZ8Pv7yJ66Rw4J7w1GUOIvGxdWPY9o3J6bSmaNY7WypGTY5kFX6G
-        4fAfplgI0bffu7hYgq9CahhkRrCxbsclQIK0NDDndRSlyyUcZZxo9ce1rrzb39UXaHz7f6VHQkyd+
-        2VKyz/QNJklZieaviHL5Uyk4p3FjzNvnl7ThlhtDQz+BPdeiJgIfAxCyJ8VO2dSMCh+JoOem2ypc/
-        hrxIhdofIBgvBLxhoYyV+nXLl3JnIPGV/t1H3b7ZLcslLCefANRiKQdnNwSgfeH9Q6kKGwHrq/haU
-        8dIy61iw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1ptvDl-00GOxe-0W;
-        Tue, 02 May 2023 18:59:29 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D0D723033A5;
-        Tue,  2 May 2023 20:59:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 89DBC241B3FAB; Tue,  2 May 2023 20:59:26 +0200 (CEST)
-Date:   Tue, 2 May 2023 20:59:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Hildenbrand <david@redhat.com>
+        Tue, 2 May 2023 15:06:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 312BB1BD8
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 12:05:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683054331;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0S2yc+ZTNRgoAH3fjxIMA+gbVtscqyIDdigzY2/OjVg=;
+        b=H/guvCKTa2jBVSoEMYQDGHzh+3kbmMudX0pl0/Z7AnqBbaxNVAvuLB9vh1lTLs5I4AzDxS
+        xH2cvBKBMxcsFXbwu1NN4AkirkFQasEZ1NoeOqGF9qrkXMVAsjhCMkT+WVzKkSOmMwuZh6
+        ON2ELAmG8GqkFYh4hSNwSEnuPdO4am8=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-647-y6CL9nqyO_KVwT43sHlJQQ-1; Tue, 02 May 2023 15:05:30 -0400
+X-MC-Unique: y6CL9nqyO_KVwT43sHlJQQ-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f1749c63c9so12814975e9.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 12:05:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683054329; x=1685646329;
+        h=content-transfer-encoding:in-reply-to:organization:from:references
+         :cc:to:content-language:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0S2yc+ZTNRgoAH3fjxIMA+gbVtscqyIDdigzY2/OjVg=;
+        b=EJZvwABzUzEwjOK6fvfqhDUhAJaBqYD9ouGq6pUQt35ciQUPI628iSgD0UcKGZhbPQ
+         NeQpg+hP64JJcu2/vpQ/E+gNZQf+PT8RYZ1fhzewMJwUW54vVakfSpq2JSctnOvDemdi
+         2lo/L/03Aq0SS+9vhSSgviiKlN6/nedIM6qtqarC2hdYKMzO+xtyjWSHiaiwz7gU9cjy
+         hecXsNwAyDiTphYfjHML0w+ygmBvE5Nersb8LdGYqwtOjWXrwhm20OE+aK8D2+6Itot3
+         rqYSXn7uV28dXvmYRwWX0Gmn9r31C+HIXu8NuVi793VGEk0z4d1VLNXuyyHHVec/9SWj
+         Nl2Q==
+X-Gm-Message-State: AC+VfDzPIrHJ2ZYPhrSkIjSvXLqlrMn15DxQhbTW6VPmLFavg4uACcod
+        xq8URW0rDtYZ9Cy4yPKG3RNzgDPKgEPHPCTmJ//d5y4P1TTOF5yumnsn92HMNvD/CqMN6hZKn6D
+        UJYGQWlZdM1sXPpoZZzBDHbBBTozsVw==
+X-Received: by 2002:a7b:c015:0:b0:3f1:662a:93d0 with SMTP id c21-20020a7bc015000000b003f1662a93d0mr13370007wmb.15.1683054328797;
+        Tue, 02 May 2023 12:05:28 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5V+NnBCdmD2ICFY88fyR5/MuVWTN0W2FYrYm/F35B55dmr3mxlkomvx8ayNTAEFJ/KlNPdKQ==
+X-Received: by 2002:a7b:c015:0:b0:3f1:662a:93d0 with SMTP id c21-20020a7bc015000000b003f1662a93d0mr13369974wmb.15.1683054328421;
+        Tue, 02 May 2023 12:05:28 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c700:2400:6b79:2aa:9602:7016? (p200300cbc70024006b7902aa96027016.dip0.t-ipconnect.de. [2003:cb:c700:2400:6b79:2aa:9602:7016])
+        by smtp.gmail.com with ESMTPSA id m9-20020a7bce09000000b003f049a42689sm36193382wmc.25.2023.05.02.12.05.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 May 2023 12:05:27 -0700 (PDT)
+Message-ID: <82368bae-b2cc-5d55-6de6-e3283cef063b@redhat.com>
+Date:   Tue, 2 May 2023 21:05:25 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v7 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing to
+ file-backed mappings
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -87,31 +113,40 @@ Cc:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Christian Borntraeger <borntraeger@linux.ibm.com>,
         Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v7 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing
- to file-backed mappings
-Message-ID: <20230502185926.GE4253@hirez.programming.kicks-ass.net>
 References: <cover.1683044162.git.lstoakes@gmail.com>
  <b3a4441cade9770e00d24f5ecb75c8f4481785a4.1683044162.git.lstoakes@gmail.com>
  <1691115d-dba4-636b-d736-6a20359a67c3@redhat.com>
  <20230502172231.GH1597538@hirez.programming.kicks-ass.net>
  <406fd43a-a051-5fbe-6f66-a43f5e7e7573@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <406fd43a-a051-5fbe-6f66-a43f5e7e7573@redhat.com>
+ <20230502185926.GE4253@hirez.programming.kicks-ass.net>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+In-Reply-To: <20230502185926.GE4253@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 02, 2023 at 07:34:06PM +0200, David Hildenbrand wrote:
-> Now, if we read folio->mapping after checking if the page we pinned is still
-> mapped (PTE unchanged), at least the page we pinned cannot be reused in the
-> meantime. I suspect that we can still read "NULL" on the second read. But
-> whatever we dereference from the first read should still be valid, even if
-> the second read would have returned NULL ("rcu freeing").
+On 02.05.23 20:59, Peter Zijlstra wrote:
+> On Tue, May 02, 2023 at 07:34:06PM +0200, David Hildenbrand wrote:
+>> Now, if we read folio->mapping after checking if the page we pinned is still
+>> mapped (PTE unchanged), at least the page we pinned cannot be reused in the
+>> meantime. I suspect that we can still read "NULL" on the second read. But
+>> whatever we dereference from the first read should still be valid, even if
+>> the second read would have returned NULL ("rcu freeing").
+> 
+> Right, but given it's the compiler adding loads we're not sure what if
+> anything it uses and it gets very hard to reason about the code.
+> 
+> This is where READ_ONCE() helps, we instruct the compiler to only do a
+> single load and we can still reason about the code.
 
-Right, but given it's the compiler adding loads we're not sure what if
-anything it uses and it gets very hard to reason about the code.
+I completely agree, and I think we should fix that in 
+page_is_secretmem() as well.
 
-This is where READ_ONCE() helps, we instruct the compiler to only do a
-single load and we can still reason about the code.
+-- 
+Thanks,
+
+David / dhildenb
+
