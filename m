@@ -2,279 +2,228 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D38C77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 17:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A8FC77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 17:40:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233373AbjEBRj0 (ORCPT
+        id S234141AbjEBRkw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 13:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35558 "EHLO
+        Tue, 2 May 2023 13:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233856AbjEBRjU (ORCPT
+        with ESMTP id S233858AbjEBRkv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 13:39:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E49D910B
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 10:38:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683049113;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v8fHR5fGdOr3tzI1vnMcnzbjMrPGTX3k27WoHFiXGI0=;
-        b=hMtOE5qU39HvJnAr41E7MoXxOtVSO2a0TpqS8FFqfr5K1DR+0Eau77W9++qTULis6gVS7w
-        +mDmhWEvDPlMW6S68fOvCePPvQtXi26n7VuCerD24f7BXxr5UEYbPQCQ347GsTtvfSjb6+
-        +cBJeZQkD3ly63yOUB/TjjhBa1/YWkY=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-349-2Iwf1wDlOWWu1Mkm5X2X-Q-1; Tue, 02 May 2023 13:38:32 -0400
-X-MC-Unique: 2Iwf1wDlOWWu1Mkm5X2X-Q-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3f1754de18cso25201855e9.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 10:38:31 -0700 (PDT)
+        Tue, 2 May 2023 13:40:51 -0400
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B36C3
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 10:40:50 -0700 (PDT)
+Received: by mail-il1-x135.google.com with SMTP id e9e14a558f8ab-330ec047d3bso129605ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 10:40:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683049249; x=1685641249;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H7zwT9U3Q7DJabdbJ+tKTAKmuAVSsUfjeiCdQzr1Lqw=;
+        b=1yiTfOHI79peXlm0E6+h9E32HLEcYSlJE0Zm5YBx91HiUeUI4d/2Q6RZmLIatKJo88
+         YiYQd4BusAd52HweaBckBQNxZxb6buqjk8CwJa9kpAaiuXUAJd5lpG0RddJy4JjcI19c
+         ZOQi4bHLWA3apCdB2ufkpzbb3sMRRsGxVK1eJ6r8+plBsVmcxBa2L2hy4OObU/+kHIWS
+         TCQ6rez/lyWj/6mocKuRKasaREiu6tJX4F2pPQUphIkvqey9Qnt6VEFecFq2bZaIQG/l
+         Ewz0eZBycDz0j/hkfxai3V0eO3i0vkJiknkqXrhRkj/0sH60aJCg5tgmvJ4QHd/tZeZv
+         lvrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683049110; x=1685641110;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v8fHR5fGdOr3tzI1vnMcnzbjMrPGTX3k27WoHFiXGI0=;
-        b=DewrN9YgSvt8XhdTwqQ2KZmdVQt2I4Ui4R/3p136wK1IxO3/Ty5/bhKSMij2xuV04D
-         MzOGv2obm/+bZXfwyyUFLFQ0DLj15P2ZjfiWNkfP+cBLWVIV1nZNqySkB1RcCqX/SI5G
-         cJW68P2W7eHfD3NWeILonRaJD//EGVNAoFwA8xcUMUwjvRxiDtigG+zK1tN9QcFsGPXn
-         UXP1H/FVDmMYrHT2KcvWw5pkJnzMAe8Gw2piTwe2QXyqGRUye/slhTWmCc02gMl0HDCY
-         AnzEV3rnNOuDFwgJII2UoIrlwJ9pmg9oWr/1QRGKN4I6T6dEhGGIEmOTz7t/a/lcpNpa
-         /vgg==
-X-Gm-Message-State: AC+VfDwaI4D+2XbsONvr9JGWhfSzpcRy5WGVwQXXEebfY9mUP0Ynj7LE
-        2JeYUfpZPp1M5gPUMpFdlsh/Vhe9ka5xBcAqGlJ1d1cSYDDlUjVtmmeUz9EGpkU8FV1YTd8AJd5
-        /3Dwc997FBqNftZKRiTRzECDBeb/ZoQ==
-X-Received: by 2002:adf:f5c2:0:b0:2c9:e585:84b0 with SMTP id k2-20020adff5c2000000b002c9e58584b0mr12006547wrp.1.1683049110608;
-        Tue, 02 May 2023 10:38:30 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6UHQZmPjIHoSHGB9u6827k6gGO+sy+BGJNzulnCYxHPhBnThYPQpbu7NtdcVnWP3Er6P987w==
-X-Received: by 2002:adf:f5c2:0:b0:2c9:e585:84b0 with SMTP id k2-20020adff5c2000000b002c9e58584b0mr12006525wrp.1.1683049110163;
-        Tue, 02 May 2023 10:38:30 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c700:2400:6b79:2aa:9602:7016? (p200300cbc70024006b7902aa96027016.dip0.t-ipconnect.de. [2003:cb:c700:2400:6b79:2aa:9602:7016])
-        by smtp.gmail.com with ESMTPSA id l7-20020a5d4bc7000000b002fefe2edb72sm31513852wrt.17.2023.05.02.10.38.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 02 May 2023 10:38:29 -0700 (PDT)
-Message-ID: <6f17af6b-0925-12bd-5041-14462dab2768@redhat.com>
-Date:   Tue, 2 May 2023 19:38:27 +0200
+        d=1e100.net; s=20221208; t=1683049249; x=1685641249;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H7zwT9U3Q7DJabdbJ+tKTAKmuAVSsUfjeiCdQzr1Lqw=;
+        b=OvCgV6ID1lJOwbPMHcB7zP2j0c+tA23jnIDrFxGKCvkJCeqLTc2kcszTphgYgH9h4a
+         huDpmXVkDuKZ8FVHXXNf8ci9O5RBIY9mqLHT80TiWIm4iZhr4t43Y0hcTV88j3ovAjbs
+         mgHQMPP9xgZvhSJlsOAqhCRDajV0h0ALz3Av9PR1052s/ClhSlJIjdVPp8AnKy4AIErd
+         igAiVNX5dV5BCex+Dt173nbkx6qkBJJMwHWCqsm4H5yfvRE0unJNlYX2fg5oyXqhfOJm
+         Q4Q+Jy2OMwK9Go/zAbTTOnWL5+nTta0UBRp4Qw5WzJOcqSUok5wUIJYi6a7XssOsMKOX
+         n5xA==
+X-Gm-Message-State: AC+VfDwi7BLvgIZi+axkPkzbep9PKiN7sZBhCZ0niW/QUCcW5Ucmd0mv
+        Rr5qybrN/TCl0n5SRX1CYwHRHZ6KWFL23BYxxO+UbQ==
+X-Google-Smtp-Source: ACHHUZ6YzhZt+Ehy6aXWrwYKYsdOrWKZI2pGYiARfOmu63ybIgxhSCZ7A7G8L/YlD+NGWuW7FqIY818IC4vYxU0KQpA=
+X-Received: by 2002:a05:6e02:194a:b0:331:399c:57c5 with SMTP id
+ x10-20020a056e02194a00b00331399c57c5mr192255ilu.3.1683049249296; Tue, 02 May
+ 2023 10:40:49 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v7 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing to
- file-backed mappings
-Content-Language: en-US
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+References: <20230429053506.1962559-1-irogers@google.com> <20230429053506.1962559-28-irogers@google.com>
+ <56dd818d-3f2a-59ba-3c56-af45f488ad8d@amd.com>
+In-Reply-To: <56dd818d-3f2a-59ba-3c56-af45f488ad8d@amd.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 2 May 2023 10:40:37 -0700
+Message-ID: <CAP-5=fWzD0+jPEZ1gZp7Zj+gzb8NB-BDZvtstcx-dPNQr0n8Tw@mail.gmail.com>
+Subject: Re: [PATCH v3 27/46] perf print-events: Print legacy cache events for
+ each PMU
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <cover.1683044162.git.lstoakes@gmail.com>
- <b3a4441cade9770e00d24f5ecb75c8f4481785a4.1683044162.git.lstoakes@gmail.com>
- <1691115d-dba4-636b-d736-6a20359a67c3@redhat.com>
- <392debc7-2de8-440e-8b26-20f2d42cdf8d@lucifer.local>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <392debc7-2de8-440e-8b26-20f2d42cdf8d@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Florian Fischer <florian.fischer@muhq.space>,
+        Rob Herring <robh@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 02.05.23 19:31, Lorenzo Stoakes wrote:
-> On Tue, May 02, 2023 at 07:13:49PM +0200, David Hildenbrand wrote:
->> [...]
->>
->>> +{
->>> +	struct address_space *mapping;
->>> +
->>> +	/*
->>> +	 * GUP-fast disables IRQs - this prevents IPIs from causing page tables
->>> +	 * to disappear from under us, as well as preventing RCU grace periods
->>> +	 * from making progress (i.e. implying rcu_read_lock()).
->>> +	 *
->>> +	 * This means we can rely on the folio remaining stable for all
->>> +	 * architectures, both those that set CONFIG_MMU_GATHER_RCU_TABLE_FREE
->>> +	 * and those that do not.
->>> +	 *
->>> +	 * We get the added benefit that given inodes, and thus address_space,
->>> +	 * objects are RCU freed, we can rely on the mapping remaining stable
->>> +	 * here with no risk of a truncation or similar race.
->>> +	 */
->>> +	lockdep_assert_irqs_disabled();
->>> +
->>> +	/*
->>> +	 * If no mapping can be found, this implies an anonymous or otherwise
->>> +	 * non-file backed folio so in this instance we permit the pin.
->>> +	 *
->>> +	 * shmem and hugetlb mappings do not require dirty-tracking so we
->>> +	 * explicitly whitelist these.
->>> +	 *
->>> +	 * Other non dirty-tracked folios will be picked up on the slow path.
->>> +	 */
->>> +	mapping = folio_mapping(folio);
->>> +	return !mapping || shmem_mapping(mapping) || folio_test_hugetlb(folio);
->>
->> "Folios in the swap cache return the swap mapping" -- you might disallow
->> pinning anonymous pages that are in the swap cache.
->>
->> I recall that there are corner cases where we can end up with an anon page
->> that's mapped writable but still in the swap cache ... so you'd fallback to
->> the GUP slow path (acceptable for these corner cases, I guess), however
->> especially the comment is a bit misleading then.
-> 
-> How could that happen?
-> 
->>
->> So I'd suggest not dropping the folio_test_anon() check, or open-coding it
->> ... which will make this piece of code most certainly easier to get when
->> staring at folio_mapping(). Or to spell it out in the comment (usually I
->> prefer code over comments).
-> 
-> I literally made this change based on your suggestion :) but perhaps I
-> misinterpreted what you meant.
-> 
-> I do spell it out in the comment that the page can be anonymous, But perhaps
-> explicitly checking the mapping flags is the way to go.
-> 
->>
->>> +}
->>> +
->>>    /**
->>>     * try_grab_folio() - Attempt to get or pin a folio.
->>>     * @page:  pointer to page to be grabbed
->>> @@ -123,6 +170,8 @@ static inline struct folio *try_get_folio(struct page *page, int refs)
->>>     */
->>>    struct folio *try_grab_folio(struct page *page, int refs, unsigned int flags)
->>>    {
->>> +	bool is_longterm = flags & FOLL_LONGTERM;
->>> +
->>>    	if (unlikely(!(flags & FOLL_PCI_P2PDMA) && is_pci_p2pdma_page(page)))
->>>    		return NULL;
->>> @@ -136,8 +185,7 @@ struct folio *try_grab_folio(struct page *page, int refs, unsigned int flags)
->>>    		 * right zone, so fail and let the caller fall back to the slow
->>>    		 * path.
->>>    		 */
->>> -		if (unlikely((flags & FOLL_LONGTERM) &&
->>> -			     !is_longterm_pinnable_page(page)))
->>> +		if (unlikely(is_longterm && !is_longterm_pinnable_page(page)))
->>>    			return NULL;
->>>    		/*
->>> @@ -148,6 +196,16 @@ struct folio *try_grab_folio(struct page *page, int refs, unsigned int flags)
->>>    		if (!folio)
->>>    			return NULL;
->>> +		/*
->>> +		 * Can this folio be safely pinned? We need to perform this
->>> +		 * check after the folio is stabilised.
->>> +		 */
->>> +		if ((flags & FOLL_WRITE) && is_longterm &&
->>> +		    !folio_longterm_write_pin_allowed(folio)) {
->>> +			folio_put_refs(folio, refs);
->>> +			return NULL;
->>> +		}
->>
->> So we perform this change before validating whether the PTE changed.
->>
->> Hmm, naturally, I would have done it afterwards.
->>
->> IIRC, without IPI syncs during TLB flush (i.e.,
->> CONFIG_MMU_GATHER_RCU_TABLE_FREE), there is the possibility that
->> (1) We lookup the pte
->> (2) The page was unmapped and free
->> (3) The page gets reallocated and used
->> (4) We pin the page
->> (5) We dereference page->mapping
-> 
-> But we have an implied RCU lock from disabled IRQs right? Unless that CONFIG
-> option does something odd (I've not really dug into its brehaviour). It feels
-> like that would break GUP-fast as a whole.
-> 
->>
->> If we then de-reference page->mapping that gets used by whoever allocated it
->> for something completely different (not a pointer to something reasonable),
->> I wonder if we might be in trouble.
->>
->> Checking first, whether the PTE changed makes sure that what we pinned and
->> what we're looking at is what we expected.
->>
->> ... I can spot that the page_is_secretmem() check is also done before that.
->> But it at least makes sure that it's still an LRU page before staring at the
->> mapping (making it a little safer?).
-> 
-> As do we :)
-> 
-> We also via try_get_folio() check to ensure that we aren't subject to a split.
-> 
->>
->> BUT, I keep messing up this part of the story. Maybe it all works as
->> expected because we will be synchronizing RCU somehow before actually
->> freeing the page in the !IPI case. ... but I think that's only true for page
->> tables with CONFIG_MMU_GATHER_RCU_TABLE_FREE.
-> 
-> My understanding based on what Peter said is that the IRQs being disabled should
-> prevent anything bad from happening here.
+On Tue, May 2, 2023 at 3:48=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.com=
+> wrote:
+>
+> On 29-Apr-23 11:04 AM, Ian Rogers wrote:
+> > Mirroring parse_events_add_cache, list the legacy name alongside its
+> > alias with the PMU. Remove the now unnecessary hybrid logic.
+>
+> Before patch:
+>
+> ```
+> $ sudo ./perf list
+>   ...
+>   duration_time                                      [Tool event]
+>   user_time                                          [Tool event]
+>   system_time                                        [Tool event]
+>   L1-dcache-loads                                    [Hardware cache even=
+t]
+>   L1-dcache-load-misses                              [Hardware cache even=
+t]
+>   L1-dcache-prefetches                               [Hardware cache even=
+t]
+>   L1-icache-loads                                    [Hardware cache even=
+t]
+>   L1-icache-load-misses                              [Hardware cache even=
+t]
+>   dTLB-loads                                         [Hardware cache even=
+t]
+>   dTLB-load-misses                                   [Hardware cache even=
+t]
+>   iTLB-loads                                         [Hardware cache even=
+t]
+>   iTLB-load-misses                                   [Hardware cache even=
+t]
+>   branch-loads                                       [Hardware cache even=
+t]
+>   branch-load-misses                                 [Hardware cache even=
+t]
+>   branch-brs OR cpu/branch-brs/                      [Kernel PMU event]
+>   branch-instructions OR cpu/branch-instructions/    [Kernel PMU event]
+>   branch-misses OR cpu/branch-misses/                [Kernel PMU event]
+>   ...
+> ```
+>
+> After patch:
+>
+> ```
+> $ sudo ./perf list
+>   ...
+>   duration_time                                      [Tool event]
+>   user_time                                          [Tool event]
+>   system_time                                        [Tool event]
+>
+> cpu:
+>   L1-dcache-loads OR cpu/L1-dcache-loads/
+>   L1-dcache-load-misses OR cpu/L1-dcache-load-misses/
+>   L1-dcache-prefetches OR cpu/L1-dcache-prefetches/
+>   L1-icache-loads OR cpu/L1-icache-loads/
+>   L1-icache-load-misses OR cpu/L1-icache-load-misses/
+>   dTLB-loads OR cpu/dTLB-loads/
+>   dTLB-load-misses OR cpu/dTLB-load-misses/
+>   iTLB-loads OR cpu/iTLB-loads/
+>   iTLB-load-misses OR cpu/iTLB-load-misses/
+>   branch-loads OR cpu/branch-loads/
+>   branch-load-misses OR cpu/branch-load-misses/
+>   branch-brs OR cpu/branch-brs/                      [Kernel PMU event]
+>   branch-instructions OR cpu/branch-instructions/    [Kernel PMU event]
+>   branch-misses OR cpu/branch-misses/                [Kernel PMU event]
+>   ...
+> ```
+>\
+> Is this intentional change?
 
+Yep, but I think the commit message should call it out, so I'll change
+it in v4. When we have an alias the event type descriptor isn't shown,
+this is pre-existing perf list behavior but I think we may want to
+tweak it as I like the event type descriptor.
 
-... only if we verified that the PTE didn't change IIUC. IRQs disabled 
-only protect you from the mapping getting freed and reused (because 
-mappings are freed via RCU IIUC).
+> > -     for (int type =3D 0; type < PERF_COUNT_HW_CACHE_MAX; type++) {
+> > -             for (int op =3D 0; op < PERF_COUNT_HW_CACHE_OP_MAX; op++)=
+ {
+> > -                     /* skip invalid cache type */
+> > -                     if (!evsel__is_cache_op_valid(type, op))
+> > -                             continue;
+> > +     while ((pmu =3D perf_pmu__scan(pmu)) !=3D NULL) {
+> > +             /*
+> > +              * Skip uncore PMUs for performance. Software PMUs can op=
+en
+> > +              * PERF_TYPE_HW_CACHE, so skip.
+>
+> This statement is bit confusing. Can you please explain how SW pmus can
+> open cache events.
 
-But as far as I can tell, it doesn't protect you from the page itself 
-getting freed and reused, and whoever freed the page uses page->mapping 
-to store something completely different.
+If the type is PERF_TYPE_HW_CACHE (3) and the extended type is
+PERF_TYPE_SOFTWARE (1) then this yields the encoding '3:0x100000000'
+which will succeed perf_event_open:
+```
+$ perf stat -vv -e '3:0x100000000' true
+Using CPUID GenuineIntel-6-8D-1
+intel_pt default config: tsc,mtc,mtc_period=3D3,psb_period=3D3,pt,branch
+Control descriptor is not initialized
+------------------------------------------------------------
+perf_event_attr:
+ type                             3
+ size                             128
+ config                           0x100000000
+ sample_type                      IDENTIFIER
+ read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
+ disabled                         1
+ inherit                          1
+ enable_on_exec                   1
+ exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid 2128955  cpu -1  group_fd -1  flags 0x8 =3D 3
+3:0x100000000: -1: 265630 261923 261923
+3:0x100000000: 265630 261923 261923
 
-But, again, it's all complicated and confusing to me.
+Performance counter stats for 'true':
 
+          265,630      3:0x100000000
 
-page_is_secretmem() also doesn't use a READ_ONCE() ...
+      0.000844251 seconds time elapsed
 
--- 
+      0.000911000 seconds user
+      0.000000000 seconds sys
+```
+I agree this isn't expected, but if I don't exclude the PMU type the
+print events will list it as an alias. I'll try to improve the comment
+in v4.
+
 Thanks,
-
-David / dhildenb
-
+Ian
