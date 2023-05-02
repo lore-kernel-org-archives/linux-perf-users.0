@@ -2,67 +2,82 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C803EC77B7E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 18:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5A5C77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 18:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234147AbjEBSRg (ORCPT
+        id S229461AbjEBSpu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 14:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54958 "EHLO
+        Tue, 2 May 2023 14:45:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbjEBSRe (ORCPT
+        with ESMTP id S229441AbjEBSps (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 14:17:34 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 768D01BFC;
-        Tue,  2 May 2023 11:17:17 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-2fde2879eabso3903389f8f.1;
-        Tue, 02 May 2023 11:17:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683051436; x=1685643436;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=R3bHT20tkh2F79+SFx041a+gGb7WqEwkVCZSdSx9/lw=;
-        b=ABZvkaFx4jKAf56HV0DtLrke19279svzYn5R3maOZMPNdxk0ObOArzxg1z10J93D2a
-         yLqJcK/Q43aIz0gAQN6GUv32LLd4ihSJH2F3lDhmH6FsxDa2erMpPikt/SxAVgopgXh/
-         kePR/OzazJRcy7NYIKiVq0ZpgVDTP1xoUDJqWPO64eI6859mQ7bOQbyBJ1ugVRvqeNck
-         ybXXGPgAtjCcK3M5B0rdV9P+ADK+khmo7zHMhxkuQ2Fp77MhaAhxZbRtET12rtM07E52
-         ixbhgq27zTpHgcZGNlvbBdyVkC5sSxn0J2bqVU/ZNhFeOPyhwZpIeArFjZC3/h2p331x
-         RF/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683051436; x=1685643436;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R3bHT20tkh2F79+SFx041a+gGb7WqEwkVCZSdSx9/lw=;
-        b=BtrwGqy8+TKHBEv4BA5rkYRfc0wvAKYboRvHvKZMiEdX7zofKWvVUopEcH15jMJtaI
-         qZtMgv0dccwIj5oJG3DL1Fxk8d7IQuWxXtXGrQs604L0L5Hp2LkJPyODxijX9WkL8RHX
-         kSlBTKMlJ4EyekRJyh2qsMK4WoKb7KmcZU0s+MCXuk446241EE3eAWCi4zxcRx0kajEW
-         e4D5NH9g733Lp77wLGH5Mv4EdbrdNAVl5R69tFzfpOjKeNqzNn+V8kAL2xlKwaVynHKd
-         y4ehAgXiGMLE56H/hVj4fxdiU6Z5TgAzsp3UzmomHoQhbVIAp1SukbbqmpgglepeljFM
-         Xlzw==
-X-Gm-Message-State: AC+VfDxY2cnTczuUwgig0FXR8RvfhtMNFCgkucuFnli/MQCVzaJo6ft7
-        8VDugpLtyRbifdF0WuWnv5c=
-X-Google-Smtp-Source: ACHHUZ5PfpjRwsbkRTjC3oEfUSuMXhuAYSi7RouJe4rf6mD72BqoN0/2utYW1uSDsC/8YUwsJgFW7w==
-X-Received: by 2002:adf:f147:0:b0:2fd:98a8:e800 with SMTP id y7-20020adff147000000b002fd98a8e800mr13943385wro.7.1683051435620;
-        Tue, 02 May 2023 11:17:15 -0700 (PDT)
-Received: from localhost (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
-        by smtp.gmail.com with ESMTPSA id h3-20020a5d5043000000b002c70ce264bfsm31561902wrt.76.2023.05.02.11.17.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 May 2023 11:17:14 -0700 (PDT)
-Date:   Tue, 2 May 2023 19:17:14 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
+        Tue, 2 May 2023 14:45:48 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F911E73;
+        Tue,  2 May 2023 11:45:46 -0700 (PDT)
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 342Ielmu020038;
+        Tue, 2 May 2023 18:45:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=Y5zlNEwOG2ptRaoZlX8s256Y2ftpFkpYD9yVgsF0Q28=;
+ b=ciPQzlbQ2rl3+1dUFCETd8dc5/GXxssBrbewrHBqTWF1M71UEFxCv3sBwmYux9LCiaqp
+ vYlxBJ5L9ymErmtVhV2vw0AK/1RUfBOkp58J4jDog8J+kPzVcCRAZPbAmZ3kY137aqUW
+ 1a1r8PO7iDmnzJ3wio9rkgd3XYETKP5MPrxYpuz9l/9fboeN26lYhvTmYpM43VRsCyCL
+ VSRatTmA29wduAFqdIO1pFM38wMMSTwvhq3UHZ73MM3N/ocb+aXIpqhAub69V/Dyon+d
+ BXBoQWlNcmMYpfdmX8RBCLZBHmUvnsLPTCqb/KAIQCR8lYVhLeMwMqVwX/eES/cq1bxP VQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qb767sk1m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 May 2023 18:45:10 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 342IfQG8022079;
+        Tue, 2 May 2023 18:45:10 GMT
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qb767sk0c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 May 2023 18:45:09 +0000
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 342Hthea003792;
+        Tue, 2 May 2023 18:45:08 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([9.208.130.98])
+        by ppma05wdc.us.ibm.com (PPS) with ESMTPS id 3q8tv7rs0w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 May 2023 18:45:08 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+        by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 342Ij5NV44368258
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 May 2023 18:45:05 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EB0185803F;
+        Tue,  2 May 2023 18:45:04 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 711F358068;
+        Tue,  2 May 2023 18:45:01 +0000 (GMT)
+Received: from [9.60.89.243] (unknown [9.60.89.243])
+        by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Tue,  2 May 2023 18:45:01 +0000 (GMT)
+Message-ID: <ce86e956-173f-848a-a1f3-f102134ccd94@linux.ibm.com>
+Date:   Tue, 2 May 2023 14:45:01 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v7 0/3] mm/gup: disallow GUP writing to file-backed
+ mappings by default
+Content-Language: en-US
+To:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
         Matthew Wilcox <willy@infradead.org>,
         Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
         Leon Romanovsky <leon@kernel.org>,
         Christian Benvenuti <benve@cisco.com>,
         Nelson Escobar <neescoba@cisco.com>,
         Bernard Metzler <bmt@zurich.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -93,114 +108,73 @@ Cc:     Peter Zijlstra <peterz@infradead.org>, linux-mm@kvack.org,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         Pavel Begunkov <asml.silence@gmail.com>,
         Mika Penttila <mpenttil@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
         Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
         "Paul E . McKenney" <paulmck@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v7 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing
- to file-backed mappings
-Message-ID: <3a8c672d-4e6c-4705-9d6c-509d3733eb05@lucifer.local>
+        Christian Borntraeger <borntraeger@linux.ibm.com>
 References: <cover.1683044162.git.lstoakes@gmail.com>
- <b3a4441cade9770e00d24f5ecb75c8f4481785a4.1683044162.git.lstoakes@gmail.com>
- <1691115d-dba4-636b-d736-6a20359a67c3@redhat.com>
- <20230502172231.GH1597538@hirez.programming.kicks-ass.net>
- <406fd43a-a051-5fbe-6f66-a43f5e7e7573@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <406fd43a-a051-5fbe-6f66-a43f5e7e7573@redhat.com>
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+In-Reply-To: <cover.1683044162.git.lstoakes@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 2LCoG5Unst8UUEzla8ABjD356N8l43rZ
+X-Proofpoint-ORIG-GUID: cSQj8we2iuCB-VjCHpIHGE97SoRPJ3ys
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-02_10,2023-04-27_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 mlxscore=0 clxscore=1011
+ spamscore=0 impostorscore=0 adultscore=0 bulkscore=0 mlxlogscore=733
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305020160
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 02, 2023 at 07:34:06PM +0200, David Hildenbrand wrote:
-> On 02.05.23 19:22, Peter Zijlstra wrote:
-> > On Tue, May 02, 2023 at 07:13:49PM +0200, David Hildenbrand wrote:
-> > > [...]
-> > >
-> > > > +{
-> > > > +	struct address_space *mapping;
-> > > > +
-> > > > +	/*
-> > > > +	 * GUP-fast disables IRQs - this prevents IPIs from causing page tables
-> > > > +	 * to disappear from under us, as well as preventing RCU grace periods
-> > > > +	 * from making progress (i.e. implying rcu_read_lock()).
-> > > > +	 *
-> > > > +	 * This means we can rely on the folio remaining stable for all
-> > > > +	 * architectures, both those that set CONFIG_MMU_GATHER_RCU_TABLE_FREE
-> > > > +	 * and those that do not.
-> > > > +	 *
-> > > > +	 * We get the added benefit that given inodes, and thus address_space,
-> > > > +	 * objects are RCU freed, we can rely on the mapping remaining stable
-> > > > +	 * here with no risk of a truncation or similar race.
-> > > > +	 */
-> > > > +	lockdep_assert_irqs_disabled();
-> > > > +
-> > > > +	/*
-> > > > +	 * If no mapping can be found, this implies an anonymous or otherwise
-> > > > +	 * non-file backed folio so in this instance we permit the pin.
-> > > > +	 *
-> > > > +	 * shmem and hugetlb mappings do not require dirty-tracking so we
-> > > > +	 * explicitly whitelist these.
-> > > > +	 *
-> > > > +	 * Other non dirty-tracked folios will be picked up on the slow path.
-> > > > +	 */
-> > > > +	mapping = folio_mapping(folio);
-> > > > +	return !mapping || shmem_mapping(mapping) || folio_test_hugetlb(folio);
-> > >
-> > > "Folios in the swap cache return the swap mapping" -- you might disallow
-> > > pinning anonymous pages that are in the swap cache.
-> > >
-> > > I recall that there are corner cases where we can end up with an anon page
-> > > that's mapped writable but still in the swap cache ... so you'd fallback to
-> > > the GUP slow path (acceptable for these corner cases, I guess), however
-> > > especially the comment is a bit misleading then.
-> > >
-> > > So I'd suggest not dropping the folio_test_anon() check, or open-coding it
-> > > ... which will make this piece of code most certainly easier to get when
-> > > staring at folio_mapping(). Or to spell it out in the comment (usually I
-> > > prefer code over comments).
-> >
-> > So how stable is folio->mapping at this point? Can two subsequent reads
-> > get different values? (eg. an actual mapping and NULL)
-> >
-> > If so, folio_mapping() itself seems to be missing a READ_ONCE() to avoid
-> > the compiler from emitting the load multiple times.
->
-> I can only talk about anon pages in this specific call order here (check
-> first, then test if the PTE changed in the meantime): we don't care if we
-> get two different values. If we get a different value the second time,
-> surely we (temporarily) pinned an anon page that is no longer mapped (freed
-> in the meantime). But in that case (even if we read garbage folio->mapping
-> and made the wrong call here), we'll detect afterwards that the PTE changed,
-> and unpin what we (temporarily) pinned. As folio_test_anon() only checks two
-> bits in folio->mapping it's fine, because we won't dereference garbage
-> folio->mapping.
->
-> With folio_mapping() on !anon and READ_ONCE() ... good question. Kirill said
-> it would be fairly stable, but I suspect that it could change (especially if
-> we call it before validating if the PTE changed as I described further
-> below).
->
-> Now, if we read folio->mapping after checking if the page we pinned is still
-> mapped (PTE unchanged), at least the page we pinned cannot be reused in the
-> meantime. I suspect that we can still read "NULL" on the second read. But
-> whatever we dereference from the first read should still be valid, even if
-> the second read would have returned NULL ("rcu freeing").
->
+On 5/2/23 12:34 PM, Lorenzo Stoakes wrote:
+> Writing to file-backed mappings which require folio dirty tracking using
+> GUP is a fundamentally broken operation, as kernel write access to GUP
+> mappings do not adhere to the semantics expected by a file system.
+> 
+> A GUP caller uses the direct mapping to access the folio, which does not
+> cause write notify to trigger, nor does it enforce that the caller marks
+> the folio dirty.
+> 
+> The problem arises when, after an initial write to the folio, writeback
+> results in the folio being cleaned and then the caller, via the GUP
+> interface, writes to the folio again.
+> 
+> As a result of the use of this secondary, direct, mapping to the folio no
+> write notify will occur, and if the caller does mark the folio dirty, this
+> will be done so unexpectedly.
+> 
+> For example, consider the following scenario:-
+> 
+> 1. A folio is written to via GUP which write-faults the memory, notifying
+>    the file system and dirtying the folio.
+> 2. Later, writeback is triggered, resulting in the folio being cleaned and
+>    the PTE being marked read-only.
+> 3. The GUP caller writes to the folio, as it is mapped read/write via the
+>    direct mapping.
+> 4. The GUP caller, now done with the page, unpins it and sets it dirty
+>    (though it does not have to).
+> 
+> This change updates both the PUP FOLL_LONGTERM slow and fast APIs. As
+> pin_user_pages_fast_only() does not exist, we can rely on a slightly
+> imperfect whitelisting in the PUP-fast case and fall back to the slow case
+> should this fail.
+> 
+> v7:
+> - Fixed very silly bug in writeable_file_mapping_allowed() inverting the
+>   logic.
+> - Removed unnecessary RCU lock code and replaced with adaptation of Peter's
+>   idea.
+> - Removed unnecessary open-coded folio_test_anon() in
+>   folio_longterm_write_pin_allowed() and restructured to generally permit
+>   NULL folio_mapping().
+> 
 
-On a specific point - if mapping turns out to be NULL after we confirm
-stable PTE, I'd be inclined to reject and let the slow path take care of
-it, would you agree that that's the correct approach?
+FWIW, I realize you are planning another respin, but I went and tried this version out on s390 -- Now when using a memory backend file and vfio-pci on s390 I see vfio_pin_pages_remote failing consistently.  However, the pin_user_pages_fast(FOLL_WRITE | FOLL_LONGTERM) in kvm_s390_pci_aif_enable will still return positive.  
 
-I guess you could take that to mean that the page is no longer mapped so is
-safe, but it feels like refusing it would be the safe course.
-
-
-> --
-> Thanks,
->
-> David / dhildenb
->
