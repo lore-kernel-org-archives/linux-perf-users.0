@@ -2,37 +2,37 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF050C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 15:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D975C77B7E
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 15:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234356AbjEBPXy (ORCPT
+        id S234545AbjEBP01 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 11:23:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41340 "EHLO
+        Tue, 2 May 2023 11:26:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233786AbjEBPXy (ORCPT
+        with ESMTP id S234556AbjEBP0Y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 11:23:54 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9838DD7;
-        Tue,  2 May 2023 08:23:49 -0700 (PDT)
+        Tue, 2 May 2023 11:26:24 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95F1026BC;
+        Tue,  2 May 2023 08:26:21 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 4879F221BC;
-        Tue,  2 May 2023 15:23:48 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTP id A531421B0D;
+        Tue,  2 May 2023 15:26:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1683041028; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1683041179; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=uxhui/Ir4eT5sPQEaZT+4zpzC7jhoc2yOtRKPtRVLuQ=;
-        b=aq3JR34r8i83T70pqTkemzrSH10xQCplmij5pIQyD0YK8z+itGyO9k/Zvwi7Qf+IAKSBhy
-        eo5tEqIAixUbBkkCE5eSv5dIFEOV+IPzcaBToFTE8efSam2JM1pCB6A8Hp2m1P1M7YFOvF
-        iPQTkRjELszxauRKGj1883nDqmBx4G8=
+        bh=CXWn7FssbrSs8MRrutlOtshdeBbrP/crYQCwv1Iexd0=;
+        b=XxDdHFZlQui1F2WlF8bhbf41oWW6Fr9rAfk13WKktw/+Jtw97yL5A1Sttz4uqgqOcjRNii
+        pj4J+Cp+HRg6BC0SrBdlXBmUXIj6XkAHYUWf0RbaKYkK6ZbWB8Cclv6Li0bhCJwINGjccy
+        EBYuacjqAOW4uoLsHujhtJf/7MKOnXE=
 Received: from suse.cz (unknown [10.100.201.202])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 1DBAC2C141;
-        Tue,  2 May 2023 15:23:46 +0000 (UTC)
-Date:   Tue, 2 May 2023 17:23:45 +0200
+        by relay2.suse.de (Postfix) with ESMTPS id AA2872C141;
+        Tue,  2 May 2023 15:26:18 +0000 (UTC)
+Date:   Tue, 2 May 2023 17:26:18 +0200
 From:   Petr Mladek <pmladek@suse.com>
 To:     Douglas Anderson <dianders@chromium.org>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -76,9 +76,9 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
         Zhen Lei <thunder.leizhen@huawei.com>,
         linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Subject: cpu hotplug : was: Re: [PATCH v3] hardlockup: detect hard lockups
+Subject: shared code: was: Re: [PATCH v3] hardlockup: detect hard lockups
  using secondary (buddy) CPUs
-Message-ID: <ZFEqynvf5nqkzEvQ@alley>
+Message-ID: <ZFErmshcrcikrSU1@alley>
 References: <20230501082341.v3.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -98,65 +98,266 @@ On Mon 2023-05-01 08:24:46, Douglas Anderson wrote:
 > softlockup hrtimer to check that the next CPU is processing hrtimer
 > interrupts by verifying that a counter is increasing.
 > 
+> --- a/include/linux/nmi.h
+> +++ b/include/linux/nmi.h
+> @@ -134,6 +144,7 @@ void lockup_detector_reconfigure(void);
+>  static inline void touch_nmi_watchdog(void)
+>  {
+>  	arch_touch_nmi_watchdog();
+> +	buddy_cpu_touch_watchdog();
+
+	touch_buddy_watchdog();    ??? to follow the naming scheme?
+
+>  	touch_softlockup_watchdog();
+>  }
+>  
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -106,6 +108,13 @@ void __weak watchdog_nmi_disable(unsigned int cpu)
+>  	hardlockup_detector_perf_disable();
+>  }
+>  
+> +#else
+> +
+> +int __weak watchdog_nmi_enable(unsigned int cpu) { return 0; }
+> +void __weak watchdog_nmi_disable(unsigned int cpu) { return; }
+
+Honestly, the mix of softlockup and hardlockup code was a hard to
+follow even before this patch. And it is going to be worse.
+
+Anyway, the buddy watchdog is not using NMI at all. It should not
+get enable using a function called *_nmi_enabled().
+
+Also some comments are not longer valid, for example:
+
+static void watchdog_enable(unsigned int cpu)
+{
+[...]
+	/* Enable the perf event */
+	if (watchdog_enabled & NMI_WATCHDOG_ENABLED)
+		watchdog_nmi_enable(cpu);
+
+
+I do not know. Maybe, fixing the mess is beyond any hope.
+But we shold not make it worse.
+
+I suggest to rename/shuffle at least functions touched
+by this patchset to improve the meaning.
+
+Sigh, it is hard to find a reasonable names. The code
+already uses:
+
+    + watchdog_*
+    + watchdog_nmi_
+
+    + softlockup_*
+
+    + lockup_detector_*
+    + hardlockup_detector_perf_*
+
+and sysctl:
+
+		.procname       = "watchdog",
+		.procname	= "watchdog_thresh",
+		.procname       = "nmi_watchdog",
+		.procname	= "watchdog_cpumask",
+		.procname       = "soft_watchdog",
+		.procname	= "softlockup_panic",
+		.procname	= "softlockup_all_cpu_backtrace",
+		.procname	= "hardlockup_panic",
+		.procname	= "hardlockup_all_cpu_backtrace",
+
+
+So, I suggest, to use the names:
+
+
+    + watchdog_*
+
+	+ for the common infrastructure
+	+ keep it in watchdog.c
+
+    + hardlockup_detector_* or
+      hardlockup_watchdog_* or
+      watchdog_hld_*
+
+	+ for the common hardlockup stuff.
+	+ it t can stay in watchdog.c to keep shuffling bearable
+
+
+    + hardlockup_detector_nmi_* or
+      hardlockup_watchdog_nmi_* or
+      watchdog_hld_nmi_* or
+      watchdog_nmi_*
+
+	+ for the arch specific hardlockup stuff that is
+	  using NMI interrupts.
+
+	+ it might either stay in watchdog_hld.c
+	  or be moved to watchdog_nmi.c or
+	  watchdog_hld_nmi.c
+
+    + hardlockup_detector_buddy_* or
+      hardlockup_watchdog_buddy_* or
+      watchdog_hld_buddy_*
+      watchdog_buddy_*
+
+	+ for the arch specific hardlockup stuff that is
+	  using buddy monitoring
+
+	+ it might either be added to watchdog_hld.c
+	  or be moved to watchdog_buddy.c or
+	  watchdog_hld_buddy.c
+
+
+Opinion:
+
+     The buddy watchdog might actually be used also for
+     softlockup detector. So, watchdog_buddy_* API
+     and watchdog_buddy.c might make sense.
+
+
+> +
+> +#endif /* CONFIG_HARDLOCKUP_DETECTOR */
+> +
+>  /* Return 0, if a NMI watchdog is available. Error code otherwise */
+>  int __weak __init watchdog_nmi_probe(void)
+>  {
+> @@ -364,6 +373,9 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+>  	/* kick the hardlockup detector */
+>  	watchdog_interrupt_count();
+>  
+> +	/* test for hardlockups */
+> +	watchdog_check_hardlockup();
+
+  rename watchdog_buddy_check_hardlockup(); ???
+
+> +
+>  	/* kick the softlockup detector */
+>  	if (completion_done(this_cpu_ptr(&softlockup_completion))) {
+>  		reinit_completion(this_cpu_ptr(&softlockup_completion));
 > --- /dev/null
 > +++ b/kernel/watchdog_buddy_cpu.c
-> +int watchdog_nmi_enable(unsigned int cpu)
+> @@ -0,0 +1,141 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/cpu.h>
+> +#include <linux/cpumask.h>
+> +#include <linux/kernel.h>
+> +#include <linux/nmi.h>
+> +#include <linux/percpu-defs.h>
+> +
+> +static DEFINE_PER_CPU(bool, watchdog_touch);
+> +static DEFINE_PER_CPU(bool, hard_watchdog_warn);
+> +static cpumask_t __read_mostly watchdog_cpus;
+> +
+> +static unsigned long hardlockup_allcpu_dumped;
+> +
+> +int __init watchdog_nmi_probe(void)
 > +{
-> +	/*
-> +	 * The new CPU will be marked online before the first hrtimer interrupt
-> +	 * runs on it.
-
-It does not need to be the first hrtimer interrupt. The CPU might have
-been offlined/onlined repeatedly. The counter might have any value.
-
-> +      * If another CPU tests for a hardlockup on the new CPU
-> +	 * before it has run its first hrtimer, it will get a false positive.
-> +	 * Touch the watchdog on the new CPU to delay the first check for at
-> +	 * least 3 sampling periods to guarantee one hrtimer has run on the new
-> +	 * CPU.
-> +	 */
-> +	per_cpu(watchdog_touch, cpu) = true;
-
-We should touch also the next_cpu:
-
-	/*
-	 * We are going to check the next CPU. Our watchdog_hrtimer
-	 * need not be zero if the CPU has already been online earlier.
-	 * Touch the watchdog on the next CPU to avoid false positive
-	 * if we try to check it in less then 3 interrupts.
-	 */
-	next_cpu = watchdog_next_cpu(cpu);
-	if (next_cpu < nr_cpu_ids)
-		per_cpu(watchdog_touch, next_cpu) = true;
-
-Alternative would be to clear watchdog_hrtimer. But it would kind-of
-affect also the softlockup detector.
-
-
-> +	/* Match with smp_rmb() in watchdog_check_hardlockup() */
-> +	smp_wmb();
-> +	cpumask_set_cpu(cpu, &watchdog_cpus);
 > +	return 0;
 > +}
+
+This is pretty strange. It shows that it was added a hacky way.
+
 > +
-> +void watchdog_nmi_disable(unsigned int cpu)
+> +notrace void buddy_cpu_touch_watchdog(void)
 > +{
-> +	unsigned int next_cpu = watchdog_next_cpu(cpu);
-> +
 > +	/*
-> +	 * Offlining this CPU will cause the CPU before this one to start
-> +	 * checking the one after this one. If this CPU just finished checking
-> +	 * the next CPU and updating hrtimer_interrupts_saved, and then the
-> +	 * previous CPU checks it within one sample period, it will trigger a
-> +	 * false positive. Touch the watchdog on the next CPU to prevent it.
+> +	 * Using __raw here because some code paths have
+> +	 * preemption enabled.  If preemption is enabled
+> +	 * then interrupts should be enabled too, in which
+> +	 * case we shouldn't have to worry about the watchdog
+> +	 * going off.
 > +	 */
-> +	if (next_cpu < nr_cpu_ids)
-> +		per_cpu(watchdog_touch, next_cpu) = true;
-> +	/* Match with smp_rmb() in watchdog_check_hardlockup() */
-> +	smp_wmb();
-> +	cpumask_clear_cpu(cpu, &watchdog_cpus);
+> +	raw_cpu_write(watchdog_touch, true);
+> +}
+> +EXPORT_SYMBOL_GPL(buddy_cpu_touch_watchdog);
+
+Cut&pasted arch_touch_nmi_watchdog().
+
+> +
+> +static unsigned int watchdog_next_cpu(unsigned int cpu)
+> +{
+> +	cpumask_t cpus = watchdog_cpus;
+> +	unsigned int next_cpu;
+> +
+> +	next_cpu = cpumask_next(cpu, &cpus);
+> +	if (next_cpu >= nr_cpu_ids)
+> +		next_cpu = cpumask_first(&cpus);
+> +
+> +	if (next_cpu == cpu)
+> +		return nr_cpu_ids;
+> +
+> +	return next_cpu;
 > +}
 > +
+[...]
+> +static int is_hardlockup_buddy_cpu(unsigned int cpu)
+> +{
+> +	unsigned long hrint = per_cpu(hrtimer_interrupts, cpu);
+> +
+> +	if (per_cpu(hrtimer_interrupts_saved, cpu) == hrint)
+> +		return 1;
+> +
+> +	per_cpu(hrtimer_interrupts_saved, cpu) = hrint;
+> +	return 0;
+
+This is cut&pasted is_hardlockup(). And the __this_cpu_* API
+is replaced by per_cpu_* API.
+
+> +}
+> +
+> +void watchdog_check_hardlockup(void)
+> +{
+> +	unsigned int next_cpu;
+> +
+> +	/*
+> +	 * Test for hardlockups every 3 samples. The sample period is
+> +	 *  watchdog_thresh * 2 / 5, so 3 samples gets us back to slightly over
+> +	 *  watchdog_thresh (over by 20%).
+> +	 */
+> +	if (__this_cpu_read(hrtimer_interrupts) % 3 != 0)
+> +		return;
+> +
+> +	/* check for a hardlockup on the next CPU */
+> +	next_cpu = watchdog_next_cpu(smp_processor_id());
+> +	if (next_cpu >= nr_cpu_ids)
+> +		return;
+> +
+> +	/* Match with smp_wmb() in watchdog_nmi_enable() / watchdog_nmi_disable() */
+> +	smp_rmb();
+> +
+> +	if (per_cpu(watchdog_touch, next_cpu) == true) {
+> +		per_cpu(watchdog_touch, next_cpu) = false;
+> +		return;
+> +	}
+> +
+> +	if (is_hardlockup_buddy_cpu(next_cpu)) {
+> +		/* only warn once */
+> +		if (per_cpu(hard_watchdog_warn, next_cpu) == true)
+> +			return;
+> +
+> +		/*
+> +		 * Perform all-CPU dump only once to avoid multiple hardlockups
+> +		 * generating interleaving traces
+> +		 */
+> +		if (sysctl_hardlockup_all_cpu_backtrace &&
+> +				!test_and_set_bit(0, &hardlockup_allcpu_dumped))
+> +			trigger_allbutself_cpu_backtrace();
+> +
+> +		if (hardlockup_panic)
+> +			panic("Watchdog detected hard LOCKUP on cpu %u", next_cpu);
+> +		else
+> +			WARN(1, "Watchdog detected hard LOCKUP on cpu %u", next_cpu);
+> +
+> +		per_cpu(hard_watchdog_warn, next_cpu) = true;
+> +	} else {
+> +		per_cpu(hard_watchdog_warn, next_cpu) = false;
+
+Also this cut&pastes a lots of code from watchdog_overflow_callback().
+
+I wonder if we could somehow share the code between the two hardlockup
+detectors. It would be win-win. It might help a lot with maintenance.
 
 Best Regards,
 Petr
