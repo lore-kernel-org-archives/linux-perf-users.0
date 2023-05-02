@@ -2,60 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AADC77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E43A4C7EE21
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:41:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230076AbjEBWk6 (ORCPT
+        id S230078AbjEBWlD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 18:40:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57206 "EHLO
+        Tue, 2 May 2023 18:41:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230081AbjEBWkz (ORCPT
+        with ESMTP id S230082AbjEBWk6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 18:40:55 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8549330D4
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:40:22 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b9a7ba919dcso8836801276.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:40:22 -0700 (PDT)
+        Tue, 2 May 2023 18:40:58 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5E5359F
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:40:25 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-559f142fce7so71393087b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:40:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683067216; x=1685659216;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JmL6hSbfwKLQ2Rkdau58A867nnjWXNzjuwqbLX3orRI=;
-        b=p0HVrCzKK3SdQEGqL8DDu6W0gYIELMrqr04BWz5egZWLV0X7etg/TxW20lOjLKLLRb
-         HMKfHEGUJnRjhyt1q/M4v8x3b/4vx/2McLkN6wBUHQubFl5FFxpgF8EMHI+FN0FbtRuR
-         /xwN6SOCjeWlvV6tHa7upQC/gSKWegFhiIBoPDohinWnQzu6XxiVzSAdF141GNnY6Crz
-         57c7nbkGzo/DeZ1Fu4tzNYMXKoFo1Wi408rxY7xElLByFuEWSn0fFPIkbIRyxfk2+1Wc
-         ZalNCJA4z1qiojZEITqhpzPKAlJ2t7Wjyo64BTLUxjK35tCqwk8SyHtGjaWm0dCNzDGA
-         DQ8g==
+        d=google.com; s=20221208; t=1683067222; x=1685659222;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=2hc6sYqaX/JTEzA/WD5PdQqzvPbvzN/Ao//5MFid2Dk=;
+        b=cPM/XeaYqW8ATEh2et7lHdr0dAMzZNIm5WbuxFf8j8j45I0GkN69BbdrMqfbvtTjFz
+         /rwgkYHSWC2gH7+pVPv4Tep2Zl1i4ofTcxJWGu21WQU5f2n+npUt3CnreJzRJfB0Vuuc
+         DRLXb+f4x0X3cZe4SFAa3gfzN7lHKQU0gtpHFQOZ3H2Ald2QdjFk/xpj2qKEhrAn+EoH
+         kt7DdfJLOuiwhz9l+SqgE85rpt5CJDQtCeQYyHkr7RX09hbO0RTSaiXsSo6u3mg3oXkJ
+         bWUtBTofyZCuUyzSy8IIZZWqd6+PoU69fjDSZ/yuISJ9duzO3QAhqmVIFpUU3eFVgrp9
+         cOCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683067216; x=1685659216;
-        h=content-transfer-encoding:cc:to:from:subject:references
-         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JmL6hSbfwKLQ2Rkdau58A867nnjWXNzjuwqbLX3orRI=;
-        b=j4hT8VzF3Bzrzd6JnG8hVq/4GGKRm2or5l7Ia+3PYwMCizGjAUHw3dee1ItcyX4nOY
-         fvznoHbQz3eGg1GwB57eZ8imXHUOQhhHov7CHba+H1Ytl4RwNtk1NHpvY42IbSih2N1c
-         R4ctF+pV3r0tVD/t62CohoShjSI6t+CbIDbMZrSQrL6qKke1n6lJkD8a2lPZG3gRUp6N
-         KubF4F2McCjwZxuVEcVv6zor4fwDAtUMXP1GAPkSjEiDTJQjZaad54F0nVPABYJCAbVU
-         dqn4/Lu9bGVyBmaoi25Q5zV+CinHfu5oUfIdWxYdE/H3Jz6ILpwxXq7SfbVdBYyR0MeP
-         JZBQ==
-X-Gm-Message-State: AC+VfDxS21IaCONv+ZQbuFtllyltdPCqn5V8Jgq3RIsRotDeJw28H5Uq
-        +XKG/WfAi5Ztk+km5qBSiPc9jqatmm15
-X-Google-Smtp-Source: ACHHUZ4x652Df5lZBpcACbhi+E28WNvkzFhzgZL6XDlnmSPTZdnUsW1rRkupP0Cq/2lAU2/wtqRP3IWafF32
+        d=1e100.net; s=20221208; t=1683067222; x=1685659222;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2hc6sYqaX/JTEzA/WD5PdQqzvPbvzN/Ao//5MFid2Dk=;
+        b=cour5ZtIB50Vk65y+TR6BsI2fbHhNWi1JSyYYOlLp9AZZdP5YW8vduOlxDWDavr9gm
+         UAZ0oJSw8fxiROAvk/yuSHvEnpfPcS1EZZpRUD+YYo2nO3dSXw1MEnIETpChkqGXOGOV
+         LcHnv2ptHJFFtDYxC9D7+zl6YWjehZ+q38s10ScpLzHPYXKuX+gQOkf/JynqrZPomfUG
+         xs3U40UmtB2A/XZW2H7d5s2X9SdHqcW2L+bqoVZo4lDWOGs+Q92IovV2gYsAdWFa6lqn
+         xPJ2wBc5b5I1EMAxANLVCa6FTpiuRK+ewAGodRw6U57vaQbCqMx2np1Er995yvKB2cM6
+         TrwA==
+X-Gm-Message-State: AC+VfDwZfhIfREtVmcNm9czDfCDCjLiyGDeJYfnVS5YsmQcouyZsiKs2
+        Bv/0fWao/wzHLzCLvQbR2IEr3bLrF/14
+X-Google-Smtp-Source: ACHHUZ6aqJfkF1DqLqV5dk0PcZwobR7Cpms4xHZeUifk8XAn1c6w2Zms4SRaNZSJKKQ3uNmdCClNiXbd+SuL
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:e70c:446b:d23b:982e])
- (user=irogers job=sendgmr) by 2002:a05:6902:18c3:b0:b95:6b30:9752 with SMTP
- id ck3-20020a05690218c300b00b956b309752mr11299856ybb.12.1683067215959; Tue,
- 02 May 2023 15:40:15 -0700 (PDT)
-Date:   Tue,  2 May 2023 15:38:16 -0700
+ (user=irogers job=sendgmr) by 2002:a81:a8c4:0:b0:556:edb1:1fb0 with SMTP id
+ f187-20020a81a8c4000000b00556edb11fb0mr11609056ywh.10.1683067222531; Tue, 02
+ May 2023 15:40:22 -0700 (PDT)
+Date:   Tue,  2 May 2023 15:38:17 -0700
 In-Reply-To: <20230502223851.2234828-1-irogers@google.com>
-Message-Id: <20230502223851.2234828-10-irogers@google.com>
+Message-Id: <20230502223851.2234828-11-irogers@google.com>
 Mime-Version: 1.0
 References: <20230502223851.2234828-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v4 09/44] perf vendor events intel: Add tigerlake metric constraints
+Subject: [PATCH v4 10/44] perf test: Test more sysfs events
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -92,162 +90,191 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Previously these constraints were disabled as they contained topdown
-events. Since:
-https://lore.kernel.org/all/20230312021543.3060328-9-irogers@google.com/
-the topdown events are correctly grouped even if no group exists.
-
-This change was created by PR:
-https://github.com/intel/perfmon/pull/71
+Parse events for all PMUs, and not just cpu, in test "Parsing of all
+PMU events from sysfs".
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/tigerlake/tgl-metrics.json    | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/perf/tests/parse-events.c | 129 ++++++++++++++++++--------------
+ 1 file changed, 71 insertions(+), 58 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json b/to=
-ols/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json
-index b442ed4acfbb..ae62bacf9f5e 100644
---- a/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/tigerlake/tgl-metrics.json
-@@ -311,6 +311,7 @@
-     },
-     {
-         "BriefDescription": "This metric represents overall arithmetic flo=
-ating-point (FP) operations fraction the CPU has executed (retired)",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "tma_x87_use + tma_fp_scalar + tma_fp_vector",
-         "MetricGroup": "HPC;TopdownL3;tma_L3_group;tma_light_operations_gr=
-oup",
-         "MetricName": "tma_fp_arith",
-@@ -415,6 +416,7 @@
-     },
-     {
-         "BriefDescription": "Branch Misprediction Cost: Fraction of TMA sl=
-ots wasted per non-speculative branch misprediction (retired JEClear)",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "(tma_branch_mispredicts + tma_fetch_latency * tma_m=
-ispredicts_resteers / (tma_branch_resteers + tma_dsb_switches + tma_icache_=
-misses + tma_itlb_misses + tma_lcp + tma_ms_switches)) * tma_info_slots / B=
-R_MISP_RETIRED.ALL_BRANCHES",
-         "MetricGroup": "Bad;BrMispredicts;tma_issueBM",
-         "MetricName": "tma_info_branch_misprediction_cost",
-@@ -460,6 +462,7 @@
-     },
-     {
-         "BriefDescription": "Probability of Core Bound bottleneck hidden b=
-y SMT-profiling artifacts",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "(100 * (1 - tma_core_bound / tma_ports_utilization =
-if tma_core_bound < tma_ports_utilization else 1) if tma_info_smt_2t_utiliz=
-ation > 0.5 else 0)",
-         "MetricGroup": "Cor;SMT",
-         "MetricName": "tma_info_core_bound_likely",
-@@ -512,6 +515,7 @@
-     },
-     {
-         "BriefDescription": "Total pipeline cost of DSB (uop cache) misses=
- - subset of the Instruction_Fetch_BW Bottleneck",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "100 * (tma_fetch_latency * tma_dsb_switches / (tma_=
-branch_resteers + tma_dsb_switches + tma_icache_misses + tma_itlb_misses + =
-tma_lcp + tma_ms_switches) + tma_fetch_bandwidth * tma_mite / (tma_dsb + tm=
-a_lsd + tma_mite))",
-         "MetricGroup": "DSBmiss;Fed;tma_issueFB",
-         "MetricName": "tma_info_dsb_misses",
-@@ -593,6 +597,7 @@
-     },
-     {
-         "BriefDescription": "Total pipeline cost of instruction fetch band=
-width related bottlenecks",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "100 * (tma_frontend_bound - tma_fetch_latency * tma=
-_mispredicts_resteers / (tma_branch_resteers + tma_dsb_switches + tma_icach=
-e_misses + tma_itlb_misses + tma_lcp + tma_ms_switches)) - tma_info_big_cod=
-e",
-         "MetricGroup": "Fed;FetchBW;Frontend",
-         "MetricName": "tma_info_instruction_fetch_bw",
-@@ -957,6 +962,7 @@
-     },
-     {
-         "BriefDescription": "Total pipeline cost of Memory Address Transla=
-tion related bottlenecks (data-side TLBs)",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "100 * tma_memory_bound * (tma_l1_bound / max(tma_me=
-mory_bound, tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + t=
-ma_store_bound) * (tma_dtlb_load / max(tma_l1_bound, tma_4k_aliasing + tma_=
-dtlb_load + tma_fb_full + tma_lock_latency + tma_split_loads + tma_store_fw=
-d_blk)) + tma_store_bound / (tma_dram_bound + tma_l1_bound + tma_l2_bound +=
- tma_l3_bound + tma_store_bound) * (tma_dtlb_store / (tma_dtlb_store + tma_=
-false_sharing + tma_split_stores + tma_store_latency + tma_streaming_stores=
-)))",
-         "MetricGroup": "Mem;MemoryTLB;Offcore;tma_issueTLB",
-         "MetricName": "tma_info_memory_data_tlbs",
-@@ -965,6 +971,7 @@
-     },
-     {
-         "BriefDescription": "Total pipeline cost of Memory Latency related=
- bottlenecks (external memory and off-core caches)",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "100 * tma_memory_bound * (tma_dram_bound / (tma_dra=
-m_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bound) * (=
-tma_mem_latency / (tma_mem_bandwidth + tma_mem_latency)) + tma_l3_bound / (=
-tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bou=
-nd) * (tma_l3_hit_latency / (tma_contested_accesses + tma_data_sharing + tm=
-a_l3_hit_latency + tma_sq_full)) + tma_l2_bound / (tma_dram_bound + tma_l1_=
-bound + tma_l2_bound + tma_l3_bound + tma_store_bound))",
-         "MetricGroup": "Mem;MemoryLat;Offcore;tma_issueLat",
-         "MetricName": "tma_info_memory_latency",
-@@ -973,6 +980,7 @@
-     },
-     {
-         "BriefDescription": "Total pipeline cost of Branch Misprediction r=
-elated bottlenecks",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "100 * (tma_branch_mispredicts + tma_fetch_latency *=
- tma_mispredicts_resteers / (tma_branch_resteers + tma_dsb_switches + tma_i=
-cache_misses + tma_itlb_misses + tma_lcp + tma_ms_switches))",
-         "MetricGroup": "Bad;BadSpec;BrMispredicts;tma_issueBM",
-         "MetricName": "tma_info_mispredictions",
-@@ -1024,6 +1032,7 @@
-     },
-     {
-         "BriefDescription": "Average number of Uops retired in cycles wher=
-e at least one uop has retired.",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "tma_retiring * tma_info_slots / cpu@UOPS_RETIRED.SL=
-OTS\\,cmask\\=3D1@",
-         "MetricGroup": "Pipeline;Ret",
-         "MetricName": "tma_info_retire"
-@@ -1221,6 +1230,7 @@
-     },
-     {
-         "BriefDescription": "This metric represents fraction of slots wher=
-e the CPU was retiring memory operations -- uops for memory load or store a=
-ccesses.",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "tma_light_operations * MEM_INST_RETIRED.ANY / INST_=
-RETIRED.ANY",
-         "MetricGroup": "Pipeline;TopdownL3;tma_L3_group;tma_light_operatio=
-ns_group",
-         "MetricName": "tma_memory_operations",
-@@ -1291,6 +1301,7 @@
-     },
-     {
-         "BriefDescription": "This metric represents the remaining light uo=
-ps fraction the CPU has executed - remaining means not covered by other sib=
-ling nodes",
-+        "MetricConstraint": "NO_GROUP_EVENTS",
-         "MetricExpr": "max(0, tma_light_operations - (tma_fp_arith + tma_m=
-emory_operations + tma_branch_instructions + tma_nop_instructions))",
-         "MetricGroup": "Pipeline;TopdownL3;tma_L3_group;tma_light_operatio=
-ns_group",
-         "MetricName": "tma_other_light_ops",
---=20
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index 8068cfd89b84..3721a2182f45 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -7,6 +7,7 @@
+ #include "debug.h"
+ #include "pmu.h"
+ #include "pmu-hybrid.h"
++#include "pmus.h"
+ #include <dirent.h>
+ #include <errno.h>
+ #include "fncache.h"
+@@ -558,7 +559,8 @@ static int test__checkevent_pmu_events(struct evlist *evlist)
+ 	struct evsel *evsel = evlist__first(evlist);
+ 
+ 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
+-	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
++	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type ||
++				      strcmp(evsel->pmu_name, "cpu"));
+ 	TEST_ASSERT_VAL("wrong exclude_user",
+ 			!evsel->core.attr.exclude_user);
+ 	TEST_ASSERT_VAL("wrong exclude_kernel",
+@@ -590,7 +592,8 @@ static int test__checkevent_pmu_events_mix(struct evlist *evlist)
+ 	/* cpu/pmu-event/u*/
+ 	evsel = evsel__next(evsel);
+ 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
+-	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
++	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type ||
++				      strcmp(evsel->pmu_name, "cpu"));
+ 	TEST_ASSERT_VAL("wrong exclude_user",
+ 			!evsel->core.attr.exclude_user);
+ 	TEST_ASSERT_VAL("wrong exclude_kernel",
+@@ -2225,74 +2228,84 @@ static int test_pmu(void)
+ 
+ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+ {
+-	struct stat st;
+-	char path[PATH_MAX];
+-	struct dirent *ent;
+-	DIR *dir;
+-	int ret;
+-
+-	if (!test_pmu())
+-		return TEST_SKIP;
++	struct perf_pmu *pmu;
++	int ret = TEST_OK;
+ 
+-	snprintf(path, PATH_MAX, "%s/bus/event_source/devices/cpu/events/",
+-		 sysfs__mountpoint());
++	if (list_empty(&pmus))
++		perf_pmu__scan(NULL);
+ 
+-	ret = stat(path, &st);
+-	if (ret) {
+-		pr_debug("omitting PMU cpu events tests: %s\n", path);
+-		return TEST_OK;
+-	}
++	perf_pmus__for_each_pmu(pmu) {
++		struct stat st;
++		char path[PATH_MAX];
++		struct dirent *ent;
++		DIR *dir;
++		int err;
+ 
+-	dir = opendir(path);
+-	if (!dir) {
+-		pr_debug("can't open pmu event dir: %s\n", path);
+-		return TEST_FAIL;
+-	}
++		snprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/events/",
++			sysfs__mountpoint(), pmu->name);
+ 
+-	ret = TEST_OK;
+-	while ((ent = readdir(dir))) {
+-		struct evlist_test e = { .name = NULL, };
+-		char name[2 * NAME_MAX + 1 + 12 + 3];
+-		int test_ret;
++		err = stat(path, &st);
++		if (err) {
++			pr_debug("skipping PMU %s events tests: %s\n", pmu->name, path);
++			continue;
++		}
+ 
+-		/* Names containing . are special and cannot be used directly */
+-		if (strchr(ent->d_name, '.'))
++		dir = opendir(path);
++		if (!dir) {
++			pr_debug("can't open pmu event dir: %s\n", path);
++			ret = combine_test_results(ret, TEST_SKIP);
+ 			continue;
++		}
+ 
+-		snprintf(name, sizeof(name), "cpu/event=%s/u", ent->d_name);
++		while ((ent = readdir(dir))) {
++			struct evlist_test e = { .name = NULL, };
++			char name[2 * NAME_MAX + 1 + 12 + 3];
++			int test_ret;
+ 
+-		e.name  = name;
+-		e.check = test__checkevent_pmu_events;
++			/* Names containing . are special and cannot be used directly */
++			if (strchr(ent->d_name, '.'))
++				continue;
+ 
+-		test_ret = test_event(&e);
+-		if (test_ret != TEST_OK) {
+-			pr_debug("Test PMU event failed for '%s'", name);
+-			ret = combine_test_results(ret, test_ret);
+-		}
+-		/*
+-		 * Names containing '-' are recognized as prefixes and suffixes
+-		 * due to '-' being a legacy PMU separator. This fails when the
+-		 * prefix or suffix collides with an existing legacy token. For
+-		 * example, branch-brs has a prefix (branch) that collides with
+-		 * a PE_NAME_CACHE_TYPE token causing a parse error as a suffix
+-		 * isn't expected after this. As event names in the config
+-		 * slashes are allowed a '-' in the name we check this works
+-		 * above.
+-		 */
+-		if (strchr(ent->d_name, '-'))
+-			continue;
++			snprintf(name, sizeof(name), "%s/event=%s/u", pmu->name, ent->d_name);
+ 
+-		snprintf(name, sizeof(name), "%s:u,cpu/event=%s/u", ent->d_name, ent->d_name);
+-		e.name  = name;
+-		e.check = test__checkevent_pmu_events_mix;
+-		test_ret = test_event(&e);
+-		if (test_ret != TEST_OK) {
+-			pr_debug("Test PMU event failed for '%s'", name);
+-			ret = combine_test_results(ret, test_ret);
++			e.name  = name;
++			e.check = test__checkevent_pmu_events;
++
++			test_ret = test_event(&e);
++			if (test_ret != TEST_OK) {
++				pr_debug("Test PMU event failed for '%s'", name);
++				ret = combine_test_results(ret, test_ret);
++			}
++
++			if (!is_pmu_core(pmu->name))
++				continue;
++
++			/*
++			 * Names containing '-' are recognized as prefixes and suffixes
++			 * due to '-' being a legacy PMU separator. This fails when the
++			 * prefix or suffix collides with an existing legacy token. For
++			 * example, branch-brs has a prefix (branch) that collides with
++			 * a PE_NAME_CACHE_TYPE token causing a parse error as a suffix
++			 * isn't expected after this. As event names in the config
++			 * slashes are allowed a '-' in the name we check this works
++			 * above.
++			 */
++			if (strchr(ent->d_name, '-'))
++				continue;
++
++			snprintf(name, sizeof(name), "%s:u,%s/event=%s/u",
++				 ent->d_name, pmu->name, ent->d_name);
++			e.name  = name;
++			e.check = test__checkevent_pmu_events_mix;
++			test_ret = test_event(&e);
++			if (test_ret != TEST_OK) {
++				pr_debug("Test PMU event failed for '%s'", name);
++				ret = combine_test_results(ret, test_ret);
++			}
+ 		}
+-	}
+ 
+-	closedir(dir);
++		closedir(dir);
++	}
+ 	return ret;
+ }
+ 
+-- 
 2.40.1.495.gc816e09b53d-goog
 
