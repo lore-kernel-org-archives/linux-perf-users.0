@@ -2,58 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E41C19F20
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5E7C7EE21
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230389AbjEBWyb (ORCPT
+        id S230418AbjEBWyd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 18:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43738 "EHLO
+        Tue, 2 May 2023 18:54:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230403AbjEBWyU (ORCPT
+        with ESMTP id S230423AbjEBWyX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 18:54:20 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97E903C0D
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:53:39 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id af79cd13be357-74e1b845790so501679785a.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:53:39 -0700 (PDT)
+        Tue, 2 May 2023 18:54:23 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6BA3C05
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:53:44 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-55a3f6a29edso971457b3.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:53:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683067953; x=1685659953;
+        d=google.com; s=20221208; t=1683067963; x=1685659963;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uX2HSmx6kEz7AF/sikU4sT7+5OfRWtA69N2zyZbBkbM=;
-        b=1nOtmd0MqdGVB23j6Ds+yqzkf3EULYJiJ2O4aUWz6Ym/jqwNth3jL5bxye+DK2P0Pz
-         stGYp88470Colk7hQVwnVszoPCRRE8sZfJ90ITM5WBhFNUD4b7mBrg/Mu92OLkgWy0Y+
-         C2V/lkBSRAZQt7buViBCScGsdcCC61O/cV0S7Lr1qbswX6UUdOyEoC1o98+oqq75LBGR
-         TUvOnSkbcr7OSCqK8GV1WbmytBxUJ6xAfRVY9Prz3ZqPGfbsw4rQW0SFJf4gStM4jkNA
-         +wlMsqp+kD1Zt3M1kr4MeHnYvBLDRYT8xMy3tttnl2QDlTA2I8i5g/CtEPvFOQcgk6zs
-         E5Hg==
+        bh=aRrQWfMbhp+rlO4pd/8kREfyV/ueQNA+MFq0luWCz2E=;
+        b=uH8dLLHV9VAkcbnRVoJsJuOEduNrj0iGNP3KCy/ymDzqpYFajcjSeUA7gGnrCcTw85
+         0TaLt2UY5fsVtJ7coUldx5rwZYX0Rdg3ZmGuj5kU2rrP8PjN8QZrgJ9cY9ZVTsdzcxI8
+         SXalSvCcFqrpjZ2geAhtgrHRWitvVS1RjRWDeN5kFGCU+Pm2A6G1UVywsZQpoBfY5nA3
+         MysLaft0D1kRNv9cqcZefif9H+X5msp5AzsYF3m1xZusK9AuPzYMGpZ0eNBEb6hJc+YF
+         bE4+0hE6N5Tx6mWK+s9/Rxsb9xHURuS1NmmOBtKp/CPZTjwgijLOaWbbTfpttenWPN+a
+         Cq/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683067953; x=1685659953;
+        d=1e100.net; s=20221208; t=1683067963; x=1685659963;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uX2HSmx6kEz7AF/sikU4sT7+5OfRWtA69N2zyZbBkbM=;
-        b=k+2ilxrsIjJ6NJ999iqf1V/jOYgRrkXlLkvOYcy+dfk3PiBdt5JGGhEhYkc+OV+oqc
-         T1i1geCrMAiy+jUxZnThxf96TvZom4JX89YiXilNuo5eKn+eFphGwUlt7p+aRp4WGu7S
-         gSznssBUMuLAWMWzw5RrqrNB7lH4xtOMpINaDu3ftyt0TRcRCU41F5WHxH5qX6rDo5pM
-         rYAVTA1fb3boFFr0yiziYQo1fu31NapWRH1F+i+Vepy5NvCzTjifTtoRV4GvzL6H8r+z
-         bJaELNBK/1DqQatmcwAGIOg+MoJUWKgWnojQVjeOKWW4+k2WfKFM0Bg4yeOiFhxmE8Ik
-         4I/Q==
-X-Gm-Message-State: AC+VfDzg/DNJInEy4sOH+z/nuMoM0aKRU6f5yR99bjublTheop6qzpFa
-        2m4ldvTACnvBVkKDjav2UE9IwK8M8Qa3
-X-Google-Smtp-Source: ACHHUZ5M9/CQ9k1r5X88Vqj7nyogkOweBJ6MjlyJszgJ4oyYuvz+nM/zMhTKFX0AUFD22vbQmtQoejLWC6Mu
+        bh=aRrQWfMbhp+rlO4pd/8kREfyV/ueQNA+MFq0luWCz2E=;
+        b=g+9JrDF2jWzJGhAE4dkzq0hwOl1xrTWMbbbvr7Z6SrmgBk6H2IxK27SndM6ygrirVf
+         KNe/YvSViRSrDvcPmachPwT1PMji494W+96KbFU+zYP5LvtNZ4PC/ZkxGOmEXZMz/RE4
+         YfzUxZZtapnZNeH20HN5wPpjZL+uuFXjviink4lvHt4Nq7k+cw0IWXpoKEqrZkcIShbc
+         oeiTXnNAkomlQE+RNud3Vh3By+/FkHiSwCtzraoiQOvRjvOJFPS3siikW9YqrO2jsn9j
+         D3zaZ1ICwO8s/mW6vBpMFD7Z6K11mcWE0N1PpG6jl/yBOsMUbR8+amxHj3HoKQfIa6Jj
+         ZtRQ==
+X-Gm-Message-State: AC+VfDxxexJqocehPbEkKktg9dN0r6z9Dv+MsTweRkCBxknv6hWXYM8W
+        L+7Vfc05WYwBwYBRdYN0IULACGzZA9rN
+X-Google-Smtp-Source: ACHHUZ6l6yQT0eNizaa54wKMpaY+fppvn7gI2uSsn6yH/Kk1CrNSxJL7CW+d6Nmv2hlVj0VFHbeLUspxXl1Q
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:e70c:446b:d23b:982e])
- (user=irogers job=sendgmr) by 2002:a05:6902:1081:b0:b9d:d5dc:5971 with SMTP
- id v1-20020a056902108100b00b9dd5dc5971mr6040545ybu.2.1683067375581; Tue, 02
- May 2023 15:42:55 -0700 (PDT)
-Date:   Tue,  2 May 2023 15:38:38 -0700
+ (user=irogers job=sendgmr) by 2002:a17:903:408d:b0:1a9:7f45:8711 with SMTP id
+ z13-20020a170903408d00b001a97f458711mr8155plc.6.1683067402755; Tue, 02 May
+ 2023 15:43:22 -0700 (PDT)
+Date:   Tue,  2 May 2023 15:38:42 -0700
 In-Reply-To: <20230502223851.2234828-1-irogers@google.com>
-Message-Id: <20230502223851.2234828-32-irogers@google.com>
+Message-Id: <20230502223851.2234828-36-irogers@google.com>
 Mime-Version: 1.0
 References: <20230502223851.2234828-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v4 31/44] perf test: Add cputype testing to perf stat
+Subject: [PATCH v4 35/44] perf parse-events: Avoid error when assigning a
+ legacy cache term
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,72 +95,115 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Check a bogus PMU fails and that a known PMU succeeds. Limit to PMUs
-known cpu, cpu_atom and armv8_pmuv3_0 ones.
+Avoid the parser error:
+'''
+$ perf stat -e 'cycles/name=l1d/' true
+event syntax error: 'cycles/name=l1d/'
+                                \___ parser error
+'''
+by combining the name and legacy cache cases in the parser.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/stat.sh | 44 ++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ tools/perf/tests/parse-events.c | 21 +++++++++++++++++++++
+ tools/perf/util/parse-events.y  | 10 ++++++----
+ 2 files changed, 27 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index 2c1d3f704995..fe1283ca39d1 100755
---- a/tools/perf/tests/shell/stat.sh
-+++ b/tools/perf/tests/shell/stat.sh
-@@ -91,9 +91,53 @@ test_topdown_weak_groups() {
-   echo "Topdown weak groups test [Success]"
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index eb893cc15878..72a10bed84fd 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -1509,6 +1509,16 @@ static int test__term_equal_term(struct evlist *evlist)
+ 	return TEST_OK;
  }
  
-+test_cputype() {
-+  # Test --cputype argument.
-+  echo "cputype test"
++static int test__term_equal_legacy(struct evlist *evlist)
++{
++	struct evsel *evsel = evlist__first(evlist);
 +
-+  # Bogus PMU should fail.
-+  if perf stat --cputype="123" -e instructions true > /dev/null 2>&1
-+  then
-+    echo "cputype test [Bogus PMU didn't fail]"
-+    err=1
-+    return
-+  fi
-+
-+  # Find a known PMU for cputype.
-+  pmu=""
-+  for i in cpu cpu_atom armv8_pmuv3_0
-+  do
-+    if test -d "/sys/devices/$i"
-+    then
-+      pmu="$i"
-+      break
-+    fi
-+    if perf stat -e "$i/instructions/" true > /dev/null 2>&1
-+    then
-+      pmu="$i"
-+      break
-+    fi
-+  done
-+  if test "x$pmu" = "x"
-+  then
-+    echo "cputype test [Skipped known PMU not found]"
-+    return
-+  fi
-+
-+  # Test running with cputype produces output.
-+  if ! perf stat --cputype="$pmu" -e instructions true 2>&1 | grep -E -q "instructions"
-+  then
-+    echo "cputype test [Failed count missed with given filter]"
-+    err=1
-+    return
-+  fi
-+  echo "cputype test [Success]"
++	TEST_ASSERT_VAL("wrong type", evsel->core.attr.type == PERF_TYPE_HARDWARE);
++	TEST_ASSERT_VAL("wrong config", test_config(evsel, PERF_COUNT_HW_CPU_CYCLES));
++	TEST_ASSERT_VAL("wrong name setting", strcmp(evsel->name, "l1d") == 0);
++	return TEST_OK;
 +}
 +
- test_default_stat
- test_stat_record_report
- test_stat_repeat_weak_groups
- test_topdown_groups
- test_topdown_weak_groups
-+test_cputype
- exit $err
+ #ifdef HAVE_LIBTRACEEVENT
+ static int count_tracepoints(void)
+ {
+@@ -1886,6 +1896,11 @@ static const struct evlist_test test__events[] = {
+ 		.check = test__term_equal_term,
+ 		/* 8 */
+ 	},
++	{
++		.name  = "cycles/name=l1d/",
++		.check = test__term_equal_legacy,
++		/* 9 */
++	},
+ };
+ 
+ static const struct evlist_test test__events_pmu[] = {
+@@ -2073,6 +2088,12 @@ static const struct evlist_test test__events_pmu[] = {
+ 		.check = test__term_equal_term,
+ 		/* 0 */
+ 	},
++	{
++		.name  = "cpu/cycles,name=l1d/",
++		.valid = test__pmu_cpu_valid,
++		.check = test__term_equal_legacy,
++		/* 1 */
++	},
+ };
+ 
+ struct terms_test {
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 0aaebc57748e..f4ee03b5976b 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -82,7 +82,7 @@ static void free_list_evsel(struct list_head* list_evsel)
+ %type <str> PE_EVENT_NAME
+ %type <str> PE_KERNEL_PMU_EVENT PE_PMU_EVENT_FAKE
+ %type <str> PE_DRV_CFG_TERM
+-%type <str> name_or_raw
++%type <str> name_or_raw name_or_legacy
+ %destructor { free ($$); } <str>
+ %type <term> event_term
+ %destructor { parse_events_term__delete ($$); } <term>
+@@ -739,6 +739,8 @@ event_term
+ 
+ name_or_raw: PE_RAW | PE_NAME | PE_LEGACY_CACHE
+ 
++name_or_legacy: PE_NAME | PE_LEGACY_CACHE
++
+ event_term:
+ PE_RAW
+ {
+@@ -752,7 +754,7 @@ PE_RAW
+ 	$$ = term;
+ }
+ |
+-name_or_raw '=' PE_NAME
++name_or_raw '=' name_or_legacy
+ {
+ 	struct parse_events_term *term;
+ 
+@@ -826,7 +828,7 @@ PE_TERM_HW
+ 	$$ = term;
+ }
+ |
+-PE_TERM '=' PE_NAME
++PE_TERM '=' name_or_legacy
+ {
+ 	struct parse_events_term *term;
+ 
+@@ -872,7 +874,7 @@ PE_TERM
+ 	$$ = term;
+ }
+ |
+-name_or_raw array '=' PE_NAME
++name_or_raw array '=' name_or_legacy
+ {
+ 	struct parse_events_term *term;
+ 
 -- 
 2.40.1.495.gc816e09b53d-goog
 
