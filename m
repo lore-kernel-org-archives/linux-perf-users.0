@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43A4C7EE21
-	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78D0C7EE21
+	for <linux-perf-users@archiver.kernel.org>; Tue,  2 May 2023 22:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230078AbjEBWlD (ORCPT
+        id S229891AbjEBWlM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 18:41:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57302 "EHLO
+        Tue, 2 May 2023 18:41:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230082AbjEBWk6 (ORCPT
+        with ESMTP id S229936AbjEBWlM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 18:40:58 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5E5359F
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:40:25 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-559f142fce7so71393087b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:40:25 -0700 (PDT)
+        Tue, 2 May 2023 18:41:12 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6285359C
+        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 15:40:31 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-b9a7e65b34aso7799132276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 15:40:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683067222; x=1685659222;
+        d=google.com; s=20221208; t=1683067229; x=1685659229;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2hc6sYqaX/JTEzA/WD5PdQqzvPbvzN/Ao//5MFid2Dk=;
-        b=cPM/XeaYqW8ATEh2et7lHdr0dAMzZNIm5WbuxFf8j8j45I0GkN69BbdrMqfbvtTjFz
-         /rwgkYHSWC2gH7+pVPv4Tep2Zl1i4ofTcxJWGu21WQU5f2n+npUt3CnreJzRJfB0Vuuc
-         DRLXb+f4x0X3cZe4SFAa3gfzN7lHKQU0gtpHFQOZ3H2Ald2QdjFk/xpj2qKEhrAn+EoH
-         kt7DdfJLOuiwhz9l+SqgE85rpt5CJDQtCeQYyHkr7RX09hbO0RTSaiXsSo6u3mg3oXkJ
-         bWUtBTofyZCuUyzSy8IIZZWqd6+PoU69fjDSZ/yuISJ9duzO3QAhqmVIFpUU3eFVgrp9
-         cOCw==
+        bh=DOnZ2OKjlCq2CMx90UX2ZPWCEDMEl/hBSCdauBOSwyg=;
+        b=IoTJMyEobSDIJv1QyUDMmxGGV9wHG4+zMd6uosrqg//eIBbse9xgINyme8g2w9CntC
+         DFPbZ3X8+n3aJsIiNC2/Ul7Bdojx6o5tVgszEn9B/qpRuVxKNt9Ow8hw1pKeqZLeYcd1
+         IbJoq6P1NIS4QZEyvKfTKTSOANbl+4Bnau+JSClba+FF2atLEFMO2sAVnVw+Or5aZVRI
+         2EfixSZzj+Q8A3CR0a47urNbRvtSK/ELNieLxZd5ikydlCWCZTF5VXkCR7GH503SqaoI
+         8rESINzQAlxOqwcyWsxz/xdToKiviJMW16wIHCHkAJTqjmQrVWrfe+L0Z4A6iSbV3UTh
+         JldQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683067222; x=1685659222;
+        d=1e100.net; s=20221208; t=1683067229; x=1685659229;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2hc6sYqaX/JTEzA/WD5PdQqzvPbvzN/Ao//5MFid2Dk=;
-        b=cour5ZtIB50Vk65y+TR6BsI2fbHhNWi1JSyYYOlLp9AZZdP5YW8vduOlxDWDavr9gm
-         UAZ0oJSw8fxiROAvk/yuSHvEnpfPcS1EZZpRUD+YYo2nO3dSXw1MEnIETpChkqGXOGOV
-         LcHnv2ptHJFFtDYxC9D7+zl6YWjehZ+q38s10ScpLzHPYXKuX+gQOkf/JynqrZPomfUG
-         xs3U40UmtB2A/XZW2H7d5s2X9SdHqcW2L+bqoVZo4lDWOGs+Q92IovV2gYsAdWFa6lqn
-         xPJ2wBc5b5I1EMAxANLVCa6FTpiuRK+ewAGodRw6U57vaQbCqMx2np1Er995yvKB2cM6
-         TrwA==
-X-Gm-Message-State: AC+VfDwZfhIfREtVmcNm9czDfCDCjLiyGDeJYfnVS5YsmQcouyZsiKs2
-        Bv/0fWao/wzHLzCLvQbR2IEr3bLrF/14
-X-Google-Smtp-Source: ACHHUZ6aqJfkF1DqLqV5dk0PcZwobR7Cpms4xHZeUifk8XAn1c6w2Zms4SRaNZSJKKQ3uNmdCClNiXbd+SuL
+        bh=DOnZ2OKjlCq2CMx90UX2ZPWCEDMEl/hBSCdauBOSwyg=;
+        b=aaHGp7zPbxf0cP8tP03L2ulfo1YDUP/O0vtrksjFYX4QZ7a23m0Ts6m9KEOQoFHQm9
+         02rAIhxEbbM9BS+GpHCYTPx+1HNji0V9s1sjB1KrYy5SlIRO0Dhcfjnx0nji56KjQCeA
+         Bj57FMa+HO9CPB38KIwMPelkUcFGJIf/X0cHMde8VdXfgWr5525g7GUWABc9q7MAbUIf
+         jhFDlB8Q1m3n+zhEJ2nKi2f54KKr00B9gRWFQmJfJzd+CiER8sMkxPH5+lJ11ljau44N
+         ChehUsM9Fwglr5QcbPYRVTC7WwPh+qp1MFdogkxSBK2XaDcHe5ZI0+8M0b56ML/WQpGB
+         MhFw==
+X-Gm-Message-State: AC+VfDxmPETMECWwhgOtPcHSKSQcw22Rch+eNbkoNVvVFt9ohxYG9Aic
+        NdqKJtwBaQkudvbIftFFMrdHHmvbFbZ6
+X-Google-Smtp-Source: ACHHUZ7bkS+Y09SwE9jvgupciznHDby6NANZZhdZ47txsHbvKXbziwG5oshPrZcmZcSd7aM/aAZ/WxBv1xJX
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:e70c:446b:d23b:982e])
- (user=irogers job=sendgmr) by 2002:a81:a8c4:0:b0:556:edb1:1fb0 with SMTP id
- f187-20020a81a8c4000000b00556edb11fb0mr11609056ywh.10.1683067222531; Tue, 02
- May 2023 15:40:22 -0700 (PDT)
-Date:   Tue,  2 May 2023 15:38:17 -0700
+ (user=irogers job=sendgmr) by 2002:a25:d250:0:b0:b9e:2f92:52b with SMTP id
+ j77-20020a25d250000000b00b9e2f92052bmr2684908ybg.2.1683067229666; Tue, 02 May
+ 2023 15:40:29 -0700 (PDT)
+Date:   Tue,  2 May 2023 15:38:18 -0700
 In-Reply-To: <20230502223851.2234828-1-irogers@google.com>
-Message-Id: <20230502223851.2234828-11-irogers@google.com>
+Message-Id: <20230502223851.2234828-12-irogers@google.com>
 Mime-Version: 1.0
 References: <20230502223851.2234828-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Subject: [PATCH v4 10/44] perf test: Test more sysfs events
+Subject: [PATCH v4 11/44] perf test: Use valid for PMU tests
 From:   Ian Rogers <irogers@google.com>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>,
@@ -94,185 +94,88 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Parse events for all PMUs, and not just cpu, in test "Parsing of all
-PMU events from sysfs".
+Rather than skip all tests in test__events_pmu if PMU cpu isn't
+present, use the per-test valid test. This allows the running of
+software PMU tests on hybrid and arm systems.
 
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/parse-events.c | 129 ++++++++++++++++++--------------
- 1 file changed, 71 insertions(+), 58 deletions(-)
+ tools/perf/tests/parse-events.c | 27 +++++++++------------------
+ 1 file changed, 9 insertions(+), 18 deletions(-)
 
 diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 8068cfd89b84..3721a2182f45 100644
+index 3721a2182f45..c06fa7653ac2 100644
 --- a/tools/perf/tests/parse-events.c
 +++ b/tools/perf/tests/parse-events.c
-@@ -7,6 +7,7 @@
- #include "debug.h"
- #include "pmu.h"
- #include "pmu-hybrid.h"
-+#include "pmus.h"
- #include <dirent.h>
- #include <errno.h>
- #include "fncache.h"
-@@ -558,7 +559,8 @@ static int test__checkevent_pmu_events(struct evlist *evlist)
- 	struct evsel *evsel = evlist__first(evlist);
+@@ -1432,6 +1432,11 @@ static int test__checkevent_config_cache(struct evlist *evlist)
+ 	return TEST_OK;
+ }
  
- 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type ||
-+				      strcmp(evsel->pmu_name, "cpu"));
- 	TEST_ASSERT_VAL("wrong exclude_user",
- 			!evsel->core.attr.exclude_user);
- 	TEST_ASSERT_VAL("wrong exclude_kernel",
-@@ -590,7 +592,8 @@ static int test__checkevent_pmu_events_mix(struct evlist *evlist)
- 	/* cpu/pmu-event/u*/
- 	evsel = evsel__next(evsel);
- 	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
--	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type ||
-+				      strcmp(evsel->pmu_name, "cpu"));
- 	TEST_ASSERT_VAL("wrong exclude_user",
- 			!evsel->core.attr.exclude_user);
- 	TEST_ASSERT_VAL("wrong exclude_kernel",
-@@ -2225,74 +2228,84 @@ static int test_pmu(void)
- 
- static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
++static bool test__pmu_cpu_valid(void)
++{
++	return !!perf_pmu__find("cpu");
++}
++
+ static bool test__intel_pt_valid(void)
  {
+ 	return !!perf_pmu__find("intel_pt");
+@@ -1981,21 +1986,25 @@ static const struct evlist_test test__events[] = {
+ static const struct evlist_test test__events_pmu[] = {
+ 	{
+ 		.name  = "cpu/config=10,config1,config2=3,period=1000/u",
++		.valid = test__pmu_cpu_valid,
+ 		.check = test__checkevent_pmu,
+ 		/* 0 */
+ 	},
+ 	{
+ 		.name  = "cpu/config=1,name=krava/u,cpu/config=2/u",
++		.valid = test__pmu_cpu_valid,
+ 		.check = test__checkevent_pmu_name,
+ 		/* 1 */
+ 	},
+ 	{
+ 		.name  = "cpu/config=1,call-graph=fp,time,period=100000/,cpu/config=2,call-graph=no,time=0,period=2000/",
++		.valid = test__pmu_cpu_valid,
+ 		.check = test__checkevent_pmu_partial_time_callgraph,
+ 		/* 2 */
+ 	},
+ 	{
+ 		.name  = "cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp",
++		.valid = test__pmu_cpu_valid,
+ 		.check = test__checkevent_complex_name,
+ 		/* 3 */
+ 	},
+@@ -2211,21 +2220,6 @@ static int test__terms2(struct test_suite *test __maybe_unused, int subtest __ma
+ 	return test_terms(test__terms, ARRAY_SIZE(test__terms));
+ }
+ 
+-static int test_pmu(void)
+-{
 -	struct stat st;
 -	char path[PATH_MAX];
--	struct dirent *ent;
--	DIR *dir;
 -	int ret;
 -
+-	snprintf(path, PATH_MAX, "%s/bus/event_source/devices/cpu/format/",
+-		 sysfs__mountpoint());
+-
+-	ret = stat(path, &st);
+-	if (ret)
+-		pr_debug("omitting PMU cpu tests\n");
+-	return !ret;
+-}
+-
+ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+ {
+ 	struct perf_pmu *pmu;
+@@ -2311,9 +2305,6 @@ static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest
+ 
+ static int test__pmu_events2(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+ {
 -	if (!test_pmu())
 -		return TEST_SKIP;
-+	struct perf_pmu *pmu;
-+	int ret = TEST_OK;
- 
--	snprintf(path, PATH_MAX, "%s/bus/event_source/devices/cpu/events/",
--		 sysfs__mountpoint());
-+	if (list_empty(&pmus))
-+		perf_pmu__scan(NULL);
- 
--	ret = stat(path, &st);
--	if (ret) {
--		pr_debug("omitting PMU cpu events tests: %s\n", path);
--		return TEST_OK;
--	}
-+	perf_pmus__for_each_pmu(pmu) {
-+		struct stat st;
-+		char path[PATH_MAX];
-+		struct dirent *ent;
-+		DIR *dir;
-+		int err;
- 
--	dir = opendir(path);
--	if (!dir) {
--		pr_debug("can't open pmu event dir: %s\n", path);
--		return TEST_FAIL;
--	}
-+		snprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/events/",
-+			sysfs__mountpoint(), pmu->name);
- 
--	ret = TEST_OK;
--	while ((ent = readdir(dir))) {
--		struct evlist_test e = { .name = NULL, };
--		char name[2 * NAME_MAX + 1 + 12 + 3];
--		int test_ret;
-+		err = stat(path, &st);
-+		if (err) {
-+			pr_debug("skipping PMU %s events tests: %s\n", pmu->name, path);
-+			continue;
-+		}
- 
--		/* Names containing . are special and cannot be used directly */
--		if (strchr(ent->d_name, '.'))
-+		dir = opendir(path);
-+		if (!dir) {
-+			pr_debug("can't open pmu event dir: %s\n", path);
-+			ret = combine_test_results(ret, TEST_SKIP);
- 			continue;
-+		}
- 
--		snprintf(name, sizeof(name), "cpu/event=%s/u", ent->d_name);
-+		while ((ent = readdir(dir))) {
-+			struct evlist_test e = { .name = NULL, };
-+			char name[2 * NAME_MAX + 1 + 12 + 3];
-+			int test_ret;
- 
--		e.name  = name;
--		e.check = test__checkevent_pmu_events;
-+			/* Names containing . are special and cannot be used directly */
-+			if (strchr(ent->d_name, '.'))
-+				continue;
- 
--		test_ret = test_event(&e);
--		if (test_ret != TEST_OK) {
--			pr_debug("Test PMU event failed for '%s'", name);
--			ret = combine_test_results(ret, test_ret);
--		}
--		/*
--		 * Names containing '-' are recognized as prefixes and suffixes
--		 * due to '-' being a legacy PMU separator. This fails when the
--		 * prefix or suffix collides with an existing legacy token. For
--		 * example, branch-brs has a prefix (branch) that collides with
--		 * a PE_NAME_CACHE_TYPE token causing a parse error as a suffix
--		 * isn't expected after this. As event names in the config
--		 * slashes are allowed a '-' in the name we check this works
--		 * above.
--		 */
--		if (strchr(ent->d_name, '-'))
--			continue;
-+			snprintf(name, sizeof(name), "%s/event=%s/u", pmu->name, ent->d_name);
- 
--		snprintf(name, sizeof(name), "%s:u,cpu/event=%s/u", ent->d_name, ent->d_name);
--		e.name  = name;
--		e.check = test__checkevent_pmu_events_mix;
--		test_ret = test_event(&e);
--		if (test_ret != TEST_OK) {
--			pr_debug("Test PMU event failed for '%s'", name);
--			ret = combine_test_results(ret, test_ret);
-+			e.name  = name;
-+			e.check = test__checkevent_pmu_events;
-+
-+			test_ret = test_event(&e);
-+			if (test_ret != TEST_OK) {
-+				pr_debug("Test PMU event failed for '%s'", name);
-+				ret = combine_test_results(ret, test_ret);
-+			}
-+
-+			if (!is_pmu_core(pmu->name))
-+				continue;
-+
-+			/*
-+			 * Names containing '-' are recognized as prefixes and suffixes
-+			 * due to '-' being a legacy PMU separator. This fails when the
-+			 * prefix or suffix collides with an existing legacy token. For
-+			 * example, branch-brs has a prefix (branch) that collides with
-+			 * a PE_NAME_CACHE_TYPE token causing a parse error as a suffix
-+			 * isn't expected after this. As event names in the config
-+			 * slashes are allowed a '-' in the name we check this works
-+			 * above.
-+			 */
-+			if (strchr(ent->d_name, '-'))
-+				continue;
-+
-+			snprintf(name, sizeof(name), "%s:u,%s/event=%s/u",
-+				 ent->d_name, pmu->name, ent->d_name);
-+			e.name  = name;
-+			e.check = test__checkevent_pmu_events_mix;
-+			test_ret = test_event(&e);
-+			if (test_ret != TEST_OK) {
-+				pr_debug("Test PMU event failed for '%s'", name);
-+				ret = combine_test_results(ret, test_ret);
-+			}
- 		}
--	}
- 
--	closedir(dir);
-+		closedir(dir);
-+	}
- 	return ret;
+-
+ 	return test_events(test__events_pmu, ARRAY_SIZE(test__events_pmu));
  }
  
 -- 
