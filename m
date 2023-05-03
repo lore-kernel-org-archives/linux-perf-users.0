@@ -2,236 +2,193 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E08C77B7F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 13:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E1CC77B78
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 13:56:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbjECNZE (ORCPT
+        id S229920AbjECN4k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 May 2023 09:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46060 "EHLO
+        Wed, 3 May 2023 09:56:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229643AbjECNZC (ORCPT
+        with ESMTP id S230040AbjECN4j (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 May 2023 09:25:02 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC82E5264;
-        Wed,  3 May 2023 06:25:00 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 343DLiYp026377;
-        Wed, 3 May 2023 13:24:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=t7Z4GyVofl8KH3R21cSalBDAwo0cz6K18KiapRYFmk0=;
- b=YTahdXHZ9DCOaPJBHL5p3suGYwh5W+ixnWjdslkKzhwc5k+XtxGshINN/kF3W7r4WWIX
- 6ZgsmHsfdrefkhAnJ4negVLnhkiGNC6502w7rL5x2UPgVPtYTvpKa+AufaacO+PA/E/y
- Uy8bIuQSm8rD0Xun0yNYesGuH0Dh9GqkNE1hx7+5CIe7FFbScORvseZv/ZyZUuf8Qw3k
- /lmqU9KgkczXTQHUno7tgFoNnQbr7YlUDDINMwHfOVQZpI6z7AuP1DC7UDQkFA6xuai1
- EvFrwtFTbR0z67ksMoSjyEwoSGgBkuL3sZxNaKFmgmbxPyz8+w86frDkCNxhhc6Snt2h jQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qbr9h8nwe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 May 2023 13:24:25 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 343DBqHf024587;
-        Wed, 3 May 2023 13:24:23 GMT
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qbr9h8nug-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 May 2023 13:24:23 +0000
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 343CUqk5026692;
-        Wed, 3 May 2023 13:24:20 GMT
-Received: from smtprelay07.wdc07v.mail.ibm.com ([9.208.129.116])
-        by ppma01dal.us.ibm.com (PPS) with ESMTPS id 3q8tv99qcw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 03 May 2023 13:24:20 +0000
-Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
-        by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 343DOG0i16581142
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 3 May 2023 13:24:16 GMT
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B23CF58055;
-        Wed,  3 May 2023 13:24:16 +0000 (GMT)
-Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3AEDA5804E;
-        Wed,  3 May 2023 13:24:09 +0000 (GMT)
-Received: from [9.160.35.135] (unknown [9.160.35.135])
-        by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Wed,  3 May 2023 13:24:09 +0000 (GMT)
-Message-ID: <0cb48a73-db45-1207-2150-821086eab5df@linux.ibm.com>
-Date:   Wed, 3 May 2023 09:24:08 -0400
+        Wed, 3 May 2023 09:56:39 -0400
+Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C50D5BBC
+        for <linux-perf-users@vger.kernel.org>; Wed,  3 May 2023 06:56:30 -0700 (PDT)
+Received: by mail-qk1-x72b.google.com with SMTP id af79cd13be357-7516ef6b519so16729285a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 May 2023 06:56:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683122188; x=1685714188;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=L7GSaDU+oT/ntMiaCollt+1Pf02SpPPlm+2u83gwZfE=;
+        b=P6VWQ9FGuG+5pxcqIGRcMalIRKyHZ39lpp0TRDK0z4B1Wnvb5q1AAczJcVvnb1aKuQ
+         wYdqzxKz5OSXScdPSJ3rRrIVEmc5Dkb+AwWSFx/bsV+W9XFY29xCFKd5UDsBsN5ElDwD
+         EYrd8jYn/8ia1CQLAMhTZDmMtkWAkjPyR0uk5mbxeUEtyB4cPfk+tUHdg6coQJJdsVvl
+         QA6quR6OmvLAKG9vrkwptNhuJUiRbbLVuRDhqbNiRyW8L1xemVkScwiLoyVjJHl+Mids
+         hPJQX5na2YLh2cdxBkJSifAD5YPLvUWSlyJshcXW6B9ZxbJJvxjYJIVIYMggL9509Tly
+         K72Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683122188; x=1685714188;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L7GSaDU+oT/ntMiaCollt+1Pf02SpPPlm+2u83gwZfE=;
+        b=DOf9lWWEcRgMWLKVZ3UCCg3Sxxdi8pZcxlceq5HqN8AViWfc/wSgLPxse78NzQ/c3r
+         vT4/o4Vx7i1cdrAQgM4v7S7gu2BxRwLMitWtE2rtStZzdydnHqdP04vHzY1bnwqjc8Wg
+         +GfXiJtujN1m9p+EP8LNEgJU4+PPNSAJ3nAGKPVWy09QdOTUXwFNT62cyCBh3qOEY7R0
+         jP4ZIBW9FML6PYrXU1XS7XnlgSPpr+XTuVmSC4pK20ZjMjqf2xwHXEorrCcJ3VlHYvW7
+         4OtpoCm1BMfk04mXyOODgqXPjL39aoLVI6ViKmNeVewbVGlAbey4lvbqbpPH1Pij1PeK
+         O89Q==
+X-Gm-Message-State: AC+VfDxutISbq+yMDa61xugfpQrDrHXHnKC9jf0OZmHrqh8rYAplnGbA
+        OkKVye1B9ylVXylkEUCpFnhjB0uW10LNtU4vodTkyxnGLBiGuJ9I
+X-Google-Smtp-Source: ACHHUZ71pUcb7f5qcOzLQ4S+jjlUdTh7AgeYPVz5/+646nP04BHaN2+sgJJpTT709kEsB12vbCvn1/6ZS4sYv7D5ZLc=
+X-Received: by 2002:a05:6214:622:b0:532:141d:3750 with SMTP id
+ a2-20020a056214062200b00532141d3750mr8204131qvx.2.1683122188356; Wed, 03 May
+ 2023 06:56:28 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v8 0/3] mm/gup: disallow GUP writing to file-backed
- mappings by default
-Content-Language: en-US
-To:     David Hildenbrand <david@redhat.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-References: <cover.1683067198.git.lstoakes@gmail.com>
- <20d078c5-4ee6-18dc-d3a5-d76b6a68f64e@linux.ibm.com>
- <1b34e9a4-83c0-2f44-1457-dd8800b9287a@redhat.com>
- <80e3b8ee-c16d-062f-f483-06e21282e59c@linux.ibm.com>
- <976fcec0-d132-3a27-bbd2-01b21571bca2@redhat.com>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <976fcec0-d132-3a27-bbd2-01b21571bca2@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: bBGbjL1BT7NUlN6uohu087clNiuGmNkf
-X-Proofpoint-GUID: Dn-rOS0FmD-1OwpBDUptu9MfNXcH6pk3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-03_08,2023-05-03_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=814 bulkscore=0
- adultscore=0 phishscore=0 spamscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 impostorscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2305030110
+From:   Danny Pereira <dannyjpereira1@gmail.com>
+Date:   Wed, 3 May 2023 19:26:16 +0530
+Message-ID: <CAOorKwEo703Mk0vaSG42sOJVaGnn36OAvx=XYOhwX9tuxikhsQ@mail.gmail.com>
+Subject: Issue in inserting a kernel module for counting performance counters
+ on Jetson Nano
+To:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 5/3/23 8:53 AM, David Hildenbrand wrote:
-> On 03.05.23 13:25, Matthew Rosato wrote:
->> On 5/3/23 3:08 AM, David Hildenbrand wrote:
->>> On 03.05.23 02:31, Matthew Rosato wrote:
->>>> On 5/2/23 6:51 PM, Lorenzo Stoakes wrote:
->>>>> Writing to file-backed mappings which require folio dirty tracking using
->>>>> GUP is a fundamentally broken operation, as kernel write access to GUP
->>>>> mappings do not adhere to the semantics expected by a file system.
->>>>>
->>>>> A GUP caller uses the direct mapping to access the folio, which does not
->>>>> cause write notify to trigger, nor does it enforce that the caller marks
->>>>> the folio dirty.
->>>>>
->>>>> The problem arises when, after an initial write to the folio, writeback
->>>>> results in the folio being cleaned and then the caller, via the GUP
->>>>> interface, writes to the folio again.
->>>>>
->>>>> As a result of the use of this secondary, direct, mapping to the folio no
->>>>> write notify will occur, and if the caller does mark the folio dirty, this
->>>>> will be done so unexpectedly.
->>>>>
->>>>> For example, consider the following scenario:-
->>>>>
->>>>> 1. A folio is written to via GUP which write-faults the memory, notifying
->>>>>      the file system and dirtying the folio.
->>>>> 2. Later, writeback is triggered, resulting in the folio being cleaned and
->>>>>      the PTE being marked read-only.
->>>>> 3. The GUP caller writes to the folio, as it is mapped read/write via the
->>>>>      direct mapping.
->>>>> 4. The GUP caller, now done with the page, unpins it and sets it dirty
->>>>>      (though it does not have to).
->>>>>
->>>>> This change updates both the PUP FOLL_LONGTERM slow and fast APIs. As
->>>>> pin_user_pages_fast_only() does not exist, we can rely on a slightly
->>>>> imperfect whitelisting in the PUP-fast case and fall back to the slow case
->>>>> should this fail.
->>>>>
->>>>> v8:
->>>>> - Fixed typo writeable -> writable.
->>>>> - Fixed bug in writable_file_mapping_allowed() - must check combination of
->>>>>     FOLL_PIN AND FOLL_LONGTERM not either/or.
->>>>> - Updated vma_needs_dirty_tracking() to include write/shared to account for
->>>>>     MAP_PRIVATE mappings.
->>>>> - Move to open-coding the checks in folio_pin_allowed() so we can
->>>>>     READ_ONCE() the mapping and avoid unexpected compiler loads. Rename to
->>>>>     account for fact we now check flags here.
->>>>> - Disallow mapping == NULL or mapping & PAGE_MAPPING_FLAGS other than
->>>>>     anon. Defer to slow path.
->>>>> - Perform GUP-fast check _after_ the lowest page table level is confirmed to
->>>>>     be stable.
->>>>> - Updated comments and commit message for final patch as per Jason's
->>>>>     suggestions.
->>>>
->>>> Tested again on s390 using QEMU with a memory backend file (on ext4) and vfio-pci -- This time both vfio_pin_pages_remote (which will call pin_user_pages_remote(flags | FOLL_LONGTERM)) and the pin_user_pages_fast(FOLL_WRITE | FOLL_LONGTERM) in kvm_s390_pci_aif_enable are being allowed (e.g. returning positive pin count)
->>>
->>> At least it's consistent now ;) And it might be working as expected ...
->>>
->>> In v7:
->>> * pin_user_pages_fast() succeeded
->>> * vfio_pin_pages_remote() failed
->>>
->>> But also in v7:
->>> * GUP-fast allows pinning (anonymous) pages in MAP_PRIVATE file
->>>    mappings
->>> * Ordinary GUP allows pinning pages in MAP_PRIVATE file mappings
->>>
->>> In v8:
->>> * pin_user_pages_fast() succeeds
->>> * vfio_pin_pages_remote() succeeds
->>>
->>> But also in v8:
->>> * GUP-fast allows pinning (anonymous) pages in MAP_PRIVATE file
->>>    mappings
->>> * Ordinary GUP allows pinning pages in MAP_PRIVATE file mappings
->>>
->>>
->>> I have to speculate, but ... could it be that you are using a private mapping?
->>>
->>> In QEMU, unfortunately, the default for memory-backend-file is "share=off" (private) ... for memory-backend-memfd it is "share=on" (shared). The default is stupid ...
->>>
->>> If you invoke QEMU manually, can you specify "share=on" for the memory-backend-file? I thought libvirt would always default to "share=on" for file mappings (everything else doesn't make much sense) ... but you might have to specify
->>>      <access mode="shared"/>
->>> in addition to
->>>      <source type="file"/>
->>>
->>
->> Ah, there we go.  Yes, I was using the default of share=off.  When I instead specify share=on, now the pins will fail in both cases.
->>
-> 
-> Out of curiosity, how does that manifest?
-> 
-> I assume the VM is successfully created and as Linux tries initializing and using the device, we get a bunch of errors inside the VM, correct?
-> 
+Hello All,
 
-Yes, that's correct.
+I am testing a kernel module which creates perf events on every core
+and counts the total number of L2D_CACHE_REFILL.
 
-Which error comes first (an attempt at mapping something via type1 iommu or an attempt to register AEN) depends on the device type and the order of operations of the associated driver.  But in either case, you're going to see guest errors associated with that action.  mlx5 and ism give up rather quickly and just fail their probe. nvme in the guest is persistent and its actions keep re-attempting to setup AEN by issuing the associated instruction; but the associated blockdev will never show up. 
+System details are :
 
+NVIDIA Jetson nano,
+OS: Ubuntu  18.04.6 LTS,
+Kernel: 4.9.255, L4T: 32.7.3,
+Jetpack: 4.6.3
+
+insmod is inserting module in kernel space. But throws WARNING message
+in kernel log file. The log obtained using  dmesg command is :
+
+[  977.838359] CPU: 1 PID: 0 Comm: swapper/1 Tainted: G           O
+4.9.299-BWv1.0 #1
+[  977.838361] Hardware name: NVIDIA Jetson Nano Developer Kit (DT)
+[  977.838364] task: ffffffc0fa7bb900 task.stack: ffffffc0fa7cc000
+[  977.838368] PC is at armpmu_start+0x70/0x78
+[  977.838372] LR is at cpu_pm_pmu_setup.isra.2+0x68/0xd8
+[  977.838375] pc : [<ffffff8008ce1b48>] lr : [<ffffff8008ce1e30>]
+pstate: 604000c5
+[  977.838377] sp : ffffffc0fa7cfd20
+[  977.838380] x29: ffffffc0fa7cfd20 x28: 0000000000000001
+[  977.838385] x27: ffffff8009ed6000 x26: ffffff8009892b00
+[  977.838391] x25: ffffffc0f7f88000 x24: ffffffc0f1cd2000
+[  977.838396] x23: ffffffc0fefdfe00 x22: 0000000000000002
+[  977.838400] x21: 0000000000000002 x20: ffffffc0f7f88000
+[  977.838405] x19: ffffffc0f1cd2000 x18: 0000007f94f20a70
+[  977.838410] x17: 0000000000021a3d x16: 0000000000000000
+[  977.838414] x15: 000000000000003a x14: 0000000000022400
+[  977.838419] x13: 0000000000000959 x12: ffffffc0fa7bb900
+[  977.838423] x11: 000000000000000b x10: 0101010101010101
+[  977.838428] x9 : fffffffffffffff9 x8 : 7f7f7f7f7f7f7f7f
+[  977.838433] x7 : fefefeff646c606d x6 : 00170401e9e1acf4
+[  977.838437] x5 : ffffff8008002004 x4 : 00000040f5744000
+[  977.838441] x3 : 0000000000000001 x2 : 0000000000000001
+[  977.838446] x1 : ffffff800a10d000 x0 : ffffffc0f1cd2148
+
+[  977.838452] ---[ end trace aa706cb5bd510b65 ]---
+[  977.843057] Call trace:
+[  977.843063] [<ffffff8008ce1b48>] armpmu_start+0x70/0x78
+[  977.843067] [<ffffff8008ce1e30>] cpu_pm_pmu_setup.isra.2+0x68/0xd8
+[  977.843071] [<ffffff8008ce1fa0>] cpu_pm_pmu_notify+0x100/0x138
+[  977.843076] [<ffffff80080dcbac>] notifier_call_chain+0x5c/0xa0
+[  977.843080] [<ffffff80080dcd98>] __raw_notifier_call_chain+0x48/0x60
+[  977.843085] [<ffffff80081acf84>] cpu_pm_exit+0x44/0x78
+[  977.843089] [<ffffff8008ba6be0>] arm_enter_idle_state+0x80/0xc0
+[  977.843092] [<ffffff8008ba45b4>] cpuidle_enter_state+0x84/0x380
+[  977.843095] [<ffffff8008ba4924>] cpuidle_enter+0x34/0x48
+[  977.843099] [<ffffff8008111664>] call_cpuidle+0x44/0x70
+[  977.843102] [<ffffff80081119e0>] cpu_startup_entry+0x1b0/0x200
+[  977.843106] [<ffffff8008091cc8>] secondary_start_kernel+0x190/0x1f8
+[  977.843109] [<0000000084f841a8>] 0x84f841a8
+
+This warning states that at line no. 199, the function armpmu_start()
+is throwing a warning.
+
+I tried checking the kernel source code. The kernel code snippet for
+armpmu_start function from drivers/perf/arm_pmu file is as below:
+
+ 189 static void armpmu_start(struct perf_event *event, int flags)
+ 190 {
+ 191     struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
+ 192     struct hw_perf_event *hwc = &event->hw;
+ 193
+ 194     /*
+ 195      * ARM pmu always has to reprogram the period, so ignore
+ 196      * PERF_EF_RELOAD, see the comment below.
+ 197      */
+ 198     if (flags & PERF_EF_RELOAD)
+ 199         WARN_ON_ONCE(!(hwc->state & PERF_HES_UPTODATE));
+ 200
+ 201     hwc->state = 0;
+ 202     /*
+ 203      * Set the period again. Some counters can't be stopped, so when we
+ 204      * were stopped we simply disabled the IRQ source and the counter
+ 205      * may have been left counting. If we don't do this step then we may
+ 206      * get an interrupt too soon or *way* too late if the overflow has
+ 207      * happened since disabling.
+ 208      */
+ 209     armpmu_event_set_period(event);
+ 210     armpmu->enable(event);
+ 211 }
+
+Also when I try to remove the module with rmmod command my jetson nano
+board is restarting.
+
+Here are the few perf API's the kernel module is using:
+
+Creating attributes structure of the perf event
+
+ struct perf_event_attr sched_perf_hw_attr = {
+        .type = PERF_TYPE_RAW,
+        .config = 0x17,
+        .size = sizeof (struct perf_event_attr),
+        .pinned = 1,
+        .disabled = 1,
+        .exclude_kernel = 1,
+        .sample_period = budget
+        };
+
+Creating perf event with event_overflow_callback function
+     event = perf_event_create_kernel_counter (&sched_perf_hw_attr,
+                                                                            cpu,
+
+     NULL,
+
+     event_overflow_callback,
+                                                                            NULL
+                                                                            );
+
+Code to start the counter
+     perf_event_enable (event);
+     event->pmu->add (event, PERF_EF_START);
+
+Code to stop the counter
+     event->pmu->stop (event, PERF_EF_UPDATE);
+     event->pmu->del(event,0);
+
+In the event_overflow_callback function following activities are performed.
+  *Stopping counter
+          event->pmu->stop (event, PERF_EF_UPDATE);
+ *Enable performance counter
+          event->pmu->start (event, PERF_EF_RELOAD);
+
+The same kernel module is working fine on Jetson Nvidia Xavier NX
+without any warning messages.
+Any help in diagnosing/resolving  the issue is highly appreciated.
+Also, kindly provide learning resources on perf event counter programming.
+
+Thank in advance
+Danny
