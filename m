@@ -2,60 +2,76 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 190E4C77B78
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 11:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD6EC77B78
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 11:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbjECLCY (ORCPT
+        id S229813AbjECL0h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 May 2023 07:02:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60652 "EHLO
+        Wed, 3 May 2023 07:26:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbjECLCX (ORCPT
+        with ESMTP id S229585AbjECL0g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 May 2023 07:02:23 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 700F055B9;
-        Wed,  3 May 2023 04:01:48 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 77D2A22652;
-        Wed,  3 May 2023 11:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1683111706; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z8jwtQHJUM/AAWsjtHIjrtk50jYN3yDn+0AjU75Gl8I=;
-        b=YnHHB9XleIkwOgka1vGP8aJr57QABiFIYqyQyRc190pWEehlsHxHHfLtXMcwYmaPOpl+wN
-        PF7SwfH0/Fl3otDZ0ORMKPi1ufHEJI+u1wXNthvFYPJ19qsDYxRolPgvwjfiYKrU2fop0C
-        HIwPUQffZm/HAW8bbxEbbw1BFC9A3qE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1683111706;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z8jwtQHJUM/AAWsjtHIjrtk50jYN3yDn+0AjU75Gl8I=;
-        b=LbUksBymq3p4Gn1YivZps62g/RWguxmOUm3+x9IlBwCcn/cItgSEOeSSPICJnwGxuZWzIC
-        oNqeocndKtvnM6AA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 60A45139F8;
-        Wed,  3 May 2023 11:01:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id MroXFxo/UmRuSgAAMHmgww
-        (envelope-from <jack@suse.cz>); Wed, 03 May 2023 11:01:46 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id DC334A0744; Wed,  3 May 2023 13:01:45 +0200 (CEST)
-Date:   Wed, 3 May 2023 13:01:45 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Wed, 3 May 2023 07:26:36 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0DEC44A1;
+        Wed,  3 May 2023 04:26:34 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 343BKDmg014939;
+        Wed, 3 May 2023 11:25:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=tN/6/ojBDjGfUZIYYy6VieH+LClC7elDYOoimNAuvGQ=;
+ b=bmAY8L1QXG+5DBuyCXVsv6/uVGjos0QGyomsZZgAi0qqsFRJSIseQR4WZwEiXB0JGY9P
+ lrWBsqdrHu7Qa79Ge501sDNP1KS2Sm5hOUl5ufWTPTyeU0mNZWwZ+KfhqUTTnbi/U0D4
+ 6ESjBvrG1Jyqt2Sm41Yc9EXm0CFZiUni7857dkJIyFTJOeVOdNWGki6Sbh+aw90JAnK2
+ heKoI0JRfG2+Ic2k3jP77siFBYPwCVMBvb/3V1PLbBpVyqH/ISNSMhm9VILLMVJwino9
+ PcVoKHJMaGHez23EqHEeCP4C0ETOC/BASBIaq1Tmitif0JPh92G0Jf9SC21YFn295D8Z ew== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qbpn503yt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 03 May 2023 11:25:19 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 343BOED1028588;
+        Wed, 3 May 2023 11:25:17 GMT
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qbpn503w3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 03 May 2023 11:25:17 +0000
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3438xskL009972;
+        Wed, 3 May 2023 11:25:13 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([9.208.130.101])
+        by ppma02dal.us.ibm.com (PPS) with ESMTPS id 3q8tv8148w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 03 May 2023 11:25:13 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+        by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 343BPAQC37355840
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 May 2023 11:25:10 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D06258060;
+        Wed,  3 May 2023 11:25:10 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB1125804E;
+        Wed,  3 May 2023 11:25:03 +0000 (GMT)
+Received: from [9.160.35.135] (unknown [9.160.35.135])
+        by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Wed,  3 May 2023 11:25:03 +0000 (GMT)
+Message-ID: <80e3b8ee-c16d-062f-f483-06e21282e59c@linux.ibm.com>
+Date:   Wed, 3 May 2023 07:25:03 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v8 0/3] mm/gup: disallow GUP writing to file-backed
+ mappings by default
+Content-Language: en-US
+To:     David Hildenbrand <david@redhat.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
         Matthew Wilcox <willy@infradead.org>,
         Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
         Leon Romanovsky <leon@kernel.org>,
@@ -93,221 +109,114 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         Pavel Begunkov <asml.silence@gmail.com>,
         Mika Penttila <mpenttil@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
         Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
+        "Theodore Ts'o" <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: Re: [PATCH v8 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing
- to file-backed mappings
-Message-ID: <20230503110145.74q5sm5psv7o7nrd@quack3>
 References: <cover.1683067198.git.lstoakes@gmail.com>
- <a690186fc37e1ea92556a7dbd0887fe201fcc709.1683067198.git.lstoakes@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a690186fc37e1ea92556a7dbd0887fe201fcc709.1683067198.git.lstoakes@gmail.com>
+ <20d078c5-4ee6-18dc-d3a5-d76b6a68f64e@linux.ibm.com>
+ <1b34e9a4-83c0-2f44-1457-dd8800b9287a@redhat.com>
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+In-Reply-To: <1b34e9a4-83c0-2f44-1457-dd8800b9287a@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: HOrfLyMo8HgxagrM7LF2KsfFcEL250P9
+X-Proofpoint-ORIG-GUID: LlOt6N30KORomTgFjYXhnYnyMpIYAh6q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-03_06,2023-05-03_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ phishscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0
+ priorityscore=1501 adultscore=0 mlxscore=0 spamscore=0 bulkscore=0
+ mlxlogscore=552 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305030093
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue 02-05-23 23:51:35, Lorenzo Stoakes wrote:
-> Writing to file-backed dirty-tracked mappings via GUP is inherently broken
-> as we cannot rule out folios being cleaned and then a GUP user writing to
-> them again and possibly marking them dirty unexpectedly.
+On 5/3/23 3:08 AM, David Hildenbrand wrote:
+> On 03.05.23 02:31, Matthew Rosato wrote:
+>> On 5/2/23 6:51 PM, Lorenzo Stoakes wrote:
+>>> Writing to file-backed mappings which require folio dirty tracking using
+>>> GUP is a fundamentally broken operation, as kernel write access to GUP
+>>> mappings do not adhere to the semantics expected by a file system.
+>>>
+>>> A GUP caller uses the direct mapping to access the folio, which does not
+>>> cause write notify to trigger, nor does it enforce that the caller marks
+>>> the folio dirty.
+>>>
+>>> The problem arises when, after an initial write to the folio, writeback
+>>> results in the folio being cleaned and then the caller, via the GUP
+>>> interface, writes to the folio again.
+>>>
+>>> As a result of the use of this secondary, direct, mapping to the folio no
+>>> write notify will occur, and if the caller does mark the folio dirty, this
+>>> will be done so unexpectedly.
+>>>
+>>> For example, consider the following scenario:-
+>>>
+>>> 1. A folio is written to via GUP which write-faults the memory, notifying
+>>>     the file system and dirtying the folio.
+>>> 2. Later, writeback is triggered, resulting in the folio being cleaned and
+>>>     the PTE being marked read-only.
+>>> 3. The GUP caller writes to the folio, as it is mapped read/write via the
+>>>     direct mapping.
+>>> 4. The GUP caller, now done with the page, unpins it and sets it dirty
+>>>     (though it does not have to).
+>>>
+>>> This change updates both the PUP FOLL_LONGTERM slow and fast APIs. As
+>>> pin_user_pages_fast_only() does not exist, we can rely on a slightly
+>>> imperfect whitelisting in the PUP-fast case and fall back to the slow case
+>>> should this fail.
+>>>
+>>> v8:
+>>> - Fixed typo writeable -> writable.
+>>> - Fixed bug in writable_file_mapping_allowed() - must check combination of
+>>>    FOLL_PIN AND FOLL_LONGTERM not either/or.
+>>> - Updated vma_needs_dirty_tracking() to include write/shared to account for
+>>>    MAP_PRIVATE mappings.
+>>> - Move to open-coding the checks in folio_pin_allowed() so we can
+>>>    READ_ONCE() the mapping and avoid unexpected compiler loads. Rename to
+>>>    account for fact we now check flags here.
+>>> - Disallow mapping == NULL or mapping & PAGE_MAPPING_FLAGS other than
+>>>    anon. Defer to slow path.
+>>> - Perform GUP-fast check _after_ the lowest page table level is confirmed to
+>>>    be stable.
+>>> - Updated comments and commit message for final patch as per Jason's
+>>>    suggestions.
+>>
+>> Tested again on s390 using QEMU with a memory backend file (on ext4) and vfio-pci -- This time both vfio_pin_pages_remote (which will call pin_user_pages_remote(flags | FOLL_LONGTERM)) and the pin_user_pages_fast(FOLL_WRITE | FOLL_LONGTERM) in kvm_s390_pci_aif_enable are being allowed (e.g. returning positive pin count)
 > 
-> This is especially egregious for long-term mappings (as indicated by the
-> use of the FOLL_LONGTERM flag), so we disallow this case in GUP-fast as
-> we have already done in the slow path.
+> At least it's consistent now ;) And it might be working as expected ...
 > 
-> We have access to less information in the fast path as we cannot examine
-> the VMA containing the mapping, however we can determine whether the folio
-> is anonymous or belonging to a whitelisted filesystem - specifically
-> hugetlb and shmem mappings.
+> In v7:
+> * pin_user_pages_fast() succeeded
+> * vfio_pin_pages_remote() failed
 > 
-> We take special care to ensure that both the folio and mapping are safe to
-> access when performing these checks and document folio_fast_pin_allowed()
-> accordingly.
+> But also in v7:
+> * GUP-fast allows pinning (anonymous) pages in MAP_PRIVATE file
+>   mappings
+> * Ordinary GUP allows pinning pages in MAP_PRIVATE file mappings
 > 
-> It's important to note that there are no APIs allowing users to specify
-> FOLL_FAST_ONLY for a PUP-fast let alone with FOLL_LONGTERM, so we can
-> always rely on the fact that if we fail to pin on the fast path, the code
-> will fall back to the slow path which can perform the more thorough check.
+> In v8:
+> * pin_user_pages_fast() succeeds
+> * vfio_pin_pages_remote() succeeds
 > 
-> Suggested-by: David Hildenbrand <david@redhat.com>
-> Suggested-by: Kirill A . Shutemov <kirill@shutemov.name>
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Lorenzo Stoakes <lstoakes@gmail.com>
+> But also in v8:
+> * GUP-fast allows pinning (anonymous) pages in MAP_PRIVATE file
+>   mappings
+> * Ordinary GUP allows pinning pages in MAP_PRIVATE file mappings
+> 
+> 
+> I have to speculate, but ... could it be that you are using a private mapping?
+> 
+> In QEMU, unfortunately, the default for memory-backend-file is "share=off" (private) ... for memory-backend-memfd it is "share=on" (shared). The default is stupid ...
+> 
+> If you invoke QEMU manually, can you specify "share=on" for the memory-backend-file? I thought libvirt would always default to "share=on" for file mappings (everything else doesn't make much sense) ... but you might have to specify
+>     <access mode="shared"/>
+> in addition to
+>     <source type="file"/>
+> 
 
-The patch looks good to me now. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  mm/gup.c | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 102 insertions(+)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 0ea9ebec9547..1ab369b5d889 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -18,6 +18,7 @@
->  #include <linux/migrate.h>
->  #include <linux/mm_inline.h>
->  #include <linux/sched/mm.h>
-> +#include <linux/shmem_fs.h>
->  
->  #include <asm/mmu_context.h>
->  #include <asm/tlbflush.h>
-> @@ -95,6 +96,83 @@ static inline struct folio *try_get_folio(struct page *page, int refs)
->  	return folio;
->  }
->  
-> +/*
-> + * Used in the GUP-fast path to determine whether a pin is permitted for a
-> + * specific folio.
-> + *
-> + * This call assumes the caller has pinned the folio, that the lowest page table
-> + * level still points to this folio, and that interrupts have been disabled.
-> + *
-> + * Writing to pinned file-backed dirty tracked folios is inherently problematic
-> + * (see comment describing the writable_file_mapping_allowed() function). We
-> + * therefore try to avoid the most egregious case of a long-term mapping doing
-> + * so.
-> + *
-> + * This function cannot be as thorough as that one as the VMA is not available
-> + * in the fast path, so instead we whitelist known good cases and if in doubt,
-> + * fall back to the slow path.
-> + */
-> +static bool folio_fast_pin_allowed(struct folio *folio, unsigned int flags)
-> +{
-> +	struct address_space *mapping;
-> +	unsigned long mapping_flags;
-> +
-> +	/*
-> +	 * If we aren't pinning then no problematic write can occur. A long term
-> +	 * pin is the most egregious case so this is the one we disallow.
-> +	 */
-> +	if ((flags & (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE)) !=
-> +	    (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE))
-> +		return true;
-> +
-> +	/* The folio is pinned, so we can safely access folio fields. */
-> +
-> +	/* Neither of these should be possible, but check to be sure. */
-> +	if (unlikely(folio_test_slab(folio) || folio_test_swapcache(folio)))
-> +		return false;
-> +
-> +	/* hugetlb mappings do not require dirty-tracking. */
-> +	if (folio_test_hugetlb(folio))
-> +		return true;
-> +
-> +	/*
-> +	 * GUP-fast disables IRQs. When IRQS are disabled, RCU grace periods
-> +	 * cannot proceed, which means no actions performed under RCU can
-> +	 * proceed either.
-> +	 *
-> +	 * inodes and thus their mappings are freed under RCU, which means the
-> +	 * mapping cannot be freed beneath us and thus we can safely dereference
-> +	 * it.
-> +	 */
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	/*
-> +	 * However, there may be operations which _alter_ the mapping, so ensure
-> +	 * we read it once and only once.
-> +	 */
-> +	mapping = READ_ONCE(folio->mapping);
-> +
-> +	/*
-> +	 * The mapping may have been truncated, in any case we cannot determine
-> +	 * if this mapping is safe - fall back to slow path to determine how to
-> +	 * proceed.
-> +	 */
-> +	if (!mapping)
-> +		return false;
-> +
-> +	/* Anonymous folios are fine, other non-file backed cases are not. */
-> +	mapping_flags = (unsigned long)mapping & PAGE_MAPPING_FLAGS;
-> +	if (mapping_flags)
-> +		return mapping_flags == PAGE_MAPPING_ANON;
-> +
-> +	/*
-> +	 * At this point, we know the mapping is non-null and points to an
-> +	 * address_space object. The only remaining whitelisted file system is
-> +	 * shmem.
-> +	 */
-> +	return shmem_mapping(mapping);
-> +}
-> +
->  /**
->   * try_grab_folio() - Attempt to get or pin a folio.
->   * @page:  pointer to page to be grabbed
-> @@ -2464,6 +2542,11 @@ static int gup_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
->  			goto pte_unmap;
->  		}
->  
-> +		if (!folio_fast_pin_allowed(folio, flags)) {
-> +			gup_put_folio(folio, 1, flags);
-> +			goto pte_unmap;
-> +		}
-> +
->  		if (!pte_write(pte) && gup_must_unshare(NULL, flags, page)) {
->  			gup_put_folio(folio, 1, flags);
->  			goto pte_unmap;
-> @@ -2656,6 +2739,11 @@ static int gup_hugepte(pte_t *ptep, unsigned long sz, unsigned long addr,
->  		return 0;
->  	}
->  
-> +	if (!folio_fast_pin_allowed(folio, flags)) {
-> +		gup_put_folio(folio, refs, flags);
-> +		return 0;
-> +	}
-> +
->  	if (!pte_write(pte) && gup_must_unshare(NULL, flags, &folio->page)) {
->  		gup_put_folio(folio, refs, flags);
->  		return 0;
-> @@ -2722,6 +2810,10 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
->  		return 0;
->  	}
->  
-> +	if (!folio_fast_pin_allowed(folio, flags)) {
-> +		gup_put_folio(folio, refs, flags);
-> +		return 0;
-> +	}
->  	if (!pmd_write(orig) && gup_must_unshare(NULL, flags, &folio->page)) {
->  		gup_put_folio(folio, refs, flags);
->  		return 0;
-> @@ -2762,6 +2854,11 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
->  		return 0;
->  	}
->  
-> +	if (!folio_fast_pin_allowed(folio, flags)) {
-> +		gup_put_folio(folio, refs, flags);
-> +		return 0;
-> +	}
-> +
->  	if (!pud_write(orig) && gup_must_unshare(NULL, flags, &folio->page)) {
->  		gup_put_folio(folio, refs, flags);
->  		return 0;
-> @@ -2797,6 +2894,11 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
->  		return 0;
->  	}
->  
-> +	if (!folio_fast_pin_allowed(folio, flags)) {
-> +		gup_put_folio(folio, refs, flags);
-> +		return 0;
-> +	}
-> +
->  	*nr += refs;
->  	folio_set_referenced(folio);
->  	return 1;
-> -- 
-> 2.40.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Ah, there we go.  Yes, I was using the default of share=off.  When I instead specify share=on, now the pins will fail in both cases.
