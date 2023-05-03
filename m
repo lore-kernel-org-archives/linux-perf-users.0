@@ -2,44 +2,66 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4766AC77B78
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 15:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E34C77B78
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 15:28:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229871AbjECPE0 (ORCPT
+        id S230481AbjECP2j (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 May 2023 11:04:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38956 "EHLO
+        Wed, 3 May 2023 11:28:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbjECPEZ (ORCPT
+        with ESMTP id S230470AbjECP2h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 May 2023 11:04:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D568B4C15;
-        Wed,  3 May 2023 08:04:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7472060C75;
-        Wed,  3 May 2023 15:04:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A72BAC4339B;
-        Wed,  3 May 2023 15:04:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683126263;
-        bh=O4yYd1WUoawxWUlnbi//Aw0bkKIFeQzVHOZgaaz1lTk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u3rJ730VI76xVq/Yd1qBPXxaILS4zJabwDhQ2vA6Yb9BlQh9sENrclIc9gGVWJQ9H
-         KV6DuZycHxJV/BBy7k0dK9Ta13yE8Ett9wsuZKlyQ+BxKOWRjaiRU/rhXBKi6LrAYU
-         y5oYasffYdx3HXVQNIKRGIxJ4hgUJAsnY7lkD1ti2MBqSOOZb7cfustxWhVO1y0S/9
-         5UG01TApZYbA2AfrXcDLDCmP9xbZhAYl1YB/KdbUhMNdBSSLG2Ck9H6h8grJq9hGf1
-         vRd+69Wf0NBoOOmfyQP9pvaROWgtsnajHTMs/0FEADx3ohNTcJEiA9ZDLZb6/PwlpX
-         4b4IdvUq2V06A==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EBEC6403B5; Wed,  3 May 2023 12:04:20 -0300 (-03)
-Date:   Wed, 3 May 2023 12:04:20 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
+        Wed, 3 May 2023 11:28:37 -0400
+Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20BA16A5D
+        for <linux-perf-users@vger.kernel.org>; Wed,  3 May 2023 08:28:36 -0700 (PDT)
+Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-330ec047d3bso301655ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 May 2023 08:28:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683127715; x=1685719715;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/qowq5eaooF5EfPDAG5Prg8rQoyyfy/TivcsC5fJA/c=;
+        b=GYG7QQSW5O90ohyO56EoNemZ7golNZP54UQ7SwhViEZwYjPVlpDLUDtVHomYEcYPGF
+         CeImdwOT7GlNrGqL9YWnk7GMt/uiDzc3vqMWuAByGYVYq72yG19hcVom4JAmVlIG0Cz9
+         Ar171qPLcGSUpXcBJy5cav2bTRHixBsdpvWg/yYRPLOotuBhoZGb8NL8Lgro/ZKQlOzr
+         N2O9NXpQs9YOXvQaHcamZXREvV5NVzktBCNTHmn09pJEJAGnylsk7e9LHk0SUn4OGa6H
+         3MGJzWH4D9ugjyyr3h5Fx5Uq0vfa3dX55RI11YQiitESGO5xp28yXLc76rWEBHhxNev4
+         5Ilw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683127715; x=1685719715;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/qowq5eaooF5EfPDAG5Prg8rQoyyfy/TivcsC5fJA/c=;
+        b=HInedQgL/qqYpYMrcSLadnX4ofMKUcTf75r+l0bC8qyO8LoWkenvMhqYJ9XgQHpL0C
+         WpE4n5Z54hWYelrVlYVoBYlObKP8uqB2yJeU55CSwEDNkHV267QQwEKPqMiHTdzNStqW
+         EUJ5rqIbhN3TQTFoAxzyfcN+EN2CYTfeoYGbsKO9W9oLs+pA+qE90Osz6fSbxsC78lP8
+         0zebU3GyKJYBAtEVkUNnChRQ+s3JZjxzWRfKDfW0JUjtl2iFgEx81Oy8KnpZLxhytlMX
+         ecHlh+zQWEUJawf7h5p3Fd1QO1+XGA6dCsBDUdjAFOROsID4IBe4OP/SXr4OwLlaFJ4o
+         mNDg==
+X-Gm-Message-State: AC+VfDw6cSx1Q68JXgQI6c5gcwjcNeOa+hmJzJFMAJhUTtCM+WviZzsf
+        BgaKLbV9ZAhQZzojc3L400Am3sjUoAuW7yXOOh4r8A==
+X-Google-Smtp-Source: ACHHUZ6/tku7n9gduYI3Ggu24QNVh8G7eHSwi8IiNVBHgEwrkq2UCalGSwj6EMkEVCO6RNIRFOwS7PSpCZVlhcePiFE=
+X-Received: by 2002:a05:6e02:1cad:b0:325:d0d8:2ddb with SMTP id
+ x13-20020a056e021cad00b00325d0d82ddbmr251489ill.15.1683127715219; Wed, 03 May
+ 2023 08:28:35 -0700 (PDT)
+MIME-Version: 1.0
+References: <87sfcn7uot.fsf@oldenburg.str.redhat.com> <CAP-5=fXZv+KCdCN05wVUcAwDCZAgXjWunoaviGBQEiUPqNwOmg@mail.gmail.com>
+ <ZEx0IQAtBatrRDCR@kernel.org> <ZEx0xAamEl66qk2w@kernel.org>
+ <874jot69ks.fsf@oldenburg.str.redhat.com> <87zg6l4utl.fsf@oldenburg.str.redhat.com>
+ <ZFJ39HKzBUg64QPO@kernel.org>
+In-Reply-To: <ZFJ39HKzBUg64QPO@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 3 May 2023 08:28:22 -0700
+Message-ID: <CAP-5=fUukHuVsPS_Am6VTGvpuiEVo=2X=BuN2feh+ibhnSFAUg@mail.gmail.com>
+Subject: Re: [PATCH v2] perf: Avoid implicit function declarations in
+ lexer/parse interface
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -48,81 +70,84 @@ Cc:     Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         "Justin M. Forbes" <jforbes@fedoraproject.org>
-Subject: Re: [PATCH v2] perf: Avoid implicit function declarations in
- lexer/parse interface
-Message-ID: <ZFJ39HKzBUg64QPO@kernel.org>
-References: <87sfcn7uot.fsf@oldenburg.str.redhat.com>
- <CAP-5=fXZv+KCdCN05wVUcAwDCZAgXjWunoaviGBQEiUPqNwOmg@mail.gmail.com>
- <ZEx0IQAtBatrRDCR@kernel.org>
- <ZEx0xAamEl66qk2w@kernel.org>
- <874jot69ks.fsf@oldenburg.str.redhat.com>
- <87zg6l4utl.fsf@oldenburg.str.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87zg6l4utl.fsf@oldenburg.str.redhat.com>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 03, 2023 at 11:40:06AM +0200, Florian Weimer escreveu:
-> * Florian Weimer:
-> > * Arnaldo Carvalho de Melo:
-
-> >>> Thanks, applied. BTW b4 coulnd't find this message (nor the original):
-
-> > Yes, vger drops the message after accepting it for some reason, probably
-> > something in the patch contents.  I tried to resubmit from a completely
-> > separate account, no luck.
+On Wed, May 3, 2023 at 8:04=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> Em Wed, May 03, 2023 at 11:40:06AM +0200, Florian Weimer escreveu:
+> > * Florian Weimer:
+> > > * Arnaldo Carvalho de Melo:
+>
+> > >>> Thanks, applied. BTW b4 coulnd't find this message (nor the origina=
+l):
+>
+> > > Yes, vger drops the message after accepting it for some reason, proba=
+bly
+> > > something in the patch contents.  I tried to resubmit from a complete=
+ly
+> > > separate account, no luck.
+> > >
+> > >> Not so fast, removed it for now:
+> > >>
+> > >>   CC      /tmp/build/perf-tools-next/util/parse-events-bison.o
+> > >> In file included from util/pmu.y:14:
+> > >> /tmp/build/perf-tools-next/util/pmu-flex.h:496:1: error: unknown typ=
+e name =E2=80=98YYSTYPE=E2=80=99
+> > >>   496 |
+> > >>       | ^
+> > >> /tmp/build/perf-tools-next/util/pmu-flex.h:498:19: error: unknown ty=
+pe name =E2=80=98YYSTYPE=E2=80=99
+> > >>   498 |
+> > >>       |                   ^
+> > >> /tmp/build/perf-tools-next/util/pmu-flex.h:546:17: error: unknown ty=
+pe name =E2=80=98YYSTYPE=E2=80=99
+> > >>   546 | extern int yylex \
+> > >>       |                 ^~
+> > >> util/pmu-bison.c: In function =E2=80=98perf_pmu_parse=E2=80=99:
+> > >> /tmp/build/perf-tools-next/util/pmu-bison.c:69:25: error: implicit d=
+eclaration of function =E2=80=98perf_pmu_lex=E2=80=99; did you mean =E2=80=
+=98perf_pmu_free=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+> > >>    69 | #define yylex           perf_pmu_lex
+> > >>       |                         ^~~~~~~~~~~~
+> > >> util/pmu-bison.c:1007:16: note: in expansion of macro =E2=80=98yylex=
+=E2=80=99
+> > >
+> > > This appears to be related to some BPF filter stuff that is only in
+> > > perf-next, not mainline.
+> > >
+> > > Is this the right tree on which to base the patch?
+> > >
+> > >   <https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/>
+> > >
+> > > Branch perf-tools-next?
 > >
-> >> Not so fast, removed it for now:
-> >>
-> >>   CC      /tmp/build/perf-tools-next/util/parse-events-bison.o
-> >> In file included from util/pmu.y:14:
-> >> /tmp/build/perf-tools-next/util/pmu-flex.h:496:1: error: unknown type name ‘YYSTYPE’
-> >>   496 |
-> >>       | ^
-> >> /tmp/build/perf-tools-next/util/pmu-flex.h:498:19: error: unknown type name ‘YYSTYPE’
-> >>   498 |
-> >>       |                   ^
-> >> /tmp/build/perf-tools-next/util/pmu-flex.h:546:17: error: unknown type name ‘YYSTYPE’
-> >>   546 | extern int yylex \
-> >>       |                 ^~
-> >> util/pmu-bison.c: In function ‘perf_pmu_parse’:
-> >> /tmp/build/perf-tools-next/util/pmu-bison.c:69:25: error: implicit declaration of function ‘perf_pmu_lex’; did you mean ‘perf_pmu_free’? [-Werror=implicit-function-declaration]
-> >>    69 | #define yylex           perf_pmu_lex
-> >>       |                         ^~~~~~~~~~~~
-> >> util/pmu-bison.c:1007:16: note: in expansion of macro ‘yylex’
+> > Sorry, it doesn't build even without my patch:
 > >
-> > This appears to be related to some BPF filter stuff that is only in
-> > perf-next, not mainline.
-> >
-> > Is this the right tree on which to base the patch?
-> >
-> >   <https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/>
-> >
-> > Branch perf-tools-next?
-> 
-> Sorry, it doesn't build even without my patch:
-> 
-> make[4]: *** No rule to make target 'zip.h', needed by '/tmp/build/libbpf/staticobjs/libbpf.o'.  Stop.
+> > make[4]: *** No rule to make target 'zip.h', needed by '/tmp/build/libb=
+pf/staticobjs/libbpf.o'.  Stop.
+>
+> I'm noticing this, but then I haven't merged with upstream yet, I bet
+> this is something upstream after merging the bpf branch... Nope, I just
+> did a test merge of what is in
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-tools
+> with upstream and it builds without problems on:
+>
+> [acme@quaco perf-tools]$ head -2 /etc/os-release
+> NAME=3D"Fedora Linux"
+> VERSION=3D"37 (Workstation Edition)"
+> [acme@quaco perf-tools]$
+>
+> I'll check on f38 and rawhide.
+>
+> - Arnaldo
 
-I'm noticing this, but then I haven't merged with upstream yet, I bet
-this is something upstream after merging the bpf branch... Nope, I just
-did a test merge of what is in
-git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-tools
-with upstream and it builds without problems on:
+The zip.c and zip.h in libbpf are new, perhaps it is a fixdeps issue?
+Perhaps doing a clean build and retrying will address the problem.
 
-[acme@quaco perf-tools]$ head -2 /etc/os-release
-NAME="Fedora Linux"
-VERSION="37 (Workstation Edition)"
-[acme@quaco perf-tools]$
-
-I'll check on f38 and rawhide.
-
-- Arnaldo
-
-
-
+Thanks,
+Ian
