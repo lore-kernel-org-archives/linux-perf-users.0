@@ -2,130 +2,217 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2212FC77B75
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 02:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687E6C7EE25
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 07:09:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229482AbjECCzg (ORCPT
+        id S229627AbjECHJp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 2 May 2023 22:55:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50224 "EHLO
+        Wed, 3 May 2023 03:09:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjECCzf (ORCPT
+        with ESMTP id S229674AbjECHJl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 2 May 2023 22:55:35 -0400
-X-Greylist: delayed 1669 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 02 May 2023 19:55:34 PDT
-Received: from mx0b-00256a01.pphosted.com (mx0b-00256a01.pphosted.com [67.231.153.242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91A581BDF
-        for <linux-perf-users@vger.kernel.org>; Tue,  2 May 2023 19:55:34 -0700 (PDT)
-Received: from pps.filterd (m0119691.ppops.net [127.0.0.1])
-        by mx0b-00256a01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 342LOuQr037211
-        for <linux-perf-users@vger.kernel.org>; Tue, 2 May 2023 22:27:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nyu.edu; h=mime-version :
- references : in-reply-to : from : date : message-id : subject : to : cc :
- content-type : content-transfer-encoding; s=20180315;
- bh=l+Bn2nkMpuhSmnNKAbWRfREFiQ9EAb033dHO+OxbTcA=;
- b=aRXSO8suZ27stxath8gkhd5iNXkgR8SiqAgBhADw6KlQ6rEsAm9I7Qd+K4fTZFujTOZl
- 5CLcCsLTMDhjuVVJ0Ri1sc5tStvycQbrUoXe1f4S+1ANbkqi3J4VJnp+Gu2Y7cHcXJ4V
- amofC/9GCXzk6uliOUcJco97Q8oHyPWI5uDCJIV+aYU0zbRu8rOb/+SQ3X5LzGbxLCHI
- m/kCyraW+mvSG6VbwK4JiaOOLi3+wnNzg7gRdBn7DZ1vkz58H829ACJqcCCn7oBYATLa
- B/MfMIpF4PfVS5um1iy56FxSNmeQm93tX5dvDw/k7NcDRTszZfwW/UJKEUQrWiu/iBjZ Pg== 
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com [209.85.219.198])
-        by mx0b-00256a01.pphosted.com (PPS) with ESMTPS id 3qbads2p66-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 22:27:44 -0400
-Received: by mail-yb1-f198.google.com with SMTP id 3f1490d57ef6-b9a6f15287eso1471488276.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 02 May 2023 19:27:44 -0700 (PDT)
+        Wed, 3 May 2023 03:09:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C982736
+        for <linux-perf-users@vger.kernel.org>; Wed,  3 May 2023 00:08:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683097738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pHJN0MwZt1Qkyg0FwWKVsL71HOfF8cRCNsnTVzqCki0=;
+        b=D0/wd8rnEWmWlMr/XtAwPijjPgbMq3yz/a2EVkmuofSTffQGzLgpGF8mN/V2Jxn3wkdOyB
+        5d3gacQGLWuGX6k6KvcUmopGW4FLfyRmQHYnAiy73XmV+Kas85MRoiu6d1EQRrLTHdUvRJ
+        rHz1AFHTLD06s9XnbCrv+pJXicnhUJs=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-7-cd9VFXBpNsGUWQcj4dKqoA-1; Wed, 03 May 2023 03:08:57 -0400
+X-MC-Unique: cd9VFXBpNsGUWQcj4dKqoA-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-30641258c9eso141607f8f.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 May 2023 00:08:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683080864; x=1685672864;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l+Bn2nkMpuhSmnNKAbWRfREFiQ9EAb033dHO+OxbTcA=;
-        b=g1j90QXXzWc7p5Yuz4HBbV2PD+YlMuXRGBGH9jZnTNuioIhCKWH/rr585KGB1tb1yh
-         lBj9bhWhAApf4oowO12xe5A7MXMy/vdw5r1AhQ2zmT9rEBWd6YDUo9gxVos+iaQu1GRA
-         Byp1h89mHW973GOk4qqOFZPUV1/L8NxPTkB+QPAPfgQtPNrF3ocfYr7PwIMmr828JpNx
-         lkbkJq9i8pXr6/1yYCN9JVy3oCuCi3hKENHefyMahlRfwgfzJ8P6SiQUE6pIpXqdVrVE
-         /uzDagVs+pskZgRjnklw0A4cjXm3Z1zXHm5eb//9MaQvn3nyLXaxkCPdRmQuTSyck1T+
-         ndTA==
-X-Gm-Message-State: AC+VfDzFYi4t33t7dFHgMoadE51RsmQUYizN/fIcr7PMfkCZpx3la0NN
-        5Bu8n3i4Cwrjx9cxsXf92h+EsDmoGkweuyp9mc483lMYZ4XwMCSkuM6UHiuNJmtBa8rxp9sLonW
-        C+xR4f5EedQ2KTQY+7t2xcG3O5Y+1TYGY9C6o5jv8SDkA
-X-Received: by 2002:a25:1589:0:b0:b9e:6d19:306a with SMTP id 131-20020a251589000000b00b9e6d19306amr720919ybv.16.1683080863729;
-        Tue, 02 May 2023 19:27:43 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4nSdJ4vtc+2UclyuNh0+gY80V3U5o6WdNawveEVX91KYB4qQv+i0K+0gnFobH2ZIU67GOgWsA1q0uY80FI4TU=
-X-Received: by 2002:a25:1589:0:b0:b9e:6d19:306a with SMTP id
- 131-20020a251589000000b00b9e6d19306amr720903ybv.16.1683080863438; Tue, 02 May
- 2023 19:27:43 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683097736; x=1685689736;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :content-language:references:cc:to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pHJN0MwZt1Qkyg0FwWKVsL71HOfF8cRCNsnTVzqCki0=;
+        b=S2d/vehPdwSMeEtTG5FaYg1ljzaDKBz0OnUWChgclGdq1qBoNESjg9aNLSOP7rsWAf
+         YD0HdqbbKtejb+oIlqU+Cj5DaZT9qOpLtZPbs1QiEfsNpYIGO7C56ComkzHtl488xvOZ
+         1ja7UTaLnhHjiVtoExbCSH3e6XagjTy/uYpsMZ4P14r0ebIx8wcbmJrteZs404TxjiGp
+         eV5R+RIA9EpGRroakBylquMi5a9y3DuvOSmvJW0+LJ+loVMFx4LJi+PtKCrF1epMWoRC
+         93zNwq6HE77K56fae+9BXzSs43nnlyHWsczU9PIU2U0Q8YrrX0xrSP/Xi2gxJj93mRhC
+         f2Qw==
+X-Gm-Message-State: AC+VfDxedV0+z+TpL3HfPcXzgijd8yehZyx5SFGyleL68gjySYlTbTlI
+        Q6UyfGr4n57J+jB6lTpH6PaNLvV37hG69YWCFGnr+BIbEeY+im750d49JsVA4P6j6UglL3mvbT1
+        JuEL6Vo/xf3YStA6cHbz6v+zXKm8Qvg==
+X-Received: by 2002:a5d:6410:0:b0:306:3a28:f950 with SMTP id z16-20020a5d6410000000b003063a28f950mr3061894wru.7.1683097735919;
+        Wed, 03 May 2023 00:08:55 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7NT02o8A0M+QHO4dvjy7p83osecccZDAuDP/z0mhC15FeHFbBpxcPnSHMrIpl83AzT6cM6xQ==
+X-Received: by 2002:a5d:6410:0:b0:306:3a28:f950 with SMTP id z16-20020a5d6410000000b003063a28f950mr3061838wru.7.1683097735470;
+        Wed, 03 May 2023 00:08:55 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c711:6a00:9109:6424:1804:a441? (p200300cbc7116a00910964241804a441.dip0.t-ipconnect.de. [2003:cb:c711:6a00:9109:6424:1804:a441])
+        by smtp.gmail.com with ESMTPSA id v2-20020a1cf702000000b003f32f013c3csm962580wmh.6.2023.05.03.00.08.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 03 May 2023 00:08:54 -0700 (PDT)
+Message-ID: <1b34e9a4-83c0-2f44-1457-dd8800b9287a@redhat.com>
+Date:   Wed, 3 May 2023 09:08:52 +0200
 MIME-Version: 1.0
-References: <20230502203135.24794-1-jinli.xiao@nyu.edu> <CAP-5=fV-RZGwcM8+dMCsqwK_1aFERrvQ1sLJfUCA+kBFMEdoDw@mail.gmail.com>
-In-Reply-To: <CAP-5=fV-RZGwcM8+dMCsqwK_1aFERrvQ1sLJfUCA+kBFMEdoDw@mail.gmail.com>
-From:   Jinli Xiao <jinli.xiao@nyu.edu>
-Date:   Tue, 2 May 2023 22:27:32 -0400
-Message-ID: <CAExMFzgmcQqnVSBj9+YVr2UAkUg8CHdpLjQJF6CuOaWdcMbqDQ@mail.gmail.com>
-Subject: Re: [PATCH] perf python: Set error messages on call failure
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+To:     Matthew Rosato <mjrosato@linux.ibm.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-ORIG-GUID: DtMgfnIokxVfKBZ8wrR3BD8tHrHjImb7
-X-Proofpoint-GUID: DtMgfnIokxVfKBZ8wrR3BD8tHrHjImb7
-X-Orig-IP: 209.85.219.198
-X-Proofpoint-Spam-Details: rule=outbound_bp_notspam policy=outbound_bp score=0 adultscore=0
- spamscore=0 lowpriorityscore=0 mlxlogscore=999 impostorscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 priorityscore=1501 clxscore=1015 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2305030019
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Mika Penttila <mpenttil@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>
+References: <cover.1683067198.git.lstoakes@gmail.com>
+ <20d078c5-4ee6-18dc-d3a5-d76b6a68f64e@linux.ibm.com>
+Content-Language: en-US
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH v8 0/3] mm/gup: disallow GUP writing to file-backed
+ mappings by default
+In-Reply-To: <20d078c5-4ee6-18dc-d3a5-d76b6a68f64e@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Thanks for the prompt response!
+On 03.05.23 02:31, Matthew Rosato wrote:
+> On 5/2/23 6:51 PM, Lorenzo Stoakes wrote:
+>> Writing to file-backed mappings which require folio dirty tracking using
+>> GUP is a fundamentally broken operation, as kernel write access to GUP
+>> mappings do not adhere to the semantics expected by a file system.
+>>
+>> A GUP caller uses the direct mapping to access the folio, which does not
+>> cause write notify to trigger, nor does it enforce that the caller marks
+>> the folio dirty.
+>>
+>> The problem arises when, after an initial write to the folio, writeback
+>> results in the folio being cleaned and then the caller, via the GUP
+>> interface, writes to the folio again.
+>>
+>> As a result of the use of this secondary, direct, mapping to the folio no
+>> write notify will occur, and if the caller does mark the folio dirty, this
+>> will be done so unexpectedly.
+>>
+>> For example, consider the following scenario:-
+>>
+>> 1. A folio is written to via GUP which write-faults the memory, notifying
+>>     the file system and dirtying the folio.
+>> 2. Later, writeback is triggered, resulting in the folio being cleaned and
+>>     the PTE being marked read-only.
+>> 3. The GUP caller writes to the folio, as it is mapped read/write via the
+>>     direct mapping.
+>> 4. The GUP caller, now done with the page, unpins it and sets it dirty
+>>     (though it does not have to).
+>>
+>> This change updates both the PUP FOLL_LONGTERM slow and fast APIs. As
+>> pin_user_pages_fast_only() does not exist, we can rely on a slightly
+>> imperfect whitelisting in the PUP-fast case and fall back to the slow case
+>> should this fail.
+>>
+>> v8:
+>> - Fixed typo writeable -> writable.
+>> - Fixed bug in writable_file_mapping_allowed() - must check combination of
+>>    FOLL_PIN AND FOLL_LONGTERM not either/or.
+>> - Updated vma_needs_dirty_tracking() to include write/shared to account for
+>>    MAP_PRIVATE mappings.
+>> - Move to open-coding the checks in folio_pin_allowed() so we can
+>>    READ_ONCE() the mapping and avoid unexpected compiler loads. Rename to
+>>    account for fact we now check flags here.
+>> - Disallow mapping == NULL or mapping & PAGE_MAPPING_FLAGS other than
+>>    anon. Defer to slow path.
+>> - Perform GUP-fast check _after_ the lowest page table level is confirmed to
+>>    be stable.
+>> - Updated comments and commit message for final patch as per Jason's
+>>    suggestions.
+> 
+> Tested again on s390 using QEMU with a memory backend file (on ext4) and vfio-pci -- This time both vfio_pin_pages_remote (which will call pin_user_pages_remote(flags | FOLL_LONGTERM)) and the pin_user_pages_fast(FOLL_WRITE | FOLL_LONGTERM) in kvm_s390_pci_aif_enable are being allowed (e.g. returning positive pin count)
 
-On Tue, May 2, 2023 at 4:37=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> Nice! Would it be possible to test this? We could do a shell test
+At least it's consistent now ;) And it might be working as expected ...
 
-All my changes in this patch is just setting the error message that
-can be interpreted by Python just before the bindings return.
+In v7:
+* pin_user_pages_fast() succeeded
+* vfio_pin_pages_remote() failed
 
-I am not sure about shell test, but I can do something like
+But also in v7:
+* GUP-fast allows pinning (anonymous) pages in MAP_PRIVATE file
+   mappings
+* Ordinary GUP allows pinning pages in MAP_PRIVATE file mappings
 
-[root@nyu-lexis linux]# export PYTHONPATH=3D~jinli/linux/tools/perf/python/
-[root@nyu-lexis linux]# python3
-Python 3.11.2 (main, Feb  8 2023, 00:00:00) [GCC 12.2.1 20221121 (Red
-Hat 12.2.1-4)] on linux
-Type "help", "copyright", "credits" or "license" for more information.
->>> import perf
->>> thread_map =3D perf.thread_map(9999)   # a non-existent pid in /proc
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-FileNotFoundError: [Errno 2] No such file or directory
+In v8:
+* pin_user_pages_fast() succeeds
+* vfio_pin_pages_remote() succeeds
 
-whereas the original output is
+But also in v8:
+* GUP-fast allows pinning (anonymous) pages in MAP_PRIVATE file
+   mappings
+* Ordinary GUP allows pinning pages in MAP_PRIVATE file mappings
 
->>> thread_map =3D perf.thread_map(9999)
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-SystemError: <class 'perf.thread_map'> returned NULL without setting
-an exception
 
-Upon testing I did find some of the changes unnecessary. I will submit
-a new patch to this.
+I have to speculate, but ... could it be that you are using a private 
+mapping?
 
-This is my first time contributing so please let me know if I did
-anything wrong :)
+In QEMU, unfortunately, the default for memory-backend-file is 
+"share=off" (private) ... for memory-backend-memfd it is "share=on" 
+(shared). The default is stupid ...
 
-Best wishes,
-Jinli
+If you invoke QEMU manually, can you specify "share=on" for the 
+memory-backend-file? I thought libvirt would always default to 
+"share=on" for file mappings (everything else doesn't make much sense) 
+... but you might have to specify
+	<access mode="shared"/>
+in addition to
+	<source type="file"/>
+
+-- 
+Thanks,
+
+David / dhildenb
+
