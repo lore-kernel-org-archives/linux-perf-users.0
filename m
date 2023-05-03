@@ -2,217 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687E6C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 07:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C9CC77B75
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 08:12:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjECHJp (ORCPT
+        id S229774AbjECIMJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 May 2023 03:09:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52396 "EHLO
+        Wed, 3 May 2023 04:12:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229674AbjECHJl (ORCPT
+        with ESMTP id S229883AbjECIMI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 May 2023 03:09:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C982736
-        for <linux-perf-users@vger.kernel.org>; Wed,  3 May 2023 00:08:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683097738;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pHJN0MwZt1Qkyg0FwWKVsL71HOfF8cRCNsnTVzqCki0=;
-        b=D0/wd8rnEWmWlMr/XtAwPijjPgbMq3yz/a2EVkmuofSTffQGzLgpGF8mN/V2Jxn3wkdOyB
-        5d3gacQGLWuGX6k6KvcUmopGW4FLfyRmQHYnAiy73XmV+Kas85MRoiu6d1EQRrLTHdUvRJ
-        rHz1AFHTLD06s9XnbCrv+pJXicnhUJs=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-7-cd9VFXBpNsGUWQcj4dKqoA-1; Wed, 03 May 2023 03:08:57 -0400
-X-MC-Unique: cd9VFXBpNsGUWQcj4dKqoA-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-30641258c9eso141607f8f.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 May 2023 00:08:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683097736; x=1685689736;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :content-language:references:cc:to:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pHJN0MwZt1Qkyg0FwWKVsL71HOfF8cRCNsnTVzqCki0=;
-        b=S2d/vehPdwSMeEtTG5FaYg1ljzaDKBz0OnUWChgclGdq1qBoNESjg9aNLSOP7rsWAf
-         YD0HdqbbKtejb+oIlqU+Cj5DaZT9qOpLtZPbs1QiEfsNpYIGO7C56ComkzHtl488xvOZ
-         1ja7UTaLnhHjiVtoExbCSH3e6XagjTy/uYpsMZ4P14r0ebIx8wcbmJrteZs404TxjiGp
-         eV5R+RIA9EpGRroakBylquMi5a9y3DuvOSmvJW0+LJ+loVMFx4LJi+PtKCrF1epMWoRC
-         93zNwq6HE77K56fae+9BXzSs43nnlyHWsczU9PIU2U0Q8YrrX0xrSP/Xi2gxJj93mRhC
-         f2Qw==
-X-Gm-Message-State: AC+VfDxedV0+z+TpL3HfPcXzgijd8yehZyx5SFGyleL68gjySYlTbTlI
-        Q6UyfGr4n57J+jB6lTpH6PaNLvV37hG69YWCFGnr+BIbEeY+im750d49JsVA4P6j6UglL3mvbT1
-        JuEL6Vo/xf3YStA6cHbz6v+zXKm8Qvg==
-X-Received: by 2002:a5d:6410:0:b0:306:3a28:f950 with SMTP id z16-20020a5d6410000000b003063a28f950mr3061894wru.7.1683097735919;
-        Wed, 03 May 2023 00:08:55 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7NT02o8A0M+QHO4dvjy7p83osecccZDAuDP/z0mhC15FeHFbBpxcPnSHMrIpl83AzT6cM6xQ==
-X-Received: by 2002:a5d:6410:0:b0:306:3a28:f950 with SMTP id z16-20020a5d6410000000b003063a28f950mr3061838wru.7.1683097735470;
-        Wed, 03 May 2023 00:08:55 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c711:6a00:9109:6424:1804:a441? (p200300cbc7116a00910964241804a441.dip0.t-ipconnect.de. [2003:cb:c711:6a00:9109:6424:1804:a441])
-        by smtp.gmail.com with ESMTPSA id v2-20020a1cf702000000b003f32f013c3csm962580wmh.6.2023.05.03.00.08.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 May 2023 00:08:54 -0700 (PDT)
-Message-ID: <1b34e9a4-83c0-2f44-1457-dd8800b9287a@redhat.com>
-Date:   Wed, 3 May 2023 09:08:52 +0200
+        Wed, 3 May 2023 04:12:08 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72C07B5;
+        Wed,  3 May 2023 01:11:50 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3438BVEp023737;
+        Wed, 3 May 2023 08:11:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-transfer-encoding; s=pp1;
+ bh=TZTIlAYz5Xrm3wa3jxWVgbAqiZepf8IQvMmA42vTCVY=;
+ b=dFlXR9l856fIKbI2J1x7YENN7vnr/HZ7SWw5QkAxZ8OhEF1mKCpgU5cn/G+WxVRtbJpX
+ Am6p/W7j2v/iAu6jcgLbBaBtQb+/JXW+Bu2S+M9Kpg0Z7Bvrir9KFUghuzfwcpY1Xj51
+ q8WGwzfolZQBWdT9qZmWWiULXqicPoA3k6D+dgO6uNNMigOl3NrvHkwgcHvHT9aGlZ0l
+ AZ+7eSd7s9fwjnGZf65B9A/D/bGsM+Y2fATHOjc2Vcf1GwVwtiV5n0j18xWWWaSs20Bl
+ 4Ose0A/aq84eXbd+N3j4bpadmtkXKfsh5ebU40pk4xnp393Uyr8pBxY3bafdfKNjn7Di lw== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qbjqfhv6g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 03 May 2023 08:11:47 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 342437qa027740;
+        Wed, 3 May 2023 08:11:45 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3q8tv6t26w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 03 May 2023 08:11:44 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3438BeaV34865832
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 May 2023 08:11:41 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DD5B12004B;
+        Wed,  3 May 2023 08:11:40 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B69D72004F;
+        Wed,  3 May 2023 08:11:40 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed,  3 May 2023 08:11:40 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     svens@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] Fix perf test probe libc's inet_pton on s390
+Date:   Wed,  3 May 2023 10:11:34 +0200
+Message-Id: <20230503081134.3372415-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-To:     Matthew Rosato <mjrosato@linux.ibm.com>,
-        Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-References: <cover.1683067198.git.lstoakes@gmail.com>
- <20d078c5-4ee6-18dc-d3a5-d76b6a68f64e@linux.ibm.com>
-Content-Language: en-US
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH v8 0/3] mm/gup: disallow GUP writing to file-backed
- mappings by default
-In-Reply-To: <20d078c5-4ee6-18dc-d3a5-d76b6a68f64e@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: mJOiGhctZuvIl8KHMKcJs6DhbHoeAf0u
+X-Proofpoint-ORIG-GUID: mJOiGhctZuvIl8KHMKcJs6DhbHoeAf0u
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-03_04,2023-04-27_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 clxscore=1011 impostorscore=0
+ suspectscore=0 priorityscore=1501 mlxlogscore=999 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305030066
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 03.05.23 02:31, Matthew Rosato wrote:
-> On 5/2/23 6:51 PM, Lorenzo Stoakes wrote:
->> Writing to file-backed mappings which require folio dirty tracking using
->> GUP is a fundamentally broken operation, as kernel write access to GUP
->> mappings do not adhere to the semantics expected by a file system.
->>
->> A GUP caller uses the direct mapping to access the folio, which does not
->> cause write notify to trigger, nor does it enforce that the caller marks
->> the folio dirty.
->>
->> The problem arises when, after an initial write to the folio, writeback
->> results in the folio being cleaned and then the caller, via the GUP
->> interface, writes to the folio again.
->>
->> As a result of the use of this secondary, direct, mapping to the folio no
->> write notify will occur, and if the caller does mark the folio dirty, this
->> will be done so unexpectedly.
->>
->> For example, consider the following scenario:-
->>
->> 1. A folio is written to via GUP which write-faults the memory, notifying
->>     the file system and dirtying the folio.
->> 2. Later, writeback is triggered, resulting in the folio being cleaned and
->>     the PTE being marked read-only.
->> 3. The GUP caller writes to the folio, as it is mapped read/write via the
->>     direct mapping.
->> 4. The GUP caller, now done with the page, unpins it and sets it dirty
->>     (though it does not have to).
->>
->> This change updates both the PUP FOLL_LONGTERM slow and fast APIs. As
->> pin_user_pages_fast_only() does not exist, we can rely on a slightly
->> imperfect whitelisting in the PUP-fast case and fall back to the slow case
->> should this fail.
->>
->> v8:
->> - Fixed typo writeable -> writable.
->> - Fixed bug in writable_file_mapping_allowed() - must check combination of
->>    FOLL_PIN AND FOLL_LONGTERM not either/or.
->> - Updated vma_needs_dirty_tracking() to include write/shared to account for
->>    MAP_PRIVATE mappings.
->> - Move to open-coding the checks in folio_pin_allowed() so we can
->>    READ_ONCE() the mapping and avoid unexpected compiler loads. Rename to
->>    account for fact we now check flags here.
->> - Disallow mapping == NULL or mapping & PAGE_MAPPING_FLAGS other than
->>    anon. Defer to slow path.
->> - Perform GUP-fast check _after_ the lowest page table level is confirmed to
->>    be stable.
->> - Updated comments and commit message for final patch as per Jason's
->>    suggestions.
-> 
-> Tested again on s390 using QEMU with a memory backend file (on ext4) and vfio-pci -- This time both vfio_pin_pages_remote (which will call pin_user_pages_remote(flags | FOLL_LONGTERM)) and the pin_user_pages_fast(FOLL_WRITE | FOLL_LONGTERM) in kvm_s390_pci_aif_enable are being allowed (e.g. returning positive pin count)
+With Fedora 38 the perf test 86 probe libc's inet_pton
+fails on s390. The call chain of the ping command changed.
+The functions text_to_binary_address() and gaih_inet() do
+not show up in the call chain anymore.
 
-At least it's consistent now ;) And it might be working as expected ...
+Output before:
+ # ./perf test -v 86
+ 86: probe libc's inet_pton & backtrace it with ping                 :
+ --- start ---
+ test child forked, pid 541050
+ fgrep: warning: fgrep is obsolescent; using grep -F
+ fgrep: warning: fgrep is obsolescent; using grep -F
+ BFD: DWARF error: could not find variable specification at offset 0x22011
+ ...
 
-In v7:
-* pin_user_pages_fast() succeeded
-* vfio_pin_pages_remote() failed
+ ping 541078 [002] 348826.679581: probe_libc:inet_pton_1: (3ffad84b940)
+ 14b940 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+ 10e9c3 __GI_getaddrinfo+0xeb3 (inlined)
+ 4397 main+0x737 (/usr/bin/ping)
+  FAIL: expected backtrace entry "gaih_inet.*\+0x[[:xdigit:]]\
+         +[[:space:]]\(/usr/lib64/libc.so.6|inlined\)$"
+         got "4397 main+0x737 (/usr/bin/ping)"
+ test child finished with -1
+ ---- end ----
+ probe libc's inet_pton & backtrace it with ping: FAILED!
+ #
 
-But also in v7:
-* GUP-fast allows pinning (anonymous) pages in MAP_PRIVATE file
-   mappings
-* Ordinary GUP allows pinning pages in MAP_PRIVATE file mappings
+Output after:
+ # ./perf test -v 86
+ 86: probe libc's inet_pton & backtrace it with ping                 :
+ --- start ---
+ test child forked, pid 541098
+ fgrep: warning: fgrep is obsolescent; using grep -F
+ fgrep: warning: fgrep is obsolescent; using grep -F
+ BFD: DWARF error: could not find variable specification at offset 0x309d1
+ ...
 
-In v8:
-* pin_user_pages_fast() succeeds
-* vfio_pin_pages_remote() succeeds
+ ping 541126 [006] 349309.099067: probe_libc:inet_pton_1: (3ffb7f4b940)
+ 14b940 __GI___inet_pton+0x0 (/usr/lib64/libc.so.6)
+ 10e9c3 __GI_getaddrinfo+0xeb3 (inlined)
+ 4397 main+0x737 (/usr/bin/ping)
+ test child finished with 0
+ ---- end ----
+ probe libc's inet_pton & backtrace it with ping: Ok
+ #
 
-But also in v8:
-* GUP-fast allows pinning (anonymous) pages in MAP_PRIVATE file
-   mappings
-* Ordinary GUP allows pinning pages in MAP_PRIVATE file mappings
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+---
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 2 --
+ 1 file changed, 2 deletions(-)
 
-
-I have to speculate, but ... could it be that you are using a private 
-mapping?
-
-In QEMU, unfortunately, the default for memory-backend-file is 
-"share=off" (private) ... for memory-backend-memfd it is "share=on" 
-(shared). The default is stupid ...
-
-If you invoke QEMU manually, can you specify "share=on" for the 
-memory-backend-file? I thought libvirt would always default to 
-"share=on" for file mappings (everything else doesn't make much sense) 
-... but you might have to specify
-	<access mode="shared"/>
-in addition to
-	<source type="file"/>
-
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index b4149b2db4c6..4c739056cb65 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -38,8 +38,6 @@ trace_libc_inet_pton_backtrace() {
+ 	case "$(uname -m)" in
+ 	s390x)
+ 		eventattr='call-graph=dwarf,max-stack=4'
+-		echo "text_to_binary_address.*\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
+-		echo "gaih_inet.*\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
+ 		echo "(__GI_)?getaddrinfo\+0x[[:xdigit:]]+[[:space:]]\($libc|inlined\)$" >> $expected
+ 		echo "main\+0x[[:xdigit:]]+[[:space:]]\(.*/bin/ping.*\)$" >> $expected
+ 		;;
 -- 
-Thanks,
-
-David / dhildenb
+2.40.0
 
