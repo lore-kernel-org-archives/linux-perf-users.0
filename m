@@ -2,56 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38454C77B75
-	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 20:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1DAC77B75
+	for <linux-perf-users@archiver.kernel.org>; Wed,  3 May 2023 20:57:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbjECU5R (ORCPT
+        id S229650AbjECU5h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 3 May 2023 16:57:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60072 "EHLO
+        Wed, 3 May 2023 16:57:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjECU5Q (ORCPT
+        with ESMTP id S229648AbjECU5g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 3 May 2023 16:57:16 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60CF183DD;
-        Wed,  3 May 2023 13:57:15 -0700 (PDT)
+        Wed, 3 May 2023 16:57:36 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF868A40;
+        Wed,  3 May 2023 13:57:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683147435; x=1714683435;
+  t=1683147448; x=1714683448;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=GaehTfve45CbIaWWz2WMlJ4UzjVlJnRrSQYu3WWTTN0=;
-  b=ATjFgW415d/wDOD5SPqt87tUFGskjlFrIo34EVqZqwe/Ihkz1C67mIp8
-   sRzOvRSxtHDpUp/ILlhLYzZkeNqOSxLTkgvjqjEw5ENOKycoVblqticwD
-   GSN9SSnpQhAO/lP3EP9uTuQUw50CWKpOU1UjDa1J1jgQGEnsNU6qhQBYW
-   0XbT7I4vNGqojGFZRHfQ8wTEwnWPNWzPxQmFPv6ZiWn790+HDrInHlKYO
-   Q8F71nugXX83vKnkN5T3FwNq2lEs7ZO+AQdVWbaVvX6MdDJGcBufC+lIn
-   K4zge09yX62MqjkQXzwB5qa4VtvXnLQsxBQ32bp8mmEvZJeae0gPlMBm8
+  bh=LP6aJsbAslWxtPOKTpN6qXrdWcQD2USlo7JFwiBp9sU=;
+  b=A7in0AJcqoulsv2rQeSaSAifnFw43F1PTAmbpOOmdrrZ3fs6NFyHykeT
+   KJWoxdAj43O8kn2S+UCB9TAcvMH5kAeYVSfNBitUww8Re1Z1wFNmg5ukF
+   q/9UrbvxOUoUwPGZNvAElGI7d9F6t8xktqzDfPPQvBXFJ3D/4xz+Q0lm8
+   pDJpIZfwOoKAK4zJXrJ6UMu3IvMNhbwnCS/KfYenRUFGKPJv08QhBlS5l
+   vSp/LwAJPB6STwdk88L77WgjNiPYMu9sTG0Rn/8hrpaF5Ny+RZNUyw/Zu
+   9Mb4Kwp1zrfnY0UbhP8jh6qgeDFShKtjMb3PhflIHtVW6PJmBOd+XRi4R
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="337906388"
+X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="411922222"
 X-IronPort-AV: E=Sophos;i="5.99,248,1677571200"; 
-   d="scan'208";a="337906388"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2023 13:57:10 -0700
+   d="scan'208";a="411922222"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2023 13:57:27 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="820904656"
+X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="727297487"
 X-IronPort-AV: E=Sophos;i="5.99,248,1677571200"; 
-   d="scan'208";a="820904656"
+   d="scan'208";a="727297487"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 03 May 2023 13:57:09 -0700
+  by orsmga008.jf.intel.com with ESMTP; 03 May 2023 13:57:27 -0700
 Received: from [10.209.46.175] (kliang2-mobl1.ccr.corp.intel.com [10.209.46.175])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id D883C580569;
-        Wed,  3 May 2023 13:57:05 -0700 (PDT)
-Message-ID: <30c9f835-d269-1ee9-d715-d3efbd651dc2@linux.intel.com>
-Date:   Wed, 3 May 2023 16:57:04 -0400
+        by linux.intel.com (Postfix) with ESMTPS id 58A8C580D43;
+        Wed,  3 May 2023 13:57:23 -0700 (PDT)
+Message-ID: <01bb74d6-9240-5a42-f936-2106d1488800@linux.intel.com>
+Date:   Wed, 3 May 2023 16:57:22 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.1
-Subject: Re: [PATCH v4 01/44] perf metric: Change divide by zero and !support
- events behavior
+Subject: Re: [PATCH v4 02/44] perf stat: Introduce skippable evsels
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -87,9 +86,9 @@ To:     Ian Rogers <irogers@google.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20230502223851.2234828-1-irogers@google.com>
- <20230502223851.2234828-2-irogers@google.com>
+ <20230502223851.2234828-3-irogers@google.com>
 From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230502223851.2234828-2-irogers@google.com>
+In-Reply-To: <20230502223851.2234828-3-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -99,81 +98,79 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 2023-05-02 6:38 p.m., Ian Rogers wrote:
-> Division by zero causes expression parsing to fail and no metric to be
-> generated. This can mean for short running benchmarks metrics are not
-> shown. Change the behavior to make the value nan, which gets shown like:
-> 
-> '''
-> $ perf stat -M TopdownL2 true
-> 
->  Performance counter stats for 'true':
-> 
->          1,031,492      INST_RETIRED.ANY                 #      nan %  tma_fetch_bandwidth
->                                                   #      nan %  tma_heavy_operations
->                                                   #      nan %  tma_light_operations
->             29,304      CPU_CLK_UNHALTED.REF_XCLK        #      nan %  tma_fetch_latency
->                                                   #      nan %  tma_branch_mispredicts
->                                                   #      nan %  tma_machine_clears
->                                                   #      nan %  tma_core_bound
->                                                   #      nan %  tma_memory_bound
->          2,658,319      IDQ_UOPS_NOT_DELIVERED.CORE
->             11,167      EXE_ACTIVITY.BOUND_ON_STORES
->            262,058      EXE_ACTIVITY.1_PORTS_UTIL
->      <not counted>      BR_MISP_RETIRED.ALL_BRANCHES                                            (0.00%)
->      <not counted>      INT_MISC.RECOVERY_CYCLES_ANY                                            (0.00%)
->      <not counted>      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE                                        (0.00%)
->      <not counted>      CPU_CLK_UNHALTED.THREAD                                                 (0.00%)
->      <not counted>      UOPS_RETIRED.RETIRE_SLOTS                                               (0.00%)
->      <not counted>      CYCLE_ACTIVITY.STALLS_MEM_ANY                                           (0.00%)
->      <not counted>      UOPS_RETIRED.MACRO_FUSED                                                (0.00%)
->      <not counted>      IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE                                        (0.00%)
->      <not counted>      EXE_ACTIVITY.2_PORTS_UTIL                                               (0.00%)
->      <not counted>      CYCLE_ACTIVITY.STALLS_TOTAL                                             (0.00%)
->      <not counted>      MACHINE_CLEARS.COUNT                                                    (0.00%)
->      <not counted>      UOPS_ISSUED.ANY                                                         (0.00%)
-> 
->        0.002864879 seconds time elapsed
-> 
->        0.003012000 seconds user
->        0.000000000 seconds sys
-> '''
-> 
-> When events aren't supported a count of 0 can be confusing and make
-> metrics look meaningful. Change these to be nan also which, with the
-> next change, gets shown like:
+> Perf stat with no arguments will use default events and metrics. These
+> events may fail to open even with kernel and hypervisor disabled. When
+> these fail then the permissions error appears even though they were
+> implicitly selected. This is particularly a problem with the automatic
+> selection of the TopdownL1 metric group on certain architectures like
+> Skylake:
 > 
 > '''
 > $ perf stat true
->  Performance counter stats for 'true':
-> 
->               1.25 msec task-clock:u                     #    0.387 CPUs utilized
->                  0      context-switches:u               #    0.000 /sec
->                  0      cpu-migrations:u                 #    0.000 /sec
->                 46      page-faults:u                    #   36.702 K/sec
->            255,942      cycles:u                         #    0.204 GHz                         (88.66%)
->            123,046      instructions:u                   #    0.48  insn per cycle
->             28,301      branches:u                       #   22.580 M/sec
->              2,489      branch-misses:u                  #    8.79% of all branches
->              4,719      CPU_CLK_UNHALTED.REF_XCLK:u      #    3.765 M/sec
->                                                   #      nan %  tma_frontend_bound
->                                                   #      nan %  tma_retiring
->                                                   #      nan %  tma_backend_bound
->                                                   #      nan %  tma_bad_speculation
->            344,855      IDQ_UOPS_NOT_DELIVERED.CORE:u    #  275.147 M/sec
->    <not supported>      INT_MISC.RECOVERY_CYCLES_ANY:u
->      <not counted>      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u                                        (0.00%)
->      <not counted>      CPU_CLK_UNHALTED.THREAD:u                                               (0.00%)
->      <not counted>      UOPS_RETIRED.RETIRE_SLOTS:u                                             (0.00%)
->      <not counted>      UOPS_ISSUED.ANY:u                                                       (0.00%)
-> 
->        0.003238142 seconds time elapsed
-> 
->        0.000000000 seconds user
->        0.003434000 seconds sys
+> Error:
+> Access to performance monitoring and observability operations is limited.
+> Consider adjusting /proc/sys/kernel/perf_event_paranoid setting to open
+> access to performance monitoring and observability operations for processes
+> without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+> More information can be found at 'Perf events and tool security' document:
+> https://www.kernel.org/doc/html/latest/admin-guide/perf-security.html
+> perf_event_paranoid setting is 2:
+>   -1: Allow use of (almost) all events by all users
+>       Ignore mlock limit after perf_event_mlock_kb without CAP_IPC_LOCK
+>> = 0: Disallow raw and ftrace function tracepoint access
+>> = 1: Disallow CPU event access
+>> = 2: Disallow kernel profiling
+> To make the adjusted perf_event_paranoid setting permanent preserve it
+> in /etc/sysctl.conf (e.g. kernel.perf_event_paranoid = <setting>)
 > '''
 > 
-> Ensure that nan metric values are quoted as nan isn't a valid number
-> in json.
+> This patch adds skippable evsels that when they fail to open won't
+> cause termination and will appear as "<not supported>" in output. The
+> TopdownL1 events, from the metric group, are marked as skippable. This
+> turns the failure above to:
+> 
+> '''
+> $ perf stat perf bench internals synthesize
+> Computing performance of single threaded perf event synthesis by
+> synthesizing events on the perf process itself:
+>   Average synthesis took: 49.287 usec (+- 0.083 usec)
+>   Average num. events: 3.000 (+- 0.000)
+>   Average time per event 16.429 usec
+>   Average data synthesis took: 49.641 usec (+- 0.085 usec)
+>   Average num. events: 11.000 (+- 0.000)
+>   Average time per event 4.513 usec
+> 
+>  Performance counter stats for 'perf bench internals synthesize':
+> 
+>           1,222.38 msec task-clock:u                     #    0.993 CPUs utilized
+>                  0      context-switches:u               #    0.000 /sec
+>                  0      cpu-migrations:u                 #    0.000 /sec
+>                162      page-faults:u                    #  132.529 /sec
+>        774,445,184      cycles:u                         #    0.634 GHz                         (49.61%)
+>      1,640,969,811      instructions:u                   #    2.12  insn per cycle              (59.67%)
+>        302,052,148      branches:u                       #  247.102 M/sec                       (59.69%)
+>          1,807,718      branch-misses:u                  #    0.60% of all branches             (59.68%)
+>          5,218,927      CPU_CLK_UNHALTED.REF_XCLK:u      #    4.269 M/sec
+>                                                   #     17.3 %  tma_frontend_bound
+>                                                   #     56.4 %  tma_retiring
+>                                                   #      nan %  tma_backend_bound
+>                                                   #      nan %  tma_bad_speculation      (60.01%)
+>        536,580,469      IDQ_UOPS_NOT_DELIVERED.CORE:u    #  438.965 M/sec                       (60.33%)
+>    <not supported>      INT_MISC.RECOVERY_CYCLES_ANY:u
+>          5,223,936      CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE:u #    4.274 M/sec                       (40.31%)
+>        774,127,250      CPU_CLK_UNHALTED.THREAD:u        #  633.297 M/sec                       (50.34%)
+>      1,746,579,518      UOPS_RETIRED.RETIRE_SLOTS:u      #    1.429 G/sec                       (50.12%)
+>      1,940,625,702      UOPS_ISSUED.ANY:u                #    1.588 G/sec                       (49.70%)
+> 
+>        1.231055525 seconds time elapsed
+> 
+>        0.258327000 seconds user
+>        0.965749000 seconds sys
+> '''
+> 
+> The event INT_MISC.RECOVERY_CYCLES_ANY:u is skipped as it can't be
+> opened with paranoia 2 on Skylake. With a lower paranoia, or as root,
+> all events/metrics are computed.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -183,102 +180,117 @@ Thanks,
 Kan
 
 > ---
->  tools/perf/tests/expr.c         |  3 ++-
->  tools/perf/tests/parse-metric.c |  1 +
->  tools/perf/util/expr.y          |  6 +++++-
->  tools/perf/util/stat-display.c  |  2 +-
->  tools/perf/util/stat-shadow.c   | 25 +++++++++++++++++++------
->  5 files changed, 28 insertions(+), 9 deletions(-)
+>  tools/perf/builtin-stat.c | 38 +++++++++++++++++++++++++++++---------
+>  tools/perf/util/evsel.c   | 15 +++++++++++++--
+>  tools/perf/util/evsel.h   |  1 +
+>  3 files changed, 43 insertions(+), 11 deletions(-)
 > 
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index cbf0e0c74906..733ead151c63 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -120,7 +120,8 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
->  
->  	p = "FOO/0";
->  	ret = expr__parse(&val, ctx, p);
-> -	TEST_ASSERT_VAL("division by zero", ret == -1);
-> +	TEST_ASSERT_VAL("division by zero", ret == 0);
-> +	TEST_ASSERT_VAL("division by zero", isnan(val));
->  
->  	p = "BAR/";
->  	ret = expr__parse(&val, ctx, p);
-> diff --git a/tools/perf/tests/parse-metric.c b/tools/perf/tests/parse-metric.c
-> index 1185b79e6274..c05148ea400c 100644
-> --- a/tools/perf/tests/parse-metric.c
-> +++ b/tools/perf/tests/parse-metric.c
-> @@ -38,6 +38,7 @@ static void load_runtime_stat(struct evlist *evlist, struct value *vals)
->  	evlist__alloc_aggr_stats(evlist, 1);
->  	evlist__for_each_entry(evlist, evsel) {
->  		count = find_value(evsel->name, vals);
-> +		evsel->supported = true;
->  		evsel->stats->aggr->counts.val = count;
->  		if (evsel__name_is(evsel, "duration_time"))
->  			update_stats(&walltime_nsecs_stats, count);
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 250e444bf032..4ce931cccb63 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -225,7 +225,11 @@ expr: NUMBER
->  {
->  	if (fpclassify($3.val) == FP_ZERO) {
->  		pr_debug("division by zero\n");
-> -		YYABORT;
-> +		assert($3.ids == NULL);
-> +		if (compute_ids)
-> +			ids__free($1.ids);
-> +		$$.val = NAN;
-> +		$$.ids = NULL;
->  	} else if (!compute_ids || (is_const($1.val) && is_const($3.val))) {
->  		assert($1.ids == NULL);
->  		assert($3.ids == NULL);
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 73b2ff2ddf29..bf5a6c14dfcd 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -431,7 +431,7 @@ static void print_metric_json(struct perf_stat_config *config __maybe_unused,
->  	struct outstate *os = ctx;
->  	FILE *out = os->fh;
->  
-> -	fprintf(out, "\"metric-value\" : %f, ", val);
-> +	fprintf(out, "\"metric-value\" : \"%f\", ", val);
->  	fprintf(out, "\"metric-unit\" : \"%s\"", unit);
->  	if (!config->metric_only)
->  		fprintf(out, "}");
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> index eeccab6751d7..1566a206ba42 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -403,12 +403,25 @@ static int prepare_metric(struct evsel **metric_events,
->  			if (!aggr)
->  				break;
->  
-> -			/*
-> -			 * If an event was scaled during stat gathering, reverse
-> -			 * the scale before computing the metric.
-> -			 */
-> -			val = aggr->counts.val * (1.0 / metric_events[i]->scale);
-> -			source_count = evsel__source_count(metric_events[i]);
-> +                        if (!metric_events[i]->supported) {
-> +				/*
-> +				 * Not supported events will have a count of 0,
-> +				 * which can be confusing in a
-> +				 * metric. Explicitly set the value to NAN. Not
-> +				 * counted events (enable time of 0) are read as
-> +				 * 0.
-> +				 */
-> +				val = NAN;
-> +				source_count = 0;
-> +			} else {
-> +				/*
-> +				 * If an event was scaled during stat gathering,
-> +				 * reverse the scale before computing the
-> +				 * metric.
-> +				 */
-> +				val = aggr->counts.val * (1.0 / metric_events[i]->scale);
-> +				source_count = evsel__source_count(metric_events[i]);
-> +			}
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index be9677aa642f..ffb47b166098 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -667,6 +667,13 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+>  			evsel_list->core.threads->err_thread = -1;
+>  			return COUNTER_RETRY;
 >  		}
->  		n = strdup(evsel__metric_id(metric_events[i]));
->  		if (!n)
+> +	} else if (counter->skippable) {
+> +		if (verbose > 0)
+> +			ui__warning("skipping event %s that kernel failed to open .\n",
+> +				    evsel__name(counter));
+> +		counter->supported = false;
+> +		counter->errored = true;
+> +		return COUNTER_SKIP;
+>  	}
+>  
+>  	evsel__open_strerror(counter, &target, errno, msg, sizeof(msg));
+> @@ -1890,15 +1897,28 @@ static int add_default_attributes(void)
+>  		 * caused by exposing latent bugs. This is fixed properly in:
+>  		 * https://lore.kernel.org/lkml/bff481ba-e60a-763f-0aa0-3ee53302c480@linux.intel.com/
+>  		 */
+> -		if (metricgroup__has_metric("TopdownL1") && !perf_pmu__has_hybrid() &&
+> -		    metricgroup__parse_groups(evsel_list, "TopdownL1",
+> -					    /*metric_no_group=*/false,
+> -					    /*metric_no_merge=*/false,
+> -					    /*metric_no_threshold=*/true,
+> -					    stat_config.user_requested_cpu_list,
+> -					    stat_config.system_wide,
+> -					    &stat_config.metric_events) < 0)
+> -			return -1;
+> +		if (metricgroup__has_metric("TopdownL1") && !perf_pmu__has_hybrid()) {
+> +			struct evlist *metric_evlist = evlist__new();
+> +			struct evsel *metric_evsel;
+> +
+> +			if (!metric_evlist)
+> +				return -1;
+> +
+> +			if (metricgroup__parse_groups(metric_evlist, "TopdownL1",
+> +							/*metric_no_group=*/false,
+> +							/*metric_no_merge=*/false,
+> +							/*metric_no_threshold=*/true,
+> +							stat_config.user_requested_cpu_list,
+> +							stat_config.system_wide,
+> +							&stat_config.metric_events) < 0)
+> +				return -1;
+> +
+> +			evlist__for_each_entry(metric_evlist, metric_evsel) {
+> +				metric_evsel->skippable = true;
+> +			}
+> +			evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
+> +			evlist__delete(metric_evlist);
+> +		}
+>  
+>  		/* Platform specific attrs */
+>  		if (evlist__add_default_attrs(evsel_list, default_null_attrs) < 0)
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 356c07f03be6..1cd04b5998d2 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
+>  	evsel->per_pkg_mask  = NULL;
+>  	evsel->collect_stat  = false;
+>  	evsel->pmu_name      = NULL;
+> +	evsel->skippable     = false;
+>  }
+>  
+>  struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
+> @@ -1725,9 +1726,13 @@ static int get_group_fd(struct evsel *evsel, int cpu_map_idx, int thread)
+>  		return -1;
+>  
+>  	fd = FD(leader, cpu_map_idx, thread);
+> -	BUG_ON(fd == -1);
+> +	BUG_ON(fd == -1 && !leader->skippable);
+>  
+> -	return fd;
+> +	/*
+> +	 * When the leader has been skipped, return -2 to distinguish from no
+> +	 * group leader case.
+> +	 */
+> +	return fd == -1 ? -2 : fd;
+>  }
+>  
+>  static void evsel__remove_fd(struct evsel *pos, int nr_cpus, int nr_threads, int thread_idx)
+> @@ -2109,6 +2114,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  
+>  			group_fd = get_group_fd(evsel, idx, thread);
+>  
+> +			if (group_fd == -2) {
+> +				pr_debug("broken group leader for %s\n", evsel->name);
+> +				err = -EINVAL;
+> +				goto out_close;
+> +			}
+> +
+>  			test_attr__ready();
+>  
+>  			/* Debug message used by test scripts */
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 35805dcdb1b9..bf8f01af1c0b 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -95,6 +95,7 @@ struct evsel {
+>  		bool			weak_group;
+>  		bool			bpf_counter;
+>  		bool			use_config_name;
+> +		bool			skippable;
+>  		int			bpf_fd;
+>  		struct bpf_object	*bpf_obj;
+>  		struct list_head	config_terms;
