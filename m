@@ -2,50 +2,46 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A16C7EE21
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 15:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 584AAC77B78
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 15:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231373AbjEDPY1 (ORCPT
+        id S230396AbjEDPZd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 11:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42188 "EHLO
+        Thu, 4 May 2023 11:25:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231220AbjEDPYY (ORCPT
+        with ESMTP id S229925AbjEDPZa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 11:24:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D320644A6
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 08:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683213812;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jnl2toVgwwItvy6XtFHZnmUDaDwxr0L/Z3lg2dwhqx4=;
-        b=Itae1jcS28rXuMYpmwC4scg+EXE2VhwyI2nM7BilOrc6qRAX3Wm2wV03ixBEE6vPcWBRbY
-        rcFDPD0rLAlN9hMQshZBzDc4IVGfreOJhI6ExoH/Mpmm86dGsPU+ybqCr0qmiJPt1r1d5F
-        0VVjglZsWP87HcMmQ1p1jOyKrbBclPw=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-512-6LWlnIc6OTKYxoO-Dh0TuQ-1; Thu, 04 May 2023 11:23:29 -0400
-X-MC-Unique: 6LWlnIc6OTKYxoO-Dh0TuQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 58DFA3810B19;
-        Thu,  4 May 2023 15:23:27 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.24])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C171B40C2064;
-        Thu,  4 May 2023 15:23:19 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu,  4 May 2023 17:23:15 +0200 (CEST)
-Date:   Thu, 4 May 2023 17:23:07 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
+        Thu, 4 May 2023 11:25:30 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7717344A9;
+        Thu,  4 May 2023 08:25:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zX4DJF+PwWblvm+wykuyM69Hc+yDwICH3hfz2Z5YxUA=; b=iagn8V3H/ViU6UBAW3QvY2VDmS
+        7r8yQMKFfDEj0r4m+r0l7q2MjBzsIfVtoqz3BQ8FZuJFc9Er+GUhBGPNJJD0B6zsL0FOSdzS2fHsM
+        m24nPc2sDAKXt5Sr2hDNH3B3DPrCwvhv2RMqHtIUmoIr7uuobKPxp+uyPMwhVfWwh37LoiB7TB5VU
+        5XhaLX30+Nf71mfSgNXZ3Xeul58fwuM7C+oQyHWL8OZzaeMwcHkwy7+SlgDmobgD9m3rx9SnO1idn
+        3Mdsih0Iegc28wg9LlmmqRN/hm5Uf3pTPNdoaAtgDuu740bqIonmWEFr7oy0rWyOv5+a5JPQZOa4H
+        citVwWUw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1puaoo-001lOu-20;
+        Thu, 04 May 2023 15:24:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0E8FC3003CF;
+        Thu,  4 May 2023 17:24:24 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C2E2224209FE5; Thu,  4 May 2023 17:24:24 +0200 (CEST)
+Date:   Thu, 4 May 2023 17:24:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Wander Lairson Costa <wander@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -79,7 +75,7 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Subject: Re: [PATCH v7 2/3] sched/task: Add the put_task_struct_atomic_safe()
  function
-Message-ID: <20230504152306.GA1135@redhat.com>
+Message-ID: <20230504152424.GG1744258@hirez.programming.kicks-ass.net>
 References: <20230425114307.36889-1-wander@redhat.com>
  <20230425114307.36889-3-wander@redhat.com>
  <20230504084229.GI1734100@hirez.programming.kicks-ass.net>
@@ -87,19 +83,16 @@ References: <20230425114307.36889-1-wander@redhat.com>
  <20230504143303.GA1744142@hirez.programming.kicks-ass.net>
  <CAAq0SUmYrQbS1k9NNKGQP7hQRQJ308dk9NCiUimEiLeBJUavgA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
 In-Reply-To: <CAAq0SUmYrQbS1k9NNKGQP7hQRQJ308dk9NCiUimEiLeBJUavgA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 05/04, Wander Lairson Costa wrote:
->
-> On Thu, May 4, 2023 at 11:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, May 04, 2023 at 11:55:15AM -0300, Wander Lairson Costa wrote:
+
+> > Then I'm thinking something trivial like so:
 > >
 > > static inline void put_task_struct(struct task_struct *t)
 > > {
@@ -112,12 +105,11 @@ On 05/04, Wander Lairson Costa wrote:
 > >         __put_task_struct(t);
 > > }
 > >
->
-> That's what v5 [1] does.
+> 
+> That's what v5 [1] does. What would be the path in this case? Should I
+> resend it as v8?
 
-Yes, but as Sebastian explained CONFIG_PROVE_RAW_LOCK_NESTING won't like it.
+It's almost what v5 does. v5 also has a !in_task() thing. v5 also
+violates codingstyle :-)
 
-	https://lore.kernel.org/all/Y+zFNrCjBn53%2F+Q2@linutronix.de/
-
-Oleg.
-
+But yeah.. something like that.
