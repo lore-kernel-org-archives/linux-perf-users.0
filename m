@@ -2,231 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5943CC7EE21
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 11:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8732C77B78
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 12:15:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229775AbjEDLJM (ORCPT
+        id S229915AbjEDMPe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 07:09:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41306 "EHLO
+        Thu, 4 May 2023 08:15:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230214AbjEDLJL (ORCPT
+        with ESMTP id S229564AbjEDMPd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 07:09:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CE47448E;
-        Thu,  4 May 2023 04:09:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9D6396334F;
-        Thu,  4 May 2023 11:09:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C3BCC433D2;
-        Thu,  4 May 2023 11:09:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683198549;
-        bh=kCDza5+2lizs2eIg2BSpKGAvN02/BzWrGa+YvQh2qJU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g9/h+ftNrYBleQOgLdxJjmL/8cRc75X1bJjzZPfcQttYfZpcH9HnNINLlUR9RUEvZ
-         m0ip2f4Q6aJsX+f+POqUokWbu6UuIqRxtQUwAmGUxL1ud34i4FimRWIp0pg1eNEhMh
-         4AWNlLeFFYW/PyfHeQjJegnPrmcWsV4o2OMYv2TMhMnJpIDk7rVaSY/bu8z3VGHlpq
-         ZlPoOdB/+R4nQi5pVCCRwuHN1eX9ba22EiZ4t5Pk/T/m/UTiu9h72U6SsIYlhwRiP3
-         HOqhxn4Ok4l4y2tjZ+0Xf77+rbD+lV6ethgsJDzB8ntNxtEAnDgswPAuooZKXL1J1b
-         A4g3XV2gx8Jbw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id CEDD9403B5; Thu,  4 May 2023 08:09:05 -0300 (-03)
-Date:   Thu, 4 May 2023 08:09:05 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Song Liu <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Thu, 4 May 2023 08:15:33 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2DF7C5FD3;
+        Thu,  4 May 2023 05:15:32 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 915662F4;
+        Thu,  4 May 2023 05:16:15 -0700 (PDT)
+Received: from [10.57.83.11] (unknown [10.57.83.11])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0B143F67D;
+        Thu,  4 May 2023 05:15:28 -0700 (PDT)
+Message-ID: <6bb7eaee-2d00-46f5-89ff-95133aea9a5d@arm.com>
+Date:   Thu, 4 May 2023 13:15:25 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH v2 1/5] driver/perf: Add identifier sysfs file for CMN
+Content-Language: en-GB
+To:     John Garry <john.g.garry@oracle.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, Ian Rogers <irogers@google.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
-Message-ID: <ZFOSUab5XEJD0kxj@kernel.org>
-References: <20230503211801.897735-1-acme@kernel.org>
- <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
- <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1682329456-19418-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <df63b597-4355-b9fc-6002-5a390b1a56f5@oracle.com>
+ <12bf4a7f-e99c-47cf-e8e4-e2700db6c5c9@arm.com>
+ <da55ef21-e199-79c3-5b65-d51edb2e754b@oracle.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <da55ef21-e199-79c3-5b65-d51edb2e754b@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 03, 2023 at 08:12:20PM -0700, Linus Torvalds escreveu:
-> On Wed, May 3, 2023 at 8:00 PM Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > I did consider it, but the end result doesn't even build, so I unpulled again..
+On 2023-05-04 12:02, John Garry wrote:
+> On 04/05/2023 10:47, Robin Murphy wrote:
+>>> nit: generally if (!val) is preferred
+> 
+> Hi Robin,
+> 
+>>
+>> Although either way it can only be NULL in cases of memory corruption 
+>> or developers making broken changes to the driver, neither of which 
+>> are worth pretending to defend against.
+> 
+> If there was some broken code for setting this identifier, then we would 
+> just not show the identifier file, rather than show it containing "NULL" 
+> - that seems better. However, there may be other implications from that 
+> same broken code, so you maintainers and contributors please decide.
 
-> > I get some libbpf error, and I'm just not interested in trying to
-> > debug it. This has clearly not been tested well enough to be merged.
+Yeah, from the usage point of view, if there should be an identifier at 
+all then there should always be one, so it makes little sense to pretend 
+to accommodate a case where there wouldn't be. And it would be trivially 
+obvious to see in review if someone adds a new model enum without any 
+necessary identifier updates at the same time (far more so than spotting 
+whether all the subtle functional differences of the new model have been 
+accounted for).
 
-Its the default (opt-out) in the development branch for a while and
-stayed in linux-next, but as it has been opt-in it hasn't received the
-same amount of testing as the default build in the past development
-cycles, even with the first feature that uses it having been introduced
-back in 2020 :-\
- 
-> Side note: its' not even about testing.
- 
-> The error message makes it clear that this is garbage and should never
-> be merged even if it were to compile.
- 
-> There is not a way in hell that it is correct that a 'perf' tool build
-> should ever even look at the vmlinux binary to build.
- 
-> The fact that it does shows that something is seriously wrong in
-> perf-tool land, and I will not be touching any pulls until that
-> fundamental mistake is entirely gone.
- 
-> The vmlinux image that is present in my tree (ie
-> /home/torvalds/v2.6/linux/vmlinux) is a test build with an insane
-> config. And the fact that the perf tool even looks at it is seriously
-> broken.
+>>>> +    return attr->mode;
+>>>> +};
+>>>> +
+>>>> +static struct device_attribute arm_cmn_identifier_attr =
+>>>> +__ATTR(identifier, 0444, arm_cmn_identifier_show, NULL);
+>>>> +
+>>>> +static struct attribute *arm_cmn_identifier_attrs[] = {
+>>>> +    &arm_cmn_identifier_attr.attr,
+>>>> +    NULL
+>>>> +};
+>>>> +
+>>>> +static struct attribute_group arm_cmn_identifier_attr_group = {
+>>>> +    .attrs = arm_cmn_identifier_attrs,
+>>>> +    .is_visible = arm_cmn_identifier_attr_visible
+>>>> +};
+>>>> +
+>>>>   static const struct attribute_group *arm_cmn_attr_groups[] = {
+>>>>       &arm_cmn_event_attrs_group,
+>>>>       &arm_cmn_format_attrs_group,
+>>>>       &arm_cmn_cpumask_attr_group,
+>>>> +    &arm_cmn_identifier_attr_group,
+>>>>       NULL
+>>>>   };
+>>>> @@ -2241,6 +2273,22 @@ static int arm_cmn600_of_probe(struct 
+>>>> device_node *np)
+>>>>       return of_property_read_u32(np, "arm,root-node", &rootnode) ?: 
+>>>> rootnode;
+>>>>   }
+>>>> +const char *arm_cmn_identifier(unsigned long model)
+>>>> +{
+>>>> +    switch (model) {
+>>>> +    case CMN600:
+>>>> +        return "cmn600";
+>>>> +    case CMN650:
+>>>> +        return "cmn650";
+>>>> +    case CMN700:
+>>>> +        return "cmn700";
+>>>> +    case CI700:
+>>>> +        return "ci700";
+>>>> +    default:
+>>>> +        return NULL;
+>>>> +    }
+>>>
+>>> nit: I think that it would be nicer to have this per-model string 
+>>> stored statically in arm_cmn_acpi_match[].driver_data and 
+>>> arm_cmn_of_match[].data, so we have a straight lookup
+>>
+>> Again, I'm not really convinced how useful this coarse per-model 
+>> scheme is - for instance, in terms of many events, CMN-600 r3 is 
+>> closer to CMN-650 than it is to CMN-600 r1, so what exactly would 
+>> "CMN-600" mean to the user?
+> 
+> ok, I see, that's what I was asking about in the cmn-700 JSON review; 
+> and from what you say, it is not the case that we always have the same 
+> events for every revision. So we need a more fine-grained identifier.
 
-Humm,
+Yes, it's mostly just a case of new events getting added as the 
+microarchitecture evolves over the product's lifetime, but there has 
+been at least one event ID which had a meaning in very early versions of 
+CMN-600, was subsequently removed, and then got reused for a *different* 
+event a couple of revisions after that. Thankfully I believe those 
+earliest versions only ever existed on FPGA internally, and the TRMs 
+were never made public, so upstream doesn't care about that specific case.
 
-Does building runqslower works for you in this same environment where
-building perf failed?
+> For DT support, I suppose per-revision compat strings could be added, 
+> but I would not be sure what to do about ACPI.
 
-I ask this because it uses the same libbpf technique (CO-RE) to allow
-tools that access kernel data structures from BPF to work with multiple
-kernels, even those where the layout of the accessed kernel structures
-changed.
+We know the version from the ID registers, that's no problem - it's 
+already used to manage visibility of the sysfs event aliases. In 
+principle we *should* have a model code in CFGM_PERIPH_ID_0 as well, and 
+be able to compose an identifier exactly the same way as 
+smmu_pmu_get_iidr() does in the SMMUv3 PMCG driver, but as I mentioned 
+before I'm not entirely confident in the implementation: I do happen to 
+know what codes have been nominally assigned for each product, but the 
+TRMs claim otherwise :(
 
-To build it:
+> BTW, My comment was more about coding style of case a, case b, case c, 
+> ... case z, does not scale well.
 
-$ make -C tools/bpf/runqslower/
-make: Entering directory '/home/acme/git/perf-tools/tools/bpf/runqslower'
-  MKDIR   /home/acme/git/perf-tools/tools/bpf/runqslower/.output/libbpf/
-  GEN     /home/acme/git/perf-tools/tools/bpf/runqslower/.output/libbpf/bpf_helper_defs.h
-  CC      /home/acme/git/perf-tools/tools/bpf/runqslower/.output/libbpf/staticobjs/libbpf.o
-<SNIP>
-  LINK    /home/acme/git/perf-tools/tools/bpf/runqslower/.output/libbpf/libbpf.a
-  INSTALL /home/acme/git/perf-tools/tools/bpf/runqslower/.output/libbpf//include/bpf/bpf.h
-  INSTALL /home/acme/git/perf-tools/tools/bpf/runqslower/.output/libbpf//include/bpf/libbpf.h
-  INSTALL /home/acme/git/perf-tools/tools/bpf/runqslower/.output/libbpf//include/bpf/btf.h
- <SNIP>
-  INSTALL /home/acme/git/perf-tools/tools/bpf/runqslower/.output/libbpf//include/bpf/bpf_helper_defs.h
-  INSTALL libbpf_headers
-  MKDIR   /home/acme/git/perf-tools/tools/bpf/runqslower/.output/bpftool/bootstrap/libbpf/include/bpf
-  INSTALL /home/acme/git/perf-tools/tools/bpf/runqslower/.output/bpftool/bootstrap/libbpf/include/bpf/hashmap.h
-<SNIP>
-  LINK    /home/acme/git/perf-tools/tools/bpf/runqslower/.output/bpftool/bootstrap/bpftool
-  GEN     /home/acme/git/perf-tools/tools/bpf/runqslower/.output//vmlinux.h
-  GEN     /home/acme/git/perf-tools/tools/bpf/runqslower/.output//runqslower.bpf.o
-  GEN     /home/acme/git/perf-tools/tools/bpf/runqslower/.output//runqslower.skel.h
-  CC      /home/acme/git/perf-tools/tools/bpf/runqslower/.output//runqslower.o
-  LINK    /home/acme/git/perf-tools/tools/bpf/runqslower/.output//runqslower
-make: Leaving directory '/home/acme/git/perf-tools/tools/bpf/runqslower'
-$
+Indeed, it's probably the nature of the switch statement that leads to 
+the perceived need for a not-practically-meaningful "default" case in 
+the first place.
 
-# strip tools/bpf/runqslower/.output/runqslower
-# file tools/bpf/runqslower/.output/runqslower
-tools/bpf/runqslower/.output/runqslower: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=ab0306ee3f6cdc671d9aac7006457a3646e1c266, for GNU/Linux 3.2.0, stripped
-[root@quaco perf-tools]# tools/bpf/runqslower/.output/runqslower 100
-Tracing run queue latency higher than 100 us
-TIME     COMM             PID           LAT(us)
-08:00:17 swapper/4        30951            1001
-08:00:18 kworker/7:8      2604              101
-08:00:19 ksoftirqd/2      15665             105
-08:00:22 swapper/2        904400            179
-08:00:22 swapper/2        1247              102
-08:00:23 TaskCon~ller #7  643789            102
-08:00:26 ksoftirqd/2      849302            109
-08:00:26 gmain            3107              238
-08:00:26 rcu_tasks_trace  152972            634
-08:00:27 systemd-oomd     899470           4887
-08:00:28 Timer            30951             262
-08:00:28 ksoftirqd/2      15665             103
-08:00:29 systemd-resolve  895022            104
-08:00:29 ksoftirqd/2      15665             145
-08:00:30 ksoftirqd/2      15665             117
-08:00:30 ksoftirqd/2      640315            149
-08:00:30 gmain            3074              122
-08:00:30 goa-identity-se  3107              109
-^C
-#
-
-It builds and uses the tools/bpf/bpftool tool to generate the vmlinux.h
-file to build the tool:
-
-$ strace -f -e access,open,openat make -C tools/bpf/runqslower/ |& grep vmlinux
-  GEN     /home/acme/git/perf-tools/tools/bpf/runqslower/.output//vmlinux.h
-[pid 902901] openat(AT_FDCWD, "/home/acme/git/perf-tools/tools/bpf/runqslower/.output//vmlinux.h", O_WRONLY|O_CREAT|O_TRUNC, 0666) = 3
-[pid 902901] openat(AT_FDCWD, "/sys/kernel/btf/vmlinux", O_RDONLY) = 3
-[pid 902909] openat(AT_FDCWD, "/home/acme/git/perf-tools/tools/bpf/runqslower/.output/vmlinux.h", O_RDONLY) = 4
-$
-
-But here it is using /sys/kernel/btf/vmlinux, which is way more sensible
-than what you noticed.
-
-Looking at tools/bpf/runqslower/Makefile:
-
-# Try to detect best kernel BTF source
-KERNEL_REL := $(shell uname -r)
-VMLINUX_BTF_PATHS := $(if $(O),$(O)/vmlinux)            \
-        $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux) \
-        ../../../vmlinux /sys/kernel/btf/vmlinux        \
-        /boot/vmlinux-$(KERNEL_REL)
-VMLINUX_BTF_PATH := $(or $(VMLINUX_BTF),$(firstword                            \
-                                          $(wildcard $(VMLINUX_BTF_PATHS))))
-
-It tries to use vmlinux.
-
-I'll check why it isn't using the same technique, possibly you don't
-generate BTF?
-
-In this fedora 37 kernel:
-
-$ grep DEBUG_INFO_BTF /boot/config-6.2.9-200.fc37.x86_64
-CONFIG_DEBUG_INFO_BTF=y
-CONFIG_DEBUG_INFO_BTF_MODULES=y
-$
-
-Having said that probably we should go back to making build with BPF
-skels a opt in feature, as it has been since the first feature using it
-was introduced, in:
-
-commit fbcdaa1908e8f61aa56c71a1db9a9deb72110a9d
-Author: Song Liu <songliubraving@fb.com>
-Date:   Tue Dec 29 13:42:13 2020 -0800
-
-    perf build: Support build BPF skeletons with perf
-
-    BPF programs are useful in perf to profile BPF programs.
-
-    BPF skeleton is by far the easiest way to write BPF tools. Enable
-    building BPF skeletons in util/bpf_skel. A dummy bpf skeleton is added.
-    More bpf skeletons will be added for different use cases.
-
-    Signed-off-by: Song Liu <songliubraving@fb.com>
-    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-    Acked-by: Jiri Olsa <jolsa@redhat.com>
-    Acked-by: Namhyung Kim <namhyung@kernel.org>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Mark Rutland <mark.rutland@arm.com>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Cc: kernel-team@fb.com
-    Link: http://lore.kernel.org/lkml/20201229214214.3413833-3-songliubraving@fb.com
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Until we sort out these build robustness issues.
-
-- Arnaldo
+Thanks,
+Robin.
