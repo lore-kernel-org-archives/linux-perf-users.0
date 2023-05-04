@@ -2,52 +2,52 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4A3C7EE2A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C971C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbjEDWPP (ORCPT
+        id S229626AbjEDWPS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 18:15:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56130 "EHLO
+        Thu, 4 May 2023 18:15:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229963AbjEDWPN (ORCPT
+        with ESMTP id S229797AbjEDWPR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 18:15:13 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 923EA12082
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 15:15:12 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6439df6c268so83823b3a.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:15:12 -0700 (PDT)
+        Thu, 4 May 2023 18:15:17 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5DC120AC
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 15:15:15 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-642f5394651so996068b3a.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:15:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683238512; x=1685830512;
+        d=chromium.org; s=google; t=1683238515; x=1685830515;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Qs9dVqDn19dbFuBLpnSq6u/1X9XncQ7793Pg3nTbXSY=;
-        b=YJROINNmnTriLPHEMGRffEEU5u5jgOZI+OjH5ib5+xogbKCty4xGU/gxTjvwZlF0Wq
-         Y41ByV3ME3y2zIqQvZlfm5TvuytZulDOsfyDEiZk5uPDq5w5r51Z0+JrQfSi+OMn98zN
-         vTuEboyeGfy9khGK+oRTXwvq0syqveXf6UD30=
+        bh=TUknF6ajnI+moT8P8i/ZCNk2tv65O4bG3/LdBCmIAIk=;
+        b=Fdqp591+Bc0n5LUOuZ+jw9voBFFuPd7of8525iR+iiRO9Xj3fHv6nKNTGTpP5EaqDU
+         EzdXgrpZWBW3vYibWNS6iTCW6bJ2XbAL2UppoxvxeWowhQLXgcQ4I+FoXqCP9LO8Znal
+         rLiqN5QqWtizpZvWHG6Tqu3Wto5zDTHGStQnw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683238512; x=1685830512;
+        d=1e100.net; s=20221208; t=1683238515; x=1685830515;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Qs9dVqDn19dbFuBLpnSq6u/1X9XncQ7793Pg3nTbXSY=;
-        b=IkBKmFTlqFL8uTRiFURCbGHuTjDS/sl9QKyr1a71JOa/Gb5gfgkzqgkPXjH9lVnsRj
-         td6DG8h/5dMWeSjqAhARyGsQ/uXdP1WyWFdRtZBzQowP8PX2m1GkDyJ6O/IJGO9IWkvi
-         tiYgaZNUcM+FxWh3ozs13hqEo2w6zYGzIdQFLB30Y70gjUseKCablssgwIlR5hXzxjzM
-         XqLnnzK0co8gT649zZpkvE8BarQMT/qbNrglzndIFV4SZBTL+SQ3gnBJ3Cz8jUvSnDuj
-         A8gL0V2ruE1+gsShfGEa0Ma5XJAPqfIqFJAPmZK0a9R+kFPvcjrKYuQKPsSe1QpABf9T
-         1X+A==
-X-Gm-Message-State: AC+VfDwJ7LgCYVuMcLk+w5MTCPj5Dz/zB6dOVvdYa9jP+5HYp0tz3RF9
-        5NMkNMF/HWvoe9Fzx3i4xJOiPA==
-X-Google-Smtp-Source: ACHHUZ4Ssrt4fd2DGpbw/dz7xZl+zekrUKqrX4nrV4w3MwOPjKkeowMi5feC+Af+mzM8p4SVwo3IHQ==
-X-Received: by 2002:a05:6a00:2284:b0:643:9b40:103e with SMTP id f4-20020a056a00228400b006439b40103emr1621714pfe.30.1683238512076;
-        Thu, 04 May 2023 15:15:12 -0700 (PDT)
+        bh=TUknF6ajnI+moT8P8i/ZCNk2tv65O4bG3/LdBCmIAIk=;
+        b=Dura5z9YIZwPHT5J3v8QaS7YS5oA8/1OXV4/nSIgngFMIzN2DtFE6ZQ81JzL0rH/VL
+         nD+0szeOz2u9PU2j5smuEEGxOmIy44TEcxBbB+P9cpRCuuI8UXCGM2eveC7fbNl9yFOS
+         lCS68eA9zPmLOER5rgMvgXco2mBrR5IjrM3OnDTTuXRVuGBVr9QObqk0DdHT/J2b94JC
+         GJ4lvKXLp4xxQjEXIh91s+83AlObPsVmHYSfvTyVwwIid5HV5v1yJJZ4dEq4rtd+oA+0
+         B190Qoa8QmR01tWIXXMUzWYf4O6u6ztq/mANdMTE5wlQ0Ds/kugJUgfPnyUD1zGhLd/a
+         mZRg==
+X-Gm-Message-State: AC+VfDxSW3cxCqsuvO90jND7XmR5pYBnHvfGzK/6vGkRUK7XdD59yb6K
+        KH7r2JLrSbNiyaPYnX1Jc9vwiw==
+X-Google-Smtp-Source: ACHHUZ74QoZiaoJdwRc3XVsG97oTLnm9/4CdtL0i/W46ZYWiOKXfp/f5jJlYmEEJ5QQG/1COaksDoQ==
+X-Received: by 2002:a05:6a00:1954:b0:63b:7ae0:fde9 with SMTP id s20-20020a056a00195400b0063b7ae0fde9mr4369313pfk.20.1683238515243;
+        Thu, 04 May 2023 15:15:15 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:edf0:7321:6b9e:d5e7])
-        by smtp.gmail.com with ESMTPSA id g26-20020aa7819a000000b006437c0edf9csm169615pfi.16.2023.05.04.15.15.09
+        by smtp.gmail.com with ESMTPSA id g26-20020aa7819a000000b006437c0edf9csm169615pfi.16.2023.05.04.15.15.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 May 2023 15:15:11 -0700 (PDT)
+        Thu, 04 May 2023 15:15:14 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Petr Mladek <pmladek@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>
@@ -75,9 +75,9 @@ Cc:     Sumit Garg <sumit.garg@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v4 09/17] watchdog/hardlockup: Add a "cpu" param to watchdog_hardlockup_check()
-Date:   Thu,  4 May 2023 15:13:41 -0700
-Message-ID: <20230504151100.v4.9.I3a7d4dd8c23ac30ee0b607d77feb6646b64825c0@changeid>
+Subject: [PATCH v4 10/17] watchdog/hardlockup: Move perf hardlockup watchdog petting to watchdog.c
+Date:   Thu,  4 May 2023 15:13:42 -0700
+Message-ID: <20230504151100.v4.10.I00dfd6386ee00da25bf26d140559a41339b53e57@changeid>
 X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
 In-Reply-To: <20230504221349.1535669-1-dianders@chromium.org>
 References: <20230504221349.1535669-1-dianders@chromium.org>
@@ -87,141 +87,149 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In preparation for the buddy hardlockup detector where the CPU
-checking for lockup might not be the currently running CPU, add a
-"cpu" parameter to watchdog_hardlockup_check().
+In preparation for the buddy hardlockup detector, which wants the same
+petting logic as the current perf hardlockup detector, move the code
+to watchdog.c. While doing this, rename the global variable to match
+others nearby. The arch_touch_nmi_watchdog() function is not renamed
+since that is exported with "EXPORT_SYMBOL" and is thus ABI.
+
+Currently the code in watchdog.c is guarded by
+CONFIG_HARDLOCKUP_DETECTOR_PERF, which makes this change seem
+silly. However, a future patch will change this.
+
+NOTE: there is a slight side effect to this change, though from code
+analysis I believe it to be a beneficial one. Specifically the perf
+hardlockup detector will now do check the "timestamp" before clearing
+any watchdog pets. Previously the order was reversed. With the old
+order if the watchdog perf event was firing super fast then it would
+also be clearing existing watchdog pets super fast. The new behavior
+of handling super-fast perf before clearing watchdog pets seems
+better.
 
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 Changes in v4:
-- ("Add a "cpu" param to watchdog_hardlockup_check()") new for v4.
+- ("Move perf hardlockup watchdog petting to watchdog.c") new for v4.
 
- include/linux/nmi.h    |  2 +-
- kernel/watchdog.c      | 47 ++++++++++++++++++++++++++++--------------
- kernel/watchdog_perf.c |  2 +-
- 3 files changed, 33 insertions(+), 18 deletions(-)
+ include/linux/nmi.h    |  5 +++--
+ kernel/watchdog.c      | 19 +++++++++++++++++++
+ kernel/watchdog_perf.c | 19 -------------------
+ 3 files changed, 22 insertions(+), 21 deletions(-)
 
 diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-index c6cb9bc5dc80..2c9ea1ba285c 100644
+index 2c9ea1ba285c..94ff84e1c8ec 100644
 --- a/include/linux/nmi.h
 +++ b/include/linux/nmi.h
-@@ -88,7 +88,7 @@ static inline void hardlockup_detector_disable(void) {}
+@@ -88,7 +88,10 @@ static inline void hardlockup_detector_disable(void) {}
  #endif
  
  #if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
--void watchdog_hardlockup_check(struct pt_regs *regs);
-+void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs);
++void arch_touch_nmi_watchdog(void);
+ void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs);
++#elif !defined(CONFIG_HAVE_NMI_WATCHDOG)
++static inline void arch_touch_nmi_watchdog(void) { }
  #endif
  
  #if defined(CONFIG_HAVE_NMI_WATCHDOG) || defined(CONFIG_HARDLOCKUP_DETECTOR)
+@@ -98,7 +101,6 @@ void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs);
+ #endif
+ 
+ #if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
+-extern void arch_touch_nmi_watchdog(void);
+ extern void hardlockup_detector_perf_stop(void);
+ extern void hardlockup_detector_perf_restart(void);
+ extern void hardlockup_detector_perf_disable(void);
+@@ -113,7 +115,6 @@ static inline void hardlockup_detector_perf_enable(void) { }
+ static inline void hardlockup_detector_perf_cleanup(void) { }
+ # if !defined(CONFIG_HAVE_NMI_WATCHDOG)
+ static inline int hardlockup_detector_perf_init(void) { return -ENODEV; }
+-static inline void arch_touch_nmi_watchdog(void) {}
+ # else
+ static inline int hardlockup_detector_perf_init(void) { return 0; }
+ # endif
 diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index f46669c1671d..367bea0167a5 100644
+index 367bea0167a5..9c17090611f2 100644
 --- a/kernel/watchdog.c
 +++ b/kernel/watchdog.c
-@@ -92,14 +92,14 @@ static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts_saved);
+@@ -90,8 +90,22 @@ __setup("nmi_watchdog=", hardlockup_panic_setup);
+ static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts);
+ static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts_saved);
  static DEFINE_PER_CPU(bool, watchdog_hardlockup_processed);
++static DEFINE_PER_CPU(bool, watchdog_hardlockup_touch);
  static unsigned long watchdog_hardlockup_dumped_stacks;
  
--static bool watchdog_hardlockup_is_lockedup(void)
-+static bool watchdog_hardlockup_is_lockedup(unsigned int cpu)
++notrace void arch_touch_nmi_watchdog(void)
++{
++	/*
++	 * Using __raw here because some code paths have
++	 * preemption enabled.  If preemption is enabled
++	 * then interrupts should be enabled too, in which
++	 * case we shouldn't have to worry about the watchdog
++	 * going off.
++	 */
++	raw_cpu_write(watchdog_hardlockup_touch, true);
++}
++EXPORT_SYMBOL(arch_touch_nmi_watchdog);
++
+ static bool watchdog_hardlockup_is_lockedup(unsigned int cpu)
  {
--	unsigned long hrint = __this_cpu_read(hrtimer_interrupts);
-+	unsigned long hrint = per_cpu(hrtimer_interrupts, cpu);
+ 	unsigned long hrint = per_cpu(hrtimer_interrupts, cpu);
+@@ -111,6 +125,11 @@ static void watchdog_hardlockup_interrupt_count(void)
  
--	if (__this_cpu_read(hrtimer_interrupts_saved) == hrint)
-+	if (per_cpu(hrtimer_interrupts_saved, cpu) == hrint)
- 		return true;
- 
--	__this_cpu_write(hrtimer_interrupts_saved, hrint);
-+	per_cpu(hrtimer_interrupts_saved, cpu) = hrint;
- 
- 	return false;
- }
-@@ -109,7 +109,7 @@ static void watchdog_hardlockup_interrupt_count(void)
- 	__this_cpu_inc(hrtimer_interrupts);
- }
- 
--void watchdog_hardlockup_check(struct pt_regs *regs)
-+void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs)
+ void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs)
  {
++	if (__this_cpu_read(watchdog_hardlockup_touch)) {
++		__this_cpu_write(watchdog_hardlockup_touch, false);
++		return;
++	}
++
  	/*
  	 * Check for a hardlockup by making sure the CPU's timer
-@@ -117,35 +117,50 @@ void watchdog_hardlockup_check(struct pt_regs *regs)
- 	 * fired multiple times before we overflow'd. If it hasn't
- 	 * then this is a good indication the cpu is stuck
- 	 */
--	if (watchdog_hardlockup_is_lockedup()) {
-+	if (watchdog_hardlockup_is_lockedup(cpu)) {
- 		unsigned int this_cpu = smp_processor_id();
-+		struct cpumask backtrace_mask = *cpu_online_mask;
- 
- 		/* Only handle hardlockups once. */
--		if (__this_cpu_read(watchdog_hardlockup_processed))
-+		if (per_cpu(watchdog_hardlockup_processed, cpu))
- 			return;
- 
--		pr_emerg("Watchdog detected hard LOCKUP on cpu %d\n", this_cpu);
-+		pr_emerg("Watchdog detected hard LOCKUP on cpu %d\n", cpu);
- 		print_modules();
- 		print_irqtrace_events(current);
--		if (regs)
-+		if (regs) {
- 			show_regs(regs);
--		else
--			dump_stack();
-+			cpumask_clear_cpu(cpu, &backtrace_mask);
-+		} else {
-+			/*
-+			 * If the locked up CPU is different than the CPU we're
-+			 * running on then we'll try to backtrace the CPU that
-+			 * locked up and then exclude it from later backtraces.
-+			 * If that fails or if we're running on the locked up
-+			 * CPU, just do a normal backtrace.
-+			 */
-+			if (cpu != this_cpu && trigger_single_cpu_backtrace(cpu)) {
-+				cpumask_clear_cpu(cpu, &backtrace_mask);
-+			} else {
-+				dump_stack();
-+				cpumask_clear_cpu(this_cpu, &backtrace_mask);
-+			}
-+		}
- 
- 		/*
--		 * Perform all-CPU dump only once to avoid multiple hardlockups
--		 * generating interleaving traces
-+		 * Perform multi-CPU dump only once to avoid multiple
-+		 * hardlockups generating interleaving traces
- 		 */
- 		if (sysctl_hardlockup_all_cpu_backtrace &&
- 		    !test_and_set_bit(0, &watchdog_hardlockup_dumped_stacks))
--			trigger_allbutself_cpu_backtrace();
-+			trigger_cpumask_backtrace(&backtrace_mask);
- 
- 		if (hardlockup_panic)
- 			nmi_panic(regs, "Hard LOCKUP");
- 
--		__this_cpu_write(watchdog_hardlockup_processed, true);
-+		per_cpu(watchdog_hardlockup_processed, cpu) = true;
- 	} else {
--		__this_cpu_write(watchdog_hardlockup_processed, false);
-+		per_cpu(watchdog_hardlockup_processed, cpu) = false;
- 	}
- }
- 
+ 	 * interrupt is incrementing. The timer interrupt should have
 diff --git a/kernel/watchdog_perf.c b/kernel/watchdog_perf.c
-index 5f3651b87ee7..9be90b2a2ea7 100644
+index 9be90b2a2ea7..547917ebd5d3 100644
 --- a/kernel/watchdog_perf.c
 +++ b/kernel/watchdog_perf.c
-@@ -120,7 +120,7 @@ static void watchdog_overflow_callback(struct perf_event *event,
+@@ -20,26 +20,12 @@
+ #include <asm/irq_regs.h>
+ #include <linux/perf_event.h>
+ 
+-static DEFINE_PER_CPU(bool, watchdog_nmi_touch);
+ static DEFINE_PER_CPU(struct perf_event *, watchdog_ev);
+ static DEFINE_PER_CPU(struct perf_event *, dead_event);
+ static struct cpumask dead_events_mask;
+ 
+ static atomic_t watchdog_cpus = ATOMIC_INIT(0);
+ 
+-notrace void arch_touch_nmi_watchdog(void)
+-{
+-	/*
+-	 * Using __raw here because some code paths have
+-	 * preemption enabled.  If preemption is enabled
+-	 * then interrupts should be enabled too, in which
+-	 * case we shouldn't have to worry about the watchdog
+-	 * going off.
+-	 */
+-	raw_cpu_write(watchdog_nmi_touch, true);
+-}
+-EXPORT_SYMBOL(arch_touch_nmi_watchdog);
+-
+ #ifdef CONFIG_HARDLOCKUP_CHECK_TIMESTAMP
+ static DEFINE_PER_CPU(ktime_t, last_timestamp);
+ static DEFINE_PER_CPU(unsigned int, nmi_rearmed);
+@@ -112,11 +98,6 @@ static void watchdog_overflow_callback(struct perf_event *event,
+ 	/* Ensure the watchdog never gets throttled */
+ 	event->hw.interrupts = 0;
+ 
+-	if (__this_cpu_read(watchdog_nmi_touch) == true) {
+-		__this_cpu_write(watchdog_nmi_touch, false);
+-		return;
+-	}
+-
  	if (!watchdog_check_timestamp())
  		return;
  
--	watchdog_hardlockup_check(regs);
-+	watchdog_hardlockup_check(smp_processor_id(), regs);
- }
- 
- static int hardlockup_detector_event_create(void)
 -- 
 2.40.1.521.gf1e218fcd8-goog
 
