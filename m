@@ -2,79 +2,49 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C43C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 15:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A16C7EE21
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 15:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230398AbjEDPFa (ORCPT
+        id S231373AbjEDPY1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 11:05:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58634 "EHLO
+        Thu, 4 May 2023 11:24:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230172AbjEDPF3 (ORCPT
+        with ESMTP id S231220AbjEDPYY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 11:05:29 -0400
+        Thu, 4 May 2023 11:24:24 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDF7E1BD9
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 08:04:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D320644A6
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 08:23:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683212680;
+        s=mimecast20190719; t=1683213812;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=qKpeHZVSxx8CJs7gUO4c0bM4YS+xQ3y47FDdrxUz/84=;
-        b=L/bRfY/sbJ6YBeBTI0+WDtbXv64p4oWv1Le1GJ4IP4fGxF5gbirvOiUSray5KPJ1Z7GjLh
-        dso3Ej5bQv1816p4IjBTnmLAYw3uIkROx+EJ5TMKzFM77X1bphe5OFnkh3RlpvCdub0Jx3
-        zzCAOUeVzhKs6jIh/rR13titLJxbhDk=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-76-n3fdy2u5MmG67jP_2DmVTg-1; Thu, 04 May 2023 11:04:38 -0400
-X-MC-Unique: n3fdy2u5MmG67jP_2DmVTg-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-30641258c9eso228893f8f.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 08:04:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683212678; x=1685804678;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :references:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qKpeHZVSxx8CJs7gUO4c0bM4YS+xQ3y47FDdrxUz/84=;
-        b=EaHbjQmXuUzAt4ir4xUIWWCKFB5CJd0SpnqL83HfkvilYs73S8GrgOUcrIrIx5gcNS
-         pbUAi1wc7926ddvrKQ2HGm8sI+ZSplH99A4gwhdNH6mRew+LACcU/iTcQuTVmMfvBfl6
-         DLx9A3sZgX8G2IuCZMUu3bf93grHlbLdei0kUzqyDMdpIelmfddX69oJaro9xkDg7BXW
-         ZueHViizohRGgBwR8CdbSIgzqRE8bPY3ONTugj6zyP8JqAB8njXgJQ5sWDZxg0G3AZtu
-         oBMYIGBu8e4z+GpBass/VYIntXQVKY3tifCP2ZFJlBrEehfTiZxjD0UNWay9c7vek+gd
-         I5MA==
-X-Gm-Message-State: AC+VfDwvxYui2p9hdBkIbZKRb7tS/7tazN56hszMJZqbn/z55MPirZ/y
-        R5sDlNTIlJoamsnN05ybEqPHegPDcF1E88ZXhu9cVG5lZ/5aTAYbMyVFCczLyz+h9ilfX+aPAAW
-        V5NJcXVksXm2Mk/E0lOJwBEzI1RaX3g==
-X-Received: by 2002:adf:fe0f:0:b0:2f8:e190:e719 with SMTP id n15-20020adffe0f000000b002f8e190e719mr3103310wrr.65.1683212677669;
-        Thu, 04 May 2023 08:04:37 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6rxT0rJtp8bOBHaHErNHhzE0fosUbvHA3tSGtLLdRYz110diw12mrtbe5YpgvE/16tzPAhoQ==
-X-Received: by 2002:adf:fe0f:0:b0:2f8:e190:e719 with SMTP id n15-20020adffe0f000000b002f8e190e719mr3103257wrr.65.1683212676920;
-        Thu, 04 May 2023 08:04:36 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id w12-20020a5d680c000000b0030630120e56sm10437110wru.57.2023.05.04.08.04.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 May 2023 08:04:36 -0700 (PDT)
-Message-ID: <e4c92510-9756-d9a1-0055-4cd64a0c76d9@redhat.com>
-Date:   Thu, 4 May 2023 17:04:34 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Content-Language: en-US
-To:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        bh=Jnl2toVgwwItvy6XtFHZnmUDaDwxr0L/Z3lg2dwhqx4=;
+        b=Itae1jcS28rXuMYpmwC4scg+EXE2VhwyI2nM7BilOrc6qRAX3Wm2wV03ixBEE6vPcWBRbY
+        rcFDPD0rLAlN9hMQshZBzDc4IVGfreOJhI6ExoH/Mpmm86dGsPU+ybqCr0qmiJPt1r1d5F
+        0VVjglZsWP87HcMmQ1p1jOyKrbBclPw=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-512-6LWlnIc6OTKYxoO-Dh0TuQ-1; Thu, 04 May 2023 11:23:29 -0400
+X-MC-Unique: 6LWlnIc6OTKYxoO-Dh0TuQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 58DFA3810B19;
+        Thu,  4 May 2023 15:23:27 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.24])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C171B40C2064;
+        Thu,  4 May 2023 15:23:19 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Thu,  4 May 2023 17:23:15 +0200 (CEST)
+Date:   Thu, 4 May 2023 17:23:07 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Wander Lairson Costa <wander@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -83,142 +53,71 @@ Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Brian Cain <bcain@quicinc.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-References: <cover.1683067198.git.lstoakes@gmail.com>
- <a690186fc37e1ea92556a7dbd0887fe201fcc709.1683067198.git.lstoakes@gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH v8 3/3] mm/gup: disallow FOLL_LONGTERM GUP-fast writing to
- file-backed mappings
-In-Reply-To: <a690186fc37e1ea92556a7dbd0887fe201fcc709.1683067198.git.lstoakes@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Andrei Vagin <avagin@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>, Hu Chunyu <chuhu@redhat.com>,
+        Paul McKenney <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v7 2/3] sched/task: Add the put_task_struct_atomic_safe()
+ function
+Message-ID: <20230504152306.GA1135@redhat.com>
+References: <20230425114307.36889-1-wander@redhat.com>
+ <20230425114307.36889-3-wander@redhat.com>
+ <20230504084229.GI1734100@hirez.programming.kicks-ass.net>
+ <20230504122945.GA28757@redhat.com>
+ <20230504143303.GA1744142@hirez.programming.kicks-ass.net>
+ <CAAq0SUmYrQbS1k9NNKGQP7hQRQJ308dk9NCiUimEiLeBJUavgA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAq0SUmYrQbS1k9NNKGQP7hQRQJ308dk9NCiUimEiLeBJUavgA@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-[...]
+On 05/04, Wander Lairson Costa wrote:
+>
+> On Thu, May 4, 2023 at 11:34 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > static inline void put_task_struct(struct task_struct *t)
+> > {
+> >         if (!refcount_dec_and_test(&t->usage))
+> >                 return;
+> >
+> >         if (IS_ENABLED(CONFIG_PREEMPT_RT) && !preemptible())
+> >                 call_rcu(&t->rcu, __put_task_struct_rcu);
+> >
+> >         __put_task_struct(t);
+> > }
+> >
+>
+> That's what v5 [1] does.
 
-> +static bool folio_fast_pin_allowed(struct folio *folio, unsigned int flags)
-> +{
-> +	struct address_space *mapping;
-> +	unsigned long mapping_flags;
-> +
-> +	/*
-> +	 * If we aren't pinning then no problematic write can occur. A long term
-> +	 * pin is the most egregious case so this is the one we disallow.
-> +	 */
-> +	if ((flags & (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE)) !=
-> +	    (FOLL_PIN | FOLL_LONGTERM | FOLL_WRITE))
-> +		return true;
-> +
-> +	/* The folio is pinned, so we can safely access folio fields. */
-> +
-> +	/* Neither of these should be possible, but check to be sure. */
+Yes, but as Sebastian explained CONFIG_PROVE_RAW_LOCK_NESTING won't like it.
 
-You can easily have anon pages that are at the swapcache at this point 
-(especially, because this function is called before our unsharing 
-checks), the comment is misleading.
+	https://lore.kernel.org/all/Y+zFNrCjBn53%2F+Q2@linutronix.de/
 
-And there is nothing wrong about pinning an anon page that's still in 
-the swapcache. The following folio_test_anon() check will allow them.
-
-The check made sense in page_mapping(), but here it's not required.
-
-I do agree regarding folio_test_slab(), though. Should we WARN in case 
-we would have one?
-
-if (WARN_ON_ONCE(folio_test_slab(folio)))
-	return false;
-
-> +	if (unlikely(folio_test_slab(folio) || folio_test_swapcache(folio)))
-> +		return false;
-> +
-> +	/* hugetlb mappings do not require dirty-tracking. */
-> +	if (folio_test_hugetlb(folio))
-> +		return true;
-> +
-> +	/*
-> +	 * GUP-fast disables IRQs. When IRQS are disabled, RCU grace periods
-> +	 * cannot proceed, which means no actions performed under RCU can
-> +	 * proceed either.
-> +	 *
-> +	 * inodes and thus their mappings are freed under RCU, which means the
-> +	 * mapping cannot be freed beneath us and thus we can safely dereference
-> +	 * it.
-> +	 */
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	/*
-> +	 * However, there may be operations which _alter_ the mapping, so ensure
-> +	 * we read it once and only once.
-> +	 */
-> +	mapping = READ_ONCE(folio->mapping);
-> +
-> +	/*
-> +	 * The mapping may have been truncated, in any case we cannot determine
-> +	 * if this mapping is safe - fall back to slow path to determine how to
-> +	 * proceed.
-> +	 */
-> +	if (!mapping)
-> +		return false;
-> +
-> +	/* Anonymous folios are fine, other non-file backed cases are not. */
-> +	mapping_flags = (unsigned long)mapping & PAGE_MAPPING_FLAGS;
-> +	if (mapping_flags)
-> +		return mapping_flags == PAGE_MAPPING_ANON;
-
-KSM pages are also (shared) anonymous folios, and that check would fail 
--- which is ok (the following unsharing checks rejects long-term pinning 
-them), but a bit inconstent with your comment and folio_test_anon().
-
-It would be more consistent (with your comment and also the 
-folio_test_anon implementation) to have here:
-
-	return mapping_flags & PAGE_MAPPING_ANON;
-
-> +
-> +	/*
-> +	 * At this point, we know the mapping is non-null and points to an
-> +	 * address_space object. The only remaining whitelisted file system is
-> +	 * shmem.
-> +	 */
-> +	return shmem_mapping(mapping);
-> +}
-> +
-
-In general, LGTM
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
-Thanks,
-
-David / dhildenb
+Oleg.
 
