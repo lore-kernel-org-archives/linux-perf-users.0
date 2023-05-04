@@ -2,153 +2,87 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DBAC77B73
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2314CC77B73
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbjEDWfC (ORCPT
+        id S229622AbjEDWhC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 18:35:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
+        Thu, 4 May 2023 18:37:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjEDWfB (ORCPT
+        with ESMTP id S229499AbjEDWhB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 18:35:01 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC647AA3
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 15:35:00 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-3ef4daaf906so5199961cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:35:00 -0700 (PDT)
+        Thu, 4 May 2023 18:37:01 -0400
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9208F86AD
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 15:37:00 -0700 (PDT)
+Received: by mail-il1-x134.google.com with SMTP id e9e14a558f8ab-33164ec77ccso434675ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:37:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683239699; x=1685831699;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z4uBgz0yZBTHWQuliVmtKoGkSIHeFOTfO6AJGNbOg9A=;
-        b=isO3eR5NuFdGcjEDfd6yhyFJJVV3hdhYc0m+77AV3Ct9egH/L2YLByRmiZ5Q10jro/
-         W3Qzih1wosvohCkiVkhLWkyAQKqFIQAC6Q4hYgHanRcrYJQEIkvb9xnwFO5VCZBKJChT
-         G2UI9CFbw5KOObPyiyJQTqFRfjboVKHSX9aAY=
+        d=google.com; s=20221208; t=1683239819; x=1685831819;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=u0FXZemdZP1sc4GdQsiRnSDQqgwioJ3/xR0t3+isdx4=;
+        b=K3lcgAap8BGRpF2ce0mJQa6SnLs9oKFAc2rQTpNmaZNEwxxNo14peRWA1WDrCKHZFd
+         vnIoaMxme68jPugJIlPqKCAoC4eE+U36bSY3o4MGtBtGTfC31sJr/k1iwiSqAd9XaGQh
+         cd7pIqjcE2cgzTr8TCUwaBvVhdjmt6S47tL4KCP0VYEcYdEkT+YTcyRoZcPstK2S2LhS
+         RdSRnqG6sypVD1Z0581/lidHabYBfx3A1m0DDzLQwWmK/Ovc4j/MxHFHWv6NdDXlLJbc
+         4EczlQ4tbrNccqMCIsU+V1v8fUQfOwzwWD7gcUgV9UW/sAkHZVNMOfGcMFbSBh36+00V
+         AMaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683239699; x=1685831699;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Z4uBgz0yZBTHWQuliVmtKoGkSIHeFOTfO6AJGNbOg9A=;
-        b=SAlhIBrsUid9fC4vU1iET/AAkjH05GL4dcxL0oRTJnmVQ3OUH/4+LjC2dxTD0hmuSh
-         1V/tnYLUE/cnwPhJ4uzXSn6qjaV6ZiG9+AtOTD1m9fgmyyl2t4eK4OW/OxLq0hr1z0N0
-         BUoloaSTYiCWh7ewLO1h2SPJX6YKgFBGsE4jza6QOOuEslnAQrUNATJN3puVpBTG8tfS
-         eYIQ4XsL3y7G0F+p0PHGCmYuC3dFR9xDglsYTDcJnzB6kkVruJ4HRwKZsgjWMYZZ36kt
-         jC4kXE6Kxm1z4jTLtQmTH4T+7wyFnpBpvdRRBrHt74A42JQInbU859XgSe12ybk65gD2
-         dQeA==
-X-Gm-Message-State: AC+VfDyBOFXNx6KBmktKuQIPDvFgKwsPAtqzyFpXp5jCoKR/AppFFteg
-        Cyrqtat83hjlumqvkDuIAOb0KXcwvOuUn/nLxFU=
-X-Google-Smtp-Source: ACHHUZ7lVhzM2ww7R/sb/PJcFTkcUQfpsCEdxtCgKhmJ4wqLxV7IFHxT6fLlSlxBCvlbsFGOneB6zg==
-X-Received: by 2002:ac8:7c45:0:b0:3bf:cff2:2c2f with SMTP id o5-20020ac87c45000000b003bfcff22c2fmr7369980qtv.44.1683239698866;
-        Thu, 04 May 2023 15:34:58 -0700 (PDT)
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com. [209.85.160.182])
-        by smtp.gmail.com with ESMTPSA id z27-20020ac8431b000000b003eda962ed24sm60621qtm.22.2023.05.04.15.34.58
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 May 2023 15:34:58 -0700 (PDT)
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-3f0a2f8216fso890281cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:34:58 -0700 (PDT)
-X-Received: by 2002:a05:622a:1487:b0:3f3:75c2:7466 with SMTP id
- t7-20020a05622a148700b003f375c27466mr43810qtx.8.1683239371523; Thu, 04 May
- 2023 15:29:31 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683239819; x=1685831819;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u0FXZemdZP1sc4GdQsiRnSDQqgwioJ3/xR0t3+isdx4=;
+        b=kI1AMXIG96CoG+rxFM7UlFdayiWvoqHwpUrSYlcxkmoPa0zRBlUZmKZLlNdIt+X+LZ
+         s+gmi4I0gA8gqQYp6xejiI+jVkdgnxSdNuqWHkX1U7YV4eRurDzH6YlAv0Vv9AZA2/xr
+         Sc+FJHLLthYT9yaMc2Yf359ewajW/e4cIXj4dM6eNrmqfzEI7gNdgB3cdqjB4aYOV7Db
+         0/hGK98sTgt38hRD3QAfswiVn6fAhafdRs9oIpWLMviQxAMgZ7MPca/ptuCIXg6v404P
+         0ajycqxVWQu53W9D+4LMHJViMrTLttLf7P26KLX/H1n4/M+vjFm7xR+szQwKvcWmuO49
+         WZfA==
+X-Gm-Message-State: AC+VfDwgzdLvKayKgqh7IXRgUCEwuHUVyDL4QO/MWP3n7SGgYyOqqN7e
+        yZ11Jiw6L/ap7O8auBdEtB0DUhmNwb+BTyH+ut7gOMZoCYWhxF9n8rxCiw==
+X-Google-Smtp-Source: ACHHUZ72hPg1K9a9AjDt4CfdHBNgN6g2p1ks0bnG2jPWxr1DyIwjVYMJ6IVdl2ZrJ8zxazhYzjw2m6dMr4OdAfr7OH0=
+X-Received: by 2002:a92:c247:0:b0:31f:ba43:2ed5 with SMTP id
+ k7-20020a92c247000000b0031fba432ed5mr22553ilo.11.1683239819384; Thu, 04 May
+ 2023 15:36:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230501082341.v3.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
- <ZFErmshcrcikrSU1@alley>
-In-Reply-To: <ZFErmshcrcikrSU1@alley>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 4 May 2023 15:29:19 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UVFR5YvJ8QrZ8YYPpwzYeymuy_JhcmZknbwUXg9njoGA@mail.gmail.com>
-Message-ID: <CAD=FV=UVFR5YvJ8QrZ8YYPpwzYeymuy_JhcmZknbwUXg9njoGA@mail.gmail.com>
-Subject: Re: shared code: was: Re: [PATCH v3] hardlockup: detect hard lockups
- using secondary (buddy) CPUs
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Ian Rogers <irogers@google.com>, ravi.v.shankar@intel.com,
-        Marc Zyngier <maz@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>,
-        kgdb-bugreport@lists.sourceforge.net, ito-yuichi@fujitsu.com,
-        linux-arm-kernel@lists.infradead.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        ricardo.neri@intel.com, Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Chen-Yu Tsai <wens@csie.org>, Andi Kleen <ak@linux.intel.com>,
-        Colin Cross <ccross@android.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 4 May 2023 15:36:48 -0700
+Message-ID: <CAP-5=fXKi+VAr-_n5tAaJ7Z2fvU7jc5N-CKCjkCAh_01_pzMfA@mail.gmail.com>
+Subject: uapi vs kernel headers
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi,
 
-On Tue, May 2, 2023 at 8:26=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
-:
->
-> > +int __weak watchdog_nmi_enable(unsigned int cpu) { return 0; }
-> > +void __weak watchdog_nmi_disable(unsigned int cpu) { return; }
->
-> Honestly, the mix of softlockup and hardlockup code was a hard to
-> follow even before this patch. And it is going to be worse.
->
-> Anyway, the buddy watchdog is not using NMI at all. It should not
-> get enable using a function called *_nmi_enabled().
+when the C compiler builds perf the priority of the "-I" flags is left
+to right. This means that in the perf build:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Makefile.config?h=perf-tools-next#n355
+if the build is looking for <linux/types.h> then whereas most projects
+would expect that to come from /usr/include/linux/types.h (which
+matches the uapi version) perf actually builds with the kernel version
+(tools/include/linux/types.h). The kernel version will declare types
+like u64 that are __u64 in the uapi code, so reversing the include
+order massively breaks the build as u64 and many associated types are
+missing.
 
-Thanks for your review! I'm not going to individually reply to all
-your comments below, but I've sent out a v4 [1] where I think I've
-done a semi-decent job of making this a little cleaner (not perfect,
-but hopefully a step in the right direction). Please take a look.
+It almost feels accidental that perf does things this way, and it
+feels more obvious if perf were to reverse the include order and deal
+with the fall-out in the code (ie perf's linux/types.h would agree
+more with what normal projects have). Perhaps perf needs its own
+types.h to minimize the fallout. I wondered what more general opinions
+on this were? Is this something that should be fixed?
 
-[1] https://lore.kernel.org/r/20230504221349.1535669-1-dianders@chromium.or=
-g
-
-
-> Also some comments are not longer valid, for example:
->
-> static void watchdog_enable(unsigned int cpu)
-> {
-> [...]
->         /* Enable the perf event */
->         if (watchdog_enabled & NMI_WATCHDOG_ENABLED)
->                 watchdog_nmi_enable(cpu);
-
-Ugh, after I sent the new version I just realized that I missed
-updating the above comment. :( If I need to send a v5 I can update it
-then, or if v4 lands I can send a follow-on patch to update that
-comment. My eyes are glazed over enough from trying to organize a
-17-patch series, so I somewhat imagine it's not the only comment I
-missed...
-
--Doug
+Thanks,
+Ian
