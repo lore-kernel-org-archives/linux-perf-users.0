@@ -2,229 +2,237 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A5CC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A57CC7EE21
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:46:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229731AbjEDWpg (ORCPT
+        id S229711AbjEDWqs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 18:45:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40332 "EHLO
+        Thu, 4 May 2023 18:46:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbjEDWpf (ORCPT
+        with ESMTP id S229482AbjEDWqq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 18:45:35 -0400
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 918F5869A
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 15:45:30 -0700 (PDT)
-Received: by mail-il1-x131.google.com with SMTP id e9e14a558f8ab-3313a2200a4so2808195ab.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:45:30 -0700 (PDT)
+        Thu, 4 May 2023 18:46:46 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0F3BA;
+        Thu,  4 May 2023 15:46:45 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1ab267e3528so8083615ad.0;
+        Thu, 04 May 2023 15:46:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683240329; x=1685832329;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/rN99MG5d6M+UabPVww+w9dMJG2WFhR6z4xfKsLbvtE=;
-        b=MT/AK5TGOzqV/y3TrvC/JEKjyss83EB0Tan/DMZv05DEdL7X7E1NafYoPUH/o52qtP
-         5kI+EBBTr6SJPll1zoRUjaUUpb8BXGgJX/dki8er8qyN+Pqk7aZI21ANnB9V10tm5y/g
-         k4KSL2eV/xrKo5J/kVQaZdp8oqg28xK0FxYNk=
+        d=gmail.com; s=20221208; t=1683240405; x=1685832405;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p2bj78cFGTKoY9hMxKQqwLP1oh/46AWaP5OKPTFbXuw=;
+        b=O38pyl2iTIXIM0pAlFz2cU0odBhXCj5fHILgOkUUWlfCbSaoyGvt+UG2kkCHfNMyKI
+         q9JEd1gjd6ggpkUrEBCS6Ebz3gqzzyiMPYMkSbMJj7Jb+pce7eXQuiSPvzzUE06Y+bwa
+         vg0HWedt5xZtSErdY8mLcbYXcbUpeJfji+hHlSx7unaz5bR+PGo57BpfAoDrRzx6i/2b
+         6JG9FeMcabeouD6wXQyQ3r16So+GN0N7fD5PKufPMexupJ3flf8WR6HxWtZDcNG7ICa2
+         LXvB44P1BWDQt98TeRXCQS39vZD9K/sxtJtkIndrySiBHYyo+g6iVrUaHAVR+8hdeB0Z
+         M7rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683240329; x=1685832329;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/rN99MG5d6M+UabPVww+w9dMJG2WFhR6z4xfKsLbvtE=;
-        b=VOMlUyA0DMg69XaxDZQRxJ1k2mu2j4XVZpJaSoVV0mN9QKdh316xU3xqAaDIYAJvCH
-         6kiQkFT5OHzl7oo7iHnMRX5z0rglPvydIlNfDorLupDYgfv4WGfw2tEUkjCe4t2FGUvE
-         OZ2G/97iZjVFlfq9wDNOzgyspUWUBSDnEX+GCvDygRVZ2+RzVJ1LerW3ROTDjiAf99Fi
-         I2goiqj7YuoRmvj3+NV2gKaiHFo0GbJVvnbnijr8Ply1j1OTIvvIUcFPmoIspu2/vatS
-         yXwC+75yT35wytc+MfLwiWyMhN0+6rAKuV06uY2lKoB7C4hyOo2Zbq216BKazOoFuX3/
-         514w==
-X-Gm-Message-State: AC+VfDwUsteMasakZnTNGyeYk07bI9dmcByRRUPtcjW/knWJaA8ktRnH
-        R5Xd0t7FJkdHkPJKVZz65MGNV+s2ClvNTvR4Tqw=
-X-Google-Smtp-Source: ACHHUZ72gQGxTfzw690ol6NzW0E+mpZX+fbsybTOmoIEc1iRaKybVFI9dJ2wC4IE5wfBrfF1DAPF1A==
-X-Received: by 2002:a92:cd4c:0:b0:331:96e5:678b with SMTP id v12-20020a92cd4c000000b0033196e5678bmr233992ilq.23.1683240329466;
-        Thu, 04 May 2023 15:45:29 -0700 (PDT)
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com. [209.85.166.172])
-        by smtp.gmail.com with ESMTPSA id v31-20020a056638359f00b004050767f779sm151708jal.164.2023.05.04.15.45.29
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 May 2023 15:45:29 -0700 (PDT)
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-32f4e0f42a7so629245ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:45:29 -0700 (PDT)
-X-Received: by 2002:ac8:5805:0:b0:3ef:3510:7c3a with SMTP id
- g5-20020ac85805000000b003ef35107c3amr17232qtg.3.1683239933101; Thu, 04 May
- 2023 15:38:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230501082341.v3.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
-In-Reply-To: <20230501082341.v3.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 4 May 2023 15:38:40 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Wz8u0+WHqiLwcE-3BhbtdVVCnSQjs7bxp=-tisyYQwWw@mail.gmail.com>
-Message-ID: <CAD=FV=Wz8u0+WHqiLwcE-3BhbtdVVCnSQjs7bxp=-tisyYQwWw@mail.gmail.com>
-Subject: Re: [PATCH v3] hardlockup: detect hard lockups using secondary
- (buddy) CPUs
-To:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Ian Rogers <irogers@google.com>, ravi.v.shankar@intel.com,
-        Marc Zyngier <maz@kernel.org>,
+        d=1e100.net; s=20221208; t=1683240405; x=1685832405;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p2bj78cFGTKoY9hMxKQqwLP1oh/46AWaP5OKPTFbXuw=;
+        b=UDy7tumzneRhe4Be5qSTL+2N6wa8XnOCVxmJh1lXvB6svMyK9j5hpUWwZvH1DJjAJ4
+         hQFFuMrnf7aN+Qu4fc9zTKvFthjH0V6h4K36pQHNM3V7iBmkJIwpq+04raX0kRczHo9c
+         CvytTffqnE2CNR3mKEhb4XFT15Zr5i9+kLyQMMxrDx1rDBkfqCp1wtPMmCs+KWLci8Vv
+         r9J9XYCJz7ZwiZCCHwgVBVQPBMElq5FBVI+biGdtGvDM+fAvDn4NtyMWUYmSYUw1620b
+         8xqc76VjwNXKv3Vow/kgqeqa87QZpNQhwFD7OoCTz6C8zT3bgHIMQiBZleCSOIEms/Tu
+         Vzjg==
+X-Gm-Message-State: AC+VfDyD+4iQWBAWt+5A/JJpVkIWPKcv/3RtX2yx8VvOA4AgSrXAd2eG
+        QeEn18f8RSYYFE617Dfi+9k=
+X-Google-Smtp-Source: ACHHUZ5y37zOX6jAcd+0ko/m7mNN0pGRCuco/wXfCBx4EDDoKKJ8LCNRfbxU3jr8I7kU8qym+4Oxyw==
+X-Received: by 2002:a17:903:18c:b0:1a6:83fa:b370 with SMTP id z12-20020a170903018c00b001a683fab370mr5874827plg.2.1683240404454;
+        Thu, 04 May 2023 15:46:44 -0700 (PDT)
+Received: from google.com ([2620:15c:2d4:203:cf29:c3f3:b6aa:dcb5])
+        by smtp.gmail.com with ESMTPSA id b2-20020a170903228200b001aaf5dcd762sm36331plh.214.2023.05.04.15.46.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 May 2023 15:46:44 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+Date:   Thu, 4 May 2023 15:46:41 -0700
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Song Liu <song@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Changbin Du <changbin.du@huawei.com>,
+        Hao Luo <haoluo@google.com>, Ian Rogers <irogers@google.com>,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Roman Lozko <lozko.roma@gmail.com>,
         Stephane Eranian <eranian@google.com>,
-        kgdb-bugreport@lists.sourceforge.net, ito-yuichi@fujitsu.com,
-        linux-arm-kernel@lists.infradead.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        ricardo.neri@intel.com, Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Chen-Yu Tsai <wens@csie.org>, Andi Kleen <ak@linux.intel.com>,
-        Colin Cross <ccross@android.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Borislav Petkov <bp@suse.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        bpf <bpf@vger.kernel.org>
+Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
+Message-ID: <ZFQ10TwDqzbUZ2V0@google.com>
+References: <20230503211801.897735-1-acme@kernel.org>
+ <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
+ <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
+ <ZFOSUab5XEJD0kxj@kernel.org>
+ <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
+ <ZFPw0scDq1eIzfHr@kernel.org>
+ <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
+ <ZFQCccsx6GK+gY0j@kernel.org>
+ <ZFQoQjCNtyMIulp+@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZFQoQjCNtyMIulp+@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+On Thu, May 04, 2023 at 06:48:50PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, May 04, 2023 at 04:07:29PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Thu, May 04, 2023 at 11:50:07AM -0700, Andrii Nakryiko escreveu:
+> > > On Thu, May 4, 2023 at 10:52 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > > Andrii, can you add some more information about the usage of vmlinux.h
+> > > > instead of using kernel headers?
+> >  
+> > > I'll just say that vmlinux.h is not a hard requirement to build BPF
+> > > programs, it's more a convenience allowing easy access to definitions
+> > > of both UAPI and kernel-internal structures for tracing needs and
+> > > marking them relocatable using BPF CO-RE machinery. Lots of real-world
+> > > applications just check-in pregenerated vmlinux.h to avoid build-time
+> > > dependency on up-to-date host kernel and such.
+> >  
+> > > If vmlinux.h generation and usage is causing issues, though, given
+> > > that perf's BPF programs don't seem to be using many different kernel
+> > > types, it might be a better option to just use UAPI headers for public
+> > > kernel type definitions, and just define CO-RE-relocatable minimal
+> > > definitions locally in perf's BPF code for the other types necessary.
+> > > E.g., if perf needs only pid and tgid from task_struct, this would
+> > > suffice:
+> >  
+> > > struct task_struct {
+> > >     int pid;
+> > >     int tgid;
+> > > } __attribute__((preserve_access_index));
+> > 
+> > Yeah, that seems like a way better approach, no vmlinux involved, libbpf
+> > CO-RE notices that task_struct changed from this two integers version
+> > (of course) and does the relocation to where it is in the running kernel
+> > by using /sys/kernel/btf/vmlinux.
+> 
+> Doing it for one of the skels, build tested, runtime untested, but not
+> using any vmlinux, BTF to help, not that bad, more verbose, but at least
+> we state what are the fields we actually use, have those attribute
+> documenting that those offsets will be recorded for future use, etc.
+> 
+> Namhyung, can you please check that this works?
 
-On Mon, May 1, 2023 at 8:25=E2=80=AFAM Douglas Anderson <dianders@chromium.=
-org> wrote:
->
-> From: Colin Cross <ccross@android.com>
->
-> Implement a hardlockup detector that doesn't doesn't need any extra
-> arch-specific support code to detect lockups. Instead of using
-> something arch-specific we will use the buddy system, where each CPU
-> watches out for another one. Specifically, each CPU will use its
-> softlockup hrtimer to check that the next CPU is processing hrtimer
-> interrupts by verifying that a counter is increasing.
->
-> NOTE: unlike the other hard lockup detectors, the buddy one can't
-> easily show what's happening on the CPU that locked up just by doing a
-> simple backtrace. It relies on some other mechanism in the system to
-> get information about the locked up CPUs. This could be support for
-> NMI backtraces like [1], it could be a mechanism for printing the PC
-> of locked CPUs at panic time like [2] / [3], or it could be something
-> else. Even though that means we still rely on arch-specific code, this
-> arch-specific code seems to often be implemented even on architectures
-> that don't have a hardlockup detector.
->
-> This style of hardlockup detector originated in some downstream
-> Android trees and has been rebased on / carried in ChromeOS trees for
-> quite a long time for use on arm and arm64 boards. Historically on
-> these boards we've leveraged mechanism [2] / [3] to get information
-> about hung CPUs, but we could move to [1].
->
-> Although the original motivation for the buddy system was for use on
-> systems without an arch-specific hardlockup detector, it can still be
-> useful to use even on systems that _do_ have an arch-specific
-> hardlockup detector. On x86, for instance, there is a 24-part patch
-> series [4] in progress switching the arch-specific hard lockup
-> detector from a scarce perf counter to a less-scarce hardware
-> resource. Potentially the buddy system could be a simpler alternative
-> to free up the perf counter but still get hard lockup detection.
->
-> Overall, pros (+) and cons (-) of the buddy system compared to an
-> arch-specific hardlockup detector:
-> + The buddy system is usable on systems that don't have an
->   arch-specific hardlockup detector, like arm32 and arm64 (though it's
->   being worked on for arm64 [5]).
-> + The buddy system may free up scarce hardware resources.
-> + If a CPU totally goes out to lunch (can't process NMIs) the buddy
->   system could still detect the problem (though it would be unlikely
->   to be able to get a stack trace).
-> + The buddy system uses the same timer function to pet the hardlockup
->   detector on the running CPU as it uses to detect hardlockups on
->   other CPUs. Compared to other hardlockup detectors, this means it
->   generates fewer interrupts and thus is likely better able to let
->   CPUs stay idle longer.
-> - If all CPUs are hard locked up at the same time the buddy system
->   can't detect it.
-> - If we don't have SMP we can't use the buddy system.
-> - The buddy system needs an arch-specific mechanism (possibly NMI
->   backtrace) to get info about the locked up CPU.
->
-> [1] https://lore.kernel.org/r/20230419225604.21204-1-dianders@chromium.or=
-g
-> [2] https://issuetracker.google.com/172213129
-> [3] https://docs.kernel.org/trace/coresight/coresight-cpu-debug.html
-> [4] https://lore.kernel.org/lkml/20230301234753.28582-1-ricardo.neri-cald=
-eron@linux.intel.com/
-> [5] https://lore.kernel.org/linux-arm-kernel/20220903093415.15850-1-lecop=
-zer.chen@mediatek.com/
->
-> Signed-off-by: Colin Cross <ccross@android.com>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Signed-off-by: Guenter Roeck <groeck@chromium.org>
-> Signed-off-by: Tzung-Bi Shih <tzungbi@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> This patch has been rebased in ChromeOS kernel trees many times, and
-> each time someone had to do work on it they added their
-> Signed-off-by. I've included those here. I've also left the author as
-> Colin Cross since the core code is still his.
->
-> I'll also note that the CC list is pretty giant, but that's what
-> get_maintainers came up with (plus a few other folks I thought would
-> be interested). As far as I can tell, there's no true MAINTAINER
-> listed for the existing watchdog code. Assuming people don't hate
-> this, maybe it would go through Andrew Morton's tree?
->
-> Changes in v3:
-> - More cpu =3D> CPU (in Kconfig and comments).
-> - Added a note in commit message about the effect on idle.
-> - Cleaned up commit message pros/cons to be complete sentences.
-> - No code changes other than comments.
->
-> Changes in v2:
-> - cpu =3D> CPU (in commit message).
-> - Reworked description and Kconfig based on v1 discussion.
-> - No code changes.
->
->  include/linux/nmi.h         |  18 ++++-
->  kernel/Makefile             |   1 +
->  kernel/watchdog.c           |  24 ++++--
->  kernel/watchdog_buddy_cpu.c | 141 ++++++++++++++++++++++++++++++++++++
->  lib/Kconfig.debug           |  23 +++++-
->  5 files changed, 196 insertions(+), 11 deletions(-)
+Yep, it works great!
 
-To leave breadcrumbs: I've posted v4 which is now a big series
+  $ sudo ./perf stat -a --bpf-counters --for-each-cgroup /,user.slice,system.slice sleep 1
+  
+   Performance counter stats for 'system wide':
+  
+           64,110.41 msec cpu-clock                        /                #   64.004 CPUs utilized
+              15,787      context-switches                 /                #  246.247 /sec
+                  72      cpu-migrations                   /                #    1.123 /sec
+               1,236      page-faults                      /                #   19.279 /sec
+         848,608,137      cycles                           /                #    0.013 GHz                         (83.23%)
+         106,928,070      stalled-cycles-frontend          /                #   12.60% frontend cycles idle        (83.23%)
+         209,204,795      stalled-cycles-backend           /                #   24.65% backend cycles idle         (83.23%)
+         645,183,025      instructions                     /                #    0.76  insn per cycle
+                                                    #    0.32  stalled cycles per insn     (83.24%)
+         141,776,876      branches                         /                #    2.211 M/sec                       (83.63%)
+           3,001,078      branch-misses                    /                #    2.12% of all branches             (83.44%)
+               66.67 msec cpu-clock                        user.slice       #    0.067 CPUs utilized
+                 695      context-switches                 user.slice       #   10.424 K/sec
+                  22      cpu-migrations                   user.slice       #  329.966 /sec
+               1,202      page-faults                      user.slice       #   18.028 K/sec
+         150,514,330      cycles                           user.slice       #    2.257 GHz                         (90.17%)
+          13,504,605      stalled-cycles-frontend          user.slice       #    8.97% frontend cycles idle        (69.71%)
+          38,859,376      stalled-cycles-backend           user.slice       #   25.82% backend cycles idle         (95.28%)
+         189,382,145      instructions                     user.slice       #    1.26  insn per cycle
+                                                    #    0.21  stalled cycles per insn     (88.92%)
+          36,019,878      branches                         user.slice       #  540.242 M/sec                       (90.16%)
+             697,723      branch-misses                    user.slice       #    1.94% of all branches             (65.77%)
+               44.33 msec cpu-clock                        system.slice     #    0.044 CPUs utilized
+               2,382      context-switches                 system.slice     #   53.732 K/sec
+                  42      cpu-migrations                   system.slice     #  947.418 /sec
+                  34      page-faults                      system.slice     #  766.958 /sec
+         100,383,549      cycles                           system.slice     #    2.264 GHz                         (87.27%)
+          10,165,225      stalled-cycles-frontend          system.slice     #   10.13% frontend cycles idle        (71.73%)
+          29,964,682      stalled-cycles-backend           system.slice     #   29.85% backend cycles idle         (84.94%)
+         101,210,743      instructions                     system.slice     #    1.01  insn per cycle
+                                                    #    0.30  stalled cycles per insn     (80.68%)
+          19,893,831      branches                         system.slice     #  448.757 M/sec                       (86.94%)
+             397,854      branch-misses                    system.slice     #    2.00% of all branches             (88.42%)
+  
+         1.001667221 seconds time elapsed
+  
+Thanks,
+Namhyung
 
-https://lore.kernel.org/r/20230504221349.1535669-1-dianders@chromium.org
 
-I took some people off the CC list that get_maintainers had added on
-v3, mostly because it was getting unbearable. I tried to copy all
-relevant mailing lists, so hopefully anyone who needs v4 can find it
-somewhere where it's easy for them to reply to. If you got dropped off
-the CC list and want back on for future versions, please yell and I'll
-add you. Unless I messed up, I've CCed anyone who replied to previous
-versions.
-
--Doug
+> diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> index 6a438e0102c5a2cb..f376d162549ebd74 100644
+> --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
+> @@ -1,11 +1,40 @@
+>  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>  // Copyright (c) 2021 Facebook
+>  // Copyright (c) 2021 Google
+> -#include "vmlinux.h"
+> +#include <linux/types.h>
+> +#include <linux/bpf.h>
+>  #include <bpf/bpf_helpers.h>
+>  #include <bpf/bpf_tracing.h>
+>  #include <bpf/bpf_core_read.h>
+>  
+> +// libbpf's CO-RE will take care of the relocations so that these fields match
+> +// the layout of these structs in the kernel where this ends up running on.
+> +
+> +struct cgroup_subsys_state {
+> +	struct cgroup *cgroup;
+> +} __attribute__((preserve_access_index));
+> +
+> +struct css_set {
+> +	struct cgroup_subsys_state *subsys[13];
+> +} __attribute__((preserve_access_index));
+> +
+> +struct task_struct {
+> +	struct css_set *cgroups;
+> +} __attribute__((preserve_access_index));
+> +
+> +struct kernfs_node {
+> +	__u64 id;
+> +}  __attribute__((preserve_access_index));
+> +
+> +struct cgroup {
+> +	struct kernfs_node *kn;
+> +	int                level;
+> +}  __attribute__((preserve_access_index));
+> +
+> +enum cgroup_subsys_id {
+> +	perf_event_cgrp_id  = 8,
+> +};
+> +
+>  #define MAX_LEVELS  10  // max cgroup hierarchy level: arbitrary
+>  #define MAX_EVENTS  32  // max events per cgroup: arbitrary
+>  
+> @@ -52,7 +81,7 @@ struct cgroup___new {
+>  /* old kernel cgroup definition */
+>  struct cgroup___old {
+>  	int level;
+> -	u64 ancestor_ids[];
+> +	__u64 ancestor_ids[];
+>  } __attribute__((preserve_access_index));
+>  
+>  const volatile __u32 num_events = 1;
+> 
