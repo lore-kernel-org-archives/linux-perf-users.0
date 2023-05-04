@@ -2,155 +2,470 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BBFC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 07:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB2D5C7EE21
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 07:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbjEDHPM (ORCPT
+        id S229645AbjEDHTL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 03:15:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
+        Thu, 4 May 2023 03:19:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjEDHPM (ORCPT
+        with ESMTP id S229459AbjEDHTL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 03:15:12 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128DA1731;
-        Thu,  4 May 2023 00:15:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683184511; x=1714720511;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CyVV9r/J36vPs8Amt+XKv1VeMXKDAyxKEBpx5xFq2aw=;
-  b=ex6despMTO3wjAQv806SU0oqdpyZLlWCFQBNYtqha6W326Qo6feXnYlU
-   h7D96wnrJ4MaaeSVvAw5Qon/ttybf3J3DHdZ4TPnfEcNyEpwkx7dP1gtV
-   aHW3D7PYhGm5+VnguQSgsvhBEA+WLZbVx4Umzo/+FN06wX7Rv8MXUoOSr
-   bQpyVozEhKg9XsydNkJClKUB05iSxJdMM1CQGrsv/O+pBtimfg5YlEIcd
-   ji75oHgWKxfxXSQEq7cHUtM2NbDtHi6Dg7AXSeYB0S+JeobWWdfclDeGf
-   9hccH5s8PAqSoHMkUnaKsU1BDOziV1Dz5dWZEUip+nZQHHAwsF02UzIaQ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="346326356"
-X-IronPort-AV: E=Sophos;i="5.99,249,1677571200"; 
-   d="scan'208";a="346326356"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2023 00:15:10 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="699729388"
-X-IronPort-AV: E=Sophos;i="5.99,249,1677571200"; 
-   d="scan'208";a="699729388"
-Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
-  by fmsmga007.fm.intel.com with ESMTP; 04 May 2023 00:14:43 -0700
-From:   Dapeng Mi <dapeng1.mi@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Thu, 4 May 2023 03:19:11 -0400
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84C0E1990;
+        Thu,  4 May 2023 00:19:07 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0VhfhoRB_1683184740;
+Received: from 30.240.112.215(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VhfhoRB_1683184740)
+          by smtp.aliyun-inc.com;
+          Thu, 04 May 2023 15:19:02 +0800
+Message-ID: <6ca986e4-38a0-4296-5307-e6e344c62853@linux.alibaba.com>
+Date:   Thu, 4 May 2023 15:18:59 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.10.1
+Subject: Re: [PATCH v2 4/5] perf jevents: Add support for Yitian 710 DDR PMU
+ aliasing
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>
+Cc:     James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Zhenyu Wang <zhenyuw@linux.intel.com>,
-        Zhang Tinghao <tinghao.zhang@intel.com>,
-        Dapeng Mi <dapeng1.mi@intel.com>,
-        Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH v2] perf/x86/intel: Define bit macros for FixCntrCtl MSR
-Date:   Thu,  4 May 2023 15:21:28 +0800
-Message-Id: <20230504072128.3653470-1-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1682329456-19418-5-git-send-email-renyu.zj@linux.alibaba.com>
+Content-Language: en-US
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <1682329456-19418-5-git-send-email-renyu.zj@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Define bit macros for FixCntrCtl MSR and replace the bit hardcoding
-with these bit macros. This would make code be more human-readable.
 
-Perf commands 'perf stat -e "instructions,cycles,ref-cycles"' and
-'perf record -e "instructions,cycles,ref-cycles"' pass.
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- arch/x86/events/intel/core.c      | 18 +++++++++---------
- arch/x86/include/asm/perf_event.h | 10 ++++++++++
- 2 files changed, 19 insertions(+), 9 deletions(-)
+On 2023/4/24 17:44, Jing Zhang wrote:
+> Add support for T-HEAD Yitian 710 SoC DDR PMU aliasing.
+> 
+> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
+> ---
+>  .../arm64/freescale/yitian710/sys/ali_drw.json     | 373 +++++++++++++++++++++
+>  tools/perf/pmu-events/jevents.py                   |   1 +
+>  2 files changed, 374 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/ali_drw.json
+> 
+> diff --git a/tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/ali_drw.json b/tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/ali_drw.json
+> new file mode 100644
+> index 0000000..f17f239
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/ali_drw.json
+> @@ -0,0 +1,373 @@
+> +[
+> +	{
+> +		"BriefDescription": "A Write or Read Op at HIF interface. 64B",
+> +		"ConfigCode": "0x0",
+> +		"EventName": "hif_rd_or_wr",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Write Op at HIF interface. 64B",
+> +		"ConfigCode": "0x1",
+> +		"EventName": "hif_wr",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Read Op at HIF interface. 64B",
+> +		"ConfigCode": "0x2",
+> +		"EventName": "hif_rd",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Read-Modify-Write Op at HIF interface. 64B",
+> +		"ConfigCode": "0x3",
+> +		"EventName": "hif_rmw",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A high priority Read at HIF interface. 64B",
+> +		"ConfigCode": "0x4",
+> +		"EventName": "hif_hi_pri_rd",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A write data cycle at DFI interface (to DRAM)",
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index a3fb996a86a1..7beebbd15343 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -2451,7 +2451,7 @@ static void intel_pmu_disable_fixed(struct perf_event *event)
- 
- 	intel_clear_masks(event, idx);
- 
--	mask = 0xfULL << ((idx - INTEL_PMC_IDX_FIXED) * 4);
-+	mask = intel_fixed_bits_by_idx(idx - INTEL_PMC_IDX_FIXED, INTEL_FIXED_BITS_MASK);
- 	cpuc->fixed_ctrl_val &= ~mask;
- }
- 
-@@ -2750,25 +2750,25 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
- 	 * if requested:
- 	 */
- 	if (!event->attr.precise_ip)
--		bits |= 0x8;
-+		bits |= INTEL_FIXED_0_ENABLE_PMI;
- 	if (hwc->config & ARCH_PERFMON_EVENTSEL_USR)
--		bits |= 0x2;
-+		bits |= INTEL_FIXED_0_USER;
- 	if (hwc->config & ARCH_PERFMON_EVENTSEL_OS)
--		bits |= 0x1;
-+		bits |= INTEL_FIXED_0_KERNEL;
- 
- 	/*
- 	 * ANY bit is supported in v3 and up
- 	 */
- 	if (x86_pmu.version > 2 && hwc->config & ARCH_PERFMON_EVENTSEL_ANY)
--		bits |= 0x4;
-+		bits |= INTEL_FIXED_0_ANYTHREAD;
- 
- 	idx -= INTEL_PMC_IDX_FIXED;
--	bits <<= (idx * 4);
--	mask = 0xfULL << (idx * 4);
-+	bits = intel_fixed_bits_by_idx(idx, bits);
-+	mask = intel_fixed_bits_by_idx(idx, INTEL_FIXED_BITS_MASK);
- 
- 	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip) {
--		bits |= ICL_FIXED_0_ADAPTIVE << (idx * 4);
--		mask |= ICL_FIXED_0_ADAPTIVE << (idx * 4);
-+		bits |= intel_fixed_bits_by_idx(idx, ICL_FIXED_0_ADAPTIVE);
-+		mask |= intel_fixed_bits_by_idx(idx, ICL_FIXED_0_ADAPTIVE);
- 	}
- 
- 	cpuc->fixed_ctrl_val &= ~mask;
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 8fc15ed5e60b..d879dbf62284 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -32,11 +32,21 @@
- #define ARCH_PERFMON_EVENTSEL_INV			(1ULL << 23)
- #define ARCH_PERFMON_EVENTSEL_CMASK			0xFF000000ULL
- 
-+#define INTEL_FIXED_BITS_MASK				0xFULL
-+#define INTEL_FIXED_BITS_STRIDE			4
-+#define INTEL_FIXED_0_KERNEL				(1ULL << 0)
-+#define INTEL_FIXED_0_USER				(1ULL << 1)
-+#define INTEL_FIXED_0_ANYTHREAD			(1ULL << 2)
-+#define INTEL_FIXED_0_ENABLE_PMI			(1ULL << 3)
-+
- #define HSW_IN_TX					(1ULL << 32)
- #define HSW_IN_TX_CHECKPOINTED				(1ULL << 33)
- #define ICL_EVENTSEL_ADAPTIVE				(1ULL << 34)
- #define ICL_FIXED_0_ADAPTIVE				(1ULL << 32)
- 
-+#define intel_fixed_bits_by_idx(_idx, _bits)			\
-+	((_bits) << ((_idx) * INTEL_FIXED_BITS_STRIDE))
-+
- #define AMD64_EVENTSEL_INT_CORE_ENABLE			(1ULL << 36)
- #define AMD64_EVENTSEL_GUESTONLY			(1ULL << 40)
- #define AMD64_EVENTSEL_HOSTONLY				(1ULL << 41)
--- 
-2.34.1
+Add an ending period to BriefDescription as you do latter.
 
+> +		"ConfigCode": "0x7",
+> +		"EventName": "dfi_wr_data_cycles",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A read data cycle at DFI interface (to DRAM).",
+> +		"ConfigCode": "0x8",
+> +		"EventName": "dfi_rd_data_cycles",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A high priority read becomes critical.",
+> +		"ConfigCode": "0x9",
+> +		"EventName": "hpr_xact_when_critical",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A low priority read becomes critical.",
+> +		"ConfigCode": "0xA",
+> +		"EventName": "lpr_xact_when_critical",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A write becomes critical.",
+> +		"ConfigCode": "0xB",
+> +		"EventName": "wr_xact_when_critical",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "An Activate (ACT) command to DRAM.",
+> +		"ConfigCode": "0xC",
+> +		"EventName": "op_is_activate",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Read or Write CAS command to DRAM.",
+> +		"ConfigCode": "0xD",
+> +		"EventName": "op_is_rd_or_wr",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "An ACT command for read to DRAM.",
+> +		"ConfigCode": "0xE",
+> +		"EventName": "op_is_rd_activate",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Read CAS command to DRAM.",
+> +		"ConfigCode": "0xF",
+> +		"EventName": "op_is_rd",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Write CAS command to DRAM.",
+> +		"ConfigCode": "0x10",
+> +		"EventName": "op_is_wr",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Masked Write command to DRAM.",
+> +		"ConfigCode": "0x11",
+> +		"EventName": "op_is_mwr",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Precharge (PRE) command to DRAM.",
+> +		"ConfigCode": "0x12",
+> +		"EventName": "op_is_precharge",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A PRE required by read or write.",
+
+A non-abbreviation format is prefered here.
+
+> +		"ConfigCode": "0x13",
+> +		"EventName": "precharge_for_rdwr",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A PRE required by other conditions.",
+> +		"ConfigCode": "0x14",
+> +		"EventName": "precharge_for_other",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A read-write turnaround.",
+> +		"ConfigCode": "0x15",
+> +		"EventName": "rdwr_transitions",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A write combine (merge) in write data buffer.",
+> +		"ConfigCode": "0x16",
+> +		"EventName": "write_combine",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Write-After-Read hazard.",
+> +		"ConfigCode": "0x17",
+> +		"EventName": "war_hazard",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Read-After-Write hazard.",
+> +		"ConfigCode": "0x18",
+> +		"EventName": "raw_hazard",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A Write-After-Write hazard.",
+> +		"ConfigCode": "0x19",
+> +		"EventName": "waw_hazard",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "Rank0 enters self-refresh (SRE).",
+> +		"ConfigCode": "0x1A",
+> +		"EventName": "op_is_enter_selfref_rk0",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "Rank1 enters self-refresh (SRE).",
+> +		"ConfigCode": "0x1B",
+> +		"EventName": "op_is_enter_selfref_rk1",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "Rank2 enters self-refresh (SRE).",
+> +		"ConfigCode": "0x1C",
+> +		"EventName": "op_is_enter_selfref_rk2",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "Rank3 enters self-refresh (SRE).",
+> +		"ConfigCode": "0x1D",
+> +		"EventName": "op_is_enter_selfref_rk3",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "Rank0 enters power-down (PDE).",
+> +		"ConfigCode": "0x1E",
+> +		"EventName": "op_is_enter_powerdown_rk0",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "Rank1 enters power-down (PDE).",
+> +		"ConfigCode": "0x1F",
+> +		"EventName": "op_is_enter_powerdown_rk1",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "Rank2 enters power-down (PDE).",
+> +		"ConfigCode": "0x20",
+> +		"EventName": "op_is_enter_powerdown_rk2",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "Rank3 enters power-down (PDE).",
+> +		"ConfigCode": "0x21",
+> +		"EventName": "op_is_enter_powerdown_rk3",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A cycle that Rank0 stays in self-refresh mode.",
+> +		"ConfigCode": "0x26",
+> +		"EventName": "selfref_mode_rk0",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A cycle that Rank1 stays in self-refresh mode.",
+> +		"ConfigCode": "0x27",
+> +		"EventName": "selfref_mode_rk1",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A cycle that Rank2 stays in self-refresh mode.",
+> +		"ConfigCode": "0x28",
+> +		"EventName": "selfref_mode_rk2",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A cycle that Rank3 stays in self-refresh mode.",
+> +		"ConfigCode": "0x29",
+> +		"EventName": "selfref_mode_rk3",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "An auto-refresh (REF) command to DRAM.",
+> +		"ConfigCode": "0x2A",
+> +		"EventName": "op_is_refresh",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A critical REF command to DRAM.",
+> +		"ConfigCode": "0x2B",
+> +		"EventName": "op_is_crit_ref",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "An MRR or MRW command to DRAM.",
+> +		"ConfigCode": "0x2D",
+> +		"EventName": "op_is_load_mode",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A ZQCal command to DRAM.",
+> +		"ConfigCode": "0x2E",
+> +		"EventName": "op_is_zqcl",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "At least one entry in read queue reaches the visible window limit.",
+> +		"ConfigCode": "0x30",
+> +		"EventName": "visible_window_limit_reached_rd",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "At least one entry in write queue reaches the visible window limit.",
+> +		"ConfigCode": "0x31",
+> +		"EventName": "visible_window_limit_reached_wr",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A DQS Oscillator MPC command to DRAM.",
+> +		"ConfigCode": "0x34",
+> +		"EventName": "op_is_dqsosc_mpc",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A DQS Oscillator MRR command to DRAM.",
+> +		"ConfigCode": "0x35",
+> +		"EventName": "op_is_dqsosc_mrr",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A TCR (Temperature Compensated Refresh) MRR command to DRAM.",
+> +		"ConfigCode": "0x36",
+> +		"EventName": "op_is_tcr_mrr",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A ZQCal Start command to DRAM.",
+> +		"ConfigCode": "0x37",
+> +		"EventName": "op_is_zqstart",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A ZQCal Latch command to DRAM.",
+> +		"ConfigCode": "0x38",
+> +		"EventName": "op_is_zqlatch",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A packet at CHI TXREQ interface (request).",
+> +		"ConfigCode": "0x39",
+> +		"EventName": "chi_txreq",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A packet at CHI TXDAT interface (read data).",
+> +		"ConfigCode": "0x3A",
+> +		"EventName": "chi_txdat",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A packet at CHI RXDAT interface (write data).",
+> +		"ConfigCode": "0x3B",
+> +		"EventName": "chi_rxdat",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A packet at CHI RXRSP interface.",
+> +		"ConfigCode": "0x3C",
+> +		"EventName": "chi_rxrsp",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "A violation detected in TZC.",
+> +		"ConfigCode": "0x3D",
+> +		"EventName": "tsz_vio",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"BriefDescription": "The ddr cycle.",
+> +		"ConfigCode": "0x80",
+> +		"EventName": "cycle",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	}
+> +]
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index 7cff2c6..aff4051 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -257,6 +257,7 @@ class JsonEvent:
+>            'cpu_core': 'cpu_core',
+>            'cpu_atom': 'cpu_atom',
+>            'arm_cmn': 'arm_cmn',
+> +          'ali_drw': 'ali_drw',
+>        }
+>        return table[unit] if unit in table else f'uncore_{unit.lower()}'
+>  
+
+Otherwise, LGTM.
+
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+
+Best Regards,
+Shuai
