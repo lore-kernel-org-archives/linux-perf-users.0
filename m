@@ -2,250 +2,179 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C4AC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAB3C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbjEDWPl (ORCPT
+        id S229463AbjEDWQn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 18:15:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56476 "EHLO
+        Thu, 4 May 2023 18:16:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbjEDWPk (ORCPT
+        with ESMTP id S229449AbjEDWQm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 18:15:40 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 258A7120AD
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 15:15:38 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-64395e2a715so941532b3a.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:15:38 -0700 (PDT)
+        Thu, 4 May 2023 18:16:42 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5241311DB1
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 15:16:40 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-74fb8677a36so56028585a.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:16:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683238537; x=1685830537;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1683238598; x=1685830598;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Rx1vfeyE3TRvVHLtc8wjeQXsVXDN6U5WvEYHnvnsZiQ=;
-        b=GrXsJ9B6lpVddvHVF4LE//sAxHKEwPqS+Lrmy5FZm5C+BBxcMf/KBnQ2Kz0ToqXupC
-         stkOTuW3TG4O8WK+889znwTdd4mpmXVLRAtVy4QbnUMBEfL9e2VkXE8ZF2uB8RqfGrwM
-         V5WHNLrECfzPUJD69+fwMyXpFWfAfGK902akM=
+        bh=CzswV8h6Pv5RbnDUfs5XaziOPH7Dg5YP+9HIzH76G84=;
+        b=NB2139Nf7RGw9RCIAQw10bNLb48qHeZGcJSCY/GZW76l3WHWt9CmmEmkXDfTJERPEG
+         rFVzAf6cf/LDkA7PZtoDtVPvfaoTz+RR8J/9dmpbQEncxGDvC3tbHp4dv/ZlJEfTlw/x
+         4Ho5qauU1IwbLhhzrYajB3VLrviVbdCntZXCg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683238537; x=1685830537;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1683238598; x=1685830598;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Rx1vfeyE3TRvVHLtc8wjeQXsVXDN6U5WvEYHnvnsZiQ=;
-        b=JWwl3cIvMCbuUeu5WCkDszIKwCZbebvrz29AGMJuJCtPv4lp0KjZ/VjzFOjoYcZvJE
-         Jan9TzXsSJ/zUenC9tW/EUEUe3lEd2JEas010TcnPncWZRBOImbOzJAx8L+h2veMt4Eu
-         EygjIXTurj4oUHcl/LGpnYUMXBEgO0z8XDCMI4Oelxl8KPPT3krAegPZ0NjW5eGPO3wM
-         ZmYjpJoEbu2TWU3XE7ayceH/qwyvIc7hy26jdxPGVmRJc5GJthJfWDc/thHgsfYQyfP3
-         HmPiP4s8otsTn9Ix9nQyTBRjiKjElZsKDU+gWMAp0x7R5xLhjRIujgoGkxwTGiPPABeJ
-         KorA==
-X-Gm-Message-State: AC+VfDwe7vNdqPFl3Ck/ICxKPbH1y5n588Ms+VRuYxxFfygk62MxAZO7
-        1iHe06aQN/VeePsf37ugiR3nsw==
-X-Google-Smtp-Source: ACHHUZ5OyqHQkkk5eV4OQnbvYXBWIDTEw9i7oDzC+q4tZkWV0tXI752A7bILgADyxN7Wq0liTZgOEg==
-X-Received: by 2002:a05:6a00:23d0:b0:639:9089:798e with SMTP id g16-20020a056a0023d000b006399089798emr4377726pfc.19.1683238537495;
-        Thu, 04 May 2023 15:15:37 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:edf0:7321:6b9e:d5e7])
-        by smtp.gmail.com with ESMTPSA id g26-20020aa7819a000000b006437c0edf9csm169615pfi.16.2023.05.04.15.15.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 May 2023 15:15:36 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Stephen Boyd <swboyd@chromium.org>, ricardo.neri@intel.com,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Chen-Yu Tsai <wens@csie.org>, christophe.leroy@csgroup.eu,
-        davem@davemloft.net, sparclinux@vger.kernel.org,
-        mpe@ellerman.id.au, Will Deacon <will@kernel.org>,
-        ravi.v.shankar@intel.com, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v4 17/17] arm64: Enable perf events based hard lockup detector
-Date:   Thu,  4 May 2023 15:13:49 -0700
-Message-ID: <20230504151100.v4.17.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
-X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
-In-Reply-To: <20230504221349.1535669-1-dianders@chromium.org>
-References: <20230504221349.1535669-1-dianders@chromium.org>
+        bh=CzswV8h6Pv5RbnDUfs5XaziOPH7Dg5YP+9HIzH76G84=;
+        b=M50fyIXiwLYzWU05Hz8EhLSzRJ3g2n+4EsN7C6TxGzo99TfN2OuwkuYNqYD7BqeVlC
+         734hRVXVsm9zeDEUzFTQuZvk2CXI0ZFw7n4XmokRhwR00Flcx1NiIQOTkcrz9n65Vexv
+         jYnVRPA2GP1A/oNncbvUw3ou8CCGsxGRpMSzYXZTqcHrNVbPrjRXwduhlv8hJkTXcad2
+         dZzP2lVxCtVkIvFjLMcdpbZpcSyMKyoI1un/6gq5oVjF2tHmwHgYvV3Ttjri1IPsRUPp
+         7h2vEE1bxmvGZysmv61jKm01fQyDzBiRqhDuxLOgvNgrzZ0HfZL+u19NccByfzy5yfVT
+         LS/Q==
+X-Gm-Message-State: AC+VfDzx4VcHrVSuaQjECS2HRbEGzGCmzqS3P5PHHn+XV3tP1YAA2+nC
+        FpCjyHBYlbpGux24Xaz5exARKKUvRfL+O2sVmRo=
+X-Google-Smtp-Source: ACHHUZ7Bv4knZ0aIRxleLUJ/wxyDIju9LnV/AiEakU9IUOglTQkQjY3ELLjjDXbk0fLGQTaaNySPGA==
+X-Received: by 2002:a05:6214:2689:b0:5ec:4388:8807 with SMTP id gm9-20020a056214268900b005ec43888807mr17261991qvb.24.1683238598026;
+        Thu, 04 May 2023 15:16:38 -0700 (PDT)
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com. [209.85.160.182])
+        by smtp.gmail.com with ESMTPSA id a19-20020a0cca93000000b0061f7cf8207esm72419qvk.89.2023.05.04.15.16.36
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 May 2023 15:16:37 -0700 (PDT)
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-3ef36d814a5so911241cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:16:36 -0700 (PDT)
+X-Received: by 2002:a05:622a:144d:b0:3de:1aaa:42f5 with SMTP id
+ v13-20020a05622a144d00b003de1aaa42f5mr10116qtx.15.1683238596262; Thu, 04 May
+ 2023 15:16:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230501082341.v3.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
+ <ZFEqynvf5nqkzEvQ@alley>
+In-Reply-To: <ZFEqynvf5nqkzEvQ@alley>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 4 May 2023 15:16:23 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=V1nqunM83LzSXnYiODC66tn5hjSWsUvxabf6vSO7reUQ@mail.gmail.com>
+Message-ID: <CAD=FV=V1nqunM83LzSXnYiODC66tn5hjSWsUvxabf6vSO7reUQ@mail.gmail.com>
+Subject: Re: cpu hotplug : was: Re: [PATCH v3] hardlockup: detect hard lockups
+ using secondary (buddy) CPUs
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Ian Rogers <irogers@google.com>, ravi.v.shankar@intel.com,
+        Marc Zyngier <maz@kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Stephane Eranian <eranian@google.com>,
+        kgdb-bugreport@lists.sourceforge.net, ito-yuichi@fujitsu.com,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        ricardo.neri@intel.com, Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Chen-Yu Tsai <wens@csie.org>, Andi Kleen <ak@linux.intel.com>,
+        Colin Cross <ccross@android.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Alexander Potapenko <glider@google.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-With the recent feature added to enable perf events to use pseudo NMIs
-as interrupts on platforms which support GICv3 or later, its now been
-possible to enable hard lockup detector (or NMI watchdog) on arm64
-platforms. So enable corresponding support.
+Hi,
 
-One thing to note here is that normally lockup detector is initialized
-just after the early initcalls but PMU on arm64 comes up much later as
-device_initcall(). To cope with that, override
-arch_perf_nmi_is_available() to let the watchdog framework know PMU
-not ready, and inform the framework to re-initialize lockup detection
-once PMU has been initialized.
+On Tue, May 2, 2023 at 8:23=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
+:
+>
+> On Mon 2023-05-01 08:24:46, Douglas Anderson wrote:
+> > From: Colin Cross <ccross@android.com>
+> >
+> > Implement a hardlockup detector that doesn't doesn't need any extra
+> > arch-specific support code to detect lockups. Instead of using
+> > something arch-specific we will use the buddy system, where each CPU
+> > watches out for another one. Specifically, each CPU will use its
+> > softlockup hrtimer to check that the next CPU is processing hrtimer
+> > interrupts by verifying that a counter is increasing.
+> >
+> > --- /dev/null
+> > +++ b/kernel/watchdog_buddy_cpu.c
+> > +int watchdog_nmi_enable(unsigned int cpu)
+> > +{
+> > +     /*
+> > +      * The new CPU will be marked online before the first hrtimer int=
+errupt
+> > +      * runs on it.
+>
+> It does not need to be the first hrtimer interrupt. The CPU might have
+> been offlined/onlined repeatedly. The counter might have any value.
+>
+> > +      * If another CPU tests for a hardlockup on the new CPU
+> > +      * before it has run its first hrtimer, it will get a false posit=
+ive.
+> > +      * Touch the watchdog on the new CPU to delay the first check for=
+ at
+> > +      * least 3 sampling periods to guarantee one hrtimer has run on t=
+he new
+> > +      * CPU.
+> > +      */
 
-Co-developed-by: Sumit Garg <sumit.garg@linaro.org>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Co-developed-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-I yanked this patch from the mailing lists [1] into my series just to
-make it easier to avoid conflicts between my series and the one adding
-the arm64 perf hardlockup detector, in case someone wanted to test
-them both together.
+OK, I've updated the above comment to:
 
-As part of making this match with my series, I needed to resolve
-conflicts with the patch ("watchdog/hardlockup: Have the perf
-hardlockup use __weak functions more cleanly"). This makes ${SUBJECT}
-patch now depend on the patch ("watchdog/perf: Add a weak function for
-an arch to detect if perf can use NMIs"). As talked about in that
-patch, there may be better alternatives to accomplish the same thing.
+/*
+ * The new CPU will be marked online before the hrtimer interrupt
+ * gets a chance to run on it. If another CPU tests for a
+ * hardlockup on the new CPU before it has run its the hrtimer
+ * interrupt, it will get a false positive. Touch the watchdog on
+ * the new CPU to delay the check for at least 3 sampling periods
+ * to guarantee one hrtimer has run on the new CPU.
+ */
 
-As mentioned in the cover letter, I'm not really expecting this patch
-to land together with the patches for the buddy detector. I included
-it with my series simply for convenience of testing both series
-together.
+> > +     per_cpu(watchdog_touch, cpu) =3D true;
+>
+> We should touch also the next_cpu:
+>
+>         /*
+>          * We are going to check the next CPU. Our watchdog_hrtimer
+>          * need not be zero if the CPU has already been online earlier.
+>          * Touch the watchdog on the next CPU to avoid false positive
+>          * if we try to check it in less then 3 interrupts.
+>          */
+>         next_cpu =3D watchdog_next_cpu(cpu);
+>         if (next_cpu < nr_cpu_ids)
+>                 per_cpu(watchdog_touch, next_cpu) =3D true;
+>
+> Alternative would be to clear watchdog_hrtimer. But it would kind-of
+> affect also the softlockup detector.
 
-NOTE: the previous patch posted by Lecopzer pointed to Sumit's
-patch [2] in the commit text but provided no context. I moved it to
-this "after the cut" note.
-
-[1] https://lore.kernel.org/r/20220903093415.15850-7-lecopzer.chen@mediatek.com/
-[2] http://lore.kernel.org/linux-arm-kernel/1610712101-14929-1-git-send-email-sumit.garg@linaro.org
-
-Changes in v4:
-- Pulled ("Enable perf events based hard ...") into my series for v4.
-
- arch/arm64/Kconfig               |  2 ++
- arch/arm64/kernel/perf_event.c   | 12 ++++++++++--
- arch/arm64/kernel/watchdog_hld.c | 12 ++++++++++++
- drivers/perf/arm_pmu.c           |  5 +++++
- include/linux/perf/arm_pmu.h     |  2 ++
- 5 files changed, 31 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 1023e896d46b..4ee9f3a7bc7a 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -197,12 +197,14 @@ config ARM64
- 	select HAVE_FUNCTION_ERROR_INJECTION
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_GCC_PLUGINS
-+	select HAVE_HARDLOCKUP_DETECTOR_PERF if PERF_EVENTS && HAVE_PERF_EVENTS_NMI
- 	select HAVE_HW_BREAKPOINT if PERF_EVENTS
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_TIME_ACCOUNTING
- 	select HAVE_KVM
- 	select HAVE_NMI
- 	select HAVE_PERF_EVENTS
-+	select HAVE_PERF_EVENTS_NMI if ARM64_PSEUDO_NMI
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_PREEMPT_DYNAMIC_KEY
-diff --git a/arch/arm64/kernel/perf_event.c b/arch/arm64/kernel/perf_event.c
-index dde06c0f97f3..732bc5d76cb1 100644
---- a/arch/arm64/kernel/perf_event.c
-+++ b/arch/arm64/kernel/perf_event.c
-@@ -23,6 +23,7 @@
- #include <linux/platform_device.h>
- #include <linux/sched_clock.h>
- #include <linux/smp.h>
-+#include <linux/nmi.h>
- 
- /* ARMv8 Cortex-A53 specific event types. */
- #define ARMV8_A53_PERFCTR_PREF_LINEFILL				0xC2
-@@ -1396,10 +1397,17 @@ static struct platform_driver armv8_pmu_driver = {
- 
- static int __init armv8_pmu_driver_init(void)
- {
-+	int ret;
-+
- 	if (acpi_disabled)
--		return platform_driver_register(&armv8_pmu_driver);
-+		ret = platform_driver_register(&armv8_pmu_driver);
- 	else
--		return arm_pmu_acpi_probe(armv8_pmuv3_pmu_init);
-+		ret = arm_pmu_acpi_probe(armv8_pmuv3_pmu_init);
-+
-+	if (!ret)
-+		lockup_detector_retry_init();
-+
-+	return ret;
- }
- device_initcall(armv8_pmu_driver_init)
- 
-diff --git a/arch/arm64/kernel/watchdog_hld.c b/arch/arm64/kernel/watchdog_hld.c
-index 2401eb1b7e55..dcd25322127c 100644
---- a/arch/arm64/kernel/watchdog_hld.c
-+++ b/arch/arm64/kernel/watchdog_hld.c
-@@ -1,5 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <linux/nmi.h>
- #include <linux/cpufreq.h>
-+#include <linux/perf/arm_pmu.h>
- 
- /*
-  * Safe maximum CPU frequency in case a particular platform doesn't implement
-@@ -22,3 +24,13 @@ u64 hw_nmi_get_sample_period(int watchdog_thresh)
- 
- 	return (u64)max_cpu_freq * watchdog_thresh;
- }
-+
-+bool __init arch_perf_nmi_is_available(void)
-+{
-+	/*
-+	 * hardlockup_detector_perf_init() will success even if Pseudo-NMI turns off,
-+	 * however, the pmu interrupts will act like a normal interrupt instead of
-+	 * NMI and the hardlockup detector would be broken.
-+	 */
-+	return arm_pmu_irq_is_nmi();
-+}
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 15bd1e34a88e..7b9caa502d33 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -687,6 +687,11 @@ static int armpmu_get_cpu_irq(struct arm_pmu *pmu, int cpu)
- 	return per_cpu(hw_events->irq, cpu);
- }
- 
-+bool arm_pmu_irq_is_nmi(void)
-+{
-+	return has_nmi;
-+}
-+
- /*
-  * PMU hardware loses all context when a CPU goes offline.
-  * When a CPU is hotplugged back in, since some hardware registers are
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index 525b5d64e394..5b00f5cb4cf9 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -171,6 +171,8 @@ void kvm_host_pmu_init(struct arm_pmu *pmu);
- #define kvm_host_pmu_init(x)	do { } while(0)
- #endif
- 
-+bool arm_pmu_irq_is_nmi(void);
-+
- /* Internal functions only for core arm_pmu code */
- struct arm_pmu *armpmu_alloc(void);
- void armpmu_free(struct arm_pmu *pmu);
--- 
-2.40.1.521.gf1e218fcd8-goog
-
+Looks reasonable. I've incorporated it.
