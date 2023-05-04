@@ -2,30 +2,30 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C6FC7EE21
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 07:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DCBC7EE21
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 07:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229780AbjEDHWH (ORCPT
+        id S230044AbjEDHcP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 03:22:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
+        Thu, 4 May 2023 03:32:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjEDHWG (ORCPT
+        with ESMTP id S229514AbjEDHcN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 03:22:06 -0400
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2B12128;
-        Thu,  4 May 2023 00:22:04 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0VhfbNf5_1683184917;
-Received: from 30.240.112.215(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VhfbNf5_1683184917)
+        Thu, 4 May 2023 03:32:13 -0400
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBD802D6D;
+        Thu,  4 May 2023 00:32:07 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0VhfrQKo_1683185519;
+Received: from 30.240.112.215(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VhfrQKo_1683185519)
           by smtp.aliyun-inc.com;
-          Thu, 04 May 2023 15:21:59 +0800
-Message-ID: <22d07c42-b2e3-06ae-6366-7f7a69edcedc@linux.alibaba.com>
-Date:   Thu, 4 May 2023 15:21:56 +0800
+          Thu, 04 May 2023 15:32:01 +0800
+Message-ID: <bf593f0f-5c62-f36a-a5d2-f6376f3babda@linux.alibaba.com>
+Date:   Thu, 4 May 2023 15:31:58 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.10.1
-Subject: Re: [PATCH v2 3/5] driver/perf: Add identifier sysfs file for Yitian
+Subject: Re: [PATCH v2 5/5] perf vendor events: Add JSON metrics for Yitian
  710 DDR
 Content-Language: en-US
 To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
@@ -44,9 +44,9 @@ Cc:     James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org,
         Zhuo Song <zhuo.song@linux.alibaba.com>
 References: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1682329456-19418-4-git-send-email-renyu.zj@linux.alibaba.com>
+ <1682329456-19418-6-git-send-email-renyu.zj@linux.alibaba.com>
 From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <1682329456-19418-4-git-send-email-renyu.zj@linux.alibaba.com>
+In-Reply-To: <1682329456-19418-6-git-send-email-renyu.zj@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -56,63 +56,46 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 2023/4/24 17:44, Jing Zhang wrote:
-> To allow userspace to identify the specific implementation of the device,
-> add an "identifier" sysfs file.
-> 
-> The perf tool can match the Yitian 710 DDR metric through the identifier.
+> Add JSON metrics for T-HEAD Yitian 710 SoC DDR.
 > 
 > Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
 
-LGTM, thanks.
 
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Could you also update the Documentation/admin-guide/perf/alibaba_pmu.rst
+with some example of how to use these metrics?
 
 Best Regards,
 Shuai
 
+
 > ---
->  drivers/perf/alibaba_uncore_drw_pmu.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
+>  .../arch/arm64/freescale/yitian710/sys/metrics.json  | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json
 > 
-> diff --git a/drivers/perf/alibaba_uncore_drw_pmu.c b/drivers/perf/alibaba_uncore_drw_pmu.c
-> index a7689fe..fe075fd 100644
-> --- a/drivers/perf/alibaba_uncore_drw_pmu.c
-> +++ b/drivers/perf/alibaba_uncore_drw_pmu.c
-> @@ -236,10 +236,37 @@ static ssize_t ali_drw_pmu_cpumask_show(struct device *dev,
->  	.attrs = ali_drw_pmu_cpumask_attrs,
->  };
->  
-> +static ssize_t ali_drw_pmu_identifier_show(struct device *dev,
-> +					struct device_attribute *attr,
-> +					char *page)
-> +{
-> +	return sysfs_emit(page, "%s\n", "ali_drw_pmu");
-> +}
-> +
-> +static umode_t ali_drw_pmu_identifier_attr_visible(struct kobject *kobj,
-> +						struct attribute *attr, int n)
-> +{
-> +	return attr->mode;
-> +}
-> +
-> +static struct device_attribute ali_drw_pmu_identifier_attr =
-> +	__ATTR(identifier, 0444, ali_drw_pmu_identifier_show, NULL);
-> +
-> +static struct attribute *ali_drw_pmu_identifier_attrs[] = {
-> +	&ali_drw_pmu_identifier_attr.attr,
-> +	NULL
-> +};
-> +
-> +static const struct attribute_group ali_drw_pmu_identifier_attr_group = {
-> +	.attrs = ali_drw_pmu_identifier_attrs,
-> +	.is_visible = ali_drw_pmu_identifier_attr_visible
-> +};
-> +
->  static const struct attribute_group *ali_drw_pmu_attr_groups[] = {
->  	&ali_drw_pmu_events_attr_group,
->  	&ali_drw_pmu_cpumask_attr_group,
->  	&ali_drw_pmu_format_group,
-> +	&ali_drw_pmu_identifier_attr_group,
->  	NULL,
->  };
->  
+> diff --git a/tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json b/tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json
+> new file mode 100644
+> index 0000000..1a92477
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json
+> @@ -0,0 +1,20 @@
+> +[
+> +	{
+> +		"MetricName": "ddr_read_bandwidth.all",
+> +		"BriefDescription": "The ddr read bandwidth(MB/s).",
+> +		"MetricGroup": "ddr",
+> +		"MetricExpr": "hif_rd * 64 / 1e6 / duration_time",
+> +		"ScaleUnit": "1MB/s",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	},
+> +	{
+> +		"MetricName": "ddr_write_bandwidth.all",
+> +		"BriefDescription": "The ddr write bandwidth(MB/s).",
+> +		"MetricGroup": "ddr",
+> +		"MetricExpr": "(hif_wr + hif_rmw) * 64 / 1e6 / duration_time",
+> +		"ScaleUnit": "1MB/s",
+> +		"Unit": "ali_drw",
+> +		"Compat": "ali_drw_pmu"
+> +	}
+> +]
