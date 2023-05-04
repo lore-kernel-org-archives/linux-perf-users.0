@@ -2,237 +2,232 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A57CC7EE21
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63634C7EE21
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbjEDWqs (ORCPT
+        id S229887AbjEDWtc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 18:46:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40624 "EHLO
+        Thu, 4 May 2023 18:49:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjEDWqq (ORCPT
+        with ESMTP id S229514AbjEDWtb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 18:46:46 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0F3BA;
-        Thu,  4 May 2023 15:46:45 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1ab267e3528so8083615ad.0;
-        Thu, 04 May 2023 15:46:45 -0700 (PDT)
+        Thu, 4 May 2023 18:49:31 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95C2F59DB
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 15:49:30 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3ef3887e3c0so4634591cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:49:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683240405; x=1685832405;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=p2bj78cFGTKoY9hMxKQqwLP1oh/46AWaP5OKPTFbXuw=;
-        b=O38pyl2iTIXIM0pAlFz2cU0odBhXCj5fHILgOkUUWlfCbSaoyGvt+UG2kkCHfNMyKI
-         q9JEd1gjd6ggpkUrEBCS6Ebz3gqzzyiMPYMkSbMJj7Jb+pce7eXQuiSPvzzUE06Y+bwa
-         vg0HWedt5xZtSErdY8mLcbYXcbUpeJfji+hHlSx7unaz5bR+PGo57BpfAoDrRzx6i/2b
-         6JG9FeMcabeouD6wXQyQ3r16So+GN0N7fD5PKufPMexupJ3flf8WR6HxWtZDcNG7ICa2
-         LXvB44P1BWDQt98TeRXCQS39vZD9K/sxtJtkIndrySiBHYyo+g6iVrUaHAVR+8hdeB0Z
-         M7rw==
+        d=chromium.org; s=google; t=1683240569; x=1685832569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zKTOrpdPKD9tXXBM+7yvRbp5HwSbEUEOiX00H7sR240=;
+        b=kKbjB8kd5TcnUk/Ly9l/EQZQ3O985sXgGRu3dWj1zvS8Et21atrz14zw0oWEsEtMrC
+         Sf6gF5poY0EIHY9dVSF6ErN+LCmtrOOJfx4i0GHU0g3h/io+Sndv5ZlzqXcIj+W2dpiR
+         b5JoPop0NPkOFOUhJuxjEscGfvMbkN7qW5Jsk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683240405; x=1685832405;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:sender
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p2bj78cFGTKoY9hMxKQqwLP1oh/46AWaP5OKPTFbXuw=;
-        b=UDy7tumzneRhe4Be5qSTL+2N6wa8XnOCVxmJh1lXvB6svMyK9j5hpUWwZvH1DJjAJ4
-         hQFFuMrnf7aN+Qu4fc9zTKvFthjH0V6h4K36pQHNM3V7iBmkJIwpq+04raX0kRczHo9c
-         CvytTffqnE2CNR3mKEhb4XFT15Zr5i9+kLyQMMxrDx1rDBkfqCp1wtPMmCs+KWLci8Vv
-         r9J9XYCJz7ZwiZCCHwgVBVQPBMElq5FBVI+biGdtGvDM+fAvDn4NtyMWUYmSYUw1620b
-         8xqc76VjwNXKv3Vow/kgqeqa87QZpNQhwFD7OoCTz6C8zT3bgHIMQiBZleCSOIEms/Tu
-         Vzjg==
-X-Gm-Message-State: AC+VfDyD+4iQWBAWt+5A/JJpVkIWPKcv/3RtX2yx8VvOA4AgSrXAd2eG
-        QeEn18f8RSYYFE617Dfi+9k=
-X-Google-Smtp-Source: ACHHUZ5y37zOX6jAcd+0ko/m7mNN0pGRCuco/wXfCBx4EDDoKKJ8LCNRfbxU3jr8I7kU8qym+4Oxyw==
-X-Received: by 2002:a17:903:18c:b0:1a6:83fa:b370 with SMTP id z12-20020a170903018c00b001a683fab370mr5874827plg.2.1683240404454;
-        Thu, 04 May 2023 15:46:44 -0700 (PDT)
-Received: from google.com ([2620:15c:2d4:203:cf29:c3f3:b6aa:dcb5])
-        by smtp.gmail.com with ESMTPSA id b2-20020a170903228200b001aaf5dcd762sm36331plh.214.2023.05.04.15.46.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 May 2023 15:46:44 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-Date:   Thu, 4 May 2023 15:46:41 -0700
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Song Liu <song@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, Ian Rogers <irogers@google.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
-Message-ID: <ZFQ10TwDqzbUZ2V0@google.com>
-References: <20230503211801.897735-1-acme@kernel.org>
- <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
- <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
- <ZFOSUab5XEJD0kxj@kernel.org>
- <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
- <ZFPw0scDq1eIzfHr@kernel.org>
- <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
- <ZFQCccsx6GK+gY0j@kernel.org>
- <ZFQoQjCNtyMIulp+@kernel.org>
+        d=1e100.net; s=20221208; t=1683240569; x=1685832569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zKTOrpdPKD9tXXBM+7yvRbp5HwSbEUEOiX00H7sR240=;
+        b=Lbo41WDczOW55jDh37HYmhoSCseoWvxPLfHzom4Vh94+fB9VgFPLy983R3MdibRGPw
+         vT4dtjzHoIX2AwIltRqy/zCkH9x026GgKKfCqra9JduG4MsmY0PrTONkFGQv6+QYDAWN
+         QNtekHMhfoOJlKi49bu1lJrhRkO5jScA5qHG1ADaFJfBQqDzf+lQjNuUKZM1BoEQYU0j
+         tV88DnAQU20P1MoDl4iOYSDf+w+KUT7adCfMOnvC3dBeiaLVCycJ50JeWbg7XnhDVBCN
+         5aBKM5tR7r9Ufw5sBFCgAfzMxoPEBddr2Ep+uwu4cqVz3tpT5UOwc1M19yQ182g9/Ao4
+         WQGg==
+X-Gm-Message-State: AC+VfDznqaUMnZRYiaef4cuGzxJdld0VUlUFiOHYvMNZwfvSv48mwR2k
+        F1bXdMex6fsf41Gw5+Kf0XoPnXKRiKKc9P2/vVM=
+X-Google-Smtp-Source: ACHHUZ65xqmvZ3+zCPaas64OgsTu6TbEXymQWO4/L+desyyqoA+BQS1zGz8vlBVSP/i4NVQxZib45Q==
+X-Received: by 2002:ac8:5c8a:0:b0:3bd:1a8a:8015 with SMTP id r10-20020ac85c8a000000b003bd1a8a8015mr7618471qta.16.1683240569334;
+        Thu, 04 May 2023 15:49:29 -0700 (PDT)
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com. [209.85.160.175])
+        by smtp.gmail.com with ESMTPSA id x18-20020ac87012000000b003ef3df76ec7sm44179qtm.93.2023.05.04.15.49.29
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 May 2023 15:49:29 -0700 (PDT)
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-3ef31924c64so913731cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:49:29 -0700 (PDT)
+X-Received: by 2002:ac8:5781:0:b0:3ef:302c:319e with SMTP id
+ v1-20020ac85781000000b003ef302c319emr15500qta.8.1683240114116; Thu, 04 May
+ 2023 15:41:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZFQoQjCNtyMIulp+@kernel.org>
+References: <20220903093415.15850-1-lecopzer.chen@mediatek.com>
+In-Reply-To: <20220903093415.15850-1-lecopzer.chen@mediatek.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 4 May 2023 15:41:41 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=W=AhZe35_uaZR=qq78kyw89gUf7FYzjGak-2-8-XcxWQ@mail.gmail.com>
+Message-ID: <CAD=FV=W=AhZe35_uaZR=qq78kyw89gUf7FYzjGak-2-8-XcxWQ@mail.gmail.com>
+Subject: Re: [PATCH v7 0/6] Support hld delayed init based on Pseudo-NMI for
+To:     Lecopzer Chen <lecopzer.chen@mediatek.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+        will@kernel.org, acme@kernel.org, akpm@linux-foundation.org,
+        alexander.shishkin@linux.intel.com, catalin.marinas@arm.com,
+        davem@davemloft.net, jolsa@redhat.com, jthierry@redhat.com,
+        keescook@chromium.org, kernelfans@gmail.com, masahiroy@kernel.org,
+        matthias.bgg@gmail.com, maz@kernel.org, mcgrof@kernel.org,
+        mingo@redhat.com, namhyung@kernel.org, nixiaoming@huawei.com,
+        peterz@infradead.org, pmladek@suse.com, sparclinux@vger.kernel.org,
+        sumit.garg@linaro.org, wangqing@vivo.com, yj.chiang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 04, 2023 at 06:48:50PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Thu, May 04, 2023 at 04:07:29PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > Em Thu, May 04, 2023 at 11:50:07AM -0700, Andrii Nakryiko escreveu:
-> > > On Thu, May 4, 2023 at 10:52 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > Andrii, can you add some more information about the usage of vmlinux.h
-> > > > instead of using kernel headers?
-> >  
-> > > I'll just say that vmlinux.h is not a hard requirement to build BPF
-> > > programs, it's more a convenience allowing easy access to definitions
-> > > of both UAPI and kernel-internal structures for tracing needs and
-> > > marking them relocatable using BPF CO-RE machinery. Lots of real-world
-> > > applications just check-in pregenerated vmlinux.h to avoid build-time
-> > > dependency on up-to-date host kernel and such.
-> >  
-> > > If vmlinux.h generation and usage is causing issues, though, given
-> > > that perf's BPF programs don't seem to be using many different kernel
-> > > types, it might be a better option to just use UAPI headers for public
-> > > kernel type definitions, and just define CO-RE-relocatable minimal
-> > > definitions locally in perf's BPF code for the other types necessary.
-> > > E.g., if perf needs only pid and tgid from task_struct, this would
-> > > suffice:
-> >  
-> > > struct task_struct {
-> > >     int pid;
-> > >     int tgid;
-> > > } __attribute__((preserve_access_index));
-> > 
-> > Yeah, that seems like a way better approach, no vmlinux involved, libbpf
-> > CO-RE notices that task_struct changed from this two integers version
-> > (of course) and does the relocation to where it is in the running kernel
-> > by using /sys/kernel/btf/vmlinux.
-> 
-> Doing it for one of the skels, build tested, runtime untested, but not
-> using any vmlinux, BTF to help, not that bad, more verbose, but at least
-> we state what are the fields we actually use, have those attribute
-> documenting that those offsets will be recorded for future use, etc.
-> 
-> Namhyung, can you please check that this works?
+Hi,
 
-Yep, it works great!
+On Sat, Sep 3, 2022 at 2:35=E2=80=AFAM Lecopzer Chen <lecopzer.chen@mediate=
+k.com> wrote:
+>
+> As we already used hld internally for arm64 since 2020, there still
+> doesn't have a proper commit on the upstream and we badly need it.
+>
+> This serise rework on 5.17 from [1] and the origin author is
+> Pingfan Liu <kernelfans@gmail.com>
+> Sumit Garg <sumit.garg@linaro.org>
+>
+> Qoute from [1]:
+>
+> > Hard lockup detector is helpful to diagnose unpaired irq
+> > enable/disable.
+> > But the current watchdog framework can not cope with arm64 hw perf
+> > event
+> > easily.
+>
+> > On arm64, when lockup_detector_init()->watchdog_nmi_probe(), PMU is
+> > not
+> > ready until device_initcall(armv8_pmu_driver_init).  And it is deeply
+> > integrated with the driver model and cpuhp. Hence it is hard to push
+> > the
+> > initialization of armv8_pmu_driver_init() before smp_init().
+>
+> > But it is easy to take an opposite approach by enabling watchdog_hld
+> > to
+> > get the capability of PMU async.
+> > The async model is achieved by expanding watchdog_nmi_probe() with
+> > -EBUSY, and a re-initializing work_struct which waits on a
+> > wait_queue_head.
+>
+> Provide an API - retry_lockup_detector_init() for anyone who needs
+> to delayed init lockup detector.
+>
+> The original assumption is: nobody should use delayed probe after
+> lockup_detector_check() (which has __init attribute).
+> That is, anyone uses this API must call between lockup_detector_init()
+> and lockup_detector_check(), and the caller must have __init attribute
+>
+> The delayed init flow is:
+> 1. lockup_detector_init() -> watchdog_nmi_probe() get non-zero retun,
+>    then set allow_lockup_detector_init_retry to true which means it's
+>    able to do delayed probe later.
+>
+> 2. PMU arch code init done, call retry_lockup_detector_init().
+>
+> 3. retry_lockup_detector_init() queue the work only when
+>    allow_lockup_detector_init_retry is true which means nobody should
+> call
+>    this before lockup_detector_init().
+>
+> 4. the work lockup_detector_delay_init() is doing without wait event.
+>    if probe success, set allow_lockup_detector_init_retry to false.
+>
+> 5. at late_initcall_sync(), lockup_detector_check() set
+>    allow_lockup_detector_init_retry to false first to avoid any later
+> retry,
+>    and then flush_work() to make sure the __init section won't be freed
+>    before the work done.
+>
+> [1]
+> https://lore.kernel.org/lkml/20211014024155.15253-1-kernelfans@gmail.com/
+>
+> v7:
+>   rebase on v6.0-rc3
+>
+> v6:
+>   fix build failed reported by kernel test robot <lkp@intel.com>
+> https://lore.kernel.org/lkml/20220614062835.7196-1-lecopzer.chen@mediatek=
+.com/
+>
+> v5:
+>   1. rebase on v5.19-rc2
+>   2. change to proper schedule api
+>   3. return value checking before retry_lockup_detector_init()
+> https://lore.kernel.org/lkml/20220613135956.15711-1-lecopzer.chen@mediate=
+k.com/
+>
+> v4:
+>   1. remove -EBUSY protocal, let all the non-zero value from
+>      watchdog_nmi_probe() be able to retry.
+>   2. separate arm64 part patch into hw_nmi_get_sample_period and retry
+>      delayed init
+>   3. tweak commit msg that we don't have to limit to -EBUSY
+>   4. rebase on v5.18-rc4
+> https://lore.kernel.org/lkml/20220427161340.8518-1-lecopzer.chen@mediatek=
+.com/
+>
+> v3:
+>   1. Tweak commit message in patch 04
+>         2. Remove wait event
+>   3. s/lockup_detector_pending_init/allow_lockup_detector_init_retry/
+>   4. provide api retry_lockup_detector_init()
+> https://lore.kernel.org/lkml/20220324141405.10835-1-lecopzer.chen@mediate=
+k.com/
+>
+> v2:
+>   1. Tweak commit message in patch 01/02/04/05
+>   2. Remove vobose WARN in patch 04 within watchdog core.
+>   3. Change from three states variable: detector_delay_init_state to
+>      two states variable: allow_lockup_detector_init_retry
+>
+>      Thanks Petr Mladek <pmladek@suse.com> for the idea.
+>      > 1.  lockup_detector_work() called before lockup_detector_check().
+>      >     In this case, wait_event() will wait until
+>      >     lockup_detector_check()
+>      >     clears detector_delay_pending_init and calls wake_up().
+>
+>      > 2. lockup_detector_check() called before lockup_detector_work().
+>      >    In this case, wait_even() will immediately continue because
+>      >    it will see cleared detector_delay_pending_init.
+>   4. Add comment in code in patch 04/05 for two states variable
+> changing.
+> https://lore.kernel.org/lkml/20220307154729.13477-1-lecopzer.chen@mediate=
+k.com/
+>
+>
+> Lecopzer Chen (5):
+>   kernel/watchdog: remove WATCHDOG_DEFAULT
+>   kernel/watchdog: change watchdog_nmi_enable() to void
+>   kernel/watchdog: Adapt the watchdog_hld interface for async model
+>   arm64: add hw_nmi_get_sample_period for preparation of lockup detector
+>   arm64: Enable perf events based hard lockup detector
+>
+> Pingfan Liu (1):
+>   kernel/watchdog_hld: Ensure CPU-bound context when creating hardlockup
+>     detector event
+>
+>  arch/arm64/Kconfig               |  2 +
+>  arch/arm64/kernel/Makefile       |  1 +
+>  arch/arm64/kernel/perf_event.c   | 12 +++++-
+>  arch/arm64/kernel/watchdog_hld.c | 39 +++++++++++++++++
+>  arch/sparc/kernel/nmi.c          |  8 ++--
+>  drivers/perf/arm_pmu.c           |  5 +++
+>  include/linux/nmi.h              |  4 +-
+>  include/linux/perf/arm_pmu.h     |  2 +
+>  kernel/watchdog.c                | 72 +++++++++++++++++++++++++++++---
+>  kernel/watchdog_hld.c            |  8 +++-
+>  10 files changed, 139 insertions(+), 14 deletions(-)
 
-  $ sudo ./perf stat -a --bpf-counters --for-each-cgroup /,user.slice,system.slice sleep 1
-  
-   Performance counter stats for 'system wide':
-  
-           64,110.41 msec cpu-clock                        /                #   64.004 CPUs utilized
-              15,787      context-switches                 /                #  246.247 /sec
-                  72      cpu-migrations                   /                #    1.123 /sec
-               1,236      page-faults                      /                #   19.279 /sec
-         848,608,137      cycles                           /                #    0.013 GHz                         (83.23%)
-         106,928,070      stalled-cycles-frontend          /                #   12.60% frontend cycles idle        (83.23%)
-         209,204,795      stalled-cycles-backend           /                #   24.65% backend cycles idle         (83.23%)
-         645,183,025      instructions                     /                #    0.76  insn per cycle
-                                                    #    0.32  stalled cycles per insn     (83.24%)
-         141,776,876      branches                         /                #    2.211 M/sec                       (83.63%)
-           3,001,078      branch-misses                    /                #    2.12% of all branches             (83.44%)
-               66.67 msec cpu-clock                        user.slice       #    0.067 CPUs utilized
-                 695      context-switches                 user.slice       #   10.424 K/sec
-                  22      cpu-migrations                   user.slice       #  329.966 /sec
-               1,202      page-faults                      user.slice       #   18.028 K/sec
-         150,514,330      cycles                           user.slice       #    2.257 GHz                         (90.17%)
-          13,504,605      stalled-cycles-frontend          user.slice       #    8.97% frontend cycles idle        (69.71%)
-          38,859,376      stalled-cycles-backend           user.slice       #   25.82% backend cycles idle         (95.28%)
-         189,382,145      instructions                     user.slice       #    1.26  insn per cycle
-                                                    #    0.21  stalled cycles per insn     (88.92%)
-          36,019,878      branches                         user.slice       #  540.242 M/sec                       (90.16%)
-             697,723      branch-misses                    user.slice       #    1.94% of all branches             (65.77%)
-               44.33 msec cpu-clock                        system.slice     #    0.044 CPUs utilized
-               2,382      context-switches                 system.slice     #   53.732 K/sec
-                  42      cpu-migrations                   system.slice     #  947.418 /sec
-                  34      page-faults                      system.slice     #  766.958 /sec
-         100,383,549      cycles                           system.slice     #    2.264 GHz                         (87.27%)
-          10,165,225      stalled-cycles-frontend          system.slice     #   10.13% frontend cycles idle        (71.73%)
-          29,964,682      stalled-cycles-backend           system.slice     #   29.85% backend cycles idle         (84.94%)
-         101,210,743      instructions                     system.slice     #    1.01  insn per cycle
-                                                    #    0.30  stalled cycles per insn     (80.68%)
-          19,893,831      branches                         system.slice     #  448.757 M/sec                       (86.94%)
-             397,854      branch-misses                    system.slice     #    2.00% of all branches             (88.42%)
-  
-         1.001667221 seconds time elapsed
-  
-Thanks,
-Namhyung
+To leave some breadcrumbs here, I've included all the patches here in
+my latest "buddy" hardlockup detector series. I'm hoping that the
+cleanup patches that were part of your series can land as part of my
+series. I'm not necessarily expecting the the arm64 perf hardlockup
+detector patches will land as part of my series, though. See the cover
+letter and "after-the-cut" notes on the later patches in my series for
+details.
 
-
-> diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> index 6a438e0102c5a2cb..f376d162549ebd74 100644
-> --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> @@ -1,11 +1,40 @@
->  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->  // Copyright (c) 2021 Facebook
->  // Copyright (c) 2021 Google
-> -#include "vmlinux.h"
-> +#include <linux/types.h>
-> +#include <linux/bpf.h>
->  #include <bpf/bpf_helpers.h>
->  #include <bpf/bpf_tracing.h>
->  #include <bpf/bpf_core_read.h>
->  
-> +// libbpf's CO-RE will take care of the relocations so that these fields match
-> +// the layout of these structs in the kernel where this ends up running on.
-> +
-> +struct cgroup_subsys_state {
-> +	struct cgroup *cgroup;
-> +} __attribute__((preserve_access_index));
-> +
-> +struct css_set {
-> +	struct cgroup_subsys_state *subsys[13];
-> +} __attribute__((preserve_access_index));
-> +
-> +struct task_struct {
-> +	struct css_set *cgroups;
-> +} __attribute__((preserve_access_index));
-> +
-> +struct kernfs_node {
-> +	__u64 id;
-> +}  __attribute__((preserve_access_index));
-> +
-> +struct cgroup {
-> +	struct kernfs_node *kn;
-> +	int                level;
-> +}  __attribute__((preserve_access_index));
-> +
-> +enum cgroup_subsys_id {
-> +	perf_event_cgrp_id  = 8,
-> +};
-> +
->  #define MAX_LEVELS  10  // max cgroup hierarchy level: arbitrary
->  #define MAX_EVENTS  32  // max events per cgroup: arbitrary
->  
-> @@ -52,7 +81,7 @@ struct cgroup___new {
->  /* old kernel cgroup definition */
->  struct cgroup___old {
->  	int level;
-> -	u64 ancestor_ids[];
-> +	__u64 ancestor_ids[];
->  } __attribute__((preserve_access_index));
->  
->  const volatile __u32 num_events = 1;
-> 
+https://lore.kernel.org/r/20230504221349.1535669-1-dianders@chromium.org
