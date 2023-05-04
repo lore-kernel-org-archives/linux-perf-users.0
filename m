@@ -2,121 +2,155 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ACC0C77B78
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 05:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BBFC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 07:15:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjEDFvb (ORCPT
+        id S229502AbjEDHPM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 01:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54760 "EHLO
+        Thu, 4 May 2023 03:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjEDFva (ORCPT
+        with ESMTP id S229461AbjEDHPM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 01:51:30 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 673271731
-        for <linux-perf-users@vger.kernel.org>; Wed,  3 May 2023 22:51:29 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-33164ec77ccso250325ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 May 2023 22:51:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683179489; x=1685771489;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2a/HKc7PwjD3Q1+TFgDiavZuTOvfNjVC4H3DeHGWxqE=;
-        b=LH2HjhcE1aiNhuDmkzmvtFKwez04ywqxfNU0XsOTpoU4jsErIKayDaTBVIHgenQXbB
-         61SRlNRFoTQYGekDGPq2XB4l5VNK3WtqNszovEr06FTnwRx8kVLcz74BWG3Uj2Nebg/x
-         /O7YucZJhf9TGAAea3icWANPYMQKpYKxsx+w2g9V9gFx40vEIYYdYc7Gg1LwWvcoGzQe
-         JRsYq3YZlnq/U14o18qNUqhC3yx5BN5k0xmlc79iM37XsmbvzKJlA8hfTS44ezXWjd7J
-         EbNnKXo5E94f+RXbDeTjxP02hhWdMehNFiomiJLppPxxFGiNoo71oRVY7CyoGWu6hXFk
-         o8gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683179489; x=1685771489;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2a/HKc7PwjD3Q1+TFgDiavZuTOvfNjVC4H3DeHGWxqE=;
-        b=k8RbFatEG5zQXn4s75IzgNCv9AWylOs5zIGPLEy2rpgDmRNhdiG4MkkRrOgSTNoPIn
-         l9sG0Ym3JKxZk34T21wj3cGympiiVJJGCe1KQ/b7HuRmGg21vW6nM1SNwJFzvWeSk6xa
-         oNM5x6QNzWAU5sHV+Wo1lVBwE1U8bcJs0QxuRHFnIaI4cX9NMuqK73tLM6wSnEVtr+pE
-         r3B7pYTg9m4advyFy8JQg0TgJd23KvC3WvamaEUSk/ARe0RjlBKN/rGymat1LEqYEsJ+
-         SUk/a3vRNUtL3JcpZCR5cZKzFEj1rsk0pp7EUaVwTmPN1FYgwOfrUh8Cfsg5lLCevzyY
-         VgGQ==
-X-Gm-Message-State: AC+VfDw6l1DLrTN0xOv9DQUpQsV2pQMJxmpCMURZsdhaqDQ1SKPJd8+V
-        iCm5CB/5Y6gMYkah0doE9OEuecYLtphm+SuCVwaGgA==
-X-Google-Smtp-Source: ACHHUZ4H21WJZUtEeXdsA9kCblIuuU+osNDBnb471oQ8EPJnmWP8nRHU6ZFKqcwHBIwabdTrIxaupWJndZQjBAvtOJs=
-X-Received: by 2002:a05:6e02:18ca:b0:329:3f69:539e with SMTP id
- s10-20020a056e0218ca00b003293f69539emr208186ilu.2.1683179488546; Wed, 03 May
- 2023 22:51:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230503211801.897735-1-acme@kernel.org> <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
- <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
-In-Reply-To: <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 3 May 2023 22:51:15 -0700
-Message-ID: <CAP-5=fUNmiguiW+sv19EpGVVsrBD7dnVm4uMLOuutOo7_LUR=A@mail.gmail.com>
-Subject: Re: [GIT PULL] perf tools changes for v6.4
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Thu, 4 May 2023 03:15:12 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 128DA1731;
+        Thu,  4 May 2023 00:15:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683184511; x=1714720511;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CyVV9r/J36vPs8Amt+XKv1VeMXKDAyxKEBpx5xFq2aw=;
+  b=ex6despMTO3wjAQv806SU0oqdpyZLlWCFQBNYtqha6W326Qo6feXnYlU
+   h7D96wnrJ4MaaeSVvAw5Qon/ttybf3J3DHdZ4TPnfEcNyEpwkx7dP1gtV
+   aHW3D7PYhGm5+VnguQSgsvhBEA+WLZbVx4Umzo/+FN06wX7Rv8MXUoOSr
+   bQpyVozEhKg9XsydNkJClKUB05iSxJdMM1CQGrsv/O+pBtimfg5YlEIcd
+   ji75oHgWKxfxXSQEq7cHUtM2NbDtHi6Dg7AXSeYB0S+JeobWWdfclDeGf
+   9hccH5s8PAqSoHMkUnaKsU1BDOziV1Dz5dWZEUip+nZQHHAwsF02UzIaQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="346326356"
+X-IronPort-AV: E=Sophos;i="5.99,249,1677571200"; 
+   d="scan'208";a="346326356"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2023 00:15:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10699"; a="699729388"
+X-IronPort-AV: E=Sophos;i="5.99,249,1677571200"; 
+   d="scan'208";a="699729388"
+Received: from dmi-pnp-i7.sh.intel.com ([10.239.159.155])
+  by fmsmga007.fm.intel.com with ESMTP; 04 May 2023 00:14:43 -0700
+From:   Dapeng Mi <dapeng1.mi@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, James Clark <james.clark@arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhang Tinghao <tinghao.zhang@intel.com>,
+        Dapeng Mi <dapeng1.mi@intel.com>,
+        Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: [PATCH v2] perf/x86/intel: Define bit macros for FixCntrCtl MSR
+Date:   Thu,  4 May 2023 15:21:28 +0800
+Message-Id: <20230504072128.3653470-1-dapeng1.mi@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 3, 2023 at 8:12=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Wed, May 3, 2023 at 8:00=E2=80=AFPM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > I did consider it, but the end result doesn't even build, so I unpulled=
- again..
-> >
-> > I get some libbpf error, and I'm just not interested in trying to
-> > debug it. This has clearly not been tested well enough to be merged.
->
-> Side note: its' not even about testing.
->
-> The error message makes it clear that this is garbage and should never
-> be merged even if it were to compile.
->
-> There is not a way in hell that it is correct that a 'perf' tool build
-> should ever even look at the vmlinux binary to build.
->
-> The fact that it does shows that something is seriously wrong in
-> perf-tool land, and I will not be touching any pulls until that
-> fundamental mistake is entirely gone.
->
-> The vmlinux image that is present in my tree (ie
-> /home/torvalds/v2.6/linux/vmlinux) is a test build with an insane
-> config. And the fact that the perf tool even looks at it is seriously
-> broken.
->
-> Whatever you are doing - stop it right now.
->
->                Linus
+Define bit macros for FixCntrCtl MSR and replace the bit hardcoding
+with these bit macros. This would make code be more human-readable.
 
-I think the error you gave makes it pretty clear what is going on and
-Arnaldo's e-mail explains the motivation. Perhaps we can check a
-vmlinux.h into the perf tree so that we don't default to generating
-it. This would avoid the binary dependency but we may need different
-flavors for different architectures because of structs like pt_regs.
+Perf commands 'perf stat -e "instructions,cycles,ref-cycles"' and
+'perf record -e "instructions,cycles,ref-cycles"' pass.
 
-Thanks,
-Ian
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+---
+ arch/x86/events/intel/core.c      | 18 +++++++++---------
+ arch/x86/include/asm/perf_event.h | 10 ++++++++++
+ 2 files changed, 19 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index a3fb996a86a1..7beebbd15343 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2451,7 +2451,7 @@ static void intel_pmu_disable_fixed(struct perf_event *event)
+ 
+ 	intel_clear_masks(event, idx);
+ 
+-	mask = 0xfULL << ((idx - INTEL_PMC_IDX_FIXED) * 4);
++	mask = intel_fixed_bits_by_idx(idx - INTEL_PMC_IDX_FIXED, INTEL_FIXED_BITS_MASK);
+ 	cpuc->fixed_ctrl_val &= ~mask;
+ }
+ 
+@@ -2750,25 +2750,25 @@ static void intel_pmu_enable_fixed(struct perf_event *event)
+ 	 * if requested:
+ 	 */
+ 	if (!event->attr.precise_ip)
+-		bits |= 0x8;
++		bits |= INTEL_FIXED_0_ENABLE_PMI;
+ 	if (hwc->config & ARCH_PERFMON_EVENTSEL_USR)
+-		bits |= 0x2;
++		bits |= INTEL_FIXED_0_USER;
+ 	if (hwc->config & ARCH_PERFMON_EVENTSEL_OS)
+-		bits |= 0x1;
++		bits |= INTEL_FIXED_0_KERNEL;
+ 
+ 	/*
+ 	 * ANY bit is supported in v3 and up
+ 	 */
+ 	if (x86_pmu.version > 2 && hwc->config & ARCH_PERFMON_EVENTSEL_ANY)
+-		bits |= 0x4;
++		bits |= INTEL_FIXED_0_ANYTHREAD;
+ 
+ 	idx -= INTEL_PMC_IDX_FIXED;
+-	bits <<= (idx * 4);
+-	mask = 0xfULL << (idx * 4);
++	bits = intel_fixed_bits_by_idx(idx, bits);
++	mask = intel_fixed_bits_by_idx(idx, INTEL_FIXED_BITS_MASK);
+ 
+ 	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip) {
+-		bits |= ICL_FIXED_0_ADAPTIVE << (idx * 4);
+-		mask |= ICL_FIXED_0_ADAPTIVE << (idx * 4);
++		bits |= intel_fixed_bits_by_idx(idx, ICL_FIXED_0_ADAPTIVE);
++		mask |= intel_fixed_bits_by_idx(idx, ICL_FIXED_0_ADAPTIVE);
+ 	}
+ 
+ 	cpuc->fixed_ctrl_val &= ~mask;
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 8fc15ed5e60b..d879dbf62284 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -32,11 +32,21 @@
+ #define ARCH_PERFMON_EVENTSEL_INV			(1ULL << 23)
+ #define ARCH_PERFMON_EVENTSEL_CMASK			0xFF000000ULL
+ 
++#define INTEL_FIXED_BITS_MASK				0xFULL
++#define INTEL_FIXED_BITS_STRIDE			4
++#define INTEL_FIXED_0_KERNEL				(1ULL << 0)
++#define INTEL_FIXED_0_USER				(1ULL << 1)
++#define INTEL_FIXED_0_ANYTHREAD			(1ULL << 2)
++#define INTEL_FIXED_0_ENABLE_PMI			(1ULL << 3)
++
+ #define HSW_IN_TX					(1ULL << 32)
+ #define HSW_IN_TX_CHECKPOINTED				(1ULL << 33)
+ #define ICL_EVENTSEL_ADAPTIVE				(1ULL << 34)
+ #define ICL_FIXED_0_ADAPTIVE				(1ULL << 32)
+ 
++#define intel_fixed_bits_by_idx(_idx, _bits)			\
++	((_bits) << ((_idx) * INTEL_FIXED_BITS_STRIDE))
++
+ #define AMD64_EVENTSEL_INT_CORE_ENABLE			(1ULL << 36)
+ #define AMD64_EVENTSEL_GUESTONLY			(1ULL << 40)
+ #define AMD64_EVENTSEL_HOSTONLY				(1ULL << 41)
+-- 
+2.34.1
+
