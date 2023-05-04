@@ -2,191 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E93C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 20:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE930C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 20:38:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231948AbjEDUbW (ORCPT
+        id S231254AbjEDUi0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 16:31:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39866 "EHLO
+        Thu, 4 May 2023 16:38:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232024AbjEDUbH (ORCPT
+        with ESMTP id S229506AbjEDUiL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 16:31:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 962D82155C
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 13:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683231399;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/CxSMEostxLiZatH9TiyyAVyAfzpb47ON2iWXP0TsyU=;
-        b=CdiS9W5tVjNaMwY4hWEx0PtcqcqP3IGKG9tOJQKKbiMc6gG9wm/osoHi+Lzn6rB/7WdWCA
-        NjkkE95e3ZIMwi357ymy3PmbNGBzhaaGwav/4ELDLOOP6WcMsj9Dx5jv++NYG9mPpuX+jM
-        vHRuzlr/nY8hsTuM6butTJ1/rUbtT0k=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-643-LonMkh6yNXuoi5co3KfoZQ-1; Thu, 04 May 2023 16:16:36 -0400
-X-MC-Unique: LonMkh6yNXuoi5co3KfoZQ-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7460D3810B1A;
-        Thu,  4 May 2023 20:16:34 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.24])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1AA82492C13;
-        Thu,  4 May 2023 20:16:26 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Thu,  4 May 2023 22:16:22 +0200 (CEST)
-Date:   Thu, 4 May 2023 22:16:14 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Wander Lairson Costa <wander@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thu, 4 May 2023 16:38:11 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD16191EE
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 13:31:41 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-b8f6bef3d4aso1967228276.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 13:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683232245; x=1685824245;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uf90B0DNuv78Zar9yEbDcO4xMMRYhft3uy0mg3u42Sk=;
+        b=sFQLlLIFZAhaYfJD5jfeXBrvNutgr5IEjPwCdAswSQPiVrruOeSGDV6qFW2z0c4nBy
+         C/BGxfqhPKdAbJX6M0qamgmr1G7qNBHLW+7QblXe4fUI8cgngnZNmjBWFYg3hkalOW6k
+         68fhVksoUZiUmPQbAPDwJs36Wk0TOErD0vr/7R6bn1mF15/r+BcDHehogM1U6KiC+C2a
+         ok/Jkqfs15HUpLfNNnVoNxUodiUPtgBRrfmZ7GTw5I/P0v28qHW2RBjbJZ61je355YcT
+         ZGRbAT1j6PRfAcsQFP+FbTZDfYOh+MgZQlSPe8dhKTk/Eu6mb2kP0KnrZCcjgnYcJ2eD
+         xwgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683232245; x=1685824245;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uf90B0DNuv78Zar9yEbDcO4xMMRYhft3uy0mg3u42Sk=;
+        b=JWy8eb/+gQusO992sPpmKvAvVBHvferWDjmMbW7JasMQ0OjRm5VUGeGKQd7v98iQR8
+         0VJc3n0JxilLzRjZ+YQtwlL5h4l6095QfdvTbHyIC40VT/nqeerQBeCzptbkjptjqKPa
+         M3o5yeTsuZ6W5O/8qhJh1a8g+HaBdbgfOw9wNuBlygvX08fXJSui8vwlC5ZYqCx/y93/
+         RCFUyI7PnmAN3PZGjJ3NFGNjp86vgdKzX94RFsTUbNiieq0WE1eIWXVWWQZVZVdHb4gF
+         A59hiS1GFHeRCggrIMJoPtJ+WJ0Wk6mb3Ur6IjIQmyZP9NeAW16kwXtX7Ype46PkRr3S
+         y/Uw==
+X-Gm-Message-State: AC+VfDzovmKA2lHAmF7v9tn+YoX7YyeE3rx47VbIyRvf3UcCwjCfOXhj
+        AEV+x3vzzDNysREgd3tQG/qXXI/V5eHT
+X-Google-Smtp-Source: ACHHUZ5D6oBfEWsjyxziFTJx5Gel0+EXHSwY0SgDL1ePNM78CRemBZVMsSyesUUrhKYz5oE4MEut4UEFSWec
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3367:2fed:395f:6f64])
+ (user=irogers job=sendgmr) by 2002:a25:52d5:0:b0:b9a:7088:d95 with SMTP id
+ g204-20020a2552d5000000b00b9a70880d95mr666862ybb.0.1683230297329; Thu, 04 May
+ 2023 12:58:17 -0700 (PDT)
+Date:   Thu,  4 May 2023 12:58:03 -0700
+In-Reply-To: <20230504195803.3331775-1-irogers@google.com>
+Message-Id: <20230504195803.3331775-2-irogers@google.com>
+Mime-Version: 1.0
+References: <20230504195803.3331775-1-irogers@google.com>
+X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
+Subject: [PATCH v1 2/2] perf stat: Document --metric-no-threshold and
+ threshold colors
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Brian Cain <bcain@quicinc.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christian Brauner <brauner@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>, Hu Chunyu <chuhu@redhat.com>,
-        Paul McKenney <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v7 2/3] sched/task: Add the put_task_struct_atomic_safe()
- function
-Message-ID: <20230504201614.GB4164@redhat.com>
-References: <20230425114307.36889-1-wander@redhat.com>
- <20230425114307.36889-3-wander@redhat.com>
- <20230504084229.GI1734100@hirez.programming.kicks-ass.net>
- <20230504122945.GA28757@redhat.com>
- <20230504143303.GA1744142@hirez.programming.kicks-ass.net>
- <CAAq0SUmYrQbS1k9NNKGQP7hQRQJ308dk9NCiUimEiLeBJUavgA@mail.gmail.com>
- <20230504152306.GA1135@redhat.com>
- <CAAq0SU=G0WQBLP77Wgm8MJRcVwUCj25WOowh_X8jiGiHTKAQEA@mail.gmail.com>
- <20230504192246.GA4164@redhat.com>
- <CAAq0SUkJ40OeS3cRzhK3voGquJ1AFahYoyQ1fgWS+N=DkOQpig@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAq0SUkJ40OeS3cRzhK3voGquJ1AFahYoyQ1fgWS+N=DkOQpig@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>
+Cc:     Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Wander,
+Document the threshold behavior for -M/--metrics.
 
-I certainly missed something ;) plus I am already sleeping. but let me try to
-reply anyway.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Documentation/perf-stat.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-On 05/04, Wander Lairson Costa wrote:
-> On Thu, May 4, 2023 at 4:23 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > On 05/04, Wander Lairson Costa wrote:
-> > >
-> > > On Thu, May 4, 2023 at 12:23 PM Oleg Nesterov <oleg@redhat.com> wrote:
-> > > >
-> > > > Yes, but as Sebastian explained CONFIG_PROVE_RAW_LOCK_NESTING won't like it.
-> > > >
-> > > >         https://lore.kernel.org/all/Y+zFNrCjBn53%2F+Q2@linutronix.de/
-> > > >
-> > >
-> > > I think that was my confusion in that thread. My understanding is that
-> > > CONFIG_PROVE_RAW_LOCK_NESTING will check lock ordering but not
-> > > context.
-> >
-> > Sorry, I don't understand... perhaps I missed something. But iiuc
-> > the problem is simple.
-> >
-> > So, this code
-> >
-> >         raw_spin_lock(one);
-> >         spin_lock(two);
-> >
-> > is obviously wrong if CONFIG_PREEMPT_RT.
-> >
-> > Without PREEMPT_RT this code is fine because raw_spinlock_t and spinlock_t
-> > are the same thing. Except they have different lockdep annotations if
-> > CONFIG_PROVE_RAW_LOCK_NESTING is true, LD_WAIT_SPIN and LD_WAIT_CONFIG.
-> >
-> > So if CONFIG_PROVE_RAW_LOCK_NESTING is set, lockdep will complain even
-> > on the !PREEMPT_RT kernel, iow it checks the nesting as if the code runs
-> > on with PREEMPT_RT.
-> >
-> > Cough... not sure my explanation can help ;) It looks very confusing when
-> > I read it.
-> >
->
-> Thanks for the explanation. That's my understanding too. The part I
-> don't get is why this would fail with a call_rcu() inside
-> put_task_struct().
-
-the problem is that call_rcu() won't be called if !IS_ENABLED(PREEMPT_RT),
-___put_task_struct() will be called.
-
-CONFIG_PROVE_RAW_LOCK_NESTING can't know this can't happen if PREEMPT_RT
-is set.
-
-IOW. To simplify, suppose we have
-
-	// can be called in atomic context, e.g. under
-	// raw_spin_lock() so it is wrong with PREEMPT_RT
-	void __put_task_struct(struct task_struct *tsk)
-	{
-		spin_lock(some_lock);
-	}
-
-lets "fix" the code above, lets change __put_task_struct,
-
-	void __put_task_struct(struct task_struct *tsk)
-	{
-		if (!IS_ENABLED(CONFIG_PREEMPT_RT))
-			return;
-
-		spin_lock(some_lock);
-	}
-
-Now, if CONFIG_PREEMPT_RT is true then __put_task_struct() is fine
-wrt lock nesting.
-
-But, if CONFIG_PREEMPT_RT is not set, then __put_task_struct() still
-does the same:
-
-	void __put_task_struct(struct task_struct *tsk)
-	{
-		spin_lock(some_lock);
-	}
-
-and CONFIG_PROVE_RAW_LOCK_NESTING will complain. Because, once again,
-it checks the nesting as if CONFIG_PREEMPT_RT is true, and in this case
-__put_task_struct() if it is called under raw_spin_lock().
-
-Oleg.
+diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+index 29bdcfa93f04..ff71399db738 100644
+--- a/tools/perf/Documentation/perf-stat.txt
++++ b/tools/perf/Documentation/perf-stat.txt
+@@ -353,6 +353,15 @@ small group that need not have multiplexing is lowered. This option
+ forbids the event merging logic from sharing events between groups and
+ may be used to increase accuracy in this case.
+ 
++--metric-no-threshold::
++Metric thresholds may increase the number of events necessary to
++compute whether a metric has exceeded its threshold expression. This
++may not be desirable, for example, as the events can introduce
++multiplexing. This option disables the adding of threshold expression
++events for a metric. However, if there are sufficient events to
++compute the threshold then the threshold is still computed and used to
++color the metric's computed value.
++
+ --quiet::
+ Don't print output, warnings or messages. This is useful with perf stat
+ record below to only write data to the perf.data file.
+@@ -389,6 +398,12 @@ For a group all metrics from the group are added.
+ The events from the metrics are automatically measured.
+ See perf list output for the possible metrics and metricgroups.
+ 
++	When threshold information is available for a metric, the
++	color red is used to signify a metric has exceeded a threshold
++	while green shows it is hasn't. The default color means that
++	no threshold information was available or the threshold
++	couldn't be computed.
++
+ -A::
+ --no-aggr::
+ Do not aggregate counts across all monitored CPUs.
+-- 
+2.40.1.521.gf1e218fcd8-goog
 
