@@ -2,130 +2,171 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 652DCC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 18:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E82DDC7EE21
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 18:50:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbjEDSg2 (ORCPT
+        id S229678AbjEDSuX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 14:36:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38630 "EHLO
+        Thu, 4 May 2023 14:50:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbjEDSg1 (ORCPT
+        with ESMTP id S229460AbjEDSuW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 14:36:27 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8336761B1;
-        Thu,  4 May 2023 11:36:21 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-96598a7c5e0so138610266b.3;
-        Thu, 04 May 2023 11:36:21 -0700 (PDT)
+        Thu, 4 May 2023 14:50:22 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B56859FB;
+        Thu,  4 May 2023 11:50:21 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-50bd37ca954so20236240a12.0;
+        Thu, 04 May 2023 11:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683225380; x=1685817380;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7SN19wDNYmU4q+XSqNk7FwWu0e+B21E4gPwmpCjIg2w=;
-        b=AFp8jRlFwOgqYRC8iQqyvfOdG1oTQmfbyCnpPRnYnXDc4mKAqJEVxAXBmi7KEolldg
-         83pq7e/lV+pkYBib08bQzL5nKyixKeZ43SOacXQkieoOaOD/5M1y4BhV5KO4CuoIldxe
-         LZ7+Iq/5HrSgm7BNJu/e3qph+MRZcdTWGdpZCmkd4q6O0JNO9CaDIu+hu9kgPBy6Qwmc
-         i/oQVC72NIBsqJ7p1usfbg+nI9LJFkdQnYPkHAgxMlgt6Tiy5kcL1rdVDayUqplnY/op
-         NWLhibHoPyZ3WDjdRJsRo6KPYfP0/NdXQT56SlWjulP53Tc5byMs6z3cpWv9cDegJ4N4
-         BWbA==
+        d=gmail.com; s=20221208; t=1683226220; x=1685818220;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=edJ8JLxHdVmfwm25SDvTJnz/EoID7nCi8CNvbRMsr/Y=;
+        b=HxyUUBEfrNH5+wdQIphnaH4JkB8Qm+HXNhXQrIdD1YlKC6+E23iqMKXUzLeqX8RgaG
+         3mcS8X3Iz+zi3sHXrz6RQcGMG1vVcUmKuw3s5jiC1eApSYToTo2qTU69u8Dg2D9hmzUl
+         b0gXDCLDrzGP+tGLwiLKfgrvBMCseMU9vSvCNjW4j13iqN+x7P+fDfjVldVvuiZYV8bO
+         Tv7t7v7PjJ1ergexjbbTaUPdTyBDAHCfBlkxfJlIDNXzqgCOM9nG6c6jaqH/tIprdi/D
+         7C396sHI9PMxUtYD7vvRNgpBPlCLOKnJMY5G8h4Pzke3/IdF2U3Fshi2/xj8yeFmNu8y
+         tcyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683225380; x=1685817380;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7SN19wDNYmU4q+XSqNk7FwWu0e+B21E4gPwmpCjIg2w=;
-        b=eRSi6BiHYaqCdnJJyZtxzgsARhjugtNWb7IDILVLOfuqxpFwWezKAZSwaTmY5UYKkK
-         qFWyqr17EvqQMLTVeqF1zBZAGMBMlaZuvxL1p7/ainWo1noiqvBpBETgZvNPfJBUKAIP
-         7wwEb5wbs/82TlNgjJ9e0y8CjM3MJLi2W2/cjoWKBhNg7V5WIxFwsuJqW1xRxSud0jPz
-         L9//TTZLqW6eLgoDc4vH4iw7sM253j7BtNW2O3TPyA4zUUPTa0o8pmwd1EEEYKXIERin
-         fGSHMgvCz1Xd1Cwp+72BFdoBTAy+7uMBOgGFXKCz2sLCV6WbjcufLtXtnfUuQNzPXCdQ
-         JGjA==
-X-Gm-Message-State: AC+VfDy4ZOvcIeMDynWZYAZZce0GLGHkFNpk5ioHkwJ5KX32KEYwEh+k
-        yQSyczIxY72BGGDQj/2PGYE=
-X-Google-Smtp-Source: ACHHUZ7MFl1r5scwPi69aSlFCp5ZglXSrr//bvB8gP7PMR4+VkfxcDY6MOidFs/slXG3O344G4WHfw==
-X-Received: by 2002:a17:907:25c2:b0:94e:75f8:668 with SMTP id ae2-20020a17090725c200b0094e75f80668mr7983708ejc.56.1683225379501;
-        Thu, 04 May 2023 11:36:19 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id e1-20020a17090681c100b0094f67ea6598sm18991631ejx.193.2023.05.04.11.36.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 May 2023 11:36:19 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Thu, 4 May 2023 20:36:16 +0200
-To:     Ian Rogers <irogers@google.com>
+        d=1e100.net; s=20221208; t=1683226220; x=1685818220;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=edJ8JLxHdVmfwm25SDvTJnz/EoID7nCi8CNvbRMsr/Y=;
+        b=lwA7KiZTOiZ4rEQmTGmGAREwdmOE9ErP+qacwpr+VMhJI85Fw1abhSAu5zchN6qByY
+         mWeMcL+sUrQgML0TFyRfDZ/T3RVGs68DWYRghKSfqO6+gGjWsFFFzOmH6EVhYqWXUGcO
+         SiWbjM8Bit2ltw297mLlDrhRb6V5FDGdI0L8e4uWiQL9opNHKlOU3Pu3eYY/1G1ySonQ
+         WbRhFjl6RR1S4FgmFLstqYjL4AxnldRPbBCZ1G2Bi0VCdRwSUVTAWENDZLQJzOUXJsZA
+         YRmxzc1hoKqY0+66rWZerFYN+GmupQqn/68aJl+NhGxGqp3LUEC/AkCywWJlMgyrHdVY
+         uWFw==
+X-Gm-Message-State: AC+VfDzijT+kda8WjhDUf5D0EKmyNunx6C5rbS+dpq82gu/5U9oXh1Jq
+        L2iI4WDWu/A2HQc1IrDpZLAZRfbBW+6IpmXP94M=
+X-Google-Smtp-Source: ACHHUZ52x83gTQbqorZt8NGXn7JbLU/aP4toWSIImadejp+0ctw/o0wBBwgz0Lun7/jvdNMDfvSgB0zi9Fzvzd/kBzo=
+X-Received: by 2002:a17:907:36c6:b0:94f:432f:243d with SMTP id
+ bj6-20020a17090736c600b0094f432f243dmr6222943ejc.17.1683226219529; Thu, 04
+ May 2023 11:50:19 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230503211801.897735-1-acme@kernel.org> <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
+ <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
+ <ZFOSUab5XEJD0kxj@kernel.org> <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
+ <ZFPw0scDq1eIzfHr@kernel.org>
+In-Reply-To: <ZFPw0scDq1eIzfHr@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 4 May 2023 11:50:07 -0700
+Message-ID: <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
+Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Song Liu <song@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
         Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, James Clark <james.clark@arm.com>,
+        Hao Luo <haoluo@google.com>, Ian Rogers <irogers@google.com>,
+        James Clark <james.clark@arm.com>,
         Kan Liang <kan.liang@linux.intel.com>,
         Roman Lozko <lozko.roma@gmail.com>,
         Stephane Eranian <eranian@google.com>,
         Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [GIT PULL] perf tools changes for v6.4
-Message-ID: <ZFP7IFEKdyx5NRYN@krava>
-References: <20230503211801.897735-1-acme@kernel.org>
- <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
- <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
- <CAP-5=fUNmiguiW+sv19EpGVVsrBD7dnVm4uMLOuutOo7_LUR=A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUNmiguiW+sv19EpGVVsrBD7dnVm4uMLOuutOo7_LUR=A@mail.gmail.com>
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 03, 2023 at 10:51:15PM -0700, Ian Rogers wrote:
-> On Wed, May 3, 2023 at 8:12 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Wed, May 3, 2023 at 8:00 PM Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:
-> > >
-> > > I did consider it, but the end result doesn't even build, so I unpulled again..
-> > >
-> > > I get some libbpf error, and I'm just not interested in trying to
-> > > debug it. This has clearly not been tested well enough to be merged.
-> >
-> > Side note: its' not even about testing.
-> >
-> > The error message makes it clear that this is garbage and should never
-> > be merged even if it were to compile.
-> >
-> > There is not a way in hell that it is correct that a 'perf' tool build
-> > should ever even look at the vmlinux binary to build.
-> >
-> > The fact that it does shows that something is seriously wrong in
-> > perf-tool land, and I will not be touching any pulls until that
-> > fundamental mistake is entirely gone.
-> >
-> > The vmlinux image that is present in my tree (ie
-> > /home/torvalds/v2.6/linux/vmlinux) is a test build with an insane
-> > config. And the fact that the perf tool even looks at it is seriously
-> > broken.
-> >
-> > Whatever you are doing - stop it right now.
-> >
-> >                Linus
-> 
-> I think the error you gave makes it pretty clear what is going on and
-> Arnaldo's e-mail explains the motivation. Perhaps we can check a
-> vmlinux.h into the perf tree so that we don't default to generating
-> it. This would avoid the binary dependency but we may need different
-> flavors for different architectures because of structs like pt_regs.
+On Thu, May 4, 2023 at 10:52=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Thu, May 04, 2023 at 10:25:30AM -0700, Linus Torvalds escreveu:
+> > On Thu, May 4, 2023 at 4:09=E2=80=AFAM Arnaldo Carvalho de Melo <acme@k=
+ernel.org> wrote:
+> > > Does building runqslower works for you in this same environment where
+> > > building perf failed?
+>
+> > I don't know, and I don't care. I've never used that thing, and I'm
+> > not going to.
+>
+> > And it's irrelevant. Two wrongs do not make a right.
+>
+> > I'm going to ignore perf tools pulls going forward if this is the kind
+> > of argument for garbage that you use.
+>
+> > Because a billion flies *can* be wrong.
+>
+> I pushed two reverts there that make this back into a
+> opt-in/experimental feature till we fix the issue you reported:
+>
+> =E2=AC=A2[acme@toolbox perf-tools]$ git log --oneline -3
+> e7b7a54767a71c67 (HEAD -> perf-tools, acme/perf-tools) Revert "perf build=
+: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL"
+> 6957bdf37a1e6eca Revert "perf build: Warn for BPF skeletons if endian mis=
+matches"
+> 1f85d016768ff19f (tag: perf-tools-for-v6.4-1-2023-05-03) perf test record=
++probe_libc_inet_pton: Fix call chain match on x86_64
+> =E2=AC=A2[acme@toolbox perf-tools]$
+>
+> Its in:
+>
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-tools
+>
+> Using a vmlinux.h file built by bpftool from the BTF info, be it in a
+> vmlinux file or in /sys/kernel/btf/vmlinux (a RAW BTF file) is used for
+> building the BPF bytecode, using clang:
+>
+> =E2=AC=A2[acme@toolbox perf-tools]$ head tools/perf/util/bpf_skel/sample_=
+filter.bpf.c
+> // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> // Copyright (c) 2023 Google
+> #include "vmlinux.h"
+> #include <bpf/bpf_helpers.h>
+> #include <bpf/bpf_tracing.h>
+> #include <bpf/bpf_core_read.h>
+>
+> #include "sample-filter.h"
+>
+> /* BPF map that will be filled by user space */
+> =E2=AC=A2[acme@toolbox perf-tools]$
+>
+> So that it can access kernel types and store the type info for those
+> types together with the BPF bytecode, as BTF info, and later use this
+> and relocation records for libbpf to be able to adjust things when
+> accessed data structures change in the kernel and needs adjustments
+> based in both the kernel BTF info (/sys/kernel/btf/vmlinux) and the
+> BPF bytecode being loaded (in its .BTF ELF section).
+>
+> Andrii, can you add some more information about the usage of vmlinux.h
+> instead of using kernel headers?
+>
 
-I think we could check that vmlinux with .BTF is present before
-allowing to build skeletons
+I'll just say that vmlinux.h is not a hard requirement to build BPF
+programs, it's more a convenience allowing easy access to definitions
+of both UAPI and kernel-internal structures for tracing needs and
+marking them relocatable using BPF CO-RE machinery. Lots of real-world
+applications just check-in pregenerated vmlinux.h to avoid build-time
+dependency on up-to-date host kernel and such.
 
-jirka
+If vmlinux.h generation and usage is causing issues, though, given
+that perf's BPF programs don't seem to be using many different kernel
+types, it might be a better option to just use UAPI headers for public
+kernel type definitions, and just define CO-RE-relocatable minimal
+definitions locally in perf's BPF code for the other types necessary.
+E.g., if perf needs only pid and tgid from task_struct, this would
+suffice:
+
+struct task_struct {
+    int pid;
+    int tgid;
+} __attribute__((preserve_access_index));
+
+> - Arnaldo
