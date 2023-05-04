@@ -2,155 +2,264 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 700E6C7EE21
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 19:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02330C77B78
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 20:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229706AbjEDTjS (ORCPT
+        id S232381AbjEDUV3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 15:39:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45272 "EHLO
+        Thu, 4 May 2023 16:21:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjEDTjR (ORCPT
+        with ESMTP id S232416AbjEDUVJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 15:39:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DB5061AF
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 12:38:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683229110;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xVAk0B1QqY/UI3sXcpLYnSi0ySDnKl0NNcM0I1JlNjk=;
-        b=cU94WEN3Zhd9srOppON/pB92MY2OcMBeTpk09f6Sm+S+ARcuQLfCtGMpGRzPebWTgoz/7h
-        R7V03fsGbaJREgAFJVVXLvCGMaxBl4E8qssRKRa7hSSB5vvCCoxHtchOIEiC80aDi68oMz
-        m7C12u2m+1EG9nqyKPXaVtBFpeNhXNM=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-67-Vp4iWJyFP3CrRk387qw07g-1; Thu, 04 May 2023 15:38:29 -0400
-X-MC-Unique: Vp4iWJyFP3CrRk387qw07g-1
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-64115ef7234so10086188b3a.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 12:38:28 -0700 (PDT)
+        Thu, 4 May 2023 16:21:09 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA22D1156E
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 13:07:04 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-1aaff728c24so7011355ad.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 13:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683230757; x=1685822757;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/r9KGpkW5PSBM9D941BUL0+gJYwAE5n4IR7E5or+wxM=;
+        b=A+F+1nGkKZNvXnCdhaSW0gZ2uEJuFYqqUUdbC3zWxTYzxgX6KVINf2otMJ8dqWRt99
+         NKXrSOy62iASlHDMPWp19rygyNrbD6ndINRinFfJxJH1mqwtIk6wuiPvRwSjxpHcxl+H
+         enjOC846aQGQXd3grzYaU7lM3JkgU3GWh10DyisJ9nxEexeZ4vTQNYImFY8V0KK4m7eN
+         9ygmebTC9TU7jt80un3GIL0BtT56peh96lplLuDtYgdpzh4MrAB4v6jebrM93a5rhx2o
+         1jwCB1lKAzqETCC5st9b0TuTeukiuyLOwVKZUXk8slTGaQhH/kDORhKh7qoKGF0KBnNf
+         05cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683229108; x=1685821108;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xVAk0B1QqY/UI3sXcpLYnSi0ySDnKl0NNcM0I1JlNjk=;
-        b=JrmIPF91Gs6JEHa2qhnU2F6idTuc5CVnLsaaxbVgbcgIq/KHvSKoPRSbdlQQC7quun
-         Zl5F5kvEVk7b1wuqBUhVGdPjZ7oy0b2c4EgWm7fEmhy7oXZytWMDrE93QmOwUkOU1RBA
-         /VN2472IEJbT0oLNg/TWOojVDO1FgyqfnrTGDj+WJ6CwhUyGJz9FqCbhno8C+jVjS5r5
-         qM9zynVXKB8PM5iaRFlah442UXlLoM/AV2qNBMt3Wfl4M4dAQIMwGwqNQq4Mfp60PkgL
-         aJdTaA2PcaplVaLDZfpkoxHTx9OtGDPnRo6oQoMROi/+8aeKa+vXvXsTFjuLSWszh99t
-         Ka2w==
-X-Gm-Message-State: AC+VfDwF0ygJm1F0bnMgzSf7rT66ysdbA4GQkLaRCSkMKwyh/bfFwpvy
-        3t/z9631WcFvHqwZoEIBuvNGi3i4VwtSyh96NkGvv0QEMMt3fyUc+AqAcySBXAdnJez+iaN3xOM
-        kwxvDxo03os75xaxyJ0bmqs7aZqMo2TPeoS9g186q+bGLQQ==
-X-Received: by 2002:a17:90b:38c2:b0:24d:f67d:7177 with SMTP id nn2-20020a17090b38c200b0024df67d7177mr3649813pjb.20.1683229108049;
-        Thu, 04 May 2023 12:38:28 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6QFf9sqCL3Da0AB8FzBJJgX/71RAWq6l/veLikhvZrfzwgKF5/Scrc2BUNg8lpLteQf6+AOIz1M2OtAxDaAfw=
-X-Received: by 2002:a17:90b:38c2:b0:24d:f67d:7177 with SMTP id
- nn2-20020a17090b38c200b0024df67d7177mr3649760pjb.20.1683229107692; Thu, 04
- May 2023 12:38:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230425114307.36889-1-wander@redhat.com> <20230425114307.36889-3-wander@redhat.com>
- <20230504084229.GI1734100@hirez.programming.kicks-ass.net>
- <20230504122945.GA28757@redhat.com> <20230504143303.GA1744142@hirez.programming.kicks-ass.net>
- <CAAq0SUmYrQbS1k9NNKGQP7hQRQJ308dk9NCiUimEiLeBJUavgA@mail.gmail.com>
- <20230504152306.GA1135@redhat.com> <CAAq0SU=G0WQBLP77Wgm8MJRcVwUCj25WOowh_X8jiGiHTKAQEA@mail.gmail.com>
- <20230504192246.GA4164@redhat.com>
-In-Reply-To: <20230504192246.GA4164@redhat.com>
-From:   Wander Lairson Costa <wander@redhat.com>
-Date:   Thu, 4 May 2023 16:38:16 -0300
-Message-ID: <CAAq0SUkJ40OeS3cRzhK3voGquJ1AFahYoyQ1fgWS+N=DkOQpig@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] sched/task: Add the put_task_struct_atomic_safe() function
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        d=1e100.net; s=20221208; t=1683230757; x=1685822757;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/r9KGpkW5PSBM9D941BUL0+gJYwAE5n4IR7E5or+wxM=;
+        b=aqCq2wWC37hSKWMWCxdEWd8EM2WVh5KFEmRwXYBoc7UapOD0r4f/NHh+WBw6iXWiUO
+         VL4/zEoW+On0YWhwkWmU/63phaVLlWWFEqn8fUNTLvk/ARHVpfMYBuF50Alyn+KT8Q0x
+         KQo8EBGqobZRKFDh+ZkUqXqWVaPecryfTOW0EcCcoy9RaodV9pKHvrWCJNFZLLAZuYr5
+         WSfMGWUKQ23Dm09SrSYfwNcrFoMFZRIes5pN1vLLugtU3SXi0a4/1cTmGj08bl4UsUWm
+         6aSo2829QABGBwIzfNXmr/jURcrdjhqDwrnDp5bNBmbjdahpSI5G2tdZIL6fhqmJZpPa
+         9uGQ==
+X-Gm-Message-State: AC+VfDxyR9JdpYZoLZbSt0AZ1ZlremJtxfe6Y5d3dEWKp67XKEZ3k59l
+        gOjTph1mH198RRQVirlN0WOFjP4wog0G
+X-Google-Smtp-Source: ACHHUZ72tuOd4ycu57tLPZJN/WIH3wq4S5qp9AaiBLzc58+OfgrMXhnv3k26K2Uh8T+qFJeqz4q2QD8tP0yt
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3367:2fed:395f:6f64])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1804:b0:b9d:c27c:3442 with SMTP
+ id cf4-20020a056902180400b00b9dc27c3442mr452307ybb.9.1683230294858; Thu, 04
+ May 2023 12:58:14 -0700 (PDT)
+Date:   Thu,  4 May 2023 12:58:02 -0700
+Message-Id: <20230504195803.3331775-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
+Subject: [PATCH v1 1/2] perf expr: Make the evaluation of & and | logical and lazy
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Brian Cain <bcain@quicinc.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christian Brauner <brauner@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>, Hu Chunyu <chuhu@redhat.com>,
-        Paul McKenney <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>
+Cc:     Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 4, 2023 at 4:23=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wrot=
-e:
->
-> On 05/04, Wander Lairson Costa wrote:
-> >
-> > On Thu, May 4, 2023 at 12:23=E2=80=AFPM Oleg Nesterov <oleg@redhat.com>=
- wrote:
-> > >
-> > > Yes, but as Sebastian explained CONFIG_PROVE_RAW_LOCK_NESTING won't l=
-ike it.
-> > >
-> > >         https://lore.kernel.org/all/Y+zFNrCjBn53%2F+Q2@linutronix.de/
-> > >
-> >
-> > I think that was my confusion in that thread. My understanding is that
-> > CONFIG_PROVE_RAW_LOCK_NESTING will check lock ordering but not
-> > context.
->
-> Sorry, I don't understand... perhaps I missed something. But iiuc
-> the problem is simple.
->
-> So, this code
->
->         raw_spin_lock(one);
->         spin_lock(two);
->
-> is obviously wrong if CONFIG_PREEMPT_RT.
->
-> Without PREEMPT_RT this code is fine because raw_spinlock_t and spinlock_=
-t
-> are the same thing. Except they have different lockdep annotations if
-> CONFIG_PROVE_RAW_LOCK_NESTING is true, LD_WAIT_SPIN and LD_WAIT_CONFIG.
->
-> So if CONFIG_PROVE_RAW_LOCK_NESTING is set, lockdep will complain even
-> on the !PREEMPT_RT kernel, iow it checks the nesting as if the code runs
-> on with PREEMPT_RT.
->
-> Cough... not sure my explanation can help ;) It looks very confusing when
-> I read it.
->
+Currently the & and | operators are only used in metric thresholds
+like (from the tma_retiring metric):
+tma_retiring > 0.7 | tma_heavy_operations > 0.1
 
-Thanks for the explanation. That's my understanding too. The part I
-don't get is why this would fail with a call_rcu() inside
-put_task_struct().
+Thresholds are always computed when present, but a lack events may
+mean the threshold can't be computed. This happens with the option
+--metric-no-threshold for say the metric tma_retiring on Tigerlake
+model CPUs. To fully compute the threshold tma_heavy_operations is
+needed and it needs the extra events of IDQ.MS_UOPS,
+UOPS_DECODED.DEC0, cpu/UOPS_DECODED.DEC0,cmask=1/ and
+IDQ.MITE_UOPS. So --metric-no-threshold is a useful option to reduce
+the number of events needed and potentially multiplexing of events.
 
-> Oleg.
->
+Rather than just fail threshold computations like this, we may know a
+result from just the left or right-hand side. So, for tma_retiring if
+its value is "> 0.7" we know it is over the threshold. This allows the
+metric to have the threshold coloring, when possible, without all the
+counters being programmed.
+
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/expr.c | 40 +++++++++++++++++++
+ tools/perf/util/expr.y  | 86 +++++++++++++++++++++++++++++++++--------
+ 2 files changed, 109 insertions(+), 17 deletions(-)
+
+diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+index cbf0e0c74906..45c7fedb797a 100644
+--- a/tools/perf/tests/expr.c
++++ b/tools/perf/tests/expr.c
+@@ -184,6 +184,46 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+ 			NULL, ctx) == 0);
+ 	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
+ 
++	/* The expression is a constant 0.0 without needing to evaluate EVENT1. */
++	expr__ctx_clear(ctx);
++	TEST_ASSERT_VAL("find ids",
++			expr__find_ids("0 & EVENT1 > 0", NULL, ctx) == 0);
++	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
++	expr__ctx_clear(ctx);
++	TEST_ASSERT_VAL("find ids",
++			expr__find_ids("EVENT1 > 0 & 0", NULL, ctx) == 0);
++	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
++	expr__ctx_clear(ctx);
++	TEST_ASSERT_VAL("find ids",
++			expr__find_ids("1 & EVENT1 > 0", NULL, ctx) == 0);
++	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
++	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
++	expr__ctx_clear(ctx);
++	TEST_ASSERT_VAL("find ids",
++			expr__find_ids("EVENT1 > 0 & 1", NULL, ctx) == 0);
++	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
++	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
++
++	/* The expression is a constant 1.0 without needing to evaluate EVENT1. */
++	expr__ctx_clear(ctx);
++	TEST_ASSERT_VAL("find ids",
++			expr__find_ids("1 | EVENT1 > 0", NULL, ctx) == 0);
++	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
++	expr__ctx_clear(ctx);
++	TEST_ASSERT_VAL("find ids",
++			expr__find_ids("EVENT1 > 0 | 1", NULL, ctx) == 0);
++	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
++	expr__ctx_clear(ctx);
++	TEST_ASSERT_VAL("find ids",
++			expr__find_ids("0 | EVENT1 > 0", NULL, ctx) == 0);
++	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
++	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
++	expr__ctx_clear(ctx);
++	TEST_ASSERT_VAL("find ids",
++			expr__find_ids("EVENT1 > 0 | 0", NULL, ctx) == 0);
++	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
++	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
++
+ 	/* Test toplogy constants appear well ordered. */
+ 	expr__ctx_clear(ctx);
+ 	TEST_ASSERT_VAL("#num_cpus", expr__parse(&num_cpus, ctx, "#num_cpus") == 0);
+diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+index 250e444bf032..6b110f9f95c9 100644
+--- a/tools/perf/util/expr.y
++++ b/tools/perf/util/expr.y
+@@ -123,20 +123,6 @@ static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
+  * constant value using OP. Its invariant that there are no ids.  If computing
+  * ids for non-constants union the set of IDs that must be computed.
+  */
+-#define BINARY_LONG_OP(RESULT, OP, LHS, RHS)				\
+-	if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
+-		assert(LHS.ids == NULL);				\
+-		assert(RHS.ids == NULL);				\
+-		if (isnan(LHS.val) || isnan(RHS.val)) {			\
+-			RESULT.val = NAN;				\
+-		} else {						\
+-			RESULT.val = (long)LHS.val OP (long)RHS.val;	\
+-		}							\
+-		RESULT.ids = NULL;					\
+-	} else {							\
+-	        RESULT = union_expr(LHS, RHS);				\
+-	}
+-
+ #define BINARY_OP(RESULT, OP, LHS, RHS)					\
+ 	if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
+ 		assert(LHS.ids == NULL);				\
+@@ -213,9 +199,75 @@ expr: NUMBER
+ }
+ | ID				{ $$ = handle_id(ctx, $1, compute_ids, /*source_count=*/false); }
+ | SOURCE_COUNT '(' ID ')'	{ $$ = handle_id(ctx, $3, compute_ids, /*source_count=*/true); }
+-| expr '|' expr { BINARY_LONG_OP($$, |, $1, $3); }
+-| expr '&' expr { BINARY_LONG_OP($$, &, $1, $3); }
+-| expr '^' expr { BINARY_LONG_OP($$, ^, $1, $3); }
++| expr '|' expr
++{
++	if (is_const($1.val) && is_const($3.val)) {
++		assert($1.ids == NULL);
++		assert($3.ids == NULL);
++		$$.ids = NULL;
++		$$.val = (fpclassify($1.val) == FP_ZERO && fpclassify($3.val) == FP_ZERO) ? 0 : 1;
++	} else if (is_const($1.val)) {
++		assert($1.ids == NULL);
++		if (fpclassify($1.val) == FP_ZERO) {
++			$$ = $3;
++		} else {
++			$$.val = 1;
++			$$.ids = NULL;
++			ids__free($3.ids);
++		}
++	} else if (is_const($3.val)) {
++		assert($3.ids == NULL);
++		if (fpclassify($3.val) == FP_ZERO) {
++			$$ = $1;
++		} else {
++			$$.val = 1;
++			$$.ids = NULL;
++			ids__free($1.ids);
++		}
++	} else {
++		$$ = union_expr($1, $3);
++	}
++}
++| expr '&' expr
++{
++	if (is_const($1.val) && is_const($3.val)) {
++		assert($1.ids == NULL);
++		assert($3.ids == NULL);
++		$$.val = (fpclassify($1.val) != FP_ZERO && fpclassify($3.val) != FP_ZERO) ? 1 : 0;
++		$$.ids = NULL;
++	} else if (is_const($1.val)) {
++		assert($1.ids == NULL);
++		if (fpclassify($1.val) != FP_ZERO) {
++			$$ = $3;
++		} else {
++			$$.val = 0;
++			$$.ids = NULL;
++			ids__free($3.ids);
++		}
++	} else if (is_const($3.val)) {
++		assert($3.ids == NULL);
++		if (fpclassify($3.val) != FP_ZERO) {
++			$$ = $1;
++		} else {
++			$$.val = 0;
++			$$.ids = NULL;
++			ids__free($1.ids);
++		}
++	} else {
++		$$ = union_expr($1, $3);
++	}
++}
++| expr '^' expr
++{
++	if (is_const($1.val) && is_const($3.val)) {
++		assert($1.ids == NULL);
++		assert($3.ids == NULL);
++		$$.val = (fpclassify($1.val) == FP_ZERO) != (fpclassify($3.val) == FP_ZERO) ? 1 : 0;
++		$$.ids = NULL;
++	} else {
++		$$ = union_expr($1, $3);
++	}
++}
+ | expr '<' expr { BINARY_OP($$, <, $1, $3); }
+ | expr '>' expr { BINARY_OP($$, >, $1, $3); }
+ | expr '+' expr { BINARY_OP($$, +, $1, $3); }
+-- 
+2.40.1.521.gf1e218fcd8-goog
 
