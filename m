@@ -2,96 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272CAC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 10:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05193C77B78
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 11:01:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbjEDKQ3 (ORCPT
+        id S229877AbjEDLBe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 06:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46412 "EHLO
+        Thu, 4 May 2023 07:01:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230056AbjEDKQ2 (ORCPT
+        with ESMTP id S229767AbjEDLBd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 06:16:28 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28472128;
-        Thu,  4 May 2023 03:16:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gsECIUQqgZWVmtyCs0d/qSHL8f2CR0oUbiSXmdx/aXQ=; b=ecdF9meQsYMxekqiG3qKkBDmlm
-        xkitMCwc7VbbEApg3ONkQVzJxyCCMXrZ2iYfpTk28l3dEDvvTAqrJ5KYEwihCsLrh/BAoOMAPQX0G
-        OT3u3/v0XpgAgK1lTQ7Dovu9hM9N91ywoxF8em0kPFuH5ejSswlH4Rr3vEl5dtgKY6DlKETRslQHN
-        U9NMeWkktgPy9+fvLrlyEmMiC7mw4tPZn/2GYyN00uzMfIhxdUQ0UaB+1+esgxEpt6RFcMcHiIpem
-        MPd44oLPklrGyz516qpf9q/sAMLiO8EVYkEWf1qjiIZP92GgXPAtrEiKmghZX/qBmCqFnC/Q1MGm8
-        KC8471/w==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1puW0O-001hzF-22;
-        Thu, 04 May 2023 10:16:08 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E96EF3003CF;
-        Thu,  4 May 2023 12:16:06 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CA78F241A3588; Thu,  4 May 2023 12:16:06 +0200 (CEST)
-Date:   Thu, 4 May 2023 12:16:06 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kernel test robot <yujie.liu@intel.com>
-Cc:     kan.liang@linux.intel.com, oe-lkp@lists.linux.dev, lkp@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, eranian@google.com, ak@linux.intel.com
-Subject: Re: [PATCH V4 2/2] perf/x86/intel/ds: Delay the threshold update
-Message-ID: <20230504101606.GA1735197@hirez.programming.kicks-ass.net>
-References: <20230421184529.3320912-2-kan.liang@linux.intel.com>
- <202304251457.d108dbb3-yujie.liu@intel.com>
- <20230504091123.GJ1734100@hirez.programming.kicks-ass.net>
+        Thu, 4 May 2023 07:01:33 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2066.outbound.protection.outlook.com [40.107.223.66])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85E385267;
+        Thu,  4 May 2023 04:01:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O3OP1zm50qzi7+GQPsTl9OSDiS1cC9HW1EAUpRtw5D32LEg9quendC+wTM6Yvbbf/7aeSGZF8IN21w+6FDCgyCNvIq2XZY7H5yeuRNybmxKVIMBxH5dvu+BhSAfv9KMMbA/g9FNmU7a55RgvRmLXWb4JdLQHE3llOKdXwAE0D6yfXO/etq+CSJgf7O1kDGAzk+Kpou+5x6Vlu3vTEUleGH/f50B9KEmJ6HcnT5Uii1xbI25l4m6wovmmYwPIu6oWDNuaPLEdHNr6FYTrDohi5YfMeyQG/TDQsoroEv/HAopUppAn/niF5FhqWX7/YEosnWABSXU0WndosQYJM/LScA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eZZRwxw0UjB16HJlKKUAcKfxCQURFPqKoJRqpPDi8BY=;
+ b=Jcon7Qe0YcaRI/JkjKFMnc3MQQ7KT5CRGJ0z3gdoC+NfsATU798AiGbea61wDWgM2LxlWnbi1e5p164Cpr33OZFTJCDhv14+aOGPHUiH/NVXhDNMFNV8F7ShaQg9oSJoMOA/ergDvR+5GWpEUCH7FElauDte16ct567rc2VVBOiWAQZZPIzHTqx3FvtWJtv9ubE64lEHx55DaZiXjZyymqtg+sdnMS0emv9UQqw2lZNIzrG7m+Z1Y91Oejs5MwV2CIAjE762TFClGTJLlnb5mbjQHAIvE+jS/XdgQVzqmfV5obcNJEdFEkOpz9jchDaYc2wI0VU2AIjr0JKes0eG0A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eZZRwxw0UjB16HJlKKUAcKfxCQURFPqKoJRqpPDi8BY=;
+ b=pVjb1/vucHwLGvCeCZva+yOEoRHhPDPZK8ExIdvXmzVjws+HO/eqVdGxRpx0hBMC1uRpTTAIxEGa1smHMN09wURhx8JWIBEyOXb30n0NjoIHIRELRcn56zNQrjT36vDwYs9yXpL1D67Lmqm2fUswDhpr+oPaxrHJin8xSQHiEb0=
+Received: from DM6PR12CA0031.namprd12.prod.outlook.com (2603:10b6:5:1c0::44)
+ by SA1PR12MB6917.namprd12.prod.outlook.com (2603:10b6:806:24c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.20; Thu, 4 May
+ 2023 11:01:24 +0000
+Received: from DM6NAM11FT076.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:1c0:cafe::b) by DM6PR12CA0031.outlook.office365.com
+ (2603:10b6:5:1c0::44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.27 via Frontend
+ Transport; Thu, 4 May 2023 11:01:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT076.mail.protection.outlook.com (10.13.173.204) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6363.26 via Frontend Transport; Thu, 4 May 2023 11:01:23 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 4 May
+ 2023 06:00:18 -0500
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <peterz@infradead.org>
+CC:     <ravi.bangoria@amd.com>, <namhyung@kernel.org>,
+        <eranian@google.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <jolsa@kernel.org>, <irogers@google.com>, <bp@alien8.de>,
+        <kan.liang@linux.intel.com>, <adrian.hunter@intel.com>,
+        <maddy@linux.ibm.com>, <x86@kernel.org>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sandipan.das@amd.com>, <ananth.narayan@amd.com>,
+        <santosh.shukla@amd.com>
+Subject: [PATCH v4 0/4] perf: Rework event forwarding logic
+Date:   Thu, 4 May 2023 16:29:59 +0530
+Message-ID: <20230504110003.2548-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230504091123.GJ1734100@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT076:EE_|SA1PR12MB6917:EE_
+X-MS-Office365-Filtering-Correlation-Id: f36c6e9c-549f-43d4-1fc1-08db4c8ee687
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zrfm4kjnk+/KBCi/5P7ERy6+MnUrVz1EuTbUncQyZnmquhhNiOm4x3Zz8rcodEjW2ToS/vtBnXodVzPPuQ22B4yv/eNQxHcYPOm2VrOH925jlSWe0Ipb2GPJAZJ2Viyeg8eRtFTRoGfzYd81weClQUfteJ3QSMwBZ5LhNZUCxgCUZ9oFKfsk1hDhoxG6ImubEuEsZyUJugBQYjWhklDLnDUAa6SimqSCMRPzg3uI1FS4/DA4yD05WukEuv1Omdp3kMIsIRTbHjv/KaSxXEVtdv1WS0QY3OFj1fiZnPnU/+H2y2Ci3wuimXbhdDkbnnW9hKDKAjiyWuLfXdmpNxQyFJqqn2F3RtC431EVUS+P8wm1qLokg1f+YnQPTkyJM+UD63qNAMBVPkG+iQPWZLj6HIvIBvz6MA+9S8zgZrcVEAHtxfUQBY8Cfw4pCXBB3T7AqZ/LztYrE4V2hKnThA/2UsMufOA3FHcfapwPs+7YxpqMCl4D2G0cmlf5UQ+SmN+kvs3Q/MSR7SVI9Eb+tPP4LrH1xEnI9ep5RRbVAakskupeut9cPrAXM2Ia3Lcs1jCu00OwZxisJvFkGInbJ+2UweEwkH0HQ26OGNWP091lLLU74slycz9egQ5iGYkXVQm0MQlxkM6gLAlcXZ2Zf4rGc4NaJu7jMsF40VoOhJ4CP5VDyV55/v5YrefP4h0L46oLWZFY4uxyyEQc4XRmm1WNcwtfnMIq29XM9dHOuEKnCio=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(136003)(39860400002)(346002)(451199021)(46966006)(36840700001)(40470700004)(2906002)(70206006)(70586007)(44832011)(86362001)(2616005)(82310400005)(426003)(36756003)(336012)(7416002)(5660300002)(478600001)(8676002)(8936002)(966005)(40460700003)(6916009)(40480700001)(4326008)(41300700001)(6666004)(54906003)(316002)(7696005)(82740400003)(16526019)(26005)(186003)(81166007)(1076003)(356005)(83380400001)(47076005)(36860700001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2023 11:01:23.8801
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: f36c6e9c-549f-43d4-1fc1-08db4c8ee687
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT076.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6917
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 04, 2023 at 11:11:23AM +0200, Peter Zijlstra wrote:
-> On Tue, Apr 25, 2023 at 03:16:29PM +0800, kernel test robot wrote:
-> > Hello,
-> > 
-> > kernel test robot noticed "Kernel_panic-not_syncing:Timeout:Not_all_CPUs_entered_broadcast_exception_handler" on:
-> > 
-> > commit: a17c97370d1fb9b2eac75c85136a1f70ec44eded ("[PATCH V4 2/2] perf/x86/intel/ds: Delay the threshold update")
-> > url: https://github.com/intel-lab-lkp/linux/commits/kan-liang-linux-intel-com/perf-x86-intel-ds-Delay-the-threshold-update/20230422-024743
-> > base: https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git 15def34e2635ab7e0e96f1bc32e1b69609f14942
-> > patch link: https://lore.kernel.org/all/20230421184529.3320912-2-kan.liang@linux.intel.com/
-> > patch subject: [PATCH V4 2/2] perf/x86/intel/ds: Delay the threshold update
-> > 
-> > in testcase: kvm-unit-tests-qemu
-> > 
-> > compiler: gcc-11
-> > test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapphire Rapids) with 256G memory
-> > 
-> > (please refer to attached dmesg/kmsg for entire log/backtrace)
-> > 
-> > 
-> > If you fix the issue, kindly add following tag
-> > | Reported-by: kernel test robot <yujie.liu@intel.com>
-> > | Link: https://lore.kernel.org/oe-lkp/202304251457.d108dbb3-yujie.liu@intel.com
-> > 
-> > 
-> > [  179.997768][ T2324] 2023-04-23 15:30:10 ./run_tests.sh
-> > ...
-> > [  180.442663][T20263] x86/split lock detection: #AC: qemu-system-x86/20263 took a split_lock trap at address: 0x1e3
-> > [  182.372875][ T2324] 
-> 
-> I'm going to try and replicate this on my ADL which should have
-> split_lock crud on. How does one run this kvm-unit-test stuff, inside
-> kvm or on bare metal?
+Usually, events are opened on the same pmu as requested by user via
+perf_event_attr->type argument. But certain special events are
+internally redirected to different pmu. Currently such pmus needs to
+be treated specially and thus requires some gruesome hacks.
 
-Bare metal it is..
+An approach, suggested by Peter Zijlstra, to get rid of these hacks
+was to overwrite event attributes with new pmu's attribute values
+within the kernel and let perf_event_init() retry opening the event
+with overwritten values. This patch series implements it.
 
-Anyway, on the ADL I can see the split lock thing with or without the
-patches in question so thta can't be it.
+v3: https://lore.kernel.org/r/20230425142205.762-1-ravi.bangoria@amd.com
+v3->v4:
+ - Split pmu linear searching changes into a separate patch with few
+   additional changes.
+ - Use special pointer value (void *)(~0) instead of introducing new
+   variable to skip creating sysfs/dev files.
+ - Move AMD IBS unit test under tools/perf/arch/x86/tests/
+
+Patches are prepared on v6.3.
+
+Ravi Bangoria (4):
+  perf/core: Rework forwarding of {task|cpu}-clock events
+  perf/ibs: Fix interface via core pmu events
+  perf/core: Remove pmu linear searching code
+  perf test: Add selftest to test IBS invocation via core pmu events
+
+ arch/x86/events/amd/core.c                    |   2 +-
+ arch/x86/events/amd/ibs.c                     |  53 ++++----
+ arch/x86/include/asm/perf_event.h             |   2 +
+ include/linux/perf_event.h                    |  10 ++
+ kernel/events/core.c                          | 114 +++++++++---------
+ tools/perf/arch/x86/include/arch-tests.h      |   1 +
+ tools/perf/arch/x86/tests/Build               |   1 +
+ .../arch/x86/tests/amd-ibs-via-core-pmu.c     |  71 +++++++++++
+ tools/perf/arch/x86/tests/arch-tests.c        |   2 +
+ 9 files changed, 168 insertions(+), 88 deletions(-)
+ create mode 100644 tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c
+
+-- 
+2.40.0
+
