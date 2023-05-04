@@ -2,129 +2,123 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC136C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 17:52:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD0B4C7EE25
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 18:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229472AbjEDRwZ (ORCPT
+        id S229598AbjEDSWM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 13:52:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46210 "EHLO
+        Thu, 4 May 2023 14:22:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjEDRwW (ORCPT
+        with ESMTP id S229758AbjEDSWK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 13:52:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2841759FF;
-        Thu,  4 May 2023 10:52:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 4 May 2023 14:22:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF6FF65B5
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 11:21:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683224484;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xk9N1SAae40jiJ+7feKN65ej6E8xOtfFm29HAuZRStU=;
+        b=P39ijnvZwoRsyAdcVJ7tEOdZmzgXRkoWFMYT3q/YyVvO9J08xKmqUJHI/l2kMj5e4kvk1L
+        vexlWlHYmZju2Q+C2I2eCG/LeV1WfftlbPiNEa/UosuUFb3+em77KWqI9mipfTjns5PcA1
+        BXYQG3oL3f92TPYTjXhYWzL6Otz8uY4=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-151-qpzBBuZNPiaemdq36FY2fw-1; Thu, 04 May 2023 14:21:21 -0400
+X-MC-Unique: qpzBBuZNPiaemdq36FY2fw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 922E763634;
-        Thu,  4 May 2023 17:52:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B763DC433EF;
-        Thu,  4 May 2023 17:52:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683222740;
-        bh=A2w7Y71QqLt52hr0tlxUZFVDq7F6B+lT1dL7dRq4zpc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ap8YPEnAH1XR8SFijaOYftny778ROMrxFYLjCqRYBXknC6lhSv2AffeF+9f4b3n8f
-         0of9tsL8zKp+0wy8knnjVL4FCUVFbW5fA4ZwnZWJgO6dxWZRFVNdHr4HTCOBWgKqYy
-         UmcaVpn3aa9mSBGLp8z2MVQG3vPVhgDOZd5nRESSbZ+bDrDTCKPS2qu22r7eSLFCdA
-         QDbEAZxEaQ/Ivh4+pibiWAEvqNhCahxXRvbC/QN/9TUuDASCkqf6bkROCHCTpLojDl
-         /15XpTeW0vtNJOj8e2n2YN3Ap7nNG78vyWjctWvxF0gzjMwUGzHG30RVqXUV/8Dd5u
-         CUCj2ANnYyriA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2368F403B5; Thu,  4 May 2023 14:52:18 -0300 (-03)
-Date:   Thu, 4 May 2023 14:52:18 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Song Liu <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 17A9538149A8;
+        Thu,  4 May 2023 18:21:20 +0000 (UTC)
+Received: from fedora (unknown [10.22.9.13])
+        by smtp.corp.redhat.com (Postfix) with SMTP id AE10940BC79A;
+        Thu,  4 May 2023 18:21:12 +0000 (UTC)
+Date:   Thu, 4 May 2023 15:21:11 -0300
+From:   Wander Lairson Costa <wander@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, Ian Rogers <irogers@google.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
-Message-ID: <ZFPw0scDq1eIzfHr@kernel.org>
-References: <20230503211801.897735-1-acme@kernel.org>
- <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
- <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
- <ZFOSUab5XEJD0kxj@kernel.org>
- <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
+        Will Deacon <will@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Brian Cain <bcain@quicinc.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christian Brauner <brauner@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>, Hu Chunyu <chuhu@redhat.com>,
+        Paul McKenney <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v7 2/3] sched/task: Add the put_task_struct_atomic_safe()
+ function
+Message-ID: <cjhvb72qrqggom5gxdjz6mtz3bntlmznx7r52adz72z2t2edzr@hwcog2pltfaq>
+References: <20230425114307.36889-1-wander@redhat.com>
+ <20230425114307.36889-3-wander@redhat.com>
+ <20230504084229.GI1734100@hirez.programming.kicks-ass.net>
+ <20230504122945.GA28757@redhat.com>
+ <20230504143303.GA1744142@hirez.programming.kicks-ass.net>
+ <CAAq0SUmYrQbS1k9NNKGQP7hQRQJ308dk9NCiUimEiLeBJUavgA@mail.gmail.com>
+ <20230504152424.GG1744258@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20230504152424.GG1744258@hirez.programming.kicks-ass.net>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, May 04, 2023 at 10:25:30AM -0700, Linus Torvalds escreveu:
-> On Thu, May 4, 2023 at 4:09 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > Does building runqslower works for you in this same environment where
-> > building perf failed?
- 
-> I don't know, and I don't care. I've never used that thing, and I'm
-> not going to.
- 
-> And it's irrelevant. Two wrongs do not make a right.
- 
-> I'm going to ignore perf tools pulls going forward if this is the kind
-> of argument for garbage that you use.
- 
-> Because a billion flies *can* be wrong.
+On Thu, May 04, 2023 at 05:24:24PM +0200, Peter Zijlstra wrote:
+> On Thu, May 04, 2023 at 11:55:15AM -0300, Wander Lairson Costa wrote:
+> 
+> > > Then I'm thinking something trivial like so:
+> > >
+> > > static inline void put_task_struct(struct task_struct *t)
+> > > {
+> > >         if (!refcount_dec_and_test(&t->usage))
+> > >                 return;
+> > >
+> > >         if (IS_ENABLED(CONFIG_PREEMPT_RT) && !preemptible())
+> > >                 call_rcu(&t->rcu, __put_task_struct_rcu);
+> > >
+> > >         __put_task_struct(t);
+> > > }
+> > >
+> > 
+> > That's what v5 [1] does. What would be the path in this case? Should I
+> > resend it as v8?
+> 
+> It's almost what v5 does. v5 also has a !in_task() thing. v5 also
+> violates codingstyle :-)
 
-I pushed two reverts there that make this back into a
-opt-in/experimental feature till we fix the issue you reported:
+IIRC, the in_task() is there because preemptible() doesn't check if it
+is running in interrupt context.
 
-⬢[acme@toolbox perf-tools]$ git log --oneline -3
-e7b7a54767a71c67 (HEAD -> perf-tools, acme/perf-tools) Revert "perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL"
-6957bdf37a1e6eca Revert "perf build: Warn for BPF skeletons if endian mismatches"
-1f85d016768ff19f (tag: perf-tools-for-v6.4-1-2023-05-03) perf test record+probe_libc_inet_pton: Fix call chain match on x86_64
-⬢[acme@toolbox perf-tools]$
+> 
+> But yeah.. something like that.
+> 
 
-Its in:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-tools
-
-Using a vmlinux.h file built by bpftool from the BTF info, be it in a
-vmlinux file or in /sys/kernel/btf/vmlinux (a RAW BTF file) is used for
-building the BPF bytecode, using clang:
-
-⬢[acme@toolbox perf-tools]$ head tools/perf/util/bpf_skel/sample_filter.bpf.c
-// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-// Copyright (c) 2023 Google
-#include "vmlinux.h"
-#include <bpf/bpf_helpers.h>
-#include <bpf/bpf_tracing.h>
-#include <bpf/bpf_core_read.h>
-
-#include "sample-filter.h"
-
-/* BPF map that will be filled by user space */
-⬢[acme@toolbox perf-tools]$
-
-So that it can access kernel types and store the type info for those
-types together with the BPF bytecode, as BTF info, and later use this
-and relocation records for libbpf to be able to adjust things when
-accessed data structures change in the kernel and needs adjustments
-based in both the kernel BTF info (/sys/kernel/btf/vmlinux) and the
-BPF bytecode being loaded (in its .BTF ELF section).
-
-Andrii, can you add some more information about the usage of vmlinux.h
-instead of using kernel headers?
-
-- Arnaldo
