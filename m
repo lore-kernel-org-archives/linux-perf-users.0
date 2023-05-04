@@ -2,68 +2,42 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D34FC77B78
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 17:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC136C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 17:52:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbjEDRZw (ORCPT
+        id S229472AbjEDRwZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 13:25:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56316 "EHLO
+        Thu, 4 May 2023 13:52:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbjEDRZv (ORCPT
+        with ESMTP id S229449AbjEDRwW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 13:25:51 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE80E449C
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 10:25:50 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-95f4c5cb755so135673466b.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 10:25:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1683221149; x=1685813149;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lcRi0OT1PHOb52J7+pfe7c0giAH6vTm1G5lOY/4eLy8=;
-        b=CZUeay9KmIpxmvT92te1g7tEn9Xl5R6m+Vvl9GmmyRtdEK1Owtwl8HtvfLnN0pC020
-         NiXyIpB0BlsYjgdv5U5Bf2/VpqY5u2n1Yu/bzHP0btBkoV2zd5r0dQrYjALm2BLtVrf4
-         IjB/LsxIM2IdJ1grCg0purYszkhGnDKRI/VPA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683221149; x=1685813149;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lcRi0OT1PHOb52J7+pfe7c0giAH6vTm1G5lOY/4eLy8=;
-        b=K8Nk/EyBaNGvwyYDBbSHT+G3j4M3whAMhYANnbMCVi2tmyLRX4dORzNHRESVwDfyEg
-         jLZ2WmRbouMO/qTmDngK5e44HvjSmsYFOeZRX2EfUPcdrW3fki7b0Cm3yrd8cqTWRAcF
-         fN0Fuduvk55u9EePWcd6HL9qRDUL5tZJIkRztBcxbjwLziu84chH0XCvtlyV+G0xthi8
-         EBB+C3n/xCiXsHSlEjS/ehxBABdPFrTaxWfQ7fypN998fqnACBDxxAuzYRR0yQ+adrbv
-         6xRhfkbBYUxn7g4BmDmchSaN1hjFGZY5wgE6SC6qO09LDOCb4wtlZEQ6bmZCwnkjbo2f
-         CaQQ==
-X-Gm-Message-State: AC+VfDwL+NIk9mVkmrLWMHh8LtOKRHWaQqJvN4Aih8b/PqbdJSCo8qCG
-        ONtse3EArR4CkynZqaktkB41pOOQp5sR3SVyV/x9GWLp
-X-Google-Smtp-Source: ACHHUZ40UgrSr0/4duGrMA8HunztA4JdXCGaD1w9ApurcF23Vet79SMGpTt9U/3Qw/xLwWtA8kq0dQ==
-X-Received: by 2002:a17:907:9288:b0:953:3e29:f35c with SMTP id bw8-20020a170907928800b009533e29f35cmr6804584ejc.45.1683221149064;
-        Thu, 04 May 2023 10:25:49 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id ia22-20020a170907a07600b0096595cc0810sm1675435ejc.72.2023.05.04.10.25.48
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 04 May 2023 10:25:48 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-50bcb229adaso1494404a12.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 10:25:48 -0700 (PDT)
-X-Received: by 2002:a17:907:984:b0:94f:9acc:65c9 with SMTP id
- bf4-20020a170907098400b0094f9acc65c9mr6254599ejc.66.1683221148020; Thu, 04
- May 2023 10:25:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230503211801.897735-1-acme@kernel.org> <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
- <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com> <ZFOSUab5XEJD0kxj@kernel.org>
-In-Reply-To: <ZFOSUab5XEJD0kxj@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 4 May 2023 10:25:30 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
-Message-ID: <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
-Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+        Thu, 4 May 2023 13:52:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2841759FF;
+        Thu,  4 May 2023 10:52:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 922E763634;
+        Thu,  4 May 2023 17:52:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B763DC433EF;
+        Thu,  4 May 2023 17:52:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683222740;
+        bh=A2w7Y71QqLt52hr0tlxUZFVDq7F6B+lT1dL7dRq4zpc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ap8YPEnAH1XR8SFijaOYftny778ROMrxFYLjCqRYBXknC6lhSv2AffeF+9f4b3n8f
+         0of9tsL8zKp+0wy8knnjVL4FCUVFbW5fA4ZwnZWJgO6dxWZRFVNdHr4HTCOBWgKqYy
+         UmcaVpn3aa9mSBGLp8z2MVQG3vPVhgDOZd5nRESSbZ+bDrDTCKPS2qu22r7eSLFCdA
+         QDbEAZxEaQ/Ivh4+pibiWAEvqNhCahxXRvbC/QN/9TUuDASCkqf6bkROCHCTpLojDl
+         /15XpTeW0vtNJOj8e2n2YN3Ap7nNG78vyWjctWvxF0gzjMwUGzHG30RVqXUV/8Dd5u
+         CUCj2ANnYyriA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2368F403B5; Thu,  4 May 2023 14:52:18 -0300 (-03)
+Date:   Thu, 4 May 2023 14:52:18 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Song Liu <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -81,26 +55,76 @@ Cc:     Song Liu <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
         Stephane Eranian <eranian@google.com>,
         Thomas Richter <tmricht@linux.ibm.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
+Message-ID: <ZFPw0scDq1eIzfHr@kernel.org>
+References: <20230503211801.897735-1-acme@kernel.org>
+ <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
+ <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
+ <ZFOSUab5XEJD0kxj@kernel.org>
+ <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 4, 2023 at 4:09=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->>
-> Does building runqslower works for you in this same environment where
-> building perf failed?
+Em Thu, May 04, 2023 at 10:25:30AM -0700, Linus Torvalds escreveu:
+> On Thu, May 4, 2023 at 4:09 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > Does building runqslower works for you in this same environment where
+> > building perf failed?
+ 
+> I don't know, and I don't care. I've never used that thing, and I'm
+> not going to.
+ 
+> And it's irrelevant. Two wrongs do not make a right.
+ 
+> I'm going to ignore perf tools pulls going forward if this is the kind
+> of argument for garbage that you use.
+ 
+> Because a billion flies *can* be wrong.
 
-I don't know, and I don't care. I've never used that thing, and I'm
-not going to.
+I pushed two reverts there that make this back into a
+opt-in/experimental feature till we fix the issue you reported:
 
-And it's irrelevant. Two wrongs do not make a right.
+⬢[acme@toolbox perf-tools]$ git log --oneline -3
+e7b7a54767a71c67 (HEAD -> perf-tools, acme/perf-tools) Revert "perf build: Make BUILD_BPF_SKEL default, rename to NO_BPF_SKEL"
+6957bdf37a1e6eca Revert "perf build: Warn for BPF skeletons if endian mismatches"
+1f85d016768ff19f (tag: perf-tools-for-v6.4-1-2023-05-03) perf test record+probe_libc_inet_pton: Fix call chain match on x86_64
+⬢[acme@toolbox perf-tools]$
 
-I'm going to ignore perf tools pulls going forward if this is the kind
-of argument for garbage that you use.
+Its in:
 
-Because a billion flies *can* be wrong.
+git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf-tools
 
-           Linus
+Using a vmlinux.h file built by bpftool from the BTF info, be it in a
+vmlinux file or in /sys/kernel/btf/vmlinux (a RAW BTF file) is used for
+building the BPF bytecode, using clang:
+
+⬢[acme@toolbox perf-tools]$ head tools/perf/util/bpf_skel/sample_filter.bpf.c
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+// Copyright (c) 2023 Google
+#include "vmlinux.h"
+#include <bpf/bpf_helpers.h>
+#include <bpf/bpf_tracing.h>
+#include <bpf/bpf_core_read.h>
+
+#include "sample-filter.h"
+
+/* BPF map that will be filled by user space */
+⬢[acme@toolbox perf-tools]$
+
+So that it can access kernel types and store the type info for those
+types together with the BPF bytecode, as BTF info, and later use this
+and relocation records for libbpf to be able to adjust things when
+accessed data structures change in the kernel and needs adjustments
+based in both the kernel BTF info (/sys/kernel/btf/vmlinux) and the
+BPF bytecode being loaded (in its .BTF ELF section).
+
+Andrii, can you add some more information about the usage of vmlinux.h
+instead of using kernel headers?
+
+- Arnaldo
