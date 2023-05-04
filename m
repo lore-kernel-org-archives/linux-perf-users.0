@@ -2,179 +2,92 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9496C7EE21
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 09:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AAAC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 09:51:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230023AbjEDJsr (ORCPT
+        id S229606AbjEDJvT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 05:48:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60524 "EHLO
+        Thu, 4 May 2023 05:51:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229980AbjEDJsj (ORCPT
+        with ESMTP id S229636AbjEDJvS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 05:48:39 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E2D2359C4;
-        Thu,  4 May 2023 02:48:07 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B65832F4;
-        Thu,  4 May 2023 02:48:44 -0700 (PDT)
-Received: from [10.57.83.11] (unknown [10.57.83.11])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8A503F5A1;
-        Thu,  4 May 2023 02:47:57 -0700 (PDT)
-Message-ID: <12bf4a7f-e99c-47cf-e8e4-e2700db6c5c9@arm.com>
-Date:   Thu, 4 May 2023 10:47:53 +0100
+        Thu, 4 May 2023 05:51:18 -0400
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6E7CCD;
+        Thu,  4 May 2023 02:51:17 -0700 (PDT)
+Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-517bdc9e81dso96203a12.1;
+        Thu, 04 May 2023 02:51:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683193877; x=1685785877;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7CKov2TobfwCTjaWyM91275MatNo9xTyTP5cQswtwXI=;
+        b=fO1zG520RUJK2HUth/fLCrNJ8frC3lqpjN8VMyLgi2hyw2HCzoX+BhHzc6GsKAHF4b
+         4llZI4Y76rVMZjAzMBh7YQuiO0Hw8zl/64CyKqj6uueL+Bxs7o1I7PYrd961Napbo0G2
+         F/aqx3CoHEdyu8Y9OSq8pniKcMPl0hMr374Ox3itlV9x5OjDPVnmIWJyIQ58hbXGJFHp
+         rocT0Ffac99QEgO7LOS1R6faAmeNFrJYUxXKGx8Y3yIklAoCaJqLXF9O2HFald2rxN3l
+         UK1HeRROOzASXc0kwhVwQomAnZhejjciH9duH+hgw95NUiOjGPOCwqk6ONPnL0G9FnE0
+         Ao9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683193877; x=1685785877;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7CKov2TobfwCTjaWyM91275MatNo9xTyTP5cQswtwXI=;
+        b=aIaYrEfUbn2rR4K4DxhGAhOcf5EUdbcYmZ4jrXVRGi2BfBvHzsc8cO7Jz+5wr6Sx0t
+         APKu0+xnAeiXYEkDpeexJ5/ARRH0Vp5Ywde9aNKoUp9ZptHaljgQaZM5HVGDvllxzVFl
+         TlCHmA4A91gCbDgOAOkY+qTPvBL6aa52URLpAu7lEw7jeNeQK7p3O7GkIDiwPhl4T538
+         AeAKWgKUrCUgmwuN6uL23LXsH1GQ68/1QHCkehmUQicfFLFEeSWpthXARL1Ur3bBciUO
+         9auogBPr/z2Sd3/wQqVPyh7RhXqvuwj0dPmKpV4+0+usTpv3xAFnlraYxOauQ1B9grCn
+         J+Rw==
+X-Gm-Message-State: AC+VfDy24JwmEIzow8wbf0B7KR6iCjWReyIaZXvYBYv1zdITzyTrlViE
+        V6y0cE5lnvx1wUfki0Ty6Dw=
+X-Google-Smtp-Source: ACHHUZ63PWM4FtDd5mPwoZUgHolHaDA4Ua7GcELEIewVvQ5ajd4RAGGqGGO1vzL7Jdb2flL/6HNOjg==
+X-Received: by 2002:a17:902:e751:b0:1a9:6183:f965 with SMTP id p17-20020a170902e75100b001a96183f965mr4003552plf.60.1683193877062;
+        Thu, 04 May 2023 02:51:17 -0700 (PDT)
+Received: from localhost.localdomain ([43.132.141.8])
+        by smtp.gmail.com with ESMTPSA id bf9-20020a170902b90900b001a245b49731sm23092963plb.128.2023.05.04.02.51.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 May 2023 02:51:16 -0700 (PDT)
+From:   Quanfa Fu <quanfafu@gmail.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Quanfa Fu <quanfafu@gmail.com>
+Subject: [PATCH] perf: Remove the redundant assignment operation
+Date:   Thu,  4 May 2023 17:50:56 +0800
+Message-Id: <20230504095056.3677889-1-quanfafu@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH v2 1/5] driver/perf: Add identifier sysfs file for CMN
-Content-Language: en-GB
-To:     John Garry <john.g.garry@oracle.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1682329456-19418-2-git-send-email-renyu.zj@linux.alibaba.com>
- <df63b597-4355-b9fc-6002-5a390b1a56f5@oracle.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <df63b597-4355-b9fc-6002-5a390b1a56f5@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2023-05-01 13:38, John Garry wrote:
-> On 24/04/2023 10:44, Jing Zhang wrote:
->> To allow userspace to identify the specific implementation of the device,
->> add an "identifier" sysfs file.
->>
->> The perf tool can match the arm CMN metric through the identifier.
->>
->> Signed-off-by: Jing Zhang<renyu.zj@linux.alibaba.com>
->> ---
->>   drivers/perf/arm-cmn.c | 49 
->> +++++++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 49 insertions(+)
->>
->> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
->> index c968986..f425610 100644
->> --- a/drivers/perf/arm-cmn.c
->> +++ b/drivers/perf/arm-cmn.c
->> @@ -334,6 +334,7 @@ struct arm_cmn {
->>       struct pmu pmu;
->>       struct dentry *debug;
->> +    const char *identifier;
->>   };
->>   #define to_cmn(p)    container_of(p, struct arm_cmn, pmu)
->> @@ -1168,10 +1169,41 @@ static ssize_t arm_cmn_cpumask_show(struct 
->> device *dev,
->>       .attrs = arm_cmn_cpumask_attrs,
->>   };
->> +static ssize_t arm_cmn_identifier_show(struct device *dev,
->> +        struct device_attribute *attr, char *buf)
->> +{
->> +    struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
->> +
->> +    return sysfs_emit(buf, "%s\n", cmn->identifier);
->> +}
->> +
->> +static umode_t arm_cmn_identifier_attr_visible(struct kobject *kobj,
->> +        struct attribute *attr, int n)
->> +{
->> +    struct device *dev = kobj_to_dev(kobj);
->> +    struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
->> +
->> +    if (cmn->identifier == NULL)
->> +        return 0;
-> 
-> nit: generally if (!val) is preferred
+After commit bd2756811766 ("perf: Rewrite core context handling"), the variable
+err will be assigned a value before use, so no need to assign it to -EINVAL
+here.
 
-Although either way it can only be NULL in cases of memory corruption or 
-developers making broken changes to the driver, neither of which are 
-worth pretending to defend against.
+Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
+---
+ kernel/events/core.c | 1 -
+ 1 file changed, 1 deletion(-)
 
->> +    return attr->mode;
->> +};
->> +
->> +static struct device_attribute arm_cmn_identifier_attr =
->> +__ATTR(identifier, 0444, arm_cmn_identifier_show, NULL);
->> +
->> +static struct attribute *arm_cmn_identifier_attrs[] = {
->> +    &arm_cmn_identifier_attr.attr,
->> +    NULL
->> +};
->> +
->> +static struct attribute_group arm_cmn_identifier_attr_group = {
->> +    .attrs = arm_cmn_identifier_attrs,
->> +    .is_visible = arm_cmn_identifier_attr_visible
->> +};
->> +
->>   static const struct attribute_group *arm_cmn_attr_groups[] = {
->>       &arm_cmn_event_attrs_group,
->>       &arm_cmn_format_attrs_group,
->>       &arm_cmn_cpumask_attr_group,
->> +    &arm_cmn_identifier_attr_group,
->>       NULL
->>   };
->> @@ -2241,6 +2273,22 @@ static int arm_cmn600_of_probe(struct 
->> device_node *np)
->>       return of_property_read_u32(np, "arm,root-node", &rootnode) ?: 
->> rootnode;
->>   }
->> +const char *arm_cmn_identifier(unsigned long model)
->> +{
->> +    switch (model) {
->> +    case CMN600:
->> +        return "cmn600";
->> +    case CMN650:
->> +        return "cmn650";
->> +    case CMN700:
->> +        return "cmn700";
->> +    case CI700:
->> +        return "ci700";
->> +    default:
->> +        return NULL;
->> +    }
-> 
-> nit: I think that it would be nicer to have this per-model string stored 
-> statically in arm_cmn_acpi_match[].driver_data and 
-> arm_cmn_of_match[].data, so we have a straight lookup
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 68baa8194d9f..c57b7aebf3ee 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4752,7 +4752,6 @@ find_get_context(struct task_struct *task, struct perf_event *event)
+ 		return ctx;
+ 	}
+ 
+-	err = -EINVAL;
+ retry:
+ 	ctx = perf_lock_task_context(task, &flags);
+ 	if (ctx) {
+-- 
+2.31.1
 
-Again, I'm not really convinced how useful this coarse per-model scheme 
-is - for instance, in terms of many events, CMN-600 r3 is closer to 
-CMN-650 than it is to CMN-600 r1, so what exactly would "CMN-600" mean 
-to the user?
-
-Thanks,
-Robin.
-
->> +}
->> +
->>   static int arm_cmn_probe(struct platform_device *pdev)
->>   {
->>       struct arm_cmn *cmn;
->> @@ -2254,6 +2302,7 @@ static int arm_cmn_probe(struct platform_device 
->> *pdev)
->>       cmn->dev = &pdev->dev;
->>       cmn->model = (unsigned long)device_get_match_data(cmn->dev);
->> +    cmn->identifier = arm_cmn_identifier(cmn->model);
->>       platform_set_drvdata(pdev, cmn);
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
