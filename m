@@ -2,52 +2,52 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDFFC77B73
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CCDC77B73
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 22:14:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229913AbjEDWOs (ORCPT
+        id S229821AbjEDWOw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 18:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55828 "EHLO
+        Thu, 4 May 2023 18:14:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229802AbjEDWOs (ORCPT
+        with ESMTP id S229795AbjEDWOv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 18:14:48 -0400
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC7511DB6
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 15:14:47 -0700 (PDT)
-Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-5144a9c11c7so920831a12.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:14:47 -0700 (PDT)
+        Thu, 4 May 2023 18:14:51 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FB7120AC
+        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 15:14:50 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-643990c5373so764486b3a.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 15:14:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683238486; x=1685830486;
+        d=chromium.org; s=google; t=1683238489; x=1685830489;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q1z7mPfi+9kXcDKqT71sJAQGBxu7RyXh4JV2wfNk/es=;
-        b=nIjoIkW3p03FUu+3GxCcNYkSzcj/lDeOENMDPI4fWfUDdG7bT08Sb+dJlzfLePSU5E
-         mVGDvKwII6sScPmLx8Iom+7xMBMbGZTte6pLYZwgEDCl0uBaz3UERsDasZ//5a7Rt8ID
-         KeoANLYDUm1QrguA2OgwX0v7dqA356HU4O/WQ=
+        bh=8/SVxTc3UaBCcYMvWm7ggGzatNZYd3WDIFJWHr8ve6I=;
+        b=X19hszaOFSMqhUUTvYqKnpXKHrV30sSo3SEXBWBDST1p9/syYROS0IIkdVGQ+OBBwc
+         UOUV1W8ZrnobxsdA2rBQzkXVu5EgyHEFKYEabCh94CIJFZVhDifB8A+4LlZoZY+RhnMN
+         4c+Yj95+6/01UcWsLFOM6meTjnZu2KiTKN6lk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683238486; x=1685830486;
+        d=1e100.net; s=20221208; t=1683238489; x=1685830489;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q1z7mPfi+9kXcDKqT71sJAQGBxu7RyXh4JV2wfNk/es=;
-        b=Ku51cKZF8C5GhCpenXNpdls5RB7Tu2W17bdgpT9qUXHOtlT76Bt3ExigNE7hW/qFZU
-         6LTfrdUnNCocE0juq4ViVnJZYvR7rqEGlSdRN4s3n0fM3hemQv8dnj+uitPaOAskaLyE
-         dvnjDshyuejxL6e2eRnjWm+JVsgwpifCx7lTnbTlqrhY0CrlHn1WG/0CzjIqfgKyTcXh
-         idalKDRPPwIdzLBdePkNl4ai/+T7Z/BSejpmWb3FRmRtbFrQX1nG780DP/dddOAcJNR1
-         SyekvJuDZYembvCDajsFomS8x0xrAkVeD2qkC/3jxxL6aMBjdI/jy0Cy/k5J2yUZ2lHR
-         CYvA==
-X-Gm-Message-State: AC+VfDyIVf5sNuTmfeMbCnxZUla4vdCbyBOxWK6UuuPxiG4a/gh/iYcd
-        +jo3oN9jw+oZUQ0emS7GC1Wm+g==
-X-Google-Smtp-Source: ACHHUZ6srX3RLh0nySv1vg2bjN5I3jzdANZ2xcZbCkodBOlfCv7QBn4Vf3SuhK63bPEngQxlNTdd2A==
-X-Received: by 2002:a05:6a20:7f8f:b0:f8:ac26:b899 with SMTP id d15-20020a056a207f8f00b000f8ac26b899mr4830221pzj.0.1683238486722;
-        Thu, 04 May 2023 15:14:46 -0700 (PDT)
+        bh=8/SVxTc3UaBCcYMvWm7ggGzatNZYd3WDIFJWHr8ve6I=;
+        b=k9zfd96Jjy7JPa4uAV4UdySG7LhOl4KiFVBPFd2D8FvlXQJld9wjUJhINvev7NLVkS
+         W58GfMS6m+Hh+HK6122uYDcdAr0iaTSHr2+R6rTkRAAu+h3JPfQF5YSclDR5fFXlb52W
+         QsO27T75SoE5yK+GrdA0QYdIDGN8rtlr8TkgfxQm8IoVN6HB84h9gpUCZ46KbZhpJyYB
+         jXy9/IoX6wnhET/gIwCYDxWmaKkldOTyZUGzusqe242TMVZKF161m1AtjQAVONs1OP/y
+         pNs25YOf+snzJzS/Q1oQ2Ty63GpxrLcHyA0pjSaOYcKa1m+Pq52ANf2N+XzIZECuPFGw
+         PIyg==
+X-Gm-Message-State: AC+VfDxPMYyuHBlpoFyUVwse5h5h7lZ16Ed+nD7z4wh9cpAnH9PkWKeA
+        s+ZY4xQN2TaTgqnz5Zy0sx1C7g==
+X-Google-Smtp-Source: ACHHUZ6x6UvTHK1Uwv8WFmoIDk5oLTRQJtGFN81A04pmMS/WLo2rYeSvtpIwG+erMPl2na+euS5YjQ==
+X-Received: by 2002:a05:6a00:1407:b0:643:59e7:e601 with SMTP id l7-20020a056a00140700b0064359e7e601mr4271042pfu.26.1683238489665;
+        Thu, 04 May 2023 15:14:49 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:edf0:7321:6b9e:d5e7])
-        by smtp.gmail.com with ESMTPSA id g26-20020aa7819a000000b006437c0edf9csm169615pfi.16.2023.05.04.15.14.44
+        by smtp.gmail.com with ESMTPSA id g26-20020aa7819a000000b006437c0edf9csm169615pfi.16.2023.05.04.15.14.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 May 2023 15:14:46 -0700 (PDT)
+        Thu, 04 May 2023 15:14:49 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Petr Mladek <pmladek@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>
@@ -75,9 +75,9 @@ Cc:     Sumit Garg <sumit.garg@linaro.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Daniel Thompson <daniel.thompson@linaro.org>,
         Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH v4 01/17] watchdog/perf: Define dummy watchdog_update_hrtimer_threshold() on correct config
-Date:   Thu,  4 May 2023 15:13:33 -0700
-Message-ID: <20230504151100.v4.1.I8cbb2f4fa740528fcfade4f5439b6cdcdd059251@changeid>
+Subject: [PATCH v4 02/17] watchdog: remove WATCHDOG_DEFAULT
+Date:   Thu,  4 May 2023 15:13:34 -0700
+Message-ID: <20230504151100.v4.2.I6a729209a1320e0ad212176e250ff945b8f91b2a@changeid>
 X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
 In-Reply-To: <20230504221349.1535669-1-dianders@chromium.org>
 References: <20230504221349.1535669-1-dianders@chromium.org>
@@ -87,38 +87,46 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The real watchdog_update_hrtimer_threshold() is defined in
-watchdog_hardlockup_perf.c. That file is included if
-CONFIG_HARDLOCKUP_DETECTOR_PERF and the function is defined in that
-file if CONFIG_HARDLOCKUP_CHECK_TIMESTAMP.
+From: Lecopzer Chen <lecopzer.chen@mediatek.com>
 
-The dummy version of the function in "nmi.h" didn't get that quite
-right. While this doesn't appear to be a huge deal, it's nice to make
-it consistent.
+No reference to WATCHDOG_DEFAULT, remove it.
 
-Fixes: 7edaeb6841df ("kernel/watchdog: Prevent false positives with turbo modes")
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
+I yanked this patch from the mailing lists [1] into my series just to
+make it easier to avoid conflicts between my series and the one adding
+the arm64 perf hardlockup detector, in case someone wanted to test
+them both together. This is a nice cleanup and could land together
+with the rest of my series if that makes sense.
+
+I changed the patch prefix to match others in my series.
+
+[1] https://lore.kernel.org/r/20220903093415.15850-2-lecopzer.chen@mediatek.com/
 
 Changes in v4:
-- ("Define dummy watchdog_update_hrtimer_threshold() ...") new for v4.
+- Pulled ("remove WATCHDOG_DEFAULT") into my series for v4.
 
- include/linux/nmi.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/watchdog.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-index 048c0b9aa623..771d77b62bc1 100644
---- a/include/linux/nmi.h
-+++ b/include/linux/nmi.h
-@@ -197,7 +197,7 @@ u64 hw_nmi_get_sample_period(int watchdog_thresh);
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index 8e61f21e7e33..582d572e1379 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -30,10 +30,8 @@
+ static DEFINE_MUTEX(watchdog_mutex);
+ 
+ #if defined(CONFIG_HARDLOCKUP_DETECTOR) || defined(CONFIG_HAVE_NMI_WATCHDOG)
+-# define WATCHDOG_DEFAULT	(SOFT_WATCHDOG_ENABLED | NMI_WATCHDOG_ENABLED)
+ # define NMI_WATCHDOG_DEFAULT	1
+ #else
+-# define WATCHDOG_DEFAULT	(SOFT_WATCHDOG_ENABLED)
+ # define NMI_WATCHDOG_DEFAULT	0
  #endif
  
- #if defined(CONFIG_HARDLOCKUP_CHECK_TIMESTAMP) && \
--    defined(CONFIG_HARDLOCKUP_DETECTOR)
-+    defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
- void watchdog_update_hrtimer_threshold(u64 period);
- #else
- static inline void watchdog_update_hrtimer_threshold(u64 period) { }
 -- 
 2.40.1.521.gf1e218fcd8-goog
 
