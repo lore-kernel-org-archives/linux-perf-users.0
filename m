@@ -2,127 +2,241 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE930C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 20:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAA7C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 21:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231254AbjEDUi0 (ORCPT
+        id S229460AbjEDV2D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 16:38:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53830 "EHLO
+        Thu, 4 May 2023 17:28:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjEDUiL (ORCPT
+        with ESMTP id S229446AbjEDV2C (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 16:38:11 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD16191EE
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 13:31:41 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-b8f6bef3d4aso1967228276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 13:31:41 -0700 (PDT)
+        Thu, 4 May 2023 17:28:02 -0400
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DDEA1208E;
+        Thu,  4 May 2023 14:28:00 -0700 (PDT)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-3062db220a3so724399f8f.0;
+        Thu, 04 May 2023 14:28:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683232245; x=1685824245;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uf90B0DNuv78Zar9yEbDcO4xMMRYhft3uy0mg3u42Sk=;
-        b=sFQLlLIFZAhaYfJD5jfeXBrvNutgr5IEjPwCdAswSQPiVrruOeSGDV6qFW2z0c4nBy
-         C/BGxfqhPKdAbJX6M0qamgmr1G7qNBHLW+7QblXe4fUI8cgngnZNmjBWFYg3hkalOW6k
-         68fhVksoUZiUmPQbAPDwJs36Wk0TOErD0vr/7R6bn1mF15/r+BcDHehogM1U6KiC+C2a
-         ok/Jkqfs15HUpLfNNnVoNxUodiUPtgBRrfmZ7GTw5I/P0v28qHW2RBjbJZ61je355YcT
-         ZGRbAT1j6PRfAcsQFP+FbTZDfYOh+MgZQlSPe8dhKTk/Eu6mb2kP0KnrZCcjgnYcJ2eD
-         xwgA==
+        d=gmail.com; s=20221208; t=1683235679; x=1685827679;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KC+4rdAZwJWGenCNR7ys2Od2uEdn44ram9bK1avxY1g=;
+        b=VW8RtMCJoG4skxDpcHD2NTeefnts8zeezWC9cOE3j2TN2iMDgpZI7V84Z9Ac91TTNA
+         66tYE6nKo0TJ1wTTDosvB9hGB4VYvC32zQ4fYMQvV9AKGweLMd0BsL/HKCkMMl8X7lC4
+         yY3bpMhS0pvp2dwsPPyf2xwfafZVTsbFfIdKFQ4SC3TsxTWdfj7152kZG5mnDu29CZrF
+         zIEwbDl229MICPHYSJ9iTGIWcOxoG+w5Sg5FQN7hoxOiEQfLDJUPUTXYqXZztZNm+IjD
+         ppGEkrdUKUEhIUGsQmBAGvdWUWmeWyqXJDvO38NnmLCmEvpEMBWeD73Hs5FEHdK13AV5
+         Z6fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683232245; x=1685824245;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uf90B0DNuv78Zar9yEbDcO4xMMRYhft3uy0mg3u42Sk=;
-        b=JWy8eb/+gQusO992sPpmKvAvVBHvferWDjmMbW7JasMQ0OjRm5VUGeGKQd7v98iQR8
-         0VJc3n0JxilLzRjZ+YQtwlL5h4l6095QfdvTbHyIC40VT/nqeerQBeCzptbkjptjqKPa
-         M3o5yeTsuZ6W5O/8qhJh1a8g+HaBdbgfOw9wNuBlygvX08fXJSui8vwlC5ZYqCx/y93/
-         RCFUyI7PnmAN3PZGjJ3NFGNjp86vgdKzX94RFsTUbNiieq0WE1eIWXVWWQZVZVdHb4gF
-         A59hiS1GFHeRCggrIMJoPtJ+WJ0Wk6mb3Ur6IjIQmyZP9NeAW16kwXtX7Ype46PkRr3S
-         y/Uw==
-X-Gm-Message-State: AC+VfDzovmKA2lHAmF7v9tn+YoX7YyeE3rx47VbIyRvf3UcCwjCfOXhj
-        AEV+x3vzzDNysREgd3tQG/qXXI/V5eHT
-X-Google-Smtp-Source: ACHHUZ5D6oBfEWsjyxziFTJx5Gel0+EXHSwY0SgDL1ePNM78CRemBZVMsSyesUUrhKYz5oE4MEut4UEFSWec
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3367:2fed:395f:6f64])
- (user=irogers job=sendgmr) by 2002:a25:52d5:0:b0:b9a:7088:d95 with SMTP id
- g204-20020a2552d5000000b00b9a70880d95mr666862ybb.0.1683230297329; Thu, 04 May
- 2023 12:58:17 -0700 (PDT)
-Date:   Thu,  4 May 2023 12:58:03 -0700
-In-Reply-To: <20230504195803.3331775-1-irogers@google.com>
-Message-Id: <20230504195803.3331775-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20230504195803.3331775-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
-Subject: [PATCH v1 2/2] perf stat: Document --metric-no-threshold and
- threshold colors
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        d=1e100.net; s=20221208; t=1683235679; x=1685827679;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KC+4rdAZwJWGenCNR7ys2Od2uEdn44ram9bK1avxY1g=;
+        b=XZusevKACfSIgtxapjWPCB3CySYh3yafiwdUD726LFAoIsopP7s5MBsLo0mP9R8u60
+         vdZSCeqqAd8abnNshM/yS1QUP394UbzQSJucHDS0RsWDJv7AZh8IqozSJT0oAvlqja5n
+         vLGtX6bRRof9pY/rZiAnjAFBF85BfxqtpsfJtPq8hLpl/TghglYIRI+b1oVtWpM93P+Y
+         e7Ny/mvbR6hHU1tde1XRx1cO+xcLM+La88sC+MnSZDOUwY6i0yt076n8HLOm1XOqauY3
+         sw0gc0PzIrdBug70lM1qy0ypnZrK0QOpx0gXPM+NQEtu0T1DEUMI0ZFe44s/1AmsgPba
+         OoRA==
+X-Gm-Message-State: AC+VfDxQefQlCOS2xP33f0zcGuDYO0BrgtcGQk9QzLMHSzitVBcsbmze
+        UwW1+m7rfz6D2exL4wV8+dXh1q7Bid8VKA==
+X-Google-Smtp-Source: ACHHUZ7WgHnTySGE7UylZdBSEkgJId9O2hawXL/Fc1eWsSXRVEkunluwqLnhmxo5jrljgk6rsaqTeA==
+X-Received: by 2002:a5d:4a92:0:b0:2ff:1e0f:fb2 with SMTP id o18-20020a5d4a92000000b002ff1e0f0fb2mr3565425wrq.13.1683235678688;
+        Thu, 04 May 2023 14:27:58 -0700 (PDT)
+Received: from lucifer.home (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
+        by smtp.googlemail.com with ESMTPSA id h15-20020a05600c314f00b003f1978bbcd6sm51617562wmo.3.2023.05.04.14.27.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 May 2023 14:27:57 -0700 (PDT)
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Christian Benvenuti <benve@cisco.com>,
+        Nelson Escobar <neescoba@cisco.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>
-Cc:     Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Bjorn Topel <bjorn@kernel.org>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+        Jonathan Lemon <jonathan.lemon@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Mika Penttila <mpenttil@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>
+Subject: [PATCH v9 0/3] mm/gup: disallow GUP writing to file-backed mappings by default
+Date:   Thu,  4 May 2023 22:27:50 +0100
+Message-Id: <cover.1683235180.git.lstoakes@gmail.com>
+X-Mailer: git-send-email 2.40.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Document the threshold behavior for -M/--metrics.
+Writing to file-backed mappings which require folio dirty tracking using
+GUP is a fundamentally broken operation, as kernel write access to GUP
+mappings do not adhere to the semantics expected by a file system.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Documentation/perf-stat.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+A GUP caller uses the direct mapping to access the folio, which does not
+cause write notify to trigger, nor does it enforce that the caller marks
+the folio dirty.
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 29bdcfa93f04..ff71399db738 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -353,6 +353,15 @@ small group that need not have multiplexing is lowered. This option
- forbids the event merging logic from sharing events between groups and
- may be used to increase accuracy in this case.
- 
-+--metric-no-threshold::
-+Metric thresholds may increase the number of events necessary to
-+compute whether a metric has exceeded its threshold expression. This
-+may not be desirable, for example, as the events can introduce
-+multiplexing. This option disables the adding of threshold expression
-+events for a metric. However, if there are sufficient events to
-+compute the threshold then the threshold is still computed and used to
-+color the metric's computed value.
-+
- --quiet::
- Don't print output, warnings or messages. This is useful with perf stat
- record below to only write data to the perf.data file.
-@@ -389,6 +398,12 @@ For a group all metrics from the group are added.
- The events from the metrics are automatically measured.
- See perf list output for the possible metrics and metricgroups.
- 
-+	When threshold information is available for a metric, the
-+	color red is used to signify a metric has exceeded a threshold
-+	while green shows it is hasn't. The default color means that
-+	no threshold information was available or the threshold
-+	couldn't be computed.
-+
- -A::
- --no-aggr::
- Do not aggregate counts across all monitored CPUs.
--- 
-2.40.1.521.gf1e218fcd8-goog
+The problem arises when, after an initial write to the folio, writeback
+results in the folio being cleaned and then the caller, via the GUP
+interface, writes to the folio again.
 
+As a result of the use of this secondary, direct, mapping to the folio no
+write notify will occur, and if the caller does mark the folio dirty, this
+will be done so unexpectedly.
+
+For example, consider the following scenario:-
+
+1. A folio is written to via GUP which write-faults the memory, notifying
+   the file system and dirtying the folio.
+2. Later, writeback is triggered, resulting in the folio being cleaned and
+   the PTE being marked read-only.
+3. The GUP caller writes to the folio, as it is mapped read/write via the
+   direct mapping.
+4. The GUP caller, now done with the page, unpins it and sets it dirty
+   (though it does not have to).
+
+This change updates both the PUP FOLL_LONGTERM slow and fast APIs. As
+pin_user_pages_fast_only() does not exist, we can rely on a slightly
+imperfect whitelisting in the PUP-fast case and fall back to the slow case
+should this fail.
+
+v9:
+- Refactored vma_needs_dirty_tracking() and vma_wants_writenotify() to avoid
+  duplicate check of shared writable/needs writenotify.
+- Removed redundant comments.
+- Improved vma_needs_dirty_tracking() commit message.
+- Moved folio_fast_pin_allowed() into CONFIG_HAVE_FAST_GUP block as used by
+  both the CONFIG_ARCH_HAS_PTE_SPECIAL and huge page cases, both of which
+  are invoked under any CONFIG_HAVE_FAST_GUP configuration. Should fix
+  mips/arm builds.
+- Permit pins of swap cache anon pages.
+- Permit KSM anon pages.
+
+v8:
+- Fixed typo writeable -> writable.
+- Fixed bug in writable_file_mapping_allowed() - must check combination of
+  FOLL_PIN AND FOLL_LONGTERM not either/or.
+- Updated vma_needs_dirty_tracking() to include write/shared to account for
+  MAP_PRIVATE mappings.
+- Move to open-coding the checks in folio_pin_allowed() so we can
+  READ_ONCE() the mapping and avoid unexpected compiler loads. Rename to
+  account for fact we now check flags here.
+- Disallow mapping == NULL or mapping & PAGE_MAPPING_FLAGS other than
+  anon. Defer to slow path.
+- Perform GUP-fast check _after_ the lowest page table level is confirmed to
+  be stable.
+- Updated comments and commit message for final patch as per Jason's
+  suggestions.
+https://lore.kernel.org/all/cover.1683067198.git.lstoakes@gmail.com/
+
+v7:
+- Fixed very silly bug in writeable_file_mapping_allowed() inverting the
+  logic.
+- Removed unnecessary RCU lock code and replaced with adaptation of Peter's
+  idea.
+- Removed unnecessary open-coded folio_test_anon() in
+  folio_longterm_write_pin_allowed() and restructured to generally permit
+  NULL folio_mapping().
+https://lore.kernel.org/all/cover.1683044162.git.lstoakes@gmail.com/
+
+v6:
+- Rebased on latest mm-unstable as of 28th April 2023.
+- Add PUP-fast check with handling for rcu-locked TLB shootdown to synchronise
+  correctly.
+- Split patch series into 3 to make it more digestible.
+https://lore.kernel.org/all/cover.1682981880.git.lstoakes@gmail.com/
+
+v5:
+- Rebased on latest mm-unstable as of 25th April 2023.
+- Some small refactorings suggested by John.
+- Added an extended description of the problem in the comment around
+  writeable_file_mapping_allowed() for clarity.
+- Updated commit message as suggested by Mika and John.
+https://lore.kernel.org/all/6b73e692c2929dc4613af711bdf92e2ec1956a66.1682638385.git.lstoakes@gmail.com/
+
+v4:
+- Split out vma_needs_dirty_tracking() from vma_wants_writenotify() to
+  reduce duplication and update to use this in the GUP check. Note that
+  both separately check vm_ops_needs_writenotify() as the latter needs to
+  test this before the vm_pgprot_modify() test, resulting in
+  vma_wants_writenotify() checking this twice, however it is such a small
+  check this should not be egregious.
+https://lore.kernel.org/all/3b92d56f55671a0389252379237703df6e86ea48.1682464032.git.lstoakes@gmail.com/
+
+v3:
+- Rebased on latest mm-unstable as of 24th April 2023.
+- Explicitly check whether file system requires folio dirtying. Note that
+  vma_wants_writenotify() could not be used directly as it is very much focused
+  on determining if the PTE r/w should be set (e.g. assuming private mapping
+  does not require it as already set, soft dirty considerations).
+- Tested code against shmem and hugetlb mappings - confirmed that these are not
+  disallowed by the check.
+- Eliminate FOLL_ALLOW_BROKEN_FILE_MAPPING flag and instead perform check only
+  for FOLL_LONGTERM pins.
+- As a result, limit check to internal GUP code.
+ https://lore.kernel.org/all/23c19e27ef0745f6d3125976e047ee0da62569d4.1682406295.git.lstoakes@gmail.com/
+
+v2:
+- Add accidentally excluded ptrace_access_vm() use of
+  FOLL_ALLOW_BROKEN_FILE_MAPPING.
+- Tweak commit message.
+https://lore.kernel.org/all/c8ee7e02d3d4f50bb3e40855c53bda39eec85b7d.1682321768.git.lstoakes@gmail.com/
+
+v1:
+https://lore.kernel.org/all/f86dc089b460c80805e321747b0898fd1efe93d7.1682168199.git.lstoakes@gmail.com/
+
+Lorenzo Stoakes (3):
+  mm/mmap: separate writenotify and dirty tracking logic
+  mm/gup: disallow FOLL_LONGTERM GUP-nonfast writing to file-backed
+    mappings
+  mm/gup: disallow FOLL_LONGTERM GUP-fast writing to file-backed
+    mappings
+
+ include/linux/mm.h |   1 +
+ mm/gup.c           | 145 ++++++++++++++++++++++++++++++++++++++++++++-
+ mm/mmap.c          |  58 ++++++++++++++----
+ 3 files changed, 191 insertions(+), 13 deletions(-)
+
+--
+2.40.1
