@@ -2,62 +2,63 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A71B3C77B7F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 09:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C23C77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 09:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231761AbjEEJgU (ORCPT
+        id S230484AbjEEJj0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 05:36:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43046 "EHLO
+        Fri, 5 May 2023 05:39:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230297AbjEEJgT (ORCPT
+        with ESMTP id S231797AbjEEJjY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 05:36:19 -0400
+        Fri, 5 May 2023 05:39:24 -0400
 Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB85310F3;
-        Fri,  5 May 2023 02:36:12 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-965d2749e2eso121534666b.1;
-        Fri, 05 May 2023 02:36:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C84219928;
+        Fri,  5 May 2023 02:39:21 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-965ab8ed1c0so246057366b.2;
+        Fri, 05 May 2023 02:39:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683279371; x=1685871371;
+        d=gmail.com; s=20221208; t=1683279560; x=1685871560;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=+4bTW2iXQuPUhD6F2rTrgXPNpZoWABuiI82ZSrn6ZeQ=;
-        b=ZgJD0jzisd17mwG6/TAJZoOe9THtXUtJROaL2dPa9EAXG6sWl5vFMaIVuwF+dreRbQ
-         K9lji+Gf94C2msPVo32PZQvaUZ9W1KeNqeF18POQkmtBbRR/Hjzd3eaB4ZpKuuzgfxTh
-         1lV5V8+tp4TW2nkbA5ZVsvy9B4XtgNua1ePuvGKawj9VAA9vkpVli1uek42hGNOEjVHj
-         I85M/JG6putiRDHrfqcjgd/l+lZj/eaa+HDKxEkThQ62PBflpgofwfmIDWmWH8ps15Kq
-         I8N6dj6hUSVT6c4EeP44+u/3U5oJK1EKXLxFVsJDebYI9Qcd1BWa6SA/s6i34nK1v/Ia
-         B9mg==
+        bh=GUktY4jStI4pioqhxhiQLqN7xdp1S8+7gGDVuIEND74=;
+        b=a/m+zAdVmVzY7n3IFMrOHes7piGpofgyMv0chbeHFQJBDhvUL1B1CocjQ5kUigMoyu
+         DGNr6C2U70w0fj8H8M+WIReDJv4hqiBYgywhuAEoahNjqg4sMkspLl3PDKe9RawCXvOr
+         L77U8IOhjtF6xkL3h906lXiVngWu4h6Q1UdUHFTa0M+wCllEBVaMea5oeHAzpkABD97l
+         Qmpcbe6MbTvJFOTfKFv0AaOPCMI+CAw9uu9Vx5FIx7U+uc8NOhjgF2xfc14yi1wWY3Hu
+         SvE98SUCKG8uqK532gzKmdqq+YfZMyPe2Kaz5RdxEdxu8lTF4o30w3qh3lOKY5nNt+tP
+         629g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683279371; x=1685871371;
+        d=1e100.net; s=20221208; t=1683279560; x=1685871560;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+4bTW2iXQuPUhD6F2rTrgXPNpZoWABuiI82ZSrn6ZeQ=;
-        b=MXAc1cKBxrUW2I3cjWQS+c2Ikrv42dpAIX4tG5LJT/qokE6vozPvNeJY2y25ZTtZUH
-         UNid7h2bqKmvjPTu6rfA2Jw2IxsRKYGavTbzFIK+VevmjfkdJk76gU6aG/A/6RSh/x3I
-         K2F4jFT51IWR7B7O+AMIWGV/jBKDqnB6kKuRrdZdqOj9cgbwQ8Yf6fBIQdyiGnTdfcxz
-         KjG+4OVI6R19potgehLA6iqENY9e/0XH7uRI04q38cgsWhoKcLgPb72M1rXmIPFFoSft
-         6PzF5wv+Ad/vGy1T0Oluy9aW8groDUK0s2RqIEoG1xKEJIJA2bERIpYV8xOoWgCc5B6l
-         jjpg==
-X-Gm-Message-State: AC+VfDwroR9C/OXfA6sbOg9IIvh8UFKvH7jxPN9auY4UnRQ8+0G9E7ma
-        eTNvxnDkSCQBbfyrU8RpO8o=
-X-Google-Smtp-Source: ACHHUZ6iEMd2LVpNbbs8NBcnocM2nbglOzIoCa+ZQRbGy2sxfgnz6bLEJ6mNIqOehEnDaxe1WtjxGA==
-X-Received: by 2002:a17:906:ee8e:b0:95e:c549:9ace with SMTP id wt14-20020a170906ee8e00b0095ec5499acemr500737ejb.62.1683279370940;
-        Fri, 05 May 2023 02:36:10 -0700 (PDT)
+        bh=GUktY4jStI4pioqhxhiQLqN7xdp1S8+7gGDVuIEND74=;
+        b=dwHEUn0uwNtBWkL5b9jB+2YTdaUxVzZzssJMPCwSgagRPfqsw7ptCJ2cL/vUOWquWM
+         G4+nrEK3bhLKiWnzklsYutEkGcjXQCTilefkeozrcLVyh49FrCzpl8IyvfghWE3Q3Sw8
+         48Qrw77OFHTozewAo13TmGNMhbdaGFDzyGvwpkQBhF5rLM2WBWh1eCtQp/cXe5GR90+J
+         KqoPVcX+9cLPThcwQrnEqEH3wnaJGHNxewMnyxVlE+FRwdsdfJdlwH1aapQE8+DfPfGP
+         0J5QVvrWBbbEzJzwpalWHiswc76KfWYdirUQNjlETtooD7lfVdUAesk3v1bqUh0Wcwmq
+         9Ghw==
+X-Gm-Message-State: AC+VfDxJ6hWU27LCB/yCaBXBN45Mgo7rKVUDuexkJrTnEmANKh98lZpF
+        YolnLO/CuKbHxsMv+Mc4QmM=
+X-Google-Smtp-Source: ACHHUZ5QYFD4IELsY0R7LPQMp/0MWV54qghTOrO9jyvy11VxKC4OuAqTMSBTYwCjrBV0h68SeRTpYA==
+X-Received: by 2002:a17:907:6289:b0:961:8d21:a480 with SMTP id nd9-20020a170907628900b009618d21a480mr582683ejc.58.1683279559773;
+        Fri, 05 May 2023 02:39:19 -0700 (PDT)
 Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id bu26-20020a170906a15a00b00965cd3a037fsm709594ejb.112.2023.05.05.02.36.09
+        by smtp.gmail.com with ESMTPSA id n5-20020a1709065da500b00965e68b8df5sm437929ejv.76.2023.05.05.02.39.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 May 2023 02:36:10 -0700 (PDT)
+        Fri, 05 May 2023 02:39:19 -0700 (PDT)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Fri, 5 May 2023 11:36:07 +0200
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>,
+Date:   Fri, 5 May 2023 11:39:16 +0200
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Song Liu <song@kernel.org>,
         Andrii Nakryiko <andrii@kernel.org>,
@@ -76,7 +77,7 @@ Cc:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         bpf <bpf@vger.kernel.org>
 Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
-Message-ID: <ZFTOB9ZXsKuxXm/6@krava>
+Message-ID: <ZFTOxBDsbboKeEr9@krava>
 References: <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
  <ZFOSUab5XEJD0kxj@kernel.org>
  <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
@@ -86,20 +87,19 @@ References: <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
  <ZFQoQjCNtyMIulp+@kernel.org>
  <CAP-5=fU8HQorW+7O6vfEKGs1mEFkjkzXZMVPACzurtcMcRhVzQ@mail.gmail.com>
  <ZFQ5sjjtfEYzvHNP@krava>
- <ZFQ8fB3yfIFimwhD@google.com>
+ <CAP-5=fXgtNQ5KQv_M+b-mR-dm_s8AAgRkotXifFiTqBo9FHJzA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZFQ8fB3yfIFimwhD@google.com>
+In-Reply-To: <CAP-5=fXgtNQ5KQv_M+b-mR-dm_s8AAgRkotXifFiTqBo9FHJzA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 04, 2023 at 04:15:08PM -0700, Namhyung Kim wrote:
-> Hi Jiri,
-> 
-> On Fri, May 05, 2023 at 01:03:14AM +0200, Jiri Olsa wrote:
+On Thu, May 04, 2023 at 04:19:47PM -0700, Ian Rogers wrote:
+> On Thu, May 4, 2023 at 4:03 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
 > > On Thu, May 04, 2023 at 03:03:42PM -0700, Ian Rogers wrote:
 > > > On Thu, May 4, 2023 at 2:48 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 > > > >
@@ -156,51 +156,48 @@ On Thu, May 04, 2023 at 04:15:08PM -0700, Namhyung Kim wrote:
 > > > > -#include "vmlinux.h"
 > > > > +#include <linux/types.h>
 > > > > +#include <linux/bpf.h>
-> > > 
+> > >
 > > > Compared to vmlinux.h here be dragons. It is easy to start dragging in
 > > > all of libc and that may not work due to missing #ifdefs, etc.. Could
 > > > we check in a vmlinux.h like libbpf-tools does?
 > > > https://github.com/iovisor/bcc/tree/master/libbpf-tools#vmlinuxh-generation
 > > > https://github.com/iovisor/bcc/tree/master/libbpf-tools/arm64
-> > > 
+> > >
 > > > This would also remove some of the errors that could be introduced by
 > > > copy+pasting enums, etc. and also highlight issues with things being
 > > > renamed as build time rather than runtime failures.
-> > 
+> >
 > > we already have to deal with that, right? doing checks on fields in
 > > structs like mm_struct___old
-> > 
+> 
+> We do, but the way I detected the problems in the first place was by
+> building against older kernels. Now the build will always succeed but
+> fail at runtime.
+> 
 > > > Could this be some shared resource for the different linux tools
 > > > projects using a vmlinux.h? e.g. tools/lib/vmlinuxh with an
 > > > install_headers target that builds a vmlinux.h.
-> > 
+> >
 > > I tried to do the minimal header and it's not too big,
 > > I pushed it in here:
 > >   https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=perf/vmlinux_h
-> > 
+> >
 > > compile tested so far
->  
-> Cool.  But I think you missed this.
+> >
+> > jirka
 > 
-> diff --git a/tools/perf/util/bpf_skel/perf-defs.h b/tools/perf/util/bpf_skel/perf-defs.h
-> index 1320e1be03b8..4cfa8a9fce39 100644
-> --- a/tools/perf/util/bpf_skel/perf-defs.h
-> +++ b/tools/perf/util/bpf_skel/perf-defs.h
-> @@ -253,6 +253,7 @@ typedef struct {
->  } atomic64_t;
->  
->  struct rw_semaphore {
-> +	atomic_long_t owner;
->  } __attribute__((preserve_access_index));
+> Cool, could we just call it vmlinux.h rather than perf-defs.h?
 
-ah right, I did not see that because my clang took another #ifdef leg
+right, it also makes the change smaller
+
+> 
+> I notice cgroup_subsys_id is in there which is called out in Andrii's
+> CO-RE  guide/blog:
+> https://nakryiko.com/posts/bpf-core-reference-guide/#relocatable-enums
+> perhaps we can do something with names/types to make sure a helper is
+> being used for these enum values.
+
+ok, I'll check on that..  so far I made some clean ups and updated the branch
 
 thanks,
 jirka
-
->  
->  typedef atomic64_t atomic_long_t;
-> 
-> 
-> Thanks,
-> Namhyung
