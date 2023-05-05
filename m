@@ -2,147 +2,100 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F43C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 20:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7672BC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 20:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233305AbjEEUtn (ORCPT
+        id S233418AbjEEUyu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 16:49:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40216 "EHLO
+        Fri, 5 May 2023 16:54:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232707AbjEEUtm (ORCPT
+        with ESMTP id S233412AbjEEUyq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 16:49:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F28C2129;
-        Fri,  5 May 2023 13:49:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1281F640A2;
-        Fri,  5 May 2023 20:49:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39750C433EF;
-        Fri,  5 May 2023 20:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683319778;
-        bh=W59TR9E32Yah1dFs08dbWyLipmFb+psLrDFRxEQpgnE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VNMabUPhKyNss7GFEOqyfB6OMpKzdhW+nMaDUdTpEHltfzlk5hxr3llxJ/OfnmpOI
-         ExgTNLC+SUY3gwxiXTJGCSGUHdjHcsRhsAaJ5dF9b5TmQwa1H9OYD1BKk8r2w2kGap
-         T49SSvrJGIIoh1kokytEQ0IxTaOteXBy9oIXohVlslQKYNrdUngNOLKR5uzoxqz9c8
-         BB6XGatN21KTLCr5v7WHgglG0OYwmKHHyR2y0pZAkQf55s37MLzK1zHBXsBdYSn5SI
-         2yuizHDwQg0OyUhil5LU2WMBRtI+yZSZ7FKxRVXHUvx8UnGlrBeuhIhUl64a//ZLUG
-         y+j65SzycWntg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B04B6403B5; Fri,  5 May 2023 17:49:35 -0300 (-03)
-Date:   Fri, 5 May 2023 17:49:35 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>, Song Liu <song@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Clarke <pc@us.ibm.com>
-Subject: Re: [PATCH RFC/RFT] perf bpf skels: Stop using vmlinux.h generated
- from BTF, use subset of used structs + CO-RE. was Re: BPF skels in perf .Re:
- [GIT PULL] perf tools changes for v6.4
-Message-ID: <ZFVr38MZLGpBFaUg@kernel.org>
-References: <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
- <ZFQCccsx6GK+gY0j@kernel.org>
- <ZFQoQjCNtyMIulp+@kernel.org>
- <CAP-5=fU8HQorW+7O6vfEKGs1mEFkjkzXZMVPACzurtcMcRhVzQ@mail.gmail.com>
- <ZFQ5sjjtfEYzvHNP@krava>
- <ZFUFmxDU/6Z/JEsi@kernel.org>
- <ZFU1PJrn8YtHIqno@kernel.org>
- <CAP-5=fWfmmMCRnEmzj_CXTKacp6gjrzmR49Ge_C5XRyfTegRjg@mail.gmail.com>
- <ZFVqeKLssg7uzxzI@krava>
- <CAP-5=fVgJdBvjV8S2xKswAFiSZvyCcUvZTO1bsLyUf-wQ0pBuw@mail.gmail.com>
+        Fri, 5 May 2023 16:54:46 -0400
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0A149E3;
+        Fri,  5 May 2023 13:54:45 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-b9a6ab9ede3so3007110276.2;
+        Fri, 05 May 2023 13:54:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683320084; x=1685912084;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uYVGB6plWT1YdfLLw6hoHtv7l2YFMxriyoV+UZStGq4=;
+        b=i+2fanKdhVP8IAFYdSPy2tTMfRJ5D8as/v7bblW1rj2svnhNbK2kDv0yIJA1aGkAs+
+         FZrDmBZz2kjsCwMl9EW7eRKY7pd3VKIktXKKx4/StL8bW9oAQGgWz0FscqCeXASI0f5P
+         HfkIoqykd+Zu5U28gpG4dqGqE4wxnbFrP32667JG2sNixPAbOOCWfjCkpnmBRBTnx++L
+         jtxITg4PMDDQZXa7FW+jpXfeZetiMC9vMVwpLKsmZWbGD1q1tcLlG9eAzwm0TassVqx5
+         GsbBun3VZ/FfFXq6YhmIOIg19L3EjCJ3CBaPOhqFDWtHKw4MrIy5mthWG8TtXDxjqmMa
+         6erQ==
+X-Gm-Message-State: AC+VfDx0u1g1/JsLCACCl8xAWQ6AflUlXarZYx1gdXw0h/AaTOTlZEF5
+        bCjjcfPJVIz4PW7lUzU5399DAiyhw4TeviLEmtc=
+X-Google-Smtp-Source: ACHHUZ7K8c39ZHBIJe/ovC4cnYkkrQsebbP0ZMkYWfv7B2HUDG+87jr0dUz0+X123t+Ee5hn8BDjwnidUGMZKK/LSCA=
+X-Received: by 2002:a25:1542:0:b0:b9e:84b0:bfa6 with SMTP id
+ 63-20020a251542000000b00b9e84b0bfa6mr2836370ybv.25.1683320084061; Fri, 05 May
+ 2023 13:54:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVgJdBvjV8S2xKswAFiSZvyCcUvZTO1bsLyUf-wQ0pBuw@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20230505204119.3443491-1-irogers@google.com>
+In-Reply-To: <20230505204119.3443491-1-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 5 May 2023 13:54:33 -0700
+Message-ID: <CAM9d7cifodHyFJHmfSCBBTocab1GbvzoebLQRbf4vjYJHJWb+g@mail.gmail.com>
+Subject: Re: [PATCH v1] perf metrics: Fix segv with --for-each-cgroup
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, May 05, 2023 at 01:46:30PM -0700, Ian Rogers escreveu:
-> On Fri, May 5, 2023 at 1:43 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Fri, May 05, 2023 at 10:04:47AM -0700, Ian Rogers wrote:
-> > > On Fri, May 5, 2023 at 9:56 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > >
-> > > > Em Fri, May 05, 2023 at 10:33:15AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > > Em Fri, May 05, 2023 at 01:03:14AM +0200, Jiri Olsa escreveu:
-> > > > > That with the preserve_access_index isn't needed, we need just the
-> > > > > fields that we access in the tools, right?
-> > > >
-> > > > I'm now doing build test this in many distro containers, without the two
-> > > > reverts, i.e. BPF skels continue as opt-out as in my pull request, to
-> > > > test build and also for the functionality tests on the tools using such
-> > > > bpf skels, see below, no touching of vmlinux nor BTF data during the
-> > > > build.
-> > > >
-> > > > - Arnaldo
-> > > >
-> > > > From 882adaee50bc27f85374aeb2fbaa5b76bef60d05 Mon Sep 17 00:00:00 2001
-> > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > Date: Thu, 4 May 2023 19:03:51 -0300
-> > > > Subject: [PATCH 1/1] perf bpf skels: Stop using vmlinux.h generated from BTF,
-> > > >  use subset of used structs + CO-RE
-> > > >
-> > > > Linus reported a build break due to using a vmlinux without a BTF elf
-> > > > section to generate the vmlinux.h header with bpftool for use in the BPF
-> > > > tools in tools/perf/util/bpf_skel/*.bpf.c.
-> > > >
-> > > > Instead add a vmlinux.h file with the structs needed with the fields the
-> > > > tools need, marking the structs with __attribute__((preserve_access_index)),
-> > > > so that libbpf's CO-RE code can fixup the struct field offsets.
-> > > >
-> > > > In some cases the vmlinux.h file that was being generated by bpftool
-> > > > from the kernel BTF information was not needed at all, just including
-> > > > linux/bpf.h, sometimes linux/perf_event.h was enough as non-UAPI
-> > > > types were not being used.
-> > > >
-> > > > To keep te patch small, include those UAPI headers from the trimmed down
-> > > > vmlinux.h file, that then provides the tools with just the structs and
-> > > > the subset of its fields needed for them.
-> > > >
-> > > > Testing it:
-> > > >
-> > > >   # perf lock contention -b find / > /dev/null
-> >
-> > I tested perf lock con -abv -L rcu_state sleep 1
-> > and needed fix below
-> >
-> > jirka
-> 
-> I thought this was fixed by:
-> https://lore.kernel.org/lkml/20230427234833.1576130-1-namhyung@kernel.org/
-> but I think that is just in perf-tools-next.
+On Fri, May 5, 2023 at 1:41 PM Ian Rogers <irogers@google.com> wrote:
+>
+> Ensure the metric threshold is copied correctly or else a use of
+> uninitialized memory happens.
+>
+> Fixes: d0a3052f6fae ("perf metric: Compute and print threshold values")
+>
+> Reported-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Nope, we have it in perf-tools:
+Thanks for the fix.  Now it runs ok
 
-commit e53de7b65a3ca59af268c78df2d773f277f717fd
-Author: Namhyung Kim <namhyung@kernel.org>
-Date:   Thu Apr 27 16:48:32 2023 -0700
+  $ sudo ./perf stat -a --bpf-counters \
+  > --for-each-cgroup user.slice,system.slice sleep 1
 
-    perf lock contention: Fix struct rq lock access
+Tested-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
+
+> ---
+>  tools/perf/util/metricgroup.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 4b9a16291b96..c566c6859302 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -1730,6 +1730,7 @@ int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
+>                                 return -ENOMEM;
+>
+>                         new_expr->metric_expr = old_expr->metric_expr;
+> +                       new_expr->metric_threshold = old_expr->metric_threshold;
+>                         new_expr->metric_name = strdup(old_expr->metric_name);
+>                         if (!new_expr->metric_name)
+>                                 return -ENOMEM;
+> --
+> 2.40.1.521.gf1e218fcd8-goog
+>
