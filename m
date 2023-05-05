@@ -2,209 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B90C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  4 May 2023 23:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C568C77B73
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 02:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229818AbjEDXUD (ORCPT
+        id S229768AbjEECBV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 4 May 2023 19:20:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53722 "EHLO
+        Thu, 4 May 2023 22:01:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbjEDXUB (ORCPT
+        with ESMTP id S229446AbjEECBU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 4 May 2023 19:20:01 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26D112E9E
-        for <linux-perf-users@vger.kernel.org>; Thu,  4 May 2023 16:19:59 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id e9e14a558f8ab-33124b0dd85so649455ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 04 May 2023 16:19:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683242399; x=1685834399;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jleM9mam0jC92K7s5TbbM7NijY+miJheeAbD3LOvDfA=;
-        b=J90ITR/r2P88wH3CGkZ5u0W3j8eg6vs8I9cLw/l7YC559zhwlMFqmmhArwcq4/4USL
-         s2DYaf7ejAnnO4A2Dmx814A2057D/RDduNBW3AlEsaSLsj8CkxuXzWjyZCiNsuuMxl3Z
-         gLZp9aEm6VVRr5d9DFn0z8LiMMWLNftadj6TKQAI/VtsNGBxSqx15wpgOeaTs9XJNqgr
-         4iOChk7p9fPxJwE0UcItqEMpE+jqXpkEwgI3WJxsHCnlnzCw1EmyXJNplSisMytsK7iE
-         UKkECc/oUuEb789YslJI/ZCtyFBQcymx7EQMM99KeHqNVweuv3K5CmXt4mENHKTH2tWz
-         LvZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683242399; x=1685834399;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jleM9mam0jC92K7s5TbbM7NijY+miJheeAbD3LOvDfA=;
-        b=hujumHvA6cunTsb5yXIhutf/xPnTG+b2Kqysm6FeyQv1XFTA7w/9+oyFVsI4UASu1u
-         Nmivw/0kGw1LFVwkcuJYuIT5Eqvg/traus01Adk27PYMi6PlNbji/yg3vDqbmaGMWkZu
-         HKXRK8E2EkIOs+hagvjGv5eJ0BObck74HIU0lQey5r3POsVixqL5o5VykKC4qog6YHo9
-         Cj1GH+WqDSwkX/Y52RHu1e7rSaNtQtlt0622cxQyhoEjli2bcrmWrpu051po0OMArqXK
-         flN0Vj10b8hMgXU0cS7lxbBTVvj+MvCwj1movJYQ2EdccELD62ighgADfms5CL2Zibry
-         do0w==
-X-Gm-Message-State: AC+VfDwsRZdWbx6m3p4XXCvAZLv7+3hebz+R7R1aMNPNppOZI60fHTQW
-        1DkNGojoPKVB61ZMEmKcI5KRflmKbdV3FeiL8pWxXQ==
-X-Google-Smtp-Source: ACHHUZ7owDID/HQFBwNWNr+6addwdGscj9GPolKRD+c7/uHSaXyISjdRbsy5/0EXV3MMukoUvjf2WGcMhBLZEiLvL/4=
-X-Received: by 2002:a92:cdac:0:b0:32a:dc6a:3b97 with SMTP id
- g12-20020a92cdac000000b0032adc6a3b97mr10344ild.0.1683242398875; Thu, 04 May
- 2023 16:19:58 -0700 (PDT)
+        Thu, 4 May 2023 22:01:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3825C120A9;
+        Thu,  4 May 2023 19:01:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C05D263ABB;
+        Fri,  5 May 2023 02:01:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A344C433D2;
+        Fri,  5 May 2023 02:01:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683252078;
+        bh=ZS3YDRfyUL+4s0HOmEwczt4nBL9aZThHgS9wOj3+vr4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ffkyqnOKrju+rUXMKoV75RJb5s5sv55V0F42e5sa607EgsmfWuHCz0kl+oAIWye5L
+         vhEgikIJO5LtPoitHQqyZ7wloDkpxS+pmfv3w+p86MiiwqLp1Ix4E4oxsf9rINM9YO
+         ftqafPuSpWHWf2+efacxolKYFbzJbhlpR+RNQBf3tQO+EQmy+tKq9Q8ro8sdnAei6W
+         dnf7FECjGRdGjyfQwRMkIqigAiDbuRJzAEoYEwepH24hAV7KDMOF+InF83NSxdUkKu
+         w7GIng5kd+GtCAe2g/2zM9VJAkI/EFLSb9zNHJzJZnVsc1KuBMk1pqsTrikGHBaUZz
+         5nvGQOIzpikOQ==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-4eff055d4d3so1353192e87.3;
+        Thu, 04 May 2023 19:01:17 -0700 (PDT)
+X-Gm-Message-State: AC+VfDxXYFdxK39wkv6m71xQuxaE/KyUCvf66Wr2s9gQIlFtOTgBUrXo
+        7qO+yTWEyPWZnzyFxy2gCyGFwblyOBshtNt7R8A=
+X-Google-Smtp-Source: ACHHUZ5+kF7zfmLmcC+Z394neICuwx0R0RBjorv/3Pxl7o4b1qOgseYDPiOXspx6m7cCWCyvlV8h4cwMkUpIK83EQl0=
+X-Received: by 2002:ac2:5963:0:b0:4ea:e799:59f9 with SMTP id
+ h3-20020ac25963000000b004eae79959f9mr50823lfp.66.1683252076056; Thu, 04 May
+ 2023 19:01:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230503211801.897735-1-acme@kernel.org> <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
- <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
- <ZFOSUab5XEJD0kxj@kernel.org> <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
- <ZFPw0scDq1eIzfHr@kernel.org> <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
- <ZFQCccsx6GK+gY0j@kernel.org> <ZFQoQjCNtyMIulp+@kernel.org>
- <CAP-5=fU8HQorW+7O6vfEKGs1mEFkjkzXZMVPACzurtcMcRhVzQ@mail.gmail.com> <ZFQ5sjjtfEYzvHNP@krava>
-In-Reply-To: <ZFQ5sjjtfEYzvHNP@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 4 May 2023 16:19:47 -0700
-Message-ID: <CAP-5=fXgtNQ5KQv_M+b-mR-dm_s8AAgRkotXifFiTqBo9FHJzA@mail.gmail.com>
-Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Song Liu <song@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+References: <20230412182316.11628-1-9erthalion6@gmail.com> <20230421205610.xawzzfy36iskcoyx@erthalion.local>
+ <ZEx2gsEOWNxXaY/+@kernel.org>
+In-Reply-To: <ZEx2gsEOWNxXaY/+@kernel.org>
+From:   Song Liu <song@kernel.org>
+Date:   Thu, 4 May 2023 19:01:04 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW5e+2rjnbEsXXXuBO2bUvyx0mHquxb6a0a6MGqXdaodUw@mail.gmail.com>
+Message-ID: <CAPhsuW5e+2rjnbEsXXXuBO2bUvyx0mHquxb6a0a6MGqXdaodUw@mail.gmail.com>
+Subject: Re: [RFC PATCH] perf stat: Separate bperf from bpf_profiler
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>,
+        Dmitry Dolgov <9erthalion6@gmail.com>,
         linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        bpf <bpf@vger.kernel.org>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        mingo@redhat.com, jolsa@kernel.org, irogers@google.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 4, 2023 at 4:03=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> wrote=
-:
->
-> On Thu, May 04, 2023 at 03:03:42PM -0700, Ian Rogers wrote:
-> > On Thu, May 4, 2023 at 2:48=E2=80=AFPM Arnaldo Carvalho de Melo <acme@k=
-ernel.org> wrote:
-> > >
-> > > Em Thu, May 04, 2023 at 04:07:29PM -0300, Arnaldo Carvalho de Melo es=
-creveu:
-> > > > Em Thu, May 04, 2023 at 11:50:07AM -0700, Andrii Nakryiko escreveu:
-> > > > > On Thu, May 4, 2023 at 10:52=E2=80=AFAM Arnaldo Carvalho de Melo =
+On Fri, Apr 28, 2023 at 6:44=E2=80=AFPM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
-> > > > > > Andrii, can you add some more information about the usage of vm=
-linux.h
-> > > > > > instead of using kernel headers?
-> > > >
-> > > > > I'll just say that vmlinux.h is not a hard requirement to build B=
-PF
-> > > > > programs, it's more a convenience allowing easy access to definit=
-ions
-> > > > > of both UAPI and kernel-internal structures for tracing needs and
-> > > > > marking them relocatable using BPF CO-RE machinery. Lots of real-=
-world
-> > > > > applications just check-in pregenerated vmlinux.h to avoid build-=
-time
-> > > > > dependency on up-to-date host kernel and such.
-> > > >
-> > > > > If vmlinux.h generation and usage is causing issues, though, give=
-n
-> > > > > that perf's BPF programs don't seem to be using many different ke=
-rnel
-> > > > > types, it might be a better option to just use UAPI headers for p=
-ublic
-> > > > > kernel type definitions, and just define CO-RE-relocatable minima=
-l
-> > > > > definitions locally in perf's BPF code for the other types necess=
-ary.
-> > > > > E.g., if perf needs only pid and tgid from task_struct, this woul=
-d
-> > > > > suffice:
-> > > >
-> > > > > struct task_struct {
-> > > > >     int pid;
-> > > > >     int tgid;
-> > > > > } __attribute__((preserve_access_index));
-> > > >
-> > > > Yeah, that seems like a way better approach, no vmlinux involved, l=
-ibbpf
-> > > > CO-RE notices that task_struct changed from this two integers versi=
-on
-> > > > (of course) and does the relocation to where it is in the running k=
-ernel
-> > > > by using /sys/kernel/btf/vmlinux.
+>
+> Em Fri, Apr 21, 2023 at 10:56:10PM +0200, Dmitry Dolgov escreveu:
+> > > On Wed, Apr 12, 2023 at 08:23:16PM +0200, Dmitrii Dolgov wrote:
+> > > It seems that perf stat -b <prog id> doesn't produce any results:
 > > >
-> > > Doing it for one of the skels, build tested, runtime untested, but no=
-t
-> > > using any vmlinux, BTF to help, not that bad, more verbose, but at le=
-ast
-> > > we state what are the fields we actually use, have those attribute
-> > > documenting that those offsets will be recorded for future use, etc.
+> > >     $ perf stat -e cycles -b 4 -I 10000 -vvv
+> > >     Control descriptor is not initialized
+> > >     cycles: 0 0 0
+> > >                 time        counts unit      events
+> > >     10.007641640    <not supported>      cycles
 > > >
-> > > Namhyung, can you please check that this works?
-> > >
-> > > Thanks,
-> > >
-> > > - Arnaldo
-> > >
-> > > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf=
-/util/bpf_skel/bperf_cgroup.bpf.c
-> > > index 6a438e0102c5a2cb..f376d162549ebd74 100644
-> > > --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > @@ -1,11 +1,40 @@
-> > >  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > >  // Copyright (c) 2021 Facebook
-> > >  // Copyright (c) 2021 Google
-> > > -#include "vmlinux.h"
-> > > +#include <linux/types.h>
-> > > +#include <linux/bpf.h>
+> > > Looks like this happens because fentry/fexit progs are getting loaded=
+, but the
+> > > corresponding perf event is not enabled and not added into the events=
+ bpf map.
+> > > I think there is some mixing up between two type of bpf support, one =
+for bperf
+> > > and one for bpf_profiler. Both are identified via evsel__is_bpf, base=
+d on which
+> > > perf events are enabled, but for the latter (bpf_profiler) a perf eve=
+nt is
+> > > required. Using evsel__is_bperf to check only bperf produces expected=
+ results:
 > >
-> > Compared to vmlinux.h here be dragons. It is easy to start dragging in
-> > all of libc and that may not work due to missing #ifdefs, etc.. Could
-> > we check in a vmlinux.h like libbpf-tools does?
-> > https://github.com/iovisor/bcc/tree/master/libbpf-tools#vmlinuxh-genera=
-tion
-> > https://github.com/iovisor/bcc/tree/master/libbpf-tools/arm64
-> >
-> > This would also remove some of the errors that could be introduced by
-> > copy+pasting enums, etc. and also highlight issues with things being
-> > renamed as build time rather than runtime failures.
+> > Any thoughts on this? I would appreciate clarifications if I'm missing
+> > something.
 >
-> we already have to deal with that, right? doing checks on fields in
-> structs like mm_struct___old
+> Namhyung, Song, can you please take a look at this?
 
-We do, but the way I detected the problems in the first place was by
-building against older kernels. Now the build will always succeed but
-fail at runtime.
+Sorry for the late response. The fix looks good to me and worked well
+in my test.
 
-> > Could this be some shared resource for the different linux tools
-> > projects using a vmlinux.h? e.g. tools/lib/vmlinuxh with an
-> > install_headers target that builds a vmlinux.h.
->
-> I tried to do the minimal header and it's not too big,
-> I pushed it in here:
->   https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=
-=3Dperf/vmlinux_h
->
-> compile tested so far
->
-> jirka
+Reviewed-and-tested-by: Song Liu <song@kernel.org>
 
-Cool, could we just call it vmlinux.h rather than perf-defs.h?
+I guess we also need:
 
-I notice cgroup_subsys_id is in there which is called out in Andrii's
-CO-RE  guide/blog:
-https://nakryiko.com/posts/bpf-core-reference-guide/#relocatable-enums
-perhaps we can do something with names/types to make sure a helper is
-being used for these enum values.
+Fixes: 112cb56164bc2 ("perf stat: Introduce config stat.bpf-counter-events"=
+)
 
-Thanks,
-Ian
+Thanks for the fix!
+Song
