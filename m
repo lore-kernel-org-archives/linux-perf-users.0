@@ -2,47 +2,48 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD42C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 23:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2855DC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 23:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbjEEXne convert rfc822-to-8bit (ORCPT
+        id S231252AbjEEXoG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 19:43:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
+        Fri, 5 May 2023 19:44:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229831AbjEEXnd (ORCPT
+        with ESMTP id S229831AbjEEXoF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 19:43:33 -0400
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E235FD9;
-        Fri,  5 May 2023 16:43:32 -0700 (PDT)
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-55a8e9e2c53so22879967b3.1;
-        Fri, 05 May 2023 16:43:32 -0700 (PDT)
+        Fri, 5 May 2023 19:44:05 -0400
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5585FE0;
+        Fri,  5 May 2023 16:44:03 -0700 (PDT)
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-b9a6f17f2b6so16535570276.1;
+        Fri, 05 May 2023 16:44:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683330211; x=1685922211;
+        d=1e100.net; s=20221208; t=1683330243; x=1685922243;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2x1tn4ecL7a7PZyU0NHPKD9PY3vOquBlEMbobtDzvuM=;
-        b=A93/FvJv1FYbG/nolYa/F7ktpbKhtwrzy43ROIM2WvMNzNaYAbTSGlGuo+IMhn+fmu
-         exlEo5f6cuWHuMuz6gXO5w90LPDUmdxnEofjFVlAIxYqOZrScKNlqbv3cO688X0UYbL3
-         SNbfcjxaIXq8CdThoe6qEoxHOch/WIebJt+7jeHfLveE5Vo6oJkXr6VUbsbgC1XT9tAa
-         Zwjj/0tmQ3oMjw0yQ7w7HTIe7xf5/q+aRv+eaXbMxVlVQi6a2O6+xSdQliVR9k4QxQvk
-         je7cgkzPi9FwnWQhiWH174rZ+CPCvmoOc/zKc+Yg2/keMEDsV5MBbeIMSjr3Rv0LZSMo
-         wLrQ==
-X-Gm-Message-State: AC+VfDwodK3gldGpq2IMIGn7Hqkd2A+NlTIvpDhtxSscY3qXcMqamKWl
-        3us4X3V5slbPVfcjrJSdpfJ7VmBnD+SoU1yMjPg=
-X-Google-Smtp-Source: ACHHUZ5rFc3wS54CsVRG1DPr2zu+nHGMWF8vD1d6hDpwm5zY0I+iBCvVecXDwuNv8KgEQmhzSLgOdWQGiSxuncnDSmA=
-X-Received: by 2002:a25:abe5:0:b0:ba1:b539:a39a with SMTP id
- v92-20020a25abe5000000b00ba1b539a39amr3430513ybi.6.1683330211398; Fri, 05 May
- 2023 16:43:31 -0700 (PDT)
+        bh=0VWVwxZIs17EWQgN1pMsqtqITHwPVpRT/J8MlrKIuf0=;
+        b=C2MUZgswslksx+JUOU1qPojPDLZMWut1Kkg0eQCooDH5b2YNyEpUBUda4UDAzkBSBq
+         ZdNttltoCOZ4pq3Iyv9erC0ipGaJ8d+9kY8AzbclJgjM+DM5jerVzYGAyd0HydFHrcWJ
+         3Wk0EiytStcGohcv5bs/SxCYBuj9QyWxJFkcQNNqwKityZ6KQEkbp6jBv1bu9jPkaHkL
+         fQaApvZGR+Z27ICj464baUERG/SGkkaYzwtpE/HRNz9jgLeGHAXtMliF/IE9Uzxx4seL
+         eo0gHHkikiQBCbHMaT8rUSUEaEU1oXuhSieYAo0PlekonPoVTaQMnweHPFGDgXt8Y4OU
+         +H+A==
+X-Gm-Message-State: AC+VfDzbpiqv3tTWWhtogazfgklKCemcVJY+olWzamZKV22ljg7h2NMj
+        Io0f42jVZijgIqHsg1WAk46yKoZ03u676yAzLOM=
+X-Google-Smtp-Source: ACHHUZ6t7vln0PDR6zfyAtsdsfhDAr3DtC9YEHncbwx3EogvaxvcUX9cVuniMmYDEdAimDdVXZRwT7xXfzZWxHQGs9I=
+X-Received: by 2002:a25:4f57:0:b0:b9e:2ef0:de90 with SMTP id
+ d84-20020a254f57000000b00b9e2ef0de90mr5369318ybb.17.1683330242744; Fri, 05
+ May 2023 16:44:02 -0700 (PDT)
 MIME-Version: 1.0
 References: <83d6c6c05c54bf00c5a9df32ac160718efca0c7a.1683280603.git.sandipan.das@amd.com>
-In-Reply-To: <83d6c6c05c54bf00c5a9df32ac160718efca0c7a.1683280603.git.sandipan.das@amd.com>
+ <6a5429879764e3dac984cbb11ee2d95cc1604161.1683280603.git.sandipan.das@amd.com>
+In-Reply-To: <6a5429879764e3dac984cbb11ee2d95cc1604161.1683280603.git.sandipan.das@amd.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 5 May 2023 16:43:20 -0700
-Message-ID: <CAM9d7cgZLiRmUDnxW3NpN67Jvgj670FPBkwqncXmDEamYM6n3A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf script: Skip aggregation for stat events
+Date:   Fri, 5 May 2023 16:43:51 -0700
+Message-ID: <CAM9d7cinMnb03jU=ZzEbPhBkbd7-rL1CMaQ41ZBnaD2ysqDVBA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf test: Add stat test for record and script
 To:     Sandipan Das <sandipan.das@amd.com>
 Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
@@ -55,35 +56,15 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
 On Fri, May 5, 2023 at 3:03 AM Sandipan Das <sandipan.das@amd.com> wrote:
 >
-> The script command does not support aggregation modes by itself although
-> that can be achieved using post-processing scripts. Because of this, it
-> does not allocate memory for aggregated event values.
+> When using the global aggregation mode, running perf script after perf
+> stat record can result in a segmentation fault as seen with commit
+> 8b76a3188b85 ("perf stat: Remove unused perf_counts.aggr field"). Add a
+> basic test to the existing suite of stat-related tests for checking if
+> that workflow runs without erroring out.
 >
-> Upon running perf stat record, the aggregation mode is set in the perf
-> data file. If the mode is AGGR_GLOBAL, the aggregated event values are
-> accessed and this leads to a segmentation fault since these were never
-> allocated to begin with. Set the mode to AGGR_NONE explicitly to avoid
-> this.
->
-> E.g.
->
->   $ perf stat record -e cycles true
->   $ perf script
->
-> Before:
->   Segmentation fault (core dumped)
->
-> After:
->   CPU   THREAD             VAL             ENA             RUN            TIME EVENT
->    -1   231919          162831          362069          362069          935289 cycles:u
->
-> Fixes: 8b76a3188b85 ("perf stat: Remove unused perf_counts.aggr field")
 > Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> Cc: stable@vger.kernel.org # v6.2+
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -92,27 +73,40 @@ Namhyung
 
 
 > ---
->  tools/perf/builtin-script.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  tools/perf/tests/shell/stat.sh | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 >
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 006f522d0e7f..c57be48d65bb 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -3647,6 +3647,13 @@ static int process_stat_config_event(struct perf_session *session __maybe_unused
->                                      union perf_event *event)
->  {
->         perf_event__read_stat_config(&stat_config, &event->stat_config);
-> +
-> +       /*
-> +        * Aggregation modes are not used since post-processing scripts are
-> +        * supposed to take care of such requirements
-> +        */
-> +       stat_config.aggr_mode = AGGR_NONE;
-> +
->         return 0;
+> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+> index 2c1d3f704995..b154fbb15d54 100755
+> --- a/tools/perf/tests/shell/stat.sh
+> +++ b/tools/perf/tests/shell/stat.sh
+> @@ -28,6 +28,18 @@ test_stat_record_report() {
+>    echo "stat record and report test [Success]"
 >  }
 >
+> +test_stat_record_script() {
+> +  echo "stat record and script test"
+> +  if ! perf stat record -o - true | perf script -i - 2>&1 | \
+> +    grep -E -q "CPU[[:space:]]+THREAD[[:space:]]+VAL[[:space:]]+ENA[[:space:]]+RUN[[:space:]]+TIME[[:space:]]+EVENT"
+> +  then
+> +    echo "stat record and script test [Failed]"
+> +    err=1
+> +    return
+> +  fi
+> +  echo "stat record and script test [Success]"
+> +}
+> +
+>  test_stat_repeat_weak_groups() {
+>    echo "stat repeat weak groups test"
+>    if ! perf stat -e '{cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles,cycles}' \
+> @@ -93,6 +105,7 @@ test_topdown_weak_groups() {
+>
+>  test_default_stat
+>  test_stat_record_report
+> +test_stat_record_script
+>  test_stat_repeat_weak_groups
+>  test_topdown_groups
+>  test_topdown_weak_groups
 > --
 > 2.34.1
 >
