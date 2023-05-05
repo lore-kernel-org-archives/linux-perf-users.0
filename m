@@ -2,202 +2,147 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C23C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 09:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F0E0C77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 10:03:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230484AbjEEJj0 (ORCPT
+        id S231301AbjEEKDR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 05:39:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45366 "EHLO
+        Fri, 5 May 2023 06:03:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231797AbjEEJjY (ORCPT
+        with ESMTP id S231897AbjEEKDL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 05:39:24 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C84219928;
-        Fri,  5 May 2023 02:39:21 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-965ab8ed1c0so246057366b.2;
-        Fri, 05 May 2023 02:39:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683279560; x=1685871560;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=GUktY4jStI4pioqhxhiQLqN7xdp1S8+7gGDVuIEND74=;
-        b=a/m+zAdVmVzY7n3IFMrOHes7piGpofgyMv0chbeHFQJBDhvUL1B1CocjQ5kUigMoyu
-         DGNr6C2U70w0fj8H8M+WIReDJv4hqiBYgywhuAEoahNjqg4sMkspLl3PDKe9RawCXvOr
-         L77U8IOhjtF6xkL3h906lXiVngWu4h6Q1UdUHFTa0M+wCllEBVaMea5oeHAzpkABD97l
-         Qmpcbe6MbTvJFOTfKFv0AaOPCMI+CAw9uu9Vx5FIx7U+uc8NOhjgF2xfc14yi1wWY3Hu
-         SvE98SUCKG8uqK532gzKmdqq+YfZMyPe2Kaz5RdxEdxu8lTF4o30w3qh3lOKY5nNt+tP
-         629g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683279560; x=1685871560;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GUktY4jStI4pioqhxhiQLqN7xdp1S8+7gGDVuIEND74=;
-        b=dwHEUn0uwNtBWkL5b9jB+2YTdaUxVzZzssJMPCwSgagRPfqsw7ptCJ2cL/vUOWquWM
-         G4+nrEK3bhLKiWnzklsYutEkGcjXQCTilefkeozrcLVyh49FrCzpl8IyvfghWE3Q3Sw8
-         48Qrw77OFHTozewAo13TmGNMhbdaGFDzyGvwpkQBhF5rLM2WBWh1eCtQp/cXe5GR90+J
-         KqoPVcX+9cLPThcwQrnEqEH3wnaJGHNxewMnyxVlE+FRwdsdfJdlwH1aapQE8+DfPfGP
-         0J5QVvrWBbbEzJzwpalWHiswc76KfWYdirUQNjlETtooD7lfVdUAesk3v1bqUh0Wcwmq
-         9Ghw==
-X-Gm-Message-State: AC+VfDxJ6hWU27LCB/yCaBXBN45Mgo7rKVUDuexkJrTnEmANKh98lZpF
-        YolnLO/CuKbHxsMv+Mc4QmM=
-X-Google-Smtp-Source: ACHHUZ5QYFD4IELsY0R7LPQMp/0MWV54qghTOrO9jyvy11VxKC4OuAqTMSBTYwCjrBV0h68SeRTpYA==
-X-Received: by 2002:a17:907:6289:b0:961:8d21:a480 with SMTP id nd9-20020a170907628900b009618d21a480mr582683ejc.58.1683279559773;
-        Fri, 05 May 2023 02:39:19 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id n5-20020a1709065da500b00965e68b8df5sm437929ejv.76.2023.05.05.02.39.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 May 2023 02:39:19 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Fri, 5 May 2023 11:39:16 +0200
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Song Liu <song@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
-Message-ID: <ZFTOxBDsbboKeEr9@krava>
-References: <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
- <ZFOSUab5XEJD0kxj@kernel.org>
- <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
- <ZFPw0scDq1eIzfHr@kernel.org>
- <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
- <ZFQCccsx6GK+gY0j@kernel.org>
- <ZFQoQjCNtyMIulp+@kernel.org>
- <CAP-5=fU8HQorW+7O6vfEKGs1mEFkjkzXZMVPACzurtcMcRhVzQ@mail.gmail.com>
- <ZFQ5sjjtfEYzvHNP@krava>
- <CAP-5=fXgtNQ5KQv_M+b-mR-dm_s8AAgRkotXifFiTqBo9FHJzA@mail.gmail.com>
+        Fri, 5 May 2023 06:03:11 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2044.outbound.protection.outlook.com [40.107.223.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB4099019;
+        Fri,  5 May 2023 03:03:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nwaPVR79d8gAtTi3x2uElkJK45Wyd/n+1zYuVrN83yw5u2wMAgn1lPDagxU6KK4sLw9HFxkBl/fCsQy1MU8lvzZ+n2kFWBHgBhqXcZCpXYXl2kx/Toj9jQNzZBlF0fL8ezDzGXGICA+MTYykkXV4qhq3w+0mvCe6FZHsahSKO1nxzfLPU24dLHuTdtfwebW0ybOuMjSrrZncZ4LsiH8kxydxvl6GP1VNvIg/mSVVQkU1T26/H7h9EeT6f7H2iuCy69zVdAlCpJbiLyiR/uq/GTLutL9yXQRlj8IGCCvOt7uY93dGF2+Cfr1g+tej+Mmk8ahJK6Ci5PhGsyNMVYwlog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jutWhOYcfhVltBsmhAGpFE40+Id0JaupsxHlGmdKoQs=;
+ b=kVffDqrzfT5KKMNTy1/aSJWRR8/CTMES+gbt3aMZ1KKYUxwsBzRVtLwqAzO/bsbqUdSQUp5Sg2lFmRDMZ2cFQCobpQaDCKd0TxMQTyTcqfbmb8nqaqAHLDMrEOUjD/cJ7e8kcYGpq3nI7yc1QQ4NGV3nZc8EmBIsFtn5omE14/pE0LbOPJsAaoTPDtxlrUUxqr2KB85A2p6uA/aqckASjij6owriQHEP8nxj30DJGr4BmB2xrHPsDOzmulCE7l3Z3Y07OfXaAf3Gvz3cFdxHtjqyBrBSEjwllYlO5Fv8gf9bedffBfvSt+kMSYvhenHaCHdd/I9xKSRWSI7hlsFEHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jutWhOYcfhVltBsmhAGpFE40+Id0JaupsxHlGmdKoQs=;
+ b=vtfwj851ysWwcZevhbksX8DYkCB0WcfsS/mb46U4ktix4DABLP+cBlzd1TPLWEopdayv/+4hiuz0Uibmpe5B8pO7Pkt8ZXeTiDE0bEZb3KQYKyugCqZ+hV7yH1k0ZgMFbF+jn0jPNdFjBh/sF2JJzbsey8sQZbebgwfopYmHglo=
+Received: from MW4PR04CA0093.namprd04.prod.outlook.com (2603:10b6:303:83::8)
+ by MW4PR12MB7481.namprd12.prod.outlook.com (2603:10b6:303:212::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.27; Fri, 5 May
+ 2023 10:03:07 +0000
+Received: from CO1NAM11FT041.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:83:cafe::e4) by MW4PR04CA0093.outlook.office365.com
+ (2603:10b6:303:83::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.27 via Frontend
+ Transport; Fri, 5 May 2023 10:03:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1NAM11FT041.mail.protection.outlook.com (10.13.174.217) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6363.27 via Frontend Transport; Fri, 5 May 2023 10:03:07 +0000
+Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 5 May
+ 2023 05:03:02 -0500
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <acme@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <terrelln@fb.com>,
+        <ravi.bangoria@amd.com>, <ananth.narayan@amd.com>,
+        <sandipan.das@amd.com>
+Subject: [PATCH 1/2] perf script: Skip aggregation for stat events
+Date:   Fri, 5 May 2023 15:32:53 +0530
+Message-ID: <83d6c6c05c54bf00c5a9df32ac160718efca0c7a.1683280603.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXgtNQ5KQv_M+b-mR-dm_s8AAgRkotXifFiTqBo9FHJzA@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT041:EE_|MW4PR12MB7481:EE_
+X-MS-Office365-Filtering-Correlation-Id: aacdbb1c-2af7-48dd-30f5-08db4d4fecd1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bW3wqHOlIezOBYj/Ym4/VnO6c9WNqo6EfkS+1trlI06FTRwMwWrk/o7bB6yAYNLrxNnbm4mcMbQAeBiTJ+K4CxlQ1AHlRVrt+CYRuOqYNoR2pYKskcq/mNyHlKcTiVO+IV/b1UxiKTgNNtyMwl+Y9Fa2a9U2LdjWyra7MNX81221y/wmvb5h2t27TaL/rLRVfv5N4uUpawg18dB/mCL9Kck6ClNpMzt8rOdYn+gLVp7RwnDcCAgs79ADehQH6Axk5i53jvYKNgv6fgV13+lQaq/UwH0girQ8xhMPKbnGu8vuO9PtpcBHcpjexFe5CLjF+j29RzLgrEAtDPjsvqfhJYe7sipqPp9EjOOZjMVAhPeC+pgMVTPK2c+DBNuWQCQpPuhQ7JcM8t3t9uj30drMeDAUgdLUQawL4oD5Y2jDlnTisN9OuVBBdL9Nd6QFG0RMSYrewjTLz4M2HlqV77k8ORyIQUh5J93OGTEuGBCa5jjipK4MDPccn0xLMc1i7IuHkrnptIaTJCsdE8lU1V4hhyZV2wtpdcTOo8HhEzJ38DWf0D/9rFmzg/SYxJaLtpjUClI0llYT/w3HZv1RjWEJZlzRd8VXWnwBCKvBmzbVZ2ELsJcWK7/qAHVVSiw3Y4cMXr7AHg+Mr8JnFl1HkTtWfL4Zmfhq9ctLtWDazH0hDX3Rw5pwaRlCT96ys1ksAA6giictEJ6YTu0FACd6Je59lfbtal/jbHqKcVuphCaP03zhGjT8GWzorBSQyRXlJGP2mD3SbXe3nDNa9lsVD9TSEUhOu2V1mA7qEYF1k25ULfE=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(136003)(39860400002)(346002)(451199021)(36840700001)(40470700004)(46966006)(44832011)(70206006)(70586007)(41300700001)(4326008)(8936002)(8676002)(7416002)(5660300002)(26005)(54906003)(478600001)(316002)(6666004)(110136005)(2906002)(83380400001)(40460700003)(47076005)(336012)(426003)(2616005)(16526019)(186003)(36860700001)(81166007)(82740400003)(356005)(40480700001)(86362001)(82310400005)(36756003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2023 10:03:07.2069
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aacdbb1c-2af7-48dd-30f5-08db4d4fecd1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT041.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7481
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 04, 2023 at 04:19:47PM -0700, Ian Rogers wrote:
-> On Thu, May 4, 2023 at 4:03 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> >
-> > On Thu, May 04, 2023 at 03:03:42PM -0700, Ian Rogers wrote:
-> > > On Thu, May 4, 2023 at 2:48 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > >
-> > > > Em Thu, May 04, 2023 at 04:07:29PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > > Em Thu, May 04, 2023 at 11:50:07AM -0700, Andrii Nakryiko escreveu:
-> > > > > > On Thu, May 4, 2023 at 10:52 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > > > > Andrii, can you add some more information about the usage of vmlinux.h
-> > > > > > > instead of using kernel headers?
-> > > > >
-> > > > > > I'll just say that vmlinux.h is not a hard requirement to build BPF
-> > > > > > programs, it's more a convenience allowing easy access to definitions
-> > > > > > of both UAPI and kernel-internal structures for tracing needs and
-> > > > > > marking them relocatable using BPF CO-RE machinery. Lots of real-world
-> > > > > > applications just check-in pregenerated vmlinux.h to avoid build-time
-> > > > > > dependency on up-to-date host kernel and such.
-> > > > >
-> > > > > > If vmlinux.h generation and usage is causing issues, though, given
-> > > > > > that perf's BPF programs don't seem to be using many different kernel
-> > > > > > types, it might be a better option to just use UAPI headers for public
-> > > > > > kernel type definitions, and just define CO-RE-relocatable minimal
-> > > > > > definitions locally in perf's BPF code for the other types necessary.
-> > > > > > E.g., if perf needs only pid and tgid from task_struct, this would
-> > > > > > suffice:
-> > > > >
-> > > > > > struct task_struct {
-> > > > > >     int pid;
-> > > > > >     int tgid;
-> > > > > > } __attribute__((preserve_access_index));
-> > > > >
-> > > > > Yeah, that seems like a way better approach, no vmlinux involved, libbpf
-> > > > > CO-RE notices that task_struct changed from this two integers version
-> > > > > (of course) and does the relocation to where it is in the running kernel
-> > > > > by using /sys/kernel/btf/vmlinux.
-> > > >
-> > > > Doing it for one of the skels, build tested, runtime untested, but not
-> > > > using any vmlinux, BTF to help, not that bad, more verbose, but at least
-> > > > we state what are the fields we actually use, have those attribute
-> > > > documenting that those offsets will be recorded for future use, etc.
-> > > >
-> > > > Namhyung, can you please check that this works?
-> > > >
-> > > > Thanks,
-> > > >
-> > > > - Arnaldo
-> > > >
-> > > > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > > index 6a438e0102c5a2cb..f376d162549ebd74 100644
-> > > > --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > > @@ -1,11 +1,40 @@
-> > > >  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > >  // Copyright (c) 2021 Facebook
-> > > >  // Copyright (c) 2021 Google
-> > > > -#include "vmlinux.h"
-> > > > +#include <linux/types.h>
-> > > > +#include <linux/bpf.h>
-> > >
-> > > Compared to vmlinux.h here be dragons. It is easy to start dragging in
-> > > all of libc and that may not work due to missing #ifdefs, etc.. Could
-> > > we check in a vmlinux.h like libbpf-tools does?
-> > > https://github.com/iovisor/bcc/tree/master/libbpf-tools#vmlinuxh-generation
-> > > https://github.com/iovisor/bcc/tree/master/libbpf-tools/arm64
-> > >
-> > > This would also remove some of the errors that could be introduced by
-> > > copy+pasting enums, etc. and also highlight issues with things being
-> > > renamed as build time rather than runtime failures.
-> >
-> > we already have to deal with that, right? doing checks on fields in
-> > structs like mm_struct___old
-> 
-> We do, but the way I detected the problems in the first place was by
-> building against older kernels. Now the build will always succeed but
-> fail at runtime.
-> 
-> > > Could this be some shared resource for the different linux tools
-> > > projects using a vmlinux.h? e.g. tools/lib/vmlinuxh with an
-> > > install_headers target that builds a vmlinux.h.
-> >
-> > I tried to do the minimal header and it's not too big,
-> > I pushed it in here:
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=perf/vmlinux_h
-> >
-> > compile tested so far
-> >
-> > jirka
-> 
-> Cool, could we just call it vmlinux.h rather than perf-defs.h?
+The script command does not support aggregation modes by itself although
+that can be achieved using post-processing scripts. Because of this, it
+does not allocate memory for aggregated event values.
 
-right, it also makes the change smaller
+Upon running perf stat record, the aggregation mode is set in the perf
+data file. If the mode is AGGR_GLOBAL, the aggregated event values are
+accessed and this leads to a segmentation fault since these were never
+allocated to begin with. Set the mode to AGGR_NONE explicitly to avoid
+this.
 
-> 
-> I notice cgroup_subsys_id is in there which is called out in Andrii's
-> CO-RE  guide/blog:
-> https://nakryiko.com/posts/bpf-core-reference-guide/#relocatable-enums
-> perhaps we can do something with names/types to make sure a helper is
-> being used for these enum values.
+E.g.
 
-ok, I'll check on that..  so far I made some clean ups and updated the branch
+  $ perf stat record -e cycles true
+  $ perf script
 
-thanks,
-jirka
+Before:
+  Segmentation fault (core dumped)
+
+After:
+  CPU   THREAD             VAL             ENA             RUN            TIME EVENT
+   -1   231919          162831          362069          362069          935289 cycles:u
+
+Fixes: 8b76a3188b85 ("perf stat: Remove unused perf_counts.aggr field")
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Cc: stable@vger.kernel.org # v6.2+
+---
+ tools/perf/builtin-script.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 006f522d0e7f..c57be48d65bb 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3647,6 +3647,13 @@ static int process_stat_config_event(struct perf_session *session __maybe_unused
+ 				     union perf_event *event)
+ {
+ 	perf_event__read_stat_config(&stat_config, &event->stat_config);
++
++	/*
++	 * Aggregation modes are not used since post-processing scripts are
++	 * supposed to take care of such requirements
++	 */
++	stat_config.aggr_mode = AGGR_NONE;
++
+ 	return 0;
+ }
+ 
+-- 
+2.34.1
+
