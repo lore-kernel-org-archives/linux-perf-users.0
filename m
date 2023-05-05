@@ -2,125 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A094C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 23:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD42C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 23:43:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbjEEXIm (ORCPT
+        id S229879AbjEEXne convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 19:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60472 "EHLO
+        Fri, 5 May 2023 19:43:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbjEEXIl (ORCPT
+        with ESMTP id S229831AbjEEXnd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 19:08:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A71D3C27;
-        Fri,  5 May 2023 16:08:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 068CA64089;
-        Fri,  5 May 2023 23:08:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33B49C433EF;
-        Fri,  5 May 2023 23:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683328119;
-        bh=E9xVrGcyPpQiErxL+lGa0x3zhKoFQlcP5X0surPTEkc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=AIIVx1GrhOuJmOOGM/1DuuArum/V7qVHzZHXd3ehNcStcCrVbQA+zJumI4eIzp6Vn
-         hdPGCJPKYwuFm5fcC/2sU9VBaLkWsEUT+LV/17BnIhp5D5sNpUoZ1Fm8v6dEntuE+R
-         mkBVuhoXNEyfUa3K5sHzORLva15diJPBmQXTy1sN8ignpjqPWSwUl6qQ6hWnEbj20h
-         9qUfwRNUee6OaRZ/q/TJZ+L3gr+kne1RUdz7w6Do5bYh2AF5w4Bhr0I5J8Og4x6nzc
-         +tn8dGJyKQj5D+plq3e7p7XD0Z7FGNf1DsSooKFchrZKKW4Gh9LNhcJuOvundqGOs5
-         08S/9eqP71ffA==
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, Ian Rogers <irogers@google.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools changes for v6.4: 2nd attempt
-Date:   Fri,  5 May 2023 20:08:31 -0300
-Message-Id: <20230505230831.1084855-1-acme@kernel.org>
-X-Mailer: git-send-email 2.39.2
+        Fri, 5 May 2023 19:43:33 -0400
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E235FD9;
+        Fri,  5 May 2023 16:43:32 -0700 (PDT)
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-55a8e9e2c53so22879967b3.1;
+        Fri, 05 May 2023 16:43:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683330211; x=1685922211;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2x1tn4ecL7a7PZyU0NHPKD9PY3vOquBlEMbobtDzvuM=;
+        b=A93/FvJv1FYbG/nolYa/F7ktpbKhtwrzy43ROIM2WvMNzNaYAbTSGlGuo+IMhn+fmu
+         exlEo5f6cuWHuMuz6gXO5w90LPDUmdxnEofjFVlAIxYqOZrScKNlqbv3cO688X0UYbL3
+         SNbfcjxaIXq8CdThoe6qEoxHOch/WIebJt+7jeHfLveE5Vo6oJkXr6VUbsbgC1XT9tAa
+         Zwjj/0tmQ3oMjw0yQ7w7HTIe7xf5/q+aRv+eaXbMxVlVQi6a2O6+xSdQliVR9k4QxQvk
+         je7cgkzPi9FwnWQhiWH174rZ+CPCvmoOc/zKc+Yg2/keMEDsV5MBbeIMSjr3Rv0LZSMo
+         wLrQ==
+X-Gm-Message-State: AC+VfDwodK3gldGpq2IMIGn7Hqkd2A+NlTIvpDhtxSscY3qXcMqamKWl
+        3us4X3V5slbPVfcjrJSdpfJ7VmBnD+SoU1yMjPg=
+X-Google-Smtp-Source: ACHHUZ5rFc3wS54CsVRG1DPr2zu+nHGMWF8vD1d6hDpwm5zY0I+iBCvVecXDwuNv8KgEQmhzSLgOdWQGiSxuncnDSmA=
+X-Received: by 2002:a25:abe5:0:b0:ba1:b539:a39a with SMTP id
+ v92-20020a25abe5000000b00ba1b539a39amr3430513ybi.6.1683330211398; Fri, 05 May
+ 2023 16:43:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <83d6c6c05c54bf00c5a9df32ac160718efca0c7a.1683280603.git.sandipan.das@amd.com>
+In-Reply-To: <83d6c6c05c54bf00c5a9df32ac160718efca0c7a.1683280603.git.sandipan.das@amd.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 5 May 2023 16:43:20 -0700
+Message-ID: <CAM9d7cgZLiRmUDnxW3NpN67Jvgj670FPBkwqncXmDEamYM6n3A@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf script: Skip aggregation for stat events
+To:     Sandipan Das <sandipan.das@amd.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        terrelln@fb.com, ravi.bangoria@amd.com, ananth.narayan@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+Hello,
 
-	Please see if this is now ok, otherwise holler and we'll try
-again to address whatever problems remain,
+On Fri, May 5, 2023 at 3:03 AM Sandipan Das <sandipan.das@amd.com> wrote:
+>
+> The script command does not support aggregation modes by itself although
+> that can be achieved using post-processing scripts. Because of this, it
+> does not allocate memory for aggregated event values.
+>
+> Upon running perf stat record, the aggregation mode is set in the perf
+> data file. If the mode is AGGR_GLOBAL, the aggregated event values are
+> accessed and this leads to a segmentation fault since these were never
+> allocated to begin with. Set the mode to AGGR_NONE explicitly to avoid
+> this.
+>
+> E.g.
+>
+>   $ perf stat record -e cycles true
+>   $ perf script
+>
+> Before:
+>   Segmentation fault (core dumped)
+>
+> After:
+>   CPU   THREAD             VAL             ENA             RUN            TIME EVENT
+>    -1   231919          162831          362069          362069          935289 cycles:u
+>
+> Fixes: 8b76a3188b85 ("perf stat: Remove unused perf_counts.aggr field")
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> Cc: stable@vger.kernel.org # v6.2+
 
-Best regards,
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-- Arnaldo
+Thanks,
+Namhyung
 
-The following changes since commit 1f85d016768ff19f060f3cce014a43c761de8259:
 
-  perf test record+probe_libc_inet_pton: Fix call chain match on x86_64 (2023-05-03 11:02:21 -0300)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-for-v6.4-2-2023-05-05
-
-for you to fetch changes up to 6c73f819b6b6d6f052e8dbe3f66f0693554ddf48:
-
-  perf metrics: Fix SEGV with --for-each-cgroup (2023-05-05 19:18:55 -0300)
-
-----------------------------------------------------------------
-Additional fixes on top of the previous v6.4 perf tools pull request:
-
-- Remove the use of bpftool to generate a vmlinux.h file to be used when
-  building BPF bytecode that enables perf tools features.
-
-  Instead add a vmlinux.h file with just the set of structs and fields
-  used in the tools/perf/util/bpf_skel/*.bpf.c files and rely on libbpf's
-  CO-RE functionality to compare the BTF info generated by clang for the
-  BPF target against the BPF info for the kernel where the resulting tool
-  runs to adjust it before loading into the kernel.
-
-- Fix 'perf stat -b <prog id>' to match counter values obtained via
-  'bpftool prog profile <prog id>', as fentry/fexit progs gets loaded,
-  but the corresponding perf event wasn't being enabled and added into
-  the events BPF map.
-
-- Fix copy of 'perf stat' metric threshold to avoid SEGV on using
-  uninitialized memory.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (1):
-      perf bpf skels: Stop using vmlinux.h generated from BTF, use subset of used structs + CO-RE
-
-Dmitrii Dolgov (1):
-      perf stat: Separate bperf from bpf_profiler
-
-Ian Rogers (1):
-      perf metrics: Fix SEGV with --for-each-cgroup
-
- tools/perf/Makefile.perf            |  20 +----
- tools/perf/builtin-stat.c           |   4 +-
- tools/perf/util/bpf_skel/.gitignore |   1 -
- tools/perf/util/bpf_skel/vmlinux.h  | 173 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/evsel.h             |   5 ++
- tools/perf/util/metricgroup.c       |   1 +
- 6 files changed, 182 insertions(+), 22 deletions(-)
- create mode 100644 tools/perf/util/bpf_skel/vmlinux.h
+> ---
+>  tools/perf/builtin-script.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index 006f522d0e7f..c57be48d65bb 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -3647,6 +3647,13 @@ static int process_stat_config_event(struct perf_session *session __maybe_unused
+>                                      union perf_event *event)
+>  {
+>         perf_event__read_stat_config(&stat_config, &event->stat_config);
+> +
+> +       /*
+> +        * Aggregation modes are not used since post-processing scripts are
+> +        * supposed to take care of such requirements
+> +        */
+> +       stat_config.aggr_mode = AGGR_NONE;
+> +
+>         return 0;
+>  }
+>
+> --
+> 2.34.1
+>
