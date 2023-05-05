@@ -2,45 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45673C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 21:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A4BC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 21:52:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233120AbjEEVdd (ORCPT
+        id S229989AbjEEVwL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 17:33:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35630 "EHLO
+        Fri, 5 May 2023 17:52:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230312AbjEEVdc (ORCPT
+        with ESMTP id S231783AbjEEVwK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 17:33:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C006F4;
-        Fri,  5 May 2023 14:33:31 -0700 (PDT)
+        Fri, 5 May 2023 17:52:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D7CC4C28;
+        Fri,  5 May 2023 14:52:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8FB84640D8;
-        Fri,  5 May 2023 21:33:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74DC4C433D2;
-        Fri,  5 May 2023 21:33:29 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C60AC64118;
+        Fri,  5 May 2023 21:52:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7FE0C433EF;
+        Fri,  5 May 2023 21:52:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683322409;
-        bh=M4kahhFPmrKwLmC+dwLRPb9KCPDgd7YIFYm187tld3A=;
+        s=k20201202; t=1683323527;
+        bh=LBfqOVw4Z6GuC13VItNamLAOjDe39tStvarVotopRwI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m5spICSYMMdXNA9wHyGc+FulwdcXkR8owOHc+m9ihjvpDcUM0ZP+xGyFkDCDTae+p
-         qeg31jfxTIBoDPNErCo0O6lh81M5Y51fCeh8XMuY2YJA6g//xr1X+vI8RgTBe8Ffh3
-         rWT8e4hMgwgyA7aaxdroUzKRpBPz6meLsKarHStHqlWKQBYmcAgd8K4y8yWBCfRjcU
-         SqJv9W7XEu4pYQVDMTr+y1+OdQieT2eViMMSzqic7JRJwsJwSfsCE8GzTU+qNpHpgI
-         kaYlbYox6jL/K2mpdGlPkneCGW4w15X/lWnlSFqQs7RkAgdTWrwmeSOPzatqYDU0bB
-         7bNKd+k1o3SSw==
+        b=nok614urewGKxx3mZLQ/3JFXst8YbvkWMLPAmAn9CWcdDQ/FzIJ6nHeDT3Cajoj00
+         CpFtyY+cEijzqw0scykBhuSuCFqmN1Svg3TNehoyBYgVBX30BskZBqRRen/BtFJMoZ
+         2cpS/QqWAB2lBlUniu3jVyrZ4TGZD9LqmW52FeNlwdsraQ6KLZDdGNDZo2U4UPR0yG
+         AuGXuIBNtwIbRMe2hcSa1nXroMfNf+JmAjWe2Y65llfDHd8CSL2dD5UTF+Y9VfwcBc
+         bPgmJyZOIsfiK4VwVckWcMIPtj6C/hUwbJax6GZJrHKWhPoWeC3PJEtG9Yi1/LnTpO
+         WGg+c20r6DZbw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B359C403B5; Fri,  5 May 2023 18:33:26 -0300 (-03)
-Date:   Fri, 5 May 2023 18:33:26 -0300
+        id 1C043403B5; Fri,  5 May 2023 18:52:04 -0300 (-03)
+Date:   Fri, 5 May 2023 18:52:04 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Ian Rogers <irogers@google.com>,
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
         Namhyung Kim <namhyung@kernel.org>, Song Liu <song@kernel.org>,
         Andrii Nakryiko <andrii@kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
@@ -63,141 +62,137 @@ Cc:     Ian Rogers <irogers@google.com>,
 Subject: Re: [PATCH RFC/RFT] perf bpf skels: Stop using vmlinux.h generated
  from BTF, use subset of used structs + CO-RE. was Re: BPF skels in perf .Re:
  [GIT PULL] perf tools changes for v6.4
-Message-ID: <ZFV2JhBV6xyLm7xg@kernel.org>
-References: <ZFPw0scDq1eIzfHr@kernel.org>
- <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
- <ZFQCccsx6GK+gY0j@kernel.org>
- <ZFQoQjCNtyMIulp+@kernel.org>
+Message-ID: <ZFV6hFG/YMiF8vY0@kernel.org>
+References: <ZFQoQjCNtyMIulp+@kernel.org>
  <CAP-5=fU8HQorW+7O6vfEKGs1mEFkjkzXZMVPACzurtcMcRhVzQ@mail.gmail.com>
  <ZFQ5sjjtfEYzvHNP@krava>
  <ZFUFmxDU/6Z/JEsi@kernel.org>
  <ZFU1PJrn8YtHIqno@kernel.org>
  <CAP-5=fWfmmMCRnEmzj_CXTKacp6gjrzmR49Ge_C5XRyfTegRjg@mail.gmail.com>
  <ZFVqeKLssg7uzxzI@krava>
+ <CAP-5=fVgJdBvjV8S2xKswAFiSZvyCcUvZTO1bsLyUf-wQ0pBuw@mail.gmail.com>
+ <ZFVyAap3R9RZ+P6u@krava>
+ <CAEf4BzYYnpD6+GSg+wfL1wUY5YasbN2-9NPJ3QkGZ9o963uYdA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZFVqeKLssg7uzxzI@krava>
+In-Reply-To: <CAEf4BzYYnpD6+GSg+wfL1wUY5YasbN2-9NPJ3QkGZ9o963uYdA@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, May 05, 2023 at 10:43:36PM +0200, Jiri Olsa escreveu:
-> On Fri, May 05, 2023 at 10:04:47AM -0700, Ian Rogers wrote:
-> > On Fri, May 5, 2023 at 9:56 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+Em Fri, May 05, 2023 at 02:21:56PM -0700, Andrii Nakryiko escreveu:
+> On Fri, May 5, 2023 at 2:15 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > On Fri, May 05, 2023 at 01:46:30PM -0700, Ian Rogers wrote:
+> > > On Fri, May 5, 2023 at 1:43 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > > >
+> > > > On Fri, May 05, 2023 at 10:04:47AM -0700, Ian Rogers wrote:
+> > > > > On Fri, May 5, 2023 at 9:56 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > > > >
+> > > > > > Em Fri, May 05, 2023 at 10:33:15AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > > > > > Em Fri, May 05, 2023 at 01:03:14AM +0200, Jiri Olsa escreveu:
+> > > > > > > That with the preserve_access_index isn't needed, we need just the
+> > > > > > > fields that we access in the tools, right?
+> > > > > >
+> > > > > > I'm now doing build test this in many distro containers, without the two
+> > > > > > reverts, i.e. BPF skels continue as opt-out as in my pull request, to
+> > > > > > test build and also for the functionality tests on the tools using such
+> > > > > > bpf skels, see below, no touching of vmlinux nor BTF data during the
+> > > > > > build.
+> > > > > >
+> > > > > > - Arnaldo
+> > > > > >
+> > > > > > From 882adaee50bc27f85374aeb2fbaa5b76bef60d05 Mon Sep 17 00:00:00 2001
+> > > > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > > > Date: Thu, 4 May 2023 19:03:51 -0300
+> > > > > > Subject: [PATCH 1/1] perf bpf skels: Stop using vmlinux.h generated from BTF,
+> > > > > >  use subset of used structs + CO-RE
+> > > > > >
+> > > > > > Linus reported a build break due to using a vmlinux without a BTF elf
+> > > > > > section to generate the vmlinux.h header with bpftool for use in the BPF
+> > > > > > tools in tools/perf/util/bpf_skel/*.bpf.c.
+> > > > > >
+> > > > > > Instead add a vmlinux.h file with the structs needed with the fields the
+> > > > > > tools need, marking the structs with __attribute__((preserve_access_index)),
+> > > > > > so that libbpf's CO-RE code can fixup the struct field offsets.
+> > > > > >
+> > > > > > In some cases the vmlinux.h file that was being generated by bpftool
+> > > > > > from the kernel BTF information was not needed at all, just including
+> > > > > > linux/bpf.h, sometimes linux/perf_event.h was enough as non-UAPI
+> > > > > > types were not being used.
+> > > > > >
+> > > > > > To keep te patch small, include those UAPI headers from the trimmed down
+> > > > > > vmlinux.h file, that then provides the tools with just the structs and
+> > > > > > the subset of its fields needed for them.
+> > > > > >
+> > > > > > Testing it:
+> > > > > >
+> > > > > >   # perf lock contention -b find / > /dev/null
+> > > >
+> > > > I tested perf lock con -abv -L rcu_state sleep 1
+> > > > and needed fix below
+> > > >
+> > > > jirka
 > > >
-> > > Em Fri, May 05, 2023 at 10:33:15AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > Em Fri, May 05, 2023 at 01:03:14AM +0200, Jiri Olsa escreveu:
-> > > > That with the preserve_access_index isn't needed, we need just the
-> > > > fields that we access in the tools, right?
-> > >
-> > > I'm now doing build test this in many distro containers, without the two
-> > > reverts, i.e. BPF skels continue as opt-out as in my pull request, to
-> > > test build and also for the functionality tests on the tools using such
-> > > bpf skels, see below, no touching of vmlinux nor BTF data during the
-> > > build.
-> > >
-> > > - Arnaldo
-> > >
-> > > From 882adaee50bc27f85374aeb2fbaa5b76bef60d05 Mon Sep 17 00:00:00 2001
-> > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > Date: Thu, 4 May 2023 19:03:51 -0300
-> > > Subject: [PATCH 1/1] perf bpf skels: Stop using vmlinux.h generated from BTF,
-> > >  use subset of used structs + CO-RE
-> > >
-> > > Linus reported a build break due to using a vmlinux without a BTF elf
-> > > section to generate the vmlinux.h header with bpftool for use in the BPF
-> > > tools in tools/perf/util/bpf_skel/*.bpf.c.
-> > >
-> > > Instead add a vmlinux.h file with the structs needed with the fields the
-> > > tools need, marking the structs with __attribute__((preserve_access_index)),
-> > > so that libbpf's CO-RE code can fixup the struct field offsets.
-> > >
-> > > In some cases the vmlinux.h file that was being generated by bpftool
-> > > from the kernel BTF information was not needed at all, just including
-> > > linux/bpf.h, sometimes linux/perf_event.h was enough as non-UAPI
-> > > types were not being used.
-> > >
-> > > To keep te patch small, include those UAPI headers from the trimmed down
-> > > vmlinux.h file, that then provides the tools with just the structs and
-> > > the subset of its fields needed for them.
-> > >
-> > > Testing it:
-> > >
-> > >   # perf lock contention -b find / > /dev/null
+> > > I thought this was fixed by:
+> > > https://lore.kernel.org/lkml/20230427234833.1576130-1-namhyung@kernel.org/
+> > > but I think that is just in perf-tools-next.
+> >
+> > ah ok, missed that one
 > 
-> I tested perf lock con -abv -L rcu_state sleep 1
-> and needed fix below
+> Please try validating with veristat to check if all of perf's .bpf.o
+> files are successful. Veristat is part of selftests and can be built
+> with just `make -C tools/testing/selftests/bpf veristat`. After that;
 > 
-> jirka
+>  sudo ~/bin/veristat tools/perf/util/bpf_skel/.tmp/*.bpf.o
+> 
+> This is a surer way to check that BPF object files are ok at least on
+> your currently running kernel, than trying to exercise each BPF
+> program through perf commands.
 
-patch not applying trying to do it manually.
+[acme@quaco perf-tools]$ sudo tools/testing/selftests/bpf/veristat /tmp/build/perf-tools/util/bpf_skel/.tmp/*.bpf.o
+Processing 'bperf_cgroup.bpf.o'...
+Processing 'bperf_follower.bpf.o'...
+Processing 'bperf_leader.bpf.o'...
+Processing 'bpf_prog_profiler.bpf.o'...
+Processing 'func_latency.bpf.o'...
+Processing 'kwork_trace.bpf.o'...
+Processing 'lock_contention.bpf.o'...
+Processing 'off_cpu.bpf.o'...
+Processing 'sample_filter.bpf.o'...
+File                     Program                          Verdict  Duration (us)   Insns  States  Peak states
+-----------------------  -------------------------------  -------  -------------  ------  ------  -----------
+bperf_cgroup.bpf.o       on_cgrp_switch                   success           6479   17025     417          174
+bperf_cgroup.bpf.o       trigger_read                     success           6370   17025     417          174
+bperf_follower.bpf.o     fexit_XXX                        failure              0       0       0            0
+bperf_leader.bpf.o       on_switch                        success            360      49       3            3
+bpf_prog_profiler.bpf.o  fentry_XXX                       failure              0       0       0            0
+bpf_prog_profiler.bpf.o  fexit_XXX                        failure              0       0       0            0
+func_latency.bpf.o       func_begin                       success            351      69       6            6
+func_latency.bpf.o       func_end                         success            318     158      15           15
+kwork_trace.bpf.o        latency_softirq_entry            success            334     108      10           10
+kwork_trace.bpf.o        latency_softirq_raise            success            896    1993      34           34
+kwork_trace.bpf.o        latency_workqueue_activate_work  success            333      46       4            4
+kwork_trace.bpf.o        latency_workqueue_execute_start  success           1112    2219      41           41
+kwork_trace.bpf.o        report_irq_handler_entry         success           1067    2118      34           34
+kwork_trace.bpf.o        report_irq_handler_exit          success            334     110      10           10
+kwork_trace.bpf.o        report_softirq_entry             success            897    1993      34           34
+kwork_trace.bpf.o        report_softirq_exit              success            329     108      10           10
+kwork_trace.bpf.o        report_workqueue_execute_end     success           1124    2219      41           41
+kwork_trace.bpf.o        report_workqueue_execute_start   success            295      46       4            4
+lock_contention.bpf.o    collect_lock_syms                failure              0       0       0            0
+lock_contention.bpf.o    contention_begin                 failure              0       0       0            0
+lock_contention.bpf.o    contention_end                   failure              0       0       0            0
+off_cpu.bpf.o            on_newtask                       success            387      37       3            3
+off_cpu.bpf.o            on_switch                        success            536     220      20           20
+sample_filter.bpf.o      perf_sample_filter               success         190443  190237   11173          923
+-----------------------  -------------------------------  -------  -------------  ------  ------  -----------
+Done. Processed 9 files, 0 programs. Skipped 24 files, 0 programs.
+[acme@quaco perf-tools]$
 
-- Arnaldo
- 
-> 
-> ---
-> From b12aea55f1171dc09cde2957f9019c84bda7adbb Mon Sep 17 00:00:00 2001
-> From: Jiri Olsa <jolsa@kernel.org>
-> Date: Fri, 5 May 2023 13:28:46 +0200
-> Subject: [PATCH] perf tools: Fix lock_contention bpf program
-> 
-> We need to define empty 'struct rq' so the runqueues gets
-> resolved properly:
-> 
->   # ./perf lock con -b
->   libbpf: extern (var ksym) 'runqueues': incompatible types, expected [99] fwd rq, but kernel has [19783] struct rq
->   libbpf: failed to load object 'lock_contention_bpf'
->   libbpf: failed to load BPF skeleton 'lock_contention_bpf': -22
->   Failed to load lock-contention BPF skeleton
-> 
-> Also rq__old/rq__new need additional '_' so the suffix is ignored
-> properly.
-> 
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/util/bpf_skel/lock_contention.bpf.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf_skel/lock_contention.bpf.c b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> index 8911e2a077d8..c2bf24c68c14 100644
-> --- a/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> +++ b/tools/perf/util/bpf_skel/lock_contention.bpf.c
-> @@ -416,13 +416,15 @@ int contention_end(u64 *ctx)
->  	return 0;
->  }
->  
-> +struct rq {};
-> +
->  extern struct rq runqueues __ksym;
->  
-> -struct rq__old {
-> +struct rq___old {
->  	raw_spinlock_t lock;
->  } __attribute__((preserve_access_index));
->  
-> -struct rq__new {
-> +struct rq___new {
->  	raw_spinlock_t __lock;
->  } __attribute__((preserve_access_index));
->  
-> @@ -434,8 +436,8 @@ int BPF_PROG(collect_lock_syms)
->  
->  	for (int i = 0; i < MAX_CPUS; i++) {
->  		struct rq *rq = bpf_per_cpu_ptr(&runqueues, i);
-> -		struct rq__new *rq_new = (void *)rq;
-> -		struct rq__old *rq_old = (void *)rq;
-> +		struct rq___new *rq_new = (void *)rq;
-> +		struct rq___old *rq_old = (void *)rq;
->  
->  		if (rq == NULL)
->  			break;
-> -- 
-> 2.40.1
-> 
-
--- 
+What extra info can we get from these "failure" lines?
 
 - Arnaldo
