@@ -2,68 +2,67 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31BEC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 16:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79FADC77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 16:46:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231356AbjEEQqM (ORCPT
+        id S231236AbjEEQqm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 12:46:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38238 "EHLO
+        Fri, 5 May 2023 12:46:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230484AbjEEQqL (ORCPT
+        with ESMTP id S230484AbjEEQql (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 12:46:11 -0400
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BA6B13284
-        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 09:46:10 -0700 (PDT)
-Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-61af33bdf1dso9506236d6.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:46:10 -0700 (PDT)
+        Fri, 5 May 2023 12:46:41 -0400
+Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A1C013294
+        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 09:46:40 -0700 (PDT)
+Received: by mail-io1-xd2f.google.com with SMTP id ca18e2360f4ac-76372a83c8eso44975339f.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:46:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683305169; x=1685897169;
+        d=chromium.org; s=google; t=1683305199; x=1685897199;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hx/Z1QGIGo513DGFRHbMqQT6fmsKMlQd8/3rs/cumNc=;
-        b=lKIduvGI33S/Pa/N9oIpeJpTDR0OyPb4EGyGWPDuLALNgAP+QWlBobLRviWrY+P0xS
-         K6AHTHIM5pWY4RojkX9YXQSL6V97zLKhVr9V16Gvdj8fv2MFiTs8OPcS4gxG/lEtt5pX
-         iqlLtuNHfHpcCqu3uov8L0bq9qcYrGHwgeFVk=
+        bh=hFdQlmBZsVXpMFRWa31Nf9CH5lKcpqbN0ffO9NCLDqk=;
+        b=C3xBDtMyfXMgAYX/cA7Nn3bUoQGZFR45G17ic6CuUzkPnm23aqNnYdHTyhkYbZA4dj
+         gLHtDcfEOM0LCfiwHDQEWrvna8EZ6GP6sayqTcdb6WpWyiR+obeA9sWExxMWYlGKApMK
+         tlLiGrfS5TAawb4Zc0NUILIW3PWfmncVKQnoQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683305169; x=1685897169;
+        d=1e100.net; s=20221208; t=1683305199; x=1685897199;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hx/Z1QGIGo513DGFRHbMqQT6fmsKMlQd8/3rs/cumNc=;
-        b=chPeLtHMa4yNhD/skrnC4cNTXnb1BVX+iKeLWdoNXbGzVTr0w0VT7xDCdK+ZG3wcrT
-         UcNCDs0UM0MUpEz7BiRj4GaGnOUg1Ln3kbBacwQVVuaqg1zBNv6hVPARDyu3kbV08/ev
-         Rd3EedQjFMkSGZa6cB2WFPb3LqwK8JkGXP1LJKVCezInag1MhqKgzlYCdhqP9PLRQR84
-         lw7ctD7PXonmHa8YESPtsuP0E+YHge1uQNWEqPjXtZjBWPWgA9291XegIMh4dKC58x4z
-         W9cOZtN5Ay30s7moULrZTrS/O1sf5y7ucBztsMZMdEkBC1ylMUg1OTPXDkml5vVqIyq8
-         fNuA==
-X-Gm-Message-State: AC+VfDyPQvdaXwKrz/qqoNFFUe6ZbisaLoehdPsMomcaZZub+Ch/o9L8
-        vRKuNzetwjWjS1ZdZ4ybLtEKPjqqd/38ZS84RGM=
-X-Google-Smtp-Source: ACHHUZ63WxetCRK1Y2p6Rg7HinoImq/QTEGTjmfaNqCo8Q0nNg4iw6/eeoRQh42ZwipFdS/3kh11UA==
-X-Received: by 2002:ad4:5ba2:0:b0:5ca:83ed:12be with SMTP id 2-20020ad45ba2000000b005ca83ed12bemr3369565qvq.21.1683305169057;
-        Fri, 05 May 2023 09:46:09 -0700 (PDT)
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com. [209.85.160.172])
-        by smtp.gmail.com with ESMTPSA id n18-20020ae9c312000000b0074e003c55f0sm691561qkg.102.2023.05.05.09.46.08
+        bh=hFdQlmBZsVXpMFRWa31Nf9CH5lKcpqbN0ffO9NCLDqk=;
+        b=g/M3O6Vg0ChwJ15HnujaGiwFw/yuPzMup3V3HvCr1KCSg0uOL0z0ZaDvJ5iQA41NZp
+         zGPwdvHCdnsAtunNA0Qzctoc+rjxfIV8J9OgQyJOf+/YmItr3k0W7S2Ke07NJu/tcmSh
+         DM2Wzw1mboDXT6adyRLlkdRJVU9AnSV72i3NzFv3zi5tnUtr33KpW/Z6FHMyX7niuLH0
+         VbiFqr+wsgpq2z6wsnhJ4iRndQ2dOkmW1jdz3NcgRhP9boBx2EEweBgovkWhFN+lpGqb
+         5BmLiLZce0aqVowK11odITkkH2mb6ctezpYzT0NE5mNmqxfdqAabAjuvUPNiG6j4367T
+         8q9Q==
+X-Gm-Message-State: AC+VfDzrerJk+rJrIbhby6DiPm997avB54p30Wr4uV3m1lmmnvPkfngD
+        R/BD2U+wnZyBVvyiR1ugCgAnO8VaIst47FByot8=
+X-Google-Smtp-Source: ACHHUZ44a1xohcioOZxMj8O1jSPlQ7CV1Zn/iutRrXUaTZq4Nykv0NX3DCapRAau0FFsKE1YcwZsOw==
+X-Received: by 2002:a92:c087:0:b0:32b:59f2:41d2 with SMTP id h7-20020a92c087000000b0032b59f241d2mr1307169ile.15.1683305199213;
+        Fri, 05 May 2023 09:46:39 -0700 (PDT)
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com. [209.85.166.173])
+        by smtp.gmail.com with ESMTPSA id v17-20020a92c811000000b00331139b467bsm585873iln.21.2023.05.05.09.46.38
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 May 2023 09:46:08 -0700 (PDT)
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-3ef36d814a5so1119621cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:46:08 -0700 (PDT)
-X-Received: by 2002:a05:622a:1898:b0:3ef:31a5:13c with SMTP id
- v24-20020a05622a189800b003ef31a5013cmr206117qtc.3.1683304708084; Fri, 05 May
- 2023 09:38:28 -0700 (PDT)
+        Fri, 05 May 2023 09:46:39 -0700 (PDT)
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-33164ec77ccso601865ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:46:38 -0700 (PDT)
+X-Received: by 2002:ac8:5a8e:0:b0:3ef:3361:75d5 with SMTP id
+ c14-20020ac85a8e000000b003ef336175d5mr266034qtc.11.1683304721570; Fri, 05 May
+ 2023 09:38:41 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230504221349.1535669-1-dianders@chromium.org>
- <20230504151100.v4.8.I818492c326b632560b09f20d2608455ecf9d3650@changeid> <CSE0CI3TFK72.2I4E5TJIRHDGM@wheely>
-In-Reply-To: <CSE0CI3TFK72.2I4E5TJIRHDGM@wheely>
+ <20230504151100.v4.11.I91f7277bab4bf8c0cb238732ed92e7ce7bbd71a6@changeid> <CSE0GBQQDUAY.1QAJIC3D3OBVU@wheely>
+In-Reply-To: <CSE0GBQQDUAY.1QAJIC3D3OBVU@wheely>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 5 May 2023 09:38:14 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vuad+gxrUirhyx8aFuLbh2M1hMnoY5NUVBxdycd8kFiQ@mail.gmail.com>
-Message-ID: <CAD=FV=Vuad+gxrUirhyx8aFuLbh2M1hMnoY5NUVBxdycd8kFiQ@mail.gmail.com>
-Subject: Re: [PATCH v4 08/17] watchdog/hardlockup: Style changes to
- watchdog_hardlockup_check() / ..._is_lockedup()
+Date:   Fri, 5 May 2023 09:38:27 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VVhPpTLPv1fmavGz-iwW1xA2P7_Uu_=GKZ-Ofu=vReZw@mail.gmail.com>
+Message-ID: <CAD=FV=VVhPpTLPv1fmavGz-iwW1xA2P7_Uu_=GKZ-Ofu=vReZw@mail.gmail.com>
+Subject: Re: [PATCH v4 11/17] watchdog/hardlockup: Rename some "NMI watchdog" constants/function
 To:     Nicholas Piggin <npiggin@gmail.com>
 Cc:     Petr Mladek <pmladek@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -98,32 +97,21 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi,
 
-On Thu, May 4, 2023 at 8:02=E2=80=AFPM Nicholas Piggin <npiggin@gmail.com> =
+On Thu, May 4, 2023 at 8:07=E2=80=AFPM Nicholas Piggin <npiggin@gmail.com> =
 wrote:
 >
 > On Fri May 5, 2023 at 8:13 AM AEST, Douglas Anderson wrote:
-> > These are tiny style changes:
-> > - Add a blank line before a "return".
-> > - Renames two globals to use the "watchdog_hld" prefix.
+> > Do a search and replace of:
+> > - NMI_WATCHDOG_ENABLED =3D> HARD_WATCHDOG_ENABLED
+> > - watchdog_nmi_ =3D> watchdog_hardlockup_
 >
-> Particularly static ones don't really need the namespace prefixes.
+> These are just making prefixes inconsistent again.
+>
+> If you really want to do a prefix, I would call it hardlockup which
+> probably best matches existing code and sysctl / boot stuff, and
+> concentrate on non-static symbols.
 
-Renames are mostly at Petr's request. If I've misunderstood what he
-wants here that I'm happy to remove them.
-
-
-> Not sure if processed is better than warn.
-
-I can undo this one if you want. It felt like we were doing more than
-just warning, but if people think "warn" is a better way to describe
-it then that's fine with me.
-
-
-> allcpu_dumped is better
-> than dumped_stacks though because the all-CPUs-dump is a particular
-> thing.
-
-OK, I can undo this and leave it as "allcpu_dumped".
-
+As with other similar patches, I'm happy to drop this and am doing it
+at Petr's request.
 
 [1] https://lore.kernel.org/r/ZFErmshcrcikrSU1@alley
