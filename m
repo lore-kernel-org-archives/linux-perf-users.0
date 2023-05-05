@@ -2,259 +2,144 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5D4C77B7F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 15:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86382C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 16:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232060AbjEEPOc (ORCPT
+        id S231615AbjEEQfv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 11:14:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48796 "EHLO
+        Fri, 5 May 2023 12:35:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231987AbjEEPOb (ORCPT
+        with ESMTP id S233003AbjEEQfq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 11:14:31 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CFF61BCA;
-        Fri,  5 May 2023 08:14:28 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4f0108a7d20so2132040e87.3;
-        Fri, 05 May 2023 08:14:28 -0700 (PDT)
+        Fri, 5 May 2023 12:35:46 -0400
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0AA191C8
+        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 09:35:45 -0700 (PDT)
+Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-75178b082a5so91664085a.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:35:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683299666; x=1685891666;
+        d=chromium.org; s=google; t=1683304543; x=1685896543;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oegoxXyGIHmylmkklaLXWJVdylUtYMRDksZxxgTnY0w=;
-        b=p42IIgkZJZdYM019cvt5p4yYWtec7Tl60FHGEnllaoaXvo0XUFGNz0swJdqvcfB0ou
-         yQFVtwkPmBXfzuF/3KJHG5DGVGVQJXOm4RKNu2Z2D9Pju7xBrdbslmr71Kr7b1r4bYDo
-         262IerPoaHfYHTz0iNOLo1Nd1XNxr8Zt8+nI/QxyudxXzn3TolODVrBjduTMPb0nkU2S
-         MVwUccC3Vht/5kWun3NhspGc+YvSEmaMqxX2cJR9pDA+kAKbj81g0iiLnf2pyEc2Z+HV
-         cRH5BNaBG5X9wcwQaPgHTr+eHGUVJ0PW6W9LFnnPCSvgG/u5KeorJSGj0r/MJL6LubKs
-         0LtQ==
+        bh=EpDnC2craXa71PgQOtY/fZMYoEOsNHjFRztUygfINOs=;
+        b=nDSG83gvAxsI1q5Lf2iXaJn5kgyIzRmDZ88V/iuExJBMKAZ8ItX2XgzNS+HhRZBT4Z
+         CYf8PwhRLPKs/vqjZugnfa99wmW2iBYXxN31X8IFnP+Q89BrEBQjJhUhpn7U2Ng5zkvx
+         AMspwL2r6mcXM74FVBZXvqTKaYpGltgFnBVwI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683299666; x=1685891666;
+        d=1e100.net; s=20221208; t=1683304543; x=1685896543;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oegoxXyGIHmylmkklaLXWJVdylUtYMRDksZxxgTnY0w=;
-        b=ABBnVJPoCYQ09tQwjD3hyGz0vYWri4O2mwFkn/ilTBQYI0Qw6tjj+ID34a3CrI0nnK
-         YhICamATzzIvXA3/xoMf3dX28733UFPMmli6vU4jqZ8Z3CxlkoguugueZTj2yd69iqgQ
-         EMGdQ0sB/YfyAfVYanV1M/9KbBQ4qts3MBbfQfDKOhJ+9hxok86nKmHEgeoLyVoRcx+O
-         k7RDq97P2RXGx0J4vusNMiCocTQR4Z+C3GzQl1xugw8sa6Aj4/Tj304jPm/fmkz0Laj8
-         qPeZZUsTPWmV5GVCmzYEP5aElr6/hNKOiS/dQwFKxQGFjJN+JZ7w7VCo0bfo7iwn2wIJ
-         BtbA==
-X-Gm-Message-State: AC+VfDyysFkD09urdnaLMnQo4MsoHoadZBLYQwtCREEGjCxWdNMYr0tN
-        SadRQVHMugD6O+1dfaweXd/a9Qj0rFmOrYWeoSo=
-X-Google-Smtp-Source: ACHHUZ6Nudfg9QFfCNejF73wLcnsuJ+BQGNiIFuQ+8BtnxjcgXU6SXZHYJdANmtPcNFLdrsU9lzdE8aYtSBwE9ju0uY=
-X-Received: by 2002:a05:6512:21ac:b0:4f1:3716:ab34 with SMTP id
- c12-20020a05651221ac00b004f13716ab34mr531680lft.60.1683299666246; Fri, 05 May
- 2023 08:14:26 -0700 (PDT)
+        bh=EpDnC2craXa71PgQOtY/fZMYoEOsNHjFRztUygfINOs=;
+        b=G4+1or+zvIJgX7UK27BmMEZ5ZsQvOgaUaCAKbRZjcp69pXQiLaA2Qso97N1hPS+hjb
+         sV09bsWcWtS8lL+VUc4+Zz7g6cQSo/f2k1veNAR1dMWRQogOlICiwBHwk7NLLL+Y5a8H
+         wJRpK8V81Vw6+BgSBmHGhIlE8WqyYWB8R41Z/K0KjFJLiyoMdaF7BFoWl0eOTYzm7mBW
+         qQXrrS/hv/hzgQW/pqLfjZCkYVeHdmYuFn5AlOrnOb8+lLmSW7xHQaiIVTsGfWoGxQaQ
+         xSdmptFybSUqQxkoyYHwsI+d13C9r0dAigxTv58e1bqw5wq2cH7TTN04tLUbQA2lUmRa
+         bgBw==
+X-Gm-Message-State: AC+VfDxJ2Z1LF2Pl1rhyESX2OLnjk6cSHLvhc8Ne8t7gxfxd+7UtW5mg
+        wN8rPUsDfflVGnWfHRPwbySX1RZQ583COgENsbc=
+X-Google-Smtp-Source: ACHHUZ6aVByVT71VYjq7a5kjTVRwv631Z0CUVIBPxn0M3ezeq8I87+gqWsD1WChnyrEnyV2C1Q7MaA==
+X-Received: by 2002:a05:6214:20a5:b0:5fd:7701:88c5 with SMTP id 5-20020a05621420a500b005fd770188c5mr2303408qvd.6.1683304542745;
+        Fri, 05 May 2023 09:35:42 -0700 (PDT)
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com. [209.85.160.174])
+        by smtp.gmail.com with ESMTPSA id o16-20020a0ce410000000b005dd8b93459esm712383qvl.54.2023.05.05.09.35.39
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 05 May 2023 09:35:40 -0700 (PDT)
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-3f0a2f8216fso1093211cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:35:39 -0700 (PDT)
+X-Received: by 2002:a05:622a:1981:b0:3ed:210b:e698 with SMTP id
+ u1-20020a05622a198100b003ed210be698mr317734qtc.7.1683304539483; Fri, 05 May
+ 2023 09:35:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
- <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
- <ZFOSUab5XEJD0kxj@kernel.org> <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
- <ZFPw0scDq1eIzfHr@kernel.org> <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
- <ZFQCccsx6GK+gY0j@kernel.org> <ZFQoQjCNtyMIulp+@kernel.org>
- <CAP-5=fU8HQorW+7O6vfEKGs1mEFkjkzXZMVPACzurtcMcRhVzQ@mail.gmail.com>
- <ZFQ5sjjtfEYzvHNP@krava> <ZFUFmxDU/6Z/JEsi@kernel.org>
-In-Reply-To: <ZFUFmxDU/6Z/JEsi@kernel.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Fri, 5 May 2023 08:14:14 -0700
-Message-ID: <CAADnVQLe2HK8GN44fXJgKm+pr=JmK8LC_YU3i1fgyVfS+nQxDA@mail.gmail.com>
-Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Quentin Monnet <quentin@isovalent.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>, Ian Rogers <irogers@google.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Song Liu <song@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
+References: <20230504221349.1535669-1-dianders@chromium.org>
+ <20230504151100.v4.13.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid> <CSDZSKA38AEF.FY7J3JXBJX4I@wheely>
+In-Reply-To: <CSDZSKA38AEF.FY7J3JXBJX4I@wheely>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Fri, 5 May 2023 09:35:25 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XDfbx3UaP7DV63tASE5Md7siS-EnORD_3T-4yYaEQ7ww@mail.gmail.com>
+Message-ID: <CAD=FV=XDfbx3UaP7DV63tASE5Md7siS-EnORD_3T-4yYaEQ7ww@mail.gmail.com>
+Subject: Re: [PATCH v4 13/17] watchdog/hardlockup: detect hard lockups using
+ secondary (buddy) CPUs
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
         Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        bpf <bpf@vger.kernel.org>
+        Stephen Boyd <swboyd@chromium.org>, ricardo.neri@intel.com,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Chen-Yu Tsai <wens@csie.org>, christophe.leroy@csgroup.eu,
+        davem@davemloft.net, sparclinux@vger.kernel.org,
+        mpe@ellerman.id.au, Will Deacon <will@kernel.org>,
+        ravi.v.shankar@intel.com, linuxppc-dev@lists.ozlabs.org,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Colin Cross <ccross@android.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 5, 2023 at 6:33=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> Em Fri, May 05, 2023 at 01:03:14AM +0200, Jiri Olsa escreveu:
-> > On Thu, May 04, 2023 at 03:03:42PM -0700, Ian Rogers wrote:
-> > > On Thu, May 4, 2023 at 2:48=E2=80=AFPM Arnaldo Carvalho de Melo <acme=
-@kernel.org> wrote:
-> > > >
-> > > > Em Thu, May 04, 2023 at 04:07:29PM -0300, Arnaldo Carvalho de Melo =
-escreveu:
-> > > > > Em Thu, May 04, 2023 at 11:50:07AM -0700, Andrii Nakryiko escreve=
-u:
-> > > > > > On Thu, May 4, 2023 at 10:52=E2=80=AFAM Arnaldo Carvalho de Mel=
-o <acme@kernel.org> wrote:
-> > > > > > > Andrii, can you add some more information about the usage of =
-vmlinux.h
-> > > > > > > instead of using kernel headers?
-> > > > >
-> > > > > > I'll just say that vmlinux.h is not a hard requirement to build=
- BPF
-> > > > > > programs, it's more a convenience allowing easy access to defin=
-itions
-> > > > > > of both UAPI and kernel-internal structures for tracing needs a=
-nd
-> > > > > > marking them relocatable using BPF CO-RE machinery. Lots of rea=
-l-world
-> > > > > > applications just check-in pregenerated vmlinux.h to avoid buil=
-d-time
-> > > > > > dependency on up-to-date host kernel and such.
-> > > > >
-> > > > > > If vmlinux.h generation and usage is causing issues, though, gi=
-ven
-> > > > > > that perf's BPF programs don't seem to be using many different =
-kernel
-> > > > > > types, it might be a better option to just use UAPI headers for=
- public
-> > > > > > kernel type definitions, and just define CO-RE-relocatable mini=
-mal
-> > > > > > definitions locally in perf's BPF code for the other types nece=
-ssary.
-> > > > > > E.g., if perf needs only pid and tgid from task_struct, this wo=
-uld
-> > > > > > suffice:
-> > > > >
-> > > > > > struct task_struct {
-> > > > > >     int pid;
-> > > > > >     int tgid;
-> > > > > > } __attribute__((preserve_access_index));
-> > > > >
-> > > > > Yeah, that seems like a way better approach, no vmlinux involved,=
- libbpf
-> > > > > CO-RE notices that task_struct changed from this two integers ver=
-sion
-> > > > > (of course) and does the relocation to where it is in the running=
- kernel
-> > > > > by using /sys/kernel/btf/vmlinux.
-> > > >
-> > > > Doing it for one of the skels, build tested, runtime untested, but =
-not
-> > > > using any vmlinux, BTF to help, not that bad, more verbose, but at =
-least
-> > > > we state what are the fields we actually use, have those attribute
-> > > > documenting that those offsets will be recorded for future use, etc=
-.
-> > > >
-> > > > Namhyung, can you please check that this works?
-> > > >
-> > > > Thanks,
-> > > >
-> > > > - Arnaldo
-> > > >
-> > > > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/pe=
-rf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > > index 6a438e0102c5a2cb..f376d162549ebd74 100644
-> > > > --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > > @@ -1,11 +1,40 @@
-> > > >  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > >  // Copyright (c) 2021 Facebook
-> > > >  // Copyright (c) 2021 Google
-> > > > -#include "vmlinux.h"
-> > > > +#include <linux/types.h>
-> > > > +#include <linux/bpf.h>
-> > >
-> > > Compared to vmlinux.h here be dragons. It is easy to start dragging i=
-n
-> > > all of libc and that may not work due to missing #ifdefs, etc.. Could
-> > > we check in a vmlinux.h like libbpf-tools does?
-> > > https://github.com/iovisor/bcc/tree/master/libbpf-tools#vmlinuxh-gene=
-ration
-> > > https://github.com/iovisor/bcc/tree/master/libbpf-tools/arm64
-> > >
-> > > This would also remove some of the errors that could be introduced by
-> > > copy+pasting enums, etc. and also highlight issues with things being
-> > > renamed as build time rather than runtime failures.
-> >
-> > we already have to deal with that, right? doing checks on fields in
-> > structs like mm_struct___old
-> >
-> > > Could this be some shared resource for the different linux tools
-> > > projects using a vmlinux.h? e.g. tools/lib/vmlinuxh with an
-> > > install_headers target that builds a vmlinux.h.
-> >
-> > I tried to do the minimal header and it's not too big,
-> > I pushed it in here:
-> >   https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=
-=3Dperf/vmlinux_h
-> >
-> > compile tested so far
->
-> I see it and it makes the change to be minimal, which is good at the
-> current stage, but I wonder if it wouldn't be better for us to define
-> just the ones not in UAPI and use the #include <linux/bpf.h>,
-> <linux/perf_event.h> as I did in the patches I posted here and Namhyung
-> tested at least one, this way the added vmlinux.h file get even smaller
-> by not including things like:
->
-> [acme@quaco perf-tools]$ egrep -w '(perf_event_sample_format|bpf_perf_eve=
-nt_value|perf_sample_weight|perf_mem_data_src) {' include/uapi/linux/*.h
-> include/uapi/linux/bpf.h:struct bpf_perf_event_value {
-> include/uapi/linux/perf_event.h:enum perf_event_sample_format {
-> include/uapi/linux/perf_event.h:union perf_mem_data_src {
-> include/uapi/linux/perf_event.h:union perf_mem_data_src {
-> include/uapi/linux/perf_event.h:union perf_sample_weight {
-> [acme@quaco perf-tools]$
->
-> Also why do we need these:
->
-> +struct mm_struct {
-> +} __attribute__((preserve_access_index));
-> +
-> +struct raw_spinlock {
-> +} __attribute__((preserve_access_index));
-> +
-> +typedef struct raw_spinlock raw_spinlock_t;
-> +
-> +struct spinlock {
-> +} __attribute__((preserve_access_index));
-> +
-> +typedef struct spinlock spinlock_t;
-> +
-> +struct sighand_struct {
-> +       spinlock_t siglock;
-> +} __attribute__((preserve_access_index));
->
-> We don't use them, they're just pointers you kept on:
->
-> +struct task_struct {
-> +       struct css_set *cgroups;
-> +       pid_t pid;
-> +       pid_t tgid;
-> +       char comm[16];
-> +       struct mm_struct *mm;
-> +       struct sighand_struct *sighand;
-> +       unsigned int flags;
-> +} __attribute__((preserve_access_index));
->
-> That with the preserve_access_index isn't needed, we need just the
-> fields that we access in the tools, right?
+Hi,
 
-Aside from that you probably want to take a look at BTFgen.
-Old doc:
-https://github.com/aquasecurity/btfhub/blob/main/docs/btfgen-internals.md
-which landed as
-"bpftool gen min_core_btf"
-man bpftool-gen
+On Thu, May 4, 2023 at 7:36=E2=80=AFPM Nicholas Piggin <npiggin@gmail.com> =
+wrote:
+>
+> On Fri May 5, 2023 at 8:13 AM AEST, Douglas Anderson wrote:
+> > From: Colin Cross <ccross@android.com>
+> >
+> > Implement a hardlockup detector that doesn't doesn't need any extra
+> > arch-specific support code to detect lockups. Instead of using
+> > something arch-specific we will use the buddy system, where each CPU
+> > watches out for another one. Specifically, each CPU will use its
+> > softlockup hrtimer to check that the next CPU is processing hrtimer
+> > interrupts by verifying that a counter is increasing.
+>
+> Powerpc's watchdog has an SMP checker, did you see it?
 
-It addresses the use case for kernels _without_ CONFIG_DEBUG_INFO_BTF.
+No, I wasn't aware of it. Interesting, it seems to basically enable
+both types of hardlockup detectors together. If that really catches
+more lockups, it seems like we could do the same thing for the buddy
+system. If people want, I don't think it would be very hard to make
+the buddy system _not_ exclusive of the perf system. Instead of having
+the buddy system implement the "weak" functions I could just call the
+buddy functions in the right places directly and leave the "weak"
+functions for a more traditional hardlockup detector to implement.
+Opinions?
+
+Maybe after all this lands, the powerpc watchdog could move to use the
+common code? As evidenced by this patch series, there's not really a
+reason for the SMP detection to be platform specific.
+
+
+> It's all to
+> all rather than buddy which makes it more complicated but arguably
+> bit better functionality.
+
+Can you come up with an example crash where the "all to all" would
+work better than the simple buddy system provided by this patch? It
+seems like they would be equivalent, but I could be missing something.
+Specifically they both need at least one non-locked-up CPU to detect a
+problem. If one or more CPUs is locked up then we'll always detect it.
+I suppose maybe you could provide a better error message at lockup
+time saying that several CPUs were locked up and that could be
+helpful. For now, I'd keep the current buddy system the way it is and
+if you want to provide a patch improving things to be "all-to-all" in
+the future that would be interesting to review.
