@@ -2,68 +2,68 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12B6C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 16:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31BEC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 16:46:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230444AbjEEQoF (ORCPT
+        id S231356AbjEEQqM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 12:44:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37298 "EHLO
+        Fri, 5 May 2023 12:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230387AbjEEQoF (ORCPT
+        with ESMTP id S230484AbjEEQqL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 12:44:05 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5403813284
-        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 09:44:04 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-76375982b6aso147810739f.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:44:04 -0700 (PDT)
+        Fri, 5 May 2023 12:46:11 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BA6B13284
+        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 09:46:10 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-61af33bdf1dso9506236d6.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:46:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683305043; x=1685897043;
+        d=chromium.org; s=google; t=1683305169; x=1685897169;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aPJ3eJX3Wd0Hq9EHdr00dwY2jAtHzFmYEuKOc8G/h4A=;
-        b=ZqMquCJWPGNyK4dPyFWCwMj3HujlFDiCHJlMSIOHkBM5QcCdnQnARk43+mldrOjlQ2
-         yURnjy2bXo83BCJCpuoyMmCCZaLsZPFCOUks4RKPnTe7hdeL31HezD5eR0Zth0nj9uPB
-         TeTX6sBYbTjRITAHaJECWljT3wjqICCVKQ8sU=
+        bh=hx/Z1QGIGo513DGFRHbMqQT6fmsKMlQd8/3rs/cumNc=;
+        b=lKIduvGI33S/Pa/N9oIpeJpTDR0OyPb4EGyGWPDuLALNgAP+QWlBobLRviWrY+P0xS
+         K6AHTHIM5pWY4RojkX9YXQSL6V97zLKhVr9V16Gvdj8fv2MFiTs8OPcS4gxG/lEtt5pX
+         iqlLtuNHfHpcCqu3uov8L0bq9qcYrGHwgeFVk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683305043; x=1685897043;
+        d=1e100.net; s=20221208; t=1683305169; x=1685897169;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aPJ3eJX3Wd0Hq9EHdr00dwY2jAtHzFmYEuKOc8G/h4A=;
-        b=cHU8vlypolu+UAvm/CxPMyrARbnNJQy9pOiz1saLH/htoJGgo8V2U7KB6Widm6SiNa
-         WNlq5FYniI6lSrP+OHXmJ4pzKd0xCvO2wFOqzPZGdgr5oWVva8t9thWSlZ1//9fTfT05
-         KG5FCGXnQ914O5M5Kfhw0L0NBaTt0PrUy68yKX7FSdwcA3EqV0WVMQcH/uVNnygC0VZP
-         6xenFLuFhmdRqU9hx9pkaCfhkYDy3lID3v5pDgj7zinUxxDUjfXouLW7uTbnorUCMwoc
-         BOVnpyzWFa3SxcoNg1wO6EsdfbXVwoi6hR1CCZ8FLVyuQbyugBuQBUEbTtc4/cL2LdBV
-         /fbw==
-X-Gm-Message-State: AC+VfDwZYwcv9Cv8BkcTC56MsQXFEbtIRhfCOlxIewQ5FVn0921WEEth
-        TF3hW4nrGQ+7MblSi0EaoRAErbsprb8xc4fn0gY=
-X-Google-Smtp-Source: ACHHUZ7TRHECDxVOIHpYAzCrxCf3adC+3uH4asqawJ5rpThH6oUIOW92dnIVejgtfBakRQf8iFTP8w==
-X-Received: by 2002:a92:d950:0:b0:328:6412:df0e with SMTP id l16-20020a92d950000000b003286412df0emr1364348ilq.29.1683305043083;
-        Fri, 05 May 2023 09:44:03 -0700 (PDT)
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com. [209.85.166.173])
-        by smtp.gmail.com with ESMTPSA id k17-20020a026611000000b0040bd326b279sm46477jac.167.2023.05.05.09.44.02
+        bh=hx/Z1QGIGo513DGFRHbMqQT6fmsKMlQd8/3rs/cumNc=;
+        b=chPeLtHMa4yNhD/skrnC4cNTXnb1BVX+iKeLWdoNXbGzVTr0w0VT7xDCdK+ZG3wcrT
+         UcNCDs0UM0MUpEz7BiRj4GaGnOUg1Ln3kbBacwQVVuaqg1zBNv6hVPARDyu3kbV08/ev
+         Rd3EedQjFMkSGZa6cB2WFPb3LqwK8JkGXP1LJKVCezInag1MhqKgzlYCdhqP9PLRQR84
+         lw7ctD7PXonmHa8YESPtsuP0E+YHge1uQNWEqPjXtZjBWPWgA9291XegIMh4dKC58x4z
+         W9cOZtN5Ay30s7moULrZTrS/O1sf5y7ucBztsMZMdEkBC1ylMUg1OTPXDkml5vVqIyq8
+         fNuA==
+X-Gm-Message-State: AC+VfDyPQvdaXwKrz/qqoNFFUe6ZbisaLoehdPsMomcaZZub+Ch/o9L8
+        vRKuNzetwjWjS1ZdZ4ybLtEKPjqqd/38ZS84RGM=
+X-Google-Smtp-Source: ACHHUZ63WxetCRK1Y2p6Rg7HinoImq/QTEGTjmfaNqCo8Q0nNg4iw6/eeoRQh42ZwipFdS/3kh11UA==
+X-Received: by 2002:ad4:5ba2:0:b0:5ca:83ed:12be with SMTP id 2-20020ad45ba2000000b005ca83ed12bemr3369565qvq.21.1683305169057;
+        Fri, 05 May 2023 09:46:09 -0700 (PDT)
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com. [209.85.160.172])
+        by smtp.gmail.com with ESMTPSA id n18-20020ae9c312000000b0074e003c55f0sm691561qkg.102.2023.05.05.09.46.08
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 May 2023 09:44:02 -0700 (PDT)
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-32f4e0f42a7so796515ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:44:02 -0700 (PDT)
-X-Received: by 2002:ac8:5716:0:b0:3ef:330c:8f9e with SMTP id
- 22-20020ac85716000000b003ef330c8f9emr343597qtw.10.1683304683433; Fri, 05 May
- 2023 09:38:03 -0700 (PDT)
+        Fri, 05 May 2023 09:46:08 -0700 (PDT)
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-3ef36d814a5so1119621cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:46:08 -0700 (PDT)
+X-Received: by 2002:a05:622a:1898:b0:3ef:31a5:13c with SMTP id
+ v24-20020a05622a189800b003ef31a5013cmr206117qtc.3.1683304708084; Fri, 05 May
+ 2023 09:38:28 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230504221349.1535669-1-dianders@chromium.org>
- <20230504151100.v4.7.Id4133d3183e798122dc3b6205e7852601f289071@changeid> <CSE09YL4X0XY.1GAQWAFOOEK42@wheely>
-In-Reply-To: <CSE09YL4X0XY.1GAQWAFOOEK42@wheely>
+ <20230504151100.v4.8.I818492c326b632560b09f20d2608455ecf9d3650@changeid> <CSE0CI3TFK72.2I4E5TJIRHDGM@wheely>
+In-Reply-To: <CSE0CI3TFK72.2I4E5TJIRHDGM@wheely>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 5 May 2023 09:37:50 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vom15dOxnp=x5RFsk7ZCXGVwUjjrA4z1js-cCB=PDLFg@mail.gmail.com>
-Message-ID: <CAD=FV=Vom15dOxnp=x5RFsk7ZCXGVwUjjrA4z1js-cCB=PDLFg@mail.gmail.com>
-Subject: Re: [PATCH v4 07/17] watchdog/hardlockup: Move perf hardlockup
- checking/panic to common watchdog.c
+Date:   Fri, 5 May 2023 09:38:14 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Vuad+gxrUirhyx8aFuLbh2M1hMnoY5NUVBxdycd8kFiQ@mail.gmail.com>
+Message-ID: <CAD=FV=Vuad+gxrUirhyx8aFuLbh2M1hMnoY5NUVBxdycd8kFiQ@mail.gmail.com>
+Subject: Re: [PATCH v4 08/17] watchdog/hardlockup: Style changes to
+ watchdog_hardlockup_check() / ..._is_lockedup()
 To:     Nicholas Piggin <npiggin@gmail.com>
 Cc:     Petr Mladek <pmladek@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -98,34 +98,32 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi,
 
-On Thu, May 4, 2023 at 7:58=E2=80=AFPM Nicholas Piggin <npiggin@gmail.com> =
+On Thu, May 4, 2023 at 8:02=E2=80=AFPM Nicholas Piggin <npiggin@gmail.com> =
 wrote:
 >
 > On Fri May 5, 2023 at 8:13 AM AEST, Douglas Anderson wrote:
-> > The perf hardlockup detector works by looking at interrupt counts and
-> > seeing if they change from run to run. The interrupt counts are
-> > managed by the common watchdog code via its watchdog_timer_fn().
-> >
-> > Currently the API between the perf detector and the common code is a
-> > function: is_hardlockup(). When the hard lockup detector sees that
-> > function return true then it handles printing out debug info and
-> > inducing a panic if necessary.
-> >
-> > Let's change the API a little bit in preparation for the buddy
-> > hardlockup detector. The buddy hardlockup detector wants to print
+> > These are tiny style changes:
+> > - Add a blank line before a "return".
+> > - Renames two globals to use the "watchdog_hld" prefix.
 >
-> I think the name change is a gratuitous. Especially since it's now
-> static.
->
-> watchdog_hardlockup_ is a pretty long prefix too, hardlockup_
-> should be enough?
->
-> Seems okay otherwise though.
+> Particularly static ones don't really need the namespace prefixes.
 
-I went back and forth on names far too much when constructing this
-patch series. Mostly I was trying to balance what looked good to me
-and what Petr suggested [1]. I'm not super picky about the names and
-I'm happy to change them all to a "hardlockup_" prefix. I'd love to
-hear Petr's opinion.
+Renames are mostly at Petr's request. If I've misunderstood what he
+wants here that I'm happy to remove them.
+
+
+> Not sure if processed is better than warn.
+
+I can undo this one if you want. It felt like we were doing more than
+just warning, but if people think "warn" is a better way to describe
+it then that's fine with me.
+
+
+> allcpu_dumped is better
+> than dumped_stacks though because the all-CPUs-dump is a particular
+> thing.
+
+OK, I can undo this and leave it as "allcpu_dumped".
+
 
 [1] https://lore.kernel.org/r/ZFErmshcrcikrSU1@alley
