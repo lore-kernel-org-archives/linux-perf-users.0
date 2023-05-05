@@ -2,68 +2,68 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86382C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 16:35:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10612C77B7F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 16:37:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231615AbjEEQfv (ORCPT
+        id S232830AbjEEQhx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 12:35:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34874 "EHLO
+        Fri, 5 May 2023 12:37:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233003AbjEEQfq (ORCPT
+        with ESMTP id S232137AbjEEQhw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 12:35:46 -0400
-Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0AA191C8
-        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 09:35:45 -0700 (PDT)
-Received: by mail-qk1-x733.google.com with SMTP id af79cd13be357-75178b082a5so91664085a.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:35:45 -0700 (PDT)
+        Fri, 5 May 2023 12:37:52 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80AE1160B4
+        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 09:37:51 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-3ef35d44612so20175221cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:37:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683304543; x=1685896543;
+        d=chromium.org; s=google; t=1683304670; x=1685896670;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EpDnC2craXa71PgQOtY/fZMYoEOsNHjFRztUygfINOs=;
-        b=nDSG83gvAxsI1q5Lf2iXaJn5kgyIzRmDZ88V/iuExJBMKAZ8ItX2XgzNS+HhRZBT4Z
-         CYf8PwhRLPKs/vqjZugnfa99wmW2iBYXxN31X8IFnP+Q89BrEBQjJhUhpn7U2Ng5zkvx
-         AMspwL2r6mcXM74FVBZXvqTKaYpGltgFnBVwI=
+        bh=+yj1n8SZYpHx6GcDEfBZNc+Nz+lwlz9tugCt27cvkK8=;
+        b=CMsm/LqGEAj+s7CIDExkm9nhwDFeJQDa+Oeq9fVS2Bmq3gS2DMH4rbkFfJstSWSWVJ
+         sE6rFmodbvgtKNrRH1DIZUJNoyIpRSrlkmD5UQQ1e0/L6pdn3226k8bNu4IsYNMmUJHT
+         StGBLiDqJmtf8Cr0AU5QJCiTcVq+LrUiMT5JE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683304543; x=1685896543;
+        d=1e100.net; s=20221208; t=1683304670; x=1685896670;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EpDnC2craXa71PgQOtY/fZMYoEOsNHjFRztUygfINOs=;
-        b=G4+1or+zvIJgX7UK27BmMEZ5ZsQvOgaUaCAKbRZjcp69pXQiLaA2Qso97N1hPS+hjb
-         sV09bsWcWtS8lL+VUc4+Zz7g6cQSo/f2k1veNAR1dMWRQogOlICiwBHwk7NLLL+Y5a8H
-         wJRpK8V81Vw6+BgSBmHGhIlE8WqyYWB8R41Z/K0KjFJLiyoMdaF7BFoWl0eOTYzm7mBW
-         qQXrrS/hv/hzgQW/pqLfjZCkYVeHdmYuFn5AlOrnOb8+lLmSW7xHQaiIVTsGfWoGxQaQ
-         xSdmptFybSUqQxkoyYHwsI+d13C9r0dAigxTv58e1bqw5wq2cH7TTN04tLUbQA2lUmRa
-         bgBw==
-X-Gm-Message-State: AC+VfDxJ2Z1LF2Pl1rhyESX2OLnjk6cSHLvhc8Ne8t7gxfxd+7UtW5mg
-        wN8rPUsDfflVGnWfHRPwbySX1RZQ583COgENsbc=
-X-Google-Smtp-Source: ACHHUZ6aVByVT71VYjq7a5kjTVRwv631Z0CUVIBPxn0M3ezeq8I87+gqWsD1WChnyrEnyV2C1Q7MaA==
-X-Received: by 2002:a05:6214:20a5:b0:5fd:7701:88c5 with SMTP id 5-20020a05621420a500b005fd770188c5mr2303408qvd.6.1683304542745;
-        Fri, 05 May 2023 09:35:42 -0700 (PDT)
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com. [209.85.160.174])
-        by smtp.gmail.com with ESMTPSA id o16-20020a0ce410000000b005dd8b93459esm712383qvl.54.2023.05.05.09.35.39
+        bh=+yj1n8SZYpHx6GcDEfBZNc+Nz+lwlz9tugCt27cvkK8=;
+        b=HLliOPKpizjMxO4xt/ywHmXmyEzP36TablDS5ImOBHgC5NbClggtMjm4BClxiam3gz
+         Kt5oGORI6oc47bGPVqBE1VUcSBx2JV1iWFKzQT3Lvc11UeHXDgNklWeoDjENEnrXFH4T
+         zwqjJb4Hdtj6k/jtk7/MaNXAte9nttyvvlAqcggOpT11QzcD0vHj4mFqKJYYo395t8E4
+         sR+J8jaAS2QRSdWW5P5k4IRjEEGB/jdhRrrcWW0q3SOvFnlvsRcU7i6EIQqxVkXNoaCE
+         /sLT3bMt9PWGUGBueLtcmxy345JCR9WPw7b/oY8CAPCUXNvrBujKy+esaqvh5BVSsp+s
+         u0dQ==
+X-Gm-Message-State: AC+VfDyHnsYA4elN8hOjzZWMSkyF5FyOTuP2MEObPA2bpLuKZ2a5LP0f
+        eq4XsIgHNTPOkfUN/VxsmbiBBExaa7bbfXQLnVM=
+X-Google-Smtp-Source: ACHHUZ4bEHedbkqQjhy57z/+2nUPmA5asW5g6XL7rY2bYz16chXbzFohbUmQXn+vycd1LlbYm9oFwg==
+X-Received: by 2002:a05:622a:138d:b0:3f0:a3ae:7e69 with SMTP id o13-20020a05622a138d00b003f0a3ae7e69mr3451797qtk.18.1683304670246;
+        Fri, 05 May 2023 09:37:50 -0700 (PDT)
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com. [209.85.160.177])
+        by smtp.gmail.com with ESMTPSA id bx13-20020a05622a090d00b003e8160cf93asm729440qtb.80.2023.05.05.09.37.49
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 May 2023 09:35:40 -0700 (PDT)
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-3f0a2f8216fso1093211cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:35:39 -0700 (PDT)
-X-Received: by 2002:a05:622a:1981:b0:3ed:210b:e698 with SMTP id
- u1-20020a05622a198100b003ed210be698mr317734qtc.7.1683304539483; Fri, 05 May
- 2023 09:35:39 -0700 (PDT)
+        Fri, 05 May 2023 09:37:49 -0700 (PDT)
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-3ef34c49cb9so1091991cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 09:37:49 -0700 (PDT)
+X-Received: by 2002:a05:622a:206:b0:3db:1c01:9d95 with SMTP id
+ b6-20020a05622a020600b003db1c019d95mr335755qtx.4.1683304668543; Fri, 05 May
+ 2023 09:37:48 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230504221349.1535669-1-dianders@chromium.org>
- <20230504151100.v4.13.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid> <CSDZSKA38AEF.FY7J3JXBJX4I@wheely>
-In-Reply-To: <CSDZSKA38AEF.FY7J3JXBJX4I@wheely>
+ <20230504151100.v4.5.I4e47cbfa1bb2ebbcdb5ca16817aa2887f15dc82c@changeid> <CSE04EI159N2.2TSXHBN2QLFCM@wheely>
+In-Reply-To: <CSE04EI159N2.2TSXHBN2QLFCM@wheely>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 5 May 2023 09:35:25 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XDfbx3UaP7DV63tASE5Md7siS-EnORD_3T-4yYaEQ7ww@mail.gmail.com>
-Message-ID: <CAD=FV=XDfbx3UaP7DV63tASE5Md7siS-EnORD_3T-4yYaEQ7ww@mail.gmail.com>
-Subject: Re: [PATCH v4 13/17] watchdog/hardlockup: detect hard lockups using
- secondary (buddy) CPUs
+Date:   Fri, 5 May 2023 09:37:35 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XXzo3m2dqwtNST+uXGQz6NW_e-B6-tWkJMrHoCTZBT9Q@mail.gmail.com>
+Message-ID: <CAD=FV=XXzo3m2dqwtNST+uXGQz6NW_e-B6-tWkJMrHoCTZBT9Q@mail.gmail.com>
+Subject: Re: [PATCH v4 05/17] watchdog/hardlockup: Rename touch_nmi_watchdog()
+ to touch_hardlockup_watchdog()
 To:     Nicholas Piggin <npiggin@gmail.com>
 Cc:     Petr Mladek <pmladek@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -89,8 +89,7 @@ Cc:     Petr Mladek <pmladek@suse.com>,
         ravi.v.shankar@intel.com, linuxppc-dev@lists.ozlabs.org,
         Marc Zyngier <maz@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Colin Cross <ccross@android.com>
+        Daniel Thompson <daniel.thompson@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -99,47 +98,63 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi,
 
-On Thu, May 4, 2023 at 7:36=E2=80=AFPM Nicholas Piggin <npiggin@gmail.com> =
+On Thu, May 4, 2023 at 7:51=E2=80=AFPM Nicholas Piggin <npiggin@gmail.com> =
 wrote:
 >
 > On Fri May 5, 2023 at 8:13 AM AEST, Douglas Anderson wrote:
-> > From: Colin Cross <ccross@android.com>
-> >
-> > Implement a hardlockup detector that doesn't doesn't need any extra
-> > arch-specific support code to detect lockups. Instead of using
-> > something arch-specific we will use the buddy system, where each CPU
-> > watches out for another one. Specifically, each CPU will use its
-> > softlockup hrtimer to check that the next CPU is processing hrtimer
-> > interrupts by verifying that a counter is increasing.
+> > In preparation for the buddy hardlockup detector, rename
+> > touch_nmi_watchdog() to touch_hardlockup_watchdog() to make it clear
+> > that it will touch whatever hardlockup detector is configured. We'll
+> > add a #define for the old name (touch_nmi_watchdog) so that we don't
+> > have to touch every piece of code referring to the old name.
 >
-> Powerpc's watchdog has an SMP checker, did you see it?
+> Is this really helpful? Now it's got two names Could just leave it.
+> If you insist then it'd be better just to rename everything in one
+> go at the end of a merge window IMO. Conflicts would be trivial.
 
-No, I wasn't aware of it. Interesting, it seems to basically enable
-both types of hardlockup detectors together. If that really catches
-more lockups, it seems like we could do the same thing for the buddy
-system. If people want, I don't think it would be very hard to make
-the buddy system _not_ exclusive of the perf system. Instead of having
-the buddy system implement the "weak" functions I could just call the
-buddy functions in the right places directly and leave the "weak"
-functions for a more traditional hardlockup detector to implement.
-Opinions?
+I'm not picky here. I changed the name since Petr requested names to
+be changed for any code I was touching [1] and so I threw this out as
+a proposal. I agree that having two names can be confusing, but in
+this case it didn't feel too terrible to me.
 
-Maybe after all this lands, the powerpc watchdog could move to use the
-common code? As evidenced by this patch series, there's not really a
-reason for the SMP detection to be platform specific.
+I'd love to hear Petr's opinion on this name change. I'm happy with:
+
+a) This patch as it is.
+
+b) Dropping this patch (or perhaps just changing it to add comments).
+
+c) Changing this patch to rename all 70 uses of the old name. Assuming
+this will go through Andrew Morton's tree, I'd be interested in
+whether he's OK w/ this.
+
+d) Dropping this patch from this series but putting it on the
+backburner to try to do later (so that the rename can happen at a time
+when it's least disruptive).
 
 
-> It's all to
-> all rather than buddy which makes it more complicated but arguably
-> bit better functionality.
+> > Ideally this change would also rename the arch_touch_nmi_watchdog(),
+> > but that is harder since arch_touch_nmi_watchdog() is exported with
+> > EXPORT_SYMBOL() and thus is ABI. Add a comment next to the call to
+> > hopefully alleviate some of the confusion here.
+>
+> We don't keep ABI fixed upstream.
 
-Can you come up with an example crash where the "all to all" would
-work better than the simple buddy system provided by this patch? It
-seems like they would be equivalent, but I could be missing something.
-Specifically they both need at least one non-locked-up CPU to detect a
-problem. If one or more CPUs is locked up then we'll always detect it.
-I suppose maybe you could provide a better error message at lockup
-time saying that several CPUs were locked up and that could be
-helpful. For now, I'd keep the current buddy system the way it is and
-if you want to provide a patch improving things to be "all-to-all" in
-the future that would be interesting to review.
+I'm happy to be corrected, but my understanding was that kernel devs
+made an effort not to mess with things exported via "EXPORT_SYMBOL",
+but things exported via "EXPORT_SYMBOL_GPL" were fair game.
+
+I guess maybe my patch calling it "ABI" is a stronger statement than
+that, though. Doing a little more research, nobody wants to say that
+things exported with "EXPORT_SYMBOL" are ABI, they just want to say
+that we make an effort to have them be more stable.
+
+So certainly I should adjust my patch series not to call it ABI, but
+I'm still on the fence about whether I should rename this or not. I'd
+love to hear other opinions. This rename actually would be a lot
+easier than the touch_nmi_watchdog() one since the code referencing
+the name "arch_touch_nmi_watchdog" isn't spread so broadly through the
+kernel.
+
+[1] https://lore.kernel.org/r/ZFErmshcrcikrSU1@alley
+
+-Doug
