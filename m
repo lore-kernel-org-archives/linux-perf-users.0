@@ -2,180 +2,227 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94320C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 13:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D55C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 13:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232059AbjEENC6 (ORCPT
+        id S232058AbjEENSM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 09:02:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33084 "EHLO
+        Fri, 5 May 2023 09:18:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231699AbjEENC5 (ORCPT
+        with ESMTP id S232370AbjEENSL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 09:02:57 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA6B1C0DA
-        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 06:02:55 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-3f195b95663so213925e9.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 06:02:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683291774; x=1685883774;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vLhpo8p3NjaRU+xZ3FnEvwtiwQmz433qnq9rqgkiBA4=;
-        b=L613O4qFFi1OZj5Cm5vsFf6UgI/6wBV5NJX8lfURSt17zWYkYJ7MVwerf1X1Rqyg08
-         aWu1RwAT40Z0NtpJ5T0VLxsMZc3CDU51BFF1V3OjDBUm62bNp3Xk5q3J++IztxiexfxW
-         rLbOe0pAzNUqZ0E3yvbV86QIjj/mtea+XmpTOclcN81ZqjTlXkOuSJyM4OrLFMrLRd+Y
-         YmzlKNSARBT8LyWHReVuLQFgHw3RIIhHAmhw07/nw3aWOekxh7tL95GlruUUbQLxubVo
-         KaU7YdlNNilm+tAkJvvRK7favcDMZwjk4EKffLZo1yugQdVu0Qqu6e16Bwoj8KOP2w49
-         LXhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683291774; x=1685883774;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vLhpo8p3NjaRU+xZ3FnEvwtiwQmz433qnq9rqgkiBA4=;
-        b=AETseOlA/U9Lv8P1U9Ff6/aygMNIIWpxjgBjvlJWVLR0hjSV4+WmZLR9Wirxg5oirv
-         pN4zqNyLB51iB6gdAzMc7o+eRfre16iju33PHd0hDJfo5jKloPS5PceKt1XRb1Ij4H/K
-         R4hF4T0Zo4OV3N9J8Ck8u7AiCpjFAFPu+1wm594rVELXuUFAw/NA4b8OqVGTGtdU7b6M
-         yDgqJW5yZPeAWCFrOXFbVL14lSWyEmCh27BkL65lBTk8x4T4qIT/Fwkle03IMvQwMhMt
-         m6A4I7lX1HCv16fOvy2pQJtBxWi8P33IJRUcbdlAoPA4IxpvLo6IEUEJC7yHAYLaAFeq
-         qNKQ==
-X-Gm-Message-State: AC+VfDyXSFpxgdaAF1l9/LNJcohQpeP8O05Q/cpqdgl1bqihn6fs4Gur
-        jXV+tlx0280e1rWxxzaU1Qbwp4OkHykgcB4uRQyE8w==
-X-Google-Smtp-Source: ACHHUZ7b/onycZz8eT2ap563s8T5JnuQGsanELUkymTDMcNrQfqR1U9Ec3PN+VY6kkvds4iu8G/VuFv790kJjpuNuHQ=
-X-Received: by 2002:a05:600c:45c6:b0:3f1:74cf:8563 with SMTP id
- s6-20020a05600c45c600b003f174cf8563mr128941wmo.5.1683291773816; Fri, 05 May
- 2023 06:02:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230505064452.9660-1-adrian.hunter@intel.com>
-In-Reply-To: <20230505064452.9660-1-adrian.hunter@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 5 May 2023 06:02:41 -0700
-Message-ID: <CAP-5=fUwwvVVa=+bHEPC+bzxQFXVoXQmd+ercYtTDRSa5jDfWw@mail.gmail.com>
-Subject: Re: [PATCH] perf parse-events: Do not break up AUX event group
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Fri, 5 May 2023 09:18:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9CB82699;
+        Fri,  5 May 2023 06:18:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0182860A71;
+        Fri,  5 May 2023 13:18:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E735C433EF;
+        Fri,  5 May 2023 13:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683292688;
+        bh=iWuVMtbZc8fX58fKAMNGGbRV6grNa+1PwhlQF6nB89w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S35fn3fxmBi+6jrRNiFXaSAC30eGZPm5Rkh1QJQgPtnF7tFmgi7tb6ddOydiLE6om
+         7Gjv4ZuG4WmfLsZ0dSiVV8a7v0Zp2DcKKYCBtGTsWyrgsFeaSk0f8CYsO+0iewbAMM
+         Ahb6wb5/sTjdVBBzRJ0NJSfJu8TIqhiVuv7Lrm6oketO3vo+F5bEP6dwpZS5E4Zzfe
+         ZaXHWQwCesJhtU23Y1DWwYZWwfPmyobsrXya4D5V5eZLZO1N3CUObCjj8oclaO46VB
+         A7mcIl9HDHQydU25b2IdCirzsW4I79Klrut2T+5xqyTFsVWbwTDH4fFupjaIhnuic4
+         5GR2x18K4OHlQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4BA9E403B5; Fri,  5 May 2023 10:18:05 -0300 (-03)
+Date:   Fri, 5 May 2023 10:18:05 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Yang Jihong <yangjihong1@huawei.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Song Liu <song@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Changbin Du <changbin.du@huawei.com>,
+        Hao Luo <haoluo@google.com>, Ian Rogers <irogers@google.com>,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Roman Lozko <lozko.roma@gmail.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        bpf <bpf@vger.kernel.org>
+Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
+Message-ID: <ZFUCDVpqXkpGjXBK@kernel.org>
+References: <20230503211801.897735-1-acme@kernel.org>
+ <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
+ <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
+ <ZFOSUab5XEJD0kxj@kernel.org>
+ <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
+ <ZFPw0scDq1eIzfHr@kernel.org>
+ <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
+ <ZFQCccsx6GK+gY0j@kernel.org>
+ <ZFQoQjCNtyMIulp+@kernel.org>
+ <ZFQrT42SyEbCj4om@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZFQrT42SyEbCj4om@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 4, 2023 at 11:45=E2=80=AFPM Adrian Hunter <adrian.hunter@intel.=
-com> wrote:
->
-> Assume AUX event group is correct and not do break it up.
->
-> Example:
->
->  Before:
->
->     $ perf record --no-bpf-event -c 10 -e '{intel_pt//,tlb_flush.stlb_any=
-/aux-sample-size=3D8192/pp}:u' -- sleep 0.1
+Em Thu, May 04, 2023 at 07:01:51PM -0300, Arnaldo Carvalho de Melo escreveu:
+> Em Thu, May 04, 2023 at 06:48:50PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > Em Thu, May 04, 2023 at 04:07:29PM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Thu, May 04, 2023 at 11:50:07AM -0700, Andrii Nakryiko escreveu:
+> > > > On Thu, May 4, 2023 at 10:52 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > > > Andrii, can you add some more information about the usage of vmlinux.h
+> > > > > instead of using kernel headers?
+> > >  
+> > > > I'll just say that vmlinux.h is not a hard requirement to build BPF
+> > > > programs, it's more a convenience allowing easy access to definitions
+> > > > of both UAPI and kernel-internal structures for tracing needs and
+> > > > marking them relocatable using BPF CO-RE machinery. Lots of real-world
+> > > > applications just check-in pregenerated vmlinux.h to avoid build-time
+> > > > dependency on up-to-date host kernel and such.
+> > >  
+> > > > If vmlinux.h generation and usage is causing issues, though, given
+> > > > that perf's BPF programs don't seem to be using many different kernel
+> > > > types, it might be a better option to just use UAPI headers for public
+> > > > kernel type definitions, and just define CO-RE-relocatable minimal
+> > > > definitions locally in perf's BPF code for the other types necessary.
+> > > > E.g., if perf needs only pid and tgid from task_struct, this would
+> > > > suffice:
+> > >  
+> > > > struct task_struct {
+> > > >     int pid;
+> > > >     int tgid;
+> > > > } __attribute__((preserve_access_index));
+> > > 
+> > > Yeah, that seems like a way better approach, no vmlinux involved, libbpf
+> > > CO-RE notices that task_struct changed from this two integers version
+> > > (of course) and does the relocation to where it is in the running kernel
+> > > by using /sys/kernel/btf/vmlinux.
+> > 
+> > Doing it for one of the skels, build tested, runtime untested, but not
+> > using any vmlinux, BTF to help, not that bad, more verbose, but at least
+> > we state what are the fields we actually use, have those attribute
+> > documenting that those offsets will be recorded for future use, etc.
 
-Could we add this, or similar, to the intel_pt tests?
+Yang, can you please check that this works?
 
->     WARNING: events were regrouped to match PMUs
->     Cannot add AUX area sampling to a group leader
->
->  After:
->
->     $ perf record --no-bpf-event -c 10 -e '{intel_pt//,tlb_flush.stlb_any=
-/aux-sample-size=3D8192/pp}:u' -- sleep 0.1
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.078 MB perf.data ]
->     $ perf script -F-dso,+addr | grep -C5 tlb_flush.stlb_any | head -11
->     sleep 20444 [003]  7939.510243:  1  branches:uH:  7f5350cc82a2 dl_mai=
-n+0x9a2 =3D> 7f5350cb38f0 _dl_add_to_namespace_list+0x0
->     sleep 20444 [003]  7939.510243:  1  branches:uH:  7f5350cb3908 _dl_ad=
-d_to_namespace_list+0x18 =3D> 7f5350cbb080 rtld_mutex_dummy+0x0
->     sleep 20444 [003]  7939.510243:  1  branches:uH:  7f5350cc8350 dl_mai=
-n+0xa50 =3D> 0 [unknown]
->     sleep 20444 [003]  7939.510244:  1  branches:uH:  7f5350cc83ca dl_mai=
-n+0xaca =3D> 7f5350caeb60 _dl_process_pt_gnu_property+0x0
->     sleep 20444 [003]  7939.510245:  1  branches:uH:  7f5350caeb60 _dl_pr=
-ocess_pt_gnu_property+0x0 =3D> 0 [unknown]
->     sleep 20444  7939.510245:       10 tlb_flush.stlb_any/aux-sample-size=
-=3D8192/pp: 0 7f5350caeb60 _dl_process_pt_gnu_property+0x0
->     sleep 20444 [003]  7939.510254:  1  branches:uH:  7f5350cc87fe dl_mai=
-n+0xefe =3D> 7f5350ccd240 strcmp+0x0
->     sleep 20444 [003]  7939.510254:  1  branches:uH:  7f5350cc8862 dl_mai=
-n+0xf62 =3D> 0 [unknown]
->     sleep 20444 [003]  7939.510255:  1  branches:uH:  7f5350cc9cdc dl_mai=
-n+0x23dc =3D> 0 [unknown]
->     sleep 20444 [003]  7939.510257:  1  branches:uH:  7f5350cc89f6 dl_mai=
-n+0x10f6 =3D> 7f5350cb9530 _dl_setup_hash+0x0
->     sleep 20444 [003]  7939.510257:  1  branches:uH:  7f5350cc8a2d dl_mai=
-n+0x112d =3D> 7f5350cb3990 _dl_new_object+0x0
->
-> Fixes: 347c2f0a0988 ("perf parse-events: Sort and group parsed events")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-These changes are related:
-https://lore.kernel.org/lkml/20230502223851.2234828-5-irogers@google.com/
-https://lore.kernel.org/lkml/20230502223851.2234828-20-irogers@google.com/
+From bd6289bc3ffc89aecad3bd8798d76626c8c16d39 Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Fri, 5 May 2023 10:13:09 -0300
+Subject: [PATCH 1/1] perf kwork_trace.bpf: Stop using vmlinux.h, grab copies
+ of used structs
 
-> ---
->  tools/perf/util/evsel.c | 14 ++++++--------
->  1 file changed, 6 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 356c07f03be6..a34f61a5271d 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -828,7 +828,11 @@ bool evsel__name_is(struct evsel *evsel, const char =
-*name)
->
->  const char *evsel__group_pmu_name(const struct evsel *evsel)
->  {
-> -       const struct evsel *leader;
-> +       const struct evsel *leader =3D evsel__leader(evsel);
-> +
-> +       /* Never break AUX event groups */
-> +       if (evsel__is_aux_event(leader))
-> +               return leader->pmu_name;
->
->         /* If the pmu_name is set use it. pmu_name isn't set for CPU and =
-software events. */
+And mark them with __attribute__((preserve_access_index)) so that
+libbpf's CO-RE code can fixup offsets if they differ with the kernel
+data structure.
 
-I think this comment isn't true, hence this patch. I think we should
-just move the check into the return, so:
-return evsel->pmu_name ?: "cpu";
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/bpf_skel/kwork_trace.bpf.c | 70 +++++++++++++++++++++-
+ 1 file changed, 69 insertions(+), 1 deletion(-)
 
-Sorry for the breakage!
+diff --git a/tools/perf/util/bpf_skel/kwork_trace.bpf.c b/tools/perf/util/bpf_skel/kwork_trace.bpf.c
+index 063c124e099938ed..e38fe54c7667fa74 100644
+--- a/tools/perf/util/bpf_skel/kwork_trace.bpf.c
++++ b/tools/perf/util/bpf_skel/kwork_trace.bpf.c
+@@ -1,13 +1,81 @@
+ // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ // Copyright (c) 2022, Huawei
+ 
+-#include "vmlinux.h"
++#include <linux/bpf.h>
+ #include <bpf/bpf_helpers.h>
+ #include <bpf/bpf_tracing.h>
+ 
+ #define KWORK_COUNT 100
+ #define MAX_KWORKNAME 128
+ 
++
++// non-UAPI kernel data structures, just the fields used in this tool,
++// preserving the access index so that libbpf can fixup offsets with the ones
++// used in the kernel when loading the BPF bytecode, if they differ from what
++// is used here.
++
++enum {
++	HI_SOFTIRQ = 0,
++	TIMER_SOFTIRQ,
++	NET_TX_SOFTIRQ,
++	NET_RX_SOFTIRQ,
++	BLOCK_SOFTIRQ,
++	IRQ_POLL_SOFTIRQ,
++	TASKLET_SOFTIRQ,
++	SCHED_SOFTIRQ,
++	HRTIMER_SOFTIRQ,
++	RCU_SOFTIRQ,    /* Preferable RCU should always be the last softirq */
++
++	NR_SOFTIRQS
++};
++
++struct trace_entry {
++	short unsigned int type;
++	unsigned char	   flags;
++	unsigned char	   preempt_count;
++	int		   pid;
++} __attribute__((preserve_access_index));
++
++struct trace_event_raw_irq_handler_entry {
++	struct trace_entry ent;
++	int		   irq;
++	__u32		   __data_loc_name;
++	char		   __data[];
++} __attribute__((preserve_access_index));
++
++struct trace_event_raw_irq_handler_exit {
++	struct trace_entry ent;
++	int		   irq;
++	int		   ret;
++	char		   __data[];
++} __attribute__((preserve_access_index));
++
++struct trace_event_raw_softirq {
++	struct trace_entry ent;
++	unsigned int	   vec;
++	char		   __data[];
++} __attribute__((preserve_access_index));
++
++struct trace_event_raw_workqueue_execute_start {
++	struct trace_entry ent;
++	void		   *work;
++	void		   *function;
++	char		   __data[];
++} __attribute__((preserve_access_index));
++
++struct trace_event_raw_workqueue_execute_end {
++	struct trace_entry ent;
++	void		   *work;
++	void		   *function;
++	char		  __data[];
++} __attribute__((preserve_access_index));
++
++struct trace_event_raw_workqueue_activate_work {
++	struct trace_entry ent;
++	void		   *work;
++	char		   __data[];
++} __attribute__((preserve_access_index));
++
+ /*
+  * This should be in sync with "util/kwork.h"
+  */
+-- 
+2.39.2
 
-Thanks,
-Ian
-
->         if (evsel->pmu_name)
-> @@ -837,15 +841,9 @@ const char *evsel__group_pmu_name(const struct evsel=
- *evsel)
->          * Software events may be in a group with other uncore PMU events=
-. Use
->          * the pmu_name of the group leader to avoid breaking the softwar=
-e event
->          * out of the group.
-> -        *
-> -        * Aux event leaders, like intel_pt, expect a group with events f=
-rom
-> -        * other PMUs, so substitute the AUX event's PMU in this case.
->          */
-> -       leader  =3D evsel__leader(evsel);
-> -       if ((evsel->core.attr.type =3D=3D PERF_TYPE_SOFTWARE || evsel__is=
-_aux_event(leader)) &&
-> -           leader->pmu_name) {
-> +       if (evsel->core.attr.type =3D=3D PERF_TYPE_SOFTWARE && leader->pm=
-u_name)
->                 return leader->pmu_name;
-> -       }
->
->         return "cpu";
->  }
-> --
-> 2.34.1
->
