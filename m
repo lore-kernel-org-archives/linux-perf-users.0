@@ -2,202 +2,239 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA94C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 11:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1DDC77B7F
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 12:24:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231709AbjEELmS (ORCPT
+        id S231984AbjEEMYy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 07:42:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44082 "EHLO
+        Fri, 5 May 2023 08:24:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjEELmR (ORCPT
+        with ESMTP id S232125AbjEEMYv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 07:42:17 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3DB411607;
-        Fri,  5 May 2023 04:42:15 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f178da21b5so11393215e9.3;
-        Fri, 05 May 2023 04:42:15 -0700 (PDT)
+        Fri, 5 May 2023 08:24:51 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AD51C0DD;
+        Fri,  5 May 2023 05:24:50 -0700 (PDT)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3456YXxd011393;
+        Fri, 5 May 2023 12:24:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=CRME0kuVbH9PV0OCC9XpD8m5BkCBA7YwplCrv35Wdes=;
+ b=aR6CZl5XJY5aEuPyJpvC/T7mkAW8zu1i3w8kWSAdRAzM8uM5ppvF1bD2OOJRA/+cbH4V
+ fv3uxJonVbVfmrgCa6yo3t9rUShbQ1cGyuSjpCmXZYdEYlnqr6DDOayjSAFmJDDiTci9
+ YqqMGi6tC5VPuAGTtESXwtCLiXZosOhqFNqrKkElKeWhZDXH6r7Gx3uaMrhL1sdTC8Zt
+ hho9PQaUqlL6Pbk4II9/muF/89GO41uM+tYep0sFixWOnb8ggr8c78ZOz4FWHm+0LoPc
+ pdfm6XeRmvWkLtXNt36UVd4emeFWkrm9pqEB4vY9bJ2OukNUV1zXhPILTSPOTUs43Kl5 kg== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q8t5fvnfv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 May 2023 12:24:33 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 345BqNru024982;
+        Fri, 5 May 2023 12:24:33 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2175.outbound.protection.outlook.com [104.47.73.175])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q8spa1n47-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 05 May 2023 12:24:32 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ATIz3PlIzzFBwkgtPhME3PwzDYQqHi8gaeB0kudLx2Hi6WP9AgLWMz8oaS3JsQhudO9FuD3OItiX3iYUskpE6gZBhQRw+dRprDj8cUmo15VBOBA5hpbFmCbmiokndcIQvq37RA5SgTRAnVLfM+k9sWxB4cFNfXYU0dMniTTs0eVlJcHmG9Ti+rI6U8ie6IhxTonRH9X6pmrHV6ru/krjBnM/6xbJjIUlpxLWEVa30ldAQfziu6qj0thZOWCk1uAhs1Mmu4gkBGWncQjcSR/dznYmuMfVUKjS9OIOxHHpW9tmi2qnqtYGCmYomcHkCKpkdWW7J7DYbsYrjx2MiuTbBQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CRME0kuVbH9PV0OCC9XpD8m5BkCBA7YwplCrv35Wdes=;
+ b=U1DowW9/ZiotdPEnachjIlh997ksf2hyMlrfvVdLNX2Khr1/zlZ5ndLtd2mbrBEYVdA4nMbEjxMQj30lc0Tc2IhwjiCVPlSsdr2laQOba6navae0H2mnBm/XAGJb6hJKw7rSm42u+h8rzIx7xgvDrMq7nzm6S5qUuJlFpfLZptF9tOJAI/SMbE+thAK8mBJARMWU1P5lyz+sqDFkFvPoFHr3qE5lhArsNRL8Tawu6hs3j7My29v8CRhuHJwX4Ep3TrDjU9TGJ3qoRBy4ireSmO9vRYZ6+TfljwNRJ4XvIHY7+oAtAkg+zHEZfzpMBaHyqkRoSv0vDweRgoIR6e6YSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683286934; x=1685878934;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=jwA4RNzHLoe51BKJcNUYfJNJRyNu9DKsCjgDMwmTA7A=;
-        b=WF62c/j6RiITYW667aRT9w0LZy3zB+wgpx/WJ54+TRNLcLn4nTSikrpYai6OPrVGkz
-         IhgIvNnPGGl2SqlqbS+XLVcmzlBBB3OIewdGD/Mc7jw1zvkSCZS0gO6g4I18UKjJpoj1
-         FO9voODgeBvwtJghqcm99OfSx20ZYAYuzHd2L/pDpWIFnzEdDA3BDtg027bp6yGvd9Dy
-         qmFj4Wp7HLufi3CpLf5X1VBmgRP2xFU6Kl41WtHiVSFzxiRuFE36kp27VfhPHPstuWxI
-         64+hwtMFhwaAojMK5K/YmDlC2xrKZsqTNtkbqts5wT+hjaUtZQ2H9I3Ym5HgEfVBlr30
-         j7CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683286934; x=1685878934;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jwA4RNzHLoe51BKJcNUYfJNJRyNu9DKsCjgDMwmTA7A=;
-        b=e/mr5PElj8n0EMnDDEUQ19+O3x5Zdr3t8VmUh93yvsoaMFdsMogYYy15fPAxd1T3PW
-         yU4qDoIOoD2TIJktpgZzzvH6rMrGak1VW2snljc+09rvjNY64xlRx0XVDo/V+pDC039y
-         VbfULTcewhhBnp9yCtoHNjj5bqvT28oB2tRVN3i9J/4EZqfm9JTvWsdBRuyqxhQsFBpe
-         Y1g1iJWACcBPP/iTWOxSh1uSMWbCmTDXpy2g7QoTMPv7tZfPZ1YFS4AacUAI0RUmJMxI
-         geMOioyVM3+9fGX06c3YjAYHO7YQIzvtQwt3iYuaF3QgBDLizmOVwSdP5rUfi+3pkO60
-         iZng==
-X-Gm-Message-State: AC+VfDxcU7eFgZrlqZH+5Ri0VIHSVXYNdA+y78uxgbALkzaBy2uJemDW
-        HR9wKLnYWYfucxF/GroU85+2U0hCPI6OCg==
-X-Google-Smtp-Source: ACHHUZ5w3w27K7kl40zFdLW88ML+N5pSdsni2WgKoruZX/PkX3r58fPaDnqKsJGOacQJD5I58y5CNA==
-X-Received: by 2002:a7b:c8d9:0:b0:3f1:78a7:6bd2 with SMTP id f25-20020a7bc8d9000000b003f178a76bd2mr930562wml.27.1683286934055;
-        Fri, 05 May 2023 04:42:14 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id 20-20020a05600c029400b003f16932fe7dsm7803364wmk.38.2023.05.05.04.42.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 May 2023 04:42:13 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Fri, 5 May 2023 13:42:10 +0200
-To:     Ian Rogers <irogers@google.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CRME0kuVbH9PV0OCC9XpD8m5BkCBA7YwplCrv35Wdes=;
+ b=dEXUicKvjBfDRXYOKqOwpBUoa8yiXFwNz6gGfzVkzABtfLY9MkMCPYOjO2ckAaFF2WqYrCoCtzfcw0J8zbC2+UtKf65pkuWqSOk3sTQZIuvjllLFoH+3RBHkPIKqdsnStHuGmaS1R6CKioKc2UwgFqip+9BJTPVeGSWL+vCHBRQ=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by SA1PR10MB6664.namprd10.prod.outlook.com (2603:10b6:806:2b3::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.27; Fri, 5 May
+ 2023 12:24:30 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::8456:ba59:80ec:d804]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::8456:ba59:80ec:d804%7]) with mapi id 15.20.6363.027; Fri, 5 May 2023
+ 12:24:30 +0000
+Message-ID: <98eaaa87-ae33-5479-dee0-71e42bc5d798@oracle.com>
+Date:   Fri, 5 May 2023 13:24:18 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 1/5] driver/perf: Add identifier sysfs file for CMN
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Song Liu <song@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        bpf <bpf@vger.kernel.org>
-Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
-Message-ID: <ZFTrkjccQ4cW6kYZ@krava>
-References: <ZFOSUab5XEJD0kxj@kernel.org>
- <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
- <ZFPw0scDq1eIzfHr@kernel.org>
- <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
- <ZFQCccsx6GK+gY0j@kernel.org>
- <ZFQoQjCNtyMIulp+@kernel.org>
- <CAP-5=fU8HQorW+7O6vfEKGs1mEFkjkzXZMVPACzurtcMcRhVzQ@mail.gmail.com>
- <ZFQ5sjjtfEYzvHNP@krava>
- <CAP-5=fXgtNQ5KQv_M+b-mR-dm_s8AAgRkotXifFiTqBo9FHJzA@mail.gmail.com>
- <ZFTOxBDsbboKeEr9@krava>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1682329456-19418-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <df63b597-4355-b9fc-6002-5a390b1a56f5@oracle.com>
+ <12bf4a7f-e99c-47cf-e8e4-e2700db6c5c9@arm.com>
+ <da55ef21-e199-79c3-5b65-d51edb2e754b@oracle.com>
+ <6bb7eaee-2d00-46f5-89ff-95133aea9a5d@arm.com>
+Content-Language: en-US
+From:   John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <6bb7eaee-2d00-46f5-89ff-95133aea9a5d@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZFTOxBDsbboKeEr9@krava>
+X-ClientProxiedBy: SGXP274CA0002.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::14)
+ To DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|SA1PR10MB6664:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1d54c51b-39fa-4e6c-1317-08db4d63ace0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Fcz1y7Z8S3YnzPcc0QxtXZNSmmn4FYO27onTRoNt22P9UOc8dnraYvM8l/J8Jqo0Lvt9LZ6j2cydHgkHwYfv+QFsC0N4xkDIejC5H/TNmcDMxWsVL2mA0GbBeoTkZWSe6WLgn0WpmFasHIs2GOvKm6L5sEIom/STsrUXAuahzGDudH+pAPe2F8zS/KBaCJa9lsmyG6taZiHOcU68sGx8cZD2c7fzVuovCH9DtTmkhIQwc5vdACriZGH+UWPnEQ2VSgnH7x8A4xdD9JH3ldEbX5h9Af7TxkrufHwTWHHCC+1sasOZWvETlOoxKb/b4HIx+slJybTwrK///xDqs46UEMzWqQLmMKRPAUWkDegjp16oy25N0yiQn/ZF15x9g0UQNMamkD47/95bxz6nhTvZ+0pERnHY9R4yzi4vJMnKhOpEDmNpTbcggLhy9e1VuVyag5CCQap0Grx3PG2SvvIDQwC7dvI+bo348dVnRkHhCI6+tXpv0/qHimP6VoivkBkR8RmbVxJH0+GyH0Gt+Tok/9Ihdn63NDrWnxXyAwaZEHjJnVZk+cg4ejRYLP47tMd63zBtvsqt1AVdhC90eoqwXRKE2osuH2FtDx3k5tptwirV8imhGlx13yT3JoBv3oaHQh54rFdFw1+6FWdh0VWVjA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(376002)(346002)(136003)(39860400002)(396003)(451199021)(31686004)(36916002)(66946007)(66556008)(66476007)(4326008)(478600001)(6486002)(316002)(110136005)(54906003)(36756003)(6666004)(86362001)(31696002)(2616005)(53546011)(6512007)(6506007)(26005)(8676002)(8936002)(5660300002)(41300700001)(7416002)(2906002)(186003)(38100700002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UlZtYzFlZzFRUGJEYjVoZDF3WW13cE1JUHhldGVCcktYUzdFWGZGcW1zZk1h?=
+ =?utf-8?B?a0ZtTDZsakgyRFExcFNidGVOSFdCMmRXcGVFK1JFZzVxbWQ2c2NhMUdtcHNV?=
+ =?utf-8?B?ekNQU1o5Z2x6ZGdGUmxTRmhJTXNPZ0ZESVRKZmVPVFNpVE5ERTM5ZGF3UnBW?=
+ =?utf-8?B?K3UrcWlVRDQwaFNIQkxmYmZMTzZpdDFtYlhvbEhKMTA3V1BqVkpVZXlWWE5K?=
+ =?utf-8?B?RDdBYnF0bTNYc0lsanNlbnB2ajdWNXpQVEQ3ZFdGWlBtUUZPQlNtbU1wS2x4?=
+ =?utf-8?B?cUFicFlNb3RFZzBkZkg4d0szU3dzdmFFd2tEc3JXekpyV1JQeHRkbFE4VU5u?=
+ =?utf-8?B?MStQZ0RQR3AxWnNmbDM1TjRaNzExMnROQmFUc3ZuMHdyaEhCa1kxYzBPVHBs?=
+ =?utf-8?B?K0lqQlRrSnVDRXNEZTY5RFZNcmFQSndyNVdTNm01WERCQnFGMkdZVVVRakVP?=
+ =?utf-8?B?RjFJdDdadSt6WmtkZFJIL2M0bkJoQnZKOE1HeTlLT0pvdWtBUGpjN01SYWhx?=
+ =?utf-8?B?WTZTMTZ3Mm1jcGpJWUxhR3h0T2hFQjN6NzMxSGpYd3lueTNPVDErRnNHSFg1?=
+ =?utf-8?B?U3N2Z3RkVEh2amNYdGNNRFArZUJnVTF3cWN1U1BxQ3hLTitMQXJCNk41NGRH?=
+ =?utf-8?B?alVCMTJQUVNXKzd5SHY3S002dmV0OFBiK2NlZnJiKzBUMzNRTDYyNTg4M2Yx?=
+ =?utf-8?B?QU1lWk1wWnIreXViZ1l1S3RrNEtxblpBZVc3cDZSbmd4b3lmR2ZLNFZuK2RG?=
+ =?utf-8?B?bkpXaWNydEVhNGRuYXE0Z0RObkxUV2wyd1FUUmJRUTUvbjJjTytJRFZPV1dO?=
+ =?utf-8?B?d0RzeU41VWhhZXBub3hBMEY2M2NXalJPWUh5UE1FSmQxTmxHbnY1dis2SHR1?=
+ =?utf-8?B?T2ROV0VPbzF4V0V0U0VIUmRFVGxoTXRoQ1BySjlMUGkrd1ZPbjJtWW94OWdR?=
+ =?utf-8?B?dCtRaGF5RlBsVlNBQnlZa1B4RDNXTE1aWUlOeUdLeElqOGFZM0t4QW85NEtG?=
+ =?utf-8?B?ajVsZnV2RzcrRGhwc3gxZXd4STJXVEZvV0pUWDBTRENTRnpZYVZUd3RuMmJy?=
+ =?utf-8?B?aUxEVm5HMEJWVGRsY2FaUzRIQkw3c1h0NVFSa2s4V1JnaVFzd29OWmx4ekRs?=
+ =?utf-8?B?RU9oeDhIVENOODNOYXZYNEV0SUNKdiswa3h3Zk9YQ3RrZlVpN2dYbHBRYnln?=
+ =?utf-8?B?RkxOSk1uMi9tR0x4TlFzNFF3aXV1VEhKWkVTR013NXZ3bWMvMzdBUllaTGda?=
+ =?utf-8?B?WDQ5ZndhdkROcGRFMTNUcW9vbkRkdjFOdzNjSDdabWlnaW8ySVB1OFpsY2hh?=
+ =?utf-8?B?Z29KcjNRZ0dxYzJDbTBNODJHU1U3b0JOd3VMSk5IOHZhaFNNN3d4ZHVoZVJE?=
+ =?utf-8?B?Nk1UMnNxUWlGME5wZ1FzUmh2REhwZjhGelFrYVFNL2UxVEc3VEgzajBRVzZ0?=
+ =?utf-8?B?djkzWm1TSUNjMnVjei9JN0dFODVQTWN3bUlYUkFaYU0vYWkvNDVVRlUvTVE3?=
+ =?utf-8?B?bWI1a2RKSmZDZVB0Y2p3TEFWMHVsdnhoU3p0My9aV2lja0kwQXdzV1k3SWdH?=
+ =?utf-8?B?TVZQdlJ3eFF0L25mbTdYQURjY29jQVJtd2pMU3YxbVQ4WWV3bXNFSEM5Zm9r?=
+ =?utf-8?B?MGZyTWlCbTkwZFVVbmNnT1Fmb1Zzajh3Y3Z6TkZJLzlONEZPTFA2bURlWUxo?=
+ =?utf-8?B?WEVkTC9jaFNjYUl1SDEvZDQ0bjVBelFnWHcxMHNQYXBOS0tNRnI2UFhOZ2V4?=
+ =?utf-8?B?UGovR3RnUlN1dlR3cFo3SndiTTdqU2k4SUM1a0UyWXhZd3dTUE81TW9LVkFN?=
+ =?utf-8?B?N0NxRWR5NUpmWWo0NUw3RlZSdlFxUlNmS3lUaEhJSldHU1FEbGR4djdBUmlS?=
+ =?utf-8?B?SFNCb2lmeFIwc2JYdXFNM2ZPbUF1QStaL2pqQUI5cXZCWlh3UWpBYWNkMk93?=
+ =?utf-8?B?UjN3QWxia2pHWGdUeEpneCt3dVZ5NFkrdlpiRlpqWGNKL1F0bDV6MEprMWgw?=
+ =?utf-8?B?YmlUeVZ0WkYwaTdPVmJ6d2xOTzJSejhQZGlyNU5FZVErREVrSER6dnhSVFpa?=
+ =?utf-8?B?ZTJPWTlxdlV5VUkzQ3luYzJxTXFGNXNNbUtydzRXcWlCK3ZGaW9kU0UxRW5N?=
+ =?utf-8?Q?erg67kPglnaqkGDCMCXjT1qs7?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?a1gwZ3BPbnlXSVpKeGJkLzRQa0Q5M1M4MW95V0s2NUZRZDUyVnovTzlIcTlL?=
+ =?utf-8?B?VlVXNHNPN24reWJzN3BTbHpFV2ZEbmtUeU5VNlQ4UDRhZThXRlVpSUxEejI0?=
+ =?utf-8?B?QnNoV0R5OVgzam5yWWtrdjVXVC8reWRsL2YvekZ1QW5TOGJlR003OE1uNFdU?=
+ =?utf-8?B?dWx6OFViSjI2UG5sMGh3M3dUV2poMTByQWthR0VTTlBLZGo3eFZzOWxhSFZt?=
+ =?utf-8?B?ZjArUk9XV2xwZ2hWaUt5WVF6eEZVaW1mSDV5S3Rnc1J2K3JnRUFoeGRNRHhw?=
+ =?utf-8?B?QW11UjZPMlU2SWFSR3c2T20rempQc2wrbjY0MjBhRmU0N24vYmsvV0E5b3B5?=
+ =?utf-8?B?ZVlHcjhaeW5GZUpOYythVzRpdy80dHU2UmhJMjVQTVF2c3p4S1ByM1kxVHBN?=
+ =?utf-8?B?TmhhcGxDV3J3bjNuQ0JvOHZaQzh3dnFXeE01cFgxa2N5NXRKeVd3NnZ3UGhx?=
+ =?utf-8?B?VzU1RDhqbVl4aDdzazB1L3pORWRkNDU0YlFlQzN1QUxWTFFNODhHOVVoYVNU?=
+ =?utf-8?B?Y3VhUmFTMFo5TjBqZU4zY0JjNlk3c045elNqbUZMbEVSaEoxajlLeE05dFZq?=
+ =?utf-8?B?OU5xWUpsMCtwNHdveEJ1dlNEbVJvNDRUU1ZhRTZpcndaeTdMT3VUUGJ2TzBs?=
+ =?utf-8?B?dVNCb1MxcGZoaXlYL3lDbURjUkh4bS9HSGg5U3pUWERwY1d4UGZONGU5anVq?=
+ =?utf-8?B?UmE4V1E3czdTSG8yTVpnckdCUmRFdWRoekwzV2VYSUluTkphSnU4bnp4VTJh?=
+ =?utf-8?B?Qmt1NGppZnRpUFR1Q2FkNDJkaXVJcklQeFVLU1VBeHNFVGwzNXdtb0RGV2Zu?=
+ =?utf-8?B?M1kweUgrVTdJT01teVB3aTJUcHpsRi9BYTdRV2FVNUpJUjlKams3TzNMUlZN?=
+ =?utf-8?B?ZjlKbW0xd042bEdGbk5SY1JUOVpMUWpPMnJUVm0rR0EzZUJ2cmMzWm9Pc1NQ?=
+ =?utf-8?B?SDQzWG14TUh1YitVdDMrNHEwSjNhVGNsMGdBOVhDRGFUWGZOcGVERzE4MThz?=
+ =?utf-8?B?UDJOTHNkdW1jQTNkMy9iSU5XVVlJM2RMRjNuTTlxckZmZ2xLYUdTR2NuRjJD?=
+ =?utf-8?B?NHpOdmJIbjdTQU9JUkFhWThKUEpFYmFnaWE4YmkwclJ6ZkpheURSdG1Razl0?=
+ =?utf-8?B?KzVzRXR6anZqTGN4Z0xncVU5SHRTV2lqMEhBZHlnM0VVSEVUenF4dkZtVFpW?=
+ =?utf-8?B?K0JSdXVrTER2ejJiMERGMVhycDVEOHJVSkN3clZkaVJ2bTM5Wm0vdVE2Sm1m?=
+ =?utf-8?B?aVhleXhsN2VEWmtELzIyWE56ckNFOThHcGhvbE5vUXNsOEE0N0tOU0J4aUxW?=
+ =?utf-8?B?SzZOUnZzOENVQ1RPNUxrSXBIajFTVXI5TkRXVUYwaVFqR0Npd1ZHdU5vcENp?=
+ =?utf-8?B?Skp2aTlOcGxNMVhGeWpjbWdRTjRkNUY4TFBnWFJ0K0dBLzlWUjRtWHhmUHJY?=
+ =?utf-8?B?endEMUVVUlZsdDVnS0w3d2hoNFpCU0YzOGQ4NEdWR2EyYXRvQld0dmpjYzlP?=
+ =?utf-8?Q?Qjtgb0=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d54c51b-39fa-4e6c-1317-08db4d63ace0
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2023 12:24:30.3867
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oQhYCnWe/vOr/Cra1+cGXRV+mC4cx1S3KvSItsW6qS2sffa1H0SyNBLFt8LcYOrbRu7zbWYqkKq7a8DIzh6dMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6664
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-05_19,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxlogscore=999 spamscore=0 phishscore=0 adultscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305050102
+X-Proofpoint-GUID: 6O5zfVXUsd-PK2Kk3BMsIjBvlfE5oj-B
+X-Proofpoint-ORIG-GUID: 6O5zfVXUsd-PK2Kk3BMsIjBvlfE5oj-B
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 05, 2023 at 11:39:19AM +0200, Jiri Olsa wrote:
-> On Thu, May 04, 2023 at 04:19:47PM -0700, Ian Rogers wrote:
-> > On Thu, May 4, 2023 at 4:03 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > >
-> > > On Thu, May 04, 2023 at 03:03:42PM -0700, Ian Rogers wrote:
-> > > > On Thu, May 4, 2023 at 2:48 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > >
-> > > > > Em Thu, May 04, 2023 at 04:07:29PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > > > Em Thu, May 04, 2023 at 11:50:07AM -0700, Andrii Nakryiko escreveu:
-> > > > > > > On Thu, May 4, 2023 at 10:52 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > > > > > Andrii, can you add some more information about the usage of vmlinux.h
-> > > > > > > > instead of using kernel headers?
-> > > > > >
-> > > > > > > I'll just say that vmlinux.h is not a hard requirement to build BPF
-> > > > > > > programs, it's more a convenience allowing easy access to definitions
-> > > > > > > of both UAPI and kernel-internal structures for tracing needs and
-> > > > > > > marking them relocatable using BPF CO-RE machinery. Lots of real-world
-> > > > > > > applications just check-in pregenerated vmlinux.h to avoid build-time
-> > > > > > > dependency on up-to-date host kernel and such.
-> > > > > >
-> > > > > > > If vmlinux.h generation and usage is causing issues, though, given
-> > > > > > > that perf's BPF programs don't seem to be using many different kernel
-> > > > > > > types, it might be a better option to just use UAPI headers for public
-> > > > > > > kernel type definitions, and just define CO-RE-relocatable minimal
-> > > > > > > definitions locally in perf's BPF code for the other types necessary.
-> > > > > > > E.g., if perf needs only pid and tgid from task_struct, this would
-> > > > > > > suffice:
-> > > > > >
-> > > > > > > struct task_struct {
-> > > > > > >     int pid;
-> > > > > > >     int tgid;
-> > > > > > > } __attribute__((preserve_access_index));
-> > > > > >
-> > > > > > Yeah, that seems like a way better approach, no vmlinux involved, libbpf
-> > > > > > CO-RE notices that task_struct changed from this two integers version
-> > > > > > (of course) and does the relocation to where it is in the running kernel
-> > > > > > by using /sys/kernel/btf/vmlinux.
-> > > > >
-> > > > > Doing it for one of the skels, build tested, runtime untested, but not
-> > > > > using any vmlinux, BTF to help, not that bad, more verbose, but at least
-> > > > > we state what are the fields we actually use, have those attribute
-> > > > > documenting that those offsets will be recorded for future use, etc.
-> > > > >
-> > > > > Namhyung, can you please check that this works?
-> > > > >
-> > > > > Thanks,
-> > > > >
-> > > > > - Arnaldo
-> > > > >
-> > > > > diff --git a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > > > index 6a438e0102c5a2cb..f376d162549ebd74 100644
-> > > > > --- a/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > > > +++ b/tools/perf/util/bpf_skel/bperf_cgroup.bpf.c
-> > > > > @@ -1,11 +1,40 @@
-> > > > >  // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > >  // Copyright (c) 2021 Facebook
-> > > > >  // Copyright (c) 2021 Google
-> > > > > -#include "vmlinux.h"
-> > > > > +#include <linux/types.h>
-> > > > > +#include <linux/bpf.h>
-> > > >
-> > > > Compared to vmlinux.h here be dragons. It is easy to start dragging in
-> > > > all of libc and that may not work due to missing #ifdefs, etc.. Could
-> > > > we check in a vmlinux.h like libbpf-tools does?
-> > > > https://github.com/iovisor/bcc/tree/master/libbpf-tools#vmlinuxh-generation
-> > > > https://github.com/iovisor/bcc/tree/master/libbpf-tools/arm64
-> > > >
-> > > > This would also remove some of the errors that could be introduced by
-> > > > copy+pasting enums, etc. and also highlight issues with things being
-> > > > renamed as build time rather than runtime failures.
-> > >
-> > > we already have to deal with that, right? doing checks on fields in
-> > > structs like mm_struct___old
-> > 
-> > We do, but the way I detected the problems in the first place was by
-> > building against older kernels. Now the build will always succeed but
-> > fail at runtime.
-> > 
-> > > > Could this be some shared resource for the different linux tools
-> > > > projects using a vmlinux.h? e.g. tools/lib/vmlinuxh with an
-> > > > install_headers target that builds a vmlinux.h.
-> > >
-> > > I tried to do the minimal header and it's not too big,
-> > > I pushed it in here:
-> > >   https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/log/?h=perf/vmlinux_h
-> > >
-> > > compile tested so far
-> > >
-> > > jirka
-> > 
-> > Cool, could we just call it vmlinux.h rather than perf-defs.h?
+On 04/05/2023 13:15, Robin Murphy wrote:
+>>
+>> ok, I see, that's what I was asking about in the cmn-700 JSON review; 
+>> and from what you say, it is not the case that we always have the same 
+>> events for every revision. So we need a more fine-grained identifier.
 > 
-> right, it also makes the change smaller
+> Yes, it's mostly just a case of new events getting added as the 
+> microarchitecture evolves over the product's lifetime,
+
+I might have mentioned this before: Currently userspace matches both the 
+PMU sysfs name and this HW identifier for creating these event aliases. 
+For fixed events - like those non-IMPDEF ones on the PMCG - userspace 
+could just assume those standard ones are implemented and not need to 
+check the HW identifier. Maybe this will help with scalability of JSONs 
+for CMN PMU implementations. Or even HW identifier wildcard matching. 
+However, as you might anticipate, we may need to add some sort of 
+userspace support for times when HW implementations get messed up...
+
+> but there has 
+> been at least one event ID which had a meaning in very early versions of 
+> CMN-600, was subsequently removed, and then got reused for a *different* 
+> event a couple of revisions after that.
+> Thankfully I believe those 
+> earliest versions only ever existed on FPGA internally, and the TRMs 
+> were never made public, so upstream doesn't care about that specific case.
+
+ok, good
+
 > 
-> > 
-> > I notice cgroup_subsys_id is in there which is called out in Andrii's
-> > CO-RE  guide/blog:
-> > https://nakryiko.com/posts/bpf-core-reference-guide/#relocatable-enums
-> > perhaps we can do something with names/types to make sure a helper is
-> > being used for these enum values.
+>> For DT support, I suppose per-revision compat strings could be added, 
+>> but I would not be sure what to do about ACPI.
+> 
+> We know the version from the ID registers, that's no problem - it's 
+> already used to manage visibility of the sysfs event aliases. In 
+> principle we *should* have a model code in CFGM_PERIPH_ID_0 as well, and 
+> be able to compose an identifier exactly the same way as 
+> smmu_pmu_get_iidr() does in the SMMUv3 PMCG driver, but as I mentioned 
+> before I'm not entirely confident in the implementation: I do happen to 
+> know what codes have been nominally assigned for each product, but the 
+> TRMs claim otherwise 🙁
 
-both bperf_cgroup and off_cpu programs use bpf_core_enum_value, so we should be fine
-
-jirka
+Thanks,
+John
