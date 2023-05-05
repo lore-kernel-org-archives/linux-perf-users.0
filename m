@@ -2,128 +2,84 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0680C77B7D
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 06:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 532C6C77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 08:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231152AbjEEGpf (ORCPT
+        id S229810AbjEEIaK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 02:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60940 "EHLO
+        Fri, 5 May 2023 04:30:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231157AbjEEGpe (ORCPT
+        with ESMTP id S231487AbjEEI25 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 02:45:34 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A7DB4C12;
-        Thu,  4 May 2023 23:45:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683269130; x=1714805130;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4KhTQWYJpyZeeVVAqWxzuhhuJ24zjCNfiqa/E3D5Nws=;
-  b=FmJImMTKul5Ft39vikBGwCRKF5XwuGnvuTr6fVxbBMap0t5GFKbfmql/
-   NanMN+JPDq8LWR43nVPH2nmAb5JB1qWyiXmRslKRRzKuDfEOOu59LdhJh
-   cEUa7vWvyxb+PblKZd8D6eTVpoX19s9O9wvUffQjgU9dD8rhELVFVaXME
-   0T9VRvvNADU7/qFr7DtwULU/DzZK4uL6Bh6GQ2he0BwSNhMjhOWdFCv+k
-   yt+qDtonxy9o4xCFnnf7EHKnAnh3vPUyDwIJ2ZBKWUOwpErtiPrbKeY3w
-   9kb/b76f1IT92ObYCUBg2Iy4BsSyPHPs2R2HoBmAxptRLRQz5SdFVWJRe
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10700"; a="333565129"
-X-IronPort-AV: E=Sophos;i="5.99,251,1677571200"; 
-   d="scan'208";a="333565129"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2023 23:45:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10700"; a="943714373"
-X-IronPort-AV: E=Sophos;i="5.99,251,1677571200"; 
-   d="scan'208";a="943714373"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.216.212])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2023 23:45:05 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf parse-events: Do not break up AUX event group
-Date:   Fri,  5 May 2023 09:44:52 +0300
-Message-Id: <20230505064452.9660-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 5 May 2023 04:28:57 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D4101814A
+        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 01:28:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wtsT3el5XQOB42nPQ1QzQK95akpe5aJoeY1XXGifUlk=; b=EhsV2DSIxQnxOMhVgsm/AjWHqC
+        prpu+2dA39KT7zuiNXcN8Ak8MyDo8Ub7VFW8vpexuSuFfL0CksQnLmv//YXwIfnGmxOBdNy2YbTkP
+        t1ZWboGPH3y0+ivX0xFa+Eft4BwSVNlZliMno4j0fpMpHkSDgDe7DTz3ReBedwlN2uxv2cT0lDkQQ
+        /Zed7bP8hSFdbs9lP4LUhu1SnnOkeJ4/I5RcPhzswrJ95tsWnOknPXtmB15axyXQdGtxZykjo2uQn
+        2XmxX7mRzYYr4/AFShFbaXlBE4b+K8SpA3oI4fHEZh/7MpXHEQYZb6h06otKOfi5Nj4FW4eoosKIA
+        xEY3Ky4Q==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1puqnq-003CIN-2y;
+        Fri, 05 May 2023 08:28:35 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1301A300635;
+        Fri,  5 May 2023 10:28:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E7FB723CC0167; Fri,  5 May 2023 10:28:32 +0200 (CEST)
+Date:   Fri, 5 May 2023 10:28:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: Re: uapi vs kernel headers
+Message-ID: <20230505082832.GA1770668@hirez.programming.kicks-ass.net>
+References: <CAP-5=fXKi+VAr-_n5tAaJ7Z2fvU7jc5N-CKCjkCAh_01_pzMfA@mail.gmail.com>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXKi+VAr-_n5tAaJ7Z2fvU7jc5N-CKCjkCAh_01_pzMfA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Assume AUX event group is correct and not do break it up.
+On Thu, May 04, 2023 at 03:36:48PM -0700, Ian Rogers wrote:
+> Hi,
+> 
+> when the C compiler builds perf the priority of the "-I" flags is left
+> to right. This means that in the perf build:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Makefile.config?h=perf-tools-next#n355
+> if the build is looking for <linux/types.h> then whereas most projects
+> would expect that to come from /usr/include/linux/types.h (which
+> matches the uapi version) perf actually builds with the kernel version
+> (tools/include/linux/types.h). The kernel version will declare types
+> like u64 that are __u64 in the uapi code, so reversing the include
+> order massively breaks the build as u64 and many associated types are
+> missing.
+> 
+> It almost feels accidental that perf does things this way, and it
+> feels more obvious if perf were to reverse the include order and deal
+> with the fall-out in the code (ie perf's linux/types.h would agree
+> more with what normal projects have). Perhaps perf needs its own
+> types.h to minimize the fallout. I wondered what more general opinions
+> on this were? Is this something that should be fixed?
 
-Example:
-
- Before:
-
-    $ perf record --no-bpf-event -c 10 -e '{intel_pt//,tlb_flush.stlb_any/aux-sample-size=8192/pp}:u' -- sleep 0.1
-    WARNING: events were regrouped to match PMUs
-    Cannot add AUX area sampling to a group leader
-
- After:
-
-    $ perf record --no-bpf-event -c 10 -e '{intel_pt//,tlb_flush.stlb_any/aux-sample-size=8192/pp}:u' -- sleep 0.1
-    [ perf record: Woken up 1 times to write data ]
-    [ perf record: Captured and wrote 0.078 MB perf.data ]
-    $ perf script -F-dso,+addr | grep -C5 tlb_flush.stlb_any | head -11
-    sleep 20444 [003]  7939.510243:  1  branches:uH:  7f5350cc82a2 dl_main+0x9a2 => 7f5350cb38f0 _dl_add_to_namespace_list+0x0
-    sleep 20444 [003]  7939.510243:  1  branches:uH:  7f5350cb3908 _dl_add_to_namespace_list+0x18 => 7f5350cbb080 rtld_mutex_dummy+0x0
-    sleep 20444 [003]  7939.510243:  1  branches:uH:  7f5350cc8350 dl_main+0xa50 => 0 [unknown]
-    sleep 20444 [003]  7939.510244:  1  branches:uH:  7f5350cc83ca dl_main+0xaca => 7f5350caeb60 _dl_process_pt_gnu_property+0x0
-    sleep 20444 [003]  7939.510245:  1  branches:uH:  7f5350caeb60 _dl_process_pt_gnu_property+0x0 => 0 [unknown]
-    sleep 20444  7939.510245:       10 tlb_flush.stlb_any/aux-sample-size=8192/pp: 0 7f5350caeb60 _dl_process_pt_gnu_property+0x0
-    sleep 20444 [003]  7939.510254:  1  branches:uH:  7f5350cc87fe dl_main+0xefe => 7f5350ccd240 strcmp+0x0
-    sleep 20444 [003]  7939.510254:  1  branches:uH:  7f5350cc8862 dl_main+0xf62 => 0 [unknown]
-    sleep 20444 [003]  7939.510255:  1  branches:uH:  7f5350cc9cdc dl_main+0x23dc => 0 [unknown]
-    sleep 20444 [003]  7939.510257:  1  branches:uH:  7f5350cc89f6 dl_main+0x10f6 => 7f5350cb9530 _dl_setup_hash+0x0
-    sleep 20444 [003]  7939.510257:  1  branches:uH:  7f5350cc8a2d dl_main+0x112d => 7f5350cb3990 _dl_new_object+0x0
-
-Fixes: 347c2f0a0988 ("perf parse-events: Sort and group parsed events")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/evsel.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 356c07f03be6..a34f61a5271d 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -828,7 +828,11 @@ bool evsel__name_is(struct evsel *evsel, const char *name)
- 
- const char *evsel__group_pmu_name(const struct evsel *evsel)
- {
--	const struct evsel *leader;
-+	const struct evsel *leader = evsel__leader(evsel);
-+
-+	/* Never break AUX event groups */
-+	if (evsel__is_aux_event(leader))
-+		return leader->pmu_name;
- 
- 	/* If the pmu_name is set use it. pmu_name isn't set for CPU and software events. */
- 	if (evsel->pmu_name)
-@@ -837,15 +841,9 @@ const char *evsel__group_pmu_name(const struct evsel *evsel)
- 	 * Software events may be in a group with other uncore PMU events. Use
- 	 * the pmu_name of the group leader to avoid breaking the software event
- 	 * out of the group.
--	 *
--	 * Aux event leaders, like intel_pt, expect a group with events from
--	 * other PMUs, so substitute the AUX event's PMU in this case.
- 	 */
--	leader  = evsel__leader(evsel);
--	if ((evsel->core.attr.type == PERF_TYPE_SOFTWARE || evsel__is_aux_event(leader)) &&
--	    leader->pmu_name) {
-+	if (evsel->core.attr.type == PERF_TYPE_SOFTWARE && leader->pmu_name)
- 		return leader->pmu_name;
--	}
- 
- 	return "cpu";
- }
--- 
-2.34.1
-
+Doesn't perf have to prioritize the kernel headers because it needs the
+latest version of the perf uapi -- and not some random old version the
+system headers might have?
