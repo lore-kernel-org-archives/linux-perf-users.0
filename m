@@ -2,84 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 532C6C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 08:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA803C77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri,  5 May 2023 09:17:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbjEEIaK (ORCPT
+        id S231200AbjEEJRV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 04:30:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57710 "EHLO
+        Fri, 5 May 2023 05:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231487AbjEEI25 (ORCPT
+        with ESMTP id S229658AbjEEJRU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 04:28:57 -0400
+        Fri, 5 May 2023 05:17:20 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D4101814A
-        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 01:28:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA69E4B;
+        Fri,  5 May 2023 02:17:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wtsT3el5XQOB42nPQ1QzQK95akpe5aJoeY1XXGifUlk=; b=EhsV2DSIxQnxOMhVgsm/AjWHqC
-        prpu+2dA39KT7zuiNXcN8Ak8MyDo8Ub7VFW8vpexuSuFfL0CksQnLmv//YXwIfnGmxOBdNy2YbTkP
-        t1ZWboGPH3y0+ivX0xFa+Eft4BwSVNlZliMno4j0fpMpHkSDgDe7DTz3ReBedwlN2uxv2cT0lDkQQ
-        /Zed7bP8hSFdbs9lP4LUhu1SnnOkeJ4/I5RcPhzswrJ95tsWnOknPXtmB15axyXQdGtxZykjo2uQn
-        2XmxX7mRzYYr4/AFShFbaXlBE4b+K8SpA3oI4fHEZh/7MpXHEQYZb6h06otKOfi5Nj4FW4eoosKIA
-        xEY3Ky4Q==;
+        bh=XgffjADJueiaBKtq3vhPj7C6S2yqagj9t0to9VzS6Xs=; b=Rlz9BJSPkpRxxRFZtVP6M3TiJu
+        e/2YQdUQ8rgk0GZKJ+29hc47yt39PK1k4TIfFGlf598IpDcRPh0sudyGbmxQeTd9tpYjaJNyivxz9
+        k+YX0UYfkeCkSx0Bp/sNu1cxylrpB2iF5LM0lpD1QQ++s/29vD4uuJJKZVYBF4dNqkWejR6MLUN65
+        YG66GWrSyMUThtezexDg2IL6HIe89V7PpkqBLMvu0i+UM63COcB0IVLgWLQUcIwgL9ihcewCgRdj5
+        lHqqv0mzigZ2DK5ee33qcYPe19ePm4zx0nRysnK6s7M+3fLTNPgfg19u7lWUzSPSCmUhOkGRR6PH/
+        Y8LYmrUw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1puqnq-003CIN-2y;
-        Fri, 05 May 2023 08:28:35 +0000
+        id 1purYY-003CsK-28;
+        Fri, 05 May 2023 09:16:52 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1301A300635;
-        Fri,  5 May 2023 10:28:33 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 09C2930602A;
+        Fri,  5 May 2023 11:16:48 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E7FB723CC0167; Fri,  5 May 2023 10:28:32 +0200 (CEST)
-Date:   Fri, 5 May 2023 10:28:32 +0200
+        id D6BB5241D3325; Fri,  5 May 2023 11:16:48 +0200 (CEST)
+Date:   Fri, 5 May 2023 11:16:48 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: Re: uapi vs kernel headers
-Message-ID: <20230505082832.GA1770668@hirez.programming.kicks-ass.net>
-References: <CAP-5=fXKi+VAr-_n5tAaJ7Z2fvU7jc5N-CKCjkCAh_01_pzMfA@mail.gmail.com>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     namhyung@kernel.org, eranian@google.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
+        bp@alien8.de, kan.liang@linux.intel.com, adrian.hunter@intel.com,
+        maddy@linux.ibm.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com
+Subject: Re: [PATCH v4 4/4] perf test: Add selftest to test IBS invocation
+ via core pmu events
+Message-ID: <20230505091648.GC1770668@hirez.programming.kicks-ass.net>
+References: <20230504110003.2548-1-ravi.bangoria@amd.com>
+ <20230504110003.2548-5-ravi.bangoria@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXKi+VAr-_n5tAaJ7Z2fvU7jc5N-CKCjkCAh_01_pzMfA@mail.gmail.com>
+In-Reply-To: <20230504110003.2548-5-ravi.bangoria@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 04, 2023 at 03:36:48PM -0700, Ian Rogers wrote:
-> Hi,
+On Thu, May 04, 2023 at 04:30:03PM +0530, Ravi Bangoria wrote:
+> IBS pmu can be invoked via fixed set of core pmu events with 'precise_ip'
+> set to 1. Add a simple event open test for all these events.
 > 
-> when the C compiler builds perf the priority of the "-I" flags is left
-> to right. This means that in the perf build:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Makefile.config?h=perf-tools-next#n355
-> if the build is looking for <linux/types.h> then whereas most projects
-> would expect that to come from /usr/include/linux/types.h (which
-> matches the uapi version) perf actually builds with the kernel version
-> (tools/include/linux/types.h). The kernel version will declare types
-> like u64 that are __u64 in the uapi code, so reversing the include
-> order massively breaks the build as u64 and many associated types are
-> missing.
+> Without kernel fix:
+>   $ sudo ./perf test -vv 76
+>    76: AMD IBS via core pmu                                      :
+>   --- start ---
+>   test child forked, pid 6553
+>   Using CPUID AuthenticAMD-25-1-1
+>   type: 0x0, config: 0x0, fd: 3  -  Pass
+>   type: 0x0, config: 0x1, fd: -1  -  Pass
+>   type: 0x4, config: 0x76, fd: -1  -  Fail
+>   type: 0x4, config: 0xc1, fd: -1  -  Fail
+>   type: 0x4, config: 0x12, fd: -1  -  Pass
+>   test child finished with -1
+>   ---- end ----
+>   AMD IBS via core pmu: FAILED!
 > 
-> It almost feels accidental that perf does things this way, and it
-> feels more obvious if perf were to reverse the include order and deal
-> with the fall-out in the code (ie perf's linux/types.h would agree
-> more with what normal projects have). Perhaps perf needs its own
-> types.h to minimize the fallout. I wondered what more general opinions
-> on this were? Is this something that should be fixed?
+> With kernel fix:
+>   $ sudo ./perf test -vv 76
+>    76: AMD IBS via core pmu                                      :
+>   --- start ---
+>   test child forked, pid 7526
+>   Using CPUID AuthenticAMD-25-1-1
+>   type: 0x0, config: 0x0, fd: 3  -  Pass
+>   type: 0x0, config: 0x1, fd: -1  -  Pass
+>   type: 0x4, config: 0x76, fd: 3  -  Pass
+>   type: 0x4, config: 0xc1, fd: 3  -  Pass
+>   type: 0x4, config: 0x12, fd: -1  -  Pass
+>   test child finished with 0
+>   ---- end ----
+>   AMD IBS via core pmu: Ok
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+>  tools/perf/arch/x86/include/arch-tests.h      |  1 +
+>  tools/perf/arch/x86/tests/Build               |  1 +
+>  .../arch/x86/tests/amd-ibs-via-core-pmu.c     | 71 +++++++++++++++++++
+>  tools/perf/arch/x86/tests/arch-tests.c        |  2 +
+>  4 files changed, 75 insertions(+)
+>  create mode 100644 tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c
 
-Doesn't perf have to prioritize the kernel headers because it needs the
-latest version of the perf uapi -- and not some random old version the
-system headers might have?
+Arnaldo, ok if I merge this along with the other patches or would you
+rather take it?
