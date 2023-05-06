@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39DC1C7EE2C
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 May 2023 11:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC6BC7EE22
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 May 2023 11:06:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232108AbjEFLGw (ORCPT
+        id S231190AbjEFLGv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 May 2023 07:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48528 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232125AbjEFLGv (ORCPT
-        <rfc822;linux-perf-users@vger.kernel.org>);
         Sat, 6 May 2023 07:06:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232108AbjEFLGs (ORCPT
+        <rfc822;linux-perf-users@vger.kernel.org>);
+        Sat, 6 May 2023 07:06:48 -0400
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7EB9483E1
-        for <linux-perf-users@vger.kernel.org>; Sat,  6 May 2023 04:06:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9EAD1869E
+        for <linux-perf-users@vger.kernel.org>; Sat,  6 May 2023 04:06:43 -0700 (PDT)
 Received: from loongson.cn (unknown [112.20.110.102])
-        by gateway (Coremail) with SMTP id _____8AxW+rDNFZkn70FAA--.9481S3;
-        Sat, 06 May 2023 19:06:43 +0800 (CST)
+        by gateway (Coremail) with SMTP id _____8DxRunCNFZklb0FAA--.9336S3;
+        Sat, 06 May 2023 19:06:42 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.110.102])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD7+_NFZkZWxNAA--.10396S5;
-        Sat, 06 May 2023 19:06:43 +0800 (CST)
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD7+_NFZkZWxNAA--.10396S4;
+        Sat, 06 May 2023 19:06:42 +0800 (CST)
 From:   Yanteng Si <siyanteng@loongson.cn>
 To:     peterz@infradead.org
 Cc:     Yanteng Si <siyanteng@loongson.cn>, mingo@redhat.com,
@@ -29,19 +29,19 @@ Cc:     Yanteng Si <siyanteng@loongson.cn>, mingo@redhat.com,
         alexander.shishkin@linux.intel.com, jolsa@kernel.org,
         namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
         linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 16/18] tools arch x86: Sync the prctl headers with the kernel sources
-Date:   Sat,  6 May 2023 19:06:13 +0800
-Message-Id: <7cff9f72da3e9aa078824545f5936c82464bdba3.1683370076.git.siyanteng@loongson.cn>
+Subject: [PATCH 15/18] tools arch x86: Sync the msr-index.h copy with the kernel sources
+Date:   Sat,  6 May 2023 19:06:12 +0800
+Message-Id: <0e1e49fa8a9b065f3eb014356d7596a2438d3fa0.1683370076.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.31.4
 In-Reply-To: <cover.1683370076.git.siyanteng@loongson.cn>
 References: <cover.1683370076.git.siyanteng@loongson.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8DxD7+_NFZkZWxNAA--.10396S5
+X-CM-TRANSID: AQAAf8DxD7+_NFZkZWxNAA--.10396S4
 X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zw18AryrJryUKrW5Jr18Xwb_yoW8trWfpr
-        4q9as3Gr45WrWakr1F93WkAa43Z3ykCr4Dtry2q34xX3WUA34kJr1xCrsa9FyvganYq3W8
-        KF1kX34UW39YvFUanT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoWrZryxtw4fJrW3tr4kXr4xWFg_yoW8Jr43pF
+        n8AwnYgFsYgr95urWUJF9Fk3y7Cw4qkr4S9F4Uur1Yqr13Wa17Xrn7Ka1jg34UJa1Sv3y0
+        kanrur97Jry8tw7anT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
         qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
         bkkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
         1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
@@ -63,65 +63,34 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Picking the changes from:
 
-  commit a03c376ebaf38394 ("x86/arch_prctl: Add AMX feature numbers as ABI
-   constants")
-  commit b642e9e5f0dc797f ("x86/shstk: Add ARCH_SHSTK_STATUS")
-  commit d30299329def886f ("x86/shstk: Add ARCH_SHSTK_UNLOCK")
-  commit 44600eec3f2b708c ("x86/shstk: Support WRSS for userspace")
-  commit 2e30e007142374b6 ("x86/shstk: Add user-mode shadow stack
-   support")
-  commit c40a7569ad82fb47 ("x86: Introduce userspace API for shadow
-   stack")
-  commit 23e5d9ec2bab53c4 ("x86/mm/iommu/sva: Make LAM and SVA mutually
-   exclusive")
-  commit 2f8794bd087e7958 ("x86/mm: Provide arch_prctl() interface for
-   LAM")
+  commit c68e3d473988b9af ("x86/include/asm/msr-index.h: Add IFS Array
+   test bits")
 
 Silencing these perf build warnings:
 
-  Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/prctl.h'
-   differs from latest version at 'arch/x86/include/uapi/asm/prctl.h'
-  diff -u tools/arch/x86/include/uapi/asm/prctl.h arch/x86/include/uapi
-   /asm/prctl.h
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/msr-index.h'
+   differs from latest version at 'arch/x86/include/asm/msr-index.h'
+  diff -u tools/arch/x86/include/asm/msr-index.h arch/x86/include/asm
+   /msr-index.h
 
 Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
 ---
- tools/arch/x86/include/uapi/asm/prctl.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ tools/arch/x86/include/asm/msr-index.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/arch/x86/include/uapi/asm/prctl.h b/tools/arch/x86/include/uapi/asm/prctl.h
-index 500b96e71f18..384e2cc6ac19 100644
---- a/tools/arch/x86/include/uapi/asm/prctl.h
-+++ b/tools/arch/x86/include/uapi/asm/prctl.h
-@@ -16,8 +16,28 @@
- #define ARCH_GET_XCOMP_GUEST_PERM	0x1024
- #define ARCH_REQ_XCOMP_GUEST_PERM	0x1025
+diff --git a/tools/arch/x86/include/asm/msr-index.h b/tools/arch/x86/include/asm/msr-index.h
+index ad35355ee43e..3aedae61af4f 100644
+--- a/tools/arch/x86/include/asm/msr-index.h
++++ b/tools/arch/x86/include/asm/msr-index.h
+@@ -206,6 +206,8 @@
  
-+#define ARCH_XCOMP_TILECFG		17
-+#define ARCH_XCOMP_TILEDATA		18
-+
- #define ARCH_MAP_VDSO_X32		0x2001
- #define ARCH_MAP_VDSO_32		0x2002
- #define ARCH_MAP_VDSO_64		0x2003
+ /* Abbreviated from Intel SDM name IA32_INTEGRITY_CAPABILITIES */
+ #define MSR_INTEGRITY_CAPS			0x000002d9
++#define MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT      2
++#define MSR_INTEGRITY_CAPS_ARRAY_BIST          BIT(MSR_INTEGRITY_CAPS_ARRAY_BIST_BIT)
+ #define MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT	4
+ #define MSR_INTEGRITY_CAPS_PERIODIC_BIST	BIT(MSR_INTEGRITY_CAPS_PERIODIC_BIST_BIT)
  
-+/* Don't use 0x3001-0x3004 because of old glibcs */
-+
-+#define ARCH_GET_UNTAG_MASK		0x4001
-+#define ARCH_ENABLE_TAGGED_ADDR		0x4002
-+#define ARCH_GET_MAX_TAG_BITS		0x4003
-+#define ARCH_FORCE_TAGGED_SVA		0x4004
-+
-+#define ARCH_SHSTK_ENABLE		0x5001
-+#define ARCH_SHSTK_DISABLE		0x5002
-+#define ARCH_SHSTK_LOCK			0x5003
-+#define ARCH_SHSTK_UNLOCK		0x5004
-+#define ARCH_SHSTK_STATUS		0x5005
-+
-+/* ARCH_SHSTK_ features bits */
-+#define ARCH_SHSTK_SHSTK		(1ULL <<  0)
-+#define ARCH_SHSTK_WRSS			(1ULL <<  1)
-+
- #endif /* _ASM_X86_PRCTL_H */
 -- 
 2.31.4
 
