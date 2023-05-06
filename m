@@ -2,242 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C52C77B7D
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 May 2023 01:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FCAC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 May 2023 02:15:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbjEFBNq (ORCPT
+        id S231303AbjEFCPM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 5 May 2023 21:13:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47542 "EHLO
+        Fri, 5 May 2023 22:15:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbjEFBNp (ORCPT
+        with ESMTP id S230339AbjEFCPI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 5 May 2023 21:13:45 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38B61FDE;
-        Fri,  5 May 2023 18:13:43 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QCqHd0n6qzLnbF;
-        Sat,  6 May 2023 09:10:53 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sat, 6 May 2023 09:13:40 +0800
-Subject: Re: BPF skels in perf .Re: [GIT PULL] perf tools changes for v6.4
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Song Liu <song@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Fri, 5 May 2023 22:15:08 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51F897289
+        for <linux-perf-users@vger.kernel.org>; Fri,  5 May 2023 19:15:06 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-55a40d32a6bso25177567b3.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 05 May 2023 19:15:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683339305; x=1685931305;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pJf4bwuwk+xW5YFYNv2ihAkRZ7CiJDxHsIhFi1q/46E=;
+        b=Ti63042aDcnZkRbwB60td25AhQmPK47NkWC4qIEwqnfJdGnj0R04pdJ2Hmgfnm0P9x
+         pnr53iBTBqHhMz2a1cjdh1lJqGEd5NO4jdoPES1QWLOzDszwUDRuyE4gKQQMKrzAdbQT
+         GWNLK3lHqXnKx1gm7p/uEzOZnR6dbIOScU4gUUyzFaULBVNQLD01x1ht1EjMgDk3zer0
+         CrIFaKj0/OeOYRjv2KXodKeX6aLlthx7d9iJuEd8xAbtDgONnObWblpk0L8UPOopVPgi
+         tU5oRk2o8taGUXAsOx5REh74Eus7puNDh4VdSRLZvmaZKJKRfnaUz0JG52z6+kCQYJVk
+         g+Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683339305; x=1685931305;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pJf4bwuwk+xW5YFYNv2ihAkRZ7CiJDxHsIhFi1q/46E=;
+        b=DdVok4vMMzKwK6k200tSUHXr6TXYXpZi48w8BhRMm4wGiVkkzEJENvxaQQDFgVR4za
+         G6wk2iiQbxyxg7dDFmbcV3XgUlO2XwzrtD7zls7cZGBpA8Jh0zoSrM5F4dzgqkpYFPHA
+         f+SINVKA4pQYM7fo7giCrRnIgtIYxDs/gRY4zMpbzJs/EMRKMhcicQ3mDO5ZDkI/fjUn
+         fCuZGyLX9Z6jdaYlDp+g8DKViwQFqTbQwXSqS1DDW924G6sha3b+ZRWz2xcnlxlWJCxB
+         I9VPhmnoGXVDo7mRsJF5SGV7OTgWXp1fr/4jDk7DCsdZEQWapcF5hyUGMo4Blac7HDTH
+         FepA==
+X-Gm-Message-State: AC+VfDx4l41f0Lk96cAy8mGjxIgvlcAgEnwvwD8rkyMsRamMULhLFl1E
+        7tLsSoevqbs8XWA2FgM7MUNwEAPojMvE
+X-Google-Smtp-Source: ACHHUZ7fCEmGVZcSm742KT0Xx/0ZWwbb5eOxYd/8GGeWHCsrV/oXhwWrE0VcUJkh0NBstgJVs6bMKgnnycng
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:4715:8e64:29b7:6c4])
+ (user=irogers job=sendgmr) by 2002:a81:e206:0:b0:55a:3532:2fd5 with SMTP id
+ p6-20020a81e206000000b0055a35322fd5mr2078640ywl.8.1683339305504; Fri, 05 May
+ 2023 19:15:05 -0700 (PDT)
+Date:   Fri,  5 May 2023 19:14:50 -0700
+Message-Id: <20230506021450.3499232-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
+Subject: [PATCH v1] perf build: Add system include paths to BPF builds
+From:   Ian Rogers <irogers@google.com>
+To:     Song Liu <songliubraving@meta.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, Ian Rogers <irogers@google.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        bpf <bpf@vger.kernel.org>
-References: <20230503211801.897735-1-acme@kernel.org>
- <CAHk-=wjY_3cBELRSLMpqCt6Eb71Qei2agfKSNsrr5KcpdEQCaA@mail.gmail.com>
- <CAHk-=wgci+OTRacQZcvvapRcWkoiTFJ=VTe_JYtabGgZ9refmg@mail.gmail.com>
- <ZFOSUab5XEJD0kxj@kernel.org>
- <CAHk-=wgv1sKTdLWPC7XR1Px=pDNrDPDTKdX-T_2AQOwgkpWB2A@mail.gmail.com>
- <ZFPw0scDq1eIzfHr@kernel.org>
- <CAEf4BzaUU9vZU6R_020ru5ct0wh-p1M3ZFet-vYqcHvb9bW1Cw@mail.gmail.com>
- <ZFQCccsx6GK+gY0j@kernel.org> <ZFQoQjCNtyMIulp+@kernel.org>
- <ZFQrT42SyEbCj4om@kernel.org> <ZFUCDVpqXkpGjXBK@kernel.org>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <bf082a2a-f360-95fd-9d18-0702c421b296@huawei.com>
-Date:   Sat, 6 May 2023 09:13:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
-MIME-Version: 1.0
-In-Reply-To: <ZFUCDVpqXkpGjXBK@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        bpf@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+There are insufficient headers in tools/include to satisfy building
+BPF programs and their header dependencies. Add the system include
+paths from the non-BPF clang compile so that these headers can be
+found.
 
-On 2023/5/5 21:18, Arnaldo Carvalho de Melo wrote:
-> Em Thu, May 04, 2023 at 07:01:51PM -0300, Arnaldo Carvalho de Melo escreveu:
->> Em Thu, May 04, 2023 at 06:48:50PM -0300, Arnaldo Carvalho de Melo escreveu:
->>> Em Thu, May 04, 2023 at 04:07:29PM -0300, Arnaldo Carvalho de Melo escreveu:
->>>> Em Thu, May 04, 2023 at 11:50:07AM -0700, Andrii Nakryiko escreveu:
->>>>> On Thu, May 4, 2023 at 10:52 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->>>>>> Andrii, can you add some more information about the usage of vmlinux.h
->>>>>> instead of using kernel headers?
->>>>   
->>>>> I'll just say that vmlinux.h is not a hard requirement to build BPF
->>>>> programs, it's more a convenience allowing easy access to definitions
->>>>> of both UAPI and kernel-internal structures for tracing needs and
->>>>> marking them relocatable using BPF CO-RE machinery. Lots of real-world
->>>>> applications just check-in pregenerated vmlinux.h to avoid build-time
->>>>> dependency on up-to-date host kernel and such.
->>>>   
->>>>> If vmlinux.h generation and usage is causing issues, though, given
->>>>> that perf's BPF programs don't seem to be using many different kernel
->>>>> types, it might be a better option to just use UAPI headers for public
->>>>> kernel type definitions, and just define CO-RE-relocatable minimal
->>>>> definitions locally in perf's BPF code for the other types necessary.
->>>>> E.g., if perf needs only pid and tgid from task_struct, this would
->>>>> suffice:
->>>>   
->>>>> struct task_struct {
->>>>>      int pid;
->>>>>      int tgid;
->>>>> } __attribute__((preserve_access_index));
->>>>
->>>> Yeah, that seems like a way better approach, no vmlinux involved, libbpf
->>>> CO-RE notices that task_struct changed from this two integers version
->>>> (of course) and does the relocation to where it is in the running kernel
->>>> by using /sys/kernel/btf/vmlinux.
->>>
->>> Doing it for one of the skels, build tested, runtime untested, but not
->>> using any vmlinux, BTF to help, not that bad, more verbose, but at least
->>> we state what are the fields we actually use, have those attribute
->>> documenting that those offsets will be recorded for future use, etc.
-> 
-> Yang, can you please check that this works?
-> 
-Yes, I've tested this patch and it works :)
+This code was taken from:
+tools/testing/selftests/bpf/Makefile
 
-Tested-by: Yang Jihong <yangjihong1@huawei.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/Makefile.perf | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-# perf kwork report -b
-Starting trace, Hit <Ctrl+C> to stop and report
-^C
-   Kwork Name                     | Cpu  | Total Runtime | Count     | 
-Max runtime   | Max runtime start   | Max runtime end     |
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 61c33d100b2b..37befdfa8ac8 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -1057,7 +1057,25 @@ $(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_
  
---------------------------------------------------------------------------------------------------------------------------------
-   (s)SCHED:7                     | 0005 |      1.440 ms |         3 | 
-     1.377 ms |     165822.963188 s |     165822.964565 s |
-   (s)SCHED:7                     | 0001 |      1.388 ms |         2 | 
-     1.377 ms |     165822.963188 s |     165822.964565 s |
-   (w)e1000_watchdog              | 0002 |      0.532 ms |         1 | 
-     0.532 ms |     165823.806777 s |     165823.807309 s |
-   (w)flush_to_ldisc              | 0005 |      0.524 ms |         1 | 
-     0.524 ms |     165824.255219 s |     165824.255743 s |
-   (s)NET_RX:3                    | 0002 |      0.512 ms |         4 | 
-     0.247 ms |     165824.254103 s |     165824.254350 s |
-   (w)wq_barrier_func             | 0003 |      0.394 ms |         1 | 
-     0.394 ms |     165822.964179 s |     165822.964573 s |
-   eth0:10                        | 0002 |      0.250 ms |         4 | 
-     0.115 ms |     165822.964814 s |     165822.964929 s |
-   (w)wb_workfn                   | 0005 |      0.208 ms |         1 | 
-     0.208 ms |     165823.998558 s |     165823.998766 s |
-   (s)TIMER:1                     | 0002 |      0.205 ms |         4 | 
-     0.077 ms |     165823.806548 s |     165823.806626 s |
-   (s)SCHED:7                     | 0002 |      0.185 ms |         5 | 
-     0.049 ms |     165824.255119 s |     165824.255168 s |
-   (s)TIMER:1                     | 0003 |      0.167 ms |         4 | 
-     0.079 ms |     165823.998326 s |     165823.998405 s |
-   (s)SCHED:7                     | 0000 |      0.165 ms |         4 | 
-     0.073 ms |     165823.807235 s |     165823.807308 s |
-   (w)flush_to_ldisc              | 0003 |      0.156 ms |         1 | 
-     0.156 ms |     165824.255723 s |     165824.255879 s |
-   (s)TIMER:1                     | 0007 |      0.152 ms |         2 | 
-     0.100 ms |     165823.358416 s |     165823.358517 s |
-   (w)vmstat_update               | 0001 |      0.094 ms |         1 | 
-     0.094 ms |     165824.256460 s |     165824.256554 s |
-   (s)RCU:9                       | 0001 |      0.088 ms |         4 | 
-     0.040 ms |     165822.964728 s |     165822.964768 s |
-   (w)vmstat_shepherd             | 0000 |      0.078 ms |         1 | 
-     0.078 ms |     165824.256321 s |     165824.256399 s |
-   (s)SCHED:7                     | 0007 |      0.066 ms |         2 | 
-     0.038 ms |     165823.358528 s |     165823.358566 s |
-   (s)SCHED:7                     | 0003 |      0.057 ms |         2 | 
-     0.034 ms |     165823.998412 s |     165823.998446 s |
-   virtio0-requests:25            | 0000 |      0.056 ms |         1 | 
-     0.056 ms |     165824.255959 s |     165824.256016 s |
-   (s)TIMER:1                     | 0000 |      0.055 ms |         1 | 
-     0.055 ms |     165824.256164 s |     165824.256219 s |
-   (s)RCU:9                       | 0005 |      0.045 ms |         3 | 
-     0.023 ms |     165822.964728 s |     165822.964751 s |
-   (s)RCU:9                       | 0002 |      0.028 ms |         2 | 
-     0.017 ms |     165823.174539 s |     165823.174556 s |
-   (s)RCU:9                       | 0007 |      0.016 ms |         1 | 
-     0.016 ms |     165823.358571 s |     165823.358587 s |
-   (s)RCU:9                       | 0000 |      0.013 ms |         1 | 
-     0.013 ms |     165824.256264 s |     165824.256278 s |
-   (s)RCU:9                       | 0003 |      0.011 ms |         1 | 
-     0.011 ms |     165822.973142 s |     165822.973153 s |
+ ifndef NO_BPF_SKEL
+ BPFTOOL := $(SKEL_TMP_OUT)/bootstrap/bpftool
+-BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE)
++
++# Get Clang's default includes on this system, as opposed to those seen by
++# '-target bpf'. This fixes "missing" files on some architectures/distros,
++# such as asm/byteorder.h, asm/socket.h, asm/sockios.h, sys/cdefs.h etc.
++#
++# Use '-idirafter': Don't interfere with include mechanics except where the
++# build would have failed anyways.
++define get_sys_includes
++$(shell $(1) $(2) -v -E - </dev/null 2>&1 \
++	| sed -n '/<...> search starts here:/,/End of search list./{ s| \(/.*\)|-idirafter \1|p }') \
++$(shell $(1) $(2) -dM -E - </dev/null | grep '__riscv_xlen ' | awk '{printf("-D__riscv_xlen=%d -D__BITS_PER_LONG=%d", $$3, $$3)}')
++endef
++
++ifneq ($(CROSS_COMPILE),)
++CLANG_TARGET_ARCH = --target=$(notdir $(CROSS_COMPILE:%-=%))
++endif
++
++CLANG_SYS_INCLUDES = $(call get_sys_includes,$(CLANG),$(CLANG_TARGET_ARCH))
++BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE) $(CLANG_SYS_INCLUDES)
  
---------------------------------------------------------------------------------------------------------------------------------
+ $(BPFTOOL): | $(SKEL_TMP_OUT)
+ 	$(Q)CFLAGS= $(MAKE) -C ../bpf/bpftool \
+-- 
+2.40.1.521.gf1e218fcd8-goog
 
-# perf kwork lat -b
-Starting trace, Hit <Ctrl+C> to stop and report
-^C
-   Kwork Name                     | Cpu  | Avg delay     | Count     | 
-Max delay     | Max delay start     | Max delay end       |
- 
---------------------------------------------------------------------------------------------------------------------------------
-   (w)neigh_periodic_work         | 0001 |      0.568 ms |         1 | 
-     0.568 ms |     165839.038372 s |     165839.038941 s |
-   (s)RCU:9                       | 0000 |      0.292 ms |         1 | 
-     0.292 ms |     165840.176224 s |     165840.176515 s |
-   (s)TIMER:1                     | 0000 |      0.260 ms |         1 | 
-     0.260 ms |     165840.176206 s |     165840.176466 s |
-   (w)disk_events_workfn          | 0001 |      0.256 ms |         1 | 
-     0.256 ms |     165839.038327 s |     165839.038583 s |
-   (s)RCU:9                       | 0001 |      0.204 ms |         1 | 
-     0.204 ms |     165839.038213 s |     165839.038417 s |
-   (s)SCHED:7                     | 0001 |      0.153 ms |         1 | 
-     0.153 ms |     165839.038231 s |     165839.038384 s |
-   (s)NET_RX:3                    | 0002 |      0.132 ms |         3 | 
-     0.184 ms |     165840.175984 s |     165840.176168 s |
-   (w)ata_sff_pio_task            | 0001 |      0.124 ms |         1 | 
-     0.124 ms |     165839.038852 s |     165839.038976 s |
-   (s)SCHED:7                     | 0000 |      0.122 ms |         2 | 
-     0.193 ms |     165840.176244 s |     165840.176437 s |
-   (s)RCU:9                       | 0007 |      0.106 ms |         1 | 
-     0.106 ms |     165838.982220 s |     165838.982326 s |
-   (s)RCU:9                       | 0003 |      0.092 ms |         1 | 
-     0.092 ms |     165839.040098 s |     165839.040189 s |
-   (s)TIMER:1                     | 0001 |      0.085 ms |         1 | 
-     0.085 ms |     165839.038179 s |     165839.038264 s |
-   (s)SCHED:7                     | 0007 |      0.078 ms |         3 | 
-     0.086 ms |     165839.990180 s |     165839.990265 s |
-   (s)TIMER:1                     | 0007 |      0.077 ms |         3 | 
-     0.081 ms |     165839.990136 s |     165839.990216 s |
-   (s)TIMER:1                     | 0003 |      0.076 ms |         1 | 
-     0.076 ms |     165839.040066 s |     165839.040142 s |
-   (s)RCU:9                       | 0002 |      0.075 ms |         2 | 
-     0.088 ms |     165839.118209 s |     165839.118297 s |
-   (w)flush_to_ldisc              | 0006 |      0.070 ms |         1 | 
-     0.070 ms |     165840.175332 s |     165840.175402 s |
-   (s)TIMER:1                     | 0006 |      0.067 ms |         2 | 
-     0.085 ms |     165838.908056 s |     165838.908142 s |
-   (s)TIMER:1                     | 0002 |      0.067 ms |         2 | 
-     0.074 ms |     165840.175076 s |     165840.175149 s |
-   (s)SCHED:7                     | 0006 |      0.065 ms |         1 | 
-     0.065 ms |     165838.908107 s |     165838.908171 s |
-   (s)SCHED:7                     | 0003 |      0.051 ms |         1 | 
-     0.051 ms |     165839.040115 s |     165839.040166 s |
-   (s)SCHED:7                     | 0002 |      0.046 ms |         2 | 
-     0.048 ms |     165840.175123 s |     165840.175171 s |
-   (s)RCU:9                       | 0006 |      0.035 ms |         2 | 
-     0.036 ms |     165838.913051 s |     165838.913087 s |
-   (s)BLOCK:4                     | 0001 |      0.023 ms |         1 | 
-     0.023 ms |     165839.039281 s |     165839.039303 s |
- 
---------------------------------------------------------------------------------------------------------------------------------
-
-Thanks,
-Yang
