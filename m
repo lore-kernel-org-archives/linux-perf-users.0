@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD938C77B75
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 May 2023 11:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E8EC77B73
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 May 2023 11:02:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232066AbjEFLCx (ORCPT
+        id S230471AbjEFLCy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 May 2023 07:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
+        Sat, 6 May 2023 07:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230471AbjEFLCt (ORCPT
+        with ESMTP id S231553AbjEFLCt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Sat, 6 May 2023 07:02:49 -0400
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3B6E759E2
-        for <linux-perf-users@vger.kernel.org>; Sat,  6 May 2023 04:02:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8DD3259D7
+        for <linux-perf-users@vger.kernel.org>; Sat,  6 May 2023 04:02:47 -0700 (PDT)
 Received: from loongson.cn (unknown [112.20.110.102])
-        by gateway (Coremail) with SMTP id _____8CxPuvXM1Zk5rwFAA--.9336S3;
-        Sat, 06 May 2023 19:02:47 +0800 (CST)
-Received: from localhost.localdomain (unknown [112.20.110.102])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHuTUM1Zkw2tNAA--.10375S3;
+        by gateway (Coremail) with SMTP id _____8BxJunWM1Zk3bwFAA--.9415S3;
         Sat, 06 May 2023 19:02:46 +0800 (CST)
+Received: from localhost.localdomain (unknown [112.20.110.102])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxHuTUM1Zkw2tNAA--.10375S2;
+        Sat, 06 May 2023 19:02:45 +0800 (CST)
 From:   Yanteng Si <siyanteng@loongson.cn>
 To:     peterz@infradead.org
 Cc:     Yanteng Si <siyanteng@loongson.cn>, mingo@redhat.com,
@@ -29,64 +29,87 @@ Cc:     Yanteng Si <siyanteng@loongson.cn>, mingo@redhat.com,
         alexander.shishkin@linux.intel.com, jolsa@kernel.org,
         namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
         linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 01/18] tools headers UAPI: Sync the linux/in.h with the kernel sources
-Date:   Sat,  6 May 2023 19:01:55 +0800
-Message-Id: <03c2c82eacbd8b66ca5152948ccbc8f6b5164bba.1683370076.git.siyanteng@loongson.cn>
+Subject: [PATCH 00/18] tools perf: fix build warning
+Date:   Sat,  6 May 2023 19:01:54 +0800
+Message-Id: <cover.1683370076.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.31.4
-In-Reply-To: <cover.1683370076.git.siyanteng@loongson.cn>
-References: <cover.1683370076.git.siyanteng@loongson.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8BxHuTUM1Zkw2tNAA--.10375S3
+X-CM-TRANSID: AQAAf8BxHuTUM1Zkw2tNAA--.10375S2
 X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrZF4xGrW7Xr47WFW7AFy3CFg_yoWfAFg_C3
-        4S9rWkCr4Uur1Ig3yjkF1kXFyrK3W8Zr1qgrn3Gw10ya1DWw43Kan7Ar9rJws8Ww1DCrZ2
-        qF1rXry0q3sxWjkaLaAFLSUrUUUU5b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-        W7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-        AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-        6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-        xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWln4kS
-        14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
-        1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E87Iv
-        67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2
-        AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xF
-        xVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWw
-        C2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_
-        Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJV
-        WUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIY
-        CTnIWIevJa73UjIFyTuYvjxU4YLvDUUUU
+X-Coremail-Antispam: 1Uk129KBjvJXoWxAr4DCrykurW5AF45ur15urg_yoW5GF17pF
+        nakFWvya1DWFWfAwn8CF4qvry8u39agF4Yg3yxWr92qa15tFykAr1xuF1UKFnrt397tF10
+        9Fy7Wr15Ka4kZF7anT9S1TB71UUUUjJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
+        e7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+        0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280
+        aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0En4
+        kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+        1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+        Wlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I
+        6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
+        0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIY
+        CTnIWIevJa73UjIFyTuYvjxUcApnDUUUU
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Picking the changes from:
+When I try to build perf, a lot of warnings are output, let's fix them.
 
-  commit 91d0b78c5177f3e4 ("inet: Add IP_LOCAL_PORT_RANGE socket option")
+Yanteng Si (18):
+  tools headers UAPI: Sync the linux/in.h with the kernel sources
+  tools headers UAPI: Sync the linux/prctl.h with the kernel sources
+  tools headers UAPI: Sync the drm/drm.h with the kernel sources
+  tools headers UAPI: Sync the i915_drm.h with the kernel sources
+  tools headers UAPI: Sync the coresight-pmu headers copy with the
+    kernel sources
+  tools headers UAPI: Sync the linux/const.h with the kernel headers
+  tools headers UAPI: Sync the linux/perf_event.h with the kernel
+    headers
+  tools include UAPI: Sync the sound/asound.h copy with the kernel
+    sources
+  tools headers UAPI: Sync the linux/mman.h with the kernel sources
+  tools headers UAPI: Sync the unistd with the kernel sources
+  tools headers kvm: Sync uapi/{asm/linux} kvm.h headers with the kernel
+    sources
+  tools arch x86: Sync the disabled-features with the kernel sources
+  tools arch x86: Sync the memcpy_64 with the kernel sources
+  tools arch x86: Sync the cpufeatures with the kernel sources
+  tools arch x86: Sync the msr-index.h copy with the kernel sources
+  tools arch x86: Sync the prctl headers with the kernel sources
+  tools arch arm64: Sync the perf_regs headers with the kernel sources
+  tools arch s390: Sync the ptrace headers with the kernel sources
 
-Silencing these perf build warnings:
+ tools/arch/arm64/include/uapi/asm/kvm.h       |  36 ++
+ tools/arch/arm64/include/uapi/asm/perf_regs.h |  10 +-
+ tools/arch/s390/include/uapi/asm/ptrace.h     | 458 ++++++++++++++++++
+ tools/arch/x86/include/asm/cpufeatures.h      |  28 +-
+ .../arch/x86/include/asm/disabled-features.h  |  24 +-
+ tools/arch/x86/include/asm/msr-index.h        |   2 +
+ tools/arch/x86/include/uapi/asm/kvm.h         |   3 +
+ tools/arch/x86/include/uapi/asm/prctl.h       |  20 +
+ tools/arch/x86/lib/memcpy_64.S                |  35 +-
+ tools/arch/x86/lib/memset_64.S                |  47 +-
+ tools/include/linux/coresight-pmu.h           |  13 -
+ tools/include/uapi/asm-generic/unistd.h       |   5 +-
+ tools/include/uapi/drm/drm.h                  |  57 ++-
+ tools/include/uapi/drm/i915_drm.h             |  25 +-
+ tools/include/uapi/linux/const.h              |   2 +-
+ tools/include/uapi/linux/in.h                 |   1 +
+ tools/include/uapi/linux/kvm.h                |  12 +-
+ tools/include/uapi/linux/mman.h               |  14 +
+ tools/include/uapi/linux/perf_event.h         |   3 +-
+ tools/include/uapi/linux/prctl.h              |   2 +
+ tools/include/uapi/sound/asound.h             |  14 +-
+ .../perf/arch/s390/entry/syscalls/syscall.tbl |   2 +-
+ .../arch/x86/entry/syscalls/syscall_64.tbl    |   2 +
+ 23 files changed, 716 insertions(+), 99 deletions(-)
+ create mode 100644 tools/arch/s390/include/uapi/asm/ptrace.h
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/in.h' differs
-   from latest version at 'include/uapi/linux/in.h'
-  diff -u tools/include/uapi/linux/in.h include/uapi/linux/in.h
-
-Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
----
- tools/include/uapi/linux/in.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/include/uapi/linux/in.h b/tools/include/uapi/linux/in.h
-index 07a4cb149305..4b7f2df66b99 100644
---- a/tools/include/uapi/linux/in.h
-+++ b/tools/include/uapi/linux/in.h
-@@ -162,6 +162,7 @@ struct in_addr {
- #define MCAST_MSFILTER			48
- #define IP_MULTICAST_ALL		49
- #define IP_UNICAST_IF			50
-+#define IP_LOCAL_PORT_RANGE		51
- 
- #define MCAST_EXCLUDE	0
- #define MCAST_INCLUDE	1
 -- 
 2.31.4
 
