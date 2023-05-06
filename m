@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C97EC7EE22
-	for <linux-perf-users@archiver.kernel.org>; Sat,  6 May 2023 11:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8C4C77B75
+	for <linux-perf-users@archiver.kernel.org>; Sat,  6 May 2023 11:06:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231996AbjEFLFs (ORCPT
+        id S232110AbjEFLGt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 6 May 2023 07:05:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47720 "EHLO
+        Sat, 6 May 2023 07:06:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231909AbjEFLFr (ORCPT
+        with ESMTP id S231489AbjEFLGs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 6 May 2023 07:05:47 -0400
+        Sat, 6 May 2023 07:06:48 -0400
 Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 755B859D7
-        for <linux-perf-users@vger.kernel.org>; Sat,  6 May 2023 04:05:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B31038699
+        for <linux-perf-users@vger.kernel.org>; Sat,  6 May 2023 04:06:42 -0700 (PDT)
 Received: from loongson.cn (unknown [112.20.110.102])
-        by gateway (Coremail) with SMTP id _____8Cx+emINFZkZb0FAA--.9455S3;
-        Sat, 06 May 2023 19:05:44 +0800 (CST)
+        by gateway (Coremail) with SMTP id _____8CxOurBNFZkjL0FAA--.9376S3;
+        Sat, 06 May 2023 19:06:41 +0800 (CST)
 Received: from localhost.localdomain (unknown [112.20.110.102])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxDbOFNFZkSmxNAA--.10164S4;
-        Sat, 06 May 2023 19:05:43 +0800 (CST)
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxD7+_NFZkZWxNAA--.10396S3;
+        Sat, 06 May 2023 19:06:40 +0800 (CST)
 From:   Yanteng Si <siyanteng@loongson.cn>
 To:     peterz@infradead.org
 Cc:     Yanteng Si <siyanteng@loongson.cn>, mingo@redhat.com,
@@ -29,191 +29,167 @@ Cc:     Yanteng Si <siyanteng@loongson.cn>, mingo@redhat.com,
         alexander.shishkin@linux.intel.com, jolsa@kernel.org,
         namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
         linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 11/18] tools headers kvm: Sync uapi/{asm/linux} kvm.h headers with the kernel sources
-Date:   Sat,  6 May 2023 19:05:15 +0800
-Message-Id: <ab8b8cce08e7c94d1176ffbef603cd7c978faccf.1683370076.git.siyanteng@loongson.cn>
+Subject: [PATCH 14/18] tools arch x86: Sync the cpufeatures with the kernel sources
+Date:   Sat,  6 May 2023 19:06:11 +0800
+Message-Id: <d0fdcea7eb8b37328fcbffdc11f8c9eeb1a8d456.1683370076.git.siyanteng@loongson.cn>
 X-Mailer: git-send-email 2.31.4
 In-Reply-To: <cover.1683370076.git.siyanteng@loongson.cn>
 References: <cover.1683370076.git.siyanteng@loongson.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxDbOFNFZkSmxNAA--.10164S4
+X-CM-TRANSID: AQAAf8DxD7+_NFZkZWxNAA--.10396S3
 X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxuFy3KF1DAw1fCF1UJw4DCFg_yoW7WFW3p3
-        Z5Aas5JF4YgrWfC34rJF1Dury3G393Wrn5K3y3Wr4a9F13t3WkJrs2kFs8AF9rtw48Ja1I
-        9FySgry5W34Dt3DanT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW3Ww18Gry3GF17Jw1kur4fuFg_yoW3Xry7pr
+        yxKa93t3yrJa12kw4kJrWavrW5WF9Fkw1UGr1UWr13Z3W5Cw1ktr1I9F45CayDXw4xZ342
+        gas8X3yqvrZ8urUanT9S1TB71UUUUbUqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
         qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
         bkkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
         1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
         wVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM2
         8EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAa
         w2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_ZF0_GryDMcIj6I8E
+        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Gryq6s0DMcIj6I8E
         87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjc
         xG6xCI17CEII8vrVW3JVW8Jr1lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l
         4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxV
         WUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI
         7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_tr0E3s1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r
         4UJVWxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4UJVWx
-        Jr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07bYoG
-        QUUUUU=
+        Jr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07bVL0
+        5UUUUU=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Picking the changes from:
 
-  commit e65733b5c59a1ea2 ("KVM: x86: Redefine 'longmode' as a flag for
-   KVM_EXIT_HYPERCALL")
-  commit 30ec7997d175cd68 ("KVM: arm64: timers: Allow userspace to set
-   the global counter offset")
-  commit 821d935c87bc9525 ("KVM: arm64: Introduce support for userspace
-   SMCCC filtering")
-  commit 81dc9504a7006b48 ("KVM: arm64: nv: timers: Support hyp timer
-   emulation")
-  commit a8308b3fc9494953 ("KVM: arm64: Refactor hvc filtering to support
-   different actions")
-  commit 0e5c9a9d6548e9b1 ("KVM: arm64: Expose SMC/HVC width to
-   userspace")
+  commit 3d8f61bf8bcd69bc ("x86: KVM: Add common feature flag for AMD's
+   PSFD")
+  commit 3763bf58029f3459 ("x86/cpufeatures: Redefine synthetic virtual
+   NMI bit as AMD's "real" vNMI")
+  commit d1b5e84f943c7b5b ("x86/cpufeatures: Add CPU feature flags for
+   shadow stacks")
+  commit 6449dcb0cac73821 ("x86: CPUID and CR3/CR4 flags for Linear
+   Address Masking")
+  commit be8de49bea505e77 ("x86/speculation: Identify processors
+   vulnerable to SMT RSB predictions")
+  commit e7862eda309ecfcc ("x86/cpu: Support AMD Automatic IBRS")
+  commit faabfcb194a8d068 ("x86/cpu, kvm: Add the SMM_CTL MSR not present
+   feature")
+  commit 5b909d4ae59aedc7 ("x86/cpu, kvm: Add the Null Selector Clears
+   Base feature")
+  commit 84168ae786f8a15a ("x86/cpu, kvm: Move X86_FEATURE_LFENCE_RDTSC
+   to its native leaf")
+  commit a9dc9ec5a1fafc3d ("x86/cpu, kvm: Add the NO_NESTED_DATA_BP
+   feature")
 
 Silencing these perf build warnings:
 
- Warning: Kernel ABI header at 'tools/include/uapi/linux/kvm.h' differs
-  from latest version at 'include/uapi/linux/kvm.h'
- diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
- Warning: Kernel ABI header at 'tools/arch/x86/include/uapi/asm/kvm.h'
-  differs from latest version at 'arch/x86/include/uapi/asm/kvm.h'
- diff -u tools/arch/x86/include/uapi/asm/kvm.h arch/x86/include/uapi
-  /asm/kvm.h
- Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/kvm.h'
-  differs from latest version at 'arch/arm64/include/uapi/asm/kvm.h'
- diff -u tools/arch/arm64/include/uapi/asm/kvm.h arch/arm64/include/uapi
-  /asm/kvm.h
+  Warning: Kernel ABI header at 'tools/arch/x86/include/asm/cpufeatures.h'
+   differs from latest version at 'arch/x86/include/asm/cpufeatures.h'
+  diff -u tools/arch/x86/include/asm/cpufeatures.h arch/x86/include/asm
+   /cpufeatures.h
 
 Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
 ---
- tools/arch/arm64/include/uapi/asm/kvm.h | 36 +++++++++++++++++++++++++
- tools/arch/x86/include/uapi/asm/kvm.h   |  3 +++
- tools/include/uapi/linux/kvm.h          | 12 +++++++--
- 3 files changed, 49 insertions(+), 2 deletions(-)
+ tools/arch/x86/include/asm/cpufeatures.h | 28 +++++++++++++++++++-----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
-diff --git a/tools/arch/arm64/include/uapi/asm/kvm.h b/tools/arch/arm64/include/uapi/asm/kvm.h
-index f8129c624b07..f7ddd73a8c0f 100644
---- a/tools/arch/arm64/include/uapi/asm/kvm.h
-+++ b/tools/arch/arm64/include/uapi/asm/kvm.h
-@@ -198,6 +198,15 @@ struct kvm_arm_copy_mte_tags {
- 	__u64 reserved[2];
- };
+diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
+index b89005819cd5..d7215c8b7923 100644
+--- a/tools/arch/x86/include/asm/cpufeatures.h
++++ b/tools/arch/x86/include/asm/cpufeatures.h
+@@ -97,7 +97,7 @@
+ #define X86_FEATURE_SYSENTER32		( 3*32+15) /* "" sysenter in IA32 userspace */
+ #define X86_FEATURE_REP_GOOD		( 3*32+16) /* REP microcode works well */
+ #define X86_FEATURE_AMD_LBR_V2		( 3*32+17) /* AMD Last Branch Record Extension Version 2 */
+-#define X86_FEATURE_LFENCE_RDTSC	( 3*32+18) /* "" LFENCE synchronizes RDTSC */
++/* FREE, was #define X86_FEATURE_LFENCE_RDTSC		( 3*32+18) "" LFENCE synchronizes RDTSC */
+ #define X86_FEATURE_ACC_POWER		( 3*32+19) /* AMD Accumulated Power Mechanism */
+ #define X86_FEATURE_NOPL		( 3*32+20) /* The NOPL (0F 1F) instructions */
+ #define X86_FEATURE_ALWAYS		( 3*32+21) /* "" Always-present feature */
+@@ -226,10 +226,9 @@
  
-+/*
-+ * Counter/Timer offset structure. Describe the virtual/physical offset.
-+ * To be used with KVM_ARM_SET_COUNTER_OFFSET.
-+ */
-+struct kvm_arm_counter_offset {
-+	__u64 counter_offset;
-+	__u64 reserved;
-+};
+ /* Virtualization flags: Linux defined, word 8 */
+ #define X86_FEATURE_TPR_SHADOW		( 8*32+ 0) /* Intel TPR Shadow */
+-#define X86_FEATURE_VNMI		( 8*32+ 1) /* Intel Virtual NMI */
+-#define X86_FEATURE_FLEXPRIORITY	( 8*32+ 2) /* Intel FlexPriority */
+-#define X86_FEATURE_EPT			( 8*32+ 3) /* Intel Extended Page Table */
+-#define X86_FEATURE_VPID		( 8*32+ 4) /* Intel Virtual Processor ID */
++#define X86_FEATURE_FLEXPRIORITY	( 8*32+ 1) /* Intel FlexPriority */
++#define X86_FEATURE_EPT			( 8*32+ 2) /* Intel Extended Page Table */
++#define X86_FEATURE_VPID		( 8*32+ 3) /* Intel Virtual Processor ID */
+ 
+ #define X86_FEATURE_VMMCALL		( 8*32+15) /* Prefer VMMCALL to VMCALL */
+ #define X86_FEATURE_XENPV		( 8*32+16) /* "" Xen paravirtual guest */
+@@ -307,14 +306,22 @@
+ #define X86_FEATURE_SGX_EDECCSSA	(11*32+18) /* "" SGX EDECCSSA user leaf function */
+ #define X86_FEATURE_CALL_DEPTH		(11*32+19) /* "" Call depth tracking for RSB stuffing */
+ #define X86_FEATURE_MSR_TSX_CTRL	(11*32+20) /* "" MSR IA32_TSX_CTRL (Intel) implemented */
++#define X86_FEATURE_SMBA		(11*32+21) /* "" Slow Memory Bandwidth Allocation */
++#define X86_FEATURE_BMEC		(11*32+22) /* "" Bandwidth Monitoring Event Configuration */
++#define X86_FEATURE_USER_SHSTK		(11*32+23) /* Shadow stack support for user mode applications */
+ 
+ /* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
+ #define X86_FEATURE_AVX_VNNI		(12*32+ 4) /* AVX VNNI instructions */
+ #define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
+ #define X86_FEATURE_CMPCCXADD           (12*32+ 7) /* "" CMPccXADD instructions */
++#define X86_FEATURE_ARCH_PERFMON_EXT	(12*32+ 8) /* "" Intel Architectural PerfMon Extension */
++#define X86_FEATURE_FZRM		(12*32+10) /* "" Fast zero-length REP MOVSB */
++#define X86_FEATURE_FSRS		(12*32+11) /* "" Fast short REP STOSB */
++#define X86_FEATURE_FSRC		(12*32+12) /* "" Fast short REP {CMPSB,SCASB} */
+ #define X86_FEATURE_LKGS		(12*32+18) /* "" Load "kernel" (userspace) GS */
+ #define X86_FEATURE_AMX_FP16		(12*32+21) /* "" AMX fp16 Support */
+ #define X86_FEATURE_AVX_IFMA            (12*32+23) /* "" Support for VPMADD52[H,L]UQ */
++#define X86_FEATURE_LAM			(12*32+26) /* Linear Address Masking */
+ 
+ /* AMD-defined CPU features, CPUID level 0x80000008 (EBX), word 13 */
+ #define X86_FEATURE_CLZERO		(13*32+ 0) /* CLZERO instruction */
+@@ -331,6 +338,7 @@
+ #define X86_FEATURE_VIRT_SSBD		(13*32+25) /* Virtualized Speculative Store Bypass Disable */
+ #define X86_FEATURE_AMD_SSB_NO		(13*32+26) /* "" Speculative Store Bypass is fixed in hardware. */
+ #define X86_FEATURE_CPPC		(13*32+27) /* Collaborative Processor Performance Control */
++#define X86_FEATURE_AMD_PSFD            (13*32+28) /* "" Predictive Store Forwarding Disable */
+ #define X86_FEATURE_BTC_NO		(13*32+29) /* "" Not vulnerable to Branch Type Confusion */
+ #define X86_FEATURE_BRS			(13*32+31) /* Branch Sampling available */
+ 
+@@ -363,6 +371,7 @@
+ #define X86_FEATURE_VGIF		(15*32+16) /* Virtual GIF */
+ #define X86_FEATURE_X2AVIC		(15*32+18) /* Virtual x2apic */
+ #define X86_FEATURE_V_SPEC_CTRL		(15*32+20) /* Virtual SPEC_CTRL */
++#define X86_FEATURE_VNMI		(15*32+25) /* Virtual NMI */
+ #define X86_FEATURE_SVME_ADDR_CHK	(15*32+28) /* "" SVME addr check */
+ 
+ /* Intel-defined CPU features, CPUID level 0x00000007:0 (ECX), word 16 */
+@@ -372,6 +381,7 @@
+ #define X86_FEATURE_OSPKE		(16*32+ 4) /* OS Protection Keys Enable */
+ #define X86_FEATURE_WAITPKG		(16*32+ 5) /* UMONITOR/UMWAIT/TPAUSE Instructions */
+ #define X86_FEATURE_AVX512_VBMI2	(16*32+ 6) /* Additional AVX512 Vector Bit Manipulation Instructions */
++#define X86_FEATURE_SHSTK		(16*32+ 7) /* "" Shadow stack */
+ #define X86_FEATURE_GFNI		(16*32+ 8) /* Galois Field New Instructions */
+ #define X86_FEATURE_VAES		(16*32+ 9) /* Vector AES */
+ #define X86_FEATURE_VPCLMULQDQ		(16*32+10) /* Carry-Less Multiplication Double Quadword */
+@@ -427,6 +437,13 @@
+ #define X86_FEATURE_V_TSC_AUX		(19*32+ 9) /* "" Virtual TSC_AUX */
+ #define X86_FEATURE_SME_COHERENT	(19*32+10) /* "" AMD hardware-enforced cache coherency */
+ 
++/* AMD-defined Extended Feature 2 EAX, CPUID level 0x80000021 (EAX), word 20 */
++#define X86_FEATURE_NO_NESTED_DATA_BP	(20*32+ 0) /* "" No Nested Data Breakpoints */
++#define X86_FEATURE_LFENCE_RDTSC	(20*32+ 2) /* "" LFENCE always serializing / synchronizes RDTSC */
++#define X86_FEATURE_NULL_SEL_CLR_BASE	(20*32+ 6) /* "" Null Selector Clears Base */
++#define X86_FEATURE_AUTOIBRS		(20*32+ 8) /* "" Automatic IBRS */
++#define X86_FEATURE_NO_SMM_CTL_MSR	(20*32+ 9) /* "" SMM_CTL MSR is not present */
 +
- #define KVM_ARM_TAGS_TO_GUEST		0
- #define KVM_ARM_TAGS_FROM_GUEST		1
+ /*
+  * BUG word(s)
+  */
+@@ -467,5 +484,6 @@
+ #define X86_BUG_MMIO_UNKNOWN		X86_BUG(26) /* CPU is too old and its MMIO Stale Data status is unknown */
+ #define X86_BUG_RETBLEED		X86_BUG(27) /* CPU is affected by RETBleed */
+ #define X86_BUG_EIBRS_PBRSB		X86_BUG(28) /* EIBRS is vulnerable to Post Barrier RSB Predictions */
++#define X86_BUG_SMT_RSB			X86_BUG(29) /* CPU is vulnerable to Cross-Thread Return Address Predictions */
  
-@@ -372,6 +381,10 @@ enum {
- #endif
- };
- 
-+/* Device Control API on vm fd */
-+#define KVM_ARM_VM_SMCCC_CTRL		0
-+#define   KVM_ARM_VM_SMCCC_FILTER	0
-+
- /* Device Control API: ARM VGIC */
- #define KVM_DEV_ARM_VGIC_GRP_ADDR	0
- #define KVM_DEV_ARM_VGIC_GRP_DIST_REGS	1
-@@ -411,6 +424,8 @@ enum {
- #define KVM_ARM_VCPU_TIMER_CTRL		1
- #define   KVM_ARM_VCPU_TIMER_IRQ_VTIMER		0
- #define   KVM_ARM_VCPU_TIMER_IRQ_PTIMER		1
-+#define   KVM_ARM_VCPU_TIMER_IRQ_HVTIMER	2
-+#define   KVM_ARM_VCPU_TIMER_IRQ_HPTIMER	3
- #define KVM_ARM_VCPU_PVTIME_CTRL	2
- #define   KVM_ARM_VCPU_PVTIME_IPA	0
- 
-@@ -469,6 +484,27 @@ enum {
- /* run->fail_entry.hardware_entry_failure_reason codes. */
- #define KVM_EXIT_FAIL_ENTRY_CPU_UNSUPPORTED	(1ULL << 0)
- 
-+enum kvm_smccc_filter_action {
-+	KVM_SMCCC_FILTER_HANDLE = 0,
-+	KVM_SMCCC_FILTER_DENY,
-+	KVM_SMCCC_FILTER_FWD_TO_USER,
-+
-+#ifdef __KERNEL__
-+	NR_SMCCC_FILTER_ACTIONS
-+#endif
-+};
-+
-+struct kvm_smccc_filter {
-+	__u32 base;
-+	__u32 nr_functions;
-+	__u8 action;
-+	__u8 pad[15];
-+};
-+
-+/* arm64-specific KVM_EXIT_HYPERCALL flags */
-+#define KVM_HYPERCALL_EXIT_SMC		(1U << 0)
-+#define KVM_HYPERCALL_EXIT_16BIT	(1U << 1)
-+
- #endif
- 
- #endif /* __ARM_KVM_H__ */
-diff --git a/tools/arch/x86/include/uapi/asm/kvm.h b/tools/arch/x86/include/uapi/asm/kvm.h
-index 7f467fe05d42..1a6a1f987949 100644
---- a/tools/arch/x86/include/uapi/asm/kvm.h
-+++ b/tools/arch/x86/include/uapi/asm/kvm.h
-@@ -559,4 +559,7 @@ struct kvm_pmu_event_filter {
- #define KVM_VCPU_TSC_CTRL 0 /* control group for the timestamp counter (TSC) */
- #define   KVM_VCPU_TSC_OFFSET 0 /* attribute for the TSC offset */
- 
-+/* x86-specific KVM_EXIT_HYPERCALL flags. */
-+#define KVM_EXIT_HYPERCALL_LONG_MODE	BIT(0)
-+
- #endif /* _ASM_X86_KVM_H */
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 4003a166328c..737318b1c1d9 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -341,8 +341,13 @@ struct kvm_run {
- 			__u64 nr;
- 			__u64 args[6];
- 			__u64 ret;
--			__u32 longmode;
--			__u32 pad;
-+
-+			union {
-+#ifndef __KERNEL__
-+				__u32 longmode;
-+#endif
-+				__u64 flags;
-+			};
- 		} hypercall;
- 		/* KVM_EXIT_TPR_ACCESS */
- 		struct {
-@@ -1184,6 +1189,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_S390_PROTECTED_ASYNC_DISABLE 224
- #define KVM_CAP_DIRTY_LOG_RING_WITH_BITMAP 225
- #define KVM_CAP_PMU_EVENT_MASKED_EVENTS 226
-+#define KVM_CAP_COUNTER_OFFSET 227
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-@@ -1543,6 +1549,8 @@ struct kvm_s390_ucas_mapping {
- #define KVM_SET_PMU_EVENT_FILTER  _IOW(KVMIO,  0xb2, struct kvm_pmu_event_filter)
- #define KVM_PPC_SVM_OFF		  _IO(KVMIO,  0xb3)
- #define KVM_ARM_MTE_COPY_TAGS	  _IOR(KVMIO,  0xb4, struct kvm_arm_copy_mte_tags)
-+/* Available with KVM_CAP_COUNTER_OFFSET */
-+#define KVM_ARM_SET_COUNTER_OFFSET _IOW(KVMIO,  0xb5, struct kvm_arm_counter_offset)
- 
- /* ioctl for vm fd */
- #define KVM_CREATE_DEVICE	  _IOWR(KVMIO,  0xe0, struct kvm_create_device)
+ #endif /* _ASM_X86_CPUFEATURES_H */
 -- 
 2.31.4
 
