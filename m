@@ -2,170 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC0CC77B7D
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 01:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAFCC77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 09:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232203AbjEHB7P (ORCPT
+        id S233561AbjEHJPC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 7 May 2023 21:59:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
+        Mon, 8 May 2023 05:15:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232193AbjEHB7N (ORCPT
+        with ESMTP id S232894AbjEHJPC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 7 May 2023 21:59:13 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097AEA5DF;
-        Sun,  7 May 2023 18:59:11 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QF49c1kzszpStJ;
-        Mon,  8 May 2023 09:55:00 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Mon, 8 May 2023 09:59:08 +0800
-Subject: Re: [PATCH v3] perf/core: Fix perf_sample_data not properly
- initialized for different swevents in perf_tp_event()
-To:     <peterz@infradead.org>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230425103217.130600-1-yangjihong1@huawei.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>
-Message-ID: <9ae47526-8d40-dcd7-4fef-199b8605bfe9@huawei.com>
-Date:   Mon, 8 May 2023 09:59:07 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Mon, 8 May 2023 05:15:02 -0400
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C659ECF;
+        Mon,  8 May 2023 02:15:00 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0Vi312Yk_1683537294;
+Received: from 30.221.149.87(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vi312Yk_1683537294)
+          by smtp.aliyun-inc.com;
+          Mon, 08 May 2023 17:14:56 +0800
+Message-ID: <b640e7e2-bbdd-c746-4006-d086a55a9615@linux.alibaba.com>
+Date:   Mon, 8 May 2023 17:14:52 +0800
 MIME-Version: 1.0
-In-Reply-To: <20230425103217.130600-1-yangjihong1@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH v2 1/5] driver/perf: Add identifier sysfs file for CMN
+To:     John Garry <john.g.garry@oracle.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Shuai Xue <xueshuai@linux.alibaba.com>
+References: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1682329456-19418-2-git-send-email-renyu.zj@linux.alibaba.com>
+ <df63b597-4355-b9fc-6002-5a390b1a56f5@oracle.com>
+ <12bf4a7f-e99c-47cf-e8e4-e2700db6c5c9@arm.com>
+ <da55ef21-e199-79c3-5b65-d51edb2e754b@oracle.com>
+ <6bb7eaee-2d00-46f5-89ff-95133aea9a5d@arm.com>
+ <98eaaa87-ae33-5479-dee0-71e42bc5d798@oracle.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <98eaaa87-ae33-5479-dee0-71e42bc5d798@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello, Peter
 
-PING.
 
-As shown in Link [1] report, data->raw->frag.data may be accessed in 
-perf_tp_event_match().
-we may need to init sample_data and then go through swevent hlist to 
-prevent reference of NULL pointer.
+在 2023/5/5 下午8:24, John Garry 写道:
+> On 04/05/2023 13:15, Robin Murphy wrote:
+>>>
+>>> ok, I see, that's what I was asking about in the cmn-700 JSON review; and from what you say, it is not the case that we always have the same events for every revision. So we need a more fine-grained identifier.
+>>
+>> Yes, it's mostly just a case of new events getting added as the microarchitecture evolves over the product's lifetime,
+> 
+> I might have mentioned this before: Currently userspace matches both the PMU sysfs name and this HW identifier for creating these event aliases. For fixed events - like those non-IMPDEF ones on the PMCG - userspace could just assume those standard ones are implemented and not need to check the HW identifier. Maybe this will help with scalability of JSONs for CMN PMU implementations. Or even HW identifier wildcard matching. However, as you might anticipate, we may need to add some sort of userspace support for times when HW implementations get messed up...
+> 
+>> but there has been at least one event ID which had a meaning in very early versions of CMN-600, was subsequently removed, and then got reused for a *different* event a couple of revisions after that.
+>> Thankfully I believe those earliest versions only ever existed on FPGA internally, and the TRMs were never made public, so upstream doesn't care about that specific case.
+> 
+> ok, good
+> 
 
-Please check whether the solution is OK.
+Thanks John and Robin, perhaps using CMN's model and revision to form an identifier is currently the most feasible solution?
+For example: CMN600_R1P0, CMN600_R1P1. The revision of CMN can be obtained from the revision register.
 
-[1] Link: 
-https://lore.kernel.org/oe-lkp/202304250929.efef2caa-yujie.liu@intel.com
+>>
+>>> For DT support, I suppose per-revision compat strings could be added, but I would not be sure what to do about ACPI.
+>>
+
+Yes, I also have this doubt. On DT, char* can be passed in through the data field because it is of void* type, but the driver_data
+field of ACPI is ulong. In addition, the revision is read out through the register, and I cannot get the revision in
+arm_cmn_acpi/of_match[]. We still need to compose the identifier in the probe function. So, I wonder if it is better to use an
+additional function to form the identifier instead of passing the identifier through arm_cmn_acpi/of_match[]?
+
+>> We know the version from the ID registers, that's no problem - it's already used to manage visibility of the sysfs event aliases. In principle we *should* have a model code in CFGM_PERIPH_ID_0 as well, and be able to compose an identifier exactly the same way as smmu_pmu_get_iidr() does in the SMMUv3 PMCG driver, but as I mentioned before I'm not entirely confident in the implementation: I do happen to know what codes have been nominally assigned for each product, but the TRMs claim otherwise 🙁
+> 
+> Thanks,
+> John
+
 
 Thanks,
-Yang
-
-On 2023/4/25 18:32, Yang Jihong wrote:
-> data->sample_flags may be modified in perf_prepare_sample(),
-> in perf_tp_event(), different swevents use the same on-stack
-> perf_sample_data, the previous swevent may change sample_flags in
-> perf_prepare_sample(), as a result, some members of perf_sample_data are
-> not correctly initialized when next swevent_event preparing sample
-> (for example data->id, the value varies according to swevent).
-> 
-> A simple scenario triggers this problem is as follows:
-> 
->    # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
->    [ perf record: dump data: Woken up 0 times ]
->    [ perf record: Dump perf.data.2023041209014396 ]
->    [ perf record: dump data: Woken up 0 times ]
->    [ perf record: Dump perf.data.2023041209014662 ]
->    [ perf record: dump data: Woken up 0 times ]
->    [ perf record: Dump perf.data.2023041209014910 ]
->    [ perf record: Woken up 0 times to write data ]
->    [ perf record: Dump perf.data.2023041209015164 ]
->    [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
->    # ls -l
->    total 860
->    -rw------- 1 root root  95694 Apr 12 09:01 perf.data.2023041209014396
->    -rw------- 1 root root 606430 Apr 12 09:01 perf.data.2023041209014662
->    -rw------- 1 root root  82246 Apr 12 09:01 perf.data.2023041209014910
->    -rw------- 1 root root  82342 Apr 12 09:01 perf.data.2023041209015164
->    # perf script -i perf.data.2023041209014396
->    0x11d58 [0x80]: failed to process type: 9 [Bad address]
-> 
-> Solution: Re-initialize perf_sample_data after each event is processed.
-> Note that data->raw->frag.data may be accessed in perf_tp_event_match().
-> Therefore, need to init sample_data and then go through swevent hlist to prevent
-> reference of NULL pointer, reported by [1].
-> 
-> After fix:
-> 
->    # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
->    [ perf record: dump data: Woken up 0 times ]
->    [ perf record: Dump perf.data.2023041209442259 ]
->    [ perf record: dump data: Woken up 0 times ]
->    [ perf record: Dump perf.data.2023041209442514 ]
->    [ perf record: dump data: Woken up 0 times ]
->    [ perf record: Dump perf.data.2023041209442760 ]
->    [ perf record: Woken up 0 times to write data ]
->    [ perf record: Dump perf.data.2023041209443003 ]
->    [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
->    # ls -l
->    total 864
->    -rw------- 1 root root 100166 Apr 12 09:44 perf.data.2023041209442259
->    -rw------- 1 root root 606438 Apr 12 09:44 perf.data.2023041209442514
->    -rw------- 1 root root  82246 Apr 12 09:44 perf.data.2023041209442760
->    -rw------- 1 root root  82342 Apr 12 09:44 perf.data.2023041209443003
->    # perf script -i perf.data.2023041209442259 | head -n 5
->                perf   232 [000]    66.846217: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=D ==> next_comm=perf next_pid=234 next_prio=120
->                perf   234 [000]    66.846449: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
->                perf   232 [000]    66.846546: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
->                perf   234 [000]    66.846606: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
->                perf   232 [000]    66.846646: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
-> 
-> [1] Link: https://lore.kernel.org/oe-lkp/202304250929.efef2caa-yujie.liu@intel.com
-> 
-> Fixes: bb447c27a467 ("perf/core: Set data->sample_flags in perf_prepare_sample()")
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
-> 
-> Changes since v2:
->   - Initialize perf_sample_data before go through the swevent hlist.
->   - Re-initialize perf_sample_data after each swevent is processed.
-> 
-> Changes since v1:
->   - Re-initialize the entire perf_sample_data before processing each swevent.
-> 
->   kernel/events/core.c | 14 +++++++++++++-
->   1 file changed, 13 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 435815d3be3f..753d4e9665b6 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10150,8 +10150,20 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
->   	perf_trace_buf_update(record, event_type);
->   
->   	hlist_for_each_entry_rcu(event, head, hlist_entry) {
-> -		if (perf_tp_event_match(event, &data, regs))
-> +		if (perf_tp_event_match(event, &data, regs)) {
->   			perf_swevent_event(event, count, &data, regs);
-> +
-> +			/*
-> +			 * Here use the same on-stack perf_sample_data,
-> +			 * some members in data are event-specific and
-> +			 * need to be re-computed for different sweveents.
-> +			 * Re-initialize data->sample_flags safely to avoid
-> +			 * the problem that next event skips preparing data
-> +			 * because data->sample_flags is set.
-> +			 */
-> +			perf_sample_data_init(&data, 0, 0);
-> +			perf_sample_save_raw_data(&data, &raw);
-> +		}
->   	}
->   
->   	/*
-> 
+Jing
