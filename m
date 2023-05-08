@@ -2,178 +2,100 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA88C77B7F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 16:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC53C77B75
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 21:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233734AbjEHQDb (ORCPT
+        id S233980AbjEHVbu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 May 2023 12:03:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42526 "EHLO
+        Mon, 8 May 2023 17:31:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233298AbjEHQDZ (ORCPT
+        with ESMTP id S233798AbjEHVbp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 May 2023 12:03:25 -0400
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592FD6186
-        for <linux-perf-users@vger.kernel.org>; Mon,  8 May 2023 09:03:13 -0700 (PDT)
-Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-3310c01beb9so35184615ab.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 May 2023 09:03:13 -0700 (PDT)
+        Mon, 8 May 2023 17:31:45 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2BE983F5
+        for <linux-perf-users@vger.kernel.org>; Mon,  8 May 2023 14:31:33 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b9a6eeea78cso37023995276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 May 2023 14:31:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1683561792; x=1686153792;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f5S/FC+4loxuZb2hQfcppwnscYEX/EcpE8zM8Zwa0M8=;
-        b=btvf+tEFEPHApUqiwEKGx1ljlXZRaS46cFKqlMwKK13uj7XNqMuC90JKChNduiLqCl
-         skYb3G4IU9weL+oKE7j3ZczQMfj5izO6qJ1rY3DTptt+4E+cq3iG38oCijUZ6KSnNF5v
-         4I3u16JhoDDWdEEww1U1QJ+EsW2x9SNusN/QA=
+        d=google.com; s=20221208; t=1683581493; x=1686173493;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZbgAGNI+jtBJ6/C5+rY59MHLdq0bPiPylAp1nQ6EvFY=;
+        b=1rR6+YSoVSx99at6wdoEphzxoMCPRs1p1vKXaAj3dOvy/esrEuCHCWNAQyN34rrpEe
+         ztL6dd7bkVl40gfKoU3Ryx/CyfGQYYJysHx5bZpTX+DMzBbG7YMLeuLbgbp+3a8a0KZH
+         2UG7bvIMYa/3sfu4AuPUWzo71BA733QFqvqmtdf5CBNrOaXzSpY5zGGCcZ2pmXnanHou
+         3pSIBvQ33YJYyBWeynsooEzQVM3gPU6nMzvYw3/Smjn8sQHXfzZf5KwhvURrx+c/B5sU
+         iyoQtJ4z0iKNSdCQUbn6HGZI390BFipfac59wfNGPSTsu4ndRxaX8AvTaubq+8RctLsg
+         C9zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683561792; x=1686153792;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f5S/FC+4loxuZb2hQfcppwnscYEX/EcpE8zM8Zwa0M8=;
-        b=FVL9tJFOomJHDyNUvvaVqsG6QniV2Dhy0FyElD1NvPsMm15VWKhHXFZQIH/kdwFw1n
-         VDtLdORQ5PjkGCfWaHRZH0QgLVgsu3F5KziD5W9PstXPXNHI5dEHFZs/Kf96ZDISyB9v
-         lBtbTgKEcHZ2SB4yyR8td3SsH4orOzxxAdTYVNQcsihdaJTQYGnBrw1gzWKe4p30AEdt
-         mxeclICkqv2sEzUrsrxPls6gmRHq2oZZY7LXfn5d+zaDxKLYfRkZ9QJSnSmKRDMX6D+e
-         PVU+/8zyZzY91jFhhgfpPVjx0/MxPgBDGkGY6cPPcM8X5UfdaVVxBl5xkDBF05mNers1
-         qhNg==
-X-Gm-Message-State: AC+VfDyv9Tf6ELlL3I3271uHWc2IGUmStxCKGOGZURnWLFWNwo1Rw7BX
-        APoUBlbR/pXwZa3ZGMtvOLsXnH0lJ70g6VcFDcU=
-X-Google-Smtp-Source: ACHHUZ4d2OqowcrHWCnfx8ugQOwrgBqGriWDlw/wfwH0Z8LqOytAAxPM2eTkykbHAKH7zhyZLKCqqQ==
-X-Received: by 2002:a92:c986:0:b0:335:7e65:dfa with SMTP id y6-20020a92c986000000b003357e650dfamr509564iln.30.1683561791456;
-        Mon, 08 May 2023 09:03:11 -0700 (PDT)
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com. [209.85.166.178])
-        by smtp.gmail.com with ESMTPSA id j13-20020a056e02014d00b0032df69c9217sm2499668ilr.39.2023.05.08.09.03.11
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 May 2023 09:03:11 -0700 (PDT)
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-32f4e0f42a7so1161495ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 May 2023 09:03:11 -0700 (PDT)
-X-Received: by 2002:a05:622a:1813:b0:3bf:e4e0:26a0 with SMTP id
- t19-20020a05622a181300b003bfe4e026a0mr581724qtc.14.1683561427207; Mon, 08 May
- 2023 08:57:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230504221349.1535669-1-dianders@chromium.org>
- <20230504151100.v4.5.I4e47cbfa1bb2ebbcdb5ca16817aa2887f15dc82c@changeid>
- <CSE04EI159N2.2TSXHBN2QLFCM@wheely> <CAD=FV=XXzo3m2dqwtNST+uXGQz6NW_e-B6-tWkJMrHoCTZBT9Q@mail.gmail.com>
- <CSGIDMMFXIVH.3SFPYD19Y5WQX@wheely>
-In-Reply-To: <CSGIDMMFXIVH.3SFPYD19Y5WQX@wheely>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 8 May 2023 08:56:56 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V7XQog=OSESB8-BLaeSDRg+0cGnK-YoccdLYeFh7_bmA@mail.gmail.com>
-Message-ID: <CAD=FV=V7XQog=OSESB8-BLaeSDRg+0cGnK-YoccdLYeFh7_bmA@mail.gmail.com>
-Subject: Re: [PATCH v4 05/17] watchdog/hardlockup: Rename touch_nmi_watchdog()
- to touch_hardlockup_watchdog()
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
+        d=1e100.net; s=20221208; t=1683581493; x=1686173493;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZbgAGNI+jtBJ6/C5+rY59MHLdq0bPiPylAp1nQ6EvFY=;
+        b=CPCWsycuVKP4Y9prlNJat2M5ZPKCyH/zioTDHEWsWt3jGITEXd3vq/olJ6tbS3FyyE
+         wgLmRQqYeZA6QZ5WixxzoIPLA4HXG5i1SgKfWp/2+E46B7RM8hJ4sTkWUcxUWieBMAyr
+         nAKBi4DJwi/rBidkiOQ9V8k4w8DZ+kGiGQwlnuewUyJjTxayTXJQntl9sPkCfwIZtOrF
+         RK2QlDaDQFfrYG9TbxpHGg46X6xnITXWvAbBHlgQYTg4/vCOYnHJpTs1EUDxsTCmf3M6
+         +ICpG6RQVhCghosTdCuFO79MnXV/yXY6kJdYYRx4KGqtTstqw6CF73Bp3maoSP+Mbb6m
+         cN5w==
+X-Gm-Message-State: AC+VfDyvgOcU1tvqKxGAT5s0VA0meajURJqaXnt2/9YbntFyJjQJfoF8
+        zXhYx6PqSk4L4DmS/yqk4lJiCfP0UP1B
+X-Google-Smtp-Source: ACHHUZ7Y0TBeQX2fd8lGvisO3nhb1pLzb0aA5uKxiANiaOdr2vJEWbJRrVvcs/WRCIT2N6iql56deytoA2V+
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9cc5:6f12:98dc:d684])
+ (user=irogers job=sendgmr) by 2002:a25:5404:0:b0:b8b:f5fb:598d with SMTP id
+ i4-20020a255404000000b00b8bf5fb598dmr7276423ybb.6.1683581493105; Mon, 08 May
+ 2023 14:31:33 -0700 (PDT)
+Date:   Mon,  8 May 2023 14:31:28 -0700
+Message-Id: <20230508213128.3622268-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
+Subject: [PATCH v1] perf arm: Fix include path
+From:   Ian Rogers <irogers@google.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Stephen Boyd <swboyd@chromium.org>, ricardo.neri@intel.com,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Chen-Yu Tsai <wens@csie.org>, christophe.leroy@csgroup.eu,
-        davem@davemloft.net, sparclinux@vger.kernel.org,
-        mpe@ellerman.id.au, Will Deacon <will@kernel.org>,
-        ravi.v.shankar@intel.com, linuxppc-dev@lists.ozlabs.org,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
+        Adrian Hunter <adrian.hunter@intel.com>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Change "../cs-etm.h" to just "cs-etm.h" as ../cs-etm.h doesn't exist.
 
-On Sun, May 7, 2023 at 6:35=E2=80=AFPM Nicholas Piggin <npiggin@gmail.com> =
-wrote:
->
-> On Sat May 6, 2023 at 2:37 AM AEST, Doug Anderson wrote:
-> > Hi,
-> >
-> > On Thu, May 4, 2023 at 7:51=E2=80=AFPM Nicholas Piggin <npiggin@gmail.c=
-om> wrote:
-> > >
-> > > On Fri May 5, 2023 at 8:13 AM AEST, Douglas Anderson wrote:
-> > > > In preparation for the buddy hardlockup detector, rename
-> > > > touch_nmi_watchdog() to touch_hardlockup_watchdog() to make it clea=
-r
-> > > > that it will touch whatever hardlockup detector is configured. We'l=
-l
-> > > > add a #define for the old name (touch_nmi_watchdog) so that we don'=
-t
-> > > > have to touch every piece of code referring to the old name.
-> > >
-> > > Is this really helpful? Now it's got two names Could just leave it.
-> > > If you insist then it'd be better just to rename everything in one
-> > > go at the end of a merge window IMO. Conflicts would be trivial.
-> >
-> > I'm not picky here. I changed the name since Petr requested names to
-> > be changed for any code I was touching [1] and so I threw this out as
-> > a proposal. I agree that having two names can be confusing, but in
-> > this case it didn't feel too terrible to me.
-> >
-> > I'd love to hear Petr's opinion on this name change. I'm happy with:
-> >
-> > a) This patch as it is.
-> >
-> > b) Dropping this patch (or perhaps just changing it to add comments).
-> >
-> > c) Changing this patch to rename all 70 uses of the old name. Assuming
-> > this will go through Andrew Morton's tree, I'd be interested in
-> > whether he's OK w/ this.
-> >
-> > d) Dropping this patch from this series but putting it on the
-> > backburner to try to do later (so that the rename can happen at a time
-> > when it's least disruptive).
-> >
-> >
-> > > > Ideally this change would also rename the arch_touch_nmi_watchdog()=
-,
-> > > > but that is harder since arch_touch_nmi_watchdog() is exported with
-> > > > EXPORT_SYMBOL() and thus is ABI. Add a comment next to the call to
-> > > > hopefully alleviate some of the confusion here.
-> > >
-> > > We don't keep ABI fixed upstream.
-> >
-> > I'm happy to be corrected, but my understanding was that kernel devs
-> > made an effort not to mess with things exported via "EXPORT_SYMBOL",
-> > but things exported via "EXPORT_SYMBOL_GPL" were fair game.
->
-> I don't think that's the case. If anything people might be a bit more
-> inclined to accommodate GPL exports for out of tree modules that use
-> them.
->
-> > I guess maybe my patch calling it "ABI" is a stronger statement than
-> > that, though. Doing a little more research, nobody wants to say that
-> > things exported with "EXPORT_SYMBOL" are ABI, they just want to say
-> > that we make an effort to have them be more stable.
->
-> We wouldn't break any symbol for no reason, but in this case there is a
-> good reason. If the name change is important for clarity then we change
-> it. And this is about the easiest change for an out of tree module to
-> deal with, so it should be no big deal for them.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/arch/arm/util/pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-OK, fair enough. My current plan is to wait a few more days to see if
-anyone else chimes in with opinions. If I don't hear anything, in my
-next version I will rename _neither_ touch_nmi_watchdog() nor
-arch_touch_nmi_watchdog(). I'll still add comments indicating that
-these functions touch the "hardlockup" watchdog but I won't attempt
-the rename just to keep the series simpler.
+diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
+index 860a8b42b4b5..46154c226fbb 100644
+--- a/tools/perf/arch/arm/util/pmu.c
++++ b/tools/perf/arch/arm/util/pmu.c
+@@ -12,7 +12,7 @@
+ #include "arm-spe.h"
+ #include "hisi-ptt.h"
+ #include "../../../util/pmu.h"
+-#include "../cs-etm.h"
++#include "cs-etm.h"
+ 
+ struct perf_event_attr
+ *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
+-- 
+2.40.1.521.gf1e218fcd8-goog
 
--Doug
