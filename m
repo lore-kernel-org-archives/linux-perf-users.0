@@ -2,72 +2,74 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51787C77B7F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 12:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AF3C77B7F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 12:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233456AbjEHM36 (ORCPT
+        id S232881AbjEHMbm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 May 2023 08:29:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58172 "EHLO
+        Mon, 8 May 2023 08:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234671AbjEHM3v (ORCPT
+        with ESMTP id S234029AbjEHMbl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 May 2023 08:29:51 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 151D03C481
-        for <linux-perf-users@vger.kernel.org>; Mon,  8 May 2023 05:28:39 -0700 (PDT)
+        Mon, 8 May 2023 08:31:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFC339BBE
+        for <linux-perf-users@vger.kernel.org>; Mon,  8 May 2023 05:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683548910;
+        s=mimecast20190719; t=1683549043;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lgrzGxAxmI/spviOHV2b8UBBldlWDCIioMic8trwoYg=;
-        b=Bw8+57xoqvf0lgYZQLr/DQ2Rw3DUDO2q0+A546LDsHoAd7rEhypYHaFyi1C+NyEeSVpWEv
-        2Bz7SlHWc//je2PC33bnEckBWpGI8pZBLRkqIWzOrub6mNyxY5OCPBLiORoEGrCCjgd/NI
-        jy5eMPC6uU+i+kbcGNSrbRfylbMF2R0=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=4ahk7pg9sIQ0xJg4E79SX5MEbsNWbDbb49YKqgeiO0s=;
+        b=VSBtWlTSjKJ6/FJzTjlamJpWHR18cNvCTtIugdtF7GBbhsVQz4x8MbXJtQmGrLm7rwDeW1
+        3loM5khfIpFlL3bLk8UMmSgLhRS4YSeQajwIPSfrA9RXBprrDcUeJAD0zvDjUgUGklfLTI
+        ZUfzaeps99DJ0EcjNrMFUNROJ7qjomY=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-ePxTKBiHPa6Jvb76wfoBkg-1; Mon, 08 May 2023 08:28:29 -0400
-X-MC-Unique: ePxTKBiHPa6Jvb76wfoBkg-1
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-643fdfb437aso8936218b3a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 May 2023 05:28:29 -0700 (PDT)
+ us-mta-594-LFuBPU4aPFCiVjqflHWa3Q-1; Mon, 08 May 2023 08:30:42 -0400
+X-MC-Unique: LFuBPU4aPFCiVjqflHWa3Q-1
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-24e2b3c19e0so2282218a91.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 May 2023 05:30:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683548908; x=1686140908;
+        d=1e100.net; s=20221208; t=1683549040; x=1686141040;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lgrzGxAxmI/spviOHV2b8UBBldlWDCIioMic8trwoYg=;
-        b=SvOTEybemq0pSgLo1gFAAg6brL9NMBziCla9IrxmQDYKpVuZogezTyBI2rthMrDAix
-         HOJARIrIZwgB1LI/b9zUqFxI0N/ounA3xJBMYGLXtwta/jihtQS+NjtWfCVsjgrL7EeM
-         QIJUF436R8T9ppkA/fRYSwAZVPuGmy6Px+AFsPyVoOCH7N2YBVxF8oT4MS2yIn+jIvF9
-         ejtmrHJkudhzIvGKhfICOgVmH2iSP0KC3TBx4ZIwSMRXOMg6pXcyoZLBVIeImvJcetnZ
-         SRSFcAAmgQ/qH8fqeXEH0rZKGyDKcazieYmFpRYLhg5EIfCWwqqMt0cpk9U44BKCGj/j
-         SFvA==
-X-Gm-Message-State: AC+VfDxp33Kwtw6qNWeXFh+ddkOVyV2VC/81UNT9ByUM/Sc6Wu0zKC6h
-        rz/E8iXXWLEGxFui+ND7+5CMz/x7073A/SNsG0jgVS/u9ujI+eWwj3P5gISyDMJWlElo8gx2MHq
-        aS7iEW3gFla43AST1ZQSHAf/3i+JmZxd6/0RcqbJNLePf4Q==
-X-Received: by 2002:a17:902:c943:b0:1a9:2a9e:30a8 with SMTP id i3-20020a170902c94300b001a92a9e30a8mr19852485pla.9.1683548908011;
-        Mon, 08 May 2023 05:28:28 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5wJMx1jBWrcarhM+oA6VC9s/ptiRs+n09mKMApsO+ZT6dRWxKFOpP7kv6qviLo30TspCsRD9iNCrTW20+sv0M=
-X-Received: by 2002:a17:902:c943:b0:1a9:2a9e:30a8 with SMTP id
- i3-20020a170902c94300b001a92a9e30a8mr19852446pla.9.1683548907634; Mon, 08 May
- 2023 05:28:27 -0700 (PDT)
+        bh=4ahk7pg9sIQ0xJg4E79SX5MEbsNWbDbb49YKqgeiO0s=;
+        b=jQBx15JiyctxpXAE6DAsuSBISUcOGToQPZRLRmrdFNlVR5MM9qYDpu+EVHz9a0yNPL
+         3GL1EC3oAch10nRuxyRJTmiY9nQCUenJztTn5EtJ9bDdLDS0wlxpUNTlqWC+/yralV5b
+         79rzALV2bRsEcIMMJc6VqlzVivXdoavJQXXKXRI/kN2b9tIeQTmm4FIaclKhWj+8YTed
+         ogIAk6RNRikLQfxgUhFdiuLkdBa5czwx4IczQIPwFZ73rO1XYxU8f91JrkFI8snJO/lY
+         jJAu0NeONxSRjOq3OCfr70BzlnJWPIAVfkNBfIqZdH+D5iwVKr/JO6GrdYU42KzIiZgs
+         HOvg==
+X-Gm-Message-State: AC+VfDz+Gq6YNOY1ibIcNLZkG4in+g7MdndbxBvoiETuBMA9NtT8bIju
+        uCATWPcw8hs3IfnSnHIZpEwX95SEps3ofjHpNPcTNbAUmzHq7pFZfnB/Hebsw8jzUjkYil54Kbt
+        MJpza9FD5Q/XZBkollS0wZRLcbRcWK/DE2xtld0CrTijUaA==
+X-Received: by 2002:a17:90a:6688:b0:24e:69d:3470 with SMTP id m8-20020a17090a668800b0024e069d3470mr10502280pjj.8.1683549040424;
+        Mon, 08 May 2023 05:30:40 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5Di0lnN5kaZRDIBsskfBRlXT6qGyYKG5AlhJpf+4qjePW6fIzgMr5duhXeS1+pHa4JeeUf4lDXPuvmKhy2lnE=
+X-Received: by 2002:a17:90a:6688:b0:24e:69d:3470 with SMTP id
+ m8-20020a17090a668800b0024e069d3470mr10502226pjj.8.1683549040066; Mon, 08 May
+ 2023 05:30:40 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230425114307.36889-1-wander@redhat.com> <20230425114307.36889-3-wander@redhat.com>
  <20230504084229.GI1734100@hirez.programming.kicks-ass.net>
  <20230504122945.GA28757@redhat.com> <20230504143303.GA1744142@hirez.programming.kicks-ass.net>
  <CAAq0SUmYrQbS1k9NNKGQP7hQRQJ308dk9NCiUimEiLeBJUavgA@mail.gmail.com>
- <20230504152424.GG1744258@hirez.programming.kicks-ass.net>
- <cjhvb72qrqggom5gxdjz6mtz3bntlmznx7r52adz72z2t2edzr@hwcog2pltfaq> <20230505133235.GG4253@hirez.programming.kicks-ass.net>
-In-Reply-To: <20230505133235.GG4253@hirez.programming.kicks-ass.net>
+ <20230504152306.GA1135@redhat.com> <CAAq0SU=G0WQBLP77Wgm8MJRcVwUCj25WOowh_X8jiGiHTKAQEA@mail.gmail.com>
+ <20230504192246.GA4164@redhat.com> <CAAq0SUkJ40OeS3cRzhK3voGquJ1AFahYoyQ1fgWS+N=DkOQpig@mail.gmail.com>
+ <20230504201614.GB4164@redhat.com>
+In-Reply-To: <20230504201614.GB4164@redhat.com>
 From:   Wander Lairson Costa <wander@redhat.com>
-Date:   Mon, 8 May 2023 09:28:16 -0300
-Message-ID: <CAAq0SUmf_q5UFMKrBb+JtqUF3cFchSZhiiRM4YbVmYO_dyDRGg@mail.gmail.com>
+Date:   Mon, 8 May 2023 09:30:28 -0300
+Message-ID: <CAAq0SUk5kSx0vr+OvxG3sm_XArnFm3GZWz0kec8nigZHLo-rZQ@mail.gmail.com>
 Subject: Re: [PATCH v7 2/3] sched/task: Add the put_task_struct_atomic_safe() function
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -105,46 +107,112 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 5, 2023 at 10:33=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Thu, May 4, 2023 at 5:16=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wrot=
+e:
 >
-> On Thu, May 04, 2023 at 03:21:11PM -0300, Wander Lairson Costa wrote:
-> > On Thu, May 04, 2023 at 05:24:24PM +0200, Peter Zijlstra wrote:
-> > > On Thu, May 04, 2023 at 11:55:15AM -0300, Wander Lairson Costa wrote:
+> Hi Wander,
+>
+> I certainly missed something ;) plus I am already sleeping. but let me tr=
+y to
+> reply anyway.
+>
+> On 05/04, Wander Lairson Costa wrote:
+> > On Thu, May 4, 2023 at 4:23=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> =
+wrote:
 > > >
-> > > > > Then I'm thinking something trivial like so:
+> > > On 05/04, Wander Lairson Costa wrote:
+> > > >
+> > > > On Thu, May 4, 2023 at 12:23=E2=80=AFPM Oleg Nesterov <oleg@redhat.=
+com> wrote:
 > > > > >
-> > > > > static inline void put_task_struct(struct task_struct *t)
-> > > > > {
-> > > > >         if (!refcount_dec_and_test(&t->usage))
-> > > > >                 return;
+> > > > > Yes, but as Sebastian explained CONFIG_PROVE_RAW_LOCK_NESTING won=
+'t like it.
 > > > > >
-> > > > >         if (IS_ENABLED(CONFIG_PREEMPT_RT) && !preemptible())
-> > > > >                 call_rcu(&t->rcu, __put_task_struct_rcu);
-> > > > >
-> > > > >         __put_task_struct(t);
-> > > > > }
+> > > > >         https://lore.kernel.org/all/Y+zFNrCjBn53%2F+Q2@linutronix=
+.de/
 > > > > >
 > > > >
-> > > > That's what v5 [1] does. What would be the path in this case? Shoul=
-d I
-> > > > resend it as v8?
+> > > > I think that was my confusion in that thread. My understanding is t=
+hat
+> > > > CONFIG_PROVE_RAW_LOCK_NESTING will check lock ordering but not
+> > > > context.
 > > >
-> > > It's almost what v5 does. v5 also has a !in_task() thing. v5 also
-> > > violates codingstyle :-)
+> > > Sorry, I don't understand... perhaps I missed something. But iiuc
+> > > the problem is simple.
+> > >
+> > > So, this code
+> > >
+> > >         raw_spin_lock(one);
+> > >         spin_lock(two);
+> > >
+> > > is obviously wrong if CONFIG_PREEMPT_RT.
+> > >
+> > > Without PREEMPT_RT this code is fine because raw_spinlock_t and spinl=
+ock_t
+> > > are the same thing. Except they have different lockdep annotations if
+> > > CONFIG_PROVE_RAW_LOCK_NESTING is true, LD_WAIT_SPIN and LD_WAIT_CONFI=
+G.
+> > >
+> > > So if CONFIG_PROVE_RAW_LOCK_NESTING is set, lockdep will complain eve=
+n
+> > > on the !PREEMPT_RT kernel, iow it checks the nesting as if the code r=
+uns
+> > > on with PREEMPT_RT.
+> > >
+> > > Cough... not sure my explanation can help ;) It looks very confusing =
+when
+> > > I read it.
+> > >
 > >
-> > IIRC, the in_task() is there because preemptible() doesn't check if it
-> > is running in interrupt context.
+> > Thanks for the explanation. That's my understanding too. The part I
+> > don't get is why this would fail with a call_rcu() inside
+> > put_task_struct().
 >
-> #define preemptible()   (preempt_count() =3D=3D 0 && !irqs_disabled())
+> the problem is that call_rcu() won't be called if !IS_ENABLED(PREEMPT_RT)=
+,
+> ___put_task_struct() will be called.
 >
-> When in interrupt context preempt_count() will have a non-zero value in
-> HARDIRQ_MASK and IRQs must be disabled, so preemptible() evaluates to
-> (false && false), last time I checked that ends up being false.
+> CONFIG_PROVE_RAW_LOCK_NESTING can't know this can't happen if PREEMPT_RT
+> is set.
+>
+> IOW. To simplify, suppose we have
+>
+>         // can be called in atomic context, e.g. under
+>         // raw_spin_lock() so it is wrong with PREEMPT_RT
+>         void __put_task_struct(struct task_struct *tsk)
+>         {
+>                 spin_lock(some_lock);
+>         }
+>
+> lets "fix" the code above, lets change __put_task_struct,
+>
+>         void __put_task_struct(struct task_struct *tsk)
+>         {
+>                 if (!IS_ENABLED(CONFIG_PREEMPT_RT))
+>                         return;
+>
+>                 spin_lock(some_lock);
+>         }
+>
+> Now, if CONFIG_PREEMPT_RT is true then __put_task_struct() is fine
+> wrt lock nesting.
+>
+> But, if CONFIG_PREEMPT_RT is not set, then __put_task_struct() still
+> does the same:
+>
+>         void __put_task_struct(struct task_struct *tsk)
+>         {
+>                 spin_lock(some_lock);
+>         }
+>
+> and CONFIG_PROVE_RAW_LOCK_NESTING will complain. Because, once again,
+> it checks the nesting as if CONFIG_PREEMPT_RT is true, and in this case
+> __put_task_struct() if it is called under raw_spin_lock().
 >
 
-When I first tested, I started with in_irq(), then I saw some warnings
-and added preemptible().
-Never tested with preemptible() alone. Thanks, I will change that and test =
-it.
+IIUC, this is a problem with the current implementation, isn't it?
+Because the holder of raw_spin_lock is the put_task_struct() caller.
+
+> Oleg.
+>
 
