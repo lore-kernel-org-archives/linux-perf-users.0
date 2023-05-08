@@ -2,35 +2,33 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91261C7EE26
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 11:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD51EC77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 11:36:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235543AbjEHLTl (ORCPT
+        id S236089AbjEHLgs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 May 2023 07:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33302 "EHLO
+        Mon, 8 May 2023 07:36:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235547AbjEHLTk (ORCPT
+        with ESMTP id S236095AbjEHLg0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 May 2023 07:19:40 -0400
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 838B237C6D;
-        Mon,  8 May 2023 04:19:37 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Vi4aMn6_1683544771;
-Received: from 30.221.149.87(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vi4aMn6_1683544771)
+        Mon, 8 May 2023 07:36:26 -0400
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3A183D214;
+        Mon,  8 May 2023 04:35:59 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---0Vi5-Kjt_1683545726;
+Received: from 30.221.149.87(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vi5-Kjt_1683545726)
           by smtp.aliyun-inc.com;
-          Mon, 08 May 2023 19:19:32 +0800
-Message-ID: <fe51aeda-bfc5-eae4-bfcc-eb15655a7bea@linux.alibaba.com>
-Date:   Mon, 8 May 2023 19:19:30 +0800
+          Mon, 08 May 2023 19:35:28 +0800
+Message-ID: <d81967aa-75b4-dfcc-9f01-26ecea063051@linux.alibaba.com>
+Date:   Mon, 8 May 2023 19:35:24 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH v2 0/5] Add JSON metrics for arm CMN and Yitian710 DDR
-To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        James Clark <james.clark@arm.com>,
+Subject: Re: [PATCH v2 3/5] driver/perf: Add identifier sysfs file for Yitian
+ 710 DDR
+To:     John Garry <john.g.garry@oracle.com>
+Cc:     James Clark <james.clark@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
         Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -41,11 +39,14 @@ Cc:     John Garry <john.g.garry@oracle.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Will Deacon <will@kernel.org>, Ian Rogers <irogers@google.com>
 References: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
- <CAP-5=fX1E_qZwmch-gKcarLGkWwmxZj9dM2XuQKrBLeDRfqg7Q@mail.gmail.com>
+ <1682329456-19418-4-git-send-email-renyu.zj@linux.alibaba.com>
+ <136984f7-b9a0-721f-3e31-f6ef840b0878@oracle.com>
 From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <CAP-5=fX1E_qZwmch-gKcarLGkWwmxZj9dM2XuQKrBLeDRfqg7Q@mail.gmail.com>
+In-Reply-To: <136984f7-b9a0-721f-3e31-f6ef840b0878@oracle.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -54,56 +55,37 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-在 2023/4/30 上午5:01, Ian Rogers 写道:
-> On Mon, Apr 24, 2023 at 2:44 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+在 2023/5/1 下午8:31, John Garry 写道:
+> On 24/04/2023 10:44, Jing Zhang wrote:
+>> To allow userspace to identify the specific implementation of the device,
+>> add an "identifier" sysfs file.
 >>
->> Changes since RFC:
->> - Refact arm-cmn PMU identifier.
->> - Not add arm-cmn PMU aliasing currently because it's Eventcode is
->>   difficult to define.
->> - Rename ali_drw PMU identifier and Unit name.
->> - Divide ali_drw PMU metric and aliasing into two patches.
+>> The perf tool can match the Yitian 710 DDR metric through the identifier.
 >>
->> Add an identifier sysfs file for the yitian710 SoC DDR and arm CMN to
->> allow userspace to identify the specific implementation of the device,
->> so that the perf tool can match the corresponding uncore events and
->> metrics through the identifier. Then added several general CMN700 metrics
->> and yitian710 soc DDR metrics.
+>> Signed-off-by: Jing Zhang<renyu.zj@linux.alibaba.com>
+>> ---
+>>   drivers/perf/alibaba_uncore_drw_pmu.c | 27 +++++++++++++++++++++++++++
+>>   1 file changed, 27 insertions(+)
 >>
->> $perf list:
->> ...
->> ali_drw:
->>   hif_rmw
->>        [A Read-Modify-Write Op at HIF interface. 64B. Unit: ali_drw]
->>   hif_hi_pri_rd
->>        [A high priority Read at HIF interface. 64B. Unit: ali_drw]
->>   hif_rd
->>        [A Read Op at HIF interface. 64B. Unit: ali_drw]
->>   hif_rd_or_wr
->>        [A Write or Read Op at HIF interface. 64B. Unit: ali_drw]
->>   hif_wr
->>        [A Write Op at HIF interface. 64B. Unit: ali_drw]
->> ...
->>
->> $perf stat -M ddr_read_bandwidth.all ./test
->>
->> Performance counter stats for 'system wide':
->>
->>             38,150      hif_rd        #  2.4 MB/s  ddr_read_bandwidth.all
->>      1,000,957,941 ns   duration_time
->>
->>        1.000957941 seconds time elapsed
->>
->> Jing Zhang (5):
->>   driver/perf: Add identifier sysfs file for CMN
->>   perf vendor events: Add JSON metrics for CMN-700
->>   driver/perf: Add identifier sysfs file for Yitian 710 DDR
->>   perf jevents: Add support for Yitian 710 DDR PMU aliasing
->>   perf vendor events: Add JSON metrics for Yitian 710 DDR
+>> diff --git a/drivers/perf/alibaba_uncore_drw_pmu.c b/drivers/perf/alibaba_uncore_drw_pmu.c
+>> index a7689fe..fe075fd 100644
+>> --- a/drivers/perf/alibaba_uncore_drw_pmu.c
+>> +++ b/drivers/perf/alibaba_uncore_drw_pmu.c
+>> @@ -236,10 +236,37 @@ static ssize_t ali_drw_pmu_cpumask_show(struct device *dev,
+>>       .attrs = ali_drw_pmu_cpumask_attrs,
+>>   };
+>>   +static ssize_t ali_drw_pmu_identifier_show(struct device *dev,
+>> +                    struct device_attribute *attr,
+>> +                    char *page)
+>> +{
+>> +    return sysfs_emit(page, "%s\n", "ali_drw_pmu");
+>> +}
 > 
-> The perf tool changes all make sense. John Garry is more of an expert
-> on the ARM part of this than me though.
-> Acked-by: Ian Rogers <irogers@google.com>
+> Would there be anything more unique per implementation version? Having a constant like this means that all implementations will have same events from userspace PoV.
 > 
 
-Thanks Ian!
+Currently there is only this version, and no new revision will be added in the future. We can consider all implementations
+to have the same events.
+
+Thanks,
+Jing
