@@ -2,95 +2,85 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAFCC77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 09:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EE9C77B75
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 09:40:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233561AbjEHJPC (ORCPT
+        id S232212AbjEHJke (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 May 2023 05:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52528 "EHLO
+        Mon, 8 May 2023 05:40:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232894AbjEHJPC (ORCPT
+        with ESMTP id S230415AbjEHJkc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 May 2023 05:15:02 -0400
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C659ECF;
-        Mon,  8 May 2023 02:15:00 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R241e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0Vi312Yk_1683537294;
-Received: from 30.221.149.87(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vi312Yk_1683537294)
-          by smtp.aliyun-inc.com;
-          Mon, 08 May 2023 17:14:56 +0800
-Message-ID: <b640e7e2-bbdd-c746-4006-d086a55a9615@linux.alibaba.com>
-Date:   Mon, 8 May 2023 17:14:52 +0800
+        Mon, 8 May 2023 05:40:32 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 212781709;
+        Mon,  8 May 2023 02:40:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683538832; x=1715074832;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FbTuCrNfqpLm6qqrj0ilSsTazE+fOIbTBMkylLTw674=;
+  b=WYTXgvU7hcioNF8wlQmwQdW3PK4wEMu3vMo0Y6H4XqR4VYYkGQWAbBG4
+   PDCRRxHmfSAxPqzgg9MmIdzyX/S2P0o9IeanoAEih1sIvUYWn1uvTyS99
+   GqK4fbcGLK1jBiquk+calFnb6kKVkjIvNYnssArI7XdQHlreXdaRz2mFz
+   QG6LKSO3odUPqO8VaBJzQCnXPbUtv6zTZ767+bb2MM+GoWFg+K2E4MQ73
+   zki1GMMhi6VkcRZ69LiyVJMbAWy5Xrti7+cVc6svUINL2NfBlW7Twy3Hg
+   sELKw38TzdZ+y3nMH9rkrBY6DkTzlY44d0qZ8PcZuhwLhKVG1wu5v8M6/
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10703"; a="329223670"
+X-IronPort-AV: E=Sophos;i="5.99,258,1677571200"; 
+   d="scan'208";a="329223670"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 02:40:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10703"; a="1028354984"
+X-IronPort-AV: E=Sophos;i="5.99,258,1677571200"; 
+   d="scan'208";a="1028354984"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.218.65])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2023 02:40:29 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH V2 0/2] perf parse-events: Do not break up AUX event group
+Date:   Mon,  8 May 2023 12:39:50 +0300
+Message-Id: <20230508093952.27482-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [PATCH v2 1/5] driver/perf: Add identifier sysfs file for CMN
-To:     John Garry <john.g.garry@oracle.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-References: <1682329456-19418-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1682329456-19418-2-git-send-email-renyu.zj@linux.alibaba.com>
- <df63b597-4355-b9fc-6002-5a390b1a56f5@oracle.com>
- <12bf4a7f-e99c-47cf-e8e4-e2700db6c5c9@arm.com>
- <da55ef21-e199-79c3-5b65-d51edb2e754b@oracle.com>
- <6bb7eaee-2d00-46f5-89ff-95133aea9a5d@arm.com>
- <98eaaa87-ae33-5479-dee0-71e42bc5d798@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <98eaaa87-ae33-5479-dee0-71e42bc5d798@oracle.com>
-Content-Type: text/plain; charset=UTF-8
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi
+
+Here is a fix needed in v6.4, but dependent on Ian's patch
+"perf evsel: Modify group pmu name for software events", refer:
+
+https://lore.kernel.org/lkml/20230502223851.2234828-20-irogers@google.com/
+
+There is also a test amendment to test the AUX event group fix for
+Intel PT.
 
 
-在 2023/5/5 下午8:24, John Garry 写道:
-> On 04/05/2023 13:15, Robin Murphy wrote:
->>>
->>> ok, I see, that's what I was asking about in the cmn-700 JSON review; and from what you say, it is not the case that we always have the same events for every revision. So we need a more fine-grained identifier.
->>
->> Yes, it's mostly just a case of new events getting added as the microarchitecture evolves over the product's lifetime,
-> 
-> I might have mentioned this before: Currently userspace matches both the PMU sysfs name and this HW identifier for creating these event aliases. For fixed events - like those non-IMPDEF ones on the PMCG - userspace could just assume those standard ones are implemented and not need to check the HW identifier. Maybe this will help with scalability of JSONs for CMN PMU implementations. Or even HW identifier wildcard matching. However, as you might anticipate, we may need to add some sort of userspace support for times when HW implementations get messed up...
-> 
->> but there has been at least one event ID which had a meaning in very early versions of CMN-600, was subsequently removed, and then got reused for a *different* event a couple of revisions after that.
->> Thankfully I believe those earliest versions only ever existed on FPGA internally, and the TRMs were never made public, so upstream doesn't care about that specific case.
-> 
-> ok, good
-> 
+Changes in V2:
 
-Thanks John and Robin, perhaps using CMN's model and revision to form an identifier is currently the most feasible solution?
-For example: CMN600_R1P0, CMN600_R1P1. The revision of CMN can be obtained from the revision register.
-
->>
->>> For DT support, I suppose per-revision compat strings could be added, but I would not be sure what to do about ACPI.
->>
-
-Yes, I also have this doubt. On DT, char* can be passed in through the data field because it is of void* type, but the driver_data
-field of ACPI is ulong. In addition, the revision is read out through the register, and I cannot get the revision in
-arm_cmn_acpi/of_match[]. We still need to compose the identifier in the probe function. So, I wonder if it is better to use an
-additional function to form the identifier instead of passing the identifier through arm_cmn_acpi/of_match[]?
-
->> We know the version from the ID registers, that's no problem - it's already used to manage visibility of the sysfs event aliases. In principle we *should* have a model code in CFGM_PERIPH_ID_0 as well, and be able to compose an identifier exactly the same way as smmu_pmu_get_iidr() does in the SMMUv3 PMCG driver, but as I mentioned before I'm not entirely confident in the implementation: I do happen to know what codes have been nominally assigned for each product, but the TRMs claim otherwise 🙁
-> 
-> Thanks,
-> John
+   Add an Intel PT test amendment for the AUX event group fix
+   Change AUX event group fix as suggested by Ian
 
 
-Thanks,
-Jing
+Adrian Hunter (2):
+      perf test: test_intel_pt.sh: Test sample mode with named PMU
+      perf parse-events: Do not break up AUX event group
+
+ tools/perf/tests/shell/test_intel_pt.sh | 7 +++++++
+ tools/perf/util/evsel.c                 | 9 +++------
+ 2 files changed, 10 insertions(+), 6 deletions(-)
+
+
+Regards
+Adrian
