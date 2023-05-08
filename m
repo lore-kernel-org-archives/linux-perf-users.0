@@ -2,160 +2,170 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A09C7EE22
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 01:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DC0CC77B7D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 01:59:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232487AbjEHBfH (ORCPT
+        id S232203AbjEHB7P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 7 May 2023 21:35:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45594 "EHLO
+        Sun, 7 May 2023 21:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232461AbjEHBfG (ORCPT
+        with ESMTP id S232193AbjEHB7N (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 7 May 2023 21:35:06 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FE7B6A6D;
-        Sun,  7 May 2023 18:35:05 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-52c6f81193cso2697372a12.1;
-        Sun, 07 May 2023 18:35:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683509705; x=1686101705;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HU/mjP7Ap3TZEbMspJ2h6V5QMnaNP2Fmf0Z6DZ7aqHE=;
-        b=L14pxpyy1Yc8+HiewNaTQb+1joh8hYSOP3/eSCWmsTMJDnd6785STORT8kwjkGo2Se
-         0i8+WagpXa8hJmR6t/LT7/sRKpmf+/KhkH0cbQcr2O6uaSzqM3ZscCvvnujixJA1Ohtz
-         +TDocKRxq9Z7oFDz3JTmqk+qGJoW7sLBtQtnhjtT1o4Jbh/kSUAEi1DayHu/qBKsz9g0
-         OpLBg/55IJVmGITHmhJsf02wK5FPOZWzon9TAgZuxFxmSXGX2tWCWkv+4B/RWRpA1i4X
-         sWQkpWNXRRqS1ceEPdkUmdpxnwjVOPZRPR/xEDB1D4aX3s85+ine5OJy93J2i3tU985P
-         Pejg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683509705; x=1686101705;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HU/mjP7Ap3TZEbMspJ2h6V5QMnaNP2Fmf0Z6DZ7aqHE=;
-        b=Ys/t9LjWq1idt0eml2xy1FTL9FrWKUGUIuIwDfQDHw44BptST341e71uPqysCe/Uqs
-         pDF/YF3wjKkLeHtYhyzQA2VGGKk8NoT3XS4Gs1Cvwd5PCznfVIyUB/oRzCxwTO20iqFv
-         DoTYPn4sCVChKtt/m0I7sRNMO3DKJEzMnCVWrGadxUibqFgx1fGp2eC2ssRFI3SFvl9X
-         oruJN+MBlCjc9aq9oFMWiQmfc1tK4hZMUNeEmvnuMQwlJoDUdZn3m+U8tfX78dfpWMA9
-         uau4+h38qPuAViUjf9FK/ocG2gp+AryezQdk+KKDNzABYl3JUXB2sdBH6ahfPScLvZop
-         CDMw==
-X-Gm-Message-State: AC+VfDxGj7mS1cil6Rq3V1zBQYCpA0U20UJzJmmef8FMNksSr4AjSmNN
-        D78YdSbz3MtmqC+3wkwe97Y=
-X-Google-Smtp-Source: ACHHUZ7wpMgBNBiHQoh+RV3/6p2Xa+RAutLvbhq2Sce/KNFSy1fHPppI+Mwi880EABIulXrieqwNrA==
-X-Received: by 2002:a17:90b:19ce:b0:24e:1177:f467 with SMTP id nm14-20020a17090b19ce00b0024e1177f467mr9325645pjb.12.1683509704923;
-        Sun, 07 May 2023 18:35:04 -0700 (PDT)
-Received: from localhost (58-6-235-78.tpgi.com.au. [58.6.235.78])
-        by smtp.gmail.com with ESMTPSA id n14-20020a170902968e00b001a4edbabad3sm5814967plp.230.2023.05.07.18.34.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 May 2023 18:35:04 -0700 (PDT)
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Mon, 08 May 2023 11:34:49 +1000
-Message-Id: <CSGIDMMFXIVH.3SFPYD19Y5WQX@wheely>
-To:     "Doug Anderson" <dianders@chromium.org>
-Cc:     "Petr Mladek" <pmladek@suse.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Sumit Garg" <sumit.garg@linaro.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Matthias Kaehlcke" <mka@chromium.org>,
-        "Stephane Eranian" <eranian@google.com>,
-        "Stephen Boyd" <swboyd@chromium.org>, <ricardo.neri@intel.com>,
-        "Tzung-Bi Shih" <tzungbi@chromium.org>,
-        "Lecopzer Chen" <lecopzer.chen@mediatek.com>,
-        <kgdb-bugreport@lists.sourceforge.net>,
-        "Masayoshi Mizuma" <msys.mizuma@gmail.com>,
-        "Guenter Roeck" <groeck@chromium.org>,
-        "Pingfan Liu" <kernelfans@gmail.com>,
-        "Andi Kleen" <ak@linux.intel.com>,
-        "Ian Rogers" <irogers@google.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>, <ito-yuichi@fujitsu.com>,
-        "Randy Dunlap" <rdunlap@infradead.org>,
-        "Chen-Yu Tsai" <wens@csie.org>, <christophe.leroy@csgroup.eu>,
-        <davem@davemloft.net>, <sparclinux@vger.kernel.org>,
-        <mpe@ellerman.id.au>, "Will Deacon" <will@kernel.org>,
-        <ravi.v.shankar@intel.com>, <linuxppc-dev@lists.ozlabs.org>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Daniel Thompson" <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v4 05/17] watchdog/hardlockup: Rename
- touch_nmi_watchdog() to touch_hardlockup_watchdog()
-From:   "Nicholas Piggin" <npiggin@gmail.com>
-X-Mailer: aerc 0.14.0
-References: <20230504221349.1535669-1-dianders@chromium.org>
- <20230504151100.v4.5.I4e47cbfa1bb2ebbcdb5ca16817aa2887f15dc82c@changeid>
- <CSE04EI159N2.2TSXHBN2QLFCM@wheely>
- <CAD=FV=XXzo3m2dqwtNST+uXGQz6NW_e-B6-tWkJMrHoCTZBT9Q@mail.gmail.com>
-In-Reply-To: <CAD=FV=XXzo3m2dqwtNST+uXGQz6NW_e-B6-tWkJMrHoCTZBT9Q@mail.gmail.com>
+        Sun, 7 May 2023 21:59:13 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097AEA5DF;
+        Sun,  7 May 2023 18:59:11 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QF49c1kzszpStJ;
+        Mon,  8 May 2023 09:55:00 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Mon, 8 May 2023 09:59:08 +0800
+Subject: Re: [PATCH v3] perf/core: Fix perf_sample_data not properly
+ initialized for different swevents in perf_tp_event()
+To:     <peterz@infradead.org>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230425103217.130600-1-yangjihong1@huawei.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+CC:     <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>
+Message-ID: <9ae47526-8d40-dcd7-4fef-199b8605bfe9@huawei.com>
+Date:   Mon, 8 May 2023 09:59:07 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
+MIME-Version: 1.0
+In-Reply-To: <20230425103217.130600-1-yangjihong1@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat May 6, 2023 at 2:37 AM AEST, Doug Anderson wrote:
-> Hi,
->
-> On Thu, May 4, 2023 at 7:51=E2=80=AFPM Nicholas Piggin <npiggin@gmail.com=
-> wrote:
-> >
-> > On Fri May 5, 2023 at 8:13 AM AEST, Douglas Anderson wrote:
-> > > In preparation for the buddy hardlockup detector, rename
-> > > touch_nmi_watchdog() to touch_hardlockup_watchdog() to make it clear
-> > > that it will touch whatever hardlockup detector is configured. We'll
-> > > add a #define for the old name (touch_nmi_watchdog) so that we don't
-> > > have to touch every piece of code referring to the old name.
-> >
-> > Is this really helpful? Now it's got two names Could just leave it.
-> > If you insist then it'd be better just to rename everything in one
-> > go at the end of a merge window IMO. Conflicts would be trivial.
->
-> I'm not picky here. I changed the name since Petr requested names to
-> be changed for any code I was touching [1] and so I threw this out as
-> a proposal. I agree that having two names can be confusing, but in
-> this case it didn't feel too terrible to me.
->
-> I'd love to hear Petr's opinion on this name change. I'm happy with:
->
-> a) This patch as it is.
->
-> b) Dropping this patch (or perhaps just changing it to add comments).
->
-> c) Changing this patch to rename all 70 uses of the old name. Assuming
-> this will go through Andrew Morton's tree, I'd be interested in
-> whether he's OK w/ this.
->
-> d) Dropping this patch from this series but putting it on the
-> backburner to try to do later (so that the rename can happen at a time
-> when it's least disruptive).
->
->
-> > > Ideally this change would also rename the arch_touch_nmi_watchdog(),
-> > > but that is harder since arch_touch_nmi_watchdog() is exported with
-> > > EXPORT_SYMBOL() and thus is ABI. Add a comment next to the call to
-> > > hopefully alleviate some of the confusion here.
-> >
-> > We don't keep ABI fixed upstream.
->
-> I'm happy to be corrected, but my understanding was that kernel devs
-> made an effort not to mess with things exported via "EXPORT_SYMBOL",
-> but things exported via "EXPORT_SYMBOL_GPL" were fair game.
+Hello, Peter
 
-I don't think that's the case. If anything people might be a bit more
-inclined to accommodate GPL exports for out of tree modules that use
-them.
+PING.
 
-> I guess maybe my patch calling it "ABI" is a stronger statement than
-> that, though. Doing a little more research, nobody wants to say that
-> things exported with "EXPORT_SYMBOL" are ABI, they just want to say
-> that we make an effort to have them be more stable.
+As shown in Link [1] report, data->raw->frag.data may be accessed in 
+perf_tp_event_match().
+we may need to init sample_data and then go through swevent hlist to 
+prevent reference of NULL pointer.
 
-We wouldn't break any symbol for no reason, but in this case there is a
-good reason. If the name change is important for clarity then we change
-it. And this is about the easiest change for an out of tree module to
-deal with, so it should be no big deal for them.
+Please check whether the solution is OK.
+
+[1] Link: 
+https://lore.kernel.org/oe-lkp/202304250929.efef2caa-yujie.liu@intel.com
 
 Thanks,
-Nick
+Yang
+
+On 2023/4/25 18:32, Yang Jihong wrote:
+> data->sample_flags may be modified in perf_prepare_sample(),
+> in perf_tp_event(), different swevents use the same on-stack
+> perf_sample_data, the previous swevent may change sample_flags in
+> perf_prepare_sample(), as a result, some members of perf_sample_data are
+> not correctly initialized when next swevent_event preparing sample
+> (for example data->id, the value varies according to swevent).
+> 
+> A simple scenario triggers this problem is as follows:
+> 
+>    # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
+>    [ perf record: dump data: Woken up 0 times ]
+>    [ perf record: Dump perf.data.2023041209014396 ]
+>    [ perf record: dump data: Woken up 0 times ]
+>    [ perf record: Dump perf.data.2023041209014662 ]
+>    [ perf record: dump data: Woken up 0 times ]
+>    [ perf record: Dump perf.data.2023041209014910 ]
+>    [ perf record: Woken up 0 times to write data ]
+>    [ perf record: Dump perf.data.2023041209015164 ]
+>    [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
+>    # ls -l
+>    total 860
+>    -rw------- 1 root root  95694 Apr 12 09:01 perf.data.2023041209014396
+>    -rw------- 1 root root 606430 Apr 12 09:01 perf.data.2023041209014662
+>    -rw------- 1 root root  82246 Apr 12 09:01 perf.data.2023041209014910
+>    -rw------- 1 root root  82342 Apr 12 09:01 perf.data.2023041209015164
+>    # perf script -i perf.data.2023041209014396
+>    0x11d58 [0x80]: failed to process type: 9 [Bad address]
+> 
+> Solution: Re-initialize perf_sample_data after each event is processed.
+> Note that data->raw->frag.data may be accessed in perf_tp_event_match().
+> Therefore, need to init sample_data and then go through swevent hlist to prevent
+> reference of NULL pointer, reported by [1].
+> 
+> After fix:
+> 
+>    # perf record -e sched:sched_switch --switch-output-event sched:sched_switch -a sleep 1
+>    [ perf record: dump data: Woken up 0 times ]
+>    [ perf record: Dump perf.data.2023041209442259 ]
+>    [ perf record: dump data: Woken up 0 times ]
+>    [ perf record: Dump perf.data.2023041209442514 ]
+>    [ perf record: dump data: Woken up 0 times ]
+>    [ perf record: Dump perf.data.2023041209442760 ]
+>    [ perf record: Woken up 0 times to write data ]
+>    [ perf record: Dump perf.data.2023041209443003 ]
+>    [ perf record: Captured and wrote 0.069 MB perf.data.<timestamp> ]
+>    # ls -l
+>    total 864
+>    -rw------- 1 root root 100166 Apr 12 09:44 perf.data.2023041209442259
+>    -rw------- 1 root root 606438 Apr 12 09:44 perf.data.2023041209442514
+>    -rw------- 1 root root  82246 Apr 12 09:44 perf.data.2023041209442760
+>    -rw------- 1 root root  82342 Apr 12 09:44 perf.data.2023041209443003
+>    # perf script -i perf.data.2023041209442259 | head -n 5
+>                perf   232 [000]    66.846217: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=D ==> next_comm=perf next_pid=234 next_prio=120
+>                perf   234 [000]    66.846449: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
+>                perf   232 [000]    66.846546: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
+>                perf   234 [000]    66.846606: sched:sched_switch: prev_comm=perf prev_pid=234 prev_prio=120 prev_state=S ==> next_comm=perf next_pid=232 next_prio=120
+>                perf   232 [000]    66.846646: sched:sched_switch: prev_comm=perf prev_pid=232 prev_prio=120 prev_state=R ==> next_comm=perf next_pid=234 next_prio=120
+> 
+> [1] Link: https://lore.kernel.org/oe-lkp/202304250929.efef2caa-yujie.liu@intel.com
+> 
+> Fixes: bb447c27a467 ("perf/core: Set data->sample_flags in perf_prepare_sample()")
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+> 
+> Changes since v2:
+>   - Initialize perf_sample_data before go through the swevent hlist.
+>   - Re-initialize perf_sample_data after each swevent is processed.
+> 
+> Changes since v1:
+>   - Re-initialize the entire perf_sample_data before processing each swevent.
+> 
+>   kernel/events/core.c | 14 +++++++++++++-
+>   1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 435815d3be3f..753d4e9665b6 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10150,8 +10150,20 @@ void perf_tp_event(u16 event_type, u64 count, void *record, int entry_size,
+>   	perf_trace_buf_update(record, event_type);
+>   
+>   	hlist_for_each_entry_rcu(event, head, hlist_entry) {
+> -		if (perf_tp_event_match(event, &data, regs))
+> +		if (perf_tp_event_match(event, &data, regs)) {
+>   			perf_swevent_event(event, count, &data, regs);
+> +
+> +			/*
+> +			 * Here use the same on-stack perf_sample_data,
+> +			 * some members in data are event-specific and
+> +			 * need to be re-computed for different sweveents.
+> +			 * Re-initialize data->sample_flags safely to avoid
+> +			 * the problem that next event skips preparing data
+> +			 * because data->sample_flags is set.
+> +			 */
+> +			perf_sample_data_init(&data, 0, 0);
+> +			perf_sample_save_raw_data(&data, &raw);
+> +		}
+>   	}
+>   
+>   	/*
+> 
