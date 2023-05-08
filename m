@@ -2,217 +2,175 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AF3C77B7F
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 12:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D01C77B7F
+	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 15:53:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232881AbjEHMbm (ORCPT
+        id S234597AbjEHPxE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 May 2023 08:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60250 "EHLO
+        Mon, 8 May 2023 11:53:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234029AbjEHMbl (ORCPT
+        with ESMTP id S234662AbjEHPxB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 May 2023 08:31:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFC339BBE
-        for <linux-perf-users@vger.kernel.org>; Mon,  8 May 2023 05:30:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683549043;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4ahk7pg9sIQ0xJg4E79SX5MEbsNWbDbb49YKqgeiO0s=;
-        b=VSBtWlTSjKJ6/FJzTjlamJpWHR18cNvCTtIugdtF7GBbhsVQz4x8MbXJtQmGrLm7rwDeW1
-        3loM5khfIpFlL3bLk8UMmSgLhRS4YSeQajwIPSfrA9RXBprrDcUeJAD0zvDjUgUGklfLTI
-        ZUfzaeps99DJ0EcjNrMFUNROJ7qjomY=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-594-LFuBPU4aPFCiVjqflHWa3Q-1; Mon, 08 May 2023 08:30:42 -0400
-X-MC-Unique: LFuBPU4aPFCiVjqflHWa3Q-1
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-24e2b3c19e0so2282218a91.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 May 2023 05:30:41 -0700 (PDT)
+        Mon, 8 May 2023 11:53:01 -0400
+Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C1F6A74
+        for <linux-perf-users@vger.kernel.org>; Mon,  8 May 2023 08:52:53 -0700 (PDT)
+Received: by mail-qv1-xf36.google.com with SMTP id 6a1803df08f44-61b6101a166so22972986d6.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 May 2023 08:52:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1683561172; x=1686153172;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7an4MsU+A1D/BiDTLfn7jyyo8mReHeEE9qn6uLYEhzQ=;
+        b=iev3QowJREAXZwKMJICO1a0zso2V9KUeFQ4vy/ejLkNpxaVxWp8A3fWhXxtjPv3HoS
+         COXG1eyx4OodhQbKYeN3Iaky3jOuEFObCpnGIL5TU/RlDbZtrO8s8KRjFUAoGuVh9Fp6
+         twFcD8XhAJF7/EkslM+xS9/68RNhljZ7fb0eg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683549040; x=1686141040;
+        d=1e100.net; s=20221208; t=1683561172; x=1686153172;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4ahk7pg9sIQ0xJg4E79SX5MEbsNWbDbb49YKqgeiO0s=;
-        b=jQBx15JiyctxpXAE6DAsuSBISUcOGToQPZRLRmrdFNlVR5MM9qYDpu+EVHz9a0yNPL
-         3GL1EC3oAch10nRuxyRJTmiY9nQCUenJztTn5EtJ9bDdLDS0wlxpUNTlqWC+/yralV5b
-         79rzALV2bRsEcIMMJc6VqlzVivXdoavJQXXKXRI/kN2b9tIeQTmm4FIaclKhWj+8YTed
-         ogIAk6RNRikLQfxgUhFdiuLkdBa5czwx4IczQIPwFZ73rO1XYxU8f91JrkFI8snJO/lY
-         jJAu0NeONxSRjOq3OCfr70BzlnJWPIAVfkNBfIqZdH+D5iwVKr/JO6GrdYU42KzIiZgs
-         HOvg==
-X-Gm-Message-State: AC+VfDz+Gq6YNOY1ibIcNLZkG4in+g7MdndbxBvoiETuBMA9NtT8bIju
-        uCATWPcw8hs3IfnSnHIZpEwX95SEps3ofjHpNPcTNbAUmzHq7pFZfnB/Hebsw8jzUjkYil54Kbt
-        MJpza9FD5Q/XZBkollS0wZRLcbRcWK/DE2xtld0CrTijUaA==
-X-Received: by 2002:a17:90a:6688:b0:24e:69d:3470 with SMTP id m8-20020a17090a668800b0024e069d3470mr10502280pjj.8.1683549040424;
-        Mon, 08 May 2023 05:30:40 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5Di0lnN5kaZRDIBsskfBRlXT6qGyYKG5AlhJpf+4qjePW6fIzgMr5duhXeS1+pHa4JeeUf4lDXPuvmKhy2lnE=
-X-Received: by 2002:a17:90a:6688:b0:24e:69d:3470 with SMTP id
- m8-20020a17090a668800b0024e069d3470mr10502226pjj.8.1683549040066; Mon, 08 May
- 2023 05:30:40 -0700 (PDT)
+        bh=7an4MsU+A1D/BiDTLfn7jyyo8mReHeEE9qn6uLYEhzQ=;
+        b=kPD39FMHudyn0tm+coBySyytNtiraTqmjnqS1UsAiVVuP0RU2v9IRAEfKk0crc4juH
+         QU0lUAMYLUNP2uJ0c9zBxKpxN2pdMKIoVpuCSStRTwP1cIqU23VrodvJqhjH5FUSTBDi
+         s3xmXQ3AtDkAuPtQJG6wRJtVweR0PjG3V+IpsrLFTd5XcXY+HRyRlkdQ9ToqEn8DNdyc
+         whPifOGcltwvlR78jXzU/r06yYvtBe3+Hhed8gotu1v2CBXCKScEpC/eV3DIyZxov9MU
+         BNtn5YLVWLvuS+CZAzTw3shkFOUqrE3Cob4Z9eWVyhlev5urk00Rh/qvGIdbgARjdDk9
+         d37w==
+X-Gm-Message-State: AC+VfDw3Zi8fjky6l+Jv1nJR4EXmU6NIp/M0UEIs4KI4rShlmrZQ3pND
+        pjBiExSG0LUN3zFV+uOiovCtuvD/HiXQo+4goGo=
+X-Google-Smtp-Source: ACHHUZ4iZIwd60RnyKLrd3wyp88i2WyxDxMpQtOI0fix1l2vCVJ1XBSYR7UqfIuE/ukoqeI4RK6EOw==
+X-Received: by 2002:ad4:5761:0:b0:56a:d94d:6deb with SMTP id r1-20020ad45761000000b0056ad94d6debmr19266888qvx.25.1683561171305;
+        Mon, 08 May 2023 08:52:51 -0700 (PDT)
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com. [209.85.160.172])
+        by smtp.gmail.com with ESMTPSA id ph1-20020a0562144a4100b005ed90bf69efsm54252qvb.114.2023.05.08.08.52.47
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 May 2023 08:52:47 -0700 (PDT)
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-3ef34c49cb9so1485071cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 May 2023 08:52:47 -0700 (PDT)
+X-Received: by 2002:ac8:57c9:0:b0:3ef:3083:a437 with SMTP id
+ w9-20020ac857c9000000b003ef3083a437mr518031qta.18.1683561166909; Mon, 08 May
+ 2023 08:52:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230425114307.36889-1-wander@redhat.com> <20230425114307.36889-3-wander@redhat.com>
- <20230504084229.GI1734100@hirez.programming.kicks-ass.net>
- <20230504122945.GA28757@redhat.com> <20230504143303.GA1744142@hirez.programming.kicks-ass.net>
- <CAAq0SUmYrQbS1k9NNKGQP7hQRQJ308dk9NCiUimEiLeBJUavgA@mail.gmail.com>
- <20230504152306.GA1135@redhat.com> <CAAq0SU=G0WQBLP77Wgm8MJRcVwUCj25WOowh_X8jiGiHTKAQEA@mail.gmail.com>
- <20230504192246.GA4164@redhat.com> <CAAq0SUkJ40OeS3cRzhK3voGquJ1AFahYoyQ1fgWS+N=DkOQpig@mail.gmail.com>
- <20230504201614.GB4164@redhat.com>
-In-Reply-To: <20230504201614.GB4164@redhat.com>
-From:   Wander Lairson Costa <wander@redhat.com>
-Date:   Mon, 8 May 2023 09:30:28 -0300
-Message-ID: <CAAq0SUk5kSx0vr+OvxG3sm_XArnFm3GZWz0kec8nigZHLo-rZQ@mail.gmail.com>
-Subject: Re: [PATCH v7 2/3] sched/task: Add the put_task_struct_atomic_safe() function
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Brian Cain <bcain@quicinc.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
+References: <20230504221349.1535669-1-dianders@chromium.org>
+ <20230504151100.v4.13.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
+ <CSDZSKA38AEF.FY7J3JXBJX4I@wheely> <CAD=FV=XDfbx3UaP7DV63tASE5Md7siS-EnORD_3T-4yYaEQ7ww@mail.gmail.com>
+ <CSGHQJAJHWVS.1UAJOF8P5UXSK@wheely>
+In-Reply-To: <CSGHQJAJHWVS.1UAJOF8P5UXSK@wheely>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 8 May 2023 08:52:35 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WEp23wDm2=cFO66uSjqw1UfYSczGSrQh32DGiqHnUDkg@mail.gmail.com>
+Message-ID: <CAD=FV=WEp23wDm2=cFO66uSjqw1UfYSczGSrQh32DGiqHnUDkg@mail.gmail.com>
+Subject: Re: [PATCH v4 13/17] watchdog/hardlockup: detect hard lockups using
+ secondary (buddy) CPUs
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christian Brauner <brauner@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>, Hu Chunyu <chuhu@redhat.com>,
-        Paul McKenney <paulmck@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+        Sumit Garg <sumit.garg@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephane Eranian <eranian@google.com>,
+        Stephen Boyd <swboyd@chromium.org>, ricardo.neri@intel.com,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Chen-Yu Tsai <wens@csie.org>, christophe.leroy@csgroup.eu,
+        davem@davemloft.net, sparclinux@vger.kernel.org,
+        mpe@ellerman.id.au, Will Deacon <will@kernel.org>,
+        ravi.v.shankar@intel.com, linuxppc-dev@lists.ozlabs.org,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Colin Cross <ccross@android.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 4, 2023 at 5:16=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wrot=
-e:
->
-> Hi Wander,
->
-> I certainly missed something ;) plus I am already sleeping. but let me tr=
-y to
-> reply anyway.
->
-> On 05/04, Wander Lairson Costa wrote:
-> > On Thu, May 4, 2023 at 4:23=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> =
+Hi,
+
+On Sun, May 7, 2023 at 6:05=E2=80=AFPM Nicholas Piggin <npiggin@gmail.com> =
 wrote:
-> > >
-> > > On 05/04, Wander Lairson Costa wrote:
-> > > >
-> > > > On Thu, May 4, 2023 at 12:23=E2=80=AFPM Oleg Nesterov <oleg@redhat.=
-com> wrote:
-> > > > >
-> > > > > Yes, but as Sebastian explained CONFIG_PROVE_RAW_LOCK_NESTING won=
-'t like it.
-> > > > >
-> > > > >         https://lore.kernel.org/all/Y+zFNrCjBn53%2F+Q2@linutronix=
-.de/
-> > > > >
-> > > >
-> > > > I think that was my confusion in that thread. My understanding is t=
-hat
-> > > > CONFIG_PROVE_RAW_LOCK_NESTING will check lock ordering but not
-> > > > context.
-> > >
-> > > Sorry, I don't understand... perhaps I missed something. But iiuc
-> > > the problem is simple.
-> > >
-> > > So, this code
-> > >
-> > >         raw_spin_lock(one);
-> > >         spin_lock(two);
-> > >
-> > > is obviously wrong if CONFIG_PREEMPT_RT.
-> > >
-> > > Without PREEMPT_RT this code is fine because raw_spinlock_t and spinl=
-ock_t
-> > > are the same thing. Except they have different lockdep annotations if
-> > > CONFIG_PROVE_RAW_LOCK_NESTING is true, LD_WAIT_SPIN and LD_WAIT_CONFI=
-G.
-> > >
-> > > So if CONFIG_PROVE_RAW_LOCK_NESTING is set, lockdep will complain eve=
-n
-> > > on the !PREEMPT_RT kernel, iow it checks the nesting as if the code r=
-uns
-> > > on with PREEMPT_RT.
-> > >
-> > > Cough... not sure my explanation can help ;) It looks very confusing =
-when
-> > > I read it.
-> > >
+>
+> > No, I wasn't aware of it. Interesting, it seems to basically enable
+> > both types of hardlockup detectors together. If that really catches
+> > more lockups, it seems like we could do the same thing for the buddy
+> > system.
+>
+> It doesn't catch more lockups. On powerpc we don't have a reliable
+> periodic NMI hence the SMP checker. But it is preferable that a CPU
+> detects its own lockup because NMI IPIs can result in crashes if
+> they are taken in certain critical sections.
+
+Ah, interesting. Is the fact that NMI IPIs can crash the system
+something specific to the way they're implemented in powerpc, or is
+this something common in Linux? I've been assuming that IPI NMIs would
+be roughly as reliable (or perhaps more reliable) than the NMI
+timer/perf counter.
+
+
+> > > It's all to
+> > > all rather than buddy which makes it more complicated but arguably
+> > > bit better functionality.
 > >
-> > Thanks for the explanation. That's my understanding too. The part I
-> > don't get is why this would fail with a call_rcu() inside
-> > put_task_struct().
+> > Can you come up with an example crash where the "all to all" would
+> > work better than the simple buddy system provided by this patch?
 >
-> the problem is that call_rcu() won't be called if !IS_ENABLED(PREEMPT_RT)=
-,
-> ___put_task_struct() will be called.
+> CPU2                     CPU3
+> spin_lock_irqsave(A)     spin_lock_irqsave(B)
+> spin_lock_irqsave(B)     spin_lock_irqsave(A)
 >
-> CONFIG_PROVE_RAW_LOCK_NESTING can't know this can't happen if PREEMPT_RT
-> is set.
->
-> IOW. To simplify, suppose we have
->
->         // can be called in atomic context, e.g. under
->         // raw_spin_lock() so it is wrong with PREEMPT_RT
->         void __put_task_struct(struct task_struct *tsk)
->         {
->                 spin_lock(some_lock);
->         }
->
-> lets "fix" the code above, lets change __put_task_struct,
->
->         void __put_task_struct(struct task_struct *tsk)
->         {
->                 if (!IS_ENABLED(CONFIG_PREEMPT_RT))
->                         return;
->
->                 spin_lock(some_lock);
->         }
->
-> Now, if CONFIG_PREEMPT_RT is true then __put_task_struct() is fine
-> wrt lock nesting.
->
-> But, if CONFIG_PREEMPT_RT is not set, then __put_task_struct() still
-> does the same:
->
->         void __put_task_struct(struct task_struct *tsk)
->         {
->                 spin_lock(some_lock);
->         }
->
-> and CONFIG_PROVE_RAW_LOCK_NESTING will complain. Because, once again,
-> it checks the nesting as if CONFIG_PREEMPT_RT is true, and in this case
-> __put_task_struct() if it is called under raw_spin_lock().
->
+> CPU1 will detect the lockup on CPU2, but CPU3's lockup won't be
+> detected so we don't get the trace that can diagnose the bug.
 
-IIUC, this is a problem with the current implementation, isn't it?
-Because the holder of raw_spin_lock is the put_task_struct() caller.
+Ah, that makes sense as a benefit if
+"sysctl_hardlockup_all_cpu_backtrace" is false, which you'd probably
+want if you had massively SMP systems. ...of course, if you had a lot
+of cores then I'd imagine the "all-to-all" might become a lot of
+overhead...
 
-> Oleg.
->
+Hmmm, but I don't think you really need "all-to-all" checking to get
+the stacktraces you want, do you? Each CPU can be "watching" exactly
+one other CPU, but then when we actually lock up we could check all of
+them and dump stacks on all the ones that are locked up. I think this
+would be a fairly easy improvement for the buddy system. I'll leave it
+out for now just to keep things simple for the initial landing, but it
+wouldn't be hard to add. Then I think the two SMP systems  (buddy vs.
+all-to-all) would be equivalent in terms of functionality?
 
+
+Thinking about this more, I guess you must be assuming coordination
+between the "SMP" and "non-SMP" checker. Specifically I guess you'd
+want some guarantee that the "SMP" checker always fires before the
+non-SMP checker because that would have a higher chance of getting a
+stack trace without tickling the IPI NMI crash. ...but then once the
+non-SMP checker printed its own stack trace you'd like the SMP checker
+running on the same CPU to check to see if any other CPUs were locked
+up so you could get their stacks as well. With my simplistic solution
+of just allowing the buddy detector to be enabled in parallel with a
+perf-based detector then we wouldn't have this level of coordination,
+but I'll assume that's OK for the initial landing.
+
+
+> Another thing I actually found it useful for is you can easily
+> see if a core (i.e., all threads in the core) or a chip has
+> died. Maybe more useful when doing presilicon and bring up work
+> or firmware hacking, but still useful.
+
+I'm probably biased, but for bringup work and stuff like this I
+usually have kdb/kgdb enabled and then I could get stack traces for
+whichever CPUs I want. :-P
+
+-Doug
