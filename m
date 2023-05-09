@@ -2,77 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E48D6C77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 May 2023 18:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF3CC7EE22
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 May 2023 18:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbjEISQk (ORCPT
+        id S234786AbjEISVw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 May 2023 14:16:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43338 "EHLO
+        Tue, 9 May 2023 14:21:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229543AbjEISQk (ORCPT
+        with ESMTP id S234627AbjEISVr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 May 2023 14:16:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79252120;
-        Tue,  9 May 2023 11:16:39 -0700 (PDT)
+        Tue, 9 May 2023 14:21:47 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA365FEF;
+        Tue,  9 May 2023 11:21:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1066263638;
-        Tue,  9 May 2023 18:16:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04921C433EF;
-        Tue,  9 May 2023 18:16:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C9E9647A6;
+        Tue,  9 May 2023 18:21:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B1E4C4339B;
+        Tue,  9 May 2023 18:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683656198;
-        bh=jfcOfENDXVo1zvtGdJGG+4yuDzgrOfrlQMEP4qdEXh4=;
+        s=k20201202; t=1683656492;
+        bh=p9LFEEvugQN4++dg+fFPMCKLX5fbDpBS5vLiqTGWuAw=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fhs00o+RG1r5a6r5BnnkBobooevjXBIMZW+Eh7OIzQboi9Q+PqpKnAM9vDmfKFFqc
-         m3I1neHHeUuaDYjuyrQ8dgpg1qUKxTBNF27KArWKIZZLsJActk0us99JLQUhHk3KHi
-         BPVyvzK7ZR2IRjCjSnrqy6P/442ZQzqswtCHb1ADc9ZCrgtyfyKlePGP55Tne14dQu
-         jZ2bbDeiLkKTiBa/45R8T9RiHcruXU30cKEIwBIQ3QDpQcnpvQXZ2SKNFVe6CX2mLC
-         z+briRaH/kFMsX4rfYMsfolu1zXtv34ge94D0WBfDIL65R1Z8pP/I/QuJ5cqNA/3d7
-         IzZh5/jCqShWg==
+        b=BSPiyVS/u4Dh6cFjjlZoWUokqgfgqlhpWfvp1WyYZZ9bX7gmUBIXRhylO7TtjeG2v
+         Wq7JWpRd/tLwmfFjIhFexYdTJ70QbbQNt8jJYD2mGVXVRdXZYXXmx8AltjwOnMlCrC
+         7+MKYBGJx4KObTNwfbb74iiEnheGOwraTe/Ujj0bOFLOSUxA96yRLC3qarTMATE2+a
+         zUXE+fpzF6lyp+u1bOOclxnGBtb7PNQCOBli/a76mestdMsokB+0VGZHKEm9mYEb7u
+         7OHywAhXmZ5Kr9a6bDBgsH1qPZNv9YN2SIbvMDYrL+Szi38uWvsiw2LHNBKqiw0L6j
+         q/53SlojreDaw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9E46F403B5; Tue,  9 May 2023 15:16:35 -0300 (-03)
-Date:   Tue, 9 May 2023 15:16:35 -0300
+        id E5A4F403B5; Tue,  9 May 2023 15:21:29 -0300 (-03)
+Date:   Tue, 9 May 2023 15:21:29 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        leo.yan@linaro.org, svens@linux.ibm.com, gor@linux.ibm.com,
-        sumanthk@linux.ibm.com, hca@linux.ibm.com
-Subject: Re: [PATCH] perf/test: reduce run time of perf test Test java symbol
-Message-ID: <ZFqOAwM2mgvnExnC@kernel.org>
-References: <20230509131847.835974-1-tmricht@linux.ibm.com>
- <CAP-5=fVC1bAMk5gOGSXi0sHdetdLHGT2tqW43dxTTyJ3jRz8QA@mail.gmail.com>
- <ZFqMsjJg00zmQyJG@kernel.org>
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf bpf skels: vmlinux.h uses bpf.h and perf_event.h in
+ the source directory
+Message-ID: <ZFqPKU0p73sMb+IG@kernel.org>
+References: <20230509063649.239942-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZFqMsjJg00zmQyJG@kernel.org>
+In-Reply-To: <20230509063649.239942-1-yangjihong1@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, May 09, 2023 at 03:10:58PM -0300, Arnaldo Carvalho de Melo escreveu:
-> > On Tue, May 9, 2023 at 6:19 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
-> > > -if ! perf inject -i $PERF_DATA -o $PERF_INJ_DATA -j; then
-> > > +if ! DEBUGINFOD_URLS='' perf inject -i $PERF_DATA -o $PERF_INJ_DATA -j; then
- 
-> I noticed this delay, It is good that someone worked on rootcausing this
-> excessive delay, thanks Thomas.
+Em Tue, May 09, 2023 at 06:36:49AM +0000, Yang Jihong escreveu:
+> Currently, vmlinux.h uses the bpf.h and perf_event.h header files in the
+> system path. If the header files in compilation environment are old,
+> compilation may fail. For example:
 > 
-> I'll test it now.
+>   /home/yangjihong/linux/tools/perf/util/bpf_skel/.tmp/../vmlinux.h:151:27: error: field has incomplete type 'union perf_sample_weight'
+>           union perf_sample_weight weight;
 
-gdb asks the user if debuginfod should be used, perf is doing this if
-the system is configured for debuginfod queries via a systemwide config,
-what is best? Unsure, but since the test passes, i.e. the expected
-symbols are found in the 'perf report' output, avoiding debuginfod
-queries seems to fit the bill,
 
-Applied,
+Can this be solved in the Makefile directives for building BPF targets?
+
+- Arnaldo
+ 
+> Use the bpf.h and perf_event.h files in the source code directory to
+> avoid compilation compatibility problems.
+> 
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  tools/perf/util/bpf_skel/vmlinux.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/bpf_skel/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux.h
+> index 449b1ea91fc4..af79bcc4c4b7 100644
+> --- a/tools/perf/util/bpf_skel/vmlinux.h
+> +++ b/tools/perf/util/bpf_skel/vmlinux.h
+> @@ -1,11 +1,13 @@
+>  #ifndef __VMLINUX_H
+>  #define __VMLINUX_H
+>  
+> -#include <linux/bpf.h>
+>  #include <linux/types.h>
+> -#include <linux/perf_event.h>
+>  #include <stdbool.h>
+>  
+> +// Use header files in source directory to avoid compilation compatibility problems.
+> +#include "../../../include/uapi/linux/perf_event.h"
+> +#include "../../../include/uapi/linux/bpf.h"
+> +
+>  // non-UAPI kernel data structures, used in the .bpf.c BPF tool component.
+>  
+>  // Just the fields used in these tools preserving the access index so that
+> -- 
+> 2.30.GIT
+> 
+
+-- 
 
 - Arnaldo
