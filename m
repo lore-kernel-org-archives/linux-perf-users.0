@@ -2,104 +2,124 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF3CC7EE22
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 May 2023 18:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F57AC77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 May 2023 18:51:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234786AbjEISVw (ORCPT
+        id S230124AbjEISvA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 May 2023 14:21:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47030 "EHLO
+        Tue, 9 May 2023 14:51:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234627AbjEISVr (ORCPT
+        with ESMTP id S229595AbjEISu7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 May 2023 14:21:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA365FEF;
-        Tue,  9 May 2023 11:21:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C9E9647A6;
-        Tue,  9 May 2023 18:21:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B1E4C4339B;
-        Tue,  9 May 2023 18:21:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683656492;
-        bh=p9LFEEvugQN4++dg+fFPMCKLX5fbDpBS5vLiqTGWuAw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BSPiyVS/u4Dh6cFjjlZoWUokqgfgqlhpWfvp1WyYZZ9bX7gmUBIXRhylO7TtjeG2v
-         Wq7JWpRd/tLwmfFjIhFexYdTJ70QbbQNt8jJYD2mGVXVRdXZYXXmx8AltjwOnMlCrC
-         7+MKYBGJx4KObTNwfbb74iiEnheGOwraTe/Ujj0bOFLOSUxA96yRLC3qarTMATE2+a
-         zUXE+fpzF6lyp+u1bOOclxnGBtb7PNQCOBli/a76mestdMsokB+0VGZHKEm9mYEb7u
-         7OHywAhXmZ5Kr9a6bDBgsH1qPZNv9YN2SIbvMDYrL+Szi38uWvsiw2LHNBKqiw0L6j
-         q/53SlojreDaw==
+        Tue, 9 May 2023 14:50:59 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7178B2D43;
+        Tue,  9 May 2023 11:50:58 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-39427327edbso170731b6e.3;
+        Tue, 09 May 2023 11:50:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683658257; x=1686250257;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cgWCiGkQTALl0i92ZMPzKhrU04PC3r9JkzGT//gCMRc=;
+        b=io46sRONIioDIH77mTLjFK+zJCHD3d3WZzrghFP51GxmNGEzI/fTJIcB+BNScSKcT1
+         b1nnmjW9FDO7IZL9N20wTx5hrUjjIVDv6MjjM+hxylUowO/3j/ClzQ4bdWO1FPHZV0mG
+         5rW43k/o+547bNy2UGFa/vua0dhkVuxSuEjjp1OM/88B9wmzm8kDj/4MTT+fHoQJFdVU
+         VVwpjbFiNSY/IbhAYDLKdFSGgm9qYhelIIMe/qQZp6PnWkqbzVG1/y2rM+uj9Zx5+mMA
+         cNWW9/zk94jS9hc4+1UFxP8j2XA7lLBzOGXQP43a5FDmys511r39fEk9D8Se4iiALO8Z
+         fJ8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683658257; x=1686250257;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cgWCiGkQTALl0i92ZMPzKhrU04PC3r9JkzGT//gCMRc=;
+        b=LbwpvuF54g/0ina7b6oag6+6w1O6cSyhUHl1KBWb7J0vyT4WMgxrwY9LMvjPagjriD
+         CtN82i4NBMPLjoPzTvXncmEZVxi/QRCWpGRCfj8alR84cPvmFHss1p5zhdHPD73bzcb4
+         iSch9YD1IO94/Zl2gtjq+0qeFT+OQQIkPOPVxYZb/u+UQXJMQisS/uLwct/maWxmeVY1
+         PS8EKuJ0qYlof12tEuV+o/vpMnu9dT359h6VDhiqQjiLAHqFbRckJRe9vwuiHq84HouH
+         7mR38VzFZ8p+Ekabx+T66xAtaUCwa6VemkirWcum584zf/t3DnRdFTbPuBlt8gIG3o3e
+         38mg==
+X-Gm-Message-State: AC+VfDyKEzP0+62+w+jKlyezsCt4avtOGT3CvRtIYMjx0cGhZjhF9wGv
+        ilG+PNtSmygTuf/06jIzgZk=
+X-Google-Smtp-Source: ACHHUZ7pef41tELahiecYFgWgFHUnXpNh17J4TSzxVy/Kkpj24nyOOszy0LvlLBabhDzp0vaeyIVRQ==
+X-Received: by 2002:a05:6808:10c:b0:38d:e097:aca1 with SMTP id b12-20020a056808010c00b0038de097aca1mr1568753oie.15.1683658257620;
+        Tue, 09 May 2023 11:50:57 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([187.19.238.117])
+        by smtp.gmail.com with ESMTPSA id i3-20020aca3b03000000b0039208555951sm1489313oia.29.2023.05.09.11.50.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 May 2023 11:50:57 -0700 (PDT)
+From:   arnaldo.melo@gmail.com
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E5A4F403B5; Tue,  9 May 2023 15:21:29 -0300 (-03)
-Date:   Tue, 9 May 2023 15:21:29 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf bpf skels: vmlinux.h uses bpf.h and perf_event.h in
- the source directory
-Message-ID: <ZFqPKU0p73sMb+IG@kernel.org>
-References: <20230509063649.239942-1-yangjihong1@huawei.com>
+        id 39D11403B5; Tue,  9 May 2023 15:50:54 -0300 (-03)
+Date:   Tue, 9 May 2023 15:50:54 -0300
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Song Liu <songliubraving@meta.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/1] perf build: Gracefully fail the build if
+ BUILD_BPF_SKEL=1 is specified and clang isn't available
+Message-ID: <ZFqWDrVhaIq5QDwo@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230509063649.239942-1-yangjihong1@huawei.com>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, May 09, 2023 at 06:36:49AM +0000, Yang Jihong escreveu:
-> Currently, vmlinux.h uses the bpf.h and perf_event.h header files in the
-> system path. If the header files in compilation environment are old,
-> compilation may fail. For example:
-> 
->   /home/yangjihong/linux/tools/perf/util/bpf_skel/.tmp/../vmlinux.h:151:27: error: field has incomplete type 'union perf_sample_weight'
->           union perf_sample_weight weight;
+Namhyung,
 
-
-Can this be solved in the Makefile directives for building BPF targets?
+	The one you acked disabled the build and emitted a warning, but
+then that was when we were trying to have BUILD_BPF_SKEL=1 as default,
+this one is for the current situation, where we need to explicitely ask
+for those features by explicitely adding BUILD_BPF_SKEL=1 to the make
+command line, I think I can keep your Acked-by, right?
 
 - Arnaldo
+
+---
+
+Build BPF skels require having a compiler able to generate BPF bytecode,
+and so far this is only possible with clang, so check for its
+availability and fail the build when the user explicitely ask for BPF
+skels to be built.
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Song Liu <songliubraving@meta.com>
+Cc: Yang Jihong <yangjihong1@huawei.com>,
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/Makefile.config | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 4884520f954f4b2a..70268442f7eeca50 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -216,6 +216,12 @@ ifeq ($(call get-executable,$(BISON)),)
+   dummy := $(error Error: $(BISON) is missing on this system, please install it)
+ endif
  
-> Use the bpf.h and perf_event.h files in the source code directory to
-> avoid compilation compatibility problems.
-> 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/util/bpf_skel/vmlinux.h | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf_skel/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux.h
-> index 449b1ea91fc4..af79bcc4c4b7 100644
-> --- a/tools/perf/util/bpf_skel/vmlinux.h
-> +++ b/tools/perf/util/bpf_skel/vmlinux.h
-> @@ -1,11 +1,13 @@
->  #ifndef __VMLINUX_H
->  #define __VMLINUX_H
->  
-> -#include <linux/bpf.h>
->  #include <linux/types.h>
-> -#include <linux/perf_event.h>
->  #include <stdbool.h>
->  
-> +// Use header files in source directory to avoid compilation compatibility problems.
-> +#include "../../../include/uapi/linux/perf_event.h"
-> +#include "../../../include/uapi/linux/bpf.h"
-> +
->  // non-UAPI kernel data structures, used in the .bpf.c BPF tool component.
->  
->  // Just the fields used in these tools preserving the access index so that
-> -- 
-> 2.30.GIT
-> 
-
++ifeq ($(BUILD_BPF_SKEL),1)
++  ifeq ($(call get-executable,$(CLANG)),)
++    dummy := $(error $(CLANG) is missing on this system, please install it to be able to build with BUILD_BPF_SKEL=1)
++  endif
++endif
++
+ ifneq ($(OUTPUT),)
+   ifeq ($(shell expr $(shell $(BISON) --version | grep bison | sed -e 's/.\+ \([0-9]\+\).\([0-9]\+\).\([0-9]\+\)/\1\2\3/g') \>\= 371), 1)
+     BISON_FILE_PREFIX_MAP := --file-prefix-map=$(OUTPUT)=
 -- 
+2.39.2
 
-- Arnaldo
