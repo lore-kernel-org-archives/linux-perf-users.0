@@ -2,172 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057B9C7EE22
-	for <linux-perf-users@archiver.kernel.org>; Mon,  8 May 2023 22:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD668C77B7F
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 May 2023 02:59:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233827AbjEHWTE (ORCPT
+        id S234032AbjEIC7D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 8 May 2023 18:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52542 "EHLO
+        Mon, 8 May 2023 22:59:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232876AbjEHWTD (ORCPT
+        with ESMTP id S232223AbjEIC7C (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 8 May 2023 18:19:03 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2B7846B3
-        for <linux-perf-users@vger.kernel.org>; Mon,  8 May 2023 15:19:01 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-3f38a9918d1so25871cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 May 2023 15:19:01 -0700 (PDT)
+        Mon, 8 May 2023 22:59:02 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19D427283
+        for <linux-perf-users@vger.kernel.org>; Mon,  8 May 2023 19:58:55 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1aaf21bb42bso37442335ad.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 08 May 2023 19:58:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683584341; x=1686176341;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jCuWEM+/+k0Hql5FRWsc3HAhfzT+UCFW3skGrNQX8f4=;
-        b=e+mULCFJup7aF/lsiFIA3sBlACIq57LfMbhbMU9KOLEGIRmmaL0VhThoYBUqmsQCoW
-         2bVUheXFY188eVOylaxzgBIEfFbyQU0rHwUJiWM91ufEOl0pjRAGl83+vJAiWyZiXGxn
-         L/gGYuHKkSg5b5lAZ8y609ULUUNBQG5Zr2cDT6Kr2KkHea6CcYEvqknLQsm9WIUIO322
-         SS8EvqP/eFAB0YKKJivFgTUv3w6moh+QRzhUjnZDglyGhOkATvCYkysUT8Oz2kmXwmbx
-         BgnPTtqIHopBMDWHXUTFu6LhHGWrd/kAfHiDFjixobV1bAJkFT829weK9+F1lwmK+g1i
-         ztUw==
+        d=linaro.org; s=google; t=1683601134; x=1686193134;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vyLj8HoVtfi4u1IfIfS6SKhJKc2AXFWhk5oxVikC/mQ=;
+        b=T6QDiZzxsNNqW9dRgau/daPxt4FhkYs/ITGlQI+zGtIZhiA1yEAzgoUxaPr17QQTxB
+         T2wOKECfJ8djM9wqroh20f+GmXIREVlfas6dSHHnnm5MGpu95hx4HmiCqyx2/8sPT/bg
+         R/tMyLihWPoQg4iXsuBjyTx0SbjSGyCewtiXr3yORNoYtYtnbNR/98B5pogjIP16q0bp
+         2VHuET4Q1daNAIp5nSumoTrXsyVBllUcUJOrA6t1Eo6QFLxMpHnphjLBTrzaGNsqcqAj
+         b2umWICM7EmxusxFCNVIWIPL4LcV1y+VPsbZtrbrKQkuZ90lJqNf0Jj3+44nWWXE2wsr
+         Yztg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683584341; x=1686176341;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jCuWEM+/+k0Hql5FRWsc3HAhfzT+UCFW3skGrNQX8f4=;
-        b=hOz2IU4xtf9ecq/1VstikNtHdK4atwHDnoyNKbXR30cAAML71aC1tNsSilx296/kZr
-         HpIQzAJus7HBI81zDTKmL2SluJ8MGrsvryAtBnVmVokyevPQTBGt2KA9pwrJ/pfi6XyL
-         LHnEYfhFnp54gfkGNcID4IQswKeMZ3Nb8OGn63MUhbEKQV0F3ugPobMA78kIruTAM1YA
-         Tb9Hhf0cG0KnlIYBkdOQ0adpLnJNtKrDj9bXe+tLFJw4PPp0ycnhJOhYLRon8a2CHLXF
-         5MTe/pVLn5qxWuW79L/18iOXKdUXdx4a9lJc6bISTyr4Zvb7wIaFtvTOsN2W8DMLr5M/
-         yEgA==
-X-Gm-Message-State: AC+VfDygQUpf6LG4j85RBhCrkchg/ezvNF/HA7bhuj+dFoHMK0jNI3ZG
-        qSZsVQxX2Oq3MmJ/+WEdpTz6PS2s0MhUEQGdDRdhjg==
-X-Google-Smtp-Source: ACHHUZ5JLTSWsJkp9+NFuKURcp3h9dUzP2f50CpOOyBRuG7HynNsWaE935rN7Q3GxhqvUGSg0FKsexIKDI63lyCfVS0=
-X-Received: by 2002:a05:622a:4a:b0:3f3:8d17:ab9 with SMTP id
- y10-20020a05622a004a00b003f38d170ab9mr15885qtw.13.1683584340774; Mon, 08 May
- 2023 15:19:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230508093952.27482-1-adrian.hunter@intel.com> <20230508093952.27482-3-adrian.hunter@intel.com>
-In-Reply-To: <20230508093952.27482-3-adrian.hunter@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 8 May 2023 15:18:49 -0700
-Message-ID: <CAP-5=fU-Ud7=o52VG_oJ6roQNkxTMC-LpiMFDj7CJuqFiEiihQ@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] perf parse-events: Do not break up AUX event group
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        d=1e100.net; s=20221208; t=1683601134; x=1686193134;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vyLj8HoVtfi4u1IfIfS6SKhJKc2AXFWhk5oxVikC/mQ=;
+        b=juCY+e2gMDn+65aHOPGjPThkbByfla5twjnc079gT8kdv1ny1ExcIs0VadsF5wEjFS
+         c2bOAvMjyXgaGzzO0sov7KBoWdbNhRaq0t7s6SH5ltNle7CweM5d3GegAPfXg3mgIUFS
+         oL9fSaOGDCBmkGgjwlHviunX9R/JxpGZT4oZKwwS3pkSW662FB97INB3S6fgDcI522Io
+         BniMNwNFOwhX5xLbMNuFrqjhPlzavmUn5FOSBSG0KR5hDlk2LJrEe1WiE/PDJe2NMUc0
+         h63eGgYMgDK5DJtlVT9RqqA+ApzjQvM1R/05rDsSO2U1GpNLQ7LYpqK8AnzUFDsd9Bjt
+         b8gQ==
+X-Gm-Message-State: AC+VfDyGiixvQ2soFVPuxYiDB8HpuuAUigGvQ6+F/+LI55Jy3dZRlE9c
+        srSoR7JiDf+nLVGGo69YEZ4s1Q==
+X-Google-Smtp-Source: ACHHUZ5SGln/XR0RFcFjgz3GCNY/xB4lMkhVYaT5SM3anUrKBg8HdtL+v97rbfQYe8vYr8U7wtW4yA==
+X-Received: by 2002:a17:902:a508:b0:1a9:baa4:8677 with SMTP id s8-20020a170902a50800b001a9baa48677mr12244693plq.11.1683601134308;
+        Mon, 08 May 2023 19:58:54 -0700 (PDT)
+Received: from leoy-yangtze.lan (211-75-219-209.hinet-ip.hinet.net. [211.75.219.209])
+        by smtp.gmail.com with ESMTPSA id t1-20020a17090a448100b00246cc751c6bsm2228984pjg.46.2023.05.08.19.58.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 May 2023 19:58:53 -0700 (PDT)
+Date:   Tue, 9 May 2023 10:58:46 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Adrian Hunter <adrian.hunter@intel.com>,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] perf arm: Fix include path
+Message-ID: <20230509025846.GD3374705@leoy-yangtze.lan>
+References: <20230508213128.3622268-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230508213128.3622268-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 8, 2023 at 2:40=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.c=
-om> wrote:
->
-> Do not assume which events may have a PMU name, allowing the logic to
-> keep an AUX event group together.
->
-> Example:
->
->  Before:
->
->     $ perf record --no-bpf-event -c 10 -e '{intel_pt//,tlb_flush.stlb_any=
-/aux-sample-size=3D8192/pp}:u' -- sleep 0.1
->     WARNING: events were regrouped to match PMUs
->     Cannot add AUX area sampling to a group leader
->
->  After:
->
->     $ perf record --no-bpf-event -c 10 -e '{intel_pt//,tlb_flush.stlb_any=
-/aux-sample-size=3D8192/pp}:u' -- sleep 0.1
->     [ perf record: Woken up 1 times to write data ]
->     [ perf record: Captured and wrote 0.078 MB perf.data ]
->     $ perf script -F-dso,+addr | grep -C5 tlb_flush.stlb_any | head -11
->     sleep 20444 [003]  7939.510243:  1  branches:uH:  7f5350cc82a2 dl_mai=
-n+0x9a2 =3D> 7f5350cb38f0 _dl_add_to_namespace_list+0x0
->     sleep 20444 [003]  7939.510243:  1  branches:uH:  7f5350cb3908 _dl_ad=
-d_to_namespace_list+0x18 =3D> 7f5350cbb080 rtld_mutex_dummy+0x0
->     sleep 20444 [003]  7939.510243:  1  branches:uH:  7f5350cc8350 dl_mai=
-n+0xa50 =3D> 0 [unknown]
->     sleep 20444 [003]  7939.510244:  1  branches:uH:  7f5350cc83ca dl_mai=
-n+0xaca =3D> 7f5350caeb60 _dl_process_pt_gnu_property+0x0
->     sleep 20444 [003]  7939.510245:  1  branches:uH:  7f5350caeb60 _dl_pr=
-ocess_pt_gnu_property+0x0 =3D> 0 [unknown]
->     sleep 20444  7939.510245:       10 tlb_flush.stlb_any/aux-sample-size=
-=3D8192/pp: 0 7f5350caeb60 _dl_process_pt_gnu_property+0x0
->     sleep 20444 [003]  7939.510254:  1  branches:uH:  7f5350cc87fe dl_mai=
-n+0xefe =3D> 7f5350ccd240 strcmp+0x0
->     sleep 20444 [003]  7939.510254:  1  branches:uH:  7f5350cc8862 dl_mai=
-n+0xf62 =3D> 0 [unknown]
->     sleep 20444 [003]  7939.510255:  1  branches:uH:  7f5350cc9cdc dl_mai=
-n+0x23dc =3D> 0 [unknown]
->     sleep 20444 [003]  7939.510257:  1  branches:uH:  7f5350cc89f6 dl_mai=
-n+0x10f6 =3D> 7f5350cb9530 _dl_setup_hash+0x0
->     sleep 20444 [003]  7939.510257:  1  branches:uH:  7f5350cc8a2d dl_mai=
-n+0x112d =3D> 7f5350cb3990 _dl_new_object+0x0
->
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Fixes: 347c2f0a0988 ("perf parse-events: Sort and group parsed events")
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Hi Ian,
 
-Tested-by: Ian Rogers <irogers@google.com>
-
-Thanks!
-Ian
-
+On Mon, May 08, 2023 at 02:31:28PM -0700, Ian Rogers wrote:
+> Change "../cs-etm.h" to just "cs-etm.h" as ../cs-etm.h doesn't exist.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/evsel.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index e18752fd9245..9fdcde5471df 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -828,11 +828,9 @@ bool evsel__name_is(struct evsel *evsel, const char =
-*name)
->
->  const char *evsel__group_pmu_name(const struct evsel *evsel)
->  {
-> -       struct evsel *leader, *pos;
-> +       struct evsel *leader =3D evsel__leader(evsel);
-> +       struct evsel *pos;
->
-> -       /* If the pmu_name is set use it. pmu_name isn't set for CPU and =
-software events. */
-> -       if (evsel->pmu_name)
-> -               return evsel->pmu_name;
->         /*
->          * Software events may be in a group with other uncore PMU events=
-. Use
->          * the pmu_name of the first non-software event to avoid breaking=
- the
-> @@ -841,7 +839,6 @@ const char *evsel__group_pmu_name(const struct evsel =
-*evsel)
->          * Aux event leaders, like intel_pt, expect a group with events f=
-rom
->          * other PMUs, so substitute the AUX event's PMU in this case.
->          */
-> -       leader  =3D evsel__leader(evsel);
->         if (evsel->core.attr.type =3D=3D PERF_TYPE_SOFTWARE || evsel__is_=
-aux_event(leader)) {
->                 /* Starting with the leader, find the first event with a =
-named PMU. */
->                 for_each_group_evsel(pos, leader) {
-> @@ -850,7 +847,7 @@ const char *evsel__group_pmu_name(const struct evsel =
-*evsel)
->                 }
->         }
->
-> -       return "cpu";
-> +       return evsel->pmu_name ?: "cpu";
->  }
->
->  const char *evsel__metric_id(const struct evsel *evsel)
-> --
-> 2.34.1
->
+>  tools/perf/arch/arm/util/pmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
+> index 860a8b42b4b5..46154c226fbb 100644
+> --- a/tools/perf/arch/arm/util/pmu.c
+> +++ b/tools/perf/arch/arm/util/pmu.c
+> @@ -12,7 +12,7 @@
+>  #include "arm-spe.h"
+>  #include "hisi-ptt.h"
+>  #include "../../../util/pmu.h"
+> -#include "../cs-etm.h"
+
+This code is a bit tricky.  Here it deliberately uses "../cs-etm.h" to
+avoid including the header file in the same folder, alternatively, the
+compiler option "-I/home/leoy/Work/linux/tools/perf/util/include" will
+lead the C file to include "tools/perf/util/include/../cs-etm.h".
+
+> +#include "cs-etm.h"
+
+So with this change, perf will fail to build actually :)
+
+We need to change to:
+
+  #include "../../../util/cs-etm.h"
+
+With above change:
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
+
+Thanks for code improvement!
+
+>  struct perf_event_attr
+>  *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
+> -- 
+> 2.40.1.521.gf1e218fcd8-goog
+> 
