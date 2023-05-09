@@ -2,95 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CECC7EE22
-	for <linux-perf-users@archiver.kernel.org>; Tue,  9 May 2023 08:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE939C7EE26
+	for <linux-perf-users@archiver.kernel.org>; Tue,  9 May 2023 09:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233926AbjEIIqK (ORCPT
+        id S234094AbjEIJiP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 9 May 2023 04:46:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52188 "EHLO
+        Tue, 9 May 2023 05:38:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbjEIIqI (ORCPT
+        with ESMTP id S229527AbjEIJiO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 9 May 2023 04:46:08 -0400
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3CC2133
-        for <linux-perf-users@vger.kernel.org>; Tue,  9 May 2023 01:46:06 -0700 (PDT)
-X-ASG-Debug-ID: 1683621961-086e237e536fe60001-i5rUwQ
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx1.zhaoxin.com with ESMTP id edT1DtMeMi1OGdsv (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 09 May 2023 16:46:01 +0800 (CST)
-X-Barracuda-Envelope-From: SilviaZhao-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from ZXBJMBX02.zhaoxin.com (10.29.252.6) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Tue, 9 May
- 2023 16:46:01 +0800
-Received: from [10.29.8.33] (10.29.8.33) by ZXBJMBX02.zhaoxin.com
- (10.29.252.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Tue, 9 May
- 2023 16:45:59 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Message-ID: <f5d3c74c-3a82-30af-9603-09eb907bff6d@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.29.8.33
-Date:   Tue, 9 May 2023 16:45:58 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 0/3] Add PMC support for Zhaoxin Yongfeng architecture
-Content-Language: en-US
-X-ASG-Orig-Subj: Re: [PATCH 0/3] Add PMC support for Zhaoxin Yongfeng architecture
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <tglx@linutronix.de>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <cobechen@zhaoxin.com>, <louisqi@zhaoxin.com>,
-        <cooperyan@zhaoxin.com>,
-        "Silvia Zhao(BJ-RD)" <SilviaZhao@zhaoxin.com>
-References: <20230323024026.823-1-silviazhao-oc@zhaoxin.com>
-From:   silviazhao <silviazhao-oc@zhaoxin.com>
-In-Reply-To: <20230323024026.823-1-silviazhao-oc@zhaoxin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.29.8.33]
-X-ClientProxiedBy: ZXSHCAS1.zhaoxin.com (10.28.252.161) To
- ZXBJMBX02.zhaoxin.com (10.29.252.6)
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1683621961
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 864
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.108523
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
+        Tue, 9 May 2023 05:38:14 -0400
+Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CD9C1BB;
+        Tue,  9 May 2023 02:38:13 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 510B53200909;
+        Tue,  9 May 2023 05:38:09 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 09 May 2023 05:38:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1683625088; x=1683711488; bh=JI
+        GYjICWF1iIfi0CDhSvRnlPKKVSNYNlDX65zfQiumM=; b=I4f00STfLlF/8uXCTH
+        3QpblrayO3QWqay0XoJFyDhSGixH93u1NpebSFNfjNuzTOvoj8liVXfe1F94W5Rf
+        OkSrKPsHW5CuU0O1n0k6mggu+GTBSI/aou3nmMYv4bopXJdWnRpImUuuJczssOQ+
+        nlk+zQ5fWguXF4QyfgIy+yXeh/fUk1+OamDH2mE02AK2FeEVzFdjp/ZkYF3f7WIC
+        LIwJOvrGNIHyMm3GfL+mc2A3QpjuHP/knTB/o3RrDaqIa6igFFLXbN2J2tS7W0OZ
+        O9Wt51WwuNP4vEqULDQIoB4aLzCG2tEy390anoUON9826Lqxxh2mvRVv16wDWwRA
+        CvaA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1683625088; x=1683711488; bh=JIGYjICWF1iIf
+        i0CDhSvRnlPKKVSNYNlDX65zfQiumM=; b=irqHQQNUKUqvUAWpf1VIoKg/G9Bt6
+        oINt/vqLIbTfVMwG9Hc5BS3wM0rbLNDlp9dyFIk+K8+Yg+w4CyaCBkMNIzxaClt2
+        5hKEmXIfTpuX0D57VxY0NRbGmHgrdfX9LgmsqsHxxYojoy6cFD/h297xpqpZ2dCm
+        lgjUpyY5EApgsYS6fgKw+ibdPJPY3SWVhfBScpbBw297KiqjtIpYFOEKWx6uVBZE
+        b0R51rMZ6QfJDFCbYlMztsHMKOUmxxlKnwnj3kyD0ejAc+LApjOXTCP8sFBPBWbp
+        FSJfhVLzSwOexCHMh/u/lmkpf2d0AvcvV0c/5voSuhOmrHueXeXY33A2Q==
+X-ME-Sender: <xms:fxRaZA_Ub9iK8xWlXqyIcc6uOkdIYRFhQ2MO1HuoJ9dmIsXEFLaf3w>
+    <xme:fxRaZIvg7GcdRQOpg1jMA0HvMPQftuRhcyc5ZSdsuVGpbWVIflp8kq4JY9m-G-ZJV
+    SnIqkn0V04I_3L7-qg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeegtddgudejucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepheekfeduteffkeegieekvdffkedtkeeftefhfeejkeejgefhleekhfelheff
+    vdetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpshhouhhrtggvfigrrhgvrdhorh
+    hgnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghr
+    nhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:fxRaZGDVHJPv_8wICJO5UOx_vULOMBKmGMOLmO0DbqAHdDw2Qx8Sgg>
+    <xmx:fxRaZAeGXsQCwZusXvgF1StxgPbYalneVgw_y3tnkrhLFMC_jy3rjA>
+    <xmx:fxRaZFMfYWVflVj5rOKIcutKIF5dLbPvZi1Iw7dHO-fYBDC-s9lWkg>
+    <xmx:gBRaZCcVsH6XHVXaai7iby-iCY4PxFduF5s1msWOAJRYZEdcbjifDA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 85FE3B60086; Tue,  9 May 2023 05:38:07 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-415-gf2b17fe6c3-fm-20230503.001-gf2b17fe6
+Mime-Version: 1.0
+Message-Id: <b9624545-2c80-49a1-ac3c-39264a591f7b@app.fastmail.com>
+In-Reply-To: <1683615903-10862-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1683615903-10862-1-git-send-email-yangtiezhu@loongson.cn>
+Date:   Tue, 09 May 2023 11:37:46 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Tiezhu Yang" <yangtiezhu@loongson.cn>
+Cc:     linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>, llvm@lists.linux.dev,
+        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [RFC PATCH] asm-generic: Unify uapi bitsperlong.h
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 2023/3/23 10:40, silviazhao wrote:
-> Add PMC support for Zhaoxin Yongfeng architecture.
-> Dave Hansen suggested to use macros instead of open-coded model numbers.
-> So create arch/x86/include/asm/zhaoxin-family.h to introduce macros for
-> Zhaoxin family numbers.
-> https://lkml.org/lkml/2023/3/16/841
+On Tue, May 9, 2023, at 09:05, Tiezhu Yang wrote:
+> Now we specify the minimal version of GCC as 5.1 and Clang/LLVM as 11.0.0
+> in Documentation/process/changes.rst, __CHAR_BIT__ and __SIZEOF_LONG__ are
+> usable, just define __BITS_PER_LONG as (__CHAR_BIT__ * __SIZEOF_LONG__) in
+> asm-generic uapi bitsperlong.h, simpler, works everywhere.
 >
-> silviazhao (3):
->    x86/cpu/zhaoxin: Introduce macros for Zhaoxin family numbers
->    perf/x86/zhaoxin: Replace open-coded model number with macros
->    perf/x86/zhaoxin: Add Yongfeng support
+> Remove all the arch specific uapi bitsperlong.h which will be generated as
+> arch/*/include/generated/uapi/asm/bitsperlong.h.
 >
->   arch/x86/events/zhaoxin/core.c        | 55 ++++++++++++++++++---------
->   arch/x86/include/asm/zhaoxin-family.h | 19 +++++++++
->   2 files changed, 57 insertions(+), 17 deletions(-)
->   create mode 100644 arch/x86/include/asm/zhaoxin-family.h
->
-Is there anything that needs to be modified in this patch set? Please 
-let me know.
-Thx.
+> Suggested-by: Xi Ruoyao <xry111@xry111.site>
+> Link: 
+> https://lore.kernel.org/all/d3e255e4746de44c9903c4433616d44ffcf18d1b.camel@xry111.site/
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
+I originally introduced the bitsperlong.h header, and I'd love to
+see it removed if it's no longer needed. Your patch certainly
+seems like it does this well.
+
+There is one minor obstacle to this, which is that the compiler
+requirements for uapi headers are not the same as for kernel
+internal code. In particular, the uapi headers may be included
+by user space code that is built with an older compiler version,
+or with a compiler that is not gcc or clang.
+
+I think we are completely safe on the architectures that were
+added since the linux-3.x days (arm64, riscv, csky, openrisc,
+loongarch, nios2, and hexagon), but for the older ones there
+is a regression risk. Especially on targets that are not that
+actively maintained (sparc, alpha, ia64, sh, ...) there is
+a good chance that users are stuck on ancient toolchains.
+
+It's probably also a safe assumption that anyone with an older
+libc version won't be using the latest kernel headers, so
+I think we can still do this across architectures if both
+glibc and musl already require a compiler that is new enough,
+or alternatively if we know that the kernel headers require
+a new compiler for other reasons and nobody has complained.
+
+For glibc, it looks the minimum compiler version was raised
+from gcc-5 to gcc-8 four years ago, so we should be fine.
+
+In musl, the documentation states that at least gcc-3.4 or
+clang-3.2 are required, which probably predate the
+__SIZEOF_LONG__ macro. On the other hand, musl was only
+released in 2011, and building musl itself explicitly
+does not require kernel uapi headers, so this may not
+be too critical.
+
+There is also uClibc, but I could not find any minimum
+supported compiler version for that. Most commonly, this
+one is used for cross-build environments, so it's also
+less likely to have libc/gcc/headers being wildly out of
+sync. Not sure.
+
+      Arnd
+
+[1] https://sourceware.org/pipermail/libc-alpha/2019-January/101010.html
