@@ -2,127 +2,179 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE97C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 17:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5CAC7EE22
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 18:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230472AbjEJRlT (ORCPT
+        id S232452AbjEJS4z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 May 2023 13:41:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42964 "EHLO
+        Wed, 10 May 2023 14:56:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235824AbjEJRlQ (ORCPT
+        with ESMTP id S229482AbjEJS4y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 May 2023 13:41:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D65835258;
-        Wed, 10 May 2023 10:41:14 -0700 (PDT)
+        Wed, 10 May 2023 14:56:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E2410D3;
+        Wed, 10 May 2023 11:56:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 72E1B6321A;
-        Wed, 10 May 2023 17:41:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA51CC433EF;
-        Wed, 10 May 2023 17:41:13 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 33EDE63FC4;
+        Wed, 10 May 2023 18:56:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A18C433EF;
+        Wed, 10 May 2023 18:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683740473;
-        bh=7jyUz/5yrkPTUkgdmkl8e6tbTacmZS0y9mccVF474dI=;
+        s=k20201202; t=1683745010;
+        bh=hnjNpJ/WI6twjro0xk2Nr8Le9Sc2ewfqjnIfqLVYWXA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vCayMgWr5t/J0iQmhB0w6bxRqi0ngobCSra6FcU5zz2A9DJIQjk1/XJM5bzq3nqem
-         FNm7y6PZyPfb7iKJTVCRBPw6fEOcvu4kUgXPZ4VT5yD1S4ziFWs1W2hgX3P1MsoBxm
-         nlBped8/7OvRNpk58ObNKPMUSQjv6SIDxr9pkv6B6h/XpuO0AFsIye+uXp8vZ3n0gw
-         uZ27LfbvuS9rKHVH1DBC4XPFZKxQo8WscGrDUYb4PnDxRHIwmvYM8Wepcldy1Vhrbd
-         DtTIjeqKcq+jwC/hbukVscmkhTtidX9roPpjExoLiBU7Vq2+2z4zoDOnR1pTEG3TDS
-         OAuXhY/C+UwLQ==
+        b=ks6OQHE3+6zg0Buwwl+2k0aQIIxjKrtCGH4lX+coXTjtimmMBzqrljL1CJAw7IgPz
+         4Z0b765QPWea8zWV8ETgqugT94lYzmT10zVDrH6SDOzsR/8dyibSgvwHSfNc8mC6w3
+         jUs78Hm/crFMKmUJ9B7wvJhdD621dSUYW/+zwlNO62sGAINp8Cutt5dHcSFVd9ukTh
+         u2b7XX5pYsVemAfN5eLS2khUUeakfD4ajmrb1x/3ObSQKviBkkkM7mK/l+3olZAd15
+         sRUKEF2x/KQzZOoMq2WVL//g8cattukNRY582GDQcXHOzfUKIaM95L+xNfXKZCrB8R
+         4zpdawR8SzLyw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 63EBE403B5; Wed, 10 May 2023 14:41:11 -0300 (-03)
-Date:   Wed, 10 May 2023 14:41:11 -0300
+        id 558B7403B5; Wed, 10 May 2023 15:56:47 -0300 (-03)
+Date:   Wed, 10 May 2023 15:56:47 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Song Liu <song@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf cs-etm: Fix contextid validation
-Message-ID: <ZFvXN8uS+041W87u@kernel.org>
-References: <20230504144822.1938717-1-james.clark@arm.com>
+        Changbin Du <changbin.du@huawei.com>,
+        Hao Luo <haoluo@google.com>, James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Roman Lozko <lozko.roma@gmail.com>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Paul Clarke <pc@us.ibm.com>
+Subject: Re: [PATCH RFC/RFT] perf bpf skels: Stop using vmlinux.h generated
+ from BTF, use subset of used structs + CO-RE. was Re: BPF skels in perf .Re:
+ [GIT PULL] perf tools changes for v6.4
+Message-ID: <ZFvo79pOroYOFC/I@kernel.org>
+References: <ZFQCccsx6GK+gY0j@kernel.org>
+ <ZFQoQjCNtyMIulp+@kernel.org>
+ <CAP-5=fU8HQorW+7O6vfEKGs1mEFkjkzXZMVPACzurtcMcRhVzQ@mail.gmail.com>
+ <ZFQ5sjjtfEYzvHNP@krava>
+ <ZFUFmxDU/6Z/JEsi@kernel.org>
+ <ZFU1PJrn8YtHIqno@kernel.org>
+ <CAP-5=fWfmmMCRnEmzj_CXTKacp6gjrzmR49Ge_C5XRyfTegRjg@mail.gmail.com>
+ <ZFVqeKLssg7uzxzI@krava>
+ <CAP-5=fVgJdBvjV8S2xKswAFiSZvyCcUvZTO1bsLyUf-wQ0pBuw@mail.gmail.com>
+ <CAM9d7cjrZ-sHhO1ErqVdrN8Vv-ocCmsONc443yoPiCvnoiXj9A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230504144822.1938717-1-james.clark@arm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAM9d7cjrZ-sHhO1ErqVdrN8Vv-ocCmsONc443yoPiCvnoiXj9A@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, May 04, 2023 at 03:48:22PM +0100, James Clark escreveu:
-> Pre 5.11 kernels don't support 'contextid1' and 'contextid2' so
-> validation would be skipped. By adding an additional check for
-> 'contextid', old kernels will still have validation done even though
-> contextid would either be contextid1 or contextid2.
-> 
-> Additionally now that it's possible to override options, an existing bug
-> in the validation is revealed. 'val' is overwritten by the contextid1
-> validation, and re-used for contextid2 validation causing it to always
-> fail. '!val || val != 0x4' is the same as 'val != 0x4' because 0 is also
-> != 4, so that expression can be simplified and the temp variable not
-> overwritten.
-> 
-> Fixes: 35c51f83dd1e ("perf cs-etm: Validate options after applying them")
+Em Fri, May 05, 2023 at 01:48:52PM -0700, Namhyung Kim escreveu:
+> On Fri, May 5, 2023 at 1:46 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Fri, May 5, 2023 at 1:43 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > >
+> > > On Fri, May 05, 2023 at 10:04:47AM -0700, Ian Rogers wrote:
+> > > > On Fri, May 5, 2023 at 9:56 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > > > >
+> > > > > Em Fri, May 05, 2023 at 10:33:15AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > > > > Em Fri, May 05, 2023 at 01:03:14AM +0200, Jiri Olsa escreveu:
+> > > > > > That with the preserve_access_index isn't needed, we need just the
+> > > > > > fields that we access in the tools, right?
+> > > > >
+> > > > > I'm now doing build test this in many distro containers, without the two
+> > > > > reverts, i.e. BPF skels continue as opt-out as in my pull request, to
+> > > > > test build and also for the functionality tests on the tools using such
+> > > > > bpf skels, see below, no touching of vmlinux nor BTF data during the
+> > > > > build.
+> > > > >
+> > > > > - Arnaldo
+> > > > >
+> > > > > From 882adaee50bc27f85374aeb2fbaa5b76bef60d05 Mon Sep 17 00:00:00 2001
+> > > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > > Date: Thu, 4 May 2023 19:03:51 -0300
+> > > > > Subject: [PATCH 1/1] perf bpf skels: Stop using vmlinux.h generated from BTF,
+> > > > >  use subset of used structs + CO-RE
+> > > > >
+> > > > > Linus reported a build break due to using a vmlinux without a BTF elf
+> > > > > section to generate the vmlinux.h header with bpftool for use in the BPF
+> > > > > tools in tools/perf/util/bpf_skel/*.bpf.c.
+> > > > >
+> > > > > Instead add a vmlinux.h file with the structs needed with the fields the
+> > > > > tools need, marking the structs with __attribute__((preserve_access_index)),
+> > > > > so that libbpf's CO-RE code can fixup the struct field offsets.
+> > > > >
+> > > > > In some cases the vmlinux.h file that was being generated by bpftool
+> > > > > from the kernel BTF information was not needed at all, just including
+> > > > > linux/bpf.h, sometimes linux/perf_event.h was enough as non-UAPI
+> > > > > types were not being used.
+> > > > >
+> > > > > To keep te patch small, include those UAPI headers from the trimmed down
+> > > > > vmlinux.h file, that then provides the tools with just the structs and
+> > > > > the subset of its fields needed for them.
+> > > > >
+> > > > > Testing it:
+> > > > >
+> > > > >   # perf lock contention -b find / > /dev/null
+> > >
+> > > I tested perf lock con -abv -L rcu_state sleep 1
+> > > and needed fix below
+> > >
+> > > jirka
+> >
+> > I thought this was fixed by:
+> > https://lore.kernel.org/lkml/20230427234833.1576130-1-namhyung@kernel.org/
 
-Thanks, applied to perf-tools, for v6.4.
+Those are upstream already:
 
-- Arnaldo
+⬢[acme@toolbox perf-tools]$ git log --oneline torvalds/master | grep -m1 -B1 "perf lock contention: Fix struct rq lock access"
+b9f82b5c63bf5390 perf lock contention: Rework offset calculation with BPF CO-RE
+e53de7b65a3ca59a perf lock contention: Fix struct rq lock access
+⬢[acme@toolbox perf-tools]$
 
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> Link: https://lore.kernel.org/all/20230501073452.GA4660@leoy-yangtze.lan
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/arch/arm/util/cs-etm.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index 77cb03e6ff87..9ca040bfb1aa 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -78,9 +78,9 @@ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
->  	char path[PATH_MAX];
->  	int err;
->  	u32 val;
-> -	u64 contextid =
-> -		evsel->core.attr.config &
-> -		(perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1") |
-> +	u64 contextid = evsel->core.attr.config &
-> +		(perf_pmu__format_bits(&cs_etm_pmu->format, "contextid") |
-> +		 perf_pmu__format_bits(&cs_etm_pmu->format, "contextid1") |
->  		 perf_pmu__format_bits(&cs_etm_pmu->format, "contextid2"));
->  
->  	if (!contextid)
-> @@ -114,8 +114,7 @@ static int cs_etm_validate_context_id(struct auxtrace_record *itr,
->  		 *  0b00100 Maximum of 32-bit Context ID size.
->  		 *  All other values are reserved.
->  		 */
-> -		val = BMVAL(val, 5, 9);
-> -		if (!val || val != 0x4) {
-> +		if (BMVAL(val, 5, 9) != 0x4) {
->  			pr_err("%s: CONTEXTIDR_EL1 isn't supported, disable with %s/contextid1=0/\n",
->  			       CORESIGHT_ETM_PMU_NAME, CORESIGHT_ETM_PMU_NAME);
->  			return -EINVAL;
-> -- 
-> 2.34.1
-> 
+> > but I think that is just in perf-tools-next.
+ 
+> Right, but we might still need the empty rq definition.
 
--- 
+Yeah, without the empty struct diff libbpf complains about a mismatch of
+just a forward declaration as the type for 'runqueues' on the
+lock_contention.bpf.c file while the kernel has a the type as 'struct
+rq':
+
+[root@quaco ~]# perf lock con -ab sleep 1
+libbpf: extern (var ksym) 'runqueues': incompatible types, expected [95] fwd rq, but kernel has [55509] struct rq
+libbpf: failed to load object 'lock_contention_bpf'
+libbpf: failed to load BPF skeleton 'lock_contention_bpf': -22
+Failed to load lock-contention BPF skeleton
+lock contention BPF setup failed
+[root@quaco ~]#
+
+Adding:
+
+struct rq {};
+
+libbpf is happy:
+
+[root@quaco ~]# perf lock con -ab sleep 1
+ contended   total wait     max wait     avg wait         type   caller
+
+         2     50.64 us     25.38 us     25.32 us     spinlock   tick_do_update_jiffies64+0x25
+         1     26.18 us     26.18 us     26.18 us     spinlock   tick_do_update_jiffies64+0x25
+[root@quaco ~]#
 
 - Arnaldo
