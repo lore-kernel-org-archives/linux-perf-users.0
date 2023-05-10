@@ -2,99 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D473C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 17:39:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA28EC77B7D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 17:40:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230181AbjEJRjF (ORCPT
+        id S229447AbjEJRkF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 May 2023 13:39:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41308 "EHLO
+        Wed, 10 May 2023 13:40:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229773AbjEJRjE (ORCPT
+        with ESMTP id S235768AbjEJRjx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 May 2023 13:39:04 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 956683C1B;
-        Wed, 10 May 2023 10:39:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683740343; x=1715276343;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8Ls1QbnU0cHLj+UwwGv4G3zWqz6T76HHYT3uPfOXwWI=;
-  b=MU6hOuOcx4otcJMreZEz6qEtXZgL9eBy5PkhrabQyrPRFe4NVQeWwFgs
-   x8cChNSd8xy0RKSd9BnXPRv+ilMX3byfiEaAhW1Ct1vF3GWEWV30m4cFp
-   7hxJ5x0cZvIo9aGbVcgtu75esJD54TEQg66XeK/a/K3O1aEX7kSrx8E2k
-   XGlbyQB3fev+z/EIcwUqpEqGq1+QRpFSbhoTs+17R0Ll/Kh+sOvP2nZVm
-   wYfE8l9/O07oKuCZ4l5gIHOEZ7/VLGGmBzC7V3DI7Hu6cV/vs+F3SugA1
-   X9D1Sto+WAkurb44fuV6bDZUDm/95pSbuO+jLOnAEACCTR2qBgIXk6kpx
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="330637053"
-X-IronPort-AV: E=Sophos;i="5.99,265,1677571200"; 
-   d="scan'208";a="330637053"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2023 10:39:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="764392862"
-X-IronPort-AV: E=Sophos;i="5.99,265,1677571200"; 
-   d="scan'208";a="764392862"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.61.254])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2023 10:39:01 -0700
-Message-ID: <13640a9e-a186-2480-2649-ee19869228bb@intel.com>
-Date:   Wed, 10 May 2023 20:38:55 +0300
+        Wed, 10 May 2023 13:39:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B63A03ABA;
+        Wed, 10 May 2023 10:39:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4FC2F649C9;
+        Wed, 10 May 2023 17:39:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E89CC433D2;
+        Wed, 10 May 2023 17:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683740391;
+        bh=L3QJRNGmXorOk4+D2bi74+pF6hHWPHZgyaNTHM83eTM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fohov/Oh2SFwh26blqbfeQghhlrVcSiPP2cTXcjuw4PkIe9o3mhAHaVEYKOzqFaDE
+         X/6TV/42xXKoYE4KIS45fxySEnjXu6uQnXdL2ndjy6ZGKSrQqhD7hX1uray/pn4NgA
+         vcPJG6/Dgcog8bbstNS6NnKR/FXgrp9jqhgY16QG44BkmL+H4zW0srEjY37mLGnHso
+         UmQvpXGrKeGSHK+jgD+GpwvFlsihOup2O+vMnTHHVuw8KJDE4DQsyeKdeipqftNdbm
+         2KFSf/fqGXSr69S9Y3PsZowDSO+ct62qFZkPwf16fK8ySv3pcaUaY/IOuXexhZJohl
+         8LEKaBBG5236Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F2543403B5; Wed, 10 May 2023 14:39:48 -0300 (-03)
+Date:   Wed, 10 May 2023 14:39:48 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: arm64: Fix build with refcount checking
+Message-ID: <ZFvW5A6C9ZD+bVBU@kernel.org>
+References: <20230504160845.2065510-1-james.clark@arm.com>
+ <CAP-5=fX+PB9_UVPxwpHwcesupu_8f2c8bp5KOHrG9WAFH4VBpw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH V2 0/2] perf parse-events: Do not break up AUX event group
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20230508093952.27482-1-adrian.hunter@intel.com>
- <ZFvQpZsvyEaHUjSq@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <ZFvQpZsvyEaHUjSq@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX+PB9_UVPxwpHwcesupu_8f2c8bp5KOHrG9WAFH4VBpw@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10/05/23 20:13, Arnaldo Carvalho de Melo wrote:
-> Em Mon, May 08, 2023 at 12:39:50PM +0300, Adrian Hunter escreveu:
->> Hi
->>
->> Here is a fix needed in v6.4, but dependent on Ian's patch
->> "perf evsel: Modify group pmu name for software events", refer:
->>
->> https://lore.kernel.org/lkml/20230502223851.2234828-20-irogers@google.com/
->>
->> There is also a test amendment to test the AUX event group fix for
->> Intel PT.
+Em Thu, May 04, 2023 at 09:28:21AM -0700, Ian Rogers escreveu:
+> On Thu, May 4, 2023 at 9:09 AM James Clark <james.clark@arm.com> wrote:
+> >
+> > With EXTRA_CFLAGS=-DREFCNT_CHECKING=1 and build-test, some unwrapped
+> > map accesses appear. Wrap it in the new accessor to fix the error:
+> >
+> >   error: 'struct perf_cpu_map' has no member named 'map'
+> >
+> > Signed-off-by: James Clark <james.clark@arm.com>
 > 
-> Ok, so I think I can add your Tested-by for that "perf evsel: Modify
-> group pmu name for software events" patch, ok?
+> Thanks James and sorry for the breakage!
+> Acked-by: Ian Rogers <irogers@google.com>
 
-Yes, thank you!
+Thanks, applied.
 
+- Arnaldo
+
+ 
+> Ian
 > 
-> - Arnaldo
->  
->>
->> Changes in V2:
->>
->>    Add an Intel PT test amendment for the AUX event group fix
->>    Change AUX event group fix as suggested by Ian
->>
->>
->> Adrian Hunter (2):
->>       perf test: test_intel_pt.sh: Test sample mode with named PMU
->>       perf parse-events: Do not break up AUX event group
->>
->>  tools/perf/tests/shell/test_intel_pt.sh | 7 +++++++
->>  tools/perf/util/evsel.c                 | 9 +++------
->>  2 files changed, 10 insertions(+), 6 deletions(-)
+> > ---
+> >  tools/perf/arch/arm64/util/header.c | 4 ++--
+> >  tools/perf/arch/arm64/util/pmu.c    | 2 +-
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/tools/perf/arch/arm64/util/header.c b/tools/perf/arch/arm64/util/header.c
+> > index d730666ab95d..80b9f6287fe2 100644
+> > --- a/tools/perf/arch/arm64/util/header.c
+> > +++ b/tools/perf/arch/arm64/util/header.c
+> > @@ -29,8 +29,8 @@ static int _get_cpuid(char *buf, size_t sz, struct perf_cpu_map *cpus)
+> >                 char path[PATH_MAX];
+> >                 FILE *file;
+> >
+> > -               scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d"MIDR,
+> > -                               sysfs, cpus->map[cpu]);
+> > +               scnprintf(path, PATH_MAX, "%s/devices/system/cpu/cpu%d" MIDR,
+> > +                         sysfs, RC_CHK_ACCESS(cpus)->map[cpu].cpu);
+> >
+> >                 file = fopen(path, "r");
+> >                 if (!file) {
+> > diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
+> > index fa143acb4c8d..ef1ed645097c 100644
+> > --- a/tools/perf/arch/arm64/util/pmu.c
+> > +++ b/tools/perf/arch/arm64/util/pmu.c
+> > @@ -18,7 +18,7 @@ static struct perf_pmu *pmu__find_core_pmu(void)
+> >                  * The cpumap should cover all CPUs. Otherwise, some CPUs may
+> >                  * not support some events or have different event IDs.
+> >                  */
+> > -               if (pmu->cpus->nr != cpu__max_cpu().cpu)
+> > +               if (RC_CHK_ACCESS(pmu->cpus)->nr != cpu__max_cpu().cpu)
+> >                         return NULL;
+> >
+> >                 return pmu;
+> > --
+> > 2.34.1
+> >
 
+-- 
+
+- Arnaldo
