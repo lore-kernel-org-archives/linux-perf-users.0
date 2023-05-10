@@ -2,121 +2,111 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FCFC77B7D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 15:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E208BC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 15:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237338AbjEJPko (ORCPT
+        id S237636AbjEJPlb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 May 2023 11:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54716 "EHLO
+        Wed, 10 May 2023 11:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232912AbjEJPkn (ORCPT
+        with ESMTP id S237617AbjEJPlY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 May 2023 11:40:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 463BA19B4;
-        Wed, 10 May 2023 08:40:42 -0700 (PDT)
+        Wed, 10 May 2023 11:41:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBECC3584
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 May 2023 08:41:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CEF2B6349F;
-        Wed, 10 May 2023 15:40:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07336C433EF;
-        Wed, 10 May 2023 15:40:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 775096349F
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 May 2023 15:41:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD639C4339B;
+        Wed, 10 May 2023 15:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683733241;
-        bh=suHZgHXOnhG+Y0EFAZh64AmTpplHYWDqeWTt0Ihyy88=;
+        s=k20201202; t=1683733282;
+        bh=sffcxF6jaSSBAUFYMT4AvfFyLh6ZF89eTtVZ38ITZOs=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ad9KCxfE8ESkuSqBrrG4ePhVwIU5ALLDNXUNIFoD23t9ppM3dDkA7kwy61c1cCP3Y
-         8uT6T0wlcWGQ6lDHqdgsOf1DwmGh4efj+/HdG1C0pZNCY72nsE2HPiryeFQflUqg1T
-         t1O45+r0sbGFWXH7sQHtQ5VbX6zLNilU2zhv+lPEPX82CWfY/1zHTk02sMdUz1pyEa
-         uG/SOPDA6K1LcAcI1WL+OOK9jumodP9d9I+fVSSdUEjwgRXkzbfl3eaF6pqYjzogX1
-         IanWFsuOLhkiIG0cxM8XW5fwgshQagvaOm5VySGZtBiYAFb8XVl4x7TVAZFrE3PEiQ
-         K8U7kwGkn5uig==
+        b=N3KcdeMQeU0wcITt9rM2vGNUJctCq0UeymxAVyA1U539HApeyWu7eU6AHfRYMmknc
+         7tym+iLaJ9FTVfnoBy0UMQ5G1Opmg83dzItPk3zfgJaJ5uBXEx4Ttilxe+b0GBJSEN
+         AyXt/EOV7mNTdhCuYR/Tald1g8es6x3L32IjhHM4hejqj9i0hvtHWczABpVZV6v6Gf
+         9e0FHVbodqiIGXIc9/7fF0obwP7guqRaI+xRjvmh9qfQRB13+my2WOnu0jcNHnGsJ1
+         hfPTvVtdc9tz6QSGx8qIM/uGfiN/Qv8o/obQ2uC4fENs0Ku3JJYfUO0wRvBWW1DnQg
+         RIQ+4clslySTg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4692C403B5; Wed, 10 May 2023 12:40:38 -0300 (-03)
-Date:   Wed, 10 May 2023 12:40:38 -0300
+        id 5532E403B5; Wed, 10 May 2023 12:41:20 -0300 (-03)
+Date:   Wed, 10 May 2023 12:41:20 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Yang Jihong <yangjihong1@huawei.com>
+To:     Yanteng Si <siyanteng@loongson.cn>
 Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
         alexander.shishkin@linux.intel.com, jolsa@kernel.org,
         namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        nathan@kernel.org, ndesaulniers@google.com, trix@redhat.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf bpf skels: Make vmlinux.h use bpf.h and
- perf_event.h in source directory
-Message-ID: <ZFu69puLXBetozhT@kernel.org>
-References: <20230510064401.225051-1-yangjihong1@huawei.com>
+        linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v2 05/17] tools headers UAPI: Sync the coresight-pmu
+ headers copy with the kernel sources
+Message-ID: <ZFu7IG14QBQmIYJz@kernel.org>
+References: <cover.1683712944.git.siyanteng@loongson.cn>
+ <3fffc3f39619d060dfbaa348904e1149f379638c.1683712945.git.siyanteng@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230510064401.225051-1-yangjihong1@huawei.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3fffc3f39619d060dfbaa348904e1149f379638c.1683712945.git.siyanteng@loongson.cn>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 10, 2023 at 06:44:01AM +0000, Yang Jihong escreveu:
-> Currently, vmlinux.h uses the bpf.h and perf_event.h header files in the
-> system path. If the header files in compilation environment are old,
-> compilation may fail. For example:
+Em Wed, May 10, 2023 at 06:22:50PM +0800, Yanteng Si escreveu:
+> Removing CORESIGHT_TRACE_ID_UNUSED_FLAG and CORESIGHT_TRACE_ID_UNUSED_VAL.
 > 
->   /home/yangjihong/linux/tools/perf/util/bpf_skel/.tmp/../vmlinux.h:151:27: error: field has incomplete type 'union perf_sample_weight'
->           union perf_sample_weight weight;
+> Silencing these perf build warnings:
 > 
-> Use the bpf.h and perf_event.h files in the source code directory to
-> avoid compilation compatibility problems.
+>   Warning: Kernel ABI header at 'tools/include/linux/coresight-pmu.h'
+>    differs from latest version at 'include/linux/coresight-pmu.h'
+>   diff -u tools/include/linux/coresight-pmu.h include/linux
+>    /coresight-pmu.h
+> 
+> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
 
-Applied, will test it in my build containers.
+I think this one, when built with 'make -DCORESIGHT=1' breaks the build,
+so I'm not applying it:
 
-- Arnaldo
- 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
-> 
-> Changes since v1:
->  - Use Makefile to specify that header files in tools/include/uapi directory are preferentially used.
-> 
->  tools/perf/Makefile.perf           | 3 ++-
->  tools/perf/util/bpf_skel/vmlinux.h | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index a42a6a99c2bc..9b92749280b2 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -1058,13 +1058,14 @@ $(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_
->  ifdef BUILD_BPF_SKEL
->  BPFTOOL := $(SKEL_TMP_OUT)/bootstrap/bpftool
->  BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE)
-> +TOOLS_UAPI_INCLUDE := -I$(srctree)/tools/include/uapi
->  
->  $(BPFTOOL): | $(SKEL_TMP_OUT)
->  	$(Q)CFLAGS= $(MAKE) -C ../bpf/bpftool \
->  		OUTPUT=$(SKEL_TMP_OUT)/ bootstrap
->  
->  $(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) | $(SKEL_TMP_OUT)
-> -	$(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -Wall -Werror $(BPF_INCLUDE) \
-> +	$(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -Wall -Werror $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
->  	  -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@ && $(LLVM_STRIP) -g $@
->  
->  $(SKEL_OUT)/%.skel.h: $(SKEL_TMP_OUT)/%.bpf.o | $(BPFTOOL)
-> diff --git a/tools/perf/util/bpf_skel/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux.h
-> index 449b1ea91fc4..c7ed51b0c1ef 100644
-> --- a/tools/perf/util/bpf_skel/vmlinux.h
-> +++ b/tools/perf/util/bpf_skel/vmlinux.h
-> @@ -1,6 +1,7 @@
->  #ifndef __VMLINUX_H
->  #define __VMLINUX_H
->  
-> +#include <linux/stddef.h> // for define __always_inline
->  #include <linux/bpf.h>
->  #include <linux/types.h>
->  #include <linux/perf_event.h>
-> -- 
-> 2.30.GIT
-> 
-
--- 
-
-- Arnaldo
+  CC      /tmp/build/perf-tools/util/parse-branch-options.o
+util/cs-etm-decoder/cs-etm-decoder.c: In function ‘cs_etm_decoder__create_etm_decoder’:
+util/cs-etm-decoder/cs-etm-decoder.c:671:51: error: ‘CORESIGHT_TRACE_ID_VAL_MASK’ undeclared (first use in this function)
+  671 |                 csid = (t_params->etmv3.reg_idr & CORESIGHT_TRACE_ID_VAL_MASK);
+      |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+util/cs-etm-decoder/cs-etm-decoder.c:671:51: note: each undeclared identifier is reported only once for each function it appears in
+util/cs-etm-decoder/cs-etm-decoder.c:695:21: error: ‘CORESIGHT_TRACE_ID_UNUSED_VAL’ undeclared (first use in this function)
+  695 |         if (csid == CORESIGHT_TRACE_ID_UNUSED_VAL)
+      |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+make[5]: *** [/var/home/acme/git/perf-tools/tools/build/Makefile.build:98: /tmp/build/perf-tools/util/cs-etm-decoder/cs-etm-decoder.o] Error 1
+make[4]: *** [/var/home/acme/git/perf-tools/tools/build/Makefile.build:140: cs-etm-decoder] Error 2
+make[4]: *** Waiting for unfinished jobs....
+  LD      /tmp/build/perf-tools/util/hisi-ptt-decoder/perf-in.o
+  LD      /tmp/build/perf-tools/util/arm-spe-decoder/perf-in.o
+util/cs-etm.c: In function ‘cs_etm__metadata_get_trace_id’:
+util/cs-etm.c:246:39: error: ‘CORESIGHT_TRACE_ID_VAL_MASK’ undeclared (first use in this function)
+  246 |                                       CORESIGHT_TRACE_ID_VAL_MASK);
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+util/cs-etm.c:246:39: note: each undeclared identifier is reported only once for each function it appears in
+util/cs-etm.c: In function ‘cs_etm__map_trace_ids_metadata’:
+util/cs-etm.c:3112:60: error: ‘CORESIGHT_TRACE_ID_VAL_MASK’ undeclared (first use in this function)
+ 3112 |                         metadata[i][CS_ETM_ETMTRACEIDR] &= CORESIGHT_TRACE_ID_VAL_MASK;
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+util/cs-etm.c: In function ‘cs_etm__clear_unused_trace_ids_metadata’:
+util/cs-etm.c:3144:63: error: ‘CORESIGHT_TRACE_ID_UNUSED_FLAG’ undeclared (first use in this function)
+ 3144 |                         if (metadata[i][CS_ETM_ETMTRACEIDR] & CORESIGHT_TRACE_ID_UNUSED_FLAG)
+      |                                                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+util/cs-etm.c:3145:67: error: ‘CORESIGHT_TRACE_ID_UNUSED_VAL’ undeclared (first use in this function)
+ 3145 |                                 metadata[i][CS_ETM_ETMTRACEIDR] = CORESIGHT_TRACE_ID_UNUSED_VAL;
+      |                                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+make[4]: *** [/var/home/acme/git/perf-tools/tools/build/Makefile.build:97: /tmp/build/perf-tools/util/cs-etm.o] Error 1
+  LD      /tmp/build/perf-tools/util/scripting-engines/perf-in.o
+  LD      /tmp/build/perf-tools/util/intel-pt-decoder/perf-in.o
+make[3]: *** [/var/home/acme/git/perf-tools/tools/build/Makefile.build:140: util] Error 2
+make[2]: *** [Makefile.perf:676: /tmp/build/perf-tools/perf-in.o] Error 2
+make[1]: *** [Makefile.perf:236: sub-make] Error 2
+make: *** [Makefile:113: install-bin] Error 2
+make: Leaving directory '/var/home/acme/git/perf-tools/tools/perf'
