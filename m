@@ -2,102 +2,71 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00163C77B7D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 06:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A96C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 06:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235981AbjEJGpg (ORCPT
+        id S235889AbjEJGr7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 May 2023 02:45:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47128 "EHLO
+        Wed, 10 May 2023 02:47:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236016AbjEJGpf (ORCPT
+        with ESMTP id S229737AbjEJGr6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 May 2023 02:45:35 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 995C71B8;
-        Tue,  9 May 2023 23:45:33 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QGQR43x1sz18LN2;
-        Wed, 10 May 2023 14:41:20 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
+        Wed, 10 May 2023 02:47:58 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3AEA270B;
+        Tue,  9 May 2023 23:47:56 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QGQTn0WDLzpSyv;
+        Wed, 10 May 2023 14:43:41 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 10 May 2023 14:45:30 +0800
+ 15.1.2507.23; Wed, 10 May 2023 14:47:51 +0800
+Subject: Re: [PATCH] perf bpf skels: vmlinux.h uses bpf.h and perf_event.h in
+ the source directory
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230509063649.239942-1-yangjihong1@huawei.com>
+ <ZFqPKU0p73sMb+IG@kernel.org>
 From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <nathan@kernel.org>,
-        <ndesaulniers@google.com>, <trix@redhat.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v2] perf bpf skels: Make vmlinux.h use bpf.h and perf_event.h in source directory
-Date:   Wed, 10 May 2023 06:44:01 +0000
-Message-ID: <20230510064401.225051-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
+Message-ID: <427c2d97-64bb-ab0d-77d6-547bd73947d5@huawei.com>
+Date:   Wed, 10 May 2023 14:47:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+In-Reply-To: <ZFqPKU0p73sMb+IG@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently, vmlinux.h uses the bpf.h and perf_event.h header files in the
-system path. If the header files in compilation environment are old,
-compilation may fail. For example:
+Hello,
 
-  /home/yangjihong/linux/tools/perf/util/bpf_skel/.tmp/../vmlinux.h:151:27: error: field has incomplete type 'union perf_sample_weight'
-          union perf_sample_weight weight;
+On 2023/5/10 2:21, Arnaldo Carvalho de Melo wrote:
+> Em Tue, May 09, 2023 at 06:36:49AM +0000, Yang Jihong escreveu:
+>> Currently, vmlinux.h uses the bpf.h and perf_event.h header files in the
+>> system path. If the header files in compilation environment are old,
+>> compilation may fail. For example:
+>>
+>>    /home/yangjihong/linux/tools/perf/util/bpf_skel/.tmp/../vmlinux.h:151:27: error: field has incomplete type 'union perf_sample_weight'
+>>            union perf_sample_weight weight;
+> 
+> 
+> Can this be solved in the Makefile directives for building BPF targets?
+> 
+OK, will send v2 patch, use Makefile to specify path of header file that 
+is preferentially used. Pls check whether the solution is OK.
 
-Use the bpf.h and perf_event.h files in the source code directory to
-avoid compilation compatibility problems.
-
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
-
-Changes since v1:
- - Use Makefile to specify that header files in tools/include/uapi directory are preferentially used.
-
- tools/perf/Makefile.perf           | 3 ++-
- tools/perf/util/bpf_skel/vmlinux.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index a42a6a99c2bc..9b92749280b2 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -1058,13 +1058,14 @@ $(SKEL_TMP_OUT) $(LIBAPI_OUTPUT) $(LIBBPF_OUTPUT) $(LIBPERF_OUTPUT) $(LIBSUBCMD_
- ifdef BUILD_BPF_SKEL
- BPFTOOL := $(SKEL_TMP_OUT)/bootstrap/bpftool
- BPF_INCLUDE := -I$(SKEL_TMP_OUT)/.. -I$(LIBBPF_INCLUDE)
-+TOOLS_UAPI_INCLUDE := -I$(srctree)/tools/include/uapi
- 
- $(BPFTOOL): | $(SKEL_TMP_OUT)
- 	$(Q)CFLAGS= $(MAKE) -C ../bpf/bpftool \
- 		OUTPUT=$(SKEL_TMP_OUT)/ bootstrap
- 
- $(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) | $(SKEL_TMP_OUT)
--	$(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -Wall -Werror $(BPF_INCLUDE) \
-+	$(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -Wall -Werror $(BPF_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
- 	  -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@ && $(LLVM_STRIP) -g $@
- 
- $(SKEL_OUT)/%.skel.h: $(SKEL_TMP_OUT)/%.bpf.o | $(BPFTOOL)
-diff --git a/tools/perf/util/bpf_skel/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux.h
-index 449b1ea91fc4..c7ed51b0c1ef 100644
---- a/tools/perf/util/bpf_skel/vmlinux.h
-+++ b/tools/perf/util/bpf_skel/vmlinux.h
-@@ -1,6 +1,7 @@
- #ifndef __VMLINUX_H
- #define __VMLINUX_H
- 
-+#include <linux/stddef.h> // for define __always_inline
- #include <linux/bpf.h>
- #include <linux/types.h>
- #include <linux/perf_event.h>
--- 
-2.30.GIT
-
+Thanks,
+Yang
