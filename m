@@ -2,236 +2,301 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E8DC7EE26
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 15:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB89AC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 15:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237716AbjEJPs3 (ORCPT
+        id S237202AbjEJPwQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 May 2023 11:48:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59290 "EHLO
+        Wed, 10 May 2023 11:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237624AbjEJPsX (ORCPT
+        with ESMTP id S237177AbjEJPwP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 May 2023 11:48:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB4A97D80
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 May 2023 08:48:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 06D6D63ED1
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 May 2023 15:48:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 039FDC433EF;
-        Wed, 10 May 2023 15:48:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683733700;
-        bh=BSBdDucTQ1LbQb5i6Cu0YdtLjYS74p/J5WkZnshiUEk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=imEVddkUMc3oIuhbaF+GvbKwBatHwR28FTLgxaL4MrYb3zLcQVZp0qyvX7wzS4+hK
-         hyj8Z4onZ9aMXHtsmlv8TBH4btBoV9f5YGzzPan/MH3z9FRbJ1v4vLl/R5660HJPO7
-         zWna9M8QKRq9gc7EIbKeljD4x4Mz1oaa0Q8rEoqSbQlrRTUHpBDkf+Bi5dfb+pKMVC
-         NHbCM/8sY90+cqGx+kSMXFsaDMr624tIGZnnUtQ8UqKR7HqfcH0IHb0WNp+2Tpc5TV
-         /zW/QhEEy/MsMmBaUU2ac8zEWka+i0EfKiIDWwuYuNCjhTiM4KWIY/rE6gFurkJxZ0
-         Gi11eB9lKvmcQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 73744403B5; Wed, 10 May 2023 12:48:17 -0300 (-03)
-Date:   Wed, 10 May 2023 12:48:17 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Yanteng Si <siyanteng@loongson.cn>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v2 13/17] tools arch x86: Sync the memcpy_64 with the
- kernel sources
-Message-ID: <ZFu8wUIl+GbEjWhn@kernel.org>
-References: <cover.1683712944.git.siyanteng@loongson.cn>
- <c1d2cde32b89c3bdb822ab5d1638f2b0f5513902.1683712945.git.siyanteng@loongson.cn>
+        Wed, 10 May 2023 11:52:15 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1B371BCF;
+        Wed, 10 May 2023 08:52:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683733931; x=1715269931;
+  h=message-id:date:mime-version:subject:from:to:references:
+   in-reply-to:content-transfer-encoding;
+  bh=zFgrOcmDSS9zNwzZGl0l0+zqDgvB+lANnaZH3a8LQMM=;
+  b=nxsroYqOE8O4ANeaoL619+jhOXInqKknPWeQ1TrGCAXf/HTmJ0kw1cYQ
+   TrvPomtISEIxImY3z2dZFvc1tNaaJ7HXibbkLLbRgUI/hdzz/KdX2BZ9Z
+   aYst0UUXZaNNtFznEVg57L1f5aXqTpFEOR+2KvMQAd+10NOnvxS0Ly5bQ
+   SV8tBvQuWTg1HpKoZBO15r9WUg9UmHAxBSvZegrF07eLcacNZxhSuNN47
+   N8Pvzirdx4VfDS7OJ7+qgdEqmqq1ppFsARXE++zjsQve88Dc0uikO8nT9
+   ZpMgQZ9awm44NfgJOU/6l1e46pwAEnAkPTj5rfKkPbsZ41qv3wf8sDATU
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="334714291"
+X-IronPort-AV: E=Sophos;i="5.99,265,1677571200"; 
+   d="scan'208";a="334714291"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2023 08:52:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="768955152"
+X-IronPort-AV: E=Sophos;i="5.99,265,1677571200"; 
+   d="scan'208";a="768955152"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.61.254])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2023 08:52:01 -0700
+Message-ID: <5267232a-05a4-393b-b68e-da6a4f46d5e8@intel.com>
+Date:   Wed, 10 May 2023 18:51:55 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c1d2cde32b89c3bdb822ab5d1638f2b0f5513902.1683712945.git.siyanteng@loongson.cn>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.11.0
+Subject: Re: [PATCH 3/4] perf tools: Add printing perf_event_attr->type symbol
+ in perf_event_attr__fprintf()
+Content-Language: en-US
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, anshuman.khandual@arm.com,
+        jesussanp@google.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230419122912.73746-1-yangjihong1@huawei.com>
+ <20230419122912.73746-4-yangjihong1@huawei.com>
+ <09511964-dea6-f078-b24c-fef6b05f5b79@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <09511964-dea6-f078-b24c-fef6b05f5b79@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 10, 2023 at 06:24:50PM +0800, Yanteng Si escreveu:
-> Picking the changes from:
+On 10/05/23 11:32, Adrian Hunter wrote:
+> On 19/04/23 15:29, Yang Jihong wrote:
+>> When printing perf_event_attr, always display attr->type and its symbol
+>> to improve the readability of debugging information.
+>>
+>> Before:
+>>
+>>   # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101 -C 0 true
+>>   <SNIP>
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     size                             136
+>>     { sample_period, sample_freq }   4000
+>>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>     read_format                      ID
+>>     disabled                         1
+>>     inherit                          1
+>>     freq                             1
+>>     sample_id_all                    1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             1
+>>     size                             136
+>>     { sample_period, sample_freq }   4000
+>>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>     read_format                      ID
+>>     disabled                         1
+>>     inherit                          1
+>>     freq                             1
+>>     sample_id_all                    1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             2
+>>     size                             136
+>>     config                           0x131
+>>     { sample_period, sample_freq }   1
+>>     sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
+>>     read_format                      ID
+>>     disabled                         1
+>>     inherit                          1
+>>     sample_id_all                    1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 8
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             3
+>>     size                             136
+>>     config                           0x10005
+>>     { sample_period, sample_freq }   4000
+>>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>     read_format                      ID
+>>     disabled                         1
+>>     inherit                          1
+>>     freq                             1
+>>     sample_id_all                    1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             4
+>>     size                             136
+>>     config                           0x101
+>>     { sample_period, sample_freq }   4000
+>>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>     read_format                      ID
+>>     disabled                         1
+>>     inherit                          1
+>>     freq                             1
+>>     sample_id_all                    1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
+>>   <SNIP>
+>>
+>> After:
+>>
+>>   # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101 -C 0 true
+>>   <SNIP>
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             0 (PERF_TYPE_HARDWARE)
+>>     size                             136
+>>     { sample_period, sample_freq }   4000
+>>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>     read_format                      ID
+>>     disabled                         1
+>>     inherit                          1
+>>     freq                             1
+>>     sample_id_all                    1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             1 (PERF_TYPE_SOFTWARE)
+>>     size                             136
+>>     { sample_period, sample_freq }   4000
+>>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>     read_format                      ID
+>>     disabled                         1
+>>     inherit                          1
+>>     freq                             1
+>>     sample_id_all                    1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             2 (PERF_TYPE_TRACEPOINT)
+>>     size                             136
+>>     config                           0x131
+>>     { sample_period, sample_freq }   1
+>>     sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
+>>     read_format                      ID
+>>     disabled                         1
+>>     inherit                          1
+>>     sample_id_all                    1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 8
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             3 (PERF_TYPE_HW_CACHE)
+>>     size                             136
+>>     config                           0x10005
+>>     { sample_period, sample_freq }   4000
+>>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>     read_format                      ID
+>>     disabled                         1
+>>     inherit                          1
+>>     freq                             1
+>>     sample_id_all                    1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
+>>   ------------------------------------------------------------
+>>   perf_event_attr:
+>>     type                             4 (PERF_TYPE_RAW)
+>>     size                             136
+>>     config                           0x101
+>>     { sample_period, sample_freq }   4000
+>>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>     read_format                      ID
+>>     disabled                         1
+>>     inherit                          1
+>>     freq                             1
+>>     sample_id_all                    1
+>>     exclude_guest                    1
+>>   ------------------------------------------------------------
+>>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
+>>   <SNIP>
+>>
+>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> ---
+>>  tools/perf/util/perf_event_attr_fprintf.c | 24 ++++++++++++++++++++++-
+>>  1 file changed, 23 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+>> index 433029c6afc5..d9d70126d505 100644
+>> --- a/tools/perf/util/perf_event_attr_fprintf.c
+>> +++ b/tools/perf/util/perf_event_attr_fprintf.c
+>> @@ -71,6 +71,27 @@ static void __p_read_format(char *buf, size_t size, u64 value)
+>>  	__p_bits(buf, size, value, bits);
+>>  }
+>>  
+>> +static void __p_type_id(char *buf, size_t size, u64 value)
+>> +{
+>> +	/* sync with enum perf_type_id in perf_event.h */
+>> +	switch (value) {
+>> +#define PRINT_ENUM_PERF_TYPE_ID_CASE(x)					\
+>> +	case x:								\
+>> +		snprintf(buf, size, "%"PRIu64" (%s)", value, #x);	\
+>> +		return;
+>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_HARDWARE)
+>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_SOFTWARE)
+>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_TRACEPOINT)
+>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_HW_CACHE)
+>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_RAW)
+>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_BREAKPOINT)
+>> +#undef PRINT_ENUM_PERF_TYPE_ID_CASE
 > 
->   commit 68674f94ffc9dddc ("x86: don't use REP_GOOD or ERMS for small
->    memory copies")
+> These are ABI constants so maybe simpler:
 > 
-> Silencing these perf build warnings:
+> 	const char *fixed_types[] = {"HARDWARE", "SOFTWARE", "TRACEPOINT",
+> 				     "HW_CACHE", "RAW", "BREAKPOINT"};
 > 
->   Warning: Kernel ABI header at 'tools/arch/x86/lib/memcpy_64.S' differs
->    from latest version at 'arch/x86/lib/memcpy_64.S'
->   diff -u tools/arch/x86/lib/memcpy_64.S arch/x86/lib/memcpy_64.S
->   Warning: Kernel ABI header at 'tools/arch/x86/lib/memset_64.S' differs
->    from latest version at 'arch/x86/lib/memset_64.S'
->   diff -u tools/arch/x86/lib/memset_64.S arch/x86/lib/memset_64.S
+> 	if (value < ARRAY_SIZE(fixed_types)) {
+> 		snprintf(buf, size, "%"PRIu64" (PERF_TYPE_%s)",
+> 			 value, fixed_types[value]);
+> 	} else {
+> 		snprintf(buf, size, "%"PRIu64, value);
+> 	}
 
-Dropping this one:
+Although it is really the repeated snprintf that seems unnecessary
+so maybe use a switch but just to get the stringified name.
 
-In file included from bench/mem-memcpy-x86-64-asm.S:14:
-bench/../../arch/x86/lib/memcpy_64.S:5:10: fatal error: linux/cfi_types.h: No such file or directory
-    5 | #include <linux/cfi_types.h>
-      |          ^~~~~~~~~~~~~~~~~~~
-compilation terminated.
-
- 
-> Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-> ---
->  tools/arch/x86/lib/memcpy_64.S | 35 ++++++++-----------------
->  tools/arch/x86/lib/memset_64.S | 47 ++++++++--------------------------
->  2 files changed, 22 insertions(+), 60 deletions(-)
 > 
-> diff --git a/tools/arch/x86/lib/memcpy_64.S b/tools/arch/x86/lib/memcpy_64.S
-> index a91ac666f758..8f95fb267caa 100644
-> --- a/tools/arch/x86/lib/memcpy_64.S
-> +++ b/tools/arch/x86/lib/memcpy_64.S
-> @@ -2,6 +2,7 @@
->  /* Copyright 2002 Andi Kleen */
->  
->  #include <linux/linkage.h>
-> +#include <linux/cfi_types.h>
->  #include <asm/errno.h>
->  #include <asm/cpufeatures.h>
->  #include <asm/alternative.h>
-> @@ -9,13 +10,6 @@
->  
->  .section .noinstr.text, "ax"
->  
-> -/*
-> - * We build a jump to memcpy_orig by default which gets NOPped out on
-> - * the majority of x86 CPUs which set REP_GOOD. In addition, CPUs which
-> - * have the enhanced REP MOVSB/STOSB feature (ERMS), change those NOPs
-> - * to a jmp to memcpy_erms which does the REP; MOVSB mem copy.
-> - */
-> -
->  /*
->   * memcpy - Copy a memory block.
->   *
-> @@ -26,17 +20,21 @@
->   *
->   * Output:
->   * rax original destination
-> + *
-> + * The FSRM alternative should be done inline (avoiding the call and
-> + * the disgusting return handling), but that would require some help
-> + * from the compiler for better calling conventions.
-> + *
-> + * The 'rep movsb' itself is small enough to replace the call, but the
-> + * two register moves blow up the code. And one of them is "needed"
-> + * only for the return value that is the same as the source input,
-> + * which the compiler could/should do much better anyway.
->   */
->  SYM_TYPED_FUNC_START(__memcpy)
-> -	ALTERNATIVE_2 "jmp memcpy_orig", "", X86_FEATURE_REP_GOOD, \
-> -		      "jmp memcpy_erms", X86_FEATURE_ERMS
-> +	ALTERNATIVE "jmp memcpy_orig", "", X86_FEATURE_FSRM
->  
->  	movq %rdi, %rax
->  	movq %rdx, %rcx
-> -	shrq $3, %rcx
-> -	andl $7, %edx
-> -	rep movsq
-> -	movl %edx, %ecx
->  	rep movsb
->  	RET
->  SYM_FUNC_END(__memcpy)
-> @@ -45,17 +43,6 @@ EXPORT_SYMBOL(__memcpy)
->  SYM_FUNC_ALIAS(memcpy, __memcpy)
->  EXPORT_SYMBOL(memcpy)
->  
-> -/*
-> - * memcpy_erms() - enhanced fast string memcpy. This is faster and
-> - * simpler than memcpy. Use memcpy_erms when possible.
-> - */
-> -SYM_FUNC_START_LOCAL(memcpy_erms)
-> -	movq %rdi, %rax
-> -	movq %rdx, %rcx
-> -	rep movsb
-> -	RET
-> -SYM_FUNC_END(memcpy_erms)
-> -
->  SYM_FUNC_START_LOCAL(memcpy_orig)
->  	movq %rdi, %rax
->  
-> diff --git a/tools/arch/x86/lib/memset_64.S b/tools/arch/x86/lib/memset_64.S
-> index 6143b1a6fa2c..7c59a704c458 100644
-> --- a/tools/arch/x86/lib/memset_64.S
-> +++ b/tools/arch/x86/lib/memset_64.S
-> @@ -18,27 +18,22 @@
->   * rdx   count (bytes)
->   *
->   * rax   original destination
-> + *
-> + * The FSRS alternative should be done inline (avoiding the call and
-> + * the disgusting return handling), but that would require some help
-> + * from the compiler for better calling conventions.
-> + *
-> + * The 'rep stosb' itself is small enough to replace the call, but all
-> + * the register moves blow up the code. And two of them are "needed"
-> + * only for the return value that is the same as the source input,
-> + * which the compiler could/should do much better anyway.
->   */
->  SYM_FUNC_START(__memset)
-> -	/*
-> -	 * Some CPUs support enhanced REP MOVSB/STOSB feature. It is recommended
-> -	 * to use it when possible. If not available, use fast string instructions.
-> -	 *
-> -	 * Otherwise, use original memset function.
-> -	 */
-> -	ALTERNATIVE_2 "jmp memset_orig", "", X86_FEATURE_REP_GOOD, \
-> -		      "jmp memset_erms", X86_FEATURE_ERMS
-> +	ALTERNATIVE "jmp memset_orig", "", X86_FEATURE_FSRS
->  
->  	movq %rdi,%r9
-> +	movb %sil,%al
->  	movq %rdx,%rcx
-> -	andl $7,%edx
-> -	shrq $3,%rcx
-> -	/* expand byte value  */
-> -	movzbl %sil,%esi
-> -	movabs $0x0101010101010101,%rax
-> -	imulq %rsi,%rax
-> -	rep stosq
-> -	movl %edx,%ecx
->  	rep stosb
->  	movq %r9,%rax
->  	RET
-> @@ -48,26 +43,6 @@ EXPORT_SYMBOL(__memset)
->  SYM_FUNC_ALIAS(memset, __memset)
->  EXPORT_SYMBOL(memset)
->  
-> -/*
-> - * ISO C memset - set a memory block to a byte value. This function uses
-> - * enhanced rep stosb to override the fast string function.
-> - * The code is simpler and shorter than the fast string function as well.
-> - *
-> - * rdi   destination
-> - * rsi   value (char)
-> - * rdx   count (bytes)
-> - *
-> - * rax   original destination
-> - */
-> -SYM_FUNC_START_LOCAL(memset_erms)
-> -	movq %rdi,%r9
-> -	movb %sil,%al
-> -	movq %rdx,%rcx
-> -	rep stosb
-> -	movq %r9,%rax
-> -	RET
-> -SYM_FUNC_END(memset_erms)
-> -
->  SYM_FUNC_START_LOCAL(memset_orig)
->  	movq %rdi,%r10
->  
-> -- 
-> 2.31.4
+>> +	default:
+>> +		snprintf(buf, size, "%"PRIu64, value);
+>> +		return;
+>> +	}
+>> +}
+>> +
+>>  #define BUF_SIZE		1024
+>>  
+>>  #define p_hex(val)		snprintf(buf, BUF_SIZE, "%#"PRIx64, (uint64_t)(val))
+>> @@ -79,6 +100,7 @@ static void __p_read_format(char *buf, size_t size, u64 value)
+>>  #define p_sample_type(val)	__p_sample_type(buf, BUF_SIZE, val)
+>>  #define p_branch_sample_type(val) __p_branch_sample_type(buf, BUF_SIZE, val)
+>>  #define p_read_format(val)	__p_read_format(buf, BUF_SIZE, val)
+>> +#define p_type_id(val)		__p_type_id(buf, BUF_SIZE, val)
+>>  
+>>  #define PRINT_ATTRn(_n, _f, _p, _a)			\
+>>  do {							\
+>> @@ -96,7 +118,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+>>  	char buf[BUF_SIZE];
+>>  	int ret = 0;
+>>  
+>> -	PRINT_ATTRf(type, p_unsigned);
+>> +	PRINT_ATTRn("type", type, p_type_id, true);
+>>  	PRINT_ATTRf(size, p_unsigned);
+>>  	PRINT_ATTRf(config, p_hex);
+>>  	PRINT_ATTRn("{ sample_period, sample_freq }", sample_period, p_unsigned, false);
 > 
 
--- 
-
-- Arnaldo
