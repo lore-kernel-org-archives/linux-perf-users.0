@@ -2,301 +2,151 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB89AC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 15:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8F1C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 16:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237202AbjEJPwQ (ORCPT
+        id S229741AbjEJQaq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 May 2023 11:52:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33804 "EHLO
+        Wed, 10 May 2023 12:30:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237177AbjEJPwP (ORCPT
+        with ESMTP id S229487AbjEJQao (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 May 2023 11:52:15 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1B371BCF;
-        Wed, 10 May 2023 08:52:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683733931; x=1715269931;
-  h=message-id:date:mime-version:subject:from:to:references:
-   in-reply-to:content-transfer-encoding;
-  bh=zFgrOcmDSS9zNwzZGl0l0+zqDgvB+lANnaZH3a8LQMM=;
-  b=nxsroYqOE8O4ANeaoL619+jhOXInqKknPWeQ1TrGCAXf/HTmJ0kw1cYQ
-   TrvPomtISEIxImY3z2dZFvc1tNaaJ7HXibbkLLbRgUI/hdzz/KdX2BZ9Z
-   aYst0UUXZaNNtFznEVg57L1f5aXqTpFEOR+2KvMQAd+10NOnvxS0Ly5bQ
-   SV8tBvQuWTg1HpKoZBO15r9WUg9UmHAxBSvZegrF07eLcacNZxhSuNN47
-   N8Pvzirdx4VfDS7OJ7+qgdEqmqq1ppFsARXE++zjsQve88Dc0uikO8nT9
-   ZpMgQZ9awm44NfgJOU/6l1e46pwAEnAkPTj5rfKkPbsZ41qv3wf8sDATU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="334714291"
-X-IronPort-AV: E=Sophos;i="5.99,265,1677571200"; 
-   d="scan'208";a="334714291"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2023 08:52:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="768955152"
-X-IronPort-AV: E=Sophos;i="5.99,265,1677571200"; 
-   d="scan'208";a="768955152"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.61.254])
-  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2023 08:52:01 -0700
-Message-ID: <5267232a-05a4-393b-b68e-da6a4f46d5e8@intel.com>
-Date:   Wed, 10 May 2023 18:51:55 +0300
+        Wed, 10 May 2023 12:30:44 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5BFF24207;
+        Wed, 10 May 2023 09:30:43 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AA5212FC;
+        Wed, 10 May 2023 09:31:27 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.32.173])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 700EB3F67D;
+        Wed, 10 May 2023 09:30:35 -0700 (PDT)
+Date:   Wed, 10 May 2023 17:30:32 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>, ito-yuichi@fujitsu.com,
+        kgdb-bugreport@lists.sourceforge.net, Chen-Yu Tsai <wens@csie.org>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-perf-users@vger.kernel.org,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Ben Dooks <ben-linux@fluff.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jinyang He <hejinyang@loongson.cn>,
+        Joey Gouly <joey.gouly@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Pierre Gondois <Pierre.Gondois@arm.com>,
+        Qing Zhang <zhangqing@loongson.cn>,
+        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
+        Russell King <linux@armlinux.org.uk>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH v8 00/10] arm64: Add framework to turn an IPI as NMI
+Message-ID: <ZFvGqD//pm/lZb+p@FVFF77S0Q05N.cambridge.arm.com>
+References: <20230419225604.21204-1-dianders@chromium.org>
+ <CAD=FV=Wny=iFQf2GGuC2qP9hy4FHzpiRpV=ZvxEW77DX02XGzQ@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH 3/4] perf tools: Add printing perf_event_attr->type symbol
- in perf_event_attr__fprintf()
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, anshuman.khandual@arm.com,
-        jesussanp@google.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230419122912.73746-1-yangjihong1@huawei.com>
- <20230419122912.73746-4-yangjihong1@huawei.com>
- <09511964-dea6-f078-b24c-fef6b05f5b79@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <09511964-dea6-f078-b24c-fef6b05f5b79@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=Wny=iFQf2GGuC2qP9hy4FHzpiRpV=ZvxEW77DX02XGzQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10/05/23 11:32, Adrian Hunter wrote:
-> On 19/04/23 15:29, Yang Jihong wrote:
->> When printing perf_event_attr, always display attr->type and its symbol
->> to improve the readability of debugging information.
->>
->> Before:
->>
->>   # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101 -C 0 true
->>   <SNIP>
->>   ------------------------------------------------------------
->>   perf_event_attr:
->>     size                             136
->>     { sample_period, sample_freq }   4000
->>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>     read_format                      ID
->>     disabled                         1
->>     inherit                          1
->>     freq                             1
->>     sample_id_all                    1
->>     exclude_guest                    1
->>   ------------------------------------------------------------
->>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->>   ------------------------------------------------------------
->>   perf_event_attr:
->>     type                             1
->>     size                             136
->>     { sample_period, sample_freq }   4000
->>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>     read_format                      ID
->>     disabled                         1
->>     inherit                          1
->>     freq                             1
->>     sample_id_all                    1
->>     exclude_guest                    1
->>   ------------------------------------------------------------
->>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
->>   ------------------------------------------------------------
->>   perf_event_attr:
->>     type                             2
->>     size                             136
->>     config                           0x131
->>     { sample_period, sample_freq }   1
->>     sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
->>     read_format                      ID
->>     disabled                         1
->>     inherit                          1
->>     sample_id_all                    1
->>     exclude_guest                    1
->>   ------------------------------------------------------------
->>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 8
->>   ------------------------------------------------------------
->>   perf_event_attr:
->>     type                             3
->>     size                             136
->>     config                           0x10005
->>     { sample_period, sample_freq }   4000
->>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>     read_format                      ID
->>     disabled                         1
->>     inherit                          1
->>     freq                             1
->>     sample_id_all                    1
->>     exclude_guest                    1
->>   ------------------------------------------------------------
->>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
->>   ------------------------------------------------------------
->>   perf_event_attr:
->>     type                             4
->>     size                             136
->>     config                           0x101
->>     { sample_period, sample_freq }   4000
->>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>     read_format                      ID
->>     disabled                         1
->>     inherit                          1
->>     freq                             1
->>     sample_id_all                    1
->>     exclude_guest                    1
->>   ------------------------------------------------------------
->>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
->>   <SNIP>
->>
->> After:
->>
->>   # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101 -C 0 true
->>   <SNIP>
->>   ------------------------------------------------------------
->>   perf_event_attr:
->>     type                             0 (PERF_TYPE_HARDWARE)
->>     size                             136
->>     { sample_period, sample_freq }   4000
->>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>     read_format                      ID
->>     disabled                         1
->>     inherit                          1
->>     freq                             1
->>     sample_id_all                    1
->>     exclude_guest                    1
->>   ------------------------------------------------------------
->>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->>   ------------------------------------------------------------
->>   perf_event_attr:
->>     type                             1 (PERF_TYPE_SOFTWARE)
->>     size                             136
->>     { sample_period, sample_freq }   4000
->>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>     read_format                      ID
->>     disabled                         1
->>     inherit                          1
->>     freq                             1
->>     sample_id_all                    1
->>     exclude_guest                    1
->>   ------------------------------------------------------------
->>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
->>   ------------------------------------------------------------
->>   perf_event_attr:
->>     type                             2 (PERF_TYPE_TRACEPOINT)
->>     size                             136
->>     config                           0x131
->>     { sample_period, sample_freq }   1
->>     sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
->>     read_format                      ID
->>     disabled                         1
->>     inherit                          1
->>     sample_id_all                    1
->>     exclude_guest                    1
->>   ------------------------------------------------------------
->>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 8
->>   ------------------------------------------------------------
->>   perf_event_attr:
->>     type                             3 (PERF_TYPE_HW_CACHE)
->>     size                             136
->>     config                           0x10005
->>     { sample_period, sample_freq }   4000
->>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>     read_format                      ID
->>     disabled                         1
->>     inherit                          1
->>     freq                             1
->>     sample_id_all                    1
->>     exclude_guest                    1
->>   ------------------------------------------------------------
->>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
->>   ------------------------------------------------------------
->>   perf_event_attr:
->>     type                             4 (PERF_TYPE_RAW)
->>     size                             136
->>     config                           0x101
->>     { sample_period, sample_freq }   4000
->>     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>     read_format                      ID
->>     disabled                         1
->>     inherit                          1
->>     freq                             1
->>     sample_id_all                    1
->>     exclude_guest                    1
->>   ------------------------------------------------------------
->>   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
->>   <SNIP>
->>
->> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->> ---
->>  tools/perf/util/perf_event_attr_fprintf.c | 24 ++++++++++++++++++++++-
->>  1 file changed, 23 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
->> index 433029c6afc5..d9d70126d505 100644
->> --- a/tools/perf/util/perf_event_attr_fprintf.c
->> +++ b/tools/perf/util/perf_event_attr_fprintf.c
->> @@ -71,6 +71,27 @@ static void __p_read_format(char *buf, size_t size, u64 value)
->>  	__p_bits(buf, size, value, bits);
->>  }
->>  
->> +static void __p_type_id(char *buf, size_t size, u64 value)
->> +{
->> +	/* sync with enum perf_type_id in perf_event.h */
->> +	switch (value) {
->> +#define PRINT_ENUM_PERF_TYPE_ID_CASE(x)					\
->> +	case x:								\
->> +		snprintf(buf, size, "%"PRIu64" (%s)", value, #x);	\
->> +		return;
->> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_HARDWARE)
->> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_SOFTWARE)
->> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_TRACEPOINT)
->> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_HW_CACHE)
->> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_RAW)
->> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_BREAKPOINT)
->> +#undef PRINT_ENUM_PERF_TYPE_ID_CASE
-> 
-> These are ABI constants so maybe simpler:
-> 
-> 	const char *fixed_types[] = {"HARDWARE", "SOFTWARE", "TRACEPOINT",
-> 				     "HW_CACHE", "RAW", "BREAKPOINT"};
-> 
-> 	if (value < ARRAY_SIZE(fixed_types)) {
-> 		snprintf(buf, size, "%"PRIu64" (PERF_TYPE_%s)",
-> 			 value, fixed_types[value]);
-> 	} else {
-> 		snprintf(buf, size, "%"PRIu64, value);
-> 	}
+On Wed, May 10, 2023 at 08:28:17AM -0700, Doug Anderson wrote:
+> Hi,
 
-Although it is really the repeated snprintf that seems unnecessary
-so maybe use a switch but just to get the stringified name.
+Hi Doug,
 
-> 
->> +	default:
->> +		snprintf(buf, size, "%"PRIu64, value);
->> +		return;
->> +	}
->> +}
->> +
->>  #define BUF_SIZE		1024
->>  
->>  #define p_hex(val)		snprintf(buf, BUF_SIZE, "%#"PRIx64, (uint64_t)(val))
->> @@ -79,6 +100,7 @@ static void __p_read_format(char *buf, size_t size, u64 value)
->>  #define p_sample_type(val)	__p_sample_type(buf, BUF_SIZE, val)
->>  #define p_branch_sample_type(val) __p_branch_sample_type(buf, BUF_SIZE, val)
->>  #define p_read_format(val)	__p_read_format(buf, BUF_SIZE, val)
->> +#define p_type_id(val)		__p_type_id(buf, BUF_SIZE, val)
->>  
->>  #define PRINT_ATTRn(_n, _f, _p, _a)			\
->>  do {							\
->> @@ -96,7 +118,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
->>  	char buf[BUF_SIZE];
->>  	int ret = 0;
->>  
->> -	PRINT_ATTRf(type, p_unsigned);
->> +	PRINT_ATTRn("type", type, p_type_id, true);
->>  	PRINT_ATTRf(size, p_unsigned);
->>  	PRINT_ATTRf(config, p_hex);
->>  	PRINT_ATTRn("{ sample_period, sample_freq }", sample_period, p_unsigned, false);
-> 
+> On Wed, Apr 19, 2023 at 3:57 PM Douglas Anderson <dianders@chromium.org> wrote:
+> > This is an attempt to resurrect Sumit's old patch series [1] that
+> > allowed us to use the arm64 pseudo-NMI to get backtraces of CPUs and
+> > also to round up CPUs in kdb/kgdb. The last post from Sumit that I
+> > could find was v7, so I called this series v8. I haven't copied all of
+> > his old changelongs here, but you can find them from the link.
+> >
+> > Since v7, I have:
+> > * Addressed the small amount of feedback that was there for v7.
+> > * Rebased.
+> > * Added a new patch that prevents us from spamming the logs with idle
+> >   tasks.
+> > * Added an extra patch to gracefully fall back to regular IPIs if
+> >   pseudo-NMIs aren't there.
+> >
+> > Since there appear to be a few different patches series related to
+> > being able to use NMIs to get stack traces of crashed systems, let me
+> > try to organize them to the best of my understanding:
+> >
+> > a) This series. On its own, a) will (among other things) enable stack
+> >    traces of all running processes with the soft lockup detector if
+> >    you've enabled the sysctl "kernel.softlockup_all_cpu_backtrace". On
+> >    its own, a) doesn't give a hard lockup detector.
+> >
+> > b) A different recently-posted series [2] that adds a hard lockup
+> >    detector based on perf. On its own, b) gives a stack crawl of the
+> >    locked up CPU but no stack crawls of other CPUs (even if they're
+> >    locked too). Together with a) + b) we get everything (full lockup
+> >    detect, full ability to get stack crawls).
+> >
+> > c) The old Android "buddy" hard lockup detector [3] that I'm
+> >    considering trying to upstream. If b) lands then I believe c) would
+> >    be redundant (at least for arm64). c) on its own is really only
+> >    useful on arm64 for platforms that can print CPU_DBGPCSR somehow
+> >    (see [4]). a) + c) is roughly as good as a) + b).
 
+> It's been 3 weeks and I haven't heard a peep on this series. That
+> means nobody has any objections and it's all good to land, right?
+> Right? :-P
+
+FWIW, there are still longstanding soundness issues in the arm64 pseudo-NMI
+support (and fixing that requires an overhaul of our DAIF / IRQ flag
+management, which I've been chipping away at for a number of releases), so I
+hadn't looked at this in detail yet because the foundations are still somewhat
+dodgy.
+
+I appreciate that this has been around for a while, and it's on my queue to
+look at.
+
+Thanks,
+Mark.
