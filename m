@@ -2,179 +2,189 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5CAC7EE22
-	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 18:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D91C7EE22
+	for <linux-perf-users@archiver.kernel.org>; Wed, 10 May 2023 21:13:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232452AbjEJS4z (ORCPT
+        id S229580AbjEJVN0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 10 May 2023 14:56:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46676 "EHLO
+        Wed, 10 May 2023 17:13:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjEJS4y (ORCPT
+        with ESMTP id S236905AbjEJVNZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 10 May 2023 14:56:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E2410D3;
-        Wed, 10 May 2023 11:56:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 33EDE63FC4;
-        Wed, 10 May 2023 18:56:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36A18C433EF;
-        Wed, 10 May 2023 18:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683745010;
-        bh=hnjNpJ/WI6twjro0xk2Nr8Le9Sc2ewfqjnIfqLVYWXA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ks6OQHE3+6zg0Buwwl+2k0aQIIxjKrtCGH4lX+coXTjtimmMBzqrljL1CJAw7IgPz
-         4Z0b765QPWea8zWV8ETgqugT94lYzmT10zVDrH6SDOzsR/8dyibSgvwHSfNc8mC6w3
-         jUs78Hm/crFMKmUJ9B7wvJhdD621dSUYW/+zwlNO62sGAINp8Cutt5dHcSFVd9ukTh
-         u2b7XX5pYsVemAfN5eLS2khUUeakfD4ajmrb1x/3ObSQKviBkkkM7mK/l+3olZAd15
-         sRUKEF2x/KQzZOoMq2WVL//g8cattukNRY582GDQcXHOzfUKIaM95L+xNfXKZCrB8R
-         4zpdawR8SzLyw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 558B7403B5; Wed, 10 May 2023 15:56:47 -0300 (-03)
-Date:   Wed, 10 May 2023 15:56:47 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>, Jiri Olsa <olsajiri@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Song Liu <song@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Hao Luo <haoluo@google.com>, James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Roman Lozko <lozko.roma@gmail.com>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Clarke <pc@us.ibm.com>
-Subject: Re: [PATCH RFC/RFT] perf bpf skels: Stop using vmlinux.h generated
- from BTF, use subset of used structs + CO-RE. was Re: BPF skels in perf .Re:
- [GIT PULL] perf tools changes for v6.4
-Message-ID: <ZFvo79pOroYOFC/I@kernel.org>
-References: <ZFQCccsx6GK+gY0j@kernel.org>
- <ZFQoQjCNtyMIulp+@kernel.org>
- <CAP-5=fU8HQorW+7O6vfEKGs1mEFkjkzXZMVPACzurtcMcRhVzQ@mail.gmail.com>
- <ZFQ5sjjtfEYzvHNP@krava>
- <ZFUFmxDU/6Z/JEsi@kernel.org>
- <ZFU1PJrn8YtHIqno@kernel.org>
- <CAP-5=fWfmmMCRnEmzj_CXTKacp6gjrzmR49Ge_C5XRyfTegRjg@mail.gmail.com>
- <ZFVqeKLssg7uzxzI@krava>
- <CAP-5=fVgJdBvjV8S2xKswAFiSZvyCcUvZTO1bsLyUf-wQ0pBuw@mail.gmail.com>
- <CAM9d7cjrZ-sHhO1ErqVdrN8Vv-ocCmsONc443yoPiCvnoiXj9A@mail.gmail.com>
+        Wed, 10 May 2023 17:13:25 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2224C1FD9
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 May 2023 14:13:24 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3f3faefc92cso12852351cf.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 May 2023 14:13:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1683753202; x=1686345202;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zyh0bxNbQysRLzMlyvYUgAW6FOR/Pp87rMETzWIkR6k=;
+        b=L/7CeZfiVoqY2CusiCjASmx0s8QvFTUKJqUAmw1HiFlfkDnYWkRF3pjeP2J++NS0y2
+         cWopIoLtx+6wFWO0TtoprRwkeRrfen5voxCTEwIVnpVfHS24lmdcjNtE95ALM+3R8UDi
+         2yPXkMNoIGB8kQLKXFFlojF/sK26Drsj2+d6c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683753202; x=1686345202;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Zyh0bxNbQysRLzMlyvYUgAW6FOR/Pp87rMETzWIkR6k=;
+        b=fQYSLnd+Rykantft6+0KH3OMc9LfxUy9NH8wBJ7N7D1TI825/ZJ4jikVsXslyCdfUr
+         AKvLyYQkdRY8vuQ1IGS9dGIk44G9HoQx+40kOesDE8OhTVHo1h1NwCXnL0Tz2OfDuDVn
+         Ygl/Mw6DyIfzs84NySoWXECKllKH7yjjMwWMj0OEv8uaTjX0UdJ9Id4AEPz2fQUWF71f
+         6quN04wuumWYEER/CvEaG1Lh6qwzRphnNSS7+fPk/LYYbq7ibphVmS5QIC+Jw68IJr/9
+         78wy0TUxaLHBlxpSbZqNu/oZJMdNVjSTKDLLvGZxkPQUjEhKfRokfyuEuL6aJSZZZ/C3
+         u78Q==
+X-Gm-Message-State: AC+VfDy+hyNmGAcd5qTN+rzKqCcZS54cTTPzXcDARqY9+Tf6/2SeiWoL
+        bjNSspmtt2hjBmhXXVsSF7Z+9f+f4+zEu50pCUukmA==
+X-Google-Smtp-Source: ACHHUZ4mFK9rY/tmhga4EUFvALOWp1XNrDB9prPhD5DBOkYP9x2QKGpCVM6Qcoilr1Q+bvPhjMdv1A==
+X-Received: by 2002:a05:622a:44:b0:3f3:99fb:4d1f with SMTP id y4-20020a05622a004400b003f399fb4d1fmr10763545qtw.39.1683753202204;
+        Wed, 10 May 2023 14:13:22 -0700 (PDT)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com. [209.85.160.173])
+        by smtp.gmail.com with ESMTPSA id o20-20020a05620a111400b0075904321c87sm228603qkk.13.2023.05.10.14.13.21
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 May 2023 14:13:21 -0700 (PDT)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-3f38a9918d1so566221cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 May 2023 14:13:21 -0700 (PDT)
+X-Received: by 2002:ac8:5c12:0:b0:3f2:1441:3c11 with SMTP id
+ i18-20020ac85c12000000b003f214413c11mr120377qti.2.1683753200902; Wed, 10 May
+ 2023 14:13:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7cjrZ-sHhO1ErqVdrN8Vv-ocCmsONc443yoPiCvnoiXj9A@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+References: <20230419225604.21204-1-dianders@chromium.org> <20230419155341.v8.6.I4baba13e220bdd24d11400c67f137c35f07f82c7@changeid>
+ <ZFvJqIYo00vfqRiB@FVFF77S0Q05N.cambridge.arm.com>
+In-Reply-To: <ZFvJqIYo00vfqRiB@FVFF77S0Q05N.cambridge.arm.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 10 May 2023 14:13:09 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WuONtodLgMSubLANywT1LVd2T3PQHxm18EN090YnrkNw@mail.gmail.com>
+Message-ID: <CAD=FV=WuONtodLgMSubLANywT1LVd2T3PQHxm18EN090YnrkNw@mail.gmail.com>
+Subject: Re: [PATCH v8 06/10] arm64: idle: Tag the arm64 idle functions as __cpuidle
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>, ito-yuichi@fujitsu.com,
+        kgdb-bugreport@lists.sourceforge.net, Chen-Yu Tsai <wens@csie.org>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-perf-users@vger.kernel.org,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+        Ingo Molnar <mingo@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, May 05, 2023 at 01:48:52PM -0700, Namhyung Kim escreveu:
-> On Fri, May 5, 2023 at 1:46 PM Ian Rogers <irogers@google.com> wrote:
+Hi,
+
+On Wed, May 10, 2023 at 9:43=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
+ wrote:
+>
+> On Wed, Apr 19, 2023 at 03:56:00PM -0700, Douglas Anderson wrote:
+> > As per the (somewhat recent) comment before the definition of
+> > `__cpuidle`, the tag is like `noinstr` but also marks a function so it
+> > can be identified by cpu_in_idle(). Let'a add this.
 > >
-> > On Fri, May 5, 2023 at 1:43 PM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > >
-> > > On Fri, May 05, 2023 at 10:04:47AM -0700, Ian Rogers wrote:
-> > > > On Fri, May 5, 2023 at 9:56 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > >
-> > > > > Em Fri, May 05, 2023 at 10:33:15AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > > > Em Fri, May 05, 2023 at 01:03:14AM +0200, Jiri Olsa escreveu:
-> > > > > > That with the preserve_access_index isn't needed, we need just the
-> > > > > > fields that we access in the tools, right?
-> > > > >
-> > > > > I'm now doing build test this in many distro containers, without the two
-> > > > > reverts, i.e. BPF skels continue as opt-out as in my pull request, to
-> > > > > test build and also for the functionality tests on the tools using such
-> > > > > bpf skels, see below, no touching of vmlinux nor BTF data during the
-> > > > > build.
-> > > > >
-> > > > > - Arnaldo
-> > > > >
-> > > > > From 882adaee50bc27f85374aeb2fbaa5b76bef60d05 Mon Sep 17 00:00:00 2001
-> > > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > > Date: Thu, 4 May 2023 19:03:51 -0300
-> > > > > Subject: [PATCH 1/1] perf bpf skels: Stop using vmlinux.h generated from BTF,
-> > > > >  use subset of used structs + CO-RE
-> > > > >
-> > > > > Linus reported a build break due to using a vmlinux without a BTF elf
-> > > > > section to generate the vmlinux.h header with bpftool for use in the BPF
-> > > > > tools in tools/perf/util/bpf_skel/*.bpf.c.
-> > > > >
-> > > > > Instead add a vmlinux.h file with the structs needed with the fields the
-> > > > > tools need, marking the structs with __attribute__((preserve_access_index)),
-> > > > > so that libbpf's CO-RE code can fixup the struct field offsets.
-> > > > >
-> > > > > In some cases the vmlinux.h file that was being generated by bpftool
-> > > > > from the kernel BTF information was not needed at all, just including
-> > > > > linux/bpf.h, sometimes linux/perf_event.h was enough as non-UAPI
-> > > > > types were not being used.
-> > > > >
-> > > > > To keep te patch small, include those UAPI headers from the trimmed down
-> > > > > vmlinux.h file, that then provides the tools with just the structs and
-> > > > > the subset of its fields needed for them.
-> > > > >
-> > > > > Testing it:
-> > > > >
-> > > > >   # perf lock contention -b find / > /dev/null
-> > >
-> > > I tested perf lock con -abv -L rcu_state sleep 1
-> > > and needed fix below
-> > >
-> > > jirka
+> > After doing this then when we dump stack traces of all processors
+> > using nmi_cpu_backtrace() then instead of getting useless backtraces
+> > we get things like:
 > >
-> > I thought this was fixed by:
-> > https://lore.kernel.org/lkml/20230427234833.1576130-1-namhyung@kernel.org/
+> >   NMI backtrace for cpu N skipped: idling at cpu_do_idle+0x94/0x98
+>
+> As a heads-up, this is only going to work in the trivial case where a CPU=
+ is
+> within the default cpu_do_idle(), and not for anything using PSCI
+> cpu_suspend() (which I'd *really* hope is the common case).
 
-Those are upstream already:
+Thanks for the review and the heads up! Right. It only catches shallow
+idle. Specifically this was the stack trace when it was "caught" on a
+sc7180-trogdor device:
 
-⬢[acme@toolbox perf-tools]$ git log --oneline torvalds/master | grep -m1 -B1 "perf lock contention: Fix struct rq lock access"
-b9f82b5c63bf5390 perf lock contention: Rework offset calculation with BPF CO-RE
-e53de7b65a3ca59a perf lock contention: Fix struct rq lock access
-⬢[acme@toolbox perf-tools]$
+ cpu_do_idle+0x94/0x98
+ psci_enter_idle_state+0x58/0x70
+ cpuidle_enter_state+0xb8/0x260
+ cpuidle_enter+0x44/0x5c
+ do_idle+0x188/0x30c
+ ...
 
-> > but I think that is just in perf-tools-next.
- 
-> Right, but we might still need the empty rq definition.
+I checked in kgdb and saw that "psci_enter_idle_state()" had "idx" as
+0, which makes sense since __CPU_PM_CPU_IDLE_ENTER will directly call
+cpu_do_idle() when idx is 0.
 
-Yeah, without the empty struct diff libbpf complains about a mismatch of
-just a forward declaration as the type for 'runqueues' on the
-lock_contention.bpf.c file while the kernel has a the type as 'struct
-rq':
+I agree that it doesn't catch every case. Certainly it's not too hard
+to see a CPU here:
 
-[root@quaco ~]# perf lock con -ab sleep 1
-libbpf: extern (var ksym) 'runqueues': incompatible types, expected [95] fwd rq, but kernel has [55509] struct rq
-libbpf: failed to load object 'lock_contention_bpf'
-libbpf: failed to load BPF skeleton 'lock_contention_bpf': -22
-Failed to load lock-contention BPF skeleton
-lock contention BPF setup failed
-[root@quaco ~]#
+ gic_cpu_sys_reg_init+0x1f8/0x314
+ gic_cpu_pm_notifier+0x40/0x78
+ raw_notifier_call_chain+0x5c/0x134
+ cpu_pm_notify+0x38/0x64
+ cpu_pm_exit+0x20/0x2c
+ psci_enter_idle_state+0x48/0x70
+ cpuidle_enter_state+0xb8/0x260
+ cpuidle_enter+0x44/0x5c
+ do_idle+0x188/0x30c
+ ...
 
-Adding:
+...and kgdb showed "idx" was 3.
 
-struct rq {};
+That being said, catching some of the cases is better than catching
+none of the cases. ;-)
 
-libbpf is happy:
+In reality, I've seen cases where it catches most CPUs. For instance,
+running soon after bootup on my sc7180-trogdor device:
 
-[root@quaco ~]# perf lock con -ab sleep 1
- contended   total wait     max wait     avg wait         type   caller
+echo HARDLOCKUP > /sys/kernel/debug/provoke-crash/DIRECT
 
-         2     50.64 us     25.38 us     25.32 us     spinlock   tick_do_update_jiffies64+0x25
-         1     26.18 us     26.18 us     26.18 us     spinlock   tick_do_update_jiffies64+0x25
-[root@quaco ~]#
+...and then having the "buddy" hardlockup detector [1] catch the crash
+caught all of the CPUs other than the one that was locked up and the
+one that detected it. Specifically:
 
-- Arnaldo
+NMI backtrace for cpu 2 skipped: idling at cpu_do_idle+0x94/0x98
+NMI backtrace for cpu 1 skipped: idling at cpu_do_idle+0x94/0x98
+NMI backtrace for cpu 0 skipped: idling at cpu_do_idle+0x94/0x98
+NMI backtrace for cpu 3 skipped: idling at cpu_do_idle+0x94/0x98
+NMI backtrace for cpu 4 skipped: idling at cpu_do_idle+0x94/0x98
+NMI backtrace for cpu 7 skipped: idling at cpu_do_idle+0x94/0x98
+
+I haven't analyzed it, but I guess it's possible that when the buddy
+hardlockup detector triggers that other CPUs are more likely to be in
+a shallow idle? Certainly I seem to catch a lot more CPUs in a shallow
+idle in buddy lockup reports...
+
+
+[1] https://lore.kernel.org/r/20230504221349.1535669-1-dianders@chromium.or=
+g
+
+
+> That doesn't get inlined, and the invocation is shared with other SMCCC u=
+sers,
+> so we probably need more work there if culling idle backtraces is importa=
+nt.
+
+At this point I'd say that we should just take the low hanging fruit
+(this patch). If someone later wants to try to do better they can.
+
+
+> I'm not averse to this change itself.
+
+Any chance you'd be willing to give any tags to it? :-P Do you need me
+to add any of the above caveats to the commit message?
+
+I also certainly wouldn't object to this patch landing even if others
+aren't ready. It has no dependencies on any other patches and just
+makes the debug messages prettier in some cases.
+
+-Doug
