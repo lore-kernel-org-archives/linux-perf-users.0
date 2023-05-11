@@ -2,74 +2,113 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B110C7EE22
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 05:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90AFAC7EE22
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 06:27:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232410AbjEKFgE (ORCPT
+        id S237016AbjEKG1d (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 May 2023 01:36:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50564 "EHLO
+        Thu, 11 May 2023 02:27:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230205AbjEKFgD (ORCPT
+        with ESMTP id S236751AbjEKG1a (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 May 2023 01:36:03 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B608E61
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 May 2023 22:36:02 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id 98e67ed59e1d1-24e4f674356so7360689a91.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 May 2023 22:36:02 -0700 (PDT)
+        Thu, 11 May 2023 02:27:30 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDF9103;
+        Wed, 10 May 2023 23:27:29 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-51b0f9d7d70so7437391a12.1;
+        Wed, 10 May 2023 23:27:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683783361; x=1686375361;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hNKPKJQGc5C02qWJH+QMSd9EFf+RdxvoMCl8k5H3wG8=;
-        b=CNiaw4tQvZvXT5RxJ1IbUdLNeq0kfhuG0FRX5D6Q7+j5STEy7a/3OqqSjDtQKbQtnL
-         48oj+KCXPLgtYJjw73H4L85eWtkHU/+0QkV7ujkfqXNoSzrLa150RYUQSy5YIw4UmNzB
-         YAKdrVnljW0rFh0xTGDqG2V/tjOpjj4JkeQ/8KDA+h474nmCLSqkvan4XKvNEkHGgeCh
-         f/s5SqiKw45sykAy3ELZeZieONS1/SmgaNVPHszywV1P/7ltl1iZ8Thiohebkm2HX4p3
-         2IFtbFZXSqzhVyB2mvulIcKphqXBIKIwBQEcrr2WlNdCxd9xk38jTgajXz7dmcK4hymJ
-         9vVg==
+        d=gmail.com; s=20221208; t=1683786449; x=1686378449;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BUM/womBq8zG0iIiWwWTRkqn2H+jvaSWOmmttRj5uZA=;
+        b=QVkS6/mfk8fj+fZi8lFlKmIk8nPgYKzj4H1gYEY24Nc0TMmQJ0SNvHM5yPrbqOQfez
+         S509jegR0jRiPSkb5q6EpjrQlc8BZmq7/uzRWMURB2sUOb1B8W4qCx+YeGhIG1+tyZ+Y
+         JZ7MVI2Qr8dpfFvczODEDR2pZIDgJt/L3nZjlWihYI6ZgCxTgYVPgoMMohmAHoJm0YHJ
+         csf6IDnjecRXuoahJO/J6TXkhlBSpNbw9Eyoa0eg4f2eWrvwbzODuMFxbOJssWCkY2pB
+         6IRD/wZz56p9HWtMibiYOzR75HJk+YcZqX0lj6dghNkh4YUkCOo796cgbFz7HhsEA3lV
+         T+eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683783361; x=1686375361;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hNKPKJQGc5C02qWJH+QMSd9EFf+RdxvoMCl8k5H3wG8=;
-        b=PUNXS+eBzwMNmbfyP2Ljb74T2Fz+zFJPjdgPtSvHaXrDykbLZCrCNWxg0D0+ZAWxb3
-         oGh5EV62EubPz/2EWdTwL81trrUAu1vHx9O8Em2wqN2p3HjdCOnwetxGL6mcjjm2YB1e
-         PC9QoXMouVzvd5wwPXhZxVkHOjJnulVYp8aIde2e5Ts0+S0SpveJTvhIbYv0du9uSqRE
-         rgUDFtZrfft6lauWSzQPfdscSBuZaeD+SF1FvrYLAcg0URRpiphRyvjk72ujOzIiorKx
-         rmnFAMe6CY9t1EUMP5oIou3ICXN9OPMHYdThi3iXDfqn7fbSgTBwGViVDS7IaTPM5iPR
-         sAGg==
-X-Gm-Message-State: AC+VfDyCC30K5XG9yslcKvNtlcbUbI63k/Uri7WC6VYCxo5XBr6mPi1K
-        4QfdJSHGn7954X16jw/OErfIJj2Zbn/5dRK6Ic4owDgz1T8=
-X-Google-Smtp-Source: ACHHUZ5KexVQLVc0Vulq6FPr+ZgLcFbFvf7BXEpIMoHM9TUZdH8xOf5VqqzuT8UFX6beiybtUOfvV/ENOHzs74aih2s=
-X-Received: by 2002:a17:90a:2981:b0:247:6be7:8cc0 with SMTP id
- h1-20020a17090a298100b002476be78cc0mr19380373pjd.35.1683783361235; Wed, 10
- May 2023 22:36:01 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683786449; x=1686378449;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=BUM/womBq8zG0iIiWwWTRkqn2H+jvaSWOmmttRj5uZA=;
+        b=SZUYzB1Va2cyi6Or0mPerN1HICTU28wF4KDSHnkx+Z+J+GalLfEWwzGXbGTYa7GqNj
+         aQTbMEfZAfH0+S3U6Z4fFeF497l70SNN4rQJNRc7eHkXW5RngQH8ZWHSws15YwjTPLk5
+         eNSf1Yh/mQy8+xPpnpD51bgxToiyySdLes7kv4h+gy29KLzdGHkB3FmhvwZ7rA7IOoYp
+         XzyOeBSwskGc9DBvTjKMX4Q122jk2kQ9dAEZTm84NsnjIdiWWFJWTwHn0MPjHa4jKXbr
+         yZ4FPlEh8PAkG3Y+WUFgvbpjOmS9uNeX6Vpa59brbOHDhT/MV2guovSDi2kFJY4HgW3j
+         NUOA==
+X-Gm-Message-State: AC+VfDwoV5bvfp34JGbu1EgpSdyjynNcCM65pfSBWTOdf/7DwQed+824
+        B3YsMY/mG5CH2kmq8AonsX0=
+X-Google-Smtp-Source: ACHHUZ74w2hCkiKy/x/b9809bt+OPI4LJAVDv1QVb1FH6S8QXBhvKah1mnfVslzU97GE0NEA2QMPBA==
+X-Received: by 2002:a17:902:b68d:b0:1ac:7405:d3ba with SMTP id c13-20020a170902b68d00b001ac7405d3bamr13535688pls.40.1683786449496;
+        Wed, 10 May 2023 23:27:29 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6700:7f00:c18c:3210:36c3:c88c])
+        by smtp.gmail.com with ESMTPSA id jj17-20020a170903049100b001ac2be2639asm4925683plb.223.2023.05.10.23.27.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 May 2023 23:27:29 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 2/3] perf annotate: Parse x86 SIB addressing properly
+Date:   Wed, 10 May 2023 23:27:24 -0700
+Message-ID: <20230511062725.514752-2-namhyung@kernel.org>
+X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
+In-Reply-To: <20230511062725.514752-1-namhyung@kernel.org>
+References: <20230511062725.514752-1-namhyung@kernel.org>
 MIME-Version: 1.0
-From:   Rajasekhar Pulluru <pullururajasekhar@gmail.com>
-Date:   Thu, 11 May 2023 11:05:47 +0530
-Message-ID: <CAGA5_H6b7jVJcy0ahnbTqG3eqA2PD3TGFmXm7xQ=gMBVJ1yZyg@mail.gmail.com>
-Subject: missing symbol names in perf top but not in perf record/report
-To:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-An application (compiled with -g and -fno-omit-frame-pointer) is
-running inside the linux container. Trying to use perf tool on the
-linux host (not inside the container) to identify a list of functions
-consuming more cpu cycles.
-Running perf top -p `pidof app` on the linux host prints address
-instead of symbol name, where-as perf record -p `pidof app` and perf
-report prints symbol names instead of addresses.
+When the source argument of mov instruction is look like below, it didn't
+parse the whole operand and just stopped at the first comma.
 
-Why doesn't perf top display symbol names if perf record/report can?
+  mov    (%rbx,%rax,1),%rcx
 
-Linux host is based on jammy, and Linux container is based on bionic.
+Fix it by checking the parentheses and move it to the closing one.
 
-Appreciate any help.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/annotate.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Thanks & Regards,
-Rajasekhar
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index ca9f0add68f4..6053ddf9c32d 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -550,6 +550,19 @@ static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map_sy
+ 		return -1;
+ 
+ 	*s = '\0';
++
++	/*
++	 * x86 SIB addressing has something like 0x8(%rax, %rcx, 1)
++	 * then it needs to have the closing parenthesis.
++	 */
++	if (strchr(ops->raw, '(')) {
++		*s = ',';
++		s = strchr(ops->raw, ')');
++		if (s == NULL || s[1] != ',')
++			return -1;
++		*++s = '\0';
++	}
++
+ 	ops->source.raw = strdup(ops->raw);
+ 	*s = ',';
+ 
+-- 
+2.40.1.521.gf1e218fcd8-goog
+
