@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4E3C7EE24
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 07:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EABE5C7EE25
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 07:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237547AbjEKHxd (ORCPT
+        id S237650AbjEKHxd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Thu, 11 May 2023 03:53:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53766 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237092AbjEKHxb (ORCPT
+        with ESMTP id S237380AbjEKHxc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 May 2023 03:53:31 -0400
+        Thu, 11 May 2023 03:53:32 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07B9926A5;
-        Thu, 11 May 2023 00:53:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265742D7B;
+        Thu, 11 May 2023 00:53:30 -0700 (PDT)
 Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QH3tR2B5bzTkD6;
-        Thu, 11 May 2023 15:48:47 +0800 (CST)
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QH3tS73xnzTk8w;
+        Thu, 11 May 2023 15:48:48 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 11 May 2023 15:53:26 +0800
+ 15.1.2507.23; Thu, 11 May 2023 15:53:27 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -31,9 +31,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <jesussanp@google.com>, <linux-perf-users@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v2 1/4] perf trace-event-info: Add tracepoint_id_to_name() helper
-Date:   Thu, 11 May 2023 07:51:51 +0000
-Message-ID: <20230511075154.240163-2-yangjihong1@huawei.com>
+Subject: [PATCH v2 4/4] perf tools: Add printing perf_event_attr config symbol in perf_event_attr__fprintf()
+Date:   Thu, 11 May 2023 07:51:54 +0000
+Message-ID: <20230511075154.240163-5-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 In-Reply-To: <20230511075154.240163-1-yangjihong1@huawei.com>
 References: <20230511075154.240163-1-yangjihong1@huawei.com>
@@ -48,54 +48,419 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add tracepoint_id_to_name() helper to search for the trace events directory
-by given event id and return the corresponding tracepoint.
+When printing perf_event_attr, always display perf_event_attr config and its symbol
+to improve the readability of debugging information.
+
+Before:
+
+  # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101,mem:0x0 -C 0 true
+  <SNIP>
+  ------------------------------------------------------------
+  perf_event_attr:
+    size                             136
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1
+    size                             136
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             2
+    size                             136
+    config                           0x143
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             3
+    size                             136
+    config                           0x10005
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             136
+    config                           0x101
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             5
+    size                             136
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    sample_id_all                    1
+    exclude_guest                    1
+    bp_type                          3
+    { bp_len, config2 }              0x4
+  ------------------------------------------------------------
+  <SNIP>
+
+After:
+
+  # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101,mem:0x0 -C 0 true
+  <SNIP>
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             0 (PERF_TYPE_HARDWARE)
+    size                             136
+    config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1 (PERF_TYPE_SOFTWARE)
+    size                             136
+    config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             2 (PERF_TYPE_TRACEPOINT)
+    size                             136
+    config                           0x143 (sched:sched_switch)
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             3 (PERF_TYPE_HW_CACHE)
+    size                             136
+    config                           0x10005 (PERF_COUNT_HW_CACHE_RESULT_MISS | PERF_COUNT_HW_CACHE_OP_READ | PERF_COUNT_HW_CACHE_BPU)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4 (PERF_TYPE_RAW)
+    size                             136
+    config                           0x101
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             5 (PERF_TYPE_BREAKPOINT)
+    size                             136
+    config                           0
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    sample_id_all                    1
+    exclude_guest                    1
+    bp_type                          3
+    { bp_len, config2 }              0x4
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1 (PERF_TYPE_SOFTWARE)
+    size                             136
+    config                           9 (PERF_COUNT_SW_DUMMY)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    inherit                          1
+    mmap                             1
+    comm                             1
+    freq                             1
+    task                             1
+    sample_id_all                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 12
+  <SNIP>
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
- tools/perf/util/trace-event-info.c | 11 +++++++++++
- tools/perf/util/trace-event.h      |  6 ++++++
- 2 files changed, 17 insertions(+)
+ tools/perf/util/perf_event_attr_fprintf.c | 159 +++++++++++++++++++++-
+ 1 file changed, 158 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
-index c24b3a15e319..a5c65cb02a28 100644
---- a/tools/perf/util/trace-event-info.c
-+++ b/tools/perf/util/trace-event-info.c
-@@ -466,6 +466,17 @@ static struct tracepoint_path *tracepoint_id_to_path(u64 config)
- 	return NULL;
- }
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index cd0905d8cb7a..7730f0d7c28a 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -7,6 +7,11 @@
+ #include <linux/perf_event.h>
+ #include "util/evsel_fprintf.h"
  
-+char *tracepoint_id_to_name(u64 config)
++#ifdef HAVE_LIBTRACEEVENT
++#include <stdlib.h> // for free
++#include "trace-event.h"
++#endif
++
+ struct bit_names {
+ 	int bit;
+ 	const char *name;
+@@ -86,6 +91,85 @@ static const char *stringify_perf_type_id(u64 value)
+ 		return NULL;
+ 	}
+ }
++
++static const char *stringify_perf_hw_id(u64 value)
 +{
-+	char *buf = NULL;
-+	struct tracepoint_path *path = tracepoint_id_to_path(config);
-+
-+	if ((path != NULL) && (asprintf(&buf, "%s:%s", path->system, path->name) > 0))
-+		return buf;
-+
-+	return NULL;
++	/* sync with enum perf_hw_id in perf_event.h */
++	switch (value) {
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CPU_CYCLES)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_INSTRUCTIONS)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_REFERENCES)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_MISSES)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_BRANCH_MISSES)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_BUS_CYCLES)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_STALLED_CYCLES_FRONTEND)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_STALLED_CYCLES_BACKEND)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_REF_CPU_CYCLES)
++	default:
++		return NULL;
++	}
 +}
 +
- static struct tracepoint_path *tracepoint_name_to_path(const char *name)
- {
- 	struct tracepoint_path *path = zalloc(sizeof(*path));
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index a0cff184b1cd..a69ee29419f3 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -62,6 +62,12 @@ unsigned long long eval_flag(const char *flag);
- 
- int read_tracing_data(int fd, struct list_head *pattrs);
- 
-+/*
-+ * Return the tracepoint name in the format "subsystem:event_name",
-+ * callers should free the returned string.
-+ */
-+char *tracepoint_id_to_name(u64 config);
++static const char *stringify_perf_hw_cache_id(u64 value)
++{
++	/* sync with enum perf_hw_cache_id in perf_event.h */
++	switch (value) {
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_L1D)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_L1I)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_LL)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_DTLB)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_ITLB)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_BPU)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_NODE)
++	default:
++		return NULL;
++	}
++}
 +
- struct tracing_data {
- 	/* size is only valid if temp is 'true' */
- 	ssize_t size;
++static const char *stringify_perf_hw_cache_op_id(u64 value)
++{
++	/* sync with enum perf_hw_cache_op_id in perf_event.h */
++	switch (value) {
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_OP_READ)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_OP_WRITE)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_OP_PREFETCH)
++	default:
++		return NULL;
++	}
++}
++
++static const char *stringify_perf_hw_cache_op_result_id(u64 value)
++{
++	/* sync with enum perf_hw_cache_op_result_id in perf_event.h */
++	switch (value) {
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_RESULT_ACCESS)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_RESULT_MISS)
++	default:
++		return NULL;
++	}
++}
++
++static const char *stringify_perf_sw_id(u64 value)
++{
++	/* sync with enum perf_sw_ids in perf_event.h */
++	switch (value) {
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_CPU_CLOCK)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_TASK_CLOCK)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_PAGE_FAULTS)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_CONTEXT_SWITCHES)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_CPU_MIGRATIONS)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_PAGE_FAULTS_MIN)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_PAGE_FAULTS_MAJ)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_ALIGNMENT_FAULTS)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_EMULATION_FAULTS)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_DUMMY)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_BPF_OUTPUT)
++	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_CGROUP_SWITCHES)
++	default:
++		return NULL;
++	}
++}
+ #undef ENUM_ID_TO_STR_CASE
+ 
+ static void __p_type_id(char *buf, size_t size, u64 value)
+@@ -98,6 +182,78 @@ static void __p_type_id(char *buf, size_t size, u64 value)
+ 		snprintf(buf, size, "%"PRIu64" (%s)", value, str);
+ }
+ 
++static void __p_config_hw_id(char *buf, size_t size, u64 value)
++{
++	const char *str = stringify_perf_hw_id(value);
++
++	if (str == NULL)
++		snprintf(buf, size, "%"PRIx64, value);
++	else
++		snprintf(buf, size, "%"PRIx64" (%s)", value, str);
++}
++
++static void __p_config_sw_id(char *buf, size_t size, u64 value)
++{
++	const char *str = stringify_perf_sw_id(value);
++
++	if (str == NULL)
++		snprintf(buf, size, "%"PRIx64, value);
++	else
++		snprintf(buf, size, "%"PRIx64" (%s)", value, str);
++}
++
++static void __p_config_hw_cache_id(char *buf, size_t size, u64 value)
++{
++	const char *hw_cache_str = stringify_perf_hw_cache_id(value & 0xff);
++	const char *hw_cache_op_str =
++		stringify_perf_hw_cache_op_id((value & 0xff00) >> 8);
++	const char *hw_cache_op_result_str =
++		stringify_perf_hw_cache_op_result_id((value & 0xff0000) >> 16);
++
++	if (hw_cache_str == NULL || hw_cache_op_str == NULL ||
++	    hw_cache_op_result_str == NULL) {
++		snprintf(buf, size, "%#"PRIx64, value);
++	} else {
++		snprintf(buf, size, "%#"PRIx64" (%s | %s | %s)", value,
++			 hw_cache_op_result_str, hw_cache_op_str, hw_cache_str);
++	}
++}
++
++#ifdef HAVE_LIBTRACEEVENT
++static void __p_config_tracepoint_id(char *buf, size_t size, u64 value)
++{
++	char *str = tracepoint_id_to_name(value);
++
++	if (str != NULL) {
++		snprintf(buf, size, "%#"PRIx64" (%s)", value, str);
++		free(str);
++	} else {
++		snprintf(buf, size, "%#"PRIx64, value);
++	}
++}
++#endif
++
++static void __p_config_id(char *buf, size_t size, u32 type, u64 value)
++{
++	switch (type) {
++	case PERF_TYPE_HARDWARE:
++		return __p_config_hw_id(buf, size, value);
++	case PERF_TYPE_SOFTWARE:
++		return __p_config_sw_id(buf, size, value);
++	case PERF_TYPE_HW_CACHE:
++		return __p_config_hw_cache_id(buf, size, value);
++	case PERF_TYPE_TRACEPOINT:
++#ifdef HAVE_LIBTRACEEVENT
++		return __p_config_tracepoint_id(buf, size, value);
++#endif
++	case PERF_TYPE_RAW:
++	case PERF_TYPE_BREAKPOINT:
++	default:
++		snprintf(buf, size, "%#"PRIx64, value);
++		return;
++	}
++}
++
+ #define BUF_SIZE		1024
+ 
+ #define p_hex(val)		snprintf(buf, BUF_SIZE, "%#"PRIx64, (uint64_t)(val))
+@@ -107,6 +263,7 @@ static void __p_type_id(char *buf, size_t size, u64 value)
+ #define p_branch_sample_type(val) __p_branch_sample_type(buf, BUF_SIZE, val)
+ #define p_read_format(val)	__p_read_format(buf, BUF_SIZE, val)
+ #define p_type_id(val)		__p_type_id(buf, BUF_SIZE, val)
++#define p_config_id(val)	__p_config_id(buf, BUF_SIZE, attr->type, val)
+ 
+ #define PRINT_ATTRn(_n, _f, _p, _a)			\
+ do {							\
+@@ -126,7 +283,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 
+ 	PRINT_ATTRn("type", type, p_type_id, true);
+ 	PRINT_ATTRf(size, p_unsigned);
+-	PRINT_ATTRf(config, p_hex);
++	PRINT_ATTRn("config", config, p_config_id, true);
+ 	PRINT_ATTRn("{ sample_period, sample_freq }", sample_period, p_unsigned, false);
+ 	PRINT_ATTRf(sample_type, p_sample_type);
+ 	PRINT_ATTRf(read_format, p_read_format);
 -- 
 2.30.GIT
 
