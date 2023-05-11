@@ -2,265 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF112C77B7F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 07:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89667C77B7F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 07:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232224AbjEKHmO (ORCPT
+        id S237432AbjEKHxc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 May 2023 03:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47586 "EHLO
+        Thu, 11 May 2023 03:53:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236654AbjEKHmN (ORCPT
+        with ESMTP id S237368AbjEKHxb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 May 2023 03:42:13 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C50F110FD;
-        Thu, 11 May 2023 00:42:10 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QH3dt28HSzpSyK;
-        Thu, 11 May 2023 15:37:54 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
+        Thu, 11 May 2023 03:53:31 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291F12D48;
+        Thu, 11 May 2023 00:53:29 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QH3wX4CrKzLnb9;
+        Thu, 11 May 2023 15:50:36 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 11 May 2023 15:42:06 +0800
-Subject: Re: [PATCH 3/4] perf tools: Add printing perf_event_attr->type symbol
- in perf_event_attr__fprintf()
-To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <irogers@google.com>,
-        <anshuman.khandual@arm.com>, <jesussanp@google.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20230419122912.73746-1-yangjihong1@huawei.com>
- <20230419122912.73746-4-yangjihong1@huawei.com>
- <09511964-dea6-f078-b24c-fef6b05f5b79@intel.com>
- <5267232a-05a4-393b-b68e-da6a4f46d5e8@intel.com>
+ 15.1.2507.23; Thu, 11 May 2023 15:53:26 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <bcf24f41-8be1-75f4-aafa-d47dccc15500@huawei.com>
-Date:   Thu, 11 May 2023 15:42:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <anshuman.khandual@arm.com>,
+        <jesussanp@google.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH v2 2/4] perf tools: Extend PRINT_ATTRf to support printing of members with a value of 0
+Date:   Thu, 11 May 2023 07:51:52 +0000
+Message-ID: <20230511075154.240163-3-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20230511075154.240163-1-yangjihong1@huawei.com>
+References: <20230511075154.240163-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <5267232a-05a4-393b-b68e-da6a4f46d5e8@intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+When printing attr, members whose value is 0 will not be printed, we want
+to print the case where attr->type is 0(PERF_TYPE_HARDWARE), add `_a`
+param to PRINT_ATTRf macro to always print member when it is true
+No functional change.
 
-On 2023/5/10 23:51, Adrian Hunter wrote:
-> On 10/05/23 11:32, Adrian Hunter wrote:
->> On 19/04/23 15:29, Yang Jihong wrote:
->>> When printing perf_event_attr, always display attr->type and its symbol
->>> to improve the readability of debugging information.
->>>
->>> Before:
->>>
->>>    # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101 -C 0 true
->>>    <SNIP>
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      size                             136
->>>      { sample_period, sample_freq }   4000
->>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>      read_format                      ID
->>>      disabled                         1
->>>      inherit                          1
->>>      freq                             1
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>    ------------------------------------------------------------
->>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      type                             1
->>>      size                             136
->>>      { sample_period, sample_freq }   4000
->>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>      read_format                      ID
->>>      disabled                         1
->>>      inherit                          1
->>>      freq                             1
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>    ------------------------------------------------------------
->>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      type                             2
->>>      size                             136
->>>      config                           0x131
->>>      { sample_period, sample_freq }   1
->>>      sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
->>>      read_format                      ID
->>>      disabled                         1
->>>      inherit                          1
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>    ------------------------------------------------------------
->>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 8
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      type                             3
->>>      size                             136
->>>      config                           0x10005
->>>      { sample_period, sample_freq }   4000
->>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>      read_format                      ID
->>>      disabled                         1
->>>      inherit                          1
->>>      freq                             1
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>    ------------------------------------------------------------
->>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      type                             4
->>>      size                             136
->>>      config                           0x101
->>>      { sample_period, sample_freq }   4000
->>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>      read_format                      ID
->>>      disabled                         1
->>>      inherit                          1
->>>      freq                             1
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>    ------------------------------------------------------------
->>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
->>>    <SNIP>
->>>
->>> After:
->>>
->>>    # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101 -C 0 true
->>>    <SNIP>
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      type                             0 (PERF_TYPE_HARDWARE)
->>>      size                             136
->>>      { sample_period, sample_freq }   4000
->>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>      read_format                      ID
->>>      disabled                         1
->>>      inherit                          1
->>>      freq                             1
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>    ------------------------------------------------------------
->>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      type                             1 (PERF_TYPE_SOFTWARE)
->>>      size                             136
->>>      { sample_period, sample_freq }   4000
->>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>      read_format                      ID
->>>      disabled                         1
->>>      inherit                          1
->>>      freq                             1
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>    ------------------------------------------------------------
->>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      type                             2 (PERF_TYPE_TRACEPOINT)
->>>      size                             136
->>>      config                           0x131
->>>      { sample_period, sample_freq }   1
->>>      sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
->>>      read_format                      ID
->>>      disabled                         1
->>>      inherit                          1
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>    ------------------------------------------------------------
->>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 8
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      type                             3 (PERF_TYPE_HW_CACHE)
->>>      size                             136
->>>      config                           0x10005
->>>      { sample_period, sample_freq }   4000
->>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>      read_format                      ID
->>>      disabled                         1
->>>      inherit                          1
->>>      freq                             1
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>    ------------------------------------------------------------
->>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
->>>    ------------------------------------------------------------
->>>    perf_event_attr:
->>>      type                             4 (PERF_TYPE_RAW)
->>>      size                             136
->>>      config                           0x101
->>>      { sample_period, sample_freq }   4000
->>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>      read_format                      ID
->>>      disabled                         1
->>>      inherit                          1
->>>      freq                             1
->>>      sample_id_all                    1
->>>      exclude_guest                    1
->>>    ------------------------------------------------------------
->>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
->>>    <SNIP>
->>>
->>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->>> ---
->>>   tools/perf/util/perf_event_attr_fprintf.c | 24 ++++++++++++++++++++++-
->>>   1 file changed, 23 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
->>> index 433029c6afc5..d9d70126d505 100644
->>> --- a/tools/perf/util/perf_event_attr_fprintf.c
->>> +++ b/tools/perf/util/perf_event_attr_fprintf.c
->>> @@ -71,6 +71,27 @@ static void __p_read_format(char *buf, size_t size, u64 value)
->>>   	__p_bits(buf, size, value, bits);
->>>   }
->>>   
->>> +static void __p_type_id(char *buf, size_t size, u64 value)
->>> +{
->>> +	/* sync with enum perf_type_id in perf_event.h */
->>> +	switch (value) {
->>> +#define PRINT_ENUM_PERF_TYPE_ID_CASE(x)					\
->>> +	case x:								\
->>> +		snprintf(buf, size, "%"PRIu64" (%s)", value, #x);	\
->>> +		return;
->>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_HARDWARE)
->>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_SOFTWARE)
->>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_TRACEPOINT)
->>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_HW_CACHE)
->>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_RAW)
->>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_BREAKPOINT)
->>> +#undef PRINT_ENUM_PERF_TYPE_ID_CASE
->>
->> These are ABI constants so maybe simpler:
->>
->> 	const char *fixed_types[] = {"HARDWARE", "SOFTWARE", "TRACEPOINT",
->> 				     "HW_CACHE", "RAW", "BREAKPOINT"};
->>
->> 	if (value < ARRAY_SIZE(fixed_types)) {
->> 		snprintf(buf, size, "%"PRIu64" (PERF_TYPE_%s)",
->> 			 value, fixed_types[value]);
->> 	} else {
->> 		snprintf(buf, size, "%"PRIu64, value);
->> 	}
-> 
-> Although it is really the repeated snprintf that seems unnecessary
-> so maybe use a switch but just to get the stringified name.
-> 
-Ok, will use switch/case to get stringified name for type and id in v2.
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/util/perf_event_attr_fprintf.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Thanks,
-Yang
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 7e5e7b30510d..433029c6afc5 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -80,15 +80,15 @@ static void __p_read_format(char *buf, size_t size, u64 value)
+ #define p_branch_sample_type(val) __p_branch_sample_type(buf, BUF_SIZE, val)
+ #define p_read_format(val)	__p_read_format(buf, BUF_SIZE, val)
+ 
+-#define PRINT_ATTRn(_n, _f, _p)				\
++#define PRINT_ATTRn(_n, _f, _p, _a)			\
+ do {							\
+-	if (attr->_f) {					\
++	if (_a || attr->_f) {				\
+ 		_p(attr->_f);				\
+ 		ret += attr__fprintf(fp, _n, buf, priv);\
+ 	}						\
+ } while (0)
+ 
+-#define PRINT_ATTRf(_f, _p)	PRINT_ATTRn(#_f, _f, _p)
++#define PRINT_ATTRf(_f, _p)	PRINT_ATTRn(#_f, _f, _p, false)
+ 
+ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 			     attr__fprintf_f attr__fprintf, void *priv)
+@@ -99,7 +99,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(type, p_unsigned);
+ 	PRINT_ATTRf(size, p_unsigned);
+ 	PRINT_ATTRf(config, p_hex);
+-	PRINT_ATTRn("{ sample_period, sample_freq }", sample_period, p_unsigned);
++	PRINT_ATTRn("{ sample_period, sample_freq }", sample_period, p_unsigned, false);
+ 	PRINT_ATTRf(sample_type, p_sample_type);
+ 	PRINT_ATTRf(read_format, p_read_format);
+ 
+@@ -141,10 +141,10 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(remove_on_exec, p_unsigned);
+ 	PRINT_ATTRf(sigtrap, p_unsigned);
+ 
+-	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned);
++	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned, false);
+ 	PRINT_ATTRf(bp_type, p_unsigned);
+-	PRINT_ATTRn("{ bp_addr, config1 }", bp_addr, p_hex);
+-	PRINT_ATTRn("{ bp_len, config2 }", bp_len, p_hex);
++	PRINT_ATTRn("{ bp_addr, config1 }", bp_addr, p_hex, false);
++	PRINT_ATTRn("{ bp_len, config2 }", bp_len, p_hex, false);
+ 	PRINT_ATTRf(branch_sample_type, p_branch_sample_type);
+ 	PRINT_ATTRf(sample_regs_user, p_hex);
+ 	PRINT_ATTRf(sample_stack_user, p_unsigned);
+-- 
+2.30.GIT
+
