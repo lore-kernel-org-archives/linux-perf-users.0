@@ -2,54 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40BF1C77B7F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 06:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EA6C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 06:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236799AbjEKG1c (ORCPT
+        id S229536AbjEKG1e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 May 2023 02:27:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44942 "EHLO
+        Thu, 11 May 2023 02:27:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbjEKG1a (ORCPT
+        with ESMTP id S236987AbjEKG1d (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 May 2023 02:27:30 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F35DDE0;
-        Wed, 10 May 2023 23:27:28 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1a50cb65c92so58714655ad.0;
-        Wed, 10 May 2023 23:27:28 -0700 (PDT)
+        Thu, 11 May 2023 02:27:33 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F0210F;
+        Wed, 10 May 2023 23:27:31 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-64384c6797eso6655908b3a.2;
+        Wed, 10 May 2023 23:27:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683786448; x=1686378448;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=WK/vptfD+s0yQGQBHciJfzoWhRURnNdyfSrksISe1As=;
-        b=gJBO284BPEnxa95PkjvJXy4xbgbF2UBpZvdagt/VBUrBSAfzfEu8DL1CmFwXPDBwve
-         mId9OBLz+z5A9GE3JU6KhE7rCwXODt6+/uMmVvDikBpws/w9RZjrdm3oZVg+7rx9qrxo
-         ZYNZy7hlGj88jJ7fZ7zUlTt6l5KKxKh7jJEfwrIUGtbSLFQry5rmFdiyR4YYmoJBJ5Zg
-         aOIxV2uGu3MBfC/PPx9qFCSCQ9OIWxhViTmhZfXhT4wspIUol+LCrd6zRC09HPLnWCui
-         5Pu6NrvfXMHa7UlXgTDGml32vKnX4XI+FbFSpw5asVznYpickyJFn/mpr8EW6sGQ8C0d
-         9rzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683786448; x=1686378448;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1683786451; x=1686378451;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WK/vptfD+s0yQGQBHciJfzoWhRURnNdyfSrksISe1As=;
-        b=adMqbjOlfHoSgtaRCW8DWUHFkZyYAgZsYC2duT9Hh1yYJdEoo65FfuMUZl6gXD35OB
-         zYfhmhfuIS7viOLubnG/sg9zZ4PtMbdtw6CWRznSqzNOwxEFJwty+4YCYfPdC4ce7UVA
-         vIMK0g6hWKKz/T12ovESg2v9PsHciERI9p9BlRpTjSRC6n6pxhxabXK6P6mUQVxGgHtC
-         NaBr25aJu2PuxIpzxLaKBdXzTOVrv0D1sjVwZXXQACwjZJiNUpU0m99lqhh/adaz68jl
-         rL/9aTrP/AQwDf51KNMmtxPR/2Ii5Jhr67k+WC0a6bCPke6dnbdGGdEZ6eoARjS7sjt8
-         JS0Q==
-X-Gm-Message-State: AC+VfDxT79wAyqK7DzZ8mzOAWwrxgK0ScK8Fsv7JQXFUVm5aSTNEeWHN
-        CtDxta8N1Nmm7r0h54V5p4Y=
-X-Google-Smtp-Source: ACHHUZ7WaGgNnYjLsRO/LfW6XkiMCrq1KgpDQmq1xehf5f92Oh5Kx3GelBWTdSsGYoPzV9+O0H1ijg==
-X-Received: by 2002:a17:902:8216:b0:1ac:753a:7933 with SMTP id x22-20020a170902821600b001ac753a7933mr11649636pln.39.1683786448233;
-        Wed, 10 May 2023 23:27:28 -0700 (PDT)
+        bh=Wccq2cR0tl91tz/Xz/oRtoRCvVeKB1PntoUZvC+KoPo=;
+        b=X/nJr+o62wE8h5IO6ySscvVRFTeLOXrjZ+GvnMkMet3bf3AQvsKLeZZizE8UZoHNxR
+         f8OLSsbDXLcejOpnV6r2N7DL0A3RDpI0sKiNfwCg9ce2OxvAaJTuP+MvL75uBkRBIe9g
+         tLKzz0HWVZGEmmJiGAV9+9g0Z7VzjM1rdnHGlX1tJMGaqZgDxfNfsSPYWjqbY17xNXh3
+         SEI12+/bIprRSGwQRghk08j0DcDsuDAp2d2NyIuuBr9mX1mzQPwl81DLStVCR4BdZgB1
+         ZYgabkfqBb6VzPdQdl1lY/3aMfkd73ff8JI1VZC+id5FeoCJaEqv7eDSqYb2cx1xEqa7
+         Dm/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683786451; x=1686378451;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Wccq2cR0tl91tz/Xz/oRtoRCvVeKB1PntoUZvC+KoPo=;
+        b=gyc3C/V//QddVKYSbT/YuJ89VxPVFKYINuGJdqal9VVMUa2ztN1i7Mn+uGhMYFKKin
+         d8qEULCeUEe2SdNw0sY/rM1Q3GxJTkqbTrsvIexSCgwMy2ij5bbYb3+SpSEG/WLquzqv
+         tzygum1vCrQQUZqUFcDDPEAu74eziz0/UcoaG8i6uOwAtO9snDt4NWkUBL1MV1Y83oFy
+         ueDaC++F0fO58mW/xrY4EUAjIaAOULHm5ppi+54j2i1AYG/IJhJfNTwecodD1ERgYgFB
+         6gRrihli4IPwQpxQUwbic8IuQ0TH83cwmyzMYEop9M465BmAq65xuKIpv9wnaTQGCVGF
+         2l5w==
+X-Gm-Message-State: AC+VfDy5TgeH3TfSMT9MwZRXKTkHRxChskOjxvcjCtSB7C6/sXOc0jne
+        5X0OJd0qalCPPqD9hCh3xN4=
+X-Google-Smtp-Source: ACHHUZ4cl9qdIjCGVU4AHXVztOqh3mEj5WMrHpNEs/6hw9KS/NeeX9Lp6vYF+Savuc3W/ZSgVYaA/A==
+X-Received: by 2002:a17:902:ecc3:b0:1ab:528:5f85 with SMTP id a3-20020a170902ecc300b001ab05285f85mr26717839plh.59.1683786450600;
+        Wed, 10 May 2023 23:27:30 -0700 (PDT)
 Received: from bangji.hsd1.ca.comcast.net ([2601:647:6700:7f00:c18c:3210:36c3:c88c])
-        by smtp.gmail.com with ESMTPSA id jj17-20020a170903049100b001ac2be2639asm4925683plb.223.2023.05.10.23.27.27
+        by smtp.gmail.com with ESMTPSA id jj17-20020a170903049100b001ac2be2639asm4925683plb.223.2023.05.10.23.27.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 May 2023 23:27:27 -0700 (PDT)
+        Wed, 10 May 2023 23:27:30 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -60,52 +61,81 @@ Cc:     Ian Rogers <irogers@google.com>,
         Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 1/3] perf annotate: Handle more instructions on x86
-Date:   Wed, 10 May 2023 23:27:23 -0700
-Message-ID: <20230511062725.514752-1-namhyung@kernel.org>
+Subject: [PATCH 3/3] perf annotate browser: Add '<' and '>' keys for navigation
+Date:   Wed, 10 May 2023 23:27:25 -0700
+Message-ID: <20230511062725.514752-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
+In-Reply-To: <20230511062725.514752-1-namhyung@kernel.org>
+References: <20230511062725.514752-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-I found some instructions didn't parse the operands properly.
-Add them to the table to fix the issue.
+The hists__find_annotations() allow to move to next or previous symbols
+for annotation using the arrow keys.  But TUI annotate_browser__run()
+uses the RIGHT key as ENTER to handle jump/call instructions.  That
+makes the navigation to the next function impossible.
+
+I'd like to change it back to move the next symbol but I'm afraid if
+some users get confused.  So I added a new pair of keys to handle that.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/arch/x86/annotate/instructions.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/builtin-annotate.c     | 4 +++-
+ tools/perf/ui/browsers/annotate.c | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-index 305872692bfd..5c7bec25fee4 100644
---- a/tools/perf/arch/x86/annotate/instructions.c
-+++ b/tools/perf/arch/x86/annotate/instructions.c
-@@ -35,12 +35,14 @@ static struct ins x86__instructions[] = {
- 	{ .name = "cs",		.ops = &mov_ops,  },
- 	{ .name = "dec",	.ops = &dec_ops,  },
- 	{ .name = "decl",	.ops = &dec_ops,  },
-+	{ .name = "decq",	.ops = &dec_ops,  },
- 	{ .name = "divsd",	.ops = &mov_ops,  },
- 	{ .name = "divss",	.ops = &mov_ops,  },
- 	{ .name = "gs",		.ops = &mov_ops,  },
- 	{ .name = "imul",	.ops = &mov_ops,  },
- 	{ .name = "inc",	.ops = &dec_ops,  },
- 	{ .name = "incl",	.ops = &dec_ops,  },
-+	{ .name = "incq",	.ops = &dec_ops,  },
- 	{ .name = "ja",		.ops = &jump_ops, },
- 	{ .name = "jae",	.ops = &jump_ops, },
- 	{ .name = "jb",		.ops = &jump_ops, },
-@@ -123,6 +125,8 @@ static struct ins x86__instructions[] = {
- 	{ .name = "test",	.ops = &mov_ops,  },
- 	{ .name = "testb",	.ops = &mov_ops,  },
- 	{ .name = "testl",	.ops = &mov_ops,  },
-+	{ .name = "testq",	.ops = &mov_ops,  },
-+	{ .name = "tzcnt",	.ops = &mov_ops,  },
- 	{ .name = "ucomisd",	.ops = &mov_ops,  },
- 	{ .name = "ucomiss",	.ops = &mov_ops,  },
- 	{ .name = "vaddsd",	.ops = &mov_ops,  },
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 63cdf6ea6f6d..425a7e2fd6fb 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -342,7 +342,7 @@ static void hists__find_annotations(struct hists *hists,
+ 		notes = symbol__annotation(he->ms.sym);
+ 		if (notes->src == NULL) {
+ find_next:
+-			if (key == K_LEFT)
++			if (key == K_LEFT || key == '<')
+ 				nd = rb_prev(nd);
+ 			else
+ 				nd = rb_next(nd);
+@@ -378,9 +378,11 @@ static void hists__find_annotations(struct hists *hists,
+ 					return;
+ 				/* fall through */
+ 			case K_RIGHT:
++			case '>':
+ 				next = rb_next(nd);
+ 				break;
+ 			case K_LEFT:
++			case '<':
+ 				next = rb_prev(nd);
+ 				break;
+ 			default:
+diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+index 12c3ce530e42..70bad42b807b 100644
+--- a/tools/perf/ui/browsers/annotate.c
++++ b/tools/perf/ui/browsers/annotate.c
+@@ -781,9 +781,9 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 			ui_browser__help_window(&browser->b,
+ 		"UP/DOWN/PGUP\n"
+ 		"PGDN/SPACE    Navigate\n"
++		"</>           Move to prev/next symbol\n"
+ 		"q/ESC/CTRL+C  Exit\n\n"
+ 		"ENTER         Go to target\n"
+-		"ESC           Exit\n"
+ 		"H             Go to hottest instruction\n"
+ 		"TAB/shift+TAB Cycle thru hottest instructions\n"
+ 		"j             Toggle showing jump to target arrows\n"
+@@ -913,6 +913,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
+ 			annotation__toggle_full_addr(notes, ms);
+ 			continue;
+ 		case K_LEFT:
++		case '<':
++		case '>':
+ 		case K_ESC:
+ 		case 'q':
+ 		case CTRL('c'):
 -- 
 2.40.1.521.gf1e218fcd8-goog
 
