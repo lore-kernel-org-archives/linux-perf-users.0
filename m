@@ -2,223 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E39ABC7EE26
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 14:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E231FC7EE22
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 14:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237332AbjEKOP5 (ORCPT
+        id S238557AbjEKOfo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 May 2023 10:15:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33064 "EHLO
+        Thu, 11 May 2023 10:35:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238455AbjEKOPu (ORCPT
+        with ESMTP id S238573AbjEKOf0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 May 2023 10:15:50 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94FE8D2D3;
-        Thu, 11 May 2023 07:15:24 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 75A5A21D09;
-        Thu, 11 May 2023 14:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1683814480; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RsbmH7Uqop/nnM3vjIRjHRqffBOelcetDOasqeW6Jho=;
-        b=pOJqJS5iXtgLyWgNrYikAH8lcP9VErhN6vam0bviIGKv5MIKfAJuXwdEnozUAl1mFiB4qM
-        Td/bamTw2bqEgQNfkm93ZRlv/TH+VmTSwCohSr4w9x5dduYiCKpI5GaFu6jyUYqF9cD6Qa
-        q9wqaGcZN1O3kEmspF38GXvD5Hh7KCE=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 5B4622C141;
-        Thu, 11 May 2023 14:14:37 +0000 (UTC)
-Date:   Thu, 11 May 2023 16:14:37 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Stephen Boyd <swboyd@chromium.org>, ricardo.neri@intel.com,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Chen-Yu Tsai <wens@csie.org>, christophe.leroy@csgroup.eu,
-        davem@davemloft.net, sparclinux@vger.kernel.org,
-        mpe@ellerman.id.au, Will Deacon <will@kernel.org>,
-        ravi.v.shankar@intel.com, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v4 09/17] watchdog/hardlockup: Add a "cpu" param to
- watchdog_hardlockup_check()
-Message-ID: <ZFz4TVOyEU51b898@alley>
-References: <20230504221349.1535669-1-dianders@chromium.org>
- <20230504151100.v4.9.I3a7d4dd8c23ac30ee0b607d77feb6646b64825c0@changeid>
+        Thu, 11 May 2023 10:35:26 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A369B11B68
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 May 2023 07:34:48 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id af79cd13be357-7591797c638so13663985a.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 May 2023 07:34:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1683815686; x=1686407686;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RDAnVIuo236iFwX8Q4PwBvcDGXZtwfSqujw0bG7p3X0=;
+        b=GTmTypfqSNuLbRXk7CoP5u2QhIfP2ABwgsrnyU8SyjwRhri7xhRhiCPlxWYdoU3vL6
+         QFPcynxldEMfc6XpkSco9M92VA3cEELBoJbd600audt762yS1ER/PFkDdjZJO4jP2j++
+         g4DGXREKQ4yO+KZmco1dWlLLRgejdc3Buw1F8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683815686; x=1686407686;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RDAnVIuo236iFwX8Q4PwBvcDGXZtwfSqujw0bG7p3X0=;
+        b=FgB/nSHcHuJ2RamApdXaUYZlNekSzJqXMI93g/i8sYqWOqHwIn0VqXTonvZoIYgHHo
+         NVZYWqd1AY2ItJYG/+HToxuIB/SPubhSIwElVDK//uaYTCgCt+AxUygDWjGzmv82ZKCr
+         d71bJin0mmx4KgY1zNsSTzdptwHyLGrQ+68IVCsTAoGNxqrPFnZopiQBw2uLB0lMdADi
+         fh9lK0lVtHLLgebR8wDBzMfUU++BCDSidA2XUcUneuNJILtbmrEWfqr3ItJ2XR0p3Tsw
+         qHuCzT1SJR7mPrb5VWX0CRZv/dOxdBhBjKiaBpgVfq52sRjEVolc/jlWr/x6UsHbZPCS
+         dLOQ==
+X-Gm-Message-State: AC+VfDw9phbKECK/r02iEm5JuxMcIr5x2q1pdbBWWMSYWnureE+WxS0I
+        lfrzP3H0cYYKHBa+U+XJlwVTkSX+OADyyuLoZetYTQ==
+X-Google-Smtp-Source: ACHHUZ7hdBDCZ4G5WI26cZ0i3lMhi8Fy8St+FAGZPqEpSOdzzKpoMMk3OIWpxqMWwpvCjSx+fSBMYA==
+X-Received: by 2002:a05:6214:2629:b0:61b:6271:532b with SMTP id gv9-20020a056214262900b0061b6271532bmr34260271qvb.36.1683815686100;
+        Thu, 11 May 2023 07:34:46 -0700 (PDT)
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com. [209.85.160.182])
+        by smtp.gmail.com with ESMTPSA id c16-20020a0ca9d0000000b005ef6b124d39sm2334459qvb.5.2023.05.11.07.34.43
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 May 2023 07:34:43 -0700 (PDT)
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-3f38824a025so789481cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 May 2023 07:34:43 -0700 (PDT)
+X-Received: by 2002:a05:622a:1a05:b0:3f3:9c91:fee7 with SMTP id
+ f5-20020a05622a1a0500b003f39c91fee7mr421512qtb.16.1683815682956; Thu, 11 May
+ 2023 07:34:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230504151100.v4.9.I3a7d4dd8c23ac30ee0b607d77feb6646b64825c0@changeid>
+References: <20230419225604.21204-1-dianders@chromium.org> <20230419155341.v8.8.Ia3aeac89bb6751b682237e76e5ba594318e4b1aa@changeid>
+In-Reply-To: <20230419155341.v8.8.Ia3aeac89bb6751b682237e76e5ba594318e4b1aa@changeid>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 11 May 2023 07:34:30 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X=tm_smsi9itwK_Ku2vU0d676JT+MK3fkALn5QMsduiQ@mail.gmail.com>
+Message-ID: <CAD=FV=X=tm_smsi9itwK_Ku2vU0d676JT+MK3fkALn5QMsduiQ@mail.gmail.com>
+Subject: Re: [PATCH v8 08/10] kgdb: Provide a stub kgdb_nmicallback() if !CONFIG_KGDB
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     ito-yuichi@fujitsu.com, kgdb-bugreport@lists.sourceforge.net,
+        Chen-Yu Tsai <wens@csie.org>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-perf-users@vger.kernel.org,
+        Jason Wessel <jason.wessel@windriver.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu 2023-05-04 15:13:41, Douglas Anderson wrote:
-> In preparation for the buddy hardlockup detector where the CPU
-> checking for lockup might not be the currently running CPU, add a
-> "cpu" parameter to watchdog_hardlockup_check().
-> 
-> --- a/kernel/watchdog.c
-> +++ b/kernel/watchdog.c
-> @@ -92,14 +92,14 @@ static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts_saved);
->  static DEFINE_PER_CPU(bool, watchdog_hardlockup_processed);
->  static unsigned long watchdog_hardlockup_dumped_stacks;
->  
-> -static bool watchdog_hardlockup_is_lockedup(void)
-> +static bool watchdog_hardlockup_is_lockedup(unsigned int cpu)
->  {
-> -	unsigned long hrint = __this_cpu_read(hrtimer_interrupts);
-> +	unsigned long hrint = per_cpu(hrtimer_interrupts, cpu);
+Hi,
 
-My radar tells me that this should be
-READ_ONCE(per_cpu(hrtimer_interrupts, cpu)) when the value might
-be modified on another CPU. Otherwise, the compiler is allowed
-to split the read into more instructions.
+On Wed, Apr 19, 2023 at 3:57=E2=80=AFPM Douglas Anderson <dianders@chromium=
+.org> wrote:
+>
+> To save architectures from needing to wrap the call in #ifdefs, add a
+> stub no-op version of kgdb_nmicallback(), which returns 1 if it didn't
+> handle anything.
+>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> Changes in v8:
+> - "Provide a stub kgdb_nmicallback() if !CONFIG_KGDB" new for v8
+>
+>  include/linux/kgdb.h | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+> index 87713bd390f3..9ce628ee47cc 100644
+> --- a/include/linux/kgdb.h
+> +++ b/include/linux/kgdb.h
+> @@ -377,5 +377,6 @@ extern void kgdb_free_init_mem(void);
+>  #define dbg_late_init()
+>  static inline void kgdb_panic(const char *msg) {}
+>  static inline void kgdb_free_init_mem(void) { }
+> +static int kgdb_nmicallback(int cpu, void *regs) { return 1; }
 
-It will be needed for the buddy detector. And it will require
-also incrementing the value in watchdog_hardlockup_interrupt_count()
-an atomic way.
+FWIW: I just realized that the above needs an "inline" to make the
+compiler not complain. I'm still hoping for more feedback on the
+series, but I'll plan to fix that in the next spin.
 
-Note that __this_cpu_inc_return() does not guarantee atomicity
-according to my understanding. In theory, the following should
-work because counter will never be incremented in parallel:
-
-static unsigned long watchdog_hardlockup_interrupt_count(void)
-{
-	unsigned long count;
-
-	count = __this_cpu_read(hrtimer_interrupts);
-	count++;
-	WRITE_ONCE(*raw_cpu_ptr(hrtimer_interrupts), count);
-}
-
-but it is nasty. A more elegant solution might be using atomic_t
-for hrtimer_interrupts counter.
-
-> -	if (__this_cpu_read(hrtimer_interrupts_saved) == hrint)
-> +	if (per_cpu(hrtimer_interrupts_saved, cpu) == hrint)
->  		return true;
->  
-> -	__this_cpu_write(hrtimer_interrupts_saved, hrint);
-> +	per_cpu(hrtimer_interrupts_saved, cpu) = hrint;
-
-IMHO, hrtimer_interrupts_saved might be handled this way.
-The value is read/written only by this function.
-
-The buddy watchdog should see consistent values even when
-the buddy CPU goes offline. This check should never race
-because this CPU should get touched when another buddy
-gets assigned.
-
-Well, it would deserve a comment.
-
->  
->  	return false;
->  }
-> @@ -117,35 +117,50 @@ void watchdog_hardlockup_check(struct pt_regs *regs)
->  	 * fired multiple times before we overflow'd. If it hasn't
->  	 * then this is a good indication the cpu is stuck
->  	 */
-> -	if (watchdog_hardlockup_is_lockedup()) {
-> +	if (watchdog_hardlockup_is_lockedup(cpu)) {
->  		unsigned int this_cpu = smp_processor_id();
-> +		struct cpumask backtrace_mask = *cpu_online_mask;
->  
->  		/* Only handle hardlockups once. */
-> -		if (__this_cpu_read(watchdog_hardlockup_processed))
-> +		if (per_cpu(watchdog_hardlockup_processed, cpu))
-
-This should not need READ_ONCE()/WRITE_ONCE() because it is just bool.
-Also it is read/modified only in this function on the same CPU.
-
->  			return;
->  
-> -		pr_emerg("Watchdog detected hard LOCKUP on cpu %d\n", this_cpu);
-> +		pr_emerg("Watchdog detected hard LOCKUP on cpu %d\n", cpu);
->  		print_modules();
->  		print_irqtrace_events(current);
-> -		if (regs)
-> +		if (regs) {
->  			show_regs(regs);
-> -		else
-> -			dump_stack();
-> +			cpumask_clear_cpu(cpu, &backtrace_mask);
-> +		} else {
-> +			/*
-> +			 * If the locked up CPU is different than the CPU we're
-> +			 * running on then we'll try to backtrace the CPU that
-> +			 * locked up and then exclude it from later backtraces.
-> +			 * If that fails or if we're running on the locked up
-> +			 * CPU, just do a normal backtrace.
-> +			 */
-> +			if (cpu != this_cpu && trigger_single_cpu_backtrace(cpu)) {
-> +				cpumask_clear_cpu(cpu, &backtrace_mask);
-> +			} else {
-> +				dump_stack();
-> +				cpumask_clear_cpu(this_cpu, &backtrace_mask);
-
-This will dump the stack on the current CPU when
-trigger_single_cpu_backtrace(cpu) is not supported.
-It would be confusing because the buddy watchdog
-could be here only when this_cpu is not hardlocked.
-
-It should be:
-
-	if (cpu == this_cpu) {
-		if (regs)
-			show_regs(regs);
-		else
-			dump_stack();
-		cpumask_clear_cpu(cpu, &backtrace_mask);
-	} else {
-		if (trigger_single_cpu_backtrace(cpu)
-			cpumask_clear_cpu(cpu, &backtrace_mask);
-	}
-
-> +			}
-> +		}
->  
->  		/*
-> -		 * Perform all-CPU dump only once to avoid multiple hardlockups
-> -		 * generating interleaving traces
-> +		 * Perform multi-CPU dump only once to avoid multiple
-> +		 * hardlockups generating interleaving traces
->  		 */
->  		if (sysctl_hardlockup_all_cpu_backtrace &&
->  		    !test_and_set_bit(0, &watchdog_hardlockup_dumped_stacks))
-> -			trigger_allbutself_cpu_backtrace();
-> +			trigger_cpumask_backtrace(&backtrace_mask);
->  
->  		if (hardlockup_panic)
->  			nmi_panic(regs, "Hard LOCKUP");
->  
-> -		__this_cpu_write(watchdog_hardlockup_processed, true);
-> +		per_cpu(watchdog_hardlockup_processed, cpu) = true;
->  	} else {
-> -		__this_cpu_write(watchdog_hardlockup_processed, false);
-> +		per_cpu(watchdog_hardlockup_processed, cpu) = false;
->  	}
->  }
->  
-
-Best Regards,
-Petr
+-Doug
