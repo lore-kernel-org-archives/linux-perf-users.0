@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB12C7EE2D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 07:53:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06642C77B7F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 07:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237375AbjEKHxe (ORCPT
+        id S237662AbjEKHxf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 May 2023 03:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53788 "EHLO
+        Thu, 11 May 2023 03:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237470AbjEKHxc (ORCPT
+        with ESMTP id S237602AbjEKHxd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 May 2023 03:53:32 -0400
+        Thu, 11 May 2023 03:53:33 -0400
 Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 940663A98;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 985B93AB3;
         Thu, 11 May 2023 00:53:30 -0700 (PDT)
 Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QH3ty0CFFz18LC3;
-        Thu, 11 May 2023 15:49:14 +0800 (CST)
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QH3tz4zwVz18LQt;
+        Thu, 11 May 2023 15:49:15 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 11 May 2023 15:53:25 +0800
+ 15.1.2507.23; Thu, 11 May 2023 15:53:27 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -31,10 +31,12 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <jesussanp@google.com>, <linux-perf-users@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v2 0/4] perf tools: Add printing perf_event_attr `config` and `id` symbol in perf_event_attr__fprintf()
-Date:   Thu, 11 May 2023 07:51:50 +0000
-Message-ID: <20230511075154.240163-1-yangjihong1@huawei.com>
+Subject: [PATCH v2 3/4] perf tools: Add printing perf_event_attr type symbol in perf_event_attr__fprintf()
+Date:   Thu, 11 May 2023 07:51:53 +0000
+Message-ID: <20230511075154.240163-4-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
+In-Reply-To: <20230511075154.240163-1-yangjihong1@huawei.com>
+References: <20230511075154.240163-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -46,7 +48,8 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add printing perf_event_attr `config` and `id` symbol to improve the readability of debugging information.
+When printing perf_event_attr, always display perf_event_attr type and its symbol
+to improve the readability of debugging information.
 
 Before:
 
@@ -147,7 +150,6 @@ After:
   perf_event_attr:
     type                             0 (PERF_TYPE_HARDWARE)
     size                             136
-    config                           0 (PERF_COUNT_HW_CPU_CYCLES)
     { sample_period, sample_freq }   4000
     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
     read_format                      ID
@@ -162,7 +164,6 @@ After:
   perf_event_attr:
     type                             1 (PERF_TYPE_SOFTWARE)
     size                             136
-    config                           0 (PERF_COUNT_SW_CPU_CLOCK)
     { sample_period, sample_freq }   4000
     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
     read_format                      ID
@@ -177,7 +178,7 @@ After:
   perf_event_attr:
     type                             2 (PERF_TYPE_TRACEPOINT)
     size                             136
-    config                           0x143 (sched:sched_switch)
+    config                           0x143
     { sample_period, sample_freq }   1
     sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
     read_format                      ID
@@ -191,7 +192,7 @@ After:
   perf_event_attr:
     type                             3 (PERF_TYPE_HW_CACHE)
     size                             136
-    config                           0x10005 (PERF_COUNT_HW_CACHE_RESULT_MISS | PERF_COUNT_HW_CACHE_OP_READ | PERF_COUNT_HW_CACHE_BPU)
+    config                           0x10005
     { sample_period, sample_freq }   4000
     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
     read_format                      ID
@@ -221,7 +222,6 @@ After:
   perf_event_attr:
     type                             5 (PERF_TYPE_BREAKPOINT)
     size                             136
-    config                           0
     { sample_period, sample_freq }   1
     sample_type                      IP|TID|TIME|CPU|IDENTIFIER
     read_format                      ID
@@ -232,49 +232,68 @@ After:
     bp_type                          3
     { bp_len, config2 }              0x4
   ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             1 (PERF_TYPE_SOFTWARE)
-    size                             136
-    config                           9 (PERF_COUNT_SW_DUMMY)
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
-    read_format                      ID
-    inherit                          1
-    mmap                             1
-    comm                             1
-    freq                             1
-    task                             1
-    sample_id_all                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 12
   <SNIP>
 
-Yang Jihong (4):
-  perf trace-event-info: Add tracepoint_id_to_name() helper
-  perf tools: Extend PRINT_ATTRf to support printing of members with a
-    value of 0
-  perf tools: Add printing perf_event_attr type symbol in
-    perf_event_attr__fprintf()
-  perf tools: Add printing perf_event_attr config symbol in
-    perf_event_attr__fprintf()
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/util/perf_event_attr_fprintf.c | 30 ++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
- tools/perf/util/perf_event_attr_fprintf.c | 203 +++++++++++++++++++++-
- tools/perf/util/trace-event-info.c        |  11 ++
- tools/perf/util/trace-event.h             |   6 +
- 3 files changed, 211 insertions(+), 9 deletions(-)
-
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 433029c6afc5..cd0905d8cb7a 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -71,6 +71,33 @@ static void __p_read_format(char *buf, size_t size, u64 value)
+ 	__p_bits(buf, size, value, bits);
+ }
+ 
++#define ENUM_ID_TO_STR_CASE(x) case x: return (#x);
++static const char *stringify_perf_type_id(u64 value)
++{
++	/* sync with enum perf_type_id in perf_event.h */
++	switch (value) {
++	ENUM_ID_TO_STR_CASE(PERF_TYPE_HARDWARE)
++	ENUM_ID_TO_STR_CASE(PERF_TYPE_SOFTWARE)
++	ENUM_ID_TO_STR_CASE(PERF_TYPE_TRACEPOINT)
++	ENUM_ID_TO_STR_CASE(PERF_TYPE_HW_CACHE)
++	ENUM_ID_TO_STR_CASE(PERF_TYPE_RAW)
++	ENUM_ID_TO_STR_CASE(PERF_TYPE_BREAKPOINT)
++	default:
++		return NULL;
++	}
++}
++#undef ENUM_ID_TO_STR_CASE
++
++static void __p_type_id(char *buf, size_t size, u64 value)
++{
++	const char *str = stringify_perf_type_id(value);
++
++	if (str == NULL)
++		snprintf(buf, size, "%"PRIu64, value);
++	else
++		snprintf(buf, size, "%"PRIu64" (%s)", value, str);
++}
++
+ #define BUF_SIZE		1024
+ 
+ #define p_hex(val)		snprintf(buf, BUF_SIZE, "%#"PRIx64, (uint64_t)(val))
+@@ -79,6 +106,7 @@ static void __p_read_format(char *buf, size_t size, u64 value)
+ #define p_sample_type(val)	__p_sample_type(buf, BUF_SIZE, val)
+ #define p_branch_sample_type(val) __p_branch_sample_type(buf, BUF_SIZE, val)
+ #define p_read_format(val)	__p_read_format(buf, BUF_SIZE, val)
++#define p_type_id(val)		__p_type_id(buf, BUF_SIZE, val)
+ 
+ #define PRINT_ATTRn(_n, _f, _p, _a)			\
+ do {							\
+@@ -96,7 +124,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	char buf[BUF_SIZE];
+ 	int ret = 0;
+ 
+-	PRINT_ATTRf(type, p_unsigned);
++	PRINT_ATTRn("type", type, p_type_id, true);
+ 	PRINT_ATTRf(size, p_unsigned);
+ 	PRINT_ATTRf(config, p_hex);
+ 	PRINT_ATTRn("{ sample_period, sample_freq }", sample_period, p_unsigned, false);
 -- 
-
-Changes since v1:
- - Modify initialization of path in tracepoint_id_to_path().
- - Replace snprintf&strdup with asprintf.
- - Use switch/case to get stringified name for type and id.
-
 2.30.GIT
 
