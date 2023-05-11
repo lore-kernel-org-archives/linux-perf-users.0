@@ -2,140 +2,265 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EA6C7EE24
-	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 06:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF112C77B7F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 11 May 2023 07:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229536AbjEKG1e (ORCPT
+        id S232224AbjEKHmO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 11 May 2023 02:27:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44950 "EHLO
+        Thu, 11 May 2023 03:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236987AbjEKG1d (ORCPT
+        with ESMTP id S236654AbjEKHmN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 11 May 2023 02:27:33 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F0210F;
-        Wed, 10 May 2023 23:27:31 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-64384c6797eso6655908b3a.2;
-        Wed, 10 May 2023 23:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683786451; x=1686378451;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wccq2cR0tl91tz/Xz/oRtoRCvVeKB1PntoUZvC+KoPo=;
-        b=X/nJr+o62wE8h5IO6ySscvVRFTeLOXrjZ+GvnMkMet3bf3AQvsKLeZZizE8UZoHNxR
-         f8OLSsbDXLcejOpnV6r2N7DL0A3RDpI0sKiNfwCg9ce2OxvAaJTuP+MvL75uBkRBIe9g
-         tLKzz0HWVZGEmmJiGAV9+9g0Z7VzjM1rdnHGlX1tJMGaqZgDxfNfsSPYWjqbY17xNXh3
-         SEI12+/bIprRSGwQRghk08j0DcDsuDAp2d2NyIuuBr9mX1mzQPwl81DLStVCR4BdZgB1
-         ZYgabkfqBb6VzPdQdl1lY/3aMfkd73ff8JI1VZC+id5FeoCJaEqv7eDSqYb2cx1xEqa7
-         Dm/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683786451; x=1686378451;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Wccq2cR0tl91tz/Xz/oRtoRCvVeKB1PntoUZvC+KoPo=;
-        b=gyc3C/V//QddVKYSbT/YuJ89VxPVFKYINuGJdqal9VVMUa2ztN1i7Mn+uGhMYFKKin
-         d8qEULCeUEe2SdNw0sY/rM1Q3GxJTkqbTrsvIexSCgwMy2ij5bbYb3+SpSEG/WLquzqv
-         tzygum1vCrQQUZqUFcDDPEAu74eziz0/UcoaG8i6uOwAtO9snDt4NWkUBL1MV1Y83oFy
-         ueDaC++F0fO58mW/xrY4EUAjIaAOULHm5ppi+54j2i1AYG/IJhJfNTwecodD1ERgYgFB
-         6gRrihli4IPwQpxQUwbic8IuQ0TH83cwmyzMYEop9M465BmAq65xuKIpv9wnaTQGCVGF
-         2l5w==
-X-Gm-Message-State: AC+VfDy5TgeH3TfSMT9MwZRXKTkHRxChskOjxvcjCtSB7C6/sXOc0jne
-        5X0OJd0qalCPPqD9hCh3xN4=
-X-Google-Smtp-Source: ACHHUZ4cl9qdIjCGVU4AHXVztOqh3mEj5WMrHpNEs/6hw9KS/NeeX9Lp6vYF+Savuc3W/ZSgVYaA/A==
-X-Received: by 2002:a17:902:ecc3:b0:1ab:528:5f85 with SMTP id a3-20020a170902ecc300b001ab05285f85mr26717839plh.59.1683786450600;
-        Wed, 10 May 2023 23:27:30 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6700:7f00:c18c:3210:36c3:c88c])
-        by smtp.gmail.com with ESMTPSA id jj17-20020a170903049100b001ac2be2639asm4925683plb.223.2023.05.10.23.27.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 May 2023 23:27:30 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 3/3] perf annotate browser: Add '<' and '>' keys for navigation
-Date:   Wed, 10 May 2023 23:27:25 -0700
-Message-ID: <20230511062725.514752-3-namhyung@kernel.org>
-X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
-In-Reply-To: <20230511062725.514752-1-namhyung@kernel.org>
-References: <20230511062725.514752-1-namhyung@kernel.org>
+        Thu, 11 May 2023 03:42:13 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C50F110FD;
+        Thu, 11 May 2023 00:42:10 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QH3dt28HSzpSyK;
+        Thu, 11 May 2023 15:37:54 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 11 May 2023 15:42:06 +0800
+Subject: Re: [PATCH 3/4] perf tools: Add printing perf_event_attr->type symbol
+ in perf_event_attr__fprintf()
+To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <anshuman.khandual@arm.com>, <jesussanp@google.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20230419122912.73746-1-yangjihong1@huawei.com>
+ <20230419122912.73746-4-yangjihong1@huawei.com>
+ <09511964-dea6-f078-b24c-fef6b05f5b79@intel.com>
+ <5267232a-05a4-393b-b68e-da6a4f46d5e8@intel.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <bcf24f41-8be1-75f4-aafa-d47dccc15500@huawei.com>
+Date:   Thu, 11 May 2023 15:42:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5267232a-05a4-393b-b68e-da6a4f46d5e8@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The hists__find_annotations() allow to move to next or previous symbols
-for annotation using the arrow keys.  But TUI annotate_browser__run()
-uses the RIGHT key as ENTER to handle jump/call instructions.  That
-makes the navigation to the next function impossible.
+Hello,
 
-I'd like to change it back to move the next symbol but I'm afraid if
-some users get confused.  So I added a new pair of keys to handle that.
+On 2023/5/10 23:51, Adrian Hunter wrote:
+> On 10/05/23 11:32, Adrian Hunter wrote:
+>> On 19/04/23 15:29, Yang Jihong wrote:
+>>> When printing perf_event_attr, always display attr->type and its symbol
+>>> to improve the readability of debugging information.
+>>>
+>>> Before:
+>>>
+>>>    # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101 -C 0 true
+>>>    <SNIP>
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      size                             136
+>>>      { sample_period, sample_freq }   4000
+>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>>      read_format                      ID
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      freq                             1
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>    ------------------------------------------------------------
+>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      type                             1
+>>>      size                             136
+>>>      { sample_period, sample_freq }   4000
+>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>>      read_format                      ID
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      freq                             1
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>    ------------------------------------------------------------
+>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      type                             2
+>>>      size                             136
+>>>      config                           0x131
+>>>      { sample_period, sample_freq }   1
+>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
+>>>      read_format                      ID
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>    ------------------------------------------------------------
+>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 8
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      type                             3
+>>>      size                             136
+>>>      config                           0x10005
+>>>      { sample_period, sample_freq }   4000
+>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>>      read_format                      ID
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      freq                             1
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>    ------------------------------------------------------------
+>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      type                             4
+>>>      size                             136
+>>>      config                           0x101
+>>>      { sample_period, sample_freq }   4000
+>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>>      read_format                      ID
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      freq                             1
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>    ------------------------------------------------------------
+>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
+>>>    <SNIP>
+>>>
+>>> After:
+>>>
+>>>    # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101 -C 0 true
+>>>    <SNIP>
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      type                             0 (PERF_TYPE_HARDWARE)
+>>>      size                             136
+>>>      { sample_period, sample_freq }   4000
+>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>>      read_format                      ID
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      freq                             1
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>    ------------------------------------------------------------
+>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      type                             1 (PERF_TYPE_SOFTWARE)
+>>>      size                             136
+>>>      { sample_period, sample_freq }   4000
+>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>>      read_format                      ID
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      freq                             1
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>    ------------------------------------------------------------
+>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      type                             2 (PERF_TYPE_TRACEPOINT)
+>>>      size                             136
+>>>      config                           0x131
+>>>      { sample_period, sample_freq }   1
+>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
+>>>      read_format                      ID
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>    ------------------------------------------------------------
+>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 8
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      type                             3 (PERF_TYPE_HW_CACHE)
+>>>      size                             136
+>>>      config                           0x10005
+>>>      { sample_period, sample_freq }   4000
+>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>>      read_format                      ID
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      freq                             1
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>    ------------------------------------------------------------
+>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
+>>>    ------------------------------------------------------------
+>>>    perf_event_attr:
+>>>      type                             4 (PERF_TYPE_RAW)
+>>>      size                             136
+>>>      config                           0x101
+>>>      { sample_period, sample_freq }   4000
+>>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>>      read_format                      ID
+>>>      disabled                         1
+>>>      inherit                          1
+>>>      freq                             1
+>>>      sample_id_all                    1
+>>>      exclude_guest                    1
+>>>    ------------------------------------------------------------
+>>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
+>>>    <SNIP>
+>>>
+>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>>> ---
+>>>   tools/perf/util/perf_event_attr_fprintf.c | 24 ++++++++++++++++++++++-
+>>>   1 file changed, 23 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+>>> index 433029c6afc5..d9d70126d505 100644
+>>> --- a/tools/perf/util/perf_event_attr_fprintf.c
+>>> +++ b/tools/perf/util/perf_event_attr_fprintf.c
+>>> @@ -71,6 +71,27 @@ static void __p_read_format(char *buf, size_t size, u64 value)
+>>>   	__p_bits(buf, size, value, bits);
+>>>   }
+>>>   
+>>> +static void __p_type_id(char *buf, size_t size, u64 value)
+>>> +{
+>>> +	/* sync with enum perf_type_id in perf_event.h */
+>>> +	switch (value) {
+>>> +#define PRINT_ENUM_PERF_TYPE_ID_CASE(x)					\
+>>> +	case x:								\
+>>> +		snprintf(buf, size, "%"PRIu64" (%s)", value, #x);	\
+>>> +		return;
+>>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_HARDWARE)
+>>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_SOFTWARE)
+>>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_TRACEPOINT)
+>>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_HW_CACHE)
+>>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_RAW)
+>>> +	PRINT_ENUM_PERF_TYPE_ID_CASE(PERF_TYPE_BREAKPOINT)
+>>> +#undef PRINT_ENUM_PERF_TYPE_ID_CASE
+>>
+>> These are ABI constants so maybe simpler:
+>>
+>> 	const char *fixed_types[] = {"HARDWARE", "SOFTWARE", "TRACEPOINT",
+>> 				     "HW_CACHE", "RAW", "BREAKPOINT"};
+>>
+>> 	if (value < ARRAY_SIZE(fixed_types)) {
+>> 		snprintf(buf, size, "%"PRIu64" (PERF_TYPE_%s)",
+>> 			 value, fixed_types[value]);
+>> 	} else {
+>> 		snprintf(buf, size, "%"PRIu64, value);
+>> 	}
+> 
+> Although it is really the repeated snprintf that seems unnecessary
+> so maybe use a switch but just to get the stringified name.
+> 
+Ok, will use switch/case to get stringified name for type and id in v2.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-annotate.c     | 4 +++-
- tools/perf/ui/browsers/annotate.c | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 63cdf6ea6f6d..425a7e2fd6fb 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -342,7 +342,7 @@ static void hists__find_annotations(struct hists *hists,
- 		notes = symbol__annotation(he->ms.sym);
- 		if (notes->src == NULL) {
- find_next:
--			if (key == K_LEFT)
-+			if (key == K_LEFT || key == '<')
- 				nd = rb_prev(nd);
- 			else
- 				nd = rb_next(nd);
-@@ -378,9 +378,11 @@ static void hists__find_annotations(struct hists *hists,
- 					return;
- 				/* fall through */
- 			case K_RIGHT:
-+			case '>':
- 				next = rb_next(nd);
- 				break;
- 			case K_LEFT:
-+			case '<':
- 				next = rb_prev(nd);
- 				break;
- 			default:
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 12c3ce530e42..70bad42b807b 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -781,9 +781,9 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 			ui_browser__help_window(&browser->b,
- 		"UP/DOWN/PGUP\n"
- 		"PGDN/SPACE    Navigate\n"
-+		"</>           Move to prev/next symbol\n"
- 		"q/ESC/CTRL+C  Exit\n\n"
- 		"ENTER         Go to target\n"
--		"ESC           Exit\n"
- 		"H             Go to hottest instruction\n"
- 		"TAB/shift+TAB Cycle thru hottest instructions\n"
- 		"j             Toggle showing jump to target arrows\n"
-@@ -913,6 +913,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 			annotation__toggle_full_addr(notes, ms);
- 			continue;
- 		case K_LEFT:
-+		case '<':
-+		case '>':
- 		case K_ESC:
- 		case 'q':
- 		case CTRL('c'):
--- 
-2.40.1.521.gf1e218fcd8-goog
-
+Thanks,
+Yang
