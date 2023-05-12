@@ -2,58 +2,57 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE11C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 13:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DE5C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 14:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241348AbjELNwh (ORCPT
+        id S241395AbjELOBU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 May 2023 09:52:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60128 "EHLO
+        Fri, 12 May 2023 10:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241075AbjELNwe (ORCPT
+        with ESMTP id S240835AbjELOBM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 May 2023 09:52:34 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C11E4A
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 May 2023 06:52:30 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3f415a90215so76992515e9.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 May 2023 06:52:30 -0700 (PDT)
+        Fri, 12 May 2023 10:01:12 -0400
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A348D13C2A
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 May 2023 07:00:55 -0700 (PDT)
+Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-3090408e09bso238977f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 May 2023 07:00:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683899548; x=1686491548;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KlqtYj2sIx0sjwwCMtZ7w/k64brEWXitqz4tOF+SKWQ=;
-        b=ikM1onuzF3Q2H1SPl3vp3GOfHcQ+i0G5uF9g9tbNOkzp8gBEtd0oUKEFRDxfL9LnOQ
-         JfEkQeoEAU2gKgbpS/KjT0ta/VG6CP75xgy7ao5vtDsXQUFAJx6BJwnhlEGOJOAk3d/7
-         AptQCENFBIBebQimL+ZHRUT8eDT4YH9BW1UuXCZFa0O4wnqhByXHQrRfylk5N0s2GhLu
-         FizGaUOzpuqFK8zQPZN+rchWGEOO1O2TiXromozhQbkYEKO3KW/XF6Hp3jnp1PHSdCg9
-         QRYQ05kei/nv3fNKIn0wqzZD6tiarLvKdaHkPrNVweYs7f/SqzE+ot9y5P6EpLG+s98Q
-         Is2A==
+        d=linaro.org; s=google; t=1683900054; x=1686492054;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xZTBhI8WbVwatkb4NYJFwNjU8zCWiGxjcfs72+Uqg0s=;
+        b=qMkQbvxAC2CEszBSGG2OCKh/YDmt7+6DPvo4kAkYiaPeP4mYr3nqr3UGNKdA91FYfD
+         1P/2Fce83EnJbUyzAu3rcyn3uYJGZDTevO/Ia7oPB6v75enCd8kB+Ob5foHVqn0S1YIg
+         R6EOJG4kWKq8XWjTIIuymT+YMDuv8ijmTX3nKeBY9OcYg+RhZH9IE19D274/5Jcdy1ZV
+         qgJ8HPf3qvBhd9bgDH6sLh8PYdzTyq511nN7ZSQtdi5MRRna3+u+gfXxQSz9L2zu2dVL
+         bqPpTgnaYuMe/YefKrnWpWqA+nzVXkPz5FG9latdfTq3BhiTmKNNbvjq8gkNY/BTt/Zy
+         uJ9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683899548; x=1686491548;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KlqtYj2sIx0sjwwCMtZ7w/k64brEWXitqz4tOF+SKWQ=;
-        b=IqU4MT7HL+nqE+sgcV/2e8LFEOvljMMkXtEummzrXVPEMcxbmuS/MhCke0j/UO9knn
-         Im+gSokRrfvyScmhfm3vEtgie+EOmw+HWjpC8KjytjazWTbe/xgl3RGUv0F+/WbPaKut
-         1pwbQuT5UF+rlj4nBU2eyO3lz5IpfPozN7QnEw1QUo1X8P9PRShOi4OLknpcrb/Oxmwt
-         VC6mPuVskLzA6vY506pkcq7UJ1EVy4keZxUNu3dfOieuja4WdS7IHdVjQyTVnQBQ9JuG
-         pkTGXHGh+ky3Io7YA1yJFbOvtEDudJH2BoFGjfw7UNaaQFkD965227WI+BuPLNCZocte
-         WFHw==
-X-Gm-Message-State: AC+VfDyHd+CDYjx0wmiTz/Zw/8tbfLu45m11vzpBSwsK62JdQyxSQyp9
-        pBh2He9FNfXzL3VHQI7jZ1JrDg==
-X-Google-Smtp-Source: ACHHUZ5gks0kesTcYHQGZmDMSB53C9RWSGJ2R9t+vGgAq1ZD4zyk0Htxw3eMp2IcxpNoLZT/HXSQMA==
-X-Received: by 2002:a5d:6246:0:b0:2f6:25a6:9788 with SMTP id m6-20020a5d6246000000b002f625a69788mr16443692wrv.35.1683899548461;
-        Fri, 12 May 2023 06:52:28 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683900054; x=1686492054;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xZTBhI8WbVwatkb4NYJFwNjU8zCWiGxjcfs72+Uqg0s=;
+        b=iC4I4r97lADUApVCc7eDea8GY4bUEkvGFgh5wjUhu6cM1ehkiowwsVfzzPKxU71TJo
+         vRGaoZodv2xjsvDVqlEBMvh0kRnoxRgMqHvE2FAcHLjiAtJvXuFqJXzzN0TuGpLvrtsv
+         SG9Nik85ZvyiGzLduxEbUuiX768I+p0zMEojsiFs9+mmtkCHw3dzS4mExCXHhFmlnJLG
+         hNplZqZ/iO7T08wrpeo7tDAjZJmTuYIsYNsXYSUzRcuy63lLzq6KWW7v8rHwx0tnBXr6
+         +nfdx8VYbnY3CORH81UnvuVxFBWRoA0hQUp5WMCk8oVH+SnjGtD2YXbM2s/OUzlO74ch
+         qv8Q==
+X-Gm-Message-State: AC+VfDxHyOD2Ic+9eyQqhG7AwT87RC8PWrcr892tGgcRXTbgub0zqFuZ
+        SUW4TOS2NhaZ1zEAL3DDnVJTZw==
+X-Google-Smtp-Source: ACHHUZ4kNwv3cDr0xN4V/C2Hts5rmuiXYr3NgdImv65NIcgXDbOUwrHJnIlxUMCK1b/wB4987mMUKg==
+X-Received: by 2002:a5d:51c4:0:b0:306:37ec:656c with SMTP id n4-20020a5d51c4000000b0030637ec656cmr17349120wrv.66.1683900053995;
+        Fri, 12 May 2023 07:00:53 -0700 (PDT)
 Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
-        by smtp.gmail.com with ESMTPSA id i11-20020adff30b000000b0030644bdefd8sm23519775wro.52.2023.05.12.06.52.27
+        by smtp.gmail.com with ESMTPSA id t14-20020a5d460e000000b003047ae72b14sm23588654wrq.82.2023.05.12.07.00.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 May 2023 06:52:27 -0700 (PDT)
-Date:   Fri, 12 May 2023 14:52:25 +0100
+        Fri, 12 May 2023 07:00:53 -0700 (PDT)
+Date:   Fri, 12 May 2023 15:00:51 +0100
 From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Doug Anderson <dianders@chromium.org>
+To:     Douglas Anderson <dianders@chromium.org>
 Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Sumit Garg <sumit.garg@linaro.org>,
@@ -69,57 +68,67 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Lecopzer Chen <lecopzer.chen@mediatek.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-perf-users@vger.kernel.org,
-        Jason Wessel <jason.wessel@windriver.com>,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 08/10] kgdb: Provide a stub kgdb_nmicallback() if
- !CONFIG_KGDB
-Message-ID: <20230512135225.GA217187@aspen.lan>
+Subject: Re: [PATCH v8 09/10] arm64: kgdb: Roundup cpus using IPI as NMI
+Message-ID: <20230512140051.GA217273@aspen.lan>
 References: <20230419225604.21204-1-dianders@chromium.org>
- <20230419155341.v8.8.Ia3aeac89bb6751b682237e76e5ba594318e4b1aa@changeid>
- <CAD=FV=X=tm_smsi9itwK_Ku2vU0d676JT+MK3fkALn5QMsduiQ@mail.gmail.com>
+ <20230419155341.v8.9.I2ef26d1b3bfbed2d10a281942b0da7d9854de05e@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=X=tm_smsi9itwK_Ku2vU0d676JT+MK3fkALn5QMsduiQ@mail.gmail.com>
+In-Reply-To: <20230419155341.v8.9.I2ef26d1b3bfbed2d10a281942b0da7d9854de05e@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 11, 2023 at 07:34:30AM -0700, Doug Anderson wrote:
-> Hi,
+On Wed, Apr 19, 2023 at 03:56:03PM -0700, Douglas Anderson wrote:
+> From: Sumit Garg <sumit.garg@linaro.org>
 >
-> On Wed, Apr 19, 2023 at 3:57 PM Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > To save architectures from needing to wrap the call in #ifdefs, add a
-> > stub no-op version of kgdb_nmicallback(), which returns 1 if it didn't
-> > handle anything.
-> >
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> > Changes in v8:
-> > - "Provide a stub kgdb_nmicallback() if !CONFIG_KGDB" new for v8
-> >
-> >  include/linux/kgdb.h | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> > index 87713bd390f3..9ce628ee47cc 100644
-> > --- a/include/linux/kgdb.h
-> > +++ b/include/linux/kgdb.h
-> > @@ -377,5 +377,6 @@ extern void kgdb_free_init_mem(void);
-> >  #define dbg_late_init()
-> >  static inline void kgdb_panic(const char *msg) {}
-> >  static inline void kgdb_free_init_mem(void) { }
-> > +static int kgdb_nmicallback(int cpu, void *regs) { return 1; }
+> arm64 platforms with GICv3 or later supports pseudo NMIs which can be
+> leveraged to roundup CPUs which are stuck in hard lockup state with
+> interrupts disabled that wouldn't be possible with a normal IPI.
 >
-> FWIW: I just realized that the above needs an "inline" to make the
-> compiler not complain. I'm still hoping for more feedback on the
-> series, but I'll plan to fix that in the next spin.
+> So instead switch to roundup CPUs using IPI turned as NMI. And in
+> case a particular arm64 platform doesn't supports pseudo NMIs,
+> it will switch back to default kgdb CPUs roundup mechanism.
+>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Tested-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+>
+> (no changes since v1)
+>
+>  arch/arm64/kernel/ipi_nmi.c |  5 +++++
+>  arch/arm64/kernel/kgdb.c    | 18 ++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+>
+> diff --git a/arch/arm64/kernel/ipi_nmi.c b/arch/arm64/kernel/ipi_nmi.c
+> index c592e92b8cbf..2adaaf1519e5 100644
+> --- a/arch/arm64/kernel/ipi_nmi.c
+> +++ b/arch/arm64/kernel/ipi_nmi.c
+> @@ -8,6 +8,7 @@
+>
+>  #include <linux/interrupt.h>
+>  #include <linux/irq.h>
+> +#include <linux/kgdb.h>
+>  #include <linux/nmi.h>
+>  #include <linux/smp.h>
+>
+> @@ -45,10 +46,14 @@ bool arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+>  static irqreturn_t ipi_nmi_handler(int irq, void *data)
+>  {
+>  	irqreturn_t ret = IRQ_NONE;
+> +	unsigned int cpu = smp_processor_id();
 
-On the next spin feel free to add:
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Does this play nice with CONFIG_DEBUG_PREEMPT? I may have missed
+something about the NMI entry but a quick scan of the arm64
+arch_irq_disabled() suggests that debug_smp_processor_id() will issue
+warnings at this point...
+
+Other than I didn't see anything I don't like here.
 
 
 Daniel.
