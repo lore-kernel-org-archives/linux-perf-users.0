@@ -2,505 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54341C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 10:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 278CBC7EE2A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 11:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240653AbjELKfW (ORCPT
+        id S241042AbjELLVy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 May 2023 06:35:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34632 "EHLO
+        Fri, 12 May 2023 07:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240651AbjELKfV (ORCPT
+        with ESMTP id S241112AbjELLVt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 May 2023 06:35:21 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA6A1132AE;
-        Fri, 12 May 2023 03:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683887688; x=1715423688;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=+VorvQYumJr02q1cfZdLDRODEaPJsIyB8mSkRa7jy0s=;
-  b=fcvMDvabQrXZ1dlb5g0/W2cNmpWgG+BHzD+i1nJdJLMZK98lVFKosWAy
-   153ezFWktIotJZ3mpOxdGuJK91E/hUFWo/Vh6oxnEV49hQ113QXiNFUBt
-   48UFhho+i6xvra80m47CUwzAGlSGZyZ+u9TPUF1yhMJjx0prwNlidx7vo
-   AiqFGTp0fHyH9GhZjL31mZwncSoo7jXuYa/2UEzsoNUBLDBAWvrZ0pnW5
-   aVyl2nXSGLLiYm5ArZ/rvqdY2cSyPPEemOUWXn7l8dWFbP26MIt7BOoTb
-   iL6AQtuSjhUpkdtnkrBr5QT7OrRoddHeIKZSoKUnAcJt2r1vKZuSVwTru
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="335278839"
-X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
-   d="scan'208";a="335278839"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2023 03:34:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="765136575"
-X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
-   d="scan'208";a="765136575"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.38.197])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2023 03:34:42 -0700
-Message-ID: <aa9f1c70-eb6c-8c09-8af6-f1a0a4b60831@intel.com>
-Date:   Fri, 12 May 2023 13:34:38 +0300
+        Fri, 12 May 2023 07:21:49 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295C53C03;
+        Fri, 12 May 2023 04:21:43 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id AA27E228E0;
+        Fri, 12 May 2023 11:21:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1683890501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8Mll1DAMbLGCFXSubtx4QEn03KKOCJspxVpDzXoQOQ4=;
+        b=KpIW+Hu8ySVymSB28TiB64CYpeKVwXlVWvacchzaLtI9q7FObkmBCPO2LZ7HOgvYh0awWb
+        Vu/XmXFI2k4C5E7HKbYqv+kv7F2CMc4cHuQv9iabvQkMtDDbD2aVX1La9fkct2gRNR0/Iu
+        dWM7bdtfBmqRCNU9EtJIGZIfqdvJIxc=
+Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id A80022C152;
+        Fri, 12 May 2023 11:21:37 +0000 (UTC)
+Date:   Fri, 12 May 2023 13:21:34 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Stephane Eranian <eranian@google.com>,
+        Stephen Boyd <swboyd@chromium.org>, ricardo.neri@intel.com,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Chen-Yu Tsai <wens@csie.org>, christophe.leroy@csgroup.eu,
+        davem@davemloft.net, sparclinux@vger.kernel.org,
+        mpe@ellerman.id.au, Will Deacon <will@kernel.org>,
+        ravi.v.shankar@intel.com, linuxppc-dev@lists.ozlabs.org,
+        Marc Zyngier <maz@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v4 11/17] watchdog/hardlockup: Rename some "NMI watchdog"
+ constants/function
+Message-ID: <ZF4hPiEjvr4_ditV@alley>
+References: <20230504221349.1535669-1-dianders@chromium.org>
+ <20230504151100.v4.11.I91f7277bab4bf8c0cb238732ed92e7ce7bbd71a6@changeid>
+ <CSE0GBQQDUAY.1QAJIC3D3OBVU@wheely>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH v2 4/4] perf tools: Add printing perf_event_attr config
- symbol in perf_event_attr__fprintf()
-Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, anshuman.khandual@arm.com,
-        jesussanp@google.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230511075154.240163-1-yangjihong1@huawei.com>
- <20230511075154.240163-5-yangjihong1@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230511075154.240163-5-yangjihong1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CSE0GBQQDUAY.1QAJIC3D3OBVU@wheely>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 11/05/23 10:51, Yang Jihong wrote:
-> When printing perf_event_attr, always display perf_event_attr config and its symbol
-> to improve the readability of debugging information.
+On Fri 2023-05-05 13:06:41, Nicholas Piggin wrote:
+> On Fri May 5, 2023 at 8:13 AM AEST, Douglas Anderson wrote:
+> > Do a search and replace of:
+> > - NMI_WATCHDOG_ENABLED => HARD_WATCHDOG_ENABLED
+> > - watchdog_nmi_ => watchdog_hardlockup_
 > 
-> Before:
-> 
->   # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101,mem:0x0 -C 0 true
->   <SNIP>
->   ------------------------------------------------------------
->   perf_event_attr:
->     size                             136
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1
->     size                             136
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             2
->     size                             136
->     config                           0x143
->     { sample_period, sample_freq }   1
->     sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             3
->     size                             136
->     config                           0x10005
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             4
->     size                             136
->     config                           0x101
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             5
->     size                             136
->     { sample_period, sample_freq }   1
->     sample_type                      IP|TID|TIME|CPU|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     sample_id_all                    1
->     exclude_guest                    1
->     bp_type                          3
->     { bp_len, config2 }              0x4
->   ------------------------------------------------------------
->   <SNIP>
-> 
-> After:
-> 
->   # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101,mem:0x0 -C 0 true
->   <SNIP>
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             0 (PERF_TYPE_HARDWARE)
->     size                             136
->     config                           0 (PERF_COUNT_HW_CPU_CYCLES)
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1 (PERF_TYPE_SOFTWARE)
->     size                             136
->     config                           0 (PERF_COUNT_SW_CPU_CLOCK)
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             2 (PERF_TYPE_TRACEPOINT)
->     size                             136
->     config                           0x143 (sched:sched_switch)
->     { sample_period, sample_freq }   1
->     sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             3 (PERF_TYPE_HW_CACHE)
->     size                             136
->     config                           0x10005 (PERF_COUNT_HW_CACHE_RESULT_MISS | PERF_COUNT_HW_CACHE_OP_READ | PERF_COUNT_HW_CACHE_BPU)
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             4 (PERF_TYPE_RAW)
->     size                             136
->     config                           0x101
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     freq                             1
->     sample_id_all                    1
->     exclude_guest                    1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             5 (PERF_TYPE_BREAKPOINT)
->     size                             136
->     config                           0
->     { sample_period, sample_freq }   1
->     sample_type                      IP|TID|TIME|CPU|IDENTIFIER
->     read_format                      ID
->     disabled                         1
->     inherit                          1
->     sample_id_all                    1
->     exclude_guest                    1
->     bp_type                          3
->     { bp_len, config2 }              0x4
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
->   ------------------------------------------------------------
->   perf_event_attr:
->     type                             1 (PERF_TYPE_SOFTWARE)
->     size                             136
->     config                           9 (PERF_COUNT_SW_DUMMY)
->     { sample_period, sample_freq }   4000
->     sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->     read_format                      ID
->     inherit                          1
->     mmap                             1
->     comm                             1
->     freq                             1
->     task                             1
->     sample_id_all                    1
->     mmap2                            1
->     comm_exec                        1
->     ksymbol                          1
->     bpf_event                        1
->   ------------------------------------------------------------
->   sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 12
->   <SNIP>
-> 
-> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-> ---
->  tools/perf/util/perf_event_attr_fprintf.c | 159 +++++++++++++++++++++-
->  1 file changed, 158 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-> index cd0905d8cb7a..7730f0d7c28a 100644
-> --- a/tools/perf/util/perf_event_attr_fprintf.c
-> +++ b/tools/perf/util/perf_event_attr_fprintf.c
-> @@ -7,6 +7,11 @@
->  #include <linux/perf_event.h>
->  #include "util/evsel_fprintf.h"
->  
-> +#ifdef HAVE_LIBTRACEEVENT
-> +#include <stdlib.h> // for free
+> These are just making prefixes inconsistent again.
 
-stdlib has too much ordinary stuff for the "// for free" comment
-to be interesting, and it is very unlikely to be updated if another
-dependency on stdlib were added.
+Yeah, HARD_WATCHDOG_ENABLED does not fit in. I would personally
+rename:
 
-> +#include "trace-event.h"
-> +#endif
+  - NMI_WATCHDOG_ENABLED => WATCHDOG_HARDLOCKUP_ENABLED
+  - SOFT_WATCHDOG_ENABLED => WATCHDOG_SOFTOCKUP_ENABLED
 
-No where else is "#ifdef HAVE_LIBTRACEEVENT" put around
-"#include "trace-event.h"
+to follow the new name space.
 
-> +
->  struct bit_names {
->  	int bit;
->  	const char *name;
-> @@ -86,6 +91,85 @@ static const char *stringify_perf_type_id(u64 value)
->  		return NULL;
->  	}
->  }
-> +
-> +static const char *stringify_perf_hw_id(u64 value)
-> +{
-> +	/* sync with enum perf_hw_id in perf_event.h */
+> If you really want to do a prefix, I would call it hardlockup which
 
-As with patch 3, this comment and same ones below could be left out
+I wish, we found a good short prefix. My problem with hardlockup_
+is that for example "hardlockup_enable() looks ugly.
 
-> +	switch (value) {
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CPU_CYCLES)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_INSTRUCTIONS)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_REFERENCES)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_MISSES)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_BRANCH_MISSES)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_BUS_CYCLES)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_STALLED_CYCLES_FRONTEND)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_STALLED_CYCLES_BACKEND)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_REF_CPU_CYCLES)
-> +	default:
-> +		return NULL;
-> +	}
-> +}
-> +
-> +static const char *stringify_perf_hw_cache_id(u64 value)
-> +{
-> +	/* sync with enum perf_hw_cache_id in perf_event.h */
-> +	switch (value) {
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_L1D)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_L1I)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_LL)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_DTLB)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_ITLB)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_BPU)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_NODE)
-> +	default:
-> +		return NULL;
-> +	}
-> +}
-> +
-> +static const char *stringify_perf_hw_cache_op_id(u64 value)
-> +{
-> +	/* sync with enum perf_hw_cache_op_id in perf_event.h */
-> +	switch (value) {
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_OP_READ)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_OP_WRITE)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_OP_PREFETCH)
-> +	default:
-> +		return NULL;
-> +	}
-> +}
-> +
-> +static const char *stringify_perf_hw_cache_op_result_id(u64 value)
-> +{
-> +	/* sync with enum perf_hw_cache_op_result_id in perf_event.h */
-> +	switch (value) {
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_RESULT_ACCESS)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_HW_CACHE_RESULT_MISS)
-> +	default:
-> +		return NULL;
-> +	}
-> +}
-> +
-> +static const char *stringify_perf_sw_id(u64 value)
-> +{
-> +	/* sync with enum perf_sw_ids in perf_event.h */
-> +	switch (value) {
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_CPU_CLOCK)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_TASK_CLOCK)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_PAGE_FAULTS)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_CONTEXT_SWITCHES)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_CPU_MIGRATIONS)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_PAGE_FAULTS_MIN)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_PAGE_FAULTS_MAJ)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_ALIGNMENT_FAULTS)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_EMULATION_FAULTS)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_DUMMY)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_BPF_OUTPUT)
-> +	ENUM_ID_TO_STR_CASE(PERF_COUNT_SW_CGROUP_SWITCHES)
-> +	default:
-> +		return NULL;
-> +	}
-> +}
->  #undef ENUM_ID_TO_STR_CASE
->  
->  static void __p_type_id(char *buf, size_t size, u64 value)
-> @@ -98,6 +182,78 @@ static void __p_type_id(char *buf, size_t size, u64 value)
->  		snprintf(buf, size, "%"PRIu64" (%s)", value, str);
->  }
->  
-> +static void __p_config_hw_id(char *buf, size_t size, u64 value)
-> +{
-> +	const char *str = stringify_perf_hw_id(value);
-> +
-> +	if (str == NULL)
-> +		snprintf(buf, size, "%"PRIx64, value);
-> +	else
-> +		snprintf(buf, size, "%"PRIx64" (%s)", value, str);
+Also some stuff is common for both softlockup and hardlockup
+detectors. And some stuff will be common for both perf and
+buddy hardlockup detectors.
 
-This could use the print_id() or equivalent helper mentioned in patch 3
+Possible alternatives:
 
-> +}
-> +
-> +static void __p_config_sw_id(char *buf, size_t size, u64 value)
-> +{
-> +	const char *str = stringify_perf_sw_id(value);
-> +
-> +	if (str == NULL)
-> +		snprintf(buf, size, "%"PRIx64, value);
-> +	else
-> +		snprintf(buf, size, "%"PRIx64" (%s)", value, str);
+   a) watchdog_, watchdog_sl_ and watchdog_hl_, watchdog_hl_buddy_
+   b) wd_, wd_hardlockup_, wd_softlockup_, wd_hardlockup_buddy_
+   c) wd_, wd_hl_, wd_sl_, wd_hl_buddy_
+   d_ wd_, wdhl_, wdsl_, wdhl_buddy_
 
-Ditto
+If you want something shorter then c) looks the best to me.
 
-> +}
-> +
-> +static void __p_config_hw_cache_id(char *buf, size_t size, u64 value)
-> +{
-> +	const char *hw_cache_str = stringify_perf_hw_cache_id(value & 0xff);
-> +	const char *hw_cache_op_str =
-> +		stringify_perf_hw_cache_op_id((value & 0xff00) >> 8);
-> +	const char *hw_cache_op_result_str =
-> +		stringify_perf_hw_cache_op_result_id((value & 0xff0000) >> 16);
-> +
-> +	if (hw_cache_str == NULL || hw_cache_op_str == NULL ||
-> +	    hw_cache_op_result_str == NULL) {
-> +		snprintf(buf, size, "%#"PRIx64, value);
-> +	} else {
-> +		snprintf(buf, size, "%#"PRIx64" (%s | %s | %s)", value,
-> +			 hw_cache_op_result_str, hw_cache_op_str, hw_cache_str);
-> +	}
-> +}
-> +
-> +#ifdef HAVE_LIBTRACEEVENT
-> +static void __p_config_tracepoint_id(char *buf, size_t size, u64 value)
-> +{
-> +	char *str = tracepoint_id_to_name(value);
-> +
-> +	if (str != NULL) {
-> +		snprintf(buf, size, "%#"PRIx64" (%s)", value, str);
-> +		free(str);
-> +	} else {
-> +		snprintf(buf, size, "%#"PRIx64, value);
-> +	}
+The wd_ prefix seems to be already used in:
 
-Ditto
+   + arch/powerpc/kernel/watchdog.c
+   + kernel/time/clocksource.c
 
-Note, can just call free() on 'str' whether or not it is NULL.
+, but it is not used in the core watchdog code at all so it
+would require renaming almost everything.
 
-> +}
-> +#endif
-> +
-> +static void __p_config_id(char *buf, size_t size, u32 type, u64 value)
-> +{
-> +	switch (type) {
-> +	case PERF_TYPE_HARDWARE:
-> +		return __p_config_hw_id(buf, size, value);
-> +	case PERF_TYPE_SOFTWARE:
-> +		return __p_config_sw_id(buf, size, value);
-> +	case PERF_TYPE_HW_CACHE:
-> +		return __p_config_hw_cache_id(buf, size, value);
-> +	case PERF_TYPE_TRACEPOINT:
-> +#ifdef HAVE_LIBTRACEEVENT
-> +		return __p_config_tracepoint_id(buf, size, value);
-> +#endif
-> +	case PERF_TYPE_RAW:
-> +	case PERF_TYPE_BREAKPOINT:
-> +	default:
-> +		snprintf(buf, size, "%#"PRIx64, value);
-> +		return;
-> +	}
-> +}
-> +
->  #define BUF_SIZE		1024
->  
->  #define p_hex(val)		snprintf(buf, BUF_SIZE, "%#"PRIx64, (uint64_t)(val))
-> @@ -107,6 +263,7 @@ static void __p_type_id(char *buf, size_t size, u64 value)
->  #define p_branch_sample_type(val) __p_branch_sample_type(buf, BUF_SIZE, val)
->  #define p_read_format(val)	__p_read_format(buf, BUF_SIZE, val)
->  #define p_type_id(val)		__p_type_id(buf, BUF_SIZE, val)
-> +#define p_config_id(val)	__p_config_id(buf, BUF_SIZE, attr->type, val)
->  
->  #define PRINT_ATTRn(_n, _f, _p, _a)			\
->  do {							\
-> @@ -126,7 +283,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
->  
->  	PRINT_ATTRn("type", type, p_type_id, true);
->  	PRINT_ATTRf(size, p_unsigned);
-> -	PRINT_ATTRf(config, p_hex);
-> +	PRINT_ATTRn("config", config, p_config_id, true);
->  	PRINT_ATTRn("{ sample_period, sample_freq }", sample_period, p_unsigned, false);
->  	PRINT_ATTRf(sample_type, p_sample_type);
->  	PRINT_ATTRf(read_format, p_read_format);
 
+> probably best matches existing code and sysctl / boot stuff, and
+> concentrate on non-static symbols.
+
+Yeah, we could hardly change the sysctl interface visible to
+userspace. But we could change at least the internal code.
+
+And if we are changing the API anyway because of the
+nmi/perf/buddy/hardlockup/hard mess then lets choose
+something that will help to distinguish the common watchdog
+vs. softlockup/hardlockup/buddy/perf-specific watchdog code.
+
+And I would change it to the watchdog_hardlockup_ as it is
+done in this patchset:
+
+   + the names were mostly long even before
+   + the code mostly stayed within the 80-chars per-line limit
+   + the patches are ready
+
+
+> No problem with minor things like this that touch arch/powerpc
+> going through Andrew's tree though. I'm sure sparc maintainers
+> wouldn't mind either.
+
+Good to know.
+
+Best Regards,
+Petr
