@@ -2,118 +2,130 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8C5C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 09:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E69C7EE25
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 10:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240399AbjELJEa (ORCPT
+        id S240694AbjELKe2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 May 2023 05:04:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40960 "EHLO
+        Fri, 12 May 2023 06:34:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240300AbjELJET (ORCPT
+        with ESMTP id S240645AbjELKeS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 May 2023 05:04:19 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B4361154F
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 May 2023 02:04:07 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-307d84f5ce4so702665f8f.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 May 2023 02:04:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1683882246; x=1686474246;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LOQ/DlOGIctkGIcCTQtutRYPiw4IXxyRImNc8aVkxjk=;
-        b=pcba1+uq/tkvdmjmQc1k0s5XhFgG4/E/TIRDBO/sNR/P0n+Jypo9JpGOVUOZ1sYhpc
-         K6DC7rio/DIg3AQJXqk/986STBuCuxctiX4PNpQOLvkIacGSrVTXHP3EEyncOM8Vt44t
-         ckOE/rnvkxumONDZCzR0JJpYANPA5nwuzFgcztVSCrQ26H7Ca3f6VdvMoH2WocjmPD+2
-         JQSpRPF8k0RlLkD1F0jdx6eT6thzDHFZbt4Xj/2DhUCpu+NZvQZwug+he17lHM5b1Ui2
-         zTP800qCwgEHjUNKHvYLUwVRHmntT1rwrUwoiQVQG8fL3/moRB8byaY8dRKm2w9oE0gz
-         bfDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683882246; x=1686474246;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LOQ/DlOGIctkGIcCTQtutRYPiw4IXxyRImNc8aVkxjk=;
-        b=PiXx8Iqfs+m/a5c29XLprxTCp3gbfOS9EtjerDAlI3/zo0COemIvMaRw44IHefT3oJ
-         IZiV0105Z5dk5XJ9/SHaGG5BsD+Sirc0fypBetxYHpR5UazZB9KOJmY730tw4+ORHmbh
-         qKb7eFeelI3dVUlOLriutN9CKFF4UbvvjHijuk1KqRWT3sSLxrgU2dHrWTkooTYugRoA
-         gObSEhFc1DOGxouMaqbPQdMDH2YNwSn6QY/CnWA+KZRa44by5izErt+kGcA2Ce9Ei9E7
-         UMZfpe2IaLHFUHraSmdntyCcQESwBlur3+d5vx9nDl2eyxPj1nlq9vIa7GrunWvMteyb
-         +SrQ==
-X-Gm-Message-State: AC+VfDyNsBDxRwmLUe9Z9hLMElhGZc5Ci9zmXmTJOfw5wrXvi1vKhPMi
-        yRoXqp76becmPLQrxZ9iJ9Qqow==
-X-Google-Smtp-Source: ACHHUZ5goOCUzTjChWxdDq9l5hFZBiYUR1vs3XG/CA63CCoohpET/2lu8oGivMch6urud3hl8eKx7g==
-X-Received: by 2002:a5d:4b02:0:b0:307:a33d:d093 with SMTP id v2-20020a5d4b02000000b00307a33dd093mr8200432wrq.16.1683882245915;
-        Fri, 12 May 2023 02:04:05 -0700 (PDT)
-Received: from alex-rivos.home (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id h8-20020a1ccc08000000b003f17eaae2c9sm28149299wmb.1.2023.05.12.02.04.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 May 2023 02:04:05 -0700 (PDT)
-From:   Alexandre Ghiti <alexghiti@rivosinc.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2 10/10] perf: tests: Adapt mmap-basic.c for riscv
-Date:   Fri, 12 May 2023 10:53:21 +0200
-Message-Id: <20230512085321.13259-11-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20230512085321.13259-1-alexghiti@rivosinc.com>
-References: <20230512085321.13259-1-alexghiti@rivosinc.com>
+        Fri, 12 May 2023 06:34:18 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693F912492;
+        Fri, 12 May 2023 03:33:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683887613; x=1715423613;
+  h=message-id:date:mime-version:from:subject:to:references:
+   in-reply-to:content-transfer-encoding;
+  bh=/zL9B3y256x+WcUzPppGfr9xXV82oxf98bzuketet9s=;
+  b=PgSnU8SXBBnBIHp8C2kAqLnLsiIfsYsYzW+g+0dkoS4rHSF83dV6UaNR
+   DXKyQpKve2OxbySJo3N6SzAilyQJ4l0cnTXQqX71PsKeVEfEtDUbwHLN3
+   eH3BvKLFgMVLT9tv2AvIGV2CZSsKkzt4ZSBDvbXMzyYAk2UMI6T7OSTsR
+   sRQkdE0bdxDwA5DFCPW2bOQsCAOfHK2m234PtZtFGInek8bX/C4ejsgzv
+   dYj3t9O6Fej1bmizI/M+p34GxEJQQGm2U3NWWfh4lBqu1ZOOTFd1R2Y/P
+   64FR7UR7Cj78iQBHDC0nB/rKfIiU8SypRIo4DD7Q7qv90GrUbjFWXr0Q2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="335278641"
+X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
+   d="scan'208";a="335278641"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2023 03:33:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="765136113"
+X-IronPort-AV: E=Sophos;i="5.99,269,1677571200"; 
+   d="scan'208";a="765136113"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.38.197])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2023 03:33:25 -0700
+Message-ID: <14f09d56-d4f1-8602-6a98-5588cbef8c81@intel.com>
+Date:   Fri, 12 May 2023 13:33:20 +0300
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.11.0
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH v2 1/4] perf trace-event-info: Add tracepoint_id_to_name()
+ helper
+To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, anshuman.khandual@arm.com,
+        jesussanp@google.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230511075154.240163-1-yangjihong1@huawei.com>
+ <20230511075154.240163-2-yangjihong1@huawei.com>
+Content-Language: en-US
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230511075154.240163-2-yangjihong1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-riscv now supports mmaping hardware counters to userspace so adapt the test
-to run on this architecture.
+On 11/05/23 10:51, Yang Jihong wrote:
+> Add tracepoint_id_to_name() helper to search for the trace events directory
+> by given event id and return the corresponding tracepoint.
+> 
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+>  tools/perf/util/trace-event-info.c | 11 +++++++++++
+>  tools/perf/util/trace-event.h      |  6 ++++++
+>  2 files changed, 17 insertions(+)
+> 
+> diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
+> index c24b3a15e319..a5c65cb02a28 100644
+> --- a/tools/perf/util/trace-event-info.c
+> +++ b/tools/perf/util/trace-event-info.c
+> @@ -466,6 +466,17 @@ static struct tracepoint_path *tracepoint_id_to_path(u64 config)
+>  	return NULL;
+>  }
+>  
+> +char *tracepoint_id_to_name(u64 config)
+> +{
+> +	char *buf = NULL;
+> +	struct tracepoint_path *path = tracepoint_id_to_path(config);
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- tools/perf/tests/mmap-basic.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+It is considered slightly nicer to put local declarations
+in descending order of line length. i.e.
 
-diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
-index e68ca6229756..f5075ca774f8 100644
---- a/tools/perf/tests/mmap-basic.c
-+++ b/tools/perf/tests/mmap-basic.c
-@@ -284,7 +284,7 @@ static struct test_case tests__basic_mmap[] = {
- 			 "permissions"),
- 	TEST_CASE_REASON("User space counter reading of instructions",
- 			 mmap_user_read_instr,
--#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
- 			 "permissions"
- #else
- 			 "unsupported"
-@@ -292,7 +292,7 @@ static struct test_case tests__basic_mmap[] = {
- 		),
- 	TEST_CASE_REASON("User space counter reading of cycles",
- 			 mmap_user_read_cycles,
--#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-+#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
- 			 "permissions"
- #else
- 			 "unsupported"
--- 
-2.37.2
+	struct tracepoint_path *path = tracepoint_id_to_path(config);
+	char *buf = NULL;
+
+> +
+> +	if ((path != NULL) && (asprintf(&buf, "%s:%s", path->system, path->name) > 0))
+
+The parentheses are unnecessary and kernel style tends to avoid "!= NULL"
+i.e.
+
+	if (path && asprintf(&buf, "%s:%s", path->system, path->name) > 0)
+
+> +		return buf;
+> +
+> +	return NULL;
+> +}
+> +
+>  static struct tracepoint_path *tracepoint_name_to_path(const char *name)
+>  {
+>  	struct tracepoint_path *path = zalloc(sizeof(*path));
+> diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
+> index a0cff184b1cd..a69ee29419f3 100644
+> --- a/tools/perf/util/trace-event.h
+> +++ b/tools/perf/util/trace-event.h
+> @@ -62,6 +62,12 @@ unsigned long long eval_flag(const char *flag);
+>  
+>  int read_tracing_data(int fd, struct list_head *pattrs);
+>  
+> +/*
+> + * Return the tracepoint name in the format "subsystem:event_name",
+> + * callers should free the returned string.
+> + */
+> +char *tracepoint_id_to_name(u64 config);
+> +
+>  struct tracing_data {
+>  	/* size is only valid if temp is 'true' */
+>  	ssize_t size;
 
