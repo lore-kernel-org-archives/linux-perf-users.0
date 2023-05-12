@@ -2,141 +2,137 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40346C7EE24
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 11:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC473C77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 13:49:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240426AbjELLza (ORCPT
+        id S241320AbjELNtC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 May 2023 07:55:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39586 "EHLO
+        Fri, 12 May 2023 09:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232174AbjELLz3 (ORCPT
+        with ESMTP id S241316AbjELNtB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 May 2023 07:55:29 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B42D8A60;
-        Fri, 12 May 2023 04:55:28 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id D7F82221B0;
-        Fri, 12 May 2023 11:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1683892526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xyID2nrfRFvnCmCCEoDqrRJb/SLL4bOOzyPEcVWhIcg=;
-        b=lEQ0yjMIPHRMyl9VsYuE8tD7yo0iFTwLUXaORxnhA7t8728sX0q4aRdF3iN6dqy1aC3q8/
-        YPm1Tcs8DZ1wYKRHJ8/JPaw9/W3ekjR2+D3gmP9Tk3pQE/UABRQW6NVwrkr0j2R28omH/o
-        DCRZdesZpFrDMAZ/mT4KGYDe+egXfWo=
-Received: from suse.cz (unknown [10.100.208.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 6A61A2C152;
-        Fri, 12 May 2023 11:55:25 +0000 (UTC)
-Date:   Fri, 12 May 2023 13:55:24 +0200
-From:   Petr Mladek <pmladek@suse.com>
+        Fri, 12 May 2023 09:49:01 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD711329C
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 May 2023 06:48:58 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3f41dceb9d1so72300075e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 May 2023 06:48:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683899337; x=1686491337;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=67+i61jguyp+ViZ9g6BdKZA7MoS8H9z+3IWq9oh/QL4=;
+        b=OwLBvsSCAL4IKqngbyeoNx/oUbfIXwpu3OvJhWUAlVCiT6A9dVvRwxpOuPJqfIbT/6
+         PrRcyqgLS3++Foa3bBtNBv/pj2lvZa83iigcr+fC8lrKrUMNsAQzjyEy+PMw5OMm/Mhf
+         xF0yyGQzDsuSOMbxKBHHyAFAEKrz+LS4Fyu3wgjp0bEG6ZAZ6d6zsvotf2t02PXSwHRW
+         FfnDosgrkDUWBd8K4VTIE+ETIO+fdaZ1mayOHMPSoB8rpU8IPhOHJYHvOjr5iMGiPkQF
+         8qstkH9p0C0OucOJviu7r6yDgaQ9C5Z5Y9EfGtbIHXO5xfXzDSrQ5BQ6gaa5O1McMXua
+         2pOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683899337; x=1686491337;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=67+i61jguyp+ViZ9g6BdKZA7MoS8H9z+3IWq9oh/QL4=;
+        b=D6y5btMV0NlWXL8URdxZmZuPAL+8aFg3xacRNhtR6Wc6noDYeMwjjvc4pVbj0eUMaf
+         0prVrdyYkW1dh2GDxbMx9I+NWhk/5g5Gdu7YojpXOaCxBTBGq+V8yEHWFzzK6a+C6UaX
+         mCHw/S8NQNOIv7gk2le3Yt3rl9J5Nkd33J/G64OrQcO+FYinT0cPbDxZT1TPT/+1wbbd
+         /p7LhSBJZLMXL+TWO/BN6nUVAivHGc3AoLeeDCxudj6zbt8wtXWu6anHSVy3esHQjehi
+         6nDdfVoQ4pJ42Qw5NIDzKY6/qugGFFyaKIXiYsT34EimiQuYjpqmxY5lyNllDmD9XrqX
+         Zw8Q==
+X-Gm-Message-State: AC+VfDzL0e43g45JBOtcp+Hiut5mHEtjN6YSEr7vP53x9bOAHbcYpXL0
+        pLBd9NbPsAEdYho0KshjDbPU8w==
+X-Google-Smtp-Source: ACHHUZ587vmfUkFwUYJByiVpeFrZ7RH44sF7IGxP8ERhwrP7uly1qe+BtE/g9t78xP4zh4ZmSj7afw==
+X-Received: by 2002:a05:600c:2198:b0:3f4:253b:92a9 with SMTP id e24-20020a05600c219800b003f4253b92a9mr11929533wme.30.1683899337069;
+        Fri, 12 May 2023 06:48:57 -0700 (PDT)
+Received: from aspen.lan (aztw-34-b2-v4wan-166919-cust780.vm26.cable.virginm.net. [82.37.195.13])
+        by smtp.gmail.com with ESMTPSA id k14-20020a7bc40e000000b003f4272c2d0csm13894413wmi.36.2023.05.12.06.48.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 May 2023 06:48:56 -0700 (PDT)
+Date:   Fri, 12 May 2023 14:48:53 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
 To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Sumit Garg <sumit.garg@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Stephen Boyd <swboyd@chromium.org>, ricardo.neri@intel.com,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        kgdb-bugreport@lists.sourceforge.net,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, ito-yuichi@fujitsu.com,
+        kgdb-bugreport@lists.sourceforge.net, Chen-Yu Tsai <wens@csie.org>,
         Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Chen-Yu Tsai <wens@csie.org>, christophe.leroy@csgroup.eu,
-        davem@davemloft.net, sparclinux@vger.kernel.org,
-        mpe@ellerman.id.au, Will Deacon <will@kernel.org>,
-        ravi.v.shankar@intel.com, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v4 12/17] watchdog/hardlockup: Have the perf hardlockup
- use __weak functions more cleanly
-Message-ID: <ZF4pLJUpvec7vvXT@alley>
-References: <20230504221349.1535669-1-dianders@chromium.org>
- <20230504151100.v4.12.I847d9ec852449350997ba00401d2462a9cb4302b@changeid>
+        Stephen Boyd <swboyd@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-perf-users@vger.kernel.org,
+        Jason Wessel <jason.wessel@windriver.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 07/10] kgdb: Expose default CPUs roundup fallback
+ mechanism
+Message-ID: <20230512134853.GA216623@aspen.lan>
+References: <20230419225604.21204-1-dianders@chromium.org>
+ <20230419155341.v8.7.I21d92f8974c8e4001a5982fea6c98da1bed33ef5@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230504151100.v4.12.I847d9ec852449350997ba00401d2462a9cb4302b@changeid>
+In-Reply-To: <20230419155341.v8.7.I21d92f8974c8e4001a5982fea6c98da1bed33ef5@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu 2023-05-04 15:13:44, Douglas Anderson wrote:
-> The fact that there watchdog_hardlockup_enable(),
-> watchdog_hardlockup_disable(), and watchdog_hardlockup_probe() are
-> declared __weak means that the configured hardlockup detector can
-> define non-weak versions of those functions if it needs to. Instead of
-> doing this, the perf hardlockup detector hooked itself into the
-> default __weak implementation, which was a bit awkward. Clean this up.
-> 
-> >From comments, it looks as if the original design was done because the
-> __weak function were expected to implemented by the architecture and
-> not by the configured hardlockup detector. This got awkward when we
-> tried to add the buddy lockup detector which was not arch-specific but
-> wanted to hook into those same functions.
-> 
-> This is not expected to have any functional impact.
-> 
+On Wed, Apr 19, 2023 at 03:56:01PM -0700, Douglas Anderson wrote:
+> From: Sumit Garg <sumit.garg@linaro.org>
+>
+> Add a new API kgdb_smp_call_nmi_hook() to expose default CPUs roundup
+> mechanism to a particular archichecture as a runtime fallback if it
+> detects to not support NMI roundup.
+>
+> Currently such an architecture example is arm64 supporting pseudo NMIs
+> feature which is only available on platforms which have support for GICv3
+> or later version.
+>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Tested-by: Chen-Yu Tsai <wens@csie.org>
 > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-I like this change:
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-See a comment below.
-
-> --- a/kernel/watchdog_perf.c
-> +++ b/kernel/watchdog_perf.c
-> @@ -147,12 +151,16 @@ void hardlockup_detector_perf_enable(void)
->  }
->  
->  /**
-> - * hardlockup_detector_perf_disable - Disable the local event
-> + * watchdog_hardlockup_disable - Disable the local event
+> ---
+>
+> (no changes since v1)
+>
+>  include/linux/kgdb.h      | 12 ++++++++++++
+>  kernel/debug/debug_core.c |  8 +++++++-
+>  2 files changed, 19 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+> index 258cdde8d356..87713bd390f3 100644
+> --- a/include/linux/kgdb.h
+> +++ b/include/linux/kgdb.h
+> @@ -199,6 +199,18 @@ kgdb_arch_handle_qxfer_pkt(char *remcom_in_buffer,
+>
+>  extern void kgdb_call_nmi_hook(void *ignored);
+>
+> +/**
+> + *	kgdb_smp_call_nmi_hook - Provide default fallback mechanism to
+> + *				 round-up CPUs
 > + *
-> + * @cpu: The CPU to enable hard lockup on.
->   */
-> -void hardlockup_detector_perf_disable(void)
-> +void watchdog_hardlockup_disable(unsigned int cpu)
->  {
->  	struct perf_event *event = this_cpu_read(watchdog_ev);
->  
-> +	WARN_ON_ONCE(cpu != smp_processor_id());
+> + *	If you're using the default implementation of kgdb_roundup_cpus()
+> + *	this function will be called.  And if an arch detects at runtime to
+> + *	not support NMI based roundup then it can fallback to default
+> + *	mechanism using this API.
+> + */
 > +
+> +extern void kgdb_smp_call_nmi_hook(void);
 
-It makes sense. But it just shows how the code is weird.
-@cpu is passed as a parameter and the code expects that it is
-running on the given CPU.
+Concept looks sensible but this is a terrible name for aa command to
+round up the CPUs using smp_call... functions. Whilst it is true it that
+kgdb_roundup_cpus() does use kgdb_call_nmi_hook() internally that
+doesn't mean we should name functions after it. They should be named
+after what they are do, not how they do it.
 
-It seems that @cpu is passed as a parameter because this is
-called from:
+Something more like kgdb_roundup_cpus_with_smp_call() would be a much
+better name.
 
-  + [CPUHP_AP_WATCHDOG_ONLINE].teardown.single()
-    + lockup_detector_offline_cpu()
-      + watchdog_disable()
 
-and the CPU hotplug API passes @cpu parameter.
-
-IMHO, the clean solution would be to use per_cpu*() instead
-of this_cpu*() API everywhere in this code path.
-
-But it is yet another cleanup. It seems to be out-of-scope of
-this patchset.
-
->  	if (event) {
->  		perf_event_disable(event);
->  		this_cpu_write(watchdog_ev, NULL);
-
-Best Regards,
-Petr
+Daniel.
