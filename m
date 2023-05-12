@@ -2,41 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 278CBC7EE2A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 11:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40346C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 11:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241042AbjELLVy (ORCPT
+        id S240426AbjELLza (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 May 2023 07:21:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44714 "EHLO
+        Fri, 12 May 2023 07:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241112AbjELLVt (ORCPT
+        with ESMTP id S232174AbjELLz3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 May 2023 07:21:49 -0400
+        Fri, 12 May 2023 07:55:29 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295C53C03;
-        Fri, 12 May 2023 04:21:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B42D8A60;
+        Fri, 12 May 2023 04:55:28 -0700 (PDT)
 Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id AA27E228E0;
-        Fri, 12 May 2023 11:21:41 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTP id D7F82221B0;
+        Fri, 12 May 2023 11:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1683890501; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1683892526; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=8Mll1DAMbLGCFXSubtx4QEn03KKOCJspxVpDzXoQOQ4=;
-        b=KpIW+Hu8ySVymSB28TiB64CYpeKVwXlVWvacchzaLtI9q7FObkmBCPO2LZ7HOgvYh0awWb
-        Vu/XmXFI2k4C5E7HKbYqv+kv7F2CMc4cHuQv9iabvQkMtDDbD2aVX1La9fkct2gRNR0/Iu
-        dWM7bdtfBmqRCNU9EtJIGZIfqdvJIxc=
-Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
+        bh=xyID2nrfRFvnCmCCEoDqrRJb/SLL4bOOzyPEcVWhIcg=;
+        b=lEQ0yjMIPHRMyl9VsYuE8tD7yo0iFTwLUXaORxnhA7t8728sX0q4aRdF3iN6dqy1aC3q8/
+        YPm1Tcs8DZ1wYKRHJ8/JPaw9/W3ekjR2+D3gmP9Tk3pQE/UABRQW6NVwrkr0j2R28omH/o
+        DCRZdesZpFrDMAZ/mT4KGYDe+egXfWo=
+Received: from suse.cz (unknown [10.100.208.146])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id A80022C152;
-        Fri, 12 May 2023 11:21:37 +0000 (UTC)
-Date:   Fri, 12 May 2023 13:21:34 +0200
+        by relay2.suse.de (Postfix) with ESMTPS id 6A61A2C152;
+        Fri, 12 May 2023 11:55:25 +0000 (UTC)
+Date:   Fri, 12 May 2023 13:55:24 +0200
 From:   Petr Mladek <pmladek@suse.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Sumit Garg <sumit.garg@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Matthias Kaehlcke <mka@chromium.org>,
@@ -56,91 +55,88 @@ Cc:     Douglas Anderson <dianders@chromium.org>,
         Chen-Yu Tsai <wens@csie.org>, christophe.leroy@csgroup.eu,
         davem@davemloft.net, sparclinux@vger.kernel.org,
         mpe@ellerman.id.au, Will Deacon <will@kernel.org>,
-        ravi.v.shankar@intel.com, linuxppc-dev@lists.ozlabs.org,
-        Marc Zyngier <maz@kernel.org>,
+        ravi.v.shankar@intel.com, npiggin@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, Marc Zyngier <maz@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v4 11/17] watchdog/hardlockup: Rename some "NMI watchdog"
- constants/function
-Message-ID: <ZF4hPiEjvr4_ditV@alley>
+Subject: Re: [PATCH v4 12/17] watchdog/hardlockup: Have the perf hardlockup
+ use __weak functions more cleanly
+Message-ID: <ZF4pLJUpvec7vvXT@alley>
 References: <20230504221349.1535669-1-dianders@chromium.org>
- <20230504151100.v4.11.I91f7277bab4bf8c0cb238732ed92e7ce7bbd71a6@changeid>
- <CSE0GBQQDUAY.1QAJIC3D3OBVU@wheely>
+ <20230504151100.v4.12.I847d9ec852449350997ba00401d2462a9cb4302b@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CSE0GBQQDUAY.1QAJIC3D3OBVU@wheely>
+In-Reply-To: <20230504151100.v4.12.I847d9ec852449350997ba00401d2462a9cb4302b@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri 2023-05-05 13:06:41, Nicholas Piggin wrote:
-> On Fri May 5, 2023 at 8:13 AM AEST, Douglas Anderson wrote:
-> > Do a search and replace of:
-> > - NMI_WATCHDOG_ENABLED => HARD_WATCHDOG_ENABLED
-> > - watchdog_nmi_ => watchdog_hardlockup_
+On Thu 2023-05-04 15:13:44, Douglas Anderson wrote:
+> The fact that there watchdog_hardlockup_enable(),
+> watchdog_hardlockup_disable(), and watchdog_hardlockup_probe() are
+> declared __weak means that the configured hardlockup detector can
+> define non-weak versions of those functions if it needs to. Instead of
+> doing this, the perf hardlockup detector hooked itself into the
+> default __weak implementation, which was a bit awkward. Clean this up.
 > 
-> These are just making prefixes inconsistent again.
+> >From comments, it looks as if the original design was done because the
+> __weak function were expected to implemented by the architecture and
+> not by the configured hardlockup detector. This got awkward when we
+> tried to add the buddy lockup detector which was not arch-specific but
+> wanted to hook into those same functions.
+> 
+> This is not expected to have any functional impact.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Yeah, HARD_WATCHDOG_ENABLED does not fit in. I would personally
-rename:
+I like this change:
 
-  - NMI_WATCHDOG_ENABLED => WATCHDOG_HARDLOCKUP_ENABLED
-  - SOFT_WATCHDOG_ENABLED => WATCHDOG_SOFTOCKUP_ENABLED
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-to follow the new name space.
+See a comment below.
 
-> If you really want to do a prefix, I would call it hardlockup which
+> --- a/kernel/watchdog_perf.c
+> +++ b/kernel/watchdog_perf.c
+> @@ -147,12 +151,16 @@ void hardlockup_detector_perf_enable(void)
+>  }
+>  
+>  /**
+> - * hardlockup_detector_perf_disable - Disable the local event
+> + * watchdog_hardlockup_disable - Disable the local event
+> + *
+> + * @cpu: The CPU to enable hard lockup on.
+>   */
+> -void hardlockup_detector_perf_disable(void)
+> +void watchdog_hardlockup_disable(unsigned int cpu)
+>  {
+>  	struct perf_event *event = this_cpu_read(watchdog_ev);
+>  
+> +	WARN_ON_ONCE(cpu != smp_processor_id());
+> +
 
-I wish, we found a good short prefix. My problem with hardlockup_
-is that for example "hardlockup_enable() looks ugly.
+It makes sense. But it just shows how the code is weird.
+@cpu is passed as a parameter and the code expects that it is
+running on the given CPU.
 
-Also some stuff is common for both softlockup and hardlockup
-detectors. And some stuff will be common for both perf and
-buddy hardlockup detectors.
+It seems that @cpu is passed as a parameter because this is
+called from:
 
-Possible alternatives:
+  + [CPUHP_AP_WATCHDOG_ONLINE].teardown.single()
+    + lockup_detector_offline_cpu()
+      + watchdog_disable()
 
-   a) watchdog_, watchdog_sl_ and watchdog_hl_, watchdog_hl_buddy_
-   b) wd_, wd_hardlockup_, wd_softlockup_, wd_hardlockup_buddy_
-   c) wd_, wd_hl_, wd_sl_, wd_hl_buddy_
-   d_ wd_, wdhl_, wdsl_, wdhl_buddy_
+and the CPU hotplug API passes @cpu parameter.
 
-If you want something shorter then c) looks the best to me.
+IMHO, the clean solution would be to use per_cpu*() instead
+of this_cpu*() API everywhere in this code path.
 
-The wd_ prefix seems to be already used in:
+But it is yet another cleanup. It seems to be out-of-scope of
+this patchset.
 
-   + arch/powerpc/kernel/watchdog.c
-   + kernel/time/clocksource.c
-
-, but it is not used in the core watchdog code at all so it
-would require renaming almost everything.
-
-
-> probably best matches existing code and sysctl / boot stuff, and
-> concentrate on non-static symbols.
-
-Yeah, we could hardly change the sysctl interface visible to
-userspace. But we could change at least the internal code.
-
-And if we are changing the API anyway because of the
-nmi/perf/buddy/hardlockup/hard mess then lets choose
-something that will help to distinguish the common watchdog
-vs. softlockup/hardlockup/buddy/perf-specific watchdog code.
-
-And I would change it to the watchdog_hardlockup_ as it is
-done in this patchset:
-
-   + the names were mostly long even before
-   + the code mostly stayed within the 80-chars per-line limit
-   + the patches are ready
-
-
-> No problem with minor things like this that touch arch/powerpc
-> going through Andrew's tree though. I'm sure sparc maintainers
-> wouldn't mind either.
-
-Good to know.
+>  	if (event) {
+>  		perf_event_disable(event);
+>  		this_cpu_write(watchdog_ev, NULL);
 
 Best Regards,
 Petr
