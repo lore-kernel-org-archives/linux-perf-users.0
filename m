@@ -2,43 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A87C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Fri, 12 May 2023 18:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCFEC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 May 2023 06:34:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238612AbjELSfE (ORCPT
+        id S232059AbjEMGey (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 12 May 2023 14:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50198 "EHLO
+        Sat, 13 May 2023 02:34:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238987AbjELSeu (ORCPT
+        with ESMTP id S230337AbjEMGew (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 12 May 2023 14:34:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75DE8100EC;
-        Fri, 12 May 2023 11:34:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2703865820;
-        Fri, 12 May 2023 18:33:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 443C9C433EF;
-        Fri, 12 May 2023 18:33:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683916436;
-        bh=uEUlpihp5tVKy7mhM2g9TmmU+1eAtfhIw9NOGqIbp94=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J3eR3Ee+olvwLcueJofvlX/7QB2Lr9jXZr1hsWupwld8jyIpJ0nieVY68Otn1oKdW
-         R9swGe4Mb+iGzqPKq63bfMPOfzxKG0narmon64Gk27W7a1QEUHbd05f+sa10+DdlhX
-         OFCcLWy8cIYD2/jD3KmmnB87WeTh1cUWl0GD0zeJDgUEHoGOdJf2xQez3jYdDRlV1e
-         yClwXnQ5Yf0zwdqWwv2TMKTPisbxe4ohjiLatJdGfuc8PFOFkES36xkl0QwoXtOLVg
-         yovC1dgfO+QdhVTHV//RGG1ow3GQusD7TFra2Hh5qqdlIPEgr17lgJbJtsCN/b/Md1
-         YWOklEFxyuyrA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D8D5E403B5; Fri, 12 May 2023 15:33:53 -0300 (-03)
-Date:   Fri, 12 May 2023 15:33:53 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Ian Rogers <irogers@google.com>,
+        Sat, 13 May 2023 02:34:52 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D82D2D5A
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 May 2023 23:34:51 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba712bb7b28so7976183276.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 May 2023 23:34:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683959690; x=1686551690;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0p8d1w/pe9O+QCnFcGkr2LKxroB31jvE11GGSxuYfLg=;
+        b=qeqhVVaqhMOViKbS7qJ+qBk3zWVdmuAad2hhyaH2tMjSExiybH8pRXhEhr/IWJoL9j
+         iwjyoCGBbyGMaPAfQgGCNsancR1+2aFQ2h/PH1i1yt9igf1ryzmhs2QNSnEArhH0O1ny
+         GcDOCgl1miurXs6uruHEBe1qE89qVsjxRpl5/EMwFnvzl85rkT5Dz6oI5/BfHQYNh51X
+         3lSCPxkrMFe8bQx5jkAjKuP70PEIry1HS4hSGIAOUBAYLYYUg9e0k2WqGQPN6fGlY3mE
+         UdSdal1aQ8qQYyWKabHmRgRGPtlKFwBDdyGvUAtmY8QilF9cr+F3uzKwkloKjSEUl41M
+         koeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683959690; x=1686551690;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0p8d1w/pe9O+QCnFcGkr2LKxroB31jvE11GGSxuYfLg=;
+        b=DuSajwmbAceYK9qD9Jp3iPNW8avHimtqInQrsa83//i0yJdE8+vMTgpj3zc5az1wV5
+         n0hQpRO+eC++/S4vS/c2D/Fj6WVJydH0s9Fovbw2PwLkMP0P05gI3MFilYWMflWdQSvz
+         +JTrwZtPnW+DIYrbqwyylBLKHQx12IzqP06I/y2HMFcDE0AwAc5/b2N0JfiD9YRGXvdq
+         h9Fc3sJfotHk9N+2tJjH6J9MVPMwrv2nW1168FHxhXXKTABWiXt6jm8yZJhgYbiRVyhx
+         yq9vP8Lxm6w98JBn2uJDeaFSvBy3bQ2inIk/Y2bpy+lxpTPlp/BppL8wD5L/GGTE8f9j
+         Uh/g==
+X-Gm-Message-State: AC+VfDznXfcs9hT1LD4J8rBCqWZTGLe+F+ZqFp8fxfxsFX9htbRz06Bo
+        ezEWNgiDd+sxQL5T+zO6niKdH46WG+mR
+X-Google-Smtp-Source: ACHHUZ7zQYUHC2aQiVksyfSm70YyYLEyQCRWIdlqJZLEGQdW1oVWL/HLq0/4j++8+vJPvEbqMGSQnLecNCJl
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:9575:f2a2:614d:d082])
+ (user=irogers job=sendgmr) by 2002:a25:5e55:0:b0:ba2:58d2:bd86 with SMTP id
+ s82-20020a255e55000000b00ba258d2bd86mr13886743ybb.5.1683959690694; Fri, 12
+ May 2023 23:34:50 -0700 (PDT)
+Date:   Fri, 12 May 2023 23:34:47 -0700
+Message-Id: <20230513063447.464691-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
+Subject: [PATCH v1] perf test: Add cputype testing to perf stat
+From:   Ian Rogers <irogers@google.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Ahmad Yasin <ahmad.yasin@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -70,90 +86,79 @@ Cc:     Ian Rogers <irogers@google.com>,
         Kang Minchul <tegongkang@gmail.com>,
         Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/44] Fix perf on Intel hybrid CPUs
-Message-ID: <ZF6GkU6Le8bxex2O@kernel.org>
-References: <20230502223851.2234828-1-irogers@google.com>
- <b8f03c40-d238-2ce9-5b50-bd9e1465be23@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b8f03c40-d238-2ce9-5b50-bd9e1465be23@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+Cc:     Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, May 03, 2023 at 04:56:36PM -0400, Liang, Kan escreveu:
-> 
-> 
-> On 2023-05-02 6:38 p.m., Ian Rogers wrote:
-> > TL;DR: hybrid doesn't crash, json metrics work on hybrid on both PMUs
-> > or individually, event parsing doesn't always scan all PMUs, more and
-> > new tests that also run without hybrid, less code.
-> > 
-> > The first 4 patches are aimed at Linux 6.4 to address issues raised,
-> > in particular by Kan, on the existing perf stat behavior with json
-> > metrics. They avoid duplicated events by removing groups. They don't
-> > hide events and metrics to make event multiplexing obvious. They avoid
-> > terminating perf when paranoia is higher due to certain events that
-> > always fail. They avoid rearranging events by PMUs when the events
-> > aren't in a group.
-> > 
-> > The next 5 patches avoid grouping events for metrics where they could
-> > never succeed and were previously posted as:
-> > "perf vendor events intel: Add xxx metric constraints"
-> > https://lore.kernel.org/all/20230419005423.343862-1-irogers@google.com/
-> > In general the generated json is coming from:
-> > https://github.com/intel/perfmon/pull/73
-> > 
-> > Next are some general and test improvements.
-> > 
-> > Next event parsing is rewritten to not scan all PMUs for the benefit
-> > of raw and legacy cache parsing, instead these are handled by the
-> > lexer and a new term type. This ultimately removes the need for the
-> > event parser for hybrid to be recursive as legacy cache can be just a
-> > term. Tests are re-enabled for events with hyphens, so AMD's
-> > branch-brs event is now parsable.
-> > 
-> > The cputype option is made a generic pmu filter flag and is tested
-> > even on non-hybrid systems.
-> > 
-> > The final patches address specific json metric issues on hybrid, in
-> > both the json metrics and the metric code.
-> > 
-> > The patches add slightly more code than they remove, in areas like
-> > better json metric constraints and tests, but in the core util code,
-> > the removal of hybrid is a net reduction:
-> >  22 files changed, 711 insertions(+), 1016 deletions(-)
-> > 
-> > Sample output is contained in the v1 patch set:
-> > https://lore.kernel.org/lkml/bff481ba-e60a-763f-0aa0-3ee53302c480@linux.intel.com/
-> > 
-> > Tested on Tigerlake, Skylake and Alderlake CPUs.
-> > 
-> > The v4 patch set:
-> >  - rebase, 1 of the Linux 6.4 recommended patches are merged leaving:
-> >    1) perf metric: Change divide by zero and !support events behavior
-> >    2) perf stat: Introduce skippable evsels
-> >    3) perf metric: Json flag to not group events if gathering a metric group
-> >    4) perf parse-events: Don't reorder ungrouped events by pmu
-> >    whose diffstat is:
-> >     30 files changed, 326 insertions(+), 33 deletions(-)
-> >    but without the vendor event updates (the tend to be large as they
-> >    repeat something per architecture per metric) is just:
-> >     10 files changed, 90 insertions(+), 32 deletions(-)
-> 
-> I have tested the 4 patches on top of the perf-tools-next branch on both
-> Cascade Lake and Raptor Lake. The result looks good to me.
-> 
-> They address the permission error found in the default mode of perf stat
-> on the Cascade Lake. Thanks Ian for the fix.
-> 
-> Arnaldo, could you please consider to back port them for the 6.4?
+Check a bogus PMU fails and that a known PMU succeeds. Limit to PMUs
+known cpu, cpu_atom and armv8_pmuv3_0 ones.
 
-Yes, its in perf-tools now, will go to Linus next week.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/tests/shell/stat.sh | 44 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-What about the other patches? I saw some you provided your review, what
-about the others, are you ok with them?
+diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+index b154fbb15d54..3f1e67795490 100755
+--- a/tools/perf/tests/shell/stat.sh
++++ b/tools/perf/tests/shell/stat.sh
+@@ -103,10 +103,54 @@ test_topdown_weak_groups() {
+   echo "Topdown weak groups test [Success]"
+ }
+ 
++test_cputype() {
++  # Test --cputype argument.
++  echo "cputype test"
++
++  # Bogus PMU should fail.
++  if perf stat --cputype="123" -e instructions true > /dev/null 2>&1
++  then
++    echo "cputype test [Bogus PMU didn't fail]"
++    err=1
++    return
++  fi
++
++  # Find a known PMU for cputype.
++  pmu=""
++  for i in cpu cpu_atom armv8_pmuv3_0
++  do
++    if test -d "/sys/devices/$i"
++    then
++      pmu="$i"
++      break
++    fi
++    if perf stat -e "$i/instructions/" true > /dev/null 2>&1
++    then
++      pmu="$i"
++      break
++    fi
++  done
++  if test "x$pmu" = "x"
++  then
++    echo "cputype test [Skipped known PMU not found]"
++    return
++  fi
++
++  # Test running with cputype produces output.
++  if ! perf stat --cputype="$pmu" -e instructions true 2>&1 | grep -E -q "instructions"
++  then
++    echo "cputype test [Failed count missed with given filter]"
++    err=1
++    return
++  fi
++  echo "cputype test [Success]"
++}
++
+ test_default_stat
+ test_stat_record_report
+ test_stat_record_script
+ test_stat_repeat_weak_groups
+ test_topdown_groups
+ test_topdown_weak_groups
++test_cputype
+ exit $err
+-- 
+2.40.1.606.ga4b1b128d6-goog
 
-- Arnaldo
