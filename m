@@ -2,75 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83782C77B7D
-	for <linux-perf-users@archiver.kernel.org>; Sat, 13 May 2023 07:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C7EC77B7F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 13 May 2023 20:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229991AbjEMHkW (ORCPT
+        id S229603AbjEMUff (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 13 May 2023 03:40:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54640 "EHLO
+        Sat, 13 May 2023 16:35:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229918AbjEMHkV (ORCPT
+        with ESMTP id S229502AbjEMUfe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 13 May 2023 03:40:21 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A70135B5;
-        Sat, 13 May 2023 00:40:17 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QJHVl3wxQz18LQJ;
-        Sat, 13 May 2023 15:35:59 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sat, 13 May 2023 15:40:13 +0800
-From:   Changbin Du <changbin.du@huawei.com>
+        Sat, 13 May 2023 16:35:34 -0400
+Received: from maynard.decadent.org.uk (maynard.decadent.org.uk [95.217.213.242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C4FF2D40;
+        Sat, 13 May 2023 13:35:33 -0700 (PDT)
+Received: from [213.219.167.32] (helo=deadeye)
+        by maynard with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1pxvxd-0008Pk-Gz; Sat, 13 May 2023 22:35:25 +0200
+Received: from ben by deadeye with local (Exim 4.96)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1pxvxd-007dgZ-03;
+        Sat, 13 May 2023 22:35:25 +0200
+Date:   Sat, 13 May 2023 22:35:24 +0200
+From:   Ben Hutchings <ben@decadent.org.uk>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH] perf: ftrace: flush output after each writing
-Date:   Sat, 13 May 2023 15:40:00 +0800
-Message-ID: <20230513074000.733550-1-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.25.1
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Salvatore Bonaccorso <carnil@debian.org>
+Subject: [PATCH v2 0/2] perf doc improvements to man page reproducibility
+Message-ID: <ZF/0jJkAOXxzGAMc@decadent.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3NraPDKjMzW1VfwZ"
+Content-Disposition: inline
+X-SA-Exim-Connect-IP: 213.219.167.32
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on maynard); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pager will result stdout in full buffering mode instead of line
-buffering. We need to make the trace visible timely.
 
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/builtin-ftrace.c | 2 ++
- 1 file changed, 2 insertions(+)
+--3NraPDKjMzW1VfwZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index 810e3376c7d6..ad2a9ae041f6 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -650,6 +650,8 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
- 				break;
- 			if (fwrite(buf, n, 1, stdout) != 1)
- 				break;
-+			/* flush output since stdout is in full buffering mode due to pager */
-+			fflush(stdout);
- 		}
- 	}
- 
--- 
-2.25.1
+I previously sent a patch in 2016(!) to make the dates in man pages
+reproducible, with KBUILD_BUILD_TIMESTAMP specifiying the date.  That
+patch partly overlaps with commit d586ac10ce56 "perf docs: Allow man
+page date to be specified", which implemented generation of dates
+based on commit timestamps.
 
+However, both of those implementations were specific to the original
+asciidoc's DocBook backend and had no effect on asciidoctor's direct
+man page generation.
+
+This series builds on the current definition of perf_date, adding
+support for asciidoctor and the KBUILD_BUILD_TIMESTAMP variable.
+
+Ben.
+
+Ben Hutchings (2):
+  perf doc: Define man page date when using asciidoctor
+  perf doc: Add support for KBUILD_BUILD_TIMESTAMP
+
+ tools/perf/Documentation/Makefile | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
+
+
+--3NraPDKjMzW1VfwZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEErCspvTSmr92z9o8157/I7JWGEQkFAmRf9IcACgkQ57/I7JWG
+EQkXhA/+NC0hKNh65HLxO2pw8jYqTv2z+hnTyqWYDeMX8pcibHJgDJpo0ovkvXvT
+D6sa7wlxtFxQogTqmJkpVFOvH3xaUBtFGq1P9kiwr+TVcJE8X5hE8uPBv5F4jShl
+uEaSmHG3GVR+7qIwX/+0QVyth5fFdd2vmIjS8SQWpxULvCKxCHeslmwSqMwAoxpx
+Ql3Ei2IKh+04NfhR2/OJy62o5VFFOoESBlKcQcLYe0L4jKj2mIXn31j3Iy3cJhf5
+yzsgJk3H6uYMCIz14WRqtsX109yTJB6zMcYn1PZnEE6ZjTE7jbLqI/Yj4jPNaDH5
+IKMxCgH0XcDzMzIz5wR+dr9/+ZOzNQYLraXhLr/xyJ9JJsJtAg/ozD32mvh893Iy
+OjTO4cQdgIDpodwPu1ZqWgc+PjH9rbt6OUBoicIOgIttgw1cRct1NNQIikZK5ThB
+PtwkaEV1scUux+1ABI23o/iJOwwMrcFP1ZN5MZ6OhStyTfow04PcF3eOuqQZyfoC
+pj0VUPN03efhbmzLTmgMxnhHspVnPjVZJADZ8vuZx23+6dZ02c1inpa4/4Z+KKy/
++UtHdMvv2z/UZwg4Y5vWXe5N+c1mQy29tRptanSsrxum+ttJVuJ58dIa2gYA5u20
+wdJ7HZavURfbkmrLK6rRSb7fqTW5lW3R8WxEFOUl8osUPuixTwg=
+=vukG
+-----END PGP SIGNATURE-----
+
+--3NraPDKjMzW1VfwZ--
