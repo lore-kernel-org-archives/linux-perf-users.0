@@ -2,328 +2,173 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F1AC7EE26
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 22:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080D9C7EE22
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 23:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343520AbjEOWuC (ORCPT
+        id S230236AbjEOXMO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 18:50:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
+        Mon, 15 May 2023 19:12:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245301AbjEOWuA (ORCPT
+        with ESMTP id S245415AbjEOXMN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 18:50:00 -0400
+        Mon, 15 May 2023 19:12:13 -0400
 Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 019BEDC6A
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 15:49:57 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-3f38824a025so1616921cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 15:49:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54CC7D99
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 16:12:11 -0700 (PDT)
+Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-3f475746ae0so37213891cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 16:12:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684190997; x=1686782997;
+        d=chromium.org; s=google; t=1684192330; x=1686784330;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1ZTjiVuHFBirYHtxN1fAOg4WJAZDMLdPxECi8NRB08Q=;
-        b=Outk4cMYMHv3vtEwIMZexxy0ppM3vG2PD1EqLwFtt09FbiV4ZI3UQG5m/5T0oT5o2q
-         y/Fr3sGN6gbjYz3rUYSj80ZucRDr5YhXDUvYLJyZSljl6b2mHIG6EzJABOiSnv+Z3Scd
-         7gY0Ndi98X1maAPd5aGqVjwj/1831FXMBvGkR2RgCYCVJpB+feX7IoLV7fUmlchI8Bnh
-         vuzuGJnVVUTUkV1B9UdNgMjxxowykdX3n44WJ99uWpcJBfZUSrWFtqULn7RBGxn/Zu8r
-         YCeXRNK05C6WhzfvCNY1VOVctMtoBlZYcdsGw37vPGZ5D8jA7zbL9v3ntRRYdnjnAgDh
-         9twQ==
+        bh=lqtkImGxR85aToYA0Aq0yuOc2duxdpDWQf3A/P/lpm0=;
+        b=UPSmIKf7273Wy1Mw+xSr5yVGmTgrDBlcXcvk1aOZw9NVOZHB6gqQ9XSaQmV4fqy7tz
+         IEweB/5fBnqoU5BS5zoWBtr8DAwQSX+3VhvEEAxhHCA0WNP7QTGzsBu4Od8R00BCsh+C
+         gWawwK4Np+DG/AGrA1DNe/9aA1EJGZv3SxEWc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684190997; x=1686782997;
+        d=1e100.net; s=20221208; t=1684192330; x=1686784330;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1ZTjiVuHFBirYHtxN1fAOg4WJAZDMLdPxECi8NRB08Q=;
-        b=VJsbzOChXiCL8Im/ii5YihowtQXpz/bYwxQM9hfzL3v5TbcgXNtVgKAVDdaIncaca9
-         WYZoYwLzc1qmbaUWXAJJ3TxOE65GfWPivcX4Xi6SRuwhK0kXMWtyxxcAMiAykDrUG3kT
-         joVtDEEM+pSvG+/Ck2g0Oi59RBqqTHfVAK6foRKy3rmjxzCZ8BKDjJBG/vH25jJdxfx6
-         TDGeHiLCcYWp0pzO2w1xVHjJca0fsdFKmGnyBXb51Az5+UfTMnh5vfdcP58EK2pHDStX
-         6XaUajgcdUqdLyjw09NJS8x3iaCwAQNf1/ZVJNEiKcQgtcxgVYAENd6Cca01CK2Uxt73
-         SDsg==
-X-Gm-Message-State: AC+VfDw+k4QenNFx4DUyRYXDdKTfrKB/Y9YgwcPXF93HG+8D7bAd4yml
-        3TQyQSYBlqN/rv+I7ZQGlUI+StlEy1MMcSm6yiCBoA==
-X-Google-Smtp-Source: ACHHUZ5fiXDFyEGKIZokJk+SQ58w2mPLHArX08+dHQ+hInnXnFu9iPlhNSRYjy3/HEbTLYnAiPY/OqM4NUkWA/MHnWw=
-X-Received: by 2002:ac8:7dcb:0:b0:3f5:2006:50f1 with SMTP id
- c11-20020ac87dcb000000b003f5200650f1mr76767qte.12.1684190996650; Mon, 15 May
- 2023 15:49:56 -0700 (PDT)
+        bh=lqtkImGxR85aToYA0Aq0yuOc2duxdpDWQf3A/P/lpm0=;
+        b=cGnEfUZUB8mbxJynxxjnDK+Ao5HX5ifPkf5QiPQC+Q0+gj4qhejT9a3TqWSGvb7Q8N
+         CsoRzpzGDegbrJCZofWkrgo66gUfP+FAyjMJwsrzjaVQJeLuiSeyyDnkPh4kP6lv6eym
+         WI2WNmIef7rxk4FW1mG5QQbNKCnjMYV7zAzseN5pkXENihPVZwuKnF3VWMw71pPBCdqh
+         ioKq4aIbj9xYiEGEUy8eRCgYUFptHeBIT8f4B+i31fuwyvs56jsPpIBlMNe3qYKEbhZd
+         xWpSQhp7B6vOKknmiFT0g7Prlx51IFw/fUhZ60t66WJjvoMnUE7Y9odN070j4oDN3jlO
+         BPvA==
+X-Gm-Message-State: AC+VfDwNrkpkep3s3DDD+wiL8/fZdns4yPG+5GXzRjKFPcNDSUv5h4ZG
+        1xU0X22erYXEu1SUdRaMAE/J3ovZo0qfCRxc73o=
+X-Google-Smtp-Source: ACHHUZ5M+Iazz33djd0bLoB4gW2nOGBtz9ZAnvHYjm8f1tAp6ulGYsBIhRQZdbF5lfM2xJHGXbFA0A==
+X-Received: by 2002:ac8:7dd1:0:b0:3ea:65d2:2fd1 with SMTP id c17-20020ac87dd1000000b003ea65d22fd1mr54331715qte.3.1684192330307;
+        Mon, 15 May 2023 16:12:10 -0700 (PDT)
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com. [209.85.160.181])
+        by smtp.gmail.com with ESMTPSA id z26-20020ac83e1a000000b003f3937c16c4sm5776457qtf.5.2023.05.15.16.12.08
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 May 2023 16:12:08 -0700 (PDT)
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-3f38a9918d1so1589381cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 16:12:08 -0700 (PDT)
+X-Received: by 2002:ac8:5c48:0:b0:3f3:8b28:f0b4 with SMTP id
+ j8-20020ac85c48000000b003f38b28f0b4mr67302qtj.18.1684192327980; Mon, 15 May
+ 2023 16:12:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230502223851.2234828-1-irogers@google.com> <b8f03c40-d238-2ce9-5b50-bd9e1465be23@linux.intel.com>
- <ZF6GkU6Le8bxex2O@kernel.org> <b1fb8f09-17d7-45c2-6f8d-0756cd09fe77@linux.intel.com>
-In-Reply-To: <b1fb8f09-17d7-45c2-6f8d-0756cd09fe77@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 15 May 2023 15:49:45 -0700
-Message-ID: <CAP-5=fUc7mcEurwCBxZ_Dx=1pARynyra5Psi3J_OVk9JCXYMcA@mail.gmail.com>
-Subject: Re: [PATCH v4 00/44] Fix perf on Intel hybrid CPUs
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
+References: <20230419225604.21204-1-dianders@chromium.org> <20230419155341.v8.9.I2ef26d1b3bfbed2d10a281942b0da7d9854de05e@changeid>
+ <20230512140051.GA217273@aspen.lan>
+In-Reply-To: <20230512140051.GA217273@aspen.lan>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 15 May 2023 16:11:56 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UPy5kA7mJteY+YzHa2ExvBKHvxR9SnM=qxxKwXbTNHkw@mail.gmail.com>
+Message-ID: <CAD=FV=UPy5kA7mJteY+YzHa2ExvBKHvxR9SnM=qxxKwXbTNHkw@mail.gmail.com>
+Subject: Re: [PATCH v8 09/10] arm64: kgdb: Roundup cpus using IPI as NMI
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, ito-yuichi@fujitsu.com,
+        kgdb-bugreport@lists.sourceforge.net, Chen-Yu Tsai <wens@csie.org>,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
-        Rob Herring <robh@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Ard Biesheuvel <ardb@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-perf-users@vger.kernel.org,
+        Alexandru Elisei <alexandru.elisei@arm.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, May 14, 2023 at 5:03=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2023-05-12 2:33 p.m., Arnaldo Carvalho de Melo wrote:
-> > Em Wed, May 03, 2023 at 04:56:36PM -0400, Liang, Kan escreveu:
-> >>
-> >>
-> >> On 2023-05-02 6:38 p.m., Ian Rogers wrote:
-> >>> TL;DR: hybrid doesn't crash, json metrics work on hybrid on both PMUs
-> >>> or individually, event parsing doesn't always scan all PMUs, more and
-> >>> new tests that also run without hybrid, less code.
-> >>>
-> >>> The first 4 patches are aimed at Linux 6.4 to address issues raised,
-> >>> in particular by Kan, on the existing perf stat behavior with json
-> >>> metrics. They avoid duplicated events by removing groups. They don't
-> >>> hide events and metrics to make event multiplexing obvious. They avoi=
-d
-> >>> terminating perf when paranoia is higher due to certain events that
-> >>> always fail. They avoid rearranging events by PMUs when the events
-> >>> aren't in a group.
-> >>>
-> >>> The next 5 patches avoid grouping events for metrics where they could
-> >>> never succeed and were previously posted as:
-> >>> "perf vendor events intel: Add xxx metric constraints"
-> >>> https://lore.kernel.org/all/20230419005423.343862-1-irogers@google.co=
-m/
-> >>> In general the generated json is coming from:
-> >>> https://github.com/intel/perfmon/pull/73
-> >>>
-> >>> Next are some general and test improvements.
-> >>>
-> >>> Next event parsing is rewritten to not scan all PMUs for the benefit
-> >>> of raw and legacy cache parsing, instead these are handled by the
-> >>> lexer and a new term type. This ultimately removes the need for the
-> >>> event parser for hybrid to be recursive as legacy cache can be just a
-> >>> term. Tests are re-enabled for events with hyphens, so AMD's
-> >>> branch-brs event is now parsable.
-> >>>
-> >>> The cputype option is made a generic pmu filter flag and is tested
-> >>> even on non-hybrid systems.
-> >>>
-> >>> The final patches address specific json metric issues on hybrid, in
-> >>> both the json metrics and the metric code.
-> >>>
-> >>> The patches add slightly more code than they remove, in areas like
-> >>> better json metric constraints and tests, but in the core util code,
-> >>> the removal of hybrid is a net reduction:
-> >>>  22 files changed, 711 insertions(+), 1016 deletions(-)
-> >>>
-> >>> Sample output is contained in the v1 patch set:
-> >>> https://lore.kernel.org/lkml/bff481ba-e60a-763f-0aa0-3ee53302c480@lin=
-ux.intel.com/
-> >>>
-> >>> Tested on Tigerlake, Skylake and Alderlake CPUs.
-> >>>
-> >>> The v4 patch set:
-> >>>  - rebase, 1 of the Linux 6.4 recommended patches are merged leaving:
-> >>>    1) perf metric: Change divide by zero and !support events behavior
-> >>>    2) perf stat: Introduce skippable evsels
-> >>>    3) perf metric: Json flag to not group events if gathering a metri=
-c group
-> >>>    4) perf parse-events: Don't reorder ungrouped events by pmu
-> >>>    whose diffstat is:
-> >>>     30 files changed, 326 insertions(+), 33 deletions(-)
-> >>>    but without the vendor event updates (the tend to be large as they
-> >>>    repeat something per architecture per metric) is just:
-> >>>     10 files changed, 90 insertions(+), 32 deletions(-)
-> >>
-> >> I have tested the 4 patches on top of the perf-tools-next branch on bo=
-th
-> >> Cascade Lake and Raptor Lake. The result looks good to me.
-> >>
-> >> They address the permission error found in the default mode of perf st=
-at
-> >> on the Cascade Lake. Thanks Ian for the fix.
-> >>
-> >> Arnaldo, could you please consider to back port them for the 6.4?
-> >
-> > Yes, its in perf-tools now, will go to Linus next week.
->
-> Thanks Arnaldo!
->
-> >
-> > What about the other patches? I saw some you provided your review, what
-> > about the others, are you ok with them?
-> >
->
-> Yes, I'm OK with the patch set. It fixes many issues. Thanks Ian.
-> (My tests mainly focus on the area in which the patch set may touch. I
-> did the tests on various platforms, ADL (hybrid), Cascade Lake, SPR.)
->
-> Tested-by: Kan Liang <kan.liang@linux.intel.com>
->
-> But there are still some issues. I don't think they are introduced by
-> this patch set. We may fix them later separately.
->
-> - Segmentation fault with perf stat --topdown on ADL (hybrid) and
-> Cascade Lake.
->   It looks like a legacy issue, may not be introduced by this patch set.
->   Here is the backtrace. It looks like there is a NULL metric_group.
->
-> (gdb) backtrace
-> #0  0x00007ffff73035d1 in __strstr_sse2_unaligned () from /lib64/libc.so.=
-6
-> #1  0x00000000004f9019 in metricgroup__topdown_max_level_callback
-> (pm=3D<optimized out>, table=3D<optimized out>,
->     data=3D0x7fffffff92f4) at util/metricgroup.c:1722
-> #2  0x00000000005e8a31 in pmu_metrics_table_for_each_metric
-> (table=3D0xcb74d0 <pmu_events_map+368>,
->     fn=3Dfn@entry=3D0x4f8ff0 <metricgroup__topdown_max_level_callback>,
-> data=3Ddata@entry=3D0x7fffffff92f4)
->     at pmu-events/pmu-events.c:61123
-> #3  0x00000000004fbc3b in metricgroups__topdown_max_level () at
-> util/metricgroup.c:1742
-> #4  0x000000000042c135 in add_default_attributes () at builtin-stat.c:184=
-5
-> #5  cmd_stat (argc=3D0, argv=3D0x7fffffffe3e0) at builtin-stat.c:2446
-> #6  0x00000000004b922b in run_builtin (p=3Dp@entry=3D0xd5c530
-> <commands+336>, argc=3Dargc@entry=3D2,
->     argv=3Dargv@entry=3D0x7fffffffe3e0) at perf.c:323
-> #7  0x000000000040e373 in handle_internal_command (argv=3D0x7fffffffe3e0,
-> argc=3D2) at perf.c:377
-> #8  run_argv (argv=3D<synthetic pointer>, argcp=3D<synthetic pointer>) at
-> perf.c:421
-> #9  main (argc=3D2, argv=3D0x7fffffffe3e0) at perf.c:537
-> (gdb)
+Hi,
 
-Thanks, there's a 1-liner for the segv:
-https://lore.kernel.org/lkml/20230515224530.671331-1-irogers@google.com/
-Arnaldo, can we make sure this goes toward the next 6.4 release candidate?
+On Fri, May 12, 2023 at 7:00=E2=80=AFAM Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Wed, Apr 19, 2023 at 03:56:03PM -0700, Douglas Anderson wrote:
+> > From: Sumit Garg <sumit.garg@linaro.org>
+> >
+> > arm64 platforms with GICv3 or later supports pseudo NMIs which can be
+> > leveraged to roundup CPUs which are stuck in hard lockup state with
+> > interrupts disabled that wouldn't be possible with a normal IPI.
+> >
+> > So instead switch to roundup CPUs using IPI turned as NMI. And in
+> > case a particular arm64 platform doesn't supports pseudo NMIs,
+> > it will switch back to default kgdb CPUs roundup mechanism.
+> >
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > Tested-by: Chen-Yu Tsai <wens@csie.org>
+> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >
+> > (no changes since v1)
+> >
+> >  arch/arm64/kernel/ipi_nmi.c |  5 +++++
+> >  arch/arm64/kernel/kgdb.c    | 18 ++++++++++++++++++
+> >  2 files changed, 23 insertions(+)
+> >
+> > diff --git a/arch/arm64/kernel/ipi_nmi.c b/arch/arm64/kernel/ipi_nmi.c
+> > index c592e92b8cbf..2adaaf1519e5 100644
+> > --- a/arch/arm64/kernel/ipi_nmi.c
+> > +++ b/arch/arm64/kernel/ipi_nmi.c
+> > @@ -8,6 +8,7 @@
+> >
+> >  #include <linux/interrupt.h>
+> >  #include <linux/irq.h>
+> > +#include <linux/kgdb.h>
+> >  #include <linux/nmi.h>
+> >  #include <linux/smp.h>
+> >
+> > @@ -45,10 +46,14 @@ bool arch_trigger_cpumask_backtrace(const cpumask_t=
+ *mask, bool exclude_self)
+> >  static irqreturn_t ipi_nmi_handler(int irq, void *data)
+> >  {
+> >       irqreturn_t ret =3D IRQ_NONE;
+> > +     unsigned int cpu =3D smp_processor_id();
+>
+> Does this play nice with CONFIG_DEBUG_PREEMPT? I may have missed
+> something about the NMI entry but a quick scan of the arm64
+> arch_irq_disabled() suggests that debug_smp_processor_id() will issue
+> warnings at this point...
+>
+> Other than I didn't see anything I don't like here.
 
-Thanks,
-Ian
+Good question. It seems to, at least on the sc7180-trogdor-based
+system I tested.
 
-> Also, the return type is unsigned int, but a bool is given.
->
-> unsigned int metricgroups__topdown_max_level(void)
-> {
->         unsigned int max_level =3D 0;
->         const struct pmu_metrics_table *table =3D pmu_metrics_table__find=
-();
->
->         if (!table)
->                 return false;
->
->
->
-> - The perf metric and metricgroups fail on different platforms.
->   Ian and I have discussed it. We agree to address it later separately.
->
->   102: perf all metricgroups test
->   ADL (hybrid)
->   103: perf all metrics test
->   ADL (hybrid), Cascade Lake, SPR
->
-> - perf list: The [Kernel PMU event] is missed for all the hardware cache
-> events.
->   It impacts both hybrid and non-hybrid platforms.
->   It's a user-visible change introduced by the patch set.
->   I don't know if anyone cares whether it's a kernel event or a regular
-> event. It doesn't bother me. So I'm OK with it.
->
-> cpu:
->   L1-dcache-loads OR cpu/L1-dcache-loads/
->   L1-dcache-load-misses OR cpu/L1-dcache-load-misses/
->   L1-dcache-stores OR cpu/L1-dcache-stores/
->   L1-icache-load-misses OR cpu/L1-icache-load-misses/
->   LLC-loads OR cpu/LLC-loads/
->   LLC-load-misses OR cpu/LLC-load-misses/
->   LLC-stores OR cpu/LLC-stores/
->   LLC-store-misses OR cpu/LLC-store-misses/
->   dTLB-loads OR cpu/dTLB-loads/
->   dTLB-load-misses OR cpu/dTLB-load-misses/
->   dTLB-stores OR cpu/dTLB-stores/
->   dTLB-store-misses OR cpu/dTLB-store-misses/
->   iTLB-load-misses OR cpu/iTLB-load-misses/
->   branch-loads OR cpu/branch-loads/
->   branch-load-misses OR cpu/branch-load-misses/
->   node-loads OR cpu/node-loads/
->   node-load-misses OR cpu/node-load-misses/
->   branch-instructions OR cpu/branch-instructions/    [Kernel PMU event]
->   branch-misses OR cpu/branch-misses/                [Kernel PMU event]
->   bus-cycles OR cpu/bus-cycles/                      [Kernel PMU event]
->   cache-misses OR cpu/cache-misses/                  [Kernel PMU event]
->   cache-references OR cpu/cache-references/          [Kernel PMU event]
->   cpu-cycles OR cpu/cpu-cycles/                      [Kernel PMU event]
->   instructions OR cpu/instructions/                  [Kernel PMU event]
->
->
-> - The --cputype only works for the metric in the default mode.
->   I can still see the cpu_atom events with --cputype core
->   It may be something we can improve later.
->
-> # ./perf stat --cputype core sleep 2
->
->  Performance counter stats for 'sleep 2':
->
->               0.52 msec task-clock                       #    0.000 CPUs
-> utilized
->                  1      context-switches                 #    1.939 K/sec
->                  0      cpu-migrations                   #    0.000 /sec
->                 69      page-faults                      #  133.770 K/sec
->          2,569,423      cpu_core/cycles/                 #    4.981 G/sec
->      <not counted>      cpu_atom/cycles/
->                        (0.00%)
->          3,287,691      cpu_core/instructions/           #    6.374 G/sec
->      <not counted>      cpu_atom/instructions/
->                        (0.00%)
->            555,848      cpu_core/branches/               #    1.078 G/sec
->      <not counted>      cpu_atom/branches/
->                        (0.00%)
->              8,398      cpu_core/branch-misses/          #   16.281 M/sec
->      <not counted>      cpu_atom/branch-misses/
->                        (0.00%)
->         15,416,538      cpu_core/TOPDOWN.SLOTS/          #     36.1 %
-> tma_backend_bound
->                                                   #     23.9 %  tma_retir=
-ing
->                                                   #      5.6 %
-> tma_bad_speculation
->                                                   #     34.4 %
-> tma_frontend_bound
->          3,687,877      cpu_core/topdown-retiring/
->            846,398      cpu_core/topdown-bad-spec/
->          5,320,217      cpu_core/topdown-fe-bound/
->          5,562,045      cpu_core/topdown-be-bound/
->             14,149      cpu_core/INT_MISC.UOP_DROPPING/  #   27.431 M/sec
->
->
-> Thanks,
-> Kan
+Just to confirm, I printed out the values of some of the stuff that's
+checked. When this function was called, I saw:
+
+irqs_disabled() =3D> true
+raw_local_save_flags() =3D> 0x000000f0
+__irqflags_uses_pmr() =3D> 1
+
+The "__irqflags_uses_pmr" is the thing that gets set when we try to
+enable pseudo-NMIs and they're actually there. That causes us to call
+__pmr_irqs_disabled_flags() which will compare the flags (0xf0) to
+GIC_PRIO_IRQON (0xe0). If flags is not the same as GIC_PRIO_IRQON then
+interrupts are disabled.
+
+...so, assuming I understood everything, I think we're OK.
+
+I also tried to see what happened with the whole "fallback to use
+regular IPIs if we don't have pseudo-NMIs enabled" (AKA patch #10 in
+this series). In that case, I had:
+
+irqs_disabled() =3D> true
+raw_local_save_flags() =3D> 0x000000c0
+__irqflags_uses_pmr() =3D> 0
+
+...in this case we end up in __daif_irqs_disabled_flags(). That checks
+to see if the flags (0xc0) has the "I bit" (0x80) set. It is set, so
+interrupts are disabled.
+
+-Doug
