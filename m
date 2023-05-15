@@ -2,60 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2AEAC7EE24
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 22:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD6A9C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 22:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245341AbjEOWBS (ORCPT
+        id S245722AbjEOWBj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 18:01:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45934 "EHLO
+        Mon, 15 May 2023 18:01:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245323AbjEOV75 (ORCPT
+        with ESMTP id S245708AbjEOWAc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 17:59:57 -0400
-Received: from mail-pj1-x104a.google.com (mail-pj1-x104a.google.com [IPv6:2607:f8b0:4864:20::104a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76EE11DAA
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 14:59:26 -0700 (PDT)
-Received: by mail-pj1-x104a.google.com with SMTP id 98e67ed59e1d1-24de504c5fcso13012721a91.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 14:59:26 -0700 (PDT)
+        Mon, 15 May 2023 18:00:32 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B3BA275
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 14:59:41 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-b9a7e65b34aso23904812276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 14:59:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684187962; x=1686779962;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BnAfIbmSAJy1nhwxlLI4CXbH/I642OPdNYHz63+L4Ls=;
-        b=W9ksAdYMSV2U1tg+E58NK6A5lmRgVWge5+PG2HE+hYTkMd3rtxdFEpxMGw3JWaHJ4O
-         SR19x9LlHdZPcYyAMNCIcQYL6LvAcxbMSJbrNGzCCa7LOCvMdr6t5LhZ48Z5jH9sh/pz
-         MW6brk+BzGA1aeJ2pqXpjYMdYE2bea7cPfvxpPtpkN0jvsEanMe3bL8cCfaHw+1VPL2Z
-         zYqVUAPVc9qeGuReOszQXS7aPvYlaKhqV32K6qLGf/sqfm/yd5qhq4J0qTQFKgqC1VlN
-         WFmHhCR/m9Kd1hZljZknpB66hKSlk5VqdfWJsV3EW590gQ6WuA538gnXo/DAGZD8Dvdl
-         VxBQ==
+        d=google.com; s=20221208; t=1684187967; x=1686779967;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xo70dYhEcfCgGbPC8sbOAVfsz7lHN99PYmfDYjMXA94=;
+        b=f829HRXKGHhrwUtQJHlJUuZW/kQHSdRQP17OzJ86X57kN1a2r2Kd3r1dtQh1BoqgyS
+         BNnuMrt+PGQKKhDXqyfza4k1hlvecZ92MrhDYuj/vRs+AmOCTFrz64KXioBGHQpM7jV7
+         D2Ka2capAGjZOERQ9x9uz6xfxC2dojijS8iBGvtYggo3kUWJ1eLxVPLYS9M4gkhI+RuF
+         1MFyu+FoLYULe5fHX5SEWt8tCU96rkJsXBjY0l1MrpbnHMGxbImo+snT0u1rAB2DWOCW
+         cIwR6YriMI/TGGsBd110UKtdfDzGAeHV+G5Bgyi2Z2kSqYQ8vtk0kWlhOc2wBmgpfEr9
+         CY9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684187962; x=1686779962;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=BnAfIbmSAJy1nhwxlLI4CXbH/I642OPdNYHz63+L4Ls=;
-        b=lglIsilOlUCNxAczjP6m3YTvJnUeJFVsmePr/oY8PMJeChfHeDtSxRYpquIx2A6qBn
-         lOce5mHYpeII1s6Yy7m1l9stZZJ5RISWk5CCsZfjHFd+XcuqxDZqEbSMd9pq1/gGiz/k
-         OHgqjU38velu7pNnfHYF+YIwqIc9XZ9uQHSEMotHPhWt28U9t1v7v4bX00gYqRRbfoyo
-         HRLZazhjNMAuLwnz0tYGrSNC2BS/w07Oz2K1mjhqAz/gtVoMaN442flmjRDInLutLkN+
-         46MzEGB4VxrunDlnn/uDybVeGTe1e6TWaq0eJ/DWzF5F53OSqrRVTFyo+FBpzfgfGrX+
-         wuBA==
-X-Gm-Message-State: AC+VfDwy7CrZErx/aZkI/rHZK4Jw7mjTgOWP0+SmCNI9UCoZ1/WgAO8J
-        9jFJ/9qWcLOF/dFFvNxTvz0kV80co0yT
-X-Google-Smtp-Source: ACHHUZ4697456TWAfIuTjr7sInqfgqQF+2Go/iLH83Z0j2xpRLHLpsxUVEuxt6a8Qy+HVcJGSa/yWZidDKql
+        d=1e100.net; s=20221208; t=1684187967; x=1686779967;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xo70dYhEcfCgGbPC8sbOAVfsz7lHN99PYmfDYjMXA94=;
+        b=g5iojHu4aK1cBHlgJho0EbUj8FKZAR1T3DxZxuYJkaH1LRx6+ezTNcKBPJkjCpXyFv
+         zXMekT8Lp+2oK9qkAGccnT3H0EwoalKW2v8OjTTGyMUkCI8LLSvI45uHqDzf08H/PgUO
+         qUy0hcVfpfNL/0CtV/noLpP+PN2fP6riQPNeiKXYj3jPIka6kkbnYHkDULhtq3ITYBQ4
+         e//DU3fezkEvdx8TvrFbAKFA0xmNbl1dkHneSvQAzOShvikrDDJ7qHPx9QtaGd+rfUR0
+         yOtKs7YX0GWatkz235/4urLPrK7NRcqY5HuPyt1I+V1PtUfmHhQ/8N8OOCMsSBXqhcBP
+         DZmA==
+X-Gm-Message-State: AC+VfDwUC16ISFZhztc/5romUSZEh+ryPWgd6WTECs/LJw4R7SB7QrtD
+        Up6D99+SKsJIxfHDTb/KODyrmwSlZnHc
+X-Google-Smtp-Source: ACHHUZ4WJyGL4EI3+IbnUzrXK/XAq2kTEJjp1Wsdo9Rx9kX98EKssBAdRaK2Je3lY22cMbcxXeCD92PUjxj9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:638e:7eff:a1d9:3b2b])
- (user=irogers job=sendgmr) by 2002:a17:90a:df14:b0:24e:9e8:1e2b with SMTP id
- gp20-20020a17090adf1400b0024e09e81e2bmr10252714pjb.9.1684187962276; Mon, 15
- May 2023 14:59:22 -0700 (PDT)
-Date:   Mon, 15 May 2023 14:58:41 -0700
+ (user=irogers job=sendgmr) by 2002:a25:4503:0:b0:b9d:b774:3a8b with SMTP id
+ s3-20020a254503000000b00b9db7743a8bmr15101380yba.8.1684187967537; Mon, 15 May
+ 2023 14:59:27 -0700 (PDT)
+Date:   Mon, 15 May 2023 14:58:43 -0700
 In-Reply-To: <20230515215844.653610-1-irogers@google.com>
-Message-Id: <20230515215844.653610-13-irogers@google.com>
+Message-Id: <20230515215844.653610-15-irogers@google.com>
 Mime-Version: 1.0
 References: <20230515215844.653610-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
-Subject: [PATCH v1 12/15] perf vendor events intel: Update snowridgex events
+Subject: [PATCH v1 14/15] perf jevents: Add support for metricgroup descriptions
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -73,588 +71,191 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Thomas Richter <tmricht@linux.ibm.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update snowridgex to v1.21 that marks deprecated a number of events
-and adds improves descriptions. The events data was generated by:
-https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
+Metrics have a field where the groups they belong to are listed like
+the following from
+tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json:
 
+        "MetricGroup": "PGO;TmaL1;TopdownL1;tma_L1_group",
+        "MetricName": "tma_frontend_bound",
+
+The metric groups are shown in 'perf list' like the following where
+TopdownL1 is a metric group:
+
+TopdownL1:
+  tma_backend_bound
+       [This category represents fraction of slots where no uops are being
+        delivered due to a lack of required resources for accepting new uops
+        in the Backend]
+  tma_bad_speculation
+       [This category represents fraction of slots wasted due to incorrect
+        speculations]
+  tma_frontend_bound
+       [This category represents fraction of slots where the processor's
+        Frontend undersupplies its Backend]
+  tma_retiring
+       [This category represents fraction of slots utilized by useful work
+        i.e. issued uops that eventually get retired]
+
+This patch adds support for a new json file in each model directory
+called metricgroups.json that comprises a dictionary containing
+entries that map from a metric group to a description:
+
+{
+...
+    "TopdownL1": "Metrics for top-down breakdown at level 1",
+...
+}
+
+perf list is then updated to support this changing the above output
+to:
+
+TopdownL1: [Metrics for top-down breakdown at level 1]
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv         |  2 +-
- .../perf/pmu-events/arch/x86/snowridgex/cache.json |  7 +++++++
- .../pmu-events/arch/x86/snowridgex/memory.json     |  2 ++
- .../perf/pmu-events/arch/x86/snowridgex/other.json | 10 ++++++++++
- .../pmu-events/arch/x86/snowridgex/pipeline.json   |  3 +++
- .../arch/x86/snowridgex/uncore-interconnect.json   | 14 +++++++-------
- .../pmu-events/arch/x86/snowridgex/uncore-io.json  |  8 --------
- .../arch/x86/snowridgex/uncore-memory.json         |  7 +++----
- .../arch/x86/snowridgex/uncore-power.json          |  6 +++---
- 9 files changed, 36 insertions(+), 23 deletions(-)
+ tools/perf/builtin-list.c                | 11 ++++--
+ tools/perf/pmu-events/empty-pmu-events.c |  5 +++
+ tools/perf/pmu-events/jevents.py         | 49 +++++++++++++++++++++++-
+ tools/perf/pmu-events/pmu-events.h       |  2 +
+ 4 files changed, 62 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 4731a92af9f9..4a1a2b8d6201 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -28,7 +28,7 @@ GenuineIntel-6-AF,v1.00,sierraforest,core
- GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
- GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v56,skylake,core
- GenuineIntel-6-55-[01234],v1.30,skylakex,core
--GenuineIntel-6-86,v1.20,snowridgex,core
-+GenuineIntel-6-86,v1.21,snowridgex,core
- GenuineIntel-6-8[CD],v1.10,tigerlake,core
- GenuineIntel-6-2C,v4,westmereep-dp,core
- GenuineIntel-6-25,v3,westmereep-sp,core
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/cache.json b/tools/p=
-erf/pmu-events/arch/x86/snowridgex/cache.json
-index 0ab90e3bf76b..c6be60584522 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/cache.json
-@@ -72,6 +72,7 @@
-         "BriefDescription": "Counts the number of cycles the core is stall=
-ed due to an instruction cache or TLB miss which hit in the L2, LLC, DRAM o=
-r MMIO (Non-DRAM).",
-         "EventCode": "0x34",
-         "EventName": "MEM_BOUND_STALLS.IFETCH",
-+        "PublicDescription": "Counts the number of cycles the core is stal=
-led due to an instruction cache or translation lookaside buffer (TLB) miss =
-which hit in the L2, LLC, DRAM or MMIO (Non-DRAM).",
-         "SampleAfterValue": "200003",
-         "UMask": "0x38"
-     },
-@@ -437,6 +438,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -446,6 +448,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT.SNOOP_HITM",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -455,6 +458,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT.SNOOP_HIT_NO_FWD",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_NO_FWD",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -464,6 +468,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -473,6 +478,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT.SNOOP_MISS",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_MISS",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -482,6 +488,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT.SNOOP_NOT_NEEDED",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_NOT_NEEDED",
-         "MSRIndex": "0x1a6,0x1a7",
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/memory.json b/tools/=
-perf/pmu-events/arch/x86/snowridgex/memory.json
-index 18621909d1a9..c02eb0e836ad 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/memory.json
-@@ -96,6 +96,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.L3_MISS",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -105,6 +106,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.L3_MISS_LOCAL",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS_LOCAL",
-         "MSRIndex": "0x1a6,0x1a7",
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/other.json b/tools/p=
-erf/pmu-events/arch/x86/snowridgex/other.json
-index 00ae180ded25..fefbc383b840 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/other.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/other.json
-@@ -1,6 +1,7 @@
- [
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-BUS_LOCK.SELF_LOCKS",
-+        "Deprecated": "1",
-         "EdgeDetect": "1",
-         "EventCode": "0x63",
-         "EventName": "BUS_LOCK.ALL",
-@@ -16,6 +17,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-BUS_LOCK.BLOCK_CYCLES",
-+        "Deprecated": "1",
-         "EventCode": "0x63",
-         "EventName": "BUS_LOCK.CYCLES_OTHER_BLOCK",
-         "SampleAfterValue": "200003",
-@@ -23,6 +25,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-BUS_LOCK.LOCK_CYCLES",
-+        "Deprecated": "1",
-         "EventCode": "0x63",
-         "EventName": "BUS_LOCK.CYCLES_SELF_BLOCK",
-         "SampleAfterValue": "200003",
-@@ -46,6 +49,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-MEM_BOUND_STALLS.LOAD_DRAM_HIT",
-+        "Deprecated": "1",
-         "EventCode": "0x34",
-         "EventName": "C0_STALLS.LOAD_DRAM_HIT",
-         "SampleAfterValue": "200003",
-@@ -53,6 +57,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-MEM_BOUND_STALLS.LOAD_L2_HIT",
-+        "Deprecated": "1",
-         "EventCode": "0x34",
-         "EventName": "C0_STALLS.LOAD_L2_HIT",
-         "SampleAfterValue": "200003",
-@@ -60,6 +65,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-MEM_BOUND_STALLS.LOAD_LLC_HIT",
-+        "Deprecated": "1",
-         "EventCode": "0x34",
-         "EventName": "C0_STALLS.LOAD_LLC_HIT",
-         "SampleAfterValue": "200003",
-@@ -207,6 +213,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.ANY_RESPONSE",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -216,6 +223,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.DRAM",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.DRAM",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -225,6 +233,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.LOCAL_DRAM",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
-         "MSRIndex": "0x1a6,0x1a7",
-@@ -234,6 +243,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-OCR.DEMAND_DATA_AND_L1PF_RD.OUTSTANDING",
-+        "Deprecated": "1",
-         "EventCode": "0XB7",
-         "EventName": "OCR.DEMAND_DATA_RD.OUTSTANDING",
-         "MSRIndex": "0x1a6",
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/pipeline.json b/tool=
-s/perf/pmu-events/arch/x86/snowridgex/pipeline.json
-index 9dd8c909facc..c483c0838e08 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/pipeline.json
-@@ -165,6 +165,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated.",
-+        "Deprecated": "1",
-         "EventCode": "0xcd",
-         "EventName": "CYCLES_DIV_BUSY.ANY",
-         "SampleAfterValue": "2000003"
-@@ -283,6 +284,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated. Refer to new event =
-TOPDOWN_BAD_SPECULATION.FASTNUKE",
-+        "Deprecated": "1",
-         "EventCode": "0x73",
-         "EventName": "TOPDOWN_BAD_SPECULATION.MONUKE",
-         "SampleAfterValue": "1000003",
-@@ -338,6 +340,7 @@
-     },
-     {
-         "BriefDescription": "This event is deprecated.",
-+        "Deprecated": "1",
-         "EventCode": "0x74",
-         "EventName": "TOPDOWN_BE_BOUND.STORE_BUFFER",
-         "SampleAfterValue": "1000003",
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-interconnect.=
-json b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-interconnect.json
-index de3840078e21..7e2895f7fe3d 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-interconnect.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-interconnect.json
-@@ -590,7 +590,7 @@
-         "EventCode": "0x0C",
-         "EventName": "UNC_I_TxS_REQUEST_OCCUPANCY",
-         "PerPkg": "1",
--        "PublicDescription": "Outbound Request Queue Occupancy : Accumulte=
-s the number of outstanding outbound requests from the IRP to the switch (t=
-owards the devices).  This can be used in conjuection with the allocations =
-event in order to calculate average latency of outbound requests.",
-+        "PublicDescription": "Outbound Request Queue Occupancy : Accumulat=
-es the number of outstanding outbound requests from the IRP to the switch (=
-towards the devices).  This can be used in conjunction with the allocations=
- event in order to calculate average latency of outbound requests.",
-         "Unit": "IRP"
-     },
-     {
-@@ -5570,7 +5570,7 @@
-         "Unit": "M2M"
-     },
-     {
--        "BriefDescription": "M2M-&gt;iMC WPQ Cycles w/Credits - Regular : =
-Channel 0",
-+        "BriefDescription": "M2M->iMC WPQ Cycles w/Credits - Regular : Cha=
-nnel 0",
-         "EventCode": "0x4D",
-         "EventName": "UNC_M2M_WPQ_NO_REG_CRD.CHN0",
-         "PerPkg": "1",
-@@ -5578,7 +5578,7 @@
-         "Unit": "M2M"
-     },
-     {
--        "BriefDescription": "M2M-&gt;iMC WPQ Cycles w/Credits - Regular : =
-Channel 1",
-+        "BriefDescription": "M2M->iMC WPQ Cycles w/Credits - Regular : Cha=
-nnel 1",
-         "EventCode": "0x4D",
-         "EventName": "UNC_M2M_WPQ_NO_REG_CRD.CHN1",
-         "PerPkg": "1",
-@@ -5586,7 +5586,7 @@
-         "Unit": "M2M"
-     },
-     {
--        "BriefDescription": "M2M-&gt;iMC WPQ Cycles w/Credits - Regular : =
-Channel 2",
-+        "BriefDescription": "M2M->iMC WPQ Cycles w/Credits - Regular : Cha=
-nnel 2",
-         "EventCode": "0x4D",
-         "EventName": "UNC_M2M_WPQ_NO_REG_CRD.CHN2",
-         "PerPkg": "1",
-@@ -5594,7 +5594,7 @@
-         "Unit": "M2M"
-     },
-     {
--        "BriefDescription": "M2M-&gt;iMC WPQ Cycles w/Credits - Special : =
-Channel 0",
-+        "BriefDescription": "M2M->iMC WPQ Cycles w/Credits - Special : Cha=
-nnel 0",
-         "EventCode": "0x4E",
-         "EventName": "UNC_M2M_WPQ_NO_SPEC_CRD.CHN0",
-         "PerPkg": "1",
-@@ -5602,7 +5602,7 @@
-         "Unit": "M2M"
-     },
-     {
--        "BriefDescription": "M2M-&gt;iMC WPQ Cycles w/Credits - Special : =
-Channel 1",
-+        "BriefDescription": "M2M->iMC WPQ Cycles w/Credits - Special : Cha=
-nnel 1",
-         "EventCode": "0x4E",
-         "EventName": "UNC_M2M_WPQ_NO_SPEC_CRD.CHN1",
-         "PerPkg": "1",
-@@ -5610,7 +5610,7 @@
-         "Unit": "M2M"
-     },
-     {
--        "BriefDescription": "M2M-&gt;iMC WPQ Cycles w/Credits - Special : =
-Channel 2",
-+        "BriefDescription": "M2M->iMC WPQ Cycles w/Credits - Special : Cha=
-nnel 2",
-         "EventCode": "0x4E",
-         "EventName": "UNC_M2M_WPQ_NO_SPEC_CRD.CHN2",
-         "PerPkg": "1",
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-io.json b/too=
-ls/perf/pmu-events/arch/x86/snowridgex/uncore-io.json
-index 996028071ee4..ecdd6f0f8e8f 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-io.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-io.json
-@@ -34,7 +34,6 @@
-         "EventCode": "0xff",
-         "EventName": "UNC_IIO_BANDWIDTH_IN.PART0_FREERUN",
-         "PerPkg": "1",
--        "PublicDescription": "UNC_IIO_BANDWIDTH_IN.PART0_FREERUN",
-         "UMask": "0x20",
-         "Unit": "iio_free_running"
-     },
-@@ -43,7 +42,6 @@
-         "EventCode": "0xff",
-         "EventName": "UNC_IIO_BANDWIDTH_IN.PART1_FREERUN",
-         "PerPkg": "1",
--        "PublicDescription": "UNC_IIO_BANDWIDTH_IN.PART1_FREERUN",
-         "UMask": "0x21",
-         "Unit": "iio_free_running"
-     },
-@@ -52,7 +50,6 @@
-         "EventCode": "0xff",
-         "EventName": "UNC_IIO_BANDWIDTH_IN.PART2_FREERUN",
-         "PerPkg": "1",
--        "PublicDescription": "UNC_IIO_BANDWIDTH_IN.PART2_FREERUN",
-         "UMask": "0x22",
-         "Unit": "iio_free_running"
-     },
-@@ -61,7 +58,6 @@
-         "EventCode": "0xff",
-         "EventName": "UNC_IIO_BANDWIDTH_IN.PART3_FREERUN",
-         "PerPkg": "1",
--        "PublicDescription": "UNC_IIO_BANDWIDTH_IN.PART3_FREERUN",
-         "UMask": "0x23",
-         "Unit": "iio_free_running"
-     },
-@@ -70,7 +66,6 @@
-         "EventCode": "0xff",
-         "EventName": "UNC_IIO_BANDWIDTH_IN.PART4_FREERUN",
-         "PerPkg": "1",
--        "PublicDescription": "UNC_IIO_BANDWIDTH_IN.PART4_FREERUN",
-         "UMask": "0x24",
-         "Unit": "iio_free_running"
-     },
-@@ -79,7 +74,6 @@
-         "EventCode": "0xff",
-         "EventName": "UNC_IIO_BANDWIDTH_IN.PART5_FREERUN",
-         "PerPkg": "1",
--        "PublicDescription": "UNC_IIO_BANDWIDTH_IN.PART5_FREERUN",
-         "UMask": "0x25",
-         "Unit": "iio_free_running"
-     },
-@@ -88,7 +82,6 @@
-         "EventCode": "0xff",
-         "EventName": "UNC_IIO_BANDWIDTH_IN.PART6_FREERUN",
-         "PerPkg": "1",
--        "PublicDescription": "UNC_IIO_BANDWIDTH_IN.PART6_FREERUN",
-         "UMask": "0x26",
-         "Unit": "iio_free_running"
-     },
-@@ -97,7 +90,6 @@
-         "EventCode": "0xff",
-         "EventName": "UNC_IIO_BANDWIDTH_IN.PART7_FREERUN",
-         "PerPkg": "1",
--        "PublicDescription": "UNC_IIO_BANDWIDTH_IN.PART7_FREERUN",
-         "UMask": "0x27",
-         "Unit": "iio_free_running"
-     },
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-memory.json b=
-/tools/perf/pmu-events/arch/x86/snowridgex/uncore-memory.json
-index 530e9b71b92a..b80911d498dd 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-memory.json
-@@ -130,7 +130,6 @@
-         "EventCode": "0xff",
-         "EventName": "UNC_M_CLOCKTICKS_FREERUN",
-         "PerPkg": "1",
--        "PublicDescription": "UNC_M_CLOCKTICKS_FREERUN",
-         "UMask": "0x10",
-         "Unit": "imc_free_running"
-     },
-@@ -322,7 +321,7 @@
-         "EventCode": "0x02",
-         "EventName": "UNC_M_PRE_COUNT.PGT",
-         "PerPkg": "1",
--        "PublicDescription": "DRAM Precharge commands. : Precharge due to =
-page table : Counts the number of DRAM Precharge commands sent on this chan=
-nel. : Prechages from Page Table",
-+        "PublicDescription": "DRAM Precharge commands. : Precharge due to =
-page table : Counts the number of DRAM Precharge commands sent on this chan=
-nel. : Precharges from Page Table",
-         "UMask": "0x10",
-         "Unit": "iMC"
-     },
-@@ -497,7 +496,7 @@
-         "EventCode": "0x82",
-         "EventName": "UNC_M_WPQ_OCCUPANCY_PCH0",
-         "PerPkg": "1",
--        "PublicDescription": "Write Pending Queue Occupancy : Accumulates =
-the occupancies of the Write Pending Queue each cycle.  This can then be us=
-ed to calculate both the average queue occupancy (in conjunction with the n=
-umber of cycles not empty) and the average latency (in conjunction with the=
- number of allocations).  The WPQ is used to schedule write out to the memo=
-ry controller and to track the writes.  Requests allocate into the WPQ soon=
- after they enter the memory controller, and need credits for an entry in t=
-his buffer before being sent from the HA to the iMC.  They deallocate after=
- being issued to DRAM.  Write requests themselves are able to complete (fro=
-m the perspective of the rest of the system) as soon they have posted to th=
-e iMC.  This is not to be confused with actually performing the write to DR=
-AM.  Therefore, the average latency for this queue is actually not useful f=
-or deconstruction intermediate write latencies.  So, we provide filtering b=
-ased on if the request has posted or not.  By using the not posted filter, =
-we can track how long writes spent in the iMC before completions were sent =
-to the HA.  The posted filter, on the other hand, provides information abou=
-t how much queueing is actually happenning in the iMC for writes before the=
-y are actually issued to memory.  High average occupancies will generally c=
-oincide with high write major mode counts.",
-+        "PublicDescription": "Write Pending Queue Occupancy : Accumulates =
-the occupancies of the Write Pending Queue each cycle.  This can then be us=
-ed to calculate both the average queue occupancy (in conjunction with the n=
-umber of cycles not empty) and the average latency (in conjunction with the=
- number of allocations).  The WPQ is used to schedule write out to the memo=
-ry controller and to track the writes.  Requests allocate into the WPQ soon=
- after they enter the memory controller, and need credits for an entry in t=
-his buffer before being sent from the HA to the iMC.  They deallocate after=
- being issued to DRAM.  Write requests themselves are able to complete (fro=
-m the perspective of the rest of the system) as soon they have posted to th=
-e iMC.  This is not to be confused with actually performing the write to DR=
-AM.  Therefore, the average latency for this queue is actually not useful f=
-or deconstruction intermediate write latencies.  So, we provide filtering b=
-ased on if the request has posted or not.  By using the not posted filter, =
-we can track how long writes spent in the iMC before completions were sent =
-to the HA.  The posted filter, on the other hand, provides information abou=
-t how much queueing is actually happening in the iMC for writes before they=
- are actually issued to memory.  High average occupancies will generally co=
-incide with high write major mode counts.",
-         "Unit": "iMC"
-     },
-     {
-@@ -505,7 +504,7 @@
-         "EventCode": "0x83",
-         "EventName": "UNC_M_WPQ_OCCUPANCY_PCH1",
-         "PerPkg": "1",
--        "PublicDescription": "Write Pending Queue Occupancy : Accumulates =
-the occupancies of the Write Pending Queue each cycle.  This can then be us=
-ed to calculate both the average queue occupancy (in conjunction with the n=
-umber of cycles not empty) and the average latency (in conjunction with the=
- number of allocations).  The WPQ is used to schedule write out to the memo=
-ry controller and to track the writes.  Requests allocate into the WPQ soon=
- after they enter the memory controller, and need credits for an entry in t=
-his buffer before being sent from the HA to the iMC.  They deallocate after=
- being issued to DRAM.  Write requests themselves are able to complete (fro=
-m the perspective of the rest of the system) as soon they have posted to th=
-e iMC.  This is not to be confused with actually performing the write to DR=
-AM.  Therefore, the average latency for this queue is actually not useful f=
-or deconstruction intermediate write latencies.  So, we provide filtering b=
-ased on if the request has posted or not.  By using the not posted filter, =
-we can track how long writes spent in the iMC before completions were sent =
-to the HA.  The posted filter, on the other hand, provides information abou=
-t how much queueing is actually happenning in the iMC for writes before the=
-y are actually issued to memory.  High average occupancies will generally c=
-oincide with high write major mode counts.",
-+        "PublicDescription": "Write Pending Queue Occupancy : Accumulates =
-the occupancies of the Write Pending Queue each cycle.  This can then be us=
-ed to calculate both the average queue occupancy (in conjunction with the n=
-umber of cycles not empty) and the average latency (in conjunction with the=
- number of allocations).  The WPQ is used to schedule write out to the memo=
-ry controller and to track the writes.  Requests allocate into the WPQ soon=
- after they enter the memory controller, and need credits for an entry in t=
-his buffer before being sent from the HA to the iMC.  They deallocate after=
- being issued to DRAM.  Write requests themselves are able to complete (fro=
-m the perspective of the rest of the system) as soon they have posted to th=
-e iMC.  This is not to be confused with actually performing the write to DR=
-AM.  Therefore, the average latency for this queue is actually not useful f=
-or deconstruction intermediate write latencies.  So, we provide filtering b=
-ased on if the request has posted or not.  By using the not posted filter, =
-we can track how long writes spent in the iMC before completions were sent =
-to the HA.  The posted filter, on the other hand, provides information abou=
-t how much queueing is actually happening in the iMC for writes before they=
- are actually issued to memory.  High average occupancies will generally co=
-incide with high write major mode counts.",
-         "Unit": "iMC"
-     },
-     {
-diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json b/=
-tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json
-index 27fc155f1223..a61ffca2dfea 100644
---- a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json
-+++ b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-power.json
-@@ -149,7 +149,7 @@
-         "EventCode": "0x80",
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C0",
-         "PerPkg": "1",
--        "PublicDescription": "Number of cores in C-State : C0 and C1 : Thi=
-s is an occupancy event that tracks the number of cores that are in the cho=
-sen C-State.  It can be used by itself to get the average number of cores i=
-n that C-state with threshholding to generate histograms, or with other PCU=
- events and occupancy triggering to capture other details.",
-+        "PublicDescription": "Number of cores in C-State : C0 and C1 : Thi=
-s is an occupancy event that tracks the number of cores that are in the cho=
-sen C-State.  It can be used by itself to get the average number of cores i=
-n that C-state with thresholding to generate histograms, or with other PCU =
-events and occupancy triggering to capture other details.",
-         "Unit": "PCU"
-     },
-     {
-@@ -157,7 +157,7 @@
-         "EventCode": "0x80",
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C3",
-         "PerPkg": "1",
--        "PublicDescription": "Number of cores in C-State : C3 : This is an=
- occupancy event that tracks the number of cores that are in the chosen C-S=
-tate.  It can be used by itself to get the average number of cores in that =
-C-state with threshholding to generate histograms, or with other PCU events=
- and occupancy triggering to capture other details.",
-+        "PublicDescription": "Number of cores in C-State : C3 : This is an=
- occupancy event that tracks the number of cores that are in the chosen C-S=
-tate.  It can be used by itself to get the average number of cores in that =
-C-state with thresholding to generate histograms, or with other PCU events =
-and occupancy triggering to capture other details.",
-         "Unit": "PCU"
-     },
-     {
-@@ -165,7 +165,7 @@
-         "EventCode": "0x80",
-         "EventName": "UNC_P_POWER_STATE_OCCUPANCY.CORES_C6",
-         "PerPkg": "1",
--        "PublicDescription": "Number of cores in C-State : C6 and C7 : Thi=
-s is an occupancy event that tracks the number of cores that are in the cho=
-sen C-State.  It can be used by itself to get the average number of cores i=
-n that C-state with threshholding to generate histograms, or with other PCU=
- events and occupancy triggering to capture other details.",
-+        "PublicDescription": "Number of cores in C-State : C6 and C7 : Thi=
-s is an occupancy event that tracks the number of cores that are in the cho=
-sen C-State.  It can be used by itself to get the average number of cores i=
-n that C-state with thresholding to generate histograms, or with other PCU =
-events and occupancy triggering to capture other details.",
-         "Unit": "PCU"
-     },
-     {
---=20
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index c6bd0aa4a56e..e8520a027b45 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -192,9 +192,14 @@ static void default_print_metric(void *ps,
+ 		if (group && print_state->metricgroups) {
+ 			if (print_state->name_only)
+ 				printf("%s ", group);
+-			else if (print_state->metrics)
+-				printf("\n%s:\n", group);
+-			else
++			else if (print_state->metrics) {
++				const char *gdesc = describe_metricgroup(group);
++
++				if (gdesc)
++					printf("\n%s: [%s]\n", group, gdesc);
++				else
++					printf("\n%s:\n", group);
++			} else
+ 				printf("%s\n", group);
+ 		}
+ 		zfree(&print_state->last_metricgroups);
+diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+index e74defb5284f..a630c617e879 100644
+--- a/tools/perf/pmu-events/empty-pmu-events.c
++++ b/tools/perf/pmu-events/empty-pmu-events.c
+@@ -420,3 +420,8 @@ int pmu_for_each_sys_metric(pmu_metric_iter_fn fn __maybe_unused, void *data __m
+ {
+ 	return 0;
+ }
++
++const char *describe_metricgroup(const char *group __maybe_unused)
++{
++	return NULL;
++}
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 487ff01baf1b..8fca7c9adee0 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -37,6 +37,8 @@ _pending_metrics = []
+ _pending_metrics_tblname = None
+ # Global BigCString shared by all structures.
+ _bcs = None
++# Map from the name of a metric group to a description of the group.
++_metricgroups = {}
+ # Order specific JsonEvent attributes will be visited.
+ _json_event_attributes = [
+     # cmp_sevent related attributes.
+@@ -512,6 +514,17 @@ def preprocess_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
+   if not item.is_file() or not item.name.endswith('.json'):
+     return
+ 
++  if item.name == 'metricgroups.json':
++    metricgroup_descriptions = json.load(open(item.path))
++    for mgroup in metricgroup_descriptions:
++      assert len(mgroup) > 1, parents
++      description = f"{metricgroup_descriptions[mgroup]}\\000"
++      mgroup = f"{mgroup}\\000"
++      _bcs.add(mgroup)
++      _bcs.add(description)
++      _metricgroups[mgroup] = description
++    return
++
+   topic = get_topic(item.name)
+   for event in read_json_events(item.path, topic):
+     if event.name:
+@@ -548,7 +561,7 @@ def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
+ 
+   # Ignore other directories. If the file name does not have a .json
+   # extension, ignore it. It could be a readme.txt for instance.
+-  if not item.is_file() or not item.name.endswith('.json'):
++  if not item.is_file() or not item.name.endswith('.json') or item.name == 'metricgroups.json':
+     return
+ 
+   add_events_table_entries(item, get_topic(item.name))
+@@ -911,6 +924,38 @@ int pmu_for_each_sys_metric(pmu_metric_iter_fn fn, void *data)
+ }
+ """)
+ 
++def print_metricgroups() -> None:
++  _args.output_file.write("""
++static const int metricgroups[][2] = {
++""")
++  for mgroup in sorted(_metricgroups):
++    description = _metricgroups[mgroup]
++    _args.output_file.write(
++        f'\t{{ {_bcs.offsets[mgroup]}, {_bcs.offsets[description]} }}, /* {mgroup} => {description} */\n'
++    )
++  _args.output_file.write("""
++};
++
++const char *describe_metricgroup(const char *group)
++{
++        int low = 0, high = ARRAY_SIZE(metricgroups) - 1;
++
++        while (low <= high) {
++                int mid = (low + high) / 2;
++                const char *mgroup = &big_c_string[metricgroups[mid][0]];
++                int cmp = strcmp(mgroup, group);
++
++                if (cmp == 0) {
++                        return &big_c_string[metricgroups[mid][1]];
++                } else if (cmp < 0) {
++                        low = mid + 1;
++                } else {
++                        high = mid - 1;
++                }
++        }
++        return NULL;
++}
++""")
+ 
+ def main() -> None:
+   global _args
+@@ -993,7 +1038,7 @@ struct compact_pmu_event {
+ 
+   print_mapping_table(archs)
+   print_system_mapping_table()
+-
++  print_metricgroups()
+ 
+ if __name__ == '__main__':
+   main()
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index 3549e6971a4d..8cd23d656a5d 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -93,4 +93,6 @@ const struct pmu_metrics_table *find_sys_metrics_table(const char *name);
+ int pmu_for_each_sys_event(pmu_event_iter_fn fn, void *data);
+ int pmu_for_each_sys_metric(pmu_metric_iter_fn fn, void *data);
+ 
++const char *describe_metricgroup(const char *group);
++
+ #endif
+-- 
 2.40.1.606.ga4b1b128d6-goog
 
