@@ -2,72 +2,57 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3005BC77B7D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 11:03:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3D9C77B7D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 11:16:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240888AbjEOLD1 (ORCPT
+        id S240898AbjEOLQ2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 07:03:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48166 "EHLO
+        Mon, 15 May 2023 07:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232090AbjEOLD0 (ORCPT
+        with ESMTP id S237581AbjEOLQ1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 07:03:26 -0400
-Received: from wnew4-smtp.messagingengine.com (wnew4-smtp.messagingengine.com [64.147.123.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C1593;
-        Mon, 15 May 2023 04:03:25 -0700 (PDT)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.west.internal (Postfix) with ESMTP id BF1CA2B05E55;
-        Mon, 15 May 2023 07:03:20 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Mon, 15 May 2023 07:03:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=shutemov.name;
-         h=cc:cc:content-type:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; t=1684148600; x=
-        1684155800; bh=a/Iydw3E9XYq6OMWXW3TvDHCSGXOvuQLC/4M2+8UgSg=; b=b
-        eqhaz6+aC9XTJDJe/wr3N36+Tj3flpCfHvlOf9y8lXsK+262zaCij702Mejo2+QE
-        Fd2xpeGSZ+xZXcy4D/O2ys6/yeyG+eg9pe7ttAK7rJ4flep8j0NnEuUu/JpgQ2zq
-        +sQYGICk0DOSR7KXB1FGzWMBThhFGROaza2HF5WZTMoyXCpSoGrgyUpv2AwTVyoh
-        MPRAEKadMnnI/sj+LbQEWvTyhwhvfq0KMSmbFHooxdpg4bZ6fN05mjKqs5p5+gMe
-        sDKrBEwm+QstfKvMpg7xfToq9y+QHBotkJ9i3CoJB7tGWQC23VldSFyJYd2XEL4U
-        Gl+2fihoHMbSTuxjVue1g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1684148600; x=1684155800; bh=a/Iydw3E9XYq6
-        OMWXW3TvDHCSGXOvuQLC/4M2+8UgSg=; b=HCOKyUCGguRFf1xsGM0olaZPpyE83
-        QUFg57fXwoOwyQLXQfBrzuMoGa6jxavNDy4hgO/KieahDInTa0sH3/uTA04n9PBd
-        pOkNlIQsSrzizEIjBJ9OClefL/E9/wJWOs6W/BHwQZEkVPX/yhJWt9zeo1XJL8yO
-        Dm7ChPssB/erg2Ti3ewsAZ+Qt8Pig5D5DcQN2IwE1zz0yI1+ld7eJeDoy/HbjJp8
-        Fwwn6gnv5N4GzwOjiaZb1+aSt2I9N4jbT6NnDxfZPC4PkwlZwKP41PP0oJSiwruW
-        x9dW25YtqwNwMjBly/giIjtuqcpmWp+sz3+M1OpAnT7+WPfc354OTJLVA==
-X-ME-Sender: <xms:dhFiZEQbnWm3lInkgea7I7q1loI6EFTX6nzXoxo3EDKGBC7aVf78JQ>
-    <xme:dhFiZBzQCYHtsXc_PNzioGz_LirMx3rzOlJKv2j3XQvwtfi9xBh9nIt-NSbn91mDy
-    GGmyxgBoYxOaSQmTHg>
-X-ME-Received: <xmr:dhFiZB0cV9suhDUtQEAuyjbHbnx9BgFWQsl2ctv7O5xUxZYuVwDGbzehTtid6zfg5GjMnQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeehjedgfeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdttddttddtvdenucfhrhhomhepfdfmihhr
-    ihhllhcutecurdcuufhhuhhtvghmohhvfdcuoehkihhrihhllhesshhhuhhtvghmohhvrd
-    hnrghmvgeqnecuggftrfgrthhtvghrnhepgfdtveeugeethfffffeklefgkeelgfekfedt
-    heeileetuefhkeefleduvddtkeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomhepkhhirhhilhhlsehshhhuthgvmhhovhdrnhgrmhgv
-X-ME-Proxy: <xmx:dhFiZIBy-PxGx3tPTgENuB_FWVbnaUYJARgJaIETejlMMBmS1qqMqg>
-    <xmx:dhFiZNiE67YhRxNXKSa-apUdVunXaJs_KQHgaZXyYup4bktoBVqs2w>
-    <xmx:dhFiZEo8qMND9yszOfCAsL6QVxCoJx9tsBa5wX9U-MgZ4JdFPa9D8Q>
-    <xmx:eBFiZLGG797U78ccFpNj3KjzIqU78oAjziYTSAnozz3GqFRyt5wx050guAM>
-Feedback-ID: ie3994620:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 15 May 2023 07:03:17 -0400 (EDT)
-Received: by box.shutemov.name (Postfix, from userid 1000)
-        id 55AD0103956; Mon, 15 May 2023 14:03:15 +0300 (+03)
-Date:   Mon, 15 May 2023 14:03:15 +0300
-From:   "Kirill A . Shutemov" <kirill@shutemov.name>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
+        Mon, 15 May 2023 07:16:27 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7551725;
+        Mon, 15 May 2023 04:16:25 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-965e4be7541so2192559866b.1;
+        Mon, 15 May 2023 04:16:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684149384; x=1686741384;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=knPSlIoi8JJlfvyB9MqyozwzNx+4xRNl0fuueJdn78w=;
+        b=TDrCEU8FuW3hDweQ5bwdycEiJjcobOp3IpmpMjXkU7AaTDL+TdsNmJoEXoMEQMruop
+         GIScUD01CMAgF/1mC0SD1gv77x0WiGT8QjnQz3Ma4Wy//I36ne/NL9Vd6iTB4U/wlThq
+         8bcQj7xmcYxzSNb8+GF2+O52JpZVE3ZVfzvvS9BdKzWQ/h6Hi1zStdC9/TvhYq1OvFiZ
+         yiDCT/F8jkXfyg5LlWU+wYh3CYKCnwZ0lwdXgeg2isHG83ddUTkj5mfHqhUVBQxKGfCR
+         yBPB/bdHdisdWue0ctSmOENHVHpaiuH7A0vEFCI7gdMD9Hhe0ViXPRv77UOveUz2UpaD
+         egdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684149384; x=1686741384;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=knPSlIoi8JJlfvyB9MqyozwzNx+4xRNl0fuueJdn78w=;
+        b=YOZPGPHbI3+bc1mWlznQm85z5ZBg6mNgZtk75WKVHb6y1cFRPyD02mt1nunikmi9Qb
+         Cu2Faa1TjOonCkL2ZXpIrv0b9xHd5s1dJOsWhgMFXwSAEhEhNj6x6dUnbDhHyGklw3vY
+         bKiJWXwYbTQYRTz9mmEMri6GFwyjx2kOP3Pr1eUAO3CwT6xsGss3GSbVN+trZsja1S3H
+         F+9blB7rXOLGh0aqMVyL+jMf3yebULx8e+2N4wKL5pBJNkx0n9yhTa2PO3Q06P6Y9Gef
+         BRgCEPESzvdHYH1nuvAWz+zWe/mfmHsq+IdmJoB/8Ac4lhx3Yfype/4ag/GoRpmGvj6b
+         vTPg==
+X-Gm-Message-State: AC+VfDwhWweuxnl3W1sSZgth6W5xyqjq7IvMR9ZFrFKdSrExAZ1gkTBB
+        Uh73sSk7rDiuPmkODXy8zgY=
+X-Google-Smtp-Source: ACHHUZ7WHM6iw+dCrh6+o/s11/K9CwCF/i+8iSZDcuGO4RTTrbL4NWF45E3g1pqnoenQBo6gAyOXSw==
+X-Received: by 2002:a17:906:9c83:b0:94f:449e:75db with SMTP id fj3-20020a1709069c8300b0094f449e75dbmr32016828ejc.52.1684149383725;
+        Mon, 15 May 2023 04:16:23 -0700 (PDT)
+Received: from localhost ([31.94.21.70])
+        by smtp.gmail.com with ESMTPSA id wi21-20020a170906fd5500b0094edbe5c7ddsm9460583ejb.38.2023.05.15.04.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 May 2023 04:16:22 -0700 (PDT)
+Date:   Mon, 15 May 2023 12:16:21 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     "Kirill A . Shutemov" <kirill@shutemov.name>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
@@ -115,55 +100,87 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Christian Borntraeger <borntraeger@linux.ibm.com>
 Subject: Re: [PATCH v9 0/3] mm/gup: disallow GUP writing to file-backed
  mappings by default
-Message-ID: <20230515110315.uqifqgqkzcrrrubv@box.shutemov.name>
+Message-ID: <7f6dbe36-88f2-468e-83c1-c97e666d8317@lucifer.local>
 References: <cover.1683235180.git.lstoakes@gmail.com>
+ <20230515110315.uqifqgqkzcrrrubv@box.shutemov.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1683235180.git.lstoakes@gmail.com>
+In-Reply-To: <20230515110315.uqifqgqkzcrrrubv@box.shutemov.name>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 04, 2023 at 10:27:50PM +0100, Lorenzo Stoakes wrote:
-> Writing to file-backed mappings which require folio dirty tracking using
-> GUP is a fundamentally broken operation, as kernel write access to GUP
-> mappings do not adhere to the semantics expected by a file system.
-> 
-> A GUP caller uses the direct mapping to access the folio, which does not
-> cause write notify to trigger, nor does it enforce that the caller marks
-> the folio dirty.
+On Mon, May 15, 2023 at 02:03:15PM +0300, Kirill A . Shutemov wrote:
+> On Thu, May 04, 2023 at 10:27:50PM +0100, Lorenzo Stoakes wrote:
+> > Writing to file-backed mappings which require folio dirty tracking using
+> > GUP is a fundamentally broken operation, as kernel write access to GUP
+> > mappings do not adhere to the semantics expected by a file system.
+> >
+> > A GUP caller uses the direct mapping to access the folio, which does not
+> > cause write notify to trigger, nor does it enforce that the caller marks
+> > the folio dirty.
+>
+> Okay, problem is clear and the patchset look good to me. But I'm worried
+> breaking existing users.
+>
+> Do we expect the change to be visible to real world users? If yes, are we
+> okay to break them?
 
-Okay, problem is clear and the patchset look good to me. But I'm worried
-breaking existing users.
+The general consensus at the moment is that there is no entirely reasonable
+usage of this case and you're already running the riks of a kernel oops if
+you do this, so it's already broken.
 
-Do we expect the change to be visible to real world users? If yes, are we
-okay to break them?
+>
+> One thing that came to mind is KVM with "qemu -object memory-backend-file,share=on..."
+> It is mostly used for pmem emulation.
+>
+> Do we have plan B?
 
-One thing that came to mind is KVM with "qemu -object memory-backend-file,share=on..."
-It is mostly used for pmem emulation.
+Yes, we can make it opt-in or opt-out via a FOLL_FLAG. This would be easy
+to implement in the event of any issues arising.
 
-Do we have plan B?
+>
+> Just a random/crazy/broken idea:
+>
+>  - Allow folio_mkclean() (and folio_clear_dirty_for_io()) to fail,
+>    indicating that the page cannot be cleared because it is pinned;
+>
+>  - Introduce a new vm_operations_struct::mkclean() that would be called by
+>    page_vma_mkclean_one() before clearing the range and can fail;
+>
+>  - On GUP, create an in-kernel fake VMA that represents the file, but with
+>    custom vm_ops. The VMA registered in rmap to get notified on
+>    folio_mkclean() and fail it because of GUP.
+>
+>  - folio_clear_dirty_for_io() callers will handle the new failure as
+>    indication that the page can be written back but will stay dirty and
+>    fs-specific data that is associated with the page writeback cannot be
+>    freed.
+>
+> I'm sure the idea is broken on many levels (I have never looked closely at
+> the writeback path). But maybe it is good enough as conversation started?
+>
 
-Just a random/crazy/broken idea:
+Yeah there are definitely a few ideas down this road that might be
+possible, I am not sure how a filesystem can be expected to cope or this to
+be reasonably used without dirty/writeback though because you'll just not
+track anything or I guess you mean the mapping would be read-only but
+somehow stay dirty?
 
- - Allow folio_mkclean() (and folio_clear_dirty_for_io()) to fail,
-   indicating that the page cannot be cleared because it is pinned;
+I also had ideas along these lines of e.g. having a special vmalloc mode
+which mimics the correct wrprotect settings + does the right thing, but of
+course that does nothing to help DMA writing to a GUP-pinned page.
 
- - Introduce a new vm_operations_struct::mkclean() that would be called by
-   page_vma_mkclean_one() before clearing the range and can fail;
+Though if the issue is at the point of the kernel marking the page dirty
+unexpectedly, perhaps we can just invoke the mkwrite() _there_ before
+marking dirty?
 
- - On GUP, create an in-kernel fake VMA that represents the file, but with
-   custom vm_ops. The VMA registered in rmap to get notified on
-   folio_mkclean() and fail it because of GUP.
+There are probably some sycnhronisation issues there too.
 
- - folio_clear_dirty_for_io() callers will handle the new failure as
-   indication that the page can be written back but will stay dirty and
-   fs-specific data that is associated with the page writeback cannot be
-   freed.
+Jason will have some thoughts on this I'm sure. I guess the key question
+here is - is it actually feasible for this to work at all? Once we
+establish that, the rest are details :)
 
-I'm sure the idea is broken on many levels (I have never looked closely at
-the writeback path). But maybe it is good enough as conversation started?
-
--- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+> --
+>   Kiryl Shutsemau / Kirill A. Shutemov
