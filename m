@@ -2,103 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40837C7EE2C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 16:51:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6A8C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 17:10:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243105AbjEOQvx (ORCPT
+        id S243723AbjEORKs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 12:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56362 "EHLO
+        Mon, 15 May 2023 13:10:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243063AbjEOQvd (ORCPT
+        with ESMTP id S243714AbjEORKU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 12:51:33 -0400
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E4D55BC
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 09:51:25 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id d2e1a72fcca58-645538f6101so46806891b3a.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 09:51:25 -0700 (PDT)
+        Mon, 15 May 2023 13:10:20 -0400
+Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB821E58
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 10:08:43 -0700 (PDT)
+Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-3f51ea3a062so274631cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 10:08:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684169485; x=1686761485;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2Zp9tRh+FO1zLUbEzGzOtScVTBYPqTpeZg2SlWORkVg=;
-        b=fUe8uIYoq6QXxQg5ptSRPuQW8LfC3SYChEv+rjCssHCMF4bjAoiYHSvo8Ukijxpt/j
-         RIs/zPmmbqVPinsh38wWKAXfG85D/dW/HUER8QIH9IHk/vMcMwOXB45y6r3pNaCgAXPA
-         jmDzq26FxdpZ8aVT2YX40wcTgiBB36wGz2MkbOSHpMnwsgQVlHjkhM6Eczi4o/EQgSVq
-         vwjzC3p7Z2bWwV09S8OAtHwrPpiIZouWtl3xbcrtnT875cqFbDl1+NSWu+7iGnroj0la
-         agV4lHtAZi21D+iaDF1PrLXifCcIVFVUUH43Cx+1VUbqwzghglYTckKI8huWfjsDc231
-         IqoQ==
+        d=google.com; s=20221208; t=1684170522; x=1686762522;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EIbiC9cj1KePtZOLrlHrem/cf+4Waru7tYANSEf3zjI=;
+        b=N8IrDzI5ZGRsisNrr9sIk+XW0ISmpfoBX6AaCzpTqtmxyhstN2XfPsjic0itZ4ylX0
+         35Lo+m/iPby2FFDhgACMEZMxP1scGCdWfXORelYfz0PcnsRqbLp16i6p3cr745OKoc4D
+         lInm5XbC/d+AFJXIVyN/VIdqUrokqaLJ+rgtFrwYmw5ghQ4/mtbc8dU0c+j7wzqNVtNk
+         0c7ka/3Lc2HG1C9k6sMVL1njZnttQz9ERXCBDcZnet00CHLb2cjuo4GAJnDOPY9XRJEb
+         7mWDa12fJuwus3//CAwyHBUW+QWAzkFx7ATYXfCzTiqCNiCXXeZHpw1TBBGajQx+ONPO
+         3biA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684169485; x=1686761485;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2Zp9tRh+FO1zLUbEzGzOtScVTBYPqTpeZg2SlWORkVg=;
-        b=gsv19Yn1YwUM4v85K4oUhupYCx0njcY6RiaUyCTWA4PPdh9sEGUDnlgYyKIOhs7fhe
-         oZcGXpUjfnmjyfvBMPTK7OIpByc9edu8P5rlyZZ9jfc4IB4Oc/6ZXD0HU2/NOqJitMz9
-         aAmAQo3ytSyD21gG7AsMb5DZjaWreYwFLKNL6SKScFsn2i/Ln+3oQKNWmPWc5FWKRAAf
-         GTdV2Gge5mbbvhONQuZHqLKrHW2Whg8VXnb1GSCFEdyIWFPi0WfrQyKlvrsgxF182lKQ
-         ycW8dwOgbJmAIt8T4XsSzqoDhnHj3hv/8UrTNaE9e0AitQ36llbIxuTHb7BEgGs7YQvG
-         1eWg==
-X-Gm-Message-State: AC+VfDyVAQBc0UOrlQ8rfTY2bTAq8DLprotqNf6p4YuO/Qmd1Hs/Tcb/
-        x7gTttZm2P5Xv5M2UEFsaAAWgaNJHdiQ
-X-Google-Smtp-Source: ACHHUZ6bdv2ATRwMm73jY39auKUdui6mQ8hUAXxgBhGFpkDDF32OO7DEtBhPDyO5O60jrvxsshXXx4SLysWm
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a38b:39c5:e0c6:e9f])
- (user=irogers job=sendgmr) by 2002:a63:2ccf:0:b0:52c:4e3e:24ef with SMTP id
- s198-20020a632ccf000000b0052c4e3e24efmr9462225pgs.2.1684169485265; Mon, 15
- May 2023 09:51:25 -0700 (PDT)
-Date:   Mon, 15 May 2023 09:50:39 -0700
-Message-Id: <20230515165039.544045-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
-Subject: [PATCH v2] perf arm: Fix include path
+        d=1e100.net; s=20221208; t=1684170522; x=1686762522;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EIbiC9cj1KePtZOLrlHrem/cf+4Waru7tYANSEf3zjI=;
+        b=LrtS5hic+d9Tg5+mTEZyHFOgWCUJiIcwxNuAF4sih6Qbrv9KmtvfntpnjzfZRM5D39
+         MYy4dn/UKFjqpPMMzruLZZ4oymvPm56YFb7xmkFnJM+0KnFlgG89lL1lrSERfTKYOSFN
+         bLmGEcGyDV/F577i/zC9w/kPEYIZQ26gcLnL4+kvLMAfEN7Ya4VpFT0VZIcUmKrv5PRt
+         QRH1Q5ydJIWU9I3TjnUarATdVmFI+RDw7YcRWVUySboggToSUH8dWj3UFTS75H/l+ah+
+         OXIR2V1sd7zF1ylh5ZQw23hb25p+c7iOdLiKmVVSFukkqmIEOcsoOZwFPgnDGLPDbdRl
+         iVHA==
+X-Gm-Message-State: AC+VfDxkAmDd0yFTZl5A59/Ao9sYz5rJ1TKwZwVU2GqTQzlep8sZGjMr
+        D6+bdyFeGJpIVw+rKEXtL8BGdqA1QGgIobQVvp3FCg==
+X-Google-Smtp-Source: ACHHUZ4uVrEjbBmgaeLWyKN5WpJiG48pgOSBDd+qbzglXLF7mkTVLPk7deTZ5RU89OyoX80z6v51FnHSEnNrwGj07Lo=
+X-Received: by 2002:ac8:5dd1:0:b0:3ef:3083:a437 with SMTP id
+ e17-20020ac85dd1000000b003ef3083a437mr1253088qtx.18.1684170522372; Mon, 15
+ May 2023 10:08:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230511062725.514752-1-namhyung@kernel.org>
+In-Reply-To: <20230511062725.514752-1-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Date:   Mon, 15 May 2023 10:08:31 -0700
+Message-ID: <CAP-5=fVkLpcyuEjay_VUq9+K7nFRKPTCYr6SH-VBcrSfkKUoYQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] perf annotate: Handle more instructions on x86
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Change "../cs-etm.h" to just "../../../util/cs-etm.h" as ../cs-etm.h
-doesn't exist.
+On Wed, May 10, 2023 at 11:27=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> I found some instructions didn't parse the operands properly.
+> Add them to the table to fix the issue.
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Suggested-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/arch/arm/util/pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
-index 860a8b42b4b5..a9623b128ece 100644
---- a/tools/perf/arch/arm/util/pmu.c
-+++ b/tools/perf/arch/arm/util/pmu.c
-@@ -12,7 +12,7 @@
- #include "arm-spe.h"
- #include "hisi-ptt.h"
- #include "../../../util/pmu.h"
--#include "../cs-etm.h"
-+#include "../../../util/cs-etm.h"
- 
- struct perf_event_attr
- *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
--- 
-2.40.1.606.ga4b1b128d6-goog
+Thanks,
+Ian
 
+> ---
+>  tools/perf/arch/x86/annotate/instructions.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arc=
+h/x86/annotate/instructions.c
+> index 305872692bfd..5c7bec25fee4 100644
+> --- a/tools/perf/arch/x86/annotate/instructions.c
+> +++ b/tools/perf/arch/x86/annotate/instructions.c
+> @@ -35,12 +35,14 @@ static struct ins x86__instructions[] =3D {
+>         { .name =3D "cs",         .ops =3D &mov_ops,  },
+>         { .name =3D "dec",        .ops =3D &dec_ops,  },
+>         { .name =3D "decl",       .ops =3D &dec_ops,  },
+> +       { .name =3D "decq",       .ops =3D &dec_ops,  },
+>         { .name =3D "divsd",      .ops =3D &mov_ops,  },
+>         { .name =3D "divss",      .ops =3D &mov_ops,  },
+>         { .name =3D "gs",         .ops =3D &mov_ops,  },
+>         { .name =3D "imul",       .ops =3D &mov_ops,  },
+>         { .name =3D "inc",        .ops =3D &dec_ops,  },
+>         { .name =3D "incl",       .ops =3D &dec_ops,  },
+> +       { .name =3D "incq",       .ops =3D &dec_ops,  },
+>         { .name =3D "ja",         .ops =3D &jump_ops, },
+>         { .name =3D "jae",        .ops =3D &jump_ops, },
+>         { .name =3D "jb",         .ops =3D &jump_ops, },
+> @@ -123,6 +125,8 @@ static struct ins x86__instructions[] =3D {
+>         { .name =3D "test",       .ops =3D &mov_ops,  },
+>         { .name =3D "testb",      .ops =3D &mov_ops,  },
+>         { .name =3D "testl",      .ops =3D &mov_ops,  },
+> +       { .name =3D "testq",      .ops =3D &mov_ops,  },
+> +       { .name =3D "tzcnt",      .ops =3D &mov_ops,  },
+>         { .name =3D "ucomisd",    .ops =3D &mov_ops,  },
+>         { .name =3D "ucomiss",    .ops =3D &mov_ops,  },
+>         { .name =3D "vaddsd",     .ops =3D &mov_ops,  },
+> --
+> 2.40.1.521.gf1e218fcd8-goog
+>
