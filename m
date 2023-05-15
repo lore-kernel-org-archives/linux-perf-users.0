@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34364C7EE24
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 21:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4F3C77B75
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 21:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243631AbjEOV6v (ORCPT
+        id S245595AbjEOV7J (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 17:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44416 "EHLO
+        Mon, 15 May 2023 17:59:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242711AbjEOV6u (ORCPT
+        with ESMTP id S245203AbjEOV7E (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 17:58:50 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B4B9271E
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 14:58:49 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b8f32cc8c31so24434993276.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 14:58:49 -0700 (PDT)
+        Mon, 15 May 2023 17:59:04 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7954F83CF
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 14:59:00 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba2b9ecfadaso18303924276.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 14:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684187928; x=1686779928;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=G0bS22CbhPXpB43FjjFU2MCdOSdF0WGgC6o1gyAzyTk=;
-        b=tKDweTwEhrOGuI862pQ4U4CM2YB35lZkKhbvxIPHASDN52NaqCLeWYtyDumFyb5CnA
-         sBmjGTP+MDWjJkE7BNBgA0ilhiwRmlX+x4fXu1XMbjyu7w1yb5qyyg0UHJgktuCxD73j
-         n79Isxboi3hQXWYbXKMkSzbKkEHczizv6/Egn9v7tW7W+7LqB1CotkNylg7glNLFr8Wm
-         eBhuCqsW7JBBXOu6ONeKdEqPYN2r+nSIkYyiD98DUaNMdukz3AAjnpEr/AqgKJYPsagT
-         1UWx5WTlhfaTnwpz1fBVlF+DT1ZbDA7xH7RF71Yk2fZ2DUAQI0tT4h4U54HTthy2ZoSz
-         MucA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684187928; x=1686779928;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20221208; t=1684187939; x=1686779939;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=G0bS22CbhPXpB43FjjFU2MCdOSdF0WGgC6o1gyAzyTk=;
-        b=T1EURoATImmt8gPZ46A+opD8d/9k3YsZEQ1apYkfq7lZdnEA/lLuFaTQHql9QcyOAz
-         Ehz/PaZwoEjOtyp/KsGNK+cDLIyz9+vLprjAaKYtxPYCFqpK40JZK30sBGgoCEfO2OsR
-         DwxmMQgCnfOcVBpfaSA+Bhl6AQSW8bdIcmbBWy+GTGq0VHpk7o2IxPXxjabxplyOsGQJ
-         zZNaQpB4T1Tcex8iOW8OeDSZemrjQM2MRAwbbmW+xfCT0pgAwN0d2JYPV2QHQK+u9aHE
-         U7uv0uNXPfipUhb0iFcEgiFXy9YXc7XGhrSof++qcyBwjaM6NxzPnM06lktB75o2Yit9
-         hE5Q==
-X-Gm-Message-State: AC+VfDyRF5Bw/0AiTTEzn82PyKvbo8WcJ1ccX8GAxVgFVw2WYqFcUhuf
-        Eg9r138DUGuSB8W1HUFEAaIX5Zo5051K
-X-Google-Smtp-Source: ACHHUZ7ccSQlwjqxFTkNiqhdSjSLdK9/5FKICIdrXLFZa8R+l00Qwad1jpEX7LvuIdL6d9ClIIaCrUBlWwxL
+        bh=L3zOq/aJY9J48OW5hg8gl93O+V750jrlOYQz1VI35ZI=;
+        b=rJZdIZUSWY9Lrq4SjfO8zSpEYvZ6+lE9kWQyj6h3RT5ASBGppw62Ceos9HP9/0Pksl
+         5pbvIA/gA9Fd5l9k9/6IUiQS/4yiEBXQRAAAYiwQZbh3UPrcsRrUFkTXx8owMsp8LvNc
+         /TjAVtAmYyQLDFtEJWgF3QO3y3ahv6EXuhn4cabNiz+pG0riWV/9OS3kHyTxvIymzMIf
+         o9l22Wb0QkUJEV16FhTmxN0j2y2t7uFGs/fvVq/QQhDS1JFwMus3Q1jjS8wfcReenXTf
+         lthUf4fZ3+8u3YxErfMbXDfsVP8ORJRG1uS4IVBSeCqmruBJAG7/wmNt9JcowsePwulI
+         fI6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684187939; x=1686779939;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L3zOq/aJY9J48OW5hg8gl93O+V750jrlOYQz1VI35ZI=;
+        b=J+kKsu+onU5j9Ba287ePrs5DMmNE+mWPXPLTpdQ18ieyeXcpBqypNk1rE8QMS4qAAJ
+         9CHyhdYZnIcoYutb5wmtUlUb8WyEAXExyVHTvtdspt2z2x/s3adZ4vvD1q/OHOEF42Tb
+         Z2rkfdsMtBd9tFSpjPifCK4Atb5mjzh0kcyIh6g33T5xqlumdpU5Uslkm0RypzyR70P3
+         +IqwHglNpyQHBlVJA2WqDOrHRWdNky8ziH4lgzDB48v9N9v/jzB06g5i0q68AQWqw5Jg
+         8CnrMN5Q+SZB3YH4HQ+Po11ZaHS+zPHbFb3sjLSDQExA3KPX9j4QKQCukpRQ65s2cauz
+         /paQ==
+X-Gm-Message-State: AC+VfDwYeaWo7lX6K6cJVqXjBimkeeK8sZ1TXiLxu2KIOv4s6ZJTd5E1
+        DraPZtSJYENQUSgSbr64c+GSq9SO7jDR
+X-Google-Smtp-Source: ACHHUZ76ec2NL/RcGKvzOelo8SQwMlKUDT+dsjkoWs4BnpE/xsETEPj3WfpwWSnuQzJtwIFWLmlal7r1AAZ9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:638e:7eff:a1d9:3b2b])
- (user=irogers job=sendgmr) by 2002:a25:6503:0:b0:ba6:8a90:59b9 with SMTP id
- z3-20020a256503000000b00ba68a9059b9mr7390757ybb.5.1684187928302; Mon, 15 May
- 2023 14:58:48 -0700 (PDT)
-Date:   Mon, 15 May 2023 14:58:29 -0700
-Message-Id: <20230515215844.653610-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:154f:b0:b78:8bd8:6e77 with SMTP
+ id r15-20020a056902154f00b00b788bd86e77mr22572501ybu.8.1684187939268; Mon, 15
+ May 2023 14:58:59 -0700 (PDT)
+Date:   Mon, 15 May 2023 14:58:33 -0700
+In-Reply-To: <20230515215844.653610-1-irogers@google.com>
+Message-Id: <20230515215844.653610-5-irogers@google.com>
 Mime-Version: 1.0
+References: <20230515215844.653610-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
-Subject: [PATCH v1 00/15] Event, metric and metric group improvements
+Subject: [PATCH v1 04/15] perf vendor events intel: Update elkhartlake events
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -73,135 +75,225 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Update Intel events to the latest at: https://github.com/intel/perfmon
-TMA info metrics are renamed for consistency and a fix is added that
-adds back in the Valkyrie metrics such as memory_bandwidth_total,
-memory_bandwidth_read and memory_bandwidth_write on icelakex.
+Update elkhartlake to v1.04 that marks deprecated a number of events
+and adds additional description to MEM_BOUND_STALLS.IFETCH. The events
+data was generated by:
+https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
 
-Add a new feature to perf list to show a description of a metricgroup
-via a new metricgroups.json file, add this for the generated Intel
-metrics. The descriptions looks like:
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/pmu-events/arch/x86/elkhartlake/cache.json  |  7 +++++++
+ tools/perf/pmu-events/arch/x86/elkhartlake/memory.json |  2 ++
+ tools/perf/pmu-events/arch/x86/elkhartlake/other.json  | 10 ++++++++++
+ .../perf/pmu-events/arch/x86/elkhartlake/pipeline.json |  3 +++
+ tools/perf/pmu-events/arch/x86/mapfile.csv             |  2 +-
+ 5 files changed, 23 insertions(+), 1 deletion(-)
 
-```
-$ perf list
-...
-tma_frontend_bound_group: [Metrics contributing to tma_frontend_bound category]
-  tma_fetch_bandwidth
-       [This metric represents fraction of slots the CPU
-        was stalled due to Frontend bandwidth issues]
-  tma_fetch_latency
-       [This metric represents fraction of slots the CPU
-        was stalled due to Frontend latency issues]
-...
-```
-
-Ian Rogers (15):
-  perf vendor events intel: Update alderlake events/metrics
-  perf vendor events intel: Update broadwell variant events/metrics
-  perf vendor events intel: Update cascadelakex events/metrics
-  perf vendor events intel: Update elkhartlake events
-  perf vendor events intel: Update haswell(x) metrics
-  perf vendor events intel: Update icelake/icelakex events/metrics
-  perf vendor events intel: Update ivybridge/ivytown metrics
-  perf vendor events intel: Update jaketown metrics
-  perf vendor events intel: Update sandybridge metrics
-  perf vendor events intel: Update sapphirerapids events/metrics
-  perf vendor events intel: Update skylake/skylakex events/metrics
-  perf vendor events intel: Update snowridgex events
-  perf vendor events intel: Update tigerlake events/metrics
-  perf jevents: Add support for metricgroup descriptions
-  perf vendor events intel: Add metricgroup descriptions for all models
-
- tools/perf/builtin-list.c                     |   11 +-
- .../arch/x86/alderlake/adl-metrics.json       | 1314 ++++++++--------
- .../pmu-events/arch/x86/alderlake/cache.json  |    9 +
- .../pmu-events/arch/x86/alderlake/memory.json |    6 +-
- .../arch/x86/alderlake/metricgroups.json      |  122 ++
- .../arch/x86/alderlaken/adln-metrics.json     |  276 ++--
- .../arch/x86/alderlaken/metricgroups.json     |   26 +
- .../arch/x86/broadwell/bdw-metrics.json       |  580 +++----
- .../arch/x86/broadwell/floating-point.json    |   15 +
- .../arch/x86/broadwell/metricgroups.json      |  107 ++
- .../arch/x86/broadwellde/bdwde-metrics.json   |  556 +++----
- .../arch/x86/broadwellde/floating-point.json  |   15 +
- .../arch/x86/broadwellde/metricgroups.json    |  107 ++
- .../arch/x86/broadwellx/bdx-metrics.json      |  796 ++++++----
- .../arch/x86/broadwellx/floating-point.json   |   15 +
- .../arch/x86/broadwellx/metricgroups.json     |  107 ++
- .../arch/x86/cascadelakex/clx-metrics.json    | 1231 +++++++++------
- .../arch/x86/cascadelakex/floating-point.json |   31 +
- .../arch/x86/cascadelakex/metricgroups.json   |  114 ++
- .../arch/x86/cascadelakex/pipeline.json       |   23 +-
- .../arch/x86/elkhartlake/cache.json           |    7 +
- .../arch/x86/elkhartlake/memory.json          |    2 +
- .../arch/x86/elkhartlake/other.json           |   10 +
- .../arch/x86/elkhartlake/pipeline.json        |    3 +
- .../arch/x86/haswell/hsw-metrics.json         |  484 +++---
- .../arch/x86/haswell/metricgroups.json        |  107 ++
- .../arch/x86/haswellx/hsx-metrics.json        |  700 ++++++---
- .../arch/x86/haswellx/metricgroups.json       |  107 ++
- .../pmu-events/arch/x86/icelake/cache.json    |   18 +
- .../arch/x86/icelake/icl-metrics.json         |  950 ++++++------
- .../arch/x86/icelake/metricgroups.json        |  113 ++
- .../arch/x86/icelakex/icx-metrics.json        | 1306 +++++++++-------
- .../arch/x86/icelakex/metricgroups.json       |  114 ++
- .../arch/x86/ivybridge/ivb-metrics.json       |  526 +++----
- .../arch/x86/ivybridge/metricgroups.json      |  107 ++
- .../arch/x86/ivytown/ivt-metrics.json         |  534 +++----
- .../arch/x86/ivytown/metricgroups.json        |  107 ++
- .../arch/x86/jaketown/jkt-metrics.json        |  224 +--
- .../arch/x86/jaketown/metricgroups.json       |  100 ++
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   26 +-
- .../arch/x86/sandybridge/metricgroups.json    |  100 ++
- .../arch/x86/sandybridge/snb-metrics.json     |  222 +--
- .../arch/x86/sapphirerapids/memory.json       |    6 +-
- .../arch/x86/sapphirerapids/metricgroups.json |  118 ++
- .../arch/x86/sapphirerapids/spr-metrics.json  | 1357 ++++++++++-------
- .../sapphirerapids/uncore-interconnect.json   |    2 +-
- .../x86/sapphirerapids/uncore-memory.json     |    8 +-
- .../arch/x86/skylake/floating-point.json      |    8 +
- .../arch/x86/skylake/metricgroups.json        |  113 ++
- .../pmu-events/arch/x86/skylake/pipeline.json |   15 +-
- .../arch/x86/skylake/skl-metrics.json         |  875 ++++++-----
- .../arch/x86/skylakex/floating-point.json     |   31 +
- .../arch/x86/skylakex/metricgroups.json       |  114 ++
- .../arch/x86/skylakex/pipeline.json           |   23 +-
- .../arch/x86/skylakex/skx-metrics.json        | 1183 ++++++++------
- .../pmu-events/arch/x86/snowridgex/cache.json |    7 +
- .../arch/x86/snowridgex/memory.json           |    2 +
- .../pmu-events/arch/x86/snowridgex/other.json |   10 +
- .../arch/x86/snowridgex/pipeline.json         |    3 +
- .../x86/snowridgex/uncore-interconnect.json   |   14 +-
- .../arch/x86/snowridgex/uncore-io.json        |    8 -
- .../arch/x86/snowridgex/uncore-memory.json    |    7 +-
- .../arch/x86/snowridgex/uncore-power.json     |    6 +-
- .../pmu-events/arch/x86/tigerlake/cache.json  |   18 +
- .../arch/x86/tigerlake/metricgroups.json      |  113 ++
- .../arch/x86/tigerlake/pipeline.json          |    1 +
- .../arch/x86/tigerlake/tgl-metrics.json       |  970 ++++++------
- tools/perf/pmu-events/empty-pmu-events.c      |    5 +
- tools/perf/pmu-events/jevents.py              |   49 +-
- tools/perf/pmu-events/pmu-events.h            |    2 +
- 70 files changed, 9985 insertions(+), 6411 deletions(-)
- create mode 100644 tools/perf/pmu-events/arch/x86/alderlake/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwell/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwellde/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/haswell/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/haswellx/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/ivybridge/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/ivytown/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/jaketown/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sandybridge/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/skylake/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/metricgroups.json
-
+diff --git a/tools/perf/pmu-events/arch/x86/elkhartlake/cache.json b/tools/perf/pmu-events/arch/x86/elkhartlake/cache.json
+index 0ab90e3bf76b..c6be60584522 100644
+--- a/tools/perf/pmu-events/arch/x86/elkhartlake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/elkhartlake/cache.json
+@@ -72,6 +72,7 @@
+         "BriefDescription": "Counts the number of cycles the core is stalled due to an instruction cache or TLB miss which hit in the L2, LLC, DRAM or MMIO (Non-DRAM).",
+         "EventCode": "0x34",
+         "EventName": "MEM_BOUND_STALLS.IFETCH",
++        "PublicDescription": "Counts the number of cycles the core is stalled due to an instruction cache or translation lookaside buffer (TLB) miss which hit in the L2, LLC, DRAM or MMIO (Non-DRAM).",
+         "SampleAfterValue": "200003",
+         "UMask": "0x38"
+     },
+@@ -437,6 +438,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -446,6 +448,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT.SNOOP_HITM",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -455,6 +458,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT.SNOOP_HIT_NO_FWD",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_NO_FWD",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -464,6 +468,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -473,6 +478,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT.SNOOP_MISS",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_MISS",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -482,6 +488,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.L3_HIT.SNOOP_NOT_NEEDED",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_NOT_NEEDED",
+         "MSRIndex": "0x1a6,0x1a7",
+diff --git a/tools/perf/pmu-events/arch/x86/elkhartlake/memory.json b/tools/perf/pmu-events/arch/x86/elkhartlake/memory.json
+index 18621909d1a9..c02eb0e836ad 100644
+--- a/tools/perf/pmu-events/arch/x86/elkhartlake/memory.json
++++ b/tools/perf/pmu-events/arch/x86/elkhartlake/memory.json
+@@ -96,6 +96,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.L3_MISS",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -105,6 +106,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.L3_MISS_LOCAL",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS_LOCAL",
+         "MSRIndex": "0x1a6,0x1a7",
+diff --git a/tools/perf/pmu-events/arch/x86/elkhartlake/other.json b/tools/perf/pmu-events/arch/x86/elkhartlake/other.json
+index 00ae180ded25..fefbc383b840 100644
+--- a/tools/perf/pmu-events/arch/x86/elkhartlake/other.json
++++ b/tools/perf/pmu-events/arch/x86/elkhartlake/other.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event BUS_LOCK.SELF_LOCKS",
++        "Deprecated": "1",
+         "EdgeDetect": "1",
+         "EventCode": "0x63",
+         "EventName": "BUS_LOCK.ALL",
+@@ -16,6 +17,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event BUS_LOCK.BLOCK_CYCLES",
++        "Deprecated": "1",
+         "EventCode": "0x63",
+         "EventName": "BUS_LOCK.CYCLES_OTHER_BLOCK",
+         "SampleAfterValue": "200003",
+@@ -23,6 +25,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event BUS_LOCK.LOCK_CYCLES",
++        "Deprecated": "1",
+         "EventCode": "0x63",
+         "EventName": "BUS_LOCK.CYCLES_SELF_BLOCK",
+         "SampleAfterValue": "200003",
+@@ -46,6 +49,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event MEM_BOUND_STALLS.LOAD_DRAM_HIT",
++        "Deprecated": "1",
+         "EventCode": "0x34",
+         "EventName": "C0_STALLS.LOAD_DRAM_HIT",
+         "SampleAfterValue": "200003",
+@@ -53,6 +57,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event MEM_BOUND_STALLS.LOAD_L2_HIT",
++        "Deprecated": "1",
+         "EventCode": "0x34",
+         "EventName": "C0_STALLS.LOAD_L2_HIT",
+         "SampleAfterValue": "200003",
+@@ -60,6 +65,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event MEM_BOUND_STALLS.LOAD_LLC_HIT",
++        "Deprecated": "1",
+         "EventCode": "0x34",
+         "EventName": "C0_STALLS.LOAD_LLC_HIT",
+         "SampleAfterValue": "200003",
+@@ -207,6 +213,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.ANY_RESPONSE",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -216,6 +223,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.DRAM",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -225,6 +233,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.LOCAL_DRAM",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -234,6 +243,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event OCR.DEMAND_DATA_AND_L1PF_RD.OUTSTANDING",
++        "Deprecated": "1",
+         "EventCode": "0XB7",
+         "EventName": "OCR.DEMAND_DATA_RD.OUTSTANDING",
+         "MSRIndex": "0x1a6",
+diff --git a/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json b/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json
+index 9dd8c909facc..c483c0838e08 100644
+--- a/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/elkhartlake/pipeline.json
+@@ -165,6 +165,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated.",
++        "Deprecated": "1",
+         "EventCode": "0xcd",
+         "EventName": "CYCLES_DIV_BUSY.ANY",
+         "SampleAfterValue": "2000003"
+@@ -283,6 +284,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event TOPDOWN_BAD_SPECULATION.FASTNUKE",
++        "Deprecated": "1",
+         "EventCode": "0x73",
+         "EventName": "TOPDOWN_BAD_SPECULATION.MONUKE",
+         "SampleAfterValue": "1000003",
+@@ -338,6 +340,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated.",
++        "Deprecated": "1",
+         "EventCode": "0x74",
+         "EventName": "TOPDOWN_BE_BOUND.STORE_BUFFER",
+         "SampleAfterValue": "1000003",
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 6b132eecd2a7..f3ae41e28ed2 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -6,7 +6,7 @@ GenuineIntel-6-(3D|47),v28,broadwell,core
+ GenuineIntel-6-56,v10,broadwellde,core
+ GenuineIntel-6-4F,v21,broadwellx,core
+ GenuineIntel-6-55-[56789ABCDEF],v1.18,cascadelakex,core
+-GenuineIntel-6-9[6C],v1.03,elkhartlake,core
++GenuineIntel-6-9[6C],v1.04,elkhartlake,core
+ GenuineIntel-6-5[CF],v13,goldmont,core
+ GenuineIntel-6-7A,v1.01,goldmontplus,core
+ GenuineIntel-6-B6,v1.00,grandridge,core
 -- 
 2.40.1.606.ga4b1b128d6-goog
 
