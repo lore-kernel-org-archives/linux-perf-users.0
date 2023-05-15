@@ -2,89 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C19FC7EE23
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 17:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C880AC7EE25
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 17:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243793AbjEORW3 (ORCPT
+        id S244766AbjEORxe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 13:22:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40884 "EHLO
+        Mon, 15 May 2023 13:53:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244060AbjEORWF (ORCPT
+        with ESMTP id S244922AbjEORxQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 13:22:05 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7BF13C01
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 10:20:16 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-24e4f674356so11669468a91.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 10:20:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684171214; x=1686763214;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FX6egQiHhIXuURJzhuekh3GWalrQL58fuRjBxSVKU44=;
-        b=DCysOcvZAq2Qg21dqZ6wHxBGBIIgvLp4GcrrcRsl/4xvFuSK22NUVgbCLRUkIrQ69c
-         +KrAT7tEPlHBnaa6ia7TZPPRU2CeHkRU3Tq/ZUcjuDBfTP/BuzjQAqy2FrbsbdAkBb4f
-         ouPgI0iWUIcMVstRdWPTiNbGwjlmMBZ/8rN/V4VYHHqQnii2b1DGEQcey+cOtFLcmdWh
-         eMKmTrkqVGFYNo/BzSFwBWroQHNc44BcpVlJezD5GZd6shSbaRGxzrtbF43ljGGfvdqG
-         wy0hCGssbdVTn4mZA9iyGGvu6tYSupvxeVteUkpj8FKgNnEHNVGhomBuXxPfJKZe3lw1
-         hkAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684171214; x=1686763214;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FX6egQiHhIXuURJzhuekh3GWalrQL58fuRjBxSVKU44=;
-        b=aFK01Faw1XtRcSjAqC+LHBcxXCY6YqrdS2qrKnFRpej58/B8ONrG1JJ1DvhimXA4qt
-         2fulCDhyT0+x5/TuVOux9EjQEowXk0L+X6sGw/Kd2JYlq2FCGJuOX/l0HFkBASKN2WgP
-         19wE4VdqVOTyBrWkkY+nwQUeNm9lnJrl3sg6fWkX4rwI9D7L2rUeyJfKN+iuFxuVHGu9
-         WmWA41s+2ANsVYFy+yB/xKk3l1zSdKIeoHMj1HCLVQnxKGZdvfS2FLBvXfTwFjnL3epR
-         GZiWZEF5iag/j5G60OmelWtw/cwCv8liWwsh+aEAy0+fjQ4Ks85Vh5ulVkEaOuplBtDm
-         OnMA==
-X-Gm-Message-State: AC+VfDxARpNPUXUdnAs8id5tQOjEl1Dn8fuR3bIAnEVAzSpAT3j7ki2C
-        ida8prW2JCtLQbK5w6d8BrpYe99BjEWVefpMiMToo8lk
-X-Google-Smtp-Source: ACHHUZ7efjsKR+COZuU6zeF9TphOU3M4F2igOPBHC0zc0Uo3dbyPCRua+tK2cLXprWccg0dAaw8pD+j5Pti9+7xAMp4=
-X-Received: by 2002:a17:90a:3ccd:b0:250:4847:426a with SMTP id
- k13-20020a17090a3ccd00b002504847426amr31555929pjd.11.1684171214517; Mon, 15
- May 2023 10:20:14 -0700 (PDT)
+        Mon, 15 May 2023 13:53:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030CB1CA4D;
+        Mon, 15 May 2023 10:51:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AD24062F51;
+        Mon, 15 May 2023 17:50:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8159C4339C;
+        Mon, 15 May 2023 17:50:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684173016;
+        bh=ZOa1DuUaalVCTQ5zS8baq1fo8jfyEiJs85l6V1kJejo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tFBB5QmZRIkddN1jXrL0rxgk+YytZrH7cS/JUc/RyYLgIDM4Kkyy8yuO5rjnKFvDH
+         MqqGEQvhse7GWhRZX/gyZ5MQmxzPDa4OI2vlxKzO+XScyEUHqfEoddAxGkP8ZxN21j
+         F1CIwJqEeUzA3tH6wKZztMSu5xgJkMwDbQinJHZAyl7OWvFinSV3O8AGaU5q42mwwy
+         D9WatvBizQmoLohHCc7SWJKgSYJphFAzBIssilSkUJG3BWhAj5Krb+XkD9aW298s+H
+         FnkJSM8OeI92H2iZhqvDk2TDwOTUg39i4kRefZwtXAsOZYDj/bEOL/iMsmj1kqdZoD
+         wzHDL4qn/ytJA==
+Date:   Mon, 15 May 2023 18:50:09 +0100
+From:   Conor Dooley <conor@kernel.org>
+To:     Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 00/10] riscv: Allow userspace to directly access perf
+ counters
+Message-ID: <20230515-unmoved-promenade-9e678c4f14f5@spud>
+References: <20230512085321.13259-1-alexghiti@rivosinc.com>
 MIME-Version: 1.0
-References: <CAGA5_H6b7jVJcy0ahnbTqG3eqA2PD3TGFmXm7xQ=gMBVJ1yZyg@mail.gmail.com>
-In-Reply-To: <CAGA5_H6b7jVJcy0ahnbTqG3eqA2PD3TGFmXm7xQ=gMBVJ1yZyg@mail.gmail.com>
-From:   Rajasekhar Pulluru <pullururajasekhar@gmail.com>
-Date:   Mon, 15 May 2023 22:50:02 +0530
-Message-ID: <CAGA5_H7CBGiaaULrbhQk1P8qQC5BKBOK54pEGnppggY892MWSw@mail.gmail.com>
-Subject: Re: missing symbol names in perf top but not in perf record/report
-To:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yUJ9qocDe5RgavIo"
+Content-Disposition: inline
+In-Reply-To: <20230512085321.13259-1-alexghiti@rivosinc.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Team,
-Will be glad to see some help on the issue reported below.
-Is this an expected behaviour? Is there a known solution to this problem?
 
-Thanks & Regards,
-Rajasekhar
+--yUJ9qocDe5RgavIo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, May 11, 2023 at 11:05=E2=80=AFAM Rajasekhar Pulluru
-<pullururajasekhar@gmail.com> wrote:
->
-> An application (compiled with -g and -fno-omit-frame-pointer) is
-> running inside the linux container. Trying to use perf tool on the
-> linux host (not inside the container) to identify a list of functions
-> consuming more cpu cycles.
-> Running perf top -p `pidof app` on the linux host prints address
-> instead of symbol name, where-as perf record -p `pidof app` and perf
-> report prints symbol names instead of addresses.
->
-> Why doesn't perf top display symbol names if perf record/report can?
->
-> Linux host is based on jammy, and Linux container is based on bionic.
->
-> Appreciate any help.
->
-> Thanks & Regards,
-> Rajasekhar
+On Fri, May 12, 2023 at 10:53:11AM +0200, Alexandre Ghiti wrote:
+
+> base-commit-tag: v6.3
+
+
+BTW Alex, in the future it'd be great if you could pick a more recent
+base (eg -rc1 or riscv/for-next) so that the patchwork automation
+doesn't run into a bunch of conflicts while trying to apply patches.
+
+Cheers,
+Conor.
+
+--yUJ9qocDe5RgavIo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZGJw0QAKCRB4tDGHoIJi
+0ttiAQCvuOgsTmAbHoptLuttHFak0avpeoAERDI2wkQYdNUeUwD/Q+eHjCl2EwCO
+AMEo1k9TljgZ9ZWXb/Q9SCxc/XeGawQ=
+=4Rls
+-----END PGP SIGNATURE-----
+
+--yUJ9qocDe5RgavIo--
