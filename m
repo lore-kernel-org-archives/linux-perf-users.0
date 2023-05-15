@@ -2,82 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B149C77B7D
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 06:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD28C77B7D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 08:42:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238527AbjEOGY1 (ORCPT
+        id S233752AbjEOIme (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 02:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56398 "EHLO
+        Mon, 15 May 2023 04:42:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229829AbjEOGY0 (ORCPT
+        with ESMTP id S237142AbjEOIm1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 02:24:26 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 24E4F12B;
-        Sun, 14 May 2023 23:24:19 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9495B4B3;
-        Sun, 14 May 2023 23:25:03 -0700 (PDT)
-Received: from [10.163.71.10] (unknown [10.163.71.10])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B4DD3F7BD;
-        Sun, 14 May 2023 23:24:10 -0700 (PDT)
-Message-ID: <2dafd371-173e-1592-23d2-939b8a81dcbe@arm.com>
-Date:   Mon, 15 May 2023 11:54:07 +0530
+        Mon, 15 May 2023 04:42:27 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7985EC;
+        Mon, 15 May 2023 01:42:25 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QKXq73GrszLq1c;
+        Mon, 15 May 2023 16:39:31 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Mon, 15 May 2023 16:42:23 +0800
+Subject: Re: [PATCH v2 1/4] perf trace-event-info: Add tracepoint_id_to_name()
+ helper
+To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <anshuman.khandual@arm.com>, <jesussanp@google.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20230511075154.240163-1-yangjihong1@huawei.com>
+ <20230511075154.240163-2-yangjihong1@huawei.com>
+ <14f09d56-d4f1-8602-6a98-5588cbef8c81@intel.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <6955e0df-5835-e79b-2ba4-cddc3bb7c976@huawei.com>
+Date:   Mon, 15 May 2023 16:42:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH V9 00/10] arm64/perf: Enable branch stack sampling
+In-Reply-To: <14f09d56-d4f1-8602-6a98-5588cbef8c81@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-To:     Will Deacon <will@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, mark.rutland@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
- <20230411130326.GA22736@willie-the-truck>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20230411130326.GA22736@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
 
-
-On 4/11/23 18:33, Will Deacon wrote:
-> Hi Anshuman
-> 
-> On Wed, Mar 15, 2023 at 10:44:34AM +0530, Anshuman Khandual wrote:
->> This series enables perf branch stack sampling support on arm64 platform
->> via a new arch feature called Branch Record Buffer Extension (BRBE). All
->> relevant register definitions could be accessed here.
+On 2023/5/12 18:33, Adrian Hunter wrote:
+> On 11/05/23 10:51, Yang Jihong wrote:
+>> Add tracepoint_id_to_name() helper to search for the trace events directory
+>> by given event id and return the corresponding tracepoint.
 >>
->> https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
+>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> ---
+>>   tools/perf/util/trace-event-info.c | 11 +++++++++++
+>>   tools/perf/util/trace-event.h      |  6 ++++++
+>>   2 files changed, 17 insertions(+)
 >>
->> This series applies on 6.3-rc1 after applying the following patch from Mark
->> which allows enums in SysregFields blocks in sysreg tools.
->>
->> https://lore.kernel.org/all/20230306114836.2575432-1-mark.rutland@arm.com/
+>> diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
+>> index c24b3a15e319..a5c65cb02a28 100644
+>> --- a/tools/perf/util/trace-event-info.c
+>> +++ b/tools/perf/util/trace-event-info.c
+>> @@ -466,6 +466,17 @@ static struct tracepoint_path *tracepoint_id_to_path(u64 config)
+>>   	return NULL;
+>>   }
+>>   
+>> +char *tracepoint_id_to_name(u64 config)
+>> +{
+>> +	char *buf = NULL;
+>> +	struct tracepoint_path *path = tracepoint_id_to_path(config);
 > 
-> As mentioned by Mark at:
+> It is considered slightly nicer to put local declarations
+> in descending order of line length. i.e.
+OK, will fix in v3.
 > 
-> https://lore.kernel.org/r/ZB2sGrsbr58ttoWI@FVFF77S0Q05N
+> 	struct tracepoint_path *path = tracepoint_id_to_path(config);
+> 	char *buf = NULL;
 > 
-> this conflicts with supporting PMUv3 on AArch32. Please can you rebase onto
-> for-next/perf, which will mean moving this driver back into drivers/perf/
-> now?
+>> +
+>> +	if ((path != NULL) && (asprintf(&buf, "%s:%s", path->system, path->name) > 0))
+> 
+> The parentheses are unnecessary and kernel style tends to avoid "!= NULL"
+> i.e.
+OK, will fix in v3.
 
-Hi Will,
-
-I am back from a long vacation, will go through the earlier discussions
-on this and rework the series as required.
-
-- Anshuman
+Thanks,
+Yang
