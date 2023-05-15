@@ -2,104 +2,220 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA00C77B75
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 05:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18884C77B7D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 06:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232916AbjEOFPB (ORCPT
+        id S237910AbjEOGW1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 01:15:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45550 "EHLO
+        Mon, 15 May 2023 02:22:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229635AbjEOFO5 (ORCPT
+        with ESMTP id S234659AbjEOGW0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 01:14:57 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB4E26A0;
-        Sun, 14 May 2023 22:14:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8z08rPxfDAASG/XLpN5ZedEBdMlrltNVn22wzFhYK0Q=; b=DBnEYHtgDBNHel35RYI8L6MwdG
-        CXYRTUv6uFJgJPOmp1dC7GyFiOrl7T9RDvVL7ssNxrdDZuv06gFGlXD+4TjMNfRR7jllqpFx9ZcPk
-        iWuFmrLuY2w0rXmJFGf+CKrzyNnAMNTmQanAWet7sGxkMm+e3hC8lRgBB4abCj9hzdDZsso1mP7Ys
-        1fE1HfzlN2Ljyek0uKbAifZ8L0D7nMMqZgNZ0SmvgO7W5OCE/51X3pVXURq5GVUg8GQEZUuig+8l9
-        /3642c8ZGs8O/jvN0ziHyaxigZGRxPz79VfXkgFV1iczxRORzO1oIQIFuyI2QWGR6oHzFpR50n61u
-        IH83ZVLw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1pyQXm-000vaf-1t;
-        Mon, 15 May 2023 05:14:46 +0000
-Date:   Sun, 14 May 2023 22:14:46 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+        Mon, 15 May 2023 02:22:26 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0F6FF1FE8;
+        Sun, 14 May 2023 23:22:17 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D6CA2F4;
+        Sun, 14 May 2023 23:23:02 -0700 (PDT)
+Received: from [10.163.71.10] (unknown [10.163.71.10])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 769EE3F7BD;
+        Sun, 14 May 2023 23:22:12 -0700 (PDT)
+Message-ID: <168e26b3-e995-88ad-b0a0-d917313956c8@arm.com>
+Date:   Mon, 15 May 2023 11:52:08 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH V9 02/10] arm64/perf: Add BRBE registers and fields
+To:     Yang Shen <shenyang39@huawei.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
+Cc:     Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: Re: [PATCH v9 0/3] mm/gup: disallow GUP writing to file-backed
- mappings by default
-Message-ID: <ZGG/xkIUYK2QMPSv@infradead.org>
-References: <cover.1683235180.git.lstoakes@gmail.com>
- <0eb31f6f-a122-4a5b-a959-03ed4dee1f3c@lucifer.local>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0eb31f6f-a122-4a5b-a959-03ed4dee1f3c@lucifer.local>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        linux-perf-users@vger.kernel.org
+References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
+ <20230315051444.1683170-3-anshuman.khandual@arm.com>
+ <3a8ae180-5a0f-7996-58de-edb0e370e4f5@huawei.com>
+Content-Language: en-US
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <3a8ae180-5a0f-7996-58de-edb0e370e4f5@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, May 14, 2023 at 08:20:04PM +0100, Lorenzo Stoakes wrote:
-> As discussed at LSF/MM, on the flight over I wrote a little repro [0] which
-> reliably triggers the ext4 warning by recreating the scenario described
-> above, using a small userland program and kernel module.
-> 
-> This code is not perfect (plane code :) but does seem to do the job
-> adequately, also obviously this should only be run in a VM environment
-> where data loss is acceptable (in my case a small qemu instance).
 
-It would be really awesome if you could wire it up with and submit it
-to xfstests.
+
+On 4/12/23 14:02, Yang Shen wrote:
+> 
+> 
+> 在 2023/3/15 13:14, Anshuman Khandual 写道:
+>> This adds BRBE related register definitions and various other related field
+>> macros there in. These will be used subsequently in a BRBE driver which is
+>> being added later on.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Reviewed-by: Mark Brown <broonie@kernel.org>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   arch/arm64/include/asm/sysreg.h | 103 +++++++++++++++++++++
+>>   arch/arm64/tools/sysreg         | 159 ++++++++++++++++++++++++++++++++
+>>   2 files changed, 262 insertions(+)
+>>
+>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+>> index 9e3ecba3c4e6..b3bc03ee22bd 100644
+>> --- a/arch/arm64/include/asm/sysreg.h
+>> +++ b/arch/arm64/include/asm/sysreg.h
+>> @@ -165,6 +165,109 @@
+>>   #define SYS_DBGDTRTX_EL0        sys_reg(2, 3, 0, 5, 0)
+>>   #define SYS_DBGVCR32_EL2        sys_reg(2, 4, 0, 7, 0)
+>>   +#define __SYS_BRBINFO(n)        sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 0))
+>> +#define __SYS_BRBSRC(n)            sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 1))
+>> +#define __SYS_BRBTGT(n)            sys_reg(2, 1, 8, ((n) & 0xf), ((((n) & 0x10)) >> 2 + 2))
+>> +
+>> +#define SYS_BRBINF0_EL1            __SYS_BRBINFO(0)
+>> +#define SYS_BRBINF1_EL1            __SYS_BRBINFO(1)
+>> +#define SYS_BRBINF2_EL1            __SYS_BRBINFO(2)
+>> +#define SYS_BRBINF3_EL1            __SYS_BRBINFO(3)
+>> +#define SYS_BRBINF4_EL1            __SYS_BRBINFO(4)
+>> +#define SYS_BRBINF5_EL1            __SYS_BRBINFO(5)
+>> +#define SYS_BRBINF6_EL1            __SYS_BRBINFO(6)
+>> +#define SYS_BRBINF7_EL1            __SYS_BRBINFO(7)
+>> +#define SYS_BRBINF8_EL1            __SYS_BRBINFO(8)
+>> +#define SYS_BRBINF9_EL1            __SYS_BRBINFO(9)
+>> +#define SYS_BRBINF10_EL1        __SYS_BRBINFO(10)
+>> +#define SYS_BRBINF11_EL1        __SYS_BRBINFO(11)
+>> +#define SYS_BRBINF12_EL1        __SYS_BRBINFO(12)
+>> +#define SYS_BRBINF13_EL1        __SYS_BRBINFO(13)
+>> +#define SYS_BRBINF14_EL1        __SYS_BRBINFO(14)
+>> +#define SYS_BRBINF15_EL1        __SYS_BRBINFO(15)
+>> +#define SYS_BRBINF16_EL1        __SYS_BRBINFO(16)
+>> +#define SYS_BRBINF17_EL1        __SYS_BRBINFO(17)
+>> +#define SYS_BRBINF18_EL1        __SYS_BRBINFO(18)
+>> +#define SYS_BRBINF19_EL1        __SYS_BRBINFO(19)
+>> +#define SYS_BRBINF20_EL1        __SYS_BRBINFO(20)
+>> +#define SYS_BRBINF21_EL1        __SYS_BRBINFO(21)
+>> +#define SYS_BRBINF22_EL1        __SYS_BRBINFO(22)
+>> +#define SYS_BRBINF23_EL1        __SYS_BRBINFO(23)
+>> +#define SYS_BRBINF24_EL1        __SYS_BRBINFO(24)
+>> +#define SYS_BRBINF25_EL1        __SYS_BRBINFO(25)
+>> +#define SYS_BRBINF26_EL1        __SYS_BRBINFO(26)
+>> +#define SYS_BRBINF27_EL1        __SYS_BRBINFO(27)
+>> +#define SYS_BRBINF28_EL1        __SYS_BRBINFO(28)
+>> +#define SYS_BRBINF29_EL1        __SYS_BRBINFO(29)
+>> +#define SYS_BRBINF30_EL1        __SYS_BRBINFO(30)
+>> +#define SYS_BRBINF31_EL1        __SYS_BRBINFO(31)
+>> +
+>> +#define SYS_BRBSRC0_EL1            __SYS_BRBSRC(0)
+>> +#define SYS_BRBSRC1_EL1            __SYS_BRBSRC(1)
+>> +#define SYS_BRBSRC2_EL1            __SYS_BRBSRC(2)
+>> +#define SYS_BRBSRC3_EL1            __SYS_BRBSRC(3)
+>> +#define SYS_BRBSRC4_EL1            __SYS_BRBSRC(4)
+>> +#define SYS_BRBSRC5_EL1            __SYS_BRBSRC(5)
+>> +#define SYS_BRBSRC6_EL1            __SYS_BRBSRC(6)
+>> +#define SYS_BRBSRC7_EL1            __SYS_BRBSRC(7)
+>> +#define SYS_BRBSRC8_EL1            __SYS_BRBSRC(8)
+>> +#define SYS_BRBSRC9_EL1            __SYS_BRBSRC(9)
+>> +#define SYS_BRBSRC10_EL1        __SYS_BRBSRC(10)
+>> +#define SYS_BRBSRC11_EL1        __SYS_BRBSRC(11)
+>> +#define SYS_BRBSRC12_EL1        __SYS_BRBSRC(12)
+>> +#define SYS_BRBSRC13_EL1        __SYS_BRBSRC(13)
+>> +#define SYS_BRBSRC14_EL1        __SYS_BRBSRC(14)
+>> +#define SYS_BRBSRC15_EL1        __SYS_BRBSRC(15)
+>> +#define SYS_BRBSRC16_EL1        __SYS_BRBSRC(16)
+>> +#define SYS_BRBSRC17_EL1        __SYS_BRBSRC(17)
+>> +#define SYS_BRBSRC18_EL1        __SYS_BRBSRC(18)
+>> +#define SYS_BRBSRC19_EL1        __SYS_BRBSRC(19)
+>> +#define SYS_BRBSRC20_EL1        __SYS_BRBSRC(20)
+>> +#define SYS_BRBSRC21_EL1        __SYS_BRBSRC(21)
+>> +#define SYS_BRBSRC22_EL1        __SYS_BRBSRC(22)
+>> +#define SYS_BRBSRC23_EL1        __SYS_BRBSRC(23)
+>> +#define SYS_BRBSRC24_EL1        __SYS_BRBSRC(24)
+>> +#define SYS_BRBSRC25_EL1        __SYS_BRBSRC(25)
+>> +#define SYS_BRBSRC26_EL1        __SYS_BRBSRC(26)
+>> +#define SYS_BRBSRC27_EL1        __SYS_BRBSRC(27)
+>> +#define SYS_BRBSRC28_EL1        __SYS_BRBSRC(28)
+>> +#define SYS_BRBSRC29_EL1        __SYS_BRBSRC(29)
+>> +#define SYS_BRBSRC30_EL1        __SYS_BRBSRC(30)
+>> +#define SYS_BRBSRC31_EL1        __SYS_BRBSRC(31)
+>> +
+>> +#define SYS_BRBTGT0_EL1            __SYS_BRBTGT(0)
+>> +#define SYS_BRBTGT1_EL1            __SYS_BRBTGT(1)
+>> +#define SYS_BRBTGT2_EL1            __SYS_BRBTGT(2)
+>> +#define SYS_BRBTGT3_EL1            __SYS_BRBTGT(3)
+>> +#define SYS_BRBTGT4_EL1            __SYS_BRBTGT(4)
+>> +#define SYS_BRBTGT5_EL1            __SYS_BRBTGT(5)
+>> +#define SYS_BRBTGT6_EL1            __SYS_BRBTGT(6)
+>> +#define SYS_BRBTGT7_EL1            __SYS_BRBTGT(7)
+>> +#define SYS_BRBTGT8_EL1            __SYS_BRBTGT(8)
+>> +#define SYS_BRBTGT9_EL1            __SYS_BRBTGT(9)
+>> +#define SYS_BRBTGT10_EL1        __SYS_BRBTGT(10)
+>> +#define SYS_BRBTGT11_EL1        __SYS_BRBTGT(11)
+>> +#define SYS_BRBTGT12_EL1        __SYS_BRBTGT(12)
+>> +#define SYS_BRBTGT13_EL1        __SYS_BRBTGT(13)
+>> +#define SYS_BRBTGT14_EL1        __SYS_BRBTGT(14)
+>> +#define SYS_BRBTGT15_EL1        __SYS_BRBTGT(15)
+>> +#define SYS_BRBTGT16_EL1        __SYS_BRBTGT(16)
+>> +#define SYS_BRBTGT17_EL1        __SYS_BRBTGT(17)
+>> +#define SYS_BRBTGT18_EL1        __SYS_BRBTGT(18)
+>> +#define SYS_BRBTGT19_EL1        __SYS_BRBTGT(19)
+>> +#define SYS_BRBTGT20_EL1        __SYS_BRBTGT(20)
+>> +#define SYS_BRBTGT21_EL1        __SYS_BRBTGT(21)
+>> +#define SYS_BRBTGT22_EL1        __SYS_BRBTGT(22)
+>> +#define SYS_BRBTGT23_EL1        __SYS_BRBTGT(23)
+>> +#define SYS_BRBTGT24_EL1        __SYS_BRBTGT(24)
+>> +#define SYS_BRBTGT25_EL1        __SYS_BRBTGT(25)
+>> +#define SYS_BRBTGT26_EL1        __SYS_BRBTGT(26)
+>> +#define SYS_BRBTGT27_EL1        __SYS_BRBTGT(27)
+>> +#define SYS_BRBTGT28_EL1        __SYS_BRBTGT(28)
+>> +#define SYS_BRBTGT29_EL1        __SYS_BRBTGT(29)
+>> +#define SYS_BRBTGT30_EL1        __SYS_BRBTGT(30)
+>> +#define SYS_BRBTGT31_EL1        __SYS_BRBTGT(31)
+>> +
+>>   #define SYS_MIDR_EL1            sys_reg(3, 0, 0, 0, 0)
+>>   #define SYS_MPIDR_EL1            sys_reg(3, 0, 0, 0, 5)
+>>   #define SYS_REVIDR_EL1            sys_reg(3, 0, 0, 0, 6)
+>> diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
+>> index dd5a9c7e310f..d74d9dbe18a7 100644
+>> --- a/arch/arm64/tools/sysreg
+>> +++ b/arch/arm64/tools/sysreg
+>> @@ -924,6 +924,165 @@ UnsignedEnum    3:0    BT
+>>   EndEnum
+>>   EndSysreg
+>>   +
+>> +SysregFields BRBINFx_EL1
+>> +Res0    63:47
+>> +Field    46    CCU
+>> +Field    45:32    CC
+>> +Res0    31:18
+>> +Field    17    LASTFAILED
+>> +Field    16    T
+>> +Res0    15:14
+>> +Enum    13:8        TYPE
+> 
+> Hi Anshuman,
+> 
+> I met a problem when built kernel which was based on 6.3-rc1. Here is the error log:
+>     GEN     Makefile
+>     GEN     arch/arm64/include/generated/asm/sysreg-defs.h
+> Error at 936: unexpected Enum (inside SysregFields)
+> 
+> I think this is because the 'SysregFields' doesn't support the 'Enum' type region.
+> And this problem can be fixed when I roll back this part to v7.
+> 
+> Do I need to apply some patches or do some other configures?
+
+Yes, the following patch was required, but it's now merged mainline.
+
+https://lore.kernel.org/all/20230306114836.2575432-1-mark.rutland@arm.com/
