@@ -2,87 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAABC7EE24
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 20:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE211C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 20:54:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244356AbjEOUtZ (ORCPT
+        id S245090AbjEOUy0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 16:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55122 "EHLO
+        Mon, 15 May 2023 16:54:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjEOUtY (ORCPT
+        with ESMTP id S244817AbjEOUyZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 16:49:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E45A77EDA;
-        Mon, 15 May 2023 13:49:23 -0700 (PDT)
+        Mon, 15 May 2023 16:54:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C7349EDF;
+        Mon, 15 May 2023 13:54:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 79240624A0;
-        Mon, 15 May 2023 20:49:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD04EC4339B;
-        Mon, 15 May 2023 20:49:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 29B4B624D3;
+        Mon, 15 May 2023 20:54:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B276C433D2;
+        Mon, 15 May 2023 20:54:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684183762;
-        bh=uqZfGT9l3rtQQfCunfjAVcqiCEL6GKIudde5Fwx+3u4=;
+        s=k20201202; t=1684184062;
+        bh=n9VyGRNUJDkLTEUulgC2aa9ObEOGijpX7zOS2WKs5FY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Rqif8ilFtUBkKEMRAH25KLmy4I6q2uj7SteexcS2UQoBjvn0+dIPrwS0xJncIgY3k
-         p/QAFvF/lvtu1vmB+K3hMIxw7icpilpksHKM56genTXi4Vp13LzxKIGp87aNKGSeaJ
-         CYRWxHDD56AKeAdIFCrN1w8xQ5ijlg88nnW7Qir5c0w1u6kjnuywV96qW2smqxQu+Z
-         O2u36UoZk3W4XFiqFm6nezHQPlOrHrzoS/+LM2wJhS/8OWsj+oYu4r+r6Nt8W4GyPp
-         8DWwJTpgZNXgfmny9Qs1wSblvKENiahEBaqCZ+XAgYqZDOSGFj1flGIlCOELMlxTMC
-         oMU/qgrkl8coA==
+        b=IwYgj53VUTN3MX6a4+0pmH6Lz2xdtgiknjyMyyAsTvtVdi3EuKM5zLb4VKYdh0umv
+         pXAQtvVZl6Rw+UgeaH5dImJzLRbwxldjKukRp/zxG8xnYCBV2nMcQzZQbZhAaWr6ul
+         pa4OL+NIteBWG2xMJnXVeiDDoyn7wbaq1RlCesiS67bhD0Qf1zSC7ry9/nuPbUPaNq
+         bE5WEa24R4XEfMjn0uQZyvijvgp6lLYcJt7LdV02tROrZbYLDZNvhiUyD/1c/rs+8D
+         hO9LTDSyJGMsi+wJK8L1Em3l1V0GIvrPHEFzZ0nikQS/unA2zWsVVOlhxaLUIEIdGL
+         SfqLnF8iyrQrQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id BD99A403B5; Mon, 15 May 2023 17:49:19 -0300 (-03)
-Date:   Mon, 15 May 2023 17:49:19 -0300
+        id DCD22403B5; Mon, 15 May 2023 17:54:19 -0300 (-03)
+Date:   Mon, 15 May 2023 17:54:19 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Ben Hutchings <ben@decadent.org.uk>,
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Salvatore Bonaccorso <carnil@debian.org>
-Subject: Re: [PATCH v2 0/2] perf doc improvements to man page reproducibility
-Message-ID: <ZGKaz/wrobQGJAqk@kernel.org>
-References: <ZF/0jJkAOXxzGAMc@decadent.org.uk>
- <CAP-5=fXmL509c2rhE7SYj9FW62eZPc7tPEWzG1h0DztF+Qmnww@mail.gmail.com>
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 3/3] perf annotate browser: Add '<' and '>' keys for
+ navigation
+Message-ID: <ZGKb+4DXN864kEZ+@kernel.org>
+References: <20230511062725.514752-1-namhyung@kernel.org>
+ <20230511062725.514752-3-namhyung@kernel.org>
+ <CAP-5=fV+LFcMRwHPZUrq=MpOZVp8Q+4vEVKGTQg3rLREfJsg1w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fXmL509c2rhE7SYj9FW62eZPc7tPEWzG1h0DztF+Qmnww@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV+LFcMRwHPZUrq=MpOZVp8Q+4vEVKGTQg3rLREfJsg1w@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, May 15, 2023 at 07:26:52AM -0700, Ian Rogers escreveu:
-> On Sat, May 13, 2023, 1:35 PM Ben Hutchings <ben@decadent.org.uk> wrote:
+Em Mon, May 15, 2023 at 10:09:08AM -0700, Ian Rogers escreveu:
+> On Wed, May 10, 2023 at 11:27 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > The hists__find_annotations() allow to move to next or previous symbols
+> > for annotation using the arrow keys.  But TUI annotate_browser__run()
+> > uses the RIGHT key as ENTER to handle jump/call instructions.  That
+> > makes the navigation to the next function impossible.
+> >
+> > I'd like to change it back to move the next symbol but I'm afraid if
+> > some users get confused.  So I added a new pair of keys to handle that.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> > I previously sent a patch in 2016(!) to make the dates in man pages
-> > reproducible, with KBUILD_BUILD_TIMESTAMP specifiying the date.  That
-> > patch partly overlaps with commit d586ac10ce56 "perf docs: Allow man
-> > page date to be specified", which implemented generation of dates
-> > based on commit timestamps.
-> >
-> > However, both of those implementations were specific to the original
-> > asciidoc's DocBook backend and had no effect on asciidoctor's direct
-> > man page generation.
-> >
-> > This series builds on the current definition of perf_date, adding
-> > support for asciidoctor and the KBUILD_BUILD_TIMESTAMP variable.
-> >
-> > Ben.
-> >
-> > Ben Hutchings (2):
-> >   perf doc: Define man page date when using asciidoctor
-> >   perf doc: Add support for KBUILD_BUILD_TIMESTAMP
-> >
+> Acked-by: Ian Rogers <irogers@google.com>
 > 
-> Acked-by: Ian Rogers<irogers@google.com>
+> Thanks,
+> Ian
+> 
+> > ---
+> >  tools/perf/builtin-annotate.c     | 4 +++-
+> >  tools/perf/ui/browsers/annotate.c | 4 +++-
+> >  2 files changed, 6 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> > index 63cdf6ea6f6d..425a7e2fd6fb 100644
+> > --- a/tools/perf/builtin-annotate.c
+> > +++ b/tools/perf/builtin-annotate.c
+> > @@ -342,7 +342,7 @@ static void hists__find_annotations(struct hists *hists,
+> >                 notes = symbol__annotation(he->ms.sym);
+> >                 if (notes->src == NULL) {
+> >  find_next:
+> > -                       if (key == K_LEFT)
+> > +                       if (key == K_LEFT || key == '<')
+> >                                 nd = rb_prev(nd);
+> >                         else
+> >                                 nd = rb_next(nd);
+> > @@ -378,9 +378,11 @@ static void hists__find_annotations(struct hists *hists,
+> >                                         return;
+> >                                 /* fall through */
+> >                         case K_RIGHT:
+> > +                       case '>':
+> >                                 next = rb_next(nd);
+> >                                 break;
+> >                         case K_LEFT:
+> > +                       case '<':
+> >                                 next = rb_prev(nd);
+> >                                 break;
+> >                         default:
+> > diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> > index 12c3ce530e42..70bad42b807b 100644
+> > --- a/tools/perf/ui/browsers/annotate.c
+> > +++ b/tools/perf/ui/browsers/annotate.c
+> > @@ -781,9 +781,9 @@ static int annotate_browser__run(struct annotate_browser *browser,
+> >                         ui_browser__help_window(&browser->b,
+> >                 "UP/DOWN/PGUP\n"
+> >                 "PGDN/SPACE    Navigate\n"
+> > +               "</>           Move to prev/next symbol\n"
+> >                 "q/ESC/CTRL+C  Exit\n\n"
+> >                 "ENTER         Go to target\n"
+> > -               "ESC           Exit\n"
 
-Thanks, applied.
+I think the two above were unintentional? I'm removing this hunk.
 
 - Arnaldo
 
+> >                 "H             Go to hottest instruction\n"
+> >                 "TAB/shift+TAB Cycle thru hottest instructions\n"
+> >                 "j             Toggle showing jump to target arrows\n"
+> > @@ -913,6 +913,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
+> >                         annotation__toggle_full_addr(notes, ms);
+> >                         continue;
+> >                 case K_LEFT:
+> > +               case '<':
+> > +               case '>':
+> >                 case K_ESC:
+> >                 case 'q':
+> >                 case CTRL('c'):
+> > --
+> > 2.40.1.521.gf1e218fcd8-goog
+> >
+
+-- 
+
+- Arnaldo
