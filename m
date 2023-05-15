@@ -2,182 +2,305 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48342C7EE26
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 12:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CD2C7EE22
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 12:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241345AbjEOMM4 (ORCPT
+        id S241718AbjEOMPK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 08:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
+        Mon, 15 May 2023 08:15:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230342AbjEOMMz (ORCPT
+        with ESMTP id S241594AbjEOMPH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 08:12:55 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2046.outbound.protection.outlook.com [40.107.92.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A107D1AB;
-        Mon, 15 May 2023 05:12:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dZbzkACfo0vrr08uwcPAqfESg8dm8tUXn9bd091xAYZ8hMykx3Q9Yxr2J7MOg4QcGIvWKvGhzzWr/23nP83M0iKq/GYKMxP3ZnAd2BO3yk2wLI5sa9/nOh6dCYiUkkzWYWmVfyeo6onIVTA0KRTFAhd/vGGEUPfTheqqQ91N7avxw9hJdnXOk9n01d+e3D4Po4tzKZ+ZROLXEfb3RnXRTYDwcFRuCs3OawDI8cL215yyKZLOn1vgZzAr5iDQikAxKOgwFaCi/69wSdUmzeXrAadMcJPilTjuqo36vjlta2aS61JOrBsZ2cnWVU7/CpcIRtyBtDEc+Lx1DZ0NxJXX6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vo2okyu9q4O73CTCXQvO2hUuvIL9+MVHCkrrCKsE8as=;
- b=C7WEr6hBBfoJRfJkl/zV8y27JXx+CpRaq5csiCtifgrb5IHxy0z6544f08OFc61vTVehtzzqLCc2D0YDqReNokxEq+ZMyHeUDci+J7icwg58mMeOmV5eTexHygpEcGcJaWc9JaoyQ8uIF0hJV6wGMHqSXiCBALaSSQ73NdHPl77A0nSCDq1iZf6o2Caabhe9swArFgBaaDJoKlVljCYXWuVS3yE3dmn1bXqKNiHl0Taf6kbF9QcetrBaHDun71Cq6s1UiQ4HLdPjADQtNDMKUwaBH6MMHQPVGFZ5J4afyyFVPIXGDeI2ipEHT4cDj7SSGyC3fmv5jPI+/k2tQK8BeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vo2okyu9q4O73CTCXQvO2hUuvIL9+MVHCkrrCKsE8as=;
- b=sludTHXMA373Qn9ggvQsmqJFZB1roS03FR2loxOUAbrcy3lm60ODvyNd2TI/Z9zre4o9nUZIO5jcooarRjZvTxGKitSX1K5eN6OhEztM34W9zAPDeGTCrvUBBDhKiwZpEBrLpeomekqVUWbfNvDIVk6kXOBvcUREri7uW0zRTNN75InKTpiPkG4u04JyhrbUCuF2LLmeUs4OeFruyzt9fLIMGhs07Yy8CnTpsP1u0jvgGthlJV3oaV6pmc+ePq3bPntlyyBpyHaWNuU6SYV3mHBxjy/cz6OcRrN9oW5br9CzhvAcYtY6uC3wUsordoyssd+zzI2QR3Dxt08UaMrhTw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by BY5PR12MB4321.namprd12.prod.outlook.com (2603:10b6:a03:204::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.30; Mon, 15 May
- 2023 12:12:50 +0000
-Received: from LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f7a7:a561:87e9:5fab]) by LV2PR12MB5869.namprd12.prod.outlook.com
- ([fe80::f7a7:a561:87e9:5fab%6]) with mapi id 15.20.6387.030; Mon, 15 May 2023
- 12:12:50 +0000
-Date:   Mon, 15 May 2023 09:12:49 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     "Kirill A . Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
+        Mon, 15 May 2023 08:15:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E06173C;
+        Mon, 15 May 2023 05:15:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 75E4961F72;
+        Mon, 15 May 2023 12:15:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 782B4C433D2;
+        Mon, 15 May 2023 12:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684152902;
+        bh=xzhZ8AA9jIUuCxAZoti4fbbeWVL4suH07c2HXuZLPbI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PNJcO5RZZn4HsKLeLiXzv1pJcTlIQDRYH389A8q99WFUldXDYMA5z7lYrbs5I9e3k
+         +2r3MxnMy6f3AtU4/uhMm9OwTl1/CYZJvgVtGFZnhWtesU3mEpO697mYxkZeRIJOxa
+         2nV3vub7sZJ3lpaGroa5Ok3gQyjLn5ekCkR5uMSE/d2mYVk0OZyYYkBtuveCqC1vcZ
+         rQj5rQOZ7wSx7jA0wfkWlkmNgd4BcOTti7dpgwsqTmgnuxGMVXDWYNy+jr2gr9dXQR
+         CGOD7Hg2sXaCgYT5zUaYoGQUbpCXSBQm8t3wyYrkdt/k2PaWn8v/Wh10hrwHGAG0o/
+         VeOfBIGP8aW5A==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0361D403B5; Mon, 15 May 2023 09:14:59 -0300 (-03)
+Date:   Mon, 15 May 2023 09:14:59 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Ahmad Yasin <ahmad.yasin@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: Re: [PATCH v9 0/3] mm/gup: disallow GUP writing to file-backed
- mappings by default
-Message-ID: <ZGIhwZl2FbLodLrc@nvidia.com>
-References: <cover.1683235180.git.lstoakes@gmail.com>
- <20230515110315.uqifqgqkzcrrrubv@box.shutemov.name>
- <7f6dbe36-88f2-468e-83c1-c97e666d8317@lucifer.local>
+        Florian Fischer <florian.fischer@muhq.space>,
+        Rob Herring <robh@kernel.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/44] Fix perf on Intel hybrid CPUs
+Message-ID: <ZGIiQ/TtqClPVChb@kernel.org>
+References: <20230502223851.2234828-1-irogers@google.com>
+ <b8f03c40-d238-2ce9-5b50-bd9e1465be23@linux.intel.com>
+ <ZF6GkU6Le8bxex2O@kernel.org>
+ <b1fb8f09-17d7-45c2-6f8d-0756cd09fe77@linux.intel.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7f6dbe36-88f2-468e-83c1-c97e666d8317@lucifer.local>
-X-ClientProxiedBy: BL1PR13CA0134.namprd13.prod.outlook.com
- (2603:10b6:208:2bb::19) To LV2PR12MB5869.namprd12.prod.outlook.com
- (2603:10b6:408:176::16)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|BY5PR12MB4321:EE_
-X-MS-Office365-Filtering-Correlation-Id: e517f40b-794c-47a4-952e-08db553db3b3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: N/zsEx0MTKHwLUimmYqcbdIfjLizCySoq9C6JCls6zs4LJiqfKG/rA25LDS1Fc8CiqtrCPaq14ntbssBBhPFY93Ui0TwIlq7gWOJY52P3cMfK9+rnlcElAFNkI2JN8lKopgW2fkKb4v3NgaZ3DtPKX2y1+1AzksITHLNqF/NWSqlX1TZ47nKnWM9K5bnkLmJKTGaw0izF5Vi5a0tt+CmBOD9ZZpLnLgAKhS+4SXBSOO8RJ78gMGbnyz1Ye/pgVmu2pRcIrMGSiFVLEepQSWgCj56YpJKg/0PY6R2nsxVL21gnACOYV+AQbkMJfcFygfgGohz2DL3mY67gxuBBZ8LnsfekTMq0FNnRAvOPCtelmrmsC716UrOUUWU55MiTNpbUCWR4Pv2h4L5MaTb3a2hSa9E3UwkKYaNgCY2KBgTDjw9Rvj9SSrNzgGMf3syIN/0tsGm17zxSupG5NWm4fqAH5yLqeGK3ZgAwA7Z7CdMkezZkbfpCWTjp+6TJTa3NC4Q1dWzuVY33ahWRhsuqbMW5U0EJ6R09T6YdoOa142oEzK4GPElzbkHj2lPbhllTvfo
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(39860400002)(366004)(396003)(136003)(451199021)(83380400001)(4326008)(41300700001)(6916009)(316002)(36756003)(2906002)(38100700002)(26005)(6506007)(6512007)(6486002)(478600001)(66946007)(66476007)(66556008)(2616005)(86362001)(5660300002)(8936002)(8676002)(54906003)(7366002)(7406005)(7416002)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?G+qL5vFMYT6D+nnSgzfuolJgmHEgH4dPR3MTkIhI0WJ3eg35wslLv8EcGLb0?=
- =?us-ascii?Q?XPMpDTl5n+gVUkSBlCATUXkeEkD2tulwBCzDgo/c9CbIq9c/GuEnx7IB4Jgy?=
- =?us-ascii?Q?6yCBn3kJ/QuTVHb/+v23Ikknuh2l+Tjyj2T5HwufyqWM9R9VrgyeSOU9ncne?=
- =?us-ascii?Q?W53kCiR1qM+6BI7ehhrly4/cHMzfiasKYkkb1SJrOxNdNpAkuzSS/j/aa8VX?=
- =?us-ascii?Q?qsnZ3ZEktt6StW1OnQVKxB2U0MO0u/x7LoqQ0Q+0+ztFjHIMqqp/2kQqk078?=
- =?us-ascii?Q?4c5t7Xs8O1jcckkUhxt7fDrD4QHbXzz8k+HCnwnCe8LmObVDQAGrxJgShfQx?=
- =?us-ascii?Q?rhcQxMgObqXWgdt70OWPfj6MfpJUcqNYHR/FctMkNaIiPQ+0iVRsFMLBS3JZ?=
- =?us-ascii?Q?kGKQMAORHxn2i7qkk07xzDGmyhPKfaDGQAAfBbQSUV47IWBS3xbY6Jq0LsMb?=
- =?us-ascii?Q?wKAIKW7KBF8+n0qy+pXsGzl6Q6CrDmbzUS6ujjazVLnnp+puzGqCNvJKi5rW?=
- =?us-ascii?Q?6vij8M6UnhFHgtnIdwTysz+TsrQ8i4Ab9jsbbn1NSBSxR8uO3YWwENeYmZ+3?=
- =?us-ascii?Q?Sj2AheSUFe1hxa6L8uKBluXxwDDFs+CyywNnqwh/wqmgaTdf1DMtO3BBSe32?=
- =?us-ascii?Q?PP/uR2EbfMNIUSre12EwGxlBhYO6zdXIew5kRBKNZBH+hroIIrP93opOLQxs?=
- =?us-ascii?Q?Q6c2cT6mh+W0W+Nad6geqFCejguKSAwh17upFnh7KZj3+J3bHSvihjx6c2jh?=
- =?us-ascii?Q?Iu6VaCPqRGUsQzPII1QEuTNBF79CqgyAdhOGiYP6PZpGWoWYPBHwEufU9gsP?=
- =?us-ascii?Q?c9jSoFiIT85yWl4dHFzwBTDiVQn+YFsXHubFn5aLiUsHq6Tzh+0S/awPF+2E?=
- =?us-ascii?Q?sZv9nGYdPhx68TvqjSlBo3T0ayGbeLVO7IcY8/T6ACoFlvHFp3XzTgwRMTEO?=
- =?us-ascii?Q?36oCA/Ur9l8Mvc52suSFnspxgjtC/wdRwkaqyQYSiJjiQV0pfOAK6A2wRfHP?=
- =?us-ascii?Q?QWu16Ck3nylaL7g/A9tmXyu49JLuiw0nRfzlSVbeM0r/FcfG4/HDvXepeCs4?=
- =?us-ascii?Q?EuQ6xFH+hdrReNqigeBnZJTOvDNs/DEqkCIYnfWDanuae3G787aFrkTTcato?=
- =?us-ascii?Q?jATfBK96zi52PnqHPUT0GVuB1l9y7X5fjH4VoSHljLCe0GO4dxKRtyM/sctv?=
- =?us-ascii?Q?2Sim4aV4DwoX+hMoQroedjQtzpvAoYyPuYwBimAFo8YGgoxq1Bfor2qpYeGm?=
- =?us-ascii?Q?k2L3SrkulKiFqSRPuUeqfbc3YELxnKRCcc29Mo6ilocjjEsiAZX0F9rCqGkZ?=
- =?us-ascii?Q?bKJaY33kmJQCcQ5zsY8bQAgbfGBF61NlDpaGUjQhV53tYJpN0axpZhlDnkTK?=
- =?us-ascii?Q?hLfJgkPqzyzZ2kh5bMRpRHv1lJM88A8CrVjld9HYuq/xCZ//OcWQeAnGiNdL?=
- =?us-ascii?Q?g9AqsFxbEkFIoECXTR3j8GsWlWbT4V6EsS1B5nj3uqJvdvzHi09DV4PTbfIU?=
- =?us-ascii?Q?fdwpnItvvGh+ETUOJk9ljuhbyxc4ELMLBBnqvZVStZ0iEpTDmZ1WeiJe6Vz2?=
- =?us-ascii?Q?HkXq9o4Id3e9FyX79yFP2boAC4P5tgeLP9a4BWz8?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e517f40b-794c-47a4-952e-08db553db3b3
-X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2023 12:12:50.0813
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8quOnnNBOxdw4tqchzoE4R9DYph0firWZ099EtdbNRWYDxYS5r2wSK5qv1YCcYK0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4321
+In-Reply-To: <b1fb8f09-17d7-45c2-6f8d-0756cd09fe77@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 15, 2023 at 12:16:21PM +0100, Lorenzo Stoakes wrote:
-> > One thing that came to mind is KVM with "qemu -object memory-backend-file,share=on..."
-> > It is mostly used for pmem emulation.
-> >
-> > Do we have plan B?
+Em Sun, May 14, 2023 at 08:03:38AM -0400, Liang, Kan escreveu:
+> On 2023-05-12 2:33 p.m., Arnaldo Carvalho de Melo wrote:
+> > Em Wed, May 03, 2023 at 04:56:36PM -0400, Liang, Kan escreveu:
+> >> On 2023-05-02 6:38 p.m., Ian Rogers wrote:
+> >>> TL;DR: hybrid doesn't crash, json metrics work on hybrid on both PMUs
+> >>> or individually, event parsing doesn't always scan all PMUs, more and
+> >>> new tests that also run without hybrid, less code.
+> >>>
+> >>> The first 4 patches are aimed at Linux 6.4 to address issues raised,
+> >>> in particular by Kan, on the existing perf stat behavior with json
+> >>> metrics. They avoid duplicated events by removing groups. They don't
+> >>> hide events and metrics to make event multiplexing obvious. They avoid
+> >>> terminating perf when paranoia is higher due to certain events that
+> >>> always fail. They avoid rearranging events by PMUs when the events
+> >>> aren't in a group.
+> >>>
+> >>> The next 5 patches avoid grouping events for metrics where they could
+> >>> never succeed and were previously posted as:
+> >>> "perf vendor events intel: Add xxx metric constraints"
+> >>> https://lore.kernel.org/all/20230419005423.343862-1-irogers@google.com/
+> >>> In general the generated json is coming from:
+> >>> https://github.com/intel/perfmon/pull/73
+> >>>
+> >>> Next are some general and test improvements.
+> >>>
+> >>> Next event parsing is rewritten to not scan all PMUs for the benefit
+> >>> of raw and legacy cache parsing, instead these are handled by the
+> >>> lexer and a new term type. This ultimately removes the need for the
+> >>> event parser for hybrid to be recursive as legacy cache can be just a
+> >>> term. Tests are re-enabled for events with hyphens, so AMD's
+> >>> branch-brs event is now parsable.
+> >>>
+> >>> The cputype option is made a generic pmu filter flag and is tested
+> >>> even on non-hybrid systems.
+> >>>
+> >>> The final patches address specific json metric issues on hybrid, in
+> >>> both the json metrics and the metric code.
+> >>>
+> >>> The patches add slightly more code than they remove, in areas like
+> >>> better json metric constraints and tests, but in the core util code,
+> >>> the removal of hybrid is a net reduction:
+> >>>  22 files changed, 711 insertions(+), 1016 deletions(-)
+> >>>
+> >>> Sample output is contained in the v1 patch set:
+> >>> https://lore.kernel.org/lkml/bff481ba-e60a-763f-0aa0-3ee53302c480@linux.intel.com/
+> >>>
+> >>> Tested on Tigerlake, Skylake and Alderlake CPUs.
+> >>>
+> >>> The v4 patch set:
+> >>>  - rebase, 1 of the Linux 6.4 recommended patches are merged leaving:
+> >>>    1) perf metric: Change divide by zero and !support events behavior
+> >>>    2) perf stat: Introduce skippable evsels
+> >>>    3) perf metric: Json flag to not group events if gathering a metric group
+> >>>    4) perf parse-events: Don't reorder ungrouped events by pmu
+> >>>    whose diffstat is:
+> >>>     30 files changed, 326 insertions(+), 33 deletions(-)
+> >>>    but without the vendor event updates (the tend to be large as they
+> >>>    repeat something per architecture per metric) is just:
+> >>>     10 files changed, 90 insertions(+), 32 deletions(-)
+> >>
+> >> I have tested the 4 patches on top of the perf-tools-next branch on both
+> >> Cascade Lake and Raptor Lake. The result looks good to me.
+> >>
+> >> They address the permission error found in the default mode of perf stat
+> >> on the Cascade Lake. Thanks Ian for the fix.
+> >>
+> >> Arnaldo, could you please consider to back port them for the 6.4?
+> > 
+> > Yes, its in perf-tools now, will go to Linus next week.
 > 
-> Yes, we can make it opt-in or opt-out via a FOLL_FLAG. This would be easy
-> to implement in the event of any issues arising.
+> Thanks Arnaldo!
+> 
+> > 
+> > What about the other patches? I saw some you provided your review, what
+> > about the others, are you ok with them?
+> > 
+> 
+> Yes, I'm OK with the patch set. It fixes many issues. Thanks Ian.
+> (My tests mainly focus on the area in which the patch set may touch. I
+> did the tests on various platforms, ADL (hybrid), Cascade Lake, SPR.)
+> 
+> Tested-by: Kan Liang <kan.liang@linux.intel.com>
 
-I'm becoming less keen on the idea of a per-subsystem opt out. I think
-we should make a kernel wide opt out. I like the idea of using lower
-lockdown levels. Lots of things become unavaiable in the uAPI when the
-lockdown level increases already.
+Thanks!
+ 
+> But there are still some issues. I don't think they are introduced by
+> this patch set. We may fix them later separately.
 
-> Jason will have some thoughts on this I'm sure. I guess the key question
-> here is - is it actually feasible for this to work at all? Once we
-> establish that, the rest are details :)
+Yeah, look forward to receiving the patches :-)
 
-Surely it is, but like Ted said, the FS folks are not interested and
-they are at least half the solution..
+- Arnaldo
+ 
+> - Segmentation fault with perf stat --topdown on ADL (hybrid) and
+> Cascade Lake.
+>   It looks like a legacy issue, may not be introduced by this patch set.
+>   Here is the backtrace. It looks like there is a NULL metric_group.
+> 
+> (gdb) backtrace
+> #0  0x00007ffff73035d1 in __strstr_sse2_unaligned () from /lib64/libc.so.6
+> #1  0x00000000004f9019 in metricgroup__topdown_max_level_callback
+> (pm=<optimized out>, table=<optimized out>,
+>     data=0x7fffffff92f4) at util/metricgroup.c:1722
+> #2  0x00000000005e8a31 in pmu_metrics_table_for_each_metric
+> (table=0xcb74d0 <pmu_events_map+368>,
+>     fn=fn@entry=0x4f8ff0 <metricgroup__topdown_max_level_callback>,
+> data=data@entry=0x7fffffff92f4)
+>     at pmu-events/pmu-events.c:61123
+> #3  0x00000000004fbc3b in metricgroups__topdown_max_level () at
+> util/metricgroup.c:1742
+> #4  0x000000000042c135 in add_default_attributes () at builtin-stat.c:1845
+> #5  cmd_stat (argc=0, argv=0x7fffffffe3e0) at builtin-stat.c:2446
+> #6  0x00000000004b922b in run_builtin (p=p@entry=0xd5c530
+> <commands+336>, argc=argc@entry=2,
+>     argv=argv@entry=0x7fffffffe3e0) at perf.c:323
+> #7  0x000000000040e373 in handle_internal_command (argv=0x7fffffffe3e0,
+> argc=2) at perf.c:377
+> #8  run_argv (argv=<synthetic pointer>, argcp=<synthetic pointer>) at
+> perf.c:421
+> #9  main (argc=2, argv=0x7fffffffe3e0) at perf.c:537
+> (gdb)
+> 
+> Also, the return type is unsigned int, but a bool is given.
+> 
+> unsigned int metricgroups__topdown_max_level(void)
+> {
+>         unsigned int max_level = 0;
+>         const struct pmu_metrics_table *table = pmu_metrics_table__find();
+> 
+>         if (!table)
+>                 return false;
+> 
+> 
+> 
+> - The perf metric and metricgroups fail on different platforms.
+>   Ian and I have discussed it. We agree to address it later separately.
+> 
+>   102: perf all metricgroups test
+>   ADL (hybrid)
+>   103: perf all metrics test
+>   ADL (hybrid), Cascade Lake, SPR
+> 
+> - perf list: The [Kernel PMU event] is missed for all the hardware cache
+> events.
+>   It impacts both hybrid and non-hybrid platforms.
+>   It's a user-visible change introduced by the patch set.
+>   I don't know if anyone cares whether it's a kernel event or a regular
+> event. It doesn't bother me. So I'm OK with it.
+> 
+> cpu:
+>   L1-dcache-loads OR cpu/L1-dcache-loads/
+>   L1-dcache-load-misses OR cpu/L1-dcache-load-misses/
+>   L1-dcache-stores OR cpu/L1-dcache-stores/
+>   L1-icache-load-misses OR cpu/L1-icache-load-misses/
+>   LLC-loads OR cpu/LLC-loads/
+>   LLC-load-misses OR cpu/LLC-load-misses/
+>   LLC-stores OR cpu/LLC-stores/
+>   LLC-store-misses OR cpu/LLC-store-misses/
+>   dTLB-loads OR cpu/dTLB-loads/
+>   dTLB-load-misses OR cpu/dTLB-load-misses/
+>   dTLB-stores OR cpu/dTLB-stores/
+>   dTLB-store-misses OR cpu/dTLB-store-misses/
+>   iTLB-load-misses OR cpu/iTLB-load-misses/
+>   branch-loads OR cpu/branch-loads/
+>   branch-load-misses OR cpu/branch-load-misses/
+>   node-loads OR cpu/node-loads/
+>   node-load-misses OR cpu/node-load-misses/
+>   branch-instructions OR cpu/branch-instructions/    [Kernel PMU event]
+>   branch-misses OR cpu/branch-misses/                [Kernel PMU event]
+>   bus-cycles OR cpu/bus-cycles/                      [Kernel PMU event]
+>   cache-misses OR cpu/cache-misses/                  [Kernel PMU event]
+>   cache-references OR cpu/cache-references/          [Kernel PMU event]
+>   cpu-cycles OR cpu/cpu-cycles/                      [Kernel PMU event]
+>   instructions OR cpu/instructions/                  [Kernel PMU event]
+> 
+> 
+> - The --cputype only works for the metric in the default mode.
+>   I can still see the cpu_atom events with --cputype core
+>   It may be something we can improve later.
+> 
+> # ./perf stat --cputype core sleep 2
+> 
+>  Performance counter stats for 'sleep 2':
+> 
+>               0.52 msec task-clock                       #    0.000 CPUs
+> utilized
+>                  1      context-switches                 #    1.939 K/sec
+>                  0      cpu-migrations                   #    0.000 /sec
+>                 69      page-faults                      #  133.770 K/sec
+>          2,569,423      cpu_core/cycles/                 #    4.981 G/sec
+>      <not counted>      cpu_atom/cycles/
+>                        (0.00%)
+>          3,287,691      cpu_core/instructions/           #    6.374 G/sec
+>      <not counted>      cpu_atom/instructions/
+>                        (0.00%)
+>            555,848      cpu_core/branches/               #    1.078 G/sec
+>      <not counted>      cpu_atom/branches/
+>                        (0.00%)
+>              8,398      cpu_core/branch-misses/          #   16.281 M/sec
+>      <not counted>      cpu_atom/branch-misses/
+>                        (0.00%)
+>         15,416,538      cpu_core/TOPDOWN.SLOTS/          #     36.1 %
+> tma_backend_bound
+>                                                   #     23.9 %  tma_retiring
+>                                                   #      5.6 %
+> tma_bad_speculation
+>                                                   #     34.4 %
+> tma_frontend_bound
+>          3,687,877      cpu_core/topdown-retiring/
+>            846,398      cpu_core/topdown-bad-spec/
+>          5,320,217      cpu_core/topdown-fe-bound/
+>          5,562,045      cpu_core/topdown-be-bound/
+>             14,149      cpu_core/INT_MISC.UOP_DROPPING/  #   27.431 M/sec
+> 
+> 
+> Thanks,
+> Kan
 
-The FS also has to actively not write out the page while it cannot be
-write protected unless it copies the data to a stable page. The block
-stack needs the source data to be stable to do checksum/parity/etc
-stuff. It is a complicated subject.
+-- 
 
-Jason 
+- Arnaldo
