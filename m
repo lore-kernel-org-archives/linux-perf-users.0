@@ -2,98 +2,87 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C880AC7EE25
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 17:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CAABC7EE24
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 20:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244766AbjEORxe (ORCPT
+        id S244356AbjEOUtZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 13:53:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53428 "EHLO
+        Mon, 15 May 2023 16:49:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244922AbjEORxQ (ORCPT
+        with ESMTP id S229558AbjEOUtY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 13:53:16 -0400
+        Mon, 15 May 2023 16:49:24 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030CB1CA4D;
-        Mon, 15 May 2023 10:51:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E45A77EDA;
+        Mon, 15 May 2023 13:49:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AD24062F51;
-        Mon, 15 May 2023 17:50:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8159C4339C;
-        Mon, 15 May 2023 17:50:11 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 79240624A0;
+        Mon, 15 May 2023 20:49:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD04EC4339B;
+        Mon, 15 May 2023 20:49:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684173016;
-        bh=ZOa1DuUaalVCTQ5zS8baq1fo8jfyEiJs85l6V1kJejo=;
+        s=k20201202; t=1684183762;
+        bh=uqZfGT9l3rtQQfCunfjAVcqiCEL6GKIudde5Fwx+3u4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tFBB5QmZRIkddN1jXrL0rxgk+YytZrH7cS/JUc/RyYLgIDM4Kkyy8yuO5rjnKFvDH
-         MqqGEQvhse7GWhRZX/gyZ5MQmxzPDa4OI2vlxKzO+XScyEUHqfEoddAxGkP8ZxN21j
-         F1CIwJqEeUzA3tH6wKZztMSu5xgJkMwDbQinJHZAyl7OWvFinSV3O8AGaU5q42mwwy
-         D9WatvBizQmoLohHCc7SWJKgSYJphFAzBIssilSkUJG3BWhAj5Krb+XkD9aW298s+H
-         FnkJSM8OeI92H2iZhqvDk2TDwOTUg39i4kRefZwtXAsOZYDj/bEOL/iMsmj1kqdZoD
-         wzHDL4qn/ytJA==
-Date:   Mon, 15 May 2023 18:50:09 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
+        b=Rqif8ilFtUBkKEMRAH25KLmy4I6q2uj7SteexcS2UQoBjvn0+dIPrwS0xJncIgY3k
+         p/QAFvF/lvtu1vmB+K3hMIxw7icpilpksHKM56genTXi4Vp13LzxKIGp87aNKGSeaJ
+         CYRWxHDD56AKeAdIFCrN1w8xQ5ijlg88nnW7Qir5c0w1u6kjnuywV96qW2smqxQu+Z
+         O2u36UoZk3W4XFiqFm6nezHQPlOrHrzoS/+LM2wJhS/8OWsj+oYu4r+r6Nt8W4GyPp
+         8DWwJTpgZNXgfmny9Qs1wSblvKENiahEBaqCZ+XAgYqZDOSGFj1flGIlCOELMlxTMC
+         oMU/qgrkl8coA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id BD99A403B5; Mon, 15 May 2023 17:49:19 -0300 (-03)
+Date:   Mon, 15 May 2023 17:49:19 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Ben Hutchings <ben@decadent.org.uk>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        Andrew Jones <ajones@ventanamicro.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 00/10] riscv: Allow userspace to directly access perf
- counters
-Message-ID: <20230515-unmoved-promenade-9e678c4f14f5@spud>
-References: <20230512085321.13259-1-alexghiti@rivosinc.com>
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Salvatore Bonaccorso <carnil@debian.org>
+Subject: Re: [PATCH v2 0/2] perf doc improvements to man page reproducibility
+Message-ID: <ZGKaz/wrobQGJAqk@kernel.org>
+References: <ZF/0jJkAOXxzGAMc@decadent.org.uk>
+ <CAP-5=fXmL509c2rhE7SYj9FW62eZPc7tPEWzG1h0DztF+Qmnww@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="yUJ9qocDe5RgavIo"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230512085321.13259-1-alexghiti@rivosinc.com>
+In-Reply-To: <CAP-5=fXmL509c2rhE7SYj9FW62eZPc7tPEWzG1h0DztF+Qmnww@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Em Mon, May 15, 2023 at 07:26:52AM -0700, Ian Rogers escreveu:
+> On Sat, May 13, 2023, 1:35 PM Ben Hutchings <ben@decadent.org.uk> wrote:
+> 
+> > I previously sent a patch in 2016(!) to make the dates in man pages
+> > reproducible, with KBUILD_BUILD_TIMESTAMP specifiying the date.  That
+> > patch partly overlaps with commit d586ac10ce56 "perf docs: Allow man
+> > page date to be specified", which implemented generation of dates
+> > based on commit timestamps.
+> >
+> > However, both of those implementations were specific to the original
+> > asciidoc's DocBook backend and had no effect on asciidoctor's direct
+> > man page generation.
+> >
+> > This series builds on the current definition of perf_date, adding
+> > support for asciidoctor and the KBUILD_BUILD_TIMESTAMP variable.
+> >
+> > Ben.
+> >
+> > Ben Hutchings (2):
+> >   perf doc: Define man page date when using asciidoctor
+> >   perf doc: Add support for KBUILD_BUILD_TIMESTAMP
+> >
+> 
+> Acked-by: Ian Rogers<irogers@google.com>
 
---yUJ9qocDe5RgavIo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks, applied.
 
-On Fri, May 12, 2023 at 10:53:11AM +0200, Alexandre Ghiti wrote:
+- Arnaldo
 
-> base-commit-tag: v6.3
-
-
-BTW Alex, in the future it'd be great if you could pick a more recent
-base (eg -rc1 or riscv/for-next) so that the patchwork automation
-doesn't run into a bunch of conflicts while trying to apply patches.
-
-Cheers,
-Conor.
-
---yUJ9qocDe5RgavIo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZGJw0QAKCRB4tDGHoIJi
-0ttiAQCvuOgsTmAbHoptLuttHFak0avpeoAERDI2wkQYdNUeUwD/Q+eHjCl2EwCO
-AMEo1k9TljgZ9ZWXb/Q9SCxc/XeGawQ=
-=4Rls
------END PGP SIGNATURE-----
-
---yUJ9qocDe5RgavIo--
