@@ -2,307 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA245C77B75
-	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 16:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DEC7C77B7D
+	for <linux-perf-users@archiver.kernel.org>; Mon, 15 May 2023 16:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242662AbjEOQFE (ORCPT
+        id S242440AbjEOQWO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 12:05:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35018 "EHLO
+        Mon, 15 May 2023 12:22:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242556AbjEOQEm (ORCPT
+        with ESMTP id S242192AbjEOQWN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 12:04:42 -0400
+        Mon, 15 May 2023 12:22:13 -0400
 Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB891FCF
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 09:04:10 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-3f51ea3a062so250951cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 09:04:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1663A30F0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 09:21:52 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-3f38824a025so1506811cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 May 2023 09:21:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684166649; x=1686758649;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=google.com; s=20221208; t=1684167711; x=1686759711;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FWCtorT274ZT9r6ATdV2o5UGKfkf1JsTgc/fOLqiwZ8=;
-        b=JuZ66xOnbOHlXuFnciEplSd/CAbN2LFCSQSWonCmUx9oPujrui5Z2TN2OAmVqDP7W+
-         7SabfHKKL4rvpdqhq2JGjyr9OEI2cb36CuDmamFcR9LApG4tsutCHkN5KjicP4x+Nh7m
-         mYMhG6+YynmJADkujfvlsj6PmV1MFTLjQijlNuk97IL7vMT0EgSw72EVHoQyJeBp4ACF
-         0JSDc9sGizzGGNkHjNXjhx2OScmRyhZyADIRaqz+jxu7ArC/CLjLNCGanyfANaxeDLWd
-         aKOt7m4ryqyXxRjWyz1uspUY+39vzcNg/tN6dQSTQ4PZs1IBUyk+N2moy5UUXYRySK1P
-         ERdg==
+        bh=jvq2CNWQkZWNW3MsZokYYrlPwDDtt8hmc7eDmpJCQ6I=;
+        b=WEKFeghZHl1B4CtqbHqD3XOCFfybPeKo7uv5koeXZIR6qOEQYgkSXKm6Q3HzQd0zXw
+         ESpmeBR/URegZW4U0M8D+m1TIxAQXD5p7n3juIo4IbeRsl2UdR/sm4mQsUMzRJ/8rjWQ
+         B72edvl8LgZ9BS9K3nLVby1RjS1L5Q88I90nY2g65OntfsBQeAwSmrh8waMpbKGrOvr6
+         xzliwJScAYb8p5vMkNz3jTWLheMaFHASW53yj4XFdfq3AxUjwxSwgusntSmbUUWAoSGD
+         ZNdzMTl2A9KCEH9DRWWaNgGMuJfJWIL8oh3rKRoeC44qFCjV05c/5g0cKPcGDhs/1+rC
+         hVbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684166649; x=1686758649;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20221208; t=1684167711; x=1686759711;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FWCtorT274ZT9r6ATdV2o5UGKfkf1JsTgc/fOLqiwZ8=;
-        b=NnuFzUvw9rpICBRthkfHHXkPeHipbEMXNnra76aAZeRtSn47PePP2g968AUm5imM3A
-         faTEDz/xTWqh2OeY71OcgPXUwpXsVQrpf5h4F8l9qxG9/BbpwPaXp2KPAC+w/H7bRtrF
-         NHUgEIO++YBex2SYDHAvXDCnti+vlJ1EO/RX3xQ0PikoyjQafly9vGLV93RFnGYyWYaG
-         4X9/SrQdmFD2nZdEHFmhzDkxUr2qEtBhn6cFoxL1L8XLj+ZV18qaqpzPHCUN00Gzb9gr
-         NnhlmVpsdEEmjK0pWjN/jg7pksbcpT0BTHrSkJHk1EK5iyO5hFFDO4cca/PwPxVmyOKe
-         WiLg==
-X-Gm-Message-State: AC+VfDzk0dZdHaq/vIV+jSdgXP0gll1ATSWVWPFcNyUtKFrY0BadLctl
-        la6arYV4l8q7UYx2xsRdeHBPqFJyr+xcJWTFZ8ng4A==
-X-Google-Smtp-Source: ACHHUZ7sH+2NKPcj3dtd8YtHwYs4HOnOtTAB4Legi8W1w3+KV/OLrmPaW+JrP7dcLA5HEGWYjw885My7f6ncieqRFwk=
-X-Received: by 2002:a05:622a:18d:b0:3f0:af20:1a37 with SMTP id
- s13-20020a05622a018d00b003f0af201a37mr891419qtw.15.1684166648708; Mon, 15 May
- 2023 09:04:08 -0700 (PDT)
+        bh=jvq2CNWQkZWNW3MsZokYYrlPwDDtt8hmc7eDmpJCQ6I=;
+        b=jRrIVsDPRsWWN2vHUBJILxxIyt1VO7pysPezBJ+ZFxA+a103H8JL75/vsf74QGTi54
+         ukYxPcUq9nDWG4p8Ki5ay/gChYZ/szJRoUtJe3rYCAIjCdMy7Sm+cXQghiAd4iPW/ZYk
+         O/i+4Wkab0oLUdlTUfZe+Bcl9dVL6t74v/ru/0pxcrtoiz0jOm4bds4/f4QScRbcApgJ
+         qaOXaTC6aOy6OS58oAERLHM+0Sv+G/O8xawZqvB+mgdxoCxtnD55NQ32i1E8WlSwMr4e
+         LwJDPRlUWNkVS4agnEZBTfxE8YjZxBhkxW4NHqO65DvID4kg8AmbY8JNykmtCUWXvNSK
+         AteQ==
+X-Gm-Message-State: AC+VfDzbKLJlfNX9X2qmW4d1oFV76GOVNxCSs10LUe23lYN37xvpZJOw
+        sgcFDKKR+KI+9+9JS0TzJPGWG8Qz4xfTZ0DorPl2B/uQ0mfpm8FXf53PqA==
+X-Google-Smtp-Source: ACHHUZ7Z4n8LyjNAXoexOTxTeUyTa4UKcxiUv4eqlCG5dbbv+KGC4+RG665GhsfyVs4j7HT9FvuZtn5nYILvNoWQcNs=
+X-Received: by 2002:a05:622a:c3:b0:3db:1c01:9d95 with SMTP id
+ p3-20020a05622a00c300b003db1c019d95mr1221385qtw.4.1684167710615; Mon, 15 May
+ 2023 09:21:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230504195803.3331775-1-irogers@google.com>
-In-Reply-To: <20230504195803.3331775-1-irogers@google.com>
+References: <CAP-5=fXKi+VAr-_n5tAaJ7Z2fvU7jc5N-CKCjkCAh_01_pzMfA@mail.gmail.com>
+ <20230505082832.GA1770668@hirez.programming.kicks-ass.net> <CAP-5=fV0_d8JmPXx8AgFRcO21H43bJHDojxVT4NJoepVnkTW8Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fV0_d8JmPXx8AgFRcO21H43bJHDojxVT4NJoepVnkTW8Q@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 15 May 2023 09:03:57 -0700
-Message-ID: <CAP-5=fURdgOXQzZmO1gMy6ziYqWkM7B7TP=V-chXm8Kj_zWXXw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf expr: Make the evaluation of & and | logical
- and lazy
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Date:   Mon, 15 May 2023 09:21:39 -0700
+Message-ID: <CAP-5=fX_tfGZP8r6Dvmt6C+Jw2A9ZGZ2u3YtUPyYcKjvJTN6oQ@mail.gmail.com>
+Subject: Re: uapi vs kernel headers
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>
+        Ingo Molnar <mingo@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 4, 2023 at 12:58=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Fri, May 5, 2023 at 7:07=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> Currently the & and | operators are only used in metric thresholds
-> like (from the tma_retiring metric):
-> tma_retiring > 0.7 | tma_heavy_operations > 0.1
+> On Fri, May 5, 2023 at 1:28=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
+rg> wrote:
+> >
+> > On Thu, May 04, 2023 at 03:36:48PM -0700, Ian Rogers wrote:
+> > > Hi,
+> > >
+> > > when the C compiler builds perf the priority of the "-I" flags is lef=
+t
+> > > to right. This means that in the perf build:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/t=
+ools/perf/Makefile.config?h=3Dperf-tools-next#n355
+> > > if the build is looking for <linux/types.h> then whereas most project=
+s
+> > > would expect that to come from /usr/include/linux/types.h (which
+> > > matches the uapi version) perf actually builds with the kernel versio=
+n
+> > > (tools/include/linux/types.h). The kernel version will declare types
+> > > like u64 that are __u64 in the uapi code, so reversing the include
+> > > order massively breaks the build as u64 and many associated types are
+> > > missing.
+> > >
+> > > It almost feels accidental that perf does things this way, and it
+> > > feels more obvious if perf were to reverse the include order and deal
+> > > with the fall-out in the code (ie perf's linux/types.h would agree
+> > > more with what normal projects have). Perhaps perf needs its own
+> > > types.h to minimize the fallout. I wondered what more general opinion=
+s
+> > > on this were? Is this something that should be fixed?
+> >
+> > Doesn't perf have to prioritize the kernel headers because it needs the
+> > latest version of the perf uapi -- and not some random old version the
+> > system headers might have?
 >
-> Thresholds are always computed when present, but a lack events may
-> mean the threshold can't be computed. This happens with the option
-> --metric-no-threshold for say the metric tma_retiring on Tigerlake
-> model CPUs. To fully compute the threshold tma_heavy_operations is
-> needed and it needs the extra events of IDQ.MS_UOPS,
-> UOPS_DECODED.DEC0, cpu/UOPS_DECODED.DEC0,cmask=3D1/ and
-> IDQ.MITE_UOPS. So --metric-no-threshold is a useful option to reduce
-> the number of events needed and potentially multiplexing of events.
->
-> Rather than just fail threshold computations like this, we may know a
-> result from just the left or right-hand side. So, for tma_retiring if
-> its value is "> 0.7" we know it is over the threshold. This allows the
-> metric to have the threshold coloring, when possible, without all the
-> counters being programmed.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Yep. I have no problem with using the tools/kernel headers, the issue
+> is that we prefer the non-uapi headers, like linux/types.h over the
+> uapi headers, which feels odd.
 
-Ping.
+Hi,
+
+So I remain curious to see if we should reorder the include order to
+prefer uapi over kernel headers - both being the latest. There was
+some related order issues in BPF compilation for perf that came up
+recently:
+https://lore.kernel.org/linux-perf-users/CAP-5=3DfXvxpOJoKF_YsB=3DdY=3D+pyF=
+nGSaOgUrEFa4mYA0uzDLxhQ@mail.gmail.com/
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/tests/expr.c | 40 +++++++++++++++++++
->  tools/perf/util/expr.y  | 86 +++++++++++++++++++++++++++++++++--------
->  2 files changed, 109 insertions(+), 17 deletions(-)
->
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index cbf0e0c74906..45c7fedb797a 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -184,6 +184,46 @@ static int test__expr(struct test_suite *t __maybe_u=
-nused, int subtest __maybe_u
->                         NULL, ctx) =3D=3D 0);
->         TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) =3D=3D 0);
->
-> +       /* The expression is a constant 0.0 without needing to evaluate E=
-VENT1. */
-> +       expr__ctx_clear(ctx);
-> +       TEST_ASSERT_VAL("find ids",
-> +                       expr__find_ids("0 & EVENT1 > 0", NULL, ctx) =3D=
-=3D 0);
-> +       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) =3D=3D 0);
-> +       expr__ctx_clear(ctx);
-> +       TEST_ASSERT_VAL("find ids",
-> +                       expr__find_ids("EVENT1 > 0 & 0", NULL, ctx) =3D=
-=3D 0);
-> +       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) =3D=3D 0);
-> +       expr__ctx_clear(ctx);
-> +       TEST_ASSERT_VAL("find ids",
-> +                       expr__find_ids("1 & EVENT1 > 0", NULL, ctx) =3D=
-=3D 0);
-> +       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) =3D=3D 1);
-> +       TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &va=
-l_ptr));
-> +       expr__ctx_clear(ctx);
-> +       TEST_ASSERT_VAL("find ids",
-> +                       expr__find_ids("EVENT1 > 0 & 1", NULL, ctx) =3D=
-=3D 0);
-> +       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) =3D=3D 1);
-> +       TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &va=
-l_ptr));
-> +
-> +       /* The expression is a constant 1.0 without needing to evaluate E=
-VENT1. */
-> +       expr__ctx_clear(ctx);
-> +       TEST_ASSERT_VAL("find ids",
-> +                       expr__find_ids("1 | EVENT1 > 0", NULL, ctx) =3D=
-=3D 0);
-> +       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) =3D=3D 0);
-> +       expr__ctx_clear(ctx);
-> +       TEST_ASSERT_VAL("find ids",
-> +                       expr__find_ids("EVENT1 > 0 | 1", NULL, ctx) =3D=
-=3D 0);
-> +       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) =3D=3D 0);
-> +       expr__ctx_clear(ctx);
-> +       TEST_ASSERT_VAL("find ids",
-> +                       expr__find_ids("0 | EVENT1 > 0", NULL, ctx) =3D=
-=3D 0);
-> +       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) =3D=3D 1);
-> +       TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &va=
-l_ptr));
-> +       expr__ctx_clear(ctx);
-> +       TEST_ASSERT_VAL("find ids",
-> +                       expr__find_ids("EVENT1 > 0 | 0", NULL, ctx) =3D=
-=3D 0);
-> +       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) =3D=3D 1);
-> +       TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &va=
-l_ptr));
-> +
->         /* Test toplogy constants appear well ordered. */
->         expr__ctx_clear(ctx);
->         TEST_ASSERT_VAL("#num_cpus", expr__parse(&num_cpus, ctx, "#num_cp=
-us") =3D=3D 0);
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 250e444bf032..6b110f9f95c9 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -123,20 +123,6 @@ static struct ids handle_id(struct expr_parse_ctx *c=
-tx, char *id,
->   * constant value using OP. Its invariant that there are no ids.  If com=
-puting
->   * ids for non-constants union the set of IDs that must be computed.
->   */
-> -#define BINARY_LONG_OP(RESULT, OP, LHS, RHS)                           \
-> -       if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
-> -               assert(LHS.ids =3D=3D NULL);                             =
-   \
-> -               assert(RHS.ids =3D=3D NULL);                             =
-   \
-> -               if (isnan(LHS.val) || isnan(RHS.val)) {                 \
-> -                       RESULT.val =3D NAN;                              =
- \
-> -               } else {                                                \
-> -                       RESULT.val =3D (long)LHS.val OP (long)RHS.val;   =
- \
-> -               }                                                       \
-> -               RESULT.ids =3D NULL;                                     =
- \
-> -       } else {                                                        \
-> -               RESULT =3D union_expr(LHS, RHS);                         =
- \
-> -       }
-> -
->  #define BINARY_OP(RESULT, OP, LHS, RHS)                                 =
-       \
->         if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
->                 assert(LHS.ids =3D=3D NULL);                             =
-   \
-> @@ -213,9 +199,75 @@ expr: NUMBER
->  }
->  | ID                           { $$ =3D handle_id(ctx, $1, compute_ids, =
-/*source_count=3D*/false); }
->  | SOURCE_COUNT '(' ID ')'      { $$ =3D handle_id(ctx, $3, compute_ids, =
-/*source_count=3D*/true); }
-> -| expr '|' expr { BINARY_LONG_OP($$, |, $1, $3); }
-> -| expr '&' expr { BINARY_LONG_OP($$, &, $1, $3); }
-> -| expr '^' expr { BINARY_LONG_OP($$, ^, $1, $3); }
-> +| expr '|' expr
-> +{
-> +       if (is_const($1.val) && is_const($3.val)) {
-> +               assert($1.ids =3D=3D NULL);
-> +               assert($3.ids =3D=3D NULL);
-> +               $$.ids =3D NULL;
-> +               $$.val =3D (fpclassify($1.val) =3D=3D FP_ZERO && fpclassi=
-fy($3.val) =3D=3D FP_ZERO) ? 0 : 1;
-> +       } else if (is_const($1.val)) {
-> +               assert($1.ids =3D=3D NULL);
-> +               if (fpclassify($1.val) =3D=3D FP_ZERO) {
-> +                       $$ =3D $3;
-> +               } else {
-> +                       $$.val =3D 1;
-> +                       $$.ids =3D NULL;
-> +                       ids__free($3.ids);
-> +               }
-> +       } else if (is_const($3.val)) {
-> +               assert($3.ids =3D=3D NULL);
-> +               if (fpclassify($3.val) =3D=3D FP_ZERO) {
-> +                       $$ =3D $1;
-> +               } else {
-> +                       $$.val =3D 1;
-> +                       $$.ids =3D NULL;
-> +                       ids__free($1.ids);
-> +               }
-> +       } else {
-> +               $$ =3D union_expr($1, $3);
-> +       }
-> +}
-> +| expr '&' expr
-> +{
-> +       if (is_const($1.val) && is_const($3.val)) {
-> +               assert($1.ids =3D=3D NULL);
-> +               assert($3.ids =3D=3D NULL);
-> +               $$.val =3D (fpclassify($1.val) !=3D FP_ZERO && fpclassify=
-($3.val) !=3D FP_ZERO) ? 1 : 0;
-> +               $$.ids =3D NULL;
-> +       } else if (is_const($1.val)) {
-> +               assert($1.ids =3D=3D NULL);
-> +               if (fpclassify($1.val) !=3D FP_ZERO) {
-> +                       $$ =3D $3;
-> +               } else {
-> +                       $$.val =3D 0;
-> +                       $$.ids =3D NULL;
-> +                       ids__free($3.ids);
-> +               }
-> +       } else if (is_const($3.val)) {
-> +               assert($3.ids =3D=3D NULL);
-> +               if (fpclassify($3.val) !=3D FP_ZERO) {
-> +                       $$ =3D $1;
-> +               } else {
-> +                       $$.val =3D 0;
-> +                       $$.ids =3D NULL;
-> +                       ids__free($1.ids);
-> +               }
-> +       } else {
-> +               $$ =3D union_expr($1, $3);
-> +       }
-> +}
-> +| expr '^' expr
-> +{
-> +       if (is_const($1.val) && is_const($3.val)) {
-> +               assert($1.ids =3D=3D NULL);
-> +               assert($3.ids =3D=3D NULL);
-> +               $$.val =3D (fpclassify($1.val) =3D=3D FP_ZERO) !=3D (fpcl=
-assify($3.val) =3D=3D FP_ZERO) ? 1 : 0;
-> +               $$.ids =3D NULL;
-> +       } else {
-> +               $$ =3D union_expr($1, $3);
-> +       }
-> +}
->  | expr '<' expr { BINARY_OP($$, <, $1, $3); }
->  | expr '>' expr { BINARY_OP($$, >, $1, $3); }
->  | expr '+' expr { BINARY_OP($$, +, $1, $3); }
-> --
-> 2.40.1.521.gf1e218fcd8-goog
->
+
+> Thanks,
+> Ian
