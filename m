@@ -2,103 +2,106 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0383C77B7F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 May 2023 12:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8FADC7EE24
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 May 2023 17:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230313AbjEPMGs (ORCPT
+        id S230093AbjEPROK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 May 2023 08:06:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32800 "EHLO
+        Tue, 16 May 2023 13:14:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232997AbjEPMGp (ORCPT
+        with ESMTP id S230206AbjEPROH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 May 2023 08:06:45 -0400
-X-Greylist: delayed 16930 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 16 May 2023 05:06:42 PDT
-Received: from forward502a.mail.yandex.net (forward502a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d502])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5A444AD;
-        Tue, 16 May 2023 05:06:42 -0700 (PDT)
-Received: from mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net [IPv6:2a02:6b8:c18:58f:0:640:3768:0])
-        by forward502a.mail.yandex.net (Yandex) with ESMTP id 226C25EB96;
-        Tue, 16 May 2023 15:06:40 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id b6aGXvFDdKo0-Qd5YAZVi;
-        Tue, 16 May 2023 15:06:39 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1684238799;
-        bh=/a6pvyDAWlMZ0z7v7y2vBNHYN4rbuFjpKaEnziP4leI=;
-        h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-        b=g5DXrY5seHHIRvbxU18DdWqOc5we2o1Y9nxHH41nZKWf8C5lfFVF/OERoFLIVWtp+
-         jpVrB61ha4mlM1/4aWky+QYKvwXLHSAkat5ud5IOfqTRY9JLFOgwl5a4C88fUeVvYE
-         EBB8uQsTaJoFSlSIRvq9VeLtDSGLwIDKLTzxOlEY=
-Authentication-Results: mail-nwsmtp-smtp-production-main-31.vla.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <4950f67bf989a7f5eba462c44d6bdbffb34485d1.camel@maquefel.me>
-Subject: Re: [PATCH 2/2] perf vendor events riscv: add T-HEAD C9xx JSON file
-From:   Nikita Shubin <nikita.shubin@maquefel.me>
-To:     Inochi Amaoto <inochiama@outlook.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 16 May 2023 13:14:07 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1D1A7DAA;
+        Tue, 16 May 2023 10:14:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684257244; x=1715793244;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=T5LZQA1qVyBa93gE+28Rv7aQYtz8a1zbnDhXJFdc+yE=;
+  b=dnCDqNUAothaMVjVMI86p7JNXLAZArmbha24MuvtyV/jTIIV+Y7I2RsM
+   XQej9hZhDtJ/pJSEPwajsgCRlgk3xI9YJouzKVqs3pSl4DOCC4z+KO+f7
+   3E3tzAOuh9DRCovTPRCv0OJrO+Ija+Q5R8h3qTuzqrSsBJ+wHslDgBNsd
+   +QZjAkqubNETQtkAi91RE5HcQUB3fFAaVxn0xgX57wEywS48JSChtH0mg
+   i6/Qc2ACk9z5xOWNhPs5p4KWqZpTUQsjZjnRU1zaoSSv1XOt2rSF82FJ8
+   Cra6sDXQ9gooPChqq8l3Fcdj/0oFS83nKdzgEhmurSvdNHOcuEcf5q/5+
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="379723500"
+X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
+   d="scan'208";a="379723500"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 10:14:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="845745072"
+X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
+   d="scan'208";a="845745072"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga001.fm.intel.com with ESMTP; 16 May 2023 10:14:03 -0700
+Received: from [10.212.175.225] (kliang2-mobl1.ccr.corp.intel.com [10.212.175.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 59F40580D24;
+        Tue, 16 May 2023 10:14:02 -0700 (PDT)
+Message-ID: <3688fd0f-4e59-44d4-5fdf-c92bc6b0916d@linux.intel.com>
+Date:   Tue, 16 May 2023 13:14:01 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH v1] perf metrics: Avoid segv with --topdown
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Nikita Shubin <n.shubin@yadro.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Date:   Tue, 16 May 2023 18:06:39 +0300
-In-Reply-To: <IA1PR20MB49539F3FBE068C7C811152B1BB799@IA1PR20MB4953.namprd20.prod.outlook.com>
-References: <38eaec6b495786b048f78be08470f7c770793d7b.camel@maquefel.me>
-         <IA1PR20MB49539F3FBE068C7C811152B1BB799@IA1PR20MB4953.namprd20.prod.outlook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 
-MIME-Version: 1.0
+        Kajol Jain <kjain@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230515224530.671331-1-irogers@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230515224530.671331-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, 2023-05-16 at 17:45 +0800, Inochi Amaoto wrote:
-> > Do c906 and c910 have same HPM events ?
-> >=20
-> > https://github.com/T-head-Semi/openc906/blob/main/C906_RTL_FACTORY/gen_=
-rtl/pmu/rtl/aq_hpcp_top.v
-> >=20
-> > and
-> >=20
-> >=20
-> > https://github.com/T-head-Semi/openc910/blob/main/C910_RTL_FACTORY/gen_=
-rtl/pmu/rtl/ct_hpcp_top.v
-> >=20
-> > Look different to me - am i missing something ?
->=20
-> Yes, they as different, but event ids are compatible. See [1] p.99
-> and [2] p.73.
->=20
-> It seems I forgot extra event index from C906. I will fix in the v2.
->=20
-> [1]
-> https://github.com/T-head-Semi/openc910/blob/main/doc/%E7%8E%84%E9%93%81C=
-910%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.pdf
-> [2]
-> https://github.com/T-head-Semi/openc906/blob/main/doc/%E7%8E%84%E9%93%81C=
-906%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C.pdf
-
-They are not the same - they are different in many ways. And c906 list
-seems more complete to me.
-
-I think you should drop wildcard (it shouldn't be used anyway) then and
-name it c906.
-
-"0x5b7-0x0-0x0,v1,t-head/c906,core" would match both c906 and c910.
 
 
->=20
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+On 2023-05-15 6:45 p.m., Ian Rogers wrote:
+> Some metrics may not have a metric_group which can result in segvs
+> with "perf stat --topdown". Add a condition for the no metric_group
+> case.
+> 
+> Fixes: 1647cd5b8802 ("perf stat: Implement --topdown using json metrics")
+> Reported-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
+Tested-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+
+> ---
+>  tools/perf/util/metricgroup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+> index 4e7d41d285b4..5e9c657dd3f7 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -1672,7 +1672,7 @@ static int metricgroup__topdown_max_level_callback(const struct pmu_metric *pm,
+>  {
+>  	unsigned int *max_level = data;
+>  	unsigned int level;
+> -	const char *p = strstr(pm->metric_group, "TopdownL");
+> +	const char *p = strstr(pm->metric_group ?: "", "TopdownL");
+>  
+>  	if (!p || p[8] == '\0')
+>  		return 0;
