@@ -2,325 +2,343 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3DA6C77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 May 2023 07:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA10C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 May 2023 07:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230230AbjEPHBL (ORCPT
+        id S230136AbjEPHY4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 May 2023 03:01:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38924 "EHLO
+        Tue, 16 May 2023 03:24:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230386AbjEPHBJ (ORCPT
+        with ESMTP id S230150AbjEPHYj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 May 2023 03:01:09 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C372DD1;
-        Tue, 16 May 2023 00:01:04 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QL6Xl6WQ4zsRgd;
-        Tue, 16 May 2023 14:59:03 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 16 May 2023 15:01:01 +0800
-Subject: Re: [PATCH v2 3/4] perf tools: Add printing perf_event_attr type
- symbol in perf_event_attr__fprintf()
-To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
-        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <irogers@google.com>,
-        <anshuman.khandual@arm.com>, <jesussanp@google.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20230511075154.240163-1-yangjihong1@huawei.com>
- <20230511075154.240163-4-yangjihong1@huawei.com>
- <0be18c9a-ab56-021f-5c51-8b066ead2e1c@intel.com>
- <ca0f27b5-bf0a-6ae3-a05c-84a456b02fcf@huawei.com>
- <249004ff-43b1-e25d-c8d8-9f19ce4c4aa9@intel.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <c2d48f25-c77b-ee61-fc00-1c0c915c48b8@huawei.com>
-Date:   Tue, 16 May 2023 15:01:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Tue, 16 May 2023 03:24:39 -0400
+X-Greylist: delayed 408 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 16 May 2023 00:24:34 PDT
+Received: from forward500a.mail.yandex.net (forward500a.mail.yandex.net [178.154.239.80])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 532BF18E;
+        Tue, 16 May 2023 00:24:34 -0700 (PDT)
+Received: from mail-nwsmtp-smtp-production-main-52.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-52.vla.yp-c.yandex.net [IPv6:2a02:6b8:c15:2f8a:0:640:b50b:0])
+        by forward500a.mail.yandex.net (Yandex) with ESMTP id 9DE985EE9C;
+        Tue, 16 May 2023 10:17:41 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-52.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id dHVrTK7WrW20-V20BbRZk;
+        Tue, 16 May 2023 10:17:41 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1684221461;
+        bh=2kRMUuAVEBFpEeN+FejcIVQONATDS4Jda1LwbThGWFE=;
+        h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+        b=QdC4uJC3ifix+88KCrNYCPELBdalvqExQWQJBec8lwyW8dMYiB18Zn6LZ+blo5Iwp
+         yLeQN+Mey0n94xJv4/k5M/i3tv+6EneQkVfXN/A0iMi0E/kWMycUDLLoK0/7jItN12
+         5AiRqdD95tp9SKLLY7D8YksimqDvzDvsNS9BL9pg=
+Authentication-Results: mail-nwsmtp-smtp-production-main-52.vla.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+Message-ID: <38eaec6b495786b048f78be08470f7c770793d7b.camel@maquefel.me>
+Subject: Re: [PATCH 2/2] perf vendor events riscv: add T-HEAD C9xx JSON file
+From:   Nikita Shubin <nikita.shubin@maquefel.me>
+To:     Inochi Amaoto <inochiama@outlook.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nikita Shubin <n.shubin@yadro.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Date:   Tue, 16 May 2023 13:17:40 +0300
+In-Reply-To: <IA1PR20MB4953DF5B158C820D61D48CD6BB799@IA1PR20MB4953.namprd20.prod.outlook.com>
+References: <20230516023714.306240-1-inochiama@outlook.com>
+         <IA1PR20MB4953DF5B158C820D61D48CD6BB799@IA1PR20MB4953.namprd20.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.3 
 MIME-Version: 1.0
-In-Reply-To: <249004ff-43b1-e25d-c8d8-9f19ce4c4aa9@intel.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hello Inochi Amaoto!
 
-On 2023/5/15 16:56, Adrian Hunter wrote:
-> On 15/05/23 11:48, Yang Jihong wrote:
->> Hello,
->>
->> On 2023/5/12 18:34, Adrian Hunter wrote:
->>> On 11/05/23 10:51, Yang Jihong wrote:
->>>> When printing perf_event_attr, always display perf_event_attr type and its symbol
->>>> to improve the readability of debugging information.
->>>>
->>>> Before:
->>>>
->>>>     # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101,mem:0x0 -C 0 true
->>>>     <SNIP>
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       size                             136
->>>>       { sample_period, sample_freq }   4000
->>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       freq                             1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>     ------------------------------------------------------------
->>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             1
->>>>       size                             136
->>>>       { sample_period, sample_freq }   4000
->>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       freq                             1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>     ------------------------------------------------------------
->>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             2
->>>>       size                             136
->>>>       config                           0x143
->>>>       { sample_period, sample_freq }   1
->>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>     ------------------------------------------------------------
->>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             3
->>>>       size                             136
->>>>       config                           0x10005
->>>>       { sample_period, sample_freq }   4000
->>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       freq                             1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>     ------------------------------------------------------------
->>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             4
->>>>       size                             136
->>>>       config                           0x101
->>>>       { sample_period, sample_freq }   4000
->>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       freq                             1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>     ------------------------------------------------------------
->>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             5
->>>>       size                             136
->>>>       { sample_period, sample_freq }   1
->>>>       sample_type                      IP|TID|TIME|CPU|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>       bp_type                          3
->>>>       { bp_len, config2 }              0x4
->>>>     ------------------------------------------------------------
->>>>     <SNIP>
->>>>
->>>> After:
->>>>
->>>>     # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101,mem:0x0 -C 0 true
->>>>     <SNIP>
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             0 (PERF_TYPE_HARDWARE)
->>>>       size                             136
->>>>       { sample_period, sample_freq }   4000
->>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       freq                             1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>     ------------------------------------------------------------
->>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             1 (PERF_TYPE_SOFTWARE)
->>>>       size                             136
->>>>       { sample_period, sample_freq }   4000
->>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       freq                             1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>     ------------------------------------------------------------
->>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             2 (PERF_TYPE_TRACEPOINT)
->>>>       size                             136
->>>>       config                           0x143
->>>>       { sample_period, sample_freq }   1
->>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>     ------------------------------------------------------------
->>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             3 (PERF_TYPE_HW_CACHE)
->>>>       size                             136
->>>>       config                           0x10005
->>>>       { sample_period, sample_freq }   4000
->>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       freq                             1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>     ------------------------------------------------------------
->>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             4 (PERF_TYPE_RAW)
->>>>       size                             136
->>>>       config                           0x101
->>>>       { sample_period, sample_freq }   4000
->>>>       sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       freq                             1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>     ------------------------------------------------------------
->>>>     sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
->>>>     ------------------------------------------------------------
->>>>     perf_event_attr:
->>>>       type                             5 (PERF_TYPE_BREAKPOINT)
->>>>       size                             136
->>>>       { sample_period, sample_freq }   1
->>>>       sample_type                      IP|TID|TIME|CPU|IDENTIFIER
->>>>       read_format                      ID
->>>>       disabled                         1
->>>>       inherit                          1
->>>>       sample_id_all                    1
->>>>       exclude_guest                    1
->>>>       bp_type                          3
->>>>       { bp_len, config2 }              0x4
->>>>     ------------------------------------------------------------
->>>>     <SNIP>
->>>>
->>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->>>> ---
->>>>    tools/perf/util/perf_event_attr_fprintf.c | 30 ++++++++++++++++++++++-
->>>>    1 file changed, 29 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
->>>> index 433029c6afc5..cd0905d8cb7a 100644
->>>> --- a/tools/perf/util/perf_event_attr_fprintf.c
->>>> +++ b/tools/perf/util/perf_event_attr_fprintf.c
->>>> @@ -71,6 +71,33 @@ static void __p_read_format(char *buf, size_t size, u64 value)
->>>>        __p_bits(buf, size, value, bits);
->>>>    }
->>>>    +#define ENUM_ID_TO_STR_CASE(x) case x: return (#x);
->>>> +static const char *stringify_perf_type_id(u64 value)
->>>> +{
->>>> +    /* sync with enum perf_type_id in perf_event.h */
->>>
->>> Everything in this file syncs with perf_event.h, so the comment
->>> does not seem very useful.
->> OK, will fix in v3.
->>>
->>>> +    switch (value) {
->>>> +    ENUM_ID_TO_STR_CASE(PERF_TYPE_HARDWARE)
->>>> +    ENUM_ID_TO_STR_CASE(PERF_TYPE_SOFTWARE)
->>>> +    ENUM_ID_TO_STR_CASE(PERF_TYPE_TRACEPOINT)
->>>> +    ENUM_ID_TO_STR_CASE(PERF_TYPE_HW_CACHE)
->>>> +    ENUM_ID_TO_STR_CASE(PERF_TYPE_RAW)
->>>> +    ENUM_ID_TO_STR_CASE(PERF_TYPE_BREAKPOINT)
->>>> +    default:
->>>> +        return NULL;
->>>> +    }
->>>> +}
->>>> +#undef ENUM_ID_TO_STR_CASE
->>>> +
->>>> +static void __p_type_id(char *buf, size_t size, u64 value)
->>>> +{
->>>> +    const char *str = stringify_perf_type_id(value);
->>>> +
->>>> +    if (str == NULL)
->>>> +        snprintf(buf, size, "%"PRIu64, value);
->>>> +    else
->>>> +        snprintf(buf, size, "%"PRIu64" (%s)", value, str);
->>>
->>> These 4 lines end up getting used again about 3 times in the next
->>> patch, so might as well be a separate function e.g.
->>>
->>>      print_id(buf, size, value, stringify_perf_type_id(value));
->>>
->>> where:
->>>
->>> static void print_id(char *buf, size_t size, u64 value, const char *str)
->>> {
->>>      if (str == NULL)
->>>          snprintf(buf, size, "%"PRIu64, value);
->>>      else
->>>          snprintf(buf, size, "%"PRIu64" (%s)", value, str);
->>> }
->>>
->> OK, will add print_id() helper in v3.
->> If print_id() helper is also used to print config id, is printed in the decimal format. In the past, it is printed in the hexadecimal format，
->> there may be some changes here.
->>
->> Before:
->>    config                           0x143
->>
->> After:
->>    config                           323 (sched:sched_switch)
-> 
-> Right I didn't notice the difference.  Best keep print_id() just for the hex cases.
-> 
-v4 has been sent, print_id() helper is changed to a macro function to 
-support printing of both 'hex' and 'unsigned' formats.
-Please see if it's OK.
+Do c906 and c910 have same HPM events ?
 
-Thanks,
-Yang
+https://github.com/T-head-Semi/openc906/blob/main/C906_RTL_FACTORY/gen_rtl/=
+pmu/rtl/aq_hpcp_top.v
+
+and
+
+
+https://github.com/T-head-Semi/openc910/blob/main/C910_RTL_FACTORY/gen_rtl/=
+pmu/rtl/ct_hpcp_top.v
+
+Look different to me - am i missing something ?
+
+On Tue, 2023-05-16 at 10:37 +0800, Inochi Amaoto wrote:
+> Add json file of T-HEAD C9xx events.
+>=20
+> Signed-off-by: Inochi Amaoto <inochiama@outlook.com>
+> ---
+> =C2=A0tools/perf/pmu-events/arch/riscv/mapfile.csv=C2=A0 |=C2=A0 1 +
+> =C2=A0.../arch/riscv/t-head/c9xx/cache.json=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 | 67
+> ++++++++++++++++++
+> =C2=A0.../arch/riscv/t-head/c9xx/firmware.json=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 | 68
+> +++++++++++++++++++
+> =C2=A0.../arch/riscv/t-head/c9xx/instruction.json=C2=A0=C2=A0 | 22 ++++++
+> =C2=A0.../arch/riscv/t-head/c9xx/microarch.json=C2=A0=C2=A0=C2=A0=C2=A0 |=
+ 42 ++++++++++++
+> =C2=A05 files changed, 200 insertions(+)
+> =C2=A0create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> head/c9xx/cache.json
+> =C2=A0create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> head/c9xx/firmware.json
+> =C2=A0create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> head/c9xx/instruction.json
+> =C2=A0create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> head/c9xx/microarch.json
+>=20
+> diff --git a/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> index c61b3d6ef616..9fbdfcdc17ad 100644
+> --- a/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> +++ b/tools/perf/pmu-events/arch/riscv/mapfile.csv
+> @@ -15,3 +15,4 @@
+> =C2=A0#
+> =C2=A0#MVENDORID-MARCHID-MIMPID,Version,Filename,EventType
+> =C2=A00x489-0x8000000000000007-0x[[:xdigit:]]+,v1,sifive/u74,core
+> +0x5b7-0x0000000000000000-0x[[:xdigit:]]+,v1,t-head/c9xx,core
+> diff --git a/tools/perf/pmu-events/arch/riscv/t-head/c9xx/cache.json
+> b/tools/perf/pmu-events/arch/riscv/t-head/c9xx/cache.json
+> new file mode 100644
+> index 000000000000..2c6e9a904a11
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/t-head/c9xx/cache.json
+> @@ -0,0 +1,67 @@
+> +[
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "L1_ICACHE_ACCESS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000001",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "L1 instruction cache access"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "L1_ICACHE_MISS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000002",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "L1 instruction cache miss"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "INST_TLB_MISS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000003",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "Instruction TLB (I-UTLB) miss"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "DATA_TLB_MISS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000004",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "Data TLB (D-UTLB) miss"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "JTLB_MISS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000005",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "JTLB access miss"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "L1_DCACHE_READ_ACCESS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x00000c",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "L1 data cache read access"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "L1_DCACHE_READ_MISS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x00000d",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "L1 data cache read miss"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "L1_DCACHE_WRITE_ACCESS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x00000e",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "L1 data cache write access"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "L1_DCACHE_WRITE_MISS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x00000f",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "L1 data cache write miss"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "L2_CACHE_READ_ACCESS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000010",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "L2 cache read access"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "L2_CACHE_READ_MISS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000011",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "L2 cache read miss"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "L2_CACHE_WRITE_ACCESS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000012",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "L2 cache write access"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "L2_CACHE_WRITE_MISS",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000013",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "L2 cache write miss"
+> +=C2=A0 }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/t-
+> head/c9xx/firmware.json b/tools/perf/pmu-events/arch/riscv/t-
+> head/c9xx/firmware.json
+> new file mode 100644
+> index 000000000000..9b4a032186a7
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/t-head/c9xx/firmware.json
+> @@ -0,0 +1,68 @@
+> +[
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_MISALIGNED_LOAD"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_MISALIGNED_STORE"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_ACCESS_LOAD"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_ACCESS_STORE"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_ILLEGAL_INSN"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_SET_TIMER"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_IPI_SENT"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_IPI_RECEIVED"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_FENCE_I_SENT"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_FENCE_I_RECEIVED"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_SFENCE_VMA_SENT"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_HFENCE_GVMA_SENT"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_HFENCE_GVMA_RECEIVED"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_HFENCE_GVMA_VMID_SENT"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_HFENCE_GVMA_VMID_RECEIVED"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_HFENCE_VVMA_SENT"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_HFENCE_VVMA_RECEIVED"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_HFENCE_VVMA_ASID_SENT"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "ArchStdEvent": "FW_HFENCE_VVMA_ASID_RECEIVED"
+> +=C2=A0 }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/t-
+> head/c9xx/instruction.json b/tools/perf/pmu-events/arch/riscv/t-
+> head/c9xx/instruction.json
+> new file mode 100644
+> index 000000000000..53c5a9838400
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/t-head/c9xx/instruction.json
+> @@ -0,0 +1,22 @@
+> +[
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "BR_COND_MIS_PRED",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000006",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "Conditional branch mispredict"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "BR_INDIRECT_MIS_PRED",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000008",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "Indirect branch mispredict"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "BR_INDIRECT_INST",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000009",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "Indirect branch instruction"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "INST_STORE",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x00000b",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "Store instruction retired"
+> +=C2=A0 }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/riscv/t-
+> head/c9xx/microarch.json b/tools/perf/pmu-events/arch/riscv/t-
+> head/c9xx/microarch.json
+> new file mode 100644
+> index 000000000000..47f94890d20f
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/riscv/t-head/c9xx/microarch.json
+> @@ -0,0 +1,42 @@
+> +[
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "LSU_SPEC_FAIL",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x00000a",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "LSU Spec Fail"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "RF_LAUNCH_FAIL",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000014",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "Register file launch fail"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "RF_REG_LAUNCH",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000015",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "Register file reg launch"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "RF_INSTRUCTION",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000016",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "Register file instruction"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "LSU_STALL_CROSS_4K",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000017",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "LSU stall with cross 4K access"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "LSU_STALL_OTHER",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000018",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "LSU stall with other events"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "LSU_SQ_DISCARD",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x000019",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "LSU SQ discard"
+> +=C2=A0 },
+> +=C2=A0 {
+> +=C2=A0=C2=A0=C2=A0 "EventName": "LSU_SQ_DISCARD_DATA",
+> +=C2=A0=C2=A0=C2=A0 "EventCode": "0x00001a",
+> +=C2=A0=C2=A0=C2=A0 "BriefDescription": "LSU SQ data discard"
+> +=C2=A0 }
+> +]
+
