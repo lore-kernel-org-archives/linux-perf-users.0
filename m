@@ -2,171 +2,170 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2168AC77B7F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 May 2023 21:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD0DC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 May 2023 22:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229877AbjEPVmH (ORCPT
+        id S230204AbjEPWCX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 May 2023 17:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57058 "EHLO
+        Tue, 16 May 2023 18:02:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbjEPVmG (ORCPT
+        with ESMTP id S229578AbjEPWCW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 May 2023 17:42:06 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E00B55FF1;
-        Tue, 16 May 2023 14:42:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684273323; x=1715809323;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=r7TKuMl8TXg5daYTaBJSfljSsUGfrwi+T/80mD6+RxE=;
-  b=d9W/sYwbdUF4KK9MdC94EOiv/lMl0R5qk0gL7Hjn8fTd8gsA7ow3Egn9
-   rCAaysnFeoZ6cVVNfe9jAGk/P9WWsQJe4qFmdBHrMFMxrBHjcTTDWUnkV
-   c60jIl6Grbcp/1LUH8DOqEs/7pJgX045Md8ABNAaON3MHgc/zLZa+LXi0
-   3TcoZe9Q0b2m5qWCMr4P4zPInhiwNw1Tt7VP/5UYJB13x9gyJXET0aMiS
-   pFDFZn7XL18583fvE5o9YAqGj+UC8ykAIr0oz+NJab00cEF9rN0Uk9d5g
-   Q9bW7HP2EYynZGPPHHyq6ksba5l+2WxjfmDBQnEvDryVmWpsKkHCGnex/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="354768828"
-X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
-   d="scan'208";a="354768828"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 May 2023 14:42:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10712"; a="791234019"
-X-IronPort-AV: E=Sophos;i="5.99,278,1677571200"; 
-   d="scan'208";a="791234019"
-Received: from linux.intel.com ([10.54.29.200])
-  by FMSMGA003.fm.intel.com with ESMTP; 16 May 2023 14:42:02 -0700
-Received: from [10.212.175.225] (kliang2-mobl1.ccr.corp.intel.com [10.212.175.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 16 May 2023 18:02:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A0CB4;
+        Tue, 16 May 2023 15:02:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 4A107580B9A;
-        Tue, 16 May 2023 14:42:01 -0700 (PDT)
-Message-ID: <6ad0faf3-d264-9455-6e82-93b63240f6da@linux.intel.com>
-Date:   Tue, 16 May 2023 17:41:59 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH v1 15/15] perf vendor events intel: Add metricgroup
- descriptions for all models
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B587363CF5;
+        Tue, 16 May 2023 22:02:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C90F7C433EF;
+        Tue, 16 May 2023 22:02:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1684274540;
+        bh=Xn5gFOegvDQoAs6fV+QPMtWJd/9gIN1gu+8PHj8jATQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=I8HmcSl3RSMNgObVi4nyzA8Dn0pIVn3Hyd4M9+6+jiCnOIEHPDAD1katsykkWAiMa
+         gn5fQMZJ0CFmK2NC9H7JKcNfD2tVhwbbUSeGJQe61+ttSYu+uB1762WRf9rvoaH/7u
+         R2FZf07p1aiooDIDhn5t28F6IgINIJ5khA8X4Fo4=
+Date:   Tue, 16 May 2023 15:02:18 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Anders Roxell <anders.roxell@linaro.org>
+Cc:     Lorenzo Stoakes <lstoakes@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.garry@huawei.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20230515215844.653610-1-irogers@google.com>
- <20230515215844.653610-16-irogers@google.com>
- <4f1e2e31-4efd-ba94-18e5-e53189429d9b@linux.intel.com>
- <CAP-5=fWO6uPwdkuDMiHSJL53nQ_o6cXt9LG+vngiZtm=8zFbNA@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fWO6uPwdkuDMiHSJL53nQ_o6cXt9LG+vngiZtm=8zFbNA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Kentaro Takeda <takedakn@nttdata.co.jp>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH v5 3/6] mm/gup: remove vmas parameter from
+ get_user_pages_remote()
+Message-Id: <20230516150218.477c5e9d0a2d9ef8b057069c@linux-foundation.org>
+In-Reply-To: <20230516094919.GA411@mutt>
+References: <cover.1684097001.git.lstoakes@gmail.com>
+        <afe323639b7bda066ee5c7a6cca906f5ad8df940.1684097002.git.lstoakes@gmail.com>
+        <20230516094919.GA411@mutt>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Tue, 16 May 2023 11:49:19 +0200 Anders Roxell <anders.roxell@linaro.org> wrote:
 
-
-On 2023-05-16 2:19 p.m., Ian Rogers wrote:
-> On Tue, May 16, 2023 at 10:54 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2023-05-15 5:58 p.m., Ian Rogers wrote:
->>> Add metric group descriptions created by:
->>> https://github.com/intel/perfmon/blob/main/scripts/create_perf_json.py
->>> The descriptions add some additional detail in perf list.
->>>
->>> Signed-off-by: Ian Rogers <irogers@google.com>
->>> ---
->>>  .../arch/x86/alderlake/metricgroups.json      | 122 ++++++++++++++++++
->>>  .../arch/x86/alderlaken/metricgroups.json     |  26 ++++
->>>  .../arch/x86/broadwell/metricgroups.json      | 107 +++++++++++++++
->>>  .../arch/x86/broadwellde/metricgroups.json    | 107 +++++++++++++++
->>>  .../arch/x86/broadwellx/metricgroups.json     | 107 +++++++++++++++
->>>  .../arch/x86/cascadelakex/metricgroups.json   | 114 ++++++++++++++++
->>>  .../arch/x86/haswell/metricgroups.json        | 107 +++++++++++++++
->>>  .../arch/x86/haswellx/metricgroups.json       | 107 +++++++++++++++
->>>  .../arch/x86/icelake/metricgroups.json        | 113 ++++++++++++++++
->>>  .../arch/x86/icelakex/metricgroups.json       | 114 ++++++++++++++++
->>>  .../arch/x86/ivybridge/metricgroups.json      | 107 +++++++++++++++
->>>  .../arch/x86/ivytown/metricgroups.json        | 107 +++++++++++++++
->>>  .../arch/x86/jaketown/metricgroups.json       | 100 ++++++++++++++
->>>  .../arch/x86/sandybridge/metricgroups.json    | 100 ++++++++++++++
->>>  .../arch/x86/sapphirerapids/metricgroups.json | 118 +++++++++++++++++
->>>  .../arch/x86/skylake/metricgroups.json        | 113 ++++++++++++++++
->>>  .../arch/x86/skylakex/metricgroups.json       | 114 ++++++++++++++++
->>>  .../arch/x86/tigerlake/metricgroups.json      | 113 ++++++++++++++++
->>>  18 files changed, 1896 insertions(+)
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/alderlake/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/broadwell/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/broadwellde/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/haswell/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/haswellx/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/icelake/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/ivybridge/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/ivytown/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/jaketown/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/sandybridge/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/skylake/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/metricgroups.json
->>>  create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/metricgroups.json
->>>
->>> diff --git a/tools/perf/pmu-events/arch/x86/alderlake/metricgroups.json b/tools/perf/pmu-events/arch/x86/alderlake/metricgroups.json
->>> new file mode 100644
->>> index 000000000000..273ccfb0ed6f
->>> --- /dev/null
->>> +++ b/tools/perf/pmu-events/arch/x86/alderlake/metricgroups.json
->>> @@ -0,0 +1,122 @@
->>> +{
->>> +    "Backend": "Grouping from metrics spreadsheet",
->>> +    "Bad": "Grouping from metrics spreadsheet",
->>> +    "BadSpec": "Grouping from metrics spreadsheet",
->>> +    "BigFoot": "Grouping from metrics spreadsheet",
->>> +    "BrMispredicts": "Grouping from metrics spreadsheet",
->>> +    "Branches": "Grouping from metrics spreadsheet",
->>
->> The description "Grouping from metrics spreadsheet" seems meaningless,
->> and may bring confusion information, e.g., what is metrics spreadsheet?
->> I think it may be better to leave it empty if we don't have a proper
->> description for the metricgroup.
+> On 2023-05-14 22:26, Lorenzo Stoakes wrote:
+> > The only instances of get_user_pages_remote() invocations which used the
+> > vmas parameter were for a single page which can instead simply look up the
+> > VMA directly. In particular:-
+> > 
+> > - __update_ref_ctr() looked up the VMA but did nothing with it so we simply
+> >   remove it.
+> > 
+> > - __access_remote_vm() was already using vma_lookup() when the original
+> >   lookup failed so by doing the lookup directly this also de-duplicates the
+> >   code.
+> > 
+> > We are able to perform these VMA operations as we already hold the
+> > mmap_lock in order to be able to call get_user_pages_remote().
+> > 
+> > As part of this work we add get_user_page_vma_remote() which abstracts the
+> > VMA lookup, error handling and decrementing the page reference count should
+> > the VMA lookup fail.
+> > 
+> > This forms part of a broader set of patches intended to eliminate the vmas
+> > parameter altogether.
+> > 
+> > -		int bytes, ret, offset;
+> > +		int bytes, offset;
+> >  		void *maddr;
+> > -		struct page *page = NULL;
+> > +		struct vm_area_struct *vma;
+> > +		struct page *page = get_user_page_vma_remote(mm, addr,
+> > +							     gup_flags, &vma);
+> > +
+> > +		if (IS_ERR_OR_NULL(page)) {
+> > +			int ret = 0;
 > 
-> Thanks Kan, the TMA spreadsheet has a column (AG in version 4.5-full)
-> called Metric Group. For the level 3 ICache_Misses metric the value of
-> the cell is "BigFoot;FetchLat;IcMiss". The converter will put these
-> groups alongside the groups derived by level, parent/child
-> relationship. A group like "BigFoot" could use some explanation. The
-> intent with saying "Grouping from metrics spreadsheet" is to at least
-> give the origin of the metric group which I think is at least a little
-> bit better than saying nothing and not knowing the origin of where the
-> grouping comes from. I'd like to do more, so I think we can iterate
-> and improve, but I think this first step has some value.
+> I see the warning below when building without CONFIG_HAVE_IOREMAP_PROT set.
 > 
+> make --silent --keep-going --jobs=32 \
+> O=/home/anders/.cache/tuxmake/builds/1244/build ARCH=arm \
+> CROSS_COMPILE=arm-linux-gnueabihf- /home/anders/src/kernel/next/mm/memory.c: In function '__access_remote_vm':
+> /home/anders/src/kernel/next/mm/memory.c:5608:29: warning: unused variable 'ret' [-Wunused-variable]
+>  5608 |                         int ret = 0;
+>       |                             ^~~
 
-So the groups with "Grouping from metrics spreadsheet" are all from the
-"Metric Group" column, right?
-I think the official name of TMA is Top-down Microarchitecture Analysis
-Metrics. Can we change the description to "Grouping from Top-down
-Microarchitecture Analysis Metrics spreadsheet"? If the end user
-searches the name, they can be pointed to the correct spreadsheet file.
+Thanks, I did the obvious.
 
-Thanks,
-Kan
+Also s/ret/res/, as `ret' is kinda reserved for "this is what this
+function will return".
+
+--- a/mm/memory.c~mm-gup-remove-vmas-parameter-from-get_user_pages_remote-fix
++++ a/mm/memory.c
+@@ -5605,11 +5605,11 @@ int __access_remote_vm(struct mm_struct
+ 							     gup_flags, &vma);
+ 
+ 		if (IS_ERR_OR_NULL(page)) {
+-			int ret = 0;
+-
+ #ifndef CONFIG_HAVE_IOREMAP_PROT
+ 			break;
+ #else
++			int res = 0;
++
+ 			/*
+ 			 * Check if this is a VM_IO | VM_PFNMAP VMA, which
+ 			 * we can access using slightly different code.
+@@ -5617,11 +5617,11 @@ int __access_remote_vm(struct mm_struct
+ 			if (!vma)
+ 				break;
+ 			if (vma->vm_ops && vma->vm_ops->access)
+-				ret = vma->vm_ops->access(vma, addr, buf,
++				res = vma->vm_ops->access(vma, addr, buf,
+ 							  len, write);
+-			if (ret <= 0)
++			if (res <= 0)
+ 				break;
+-			bytes = ret;
++			bytes = res;
+ #endif
+ 		} else {
+ 			bytes = len;
+_
+
