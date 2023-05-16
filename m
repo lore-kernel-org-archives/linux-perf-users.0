@@ -2,278 +2,272 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F24B6C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 May 2023 07:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFCAC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 May 2023 09:41:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229761AbjEPHko (ORCPT
+        id S231623AbjEPJlu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 May 2023 03:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40380 "EHLO
+        Tue, 16 May 2023 05:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230205AbjEPHkn (ORCPT
+        with ESMTP id S230517AbjEPJlt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 May 2023 03:40:43 -0400
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF3F2690;
-        Tue, 16 May 2023 00:40:39 -0700 (PDT)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-96aa0cab88dso754430666b.1;
-        Tue, 16 May 2023 00:40:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684222838; x=1686814838;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/wQZn//CGe7+K2GqKzKrwn7d0YEVExyW7SoiXjaCuEA=;
-        b=BF4cySnnIE51miOa5sJV6Ea5OhpNrPr4mrkPuoUq7bAYBg3gj0evsBCNBHcn99PXkf
-         op8qHkpgWa6g5anBmsUpyJ4lIpPIrXgs7dsrzb/Vcvvk6/VVr1oWDBfEXfivlA7Q7844
-         tVFvJEN1hMLq7qKl7IKvbsxclVwMck85AllCYLgfChcD/0DefTI+J/9eL1BAyR+RbGuo
-         uFi7SABoEUBtcPwkhoMMYJz/F7cIOZF1MfyFGjRyeYQiO/aGXFwqSZ/0vefo3u5d18nY
-         dvNzJEW7JQOeazIU114IWmnbK1SA653ou+9uPZ0HyXs7kpk0UqwWTZixsVG6r2rSN0Aj
-         MICQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684222838; x=1686814838;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/wQZn//CGe7+K2GqKzKrwn7d0YEVExyW7SoiXjaCuEA=;
-        b=dGNbaVAw8bgAWXLEjHcyurXSDa0bQ4TlBFlQAxaehrwBBYl4QHBYdAKcYrMUaron0t
-         DIqWPtBK2XXQ4YQol7oWnV86co+AvfSR2wD/GfuHitB8u0Y5c3049adxkULCAxEYwXqb
-         AKpQx0+J3MneTbOHZZypwQRSONZBBIJpoPvtkvv46Lq8kNhMphVT1Y3WkYdAlDPkJuks
-         vb7EwTI31o4R2C+XAsYyN3tofMBj88KfeQwGx6GeEI4Q86IU9C5uT86X8JMoUlVuFzFX
-         LfGpoyFI85RWKaRQaFam5uixTufvFGrdvnAeel52os2c7Tfekux6aurX57nbRAbxfRoO
-         iwwg==
-X-Gm-Message-State: AC+VfDyvHikGErVp8FihstsqW61/7/Ni0gVQLuye9A/LaScBAlH97yxF
-        VliTNIyQ52uhv8prbewS9Yw=
-X-Google-Smtp-Source: ACHHUZ6/oyokjYydgVAHBsq30ik7SCbvdOz8OrTjxLmR6ZRUuZeA7F380IDWMw95s+omX7P1hcWviA==
-X-Received: by 2002:a17:907:c19:b0:960:7643:c970 with SMTP id ga25-20020a1709070c1900b009607643c970mr38743981ejc.26.1684222837739;
-        Tue, 16 May 2023 00:40:37 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id rh2-20020a17090720e200b0094f698073e0sm10489521ejb.123.2023.05.16.00.40.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 May 2023 00:40:37 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Tue, 16 May 2023 09:40:35 +0200
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 16 May 2023 05:41:49 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2049.outbound.protection.outlook.com [40.92.40.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE8A269F;
+        Tue, 16 May 2023 02:41:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Kbwsrc/6XDPvnqSi+sLC/q5d77K3SaZrL0AbFOc8qE30ZBMfuaP8k0QEjc7OUkD6Jry/CJgzGGXxk8Am3mH3ArJbF9hGAwwKXnSli0yL94hTlU+004MBroNkdUJdllduanx5uG58UZuY3ZGuhLlhCzxmoZTZuUVMnBZ+/IVnLYuu/fSVtgDt1N4PnYS/l5ALd0Ls3zQ/t/ctm6faIiK6TcGw/3MVRVS2RZHhY871PNwnIKL8xc8BUJrleoNbZJFvyKwZVnGolv3AeIV+/P9AEKbH59cN9xby012nuKKq3FQByTkntGXS3R4ujEG42/HTe8egsltzLq1aNRd4+eAv2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k4HZ2MjMokj3AFs2fMHt7XQF2uQ6RX1AW/3Q0vl2xyo=;
+ b=GinIJF53NzLb0l2ITcJK6b/EQZQ/ETd6rRcaHxAi6oISz5nzHSvpD83EyGW68LF5gucZwjms62XP6MpAyQdtKCR82g3dJDUaNcxTrzqvkdXkpusGRI5H2HEvznNsIlN9SvT/E8ikutDbNfChl9Eu8XJqp17LPsmuSo2m3YVyh5Nt6DdzZ6k6hOlkKGVR2hcT7BfgUMOCrQZ+stWh3kKSaZZhSLwfEvs8h46c7gglVe0t0FNMJJjdtaBnvIwiM9Cda2MqYgs/qDHGjHtdL52a+4cgt6KVcH96D+tnDLLNzKBgdsKzQuE7qglQafijwcX75e7ReOzyq4WlBChp4C9+Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k4HZ2MjMokj3AFs2fMHt7XQF2uQ6RX1AW/3Q0vl2xyo=;
+ b=mw7quqMEeMzdewClrSiLwgesLbjq1pGaRRSKVwoEOVUV0r/ox/HmnSOd9rrQ1bPpnyg6BsUQ7ARworI7YLAJ8xndOuGfI9pYCG4Jb3n6acxo2KXnqTG8OBuUfrvHuQMnBTReBBMktlGdQkZvHsvxwmVrUd6yGmX4k0wwJG4s1SucLegV9tIZqim2eOEYO02H1r/bddoMiTjZQ4AiGVScvmiTWQM5UEOJyKklc/Mbmg4drgR+yXK3uNH56LTKWvHOSFJhg67jIsazgwj64x1+lDmyiyhV4k0b+apT09jqbGntN2PiGdPLZcPQL2Au4UOh9nAIYPlgorqITYq2rUdAuA==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by PH7PR20MB5331.namprd20.prod.outlook.com (2603:10b6:510:1b9::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.33; Tue, 16 May
+ 2023 09:41:39 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::4770:9e0f:7f59:1989]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::4770:9e0f:7f59:1989%6]) with mapi id 15.20.6387.021; Tue, 16 May 2023
+ 09:41:39 +0000
+From:   Inochi Amaoto <inochiama@outlook.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>
-Subject: Re: [PATCH v1 1/2] perf expr: Make the evaluation of & and | logical
- and lazy
-Message-ID: <ZGMzc20dvBRk2Eys@krava>
-References: <20230504195803.3331775-1-irogers@google.com>
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nikita Shubin <n.shubin@yadro.com>,
+        Inochi Amaoto <inochiama@outlook.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 0/2] perf: add T-HEAD C9xx series cpu support
+Date:   Tue, 16 May 2023 17:42:41 +0800
+Message-ID: <IA1PR20MB4953ABF862B937CC98E300B4BB799@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <df1ffa574ca014cf5e23b3482efc5a7f432948af.camel@maquefel.me>
+References: <df1ffa574ca014cf5e23b3482efc5a7f432948af.camel@maquefel.me>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN:  [cVJDXY5CP+dOiB4tMunGNqJXnT0AX1/SO3hI5nljpqw=]
+X-ClientProxiedBy: TYCPR01CA0169.jpnprd01.prod.outlook.com
+ (2603:1096:400:2b2::12) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID: <20230516094241.479673-1-inochiama@outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230504195803.3331775-1-irogers@google.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|PH7PR20MB5331:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1f1e97de-3557-4f08-e48b-08db55f1bf90
+X-MS-Exchange-SLBlob-MailProps: V85gaVfRD48pZMVLM19SXxGmTzdWqu7HTyHI52ikUKBkr0JYQYx9y6r62xF/YJw/aNWUn5mGKOKAT+4ieqJVNVJAK7beI7OhuTjKrmXoZfQJkSX7Fqz7o2pnwwEt+QbuEcvfHDWL9phk5R0iWIjaVKgHE/JoJp+OTVr8GOCZz44gOc1kudjH3SOe0c255cLyMeNWya5SWqAFrsGzDsz8Vn7K/nZftkdtoNE6oDnUA1+CFCpwKnEXQHqf5oolw7mcqCgvTNHJePKXI7vvEWGotlpDLy/bZXyvEGNBTGeIWpnyd1ehH9xKMElYG8FAierx+HIlgVjt/SU150Sho6TBBVeWTcsxbX22B6B2SKGhSwUOCw9eKRaLX9gOwiMppa4ycQ5rkMa0bKtHWpQs3hxzjiWi4EKkDK7xkd//y0joZonjwn4NpCMghfN/PmtihttuNy46XksyacGBYyvhgKgRpqq0PRx7KxVj0H8T54IP91nBWpHplPoCY5lDkrLpNYpY2bx/FAvFqfYfaB7UEEUmug0tbAruApfYOQDkEiMA/gNzjvrwHH+114hBJYv75BDYgbfKvKEcxNp62OVhAfDI2tsD7YzmEyIU0wb7XIvcj4KlQr8XI91qz1AojEAze04f7B/XSbYIGuEvFDwuQymF/wN/6Tiroc0UPhcjGYOcNEmDNuFD0yzZ06kBlFA+W5pKk7gcCua+5k+rOcBuyTV/edcFzqOyXHI1rAMS3msRm1F8HjppVYP6cimt05daRSNzhBPGdjD285J1WzgeZZ20vopi+ZDm0lDENHyFfIGvJ0ErSJQdNHkakBbnd0mPC8LEPEaJj+25zYg4oRc9J5QS5g==
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: YmI06LfpNlBC2aExdoEY0y6aQjLNnKFJJ7qXFln6AM2D3H5/AEqy73DCKDDTAbT0oZwMXTW0qM8B7JvRKtS5LEuMTVy+6W08V/ctcjOYQGtUhcbxhWx+ifMQLhNpoZeq3ryRtNoXk4aHE3TTznZoShcNP7iNPE1dv/LPEL2PBwMyq2GIyoHo5p+oJdVdtPvrRCQjP6SilYullrlEXeQ72MPQTOFkSOKtq+hBUPMCtV/P1kf/CvijecUCvGoZzzG1+A6VyVOzGazkp1Q1j2gej+E2kYl7eLFBZUmp4ofJDw7siK8k0f9aY2EbdoqNNFZqJpl6jiNMC36/OmnaUf7LBWEiTtsJ0/duAczvVG+l0lKnV3jC3KQvmryu70Lg1xuzam1/QJd9t19y+0RWcUedlnEku2J3tHyx9qa3Mw7NT0AeHqE69S/m9UkRzHvC9ak4sDrQ+bTude+bYMeGg+X3Cgz1YIpnF8sQjQj4T4FrzpBKOTT5kONl7Q/qvfEFgrlYI4fJTj547wNiDmXonECFYpOTk75YXm5oxmXaD31lViMjf0roHIxlsfR3TSRcOzadityLGh/8wzrPa2O0Qsjxf9dZCw/WhX6ymFRH3YnhsTx+YF+T2svQpkhcSoMNdAJHjXldA0q0T8IX8vCzADzncw==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?pDLMh5tQS//lI0k9AsmlWUsACw9stZDFQ9HYwGR2NbbyXjAaHT2GUE96uNGQ?=
+ =?us-ascii?Q?27zbAKCjZ+rb/NmNMrrSxfg5zZkDE+O51fx0OfELzQENMPdpu5Rf9PG8pFAI?=
+ =?us-ascii?Q?nsUijLYPi1GbKoHvLkgxlcsa0NKRlwS+IFMEqjOPBTbFm37zogLs4NmNSuAN?=
+ =?us-ascii?Q?DNbnhcjOR+xlXdyOx6FCeOkFlUqgeR9dhzGZOI0q4ECixvU7xK1wp2Q0cHMO?=
+ =?us-ascii?Q?/aZiarKuZDH00uQuKXI+1XIPZWKSRKbZkm8+l5hQb/fY63Wnfp0OqBsAgz8r?=
+ =?us-ascii?Q?KzEE0COi4Pqhc69r5taDrkhpqXkR116nmwCTDhFSfdUviMmHqRkGJZ6cpT9l?=
+ =?us-ascii?Q?65ATqLz7RM7Hok0Rl/aEnb9OehTheGtLGLULnJpo/EAWH6UAtgy44IM9QE4C?=
+ =?us-ascii?Q?DjVQaCd1syK0uej+P3HNezM256yx85eZ8k98i0LHWa3On3m82UPox+CuaI53?=
+ =?us-ascii?Q?Rpb+EIMXs+Z72T2vvs+Nb7ZEGJNV3NwCYRP6go3aF+dyE82DftO6iW/PcSSI?=
+ =?us-ascii?Q?rt5uH5YctPDWW96u6XovAKHkEJ6mA6bMq4malgCuDreQNDXuKPkgMklFyEdX?=
+ =?us-ascii?Q?riBNeIcWzvPmO7pTiqb065a6TEOsJLz26SdbI6y0jwdRgFMdzqpZd429ZVfs?=
+ =?us-ascii?Q?zFXNh6iSAI4nq2rFGzG5nzM6AEGfamkI3MJY2hz21CUoO5AE4zbICApGceJi?=
+ =?us-ascii?Q?pYRiWPpg3fJVLigSFBsmnB/gRWVhQjLgIw/y7QbUJExKF60bHWJmmncqJZUH?=
+ =?us-ascii?Q?Pie4wU5JwTgqhdxMSR6GGMTMRh4FHYyOTDvlhjCyntiWXIeCCBS3eZCJ9QLS?=
+ =?us-ascii?Q?DmSOLOLAclzSKoLu7Ig93MIhCpKtb556nnsgVc5K5iJQuuNZPkG4qv9XTjOl?=
+ =?us-ascii?Q?nUGwTkhDO8Depf10Tqh66mHAVSrzIb/ab8pL7teavcLUjCcxaLWmhMeJJl8+?=
+ =?us-ascii?Q?hZbdlk6AiX/COLVAWhVyRHlHjcKJIy5KpG0a3DL9e3qdxeyRV+PauVTcHDFd?=
+ =?us-ascii?Q?P8Oh/C0I/MN3efIklvnM6oBpJmZDU5/uweV3Pgj1ze9YAnXdGtBTr1YO/Hg0?=
+ =?us-ascii?Q?8G/zRi1Y0Z5fGlSe6GrEooSN5r5aBM8s5d94d2tVW8G9YAIDk4KpS1HKCsP8?=
+ =?us-ascii?Q?M5nePePuWfkQp3ifDc/zx7YUTLR41UafhXIvt+tv9LYMZfLzXw2j4ngTlWTz?=
+ =?us-ascii?Q?HIKl/9AqLVXXIGuV84wSlij87nZMtrJkghQ6B2nbiUoJaJnIbRx0wy+V3KA?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1f1e97de-3557-4f08-e48b-08db55f1bf90
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2023 09:41:39.4800
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR20MB5331
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 04, 2023 at 12:58:02PM -0700, Ian Rogers wrote:
-> Currently the & and | operators are only used in metric thresholds
-> like (from the tma_retiring metric):
-> tma_retiring > 0.7 | tma_heavy_operations > 0.1
-> 
-> Thresholds are always computed when present, but a lack events may
-> mean the threshold can't be computed. This happens with the option
-> --metric-no-threshold for say the metric tma_retiring on Tigerlake
-> model CPUs. To fully compute the threshold tma_heavy_operations is
-> needed and it needs the extra events of IDQ.MS_UOPS,
-> UOPS_DECODED.DEC0, cpu/UOPS_DECODED.DEC0,cmask=1/ and
-> IDQ.MITE_UOPS. So --metric-no-threshold is a useful option to reduce
-> the number of events needed and potentially multiplexing of events.
-> 
-> Rather than just fail threshold computations like this, we may know a
-> result from just the left or right-hand side. So, for tma_retiring if
-> its value is "> 0.7" we know it is over the threshold. This allows the
-> metric to have the threshold coloring, when possible, without all the
-> counters being programmed.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
+A minimal example for C910 is as follows, I have test this on a C920 chip.
 
-lgtm
+pmu {
+	compatible = "riscv,pmu";
+	riscv,event-to-mhpmcounters =
+		// event-start event-end a bitmap of all the MHPMCOUNTERx
+		<0x00006 0x00006 0x00000400>,
+		<0x00005 0x00005 0x00000800>,
+		<0x10000 0x10000 0x00004000>,
+		<0x10001 0x10001 0x00008000>,
+		<0x10002 0x10002 0x00010000>,
+		<0x10003 0x10003 0x00020000>,
+		<0x10008 0x10008 0x00000008>,
+		<0x10009 0x10009 0x00000010>,
+		<0x10010 0x10010 0x00040000>,
+		<0x10011 0x10011 0x00080000>,
+		<0x10012 0x10012 0x00100000>,
+		<0x10013 0x10013 0x00200000>,
+		<0x10019 0x10019 0x00000040>,
+		<0x10021 0x10021 0x00000020>;
+	riscv,event-to-mhpmevent =
+		// event-id event-selector
+		/* mhpmevent3: L1I_READ_ACCESS */
+		<0x10008 0x00000000 0x00000001>,
+		/* mhpmevent4: L1I_READ_MISS */
+		<0x10009 0x00000000 0x00000002>,
+		/* mhpmevent5: ITLB_READ_MISS */
+		<0x10021 0x00000000 0x00000003>,
+		/* mhpmevent6: DTLB_READ_MISS */
+		<0x10019 0x00000000 0x00000004>,
+		/* mhpmevent10: PMU_HW_BRANCH_MISSES */
+		<0x00006 0x00000000 0x00000008>,
+		/* mhpmevent11: PMU_HW_BRANCH_INSTRUCTIONS */
+		<0x00005 0x00000000 0x00000009>,
+		/* mhpmevent14: L1D_READ_ACCESS */
+		<0x10000 0x00000000 0x0000000c>,
+		/* mhpmevent15: L1D_READ_MISS */
+		<0x10001 0x00000000 0x0000000d>,
+		/* mhpmevent16: L1D_WRITE_ACCESS */
+		<0x10002 0x00000000 0x0000000e>,
+		/* mhpmevent17: L1D_WRITE_MISS */
+		<0x10003 0x00000000 0x0000000f>,
+		/* mhpmevent18: LL_READ_ACCESS */
+		<0x10010 0x00000000 0x00000010>,
+		/* mhpmevent19: LL_READ_MISS */
+		<0x10011 0x00000000 0x00000011>,
+		/* mhpmevent20: LL_WRITE_ACCESS */
+		<0x10012 0x00000000 0x00000012>,
+		/* mhpmevent21: LL_WRITE_MISS */
+		<0x10013 0x00000000 0x00000013>;
+	riscv,raw-event-to-mhpmcounters =
+		/* mhpmevent3: L1 ICache Access Counter */
+		<0x00000000 0x00000001 0xffffffff 0xffffffff 0x00000008>,
+		/* mhpmevent4: L1 ICache Miss Counter */
+		<0x00000000 0x00000002 0xffffffff 0xffffffff 0x00000010>,
+		/* mhpmevent5: I-UTLB Miss Counter */
+		<0x00000000 0x00000003 0xffffffff 0xffffffff 0x00000020>,
+		/* mhpmevent6: D-UTLB Miss Counter */
+		<0x00000000 0x00000004 0xffffffff 0xffffffff 0x00000040>,
+		/* mhpmevent7: JTLB Miss */
+		<0x00000000 0x00000005 0xffffffff 0xffffffff 0x00000080>,
+		/* mhpmevent8: Conditional Branch Mispredict */
+		<0x00000000 0x00000006 0xffffffff 0xffffffff 0x00000100>,
+		/* mhpmevent9: Conditional Branch Instruction Counter */
+		/* <0x00000000 0x00000007 0xffffffff 0xffffffff 0x00000200>, */
+		/* mhpmevent10: Indirect Branch Mispredict Counter */
+		<0x00000000 0x00000008 0xffffffff 0xffffffff 0x00000400>,
+		/* mhpmevent11: Indirect Branch Instruction Counter */
+		<0x00000000 0x00000009 0xffffffff 0xffffffff 0x00000800>,
+		/* mhpmevent12: LSU Spec Fail */
+		<0x00000000 0x0000000a 0xffffffff 0xffffffff 0x00001000>,
+		/* mhpmevent13: Store Instruction */
+		<0x00000000 0x0000000b 0xffffffff 0xffffffff 0x00002000>,
+		/* mhpmevent14: L1 DCache read access Counter */
+		<0x00000000 0x0000000c 0xffffffff 0xffffffff 0x00004000>,
+		/* mhpmevent15: L1 DCache read miss Counter */
+		<0x00000000 0x0000000d 0xffffffff 0xffffffff 0x00008000>,
+		/* mhpmevent16: L1 DCache write access Counter */
+		<0x00000000 0x0000000e 0xffffffff 0xffffffff 0x00010000>,
+		/* mhpmevent17: L1 DCache write access Counter */
+		<0x00000000 0x0000000f 0xffffffff 0xffffffff 0x00020000>,
+		/* mhpmevent18: L2 Cache read access Counter */
+		<0x00000000 0x00000010 0xffffffff 0xffffffff 0x00040000>,
+		/* mhpmevent19: L2 Cache read miss Counter */
+		<0x00000000 0x00000011 0xffffffff 0xffffffff 0x00080000>,
+		/* mhpmevent20: L2 Cache write access Counter */
+		<0x00000000 0x00000012 0xffffffff 0xffffffff 0x00100000>,
+		/* mhpmevent21: L2 Cache write miss Counter */
+		<0x00000000 0x00000013 0xffffffff 0xffffffff 0x00200000>,
+		/* mhpmevent22: RF Launch Fail */
+		<0x00000000 0x00000014 0xffffffff 0xffffffff 0x00400000>,
+		/* mhpmevent23: RF Reg Launch Fail */
+		<0x00000000 0x00000015 0xffffffff 0xffffffff 0x00800000>,
+		/* mhpmevent24: RF Instruction */
+		<0x00000000 0x00000016 0xffffffff 0xffffffff 0x01000000>,
+		/* mhpmevent25: LSU Cross 4K Stall */
+		<0x00000000 0x00000017 0xffffffff 0xffffffff 0x02000000>,
+		/* mhpmevent26: LSU Other Stall */
+		<0x00000000 0x00000018 0xffffffff 0xffffffff 0x04000000>,
+		/* mhpmevent27: LSU SQ Discard */
+		<0x00000000 0x00000019 0xffffffff 0xffffffff 0x08000000>,
+		/* mhpmevent28: LSU SQ Data Discard */
+		<0x00000000 0x0000001a 0xffffffff 0xffffffff 0x10000000>;
+};
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-jirka
-
-> ---
->  tools/perf/tests/expr.c | 40 +++++++++++++++++++
->  tools/perf/util/expr.y  | 86 +++++++++++++++++++++++++++++++++--------
->  2 files changed, 109 insertions(+), 17 deletions(-)
-> 
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index cbf0e0c74906..45c7fedb797a 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -184,6 +184,46 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
->  			NULL, ctx) == 0);
->  	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
->  
-> +	/* The expression is a constant 0.0 without needing to evaluate EVENT1. */
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("0 & EVENT1 > 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("EVENT1 > 0 & 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("1 & EVENT1 > 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> +	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("EVENT1 > 0 & 1", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> +	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> +
-> +	/* The expression is a constant 1.0 without needing to evaluate EVENT1. */
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("1 | EVENT1 > 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("EVENT1 > 0 | 1", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("0 | EVENT1 > 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> +	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("EVENT1 > 0 | 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> +	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> +
->  	/* Test toplogy constants appear well ordered. */
->  	expr__ctx_clear(ctx);
->  	TEST_ASSERT_VAL("#num_cpus", expr__parse(&num_cpus, ctx, "#num_cpus") == 0);
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 250e444bf032..6b110f9f95c9 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -123,20 +123,6 @@ static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
->   * constant value using OP. Its invariant that there are no ids.  If computing
->   * ids for non-constants union the set of IDs that must be computed.
->   */
-> -#define BINARY_LONG_OP(RESULT, OP, LHS, RHS)				\
-> -	if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
-> -		assert(LHS.ids == NULL);				\
-> -		assert(RHS.ids == NULL);				\
-> -		if (isnan(LHS.val) || isnan(RHS.val)) {			\
-> -			RESULT.val = NAN;				\
-> -		} else {						\
-> -			RESULT.val = (long)LHS.val OP (long)RHS.val;	\
-> -		}							\
-> -		RESULT.ids = NULL;					\
-> -	} else {							\
-> -	        RESULT = union_expr(LHS, RHS);				\
-> -	}
-> -
->  #define BINARY_OP(RESULT, OP, LHS, RHS)					\
->  	if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
->  		assert(LHS.ids == NULL);				\
-> @@ -213,9 +199,75 @@ expr: NUMBER
->  }
->  | ID				{ $$ = handle_id(ctx, $1, compute_ids, /*source_count=*/false); }
->  | SOURCE_COUNT '(' ID ')'	{ $$ = handle_id(ctx, $3, compute_ids, /*source_count=*/true); }
-> -| expr '|' expr { BINARY_LONG_OP($$, |, $1, $3); }
-> -| expr '&' expr { BINARY_LONG_OP($$, &, $1, $3); }
-> -| expr '^' expr { BINARY_LONG_OP($$, ^, $1, $3); }
-> +| expr '|' expr
-> +{
-> +	if (is_const($1.val) && is_const($3.val)) {
-> +		assert($1.ids == NULL);
-> +		assert($3.ids == NULL);
-> +		$$.ids = NULL;
-> +		$$.val = (fpclassify($1.val) == FP_ZERO && fpclassify($3.val) == FP_ZERO) ? 0 : 1;
-> +	} else if (is_const($1.val)) {
-> +		assert($1.ids == NULL);
-> +		if (fpclassify($1.val) == FP_ZERO) {
-> +			$$ = $3;
-> +		} else {
-> +			$$.val = 1;
-> +			$$.ids = NULL;
-> +			ids__free($3.ids);
-> +		}
-> +	} else if (is_const($3.val)) {
-> +		assert($3.ids == NULL);
-> +		if (fpclassify($3.val) == FP_ZERO) {
-> +			$$ = $1;
-> +		} else {
-> +			$$.val = 1;
-> +			$$.ids = NULL;
-> +			ids__free($1.ids);
-> +		}
-> +	} else {
-> +		$$ = union_expr($1, $3);
-> +	}
-> +}
-> +| expr '&' expr
-> +{
-> +	if (is_const($1.val) && is_const($3.val)) {
-> +		assert($1.ids == NULL);
-> +		assert($3.ids == NULL);
-> +		$$.val = (fpclassify($1.val) != FP_ZERO && fpclassify($3.val) != FP_ZERO) ? 1 : 0;
-> +		$$.ids = NULL;
-> +	} else if (is_const($1.val)) {
-> +		assert($1.ids == NULL);
-> +		if (fpclassify($1.val) != FP_ZERO) {
-> +			$$ = $3;
-> +		} else {
-> +			$$.val = 0;
-> +			$$.ids = NULL;
-> +			ids__free($3.ids);
-> +		}
-> +	} else if (is_const($3.val)) {
-> +		assert($3.ids == NULL);
-> +		if (fpclassify($3.val) != FP_ZERO) {
-> +			$$ = $1;
-> +		} else {
-> +			$$.val = 0;
-> +			$$.ids = NULL;
-> +			ids__free($1.ids);
-> +		}
-> +	} else {
-> +		$$ = union_expr($1, $3);
-> +	}
-> +}
-> +| expr '^' expr
-> +{
-> +	if (is_const($1.val) && is_const($3.val)) {
-> +		assert($1.ids == NULL);
-> +		assert($3.ids == NULL);
-> +		$$.val = (fpclassify($1.val) == FP_ZERO) != (fpclassify($3.val) == FP_ZERO) ? 1 : 0;
-> +		$$.ids = NULL;
-> +	} else {
-> +		$$ = union_expr($1, $3);
-> +	}
-> +}
->  | expr '<' expr { BINARY_OP($$, <, $1, $3); }
->  | expr '>' expr { BINARY_OP($$, >, $1, $3); }
->  | expr '+' expr { BINARY_OP($$, +, $1, $3); }
-> -- 
-> 2.40.1.521.gf1e218fcd8-goog
-> 
+> Hello Inochi Amaoto!
+>
+> Thank you for your series!
+>
+> Could you also provide HPM device tree bindings which were used in
+> OpenSBI for testing in cover letter ?
+>
+> On Tue, 2023-05-16 at 10:37 +0800, Inochi Amaoto wrote:
+> > The T-HEAD C9xx series cpu is a series of riscv CPU IP. As this IP
+> > was
+> > proposed before the current riscv event standard. It has a non-
+> > standard
+> > events encoding for perf events and unimplemented MARCH and MIMP CSR.
+> > This patch add these events to support C9xx cpus.
+> >
+> > AFAIK, at least the following chips used C9xx cpu.
+> >
+> > * Allwinner D1 (C906)
+> > * T-HEAD th1520 (C910)
+> > * Sophgo mango (C920)
+> >
+> > Inochi Amaoto (2):
+> >   perf tools riscv: Allow get_cpuid return empty MARCH and MIMP
+> >   perf vendor events riscv: add T-HEAD C9xx JSON file
+> >
+> >  tools/perf/arch/riscv/util/header.c           |  7 +-
+> >  tools/perf/pmu-events/arch/riscv/mapfile.csv  |  1 +
+> >  .../arch/riscv/t-head/c9xx/cache.json         | 67
+> > ++++++++++++++++++
+> >  .../arch/riscv/t-head/c9xx/firmware.json      | 68
+> > +++++++++++++++++++
+> >  .../arch/riscv/t-head/c9xx/instruction.json   | 22 ++++++
+> >  .../arch/riscv/t-head/c9xx/microarch.json     | 42 ++++++++++++
+> >  6 files changed, 201 insertions(+), 6 deletions(-)
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/cache.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/firmware.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/instruction.json
+> >  create mode 100644 tools/perf/pmu-events/arch/riscv/t-
+> > head/c9xx/microarch.json
+> >
+> > --
+> > 2.40.1
+> >
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
