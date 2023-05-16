@@ -2,164 +2,290 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04628C77B7D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 16 May 2023 02:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9525C77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 16 May 2023 06:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229622AbjEPCrP (ORCPT
+        id S230058AbjEPG52 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 15 May 2023 22:47:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57610 "EHLO
+        Tue, 16 May 2023 02:57:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229607AbjEPCrO (ORCPT
+        with ESMTP id S229510AbjEPG52 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 15 May 2023 22:47:14 -0400
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2065.outbound.protection.outlook.com [40.107.92.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D864B61B8;
-        Mon, 15 May 2023 19:46:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=coq/FrplMQqxQkWRsScVr37qs6u/BJZL854QRBv51cryAXdLJH/yh1qe1H4s9qVNccXeLn8PaOm1OE1+D5yWntLxt/9w2mJLRuOupLOkxNxV0BoZsSgFaVRDKB/YTBJsYQ744ZHrPF1Xl3X5UkcQ9v3vvBgzswuuyppyNaBPRyFHLacPSTo/JIFXNhKZK0CeT2zEkXRitBX+I/S9xJikVk3uEejYbpRc2/112B0zATv2Qq1OQzaeC8cNZY2KQp/9KD6C5rBaqi9VD3yHf2lf4T2XonMAfT0b8sq9/U6cIzPG7PRRoh2MffMte9caqirp4UpsJXxkASddy7O5ufPsPg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kVU8en4DwbOAXrS1CcTACrpNerZebMGtrjVlTqUaaLQ=;
- b=nZQBmYsrk2c+hJyuJ2HjSSCaqh/ZYi57Kb2NIzH0Ue78zqImQbqWCFO2Xbooay9HKxouecLot4u/RMhYfzOkoj84/wNB7Auyx7fIOTYuclcf/yToYB6G2G/KLBgdyyiyAWHC/sMnPigih3QLnbEfzuJ/ZuDSi7YQN2qfGQ7MB46qRJTb/LMcFnY3xw66zfXTha9dHivlI7oNkI6BAGrmiVPA8SqAxPZVbEg/3LP7zZTi/vheE7Iw/N+hUKuLR4s8Nez/+MArARaUJSITyuAyXpIjmw8DKRiPFfZBfF1QkusOHb+fJKzUoCUnNEVvzJkggAHSVX1hq9yJXJ+b6GMN3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kVU8en4DwbOAXrS1CcTACrpNerZebMGtrjVlTqUaaLQ=;
- b=UyyVMoBJnT/arzpnQMe4wdHIG+Iltsc4YMjZ6t/X7p4m9VF1bIgO8qmUd4RiGCsXC5eHnKpbtX97+ktNXyk8jLR8gDkajL+SbDfiMjdTqvVHOA2F39rsAaxU93V4/BP+WMp8T8N+2QANZJYWM0uhDFl/vxiX271R7q3ngpUcVss=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by MN2PR12MB4237.namprd12.prod.outlook.com (2603:10b6:208:1d6::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.30; Tue, 16 May
- 2023 02:46:49 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::b4a6:94bb:6895:645]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::b4a6:94bb:6895:645%7]) with mapi id 15.20.6387.030; Tue, 16 May 2023
- 02:46:49 +0000
-Message-ID: <bd4f84ff-640d-02bf-1abd-58bc8362edb8@amd.com>
-Date:   Tue, 16 May 2023 08:15:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3 0/9] perf/mem: AMD IBS and generic tools improvements
-To:     peterz@infradead.org
-Cc:     mingo@kernel.org, eranian@google.com, kan.liang@linux.intel.com,
-        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        leo.yan@linaro.org, kjain@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com, Namhyung Kim <namhyung@kernel.org>,
-        acme@kernel.org, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20230407112459.548-1-ravi.bangoria@amd.com>
- <CAM9d7cijvZBsaXTMm8d=sxUWy6s+umCCnWhunD3KVhKbpVp_-A@mail.gmail.com>
- <631876a2-5946-82d5-6f70-bf7734db3992@amd.com>
-Content-Language: en-US
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <631876a2-5946-82d5-6f70-bf7734db3992@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BM1PR01CA0164.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:68::34) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Tue, 16 May 2023 02:57:28 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA6A4213;
+        Mon, 15 May 2023 23:57:16 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QL6T62sCLzLmDW;
+        Tue, 16 May 2023 14:55:54 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 16 May 2023 14:57:13 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <anshuman.khandual@arm.com>,
+        <jesussanp@google.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH v4 0/4] perf tools: Add printing perf_event_attr `config` and `id` symbol in perf_event_attr__fprintf()
+Date:   Tue, 16 May 2023 06:55:34 +0000
+Message-ID: <20230516065538.83021-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|MN2PR12MB4237:EE_
-X-MS-Office365-Filtering-Correlation-Id: a85f68ca-7ec6-4702-7a65-08db55b7cbcf
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hy6DHZjqCQuTufPyY1c8pzqmRSaCz4mrpELLR5KUhthJ8FYV5vsb9yEAu6nCaO5wIcU6p/sVmmSy9fiyIhyK5VABs2LHP/BLX5BV0Gg/LhNpZQD7xFa1IwridptP7FOwB+AwOp9UlJZN9Grny0opSlE8az4HGyPz/8pGFlKLLfDGrFZl0I4taMbTqUnlFw73Xxhhk8bz32aGbzBDCQmzGvpQCWhfiKiew7Xy/8IXZwPEyQ5MRuXz5kAguWRZwtdALMJhQeNAGtGiGyLvHSpNgwAiKgDcl/BKyIlqENmbVCRznXPaLqaiEJm+1ri8bxoj+0mcSiy2qm3+CGixvgz7WvpoHXehIzmKnhnDhMbF9k0LSY7ydMMnKstktqMx1bqlAVYgbturY6frLXjqRyJQs/2WTmQuyps2gcWplypidLXD/HoX+uAAyjZdupbpAak3eedlWIpDKTG2xSqQi8gTHYdC35G/Un/th5YfPEQh+MImrDC4T7ki3ZSKHTet2/wtprriCTXtnnyMJnna0kNk09rI+dIEsor/Q5dFV60Af9yT6dOpJcP911XcTzbnxPWVlky/WDEQpVTg7J2WPpYko4jD5Ol3S1O9UKgPnqV+/BOXXOkYUTv8RyYKzdNjV/NxreaF7mAzke/s12lJO52FJU05qW4qjh3m5SZMKqMwFqA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(451199021)(478600001)(6666004)(8676002)(41300700001)(66476007)(66946007)(4326008)(66556008)(6916009)(316002)(54906003)(8936002)(38100700002)(36756003)(186003)(31686004)(6506007)(2616005)(6512007)(53546011)(2906002)(26005)(83380400001)(31696002)(86362001)(7416002)(44832011)(5660300002)(6486002)(41533002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?T3I0VnNXeGhrNFNHeklnRnQ5bUtKbHZ1Z2VoaFI5Ym94ZFFZbjRqSnhwWGNY?=
- =?utf-8?B?enNXOGl1a0VJM2ZJc29laDlIZ09URTBLUmlSRk5jQ3RlYWFlbEJZaHFGVWFH?=
- =?utf-8?B?QXpwYm5XSFpjYTJHTUprY0FZVWVlYVFQZmNyZUdCbXAvT0ZUU1ovVDFZNWty?=
- =?utf-8?B?QjJWZ2pHYzh6TVhjK0xnTnowU2NFeC82Y05FRHptUzNBWDJmSmVFU2g2b2ov?=
- =?utf-8?B?WW5kNW9YckJZYkhTUktrRkJmb1daNkZSK3NHTld0OHZqbG9oVklvdnkydENw?=
- =?utf-8?B?RDBGN0tGdEE5NjRXdmxPRldSWTRtdFFBUnI3WWdUTDlXSzdid1R1TlZRMENP?=
- =?utf-8?B?WDNaNE1QdllwWEtLZjF4M0xSK1ZHSTBBMWIyNFN2MVhsWEpEL3hoYjVuaUF2?=
- =?utf-8?B?YVhtTDcrNkhoeDBBWjNRYWxSWDRTMjA1OG5lSlZPZjZJVG5rTkVPaEpEQkxL?=
- =?utf-8?B?bHFaYzQ0bHdQclh5emJQMjBNWjFqRFNVQ3I0Mzhkby91ZDlINUl2U0VRNDAr?=
- =?utf-8?B?SzJSZWZScTkrL1YxaHdNS1o0dTRBbUV4VzdWaytpM1VlVG1PYm5STnFMeFM0?=
- =?utf-8?B?dXduVjFCWWh4SXp1MDhzZFFPUFBkVU1vL1BYRmErRFM0UkFYYXE4V3drenlY?=
- =?utf-8?B?R09uTW1mNXFqOTU5TUlUaXFMZitlaXFYRXB2SEU3UG1odEFrMFkyelFVcWkx?=
- =?utf-8?B?YmFGeWJiNy9aeU9MUkxXR3VTSWNEUGh0QXpLZ0pVenpnVHlSQWs0amtjVm1M?=
- =?utf-8?B?NHpIM1ZWSXRCSjFjdkZCOSs5R0Y2ME1jcmlEOHNxUWVtbW5oaE11bzIwTm5J?=
- =?utf-8?B?TzVUcjRrcFl3d3hjOURkb1dJQjYvb1NsMzlGYjlLS2ZjVTUzdStiRGlWMTA1?=
- =?utf-8?B?czFJKzlMWjVSZWJaSXNqK2pZMWM5T1RKbWtqckVpMFgrSmk2ZSs4ektiU215?=
- =?utf-8?B?QlZhYXhYNGdsNHR4eUx2TDE3YVltWGhiaTYyWnVmMW9yMDNYVnNRSHdPbG5v?=
- =?utf-8?B?cFY2eUN4M01EQy9QdzlKTVIyRUtzY3preDlOWXU2aDdPZzJGQ1NHY2pMek1n?=
- =?utf-8?B?bG41VngwSFVSUEY4MGdTKzBrT1kwZHdzR2p4dDhjUlFTdmsvMytJRFI2VmVw?=
- =?utf-8?B?blJCT2EzWU9PSWFZdk51eW5nSmxUMy8zQlhhajR1bVVTeFR0Z3lIV0RUT2g2?=
- =?utf-8?B?NEN1NURBMytxQk5Dbk1kcmJwUGFiUjg3UVFWbGhQR0JXd3M1Q21RQnNLKy9l?=
- =?utf-8?B?eFlKZFNSR29uSm9lOC9yek9tQW1FY0RXOUVONndaQk02WUxGMjNRUlB3bVNw?=
- =?utf-8?B?T3RVWGR5OTdQT29OczFtTGxJajFmRjQ0L0cyOWYyNnhXUVowaG43UnJyV3cy?=
- =?utf-8?B?KysrMFlVbmJNZk9zYkRJNHlDb2FRTEVuWW82YVdySGtjMnFXd3R1MGZjdk1J?=
- =?utf-8?B?T1lTby9QYVZyZmN4VXlERzlUbStMbTNLMWhQUDhyTk5oUmdsUVFZaUpFUFVt?=
- =?utf-8?B?TnFNNElpcWloUFY1Tm5oNzNPSVkybm1vWDdkYllsM1BwT1lHbWRzMnZQM2pw?=
- =?utf-8?B?eG5KZjdEVC9uK0RJZHp5UlNva2FzS29IUVF1bUh6RkR3cE0rWmpXUk5PcjZx?=
- =?utf-8?B?dXp0UXJmc3c1WmFrTXNGNzhISkJPUXExclFRTGF5WHdyTzY1czZuUUNXN29D?=
- =?utf-8?B?TXZ3TVJNd2x6Y3hpKzc3c0RVdlJ0aE1JTHdEcy83RzMxWnFsSTM1WmhzVnhL?=
- =?utf-8?B?Um1LQ1hBcm1RejlBTkY1MkZ4L0hpU2oxNWsrMUx1UzAxYi9obzZIZEhOUW8x?=
- =?utf-8?B?ZS9WOWFpUnVSUXNJRUcxLzZpZ2NubkFQQTMzdjl2bmxzUmgwMmVncW1FcXZs?=
- =?utf-8?B?QnJ2TS9LdFoyNUUvQkZEcXpoVlVxZjVHRGpsSndWeDdzeWhadEJHODRhRUVC?=
- =?utf-8?B?eFFWWDIwTmN6eERsQmxwaFlGWWtNdVdlQ2RTblhZUHRPNkhrdmZ0WkNnSldL?=
- =?utf-8?B?ZGo2ejhTTHNndGlybytCbzF0K2FKUG9rZGdKNnRZZnJ4K0FucmQwbTNPaTVm?=
- =?utf-8?B?SjUwSGVpUUlHNGlsUGY5RjJTdi9zRGxIK3NhQ0gzcFBWUWlzUUpGaXlvdHdK?=
- =?utf-8?Q?jUuCXvtN0lywh4+KMHzlea9Xw?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a85f68ca-7ec6-4702-7a65-08db55b7cbcf
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 May 2023 02:46:49.4295
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kahN1tfeRZ1XkfwdW7PMOKKPcZzxeEh+dJBz2okUW8HgP6lZdM7+d+AvSJj3oIl1fEwZZ/CjHzgwYizG4acRHA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4237
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 10-Apr-23 7:53 AM, Ravi Bangoria wrote:
-> On 08-Apr-23 3:14 AM, Namhyung Kim wrote:
->> Hi Ravi,
->>
->> On Fri, Apr 7, 2023 at 4:25 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>>
->>> Kernel IBS driver wasn't using new PERF_MEM_* APIs due to some of its
->>> limitations. Mainly:
->>>
->>> 1. mem_lvl_num doesn't allow setting multiple sources whereas old API
->>>    allows it. Setting multiple data sources is useful because IBS on
->>>    pre-zen4 uarch doesn't provide fine granular DataSrc details (there
->>>    is only one such DataSrc(2h) though).
->>> 2. perf mem sorting logic (sort__lvl_cmp()) ignores mem_lvl_num. perf
->>>    c2c (c2c_decode_stats()) does not use mem_lvl_num at all. perf mem
->>>    prints mem_lvl and mem_lvl_num both if both are set, which is ugly.
->>>
->>> Set mem_lvl_num, mem_remote and mem_hops for data_src via IBS. Handle
->>> first issue using mem_lvl_num = ANY_CACHE | HOPS_0. In addition to
->>> setting new API fields, convert all individual field assignments to
->>> compile time wrapper macros built using PERF_MEM_S(). Also convert
->>> DataSrc conditional code to array lookups.
->>>
->>> Interpretation of perf_mem_data_src by perf_mem__lvl_scnprintf() was
->>> non-intuitive. Make it sane.
->>
->> Looks good, but I think you need to split kernel and user patches.
-> 
-> Patch #1 to #3 are kernel changes. Patch #4 to #9 are userspace changes.
-> Arnaldo, Peter, please let me know if you wants to split the series and
-> resend.
+Add printing perf_event_attr `config` and `id` symbol to improve the readability of debugging information.
 
-Hi Peter, tools/ patches are already upstream. Can you please pick up
-kernel changes.
+Before:
 
-Thanks,
-Ravi
+  # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101,mem:0x0 -C 0 true
+  <SNIP>
+  ------------------------------------------------------------
+  perf_event_attr:
+    size                             136
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1
+    size                             136
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             2
+    size                             136
+    config                           0x143
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             3
+    size                             136
+    config                           0x10005
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4
+    size                             136
+    config                           0x101
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             5
+    size                             136
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    sample_id_all                    1
+    exclude_guest                    1
+    bp_type                          3
+    { bp_len, config2 }              0x4
+  ------------------------------------------------------------
+  <SNIP>
+
+After:
+
+  # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101,mem:0x0 -C 0 true
+  <SNIP>
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             0 (PERF_TYPE_HARDWARE)
+    size                             136
+    config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1 (PERF_TYPE_SOFTWARE)
+    size                             136
+    config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             2 (PERF_TYPE_TRACEPOINT)
+    size                             136
+    config                           0x143 (sched:sched_switch)
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             3 (PERF_TYPE_HW_CACHE)
+    size                             136
+    config                           0x10005 (PERF_COUNT_HW_CACHE_RESULT_MISS | PERF_COUNT_HW_CACHE_OP_READ | PERF_COUNT_HW_CACHE_BPU)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             4 (PERF_TYPE_RAW)
+    size                             136
+    config                           0x101
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    freq                             1
+    sample_id_all                    1
+    exclude_guest                    1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             5 (PERF_TYPE_BREAKPOINT)
+    size                             136
+    config                           0
+    { sample_period, sample_freq }   1
+    sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+    read_format                      ID
+    disabled                         1
+    inherit                          1
+    sample_id_all                    1
+    exclude_guest                    1
+    bp_type                          3
+    { bp_len, config2 }              0x4
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
+  ------------------------------------------------------------
+  perf_event_attr:
+    type                             1 (PERF_TYPE_SOFTWARE)
+    size                             136
+    config                           0x9 (PERF_COUNT_SW_DUMMY)
+    { sample_period, sample_freq }   4000
+    sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+    read_format                      ID
+    inherit                          1
+    mmap                             1
+    comm                             1
+    freq                             1
+    task                             1
+    sample_id_all                    1
+    mmap2                            1
+    comm_exec                        1
+    ksymbol                          1
+    bpf_event                        1
+  ------------------------------------------------------------
+  sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 12
+  <SNIP>
+
+Yang Jihong (4):
+  perf trace-event-info: Add tracepoint_id_to_name() helper
+  perf tools: Extend PRINT_ATTRf to support printing of members with a
+    value of 0
+  perf tools: Add printing perf_event_attr type symbol in
+    perf_event_attr__fprintf()
+  perf tools: Add printing perf_event_attr config symbol in
+    perf_event_attr__fprintf()
+
+ tools/perf/util/perf_event_attr_fprintf.c | 186 ++++++++++++++++++++--
+ tools/perf/util/trace-event-info.c        |  11 ++
+ tools/perf/util/trace-event.h             |   6 +
+ 3 files changed, 194 insertions(+), 9 deletions(-)
+
+-- 
+
+Changes since v3:
+ - Change print_id() helper to a macro function to support printing of both hex and unsigned formats.
+
+Changes since v2:
+ - Adjusting the order of local declarations in tracepoint_id_to_name()
+ - Remove unnecessary parentheses and "!= NULL" in tracepoint_id_to_name()
+ - Remove unnecessary comment of synchronizing with perf_event.h
+ - Add print_id helper()
+ - Remove "#ifdef HAVE_LIBTRACEEVENT" put around "#include "trace-event.h"
+ - Remove comment of "// for free" for "#include <stdlib.h>"
+
+Changes since v1:
+ - Modify initialization of path in tracepoint_id_to_path().
+ - Replace snprintf&strdup with asprintf.
+ - Use switch/case to get stringified name for type and id.
+
+2.30.GIT
+
