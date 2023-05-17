@@ -2,57 +2,57 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE709C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 07:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BE3C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 07:40:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229971AbjEQH3b (ORCPT
+        id S230044AbjEQHkc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 May 2023 03:29:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57536 "EHLO
+        Wed, 17 May 2023 03:40:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229957AbjEQH30 (ORCPT
+        with ESMTP id S229563AbjEQHkb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2023 03:29:26 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5436B1726;
-        Wed, 17 May 2023 00:29:22 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id EF577204F8;
-        Wed, 17 May 2023 07:29:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1684308561; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eii5ss2ocLxG8N7/nX823yY9WNM71xoVrkq3X6PC3iI=;
-        b=hQvUWIwV6dCGwuy3cNq5IQT6P4+C/VAVmwLb4GtYKRRH2ugi1jPXhCde+huPj1CQ4BTIvb
-        Mq7gF5pblxgfVMZ0MzePq08W3e416/qsT2eooe28/Ge9FinmDOZxJd/ttsaYqUU6FtLcXy
-        3WifwYteFwOXitONZ5p8n1bpd6ozBMk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1684308561;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eii5ss2ocLxG8N7/nX823yY9WNM71xoVrkq3X6PC3iI=;
-        b=6b8pr7AgWnQi46BzKh0rbfqRBGeaL4LkESIM594OVIo6t6RKDV5ot9JIBptg6ZdgmCqX7G
-        5J23DXq7PolfGmDw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D8A75139F5;
-        Wed, 17 May 2023 07:29:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id q0FVNFCCZGSmDQAAMHmgww
-        (envelope-from <jack@suse.cz>); Wed, 17 May 2023 07:29:20 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 24F03A0735; Wed, 17 May 2023 09:29:20 +0200 (CEST)
-Date:   Wed, 17 May 2023 09:29:20 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
+        Wed, 17 May 2023 03:40:31 -0400
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282DEE40;
+        Wed, 17 May 2023 00:40:30 -0700 (PDT)
+Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f475366514so2821145e9.2;
+        Wed, 17 May 2023 00:40:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684309228; x=1686901228;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=E+Ld0Ovjdd0x8sc5pvboMnhYHV4AgRb0J8CE6t0hZIM=;
+        b=WA4SxHpvGm1ODLM4q/8vfu4vKglP08hu0HlJ/yJJbiD9LBzuIHlUgDdcL3VIMkHk/P
+         p2cz2vdAYv4BbiJ0LQb/Dzae+iABrn+JRnv+S8RGWEPseRZq0h7QRvRtmRbcesxue8a/
+         BciE7NdBJ4QRsjKDJQE77K2/2QUXnqDpqCLLflQ9zc8BaBcSESiHiDelcdo0LrzKMHaC
+         GUMDcQgWV//4Zs7KXkfDnbCoP76vQ+YQT8YhKjLXhfDZACBifHxeO2/8ymyh0cmWzSVD
+         rtYLl1O47U9VzqLqtCwhyHFUA2ZAtik0+iGN7RqiL3HAYiJJoJPkrJkPKRposqrQ0oAq
+         ri2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684309228; x=1686901228;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E+Ld0Ovjdd0x8sc5pvboMnhYHV4AgRb0J8CE6t0hZIM=;
+        b=QBzK6v89W+4YM359n67GZzi+5YcIKdg7P+DhjZdk6BTwR0TrW1FmmOP0evHZQ+GOF+
+         d1GIQP/6NC+glSm7PukqP/G5LTX0bYHVO8f4Mofk5hwC1zTEuc73RJTilFtkf4cyQ7sj
+         XMWBqDzCQPeZHW8L0kDqExExznLNDS9LoWfsh5rAwtRgIZ5FF7mgNQmbIMf4kHhjJWNo
+         +kmRAOmXUJos7QS/BLTrYCyQmhijGqL+GFBUX8ZNp1w4n6jIRAoIZArrsrdxOssv/cER
+         KcGlDUNdAikMEUcszJV6xB0b1x0Z+hEcl4K8JZWotXzl72dlZ+VZo06n6EiKfmsWoxun
+         u6IQ==
+X-Gm-Message-State: AC+VfDwlygc1sGiQEVkQkU9xynPdCP2yY767H+8AOqjbvnjetIrFM2+T
+        N6GNfcPk8CKGwHWMP0oPItc=
+X-Google-Smtp-Source: ACHHUZ4QFru10EJHOkrAg2WS7xokWnRh6SsO8/nZ9408Z1x44sx4+q5GoeByQVkYGCmWKPQ44It+Qw==
+X-Received: by 2002:a7b:ca51:0:b0:3f4:2148:e8e5 with SMTP id m17-20020a7bca51000000b003f42148e8e5mr24473724wml.1.1684309228284;
+        Wed, 17 May 2023 00:40:28 -0700 (PDT)
+Received: from localhost (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
+        by smtp.gmail.com with ESMTPSA id f21-20020a7bcc15000000b003f31d44f0cbsm1289563wmh.29.2023.05.17.00.40.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 00:40:26 -0700 (PDT)
+Date:   Wed, 17 May 2023 08:40:26 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     Jan Kara <jack@suse.cz>
 Cc:     Jason Gunthorpe <jgg@nvidia.com>,
         "Kirill A . Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org,
@@ -90,7 +90,7 @@ Cc:     Jason Gunthorpe <jgg@nvidia.com>,
         linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org,
         Oleg Nesterov <oleg@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        John Hubbard <jhubbard@nvidia.com>,
         Pavel Begunkov <asml.silence@gmail.com>,
         Mika Penttila <mpenttil@redhat.com>,
         David Hildenbrand <david@redhat.com>,
@@ -101,56 +101,68 @@ Cc:     Jason Gunthorpe <jgg@nvidia.com>,
         Christian Borntraeger <borntraeger@linux.ibm.com>
 Subject: Re: [PATCH v9 0/3] mm/gup: disallow GUP writing to file-backed
  mappings by default
-Message-ID: <20230517072920.bfs7gfo4whdmi6ay@quack3>
+Message-ID: <d17c0fce-679b-4f5d-9a7c-6ff7e28ad4b2@lucifer.local>
 References: <cover.1683235180.git.lstoakes@gmail.com>
  <20230515110315.uqifqgqkzcrrrubv@box.shutemov.name>
  <7f6dbe36-88f2-468e-83c1-c97e666d8317@lucifer.local>
  <ZGIhwZl2FbLodLrc@nvidia.com>
  <ad0053a4-fa34-4b95-a262-d27942b168fd@lucifer.local>
+ <20230517072920.bfs7gfo4whdmi6ay@quack3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ad0053a4-fa34-4b95-a262-d27942b168fd@lucifer.local>
+In-Reply-To: <20230517072920.bfs7gfo4whdmi6ay@quack3>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon 15-05-23 14:07:57, Lorenzo Stoakes wrote:
-> On Mon, May 15, 2023 at 09:12:49AM -0300, Jason Gunthorpe wrote:
-> > On Mon, May 15, 2023 at 12:16:21PM +0100, Lorenzo Stoakes wrote:
-> > > Jason will have some thoughts on this I'm sure. I guess the key question
-> > > here is - is it actually feasible for this to work at all? Once we
-> > > establish that, the rest are details :)
+On Wed, May 17, 2023 at 09:29:20AM +0200, Jan Kara wrote:
+> On Mon 15-05-23 14:07:57, Lorenzo Stoakes wrote:
+> > On Mon, May 15, 2023 at 09:12:49AM -0300, Jason Gunthorpe wrote:
+> > > On Mon, May 15, 2023 at 12:16:21PM +0100, Lorenzo Stoakes wrote:
+> > > > Jason will have some thoughts on this I'm sure. I guess the key question
+> > > > here is - is it actually feasible for this to work at all? Once we
+> > > > establish that, the rest are details :)
+> > >
+> > > Surely it is, but like Ted said, the FS folks are not interested and
+> > > they are at least half the solution..
 > >
-> > Surely it is, but like Ted said, the FS folks are not interested and
-> > they are at least half the solution..
-> 
-> :'(
+> > :'(
+>
+> Well, I'd phrase this a bit differently - it is a difficult sell to fs
+> maintainers that they should significantly complicate writeback code / VFS
+> with bounce page handling etc. for a thing that is not much used corner
+> case. So if we can get away with forbiding long-term pins, then that's the
+> easiest solution. Dealing with short-term pins is easier as we can just
+> wait for unpinning which is implementable in a localized manner.
+>
 
-Well, I'd phrase this a bit differently - it is a difficult sell to fs
-maintainers that they should significantly complicate writeback code / VFS
-with bounce page handling etc. for a thing that is not much used corner
-case. So if we can get away with forbiding long-term pins, then that's the
-easiest solution. Dealing with short-term pins is easier as we can just
-wait for unpinning which is implementable in a localized manner.
+Totally understandable. It's unfortunately I feel a case of something we
+should simply not have allowed.
 
-> > The FS also has to actively not write out the page while it cannot be
-> > write protected unless it copies the data to a stable page. The block
-> > stack needs the source data to be stable to do checksum/parity/etc
-> > stuff. It is a complicated subject.
-> 
-> Yes my sense was that being able to write arbitrarily to these pages _at
-> all_ was a big issue, not only the dirty tracking aspect.
+> > > The FS also has to actively not write out the page while it cannot be
+> > > write protected unless it copies the data to a stable page. The block
+> > > stack needs the source data to be stable to do checksum/parity/etc
+> > > stuff. It is a complicated subject.
+> >
+> > Yes my sense was that being able to write arbitrarily to these pages _at
+> > all_ was a big issue, not only the dirty tracking aspect.
+>
+> Yes.
+>
+> > I guess at some level letting filesystems have such total flexibility as to
+> > how they implement things leaves us in a difficult position.
+>
+> I'm not sure what you mean by "total flexibility" here. In my opinion it is
+> also about how HW performs checksumming etc.
 
-Yes.
+I mean to say *_ops allow a lot of flexibility in how things are
+handled. Certainly checksumming is a great example but in theory an
+arbitrary filesystem could be doing, well, anything and always assuming
+that only userland mappings should be modifying the underlying data.
 
-> I guess at some level letting filesystems have such total flexibility as to
-> how they implement things leaves us in a difficult position.
-
-I'm not sure what you mean by "total flexibility" here. In my opinion it is
-also about how HW performs checksumming etc.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>
+> 								Honza
+> --
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
