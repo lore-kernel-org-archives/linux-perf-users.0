@@ -2,260 +2,88 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FFEC77B7D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 15:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2099C77B75
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 15:49:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231963AbjEQP3B (ORCPT
+        id S231542AbjEQPta (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 May 2023 11:29:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56612 "EHLO
+        Wed, 17 May 2023 11:49:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232442AbjEQP2N (ORCPT
+        with ESMTP id S229756AbjEQPt3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2023 11:28:13 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679251FFB
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 08:27:17 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba5fd33fdacso1518199276.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 08:27:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684337236; x=1686929236;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xo70dYhEcfCgGbPC8sbOAVfsz7lHN99PYmfDYjMXA94=;
-        b=gMdU4bD322wqDMNV9koAXPHXH4hb6CTWBdlu2bSu8PZ+49NpgyircVTQrcqIugyIE9
-         nyRShtcUk5GWNZd+1iaoN0UTkPQ3vbFSuQSDAr8MhWFmYxWlh+gEkSBW658rmpymPsgV
-         xaG1OZnEhLxZbcZ1KnsDoz99oXvcvrmpWy+Zn7MtLbAupJ6nK9jdn9AO48MAE+IqokpJ
-         R+RYO9WY5SizzzLeVWGOirbQQATb4zhFKibq6cjI2NLHgpwd+965IGZB5eKftUCilKPG
-         +OMQSZDvucSRQQSQRMZvMF8ZPs36QK28LgbyL46cLmkaOX9qKaNrHUDoQ3QE+Nc6LFMg
-         a3qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684337236; x=1686929236;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xo70dYhEcfCgGbPC8sbOAVfsz7lHN99PYmfDYjMXA94=;
-        b=h639OvuMNWxgtr716sxv03miIrh00pmetWsTull6UZF2hdjTc6eA/NIhnWcsFTzmDQ
-         Qr773iWpLHDL9pT+ykED7SGQqynYoNX4yYtJd/KLMrDBXRrBMf+3JcJ5KSQON1XYOL7Q
-         hGRpDRWkMAeeLpNQRJJRWsFed8YB+LcBSsnUiaIz4c3rtlqY+MtHD99W5pbBi1YwYWnC
-         WD67Qi9JJ3CnMgw2FrAaDdSejehcLHvYv7FZD8Y4nfx53Jz/6E5viM5Hmd0sFd2oMwxB
-         byy0u0SbSv+BIHDckkBYOer+HNVQPRTpf2qEy1uypozRXqxn8MarTn2LzYSndeCt/b86
-         Tz/g==
-X-Gm-Message-State: AC+VfDx8Gh3kkprT6r7zTEPiEWvuuHbY07jNI0R58A2zDpfhvtpDYQQG
-        ERApSGym3J1lIt+S1aH18VGJ/M5yzge0
-X-Google-Smtp-Source: ACHHUZ6Hm9l39kcH6VLHakbh3lCn8HOFPikxtQaLmOcYle3x646+kRdIUtZ54VrtsXlGYXuIPAgcM7d3A32z
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:628b:7e78:d09b:39b])
- (user=irogers job=sendgmr) by 2002:a25:ab84:0:b0:ba8:337a:d8a3 with SMTP id
- v4-20020a25ab84000000b00ba8337ad8a3mr3114681ybi.11.1684337236726; Wed, 17 May
- 2023 08:27:16 -0700 (PDT)
-Date:   Wed, 17 May 2023 08:26:25 -0700
-In-Reply-To: <20230517152626.563559-1-irogers@google.com>
-Message-Id: <20230517152626.563559-15-irogers@google.com>
-Mime-Version: 1.0
-References: <20230517152626.563559-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
-Subject: [PATCH v2 14/15] perf jevents: Add support for metricgroup descriptions
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Wed, 17 May 2023 11:49:29 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC9C6C2;
+        Wed, 17 May 2023 08:49:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684338568; x=1715874568;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=3EyLVD0TTPV3FCOCCcWuvj+mI5c+appPtjz6zRCuHA0=;
+  b=LOdARhuYCvlBqYE+Kn5f0h5PVcy064VgZV3Jx0nf3paXNbs1jlKjQRX8
+   mEYiPcB2dgN7ysOiyQoQioVhKAxbUAtEvPVCabLtgNJtFf7qDXoASLZz+
+   am5lx6cD9T8ByZW6Vr9dnvBVtl42TLxuAwywXnfJG/+p5Vf8EX0HNw2DQ
+   z07mjnAbuIvbh2QsYwUMccxzKL3f8aROM6t2b18kYJWz0wTvvwkMo5OLJ
+   tbm5rwS5J/JNGci97uPLv5Dui5LjnK7Beu5F0V1PPnJKQlcBFAnYIR78C
+   p0xP/wADV0iQJsC+I5r4+XmmA8wFycauyienwdOzCXCgjzRPo5swFeQzY
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="331411534"
+X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
+   d="scan'208";a="331411534"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 08:49:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="876099591"
+X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
+   d="scan'208";a="876099591"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 17 May 2023 08:49:27 -0700
+Received: from [10.212.161.221] (kliang2-mobl1.ccr.corp.intel.com [10.212.161.221])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 481D7580AF7;
+        Wed, 17 May 2023 08:49:26 -0700 (PDT)
+Message-ID: <fdac0774-30d6-c81b-5eb9-54edaa6f6ff1@linux.intel.com>
+Date:   Wed, 17 May 2023 11:49:24 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH v2 15/15] perf vendor events intel: Add metricgroup
+ descriptions for all models
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         John Garry <john.g.garry@oracle.com>,
         Kajol Jain <kjain@linux.ibm.com>,
         Thomas Richter <tmricht@linux.ibm.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+References: <20230517152626.563559-1-irogers@google.com>
+ <20230517152626.563559-16-irogers@google.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230517152626.563559-16-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Metrics have a field where the groups they belong to are listed like
-the following from
-tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json:
 
-        "MetricGroup": "PGO;TmaL1;TopdownL1;tma_L1_group",
-        "MetricName": "tma_frontend_bound",
 
-The metric groups are shown in 'perf list' like the following where
-TopdownL1 is a metric group:
+On 2023-05-17 11:26 a.m., Ian Rogers wrote:
+> +    "Memory_BW": "Grouping from metrics spreadsheet",
+> +    "Memory_Lat": "Grouping from metrics spreadsheet",
 
-TopdownL1:
-  tma_backend_bound
-       [This category represents fraction of slots where no uops are being
-        delivered due to a lack of required resources for accepting new uops
-        in the Backend]
-  tma_bad_speculation
-       [This category represents fraction of slots wasted due to incorrect
-        speculations]
-  tma_frontend_bound
-       [This category represents fraction of slots where the processor's
-        Frontend undersupplies its Backend]
-  tma_retiring
-       [This category represents fraction of slots utilized by useful work
-        i.e. issued uops that eventually get retired]
+Seems there is another place we need to update in the convertor script?
 
-This patch adds support for a new json file in each model directory
-called metricgroups.json that comprises a dictionary containing
-entries that map from a metric group to a description:
 
-{
-...
-    "TopdownL1": "Metrics for top-down breakdown at level 1",
-...
-}
-
-perf list is then updated to support this changing the above output
-to:
-
-TopdownL1: [Metrics for top-down breakdown at level 1]
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-list.c                | 11 ++++--
- tools/perf/pmu-events/empty-pmu-events.c |  5 +++
- tools/perf/pmu-events/jevents.py         | 49 +++++++++++++++++++++++-
- tools/perf/pmu-events/pmu-events.h       |  2 +
- 4 files changed, 62 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index c6bd0aa4a56e..e8520a027b45 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -192,9 +192,14 @@ static void default_print_metric(void *ps,
- 		if (group && print_state->metricgroups) {
- 			if (print_state->name_only)
- 				printf("%s ", group);
--			else if (print_state->metrics)
--				printf("\n%s:\n", group);
--			else
-+			else if (print_state->metrics) {
-+				const char *gdesc = describe_metricgroup(group);
-+
-+				if (gdesc)
-+					printf("\n%s: [%s]\n", group, gdesc);
-+				else
-+					printf("\n%s:\n", group);
-+			} else
- 				printf("%s\n", group);
- 		}
- 		zfree(&print_state->last_metricgroups);
-diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
-index e74defb5284f..a630c617e879 100644
---- a/tools/perf/pmu-events/empty-pmu-events.c
-+++ b/tools/perf/pmu-events/empty-pmu-events.c
-@@ -420,3 +420,8 @@ int pmu_for_each_sys_metric(pmu_metric_iter_fn fn __maybe_unused, void *data __m
- {
- 	return 0;
- }
-+
-+const char *describe_metricgroup(const char *group __maybe_unused)
-+{
-+	return NULL;
-+}
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 487ff01baf1b..8fca7c9adee0 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -37,6 +37,8 @@ _pending_metrics = []
- _pending_metrics_tblname = None
- # Global BigCString shared by all structures.
- _bcs = None
-+# Map from the name of a metric group to a description of the group.
-+_metricgroups = {}
- # Order specific JsonEvent attributes will be visited.
- _json_event_attributes = [
-     # cmp_sevent related attributes.
-@@ -512,6 +514,17 @@ def preprocess_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
-   if not item.is_file() or not item.name.endswith('.json'):
-     return
- 
-+  if item.name == 'metricgroups.json':
-+    metricgroup_descriptions = json.load(open(item.path))
-+    for mgroup in metricgroup_descriptions:
-+      assert len(mgroup) > 1, parents
-+      description = f"{metricgroup_descriptions[mgroup]}\\000"
-+      mgroup = f"{mgroup}\\000"
-+      _bcs.add(mgroup)
-+      _bcs.add(description)
-+      _metricgroups[mgroup] = description
-+    return
-+
-   topic = get_topic(item.name)
-   for event in read_json_events(item.path, topic):
-     if event.name:
-@@ -548,7 +561,7 @@ def process_one_file(parents: Sequence[str], item: os.DirEntry) -> None:
- 
-   # Ignore other directories. If the file name does not have a .json
-   # extension, ignore it. It could be a readme.txt for instance.
--  if not item.is_file() or not item.name.endswith('.json'):
-+  if not item.is_file() or not item.name.endswith('.json') or item.name == 'metricgroups.json':
-     return
- 
-   add_events_table_entries(item, get_topic(item.name))
-@@ -911,6 +924,38 @@ int pmu_for_each_sys_metric(pmu_metric_iter_fn fn, void *data)
- }
- """)
- 
-+def print_metricgroups() -> None:
-+  _args.output_file.write("""
-+static const int metricgroups[][2] = {
-+""")
-+  for mgroup in sorted(_metricgroups):
-+    description = _metricgroups[mgroup]
-+    _args.output_file.write(
-+        f'\t{{ {_bcs.offsets[mgroup]}, {_bcs.offsets[description]} }}, /* {mgroup} => {description} */\n'
-+    )
-+  _args.output_file.write("""
-+};
-+
-+const char *describe_metricgroup(const char *group)
-+{
-+        int low = 0, high = ARRAY_SIZE(metricgroups) - 1;
-+
-+        while (low <= high) {
-+                int mid = (low + high) / 2;
-+                const char *mgroup = &big_c_string[metricgroups[mid][0]];
-+                int cmp = strcmp(mgroup, group);
-+
-+                if (cmp == 0) {
-+                        return &big_c_string[metricgroups[mid][1]];
-+                } else if (cmp < 0) {
-+                        low = mid + 1;
-+                } else {
-+                        high = mid - 1;
-+                }
-+        }
-+        return NULL;
-+}
-+""")
- 
- def main() -> None:
-   global _args
-@@ -993,7 +1038,7 @@ struct compact_pmu_event {
- 
-   print_mapping_table(archs)
-   print_system_mapping_table()
--
-+  print_metricgroups()
- 
- if __name__ == '__main__':
-   main()
-diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
-index 3549e6971a4d..8cd23d656a5d 100644
---- a/tools/perf/pmu-events/pmu-events.h
-+++ b/tools/perf/pmu-events/pmu-events.h
-@@ -93,4 +93,6 @@ const struct pmu_metrics_table *find_sys_metrics_table(const char *name);
- int pmu_for_each_sys_event(pmu_event_iter_fn fn, void *data);
- int pmu_for_each_sys_metric(pmu_metric_iter_fn fn, void *data);
- 
-+const char *describe_metricgroup(const char *group);
-+
- #endif
--- 
-2.40.1.606.ga4b1b128d6-goog
-
+Thanks,
+Kan
