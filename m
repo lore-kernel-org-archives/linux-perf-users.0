@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BB6C77B7D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 14:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 386BCC77B75
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 14:58:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231464AbjEQO6p (ORCPT
+        id S231940AbjEQO6r (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 May 2023 10:58:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51800 "EHLO
+        Wed, 17 May 2023 10:58:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbjEQO6n (ORCPT
+        with ESMTP id S231721AbjEQO6p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2023 10:58:43 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E94524C
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 07:58:36 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-56098b41d42so8326867b3.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 07:58:36 -0700 (PDT)
+        Wed, 17 May 2023 10:58:45 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD60A40CE
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 07:58:40 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b9a25f6aa0eso1474470276.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 07:58:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684335515; x=1686927515;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=e7J6VZXaspRffiPWCs6qbIb2JCSbaV6rph0RrfEcGYk=;
-        b=2PIxF4UyeLmsWrhMRBIccWHdjqFVWRcx9SR3+tAY0D3mahBohC7OBiN09QOyM/wsBk
-         ZJ1zpCOJrOSn+VSjBupJd7H+HHo5CTXYsgS465pNWd8zB0b4zvO23jPCYBDjhGbz0mI5
-         ZvHB7X4BMTE2QiztWutNtfUmuQ0UUIV4aBfRLjTeQ1v4HNqPz6eiRnq9UqETieUY7qHi
-         kQNUUYKeUnhjFGB7w5c4RKsGFA5YcPs1+04r40Ma9FukRMsLlI8N3TEW2uxFXri+9kL1
-         XpWwW6Qh2s8U9bjVh9q8r+jADUevprsk2VOA/ndGkCil2FCb4FOTXksLSJUKYB/FW5hR
-         +uGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684335515; x=1686927515;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20221208; t=1684335520; x=1686927520;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=e7J6VZXaspRffiPWCs6qbIb2JCSbaV6rph0RrfEcGYk=;
-        b=XqV0fONDWseHu6LZN2SdhqkiP8k9mlUHGLoFZQLMoIMlNscmcdYsvGlj9muvAgeru3
-         S7YoW3y4nYSMve2uocZWIYHTrDDHbBePcMygGXZRAbDsV+1J4XW6dJDIcIRGxXrPwGcs
-         gzGRUguLIJBmK6Ldc6BgUORk7P+BjDrFIipV5zOGdmUi1wO6sZfQJhBIGkSa2J7w26cM
-         R3XPSpk6UiieD4gwrZSca608Q4kkN17/sJT/0CXrRBC2misAFqqezvWkhIZBYRnKnGTs
-         92X0fmjQmpXm2ZwLe8NZpzCXCp0v2MF1SwJU04i2gXQfzUydXW4FvgFxFYqXeHzFF0Xi
-         58Hw==
-X-Gm-Message-State: AC+VfDzyQNE3vRdE0JgdLEcYMs6BvHPn000jsV3EEAU3sjn+B1QVyPQv
-        Im6UImZTRu18+gvce9nIkap51+xQEcqo
-X-Google-Smtp-Source: ACHHUZ78JTFqpqUW+hSz+xcojePuu9xMCSe5wLOwAj1fmNBR8lV9lMWLFiNrA64CyK/9C5/cR6A2DV2nnzuU
+        bh=co4J+RLQCrSsAkDbz+O0JQN5mf/3HC6cUdD7SOOuvnw=;
+        b=KdRTZhvOJomjWjIy1icXpBmC245/59/sRUbHHt+KQUTyK7w6Yq+vR0TRAv3ybdI5OG
+         TPKAdklu/9GchHUfMhrjwzE/2gk+b5odq2C0RdCfgi4V8plv6OCPfwJpk9ecrXuNxtJg
+         Q/X5O4+GJ3RlbgXiLznCywRf7fRqCokSHUsclUyGIfiTOCVOFfoyyXXTnn2pPJwUzqK1
+         1cutCf5Tyd+VjNLNAR/pZATVHkIAI/R2SGAyBZ4v2hqbjXPm2CUKX/cUFzaGrqpklj58
+         ND3Hi/19GNwv+arcdVULoqX6unerqdZgvV/T4g/xhNO0txuiBEceokB9eQxUoHzY3cIV
+         DpAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684335520; x=1686927520;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=co4J+RLQCrSsAkDbz+O0JQN5mf/3HC6cUdD7SOOuvnw=;
+        b=DqL5qgmcS7eaIGR4ViwrhTJgIF/HBLdefPKKVgqmmd80hD3UJUjpi5i/fqWKseiVBP
+         8Ul0Yg3Pf0oD4BeQVSQd8B616tCDNIHyx7NVXJ2eTPKRmREhBzZ0oA8Uqimi9t2gm3js
+         ZCi61psIBuO3BtGN+IU1vWJ/NQn3WD55c3JLAA5lnX1CLwqyaCLIQHEEVFC3xXABJeyN
+         D3ghpeJTsnW4RH6YiGwGIBRKqlBTdndKA4doAuIazEtZ0DM4Y0k59M24Ufzu8QTqFcis
+         wP3H83Y80O9a1Cg480gVBPnK/2ohvviN3ZDLI9rsnCjHfVK4Nfc0DmaWpf/kk545ExM9
+         2gzg==
+X-Gm-Message-State: AC+VfDwwtXam2Owd+hZEF6oJBGj6uG/e3GZlvE2DEAkRbLDYu7E/vBXV
+        o1FBMzVPrSTz3m3An3jpFcQjrA5KUEZK
+X-Google-Smtp-Source: ACHHUZ6XUS995g82GPvS4dREMZj76DbvNdtPUZXP+4TKIsfpmu0mHvVd9YjkhzjZA6P40Xi31dE98BouBXNt
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:628b:7e78:d09b:39b])
- (user=irogers job=sendgmr) by 2002:a81:ec10:0:b0:561:4bb5:1784 with SMTP id
- j16-20020a81ec10000000b005614bb51784mr8311572ywm.2.1684335515399; Wed, 17 May
- 2023 07:58:35 -0700 (PDT)
-Date:   Wed, 17 May 2023 07:57:40 -0700
-Message-Id: <20230517145803.559429-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a5b:5c8:0:b0:ba1:919a:8f08 with SMTP id
+ w8-20020a5b05c8000000b00ba1919a8f08mr17403057ybp.2.1684335519983; Wed, 17 May
+ 2023 07:58:39 -0700 (PDT)
+Date:   Wed, 17 May 2023 07:57:42 -0700
+In-Reply-To: <20230517145803.559429-1-irogers@google.com>
+Message-Id: <20230517145803.559429-3-irogers@google.com>
 Mime-Version: 1.0
+References: <20230517145803.559429-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
-Subject: [PATCH v1 00/23] PMU refactoring and improvements
+Subject: [PATCH v1 02/23] perf evlist: Remove evlist__warn_hybrid_group
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -92,111 +94,86 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Separate the code in pmu.[ch] from the set/list of PMUs case and the
-particular PMU case. Move the set/list of PMUs case code into
-pmus.[ch]. Clean up hybrid code and remove hybrid PMU list, it is
-sufficient to scan PMUs looking for core ones. Add core PMU list and
-perf_pmus__scan_core that just reads core PMUs. Switch code that skips
-non-core PMUs during a perf_pmus__scan, to use the
-perf_pmus__scan_core variant. Don't scan sysfs for PMUs if all such
-PMUs have been previously scanned/loaded. Scanning just just core
-PMUs, for the cases it is applicable, can improve the sysfs reading
-time by more than 4 fold on my laptop, as servers generally have many
-more uncore PMUs the improvement there should be larger:
+Parse events now corrects PMU groups in
+parse_events__sort_events_and_fix_groups and so this warning is no
+longer possible.
 
-```
-$ perf bench internals pmu-scan -i 1000
-Computing performance of sysfs PMU event scan for 1000 times
-  Average core PMU scanning took: 989.231 usec (+- 1.535 usec)
-  Average PMU scanning took: 4309.425 usec (+- 74.322 usec)
-```
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-stat.c       |  3 ---
+ tools/perf/util/evlist-hybrid.c | 32 --------------------------------
+ tools/perf/util/evlist-hybrid.h |  1 -
+ 3 files changed, 36 deletions(-)
 
-The patch "perf pmu: Separate pmu and pmus" moves and renames a lot of
-functions, and is consequently large. The changes are trivial, but
-kept together to keep the overall number of patches more reasonable.
-
-Ian Rogers (23):
-  perf tools: Warn if no user requested CPUs match PMU's CPUs
-  perf evlist: Remove evlist__warn_hybrid_group
-  perf evlist: Remove __evlist__add_default
-  perf evlist: Reduce scope of evlist__has_hybrid
-  perf pmu: Remove perf_pmu__hybrid_mounted
-  perf pmu: Detect ARM and hybrid PMUs with sysfs
-  perf pmu: Add is_core to pmu
-  perf pmu: Rewrite perf_pmu__has_hybrid to avoid list
-  perf x86: Iterate hybrid PMUs as core PMUs
-  perf topology: Avoid hybrid list for hybrid topology
-  perf evsel: Compute is_hybrid from PMU being core
-  perf header: Avoid hybrid PMU list in write_pmu_caps
-  perf metrics: Remove perf_pmu__is_hybrid use
-  perf stat: Avoid hybrid PMU list
-  perf mem: Avoid hybrid PMU list
-  perf pmu: Remove perf_pmu__hybrid_pmus list
-  perf pmus: Prefer perf_pmu__scan over perf_pmus__for_each_pmu
-  perf x86 mem: minor refactor to is_mem_loads_aux_event
-  perf pmu: Separate pmu and pmus
-  perf pmus: Split pmus list into core and uncore
-  perf pmus: Allow just core PMU scanning
-  perf pmus: Avoid repeated sysfs scanning
-  perf pmus: Ensure all PMUs are read for find_by_type
-
- tools/perf/arch/arm/util/auxtrace.c   |   7 +-
- tools/perf/arch/arm/util/cs-etm.c     |   4 +-
- tools/perf/arch/arm64/util/pmu.c      |   6 +-
- tools/perf/arch/x86/tests/hybrid.c    |   7 +-
- tools/perf/arch/x86/util/auxtrace.c   |   5 +-
- tools/perf/arch/x86/util/evlist.c     |  25 +-
- tools/perf/arch/x86/util/evsel.c      |  27 +-
- tools/perf/arch/x86/util/intel-bts.c  |   4 +-
- tools/perf/arch/x86/util/intel-pt.c   |   4 +-
- tools/perf/arch/x86/util/mem-events.c |  17 +-
- tools/perf/arch/x86/util/perf_regs.c  |  15 +-
- tools/perf/arch/x86/util/topdown.c    |   5 +-
- tools/perf/bench/pmu-scan.c           |  60 ++--
- tools/perf/builtin-c2c.c              |   9 +-
- tools/perf/builtin-list.c             |   4 +-
- tools/perf/builtin-mem.c              |   9 +-
- tools/perf/builtin-record.c           |  29 +-
- tools/perf/builtin-stat.c             |  15 +-
- tools/perf/builtin-top.c              |  10 +-
- tools/perf/tests/attr.c               |   4 +-
- tools/perf/tests/event_groups.c       |   7 +-
- tools/perf/tests/parse-events.c       |  15 +-
- tools/perf/tests/parse-metric.c       |   4 +-
- tools/perf/tests/pmu-events.c         |   6 +-
- tools/perf/tests/switch-tracking.c    |   4 +-
- tools/perf/tests/topology.c           |   4 +-
- tools/perf/util/Build                 |   2 -
- tools/perf/util/cpumap.h              |   2 +-
- tools/perf/util/cputopo.c             |  16 +-
- tools/perf/util/env.c                 |   5 +-
- tools/perf/util/evlist-hybrid.c       | 162 ---------
- tools/perf/util/evlist-hybrid.h       |  15 -
- tools/perf/util/evlist.c              |  67 +++-
- tools/perf/util/evlist.h              |   9 +-
- tools/perf/util/evsel.c               |  57 +--
- tools/perf/util/evsel.h               |   3 -
- tools/perf/util/header.c              |  27 +-
- tools/perf/util/mem-events.c          |  17 +-
- tools/perf/util/metricgroup.c         |   9 +-
- tools/perf/util/parse-events.c        |  24 +-
- tools/perf/util/parse-events.y        |   3 +-
- tools/perf/util/pfm.c                 |   6 +-
- tools/perf/util/pmu-hybrid.c          |  52 ---
- tools/perf/util/pmu-hybrid.h          |  32 --
- tools/perf/util/pmu.c                 | 482 ++------------------------
- tools/perf/util/pmu.h                 |  26 +-
- tools/perf/util/pmus.c                | 477 ++++++++++++++++++++++++-
- tools/perf/util/pmus.h                |  15 +-
- tools/perf/util/print-events.c        |  15 +-
- tools/perf/util/python-ext-sources    |   1 -
- tools/perf/util/stat-display.c        |  21 +-
- 51 files changed, 819 insertions(+), 1032 deletions(-)
- delete mode 100644 tools/perf/util/evlist-hybrid.c
- delete mode 100644 tools/perf/util/evlist-hybrid.h
- delete mode 100644 tools/perf/util/pmu-hybrid.c
- delete mode 100644 tools/perf/util/pmu-hybrid.h
-
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 612467216306..084cc570b8e8 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -187,9 +187,6 @@ static void evlist__check_cpu_maps(struct evlist *evlist)
+ {
+ 	struct evsel *evsel, *warned_leader = NULL;
+ 
+-	if (evlist__has_hybrid(evlist))
+-		evlist__warn_hybrid_group(evlist);
+-
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		struct evsel *leader = evsel__leader(evsel);
+ 
+diff --git a/tools/perf/util/evlist-hybrid.c b/tools/perf/util/evlist-hybrid.c
+index db3f5fbdebe1..0f59c80f27b2 100644
+--- a/tools/perf/util/evlist-hybrid.c
++++ b/tools/perf/util/evlist-hybrid.c
+@@ -41,38 +41,6 @@ int evlist__add_default_hybrid(struct evlist *evlist, bool precise)
+ 	return 0;
+ }
+ 
+-static bool group_hybrid_conflict(struct evsel *leader)
+-{
+-	struct evsel *pos, *prev = NULL;
+-
+-	for_each_group_evsel(pos, leader) {
+-		if (!evsel__is_hybrid(pos))
+-			continue;
+-
+-		if (prev && strcmp(prev->pmu_name, pos->pmu_name))
+-			return true;
+-
+-		prev = pos;
+-	}
+-
+-	return false;
+-}
+-
+-void evlist__warn_hybrid_group(struct evlist *evlist)
+-{
+-	struct evsel *evsel;
+-
+-	evlist__for_each_entry(evlist, evsel) {
+-		if (evsel__is_group_leader(evsel) &&
+-		    evsel->core.nr_members > 1 &&
+-		    group_hybrid_conflict(evsel)) {
+-			pr_warning("WARNING: events in group from "
+-				   "different hybrid PMUs!\n");
+-			return;
+-		}
+-	}
+-}
+-
+ bool evlist__has_hybrid(struct evlist *evlist)
+ {
+ 	struct evsel *evsel;
+diff --git a/tools/perf/util/evlist-hybrid.h b/tools/perf/util/evlist-hybrid.h
+index 19f74b4c340a..4b000eda6626 100644
+--- a/tools/perf/util/evlist-hybrid.h
++++ b/tools/perf/util/evlist-hybrid.h
+@@ -8,7 +8,6 @@
+ #include <unistd.h>
+ 
+ int evlist__add_default_hybrid(struct evlist *evlist, bool precise);
+-void evlist__warn_hybrid_group(struct evlist *evlist);
+ bool evlist__has_hybrid(struct evlist *evlist);
+ 
+ #endif /* __PERF_EVLIST_HYBRID_H */
 -- 
 2.40.1.606.ga4b1b128d6-goog
 
