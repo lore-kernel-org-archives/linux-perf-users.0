@@ -2,253 +2,98 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980BAC77B7F
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 13:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA90EC77B7D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 13:38:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229654AbjEQNZp (ORCPT
+        id S231400AbjEQNiv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 May 2023 09:25:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37464 "EHLO
+        Wed, 17 May 2023 09:38:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230301AbjEQNZo (ORCPT
+        with ESMTP id S231675AbjEQNiu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2023 09:25:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E205173F;
-        Wed, 17 May 2023 06:25:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CCF8A64752;
-        Wed, 17 May 2023 13:25:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0CC0C433D2;
-        Wed, 17 May 2023 13:25:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684329942;
-        bh=43mYnJdcC5bObK0FdgvvVOZf3KnGLx1Baex8ZlTtCsA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DmyCtyLLxk0C4P8Iux5LNXOxbfJembeTNuUZiPAdzdyYICGGONeHFzSvg2d1tc8Pm
-         3deeTCh5qNJd31szAVb4AdzVFu7zwRF9oOFTtyPDk2jpGHNU/nC0Ry1lvBu8G4B6ga
-         45Pco06sAuC0/U56gcVZVMVBXEPBcpTp8GqGvSH18SyarYpQI8LHvWG65wMj1UjOlK
-         Aih6J9hGTEfOYH3Pd9/ftGiIUciaTMB8ZwDoE98XTqWsqxRbNqXTDV/2BwDnstKZtr
-         DWkubcRcKqnvpLmyUfYszWP96Yw+QyBlFTzi+wk0Zy6RUyufOdzq4riUzVyl09Rst3
-         JRHtiLnvzfxyg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 76D12403B5; Wed, 17 May 2023 10:25:39 -0300 (-03)
-Date:   Wed, 17 May 2023 10:25:39 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-hardening@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH] perf pmu: Replace all non-returning strlcpy with strscpy
-Message-ID: <ZGTV054XzxkP8Y/F@kernel.org>
-References: <20230516000500.3884588-1-azeemshaikh38@gmail.com>
- <202305161114.DEC49FB91@keescook>
+        Wed, 17 May 2023 09:38:50 -0400
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 069975FD0;
+        Wed, 17 May 2023 06:38:37 -0700 (PDT)
+Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-51f6461af24so501007a12.2;
+        Wed, 17 May 2023 06:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684330717; x=1686922717;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k8OvYgKD4CrfKg2DiZcLfhOHusqLyEctdoSrJ/WtXzM=;
+        b=KEh+YWam1KnFY/K2bIyPqm3IYPMudMHDi0ZJ2katvPPvkwzo5ZIcGpMT2/VEfLz1RC
+         gO9WrGrvTJvtXCTkY9hteSpAgWSDLUqfnBp6JsHIKeoRfrzCyZiE7s7B3dgCMXsH9T8g
+         C/1EA3HXeVV5kUxXtsd9cCeO2fbVf5mCm1Th9Ky40uzUd0M7doxtm8kc82KOSxdCQ8QM
+         I8PNXm2+bJKmOrQFC0m0ehLurGIbxWuHl4sL10ORFdrTAoK5YDXH5Jk+ZCcsXUJJ7ZK+
+         JOFYm9FR8LMw4hPTjblE2pF4BphqExQ0C082VYdrqCuH/6n/3gKPx4BVdeXeNbyiCm71
+         STxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684330717; x=1686922717;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k8OvYgKD4CrfKg2DiZcLfhOHusqLyEctdoSrJ/WtXzM=;
+        b=g4PtMMsDMc+PXH6aUIvb2wHl2noEi7eJ9oNzHKZcn7vgSaKMLn4HBUVnx4sBst8nVn
+         kNudN3+zlm0pLv5wgAWH5qk/Lk9upMFEFUc3jK4uA/g4KSA7bF+fZXDzDDNt+UIbABPV
+         tjvZKo/VtUMENmUD88ZvOE5vDABjT7JfrS4QWNFoW2yoetQ/n93l7DP+W/welhu97/b4
+         7YfJUHy+F8sbvFLQvPTJfRIgfabRu1qf57JgZ0Hg21Ocb9X/A/8Jo11FVBMkRJ0f2dOV
+         uSW1bVZLrZTFb0tuF1SAjTpQOWkRd1PZleakG1LQa8x+7/YDxQp59A+M0lYa4gXOMEoS
+         w88A==
+X-Gm-Message-State: AC+VfDzqNKkTC8zvzh83dgZBlevX+93PvRILzCksAd3u5+K+LKMZlFdu
+        W3A59u0Nz3MWFR5L89GdWYk=
+X-Google-Smtp-Source: ACHHUZ53ktGCJGR3vp/YQiRZuOPCvz7SdKay6uIQaBpaqAXvZtvtpSppG6747/Sr7TyeOCMNUjHjeg==
+X-Received: by 2002:a05:6a20:3d82:b0:104:2200:8949 with SMTP id s2-20020a056a203d8200b0010422008949mr27572883pzi.56.1684330717016;
+        Wed, 17 May 2023 06:38:37 -0700 (PDT)
+Received: from localhost.localdomain ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id fe25-20020a056a002f1900b0062dfe944c61sm15043509pfb.218.2023.05.17.06.38.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 06:38:36 -0700 (PDT)
+From:   Like Xu <like.xu.linux@gmail.com>
+X-Google-Original-From: Like Xu <likexu@tencent.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] perf/x86/intel: Save/restore cpuc->active_pebs_data_cfg when using guest PEBS
+Date:   Wed, 17 May 2023 21:38:08 +0800
+Message-Id: <20230517133808.67885-1-likexu@tencent.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202305161114.DEC49FB91@keescook>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, May 16, 2023 at 11:14:38AM -0700, Kees Cook escreveu:
-> On Tue, May 16, 2023 at 12:05:00AM +0000, Azeem Shaikh wrote:
-> > strlcpy() reads the entire source buffer first.
-> > This read may exceed the destination size limit.
-> > This is both inefficient and can lead to linear read
-> > overflows if a source string is not NUL-terminated [1].
-> > In an effort to remove strlcpy() completely [2], replace
-> > strlcpy() here with strscpy().
-> > No return values were used, so direct replacement is safe.
-> > 
-> > [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> > [2] https://github.com/KSPP/linux/issues/89
-> > 
-> > Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> 
-> Reviewed-by: Kees Cook <keescook@chromium.org>
+From: Like Xu <likexu@tencent.com>
 
-Not building as strscpy() doesn't seem to be available for tools/ code,
-probably you'll need to first copy from the kernel too tools/lib/.
+After commit b752ea0c28e3 ("perf/x86/intel/ds: Flush PEBS DS when changing
+PEBS_DATA_CFG"), the cpuc->pebs_data_cfg may save some bits that are not
+supported by real hardware, such as PEBS_UPDATE_DS_SW. This would cause
+the VMX hardware MSR switching mechanism to save/restore invalid values
+for PEBS_DATA_CFG MSR, thus crashing the host when PEBS is used for guest.
+Fix it by using the active host value from cpuc->active_pebs_data_cfg.
 
-- Arnaldo
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Like Xu <likexu@tencent.com>
+---
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  CLANG   /tmp/build/perf-tools-next/util/bpf_skel/.tmp/sample_filter.bpf.o
-jvmti/libjvmti.c: In function ‘copy_class_filename’:
-jvmti/libjvmti.c:161:17: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
-  161 |                 strscpy(result, file_name, max_length);
-      |                 ^~~~~~~
-      |                 strlcpy
-cc1: all warnings being treated as errors
-make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/jvmti/libjvmti.o] Error 1
-make[2]: *** [Makefile.perf:818: /tmp/build/perf-tools-next/jvmti/jvmti-in.o] Error 2
-make[2]: *** Waiting for unfinished jobs....
-/var/home/acme/git/perf-tools-next/tools/perf/util/pmu-hybrid.c: In function ‘perf_pmu__hybrid_mounted’:
-/var/home/acme/git/perf-tools-next/tools/perf/util/pmu-hybrid.c:30:9: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
-   30 |         strscpy(pmu_name, name, sizeof(pmu_name));
-      |         ^~~~~~~
-      |         strlcpy
-cc1: all warnings being treated as errors
-error: command '/usr/lib64/ccache/gcc' failed with exit code 1
-cp: cannot stat '/tmp/build/perf-tools-next/python_ext_build/lib/perf*.so': No such file or directory
-make[2]: *** [Makefile.perf:651: /tmp/build/perf-tools-next/python/perf.cpython-311-x86_64-linux-gnu.so] Error 1
-
-Auto-detecting system features:
-...                         clang-bpf-co-re: [ on  ]
-...                                    llvm: [ OFF ]
-...                                  libcap: [ on  ]
-...                                  libbfd: [ on  ]
-
-  MKDIR   /tmp/build/perf-tools-next/util/bpf_skel/.tmp/bootstrap/libbpf/include/bpf
-  MKDIR   /tmp/build/perf-tools-next/util/bpf_skel/.tmp/bootstrap/
-
-  CC      /tmp/build/perf-tools-next/util/intel-pt-decoder/intel-pt-log.o
-util/llvm-utils.c: In function ‘search_program’:
-util/llvm-utils.c:83:33: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
-   83 |                                 strscpy(output, def, PATH_MAX);
-      |                                 ^~~~~~~
-      |                                 strlcpy
-cc1: all warnings being treated as errors
-  CC      /tmp/build/perf-tools-next/util/intel-pt-decoder/intel-pt-decoder.o
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:98: /tmp/build/perf-tools-next/util/llvm-utils.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-  CC      /tmp/build/perf-tools-next/util/cs-etm-base.o
-  CC      /tmp/build/perf-tools-next/util/parse-branch-options.o
-  LD      /tmp/build/perf-tools-next/util/cs-etm-decoder/perf-in.o
-  LD      /tmp/build/perf-tools-next/util/hisi-ptt-decoder/perf-in.o
-  LD      /tmp/build/perf-tools-next/util/arm-spe-decoder/perf-in.o
-  CC      /tmp/build/perf-tools-next/util/intel-pt-decoder/intel-pt-insn-decoder.o
-  LD      /tmp/build/perf-tools-next/util/scripting-engines/perf-in.o
-util/pmu-hybrid.c: In function ‘perf_pmu__hybrid_mounted’:
-util/pmu-hybrid.c:30:9: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
-   30 |         strscpy(pmu_name, name, sizeof(pmu_name));
-      |         ^~~~~~~
-      |         strlcpy
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/pmu-hybrid.o] Error 1
-tests/symbols.c: In function ‘get_test_dso_filename’:
-tests/symbols.c:48:17: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
-   48 |                 strscpy(filename, dso_to_test, max_sz);
-      |                 ^~~~~~~
-      |                 strlcpy
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/tests/symbols.o] Error 1
-make[4]: *** Waiting for unfinished jobs....
-tests/dlfilter-test.c: In function ‘get_dlfilters_path’:
-tests/dlfilter-test.c:237:9: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
-  237 |         strscpy(buf, dirname(path), sz);
-      |         ^~~~~~~
-      |         strlcpy
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/tests/dlfilter-test.o] Error 1
-make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:140: tests] Error 2
-/var/home/acme/git/perf-tools-next/tools/perf/util/pmu-hybrid.c: In function ‘perf_pmu__hybrid_mounted’:
-/var/home/acme/git/perf-tools-next/tools/perf/util/pmu-hybrid.c:30:9: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
-   30 |         strscpy(pmu_name, name, sizeof(pmu_name));
-      |         ^~~~~~~
-      |         strlcpy
-cc1: all warnings being treated as errors
-error: command '/usr/lib64/ccache/gcc' failed with exit code 1
-cp: cannot stat '/tmp/build/perf-tools-next/python_ext_build/lib/perf*.so': No such file or directory
-make[2]: *** [Makefile.perf:651: /tmp/build/perf-tools-next/python/perf.cpython-311-x86_64-linux-gnu.so] Error 1
-util/svghelper.c: In function ‘cpu_model’:
-util/svghelper.c:335:33: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
-  335 |                                 strscpy(cpu_m, &buf[13], 255);
-      |                                 ^~~~~~~
-      |                                 strlcpy
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/svghelper.o] Error 1
-util/dso.c: In function ‘filename__decompress’:
-util/dso.c:354:17: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
-  354 |                 strscpy(pathname, tmpbuf, len);
-      |                 ^~~~~~~
-      |                 strlcpy
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/dso.o] Error 1
-util/symbol.c: In function ‘dso__load’:
-util/symbol.c:1970:33: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
- 1970 |                                 strscpy(name, new_name, PATH_MAX);
-      |                                 ^~~~~~~
-      |                                 strlcpy
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/symbol.o] Error 1
-util/annotate.c: In function ‘dso__disassemble_filename’:
-util/annotate.c:1718:33: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
- 1718 |                                 strscpy(filename, new_name, filename_size);
-      |                                 ^~~~~~~
-      |                                 strlcpy
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/annotate.o] Error 1
-util/synthetic-events.c: In function ‘perf_event__synthesize_event_update_unit’:
-util/synthetic-events.c:1982:9: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
- 1982 |         strscpy(ev->unit, evsel->unit, size + 1);
-      |         ^~~~~~~
-      |         strlcpy
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/synthetic-events.o] Error 1
-util/auxtrace.c: In function ‘auxtrace_synth_guest_error’:
-util/auxtrace.c:1216:9: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
- 1216 |         strscpy(auxtrace_error->msg, msg, MAX_AUXTRACE_ERROR_MSG);
-      |         ^~~~~~~
-      |         strlcpy
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/auxtrace.o] Error 1
-util/intel-pt-decoder/intel-pt-decoder.c: In function ‘intel_pt__strerror’:
-util/intel-pt-decoder/intel-pt-decoder.c:510:9: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
-  510 |         strscpy(buf, intel_pt_err_msgs[code], buflen);
-      |         ^~~~~~~
-      |         strlcpy
-cc1: all warnings being treated as errors
-make[5]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/intel-pt-decoder/intel-pt-decoder.o] Error 1
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:140: intel-pt-decoder] Error 2
-util/machine.c: In function ‘machine__create_extra_kernel_map’:
-util/machine.c:1226:9: error: implicit declaration of function ‘strscpy’; did you mean ‘strlcpy’? [-Werror=implicit-function-declaration]
- 1226 |         strscpy(kmap->name, xm->name, KMAP_NAME_LEN);
-      |         ^~~~~~~
-      |         strlcpy
-cc1: all warnings being treated as errors
-make[4]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:97: /tmp/build/perf-tools-next/util/machine.o] Error 1
-make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:140: util] Error 2
-make[2]: *** [Makefile.perf:676: /tmp/build/perf-tools-next/perf-in.o] Error 2
-  CC      /tmp/build/perf-tools-next/pmu-events/pmu-events.o
-  LD      /tmp/build/perf-tools-next/pmu-events/pmu-events-in.o
-make[1]: *** [Makefile.perf:236: sub-make] Error 2
-make: *** [Makefile:113: install-bin] Error 2
-make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
-
- Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin':
-
-       61899912971      cycles:u                                                              
-      106832920114      instructions:u                   #    1.73  insn per cycle            
-
-       4.586621727 seconds time elapsed
-
-      14.384368000 seconds user
-       5.495604000 seconds sys
-
-
-⬢[acme@toolbox perf-tools-next]$ 
-
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 070cc4ef2672..89b9c1cebb61 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4074,7 +4074,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+ 	if (x86_pmu.intel_cap.pebs_baseline) {
+ 		arr[(*nr)++] = (struct perf_guest_switch_msr){
+ 			.msr = MSR_PEBS_DATA_CFG,
+-			.host = cpuc->pebs_data_cfg,
++			.host = cpuc->active_pebs_data_cfg,
+ 			.guest = kvm_pmu->pebs_data_cfg,
+ 		};
+ 	}
+-- 
+2.40.1
 
