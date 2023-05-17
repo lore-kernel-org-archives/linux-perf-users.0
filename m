@@ -2,42 +2,73 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8883BC7EE2A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 08:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38373C7EE2A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 08:28:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230203AbjEQIK0 (ORCPT
+        id S230430AbjEQI2Q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 May 2023 04:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33224 "EHLO
+        Wed, 17 May 2023 04:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230147AbjEQIKY (ORCPT
+        with ESMTP id S230312AbjEQI14 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2023 04:10:24 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7DD510EF;
-        Wed, 17 May 2023 01:10:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DTmEEM/+QduNUnxg8gEx0EXzPjAs6x+04O4FYgiiAdQ=; b=RdAX2d2XiqRvKxl2rKOGWzP4uK
-        jRMB6DlSpFvBHfPwXiFTnREXMRvZIa5vr9f+gheMapnqq4nwfC2b6p5bhhbus/OlCtASE4Ek2elUO
-        8GI3PuGvzy06pzPsguJHueg+BCCz0i6mWoY7F4ScVr8GnLeZ82DnAedMyOfIQs8SFXX6PnA7c5H2G
-        hJD8j5BpWjJ5ZQw0C0h1lV0VgyGju5Q0HBaPOZoAtiXKQX/J5THbxD/TLpDfiRnyh8O7Uujygh0YI
-        YZJ9K6yRQPpYU2m2mrMqPUp7c1Xe5xU1To/+dbrYoiqE7CO0CMJKS3W3CZzsCiqhHLOU1JmqfXDw1
-        5gYHPBMg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1pzCEj-008nbM-21;
-        Wed, 17 May 2023 08:10:17 +0000
-Date:   Wed, 17 May 2023 01:10:17 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Lorenzo Stoakes <lstoakes@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
+        Wed, 17 May 2023 04:27:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14A09526A
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 01:27:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1684312022;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BhjK5yazou5RvTWn30tpmSdINFxSKMIDQ661jcxLjOE=;
+        b=Hdfs3ZyuzW17C5O28jpqFd56YDik0Ryg9x3VOJymCYphVmj3AduM7G5Os37yWIF7bkea9q
+        0nwj2utkmc0Q3PyObVwlECLImOOW63eShhFmoNj3mGxB2bqqkafNS/ZvzOOAw+j9fPgoG5
+        KMVzOQJSfUse2PNxPWvD2Cxow3OWDsA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-439-l0piMJLBNPS3Xdre_ZEwWA-1; Wed, 17 May 2023 04:27:00 -0400
+X-MC-Unique: l0piMJLBNPS3Xdre_ZEwWA-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3f42b226871so2109325e9.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 01:27:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684312019; x=1686904019;
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BhjK5yazou5RvTWn30tpmSdINFxSKMIDQ661jcxLjOE=;
+        b=CD0dwVvhJWJfCJfxj2PIpybF8PbW/tJlGM6h7vD2+GpdYs7P51IGRKS6qjXny+/mYx
+         tvenoC4iuaKgoy9fBif/zeAlFTpnAfkJgsHKZNZgncv527PxLEg+vNGPuMJXUvTfJJWH
+         XBWzAkUEP1hwDur7euKGhTvIqIVVto7fqBKBaww/jt6pNJqOdPtXPMwWhDeqvtihxjeT
+         g7n+avDC+2PSQ4xcFDbiAP6PiJYQDJeglmIefeNCQOCRBz6CzJRsJmorbHq5sJ6Q4x1J
+         /fzdDMo9zwg4jdfOLmF5VhAjC92pw/Q6VM/NBVkmdDsl1nNnlTo74dNyunsf32m+R5JN
+         +p5Q==
+X-Gm-Message-State: AC+VfDwTx9P2cg1sjoVmNMSgECuoPMFymhBaa1DMEWkj7c8+y8YLRu8W
+        4Et24evVvpa25d6GnK/Jr+AkukWnipAAJzb9K97mrfpGNg2VEFqmf5kXOjyCWFT4KV4/45PSUuc
+        WWx6BBgMZUpLBG3tb3Lxd+JhuTiYPrA==
+X-Received: by 2002:a05:600c:2141:b0:3f4:fd67:6d7c with SMTP id v1-20020a05600c214100b003f4fd676d7cmr9063736wml.40.1684312019279;
+        Wed, 17 May 2023 01:26:59 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5xa065nZ/uQiaIJKC7O793u58obHvly4Gk+TYkCEFKD9upiESKtIAlN64oMtp1eokU88QqYA==
+X-Received: by 2002:a05:600c:2141:b0:3f4:fd67:6d7c with SMTP id v1-20020a05600c214100b003f4fd676d7cmr9063676wml.40.1684312018895;
+        Wed, 17 May 2023 01:26:58 -0700 (PDT)
+Received: from [192.168.3.108] (p4ff23b51.dip0.t-ipconnect.de. [79.242.59.81])
+        by smtp.gmail.com with ESMTPSA id a3-20020a05600c224300b003f17848673fsm1416580wmm.27.2023.05.17.01.26.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 May 2023 01:26:58 -0700 (PDT)
+Message-ID: <3c11455b-3af4-eeaa-9f43-49d4d70348fd@redhat.com>
+Date:   Wed, 17 May 2023 10:26:56 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Content-Language: en-US
+To:     Lorenzo Stoakes <lstoakes@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
         Matthew Wilcox <willy@infradead.org>,
         Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
         Leon Romanovsky <leon@kernel.org>,
@@ -70,53 +101,86 @@ Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
         linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         netdev@vger.kernel.org, bpf@vger.kernel.org,
         Oleg Nesterov <oleg@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
         Pavel Begunkov <asml.silence@gmail.com>,
         Mika Penttila <mpenttil@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
         Dave Chinner <david@fromorbit.com>,
         Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
         Matthew Rosato <mjrosato@linux.ibm.com>,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Christian Borntraeger <borntraeger@linux.ibm.com>
+References: <cover.1683235180.git.lstoakes@gmail.com>
+ <0eb31f6f-a122-4a5b-a959-03ed4dee1f3c@lucifer.local>
+ <ZGG/xkIUYK2QMPSv@infradead.org>
+ <59c47ed5-a565-4220-823c-a278130092d5@lucifer.local>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
 Subject: Re: [PATCH v9 0/3] mm/gup: disallow GUP writing to file-backed
  mappings by default
-Message-ID: <ZGSL6Q8K5lh4Pdwp@infradead.org>
-References: <cover.1683235180.git.lstoakes@gmail.com>
- <20230515110315.uqifqgqkzcrrrubv@box.shutemov.name>
- <7f6dbe36-88f2-468e-83c1-c97e666d8317@lucifer.local>
- <ZGIhwZl2FbLodLrc@nvidia.com>
- <ad0053a4-fa34-4b95-a262-d27942b168fd@lucifer.local>
- <20230517072920.bfs7gfo4whdmi6ay@quack3>
- <d17c0fce-679b-4f5d-9a7c-6ff7e28ad4b2@lucifer.local>
- <ZGSFptUyOko+184t@infradead.org>
- <503e92f9-fbc2-422b-b0d4-f4cabe3f6802@lucifer.local>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <503e92f9-fbc2-422b-b0d4-f4cabe3f6802@lucifer.local>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <59c47ed5-a565-4220-823c-a278130092d5@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 17, 2023 at 08:55:27AM +0100, Lorenzo Stoakes wrote:
-> I'll try to take this in good faith because... yeah. I do get that, I mean
-> I literally created a repro for this situation and referenced in the commit
-> msg and comments this precise problem in my patch series that
-> addresses... this problem :P
+On 15.05.23 13:31, Lorenzo Stoakes wrote:
+> On Sun, May 14, 2023 at 10:14:46PM -0700, Christoph Hellwig wrote:
+>> On Sun, May 14, 2023 at 08:20:04PM +0100, Lorenzo Stoakes wrote:
+>>> As discussed at LSF/MM, on the flight over I wrote a little repro [0] which
+>>> reliably triggers the ext4 warning by recreating the scenario described
+>>> above, using a small userland program and kernel module.
+>>>
+>>> This code is not perfect (plane code :) but does seem to do the job
+>>> adequately, also obviously this should only be run in a VM environment
+>>> where data loss is acceptable (in my case a small qemu instance).
+>>
+>> It would be really awesome if you could wire it up with and submit it
+>> to xfstests.
 > 
-> Perhaps I'm not being clear but it was simply my intent to highlight that
-> yes this is the primary problem but ALSO GUP writing to ostensibly 'clean'
-> pages 'behind the back' of a fs is _also_ a problem.
+> Sure am happy to take a look at that! Also happy if David finds it useful in any
+> way for this unit tests.
 
-Yes, it absolutely is a problem if that happens.  But we can just
-fix it in the kernel using the:
+I played with a simple selftest that would reuse the existing gup_test 
+infrastructure (adding PIN_LONGTERM_TEST_WRITE), and try reproducing an 
+actual data corruption.
 
-   lock_page()
-   copy data
-   set_page_dirty_locked()
-   unlock_page();
+So far, I was not able to reproduce any corruption easily without your 
+patches, because d824ec2a1546 ("mm: do not reclaim private data from 
+pinned page") seems to mitigate most of it.
 
-pattern, and we should have covere every place that did in tree.
-But there's no good way to verify it except for regular code audits.
+So ... before my patches (adding PIN_LONGTERM_TEST_WRITE) I cannot test 
+it from a selftest, with d824ec2a1546 ("mm: do not reclaim private data 
+from pinned page") I cannot reproduce and with your patches long-term 
+pinning just fails.
+
+Long story short: I'll most probably not add such a test but instead 
+keep testing that long-term pinning works/fails now as expected, based 
+on the FS type.
+
+> 
+> The kernel module interface is a bit sketchy (it takes a user address which it
+> blindly pins for you) so it's not something that should be run in any unsafe
+> environment but as long as we are ok with that :)
+
+I can submit the PIN_LONGTERM_TEST_WRITE extension, that would allow to 
+test with a stock kernel that has the module compiled in. It won't allow 
+!longterm, though (it would be kind-of hacky to have !longterm 
+controlled by user space, even if it's a GUP test module).
+
+Finding an actual reproducer using existing pinning functionality would 
+be preferred. For example, using O_DIRECT (should be possible even 
+before it starts using FOLL_PIN instead of FOLL_GET). That would be 
+highly racy then, but most probably not impossible.
+
+Such (racy) tests are not a good fit for selftests.
+
+Maybe I'll have a try later to reproduce with O_DIRECT.
+
+-- 
+Thanks,
+
+David / dhildenb
+
