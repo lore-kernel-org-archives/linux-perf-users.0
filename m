@@ -2,167 +2,95 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BE3C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 07:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C04C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 07:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230044AbjEQHkc (ORCPT
+        id S230100AbjEQHl7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 May 2023 03:40:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37416 "EHLO
+        Wed, 17 May 2023 03:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbjEQHkb (ORCPT
+        with ESMTP id S229626AbjEQHl6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2023 03:40:31 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 282DEE40;
-        Wed, 17 May 2023 00:40:30 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f475366514so2821145e9.2;
-        Wed, 17 May 2023 00:40:30 -0700 (PDT)
+        Wed, 17 May 2023 03:41:58 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6305010E6;
+        Wed, 17 May 2023 00:41:53 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-3f38c23b06eso3364831cf.3;
+        Wed, 17 May 2023 00:41:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684309228; x=1686901228;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E+Ld0Ovjdd0x8sc5pvboMnhYHV4AgRb0J8CE6t0hZIM=;
-        b=WA4SxHpvGm1ODLM4q/8vfu4vKglP08hu0HlJ/yJJbiD9LBzuIHlUgDdcL3VIMkHk/P
-         p2cz2vdAYv4BbiJ0LQb/Dzae+iABrn+JRnv+S8RGWEPseRZq0h7QRvRtmRbcesxue8a/
-         BciE7NdBJ4QRsjKDJQE77K2/2QUXnqDpqCLLflQ9zc8BaBcSESiHiDelcdo0LrzKMHaC
-         GUMDcQgWV//4Zs7KXkfDnbCoP76vQ+YQT8YhKjLXhfDZACBifHxeO2/8ymyh0cmWzSVD
-         rtYLl1O47U9VzqLqtCwhyHFUA2ZAtik0+iGN7RqiL3HAYiJJoJPkrJkPKRposqrQ0oAq
-         ri2g==
+        d=gmail.com; s=20221208; t=1684309312; x=1686901312;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Gt8vcqfcBcSzFv5CqI8kXtZUiisqmIiLAVfG/Z4B1wo=;
+        b=gNAni+aefYGCbzXJZ1KCoFg8ZVjbrHwK7u+sKWIsmjjGqQJ2bWNPSg+WakHJQVS3ab
+         Bp5bqMntw1uQkVw+IN1lOsU4BFRNTNuMiq9ef5c1RW9TLIi66HUQpNRoz99rtQztmRGD
+         KYnmVtSd+sNgymFummMsYYEpskLLZBxJnmkacqEQxSIDH8jjQDIifWpfH9ktAgm+tMoA
+         l5xZHrVJnxwv1lhnl/gXppJABX//LI0ugS4VIj2bunZX7U1ejXCSJwy/Tf02yZh0TYX/
+         2qa/8Rhqzrv1gtxn/rhiuEfjmYRrH3Jk4TsxNllrNjP6UscF1wHGQheDYKzJXyF9J7W6
+         2Wiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684309228; x=1686901228;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E+Ld0Ovjdd0x8sc5pvboMnhYHV4AgRb0J8CE6t0hZIM=;
-        b=QBzK6v89W+4YM359n67GZzi+5YcIKdg7P+DhjZdk6BTwR0TrW1FmmOP0evHZQ+GOF+
-         d1GIQP/6NC+glSm7PukqP/G5LTX0bYHVO8f4Mofk5hwC1zTEuc73RJTilFtkf4cyQ7sj
-         XMWBqDzCQPeZHW8L0kDqExExznLNDS9LoWfsh5rAwtRgIZ5FF7mgNQmbIMf4kHhjJWNo
-         +kmRAOmXUJos7QS/BLTrYCyQmhijGqL+GFBUX8ZNp1w4n6jIRAoIZArrsrdxOssv/cER
-         KcGlDUNdAikMEUcszJV6xB0b1x0Z+hEcl4K8JZWotXzl72dlZ+VZo06n6EiKfmsWoxun
-         u6IQ==
-X-Gm-Message-State: AC+VfDwlygc1sGiQEVkQkU9xynPdCP2yY767H+8AOqjbvnjetIrFM2+T
-        N6GNfcPk8CKGwHWMP0oPItc=
-X-Google-Smtp-Source: ACHHUZ4QFru10EJHOkrAg2WS7xokWnRh6SsO8/nZ9408Z1x44sx4+q5GoeByQVkYGCmWKPQ44It+Qw==
-X-Received: by 2002:a7b:ca51:0:b0:3f4:2148:e8e5 with SMTP id m17-20020a7bca51000000b003f42148e8e5mr24473724wml.1.1684309228284;
-        Wed, 17 May 2023 00:40:28 -0700 (PDT)
-Received: from localhost (host86-156-84-164.range86-156.btcentralplus.com. [86.156.84.164])
-        by smtp.gmail.com with ESMTPSA id f21-20020a7bcc15000000b003f31d44f0cbsm1289563wmh.29.2023.05.17.00.40.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 00:40:26 -0700 (PDT)
-Date:   Wed, 17 May 2023 08:40:26 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jason Gunthorpe <jgg@nvidia.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Christian Benvenuti <benve@cisco.com>,
-        Nelson Escobar <neescoba@cisco.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Bjorn Topel <bjorn@kernel.org>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-        Jonathan Lemon <jonathan.lemon@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mika Penttila <mpenttil@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>, Peter Xu <peterx@redhat.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>
-Subject: Re: [PATCH v9 0/3] mm/gup: disallow GUP writing to file-backed
- mappings by default
-Message-ID: <d17c0fce-679b-4f5d-9a7c-6ff7e28ad4b2@lucifer.local>
-References: <cover.1683235180.git.lstoakes@gmail.com>
- <20230515110315.uqifqgqkzcrrrubv@box.shutemov.name>
- <7f6dbe36-88f2-468e-83c1-c97e666d8317@lucifer.local>
- <ZGIhwZl2FbLodLrc@nvidia.com>
- <ad0053a4-fa34-4b95-a262-d27942b168fd@lucifer.local>
- <20230517072920.bfs7gfo4whdmi6ay@quack3>
+        d=1e100.net; s=20221208; t=1684309312; x=1686901312;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Gt8vcqfcBcSzFv5CqI8kXtZUiisqmIiLAVfG/Z4B1wo=;
+        b=O4BYHxzEvATblTSSSlpOJLuQ4kAEho7zd5KcXofjc+THCL0MoOYhNMnHEsINaiMzMY
+         8/gfZU6ToH1Vk3B+BTnXDm+K4OFWxDpQXiS0yYpXLs/ZRVDxbNUdoQnbfWfmiAOI2GwU
+         DYvR7VyrseNN0cDnPGGZgNAEqQGWRyMeBVw9YEeN7phjgQAX/b4AN1k7N9nkLecpS3xA
+         sZU9kI6PyxmI7L0L/EOSicDT782+s6Hsb+9Gpc5edF6ai1Ca5ORhXtZU9Iv0z1+n3crr
+         vd7r0wcW115VM7ejZJhrEsWdCWbXTqu/rxUxO1XSfY2bbY/GkGa1a6WYiZ+mYq7J0Fz6
+         deTw==
+X-Gm-Message-State: AC+VfDwNnDyAUbXk6EDuKdwHea5oMUnnwALi3IIn2PjnSiD7eroUU819
+        q+nJ47q78vMmJPsfR8bzalDjTaY5v8J7GXf1kls=
+X-Google-Smtp-Source: ACHHUZ74fvUaQLS0H9Z1NeDqPl+csekVSshwiPDecXWRaUqETx8dIFlUfbpRHpQ/LDhjlhXM7ONSaWWLwZCTLV0Bubs=
+X-Received: by 2002:ac8:580e:0:b0:3ef:52ac:10d2 with SMTP id
+ g14-20020ac8580e000000b003ef52ac10d2mr66678755qtg.43.1684309312426; Wed, 17
+ May 2023 00:41:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230517072920.bfs7gfo4whdmi6ay@quack3>
+References: <20230405141710.3551-1-ubizjak@gmail.com> <20230405141710.3551-4-ubizjak@gmail.com>
+In-Reply-To: <20230405141710.3551-4-ubizjak@gmail.com>
+From:   Charlemagne Lasse <charlemagnelasse@gmail.com>
+Date:   Wed, 17 May 2023 09:41:41 +0200
+Message-ID: <CAFGhKbyxtuk=LoW-E3yLXgcmR93m+Dfo5-u9oQA_YC5Fcy_t9g@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] locking/arch: Wire up local_try_cmpxchg
+To:     Uros Bizjak <ubizjak@gmail.com>
+Cc:     linux-alpha@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org, linux-arch@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jun Yi <yijun@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 17, 2023 at 09:29:20AM +0200, Jan Kara wrote:
-> On Mon 15-05-23 14:07:57, Lorenzo Stoakes wrote:
-> > On Mon, May 15, 2023 at 09:12:49AM -0300, Jason Gunthorpe wrote:
-> > > On Mon, May 15, 2023 at 12:16:21PM +0100, Lorenzo Stoakes wrote:
-> > > > Jason will have some thoughts on this I'm sure. I guess the key question
-> > > > here is - is it actually feasible for this to work at all? Once we
-> > > > establish that, the rest are details :)
-> > >
-> > > Surely it is, but like Ted said, the FS folks are not interested and
-> > > they are at least half the solution..
-> >
-> > :'(
->
-> Well, I'd phrase this a bit differently - it is a difficult sell to fs
-> maintainers that they should significantly complicate writeback code / VFS
-> with bounce page handling etc. for a thing that is not much used corner
-> case. So if we can get away with forbiding long-term pins, then that's the
-> easiest solution. Dealing with short-term pins is easier as we can just
-> wait for unpinning which is implementable in a localized manner.
->
+> +static __inline__ bool local_try_cmpxchg(local_t *l, long *old, long new)
+> +{
+> +       typeof(l->a.counter) *__old = (typeof(l->a.counter) *) old;
+> +       return try_cmpxchg_local(&l->a.counter, __old, new);
+> +}
+> +
 
-Totally understandable. It's unfortunately I feel a case of something we
-should simply not have allowed.
+This patch then causes following sparse errors:
 
-> > > The FS also has to actively not write out the page while it cannot be
-> > > write protected unless it copies the data to a stable page. The block
-> > > stack needs the source data to be stable to do checksum/parity/etc
-> > > stuff. It is a complicated subject.
-> >
-> > Yes my sense was that being able to write arbitrarily to these pages _at
-> > all_ was a big issue, not only the dirty tracking aspect.
->
-> Yes.
->
-> > I guess at some level letting filesystems have such total flexibility as to
-> > how they implement things leaves us in a difficult position.
->
-> I'm not sure what you mean by "total flexibility" here. In my opinion it is
-> also about how HW performs checksumming etc.
+    ./arch/x86/include/asm/local.h:131:16: warning: symbol '__old'
+shadows an earlier one
+    ./arch/x86/include/asm/local.h:130:30: originally declared here
 
-I mean to say *_ops allow a lot of flexibility in how things are
-handled. Certainly checksumming is a great example but in theory an
-arbitrary filesystem could be doing, well, anything and always assuming
-that only userland mappings should be modifying the underlying data.
-
->
-> 								Honza
-> --
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+This is then visible in all kinds of builds - which makes it hard to
+find out actual problems with sparse.
