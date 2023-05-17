@@ -2,176 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F337EC7EE24
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 02:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4485C7EE22
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 05:06:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231830AbjEQC0I (ORCPT
+        id S232049AbjEQFGH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 16 May 2023 22:26:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48840 "EHLO
+        Wed, 17 May 2023 01:06:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232111AbjEQCZv (ORCPT
+        with ESMTP id S232012AbjEQFGG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 16 May 2023 22:25:51 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 568691BD9;
-        Tue, 16 May 2023 19:25:22 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EADD91FB;
-        Tue, 16 May 2023 19:26:04 -0700 (PDT)
-Received: from a077893.arm.com (unknown [10.163.70.237])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3A2B93F793;
-        Tue, 16 May 2023 19:25:14 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 17 May 2023 01:06:06 -0400
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11olkn2010.outbound.protection.outlook.com [40.92.20.10])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7E42136;
+        Tue, 16 May 2023 22:06:02 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zqa5Dw8nBfLkQF73yNm8gv+Hv7xime3n16Dzpe1fINGWIU6zT6xcfv/2NfqiW+ByB7EeYKeE3+hbE3d0Jedgd331USK+vXbvaecwOb2HykGFvZJsmzBpUVHjgA5B64ULsWk5XPjUX+2DI6J91wOkClLYhOGkc0e06bYVr/Bh48Vl/3RWEZOqV7K6UP/z+OfKiOI3GSHTbkzYnRHTBigjO7zi/gp7vViZpH01t7/fFmsR1kaiH98FqKGDP7HbYZsaxo4gz3eUoh7SM5C3l0hdV65EYfE/D44JM9Bm3gBLtyOk49WwgGAY/V9jXQdD75xnKbeDc331mKQlPfa+b1XFXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OV+2IULZCkNFQKkxK5KJ+3ezPXnhpf3yxnwuaEnZnvA=;
+ b=K2OuI/OE7u95I6mW8a5ufGvja8YOXsDJJ1iK+92tfuZbYgQrz0Ynz13RJy4wQMDVGQFwM/xcSTF/mBYy7KkRPu7+GeRArXhzTDkamUo7qXMQS5kkXbJq6LQp/CuwAA5M3Th+BNpXXbW+vl/lwaBo0pIBkuPXZ+dYWsHaFXM27YSvOKHjAfbzqYzljpIa+WsJE0At8OTEKqxHtItSEbBLAjwBWfaJS1hjdT9MnEXpxWjktA+k3nOLePjBd3JtjJKLH0QC6UlsOfr0t4VUxnnNDBVT/J9sbIgTeK4ZHKZZv/Waj0hATdeNUvPPJz5o74aN7ViPutxfibxqQX6Im0VLig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OV+2IULZCkNFQKkxK5KJ+3ezPXnhpf3yxnwuaEnZnvA=;
+ b=gvL8undun+zbQkxQhzj85+cr3x5r/YPoYp+RCNbYiB0GYP4iLOQFXziYVCGLo6Z3Q8tneTXfHM1JmdkBmcJuO5P77TCE1iWppD/X4BzeFMLZzExtlAuNIW+A0vbOsmocslbTUoqhtmjxVrqjOxBXo5gIb85Jp7yt0lrWyCsiEQQZoSYAbLSN3i4lsx+mMeRTLbFmZZDM4QvOnHYtzWQ7/fpHiHFJHZCnAf5zFICDIdBgefGepBKkx81IQVrYh/axBwGDXBDD+ftDdq/9YMunNTMQnMJYrjKmnEjJV6tRO2fwdik1hVeDJnJJomtgX+YI7eJzmlTulrstnxeg6o8mOg==
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com (2603:10b6:208:3af::19)
+ by BLAPR20MB3794.namprd20.prod.outlook.com (2603:10b6:208:334::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.17; Wed, 17 May
+ 2023 05:06:00 +0000
+Received: from IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::4770:9e0f:7f59:1989]) by IA1PR20MB4953.namprd20.prod.outlook.com
+ ([fe80::4770:9e0f:7f59:1989%6]) with mapi id 15.20.6387.021; Wed, 17 May 2023
+ 05:06:00 +0000
+From:   Inochi Amaoto <inochiama@outlook.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH V10 10/10] arm64/perf: Implement branch records save on PMU IRQ
-Date:   Wed, 17 May 2023 07:54:10 +0530
-Message-Id: <20230517022410.722287-11-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230517022410.722287-1-anshuman.khandual@arm.com>
-References: <20230517022410.722287-1-anshuman.khandual@arm.com>
-MIME-Version: 1.0
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Nikita Shubin <n.shubin@yadro.com>,
+        Inochi Amaoto <inochiama@outlook.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 1/2] perf tools riscv: Allow get_cpuid return empty MARCH and MIMP
+Date:   Wed, 17 May 2023 13:06:47 +0800
+Message-ID: <IA1PR20MB4953003EE6D76CACAEC95A5CBB7E9@IA1PR20MB4953.namprd20.prod.outlook.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <28d0792b81db018aeb644096898693694b2841bc.camel@maquefel.me>
+References: <28d0792b81db018aeb644096898693694b2841bc.camel@maquefel.me>
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-TMN:  [y5u3LA3lrewmmDQCH1LDfkXC8sIQwgvasNiq+XeAPIs=]
+X-ClientProxiedBy: TYCPR01CA0113.jpnprd01.prod.outlook.com
+ (2603:1096:405:4::29) To IA1PR20MB4953.namprd20.prod.outlook.com
+ (2603:10b6:208:3af::19)
+X-Microsoft-Original-Message-ID: <20230517050647.930570-1-inochiama@outlook.com>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR20MB4953:EE_|BLAPR20MB3794:EE_
+X-MS-Office365-Filtering-Correlation-Id: 84c6fff6-41c4-42a3-6d68-08db569467e6
+X-MS-Exchange-SLBlob-MailProps: AZnQBsB9Xmro6QgSszs9gGQWaVOCEuXK4xg9HpCh6h7gv1KObVf/l3AxVITL9Ym3x02MuQLN5PRu9tpoq1sf8drqiyHHq2onDqmV7DKeYy7S/37GNFJ1ZhInAFcq2bzHPcx0F914Mpu7QSV3jaXu/OlkV18gO8DmoltvxZwy41PBDkCXRu8JVCHKIi1Ao5OlO7wAjh+8/AFJeRdN/+3mVDSA0+6I0CceYyHTemI00fzrgxf69sA9wMg2wwPOb6iN7ULbEiTaDe1xhlsurTMTHoOo8gGFkLb0rgfVuTiC8k8oofTcrbQlRRJJl9LAoCWgYPZJEUJdMjDCB5Eeo9XQuLLhRHcAY3r9pW2QDmqvCAdjsrEnt4AoBUXLR+XIGuM+NakBcuobImsLTBMPQOe5QP1qJdGp+tK0+criXtm453oZ8ixT3Csj3DmERPsSjHlfy/NsxzDice7hQwjPrd2R30EEmtXfyeszhR345pjMduZR7Hn4XvhZ102NMftUiqhiCTW+0td0Udg+KUzsCfKIfB3exng+t1ZzTrXIdxmL99+otMaYwwhu7wx3Pw21+mal7wQm9RvMtZpLbENmx17N3jx1tzAA1OlsqxYrbESW5F4SeucvLYvtkxyaUoWPWvvq1kZPKxTW/U8bpP5NqSVWMqY1HeF0T09NRXV4IOK7qMy6CXNdLrkelr5Q7VdstLDqbSGxaCwr2u8/Rm0I3BQgPbnpodZtqfCmr/jjM9Z/G+bx4AW0Z/shxNQA3b9nfmLwdH4VLt2x3dg=
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iKVOATMPq41tci3dnnI4wgL6xZ3th7hVoGVqw6F0BNGmBs8A4FLM2gdUl+EmXn6NGqZpeAtPSjN/umf8MZRPSndP/YchLxDNzU5alZ8hxH1xclFv3mD0BQbxkndpeljdn7KQlsSRf6052s14DL5J9q+gX+QeHpcgHJ44SuECht/Khn6p392EJkEqgO3GieMcYspiKmop6CLUUktccewRMb3JqETRhHFyDxb0Axd+dAXgyUiB7j2FFsA4ewpRNDUMXANlzdeGXiE59JAAAqU2dYR42lDmazjtCBS2gOmUXy/xxVz/a3Y8buRFZ3E4p0feDDm5+llX16g4Ai5u/9TS/FYNYO0lnX4eDw3JQzaJp09rC1M5F6ZXK0bm/TZ07gSpN/vJiBMCI3outWXkiUleQyGtY+F2gH8xn/QJ+02dMpzYCk2rBELhgIFUmGiuHbpqgb6lQMos/h6Wov1Lgf2S4mnByom5cNdTs77FKCsgh1GmsBRWtYE6fiqoTT57WJcmuypNmKcC5PX/JAbKN9XMyTSVgsek9j5VjqdyEoRBe3huyuKp2JbeEjAXdobzui9iBNgT5kIk4UCQ9w8zH/rwSL/mqVw9njj1rEzIcC+uMVlQz3i+zadNiiPedZ2Ony9+/BNS+L2KZhuvnLepaFeMdg==
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?OhU6WkB+Ijq3MBPYgf0wQii4u3X9h2x3f1IdthQd4tgVnMJ1iKru3YYKHoSd?=
+ =?us-ascii?Q?c25dV3uBL8ZrDSEGjicWSeVRJbvkMEsTbVGyaPw9KOxidLDIoKulTtUv4wbY?=
+ =?us-ascii?Q?Cxg8UCrN+rGG2hxG9bBPI0EkjRmKT4jhP99bvkfU3Rouqo+piPnRgTnxc8lG?=
+ =?us-ascii?Q?4xNuCcPRQhBrx+DX4CCsDFwGBfXkjBt7oPg4yueLJLIb+XYyOe9LkV6uEyfr?=
+ =?us-ascii?Q?L+wiJtou7PJ+Mx/8/BSr0rJSoKMuLi9yYxzNfnZ609d8equP7XQq19KC/h88?=
+ =?us-ascii?Q?c19BZtpSFYyoNLM4Lz+AYFno+myyEi5VpvfLtRfU9+0Ju8fElkhr9AGooH6g?=
+ =?us-ascii?Q?MjR5MP40OFbZ2Yv4PreSIgKCB8XfsGstEfS4Q/YljckhLSRWWQSByf14IB1F?=
+ =?us-ascii?Q?0048x7Pfu5Po5kwfCAYt3y2jHl6DyguLObx6ZVjOyCBhxhm+AQzyJqZaAzC9?=
+ =?us-ascii?Q?ss/jgm11qIriti5UeovswFC2T/9KYMSSmpmND5jGZs0vrhtK7RsHaea8bMz6?=
+ =?us-ascii?Q?cRvZkI1ZXTQjAJ6G9WsZLfX65CDL+pqibJ6V2f6jxtDWdOPnvbOblJ3lgPKa?=
+ =?us-ascii?Q?uv5GfAOV60plCdPY+0o9Es+clv4DBLMJ+scBeneyKnaawG1wfKaRVuemWf1X?=
+ =?us-ascii?Q?C8na7imj2Nsxj1g0bHiQUZVOt3TpYkshicPgNSvprY9ec/ZNFZ0kb4yeiX0e?=
+ =?us-ascii?Q?e63f3P+lht/LsATc/un48VsBiqg9TOsR8UJ4lrqPbo0HiVz7R3Y+rc9dUXwg?=
+ =?us-ascii?Q?CLpijQGqVS6HFEarg8wTJddVYc5BC6dtXzObmgCNTNsFAMau14hzi8c8byeG?=
+ =?us-ascii?Q?M78zaunf2BYOuuIOMqBOMyw/Hrm6xvwOGVAy5TX3ka2EfQhfxYpum1V+Yzlz?=
+ =?us-ascii?Q?OdnHZquvACEpzxAIa93JHj+ixr00sucCTfbvoNf+nKerr1gEE3SAHi2MwvDy?=
+ =?us-ascii?Q?e9VYyJDnVLusdfLE9zUjk3sgdjQU0g8XC8S5dNAqeigrnWNN0zjwosw6hf55?=
+ =?us-ascii?Q?c96SKiFy0y0Gv0WZLjFGZYdY+jYmkzxxxoTs3aIaKCRVpbK1YlRQYEvwy4CB?=
+ =?us-ascii?Q?WMtJpnjr2TgfbniC7UxtuiVSrS2ohbBGa/9z/kbEuFVP9Xua902un6IgsC6U?=
+ =?us-ascii?Q?PfhmIZub2BMWsirBI1nfmn03rJtuVgJOmdedgLyqX23TmC6lWLaMnHe2g5PM?=
+ =?us-ascii?Q?LQOdY0EJQwBr0ytfAPdBIuaUh24diZU8wTtw3tqzk7y0cLR6hItwEbl0gbM?=
+ =?us-ascii?Q?=3D?=
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84c6fff6-41c4-42a3-6d68-08db569467e6
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR20MB4953.namprd20.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2023 05:06:00.5863
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR20MB3794
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This modifies armv8pmu_branch_read() to concatenate live entries along with
-task context stored entries and then process the resultant buffer to create
-perf branch entry array for perf_sample_data. It follows the same principle
-like task sched out.
+> Then why do you need first patch then ?
+>
+> marchid, mimpid will never be NULL they "0x0" and "0x0" strings
+> respectively.
+>
+> How have you tested it ?
+>
+> There no way "0x5b7-0x0000000000000000-0x[[:xdigit:]]+" will match
+> "0x5b7-0x0-0x0" which cpuid in your case.
+>
+> Just drop this patch.
+>
+> Anyway "PAGER=cat perf list pmu" gives me an empty list on licheerv.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- drivers/perf/arm_brbe.c | 75 +++++++++++++++--------------------------
- 1 file changed, 28 insertions(+), 47 deletions(-)
+Sorry for this mistake, I mistook the type of the MIMP and MARCH as
+unsigned long. And I write wrong MARCH id in my test container.
 
-diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-index 0678ebf0a896..9e441141a2c3 100644
---- a/drivers/perf/arm_brbe.c
-+++ b/drivers/perf/arm_brbe.c
-@@ -693,41 +693,45 @@ void armv8pmu_branch_reset(void)
- 	isb();
- }
- 
--static bool capture_branch_entry(struct pmu_hw_events *cpuc,
--				 struct perf_event *event, int idx)
-+static void brbe_regset_branch_entries(struct pmu_hw_events *cpuc, struct perf_event *event,
-+				       struct brbe_regset *regset, int idx)
- {
- 	struct perf_branch_entry *entry = &cpuc->branches->branch_entries[idx];
--	u64 brbinf = get_brbinf_reg(idx);
--
--	/*
--	 * There are no valid entries anymore on the buffer.
--	 * Abort the branch record processing to save some
--	 * cycles and also reduce the capture/process load
--	 * for the user space as well.
--	 */
--	if (brbe_invalid(brbinf))
--		return false;
-+	u64 brbinf = regset[idx].brbinf;
- 
- 	perf_clear_branch_entry_bitfields(entry);
- 	if (brbe_record_is_complete(brbinf)) {
--		entry->from = get_brbsrc_reg(idx);
--		entry->to = get_brbtgt_reg(idx);
-+		entry->from = regset[idx].brbsrc;
-+		entry->to = regset[idx].brbtgt;
- 	} else if (brbe_record_is_source_only(brbinf)) {
--		entry->from = get_brbsrc_reg(idx);
-+		entry->from = regset[idx].brbsrc;
- 		entry->to = 0;
- 	} else if (brbe_record_is_target_only(brbinf)) {
- 		entry->from = 0;
--		entry->to = get_brbtgt_reg(idx);
-+		entry->to = regset[idx].brbtgt;
- 	}
- 	capture_brbe_flags(entry, event, brbinf);
--	return true;
-+}
-+
-+static void process_branch_entries(struct pmu_hw_events *cpuc, struct perf_event *event,
-+				   struct brbe_regset *regset, int nr_regset)
-+{
-+	int idx;
-+
-+	for (idx = 0; idx < nr_regset; idx++)
-+		brbe_regset_branch_entries(cpuc, event, regset, idx);
-+
-+	cpuc->branches->branch_stack.nr = nr_regset;
-+	cpuc->branches->branch_stack.hw_idx = -1ULL;
- }
- 
- void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
- {
- 	struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
-+	struct arm64_perf_task_context *task_ctx = event->pmu_ctx->task_ctx_data;
-+	struct brbe_regset live[BRBE_MAX_ENTRIES];
-+	int nr_live, nr_store;
- 	u64 brbfcr, brbcr;
--	int idx, loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2, count;
- 
- 	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
- 	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-@@ -739,36 +743,13 @@ void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
- 	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
- 	isb();
- 
--	/* Determine the indices for each loop */
--	loop1_idx1 = BRBE_BANK0_IDX_MIN;
--	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
--		loop1_idx2 = brbe_attr->brbe_nr - 1;
--		loop2_idx1 = BRBE_BANK1_IDX_MIN;
--		loop2_idx2 = BRBE_BANK0_IDX_MAX;
--	} else {
--		loop1_idx2 = BRBE_BANK0_IDX_MAX;
--		loop2_idx1 = BRBE_BANK1_IDX_MIN;
--		loop2_idx2 = brbe_attr->brbe_nr - 1;
--	}
--
--	/* Loop through bank 0 */
--	select_brbe_bank(BRBE_BANK_IDX_0);
--	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
--		if (!capture_branch_entry(cpuc, event, idx))
--			goto skip_bank_1;
--	}
--
--	/* Loop through bank 1 */
--	select_brbe_bank(BRBE_BANK_IDX_1);
--	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
--		if (!capture_branch_entry(cpuc, event, idx))
--			break;
--	}
--
--skip_bank_1:
--	cpuc->branches->branch_stack.nr = idx;
--	cpuc->branches->branch_stack.hw_idx = -1ULL;
-+	nr_live = capture_brbe_regset(brbe_attr, live);
-+	nr_store = task_ctx->nr_brbe_records;
-+	nr_store = stitch_stored_live_entries(task_ctx->store, live, nr_store,
-+					      nr_live, brbe_attr->brbe_nr);
-+	process_branch_entries(cpuc, event, task_ctx->store, nr_store);
- 	process_branch_aborts(cpuc);
-+	task_ctx->nr_brbe_records = 0;
- 
- 	/* Unpause the buffer */
- 	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
--- 
-2.25.1
-
+Anyway, I agree to drop this patch as there is no need.
