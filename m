@@ -2,98 +2,201 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA90EC77B7D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 13:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8BB6C77B7D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 14:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231400AbjEQNiv (ORCPT
+        id S231464AbjEQO6p (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 May 2023 09:38:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48146 "EHLO
+        Wed, 17 May 2023 10:58:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231675AbjEQNiu (ORCPT
+        with ESMTP id S229746AbjEQO6n (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2023 09:38:50 -0400
-Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 069975FD0;
-        Wed, 17 May 2023 06:38:37 -0700 (PDT)
-Received: by mail-pg1-x529.google.com with SMTP id 41be03b00d2f7-51f6461af24so501007a12.2;
-        Wed, 17 May 2023 06:38:37 -0700 (PDT)
+        Wed, 17 May 2023 10:58:43 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E94524C
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 07:58:36 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-56098b41d42so8326867b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 07:58:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684330717; x=1686922717;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k8OvYgKD4CrfKg2DiZcLfhOHusqLyEctdoSrJ/WtXzM=;
-        b=KEh+YWam1KnFY/K2bIyPqm3IYPMudMHDi0ZJ2katvPPvkwzo5ZIcGpMT2/VEfLz1RC
-         gO9WrGrvTJvtXCTkY9hteSpAgWSDLUqfnBp6JsHIKeoRfrzCyZiE7s7B3dgCMXsH9T8g
-         C/1EA3HXeVV5kUxXtsd9cCeO2fbVf5mCm1Th9Ky40uzUd0M7doxtm8kc82KOSxdCQ8QM
-         I8PNXm2+bJKmOrQFC0m0ehLurGIbxWuHl4sL10ORFdrTAoK5YDXH5Jk+ZCcsXUJJ7ZK+
-         JOFYm9FR8LMw4hPTjblE2pF4BphqExQ0C082VYdrqCuH/6n/3gKPx4BVdeXeNbyiCm71
-         STxg==
+        d=google.com; s=20221208; t=1684335515; x=1686927515;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=e7J6VZXaspRffiPWCs6qbIb2JCSbaV6rph0RrfEcGYk=;
+        b=2PIxF4UyeLmsWrhMRBIccWHdjqFVWRcx9SR3+tAY0D3mahBohC7OBiN09QOyM/wsBk
+         ZJ1zpCOJrOSn+VSjBupJd7H+HHo5CTXYsgS465pNWd8zB0b4zvO23jPCYBDjhGbz0mI5
+         ZvHB7X4BMTE2QiztWutNtfUmuQ0UUIV4aBfRLjTeQ1v4HNqPz6eiRnq9UqETieUY7qHi
+         kQNUUYKeUnhjFGB7w5c4RKsGFA5YcPs1+04r40Ma9FukRMsLlI8N3TEW2uxFXri+9kL1
+         XpWwW6Qh2s8U9bjVh9q8r+jADUevprsk2VOA/ndGkCil2FCb4FOTXksLSJUKYB/FW5hR
+         +uGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684330717; x=1686922717;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k8OvYgKD4CrfKg2DiZcLfhOHusqLyEctdoSrJ/WtXzM=;
-        b=g4PtMMsDMc+PXH6aUIvb2wHl2noEi7eJ9oNzHKZcn7vgSaKMLn4HBUVnx4sBst8nVn
-         kNudN3+zlm0pLv5wgAWH5qk/Lk9upMFEFUc3jK4uA/g4KSA7bF+fZXDzDDNt+UIbABPV
-         tjvZKo/VtUMENmUD88ZvOE5vDABjT7JfrS4QWNFoW2yoetQ/n93l7DP+W/welhu97/b4
-         7YfJUHy+F8sbvFLQvPTJfRIgfabRu1qf57JgZ0Hg21Ocb9X/A/8Jo11FVBMkRJ0f2dOV
-         uSW1bVZLrZTFb0tuF1SAjTpQOWkRd1PZleakG1LQa8x+7/YDxQp59A+M0lYa4gXOMEoS
-         w88A==
-X-Gm-Message-State: AC+VfDzqNKkTC8zvzh83dgZBlevX+93PvRILzCksAd3u5+K+LKMZlFdu
-        W3A59u0Nz3MWFR5L89GdWYk=
-X-Google-Smtp-Source: ACHHUZ53ktGCJGR3vp/YQiRZuOPCvz7SdKay6uIQaBpaqAXvZtvtpSppG6747/Sr7TyeOCMNUjHjeg==
-X-Received: by 2002:a05:6a20:3d82:b0:104:2200:8949 with SMTP id s2-20020a056a203d8200b0010422008949mr27572883pzi.56.1684330717016;
-        Wed, 17 May 2023 06:38:37 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.32])
-        by smtp.gmail.com with ESMTPSA id fe25-20020a056a002f1900b0062dfe944c61sm15043509pfb.218.2023.05.17.06.38.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 06:38:36 -0700 (PDT)
-From:   Like Xu <like.xu.linux@gmail.com>
-X-Google-Original-From: Like Xu <likexu@tencent.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kan Liang <kan.liang@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/x86/intel: Save/restore cpuc->active_pebs_data_cfg when using guest PEBS
-Date:   Wed, 17 May 2023 21:38:08 +0800
-Message-Id: <20230517133808.67885-1-likexu@tencent.com>
-X-Mailer: git-send-email 2.40.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        d=1e100.net; s=20221208; t=1684335515; x=1686927515;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e7J6VZXaspRffiPWCs6qbIb2JCSbaV6rph0RrfEcGYk=;
+        b=XqV0fONDWseHu6LZN2SdhqkiP8k9mlUHGLoFZQLMoIMlNscmcdYsvGlj9muvAgeru3
+         S7YoW3y4nYSMve2uocZWIYHTrDDHbBePcMygGXZRAbDsV+1J4XW6dJDIcIRGxXrPwGcs
+         gzGRUguLIJBmK6Ldc6BgUORk7P+BjDrFIipV5zOGdmUi1wO6sZfQJhBIGkSa2J7w26cM
+         R3XPSpk6UiieD4gwrZSca608Q4kkN17/sJT/0CXrRBC2misAFqqezvWkhIZBYRnKnGTs
+         92X0fmjQmpXm2ZwLe8NZpzCXCp0v2MF1SwJU04i2gXQfzUydXW4FvgFxFYqXeHzFF0Xi
+         58Hw==
+X-Gm-Message-State: AC+VfDzyQNE3vRdE0JgdLEcYMs6BvHPn000jsV3EEAU3sjn+B1QVyPQv
+        Im6UImZTRu18+gvce9nIkap51+xQEcqo
+X-Google-Smtp-Source: ACHHUZ78JTFqpqUW+hSz+xcojePuu9xMCSe5wLOwAj1fmNBR8lV9lMWLFiNrA64CyK/9C5/cR6A2DV2nnzuU
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:628b:7e78:d09b:39b])
+ (user=irogers job=sendgmr) by 2002:a81:ec10:0:b0:561:4bb5:1784 with SMTP id
+ j16-20020a81ec10000000b005614bb51784mr8311572ywm.2.1684335515399; Wed, 17 May
+ 2023 07:58:35 -0700 (PDT)
+Date:   Wed, 17 May 2023 07:57:40 -0700
+Message-Id: <20230517145803.559429-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
+Subject: [PATCH v1 00/23] PMU refactoring and improvements
+From:   Ian Rogers <irogers@google.com>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ming Wang <wangming01@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Raul Silvera <rsilvera@google.com>,
+        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Like Xu <likexu@tencent.com>
+Separate the code in pmu.[ch] from the set/list of PMUs case and the
+particular PMU case. Move the set/list of PMUs case code into
+pmus.[ch]. Clean up hybrid code and remove hybrid PMU list, it is
+sufficient to scan PMUs looking for core ones. Add core PMU list and
+perf_pmus__scan_core that just reads core PMUs. Switch code that skips
+non-core PMUs during a perf_pmus__scan, to use the
+perf_pmus__scan_core variant. Don't scan sysfs for PMUs if all such
+PMUs have been previously scanned/loaded. Scanning just just core
+PMUs, for the cases it is applicable, can improve the sysfs reading
+time by more than 4 fold on my laptop, as servers generally have many
+more uncore PMUs the improvement there should be larger:
 
-After commit b752ea0c28e3 ("perf/x86/intel/ds: Flush PEBS DS when changing
-PEBS_DATA_CFG"), the cpuc->pebs_data_cfg may save some bits that are not
-supported by real hardware, such as PEBS_UPDATE_DS_SW. This would cause
-the VMX hardware MSR switching mechanism to save/restore invalid values
-for PEBS_DATA_CFG MSR, thus crashing the host when PEBS is used for guest.
-Fix it by using the active host value from cpuc->active_pebs_data_cfg.
+```
+$ perf bench internals pmu-scan -i 1000
+Computing performance of sysfs PMU event scan for 1000 times
+  Average core PMU scanning took: 989.231 usec (+- 1.535 usec)
+  Average PMU scanning took: 4309.425 usec (+- 74.322 usec)
+```
 
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Like Xu <likexu@tencent.com>
----
- arch/x86/events/intel/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The patch "perf pmu: Separate pmu and pmus" moves and renames a lot of
+functions, and is consequently large. The changes are trivial, but
+kept together to keep the overall number of patches more reasonable.
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 070cc4ef2672..89b9c1cebb61 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -4074,7 +4074,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
- 	if (x86_pmu.intel_cap.pebs_baseline) {
- 		arr[(*nr)++] = (struct perf_guest_switch_msr){
- 			.msr = MSR_PEBS_DATA_CFG,
--			.host = cpuc->pebs_data_cfg,
-+			.host = cpuc->active_pebs_data_cfg,
- 			.guest = kvm_pmu->pebs_data_cfg,
- 		};
- 	}
+Ian Rogers (23):
+  perf tools: Warn if no user requested CPUs match PMU's CPUs
+  perf evlist: Remove evlist__warn_hybrid_group
+  perf evlist: Remove __evlist__add_default
+  perf evlist: Reduce scope of evlist__has_hybrid
+  perf pmu: Remove perf_pmu__hybrid_mounted
+  perf pmu: Detect ARM and hybrid PMUs with sysfs
+  perf pmu: Add is_core to pmu
+  perf pmu: Rewrite perf_pmu__has_hybrid to avoid list
+  perf x86: Iterate hybrid PMUs as core PMUs
+  perf topology: Avoid hybrid list for hybrid topology
+  perf evsel: Compute is_hybrid from PMU being core
+  perf header: Avoid hybrid PMU list in write_pmu_caps
+  perf metrics: Remove perf_pmu__is_hybrid use
+  perf stat: Avoid hybrid PMU list
+  perf mem: Avoid hybrid PMU list
+  perf pmu: Remove perf_pmu__hybrid_pmus list
+  perf pmus: Prefer perf_pmu__scan over perf_pmus__for_each_pmu
+  perf x86 mem: minor refactor to is_mem_loads_aux_event
+  perf pmu: Separate pmu and pmus
+  perf pmus: Split pmus list into core and uncore
+  perf pmus: Allow just core PMU scanning
+  perf pmus: Avoid repeated sysfs scanning
+  perf pmus: Ensure all PMUs are read for find_by_type
+
+ tools/perf/arch/arm/util/auxtrace.c   |   7 +-
+ tools/perf/arch/arm/util/cs-etm.c     |   4 +-
+ tools/perf/arch/arm64/util/pmu.c      |   6 +-
+ tools/perf/arch/x86/tests/hybrid.c    |   7 +-
+ tools/perf/arch/x86/util/auxtrace.c   |   5 +-
+ tools/perf/arch/x86/util/evlist.c     |  25 +-
+ tools/perf/arch/x86/util/evsel.c      |  27 +-
+ tools/perf/arch/x86/util/intel-bts.c  |   4 +-
+ tools/perf/arch/x86/util/intel-pt.c   |   4 +-
+ tools/perf/arch/x86/util/mem-events.c |  17 +-
+ tools/perf/arch/x86/util/perf_regs.c  |  15 +-
+ tools/perf/arch/x86/util/topdown.c    |   5 +-
+ tools/perf/bench/pmu-scan.c           |  60 ++--
+ tools/perf/builtin-c2c.c              |   9 +-
+ tools/perf/builtin-list.c             |   4 +-
+ tools/perf/builtin-mem.c              |   9 +-
+ tools/perf/builtin-record.c           |  29 +-
+ tools/perf/builtin-stat.c             |  15 +-
+ tools/perf/builtin-top.c              |  10 +-
+ tools/perf/tests/attr.c               |   4 +-
+ tools/perf/tests/event_groups.c       |   7 +-
+ tools/perf/tests/parse-events.c       |  15 +-
+ tools/perf/tests/parse-metric.c       |   4 +-
+ tools/perf/tests/pmu-events.c         |   6 +-
+ tools/perf/tests/switch-tracking.c    |   4 +-
+ tools/perf/tests/topology.c           |   4 +-
+ tools/perf/util/Build                 |   2 -
+ tools/perf/util/cpumap.h              |   2 +-
+ tools/perf/util/cputopo.c             |  16 +-
+ tools/perf/util/env.c                 |   5 +-
+ tools/perf/util/evlist-hybrid.c       | 162 ---------
+ tools/perf/util/evlist-hybrid.h       |  15 -
+ tools/perf/util/evlist.c              |  67 +++-
+ tools/perf/util/evlist.h              |   9 +-
+ tools/perf/util/evsel.c               |  57 +--
+ tools/perf/util/evsel.h               |   3 -
+ tools/perf/util/header.c              |  27 +-
+ tools/perf/util/mem-events.c          |  17 +-
+ tools/perf/util/metricgroup.c         |   9 +-
+ tools/perf/util/parse-events.c        |  24 +-
+ tools/perf/util/parse-events.y        |   3 +-
+ tools/perf/util/pfm.c                 |   6 +-
+ tools/perf/util/pmu-hybrid.c          |  52 ---
+ tools/perf/util/pmu-hybrid.h          |  32 --
+ tools/perf/util/pmu.c                 | 482 ++------------------------
+ tools/perf/util/pmu.h                 |  26 +-
+ tools/perf/util/pmus.c                | 477 ++++++++++++++++++++++++-
+ tools/perf/util/pmus.h                |  15 +-
+ tools/perf/util/print-events.c        |  15 +-
+ tools/perf/util/python-ext-sources    |   1 -
+ tools/perf/util/stat-display.c        |  21 +-
+ 51 files changed, 819 insertions(+), 1032 deletions(-)
+ delete mode 100644 tools/perf/util/evlist-hybrid.c
+ delete mode 100644 tools/perf/util/evlist-hybrid.h
+ delete mode 100644 tools/perf/util/pmu-hybrid.c
+ delete mode 100644 tools/perf/util/pmu-hybrid.h
+
 -- 
-2.40.1
+2.40.1.606.ga4b1b128d6-goog
 
