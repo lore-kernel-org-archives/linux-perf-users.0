@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCAEC77B7D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 15:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD67C77B7F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 15:00:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232421AbjEQPAg (ORCPT
+        id S232455AbjEQPAi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 May 2023 11:00:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53662 "EHLO
+        Wed, 17 May 2023 11:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232505AbjEQO74 (ORCPT
+        with ESMTP id S232531AbjEQO76 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2023 10:59:56 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F9FBAD3A
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 07:59:16 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1aafb2766e0so6202965ad.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 07:59:16 -0700 (PDT)
+        Wed, 17 May 2023 10:59:58 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BC49D061
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 07:59:18 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-559ea6b1065so13819517b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 07:59:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684335555; x=1686927555;
+        d=google.com; s=20221208; t=1684335557; x=1686927557;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lI6N+gAi4DZYSVnV114efDFeKpz0k1rpLH9njpuRINE=;
-        b=VdO5yX2Mtt3uOQ2AaB3Q5XB3czFjGwA2fovuTpWU7v+Gys7pziSDULWXNnQnlh/ldX
-         UsKgUfZMpG91Xnv9oI5e6wggea5KzAsJPtPxE8sZLF+lQzDMwAXieu242N1cDu5tDpVs
-         ybGHBKCWMbZv4qCIoIGwZaS9SreYC50E/lUnTL/BV9dwCxbeU19Cj/vXXYJby3ymcVp+
-         GDwq2Y82oKaD5BzJjUw/5ROkCjU6mMtDcgXzkPjeU4Qb+w6eRlVNvQPa720O9CaXo4Un
-         TbnNL0SBw2RnLKa4hoWLJNhL6ftP84siAsYyzFR9c1s7Q2LdSa6DcZnNYI9pu/RSBgMm
-         hSOw==
+        bh=2JHMYFOy4Rnq7km0f1P5d0Novi2NnIhZ5v+qGyCXvJA=;
+        b=NUt5ix3/hj9HrpcM6MYDNvnTwoSP1xH6wlLrX9e9Tz0miwMSQTtGIKClG5qwv57l6O
+         A//ubPkeYK0kARPpDLYkyvpjLLta860QhwX1nXfQwg8tEZLVlbK1kWXym/2eZ5dZsq8x
+         6GYSvX9bRBm6eKGkHksg3BVoR2OCrj+UmGMMJkEVE+YWGLO4+6/QkfWQgMT0Iy3tbpGd
+         ywGR+r1YyKpTyXhgNpMcIreGImEsF2uwH3qWnvocCFxv0Q+CgvLR1UjKizk+npEV17LY
+         iPj9Md3WG1Jl5fTkxw6s8n+6E6qDJXYki1HnUtkNIJNcA+Ge2Zpy40/9HA4D8oS+Fc45
+         I6oA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684335555; x=1686927555;
+        d=1e100.net; s=20221208; t=1684335557; x=1686927557;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lI6N+gAi4DZYSVnV114efDFeKpz0k1rpLH9njpuRINE=;
-        b=F46VYv9eid/EIFEI2vs5AEoGHAUULnaRsSxvQvRiGOmzRBHFt3efh8SKOZzPNz86/y
-         3rB/n2aWYf1PKNgdmsbdmnPOl7HEOm32Q9k3/m0Fio0MayMMROlA8mBnkeTING+UGa38
-         v204ghoc7XTAcrY+Ph/y+yyN5GhmJCRoUrIu76G5aAjrNpUykVrEU0gvZXL5Wz0tK4i9
-         K6QyegCSM8kb9sHXwaKnKOZfxev9/QO5hqeDEwMClYFzoTGFD60q2V+HVR2xIMy3qXPq
-         9r+EbpMRtTEJEZ2IQfOqOxpgLpE9fA06BDg3aw7H8Ss/bR3/QAPCh7vRCdTlcMa0zOBW
-         mC2A==
-X-Gm-Message-State: AC+VfDwDFKMy4Sb6GLTtPW/9CPdsM6YroDxpNj+B4GGXif96cagDW/Bb
-        Q1wRjFKDslq6/gVUseZZc4F2FoUDI557
-X-Google-Smtp-Source: ACHHUZ6tg9xCmYqqW9Dcj2t83D3ZIEdg28KNdMklhDpiZRaz2/Kct1tJYmDNWbltkBzSuqq/mfchZfLPgg1h
+        bh=2JHMYFOy4Rnq7km0f1P5d0Novi2NnIhZ5v+qGyCXvJA=;
+        b=LfEOgJnbTR1N4B+l2pbVdJnB91MIUihQHJUR6RrCW9uXXNQHkjM6BYXxT1geudbwbA
+         1xOhqcYnUAU6QJhk9LldHbGxDN3Yx7QV3eYoIp0pa7bsUDWRQe+vuKcBIPmZ2OJMKVSW
+         OVBQVvsKHmLk3tKDUapu942p3RiIcyQ2/VaRDAkyolK418MMO6/EvwcIFBABqqSswWi8
+         t2gdk/9keJDGy9TtOTHU1afPeaxx1BoOqrW5+5vT8xWI6d5h/CxXQhboke3wM4T1tCt7
+         a0wy3QYX2s/DeCtvZTgt4SRnUPkJDZZVwcNPnkWfEcR4BZQcDm4FdUCev+Q7/UQBAaur
+         GkmQ==
+X-Gm-Message-State: AC+VfDwImcVD6ACUwjgE+A+gy6bKY1B/0hrFGfv8ZjjPSKAjHvP8VjfC
+        iI+m0W3jC8TO2Eq+UUYcsK9om1kHxXMt
+X-Google-Smtp-Source: ACHHUZ6qLhjY1rr5lAa1CEqcs76khLRuf/sGQ5pDoD/zXoJpttx+p0MDEXNhFEWooXgXjWu1SfGXD+0KmT/A
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:628b:7e78:d09b:39b])
- (user=irogers job=sendgmr) by 2002:a17:902:8f98:b0:1ad:c1ca:55ae with SMTP id
- z24-20020a1709028f9800b001adc1ca55aemr6879014plo.13.1684335554831; Wed, 17
- May 2023 07:59:14 -0700 (PDT)
-Date:   Wed, 17 May 2023 07:57:57 -0700
+ (user=irogers job=sendgmr) by 2002:a81:b50d:0:b0:561:4cde:92cc with SMTP id
+ t13-20020a81b50d000000b005614cde92ccmr7867334ywh.8.1684335557303; Wed, 17 May
+ 2023 07:59:17 -0700 (PDT)
+Date:   Wed, 17 May 2023 07:57:58 -0700
 In-Reply-To: <20230517145803.559429-1-irogers@google.com>
-Message-Id: <20230517145803.559429-18-irogers@google.com>
+Message-Id: <20230517145803.559429-19-irogers@google.com>
 Mime-Version: 1.0
 References: <20230517145803.559429-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
-Subject: [PATCH v1 17/23] perf pmus: Prefer perf_pmu__scan over perf_pmus__for_each_pmu
+Subject: [PATCH v1 18/23] perf x86 mem: minor refactor to is_mem_loads_aux_event
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -94,105 +94,38 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf_pmus__for_each_pmu doesn't lazily initialize pmus making its use
-error prone. Just use perf_pmu__scan as this only impacts
-non-performance critical tests.
+Find the PMU and then the event off of it.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/bench/pmu-scan.c     |  6 ++----
- tools/perf/tests/event_groups.c |  7 ++-----
- tools/perf/tests/parse-events.c | 11 ++++-------
- tools/perf/util/pmus.h          |  2 --
- 4 files changed, 8 insertions(+), 18 deletions(-)
+ tools/perf/arch/x86/util/mem-events.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/bench/pmu-scan.c b/tools/perf/bench/pmu-scan.c
-index f0f007843bb8..f4a6c37cbe27 100644
---- a/tools/perf/bench/pmu-scan.c
-+++ b/tools/perf/bench/pmu-scan.c
-@@ -40,13 +40,11 @@ static struct pmu_scan_result *results;
+diff --git a/tools/perf/arch/x86/util/mem-events.c b/tools/perf/arch/x86/util/mem-events.c
+index f683ac702247..02d65e446f46 100644
+--- a/tools/perf/arch/x86/util/mem-events.c
++++ b/tools/perf/arch/x86/util/mem-events.c
+@@ -55,13 +55,13 @@ struct perf_mem_event *perf_mem_events__ptr(int i)
  
- static int save_result(void)
+ bool is_mem_loads_aux_event(struct evsel *leader)
  {
--	struct perf_pmu *pmu;
-+	struct perf_pmu *pmu = NULL;
- 	struct list_head *list;
- 	struct pmu_scan_result *r;
+-	if (perf_pmu__find("cpu")) {
+-		if (!pmu_have_event("cpu", "mem-loads-aux"))
+-			return false;
+-	} else if (perf_pmu__find("cpu_core")) {
+-		if (!pmu_have_event("cpu_core", "mem-loads-aux"))
+-			return false;
+-	}
++	struct perf_pmu *pmu = perf_pmu__find("cpu");
++
++	if (!pmu)
++		pmu = perf_pmu__find("cpu_core");
++
++	if (pmu && !pmu_have_event(pmu->name, "mem-loads-aux"))
++		return false;
  
--	perf_pmu__scan(NULL);
--
--	perf_pmus__for_each_pmu(pmu) {
-+	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
- 		r = realloc(results, (nr_pmus + 1) * sizeof(*r));
- 		if (r == NULL)
- 			return -ENOMEM;
-diff --git a/tools/perf/tests/event_groups.c b/tools/perf/tests/event_groups.c
-index 029442b4e9c6..3d9a2b524bba 100644
---- a/tools/perf/tests/event_groups.c
-+++ b/tools/perf/tests/event_groups.c
-@@ -50,13 +50,10 @@ static int event_open(int type, unsigned long config, int group_fd)
- 
- static int setup_uncore_event(void)
- {
--	struct perf_pmu *pmu;
-+	struct perf_pmu *pmu = NULL;
- 	int i, fd;
- 
--	if (list_empty(&pmus))
--		perf_pmu__scan(NULL);
--
--	perf_pmus__for_each_pmu(pmu) {
-+	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
- 		for (i = 0; i < NR_UNCORE_PMUS; i++) {
- 			if (!strcmp(uncore_pmus[i].name, pmu->name)) {
- 				pr_debug("Using %s for uncore pmu event\n", pmu->name);
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 72a10bed84fd..277607ede060 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -108,11 +108,11 @@ static int test__checkevent_raw(struct evlist *evlist)
- 	TEST_ASSERT_VAL("wrong number of entries", 0 != evlist->core.nr_entries);
- 
- 	perf_evlist__for_each_evsel(&evlist->core, evsel) {
--		struct perf_pmu *pmu;
-+		struct perf_pmu *pmu = NULL;
- 		bool type_matched = false;
- 
- 		TEST_ASSERT_VAL("wrong config", test_perf_config(evsel, 0x1a));
--		perf_pmus__for_each_pmu(pmu) {
-+		while ((pmu = perf_pmu__scan(pmu)) != NULL) {
- 			if (pmu->type == evsel->attr.type) {
- 				TEST_ASSERT_VAL("PMU type expected once", !type_matched);
- 				type_matched = true;
-@@ -2243,13 +2243,10 @@ static int test__terms2(struct test_suite *test __maybe_unused, int subtest __ma
- 
- static int test__pmu_events(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
--	struct perf_pmu *pmu;
-+	struct perf_pmu *pmu = NULL;
- 	int ret = TEST_OK;
- 
--	if (list_empty(&pmus))
--		perf_pmu__scan(NULL);
--
--	perf_pmus__for_each_pmu(pmu) {
-+	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
- 		struct stat st;
- 		char path[PATH_MAX];
- 		struct dirent *ent;
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index d475e2960c10..257de10788e8 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -5,8 +5,6 @@
- extern struct list_head pmus;
- struct perf_pmu;
- 
--#define perf_pmus__for_each_pmu(pmu) list_for_each_entry(pmu, &pmus, list)
--
- const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
- 
- #endif /* __PMUS_H */
+ 	return leader->core.attr.config == MEM_LOADS_AUX;
+ }
 -- 
 2.40.1.606.ga4b1b128d6-goog
 
