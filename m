@@ -2,315 +2,210 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC456C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 17:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 935DBC77B7D
+	for <linux-perf-users@archiver.kernel.org>; Wed, 17 May 2023 17:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229475AbjEQR3g (ORCPT
+        id S229720AbjEQRiR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 May 2023 13:29:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41280 "EHLO
+        Wed, 17 May 2023 13:38:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjEQR3e (ORCPT
+        with ESMTP id S229562AbjEQRiR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2023 13:29:34 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F11199F;
-        Wed, 17 May 2023 10:29:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684344572; x=1715880572;
-  h=date:from:to:cc:subject:message-id;
-  bh=nSqVZysCqduEgBH88r+nOXyMT/oVrrLmi6R2ewfyuck=;
-  b=Q5NGjUyDnZTjwGyvV/KOCS3VGcqTdh4FGBTN//SqyVc9sgim2TCVGzXm
-   6UGcDQfJNnH8phlfJObEMw3oYtZiCFEGmBtChtcXViqcGBVxHRZlVXGI9
-   C2lAhKrQFatiy0BLNgfboZehpyAqP20yGLDs/DPDGR7P0E3ReY23Z6ErL
-   eRZa6dnh+VidCi2HRdBiT5GshFZByRVjAhZH4t8PjBirNeLipczh1mBFi
-   Ckgmti/D4fDtqNIvkqXjoRaWyKO/Q+mMbWyRQKqO+xPQEiTtFzC1iP8Hi
-   4Wk+UdOeMhg+tfIRp79TCDMAo6Kx/bU/pJCv1D9BDlt3t5XzpWiNGmrpc
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="350660144"
-X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
-   d="scan'208";a="350660144"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 May 2023 10:29:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="652314150"
-X-IronPort-AV: E=Sophos;i="5.99,282,1677571200"; 
-   d="scan'208";a="652314150"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 17 May 2023 10:29:29 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pzKxs-00096K-1m;
-        Wed, 17 May 2023 17:29:28 +0000
-Date:   Thu, 18 May 2023 01:28:42 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        amd-gfx@lists.freedesktop.org, kasan-dev@googlegroups.com,
-        linux-bluetooth@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: [linux-next:master] BUILD REGRESSION
- 065efa589871e93b6610c70c1e9de274ef1f1ba2
-Message-ID: <20230517172842.Ssf2F%lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        Wed, 17 May 2023 13:38:17 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD96B1A7
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 10:38:15 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba8337a5861so1213990276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 10:38:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1684345095; x=1686937095;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/koCjBS3Rx6Q1RPwbiGXuOTQYAseW2BzVACiU1S6aGQ=;
+        b=FNvzhL9550yc4gXCGT5NnLk+jdunr2jBSki2DRSsJO7soJmtqSWlozrbpYN/Eo7lra
+         +uRQDoHYqVA+4hLZXWAjhspbxMR1WE0jAo/FPZ1E6dLKZ/DtwntRs0WYZ1BYIn9+ezhh
+         /UDWkO7Qovonzt9cBI+KHdtSmOLZkUOrZ53YdO4aJZ6oYMwzUtontEFgfbNsBAgn2Xit
+         d4CMJz2BsvpBHC2AKK7Xjb6wMFlTLILFrcerlHv2JVCrk/IilnuAf0BRtReahs2abL02
+         KbIQ9EWSFpMNBZHLgxIZQ/x2I3nbOxyc+dyWG3A9fzn/9BudZBxLf/W0QIB1wNJO+WM5
+         amJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684345095; x=1686937095;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/koCjBS3Rx6Q1RPwbiGXuOTQYAseW2BzVACiU1S6aGQ=;
+        b=QaF2au8fL7QFnggA7kBmGd8Rs+NNdJzTHx+4N8XrR4oHT66fVmoiTsTW4cIUSGA0kB
+         cOcB6KA1Lo7sSoUkodlVxFXNOPzuO/iP1LRDCgkCznuDnl+pO57ntnFMrWGeWa9PpDKe
+         wS+0MdiU3J3PNgOS+4pvQqrbSFlUOE6eS5b8aXyhEuLOgCpgD7GFZ2I2grKFjsc3sspD
+         da0kaKuYLGHN+jGOR5KDs5Av5a1DTSM6l0+5drjpU0KgikVRgPs0k66iQpwBuhZHZL0Y
+         xNfX2jOobDcYRsnL2cngTkY4qu5VXvv1Sb3tfvOX4KHQjvpL6xbOwgR5yB88xWRiQOvd
+         pKfQ==
+X-Gm-Message-State: AC+VfDwX/tcFa+5OMJ0lBrh7kehVpDGkPtNCu/FY2V7uubb1/cT6OGEU
+        Q9sMJaWfFrGgMhhHk83NZ4iPNpe7PpLf
+X-Google-Smtp-Source: ACHHUZ5PLdeRVo6vhyAL2D0x4zaBqNPcaMfnZZ+6aplROH+T8+IKRuOy/1vN9hC7gVNkLZiudrY7OiiyEZh5
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:eb06:5af6:40f:47ca])
+ (user=irogers job=sendgmr) by 2002:a05:6902:104:b0:ba7:8628:93e2 with SMTP id
+ o4-20020a056902010400b00ba7862893e2mr1913070ybh.4.1684345094947; Wed, 17 May
+ 2023 10:38:14 -0700 (PDT)
+Date:   Wed, 17 May 2023 10:37:49 -0700
+Message-Id: <20230517173805.602113-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
+Subject: [PATCH v3 00/15] Event, metric and metric group improvements
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-tree/branch: INFO setup_repo_specs: /db/releases/20230517200055/lkp-src/repo/*/linux-next
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 065efa589871e93b6610c70c1e9de274ef1f1ba2  Add linux-next specific files for 20230517
+Update Intel events to the latest at: https://github.com/intel/perfmon
+TMA info metrics are renamed for consistency and a fix is added that
+adds back in the Valkyrie metrics such as memory_bandwidth_total,
+memory_bandwidth_read and memory_bandwidth_write on icelakex.
 
-Error/Warning reports:
+Add a new feature to perf list to show a description of a metricgroup
+via a new metricgroups.json file, add this for the generated Intel
+metrics. The descriptions looks like:
 
-https://lore.kernel.org/oe-kbuild-all/202304200812.6UqNDVZy-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202304220119.94Pw6YsD-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202305132244.DwzBUcUd-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202305171622.jKTovBvy-lkp@intel.com
+```
+$ perf list
+...
+tma_frontend_bound_group: [Metrics contributing to tma_frontend_bound category]
+  tma_fetch_bandwidth
+       [This metric represents fraction of slots the CPU
+        was stalled due to Frontend bandwidth issues]
+  tma_fetch_latency
+       [This metric represents fraction of slots the CPU
+        was stalled due to Frontend latency issues]
+...
+```
 
-Error/Warning: (recently discovered and may have been fixed)
+v2/v3. Reword "Grouping from metrics spreadsheet" to "Grouping from
+       Top-down Microarchitecture Analysis Metrics spreadsheet" as
+       suggested by Kan Liang.
 
-drivers/base/regmap/regcache-maple.c:113:23: warning: 'lower_index' is used uninitialized [-Wuninitialized]
-drivers/base/regmap/regcache-maple.c:113:36: warning: 'lower_last' is used uninitialized [-Wuninitialized]
-drivers/bluetooth/btnxpuart.c:1332:34: warning: unused variable 'nxpuart_of_match_table' [-Wunused-const-variable]
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:6396:21: warning: variable 'count' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dmub_abm.c:138:15: warning: variable 'feature_support' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c:499:13: warning: variable 'j' set but not used [-Wunused-but-set-variable]
-ld.lld: error: undefined symbol: __udivdi3
+Ian Rogers (15):
+  perf vendor events intel: Update alderlake events/metrics
+  perf vendor events intel: Update broadwell variant events/metrics
+  perf vendor events intel: Update cascadelakex events/metrics
+  perf vendor events intel: Update elkhartlake events
+  perf vendor events intel: Update haswell(x) metrics
+  perf vendor events intel: Update icelake/icelakex events/metrics
+  perf vendor events intel: Update ivybridge/ivytown metrics
+  perf vendor events intel: Update jaketown metrics
+  perf vendor events intel: Update sandybridge metrics
+  perf vendor events intel: Update sapphirerapids events/metrics
+  perf vendor events intel: Update skylake/skylakex events/metrics
+  perf vendor events intel: Update snowridgex events
+  perf vendor events intel: Update tigerlake events/metrics
+  perf jevents: Add support for metricgroup descriptions
+  perf vendor events intel: Add metricgroup descriptions for all models
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-drivers/net/wireless/realtek/rtw88/mac.c:798 __rtw_download_firmware() warn: missing unwind goto?
-fs/xfs/scrub/fscounters.c:459 xchk_fscounters() warn: ignoring unreachable code.
-kernel/events/uprobes.c:478 uprobe_write_opcode() warn: passing zero to 'PTR_ERR'
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
-|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- arm-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- csky-randconfig-m041-20230517
-|   |-- drivers-net-wireless-realtek-rtw88-mac.c-__rtw_download_firmware()-warn:missing-unwind-goto
-|   `-- fs-xfs-scrub-fscounters.c-xchk_fscounters()-warn:ignoring-unreachable-code.
-|-- csky-randconfig-r032-20230517
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- i386-randconfig-m021
-|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-|-- ia64-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- ia64-buildonly-randconfig-r005-20230517
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- ia64-randconfig-r023-20230517
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- ia64-randconfig-r031-20230517
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- loongarch-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- loongarch-defconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- mips-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- mips-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- powerpc-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- powerpc-buildonly-randconfig-r004-20230517
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- powerpc-randconfig-c023-20230517
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- powerpc-randconfig-c034-20230517
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- powerpc-randconfig-r012-20230517
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- powerpc-randconfig-s033-20230517
-|   `-- mm-kfence-core.c:sparse:sparse:cast-to-restricted-__le64
-|-- riscv-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- s390-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- sparc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- sparc-randconfig-r005-20230517
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- x86_64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-`-- x86_64-randconfig-m001
-    `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-clang_recent_errors
-|-- arm64-randconfig-r006-20230517
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce-dmub_abm.c:warning:variable-feature_support-set-but-not-used
-|-- i386-buildonly-randconfig-r001-20230515
-|   `-- ld.lld:error:undefined-symbol:__udivdi3
-`-- x86_64-randconfig-x052
-    `-- drivers-bluetooth-btnxpuart.c:warning:unused-variable-nxpuart_of_match_table
-
-elapsed time: 871m
-
-configs tested: 127
-configs skipped: 7
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha        buildonly-randconfig-r002-20230517   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r013-20230517   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230517   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                        clps711x_defconfig   gcc  
-arm                                 defconfig   gcc  
-arm                          exynos_defconfig   gcc  
-arm                            hisi_defconfig   gcc  
-arm                  randconfig-r004-20230517   gcc  
-arm                  randconfig-r046-20230517   clang
-arm                           sama7_defconfig   clang
-arm                           tegra_defconfig   gcc  
-arm                         vf610m4_defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r006-20230517   clang
-arm64                randconfig-r011-20230517   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r024-20230517   gcc  
-csky                 randconfig-r025-20230517   gcc  
-csky                 randconfig-r032-20230517   gcc  
-hexagon      buildonly-randconfig-r006-20230517   clang
-hexagon                             defconfig   clang
-hexagon              randconfig-r041-20230517   clang
-hexagon              randconfig-r045-20230517   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                          randconfig-a001   gcc  
-i386                          randconfig-a002   clang
-i386                          randconfig-a003   gcc  
-i386                          randconfig-a004   clang
-i386                          randconfig-a005   gcc  
-i386                          randconfig-a006   clang
-i386                          randconfig-a011   clang
-i386                          randconfig-a012   gcc  
-i386                          randconfig-a013   clang
-i386                          randconfig-a014   gcc  
-i386                          randconfig-a015   clang
-i386                          randconfig-a016   gcc  
-ia64                             allmodconfig   gcc  
-ia64         buildonly-randconfig-r005-20230517   gcc  
-ia64                                defconfig   gcc  
-ia64                        generic_defconfig   gcc  
-ia64                 randconfig-r023-20230517   gcc  
-ia64                 randconfig-r031-20230517   gcc  
-ia64                 randconfig-r036-20230517   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                         amcore_defconfig   gcc  
-m68k                         apollo_defconfig   gcc  
-m68k         buildonly-randconfig-r001-20230517   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r034-20230517   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                      malta_kvm_defconfig   clang
-mips                 randconfig-r015-20230517   clang
-nios2                            allyesconfig   gcc  
-nios2        buildonly-randconfig-r003-20230517   gcc  
-nios2                               defconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc      buildonly-randconfig-r004-20230517   gcc  
-powerpc              randconfig-r001-20230517   clang
-powerpc              randconfig-r012-20230517   gcc  
-powerpc              randconfig-r014-20230517   gcc  
-powerpc              randconfig-r035-20230517   clang
-powerpc                  storcenter_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r042-20230517   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r016-20230517   gcc  
-s390                 randconfig-r044-20230517   gcc  
-sh                               allmodconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                   randconfig-r003-20230517   gcc  
-sh                   randconfig-r022-20230517   gcc  
-sh                           se7751_defconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r005-20230517   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                        randconfig-a001   clang
-x86_64                        randconfig-a002   gcc  
-x86_64                        randconfig-a003   clang
-x86_64                        randconfig-a004   gcc  
-x86_64                        randconfig-a005   clang
-x86_64                        randconfig-a006   gcc  
-x86_64                        randconfig-a011   gcc  
-x86_64                        randconfig-a012   clang
-x86_64                        randconfig-a013   gcc  
-x86_64                        randconfig-a014   clang
-x86_64                        randconfig-a015   gcc  
-x86_64                        randconfig-a016   clang
-x86_64                        randconfig-x051   gcc  
-x86_64                        randconfig-x052   clang
-x86_64                        randconfig-x053   gcc  
-x86_64                        randconfig-x054   clang
-x86_64                        randconfig-x055   gcc  
-x86_64                        randconfig-x056   clang
-x86_64                        randconfig-x061   gcc  
-x86_64                        randconfig-x062   clang
-x86_64                        randconfig-x063   gcc  
-x86_64                        randconfig-x064   clang
-x86_64                        randconfig-x065   gcc  
-x86_64                        randconfig-x066   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                    smp_lx200_defconfig   gcc  
+ tools/perf/builtin-list.c                     |   11 +-
+ .../arch/x86/alderlake/adl-metrics.json       | 1314 ++++++++--------
+ .../pmu-events/arch/x86/alderlake/cache.json  |    9 +
+ .../pmu-events/arch/x86/alderlake/memory.json |    6 +-
+ .../arch/x86/alderlake/metricgroups.json      |  122 ++
+ .../arch/x86/alderlaken/adln-metrics.json     |  276 ++--
+ .../arch/x86/alderlaken/metricgroups.json     |   26 +
+ .../arch/x86/broadwell/bdw-metrics.json       |  580 +++----
+ .../arch/x86/broadwell/floating-point.json    |   15 +
+ .../arch/x86/broadwell/metricgroups.json      |  107 ++
+ .../arch/x86/broadwellde/bdwde-metrics.json   |  556 +++----
+ .../arch/x86/broadwellde/floating-point.json  |   15 +
+ .../arch/x86/broadwellde/metricgroups.json    |  107 ++
+ .../arch/x86/broadwellx/bdx-metrics.json      |  796 ++++++----
+ .../arch/x86/broadwellx/floating-point.json   |   15 +
+ .../arch/x86/broadwellx/metricgroups.json     |  107 ++
+ .../arch/x86/cascadelakex/clx-metrics.json    | 1231 +++++++++------
+ .../arch/x86/cascadelakex/floating-point.json |   31 +
+ .../arch/x86/cascadelakex/metricgroups.json   |  114 ++
+ .../arch/x86/cascadelakex/pipeline.json       |   23 +-
+ .../arch/x86/elkhartlake/cache.json           |    7 +
+ .../arch/x86/elkhartlake/memory.json          |    2 +
+ .../arch/x86/elkhartlake/other.json           |   10 +
+ .../arch/x86/elkhartlake/pipeline.json        |    3 +
+ .../arch/x86/haswell/hsw-metrics.json         |  484 +++---
+ .../arch/x86/haswell/metricgroups.json        |  107 ++
+ .../arch/x86/haswellx/hsx-metrics.json        |  700 ++++++---
+ .../arch/x86/haswellx/metricgroups.json       |  107 ++
+ .../pmu-events/arch/x86/icelake/cache.json    |   18 +
+ .../arch/x86/icelake/icl-metrics.json         |  950 ++++++------
+ .../arch/x86/icelake/metricgroups.json        |  113 ++
+ .../arch/x86/icelakex/icx-metrics.json        | 1306 +++++++++-------
+ .../arch/x86/icelakex/metricgroups.json       |  114 ++
+ .../arch/x86/ivybridge/ivb-metrics.json       |  526 +++----
+ .../arch/x86/ivybridge/metricgroups.json      |  107 ++
+ .../arch/x86/ivytown/ivt-metrics.json         |  534 +++----
+ .../arch/x86/ivytown/metricgroups.json        |  107 ++
+ .../arch/x86/jaketown/jkt-metrics.json        |  224 +--
+ .../arch/x86/jaketown/metricgroups.json       |  100 ++
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   31 +-
+ .../arch/x86/sandybridge/metricgroups.json    |  100 ++
+ .../arch/x86/sandybridge/snb-metrics.json     |  222 +--
+ .../arch/x86/sapphirerapids/memory.json       |    6 +-
+ .../arch/x86/sapphirerapids/metricgroups.json |  118 ++
+ .../arch/x86/sapphirerapids/spr-metrics.json  | 1357 ++++++++++-------
+ .../sapphirerapids/uncore-interconnect.json   |    2 +-
+ .../x86/sapphirerapids/uncore-memory.json     |    8 +-
+ .../arch/x86/skylake/floating-point.json      |    8 +
+ .../arch/x86/skylake/metricgroups.json        |  113 ++
+ .../pmu-events/arch/x86/skylake/pipeline.json |   15 +-
+ .../arch/x86/skylake/skl-metrics.json         |  875 ++++++-----
+ .../arch/x86/skylakex/floating-point.json     |   31 +
+ .../arch/x86/skylakex/metricgroups.json       |  114 ++
+ .../arch/x86/skylakex/pipeline.json           |   23 +-
+ .../arch/x86/skylakex/skx-metrics.json        | 1183 ++++++++------
+ .../pmu-events/arch/x86/snowridgex/cache.json |    7 +
+ .../arch/x86/snowridgex/memory.json           |    2 +
+ .../pmu-events/arch/x86/snowridgex/other.json |   10 +
+ .../arch/x86/snowridgex/pipeline.json         |    3 +
+ .../x86/snowridgex/uncore-interconnect.json   |   14 +-
+ .../arch/x86/snowridgex/uncore-io.json        |    8 -
+ .../arch/x86/snowridgex/uncore-memory.json    |    7 +-
+ .../arch/x86/snowridgex/uncore-power.json     |    6 +-
+ .../pmu-events/arch/x86/tigerlake/cache.json  |   18 +
+ .../arch/x86/tigerlake/metricgroups.json      |  113 ++
+ .../arch/x86/tigerlake/pipeline.json          |    1 +
+ .../arch/x86/tigerlake/tgl-metrics.json       |  970 ++++++------
+ tools/perf/pmu-events/empty-pmu-events.c      |    5 +
+ tools/perf/pmu-events/jevents.py              |   49 +-
+ tools/perf/pmu-events/pmu-events.h            |    2 +
+ 70 files changed, 9985 insertions(+), 6416 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/alderlake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/alderlaken/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/broadwell/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/broadwellde/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/haswell/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/haswellx/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/ivybridge/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/ivytown/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/jaketown/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sandybridge/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/skylake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/metricgroups.json
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.40.1.606.ga4b1b128d6-goog
+
