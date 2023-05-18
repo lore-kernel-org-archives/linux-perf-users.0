@@ -2,119 +2,131 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC54C77B7D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 07:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50043C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 08:46:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230032AbjERHwg (ORCPT
+        id S230120AbjERIqr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 May 2023 03:52:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41212 "EHLO
+        Thu, 18 May 2023 04:46:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbjERHwf (ORCPT
+        with ESMTP id S229704AbjERIqq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2023 03:52:35 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7864026AB;
-        Thu, 18 May 2023 00:52:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684396354; x=1715932354;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SuT79ZRDYHe0si+5PoHM6aIaHEfx1rR2SpAoApuh0tg=;
-  b=YDUrfK87fVUUDyAQFJFTzdBn8jYmtXM3fJ94f9NE5cKjBGCSqeh+C0Ex
-   mK2Bt6l4L52LLKF72+A71n7lKBsTfkAhW7XBskVo32n2yQNgT+sz/bw7/
-   T8t2isqEXBwSnYA4cnbB6x1u+pNV+1CTsXl3m2fTiOHqo7c2OsM7GJM+m
-   c0nci8gHSw7JdK1rk6XQBto/qBGCPd+xI7Zeoi1UfYZ8OOTy7nR0AZ02Z
-   b7eSW0NgM21HCbbCf72Y8kex7DpdfgKF+LfLCyJYu/ifcVJVCdGHbrhGE
-   Llf8ek+3sR2usTnEA+JjlrjPwpZgLCFqMyNv/CttQLZmeoHP8SrTblIyo
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="380207678"
-X-IronPort-AV: E=Sophos;i="5.99,284,1677571200"; 
-   d="scan'208";a="380207678"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 00:52:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10713"; a="1032066864"
-X-IronPort-AV: E=Sophos;i="5.99,284,1677571200"; 
-   d="scan'208";a="1032066864"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.38.52])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 00:52:32 -0700
-Message-ID: <a8127cb3-7693-22e9-7ace-547f7eb4403b@intel.com>
-Date:   Thu, 18 May 2023 10:52:28 +0300
+        Thu, 18 May 2023 04:46:46 -0400
+Received: from mail-vs1-xe2d.google.com (mail-vs1-xe2d.google.com [IPv6:2607:f8b0:4864:20::e2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9041107
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 May 2023 01:46:45 -0700 (PDT)
+Received: by mail-vs1-xe2d.google.com with SMTP id ada2fe7eead31-4360bef3283so516433137.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 May 2023 01:46:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684399605; x=1686991605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=t7ewcVJ8ISOfeb+KpfuhQ6AeIHogwRgTzugd0nWPdnU=;
+        b=h2ciERUagWk0JlNb//ZlnDpn4X9iHUtBfUjbwz3pvZPzgMV9FKObm58H3mmiWfgXzE
+         E7XEsJxRkKc/MSsO4MF96k+knklhn0XAHYagtUhALntYWsNN3u0gEJWWzgTJezgun+bh
+         o9odSUAGDalMDzsVT9NN2jBoLOJ7ZwIiuCeflchy2gA6knHkpl0fNnGUs7nIKA1VnSL6
+         TuRALolEkweQX1nznc4RBRlLOIUstWDYBOLcX32lDCTpM6gryEaYOJ4pVmG/xtrg2kgi
+         sZz8KCbXa5ldZFIzk4G1TasEtAYdw1RvE0BFiTDijz98woMqP4OZHhuli5sR4WnxHUQj
+         QDUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684399605; x=1686991605;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t7ewcVJ8ISOfeb+KpfuhQ6AeIHogwRgTzugd0nWPdnU=;
+        b=DAaQC93bqdFuwG2Iafjyzvud4IKztk9C+FHoE+0FJS7qRSYCbLv/qJBIRzTFHBMied
+         paOKfMoJBGqrcWpGUqbHko4H3xipk0k33ninKQYDaNKmbzz/iPZzOy9nDhXlm7F1YybF
+         Dqw83VGFtb6ZiNHoINoMaobzWL9yVsYjSNZs8NWSghzIOdaHBkknSH/chaWx9uIk5Bkh
+         q4CH+tDIScoiB2nHMudcZVSxXAt+8qAfcZi7EB79rKcUHONyvZ5riixnEu5NOGmwnPvV
+         5U4g97PqNaNEJgiY1Ib/XJPQG/q+fyPaK1yzW08sZVTxvWvG39nmKQpK5tfasX1dD8Nl
+         mvZg==
+X-Gm-Message-State: AC+VfDzaR1dHYF+RkMmunCVpNRnvoqkBIxssUMkDcu/uV9sUVQ3vSAxz
+        MF5TGbyWPV32SwIMMkgXo/XwapybypLpNiYr94roww==
+X-Google-Smtp-Source: ACHHUZ4fCNj+bGYt3HAQex+FVnJC/1RnptY69fAvJezRQq5T3f1oewFRzo6OZ6pUPcfeOr8qkTj/iWY9HO7fuZ6izCk=
+X-Received: by 2002:a05:6102:245:b0:436:18b:6a31 with SMTP id
+ a5-20020a056102024500b00436018b6a31mr216763vsq.26.1684399604549; Thu, 18 May
+ 2023 01:46:44 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: Problem running perf using Intel-PT with snapshots
-To:     Nadav Amit <nadav.amit@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <6325A777-706E-462A-8931-59E16D4E37A5@gmail.com>
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <6325A777-706E-462A-8931-59E16D4E37A5@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CA+G9fYvgBR1iB0CorM8OC4AM_w_tFzyQKHc+rF6qPzJL=TbfDQ@mail.gmail.com>
+ <b28dc2c4-6694-1699-b4a2-a8e71d179073@loongson.cn>
+In-Reply-To: <b28dc2c4-6694-1699-b4a2-a8e71d179073@loongson.cn>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 18 May 2023 14:16:33 +0530
+Message-ID: <CA+G9fYtcW9AU_OiQJSbKTdYBsW1naO=MnqDJowTLpP7ygqbjMA@mail.gmail.com>
+Subject: Re: next: perf: i386: bench/syscall.c:101:22: error: '__NR_execve'
+ undeclared (first use in this function)
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, lkft-triage@lists.linaro.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 18/05/23 07:26, Nadav Amit wrote:
-> Hello perf masters,
-> 
-> I am running perf with Intel PT with snapshot mode and the result makes no
-> sense. I tried to figure it out myself but failed.
-> 
-> Excluding the first data file, the rest seem messed up in various ways. The
-> only thing that repeatedly shows are calls to __fentry__+0x0. I would note
-> that ftrace is not enabled, and I turned off mitigations as I thought it
-> might somehow be related, but it did not help.
-> 
-> Here is an example for execution and output. In between I ran
-> `kill -SIGUSR2 [perf-pid]`. To dump some traces.
-> 
-> Any ideas what it might be?
-> 
+On Thu, 18 May 2023 at 12:17, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+>
+>
+> On 05/17/2023 11:04 PM, Naresh Kamboju wrote:
+> > Linux next perf build failing for i386 architecture.
+> >  - build/gcc-11-lkftconfig-perf
+> >
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> >
+> > Build log:
+> >   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/bench/syscall.o
+> >   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/tests/parse-events.o
+> >   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/util/build-id.o
+> >   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/util/cacheline.o
+> >   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/util/config.o
+> >   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/util/copyfile.o
+> >   CC      /home/tuxbuild/.cache/tuxmake/builds/1/build/bench/mem-functions.o
+> > bench/syscall.c: In function 'bench_syscall_common':
+> > bench/syscall.c:101:22: error: '__NR_execve' undeclared (first use in
+> > this function)
+>
+> Hi Naresh,
+>
+> Sorry for that, the __NR_execve definition for i386 was deleted
+> by mistake in the commit ece7f7c0507c ("perf bench syscall: Add
+> fork syscall benchmark").
+>
+> Could you please help to check whether the build error can be
+> fixed with the following changes? If yes, I will send a formal
+> patch as soon as possible, thank you.
+
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Build tested this patch and perf build pass on i386 now.
+
+Thanks for the quick fix patch.
+
+>
+> $ git diff tools/arch/x86/include/uapi/asm/unistd_32.h
+> diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h
+> b/tools/arch/x86/include/uapi/asm/unistd_32.h
+> index b8ddfc4..bc48a4d 100644
+> --- a/tools/arch/x86/include/uapi/asm/unistd_32.h
+> +++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
+> @@ -2,6 +2,9 @@
+>   #ifndef __NR_fork
+>   #define __NR_fork 2
+>   #endif
+> +#ifndef __NR_execve
+> +#define __NR_execve 11
+> +#endif
+>   #ifndef __NR_getppid
+>   #define __NR_getppid 64
+>   #endif
+>
 > Thanks,
-> Nadav
-> 
-> --
-> 
-> $ perf record -e intel_pt/noretcomp=1/k --kcore --timestamp -a --snapshot=e262144 --switch-output -m,64
+> Tiezhu
 
---switch-output does not work well with Intel PT.  Intel PT needs all of the sideband event information from all files, so decoding errors result from splitting files.
-
-If you need separate files, consider stopping and restarting 'perf record' instead.  If you do that, you may want to look at options like -B and -N and --no-bpf-event which can affect how long it takes to stop perf record.
-
-If you don't need separate files, you can use --time to look at time ranges within the resulting perf.data file.
-
-> [ perf record: dump data: Woken up 2 times ]
-> [ perf record: Dump perf.data.2023051804132358 ]
-> [ perf record: dump data: Woken up 1 times ]
-> [ perf record: Dump perf.data.2023051804132537 ]
-> [ perf record: dump data: Woken up 1 times ]
-> [ perf record: Dump perf.data.2023051804132689 ]
-> ^C[ perf record: Woken up 1 times to write data ]
-> [ perf record: Dump perf.data.2023051804132829 ]
-> [ perf record: Captured and wrote 14.330 MB perf.data.<timestamp> ]
-> 
-> 
-> $ sudo perf script -i  perf.data.2023051804004293
-> 
->              :-1    -1 [006]    78.287624:          1             branches:k:  ffffffff81096125 ept_page_fault+0x3f5 ([kernel.kallsyms]) => ffffffff8108f1d0 kvm_mmu_get_child_sp+0x0 ([kernel.kallsyms])
->              :-1    -1 [006]    78.287624:          1             branches:k:  ffffffff8108f1d0 kvm_mmu_get_child_sp+0x0 ([kernel.kallsyms]) => ffffffff81131190 __fentry__+0x0 ([kernel.kallsyms])
->  instruction trace error type 1 time 78.287624064 cpu 6 pid -1 tid -1 ip 0xffffffff8101c4fd code 6: Trace doesn't match instruction
->              :-1    -1 [006]    78.287624:          1             branches:k:  ffffffff81296e14 futex_unlock_pi+0x184 ([kernel.kallsyms]) => ffffffff81294120 futex_cmpxchg_value_locked+0x0 ([kernel.kallsyms])
->              :-1    -1 [006]    78.287624:          1             branches:k:  ffffffff81294124 futex_cmpxchg_value_locked+0x4 ([kernel.kallsyms]) => ffffffff81131190 __fentry__+0x0 ([kernel.kallsyms])
->  instruction trace error type 1 time 78.287624104 cpu 6 pid -1 tid -1 ip 0xffffffff824c7a44 code 6: Trace doesn't match instruction
->              :-1    -1 [006]    78.287624:          1             branches:k:  ffffffff812909c4 __tick_broadcast_oneshot_control+0x1d4 ([kernel.kallsyms]) => ffffffff8128f720 tick_broadcast_set_event+0x0 ([kernel.kallsyms])
->              :-1    -1 [006]    78.287624:          1             branches:k:  ffffffff8128f720 tick_broadcast_set_event+0x0 ([kernel.kallsyms]) => ffffffff81131190 __fentry__+0x0 ([kernel.kallsyms])
->              :-1    -1 [006]    78.287624:          1             branches:k:  ffffffff81296e8e futex_unlock_pi+0x1fe ([kernel.kallsyms]) => ffffffff812961d0 put_pi_state+0x0 ([kernel.kallsyms])
->              :-1    -1 [006]    78.287624:          1             branches:k:  ffffffff812961d4 put_pi_state+0x4 ([kernel.kallsyms]) => ffffffff81131190 __fentry__+0x0 ([kernel.kallsyms])
->  instruction trace error type 1 time 78.287624208 cpu 6 pid -1 tid -1 ip 0xffffffff824c7a44 code 6: Trace doesn't match instruction
-> 
-
+- Naresh
