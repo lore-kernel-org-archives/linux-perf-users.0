@@ -2,143 +2,199 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9979FC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 04:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C339C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 06:03:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229871AbjERE5i (ORCPT
+        id S230006AbjERGDq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 May 2023 00:57:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46346 "EHLO
+        Thu, 18 May 2023 02:03:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjERE5h (ORCPT
+        with ESMTP id S230022AbjERGDp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2023 00:57:37 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6702B2733;
-        Wed, 17 May 2023 21:57:36 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-2533d8f4a1eso1250959a91.1;
-        Wed, 17 May 2023 21:57:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684385855; x=1686977855;
-        h=to:cc:date:message-id:subject:mime-version
-         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QbIff1DfcH4ZQO1XguTv+CpOs+a0WWSeq2A5H3P9z3E=;
-        b=DPNpbTYBq9tn7P42KZKXpZzmJY+Ru8As0OG5/7/gFOQN4cRXAeyiWV8NAuJIhnellc
-         2VM+rgmLYF0iXItJc5QWYQ3MohWxGy1eRDRF/7qhNsvEZoz3WksZUqiexjvQpY6I9ssl
-         vV/Qr4nGIiWFznnkhjnOLb6slIW7KAZb5EXnUzF8qKG/VsnQxzkymAlbzUpTqe0pQV0j
-         7eAdxs3y+v4ME5Vse4grk/VpgqwRd2VmBqyl9ZFOhf5q9FEoZfuMIvmbT8uaeHUn2flj
-         pQDYiQutlqqlSmkQXtRDQ9Ngv4vJ0aKaMMU4Ze1CK56yaXHAyp1Ipk9sE5qRgdQvXuJu
-         Hi8g==
+        Thu, 18 May 2023 02:03:45 -0400
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C10342696;
+        Wed, 17 May 2023 23:03:42 -0700 (PDT)
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-4518d3a9b12so628576e0c.2;
+        Wed, 17 May 2023 23:03:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684385855; x=1686977855;
-        h=to:cc:date:message-id:subject:mime-version
-         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1684389822; x=1686981822;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QbIff1DfcH4ZQO1XguTv+CpOs+a0WWSeq2A5H3P9z3E=;
-        b=IEcG+OEEbKB/m3GJWf2q0eT2qHzZ8u9UWBK6aRrEkU4LyM7uIIINrJqkxIjLrvfynN
-         OmylL81vKkeQTZVC/ivckAl4fD3bvc+xO1hzoKJl1pEq2uKo6MnC6CLRnmMHeiafD5tM
-         nHR0wkGHqFFK1mq90h/OXNFyna4aUaQHEXQ8ES6MgaE9wO+Y1JWPoB1KDNQcd7TX398H
-         NTvcChMP0tM0574HpPcPjvDUN4Bw6KLw4u+RQnZQjSOP/nAADULRfb3nmby6ZrmOUrOz
-         CK6bQQ9d9MYPT8dvDXC7raWIOQfww6Dzw21zTJeKws4kwaZE0TxvvZzNTPeGSecbyU2c
-         xY1g==
-X-Gm-Message-State: AC+VfDwMlpgP2taUhFHLd/XsdUErB9L6j2UM3YjIHjc6ZI51n9G6iIFW
-        +RmIqTvXuivI7BDEPyyPFx5pm8eX/1jeWQ==
-X-Google-Smtp-Source: ACHHUZ7Zr5Inbn1S74qaRdklnvnngbXaMEKK9Ebuy9Go6v2VaA+TSNo5hXLoJDLGmeGfUESe14PLeg==
-X-Received: by 2002:a17:90b:ed3:b0:24d:f3cc:7d34 with SMTP id gz19-20020a17090b0ed300b0024df3cc7d34mr1268777pjb.32.1684385854898;
-        Wed, 17 May 2023 21:57:34 -0700 (PDT)
-Received: from smtpclient.apple (c-24-6-216-183.hsd1.ca.comcast.net. [24.6.216.183])
-        by smtp.gmail.com with ESMTPSA id h7-20020a17090adb8700b0023d386e4806sm422178pjv.57.2023.05.17.21.57.33
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 May 2023 21:57:34 -0700 (PDT)
-From:   Nadav Amit <nadav.amit@gmail.com>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
-Subject: Problem running perf using Intel-PT with snapshots
-Message-Id: <6325A777-706E-462A-8931-59E16D4E37A5@gmail.com>
-Date:   Wed, 17 May 2023 21:26:28 -0700
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        bh=bXsUEZdg7frRdNYYyqBOXtRmmOUkZTVlUYkUEGA36aE=;
+        b=fJ4kV94GZ2rMO4Ej6/kG8/EV4zG7nvKjSmeGl5x1NdMkG2LJRUoJ/Rc9zyyu2WAGlH
+         Vk2dMwk/D3uhXKhZGWKuGQg1a/gvqAu/Q6CQZ7xIaGdZbO5IdpPVaD/Yh/Rto2Bov/qJ
+         Md2CxXc2n5+Hz10a21m59OjKoy/GGw/rXno/zTyLj1kUDeKgepY8WucMWZfIASnuN6Hg
+         y5DX99LuCjAR2N7dfMmEqMIQj5mDAiqqzcGHb514ZB0BiBgW44OFbH27mdF3rou3DwAQ
+         RxiNJii9jIKiFs3OwTPB/RNlV6UN7m2Y70+cPqDclZjGWA1XcUwO+RimYb8gCEGh9nTm
+         JACg==
+X-Gm-Message-State: AC+VfDzgc1XQGYkjlJQjHc9AaY4Nk73M9kiZKBLPtNQ8+fhnP/wSegzh
+        1rye6Yc10ZsUiOYXy2TcvAl/LEf/XAfRbsJp3Qc=
+X-Google-Smtp-Source: ACHHUZ6/oXnhfnhg3t29UXinWQGl8uAg8QL04e9+ieeNig4sP3DSqOW8qw003vZI9yz2JTLwSxQXWuS70l2PRYg4F/k=
+X-Received: by 2002:a1f:5f06:0:b0:453:8a02:8d9 with SMTP id
+ t6-20020a1f5f06000000b004538a0208d9mr301432vkb.11.1684389821697; Wed, 17 May
+ 2023 23:03:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <ZGUYVjJk2DhX9UrC@yoga> <CAP-5=fX3oLRgUzt6QhN+6bybp_WsS9gCuJ1484hq16FTWc3Dyg@mail.gmail.com>
+In-Reply-To: <CAP-5=fX3oLRgUzt6QhN+6bybp_WsS9gCuJ1484hq16FTWc3Dyg@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 17 May 2023 23:03:30 -0700
+Message-ID: <CAM9d7cgvYEw2xvhnDDiH+HNhbp6Wirbo0T57i-KZy=BL4tJdJA@mail.gmail.com>
+Subject: Re: [PATCH] perf: test: Add support for testing JSON generated by
+ perf data command
+To:     Ian Rogers <irogers@google.com>
+Cc:     Anup Sharma <anupnewsmail@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Namhyung Kim <namhyung@kernel.org>
-To:     linux-perf-users@vger.kernel.org
-X-Mailer: Apple Mail (2.3731.500.231)
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello perf masters,
+Hello,
 
-I am running perf with Intel PT with snapshot mode and the result makes =
-no
-sense. I tried to figure it out myself but failed.
+On Wed, May 17, 2023 at 12:57 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Wed, May 17, 2023 at 11:09 AM Anup Sharma <anupnewsmail@gmail.com> wrote:
+> >
+> > This commit adds support for testing the JSON output generated
+> > by the perf data command's conversion to JSON functionality.
+> > The test script now includes a validation step to ensure that
+> > the resulting JSON file is contain valid data.
+> >
+> > As a newcomer to this community, any feedback on the implementation
+> > is highly appreciated.
+> >
+> > Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+>
+> Congratulations on sending your first patch! Anup is this summer's
+> Google Summer-of-Code contributor for the Linux perf tool. I'm sure
+> everyone on the lists is looking forward to your contributions!
 
-Excluding the first data file, the rest seem messed up in various ways. =
-The
-only thing that repeatedly shows are calls to __fentry__+0x0. I would =
-note
-that ftrace is not enabled, and I turned off mitigations as I thought it
-might somehow be related, but it did not help.
++1
 
-Here is an example for execution and output. In between I ran
-`kill -SIGUSR2 [perf-pid]`. To dump some traces.
+>
+> > ---
+> >  .../shell/test_perf_data_converter_json.sh    | 64 +++++++++++++++++++
+> >  1 file changed, 64 insertions(+)
+> >  create mode 100755 tools/perf/tests/shell/test_perf_data_converter_json.sh
+> >
+> > diff --git a/tools/perf/tests/shell/test_perf_data_converter_json.sh b/tools/perf/tests/shell/test_perf_data_converter_json.sh
+> > new file mode 100755
+> > index 000000000000..88db96e38925
+> > --- /dev/null
+> > +++ b/tools/perf/tests/shell/test_perf_data_converter_json.sh
+> > @@ -0,0 +1,64 @@
+> > +#!/bin/sh
+> > +# perf data json converter test
+> > +# SPDX-License-Identifier: GPL-2.0
 
-Any ideas what it might be?
+You may want to run shellcheck when you write a shell script.
+
+> > +
+> > +set -e
+> > +
+> > +err=0
+> > +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> > +result=$(mktemp /tmp/__perf_test.output.json.XXXXX)
+> > +
+> > +cleanup()
+> > +{
+> > +       rm -f ${perfdata}
+> > +       rm -f ${result}
+> > +       trap - exit term int
+> > +}
+> > +
+> > +trap_cleanup()
+> > +{
+> > +       cleanup
+> > +       exit ${err}
+> > +}
+> > +trap trap_cleanup exit term int
+> > +
+> > +check()
+> > +{
+> > +       if [ `id -u` != 0 ]; then
+> > +               echo "[Skip] No root permission"
+
+I don't think we actually need root permission for this test.
+
+> > +               err=2
+> > +               exit
+> > +       fi
+> > +}
+> > +
+> > +test_json()
+> > +{
+> > +       echo "Testing perf data convertion to JSON"
+> > +       perf record -o $perfdata -F 99 -a -g -- sleep 1 > /dev/null 2>&1
+
+The -a/--system-wide option requires root permission usually.
+We can run perf record in per-task mode instead.  Please remove the -a
+option and run some other command instead of 'sleep 1'.  The perf tool
+has a couple of test workloads and benchmark programs.  So you can try
+something like
+
+  perf record -o $perfdata -F 99 -g -- perf test -w noploop
+
+or
+
+  perf record -o $perfdata -F 99 -g -- perf bench sched messaging
 
 Thanks,
-Nadav
-
---
-
-$ perf record -e intel_pt/noretcomp=3D1/k --kcore --timestamp -a =
---snapshot=3De262144 --switch-output -m,64
-[ perf record: dump data: Woken up 2 times ]
-[ perf record: Dump perf.data.2023051804132358 ]
-[ perf record: dump data: Woken up 1 times ]
-[ perf record: Dump perf.data.2023051804132537 ]
-[ perf record: dump data: Woken up 1 times ]
-[ perf record: Dump perf.data.2023051804132689 ]
-^C[ perf record: Woken up 1 times to write data ]
-[ perf record: Dump perf.data.2023051804132829 ]
-[ perf record: Captured and wrote 14.330 MB perf.data.<timestamp> ]
+Namhyung
 
 
-$ sudo perf script -i  perf.data.2023051804004293
-
-             :-1    -1 [006]    78.287624:          1             =
-branches:k:  ffffffff81096125 ept_page_fault+0x3f5 ([kernel.kallsyms]) =
-=3D> ffffffff8108f1d0 kvm_mmu_get_child_sp+0x0 ([kernel.kallsyms])
-             :-1    -1 [006]    78.287624:          1             =
-branches:k:  ffffffff8108f1d0 kvm_mmu_get_child_sp+0x0 =
-([kernel.kallsyms]) =3D> ffffffff81131190 __fentry__+0x0 =
-([kernel.kallsyms])
- instruction trace error type 1 time 78.287624064 cpu 6 pid -1 tid -1 ip =
-0xffffffff8101c4fd code 6: Trace doesn't match instruction
-             :-1    -1 [006]    78.287624:          1             =
-branches:k:  ffffffff81296e14 futex_unlock_pi+0x184 ([kernel.kallsyms]) =
-=3D> ffffffff81294120 futex_cmpxchg_value_locked+0x0 ([kernel.kallsyms])
-             :-1    -1 [006]    78.287624:          1             =
-branches:k:  ffffffff81294124 futex_cmpxchg_value_locked+0x4 =
-([kernel.kallsyms]) =3D> ffffffff81131190 __fentry__+0x0 =
-([kernel.kallsyms])
- instruction trace error type 1 time 78.287624104 cpu 6 pid -1 tid -1 ip =
-0xffffffff824c7a44 code 6: Trace doesn't match instruction
-             :-1    -1 [006]    78.287624:          1             =
-branches:k:  ffffffff812909c4 __tick_broadcast_oneshot_control+0x1d4 =
-([kernel.kallsyms]) =3D> ffffffff8128f720 tick_broadcast_set_event+0x0 =
-([kernel.kallsyms])
-             :-1    -1 [006]    78.287624:          1             =
-branches:k:  ffffffff8128f720 tick_broadcast_set_event+0x0 =
-([kernel.kallsyms]) =3D> ffffffff81131190 __fentry__+0x0 =
-([kernel.kallsyms])
-             :-1    -1 [006]    78.287624:          1             =
-branches:k:  ffffffff81296e8e futex_unlock_pi+0x1fe ([kernel.kallsyms]) =
-=3D> ffffffff812961d0 put_pi_state+0x0 ([kernel.kallsyms])
-             :-1    -1 [006]    78.287624:          1             =
-branches:k:  ffffffff812961d4 put_pi_state+0x4 ([kernel.kallsyms]) =3D> =
-ffffffff81131190 __fentry__+0x0 ([kernel.kallsyms])
- instruction trace error type 1 time 78.287624208 cpu 6 pid -1 tid -1 ip =
-0xffffffff824c7a44 code 6: Trace doesn't match instruction
-
+> > +       perf data convert --to-json $result --force -i $perfdata >/dev/null 2>&1
+> > +       echo "Perf Data Converter to JSON [SUCCESS]"
+> > +}
+> > +
+> > +validate_json_format()
+> > +{
+> > +       echo "Testing perf data converted to JSON format"
+> > +       if [ -f "${result}" ]; then
+>
+> It can be a good idea to test for failure and early exit. It would
+> avoid being as indented in the following if.
+>
+> > +               if jq '.' "${result}" > /dev/null 2>&1; then
+>
+> This assumes the jq program is available and it isn't by default on my
+> distribution. We could test:
+> if ! which jq; then
+> but it may be better to depend on Python and json.loads - Python is
+> already a dependency for a number of the tests.
+>
+> Thanks,
+> Ian
+>
+> > +                   echo "The file contains valid JSON format [SUCCESS]"
+> > +               else
+> > +                   echo "The file does not contain valid JSON format [FAILED]"
+> > +                   err=1
+> > +               fi
+> > +           else
+> > +               echo "File not found [FAILED]"
+> > +               err=2
+> > +               exit
+> > +           fi
+> > +}
+> > +
+> > +check
+> > +
+> > +test_json
+> > +validate_json_format
+> > +
+> > +exit ${err}
+> > --
+> > 2.34.1
+> >
