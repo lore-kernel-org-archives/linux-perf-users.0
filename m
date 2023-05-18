@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2130EC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 19:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52766C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 19:52:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229767AbjERTrb (ORCPT
+        id S229599AbjERTws (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 May 2023 15:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33040 "EHLO
+        Thu, 18 May 2023 15:52:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbjERTra (ORCPT
+        with ESMTP id S229613AbjERTwr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2023 15:47:30 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 326D0E67;
-        Thu, 18 May 2023 12:47:29 -0700 (PDT)
+        Thu, 18 May 2023 15:52:47 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6691010CF;
+        Thu, 18 May 2023 12:52:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684439249; x=1715975249;
+  t=1684439558; x=1715975558;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=9caYYmPafBroM32BqFYVElb6P+CxhxuZ14TrqGfddUo=;
-  b=GRFs9XJJitfM41Vg43ZHwV3tlOhAUjzkKOtOokwRWoXquZ6etrUs/Dxi
-   LniNCJUYuTucwrcPIIxtR0aP25LdIzFtHXDPjTi6gQHtGL9sek1gilWM2
-   5U915bi8j9sVDhwDaecO6dXZri2eS0sd91pB2QBCnk11vmyL82E8xS5dF
-   QC1Y8FvjVJv21/hNyYdI8DNxUNWxG7Ei2N/2PFcq23JnkB64wJRp8AfGw
-   aIRBfcGYiA6Cj3jVxVj8sAA9ongcQPbQOeWhaH4H+9iHdau8HqJWU1KcB
-   u90pnOiH6TSiXIi9MWT8Qs2An6gMwqqtO1ISE1qdZKXlyAQgZflPKd5BL
+  bh=awidV1hAwhtRlrQDgteR/yLzOz+GTTX7ZKKH/eNibOs=;
+  b=l1jWARrita2tdMm9kO2Kh92g5+YTZCKDxQIeVZhT48AQp1YG9hwd4vwC
+   UkYOVDWNZM1Z+970FBYb5LqzRwdMLCngpqLJenHpSBt0C0s1tsBePSd9B
+   Xpeiq1dPYbyTReYXgkaal5YT612ACMsFxmm2SUMD2/BFFjHUvmc3GVhCC
+   TONufl8TxWiW1qvQMs30YEtbkh/wyCST3m56h6iyyKathy+DQJ6HykeZV
+   G/QNZCn5RAeTpmXo2nuZgXMUSvInxs7RJTdXq2HAUuYiNRUDGxTM52cu9
+   9bWB0ETDmh0aYgYw48m54veEXTzoNyC1NBNo6P5mcwHkhL7Mq5pq41Zil
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="415635044"
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="417861377"
 X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="415635044"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 12:47:28 -0700
+   d="scan'208";a="417861377"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 12:52:38 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="876556715"
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="705316585"
 X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="876556715"
+   d="scan'208";a="705316585"
 Received: from linux.intel.com ([10.54.29.200])
-  by orsmga005.jf.intel.com with ESMTP; 18 May 2023 12:47:28 -0700
+  by fmsmga007.fm.intel.com with ESMTP; 18 May 2023 12:52:37 -0700
 Received: from [10.209.99.208] (kliang2-mobl1.ccr.corp.intel.com [10.209.99.208])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 286A7580BE4;
-        Thu, 18 May 2023 12:47:26 -0700 (PDT)
-Message-ID: <2abe618d-a2c4-3b22-ac9d-37bc91d05d41@linux.intel.com>
-Date:   Thu, 18 May 2023 15:47:25 -0400
+        by linux.intel.com (Postfix) with ESMTPS id 68CD6580B56;
+        Thu, 18 May 2023 12:52:35 -0700 (PDT)
+Message-ID: <37d2219f-68e5-ea8c-e04b-2c17fa991570@linux.intel.com>
+Date:   Thu, 18 May 2023 15:52:34 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.1
-Subject: Re: [PATCH v1 1/2] perf expr: Make the evaluation of & and | logical
- and lazy
+Subject: Re: [PATCH v1 2/2] perf stat: Document --metric-no-threshold and
+ threshold colors
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -75,8 +75,9 @@ To:     Ian Rogers <irogers@google.com>,
         Weilin Wang <weilin.wang@intel.com>,
         Edward Baker <edward.baker@intel.com>
 References: <20230504195803.3331775-1-irogers@google.com>
+ <20230504195803.3331775-2-irogers@google.com>
 From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230504195803.3331775-1-irogers@google.com>
+In-Reply-To: <20230504195803.3331775-2-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -86,190 +87,53 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 On 2023-05-04 3:58 p.m., Ian Rogers wrote:
-> Currently the & and | operators are only used in metric thresholds
-> like (from the tma_retiring metric):
-> tma_retiring > 0.7 | tma_heavy_operations > 0.1
-> 
-> Thresholds are always computed when present, but a lack events may
-> mean the threshold can't be computed. This happens with the option
-> --metric-no-threshold for say the metric tma_retiring on Tigerlake
-> model CPUs. To fully compute the threshold tma_heavy_operations is
-> needed and it needs the extra events of IDQ.MS_UOPS,
-> UOPS_DECODED.DEC0, cpu/UOPS_DECODED.DEC0,cmask=1/ and
-> IDQ.MITE_UOPS. So --metric-no-threshold is a useful option to reduce
-> the number of events needed and potentially multiplexing of events.
-> 
-> Rather than just fail threshold computations like this, we may know a
-> result from just the left or right-hand side. So, for tma_retiring if
-> its value is "> 0.7" we know it is over the threshold. This allows the
-> metric to have the threshold coloring, when possible, without all the
-> counters being programmed.
+> Document the threshold behavior for -M/--metrics.
 > 
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
+>  tools/perf/Documentation/perf-stat.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index 29bdcfa93f04..ff71399db738 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -353,6 +353,15 @@ small group that need not have multiplexing is lowered. This option
+>  forbids the event merging logic from sharing events between groups and
+>  may be used to increase accuracy in this case.
+>  
+> +--metric-no-threshold::
+> +Metric thresholds may increase the number of events necessary to
+> +compute whether a metric has exceeded its threshold expression. This
+> +may not be desirable, for example, as the events can introduce
+> +multiplexing. This option disables the adding of threshold expression
+> +events for a metric. However, if there are sufficient events to
+> +compute the threshold then the threshold is still computed and used to
+> +color the metric's computed value.
+> +
+>  --quiet::
+>  Don't print output, warnings or messages. This is useful with perf stat
+>  record below to only write data to the perf.data file.
+> @@ -389,6 +398,12 @@ For a group all metrics from the group are added.
+>  The events from the metrics are automatically measured.
+>  See perf list output for the possible metrics and metricgroups.
+>  
+> +	When threshold information is available for a metric, the
+> +	color red is used to signify a metric has exceeded a threshold
+> +	while green shows it is hasn't. The default color means that
 
-The patch works well on my machine.
+A typo. "it is hasn't" -> "it hasn't"
 
-Tested-by: Kan Liang <kan.liang@linux.intel.com>
+Rest looks good to me.
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
 Thanks,
 Kan
->  tools/perf/tests/expr.c | 40 +++++++++++++++++++
->  tools/perf/util/expr.y  | 86 +++++++++++++++++++++++++++++++++--------
->  2 files changed, 109 insertions(+), 17 deletions(-)
-> 
-> diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> index cbf0e0c74906..45c7fedb797a 100644
-> --- a/tools/perf/tests/expr.c
-> +++ b/tools/perf/tests/expr.c
-> @@ -184,6 +184,46 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
->  			NULL, ctx) == 0);
->  	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
->  
-> +	/* The expression is a constant 0.0 without needing to evaluate EVENT1. */
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("0 & EVENT1 > 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("EVENT1 > 0 & 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("1 & EVENT1 > 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> +	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("EVENT1 > 0 & 1", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> +	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
+
+> +	no threshold information was available or the threshold
+> +	couldn't be computed.
 > +
-> +	/* The expression is a constant 1.0 without needing to evaluate EVENT1. */
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("1 | EVENT1 > 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("EVENT1 > 0 | 1", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("0 | EVENT1 > 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> +	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> +	expr__ctx_clear(ctx);
-> +	TEST_ASSERT_VAL("find ids",
-> +			expr__find_ids("EVENT1 > 0 | 0", NULL, ctx) == 0);
-> +	TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> +	TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> +
->  	/* Test toplogy constants appear well ordered. */
->  	expr__ctx_clear(ctx);
->  	TEST_ASSERT_VAL("#num_cpus", expr__parse(&num_cpus, ctx, "#num_cpus") == 0);
-> diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> index 250e444bf032..6b110f9f95c9 100644
-> --- a/tools/perf/util/expr.y
-> +++ b/tools/perf/util/expr.y
-> @@ -123,20 +123,6 @@ static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
->   * constant value using OP. Its invariant that there are no ids.  If computing
->   * ids for non-constants union the set of IDs that must be computed.
->   */
-> -#define BINARY_LONG_OP(RESULT, OP, LHS, RHS)				\
-> -	if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
-> -		assert(LHS.ids == NULL);				\
-> -		assert(RHS.ids == NULL);				\
-> -		if (isnan(LHS.val) || isnan(RHS.val)) {			\
-> -			RESULT.val = NAN;				\
-> -		} else {						\
-> -			RESULT.val = (long)LHS.val OP (long)RHS.val;	\
-> -		}							\
-> -		RESULT.ids = NULL;					\
-> -	} else {							\
-> -	        RESULT = union_expr(LHS, RHS);				\
-> -	}
-> -
->  #define BINARY_OP(RESULT, OP, LHS, RHS)					\
->  	if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
->  		assert(LHS.ids == NULL);				\
-> @@ -213,9 +199,75 @@ expr: NUMBER
->  }
->  | ID				{ $$ = handle_id(ctx, $1, compute_ids, /*source_count=*/false); }
->  | SOURCE_COUNT '(' ID ')'	{ $$ = handle_id(ctx, $3, compute_ids, /*source_count=*/true); }
-> -| expr '|' expr { BINARY_LONG_OP($$, |, $1, $3); }
-> -| expr '&' expr { BINARY_LONG_OP($$, &, $1, $3); }
-> -| expr '^' expr { BINARY_LONG_OP($$, ^, $1, $3); }
-> +| expr '|' expr
-> +{
-> +	if (is_const($1.val) && is_const($3.val)) {
-> +		assert($1.ids == NULL);
-> +		assert($3.ids == NULL);
-> +		$$.ids = NULL;
-> +		$$.val = (fpclassify($1.val) == FP_ZERO && fpclassify($3.val) == FP_ZERO) ? 0 : 1;
-> +	} else if (is_const($1.val)) {
-> +		assert($1.ids == NULL);
-> +		if (fpclassify($1.val) == FP_ZERO) {
-> +			$$ = $3;
-> +		} else {
-> +			$$.val = 1;
-> +			$$.ids = NULL;
-> +			ids__free($3.ids);
-> +		}
-> +	} else if (is_const($3.val)) {
-> +		assert($3.ids == NULL);
-> +		if (fpclassify($3.val) == FP_ZERO) {
-> +			$$ = $1;
-> +		} else {
-> +			$$.val = 1;
-> +			$$.ids = NULL;
-> +			ids__free($1.ids);
-> +		}
-> +	} else {
-> +		$$ = union_expr($1, $3);
-> +	}
-> +}
-> +| expr '&' expr
-> +{
-> +	if (is_const($1.val) && is_const($3.val)) {
-> +		assert($1.ids == NULL);
-> +		assert($3.ids == NULL);
-> +		$$.val = (fpclassify($1.val) != FP_ZERO && fpclassify($3.val) != FP_ZERO) ? 1 : 0;
-> +		$$.ids = NULL;
-> +	} else if (is_const($1.val)) {
-> +		assert($1.ids == NULL);
-> +		if (fpclassify($1.val) != FP_ZERO) {
-> +			$$ = $3;
-> +		} else {
-> +			$$.val = 0;
-> +			$$.ids = NULL;
-> +			ids__free($3.ids);
-> +		}
-> +	} else if (is_const($3.val)) {
-> +		assert($3.ids == NULL);
-> +		if (fpclassify($3.val) != FP_ZERO) {
-> +			$$ = $1;
-> +		} else {
-> +			$$.val = 0;
-> +			$$.ids = NULL;
-> +			ids__free($1.ids);
-> +		}
-> +	} else {
-> +		$$ = union_expr($1, $3);
-> +	}
-> +}
-> +| expr '^' expr
-> +{
-> +	if (is_const($1.val) && is_const($3.val)) {
-> +		assert($1.ids == NULL);
-> +		assert($3.ids == NULL);
-> +		$$.val = (fpclassify($1.val) == FP_ZERO) != (fpclassify($3.val) == FP_ZERO) ? 1 : 0;
-> +		$$.ids = NULL;
-> +	} else {
-> +		$$ = union_expr($1, $3);
-> +	}
-> +}
->  | expr '<' expr { BINARY_OP($$, <, $1, $3); }
->  | expr '>' expr { BINARY_OP($$, >, $1, $3); }
->  | expr '+' expr { BINARY_OP($$, +, $1, $3); }
+>  -A::
+>  --no-aggr::
+>  Do not aggregate counts across all monitored CPUs.
