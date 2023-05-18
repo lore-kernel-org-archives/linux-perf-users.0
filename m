@@ -2,57 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94E9C77B7D
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 03:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944E5C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 04:06:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229925AbjERD5r (ORCPT
+        id S229737AbjEREGD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 17 May 2023 23:57:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57058 "EHLO
+        Thu, 18 May 2023 00:06:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229801AbjERD5o (ORCPT
+        with ESMTP id S229451AbjEREGB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 17 May 2023 23:57:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 627C530EC;
-        Wed, 17 May 2023 20:57:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ECF4064CC2;
-        Thu, 18 May 2023 03:57:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F1BCC4339E;
-        Thu, 18 May 2023 03:57:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684382262;
-        bh=G6AVMi0hrTTWDhiL/gg16hMUlxCQe8T09+SqoUjJUME=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=V2twJTCLyTJw74goxDGDj1YFWMu4s5VQ5ZB8cptlVndVhk7mu2LroRkI3E5Ih7yQW
-         IfWDLb2VFXq3KzVPen86qPb0VMq9aLO7vMcgpsuBetCu/FKMvRrZDVKms+zIzSVz+Q
-         +eBGmctqOkPKLoCxH5x3L8ppn9sS+imBIH1OgVkC502ZP5+qd0zsx58XftOP0LUQs5
-         n7NkIuwqnoufBgaK1WOxVJyNrQ/hMfzI0zt0Bl1ZX1FjCjIazqeRV0LAp513PAjMi7
-         OBntH+daVRWuYTWTDcmo5gAC8PRmN7cg3oj3vcgtXH53vecTl5lkbVubHtfcBg+riI
-         lXkrXVaSTcawQ==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-96598a7c5e0so248006066b.3;
-        Wed, 17 May 2023 20:57:42 -0700 (PDT)
-X-Gm-Message-State: AC+VfDy6XadkY1zA2xgU6D3PcGnUC9GxbgzBoFx/iTqK6KXvnFaXK8mg
-        gmMzrNAIIHYhBi1gUfXdSzPt2IcsaEQlx1HN0oE=
-X-Google-Smtp-Source: ACHHUZ5vtp6mjND47jiy61XP3fK4msZ3M5xvGQ7gV+x9CgBQOre1DAnS51ZHqla+VrBPOOfvbt0gXi4JCpODyewgJ/Y=
-X-Received: by 2002:a17:907:9405:b0:94f:5e17:e80d with SMTP id
- dk5-20020a170907940500b0094f5e17e80dmr40206605ejc.45.1684382260517; Wed, 17
- May 2023 20:57:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <1683615352-10794-1-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H7waE0gmSU09YKJMHDAnj7BV7ukiLqWs+JzzLrHDG5z8w@mail.gmail.com>
- <20230518030618.GB1068119@leoy-yangtze.lan> <CAAhV-H6L9kNyGU2UrX7jyN_6O_pafSVSamP7DYHkzfMgmCxVXA@mail.gmail.com>
- <20230518032129.GC1068119@leoy-yangtze.lan>
-In-Reply-To: <20230518032129.GC1068119@leoy-yangtze.lan>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Thu, 18 May 2023 11:57:29 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6_=qwheWvNozop2+9MexnOZQcva28xaeikCc49_DqABA@mail.gmail.com>
-Message-ID: <CAAhV-H6_=qwheWvNozop2+9MexnOZQcva28xaeikCc49_DqABA@mail.gmail.com>
-Subject: Re: [PATCH] perf symbol: Add LoongArch case in get_plt_sizes()
-To:     Leo Yan <leo.yan@linaro.org>
+        Thu, 18 May 2023 00:06:01 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB1FB199F
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 21:06:00 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-2534d7abe1bso799284a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 21:06:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684382760; x=1686974760;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XBwk/aRbKTuV6j+TKCUk1Xx6KdzibhK7F3fWMpwG1Qo=;
+        b=P66CkZWTfL1R7mhQjxFOQgulUchkFTUoPcKfUT5/Cz2KFELfTltrCqBYMn51UQGsj0
+         3IVpbR5Y4o4IIJ5zHCSy7vX+XvRsvKTmOS8jr6cYOR7852rfFfndq94R2bZ1TZG/7OGI
+         xDy/Ucq9e6r0qDnRCRshi2TTzERE+NS0MA+O34U83OuRvFmbDXyywl3z/R3KmVviTw40
+         NJ5TKUbDa3MFEA8WcV3hiFq6j7jcMzkuOOMU6LNyMwBqS+HU8jLqKfwPLwWQyPfxFxc2
+         Zi8BYmcz6o2jF0KumuBYM7hQkY4o2/ItkbKFHaMN6RSC1cHMBh2TcsDSExONBf6QYWJT
+         2NiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684382760; x=1686974760;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XBwk/aRbKTuV6j+TKCUk1Xx6KdzibhK7F3fWMpwG1Qo=;
+        b=eVnYU1uRYFKvd/5PSZqV8NIvxdTsvkcjkJIPs58cVKKE7ONguBje2xAsrLi6wEFHIi
+         EGpc3AfIxCtXC4k35MRIsmJEs3hXAzdsUJU4/j/pD2DosrClkqrO4pytioKBaosXv8js
+         et4CLNpbn/++f2WJ/AeBKi6nOTCucA016gGzW7kvR7qV1jki8yY+N4r22Y5RpbvKYyNH
+         v4Zf1qWu5xHe17HT/UU9TZJO4WlcEpPGONw9k+0KRqSk3c7McLExJ58gvcWEZ8q49d1Q
+         VQALxy67a+Dq8KaROz/fyy0NKbDVzF4UxrNvMDidZyO1gixUFCBL5I8N/xQRJ+ZuqdYT
+         +mGA==
+X-Gm-Message-State: AC+VfDxlkqNRmak7hgn1QqHq/UgcbBbsMaXZ3QWLwxW+lkUOtcB1dcRj
+        XQ7ryP1fTaifE4B7kgFOJufGaQ==
+X-Google-Smtp-Source: ACHHUZ4kUlWKUIOZBXER/JPPz6JM9GTjl6mCIlThAFgi8+JsiTOlfiN60V9ksfqPOYPSz8t6gSE66g==
+X-Received: by 2002:a17:90a:5802:b0:24e:1a7:eee6 with SMTP id h2-20020a17090a580200b0024e01a7eee6mr1093793pji.45.1684382760150;
+        Wed, 17 May 2023 21:06:00 -0700 (PDT)
+Received: from leoy-yangtze.lan ([156.59.236.115])
+        by smtp.gmail.com with ESMTPSA id v5-20020a17090a088500b0024e268985b1sm355334pjc.9.2023.05.17.21.05.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 21:05:59 -0700 (PDT)
+Date:   Thu, 18 May 2023 12:05:53 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Huacai Chen <chenhuacai@kernel.org>
 Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -65,36 +66,50 @@ Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev,
         linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] perf symbol: Add LoongArch case in get_plt_sizes()
+Message-ID: <20230518040553.GE1068119@leoy-yangtze.lan>
+References: <1683615352-10794-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H7waE0gmSU09YKJMHDAnj7BV7ukiLqWs+JzzLrHDG5z8w@mail.gmail.com>
+ <20230518030618.GB1068119@leoy-yangtze.lan>
+ <CAAhV-H6L9kNyGU2UrX7jyN_6O_pafSVSamP7DYHkzfMgmCxVXA@mail.gmail.com>
+ <20230518032129.GC1068119@leoy-yangtze.lan>
+ <CAAhV-H6_=qwheWvNozop2+9MexnOZQcva28xaeikCc49_DqABA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAhV-H6_=qwheWvNozop2+9MexnOZQcva28xaeikCc49_DqABA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 18, 2023 at 11:21=E2=80=AFAM Leo Yan <leo.yan@linaro.org> wrote=
-:
->
-> On Thu, May 18, 2023 at 11:12:26AM +0800, Huacai Chen wrote:
-> > On Thu, May 18, 2023 at 11:06=E2=80=AFAM Leo Yan <leo.yan@linaro.org> w=
-rote:
-> > >
-> > > On Thu, May 18, 2023 at 10:11:27AM +0800, Huacai Chen wrote:
-> > > > Queued, thanks.
-> > >
-> > > The patch is fine for me.
-> > >
-> > > Should not perf patches are to be merged via Arnaldo's tree?
+On Thu, May 18, 2023 at 11:57:29AM +0800, Huacai Chen wrote:
+> On Thu, May 18, 2023 at 11:21 AM Leo Yan <leo.yan@linaro.org> wrote:
 > >
-> > I think both are OK, if Arnaldo takes this patch, I will drop it.
->
-> A good practice is to firstly inquiry the maintainers.
->
-> AFAIK, Arnaldo will test perf patches before sending out pull request;
-> if perf patches are scattered out, it might be out of the testing
-> radar.
-OK, I know, thank you very much.
+> > On Thu, May 18, 2023 at 11:12:26AM +0800, Huacai Chen wrote:
+> > > On Thu, May 18, 2023 at 11:06 AM Leo Yan <leo.yan@linaro.org> wrote:
+> > > >
+> > > > On Thu, May 18, 2023 at 10:11:27AM +0800, Huacai Chen wrote:
+> > > > > Queued, thanks.
+> > > >
+> > > > The patch is fine for me.
+> > > >
+> > > > Should not perf patches are to be merged via Arnaldo's tree?
+> > >
+> > > I think both are OK, if Arnaldo takes this patch, I will drop it.
+> >
+> > A good practice is to firstly inquiry the maintainers.
+> >
+> > AFAIK, Arnaldo will test perf patches before sending out pull request;
+> > if perf patches are scattered out, it might be out of the testing
+> > radar.
+> OK, I know, thank you very much.
 
-Huacai
->
-> Thanks,
-> Leo
+You are welcome!
+
+I found the code base for bfd:
+https://github.com/bminor/binutils-gdb/blob/master/bfd/elfnn-loongarch.c
+
+And this patch is consistent with above link, FWIW:
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
