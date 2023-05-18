@@ -2,126 +2,131 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724E5C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 17:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED32C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 17:59:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229654AbjERR4U (ORCPT
+        id S229485AbjERR7k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 May 2023 13:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45230 "EHLO
+        Thu, 18 May 2023 13:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbjERR4T (ORCPT
+        with ESMTP id S229473AbjERR7j (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2023 13:56:19 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 225E8C2;
-        Thu, 18 May 2023 10:56:18 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1ae40dcdc18so17580565ad.2;
-        Thu, 18 May 2023 10:56:18 -0700 (PDT)
+        Thu, 18 May 2023 13:59:39 -0400
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 338CCDB;
+        Thu, 18 May 2023 10:59:38 -0700 (PDT)
+Received: by mail-oi1-x22a.google.com with SMTP id 5614622812f47-3909756b8b1so844990b6e.1;
+        Thu, 18 May 2023 10:59:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684432577; x=1687024577;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v3G69aZH4uqB82fubrI/45DH+hEMD1HZqbXKUDVHXs4=;
-        b=gISJWQhxSOPYp5RVKKjT2X+yM67aAYH+uqz9RitKZIU8HCNyl1HG4N7+RkuF1fRbl4
-         2j/G7fJWBGICej8LdDO10xBzC3nf/cdvK2LpqSX/H5qx2+R7joW9MVgyGmQzQY2G7V2j
-         56rpoczITKi9u5bRfyzRQDMlQQpuTjXz9TASfJfs2f30P82hZWYzajQCIq/HNLHR/hi0
-         kbwgofSmtWrBhN0tQ+FISGJ7gklRIJo0ZlD1EJXmFbXj3CMrR3PE9wCkcvSjBJXjRaRO
-         wKRNx7sY3ogXP8Xq1ucmBuowMB4P4rW+uBAKIA3zIVw/fw2E+zaSh9kJAZfUx6AG5e/i
-         eWuw==
+        d=gmail.com; s=20221208; t=1684432777; x=1687024777;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3RZ484p2SQ7TxSccE0/ZDJkbe9UYR5m17S/JmLq0VRc=;
+        b=Pt5lc058I1U0eKntpmnf6AmBTmfzAXhGZPXf3f7ZL8k7/N+Z/VTQHgbN62ZQ4yDFLp
+         C6RdbXyrhoYLGuwy7OKrIUD+ArTiGo3o9IgURojrFhiKMBzt0exyVRHZzMh7maNKStLX
+         Dxrj42D/cKCUzz5NUX4yCKKCmMO6SdNFoCGmL5HCOESWMZz49Hy5Co1MTV43MZR0iUYf
+         tY07fKUaalWJISSlCQEOlo4k4yq+4Dt5uUgfUyunE6tXZY7On3Em+LCzXsYE9kqjGKB7
+         t3mdQOFNwvt5NQBVp7x+0+RBDgeVj/lg3uFlD9U0YLJYgTr+aPlkyz4ZMMHuvLjDX4GA
+         u3hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684432577; x=1687024577;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v3G69aZH4uqB82fubrI/45DH+hEMD1HZqbXKUDVHXs4=;
-        b=ZPYxk4IuWHCecY4oyH9daU+7pCNYE/Q6HMfgTBxrD+o6YvRZEMJgkBpIEnN2V+CFit
-         O9noEKqoTUvzenh/e125OPgvrQLJcPns9Weqswo9uUA1WW67Wu6xfd179//huV0GKais
-         XEafZF7h++gPXjSA0ozEuZigQ8S1nnYgS0eDTRRqvYWd09JzFe678EVNWn7lgp6T/4Xv
-         d7x+xUDpUIt3t1B3ZvJX/YDzda3YXAhjkK/zgKIv6CLGEcAaNOvS5NS6wMILTwFodFc+
-         7lVW8OS2HMCIfthOVkhk+irlt+JGdYBEdgnjCxWv/0UsLj7RPsRQ2D556hhnfhOxDOJd
-         AfDQ==
-X-Gm-Message-State: AC+VfDwmZHUqvnS5Ztup91ZxcNCnA2JQ+kcboTwX+OAeXbhRCb/E+W1N
-        PUi3joS7qcJBwPKMiIUyFP8=
-X-Google-Smtp-Source: ACHHUZ6BMWsqPxP8dFTomOtP1RHHtTZ4QK0KBoaEuFsDU4uPtjDNdnBxaLWmTR+Ft40MMAKTuBoFng==
-X-Received: by 2002:a17:902:680d:b0:1ad:bb89:16f6 with SMTP id h13-20020a170902680d00b001adbb8916f6mr3079264plk.50.1684432577039;
-        Thu, 18 May 2023 10:56:17 -0700 (PDT)
-Received: from smtpclient.apple (c-24-6-216-183.hsd1.ca.comcast.net. [24.6.216.183])
-        by smtp.gmail.com with ESMTPSA id q20-20020a170902e31400b001aaea39043dsm1758053plc.41.2023.05.18.10.56.15
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 18 May 2023 10:56:16 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
-Subject: Re: Problem running perf using Intel-PT with snapshots
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <a8127cb3-7693-22e9-7ace-547f7eb4403b@intel.com>
-Date:   Thu, 18 May 2023 10:56:02 -0700
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        d=1e100.net; s=20221208; t=1684432777; x=1687024777;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3RZ484p2SQ7TxSccE0/ZDJkbe9UYR5m17S/JmLq0VRc=;
+        b=CX2FC8EiRh44S+jP+BZyEOtdYMNpTQ2CAox47SE1gL3+UQP0oUK584lAGdjEynB68m
+         NYcqfgddaqBJF2yfDuPo0RaCWC5t7mBJHKGHrDTd6PleAo0Qr9HvSZt00fTsN9R554px
+         R+Ep7HvlCUde8L5mome8QmXnUs9u4nc1DnIr8YXStOhFHci/m7Ep95zfJEjvFEpyDSOf
+         EYf41WcZPu2JLzzYNCY/FzWuSmQeBWEEsX8IKaAa3iIRcGnCLZzIwwkH1TIHaGkVNA9R
+         cjDiaYvtPkb8CsITEU125E4yLY3s86wdM+HUPGepf1c3ThlMm29+R0vtZ0Ll4YUZu07o
+         xoYQ==
+X-Gm-Message-State: AC+VfDyE8HKREofxeJI9dDeNO5E5GNzmigZJpJ5NmgxI1MrBZhp0pLzm
+        T7y+j+p8LgrEqKHzr+75q+k=
+X-Google-Smtp-Source: ACHHUZ7wvbFwrbwfJyso5tvo+RO6RA9saOfmJkwM5rTA+0ms7qi1jYOGSS3k0Gu0XljGe47pme0UTw==
+X-Received: by 2002:a05:6808:1a1e:b0:387:1e2a:fed2 with SMTP id bk30-20020a0568081a1e00b003871e2afed2mr1647930oib.49.1684432777332;
+        Thu, 18 May 2023 10:59:37 -0700 (PDT)
+Received: from [127.0.0.1] (177-57-195-112.3g.claro.net.br. [177.57.195.112])
+        by smtp.gmail.com with ESMTPSA id i9-20020a056820138900b00552465a754esm658600oow.44.2023.05.18.10.59.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 18 May 2023 10:59:36 -0700 (PDT)
+Date:   Thu, 18 May 2023 14:59:26 -0300
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+To:     "Liang, Kan" <kan.liang@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Ian Rogers <irogers@google.com>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1_1/2=5D_perf_test_attr=3A_?= =?US-ASCII?Q?Update_no_event/metric_expectations?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <9178149c-45e8-3de4-58db-b8b8d27b3a08@linux.intel.com>
+References: <20230517225707.2682235-1-irogers@google.com> <64f329a9-09a3-aa84-a354-23a919062d09@arm.com> <ZGYYJ/biKyeFNJjL@kernel.org> <f753beda-2d5e-c391-520a-450b186fd4d4@linux.intel.com> <9178149c-45e8-3de4-58db-b8b8d27b3a08@linux.intel.com>
+Message-ID: <053C65F5-503E-4DF8-8882-0B9EF1581D03@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <CBE205D4-C798-419D-A9B2-42870245B885@gmail.com>
-References: <6325A777-706E-462A-8931-59E16D4E37A5@gmail.com>
- <a8127cb3-7693-22e9-7ace-547f7eb4403b@intel.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-X-Mailer: Apple Mail (2.3731.500.231)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-> On May 18, 2023, at 12:52 AM, Adrian Hunter <adrian.hunter@intel.com> =
-wrote:
->=20
-> On 18/05/23 07:26, Nadav Amit wrote:
->> Hello perf masters,
->>=20
->> I am running perf with Intel PT with snapshot mode and the result =
-makes no
->> sense. I tried to figure it out myself but failed.
->>=20
->> Excluding the first data file, the rest seem messed up in various =
-ways. The
->> only thing that repeatedly shows are calls to __fentry__+0x0. I would =
-note
->> that ftrace is not enabled, and I turned off mitigations as I thought =
-it
->> might somehow be related, but it did not help.
->>=20
->> Here is an example for execution and output. In between I ran
->> `kill -SIGUSR2 [perf-pid]`. To dump some traces.
->>=20
->> Any ideas what it might be?
->>=20
->> Thanks,
->> Nadav
->>=20
->> --
->>=20
->> $ perf record -e intel_pt/noretcomp=3D1/k --kcore --timestamp -a =
---snapshot=3De262144 --switch-output -m,64
->=20
-> --switch-output does not work well with Intel PT.  Intel PT needs all =
-of the sideband event information from all files, so decoding errors =
-result from splitting files.
->=20
-> If you need separate files, consider stopping and restarting 'perf =
-record' instead.  If you do that, you may want to look at options like =
--B and -N and --no-bpf-event which can affect how long it takes to stop =
-perf record.
->=20
-> If you don't need separate files, you can use --time to look at time =
-ranges within the resulting perf.data file.
+On May 18, 2023 2:45:06 PM GMT-03:00, "Liang, Kan" <kan=2Eliang@linux=2Ein=
+tel=2Ecom> wrote:
+>Hi Arnaldo,
+>
+>On 2023-05-18 8:55 a=2Em=2E, Liang, Kan wrote:
+>> On 2023-05-18 8:20 a=2Em=2E, Arnaldo Carvalho de Melo wrote:
+>>> Em Thu, May 18, 2023 at 08:50:14AM +0100, James Clark escreveu:
+>>>>
+>>>> On 17/05/2023 23:57, Ian Rogers wrote:
+>>>>> Previously hard coded events/metrics were used, update for the use o=
+f
+>>>>> the TopdownL1 json metric group=2E
+>>>>>
+>>>>> Fixes: 94b1a603fca7 ("perf stat: Add TopdownL1 metric as a default i=
+f present")
+>>>>> Signed-off-by: Ian Rogers <irogers@google=2Ecom>
+>>>>> ---
+>>>>>  tools/perf/tests/attr/base-stat            |   2 +-
+>>>>>  tools/perf/tests/attr/test-stat-default    |  80 ++++++++-----
+>>>>>  tools/perf/tests/attr/test-stat-detailed-1 |  95 +++++++++------
+>>>>>  tools/perf/tests/attr/test-stat-detailed-2 | 119 +++++++++++-------=
+-
+>>>>>  tools/perf/tests/attr/test-stat-detailed-3 | 127 ++++++++++++------=
+---
+>>>>>  5 files changed, 249 insertions(+), 174 deletions(-)
+>>>>>
+>>>> Reviewed-by: James Clark <james=2Eclark@arm=2Ecom>
+>>> Thanks, applied both patches to perf-tools=2E
+>>>
+>> Could you please hold patch 1 for a while?
+>
+>Sorry for the noise=2E
 
-Thank you Adrian. It was driving me crazy and I was sure I am somehow =
-not
-accounting for some ftrace/rethunk or some other binary rewriting event.
+That's not noise, I value your reviews, please keep doing them=2E
 
-These ideas for workarounds should suffice.
+>Ian has addressed my concerns=2E The patch looks good to me now=2E
+>It also fixes a "Failed" on my Cascade Lake machine=2E
+>
+>Tested-by: Kan Liang <kan=2Eliang@linux=2Eintel=2Ecom>
 
-Thanks again,
-Nadav=
+Thanks !
+
+>But for long term, we probably need a better solution to avoid keeping
+>adding such non-architectural events in the test case=2E
+
+Yes, the situation now is different than the one when this test was put in=
+ place by Jiri (IIRC)=2E
+
+- Arnaldo
