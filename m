@@ -2,114 +2,143 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944E5C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 04:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9979FC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 04:57:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbjEREGD (ORCPT
+        id S229871AbjERE5i (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 May 2023 00:06:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58866 "EHLO
+        Thu, 18 May 2023 00:57:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjEREGB (ORCPT
+        with ESMTP id S229549AbjERE5h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2023 00:06:01 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB1FB199F
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 21:06:00 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-2534d7abe1bso799284a91.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 May 2023 21:06:00 -0700 (PDT)
+        Thu, 18 May 2023 00:57:37 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6702B2733;
+        Wed, 17 May 2023 21:57:36 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-2533d8f4a1eso1250959a91.1;
+        Wed, 17 May 2023 21:57:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684382760; x=1686974760;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XBwk/aRbKTuV6j+TKCUk1Xx6KdzibhK7F3fWMpwG1Qo=;
-        b=P66CkZWTfL1R7mhQjxFOQgulUchkFTUoPcKfUT5/Cz2KFELfTltrCqBYMn51UQGsj0
-         3IVpbR5Y4o4IIJ5zHCSy7vX+XvRsvKTmOS8jr6cYOR7852rfFfndq94R2bZ1TZG/7OGI
-         xDy/Ucq9e6r0qDnRCRshi2TTzERE+NS0MA+O34U83OuRvFmbDXyywl3z/R3KmVviTw40
-         NJ5TKUbDa3MFEA8WcV3hiFq6j7jcMzkuOOMU6LNyMwBqS+HU8jLqKfwPLwWQyPfxFxc2
-         Zi8BYmcz6o2jF0KumuBYM7hQkY4o2/ItkbKFHaMN6RSC1cHMBh2TcsDSExONBf6QYWJT
-         2NiA==
+        d=gmail.com; s=20221208; t=1684385855; x=1686977855;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QbIff1DfcH4ZQO1XguTv+CpOs+a0WWSeq2A5H3P9z3E=;
+        b=DPNpbTYBq9tn7P42KZKXpZzmJY+Ru8As0OG5/7/gFOQN4cRXAeyiWV8NAuJIhnellc
+         2VM+rgmLYF0iXItJc5QWYQ3MohWxGy1eRDRF/7qhNsvEZoz3WksZUqiexjvQpY6I9ssl
+         vV/Qr4nGIiWFznnkhjnOLb6slIW7KAZb5EXnUzF8qKG/VsnQxzkymAlbzUpTqe0pQV0j
+         7eAdxs3y+v4ME5Vse4grk/VpgqwRd2VmBqyl9ZFOhf5q9FEoZfuMIvmbT8uaeHUn2flj
+         pQDYiQutlqqlSmkQXtRDQ9Ngv4vJ0aKaMMU4Ze1CK56yaXHAyp1Ipk9sE5qRgdQvXuJu
+         Hi8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684382760; x=1686974760;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XBwk/aRbKTuV6j+TKCUk1Xx6KdzibhK7F3fWMpwG1Qo=;
-        b=eVnYU1uRYFKvd/5PSZqV8NIvxdTsvkcjkJIPs58cVKKE7ONguBje2xAsrLi6wEFHIi
-         EGpc3AfIxCtXC4k35MRIsmJEs3hXAzdsUJU4/j/pD2DosrClkqrO4pytioKBaosXv8js
-         et4CLNpbn/++f2WJ/AeBKi6nOTCucA016gGzW7kvR7qV1jki8yY+N4r22Y5RpbvKYyNH
-         v4Zf1qWu5xHe17HT/UU9TZJO4WlcEpPGONw9k+0KRqSk3c7McLExJ58gvcWEZ8q49d1Q
-         VQALxy67a+Dq8KaROz/fyy0NKbDVzF4UxrNvMDidZyO1gixUFCBL5I8N/xQRJ+ZuqdYT
-         +mGA==
-X-Gm-Message-State: AC+VfDxlkqNRmak7hgn1QqHq/UgcbBbsMaXZ3QWLwxW+lkUOtcB1dcRj
-        XQ7ryP1fTaifE4B7kgFOJufGaQ==
-X-Google-Smtp-Source: ACHHUZ4kUlWKUIOZBXER/JPPz6JM9GTjl6mCIlThAFgi8+JsiTOlfiN60V9ksfqPOYPSz8t6gSE66g==
-X-Received: by 2002:a17:90a:5802:b0:24e:1a7:eee6 with SMTP id h2-20020a17090a580200b0024e01a7eee6mr1093793pji.45.1684382760150;
-        Wed, 17 May 2023 21:06:00 -0700 (PDT)
-Received: from leoy-yangtze.lan ([156.59.236.115])
-        by smtp.gmail.com with ESMTPSA id v5-20020a17090a088500b0024e268985b1sm355334pjc.9.2023.05.17.21.05.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 21:05:59 -0700 (PDT)
-Date:   Thu, 18 May 2023 12:05:53 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Huacai Chen <chenhuacai@kernel.org>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        d=1e100.net; s=20221208; t=1684385855; x=1686977855;
+        h=to:cc:date:message-id:subject:mime-version
+         :content-transfer-encoding:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QbIff1DfcH4ZQO1XguTv+CpOs+a0WWSeq2A5H3P9z3E=;
+        b=IEcG+OEEbKB/m3GJWf2q0eT2qHzZ8u9UWBK6aRrEkU4LyM7uIIINrJqkxIjLrvfynN
+         OmylL81vKkeQTZVC/ivckAl4fD3bvc+xO1hzoKJl1pEq2uKo6MnC6CLRnmMHeiafD5tM
+         nHR0wkGHqFFK1mq90h/OXNFyna4aUaQHEXQ8ES6MgaE9wO+Y1JWPoB1KDNQcd7TX398H
+         NTvcChMP0tM0574HpPcPjvDUN4Bw6KLw4u+RQnZQjSOP/nAADULRfb3nmby6ZrmOUrOz
+         CK6bQQ9d9MYPT8dvDXC7raWIOQfww6Dzw21zTJeKws4kwaZE0TxvvZzNTPeGSecbyU2c
+         xY1g==
+X-Gm-Message-State: AC+VfDwMlpgP2taUhFHLd/XsdUErB9L6j2UM3YjIHjc6ZI51n9G6iIFW
+        +RmIqTvXuivI7BDEPyyPFx5pm8eX/1jeWQ==
+X-Google-Smtp-Source: ACHHUZ7Zr5Inbn1S74qaRdklnvnngbXaMEKK9Ebuy9Go6v2VaA+TSNo5hXLoJDLGmeGfUESe14PLeg==
+X-Received: by 2002:a17:90b:ed3:b0:24d:f3cc:7d34 with SMTP id gz19-20020a17090b0ed300b0024df3cc7d34mr1268777pjb.32.1684385854898;
+        Wed, 17 May 2023 21:57:34 -0700 (PDT)
+Received: from smtpclient.apple (c-24-6-216-183.hsd1.ca.comcast.net. [24.6.216.183])
+        by smtp.gmail.com with ESMTPSA id h7-20020a17090adb8700b0023d386e4806sm422178pjv.57.2023.05.17.21.57.33
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 May 2023 21:57:34 -0700 (PDT)
+From:   Nadav Amit <nadav.amit@gmail.com>
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
+Subject: Problem running perf using Intel-PT with snapshots
+Message-Id: <6325A777-706E-462A-8931-59E16D4E37A5@gmail.com>
+Date:   Wed, 17 May 2023 21:26:28 -0700
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH] perf symbol: Add LoongArch case in get_plt_sizes()
-Message-ID: <20230518040553.GE1068119@leoy-yangtze.lan>
-References: <1683615352-10794-1-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H7waE0gmSU09YKJMHDAnj7BV7ukiLqWs+JzzLrHDG5z8w@mail.gmail.com>
- <20230518030618.GB1068119@leoy-yangtze.lan>
- <CAAhV-H6L9kNyGU2UrX7jyN_6O_pafSVSamP7DYHkzfMgmCxVXA@mail.gmail.com>
- <20230518032129.GC1068119@leoy-yangtze.lan>
- <CAAhV-H6_=qwheWvNozop2+9MexnOZQcva28xaeikCc49_DqABA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H6_=qwheWvNozop2+9MexnOZQcva28xaeikCc49_DqABA@mail.gmail.com>
+        Namhyung Kim <namhyung@kernel.org>
+To:     linux-perf-users@vger.kernel.org
+X-Mailer: Apple Mail (2.3731.500.231)
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 18, 2023 at 11:57:29AM +0800, Huacai Chen wrote:
-> On Thu, May 18, 2023 at 11:21 AM Leo Yan <leo.yan@linaro.org> wrote:
-> >
-> > On Thu, May 18, 2023 at 11:12:26AM +0800, Huacai Chen wrote:
-> > > On Thu, May 18, 2023 at 11:06 AM Leo Yan <leo.yan@linaro.org> wrote:
-> > > >
-> > > > On Thu, May 18, 2023 at 10:11:27AM +0800, Huacai Chen wrote:
-> > > > > Queued, thanks.
-> > > >
-> > > > The patch is fine for me.
-> > > >
-> > > > Should not perf patches are to be merged via Arnaldo's tree?
-> > >
-> > > I think both are OK, if Arnaldo takes this patch, I will drop it.
-> >
-> > A good practice is to firstly inquiry the maintainers.
-> >
-> > AFAIK, Arnaldo will test perf patches before sending out pull request;
-> > if perf patches are scattered out, it might be out of the testing
-> > radar.
-> OK, I know, thank you very much.
+Hello perf masters,
 
-You are welcome!
+I am running perf with Intel PT with snapshot mode and the result makes =
+no
+sense. I tried to figure it out myself but failed.
 
-I found the code base for bfd:
-https://github.com/bminor/binutils-gdb/blob/master/bfd/elfnn-loongarch.c
+Excluding the first data file, the rest seem messed up in various ways. =
+The
+only thing that repeatedly shows are calls to __fentry__+0x0. I would =
+note
+that ftrace is not enabled, and I turned off mitigations as I thought it
+might somehow be related, but it did not help.
 
-And this patch is consistent with above link, FWIW:
+Here is an example for execution and output. In between I ran
+`kill -SIGUSR2 [perf-pid]`. To dump some traces.
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Any ideas what it might be?
+
+Thanks,
+Nadav
+
+--
+
+$ perf record -e intel_pt/noretcomp=3D1/k --kcore --timestamp -a =
+--snapshot=3De262144 --switch-output -m,64
+[ perf record: dump data: Woken up 2 times ]
+[ perf record: Dump perf.data.2023051804132358 ]
+[ perf record: dump data: Woken up 1 times ]
+[ perf record: Dump perf.data.2023051804132537 ]
+[ perf record: dump data: Woken up 1 times ]
+[ perf record: Dump perf.data.2023051804132689 ]
+^C[ perf record: Woken up 1 times to write data ]
+[ perf record: Dump perf.data.2023051804132829 ]
+[ perf record: Captured and wrote 14.330 MB perf.data.<timestamp> ]
+
+
+$ sudo perf script -i  perf.data.2023051804004293
+
+             :-1    -1 [006]    78.287624:          1             =
+branches:k:  ffffffff81096125 ept_page_fault+0x3f5 ([kernel.kallsyms]) =
+=3D> ffffffff8108f1d0 kvm_mmu_get_child_sp+0x0 ([kernel.kallsyms])
+             :-1    -1 [006]    78.287624:          1             =
+branches:k:  ffffffff8108f1d0 kvm_mmu_get_child_sp+0x0 =
+([kernel.kallsyms]) =3D> ffffffff81131190 __fentry__+0x0 =
+([kernel.kallsyms])
+ instruction trace error type 1 time 78.287624064 cpu 6 pid -1 tid -1 ip =
+0xffffffff8101c4fd code 6: Trace doesn't match instruction
+             :-1    -1 [006]    78.287624:          1             =
+branches:k:  ffffffff81296e14 futex_unlock_pi+0x184 ([kernel.kallsyms]) =
+=3D> ffffffff81294120 futex_cmpxchg_value_locked+0x0 ([kernel.kallsyms])
+             :-1    -1 [006]    78.287624:          1             =
+branches:k:  ffffffff81294124 futex_cmpxchg_value_locked+0x4 =
+([kernel.kallsyms]) =3D> ffffffff81131190 __fentry__+0x0 =
+([kernel.kallsyms])
+ instruction trace error type 1 time 78.287624104 cpu 6 pid -1 tid -1 ip =
+0xffffffff824c7a44 code 6: Trace doesn't match instruction
+             :-1    -1 [006]    78.287624:          1             =
+branches:k:  ffffffff812909c4 __tick_broadcast_oneshot_control+0x1d4 =
+([kernel.kallsyms]) =3D> ffffffff8128f720 tick_broadcast_set_event+0x0 =
+([kernel.kallsyms])
+             :-1    -1 [006]    78.287624:          1             =
+branches:k:  ffffffff8128f720 tick_broadcast_set_event+0x0 =
+([kernel.kallsyms]) =3D> ffffffff81131190 __fentry__+0x0 =
+([kernel.kallsyms])
+             :-1    -1 [006]    78.287624:          1             =
+branches:k:  ffffffff81296e8e futex_unlock_pi+0x1fe ([kernel.kallsyms]) =
+=3D> ffffffff812961d0 put_pi_state+0x0 ([kernel.kallsyms])
+             :-1    -1 [006]    78.287624:          1             =
+branches:k:  ffffffff812961d4 put_pi_state+0x4 ([kernel.kallsyms]) =3D> =
+ffffffff81131190 __fentry__+0x0 ([kernel.kallsyms])
+ instruction trace error type 1 time 78.287624208 cpu 6 pid -1 tid -1 ip =
+0xffffffff824c7a44 code 6: Trace doesn't match instruction
+
