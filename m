@@ -2,108 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0151FC7EE26
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 17:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B46C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 22:17:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231407AbjESR5h (ORCPT
+        id S229772AbjESWRs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 May 2023 13:57:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55194 "EHLO
+        Fri, 19 May 2023 18:17:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231345AbjESR5h (ORCPT
+        with ESMTP id S229503AbjESWRr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 May 2023 13:57:37 -0400
-Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E333E40
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:57:22 -0700 (PDT)
-Received: by mail-il1-x133.google.com with SMTP id e9e14a558f8ab-335d6260e9bso12165ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:57:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684519041; x=1687111041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=feLe7uBjxvtsjgM0Ag0LKjB+8s6DSGjCmg+1nAQWaOY=;
-        b=UWEPqp9UptvnAfk22PADLuu0PozS6oMEPCEL9noGcIkKkyV1CzxlQgYoH8/DQRPm/Q
-         Z4weKJQG99AKhii1BS65iIDij376x30zpkbo1+2B5wJqGL1tw5w+pqux9SeKNbCaMDBk
-         UjRoY/1XZrF5KZlKJjIL+FDDYcPvPdULEXL+S7ZbRKF8ydoiNYtl0Oby0u6VB5CNBEfc
-         F5iUdVPL7GWYFQhimNG//TYfx//gZkyM2Bn02X7uEyTX9Tu/x+OctOxh9+7a3Jb7vKot
-         TL9hmU5a75pJHWizYF8Crxiui1Xb1209MH1lH0nxU1nEAZQXuXUvVqcvZ5/VQoXv+ydS
-         E9Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684519041; x=1687111041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=feLe7uBjxvtsjgM0Ag0LKjB+8s6DSGjCmg+1nAQWaOY=;
-        b=NrnzFKiCSYDiR6PQauJN0SaAYF1uYoD0/LGD7eRM1C/O8SnEItq1klhCNRhs3ZPqww
-         Pkj9mA21QIgX+U9voqXUUe5QZJVFBKN9yidIfYMrv0F3Ji7agEDLFnonMTZV/n6r0UP1
-         zTblYpjiYsM9OuOmrRHnMNHGRx7AOaxnHExTm6ocy7wBQvm1t7tyeiYu/u7NRoFxrqLc
-         Dg1dJy/VWDzIwrNeza7xMabrQpgHSfPrkawMQJ3nXVbNLjEc8cJ8FgMb5mQxHaC4Jp8H
-         GxlmRSRn9hKA/p461Si0pYlFwZYCuo05V25gsdvLJU6cYic0V0IcpC7V+ETpm/ZusB/W
-         8bag==
-X-Gm-Message-State: AC+VfDxu0alM0JsOFk9SREbf0l1Izw0TP47banhtSzSUNl9rK5sE4W0K
-        8dLQYlJLq/yVRzG26sQChFmZxW26U+oDe8Mf0wRQ757MlDXpm7ea5mT7fg==
-X-Google-Smtp-Source: ACHHUZ4Iy85v0Mq+Vc9LoHKjemBTC/WY96pgqW2Xf/leH4fSI4vSRcthQhPYCg9ugcXi9yBkN/TUxW83LDAN9jOmuHQ=
-X-Received: by 2002:a05:6e02:1a0a:b0:32a:f2a9:d1b7 with SMTP id
- s10-20020a056e021a0a00b0032af2a9d1b7mr246411ild.10.1684519041141; Fri, 19 May
- 2023 10:57:21 -0700 (PDT)
+        Fri, 19 May 2023 18:17:47 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2089.outbound.protection.outlook.com [40.107.220.89])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 388031A6;
+        Fri, 19 May 2023 15:17:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ws0Mp9J577p71qTPdAIG+g/YiFc8VjOSp2kXp8CFYCrb0YZO4VxmFrEigU86K6J5Ssy/LdqkqvWjiBD/ITg8ycflKlr7fsXcgaB+Qdkm0Jn53214Gl1QyaBpwFL8NOuMdq96+HJDSyGdi2sjeD26E/8axzF1qZXDE2mb+RIk8SG3luzjiFIF1H7/Jp6GW/gOJrn5roG48+9/5hiJg4ObdsT7lDTcldWluSxuXS3iQuiKt6eCjYXvT0weNA5LJLVFHrxVYcVxp/CzoyxROk6m9OGqBAUZotV280EIFmhdlzMFbmo+dGTbt4ri1zjC6NE6YZpFqMUg4qiUfQDwjZ4yZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cAUCDhbQEZCGF/ilN2dz/+jkvUPOVL2p3y2QDCccWYM=;
+ b=M7HhtE6rj48YWDBTX5c4mY918dBGRGbHPTF1NeYlKw384K6soy96Zz7ZT0/6Apj/gRzRZIBDOmJI/IUVaCCzQJUdc6bXW78DgQsyX4E8Xb0HsZ7oDpImsbU+J+A9BkIx+6To9CPvIATAmOm15qFi0aH0fp8mZ69wiqCIoRm8PS3G3xy/sH6DRNWbGHqsbsgHbcDKKgSeHhcjPJYTiQmxeNxs1ocZ7L18JMYE10txyhm1IAtxCjxapJRJTG2ABlUXT+XmiM0/udamhg2l0DfmOIk5PecMhzEI3mcqAV2ztK+caV/1rFIdDUfZoZueQQHKNB/TWs4uqNiCeEheFsFbrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cAUCDhbQEZCGF/ilN2dz/+jkvUPOVL2p3y2QDCccWYM=;
+ b=fk4gZr4cnvCzmOpbS/J3nmWaCt9+DpLk7a8bOx7IXqUz4JO9idwFlAgp1xVIfXRHjbuKxwjA1bCucVKZCoS9kALFnIa2nR2l2fcnxOy22eoEzMdjSKFFZu86EGSH8DWfx4yFXSMdnFGezWqlHXTjjF92eGVQj1Rr20lr2Y0GpdkPE9luNTbV8Jp/Mq8Ix1dGZyN7CJTjuvHiJ33oD6jHKOYkaPKnagJ7CmaMXh48J7Zk7XaZndRW0DwyVlYWlddNoOqtMtzk1Z2ZCitOXFuxSF96XphCPprw+vcBnndk1hvvjZ7FNXnHHFo35HNrDTGHdEDqBmoUYAWPjopx+688BA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by IA1PR12MB6531.namprd12.prod.outlook.com (2603:10b6:208:3a4::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.21; Fri, 19 May
+ 2023 22:17:42 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f7a7:a561:87e9:5fab]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f7a7:a561:87e9:5fab%6]) with mapi id 15.20.6411.021; Fri, 19 May 2023
+ 22:17:42 +0000
+Date:   Fri, 19 May 2023 19:17:41 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Lorenzo Stoakes <lstoakes@gmail.com>
+Cc:     Arnd Bergmann <arnd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] [suggestion] mm/gup: avoid IS_ERR_OR_NULL
+Message-ID: <ZGf1hV7iEQyqAim5@ziepe.ca>
+References: <20230519093953.10972-1-arnd@kernel.org>
+ <5b071f65-7f87-4a7b-a76a-f4a1c1568ae7@lucifer.local>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b071f65-7f87-4a7b-a76a-f4a1c1568ae7@lucifer.local>
+X-ClientProxiedBy: BLAPR03CA0012.namprd03.prod.outlook.com
+ (2603:10b6:208:32b::17) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
 MIME-Version: 1.0
-References: <CAGA5_H6Ld9U0eTatJeExSGEynf41mvfcPZ34rtdO7rAVNuoXYQ@mail.gmail.com>
-In-Reply-To: <CAGA5_H6Ld9U0eTatJeExSGEynf41mvfcPZ34rtdO7rAVNuoXYQ@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 19 May 2023 10:57:09 -0700
-Message-ID: <CAP-5=fWV2+auUQHQ5cvn2948M=0ThtrHftgGMM44ceCZyHiQeQ@mail.gmail.com>
-Subject: Re: DSO_BINARY_TYPE__SYSTEM_PATH_DSO
-To:     Rajasekhar Pulluru <pullururajasekhar@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|IA1PR12MB6531:EE_
+X-MS-Office365-Filtering-Correlation-Id: d0340a27-a15f-4501-fa6f-08db58b6dd57
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XPgdFJoTqg/lP7R9eAYEQ4eUGXekVkVBNxYjhWSG5t2GZ5E5qHAq/GzKF5niB3RcQ04wYDdCMuJHrNlJd6X3OuUjidqtR6CoL7PSc9j62lhMpZk0arHoBTyQ/QX/UImEXSu3uv3JdVBcIzofBH+FM4ZnncIxNAf9lhpNFTEH0m/iKOS3rst52R1aEvojwbXzROBnHT9YTL/X31GOCZ0I94Q8ctdnjZQvgmAARc54HaRDLt8iE2tAQdKwEmJw4o9hQG5jK+umB9fWLbcjgzotEl+gxGYLVflIWL1l8fHhFrY0IgKstjyg7DtOzrC0+wjsZZlRt6uFQ8IO6vLZ0woD4BkPPORoEjXiF8/eRw3F//YZfJMC5XCNwAW44u9YKirb9kxyI6THu7xE3wAPocs/HMxnlNvFawoOJzf6csLSbKKjCnyDUrBdVdRAH/ypNRbySGBLydg1cBzd+fqloPQdvnaaMwGrx4R7pp1PGAL5FkQ+92IN0nSDTmHAOHcbnpwq1/sVCYjX+rnEWHJNvhvLyZn/jlp//BhtwqIQctx5syz9ZVnqA+OpJcl405CuA37m
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(451199021)(66556008)(6916009)(66946007)(4326008)(66476007)(54906003)(8936002)(8676002)(478600001)(316002)(41300700001)(6486002)(2906002)(86362001)(6512007)(6506007)(26005)(9686003)(186003)(36756003)(7416002)(38100700002)(5660300002)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?WBS4gFEXPgyxJiS+LLiUGHQIp5ERAD1SJmnrj8pmYg5vaBYmvrM+w+1Lfjy2?=
+ =?us-ascii?Q?nXSAeSNfgz7MSzVg1eXwCfB4rApYaxcVGNkBvy4F0UUjmYMqDasYnuvfZpDl?=
+ =?us-ascii?Q?s3Ytaz0tK8exCWho/ARc0uRTghIBTyQvcPnaNkWgKsvXyhZGWgwzRXuQJ2em?=
+ =?us-ascii?Q?XaMMuT6CH/JQqIYpHp43fpoOOevvf/gbHjgQi5mtgZD3wq7vJ8Rx3qlNH0z3?=
+ =?us-ascii?Q?qxKn+J70WIJVIFVaL8mtcG4bdpVsEYygTlasFDnzgjCF7yn+F6psmc7U41j5?=
+ =?us-ascii?Q?DSrGJmLBoh4NvTKC3Hk4qB3SlzBu9Exsy0mP7RB9NS49V1m7F1KFqsI/+as4?=
+ =?us-ascii?Q?DJwwiE69d1Ifrw4dovWLzVZbwE2Q7tRbOYBkyQE3WHcO1UqftyOsGrDR2yAv?=
+ =?us-ascii?Q?EYO+gJj3W133oZriDEeQw9bG6GNKt+RVNkyfSoRFjm174fMpWfUc1toU4oL/?=
+ =?us-ascii?Q?a0i4ZHqG3/jHttuNaMfrjgz6j4gX5q+kBz7D3d1vVNreNSkFBocpXc+WPwVH?=
+ =?us-ascii?Q?YEjX9FENdmfDnpBIBGk15Ef8GZMqeQmxlcy24YHnohYHRhd+03Wkuo/nKDCj?=
+ =?us-ascii?Q?aDTDMpyHLi105S3nug+VLp2Uu/83zhSFbpbn8HNRaFpUZ7KP4F1AbqLQxmcz?=
+ =?us-ascii?Q?AlEylOPAxnqeXWXmtCtV//jqLDw4hnBX4fhH9tNmyuHh4xRqzwqjztGlmmZW?=
+ =?us-ascii?Q?FT/H2gHxIRqTIt+7tPxlr6Igxd6KSrpceDdQwf7RPwD98YjDGK5+DPNX4Hmj?=
+ =?us-ascii?Q?oT9Mg2ty/UAlTkMXL+o/wNf76UBQKxWWKYdB0fQ7L4Nz008Os6aus+w1mVTf?=
+ =?us-ascii?Q?a3tQ8KejuwaQxJXkiVsga2vHuw8kEpdIF7RPbDmVeBeXP96q2fUxiEzJenIa?=
+ =?us-ascii?Q?GpNMDbwETVAu4DRGxaq7BI52vEddqKGvEt1uK+5WS8CjKJrYGHy/inJscX61?=
+ =?us-ascii?Q?SQO7HYYJ1aOFaj9fN3ksO+sVoUR75lryab05yVymi/sN98swbCUpdERk54u8?=
+ =?us-ascii?Q?sFKnt61Jp2+nYqRlBZkeiI5CQbIaHcSRLL/Lqk/l4tYk3PMJM5v8rURbXuqq?=
+ =?us-ascii?Q?SGMXeYar9jCl32SSHyaW8t3kXAaIav0qel6t9C0PGZN0099a20gNLtsuiTT2?=
+ =?us-ascii?Q?r1no4KwVJyeNYDhW4PrA5AM/sIMyoWnLOKWr4cseluKyckSKNIpOHNTlYF9D?=
+ =?us-ascii?Q?1gf/g6hgcATFdJsJLzR/SDE9ivVxhmUZFa2Yj+wgTLfQUf9gm40IhV4vkAHU?=
+ =?us-ascii?Q?nfHKQkctrGSNUVsb7FNf33JeUFkwljkvtY8tXJEGEpd8MN9z7YhTVv9UEXEk?=
+ =?us-ascii?Q?V6jYaNzSDXSWZ0NM97Ye9faOmiZBZrpaM1026jaY+RTw16tlN1dsgFauDtMk?=
+ =?us-ascii?Q?u6+ZCwmT4FwNuQLZAVQc574b2/j3sfj5SZlVUmx1K2/xjOJ1XdftQwDZOwmM?=
+ =?us-ascii?Q?Vwc3onsoa2eUNCh8InFVDQ2+jFa+L0PLGfE6cD/zzPuGBgEFVhXb//eRo24w?=
+ =?us-ascii?Q?aFSJAZ0rzHwco+9DBmKfVkD52Dlm0/SGbDh3SzhvkHgvSH8SQLr/oOi+0YGY?=
+ =?us-ascii?Q?eqMPl/XwOZvrwu1fvCnV6kfMBFL6FbUyocI93C2e?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0340a27-a15f-4501-fa6f-08db58b6dd57
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2023 22:17:42.6361
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Q0P9p12xOp4wrFK2BFeijMBPS9Vdx1WNriqSI9clhhKOuVU3RBx8gbW7lqJahQgB
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6531
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 19, 2023 at 10:49=E2=80=AFAM Rajasekhar Pulluru
-<pullururajasekhar@gmail.com> wrote:
+On Fri, May 19, 2023 at 03:51:51PM +0100, Lorenzo Stoakes wrote:
+> Given you are sharply criticising the code I authored here, is it too much
+> to ask for you to cc- me, the author on commentaries like this? Thanks.
+> 
+> On Fri, May 19, 2023 at 11:39:13AM +0200, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
+> >
+> > While looking at an unused-variable warning, I noticed a new interface coming
+> > in that requires the use of IS_ERR_OR_NULL(), which tends to indicate bad
+> > interface design and is usually surprising to users.
+> 
+> I am not sure I understand your reasoning, why does it 'tend to indicate
+> bad interface design'? You say that as if it is an obvious truth. Not
+> obvious to me at all.
 >
-> Hi Team,
-> Could someone help me shed some light on this macro
-> DSO_BINARY_TYPE__SYSTEM_PATH_DSO ?
->
-> Case-1: I am trying to run perf top -p `pidof <app>` on ubuntu host
-> (based on ubuntu:jammy, outside the container) where the <app> runs
-> inside a container that's based on ubuntu bionic, and I don't see any
-> of <app> symbols (only hex-address and no function names) in perf top
-> output.
->
-> Case-2: When I try to run perf top -p `pidof <app>` on ubuntu host
-> (based on ubuntu:bionic, outside the container) where the <app> runs
-> inside a container that's also based on ubuntu bionic, and I can see
-> <app> symbols (function names) in perf top output.
->
-> On debugging both the cases, I find that, case-2 is able to display
-> symbol when dso__load of </opt/bin/<app> is successful for the type
-> DSO_BINARY_TYPE__SYSTEM_PATH_DSO, where-as the same fails for case-1
-> (is_regular_file check fails), and perf top reports "Failed to open
-> /opt/bin/<app>, continuing without symbols".
->
-> In both the cases, the file /opt/bin/<app> is not available on the
-> host, and its only available inside the container.
-> What could be causing the above failure?
->
-> Appreciate any help/inputs.
+> There are 3 possible outcomes from the function - an error, the function
+> failing to pin a page, or it succeeding in doing so. For some of the
+> callers that results in an error, for others it is not an error.
 
-Hi Rajasekhar,
+No, there really isn't.
 
-This is an area I'm not familiar with. I suspect the reason perf
-record/report are succeeding from your description is namespace
-information. If you look at the perf.data file with "perf script" and
-probably the "-D" option, you should see information. I'm not sure
-anybody has wired up the namespace code with perf top, which would go
-a long way to explaining your problems.
+Either it pins the page or it doesn't. Returning "NULL" to mean a
+specific kind of failure was encountered is crazy.. Especially if we
+don't document what that specific failure even was.
 
-Thanks for investigating this!
-Ian
+IIRC if you look really closely the only time get_user_pages()
+actually returns 0 is if the input argument validation fails, which I
+think is a bug that should be fixed.
 
-> Thanks & Regards,
-> Rajasekhar
+get_user_pages() never returns 0, so get_user_page_vma_remote() never
+returns NULL. Until we get there collapsing the 0 to EIO is perfectly
+fine.
+
+Jason
