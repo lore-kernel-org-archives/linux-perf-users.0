@@ -2,189 +2,136 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B3DC77B7F
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 14:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F6FC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 15:10:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229933AbjESOv5 (ORCPT
+        id S232148AbjESPKC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 May 2023 10:51:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38258 "EHLO
+        Fri, 19 May 2023 11:10:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229525AbjESOv4 (ORCPT
+        with ESMTP id S231893AbjESPKB (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 May 2023 10:51:56 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6433FA1;
-        Fri, 19 May 2023 07:51:55 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-309382efe13so2156580f8f.2;
-        Fri, 19 May 2023 07:51:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684507914; x=1687099914;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZMQZECFtXym11ziYXl+wIoNNwzMeR1Bxy8iSX/Q997A=;
-        b=VPDps51pUY/EJFHxafPUzqLLQCefvQWUOZysrtOX/RzXO060iImM98vSPbI4oyXa04
-         BCHUKWnNwi3h8bw/86pZYipH+lVfrBYqOfNJugL55cJuGQRV97p3NZWLoYbe/ZyTDDDZ
-         eGKWC2MF68BfcvWuz5P5H2FZ8s/fOXyPNoNlVYZc6mwmG4wWhfiLut2Ad6qjlr3TrrOE
-         7gnX+tCpMafN61s7aA2ngKLyuNMifrbogrS7bkjBvQgYAXb1aZrg5eSPT5zXPzZ3hzcj
-         i2K/9x9/U/9LN6LiNB/fiIVO0OFGsvZkmbsEVLFdKUEAf9cfmVjDQQkrQMLrjP5XEuui
-         hFlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684507914; x=1687099914;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZMQZECFtXym11ziYXl+wIoNNwzMeR1Bxy8iSX/Q997A=;
-        b=IEy9EIwxFX9C2V9Qrd3FzOYyTD082aqrUC/vn3DOkIWfAzjClkZiwI6EAKgP23H0qh
-         2LXftNU7Nhn7f5/dtGxkSajgNchRVW9W8KdrseAQCkEfoTu3vR78fxMnmAJCCUJhK/6p
-         Mm3AxaGunkzmhzxmeMA6ZaT12Uhm1eT911Akp1EwsMjRpSbnFtfVMMizTzDkJMi0XcvL
-         UCiRrjMZ1Mkyq9aeqDn0flnXsfTJ89I5CJcmPva81hBF5Z3eYqSqEeNwfO4++UrSeiVc
-         ugSrP33mvixCx4cZ+b5Tlcu0PdjWrwmBcptSl3rrGcRUk76YFuxRgJZeeUqA2t5Bd3Zu
-         Eebw==
-X-Gm-Message-State: AC+VfDxeRf66GKDb79Xn8vKH9zVN246ChuFkujMyRiioEeaeC6aBaoFL
-        sFo1OyG8kx4y2D6CfyBseUc=
-X-Google-Smtp-Source: ACHHUZ41Leun+h+YErHotZC3zd8Np65RkNQeBYIROMArGqFz6AajgszDwsnVl4ekPuFpw5pJrEFoPA==
-X-Received: by 2002:a5d:4811:0:b0:307:9a49:da89 with SMTP id l17-20020a5d4811000000b003079a49da89mr1642332wrq.38.1684507913493;
-        Fri, 19 May 2023 07:51:53 -0700 (PDT)
-Received: from localhost (host81-154-179-160.range81-154.btcentralplus.com. [81.154.179.160])
-        by smtp.gmail.com with ESMTPSA id 18-20020a05600c229200b003f42d8dd7d1sm2691633wmf.7.2023.05.19.07.51.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 07:51:52 -0700 (PDT)
-Date:   Fri, 19 May 2023 15:51:51 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Fri, 19 May 2023 11:10:01 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8E1E109;
+        Fri, 19 May 2023 08:09:59 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 78D6E5C01E4;
+        Fri, 19 May 2023 11:09:57 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Fri, 19 May 2023 11:09:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1684508997; x=1684595397; bh=Hd
+        AFOpP4Mmpj8sP8nf+XQRyuNt5e1ngGbSBEuPLR87Y=; b=K78d4ZcA+QFwcBlStc
+        cQQ4iYXDop4aIpgBuKqwKvLt25kPy3BtCpKOgNfoIFMw7PGm8cZ9BjQmPuHlVBt5
+        MUihYz2EDPttZvPEQKzYhWoFzJ4osztmjl6rOwuW4eXQuP/YMYZ2XCZNSxU2iyaU
+        Sxil6LPHtoVjM+CoOmHmqU6k++qMY10ZHJK4jwT2iSt9Hupfr+wuAIEuhsycZwFV
+        8EcUoeeZ7INOot/zOejk2HazHxI7B+Lop4oIoyVU0isx1e+bhUbHj1yFQlYZPacW
+        XuuqUeaAEoqNaydIRHBXL0Y2QO8UfG7SJ1Hva14MAtfxfdJ7vsrurQFbhz5OG7Y7
+        XIvA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1684508997; x=1684595397; bh=HdAFOpP4Mmpj8
+        sP8nf+XQRyuNt5e1ngGbSBEuPLR87Y=; b=ftIfzBI9DALcM4R1kBB4Wvk+fT0eA
+        jH509uhYkuKVC234j+xnAggzTeQXyOFTKSYxQBSlHbEKI7HrZECONql3zCZ/nEzK
+        OO52dzJKuab34buXQH2Kq1smsfapoWBdYToodvYgdZig7e0v3/2G5isnIvmoXXwy
+        802paETXLUhfJcfK+kgpNIQK4ZJDJulv+UxTjapN+L+jHfYTHOVXskB+dE1/eOF9
+        lZdtNDgfCdNvuFOF11obm4BnzWPRjUHTCS5wvp+RBTgjBA8yy6tC2a2GCdTHoYuo
+        OIe8U2MCwqLwM2JigAoGdxDvb0BWamTTzjJ7d09CsN8bCcgIyYjVXyvgQ==
+X-ME-Sender: <xms:RJFnZHS89Hj16UM_F99yHs48njGmqYQr5CvroH6rwPxYGCl_lC1esg>
+    <xme:RJFnZIyRavwJy2cy_851haydXIjG6Yg79riSbLKvha4bvHB-JcEn37AKbyZw4lUSD
+    -TSQIxeHuJwgyaLjF8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeeihedgkeehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:RJFnZM0YlMQyprx2zulWaohyJeS-vc1nBKMpUo22yygmgELnIGXsWg>
+    <xmx:RJFnZHApNqkGugKQnUoKCcthTGm1TvdBwMM71KHG4S91TP2Ss_klVQ>
+    <xmx:RJFnZAgJzkTevp3oWYlUQATh6BrWCAmopVix-Lwc9Rs_2HeliyyXTA>
+    <xmx:RZFnZMyz6tATHWyAf7aoW__TOaF0d2KWH7YuNZYhPrEsLweByPC1uw>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 39E83B6008D; Fri, 19 May 2023 11:09:56 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-431-g1d6a3ebb56-fm-20230511.001-g1d6a3ebb
+Mime-Version: 1.0
+Message-Id: <7d7ddc48-5985-4678-9f87-6e9b574a24d9@app.fastmail.com>
+In-Reply-To: <5b071f65-7f87-4a7b-a76a-f4a1c1568ae7@lucifer.local>
+References: <20230519093953.10972-1-arnd@kernel.org>
+ <5b071f65-7f87-4a7b-a76a-f4a1c1568ae7@lucifer.local>
+Date:   Fri, 19 May 2023 17:09:35 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Lorenzo Stoakes" <lstoakes@gmail.com>,
+        "Arnd Bergmann" <arnd@kernel.org>
+Cc:     "Andrew Morton" <akpm@linux-foundation.org>,
+        "Catalin Marinas" <catalin.marinas@arm.com>,
+        "Will Deacon" <will@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Ingo Molnar" <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        "Jiri Olsa" <jolsa@kernel.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
+        "Ian Rogers" <irogers@google.com>,
+        "Adrian Hunter" <adrian.hunter@intel.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH] [suggestion] mm/gup: avoid IS_ERR_OR_NULL
-Message-ID: <5b071f65-7f87-4a7b-a76a-f4a1c1568ae7@lucifer.local>
-References: <20230519093953.10972-1-arnd@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230519093953.10972-1-arnd@kernel.org>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Given you are sharply criticising the code I authored here, is it too much
-to ask for you to cc- me, the author on commentaries like this? Thanks.
+On Fri, May 19, 2023, at 16:51, Lorenzo Stoakes wrote:
+> Given you are sharply criticising the code I authored here, is it too much
+> to ask for you to cc- me, the author on commentaries like this? Thanks.
 
-On Fri, May 19, 2023 at 11:39:13AM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> While looking at an unused-variable warning, I noticed a new interface coming
-> in that requires the use of IS_ERR_OR_NULL(), which tends to indicate bad
-> interface design and is usually surprising to users.
+My mistake, I expected this to get added automatically based on
+the "Fixes:" tag, I probably dropped you by accident in the end.
 
-I am not sure I understand your reasoning, why does it 'tend to indicate
-bad interface design'? You say that as if it is an obvious truth. Not
-obvious to me at all.
+> On Fri, May 19, 2023 at 11:39:13AM +0200, Arnd Bergmann wrote:
+>> From: Arnd Bergmann <arnd@arndb.de>
+>>
+>> While looking at an unused-variable warning, I noticed a new interface coming
+>> in that requires the use of IS_ERR_OR_NULL(), which tends to indicate bad
+>> interface design and is usually surprising to users.
+>
+> I am not sure I understand your reasoning, why does it 'tend to indicate
+> bad interface design'? You say that as if it is an obvious truth. Not
+> obvious to me at all.
+>
+> There are 3 possible outcomes from the function - an error, the function
+> failing to pin a page, or it succeeding in doing so. For some of the
+> callers that results in an error, for others it is not an error.
+>
+> Overloading EIO on the assumption that gup will never, ever return this
+> indicating an error seems to me a worse solution.
 
-There are 3 possible outcomes from the function - an error, the function
-failing to pin a page, or it succeeding in doing so. For some of the
-callers that results in an error, for others it is not an error.
+The problem is that we have inconsistent error handling in functions
+that return an object, about half of them use NULL to indicate an error,
+and the other half use ERR_PTR(), and users frequently get those
+wrong by picking the wrong one. Functions that can return both make
+this worse because whichever of the two normal ways a user expects,
+they still get it wrong.
 
-Overloading EIO on the assumption that gup will never, ever return this
-indicating an error seems to me a worse solution.
+> Not a fan at all of this patch, it doesn't achieve anything useful, is in
+> service of some theoretical improvement, and actually introduces a new
+> class of bug (differentiating EIO and failing to pin).
 
->
-> Change get_user_page_vma_remote() to return -EIO when no pages were
-> found and adapt the callers to match.
->
-> Fixes: eca1a00155df ("mm/gup: remove vmas parameter from get_user_pages_remote()")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> I see the real bug is already fixed, but this seemed worth pointing out still.
-> Not sure if this is the best way to handle the return types here, but the version
-> in linux-next doesn't look great either.
-> ---
->  arch/arm64/kernel/mte.c | 4 ++--
->  include/linux/mm.h      | 2 +-
->  kernel/events/uprobes.c | 5 ++++-
->  mm/memory.c             | 2 +-
->  4 files changed, 8 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
-> index 4c5ef9b20065..6983ba35ce16 100644
-> --- a/arch/arm64/kernel/mte.c
-> +++ b/arch/arm64/kernel/mte.c
-> @@ -434,8 +434,8 @@ static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
->  		struct page *page = get_user_page_vma_remote(mm, addr,
->  							     gup_flags, &vma);
->
-> -		if (IS_ERR_OR_NULL(page)) {
-> -			err = page == NULL ? -EIO : PTR_ERR(page);
-> +		if (IS_ERR(page)) {
-> +			err = PTR_ERR(page);
->  			break;
->  		}
->
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 42ff3e04c006..4bb172e4818c 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2397,7 +2397,7 @@ static inline struct page *get_user_page_vma_remote(struct mm_struct *mm,
->  	if (got < 0)
->  		return ERR_PTR(got);
->  	if (got == 0)
-> -		return NULL;
-> +		return ERR_PTR(-EIO);
->
->  	vma = vma_lookup(mm, addr);
->  	if (WARN_ON_ONCE(!vma)) {
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index cac3aef7c6f7..9cf2d4ba760e 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -474,7 +474,10 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
->  		gup_flags |= FOLL_SPLIT_PMD;
->  	/* Read the page with vaddr into memory */
->  	old_page = get_user_page_vma_remote(mm, vaddr, gup_flags, &vma);
-> -	if (IS_ERR_OR_NULL(old_page))
-> +	if (old_page == ERR_PTR(-EIO))
-> +		return 0;
-> +
-> +	if (IS_ERR(old_page))
->  		return PTR_ERR(old_page);
+Having another -EIO return code is a problem, so I agree that
+my patch wouldn't be good either. Maybe separating the error return
+from the page pointer by passing a 'struct page **p' argument that
+gets filled would help?
 
-I hate this, you're now using an error to indicate a non-error state.
-
-Also you have no idea whether get_user_page_vma_remote() has encountered an
-error condition returning -EIO rather than not pinning anything so this
-could also be broken.
-
->
->  	ret = verify_opcode(old_page, vaddr, &opcode);
-> diff --git a/mm/memory.c b/mm/memory.c
-> index 8358f3b853f2..f9a81278e76d 100644
-> --- a/mm/memory.c
-> +++ b/mm/memory.c
-> @@ -5604,7 +5604,7 @@ int __access_remote_vm(struct mm_struct *mm, unsigned long addr, void *buf,
->  		struct page *page = get_user_page_vma_remote(mm, addr,
->  							     gup_flags, &vma);
->
-> -		if (IS_ERR_OR_NULL(page)) {
-> +		if (IS_ERR(page)) {
->  #ifndef CONFIG_HAVE_IOREMAP_PROT
->  			break;
->  #else
-> --
-> 2.39.2
->
-
-Not a fan at all of this patch, it doesn't achieve anything useful, is in
-service of some theoretical improvement, and actually introduces a new
-class of bug (differentiating EIO and failing to pin).
+    Arnd
