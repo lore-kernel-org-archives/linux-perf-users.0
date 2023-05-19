@@ -2,147 +2,87 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EF4C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 17:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CADDC77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 17:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232053AbjESRbh (ORCPT
+        id S230179AbjESRsz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 May 2023 13:31:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40660 "EHLO
+        Fri, 19 May 2023 13:48:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232058AbjESRb2 (ORCPT
+        with ESMTP id S229825AbjESRsy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 May 2023 13:31:28 -0400
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 213C3172A
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:30:25 -0700 (PDT)
-Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-783f7e82f28so1089297241.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:30:25 -0700 (PDT)
+        Fri, 19 May 2023 13:48:54 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B3F8C1
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:48:53 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-3f68a64f814so20650531cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:48:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684517424; x=1687109424;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O7bXuAl2er6jMvvw+SQdriEgYnLYrf51RQ1JCNcE4RU=;
-        b=bgCIdICPWkt3FCRRsGc/NFJUgqeEDLKK4rgNm0pY6Tm8FoLFBw7HPJ158fzzn51jOS
-         EXlDccb8uEQxTbRzcwErWxlcv/ZgEUa/ZzBhXlmQqtVOO0tWuhgkdoA5El1hXRlEk4+Z
-         9JmQ1xuSX8t3SUOCr4wp+RHMsWovUeKKIrFqM=
+        d=gmail.com; s=20221208; t=1684518532; x=1687110532;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=O5Lb/xzQ2JHQKZZV2uQ350RMFJt7Fre7cI2gqm8rADo=;
+        b=FTN72xMq9UJc/LJo+3FLasw4UDYn2q/U6LXuS2P+Y8VVqTgyLSf3Ywofs2eEwwTyew
+         83LCYK14I7cm7oLD67cHN6Qc4MkR8kK+iCTPUd/aYPOVamLXZNYlQ7sB3mlIkIV+2h14
+         ZqHxXxrBXIlxu9AA2bWWaLr6FgEfGlF9tVNScjRwYeHO2Y6FR/33h0SD25eYuDT8oBG0
+         L0Y2hwOzZ+Ry+8XoOsizroHv2bno1TeZtNslM5/Bwb5Fu+yvKbI8Ed2O9YciQ4q95UDl
+         wqtBasQShtFstKrlgS+buklZNUdPsYD6WY1PUfcClcfnwzo9UvvbIG/bHmCVmWGcPue3
+         El7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684517424; x=1687109424;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O7bXuAl2er6jMvvw+SQdriEgYnLYrf51RQ1JCNcE4RU=;
-        b=N8E9AiPQ8PfcfRT8XlsslLMuKUkV9DH1nrObtTBrclF6x2AfW/WrUKValGYqAMvJY6
-         EtJGzEii4Lxoyb+TJEl0qYn/EdZ0FBr0d55fehOLILZjslMg/fYNUno8XGQ320QBVb7X
-         ++RPxPWCvMisDN8PxBZBJPeH5318dNOS9SALS3RnMCK/biGQujnu/5OPax4BOGVEcwbR
-         bTzRUXqaA7i2cw5CiDEMf5XsMW7X4lxDEUOK3HlFukA5tbdZ2ZzQY51boo4ZVXbuDbku
-         50mOBHWnCqsT5jtxk1Wt2Xh/gtwVPXNAHyzai0iGnCPVv9PTQOyr6ylvBe7a2LmpJBjN
-         3Lzg==
-X-Gm-Message-State: AC+VfDxFEGF8EtSmqqfsssWHHNL8uSKGUNsuM445xPEGpD4uvJOE9ExZ
-        IgJph27TOmkgyAtVpAn1nWX2EshIBD11r575cSI=
-X-Google-Smtp-Source: ACHHUZ5CGRgV+mZ5Tb6Q3BC+ah3NjmcHvrzzyO+GzYIgwU2/DnDpYEYaP9Q+KUwknpAYNURKMaBz3Q==
-X-Received: by 2002:a05:6102:18c:b0:42f:edd9:6f2e with SMTP id r12-20020a056102018c00b0042fedd96f2emr37723vsq.10.1684517423782;
-        Fri, 19 May 2023 10:30:23 -0700 (PDT)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com. [209.85.222.53])
-        by smtp.gmail.com with ESMTPSA id i16-20020a67c210000000b0043930c70cfasm144981vsj.17.2023.05.19.10.30.23
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 May 2023 10:30:23 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-783e5c64d29so782089241.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:30:23 -0700 (PDT)
-X-Received: by 2002:a05:6602:1548:b0:76c:e93a:e2a with SMTP id
- h8-20020a056602154800b0076ce93a0e2amr7743221iow.8.1684516998834; Fri, 19 May
- 2023 10:23:18 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684518532; x=1687110532;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O5Lb/xzQ2JHQKZZV2uQ350RMFJt7Fre7cI2gqm8rADo=;
+        b=JXXZZpZ1nzn3PjUQI8vkVuCfPL+22tLy7CINyc97VVNdr7GS0/phrKSictka02rhkx
+         zoMH22kJfeF+BV5TVmCI1n5/H/LnP+WIFZGelPW5FFHUVmeJD2XxeF00Q6bLYV7QtV7+
+         KH6KZoBH0IgI3j+1cJCboDsT/R118gOSpo3OyvK6Ap7z9i6Fk2bRRSsVarx5vfZwWw09
+         Iis45XneknPRM9bhUjWs8Bz+YFnFq1pipRVL5PepdKDnCluSiSgi43LhQ6JlqIsyM+my
+         E5nEDtnm2NpxEuCQjegw/To93aQzMPZiYH1EAYpJh2CzwGRxuTMib3A62u4u1yE6QkPz
+         lNRA==
+X-Gm-Message-State: AC+VfDxz4uZEJzw1N3hjndd3xuj53Qm0TkDhJDS0QF8sKeM7FtMklsXn
+        CMzFe7vrBCeNom4lDt+hTvtBLKjPRMxR0DoIaDWdQUkpxIA=
+X-Google-Smtp-Source: ACHHUZ5iJQZt1uBMvXCkR5o1YZ/gnUkwWthttmWcSHFeF5slUDu9oAdrx3p2wUedZ9AfqLxAsJHR7giQSlUa6pyrbGY=
+X-Received: by 2002:a05:622a:646:b0:3f5:224d:6cd4 with SMTP id
+ a6-20020a05622a064600b003f5224d6cd4mr4490440qtb.13.1684518531802; Fri, 19 May
+ 2023 10:48:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230504221349.1535669-1-dianders@chromium.org>
- <20230504151100.v4.13.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
- <CSDZSKA38AEF.FY7J3JXBJX4I@wheely> <CAD=FV=XDfbx3UaP7DV63tASE5Md7siS-EnORD_3T-4yYaEQ7ww@mail.gmail.com>
- <CSGHQJAJHWVS.1UAJOF8P5UXSK@wheely> <CAD=FV=WEp23wDm2=cFO66uSjqw1UfYSczGSrQh32DGiqHnUDkg@mail.gmail.com>
-In-Reply-To: <CAD=FV=WEp23wDm2=cFO66uSjqw1UfYSczGSrQh32DGiqHnUDkg@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 19 May 2023 10:23:06 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=X53VnS37YXkGUT7W=1ekS1YgznCbOiBQBSHuZLqpHa_A@mail.gmail.com>
-Message-ID: <CAD=FV=X53VnS37YXkGUT7W=1ekS1YgznCbOiBQBSHuZLqpHa_A@mail.gmail.com>
-Subject: Re: [PATCH v4 13/17] watchdog/hardlockup: detect hard lockups using
- secondary (buddy) CPUs
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Stephane Eranian <eranian@google.com>,
-        Stephen Boyd <swboyd@chromium.org>, ricardo.neri@intel.com,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Chen-Yu Tsai <wens@csie.org>, christophe.leroy@csgroup.eu,
-        davem@davemloft.net, sparclinux@vger.kernel.org,
-        mpe@ellerman.id.au, Will Deacon <will@kernel.org>,
-        ravi.v.shankar@intel.com, linuxppc-dev@lists.ozlabs.org,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Colin Cross <ccross@android.com>
+From:   Rajasekhar Pulluru <pullururajasekhar@gmail.com>
+Date:   Fri, 19 May 2023 23:18:12 +0530
+Message-ID: <CAGA5_H6Ld9U0eTatJeExSGEynf41mvfcPZ34rtdO7rAVNuoXYQ@mail.gmail.com>
+Subject: DSO_BINARY_TYPE__SYSTEM_PATH_DSO
+To:     linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hi Team,
+Could someone help me shed some light on this macro
+DSO_BINARY_TYPE__SYSTEM_PATH_DSO ?
 
-On Mon, May 8, 2023 at 8:52=E2=80=AFAM Doug Anderson <dianders@chromium.org=
-> wrote:
->
-> Hmmm, but I don't think you really need "all-to-all" checking to get
-> the stacktraces you want, do you? Each CPU can be "watching" exactly
-> one other CPU, but then when we actually lock up we could check all of
-> them and dump stacks on all the ones that are locked up. I think this
-> would be a fairly easy improvement for the buddy system. I'll leave it
-> out for now just to keep things simple for the initial landing, but it
-> wouldn't be hard to add. Then I think the two SMP systems  (buddy vs.
-> all-to-all) would be equivalent in terms of functionality?
+Case-1: I am trying to run perf top -p `pidof <app>` on ubuntu host
+(based on ubuntu:jammy, outside the container) where the <app> runs
+inside a container that's based on ubuntu bionic, and I don't see any
+of <app> symbols (only hex-address and no function names) in perf top
+output.
 
-FWIW, I take back my "this would be fairly easy" comment. :-P ...or,
-at least I'll acknowledge that the easy way has some tradeoffs. It
-wouldn't be trivially easy to just snoop on the data of the other
-buddies because the watching processors aren't necessarily
-synchronized with each other.
+Case-2: When I try to run perf top -p `pidof <app>` on ubuntu host
+(based on ubuntu:bionic, outside the container) where the <app> runs
+inside a container that's also based on ubuntu bionic, and I can see
+<app> symbols (function names) in perf top output.
 
-That being said, if someone really wanted to report on other locked
-CPUs before doing a panic() and was willing to delay the panic, it
-probably wouldn't be too hard to put in a mode where the CPU that
-detects the first lockup could do some extra work to look for lockups.
-Maybe it could send a normal IPI to other CPUs and see if they respond
-or maybe it could take over monitoring all CPUs and wait one extra
-period.
+On debugging both the cases, I find that, case-2 is able to display
+symbol when dso__load of </opt/bin/<app> is successful for the type
+DSO_BINARY_TYPE__SYSTEM_PATH_DSO, where-as the same fails for case-1
+(is_regular_file check fails), and perf top reports "Failed to open
+/opt/bin/<app>, continuing without symbols".
 
-In any case, I'm not planning on implementing this now, but at least
-wanted to document thoughts. ;-)
+In both the cases, the file /opt/bin/<app> is not available on the
+host, and its only available inside the container.
+What could be causing the above failure?
 
-> With my simplistic solution
-> of just allowing the buddy detector to be enabled in parallel with a
-> perf-based detector then we wouldn't have this level of coordination,
-> but I'll assume that's OK for the initial landing.
+Appreciate any help/inputs.
 
-I dug into this more as well and I also wanted to note that, at least
-for now, I'm not going to include support to turn on both the buddy
-and perf lockup detectors in the common core. In order to do this and
-not have them stomp on each other then I think we need extra
-coordination or two copies of the interrupt count / saved interrupt
-count and, at least at this point in time, it doesn't seem worth it
-for a halfway solution. From everything I've heard there is a push on
-many x86 machines to get off the perf lockup detector anyway to free
-up the resources. Someone could look at adding this complexity later.
-
--Doug
+Thanks & Regards,
+Rajasekhar
