@@ -2,60 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D831C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 06:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6D3C77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 07:17:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229890AbjESGhq (ORCPT
+        id S229998AbjESHR4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 May 2023 02:37:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44726 "EHLO
+        Fri, 19 May 2023 03:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjESGhp (ORCPT
+        with ESMTP id S230192AbjESHRx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 May 2023 02:37:45 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE84E52
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 May 2023 23:37:44 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-561abf855afso33533507b3.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 May 2023 23:37:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684478263; x=1687070263;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M5TeZYA6Yh2uxMAka8ZUm4LCgpMtMW40FXjoIbBP7Ak=;
-        b=sBwkLDS3aNkG+qNJbW+6Y7LdB7i8GJJ/qFPaOxjiSknN/QNJnCRcAzzdAfzBqv2IY7
-         L0bAa/1DmOehqeJd2dBslVVTcI8hbvKTxSZjn1j874wh4PM36QZ5xpncKPdqc27QsDRN
-         ximxGSk7BeTcdV3721QxOoyzTCE+5A/HHeq8SSrSBCqYInpqHxz8tQ7MMlaXnxlTImz1
-         MfWEzhCu1fRezXvI01G80vNerSa/tfhCbVDyIujrl2yfUL24DTiQlMJoobWPe5soyoSU
-         CJeKVgKkGVbPEY3zT1y0RynWt8HxhaCqMTk9VXHF6f8eQZ8v7P/IeXxdzQQgA0JrQT5M
-         ANnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684478263; x=1687070263;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M5TeZYA6Yh2uxMAka8ZUm4LCgpMtMW40FXjoIbBP7Ak=;
-        b=esEhnjuvoHuLgWI0ctzd256NJ430loVaRTlRa+eRbyfEgSVFjWxPibuDLZt8KRcGvR
-         WPB+IfTwpAVw4BSdiHqOZ6S+VMy5J5JZhWrFpNVSYfTDAtpKEvBFBKFge5yIw8z0Xrlg
-         G5sgbANS2OTVHC3hsWwKh88OeOuUteyiDOXX4XbjSqgmcvUIJ+r+4lxasO92I71kNwIW
-         P1cHLW6Atk3B/hx2qmkUhcj33WqkV0YLGHuTJu+iqM93z6pNQCaxNy+SB/Yr/vnFoZBG
-         m7Dy+6bQHIcqEanDeeB3Z6XM+wBS2rwoiKIk06wfXZhPAelBbqvwSLSf9Lh83vP8DJfk
-         ffGw==
-X-Gm-Message-State: AC+VfDwNXfE1RWFXuPKFPXQ4COjGq1uDFKnSmgJ1TRRCoYuBGp5vN64a
-        sNZLzkEhYZDf9X7IKxfrnHGWibU9aQGH
-X-Google-Smtp-Source: ACHHUZ50/gkYHnLZWwB7w8YrKMq3GhfBeGBQdjSAT0G8K/6GVh4gVPhnBlr/do5az+RqLm3jPFftzyZEcAHc
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a7c2:2c4c:d716:50e2])
- (user=irogers job=sendgmr) by 2002:a81:b616:0:b0:561:8c16:2b64 with SMTP id
- u22-20020a81b616000000b005618c162b64mr644074ywh.5.1684478263638; Thu, 18 May
- 2023 23:37:43 -0700 (PDT)
-Date:   Thu, 18 May 2023 23:37:19 -0700
-In-Reply-To: <20230519063719.1029596-1-irogers@google.com>
-Message-Id: <20230519063719.1029596-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20230519063719.1029596-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
-Subject: [PATCH v2 2/2] perf stat: Document --metric-no-threshold and
- threshold colors
-From:   Ian Rogers <irogers@google.com>
+        Fri, 19 May 2023 03:17:53 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2519510EF;
+        Fri, 19 May 2023 00:17:47 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8AxNPCaImdkSxkKAA--.17655S3;
+        Fri, 19 May 2023 15:17:46 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLGXImdk2IhpAA--.47656S2;
+        Fri, 19 May 2023 15:17:44 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -63,67 +30,65 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>
-Cc:     Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        loongson-kernel@lists.loongnix.cn
+Subject: [PATCH] perf bench syscall: Fix __NR_execve undeclared build error
+Date:   Fri, 19 May 2023 15:17:37 +0800
+Message-Id: <1684480657-2375-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf8BxFLGXImdk2IhpAA--.47656S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvdXoWrZw4xXrWxurWrXF1rJF18Xwb_yoWkGwb_Za
+        12qws7Cry8Zr9rtr15Ar4kWF1fua1UWFyvvrnagw43Cr4qqF1UGan5u3s7Jr1qkan2vr4f
+        Ca93Xrn0vw1kKjkaLaAFLSUrUUUUYb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+        C7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+        AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+        6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
+        xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+        w2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
+        jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
+        kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
+        07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
+        1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
+        CVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
+        1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
+        YxBIdaVFxhVjvjDU0xZFpf9x07jTq2NUUUUU=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Document the threshold behavior for -M/--metrics.
+The __NR_execve definition for i386 was deleted by mistake
+in the commit ece7f7c0507c ("perf bench syscall: Add fork
+syscall benchmark"), add it to fix the build error on i386.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Fixes: ece7f7c0507c ("perf bench syscall: Add fork syscall benchmark")
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Closes: https://lore.kernel.org/all/CA+G9fYvgBR1iB0CorM8OC4AM_w_tFzyQKHc+rF6qPzJL=TbfDQ@mail.gmail.com/
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- tools/perf/Documentation/perf-stat.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ tools/arch/x86/include/uapi/asm/unistd_32.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 29bdcfa93f04..694950345e15 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -353,6 +353,15 @@ small group that need not have multiplexing is lowered. This option
- forbids the event merging logic from sharing events between groups and
- may be used to increase accuracy in this case.
- 
-+--metric-no-threshold::
-+Metric thresholds may increase the number of events necessary to
-+compute whether a metric has exceeded its threshold expression. This
-+may not be desirable, for example, as the events can introduce
-+multiplexing. This option disables the adding of threshold expression
-+events for a metric. However, if there are sufficient events to
-+compute the threshold then the threshold is still computed and used to
-+color the metric's computed value.
-+
- --quiet::
- Don't print output, warnings or messages. This is useful with perf stat
- record below to only write data to the perf.data file.
-@@ -389,6 +398,12 @@ For a group all metrics from the group are added.
- The events from the metrics are automatically measured.
- See perf list output for the possible metrics and metricgroups.
- 
-+	When threshold information is available for a metric, the
-+	color red is used to signify a metric has exceeded a threshold
-+	while green shows it hasn't. The default color means that
-+	no threshold information was available or the threshold
-+	couldn't be computed.
-+
- -A::
- --no-aggr::
- Do not aggregate counts across all monitored CPUs.
+diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
+index b8ddfc4..bc48a4d 100644
+--- a/tools/arch/x86/include/uapi/asm/unistd_32.h
++++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
+@@ -2,6 +2,9 @@
+ #ifndef __NR_fork
+ #define __NR_fork 2
+ #endif
++#ifndef __NR_execve
++#define __NR_execve 11
++#endif
+ #ifndef __NR_getppid
+ #define __NR_getppid 64
+ #endif
 -- 
-2.40.1.698.g37aff9b760-goog
+2.1.0
 
