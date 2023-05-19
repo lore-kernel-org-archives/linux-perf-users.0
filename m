@@ -2,56 +2,43 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B46C7EE2A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 07:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B077BC77B75
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 09:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230372AbjESHmC (ORCPT
+        id S231681AbjESJn1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 May 2023 03:42:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59480 "EHLO
+        Fri, 19 May 2023 05:43:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230270AbjESHl7 (ORCPT
+        with ESMTP id S231720AbjESJnK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 May 2023 03:41:59 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4318A1712;
-        Fri, 19 May 2023 00:41:33 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-64384c6797eso2309432b3a.2;
-        Fri, 19 May 2023 00:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684482093; x=1687074093;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xz++8cp/MOfN7DhrMnTkQuFUltOrCffkRhgTguG3kA8=;
-        b=PqaIy1xeFs1r7a7r4g+8W1WbHjHFnatSbr8Nq8PLwreNpDlco7i8/UhpB6kOJWAfLm
-         x+uLudDuiQB0BwuTtGfE/gdyu/T84y0hKGkCCZpvSwAwFAzUHiuupoBOhnI03iLsgeIi
-         FrhGGOTsmbVHd9uxMMv/ecVyzwm27NVaG2Nx4mviVB79vPL/CrT3z9YB13kAEKRfvJre
-         tkRiwY6dPhnyNbd2wXHTPGYcHG4aHkM79Bz4jUPJZlKM7qx6truEDnYbW6hTLoBWPmBP
-         qnvwHp6y3hzm49ZsKZkSJhODBsg1vM4/ugn9Evrpv7f2VjoYDcxfs0i9Ls/XYDV08MGh
-         8BEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684482093; x=1687074093;
-        h=content-disposition:mime-version:message-id:subject:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xz++8cp/MOfN7DhrMnTkQuFUltOrCffkRhgTguG3kA8=;
-        b=f0zCNdRN0XMep1+Mt5n33rIDSi9r0+KoyXuGQkA17OPbyF35yd/e8ptptAx2HNbMG1
-         eF+SC8Bry78ABddMqJj42fr4eFiIgH4HUWS2vzE2MXwZvJNN87z8qIxJDkC2tlTKk0pb
-         a53IR6qndq05+MbhUjQ68gdASYr8i/NATHUhzUzdNFx2Jg7FXKLb8FXB3QbKzQxmbVwS
-         voZPmuC5KJEmS+RcKQ2NVbGR3Rz0WjS+riyNkMq/ihxqAxAamPbJUXxJ4GkRQ0UWe5Uq
-         oJRANINZZ4A9AcSpe8L7ZL3CXP1VPB2UAbyhwUF1QZxdMt4l+ajFxerO95fJdHoEJ3++
-         mZBA==
-X-Gm-Message-State: AC+VfDxhPSbV2jcpJlqeETSe+YMHowAx5akiv8pkifx0ppnOoCf6/R8Q
-        +Kr+TlHbnHMn+PtUe+FOJJC8CDO6WRvuMlrN
-X-Google-Smtp-Source: ACHHUZ6riYfWPSPFysHEBQfMeS75lFvnOx9JAEpTac2x0Xug/XU92DVrbyAwpdcPDzxsO3saB8dZyw==
-X-Received: by 2002:a05:6a00:1783:b0:644:d77:a2c5 with SMTP id s3-20020a056a00178300b006440d77a2c5mr2161385pfg.29.1684482092509;
-        Fri, 19 May 2023 00:41:32 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:b468:8a9f:b695:3862:d744])
-        by smtp.gmail.com with ESMTPSA id v11-20020aa7808b000000b005d22639b577sm2427908pff.165.2023.05.19.00.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 00:41:32 -0700 (PDT)
-Date:   Fri, 19 May 2023 13:11:24 +0530
-From:   Anup Sharma <anupnewsmail@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 19 May 2023 05:43:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D00D2D79;
+        Fri, 19 May 2023 02:41:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A3AF61167;
+        Fri, 19 May 2023 09:40:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00C86C433EF;
+        Fri, 19 May 2023 09:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684489204;
+        bh=62m/R5D6FGhqWG6KoI9PHPEn7TdMdQqLFV3wk0LBtDc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=r5ynEHQ4VnYlo+YQjrf4A6aNXFbJk6j3c64Y7p0QM+DrWvOKJbZh68x46Tqydb38O
+         MzJEmqOAOCv/UjBxt/7hYmy5B5C8xXNk+Pk4slcPAxTzm5btMMHC8Tq4NLUcW99nsw
+         EHkGmjo/iZ9JE/YY1bu16vysaEMjywfEh8dG2cv4T4U7F1sYQWJ137x0R7n1LKD+ug
+         5o7PlE0O4QN5ybvdtJkliLy1JQG4V3dwzKwfGg4D+x90k9W+F1nhotMLMP+WPAY/so
+         mQGAkaUOWqty6IqB1mzWmq2/FnYe5i3AgFTYmLaxD46SMuJQ7Cr0Ckz7+VFoXphUWy
+         fEs8pclnp2+HQ==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -60,120 +47,97 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Anup Sharma <anupnewsmail@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf: test: Add support for testing JSON generated by
- perf data command
-Message-ID: <ZGcoJBAGlknjsA/n@yoga>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org
+Subject: [PATCH] [suggestion] mm/gup: avoid IS_ERR_OR_NULL
+Date:   Fri, 19 May 2023 11:39:13 +0200
+Message-Id: <20230519093953.10972-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This commit adds support for testing the JSON output generated
-by the perf data command's conversion to JSON functionality.
-The test script now includes a validation step to ensure that
-the resulting JSON file is contain valid data.
+From: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
+While looking at an unused-variable warning, I noticed a new interface coming
+in that requires the use of IS_ERR_OR_NULL(), which tends to indicate bad
+interface design and is usually surprising to users.
 
-Changes:
-V1 -> V2: Added a check for the existence of the result output file.
-          Replaced the usage of jq with json.load for validating the JSON format.
-          Checks using ShellCheck and checkpatch, addressing and resolving warnings.
-          Removed the unnecessary root permission check.
-          Modified the perf record command to avoid requiring root permissions.
+Change get_user_page_vma_remote() to return -EIO when no pages were
+found and adapt the callers to match.
+
+Fixes: eca1a00155df ("mm/gup: remove vmas parameter from get_user_pages_remote()")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../shell/test_perf_data_converter_json.sh    | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_perf_data_converter_json.sh
+I see the real bug is already fixed, but this seemed worth pointing out still.
+Not sure if this is the best way to handle the return types here, but the version
+in linux-next doesn't look great either.
+---
+ arch/arm64/kernel/mte.c | 4 ++--
+ include/linux/mm.h      | 2 +-
+ kernel/events/uprobes.c | 5 ++++-
+ mm/memory.c             | 2 +-
+ 4 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/shell/test_perf_data_converter_json.sh b/tools/perf/tests/shell/test_perf_data_converter_json.sh
-new file mode 100755
-index 000000000000..54b7a19962fa
---- /dev/null
-+++ b/tools/perf/tests/shell/test_perf_data_converter_json.sh
-@@ -0,0 +1,78 @@
-+#!/bin/bash
-+# perf data json converter command test
-+# SPDX-License-Identifier: GPL-2.0
+diff --git a/arch/arm64/kernel/mte.c b/arch/arm64/kernel/mte.c
+index 4c5ef9b20065..6983ba35ce16 100644
+--- a/arch/arm64/kernel/mte.c
++++ b/arch/arm64/kernel/mte.c
+@@ -434,8 +434,8 @@ static int __access_remote_tags(struct mm_struct *mm, unsigned long addr,
+ 		struct page *page = get_user_page_vma_remote(mm, addr,
+ 							     gup_flags, &vma);
+ 
+-		if (IS_ERR_OR_NULL(page)) {
+-			err = page == NULL ? -EIO : PTR_ERR(page);
++		if (IS_ERR(page)) {
++			err = PTR_ERR(page);
+ 			break;
+ 		}
+ 
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 42ff3e04c006..4bb172e4818c 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2397,7 +2397,7 @@ static inline struct page *get_user_page_vma_remote(struct mm_struct *mm,
+ 	if (got < 0)
+ 		return ERR_PTR(got);
+ 	if (got == 0)
+-		return NULL;
++		return ERR_PTR(-EIO);
+ 
+ 	vma = vma_lookup(mm, addr);
+ 	if (WARN_ON_ONCE(!vma)) {
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index cac3aef7c6f7..9cf2d4ba760e 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -474,7 +474,10 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 		gup_flags |= FOLL_SPLIT_PMD;
+ 	/* Read the page with vaddr into memory */
+ 	old_page = get_user_page_vma_remote(mm, vaddr, gup_flags, &vma);
+-	if (IS_ERR_OR_NULL(old_page))
++	if (old_page == ERR_PTR(-EIO))
++		return 0;
 +
-+set -e
-+
-+err=0
-+
-+if [ "$PYTHON" = "" ]
-+then
-+	if which python3 > /dev/null
-+	then
-+		PYTHON=python3
-+	elif which python > /dev/null
-+	then
-+		PYTHON=python
-+	else
-+		echo Skipping test, python not detected please set environment variable PYTHON.
-+		exit 2
-+	fi
-+fi
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+result=$(mktemp /tmp/__perf_test.output.json.XXXXX)
-+
-+cleanup()
-+{
-+	rm -f "${perfdata}"
-+	rm -f "${result}"
-+	trap - exit term int
-+}
-+
-+trap_cleanup()
-+{
-+	cleanup
-+	exit ${err}
-+}
-+trap trap_cleanup exit term int
-+
-+test_json_converter_command()
-+{
-+	echo "Testing Perf Data Convertion Command to JSON"
-+	perf record -o "$perfdata" -F 99 -g -- perf test -w noploop > /dev/null 2>&1
-+	perf data convert --to-json "$result" --force -i "$perfdata" >/dev/null 2>&1
-+	if [ $(cat "${result}" | wc -l) -gt "0" ]
-+	then
-+		echo "Perf Data Converter Command to JSON [SUCCESS]"
-+	else 
-+		echo "Perf Data Converter Command to JSON [FAILED]"
-+		err=1
-+		exit
-+	fi
-+}
-+
-+validate_json_format()
-+{
-+    echo "Validating Perf Data Converted JSON file"
-+    if [ -f "$result" ]
-+    then
-+        if $PYTHON -c  "import json; json.load(open('$result'))" >/dev/null 2>&1
-+	then
-+            echo "The file contains valid JSON format [SUCCESS]"
-+        else
-+            echo "The file does not contain valid JSON format [FAILED]"
-+            err=1
-+	    exit
-+        fi
-+    else
-+        echo "File not found [FAILED]"
-+        err=2
-+        exit
-+    fi
-+}
-+
-+test_json_converter_command
-+validate_json_format
-+
-+exit ${err}
++	if (IS_ERR(old_page))
+ 		return PTR_ERR(old_page);
+ 
+ 	ret = verify_opcode(old_page, vaddr, &opcode);
+diff --git a/mm/memory.c b/mm/memory.c
+index 8358f3b853f2..f9a81278e76d 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -5604,7 +5604,7 @@ int __access_remote_vm(struct mm_struct *mm, unsigned long addr, void *buf,
+ 		struct page *page = get_user_page_vma_remote(mm, addr,
+ 							     gup_flags, &vma);
+ 
+-		if (IS_ERR_OR_NULL(page)) {
++		if (IS_ERR(page)) {
+ #ifndef CONFIG_HAVE_IOREMAP_PROT
+ 			break;
+ #else
 -- 
-2.34.1
+2.39.2
 
