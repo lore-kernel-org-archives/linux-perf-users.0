@@ -2,93 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6D3C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 07:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF90C77B7F
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 07:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229998AbjESHR4 (ORCPT
+        id S229681AbjESHlE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 May 2023 03:17:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53614 "EHLO
+        Fri, 19 May 2023 03:41:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230192AbjESHRx (ORCPT
+        with ESMTP id S229436AbjESHlD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 May 2023 03:17:53 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2519510EF;
-        Fri, 19 May 2023 00:17:47 -0700 (PDT)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8AxNPCaImdkSxkKAA--.17655S3;
-        Fri, 19 May 2023 15:17:46 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxFLGXImdk2IhpAA--.47656S2;
-        Fri, 19 May 2023 15:17:44 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn
-Subject: [PATCH] perf bench syscall: Fix __NR_execve undeclared build error
-Date:   Fri, 19 May 2023 15:17:37 +0800
-Message-Id: <1684480657-2375-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: AQAAf8BxFLGXImdk2IhpAA--.47656S2
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvdXoWrZw4xXrWxurWrXF1rJF18Xwb_yoWkGwb_Za
-        12qws7Cry8Zr9rtr15Ar4kWF1fua1UWFyvvrnagw43Cr4qqF1UGan5u3s7Jr1qkan2vr4f
-        Ca93Xrn0vw1kKjkaLaAFLSUrUUUUYb8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
-        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
-        C7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
-        AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
-        6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7
-        xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
-        w2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-        jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
-        kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-        07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-        1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWU
-        CVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r
-        1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1U
-        YxBIdaVFxhVjvjDU0xZFpf9x07jTq2NUUUUU=
+        Fri, 19 May 2023 03:41:03 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E18186;
+        Fri, 19 May 2023 00:41:02 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-64d1a0d640cso1188589b3a.1;
+        Fri, 19 May 2023 00:41:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684482062; x=1687074062;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JRJ3fn1HtdgZlOZej3gETBmVJ+xLrS5nzxVcVkHU8nI=;
+        b=U66IIAM5LTp9hYcjFHNgLO+QkZaVEkt1hK9eiOSoXoAKBVk50/PU4bwua5ibSP8O5l
+         BJCI2l47VkV1ygBvCVOU5iy2wpuUoALxiTf/VTDxwI/ZltdrqEhZc3WS+N2Mgm4ipIrO
+         IJ2JDVk1pWEPrThg72x2ljXCQk71smSQZS4cU8pwBsbTK3Zn7Kuyh8QkspP7SfxFmwTr
+         66bdDIgKKsMgqU2H+dzYhN3hymo1ln5sa64Hpn7+fYn64R9gpVS/oYEMwpamwvGRMr8d
+         HqBOS2XXS9bOH8fxicF9NV1Kl6Ii3bSctgbku2JHKzN/TE4T9qDMV7thXnRUNVu0agcB
+         Jfdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684482062; x=1687074062;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JRJ3fn1HtdgZlOZej3gETBmVJ+xLrS5nzxVcVkHU8nI=;
+        b=bPG1i9lpoHJqfrcSFYQ0+m+iy/UFGJfUOCMcoWIo4tTcQHvc7ScVeBRiwfd3CSRRRj
+         tBndVRV5Vr7udLzitmk1DixJCaihS2GH6Pw9E/pEvOzJ/DnrQShnHUU+UEhLZkIjps86
+         aGfAxE/vFqHvsNi8fyYVeZniWyDjKw5jdE6ZuLks2KmVpqv6MXpV+0XDJKhxNDj0ZBda
+         C6H9T9+krYE0XqB1TxK8G2JCQRsp/1/LFcsiwEWR0I+fkJj08vrTIjiqBkVOWtK4B+Dl
+         Ta9Y2vvauzEPBvvpQp2YEon2xLnlasKefulL1K4o+wc9+94+Pr8b/nJkrdvnCLn3xR9f
+         5dEg==
+X-Gm-Message-State: AC+VfDxby6Br8zZqdpAmiNCX+uOj80aaIc04WYrSFRhiUDJFfUEBpV5l
+        lmrHiS6dcDF8odO7PBzBW9Zaiqct7O3Cn/n5Fp4=
+X-Google-Smtp-Source: ACHHUZ6Pdkuo63Ae65R/z90mCGtob/7eXWm7iQA9+766zyYgJ8NZIcslRv8GAMgUfjL4aYNFKmWEUA==
+X-Received: by 2002:a05:6a20:6a1e:b0:103:b448:ddd8 with SMTP id p30-20020a056a206a1e00b00103b448ddd8mr1458982pzk.58.1684482061893;
+        Fri, 19 May 2023 00:41:01 -0700 (PDT)
+Received: from [192.168.255.10] ([103.7.29.32])
+        by smtp.gmail.com with ESMTPSA id q2-20020a632a02000000b0050bc4ca9024sm2422098pgq.65.2023.05.19.00.41.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 May 2023 00:41:01 -0700 (PDT)
+Message-ID: <70c86b5e-a8c8-fb6a-d4cf-0580a527ee5a@gmail.com>
+Date:   Fri, 19 May 2023 15:40:53 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.0
+Subject: Re: [PATCH] perf/x86/intel: Save/restore cpuc->active_pebs_data_cfg
+ when using guest PEBS
+Content-Language: en-US
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>
+References: <20230517133808.67885-1-likexu@tencent.com>
+ <3dca8ccf-081a-0765-b5e3-9584f9128137@linux.intel.com>
+From:   Like Xu <like.xu.linux@gmail.com>
+In-Reply-To: <3dca8ccf-081a-0765-b5e3-9584f9128137@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The __NR_execve definition for i386 was deleted by mistake
-in the commit ece7f7c0507c ("perf bench syscall: Add fork
-syscall benchmark"), add it to fix the build error on i386.
+On 19/5/2023 12:31 am, Liang, Kan wrote:
+> 
+> 
+> On 2023-05-17 9:38 a.m., Like Xu wrote:
+>> From: Like Xu <likexu@tencent.com>
+>>
+>> After commit b752ea0c28e3 ("perf/x86/intel/ds: Flush PEBS DS when changing
+>> PEBS_DATA_CFG"), the cpuc->pebs_data_cfg may save some bits that are not
+>> supported by real hardware, such as PEBS_UPDATE_DS_SW. This would cause
+>> the VMX hardware MSR switching mechanism to save/restore invalid values
+>> for PEBS_DATA_CFG MSR, thus crashing the host when PEBS is used for guest.
+> 
+> I believe we clear the SW bit when it takes effect.
+> 
+> +	if (cpuc->pebs_data_cfg & PEBS_UPDATE_DS_SW) {
+> +		cpuc->pebs_data_cfg = pebs_data_cfg;
+> +		pebs_update_threshold(cpuc);
+> +	}
+> 
+> I think the SW bit can only be seen in a shot period between add() and
+> enable(). Is it caused by a VM enter which just happens on the period?
 
-Fixes: ece7f7c0507c ("perf bench syscall: Add fork syscall benchmark")
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-Closes: https://lore.kernel.org/all/CA+G9fYvgBR1iB0CorM8OC4AM_w_tFzyQKHc+rF6qPzJL=TbfDQ@mail.gmail.com/
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/arch/x86/include/uapi/asm/unistd_32.h | 3 +++
- 1 file changed, 3 insertions(+)
+What happens here is that when *intel_pmu_pebs_del()* is called,
+the pebs_update_state() also triggers:
+	cpuc->pebs_data_cfg |= PEBS_UPDATE_DS_SW;
+and the new value will then be used for the next kvm_entry.
 
-diff --git a/tools/arch/x86/include/uapi/asm/unistd_32.h b/tools/arch/x86/include/uapi/asm/unistd_32.h
-index b8ddfc4..bc48a4d 100644
---- a/tools/arch/x86/include/uapi/asm/unistd_32.h
-+++ b/tools/arch/x86/include/uapi/asm/unistd_32.h
-@@ -2,6 +2,9 @@
- #ifndef __NR_fork
- #define __NR_fork 2
- #endif
-+#ifndef __NR_execve
-+#define __NR_execve 11
-+#endif
- #ifndef __NR_getppid
- #define __NR_getppid 64
- #endif
--- 
-2.1.0
+The KVM created pebs perf_event is not added/enabled at this point
+and the cpuc->pebs_data_cfg strangely holds a non-zero value.
 
+Perhaps there is more room for perf fixes here, but for guest pebs usages,
+using active_pebs_data_cfg in intel_guest_get_msrs() is part of what is needed.
+
+> 
+>> Fix it by using the active host value from cpuc->active_pebs_data_cfg.
+> 
+> I don't see a problem of using active_pebs_data_cfg, since it reflects
+> the current MSR setting. Just curious about how it's triggered.
+> 
+>>
+>> Cc: Kan Liang <kan.liang@linux.intel.com>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Signed-off-by: Like Xu <likexu@tencent.com>
+>> ---
+> 
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Thanks,
+> Kan
+> 
+>>   arch/x86/events/intel/core.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+>> index 070cc4ef2672..89b9c1cebb61 100644
+>> --- a/arch/x86/events/intel/core.c
+>> +++ b/arch/x86/events/intel/core.c
+>> @@ -4074,7 +4074,7 @@ static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr, void *data)
+>>   	if (x86_pmu.intel_cap.pebs_baseline) {
+>>   		arr[(*nr)++] = (struct perf_guest_switch_msr){
+>>   			.msr = MSR_PEBS_DATA_CFG,
+>> -			.host = cpuc->pebs_data_cfg,
+>> +			.host = cpuc->active_pebs_data_cfg,
+>>   			.guest = kvm_pmu->pebs_data_cfg,
+>>   		};
+>>   	}
