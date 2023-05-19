@@ -2,67 +2,68 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBF1C77B75
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 17:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B364CC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 17:24:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229976AbjESRXT (ORCPT
+        id S231169AbjESRYG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 May 2023 13:23:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59996 "EHLO
+        Fri, 19 May 2023 13:24:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231741AbjESRXF (ORCPT
+        with ESMTP id S230430AbjESRXx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 May 2023 13:23:05 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B34519BB
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:22:17 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id ca18e2360f4ac-76c64ddee11so90583239f.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:22:17 -0700 (PDT)
+        Fri, 19 May 2023 13:23:53 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1DBF19B0
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:23:26 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-33823abc8a4so9154235ab.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:23:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684516924; x=1687108924;
+        d=chromium.org; s=google; t=1684516955; x=1687108955;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TxsHOCJ1OWCqFtkIFidXd/8UskEhLhb6o5wuCVwA9p8=;
-        b=nEp9ymEkd02rHW+O64+YI/P/tJWT1tbR/ZWUgyTzjpwAGGBfbCv1Pqw8rNElNiTzdv
-         BdBFONV42Kz80AHuXKUOmZmPnO6S5RYtvh8/4RmTqreOREbRQATSU41WCNJML9tMSCSd
-         eR3LjRqNrZvL9nhOzn0EXZlCJ6MMqkB1wLGnA=
+        bh=GYXxQ1/HyN04Wnp4N53Q5scLF2D44b2WUzFjxPSR5OI=;
+        b=OEWsRnT2j6y++U3iH7PWgPz0kLUuzTOydXIKrJI21fNqomzsZoJ5gRBiC3I2HIUQBc
+         yWOADd9aL/9I5Z+ROcQrKuuK9SBtWWaltSxR0Llzgp/i+Nacu8JM0ghP70fSeExyBFn3
+         0sBRQhYUBZHBATf87cB6nUcDyDhC518p9Zq8Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684516924; x=1687108924;
+        d=1e100.net; s=20221208; t=1684516955; x=1687108955;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TxsHOCJ1OWCqFtkIFidXd/8UskEhLhb6o5wuCVwA9p8=;
-        b=XhVV2fvGDUBUqZutfcBaKd5q/cSe4hVpogShrAVK8VycCGr8/KQyhXxfFJ4x2PQA2b
-         sueVPxDyRvMvUchUfZ/lSuNy/dYVTUiGVv6I+JjCGgt34IbYtFsW3tgf+XQM2lPmmtOQ
-         9C3m35dAMOvVI+ok7rVOTgdYkvLG4Ak2H18c9a9fBNLnAisv5Ac8ZwAJNXeBLQHqgv9C
-         3hGqXWQCo1ly2gZ3yMIDBDjJVaj9R/E0BB/YV1o04nd+zCPDuod05sHYYvQ7kPjp/1pK
-         6Hc+F7UuV4VWGiM26ydZvBZAcsmSn31Jq4bh0FaNIaIAxouxwpPsNSEyAIXy8qEjk/37
-         UoBg==
-X-Gm-Message-State: AC+VfDyZaPrbsM0KK3qReKWsIRw9ve6kAhYTnTVpQ3L65W8i77qQ/exN
-        iNPCXl+Pf1rsPhsavQCIg7wWrvOS1QwsflYLbz0=
-X-Google-Smtp-Source: ACHHUZ4QUO+fniYW0Auk9su6U/20/wgonpJeIfYDHuILtEhBsaYIn4Y6l9KbicHB1K9X0Z/h93sLsQ==
-X-Received: by 2002:a92:c98e:0:b0:330:c21e:5a3e with SMTP id y14-20020a92c98e000000b00330c21e5a3emr1629491iln.12.1684516923997;
-        Fri, 19 May 2023 10:22:03 -0700 (PDT)
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com. [209.85.166.179])
-        by smtp.gmail.com with ESMTPSA id o10-20020a056e02068a00b0032ca1426ddesm1079873ils.55.2023.05.19.10.22.02
+        bh=GYXxQ1/HyN04Wnp4N53Q5scLF2D44b2WUzFjxPSR5OI=;
+        b=jCg7uFshtsUtiYgYJm4a8pLRqAuCloGJL8ymhYG5AAR/hsg32S8lfuctXyQkMv77Gt
+         m6jNAfDAojhsojI+ozf/YkBZ2yB3HKGgcEOoHxPbjXBb2BKwN2Y7msM/q06C/pmo1ZoL
+         hwW8I4nfcOZmq9XrP1ai71C8LaIfp9PtYnpdGwtFjelBokQjfsi/5s1F4lmkJR52vOpg
+         nEcKHMtegP+wikl3RtpfhdYzdH3vISz6/wBIEyIsXJHcgUIxulnCJdLmBkhERez2/kGj
+         kg0PqR3AfVnTeOIGaKEah/jdhT5IBWMT7VFxGZgIsmzGtmCV6xcVMQqZ2ONCJCOWrofR
+         O0YA==
+X-Gm-Message-State: AC+VfDzlyzl1lLn1HvclmsNe3dhC3Lg0vPgiA3CQUROEhxk91bGrzqAx
+        K81iMZ5cFBAbtsKJ67Go7Oxx7DFgjT5Zdsts8+8=
+X-Google-Smtp-Source: ACHHUZ6qeQujAR+0Sz3SxsqNh7veU2/mR/XlFgcLPPD3QfTqIiWpvQ2KYpHXinzSUSzJKAJtoUYvig==
+X-Received: by 2002:a92:680b:0:b0:32b:665d:c816 with SMTP id d11-20020a92680b000000b0032b665dc816mr1492342ilc.28.1684516954786;
+        Fri, 19 May 2023 10:22:34 -0700 (PDT)
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com. [209.85.166.176])
+        by smtp.gmail.com with ESMTPSA id w1-20020a02b0c1000000b0041ac9dd35f0sm27623jah.132.2023.05.19.10.22.33
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 19 May 2023 10:22:03 -0700 (PDT)
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-335d6260e9bso6045ab.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:22:02 -0700 (PDT)
-X-Received: by 2002:a92:c266:0:b0:338:1993:1194 with SMTP id
- h6-20020a92c266000000b0033819931194mr230509ild.2.1684516922186; Fri, 19 May
- 2023 10:22:02 -0700 (PDT)
+        Fri, 19 May 2023 10:22:33 -0700 (PDT)
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-335d6260e9bso6205ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:22:33 -0700 (PDT)
+X-Received: by 2002:a05:6e02:1c8c:b0:331:8db2:5d13 with SMTP id
+ w12-20020a056e021c8c00b003318db25d13mr246620ill.8.1684516953136; Fri, 19 May
+ 2023 10:22:33 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230504221349.1535669-1-dianders@chromium.org>
- <20230504151100.v4.9.I3a7d4dd8c23ac30ee0b607d77feb6646b64825c0@changeid> <ZFz4TVOyEU51b898@alley>
-In-Reply-To: <ZFz4TVOyEU51b898@alley>
+ <20230504151100.v4.10.I00dfd6386ee00da25bf26d140559a41339b53e57@changeid> <ZF0NzSCRCapqDbC4@alley>
+In-Reply-To: <ZF0NzSCRCapqDbC4@alley>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 19 May 2023 10:21:50 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VOdFsdSK5X_8v3YFqDWQhDEYfo5Jkut7=G8TB=+KBKrQ@mail.gmail.com>
-Message-ID: <CAD=FV=VOdFsdSK5X_8v3YFqDWQhDEYfo5Jkut7=G8TB=+KBKrQ@mail.gmail.com>
-Subject: Re: [PATCH v4 09/17] watchdog/hardlockup: Add a "cpu" param to watchdog_hardlockup_check()
+Date:   Fri, 19 May 2023 10:22:21 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VXn07rgC=OUtHAz5v5h2g2gcrLCc5BYr6LMWFkyNKASw@mail.gmail.com>
+Message-ID: <CAD=FV=VXn07rgC=OUtHAz5v5h2g2gcrLCc5BYr6LMWFkyNKASw@mail.gmail.com>
+Subject: Re: [PATCH v4 10/17] watchdog/hardlockup: Move perf hardlockup
+ watchdog petting to watchdog.c
 To:     Petr Mladek <pmladek@suse.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Sumit Garg <sumit.garg@linaro.org>,
@@ -96,73 +97,79 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi,
 
-On Thu, May 11, 2023 at 7:14=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
+On Thu, May 11, 2023 at 8:46=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
 e:
 >
-> On Thu 2023-05-04 15:13:41, Douglas Anderson wrote:
-> > In preparation for the buddy hardlockup detector where the CPU
-> > checking for lockup might not be the currently running CPU, add a
-> > "cpu" parameter to watchdog_hardlockup_check().
+> > @@ -111,6 +125,11 @@ static void watchdog_hardlockup_interrupt_count(vo=
+id)
 > >
-> > --- a/kernel/watchdog.c
-> > +++ b/kernel/watchdog.c
-> > @@ -92,14 +92,14 @@ static DEFINE_PER_CPU(unsigned long, hrtimer_interr=
-upts_saved);
-> >  static DEFINE_PER_CPU(bool, watchdog_hardlockup_processed);
-> >  static unsigned long watchdog_hardlockup_dumped_stacks;
-> >
-> > -static bool watchdog_hardlockup_is_lockedup(void)
-> > +static bool watchdog_hardlockup_is_lockedup(unsigned int cpu)
+> >  void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs)
 > >  {
-> > -     unsigned long hrint =3D __this_cpu_read(hrtimer_interrupts);
-> > +     unsigned long hrint =3D per_cpu(hrtimer_interrupts, cpu);
+> > +     if (__this_cpu_read(watchdog_hardlockup_touch)) {
+> > +             __this_cpu_write(watchdog_hardlockup_touch, false);
+> > +             return;
+> > +     }
 >
-> My radar tells me that this should be
-> READ_ONCE(per_cpu(hrtimer_interrupts, cpu)) when the value might
-> be modified on another CPU. Otherwise, the compiler is allowed
-> to split the read into more instructions.
+> If we clear watchdog_hardlockup_touch() here then
+> watchdog_hardlockup_check() won't be called yet another
+> watchdog_hrtimer_sample_threshold perior.
 >
-> It will be needed for the buddy detector. And it will require
-> also incrementing the value in watchdog_hardlockup_interrupt_count()
-> an atomic way.
+> It means that any touch will cause ignoring one full period.
+> The is_hardlockup() check will be done after full two periods.
 >
-> Note that __this_cpu_inc_return() does not guarantee atomicity
-> according to my understanding. In theory, the following should
-> work because counter will never be incremented in parallel:
+> It is not ideal, see below.
 >
-> static unsigned long watchdog_hardlockup_interrupt_count(void)
-> {
->         unsigned long count;
->
->         count =3D __this_cpu_read(hrtimer_interrupts);
->         count++;
->         WRITE_ONCE(*raw_cpu_ptr(hrtimer_interrupts), count);
-> }
->
-> but it is nasty. A more elegant solution might be using atomic_t
-> for hrtimer_interrupts counter.
-
-I switched it over to atomic_t.
-
-
-> > -     if (__this_cpu_read(hrtimer_interrupts_saved) =3D=3D hrint)
-> > +     if (per_cpu(hrtimer_interrupts_saved, cpu) =3D=3D hrint)
-> >               return true;
+> > +
+> >       /*
+> >        * Check for a hardlockup by making sure the CPU's timer
+> >        * interrupt is incrementing. The timer interrupt should have
+> > diff --git a/kernel/watchdog_perf.c b/kernel/watchdog_perf.c
+> > index 9be90b2a2ea7..547917ebd5d3 100644
+> > --- a/kernel/watchdog_perf.c
+> > +++ b/kernel/watchdog_perf.c
+> > @@ -112,11 +98,6 @@ static void watchdog_overflow_callback(struct perf_=
+event *event,
+> >       /* Ensure the watchdog never gets throttled */
+> >       event->hw.interrupts =3D 0;
 > >
-> > -     __this_cpu_write(hrtimer_interrupts_saved, hrint);
-> > +     per_cpu(hrtimer_interrupts_saved, cpu) =3D hrint;
+> > -     if (__this_cpu_read(watchdog_nmi_touch) =3D=3D true) {
+> > -             __this_cpu_write(watchdog_nmi_touch, false);
+> > -             return;
+> > -     }
 >
-> IMHO, hrtimer_interrupts_saved might be handled this way.
-> The value is read/written only by this function.
+> The original code looks wrong. arch_touch_nmi_watchdog() caused
+> skipping only one period of the perf event.
 >
-> The buddy watchdog should see consistent values even when
-> the buddy CPU goes offline. This check should never race
-> because this CPU should get touched when another buddy
-> gets assigned.
+> I would expect that it caused restarting the period,
+> something like:
 >
-> Well, it would deserve a comment.
+>         if (__this_cpu_read(watchdog_nmi_touch) =3D=3D true) {
+>                 /*
+>                  * Restart the period after which the interrupt
+>                  * counter is checked.
+>                  */
+>                 __this_cpu_write(nmi_rearmed, 0);
+>                 __this_cpu_write(last_timestamp, now);
+>                 __this_cpu_write(watchdog_nmi_touch, false);
+>                 return;
+>         }
+>
+> By other words, we should restart the period in the very next perf
+> event after the watchdog was touched.
+>
+> That said, the new code looks better than the original.
+> IMHO, the original code was prone to false positives.
 
-I spent a bunch of time thinking about this too and I agree that for
-hrtimer_interrupts_saved we don't need atomic_t nor even
-READ_ONCE/WRITE_ONCE. I've add a comment and a note in the commit
-message in v5.
+I had a little bit of a hard time following, but I _think_ the "tl;dr"
+of all the above is that my change is fine. If I misunderstood, please
+yell.
+
+
+> Best Regards,
+> Petr
+>
+> PS: It might be worth fixing this problem in a separate patch at the
+>     beginning of this patchset. It might be a candidate for stable
+>     backports.
+
+Done. It's now its own patch and early in the series.
