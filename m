@@ -2,138 +2,288 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52766C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 18 May 2023 19:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7882FC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 01:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbjERTws (ORCPT
+        id S229647AbjESBUQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 18 May 2023 15:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35422 "EHLO
+        Thu, 18 May 2023 21:20:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229613AbjERTwr (ORCPT
+        with ESMTP id S229635AbjESBUP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 18 May 2023 15:52:47 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6691010CF;
-        Thu, 18 May 2023 12:52:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684439558; x=1715975558;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=awidV1hAwhtRlrQDgteR/yLzOz+GTTX7ZKKH/eNibOs=;
-  b=l1jWARrita2tdMm9kO2Kh92g5+YTZCKDxQIeVZhT48AQp1YG9hwd4vwC
-   UkYOVDWNZM1Z+970FBYb5LqzRwdMLCngpqLJenHpSBt0C0s1tsBePSd9B
-   Xpeiq1dPYbyTReYXgkaal5YT612ACMsFxmm2SUMD2/BFFjHUvmc3GVhCC
-   TONufl8TxWiW1qvQMs30YEtbkh/wyCST3m56h6iyyKathy+DQJ6HykeZV
-   G/QNZCn5RAeTpmXo2nuZgXMUSvInxs7RJTdXq2HAUuYiNRUDGxTM52cu9
-   9bWB0ETDmh0aYgYw48m54veEXTzoNyC1NBNo6P5mcwHkhL7Mq5pq41Zil
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="417861377"
-X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="417861377"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 12:52:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="705316585"
-X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="705316585"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 18 May 2023 12:52:37 -0700
-Received: from [10.209.99.208] (kliang2-mobl1.ccr.corp.intel.com [10.209.99.208])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 68CD6580B56;
-        Thu, 18 May 2023 12:52:35 -0700 (PDT)
-Message-ID: <37d2219f-68e5-ea8c-e04b-2c17fa991570@linux.intel.com>
-Date:   Thu, 18 May 2023 15:52:34 -0400
+        Thu, 18 May 2023 21:20:15 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 692B810E3;
+        Thu, 18 May 2023 18:19:47 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QMpqV5lH9zsSKs;
+        Fri, 19 May 2023 09:17:42 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Fri, 19 May 2023 09:19:43 +0800
+Subject: Re: [PATCH v4 0/4] perf tools: Add printing perf_event_attr `config`
+ and `id` symbol in perf_event_attr__fprintf()
+To:     Adrian Hunter <adrian.hunter@intel.com>, <peterz@infradead.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <anshuman.khandual@arm.com>, <jesussanp@google.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20230516065538.83021-1-yangjihong1@huawei.com>
+ <3918ec79-29de-97cd-a454-7f681028409f@intel.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <1914633f-4e81-dede-7d28-813928927b37@huawei.com>
+Date:   Fri, 19 May 2023 09:19:43 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH v1 2/2] perf stat: Document --metric-no-threshold and
- threshold colors
+In-Reply-To: <3918ec79-29de-97cd-a454-7f681028409f@intel.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>
-References: <20230504195803.3331775-1-irogers@google.com>
- <20230504195803.3331775-2-irogers@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230504195803.3331775-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
 
-
-On 2023-05-04 3:58 p.m., Ian Rogers wrote:
-> Document the threshold behavior for -M/--metrics.
+On 2023/5/16 17:49, Adrian Hunter wrote:
+> On 16/05/23 09:55, Yang Jihong wrote:
+>> Add printing perf_event_attr `config` and `id` symbol to improve the readability of debugging information.
+>>
+>> Before:
+>>
+>>    # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101,mem:0x0 -C 0 true
+>>    <SNIP>
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      size                             136
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      freq                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             1
+>>      size                             136
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      freq                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             2
+>>      size                             136
+>>      config                           0x143
+>>      { sample_period, sample_freq }   1
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             3
+>>      size                             136
+>>      config                           0x10005
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      freq                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             4
+>>      size                             136
+>>      config                           0x101
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      freq                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             5
+>>      size                             136
+>>      { sample_period, sample_freq }   1
+>>      sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>      bp_type                          3
+>>      { bp_len, config2 }              0x4
+>>    ------------------------------------------------------------
+>>    <SNIP>
+>>
+>> After:
+>>
+>>    # perf --debug verbose=2 record -e cycles,cpu-clock,sched:sched_switch,branch-load-misses,r101,mem:0x0 -C 0 true
+>>    <SNIP>
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             0 (PERF_TYPE_HARDWARE)
+>>      size                             136
+>>      config                           0 (PERF_COUNT_HW_CPU_CYCLES)
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      freq                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             1 (PERF_TYPE_SOFTWARE)
+>>      size                             136
+>>      config                           0 (PERF_COUNT_SW_CPU_CLOCK)
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      freq                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 6
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             2 (PERF_TYPE_TRACEPOINT)
+>>      size                             136
+>>      config                           0x143 (sched:sched_switch)
+>>      { sample_period, sample_freq }   1
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|RAW|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 7
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             3 (PERF_TYPE_HW_CACHE)
+>>      size                             136
+>>      config                           0x10005 (PERF_COUNT_HW_CACHE_RESULT_MISS | PERF_COUNT_HW_CACHE_OP_READ | PERF_COUNT_HW_CACHE_BPU)
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      freq                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 9
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             4 (PERF_TYPE_RAW)
+>>      size                             136
+>>      config                           0x101
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      freq                             1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 10
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             5 (PERF_TYPE_BREAKPOINT)
+>>      size                             136
+>>      config                           0
+>>      { sample_period, sample_freq }   1
+>>      sample_type                      IP|TID|TIME|CPU|IDENTIFIER
+>>      read_format                      ID
+>>      disabled                         1
+>>      inherit                          1
+>>      sample_id_all                    1
+>>      exclude_guest                    1
+>>      bp_type                          3
+>>      { bp_len, config2 }              0x4
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 11
+>>    ------------------------------------------------------------
+>>    perf_event_attr:
+>>      type                             1 (PERF_TYPE_SOFTWARE)
+>>      size                             136
+>>      config                           0x9 (PERF_COUNT_SW_DUMMY)
+>>      { sample_period, sample_freq }   4000
+>>      sample_type                      IP|TID|TIME|CPU|PERIOD|IDENTIFIER
+>>      read_format                      ID
+>>      inherit                          1
+>>      mmap                             1
+>>      comm                             1
+>>      freq                             1
+>>      task                             1
+>>      sample_id_all                    1
+>>      mmap2                            1
+>>      comm_exec                        1
+>>      ksymbol                          1
+>>      bpf_event                        1
+>>    ------------------------------------------------------------
+>>    sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 12
+>>    <SNIP>
+>>
+>> Yang Jihong (4):
+>>    perf trace-event-info: Add tracepoint_id_to_name() helper
+>>    perf tools: Extend PRINT_ATTRf to support printing of members with a
+>>      value of 0
+>>    perf tools: Add printing perf_event_attr type symbol in
+>>      perf_event_attr__fprintf()
+>>    perf tools: Add printing perf_event_attr config symbol in
+>>      perf_event_attr__fprintf()
+>>
+>>   tools/perf/util/perf_event_attr_fprintf.c | 186 ++++++++++++++++++++--
+>>   tools/perf/util/trace-event-info.c        |  11 ++
+>>   tools/perf/util/trace-event.h             |   6 +
+>>   3 files changed, 194 insertions(+), 9 deletions(-)
+>>
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Documentation/perf-stat.txt | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 > 
-> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-> index 29bdcfa93f04..ff71399db738 100644
-> --- a/tools/perf/Documentation/perf-stat.txt
-> +++ b/tools/perf/Documentation/perf-stat.txt
-> @@ -353,6 +353,15 @@ small group that need not have multiplexing is lowered. This option
->  forbids the event merging logic from sharing events between groups and
->  may be used to increase accuracy in this case.
->  
-> +--metric-no-threshold::
-> +Metric thresholds may increase the number of events necessary to
-> +compute whether a metric has exceeded its threshold expression. This
-> +may not be desirable, for example, as the events can introduce
-> +multiplexing. This option disables the adding of threshold expression
-> +events for a metric. However, if there are sufficient events to
-> +compute the threshold then the threshold is still computed and used to
-> +color the metric's computed value.
-> +
->  --quiet::
->  Don't print output, warnings or messages. This is useful with perf stat
->  record below to only write data to the perf.data file.
-> @@ -389,6 +398,12 @@ For a group all metrics from the group are added.
->  The events from the metrics are automatically measured.
->  See perf list output for the possible metrics and metricgroups.
->  
-> +	When threshold information is available for a metric, the
-> +	color red is used to signify a metric has exceeded a threshold
-> +	while green shows it is hasn't. The default color means that
-
-A typo. "it is hasn't" -> "it hasn't"
-
-Rest looks good to me.
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Thanks for review!
 
 Thanks,
-Kan
-
-> +	no threshold information was available or the threshold
-> +	couldn't be computed.
-> +
->  -A::
->  --no-aggr::
->  Do not aggregate counts across all monitored CPUs.
+Yang
+> .
+> 
