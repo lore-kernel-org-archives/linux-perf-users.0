@@ -2,358 +2,255 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31468C7EE2A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 15:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B31ECC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 19 May 2023 17:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231974AbjESPgT (ORCPT
+        id S229875AbjESRUl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 May 2023 11:36:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56104 "EHLO
+        Fri, 19 May 2023 13:20:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229708AbjESPgS (ORCPT
+        with ESMTP id S229893AbjESRUj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 May 2023 11:36:18 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A504D19F;
-        Fri, 19 May 2023 08:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684510576; x=1716046576;
-  h=date:from:to:cc:subject:message-id;
-  bh=wp0CdaCiW7lepUrAk8H3BgfyExL/v+FCGa6ZdMYSprg=;
-  b=ftvAzPxdDrBtAufpcGLL/wl5nXrWtskv5BCApIcldzHedCza+4HR0Fsv
-   op3zWQGD42XHjRs7ZsPtBKRMO5QDM+fmHlBQeqwNrRzj47a4SZjIvrDTl
-   hACCDftGmMmhHAsqZp8wUeLGsP64GMS8wzOWG/e5+ft+Ho47KBfVh4R1S
-   duFc5GT2p1f/HhGxOd8LThSJDPkToshlK6/WK9LHfySb+bPm8rRop7oM+
-   ndhlNG5svYNo44XTe/Pa1g2WIEA+fvCThok1+o9e8MLuXqhAgVGs/nc1p
-   e5Nlt2x5yQdkN0VTvfs4KAkx7RLmWa36UtwQgA8QWwKqfnDl1E30wC1A6
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="336995497"
-X-IronPort-AV: E=Sophos;i="6.00,177,1681196400"; 
-   d="scan'208";a="336995497"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 08:36:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10715"; a="814776549"
-X-IronPort-AV: E=Sophos;i="6.00,177,1681196400"; 
-   d="scan'208";a="814776549"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by fmsmga002.fm.intel.com with ESMTP; 19 May 2023 08:36:13 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q029M-000AuI-2J;
-        Fri, 19 May 2023 15:36:12 +0000
-Date:   Fri, 19 May 2023 23:35:48 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        amd-gfx@lists.freedesktop.org, kasan-dev@googlegroups.com,
-        linux-ext4@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-xfs@vger.kernel.org, netdev@vger.kernel.org
-Subject: [linux-next:master] BUILD SUCCESS WITH WARNING
- dbd91ef4e91c1ce3a24429f5fb3876b7a0306733
-Message-ID: <20230519153548.XTWhe%lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        Fri, 19 May 2023 13:20:39 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E36718C
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:20:37 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-51b0f9d7d70so3226208a12.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 10:20:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684516836; x=1687108836;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tcKzcYzYTZLG2nDvQef2x8WAMRY3aTirA8QisUYpW0A=;
+        b=La2URlLW5xfUppCkz6BkzZUabLIBjUwielPNciYlED4YjCMdp7hku1DktWBt4Xha06
+         iwgsRmn9zaJFpDA3vzA9Dq4dm7Jgh73iITo2Le8ppleJ2cpFMiL/PECgfF7ZaZQTGYco
+         +zstxAQ6sVkkJeMZ9E5zOHfVA8uyGsQwbbXRo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684516836; x=1687108836;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tcKzcYzYTZLG2nDvQef2x8WAMRY3aTirA8QisUYpW0A=;
+        b=dJuUe1WPWTlCGTvy2jFI7VwAjFIvWZd1yKtHTAWI+C/hfvLP7XhuXgDT5j5dgNHjmG
+         oKBBjBy7+g3hZm9zziKWkRGNu+4h70dKXSrTm5nfjKnyUHol/YRsJizay4FUpYa6ST6C
+         rEHg5YpaB/rBBPEMsTH0aFDaC8XVakjtwmohmubY9Q4PHs2ZdJzxP+o0r/aNW+KEpBhR
+         DvE4HHSeM7LELGjW/Y9e+dEmpCXkD21xADgiA7XAtPd6Wstu1pP/PRTWQlk89Js6SiCK
+         4WYtLMfoDq2kSg6468gZZIOnHG+gXZMsLgJINnMq5f2ycoNTJ6g62VjM6S2M2gO94OKV
+         YcQg==
+X-Gm-Message-State: AC+VfDyHkpDZyuzNLmGmDiQLhuBK7RHlmL4mBp7G6sVdEWuK6CQkv9FI
+        E/aMpt19DTnKLxKyn6T3gyJ4XA==
+X-Google-Smtp-Source: ACHHUZ4hDUeMHVYrX2euzNv2R/s3WP9WbOBP1pwBAIY9hCSu2995yvMlGen/TKfGIcJ0wTAtmE7fHQ==
+X-Received: by 2002:a17:90a:c789:b0:253:3ed3:b212 with SMTP id gn9-20020a17090ac78900b002533ed3b212mr2491137pjb.20.1684516836306;
+        Fri, 19 May 2023 10:20:36 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:9b89:2dd0:d160:429d])
+        by smtp.gmail.com with ESMTPSA id gj19-20020a17090b109300b0024e4f169931sm1763835pjb.2.2023.05.19.10.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 May 2023 10:20:35 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Stephane Eranian <eranian@google.com>, mpe@ellerman.id.au,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linuxppc-dev@lists.ozlabs.org, Sumit Garg <sumit.garg@linaro.org>,
+        npiggin@gmail.com, davem@davemloft.net,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, sparclinux@vger.kernel.org,
+        christophe.leroy@csgroup.eu,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        ravi.v.shankar@intel.com, Randy Dunlap <rdunlap@infradead.org>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Ian Rogers <irogers@google.com>, ito-yuichi@fujitsu.com,
+        ricardo.neri@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH v5 00/18] watchdog/hardlockup: Add the buddy hardlockup detector
+Date:   Fri, 19 May 2023 10:18:24 -0700
+Message-ID: <20230519101840.v5.18.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
+X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-tree/branch: INFO setup_repo_specs: /db/releases/20230519164737/lkp-src/repo/*/linux-next
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: dbd91ef4e91c1ce3a24429f5fb3876b7a0306733  Add linux-next specific files for 20230519
+This patch series adds the "buddy" hardlockup detector. In brief, the
+buddy hardlockup detector can detect hardlockups without arch-level
+support by having CPUs checkup on a "buddy" CPU periodically. All the
+details are in the patch ("watchdog/hardlockup: detect hard lockups
+using secondary (buddy) CPUs") and I encourage folks to reply to that
+patch for general comments about this approach.
 
-Warning reports:
+Note that in v3, this was a single patch [1]. It's now exploded into a
+much larger series. The much larger series does a bunch of cleanup
+that Petr requested in response to v3 [2] [3]. This new series ends up
+sharing a lot more code with the perf lockup detector. It also tries
+to bring a little sanity to some of the naming we had.
 
-https://lore.kernel.org/oe-kbuild-all/202304220118.NYuW8ip0-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202305132244.DwzBUcUd-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202305182345.LTMlWG84-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202305190358.IEfJNraU-lkp@intel.com
+v5 of this series attempts to resolve comments made against v4. It
+also fixes a bug that I had introduced between v3 and v4 where
+watchdog_hardlockup_check() was reading watchdog_hardlockup_touch from
+the wrong CPU. As somewhat expected there was debate about some of the
+naming in the v4 responses. I've mostly tended to stick with Petr
+Mladek's opinions here.
 
-Warning: (recently discovered and may have been fixed)
+The fact that this series now touches across the whole lockup detector
+codebase also caused conflicts with the series trying to add a arm64
+perf-based hardlockup detector. That was a bit incovenient for me
+since I was testing on arm64 and wanted to make sure that the perf
+and buddy hardlockup detectors both compiled and worked. Because of
+this, I've pulled the latest arm64 perf-based lockup detector patches
+into my series. Specifically:
+- Patches #1 - #3 of the arm64 perf-based lockup detector patches were
+  generic cleanups. I added them early in my series. IMO these should
+  just land.
+- Patches #4 - #6 of the arm64 perf-based lockup detector patches were
+  less generic but still caused conflict with my series. I tacked them
+  to the end of my series after adapting them to my changes. However,
+  I don't really consider them part of this series and I'd be OK if
+  the series landed without them. For use cases I'm aware of the buddy
+  system is sufficient and I see no urgent need to land the arm64 perf
+  hardlockup support, though I also don't have any strong objections
+  to the patches.
 
-drivers/base/regmap/regcache-maple.c:113:23: warning: 'lower_index' is used uninitialized [-Wuninitialized]
-drivers/base/regmap/regcache-maple.c:113:36: warning: 'lower_last' is used uninitialized [-Wuninitialized]
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.c:6396:21: warning: variable 'count' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/amdgpu_gfx.c:499:13: warning: variable 'j' set but not used [-Wunused-but-set-variable]
-drivers/net/arcnet/com20020.c:74:7: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+I will note that this patch series currently has no conflicts with the
+other patch series I posed recently adding support for pseudo-NMI
+based backtraces [5] and the two patches series are meant to work
+together.
 
-Unverified Warning (likely false positive, please contact us if interested):
+Given the new design of this patch series, testing all combinations is
+fairly difficult. I've attempted to make sure that all combinations of
+CONFIG_ options are good, but it wouldn't surprise me if I missed
+something. I apologize in advance and I'll do my best to fix any
+problems that are found.
 
-fs/ext4/verity.c:316 ext4_get_verity_descriptor_location() error: uninitialized symbol 'desc_size_disk'.
-fs/xfs/scrub/fscounters.c:459 xchk_fscounters() warn: ignoring unreachable code.
-kernel/events/uprobes.c:478 uprobe_write_opcode() warn: passing zero to 'PTR_ERR'
+I'll also note that the CC list is pretty giant. Some of this is based
+on get_maintainers and some of this is people I thought might be
+interested. Now that this series is touching so many files, I've
+stopped auto-CCing everyone that get_maintainers suggests. I'll reply
+to v3 and point at this patch to make sure folks are aware of it, but
+if I stopped CCing you and you want back on then please yell.
 
-Warning ids grouped by kconfigs:
+As far as I can tell, there's no true MAINTAINER listed for the
+existing watchdog code. Assuming people don't hate this, maybe it
+would go through Andrew Morton's tree? There is now some arch-specific
+code for sparc and powerpc, but it's all still watchdog code so
+hopefully that would still be fine to go through the same tree.
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- alpha-randconfig-r036-20230517
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
-|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- arc-vdk_hs38_defconfig
-|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
-|   `-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
-|-- arm-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- arm64-randconfig-r015-20230517
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- i386-randconfig-m021
-|   |-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-|   `-- lib-stackdepot.c-stack_print()-warn:unsigned-stack-size-is-never-less-than-zero.
-|-- i386-randconfig-s001
-|   |-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_get-was-not-declared.-Should-it-be-static
-|   `-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_set-was-not-declared.-Should-it-be-static
-|-- i386-randconfig-s002
-|   |-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_get-was-not-declared.-Should-it-be-static
-|   `-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_set-was-not-declared.-Should-it-be-static
-|-- i386-randconfig-s003
-|   |-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_get-was-not-declared.-Should-it-be-static
-|   `-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_set-was-not-declared.-Should-it-be-static
-|-- ia64-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- ia64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- loongarch-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- loongarch-defconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- loongarch-randconfig-r034-20230517
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- microblaze-buildonly-randconfig-r002-20230517
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- microblaze-randconfig-s053-20230517
-|   |-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_get-was-not-declared.-Should-it-be-static
-|   `-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_set-was-not-declared.-Should-it-be-static
-|-- mips-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- mips-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- openrisc-randconfig-s051-20230517
-|   |-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_get-was-not-declared.-Should-it-be-static
-|   `-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_set-was-not-declared.-Should-it-be-static
-|-- parisc-randconfig-m041-20230519
-|   |-- fs-ext4-verity.c-ext4_get_verity_descriptor_location()-error:uninitialized-symbol-desc_size_disk-.
-|   |-- fs-xfs-scrub-fscounters.c-xchk_fscounters()-warn:ignoring-unreachable-code.
-|   `-- lib-stackdepot.c-stack_print()-warn:unsigned-stack-size-is-never-less-than-zero.
-|-- powerpc-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- powerpc-randconfig-c034-20230517
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- riscv-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- riscv-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- riscv-randconfig-s031-20230517
-|   |-- mm-kfence-core.c:sparse:sparse:cast-to-restricted-__le64
-|   |-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_get-was-not-declared.-Should-it-be-static
-|   `-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_set-was-not-declared.-Should-it-be-static
-|-- s390-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- sparc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- sparc64-buildonly-randconfig-r004-20230517
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- x86_64-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-|-- x86_64-randconfig-m001
-|   |-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-|   `-- lib-stackdepot.c-stack_print()-warn:unsigned-stack-size-is-never-less-than-zero.
-|-- x86_64-randconfig-s021
-|   |-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_get-was-not-declared.-Should-it-be-static
-|   `-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_set-was-not-declared.-Should-it-be-static
-|-- x86_64-randconfig-s022
-|   |-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_get-was-not-declared.-Should-it-be-static
-|   `-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_set-was-not-declared.-Should-it-be-static
-|-- x86_64-randconfig-s023
-|   |-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_get-was-not-declared.-Should-it-be-static
-|   `-- mm-page_owner.c:sparse:sparse:symbol-page_owner_threshold_set-was-not-declared.-Should-it-be-static
-`-- xtensa-randconfig-r001-20230517
-    |-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.c:warning:variable-count-set-but-not-used
-    `-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c:warning:variable-j-set-but-not-used
-clang_recent_errors
-`-- riscv-randconfig-r032-20230517
-    `-- drivers-net-arcnet-com20020.c:warning:performing-pointer-arithmetic-on-a-null-pointer-has-undefined-behavior
+[1] https://lore.kernel.org/r/20230501082341.v3.1.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid
+[2] https://lore.kernel.org/r/ZFEqynvf5nqkzEvQ@alley
+[3] https://lore.kernel.org/r/ZFErmshcrcikrSU1@alley
+[4] https://lore.kernel.org/linux-arm-kernel/20220903093415.15850-1-lecopzer.chen@mediatek.com/
+[5] https://lore.kernel.org/r/20230419225604.21204-1-dianders@chromium.org
 
-elapsed time: 724m
+Changes in v5:
+- ("More properly prevent false ...") promoted to its own patch for v5.
+- Add Nicholas's explanation of why this didn't break builds.
+- Don't dump stack on the buddy CPU if we fail to backtrace the hung CPU.
+- Fixed wrong __this_cpu to per_cpu (oops).
+- Found a few more names / comments to change.
+- Move side effect (timestamp check ordering) to its own patch.
+- No longer rename touch_nmi_watchdog(), just add comments.
+- Tried to make names more consistent as per v4 feedback.
+- Use atomic_t for hrtimer_interrupts.
+- watchdog_hardlockup_dumped_stacks => watchdog_hardlockup_all_cpu_dumped
+- watchdog_hardlockup_interrupt_count() => watchdog_hardlockup_kick()
+- watchdog_hardlockup_is_lockedup() => is_hardlockup()
+- watchdog_hardlockup_perf.c => kernel/watchdog_hld.c in description.
+- watchdog_hardlockup_processed => watchdog_hardlockup_warned
+- watchdog_hardlockup_touch => watchdog_hardlockup_touched.
 
-configs tested: 142
-configs skipped: 6
+Changes in v4:
+- ("Add a "cpu" param to watchdog_hardlockup_check()") new for v4.
+- ("Add a weak function for an arch to detect ...") new for v4.
+- ("Define dummy watchdog_update_hrtimer_threshold() ...") new for v4.
+- ("Have the perf hardlockup use __weak ...") new for v4.
+- ("Move perf hardlockup checking/panic ...") new for v4.
+- ("Move perf hardlockup watchdog petting to watchdog.c") new for v4.
+- ("Rename some "NMI watchdog" constants/function ...") new for v4.
+- ("Rename touch_nmi_watchdog() to ...") new for v4.
+- ("Rename watchdog_hld.c to watchdog_perf.c") new for v4.
+- ("Style changes to watchdog_hardlockup_check ...") new for v4.
+- Pulled ("Adapt the watchdog_hld interface ...") into my series for v4.
+- Pulled ("Enable perf events based hard ...") into my series for v4.
+- Pulled ("Ensure CPU-bound context when creating ...") into my series for v4.
+- Pulled ("add hw_nmi_get_sample_period for ...") into my series for v4.
+- Pulled ("change watchdog_nmi_enable() to void") into my series for v4.
+- Pulled ("remove WATCHDOG_DEFAULT") into my series for v4.
+- Reworked atop a whole pile of cleanups, as suggested by Petr.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r033-20230517   gcc  
-alpha                randconfig-r036-20230517   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                         haps_hs_defconfig   gcc  
-arc                     haps_hs_smp_defconfig   gcc  
-arc                  randconfig-r043-20230517   gcc  
-arc                        vdk_hs38_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm          buildonly-randconfig-r005-20230517   clang
-arm                                 defconfig   gcc  
-arm                      integrator_defconfig   gcc  
-arm                         lpc32xx_defconfig   clang
-arm                        mvebu_v7_defconfig   gcc  
-arm                         nhk8815_defconfig   gcc  
-arm                            qcom_defconfig   gcc  
-arm                  randconfig-r046-20230517   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r015-20230517   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r022-20230517   clang
-hexagon              randconfig-r035-20230517   clang
-hexagon              randconfig-r041-20230517   clang
-hexagon              randconfig-r045-20230517   clang
-i386                             allyesconfig   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                          randconfig-a001   gcc  
-i386                          randconfig-a002   clang
-i386                          randconfig-a003   gcc  
-i386                          randconfig-a004   clang
-i386                          randconfig-a005   gcc  
-i386                          randconfig-a006   clang
-i386                          randconfig-a011   clang
-i386                          randconfig-a012   gcc  
-i386                          randconfig-a013   clang
-i386                          randconfig-a014   gcc  
-i386                          randconfig-a015   clang
-i386                          randconfig-a016   gcc  
-ia64                             allmodconfig   gcc  
-ia64                             allyesconfig   gcc  
-ia64                                defconfig   gcc  
-ia64                        generic_defconfig   gcc  
-ia64                          tiger_defconfig   gcc  
-loongarch                        alldefconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r034-20230517   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r014-20230517   gcc  
-m68k                 randconfig-r023-20230517   gcc  
-microblaze   buildonly-randconfig-r002-20230517   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  cavium_octeon_defconfig   clang
-mips                           gcw0_defconfig   gcc  
-mips                       lemote2f_defconfig   clang
-mips                     loongson1b_defconfig   gcc  
-mips                     loongson1c_defconfig   clang
-mips                     loongson2k_defconfig   clang
-mips                  maltasmvp_eva_defconfig   gcc  
-mips                        qi_lb60_defconfig   clang
-mips                 randconfig-r025-20230517   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r002-20230517   gcc  
-openrisc             randconfig-r026-20230517   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r011-20230517   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                     ep8248e_defconfig   gcc  
-powerpc                      katmai_defconfig   clang
-powerpc                     ksi8560_defconfig   clang
-powerpc                      pcm030_defconfig   gcc  
-powerpc                      pmac32_defconfig   clang
-powerpc                    sam440ep_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r003-20230517   clang
-riscv                randconfig-r005-20230517   clang
-riscv                randconfig-r032-20230517   clang
-riscv                randconfig-r042-20230517   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r004-20230517   clang
-s390                 randconfig-r031-20230517   clang
-s390                 randconfig-r044-20230517   gcc  
-sh                               allmodconfig   gcc  
-sh                           se7721_defconfig   gcc  
-sh                           se7751_defconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r016-20230517   gcc  
-sparc                randconfig-r024-20230517   gcc  
-sparc64      buildonly-randconfig-r004-20230517   gcc  
-sparc64              randconfig-r012-20230517   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                        randconfig-a001   clang
-x86_64                        randconfig-a002   gcc  
-x86_64                        randconfig-a003   clang
-x86_64                        randconfig-a004   gcc  
-x86_64                        randconfig-a005   clang
-x86_64                        randconfig-a006   gcc  
-x86_64                        randconfig-a011   gcc  
-x86_64                        randconfig-a012   clang
-x86_64                        randconfig-a013   gcc  
-x86_64                        randconfig-a014   clang
-x86_64                        randconfig-a015   gcc  
-x86_64                        randconfig-a016   clang
-x86_64                        randconfig-x051   gcc  
-x86_64                        randconfig-x052   clang
-x86_64                        randconfig-x053   gcc  
-x86_64                        randconfig-x054   clang
-x86_64                        randconfig-x055   gcc  
-x86_64                        randconfig-x056   clang
-x86_64                        randconfig-x061   gcc  
-x86_64                        randconfig-x062   clang
-x86_64                        randconfig-x063   gcc  
-x86_64                        randconfig-x064   clang
-x86_64                        randconfig-x065   gcc  
-x86_64                        randconfig-x066   clang
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r003-20230517   gcc  
-xtensa               randconfig-r001-20230517   gcc  
-xtensa               randconfig-r021-20230517   gcc  
+Changes in v3:
+- Added a note in commit message about the effect on idle.
+- Cleaned up commit message pros/cons to be complete sentences.
+- More cpu => CPU (in Kconfig and comments).
+- No code changes other than comments.
+
+Changes in v2:
+- No code changes.
+- Reworked description and Kconfig based on v1 discussion.
+- cpu => CPU (in commit message).
+
+Douglas Anderson (13):
+  watchdog/perf: Define dummy watchdog_update_hrtimer_threshold() on
+    correct config
+  watchdog/perf: More properly prevent false positives with turbo modes
+  watchdog/hardlockup: Add comments to touch_nmi_watchdog()
+  watchdog/perf: Rename watchdog_hld.c to watchdog_perf.c
+  watchdog/hardlockup: Move perf hardlockup checking/panic to common
+    watchdog.c
+  watchdog/hardlockup: Style changes to watchdog_hardlockup_check() /
+    is_hardlockup()
+  watchdog/hardlockup: Add a "cpu" param to watchdog_hardlockup_check()
+  watchdog/hardlockup: Move perf hardlockup watchdog petting to
+    watchdog.c
+  watchdog/hardlockup: Rename some "NMI watchdog" constants/function
+  watchdog/hardlockup: Have the perf hardlockup use __weak functions
+    more cleanly
+  watchdog/hardlockup: detect hard lockups using secondary (buddy) CPUs
+  watchdog/perf: Add a weak function for an arch to detect if perf can
+    use NMIs
+  arm64: Enable perf events based hard lockup detector
+
+Lecopzer Chen (4):
+  watchdog: remove WATCHDOG_DEFAULT
+  watchdog/hardlockup: change watchdog_nmi_enable() to void
+  watchdog/perf: Adapt the watchdog_perf interface for async model
+  arm64: add hw_nmi_get_sample_period for preparation of lockup detector
+
+Pingfan Liu (1):
+  watchdog/perf: Ensure CPU-bound context when creating hardlockup
+    detector event
+
+ arch/arm64/Kconfig                         |   2 +
+ arch/arm64/kernel/Makefile                 |   1 +
+ arch/arm64/kernel/watchdog_hld.c           |  36 +++
+ arch/powerpc/include/asm/nmi.h             |   4 +-
+ arch/powerpc/kernel/watchdog.c             |  12 +-
+ arch/powerpc/platforms/pseries/mobility.c  |   4 +-
+ arch/sparc/kernel/nmi.c                    |  10 +-
+ drivers/perf/arm_pmu.c                     |   5 +
+ drivers/perf/arm_pmuv3.c                   |  12 +-
+ include/linux/nmi.h                        |  73 +++--
+ include/linux/perf/arm_pmu.h               |   2 +
+ kernel/Makefile                            |   3 +-
+ kernel/watchdog.c                          | 344 +++++++++++++++------
+ kernel/watchdog_buddy.c                    |  93 ++++++
+ kernel/{watchdog_hld.c => watchdog_perf.c} | 105 +++----
+ lib/Kconfig.debug                          |  52 +++-
+ 16 files changed, 550 insertions(+), 208 deletions(-)
+ create mode 100644 arch/arm64/kernel/watchdog_hld.c
+ create mode 100644 kernel/watchdog_buddy.c
+ rename kernel/{watchdog_hld.c => watchdog_perf.c} (72%)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.40.1.698.g37aff9b760-goog
+
