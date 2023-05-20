@@ -2,164 +2,137 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3155FC77B75
-	for <linux-perf-users@archiver.kernel.org>; Sat, 20 May 2023 03:12:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F26CCC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Sat, 20 May 2023 05:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230185AbjETDL7 (ORCPT
+        id S229807AbjETFVy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 May 2023 23:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40080 "EHLO
+        Sat, 20 May 2023 01:21:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230333AbjETDL4 (ORCPT
+        with ESMTP id S229512AbjETFVx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 May 2023 23:11:56 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2DF4E50
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 20:11:32 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-64384c6797eso3139396b3a.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 20:11:32 -0700 (PDT)
+        Sat, 20 May 2023 01:21:53 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BF101B7;
+        Fri, 19 May 2023 22:21:50 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3f42769a0c1so40338225e9.2;
+        Fri, 19 May 2023 22:21:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684552292; x=1687144292;
+        d=gmail.com; s=20221208; t=1684560109; x=1687152109;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MUYxBmPqmV/ud9DWbP70oFr6/exYLUsp2ukjA2oNtgI=;
-        b=VEDvd2PE2K7Zi4zpxPMmWHLt9o3UfKTc9AfaVA5mmV6FetkQw0KGqg3mX9iWh/jrDL
-         FiP5DrXdXZlMNV2G4deLB38oTNmJzy+nkw1TfzL/R0bJiXHHAnq2yjYZ1iVFaCEX91LF
-         xBGHRQUYGuJ+MrhkRI7Wsh15RrYG46Ia/UN8ZajRPJ2mNlhKWvYggo0f42kgvqMbced7
-         mF2pZYOqyJaMw2dAjalaGaBHuJRbBUjKBdPr/Qnb/0256/FbnATaj7C3/WcUGxCXegs6
-         EdN1A18/CXOPMM0TQimJPh9VFl/Oy16IO4ZHike9S9PnCkBesNdXJbgbkh8bQkNY6hNz
-         PIdg==
+        bh=+YCeLgnfdNNLRbQJ3YR4Z/VQhSO2Fn36PmEIuzpNl+A=;
+        b=qJMAA70oc2XzjFfK6LPciZZQX2UKttbs+TQxY35L4pb79WT5OF3+MZZGqHT4YHfuAM
+         yQ9VXsEnIgwnlo2mLlA+UcY8p7lXlWs3dDK1rjLegS/JB9UMW4dKKr44A+h2KTvBFh2P
+         i3lJ24kUMGsp0l97Sq/Q7+hPMOx/TH+8c1plxCa03LEupDJd9GB7Ff8Mgk9a930xkeWR
+         yhmy9LwdvUrNh9FAyBb+2qNOo2FTi8zAZJZY4MZSjxDkFlJfnhrY6dT2ctcRQPcEvFbC
+         uFlZ8p8+TmykOoeWdT9qmQ/HDEdELlbSRVLyxIb12w9GN0LFjpEaqHCie1vuGi3OhpSl
+         ontg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684552292; x=1687144292;
+        d=1e100.net; s=20221208; t=1684560109; x=1687152109;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MUYxBmPqmV/ud9DWbP70oFr6/exYLUsp2ukjA2oNtgI=;
-        b=EObp1ejUSosCdSrZJ7JpCoojWdGy5Nv0NFc6ABbUfhTFy5O39sQ2YIJbYgzdskkay1
-         N81Luz/Oy9Oy42mwhU5IsyRHwMawLfM0T6No3h7fSciCyQHEDy/GQVJAakJYop7bRc9z
-         yqMIPhDbPqUZb4V7yEuwaAiNj4pQO+u7k8v8di8TZXRzvjVH9UYupI1aYswHQ9zLaHn9
-         1ukaac0SBjtJksY/CRm3WUP19D8AtsmYOx4szxtpToJbh89z6/sb3+iswPKJnWF3pRlL
-         /wcmIiHxjDl9oo1R9iqGTWIQI7rskIZ9sqSWQAChG8WWGSgL1jIDojvbI77GVOJ6FQ92
-         S+4w==
-X-Gm-Message-State: AC+VfDwoKwIWO1M0loRtyHS6z+P1rGYNz0qoKaT/S69wDQnOYqdLxMFk
-        V3JgdgXX0gyxIFj4ZArOUVWdeg==
-X-Google-Smtp-Source: ACHHUZ7Sbjz5WvqoXsEU/kz+oyvFJmCJWROzcIsMmquneVj+AYvadFDfZe+0v93ck15oV4rVfKfPqw==
-X-Received: by 2002:a05:6a00:2e0e:b0:646:3c2:4d30 with SMTP id fc14-20020a056a002e0e00b0064603c24d30mr5388136pfb.30.1684552292023;
-        Fri, 19 May 2023 20:11:32 -0700 (PDT)
-Received: from leoy-yangtze.lan ([107.151.177.126])
-        by smtp.gmail.com with ESMTPSA id m17-20020aa78a11000000b0063aa1763146sm380420pfa.17.2023.05.19.20.11.26
+        bh=+YCeLgnfdNNLRbQJ3YR4Z/VQhSO2Fn36PmEIuzpNl+A=;
+        b=ELtLzmR/PhKTcfYIsVLpj72/NyYAvTh+jg0Wznc19s+YevRZfM5+jhvfbyBgeDiNpw
+         N0Rpaa9McFsURfF3llaIMpx9qOYqY7ovtmVHs0KdJVpFQqHhlm/P0Wru2jFCm5BQFzzH
+         hfR99o/0zg8ekRMoCqsjJuGDdL6yfoJdH+UvECPUdc1wDl8uxc1lk95AHgwtV3+0Eg+V
+         FjbSUzt1vtfW9a9vM3xR5xnFIDKPSdzDopNxAYP/hBtlvga0oAf2lUGajod53JD6dya5
+         R1mEM0DALKSnRW0//7lGQfuNQe8Lqmx+6dsT3zsmFYkel5ZNSyazC6P9FYqGsFMVZM+z
+         k2OA==
+X-Gm-Message-State: AC+VfDxuYiontxVIIL64FzRm89nFpG9xGFvNdC6Ylg1aL6cnn4P0r0ak
+        GSKynHTmXZmNE+M8tFbhmdc=
+X-Google-Smtp-Source: ACHHUZ4Eoa9xWVslykQCIhtD+WNpYCFuNO5kU1HN6r6LAMURYRyh8pv+wrNmJ053DffGSdTv1WNVTA==
+X-Received: by 2002:a1c:7314:0:b0:3f4:2bce:eef8 with SMTP id d20-20020a1c7314000000b003f42bceeef8mr2763578wmb.16.1684560108575;
+        Fri, 19 May 2023 22:21:48 -0700 (PDT)
+Received: from localhost (host81-154-179-160.range81-154.btcentralplus.com. [81.154.179.160])
+        by smtp.gmail.com with ESMTPSA id l13-20020a7bc44d000000b003f42328b5d9sm1062855wmi.39.2023.05.19.22.21.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 20:11:31 -0700 (PDT)
-Date:   Sat, 20 May 2023 11:11:22 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Yanteng Si <siyanteng@loongson.cn>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn,
-        James Clark <james.clark@arm.com>,
-        German Gomez <german.gomez@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2 17/17] tools arch arm64: Sync the perf_regs headers
- with the kernel sources
-Message-ID: <20230520031122.GG1068119@leoy-yangtze.lan>
-References: <cover.1683712944.git.siyanteng@loongson.cn>
- <84e48c9d165a71c30b7a299baaa87a22c578ca0a.1683712945.git.siyanteng@loongson.cn>
- <ZFu3sY4AuuCGb9Nw@kernel.org>
- <20230515040832.GB1826330@leoy-yangtze.lan>
+        Fri, 19 May 2023 22:21:47 -0700 (PDT)
+Date:   Sat, 20 May 2023 06:19:37 +0100
+From:   Lorenzo Stoakes <lstoakes@gmail.com>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Arnd Bergmann <arnd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] [suggestion] mm/gup: avoid IS_ERR_OR_NULL
+Message-ID: <1ca47b8a-292c-47ab-aa6f-ca24fdfc0d3c@lucifer.local>
+References: <20230519093953.10972-1-arnd@kernel.org>
+ <5b071f65-7f87-4a7b-a76a-f4a1c1568ae7@lucifer.local>
+ <ZGf1hV7iEQyqAim5@ziepe.ca>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230515040832.GB1826330@leoy-yangtze.lan>
+In-Reply-To: <ZGf1hV7iEQyqAim5@ziepe.ca>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 15, 2023 at 12:08:32PM +0800, Leo Yan wrote:
-> On Wed, May 10, 2023 at 12:26:41PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, May 10, 2023 at 06:25:24PM +0800, Yanteng Si escreveu:
-> > > Picking the changes from:
-> > > 
-> > >   commit aa3e49b606e0796a ("arm64: asm/perf_regs.h: Avoid C++-style
-> > >    comment in UAPI header")
-> > >   commit 2ee0d7fd36a3f87b ("ARM64: perf: add support for perf
-> > >    registers API")
-> > >   commit cbb0c02caf4bd98b ("perf: arm64: Add SVE vector granule
-> > >    register to user regs")
-> > > 
-> > > Silencing these perf build warnings:
-> > > 
-> > >   Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi
-> > >    /asm/perf_regs.h' differs from latest version at 'arch/arm64
-> > >     /include/uapi/asm/perf_regs.h'
-> > >   diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64
-> > >    /include/uapi/asm/perf_regs.h
-> > > 
-> > > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
-> > > ---
-> > >  tools/arch/arm64/include/uapi/asm/perf_regs.h | 10 ++++++----
-> > >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/tools/arch/arm64/include/uapi/asm/perf_regs.h b/tools/arch/arm64/include/uapi/asm/perf_regs.h
-> > > index fd157f46727e..86e556429e0e 100644
-> > > --- a/tools/arch/arm64/include/uapi/asm/perf_regs.h
-> > > +++ b/tools/arch/arm64/include/uapi/asm/perf_regs.h
-> > > @@ -36,11 +36,13 @@ enum perf_event_arm_regs {
-> > >  	PERF_REG_ARM64_LR,
-> > >  	PERF_REG_ARM64_SP,
-> > >  	PERF_REG_ARM64_PC,
-> > > +	PERF_REG_ARM64_MAX,
-> > >  
-> > >  	/* Extended/pseudo registers */
-> > > -	PERF_REG_ARM64_VG = 46, // SVE Vector Granule
-> > > -
-> > > -	PERF_REG_ARM64_MAX = PERF_REG_ARM64_PC + 1,
-> > > -	PERF_REG_ARM64_EXTENDED_MAX = PERF_REG_ARM64_VG + 1
-> > > +	PERF_REG_ARM64_VG = 46,				/* SVE Vector Granule */
-> > > +	PERF_REG_ARM64_EXTENDED_MAX
-> > >  };
-> > > +
-> > > +#define PERF_REG_EXTENDED_MASK	(1ULL << PERF_REG_ARM64_VG)
-> > > +
-> > >  #endif /* _ASM_ARM64_PERF_REGS_H */
-> > 
-> > This needs some more work, note that -DCORESIGHT=1 in the make command line.
-> 
-> On the mainline kernel, the patch cbb0c02caf4bd ("perf: arm64: Add SVE
-> vector granule register to user regs") and f450f11b2d3f ("perf tools
-> arm64: Copy perf_regs.h from the kernel") are to update headers for
-> kernel header and tool's header respectively, but there are not
-> aligned with each other.  So Yanteng's patch is valid and we should
-> pick up it.
-> 
-> However, as Arnaldo tested, Yanteng's patch introduces building
-> regression due to arm64 and x86 both defines the macro
-> PERF_REG_EXTENDED_MASK, but this macro actually is architecture
-> specific.
-> 
-> The issue is now we use a single file util/perf_regs.c to maintain
-> perf register related stuffs for all architectures, this is fragile
-> since we cannot have any duplicated naming (e.g. for macros, structure
-> name, etc).  We need to refactor the source file util/perf_regs.c to
-> move architecture specific code into arch folders and only keep common
-> code.
-> 
-> @James, you is the best person to know this part for arm64.  If you
-> have already worked on this, please let me know.  Otherwise, I can
-> prepare a patch set for this, I tried a bit but found I cannot just
-> use a single patch to refactor util/perf_regs.c.
+On Fri, May 19, 2023 at 07:17:41PM -0300, Jason Gunthorpe wrote:
+> On Fri, May 19, 2023 at 03:51:51PM +0100, Lorenzo Stoakes wrote:
+> > Given you are sharply criticising the code I authored here, is it too much
+> > to ask for you to cc- me, the author on commentaries like this? Thanks.
+> >
+> > On Fri, May 19, 2023 at 11:39:13AM +0200, Arnd Bergmann wrote:
+> > > From: Arnd Bergmann <arnd@arndb.de>
+> > >
+> > > While looking at an unused-variable warning, I noticed a new interface coming
+> > > in that requires the use of IS_ERR_OR_NULL(), which tends to indicate bad
+> > > interface design and is usually surprising to users.
+> >
+> > I am not sure I understand your reasoning, why does it 'tend to indicate
+> > bad interface design'? You say that as if it is an obvious truth. Not
+> > obvious to me at all.
+> >
+> > There are 3 possible outcomes from the function - an error, the function
+> > failing to pin a page, or it succeeding in doing so. For some of the
+> > callers that results in an error, for others it is not an error.
+>
+> No, there really isn't.
+>
+> Either it pins the page or it doesn't. Returning "NULL" to mean a
+> specific kind of failure was encountered is crazy.. Especially if we
+> don't document what that specific failure even was.
+>
 
-Hi,
+It's not a specific kind of failure, it's literally "I didn't pin any
+pages" which a caller may or may not choose to interpret as a failure.
 
-I sent a patch series [1] for perf register refactoring, which will
-resolve the building failure issue caused by this arm64 header syncing
-change.
+> IIRC if you look really closely the only time get_user_pages()
+> actually returns 0 is if the input argument validation fails, which I
+> think is a bug that should be fixed.
 
-Thanks,
-Leo
+That can be a reason for gup returning 0 but also if it you look at the
+main loop in __get_user_pages_locked(), if it can't find the VMA it will
+bail early, OR if the VMA flags are not as expected it'll bail early.
 
-[1] https://lore.kernel.org/lkml/20230520025537.1811986-1-leo.yan@linaro.org/T/#mf286726bcfbc0fc5313798d1693db65ef902d9ed
+>
+> get_user_pages() never returns 0, so get_user_page_vma_remote() never
+> returns NULL. Until we get there collapsing the 0 to EIO is perfectly
+> fine.
+
+Well no, as shown above actually there is a distinct third state,
+i.e. couldn't pin, which if you see there is at least one case where the
+caller differentiates between an error and not being able to pin -
+uprobe_write_opcode() - which treats failure to pin as a non-error state.
+
+Also if we decided at some point to return -EIO as an error suddenly we
+would be treating an error state as not an error state in the proposed code
+which sounds like a foot gun.
+
+>
+> Jason
