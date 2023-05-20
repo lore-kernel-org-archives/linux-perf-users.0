@@ -2,182 +2,241 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E46C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 20 May 2023 09:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AD2C77B7D
+	for <linux-perf-users@archiver.kernel.org>; Sat, 20 May 2023 18:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbjETJO4 (ORCPT
+        id S231354AbjETSSN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 20 May 2023 05:14:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40194 "EHLO
+        Sat, 20 May 2023 14:18:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231215AbjETJOy (ORCPT
+        with ESMTP id S231201AbjETSSJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 20 May 2023 05:14:54 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A5891A8;
-        Sat, 20 May 2023 02:14:53 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-3093eb8cd1fso2570239f8f.1;
-        Sat, 20 May 2023 02:14:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684574092; x=1687166092;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p26w75jnOzAEdo+Byo9aO1qQn64wYCOl3bY13+vxNmk=;
-        b=oOl3jkJ6SD5TY56pKAFFeCXwzDR/dT6qZPAb1m7wFYg/h9zOoYhU7nDbmXo0+iqqrR
-         2sUrZXzOioUEEXZEJvSlHfHYzbOVmnOM7Rx/ANRsUAX3xWe7sfrGJPy34HpJBLxEorpd
-         M8J78EuPVkYsaA70esysc623hyLmkF3qvl2b6xwZEZsRzDlKSEB2FvgN375kCzzSHmh6
-         jXbozkqpMnPyaZwwKPTCCb6fsNyclb52LFRqgi8VJkY85sLrAhCQRSZGe4h6ZjzY/7s1
-         fEQsQCZDvusqEObIGOmEMnuziyDw5qXkCxJ+GRVrfaaVu0Qgs7vYIv6xNit10F44NfWX
-         VZ0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684574092; x=1687166092;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p26w75jnOzAEdo+Byo9aO1qQn64wYCOl3bY13+vxNmk=;
-        b=FqcEi3TnE+K/3lo9bL11MOETx9m54GHckJ2nls2ht3lSFMnoHr0SSnPGvCrxENQXXH
-         9oBhN0iaWatyaWbY9eDJq69E4JoLitTI7WRk5P4CyGoqzFUlC+oi3JttNnNxVIPq0lIE
-         fknqS/Dk153a9eO0wY9xAAkBtROal4J09Z3mKTk0fqjp6j93tkaPetzmU2L6wWvaLm05
-         enA5ZhzfB2pSdjNdOoeWziaZw+iG/t/JUiTpHWfdlJhRut8j7XjRxSI4wYPS+HIC3PLB
-         FQPuOcGE8e9U1rMS3UKV+u/YLA0Pmmt/MkG2/EPp40WkNOp+tjU18ZEG7Mc4c90QHFlR
-         yS+Q==
-X-Gm-Message-State: AC+VfDxWItDyZQ9Yr7bNUMXWVk9Lh4KLkO5SvlCjZEv8oin/4t3ERqo3
-        48i8cPlceUcYvkNuiv33sT8=
-X-Google-Smtp-Source: ACHHUZ71oQFelW3p0VPKhNo3IJWJEBFsEgvGe0d+bIIqgHevklfCmsbpUHXpFr1U8wMuimNDrlbMKg==
-X-Received: by 2002:a5d:4385:0:b0:309:436a:fc2f with SMTP id i5-20020a5d4385000000b00309436afc2fmr2826502wrq.57.1684574091429;
-        Sat, 20 May 2023 02:14:51 -0700 (PDT)
-Received: from localhost (host81-154-179-160.range81-154.btcentralplus.com. [81.154.179.160])
-        by smtp.gmail.com with ESMTPSA id j2-20020adfff82000000b00304832cd960sm1401962wrr.10.2023.05.20.02.14.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 20 May 2023 02:14:50 -0700 (PDT)
-Date:   Sat, 20 May 2023 10:12:40 +0100
-From:   Lorenzo Stoakes <lstoakes@gmail.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Arnd Bergmann <arnd@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        Sat, 20 May 2023 14:18:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D86133;
+        Sat, 20 May 2023 11:18:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3A95760B51;
+        Sat, 20 May 2023 18:18:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50C19C433D2;
+        Sat, 20 May 2023 18:18:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684606686;
+        bh=n9ZnwZEc9i33GUPwN6TPJuA8sji3D0eDeT8xlZW5un0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mcFmK+uUxc1MS+AQZrVHqHP+BzK4gYyxaz192l6a3mIxqJf3lzqCnU6+m9okGk4D4
+         hz0RSmnQZyiSaOmrdHOrEv0r3Mm2F8CFZJ01i7XyTHyMWfJXX+GlH16pLDugRmmRt/
+         dt5DbD2Zm/zAvXBPByWIwo3L8/nzaJ21mx+SjuW4vx+0KY8KroAIaBvu6HmpynNTlR
+         mtWZulyxT39HMaqcv9XoOq5+HZuX49i7COxBOgLpiZRwRvKJFo/czoL0T4JIQj3k0b
+         ydCGTgNt7dN5wO4yXz2g8IkPckTnhBDScLGbPILMD/xebCBvMLOM2ISkI2VbVqA65/
+         Ug0efFzJbXLrg==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] [suggestion] mm/gup: avoid IS_ERR_OR_NULL
-Message-ID: <0bc9dc2b-0da6-4d5c-96af-e21aa287eecb@lucifer.local>
-References: <20230519093953.10972-1-arnd@kernel.org>
- <5b071f65-7f87-4a7b-a76a-f4a1c1568ae7@lucifer.local>
- <ZGf1hV7iEQyqAim5@ziepe.ca>
- <1ca47b8a-292c-47ab-aa6f-ca24fdfc0d3c@lucifer.local>
- <ZGiEEPXdAMnKqkqx@nvidia.com>
+        Sasha Levin <sashal@kernel.org>, mingo@redhat.com,
+        acme@kernel.org, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.3 04/18] perf/x86/intel/ds: Flush PEBS DS when changing PEBS_DATA_CFG
+Date:   Sat, 20 May 2023 14:17:36 -0400
+Message-Id: <20230520181750.823365-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230520181750.823365-1-sashal@kernel.org>
+References: <20230520181750.823365-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZGiEEPXdAMnKqkqx@nvidia.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, May 20, 2023 at 05:25:52AM -0300, Jason Gunthorpe wrote:
-> On Sat, May 20, 2023 at 06:19:37AM +0100, Lorenzo Stoakes wrote:
-> > On Fri, May 19, 2023 at 07:17:41PM -0300, Jason Gunthorpe wrote:
-> > > On Fri, May 19, 2023 at 03:51:51PM +0100, Lorenzo Stoakes wrote:
-> > > > Given you are sharply criticising the code I authored here, is it too much
-> > > > to ask for you to cc- me, the author on commentaries like this? Thanks.
-> > > >
-> > > > On Fri, May 19, 2023 at 11:39:13AM +0200, Arnd Bergmann wrote:
-> > > > > From: Arnd Bergmann <arnd@arndb.de>
-> > > > >
-> > > > > While looking at an unused-variable warning, I noticed a new interface coming
-> > > > > in that requires the use of IS_ERR_OR_NULL(), which tends to indicate bad
-> > > > > interface design and is usually surprising to users.
-> > > >
-> > > > I am not sure I understand your reasoning, why does it 'tend to indicate
-> > > > bad interface design'? You say that as if it is an obvious truth. Not
-> > > > obvious to me at all.
-> > > >
-> > > > There are 3 possible outcomes from the function - an error, the function
-> > > > failing to pin a page, or it succeeding in doing so. For some of the
-> > > > callers that results in an error, for others it is not an error.
-> > >
-> > > No, there really isn't.
-> > >
-> > > Either it pins the page or it doesn't. Returning "NULL" to mean a
-> > > specific kind of failure was encountered is crazy.. Especially if we
-> > > don't document what that specific failure even was.
-> > >
-> >
-> > It's not a specific kind of failure, it's literally "I didn't pin any
-> > pages" which a caller may or may not choose to interpret as a failure.
->
-> Any time gup fails it didn't pin any pages, that is the whole
-> point. All that is happening is some ill defined subset of gup errors
-> are returning 0 instead of an error code.
->
-> If we want to enable callers to ignore certain errors then we need to
-> return error codes with well defined meanings, have documentation what
-> errors are included and actually make it sane.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Yeah I agree it's not exactly great that a failure to pin can be considered
-an ordinary case, but I don't think a wrapper function is where we should
-be trying to fix this.
+[ Upstream commit b752ea0c28e3f7f0aaaad6abf84f735eebc37a60 ]
 
-In fact this patch isn't even fixing it, it's treating EIO as a success
-case for the (possibly broken) uprobe case.
+Several similar kernel warnings can be triggered,
 
-I think we are at the wrong level of abstraction here, basically.
+  [56605.607840] CPU0 PEBS record size 0, expected 32, config 0 cpuc->record_size=208
 
->
-> > That can be a reason for gup returning 0 but also if it you look at the
-> > main loop in __get_user_pages_locked(), if it can't find the VMA it will
-> > bail early, OR if the VMA flags are not as expected it'll bail early.
->
-> And how does that make any sense? Missing VMA should be EFAULT.
+when the below commands are running in parallel for a while on SPR.
 
-Yeah missing VMA doesn't really make sense since we invoke the function
-with the mmap lock held (it _could_ make sense if you were calling it via
-one of the unlocked functions, speculatively, though how sensible doing
-that is another discussion...)
+  while true;
+  do
+	perf record --no-buildid -a --intr-regs=AX  \
+		    -e cpu/event=0xd0,umask=0x81/pp \
+		    -c 10003 -o /dev/null ./triad;
+  done &
 
->
-> > caller differentiates between an error and not being able to pin -
-> > uprobe_write_opcode() - which treats failure to pin as a non-error state.
->
-> That looks like a bug since the function returns 0 on success but it
-> clearly didn't succeed.
+  while true;
+  do
+	perf record -o /tmp/out -W -d \
+		    -e '{ld_blocks.store_forward:period=1000000, \
+                         MEM_TRANS_RETIRED.LOAD_LATENCY:u:precise=2:ldlat=4}' \
+		    -c 1037 ./triad;
+  done
 
-The code is specifically handling a failure-to-pin separately - set_swbp() ->
-uprobe_write_opcode() -> install_breakpoint() explicitly does the following:-
+The triad program is just the generation of loads/stores.
 
-	ret = set_swbp(&uprobe->arch, mm, vaddr);
-	if (!ret)
-		clear_bit(MMF_RECALC_UPROBES, &mm->flags);
+The warnings are triggered when an unexpected PEBS record (with a
+different config and size) is found.
 
-So even if this is... questionable, the code literally does want to
-differentiate between an error and a failure to pin.
+A system-wide PEBS event with the large PEBS config may be enabled
+during a context switch. Some PEBS records for the system-wide PEBS
+may be generated while the old task is sched out but the new one
+hasn't been sched in yet. When the new task is sched in, the
+cpuc->pebs_record_size may be updated for the per-task PEBS events. So
+the existing system-wide PEBS records have a different size from the
+later PEBS records.
 
-Presumably this is because of the flag check, but yeah we should be
-differentiating between sub-cases.
+The PEBS buffer should be flushed right before the hardware is
+reprogrammed. The new size and threshold should be updated after the
+old buffer has been flushed.
 
->
-> > Also if we decided at some point to return -EIO as an error suddenly we
-> > would be treating an error state as not an error state in the proposed code
-> > which sounds like a foot gun.
->
-> No, this returning 0 on failure is a foot gun. Failing to pin a single
-> page is always an error, the only question is what sub reason caused
-> the error to happen. There is no third case where it is not an error.
->
-> Jason
+Reported-by: Stephane Eranian <eranian@google.com>
+Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Link: https://lkml.kernel.org/r/20230421184529.3320912-1-kan.liang@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/events/intel/ds.c        | 56 ++++++++++++++++++-------------
+ arch/x86/include/asm/perf_event.h |  3 ++
+ 2 files changed, 35 insertions(+), 24 deletions(-)
 
-The uprobe path thinks otherwise, but maybe the answer is that we just need
-to -EFAULT on missing VMA and -EPERM on invalid flags.
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index a2e566e53076e..df88576d6b2a5 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1229,12 +1229,14 @@ pebs_update_state(bool needed_cb, struct cpu_hw_events *cpuc,
+ 		  struct perf_event *event, bool add)
+ {
+ 	struct pmu *pmu = event->pmu;
++
+ 	/*
+ 	 * Make sure we get updated with the first PEBS
+ 	 * event. It will trigger also during removal, but
+ 	 * that does not hurt:
+ 	 */
+-	bool update = cpuc->n_pebs == 1;
++	if (cpuc->n_pebs == 1)
++		cpuc->pebs_data_cfg = PEBS_UPDATE_DS_SW;
+ 
+ 	if (needed_cb != pebs_needs_sched_cb(cpuc)) {
+ 		if (!needed_cb)
+@@ -1242,7 +1244,7 @@ pebs_update_state(bool needed_cb, struct cpu_hw_events *cpuc,
+ 		else
+ 			perf_sched_cb_dec(pmu);
+ 
+-		update = true;
++		cpuc->pebs_data_cfg |= PEBS_UPDATE_DS_SW;
+ 	}
+ 
+ 	/*
+@@ -1252,24 +1254,13 @@ pebs_update_state(bool needed_cb, struct cpu_hw_events *cpuc,
+ 	if (x86_pmu.intel_cap.pebs_baseline && add) {
+ 		u64 pebs_data_cfg;
+ 
+-		/* Clear pebs_data_cfg and pebs_record_size for first PEBS. */
+-		if (cpuc->n_pebs == 1) {
+-			cpuc->pebs_data_cfg = 0;
+-			cpuc->pebs_record_size = sizeof(struct pebs_basic);
+-		}
+-
+ 		pebs_data_cfg = pebs_update_adaptive_cfg(event);
+-
+-		/* Update pebs_record_size if new event requires more data. */
+-		if (pebs_data_cfg & ~cpuc->pebs_data_cfg) {
+-			cpuc->pebs_data_cfg |= pebs_data_cfg;
+-			adaptive_pebs_record_size_update();
+-			update = true;
+-		}
++		/*
++		 * Be sure to update the thresholds when we change the record.
++		 */
++		if (pebs_data_cfg & ~cpuc->pebs_data_cfg)
++			cpuc->pebs_data_cfg |= pebs_data_cfg | PEBS_UPDATE_DS_SW;
+ 	}
+-
+-	if (update)
+-		pebs_update_threshold(cpuc);
+ }
+ 
+ void intel_pmu_pebs_add(struct perf_event *event)
+@@ -1326,9 +1317,17 @@ static void intel_pmu_pebs_via_pt_enable(struct perf_event *event)
+ 	wrmsrl(base + idx, value);
+ }
+ 
++static inline void intel_pmu_drain_large_pebs(struct cpu_hw_events *cpuc)
++{
++	if (cpuc->n_pebs == cpuc->n_large_pebs &&
++	    cpuc->n_pebs != cpuc->n_pebs_via_pt)
++		intel_pmu_drain_pebs_buffer();
++}
++
+ void intel_pmu_pebs_enable(struct perf_event *event)
+ {
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	u64 pebs_data_cfg = cpuc->pebs_data_cfg & ~PEBS_UPDATE_DS_SW;
+ 	struct hw_perf_event *hwc = &event->hw;
+ 	struct debug_store *ds = cpuc->ds;
+ 	unsigned int idx = hwc->idx;
+@@ -1344,11 +1343,22 @@ void intel_pmu_pebs_enable(struct perf_event *event)
+ 
+ 	if (x86_pmu.intel_cap.pebs_baseline) {
+ 		hwc->config |= ICL_EVENTSEL_ADAPTIVE;
+-		if (cpuc->pebs_data_cfg != cpuc->active_pebs_data_cfg) {
+-			wrmsrl(MSR_PEBS_DATA_CFG, cpuc->pebs_data_cfg);
+-			cpuc->active_pebs_data_cfg = cpuc->pebs_data_cfg;
++		if (pebs_data_cfg != cpuc->active_pebs_data_cfg) {
++			/*
++			 * drain_pebs() assumes uniform record size;
++			 * hence we need to drain when changing said
++			 * size.
++			 */
++			intel_pmu_drain_large_pebs(cpuc);
++			adaptive_pebs_record_size_update();
++			wrmsrl(MSR_PEBS_DATA_CFG, pebs_data_cfg);
++			cpuc->active_pebs_data_cfg = pebs_data_cfg;
+ 		}
+ 	}
++	if (cpuc->pebs_data_cfg & PEBS_UPDATE_DS_SW) {
++		cpuc->pebs_data_cfg = pebs_data_cfg;
++		pebs_update_threshold(cpuc);
++	}
+ 
+ 	if (idx >= INTEL_PMC_IDX_FIXED) {
+ 		if (x86_pmu.intel_cap.pebs_format < 5)
+@@ -1391,9 +1401,7 @@ void intel_pmu_pebs_disable(struct perf_event *event)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+-	if (cpuc->n_pebs == cpuc->n_large_pebs &&
+-	    cpuc->n_pebs != cpuc->n_pebs_via_pt)
+-		intel_pmu_drain_pebs_buffer();
++	intel_pmu_drain_large_pebs(cpuc);
+ 
+ 	cpuc->pebs_enabled &= ~(1ULL << hwc->idx);
+ 
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 8fc15ed5e60bb..abf09882f58b6 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -121,6 +121,9 @@
+ #define PEBS_DATACFG_LBRS	BIT_ULL(3)
+ #define PEBS_DATACFG_LBR_SHIFT	24
+ 
++/* Steal the highest bit of pebs_data_cfg for SW usage */
++#define PEBS_UPDATE_DS_SW	BIT_ULL(63)
++
+ /*
+  * Intel "Architectural Performance Monitoring" CPUID
+  * detection/enumeration details:
+-- 
+2.39.2
 
-I could look into a patch that tries to undo this convention, and then we
-could revisit this for the wrapper function too.
