@@ -2,322 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09538C77B75
-	for <linux-perf-users@archiver.kernel.org>; Sat, 20 May 2023 02:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3155FC77B75
+	for <linux-perf-users@archiver.kernel.org>; Sat, 20 May 2023 03:12:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230338AbjETC46 (ORCPT
+        id S230185AbjETDL7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 19 May 2023 22:56:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36758 "EHLO
+        Fri, 19 May 2023 23:11:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231177AbjETC45 (ORCPT
+        with ESMTP id S230333AbjETDL4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 19 May 2023 22:56:57 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188BC1720
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 19:56:26 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1ae6b4c5a53so17504885ad.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 19:56:26 -0700 (PDT)
+        Fri, 19 May 2023 23:11:56 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2DF4E50
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 20:11:32 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-64384c6797eso3139396b3a.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 May 2023 20:11:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684551385; x=1687143385;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4I7s+qmJYBYI1fLm0w6VOesYnXvgxr3WYm7dFpfRIoU=;
-        b=GCAPdZ64C9vz5vLjvuX58OXtcTqkVp7vX2LVP76fRYGBO/USp71ZN11auaLU36sJ7D
-         +9LLOmiMn8Y959F+0BSy0/1mt6LWtr8yX/dsuOQ/lcwtz1FFfZj7W859vBKqYpVkSCOI
-         8+XyziEcN8cSDayn+wAAjqdSc1eWgUPgbQDYACljd7eX0XPt1fPzsisb5jwua8lhoMWR
-         GtH6XUPkDCWisAQ8PpFhVA4wuJNuwUS1dvtzl1RWdot/8ZyQrck3imUpJlfK1AxOWNFr
-         SdvuDz65YrxKJebJqcbEExPeqbJSeBppuKXvV+u22U6duOdxLE8X/H95etP3ffr8DuvQ
-         70Xw==
+        d=linaro.org; s=google; t=1684552292; x=1687144292;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MUYxBmPqmV/ud9DWbP70oFr6/exYLUsp2ukjA2oNtgI=;
+        b=VEDvd2PE2K7Zi4zpxPMmWHLt9o3UfKTc9AfaVA5mmV6FetkQw0KGqg3mX9iWh/jrDL
+         FiP5DrXdXZlMNV2G4deLB38oTNmJzy+nkw1TfzL/R0bJiXHHAnq2yjYZ1iVFaCEX91LF
+         xBGHRQUYGuJ+MrhkRI7Wsh15RrYG46Ia/UN8ZajRPJ2mNlhKWvYggo0f42kgvqMbced7
+         mF2pZYOqyJaMw2dAjalaGaBHuJRbBUjKBdPr/Qnb/0256/FbnATaj7C3/WcUGxCXegs6
+         EdN1A18/CXOPMM0TQimJPh9VFl/Oy16IO4ZHike9S9PnCkBesNdXJbgbkh8bQkNY6hNz
+         PIdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684551385; x=1687143385;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4I7s+qmJYBYI1fLm0w6VOesYnXvgxr3WYm7dFpfRIoU=;
-        b=bgJvXd6CvBcv4lxVaEDzT/usXyaBDI7P4Xzts+fJr8T+1dbxo2fh849jb2GEj8JUTZ
-         hKe7j6GQ8y5toN62qs/nrfTw1/8DXaqeKBgLGQIaqeqvnmJrPMHHTGUtWc22uODSE4km
-         JWB63PdVgFhGdc3/xMzro4FhRch/OpMApeofsyWbbCsevS9Y/31t6pYz7twTjdGFaqzH
-         6BoE41MDvECWMxxeyelXQuS/+C4U8PaO18F8NqGEqIG2woKkEdxKptngSiyF9lqmtXnm
-         q2IqxEUT7vguwi2vfrlhww2vMyeMSpU/3u63no2qthucgRZGppnvwIXKHqvVFsCc+ypJ
-         fbhA==
-X-Gm-Message-State: AC+VfDyAPMTkGf8KXJHZPRxyQupJqGZsdJMUeOXmYE+etSLnHhjKXzCB
-        oDeCS0XsGDs11i8fDhl92FiOgA==
-X-Google-Smtp-Source: ACHHUZ4QDSj1/rLx/gOlwRttNzGb9xSN5ZInrcrrf5vrh7TbdtA881pKAdo5H+DQDVa7+Xrlnixa/A==
-X-Received: by 2002:a17:902:d34a:b0:1a9:f425:5409 with SMTP id l10-20020a170902d34a00b001a9f4255409mr3590297plk.49.1684551385369;
-        Fri, 19 May 2023 19:56:25 -0700 (PDT)
-Received: from leoy-yangtze.lan ([156.59.236.113])
-        by smtp.gmail.com with ESMTPSA id b6-20020a170902d50600b001a95aef9728sm346100plg.19.2023.05.19.19.56.18
+        d=1e100.net; s=20221208; t=1684552292; x=1687144292;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MUYxBmPqmV/ud9DWbP70oFr6/exYLUsp2ukjA2oNtgI=;
+        b=EObp1ejUSosCdSrZJ7JpCoojWdGy5Nv0NFc6ABbUfhTFy5O39sQ2YIJbYgzdskkay1
+         N81Luz/Oy9Oy42mwhU5IsyRHwMawLfM0T6No3h7fSciCyQHEDy/GQVJAakJYop7bRc9z
+         yqMIPhDbPqUZb4V7yEuwaAiNj4pQO+u7k8v8di8TZXRzvjVH9UYupI1aYswHQ9zLaHn9
+         1ukaac0SBjtJksY/CRm3WUP19D8AtsmYOx4szxtpToJbh89z6/sb3+iswPKJnWF3pRlL
+         /wcmIiHxjDl9oo1R9iqGTWIQI7rskIZ9sqSWQAChG8WWGSgL1jIDojvbI77GVOJ6FQ92
+         S+4w==
+X-Gm-Message-State: AC+VfDwoKwIWO1M0loRtyHS6z+P1rGYNz0qoKaT/S69wDQnOYqdLxMFk
+        V3JgdgXX0gyxIFj4ZArOUVWdeg==
+X-Google-Smtp-Source: ACHHUZ7Sbjz5WvqoXsEU/kz+oyvFJmCJWROzcIsMmquneVj+AYvadFDfZe+0v93ck15oV4rVfKfPqw==
+X-Received: by 2002:a05:6a00:2e0e:b0:646:3c2:4d30 with SMTP id fc14-20020a056a002e0e00b0064603c24d30mr5388136pfb.30.1684552292023;
+        Fri, 19 May 2023 20:11:32 -0700 (PDT)
+Received: from leoy-yangtze.lan ([107.151.177.126])
+        by smtp.gmail.com with ESMTPSA id m17-20020aa78a11000000b0063aa1763146sm380420pfa.17.2023.05.19.20.11.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 19:56:24 -0700 (PDT)
+        Fri, 19 May 2023 20:11:31 -0700 (PDT)
+Date:   Sat, 20 May 2023 11:11:22 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Yanteng Si <siyanteng@loongson.cn>, peterz@infradead.org,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn,
         James Clark <james.clark@arm.com>,
+        German Gomez <german.gomez@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Eric Lin <eric.lin@sifive.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Qi Liu <liuqi115@huawei.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v1 5/5] perf parse-regs: Move out arch specific header from util/perf_regs.h
-Date:   Sat, 20 May 2023 10:55:37 +0800
-Message-Id: <20230520025537.1811986-6-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230520025537.1811986-1-leo.yan@linaro.org>
-References: <20230520025537.1811986-1-leo.yan@linaro.org>
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 17/17] tools arch arm64: Sync the perf_regs headers
+ with the kernel sources
+Message-ID: <20230520031122.GG1068119@leoy-yangtze.lan>
+References: <cover.1683712944.git.siyanteng@loongson.cn>
+ <84e48c9d165a71c30b7a299baaa87a22c578ca0a.1683712945.git.siyanteng@loongson.cn>
+ <ZFu3sY4AuuCGb9Nw@kernel.org>
+ <20230515040832.GB1826330@leoy-yangtze.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230515040832.GB1826330@leoy-yangtze.lan>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-util/perf_regs.h includes another perf_regs.h:
+On Mon, May 15, 2023 at 12:08:32PM +0800, Leo Yan wrote:
+> On Wed, May 10, 2023 at 12:26:41PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, May 10, 2023 at 06:25:24PM +0800, Yanteng Si escreveu:
+> > > Picking the changes from:
+> > > 
+> > >   commit aa3e49b606e0796a ("arm64: asm/perf_regs.h: Avoid C++-style
+> > >    comment in UAPI header")
+> > >   commit 2ee0d7fd36a3f87b ("ARM64: perf: add support for perf
+> > >    registers API")
+> > >   commit cbb0c02caf4bd98b ("perf: arm64: Add SVE vector granule
+> > >    register to user regs")
+> > > 
+> > > Silencing these perf build warnings:
+> > > 
+> > >   Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi
+> > >    /asm/perf_regs.h' differs from latest version at 'arch/arm64
+> > >     /include/uapi/asm/perf_regs.h'
+> > >   diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64
+> > >    /include/uapi/asm/perf_regs.h
+> > > 
+> > > Signed-off-by: Yanteng Si <siyanteng@loongson.cn>
+> > > ---
+> > >  tools/arch/arm64/include/uapi/asm/perf_regs.h | 10 ++++++----
+> > >  1 file changed, 6 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/tools/arch/arm64/include/uapi/asm/perf_regs.h b/tools/arch/arm64/include/uapi/asm/perf_regs.h
+> > > index fd157f46727e..86e556429e0e 100644
+> > > --- a/tools/arch/arm64/include/uapi/asm/perf_regs.h
+> > > +++ b/tools/arch/arm64/include/uapi/asm/perf_regs.h
+> > > @@ -36,11 +36,13 @@ enum perf_event_arm_regs {
+> > >  	PERF_REG_ARM64_LR,
+> > >  	PERF_REG_ARM64_SP,
+> > >  	PERF_REG_ARM64_PC,
+> > > +	PERF_REG_ARM64_MAX,
+> > >  
+> > >  	/* Extended/pseudo registers */
+> > > -	PERF_REG_ARM64_VG = 46, // SVE Vector Granule
+> > > -
+> > > -	PERF_REG_ARM64_MAX = PERF_REG_ARM64_PC + 1,
+> > > -	PERF_REG_ARM64_EXTENDED_MAX = PERF_REG_ARM64_VG + 1
+> > > +	PERF_REG_ARM64_VG = 46,				/* SVE Vector Granule */
+> > > +	PERF_REG_ARM64_EXTENDED_MAX
+> > >  };
+> > > +
+> > > +#define PERF_REG_EXTENDED_MASK	(1ULL << PERF_REG_ARM64_VG)
+> > > +
+> > >  #endif /* _ASM_ARM64_PERF_REGS_H */
+> > 
+> > This needs some more work, note that -DCORESIGHT=1 in the make command line.
+> 
+> On the mainline kernel, the patch cbb0c02caf4bd ("perf: arm64: Add SVE
+> vector granule register to user regs") and f450f11b2d3f ("perf tools
+> arm64: Copy perf_regs.h from the kernel") are to update headers for
+> kernel header and tool's header respectively, but there are not
+> aligned with each other.  So Yanteng's patch is valid and we should
+> pick up it.
+> 
+> However, as Arnaldo tested, Yanteng's patch introduces building
+> regression due to arm64 and x86 both defines the macro
+> PERF_REG_EXTENDED_MASK, but this macro actually is architecture
+> specific.
+> 
+> The issue is now we use a single file util/perf_regs.c to maintain
+> perf register related stuffs for all architectures, this is fragile
+> since we cannot have any duplicated naming (e.g. for macros, structure
+> name, etc).  We need to refactor the source file util/perf_regs.c to
+> move architecture specific code into arch folders and only keep common
+> code.
+> 
+> @James, you is the best person to know this part for arm64.  If you
+> have already worked on this, please let me know.  Otherwise, I can
+> prepare a patch set for this, I tried a bit but found I cannot just
+> use a single patch to refactor util/perf_regs.c.
 
-  #include <perf_regs.h>
+Hi,
 
-Here it includes architecture specific header, for example, if we build
-arm64 target, the header tools/perf/arch/arm64/include/perf_regs.h is
-included.
+I sent a patch series [1] for perf register refactoring, which will
+resolve the building failure issue caused by this arm64 header syncing
+change.
 
-We use this implicit way to include architecture specific header, which
-is not directive; furthermore, util/perf_regs.c is coupled with the
-architecture specific definitions.
+Thanks,
+Leo
 
-This patch moves out arch specific header from util/perf_regs.h for
-generalizing the 'util' folder, as a result, the source files in 'arch'
-folder explicitly include architecture's perf_regs.h.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/arch/arm/util/perf_regs.c        | 1 +
- tools/perf/arch/arm/util/unwind-libdw.c     | 1 +
- tools/perf/arch/arm64/util/machine.c        | 1 +
- tools/perf/arch/arm64/util/perf_regs.c      | 1 +
- tools/perf/arch/arm64/util/unwind-libdw.c   | 1 +
- tools/perf/arch/csky/util/perf_regs.c       | 1 +
- tools/perf/arch/csky/util/unwind-libdw.c    | 1 +
- tools/perf/arch/mips/util/perf_regs.c       | 1 +
- tools/perf/arch/powerpc/util/perf_regs.c    | 1 +
- tools/perf/arch/powerpc/util/unwind-libdw.c | 1 +
- tools/perf/arch/riscv/util/perf_regs.c      | 1 +
- tools/perf/arch/riscv/util/unwind-libdw.c   | 1 +
- tools/perf/arch/s390/util/perf_regs.c       | 1 +
- tools/perf/arch/s390/util/unwind-libdw.c    | 1 +
- tools/perf/arch/x86/util/perf_regs.c        | 1 +
- tools/perf/arch/x86/util/unwind-libdw.c     | 1 +
- tools/perf/util/perf_regs.h                 | 2 --
- 17 files changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm/util/perf_regs.c
-index 0d669dba08c4..244c1d0a46ac 100644
---- a/tools/perf/arch/arm/util/perf_regs.c
-+++ b/tools/perf/arch/arm/util/perf_regs.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "perf_regs.h"
- #include "../../../util/perf_regs.h"
- 
- const struct sample_reg sample_reg_masks[] = {
-diff --git a/tools/perf/arch/arm/util/unwind-libdw.c b/tools/perf/arch/arm/util/unwind-libdw.c
-index 1834a0cd9ce3..4e02cef461e3 100644
---- a/tools/perf/arch/arm/util/unwind-libdw.c
-+++ b/tools/perf/arch/arm/util/unwind-libdw.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <elfutils/libdwfl.h>
-+#include "perf_regs.h"
- #include "../../../util/unwind-libdw.h"
- #include "../../../util/perf_regs.h"
- #include "../../../util/sample.h"
-diff --git a/tools/perf/arch/arm64/util/machine.c b/tools/perf/arch/arm64/util/machine.c
-index 235a0a1e1ec7..ba1144366e85 100644
---- a/tools/perf/arch/arm64/util/machine.c
-+++ b/tools/perf/arch/arm64/util/machine.c
-@@ -6,6 +6,7 @@
- #include "debug.h"
- #include "symbol.h"
- #include "callchain.h"
-+#include "perf_regs.h"
- #include "record.h"
- #include "util/perf_regs.h"
- 
-diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm64/util/perf_regs.c
-index 4490c1b5ea51..34d957c750f7 100644
---- a/tools/perf/arch/arm64/util/perf_regs.c
-+++ b/tools/perf/arch/arm64/util/perf_regs.c
-@@ -6,6 +6,7 @@
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
- 
-+#include "perf_regs.h"
- #include "../../../perf-sys.h"
- #include "../../../util/debug.h"
- #include "../../../util/event.h"
-diff --git a/tools/perf/arch/arm64/util/unwind-libdw.c b/tools/perf/arch/arm64/util/unwind-libdw.c
-index 09385081bb03..e056d50ab42e 100644
---- a/tools/perf/arch/arm64/util/unwind-libdw.c
-+++ b/tools/perf/arch/arm64/util/unwind-libdw.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <elfutils/libdwfl.h>
-+#include "perf_regs.h"
- #include "../../../util/unwind-libdw.h"
- #include "../../../util/perf_regs.h"
- #include "../../../util/sample.h"
-diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/csky/util/perf_regs.c
-index 35755811316e..053ecbbc7b2f 100644
---- a/tools/perf/arch/csky/util/perf_regs.c
-+++ b/tools/perf/arch/csky/util/perf_regs.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
- const struct sample_reg sample_reg_masks[] = {
-diff --git a/tools/perf/arch/csky/util/unwind-libdw.c b/tools/perf/arch/csky/util/unwind-libdw.c
-index 4bb4a06776e4..79df4374ab18 100644
---- a/tools/perf/arch/csky/util/unwind-libdw.c
-+++ b/tools/perf/arch/csky/util/unwind-libdw.c
-@@ -2,6 +2,7 @@
- // Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
- 
- #include <elfutils/libdwfl.h>
-+#include "perf_regs.h"
- #include "../../util/unwind-libdw.h"
- #include "../../util/perf_regs.h"
- #include "../../util/event.h"
-diff --git a/tools/perf/arch/mips/util/perf_regs.c b/tools/perf/arch/mips/util/perf_regs.c
-index 2d2bfbb96182..751413b86ebf 100644
---- a/tools/perf/arch/mips/util/perf_regs.c
-+++ b/tools/perf/arch/mips/util/perf_regs.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
- const struct sample_reg sample_reg_masks[] = {
-diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/powerpc/util/perf_regs.c
-index e48622d1bc59..3d0f7c238a33 100644
---- a/tools/perf/arch/powerpc/util/perf_regs.c
-+++ b/tools/perf/arch/powerpc/util/perf_regs.c
-@@ -4,6 +4,7 @@
- #include <regex.h>
- #include <linux/zalloc.h>
- 
-+#include "perf_regs.h"
- #include "../../../util/perf_regs.h"
- #include "../../../util/debug.h"
- #include "../../../util/event.h"
-diff --git a/tools/perf/arch/powerpc/util/unwind-libdw.c b/tools/perf/arch/powerpc/util/unwind-libdw.c
-index e616642c754c..e9a5a8bb67d9 100644
---- a/tools/perf/arch/powerpc/util/unwind-libdw.c
-+++ b/tools/perf/arch/powerpc/util/unwind-libdw.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <elfutils/libdwfl.h>
- #include <linux/kernel.h>
-+#include "perf_regs.h"
- #include "../../../util/unwind-libdw.h"
- #include "../../../util/perf_regs.h"
- #include "../../../util/sample.h"
-diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/riscv/util/perf_regs.c
-index a2aaa46ef741..7b8fafd0598a 100644
---- a/tools/perf/arch/riscv/util/perf_regs.c
-+++ b/tools/perf/arch/riscv/util/perf_regs.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
- const struct sample_reg sample_reg_masks[] = {
-diff --git a/tools/perf/arch/riscv/util/unwind-libdw.c b/tools/perf/arch/riscv/util/unwind-libdw.c
-index 54a198714eb8..5c98010d8b59 100644
---- a/tools/perf/arch/riscv/util/unwind-libdw.c
-+++ b/tools/perf/arch/riscv/util/unwind-libdw.c
-@@ -2,6 +2,7 @@
- /* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
- 
- #include <elfutils/libdwfl.h>
-+#include "perf_regs.h"
- #include "../../util/unwind-libdw.h"
- #include "../../util/perf_regs.h"
- #include "../../util/sample.h"
-diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s390/util/perf_regs.c
-index 8d79f8c50f4c..0a6358cedb93 100644
---- a/tools/perf/arch/s390/util/perf_regs.c
-+++ b/tools/perf/arch/s390/util/perf_regs.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include "perf_regs.h"
- #include "../../util/perf_regs.h"
- 
- const struct sample_reg sample_reg_masks[] = {
-diff --git a/tools/perf/arch/s390/util/unwind-libdw.c b/tools/perf/arch/s390/util/unwind-libdw.c
-index 7d92452d5287..f50fb6dbb35c 100644
---- a/tools/perf/arch/s390/util/unwind-libdw.c
-+++ b/tools/perf/arch/s390/util/unwind-libdw.c
-@@ -5,6 +5,7 @@
- #include "../../util/event.h"
- #include "../../util/sample.h"
- #include "dwarf-regs-table.h"
-+#include "perf_regs.h"
- 
- 
- bool libdw__arch_set_initial_registers(Dwfl_Thread *thread, void *arg)
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index a7e21f2a8964..aaf7f606606b 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -5,6 +5,7 @@
- #include <linux/kernel.h>
- #include <linux/zalloc.h>
- 
-+#include "perf_regs.h"
- #include "../../../perf-sys.h"
- #include "../../../util/perf_regs.h"
- #include "../../../util/debug.h"
-diff --git a/tools/perf/arch/x86/util/unwind-libdw.c b/tools/perf/arch/x86/util/unwind-libdw.c
-index ef71e8bf80bf..edb77e20e083 100644
---- a/tools/perf/arch/x86/util/unwind-libdw.c
-+++ b/tools/perf/arch/x86/util/unwind-libdw.c
-@@ -1,5 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <elfutils/libdwfl.h>
-+#include "perf_regs.h"
- #include "../../../util/unwind-libdw.h"
- #include "../../../util/perf_regs.h"
- #include "util/sample.h"
-diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
-index 43b5a6d40e58..894d527edebe 100644
---- a/tools/perf/util/perf_regs.h
-+++ b/tools/perf/util/perf_regs.h
-@@ -32,8 +32,6 @@ uint64_t arch__reg_sp(void);
- #ifdef HAVE_PERF_REGS_SUPPORT
- extern const struct sample_reg sample_reg_masks[];
- 
--#include <perf_regs.h>
--
- #define DWARF_MINIMAL_REGS ((1ULL << arch__reg_ip()) | (1ULL << arch__reg_sp()))
- 
- const char *perf_reg_name(int id, const char *arch);
--- 
-2.39.2
-
+[1] https://lore.kernel.org/lkml/20230520025537.1811986-1-leo.yan@linaro.org/T/#mf286726bcfbc0fc5313798d1693db65ef902d9ed
