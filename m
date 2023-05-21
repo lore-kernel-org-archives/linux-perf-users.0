@@ -2,225 +2,88 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C64C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Sun, 21 May 2023 20:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533ADC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Sun, 21 May 2023 21:04:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229595AbjEUUHF (ORCPT
+        id S230489AbjEUVE5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 21 May 2023 16:07:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43814 "EHLO
+        Sun, 21 May 2023 17:04:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbjEUUHE (ORCPT
+        with ESMTP id S231266AbjEUVEz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 21 May 2023 16:07:04 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7DBEDE;
-        Sun, 21 May 2023 13:07:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684699622; x=1716235622;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=HwsbC2jKcQli9wh7b3iVXWoPZB7P/2qtGKKljalL3m8=;
-  b=LawMnPawMcn5ZGJaZVgegVvcQKujjPBwx5EgL+Ef54HGyj50n+pi6MMo
-   iADtxm/+q75x9Xv2Hoe0SJUvH0g2wsL+4R75EX14/Lxt/Qk4aO/K2VcZw
-   hk0noCdfU1Ru1RFo1N4OVtZ6LGuAyU5YhogOsiAK3S+q/KP8SGO9Lvfrp
-   OOLufFvP/hdArHm84ffHSmth7NnPJ/ap/KRQRwOJ6m/avE2VMZIm60Ypp
-   AN37B0JI0bSzsDeOuFcz0heQ+UBQVhXkiOl1F4BolsGZidJSm27oqfqr6
-   sOaIHLED+T/SOT2HfGi1SGTCI0ZXsxdEEmA4Yw+5HjbjE34jG6kk0LRLA
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="439117224"
-X-IronPort-AV: E=Sophos;i="6.00,182,1681196400"; 
-   d="scan'208";a="439117224"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2023 13:03:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="949809290"
-X-IronPort-AV: E=Sophos;i="6.00,182,1681196400"; 
-   d="scan'208";a="949809290"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 21 May 2023 13:03:05 -0700
-Received: from [10.212.161.251] (kliang2-mobl1.ccr.corp.intel.com [10.212.161.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Sun, 21 May 2023 17:04:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A861D8E;
+        Sun, 21 May 2023 14:04:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 8572C580BA0;
-        Sun, 21 May 2023 13:02:58 -0700 (PDT)
-Message-ID: <efd8389a-aef1-96de-273a-ebac565cb852@linux.intel.com>
-Date:   Sun, 21 May 2023 16:02:57 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v1 20/23] perf pmus: Split pmus list into core and uncore
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3E0A061044;
+        Sun, 21 May 2023 21:04:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8FCD5C433EF;
+        Sun, 21 May 2023 21:04:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684703089;
+        bh=DkGQpLOt+hWu0WQCzLJouI6MlIltmC9SOTub9Y7Rivw=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=bKnl67MuV+k8/pbtDY+KcNkWvMCnt5WcwgxyupJQUxKCoLp3DYV+yjy3QdjqVUYht
+         /9HiMIv2n4H0V4M4mUsi9w7jywqtcI7SuVS5rfXEpICuAJ32fUpGAozGDuHccFgVGH
+         0n5r+VooNrLnV/fuf+NwUWOQ3qUsAXf9Itqc+ULkJw9lMq3l7B1RZ/MfqmKLNM0/bH
+         h6LIyAr1A4YnpVvp+RTXIhZ5GE1Dzm1/6EC5JgwjvEcAP5cZ9xhHcdxzHxNucFCAOF
+         j+lAKllN09GD5KdD/QtmEc6nl17U8GCTSa4BIuXZBQxotHOIRQa5uFakp2lQPzXcSh
+         HSflITKc+Y1zQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7B81CC3959E;
+        Sun, 21 May 2023 21:04:49 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v6.4
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230520184731.1690465-1-acme@kernel.org>
+References: <20230520184731.1690465-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230520184731.1690465-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.4-1-2023-05-20
+X-PR-Tracked-Commit-Id: 4e111f0cf0ee973ce7e7e012b4ceb07867d2dae5
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: c47d122c5ba5f3b3371cfe051d770b5bbd591f6b
+Message-Id: <168470308949.10838.382383903499705129.pr-tracker-bot@kernel.org>
+Date:   Sun, 21 May 2023 21:04:49 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ming Wang <wangming01@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        James Clark <james.clark@arm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Linux Kernel Functional Testing <lkft@linaro.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
         Sandipan Das <sandipan.das@amd.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
         Thomas Richter <tmricht@linux.ibm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-References: <20230517145803.559429-1-irogers@google.com>
- <20230517145803.559429-21-irogers@google.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230517145803.559429-21-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Yanteng Si <siyanteng@loongson.cn>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+The pull request you sent on Sat, 20 May 2023 15:47:31 -0300:
 
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.4-1-2023-05-20
 
-On 2023-05-17 10:58 a.m., Ian Rogers wrote:
-> Split the pmus list into core and uncore. This will later allow for
-> the core and uncore pmus to be populated separately.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/c47d122c5ba5f3b3371cfe051d770b5bbd591f6b
 
-I think the "uncore pmus" here means the other non-core PMUs, right? If
-so, I think the "uncore pmus" is misleading, since we have a dedicated
-uncore driver/PMU. Maybe we can use "other pmus" instead.
+Thank you!
 
-Thanks,
-Kan
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/pmus.c | 52 ++++++++++++++++++++++++++++++------------
->  1 file changed, 38 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 2fb28e583366..dd029a810147 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -12,13 +12,19 @@
->  #include "pmu.h"
->  #include "print-events.h"
->  
-> -static LIST_HEAD(pmus);
-> +static LIST_HEAD(core_pmus);
-> +static LIST_HEAD(uncore_pmus);
->  
->  void perf_pmus__destroy(void)
->  {
->  	struct perf_pmu *pmu, *tmp;
->  
-> -	list_for_each_entry_safe(pmu, tmp, &pmus, list) {
-> +	list_for_each_entry_safe(pmu, tmp, &core_pmus, list) {
-> +		list_del(&pmu->list);
-> +
-> +		perf_pmu__delete(pmu);
-> +	}
-> +	list_for_each_entry_safe(pmu, tmp, &uncore_pmus, list) {
->  		list_del(&pmu->list);
->  
->  		perf_pmu__delete(pmu);
-> @@ -29,7 +35,12 @@ static struct perf_pmu *pmu_find(const char *name)
->  {
->  	struct perf_pmu *pmu;
->  
-> -	list_for_each_entry(pmu, &pmus, list) {
-> +	list_for_each_entry(pmu, &core_pmus, list) {
-> +		if (!strcmp(pmu->name, name) ||
-> +		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
-> +			return pmu;
-> +	}
-> +	list_for_each_entry(pmu, &uncore_pmus, list) {
->  		if (!strcmp(pmu->name, name) ||
->  		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
->  			return pmu;
-> @@ -53,7 +64,7 @@ struct perf_pmu *perf_pmus__find(const char *name)
->  		return pmu;
->  
->  	dirfd = perf_pmu__event_source_devices_fd();
-> -	pmu = perf_pmu__lookup(&pmus, dirfd, name);
-> +	pmu = perf_pmu__lookup(is_pmu_core(name) ? &core_pmus : &uncore_pmus, dirfd, name);
->  	close(dirfd);
->  
->  	return pmu;
-> @@ -72,7 +83,7 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
->  	if (pmu)
->  		return pmu;
->  
-> -	return perf_pmu__lookup(&pmus, dirfd, name);
-> +	return perf_pmu__lookup(is_pmu_core(name) ? &core_pmus : &uncore_pmus, dirfd, name);
->  }
->  
->  /* Add all pmus in sysfs to pmu list: */
-> @@ -93,7 +104,7 @@ static void pmu_read_sysfs(void)
->  	while ((dent = readdir(dir))) {
->  		if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, ".."))
->  			continue;
-> -		/* add to static LIST_HEAD(pmus): */
-> +		/* add to static LIST_HEAD(core_pmus) or LIST_HEAD(uncore_pmus): */
->  		perf_pmu__find2(fd, dent->d_name);
->  	}
->  
-> @@ -104,24 +115,37 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
->  {
->  	struct perf_pmu *pmu;
->  
-> -	list_for_each_entry(pmu, &pmus, list)
-> +	list_for_each_entry(pmu, &core_pmus, list) {
->  		if (pmu->type == type)
->  			return pmu;
-> -
-> +	}
-> +	list_for_each_entry(pmu, &uncore_pmus, list) {
-> +		if (pmu->type == type)
-> +			return pmu;
-> +	}
->  	return NULL;
->  }
->  
-> +/*
-> + * pmu iterator: If pmu is NULL, we start at the begin, otherwise return the
-> + * next pmu. Returns NULL on end.
-> + */
->  struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu)
->  {
-> -	/*
-> -	 * pmu iterator: If pmu is NULL, we start at the begin,
-> -	 * otherwise return the next pmu. Returns NULL on end.
-> -	 */
-> +	bool use_core_pmus = !pmu || pmu->is_core;
-> +
->  	if (!pmu) {
->  		pmu_read_sysfs();
-> -		pmu = list_prepare_entry(pmu, &pmus, list);
-> +		pmu = list_prepare_entry(pmu, &core_pmus, list);
-> +	}
-> +	if (use_core_pmus) {
-> +		list_for_each_entry_continue(pmu, &core_pmus, list)
-> +			return pmu;
-> +
-> +		pmu = NULL;
-> +		pmu = list_prepare_entry(pmu, &uncore_pmus, list);
->  	}
-> -	list_for_each_entry_continue(pmu, &pmus, list)
-> +	list_for_each_entry_continue(pmu, &uncore_pmus, list)
->  		return pmu;
->  	return NULL;
->  }
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
