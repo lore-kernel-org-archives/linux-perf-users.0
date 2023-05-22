@@ -2,67 +2,67 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCBFC77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 20:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B763C7EE2D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 00:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234834AbjEVUlg (ORCPT
+        id S235239AbjEWAZK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 May 2023 16:41:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48050 "EHLO
+        Mon, 22 May 2023 20:25:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232172AbjEVUlf (ORCPT
+        with ESMTP id S235505AbjEWAUI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 May 2023 16:41:35 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6830B7
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 13:41:33 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-56536e25aafso4260027b3.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 13:41:33 -0700 (PDT)
+        Mon, 22 May 2023 20:20:08 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5EE1173D;
+        Mon, 22 May 2023 16:35:30 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-510d8ead2f1so295200a12.3;
+        Mon, 22 May 2023 16:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684788092; x=1687380092;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=EDof+QoJIpcW+bcC8mIq1dIhSy6Tx4m7myi7gPf3qCM=;
-        b=hL4XZqmAmsZBqISb5cs2SY76dW2m/n3/dRqTTMYPVdlAsjXvYxhCKl/wYIuYN5dH1y
-         M/Zgkcj29Ps7yZkdxvqlqLB071q0vvvwDPGSr8posF4+n+m/gUhclexIkD3Olk2KeqQV
-         pTVYcM1HHnrL4uS435VahAb4o4/PTyTyKImzzctxQZvjJGnw4XTMrdTRjjKdnyjt0ZLi
-         TIAogLgYmgvk031sY5cMg+7HCGNuWb8K3lzAN+pNqd33I//tCNpkQTjvyPsw67LorTaF
-         hdFLUxCf9oAxG+uLPCDIzzVkbJwxtYLshP/HM2YZJzL+KgSUM1yh/o0jmt3XpS5ll4w6
-         ztZg==
+        d=gmail.com; s=20221208; t=1684798529; x=1687390529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VotVH7DG8ufofu7FwiCmchyX5+I82ZeYrFOs3jDvenI=;
+        b=jSKSNoY7Q0o/FX/zQftnhRD1701iNyP8zQnaHrvNK6bOhHVeEqoz3tBT+gkEnHOqZW
+         AQZ6Dv6V2ofGxlmb5xVvKgu9gYDOvyilqMDZwAyAr1ACyuP57WmVjQczfRO2VbcqNg5+
+         s5nVzFEG16bmn4cY/6GDa0bGcUK6xbBLAzOBPS/zdtJPUpzAKAByIrdcA6ejSc7UeEoZ
+         2uXNnHjt+1fBW5Sbox5zRAHAoNqkQ+QeXejiPfW/RY1RO1h0jhgpX5khuQenES99xzXv
+         hZsfoO5OsiXXkJSOOwAHyFV4pKUVXouj6o/fnZIulzp3aWN3buPzWPLy3oXxcg0MKt4O
+         M/ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684788092; x=1687380092;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EDof+QoJIpcW+bcC8mIq1dIhSy6Tx4m7myi7gPf3qCM=;
-        b=Pb8/0RtkOncN2wHiZBFGsk7d8umDwh8z5f03C9FVbQV7BM+RDaigY/LNjJsaHjlPqM
-         2APw3fM7sjT9pXJNCA29gBtc+3ldEcZGaDVUsRRYdbRW7z6WVkPAmnJdhBI7nFx9dJgp
-         QFggBzsiOFHqKWIWklMdRTTcMjWtYhOC1pe4BZ5h3na4Dy4u1Q8n+EWOD1krCig4fPmY
-         nTsPKFhibXpDIpaCf9MjFzYaT1Xh15rPmnVascWj9ebrdypVaPM7g2Bf/ihP0StlTaNY
-         tpn1PBb1yw50ElNahfXIGwGdZbu2q4B28eVzdVyXOiHWnY9bpEtKHfbSzIwQEM6qXWgV
-         poSg==
-X-Gm-Message-State: AC+VfDy0Vh7VCHm6JqvzVyOHH+NTuGkIBvhIR7N1MKe1/+tPxbsNZ5UV
-        d6ENVNSd2QGscUSdVn0u0cOwQRUzsjg6
-X-Google-Smtp-Source: ACHHUZ6Ij6MmJUxaDx9xqk58WsfpUW60Sf6BCP5q+Vjx4RkK5eARDpLpq/+ExNmPLc2gquPDbKFREdVnHLrA
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:33a6:6e42:aa97:9ab4])
- (user=irogers job=sendgmr) by 2002:a81:ad09:0:b0:559:e97a:cb21 with SMTP id
- l9-20020a81ad09000000b00559e97acb21mr7115495ywh.9.1684788092608; Mon, 22 May
- 2023 13:41:32 -0700 (PDT)
-Date:   Mon, 22 May 2023 13:40:47 -0700
-In-Reply-To: <20230522204047.800543-1-irogers@google.com>
-Message-Id: <20230522204047.800543-4-irogers@google.com>
-Mime-Version: 1.0
+        d=1e100.net; s=20221208; t=1684798529; x=1687390529;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VotVH7DG8ufofu7FwiCmchyX5+I82ZeYrFOs3jDvenI=;
+        b=AtSYpbx2Te2mSK4Ho0dgr182CTdFf0UqX6Ott1HgS4KyGEtdV9jtAfE66bG572i4eA
+         OzvdG7/TjHGyjPA50sHFbLBbadRr4t2lpuCK3R21ydoMtaXHUnqk6+S5xRKY/L8aJx+N
+         i4gETDyfysL4SnuayjViblowK9dGTU9lhCEO5qy89S9Ff/xXusyUcdHgNDZrQBBiiCFq
+         //ACQWcZIgh5ZCfSCcBxijxyTj4G5DZQkNBQ6boTDnq7i7Dz8Z0i2CidPsZF/FZQrX+l
+         sR6OJlH8M+WE5j5GoyOY7pQWs6f6ihscaikLDOQ+Gy985YTnKZKBhNGphl9cjA8ZQUvK
+         J4Bw==
+X-Gm-Message-State: AC+VfDy3Mpdi45Zoci2glI1deW+zBEd1jsUVZq+vSpTugasb/KJTXI4I
+        nPMgf4CSj/e7yxZ4ikiLZreV4HgGqwYYbdyo0zI=
+X-Google-Smtp-Source: ACHHUZ7mtfuDOCElFvNq3nUkWqMzZyRVApBCusLe5ZyJVQE2ZsHeO/c1d0Ni3dU7vqwqaybNJj6BRwOEJMkE3oQMpRg=
+X-Received: by 2002:a17:907:c21:b0:967:5c5f:e45c with SMTP id
+ ga33-20020a1709070c2100b009675c5fe45cmr13647491ejc.0.1684798528988; Mon, 22
+ May 2023 16:35:28 -0700 (PDT)
+MIME-Version: 1.0
 References: <20230522204047.800543-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
-Subject: [PATCH v1 3/3] perf test: Add build tests for BUILD_BPF_SKEL
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+In-Reply-To: <20230522204047.800543-1-irogers@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Mon, 22 May 2023 16:35:16 -0700
+Message-ID: <CAEf4BzZ28xz=bUuFoaWRzKjxOEpv2SRJ08rOycDiX0OchGSQEA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] Bring back vmlinux.h generation
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         James Clark <james.clark@arm.com>,
         Tiezhu Yang <yangtiezhu@loongson.cn>,
@@ -70,39 +70,53 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add tests with and without generating vmlinux.h.
+On Mon, May 22, 2023 at 1:41=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> Commit 760ebc45746b ("perf lock contention: Add empty 'struct rq' to
+> satisfy libbpf 'runqueue' type verification") inadvertently created a
+> declaration of 'struct rq' that conflicted with a generated
+> vmlinux.h's:
+>
+> ```
+> util/bpf_skel/lock_contention.bpf.c:419:8: error: redefinition of 'rq'
+> struct rq {};
+>        ^
+> /tmp/perf/util/bpf_skel/.tmp/../vmlinux.h:45630:8: note: previous definit=
+ion is here
+> struct rq {
+>        ^
+> 1 error generated.
+> ```
+>
+> Fix the issue by moving the declaration to vmlinux.h. So this can't
+> happen again, bring back build support for generating vmlinux.h then
+> add build tests.
+>
+> Ian Rogers (3):
+>   perf build: Add ability to build with a generated vmlinux.h
+>   perf bpf: Move the declaration of struct rq
+>   perf test: Add build tests for BUILD_BPF_SKEL
+>
+>  tools/perf/Makefile.config                       |  4 ++++
+>  tools/perf/Makefile.perf                         | 16 +++++++++++++++-
+>  tools/perf/tests/make                            |  4 ++++
+>  tools/perf/util/bpf_skel/.gitignore              |  1 +
+>  tools/perf/util/bpf_skel/lock_contention.bpf.c   |  2 --
+>  tools/perf/util/bpf_skel/{ =3D> vmlinux}/vmlinux.h | 10 ++++++++++
+>  6 files changed, 34 insertions(+), 3 deletions(-)
+>  rename tools/perf/util/bpf_skel/{ =3D> vmlinux}/vmlinux.h (90%)
+>
+> --
+> 2.40.1.698.g37aff9b760-goog
+>
+>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/make | 4 ++++
- 1 file changed, 4 insertions(+)
+LGTM, for the series:
 
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 8dd3f8090352..775f374d9345 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -69,6 +69,8 @@ make_clean_all      := clean all
- make_python_perf_so := $(python_perf_so)
- make_debug          := DEBUG=1
- make_nondistro      := BUILD_NONDISTRO=1
-+make_bpf_skel       := BUILD_BPF_SKEL=1
-+make_gen_vmlinux_h  := BUILD_BPF_SKEL=1 GEN_VMLINUX_H=1
- make_no_libperl     := NO_LIBPERL=1
- make_no_libpython   := NO_LIBPYTHON=1
- make_no_scripts     := NO_LIBPYTHON=1 NO_LIBPERL=1
-@@ -136,6 +138,8 @@ endif
- run += make_python_perf_so
- run += make_debug
- run += make_nondistro
-+run += make_build_bpf_skel
-+run += make_gen_vmlinux_h
- run += make_no_libperl
- run += make_no_libpython
- run += make_no_scripts
--- 
-2.40.1.698.g37aff9b760-goog
-
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
