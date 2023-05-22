@@ -2,56 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9736C77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 11:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5418CC77B75
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 11:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230363AbjEVLeZ (ORCPT
+        id S232942AbjEVLzh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 May 2023 07:34:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47098 "EHLO
+        Mon, 22 May 2023 07:55:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232311AbjEVLeY (ORCPT
+        with ESMTP id S233565AbjEVLzf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 May 2023 07:34:24 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 596C6E9;
-        Mon, 22 May 2023 04:33:59 -0700 (PDT)
+        Mon, 22 May 2023 07:55:35 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A289A8;
+        Mon, 22 May 2023 04:55:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684755239; x=1716291239;
+  t=1684756534; x=1716292534;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=WX3JxU0rLQx0g7t9PLnH0AQ4UbdiTydZwHOpG058MN4=;
-  b=myj6ojPEw2lgExVHhXbtxH0pTbUkveX6+0YxQdfsHQc8yk3BQUPA+LDA
-   tnE4w9E931UlPIn0lLUP6ul0Ydxd+Plsl2eFbMMil90QMMXEZo3H9GCI3
-   G9mp7OUGLSXssASqGJuk6c9gR6+itq5PjgVkk9G4Zp2W+VEEHuPITtSzy
-   yRISNvytQSXmSSPM7pHqIMw6kX+4d6lCXWWpPQgFWzhr/t266IJhyOakW
-   mZgaiRfeCr90ptgw/c31J8QarjRlLrVt1yX8fhlMifLGDEA4KrCGwKHAo
-   EQZ4jFRMcmUprhUxhyiqKUPCOS1uaC1qv7m8L0CEMQtJX98Ap8ptmSHEu
+  bh=Ge74hN4UAWGXQucKsiYH+Kd+5tVyCczo7n6QYfTirkY=;
+  b=kbPIZNPGrHbXn0Ql7LP79jBW9NJrMzLscxX7g95d9qmPfha1o22yR0uy
+   iI7YjsTD8UYITlrnkEYCdh52gXKchK0/2fYeZwx9UzIpgxZSObZsD+VkB
+   ULb3ge/ZaXdTdrzhd8nRjoDPiZjoVM1DD0q7J9s1WJ5diqgMTVb/KMgOd
+   LJ8Qt50pDWcuO5G+ntSNXX46IYa7IF1WdmZeex2Y9MyxRkGk3jbn+m9EV
+   uaPX8LoAcLx7cHa3FyghFPs/XK5nI9dG7lRGbaehSG+Pe/cvo/fCKH1ZN
+   3smAfm3unuI9zcDcSyeAO+GGWigZPVzP5XgaMJoTw8Pl/70sMBzQAxtg+
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="439248330"
+X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="337486835"
 X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="439248330"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 04:33:40 -0700
+   d="scan'208";a="337486835"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 May 2023 04:55:33 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="1033596666"
+X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="950047509"
 X-IronPort-AV: E=Sophos;i="6.00,184,1681196400"; 
-   d="scan'208";a="1033596666"
+   d="scan'208";a="950047509"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 22 May 2023 04:33:39 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 22 May 2023 04:55:32 -0700
 Received: from [10.209.7.94] (kliang2-mobl1.ccr.corp.intel.com [10.209.7.94])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id C8165580919;
-        Mon, 22 May 2023 04:33:35 -0700 (PDT)
-Message-ID: <3ed3e064-1380-535b-8ee3-35d3bedb36d0@linux.intel.com>
-Date:   Mon, 22 May 2023 07:33:34 -0400
+        by linux.intel.com (Postfix) with ESMTPS id 19AC3580919;
+        Mon, 22 May 2023 04:55:29 -0700 (PDT)
+Message-ID: <642c0b26-fcd8-8063-72d2-c74466c29785@linux.intel.com>
+Date:   Mon, 22 May 2023 07:55:27 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH v1 01/23] perf tools: Warn if no user requested CPUs match
- PMU's CPUs
+Subject: Re: [PATCH v1 05/23] perf pmu: Remove perf_pmu__hybrid_mounted
+Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>
 Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -77,7 +77,6 @@ Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Sandipan Das <sandipan.das@amd.com>,
         Dmitrii Dolgov <9erthalion6@gmail.com>,
         Sean Christopherson <seanjc@google.com>,
-        Raul Silvera <rsilvera@google.com>,
         Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
         Thomas Richter <tmricht@linux.ibm.com>,
         Kang Minchul <tegongkang@gmail.com>,
@@ -85,12 +84,11 @@ Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org
 References: <20230517145803.559429-1-irogers@google.com>
- <20230517145803.559429-2-irogers@google.com>
- <3586d413-b7c9-9790-ec4e-4132502c806d@linux.intel.com>
- <CAP-5=fUERgwWt=C88QOdx8JzxB1P0RXJ9WxGUY=GABwdU6Pvpg@mail.gmail.com>
-Content-Language: en-US
+ <20230517145803.559429-6-irogers@google.com>
+ <1ea342ab-d68f-26e5-0043-f05b1886009e@linux.intel.com>
+ <CAP-5=fU3OYNsjaJhLq_8tJXZKFARCTqrg3CEr64-3rAm_kTx+A@mail.gmail.com>
 From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fUERgwWt=C88QOdx8JzxB1P0RXJ9WxGUY=GABwdU6Pvpg@mail.gmail.com>
+In-Reply-To: <CAP-5=fU3OYNsjaJhLq_8tJXZKFARCTqrg3CEr64-3rAm_kTx+A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -99,359 +97,174 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 2023-05-22 12:52 a.m., Ian Rogers wrote:
-> On Sun, May 21, 2023 at 12:04 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
+On 2023-05-22 1:21 a.m., Ian Rogers wrote:
+> On Sun, May 21, 2023 at 12:23 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
 >>
 >>
 >>
 >> On 2023-05-17 10:57 a.m., Ian Rogers wrote:
->>> In commit 1d3351e631fc ("perf tools: Enable on a list of CPUs for hybrid")
->>> perf on hybrid will warn if a user requested CPU doesn't match the PMU
->>> of the given event but only for hybrid PMUs. Make the logic generic
->>> for all PMUs and remove the hybrid logic.
+>>> perf_pmu__hybrid_mounted is used to detect whether cpu_core or
+>>> cpu_atom
 >>
->> The logic may not work for all PMUs, especially for uncore.
->>
->> For uncore, the user should be able to read counters from any CPU of a
->> socket/die, not just the CPU from the cpumask.
->> Please see d6a2f9035bfc ("perf/core: Introduce PMU_EV_CAP_READ_ACTIVE_PKG").
+>> Currently, there are only two CPU types for a hybrid machine, core and
+>> atom. But there may be more CPU types added later. Please see the CPUID
+>> 1AH EAX enumeration in SDM VOL2. It has several reserved encodings for
+>> CPU types. It's better not using the hardcode cpu_core/cpu_atom to
+>> replace the perf_pmu__hybrid_mounted().
 >>
 >> Thanks,
 >> Kan
 > 
-> Hi Kan,
+> This is covered by later patches. Specifically patches like:
+> patch 7: perf pmu: Add is_core to pmu
+> patch 20: Split pmus list into core and uncore
 > 
-> the code specifically handles this and for uncore PMUs the check is
-> that the CPU is any online CPU:
-> 
-> """
-> ... Uncore PMUs list a CPU in sysfs, but this may be overwritten by a
-> + *     user requested CPU and so any online CPU is applicable. Core PMUs handle
-> + *     events on the CPUs in their list and otherwise the event isn't
-> supported.
-> ...
-> +               to_test = pmu && pmu->is_uncore ? cpu_map__online() :
-> evsel__cpus(pos);
-> ...
-> """
-> 
-> in the commit message this is also called out:
-> 
-> """
-> For example on a 16 (0-15) CPU system:
-> ```
-> $ perf stat -e imc_free_running/data_read/,cycles -C 16 true
-> WARNING: Requested CPU(s) '16' not supported by PMU
-> 'uncore_imc_free_running_1' for event 'imc_free_running/data_read/'
-> WARNING: Requested CPU(s) '16' not supported by PMU
-> 'uncore_imc_free_running_0' for event 'imc_free_running/data_read/'
-> WARNING: Requested CPU(s) '16' not supported by PMU 'cpu' for event 'cycles'
-> ...
-> """
-> CPU 16 is invalid, only 0 to 15 are valid, and so there are warnings
-> for the uncore events for "imc_free_running/data_read/".
->
+> Ultimately in pmus.h we have two scan routines, one for all PMUs and
+> one for core PMUs. For everything except hybrid (and the name varies a
+> bit on ARM) the core scan only scans "cpu", on hybrid it scans
+> "cpu_atom" and "cpu_core". The determination of core vs uncore is
+> done without using the name, so can support >2 hybrid PMUs. At this
+> point in the patch series I'm trying to simplify everything so that I
+> can then build the pmus interface.
 
-Ah, I thought CPU 16 is from another socket. For the invalid/offline
-CPU, a warning should be OK.
+But if we add a new core type "cpu_whatever" later, we have to hardcode
+the new name to the perf tool, right? Users have to update the perf tool
+for the new platforms, otherwise I think the new type will be treated as
+an uncore PMU.
+
+Since the hybrid is Intel only, I think it may be better move the
+is_pmu_hybrid() to X86 specifc code. For the Intel only code, we already
+have a naming rule for the hybrid name, "cpu_$". So we don't need to
+update the tool for every new CPU type.
 
 Thanks,
 Kan
 
+> 
 > Thanks,
 > Ian
 > 
+>>> is mounted with a non-empty cpus file by
+>>> pmu_lookup. pmu_lookup will attempt to read the cpus file too and so
+>>> the check can be folded into this.
 >>>
->>> Warn if a CPU is requested that is offline for uncore events. Warn if
->>> a CPU is requested for a core PMU, but the CPU isn't within the cpu
->>> map of that PMU.
+>>> Checking hybrid_mounted in pmu_is_uncore is redundant as the next
+>>> cpumask read will fail returning false.
 >>>
->>> For example on a 16 (0-15) CPU system:
->>> ```
->>> $ perf stat -e imc_free_running/data_read/,cycles -C 16 true
->>> WARNING: Requested CPU(s) '16' not supported by PMU 'uncore_imc_free_running_1' for event 'imc_free_running/data_read/'
->>> WARNING: Requested CPU(s) '16' not supported by PMU 'uncore_imc_free_running_0' for event 'imc_free_running/data_read/'
->>> WARNING: Requested CPU(s) '16' not supported by PMU 'cpu' for event 'cycles'
->>>
->>>  Performance counter stats for 'CPU(s) 16':
->>>
->>>    <not supported> MiB  imc_free_running/data_read/
->>>    <not supported>      cycles
->>>
->>>        0.000570094 seconds time elapsed
->>> ```
+>>> Reduce the scope of perf_pmu__find_hybrid_pmu by making it static.
 >>>
 >>> Signed-off-by: Ian Rogers <irogers@google.com>
 >>> ---
->>>  tools/perf/builtin-record.c     |  6 +--
->>>  tools/perf/builtin-stat.c       |  5 +--
->>>  tools/perf/util/cpumap.h        |  2 +-
->>>  tools/perf/util/evlist-hybrid.c | 74 ---------------------------------
->>>  tools/perf/util/evlist-hybrid.h |  1 -
->>>  tools/perf/util/evlist.c        | 44 ++++++++++++++++++++
->>>  tools/perf/util/evlist.h        |  2 +
->>>  tools/perf/util/pmu.c           | 33 ---------------
->>>  tools/perf/util/pmu.h           |  4 --
->>>  9 files changed, 49 insertions(+), 122 deletions(-)
+>>>  tools/perf/util/pmu-hybrid.c | 15 +--------------
+>>>  tools/perf/util/pmu-hybrid.h |  3 ---
+>>>  tools/perf/util/pmu.c        | 26 ++++++++++++++------------
+>>>  3 files changed, 15 insertions(+), 29 deletions(-)
 >>>
->>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
->>> index ec0f2d5f189f..9d212236c75a 100644
->>> --- a/tools/perf/builtin-record.c
->>> +++ b/tools/perf/builtin-record.c
->>> @@ -4198,11 +4198,7 @@ int cmd_record(int argc, const char **argv)
->>>       /* Enable ignoring missing threads when -u/-p option is defined. */
->>>       rec->opts.ignore_missing_thread = rec->opts.target.uid != UINT_MAX || rec->opts.target.pid;
+>>> diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.c
+>>> index bc4cb0738c35..7fe943dd3217 100644
+>>> --- a/tools/perf/util/pmu-hybrid.c
+>>> +++ b/tools/perf/util/pmu-hybrid.c
+>>> @@ -18,20 +18,7 @@
 >>>
->>> -     if (evlist__fix_hybrid_cpus(rec->evlist, rec->opts.target.cpu_list)) {
->>> -             pr_err("failed to use cpu list %s\n",
->>> -                    rec->opts.target.cpu_list);
->>> -             goto out;
->>> -     }
->>> +     evlist__warn_user_requested_cpus(rec->evlist, rec->opts.target.cpu_list);
+>>>  LIST_HEAD(perf_pmu__hybrid_pmus);
 >>>
->>>       rec->opts.target.hybrid = perf_pmu__has_hybrid();
->>>
->>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->>> index bc45cee3f77c..612467216306 100644
->>> --- a/tools/perf/builtin-stat.c
->>> +++ b/tools/perf/builtin-stat.c
->>> @@ -2462,10 +2462,7 @@ int cmd_stat(int argc, const char **argv)
->>>               }
->>>       }
->>>
->>> -     if (evlist__fix_hybrid_cpus(evsel_list, target.cpu_list)) {
->>> -             pr_err("failed to use cpu list %s\n", target.cpu_list);
->>> -             goto out;
->>> -     }
->>> +     evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
->>>
->>>       target.hybrid = perf_pmu__has_hybrid();
->>>       if (evlist__create_maps(evsel_list, &target) < 0) {
->>> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
->>> index e3426541e0aa..c1de993c083f 100644
->>> --- a/tools/perf/util/cpumap.h
->>> +++ b/tools/perf/util/cpumap.h
->>> @@ -59,7 +59,7 @@ struct perf_cpu cpu__max_present_cpu(void);
->>>  /**
->>>   * cpu_map__is_dummy - Events associated with a pid, rather than a CPU, use a single dummy map with an entry of -1.
->>>   */
->>> -static inline bool cpu_map__is_dummy(struct perf_cpu_map *cpus)
->>> +static inline bool cpu_map__is_dummy(const struct perf_cpu_map *cpus)
->>>  {
->>>       return perf_cpu_map__nr(cpus) == 1 && perf_cpu_map__cpu(cpus, 0).cpu == -1;
->>>  }
->>> diff --git a/tools/perf/util/evlist-hybrid.c b/tools/perf/util/evlist-hybrid.c
->>> index 57f02beef023..db3f5fbdebe1 100644
->>> --- a/tools/perf/util/evlist-hybrid.c
->>> +++ b/tools/perf/util/evlist-hybrid.c
->>> @@ -86,77 +86,3 @@ bool evlist__has_hybrid(struct evlist *evlist)
->>>
->>>       return false;
->>>  }
->>> -
->>> -int evlist__fix_hybrid_cpus(struct evlist *evlist, const char *cpu_list)
+>>> -bool perf_pmu__hybrid_mounted(const char *name)
 >>> -{
->>> -     struct perf_cpu_map *cpus;
->>> -     struct evsel *evsel, *tmp;
->>> -     struct perf_pmu *pmu;
->>> -     int ret, unmatched_count = 0, events_nr = 0;
+>>> -     int cpu;
+>>> -     char pmu_name[PATH_MAX];
+>>> -     struct perf_pmu pmu = {.name = pmu_name};
 >>> -
->>> -     if (!perf_pmu__has_hybrid() || !cpu_list)
->>> -             return 0;
+>>> -     if (strncmp(name, "cpu_", 4))
+>>> -             return false;
 >>> -
->>> -     cpus = perf_cpu_map__new(cpu_list);
->>> -     if (!cpus)
->>> -             return -1;
->>> -
->>> -     /*
->>> -      * The evsels are created with hybrid pmu's cpus. But now we
->>> -      * need to check and adjust the cpus of evsel by cpu_list because
->>> -      * cpu_list may cause conflicts with cpus of evsel. For example,
->>> -      * cpus of evsel is cpu0-7, but the cpu_list is cpu6-8, we need
->>> -      * to adjust the cpus of evsel to cpu6-7. And then propatate maps
->>> -      * in evlist__create_maps().
->>> -      */
->>> -     evlist__for_each_entry_safe(evlist, tmp, evsel) {
->>> -             struct perf_cpu_map *matched_cpus, *unmatched_cpus;
->>> -             char buf1[128], buf2[128];
->>> -
->>> -             pmu = perf_pmu__find_hybrid_pmu(evsel->pmu_name);
->>> -             if (!pmu)
->>> -                     continue;
->>> -
->>> -             ret = perf_pmu__cpus_match(pmu, cpus, &matched_cpus,
->>> -                                        &unmatched_cpus);
->>> -             if (ret)
->>> -                     goto out;
->>> -
->>> -             events_nr++;
->>> -
->>> -             if (perf_cpu_map__nr(matched_cpus) > 0 &&
->>> -                 (perf_cpu_map__nr(unmatched_cpus) > 0 ||
->>> -                  perf_cpu_map__nr(matched_cpus) < perf_cpu_map__nr(cpus) ||
->>> -                  perf_cpu_map__nr(matched_cpus) < perf_cpu_map__nr(pmu->cpus))) {
->>> -                     perf_cpu_map__put(evsel->core.cpus);
->>> -                     perf_cpu_map__put(evsel->core.own_cpus);
->>> -                     evsel->core.cpus = perf_cpu_map__get(matched_cpus);
->>> -                     evsel->core.own_cpus = perf_cpu_map__get(matched_cpus);
->>> -
->>> -                     if (perf_cpu_map__nr(unmatched_cpus) > 0) {
->>> -                             cpu_map__snprint(matched_cpus, buf1, sizeof(buf1));
->>> -                             pr_warning("WARNING: use %s in '%s' for '%s', skip other cpus in list.\n",
->>> -                                        buf1, pmu->name, evsel->name);
->>> -                     }
->>> -             }
->>> -
->>> -             if (perf_cpu_map__nr(matched_cpus) == 0) {
->>> -                     evlist__remove(evlist, evsel);
->>> -                     evsel__delete(evsel);
->>> -
->>> -                     cpu_map__snprint(cpus, buf1, sizeof(buf1));
->>> -                     cpu_map__snprint(pmu->cpus, buf2, sizeof(buf2));
->>> -                     pr_warning("WARNING: %s isn't a '%s', please use a CPU list in the '%s' range (%s)\n",
->>> -                                buf1, pmu->name, pmu->name, buf2);
->>> -                     unmatched_count++;
->>> -             }
->>> -
->>> -             perf_cpu_map__put(matched_cpus);
->>> -             perf_cpu_map__put(unmatched_cpus);
->>> -     }
->>> -     if (events_nr)
->>> -             ret = (unmatched_count == events_nr) ? -1 : 0;
->>> -out:
->>> -     perf_cpu_map__put(cpus);
->>> -     return ret;
+>>> -     strlcpy(pmu_name, name, sizeof(pmu_name));
+>>> -     return perf_pmu__scan_file(&pmu, "cpus", "%u", &cpu) > 0;
 >>> -}
->>> diff --git a/tools/perf/util/evlist-hybrid.h b/tools/perf/util/evlist-hybrid.h
->>> index aacdb1b0f948..19f74b4c340a 100644
->>> --- a/tools/perf/util/evlist-hybrid.h
->>> +++ b/tools/perf/util/evlist-hybrid.h
->>> @@ -10,6 +10,5 @@
->>>  int evlist__add_default_hybrid(struct evlist *evlist, bool precise);
->>>  void evlist__warn_hybrid_group(struct evlist *evlist);
->>>  bool evlist__has_hybrid(struct evlist *evlist);
->>> -int evlist__fix_hybrid_cpus(struct evlist *evlist, const char *cpu_list);
+>>> -
+>>> -struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
+>>> +static struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
+>>>  {
+>>>       struct perf_pmu *pmu;
 >>>
->>>  #endif /* __PERF_EVLIST_HYBRID_H */
->>> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
->>> index a0504316b06f..5d0d99127a90 100644
->>> --- a/tools/perf/util/evlist.c
->>> +++ b/tools/perf/util/evlist.c
->>> @@ -2465,3 +2465,47 @@ void evlist__check_mem_load_aux(struct evlist *evlist)
->>>               }
->>>       }
->>>  }
->>> +
->>> +/**
->>> + * evlist__warn_user_requested_cpus() - Check each evsel against requested CPUs
->>> + *     and warn if the user CPU list is inapplicable for the event's PMUs
->>> + *     CPUs. Uncore PMUs list a CPU in sysfs, but this may be overwritten by a
->>> + *     user requested CPU and so any online CPU is applicable. Core PMUs handle
->>> + *     events on the CPUs in their list and otherwise the event isn't supported.
->>> + * @evlist: The list of events being checked.
->>> + * @cpu_list: The user provided list of CPUs.
->>> + */
->>> +void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list)
->>> +{
->>> +     struct perf_cpu_map *user_requested_cpus;
->>> +     struct evsel *pos;
->>> +
->>> +     if (!cpu_list)
->>> +             return;
->>> +
->>> +     user_requested_cpus = perf_cpu_map__new(cpu_list);
->>> +     if (!user_requested_cpus)
->>> +             return;
->>> +
->>> +     evlist__for_each_entry(evlist, pos) {
->>> +             const struct perf_cpu_map *to_test;
->>> +             struct perf_cpu cpu;
->>> +             int idx;
->>> +             bool warn = true;
->>> +             const struct perf_pmu *pmu = evsel__find_pmu(pos);
->>> +
->>> +             to_test = pmu && pmu->is_uncore ? cpu_map__online() : evsel__cpus(pos);
->>> +
->>> +             perf_cpu_map__for_each_cpu(cpu, idx, to_test) {
->>> +                     if (perf_cpu_map__has(user_requested_cpus, cpu)) {
->>> +                             warn = false;
->>> +                             break;
->>> +                     }
->>> +             }
->>> +             if (warn) {
->>> +                     pr_warning("WARNING: Requested CPU(s) '%s' not supported by PMU '%s' for event '%s'\n",
->>> +                             cpu_list, pmu ? pmu->name : "cpu", evsel__name(pos));
->>> +             }
->>> +     }
->>> +     perf_cpu_map__put(user_requested_cpus);
->>> +}
->>> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
->>> index e7e5540cc970..5e7ff44f3043 100644
->>> --- a/tools/perf/util/evlist.h
->>> +++ b/tools/perf/util/evlist.h
->>> @@ -447,4 +447,6 @@ struct evsel *evlist__find_evsel(struct evlist *evlist, int idx);
+>>> diff --git a/tools/perf/util/pmu-hybrid.h b/tools/perf/util/pmu-hybrid.h
+>>> index 206b94931531..8dbcae935020 100644
+>>> --- a/tools/perf/util/pmu-hybrid.h
+>>> +++ b/tools/perf/util/pmu-hybrid.h
+>>> @@ -13,9 +13,6 @@ extern struct list_head perf_pmu__hybrid_pmus;
+>>>  #define perf_pmu__for_each_hybrid_pmu(pmu)   \
+>>>       list_for_each_entry(pmu, &perf_pmu__hybrid_pmus, hybrid_list)
 >>>
->>>  int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char *bf);
->>>  void evlist__check_mem_load_aux(struct evlist *evlist);
->>> +void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list);
->>> +
->>>  #endif /* __PERF_EVLIST_H */
+>>> -bool perf_pmu__hybrid_mounted(const char *name);
+>>> -
+>>> -struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name);
+>>>  bool perf_pmu__is_hybrid(const char *name);
+>>>
+>>>  static inline int perf_pmu__hybrid_pmu_num(void)
 >>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->>> index f4f0afbc391c..1e0be23d4dd7 100644
+>>> index 1e0be23d4dd7..729b1f166f80 100644
 >>> --- a/tools/perf/util/pmu.c
 >>> +++ b/tools/perf/util/pmu.c
->>> @@ -2038,39 +2038,6 @@ int perf_pmu__match(char *pattern, char *name, char *tok)
->>>       return 0;
+>>> @@ -617,9 +617,6 @@ static bool pmu_is_uncore(int dirfd, const char *name)
+>>>  {
+>>>       int fd;
+>>>
+>>> -     if (perf_pmu__hybrid_mounted(name))
+>>> -             return false;
+>>> -
+>>>       fd = perf_pmu__pathname_fd(dirfd, name, "cpumask", O_PATH);
+>>>       if (fd < 0)
+>>>               return false;
+>>> @@ -898,6 +895,16 @@ static int pmu_max_precise(int dirfd, struct perf_pmu *pmu)
+>>>       return max_precise;
 >>>  }
 >>>
->>> -int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
->>> -                      struct perf_cpu_map **mcpus_ptr,
->>> -                      struct perf_cpu_map **ucpus_ptr)
->>> -{
->>> -     struct perf_cpu_map *pmu_cpus = pmu->cpus;
->>> -     struct perf_cpu_map *matched_cpus, *unmatched_cpus;
->>> -     struct perf_cpu cpu;
->>> -     int i, matched_nr = 0, unmatched_nr = 0;
->>> -
->>> -     matched_cpus = perf_cpu_map__default_new();
->>> -     if (!matched_cpus)
->>> -             return -1;
->>> -
->>> -     unmatched_cpus = perf_cpu_map__default_new();
->>> -     if (!unmatched_cpus) {
->>> -             perf_cpu_map__put(matched_cpus);
->>> -             return -1;
->>> -     }
->>> -
->>> -     perf_cpu_map__for_each_cpu(cpu, i, cpus) {
->>> -             if (!perf_cpu_map__has(pmu_cpus, cpu))
->>> -                     RC_CHK_ACCESS(unmatched_cpus)->map[unmatched_nr++] = cpu;
->>> -             else
->>> -                     RC_CHK_ACCESS(matched_cpus)->map[matched_nr++] = cpu;
->>> -     }
->>> -
->>> -     perf_cpu_map__set_nr(unmatched_cpus, unmatched_nr);
->>> -     perf_cpu_map__set_nr(matched_cpus, matched_nr);
->>> -     *mcpus_ptr = matched_cpus;
->>> -     *ucpus_ptr = unmatched_cpus;
->>> -     return 0;
->>> -}
->>> -
->>>  double __weak perf_pmu__cpu_slots_per_cycle(void)
+>>> +/**
+>>> + * perf_pmu__skip_empty_cpus() - should pmu_lookup skip the named PMU if the
+>>> + *      cpus or cpumask file isn't present?
+>>> + * @name: Name of PMU.
+>>> + */
+>>> +static bool perf_pmu__skip_empty_cpus(const char *name)
+>>> +{
+>>> +     return !strcmp(name, "cpu_core") || !strcmp(name, "cpu_atom");
+>>> +}
+>>> +
+>>>  static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_name)
 >>>  {
->>>       return NAN;
->>> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
->>> index 0e0cb6283594..49033bb134f3 100644
->>> --- a/tools/perf/util/pmu.h
->>> +++ b/tools/perf/util/pmu.h
->>> @@ -257,10 +257,6 @@ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu);
->>>  bool perf_pmu__has_hybrid(void);
->>>  int perf_pmu__match(char *pattern, char *name, char *tok);
+>>>       struct perf_pmu *pmu;
+>>> @@ -905,15 +912,8 @@ static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_name)
+>>>       LIST_HEAD(aliases);
+>>>       __u32 type;
+>>>       char *name = pmu_find_real_name(lookup_name);
+>>> -     bool is_hybrid = perf_pmu__hybrid_mounted(name);
+>>>       char *alias_name;
 >>>
->>> -int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
->>> -                      struct perf_cpu_map **mcpus_ptr,
->>> -                      struct perf_cpu_map **ucpus_ptr);
+>>> -     /*
+>>> -      * Check pmu name for hybrid and the pmu may be invalid in sysfs
+>>> -      */
+>>> -     if (!strncmp(name, "cpu_", 4) && !is_hybrid)
+>>> -             return NULL;
 >>> -
->>>  char *pmu_find_real_name(const char *name);
->>>  char *pmu_find_alias_name(const char *name);
->>>  double perf_pmu__cpu_slots_per_cycle(void);
+>>>       /*
+>>>        * The pmu data we store & need consists of the pmu
+>>>        * type value and format definitions. Load both right
+>>> @@ -933,8 +933,10 @@ static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_name)
+>>>               return NULL;
+>>>
+>>>       pmu->cpus = pmu_cpumask(dirfd, name);
+>>> -     pmu->name = strdup(name);
+>>> +     if (!pmu->cpus && perf_pmu__skip_empty_cpus(name))
+>>> +             goto err;
+>>>
+>>> +     pmu->name = strdup(name);
+>>>       if (!pmu->name)
+>>>               goto err;
+>>>
+>>> @@ -964,7 +966,7 @@ static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_name)
+>>>       list_splice(&aliases, &pmu->aliases);
+>>>       list_add_tail(&pmu->list, &pmus);
+>>>
+>>> -     if (is_hybrid)
+>>> +     if (!strcmp(name, "cpu_core") || !strcmp(name, "cpu_atom"))
+>>>               list_add_tail(&pmu->hybrid_list, &perf_pmu__hybrid_pmus);
+>>>       else
+>>>               INIT_LIST_HEAD(&pmu->hybrid_list);
