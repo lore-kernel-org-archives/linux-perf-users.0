@@ -2,161 +2,187 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2B5C7EE2A
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 12:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F61FC77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 12:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233217AbjEVMHo (ORCPT
+        id S233608AbjEVMMf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 May 2023 08:07:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44452 "EHLO
+        Mon, 22 May 2023 08:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229999AbjEVMHn (ORCPT
+        with ESMTP id S233354AbjEVMMc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 May 2023 08:07:43 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2795AA2
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 05:07:42 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-64d44b198baso1435822b3a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 05:07:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684757261; x=1687349261;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rQchT/0lNTrw+8B0CuId0SUlnq7U6PVfXba1xiCz71w=;
-        b=wca6fpXjHkjd3rjsv8N4x5KSOncS2a0VHpnNGtiD4rgVZBbKqmLjWnIGdun2rYA/Y8
-         vff4t0nOJLv+32DDppIspgUMVPSoPyRDnYg1Nn7G2Txn94Bb87rwsF5tBn6ISb2TZphQ
-         HSmIDap0oJXPdGavLiMT9AkoOT80M8S3khfihAGpad399PH5nZPUhOPGwBmfTpSMFdsD
-         4OYK2K44TRvJOZDyhX2Pz1Ost8odRND3dzVNGMlKqfaVxaUu/aDVttcZ7BStvoPVb6pg
-         kYOeXj3W5hETAxwn0fd/NIPW/6XUCFvuRvRY5d9Z6ZF6m0Llla+WfrPG+R+YuCYFZ15t
-         /dqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684757261; x=1687349261;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rQchT/0lNTrw+8B0CuId0SUlnq7U6PVfXba1xiCz71w=;
-        b=OviB4TMHjj2pdx6ISSkex3HQeqVUlYQ1Od4lA0fEZ3DsQ4H5R9k8DaQgNmZCwU6JQf
-         WWabgbWRZjTtLtsj362fVlcnoUBT/crxzeBC8h6oEwOeNGt7QA8OJt1Of5W3L8OpO9sW
-         /GbVHavahRQb3NNrnYcZmD5sVvb7hvDOeX7Qh9QJqNcYmYZzcRFnBxlmUkAmyjRVeszE
-         7SSuGSTlUj5OX3/J8H/xI1PrEKlwUd8OBtHivay7ZKE2gjNrJovJvdgdjMEe/+3U9rxk
-         zkiPyoF4iMPLX3Jxq7fLfzcQPEEpF973bQ/Bf3I97/FQ7KvNDNnFNi0DTcoGMVm4Xbgq
-         yjRw==
-X-Gm-Message-State: AC+VfDwYAPnevbVUiecrOT1JDWC5xhWYb5+JEukKkTpXIiS5d84hy7JL
-        BwHgp9L1TH7h8KM3hpQAqNDD4Q==
-X-Google-Smtp-Source: ACHHUZ7FzhOI1oZLY82kXv7E96TdiFUnztouK0GLFhMQ6d59+neuCKyIRvk0N2kpg8Te/400FlOEsA==
-X-Received: by 2002:a05:6a00:1d1d:b0:64d:5683:1977 with SMTP id a29-20020a056a001d1d00b0064d56831977mr5334494pfx.9.1684757261369;
-        Mon, 22 May 2023 05:07:41 -0700 (PDT)
-Received: from leoy-yangtze.lan ([107.151.177.126])
-        by smtp.gmail.com with ESMTPSA id p7-20020a62ab07000000b00640defda6d2sm3980510pff.207.2023.05.22.05.07.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 05:07:40 -0700 (PDT)
-Date:   Mon, 22 May 2023 20:07:29 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Eric Lin <eric.lin@sifive.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Qi Liu <liuqi115@huawei.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v1 2/5] perf parse-regs: Introduce functions
- arch__reg_{ip|sp}()
-Message-ID: <20230522120729.GB1826292@leoy-yangtze.lan>
-References: <20230520025537.1811986-1-leo.yan@linaro.org>
- <20230520025537.1811986-3-leo.yan@linaro.org>
- <839836e8-9600-9249-dcdb-e29519335141@arm.com>
+        Mon, 22 May 2023 08:12:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F145AB6
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 05:11:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1684757503;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=WIdRgPc86wRs8rRQezIuaScS15xj5tHdL0njdi6vrks=;
+        b=N16dhJ4kNoW+ZPldgtXyh48VVrV1i4815yGmrvt14sECuRRn8s7VFmJlRCyw8XVhuP6V+F
+        zlk++3RYEKg8MKUqZxuNFXHC+j6xVbZoTjLUzUnR01Cmaun4pqngXo+VfTB9gxZ8RgxkM8
+        SkGt/BUZlZtosaTMAJ6tZ6AkGF0i4ys=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-343--3_4xFoVMpGIad36fGaklA-1; Mon, 22 May 2023 08:11:40 -0400
+X-MC-Unique: -3_4xFoVMpGIad36fGaklA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 583A53C02549;
+        Mon, 22 May 2023 12:11:40 +0000 (UTC)
+Received: from Diego (unknown [10.39.208.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F1BAC54F80;
+        Mon, 22 May 2023 12:11:38 +0000 (UTC)
+Date:   Mon, 22 May 2023 14:11:36 +0200 (CEST)
+From:   Michael Petlan <mpetlan@redhat.com>
+X-X-Sender: Michael@Diego
+To:     acme@kernel.org
+cc:     linux-perf-users@vger.kernel.org, acme@redhat.com,
+        qzhao@redhat.com, cjense@google.com, irogers@google.com
+Subject: Re: [PATCH 1/2] perf stat: Fix JSON metric printout for multiple
+ metrics per line
+In-Reply-To: <20230120134039.17788-2-mpetlan@redhat.com>
+Message-ID: <alpine.LRH.2.20.2305221405430.13334@Diego>
+References: <20230120134039.17788-1-mpetlan@redhat.com> <20230120134039.17788-2-mpetlan@redhat.com>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <839836e8-9600-9249-dcdb-e29519335141@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 22, 2023 at 09:57:25AM +0100, James Clark wrote:
+Hello Ian and Arnaldo,
+
+I've recently got back to the JSON test failures. In January, I post two
+patches within a patchset. I see that Ian has updated the testcase code,
+so the second patch is probably no more needed. However I don't see this
+one applied upstream yet, although it seemed on the list, it had got some
+acks. Has it been forgotten somehow?
+
+To remind, since the JSON printer engine wasn't ready to print multiple
+metrics per line, the JSON output got screwed up in that situation. The
+situation happened on some SPR CPUs, where Top-Down metrics are supported.
+
+The patch below fixes the printer to handle this situation correctly.
+
+I remember someone saying that the whole printer engine needs to be
+refactored some day, but I'd think that before that happens, it'd be
+nice to have it fixed...
+
+What do you think?
+
+Regards,
+Michael
+
+On Fri, 20 Jan 2023, Michael Petlan wrote:
+> JSON printing engine used to always print metric (even when there should
+> be none and other engines (std, csv) would not print it) and the metric
+> used to always close the line by printing a closing curly bracket.
+> 
+> This caused invalid JSON output being generated for top-down metrics,
+> when multiple metrics are printed on a single line, so the broken output
+> might have looked like:
+> 
+>   ... "metric-value" : 15.564203, "metric-unit" : \
+>   "Memory Bound"}"metric-value" : 14.007787, "metric-unit" : "Core Bound"}
+> 
+> To fix it, print always the separating comma BEFORE the key:value pairs
+> and close the line outside of the JSON metric printing routine.
+> 
+> Fixes: df936cadfb58 ("perf stat: Add JSON output option")
+> 
+> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+> ---
+>  tools/perf/util/stat-display.c | 28 ++++++++++++++++------------
+>  1 file changed, 16 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 8bd8b0142630..8f80f6b566d0 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -86,7 +86,7 @@ static void print_running_json(struct perf_stat_config *config, u64 run, u64 ena
+>  
+>  	if (run != ena)
+>  		enabled_percent = 100 * run / ena;
+> -	fprintf(config->output, "\"event-runtime\" : %" PRIu64 ", \"pcnt-running\" : %.2f, ",
+> +	fprintf(config->output, ", \"event-runtime\" : %" PRIu64 ", \"pcnt-running\" : %.2f",
+>  		run, enabled_percent);
+>  }
+>  
+> @@ -121,7 +121,7 @@ static void print_noise_pct_csv(struct perf_stat_config *config,
+>  static void print_noise_pct_json(struct perf_stat_config *config,
+>  				 double pct)
+>  {
+> -	fprintf(config->output, "\"variance\" : %.2f, ", pct);
+> +	fprintf(config->output, ", \"variance\" : %.2f", pct);
+>  }
+>  
+>  static void print_noise_pct(struct perf_stat_config *config,
+> @@ -165,7 +165,7 @@ static void print_cgroup_csv(struct perf_stat_config *config, const char *cgrp_n
+>  
+>  static void print_cgroup_json(struct perf_stat_config *config, const char *cgrp_name)
+>  {
+> -	fprintf(config->output, "\"cgroup\" : \"%s\", ", cgrp_name);
+> +	fprintf(config->output, ", \"cgroup\" : \"%s\"", cgrp_name);
+>  }
+>  
+>  static void print_cgroup(struct perf_stat_config *config, struct cgroup *cgrp)
+> @@ -431,10 +431,11 @@ static void print_metric_json(struct perf_stat_config *config __maybe_unused,
+>  	struct outstate *os = ctx;
+>  	FILE *out = os->fh;
+>  
+> -	fprintf(out, "\"metric-value\" : %f, ", val);
+> -	fprintf(out, "\"metric-unit\" : \"%s\"", unit);
+> -	if (!config->metric_only)
+> -		fprintf(out, "}");
+> +	if (unit == NULL || fmt == NULL)
+> +		return;
+> +
+> +	fprintf(out, ", \"metric-value\" : %f", val);
+> +	fprintf(out, ", \"metric-unit\" : \"%s\"", unit);
+>  }
+>  
+>  static void new_line_json(struct perf_stat_config *config, void *ctx)
+> @@ -623,14 +624,14 @@ static void print_counter_value_json(struct perf_stat_config *config,
+>  	const char *bad_count = evsel->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED;
+>  
+>  	if (ok)
+> -		fprintf(output, "\"counter-value\" : \"%f\", ", avg);
+> +		fprintf(output, "\"counter-value\" : \"%f\"", avg);
+>  	else
+> -		fprintf(output, "\"counter-value\" : \"%s\", ", bad_count);
+> +		fprintf(output, "\"counter-value\" : \"%s\"", bad_count);
+>  
+>  	if (evsel->unit)
+> -		fprintf(output, "\"unit\" : \"%s\", ", evsel->unit);
+> +		fprintf(output, ", \"unit\" : \"%s\"", evsel->unit);
+>  
+> -	fprintf(output, "\"event\" : \"%s\", ", evsel__name(evsel));
+> +	fprintf(output, ", \"event\" : \"%s\"", evsel__name(evsel));
+>  }
+>  
+>  static void print_counter_value(struct perf_stat_config *config,
+> @@ -835,8 +836,11 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+>  
+>  	printout(config, os, uval, run, ena, avg, s);
+>  
+> -	if (!metric_only)
+> +	if (!metric_only) {
+> +		if (config->json_output)
+> +			fputc('}', output);
+>  		fputc('\n', output);
+> +	}
+>  }
+>  
+>  static void print_metric_begin(struct perf_stat_config *config,
+> -- 
+> 2.18.4
 > 
 > 
-> On 20/05/2023 03:55, Leo Yan wrote:
-> > Ideally, we want util/perf_regs.c to be general enough and doesn't bind
-> > with specific architecture.
-> > 
-> > But since util/perf_regs.c uses the macros PERF_REG_IP and PERF_REG_SP
-> > which are defined by architecture, thus util/perf_regs.c is dependent on
-> > architecture header (see util/perf_regs.h includes "<perf_regs.h>", here
-> > perf_regs.h is architecture specific header).
-> > 
-> > As a step to generalize util/perf_regs.c, this commit introduces weak
-> > functions arch__reg_ip() and arch__reg_sp() and every architecture can
-> > define their own functions; thus, util/perf_regs.c doesn't need to use
-> > PERF_REG_IP and PERF_REG_SP anymore.
-> > 
-> > This is a preparation to get rid of architecture specific header from
-> > util/perf_regs.h.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> [...]
-> >  
-> > -#define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
-> > +#define DWARF_MINIMAL_REGS ((1ULL << arch__reg_ip()) | (1ULL << arch__reg_sp()))
-> >  
-> >  const char *perf_reg_name(int id, const char *arch);
-> >  int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
-> > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-> > index bdccfc511b7e..f308f2ea512b 100644
-> > --- a/tools/perf/util/unwind-libdw.c
-> > +++ b/tools/perf/util/unwind-libdw.c
-> > @@ -252,7 +252,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
-> >  	if (!ui->dwfl)
-> >  		goto out;
-> >  
-> > -	err = perf_reg_value(&ip, &data->user_regs, PERF_REG_IP);
-> > +	err = perf_reg_value(&ip, &data->user_regs, arch__reg_ip());
-> 
-> Shouldn't it be more like this, because the weak symbols are a compile
-> time thing and it's supposed to support cross arch unwinding at runtime
-> (assuming something containing the arch from the file is passed down,
-> like we did with perf_reg_name()):
-> 
->   char *arch = perf_env__arch(evsel__env(evsel));
->   err = perf_reg_value(&ip, &data->user_regs, arch__reg_ip(arch));
 
-Thanks for pointing out, James.
-
-Agreed that we need to return the IP and SP register based on the
-arch.  I will look into more details and spin for a new patch set for
-this.
-
-> Now I'm wondering how cross unwinding ever worked because I see
-> libunwind also has something hard coded too:
-> 
->   #define LIBUNWIND__ARCH_REG_SP PERF_REG_SP
-
-Yeah, I also used arch__reg_sp() to replace PERF_REG_SP; but as you
-suggestion, we should fix this with passing 'arch' parameter for
-getting SP register based on arch.
-
-Another important thing is to find a good test for cross unwinding.
-Maybe I can use tools/perf/tests/shell/record.sh, function
-test_register_capture() for testing registers, if you have any other
-suggesion, please let me know.
-
-Thanks,
-Leo
