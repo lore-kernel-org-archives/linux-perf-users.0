@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A509C77B75
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 06:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C2A4C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 06:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232158AbjEVGrJ (ORCPT
+        id S232165AbjEVGrN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 May 2023 02:47:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52050 "EHLO
+        Mon, 22 May 2023 02:47:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231767AbjEVGqH (ORCPT
+        with ESMTP id S231965AbjEVGqI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 May 2023 02:46:07 -0400
+        Mon, 22 May 2023 02:46:08 -0400
 Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439FA1731
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 043C41737
         for <linux-perf-users@vger.kernel.org>; Sun, 21 May 2023 23:44:53 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba83fed51adso10456747276.0
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba8bab3b392so6666443276.1
         for <linux-perf-users@vger.kernel.org>; Sun, 21 May 2023 23:44:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684737868; x=1687329868;
+        d=google.com; s=20221208; t=1684737870; x=1687329870;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=/+aFtpu9F2yGljXWeZ17LuoYXO4ZNmuRrdV4BNXebZU=;
-        b=WaMOe5OUll0Sz3acYm4uBfP9Z16Iny/8w4BooK0DItssmCmNzxlUurQkN2coR0gNZn
-         VA9XDIt83nTT1n/huWCKal3K6IbRP/7461ldA4ftEms4RfXQKm6GC4TaZwpQGFfcTKqB
-         oIYrXtvyVFtZKxpNNgMT7H8kXvww57QD6IXbvkv3pwYxvv3Xz5UXm4RtaYEssAp4liK9
-         C4nuzxzYmak9iZYoexyN6LBpeLG85ppM9G08VP2VyuaeDKLi2TYGZxF9s9/ynZ4RtTJn
-         U7hw7jr42r3RXEZu0ZFOeXm+Q48UG/nUdfFzp8U7CchRVHGNj9b29tj0LfL0gIUiaLWu
-         xB8g==
+        bh=AR9zIJFSwa/PWauN3jIDvjQbr00g5VzBP70Tf1LOL1E=;
+        b=rQdTaU9Co7hmCz7sZhlTtMZNm3PLADpPrQkIYy4P6ZRDmrhzsp6Xf0YAjRm0wBZdn+
+         6xDYWZ++iJgI6JA/TGL8WcomWza08xozk8lfhLPjUgoHYFyir2BnZuybBvqke06qMHiL
+         Ks4GWm+M4VtI/9tZt17Lc5EgktlOwb2PxgJuYJvEljGKwIkIAmtJkdUurOIUjmzFgkyi
+         u9cG90qy2vNY6gDgClRU/aMiY994YcRs9Y/JPbQTmuzIwlqn75sDUp+W1KRj6BpWpW+t
+         FVrnRzdTvlOE7agFuNOID8UTjbXD2bmq8YnConWaa1Uwsej2BW3iD0MJjU0dy9mKbCxo
+         K1Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684737868; x=1687329868;
+        d=1e100.net; s=20221208; t=1684737870; x=1687329870;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/+aFtpu9F2yGljXWeZ17LuoYXO4ZNmuRrdV4BNXebZU=;
-        b=TkcrmY88R4wfMDvOGTcFcs9qioZtTNyj2FRckQmSorAF2QKYzsGef5pRO/e1Nu7Mha
-         qxi6dwHIawY87N6Hu2hjCKGtMpBjn3wYyr507eRmq+2P2GvCBLF/Jm1Zno0MUbCQcQ4Y
-         G1qU4bm1F35asdpL8t9qIJSfzA+taKWc7ZYAE9RsjqgdWo5KS85TfnbB6x/mrra3vJsd
-         5IbD6kbmU54f8Efu4fljWhwoZLZzeynjlvwmbWw8pbR79WxFrCvImno/MTssuhRt/vp9
-         eoOM96AR3PZF8Oe2edgfFGIUACp1dK7ghWhBKnqUcydPrw93+R8eGSh9pCA2CePLjYtS
-         Fo1A==
-X-Gm-Message-State: AC+VfDyDOEZuDCYPcPfr5vgA4G0g6QD0NijuYPx9abThKn2eArXenADV
-        s/D9CW6pfM43NjKx/pyc7kvEpBZO5eRD
-X-Google-Smtp-Source: ACHHUZ4VYf6iGuG5alZmBIczqrBWEaYLm65RVnA3VZh2jBU21XmP0FFw2fc2n/SzpDwfAuNUisc8brDXSjVm
+        bh=AR9zIJFSwa/PWauN3jIDvjQbr00g5VzBP70Tf1LOL1E=;
+        b=M6+Ea1LpIugqlAb/kKqe1mt8w3wmLQlTvgX3xyjx1dgN5yNMP6yNFBasAnz1Y5oMhJ
+         JTZd0xUTkrg3AtGrUYFvw99oSkz4R4Gz4X7vHtUvtePZd+ox3H29OXGxSD7F0xlsbGVO
+         I9ysfkmWrZ+XGbBz/ixTyEYLc4hoGGxrbpEz+k8iZ7HOh986YxGveix/41SNSaLb8A7Z
+         12gqJrmgBXzzTBjUbMAA5R4RD5dz7YGlwaWor+TljFBW585V8ZSGSMXr45DFG7cfRYBM
+         xw8f5kcB7EbydXhWN20HZZ4EBsskJrN90oApYA0RBDhKp4ZP0yXId7CP8Ntg/8zf41sG
+         so0w==
+X-Gm-Message-State: AC+VfDyi4a4erKSsYQwcs8eI//isQ1AML6WWPo2caFmW2NCWjREYMmKb
+        3IHDHwZGRi5lgwI3eM2lnp7hlpP35V70
+X-Google-Smtp-Source: ACHHUZ4LNBZ9sStTvrt17WoyzQgUctNLJyZ9xJ+MBkHUvinjj2Hmn4Vu3vh1z5UIvrHcyXCUstYSzvEiMpg6
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:48d9:8c21:e099:7301])
- (user=irogers job=sendgmr) by 2002:a25:bb41:0:b0:b9a:6508:1b5f with SMTP id
- b1-20020a25bb41000000b00b9a65081b5fmr3592765ybk.11.1684737868018; Sun, 21 May
- 2023 23:44:28 -0700 (PDT)
-Date:   Sun, 21 May 2023 23:43:29 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:1343:b0:ba8:4d1c:dd04 with SMTP
+ id g3-20020a056902134300b00ba84d1cdd04mr6161248ybu.1.1684737870515; Sun, 21
+ May 2023 23:44:30 -0700 (PDT)
+Date:   Sun, 21 May 2023 23:43:30 -0700
 In-Reply-To: <20230522064330.189127-1-irogers@google.com>
-Message-Id: <20230522064330.189127-23-irogers@google.com>
+Message-Id: <20230522064330.189127-24-irogers@google.com>
 Mime-Version: 1.0
 References: <20230522064330.189127-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
-Subject: [PATCH v2 22/23] perf pmus: Avoid repeated sysfs scanning
+Subject: [PATCH v2 23/23] perf pmus: Ensure all PMUs are read for find_by_type
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -93,110 +93,55 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf_pmus__scan will process every directory in sysfs to see if it is
-a PMU, attempting to add it if not already in the pmus list. Add two
-booleans to record whether this scanning has been done for core or all
-PMUs. Skip scanning in the event that scanning has already occurred.
+perf_pmus__find_by_type may be called for something like a raw event,
+in which case the PMU isn't guaranteed to have been looked up. Add a
+second check to make sure all PMUs are loaded.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmus.c | 33 +++++++++++++++++++++++++++++++--
- 1 file changed, 31 insertions(+), 2 deletions(-)
+ tools/perf/util/pmus.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 5736e99facd1..22e9e46ab765 100644
+index 22e9e46ab765..ce75c7adca84 100644
 --- a/tools/perf/util/pmus.c
 +++ b/tools/perf/util/pmus.c
-@@ -14,6 +14,8 @@
- 
- static LIST_HEAD(core_pmus);
- static LIST_HEAD(other_pmus);
-+static bool read_sysfs_core_pmus;
-+static bool read_sysfs_all_pmus;
- 
- void perf_pmus__destroy(void)
- {
-@@ -29,6 +31,8 @@ void perf_pmus__destroy(void)
- 
- 		perf_pmu__delete(pmu);
+@@ -142,7 +142,7 @@ static void pmu_read_sysfs(bool core_only)
  	}
-+	read_sysfs_core_pmus = false;
-+	read_sysfs_all_pmus = false;
  }
  
- static struct perf_pmu *pmu_find(const char *name)
-@@ -53,6 +57,7 @@ struct perf_pmu *perf_pmus__find(const char *name)
+-struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
++static struct perf_pmu *__perf_pmus__find_by_type(unsigned int type)
  {
  	struct perf_pmu *pmu;
- 	int dirfd;
-+	bool core_pmu;
  
- 	/*
- 	 * Once PMU is loaded it stays in the list,
-@@ -63,8 +68,15 @@ struct perf_pmu *perf_pmus__find(const char *name)
- 	if (pmu)
- 		return pmu;
- 
-+	if (read_sysfs_all_pmus)
-+		return NULL;
-+
-+	core_pmu = is_pmu_core(name);
-+	if (core_pmu && read_sysfs_core_pmus)
-+		return NULL;
-+
- 	dirfd = perf_pmu__event_source_devices_fd();
--	pmu = perf_pmu__lookup(is_pmu_core(name) ? &core_pmus : &other_pmus, dirfd, name);
-+	pmu = perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name);
- 	close(dirfd);
- 
- 	return pmu;
-@@ -73,6 +85,7 @@ struct perf_pmu *perf_pmus__find(const char *name)
- static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
- {
- 	struct perf_pmu *pmu;
-+	bool core_pmu;
- 
- 	/*
- 	 * Once PMU is loaded it stays in the list,
-@@ -83,7 +96,14 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
- 	if (pmu)
- 		return pmu;
- 
--	return perf_pmu__lookup(is_pmu_core(name) ? &core_pmus : &other_pmus, dirfd, name);
-+	if (read_sysfs_all_pmus)
-+		return NULL;
-+
-+	core_pmu = is_pmu_core(name);
-+	if (core_pmu && read_sysfs_core_pmus)
-+		return NULL;
-+
-+	return perf_pmu__lookup(core_pmu ? &core_pmus : &other_pmus, dirfd, name);
- }
- 
- /* Add all pmus in sysfs to pmu list: */
-@@ -93,6 +113,9 @@ static void pmu_read_sysfs(bool core_only)
- 	DIR *dir;
- 	struct dirent *dent;
- 
-+	if (read_sysfs_all_pmus || (core_only && read_sysfs_core_pmus))
-+		return;
-+
- 	fd = perf_pmu__event_source_devices_fd();
- 	if (fd < 0)
- 		return;
-@@ -111,6 +134,12 @@ static void pmu_read_sysfs(bool core_only)
+@@ -150,6 +150,7 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
+ 		if (pmu->type == type)
+ 			return pmu;
  	}
- 
- 	closedir(dir);
-+	if (core_only) {
-+		read_sysfs_core_pmus = true;
-+	} else {
-+		read_sysfs_core_pmus = true;
-+		read_sysfs_all_pmus = true;
-+	}
++
+ 	list_for_each_entry(pmu, &other_pmus, list) {
+ 		if (pmu->type == type)
+ 			return pmu;
+@@ -157,6 +158,18 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
+ 	return NULL;
  }
  
- struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
++struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
++{
++	struct perf_pmu *pmu = __perf_pmus__find_by_type(type);
++
++	if (pmu || read_sysfs_all_pmus)
++		return pmu;
++
++	pmu_read_sysfs(/*core_only=*/false);
++	pmu = __perf_pmus__find_by_type(type);
++	return pmu;
++}
++
+ /*
+  * pmu iterator: If pmu is NULL, we start at the begin, otherwise return the
+  * next pmu. Returns NULL on end.
 -- 
 2.40.1.698.g37aff9b760-goog
 
