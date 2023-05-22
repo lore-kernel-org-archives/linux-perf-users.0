@@ -2,154 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B961C7EE26
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 16:34:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC845C77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 17:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231923AbjEVQel (ORCPT
+        id S233368AbjEVRun (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 May 2023 12:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43852 "EHLO
+        Mon, 22 May 2023 13:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231721AbjEVQek (ORCPT
+        with ESMTP id S233390AbjEVRul (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 May 2023 12:34:40 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 75EF1CF;
-        Mon, 22 May 2023 09:34:37 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17A0811FB;
-        Mon, 22 May 2023 09:35:22 -0700 (PDT)
-Received: from [10.57.84.18] (unknown [10.57.84.18])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1BCF3F762;
-        Mon, 22 May 2023 09:34:33 -0700 (PDT)
-Message-ID: <e2c04000-8e2e-e5ab-daea-a84d9519569f@arm.com>
-Date:   Mon, 22 May 2023 17:34:32 +0100
+        Mon, 22 May 2023 13:50:41 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E139118
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 10:50:37 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-51f1b6e8179so4426189a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 10:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684777837; x=1687369837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=21N69fXRIa64PVVS5XD52blO3YZaOM8DbCnSTBRVsMo=;
+        b=pKsK3+dF5scOPXlLPS0Vte0P8EJ0sQ0Tk7YUG1IGXnY1NZoJiWWANPx+tGrLcJuPAy
+         yKHpqsmHeRiH6zkIv+pC76wPN1vHbEibBkCvMsy3UKzQkOvj6wYQB/S1fUVZgtb8obhl
+         FsYtfcSJJhqHcD6mo0pphPpVxvEo4GQ0va7W5KBP+Ve2qLiVmWLlNC++/fynDWOdpW/+
+         4rlJLLmKHlhlT2Ljgpm2VeJ9Ze7Ba0DieFRfpVveY3Hjqg0H9n492VAG3NuDUzBbpdMG
+         b7IlYNWuuCg9JpSkCwHcuudlWbSNwVcwUDTwSaZ/1LZrpRIyrs7ice/UMCXECoozR6PL
+         mdYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684777837; x=1687369837;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=21N69fXRIa64PVVS5XD52blO3YZaOM8DbCnSTBRVsMo=;
+        b=Hq0vlQ7qYtMKQVx4V3UKf6g4nY3snKLWFuqzzQ+0/Pwz79sKDM9dFdWYIvIgtg+0BC
+         /3CBaQDjnMad/20Y1q+pEB38ha/Qhcqd9Nl+5qwQaGK3afCc7e6mjLW/oYfY0LCIxlR2
+         tmFy8a/PRGf4penyNzM5HD9norU1khT3y+K2CYAjMWGfGK6EFaUpIpYZuPq+TFh9AGpf
+         H1rE8aPyYuwKMvF8tNlGnXCeqF8q9t8QHNvn7FmOaBku7JeBN60Ye5G3Roi5vLYlSUoK
+         oinDklNEF3k4glFHzHyCCBvJYI1ZsZt9c8WPD7Z2TuGepYUz2wd2t5xY9IRmGkMdylfK
+         bvRQ==
+X-Gm-Message-State: AC+VfDwCLU1KcP1m+o+n7pvU0/AKNQxOARgoAfmj4RY+cOUNtgkQnWVg
+        wyAo/GzQ6fi6bS+K5AhkSxdiWqorNbSwoRwzsf7Z/Urz
+X-Google-Smtp-Source: ACHHUZ7l8cAuGF50AuqLJ9c8V0BZBJEIIN1GH97xtPys+RsKWDwmRNo4CYDASTWQFX5SArDzzwAmTdnFFOuDeEFP98k=
+X-Received: by 2002:a17:90a:928e:b0:250:4a18:f575 with SMTP id
+ n14-20020a17090a928e00b002504a18f575mr10759227pjo.9.1684777836898; Mon, 22
+ May 2023 10:50:36 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v1 2/5] perf parse-regs: Introduce functions
- arch__reg_{ip|sp}()
-Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Eric Lin <eric.lin@sifive.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Qi Liu <liuqi115@huawei.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-References: <20230520025537.1811986-1-leo.yan@linaro.org>
- <20230520025537.1811986-3-leo.yan@linaro.org>
- <839836e8-9600-9249-dcdb-e29519335141@arm.com>
- <20230522120729.GB1826292@leoy-yangtze.lan>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230522120729.GB1826292@leoy-yangtze.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAGA5_H6Ld9U0eTatJeExSGEynf41mvfcPZ34rtdO7rAVNuoXYQ@mail.gmail.com>
+ <CAP-5=fWV2+auUQHQ5cvn2948M=0ThtrHftgGMM44ceCZyHiQeQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fWV2+auUQHQ5cvn2948M=0ThtrHftgGMM44ceCZyHiQeQ@mail.gmail.com>
+From:   Rajasekhar Pulluru <pullururajasekhar@gmail.com>
+Date:   Mon, 22 May 2023 23:20:24 +0530
+Message-ID: <CAGA5_H7CWd2vpomkLJ2mFzg8TyBdfkugTy1oYN3ojEGRy-VWqA@mail.gmail.com>
+Subject: Re: DSO_BINARY_TYPE__SYSTEM_PATH_DSO
+To:     Ian Rogers <irogers@google.com>
+Cc:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Ian,
+Thanks for responding, I really appreciate your time and help!
 
+Sorry, I don't see namespace related information in perf script output
+(with/without -D option).
+I tried to explore other options, but was not able to find an option
+that can dump the ns information.
 
-On 22/05/2023 13:07, Leo Yan wrote:
-> On Mon, May 22, 2023 at 09:57:25AM +0100, James Clark wrote:
->>
->>
->> On 20/05/2023 03:55, Leo Yan wrote:
->>> Ideally, we want util/perf_regs.c to be general enough and doesn't bind
->>> with specific architecture.
->>>
->>> But since util/perf_regs.c uses the macros PERF_REG_IP and PERF_REG_SP
->>> which are defined by architecture, thus util/perf_regs.c is dependent on
->>> architecture header (see util/perf_regs.h includes "<perf_regs.h>", here
->>> perf_regs.h is architecture specific header).
->>>
->>> As a step to generalize util/perf_regs.c, this commit introduces weak
->>> functions arch__reg_ip() and arch__reg_sp() and every architecture can
->>> define their own functions; thus, util/perf_regs.c doesn't need to use
->>> PERF_REG_IP and PERF_REG_SP anymore.
->>>
->>> This is a preparation to get rid of architecture specific header from
->>> util/perf_regs.h.
->>>
->>> Signed-off-by: Leo Yan <leo.yan@linaro.org>
->>> ---
->> [...]
->>>  
->>> -#define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP))
->>> +#define DWARF_MINIMAL_REGS ((1ULL << arch__reg_ip()) | (1ULL << arch__reg_sp()))
->>>  
->>>  const char *perf_reg_name(int id, const char *arch);
->>>  int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
->>> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
->>> index bdccfc511b7e..f308f2ea512b 100644
->>> --- a/tools/perf/util/unwind-libdw.c
->>> +++ b/tools/perf/util/unwind-libdw.c
->>> @@ -252,7 +252,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
->>>  	if (!ui->dwfl)
->>>  		goto out;
->>>  
->>> -	err = perf_reg_value(&ip, &data->user_regs, PERF_REG_IP);
->>> +	err = perf_reg_value(&ip, &data->user_regs, arch__reg_ip());
->>
->> Shouldn't it be more like this, because the weak symbols are a compile
->> time thing and it's supposed to support cross arch unwinding at runtime
->> (assuming something containing the arch from the file is passed down,
->> like we did with perf_reg_name()):
->>
->>   char *arch = perf_env__arch(evsel__env(evsel));
->>   err = perf_reg_value(&ip, &data->user_regs, arch__reg_ip(arch));
-> 
-> Thanks for pointing out, James.
-> 
-> Agreed that we need to return the IP and SP register based on the
-> arch.  I will look into more details and spin for a new patch set for
-> this.
-> 
+Do you have any alternate suggestions to debug this?
 
-You might be able to skip the extra work for now though, seeing as your
-change is no worse than it was before and it fixes the duplicate
-declaration issue.
+Thanks & Regards,
+Rajasekhar
 
->> Now I'm wondering how cross unwinding ever worked because I see
->> libunwind also has something hard coded too:
->>
->>   #define LIBUNWIND__ARCH_REG_SP PERF_REG_SP
-> 
-> Yeah, I also used arch__reg_sp() to replace PERF_REG_SP; but as you
-> suggestion, we should fix this with passing 'arch' parameter for
-> getting SP register based on arch.
-> 
-> Another important thing is to find a good test for cross unwinding.
-> Maybe I can use tools/perf/tests/shell/record.sh, function
-> test_register_capture() for testing registers, if you have any other
-> suggesion, please let me know.
-
-The only way I can think is to have pre-recorded perf.data files in the
-repo, but they'd also need the binary from the recording too. I think
-this is probably not a very good idea because it's going to make the
-repo huge if we keep changing them (which we will).
-
-Some kind of third party perf test suite hosted somewhere might work but
-I don't think this exists.
-
-> 
-> Thanks,
-> Leo
+On Fri, May 19, 2023 at 11:27=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Fri, May 19, 2023 at 10:49=E2=80=AFAM Rajasekhar Pulluru
+> <pullururajasekhar@gmail.com> wrote:
+> >
+> > Hi Team,
+> > Could someone help me shed some light on this macro
+> > DSO_BINARY_TYPE__SYSTEM_PATH_DSO ?
+> >
+> > Case-1: I am trying to run perf top -p `pidof <app>` on ubuntu host
+> > (based on ubuntu:jammy, outside the container) where the <app> runs
+> > inside a container that's based on ubuntu bionic, and I don't see any
+> > of <app> symbols (only hex-address and no function names) in perf top
+> > output.
+> >
+> > Case-2: When I try to run perf top -p `pidof <app>` on ubuntu host
+> > (based on ubuntu:bionic, outside the container) where the <app> runs
+> > inside a container that's also based on ubuntu bionic, and I can see
+> > <app> symbols (function names) in perf top output.
+> >
+> > On debugging both the cases, I find that, case-2 is able to display
+> > symbol when dso__load of </opt/bin/<app> is successful for the type
+> > DSO_BINARY_TYPE__SYSTEM_PATH_DSO, where-as the same fails for case-1
+> > (is_regular_file check fails), and perf top reports "Failed to open
+> > /opt/bin/<app>, continuing without symbols".
+> >
+> > In both the cases, the file /opt/bin/<app> is not available on the
+> > host, and its only available inside the container.
+> > What could be causing the above failure?
+> >
+> > Appreciate any help/inputs.
+>
+> Hi Rajasekhar,
+>
+> This is an area I'm not familiar with. I suspect the reason perf
+> record/report are succeeding from your description is namespace
+> information. If you look at the perf.data file with "perf script" and
+> probably the "-D" option, you should see information. I'm not sure
+> anybody has wired up the namespace code with perf top, which would go
+> a long way to explaining your problems.
+>
+> Thanks for investigating this!
+> Ian
+>
+> > Thanks & Regards,
+> > Rajasekhar
