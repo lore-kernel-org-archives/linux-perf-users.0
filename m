@@ -2,61 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189BAC77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 04:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EA7C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 05:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbjEVExD (ORCPT
+        id S230145AbjEVFNN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 May 2023 00:53:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43560 "EHLO
+        Mon, 22 May 2023 01:13:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231556AbjEVExB (ORCPT
+        with ESMTP id S229600AbjEVFNM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 May 2023 00:53:01 -0400
-Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E230BB
-        for <linux-perf-users@vger.kernel.org>; Sun, 21 May 2023 21:52:58 -0700 (PDT)
-Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-338458a9304so181295ab.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 21 May 2023 21:52:58 -0700 (PDT)
+        Mon, 22 May 2023 01:13:12 -0400
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC754A8
+        for <linux-perf-users@vger.kernel.org>; Sun, 21 May 2023 22:13:10 -0700 (PDT)
+Received: by mail-il1-x12d.google.com with SMTP id e9e14a558f8ab-33164ec77ccso202725ab.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 21 May 2023 22:13:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684731178; x=1687323178;
+        d=google.com; s=20221208; t=1684732390; x=1687324390;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=PAjpW8+8t+AatFAmMs1Mphf0k8MPeZh4wyrk30YVTUw=;
-        b=wa0TWVLgXkxIVfGipT6nXDZw3ufkcoyqbieIehP/9kpoEri/hBkWeEL0Uzbs6EHLJ8
-         2FR3gXu51YuoPk0otzT8KLF2E6bLKzVzEmBQMF44SMqcPlW24jBoM20Iw9+RXHXtF3tW
-         jNR27B1bBLL6vrTF7S8+tgE9iAaEA0I+DoEkJ+kEXhvaMeaOAAhaHrQIItH5HA4OALj2
-         fbBo9OtSqgZM+pRxfPSYoe7bKcozECcTMOvF5+MuQCHoiNzVaNJ9x4Z4sRSCZXn2QFes
-         H0F3WWk/xUv3+NaSNl3QzUrtO9kPmo8XkYKsYoIZitCbYSgUjdB7a3IyBmRAnVj6ozuG
-         4hNQ==
+        bh=oVFuz+LppT4Bt6rO2tywL1VM/+thHNG8bsummeehR1Q=;
+        b=0k1j9Rc1+O9BltBLMf/2JOwufCw5dbkJJf/ywrCZipO6+8+uv1jrQYYIXgah+6grbR
+         D/7iVC7mJGeCRZ3rYuAN2l9R9zWMkYvuHoF4twd2BX0w25WrheBbMHzkvQXfH81jvMAQ
+         Q3m9CaDPZan17r/+oPeDylxFo+sC4UfDxXeNukVaZ94vhqyA5Wd60rNSbFNbIPfbHoCL
+         nglFqqUXgw/h99k3FcD0rj6jq5DUSoWF7SsnNTx1Y0nmmU+b4BtbTuTd5Zds08Y6xpmT
+         OQSlSS/VeOdN+fqaUzpfWp+gxB8wPa+ghwrvN2/w17f9fUgUYJDjB2eM44wOfSftQD3i
+         dFLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684731178; x=1687323178;
+        d=1e100.net; s=20221208; t=1684732390; x=1687324390;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PAjpW8+8t+AatFAmMs1Mphf0k8MPeZh4wyrk30YVTUw=;
-        b=TtQBjJ32LqxOIVN2rtF1wwjLZ3Nu5KpGy/m1hCmanXkluZAaxKktWf3atKMfbeKfOd
-         4Wf9UrkNsxB7iccC/PYyT1Us1Cif7JnS3gCn77X9j/Uwib7C2hf1UqUI2JdyVVLsTCfg
-         nvwKJRQfYEmt1vPft0TMq3acw9ANxlQygDrNkKQpEpy28o1kOB2X+IrVihkr2lT3TJm0
-         FbL323vw/jFFo0Mf5l1zofdkimLzDAiBjWi/jXhL8BPWP3Sy21KKiGdD4E2dvWgTpbIr
-         5GOgu3VDORingww7RxovVaRzf14EUWWbb/Fh2hBf0Q9lm3Yv535tE4/D+y748qm8xywQ
-         7VlA==
-X-Gm-Message-State: AC+VfDzYBCWPptKT28PlspzKMaoAscaQqM/9G3+iVaNcgLkd7DH95m1a
-        ZyBPZOQ1usC8WkvM22KwZb/Pu/Cxqh8+7RwKZyt6Ag==
-X-Google-Smtp-Source: ACHHUZ68VK5ykgE7OwXfBX6uCsX1XWI3n80iV/eqtV8giwWQ0CUWidmYijphy4bR66GNAi3zWG96xoS/Eda9Slwit00=
-X-Received: by 2002:a05:6e02:1a85:b0:326:55d0:efad with SMTP id
- k5-20020a056e021a8500b0032655d0efadmr431717ilv.12.1684731177539; Sun, 21 May
- 2023 21:52:57 -0700 (PDT)
+        bh=oVFuz+LppT4Bt6rO2tywL1VM/+thHNG8bsummeehR1Q=;
+        b=MFuGnCBIWgzl6DJxU5nxbUcbVpIvYjKpJv1XpJEnFGzEJY9kAzxLbwR7cM4/Eiy1Vd
+         mj2QLPft3OCkPTLj1tyy9TgL1TNt98BSnJD4sE01ZRTbGGFGD+zpGylXXHBjlyXNW9I2
+         Wt3xIsrCVeC8qG/ZVJXHT+10RfjyMtKB3eWa7pUtqxNPTHPKA0iKfgUlyqvSm4LENA/K
+         7XQS9bzNYOKF+qZpLHmtIfkh9kM9XHlxPWyxNmsbb/Thl3I6IkjLkteMPyXyDUPx5itQ
+         r1sTztFAnLT2bOUVo/40oGnLfhITa7xh8ZrrT+Tw6GfFlj7AIbVm74fI9yy0UF7+YOaU
+         4WNw==
+X-Gm-Message-State: AC+VfDy/6zdd/jUEs1ZPBOfnyFFjWelSogk7d3IwcRmBO+gQ79O6aJni
+        ATQKGvcBBSCBpulqxaq1630m4LATzzmWukufuY8TNg==
+X-Google-Smtp-Source: ACHHUZ5l3QDvwrpKPScYMJ0LU7PxG6d0PLZdyn5/2xzitEy2Al1dk1MsNaOqXn5Dj/iHdC2bW8nnE9C4etmd7oKJkGk=
+X-Received: by 2002:a05:6e02:12cb:b0:331:948c:86f3 with SMTP id
+ i11-20020a056e0212cb00b00331948c86f3mr402240ilm.19.1684732389851; Sun, 21 May
+ 2023 22:13:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230517145803.559429-1-irogers@google.com> <20230517145803.559429-2-irogers@google.com>
- <3586d413-b7c9-9790-ec4e-4132502c806d@linux.intel.com>
-In-Reply-To: <3586d413-b7c9-9790-ec4e-4132502c806d@linux.intel.com>
+References: <20230517145803.559429-1-irogers@google.com> <20230517145803.559429-4-irogers@google.com>
+ <ba6ab7b6-4ce0-2f07-2b8b-a4373d96c742@linux.intel.com>
+In-Reply-To: <ba6ab7b6-4ce0-2f07-2b8b-a4373d96c742@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 21 May 2023 21:52:46 -0700
-Message-ID: <CAP-5=fUERgwWt=C88QOdx8JzxB1P0RXJ9WxGUY=GABwdU6Pvpg@mail.gmail.com>
-Subject: Re: [PATCH v1 01/23] perf tools: Warn if no user requested CPUs match
- PMU's CPUs
+Date:   Sun, 21 May 2023 22:12:58 -0700
+Message-ID: <CAP-5=fVanehMRXUQUsmxSZAijHTOfxzJtNTr84rPjEnxGKdpQA@mail.gmail.com>
+Subject: Re: [PATCH v1 03/23] perf evlist: Remove __evlist__add_default
 To:     "Liang, Kan" <kan.liang@linux.intel.com>
 Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -95,396 +94,344 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, May 21, 2023 at 12:04=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.=
+On Sun, May 21, 2023 at 12:12=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.=
 com> wrote:
 >
 >
 >
 > On 2023-05-17 10:57 a.m., Ian Rogers wrote:
-> > In commit 1d3351e631fc ("perf tools: Enable on a list of CPUs for hybri=
-d")
-> > perf on hybrid will warn if a user requested CPU doesn't match the PMU
-> > of the given event but only for hybrid PMUs. Make the logic generic
-> > for all PMUs and remove the hybrid logic.
+> > __evlist__add_default adds a cycles event to a typically empty evlist
+> > and was extended for hybrid with evlist__add_default_hybrid, as more
+> > than 1 PMU was necessary. Rather than have dedicated logic for the
+> > cycles event, this change switches to parsing 'cycles' which will
+> > handle wildcarding the PMUs appropriately for hybrid.
 >
-> The logic may not work for all PMUs, especially for uncore.
->
-> For uncore, the user should be able to read counters from any CPU of a
-> socket/die, not just the CPU from the cpumask.
-> Please see d6a2f9035bfc ("perf/core: Introduce PMU_EV_CAP_READ_ACTIVE_PKG=
-").
+> I think the default event for the perf record was cycles:P, but this
+> patch changes the default event to cycles. I think it's better to use
+> cycles:P which is more accurate.
 >
 > Thanks,
 > Kan
 
-Hi Kan,
-
-the code specifically handles this and for uncore PMUs the check is
-that the CPU is any online CPU:
-
-"""
-... Uncore PMUs list a CPU in sysfs, but this may be overwritten by a
-+ *     user requested CPU and so any online CPU is applicable. Core PMUs h=
-andle
-+ *     events on the CPUs in their list and otherwise the event isn't
-supported.
-...
-+               to_test =3D pmu && pmu->is_uncore ? cpu_map__online() :
-evsel__cpus(pos);
-...
-"""
-
-in the commit message this is also called out:
-
-"""
-For example on a 16 (0-15) CPU system:
-```
-$ perf stat -e imc_free_running/data_read/,cycles -C 16 true
-WARNING: Requested CPU(s) '16' not supported by PMU
-'uncore_imc_free_running_1' for event 'imc_free_running/data_read/'
-WARNING: Requested CPU(s) '16' not supported by PMU
-'uncore_imc_free_running_0' for event 'imc_free_running/data_read/'
-WARNING: Requested CPU(s) '16' not supported by PMU 'cpu' for event 'cycles=
-'
-...
-"""
-CPU 16 is invalid, only 0 to 15 are valid, and so there are warnings
-for the uncore events for "imc_free_running/data_read/".
+Agreed. It looks like even though the event is "cycles:P" it is always
+displayed as "cycles" and the logic to add "ppp" never fires as
+attr.precise_ip is always 0 at the point it is inspected. I'll fix in
+v2.
 
 Thanks,
 Ian
 
 > >
-> > Warn if a CPU is requested that is offline for uncore events. Warn if
-> > a CPU is requested for a core PMU, but the CPU isn't within the cpu
-> > map of that PMU.
-> >
-> > For example on a 16 (0-15) CPU system:
-> > ```
-> > $ perf stat -e imc_free_running/data_read/,cycles -C 16 true
-> > WARNING: Requested CPU(s) '16' not supported by PMU 'uncore_imc_free_ru=
-nning_1' for event 'imc_free_running/data_read/'
-> > WARNING: Requested CPU(s) '16' not supported by PMU 'uncore_imc_free_ru=
-nning_0' for event 'imc_free_running/data_read/'
-> > WARNING: Requested CPU(s) '16' not supported by PMU 'cpu' for event 'cy=
-cles'
-> >
-> >  Performance counter stats for 'CPU(s) 16':
-> >
-> >    <not supported> MiB  imc_free_running/data_read/
-> >    <not supported>      cycles
-> >
-> >        0.000570094 seconds time elapsed
-> > ```
-> >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/builtin-record.c     |  6 +--
-> >  tools/perf/builtin-stat.c       |  5 +--
-> >  tools/perf/util/cpumap.h        |  2 +-
-> >  tools/perf/util/evlist-hybrid.c | 74 ---------------------------------
-> >  tools/perf/util/evlist-hybrid.h |  1 -
-> >  tools/perf/util/evlist.c        | 44 ++++++++++++++++++++
-> >  tools/perf/util/evlist.h        |  2 +
-> >  tools/perf/util/pmu.c           | 33 ---------------
-> >  tools/perf/util/pmu.h           |  4 --
-> >  9 files changed, 49 insertions(+), 122 deletions(-)
+> >  tools/perf/arch/x86/util/evsel.c | 20 --------------
+> >  tools/perf/builtin-record.c      | 13 +++------
+> >  tools/perf/builtin-top.c         | 10 ++++---
+> >  tools/perf/util/evlist-hybrid.c  | 25 -----------------
+> >  tools/perf/util/evlist-hybrid.h  |  1 -
+> >  tools/perf/util/evlist.c         | 22 ++++++---------
+> >  tools/perf/util/evlist.h         |  7 -----
+> >  tools/perf/util/evsel.c          | 46 --------------------------------
+> >  tools/perf/util/evsel.h          |  3 ---
+> >  9 files changed, 17 insertions(+), 130 deletions(-)
 > >
-> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> > index ec0f2d5f189f..9d212236c75a 100644
-> > --- a/tools/perf/builtin-record.c
-> > +++ b/tools/perf/builtin-record.c
-> > @@ -4198,11 +4198,7 @@ int cmd_record(int argc, const char **argv)
-> >       /* Enable ignoring missing threads when -u/-p option is defined. =
-*/
-> >       rec->opts.ignore_missing_thread =3D rec->opts.target.uid !=3D UIN=
-T_MAX || rec->opts.target.pid;
-> >
-> > -     if (evlist__fix_hybrid_cpus(rec->evlist, rec->opts.target.cpu_lis=
-t)) {
-> > -             pr_err("failed to use cpu list %s\n",
-> > -                    rec->opts.target.cpu_list);
-> > -             goto out;
-> > -     }
-> > +     evlist__warn_user_requested_cpus(rec->evlist, rec->opts.target.cp=
-u_list);
-> >
-> >       rec->opts.target.hybrid =3D perf_pmu__has_hybrid();
-> >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index bc45cee3f77c..612467216306 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -2462,10 +2462,7 @@ int cmd_stat(int argc, const char **argv)
-> >               }
-> >       }
-> >
-> > -     if (evlist__fix_hybrid_cpus(evsel_list, target.cpu_list)) {
-> > -             pr_err("failed to use cpu list %s\n", target.cpu_list);
-> > -             goto out;
-> > -     }
-> > +     evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
-> >
-> >       target.hybrid =3D perf_pmu__has_hybrid();
-> >       if (evlist__create_maps(evsel_list, &target) < 0) {
-> > diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-> > index e3426541e0aa..c1de993c083f 100644
-> > --- a/tools/perf/util/cpumap.h
-> > +++ b/tools/perf/util/cpumap.h
-> > @@ -59,7 +59,7 @@ struct perf_cpu cpu__max_present_cpu(void);
-> >  /**
-> >   * cpu_map__is_dummy - Events associated with a pid, rather than a CPU=
-, use a single dummy map with an entry of -1.
-> >   */
-> > -static inline bool cpu_map__is_dummy(struct perf_cpu_map *cpus)
-> > +static inline bool cpu_map__is_dummy(const struct perf_cpu_map *cpus)
-> >  {
-> >       return perf_cpu_map__nr(cpus) =3D=3D 1 && perf_cpu_map__cpu(cpus,=
- 0).cpu =3D=3D -1;
+> > diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/uti=
+l/evsel.c
+> > index ea3972d785d1..153cdca94cd4 100644
+> > --- a/tools/perf/arch/x86/util/evsel.c
+> > +++ b/tools/perf/arch/x86/util/evsel.c
+> > @@ -16,26 +16,6 @@ void arch_evsel__set_sample_weight(struct evsel *evs=
+el)
+> >       evsel__set_sample_bit(evsel, WEIGHT_STRUCT);
 > >  }
-> > diff --git a/tools/perf/util/evlist-hybrid.c b/tools/perf/util/evlist-h=
-ybrid.c
-> > index 57f02beef023..db3f5fbdebe1 100644
-> > --- a/tools/perf/util/evlist-hybrid.c
-> > +++ b/tools/perf/util/evlist-hybrid.c
-> > @@ -86,77 +86,3 @@ bool evlist__has_hybrid(struct evlist *evlist)
 > >
-> >       return false;
-> >  }
-> > -
-> > -int evlist__fix_hybrid_cpus(struct evlist *evlist, const char *cpu_lis=
-t)
+> > -void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr)
 > > -{
-> > -     struct perf_cpu_map *cpus;
-> > -     struct evsel *evsel, *tmp;
-> > -     struct perf_pmu *pmu;
-> > -     int ret, unmatched_count =3D 0, events_nr =3D 0;
+> > -     struct perf_env env =3D { .total_mem =3D 0, } ;
 > > -
-> > -     if (!perf_pmu__has_hybrid() || !cpu_list)
-> > -             return 0;
-> > -
-> > -     cpus =3D perf_cpu_map__new(cpu_list);
-> > -     if (!cpus)
-> > -             return -1;
+> > -     if (!perf_env__cpuid(&env))
+> > -             return;
 > > -
 > > -     /*
-> > -      * The evsels are created with hybrid pmu's cpus. But now we
-> > -      * need to check and adjust the cpus of evsel by cpu_list because
-> > -      * cpu_list may cause conflicts with cpus of evsel. For example,
-> > -      * cpus of evsel is cpu0-7, but the cpu_list is cpu6-8, we need
-> > -      * to adjust the cpus of evsel to cpu6-7. And then propatate maps
-> > -      * in evlist__create_maps().
+> > -      * On AMD, precise cycles event sampling internally uses IBS pmu.
+> > -      * But IBS does not have filtering capabilities and perf by defau=
+lt
+> > -      * sets exclude_guest =3D 1. This makes IBS pmu event init fail a=
+nd
+> > -      * thus perf ends up doing non-precise sampling. Avoid it by clea=
+ring
+> > -      * exclude_guest.
 > > -      */
-> > -     evlist__for_each_entry_safe(evlist, tmp, evsel) {
-> > -             struct perf_cpu_map *matched_cpus, *unmatched_cpus;
-> > -             char buf1[128], buf2[128];
+> > -     if (env.cpuid && strstarts(env.cpuid, "AuthenticAMD"))
+> > -             attr->exclude_guest =3D 0;
 > > -
-> > -             pmu =3D perf_pmu__find_hybrid_pmu(evsel->pmu_name);
-> > -             if (!pmu)
-> > -                     continue;
-> > -
-> > -             ret =3D perf_pmu__cpus_match(pmu, cpus, &matched_cpus,
-> > -                                        &unmatched_cpus);
-> > -             if (ret)
-> > -                     goto out;
-> > -
-> > -             events_nr++;
-> > -
-> > -             if (perf_cpu_map__nr(matched_cpus) > 0 &&
-> > -                 (perf_cpu_map__nr(unmatched_cpus) > 0 ||
-> > -                  perf_cpu_map__nr(matched_cpus) < perf_cpu_map__nr(cp=
-us) ||
-> > -                  perf_cpu_map__nr(matched_cpus) < perf_cpu_map__nr(pm=
-u->cpus))) {
-> > -                     perf_cpu_map__put(evsel->core.cpus);
-> > -                     perf_cpu_map__put(evsel->core.own_cpus);
-> > -                     evsel->core.cpus =3D perf_cpu_map__get(matched_cp=
-us);
-> > -                     evsel->core.own_cpus =3D perf_cpu_map__get(matche=
-d_cpus);
-> > -
-> > -                     if (perf_cpu_map__nr(unmatched_cpus) > 0) {
-> > -                             cpu_map__snprint(matched_cpus, buf1, size=
-of(buf1));
-> > -                             pr_warning("WARNING: use %s in '%s' for '=
-%s', skip other cpus in list.\n",
-> > -                                        buf1, pmu->name, evsel->name);
-> > -                     }
-> > -             }
-> > -
-> > -             if (perf_cpu_map__nr(matched_cpus) =3D=3D 0) {
-> > -                     evlist__remove(evlist, evsel);
-> > -                     evsel__delete(evsel);
-> > -
-> > -                     cpu_map__snprint(cpus, buf1, sizeof(buf1));
-> > -                     cpu_map__snprint(pmu->cpus, buf2, sizeof(buf2));
-> > -                     pr_warning("WARNING: %s isn't a '%s', please use =
-a CPU list in the '%s' range (%s)\n",
-> > -                                buf1, pmu->name, pmu->name, buf2);
-> > -                     unmatched_count++;
-> > -             }
-> > -
-> > -             perf_cpu_map__put(matched_cpus);
-> > -             perf_cpu_map__put(unmatched_cpus);
-> > -     }
-> > -     if (events_nr)
-> > -             ret =3D (unmatched_count =3D=3D events_nr) ? -1 : 0;
-> > -out:
-> > -     perf_cpu_map__put(cpus);
-> > -     return ret;
+> > -     free(env.cpuid);
 > > -}
-> > diff --git a/tools/perf/util/evlist-hybrid.h b/tools/perf/util/evlist-h=
-ybrid.h
-> > index aacdb1b0f948..19f74b4c340a 100644
-> > --- a/tools/perf/util/evlist-hybrid.h
-> > +++ b/tools/perf/util/evlist-hybrid.h
-> > @@ -10,6 +10,5 @@
-> >  int evlist__add_default_hybrid(struct evlist *evlist, bool precise);
-> >  void evlist__warn_hybrid_group(struct evlist *evlist);
-> >  bool evlist__has_hybrid(struct evlist *evlist);
-> > -int evlist__fix_hybrid_cpus(struct evlist *evlist, const char *cpu_lis=
-t);
+> > -
+> >  /* Check whether the evsel's PMU supports the perf metrics */
+> >  bool evsel__sys_has_perf_metrics(const struct evsel *evsel)
+> >  {
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index 9d212236c75a..85f2bd035a94 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -4161,18 +4161,11 @@ int cmd_record(int argc, const char **argv)
+> >               record.opts.tail_synthesize =3D true;
 > >
-> >  #endif /* __PERF_EVLIST_HYBRID_H */
-> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > index a0504316b06f..5d0d99127a90 100644
-> > --- a/tools/perf/util/evlist.c
-> > +++ b/tools/perf/util/evlist.c
-> > @@ -2465,3 +2465,47 @@ void evlist__check_mem_load_aux(struct evlist *e=
-vlist)
-> >               }
+> >       if (rec->evlist->core.nr_entries =3D=3D 0) {
+> > -             if (perf_pmu__has_hybrid()) {
+> > -                     err =3D evlist__add_default_hybrid(rec->evlist,
+> > -                                                      !record.opts.no_=
+samples);
+> > -             } else {
+> > -                     err =3D __evlist__add_default(rec->evlist,
+> > -                                                 !record.opts.no_sampl=
+es);
+> > -             }
+> > +             bool can_profile_kernel =3D perf_event_paranoid_check(1);
+> >
+> > -             if (err < 0) {
+> > -                     pr_err("Not enough memory for event selector list=
+\n");
+> > +             err =3D parse_event(rec->evlist, can_profile_kernel ? "cy=
+cles" : "cycles:u");
+> > +             if (err)
+> >                       goto out;
+> > -             }
 > >       }
-> >  }
-> > +
-> > +/**
-> > + * evlist__warn_user_requested_cpus() - Check each evsel against reque=
-sted CPUs
-> > + *     and warn if the user CPU list is inapplicable for the event's P=
-MUs
-> > + *     CPUs. Uncore PMUs list a CPU in sysfs, but this may be overwrit=
-ten by a
-> > + *     user requested CPU and so any online CPU is applicable. Core PM=
-Us handle
-> > + *     events on the CPUs in their list and otherwise the event isn't =
-supported.
-> > + * @evlist: The list of events being checked.
-> > + * @cpu_list: The user provided list of CPUs.
-> > + */
-> > +void evlist__warn_user_requested_cpus(struct evlist *evlist, const cha=
-r *cpu_list)
-> > +{
-> > +     struct perf_cpu_map *user_requested_cpus;
-> > +     struct evsel *pos;
-> > +
-> > +     if (!cpu_list)
-> > +             return;
-> > +
-> > +     user_requested_cpus =3D perf_cpu_map__new(cpu_list);
-> > +     if (!user_requested_cpus)
-> > +             return;
-> > +
-> > +     evlist__for_each_entry(evlist, pos) {
-> > +             const struct perf_cpu_map *to_test;
-> > +             struct perf_cpu cpu;
-> > +             int idx;
-> > +             bool warn =3D true;
-> > +             const struct perf_pmu *pmu =3D evsel__find_pmu(pos);
-> > +
-> > +             to_test =3D pmu && pmu->is_uncore ? cpu_map__online() : e=
-vsel__cpus(pos);
-> > +
-> > +             perf_cpu_map__for_each_cpu(cpu, idx, to_test) {
-> > +                     if (perf_cpu_map__has(user_requested_cpus, cpu)) =
-{
-> > +                             warn =3D false;
-> > +                             break;
-> > +                     }
-> > +             }
-> > +             if (warn) {
-> > +                     pr_warning("WARNING: Requested CPU(s) '%s' not su=
-pported by PMU '%s' for event '%s'\n",
-> > +                             cpu_list, pmu ? pmu->name : "cpu", evsel_=
-_name(pos));
-> > +             }
-> > +     }
-> > +     perf_cpu_map__put(user_requested_cpus);
-> > +}
-> > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> > index e7e5540cc970..5e7ff44f3043 100644
-> > --- a/tools/perf/util/evlist.h
-> > +++ b/tools/perf/util/evlist.h
-> > @@ -447,4 +447,6 @@ struct evsel *evlist__find_evsel(struct evlist *evl=
-ist, int idx);
 > >
-> >  int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char =
-*bf);
-> >  void evlist__check_mem_load_aux(struct evlist *evlist);
-> > +void evlist__warn_user_requested_cpus(struct evlist *evlist, const cha=
-r *cpu_list);
-> > +
-> >  #endif /* __PERF_EVLIST_H */
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index f4f0afbc391c..1e0be23d4dd7 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -2038,39 +2038,6 @@ int perf_pmu__match(char *pattern, char *name, c=
-har *tok)
-> >       return 0;
-> >  }
+> >       if (rec->opts.target.tid && !rec->opts.no_inherit_set)
+> > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> > index 48ee49e95c5e..d1e6d23bee3e 100644
+> > --- a/tools/perf/builtin-top.c
+> > +++ b/tools/perf/builtin-top.c
+> > @@ -1653,10 +1653,12 @@ int cmd_top(int argc, const char **argv)
+> >       if (annotate_check_args(&top.annotation_opts) < 0)
+> >               goto out_delete_evlist;
 > >
-> > -int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cp=
-us,
-> > -                      struct perf_cpu_map **mcpus_ptr,
-> > -                      struct perf_cpu_map **ucpus_ptr)
+> > -     if (!top.evlist->core.nr_entries &&
+> > -         evlist__add_default(top.evlist) < 0) {
+> > -             pr_err("Not enough memory for event selector list\n");
+> > -             goto out_delete_evlist;
+> > +     if (!top.evlist->core.nr_entries) {
+> > +             bool can_profile_kernel =3D perf_event_paranoid_check(1);
+> > +             int err =3D parse_event(top.evlist, can_profile_kernel ? =
+"cycles" : "cycles:u");
+> > +
+> > +             if (err)
+> > +                     goto out_delete_evlist;
+> >       }
+> >
+> >       status =3D evswitch__init(&top.evswitch, top.evlist, stderr);
+> > diff --git a/tools/perf/util/evlist-hybrid.c b/tools/perf/util/evlist-h=
+ybrid.c
+> > index 0f59c80f27b2..64f78d06fe19 100644
+> > --- a/tools/perf/util/evlist-hybrid.c
+> > +++ b/tools/perf/util/evlist-hybrid.c
+> > @@ -16,31 +16,6 @@
+> >  #include <perf/evsel.h>
+> >  #include <perf/cpumap.h>
+> >
+> > -int evlist__add_default_hybrid(struct evlist *evlist, bool precise)
 > > -{
-> > -     struct perf_cpu_map *pmu_cpus =3D pmu->cpus;
-> > -     struct perf_cpu_map *matched_cpus, *unmatched_cpus;
-> > -     struct perf_cpu cpu;
-> > -     int i, matched_nr =3D 0, unmatched_nr =3D 0;
+> > -     struct evsel *evsel;
+> > -     struct perf_pmu *pmu;
+> > -     __u64 config;
+> > -     struct perf_cpu_map *cpus;
 > > -
-> > -     matched_cpus =3D perf_cpu_map__default_new();
-> > -     if (!matched_cpus)
-> > -             return -1;
+> > -     perf_pmu__for_each_hybrid_pmu(pmu) {
+> > -             config =3D PERF_COUNT_HW_CPU_CYCLES |
+> > -                      ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT);
+> > -             evsel =3D evsel__new_cycles(precise, PERF_TYPE_HARDWARE,
+> > -                                       config);
+> > -             if (!evsel)
+> > -                     return -ENOMEM;
 > > -
-> > -     unmatched_cpus =3D perf_cpu_map__default_new();
-> > -     if (!unmatched_cpus) {
-> > -             perf_cpu_map__put(matched_cpus);
-> > -             return -1;
+> > -             cpus =3D perf_cpu_map__get(pmu->cpus);
+> > -             evsel->core.cpus =3D cpus;
+> > -             evsel->core.own_cpus =3D perf_cpu_map__get(cpus);
+> > -             evsel->pmu_name =3D strdup(pmu->name);
+> > -             evlist__add(evlist, evsel);
 > > -     }
 > > -
-> > -     perf_cpu_map__for_each_cpu(cpu, i, cpus) {
-> > -             if (!perf_cpu_map__has(pmu_cpus, cpu))
-> > -                     RC_CHK_ACCESS(unmatched_cpus)->map[unmatched_nr++=
-] =3D cpu;
-> > -             else
-> > -                     RC_CHK_ACCESS(matched_cpus)->map[matched_nr++] =
-=3D cpu;
-> > -     }
-> > -
-> > -     perf_cpu_map__set_nr(unmatched_cpus, unmatched_nr);
-> > -     perf_cpu_map__set_nr(matched_cpus, matched_nr);
-> > -     *mcpus_ptr =3D matched_cpus;
-> > -     *ucpus_ptr =3D unmatched_cpus;
 > > -     return 0;
 > > -}
 > > -
-> >  double __weak perf_pmu__cpu_slots_per_cycle(void)
+> >  bool evlist__has_hybrid(struct evlist *evlist)
 > >  {
-> >       return NAN;
-> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> > index 0e0cb6283594..49033bb134f3 100644
-> > --- a/tools/perf/util/pmu.h
-> > +++ b/tools/perf/util/pmu.h
-> > @@ -257,10 +257,6 @@ void perf_pmu__warn_invalid_formats(struct perf_pm=
-u *pmu);
-> >  bool perf_pmu__has_hybrid(void);
-> >  int perf_pmu__match(char *pattern, char *name, char *tok);
+> >       struct evsel *evsel;
+> > diff --git a/tools/perf/util/evlist-hybrid.h b/tools/perf/util/evlist-h=
+ybrid.h
+> > index 4b000eda6626..0cded76eb344 100644
+> > --- a/tools/perf/util/evlist-hybrid.h
+> > +++ b/tools/perf/util/evlist-hybrid.h
+> > @@ -7,7 +7,6 @@
+> >  #include "evlist.h"
+> >  #include <unistd.h>
 > >
-> > -int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cp=
-us,
-> > -                      struct perf_cpu_map **mcpus_ptr,
-> > -                      struct perf_cpu_map **ucpus_ptr);
+> > -int evlist__add_default_hybrid(struct evlist *evlist, bool precise);
+> >  bool evlist__has_hybrid(struct evlist *evlist);
+> >
+> >  #endif /* __PERF_EVLIST_HYBRID_H */
+> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> > index 5d0d99127a90..b8ca99afdfe5 100644
+> > --- a/tools/perf/util/evlist.c
+> > +++ b/tools/perf/util/evlist.c
+> > @@ -93,8 +93,15 @@ struct evlist *evlist__new(void)
+> >  struct evlist *evlist__new_default(void)
+> >  {
+> >       struct evlist *evlist =3D evlist__new();
+> > +     bool can_profile_kernel;
+> > +     int err;
+> > +
+> > +     if (!evlist)
+> > +             return NULL;
+> >
+> > -     if (evlist && evlist__add_default(evlist)) {
+> > +     can_profile_kernel =3D perf_event_paranoid_check(1);
+> > +     err =3D parse_event(evlist, can_profile_kernel ? "cycles" : "cycl=
+es:u");
+> > +     if (err) {
+> >               evlist__delete(evlist);
+> >               evlist =3D NULL;
+> >       }
+> > @@ -237,19 +244,6 @@ static void evlist__set_leader(struct evlist *evli=
+st)
+> >       perf_evlist__set_leader(&evlist->core);
+> >  }
+> >
+> > -int __evlist__add_default(struct evlist *evlist, bool precise)
+> > -{
+> > -     struct evsel *evsel;
 > > -
-> >  char *pmu_find_real_name(const char *name);
-> >  char *pmu_find_alias_name(const char *name);
-> >  double perf_pmu__cpu_slots_per_cycle(void);
+> > -     evsel =3D evsel__new_cycles(precise, PERF_TYPE_HARDWARE,
+> > -                               PERF_COUNT_HW_CPU_CYCLES);
+> > -     if (evsel =3D=3D NULL)
+> > -             return -ENOMEM;
+> > -
+> > -     evlist__add(evlist, evsel);
+> > -     return 0;
+> > -}
+> > -
+> >  static struct evsel *evlist__dummy_event(struct evlist *evlist)
+> >  {
+> >       struct perf_event_attr attr =3D {
+> > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> > index 5e7ff44f3043..664c6bf7b3e0 100644
+> > --- a/tools/perf/util/evlist.h
+> > +++ b/tools/perf/util/evlist.h
+> > @@ -100,13 +100,6 @@ void evlist__delete(struct evlist *evlist);
+> >  void evlist__add(struct evlist *evlist, struct evsel *entry);
+> >  void evlist__remove(struct evlist *evlist, struct evsel *evsel);
+> >
+> > -int __evlist__add_default(struct evlist *evlist, bool precise);
+> > -
+> > -static inline int evlist__add_default(struct evlist *evlist)
+> > -{
+> > -     return __evlist__add_default(evlist, true);
+> > -}
+> > -
+> >  int evlist__add_attrs(struct evlist *evlist, struct perf_event_attr *a=
+ttrs, size_t nr_attrs);
+> >
+> >  int __evlist__add_default_attrs(struct evlist *evlist,
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index 2f5910b31fa9..b39615124672 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -316,48 +316,6 @@ struct evsel *evsel__new_idx(struct perf_event_att=
+r *attr, int idx)
+> >       return evsel;
+> >  }
+> >
+> > -static bool perf_event_can_profile_kernel(void)
+> > -{
+> > -     return perf_event_paranoid_check(1);
+> > -}
+> > -
+> > -struct evsel *evsel__new_cycles(bool precise __maybe_unused, __u32 typ=
+e, __u64 config)
+> > -{
+> > -     struct perf_event_attr attr =3D {
+> > -             .type   =3D type,
+> > -             .config =3D config,
+> > -             .exclude_kernel =3D !perf_event_can_profile_kernel(),
+> > -     };
+> > -     struct evsel *evsel;
+> > -
+> > -     event_attr_init(&attr);
+> > -
+> > -     /*
+> > -      * Now let the usual logic to set up the perf_event_attr defaults
+> > -      * to kick in when we return and before perf_evsel__open() is cal=
+led.
+> > -      */
+> > -     evsel =3D evsel__new(&attr);
+> > -     if (evsel =3D=3D NULL)
+> > -             goto out;
+> > -
+> > -     arch_evsel__fixup_new_cycles(&evsel->core.attr);
+> > -
+> > -     evsel->precise_max =3D true;
+> > -
+> > -     /* use asprintf() because free(evsel) assumes name is allocated *=
+/
+> > -     if (asprintf(&evsel->name, "cycles%s%s%.*s",
+> > -                  (attr.precise_ip || attr.exclude_kernel) ? ":" : "",
+> > -                  attr.exclude_kernel ? "u" : "",
+> > -                  attr.precise_ip ? attr.precise_ip + 1 : 0, "ppp") < =
+0)
+> > -             goto error_free;
+> > -out:
+> > -     return evsel;
+> > -error_free:
+> > -     evsel__delete(evsel);
+> > -     evsel =3D NULL;
+> > -     goto out;
+> > -}
+> > -
+> >  int copy_config_terms(struct list_head *dst, struct list_head *src)
+> >  {
+> >       struct evsel_config_term *pos, *tmp;
+> > @@ -1130,10 +1088,6 @@ void __weak arch_evsel__set_sample_weight(struct=
+ evsel *evsel)
+> >       evsel__set_sample_bit(evsel, WEIGHT);
+> >  }
+> >
+> > -void __weak arch_evsel__fixup_new_cycles(struct perf_event_attr *attr =
+__maybe_unused)
+> > -{
+> > -}
+> > -
+> >  void __weak arch__post_evsel_config(struct evsel *evsel __maybe_unused=
+,
+> >                                   struct perf_event_attr *attr __maybe_=
+unused)
+> >  {
+> > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> > index df8928745fc6..429b172cc94d 100644
+> > --- a/tools/perf/util/evsel.h
+> > +++ b/tools/perf/util/evsel.h
+> > @@ -243,8 +243,6 @@ static inline struct evsel *evsel__newtp(const char=
+ *sys, const char *name)
+> >  }
+> >  #endif
+> >
+> > -struct evsel *evsel__new_cycles(bool precise, __u32 type, __u64 config=
+);
+> > -
+> >  #ifdef HAVE_LIBTRACEEVENT
+> >  struct tep_event *event_format__new(const char *sys, const char *name)=
+;
+> >  #endif
+> > @@ -312,7 +310,6 @@ void __evsel__reset_sample_bit(struct evsel *evsel,=
+ enum perf_event_sample_forma
+> >  void evsel__set_sample_id(struct evsel *evsel, bool use_sample_identif=
+ier);
+> >
+> >  void arch_evsel__set_sample_weight(struct evsel *evsel);
+> > -void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr);
+> >  void arch__post_evsel_config(struct evsel *evsel, struct perf_event_at=
+tr *attr);
+> >
+> >  int evsel__set_filter(struct evsel *evsel, const char *filter);
