@@ -2,125 +2,366 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC845C77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 17:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21E0C7EE26
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 18:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233368AbjEVRun (ORCPT
+        id S233127AbjEVSI3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 May 2023 13:50:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53114 "EHLO
+        Mon, 22 May 2023 14:08:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233390AbjEVRul (ORCPT
+        with ESMTP id S233096AbjEVSI2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 May 2023 13:50:41 -0400
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E139118
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 10:50:37 -0700 (PDT)
-Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-51f1b6e8179so4426189a12.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 10:50:37 -0700 (PDT)
+        Mon, 22 May 2023 14:08:28 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72AADFF
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 11:08:25 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-33828a86ee2so20735ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 11:08:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684777837; x=1687369837;
+        d=google.com; s=20221208; t=1684778904; x=1687370904;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=21N69fXRIa64PVVS5XD52blO3YZaOM8DbCnSTBRVsMo=;
-        b=pKsK3+dF5scOPXlLPS0Vte0P8EJ0sQ0Tk7YUG1IGXnY1NZoJiWWANPx+tGrLcJuPAy
-         yKHpqsmHeRiH6zkIv+pC76wPN1vHbEibBkCvMsy3UKzQkOvj6wYQB/S1fUVZgtb8obhl
-         FsYtfcSJJhqHcD6mo0pphPpVxvEo4GQ0va7W5KBP+Ve2qLiVmWLlNC++/fynDWOdpW/+
-         4rlJLLmKHlhlT2Ljgpm2VeJ9Ze7Ba0DieFRfpVveY3Hjqg0H9n492VAG3NuDUzBbpdMG
-         b7IlYNWuuCg9JpSkCwHcuudlWbSNwVcwUDTwSaZ/1LZrpRIyrs7ice/UMCXECoozR6PL
-         mdYg==
+        bh=1R88eZc6oRVIgdx43aldgqdN8vD6BmciC13RfWJDcM8=;
+        b=MeZhfbAX3wjHPwFpHjyCnGZfGpJwdVVOLymYYvYsr6qMjNCVLvxZvJZj+cWzcrSpW1
+         yPmX6Jk42C6euQvWs8H5BmHFga8WV1Bs6KUaLzq8n3U4nr7OWhVNMWXrur2KzEYHxcGg
+         djHps3MCzWKVB/0R7pWm4Cy+28shlNeU+Pg8c9Ys603VKsB4lcB/liQSh/TJ1Rz9WItd
+         cCjRpj5l9i6I8zhqSfq9WaVIvr++RSiP+eP1YcQoEd35LotX9AKeppKk2DhJBuQn/A06
+         jIR2afm482lwdSfjXTU0li6RVRS3D/IXmFpN6ISfu6Z0fHs3+QOZjjV7I1BU59zOQdjm
+         OK8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684777837; x=1687369837;
+        d=1e100.net; s=20221208; t=1684778904; x=1687370904;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=21N69fXRIa64PVVS5XD52blO3YZaOM8DbCnSTBRVsMo=;
-        b=Hq0vlQ7qYtMKQVx4V3UKf6g4nY3snKLWFuqzzQ+0/Pwz79sKDM9dFdWYIvIgtg+0BC
-         /3CBaQDjnMad/20Y1q+pEB38ha/Qhcqd9Nl+5qwQaGK3afCc7e6mjLW/oYfY0LCIxlR2
-         tmFy8a/PRGf4penyNzM5HD9norU1khT3y+K2CYAjMWGfGK6EFaUpIpYZuPq+TFh9AGpf
-         H1rE8aPyYuwKMvF8tNlGnXCeqF8q9t8QHNvn7FmOaBku7JeBN60Ye5G3Roi5vLYlSUoK
-         oinDklNEF3k4glFHzHyCCBvJYI1ZsZt9c8WPD7Z2TuGepYUz2wd2t5xY9IRmGkMdylfK
-         bvRQ==
-X-Gm-Message-State: AC+VfDwCLU1KcP1m+o+n7pvU0/AKNQxOARgoAfmj4RY+cOUNtgkQnWVg
-        wyAo/GzQ6fi6bS+K5AhkSxdiWqorNbSwoRwzsf7Z/Urz
-X-Google-Smtp-Source: ACHHUZ7l8cAuGF50AuqLJ9c8V0BZBJEIIN1GH97xtPys+RsKWDwmRNo4CYDASTWQFX5SArDzzwAmTdnFFOuDeEFP98k=
-X-Received: by 2002:a17:90a:928e:b0:250:4a18:f575 with SMTP id
- n14-20020a17090a928e00b002504a18f575mr10759227pjo.9.1684777836898; Mon, 22
- May 2023 10:50:36 -0700 (PDT)
+        bh=1R88eZc6oRVIgdx43aldgqdN8vD6BmciC13RfWJDcM8=;
+        b=euy2vlISHj/76xieZf9ofXAHJ9i1u/l+VH5BNN635MlxbkZZQoktKnOJA5OEESJtJW
+         pY1IQ1ntyig9HIPmrkgNzBWqamNcV0sQTskZfHsjakB5JyixkMGIgy5UOansSJgkL5g+
+         flGWJibxtyNd1DO9EHLBDO0aHDdyq3VH7ACqMkG+1o6Dmki5bIL3QlsK2NpkHCPG3uCS
+         bmvMxGPbaEOFxmMOt1Rj1eFNWDpnG2UMiIZGcttShcXiZtROmNyytaqdTxSqTkCdYxWk
+         7UpwCZCeqOLiWjBP7n+j68FPKSKZyY9sSvcWXgBE1U+fhZmG53oM3+S9MwY3AGjcaa0/
+         MvLg==
+X-Gm-Message-State: AC+VfDyyvqxz9PbSsPfugX/TL18e56tXkOz54h0JeqhwzvkS2Kz8/jPa
+        OE6lYYTFY+Bf6UVuc9ErzgdCb+C6cm2CVwQXbLlgWw==
+X-Google-Smtp-Source: ACHHUZ4pgighc0mqTBnWFVC/0BRYcKKJlRuZ99VM2ibXd+FdoPBoIYO0OO9OPCQ4KWSJZd/dKGwS9c0MAvhjcoIVDVk=
+X-Received: by 2002:a92:c562:0:b0:335:5c4b:2f8a with SMTP id
+ b2-20020a92c562000000b003355c4b2f8amr975152ilj.5.1684778904498; Mon, 22 May
+ 2023 11:08:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAGA5_H6Ld9U0eTatJeExSGEynf41mvfcPZ34rtdO7rAVNuoXYQ@mail.gmail.com>
- <CAP-5=fWV2+auUQHQ5cvn2948M=0ThtrHftgGMM44ceCZyHiQeQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fWV2+auUQHQ5cvn2948M=0ThtrHftgGMM44ceCZyHiQeQ@mail.gmail.com>
-From:   Rajasekhar Pulluru <pullururajasekhar@gmail.com>
-Date:   Mon, 22 May 2023 23:20:24 +0530
-Message-ID: <CAGA5_H7CWd2vpomkLJ2mFzg8TyBdfkugTy1oYN3ojEGRy-VWqA@mail.gmail.com>
-Subject: Re: DSO_BINARY_TYPE__SYSTEM_PATH_DSO
-To:     Ian Rogers <irogers@google.com>
-Cc:     linux-perf-users@vger.kernel.org
+References: <20230520025537.1811986-1-leo.yan@linaro.org> <20230520025537.1811986-3-leo.yan@linaro.org>
+In-Reply-To: <20230520025537.1811986-3-leo.yan@linaro.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 22 May 2023 11:08:12 -0700
+Message-ID: <CAP-5=fU-+8Sdw0tfQNYN40tXanrzUgqv0=6jsHqGR9cgjkQa2A@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] perf parse-regs: Introduce functions arch__reg_{ip|sp}()
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Guo Ren <guoren@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Eric Lin <eric.lin@sifive.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Qi Liu <liuqi115@huawei.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
-Thanks for responding, I really appreciate your time and help!
+On Fri, May 19, 2023 at 7:56=E2=80=AFPM Leo Yan <leo.yan@linaro.org> wrote:
+>
+> Ideally, we want util/perf_regs.c to be general enough and doesn't bind
+> with specific architecture.
+>
+> But since util/perf_regs.c uses the macros PERF_REG_IP and PERF_REG_SP
+> which are defined by architecture, thus util/perf_regs.c is dependent on
+> architecture header (see util/perf_regs.h includes "<perf_regs.h>", here
+> perf_regs.h is architecture specific header).
+>
+> As a step to generalize util/perf_regs.c, this commit introduces weak
+> functions arch__reg_ip() and arch__reg_sp() and every architecture can
+> define their own functions; thus, util/perf_regs.c doesn't need to use
+> PERF_REG_IP and PERF_REG_SP anymore.
+>
+> This is a preparation to get rid of architecture specific header from
+> util/perf_regs.h.
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/arch/arm/util/perf_regs.c     | 10 ++++++++++
+>  tools/perf/arch/arm64/util/perf_regs.c   | 10 ++++++++++
+>  tools/perf/arch/csky/util/perf_regs.c    | 10 ++++++++++
+>  tools/perf/arch/mips/util/perf_regs.c    | 10 ++++++++++
+>  tools/perf/arch/powerpc/util/perf_regs.c | 10 ++++++++++
+>  tools/perf/arch/riscv/util/perf_regs.c   | 10 ++++++++++
+>  tools/perf/arch/s390/util/perf_regs.c    | 10 ++++++++++
+>  tools/perf/arch/x86/util/perf_regs.c     | 10 ++++++++++
+>  tools/perf/util/perf_regs.c              | 10 ++++++++++
+>  tools/perf/util/perf_regs.h              |  4 +++-
+>  tools/perf/util/unwind-libdw.c           |  2 +-
+>  tools/perf/util/unwind.h                 |  4 ++--
+>  12 files changed, 96 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/arch/arm/util/perf_regs.c b/tools/perf/arch/arm/u=
+til/perf_regs.c
+> index 2833e101a7c6..37aa3a2091bd 100644
+> --- a/tools/perf/arch/arm/util/perf_regs.c
+> +++ b/tools/perf/arch/arm/util/perf_regs.c
+> @@ -4,3 +4,13 @@
+>  const struct sample_reg sample_reg_masks[] =3D {
+>         SMPL_REG_END
+>  };
+> +
+> +uint64_t arch__reg_ip(void)
+> +{
+> +       return PERF_REG_ARM_PC;
+> +}
+> +
+> +uint64_t arch__reg_sp(void)
+> +{
+> +       return PERF_REG_ARM_SP;
+> +}
+> diff --git a/tools/perf/arch/arm64/util/perf_regs.c b/tools/perf/arch/arm=
+64/util/perf_regs.c
+> index 006692c9b040..dbe7f00b222b 100644
+> --- a/tools/perf/arch/arm64/util/perf_regs.c
+> +++ b/tools/perf/arch/arm64/util/perf_regs.c
+> @@ -169,3 +169,13 @@ uint64_t arch__user_reg_mask(void)
+>         }
+>         return PERF_REGS_MASK;
+>  }
+> +
+> +uint64_t arch__reg_ip(void)
+> +{
+> +       return PERF_REG_ARM64_PC;
+> +}
+> +
+> +uint64_t arch__reg_sp(void)
+> +{
+> +       return PERF_REG_ARM64_SP;
+> +}
+> diff --git a/tools/perf/arch/csky/util/perf_regs.c b/tools/perf/arch/csky=
+/util/perf_regs.c
+> index 2864e2e3776d..d230d7e640fd 100644
+> --- a/tools/perf/arch/csky/util/perf_regs.c
+> +++ b/tools/perf/arch/csky/util/perf_regs.c
+> @@ -4,3 +4,13 @@
+>  const struct sample_reg sample_reg_masks[] =3D {
+>         SMPL_REG_END
+>  };
+> +
+> +uint64_t arch__reg_ip(void)
+> +{
+> +       return PERF_REG_CSKY_PC;
+> +}
+> +
+> +uint64_t arch__reg_sp(void)
+> +{
+> +       return PERF_REG_CSKY_SP;
+> +}
+> diff --git a/tools/perf/arch/mips/util/perf_regs.c b/tools/perf/arch/mips=
+/util/perf_regs.c
+> index 2864e2e3776d..64882ebc9287 100644
+> --- a/tools/perf/arch/mips/util/perf_regs.c
+> +++ b/tools/perf/arch/mips/util/perf_regs.c
+> @@ -4,3 +4,13 @@
+>  const struct sample_reg sample_reg_masks[] =3D {
+>         SMPL_REG_END
+>  };
+> +
+> +uint64_t arch__reg_ip(void)
+> +{
+> +       return PERF_REG_MIPS_PC;
+> +}
+> +
+> +uint64_t arch__reg_sp(void)
+> +{
+> +       return PERF_REG_MIPS_R29;
+> +}
+> diff --git a/tools/perf/arch/powerpc/util/perf_regs.c b/tools/perf/arch/p=
+owerpc/util/perf_regs.c
+> index 8d07a78e742a..c84cd79986a8 100644
+> --- a/tools/perf/arch/powerpc/util/perf_regs.c
+> +++ b/tools/perf/arch/powerpc/util/perf_regs.c
+> @@ -226,3 +226,13 @@ uint64_t arch__intr_reg_mask(void)
+>         }
+>         return mask;
+>  }
+> +
+> +uint64_t arch__reg_ip(void)
+> +{
+> +       return PERF_REG_POWERPC_NIP;
+> +}
+> +
+> +uint64_t arch__reg_sp(void)
+> +{
+> +       return PERF_REG_POWERPC_R1;
+> +}
+> diff --git a/tools/perf/arch/riscv/util/perf_regs.c b/tools/perf/arch/ris=
+cv/util/perf_regs.c
+> index 2864e2e3776d..13bbddd139d0 100644
+> --- a/tools/perf/arch/riscv/util/perf_regs.c
+> +++ b/tools/perf/arch/riscv/util/perf_regs.c
+> @@ -4,3 +4,13 @@
+>  const struct sample_reg sample_reg_masks[] =3D {
+>         SMPL_REG_END
+>  };
+> +
+> +uint64_t arch__reg_ip(void)
+> +{
+> +       return PERF_REG_RISCV_PC;
+> +}
+> +
+> +uint64_t arch__reg_sp(void)
+> +{
+> +       return PERF_REG_RISCV_SP;
+> +}
+> diff --git a/tools/perf/arch/s390/util/perf_regs.c b/tools/perf/arch/s390=
+/util/perf_regs.c
+> index 2864e2e3776d..9b2297471090 100644
+> --- a/tools/perf/arch/s390/util/perf_regs.c
+> +++ b/tools/perf/arch/s390/util/perf_regs.c
+> @@ -4,3 +4,13 @@
+>  const struct sample_reg sample_reg_masks[] =3D {
+>         SMPL_REG_END
+>  };
+> +
+> +uint64_t arch__reg_ip(void)
+> +{
+> +       return PERF_REG_S390_PC;
+> +}
+> +
+> +uint64_t arch__reg_sp(void)
+> +{
+> +       return PERF_REG_S390_R15;
+> +}
+> diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/u=
+til/perf_regs.c
+> index 0ed177991ad0..c752a6e9cba6 100644
+> --- a/tools/perf/arch/x86/util/perf_regs.c
+> +++ b/tools/perf/arch/x86/util/perf_regs.c
+> @@ -312,3 +312,13 @@ uint64_t arch__intr_reg_mask(void)
+>
+>         return PERF_REGS_MASK;
+>  }
+> +
+> +uint64_t arch__reg_ip(void)
+> +{
+> +       return PERF_REG_X86_IP;
+> +}
+> +
+> +uint64_t arch__reg_sp(void)
+> +{
+> +       return PERF_REG_X86_SP;
+> +}
+> diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+> index 8720ec6cf147..334c9a2b785d 100644
+> --- a/tools/perf/util/perf_regs.c
+> +++ b/tools/perf/util/perf_regs.c
+> @@ -20,6 +20,16 @@ uint64_t __weak arch__user_reg_mask(void)
+>         return PERF_REGS_MASK;
+>  }
+>
+> +uint64_t __weak arch__reg_ip(void)
+> +{
+> +       return 0;
+> +}
+> +
+> +uint64_t __weak arch__reg_sp(void)
+> +{
+> +       return 0;
+> +}
+> +
 
-Sorry, I don't see namespace related information in perf script output
-(with/without -D option).
-I tried to explore other options, but was not able to find an option
-that can dump the ns information.
+Is there a need for the weak function if there is a definition for
+every architecture? A problem with weak definitions is that they are
+not part of the C standard, so strange things can happen such as
+inlining - although I think this code is safe. Not having the weak
+functions means that if someone tries to bring up a new architecture
+they will get linker failures until they add the definitions. Failing
+to link seems better than silently succeeding but then having to track
+down runtime failures because these functions are returning 0.
 
-Do you have any alternate suggestions to debug this?
+Thanks,
+Ian
 
-Thanks & Regards,
-Rajasekhar
-
-On Fri, May 19, 2023 at 11:27=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
+>  #ifdef HAVE_PERF_REGS_SUPPORT
 >
-> On Fri, May 19, 2023 at 10:49=E2=80=AFAM Rajasekhar Pulluru
-> <pullururajasekhar@gmail.com> wrote:
-> >
-> > Hi Team,
-> > Could someone help me shed some light on this macro
-> > DSO_BINARY_TYPE__SYSTEM_PATH_DSO ?
-> >
-> > Case-1: I am trying to run perf top -p `pidof <app>` on ubuntu host
-> > (based on ubuntu:jammy, outside the container) where the <app> runs
-> > inside a container that's based on ubuntu bionic, and I don't see any
-> > of <app> symbols (only hex-address and no function names) in perf top
-> > output.
-> >
-> > Case-2: When I try to run perf top -p `pidof <app>` on ubuntu host
-> > (based on ubuntu:bionic, outside the container) where the <app> runs
-> > inside a container that's also based on ubuntu bionic, and I can see
-> > <app> symbols (function names) in perf top output.
-> >
-> > On debugging both the cases, I find that, case-2 is able to display
-> > symbol when dso__load of </opt/bin/<app> is successful for the type
-> > DSO_BINARY_TYPE__SYSTEM_PATH_DSO, where-as the same fails for case-1
-> > (is_regular_file check fails), and perf top reports "Failed to open
-> > /opt/bin/<app>, continuing without symbols".
-> >
-> > In both the cases, the file /opt/bin/<app> is not available on the
-> > host, and its only available inside the container.
-> > What could be causing the above failure?
-> >
-> > Appreciate any help/inputs.
+>  const char *perf_reg_name(int id, const char *arch)
+> diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+> index ab4ec3f2a170..0a1460aaad37 100644
+> --- a/tools/perf/util/perf_regs.h
+> +++ b/tools/perf/util/perf_regs.h
+> @@ -26,13 +26,15 @@ enum {
+>  int arch_sdt_arg_parse_op(char *old_op, char **new_op);
+>  uint64_t arch__intr_reg_mask(void);
+>  uint64_t arch__user_reg_mask(void);
+> +uint64_t arch__reg_ip(void);
+> +uint64_t arch__reg_sp(void);
 >
-> Hi Rajasekhar,
+>  #ifdef HAVE_PERF_REGS_SUPPORT
+>  extern const struct sample_reg sample_reg_masks[];
 >
-> This is an area I'm not familiar with. I suspect the reason perf
-> record/report are succeeding from your description is namespace
-> information. If you look at the perf.data file with "perf script" and
-> probably the "-D" option, you should see information. I'm not sure
-> anybody has wired up the namespace code with perf top, which would go
-> a long way to explaining your problems.
+>  #include <perf_regs.h>
 >
-> Thanks for investigating this!
-> Ian
+> -#define DWARF_MINIMAL_REGS ((1ULL << PERF_REG_IP) | (1ULL << PERF_REG_SP=
+))
+> +#define DWARF_MINIMAL_REGS ((1ULL << arch__reg_ip()) | (1ULL << arch__re=
+g_sp()))
 >
-> > Thanks & Regards,
-> > Rajasekhar
+>  const char *perf_reg_name(int id, const char *arch);
+>  int perf_reg_value(u64 *valp, struct regs_dump *regs, int id);
+> diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libd=
+w.c
+> index bdccfc511b7e..f308f2ea512b 100644
+> --- a/tools/perf/util/unwind-libdw.c
+> +++ b/tools/perf/util/unwind-libdw.c
+> @@ -252,7 +252,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *a=
+rg,
+>         if (!ui->dwfl)
+>                 goto out;
+>
+> -       err =3D perf_reg_value(&ip, &data->user_regs, PERF_REG_IP);
+> +       err =3D perf_reg_value(&ip, &data->user_regs, arch__reg_ip());
+>         if (err)
+>                 goto out;
+>
+> diff --git a/tools/perf/util/unwind.h b/tools/perf/util/unwind.h
+> index b2a03fa5289b..0a98ea9d8c94 100644
+> --- a/tools/perf/util/unwind.h
+> +++ b/tools/perf/util/unwind.h
+> @@ -43,11 +43,11 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *a=
+rg,
+>  #endif
+>
+>  #ifndef LIBUNWIND__ARCH_REG_SP
+> -#define LIBUNWIND__ARCH_REG_SP PERF_REG_SP
+> +#define LIBUNWIND__ARCH_REG_SP arch__reg_sp()
+>  #endif
+>
+>  #ifndef LIBUNWIND__ARCH_REG_IP
+> -#define LIBUNWIND__ARCH_REG_IP PERF_REG_IP
+> +#define LIBUNWIND__ARCH_REG_IP arch__reg_ip()
+>  #endif
+>
+>  int LIBUNWIND__ARCH_REG_ID(int regnum);
+> --
+> 2.39.2
+>
