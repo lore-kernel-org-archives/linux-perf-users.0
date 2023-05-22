@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC92C77B75
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 05:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40770C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 05:30:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230415AbjEVFWN (ORCPT
+        id S229707AbjEVFaz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 May 2023 01:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57972 "EHLO
+        Mon, 22 May 2023 01:30:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231949AbjEVFWL (ORCPT
+        with ESMTP id S229470AbjEVFay (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 May 2023 01:22:11 -0400
-Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C364F4
-        for <linux-perf-users@vger.kernel.org>; Sun, 21 May 2023 22:22:09 -0700 (PDT)
-Received: by mail-il1-x136.google.com with SMTP id e9e14a558f8ab-335d6260e9bso223855ab.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 21 May 2023 22:22:09 -0700 (PDT)
+        Mon, 22 May 2023 01:30:54 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA0AA8
+        for <linux-perf-users@vger.kernel.org>; Sun, 21 May 2023 22:30:53 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id e9e14a558f8ab-33828a86ee2so255475ab.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 21 May 2023 22:30:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684732929; x=1687324929;
+        d=google.com; s=20221208; t=1684733452; x=1687325452;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S0tc4RCP3K7u6Ic2UEzhCnJzGDUs990ssG7u5qThApw=;
-        b=WX5uf8y+w1R3/FqJ8jgI1CIL29Co9IaTgCcYhehHjAXfRy96xa22FF6LaNVL4j8Kq1
-         EmsqUjgnK0tLg2ykDGCcdsdeRNFmNXAiQiO6kCVzv6bdkM0qGxaQOD374nwjtSRDJiy9
-         oImdK4zwu+I35I9teq2Cc2lMPDMHrkK7xz72IFcGKEyS2g51fmp4gUfPXPLNlEwc5Aay
-         elILKdPufok6sltRsULp8UkF+RqMu7MfT6za4rqzk3R+psk/cJDRPqD5FrEFqP7S3Zg9
-         Pt7zH/mB7KVcjaDXqqi381B1Y+UK2Xi9UM66X7yEUWqjUXwG0+UXCNjwtYlPpzEQjV4V
-         2UTQ==
+        bh=QcdvohU0f2w+fIMIX4DbPiChuLXgbqb9UEE/pNtU84k=;
+        b=6N8KkioYqaNwktef6Iq8E5OZXCmKbj1txma/kt5JIFjoTBgLmhUyqho/o6d1DY9PMi
+         /Gqat1eCV+T88xSdtMX9+zK4vQFfYdY18H8uyte14d9SVQ5fVhfwve/W05l3TbR3Mg7S
+         hUV/HYC0LWDD0V/jwvyDYk2uxpUqU5NoduKYg/PZISq+U1849p0A+CLMKFg95+7H7leb
+         XeDeQIkDrqAxJVQ0aOZAiaq/OSNCwdInkHBw/gi4LoI/QGpR0PUtTGUbgMiXwQ0p/2b9
+         hJxe3oaVOzLYLUnQ9wdQzeWEksLNEnvks+TGSvXN1/DJyRTDm9rI3zOVGnwxiH+o/dnX
+         z5Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684732929; x=1687324929;
+        d=1e100.net; s=20221208; t=1684733452; x=1687325452;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S0tc4RCP3K7u6Ic2UEzhCnJzGDUs990ssG7u5qThApw=;
-        b=DcNStiY/LmZvbfLDPnZWvqGfyYnNDr0pjkRX3xDVTcnpVW4zp4xxWSLJTS7LVYulBp
-         rHi+XvvS/3cI+0smJ7XKZIjd8mBFu6pcsmkSeScbU/Q/P9JNiRkk6Ip0QKcov87bTi+6
-         9gDTe6FQMiGafFthOeOTOoZgp3nt+pbGgtxSpEiZoRQ8cFpVb2PagQKY6mJ6sWA3Jso8
-         vN3maYgMNuoL+sbthJ4+P4y7ViAOASZ9LMM493CVxUFdkI67QMy7NJWkYSJMytWjs2oZ
-         q4h+Qe0n9pu5hICqXWSlDMAj4CYTCRn2lBCS69ZHAP8bcALvi7d4dM1i/diyr3ujz5SI
-         3KXA==
-X-Gm-Message-State: AC+VfDwBz7EXf1ofVmwXqJYMwXZfsJNG2v7OrhmLcOQ/rRWjtc/p+gyE
-        nN03a5iMZFczjnOtQHbNqva8mOuOIhmvfv682ra5hA==
-X-Google-Smtp-Source: ACHHUZ77M7eJMoSH/61HLM0tG1ppslArzT+OOris+LEeaQRu2shLxzzpYsHnE3ecKCwLLFO5gSXEJ8tu25OrkccUryE=
-X-Received: by 2002:a05:6e02:2185:b0:338:13f1:8c0c with SMTP id
- j5-20020a056e02218500b0033813f18c0cmr660734ila.16.1684732928613; Sun, 21 May
- 2023 22:22:08 -0700 (PDT)
+        bh=QcdvohU0f2w+fIMIX4DbPiChuLXgbqb9UEE/pNtU84k=;
+        b=c6EE7U0LUIXnZBNtu/PUBsD++2zsQFf7RTvkUY+EBBmpx/JP3PFapehDM6DAssu2kD
+         SNeAIH8gC9V9wA4ECHQMay9wpDikVexyYyzHX6ltwm1gFlOy9xQJ6ccQm0j+SYgX8uNC
+         E/qfz30XOe8jzFyppO8OwfwGTz+XnvkeVTZh30lfLvuCAI2wGQGF4XSO5IPiUC2ee6yU
+         hVZ4qXO76AsPpAgNVRUcFPZcZgLMtEhQoaDTrMEbn6Y71Hi5I7cXev3M0awIom0QB2zB
+         xQpCdGaSyohIyfi35IhaoCKyF2F9YTYcz1JfwVIXamefk5Bpxv4PLe+/n10cJp/GvhUZ
+         IQ4w==
+X-Gm-Message-State: AC+VfDxgxHaxmEhWER4DHs7gbcVSoECMHl+2tFPkAYi55gN06VS35/pS
+        PsFvzR7+FQhmkA3Y9IJ2v6uh/CPyREELJmjNxuOM7g==
+X-Google-Smtp-Source: ACHHUZ5aHxjgOROb+esLKY1PeiXeNdAKL5G4yO/Acvbmkrtd0rm5Ip7bPbLL4suDd4QhlbFlqRnwRoZbENEIyp37PCo=
+X-Received: by 2002:a05:6e02:1a0a:b0:32a:f2a9:d1b7 with SMTP id
+ s10-20020a056e021a0a00b0032af2a9d1b7mr783043ild.10.1684733452291; Sun, 21 May
+ 2023 22:30:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230517145803.559429-1-irogers@google.com> <20230517145803.559429-6-irogers@google.com>
- <1ea342ab-d68f-26e5-0043-f05b1886009e@linux.intel.com>
-In-Reply-To: <1ea342ab-d68f-26e5-0043-f05b1886009e@linux.intel.com>
+References: <20230517145803.559429-1-irogers@google.com> <20230517145803.559429-21-irogers@google.com>
+ <efd8389a-aef1-96de-273a-ebac565cb852@linux.intel.com>
+In-Reply-To: <efd8389a-aef1-96de-273a-ebac565cb852@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 21 May 2023 22:21:57 -0700
-Message-ID: <CAP-5=fU3OYNsjaJhLq_8tJXZKFARCTqrg3CEr64-3rAm_kTx+A@mail.gmail.com>
-Subject: Re: [PATCH v1 05/23] perf pmu: Remove perf_pmu__hybrid_mounted
+Date:   Sun, 21 May 2023 22:30:40 -0700
+Message-ID: <CAP-5=fV5zgPs_VayVhMq-pu7C1A_QeFvbq=jtC04GBS9T4yV2w@mail.gmail.com>
+Subject: Re: [PATCH v1 20/23] perf pmus: Split pmus list into core and uncore
 To:     "Liang, Kan" <kan.liang@linux.intel.com>
 Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -93,168 +93,148 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, May 21, 2023 at 12:23=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.=
-com> wrote:
+On Sun, May 21, 2023 at 1:07=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
 >
+> On 2023-05-17 10:58 a.m., Ian Rogers wrote:
+> > Split the pmus list into core and uncore. This will later allow for
+> > the core and uncore pmus to be populated separately.
 >
->
-> On 2023-05-17 10:57 a.m., Ian Rogers wrote:
-> > perf_pmu__hybrid_mounted is used to detect whether cpu_core or
-> > cpu_atom
->
-> Currently, there are only two CPU types for a hybrid machine, core and
-> atom. But there may be more CPU types added later. Please see the CPUID
-> 1AH EAX enumeration in SDM VOL2. It has several reserved encodings for
-> CPU types. It's better not using the hardcode cpu_core/cpu_atom to
-> replace the perf_pmu__hybrid_mounted().
+> I think the "uncore pmus" here means the other non-core PMUs, right? If
+> so, I think the "uncore pmus" is misleading, since we have a dedicated
+> uncore driver/PMU. Maybe we can use "other pmus" instead.
 >
 > Thanks,
 > Kan
 
-This is covered by later patches. Specifically patches like:
-patch 7: perf pmu: Add is_core to pmu
-patch 20: Split pmus list into core and uncore
-
-Ultimately in pmus.h we have two scan routines, one for all PMUs and
-one for core PMUs. For everything except hybrid (and the name varies a
-bit on ARM) the core scan only scans "cpu", on hybrid it scans
-"cpu_atom" and "cpu_core".  The determination of core vs uncore is
-done without using the name, so can support >2 hybrid PMUs. At this
-point in the patch series I'm trying to simplify everything so that I
-can then build the pmus interface.
+I'm okay with other PMUs. I'll change it in v2.
 
 Thanks,
 Ian
 
-> > is mounted with a non-empty cpus file by
-> > pmu_lookup. pmu_lookup will attempt to read the cpus file too and so
-> > the check can be folded into this.
-> >
-> > Checking hybrid_mounted in pmu_is_uncore is redundant as the next
-> > cpumask read will fail returning false.
-> >
-> > Reduce the scope of perf_pmu__find_hybrid_pmu by making it static.
 > >
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/util/pmu-hybrid.c | 15 +--------------
-> >  tools/perf/util/pmu-hybrid.h |  3 ---
-> >  tools/perf/util/pmu.c        | 26 ++++++++++++++------------
-> >  3 files changed, 15 insertions(+), 29 deletions(-)
+> >  tools/perf/util/pmus.c | 52 ++++++++++++++++++++++++++++++------------
+> >  1 file changed, 38 insertions(+), 14 deletions(-)
 > >
-> > diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.=
-c
-> > index bc4cb0738c35..7fe943dd3217 100644
-> > --- a/tools/perf/util/pmu-hybrid.c
-> > +++ b/tools/perf/util/pmu-hybrid.c
-> > @@ -18,20 +18,7 @@
+> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > index 2fb28e583366..dd029a810147 100644
+> > --- a/tools/perf/util/pmus.c
+> > +++ b/tools/perf/util/pmus.c
+> > @@ -12,13 +12,19 @@
+> >  #include "pmu.h"
+> >  #include "print-events.h"
 > >
-> >  LIST_HEAD(perf_pmu__hybrid_pmus);
+> > -static LIST_HEAD(pmus);
+> > +static LIST_HEAD(core_pmus);
+> > +static LIST_HEAD(uncore_pmus);
 > >
-> > -bool perf_pmu__hybrid_mounted(const char *name)
-> > -{
-> > -     int cpu;
-> > -     char pmu_name[PATH_MAX];
-> > -     struct perf_pmu pmu =3D {.name =3D pmu_name};
-> > -
-> > -     if (strncmp(name, "cpu_", 4))
-> > -             return false;
-> > -
-> > -     strlcpy(pmu_name, name, sizeof(pmu_name));
-> > -     return perf_pmu__scan_file(&pmu, "cpus", "%u", &cpu) > 0;
-> > -}
-> > -
-> > -struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
-> > +static struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
+> >  void perf_pmus__destroy(void)
+> >  {
+> >       struct perf_pmu *pmu, *tmp;
+> >
+> > -     list_for_each_entry_safe(pmu, tmp, &pmus, list) {
+> > +     list_for_each_entry_safe(pmu, tmp, &core_pmus, list) {
+> > +             list_del(&pmu->list);
+> > +
+> > +             perf_pmu__delete(pmu);
+> > +     }
+> > +     list_for_each_entry_safe(pmu, tmp, &uncore_pmus, list) {
+> >               list_del(&pmu->list);
+> >
+> >               perf_pmu__delete(pmu);
+> > @@ -29,7 +35,12 @@ static struct perf_pmu *pmu_find(const char *name)
 > >  {
 > >       struct perf_pmu *pmu;
 > >
-> > diff --git a/tools/perf/util/pmu-hybrid.h b/tools/perf/util/pmu-hybrid.=
-h
-> > index 206b94931531..8dbcae935020 100644
-> > --- a/tools/perf/util/pmu-hybrid.h
-> > +++ b/tools/perf/util/pmu-hybrid.h
-> > @@ -13,9 +13,6 @@ extern struct list_head perf_pmu__hybrid_pmus;
-> >  #define perf_pmu__for_each_hybrid_pmu(pmu)   \
-> >       list_for_each_entry(pmu, &perf_pmu__hybrid_pmus, hybrid_list)
+> > -     list_for_each_entry(pmu, &pmus, list) {
+> > +     list_for_each_entry(pmu, &core_pmus, list) {
+> > +             if (!strcmp(pmu->name, name) ||
+> > +                 (pmu->alias_name && !strcmp(pmu->alias_name, name)))
+> > +                     return pmu;
+> > +     }
+> > +     list_for_each_entry(pmu, &uncore_pmus, list) {
+> >               if (!strcmp(pmu->name, name) ||
+> >                   (pmu->alias_name && !strcmp(pmu->alias_name, name)))
+> >                       return pmu;
+> > @@ -53,7 +64,7 @@ struct perf_pmu *perf_pmus__find(const char *name)
+> >               return pmu;
 > >
-> > -bool perf_pmu__hybrid_mounted(const char *name);
-> > -
-> > -struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name);
-> >  bool perf_pmu__is_hybrid(const char *name);
+> >       dirfd =3D perf_pmu__event_source_devices_fd();
+> > -     pmu =3D perf_pmu__lookup(&pmus, dirfd, name);
+> > +     pmu =3D perf_pmu__lookup(is_pmu_core(name) ? &core_pmus : &uncore=
+_pmus, dirfd, name);
+> >       close(dirfd);
 > >
-> >  static inline int perf_pmu__hybrid_pmu_num(void)
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index 1e0be23d4dd7..729b1f166f80 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -617,9 +617,6 @@ static bool pmu_is_uncore(int dirfd, const char *na=
-me)
-> >  {
-> >       int fd;
+> >       return pmu;
+> > @@ -72,7 +83,7 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, co=
+nst char *name)
+> >       if (pmu)
+> >               return pmu;
 > >
-> > -     if (perf_pmu__hybrid_mounted(name))
-> > -             return false;
-> > -
-> >       fd =3D perf_pmu__pathname_fd(dirfd, name, "cpumask", O_PATH);
-> >       if (fd < 0)
-> >               return false;
-> > @@ -898,6 +895,16 @@ static int pmu_max_precise(int dirfd, struct perf_=
-pmu *pmu)
-> >       return max_precise;
+> > -     return perf_pmu__lookup(&pmus, dirfd, name);
+> > +     return perf_pmu__lookup(is_pmu_core(name) ? &core_pmus : &uncore_=
+pmus, dirfd, name);
 > >  }
 > >
-> > +/**
-> > + * perf_pmu__skip_empty_cpus() - should pmu_lookup skip the named PMU =
-if the
-> > + *      cpus or cpumask file isn't present?
-> > + * @name: Name of PMU.
-> > + */
-> > +static bool perf_pmu__skip_empty_cpus(const char *name)
-> > +{
-> > +     return !strcmp(name, "cpu_core") || !strcmp(name, "cpu_atom");
-> > +}
-> > +
-> >  static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_name)
+> >  /* Add all pmus in sysfs to pmu list: */
+> > @@ -93,7 +104,7 @@ static void pmu_read_sysfs(void)
+> >       while ((dent =3D readdir(dir))) {
+> >               if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, "=
+.."))
+> >                       continue;
+> > -             /* add to static LIST_HEAD(pmus): */
+> > +             /* add to static LIST_HEAD(core_pmus) or LIST_HEAD(uncore=
+_pmus): */
+> >               perf_pmu__find2(fd, dent->d_name);
+> >       }
+> >
+> > @@ -104,24 +115,37 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned=
+ int type)
 > >  {
 > >       struct perf_pmu *pmu;
-> > @@ -905,15 +912,8 @@ static struct perf_pmu *pmu_lookup(int dirfd, cons=
-t char *lookup_name)
-> >       LIST_HEAD(aliases);
-> >       __u32 type;
-> >       char *name =3D pmu_find_real_name(lookup_name);
-> > -     bool is_hybrid =3D perf_pmu__hybrid_mounted(name);
-> >       char *alias_name;
 > >
-> > -     /*
-> > -      * Check pmu name for hybrid and the pmu may be invalid in sysfs
-> > -      */
-> > -     if (!strncmp(name, "cpu_", 4) && !is_hybrid)
-> > -             return NULL;
+> > -     list_for_each_entry(pmu, &pmus, list)
+> > +     list_for_each_entry(pmu, &core_pmus, list) {
+> >               if (pmu->type =3D=3D type)
+> >                       return pmu;
 > > -
-> >       /*
-> >        * The pmu data we store & need consists of the pmu
-> >        * type value and format definitions. Load both right
-> > @@ -933,8 +933,10 @@ static struct perf_pmu *pmu_lookup(int dirfd, cons=
-t char *lookup_name)
-> >               return NULL;
+> > +     }
+> > +     list_for_each_entry(pmu, &uncore_pmus, list) {
+> > +             if (pmu->type =3D=3D type)
+> > +                     return pmu;
+> > +     }
+> >       return NULL;
+> >  }
 > >
-> >       pmu->cpus =3D pmu_cpumask(dirfd, name);
-> > -     pmu->name =3D strdup(name);
-> > +     if (!pmu->cpus && perf_pmu__skip_empty_cpus(name))
-> > +             goto err;
-> >
-> > +     pmu->name =3D strdup(name);
-> >       if (!pmu->name)
-> >               goto err;
-> >
-> > @@ -964,7 +966,7 @@ static struct perf_pmu *pmu_lookup(int dirfd, const=
- char *lookup_name)
-> >       list_splice(&aliases, &pmu->aliases);
-> >       list_add_tail(&pmu->list, &pmus);
-> >
-> > -     if (is_hybrid)
-> > +     if (!strcmp(name, "cpu_core") || !strcmp(name, "cpu_atom"))
-> >               list_add_tail(&pmu->hybrid_list, &perf_pmu__hybrid_pmus);
-> >       else
-> >               INIT_LIST_HEAD(&pmu->hybrid_list);
+> > +/*
+> > + * pmu iterator: If pmu is NULL, we start at the begin, otherwise retu=
+rn the
+> > + * next pmu. Returns NULL on end.
+> > + */
+> >  struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu)
+> >  {
+> > -     /*
+> > -      * pmu iterator: If pmu is NULL, we start at the begin,
+> > -      * otherwise return the next pmu. Returns NULL on end.
+> > -      */
+> > +     bool use_core_pmus =3D !pmu || pmu->is_core;
+> > +
+> >       if (!pmu) {
+> >               pmu_read_sysfs();
+> > -             pmu =3D list_prepare_entry(pmu, &pmus, list);
+> > +             pmu =3D list_prepare_entry(pmu, &core_pmus, list);
+> > +     }
+> > +     if (use_core_pmus) {
+> > +             list_for_each_entry_continue(pmu, &core_pmus, list)
+> > +                     return pmu;
+> > +
+> > +             pmu =3D NULL;
+> > +             pmu =3D list_prepare_entry(pmu, &uncore_pmus, list);
+> >       }
+> > -     list_for_each_entry_continue(pmu, &pmus, list)
+> > +     list_for_each_entry_continue(pmu, &uncore_pmus, list)
+> >               return pmu;
+> >       return NULL;
+> >  }
