@@ -2,187 +2,341 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F61FC77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 12:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9551DC77B75
+	for <linux-perf-users@archiver.kernel.org>; Mon, 22 May 2023 14:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233608AbjEVMMf (ORCPT
+        id S231841AbjEVOGY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 22 May 2023 08:12:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
+        Mon, 22 May 2023 10:06:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233354AbjEVMMc (ORCPT
+        with ESMTP id S231143AbjEVOGX (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 22 May 2023 08:12:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F145AB6
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 05:11:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684757503;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=WIdRgPc86wRs8rRQezIuaScS15xj5tHdL0njdi6vrks=;
-        b=N16dhJ4kNoW+ZPldgtXyh48VVrV1i4815yGmrvt14sECuRRn8s7VFmJlRCyw8XVhuP6V+F
-        zlk++3RYEKg8MKUqZxuNFXHC+j6xVbZoTjLUzUnR01Cmaun4pqngXo+VfTB9gxZ8RgxkM8
-        SkGt/BUZlZtosaTMAJ6tZ6AkGF0i4ys=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-343--3_4xFoVMpGIad36fGaklA-1; Mon, 22 May 2023 08:11:40 -0400
-X-MC-Unique: -3_4xFoVMpGIad36fGaklA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 583A53C02549;
-        Mon, 22 May 2023 12:11:40 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F1BAC54F80;
-        Mon, 22 May 2023 12:11:38 +0000 (UTC)
-Date:   Mon, 22 May 2023 14:11:36 +0200 (CEST)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     acme@kernel.org
-cc:     linux-perf-users@vger.kernel.org, acme@redhat.com,
-        qzhao@redhat.com, cjense@google.com, irogers@google.com
-Subject: Re: [PATCH 1/2] perf stat: Fix JSON metric printout for multiple
- metrics per line
-In-Reply-To: <20230120134039.17788-2-mpetlan@redhat.com>
-Message-ID: <alpine.LRH.2.20.2305221405430.13334@Diego>
-References: <20230120134039.17788-1-mpetlan@redhat.com> <20230120134039.17788-2-mpetlan@redhat.com>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Mon, 22 May 2023 10:06:23 -0400
+Received: from mail-il1-x136.google.com (mail-il1-x136.google.com [IPv6:2607:f8b0:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 595788E
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 07:06:22 -0700 (PDT)
+Received: by mail-il1-x136.google.com with SMTP id e9e14a558f8ab-33164ec77ccso273455ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 07:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1684764381; x=1687356381;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TB85uiBgKhjknrygPq+ojSJSwNAZMp9Wa7JXyVxFU0A=;
+        b=tpIdvSU6PzqxsEjJLU+aWfWX4bR/m3VqQOSQJk9yHVpfj6sm8O0x4qe0ssuDaW3bmm
+         W4tkCg5MFoM1i6N+vbbS6J1Vi2LTwyXOxdsaf4bn0IM8FQnum5BRM2PiciNb3Ki9WelW
+         i189EGPazxvor6UiqoVEjT2t1t0a5TUoEYZzxrdVCHioAp0dJ/niQvpRJ9hiPfFvSkir
+         hfXfDnyZEUC05P5maVEn0r5/qaDWhx4sxBZe2XQ9RI3zUnsW/HB0MyXjh/7btJz5PplT
+         b8okzAc4FMSooPu+oJpKCgEyPbjTMsaj8HP0tvoA+4nyRh9OQgYpUxwJ6IZ41DjCMCoj
+         gN+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684764381; x=1687356381;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TB85uiBgKhjknrygPq+ojSJSwNAZMp9Wa7JXyVxFU0A=;
+        b=F/uAsa9QIHdwvBBZKzPFQD6L1pcg+5MOG7w1mOlG06YagghqzWgzJLBbsaoKJnunvg
+         J/SvCY57PqIQh99TWXDNnWOD3siTNHlrtJxEDM8gjgRaq2suZFG1zNlGViLkS2rP4fAV
+         5xckjpOO2KQkd5aU+0Am91SP4zR5SKGoTc8Tica7KiuY8EcyCx+hzkfUR9hs9bCsqKI7
+         GUwmSJzD/NpenYQgJMRpVYRQSCUSWkWl07ezjgMYtp3YnO7xCsSZYYQz2yIjHRTedJz3
+         WnMnIokRcMA/NKnBwVSRfzu/D14Ogn1Wmvq4xjN+c7903Eeil94QF+RiW+4tEVkzCCdO
+         01FQ==
+X-Gm-Message-State: AC+VfDwhJGY5QY0dn18Ax9JIuaXhi6e4WEwrQBPs/GsixE+XBiNAMOKH
+        RV9R/vaSd7WpDRwH+C4ZMx7gWz3aOJZ6wCRzNKYHIQ==
+X-Google-Smtp-Source: ACHHUZ4VDWLKaikEbEOkmCdE7xFHUZ4WM0HfRPiXx9xBaOU4eOsWBT29d8n1GxbvB5ZBNMehTnonT3uqgyTFWzFXxW8=
+X-Received: by 2002:a05:6e02:180d:b0:338:9f6a:d546 with SMTP id
+ a13-20020a056e02180d00b003389f6ad546mr445959ilv.20.1684764381435; Mon, 22 May
+ 2023 07:06:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+References: <20230517145803.559429-1-irogers@google.com> <20230517145803.559429-6-irogers@google.com>
+ <1ea342ab-d68f-26e5-0043-f05b1886009e@linux.intel.com> <CAP-5=fU3OYNsjaJhLq_8tJXZKFARCTqrg3CEr64-3rAm_kTx+A@mail.gmail.com>
+ <642c0b26-fcd8-8063-72d2-c74466c29785@linux.intel.com>
+In-Reply-To: <642c0b26-fcd8-8063-72d2-c74466c29785@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 22 May 2023 07:06:09 -0700
+Message-ID: <CAP-5=fXEzRsmgGdKRbTNiWwNR-L65YVc4hrPjg9FE8V+daMbzg@mail.gmail.com>
+Subject: Re: [PATCH v1 05/23] perf pmu: Remove perf_pmu__hybrid_mounted
+To:     "Liang, Kan" <kan.liang@linux.intel.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ming Wang <wangming01@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Ian and Arnaldo,
+On Mon, May 22, 2023 at 4:55=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2023-05-22 1:21 a.m., Ian Rogers wrote:
+> > On Sun, May 21, 2023 at 12:23=E2=80=AFPM Liang, Kan <kan.liang@linux.in=
+tel.com> wrote:
+> >>
+> >>
+> >>
+> >> On 2023-05-17 10:57 a.m., Ian Rogers wrote:
+> >>> perf_pmu__hybrid_mounted is used to detect whether cpu_core or
+> >>> cpu_atom
+> >>
+> >> Currently, there are only two CPU types for a hybrid machine, core and
+> >> atom. But there may be more CPU types added later. Please see the CPUI=
+D
+> >> 1AH EAX enumeration in SDM VOL2. It has several reserved encodings for
+> >> CPU types. It's better not using the hardcode cpu_core/cpu_atom to
+> >> replace the perf_pmu__hybrid_mounted().
+> >>
+> >> Thanks,
+> >> Kan
+> >
+> > This is covered by later patches. Specifically patches like:
+> > patch 7: perf pmu: Add is_core to pmu
+> > patch 20: Split pmus list into core and uncore
+> >
+> > Ultimately in pmus.h we have two scan routines, one for all PMUs and
+> > one for core PMUs. For everything except hybrid (and the name varies a
+> > bit on ARM) the core scan only scans "cpu", on hybrid it scans
+> > "cpu_atom" and "cpu_core". The determination of core vs uncore is
+> > done without using the name, so can support >2 hybrid PMUs. At this
+> > point in the patch series I'm trying to simplify everything so that I
+> > can then build the pmus interface.
+>
+> But if we add a new core type "cpu_whatever" later, we have to hardcode
+> the new name to the perf tool, right? Users have to update the perf tool
+> for the new platforms, otherwise I think the new type will be treated as
+> an uncore PMU.
+>
+> Since the hybrid is Intel only, I think it may be better move the
+> is_pmu_hybrid() to X86 specifc code. For the Intel only code, we already
+> have a naming rule for the hybrid name, "cpu_$". So we don't need to
+> update the tool for every new CPU type.
+>
+> Thanks,
+> Kan
 
-I've recently got back to the JSON test failures. In January, I post two
-patches within a patchset. I see that Ian has updated the testcase code,
-so the second patch is probably no more needed. However I don't see this
-one applied upstream yet, although it seemed on the list, it had got some
-acks. Has it been forgotten somehow?
+I don't disagree, but fixing all uses of is_pmu_hybrid and similarly
+perf_pmus__has_hybrid is going to add yet more to a moderately long
+patch series. I think in most cases is_pmu_hybrid can be replaced by a
+core oriented alternative. For example, in pmu.c there is
+perf_pmu__auto_merge_stats that normally returns true that we want to
+merge counts for uncore or non-hybrid PMUs. For hybrid it returns
+false so that cpu_atom and cpu_core counts aren't merged. A core
+oriented alternative would be to return false if the PMU is core and
+the number of core PMUs is >1 - this also avoids any hard coding of
+PMU names and assuming >1 core PMU means they all begin with "cpu_".
 
-To remind, since the JSON printer engine wasn't ready to print multiple
-metrics per line, the JSON output got screwed up in that situation. The
-situation happened on some SPR CPUs, where Top-Down metrics are supported.
+The scope of fixing the remaining is_pmu_hybrid and perf_pmus__has_hybrid i=
+s:
+```
+$ grep -rn perf_pmus__has_hybrid tools/perf
+tools/perf/util/header.c:1592:  if (perf_pmus__has_hybrid()) {
+tools/perf/util/mem-events.c:132:               if (!perf_pmus__has_hybrid(=
+)) {
+tools/perf/util/mem-events.c:199:               if (!perf_pmus__has_hybrid(=
+)) {
+tools/perf/util/evsel.c:3139:   if (!perf_pmus__has_hybrid())
+tools/perf/util/pmus.h:21:bool perf_pmus__has_hybrid(void);
+tools/perf/util/stat-display.c:684:     if (!perf_pmus__has_hybrid())
+tools/perf/util/metricgroup.c:277:      bool all_pmus =3D !strcmp(pmu,
+"all") || !perf_pmus__has_hybrid() || !is_pmu_hybrid(pmu);
+tools/perf/util/pmus.c:474:bool perf_pmus__has_hybrid(void)
+tools/perf/util/cputopo.c:477:  if (!perf_pmus__has_hybrid())
+tools/perf/tests/attr.c:188:    if (perf_pmus__has_hybrid())
+tools/perf/tests/topology.c:44: if (!perf_pmus__has_hybrid()) {
+tools/perf/tests/parse-metric.c:306:    if (!perf_pmus__has_hybrid()) {
+tools/perf/tests/switch-tracking.c:378: if (perf_pmus__has_hybrid()) {
+tools/perf/builtin-record.c:1297:           perf_pmus__has_hybrid()) {
+tools/perf/builtin-record.c:2196:       if (!perf_pmus__has_hybrid())
+tools/perf/builtin-record.c:4196:       rec->opts.target.hybrid =3D
+perf_pmus__has_hybrid();
+tools/perf/builtin-stat.c:2463: target.hybrid =3D perf_pmus__has_hybrid();
+tools/perf/arch/x86/util/perf_regs.c:295:       if (perf_pmus__has_hybrid()=
+) {
+tools/perf/arch/x86/util/evlist.c:21:   if (!perf_pmus__has_hybrid())
+tools/perf/arch/x86/tests/hybrid.c:284: if (!perf_pmus__has_hybrid())
 
-The patch below fixes the printer to handle this situation correctly.
+$ grep -rn is_pmu_hybrid tools/perf
+tools/perf/util/pmu.c:1433:bool is_pmu_hybrid(const char *name)
+tools/perf/util/pmu.c:1445:     return !is_pmu_hybrid(pmu->name);
+tools/perf/util/pmu.h:224:bool is_pmu_hybrid(const char *name);
+tools/perf/util/metricgroup.c:277:      bool all_pmus =3D !strcmp(pmu,
+"all") || !perf_pmus__
+has_hybrid() || !is_pmu_hybrid(pmu);
+tools/perf/util/pmus.c:482:                     if (is_pmu_hybrid(pmu->name=
+)) {
+```
 
-I remember someone saying that the whole printer engine needs to be
-refactored some day, but I'd think that before that happens, it'd be
-nice to have it fixed...
+So, I think it makes sense to do it as a follow up.
 
-What do you think?
+Thanks,
+Ian
 
-Regards,
-Michael
-
-On Fri, 20 Jan 2023, Michael Petlan wrote:
-> JSON printing engine used to always print metric (even when there should
-> be none and other engines (std, csv) would not print it) and the metric
-> used to always close the line by printing a closing curly bracket.
-> 
-> This caused invalid JSON output being generated for top-down metrics,
-> when multiple metrics are printed on a single line, so the broken output
-> might have looked like:
-> 
->   ... "metric-value" : 15.564203, "metric-unit" : \
->   "Memory Bound"}"metric-value" : 14.007787, "metric-unit" : "Core Bound"}
-> 
-> To fix it, print always the separating comma BEFORE the key:value pairs
-> and close the line outside of the JSON metric printing routine.
-> 
-> Fixes: df936cadfb58 ("perf stat: Add JSON output option")
-> 
-> Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> ---
->  tools/perf/util/stat-display.c | 28 ++++++++++++++++------------
->  1 file changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 8bd8b0142630..8f80f6b566d0 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -86,7 +86,7 @@ static void print_running_json(struct perf_stat_config *config, u64 run, u64 ena
->  
->  	if (run != ena)
->  		enabled_percent = 100 * run / ena;
-> -	fprintf(config->output, "\"event-runtime\" : %" PRIu64 ", \"pcnt-running\" : %.2f, ",
-> +	fprintf(config->output, ", \"event-runtime\" : %" PRIu64 ", \"pcnt-running\" : %.2f",
->  		run, enabled_percent);
->  }
->  
-> @@ -121,7 +121,7 @@ static void print_noise_pct_csv(struct perf_stat_config *config,
->  static void print_noise_pct_json(struct perf_stat_config *config,
->  				 double pct)
->  {
-> -	fprintf(config->output, "\"variance\" : %.2f, ", pct);
-> +	fprintf(config->output, ", \"variance\" : %.2f", pct);
->  }
->  
->  static void print_noise_pct(struct perf_stat_config *config,
-> @@ -165,7 +165,7 @@ static void print_cgroup_csv(struct perf_stat_config *config, const char *cgrp_n
->  
->  static void print_cgroup_json(struct perf_stat_config *config, const char *cgrp_name)
->  {
-> -	fprintf(config->output, "\"cgroup\" : \"%s\", ", cgrp_name);
-> +	fprintf(config->output, ", \"cgroup\" : \"%s\"", cgrp_name);
->  }
->  
->  static void print_cgroup(struct perf_stat_config *config, struct cgroup *cgrp)
-> @@ -431,10 +431,11 @@ static void print_metric_json(struct perf_stat_config *config __maybe_unused,
->  	struct outstate *os = ctx;
->  	FILE *out = os->fh;
->  
-> -	fprintf(out, "\"metric-value\" : %f, ", val);
-> -	fprintf(out, "\"metric-unit\" : \"%s\"", unit);
-> -	if (!config->metric_only)
-> -		fprintf(out, "}");
-> +	if (unit == NULL || fmt == NULL)
-> +		return;
-> +
-> +	fprintf(out, ", \"metric-value\" : %f", val);
-> +	fprintf(out, ", \"metric-unit\" : \"%s\"", unit);
->  }
->  
->  static void new_line_json(struct perf_stat_config *config, void *ctx)
-> @@ -623,14 +624,14 @@ static void print_counter_value_json(struct perf_stat_config *config,
->  	const char *bad_count = evsel->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED;
->  
->  	if (ok)
-> -		fprintf(output, "\"counter-value\" : \"%f\", ", avg);
-> +		fprintf(output, "\"counter-value\" : \"%f\"", avg);
->  	else
-> -		fprintf(output, "\"counter-value\" : \"%s\", ", bad_count);
-> +		fprintf(output, "\"counter-value\" : \"%s\"", bad_count);
->  
->  	if (evsel->unit)
-> -		fprintf(output, "\"unit\" : \"%s\", ", evsel->unit);
-> +		fprintf(output, ", \"unit\" : \"%s\"", evsel->unit);
->  
-> -	fprintf(output, "\"event\" : \"%s\", ", evsel__name(evsel));
-> +	fprintf(output, ", \"event\" : \"%s\"", evsel__name(evsel));
->  }
->  
->  static void print_counter_value(struct perf_stat_config *config,
-> @@ -835,8 +836,11 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
->  
->  	printout(config, os, uval, run, ena, avg, s);
->  
-> -	if (!metric_only)
-> +	if (!metric_only) {
-> +		if (config->json_output)
-> +			fputc('}', output);
->  		fputc('\n', output);
-> +	}
->  }
->  
->  static void print_metric_begin(struct perf_stat_config *config,
-> -- 
-> 2.18.4
-> 
-> 
-
+> >
+> > Thanks,
+> > Ian
+> >
+> >>> is mounted with a non-empty cpus file by
+> >>> pmu_lookup. pmu_lookup will attempt to read the cpus file too and so
+> >>> the check can be folded into this.
+> >>>
+> >>> Checking hybrid_mounted in pmu_is_uncore is redundant as the next
+> >>> cpumask read will fail returning false.
+> >>>
+> >>> Reduce the scope of perf_pmu__find_hybrid_pmu by making it static.
+> >>>
+> >>> Signed-off-by: Ian Rogers <irogers@google.com>
+> >>> ---
+> >>>  tools/perf/util/pmu-hybrid.c | 15 +--------------
+> >>>  tools/perf/util/pmu-hybrid.h |  3 ---
+> >>>  tools/perf/util/pmu.c        | 26 ++++++++++++++------------
+> >>>  3 files changed, 15 insertions(+), 29 deletions(-)
+> >>>
+> >>> diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybri=
+d.c
+> >>> index bc4cb0738c35..7fe943dd3217 100644
+> >>> --- a/tools/perf/util/pmu-hybrid.c
+> >>> +++ b/tools/perf/util/pmu-hybrid.c
+> >>> @@ -18,20 +18,7 @@
+> >>>
+> >>>  LIST_HEAD(perf_pmu__hybrid_pmus);
+> >>>
+> >>> -bool perf_pmu__hybrid_mounted(const char *name)
+> >>> -{
+> >>> -     int cpu;
+> >>> -     char pmu_name[PATH_MAX];
+> >>> -     struct perf_pmu pmu =3D {.name =3D pmu_name};
+> >>> -
+> >>> -     if (strncmp(name, "cpu_", 4))
+> >>> -             return false;
+> >>> -
+> >>> -     strlcpy(pmu_name, name, sizeof(pmu_name));
+> >>> -     return perf_pmu__scan_file(&pmu, "cpus", "%u", &cpu) > 0;
+> >>> -}
+> >>> -
+> >>> -struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
+> >>> +static struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
+> >>>  {
+> >>>       struct perf_pmu *pmu;
+> >>>
+> >>> diff --git a/tools/perf/util/pmu-hybrid.h b/tools/perf/util/pmu-hybri=
+d.h
+> >>> index 206b94931531..8dbcae935020 100644
+> >>> --- a/tools/perf/util/pmu-hybrid.h
+> >>> +++ b/tools/perf/util/pmu-hybrid.h
+> >>> @@ -13,9 +13,6 @@ extern struct list_head perf_pmu__hybrid_pmus;
+> >>>  #define perf_pmu__for_each_hybrid_pmu(pmu)   \
+> >>>       list_for_each_entry(pmu, &perf_pmu__hybrid_pmus, hybrid_list)
+> >>>
+> >>> -bool perf_pmu__hybrid_mounted(const char *name);
+> >>> -
+> >>> -struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name);
+> >>>  bool perf_pmu__is_hybrid(const char *name);
+> >>>
+> >>>  static inline int perf_pmu__hybrid_pmu_num(void)
+> >>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> >>> index 1e0be23d4dd7..729b1f166f80 100644
+> >>> --- a/tools/perf/util/pmu.c
+> >>> +++ b/tools/perf/util/pmu.c
+> >>> @@ -617,9 +617,6 @@ static bool pmu_is_uncore(int dirfd, const char *=
+name)
+> >>>  {
+> >>>       int fd;
+> >>>
+> >>> -     if (perf_pmu__hybrid_mounted(name))
+> >>> -             return false;
+> >>> -
+> >>>       fd =3D perf_pmu__pathname_fd(dirfd, name, "cpumask", O_PATH);
+> >>>       if (fd < 0)
+> >>>               return false;
+> >>> @@ -898,6 +895,16 @@ static int pmu_max_precise(int dirfd, struct per=
+f_pmu *pmu)
+> >>>       return max_precise;
+> >>>  }
+> >>>
+> >>> +/**
+> >>> + * perf_pmu__skip_empty_cpus() - should pmu_lookup skip the named PM=
+U if the
+> >>> + *      cpus or cpumask file isn't present?
+> >>> + * @name: Name of PMU.
+> >>> + */
+> >>> +static bool perf_pmu__skip_empty_cpus(const char *name)
+> >>> +{
+> >>> +     return !strcmp(name, "cpu_core") || !strcmp(name, "cpu_atom");
+> >>> +}
+> >>> +
+> >>>  static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_nam=
+e)
+> >>>  {
+> >>>       struct perf_pmu *pmu;
+> >>> @@ -905,15 +912,8 @@ static struct perf_pmu *pmu_lookup(int dirfd, co=
+nst char *lookup_name)
+> >>>       LIST_HEAD(aliases);
+> >>>       __u32 type;
+> >>>       char *name =3D pmu_find_real_name(lookup_name);
+> >>> -     bool is_hybrid =3D perf_pmu__hybrid_mounted(name);
+> >>>       char *alias_name;
+> >>>
+> >>> -     /*
+> >>> -      * Check pmu name for hybrid and the pmu may be invalid in sysf=
+s
+> >>> -      */
+> >>> -     if (!strncmp(name, "cpu_", 4) && !is_hybrid)
+> >>> -             return NULL;
+> >>> -
+> >>>       /*
+> >>>        * The pmu data we store & need consists of the pmu
+> >>>        * type value and format definitions. Load both right
+> >>> @@ -933,8 +933,10 @@ static struct perf_pmu *pmu_lookup(int dirfd, co=
+nst char *lookup_name)
+> >>>               return NULL;
+> >>>
+> >>>       pmu->cpus =3D pmu_cpumask(dirfd, name);
+> >>> -     pmu->name =3D strdup(name);
+> >>> +     if (!pmu->cpus && perf_pmu__skip_empty_cpus(name))
+> >>> +             goto err;
+> >>>
+> >>> +     pmu->name =3D strdup(name);
+> >>>       if (!pmu->name)
+> >>>               goto err;
+> >>>
+> >>> @@ -964,7 +966,7 @@ static struct perf_pmu *pmu_lookup(int dirfd, con=
+st char *lookup_name)
+> >>>       list_splice(&aliases, &pmu->aliases);
+> >>>       list_add_tail(&pmu->list, &pmus);
+> >>>
+> >>> -     if (is_hybrid)
+> >>> +     if (!strcmp(name, "cpu_core") || !strcmp(name, "cpu_atom"))
+> >>>               list_add_tail(&pmu->hybrid_list, &perf_pmu__hybrid_pmus=
+);
+> >>>       else
+> >>>               INIT_LIST_HEAD(&pmu->hybrid_list);
