@@ -2,166 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1F0C7EE2D
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 15:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EC1C7EE26
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 15:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237105AbjEWPKA (ORCPT
+        id S233521AbjEWPQy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 11:10:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52032 "EHLO
+        Tue, 23 May 2023 11:16:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237439AbjEWPJ7 (ORCPT
+        with ESMTP id S237299AbjEWPQa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 11:09:59 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD7DD126
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 08:09:55 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3f603d4bc5bso27936385e9.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 08:09:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tessares.net; s=google; t=1684854594; x=1687446594;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=E8b9MpzTCglN7HI+qZ7EYTlHwVoKr0imEe2dKuGSUUc=;
-        b=oedF/OpaSzR0ty3V7END7dGpEbKtM9xZFqWV75o4kqKtimqL14VCIbfzEeX2RK4svX
-         vxTe8PsCutukTy7lfsL2C1C8OdHQyQqAqIO+2v6etis6aieDlewgAvQqdy7iKuxlj/ze
-         kJSKUdJlLYTMdPLGgElYQ2/WJGcCBsw6Zm9GKGycBR9BZs7CKmHF3darLzJ4fUWT8Kwm
-         lXO6X85FLpXKuoYLk07ZsOJCr/3NiJqFywVt+zDzED0lLsFJ+vPYkvCeA4sZDPv+roE+
-         XUZfldjTcau4V7yYACc2RTLfe1c4FXOeA7qaJjwDEVo28mmoB2g0YCB/G3MW2i6gG6l+
-         Dgqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684854594; x=1687446594;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E8b9MpzTCglN7HI+qZ7EYTlHwVoKr0imEe2dKuGSUUc=;
-        b=djKgZvRxL/GnbatZ4vzf8bRTvreHXdueaKgZkXNMHP3y4NiMxrVkVJRJv9Xp4elXpc
-         E31HzASGNK38vPOqC/bCEBcQ7CT+IGtJdzDDWCh8vdcazegprQsiGHxo0VlaWzAMA48J
-         zC9QPEZOj8HfvWglSaNPI0m2Kzv1zpcF3GRJ+UQrIjA6OxOn7UHupK3ww6IlRy+1WJmP
-         VwxPteXGtCxbF9f0nVGGX/XksKaKMBYB/IGSaDaOI28mAbRl+cmlq/yl2JATdWbW1vJH
-         ltWzSPbsDjuDb7Pzm3Cpwx3o2WnqqYAg/zhZiSmxg0suBLCxxGQEFw9bruamQ8qo17Hn
-         Uv6Q==
-X-Gm-Message-State: AC+VfDx1Th20F9rIG0sXSGnj7b1gTz8Ci83fgCwZIJgYZBZSY33G62O8
-        iw4DrUI41GyKxn5Vg7+P3E3giA==
-X-Google-Smtp-Source: ACHHUZ53ALZt8ITA9PYkpa+ddvkzqMUvuxLGadsY4TgcTyLDpTXlK3mlv8nuCJzmyUKUbpLaMhQxSw==
-X-Received: by 2002:a1c:7716:0:b0:3f6:f56:5e82 with SMTP id t22-20020a1c7716000000b003f60f565e82mr717086wmi.3.1684854594086;
-        Tue, 23 May 2023 08:09:54 -0700 (PDT)
-Received: from ?IPV6:2a02:578:8593:1200:6cb1:7d36:3be3:30d? ([2a02:578:8593:1200:6cb1:7d36:3be3:30d])
-        by smtp.gmail.com with ESMTPSA id n6-20020a7bcbc6000000b003f42d8dd7ffsm11930110wmi.19.2023.05.23.08.09.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 May 2023 08:09:53 -0700 (PDT)
-Message-ID: <457ea968-b2dd-1a9b-7eab-0b0ec825304d@tessares.net>
-Date:   Tue, 23 May 2023 17:09:52 +0200
+        Tue, 23 May 2023 11:16:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED201B0;
+        Tue, 23 May 2023 08:16:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7415B60AE7;
+        Tue, 23 May 2023 15:16:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFDFEC433D2;
+        Tue, 23 May 2023 15:16:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684854960;
+        bh=wTYbPYYFeklCoO9d6aa3rN/4GrvAtM3y6lLrAxut7Fc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hysE0ePBNGSAufB+1US8ANtTXFVCrllLsskMvwmssPsojOQY8rFJgpgjVFnjw0rF9
+         cxGiRqDOF43y7nmC1qOjWh68Bd1TyCv8ruh5OwAAn/oMEoiuAM2sSt4kb81+NreZpO
+         ajwzSTgXfieJTB2eT76sxptz3OdcDGx6fVYyA4bODUhXtsf3YVfQ0Xb9/jHFI3lkpV
+         a3WSf7ZQBEuy3gCGNWbciduG1Eu+9QLnyscIqfOpTBXatmiXUpoxt8Kf+f81dNByEp
+         3DbO/JDXt1dvOWRw197IVJexsj+3H1tYJJheqXciCOwQ5Txix8pdXssPhMcZB2RfzJ
+         p0NF4yEAZhBjA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 22CB6403B5; Tue, 23 May 2023 12:15:58 -0300 (-03)
+Date:   Tue, 23 May 2023 12:15:58 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 14/15] perf jevents: Add support for metricgroup
+ descriptions
+Message-ID: <ZGzYroXZUsPTNZVE@kernel.org>
+References: <20230517173805.602113-1-irogers@google.com>
+ <20230517173805.602113-15-irogers@google.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 6.1 000/292] 6.1.30-rc1 review
-Content-Language: en-GB
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     stable@vger.kernel.org, patches@lists.linux.dev,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-        jonathanh@nvidia.com, f.fainelli@gmail.com,
-        sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-        LTP List <ltp@lists.linux.it>, Netdev <netdev@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20230522190405.880733338@linuxfoundation.org>
- <CA+G9fYs4zoTUQUnkvncEpPWvfGD6sDSXi94KXji+udMrvfm5Rg@mail.gmail.com>
-From:   Matthieu Baerts <matthieu.baerts@tessares.net>
-In-Reply-To: <CA+G9fYs4zoTUQUnkvncEpPWvfGD6sDSXi94KXji+udMrvfm5Rg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230517173805.602113-15-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Naresh,
-
-On 23/05/2023 16:52, Naresh Kamboju wrote:
-> On Tue, 23 May 2023 at 00:53, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
->>
->> This is the start of the stable review cycle for the 6.1.30 release.
->> There are 292 patches in this series, all will be posted as a response
->> to this one.  If anyone has any issues with these being applied, please
->> let me know.
->>
->> Responses should be made by Wed, 24 May 2023 19:03:25 +0000.
->> Anything received after that time might be too late.
->>
->> The whole patch series can be found in one patch at:
->>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.30-rc1.gz
->> or in the git tree and branch at:
->>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
->> and the diffstat can be found below.
->>
->> thanks,
->>
->> greg k-h
+Em Wed, May 17, 2023 at 10:38:03AM -0700, Ian Rogers escreveu:
+> Metrics have a field where the groups they belong to are listed like
+> the following from
+> tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json:
 > 
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
-> 
-> Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+>         "MetricGroup": "PGO;TmaL1;TopdownL1;tma_L1_group",
+>         "MetricName": "tma_frontend_bound",
 
-(...)
+  LD      /tmp/build/perf-tools-next/util/perf-in.o
+  LD      /tmp/build/perf-tools-next/perf-in.o
+  CC      /tmp/build/perf-tools-next/pmu-events/pmu-events.o
+In file included from /var/home/acme/git/perf-tools-next/tools/include/linux/bitmap.h:9,
+                 from /var/home/acme/git/perf-tools-next/tools/perf/util/header.h:10,
+                 from /tmp/build/perf-tools-next/pmu-events/pmu-events.c:3:
+/tmp/build/perf-tools-next/pmu-events/pmu-events.c: In function ‘describe_metricgroup’:
+/var/home/acme/git/perf-tools-next/tools/include/linux/kernel.h:102:25: error: overflow in conversion from ‘long unsigned int’ to ‘int’ changes value from ‘18446744073709551615’ to ‘-1’ [-Werror=overflow]
+  102 | #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
+      |                         ^
+/tmp/build/perf-tools-next/pmu-events/pmu-events.c:61603:29: note: in expansion of macro ‘ARRAY_SIZE’
+61603 |         int low = 0, high = ARRAY_SIZE(metricgroups) - 1;
+      |                             ^~~~~~~~~~
+cc1: all warnings being treated as errors
+make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:98: /tmp/build/perf-tools-next/pmu-events/pmu-events.o] Error 1
+make[2]: *** [Makefile.perf:679: /tmp/build/perf-tools-next/pmu-events/pmu-events-in.o] Error 2
+make[1]: *** [Makefile.perf:236: sub-make] Error 2
+make: *** [Makefile:113: install-bin] Error 2
+make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
 
-> selftests: net/mptcp: diag.sh started failing on 6.1.30-rc1 but
-> passed on 6.3.4-rc1. This is due to changes in latest kselftest
-> (6.3) running on 6.1.
-> 
-> test logs:
-> =======
-> # selftests: net/mptcp: diag.sh
-> # no msk on netns creation                          [  ok  ]
-> # listen match for dport 10000                      [  ok  ]
-> # listen match for sport 10000                      [  ok  ]
-> # listen match for saddr and sport                  [  ok  ]
-> # all listen sockets                                [  ok  ]
-> # after MPC handshake                               [  ok  ]
-> # ....chk remote_key                                [  ok  ]
-> # ....chk no fallback                               [  ok  ]
-> # ....chk 2 msk in use                              [ fail ] expected 2 found 0
-> # ....chk 0 msk in use after flush                  [  ok  ]
-> # check fallback                                    [  ok  ]
-> # ....chk 1 msk in use                              [ fail ] expected 1 found 0
-> # ....chk 0 msk in use after flush                  [  ok  ]
-> # many msk socket present                           [  ok  ]
-> # ....chk many msk in use                           [ fail ] expected
-> 254 found 0
-> # ....chk 0 msk in use after flush                  [  ok  ]
-> not ok 4 selftests: net/mptcp: diag.sh # exit=11
-> 
-> logs:
->  - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.29-293-ge00a3d96f756/testrun/17163977/suite/kselftest-net-mptcp/test/net_mptcp_diag_sh/history/
->  - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.29-293-ge00a3d96f756/testrun/17163977/suite/kselftest-net-mptcp/test/net_mptcp_diag_sh/details/
+ Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin':
 
-Thank you for looking at these MPTCP selftests and for having reported
-these issues.
+      241752971879      cycles:u
+      296060193784      instructions:u                   #    1.22  insn per cycle
 
-We are looking at having MPTCP selftests supporting previous kernel
-versions but that's not easy because our selftests are verifying some
-internal behaviours, not just what is exposed to the uAPI, e.g. what
-network packets are being sent, etc.. Also, some socket options and
-counters -- like what you reported here above with diag.sh -- were
-returning 0 before being implemented in MPTCP: so we need to accept that
-these counters might not work, that's not ideal for a test that wants to
-check if they work :)
+       6.129451072 seconds time elapsed
 
-Anyway, for those who wants to follow the evolution, patches have been
-shared on our mailing list:
+      59.018259000 seconds user
+      12.132871000 seconds sys
 
-  https://patchwork.kernel.org/project/mptcp/list/?series=749868&state=*
-  https://github.com/multipath-tcp/mptcp_net-next/commits/7220c4c22b88
-  https://github.com/multipath-tcp/mptcp_net-next/issues/368
 
-Cheers,
-Matt
--- 
-Tessares | Belgium | Hybrid Access Solutions
-www.tessares.net
+⬢[acme@toolbox perf-tools-next]$ fg
+git rebase -i HEAD~15
+
+[1]+  Stopped                 git rebase -i HEAD~15
+⬢[acme@toolbox perf-tools-next]$ git log --oneline -1
+995a2beaa64deb7b (HEAD) perf jevents: Add support for metricgroup descriptions
+⬢[acme@toolbox perf-tools-next]$
+
+Applied 1-13, pushing to tmp.perf-tools-next,
+
+- Arnaldo
