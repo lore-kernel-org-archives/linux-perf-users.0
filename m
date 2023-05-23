@@ -2,154 +2,103 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF26FC7EE29
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 09:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E97C77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 10:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235704AbjEWJ60 (ORCPT
+        id S236517AbjEWKWV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 05:58:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40570 "EHLO
+        Tue, 23 May 2023 06:22:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236384AbjEWJ6Z (ORCPT
+        with ESMTP id S232621AbjEWKWU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 05:58:25 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C26B18C;
-        Tue, 23 May 2023 02:58:18 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id ABFEE228CB;
-        Tue, 23 May 2023 09:58:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1684835895; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nijlHHOQkzUZvFPKISvsuCEtH+liiy/rrVmusLy93j8=;
-        b=ukTNS+LA6LnEMXgs7TAWMh1IEmoqBA7OQZDzqQXjQCWc5jDXPfiss/BRVs+P68hkc1jpJr
-        c6osfgyH7PPHg1SaA9cUw8ILMGtVpU6UYgIiSt2i5Y85hLTxvlKanmjx7xXSsVqooWm2a+
-        O77Wy9lZcLNnFK6dGprQMn1Tn2HdM8E=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 305BA2C141;
-        Tue, 23 May 2023 09:58:14 +0000 (UTC)
-Date:   Tue, 23 May 2023 11:58:13 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Stephane Eranian <eranian@google.com>, mpe@ellerman.id.au,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tue, 23 May 2023 06:22:20 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6E5B4FD;
+        Tue, 23 May 2023 03:22:17 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8Bx2fHYk2xkoAgAAA--.124S3;
+        Tue, 23 May 2023 18:22:16 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxkrDWk2xk3CNwAA--.57318S3;
+        Tue, 23 May 2023 18:22:15 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, Sumit Garg <sumit.garg@linaro.org>,
-        npiggin@gmail.com, davem@davemloft.net,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, sparclinux@vger.kernel.org,
-        christophe.leroy@csgroup.eu,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        ravi.v.shankar@intel.com, Randy Dunlap <rdunlap@infradead.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Ian Rogers <irogers@google.com>, ito-yuichi@fujitsu.com,
-        ricardo.neri@intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v5 06/18] watchdog/hardlockup: Add comments to
- touch_nmi_watchdog()
-Message-ID: <ZGyONWPXpE1DcxA5@alley>
-References: <20230519101840.v5.18.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
- <20230519101840.v5.6.I4e47cbfa1bb2ebbcdb5ca16817aa2887f15dc82c@changeid>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230519101840.v5.6.I4e47cbfa1bb2ebbcdb5ca16817aa2887f15dc82c@changeid>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Hans-Peter Nilsson <hp@axis.com>, Leo Yan <leo.yan@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Subject: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
+Date:   Tue, 23 May 2023 18:22:06 +0800
+Message-Id: <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
+X-CM-TRANSID: AQAAf8BxkrDWk2xk3CNwAA--.57318S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7trWxur1DKr43Xr1kCr1UGFg_yoW8JF4kpr
+        s5C34DtayrWF1Iyw1xursIqFZ3Ca1kJF1Ygry0yrZakrnxJ3WrKryFq3Z0kFWxX34xK3yj
+        vFyrtFy5XF48XrJanT9S1TB71UUUUbJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+        n4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+        Aaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+        O2xFxVAFwI0_Jw0_GFylx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+        WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+        Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
+        WUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+        JbIYCTnIWIevJa73UjIFyTuYvjxUstxhDUUUU
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri 2023-05-19 10:18:30, Douglas Anderson wrote:
-> In preparation for the buddy hardlockup detector, add comments to
-> touch_nmi_watchdog() to make it obvious that it touches the configured
-> hardlockup detector regardless of whether it's backed by an NMI. Also
-> note that arch_touch_nmi_watchdog() may not be architecture-specific.
-> 
-> Ideally, we'd like to rename these functions but that is a fairly
-> disruptive change touching a lot of drivers. After discussion [1] the
-> plan is to defer this until a good time.
-> 
-> [1] https://lore.kernel.org/r/ZFy0TX1tfhlH8gxj@alley
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
-> Changes in v5:
-> - No longer rename touch_nmi_watchdog(), just add comments.
-> 
-> Changes in v4:
-> - ("Rename touch_nmi_watchdog() to ...") new for v4.
-> 
->  include/linux/nmi.h | 23 +++++++++++++++++++----
->  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-> index 454fe99c4874..fafab128f37e 100644
-> --- a/include/linux/nmi.h
-> +++ b/include/linux/nmi.h
-> @@ -125,15 +125,30 @@ void watchdog_nmi_disable(unsigned int cpu);
->  void lockup_detector_reconfigure(void);
->  
->  /**
-> - * touch_nmi_watchdog - restart NMI watchdog timeout.
-> + * touch_nmi_watchdog - manually pet the hardlockup watchdog.
->   *
-> - * If the architecture supports the NMI watchdog, touch_nmi_watchdog()
-> - * may be used to reset the timeout - for code which intentionally
-> - * disables interrupts for a long time. This call is stateless.
-> + * If we support detecting hardlockups, touch_nmi_watchdog() may be
-> + * used to pet the watchdog (reset the timeout) - for code which
+After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
+in the generated syscall table file syscalls.c, there exist some
+__NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
+it looks like not so good, just do some small filter operations
+to handle __NR3264_ prefixed syscall number as a digital number.
 
-Nit: I personally prefer "reset the timeout" over "pet the watchdog".
-     "pet" is just another ambiguous name as "touch" ;-)
+Without this patch:
 
-> + * intentionally disables interrupts for a long time. This call is stateless.
-> + *
-> + * Though this function has "nmi" in the name, the hardlockup watchdog might
-> + * not be backed by NMIs. This function will likely be renamed to
-> + * touch_hardlockup_watchdog() in the future.
->   */
->  static inline void touch_nmi_watchdog(void)
->  {
-> +	/*
-> +	 * Pass on to the hardlockup detector selected via CONFIG_. Note that
-> +	 * the hardlockup detector may not be arch-specific nor using NMIs
-> +	 * and the arch_touch_nmi_watchdog() function will likely be renamed
-> +	 * in the future.
-> +	 */
->  	arch_touch_nmi_watchdog();
-> +
-> +	/*
-> +	 * Touching the hardlock detector implcitily pets the
-> +	 * softlockup detector too
-> +	 */
+  [__NR3264_ftruncate] = "ftruncate",
 
-s/implcitily/implicitly/
+With this patch:
 
-That said, I would remove this comment completely. It describes what
-is clear from the code.
+  [46] = "ftruncate",
 
-A more useful information would be why it is done. But it is probably
-clear as well. CPU could not schedule when interrupts are disabled.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
->  	touch_softlockup_watchdog();
->  }
+diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+index 22cdf91..59ab7939 100755
+--- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
++++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+@@ -39,7 +39,8 @@ create_table()
+ 	echo "};"
+ }
+ 
+-$gcc -E -dM -x c -I $incpath/include/uapi $input \
+-	|sed -ne 's/^#define __NR_//p' \
+-	|sort -t' ' -k2 -n	       \
++$gcc -E -dM -x c -I $incpath/include/uapi $input		\
++	|awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'	\
++	|sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'	\
++	|sort -t' ' -k2 -n					\
+ 	|create_table
+-- 
+2.1.0
 
-With the removed comment above touch_softlockup_watchdog():
-
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Best Regards,
-Petr
