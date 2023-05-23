@@ -2,125 +2,312 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDAEC7EE23
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 12:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF7CC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 13:01:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236860AbjEWMcG (ORCPT
+        id S236978AbjEWNBA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 08:32:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56696 "EHLO
+        Tue, 23 May 2023 09:01:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236863AbjEWMcF (ORCPT
+        with ESMTP id S230283AbjEWNA7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 08:32:05 -0400
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5763109;
-        Tue, 23 May 2023 05:31:44 -0700 (PDT)
-Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3f60dfc5f93so3266745e9.2;
-        Tue, 23 May 2023 05:31:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684845103; x=1687437103;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G+XmU9cW6dJqezkxpvVuKdHpfUq+glTTnVbU9jQUiIY=;
-        b=BDsW8NKXWqnFAViuFEK3+DwmsJ3XA06LSPv9HjHVs5GKyo1yV/SucJ936S6bNsIhJh
-         jTj4G9coN/rwe0OPxC1VlrWDIKgASIOfXqvRpTg6yP4NWUYkOGD9W4oeQpNYfYgutB4e
-         nj3tjodWahVPM2ZwAtnq+Nww6bHEbAwBK3vg6OysQWDqMNoDtG37mh6vGzCaH5ZdCAnr
-         UIra1foqagU/c/HW8F3S8UplRlbt91wPrgvKSbB6t5XKeTVtae9Yscrd+YXyb88dzuXe
-         johacs49XetzbV6WqEcwrprsN9kXEFVP51o5EN967GFxi+EHmn1AulV9lc7dyc1Fv1XP
-         InUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684845103; x=1687437103;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G+XmU9cW6dJqezkxpvVuKdHpfUq+glTTnVbU9jQUiIY=;
-        b=DKxKoVk2sjtfOsCspoQlAq2E4YJFA8+2odOzEOwm0p6+j0WvEJHz4TNrLJVQwIgDOY
-         1s3muN8U14jiNlkmRJ/Po43CzBpxjM++sBSghjZwHOumhI+4OOechi8zkRw09Ia01ovz
-         Bey9SCIon+GIr9AXThhWvwAFuo4KI8DpjuCjKY78U2iJrA2XKeI7XkCwYysTBqYCIo74
-         2DsmbeViaQcGVBJYOHnxVgZn9xQBun6D9C0D1j/0AP5+6YcgOWT1b5UT9kz3Jy3ueTcF
-         fILFsiz9aGwsMNpEMQiZEjnlP6mRBNj0phAFE+DTYChsaBLKN9eLIsFdcxEG8d+3zFVn
-         jbQA==
-X-Gm-Message-State: AC+VfDytxBJoU1KillKFdc6nf625rm0S4St5Ya4/QmPXSYIW2PT+9a3x
-        8p6Tt/8hgKoS2aucafvYSEZqXW7gMU4VsTFE6tZJeht8Dn0tGgsh
-X-Google-Smtp-Source: ACHHUZ7eyHVelDYqGRcyV5GEaa5qgxyRZz2b4R38sbUlVVncJAHgy5N45wc0X6Zmj95p6Lf77UFhSQw+36FXBfxCi9M=
-X-Received: by 2002:a05:600c:259:b0:3f4:f0c2:125 with SMTP id
- 25-20020a05600c025900b003f4f0c20125mr9235031wmj.23.1684845102963; Tue, 23 May
- 2023 05:31:42 -0700 (PDT)
+        Tue, 23 May 2023 09:00:59 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5475CFF;
+        Tue, 23 May 2023 06:00:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684846857; x=1716382857;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=GMDcbG2KLo4bbXiyCuTToxMYhWdKKH1VcsNvMNyhlLU=;
+  b=QaDFGUOqNQWOqbMZdJ2tAWBbiGT8qM+B96ckZUUOvIY7a/4DYHgXiJrk
+   UD+520hN4G+0WyGJlnSuLnzHpMMpQdrmPhE6u/+78GK4rGChEOm4EmCOB
+   ox+BX0L5IcIAhVXtY99ZNciHcH7tp52Ebf/d1l0PB00QJDFw0Rxf3Nupq
+   LC277dLdMFNvhDPUgawBbtgvDMHZgVhcjl+lFs3i6tyMqmGETGsrxq2xy
+   aNFJKCk44kx2OuPif9KLnpAe78Q89fcFUCctsbrT41PAvVSVT0XTHuQ82
+   iNGD5sQXv8h9qruIpdKh6hzR/shrOmAwY4xb9q9A9qN7ASURbHl04jPUl
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="416686679"
+X-IronPort-AV: E=Sophos;i="6.00,186,1681196400"; 
+   d="scan'208";a="416686679"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 06:00:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="654357740"
+X-IronPort-AV: E=Sophos;i="6.00,186,1681196400"; 
+   d="scan'208";a="654357740"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.39.37])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 06:00:50 -0700
+Message-ID: <0dc8fa26-248d-61eb-b224-4353443ddd6b@intel.com>
+Date:   Tue, 23 May 2023 16:00:45 +0300
 MIME-Version: 1.0
-References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn> <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
-From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Date:   Tue, 23 May 2023 15:31:06 +0300
-Message-ID: <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.11.0
+Subject: Re: [PATCH v1 1/2] perf evsel: evsel__group_pmu_name fixes
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Hans-Peter Nilsson <hp@axis.com>, Leo Yan <leo.yan@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Kan Liang <kan.liang@linux.intel.com>,
+        Sandipan Das <sandipan.das@amd.com>,
+        James Clark <james.clark@arm.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Changbin Du <changbin.du@huawei.com>,
+        Rob Herring <robh@kernel.org>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230523044446.1020769-1-irogers@google.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230523044446.1020769-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 23, 2023 at 1:22=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
-> in the generated syscall table file syscalls.c, there exist some
-> __NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
-> it looks like not so good, just do some small filter operations
-> to handle __NR3264_ prefixed syscall number as a digital number.
->
-> Without this patch:
->
->   [__NR3264_ftruncate] =3D "ftruncate",
->
-> With this patch:
->
->   [46] =3D "ftruncate",
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+On 23/05/23 07:44, Ian Rogers wrote:
+> Previously the evsel__group_pmu_name would iterate the evsel's group,
+> however, the list of evsels aren't yet sorted and so the loop may
+> terminate prematurely. It is also not desirable to iterate the list of
+> evsels during list_sort as the list may be broken. Precompute the
+> group_pmu_name for the evsel before sorting, as part of the
+> computation and only if necessary, iterate the whole list looking for
+> group members so that being sorted isn't necessary.
+> 
+> Move the group pmu name computation to parse-events.c given the closer
+> dependency on the behavior of
+> parse_events__sort_events_and_fix_groups.
+> 
+> Fixes: 7abf0bccaaec ("perf evsel: Add function to compute group PMU name")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/pe=
-rf/arch/arm64/entry/syscalls/mksyscalltbl
-> index 22cdf91..59ab7939 100755
-> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-> @@ -39,7 +39,8 @@ create_table()
->         echo "};"
+>  tools/perf/util/evsel.c        | 31 +++++-----------------
+>  tools/perf/util/evsel.h        |  2 +-
+>  tools/perf/util/parse-events.c | 47 ++++++++++++++++++++++++++++++----
+>  3 files changed, 50 insertions(+), 30 deletions(-)
+> 
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 2f5910b31fa9..3247773f9e24 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
+>  	evsel->per_pkg_mask  = NULL;
+>  	evsel->collect_stat  = false;
+>  	evsel->pmu_name      = NULL;
+> +	evsel->group_pmu_name = NULL;
+>  	evsel->skippable     = false;
 >  }
->
-> -$gcc -E -dM -x c -I $incpath/include/uapi $input \
-> -       |sed -ne 's/^#define __NR_//p' \
-> -       |sort -t' ' -k2 -n             \
-> +$gcc -E -dM -x c -I $incpath/include/uapi $input               \
-> +       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
-> +       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
-> +       |sort -t' ' -k2 -n                                      \
->         |create_table
-> --
-> 2.1.0
->
+>  
+> @@ -431,6 +432,11 @@ struct evsel *evsel__clone(struct evsel *orig)
+>  		if (evsel->pmu_name == NULL)
+>  			goto out_err;
+>  	}
+> +	if (orig->group_pmu_name) {
+> +		evsel->group_pmu_name = strdup(orig->group_pmu_name);
+> +		if (evsel->group_pmu_name == NULL)
+> +			goto out_err;
+> +	}
+>  	if (orig->filter) {
+>  		evsel->filter = strdup(orig->filter);
+>  		if (evsel->filter == NULL)
+> @@ -827,30 +833,6 @@ bool evsel__name_is(struct evsel *evsel, const char *name)
+>  	return !strcmp(evsel__name(evsel), name);
+>  }
+>  
+> -const char *evsel__group_pmu_name(const struct evsel *evsel)
+> -{
+> -	struct evsel *leader = evsel__leader(evsel);
+> -	struct evsel *pos;
+> -
+> -	/*
+> -	 * Software events may be in a group with other uncore PMU events. Use
+> -	 * the pmu_name of the first non-software event to avoid breaking the
+> -	 * software event out of the group.
+> -	 *
+> -	 * Aux event leaders, like intel_pt, expect a group with events from
+> -	 * other PMUs, so substitute the AUX event's PMU in this case.
+> -	 */
+> -	if (evsel->core.attr.type == PERF_TYPE_SOFTWARE || evsel__is_aux_event(leader)) {
+> -		/* Starting with the leader, find the first event with a named PMU. */
+> -		for_each_group_evsel(pos, leader) {
+> -			if (pos->pmu_name)
+> -				return pos->pmu_name;
+> -		}
+> -	}
+> -
+> -	return evsel->pmu_name ?: "cpu";
+> -}
+> -
+>  const char *evsel__metric_id(const struct evsel *evsel)
+>  {
+>  	if (evsel->metric_id)
+> @@ -1536,6 +1518,7 @@ void evsel__exit(struct evsel *evsel)
+>  	zfree(&evsel->group_name);
+>  	zfree(&evsel->name);
+>  	zfree(&evsel->pmu_name);
+> +	zfree(&evsel->group_pmu_name);
+>  	zfree(&evsel->unit);
+>  	zfree(&evsel->metric_id);
+>  	evsel__zero_per_pkg(evsel);
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index df8928745fc6..820771a649b2 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -72,6 +72,7 @@ struct evsel {
+>  		char			*name;
+>  		char			*group_name;
+>  		const char		*pmu_name;
+> +		const char		*group_pmu_name;
 
-As an aside, the awk + sed + sort parts of the command line may be
-reduced to the following awk script, if desired:
-awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
-        sub("^#define __NR_", "")
-        sub("^#define __NR3264_", "")
-        print | "sort -k2 -n"
-}'
+Since it seems to be only used when sorting, do we really
+need this on struct evsel?
+
+>  #ifdef HAVE_LIBTRACEEVENT
+>  		struct tep_event	*tp_format;
+>  #endif
+> @@ -289,7 +290,6 @@ int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size);
+>  int __evsel__hw_cache_type_op_res_name(u8 type, u8 op, u8 result, char *bf, size_t size);
+>  const char *evsel__name(struct evsel *evsel);
+>  bool evsel__name_is(struct evsel *evsel, const char *name);
+> -const char *evsel__group_pmu_name(const struct evsel *evsel);
+>  const char *evsel__metric_id(const struct evsel *evsel);
+>  
+>  static inline bool evsel__is_tool(const struct evsel *evsel)
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 34ba840ae19a..210e6f713c6f 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -2125,6 +2125,41 @@ static int parse_events__with_hybrid_pmu(struct parse_events_state *parse_state,
+>  	return ret;
+>  }
+>  
+> +static void evsel__compute_group_pmu_name(struct evsel *evsel,
+> +					  const struct list_head *head)
+> +{
+> +	struct evsel *leader = evsel__leader(evsel);
+> +	struct evsel *pos;
+> +
+> +	/*
+> +	 * Software events may be in a group with other uncore PMU events. Use
+> +	 * the pmu_name of the first non-software event to avoid breaking the
+> +	 * software event out of the group.
+> +	 *
+> +	 * Aux event leaders, like intel_pt, expect a group with events from
+> +	 * other PMUs, so substitute the AUX event's PMU in this case.
+> +	 */
+> +	if (evsel->core.attr.type == PERF_TYPE_SOFTWARE || evsel__is_aux_event(leader)) {
+> +		/*
+> +		 * Starting with the leader, find the first event with a named
+> +		 * PMU. for_each_group_(member|evsel) isn't used as the list
+> +		 * isn't yet sorted putting evsel's in the same group together.
+> +		 */
+> +		if (leader->pmu_name) {
+> +			evsel->group_pmu_name = strdup(leader->pmu_name);
+> +			return;
+> +		}
+> +		list_for_each_entry(pos, head, core.node) {
+> +			if (evsel__leader(pos) == leader && pos->pmu_name) {
+> +				evsel->group_pmu_name = strdup(pos->pmu_name);
+> +				return;
+> +			}
+> +		}
+> +	}
+> +
+> +	evsel->group_pmu_name = strdup(evsel->pmu_name ?: "cpu");
+> +}
+> +
+>  __weak int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+>  {
+>  	/* Order by insertion index. */
+> @@ -2160,8 +2195,8 @@ static int evlist__cmp(void *state, const struct list_head *l, const struct list
+>  
+>  	/* Group by PMU if there is a group. Groups can't span PMUs. */
+>  	if (lhs_has_group && rhs_has_group) {
+> -		lhs_pmu_name = evsel__group_pmu_name(lhs);
+> -		rhs_pmu_name = evsel__group_pmu_name(rhs);
+> +		lhs_pmu_name = lhs->group_pmu_name;
+> +		rhs_pmu_name = rhs->group_pmu_name;
+>  		ret = strcmp(lhs_pmu_name, rhs_pmu_name);
+>  		if (ret)
+>  			return ret;
+> @@ -2186,6 +2221,8 @@ static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
+>  	list_for_each_entry(pos, list, core.node) {
+>  		const struct evsel *pos_leader = evsel__leader(pos);
+>  
+> +		evsel__compute_group_pmu_name(pos, list);
+
+Perhaps check for failing to allocate the string?
+
+But alternatively, allocate an array for pointers to the
+group pmu names.  Then they don't needed to be strdup'ed,
+or stored on evsel.  Would have to count the number of evsel
+first though.
+
+	group_pmu_names = calloc(nr_evsel, sizeof(const char *));
+
+	group_pmu_names[pos->core.idx] = evsel__group_pmu_name(pos);
+
+> +
+>  		if (pos == pos_leader)
+>  			orig_num_leaders++;
+>  
+> @@ -2210,7 +2247,7 @@ static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
+>  	idx = 0;
+>  	list_for_each_entry(pos, list, core.node) {
+>  		const struct evsel *pos_leader = evsel__leader(pos);
+> -		const char *pos_pmu_name = evsel__group_pmu_name(pos);
+> +		const char *pos_pmu_name = pos->group_pmu_name;
+>  		const char *cur_leader_pmu_name, *pos_leader_pmu_name;
+>  		bool force_grouped = arch_evsel__must_be_in_group(pos);
+>  
+> @@ -2227,7 +2264,7 @@ static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
+>  		if (!cur_leader)
+>  			cur_leader = pos;
+>  
+> -		cur_leader_pmu_name = evsel__group_pmu_name(cur_leader);
+> +		cur_leader_pmu_name = cur_leader->group_pmu_name;
+>  		if ((cur_leaders_grp != pos->core.leader && !force_grouped) ||
+>  		    strcmp(cur_leader_pmu_name, pos_pmu_name)) {
+>  			/* Event is for a different group/PMU than last. */
+> @@ -2239,7 +2276,7 @@ static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
+>  			 */
+>  			cur_leaders_grp = pos->core.leader;
+>  		}
+> -		pos_leader_pmu_name = evsel__group_pmu_name(pos_leader);
+> +		pos_leader_pmu_name = pos_leader->group_pmu_name;
+>  		if (strcmp(pos_leader_pmu_name, pos_pmu_name) || force_grouped) {
+>  			/*
+>  			 * Event's PMU differs from its leader's. Groups can't
+
+By the way, do we really need unsorted_idx?
+
+For example what about this for evlist__cmp():
+
+static int evlist__cmp(void *state __maybe_unused, const struct list_head *l, const struct list_head *r)
+{
+	const struct evsel *lhs = container_of(l, struct evsel, core.node);
+	const struct evsel *rhs = container_of(r, struct evsel, core.node);
+	int lhs_leader_idx = lhs->core.leader->idx;
+	int rhs_leader_idx = rhs->core.leader->idx;
+	int ret;
+
+	if (lhs_leader_idx != rhs_leader_idx)
+		return lhs_leader_idx - rhs_leader_idx;
+
+	ret = strcmp(evsel__group_pmu_name(lhs), evsel__group_pmu_name(rhs));
+	if (ret)
+		return ret;
+
+	/* Architecture specific sorting. */
+	return arch_evlist__cmp(lhs, rhs);
+}
+
