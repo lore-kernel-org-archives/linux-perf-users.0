@@ -2,150 +2,196 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F66C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 15:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAF2C7EE2D
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 16:02:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236598AbjEWP6l (ORCPT
+        id S232592AbjEWQCq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 11:58:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56064 "EHLO
+        Tue, 23 May 2023 12:02:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234390AbjEWP6k (ORCPT
+        with ESMTP id S237395AbjEWQCp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 11:58:40 -0400
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10488E
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 08:58:39 -0700 (PDT)
-Received: by mail-il1-x134.google.com with SMTP id e9e14a558f8ab-33164ec77ccso194415ab.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 08:58:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684857519; x=1687449519;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DNkJynt8qDKBfQ/oFx50TB7QMzJm3azmQ7NoIooJQy8=;
-        b=YZM11sWvc76h7ZrCTPscqzsAAzgrWNxhLbQMqlf6cZZK7w8jDavW1i4e2N3VoIFFD1
-         8aYtigM693xiIa7YPiUXRoYs8Yj365X+4ghMfycyr5o48ZIVT3Pj+JuDYw9wG6SggD/A
-         ve9OSikJL6WEf1L2DR0TnN/pKob+kZsbA6qbyo5DyYcWqKa2Ji56ppdRMi0UY04Jus21
-         WxJDUU/gKgMrn+A7sREm85s16WpN6g8paONF/S4G+RBMH18XqXjU9AuT8B1yQ7vNi0d/
-         FsfJkW09pBT8+R1MV1NYXlklNhVyNDAlB9693gDU2+V6X+egb6YPXjilso6q+Ff/mUD7
-         0CtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684857519; x=1687449519;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DNkJynt8qDKBfQ/oFx50TB7QMzJm3azmQ7NoIooJQy8=;
-        b=KeeD8PMAADP2jcme4+dLmgjMUjuUzzPjcvSlyfTk/0OSJ3s0KDXOUHFMxcidwgfbv3
-         uHO+kO7Vgm59n+BmsmK1G5sSSFbiCyaKUUjN9ljI4cWQgQRWFlJY70hBI0uUvmBkZ7o3
-         ctsTuqHXeNl1edHhabZ58Zmyq3cAt69OEoaV+DByFuXSW89sufxb8/1wbTZx6YNfaSHC
-         9P86kpaBs6IxuU5miXIvmJlnZcGmaYWCyIB2Rec9XhI4BYlzPtO4MzHpHTkoilwMkOTT
-         XyCGw0VnqRTiJ2RezmnLSIbaqGJBC9lnT5M+qjNnXbCw4eFTnN7k2yidy8wZMLRfGuQo
-         LY4A==
-X-Gm-Message-State: AC+VfDyZvqWYj7MZS+LLYpnIrccjEgnhjicJyCjUQEzr9YLojtfOxkOR
-        iRi1dWscdVyKJZOjhNh8nHdYIZMGqnEDy0WmBXW9aw==
-X-Google-Smtp-Source: ACHHUZ5gaAp5Kz27B7HqGcDH9jesRpudZLW5fQcRS1IQa1QZX3FlgQzlnKR3Vd8LxgZrhUcR/nUW28EWAOYFn3fHis8=
-X-Received: by 2002:a05:6e02:18c7:b0:335:5940:5ca6 with SMTP id
- s7-20020a056e0218c700b0033559405ca6mr212858ilu.13.1684857518825; Tue, 23 May
- 2023 08:58:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230517173805.602113-1-irogers@google.com> <20230517173805.602113-15-irogers@google.com>
- <ZGzYroXZUsPTNZVE@kernel.org>
-In-Reply-To: <ZGzYroXZUsPTNZVE@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 23 May 2023 08:58:25 -0700
-Message-ID: <CAP-5=fXKvhqySuomqHU5FMh17N=R-TVoJgLEWU=UgM+HVhSdLQ@mail.gmail.com>
-Subject: Re: [PATCH v3 14/15] perf jevents: Add support for metricgroup descriptions
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 23 May 2023 12:02:45 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49AF0C5;
+        Tue, 23 May 2023 09:02:43 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id E976D1FDE4;
+        Tue, 23 May 2023 16:02:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1684857761; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cqLxfbe6m1nrIclFjUzmkz44DpKUbRwlhs98Py3OTY8=;
+        b=CFqzXOj3bL7rPcBsBdnQq+i5O/CDOiB4nyZNA73SNAgWKZudQnAShHS3hyPjZMeVbo3Zg8
+        JKxZ6KhMqP5e4g1LT0ZE4QYnnNKcDTQP5B5H4Eu5ag6gT1SFuEVSJvWaaLv8xs0RsmZ5Yd
+        hNDc6rCkMBwtEvwv3PlapHOL2Tv73vk=
+Received: from suse.cz (pmladek.udp.ovpn2.prg.suse.de [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 921102C141;
+        Tue, 23 May 2023 16:02:38 +0000 (UTC)
+Date:   Tue, 23 May 2023 18:02:35 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Stephane Eranian <eranian@google.com>, mpe@ellerman.id.au,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linuxppc-dev@lists.ozlabs.org, Sumit Garg <sumit.garg@linaro.org>,
+        npiggin@gmail.com, davem@davemloft.net,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, sparclinux@vger.kernel.org,
+        christophe.leroy@csgroup.eu,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        ravi.v.shankar@intel.com, Randy Dunlap <rdunlap@infradead.org>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Ian Rogers <irogers@google.com>, ito-yuichi@fujitsu.com,
+        ricardo.neri@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v5 10/18] watchdog/hardlockup: Add a "cpu" param to
+ watchdog_hardlockup_check()
+Message-ID: <ZGzjm9h85fpYZJMc@alley>
+References: <20230519101840.v5.18.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
+ <20230519101840.v5.10.I3a7d4dd8c23ac30ee0b607d77feb6646b64825c0@changeid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230519101840.v5.10.I3a7d4dd8c23ac30ee0b607d77feb6646b64825c0@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 23, 2023 at 8:16=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Wed, May 17, 2023 at 10:38:03AM -0700, Ian Rogers escreveu:
-> > Metrics have a field where the groups they belong to are listed like
-> > the following from
-> > tools/perf/pmu-events/arch/x86/skylakex/skx-metrics.json:
-> >
-> >         "MetricGroup": "PGO;TmaL1;TopdownL1;tma_L1_group",
-> >         "MetricName": "tma_frontend_bound",
->
->   LD      /tmp/build/perf-tools-next/util/perf-in.o
->   LD      /tmp/build/perf-tools-next/perf-in.o
->   CC      /tmp/build/perf-tools-next/pmu-events/pmu-events.o
-> In file included from /var/home/acme/git/perf-tools-next/tools/include/li=
-nux/bitmap.h:9,
->                  from /var/home/acme/git/perf-tools-next/tools/perf/util/=
-header.h:10,
->                  from /tmp/build/perf-tools-next/pmu-events/pmu-events.c:=
-3:
-> /tmp/build/perf-tools-next/pmu-events/pmu-events.c: In function =E2=80=98=
-describe_metricgroup=E2=80=99:
-> /var/home/acme/git/perf-tools-next/tools/include/linux/kernel.h:102:25: e=
-rror: overflow in conversion from =E2=80=98long unsigned int=E2=80=99 to =
-=E2=80=98int=E2=80=99 changes value from =E2=80=9818446744073709551615=E2=
-=80=99 to =E2=80=98-1=E2=80=99 [-Werror=3Doverflow]
->   102 | #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_=
-be_array(arr))
->       |                         ^
-> /tmp/build/perf-tools-next/pmu-events/pmu-events.c:61603:29: note: in exp=
-ansion of macro =E2=80=98ARRAY_SIZE=E2=80=99
-> 61603 |         int low =3D 0, high =3D ARRAY_SIZE(metricgroups) - 1;
->       |                             ^~~~~~~~~~
-> cc1: all warnings being treated as errors
-> make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.bui=
-ld:98: /tmp/build/perf-tools-next/pmu-events/pmu-events.o] Error 1
-> make[2]: *** [Makefile.perf:679: /tmp/build/perf-tools-next/pmu-events/pm=
-u-events-in.o] Error 2
-> make[1]: *** [Makefile.perf:236: sub-make] Error 2
-> make: *** [Makefile:113: install-bin] Error 2
-> make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
->
->  Performance counter stats for 'make -k BUILD_BPF_SKEL=3D1 CORESIGHT=3D1 =
-O=3D/tmp/build/perf-tools-next -C tools/perf install-bin':
->
->       241752971879      cycles:u
->       296060193784      instructions:u                   #    1.22  insn =
-per cycle
->
->        6.129451072 seconds time elapsed
->
->       59.018259000 seconds user
->       12.132871000 seconds sys
->
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ fg
-> git rebase -i HEAD~15
->
-> [1]+  Stopped                 git rebase -i HEAD~15
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ git log --oneline -1
-> 995a2beaa64deb7b (HEAD) perf jevents: Add support for metricgroup descrip=
-tions
-> =E2=AC=A2[acme@toolbox perf-tools-next]$
->
-> Applied 1-13, pushing to tmp.perf-tools-next,
->
-> - Arnaldo
+On Fri 2023-05-19 10:18:34, Douglas Anderson wrote:
+> In preparation for the buddy hardlockup detector where the CPU
+> checking for lockup might not be the currently running CPU, add a
+> "cpu" parameter to watchdog_hardlockup_check().
+> 
+> As part of this change, make hrtimer_interrupts an atomic_t since now
+> the CPU incrementing the value and the CPU reading the value might be
+> different. Technially this could also be done with just READ_ONCE and
+> WRITE_ONCE, but atomic_t feels a little cleaner in this case.
+> 
+> While hrtimer_interrupts is made atomic_t, we change
+> hrtimer_interrupts_saved from "unsigned long" to "int". The "int" is
+> needed to match the data type backing atomic_t for hrtimer_interrupts.
+> Even if this changes us from 64-bits to 32-bits (which I don't think
+> is true for most compilers), it doesn't really matter. All we ever do
+> is increment it every few seconds and compare it to an old value so
+> 32-bits is fine (even 16-bits would be). The "signed" vs "unsigned"
+> also doesn't matter for simple equality comparisons.
+> 
+> hrtimer_interrupts_saved is _not_ switched to atomic_t nor even
+> accessed with READ_ONCE / WRITE_ONCE. The hrtimer_interrupts_saved is
+> always consistently accessed with the same CPU. NOTE: with the
+> upcoming "buddy" detector there is one special case. When a CPU goes
+> offline/online then we can change which CPU is the one to consistently
+> access a given instance of hrtimer_interrupts_saved. We still can't
+> end up with a partially updated hrtimer_interrupts_saved, however,
+> because we end up petting all affected CPUs to make sure the new and
+> old CPU can't end up somehow read/write hrtimer_interrupts_saved at
+> the same time.
+> 
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -87,29 +87,34 @@ __setup("nmi_watchdog=", hardlockup_panic_setup);
+>  
+>  #if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
+>  
+> -static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts);
+> -static DEFINE_PER_CPU(unsigned long, hrtimer_interrupts_saved);
+> +static DEFINE_PER_CPU(atomic_t, hrtimer_interrupts);
+> +static DEFINE_PER_CPU(int, hrtimer_interrupts_saved);
+>  static DEFINE_PER_CPU(bool, watchdog_hardlockup_warned);
+>  static unsigned long watchdog_hardlockup_all_cpu_dumped;
+>  
+> -static bool is_hardlockup(void)
+> +static bool is_hardlockup(unsigned int cpu)
+>  {
+> -	unsigned long hrint = __this_cpu_read(hrtimer_interrupts);
+> +	int hrint = atomic_read(&per_cpu(hrtimer_interrupts, cpu));
+>  
+> -	if (__this_cpu_read(hrtimer_interrupts_saved) == hrint)
+> +	if (per_cpu(hrtimer_interrupts_saved, cpu) == hrint)
+>  		return true;
+>  
+> -	__this_cpu_write(hrtimer_interrupts_saved, hrint);
+> +	/*
+> +	 * NOTE: we don't need any fancy atomic_t or READ_ONCE/WRITE_ONCE
+> +	 * for hrtimer_interrupts_saved. hrtimer_interrupts_saved is
+> +	 * written/read by a single CPU.
+> +	 */
+> +	per_cpu(hrtimer_interrupts_saved, cpu) = hrint;
+>  
+>  	return false;
+>  }
+>  
+>  static void watchdog_hardlockup_kick(void)
+>  {
+> -	__this_cpu_inc(hrtimer_interrupts);
+> +	atomic_inc(raw_cpu_ptr(&hrtimer_interrupts));
 
-Thanks, there's a missing (int) cast on ARRAY_SIZE. It doesn't make
-sense to resend the entire series so I'll wait to rebase, add the cast
-and then resend in v2 - that's unless you beat me to it ;-)
+Is there any particular reason why raw_*() is needed, please?
 
-Ian
+My expectation is that the raw_ API should be used only when
+there is a good reason for it. Where a good reason might be
+when the checks might fail but the consistency is guaranteed
+another way.
+
+IMHO, we should use:
+
+	atomic_inc(this_cpu_ptr(&hrtimer_interrupts));
+
+To be honest, I am a bit lost in the per_cpu API definitions.
+
+But this_cpu_ptr() seems to be implemented the same way as
+per_cpu_ptr() when CONFIG_DEBUG_PREEMPT is enabled.
+And we use per_cpu_ptr() in is_hardlockup().
+
+Also this_cpu_ptr() is used more commonly:
+
+$> git grep this_cpu_ptr | wc -l
+1385
+$> git grep raw_cpu_ptr | wc -l
+114
+
+>  }
+>  
+> -void watchdog_hardlockup_check(struct pt_regs *regs)
+> +void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs)
+>  {
+>  	/*
+>  	 * Check for a hardlockup by making sure the CPU's timer
+> @@ -117,35 +122,42 @@ void watchdog_hardlockup_check(struct pt_regs *regs)
+>  	 * fired multiple times before we overflow'd. If it hasn't
+>  	 * then this is a good indication the cpu is stuck
+>  	 */
+> -	if (is_hardlockup()) {
+> +	if (is_hardlockup(cpu)) {
+>  		unsigned int this_cpu = smp_processor_id();
+> +		struct cpumask backtrace_mask = *cpu_online_mask;
+
+Does this work, please?
+
+IMHO, we should use cpumask_copy().
+
+>  
+>  		/* Only print hardlockups once. */
+> -		if (__this_cpu_read(watchdog_hardlockup_warned))
+> +		if (per_cpu(watchdog_hardlockup_warned, cpu))
+>  			return;
+>  
+
+Otherwise, it looks good to me.
+
+Best Regards,
+Petr
