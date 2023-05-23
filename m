@@ -2,357 +2,399 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85158C77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 20:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280B3C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 21:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232674AbjEWUWe (ORCPT
+        id S232018AbjEWV7n convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 16:22:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32862 "EHLO
+        Tue, 23 May 2023 17:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230409AbjEWUWd (ORCPT
+        with ESMTP id S229961AbjEWV7m (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 16:22:33 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C19F120
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 13:22:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684873351; x=1716409351;
-  h=date:from:to:cc:subject:message-id;
-  bh=Kf9f0OGRY9TQv3y2LLjfG1lbGjzUqIHYHeUp//V1xVU=;
-  b=RfE15FjbDvhMXE2tqlE5XO+otIB59pnLmSlTseJXbcdwdYgKOeapUBum
-   Ux4HPLOWSInI9MyjS13yb8n2n/Mr+Z9KqY//v3GOfFT6WzwmvL3L3zzU9
-   7lm8/reXvL59xo3BSTm9h6fcW3RlpanQnHoVxOVCaKFRHQINyASNXhagh
-   kONcndl451zmmNIXGOz8zRtvoT+uv+QYgus9BE11lNKXVHoZWXAh31FMD
-   hqyC20xFvKbm07Uj0lssjEo6soxR0Dkd3lkdwSUW5Gqn4CRrnbXM72ALQ
-   Bz0xWFSGOJeTB+hSUIMfdD/BDp84zLN9etRgIrUJOdpgtl7Apo+rV74Zt
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="419064531"
-X-IronPort-AV: E=Sophos;i="6.00,187,1681196400"; 
-   d="scan'208";a="419064531"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 13:22:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="707157550"
-X-IronPort-AV: E=Sophos;i="6.00,187,1681196400"; 
-   d="scan'208";a="707157550"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 23 May 2023 13:22:29 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q1YWa-000E3x-2q;
-        Tue, 23 May 2023 20:22:28 +0000
-Date:   Wed, 24 May 2023 04:21:57 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Tue, 23 May 2023 17:59:42 -0400
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20E983;
+        Tue, 23 May 2023 14:59:40 -0700 (PDT)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-ba827c74187so409577276.0;
+        Tue, 23 May 2023 14:59:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684879180; x=1687471180;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JGjJxcn57lgCZWic9tKK0sWJnTgZ1s/472pT76ji6ok=;
+        b=KQhIoL0YPlIejfe7jbC+sM2wiQe5cIhcsc8hkpOGH91/b7Y4aaVgQAVv7TmoiRAtw4
+         pto7OAWjqtYl2H6vufb+oiHRgPcyV352Wfwlt/PmxopDVid94uFyITsbuiEPnrMZ8ijQ
+         fpJEjt9p7BRM1cI84Z7Ej8vyikcHPPBNbFNkz/A4Vm9GVdXCjv7QIxbMnsrHXTQh3ra3
+         erBMNzIlCA5jFOo3fFM5Q91AhQqECuN3wdsMh/iRIQW+tQNjvCIQfmcrK6yObJ4XECY5
+         9btJ3I7dgRDD7EejYEsi3F36hRpMf2qR6ZoiOuvzafdma0pKyka1sKm5Wn92ibxjHjpn
+         48Hw==
+X-Gm-Message-State: AC+VfDz4gmnMqcOPuLUt6Hl0dd1eTBCxVY1th/8XLrPg/8A6QoJFByfy
+        I0dBHGThDAxYfvLkMxJwzauIc2W6Q5eBAp4CVlCOc8uW
+X-Google-Smtp-Source: ACHHUZ4TYuQVMRCgQOHUyr7URqBgt2xneISKJzwT1XFm7obrg53FZFtFT+5+gPoLu7NPT/hLtPyjSWmW0sCu8mdtN2o=
+X-Received: by 2002:a25:a1c9:0:b0:ba8:61f8:8eed with SMTP id
+ a67-20020a25a1c9000000b00ba861f88eedmr16329846ybi.0.1684879179617; Tue, 23
+ May 2023 14:59:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230522064330.189127-1-irogers@google.com> <20230522064330.189127-2-irogers@google.com>
+In-Reply-To: <20230522064330.189127-2-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 23 May 2023 14:59:28 -0700
+Message-ID: <CAM9d7cgQpXJc_5Gf2tH3AUwyQufkDnLNms2mNYpof6kv0jtyLg@mail.gmail.com>
+Subject: Re: [PATCH v2 01/23] perf tools: Warn if no user requested CPUs match
+ PMU's CPUs
+To:     Ian Rogers <irogers@google.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ming Wang <wangming01@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org
-Subject: [linux-next:master] BUILD REGRESSION
- 9f925874281f7e8855855d6210d6e29d844e4307
-Message-ID: <20230523202157.Xwr6S%lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-tree/branch: INFO setup_repo_specs: /db/releases/20230524001904/lkp-src/repo/*/linux-next
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 9f925874281f7e8855855d6210d6e29d844e4307  Add linux-next specific files for 20230523
+Hi Ian,
 
-Error/Warning reports:
+On Sun, May 21, 2023 at 11:43 PM Ian Rogers <irogers@google.com> wrote:
+>
+> In commit 1d3351e631fc ("perf tools: Enable on a list of CPUs for hybrid")
+> perf on hybrid will warn if a user requested CPU doesn't match the PMU
+> of the given event but only for hybrid PMUs. Make the logic generic
+> for all PMUs and remove the hybrid logic.
+>
+> Warn if a CPU is requested that is offline for uncore events. Warn if
+> a CPU is requested for a core PMU, but the CPU isn't within the cpu
+> map of that PMU.
+>
+> For example on a 16 (0-15) CPU system:
+> ```
+> $ perf stat -e imc_free_running/data_read/,cycles -C 16 true
+> WARNING: Requested CPU(s) '16' not supported by PMU 'uncore_imc_free_running_1' for event 'imc_free_running/data_read/'
+> WARNING: Requested CPU(s) '16' not supported by PMU 'uncore_imc_free_running_0' for event 'imc_free_running/data_read/'
+> WARNING: Requested CPU(s) '16' not supported by PMU 'cpu' for event 'cycles'
+>
+>  Performance counter stats for 'CPU(s) 16':
+>
+>    <not supported> MiB  imc_free_running/data_read/
+>    <not supported>      cycles
+>
+>        0.000570094 seconds time elapsed
+> ```
 
-https://lore.kernel.org/oe-kbuild-all/202305230552.WOByQyYa-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202305231949.2mkdgZPN-lkp@intel.com
+I'm ok with the warning changes, but it also removed the fixup logic
+for the hybrid PMUs to change the cpu map in the events.  I'm not sure
+if it's your intention.  If so, I think you'd better splitting it into
+a separate
+commit with some explanation.
 
-Error/Warning: (recently discovered and may have been fixed)
+Thanks,
+Namhyung
 
-drivers/base/regmap/regcache-maple.c:113:23: warning: 'lower_index' is used uninitialized [-Wuninitialized]
-drivers/base/regmap/regcache-maple.c:113:36: warning: 'lower_last' is used uninitialized [-Wuninitialized]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dce110/dce110_hw_sequencer.c:2292:31: error: 'struct hwseq_private_funcs' has no member named 'resync_fifo_dccg_dio'
-drivers/gpu/drm/amd/amdgpu/../display/dc/dce110/dce110_hw_sequencer.c:2295:31: error: 'struct hwseq_private_funcs' has no member named 'resync_fifo_dccg_dio'
-drivers/gpu/drm/i915/display/intel_display.c:6012:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c:540 amdgpu_debugfs_mqd_read() warn: ignoring unreachable code.
-drivers/gpu/drm/amd/amdgpu/amdgpu_xcp.c:68 amdgpu_xcp_run_transition() error: buffer overflow 'xcp_mgr->xcp' 8 <= 8
-kernel/events/uprobes.c:478 uprobe_write_opcode() warn: passing zero to 'PTR_ERR'
-kernel/watchdog.c:40:19: sparse: sparse: symbol 'watchdog_hardlockup_user_enabled' was not declared. Should it be static?
-kernel/watchdog.c:41:19: sparse: sparse: symbol 'watchdog_softlockup_user_enabled' was not declared. Should it be static?
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- arc-allyesconfig
-|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
-|   `-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
-|-- arc-axs103_smp_defconfig
-|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
-|   `-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
-|-- arc-randconfig-c44-20230523
-|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
-|   `-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
-|-- arc-randconfig-m041-20230521
-|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
-|   `-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
-|-- arm-allmodconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
-|-- arm-allyesconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
-|-- arm-randconfig-s031-20230521
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-|-- arm-randconfig-s041-20230521
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-|-- i386-randconfig-m021
-|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-|-- i386-randconfig-s001
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-|-- i386-randconfig-s002
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-|-- i386-randconfig-s003
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-|-- ia64-randconfig-m041-20230522
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
-|-- ia64-randconfig-r026-20230522
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
-|-- m68k-randconfig-s042-20230521
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-|-- mips-allyesconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
-|-- mips-randconfig-c041-20230521
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
-|-- nios2-randconfig-s033-20230521
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-|-- powerpc-allmodconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
-|-- riscv-allmodconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
-|-- s390-allyesconfig
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
-|-- s390-randconfig-m031-20230522
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c-amdgpu_gfx_enable_kcq()-warn:inconsistent-indenting
-|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring.c-amdgpu_debugfs_mqd_read()-warn:ignoring-unreachable-code.
-|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_xcp.c-amdgpu_xcp_run_transition()-error:buffer-overflow-xcp_mgr-xcp
-|-- sparc64-randconfig-s032-20230521
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-|-- x86_64-randconfig-m001
-|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-|-- x86_64-randconfig-s021
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-|-- x86_64-randconfig-s022
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-|-- x86_64-randconfig-s023
-|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
-|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
-`-- xtensa-randconfig-s051-20230521
-    `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
-clang_recent_errors
-`-- x86_64-randconfig-r025-20230522
-    `-- drivers-gpu-drm-i915-display-intel_display.c:warning:unannotated-fall-through-between-switch-labels
-
-elapsed time: 837m
-
-configs tested: 184
-configs skipped: 12
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r001-20230522   gcc  
-alpha                randconfig-r006-20230522   gcc  
-arc                              allyesconfig   gcc  
-arc                      axs103_smp_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r011-20230522   gcc  
-arc                  randconfig-r043-20230521   gcc  
-arc                  randconfig-r043-20230522   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm          buildonly-randconfig-r004-20230522   gcc  
-arm          buildonly-randconfig-r005-20230521   clang
-arm                                 defconfig   gcc  
-arm                          pxa168_defconfig   clang
-arm                  randconfig-r004-20230521   gcc  
-arm                  randconfig-r005-20230521   gcc  
-arm                  randconfig-r015-20230521   clang
-arm                  randconfig-r016-20230522   gcc  
-arm                  randconfig-r046-20230521   clang
-arm                  randconfig-r046-20230522   gcc  
-arm                           sunxi_defconfig   gcc  
-arm                           u8500_defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64        buildonly-randconfig-r006-20230521   clang
-arm64                               defconfig   gcc  
-arm64                randconfig-r021-20230521   gcc  
-arm64                randconfig-r024-20230522   clang
-csky         buildonly-randconfig-r003-20230522   gcc  
-csky                                defconfig   gcc  
-hexagon      buildonly-randconfig-r001-20230521   clang
-hexagon              randconfig-r004-20230522   clang
-hexagon              randconfig-r024-20230521   clang
-hexagon              randconfig-r041-20230521   clang
-hexagon              randconfig-r041-20230522   clang
-hexagon              randconfig-r045-20230521   clang
-hexagon              randconfig-r045-20230522   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a001-20230522   gcc  
-i386                 randconfig-a002-20230522   gcc  
-i386                 randconfig-a003-20230522   gcc  
-i386                 randconfig-a004-20230522   gcc  
-i386                 randconfig-a005-20230522   gcc  
-i386                 randconfig-a006-20230522   gcc  
-i386                 randconfig-i051-20230523   clang
-i386                 randconfig-i052-20230523   clang
-i386                 randconfig-i053-20230523   clang
-i386                 randconfig-i054-20230523   clang
-i386                 randconfig-i055-20230523   clang
-i386                 randconfig-i056-20230523   clang
-i386                 randconfig-i061-20230523   clang
-i386                 randconfig-i062-20230523   clang
-i386                 randconfig-i063-20230523   clang
-i386                 randconfig-i064-20230523   clang
-i386                 randconfig-i065-20230523   clang
-i386                 randconfig-i066-20230523   clang
-i386                 randconfig-r036-20230522   gcc  
-ia64                             allmodconfig   gcc  
-ia64         buildonly-randconfig-r001-20230522   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r026-20230522   gcc  
-ia64                          tiger_defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r003-20230521   gcc  
-loongarch            randconfig-r005-20230522   gcc  
-m68k                             alldefconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5208evb_defconfig   gcc  
-m68k                       m5475evb_defconfig   gcc  
-m68k                 randconfig-r021-20230522   gcc  
-m68k                 randconfig-r022-20230521   gcc  
-microblaze           randconfig-r002-20230522   gcc  
-microblaze           randconfig-r011-20230521   gcc  
-microblaze           randconfig-r015-20230522   gcc  
-microblaze           randconfig-r034-20230521   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                        bcm47xx_defconfig   gcc  
-mips         buildonly-randconfig-r002-20230522   clang
-mips                     loongson2k_defconfig   clang
-mips                 randconfig-r016-20230521   clang
-mips                 randconfig-r031-20230521   gcc  
-mips                 randconfig-r032-20230521   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r003-20230522   gcc  
-nios2                randconfig-r023-20230522   gcc  
-nios2                randconfig-r032-20230522   gcc  
-openrisc             randconfig-r012-20230521   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r036-20230521   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                 mpc834x_itx_defconfig   gcc  
-powerpc                      pcm030_defconfig   gcc  
-powerpc                      pmac32_defconfig   clang
-powerpc                      ppc40x_defconfig   gcc  
-powerpc              randconfig-r026-20230521   gcc  
-powerpc                    socrates_defconfig   clang
-powerpc                     tqm8540_defconfig   clang
-powerpc                         wii_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r013-20230522   clang
-riscv                randconfig-r025-20230522   clang
-riscv                randconfig-r035-20230521   clang
-riscv                randconfig-r042-20230521   gcc  
-riscv                randconfig-r042-20230522   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r014-20230521   gcc  
-s390                 randconfig-r033-20230522   gcc  
-s390                 randconfig-r035-20230522   gcc  
-s390                 randconfig-r044-20230521   gcc  
-s390                 randconfig-r044-20230522   clang
-sh                               allmodconfig   gcc  
-sh           buildonly-randconfig-r004-20230521   gcc  
-sh           buildonly-randconfig-r005-20230522   gcc  
-sh                          polaris_defconfig   gcc  
-sh                   randconfig-r001-20230521   gcc  
-sh                          rsk7203_defconfig   gcc  
-sh                          sdk7786_defconfig   gcc  
-sh                            shmin_defconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r012-20230522   gcc  
-sparc                randconfig-r034-20230522   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230522   gcc  
-x86_64               randconfig-a002-20230522   gcc  
-x86_64               randconfig-a003-20230522   gcc  
-x86_64               randconfig-a004-20230522   gcc  
-x86_64               randconfig-a005-20230522   gcc  
-x86_64               randconfig-a006-20230522   gcc  
-x86_64               randconfig-a011-20230522   clang
-x86_64               randconfig-a012-20230522   clang
-x86_64               randconfig-a013-20230522   clang
-x86_64               randconfig-a014-20230522   clang
-x86_64               randconfig-a015-20230522   clang
-x86_64               randconfig-a016-20230522   clang
-x86_64               randconfig-r022-20230522   clang
-x86_64               randconfig-x051-20230522   clang
-x86_64               randconfig-x052-20230522   clang
-x86_64               randconfig-x053-20230522   clang
-x86_64               randconfig-x054-20230522   clang
-x86_64               randconfig-x055-20230522   clang
-x86_64               randconfig-x056-20230522   clang
-x86_64               randconfig-x061-20230522   clang
-x86_64               randconfig-x062-20230522   clang
-x86_64               randconfig-x063-20230522   clang
-x86_64               randconfig-x064-20230522   clang
-x86_64               randconfig-x065-20230522   clang
-x86_64               randconfig-x066-20230522   clang
-x86_64               randconfig-x071-20230522   gcc  
-x86_64               randconfig-x072-20230522   gcc  
-x86_64               randconfig-x073-20230522   gcc  
-x86_64               randconfig-x074-20230522   gcc  
-x86_64               randconfig-x075-20230522   gcc  
-x86_64               randconfig-x076-20230522   gcc  
-x86_64               randconfig-x081-20230522   gcc  
-x86_64               randconfig-x082-20230522   gcc  
-x86_64               randconfig-x083-20230522   gcc  
-x86_64               randconfig-x084-20230522   gcc  
-x86_64               randconfig-x085-20230522   gcc  
-x86_64               randconfig-x086-20230522   gcc  
-x86_64                               rhel-8.3   gcc  
-xtensa                          iss_defconfig   gcc  
-xtensa               randconfig-r002-20230521   gcc  
-xtensa               randconfig-r033-20230521   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/builtin-record.c     |  6 +--
+>  tools/perf/builtin-stat.c       |  5 +--
+>  tools/perf/util/cpumap.h        |  2 +-
+>  tools/perf/util/evlist-hybrid.c | 74 ---------------------------------
+>  tools/perf/util/evlist-hybrid.h |  1 -
+>  tools/perf/util/evlist.c        | 44 ++++++++++++++++++++
+>  tools/perf/util/evlist.h        |  2 +
+>  tools/perf/util/pmu.c           | 33 ---------------
+>  tools/perf/util/pmu.h           |  4 --
+>  9 files changed, 49 insertions(+), 122 deletions(-)
+>
+> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> index ec0f2d5f189f..9d212236c75a 100644
+> --- a/tools/perf/builtin-record.c
+> +++ b/tools/perf/builtin-record.c
+> @@ -4198,11 +4198,7 @@ int cmd_record(int argc, const char **argv)
+>         /* Enable ignoring missing threads when -u/-p option is defined. */
+>         rec->opts.ignore_missing_thread = rec->opts.target.uid != UINT_MAX || rec->opts.target.pid;
+>
+> -       if (evlist__fix_hybrid_cpus(rec->evlist, rec->opts.target.cpu_list)) {
+> -               pr_err("failed to use cpu list %s\n",
+> -                      rec->opts.target.cpu_list);
+> -               goto out;
+> -       }
+> +       evlist__warn_user_requested_cpus(rec->evlist, rec->opts.target.cpu_list);
+>
+>         rec->opts.target.hybrid = perf_pmu__has_hybrid();
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index bc45cee3f77c..612467216306 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2462,10 +2462,7 @@ int cmd_stat(int argc, const char **argv)
+>                 }
+>         }
+>
+> -       if (evlist__fix_hybrid_cpus(evsel_list, target.cpu_list)) {
+> -               pr_err("failed to use cpu list %s\n", target.cpu_list);
+> -               goto out;
+> -       }
+> +       evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
+>
+>         target.hybrid = perf_pmu__has_hybrid();
+>         if (evlist__create_maps(evsel_list, &target) < 0) {
+> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+> index e3426541e0aa..c1de993c083f 100644
+> --- a/tools/perf/util/cpumap.h
+> +++ b/tools/perf/util/cpumap.h
+> @@ -59,7 +59,7 @@ struct perf_cpu cpu__max_present_cpu(void);
+>  /**
+>   * cpu_map__is_dummy - Events associated with a pid, rather than a CPU, use a single dummy map with an entry of -1.
+>   */
+> -static inline bool cpu_map__is_dummy(struct perf_cpu_map *cpus)
+> +static inline bool cpu_map__is_dummy(const struct perf_cpu_map *cpus)
+>  {
+>         return perf_cpu_map__nr(cpus) == 1 && perf_cpu_map__cpu(cpus, 0).cpu == -1;
+>  }
+> diff --git a/tools/perf/util/evlist-hybrid.c b/tools/perf/util/evlist-hybrid.c
+> index 57f02beef023..db3f5fbdebe1 100644
+> --- a/tools/perf/util/evlist-hybrid.c
+> +++ b/tools/perf/util/evlist-hybrid.c
+> @@ -86,77 +86,3 @@ bool evlist__has_hybrid(struct evlist *evlist)
+>
+>         return false;
+>  }
+> -
+> -int evlist__fix_hybrid_cpus(struct evlist *evlist, const char *cpu_list)
+> -{
+> -       struct perf_cpu_map *cpus;
+> -       struct evsel *evsel, *tmp;
+> -       struct perf_pmu *pmu;
+> -       int ret, unmatched_count = 0, events_nr = 0;
+> -
+> -       if (!perf_pmu__has_hybrid() || !cpu_list)
+> -               return 0;
+> -
+> -       cpus = perf_cpu_map__new(cpu_list);
+> -       if (!cpus)
+> -               return -1;
+> -
+> -       /*
+> -        * The evsels are created with hybrid pmu's cpus. But now we
+> -        * need to check and adjust the cpus of evsel by cpu_list because
+> -        * cpu_list may cause conflicts with cpus of evsel. For example,
+> -        * cpus of evsel is cpu0-7, but the cpu_list is cpu6-8, we need
+> -        * to adjust the cpus of evsel to cpu6-7. And then propatate maps
+> -        * in evlist__create_maps().
+> -        */
+> -       evlist__for_each_entry_safe(evlist, tmp, evsel) {
+> -               struct perf_cpu_map *matched_cpus, *unmatched_cpus;
+> -               char buf1[128], buf2[128];
+> -
+> -               pmu = perf_pmu__find_hybrid_pmu(evsel->pmu_name);
+> -               if (!pmu)
+> -                       continue;
+> -
+> -               ret = perf_pmu__cpus_match(pmu, cpus, &matched_cpus,
+> -                                          &unmatched_cpus);
+> -               if (ret)
+> -                       goto out;
+> -
+> -               events_nr++;
+> -
+> -               if (perf_cpu_map__nr(matched_cpus) > 0 &&
+> -                   (perf_cpu_map__nr(unmatched_cpus) > 0 ||
+> -                    perf_cpu_map__nr(matched_cpus) < perf_cpu_map__nr(cpus) ||
+> -                    perf_cpu_map__nr(matched_cpus) < perf_cpu_map__nr(pmu->cpus))) {
+> -                       perf_cpu_map__put(evsel->core.cpus);
+> -                       perf_cpu_map__put(evsel->core.own_cpus);
+> -                       evsel->core.cpus = perf_cpu_map__get(matched_cpus);
+> -                       evsel->core.own_cpus = perf_cpu_map__get(matched_cpus);
+> -
+> -                       if (perf_cpu_map__nr(unmatched_cpus) > 0) {
+> -                               cpu_map__snprint(matched_cpus, buf1, sizeof(buf1));
+> -                               pr_warning("WARNING: use %s in '%s' for '%s', skip other cpus in list.\n",
+> -                                          buf1, pmu->name, evsel->name);
+> -                       }
+> -               }
+> -
+> -               if (perf_cpu_map__nr(matched_cpus) == 0) {
+> -                       evlist__remove(evlist, evsel);
+> -                       evsel__delete(evsel);
+> -
+> -                       cpu_map__snprint(cpus, buf1, sizeof(buf1));
+> -                       cpu_map__snprint(pmu->cpus, buf2, sizeof(buf2));
+> -                       pr_warning("WARNING: %s isn't a '%s', please use a CPU list in the '%s' range (%s)\n",
+> -                                  buf1, pmu->name, pmu->name, buf2);
+> -                       unmatched_count++;
+> -               }
+> -
+> -               perf_cpu_map__put(matched_cpus);
+> -               perf_cpu_map__put(unmatched_cpus);
+> -       }
+> -       if (events_nr)
+> -               ret = (unmatched_count == events_nr) ? -1 : 0;
+> -out:
+> -       perf_cpu_map__put(cpus);
+> -       return ret;
+> -}
+> diff --git a/tools/perf/util/evlist-hybrid.h b/tools/perf/util/evlist-hybrid.h
+> index aacdb1b0f948..19f74b4c340a 100644
+> --- a/tools/perf/util/evlist-hybrid.h
+> +++ b/tools/perf/util/evlist-hybrid.h
+> @@ -10,6 +10,5 @@
+>  int evlist__add_default_hybrid(struct evlist *evlist, bool precise);
+>  void evlist__warn_hybrid_group(struct evlist *evlist);
+>  bool evlist__has_hybrid(struct evlist *evlist);
+> -int evlist__fix_hybrid_cpus(struct evlist *evlist, const char *cpu_list);
+>
+>  #endif /* __PERF_EVLIST_HYBRID_H */
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index a0504316b06f..5d0d99127a90 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -2465,3 +2465,47 @@ void evlist__check_mem_load_aux(struct evlist *evlist)
+>                 }
+>         }
+>  }
+> +
+> +/**
+> + * evlist__warn_user_requested_cpus() - Check each evsel against requested CPUs
+> + *     and warn if the user CPU list is inapplicable for the event's PMUs
+> + *     CPUs. Uncore PMUs list a CPU in sysfs, but this may be overwritten by a
+> + *     user requested CPU and so any online CPU is applicable. Core PMUs handle
+> + *     events on the CPUs in their list and otherwise the event isn't supported.
+> + * @evlist: The list of events being checked.
+> + * @cpu_list: The user provided list of CPUs.
+> + */
+> +void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list)
+> +{
+> +       struct perf_cpu_map *user_requested_cpus;
+> +       struct evsel *pos;
+> +
+> +       if (!cpu_list)
+> +               return;
+> +
+> +       user_requested_cpus = perf_cpu_map__new(cpu_list);
+> +       if (!user_requested_cpus)
+> +               return;
+> +
+> +       evlist__for_each_entry(evlist, pos) {
+> +               const struct perf_cpu_map *to_test;
+> +               struct perf_cpu cpu;
+> +               int idx;
+> +               bool warn = true;
+> +               const struct perf_pmu *pmu = evsel__find_pmu(pos);
+> +
+> +               to_test = pmu && pmu->is_uncore ? cpu_map__online() : evsel__cpus(pos);
+> +
+> +               perf_cpu_map__for_each_cpu(cpu, idx, to_test) {
+> +                       if (perf_cpu_map__has(user_requested_cpus, cpu)) {
+> +                               warn = false;
+> +                               break;
+> +                       }
+> +               }
+> +               if (warn) {
+> +                       pr_warning("WARNING: Requested CPU(s) '%s' not supported by PMU '%s' for event '%s'\n",
+> +                               cpu_list, pmu ? pmu->name : "cpu", evsel__name(pos));
+> +               }
+> +       }
+> +       perf_cpu_map__put(user_requested_cpus);
+> +}
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index e7e5540cc970..5e7ff44f3043 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -447,4 +447,6 @@ struct evsel *evlist__find_evsel(struct evlist *evlist, int idx);
+>
+>  int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char *bf);
+>  void evlist__check_mem_load_aux(struct evlist *evlist);
+> +void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list);
+> +
+>  #endif /* __PERF_EVLIST_H */
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index f4f0afbc391c..1e0be23d4dd7 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -2038,39 +2038,6 @@ int perf_pmu__match(char *pattern, char *name, char *tok)
+>         return 0;
+>  }
+>
+> -int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
+> -                        struct perf_cpu_map **mcpus_ptr,
+> -                        struct perf_cpu_map **ucpus_ptr)
+> -{
+> -       struct perf_cpu_map *pmu_cpus = pmu->cpus;
+> -       struct perf_cpu_map *matched_cpus, *unmatched_cpus;
+> -       struct perf_cpu cpu;
+> -       int i, matched_nr = 0, unmatched_nr = 0;
+> -
+> -       matched_cpus = perf_cpu_map__default_new();
+> -       if (!matched_cpus)
+> -               return -1;
+> -
+> -       unmatched_cpus = perf_cpu_map__default_new();
+> -       if (!unmatched_cpus) {
+> -               perf_cpu_map__put(matched_cpus);
+> -               return -1;
+> -       }
+> -
+> -       perf_cpu_map__for_each_cpu(cpu, i, cpus) {
+> -               if (!perf_cpu_map__has(pmu_cpus, cpu))
+> -                       RC_CHK_ACCESS(unmatched_cpus)->map[unmatched_nr++] = cpu;
+> -               else
+> -                       RC_CHK_ACCESS(matched_cpus)->map[matched_nr++] = cpu;
+> -       }
+> -
+> -       perf_cpu_map__set_nr(unmatched_cpus, unmatched_nr);
+> -       perf_cpu_map__set_nr(matched_cpus, matched_nr);
+> -       *mcpus_ptr = matched_cpus;
+> -       *ucpus_ptr = unmatched_cpus;
+> -       return 0;
+> -}
+> -
+>  double __weak perf_pmu__cpu_slots_per_cycle(void)
+>  {
+>         return NAN;
+> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+> index 0e0cb6283594..49033bb134f3 100644
+> --- a/tools/perf/util/pmu.h
+> +++ b/tools/perf/util/pmu.h
+> @@ -257,10 +257,6 @@ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu);
+>  bool perf_pmu__has_hybrid(void);
+>  int perf_pmu__match(char *pattern, char *name, char *tok);
+>
+> -int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
+> -                        struct perf_cpu_map **mcpus_ptr,
+> -                        struct perf_cpu_map **ucpus_ptr);
+> -
+>  char *pmu_find_real_name(const char *name);
+>  char *pmu_find_alias_name(const char *name);
+>  double perf_pmu__cpu_slots_per_cycle(void);
+> --
+> 2.40.1.698.g37aff9b760-goog
+>
