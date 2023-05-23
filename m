@@ -2,157 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0F5C7EE26
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 06:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD20C77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 07:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234920AbjEWGtU (ORCPT
+        id S235470AbjEWHbS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 02:49:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
+        Tue, 23 May 2023 03:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230404AbjEWGtT (ORCPT
+        with ESMTP id S235290AbjEWHbN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 02:49:19 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6469611F
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 23:49:17 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id 98e67ed59e1d1-25275edf6caso3199514a91.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 23:49:17 -0700 (PDT)
+        Tue, 23 May 2023 03:31:13 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C0EE4B
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 00:30:17 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-64d57cd373fso1855230b3a.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 00:30:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684824557; x=1687416557;
+        d=linaro.org; s=google; t=1684827016; x=1687419016;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/CIN3k3pgEX900re7PcWc+Ixgh9Bvf8RnAPTzy/Q9qA=;
-        b=cvzXNBZcONpo9ubWJ3RJzuhpxW2KbOHQ7DyYNvAc6zjsDwkoebi1Cb5OK1Si5f9EkR
-         7oTDI3fOalzwEfxtNnjihGdUMwDKSXZkE1HxrdBA6wmIpDrDdXEuHHx+k5U8WxTjUW6a
-         mu753zyCxef2tvJdD9aw9+fAS79oQq8BvweBwSgvtEh+sI7C8jHfILbMxxemelnlc3hv
-         TQ76LfGIYbtcp4Xin0+PZPpMPCazlIiSEf0zHBPlJ/lt04cX+mrF/dfXBXOD6CJSsLoI
-         4UXwZa6kWsBRXaq6cv37NKE/oQi4+8PAY+qFC8UB3Ei+yLADc6sD5PlY57Ui2VfaCgdA
-         FoFQ==
+        bh=3cJLYszLPTbCF5D2lChgFyIZOVgyra6zrz+cbXkHEpc=;
+        b=xEvXmtOow7DKZ+dwBkiy/5V06J1nysCIso80vhRqy/mmHQPFpNIcmDziOwHemM7S0j
+         /5t+henqgz9ahhtsa3XTOCzFiZJ1U+Qc8DtCYJOR2mHZq36XVcMFup2S092fgQqWE8ZE
+         w4l2p0YfVxWxL+CZKqoQs2icH16xFjNa/oDOWD+IhsyTXizhTqUz0UkJb/nCKyBbx0/m
+         WL943oJrxJXMYbd8nlJvEzVWAkwMZDy/BhnnThPo8MQv3FQ0LqHnDCeEngBGo1V1eKxn
+         YcAxkKLeUS0wDa7UeJJRyILRELHxgUE3CuDTYWymUN1y/smLULZtzXDCviz9K62Tj3X6
+         I7Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684824557; x=1687416557;
+        d=1e100.net; s=20221208; t=1684827016; x=1687419016;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/CIN3k3pgEX900re7PcWc+Ixgh9Bvf8RnAPTzy/Q9qA=;
-        b=Eq6qwbM1haIuMbIaUDYS7Ck8oWRrGlJIgRgJoEZf3CRj2xtQ1P7tKxQqryyj4dAaLA
-         0HCBvUJHe1h1H2w4CrtbNX0ucnN+fkpulK8stlNuLEs9ipZ7Eg8piIcAZ2EvD8VMQTD8
-         wHzVdnsu/FGk4SC5lfSGuJ0dbETo00Rm596Gqe+XXroQQ0Jve1NuvRTyoyc8/PQ0rgHt
-         4hoFV9vZA8ZgRRJg4l7SQ24P8bHGZMiKn96a2MNw8Ho+7ReUDfgemp6rWtDiFoz5XqZo
-         XXFJvLMswKRnhWApjDtweLiSY+0F7yJwNp3WiYb8GMoZfiky9RGKNwy9wY5ZdPi4ia0e
-         l0sA==
-X-Gm-Message-State: AC+VfDz2P5hwaUEytIl9d8Pq1T6+9I3izSP4cawDYf2aFdLrWm7/nNSv
-        6qZy2oezEtN7GzEl8CF13jua9w==
-X-Google-Smtp-Source: ACHHUZ7nNz4A5dl27YEbGjluXzF+Iu6AoPCKpNsPdYErA3ftUxN2fDxtCgclj2E7xLaUJ53OH6sH7g==
-X-Received: by 2002:a17:90a:984:b0:253:9548:91e1 with SMTP id 4-20020a17090a098400b00253954891e1mr12132128pjo.17.1684824556586;
-        Mon, 22 May 2023 23:49:16 -0700 (PDT)
+        bh=3cJLYszLPTbCF5D2lChgFyIZOVgyra6zrz+cbXkHEpc=;
+        b=gZOPLTr4HYlhlEoaR2FNQX6Aa3IXUfpy2ouuEstlKAW8rHoGtBKxYMPz9qWC+8qJBh
+         F3jyvPA3ODj/cQfI/rg0gX/gIB17t526x1iRI63JMBzdwvrRknufQpjp8Mwqq0asQIKy
+         I1ZmLRLvzSjbYj7DxKz7vvgfTKb5/xRqeNauRzn0anIiPeOr0YQxPMYWizk3VnKhNcMR
+         t/ebsMoe7NMABqaQIlcK7PNS4jeLlb8Iqcbj01muaHvCLLG3HmkVgElYOADwWYlK6HL/
+         KfpiUxr6WuTJCtf8+dNtjEAF/iSzQQ3O23hix3I7T+rr1mCHrU4xowWHxWojwtWNk7/1
+         nIRQ==
+X-Gm-Message-State: AC+VfDzLKIANAHlfcCxhEk8TU92Gh20bhT+e0cTn/fH0ko9il2CODno0
+        YdWdmfyUjKNhWL9vv9aZnqdOEA==
+X-Google-Smtp-Source: ACHHUZ5bxVDkQxvniUkQDm1ZjQoQT/khNRoinaGjLQvly0lsCRM1/dvISXoxrNCPzWnx1TjNkNWGRA==
+X-Received: by 2002:a05:6a20:4420:b0:10b:aeff:aa00 with SMTP id ce32-20020a056a20442000b0010baeffaa00mr5592857pzb.28.1684827016299;
+        Tue, 23 May 2023 00:30:16 -0700 (PDT)
 Received: from leoy-yangtze.lan ([107.151.177.126])
-        by smtp.gmail.com with ESMTPSA id w62-20020a17090a6bc400b00246774a9addsm7391986pjj.48.2023.05.22.23.49.08
+        by smtp.gmail.com with ESMTPSA id 31-20020a63185f000000b00513973a7014sm2486505pgy.12.2023.05.23.00.30.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 May 2023 23:49:16 -0700 (PDT)
-Date:   Tue, 23 May 2023 14:49:04 +0800
+        Tue, 23 May 2023 00:30:15 -0700 (PDT)
+Date:   Tue, 23 May 2023 15:30:07 +0800
 From:   Leo Yan <leo.yan@linaro.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
+To:     Huacai Chen <chenhuacai@kernel.org>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Guo Ren <guoren@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Eric Lin <eric.lin@sifive.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Qi Liu <liuqi115@huawei.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v1 2/5] perf parse-regs: Introduce functions
- arch__reg_{ip|sp}()
-Message-ID: <20230523064904.GA1969788@leoy-yangtze.lan>
-References: <20230520025537.1811986-1-leo.yan@linaro.org>
- <20230520025537.1811986-3-leo.yan@linaro.org>
- <CAP-5=fU-+8Sdw0tfQNYN40tXanrzUgqv0=6jsHqGR9cgjkQa2A@mail.gmail.com>
+        linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH] perf symbol: Add LoongArch case in get_plt_sizes()
+Message-ID: <20230523073007.GB1969788@leoy-yangtze.lan>
+References: <CAAhV-H7waE0gmSU09YKJMHDAnj7BV7ukiLqWs+JzzLrHDG5z8w@mail.gmail.com>
+ <20230518030618.GB1068119@leoy-yangtze.lan>
+ <CAAhV-H6L9kNyGU2UrX7jyN_6O_pafSVSamP7DYHkzfMgmCxVXA@mail.gmail.com>
+ <20230518032129.GC1068119@leoy-yangtze.lan>
+ <CAAhV-H6_=qwheWvNozop2+9MexnOZQcva28xaeikCc49_DqABA@mail.gmail.com>
+ <20230518040553.GE1068119@leoy-yangtze.lan>
+ <ZGYXKnRZQh18D2Fd@kernel.org>
+ <CAAhV-H40kQf5WD-8ozFwS6copfQaGtUJqm=nvQ6btXZnpDmZFA@mail.gmail.com>
+ <387463f9-adb0-8e98-1de6-cae7a79a7d03@loongson.cn>
+ <CAAhV-H4mLCZ7qN3y6siTzpaybMr64f4FrKhfUhA_Qjm-O+sKnQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP-5=fU-+8Sdw0tfQNYN40tXanrzUgqv0=6jsHqGR9cgjkQa2A@mail.gmail.com>
+In-Reply-To: <CAAhV-H4mLCZ7qN3y6siTzpaybMr64f4FrKhfUhA_Qjm-O+sKnQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 22, 2023 at 11:08:12AM -0700, Ian Rogers wrote:
+On Tue, May 23, 2023 at 09:47:19AM +0800, Huacai Chen wrote:
 
 [...]
 
-> > diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
-> > index 8720ec6cf147..334c9a2b785d 100644
-> > --- a/tools/perf/util/perf_regs.c
-> > +++ b/tools/perf/util/perf_regs.c
-> > @@ -20,6 +20,16 @@ uint64_t __weak arch__user_reg_mask(void)
-> >         return PERF_REGS_MASK;
-> >  }
-> >
-> > +uint64_t __weak arch__reg_ip(void)
-> > +{
-> > +       return 0;
-> > +}
-> > +
-> > +uint64_t __weak arch__reg_sp(void)
-> > +{
-> > +       return 0;
-> > +}
-> > +
-> 
-> Is there a need for the weak function if there is a definition for
-> every architecture?
+> > > I'm very sorry that this patch breaks cross-build. We need some
+> > > additional modification.
+> > >
+> > > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> > > index 5d409c26a22e..b3dbf6ca99a7 100644
+> > > --- a/tools/perf/util/symbol-elf.c
+> > > +++ b/tools/perf/util/symbol-elf.c
+> > > @@ -35,6 +35,10 @@
+> > >  #define EM_AARCH64     183  /* ARM 64 bit */
+> > >  #endif
+> > >
+> > > +#ifndef EM_LOONGARCH
+> > > +#define EM_LOONGARCH   258
+> > > +#endif
+> > > +
 
-In current code, some archs don't support register parsing (e.g.
-arch/alpha, arch/parisc, arch/riscv64, etc), this is why I added weak
-functions to avoid building breakage for these archs.
+I confirmed that we must apply this change, otherwise, it will
+introduce perf building failure on Ubuntu 22.04 (jammy) with my Arm64
+machine.
 
-> A problem with weak definitions is that they are
-> not part of the C standard, so strange things can happen such as
-> inlining - although I think this code is safe.
-
-Good to know this info, thanks for sharing.
-
-> Not having the weak
-> functions means that if someone tries to bring up a new architecture
-> they will get linker failures until they add the definitions. Failing
-> to link seems better than silently succeeding but then having to track
-> down runtime failures because these functions are returning 0.
-
-I agreed that removing weak functions is better way to move forward.
-
-If removing the weak functions, we need to handle cases for below
-archs which don't support register parsing:
-
-  arch/alpha/
-  arch/arc/
-  arch/parisc/
-  arch/riscv64/
-  arch/sh/
-  arch/sparc/
-  arch/xtensa/
-
-As James pointed out perf fails to support cross unwinding, I will update
-this patch, the new version's arch__reg_ip() / arch__reg_sp() will return
-IP and SP registers based on the passed 'arch' parameter; for above
-unsupported archs, arch__reg_ip() / arch__reg_sp() will return error and
-architecture developers can extend register parsing in the future.
-
-In this way, we also can remove weak definitions, this can give us an
-extra benefit :)
+Sorry I didn't detect the building failure when reviewed this patch!
 
 Thanks,
 Leo
