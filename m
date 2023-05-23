@@ -2,145 +2,157 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14B20C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 04:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0F5C7EE26
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 06:49:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232266AbjEWEo6 (ORCPT
+        id S234920AbjEWGtU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 00:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57322 "EHLO
+        Tue, 23 May 2023 02:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232190AbjEWEo4 (ORCPT
+        with ESMTP id S230404AbjEWGtT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 00:44:56 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864C410D
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 21:44:55 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-564feceb97dso34497757b3.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 21:44:55 -0700 (PDT)
+        Tue, 23 May 2023 02:49:19 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6469611F
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 23:49:17 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id 98e67ed59e1d1-25275edf6caso3199514a91.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 May 2023 23:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684817095; x=1687409095;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PNQjK0C7CzDtxLT/edfztnWdbqpt8ERQcxl1uZNZGK0=;
-        b=e8QzE8UltmZwkjtKTRxMmtGAvMrcQxcEyiCuvqfUNbe6KywtyspLYMkvdilvoJt/vc
-         goiF7PXLS5lCBqZUi2AhGIRpjmE5PsL8FE1nvqlmQAplEpn07k96iD4rzIlx/VcyTSfv
-         GyU3hlV2U6CiclvAm6Qn2pU4HE6JPzOMjr3y3URHq8WKDKKzScHBmWw+GDaXkVkoarkQ
-         I7vpa1VdXKJMSH7+V4o8MlrJ0xhqAY+N5HhReH1S8S1PzFewWw5BzHCUSW1rmGnKcZVP
-         kKI34GrVvyv70+6oNIXdwvNXSbf4zM5ofqOHaRixHWj2mvkxENsZaOhTIIDwQs/Y7gf+
-         cG3g==
+        d=linaro.org; s=google; t=1684824557; x=1687416557;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/CIN3k3pgEX900re7PcWc+Ixgh9Bvf8RnAPTzy/Q9qA=;
+        b=cvzXNBZcONpo9ubWJ3RJzuhpxW2KbOHQ7DyYNvAc6zjsDwkoebi1Cb5OK1Si5f9EkR
+         7oTDI3fOalzwEfxtNnjihGdUMwDKSXZkE1HxrdBA6wmIpDrDdXEuHHx+k5U8WxTjUW6a
+         mu753zyCxef2tvJdD9aw9+fAS79oQq8BvweBwSgvtEh+sI7C8jHfILbMxxemelnlc3hv
+         TQ76LfGIYbtcp4Xin0+PZPpMPCazlIiSEf0zHBPlJ/lt04cX+mrF/dfXBXOD6CJSsLoI
+         4UXwZa6kWsBRXaq6cv37NKE/oQi4+8PAY+qFC8UB3Ei+yLADc6sD5PlY57Ui2VfaCgdA
+         FoFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684817095; x=1687409095;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PNQjK0C7CzDtxLT/edfztnWdbqpt8ERQcxl1uZNZGK0=;
-        b=K7XpHyI49Zv/7+3iKOoVYmOH6ijneMDhiWGEAOGFndML/IaiVk3bVUtDpmegPExdJy
-         ajtbGFNs8fQw1ne1fImBW6W6+By1wLU93FA+QTtwVAi3O5IipTSo3nyzr2WynxDho+5O
-         GKBlgNZYgDg43eXBvppc5TSdNN+iYSdzVDfxNTdTxBtVwtW2nWQA8g8KXp5s8XA3wwQY
-         nNOdpTTOMiHre5Qgbk+CWGl8ToOPAMWW5afDPAy5eiqP+4eiMcib+dp0odS2vm2S945H
-         xCIBqbUGVt6Q8OYMRJsmZm0IeasX8V2kAReOV5WMlbSnDKpDcRAJICDuBhjVGctkx5wa
-         opIQ==
-X-Gm-Message-State: AC+VfDxBqG5wfeUQARf3ws+vtWu7xBpGP3MAuOmceYkePulyBEZF/HFb
-        UND5fdNM3qtnsGZCy9C8L49tFIP041UY
-X-Google-Smtp-Source: ACHHUZ4kEhFS/JDgjsSFWpZGGfM74aZ55TFqJ1fMvTrE0JSsyc6lz0SHbiPu999cC/6CywnbsvuBjhKX1x79
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:33a6:6e42:aa97:9ab4])
- (user=irogers job=sendgmr) by 2002:a81:4503:0:b0:561:94a8:29c4 with SMTP id
- s3-20020a814503000000b0056194a829c4mr7322817ywa.2.1684817094805; Mon, 22 May
- 2023 21:44:54 -0700 (PDT)
-Date:   Mon, 22 May 2023 21:44:46 -0700
-In-Reply-To: <20230523044446.1020769-1-irogers@google.com>
-Message-Id: <20230523044446.1020769-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20230523044446.1020769-1-irogers@google.com>
-X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
-Subject: [PATCH v1 2/2] perf evsel: for_each_group fixes
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        d=1e100.net; s=20221208; t=1684824557; x=1687416557;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/CIN3k3pgEX900re7PcWc+Ixgh9Bvf8RnAPTzy/Q9qA=;
+        b=Eq6qwbM1haIuMbIaUDYS7Ck8oWRrGlJIgRgJoEZf3CRj2xtQ1P7tKxQqryyj4dAaLA
+         0HCBvUJHe1h1H2w4CrtbNX0ucnN+fkpulK8stlNuLEs9ipZ7Eg8piIcAZ2EvD8VMQTD8
+         wHzVdnsu/FGk4SC5lfSGuJ0dbETo00Rm596Gqe+XXroQQ0Jve1NuvRTyoyc8/PQ0rgHt
+         4hoFV9vZA8ZgRRJg4l7SQ24P8bHGZMiKn96a2MNw8Ho+7ReUDfgemp6rWtDiFoz5XqZo
+         XXFJvLMswKRnhWApjDtweLiSY+0F7yJwNp3WiYb8GMoZfiky9RGKNwy9wY5ZdPi4ia0e
+         l0sA==
+X-Gm-Message-State: AC+VfDz2P5hwaUEytIl9d8Pq1T6+9I3izSP4cawDYf2aFdLrWm7/nNSv
+        6qZy2oezEtN7GzEl8CF13jua9w==
+X-Google-Smtp-Source: ACHHUZ7nNz4A5dl27YEbGjluXzF+Iu6AoPCKpNsPdYErA3ftUxN2fDxtCgclj2E7xLaUJ53OH6sH7g==
+X-Received: by 2002:a17:90a:984:b0:253:9548:91e1 with SMTP id 4-20020a17090a098400b00253954891e1mr12132128pjo.17.1684824556586;
+        Mon, 22 May 2023 23:49:16 -0700 (PDT)
+Received: from leoy-yangtze.lan ([107.151.177.126])
+        by smtp.gmail.com with ESMTPSA id w62-20020a17090a6bc400b00246774a9addsm7391986pjj.48.2023.05.22.23.49.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 May 2023 23:49:16 -0700 (PDT)
+Date:   Tue, 23 May 2023 14:49:04 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        Guo Ren <guoren@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Eric Lin <eric.lin@sifive.com>,
         Kan Liang <kan.liang@linux.intel.com>,
+        Qi Liu <liuqi115@huawei.com>,
         Sandipan Das <sandipan.das@amd.com>,
-        James Clark <james.clark@arm.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Rob Herring <robh@kernel.org>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v1 2/5] perf parse-regs: Introduce functions
+ arch__reg_{ip|sp}()
+Message-ID: <20230523064904.GA1969788@leoy-yangtze.lan>
+References: <20230520025537.1811986-1-leo.yan@linaro.org>
+ <20230520025537.1811986-3-leo.yan@linaro.org>
+ <CAP-5=fU-+8Sdw0tfQNYN40tXanrzUgqv0=6jsHqGR9cgjkQa2A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fU-+8Sdw0tfQNYN40tXanrzUgqv0=6jsHqGR9cgjkQa2A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Address/memory sanitizer was reporting issues in evsel__group_pmu_name
-because the for_each_group_evsel loop didn't terminate when the head
-was reached, the head would then be cast and accessed as an evsel
-leading to invalid memory accesses. Fix for_each_group_member and
-for_each_group_evsel to terminate at the list head. Note,
-evsel__group_pmu_name no longer iterates the group, but the problem is
-present regardless.
+On Mon, May 22, 2023 at 11:08:12AM -0700, Ian Rogers wrote:
 
-Fixes: 717e263fc354 ("perf report: Show group description when event group is enabled")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/evsel.h         | 24 ++++++++++++++++--------
- tools/perf/util/evsel_fprintf.c |  1 +
- 2 files changed, 17 insertions(+), 8 deletions(-)
+[...]
 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 820771a649b2..6a64543c7612 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -462,16 +462,24 @@ static inline int evsel__group_idx(struct evsel *evsel)
- }
- 
- /* Iterates group WITHOUT the leader. */
--#define for_each_group_member(_evsel, _leader) 					\
--for ((_evsel) = list_entry((_leader)->core.node.next, struct evsel, core.node); \
--     (_evsel) && (_evsel)->core.leader == (&_leader->core);					\
--     (_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
-+#define for_each_group_member_head(_evsel, _leader, _head)				\
-+for ((_evsel) = list_entry((_leader)->core.node.next, struct evsel, core.node);		\
-+	(_evsel) && (&(_evsel)->core.node != (_head)) &&				\
-+	(_evsel)->core.leader == (&_leader->core);					\
-+	(_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
-+
-+#define for_each_group_member(_evsel, _leader)				\
-+	for_each_group_member_head(_evsel, _leader, &(_leader)->evlist->core.entries)
- 
- /* Iterates group WITH the leader. */
--#define for_each_group_evsel(_evsel, _leader) 					\
--for ((_evsel) = _leader; 							\
--     (_evsel) && (_evsel)->core.leader == (&_leader->core);					\
--     (_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
-+#define for_each_group_evsel_head(_evsel, _leader, _head)				\
-+for ((_evsel) = _leader;								\
-+	(_evsel) && (&(_evsel)->core.node != (_head)) &&				\
-+	(_evsel)->core.leader == (&_leader->core);					\
-+	(_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
-+
-+#define for_each_group_evsel(_evsel, _leader)				\
-+	for_each_group_evsel_head(_evsel, _leader, &(_leader)->evlist->core.entries)
- 
- static inline bool evsel__has_branch_callstack(const struct evsel *evsel)
- {
-diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-index cc80ec554c0a..036a2171dc1c 100644
---- a/tools/perf/util/evsel_fprintf.c
-+++ b/tools/perf/util/evsel_fprintf.c
-@@ -2,6 +2,7 @@
- #include <inttypes.h>
- #include <stdio.h>
- #include <stdbool.h>
-+#include "util/evlist.h"
- #include "evsel.h"
- #include "util/evsel_fprintf.h"
- #include "util/event.h"
--- 
-2.40.1.698.g37aff9b760-goog
+> > diff --git a/tools/perf/util/perf_regs.c b/tools/perf/util/perf_regs.c
+> > index 8720ec6cf147..334c9a2b785d 100644
+> > --- a/tools/perf/util/perf_regs.c
+> > +++ b/tools/perf/util/perf_regs.c
+> > @@ -20,6 +20,16 @@ uint64_t __weak arch__user_reg_mask(void)
+> >         return PERF_REGS_MASK;
+> >  }
+> >
+> > +uint64_t __weak arch__reg_ip(void)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> > +uint64_t __weak arch__reg_sp(void)
+> > +{
+> > +       return 0;
+> > +}
+> > +
+> 
+> Is there a need for the weak function if there is a definition for
+> every architecture?
 
+In current code, some archs don't support register parsing (e.g.
+arch/alpha, arch/parisc, arch/riscv64, etc), this is why I added weak
+functions to avoid building breakage for these archs.
+
+> A problem with weak definitions is that they are
+> not part of the C standard, so strange things can happen such as
+> inlining - although I think this code is safe.
+
+Good to know this info, thanks for sharing.
+
+> Not having the weak
+> functions means that if someone tries to bring up a new architecture
+> they will get linker failures until they add the definitions. Failing
+> to link seems better than silently succeeding but then having to track
+> down runtime failures because these functions are returning 0.
+
+I agreed that removing weak functions is better way to move forward.
+
+If removing the weak functions, we need to handle cases for below
+archs which don't support register parsing:
+
+  arch/alpha/
+  arch/arc/
+  arch/parisc/
+  arch/riscv64/
+  arch/sh/
+  arch/sparc/
+  arch/xtensa/
+
+As James pointed out perf fails to support cross unwinding, I will update
+this patch, the new version's arch__reg_ip() / arch__reg_sp() will return
+IP and SP registers based on the passed 'arch' parameter; for above
+unsupported archs, arch__reg_ip() / arch__reg_sp() will return error and
+architecture developers can extend register parsing in the future.
+
+In this way, we also can remove weak definitions, this can give us an
+extra benefit :)
+
+Thanks,
+Leo
