@@ -2,173 +2,357 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A888C7EE26
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 19:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85158C77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 20:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233908AbjEWT3G (ORCPT
+        id S232674AbjEWUWe (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 15:29:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35362 "EHLO
+        Tue, 23 May 2023 16:22:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbjEWT26 (ORCPT
+        with ESMTP id S230409AbjEWUWd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 15:28:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E41C9120;
-        Tue, 23 May 2023 12:28:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 72F52634BD;
-        Tue, 23 May 2023 19:28:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73AEFC433D2;
-        Tue, 23 May 2023 19:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684870135;
-        bh=19vYgYezmHEDZ503Xw35qJKsgZ6/tuxVbeCBHpyJVOs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hC0f+DtDPENFGPWZCn5GdySYR3D5mGOCeHdSI35gK2uIWsWVjF99/N0VqdgdGYsrR
-         1OUT+kBEfL2VG3OUQxdLA+RXPuLrQeQQGoZynp/g7S2+OPgqPhjn5o0CcS1uSQ765W
-         lmHdZ0RZ8TcqI/AN9T+h1YKCyC3CeeH9BSUmzevesc20YsGrJuDwHVbbjKzF7lpzH7
-         YyPlsmTtBjA4zy3yWlY23TzOWU5GE8YI3xOHOCCYkXMfX0ZUtFzRQUL/nXYZslW04q
-         CfJhdN+fPY8vkDzKRyn01JzRqPYC7lsQEwt5U78CwaUpoDDe0/P7FwZkyhEir1G/O7
-         EzACWpP4m/DaA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C4B45403B5; Tue, 23 May 2023 16:28:52 -0300 (-03)
-Date:   Tue, 23 May 2023 16:28:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 14/15] perf jevents: Add support for metricgroup
- descriptions
-Message-ID: <ZG0T9P8WPBPQiYOm@kernel.org>
-References: <20230517173805.602113-1-irogers@google.com>
- <20230517173805.602113-15-irogers@google.com>
- <ZGzYroXZUsPTNZVE@kernel.org>
- <CAP-5=fXKvhqySuomqHU5FMh17N=R-TVoJgLEWU=UgM+HVhSdLQ@mail.gmail.com>
- <ZG0RgAjiqQHoVXQR@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZG0RgAjiqQHoVXQR@kernel.org>
-X-Url:  http://acmel.wordpress.com
+        Tue, 23 May 2023 16:22:33 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C19F120
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 13:22:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684873351; x=1716409351;
+  h=date:from:to:cc:subject:message-id;
+  bh=Kf9f0OGRY9TQv3y2LLjfG1lbGjzUqIHYHeUp//V1xVU=;
+  b=RfE15FjbDvhMXE2tqlE5XO+otIB59pnLmSlTseJXbcdwdYgKOeapUBum
+   Ux4HPLOWSInI9MyjS13yb8n2n/Mr+Z9KqY//v3GOfFT6WzwmvL3L3zzU9
+   7lm8/reXvL59xo3BSTm9h6fcW3RlpanQnHoVxOVCaKFRHQINyASNXhagh
+   kONcndl451zmmNIXGOz8zRtvoT+uv+QYgus9BE11lNKXVHoZWXAh31FMD
+   hqyC20xFvKbm07Uj0lssjEo6soxR0Dkd3lkdwSUW5Gqn4CRrnbXM72ALQ
+   Bz0xWFSGOJeTB+hSUIMfdD/BDp84zLN9etRgIrUJOdpgtl7Apo+rV74Zt
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="419064531"
+X-IronPort-AV: E=Sophos;i="6.00,187,1681196400"; 
+   d="scan'208";a="419064531"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 13:22:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="707157550"
+X-IronPort-AV: E=Sophos;i="6.00,187,1681196400"; 
+   d="scan'208";a="707157550"
+Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 23 May 2023 13:22:29 -0700
+Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q1YWa-000E3x-2q;
+        Tue, 23 May 2023 20:22:28 +0000
+Date:   Wed, 24 May 2023 04:21:57 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        amd-gfx@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-perf-users@vger.kernel.org
+Subject: [linux-next:master] BUILD REGRESSION
+ 9f925874281f7e8855855d6210d6e29d844e4307
+Message-ID: <20230523202157.Xwr6S%lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, May 23, 2023 at 04:18:24PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Tue, May 23, 2023 at 08:58:25AM -0700, Ian Rogers escreveu:
-> > Thanks, there's a missing (int) cast on ARRAY_SIZE. It doesn't make
-> > sense to resend the entire series so I'll wait to rebase, add the cast
-> > and then resend in v2 - that's unless you beat me to it ;-)
- 
-> I made the amendment below, now lets see why it is not building after
-> the next patch is applied...
+tree/branch: INFO setup_repo_specs: /db/releases/20230524001904/lkp-src/repo/*/linux-next
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 9f925874281f7e8855855d6210d6e29d844e4307  Add linux-next specific files for 20230523
 
-⬢[acme@toolbox perf-tools-next]$ m
-make: Entering directory '/var/home/acme/git/perf-tools-next/tools/perf'
-  BUILD:   Doing 'make -j32' parallel build
-Warning: Kernel ABI header at 'tools/include/uapi/linux/perf_event.h' differs from latest version at 'include/uapi/linux/perf_event.h'
-diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
-Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.h'
-diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
-Warning: Kernel ABI header at 'tools/include/linux/coresight-pmu.h' differs from latest version at 'include/linux/coresight-pmu.h'
-diff -u tools/include/linux/coresight-pmu.h include/linux/coresight-pmu.h
+Error/Warning reports:
 
-  INSTALL libsubcmd_headers
-  INSTALL libperf_headers
-  INSTALL libsymbol_headers
-  INSTALL libapi_headers
-  INSTALL libbpf_headers
-  PERF_VERSION = 6.4.rc1.g11c3a28bd719
-  GEN     perf-archive
-  GEN     perf-iostat
-  GEN     /tmp/build/perf-tools-next/pmu-events/pmu-events.c
-  CC      /tmp/build/perf-tools-next/util/header.o
-  LD      /tmp/build/perf-tools-next/util/perf-in.o
-  LD      /tmp/build/perf-tools-next/perf-in.o
-  CC      /tmp/build/perf-tools-next/pmu-events/pmu-events.o
-/tmp/build/perf-tools-next/pmu-events/pmu-events.c:23808:39: error: ‘pmu_metrics__amdzen4’ defined but not used [-Werror=unused-const-variable=]
-23808 | static const struct compact_pmu_event pmu_metrics__amdzen4[] = {
-      |                                       ^~~~~~~~~~~~~~~~~~~~
-/tmp/build/perf-tools-next/pmu-events/pmu-events.c:23316:39: error: ‘pmu_events__amdzen4’ defined but not used [-Werror=unused-const-variable=]
-23316 | static const struct compact_pmu_event pmu_events__amdzen4[] = {
-      |                                       ^~~~~~~~~~~~~~~~~~~
-/tmp/build/perf-tools-next/pmu-events/pmu-events.c:23300:39: error: ‘pmu_metrics__amdzen3’ defined but not used [-Werror=unused-const-variable=]
-23300 | static const struct compact_pmu_event pmu_metrics__amdzen3[] = {
-      |                                       ^~~~~~~~~~~~~~~~~~~~
-/tmp/build/perf-tools-next/pmu-events/pmu-events.c:23054:39: error: ‘pmu_events__amdzen3’ defined but not used [-Werror=unused-const-variable=]
-23054 | static const struct compact_pmu_event pmu_events__amdzen3[] = {
-      |                                       ^~~~~~~~~~~~~~~~~~~
-/tmp/build/perf-tools-next/pmu-events/pmu-events.c:23040:39: error: ‘pmu_metrics__amdzen2’ defined but not used [-Werror=unused-const-variable=]
-23040 | static const struct compact_pmu_event pmu_metrics__amdzen2[] = {
-      |                                       ^~~~~~~~~~~~~~~~~~~~
-/tmp/build/perf-tools-next/pmu-events/pmu-events.c:22818:39: error: ‘pmu_events__amdzen2’ defined but not used [-Werror=unused-const-variable=]
-22818 | static const struct compact_pmu_event pmu_events__amdzen2[] = {
-      |                                       ^~~~~~~~~~~~~~~~~~~
-/tmp/build/perf-tools-next/pmu-events/pmu-events.c:22804:39: error: ‘pmu_metrics__amdzen1’ defined but not used [-Werror=unused-const-variable=]
-22804 | static const struct compact_pmu_event pmu_metrics__amdzen1[] = {
-      |                                       ^~~~~~~~~~~~~~~~~~~~
-/tmp/build/perf-tools-next/pmu-events/pmu-events.c:22618:39: error: ‘pmu_events__amdzen1’ defined but not used [-Werror=unused-const-variable=]
-22618 | static const struct compact_pmu_event pmu_events__amdzen1[] = {
-      |                                       ^~~~~~~~~~~~~~~~~~~
-/tmp/build/perf-tools-next/pmu-events/pmu-events.c:22061:39: error: ‘pmu_metrics__alderlake’ defined but not used [-Werror=unused-const-variable=]
-22061 | static const struct compact_pmu_event pmu_metrics__alderlake[] = {
-      |                                       ^~~~~~~~~~~~~~~~~~~~~~
-/tmp/build/perf-tools-next/pmu-events/pmu-events.c:21598:39: error: ‘pmu_events__alderlake’ defined but not used [-Werror=unused-const-variable=]
-21598 | static const struct compact_pmu_event pmu_events__alderlake[] = {
-      |                                       ^~~~~~~~~~~~~~~~~~~~~
-cc1: all warnings being treated as errors
-make[3]: *** [/var/home/acme/git/perf-tools-next/tools/build/Makefile.build:98: /tmp/build/perf-tools-next/pmu-events/pmu-events.o] Error 1
-make[2]: *** [Makefile.perf:679: /tmp/build/perf-tools-next/pmu-events/pmu-events-in.o] Error 2
-make[1]: *** [Makefile.perf:236: sub-make] Error 2
-make: *** [Makefile:113: install-bin] Error 2
-make: Leaving directory '/var/home/acme/git/perf-tools-next/tools/perf'
+https://lore.kernel.org/oe-kbuild-all/202305230552.WOByQyYa-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202305231949.2mkdgZPN-lkp@intel.com
 
- Performance counter stats for 'make -k BUILD_BPF_SKEL=1 CORESIGHT=1 O=/tmp/build/perf-tools-next -C tools/perf install-bin':
+Error/Warning: (recently discovered and may have been fixed)
 
-       22718940299      cycles:u
-       55319106422      instructions:u                   #    2.43  insn per cycle
+drivers/base/regmap/regcache-maple.c:113:23: warning: 'lower_index' is used uninitialized [-Wuninitialized]
+drivers/base/regmap/regcache-maple.c:113:36: warning: 'lower_last' is used uninitialized [-Wuninitialized]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dce110/dce110_hw_sequencer.c:2292:31: error: 'struct hwseq_private_funcs' has no member named 'resync_fifo_dccg_dio'
+drivers/gpu/drm/amd/amdgpu/../display/dc/dce110/dce110_hw_sequencer.c:2295:31: error: 'struct hwseq_private_funcs' has no member named 'resync_fifo_dccg_dio'
+drivers/gpu/drm/i915/display/intel_display.c:6012:3: warning: unannotated fall-through between switch labels [-Wimplicit-fallthrough]
 
-       5.035881599 seconds time elapsed
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
-       5.226416000 seconds user
-       1.483357000 seconds sys
+drivers/gpu/drm/amd/amdgpu/amdgpu_ring.c:540 amdgpu_debugfs_mqd_read() warn: ignoring unreachable code.
+drivers/gpu/drm/amd/amdgpu/amdgpu_xcp.c:68 amdgpu_xcp_run_transition() error: buffer overflow 'xcp_mgr->xcp' 8 <= 8
+kernel/events/uprobes.c:478 uprobe_write_opcode() warn: passing zero to 'PTR_ERR'
+kernel/watchdog.c:40:19: sparse: sparse: symbol 'watchdog_hardlockup_user_enabled' was not declared. Should it be static?
+kernel/watchdog.c:41:19: sparse: sparse: symbol 'watchdog_softlockup_user_enabled' was not declared. Should it be static?
 
+Error/Warning ids grouped by kconfigs:
 
-⬢[acme@toolbox perf-tools-next]$
+gcc_recent_errors
+|-- arc-allyesconfig
+|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
+|   `-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
+|-- arc-axs103_smp_defconfig
+|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
+|   `-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
+|-- arc-randconfig-c44-20230523
+|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
+|   `-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
+|-- arc-randconfig-m041-20230521
+|   |-- drivers-base-regmap-regcache-maple.c:warning:lower_index-is-used-uninitialized
+|   `-- drivers-base-regmap-regcache-maple.c:warning:lower_last-is-used-uninitialized
+|-- arm-allmodconfig
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
+|-- arm-allyesconfig
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
+|-- arm-randconfig-s031-20230521
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+|-- arm-randconfig-s041-20230521
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+|-- i386-randconfig-m021
+|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
+|-- i386-randconfig-s001
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+|-- i386-randconfig-s002
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+|-- i386-randconfig-s003
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+|-- ia64-randconfig-m041-20230522
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
+|-- ia64-randconfig-r026-20230522
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
+|-- m68k-randconfig-s042-20230521
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+|-- mips-allyesconfig
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
+|-- mips-randconfig-c041-20230521
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
+|-- nios2-randconfig-s033-20230521
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+|-- powerpc-allmodconfig
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
+|-- riscv-allmodconfig
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
+|-- s390-allyesconfig
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
+|-- s390-randconfig-m031-20230522
+|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c-amdgpu_gfx_enable_kcq()-warn:inconsistent-indenting
+|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_ring.c-amdgpu_debugfs_mqd_read()-warn:ignoring-unreachable-code.
+|   `-- drivers-gpu-drm-amd-amdgpu-amdgpu_xcp.c-amdgpu_xcp_run_transition()-error:buffer-overflow-xcp_mgr-xcp
+|-- sparc64-randconfig-s032-20230521
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+|-- x86_64-randconfig-m001
+|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
+|-- x86_64-randconfig-s021
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+|-- x86_64-randconfig-s022
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+|-- x86_64-randconfig-s023
+|   |-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_hardlockup_user_enabled-was-not-declared.-Should-it-be-static
+|   `-- kernel-watchdog.c:sparse:sparse:symbol-watchdog_softlockup_user_enabled-was-not-declared.-Should-it-be-static
+`-- xtensa-randconfig-s051-20230521
+    `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dce110-dce110_hw_sequencer.c:error:struct-hwseq_private_funcs-has-no-member-named-resync_fifo_dccg_dio
+clang_recent_errors
+`-- x86_64-randconfig-r025-20230522
+    `-- drivers-gpu-drm-i915-display-intel_display.c:warning:unannotated-fall-through-between-switch-labels
 
-Tried cleaning all up and rebuilding, same thing.
+elapsed time: 837m
 
-Removed the part that touches amd and it gets back building:
+configs tested: 184
+configs skipped: 12
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-index 8b03d246bc3b3d0e..6543a68d4a170940 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -1,3 +1,4 @@
-+Family-model,Version,Filename,EventType
- GenuineIntel-6-(97|9A|B7|BA|BF),v1.21,alderlake,core
- GenuineIntel-6-BE,v1.21,alderlaken,core
- GenuineIntel-6-(1C|26|27|35|36),v4,bonnell,core
-@@ -32,3 +33,7 @@ GenuineIntel-6-8[CD],v1.12,tigerlake,core
- GenuineIntel-6-2C,v4,westmereep-dp,core
- GenuineIntel-6-25,v3,westmereep-sp,core
- GenuineIntel-6-2F,v3,westmereex,core
-+AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v2,amdzen1,core
-+AuthenticAMD-23-[[:xdigit:]]+,v1,amdzen2,core
-+AuthenticAMD-25-([245][[:xdigit:]]|[[:xdigit:]]),v1,amdzen3,core
-+AuthenticAMD-25-[[:xdigit:]]+,v1,amdzen4,core
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r001-20230522   gcc  
+alpha                randconfig-r006-20230522   gcc  
+arc                              allyesconfig   gcc  
+arc                      axs103_smp_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r011-20230522   gcc  
+arc                  randconfig-r043-20230521   gcc  
+arc                  randconfig-r043-20230522   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm          buildonly-randconfig-r004-20230522   gcc  
+arm          buildonly-randconfig-r005-20230521   clang
+arm                                 defconfig   gcc  
+arm                          pxa168_defconfig   clang
+arm                  randconfig-r004-20230521   gcc  
+arm                  randconfig-r005-20230521   gcc  
+arm                  randconfig-r015-20230521   clang
+arm                  randconfig-r016-20230522   gcc  
+arm                  randconfig-r046-20230521   clang
+arm                  randconfig-r046-20230522   gcc  
+arm                           sunxi_defconfig   gcc  
+arm                           u8500_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64        buildonly-randconfig-r006-20230521   clang
+arm64                               defconfig   gcc  
+arm64                randconfig-r021-20230521   gcc  
+arm64                randconfig-r024-20230522   clang
+csky         buildonly-randconfig-r003-20230522   gcc  
+csky                                defconfig   gcc  
+hexagon      buildonly-randconfig-r001-20230521   clang
+hexagon              randconfig-r004-20230522   clang
+hexagon              randconfig-r024-20230521   clang
+hexagon              randconfig-r041-20230521   clang
+hexagon              randconfig-r041-20230522   clang
+hexagon              randconfig-r045-20230521   clang
+hexagon              randconfig-r045-20230522   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230522   gcc  
+i386                 randconfig-a002-20230522   gcc  
+i386                 randconfig-a003-20230522   gcc  
+i386                 randconfig-a004-20230522   gcc  
+i386                 randconfig-a005-20230522   gcc  
+i386                 randconfig-a006-20230522   gcc  
+i386                 randconfig-i051-20230523   clang
+i386                 randconfig-i052-20230523   clang
+i386                 randconfig-i053-20230523   clang
+i386                 randconfig-i054-20230523   clang
+i386                 randconfig-i055-20230523   clang
+i386                 randconfig-i056-20230523   clang
+i386                 randconfig-i061-20230523   clang
+i386                 randconfig-i062-20230523   clang
+i386                 randconfig-i063-20230523   clang
+i386                 randconfig-i064-20230523   clang
+i386                 randconfig-i065-20230523   clang
+i386                 randconfig-i066-20230523   clang
+i386                 randconfig-r036-20230522   gcc  
+ia64                             allmodconfig   gcc  
+ia64         buildonly-randconfig-r001-20230522   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r026-20230522   gcc  
+ia64                          tiger_defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r003-20230521   gcc  
+loongarch            randconfig-r005-20230522   gcc  
+m68k                             alldefconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5208evb_defconfig   gcc  
+m68k                       m5475evb_defconfig   gcc  
+m68k                 randconfig-r021-20230522   gcc  
+m68k                 randconfig-r022-20230521   gcc  
+microblaze           randconfig-r002-20230522   gcc  
+microblaze           randconfig-r011-20230521   gcc  
+microblaze           randconfig-r015-20230522   gcc  
+microblaze           randconfig-r034-20230521   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                        bcm47xx_defconfig   gcc  
+mips         buildonly-randconfig-r002-20230522   clang
+mips                     loongson2k_defconfig   clang
+mips                 randconfig-r016-20230521   clang
+mips                 randconfig-r031-20230521   gcc  
+mips                 randconfig-r032-20230521   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r003-20230522   gcc  
+nios2                randconfig-r023-20230522   gcc  
+nios2                randconfig-r032-20230522   gcc  
+openrisc             randconfig-r012-20230521   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r036-20230521   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                 mpc834x_itx_defconfig   gcc  
+powerpc                      pcm030_defconfig   gcc  
+powerpc                      pmac32_defconfig   clang
+powerpc                      ppc40x_defconfig   gcc  
+powerpc              randconfig-r026-20230521   gcc  
+powerpc                    socrates_defconfig   clang
+powerpc                     tqm8540_defconfig   clang
+powerpc                         wii_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r013-20230522   clang
+riscv                randconfig-r025-20230522   clang
+riscv                randconfig-r035-20230521   clang
+riscv                randconfig-r042-20230521   gcc  
+riscv                randconfig-r042-20230522   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r014-20230521   gcc  
+s390                 randconfig-r033-20230522   gcc  
+s390                 randconfig-r035-20230522   gcc  
+s390                 randconfig-r044-20230521   gcc  
+s390                 randconfig-r044-20230522   clang
+sh                               allmodconfig   gcc  
+sh           buildonly-randconfig-r004-20230521   gcc  
+sh           buildonly-randconfig-r005-20230522   gcc  
+sh                          polaris_defconfig   gcc  
+sh                   randconfig-r001-20230521   gcc  
+sh                          rsk7203_defconfig   gcc  
+sh                          sdk7786_defconfig   gcc  
+sh                            shmin_defconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r012-20230522   gcc  
+sparc                randconfig-r034-20230522   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230522   gcc  
+x86_64               randconfig-a002-20230522   gcc  
+x86_64               randconfig-a003-20230522   gcc  
+x86_64               randconfig-a004-20230522   gcc  
+x86_64               randconfig-a005-20230522   gcc  
+x86_64               randconfig-a006-20230522   gcc  
+x86_64               randconfig-a011-20230522   clang
+x86_64               randconfig-a012-20230522   clang
+x86_64               randconfig-a013-20230522   clang
+x86_64               randconfig-a014-20230522   clang
+x86_64               randconfig-a015-20230522   clang
+x86_64               randconfig-a016-20230522   clang
+x86_64               randconfig-r022-20230522   clang
+x86_64               randconfig-x051-20230522   clang
+x86_64               randconfig-x052-20230522   clang
+x86_64               randconfig-x053-20230522   clang
+x86_64               randconfig-x054-20230522   clang
+x86_64               randconfig-x055-20230522   clang
+x86_64               randconfig-x056-20230522   clang
+x86_64               randconfig-x061-20230522   clang
+x86_64               randconfig-x062-20230522   clang
+x86_64               randconfig-x063-20230522   clang
+x86_64               randconfig-x064-20230522   clang
+x86_64               randconfig-x065-20230522   clang
+x86_64               randconfig-x066-20230522   clang
+x86_64               randconfig-x071-20230522   gcc  
+x86_64               randconfig-x072-20230522   gcc  
+x86_64               randconfig-x073-20230522   gcc  
+x86_64               randconfig-x074-20230522   gcc  
+x86_64               randconfig-x075-20230522   gcc  
+x86_64               randconfig-x076-20230522   gcc  
+x86_64               randconfig-x081-20230522   gcc  
+x86_64               randconfig-x082-20230522   gcc  
+x86_64               randconfig-x083-20230522   gcc  
+x86_64               randconfig-x084-20230522   gcc  
+x86_64               randconfig-x085-20230522   gcc  
+x86_64               randconfig-x086-20230522   gcc  
+x86_64                               rhel-8.3   gcc  
+xtensa                          iss_defconfig   gcc  
+xtensa               randconfig-r002-20230521   gcc  
+xtensa               randconfig-r033-20230521   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
