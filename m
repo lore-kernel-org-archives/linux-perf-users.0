@@ -2,114 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950C3C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 11:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDAEC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 12:32:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230197AbjEWLpt (ORCPT
+        id S236860AbjEWMcG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 07:45:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32854 "EHLO
+        Tue, 23 May 2023 08:32:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233125AbjEWLps (ORCPT
+        with ESMTP id S236863AbjEWMcF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 07:45:48 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB4A4FE;
-        Tue, 23 May 2023 04:45:46 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 1B63120540;
-        Tue, 23 May 2023 11:45:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1684842345; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bwznIrELPYLWwydAYNIqJzHwi6mbsjXfEygWrt5kgFg=;
-        b=twQpZTwUAduFDvyrn/btduKthKphe6tUYKcM13EM9uQJnnGbA+/tzOdgNDG3JmL4BjSByc
-        n4a8Ke1XYcAI2/M3x+kl4ijn9ob2921LsYwVdvz+1/kST+5Z4rr0578WynqlcrOsM335MR
-        oM5DqKg8Dbes0acQZ55Wc7n8a3+jfXw=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id C81E62C141;
-        Tue, 23 May 2023 11:45:40 +0000 (UTC)
-Date:   Tue, 23 May 2023 13:45:40 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Stephane Eranian <eranian@google.com>, mpe@ellerman.id.au,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, Sumit Garg <sumit.garg@linaro.org>,
-        npiggin@gmail.com, davem@davemloft.net,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, sparclinux@vger.kernel.org,
-        christophe.leroy@csgroup.eu,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        ravi.v.shankar@intel.com, Randy Dunlap <rdunlap@infradead.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Ian Rogers <irogers@google.com>, ito-yuichi@fujitsu.com,
-        ricardo.neri@intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v5 08/18] watchdog/hardlockup: Move perf hardlockup
- checking/panic to common watchdog.c
-Message-ID: <ZGynZJ6Kvf1w7Pyu@alley>
-References: <20230519101840.v5.18.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
- <20230519101840.v5.8.Id4133d3183e798122dc3b6205e7852601f289071@changeid>
+        Tue, 23 May 2023 08:32:05 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5763109;
+        Tue, 23 May 2023 05:31:44 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3f60dfc5f93so3266745e9.2;
+        Tue, 23 May 2023 05:31:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684845103; x=1687437103;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G+XmU9cW6dJqezkxpvVuKdHpfUq+glTTnVbU9jQUiIY=;
+        b=BDsW8NKXWqnFAViuFEK3+DwmsJ3XA06LSPv9HjHVs5GKyo1yV/SucJ936S6bNsIhJh
+         jTj4G9coN/rwe0OPxC1VlrWDIKgASIOfXqvRpTg6yP4NWUYkOGD9W4oeQpNYfYgutB4e
+         nj3tjodWahVPM2ZwAtnq+Nww6bHEbAwBK3vg6OysQWDqMNoDtG37mh6vGzCaH5ZdCAnr
+         UIra1foqagU/c/HW8F3S8UplRlbt91wPrgvKSbB6t5XKeTVtae9Yscrd+YXyb88dzuXe
+         johacs49XetzbV6WqEcwrprsN9kXEFVP51o5EN967GFxi+EHmn1AulV9lc7dyc1Fv1XP
+         InUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684845103; x=1687437103;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G+XmU9cW6dJqezkxpvVuKdHpfUq+glTTnVbU9jQUiIY=;
+        b=DKxKoVk2sjtfOsCspoQlAq2E4YJFA8+2odOzEOwm0p6+j0WvEJHz4TNrLJVQwIgDOY
+         1s3muN8U14jiNlkmRJ/Po43CzBpxjM++sBSghjZwHOumhI+4OOechi8zkRw09Ia01ovz
+         Bey9SCIon+GIr9AXThhWvwAFuo4KI8DpjuCjKY78U2iJrA2XKeI7XkCwYysTBqYCIo74
+         2DsmbeViaQcGVBJYOHnxVgZn9xQBun6D9C0D1j/0AP5+6YcgOWT1b5UT9kz3Jy3ueTcF
+         fILFsiz9aGwsMNpEMQiZEjnlP6mRBNj0phAFE+DTYChsaBLKN9eLIsFdcxEG8d+3zFVn
+         jbQA==
+X-Gm-Message-State: AC+VfDytxBJoU1KillKFdc6nf625rm0S4St5Ya4/QmPXSYIW2PT+9a3x
+        8p6Tt/8hgKoS2aucafvYSEZqXW7gMU4VsTFE6tZJeht8Dn0tGgsh
+X-Google-Smtp-Source: ACHHUZ7eyHVelDYqGRcyV5GEaa5qgxyRZz2b4R38sbUlVVncJAHgy5N45wc0X6Zmj95p6Lf77UFhSQw+36FXBfxCi9M=
+X-Received: by 2002:a05:600c:259:b0:3f4:f0c2:125 with SMTP id
+ 25-20020a05600c025900b003f4f0c20125mr9235031wmj.23.1684845102963; Tue, 23 May
+ 2023 05:31:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230519101840.v5.8.Id4133d3183e798122dc3b6205e7852601f289071@changeid>
+References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn> <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Date:   Tue, 23 May 2023 15:31:06 +0300
+Message-ID: <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Hans-Peter Nilsson <hp@axis.com>, Leo Yan <leo.yan@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri 2023-05-19 10:18:32, Douglas Anderson wrote:
-> The perf hardlockup detector works by looking at interrupt counts and
-> seeing if they change from run to run. The interrupt counts are
-> managed by the common watchdog code via its watchdog_timer_fn().
-> 
-> Currently the API between the perf detector and the common code is a
-> function: is_hardlockup(). When the hard lockup detector sees that
-> function return true then it handles printing out debug info and
-> inducing a panic if necessary.
-> 
-> Let's change the API a little bit in preparation for the buddy
-> hardlockup detector. The buddy hardlockup detector wants to print
-> nearly the same debug info and have nearly the same panic
-> behavior. That means we want to move all that code to the common
-> file. For now, the code in the common file will only be there if the
-> perf hardlockup detector is enabled, but eventually it will be
-> selected by a common config.
-> 
-> Right now, this _just_ moves the code from the perf detector file to
-> the common file and changes the names. It doesn't make the changes
-> that the buddy hardlockup detector will need and doesn't do any style
-> cleanups. A future patch will do cleanup to make it more obvious what
-> changed.
-> 
-> With the above, we no longer have any callers of is_hardlockup()
-> outside of the "watchdog.c" file, so we can remove it from the header,
-> make it static, and move it to the same "#ifdef" block as our new
-> watchdog_hardlockup_check(). While doing this, it can be noted that
-> even if no hardlockup detectors were configured the existing code used
-> to still have the code for counting/checking "hrtimer_interrupts" even
-> if the perf hardlockup detector wasn't configured. We didn't need to
-> do that, so move all the "hrtimer_interrupts" counting to only be
-> there if the perf hardlockup detector is configured as well.
-> 
-> This change is expected to be a no-op.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+On Tue, May 23, 2023 at 1:22=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
+> in the generated syscall table file syscalls.c, there exist some
+> __NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
+> it looks like not so good, just do some small filter operations
+> to handle __NR3264_ prefixed syscall number as a digital number.
+>
+> Without this patch:
+>
+>   [__NR3264_ftruncate] =3D "ftruncate",
+>
+> With this patch:
+>
+>   [46] =3D "ftruncate",
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/pe=
+rf/arch/arm64/entry/syscalls/mksyscalltbl
+> index 22cdf91..59ab7939 100755
+> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+> @@ -39,7 +39,8 @@ create_table()
+>         echo "};"
+>  }
+>
+> -$gcc -E -dM -x c -I $incpath/include/uapi $input \
+> -       |sed -ne 's/^#define __NR_//p' \
+> -       |sort -t' ' -k2 -n             \
+> +$gcc -E -dM -x c -I $incpath/include/uapi $input               \
+> +       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
+> +       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
+> +       |sort -t' ' -k2 -n                                      \
+>         |create_table
+> --
+> 2.1.0
+>
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
-
-Best Regards,
-Petr
+As an aside, the awk + sed + sort parts of the command line may be
+reduced to the following awk script, if desired:
+awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
+        sub("^#define __NR_", "")
+        sub("^#define __NR3264_", "")
+        print | "sort -k2 -n"
+}'
