@@ -2,59 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B78DC7EE23
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 16:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71524C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 17:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237872AbjEWQ6S (ORCPT
+        id S237842AbjEWREc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 12:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35758 "EHLO
+        Tue, 23 May 2023 13:04:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237694AbjEWQ6R (ORCPT
+        with ESMTP id S237921AbjEWREb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 12:58:17 -0400
-Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CAA3119
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 09:58:15 -0700 (PDT)
-Received: by mail-il1-x135.google.com with SMTP id e9e14a558f8ab-335d6260e9bso168455ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 09:58:15 -0700 (PDT)
+        Tue, 23 May 2023 13:04:31 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3DDDD
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 10:04:27 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-335d6260e9bso169995ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 May 2023 10:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684861095; x=1687453095;
+        d=google.com; s=20221208; t=1684861467; x=1687453467;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GudC/zBhhv2vZ0cXjxOe/oq42GtFjJeYdm4KVV+ij8E=;
-        b=qP8AdqSfz42X6x1Mpc8khi3XZrz/OrDGa63mGRzxq0ZaPFRawRSIAdbK53ULN975D2
-         lZSB+CYBB04Pk9UXjWdRlaK+NYLdrx+UG+glg+itbul0O3V4Rf4YguVcdVWsSE0Kk9A3
-         QfjGyShljHBzjKR+ywvuSBxt9A3c0c+nyghG9RzvgKGMJvs+vLuudtsHI3E9MUy24yOU
-         cB5tKyKP7+MTEW2rmo1bOsE6j8YdepHUBnLSeLwJxIH34/JJYhY2l/ZSx9x3G1sdzsaC
-         2wvoyAd2MGmc2EIzJP2tD79k3QgncjiXqWyfHxycXPnxWe+JYwmOvQJGCvWTFLQ0b9H3
-         uGfA==
+        bh=muALjIcfvVCb2tAeAMgrB1kx2WpHTC3GVkLoOVcMWrs=;
+        b=hPYTWkjDJ0qxhJWHGuhyTTZRm+3Lq/ZZ6L2qVorxEtDJ2W0UwUoGB1FjZI548qw1Ty
+         MaDNYFql4e4vWR1A6Lb3Ctu2SPMnaoAnHh2Cgdr2x1V6IHPOBydyRqclUFrAuIPDxMCZ
+         R2vzfht1bM4Y2Ny8bdBYdO/pRLDNf1Ls9mi4rwsuFYI/LtZwmBOpPFlwKPFzmEOEUPve
+         G9jwB/AyYTW5EI7x993RqKRFR1EIH58caym0JR77CvtWA6OK147um1EKkJp9Sv2t87qG
+         HaXaIiPzdNH2VlGOw+uyHeKaIHRvewzvryOrTLGFknKJqgpS0S40r5HTuO9KnWMTNPkA
+         sKfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684861095; x=1687453095;
+        d=1e100.net; s=20221208; t=1684861467; x=1687453467;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=GudC/zBhhv2vZ0cXjxOe/oq42GtFjJeYdm4KVV+ij8E=;
-        b=biJaLEwiOieJCZ/Uo4BmpegyRMLjSgZH0NXMPfD4lmeMKOQj5iaJXX9iUF0VQMGaTG
-         KdV7pvRqyKl+k/3ElbXMzSNcyj+l+1XkbA0ReYd0tqYrYyscbLaUOH5AHwl7fGDk0nbm
-         VuW4f/msse7jPh70nlWTJFL7rwjyz17lPkZO/cV1N9xh65QGD32XtfUL0zPN1ZNxKkUz
-         tTbOgzwyujxJ30PTdbOOka3dmdBMWTrCEG/PRuf8+1E2ppSPPeEcBdv+I6AuDlvmtAe0
-         ETLe2KmkT2QmslvZzevdR4sJAdNeABelDHnb08BGekgmZA0rdFs5+hC4CgP70nVI5X5L
-         SMuQ==
-X-Gm-Message-State: AC+VfDz5CHTNsASUNxdugbkKfpk+qCsmEdN6Y4lJ7d2c4Wjwp8MtSOdK
-        IK4IeL6lylkRU1OPAoyNcb6PryxcR04ErEtHHEkA+w==
-X-Google-Smtp-Source: ACHHUZ4Ov+S98EGZWJ6460G1gJcGIdNvBdE/SmFZEhwaAZX42KnTHP5n4UGn5FPqnkokbiJepA7D33LupxGlkx9XIMU=
-X-Received: by 2002:a05:6e02:1a83:b0:325:d0d8:2ddb with SMTP id
- k3-20020a056e021a8300b00325d0d82ddbmr263383ilv.15.1684861094600; Tue, 23 May
- 2023 09:58:14 -0700 (PDT)
+        bh=muALjIcfvVCb2tAeAMgrB1kx2WpHTC3GVkLoOVcMWrs=;
+        b=GtIrVN+OycmKwH0HyOuZtHrY6qAlSB8NaZUPUlQQyB3LNyg8vZvvb7gLNQIDvszujT
+         RMCy7mYoUS4ZvCYCNhMTsSYEPnWct8OBozQtknJYuvjfJaRQVrbr84grOsdAmCosfFzg
+         0wuHFKD4UqhZ4066BCUSwq9D7dpttSKl3VwbL8duTsP35GevFq8p7NF7l/6wVD+2dN9B
+         rwjzFMAjKwjSHU63KQLhTn05/L1B/OgROMghgYZwUdjQh7FqD+diYiE87JCctZOYBWs+
+         rF/xA+fZTNV4bVdY8ZSJ9h74TqGXeQGxyS7FMgX+LBK2vKWiWoq5Ct5GUagAwoUtbQLF
+         RIRg==
+X-Gm-Message-State: AC+VfDyvmD+gczXHlqQcHyyonEn+XxpCV9z+zIuk6+KbZQ38ojFuv3el
+        mDEtX/v/jIA0IkCYVvaYFP9tDKMp6dmNhkfPkkBm0g==
+X-Google-Smtp-Source: ACHHUZ68eb454ZJ7+cyvvL1swgmhHWaWazGxR2m8pCubno25/gamawQfw4hRdQzBzt1f0a/HDJWu+8I248pEUTug6+A=
+X-Received: by 2002:a05:6e02:190f:b0:335:12d6:2c7d with SMTP id
+ w15-20020a056e02190f00b0033512d62c7dmr12122ilu.0.1684861466749; Tue, 23 May
+ 2023 10:04:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230523044446.1020769-1-irogers@google.com> <0dc8fa26-248d-61eb-b224-4353443ddd6b@intel.com>
-In-Reply-To: <0dc8fa26-248d-61eb-b224-4353443ddd6b@intel.com>
+References: <20230523044446.1020769-1-irogers@google.com> <20230523044446.1020769-2-irogers@google.com>
+ <0a325fc8-2945-862a-e6bd-eb7b0ac46fe5@intel.com>
+In-Reply-To: <0a325fc8-2945-862a-e6bd-eb7b0ac46fe5@intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 23 May 2023 09:58:03 -0700
-Message-ID: <CAP-5=fXfJmBEuEa1ujYmoExWos-6PG4F=7XTaO6MouEQXLuE0Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf evsel: evsel__group_pmu_name fixes
+Date:   Tue, 23 May 2023 10:04:15 -0700
+Message-ID: <CAP-5=fUpkd+aDhhzz9aRMiJ6JErjSpHgfy82zvFeYTdnHae8kQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] perf evsel: for_each_group fixes
 To:     Adrian Hunter <adrian.hunter@intel.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -77,344 +78,122 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 23, 2023 at 6:01=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+On Tue, May 23, 2023 at 7:33=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
 com> wrote:
 >
 > On 23/05/23 07:44, Ian Rogers wrote:
-> > Previously the evsel__group_pmu_name would iterate the evsel's group,
-> > however, the list of evsels aren't yet sorted and so the loop may
-> > terminate prematurely. It is also not desirable to iterate the list of
-> > evsels during list_sort as the list may be broken. Precompute the
-> > group_pmu_name for the evsel before sorting, as part of the
-> > computation and only if necessary, iterate the whole list looking for
-> > group members so that being sorted isn't necessary.
+> > Address/memory sanitizer was reporting issues in evsel__group_pmu_name
+> > because the for_each_group_evsel loop didn't terminate when the head
+> > was reached, the head would then be cast and accessed as an evsel
+> > leading to invalid memory accesses. Fix for_each_group_member and
+> > for_each_group_evsel to terminate at the list head. Note,
+> > evsel__group_pmu_name no longer iterates the group, but the problem is
+> > present regardless.
 > >
-> > Move the group pmu name computation to parse-events.c given the closer
-> > dependency on the behavior of
-> > parse_events__sort_events_and_fix_groups.
-> >
-> > Fixes: 7abf0bccaaec ("perf evsel: Add function to compute group PMU nam=
-e")
+> > Fixes: 717e263fc354 ("perf report: Show group description when event gr=
+oup is enabled")
 > > Signed-off-by: Ian Rogers <irogers@google.com>
 > > ---
-> >  tools/perf/util/evsel.c        | 31 +++++-----------------
-> >  tools/perf/util/evsel.h        |  2 +-
-> >  tools/perf/util/parse-events.c | 47 ++++++++++++++++++++++++++++++----
-> >  3 files changed, 50 insertions(+), 30 deletions(-)
+> >  tools/perf/util/evsel.h         | 24 ++++++++++++++++--------
+> >  tools/perf/util/evsel_fprintf.c |  1 +
+> >  2 files changed, 17 insertions(+), 8 deletions(-)
 > >
-> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> > index 2f5910b31fa9..3247773f9e24 100644
-> > --- a/tools/perf/util/evsel.c
-> > +++ b/tools/perf/util/evsel.c
-> > @@ -290,6 +290,7 @@ void evsel__init(struct evsel *evsel,
-> >       evsel->per_pkg_mask  =3D NULL;
-> >       evsel->collect_stat  =3D false;
-> >       evsel->pmu_name      =3D NULL;
-> > +     evsel->group_pmu_name =3D NULL;
-> >       evsel->skippable     =3D false;
-> >  }
-> >
-> > @@ -431,6 +432,11 @@ struct evsel *evsel__clone(struct evsel *orig)
-> >               if (evsel->pmu_name =3D=3D NULL)
-> >                       goto out_err;
-> >       }
-> > +     if (orig->group_pmu_name) {
-> > +             evsel->group_pmu_name =3D strdup(orig->group_pmu_name);
-> > +             if (evsel->group_pmu_name =3D=3D NULL)
-> > +                     goto out_err;
-> > +     }
-> >       if (orig->filter) {
-> >               evsel->filter =3D strdup(orig->filter);
-> >               if (evsel->filter =3D=3D NULL)
-> > @@ -827,30 +833,6 @@ bool evsel__name_is(struct evsel *evsel, const cha=
-r *name)
-> >       return !strcmp(evsel__name(evsel), name);
-> >  }
-> >
-> > -const char *evsel__group_pmu_name(const struct evsel *evsel)
-> > -{
-> > -     struct evsel *leader =3D evsel__leader(evsel);
-> > -     struct evsel *pos;
-> > -
-> > -     /*
-> > -      * Software events may be in a group with other uncore PMU events=
-. Use
-> > -      * the pmu_name of the first non-software event to avoid breaking=
- the
-> > -      * software event out of the group.
-> > -      *
-> > -      * Aux event leaders, like intel_pt, expect a group with events f=
-rom
-> > -      * other PMUs, so substitute the AUX event's PMU in this case.
-> > -      */
-> > -     if (evsel->core.attr.type =3D=3D PERF_TYPE_SOFTWARE || evsel__is_=
-aux_event(leader)) {
-> > -             /* Starting with the leader, find the first event with a =
-named PMU. */
-> > -             for_each_group_evsel(pos, leader) {
-> > -                     if (pos->pmu_name)
-> > -                             return pos->pmu_name;
-> > -             }
-> > -     }
-> > -
-> > -     return evsel->pmu_name ?: "cpu";
-> > -}
-> > -
-> >  const char *evsel__metric_id(const struct evsel *evsel)
-> >  {
-> >       if (evsel->metric_id)
-> > @@ -1536,6 +1518,7 @@ void evsel__exit(struct evsel *evsel)
-> >       zfree(&evsel->group_name);
-> >       zfree(&evsel->name);
-> >       zfree(&evsel->pmu_name);
-> > +     zfree(&evsel->group_pmu_name);
-> >       zfree(&evsel->unit);
-> >       zfree(&evsel->metric_id);
-> >       evsel__zero_per_pkg(evsel);
 > > diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> > index df8928745fc6..820771a649b2 100644
+> > index 820771a649b2..6a64543c7612 100644
 > > --- a/tools/perf/util/evsel.h
 > > +++ b/tools/perf/util/evsel.h
-> > @@ -72,6 +72,7 @@ struct evsel {
-> >               char                    *name;
-> >               char                    *group_name;
-> >               const char              *pmu_name;
-> > +             const char              *group_pmu_name;
->
-> Since it seems to be only used when sorting, do we really
-> need this on struct evsel?
-
-Agreed. There is also redundancy between evsel->pmu_name and
-evsel->pmu->name. For now having it here makes the coding easier and
-it could be a useful were we to do more with sorting, like sorting the
-final evlist rather than each evlist post parsing, or for debug
-output.
-
-> >  #ifdef HAVE_LIBTRACEEVENT
-> >               struct tep_event        *tp_format;
-> >  #endif
-> > @@ -289,7 +290,6 @@ int arch_evsel__hw_name(struct evsel *evsel, char *=
-bf, size_t size);
-> >  int __evsel__hw_cache_type_op_res_name(u8 type, u8 op, u8 result, char=
- *bf, size_t size);
-> >  const char *evsel__name(struct evsel *evsel);
-> >  bool evsel__name_is(struct evsel *evsel, const char *name);
-> > -const char *evsel__group_pmu_name(const struct evsel *evsel);
-> >  const char *evsel__metric_id(const struct evsel *evsel);
-> >
-> >  static inline bool evsel__is_tool(const struct evsel *evsel)
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
-nts.c
-> > index 34ba840ae19a..210e6f713c6f 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -2125,6 +2125,41 @@ static int parse_events__with_hybrid_pmu(struct =
-parse_events_state *parse_state,
-> >       return ret;
+> > @@ -462,16 +462,24 @@ static inline int evsel__group_idx(struct evsel *=
+evsel)
 > >  }
 > >
-> > +static void evsel__compute_group_pmu_name(struct evsel *evsel,
-> > +                                       const struct list_head *head)
-> > +{
-> > +     struct evsel *leader =3D evsel__leader(evsel);
-> > +     struct evsel *pos;
+> >  /* Iterates group WITHOUT the leader. */
+> > -#define for_each_group_member(_evsel, _leader)                        =
+               \
+> > -for ((_evsel) =3D list_entry((_leader)->core.node.next, struct evsel, =
+core.node); \
+> > -     (_evsel) && (_evsel)->core.leader =3D=3D (&_leader->core);       =
+                           \
+> > -     (_evsel) =3D list_entry((_evsel)->core.node.next, struct evsel, c=
+ore.node))
+> > +#define for_each_group_member_head(_evsel, _leader, _head)            =
+               \
+> > +for ((_evsel) =3D list_entry((_leader)->core.node.next, struct evsel, =
+core.node);              \
+> > +     (_evsel) && (&(_evsel)->core.node !=3D (_head)) &&               =
+                 \
+>
+> Extra parentheses perhaps not needed e.g. just
+>
+>         &(_evsel)->core.node !=3D (_head)
+>
+> > +     (_evsel)->core.leader =3D=3D (&_leader->core);                   =
+                   \
+>
+> Parentheses look odd, maybe should be:
+>
+>         &(_leader)->core
+>
+> > +     (_evsel) =3D list_entry((_evsel)->core.node.next, struct evsel, c=
+ore.node))
 > > +
-> > +     /*
-> > +      * Software events may be in a group with other uncore PMU events=
-. Use
-> > +      * the pmu_name of the first non-software event to avoid breaking=
- the
-> > +      * software event out of the group.
-> > +      *
-> > +      * Aux event leaders, like intel_pt, expect a group with events f=
-rom
-> > +      * other PMUs, so substitute the AUX event's PMU in this case.
-> > +      */
-> > +     if (evsel->core.attr.type =3D=3D PERF_TYPE_SOFTWARE || evsel__is_=
-aux_event(leader)) {
-> > +             /*
-> > +              * Starting with the leader, find the first event with a =
-named
-> > +              * PMU. for_each_group_(member|evsel) isn't used as the l=
-ist
-> > +              * isn't yet sorted putting evsel's in the same group tog=
-ether.
-> > +              */
-> > +             if (leader->pmu_name) {
-> > +                     evsel->group_pmu_name =3D strdup(leader->pmu_name=
-);
-> > +                     return;
-> > +             }
-> > +             list_for_each_entry(pos, head, core.node) {
-> > +                     if (evsel__leader(pos) =3D=3D leader && pos->pmu_=
-name) {
-> > +                             evsel->group_pmu_name =3D strdup(pos->pmu=
-_name);
-> > +                             return;
-> > +                     }
-> > +             }
-> > +     }
-> > +
-> > +     evsel->group_pmu_name =3D strdup(evsel->pmu_name ?: "cpu");
-> > +}
-> > +
-> >  __weak int arch_evlist__cmp(const struct evsel *lhs, const struct evse=
-l *rhs)
-> >  {
-> >       /* Order by insertion index. */
-> > @@ -2160,8 +2195,8 @@ static int evlist__cmp(void *state, const struct =
-list_head *l, const struct list
-> >
-> >       /* Group by PMU if there is a group. Groups can't span PMUs. */
-> >       if (lhs_has_group && rhs_has_group) {
-> > -             lhs_pmu_name =3D evsel__group_pmu_name(lhs);
-> > -             rhs_pmu_name =3D evsel__group_pmu_name(rhs);
-> > +             lhs_pmu_name =3D lhs->group_pmu_name;
-> > +             rhs_pmu_name =3D rhs->group_pmu_name;
-> >               ret =3D strcmp(lhs_pmu_name, rhs_pmu_name);
-> >               if (ret)
-> >                       return ret;
-> > @@ -2186,6 +2221,8 @@ static bool parse_events__sort_events_and_fix_gro=
-ups(struct list_head *list)
-> >       list_for_each_entry(pos, list, core.node) {
-> >               const struct evsel *pos_leader =3D evsel__leader(pos);
-> >
-> > +             evsel__compute_group_pmu_name(pos, list);
+> > +#define for_each_group_member(_evsel, _leader)                        =
+       \
+> > +     for_each_group_member_head(_evsel, _leader, &(_leader)->evlist->c=
+ore.entries)
 >
-> Perhaps check for failing to allocate the string?
+> Did you consider using (_leader)->core.nr_members so that it is not
+> necessary to assume the evlist back pointer is populated.
 
-Will fix in v2.
-
-> But alternatively, allocate an array for pointers to the
-> group pmu names.  Then they don't needed to be strdup'ed,
-> or stored on evsel.  Would have to count the number of evsel
-> first though.
->
->         group_pmu_names =3D calloc(nr_evsel, sizeof(const char *));
->
->         group_pmu_names[pos->core.idx] =3D evsel__group_pmu_name(pos);
-
-Possibly, I'd prefer to keep it as simple as possible until we think
-we should optimize.
-
-> > +
-> >               if (pos =3D=3D pos_leader)
-> >                       orig_num_leaders++;
-> >
-> > @@ -2210,7 +2247,7 @@ static bool parse_events__sort_events_and_fix_gro=
-ups(struct list_head *list)
-> >       idx =3D 0;
-> >       list_for_each_entry(pos, list, core.node) {
-> >               const struct evsel *pos_leader =3D evsel__leader(pos);
-> > -             const char *pos_pmu_name =3D evsel__group_pmu_name(pos);
-> > +             const char *pos_pmu_name =3D pos->group_pmu_name;
-> >               const char *cur_leader_pmu_name, *pos_leader_pmu_name;
-> >               bool force_grouped =3D arch_evsel__must_be_in_group(pos);
-> >
-> > @@ -2227,7 +2264,7 @@ static bool parse_events__sort_events_and_fix_gro=
-ups(struct list_head *list)
-> >               if (!cur_leader)
-> >                       cur_leader =3D pos;
-> >
-> > -             cur_leader_pmu_name =3D evsel__group_pmu_name(cur_leader)=
-;
-> > +             cur_leader_pmu_name =3D cur_leader->group_pmu_name;
-> >               if ((cur_leaders_grp !=3D pos->core.leader && !force_grou=
-ped) ||
-> >                   strcmp(cur_leader_pmu_name, pos_pmu_name)) {
-> >                       /* Event is for a different group/PMU than last. =
-*/
-> > @@ -2239,7 +2276,7 @@ static bool parse_events__sort_events_and_fix_gro=
-ups(struct list_head *list)
-> >                        */
-> >                       cur_leaders_grp =3D pos->core.leader;
-> >               }
-> > -             pos_leader_pmu_name =3D evsel__group_pmu_name(pos_leader)=
-;
-> > +             pos_leader_pmu_name =3D pos_leader->group_pmu_name;
-> >               if (strcmp(pos_leader_pmu_name, pos_pmu_name) || force_gr=
-ouped) {
-> >                       /*
-> >                        * Event's PMU differs from its leader's. Groups =
-can't
->
-> By the way, do we really need unsorted_idx?
-
-Right, I've played around with this a bit. I'll have a go at
-explaining the motivation below.
-
-> For example what about this for evlist__cmp():
->
-> static int evlist__cmp(void *state __maybe_unused, const struct list_head=
- *l, const struct list_head *r)
-> {
->         const struct evsel *lhs =3D container_of(l, struct evsel, core.no=
-de);
->         const struct evsel *rhs =3D container_of(r, struct evsel, core.no=
-de);
->         int lhs_leader_idx =3D lhs->core.leader->idx;
->         int rhs_leader_idx =3D rhs->core.leader->idx;
->         int ret;
->
->         if (lhs_leader_idx !=3D rhs_leader_idx)
->                 return lhs_leader_idx - rhs_leader_idx;
-
-So here any ungrouped evsels, or evsels in different groups will cause
-evlist__cmp to terminate.
-
->         ret =3D strcmp(evsel__group_pmu_name(lhs), evsel__group_pmu_name(=
-rhs));
->         if (ret)
->                 return ret;
-
-This is redundant as the leader matches on both lhs and rhs given the
-test above.
-
->         /* Architecture specific sorting. */
->         return arch_evlist__cmp(lhs, rhs);
-
-We'll never reach here for cases like ungrouped topdown (perf metric)
-events where we want to sort the topdown events to allow grouping. I
-think the comment:
-
-/*
-* First sort by grouping/leader. Read the leader idx only if the evsel
-* is part of a group, as -1 indicates no group.
-*/
-
-isn't clear. I'll tweak it in v2, I think it would be better as something l=
-ike:
-
-/*
-* First sort by grouping/leader. Read the leader idx only if the evsel
-* is part of a group, by default ungrouped events will be sorted relative
-* to grouped events based
-* on where the first ungrouped event occurs. If both events don't have
-* a group we want to fall-through to the arch specific sorting, that can
-* reorder and fix things like Intel's topdown events.
-*/
-
-To go back to why the code became this way. By default we'll place
-metric's events into a weak group and if the perf_event_open fails
-we'll break the group. We're smart enough to know when breaking a
-group of events that the topdown event's group must not be broken.
-However, there are cases where the perf_event_open succeeds but then
-the counters yield "<not counted>" as they are part of a group. I've
-asked for kernel fixes to fail the perf_event_open, maybe they'll
-happen, for now I need to be able to work on old kernels anyway.
-Metrics with "<not counted>" events are now tagged as saying the
-events shouldn't be grouped but this has a problem of breaking the
-grouping for topdown events. We already had to sort events for cases
-like "{imc/cas_count_read/,imc/cas_count_write/}" where we have
-multiple imc PMUs and we need to group cas_count_read and
-cas_count_write events for each PMU - the eventual grouping looks like
-"{uncore_imc_0/cas_count_read/,uncore_imc_0/cas_count_write/},{uncore_imc_1=
-/cas_count_read/,uncore_imc_1/cas_count_write/}...".
-The aim with the code was to have a single sorting mechanism for the
-existing uncore case and the new ungrouped topdown events case.
+Thanks! I'll address the other comments in v2. Wrt
+nr_members/evsel->evlist, I think we can use it to avoid the whole
+list scan in evsel__compute_group_pmu_name. We could use it here but
+in all the non-parse_events__sort_events_and_fix_groups cases we have
+the evsel->evlist and testing for the list head seems more consistent
+with other list_for_each cases.
 
 Thanks,
 Ian
 
-> }
+> >
+> >  /* Iterates group WITH the leader. */
+> > -#define for_each_group_evsel(_evsel, _leader)                         =
+               \
+> > -for ((_evsel) =3D _leader;                                            =
+         \
+> > -     (_evsel) && (_evsel)->core.leader =3D=3D (&_leader->core);       =
+                           \
+> > -     (_evsel) =3D list_entry((_evsel)->core.node.next, struct evsel, c=
+ore.node))
+> > +#define for_each_group_evsel_head(_evsel, _leader, _head)             =
+               \
+> > +for ((_evsel) =3D _leader;                                            =
+                 \
+> > +     (_evsel) && (&(_evsel)->core.node !=3D (_head)) &&               =
+                 \
+> > +     (_evsel)->core.leader =3D=3D (&_leader->core);                   =
+                   \
+> > +     (_evsel) =3D list_entry((_evsel)->core.node.next, struct evsel, c=
+ore.node))
+> > +
+> > +#define for_each_group_evsel(_evsel, _leader)                         =
+       \
+> > +     for_each_group_evsel_head(_evsel, _leader, &(_leader)->evlist->co=
+re.entries)
+> >
+> >  static inline bool evsel__has_branch_callstack(const struct evsel *evs=
+el)
+> >  {
+> > diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fp=
+rintf.c
+> > index cc80ec554c0a..036a2171dc1c 100644
+> > --- a/tools/perf/util/evsel_fprintf.c
+> > +++ b/tools/perf/util/evsel_fprintf.c
+> > @@ -2,6 +2,7 @@
+> >  #include <inttypes.h>
+> >  #include <stdio.h>
+> >  #include <stdbool.h>
+> > +#include "util/evlist.h"
+> >  #include "evsel.h"
+> >  #include "util/evsel_fprintf.h"
+> >  #include "util/event.h"
 >
