@@ -2,156 +2,167 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1742C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 14:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBF5C77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 14:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233239AbjEWOdi (ORCPT
+        id S237303AbjEWOjH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 10:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32972 "EHLO
+        Tue, 23 May 2023 10:39:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236077AbjEWOdh (ORCPT
+        with ESMTP id S229960AbjEWOjG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 10:33:37 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE94CFA;
-        Tue, 23 May 2023 07:33:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684852416; x=1716388416;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=TPVQ0VVbPTaQQmNO3A8vqVnzAiMmj/ojDjpM5LF4vM0=;
-  b=lH60THX/ycnFWvW2dze4HvFfK8PFlqU9k9NIYAHQkeW0iJZiTZ+QVlxh
-   7OhHGJmt/PfSV+XoByjT9mR+RDYNWYPbnEnrKKlOZFyhh6vXEs/hm/rGS
-   lYuwnceYBi0f8eiYfXQliNaw5HzMnwUuv9aDoFsPrB69+aT/e9B4Q5IVw
-   xYiXfpn2WlNB1TPzsi9ufO6cq6myeeSiozwcX+jniRsZTl3CwZGIx8A9y
-   DRFP4Io0My57VkBnohfyXhjJhA0dWVrDx3TnAOCUk2bHy/9+LdWswMNsW
-   xDX7ztlzTUGbV/Cer3Ls0iN4vNUBEXFJUF15/woc2zKhMIkiYhCbz+l42
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="350763382"
-X-IronPort-AV: E=Sophos;i="6.00,186,1681196400"; 
-   d="scan'208";a="350763382"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 07:32:01 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="654397638"
-X-IronPort-AV: E=Sophos;i="6.00,186,1681196400"; 
-   d="scan'208";a="654397638"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.249.39.37])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 07:31:56 -0700
-Message-ID: <0a325fc8-2945-862a-e6bd-eb7b0ac46fe5@intel.com>
-Date:   Tue, 23 May 2023 17:31:50 +0300
+        Tue, 23 May 2023 10:39:06 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 12901119;
+        Tue, 23 May 2023 07:39:05 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3089139F;
+        Tue, 23 May 2023 07:39:49 -0700 (PDT)
+Received: from [10.57.57.35] (unknown [10.57.57.35])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E35C13F840;
+        Tue, 23 May 2023 07:39:02 -0700 (PDT)
+Message-ID: <83cac0ae-7e82-d67e-c854-941c65dae79e@arm.com>
+Date:   Tue, 23 May 2023 15:39:01 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH v1 2/2] perf evsel: for_each_group fixes
+ Thunderbird/102.9.0
+Subject: Re: [PATCH V9 10/10] arm64/perf: Implement branch records save on PMU
+ IRQ
 Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>,
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
+Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        James Clark <james.clark@arm.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Rob Herring <robh@kernel.org>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230523044446.1020769-1-irogers@google.com>
- <20230523044446.1020769-2-irogers@google.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230523044446.1020769-2-irogers@google.com>
+        linux-perf-users@vger.kernel.org
+References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
+ <20230315051444.1683170-11-anshuman.khandual@arm.com>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230315051444.1683170-11-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 23/05/23 07:44, Ian Rogers wrote:
-> Address/memory sanitizer was reporting issues in evsel__group_pmu_name
-> because the for_each_group_evsel loop didn't terminate when the head
-> was reached, the head would then be cast and accessed as an evsel
-> leading to invalid memory accesses. Fix for_each_group_member and
-> for_each_group_evsel to terminate at the list head. Note,
-> evsel__group_pmu_name no longer iterates the group, but the problem is
-> present regardless.
+
+
+On 15/03/2023 05:14, Anshuman Khandual wrote:
+> This modifies armv8pmu_branch_read() to concatenate live entries along with
+> task context stored entries and then process the resultant buffer to create
+> perf branch entry array for perf_sample_data. It follows the same principle
+> like task sched out.
 > 
-> Fixes: 717e263fc354 ("perf report: Show group description when event group is enabled")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 > ---
->  tools/perf/util/evsel.h         | 24 ++++++++++++++++--------
->  tools/perf/util/evsel_fprintf.c |  1 +
->  2 files changed, 17 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 820771a649b2..6a64543c7612 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -462,16 +462,24 @@ static inline int evsel__group_idx(struct evsel *evsel)
->  }
->  
->  /* Iterates group WITHOUT the leader. */
-> -#define for_each_group_member(_evsel, _leader) 					\
-> -for ((_evsel) = list_entry((_leader)->core.node.next, struct evsel, core.node); \
-> -     (_evsel) && (_evsel)->core.leader == (&_leader->core);					\
-> -     (_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
-> +#define for_each_group_member_head(_evsel, _leader, _head)				\
-> +for ((_evsel) = list_entry((_leader)->core.node.next, struct evsel, core.node);		\
-> +	(_evsel) && (&(_evsel)->core.node != (_head)) &&				\
 
-Extra parentheses perhaps not needed e.g. just
+[...]
 
-	&(_evsel)->core.node != (_head)
-
-> +	(_evsel)->core.leader == (&_leader->core);					\
-
-Parentheses look odd, maybe should be:
-
-	&(_leader)->core
-
-> +	(_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
-> +
-> +#define for_each_group_member(_evsel, _leader)				\
-> +	for_each_group_member_head(_evsel, _leader, &(_leader)->evlist->core.entries)
-
-Did you consider using (_leader)->core.nr_members so that it is not
-necessary to assume the evlist back pointer is populated.
-
->  
->  /* Iterates group WITH the leader. */
-> -#define for_each_group_evsel(_evsel, _leader) 					\
-> -for ((_evsel) = _leader; 							\
-> -     (_evsel) && (_evsel)->core.leader == (&_leader->core);					\
-> -     (_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
-> +#define for_each_group_evsel_head(_evsel, _leader, _head)				\
-> +for ((_evsel) = _leader;								\
-> +	(_evsel) && (&(_evsel)->core.node != (_head)) &&				\
-> +	(_evsel)->core.leader == (&_leader->core);					\
-> +	(_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
-> +
-> +#define for_each_group_evsel(_evsel, _leader)				\
-> +	for_each_group_evsel_head(_evsel, _leader, &(_leader)->evlist->core.entries)
->  
->  static inline bool evsel__has_branch_callstack(const struct evsel *evsel)
+>  void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
 >  {
-> diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
-> index cc80ec554c0a..036a2171dc1c 100644
-> --- a/tools/perf/util/evsel_fprintf.c
-> +++ b/tools/perf/util/evsel_fprintf.c
-> @@ -2,6 +2,7 @@
->  #include <inttypes.h>
->  #include <stdio.h>
->  #include <stdbool.h>
-> +#include "util/evlist.h"
->  #include "evsel.h"
->  #include "util/evsel_fprintf.h"
->  #include "util/event.h"
+>  	struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
+> +	struct arm64_perf_task_context *task_ctx = event->pmu_ctx->task_ctx_data;
+> +	struct brbe_regset live[BRBE_MAX_ENTRIES];
+> +	int nr_live, nr_store;
+>  	u64 brbfcr, brbcr;
+> -	int idx, loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2, count;
+>  
+>  	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
+>  	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+> @@ -739,36 +743,13 @@ void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+>  	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+>  	isb();
+>  
+> -	/* Determine the indices for each loop */
+> -	loop1_idx1 = BRBE_BANK0_IDX_MIN;
+> -	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
+> -		loop1_idx2 = brbe_attr->brbe_nr - 1;
+> -		loop2_idx1 = BRBE_BANK1_IDX_MIN;
+> -		loop2_idx2 = BRBE_BANK0_IDX_MAX;
+> -	} else {
+> -		loop1_idx2 = BRBE_BANK0_IDX_MAX;
+> -		loop2_idx1 = BRBE_BANK1_IDX_MIN;
+> -		loop2_idx2 = brbe_attr->brbe_nr - 1;
+> -	}
+> -
+> -	/* Loop through bank 0 */
+> -	select_brbe_bank(BRBE_BANK_IDX_0);
+> -	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
+> -		if (!capture_branch_entry(cpuc, event, idx))
+> -			goto skip_bank_1;
+> -	}
+> -
+> -	/* Loop through bank 1 */
+> -	select_brbe_bank(BRBE_BANK_IDX_1);
+> -	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
+> -		if (!capture_branch_entry(cpuc, event, idx))
+> -			break;
+> -	}
+> -
+> -skip_bank_1:
+> -	cpuc->branches->branch_stack.nr = idx;
+> -	cpuc->branches->branch_stack.hw_idx = -1ULL;
+> +	nr_live = capture_brbe_regset(brbe_attr, live);
+> +	nr_store = task_ctx->nr_brbe_records;
+> +	nr_store = stitch_stored_live_entries(task_ctx->store, live, nr_store,
+> +					      nr_live, brbe_attr->brbe_nr);
+> +	process_branch_entries(cpuc, event, task_ctx->store, nr_store);
 
+Hi Anshuman,
+
+With the following command I get a crash:
+
+  perf record --branch-filter any,save_type -a -- ls
+
+[  101.171822] Unable to handle kernel NULL pointer dereference at
+virtual address 0000000000000600
+...
+[145380.414654] Call trace:
+[145380.414739]  armv8pmu_branch_read+0x7c/0x578
+[145380.414895]  armv8pmu_handle_irq+0x104/0x1c0
+[145380.415043]  armpmu_dispatch_irq+0x38/0x70
+[145380.415209]  __handle_irq_event_percpu+0x124/0x3b8
+[145380.415392]  handle_irq_event+0x54/0xc8
+[145380.415567]  handle_fasteoi_irq+0x100/0x1e0
+[145380.415718]  generic_handle_domain_irq+0x38/0x58
+[145380.415895]  gic_handle_irq+0x5c/0x130
+[145380.416025]  call_on_irq_stack+0x24/0x58
+[145380.416173]  el1_interrupt+0x74/0xc0
+[145380.416321]  el1h_64_irq_handler+0x18/0x28
+[145380.416475]  el1h_64_irq+0x64/0x68
+[145380.416604]  smp_call_function_single+0xe8/0x1f0
+[145380.416745]  event_function_call+0xbc/0x1c8
+[145380.416919]  _perf_event_enable+0x84/0xa0
+[145380.417069]  perf_ioctl+0xe8/0xd68
+[145380.417204]  __arm64_sys_ioctl+0x9c/0xe0
+[145380.417353]  invoke_syscall+0x4c/0x120
+[145380.417523]  el0_svc_common+0xd0/0x120
+[145380.417693]  do_el0_svc+0x3c/0xb8
+[145380.417859]  el0_svc+0x50/0xc0
+[145380.418004]  el0t_64_sync_handler+0x84/0xf0
+[145380.418160]  el0t_64_sync+0x190/0x198
+
+When using --branch-filter any,u without -a it seems to be fine so could
+be that task_ctx is null in per-cpu mode, or something to do with the
+userspace only flag?
+
+I'm also wondering if it's possible to collapse some of the last 5
+commits? They seem to mostly modify things in brbe.c which is a new file
+so the history probably isn't important at this point it just makes it a
+bit harder to review.
+
+>  	process_branch_aborts(cpuc);
+> +	task_ctx->nr_brbe_records = 0;
+>  
+>  	/* Unpause the buffer */
+>  	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
