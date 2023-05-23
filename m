@@ -2,34 +2,35 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBF5C77B75
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 14:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A54C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 14:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237303AbjEWOjH (ORCPT
+        id S236217AbjEWOwE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 10:39:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37494 "EHLO
+        Tue, 23 May 2023 10:52:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229960AbjEWOjG (ORCPT
+        with ESMTP id S232592AbjEWOwD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 10:39:06 -0400
+        Tue, 23 May 2023 10:52:03 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 12901119;
-        Tue, 23 May 2023 07:39:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ECA5FC6;
+        Tue, 23 May 2023 07:52:01 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3089139F;
-        Tue, 23 May 2023 07:39:49 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC95F139F;
+        Tue, 23 May 2023 07:52:46 -0700 (PDT)
 Received: from [10.57.57.35] (unknown [10.57.57.35])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E35C13F840;
-        Tue, 23 May 2023 07:39:02 -0700 (PDT)
-Message-ID: <83cac0ae-7e82-d67e-c854-941c65dae79e@arm.com>
-Date:   Tue, 23 May 2023 15:39:01 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C22D03F840;
+        Tue, 23 May 2023 07:51:59 -0700 (PDT)
+Message-ID: <641cb79d-fe79-3873-3698-fec66a4e3253@arm.com>
+Date:   Tue, 23 May 2023 15:51:58 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
 Subject: Re: [PATCH V9 10/10] arm64/perf: Implement branch records save on PMU
  IRQ
 Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
 To:     Anshuman Khandual <anshuman.khandual@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
@@ -42,8 +43,8 @@ Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
         linux-perf-users@vger.kernel.org
 References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
  <20230315051444.1683170-11-anshuman.khandual@arm.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <20230315051444.1683170-11-anshuman.khandual@arm.com>
+ <83cac0ae-7e82-d67e-c854-941c65dae79e@arm.com>
+In-Reply-To: <83cac0ae-7e82-d67e-c854-941c65dae79e@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -52,117 +53,124 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 15/03/2023 05:14, Anshuman Khandual wrote:
-> This modifies armv8pmu_branch_read() to concatenate live entries along with
-> task context stored entries and then process the resultant buffer to create
-> perf branch entry array for perf_sample_data. It follows the same principle
-> like task sched out.
+On 23/05/2023 15:39, James Clark wrote:
 > 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
+> 
+> On 15/03/2023 05:14, Anshuman Khandual wrote:
+>> This modifies armv8pmu_branch_read() to concatenate live entries along with
+>> task context stored entries and then process the resultant buffer to create
+>> perf branch entry array for perf_sample_data. It follows the same principle
+>> like task sched out.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+> 
+> [...]
+> 
+>>  void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+>>  {
+>>  	struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
+>> +	struct arm64_perf_task_context *task_ctx = event->pmu_ctx->task_ctx_data;
+>> +	struct brbe_regset live[BRBE_MAX_ENTRIES];
+>> +	int nr_live, nr_store;
+>>  	u64 brbfcr, brbcr;
+>> -	int idx, loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2, count;
+>>  
+>>  	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
+>>  	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+>> @@ -739,36 +743,13 @@ void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+>>  	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+>>  	isb();
+>>  
+>> -	/* Determine the indices for each loop */
+>> -	loop1_idx1 = BRBE_BANK0_IDX_MIN;
+>> -	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
+>> -		loop1_idx2 = brbe_attr->brbe_nr - 1;
+>> -		loop2_idx1 = BRBE_BANK1_IDX_MIN;
+>> -		loop2_idx2 = BRBE_BANK0_IDX_MAX;
+>> -	} else {
+>> -		loop1_idx2 = BRBE_BANK0_IDX_MAX;
+>> -		loop2_idx1 = BRBE_BANK1_IDX_MIN;
+>> -		loop2_idx2 = brbe_attr->brbe_nr - 1;
+>> -	}
+>> -
+>> -	/* Loop through bank 0 */
+>> -	select_brbe_bank(BRBE_BANK_IDX_0);
+>> -	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
+>> -		if (!capture_branch_entry(cpuc, event, idx))
+>> -			goto skip_bank_1;
+>> -	}
+>> -
+>> -	/* Loop through bank 1 */
+>> -	select_brbe_bank(BRBE_BANK_IDX_1);
+>> -	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
+>> -		if (!capture_branch_entry(cpuc, event, idx))
+>> -			break;
+>> -	}
+>> -
+>> -skip_bank_1:
+>> -	cpuc->branches->branch_stack.nr = idx;
+>> -	cpuc->branches->branch_stack.hw_idx = -1ULL;
+>> +	nr_live = capture_brbe_regset(brbe_attr, live);
+>> +	nr_store = task_ctx->nr_brbe_records;
+>> +	nr_store = stitch_stored_live_entries(task_ctx->store, live, nr_store,
+>> +					      nr_live, brbe_attr->brbe_nr);
+>> +	process_branch_entries(cpuc, event, task_ctx->store, nr_store);
+> 
+> Hi Anshuman,
+> 
+> With the following command I get a crash:
+> 
+>   perf record --branch-filter any,save_type -a -- ls
+> 
+> [  101.171822] Unable to handle kernel NULL pointer dereference at
+> virtual address 0000000000000600
+> ...
+> [145380.414654] Call trace:
+> [145380.414739]  armv8pmu_branch_read+0x7c/0x578
+> [145380.414895]  armv8pmu_handle_irq+0x104/0x1c0
+> [145380.415043]  armpmu_dispatch_irq+0x38/0x70
+> [145380.415209]  __handle_irq_event_percpu+0x124/0x3b8
+> [145380.415392]  handle_irq_event+0x54/0xc8
+> [145380.415567]  handle_fasteoi_irq+0x100/0x1e0
+> [145380.415718]  generic_handle_domain_irq+0x38/0x58
+> [145380.415895]  gic_handle_irq+0x5c/0x130
+> [145380.416025]  call_on_irq_stack+0x24/0x58
+> [145380.416173]  el1_interrupt+0x74/0xc0
+> [145380.416321]  el1h_64_irq_handler+0x18/0x28
+> [145380.416475]  el1h_64_irq+0x64/0x68
+> [145380.416604]  smp_call_function_single+0xe8/0x1f0
+> [145380.416745]  event_function_call+0xbc/0x1c8
+> [145380.416919]  _perf_event_enable+0x84/0xa0
+> [145380.417069]  perf_ioctl+0xe8/0xd68
+> [145380.417204]  __arm64_sys_ioctl+0x9c/0xe0
+> [145380.417353]  invoke_syscall+0x4c/0x120
+> [145380.417523]  el0_svc_common+0xd0/0x120
+> [145380.417693]  do_el0_svc+0x3c/0xb8
+> [145380.417859]  el0_svc+0x50/0xc0
+> [145380.418004]  el0t_64_sync_handler+0x84/0xf0
+> [145380.418160]  el0t_64_sync+0x190/0x198
+> 
+> When using --branch-filter any,u without -a it seems to be fine so could
+> be that task_ctx is null in per-cpu mode, or something to do with the
+> userspace only flag?
+> 
+> I'm also wondering if it's possible to collapse some of the last 5
+> commits? They seem to mostly modify things in brbe.c which is a new file
+> so the history probably isn't important at this point it just makes it a
+> bit harder to review.
+> 
 
-[...]
+I realised I just tested V9 instead of V10 but I diffed them and don't
+see anything that would change this issue so it's probably on both versions.
 
->  void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
->  {
->  	struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
-> +	struct arm64_perf_task_context *task_ctx = event->pmu_ctx->task_ctx_data;
-> +	struct brbe_regset live[BRBE_MAX_ENTRIES];
-> +	int nr_live, nr_store;
->  	u64 brbfcr, brbcr;
-> -	int idx, loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2, count;
->  
->  	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
->  	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-> @@ -739,36 +743,13 @@ void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
->  	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
->  	isb();
->  
-> -	/* Determine the indices for each loop */
-> -	loop1_idx1 = BRBE_BANK0_IDX_MIN;
-> -	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
-> -		loop1_idx2 = brbe_attr->brbe_nr - 1;
-> -		loop2_idx1 = BRBE_BANK1_IDX_MIN;
-> -		loop2_idx2 = BRBE_BANK0_IDX_MAX;
-> -	} else {
-> -		loop1_idx2 = BRBE_BANK0_IDX_MAX;
-> -		loop2_idx1 = BRBE_BANK1_IDX_MIN;
-> -		loop2_idx2 = brbe_attr->brbe_nr - 1;
-> -	}
-> -
-> -	/* Loop through bank 0 */
-> -	select_brbe_bank(BRBE_BANK_IDX_0);
-> -	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
-> -		if (!capture_branch_entry(cpuc, event, idx))
-> -			goto skip_bank_1;
-> -	}
-> -
-> -	/* Loop through bank 1 */
-> -	select_brbe_bank(BRBE_BANK_IDX_1);
-> -	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
-> -		if (!capture_branch_entry(cpuc, event, idx))
-> -			break;
-> -	}
-> -
-> -skip_bank_1:
-> -	cpuc->branches->branch_stack.nr = idx;
-> -	cpuc->branches->branch_stack.hw_idx = -1ULL;
-> +	nr_live = capture_brbe_regset(brbe_attr, live);
-> +	nr_store = task_ctx->nr_brbe_records;
-> +	nr_store = stitch_stored_live_entries(task_ctx->store, live, nr_store,
-> +					      nr_live, brbe_attr->brbe_nr);
-> +	process_branch_entries(cpuc, event, task_ctx->store, nr_store);
-
-Hi Anshuman,
-
-With the following command I get a crash:
-
-  perf record --branch-filter any,save_type -a -- ls
-
-[  101.171822] Unable to handle kernel NULL pointer dereference at
-virtual address 0000000000000600
-...
-[145380.414654] Call trace:
-[145380.414739]  armv8pmu_branch_read+0x7c/0x578
-[145380.414895]  armv8pmu_handle_irq+0x104/0x1c0
-[145380.415043]  armpmu_dispatch_irq+0x38/0x70
-[145380.415209]  __handle_irq_event_percpu+0x124/0x3b8
-[145380.415392]  handle_irq_event+0x54/0xc8
-[145380.415567]  handle_fasteoi_irq+0x100/0x1e0
-[145380.415718]  generic_handle_domain_irq+0x38/0x58
-[145380.415895]  gic_handle_irq+0x5c/0x130
-[145380.416025]  call_on_irq_stack+0x24/0x58
-[145380.416173]  el1_interrupt+0x74/0xc0
-[145380.416321]  el1h_64_irq_handler+0x18/0x28
-[145380.416475]  el1h_64_irq+0x64/0x68
-[145380.416604]  smp_call_function_single+0xe8/0x1f0
-[145380.416745]  event_function_call+0xbc/0x1c8
-[145380.416919]  _perf_event_enable+0x84/0xa0
-[145380.417069]  perf_ioctl+0xe8/0xd68
-[145380.417204]  __arm64_sys_ioctl+0x9c/0xe0
-[145380.417353]  invoke_syscall+0x4c/0x120
-[145380.417523]  el0_svc_common+0xd0/0x120
-[145380.417693]  do_el0_svc+0x3c/0xb8
-[145380.417859]  el0_svc+0x50/0xc0
-[145380.418004]  el0t_64_sync_handler+0x84/0xf0
-[145380.418160]  el0t_64_sync+0x190/0x198
-
-When using --branch-filter any,u without -a it seems to be fine so could
-be that task_ctx is null in per-cpu mode, or something to do with the
-userspace only flag?
-
-I'm also wondering if it's possible to collapse some of the last 5
-commits? They seem to mostly modify things in brbe.c which is a new file
-so the history probably isn't important at this point it just makes it a
-bit harder to review.
-
->  	process_branch_aborts(cpuc);
-> +	task_ctx->nr_brbe_records = 0;
->  
->  	/* Unpause the buffer */
->  	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+>>  	process_branch_aborts(cpuc);
+>> +	task_ctx->nr_brbe_records = 0;
+>>  
+>>  	/* Unpause the buffer */
+>>  	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
