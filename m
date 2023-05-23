@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34395C7EE29
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 957FEC7EE26
 	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 10:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236519AbjEWKWW (ORCPT
+        id S236526AbjEWKWW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Tue, 23 May 2023 06:22:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51778 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236512AbjEWKWV (ORCPT
+        with ESMTP id S236516AbjEWKWV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Tue, 23 May 2023 06:22:21 -0400
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C3B2F109;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6EFE0100;
         Tue, 23 May 2023 03:22:17 -0700 (PDT)
 Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8BxmPHYk2xkrAgAAA--.136S3;
+        by gateway (Coremail) with SMTP id _____8AxR_HYk2xknQgAAA--.130S3;
         Tue, 23 May 2023 18:22:16 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxkrDWk2xk3CNwAA--.57318S4;
-        Tue, 23 May 2023 18:22:16 +0800 (CST)
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxkrDWk2xk3CNwAA--.57318S2;
+        Tue, 23 May 2023 18:22:14 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -35,100 +35,40 @@ To:     Peter Zijlstra <peterz@infradead.org>,
 Cc:     Hans-Peter Nilsson <hp@axis.com>, Leo Yan <leo.yan@linaro.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Subject: [PATCH 2/2] perf LoongArch: Simplify mksyscalltbl
-Date:   Tue, 23 May 2023 18:22:07 +0800
-Message-Id: <1684837327-18203-3-git-send-email-yangtiezhu@loongson.cn>
+Subject: [PATCH 0/2] perf tools: Modify mksyscalltbl
+Date:   Tue, 23 May 2023 18:22:05 +0800
+Message-Id: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf8BxkrDWk2xk3CNwAA--.57318S4
+X-CM-TRANSID: AQAAf8BxkrDWk2xk3CNwAA--.57318S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7Zry5GF45JF1xWr4rurWDXFb_yoW8Zr4xpF
-        s3Cr9rta1rZr1xCwnF9r42qryrCws7Jr1YvFyvy3ySvw13C34rAry8Was3GFyxG3y8trWF
-        vryFqryUKa18XaDanT9S1TB71UUUUbJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bh8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-        ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
-        M2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
-        CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2
-        z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x
-        0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCF
-        I7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r
-        106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AK
-        xVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7
-        xG6r1j6r1xMIIF0xvEx4A2jsIE14v26F4j6r4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4j
-        6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU3o7KUUUUU
+X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
+        ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
+        BjDU0xBIdaVrnRJUUUP0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
+        xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r126r13M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
+        j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxV
+        AFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x02
+        67AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82
+        IYc2Ij64vIr41l4c8EcI0En4kS14v26r1q6r43MxAqzxv26xkF7I0En4kS14v26r1q6r43
+        MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI
+        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y
+        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+        W8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1l
+        IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8gAw7UUUU
+        U==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In order to print the numerical entries of the syscall table,
-there is no need to call the host compiler to build and then
-run a program, this can be done directly by the shell script.
+Tiezhu Yang (2):
+  perf arm64: Handle __NR3264_ prefixed syscall number
+  perf LoongArch: Simplify mksyscalltbl
 
-This is similar with commit 9854e7ad35fe ("perf arm64: Simplify
-mksyscalltbl").
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  |  7 +++--
  .../arch/loongarch/entry/syscalls/mksyscalltbl     | 32 ++++++----------------
- 1 file changed, 8 insertions(+), 24 deletions(-)
+ 2 files changed, 12 insertions(+), 27 deletions(-)
 
-diff --git a/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-index c52156f..d7d97d5 100755
---- a/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/loongarch/entry/syscalls/mksyscalltbl
-@@ -22,40 +22,24 @@ create_table_from_c()
- {
- 	local sc nr last_sc
- 
--	create_table_exe=`mktemp ${TMPDIR:-/tmp}/create-table-XXXXXX`
--
--	{
--
--	cat <<-_EoHEADER
--		#include <stdio.h>
--		#include "$input"
--		int main(int argc, char *argv[])
--		{
--	_EoHEADER
--
- 	while read sc nr; do
--		printf "%s\n" "	printf(\"\\t[%d] = \\\"$sc\\\",\\n\", $nr);"
--		last_sc=$nr
-+		printf "%s\n" "	[$nr] = \"$sc\","
-+		last_sc=$sc
- 	done
- 
--	printf "%s\n" "	printf(\"#define SYSCALLTBL_LOONGARCH_MAX_ID %d\\n\", $last_sc);"
--	printf "}\n"
--
--	} | $hostcc -I $incpath/include/uapi -o $create_table_exe -x c -
--
--	$create_table_exe
--
--	rm -f $create_table_exe
-+	printf "%s\n" "#define SYSCALLTBL_LOONGARCH_MAX_ID __NR_$last_sc"
- }
- 
- create_table()
- {
-+	echo "#include \"$input\""
- 	echo "static const char *syscalltbl_loongarch[] = {"
- 	create_table_from_c
- 	echo "};"
- }
- 
--$gcc -E -dM -x c  -I $incpath/include/uapi $input	       \
--	|sed -ne 's/^#define __NR_//p' \
--	|sort -t' ' -k2 -n \
-+$gcc -E -dM -x c -I $incpath/include/uapi $input		\
-+	|awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'	\
-+	|sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'	\
-+	|sort -t' ' -k2 -n					\
- 	|create_table
 -- 
 2.1.0
 
