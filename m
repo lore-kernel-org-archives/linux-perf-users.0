@@ -2,103 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72729C7EE2A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 09:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724BAC77B75
+	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 09:58:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236336AbjEWJfX (ORCPT
+        id S236301AbjEWJ6B (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 05:35:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54572 "EHLO
+        Tue, 23 May 2023 05:58:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236326AbjEWJfS (ORCPT
+        with ESMTP id S236267AbjEWJ56 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 05:35:18 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2620E138;
-        Tue, 23 May 2023 02:35:14 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id B6BD41FF45;
-        Tue, 23 May 2023 09:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1684834512; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IAYq7YJVS2Hlnl42uVu2goasTRVPRgZ4NqjKSyNxGrQ=;
-        b=KU08sltoiXCpoxueN/xTm1Dj8XgBHSTDWuL90uW147a2/O/Mr6ZoeLyNLFpVJWdIVW5kxX
-        qqA4ifcAtaWSIWN6bnayexKSUglQmxet+EFMnoKUKq4Izsg5nga9Xy+G/qI4h+1EzPAbdY
-        lsmjo1AyUZ4F7lDFhMIZqs6iohgJ0mY=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 46EBC2C141;
-        Tue, 23 May 2023 09:35:07 +0000 (UTC)
-Date:   Tue, 23 May 2023 11:35:02 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Stephane Eranian <eranian@google.com>, mpe@ellerman.id.au,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
+        Tue, 23 May 2023 05:57:58 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 822EC94;
+        Tue, 23 May 2023 02:57:55 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8CxqPEijmxkHwYAAA--.94S3;
+        Tue, 23 May 2023 17:57:54 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_7MhjmxkvhxwAA--.56731S2;
+        Tue, 23 May 2023 17:57:54 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, Sumit Garg <sumit.garg@linaro.org>,
-        npiggin@gmail.com, davem@davemloft.net,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, sparclinux@vger.kernel.org,
-        christophe.leroy@csgroup.eu,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        ravi.v.shankar@intel.com, Randy Dunlap <rdunlap@infradead.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Ian Rogers <irogers@google.com>, ito-yuichi@fujitsu.com,
-        ricardo.neri@intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v5 02/18] watchdog/perf: More properly prevent false
- positives with turbo modes
-Message-ID: <ZGyIxvKhVjr-L8-I@alley>
-References: <20230519101840.v5.18.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
- <20230519101840.v5.2.I843b0d1de3e096ba111a179f3adb16d576bef5c7@changeid>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230519101840.v5.2.I843b0d1de3e096ba111a179f3adb16d576bef5c7@changeid>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v2] perf symbol: Add LoongArch case in get_plt_sizes()
+Date:   Tue, 23 May 2023 17:57:53 +0800
+Message-Id: <1684835873-15956-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf8Dx_7MhjmxkvhxwAA--.56731S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7WF4fJFy7Cr4fKw4UWFy8Zrb_yoW8Gry5pw
+        nxuFW8K3WDtFnxG3WrJF4rXF4fWFsavFy2gFy3XrWv9Fs7uw10grWxAFyY9FWUXFykXa40
+        vr1qk3yxuF10qr7anT9S1TB71UUUUbJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bSkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
+        ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVW8Jr0_Cr1U
+        M2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zV
+        CFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2
+        z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I
+        0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCI
+        bckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_Jr
+        I_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v2
+        6r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj4
+        0_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
+        JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0L0ePUUUUU==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri 2023-05-19 10:18:26, Douglas Anderson wrote:
-> Currently, in the watchdog_overflow_callback() we first check to see
-> if the watchdog had been touched and _then_ we handle the workaround
-> for turbo mode. This order should be reversed.
-> 
-> Specifically, "touching" the hardlockup detector's watchdog should
-> avoid lockups being detected for one period that should be roughly the
-> same regardless of whether we're running turbo or not. That means that
-> we should do the extra accounting for turbo _before_ we look at (and
-> clear) the global indicating that we've been touched.
+We can see the following definitions in bfd/elfnn-loongarch.c:
 
-The ideal solution would be to reset the turbo-mode-related
-variables when the watchdog is touched. And keep checking
-watchdog_nmi_touch first.
+  #define PLT_HEADER_INSNS 8
+  #define PLT_HEADER_SIZE (PLT_HEADER_INSNS * 4)
 
-But this ordering change should be good enough. It causes that
-we always check watchdog_nmi_touch when the turbo-more-related
-variables are already reset.
+  #define PLT_ENTRY_INSNS 4
+  #define PLT_ENTRY_SIZE (PLT_ENTRY_INSNS * 4)
 
-> NOTE: this fix is made based on code inspection. I am not aware of any
-> reports where the old code would have generated false positives. That
-> being said, this order seems more correct and also makes it easier
-> down the line to share code with the "buddy" hardlockup detector.
-> 
-> Fixes: 7edaeb6841df ("kernel/watchdog: Prevent false positives with turbo modes")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+so plt header size is 32 and plt entry size is 16 on LoongArch,
+let us add LoongArch case in get_plt_sizes().
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Link: https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=bfd/elfnn-loongarch.c
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
 
-Best Regards,
-Petr
+v2: Add EM_LOONGARCH definition to avoid build error
+
+ tools/perf/util/symbol-elf.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index b2ed9cc..b3dbf6c 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -35,6 +35,10 @@
+ #define EM_AARCH64	183  /* ARM 64 bit */
+ #endif
+ 
++#ifndef EM_LOONGARCH
++#define EM_LOONGARCH	258
++#endif
++
+ #ifndef ELF32_ST_VISIBILITY
+ #define ELF32_ST_VISIBILITY(o)	((o) & 0x03)
+ #endif
+@@ -411,6 +415,10 @@ static bool get_plt_sizes(struct dso *dso, GElf_Ehdr *ehdr, GElf_Shdr *shdr_plt,
+ 		*plt_header_size = 32;
+ 		*plt_entry_size = 16;
+ 		return true;
++	case EM_LOONGARCH:
++		*plt_header_size = 32;
++		*plt_entry_size = 16;
++		return true;
+ 	case EM_SPARC:
+ 		*plt_header_size = 48;
+ 		*plt_entry_size = 12;
+-- 
+2.1.0
+
