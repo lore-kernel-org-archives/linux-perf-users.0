@@ -2,191 +2,228 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3307EC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 21:41:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D8DC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 22:18:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230504AbjEXVlj (ORCPT
+        id S235823AbjEXWSi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 May 2023 17:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36308 "EHLO
+        Wed, 24 May 2023 18:18:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230124AbjEXVli (ORCPT
+        with ESMTP id S231890AbjEXWSh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 May 2023 17:41:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83546FC;
-        Wed, 24 May 2023 14:41:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1928161221;
-        Wed, 24 May 2023 21:41:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58302C433EF;
-        Wed, 24 May 2023 21:41:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684964496;
-        bh=cZrnJxeMhUwXMVYsdoRzT3yaEt4/nNkyLF7HSNLFDZo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iihtjHlFxfST4cYvt3gkZ/Mkzems7Hy57Pf8LyKaPzb7eEGcK0mkSMAV/4GgXlEhq
-         cbJaHiSqNnSVbrnAq8IG5voAwb13B6OJdir8itKCRRFGF3O7CfNEifkQ2+Hj48MdzZ
-         fHMVHO2i2zMf27HKaz456y5C4E5XKidXmmqQRq7XWqVOpTcLuKBXZl3uO1Y0XJL00q
-         Nn7pS6Ho/uA/fthp8Wx1Tsy7IJAd9nkwaGtQJnRgUwGoTKfFnDN0hIg3xyka91U6vH
-         b5SbK+IEJrSotZ1QRaJAwHIbPKstxF+ky3ajwITMPrRYpFUNUpaAMfnND8ZuBOaAOI
-         VhyToQ/N27iAg==
-Date:   Wed, 24 May 2023 14:41:33 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     peterz@infradead.org, namhyung@kernel.org, eranian@google.com,
-        acme@kernel.org, mark.rutland@arm.com, jolsa@kernel.org,
-        irogers@google.com, bp@alien8.de, kan.liang@linux.intel.com,
-        adrian.hunter@intel.com, maddy@linux.ibm.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com, maz@kernel.org, oliver.upton@linux.dev,
-        kvmarm@lists.linux.dev
-Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
-Message-ID: <20230524214133.GA2359762@dev-arch.thelio-3990X>
-References: <20230504110003.2548-1-ravi.bangoria@amd.com>
- <20230504110003.2548-4-ravi.bangoria@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230504110003.2548-4-ravi.bangoria@amd.com>
+        Wed, 24 May 2023 18:18:37 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F94183
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 15:18:35 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba8cf175f5bso852975276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 15:18:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1684966715; x=1687558715;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ckN71DQD4uD8g3bwACRokN8CwIA0vhRKAJ7PLkv1+q4=;
+        b=tNMaC+10F+kkmfLDfPuAI3mX/14s/R5iY25dJcRJL8BiFPeyFhb3s1WtlRymiFWIqN
+         Uu6cZ56oG97CK/QMajIj+PzStD3W55VXj7vIba53+PdKVdjVSo3BOEF15i/EjE3sfBRy
+         Sm6hcVw3rXejIS9WyqPaCbbLXD2YAh5sCx9T02qlxpzIqrjtulHajd9NmySMmc6+zbQU
+         nXFmYWbrz/SEMSL49qYZ78/t3BgH/ePt/lp/sLLvV0E2WiU3O6Q8N+lkun5raHgn/jQi
+         cLVe4VSD9ZkS2Yg7Hu8Nx4NHlG/EONDywvaosKGTt6JtZH6JKRVoznDge2V42r6YQ4R7
+         Wstg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684966715; x=1687558715;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ckN71DQD4uD8g3bwACRokN8CwIA0vhRKAJ7PLkv1+q4=;
+        b=MvZDQAlciXJ241GavS0DBwiVTT/carLHQw37fDwkWEQyb0/ahxK7HV2rB8LiXms3+Z
+         ufwp/0ObvgHq5/xEBC41bAN6DWyOxVVeypnkOe+YeF5xbHEOI0q1CngXZUVg16Yl3qOE
+         V1EqDDp6Uo68OYqeJUJ51SzWBcMF6owRZX6UbkxNX8R0v1zmpDYcAYRWpf/3Dd21JS8o
+         PY/x9w01ymK0COj+y6g+vDEIz/7gdLnBeIR/NecJuxIjPYmXJLdzHpg5wLJh4Tcsch1M
+         JEmPsy8VZRLVlVjh/q77Nh294aeLMaL55CTy0Y6d3JJU+m32LtsVZ+0rToFVET/u7gZm
+         TbDQ==
+X-Gm-Message-State: AC+VfDyJQw/7B+C7JXBACODOY5xYEg6i9IBs6RD+Xsbkvs1HpHKMFZ6/
+        odWqFZ/zzH0Rk3m2PLx1bHSxu++ODWhJ
+X-Google-Smtp-Source: ACHHUZ6l3ZSOKA8KOrdtIoChwsfYDat0YckKrNuxFNC9t/YWBNKaYSFn+VcfYMPeqQah5kNVm6ibbODvTA04
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7aa7:3d2d:76ae:8e96])
+ (user=irogers job=sendgmr) by 2002:a25:d68d:0:b0:ba7:8628:93e2 with SMTP id
+ n135-20020a25d68d000000b00ba7862893e2mr585143ybg.4.1684966715077; Wed, 24 May
+ 2023 15:18:35 -0700 (PDT)
+Date:   Wed, 24 May 2023 15:17:56 -0700
+Message-Id: <20230524221831.1741381-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
+Subject: [PATCH v3 00/35]  PMU refactoring and improvements
+From:   Ian Rogers <irogers@google.com>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ming Wang <wangming01@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ravi,
+Separate the code in pmu.[ch] into the set/list of PMUs and the code
+for a particular PMU. Move the set/list of PMUs code into
+pmus.[ch]. Clean up hybrid code and remove hybrid PMU list, it is
+sufficient to scan PMUs looking for core ones. Add core PMU list and
+perf_pmus__scan_core that just reads core PMUs. Switch code that skips
+non-core PMUs during a perf_pmus__scan, to use the
+perf_pmus__scan_core variant. Don't scan sysfs for PMUs if all such
+PMUs have been previously scanned/loaded. Scanning just core PMUs, for
+the cases it is applicable, can improve the sysfs reading time by more
+than 4 fold on my laptop, as servers generally have many more uncore
+PMUs the improvement there should be larger:
 
-+ arm64 KVM folks
+```
+$ perf bench internals pmu-scan -i 1000
+Computing performance of sysfs PMU event scan for 1000 times
+  Average core PMU scanning took: 989.231 usec (+- 1.535 usec)
+  Average PMU scanning took: 4309.425 usec (+- 74.322 usec)
+```
 
-On Thu, May 04, 2023 at 04:30:02PM +0530, Ravi Bangoria wrote:
-> Searching for the right pmu by iterating over all pmus is no longer
-> required since all pmus now *must* be present in the 'pmu_idr' list.
-> So, remove linear searching code.
-> 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  kernel/events/core.c | 37 +++++++++++++------------------------
->  1 file changed, 13 insertions(+), 24 deletions(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 0695bb9fbbb6..eba2b8595115 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11630,38 +11630,27 @@ static struct pmu *perf_init_event(struct perf_event *event)
->  	}
->  
->  again:
-> +	ret = -ENOENT;
->  	rcu_read_lock();
->  	pmu = idr_find(&pmu_idr, type);
->  	rcu_read_unlock();
-> -	if (pmu) {
-> -		if (event->attr.type != type && type != PERF_TYPE_RAW &&
-> -		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-> -			goto fail;
-> -
-> -		ret = perf_try_init_event(pmu, event);
-> -		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-> -			type = event->attr.type;
-> -			goto again;
-> -		}
-> +	if (!pmu)
-> +		goto fail;
->  
-> -		if (ret)
-> -			pmu = ERR_PTR(ret);
-> +	if (event->attr.type != type && type != PERF_TYPE_RAW &&
-> +	    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-> +		goto fail;
->  
-> -		goto unlock;
-> +	ret = perf_try_init_event(pmu, event);
-> +	if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-> +		type = event->attr.type;
-> +		goto again;
->  	}
->  
-> -	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
-> -		ret = perf_try_init_event(pmu, event);
-> -		if (!ret)
-> -			goto unlock;
-> -
-> -		if (ret != -ENOENT) {
-> -			pmu = ERR_PTR(ret);
-> -			goto unlock;
-> -		}
-> -	}
->  fail:
-> -	pmu = ERR_PTR(-ENOENT);
-> +	if (ret)
-> +		pmu = ERR_PTR(ret);
-> +
->  unlock:
->  	srcu_read_unlock(&pmus_srcu, idx);
->  
-> -- 
-> 2.40.0
-> 
+The patch "perf pmu: Separate pmu and pmus" moves and renames a lot of
+functions, and is consequently large. The changes are trivial, but
+kept together to keep the overall number of patches more reasonable.
 
-My apologies if this has already been reported or fixed already, I did a
-search of lore.kernel.org and did not find anything. This patch as
-commit 9551fbb64d09 ("perf/core: Remove pmu linear searching code") in
--next breaks starting QEMU with KVM enabled on two of my arm64 machines:
+v3. Address fixing hybrid user specified CPU maps by doing it in
+    propagate maps. Remove nearly all references to cpu_core/cpu_atom
+    in particular by removing is_pmu_hybrid - hybrid is now >1 core
+    PMU. Addresses comments by Kan and Namhyung.
+v2. Address Kan's review comments wrt "cycles" -> "cycles:P" and
+    "uncore_pmus" -> "other_pmus".
 
-$ qemu-system-aarch64 \
-    -display none \
-    -nodefaults \
-    -machine virt,gic-version=max \
-    -append 'console=ttyAMA0 earlycon' \
-    -kernel arch/arm64/boot/Image.gz \
-    -initrd rootfs.cpio \
-    -cpu host \
-    -enable-kvm \
-    -m 512m \
-    -smp 8 \
-    -serial mon:stdio
-qemu-system-aarch64: PMU: KVM_SET_DEVICE_ATTR: No such device
-qemu-system-aarch64: failed to set irq for PMU
+Ian Rogers (35):
+  perf cpumap: Add intersect function
+  perf tests: Organize cpu_map tests into a single suite
+  perf cpumap: Add equal function
+  libperf cpumap: Add "any CPU"/dummy test function
+  perf pmu: Detect ARM and hybrid PMUs with sysfs
+  perf pmu: Add is_core to pmu
+  perf evsel: Add is_pmu_core inorder to interpret own_cpus
+  perf pmu: Add CPU map for "cpu" PMUs
+  perf evlist: Propagate user CPU maps intersecting core PMU maps
+  perf evlist: Allow has_user_cpus to be set on hybrid
+  perf target: Remove unused hybrid value
+  perf tools: Warn if no user requested CPUs match PMU's CPUs
+  perf evlist: Remove evlist__warn_hybrid_group
+  perf evlist: Remove __evlist__add_default
+  perf evlist: Reduce scope of evlist__has_hybrid
+  perf pmu: Remove perf_pmu__hybrid_mounted
+  perf pmu: Rewrite perf_pmu__has_hybrid to avoid list
+  perf x86: Iterate hybrid PMUs as core PMUs
+  perf topology: Avoid hybrid list for hybrid topology
+  perf evsel: Compute is_hybrid from PMU being core
+  perf header: Avoid hybrid PMU list in write_pmu_caps
+  perf metrics: Remove perf_pmu__is_hybrid use
+  perf stat: Avoid hybrid PMU list
+  perf mem: Avoid hybrid PMU list
+  perf pmu: Remove perf_pmu__hybrid_pmus list
+  perf pmus: Prefer perf_pmu__scan over perf_pmus__for_each_pmu
+  perf x86 mem: minor refactor to is_mem_loads_aux_event
+  perf pmu: Separate pmu and pmus
+  perf pmus: Split pmus list into core and other
+  perf pmus: Allow just core PMU scanning
+  perf pmus: Avoid repeated sysfs scanning
+  perf pmus: Ensure all PMUs are read for find_by_type
+  perf pmus: Add function to return count of core PMUs
+  perf pmus: Remove perf_pmus__has_hybrid
+  perf pmu: Remove is_pmu_hybrid
 
-In the kernel log, I see
+ tools/lib/perf/cpumap.c                 |  61 +++
+ tools/lib/perf/evlist.c                 |  25 +-
+ tools/lib/perf/include/internal/evsel.h |   9 +
+ tools/lib/perf/include/perf/cpumap.h    |  14 +
+ tools/perf/arch/arm/util/auxtrace.c     |   7 +-
+ tools/perf/arch/arm/util/cs-etm.c       |   4 +-
+ tools/perf/arch/arm64/util/pmu.c        |   6 +-
+ tools/perf/arch/x86/tests/hybrid.c      |   7 +-
+ tools/perf/arch/x86/util/auxtrace.c     |   5 +-
+ tools/perf/arch/x86/util/evlist.c       |  25 +-
+ tools/perf/arch/x86/util/evsel.c        |  27 +-
+ tools/perf/arch/x86/util/intel-bts.c    |   4 +-
+ tools/perf/arch/x86/util/intel-pt.c     |   4 +-
+ tools/perf/arch/x86/util/mem-events.c   |  17 +-
+ tools/perf/arch/x86/util/perf_regs.c    |  15 +-
+ tools/perf/arch/x86/util/topdown.c      |   5 +-
+ tools/perf/bench/pmu-scan.c             |  60 +--
+ tools/perf/builtin-c2c.c                |   9 +-
+ tools/perf/builtin-list.c               |   4 +-
+ tools/perf/builtin-mem.c                |   9 +-
+ tools/perf/builtin-record.c             |  29 +-
+ tools/perf/builtin-stat.c               |  14 +-
+ tools/perf/builtin-top.c                |  10 +-
+ tools/perf/tests/attr.c                 |  11 +-
+ tools/perf/tests/builtin-test.c         |   4 +-
+ tools/perf/tests/cpumap.c               |  92 ++++-
+ tools/perf/tests/event_groups.c         |   7 +-
+ tools/perf/tests/parse-events.c         |  15 +-
+ tools/perf/tests/parse-metric.c         |   9 +-
+ tools/perf/tests/pmu-events.c           |   6 +-
+ tools/perf/tests/switch-tracking.c      |  14 +-
+ tools/perf/tests/tests.h                |   4 +-
+ tools/perf/tests/topology.c             |  16 +-
+ tools/perf/util/Build                   |   2 -
+ tools/perf/util/cpumap.c                |   4 +-
+ tools/perf/util/cpumap.h                |   4 +-
+ tools/perf/util/cputopo.c               |  12 +-
+ tools/perf/util/env.c                   |   5 +-
+ tools/perf/util/evlist-hybrid.c         | 162 --------
+ tools/perf/util/evlist-hybrid.h         |  15 -
+ tools/perf/util/evlist.c                |  64 +++-
+ tools/perf/util/evlist.h                |   9 +-
+ tools/perf/util/evsel.c                 |  60 +--
+ tools/perf/util/evsel.h                 |   3 -
+ tools/perf/util/header.c                |  27 +-
+ tools/perf/util/mem-events.c            |  25 +-
+ tools/perf/util/metricgroup.c           |   9 +-
+ tools/perf/util/parse-events.c          |  25 +-
+ tools/perf/util/parse-events.y          |   3 +-
+ tools/perf/util/pfm.c                   |   6 +-
+ tools/perf/util/pmu-hybrid.c            |  52 ---
+ tools/perf/util/pmu-hybrid.h            |  32 --
+ tools/perf/util/pmu.c                   | 483 ++----------------------
+ tools/perf/util/pmu.h                   |  25 +-
+ tools/perf/util/pmus.c                  | 465 ++++++++++++++++++++++-
+ tools/perf/util/pmus.h                  |  15 +-
+ tools/perf/util/print-events.c          |  15 +-
+ tools/perf/util/python-ext-sources      |   1 -
+ tools/perf/util/stat-display.c          |  19 +-
+ tools/perf/util/target.h                |   1 -
+ 60 files changed, 1002 insertions(+), 1089 deletions(-)
+ delete mode 100644 tools/perf/util/evlist-hybrid.c
+ delete mode 100644 tools/perf/util/evlist-hybrid.h
+ delete mode 100644 tools/perf/util/pmu-hybrid.c
+ delete mode 100644 tools/perf/util/pmu-hybrid.h
 
-[   42.944952] kvm: pmu event creation failed -2
+-- 
+2.40.1.698.g37aff9b760-goog
 
-I am not sure if this issue is unexpected as a result of this change or
-if there is something that needs to change on the arm64 KVM side (it
-appears the kernel message comes from arch/arm64/kvm/pmu-emul.c).
-
-If there is any further information I can provide or patches I can test,
-I am more than happy to do so.
-
-Cheers,
-Nathan
-
-# bad: [cf09e328589a2ed7f6c8d90f2edb697fb4f8a96b] Add linux-next specific files for 20230524
-# good: [27e462c8fad4bf04ec4f81f8539ce6fa947ead3a] Merge tag 'xtensa-20230523' of https://github.com/jcmvbkbc/linux-xtensa
-git bisect start 'cf09e328589a2ed7f6c8d90f2edb697fb4f8a96b' '27e462c8fad4bf04ec4f81f8539ce6fa947ead3a'
-# good: [a20d8ab9e26daaeeaf971139b736981cf164ab0a] Merge branch 'for-linux-next' of git://anongit.freedesktop.org/drm/drm-misc
-git bisect good a20d8ab9e26daaeeaf971139b736981cf164ab0a
-# good: [2714032dfd641b22695e14efd5f9dff08a5e3245] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git
-git bisect good 2714032dfd641b22695e14efd5f9dff08a5e3245
-# bad: [b2bc2854ec87557033538aa9290f70b9141a6653] Merge branch 'for-leds-next' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git
-git bisect bad b2bc2854ec87557033538aa9290f70b9141a6653
-# good: [20d4044f23c7724020b6c7d34ccee9bb929d1078] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
-git bisect good 20d4044f23c7724020b6c7d34ccee9bb929d1078
-# bad: [c3cab2fce7b318ee2edf148b1436f3a3864ae773] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-git bisect bad c3cab2fce7b318ee2edf148b1436f3a3864ae773
-# bad: [af75e6871092fc1f9fa039132d5667f1e0a47a0a] Merge branch into tip/master: 'sched/core'
-git bisect bad af75e6871092fc1f9fa039132d5667f1e0a47a0a
-# good: [c50a7b40a2f50403c3f58f1c27a85e4c5d2e0865] Merge branch into tip/master: 'objtool/core'
-git bisect good c50a7b40a2f50403c3f58f1c27a85e4c5d2e0865
-# good: [519fabc7aaba3f0847cf37d5f9a5740c370eb777] psi: remove 500ms min window size limitation for triggers
-git bisect good 519fabc7aaba3f0847cf37d5f9a5740c370eb777
-# bad: [b85c6694924e9f09a40a2e0a3798f3945eaa6fda] Merge branch into tip/master: 'perf/core'
-git bisect bad b85c6694924e9f09a40a2e0a3798f3945eaa6fda
-# bad: [9551fbb64d094cc105964716224adeb7765df8fd] perf/core: Remove pmu linear searching code
-git bisect bad 9551fbb64d094cc105964716224adeb7765df8fd
-# good: [2fad201fe38ff9a692acedb1990ece2c52a29f95] perf/ibs: Fix interface via core pmu events
-git bisect good 2fad201fe38ff9a692acedb1990ece2c52a29f95
-# first bad commit: [9551fbb64d094cc105964716224adeb7765df8fd] perf/core: Remove pmu linear searching code
