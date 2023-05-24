@@ -2,121 +2,191 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38622C77B73
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 21:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3307EC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 21:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231827AbjEXVGH (ORCPT
+        id S230504AbjEXVlj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 May 2023 17:06:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51182 "EHLO
+        Wed, 24 May 2023 17:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjEXVGF (ORCPT
+        with ESMTP id S230124AbjEXVli (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 May 2023 17:06:05 -0400
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D22F6191;
-        Wed, 24 May 2023 14:06:04 -0700 (PDT)
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-52c30fbccd4so749253a12.0;
-        Wed, 24 May 2023 14:06:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684962364; x=1687554364;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=DvpEdbo9D8eOCupgJdY5TOmPtHK0qONBFxkN7MU8U54=;
-        b=OmFeoysniEmDOVLFTnSjviPsyEGrlwzRNwOWEeXOw4xv6KGAiC+ir8i0HOhuEDYmYg
-         KbuwYql0xMKH1y3RvMO9DmLcjKXdoqhxJ10qgK511fCCaODrZraYjN7KnAvl7i1/D7um
-         T0eUQWaB+qTLxel6VKAngFL+EL4hEbnbaTZptflUTzYhzJ6YIM8ktH15ubu4+AUvQZmO
-         7UOhcpn46W7GyNWqi6Vl6HpYgux3fwA/6qkvwNpXqNyStEDLn2QBSXMBS9+FzgozIhD8
-         zVA14yR/npyOgCnRN6yigcc6gwLW5JkdNKZdMoq22eaBZaHfL/TJyD/v4A7GXWSgOVxb
-         Sf6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684962364; x=1687554364;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DvpEdbo9D8eOCupgJdY5TOmPtHK0qONBFxkN7MU8U54=;
-        b=e/AmHB9EaWrREGqXEu6SyHHmQnqX7VchjYKyCbowGojg56z7sNH0AiX061ybghTpvO
-         FOWLoBMl4AOAZKpm5NdwjneXBGOmoOEfBOF5GJupHQrAoc3a2w4sV1FfwT4tA3NVGwOE
-         KmYVcfT9Dyd6zMUBcmR3ljsyV5Y3perMIz8Wf1zf7EZ4vNxkLTmq2/T4t2Wj1y99y7jv
-         ZLo89Ru58EHiBxsScBUMxB5iJa8ZJcIdxY5MY5Jj5hq6emDUnnA8zrAt4GD7bCqax8QF
-         FGQiVV+IMKdjKOv0O99Wxo+XHfsWbWX1Bj2kkwem+7dWxJquUAn0F/b+aoeagD/ktUc3
-         LdIg==
-X-Gm-Message-State: AC+VfDyZAD6re7FM4HVJKU2PTPeDRdVmD1qHhEvlXucR9eszL5Ri7b50
-        XsQA3sqhNsipu+xJ4IC7txQ=
-X-Google-Smtp-Source: ACHHUZ6uLEiJsfUYRUT7ujTAZGflGDS8UhUpP6v5F5mtbI+s5v+fNAdekpSl6ZOVAMY3Q74NRufQfg==
-X-Received: by 2002:a17:90b:3106:b0:253:3cfa:e310 with SMTP id gc6-20020a17090b310600b002533cfae310mr17570513pjb.19.1684962364082;
-        Wed, 24 May 2023 14:06:04 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:121:f908:b42d:c399])
-        by smtp.gmail.com with ESMTPSA id hi20-20020a17090b30d400b0024ffa911e2asm1726221pjb.51.2023.05.24.14.06.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 May 2023 14:06:02 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        K Prateek Nayak <kprateek.nayak@amd.com>
-Subject: [PATCH] perf test: Fix perf stat JSON output test
-Date:   Wed, 24 May 2023 14:06:00 -0700
-Message-ID: <20230524210600.3095830-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
+        Wed, 24 May 2023 17:41:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83546FC;
+        Wed, 24 May 2023 14:41:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1928161221;
+        Wed, 24 May 2023 21:41:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58302C433EF;
+        Wed, 24 May 2023 21:41:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684964496;
+        bh=cZrnJxeMhUwXMVYsdoRzT3yaEt4/nNkyLF7HSNLFDZo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iihtjHlFxfST4cYvt3gkZ/Mkzems7Hy57Pf8LyKaPzb7eEGcK0mkSMAV/4GgXlEhq
+         cbJaHiSqNnSVbrnAq8IG5voAwb13B6OJdir8itKCRRFGF3O7CfNEifkQ2+Hj48MdzZ
+         fHMVHO2i2zMf27HKaz456y5C4E5XKidXmmqQRq7XWqVOpTcLuKBXZl3uO1Y0XJL00q
+         Nn7pS6Ho/uA/fthp8Wx1Tsy7IJAd9nkwaGtQJnRgUwGoTKfFnDN0hIg3xyka91U6vH
+         b5SbK+IEJrSotZ1QRaJAwHIbPKstxF+ky3ajwITMPrRYpFUNUpaAMfnND8ZuBOaAOI
+         VhyToQ/N27iAg==
+Date:   Wed, 24 May 2023 14:41:33 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     peterz@infradead.org, namhyung@kernel.org, eranian@google.com,
+        acme@kernel.org, mark.rutland@arm.com, jolsa@kernel.org,
+        irogers@google.com, bp@alien8.de, kan.liang@linux.intel.com,
+        adrian.hunter@intel.com, maddy@linux.ibm.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com, maz@kernel.org, oliver.upton@linux.dev,
+        kvmarm@lists.linux.dev
+Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
+Message-ID: <20230524214133.GA2359762@dev-arch.thelio-3990X>
+References: <20230504110003.2548-1-ravi.bangoria@amd.com>
+ <20230504110003.2548-4-ravi.bangoria@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230504110003.2548-4-ravi.bangoria@amd.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The recent --per-cache option test caused a problem.  According to
-the option name, I think it should check args.per_cache instead of
-args.per_cache_instance.
+Hi Ravi,
 
-  $ sudo ./perf test -v 99
-   99: perf stat JSON output linter                                    :
-  --- start ---
-  test child forked, pid 3086101
-  Checking json output: no args [Success]
-  Checking json output: system wide [Success]
-  Checking json output: interval [Success]
-  Checking json output: event [Success]
-  Checking json output: per thread [Success]
-  Checking json output: per node [Success]
-  Checking json output: system wide no aggregation [Success]
-  Checking json output: per core [Success]
-  Checking json output: per cache_instance Test failed for input:
-  ...
-  Traceback (most recent call last):
-    File "linux/tools/perf/tests/shell/lib/perf_json_output_lint.py", line 88, in <module>
-      elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cache_instance:
-  AttributeError: 'Namespace' object has no attribute 'per_cache_instance'
-  test child finished with -1
-  ---- end ----
-  perf stat JSON output linter: FAILED!
++ arm64 KVM folks
 
-Fixes: bfce728db317 ("pert tests: Add tests for new "perf stat --per-cache" aggregation option")
-Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/lib/perf_json_output_lint.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, May 04, 2023 at 04:30:02PM +0530, Ravi Bangoria wrote:
+> Searching for the right pmu by iterating over all pmus is no longer
+> required since all pmus now *must* be present in the 'pmu_idr' list.
+> So, remove linear searching code.
+> 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> ---
+>  kernel/events/core.c | 37 +++++++++++++------------------------
+>  1 file changed, 13 insertions(+), 24 deletions(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 0695bb9fbbb6..eba2b8595115 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -11630,38 +11630,27 @@ static struct pmu *perf_init_event(struct perf_event *event)
+>  	}
+>  
+>  again:
+> +	ret = -ENOENT;
+>  	rcu_read_lock();
+>  	pmu = idr_find(&pmu_idr, type);
+>  	rcu_read_unlock();
+> -	if (pmu) {
+> -		if (event->attr.type != type && type != PERF_TYPE_RAW &&
+> -		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
+> -			goto fail;
+> -
+> -		ret = perf_try_init_event(pmu, event);
+> -		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+> -			type = event->attr.type;
+> -			goto again;
+> -		}
+> +	if (!pmu)
+> +		goto fail;
+>  
+> -		if (ret)
+> -			pmu = ERR_PTR(ret);
+> +	if (event->attr.type != type && type != PERF_TYPE_RAW &&
+> +	    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
+> +		goto fail;
+>  
+> -		goto unlock;
+> +	ret = perf_try_init_event(pmu, event);
+> +	if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+> +		type = event->attr.type;
+> +		goto again;
+>  	}
+>  
+> -	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+> -		ret = perf_try_init_event(pmu, event);
+> -		if (!ret)
+> -			goto unlock;
+> -
+> -		if (ret != -ENOENT) {
+> -			pmu = ERR_PTR(ret);
+> -			goto unlock;
+> -		}
+> -	}
+>  fail:
+> -	pmu = ERR_PTR(-ENOENT);
+> +	if (ret)
+> +		pmu = ERR_PTR(ret);
+> +
+>  unlock:
+>  	srcu_read_unlock(&pmus_srcu, idx);
+>  
+> -- 
+> 2.40.0
+> 
 
-diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-index 4acaaed5560d..b81582a89d36 100644
---- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-+++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-@@ -85,7 +85,7 @@ Lines = args.file.readlines()
-     expected_items = 7
-   elif args.interval or args.per_thread or args.system_wide_no_aggr:
-     expected_items = 8
--  elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cache_instance:
-+  elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cache:
-     expected_items = 9
-   else:
-     # If no option is specified, don't check the number of items.
--- 
-2.41.0.rc0.172.g3f132b7071-goog
+My apologies if this has already been reported or fixed already, I did a
+search of lore.kernel.org and did not find anything. This patch as
+commit 9551fbb64d09 ("perf/core: Remove pmu linear searching code") in
+-next breaks starting QEMU with KVM enabled on two of my arm64 machines:
 
+$ qemu-system-aarch64 \
+    -display none \
+    -nodefaults \
+    -machine virt,gic-version=max \
+    -append 'console=ttyAMA0 earlycon' \
+    -kernel arch/arm64/boot/Image.gz \
+    -initrd rootfs.cpio \
+    -cpu host \
+    -enable-kvm \
+    -m 512m \
+    -smp 8 \
+    -serial mon:stdio
+qemu-system-aarch64: PMU: KVM_SET_DEVICE_ATTR: No such device
+qemu-system-aarch64: failed to set irq for PMU
+
+In the kernel log, I see
+
+[   42.944952] kvm: pmu event creation failed -2
+
+I am not sure if this issue is unexpected as a result of this change or
+if there is something that needs to change on the arm64 KVM side (it
+appears the kernel message comes from arch/arm64/kvm/pmu-emul.c).
+
+If there is any further information I can provide or patches I can test,
+I am more than happy to do so.
+
+Cheers,
+Nathan
+
+# bad: [cf09e328589a2ed7f6c8d90f2edb697fb4f8a96b] Add linux-next specific files for 20230524
+# good: [27e462c8fad4bf04ec4f81f8539ce6fa947ead3a] Merge tag 'xtensa-20230523' of https://github.com/jcmvbkbc/linux-xtensa
+git bisect start 'cf09e328589a2ed7f6c8d90f2edb697fb4f8a96b' '27e462c8fad4bf04ec4f81f8539ce6fa947ead3a'
+# good: [a20d8ab9e26daaeeaf971139b736981cf164ab0a] Merge branch 'for-linux-next' of git://anongit.freedesktop.org/drm/drm-misc
+git bisect good a20d8ab9e26daaeeaf971139b736981cf164ab0a
+# good: [2714032dfd641b22695e14efd5f9dff08a5e3245] Merge branch 'next' of git://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git
+git bisect good 2714032dfd641b22695e14efd5f9dff08a5e3245
+# bad: [b2bc2854ec87557033538aa9290f70b9141a6653] Merge branch 'for-leds-next' of git://git.kernel.org/pub/scm/linux/kernel/git/lee/leds.git
+git bisect bad b2bc2854ec87557033538aa9290f70b9141a6653
+# good: [20d4044f23c7724020b6c7d34ccee9bb929d1078] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git
+git bisect good 20d4044f23c7724020b6c7d34ccee9bb929d1078
+# bad: [c3cab2fce7b318ee2edf148b1436f3a3864ae773] Merge branch 'for-next' of git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+git bisect bad c3cab2fce7b318ee2edf148b1436f3a3864ae773
+# bad: [af75e6871092fc1f9fa039132d5667f1e0a47a0a] Merge branch into tip/master: 'sched/core'
+git bisect bad af75e6871092fc1f9fa039132d5667f1e0a47a0a
+# good: [c50a7b40a2f50403c3f58f1c27a85e4c5d2e0865] Merge branch into tip/master: 'objtool/core'
+git bisect good c50a7b40a2f50403c3f58f1c27a85e4c5d2e0865
+# good: [519fabc7aaba3f0847cf37d5f9a5740c370eb777] psi: remove 500ms min window size limitation for triggers
+git bisect good 519fabc7aaba3f0847cf37d5f9a5740c370eb777
+# bad: [b85c6694924e9f09a40a2e0a3798f3945eaa6fda] Merge branch into tip/master: 'perf/core'
+git bisect bad b85c6694924e9f09a40a2e0a3798f3945eaa6fda
+# bad: [9551fbb64d094cc105964716224adeb7765df8fd] perf/core: Remove pmu linear searching code
+git bisect bad 9551fbb64d094cc105964716224adeb7765df8fd
+# good: [2fad201fe38ff9a692acedb1990ece2c52a29f95] perf/ibs: Fix interface via core pmu events
+git bisect good 2fad201fe38ff9a692acedb1990ece2c52a29f95
+# first bad commit: [9551fbb64d094cc105964716224adeb7765df8fd] perf/core: Remove pmu linear searching code
