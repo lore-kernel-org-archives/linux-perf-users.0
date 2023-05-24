@@ -2,177 +2,239 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8992CC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 07:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EA9C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 09:02:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239085AbjEXHSv (ORCPT
+        id S240527AbjEXJCk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 May 2023 03:18:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56300 "EHLO
+        Wed, 24 May 2023 05:02:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236318AbjEXHSs (ORCPT
+        with ESMTP id S240522AbjEXJCi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 May 2023 03:18:48 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2660591;
-        Wed, 24 May 2023 00:18:32 -0700 (PDT)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8Bx2fFHum1kqFYAAA--.961S3;
-        Wed, 24 May 2023 15:18:31 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqrZEum1keVRzAA--.61319S3;
-        Wed, 24 May 2023 15:18:29 +0800 (CST)
-Subject: Re: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
-To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
-References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
- <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
- <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
- <49e98308-ab8d-5811-66a8-9e17f22bb8c4@loongson.cn>
- <CAJ1xhMV=WaYbdGpiRedLUGnYp8JLzcP81Ksw1k1610xeHCiGBA@mail.gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Hans-Peter Nilsson <hp@axis.com>, Leo Yan <leo.yan@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <2932e212-ba17-090b-761b-b18e8f9c33e8@loongson.cn>
-Date:   Wed, 24 May 2023 15:18:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Wed, 24 May 2023 05:02:38 -0400
+Received: from mail-vk1-xa2d.google.com (mail-vk1-xa2d.google.com [IPv6:2607:f8b0:4864:20::a2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4879090
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 02:02:36 -0700 (PDT)
+Received: by mail-vk1-xa2d.google.com with SMTP id 71dfb90a1353d-456fa6f1f79so268009e0c.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 02:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684918955; x=1687510955;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IoXIHN+JHAtPREdCxVNh60cv2ytT0eTrapPfp0USbr4=;
+        b=qcqxbpozRm0YrX1b1eJxarTedM3Dnq8vzbpy9RbNvbtQoCihzSbk7g4ajlUP4ksIT0
+         5wZShQwz1/Xdrny7gLi99EuiEpVTZUneIzU2plEbLvDXfOXzL5X9vZ55Sx+CfFV8IdkH
+         GN+zkxD5pewpDbg+LzosdPgK/014XBxCyFNuOylE2M6nfFnHJ7StqOZF3v0kD+GY6FYG
+         e8uc/y5TFxca5myghprMVJ66VdrHU7JfiJjHTxFEAyvft9BAen+WRfv3UtzUaN6L3BvF
+         a29fikMCxqxbNluJEcAA0ere/Z1SmvrZ/0O7f2N8E7mV/IewbFeO7qMDGak2o5QL1UTN
+         0EVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684918955; x=1687510955;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IoXIHN+JHAtPREdCxVNh60cv2ytT0eTrapPfp0USbr4=;
+        b=JOddd5flUBTVudiZI8l1BvhRwWZuW11MS5zLT6UCKw6VUs8rLgukeUyN+ejAxY58l/
+         vy3tvWN05WPd9nEb0NgZY0kMDIYzzPT2RW8D9na3EUGcwRVSh6MJ5mp1sRGtHJJiPheu
+         Mr6iZLCtL/MVTRsY70apkUPkQOdc3CI0nbuqE4ZCDv2ghaa3/170rS9x6w1zK0vIg2W+
+         Z2DD3pT34CVpwr+P0t11z6uhyypb+uw5mH7N22g12XqWU4JKmPodx1XNv42wmiaz1Tl/
+         lG9+r+Zi7op8lJp/ebqO7XXff16NugT11gMrXWdlHs7OtyiEFrPV+niWL5QDItVREgEd
+         IEwQ==
+X-Gm-Message-State: AC+VfDxybSQAJQ442zFscQGYlkrgYLIzsi2XKpSs1j0pL+ADUovL9GMk
+        RquQapap6IbbC2p+mP1Z6TljjWVwHhqW51/7gp666w==
+X-Google-Smtp-Source: ACHHUZ4YxR4bNRCCAqY1snog2P8OIW025ESXTMcHLjDMXPhMhC8DfhdsNNOn+oX9uoHpz33lpTieLfl0whUtHXIb8fM=
+X-Received: by 2002:a1f:eb42:0:b0:453:8a02:8e7 with SMTP id
+ j63-20020a1feb42000000b004538a0208e7mr5231862vkh.6.1684918954432; Wed, 24 May
+ 2023 02:02:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJ1xhMV=WaYbdGpiRedLUGnYp8JLzcP81Ksw1k1610xeHCiGBA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxqrZEum1keVRzAA--.61319S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWF1rCr4fXF4kXw18XF17GFg_yoW5urWfpr
-        n5Aay5tay0gF12kwn29rsIqrySy34ktr1DWryqyws3u3WDt3Z3Kr10vF4YkFWxXw4xKrW5
-        Zr10qFy7X3W5Z3DanT9S1TB71UUUUbJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-        n4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-        AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
-        AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2
-        jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jTq2NUUUUU=
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 24 May 2023 14:32:23 +0530
+Message-ID: <CA+G9fYtCCTxT78c0T+5JFw+sN01ZnX_kvBBgDLoVLfPARc9ZuA@mail.gmail.com>
+Subject: Perf: RIP: 0010:__schedule on qemu-x86_64
+To:     open list <linux-kernel@vger.kernel.org>,
+        linux-stable <stable@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, rcu <rcu@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Following kernel crash noticed while running perf testing on qemu-x86_64
+with stable-rc 6.3.4-rc2 + kselftest merge configs.
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+logs:
+=====
+INFO: Performing perf record test...
+
+Parse sched tracepoints fields: Ok
+ 16: syscalls:sys_enter_openat event fields     :
+--- start ---
+test child forked, pid 255
+<4>[  152.221288] int3: 0000 [#1] PREEMPT SMP PTI
+<4>[  152.221564] CPU: 0 PID: 255 Comm: perf Not tainted 6.3.4-rc2 #1
+<4>[  152.221607] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.14.0-2 04/01/2014
+<4>[  152.221733] RIP: 0010:__schedule+0x29e/0xaa0
+<4>[  152.222066] Code: 00 48 29 c1 49 01 8e 48 04 00 00 48 85 db 74
+0f 48 01 8b 90 0c 00 00 48 83 83 88 0c 00 00 01 0f 1f 44 00 00 0f 1f
+44 00 00 e9 <7a> 01 00 00 49 0f ba ac 24 18 0a 00 00 00 49 83 bc 24 08
+0a 00 00
+<4>[  152.222122] RSP: 0018:ffff94aec0677bc0 EFLAGS: 00000046
+<4>[  152.222170] RAX: ffffffffa2e10900 RBX: ffff8b517bc2b700 RCX:
+0000000000000004
+<4>[  152.222184] RDX: 00000023711138c0 RSI: 0000000000000000 RDI:
+ffff8b517bc2b700
+<4>[  152.222197] RBP: ffff94aec0677c28 R08: ffff8b5102aa6a00 R09:
+000000000000004e
+<4>[  152.222211] R10: 0000000000000001 R11: 0000000000000001 R12:
+ffff8b51009e3c00
+<4>[  152.222223] R13: ffffffffa2cf3f48 R14: ffffffffa2e10900 R15:
+ffff8b51009e4248
+<4>[  152.222275] FS:  00007f6b8ea81800(0000)
+GS:ffff8b517bc00000(0000) knlGS:0000000000000000
+<4>[  152.222294] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[  152.222308] CR2: 00007f6b8dd204e0 CR3: 0000000105a1c000 CR4:
+00000000000006f0
+<4>[  152.222409] Call Trace:
+<4>[  152.222500]  <TASK>
+<4>[  152.222605]  schedule+0x6a/0xf0
+<4>[  152.222664]  schedule_timeout+0x14f/0x160
+<4>[  152.222680]  wait_for_completion+0x8c/0x140
+<4>[  152.222696]  __wait_rcu_gp+0x13e/0x140
+<4>[  152.222712]  synchronize_rcu+0x12f/0x140
+<4>[  152.222731]  ? __pfx_call_rcu_hurry+0x10/0x10
+<4>[  152.222748]  ? __pfx_wakeme_after_rcu+0x10/0x10
+<4>[  152.222766]  perf_event_alloc+0xd53/0xdc0
+<4>[  152.222783]  ? preempt_count_sub+0x50/0x80
+<4>[  152.222795]  ? _raw_spin_unlock+0x1a/0x40
+<4>[  152.222810]  __do_sys_perf_event_open+0x1df/0xd10
+<4>[  152.222838]  __x64_sys_perf_event_open+0x26/0x30
+<4>[  152.222849]  do_syscall_64+0x3e/0x90
+<4>[  152.222863]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+<4>[  152.222920] RIP: 0033:0x7f6b8dd204f9
+<4>[  152.223150] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00
+00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c
+24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 08 0d 00 f7 d8 64
+89 01 48
+<4>[  152.223158] RSP: 002b:00007ffd51880f68 EFLAGS: 00000202
+ORIG_RAX: 000000000000012a
+<4>[  152.223175] RAX: ffffffffffffffda RBX: 00000000ffffffff RCX:
+00007f6b8dd204f9
+<4>[  152.223181] RDX: 0000000000000000 RSI: 00000000000000ff RDI:
+000055e658912b50
+<4>[  152.223187] RBP: 00007ffd51881030 R08: 0000000000000008 R09:
+00007ffd51881090
+<4>[  152.223192] R10: 00000000ffffffff R11: 0000000000000202 R12:
+0000000000000008
+<4>[  152.223198] R13: 0000000000000000 R14: 0000000000000000 R15:
+000055e658912b40
+<4>[  152.223246]  </TASK>
+<4>[  152.223308] Modules linked in:
+<4>[  152.247884] ---[ end trace 0000000000000000 ]---
+<4>[  152.248004] RIP: 0010:__schedule+0x29e/0xaa0
+<4>[  152.248051] Code: 00 48 29 c1 49 01 8e 48 04 00 00 48 85 db 74
+0f 48 01 8b 90 0c 00 00 48 83 83 88 0c 00 00 01 0f 1f 44 00 00 0f 1f
+44 00 00 e9 <7a> 01 00 00 49 0f ba ac 24 18 0a 00 00 00 49 83 bc 24 08
+0a 00 00
+<4>[  152.248066] RSP: 0018:ffff94aec0677bc0 EFLAGS: 00000046
+<4>[  152.248089] RAX: ffffffffa2e10900 RBX: ffff8b517bc2b700 RCX:
+0000000000000004
+<4>[  152.248099] RDX: 00000023711138c0 RSI: 0000000000000000 RDI:
+ffff8b517bc2b700
+<4>[  152.248269] RBP: ffff94aec0677c28 R08: ffff8b5102aa6a00 R09:
+000000000000004e
+<4>[  152.248282] R10: 0000000000000001 R11: 0000000000000001 R12:
+ffff8b51009e3c00
+<4>[  152.248294] R13: ffffffffa2cf3f48 R14: ffffffffa2e10900 R15:
+ffff8b51009e4248
+<4>[  152.248304] FS:  00007f6b8ea81800(0000)
+GS:ffff8b517bc00000(0000) knlGS:0000000000000000
+<4>[  152.248316] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[  152.248479] CR2: 00007f6b8dd204e0 CR3: 0000000105a1c000 CR4:
+00000000000006f0
+<0>[  152.248663] Kernel panic - not syncing: Fatal exception in interrupt
+<4>[  152.248980] int3: 0000 [#2] PREEMPT SMP PTI
+<4>[  152.249101] CPU: 1 PID: 32 Comm: kworker/u4:3 Tainted: G      D
+          6.3.4-rc2 #1
+<4>[  152.249124] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.14.0-2 04/01/2014
+<4>[  152.249292] Workqueue:  0x0 (events_unbound)
+<4>[  152.249420] RIP: 0010:__schedule+0x29e/0xaa0
+<4>[  152.249471] Code: 00 48 29 c1 49 01 8e 48 04 00 00 48 85 db 74
+0f 48 01 8b 90 0c 00 00 48 83 83 88 0c 00 00 01 0f 1f 44 00 00 0f 1f
+44 00 00 e9 <7a> 01 00 00 49 0f ba ac 24 18 0a 00 00 00 49 83 bc 24 08
+0a 00 00
+<4>[  152.249486] RSP: 0018:ffff94aec0117e38 EFLAGS: 00000046
+<4>[  152.249502] RAX: ffff8b51002d8000 RBX: ffff8b517bd2b700 RCX:
+0000000000000004
+<4>[  152.249512] RDX: 0000002372bd853f RSI: ffffffffffa7caff RDI:
+ffff8b517bd2b700
+<4>[  152.249522] RBP: ffff94aec0117ea0 R08: 0000000000000400 R09:
+0000000000000361
+<4>[  152.249532] R10: 0000000000000001 R11: 0000000000000000 R12:
+ffff8b51008a0f00
+<4>[  152.249542] R13: ffffffffa2cf3f48 R14: ffff8b51002d8000 R15:
+ffff8b51008a1548
+<4>[  152.249552] FS:  0000000000000000(0000)
+GS:ffff8b517bd00000(0000) knlGS:0000000000000000
+<4>[  152.249565] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[  152.249576] CR2: 00007ffd518816b8 CR3: 000000010591e000 CR4:
+00000000000006e0
+<4>[  152.249588] Call Trace:
+<4>[  152.249603]  <TASK>
+<4>[  152.249636]  schedule+0x6a/0xf0
+<4>[  152.249658]  worker_thread+0xc0/0x3e0
+<4>[  152.249684]  ? __pfx_worker_thread+0x10/0x10
+<4>[  152.249704]  kthread+0xfc/0x120
+<4>[  152.249721]  ? __pfx_kthread+0x10/0x10
+<4>[  152.249739]  ret_from_fork+0x2c/0x50
+<4>[  152.249797]  </TASK>
+<4>[  152.249805] Modules linked in:
+<4>[  152.250386] ---[ end trace 0000000000000000 ]---
+<4>[  152.250399] RIP: 0010:__schedule+0x29e/0xaa0
+<4>[  152.250421] Code: 00 48 29 c1 49 01 8e 48 04 00 00 48 85 db 74
+0f 48 01 8b 90 0c 00 00 48 83 83 88 0c 00 00 01 0f 1f 44 00 00 0f 1f
+44 00 00 e9 <7a> 01 00 00 49 0f ba ac 24 18 0a 00 00 00 49 83 bc 24 08
+0a 00 00
+<4>[  152.250434] RSP: 0018:ffff94aec0677bc0 EFLAGS: 00000046
+<4>[  152.250448] RAX: ffffffffa2e10900 RBX: ffff8b517bc2b700 RCX:
+0000000000000004
+<4>[  152.250458] RDX: 00000023711138c0 RSI: 0000000000000000 RDI:
+ffff8b517bc2b700
+<4>[  152.250467] RBP: ffff94aec0677c28 R08: ffff8b5102aa6a00 R09:
+000000000000004e
+<4>[  152.250477] R10: 0000000000000001 R11: 0000000000000001 R12:
+ffff8b51009e3c00
+<4>[  152.250486] R13: ffffffffa2cf3f48 R14: ffffffffa2e10900 R15:
+ffff8b51009e4248
+<4>[  152.250496] FS:  0000000000000000(0000)
+GS:ffff8b517bd00000(0000) knlGS:0000000000000000
+<4>[  152.250508] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+<4>[  152.250519] CR2: 00007ffd518816b8 CR3: 000000010591e000 CR4:
+00000000000006e0
+<0>[  154.015533] Shutting down cpus with NMI
+<0>[  154.016784] Kernel Offset: 0x20000000 from 0xffffffff81000000
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+
+log links,
+=====
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.3.y/build/v6.3.3-364-ga37c304c022d/testrun/17169996/suite/log-parser-test/test/check-kernel-panic/log
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.3.y/build/v6.3.3-364-ga37c304c022d/testrun/17169996/suite/log-parser-test/tests/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2QCeuajqUTZlyC4kEyQGxT6YwYv/
+ - https://storage.tuxsuite.com/public/linaro/lkft/builds/2QCeuajqUTZlyC4kEyQGxT6YwYv/config
 
 
-On 05/24/2023 02:43 PM, Alexander Kapshuk wrote:
-> On Wed, May 24, 2023 at 6:19 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->>
->>
->> On 05/23/2023 08:31 PM, Alexander Kapshuk wrote:
->>> On Tue, May 23, 2023 at 1:22 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>>>
->>>> After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
->>>> in the generated syscall table file syscalls.c, there exist some
->>>> __NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
->>>> it looks like not so good, just do some small filter operations
->>>> to handle __NR3264_ prefixed syscall number as a digital number.
->>>>
->>>> Without this patch:
->>>>
->>>>   [__NR3264_ftruncate] = "ftruncate",
->>>>
->>>> With this patch:
->>>>
->>>>   [46] = "ftruncate",
->>>>
->>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>>> ---
->>>>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 7 ++++---
->>>>  1 file changed, 4 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
->>>> index 22cdf91..59ab7939 100755
->>>> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
->>>> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
->>>> @@ -39,7 +39,8 @@ create_table()
->>>>         echo "};"
->>>>  }
->>>>
->>>> -$gcc -E -dM -x c -I $incpath/include/uapi $input \
->>>> -       |sed -ne 's/^#define __NR_//p' \
->>>> -       |sort -t' ' -k2 -n             \
->>>> +$gcc -E -dM -x c -I $incpath/include/uapi $input               \
->>>> +       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
->>>> +       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
->>>> +       |sort -t' ' -k2 -n                                      \
->>>>         |create_table
->>>> --
->>>> 2.1.0
->>>>
->>>
->>> As an aside, the awk + sed + sort parts of the command line may be
->>> reduced to the following awk script, if desired:
->>> awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
->>>         sub("^#define __NR_", "")
->>>         sub("^#define __NR3264_", "")
->>>         print | "sort -k2 -n"
->>> }'
->>>
->>
->> Hi Alexander,
->>
->> Thanks, it seems more simple and works well as expected.
->> Let us wait for more review comments before respin.
->>
->> If no any objections, I will send v2 with the following
->> changes based on the current patch in the next week.
->>
->> -$gcc -E -dM -x c -I $incpath/include/uapi $input               \
->> -       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
->> -       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
->> -       |sort -t' ' -k2 -n                                      \
->> +$gcc -E -dM -x c -I $incpath/include/uapi $input \
->> +       |awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
->> +               sub("^#define __NR_", "")
->> +               sub("^#define __NR3264_", "")
->> +               print | "sort -k2 -n"}' \
->>          |create_table
->>
->> Thanks,
->> Tiezhu
->>
->
-> Hi Tiezhu,
->
-> Thanks for your prompt feedback.
-> It was merely a suggestion entirely subject to your discretion.
->
-> If no other patterns are anticipated to be processed by the sub
-
-Yes, there are only 2 patterns such as "__NR_" and "__NR3264_",
-I confirmed that in include/uapi/asm-generic/unistd.h.
-
-> routines, they may be combined into a single sub routine like so:
-> awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
->         sub("^#define __NR(3264)?_", "")
->         print | "sort -k2 -n"
-> }'
-
-Thanks again, I tested the above code, it also works well and
-looks better, I will modify the code as you suggested in v2.
-
-Thanks,
-Tiezhu
-
+--
+Linaro LKFT
+https://lkft.linaro.org
