@@ -2,49 +2,53 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C237C77B73
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 16:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AA0C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 17:42:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233219AbjEXQMK convert rfc822-to-8bit (ORCPT
+        id S232808AbjEXRmA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 May 2023 12:12:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38088 "EHLO
+        Wed, 24 May 2023 13:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231431AbjEXQMF (ORCPT
+        with ESMTP id S233361AbjEXRl7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 May 2023 12:12:05 -0400
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0282B0;
-        Wed, 24 May 2023 09:12:03 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-ba827a34ba8so2338359276.0;
-        Wed, 24 May 2023 09:12:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684944723; x=1687536723;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E6UQgi5xvFzEPSAlz8yP98XntMjzg5orOqUjts2WmdY=;
-        b=lBfPbLpAezD1iX+BkVyRHr0PbtTnz2eW51w4ArA03vAscTTLOZJTV3N+UZiIQOJRXT
-         NGu0+/UhY7aRqWkRz4PGXryKqR7YV9js2xNeNpqHHMbioPcmX6lzHiAkhBS0z0XVrbzu
-         tt5Jbvz4B1Pll6YzaLX3TmbRfa7CBC1cIpx97EnUpuYSsSQ8S0p/dbMOJN5MCtkzfHAl
-         shCneg2F3ZcOnrl2zPfvp5wj9CodWtOb0QzV8qsc6odxeWZTl0IHcTF7LQsS5FoJeFbX
-         7geSLuFq+F/2Pdkh71ZTUB2gmXsGzpB/SQ2zhZEPGrih8zZsqpPPn5M8/QuCQiuGze9h
-         riaw==
-X-Gm-Message-State: AC+VfDzY8j0IG3YZwSloej6nQ+O0DfOpUSvqXv8soOJ6zSW+aZfqCe+C
-        5zda3OwDrYo06Jl+gb+4lIlqJoqTOgaygywijjM=
-X-Google-Smtp-Source: ACHHUZ461r5Ng3ZvO+Gs0hH6gRBjPlqvVSHcjas7Du8ZO3e3ggAkUjW0N+leGkL4Sai9YPuFKL+flKVJ/Wv/7uksaJg=
-X-Received: by 2002:a25:bc47:0:b0:b9e:6d83:7bcf with SMTP id
- d7-20020a25bc47000000b00b9e6d837bcfmr367272ybk.27.1684944722741; Wed, 24 May
- 2023 09:12:02 -0700 (PDT)
+        Wed, 24 May 2023 13:41:59 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4082C119;
+        Wed, 24 May 2023 10:41:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684950117; x=1716486117;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=r6FHhG4idPEyk6XYTb9aP84pqgb9w1HnBj2Mi4iehE8=;
+  b=l3UWOibFLEjSGOc6h78blLjWQdAT25hWzw+/x5e6tuZlxTiNP0PFEka4
+   1f2diOfZKyy0rHlLatJXlsRZ19UjXcEZDuFcYVzMv8814tdmKYmYGV4Cy
+   48kNC3GfXxx4em8BWES6AVVPdqYBUO6ITPhZxcQGcED/T9U6FcrZeZJNn
+   8lnU4N11hsQJUaozhQ6N5AHcdBCjH700Y/sekw4HrL+hTVdq+i4ci3Be5
+   saG4emqfHOuHGPeKzzAt14sjHa6jXJwcDuqK3WPSsG9L7x8ZzTUhiJE89
+   DbLt7bAhOv2bKvVZb4yc16aR3tw82q7ogZGLrRkZleGaaopuMqW9uqv46
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="355994024"
+X-IronPort-AV: E=Sophos;i="6.00,189,1681196400"; 
+   d="scan'208";a="355994024"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 10:41:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="951115342"
+X-IronPort-AV: E=Sophos;i="6.00,189,1681196400"; 
+   d="scan'208";a="951115342"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.223.197])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 10:41:53 -0700
+Message-ID: <5375b029-b4a3-f7ed-735f-d3985b8cede7@intel.com>
+Date:   Wed, 24 May 2023 20:41:45 +0300
 MIME-Version: 1.0
-References: <20230524052834.1041418-1-namhyung@kernel.org> <20230524052834.1041418-2-namhyung@kernel.org>
- <a51d79b3-6ba4-e85f-0f47-a9a180ea057c@intel.com>
-In-Reply-To: <a51d79b3-6ba4-e85f-0f47-a9a180ea057c@intel.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 24 May 2023 09:11:51 -0700
-Message-ID: <CAM9d7cjpXj235c+6M6k6z41AmEwHuw7RP_oQ54VXwTopp8ui9w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf annotate: Remove x86 instructions with suffix
-To:     Adrian Hunter <adrian.hunter@intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.11.0
+Subject: Re: [PATCH 1/2] perf annotate: Handle x86 instruction suffix
+ generally
+Content-Language: en-US
+To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -53,162 +57,106 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Kan Liang <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+References: <20230524052834.1041418-1-namhyung@kernel.org>
+ <b054012a-94ee-fb86-da35-d3359b8b4683@intel.com>
+ <CAM9d7cif9PPBWPEZx6MA6E4FHaAQLbi-0pEGwLrtLxiEASog9Q@mail.gmail.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <CAM9d7cif9PPBWPEZx6MA6E4FHaAQLbi-0pEGwLrtLxiEASog9Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 23, 2023 at 11:15 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 24/05/23 08:28, Namhyung Kim wrote:
-> > Not the suffix is handled in the general code.  Let's get rid of them.
->
-> Not -> Now ?
+On 24/05/23 19:10, Namhyung Kim wrote:
+> Hi Adrian,
+> 
+> On Tue, May 23, 2023 at 11:11 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>
+>> On 24/05/23 08:28, Namhyung Kim wrote:
+>>> Most of x86 instructions can have size suffix like b, w, l or q.
+>>
+>> (AT&T mnemonics)
+> 
+> Right, will update.
+> 
+>>
+>>> Instead of adding all these instructions in the table, we can handle
+>>> them in a general way.  For example, it can try to find an instruction
+>>> as is.  If not found, it'd try again without the suffix if it's one of
+>>> the allowed suffixes.
+>>
+>> I guess it might be possible that xyz is in the table but xyz<suffix>
+>> is a completely different instruction?
+> 
+> Then xyz<suffix> should be in the table too.  The match without
+> suffix is a fallback so it should find the correct instruction first.
 
-Correct, will fix.
+Right, so when adding xyz to the table, xyz<suffix> does not need
+to be added as well if it is the same instruction but with different
+operand sizes, but xyz<suffix> must be added as well if it is a
+different instruction with different ops.
 
->
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/arch/x86/annotate/instructions.c | 44 +--------------------
-> >  1 file changed, 2 insertions(+), 42 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-> > index 5c7bec25fee4..714fd8784d99 100644
-> > --- a/tools/perf/arch/x86/annotate/instructions.c
-> > +++ b/tools/perf/arch/x86/annotate/instructions.c
-> > @@ -1,48 +1,29 @@
-> >  // SPDX-License-Identifier: GPL-2.0
->
-> Could probably use a comment about how the table works
-> with suffixes.
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+>>
+>>>
+>>> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+>>> ---
+>>>  tools/perf/util/annotate.c | 22 ++++++++++++++++++++++
+>>>  1 file changed, 22 insertions(+)
+>>>
+>>> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+>>> index b708bbc49c9e..7f05f2a2aa83 100644
+>>> --- a/tools/perf/util/annotate.c
+>>> +++ b/tools/perf/util/annotate.c
+>>> @@ -70,6 +70,7 @@ struct arch {
+>>>       struct ins_ops  *(*associate_instruction_ops)(struct arch *arch, const char *name);
+>>>       bool            sorted_instructions;
+>>>       bool            initialized;
+>>> +     const char      *insn_suffix;
+>>>       void            *priv;
+>>>       unsigned int    model;
+>>>       unsigned int    family;
+>>> @@ -179,6 +180,7 @@ static struct arch architectures[] = {
+>>>               .init = x86__annotate_init,
+>>>               .instructions = x86__instructions,
+>>>               .nr_instructions = ARRAY_SIZE(x86__instructions),
+>>> +             .insn_suffix = "bwlq",
+>>>               .objdump =  {
+>>>                       .comment_char = '#',
+>>>               },
+>>> @@ -720,6 +722,26 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name)
+>>>       }
+>>>
+>>>       ins = bsearch(name, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
+>>> +     if (ins)
+>>> +             return ins->ops;
+>>> +
+>>> +     if (arch->insn_suffix) {
+>>> +             char tmp[32];
+>>> +             char suffix;
+>>> +             size_t len = strlen(name);
+>>> +
+>>> +             if (len == 0 || len >= sizeof(tmp))
+>>> +                     return NULL;
+>>> +
+>>> +             suffix = name[len - 1];
+>>> +             if (strchr(arch->insn_suffix, suffix) == NULL)
+>>> +                     return NULL;
+>>> +
+>>> +             strcpy(tmp, name);
+>>> +             tmp[len - 1] = '\0'; /* remove the suffix and check again */
+>>> +
+>>> +             ins = bsearch(tmp, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
+>>> +     }
+>>>       return ins ? ins->ops : NULL;
+>>>  }
+>>>
+>>
 
-Ok, I will add a comment.
-
-Thanks for your review!
-Namhyung
-
-
->
-> >  static struct ins x86__instructions[] = {
-> >       { .name = "adc",        .ops = &mov_ops,  },
-> > -     { .name = "adcb",       .ops = &mov_ops,  },
-> > -     { .name = "adcl",       .ops = &mov_ops,  },
-> >       { .name = "add",        .ops = &mov_ops,  },
-> > -     { .name = "addl",       .ops = &mov_ops,  },
-> > -     { .name = "addq",       .ops = &mov_ops,  },
-> >       { .name = "addsd",      .ops = &mov_ops,  },
-> > -     { .name = "addw",       .ops = &mov_ops,  },
-> >       { .name = "and",        .ops = &mov_ops,  },
-> > -     { .name = "andb",       .ops = &mov_ops,  },
-> > -     { .name = "andl",       .ops = &mov_ops,  },
-> >       { .name = "andpd",      .ops = &mov_ops,  },
-> >       { .name = "andps",      .ops = &mov_ops,  },
-> > -     { .name = "andq",       .ops = &mov_ops,  },
-> > -     { .name = "andw",       .ops = &mov_ops,  },
-> >       { .name = "bsr",        .ops = &mov_ops,  },
-> >       { .name = "bt",         .ops = &mov_ops,  },
-> >       { .name = "btr",        .ops = &mov_ops,  },
-> >       { .name = "bts",        .ops = &mov_ops,  },
-> > -     { .name = "btsq",       .ops = &mov_ops,  },
-> >       { .name = "call",       .ops = &call_ops, },
-> > -     { .name = "callq",      .ops = &call_ops, },
-> >       { .name = "cmovbe",     .ops = &mov_ops,  },
-> >       { .name = "cmove",      .ops = &mov_ops,  },
-> >       { .name = "cmovae",     .ops = &mov_ops,  },
-> >       { .name = "cmp",        .ops = &mov_ops,  },
-> > -     { .name = "cmpb",       .ops = &mov_ops,  },
-> > -     { .name = "cmpl",       .ops = &mov_ops,  },
-> > -     { .name = "cmpq",       .ops = &mov_ops,  },
-> > -     { .name = "cmpw",       .ops = &mov_ops,  },
-> >       { .name = "cmpxch",     .ops = &mov_ops,  },
-> >       { .name = "cmpxchg",    .ops = &mov_ops,  },
-> >       { .name = "cs",         .ops = &mov_ops,  },
-> >       { .name = "dec",        .ops = &dec_ops,  },
-> > -     { .name = "decl",       .ops = &dec_ops,  },
-> > -     { .name = "decq",       .ops = &dec_ops,  },
-> >       { .name = "divsd",      .ops = &mov_ops,  },
-> >       { .name = "divss",      .ops = &mov_ops,  },
-> >       { .name = "gs",         .ops = &mov_ops,  },
-> >       { .name = "imul",       .ops = &mov_ops,  },
-> >       { .name = "inc",        .ops = &dec_ops,  },
-> > -     { .name = "incl",       .ops = &dec_ops,  },
-> > -     { .name = "incq",       .ops = &dec_ops,  },
-> >       { .name = "ja",         .ops = &jump_ops, },
-> >       { .name = "jae",        .ops = &jump_ops, },
-> >       { .name = "jb",         .ops = &jump_ops, },
-> > @@ -56,7 +37,6 @@ static struct ins x86__instructions[] = {
-> >       { .name = "jl",         .ops = &jump_ops, },
-> >       { .name = "jle",        .ops = &jump_ops, },
-> >       { .name = "jmp",        .ops = &jump_ops, },
-> > -     { .name = "jmpq",       .ops = &jump_ops, },
-> >       { .name = "jna",        .ops = &jump_ops, },
-> >       { .name = "jnae",       .ops = &jump_ops, },
-> >       { .name = "jnb",        .ops = &jump_ops, },
-> > @@ -83,49 +63,31 @@ static struct ins x86__instructions[] = {
-> >       { .name = "mov",        .ops = &mov_ops,  },
-> >       { .name = "movapd",     .ops = &mov_ops,  },
-> >       { .name = "movaps",     .ops = &mov_ops,  },
-> > -     { .name = "movb",       .ops = &mov_ops,  },
-> >       { .name = "movdqa",     .ops = &mov_ops,  },
-> >       { .name = "movdqu",     .ops = &mov_ops,  },
-> > -     { .name = "movl",       .ops = &mov_ops,  },
-> > -     { .name = "movq",       .ops = &mov_ops,  },
-> >       { .name = "movsd",      .ops = &mov_ops,  },
-> >       { .name = "movslq",     .ops = &mov_ops,  },
-> >       { .name = "movss",      .ops = &mov_ops,  },
-> >       { .name = "movupd",     .ops = &mov_ops,  },
-> >       { .name = "movups",     .ops = &mov_ops,  },
-> > -     { .name = "movw",       .ops = &mov_ops,  },
-> >       { .name = "movzbl",     .ops = &mov_ops,  },
-> >       { .name = "movzwl",     .ops = &mov_ops,  },
-> >       { .name = "mulsd",      .ops = &mov_ops,  },
-> >       { .name = "mulss",      .ops = &mov_ops,  },
-> >       { .name = "nop",        .ops = &nop_ops,  },
-> > -     { .name = "nopl",       .ops = &nop_ops,  },
-> > -     { .name = "nopw",       .ops = &nop_ops,  },
-> >       { .name = "or",         .ops = &mov_ops,  },
-> > -     { .name = "orb",        .ops = &mov_ops,  },
-> > -     { .name = "orl",        .ops = &mov_ops,  },
-> >       { .name = "orps",       .ops = &mov_ops,  },
-> > -     { .name = "orq",        .ops = &mov_ops,  },
-> >       { .name = "pand",       .ops = &mov_ops,  },
-> >       { .name = "paddq",      .ops = &mov_ops,  },
-> >       { .name = "pcmpeqb",    .ops = &mov_ops,  },
-> >       { .name = "por",        .ops = &mov_ops,  },
-> > -     { .name = "rclb",       .ops = &mov_ops,  },
-> > -     { .name = "rcll",       .ops = &mov_ops,  },
-> > +     { .name = "rcl",        .ops = &mov_ops,  },
-> >       { .name = "ret",        .ops = &ret_ops,  },
-> > -     { .name = "retq",       .ops = &ret_ops,  },
-> >       { .name = "sbb",        .ops = &mov_ops,  },
-> > -     { .name = "sbbl",       .ops = &mov_ops,  },
-> >       { .name = "sete",       .ops = &mov_ops,  },
-> >       { .name = "sub",        .ops = &mov_ops,  },
-> > -     { .name = "subl",       .ops = &mov_ops,  },
-> > -     { .name = "subq",       .ops = &mov_ops,  },
-> >       { .name = "subsd",      .ops = &mov_ops,  },
-> > -     { .name = "subw",       .ops = &mov_ops,  },
-> >       { .name = "test",       .ops = &mov_ops,  },
-> > -     { .name = "testb",      .ops = &mov_ops,  },
-> > -     { .name = "testl",      .ops = &mov_ops,  },
-> > -     { .name = "testq",      .ops = &mov_ops,  },
-> >       { .name = "tzcnt",      .ops = &mov_ops,  },
-> >       { .name = "ucomisd",    .ops = &mov_ops,  },
-> >       { .name = "ucomiss",    .ops = &mov_ops,  },
-> > @@ -139,11 +101,9 @@ static struct ins x86__instructions[] = {
-> >       { .name = "vsubsd",     .ops = &mov_ops,  },
-> >       { .name = "vucomisd",   .ops = &mov_ops,  },
-> >       { .name = "xadd",       .ops = &mov_ops,  },
-> > -     { .name = "xbeginl",    .ops = &jump_ops, },
-> > -     { .name = "xbeginq",    .ops = &jump_ops, },
-> > +     { .name = "xbegin",     .ops = &jump_ops, },
-> >       { .name = "xchg",       .ops = &mov_ops,  },
-> >       { .name = "xor",        .ops = &mov_ops, },
-> > -     { .name = "xorb",       .ops = &mov_ops, },
-> >       { .name = "xorpd",      .ops = &mov_ops, },
-> >       { .name = "xorps",      .ops = &mov_ops, },
-> >  };
->
