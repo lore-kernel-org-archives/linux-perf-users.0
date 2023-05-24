@@ -2,204 +2,163 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502C2C7EE2D
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 13:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD3FC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 13:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbjEXNU3 (ORCPT
+        id S235054AbjEXNil (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 May 2023 09:20:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52108 "EHLO
+        Wed, 24 May 2023 09:38:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233733AbjEXNU1 (ORCPT
+        with ESMTP id S231609AbjEXNik (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 May 2023 09:20:27 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9BC169B;
-        Wed, 24 May 2023 06:20:25 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FE00113E;
-        Wed, 24 May 2023 06:21:10 -0700 (PDT)
-Received: from localhost.localdomain (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C68B43F840;
-        Wed, 24 May 2023 06:20:22 -0700 (PDT)
-From:   James Clark <james.clark@arm.com>
-To:     coresight@lists.linaro.org, denik@chromium.org
-Cc:     James Clark <james.clark@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Wed, 24 May 2023 09:38:40 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF20AAA;
+        Wed, 24 May 2023 06:38:38 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 82F0E21FE4;
+        Wed, 24 May 2023 13:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1684935517; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=o9PpiufmZYzleg+TlrTh557lZlXDEM/AsL/PhNB0ois=;
+        b=b+R628QlRTNsSzyUC35Lh1Knve1z2zY9IzRDNTMeINWO8KcOzZ3/0LdvMfmwhO3yUgN9u0
+        3NjN78LPfVkSTa/C8qWoZJEhRh0s7kTbxRKhntcnuX12jzeNk1N45LuX7TCP5yoMvJy4ij
+        lnbnezv8q8w8QHqxzgg76qOTb5SCv3E=
+Received: from suse.cz (dhcp129.suse.cz [10.100.51.129])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 3F3BE2C141;
+        Wed, 24 May 2023 13:38:36 +0000 (UTC)
+Date:   Wed, 24 May 2023 15:38:35 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Stephane Eranian <eranian@google.com>, mpe@ellerman.id.au,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] perf cs-etm: Add exception level consistency check
-Date:   Wed, 24 May 2023 14:19:58 +0100
-Message-Id: <20230524131958.2139331-5-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230524131958.2139331-1-james.clark@arm.com>
-References: <20230524131958.2139331-1-james.clark@arm.com>
+        linuxppc-dev@lists.ozlabs.org, Sumit Garg <sumit.garg@linaro.org>,
+        npiggin@gmail.com, davem@davemloft.net,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, sparclinux@vger.kernel.org,
+        christophe.leroy@csgroup.eu,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        ravi.v.shankar@intel.com, Randy Dunlap <rdunlap@infradead.org>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Ian Rogers <irogers@google.com>, ito-yuichi@fujitsu.com,
+        ricardo.neri@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v5 12/18] watchdog/hardlockup: Rename some "NMI watchdog"
+ constants/function
+Message-ID: <ZG4TW--j-DdSsUO6@alley>
+References: <20230519101840.v5.18.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
+ <20230519101840.v5.12.I91f7277bab4bf8c0cb238732ed92e7ce7bbd71a6@changeid>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230519101840.v5.12.I91f7277bab4bf8c0cb238732ed92e7ce7bbd71a6@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Assert that our own tracking of the exception level matches what
-OpenCSD provides. OpenCSD doesn't distinguish between EL0 and EL1 in the
-memory access callback so the extra tracking was required. But a rough
-assert can still be done.
+On Fri 2023-05-19 10:18:36, Douglas Anderson wrote:
+> Do a search and replace of:
+> - NMI_WATCHDOG_ENABLED => WATCHDOG_HARDLOCKUP_ENABLED
+> - SOFT_WATCHDOG_ENABLED => WATCHDOG_SOFTOCKUP_ENABLED
+> - watchdog_nmi_ => watchdog_hardlockup_
+> - nmi_watchdog_available => watchdog_hardlockup_available
+> - nmi_watchdog_user_enabled => watchdog_hardlockup_user_enabled
+> - soft_watchdog_user_enabled => watchdog_softlockup_user_enabled
+> - NMI_WATCHDOG_DEFAULT => WATCHDOG_HARDLOCKUP_DEFAULT
+> 
+> Then update a few comments near where names were changed.
+> 
+> This is specifically to make it less confusing when we want to
+> introduce the buddy hardlockup detector, which isn't using NMIs. As
+> part of this, we sanitized a few names for consistency.
+> 
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -30,17 +30,17 @@
+>  static DEFINE_MUTEX(watchdog_mutex);
+>  
+>  #if defined(CONFIG_HARDLOCKUP_DETECTOR) || defined(CONFIG_HAVE_NMI_WATCHDOG)
+> -# define NMI_WATCHDOG_DEFAULT	1
+> +# define WATCHDOG_HARDLOCKUP_DEFAULT	1
+>  #else
+> -# define NMI_WATCHDOG_DEFAULT	0
+> +# define WATCHDOG_HARDLOCKUP_DEFAULT	0
+>  #endif
+>  
+>  unsigned long __read_mostly watchdog_enabled;
+>  int __read_mostly watchdog_user_enabled = 1;
+> -int __read_mostly nmi_watchdog_user_enabled = NMI_WATCHDOG_DEFAULT;
+> -int __read_mostly soft_watchdog_user_enabled = 1;
+> +int __read_mostly watchdog_hardlockup_user_enabled = WATCHDOG_HARDLOCKUP_DEFAULT;
+> +int __read_mostly watchdog_softlockup_user_enabled = 1;
 
-Signed-off-by: James Clark <james.clark@arm.com>
----
- .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  6 +--
- .../perf/util/cs-etm-decoder/cs-etm-decoder.h |  4 +-
- tools/perf/util/cs-etm.c                      | 37 +++++++++++++------
- 3 files changed, 32 insertions(+), 15 deletions(-)
+I still see nmi_watchdog_user_enabled and soft_watchdog_user_enabled
+in include/linux/nmi.h. They are declared there and also mentioned
+in a comment.
 
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-index ac227cd03eb0..50b3c248d1e5 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-@@ -52,15 +52,15 @@ struct cs_etm_decoder {
- static u32
- cs_etm_decoder__mem_access(const void *context,
- 			   const ocsd_vaddr_t address,
--			   const ocsd_mem_space_acc_t mem_space __maybe_unused,
-+			   const ocsd_mem_space_acc_t mem_space,
- 			   const u8 trace_chan_id,
- 			   const u32 req_size,
- 			   u8 *buffer)
- {
- 	struct cs_etm_decoder *decoder = (struct cs_etm_decoder *) context;
- 
--	return decoder->mem_access(decoder->data, trace_chan_id,
--				   address, req_size, buffer);
-+	return decoder->mem_access(decoder->data, trace_chan_id, address,
-+				   req_size, buffer, mem_space);
- }
- 
- int cs_etm_decoder__add_mem_access_cb(struct cs_etm_decoder *decoder,
-diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-index 21d403f55d96..272c2efe78ee 100644
---- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-+++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-@@ -11,6 +11,7 @@
- #define INCLUDE__CS_ETM_DECODER_H__
- 
- #include <linux/types.h>
-+#include <opencsd/ocsd_if_types.h>
- #include <stdio.h>
- 
- struct cs_etm_decoder;
-@@ -19,7 +20,8 @@ struct cs_etm_packet_queue;
- 
- struct cs_etm_queue;
- 
--typedef u32 (*cs_etm_mem_cb_type)(struct cs_etm_queue *, u8, u64, size_t, u8 *);
-+typedef u32 (*cs_etm_mem_cb_type)(struct cs_etm_queue *, u8, u64, size_t, u8 *,
-+				  const ocsd_mem_space_acc_t);
- 
- struct cs_etmv3_trace_params {
- 	u32 reg_ctrl;
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index b9ba19327f26..ccf34ed8ddf2 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -931,7 +931,8 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address,
- }
- 
- static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
--			      u64 address, size_t size, u8 *buffer)
-+			      u64 address, size_t size, u8 *buffer,
-+			      const ocsd_mem_space_acc_t mem_space)
- {
- 	u8  cpumode;
- 	u64 offset;
-@@ -947,6 +948,20 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 	if (!tidq)
- 		return 0;
- 
-+	/*
-+	 * We've already tracked EL along side the PID in cs_etm__set_thread()
-+	 * so double check that it matches what OpenCSD thinks as well. It
-+	 * doesn't distinguish between EL0 and EL1 for this mem access callback
-+	 * so we had to do the extra tracking.
-+	 */
-+	if (mem_space & OCSD_MEM_SPACE_EL1N) {
-+		/* Includes both non secure EL1 and EL0 */
-+		assert(tidq->el == ocsd_EL1 || tidq->el == ocsd_EL0);
-+	} else if (mem_space & OCSD_MEM_SPACE_EL2)
-+		assert(tidq->el == ocsd_EL2);
-+	else if (mem_space & OCSD_MEM_SPACE_EL3)
-+		assert(tidq->el == ocsd_EL3);
-+
- 	cpumode = cs_etm__cpu_mode(etmq, address, tidq->el);
- 
- 	if (!thread__find_map(tidq->thread, cpumode, address, &al))
-@@ -1195,8 +1210,8 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
- {
- 	u8 instrBytes[2];
- 
--	cs_etm__mem_access(etmq, trace_chan_id, addr,
--			   ARRAY_SIZE(instrBytes), instrBytes);
-+	cs_etm__mem_access(etmq, trace_chan_id, addr, ARRAY_SIZE(instrBytes),
-+			   instrBytes, 0);
- 	/*
- 	 * T32 instruction size is indicated by bits[15:11] of the first
- 	 * 16-bit word of the instruction: 0b11101, 0b11110 and 0b11111
-@@ -1387,8 +1402,8 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
- 	else
- 		sample->insn_len = 4;
- 
--	cs_etm__mem_access(etmq, trace_chan_id, sample->ip,
--			   sample->insn_len, (void *)sample->insn);
-+	cs_etm__mem_access(etmq, trace_chan_id, sample->ip, sample->insn_len,
-+			   (void *)sample->insn, 0);
- }
- 
- u64 cs_etm__convert_sample_time(struct cs_etm_queue *etmq, u64 cs_timestamp)
-@@ -1940,8 +1955,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 		 * so below only read 2 bytes as instruction size for T32.
- 		 */
- 		addr = end_addr - 2;
--		cs_etm__mem_access(etmq, trace_chan_id, addr,
--				   sizeof(instr16), (u8 *)&instr16);
-+		cs_etm__mem_access(etmq, trace_chan_id, addr, sizeof(instr16),
-+				   (u8 *)&instr16, 0);
- 		if ((instr16 & 0xFF00) == 0xDF00)
- 			return true;
- 
-@@ -1956,8 +1971,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 		 * +---------+---------+-------------------------+
- 		 */
- 		addr = end_addr - 4;
--		cs_etm__mem_access(etmq, trace_chan_id, addr,
--				   sizeof(instr32), (u8 *)&instr32);
-+		cs_etm__mem_access(etmq, trace_chan_id, addr, sizeof(instr32),
-+				   (u8 *)&instr32, 0);
- 		if ((instr32 & 0x0F000000) == 0x0F000000 &&
- 		    (instr32 & 0xF0000000) != 0xF0000000)
- 			return true;
-@@ -1973,8 +1988,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 		 * +-----------------------+---------+-----------+
- 		 */
- 		addr = end_addr - 4;
--		cs_etm__mem_access(etmq, trace_chan_id, addr,
--				   sizeof(instr32), (u8 *)&instr32);
-+		cs_etm__mem_access(etmq, trace_chan_id, addr, sizeof(instr32),
-+				   (u8 *)&instr32, 0);
- 		if ((instr32 & 0xFFE0001F) == 0xd4000001)
- 			return true;
- 
--- 
-2.34.1
+It seems that they do not actually need to be declared there.
+I guess that it was need for the /proc stuff. But it was
+moved into kernel/watchdog.c by the commit commit dd0693fdf054f2ed37
+("watchdog: move watchdog sysctl interface to watchdog.c").
 
+>  int __read_mostly watchdog_thresh = 10;
+> -static int __read_mostly nmi_watchdog_available;
+> +static int __read_mostly watchdog_hardlockup_available;
+>  
+>  struct cpumask watchdog_cpumask __read_mostly;
+>  unsigned long *watchdog_cpumask_bits = cpumask_bits(&watchdog_cpumask);
+
+Otherwise, I like the changes.
+
+With the following:
+
+diff --git a/include/linux/nmi.h b/include/linux/nmi.h
+index 83076bf70ce8..d14fe345eae9 100644
+--- a/include/linux/nmi.h
++++ b/include/linux/nmi.h
+@@ -17,8 +17,6 @@ void lockup_detector_soft_poweroff(void);
+ void lockup_detector_cleanup(void);
+ 
+ extern int watchdog_user_enabled;
+-extern int nmi_watchdog_user_enabled;
+-extern int soft_watchdog_user_enabled;
+ extern int watchdog_thresh;
+ extern unsigned long watchdog_enabled;
+ 
+@@ -68,8 +66,8 @@ static inline void reset_hung_task_detector(void) { }
+  * 'watchdog_enabled' variable. Each lockup detector has its dedicated bit -
+  * bit 0 for the hard lockup detector and bit 1 for the soft lockup detector.
+  *
+- * 'watchdog_user_enabled', 'nmi_watchdog_user_enabled' and
+- * 'soft_watchdog_user_enabled' are variables that are only used as an
++ * 'watchdog_user_enabled', 'watchdog_hardlockup_user_enabled' and
++ * 'watchdog_softlockup_user_enabled' are variables that are only used as an
+  * 'interface' between the parameters in /proc/sys/kernel and the internal
+  * state bits in 'watchdog_enabled'. The 'watchdog_thresh' variable is
+  * handled differently because its value is not boolean, and the lockup
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Even better might be to remove the unused declaration in a separate
+patch. I think that more declarations are not needed after moving
+the /proc stuff into kernel/watchdog.c.
+
+But it might also be fixed later.
+
+Best Regards,
+Petr
