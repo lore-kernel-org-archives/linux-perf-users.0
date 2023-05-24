@@ -2,211 +2,169 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189D7C77B73
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 06:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA220C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 06:45:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239260AbjEXGOa (ORCPT
+        id S234180AbjEXGps (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 May 2023 02:14:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49524 "EHLO
+        Wed, 24 May 2023 02:45:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231889AbjEXGO3 (ORCPT
+        with ESMTP id S234559AbjEXGpQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 May 2023 02:14:29 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B3F0132;
-        Tue, 23 May 2023 23:14:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684908868; x=1716444868;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=BvET74+PGhFIHGpf69Hu1b65MfR/QvNJUm8CVbYFuIc=;
-  b=ZRtXs8mOsHpBkQceiKCDqdo+7ZLRbwXUqVZW9aEuvtt+t8dCGrzoXOOI
-   EEOYFTifBRGmaYS3pemq/yNtLHZFiGSeB6/NYG5LAE/avb7lUdB/o13P0
-   BtL/9eLoeJ1pMzcGQmZG4DJzAw53LWs3vbuqRP6t2OGOm2lJHZFAlGoTP
-   /8vsn2JtJWzkuP0TyDHglCPPO72J0jt7d76ZldbF4tZ26x7zvGDeEARln
-   RCKnODST/mZvd28xLz+O/IlWqpv1Uf6fEXpQEyLmaYtrnIWqHDcyeRf4w
-   Or1w8zF61xawzeCvzCnUl88bey67o1x5aZhqMJRXQ0YFOwv9V01PMr5nN
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="350982962"
-X-IronPort-AV: E=Sophos;i="6.00,188,1681196400"; 
-   d="scan'208";a="350982962"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 23:14:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10719"; a="654693856"
-X-IronPort-AV: E=Sophos;i="6.00,188,1681196400"; 
-   d="scan'208";a="654693856"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.223.197])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 May 2023 23:14:24 -0700
-Message-ID: <a51d79b3-6ba4-e85f-0f47-a9a180ea057c@intel.com>
-Date:   Wed, 24 May 2023 09:14:20 +0300
+        Wed, 24 May 2023 02:45:16 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AABECE49;
+        Tue, 23 May 2023 23:43:54 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-3f6094cb26eso6925805e9.2;
+        Tue, 23 May 2023 23:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684910633; x=1687502633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Zk6upt+vsp22fV0++FGxdKmhDI8OOl/jL66VSuvL1JM=;
+        b=AxTSMOstnaCEH6JLjXZ30ppxzYQ3gx4X0lJps4UcVJnw5vRPswnqJwfk8CYMqfRPr4
+         opcE4dpKqAfWzoiv3xfPmIhzQTjpch5wscao9Y0sycTStG6q100U8ksj+Bin6F/4tvdr
+         xqrdSrRwL5VtstDm64URGQmtDKj8PXNf/1Wp87mGYcH3hTfI/0gOnLwnHa0DpihSWB1e
+         Lt3J9POr3MLWbh1QTVsnWpR2zh0zah1gCKpLYDF9UIHQgQ4RPDzdHAo8W4Icc9yhBkj9
+         tzD39+/S9vIhYNyn2/sg8Tb8PrB+7Igl2KZALyOaoPHfpwzdQ/nSn49HEDiWfHqVvvzs
+         0jVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684910633; x=1687502633;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Zk6upt+vsp22fV0++FGxdKmhDI8OOl/jL66VSuvL1JM=;
+        b=krd8Wry/CSQ5e640ToO+VffIEKee/DcXWaFt29QzssGboTSgcwJEHYS6Psjpxo9/Ly
+         dYVy9QPUJuM2sR5GJhAFfxEz0uKMSN/AzY8m6jgoucebnss4qJhWi9pb1ORO25DSb3iR
+         84oeApApP/djg2Xp7a1fTFme+fPYResh/Zj2FYnM2Oqpx+52NQ9MYw8RDI+9CvXrVlRQ
+         1W8gwc2MwuU2TESlO1eRjmASnkFYuXoApITojyJUs84QrUyJknKJL/RufeBTB0aV/KtA
+         yFOa79AfI3PBnkDyqCpXRyNoT+BD2XjpsLX2z5tRwkXdg51ZUHwzXIepLTlcHgnwebGh
+         TCng==
+X-Gm-Message-State: AC+VfDwyuGnEjoFv5V8PnaZMdK6txZTUUlSHXrUC6+2cOISvH45rgUtn
+        C2GOdj29cxeR2TXrWSdsZWOxQqGW+7NDi7zP1/Ib9t3eFaLGo003
+X-Google-Smtp-Source: ACHHUZ4QMq9vrYxYRJbuOvFf+VzJiwYOaYoO+O+HFuEtol5pJ+0yyOn0JHLMYZu524VVWgLx4kJjNJwyzL+wyIB+xCU=
+X-Received: by 2002:a05:600c:3795:b0:3f4:2737:a016 with SMTP id
+ o21-20020a05600c379500b003f42737a016mr12308388wmr.29.1684910632858; Tue, 23
+ May 2023 23:43:52 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH 2/2] perf annotate: Remove x86 instructions with suffix
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
+References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
+ <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
+ <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com> <49e98308-ab8d-5811-66a8-9e17f22bb8c4@loongson.cn>
+In-Reply-To: <49e98308-ab8d-5811-66a8-9e17f22bb8c4@loongson.cn>
+From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Date:   Wed, 24 May 2023 09:43:17 +0300
+Message-ID: <CAJ1xhMV=WaYbdGpiRedLUGnYp8JLzcP81Ksw1k1610xeHCiGBA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>
-References: <20230524052834.1041418-1-namhyung@kernel.org>
- <20230524052834.1041418-2-namhyung@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230524052834.1041418-2-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Hans-Peter Nilsson <hp@axis.com>, Leo Yan <leo.yan@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 24/05/23 08:28, Namhyung Kim wrote:
-> Not the suffix is handled in the general code.  Let's get rid of them.
+On Wed, May 24, 2023 at 6:19=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+>
+>
+> On 05/23/2023 08:31 PM, Alexander Kapshuk wrote:
+> > On Tue, May 23, 2023 at 1:22=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongso=
+n.cn> wrote:
+> >>
+> >> After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
+> >> in the generated syscall table file syscalls.c, there exist some
+> >> __NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
+> >> it looks like not so good, just do some small filter operations
+> >> to handle __NR3264_ prefixed syscall number as a digital number.
+> >>
+> >> Without this patch:
+> >>
+> >>   [__NR3264_ftruncate] =3D "ftruncate",
+> >>
+> >> With this patch:
+> >>
+> >>   [46] =3D "ftruncate",
+> >>
+> >> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> >> ---
+> >>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 7 ++++---
+> >>  1 file changed, 4 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools=
+/perf/arch/arm64/entry/syscalls/mksyscalltbl
+> >> index 22cdf91..59ab7939 100755
+> >> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+> >> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+> >> @@ -39,7 +39,8 @@ create_table()
+> >>         echo "};"
+> >>  }
+> >>
+> >> -$gcc -E -dM -x c -I $incpath/include/uapi $input \
+> >> -       |sed -ne 's/^#define __NR_//p' \
+> >> -       |sort -t' ' -k2 -n             \
+> >> +$gcc -E -dM -x c -I $incpath/include/uapi $input               \
+> >> +       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
+> >> +       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
+> >> +       |sort -t' ' -k2 -n                                      \
+> >>         |create_table
+> >> --
+> >> 2.1.0
+> >>
+> >
+> > As an aside, the awk + sed + sort parts of the command line may be
+> > reduced to the following awk script, if desired:
+> > awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
+> >         sub("^#define __NR_", "")
+> >         sub("^#define __NR3264_", "")
+> >         print | "sort -k2 -n"
+> > }'
+> >
+>
+> Hi Alexander,
+>
+> Thanks, it seems more simple and works well as expected.
+> Let us wait for more review comments before respin.
+>
+> If no any objections, I will send v2 with the following
+> changes based on the current patch in the next week.
+>
+> -$gcc -E -dM -x c -I $incpath/include/uapi $input               \
+> -       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
+> -       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
+> -       |sort -t' ' -k2 -n                                      \
+> +$gcc -E -dM -x c -I $incpath/include/uapi $input \
+> +       |awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
+> +               sub("^#define __NR_", "")
+> +               sub("^#define __NR3264_", "")
+> +               print | "sort -k2 -n"}' \
+>          |create_table
+>
+> Thanks,
+> Tiezhu
+>
 
-Not -> Now ?
+Hi Tiezhu,
 
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/arch/x86/annotate/instructions.c | 44 +--------------------
->  1 file changed, 2 insertions(+), 42 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-> index 5c7bec25fee4..714fd8784d99 100644
-> --- a/tools/perf/arch/x86/annotate/instructions.c
-> +++ b/tools/perf/arch/x86/annotate/instructions.c
-> @@ -1,48 +1,29 @@
->  // SPDX-License-Identifier: GPL-2.0
+Thanks for your prompt feedback.
+It was merely a suggestion entirely subject to your discretion.
 
-Could probably use a comment about how the table works
-with suffixes.
-
->  static struct ins x86__instructions[] = {
->  	{ .name = "adc",	.ops = &mov_ops,  },
-> -	{ .name = "adcb",	.ops = &mov_ops,  },
-> -	{ .name = "adcl",	.ops = &mov_ops,  },
->  	{ .name = "add",	.ops = &mov_ops,  },
-> -	{ .name = "addl",	.ops = &mov_ops,  },
-> -	{ .name = "addq",	.ops = &mov_ops,  },
->  	{ .name = "addsd",	.ops = &mov_ops,  },
-> -	{ .name = "addw",	.ops = &mov_ops,  },
->  	{ .name = "and",	.ops = &mov_ops,  },
-> -	{ .name = "andb",	.ops = &mov_ops,  },
-> -	{ .name = "andl",	.ops = &mov_ops,  },
->  	{ .name = "andpd",	.ops = &mov_ops,  },
->  	{ .name = "andps",	.ops = &mov_ops,  },
-> -	{ .name = "andq",	.ops = &mov_ops,  },
-> -	{ .name = "andw",	.ops = &mov_ops,  },
->  	{ .name = "bsr",	.ops = &mov_ops,  },
->  	{ .name = "bt",		.ops = &mov_ops,  },
->  	{ .name = "btr",	.ops = &mov_ops,  },
->  	{ .name = "bts",	.ops = &mov_ops,  },
-> -	{ .name = "btsq",	.ops = &mov_ops,  },
->  	{ .name = "call",	.ops = &call_ops, },
-> -	{ .name = "callq",	.ops = &call_ops, },
->  	{ .name = "cmovbe",	.ops = &mov_ops,  },
->  	{ .name = "cmove",	.ops = &mov_ops,  },
->  	{ .name = "cmovae",	.ops = &mov_ops,  },
->  	{ .name = "cmp",	.ops = &mov_ops,  },
-> -	{ .name = "cmpb",	.ops = &mov_ops,  },
-> -	{ .name = "cmpl",	.ops = &mov_ops,  },
-> -	{ .name = "cmpq",	.ops = &mov_ops,  },
-> -	{ .name = "cmpw",	.ops = &mov_ops,  },
->  	{ .name = "cmpxch",	.ops = &mov_ops,  },
->  	{ .name = "cmpxchg",	.ops = &mov_ops,  },
->  	{ .name = "cs",		.ops = &mov_ops,  },
->  	{ .name = "dec",	.ops = &dec_ops,  },
-> -	{ .name = "decl",	.ops = &dec_ops,  },
-> -	{ .name = "decq",	.ops = &dec_ops,  },
->  	{ .name = "divsd",	.ops = &mov_ops,  },
->  	{ .name = "divss",	.ops = &mov_ops,  },
->  	{ .name = "gs",		.ops = &mov_ops,  },
->  	{ .name = "imul",	.ops = &mov_ops,  },
->  	{ .name = "inc",	.ops = &dec_ops,  },
-> -	{ .name = "incl",	.ops = &dec_ops,  },
-> -	{ .name = "incq",	.ops = &dec_ops,  },
->  	{ .name = "ja",		.ops = &jump_ops, },
->  	{ .name = "jae",	.ops = &jump_ops, },
->  	{ .name = "jb",		.ops = &jump_ops, },
-> @@ -56,7 +37,6 @@ static struct ins x86__instructions[] = {
->  	{ .name = "jl",		.ops = &jump_ops, },
->  	{ .name = "jle",	.ops = &jump_ops, },
->  	{ .name = "jmp",	.ops = &jump_ops, },
-> -	{ .name = "jmpq",	.ops = &jump_ops, },
->  	{ .name = "jna",	.ops = &jump_ops, },
->  	{ .name = "jnae",	.ops = &jump_ops, },
->  	{ .name = "jnb",	.ops = &jump_ops, },
-> @@ -83,49 +63,31 @@ static struct ins x86__instructions[] = {
->  	{ .name = "mov",	.ops = &mov_ops,  },
->  	{ .name = "movapd",	.ops = &mov_ops,  },
->  	{ .name = "movaps",	.ops = &mov_ops,  },
-> -	{ .name = "movb",	.ops = &mov_ops,  },
->  	{ .name = "movdqa",	.ops = &mov_ops,  },
->  	{ .name = "movdqu",	.ops = &mov_ops,  },
-> -	{ .name = "movl",	.ops = &mov_ops,  },
-> -	{ .name = "movq",	.ops = &mov_ops,  },
->  	{ .name = "movsd",	.ops = &mov_ops,  },
->  	{ .name = "movslq",	.ops = &mov_ops,  },
->  	{ .name = "movss",	.ops = &mov_ops,  },
->  	{ .name = "movupd",	.ops = &mov_ops,  },
->  	{ .name = "movups",	.ops = &mov_ops,  },
-> -	{ .name = "movw",	.ops = &mov_ops,  },
->  	{ .name = "movzbl",	.ops = &mov_ops,  },
->  	{ .name = "movzwl",	.ops = &mov_ops,  },
->  	{ .name = "mulsd",	.ops = &mov_ops,  },
->  	{ .name = "mulss",	.ops = &mov_ops,  },
->  	{ .name = "nop",	.ops = &nop_ops,  },
-> -	{ .name = "nopl",	.ops = &nop_ops,  },
-> -	{ .name = "nopw",	.ops = &nop_ops,  },
->  	{ .name = "or",		.ops = &mov_ops,  },
-> -	{ .name = "orb",	.ops = &mov_ops,  },
-> -	{ .name = "orl",	.ops = &mov_ops,  },
->  	{ .name = "orps",	.ops = &mov_ops,  },
-> -	{ .name = "orq",	.ops = &mov_ops,  },
->  	{ .name = "pand",	.ops = &mov_ops,  },
->  	{ .name = "paddq",	.ops = &mov_ops,  },
->  	{ .name = "pcmpeqb",	.ops = &mov_ops,  },
->  	{ .name = "por",	.ops = &mov_ops,  },
-> -	{ .name = "rclb",	.ops = &mov_ops,  },
-> -	{ .name = "rcll",	.ops = &mov_ops,  },
-> +	{ .name = "rcl",	.ops = &mov_ops,  },
->  	{ .name = "ret",	.ops = &ret_ops,  },
-> -	{ .name = "retq",	.ops = &ret_ops,  },
->  	{ .name = "sbb",	.ops = &mov_ops,  },
-> -	{ .name = "sbbl",	.ops = &mov_ops,  },
->  	{ .name = "sete",	.ops = &mov_ops,  },
->  	{ .name = "sub",	.ops = &mov_ops,  },
-> -	{ .name = "subl",	.ops = &mov_ops,  },
-> -	{ .name = "subq",	.ops = &mov_ops,  },
->  	{ .name = "subsd",	.ops = &mov_ops,  },
-> -	{ .name = "subw",	.ops = &mov_ops,  },
->  	{ .name = "test",	.ops = &mov_ops,  },
-> -	{ .name = "testb",	.ops = &mov_ops,  },
-> -	{ .name = "testl",	.ops = &mov_ops,  },
-> -	{ .name = "testq",	.ops = &mov_ops,  },
->  	{ .name = "tzcnt",	.ops = &mov_ops,  },
->  	{ .name = "ucomisd",	.ops = &mov_ops,  },
->  	{ .name = "ucomiss",	.ops = &mov_ops,  },
-> @@ -139,11 +101,9 @@ static struct ins x86__instructions[] = {
->  	{ .name = "vsubsd",	.ops = &mov_ops,  },
->  	{ .name = "vucomisd",	.ops = &mov_ops,  },
->  	{ .name = "xadd",	.ops = &mov_ops,  },
-> -	{ .name = "xbeginl",	.ops = &jump_ops, },
-> -	{ .name = "xbeginq",	.ops = &jump_ops, },
-> +	{ .name = "xbegin",	.ops = &jump_ops, },
->  	{ .name = "xchg",	.ops = &mov_ops,  },
->  	{ .name = "xor",	.ops = &mov_ops, },
-> -	{ .name = "xorb",	.ops = &mov_ops, },
->  	{ .name = "xorpd",	.ops = &mov_ops, },
->  	{ .name = "xorps",	.ops = &mov_ops, },
->  };
-
+If no other patterns are anticipated to be processed by the sub
+routines, they may be combined into a single sub routine like so:
+awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
+        sub("^#define __NR(3264)?_", "")
+        print | "sort -k2 -n"
+}'
