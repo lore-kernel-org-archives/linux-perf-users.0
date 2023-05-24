@@ -2,399 +2,496 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280B3C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Tue, 23 May 2023 21:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93751C77B7E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 03:01:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232018AbjEWV7n convert rfc822-to-8bit (ORCPT
+        id S236013AbjEXDBS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 17:59:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48594 "EHLO
+        Tue, 23 May 2023 23:01:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbjEWV7m (ORCPT
+        with ESMTP id S232978AbjEXDBQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 17:59:42 -0400
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D20E983;
-        Tue, 23 May 2023 14:59:40 -0700 (PDT)
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-ba827c74187so409577276.0;
-        Tue, 23 May 2023 14:59:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684879180; x=1687471180;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JGjJxcn57lgCZWic9tKK0sWJnTgZ1s/472pT76ji6ok=;
-        b=KQhIoL0YPlIejfe7jbC+sM2wiQe5cIhcsc8hkpOGH91/b7Y4aaVgQAVv7TmoiRAtw4
-         pto7OAWjqtYl2H6vufb+oiHRgPcyV352Wfwlt/PmxopDVid94uFyITsbuiEPnrMZ8ijQ
-         fpJEjt9p7BRM1cI84Z7Ej8vyikcHPPBNbFNkz/A4Vm9GVdXCjv7QIxbMnsrHXTQh3ra3
-         erBMNzIlCA5jFOo3fFM5Q91AhQqECuN3wdsMh/iRIQW+tQNjvCIQfmcrK6yObJ4XECY5
-         9btJ3I7dgRDD7EejYEsi3F36hRpMf2qR6ZoiOuvzafdma0pKyka1sKm5Wn92ibxjHjpn
-         48Hw==
-X-Gm-Message-State: AC+VfDz4gmnMqcOPuLUt6Hl0dd1eTBCxVY1th/8XLrPg/8A6QoJFByfy
-        I0dBHGThDAxYfvLkMxJwzauIc2W6Q5eBAp4CVlCOc8uW
-X-Google-Smtp-Source: ACHHUZ4TYuQVMRCgQOHUyr7URqBgt2xneISKJzwT1XFm7obrg53FZFtFT+5+gPoLu7NPT/hLtPyjSWmW0sCu8mdtN2o=
-X-Received: by 2002:a25:a1c9:0:b0:ba8:61f8:8eed with SMTP id
- a67-20020a25a1c9000000b00ba861f88eedmr16329846ybi.0.1684879179617; Tue, 23
- May 2023 14:59:39 -0700 (PDT)
+        Tue, 23 May 2023 23:01:16 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2081.outbound.protection.outlook.com [40.107.220.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B40DE9;
+        Tue, 23 May 2023 20:01:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eWCdZR+S670H5N74NZ9q3OXcdBpieYe9Lgf4kBDXlQpgRPQLeeznOzS7EiJj3FkbCVtpUBun5/AGZL9/1430r6QQbXGurqA17XFzNnaTtVe7pAKDg49dZ1mLU4Zur9ijXX9jzRGkXTSm06xrrBNVPzzqzTbFiy15eeXjuVvcaOwSl5cY5sxFRD1wUFmxF97kdWbSX6hn3J1FJQ9EMrTqejXt73ivW5sMtVWLa00O8rINwBOStHWC1ZS1suDyBEzazTQAk2rntYqxRL55N0IN5Y2ZXlXYD8RPC4ZLT18TZZ4sBs0TM5qx46hszB7iEfAgBxli3SkaaGHWfvCse9EkyQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=AQJM7QN8uItZtyrJyXltWRV2n5S/UKpRQFFk8XnrIDU=;
+ b=Zbg+Dzsgiu6Ao/25xxMMRXeMmSiAimwd8/QQniLLu+Wme9Bjw3Vl3/jbUP7L51fuecWnDAcNn9OeslNDMY/mV4TYo3nPsgQbEabR3X+pkP4CCb7zUtTxUuc2EkZpG3e3ujefG+LGHd6IoZoJ9baIErEs3B3h2RZmxOQa4D5aMZkCfHFm53jD/5Y7Pr0KeXF6BKFDPsVUZK4IUxIcCG89mnV/ZCD2hzzu4D6d0nZT2RIjUWRJavCnso7qXwFhFXwdoYaTuvV2iiYdCSdHtqcrFgSv7l+JWZ5tcfHrPx0vDmPxzwHmlWWQgyFRITcrZbvyTkt95Ebslct3CFa125OekA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AQJM7QN8uItZtyrJyXltWRV2n5S/UKpRQFFk8XnrIDU=;
+ b=bJEGaaNXZUISiq2it2w5xLGqICiuQjJw8ZWWrwlToTF07ZLqcXVQkXUPCYb5cWq/XDMctKjW1PPJbS67k/GbCuz6OQ6XWkXbjNq+uVCdEMgFxJmpkjRCkEfCZlzu+8fKXe+9/6SaMuO8qdQU4WcgIcWIPH84/B8HiQmZUXwt1DI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW2PR12MB2379.namprd12.prod.outlook.com (2603:10b6:907:9::24)
+ by IA1PR12MB7589.namprd12.prod.outlook.com (2603:10b6:208:42b::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Wed, 24 May
+ 2023 03:01:11 +0000
+Received: from MW2PR12MB2379.namprd12.prod.outlook.com
+ ([fe80::b197:512:a4ca:6e9c]) by MW2PR12MB2379.namprd12.prod.outlook.com
+ ([fe80::b197:512:a4ca:6e9c%4]) with mapi id 15.20.6411.028; Wed, 24 May 2023
+ 03:01:11 +0000
+Message-ID: <3ebff16b-01ec-1457-7282-d54220382f98@amd.com>
+Date:   Wed, 24 May 2023 08:30:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.1
+Subject: Re: [PATCH v4 2/5] perf stat: Setup the foundation to allow
+ aggregation based on cache topology
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, ravi.bangoria@amd.com, sandipan.das@amd.com,
+        ananth.narayan@amd.com, gautham.shenoy@amd.com, eranian@google.com,
+        irogers@google.com, puwen@hygon.cn
+References: <20230517172745.5833-1-kprateek.nayak@amd.com>
+ <20230517172745.5833-3-kprateek.nayak@amd.com> <ZG0QFGgwqv3GVsn2@kernel.org>
+From:   K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <ZG0QFGgwqv3GVsn2@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0106.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:9b::14) To MW2PR12MB2379.namprd12.prod.outlook.com
+ (2603:10b6:907:9::24)
 MIME-Version: 1.0
-References: <20230522064330.189127-1-irogers@google.com> <20230522064330.189127-2-irogers@google.com>
-In-Reply-To: <20230522064330.189127-2-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 23 May 2023 14:59:28 -0700
-Message-ID: <CAM9d7cgQpXJc_5Gf2tH3AUwyQufkDnLNms2mNYpof6kv0jtyLg@mail.gmail.com>
-Subject: Re: [PATCH v2 01/23] perf tools: Warn if no user requested CPUs match
- PMU's CPUs
-To:     Ian Rogers <irogers@google.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ming Wang <wangming01@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW2PR12MB2379:EE_|IA1PR12MB7589:EE_
+X-MS-Office365-Filtering-Correlation-Id: bc452c9b-518a-4aa6-7ece-08db5c032079
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: u+eiJJTjoAau70QCtUhJc7V+A4qdjw49qHLI4dAtLlLg4Bm/9MMFbwGvuwmETKohLI8MHC+aF/ue/OeiKzM11OrqttmY0lZkb+KCb92tm/dofvDmJqSAw3zRhrx0wLADiuBsYnmf1qzEE1S63kQkQc6V5YZGzv16CO+yqavU8AvnZXqeMuUKzxGj2YKlACHLnIskV0nL9MTzDKID0xmZYFjDM6xATOlyFKouvmOccTCWRvHEbISli003gdzyYEI/0nZO6+ycvXSsNFDr/GSX1mxxMTAqsQ1ghKKHK8U399z44YvodMwt5Q/Sy0vBdk0Do/JCFj39oEMaYuroXfR+YeHaKQugp3S9RrBrpXC0yV4cX1x86VfbeRrt9JQeNtb12jKrIvIyQ/y2cu3VbGiXKMJ0S+DtSB5/CuSMjTUdsNQ6wrSzbKsAZ7V+T8OF96gqVeuCrjvC8RJj8GrGoTywBwFqQUHSUIpVdYe8edUj/8fXt4O94zqfkyCjiNnA2BJdYnfJLLu2JVpUPnTTBbImHBxylNonLk77xcyjFAoX7+BLFTvMw1trh43txE0c90P++pi5nZWyZW7bGgM0csM5LWMAY8rgyf0f3ZdQT5tcbyuMTpCKXFvIUr2PmBtgjSMleTMwHxbJpltGJx54n0r/RA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2379.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(136003)(346002)(39860400002)(376002)(451199021)(66476007)(66556008)(31686004)(66946007)(6666004)(6512007)(6506007)(26005)(107886003)(316002)(4326008)(6916009)(6486002)(41300700001)(478600001)(8676002)(5660300002)(8936002)(7416002)(2616005)(83380400001)(86362001)(36756003)(2906002)(38100700002)(31696002)(186003)(30864003)(53546011)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a2ZOY3hJWjZLUjYvNlV5ZnBBa1JlSGNmYVlWMCtNa3BQQko3WkRWYUxlckVa?=
+ =?utf-8?B?QWRmVDJWdzlKZmRsNXRKNjJHY2xHdU1BNGhPS2t3ZHJwdXZqS2cxS2NNWi9O?=
+ =?utf-8?B?ZFBsUk5MNGFMZ0FUclFsek1pN3N4c3NFUGw3bEJ0dUxnbERteE9XQS9JZFhy?=
+ =?utf-8?B?QWZvemRVYXJ4YXQ0WUgwREdHK3h4TjlubzNrbWZZVERPdkxBVE9yVDhIRURq?=
+ =?utf-8?B?eEsyRDVRcXhIQTRjNG1lRHhuZVFSK2lPQWlZdVVYRlUwTTgwUi93a1k3RDll?=
+ =?utf-8?B?MXp4eHlNQTdTRW1MSW85RWNKZDNDdER0TjlZajl5dFcrcnF0NjBOUDNWY2V4?=
+ =?utf-8?B?cjJVYjhPTlRzcFRZMi9rWWxoV0NVYTdMdkxHZVVOdFp1VzM1N3RyVnpxS2Jy?=
+ =?utf-8?B?Vk1VNmk1b3FoZ3VvOGI4ZHFtZVh3a1o5aW9TWmpMZCtnYjRpQ2N5UG9pa1Zt?=
+ =?utf-8?B?cURGeWxwMU1uYzVMVlg5Um13cTJxbHpjSExwN2dpTXU5eGhmTGRaa3hGNUpv?=
+ =?utf-8?B?aVpDMy9CS21FditlUUViZGtkNDc4Z0paT0ViQmNCN2x2UHdTeGhkQS9wSENp?=
+ =?utf-8?B?T0o4Wk10eUMzaVNsSmw4SmpGaG5SQW03UVh3bXBXSWdjU1VHSzBGanBtZzlw?=
+ =?utf-8?B?U3JNVG5qVEpIMDJlc3ptVXhhWGdIOWlpUmM4WDBPYzRkZWVaZVRzSTAvUGRi?=
+ =?utf-8?B?YmloVkp1VURiRmV3WGZ6STBYY0lDOVd6UjFTaWpINFZUU1g5Mis0UXBwRE9y?=
+ =?utf-8?B?TVAzZnphMHQ4b1dPM1l5OVNNQ3h2UTZTbzljcjFaLzV0a25CWmIwZXN6ZmIy?=
+ =?utf-8?B?dTNwU3R6bVB1TGJEcnRNWUNJMk0yLzZtVGtlRXNjQk8wVWdEUldBMGd0Qk8v?=
+ =?utf-8?B?VlQzY3lHZEZTaEVoY2REOGNTeWlsVjFkdFJVOW1pMGtvNmE3UWdrZ241YUFW?=
+ =?utf-8?B?Z1NsbVoxSXBwdUU2YUs5Q0R2NHRtcFVXNWl4VU5qd3dSWENyQmtHQ3QraTYr?=
+ =?utf-8?B?WWFKL2RVL1NPOUFyY3dBSThIZG9DM0hySHdGL0xONVNLcTVwWmtXOTFkdVVJ?=
+ =?utf-8?B?Q3JoTjJ0U2RyekVCUitPa2hPRE1xZVk2dGNZZk1Nd3hkYmtXcGhXRWlVcno1?=
+ =?utf-8?B?RVBKUzExejNRZVlHcmV5TkNXVzlrTTlQNHVqYVlTN0ZHL3NlVENkMjhVOS9l?=
+ =?utf-8?B?Rld4Q0s4SVMyOFZYYk5tQ0NpUjc5SWZzTC8yb1pVcXZuU0o4b095RlNYdEc1?=
+ =?utf-8?B?czA2NXAwbllwSEl1cmxWem9ma25Da0VCeDNzaG9kaGlHVkhCVjE4L1hHcDhM?=
+ =?utf-8?B?TnVVS0wvVkZEa1FBQit3dEd1RHQxVzBGQ2tZU0JoTVdpSitqK3V5Z0RranF3?=
+ =?utf-8?B?UjhYVUZVSnlaVEwxN3JrVjV4V1N6QWFEUGpLbHNqWmphTmdXY05PZFZEMlNX?=
+ =?utf-8?B?ZXQ0bXdrcjRvczZuZHU0WkkycUFSb241bmc4SDVEU1ovdWs0ZWx0emE1aWhG?=
+ =?utf-8?B?bHhhK3RvYXhwZ0ZraDBMWWNjdG95WXhUcytjandnNDNocWhNSzBmdDBEQTlD?=
+ =?utf-8?B?WEZWclZkYWlTQ2hJMFo4Zm04ZHBCeVdzdytmbDVlL24vYnpMdis0WTRVUXFF?=
+ =?utf-8?B?aHU2QmtjUjdFMEVoejNOS2dMdFpuRkplOFVEbnl3Yk5WTEk1TjRsNnFFWjlE?=
+ =?utf-8?B?VWEyZG9tUUNOUDBQRS9aNUcwYmVJWnIyd1lZRmRSSGdnRXI5aW5kbDVpMGph?=
+ =?utf-8?B?enNBcHVtQ3Qxb25MRWZiVWd6VVpiVG5qd1RIV3lnVHVhL2E4Si9sZTIzTUhl?=
+ =?utf-8?B?YUIxTzZlK2VZZi9wem9NTTdYUDdIM1YzaHZLODBVMFRNSDNBZkhDYnhEdFhW?=
+ =?utf-8?B?Ni9tOHVISkFWY1FlUjBsQ3VNa01vMkJOS1dXdVd2MGtndWc1ck44TUNWb3ds?=
+ =?utf-8?B?MXFhRjROL29KOXZyQUtGOWlkM1VpVzNuZE00eWFwdFlubi90TmhybGFzNFV4?=
+ =?utf-8?B?dnpMY1N2M3dqNFNkUEhrRHlrVE1uWXdaS2pBVXBTeTFXR2l6VVNpekd2ci9w?=
+ =?utf-8?B?V3F5K1lhRlA3V0tCVHE0OVdhUiszQVViUWdtZlhvYmptQlVueWp2aFdSbWVl?=
+ =?utf-8?Q?NMGCql46SkTVdUlycFEJ2XK7e?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc452c9b-518a-4aa6-7ece-08db5c032079
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2379.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2023 03:01:10.7766
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MDTMYtbksiNKIuvUqgItF5qjZuvOrW8ioVwOzIb1uH4YQCmdfqSI2nxdhdjuvArbOcLS6MHX1jfrWPG5cuBlSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7589
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+Hello Arnaldo,
 
-On Sun, May 21, 2023 at 11:43 PM Ian Rogers <irogers@google.com> wrote:
->
-> In commit 1d3351e631fc ("perf tools: Enable on a list of CPUs for hybrid")
-> perf on hybrid will warn if a user requested CPU doesn't match the PMU
-> of the given event but only for hybrid PMUs. Make the logic generic
-> for all PMUs and remove the hybrid logic.
->
-> Warn if a CPU is requested that is offline for uncore events. Warn if
-> a CPU is requested for a core PMU, but the CPU isn't within the cpu
-> map of that PMU.
->
-> For example on a 16 (0-15) CPU system:
-> ```
-> $ perf stat -e imc_free_running/data_read/,cycles -C 16 true
-> WARNING: Requested CPU(s) '16' not supported by PMU 'uncore_imc_free_running_1' for event 'imc_free_running/data_read/'
-> WARNING: Requested CPU(s) '16' not supported by PMU 'uncore_imc_free_running_0' for event 'imc_free_running/data_read/'
-> WARNING: Requested CPU(s) '16' not supported by PMU 'cpu' for event 'cycles'
->
->  Performance counter stats for 'CPU(s) 16':
->
->    <not supported> MiB  imc_free_running/data_read/
->    <not supported>      cycles
->
->        0.000570094 seconds time elapsed
-> ```
+On 5/24/2023 12:42 AM, Arnaldo Carvalho de Melo wrote:
+> Em Wed, May 17, 2023 at 10:57:42PM +0530, K Prateek Nayak escreveu:
+>> Processors based on chiplet architecture, such as AMD EPYC and Hygon do
+>> not expose the chiplet details in the sysfs CPU topology information.
+>> However, this information can be derived from the per CPU cache level
+>> information from the sysfs.
+>>
+>> perf stat has already supported aggregation based on topology
+>> information using core ID, socket ID, etc. It'll be useful to aggregate
+>> based on the cache topology to detect problems like imbalance and
+>> cache-to-cache sharing at various cache levels.
+>>
+>> This patch lays the foundation for aggregating data in perf stat based
+>> on the processor's cache topology. The cmdline option to aggregate data
+>> based on the cache topology is added in Patch 4 of the series while this
+>> patch sets up all the necessary functions and variables required to
+>> support the new aggregation option.
+>>
+>> The patch also adds support to display per-cache aggregation, or save it
+>> as a JSON or CSV, as splitting it into a separate patch would break
+>> builds when compiling with "-Werror=switch-enum" where the compiler will
+>> complain about the lack of handling for the AGGR_CACHE case in the
+>> output functions.
+>>
+>> Suggested-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+>> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
+>> ---
+>> Changelog:
+>> o v3->v4:
+>>   - Some parts of the previous Patch 2 have been put into subsequent
+>>     smaller patches (while being careful not to introduce any build
+>>     errors in case someone were to bisect through the series)
+>>   - Fixed comments.
+> 
+> So I had to make the following changes, added this explanation to the
+> resulting cset:
+> 
+>     Committer notes:
+> 
+>     Don't use perf_stat_config in tools/perf/util/cpumap.c, this would make
+>     code that is in util/, thus not really specific to a single builtin, use
+>     a specific builtin config structure.
+> 
+>     Move the functions introduced in this patch from
+>     tools/perf/util/cpumap.c since it needs access to builtin specific
+>     and is not strictly needed to live in the util/ directory.
+> 
+>     With this 'perf test python' is back building.
+> 
+> - Arnaldo
 
-I'm ok with the warning changes, but it also removed the fixup logic
-for the hybrid PMUs to change the cpu map in the events.  I'm not sure
-if it's your intention.  If so, I think you'd better splitting it into
-a separate
-commit with some explanation.
+An oversight on my part. Sorry about that. Thank you for fixing this and
+picking up the changes :)
 
-Thanks,
-Namhyung
-
-
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-record.c     |  6 +--
->  tools/perf/builtin-stat.c       |  5 +--
->  tools/perf/util/cpumap.h        |  2 +-
->  tools/perf/util/evlist-hybrid.c | 74 ---------------------------------
->  tools/perf/util/evlist-hybrid.h |  1 -
->  tools/perf/util/evlist.c        | 44 ++++++++++++++++++++
->  tools/perf/util/evlist.h        |  2 +
->  tools/perf/util/pmu.c           | 33 ---------------
->  tools/perf/util/pmu.h           |  4 --
->  9 files changed, 49 insertions(+), 122 deletions(-)
->
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index ec0f2d5f189f..9d212236c75a 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -4198,11 +4198,7 @@ int cmd_record(int argc, const char **argv)
->         /* Enable ignoring missing threads when -u/-p option is defined. */
->         rec->opts.ignore_missing_thread = rec->opts.target.uid != UINT_MAX || rec->opts.target.pid;
->
-> -       if (evlist__fix_hybrid_cpus(rec->evlist, rec->opts.target.cpu_list)) {
-> -               pr_err("failed to use cpu list %s\n",
-> -                      rec->opts.target.cpu_list);
-> -               goto out;
-> -       }
-> +       evlist__warn_user_requested_cpus(rec->evlist, rec->opts.target.cpu_list);
->
->         rec->opts.target.hybrid = perf_pmu__has_hybrid();
->
+> 
 > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index bc45cee3f77c..612467216306 100644
+> index 68294ea499ae51d9..0528d1bc15d27705 100644
 > --- a/tools/perf/builtin-stat.c
 > +++ b/tools/perf/builtin-stat.c
-> @@ -2462,10 +2462,7 @@ int cmd_stat(int argc, const char **argv)
->                 }
->         }
->
-> -       if (evlist__fix_hybrid_cpus(evsel_list, target.cpu_list)) {
-> -               pr_err("failed to use cpu list %s\n", target.cpu_list);
-> -               goto out;
-> -       }
-> +       evlist__warn_user_requested_cpus(evsel_list, target.cpu_list);
->
->         target.hybrid = perf_pmu__has_hybrid();
->         if (evlist__create_maps(evsel_list, &target) < 0) {
-> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
-> index e3426541e0aa..c1de993c083f 100644
-> --- a/tools/perf/util/cpumap.h
-> +++ b/tools/perf/util/cpumap.h
-> @@ -59,7 +59,7 @@ struct perf_cpu cpu__max_present_cpu(void);
->  /**
->   * cpu_map__is_dummy - Events associated with a pid, rather than a CPU, use a single dummy map with an entry of -1.
->   */
-> -static inline bool cpu_map__is_dummy(struct perf_cpu_map *cpus)
-> +static inline bool cpu_map__is_dummy(const struct perf_cpu_map *cpus)
->  {
->         return perf_cpu_map__nr(cpus) == 1 && perf_cpu_map__cpu(cpus, 0).cpu == -1;
->  }
-> diff --git a/tools/perf/util/evlist-hybrid.c b/tools/perf/util/evlist-hybrid.c
-> index 57f02beef023..db3f5fbdebe1 100644
-> --- a/tools/perf/util/evlist-hybrid.c
-> +++ b/tools/perf/util/evlist-hybrid.c
-> @@ -86,77 +86,3 @@ bool evlist__has_hybrid(struct evlist *evlist)
->
->         return false;
->  }
-> -
-> -int evlist__fix_hybrid_cpus(struct evlist *evlist, const char *cpu_list)
-> -{
-> -       struct perf_cpu_map *cpus;
-> -       struct evsel *evsel, *tmp;
-> -       struct perf_pmu *pmu;
-> -       int ret, unmatched_count = 0, events_nr = 0;
-> -
-> -       if (!perf_pmu__has_hybrid() || !cpu_list)
-> -               return 0;
-> -
-> -       cpus = perf_cpu_map__new(cpu_list);
-> -       if (!cpus)
-> -               return -1;
-> -
-> -       /*
-> -        * The evsels are created with hybrid pmu's cpus. But now we
-> -        * need to check and adjust the cpus of evsel by cpu_list because
-> -        * cpu_list may cause conflicts with cpus of evsel. For example,
-> -        * cpus of evsel is cpu0-7, but the cpu_list is cpu6-8, we need
-> -        * to adjust the cpus of evsel to cpu6-7. And then propatate maps
-> -        * in evlist__create_maps().
-> -        */
-> -       evlist__for_each_entry_safe(evlist, tmp, evsel) {
-> -               struct perf_cpu_map *matched_cpus, *unmatched_cpus;
-> -               char buf1[128], buf2[128];
-> -
-> -               pmu = perf_pmu__find_hybrid_pmu(evsel->pmu_name);
-> -               if (!pmu)
-> -                       continue;
-> -
-> -               ret = perf_pmu__cpus_match(pmu, cpus, &matched_cpus,
-> -                                          &unmatched_cpus);
-> -               if (ret)
-> -                       goto out;
-> -
-> -               events_nr++;
-> -
-> -               if (perf_cpu_map__nr(matched_cpus) > 0 &&
-> -                   (perf_cpu_map__nr(unmatched_cpus) > 0 ||
-> -                    perf_cpu_map__nr(matched_cpus) < perf_cpu_map__nr(cpus) ||
-> -                    perf_cpu_map__nr(matched_cpus) < perf_cpu_map__nr(pmu->cpus))) {
-> -                       perf_cpu_map__put(evsel->core.cpus);
-> -                       perf_cpu_map__put(evsel->core.own_cpus);
-> -                       evsel->core.cpus = perf_cpu_map__get(matched_cpus);
-> -                       evsel->core.own_cpus = perf_cpu_map__get(matched_cpus);
-> -
-> -                       if (perf_cpu_map__nr(unmatched_cpus) > 0) {
-> -                               cpu_map__snprint(matched_cpus, buf1, sizeof(buf1));
-> -                               pr_warning("WARNING: use %s in '%s' for '%s', skip other cpus in list.\n",
-> -                                          buf1, pmu->name, evsel->name);
-> -                       }
-> -               }
-> -
-> -               if (perf_cpu_map__nr(matched_cpus) == 0) {
-> -                       evlist__remove(evlist, evsel);
-> -                       evsel__delete(evsel);
-> -
-> -                       cpu_map__snprint(cpus, buf1, sizeof(buf1));
-> -                       cpu_map__snprint(pmu->cpus, buf2, sizeof(buf2));
-> -                       pr_warning("WARNING: %s isn't a '%s', please use a CPU list in the '%s' range (%s)\n",
-> -                                  buf1, pmu->name, pmu->name, buf2);
-> -                       unmatched_count++;
-> -               }
-> -
-> -               perf_cpu_map__put(matched_cpus);
-> -               perf_cpu_map__put(unmatched_cpus);
-> -       }
-> -       if (events_nr)
-> -               ret = (unmatched_count == events_nr) ? -1 : 0;
-> -out:
-> -       perf_cpu_map__put(cpus);
-> -       return ret;
-> -}
-> diff --git a/tools/perf/util/evlist-hybrid.h b/tools/perf/util/evlist-hybrid.h
-> index aacdb1b0f948..19f74b4c340a 100644
-> --- a/tools/perf/util/evlist-hybrid.h
-> +++ b/tools/perf/util/evlist-hybrid.h
-> @@ -10,6 +10,5 @@
->  int evlist__add_default_hybrid(struct evlist *evlist, bool precise);
->  void evlist__warn_hybrid_group(struct evlist *evlist);
->  bool evlist__has_hybrid(struct evlist *evlist);
-> -int evlist__fix_hybrid_cpus(struct evlist *evlist, const char *cpu_list);
->
->  #endif /* __PERF_EVLIST_HYBRID_H */
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index a0504316b06f..5d0d99127a90 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -2465,3 +2465,47 @@ void evlist__check_mem_load_aux(struct evlist *evlist)
->                 }
->         }
->  }
+> @@ -150,7 +150,7 @@ static struct perf_stat		perf_stat;
+>  
+>  static volatile sig_atomic_t done = 0;
+>  
+> -struct perf_stat_config stat_config = {
+> +static struct perf_stat_config stat_config = {
+>  	.aggr_mode		= AGGR_GLOBAL,
+>  	.aggr_level		= MAX_CACHE_LVL + 1,
+>  	.scale			= true,
+> @@ -1251,6 +1251,129 @@ static struct option stat_options[] = {
+>  	OPT_END()
+>  };
+>  
+> +/**
+> + * Calculate the cache instance ID from the map in
+> + * /sys/devices/system/cpu/cpuX/cache/indexY/shared_cpu_list
+> + * Cache instance ID is the first CPU reported in the shared_cpu_list file.
+> + */
+> +static int cpu__get_cache_id_from_map(struct perf_cpu cpu, char *map)
+> +{
+> +	int id;
+> +	struct perf_cpu_map *cpu_map = perf_cpu_map__new(map);
+> +
+> +	/*
+> +	 * If the map contains no CPU, consider the current CPU to
+> +	 * be the first online CPU in the cache domain else use the
+> +	 * first online CPU of the cache domain as the ID.
+> +	 */
+> +	if (perf_cpu_map__empty(cpu_map))
+> +		id = cpu.cpu;
+> +	else
+> +		id = perf_cpu_map__cpu(cpu_map, 0).cpu;
+> +
+> +	/* Free the perf_cpu_map used to find the cache ID */
+> +	perf_cpu_map__put(cpu_map);
+> +
+> +	return id;
+> +}
 > +
 > +/**
-> + * evlist__warn_user_requested_cpus() - Check each evsel against requested CPUs
-> + *     and warn if the user CPU list is inapplicable for the event's PMUs
-> + *     CPUs. Uncore PMUs list a CPU in sysfs, but this may be overwritten by a
-> + *     user requested CPU and so any online CPU is applicable. Core PMUs handle
-> + *     events on the CPUs in their list and otherwise the event isn't supported.
-> + * @evlist: The list of events being checked.
-> + * @cpu_list: The user provided list of CPUs.
+> + * cpu__get_cache_id - Returns 0 if successful in populating the
+> + * cache level and cache id. Cache level is read from
+> + * /sys/devices/system/cpu/cpuX/cache/indexY/level where as cache instance ID
+> + * is the first CPU reported by
+> + * /sys/devices/system/cpu/cpuX/cache/indexY/shared_cpu_list
 > + */
-> +void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list)
+> +static int cpu__get_cache_details(struct perf_cpu cpu, struct perf_cache *cache)
 > +{
-> +       struct perf_cpu_map *user_requested_cpus;
-> +       struct evsel *pos;
+> +	int ret = 0;
+> +	u32 cache_level = stat_config.aggr_level;
+> +	struct cpu_cache_level caches[MAX_CACHE_LVL];
+> +	u32 i = 0, caches_cnt = 0;
 > +
-> +       if (!cpu_list)
-> +               return;
+> +	cache->cache_lvl = (cache_level > MAX_CACHE_LVL) ? 0 : cache_level;
+> +	cache->cache = -1;
 > +
-> +       user_requested_cpus = perf_cpu_map__new(cpu_list);
-> +       if (!user_requested_cpus)
-> +               return;
+> +	ret = build_caches_for_cpu(cpu.cpu, caches, &caches_cnt);
+> +	if (ret) {
+> +		/*
+> +		 * If caches_cnt is not 0, cpu_cache_level data
+> +		 * was allocated when building the topology.
+> +		 * Free the allocated data before returning.
+> +		 */
+> +		if (caches_cnt)
+> +			goto free_caches;
 > +
-> +       evlist__for_each_entry(evlist, pos) {
-> +               const struct perf_cpu_map *to_test;
-> +               struct perf_cpu cpu;
-> +               int idx;
-> +               bool warn = true;
-> +               const struct perf_pmu *pmu = evsel__find_pmu(pos);
+> +		return ret;
+> +	}
 > +
-> +               to_test = pmu && pmu->is_uncore ? cpu_map__online() : evsel__cpus(pos);
+> +	if (!caches_cnt)
+> +		return -1;
 > +
-> +               perf_cpu_map__for_each_cpu(cpu, idx, to_test) {
-> +                       if (perf_cpu_map__has(user_requested_cpus, cpu)) {
-> +                               warn = false;
-> +                               break;
-> +                       }
-> +               }
-> +               if (warn) {
-> +                       pr_warning("WARNING: Requested CPU(s) '%s' not supported by PMU '%s' for event '%s'\n",
-> +                               cpu_list, pmu ? pmu->name : "cpu", evsel__name(pos));
-> +               }
-> +       }
-> +       perf_cpu_map__put(user_requested_cpus);
+> +	/*
+> +	 * Save the data for the highest level if no
+> +	 * level was specified by the user.
+> +	 */
+> +	if (cache_level > MAX_CACHE_LVL) {
+> +		int max_level_index = 0;
+> +
+> +		for (i = 1; i < caches_cnt; ++i) {
+> +			if (caches[i].level > caches[max_level_index].level)
+> +				max_level_index = i;
+> +		}
+> +
+> +		cache->cache_lvl = caches[max_level_index].level;
+> +		cache->cache = cpu__get_cache_id_from_map(cpu, caches[max_level_index].map);
+> +
+> +		/* Reset i to 0 to free entire caches[] */
+> +		i = 0;
+> +		goto free_caches;
+> +	}
+> +
+> +	for (i = 0; i < caches_cnt; ++i) {
+> +		if (caches[i].level == cache_level) {
+> +			cache->cache_lvl = cache_level;
+> +			cache->cache = cpu__get_cache_id_from_map(cpu, caches[i].map);
+> +		}
+> +
+> +		cpu_cache_level__free(&caches[i]);
+> +	}
+> +
+> +free_caches:
+> +	/*
+> +	 * Free all the allocated cpu_cache_level data.
+> +	 */
+> +	while (i < caches_cnt)
+> +		cpu_cache_level__free(&caches[i++]);
+> +
+> +	return ret;
 > +}
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index e7e5540cc970..5e7ff44f3043 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -447,4 +447,6 @@ struct evsel *evlist__find_evsel(struct evlist *evlist, int idx);
->
->  int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char *bf);
->  void evlist__check_mem_load_aux(struct evlist *evlist);
-> +void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list);
 > +
->  #endif /* __PERF_EVLIST_H */
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index f4f0afbc391c..1e0be23d4dd7 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -2038,39 +2038,6 @@ int perf_pmu__match(char *pattern, char *name, char *tok)
->         return 0;
+> +/**
+> + * aggr_cpu_id__cache - Create an aggr_cpu_id with cache instache ID, cache
+> + * level, die and socket populated with the cache instache ID, cache level,
+> + * die and socket for cpu. The function signature is compatible with
+> + * aggr_cpu_id_get_t.
+> + */
+> +static struct aggr_cpu_id aggr_cpu_id__cache(struct perf_cpu cpu, void *data)
+> +{
+> +	int ret;
+> +	struct aggr_cpu_id id;
+> +	struct perf_cache cache;
+> +
+> +	id = aggr_cpu_id__die(cpu, data);
+> +	if (aggr_cpu_id__is_empty(&id))
+> +		return id;
+> +
+> +	ret = cpu__get_cache_details(cpu, &cache);
+> +	if (ret)
+> +		return id;
+> +
+> +	id.cache_lvl = cache.cache_lvl;
+> +	id.cache = cache.cache;
+> +	return id;
+> +}
+> +
+>  static const char *const aggr_mode__string[] = {
+>  	[AGGR_CORE] = "core",
+>  	[AGGR_CACHE] = "cache",
+> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> index 88d387200745de2f..a0719816a218d441 100644
+> --- a/tools/perf/util/cpumap.c
+> +++ b/tools/perf/util/cpumap.c
+> @@ -3,8 +3,6 @@
+>  #include "cpumap.h"
+>  #include "debug.h"
+>  #include "event.h"
+> -#include "header.h"
+> -#include "stat.h"
+>  #include <assert.h>
+>  #include <dirent.h>
+>  #include <stdio.h>
+> @@ -311,113 +309,6 @@ struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data)
+>  	return id;
 >  }
->
-> -int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
-> -                        struct perf_cpu_map **mcpus_ptr,
-> -                        struct perf_cpu_map **ucpus_ptr)
+>  
+> -extern struct perf_stat_config stat_config;
+> -
+> -int cpu__get_cache_id_from_map(struct perf_cpu cpu, char *map)
 > -{
-> -       struct perf_cpu_map *pmu_cpus = pmu->cpus;
-> -       struct perf_cpu_map *matched_cpus, *unmatched_cpus;
-> -       struct perf_cpu cpu;
-> -       int i, matched_nr = 0, unmatched_nr = 0;
+> -	int id;
+> -	struct perf_cpu_map *cpu_map = perf_cpu_map__new(map);
 > -
-> -       matched_cpus = perf_cpu_map__default_new();
-> -       if (!matched_cpus)
-> -               return -1;
+> -	/*
+> -	 * If the map contains no CPU, consider the current CPU to
+> -	 * be the first online CPU in the cache domain else use the
+> -	 * first online CPU of the cache domain as the ID.
+> -	 */
+> -	if (perf_cpu_map__empty(cpu_map))
+> -		id = cpu.cpu;
+> -	else
+> -		id = perf_cpu_map__cpu(cpu_map, 0).cpu;
 > -
-> -       unmatched_cpus = perf_cpu_map__default_new();
-> -       if (!unmatched_cpus) {
-> -               perf_cpu_map__put(matched_cpus);
-> -               return -1;
-> -       }
+> -	/* Free the perf_cpu_map used to find the cache ID */
+> -	perf_cpu_map__put(cpu_map);
 > -
-> -       perf_cpu_map__for_each_cpu(cpu, i, cpus) {
-> -               if (!perf_cpu_map__has(pmu_cpus, cpu))
-> -                       RC_CHK_ACCESS(unmatched_cpus)->map[unmatched_nr++] = cpu;
-> -               else
-> -                       RC_CHK_ACCESS(matched_cpus)->map[matched_nr++] = cpu;
-> -       }
-> -
-> -       perf_cpu_map__set_nr(unmatched_cpus, unmatched_nr);
-> -       perf_cpu_map__set_nr(matched_cpus, matched_nr);
-> -       *mcpus_ptr = matched_cpus;
-> -       *ucpus_ptr = unmatched_cpus;
-> -       return 0;
+> -	return id;
 > -}
 > -
->  double __weak perf_pmu__cpu_slots_per_cycle(void)
->  {
->         return NAN;
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 0e0cb6283594..49033bb134f3 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -257,10 +257,6 @@ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu);
->  bool perf_pmu__has_hybrid(void);
->  int perf_pmu__match(char *pattern, char *name, char *tok);
->
-> -int perf_pmu__cpus_match(struct perf_pmu *pmu, struct perf_cpu_map *cpus,
-> -                        struct perf_cpu_map **mcpus_ptr,
-> -                        struct perf_cpu_map **ucpus_ptr);
+> -int cpu__get_cache_details(struct perf_cpu cpu, struct perf_cache *cache)
+> -{
+> -	int ret = 0;
+> -	struct cpu_cache_level caches[MAX_CACHE_LVL];
+> -	u32 cache_level = stat_config.aggr_level;
+> -	u32 i = 0, caches_cnt = 0;
 > -
->  char *pmu_find_real_name(const char *name);
->  char *pmu_find_alias_name(const char *name);
->  double perf_pmu__cpu_slots_per_cycle(void);
-> --
-> 2.40.1.698.g37aff9b760-goog
->
+> -	cache->cache_lvl = (cache_level > MAX_CACHE_LVL) ? 0 : cache_level;
+> -	cache->cache = -1;
+> -
+> -	ret = build_caches_for_cpu(cpu.cpu, caches, &caches_cnt);
+> -	if (ret) {
+> -		/*
+> -		 * If caches_cnt is not 0, cpu_cache_level data
+> -		 * was allocated when building the topology.
+> -		 * Free the allocated data before returning.
+> -		 */
+> -		if (caches_cnt)
+> -			goto free_caches;
+> -
+> -		return ret;
+> -	}
+> -
+> -	if (!caches_cnt)
+> -		return -1;
+> -
+> -	/*
+> -	 * Save the data for the highest level if no
+> -	 * level was specified by the user.
+> -	 */
+> -	if (cache_level > MAX_CACHE_LVL) {
+> -		int max_level_index = 0;
+> -
+> -		for (i = 1; i < caches_cnt; ++i) {
+> -			if (caches[i].level > caches[max_level_index].level)
+> -				max_level_index = i;
+> -		}
+> -
+> -		cache->cache_lvl = caches[max_level_index].level;
+> -		cache->cache = cpu__get_cache_id_from_map(cpu, caches[max_level_index].map);
+> -
+> -		/* Reset i to 0 to free entire caches[] */
+> -		i = 0;
+> -		goto free_caches;
+> -	}
+> -
+> -	for (i = 0; i < caches_cnt; ++i) {
+> -		if (caches[i].level == cache_level) {
+> -			cache->cache_lvl = cache_level;
+> -			cache->cache = cpu__get_cache_id_from_map(cpu, caches[i].map);
+> -		}
+> -
+> -		cpu_cache_level__free(&caches[i]);
+> -	}
+> -
+> -free_caches:
+> -	/*
+> -	 * Free all the allocated cpu_cache_level data.
+> -	 */
+> -	while (i < caches_cnt)
+> -		cpu_cache_level__free(&caches[i++]);
+> -
+> -	return ret;
+> -}
+> -
+> -struct aggr_cpu_id aggr_cpu_id__cache(struct perf_cpu cpu, void *data)
+> -{
+> -	int ret;
+> -	struct aggr_cpu_id id;
+> -	struct perf_cache cache;
+> -
+> -	id = aggr_cpu_id__die(cpu, data);
+> -	if (aggr_cpu_id__is_empty(&id))
+> -		return id;
+> -
+> -	ret = cpu__get_cache_details(cpu, &cache);
+> -	if (ret)
+> -		return id;
+> -
+> -	id.cache_lvl = cache.cache_lvl;
+> -	id.cache = cache.cache;
+> -	return id;
+> -}
+> -
+>  int cpu__get_core_id(struct perf_cpu cpu)
+>  {
+>  	int value, ret = cpu__get_topology_int(cpu.cpu, "core_id", &value);
+> diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+> index 1212b4ab19386293..f394ccc0ccfbca4c 100644
+> --- a/tools/perf/util/cpumap.h
+> +++ b/tools/perf/util/cpumap.h
+> @@ -86,20 +86,6 @@ int cpu__get_socket_id(struct perf_cpu cpu);
+>   * /sys/devices/system/cpu/cpuX/topology/die_id for the given CPU.
+>   */
+>  int cpu__get_die_id(struct perf_cpu cpu);
+> -/**
+> - * Calculate the cache instance ID from the map in
+> - * /sys/devices/system/cpu/cpuX/cache/indexY/shared_cpu_list
+> - * Cache instance ID is the first CPU reported in the shared_cpu_list file.
+> - */
+> -int cpu__get_cache_id_from_map(struct perf_cpu cpu, char *map);
+> -/**
+> - * cpu__get_cache_id - Returns 0 if successful in populating the
+> - * cache level and cache id. Cache level is read from
+> - * /sys/devices/system/cpu/cpuX/cache/indexY/level where as cache instance ID
+> - * is the first CPU reported by
+> - * /sys/devices/system/cpu/cpuX/cache/indexY/shared_cpu_list
+> - */
+> -int cpu__get_cache_details(struct perf_cpu cpu, struct perf_cache *cache);
+>  /**
+>   * cpu__get_core_id - Returns the core id as read from
+>   * /sys/devices/system/cpu/cpuX/topology/core_id for the given CPU.
+> @@ -140,13 +126,6 @@ struct aggr_cpu_id aggr_cpu_id__socket(struct perf_cpu cpu, void *data);
+>   * aggr_cpu_id_get_t.
+>   */
+>  struct aggr_cpu_id aggr_cpu_id__die(struct perf_cpu cpu, void *data);
+> -/**
+> - * aggr_cpu_id__cache - Create an aggr_cpu_id with cache instache ID, cache
+> - * level, die and socket populated with the cache instache ID, cache level,
+> - * die and socket for cpu. The function signature is compatible with
+> - * aggr_cpu_id_get_t.
+> - */
+> -struct aggr_cpu_id aggr_cpu_id__cache(struct perf_cpu cpu, void *data);
+>  /**
+>   * aggr_cpu_id__core - Create an aggr_cpu_id with the core, die and socket
+>   * populated with the core, die and socket for cpu. The function signature is
+
+--
+Thanks and Regards,
+Prateek
