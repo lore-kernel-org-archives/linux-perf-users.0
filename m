@@ -2,147 +2,134 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8487C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 03:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E73B5C77B73
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 05:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235138AbjEXDUX (ORCPT
+        id S229920AbjEXF2k (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 23:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47528 "EHLO
+        Wed, 24 May 2023 01:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239314AbjEXDTr (ORCPT
+        with ESMTP id S239347AbjEXF2j (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 23:19:47 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3F1B91B9;
-        Tue, 23 May 2023 20:19:06 -0700 (PDT)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8Dx_+spgm1kkkkAAA--.628S3;
-        Wed, 24 May 2023 11:19:05 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Axo8Aogm1kbbdyAA--.60316S3;
-        Wed, 24 May 2023 11:19:05 +0800 (CST)
-Subject: Re: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
-To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
-References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
- <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
- <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
+        Wed, 24 May 2023 01:28:39 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89E0213E;
+        Tue, 23 May 2023 22:28:37 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1ae4d1d35e6so4208605ad.0;
+        Tue, 23 May 2023 22:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684906117; x=1687498117;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=W6kUveazmI/2mChCTnueKXfUry75ocgV/yH5bVTAw9A=;
+        b=XjDPkqRK9rr1M8kESs++g8i2DeggEfB1cY59xqV+hFKaoZDNJcbIOuA8avK4mRKeUv
+         3CGu+OQZSAUsLX/Mfo5keCG84W6IN4yVYpW3iWlr0t+wLZh8w/Xj6wc42uqfNDMPfo4G
+         qB7+s+Jk4qan3k2GfhT4SFv4+Hzw1Ov6VWotsWjcqfTyoAm8rbT9sc9E8nuiHJAxKv+8
+         MdN2+8ZaTC7+f2FOq0oZj5etQEgq+p5pGB1K0rBkgrDPK0WEbhb7F4xsQRhheiQ0oAYR
+         nb4mtR0jxEUxJHrf4CyfGTBihfKxOb9JnssxSnzNYLdQ/KGdRbEVfO/3ueiWwm+g/bvx
+         5bow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684906117; x=1687498117;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W6kUveazmI/2mChCTnueKXfUry75ocgV/yH5bVTAw9A=;
+        b=Unzt9fxR4+uIRDeUAqXQjdn/EpEmjByjSLeNWRkMs/5WOHEmxlpeS6UWNho/9SnLy0
+         xBrCsL36czs6rMzl0YJcs1r1PeKD7aZExuc7Uul1OnrPBYPqmcR46kzr10MyiDNoXe3V
+         vX81KSorD02qKOroLcjN5zVUgVuKOHY2zepI4J8KZqqPXb3zlEGoPXfXue5RKC4xv6Kf
+         AZyBmgKufkP39oLbemcHzSgtsMB8qaxQ2HerBZPBQbWXQmSrVUB0QKOQVCxMKmOalDKH
+         Xq8zsUf+3d5vFefsk9n1JCRn6N9lTKMMEzkqkPTfYSDIplb8D6zE5kBLbQw+K34x0He6
+         k18Q==
+X-Gm-Message-State: AC+VfDx/Ahefr5gai71s6nhbOEkaJDQwibQvjhzzcnx0he2lbafouuqK
+        y04aoMjqFmRKYCN48Pnm6Yt9Ad7AYCs=
+X-Google-Smtp-Source: ACHHUZ5644DT6wLuSLJdUqXnUd7o9sLEu9in789VD7+zDlvzds9RMvbwqDuFRKKlYJYU7Udw5813bQ==
+X-Received: by 2002:a17:903:2341:b0:1a6:7ed0:147e with SMTP id c1-20020a170903234100b001a67ed0147emr20337766plh.33.1684906116826;
+        Tue, 23 May 2023 22:28:36 -0700 (PDT)
+Received: from bangji.hsd1.ca.comcast.net ([2601:647:6700:7f00:806f:2bdc:cf65:f76b])
+        by smtp.gmail.com with ESMTPSA id f10-20020a170902ce8a00b001a64011899asm7706626plg.25.2023.05.23.22.28.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 22:28:36 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Hans-Peter Nilsson <hp@axis.com>, Leo Yan <leo.yan@linaro.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <49e98308-ab8d-5811-66a8-9e17f22bb8c4@loongson.cn>
-Date:   Wed, 24 May 2023 11:19:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 1/2] perf annotate: Handle x86 instruction suffix generally
+Date:   Tue, 23 May 2023 22:28:33 -0700
+Message-ID: <20230524052834.1041418-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
 MIME-Version: 1.0
-In-Reply-To: <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Axo8Aogm1kbbdyAA--.60316S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7WF47CrWDKryktF47tFyxKrg_yoW8KFW8pr
-        n5Aay5tay8WF12kwn7ursIqrySy3ykJr90gryvk39xu3WDt3Z5Kr10v3Z0kFWxXr1xKrWr
-        uF10qFyUX3WrX3DanT9S1TB71UUUUbDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-        n4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
-        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-        AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
-        AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2
-        jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jTq2NUUUUU=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Most of x86 instructions can have size suffix like b, w, l or q.
+Instead of adding all these instructions in the table, we can handle
+them in a general way.  For example, it can try to find an instruction
+as is.  If not found, it'd try again without the suffix if it's one of
+the allowed suffixes.
 
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/annotate.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-On 05/23/2023 08:31 PM, Alexander Kapshuk wrote:
-> On Tue, May 23, 2023 at 1:22 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->>
->> After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
->> in the generated syscall table file syscalls.c, there exist some
->> __NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
->> it looks like not so good, just do some small filter operations
->> to handle __NR3264_ prefixed syscall number as a digital number.
->>
->> Without this patch:
->>
->>   [__NR3264_ftruncate] = "ftruncate",
->>
->> With this patch:
->>
->>   [46] = "ftruncate",
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 7 ++++---
->>  1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
->> index 22cdf91..59ab7939 100755
->> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
->> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
->> @@ -39,7 +39,8 @@ create_table()
->>         echo "};"
->>  }
->>
->> -$gcc -E -dM -x c -I $incpath/include/uapi $input \
->> -       |sed -ne 's/^#define __NR_//p' \
->> -       |sort -t' ' -k2 -n             \
->> +$gcc -E -dM -x c -I $incpath/include/uapi $input               \
->> +       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
->> +       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
->> +       |sort -t' ' -k2 -n                                      \
->>         |create_table
->> --
->> 2.1.0
->>
->
-> As an aside, the awk + sed + sort parts of the command line may be
-> reduced to the following awk script, if desired:
-> awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
->         sub("^#define __NR_", "")
->         sub("^#define __NR3264_", "")
->         print | "sort -k2 -n"
-> }'
->
-
-Hi Alexander,
-
-Thanks, it seems more simple and works well as expected.
-Let us wait for more review comments before respin.
-
-If no any objections, I will send v2 with the following
-changes based on the current patch in the next week.
-
--$gcc -E -dM -x c -I $incpath/include/uapi $input               \
--       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
--       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
--       |sort -t' ' -k2 -n                                      \
-+$gcc -E -dM -x c -I $incpath/include/uapi $input \
-+       |awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
-+               sub("^#define __NR_", "")
-+               sub("^#define __NR3264_", "")
-+               print | "sort -k2 -n"}' \
-         |create_table
-
-Thanks,
-Tiezhu
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index b708bbc49c9e..7f05f2a2aa83 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -70,6 +70,7 @@ struct arch {
+ 	struct ins_ops  *(*associate_instruction_ops)(struct arch *arch, const char *name);
+ 	bool		sorted_instructions;
+ 	bool		initialized;
++	const char	*insn_suffix;
+ 	void		*priv;
+ 	unsigned int	model;
+ 	unsigned int	family;
+@@ -179,6 +180,7 @@ static struct arch architectures[] = {
+ 		.init = x86__annotate_init,
+ 		.instructions = x86__instructions,
+ 		.nr_instructions = ARRAY_SIZE(x86__instructions),
++		.insn_suffix = "bwlq",
+ 		.objdump =  {
+ 			.comment_char = '#',
+ 		},
+@@ -720,6 +722,26 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name)
+ 	}
+ 
+ 	ins = bsearch(name, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
++	if (ins)
++		return ins->ops;
++
++	if (arch->insn_suffix) {
++		char tmp[32];
++		char suffix;
++		size_t len = strlen(name);
++
++		if (len == 0 || len >= sizeof(tmp))
++			return NULL;
++
++		suffix = name[len - 1];
++		if (strchr(arch->insn_suffix, suffix) == NULL)
++			return NULL;
++
++		strcpy(tmp, name);
++		tmp[len - 1] = '\0'; /* remove the suffix and check again */
++
++		ins = bsearch(tmp, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
++	}
+ 	return ins ? ins->ops : NULL;
+ }
+ 
+-- 
+2.40.1.698.g37aff9b760-goog
 
