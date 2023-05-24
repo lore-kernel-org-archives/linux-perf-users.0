@@ -2,211 +2,147 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F86DC7EE29
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 03:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8487C77B7E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 03:20:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233703AbjEXDKx (ORCPT
+        id S235138AbjEXDUX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 23 May 2023 23:10:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42748 "EHLO
+        Tue, 23 May 2023 23:20:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232600AbjEXDKv (ORCPT
+        with ESMTP id S239314AbjEXDTr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 23 May 2023 23:10:51 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A0C8AB3;
-        Tue, 23 May 2023 20:10:49 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F90A1042;
-        Tue, 23 May 2023 20:11:34 -0700 (PDT)
-Received: from [10.163.72.91] (unknown [10.163.72.91])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B3FF3F6C4;
-        Tue, 23 May 2023 20:10:44 -0700 (PDT)
-Message-ID: <d02df808-6d2b-c24b-bc8d-8f4859c0c71b@arm.com>
-Date:   Wed, 24 May 2023 08:40:41 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH V9 10/10] arm64/perf: Implement branch records save on PMU
- IRQ
-Content-Language: en-US
-To:     James Clark <james.clark@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 23 May 2023 23:19:47 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3F1B91B9;
+        Tue, 23 May 2023 20:19:06 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8Dx_+spgm1kkkkAAA--.628S3;
+        Wed, 24 May 2023 11:19:05 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Axo8Aogm1kbbdyAA--.60316S3;
+        Wed, 24 May 2023 11:19:05 +0800 (CST)
+Subject: Re: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
+To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
+References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
+ <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
+ <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230315051444.1683170-1-anshuman.khandual@arm.com>
- <20230315051444.1683170-11-anshuman.khandual@arm.com>
- <83cac0ae-7e82-d67e-c854-941c65dae79e@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <83cac0ae-7e82-d67e-c854-941c65dae79e@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Hans-Peter Nilsson <hp@axis.com>, Leo Yan <leo.yan@linaro.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <49e98308-ab8d-5811-66a8-9e17f22bb8c4@loongson.cn>
+Date:   Wed, 24 May 2023 11:19:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Axo8Aogm1kbbdyAA--.60316S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7WF47CrWDKryktF47tFyxKrg_yoW8KFW8pr
+        n5Aay5tay8WF12kwn7ursIqrySy3ykJr90gryvk39xu3WDt3Z5Kr10v3Z0kFWxXr1xKrWr
+        uF10qFyUX3WrX3DanT9S1TB71UUUUbDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+        n4kS14v26r1q6r43M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
+        AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
+        s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIx
+        AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2
+        jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jTq2NUUUUU=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 5/23/23 20:09, James Clark wrote:
-> 
-> 
-> On 15/03/2023 05:14, Anshuman Khandual wrote:
->> This modifies armv8pmu_branch_read() to concatenate live entries along with
->> task context stored entries and then process the resultant buffer to create
->> perf branch entry array for perf_sample_data. It follows the same principle
->> like task sched out.
+On 05/23/2023 08:31 PM, Alexander Kapshuk wrote:
+> On Tue, May 23, 2023 at 1:22 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
+>> in the generated syscall table file syscalls.c, there exist some
+>> __NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
+>> it looks like not so good, just do some small filter operations
+>> to handle __NR3264_ prefixed syscall number as a digital number.
+>>
+>> Without this patch:
+>>
+>>   [__NR3264_ftruncate] = "ftruncate",
+>>
+>> With this patch:
+>>
+>>   [46] = "ftruncate",
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 >> ---
-> 
-> [...]
-> 
->>  void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
->>  {
->>  	struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
->> +	struct arm64_perf_task_context *task_ctx = event->pmu_ctx->task_ctx_data;
->> +	struct brbe_regset live[BRBE_MAX_ENTRIES];
->> +	int nr_live, nr_store;
->>  	u64 brbfcr, brbcr;
->> -	int idx, loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2, count;
->>  
->>  	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
->>  	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
->> @@ -739,36 +743,13 @@ void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
->>  	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
->>  	isb();
->>  
->> -	/* Determine the indices for each loop */
->> -	loop1_idx1 = BRBE_BANK0_IDX_MIN;
->> -	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
->> -		loop1_idx2 = brbe_attr->brbe_nr - 1;
->> -		loop2_idx1 = BRBE_BANK1_IDX_MIN;
->> -		loop2_idx2 = BRBE_BANK0_IDX_MAX;
->> -	} else {
->> -		loop1_idx2 = BRBE_BANK0_IDX_MAX;
->> -		loop2_idx1 = BRBE_BANK1_IDX_MIN;
->> -		loop2_idx2 = brbe_attr->brbe_nr - 1;
->> -	}
->> -
->> -	/* Loop through bank 0 */
->> -	select_brbe_bank(BRBE_BANK_IDX_0);
->> -	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
->> -		if (!capture_branch_entry(cpuc, event, idx))
->> -			goto skip_bank_1;
->> -	}
->> -
->> -	/* Loop through bank 1 */
->> -	select_brbe_bank(BRBE_BANK_IDX_1);
->> -	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
->> -		if (!capture_branch_entry(cpuc, event, idx))
->> -			break;
->> -	}
->> -
->> -skip_bank_1:
->> -	cpuc->branches->branch_stack.nr = idx;
->> -	cpuc->branches->branch_stack.hw_idx = -1ULL;
->> +	nr_live = capture_brbe_regset(brbe_attr, live);
->> +	nr_store = task_ctx->nr_brbe_records;
->> +	nr_store = stitch_stored_live_entries(task_ctx->store, live, nr_store,
->> +					      nr_live, brbe_attr->brbe_nr);
->> +	process_branch_entries(cpuc, event, task_ctx->store, nr_store);
-> 
-> Hi Anshuman,
-> 
-> With the following command I get a crash:
-> 
->   perf record --branch-filter any,save_type -a -- ls
-> 
-> [  101.171822] Unable to handle kernel NULL pointer dereference at
-> virtual address 0000000000000600
-> ...
-> [145380.414654] Call trace:
-> [145380.414739]  armv8pmu_branch_read+0x7c/0x578
-> [145380.414895]  armv8pmu_handle_irq+0x104/0x1c0
-> [145380.415043]  armpmu_dispatch_irq+0x38/0x70
-> [145380.415209]  __handle_irq_event_percpu+0x124/0x3b8
-> [145380.415392]  handle_irq_event+0x54/0xc8
-> [145380.415567]  handle_fasteoi_irq+0x100/0x1e0
-> [145380.415718]  generic_handle_domain_irq+0x38/0x58
-> [145380.415895]  gic_handle_irq+0x5c/0x130
-> [145380.416025]  call_on_irq_stack+0x24/0x58
-> [145380.416173]  el1_interrupt+0x74/0xc0
-> [145380.416321]  el1h_64_irq_handler+0x18/0x28
-> [145380.416475]  el1h_64_irq+0x64/0x68
-> [145380.416604]  smp_call_function_single+0xe8/0x1f0
-> [145380.416745]  event_function_call+0xbc/0x1c8
-> [145380.416919]  _perf_event_enable+0x84/0xa0
-> [145380.417069]  perf_ioctl+0xe8/0xd68
-> [145380.417204]  __arm64_sys_ioctl+0x9c/0xe0
-> [145380.417353]  invoke_syscall+0x4c/0x120
-> [145380.417523]  el0_svc_common+0xd0/0x120
-> [145380.417693]  do_el0_svc+0x3c/0xb8
-> [145380.417859]  el0_svc+0x50/0xc0
-> [145380.418004]  el0t_64_sync_handler+0x84/0xf0
-> [145380.418160]  el0t_64_sync+0x190/0x198
-> 
-> When using --branch-filter any,u without -a it seems to be fine so could
-> be that task_ctx is null in per-cpu mode, or something to do with the
-> userspace only flag?
+>>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 7 ++++---
+>>  1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+>> index 22cdf91..59ab7939 100755
+>> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+>> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+>> @@ -39,7 +39,8 @@ create_table()
+>>         echo "};"
+>>  }
+>>
+>> -$gcc -E -dM -x c -I $incpath/include/uapi $input \
+>> -       |sed -ne 's/^#define __NR_//p' \
+>> -       |sort -t' ' -k2 -n             \
+>> +$gcc -E -dM -x c -I $incpath/include/uapi $input               \
+>> +       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
+>> +       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
+>> +       |sort -t' ' -k2 -n                                      \
+>>         |create_table
+>> --
+>> 2.1.0
+>>
+>
+> As an aside, the awk + sed + sort parts of the command line may be
+> reduced to the following awk script, if desired:
+> awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
+>         sub("^#define __NR_", "")
+>         sub("^#define __NR3264_", "")
+>         print | "sort -k2 -n"
+> }'
+>
 
-It's task_ctx is null in per-cpu mode, because armv8pmu_branch_read() used
-event->pmu_ctx->task_ctx_data in per-cpu mode where it would not have been
-allocated as well. Following change fixes the problem.
+Hi Alexander,
 
-diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-index 9e441141a2c3..c8fd581eacf9 100644
---- a/drivers/perf/arm_brbe.c
-+++ b/drivers/perf/arm_brbe.c
-@@ -744,12 +744,17 @@ void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
-        isb();
- 
-        nr_live = capture_brbe_regset(brbe_attr, live);
--       nr_store = task_ctx->nr_brbe_records;
--       nr_store = stitch_stored_live_entries(task_ctx->store, live, nr_store,
--                                             nr_live, brbe_attr->brbe_nr);
--       process_branch_entries(cpuc, event, task_ctx->store, nr_store);
-+       if (event->ctx->task) {
-+               nr_store = task_ctx->nr_brbe_records;
-+               nr_store = stitch_stored_live_entries(task_ctx->store, live, nr_store,
-+                                                     nr_live, brbe_attr->brbe_nr);
-+               process_branch_entries(cpuc, event, task_ctx->store, nr_store);
-+               task_ctx->nr_brbe_records = 0;
-+       } else {
-+               process_branch_entries(cpuc, event, live, nr_live);
-+       }
-+
-        process_branch_aborts(cpuc);
--       task_ctx->nr_brbe_records = 0;
- 
-        /* Unpause the buffer */
-        write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+Thanks, it seems more simple and works well as expected.
+Let us wait for more review comments before respin.
 
+If no any objections, I will send v2 with the following
+changes based on the current patch in the next week.
 
-> 
-> I'm also wondering if it's possible to collapse some of the last 5
-> commits? They seem to mostly modify things in brbe.c which is a new file
-> so the history probably isn't important at this point it just makes it a
-> bit harder to review.
+-$gcc -E -dM -x c -I $incpath/include/uapi $input               \
+-       |awk '{if ($2~"__NR" && $3 !~"__NR3264_") {print}}'     \
+-       |sed -ne 's/^#define __NR_//p;s/^#define __NR3264_//p'  \
+-       |sort -t' ' -k2 -n                                      \
++$gcc -E -dM -x c -I $incpath/include/uapi $input \
++       |awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
++               sub("^#define __NR_", "")
++               sub("^#define __NR3264_", "")
++               print | "sort -k2 -n"}' \
+         |create_table
 
-[PATCH 6/10] enables base perf branch stack sampling on arm64 platform via
-BRBE and then subsequent patches represent logical progression up until
-save-stitch mechanism is implemented both during normal PMU IRQ and task
-switch callbacks.
+Thanks,
+Tiezhu
 
-> 
->>  	process_branch_aborts(cpuc);
->> +	task_ctx->nr_brbe_records = 0;
->>  
->>  	/* Unpause the buffer */
->>  	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
