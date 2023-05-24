@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4560EC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 22:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E45C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 22:18:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236720AbjEXWSt (ORCPT
+        id S236518AbjEXWSu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 May 2023 18:18:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45754 "EHLO
+        Wed, 24 May 2023 18:18:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236525AbjEXWSl (ORCPT
+        with ESMTP id S236640AbjEXWSs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 May 2023 18:18:41 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9B818C
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 15:18:40 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba83fed51b0so1860832276.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 15:18:40 -0700 (PDT)
+        Wed, 24 May 2023 18:18:48 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A65EE191
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 15:18:44 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5654242df11so28546507b3.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 15:18:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684966719; x=1687558719;
+        d=google.com; s=20221208; t=1684966724; x=1687558724;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=057e7HsRfrUjB66n+MyXVmP8dOuM02fcMdiEZVZgYrU=;
-        b=dvNFdxGwO9BK6xjIp7teO+7XWdJt0dgU7vf5V7rd/YsFOhzIgMpFrbrtDFBFtxoVTC
-         IXUMA5Snqk6STJbRPnPC6NRUCVN/XKKpoPSYYPkizRP2ZrWjLp57I8/bVgtryxfYjWmM
-         3gGWsnyzMbe/2RHSI49yEeWAHdSDRtLXMF+yz+MToG4z7LOL8qSOISIDYynJHTmGFLpz
-         reyoa3oidSBF2UpYsmeuVhyDrldlpdotnyeVJUHIt0KjHKthIf0RvOZXWJr2znegOq+4
-         SDWOnBIM2nwCMKkFD/OlkiNH6Rt3jAaNbZM/TFKjwodoDtJqWQTxIqcJFfB8c4NuS08+
-         h5Qg==
+        bh=L9hyOxVMtag083U3DrBABQpzrKUd2k9oDsc9+XJnAEA=;
+        b=LtpxsdvrVIHpyYlb3xLC8sqG58Bzm9j5cBtRTcbu3rsLbnqcZy2LpSxSNxzA50XG5w
+         /AUONv2Gk38DiQ/sYYuLmGBrZ/dzL4pyU88PhOjIqusuhk7jVExQGDVPzetaywcYi+Un
+         wlZ8DlLrDhrD5XMNTk6j7Y8NGCryNgqHWNZXjk3X79vkNmKHzrZ1avClFhIeEuor36PF
+         wbHuvGb3DpL5LShCo/zH9iD455YuPM9wYpj4zAl6NMTsAZMedl+TUr0q6YbTi/3QCBUV
+         5Bb5M5U55AZMpwbXdhswy+/+aqWe3ropFnOYFQj4k/s1Y7okZgYYUlSi/pGomDTdRQJB
+         Q/ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684966719; x=1687558719;
+        d=1e100.net; s=20221208; t=1684966724; x=1687558724;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=057e7HsRfrUjB66n+MyXVmP8dOuM02fcMdiEZVZgYrU=;
-        b=e95uC6814ftOZhrFXm0tWSGRyh1vQ8xOkxgh+24br0r9C32DRDTx2XaCQRxtoxmgvP
-         7axQZdz+VHb8zchfN+OJwqAlTKX/uhYPnlpurfIkkvi4teHhaICsBpNCjs/yBsSePho2
-         JzuZnKc1UpV8IEe/7J4iOKqabSx78zhS2wGlVlIXbxzU/fkBvrYIVQUwc7gqv8ek0/wF
-         kFonScDj34yNNj41VfsUaWkykECHl8vX7b3P9ac7xYiFeeFKItQ0ydCbegqdQP6l8vTo
-         oJwFL38Tc3icRGC1itc80T496IbzvJEAiyiQXzn5ZMBUQW/2RQrGma2YMZPzn6Hf/YpH
-         pugw==
-X-Gm-Message-State: AC+VfDy/t7PI7s7jurC1+7ymEvH8uQvpCr8WoYjzfKn5Y8w/89EbjY+0
-        +oykEWL1y9Q5M7Sxt/aZdlMPft/4FCee
-X-Google-Smtp-Source: ACHHUZ4nZ3QY3W3yj3bCT/LKMCbuUt+ei31h9EkO/cLy/9wr8TKW2dnJI7BNr9GOkD6EIhYQ/DP+/8mE3Upv
+        bh=L9hyOxVMtag083U3DrBABQpzrKUd2k9oDsc9+XJnAEA=;
+        b=EZcsjeVuzDl3uRw8ik++E7mxPfL8hrO95QdajHkCjzxiTQDN5Ppd02GXvGiB7Gd8Mj
+         pvckybf1EGU+QbVm7SQOqtUJIFFpEItdXkMTnOb0HhW2Zy8OgD2spHqNPstFabx4YtPx
+         KH41cesWrpv2EgsQEHxcXP1yyIg5LQ1arbQMZqCTmPlmfS+5FCB93wGwnAR3momKboV8
+         NFue1ShUW1RtedxKPk+Zg1jaFH3ER8XFDpYrqqOx0r9jVCErdh8TaTF/4yUtHVvnE7Rb
+         Is8bzLrXZNKVbDRNX0jJptvdiHH14fQxEGA/PeEWvQzoN9iZDwJ5R3tXpiC3crgKxv2l
+         9Sxw==
+X-Gm-Message-State: AC+VfDy7PEaKLNmeLprFgktIuciQY0S4yECvg0wyn5thGCzmAZZPofSG
+        X3YYR9LcPu0hpKMJXtox8lpQRilZ8vef
+X-Google-Smtp-Source: ACHHUZ4A9xBsf2NqNhBKrjOga52LfeOavCka+IP0c2dGDJ+fOrU4kiCHN5RkZ7kCcC0QXT4WglaRezW0Dn7i
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7aa7:3d2d:76ae:8e96])
- (user=irogers job=sendgmr) by 2002:a25:6702:0:b0:ba7:4dda:f858 with SMTP id
- b2-20020a256702000000b00ba74ddaf858mr745406ybc.10.1684966719719; Wed, 24 May
- 2023 15:18:39 -0700 (PDT)
-Date:   Wed, 24 May 2023 15:17:58 -0700
+ (user=irogers job=sendgmr) by 2002:a81:ad57:0:b0:561:be13:2fd3 with SMTP id
+ l23-20020a81ad57000000b00561be132fd3mr11098955ywk.1.1684966723958; Wed, 24
+ May 2023 15:18:43 -0700 (PDT)
+Date:   Wed, 24 May 2023 15:18:00 -0700
 In-Reply-To: <20230524221831.1741381-1-irogers@google.com>
-Message-Id: <20230524221831.1741381-3-irogers@google.com>
+Message-Id: <20230524221831.1741381-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20230524221831.1741381-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
-Subject: [PATCH v3 02/35] perf tests: Organize cpu_map tests into a single suite
+Subject: [PATCH v3 04/35] libperf cpumap: Add "any CPU"/dummy test function
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -93,83 +93,70 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Go from 4 suites to a single suite with 4 test cases.
+It is common in the code currently to test a map for "empty" when in
+fact the "any CPU"/dummy value of -1 is being sought. Add a new
+function to enable this and document the behavior of two other
+functions. The term "any CPU" comes from perf_event_open, where the
+value is consumed, but it is more typical in the code to see this
+value/map referred to as the dummy value. This could be misleading due
+to the dummy event and also dummy not being intention revealing, so it
+is hoped to migrate the code to referring to this as "any CPU".
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/builtin-test.c |  5 +----
- tools/perf/tests/cpumap.c       | 16 ++++++++++++----
- tools/perf/tests/tests.h        |  5 +----
- 3 files changed, 14 insertions(+), 12 deletions(-)
+ tools/lib/perf/cpumap.c              |  5 +++++
+ tools/lib/perf/include/perf/cpumap.h | 10 ++++++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index eef400025fca..aa44fdc84763 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -88,16 +88,13 @@ static struct test_suite *generic_tests[] = {
- 	&suite__bpf,
- 	&suite__thread_map_synthesize,
- 	&suite__thread_map_remove,
--	&suite__cpu_map_synthesize,
-+	&suite__cpu_map,
- 	&suite__synthesize_stat_config,
- 	&suite__synthesize_stat,
- 	&suite__synthesize_stat_round,
- 	&suite__event_update,
- 	&suite__event_times,
- 	&suite__backward_ring_buffer,
--	&suite__cpu_map_print,
--	&suite__cpu_map_merge,
--	&suite__cpu_map_intersect,
- 	&suite__sdt_event,
- 	&suite__is_printable_array,
- 	&suite__bitmap_print,
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 92232978fe5e..83805690c209 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -211,7 +211,15 @@ static int test__cpu_map_intersect(struct test_suite *test __maybe_unused,
- 	return ret;
+diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+index 48595a3ad69c..7c8237a9e902 100644
+--- a/tools/lib/perf/cpumap.c
++++ b/tools/lib/perf/cpumap.c
+@@ -342,6 +342,11 @@ bool perf_cpu_map__equal(const struct perf_cpu_map *lhs, const struct perf_cpu_m
+ 	return true;
  }
  
--DEFINE_SUITE("Synthesize cpu map", cpu_map_synthesize);
--DEFINE_SUITE("Print cpu map", cpu_map_print);
--DEFINE_SUITE("Merge cpu map", cpu_map_merge);
--DEFINE_SUITE("Intersect cpu map", cpu_map_intersect);
-+static struct test_case tests__cpu_map[] = {
-+	TEST_CASE("Synthesize cpu map", cpu_map_synthesize),
-+	TEST_CASE("Print cpu map", cpu_map_print),
-+	TEST_CASE("Merge cpu map", cpu_map_merge),
-+	TEST_CASE("Intersect cpu map", cpu_map_intersect),
-+	{	.name = NULL, }
-+};
++bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map)
++{
++	return map && perf_cpu_map__cpu(map, 0).cpu == -1;
++}
 +
-+struct test_suite suite__cpu_map = {
-+	.desc = "CPU map",
-+	.test_cases = tests__cpu_map,
-+};
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index b4e54f08bc39..f424c0b7f43f 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -118,16 +118,13 @@ DECLARE_SUITE(bpf);
- DECLARE_SUITE(session_topology);
- DECLARE_SUITE(thread_map_synthesize);
- DECLARE_SUITE(thread_map_remove);
--DECLARE_SUITE(cpu_map_synthesize);
-+DECLARE_SUITE(cpu_map);
- DECLARE_SUITE(synthesize_stat_config);
- DECLARE_SUITE(synthesize_stat);
- DECLARE_SUITE(synthesize_stat_round);
- DECLARE_SUITE(event_update);
- DECLARE_SUITE(event_times);
- DECLARE_SUITE(backward_ring_buffer);
--DECLARE_SUITE(cpu_map_print);
--DECLARE_SUITE(cpu_map_merge);
--DECLARE_SUITE(cpu_map_intersect);
- DECLARE_SUITE(sdt_event);
- DECLARE_SUITE(is_printable_array);
- DECLARE_SUITE(bitmap_print);
+ struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
+ {
+ 	struct perf_cpu result = {
+diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+index d0ae9552f8e2..3b7c965a17f2 100644
+--- a/tools/lib/perf/include/perf/cpumap.h
++++ b/tools/lib/perf/include/perf/cpumap.h
+@@ -13,6 +13,9 @@ struct perf_cpu {
+ 
+ struct perf_cpu_map;
+ 
++/**
++ * perf_cpu_map__dummy_new - a map with a singular "any CPU"/dummy -1 value.
++ */
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__default_new(void);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+@@ -25,11 +28,18 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *or
+ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
+ LIBPERF_API struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
+ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
++/**
++ * perf_cpu_map__empty - is map either empty or the "any CPU"/dummy value.
++ */
+ LIBPERF_API bool perf_cpu_map__empty(const struct perf_cpu_map *map);
+ LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map);
+ LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, struct perf_cpu cpu);
+ LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
+ 				     const struct perf_cpu_map *rhs);
++/**
++ * perf_cpu_map__any_cpu - Does the map contain the "any CPU"/dummy -1 value?
++ */
++LIBPERF_API bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map);
+ 
+ #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
+ 	for ((idx) = 0, (cpu) = perf_cpu_map__cpu(cpus, idx);	\
 -- 
 2.40.1.698.g37aff9b760-goog
 
