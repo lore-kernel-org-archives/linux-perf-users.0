@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A667C7EE31
-	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 22:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D9AC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 24 May 2023 22:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237614AbjEXWT6 (ORCPT
+        id S237215AbjEXWT5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 May 2023 18:19:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45862 "EHLO
+        Wed, 24 May 2023 18:19:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237231AbjEXWTh (ORCPT
+        with ESMTP id S237587AbjEXWTa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 May 2023 18:19:37 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 482BC1B9
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 15:19:19 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba83a9779f3so3121300276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 15:19:19 -0700 (PDT)
+        Wed, 24 May 2023 18:19:30 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 695FA1B4
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 15:19:16 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba87bd29e9dso2008749276.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 May 2023 15:19:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684966750; x=1687558750;
+        d=google.com; s=20221208; t=1684966745; x=1687558745;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2Ev/Umag+1kF8B15W9g1QM1ZWvuEFBejQXrwI+WR21A=;
-        b=JMsQYU8+yomo5jSbLSRJBjA6TPdzXTPm3ryzbqOjQ7HfpZVXJADxYoGFbCtFk2p9Ac
-         gy8yeurv+ybzg2s44BB3EsfcuBqOuGvKxjI8UJZPLDGzJrSIS4j/BEF4MDpDrDAPg+6X
-         WAwALlGobCGXKvC7SSI6X0v6yzULWHrch28mGvGXl3LdL3lrRMLTeHJ+Sj1TC2z+ZEji
-         zOr13lKE/zy/d0IxU6HRONlAsH28ebWFz+xOHSaANWq1uiZQWhWvhS36+N2LGaSTk/kG
-         k4WpRB3sTmDGcH0Vvk9niZDX3o9VTdPtrhZD2kBb6iuaFfoMpJBP4Q9yZvOfdRPq8n5x
-         LG2w==
+        bh=3sOBUMwNNCEoqzsDPVQsAi+V2ZTdHisiz6s6WUsWey4=;
+        b=IUAL4nxf95HA/L6zeo7fXaZVJqZqwpz32+FkVl/s9ls/CHo3bOYqB/L4VNQ8e0/tUI
+         s/29FyrZuJObJpQFmg96C3gGsMHuU6411j3fVUS2xrGr/0gHOBNNWDEQyAexq6HUEqMD
+         8JitU105N/s59aUBBQ9V5qt8KX3GVE+p++6feXSvRCwe/q0vHphsyE58EcrEnLu4HWb0
+         A8etjsub1iBPBDbM9dVL8eUI12U6cnC+J1R5qzcJZFkHQ/eUFH+i6G0yJ4gxwQMqUI1l
+         I5OAFfgR3qPN/ZMiLH8iPJ2VIEd1Savg2SLL0gy9mFGoQA2dW+gIcEsyzPQN9yUzcBZI
+         M5ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684966750; x=1687558750;
+        d=1e100.net; s=20221208; t=1684966745; x=1687558745;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Ev/Umag+1kF8B15W9g1QM1ZWvuEFBejQXrwI+WR21A=;
-        b=Xm2IC0Og7kja/h2DoN/4d1mk2k3PYJzfNklWBpywtXowGeACwMIcdDl42NZoZhCDlb
-         rvjce/xhfloz+8F1ZxuBSB+UCuEDG2L2Rcoma7UJd5sdN4+E09MAw0EMyutd35L8/aV8
-         2BU0fJEUxlSgTX6DPEOcpGrQaYRzufpHTp73wt2UOgwZS2B4b4HY8m6qlE6ulGztbC4U
-         XS+NSblR/HzQuZWlY1+Hqtg5qZhzaXqv/oHj5gejwAPDzUGgunnmAK/1alXP+1vbR7EU
-         LXWWWCss/c2FsjshNpTu0CVyk0/2N5HuZVxDnNwrvjnnHnYwhZqsXSkTA4mz82zSCIQ6
-         YnIg==
-X-Gm-Message-State: AC+VfDxcnbiQvsG5OrULioNA1LpxVWrd80pYVp1CDLYfDPmAVPknABqY
-        VhgMSCrObCBmILJhcbqEZkO3ZuMXJX5I
-X-Google-Smtp-Source: ACHHUZ6nk7KPim+zmUUj154fvDJHp2Oy0J25GAXFhwzJha51YxFfXSRvFi9Uiblj4LbpUvvE76tjnkiiTBt1
+        bh=3sOBUMwNNCEoqzsDPVQsAi+V2ZTdHisiz6s6WUsWey4=;
+        b=dNnuyaN6tsJJhc58QkzPmz4gyLR02P2GRZe2aPmTCK1FxfY7iGiz89G9SZ4xMlQhGx
+         7uSE4Erad55ESYmAD2aPIs8ICveNothtD1LLU22FEDSbxhEyap/qs/uHtwFr+JsCg85f
+         9YwCUgtRG3piPIS4J760TCnY1uxXCQKZQWgtFSLOdd2ShEXJFQVT2EcuthlOcBTd3xh/
+         Aup226nN+5+AxpTUYvUa7cjz6GYP1WN9dhGdNOj8u1ZeXLcTLdDJffz5pzz0+7okTcQS
+         uCJBom9ht1uO9zXTxAUWryzczSUw/htkAK2KSgpX3pa1vNCbP8Xa0S0m02UhjHg6w0OB
+         2yfg==
+X-Gm-Message-State: AC+VfDwiMbFF/AHITe0nDEiSfTDmNPnO7mCFpdwxfNjwNwoT/tYFA205
+        Q6vwYkNrQ+24Lkju+T60gIJAme45K7it
+X-Google-Smtp-Source: ACHHUZ7/3ZvdsVAhmVmEq3HnZSBR2aiwjKzN8YLQjODHD8I+5EewidQMppMVSUcAfCNg4IiAWIB90XU5luau
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7aa7:3d2d:76ae:8e96])
- (user=irogers job=sendgmr) by 2002:a25:aacc:0:b0:ba8:757c:2523 with SMTP id
- t70-20020a25aacc000000b00ba8757c2523mr797390ybi.9.1684966749986; Wed, 24 May
- 2023 15:19:09 -0700 (PDT)
-Date:   Wed, 24 May 2023 15:18:11 -0700
+ (user=irogers job=sendgmr) by 2002:a25:e786:0:b0:ba8:93c3:393b with SMTP id
+ e128-20020a25e786000000b00ba893c3393bmr781880ybh.2.1684966745054; Wed, 24 May
+ 2023 15:19:05 -0700 (PDT)
+Date:   Wed, 24 May 2023 15:18:09 -0700
 In-Reply-To: <20230524221831.1741381-1-irogers@google.com>
-Message-Id: <20230524221831.1741381-16-irogers@google.com>
+Message-Id: <20230524221831.1741381-14-irogers@google.com>
 Mime-Version: 1.0
 References: <20230524221831.1741381-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
-Subject: [PATCH v3 15/35] perf evlist: Reduce scope of evlist__has_hybrid
+Subject: [PATCH v3 13/35] perf evlist: Remove evlist__warn_hybrid_group
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -93,159 +93,86 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Function is only used in printout, reduce scope to
-stat-display.c. Remove the now empty evlist-hybrid.c and
-evlist-hybrid.h.
+Parse events now corrects PMU groups in
+parse_events__sort_events_and_fix_groups and so this warning is no
+longer possible.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-record.c     |  1 -
- tools/perf/builtin-stat.c       |  1 -
- tools/perf/util/Build           |  1 -
- tools/perf/util/evlist-hybrid.c | 31 -------------------------------
- tools/perf/util/evlist-hybrid.h | 12 ------------
- tools/perf/util/evlist.c        |  1 -
- tools/perf/util/stat-display.c  | 15 ++++++++++++++-
- 7 files changed, 14 insertions(+), 48 deletions(-)
- delete mode 100644 tools/perf/util/evlist-hybrid.c
- delete mode 100644 tools/perf/util/evlist-hybrid.h
+ tools/perf/builtin-stat.c       |  3 ---
+ tools/perf/util/evlist-hybrid.c | 32 --------------------------------
+ tools/perf/util/evlist-hybrid.h |  1 -
+ 3 files changed, 36 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index d80b54a6f450..e30e8d6a6575 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -50,7 +50,6 @@
- #include "util/pfm.h"
- #include "util/clockid.h"
- #include "util/pmu-hybrid.h"
--#include "util/evlist-hybrid.h"
- #include "util/off_cpu.h"
- #include "util/bpf-filter.h"
- #include "asm/bug.h"
 diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index cc4d96de1851..3b90d742b023 100644
+index 04c9289e6ceb..cc4d96de1851 100644
 --- a/tools/perf/builtin-stat.c
 +++ b/tools/perf/builtin-stat.c
-@@ -48,7 +48,6 @@
- #include "util/pmu.h"
- #include "util/event.h"
- #include "util/evlist.h"
--#include "util/evlist-hybrid.h"
- #include "util/evsel.h"
- #include "util/debug.h"
- #include "util/color.h"
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index c146736ead19..21e4cdcba504 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -11,7 +11,6 @@ perf-y += db-export.o
- perf-y += env.o
- perf-y += event.o
- perf-y += evlist.o
--perf-y += evlist-hybrid.o
- perf-y += sideband_evlist.o
- perf-y += evsel.o
- perf-y += evsel_fprintf.o
+@@ -187,9 +187,6 @@ static void evlist__check_cpu_maps(struct evlist *evlist)
+ {
+ 	struct evsel *evsel, *warned_leader = NULL;
+ 
+-	if (evlist__has_hybrid(evlist))
+-		evlist__warn_hybrid_group(evlist);
+-
+ 	evlist__for_each_entry(evlist, evsel) {
+ 		struct evsel *leader = evsel__leader(evsel);
+ 
 diff --git a/tools/perf/util/evlist-hybrid.c b/tools/perf/util/evlist-hybrid.c
-deleted file mode 100644
-index 64f78d06fe19..000000000000
+index db3f5fbdebe1..0f59c80f27b2 100644
 --- a/tools/perf/util/evlist-hybrid.c
-+++ /dev/null
-@@ -1,31 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--#include <errno.h>
--#include <inttypes.h>
--#include "cpumap.h"
--#include "evlist.h"
--#include "evsel.h"
--#include "../perf.h"
--#include "util/pmu-hybrid.h"
--#include "util/evlist-hybrid.h"
--#include "debug.h"
--#include <unistd.h>
--#include <stdlib.h>
--#include <linux/err.h>
--#include <linux/string.h>
--#include <perf/evlist.h>
--#include <perf/evsel.h>
--#include <perf/cpumap.h>
--
--bool evlist__has_hybrid(struct evlist *evlist)
++++ b/tools/perf/util/evlist-hybrid.c
+@@ -41,38 +41,6 @@ int evlist__add_default_hybrid(struct evlist *evlist, bool precise)
+ 	return 0;
+ }
+ 
+-static bool group_hybrid_conflict(struct evsel *leader)
 -{
--	struct evsel *evsel;
+-	struct evsel *pos, *prev = NULL;
 -
--	evlist__for_each_entry(evlist, evsel) {
--		if (evsel->pmu_name &&
--		    perf_pmu__is_hybrid(evsel->pmu_name)) {
+-	for_each_group_evsel(pos, leader) {
+-		if (!evsel__is_hybrid(pos))
+-			continue;
+-
+-		if (prev && strcmp(prev->pmu_name, pos->pmu_name))
 -			return true;
--		}
+-
+-		prev = pos;
 -	}
 -
 -	return false;
 -}
-diff --git a/tools/perf/util/evlist-hybrid.h b/tools/perf/util/evlist-hybrid.h
-deleted file mode 100644
-index 0cded76eb344..000000000000
---- a/tools/perf/util/evlist-hybrid.h
-+++ /dev/null
-@@ -1,12 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __PERF_EVLIST_HYBRID_H
--#define __PERF_EVLIST_HYBRID_H
 -
--#include <linux/compiler.h>
--#include <linux/kernel.h>
--#include "evlist.h"
--#include <unistd.h>
+-void evlist__warn_hybrid_group(struct evlist *evlist)
+-{
+-	struct evsel *evsel;
 -
--bool evlist__has_hybrid(struct evlist *evlist);
+-	evlist__for_each_entry(evlist, evsel) {
+-		if (evsel__is_group_leader(evsel) &&
+-		    evsel->core.nr_members > 1 &&
+-		    group_hybrid_conflict(evsel)) {
+-			pr_warning("WARNING: events in group from "
+-				   "different hybrid PMUs!\n");
+-			return;
+-		}
+-	}
+-}
 -
--#endif /* __PERF_EVLIST_HYBRID_H */
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 63f8821a5395..82c0b3d0c822 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -28,7 +28,6 @@
- #include "util/string2.h"
- #include "util/perf_api_probe.h"
- #include "util/evsel_fprintf.h"
--#include "util/evlist-hybrid.h"
- #include "util/pmu.h"
- #include "util/sample.h"
- #include "util/bpf-filter.h"
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index bf5a6c14dfcd..ede0477d958a 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -20,7 +20,6 @@
- #include "util.h"
- #include "iostat.h"
- #include "pmu-hybrid.h"
--#include "evlist-hybrid.h"
- 
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
-@@ -677,6 +676,20 @@ static bool is_mixed_hw_group(struct evsel *counter)
- 	return false;
- }
- 
-+static bool evlist__has_hybrid(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->pmu_name &&
-+		    perf_pmu__is_hybrid(evsel->pmu_name)) {
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
- static void printout(struct perf_stat_config *config, struct outstate *os,
- 		     double uval, u64 run, u64 ena, double noise, int aggr_idx)
+ bool evlist__has_hybrid(struct evlist *evlist)
  {
+ 	struct evsel *evsel;
+diff --git a/tools/perf/util/evlist-hybrid.h b/tools/perf/util/evlist-hybrid.h
+index 19f74b4c340a..4b000eda6626 100644
+--- a/tools/perf/util/evlist-hybrid.h
++++ b/tools/perf/util/evlist-hybrid.h
+@@ -8,7 +8,6 @@
+ #include <unistd.h>
+ 
+ int evlist__add_default_hybrid(struct evlist *evlist, bool precise);
+-void evlist__warn_hybrid_group(struct evlist *evlist);
+ bool evlist__has_hybrid(struct evlist *evlist);
+ 
+ #endif /* __PERF_EVLIST_HYBRID_H */
 -- 
 2.40.1.698.g37aff9b760-goog
 
