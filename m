@@ -2,215 +2,190 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB7FC77B73
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 05:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62002C77B73
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 05:30:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240258AbjEYFYH (ORCPT
+        id S229958AbjEYFa4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 01:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44550 "EHLO
+        Thu, 25 May 2023 01:30:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239665AbjEYFXj (ORCPT
+        with ESMTP id S229885AbjEYFa4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 01:23:39 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 491CDE6;
-        Wed, 24 May 2023 22:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684992125; x=1716528125;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=XNWpTPyxdlMWL7w5HAAM69URFIMUwREePVbeKrWhWYU=;
-  b=isaGBg+EzSCLte75MEaxkxg21xwSmC7uDxEty7yoeFJMeE/ZEffhMrx7
-   blcr/FhzoC2hg06aAiXWFj07uxK034WO1qkQKYvwhgc44TJdTdgzcNGyi
-   IWUByafOrpzu+ft/atCIeOf+1XQHqzLLUlmEwEjlDL24sKYfG/E0B2u1v
-   2Q/b29VMNE9VXmLv4PPz26XRpDXXg216eavdMea8Tgkesj4uNgIJd15CS
-   RYab6Ytmqy0rOpAv5CNjJQOlgSpVgSoSwVHMsqNqSZOHW9aOVJXiGBkyx
-   WAY4Tz+uUg91+jkoXUhK8Ue+CVw3iC6DsJ4K4Pxb0qw1Cv3TzMTAUjQSE
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="338361213"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="338361213"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 22:22:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="816901884"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="816901884"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.208.63])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 22:22:01 -0700
-Message-ID: <9274da26-a5db-3d31-a446-df585d54c529@intel.com>
-Date:   Thu, 25 May 2023 08:21:58 +0300
+        Thu, 25 May 2023 01:30:56 -0400
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E4C9C;
+        Wed, 24 May 2023 22:30:54 -0700 (PDT)
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-456fe3597bdso113104e0c.0;
+        Wed, 24 May 2023 22:30:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684992653; x=1687584653;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1Xh0Vn9KzZCtUCAw6GpkLdF92gEyREy+XoFZlbU+VHA=;
+        b=QVzLW81k2zEPME0SjSKY2AUhoNqcmqObC+MO/WJ/+4WlVoec+DJ9azEEpju6fJYdn5
+         Ny+VyUWNURdJ4ae1cz25aT/KojfTPNRKx2Y9i2YOVHIP/oLYbfB4gA4l/Bghj1/aRs1n
+         H39zjloyyLbF2rA0/oltUObhlvXFUpI6LNO650EtwxegyKYQHpPgpniaiDcEEPfMHACv
+         Jow8llcY/+Ox8LdL1MISGR3EDWyNfurNXQ3X/mWT8kxPdKsHRiG1N6JgBEGo5qxk2Y2Y
+         eNh9yVYvkos8PThV5xcFIIS7AumzHJ7NSBcJ59Lwhys02by4Oj7RhTQcLXAa13msy63F
+         eRZA==
+X-Gm-Message-State: AC+VfDx1vtfhSpmiSV9APNJqFqQRfKGcLxdWNdQedMTmJdIjCiKegxW2
+        iWS9nJLNQd7ThiW6tIq8uhJHvHi3g6aa/NCb3tU=
+X-Google-Smtp-Source: ACHHUZ4gM+e0+iu5fU2ScDoza6sA0PdTWhkDFpjCnW25ahJB3HG/1nvz/Gj7cba5CyoutlltqNRnrDprrap2m9xtw/w=
+X-Received: by 2002:a1f:45cf:0:b0:44f:c1a7:ceff with SMTP id
+ s198-20020a1f45cf000000b0044fc1a7ceffmr581404vka.6.1684992653502; Wed, 24 May
+ 2023 22:30:53 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH v2 2/2] perf annotate: Remove x86 instructions with suffix
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
+References: <20230524221831.1741381-1-irogers@google.com> <20230524221831.1741381-10-irogers@google.com>
+In-Reply-To: <20230524221831.1741381-10-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 24 May 2023 22:30:41 -0700
+Message-ID: <CAM9d7ci21E+BFHPtbx4iO=pcgs2Y7ZCCVsjD-b5OWMdPLb0-6A@mail.gmail.com>
+Subject: Re: [PATCH v3 09/35] perf evlist: Propagate user CPU maps
+ intersecting core PMU maps
+To:     Ian Rogers <irogers@google.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>
-References: <20230524205054.3087004-1-namhyung@kernel.org>
- <20230524205054.3087004-2-namhyung@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230524205054.3087004-2-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ming Wang <wangming01@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 24/05/23 23:50, Namhyung Kim wrote:
-> Now the suffix is handled in the general code.  Let's get rid of them.
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Hi Ian,
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+On Wed, May 24, 2023 at 3:19 PM Ian Rogers <irogers@google.com> wrote:
+>
+> The CPU map for a non-core PMU gives a default CPU value for
+> perf_event_open. For core PMUs the CPU map lists all CPUs the evsel
+> may be opened on. If there are >1 core PMU, the CPU maps will list the
+> CPUs for that core PMU, but the user_requested_cpus may contain CPUs
+> that are invalid for the PMU and cause perf_event_open to fail. To
+> avoid this, when propagating the CPU map for core PMUs intersect it
+> with the CPU map of the PMU (the evsel's "own_cpus").
+>
+> Add comments to __perf_evlist__propagate_maps to explain its somewhat
+> complex behavior.
 
+Thanks for tackling this.  There are many assumptions on this code
+which make this code hard to understand.  I think we need to list
+all possible cases and make the logic as simple as possible.
+
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/arch/x86/annotate/instructions.c | 52 ++++-----------------
->  1 file changed, 10 insertions(+), 42 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-> index 5c7bec25fee4..5f4ac4fc7fcf 100644
-> --- a/tools/perf/arch/x86/annotate/instructions.c
-> +++ b/tools/perf/arch/x86/annotate/instructions.c
-> @@ -1,48 +1,37 @@
->  // SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * x86 instruction nmemonic table to parse disasm lines for annotate.
-> + * This table is searched twice - one for exact match and another for
-> + * match without a size suffix (b, w, l, q) in case of AT&T syntax.
-> + *
-> + * So this table should not have entries with the suffix unless it's
-> + * a complete different instruction than ones without the suffix.
-> + */
->  static struct ins x86__instructions[] = {
->  	{ .name = "adc",	.ops = &mov_ops,  },
-> -	{ .name = "adcb",	.ops = &mov_ops,  },
-> -	{ .name = "adcl",	.ops = &mov_ops,  },
->  	{ .name = "add",	.ops = &mov_ops,  },
-> -	{ .name = "addl",	.ops = &mov_ops,  },
-> -	{ .name = "addq",	.ops = &mov_ops,  },
->  	{ .name = "addsd",	.ops = &mov_ops,  },
-> -	{ .name = "addw",	.ops = &mov_ops,  },
->  	{ .name = "and",	.ops = &mov_ops,  },
-> -	{ .name = "andb",	.ops = &mov_ops,  },
-> -	{ .name = "andl",	.ops = &mov_ops,  },
->  	{ .name = "andpd",	.ops = &mov_ops,  },
->  	{ .name = "andps",	.ops = &mov_ops,  },
-> -	{ .name = "andq",	.ops = &mov_ops,  },
-> -	{ .name = "andw",	.ops = &mov_ops,  },
->  	{ .name = "bsr",	.ops = &mov_ops,  },
->  	{ .name = "bt",		.ops = &mov_ops,  },
->  	{ .name = "btr",	.ops = &mov_ops,  },
->  	{ .name = "bts",	.ops = &mov_ops,  },
-> -	{ .name = "btsq",	.ops = &mov_ops,  },
->  	{ .name = "call",	.ops = &call_ops, },
-> -	{ .name = "callq",	.ops = &call_ops, },
->  	{ .name = "cmovbe",	.ops = &mov_ops,  },
->  	{ .name = "cmove",	.ops = &mov_ops,  },
->  	{ .name = "cmovae",	.ops = &mov_ops,  },
->  	{ .name = "cmp",	.ops = &mov_ops,  },
-> -	{ .name = "cmpb",	.ops = &mov_ops,  },
-> -	{ .name = "cmpl",	.ops = &mov_ops,  },
-> -	{ .name = "cmpq",	.ops = &mov_ops,  },
-> -	{ .name = "cmpw",	.ops = &mov_ops,  },
->  	{ .name = "cmpxch",	.ops = &mov_ops,  },
->  	{ .name = "cmpxchg",	.ops = &mov_ops,  },
->  	{ .name = "cs",		.ops = &mov_ops,  },
->  	{ .name = "dec",	.ops = &dec_ops,  },
-> -	{ .name = "decl",	.ops = &dec_ops,  },
-> -	{ .name = "decq",	.ops = &dec_ops,  },
->  	{ .name = "divsd",	.ops = &mov_ops,  },
->  	{ .name = "divss",	.ops = &mov_ops,  },
->  	{ .name = "gs",		.ops = &mov_ops,  },
->  	{ .name = "imul",	.ops = &mov_ops,  },
->  	{ .name = "inc",	.ops = &dec_ops,  },
-> -	{ .name = "incl",	.ops = &dec_ops,  },
-> -	{ .name = "incq",	.ops = &dec_ops,  },
->  	{ .name = "ja",		.ops = &jump_ops, },
->  	{ .name = "jae",	.ops = &jump_ops, },
->  	{ .name = "jb",		.ops = &jump_ops, },
-> @@ -56,7 +45,6 @@ static struct ins x86__instructions[] = {
->  	{ .name = "jl",		.ops = &jump_ops, },
->  	{ .name = "jle",	.ops = &jump_ops, },
->  	{ .name = "jmp",	.ops = &jump_ops, },
-> -	{ .name = "jmpq",	.ops = &jump_ops, },
->  	{ .name = "jna",	.ops = &jump_ops, },
->  	{ .name = "jnae",	.ops = &jump_ops, },
->  	{ .name = "jnb",	.ops = &jump_ops, },
-> @@ -83,49 +71,31 @@ static struct ins x86__instructions[] = {
->  	{ .name = "mov",	.ops = &mov_ops,  },
->  	{ .name = "movapd",	.ops = &mov_ops,  },
->  	{ .name = "movaps",	.ops = &mov_ops,  },
-> -	{ .name = "movb",	.ops = &mov_ops,  },
->  	{ .name = "movdqa",	.ops = &mov_ops,  },
->  	{ .name = "movdqu",	.ops = &mov_ops,  },
-> -	{ .name = "movl",	.ops = &mov_ops,  },
-> -	{ .name = "movq",	.ops = &mov_ops,  },
->  	{ .name = "movsd",	.ops = &mov_ops,  },
->  	{ .name = "movslq",	.ops = &mov_ops,  },
->  	{ .name = "movss",	.ops = &mov_ops,  },
->  	{ .name = "movupd",	.ops = &mov_ops,  },
->  	{ .name = "movups",	.ops = &mov_ops,  },
-> -	{ .name = "movw",	.ops = &mov_ops,  },
->  	{ .name = "movzbl",	.ops = &mov_ops,  },
->  	{ .name = "movzwl",	.ops = &mov_ops,  },
->  	{ .name = "mulsd",	.ops = &mov_ops,  },
->  	{ .name = "mulss",	.ops = &mov_ops,  },
->  	{ .name = "nop",	.ops = &nop_ops,  },
-> -	{ .name = "nopl",	.ops = &nop_ops,  },
-> -	{ .name = "nopw",	.ops = &nop_ops,  },
->  	{ .name = "or",		.ops = &mov_ops,  },
-> -	{ .name = "orb",	.ops = &mov_ops,  },
-> -	{ .name = "orl",	.ops = &mov_ops,  },
->  	{ .name = "orps",	.ops = &mov_ops,  },
-> -	{ .name = "orq",	.ops = &mov_ops,  },
->  	{ .name = "pand",	.ops = &mov_ops,  },
->  	{ .name = "paddq",	.ops = &mov_ops,  },
->  	{ .name = "pcmpeqb",	.ops = &mov_ops,  },
->  	{ .name = "por",	.ops = &mov_ops,  },
-> -	{ .name = "rclb",	.ops = &mov_ops,  },
-> -	{ .name = "rcll",	.ops = &mov_ops,  },
-> +	{ .name = "rcl",	.ops = &mov_ops,  },
->  	{ .name = "ret",	.ops = &ret_ops,  },
-> -	{ .name = "retq",	.ops = &ret_ops,  },
->  	{ .name = "sbb",	.ops = &mov_ops,  },
-> -	{ .name = "sbbl",	.ops = &mov_ops,  },
->  	{ .name = "sete",	.ops = &mov_ops,  },
->  	{ .name = "sub",	.ops = &mov_ops,  },
-> -	{ .name = "subl",	.ops = &mov_ops,  },
-> -	{ .name = "subq",	.ops = &mov_ops,  },
->  	{ .name = "subsd",	.ops = &mov_ops,  },
-> -	{ .name = "subw",	.ops = &mov_ops,  },
->  	{ .name = "test",	.ops = &mov_ops,  },
-> -	{ .name = "testb",	.ops = &mov_ops,  },
-> -	{ .name = "testl",	.ops = &mov_ops,  },
-> -	{ .name = "testq",	.ops = &mov_ops,  },
->  	{ .name = "tzcnt",	.ops = &mov_ops,  },
->  	{ .name = "ucomisd",	.ops = &mov_ops,  },
->  	{ .name = "ucomiss",	.ops = &mov_ops,  },
-> @@ -139,11 +109,9 @@ static struct ins x86__instructions[] = {
->  	{ .name = "vsubsd",	.ops = &mov_ops,  },
->  	{ .name = "vucomisd",	.ops = &mov_ops,  },
->  	{ .name = "xadd",	.ops = &mov_ops,  },
-> -	{ .name = "xbeginl",	.ops = &jump_ops, },
-> -	{ .name = "xbeginq",	.ops = &jump_ops, },
-> +	{ .name = "xbegin",	.ops = &jump_ops, },
->  	{ .name = "xchg",	.ops = &mov_ops,  },
->  	{ .name = "xor",	.ops = &mov_ops, },
-> -	{ .name = "xorb",	.ops = &mov_ops, },
->  	{ .name = "xorpd",	.ops = &mov_ops, },
->  	{ .name = "xorps",	.ops = &mov_ops, },
->  };
+>  tools/lib/perf/evlist.c | 25 ++++++++++++++++++++-----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> index 81e8b5fcd8ba..b8b066d0dc5e 100644
+> --- a/tools/lib/perf/evlist.c
+> +++ b/tools/lib/perf/evlist.c
+> @@ -36,18 +36,33 @@ void perf_evlist__init(struct perf_evlist *evlist)
+>  static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+>                                           struct perf_evsel *evsel)
+>  {
+> -       /*
+> -        * We already have cpus for evsel (via PMU sysfs) so
+> -        * keep it, if there's no target cpu list defined.
+> -        */
 
+So basically this code is only needed when the user specified a cpu list.
+Otherwise evsels can use their own cpus.  But it's a kind of sad that
+libperf does not have a notion of PMU (with a cpu map) yet.
+
+I think we have the following cases.  Please tell me if I miss some.
+
+1. non-hybrid core PMU: It used to not have a cpu map, but you added it
+   in this patchset to cover all (online) CPUs.  So it'd be ok to treat them as
+   same as the hybrid PMUs.
+
+2. hybrid core PMU: It has a cpu map to cover possible CPUs and the
+   user requested cpu map should be intersected with its map.
+
+3. uncore PMU: It has a cpu map to indicate CPUs to handle event
+   settings but it's allowed to read the event from other CPUs (at least
+   for Intel CPUs).  That means it can just use the user request cpu map.
+
+4. dummy event: It can be marked as system-wide to get the sideband
+   events from all CPUs.  Then it should ignore the user requested cpu
+   map.  Otherwise it should be treated as other events.
+
+5. tool event: It's used for perf stat and has a hardcoded cpu map for
+   CPU 0.  Not sure if it can accept other CPUs but it seems we can ignore
+   the user requested cpu map.
+
+6. other event: No restrictions.  It can use the user requested cpu map.
+
+
+>         if (evsel->system_wide) {
+> +               /* System wide: set the cpu map of the evsel to all online CPUs. */
+>                 perf_cpu_map__put(evsel->cpus);
+>                 evsel->cpus = perf_cpu_map__new(NULL);
+> +       } else if (evlist->has_user_cpus && evsel->is_pmu_core) {
+> +               /*
+> +                * User requested CPUs on a core PMU, ensure the requested CPUs
+> +                * are valid by intersecting with those of the PMU.
+> +                */
+> +               perf_cpu_map__put(evsel->cpus);
+> +               evsel->cpus = perf_cpu_map__intersect(evlist->user_requested_cpus, evsel->own_cpus);
+>         } else if (!evsel->own_cpus || evlist->has_user_cpus ||
+> -                  (!evsel->requires_cpu && perf_cpu_map__empty(evlist->user_requested_cpus))) {
+> +               (!evsel->requires_cpu && perf_cpu_map__has_any_cpu(evlist->user_requested_cpus))) {
+> +               /*
+> +                * The PMU didn't specify a default cpu map, this isn't a core
+> +                * event and the user requested CPUs or the evlist user
+> +                * requested CPUs have the "any CPU" (aka dummy) CPU value. In
+> +                * which case use the user requested CPUs rather than the PMU
+> +                * ones.
+> +                */
+>                 perf_cpu_map__put(evsel->cpus);
+>                 evsel->cpus = perf_cpu_map__get(evlist->user_requested_cpus);
+>         } else if (evsel->cpus != evsel->own_cpus) {
+> +               /*
+> +                * No user requested cpu map but the PMU cpu map doesn't match
+> +                * the evsel's. Reset it back to the PMU cpu map.
+> +                */
+
+Not sure if it actually happens.
+
+Thanks,
+Namhyung
+
+
+>                 perf_cpu_map__put(evsel->cpus);
+>                 evsel->cpus = perf_cpu_map__get(evsel->own_cpus);
+>         }
+> --
+> 2.40.1.698.g37aff9b760-goog
+>
