@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E1BC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 07:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8EDC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 07:13:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230511AbjEYHNF (ORCPT
+        id S239180AbjEYHNO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 03:13:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47078 "EHLO
+        Thu, 25 May 2023 03:13:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239153AbjEYHM0 (ORCPT
+        with ESMTP id S239208AbjEYHM1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 03:12:26 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A201DE4D
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 00:12:17 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba8338f20bdso419679276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 00:12:17 -0700 (PDT)
+        Thu, 25 May 2023 03:12:27 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93C1E56
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 00:12:19 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba8696637a7so627037276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 00:12:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1684998736; x=1687590736;
+        d=google.com; s=20221208; t=1684998739; x=1687590739;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=JINgRbKyqeD/5xjEyB2Z8M27zbkpuoQ93P6f/ale0uI=;
-        b=OP4afWsTIYHlIiVTegNyeLRIqJ2zMqeyRsGXo/7eq4nQ5gebMPUTViLGgtu89xP43w
-         X25NyK2bhxqAHZtrw1issc4tRmXnff5EtFVyw+kq3E99WowlEQlVAV4935YOas6Bl/Bq
-         LhMHBUoNbwpi0bpYt5T9maZQF4yoblT3yyX+IAZdUcmpyyuKxTOzG4miAldimh5JFUIB
-         Hiu2a09aHEQYNjXmmZv0C//qoO+ntkS8zOpyqiIypFAXIpib6mKGDVU/UHRod0EfNM7Q
-         nOsc/DeVMBBGfIoAUK4Fbqu4C3dpZ7W1WSvi/0P4y2uIevkTZhzXlmn9TyFaWIKeHC/j
-         G8xA==
+        bh=ggTb6f0gA72Brkbk+lLnAHMXMj4Nzlq459y7w+X8s+M=;
+        b=zya5huYBVKCG09FY59/9EdJFJ2gtw3RbTIm4L55BBG4PT8X/b9MS0BN14J4TKX+lMm
+         IkFOIuPFZ707dsTexrCX/BMGBrjuOmazCA/KpqQ31nhcJCrHCuMwxRGCXdateaDifYsP
+         +bqt+5PF4GgP5c+wrtqg6ILOa/6evCiGQAoR1k/Hu4+5xpIDLomMz1r/vAe7soVeoX8g
+         YyUP8Jh6iKavD1b8sNyutgDqZTLf0Hp2jFHIY8cXwcZ6XTEikRZVK3nJHUYmCmzO0FZb
+         9qvJlc5ZMY/CWUCxRaEbUFxBW2ho276N0givK7byEZJV1kmxegsZynwjUqTyBf63X5hJ
+         pB2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684998736; x=1687590736;
+        d=1e100.net; s=20221208; t=1684998739; x=1687590739;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JINgRbKyqeD/5xjEyB2Z8M27zbkpuoQ93P6f/ale0uI=;
-        b=bXsIIRToipXrLBFvNOFmCaZOuMk94qqZm7Kfm37MiW9/hYpIiG1Zz+8LNfaVrLljR1
-         EBm/O81il8BUaPtYBLXUnE+PXieweBGS3ick6VnPQZTCsGqo559OjsqIuqQiLGk6R0PJ
-         nAItPsJt1csu6YiD7pRnyOuBfUyzQRtV6u0B5nbW/yzLp+leOZM7C53iFhPINsMEJ3bA
-         +AYPFZv9+IFSdj6QMyp0+GMWcBza3qgB9LHgv+rFzxtq7dKCf26706hZRDTzJ1KElwYh
-         x7fr3v4noQRqVdtRuxC6qQF48U9HW377mfjAKDlrlcXcuMJBQ8PoRFEXUNV1vN6hj89t
-         uxAQ==
-X-Gm-Message-State: AC+VfDwRx/u89Lwj4jCyCgzyfF2uqxLmYq9z6aCnD1kPCvXX40JWOqBp
-        DO5t75mLlJUA/V3shX+adhcmzB03lhx4
-X-Google-Smtp-Source: ACHHUZ7sbw6AbhpElOgagS6t6+PV+X3bd3rUnq9Dqsw9hU6xB469HNKeglXDNdx1ojU0xz8YM86WvVJWnJUg
+        bh=ggTb6f0gA72Brkbk+lLnAHMXMj4Nzlq459y7w+X8s+M=;
+        b=lro6qW2xE16hFcd5EeHrzGLCDYma/GgS23rO5PpKRi3T+NsAsbbU5VH+wrl0KPddCe
+         nhPzlcj1EgcxK39QSwVR6ETMmmKwzq8svejOLodovV5J459oPYd2VGpu/LgUP1VwZgws
+         /AU6Xz8b6XRoqX1Pt5ePqha+S//tKJ2lID7Fr56BJkX9lA1EDgcwEQNweLEyl5oQjBM9
+         6UhiDG0eGmcUv1dwfdpOsV77PUVljhqVN42HT4n6HZUXVPaS8Ag/JK/O6/yHFu/qGVFo
+         DWGzoqNyDJSz2OGjMOu91Vt7Q9ysh/X+az1xraHT21iDGXXNTV9I8iGsQNs85/TNipZt
+         ckMQ==
+X-Gm-Message-State: AC+VfDwTQ3sX8CcVwEmnA5xg9fbGKK4uQeJuRS6FL0hOmwTJtKITBm9o
+        NdZ6PNVMdj98WzvDsMxQWIZygDNx17/Y
+X-Google-Smtp-Source: ACHHUZ7nBAXkL3/0TFHswcK9NCUCL+Ni/cvNuvpsdJBuVmg6LFyOPSr0UMvPxYD7FGLVdzpa0HosozU2iF0S
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:7aa7:3d2d:76ae:8e96])
- (user=irogers job=sendgmr) by 2002:a25:7456:0:b0:ba7:1499:e202 with SMTP id
- p83-20020a257456000000b00ba71499e202mr1646377ybc.7.1684998736756; Thu, 25 May
- 2023 00:12:16 -0700 (PDT)
-Date:   Thu, 25 May 2023 00:11:25 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:4ca:b0:ba8:84fb:6ad with SMTP id
+ v10-20020a05690204ca00b00ba884fb06admr1696358ybs.4.1684998738824; Thu, 25 May
+ 2023 00:12:18 -0700 (PDT)
+Date:   Thu, 25 May 2023 00:11:26 -0700
 In-Reply-To: <20230525071133.2066610-1-irogers@google.com>
-Message-Id: <20230525071133.2066610-9-irogers@google.com>
+Message-Id: <20230525071133.2066610-10-irogers@google.com>
 Mime-Version: 1.0
 References: <20230525071133.2066610-1-irogers@google.com>
 X-Mailer: git-send-email 2.40.1.698.g37aff9b760-goog
-Subject: [PATCH v1 08/16] perf daemon: Dynamically allocate path to perf
+Subject: [PATCH v1 09/16] perf lock: Dynamically allocate lockhash_table
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -82,54 +82,89 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Avoid a PATH_MAX array in __daemon (the .data section) by dynamically
-allocating the memory.
+lockhash_table is 32,768bytes in .bss, make it a memory allocation so
+that the space is freed for non-lock perf commands.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-daemon.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ tools/perf/builtin-lock.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index 34cbe3e959aa..adb5751c3ed0 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -90,7 +90,7 @@ struct daemon {
- 	char			*base;
- 	struct list_head	 sessions;
- 	FILE			*out;
--	char			 perf[PATH_MAX];
-+	char			*perf;
- 	int			 signal_fd;
- 	time_t			 start;
- };
-@@ -1490,6 +1490,15 @@ static int __cmd_ping(struct daemon *daemon, struct option parent_options[],
- 	return send_cmd(daemon, &cmd);
- }
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 70b14ba5fdd5..fc8356bd6e3a 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -48,7 +48,7 @@ static struct target target;
+ #define LOCKHASH_BITS		12
+ #define LOCKHASH_SIZE		(1UL << LOCKHASH_BITS)
  
-+static char *set_perf_exe(void)
-+{
-+	char path[PATH_MAX];
-+
-+	perf_exe(path, sizeof(path));
-+	__daemon.perf = strdup(path);
-+	return __daemon.perf;
-+}
-+
- int cmd_daemon(int argc, const char **argv)
- {
- 	struct option daemon_options[] = {
-@@ -1503,7 +1512,9 @@ int cmd_daemon(int argc, const char **argv)
- 		OPT_END()
+-static struct hlist_head lockhash_table[LOCKHASH_SIZE];
++static struct hlist_head *lockhash_table;
+ 
+ #define __lockhashfn(key)	hash_long((unsigned long)key, LOCKHASH_BITS)
+ #define lockhashentry(key)	(lockhash_table + __lockhashfn((key)))
+@@ -1871,7 +1871,6 @@ static int __cmd_contention(int argc, const char **argv)
+ 	};
+ 	struct lock_contention con = {
+ 		.target = &target,
+-		.result = &lockhash_table[0],
+ 		.map_nr_entries = bpf_map_entries,
+ 		.max_stack = max_stack_depth,
+ 		.stack_skip = stack_skip,
+@@ -1880,10 +1879,17 @@ static int __cmd_contention(int argc, const char **argv)
+ 		.owner = show_lock_owner,
  	};
  
--	perf_exe(__daemon.perf, sizeof(__daemon.perf));
-+	if (!set_perf_exe())
++	lockhash_table = calloc(LOCKHASH_SIZE, sizeof(*lockhash_table));
++	if (!lockhash_table)
 +		return -ENOMEM;
 +
- 	__daemon.out = stdout;
++	con.result = &lockhash_table[0];
++
+ 	session = perf_session__new(use_bpf ? NULL : &data, &eops);
+ 	if (IS_ERR(session)) {
+ 		pr_err("Initializing perf session failed\n");
+-		return PTR_ERR(session);
++		err = PTR_ERR(session);
++		goto out_delete;
+ 	}
  
- 	argc = parse_options(argc, argv, daemon_options, daemon_usage,
+ 	con.machine = &session->machines.host;
+@@ -1983,6 +1989,7 @@ static int __cmd_contention(int argc, const char **argv)
+ 	evlist__delete(con.evlist);
+ 	lock_contention_finish();
+ 	perf_session__delete(session);
++	zfree(&lockhash_table);
+ 	return err;
+ }
+ 
+@@ -2348,6 +2355,10 @@ int cmd_lock(int argc, const char **argv)
+ 	unsigned int i;
+ 	int rc = 0;
+ 
++	lockhash_table = calloc(LOCKHASH_SIZE, sizeof(*lockhash_table));
++	if (!lockhash_table)
++		return -ENOMEM;
++
+ 	for (i = 0; i < LOCKHASH_SIZE; i++)
+ 		INIT_HLIST_HEAD(lockhash_table + i);
+ 
+@@ -2369,7 +2380,7 @@ int cmd_lock(int argc, const char **argv)
+ 		rc = __cmd_report(false);
+ 	} else if (!strcmp(argv[0], "script")) {
+ 		/* Aliased to 'perf script' */
+-		return cmd_script(argc, argv);
++		rc = cmd_script(argc, argv);
+ 	} else if (!strcmp(argv[0], "info")) {
+ 		if (argc) {
+ 			argc = parse_options(argc, argv,
+@@ -2403,5 +2414,6 @@ int cmd_lock(int argc, const char **argv)
+ 		usage_with_options(lock_usage, lock_options);
+ 	}
+ 
++	zfree(&lockhash_table);
+ 	return rc;
+ }
 -- 
 2.40.1.698.g37aff9b760-goog
 
