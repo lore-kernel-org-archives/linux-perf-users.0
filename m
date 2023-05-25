@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0468C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 19:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23F9C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 19:27:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243661AbjEYTXS convert rfc822-to-8bit (ORCPT
+        id S241637AbjEYT17 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 15:23:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38700 "EHLO
+        Thu, 25 May 2023 15:27:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243688AbjEYTXC (ORCPT
+        with ESMTP id S243670AbjEYT1l (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 15:23:02 -0400
-Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0742AE57;
-        Thu, 25 May 2023 12:19:35 -0700 (PDT)
-Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-456f7ea8694so312199e0c.0;
-        Thu, 25 May 2023 12:19:34 -0700 (PDT)
+        Thu, 25 May 2023 15:27:41 -0400
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46DBB10E3;
+        Thu, 25 May 2023 12:26:33 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-ba8afcc82c0so28122276.2;
+        Thu, 25 May 2023 12:26:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685042277; x=1687634277;
+        d=1e100.net; s=20221208; t=1685042691; x=1687634691;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XUkevm3aMU5xLxVBa9KxEIFuZRkmPE748qzKxoDf9/0=;
-        b=dNZ3rmg6sV4BREbRboM9CuBrgR24asHz38JUEVp2l5Zx77M4xIhYBCYbOx15qkXAgq
-         /Xlae6PgTtVTfxIwOwKJF603ioO8shZhnO4oz8VdQwBskLPiagLq8k5aTuk1JtWe5d8j
-         gZfKwC75aJ8Efc3et4VdwqMplnJsMqdtO/gU0CPGcS8x02hA/ogjCkrj/4/w/H7Swksv
-         Z+F2jFNOTqessoEwGAWScSoOmpQ3nr/ASkXkuhIYz1UPfFh/h6mlSaeKusqbNIOVXa7d
-         t36KL2/tr+kTqcbJvtRWLoDQsuECUWCEaP+E3VpbWv0Ps6oW4ciDtYJV8IA5605bY91t
-         iGZw==
-X-Gm-Message-State: AC+VfDw+CSeWisxj/wWZo1Z9/PaGan7IyR1t5qFW1WjL4FwxTAsyAash
-        7OHIQ21CsjmRBExBRz5TD/A7etAJ/GQYu9FW6G4=
-X-Google-Smtp-Source: ACHHUZ70TCJa3LuotxEpuRt8HHeEdaR6EhrXfj0TDwMm/6pncpPKae8houpIaIJqkJH9JxLSLSk63tXSWWdYymK7Pv8=
-X-Received: by 2002:a1f:e604:0:b0:43f:e32a:c650 with SMTP id
- d4-20020a1fe604000000b0043fe32ac650mr6364003vkh.15.1685042277355; Thu, 25 May
- 2023 12:17:57 -0700 (PDT)
+        bh=ps2nba1CZQSLfcCNY2djZFhOfLDj/kiQp3GO8gySDB4=;
+        b=FCxUaapCUGb5NNZDCdsk7mtNpettchXvWswpbcHTbMX/5CEmR2n/XUhxMOuzMVC5mO
+         7fw8xQ9lQJe8vng0R4hquINa05vgmh6yocGJVnnMUCFZdI7k05DizuaiAeJI7uxwUwok
+         1v4l/yx65FW3Cz94vx7HgeYfb7LduSypZknTp2lrsiFYyV0NCsheW5GrbycZFXzUwD8P
+         pK4YmGBerooI+I/w1++uxdwYulxryiixdM7aUz6mmvnZaXWkv/X00GHDjOQVfYAfEmLQ
+         kN2tsxsBEW/xvI2R2MaFbrIzUoH4w8zrayLeI9AvoPkjtZ752hiZtQx5TEHbwfWHeeEP
+         TnnQ==
+X-Gm-Message-State: AC+VfDwy1PoDq6L54wVNvetx4tHQ6jJsM9hF7qSFBwPqEeGlDQhlZpIb
+        gg3Qljy4TUrGLZl4UerVWa+P6GD0OOv/xQNGalPk2QfF
+X-Google-Smtp-Source: ACHHUZ5S28d+j79LBuLMG6U3SrhLRvE2YDRnaoiCRim0SXQ2+UhdjPmOpLhJFNgTlJVx9MdG29sKhedMxQwNm0A4xVM=
+X-Received: by 2002:a67:e205:0:b0:439:31df:f097 with SMTP id
+ g5-20020a67e205000000b0043931dff097mr6127786vsa.24.1685042105094; Thu, 25 May
+ 2023 12:15:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230525071133.2066610-1-irogers@google.com> <20230525071133.2066610-9-irogers@google.com>
-In-Reply-To: <20230525071133.2066610-9-irogers@google.com>
+References: <20230525071133.2066610-1-irogers@google.com> <20230525071133.2066610-2-irogers@google.com>
+In-Reply-To: <20230525071133.2066610-2-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 25 May 2023 12:17:46 -0700
-Message-ID: <CAM9d7ci5XB7-PdcXchWW7bBFO_64B0M76rpY8xgkBYr3-mGW0Q@mail.gmail.com>
-Subject: Re: [PATCH v1 08/16] perf daemon: Dynamically allocate path to perf
+Date:   Thu, 25 May 2023 12:14:53 -0700
+Message-ID: <CAM9d7cgaSPbnjoA6bv8fwkpoyc6nCdXOOrbmBm_jGbZbm3a_4w@mail.gmail.com>
+Subject: Re: [PATCH v1 01/16] perf header: Make nodes dynamic in write_mem_topology
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -72,61 +72,117 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Thu, May 25, 2023 at 12:12 AM Ian Rogers <irogers@google.com> wrote:
 >
-> Avoid a PATH_MAX array in __daemon (the .data section) by dynamically
-> allocating the memory.
+> Avoid a large static array, dynamically allocate the nodes avoiding a
+> hard coded limited as well.
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/builtin-daemon.c | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+>  tools/perf/util/header.c | 33 +++++++++++++++++++++------------
+>  1 file changed, 21 insertions(+), 12 deletions(-)
 >
-> diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-> index 34cbe3e959aa..adb5751c3ed0 100644
-> --- a/tools/perf/builtin-daemon.c
-> +++ b/tools/perf/builtin-daemon.c
-> @@ -90,7 +90,7 @@ struct daemon {
->         char                    *base;
->         struct list_head         sessions;
->         FILE                    *out;
-> -       char                     perf[PATH_MAX];
-> +       char                    *perf;
->         int                      signal_fd;
->         time_t                   start;
->  };
-> @@ -1490,6 +1490,15 @@ static int __cmd_ping(struct daemon *daemon, struct option parent_options[],
->         return send_cmd(daemon, &cmd);
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 2dde3ca20de5..80593ed8c79b 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -24,6 +24,7 @@
+>  #include <bpf/libbpf.h>
+>  #endif
+>  #include <perf/cpumap.h>
+> +#include <tools/libc_compat.h> // reallocarray
+>
+>  #include "dso.h"
+>  #include "evlist.h"
+> @@ -1396,13 +1397,14 @@ static int memory_node__sort(const void *a, const void *b)
+>         return na->node - nb->node;
 >  }
 >
-> +static char *set_perf_exe(void)
-> +{
-> +       char path[PATH_MAX];
-> +
-> +       perf_exe(path, sizeof(path));
-> +       __daemon.perf = strdup(path);
-> +       return __daemon.perf;
+> -static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
+> +static int build_mem_topology(struct memory_node **nodesp, u64 *cntp)
+>  {
+>         char path[PATH_MAX];
+>         struct dirent *ent;
+>         DIR *dir;
+> -       u64 cnt = 0;
+>         int ret = 0;
+> +       size_t cnt = 0, size = 0;
+> +       struct memory_node *nodes = NULL;
+>
+>         scnprintf(path, PATH_MAX, "%s/devices/system/node/",
+>                   sysfs__mountpoint());
+> @@ -1426,16 +1428,24 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
+>                 if (r != 1)
+>                         continue;
+>
+> -               if (WARN_ONCE(cnt >= size,
+> -                       "failed to write MEM_TOPOLOGY, way too many nodes\n")) {
+> -                       closedir(dir);
+> -                       return -1;
+> -               }
+> +               if (cnt >= size) {
+> +                       struct memory_node *new_nodes =
+> +                               reallocarray(nodes, cnt + 4, sizeof(*nodes));
+>
+> +                       if (!new_nodes) {
+> +                               pr_err("Failed to write MEM_TOPOLOGY, size %zd nodes\n", size);
+> +                               free(nodes);
+> +                               closedir(dir);
+> +                               return -ENOMEM;
+> +                       }
+> +                       nodes = new_nodes;
+> +                       size += 4;
+> +               }
+>                 ret = memory_node__read(&nodes[cnt++], idx);
 
-Then you need to free it somewhere.
+I think you need to handle error cases here.
 
 Thanks,
 Namhyung
 
 
-> +}
-> +
->  int cmd_daemon(int argc, const char **argv)
+>         }
+>
+>         *cntp = cnt;
+> +       *nodesp = nodes;
+>         closedir(dir);
+>
+>         if (!ret)
+> @@ -1444,8 +1454,6 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
+>         return ret;
+>  }
+>
+> -#define MAX_MEMORY_NODES 2000
+> -
+>  /*
+>   * The MEM_TOPOLOGY holds physical memory map for every
+>   * node in system. The format of data is as follows:
+> @@ -1464,8 +1472,8 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
+>  static int write_mem_topology(struct feat_fd *ff __maybe_unused,
+>                               struct evlist *evlist __maybe_unused)
 >  {
->         struct option daemon_options[] = {
-> @@ -1503,7 +1512,9 @@ int cmd_daemon(int argc, const char **argv)
->                 OPT_END()
->         };
+> -       static struct memory_node nodes[MAX_MEMORY_NODES];
+> -       u64 bsize, version = 1, i, nr;
+> +       struct memory_node *nodes = NULL;
+> +       u64 bsize, version = 1, i, nr = 0;
+>         int ret;
 >
-> -       perf_exe(__daemon.perf, sizeof(__daemon.perf));
-> +       if (!set_perf_exe())
-> +               return -ENOMEM;
-> +
->         __daemon.out = stdout;
+>         ret = sysfs__read_xll("devices/system/memory/block_size_bytes",
+> @@ -1473,7 +1481,7 @@ static int write_mem_topology(struct feat_fd *ff __maybe_unused,
+>         if (ret)
+>                 return ret;
 >
->         argc = parse_options(argc, argv, daemon_options, daemon_usage,
+> -       ret = build_mem_topology(&nodes[0], MAX_MEMORY_NODES, &nr);
+> +       ret = build_mem_topology(&nodes, &nr);
+>         if (ret)
+>                 return ret;
+>
+> @@ -1508,6 +1516,7 @@ static int write_mem_topology(struct feat_fd *ff __maybe_unused,
+>         }
+>
+>  out:
+> +       free(nodes);
+>         return ret;
+>  }
+>
 > --
 > 2.40.1.698.g37aff9b760-goog
 >
