@@ -2,94 +2,360 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68590C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 15:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF41C7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 16:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241869AbjEYP4r (ORCPT
+        id S240858AbjEYQ1i (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 11:56:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45682 "EHLO
+        Thu, 25 May 2023 12:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241799AbjEYP4k (ORCPT
+        with ESMTP id S240695AbjEYQ1K (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 11:56:40 -0400
-Received: from out-6.mta0.migadu.com (out-6.mta0.migadu.com [91.218.175.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF94C198
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 08:56:37 -0700 (PDT)
-Date:   Thu, 25 May 2023 15:56:29 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1685030195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        Thu, 25 May 2023 12:27:10 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82063E5A;
+        Thu, 25 May 2023 09:27:00 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 34E5221C65;
+        Thu, 25 May 2023 16:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1685032018; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=0TaRl4n9XMPX8xYtktTsVXIPmY5xjSbUFHkUUq8DkmI=;
-        b=hVrEFsfSK9zqWSTXkIGyFhD9rIX/jc87yhI5D8VjTZ8kI0yQmUL9HlGzmsvHXABFo+d9Ps
-        X6Jlw84tCpkeImBdiDkjeaNPRnNo79FI+mRcdgm1fc+kYysuFOuXhQBYQF28pRtYJ9k3nK
-        DdUZt+FFlvSHbvrwhbFsjVAif+Q0yIk=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Oliver Upton <oliver.upton@linux.dev>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
-        Nathan Chancellor <nathan@kernel.org>, namhyung@kernel.org,
-        eranian@google.com, acme@kernel.org, mark.rutland@arm.com,
-        jolsa@kernel.org, irogers@google.com, bp@alien8.de,
-        kan.liang@linux.intel.com, adrian.hunter@intel.com,
-        maddy@linux.ibm.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com, maz@kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
-Message-ID: <ZG+FLdP2kkfI1m2Z@linux.dev>
-References: <20230504110003.2548-1-ravi.bangoria@amd.com>
- <20230504110003.2548-4-ravi.bangoria@amd.com>
- <20230524214133.GA2359762@dev-arch.thelio-3990X>
- <f02c78e2-34b9-4985-640a-279dae1004a9@amd.com>
- <ZG8KLbZSECiYaKFc@linux.dev>
- <20230525142031.GU83892@hirez.programming.kicks-ass.net>
+        bh=qBSf8dQvqenvM4XuaXqBfFlxjVrL5fPe+CB4lmnXjuk=;
+        b=C4s+hdIyCnXmGRzN2XmAwfRTIB+9xRT+DvPlRO3vRcui7FbrbO1JQDWFx0rfTnZPSjX5i1
+        rRTvdTF0fGM/eRmPRJQYStRfQXRzvjlNo/ZL8IUHR6kuT7x8QzWCoJZmsiqU3ukACJ1fan
+        DauIAYjaJf8QRWaSlI7nNnrfcF7cPGY=
+Received: from suse.cz (unknown [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id A2C412C141;
+        Thu, 25 May 2023 16:26:55 +0000 (UTC)
+Date:   Thu, 25 May 2023 18:26:52 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Stephane Eranian <eranian@google.com>, mpe@ellerman.id.au,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linuxppc-dev@lists.ozlabs.org, Sumit Garg <sumit.garg@linaro.org>,
+        npiggin@gmail.com, davem@davemloft.net,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, sparclinux@vger.kernel.org,
+        christophe.leroy@csgroup.eu,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        ravi.v.shankar@intel.com, Randy Dunlap <rdunlap@infradead.org>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Ian Rogers <irogers@google.com>, ito-yuichi@fujitsu.com,
+        ricardo.neri@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Colin Cross <ccross@android.com>
+Subject: Re: [PATCH v5 14/18] watchdog/hardlockup: detect hard lockups using
+ secondary (buddy) CPUs
+Message-ID: <ZG-MTPSZakRDl2CP@alley>
+References: <20230519101840.v5.18.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
+ <20230519101840.v5.14.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230525142031.GU83892@hirez.programming.kicks-ass.net>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20230519101840.v5.14.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 25, 2023 at 04:20:31PM +0200, Peter Zijlstra wrote:
-> On Thu, May 25, 2023 at 07:11:41AM +0000, Oliver Upton wrote:
+On Fri 2023-05-19 10:18:38, Douglas Anderson wrote:
+> Implement a hardlockup detector that doesn't doesn't need any extra
+> arch-specific support code to detect lockups. Instead of using
+> something arch-specific we will use the buddy system, where each CPU
+> watches out for another one. Specifically, each CPU will use its
+> softlockup hrtimer to check that the next CPU is processing hrtimer
+> interrupts by verifying that a counter is increasing.
 > 
-> > The PMUv3 driver does pass a name, but it relies on getting back an
-> > allocated pmu id as @type is -1 in the call to perf_pmu_register().
-> > 
-> > What actually broke is how KVM probes for a default core PMU to use for
-> > a guest. kvm_pmu_probe_armpmu() creates a counter w/ PERF_TYPE_RAW and
-> > reads the pmu from the returned perf_event. The linear search had the
-> > effect of eventually stumbling on the correct core PMU and succeeding.
-> > 
-> > Perf folks: is this WAI for heterogenous systems?
-> 
-> TBH, I'm not sure. hetero and virt don't mix very well AFAIK and I'm not
-> sure what ARM64 does here.
-> 
-> IIRC the only way is to hard affine things; that is, force vCPU of
-> 'type' to the pCPU mask of 'type' CPUs.
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -85,7 +85,7 @@ __setup("nmi_watchdog=", hardlockup_panic_setup);
+>  
+>  #endif /* CONFIG_HARDLOCKUP_DETECTOR */
+>  
+> -#if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
+> +#if defined(CONFIG_HARDLOCKUP_DETECTOR_COUNTS_HRTIMER)
+>  
+>  static DEFINE_PER_CPU(atomic_t, hrtimer_interrupts);
+>  static DEFINE_PER_CPU(int, hrtimer_interrupts_saved);
+> @@ -106,6 +106,14 @@ notrace void arch_touch_nmi_watchdog(void)
+>  }
+>  EXPORT_SYMBOL(arch_touch_nmi_watchdog);
+>  
+> +void watchdog_hardlockup_touch_cpu(unsigned int cpu)
+> +{
+> +	per_cpu(watchdog_hardlockup_touched, cpu) = true;
+> +
+> +	/* Match with smp_rmb() in watchdog_hardlockup_check() */
+> +	smp_wmb();
 
-We provide absolutely no illusion of consistency across implementations.
-Userspace can select the PMU type, and then it is a userspace problem
-affining vCPUs to the right pCPUs.
+It is great that you described where the related barrier is.
 
-And if they get that wrong, we just bail and refuse to run the vCPU.
+Another important information is what exactly is synchronized.
+And I am actually not sure what we are synchronizing here.
 
-> If you don't do that; or let userspace 'override' that, things go
-> sideways *real* fast.
+My understanding is that a write barrier should synchronize
+related writes, for example:
 
-Oh yeah, and I wish PMUs were the only problem with these hetero
-systems...
+	X = ...;
+	/* Make sure that X is modified before Y */
+	smp_wmb();
+	Y = ...;
 
-> Mark gonna have to look at this.
+And the related read barrier should synchronize the related reads,
+for example:
 
-Cool. I'll go ahead with the KVM cleanup regardless of the outcome.
+	if (test(Y)) {
+		/*
+		 * Make sure that we use the updated X when
+		 * we saw the updated Y.
+		 */
+		 smp_rmb();
+		 do_something(X);
+	 }
 
---
-Thanks,
-Oliver
+IMHO, we do not need any barrier here because we have only
+one variable "watchdog_hardlockup_touched" here.
+watchdog_hardlockup_check() will either see the updated value
+or not. But it does not synchronize it against any other
+variables or values.
+
+> +}
+> +
+>  static bool is_hardlockup(unsigned int cpu)
+>  {
+>  	int hrint = atomic_read(&per_cpu(hrtimer_interrupts, cpu));
+> @@ -443,11 +454,15 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+>  	struct pt_regs *regs = get_irq_regs();
+>  	int duration;
+>  	int softlockup_all_cpu_backtrace = sysctl_softlockup_all_cpu_backtrace;
+> +	unsigned long hrtimer_interrupts;
+>  
+>  	if (!watchdog_enabled)
+>  		return HRTIMER_NORESTART;
+>  
+> -	watchdog_hardlockup_kick();
+> +	hrtimer_interrupts = watchdog_hardlockup_kick();
+> +
+> +	/* test for hardlockups */
+
+I would omit the comment. It is not valid when perf detector is used.
+And checking the buddy is clear from the function name.
+
+> +	watchdog_buddy_check_hardlockup(hrtimer_interrupts);
+
+I would personally move this into watchdog_hardlockup_kick().
+watchdog_timer_fn() is already complex enough. And checking
+the buddy when kicking a CPU makes sense.
+
+Also I would not pass "hrtimer_interrupts". I guess that it is
+just an optimization. It is an extra churn in the code. IMHO,
+is is not wort it. This code does not need to be super optimized.
+
+> +
+
+>  
+>  	/* kick the softlockup detector */
+>  	if (completion_done(this_cpu_ptr(&softlockup_completion))) {
+> diff --git a/kernel/watchdog_buddy.c b/kernel/watchdog_buddy.c
+> new file mode 100644
+> index 000000000000..fee45af2e5bd
+> --- /dev/null
+> +++ b/kernel/watchdog_buddy.c
+> @@ -0,0 +1,93 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/cpu.h>
+> +#include <linux/cpumask.h>
+> +#include <linux/kernel.h>
+> +#include <linux/nmi.h>
+> +#include <linux/percpu-defs.h>
+> +
+> +static cpumask_t __read_mostly watchdog_cpus;
+> +
+> +static unsigned int watchdog_next_cpu(unsigned int cpu)
+> +{
+> +	cpumask_t cpus = watchdog_cpus;
+
+A copy should be done by cpumask_copy().
+
+But the question is why a copy would be needed. When called from
+watchdog_buddy_check_hardlockup(), this function is not sychronized
+against the CPU hotplug. And even the copying would be racy.
+
+IMHO, the copy does not help much and we do not need it.
+
+The only important this is that this function would return
+a valid CPU. And I think that it is guarantted because
+CPU0 could not be disabled.
+
+> +	unsigned int next_cpu;
+> +
+> +	next_cpu = cpumask_next(cpu, &cpus);
+> +	if (next_cpu >= nr_cpu_ids)
+> +		next_cpu = cpumask_first(&cpus);
+> +
+> +	if (next_cpu == cpu)
+> +		return nr_cpu_ids;
+>> +	return next_cpu;
+> +}
+> +
+> +int __init watchdog_hardlockup_probe(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +void watchdog_hardlockup_enable(unsigned int cpu)
+> +{
+> +	unsigned int next_cpu;
+> +
+> +	/*
+> +	 * The new CPU will be marked online before the hrtimer interrupt
+> +	 * gets a chance to run on it. If another CPU tests for a
+> +	 * hardlockup on the new CPU before it has run its the hrtimer
+> +	 * interrupt, it will get a false positive. Touch the watchdog on
+> +	 * the new CPU to delay the check for at least 3 sampling periods
+> +	 * to guarantee one hrtimer has run on the new CPU.
+> +	 */
+> +	watchdog_hardlockup_touch_cpu(cpu);
+> +
+> +	/*
+> +	 * We are going to check the next CPU. Our watchdog_hrtimer
+> +	 * need not be zero if the CPU has already been online earlier.
+> +	 * Touch the watchdog on the next CPU to avoid false positive
+> +	 * if we try to check it in less then 3 interrupts.
+> +	 */
+> +	next_cpu = watchdog_next_cpu(cpu);
+> +	if (next_cpu < nr_cpu_ids)
+> +		watchdog_hardlockup_touch_cpu(next_cpu);
+
+Thinking loudly:
+
+This feels racy when many CPUs are enabled/disabled in parallel.
+I am not 100% sure it it can happen though.
+
+My understanding is that it can't happen because the CPU hotplug
+is serialized by cpu_add_remove_lock.
+
+So, this seems to work after all.
+
+> +
+> +	cpumask_set_cpu(cpu, &watchdog_cpus);
+> +}
+> +
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1035,10 +1035,55 @@ config BOOTPARAM_SOFTLOCKUP_PANIC
+>  
+>  	  Say N if unsure.
+>  
+> -config HARDLOCKUP_DETECTOR_PERF
+> +# Both the "perf" and "buddy" hardlockup detectors count hrtimer
+> +# interrupts. This config enables functions managing this common code.
+> +config HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+>  	bool
+>  	select SOFTLOCKUP_DETECTOR
+>  
+> +config HARDLOCKUP_DETECTOR_PERF
+> +	bool
+> +	depends on HAVE_HARDLOCKUP_DETECTOR_PERF
+> +	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> +
+> +config HARDLOCKUP_DETECTOR_BUDDY
+> +	bool
+> +	depends on SMP
+> +	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> +
+> +# For hardlockup detectors you can have one directly provided by the arch
+> +# or use a "non-arch" one. If you're using a "non-arch" one that is
+> +# further divided the perf hardlockup detector (which, confusingly, needs
+> +# arch-provided perf support) and the buddy hardlockup detector (which just
+> +# needs SMP). In either case, using the "non-arch" code conflicts with
+> +# the NMI watchdog code (which is sometimes used directly and sometimes used
+> +# by the arch-provided hardlockup detector).
+> +config HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+> +	bool
+> +	depends on (HAVE_HARDLOCKUP_DETECTOR_PERF || SMP) && !HAVE_NMI_WATCHDOG
+> +	default y
+> +
+> +config HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> +	bool "Prefer the buddy CPU hardlockup detector"
+> +	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH && HAVE_HARDLOCKUP_DETECTOR_PERF && SMP
+
+Huh, I have big troubles to scratch my head around this check:
+
+       HAVE_HARDLOCKUP_DETECTOR_NON_ARCH depends on HAVE_HARDLOCKUP_DETECTOR_PERF and SMP
+
+       and this depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH and again
+	       on HAVE_HARDLOCKUP_DETECTOR_PERF and SMP.
+
+> +	help
+> +	  Say Y here to prefer the buddy hardlockup detector over the perf one.
+> +
+> +	  With the buddy detector, each CPU uses its softlockup hrtimer
+> +	  to check that the next CPU is processing hrtimer interrupts by
+> +	  verifying that a counter is increasing.
+> +
+> +	  This hardlockup detector is useful on systems that don't have
+> +	  an arch-specific hardlockup detector or if resources needed
+> +	  for the hardlockup detector are better used for other things.
+> +
+> +# This will select the appropriate non-arch hardlockdup detector
+> +config HARDLOCKUP_DETECTOR_NON_ARCH
+> +	bool
+> +	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+> +	select HARDLOCKUP_DETECTOR_BUDDY if !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> +	select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> +
+>  #
+>  # Enables a timestamp based low pass filter to compensate for perf based
+>  # hard lockup detection which runs too fast due to turbo modes.
+> @@ -1053,9 +1098,10 @@ config HARDLOCKUP_CHECK_TIMESTAMP
+>  config HARDLOCKUP_DETECTOR
+>  	bool "Detect Hard Lockups"
+>  	depends on DEBUG_KERNEL && !S390
+
+Is there any reason why S390 could not or do not want to use the buddy
+hardlockup detector.
+
+> -	depends on HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETECTOR_ARCH
+> +	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH || HAVE_HARDLOCKUP_DETECTOR_ARCH
+>  	select LOCKUP_DETECTOR
+> -	select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF
+> +	select HARDLOCKUP_DETECTOR_NON_ARCH if HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+
+Anyway, the configuration of the hard lockup detectors is insane and
+this patchset makes it even worse, especially the new
+HARDLOCKUP_DETECTOR_NON_ARCH stuff.
+
+It seems that sparc, powerpc and s390 are somehow special. Do you
+still have in mind how they are distinguished using the Kconfig
+variables?
+
+For example, I am pretty confused by the meaning of HAVE_NMI_WATCHDOG.
+
+And sparc has its own variant of
+watchdog_hardlockup_enable()/disable(). It means that it is
+arch-specific. Does it work with the 13th patch which made
+watchdog_hardlockup_enable()/disable() to be watchdog-hardlockup-type
+specific? Is is somehow related to HAVE_NMI_WATCHDOG?
+Does this replace the entire watchdog only only the enable part?
+
+I think that we need to make this more straightforward. But I first
+need to understand the existing maze of config variables.
+
+Best Regards,
+Petr
