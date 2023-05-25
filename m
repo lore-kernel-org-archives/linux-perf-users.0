@@ -2,249 +2,161 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5325DC7EE29
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 11:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C7FC77B7E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 14:21:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240340AbjEYLkO (ORCPT
+        id S241327AbjEYOVD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 07:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60702 "EHLO
+        Thu, 25 May 2023 10:21:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240805AbjEYLjs (ORCPT
+        with ESMTP id S230290AbjEYOVC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 07:39:48 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE5B31AB
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 04:39:30 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-25566708233so1264091a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 04:39:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685014770; x=1687606770;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PUDrtObFSBZgAV2FphIxE7ETarjCEzRZSp3iZ5qQ7xU=;
-        b=LW/h5mlzeb+iWkFocmKnDCuTMkpl3bHgnWK23XTWQ0ZyICI20itwciK8Y4Y0lwUQZ2
-         +68u3K/C1tGxAuOGzck/5y1xmFL8pXrvRV+nleeraz7ETUzPtZfDvVEX2g+fF6QjE0Lj
-         1bnv2CDbuJWtrDN58fqRbhuPcQKV1UlisVtd+YSKSZgzptDLBjHHnSl+I/Pc+SHLHwwx
-         NG4OkgNsw5GGMzJbhXDfiFQb2nhXKBUx0XgHtP18yVcntwa1dQBTBFEmWugZPbZebfhk
-         Wd8D50WpybzjWRfoQnbQiUtlIQFHeNTey/IM5F5lBZESIH5pveq6ETEOVvIDive3l/zJ
-         tCvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685014770; x=1687606770;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PUDrtObFSBZgAV2FphIxE7ETarjCEzRZSp3iZ5qQ7xU=;
-        b=RWEZMyoKSuC9T1KFC1dfFtovTrohC1aD2rFr5aWBtX0A2ETN1kzPq0Zy2B4jnOF//s
-         OYdOovSi7HHffUZPads6x3siQfDDLMW6qquaiNegWrL9pT1to/mMsOxO+5kGBjOuEILA
-         rhAwA9JG+NBdKohKOat8+6eCuAn8tWdrblUg+sQxiRoM5Hi4nmnfns8/5cvD95p/kXht
-         x4aey8h0UE4dNgwpXZqyM1Ng7zJ2Z186FGs3/3kDGADDRoxtko0kVZIDU69sXdXSx8iF
-         vu/bhVDajVBpFY8ntuwpiINOKQlAtBF6sCVB+m0tlQs3xfp8JhU9JHDzoyl05KiRbIK5
-         XVcA==
-X-Gm-Message-State: AC+VfDwzOHsZ6A3sQMmbbomyvAS3fQoLXdGXxDG5gle+seoYRSG8GVl7
-        KgZ5x3mFOe068efZv8A6JuNkGEoFHH12RsmAI9ZqnQ==
-X-Google-Smtp-Source: ACHHUZ4+JiqoNvQVvKNyZMGJ8vWo3Bi+H4/d5i2P/2lN35RD/4oagIbG1Q8InsP3EZCDIhydFPcwGbNiu63egbM2uhA=
-X-Received: by 2002:a17:90a:7047:b0:255:ee94:df7 with SMTP id
- f65-20020a17090a704700b00255ee940df7mr1434634pjk.16.1685014769951; Thu, 25
- May 2023 04:39:29 -0700 (PDT)
+        Thu, 25 May 2023 10:21:02 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B096189;
+        Thu, 25 May 2023 07:21:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=U8Ak11VIsc+VQhtMvrttpQiETgYMyOlybtRim6fMVi8=; b=NBQsDfTgYYZT0p9hVq/M7btlaw
+        FF3WYNlSo9swkBIqjIu0sUYi3sou4mxgUw9C7Iw+7Q1lrB8d8nhWaDiCn+aucm5HDK9LvwarpDmE0
+        1HiVUN26Q/Qgd399Y5XpfuFJ8DREht21ZUuoorPIjwXqGszB208WDMi8DOhgAqbKKWzHtJANr9Qp3
+        ALs4m7kyHdQ8iTjmDszLjZb5Gr6coOV66fpS8iX4T1aN0zjbg1Hw5MxnrrOv4xPigKqbAThn2WZRm
+        pjz7F/gT34P5LzQHsl5FdcpvrIddoNPh0xwZX9+geRDqBpZfIaNWDMU7P2htPXzhO+WV5JB40wRFV
+        6XXuOs2w==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q2BpR-006Z1z-2k;
+        Thu, 25 May 2023 14:20:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E3FCC300322;
+        Thu, 25 May 2023 16:20:31 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C8AC3241ECA53; Thu, 25 May 2023 16:20:31 +0200 (CEST)
+Date:   Thu, 25 May 2023 16:20:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Oliver Upton <oliver.upton@linux.dev>
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
+        Nathan Chancellor <nathan@kernel.org>, namhyung@kernel.org,
+        eranian@google.com, acme@kernel.org, mark.rutland@arm.com,
+        jolsa@kernel.org, irogers@google.com, bp@alien8.de,
+        kan.liang@linux.intel.com, adrian.hunter@intel.com,
+        maddy@linux.ibm.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com, maz@kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
+Message-ID: <20230525142031.GU83892@hirez.programming.kicks-ass.net>
+References: <20230504110003.2548-1-ravi.bangoria@amd.com>
+ <20230504110003.2548-4-ravi.bangoria@amd.com>
+ <20230524214133.GA2359762@dev-arch.thelio-3990X>
+ <f02c78e2-34b9-4985-640a-279dae1004a9@amd.com>
+ <ZG8KLbZSECiYaKFc@linux.dev>
 MIME-Version: 1.0
-References: <20230524131958.2139331-1-james.clark@arm.com> <20230524131958.2139331-5-james.clark@arm.com>
-In-Reply-To: <20230524131958.2139331-5-james.clark@arm.com>
-From:   Mike Leach <mike.leach@linaro.org>
-Date:   Thu, 25 May 2023 12:39:18 +0100
-Message-ID: <CAJ9a7VioqoCTLOKmPPbS9ogs9n+2sV3szn-ZSDE3+mZTEgP0UQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] perf cs-etm: Add exception level consistency check
-To:     James Clark <james.clark@arm.com>
-Cc:     coresight@lists.linaro.org, denik@chromium.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZG8KLbZSECiYaKFc@linux.dev>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi James,
+On Thu, May 25, 2023 at 07:11:41AM +0000, Oliver Upton wrote:
 
-My concern here is that for etmv3 trace, OpenCSD will only provide
-memory spaces as either secure or non-secure, The ETMv3 does not
-trace, and hence OpenCSD cannot provide the different ELs.
-The memory callback will be either OCSD_MEM_SPACE_S or OCSD_MEM_SPACE_N.
+> The PMUv3 driver does pass a name, but it relies on getting back an
+> allocated pmu id as @type is -1 in the call to perf_pmu_register().
+> 
+> What actually broke is how KVM probes for a default core PMU to use for
+> a guest. kvm_pmu_probe_armpmu() creates a counter w/ PERF_TYPE_RAW and
+> reads the pmu from the returned perf_event. The linear search had the
+> effect of eventually stumbling on the correct core PMU and succeeding.
+> 
+> Perf folks: is this WAI for heterogenous systems?
 
-Can this patch - and the set handle this. (assuming perf supports our
-ETMv3 coresight kernel driver)
+TBH, I'm not sure. hetero and virt don't mix very well AFAIK and I'm not
+sure what ARM64 does here.
 
-Regards
+IIRC the only way is to hard affine things; that is, force vCPU of
+'type' to the pCPU mask of 'type' CPUs.
 
-Mike
+If you don't do that; or let userspace 'override' that, things go
+sideways *real* fast.
 
-On Wed, 24 May 2023 at 14:20, James Clark <james.clark@arm.com> wrote:
->
-> Assert that our own tracking of the exception level matches what
-> OpenCSD provides. OpenCSD doesn't distinguish between EL0 and EL1 in the
-> memory access callback so the extra tracking was required. But a rough
-> assert can still be done.
->
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  6 +--
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.h |  4 +-
->  tools/perf/util/cs-etm.c                      | 37 +++++++++++++------
->  3 files changed, 32 insertions(+), 15 deletions(-)
->
-> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> index ac227cd03eb0..50b3c248d1e5 100644
-> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> @@ -52,15 +52,15 @@ struct cs_etm_decoder {
->  static u32
->  cs_etm_decoder__mem_access(const void *context,
->                            const ocsd_vaddr_t address,
-> -                          const ocsd_mem_space_acc_t mem_space __maybe_unused,
-> +                          const ocsd_mem_space_acc_t mem_space,
->                            const u8 trace_chan_id,
->                            const u32 req_size,
->                            u8 *buffer)
+Mark gonna have to look at this.
+
+> Either way, the whole KVM end of this scheme is a bit clunky, and I
+> believe it to be unneccessary at this point as we maintain a list of
+> core PMU instances that KVM is able to virtualize. We can just walk
+> that to find a default PMU to use.
+> 
+> Not seeing any issues on -next with the below diff. If this works for
+> folks I can actually wrap it up in a patch and send it out.
+> 
+> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+> index 45727d50d18d..cbc0b662b7f8 100644
+> --- a/arch/arm64/kvm/pmu-emul.c
+> +++ b/arch/arm64/kvm/pmu-emul.c
+> @@ -694,47 +694,26 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
+>  
+>  static struct arm_pmu *kvm_pmu_probe_armpmu(void)
 >  {
->         struct cs_etm_decoder *decoder = (struct cs_etm_decoder *) context;
->
-> -       return decoder->mem_access(decoder->data, trace_chan_id,
-> -                                  address, req_size, buffer);
-> +       return decoder->mem_access(decoder->data, trace_chan_id, address,
-> +                                  req_size, buffer, mem_space);
+> -	struct perf_event_attr attr = { };
+> -	struct perf_event *event;
+> -	struct arm_pmu *pmu = NULL;
+> -
+> -	/*
+> -	 * Create a dummy event that only counts user cycles. As we'll never
+> -	 * leave this function with the event being live, it will never
+> -	 * count anything. But it allows us to probe some of the PMU
+> -	 * details. Yes, this is terrible.
+> -	 */
+> -	attr.type = PERF_TYPE_RAW;
+> -	attr.size = sizeof(attr);
+> -	attr.pinned = 1;
+> -	attr.disabled = 0;
+> -	attr.exclude_user = 0;
+> -	attr.exclude_kernel = 1;
+> -	attr.exclude_hv = 1;
+> -	attr.exclude_host = 1;
+> -	attr.config = ARMV8_PMUV3_PERFCTR_CPU_CYCLES;
+> -	attr.sample_period = GENMASK(63, 0);
+> +	struct arm_pmu *arm_pmu = NULL, *tmp;
+> +	struct arm_pmu_entry *entry;
+> +	int cpu;
+>  
+> -	event = perf_event_create_kernel_counter(&attr, -1, current,
+> -						 kvm_pmu_perf_overflow, &attr);
+> +	mutex_lock(&arm_pmus_lock);
+> +	cpu = get_cpu();
+>  
+> -	if (IS_ERR(event)) {
+> -		pr_err_once("kvm: pmu event creation failed %ld\n",
+> -			    PTR_ERR(event));
+> -		return NULL;
+> -	}
+> +	list_for_each_entry(entry, &arm_pmus, entry) {
+> +		tmp = entry->arm_pmu;
+>  
+> -	if (event->pmu) {
+> -		pmu = to_arm_pmu(event->pmu);
+> -		if (pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_NI ||
+> -		    pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
+> -			pmu = NULL;
+> +		if (cpumask_test_cpu(cpu, &tmp->supported_cpus)) {
+> +			arm_pmu = tmp;
+> +			break;
+> +		}
+>  	}
+>  
+> -	perf_event_disable(event);
+> -	perf_event_release_kernel(event);
+> +	put_cpu();
+> +	mutex_unlock(&arm_pmus_lock);
+>  
+> -	return pmu;
+> +	return arm_pmu;
 >  }
->
->  int cs_etm_decoder__add_mem_access_cb(struct cs_etm_decoder *decoder,
-> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-> index 21d403f55d96..272c2efe78ee 100644
-> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
-> @@ -11,6 +11,7 @@
->  #define INCLUDE__CS_ETM_DECODER_H__
->
->  #include <linux/types.h>
-> +#include <opencsd/ocsd_if_types.h>
->  #include <stdio.h>
->
->  struct cs_etm_decoder;
-> @@ -19,7 +20,8 @@ struct cs_etm_packet_queue;
->
->  struct cs_etm_queue;
->
-> -typedef u32 (*cs_etm_mem_cb_type)(struct cs_etm_queue *, u8, u64, size_t, u8 *);
-> +typedef u32 (*cs_etm_mem_cb_type)(struct cs_etm_queue *, u8, u64, size_t, u8 *,
-> +                                 const ocsd_mem_space_acc_t);
->
->  struct cs_etmv3_trace_params {
->         u32 reg_ctrl;
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index b9ba19327f26..ccf34ed8ddf2 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -931,7 +931,8 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address,
->  }
->
->  static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
-> -                             u64 address, size_t size, u8 *buffer)
-> +                             u64 address, size_t size, u8 *buffer,
-> +                             const ocsd_mem_space_acc_t mem_space)
->  {
->         u8  cpumode;
->         u64 offset;
-> @@ -947,6 +948,20 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
->         if (!tidq)
->                 return 0;
->
-> +       /*
-> +        * We've already tracked EL along side the PID in cs_etm__set_thread()
-> +        * so double check that it matches what OpenCSD thinks as well. It
-> +        * doesn't distinguish between EL0 and EL1 for this mem access callback
-> +        * so we had to do the extra tracking.
-> +        */
-> +       if (mem_space & OCSD_MEM_SPACE_EL1N) {
-> +               /* Includes both non secure EL1 and EL0 */
-> +               assert(tidq->el == ocsd_EL1 || tidq->el == ocsd_EL0);
-> +       } else if (mem_space & OCSD_MEM_SPACE_EL2)
-> +               assert(tidq->el == ocsd_EL2);
-> +       else if (mem_space & OCSD_MEM_SPACE_EL3)
-> +               assert(tidq->el == ocsd_EL3);
-> +
->         cpumode = cs_etm__cpu_mode(etmq, address, tidq->el);
->
->         if (!thread__find_map(tidq->thread, cpumode, address, &al))
-> @@ -1195,8 +1210,8 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
->  {
->         u8 instrBytes[2];
->
-> -       cs_etm__mem_access(etmq, trace_chan_id, addr,
-> -                          ARRAY_SIZE(instrBytes), instrBytes);
-> +       cs_etm__mem_access(etmq, trace_chan_id, addr, ARRAY_SIZE(instrBytes),
-> +                          instrBytes, 0);
->         /*
->          * T32 instruction size is indicated by bits[15:11] of the first
->          * 16-bit word of the instruction: 0b11101, 0b11110 and 0b11111
-> @@ -1387,8 +1402,8 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
->         else
->                 sample->insn_len = 4;
->
-> -       cs_etm__mem_access(etmq, trace_chan_id, sample->ip,
-> -                          sample->insn_len, (void *)sample->insn);
-> +       cs_etm__mem_access(etmq, trace_chan_id, sample->ip, sample->insn_len,
-> +                          (void *)sample->insn, 0);
->  }
->
->  u64 cs_etm__convert_sample_time(struct cs_etm_queue *etmq, u64 cs_timestamp)
-> @@ -1940,8 +1955,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
->                  * so below only read 2 bytes as instruction size for T32.
->                  */
->                 addr = end_addr - 2;
-> -               cs_etm__mem_access(etmq, trace_chan_id, addr,
-> -                                  sizeof(instr16), (u8 *)&instr16);
-> +               cs_etm__mem_access(etmq, trace_chan_id, addr, sizeof(instr16),
-> +                                  (u8 *)&instr16, 0);
->                 if ((instr16 & 0xFF00) == 0xDF00)
->                         return true;
->
-> @@ -1956,8 +1971,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
->                  * +---------+---------+-------------------------+
->                  */
->                 addr = end_addr - 4;
-> -               cs_etm__mem_access(etmq, trace_chan_id, addr,
-> -                                  sizeof(instr32), (u8 *)&instr32);
-> +               cs_etm__mem_access(etmq, trace_chan_id, addr, sizeof(instr32),
-> +                                  (u8 *)&instr32, 0);
->                 if ((instr32 & 0x0F000000) == 0x0F000000 &&
->                     (instr32 & 0xF0000000) != 0xF0000000)
->                         return true;
-> @@ -1973,8 +1988,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
->                  * +-----------------------+---------+-----------+
->                  */
->                 addr = end_addr - 4;
-> -               cs_etm__mem_access(etmq, trace_chan_id, addr,
-> -                                  sizeof(instr32), (u8 *)&instr32);
-> +               cs_etm__mem_access(etmq, trace_chan_id, addr, sizeof(instr32),
-> +                                  (u8 *)&instr32, 0);
->                 if ((instr32 & 0xFFE0001F) == 0xd4000001)
->                         return true;
->
-> --
-> 2.34.1
->
-
-
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
