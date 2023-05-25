@@ -2,221 +2,194 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE3AC77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 15:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA88C7EE33
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 15:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241746AbjEYPVc (ORCPT
+        id S241156AbjEYPzg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 11:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56672 "EHLO
+        Thu, 25 May 2023 11:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241738AbjEYPVb (ORCPT
+        with ESMTP id S241195AbjEYPzf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 11:21:31 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 240D7197
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 08:21:29 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id 3f1490d57ef6-bacf7060678so432460276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 08:21:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1685028088; x=1687620088;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QUuvOZp4ohZVs+06f+xW0E2DzMyZOkJ0sYTaDlgT1vs=;
-        b=f82LooSd7Z8HPJYxwPF9j5/XV5x/T1dTocoQbusc6c1IUKGSUAuk9Ir1SOkxO0WNbN
-         b2opwYAOqYOC4KkwzFjmYl168YBnmaOSz/DleuyrzHukBjDwPyLhgHqlAy/6nc9XqxKv
-         /gwu60eypgCA/tV78al/ca4tdpRg6RRfpASV0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685028088; x=1687620088;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QUuvOZp4ohZVs+06f+xW0E2DzMyZOkJ0sYTaDlgT1vs=;
-        b=M5zAduVpbukkRXbJkU2O9frpwSyrSXAQ4K7CI30v4ZZI+YVd6gcuBxuhrP04sK5UeA
-         AWc876rpgrOpUyCcR3xHTCb+fkw35p/6Kp3a+l6Gahst7IOyJtcEjUmagejfID5YxHiC
-         D39yaUQkHmoPDNUGHx3n8wsakRrN1XkJB8mgSmbK5WWB7DbMcYPmqAhg0Fc+0FGD9oac
-         h3/9f7Rk52GmuZmH/9L6Jhgj9bL2dWeNAEdAPRfbq89U9qpt46KSNEwdVvIrO2KNooqi
-         q1AIhXqypzYyAWJ7K9ij0QrnULn3CWQVtJT/eskA/xITmifn4r1zRtklR4QgcJiOvSmX
-         ejHg==
-X-Gm-Message-State: AC+VfDzOnDJLrX/HJjsyagA7EDi5Kker42rKcnruwFNSw44ItworkgxS
-        vplL+ERZCuoJ4oSNwr76Ra6rnDx8Sd5PpONjjx+bhA==
-X-Google-Smtp-Source: ACHHUZ5klVKxazSQswoLgBHRkEqznQCwIYHY0bNpzGBBflEWsBmG5N8Vg50kHOHw7oPG/n7cky7LPcnxXNlxCIOmkok=
-X-Received: by 2002:a25:73cc:0:b0:ba7:46b3:5c91 with SMTP id
- o195-20020a2573cc000000b00ba746b35c91mr3107549ybc.2.1685028088239; Thu, 25
- May 2023 08:21:28 -0700 (PDT)
+        Thu, 25 May 2023 11:55:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62A22CC;
+        Thu, 25 May 2023 08:55:34 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D806B61B4D;
+        Thu, 25 May 2023 15:55:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E04C433EF;
+        Thu, 25 May 2023 15:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685030133;
+        bh=QgYFhY03eBNOXHKTIvE6AGMDieLcw0Vh3Yokc3ipvrc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D2Ohl0G3gHcanACbUVsaI/O6pTRv6WE9jRIG7pzPtvxXMK8eSn7XWd1DHBCAWSgGW
+         qcEEisb4isdfqIa49hRxhX7SrUn18nHWHVbnXVWrvH3Ka2IVR8SXE/Xh5VSQH0KEJi
+         3AUXWNZb5iL82IgyYPxSu9Ot7uY9fhD/k+lc5OyIWpFRsEHMpWJFGh2VGwMqV1AVg8
+         JlHM7MJWaSIEYxFJclsFZG9Fpuc0ovxJSCDaGmcY6wM/RhW7UwqoIggzycEYi6c43k
+         xnaa8D+j1Jp2Xgw0uLktLDydu7tsr/YN77bo7t/JQIelr77AS0laXoBuqEnA3O1pW/
+         Ld/pCgvwa16uQ==
+Date:   Thu, 25 May 2023 08:55:30 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Oliver Upton <oliver.upton@linux.dev>
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>, peterz@infradead.org,
+        namhyung@kernel.org, eranian@google.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
+        bp@alien8.de, kan.liang@linux.intel.com, adrian.hunter@intel.com,
+        maddy@linux.ibm.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com, maz@kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
+Message-ID: <20230525155530.GA546949@dev-arch.thelio-3990X>
+References: <20230504110003.2548-1-ravi.bangoria@amd.com>
+ <20230504110003.2548-4-ravi.bangoria@amd.com>
+ <20230524214133.GA2359762@dev-arch.thelio-3990X>
+ <f02c78e2-34b9-4985-640a-279dae1004a9@amd.com>
+ <ZG8KLbZSECiYaKFc@linux.dev>
 MIME-Version: 1.0
-References: <CA+G9fYtCCTxT78c0T+5JFw+sN01ZnX_kvBBgDLoVLfPARc9ZuA@mail.gmail.com>
-In-Reply-To: <CA+G9fYtCCTxT78c0T+5JFw+sN01ZnX_kvBBgDLoVLfPARc9ZuA@mail.gmail.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Thu, 25 May 2023 11:21:17 -0400
-Message-ID: <CAEXW_YQwBy9xNRV9Xrdti46cC8vNE8nOocoL9pRrhjNMGdEWeg@mail.gmail.com>
-Subject: Re: Perf: RIP: 0010:__schedule on qemu-x86_64
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux-stable <stable@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, rcu <rcu@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZG8KLbZSECiYaKFc@linux.dev>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Naresh,
+On Thu, May 25, 2023 at 07:11:41AM +0000, Oliver Upton wrote:
+> On Thu, May 25, 2023 at 10:46:01AM +0530, Ravi Bangoria wrote:
+> > On 25-May-23 3:11 AM, Nathan Chancellor wrote:
+> > > My apologies if this has already been reported or fixed already, I did a
+> > > search of lore.kernel.org and did not find anything. This patch as
+> > > commit 9551fbb64d09 ("perf/core: Remove pmu linear searching code") in
+> > > -next breaks starting QEMU with KVM enabled on two of my arm64 machines:
+> > > 
+> > > $ qemu-system-aarch64 \
+> > >     -display none \
+> > >     -nodefaults \
+> > >     -machine virt,gic-version=max \
+> > >     -append 'console=ttyAMA0 earlycon' \
+> > >     -kernel arch/arm64/boot/Image.gz \
+> > >     -initrd rootfs.cpio \
+> > >     -cpu host \
+> > >     -enable-kvm \
+> > >     -m 512m \
+> > >     -smp 8 \
+> > >     -serial mon:stdio
+> > > qemu-system-aarch64: PMU: KVM_SET_DEVICE_ATTR: No such device
+> > > qemu-system-aarch64: failed to set irq for PMU
+> > > 
+> > > In the kernel log, I see
+> > > 
+> > > [   42.944952] kvm: pmu event creation failed -2
+> > > 
+> > > I am not sure if this issue is unexpected as a result of this change or
+> > > if there is something that needs to change on the arm64 KVM side (it
+> > > appears the kernel message comes from arch/arm64/kvm/pmu-emul.c).
+> > 
+> > Thanks for reporting it.
+> > 
+> > Based on these detail, I feel the pmu registration failed in the host,
+> > most probably because pmu driver did not pass pmu name while calling
+> > perf_pmu_register(). Consequently kvm also failed while trying to use
+> > it for guest. Can you please check host kernel logs.
+> 
+> The PMUv3 driver does pass a name, but it relies on getting back an
+> allocated pmu id as @type is -1 in the call to perf_pmu_register().
+> 
+> What actually broke is how KVM probes for a default core PMU to use for
+> a guest. kvm_pmu_probe_armpmu() creates a counter w/ PERF_TYPE_RAW and
+> reads the pmu from the returned perf_event. The linear search had the
+> effect of eventually stumbling on the correct core PMU and succeeding.
+> 
+> Perf folks: is this WAI for heterogenous systems?
+> 
+> Either way, the whole KVM end of this scheme is a bit clunky, and I
+> believe it to be unneccessary at this point as we maintain a list of
+> core PMU instances that KVM is able to virtualize. We can just walk
+> that to find a default PMU to use.
+> 
+> Not seeing any issues on -next with the below diff. If this works for
+> folks I can actually wrap it up in a patch and send it out.
 
-On Wed, May 24, 2023 at 5:02=E2=80=AFAM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> Following kernel crash noticed while running perf testing on qemu-x86_64
-> with stable-rc 6.3.4-rc2 + kselftest merge configs.
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> logs:
-> =3D=3D=3D=3D=3D
-> INFO: Performing perf record test...
->
-> Parse sched tracepoints fields: Ok
->  16: syscalls:sys_enter_openat event fields     :
-> --- start ---
-> test child forked, pid 255
-> <4>[  152.221288] int3: 0000 [#1] PREEMPT SMP PTI
-> <4>[  152.221564] CPU: 0 PID: 255 Comm: perf Not tainted 6.3.4-rc2 #1
-> <4>[  152.221607] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> BIOS 1.14.0-2 04/01/2014
-> <4>[  152.221733] RIP: 0010:__schedule+0x29e/0xaa0
-> <4>[  152.222066] Code: 00 48 29 c1 49 01 8e 48 04 00 00 48 85 db 74
-> 0f 48 01 8b 90 0c 00 00 48 83 83 88 0c 00 00 01 0f 1f 44 00 00 0f 1f
-> 44 00 00 e9 <7a> 01 00 00 49 0f ba ac 24 18 0a 00 00 00 49 83 bc 24 08
-> 0a 00 00
-> <4>[  152.222122] RSP: 0018:ffff94aec0677bc0 EFLAGS: 00000046
-> <4>[  152.222170] RAX: ffffffffa2e10900 RBX: ffff8b517bc2b700 RCX:
-> 0000000000000004
-> <4>[  152.222184] RDX: 00000023711138c0 RSI: 0000000000000000 RDI:
-> ffff8b517bc2b700
-> <4>[  152.222197] RBP: ffff94aec0677c28 R08: ffff8b5102aa6a00 R09:
-> 000000000000004e
-> <4>[  152.222211] R10: 0000000000000001 R11: 0000000000000001 R12:
-> ffff8b51009e3c00
-> <4>[  152.222223] R13: ffffffffa2cf3f48 R14: ffffffffa2e10900 R15:
-> ffff8b51009e4248
-> <4>[  152.222275] FS:  00007f6b8ea81800(0000)
-> GS:ffff8b517bc00000(0000) knlGS:0000000000000000
-> <4>[  152.222294] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> <4>[  152.222308] CR2: 00007f6b8dd204e0 CR3: 0000000105a1c000 CR4:
-> 00000000000006f0
-> <4>[  152.222409] Call Trace:
-> <4>[  152.222500]  <TASK>
-> <4>[  152.222605]  schedule+0x6a/0xf0
-> <4>[  152.222664]  schedule_timeout+0x14f/0x160
-> <4>[  152.222680]  wait_for_completion+0x8c/0x140
-> <4>[  152.222696]  __wait_rcu_gp+0x13e/0x140
-> <4>[  152.222712]  synchronize_rcu+0x12f/0x140
-> <4>[  152.222731]  ? __pfx_call_rcu_hurry+0x10/0x10
-> <4>[  152.222748]  ? __pfx_wakeme_after_rcu+0x10/0x10
-> <4>[  152.222766]  perf_event_alloc+0xd53/0xdc0
-> <4>[  152.222783]  ? preempt_count_sub+0x50/0x80
-> <4>[  152.222795]  ? _raw_spin_unlock+0x1a/0x40
-> <4>[  152.222810]  __do_sys_perf_event_open+0x1df/0xd10
-> <4>[  152.222838]  __x64_sys_perf_event_open+0x26/0x30
-> <4>[  152.222849]  do_syscall_64+0x3e/0x90
-> <4>[  152.222863]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> <4>[  152.222920] RIP: 0033:0x7f6b8dd204f9
-> <4>[  152.223150] Code: 08 89 e8 5b 5d c3 66 2e 0f 1f 84 00 00 00 00
-> 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c
-> 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d d7 08 0d 00 f7 d8 64
-> 89 01 48
-> <4>[  152.223158] RSP: 002b:00007ffd51880f68 EFLAGS: 00000202
-> ORIG_RAX: 000000000000012a
-> <4>[  152.223175] RAX: ffffffffffffffda RBX: 00000000ffffffff RCX:
-> 00007f6b8dd204f9
-> <4>[  152.223181] RDX: 0000000000000000 RSI: 00000000000000ff RDI:
-> 000055e658912b50
-> <4>[  152.223187] RBP: 00007ffd51881030 R08: 0000000000000008 R09:
-> 00007ffd51881090
-> <4>[  152.223192] R10: 00000000ffffffff R11: 0000000000000202 R12:
-> 0000000000000008
-> <4>[  152.223198] R13: 0000000000000000 R14: 0000000000000000 R15:
-> 000055e658912b40
-> <4>[  152.223246]  </TASK>
-> <4>[  152.223308] Modules linked in:
-> <4>[  152.247884] ---[ end trace 0000000000000000 ]---
-> <4>[  152.248004] RIP: 0010:__schedule+0x29e/0xaa0
-> <4>[  152.248051] Code: 00 48 29 c1 49 01 8e 48 04 00 00 48 85 db 74
-> 0f 48 01 8b 90 0c 00 00 48 83 83 88 0c 00 00 01 0f 1f 44 00 00 0f 1f
-> 44 00 00 e9 <7a> 01 00 00 49 0f ba ac 24 18 0a 00 00 00 49 83 bc 24 08
-> 0a 00 00
-> <4>[  152.248066] RSP: 0018:ffff94aec0677bc0 EFLAGS: 00000046
-> <4>[  152.248089] RAX: ffffffffa2e10900 RBX: ffff8b517bc2b700 RCX:
-> 0000000000000004
-> <4>[  152.248099] RDX: 00000023711138c0 RSI: 0000000000000000 RDI:
-> ffff8b517bc2b700
-> <4>[  152.248269] RBP: ffff94aec0677c28 R08: ffff8b5102aa6a00 R09:
-> 000000000000004e
-> <4>[  152.248282] R10: 0000000000000001 R11: 0000000000000001 R12:
-> ffff8b51009e3c00
-> <4>[  152.248294] R13: ffffffffa2cf3f48 R14: ffffffffa2e10900 R15:
-> ffff8b51009e4248
-> <4>[  152.248304] FS:  00007f6b8ea81800(0000)
-> GS:ffff8b517bc00000(0000) knlGS:0000000000000000
-> <4>[  152.248316] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> <4>[  152.248479] CR2: 00007f6b8dd204e0 CR3: 0000000105a1c000 CR4:
-> 00000000000006f0
-> <0>[  152.248663] Kernel panic - not syncing: Fatal exception in interrup=
-t
-> <4>[  152.248980] int3: 0000 [#2] PREEMPT SMP PTI
-> <4>[  152.249101] CPU: 1 PID: 32 Comm: kworker/u4:3 Tainted: G      D
->           6.3.4-rc2 #1
-> <4>[  152.249124] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-> BIOS 1.14.0-2 04/01/2014
-> <4>[  152.249292] Workqueue:  0x0 (events_unbound)
-> <4>[  152.249420] RIP: 0010:__schedule+0x29e/0xaa0
-> <4>[  152.249471] Code: 00 48 29 c1 49 01 8e 48 04 00 00 48 85 db 74
-> 0f 48 01 8b 90 0c 00 00 48 83 83 88 0c 00 00 01 0f 1f 44 00 00 0f 1f
-> 44 00 00 e9 <7a> 01 00 00 49 0f ba ac 24 18 0a 00 00 00 49 83 bc 24 08
-> 0a 00 00
-> <4>[  152.249486] RSP: 0018:ffff94aec0117e38 EFLAGS: 00000046
-> <4>[  152.249502] RAX: ffff8b51002d8000 RBX: ffff8b517bd2b700 RCX:
-> 0000000000000004
-> <4>[  152.249512] RDX: 0000002372bd853f RSI: ffffffffffa7caff RDI:
-> ffff8b517bd2b700
-> <4>[  152.249522] RBP: ffff94aec0117ea0 R08: 0000000000000400 R09:
-> 0000000000000361
-> <4>[  152.249532] R10: 0000000000000001 R11: 0000000000000000 R12:
-> ffff8b51008a0f00
-> <4>[  152.249542] R13: ffffffffa2cf3f48 R14: ffff8b51002d8000 R15:
-> ffff8b51008a1548
-> <4>[  152.249552] FS:  0000000000000000(0000)
-> GS:ffff8b517bd00000(0000) knlGS:0000000000000000
-> <4>[  152.249565] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> <4>[  152.249576] CR2: 00007ffd518816b8 CR3: 000000010591e000 CR4:
-> 00000000000006e0
-> <4>[  152.249588] Call Trace:
-> <4>[  152.249603]  <TASK>
-> <4>[  152.249636]  schedule+0x6a/0xf0
-> <4>[  152.249658]  worker_thread+0xc0/0x3e0
-> <4>[  152.249684]  ? __pfx_worker_thread+0x10/0x10
-> <4>[  152.249704]  kthread+0xfc/0x120
-> <4>[  152.249721]  ? __pfx_kthread+0x10/0x10
+I can start QEMU on both the machines that had issues and my machines
+continue to run without any visible issues but I have never done any
+profile work within them. If there is any further testing or validation
+that I should do, I am more than happy to do so. Until then, consider
+it:
 
-I wonder if this is a deadlock related to runqueue lock since another
-CPU call stack are similarly in schedule.
+Tested-by: Nathan Chancellor <nathan@kernel.org>
 
-I tried to run gdb on your vmlinux but it does not have symbols, would
-it be possible for you to provide a copy of vmlinux with symbols?
-
-Were you able to narrow down the commit/release using git bisect to
-see when it started happening?
-
-Thank you,
-
- - Joel
+> diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
+> index 45727d50d18d..cbc0b662b7f8 100644
+> --- a/arch/arm64/kvm/pmu-emul.c
+> +++ b/arch/arm64/kvm/pmu-emul.c
+> @@ -694,47 +694,26 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
+>  
+>  static struct arm_pmu *kvm_pmu_probe_armpmu(void)
+>  {
+> -	struct perf_event_attr attr = { };
+> -	struct perf_event *event;
+> -	struct arm_pmu *pmu = NULL;
+> -
+> -	/*
+> -	 * Create a dummy event that only counts user cycles. As we'll never
+> -	 * leave this function with the event being live, it will never
+> -	 * count anything. But it allows us to probe some of the PMU
+> -	 * details. Yes, this is terrible.
+> -	 */
+> -	attr.type = PERF_TYPE_RAW;
+> -	attr.size = sizeof(attr);
+> -	attr.pinned = 1;
+> -	attr.disabled = 0;
+> -	attr.exclude_user = 0;
+> -	attr.exclude_kernel = 1;
+> -	attr.exclude_hv = 1;
+> -	attr.exclude_host = 1;
+> -	attr.config = ARMV8_PMUV3_PERFCTR_CPU_CYCLES;
+> -	attr.sample_period = GENMASK(63, 0);
+> +	struct arm_pmu *arm_pmu = NULL, *tmp;
+> +	struct arm_pmu_entry *entry;
+> +	int cpu;
+>  
+> -	event = perf_event_create_kernel_counter(&attr, -1, current,
+> -						 kvm_pmu_perf_overflow, &attr);
+> +	mutex_lock(&arm_pmus_lock);
+> +	cpu = get_cpu();
+>  
+> -	if (IS_ERR(event)) {
+> -		pr_err_once("kvm: pmu event creation failed %ld\n",
+> -			    PTR_ERR(event));
+> -		return NULL;
+> -	}
+> +	list_for_each_entry(entry, &arm_pmus, entry) {
+> +		tmp = entry->arm_pmu;
+>  
+> -	if (event->pmu) {
+> -		pmu = to_arm_pmu(event->pmu);
+> -		if (pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_NI ||
+> -		    pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
+> -			pmu = NULL;
+> +		if (cpumask_test_cpu(cpu, &tmp->supported_cpus)) {
+> +			arm_pmu = tmp;
+> +			break;
+> +		}
+>  	}
+>  
+> -	perf_event_disable(event);
+> -	perf_event_release_kernel(event);
+> +	put_cpu();
+> +	mutex_unlock(&arm_pmus_lock);
+>  
+> -	return pmu;
+> +	return arm_pmu;
+>  }
+>  
+>  u64 kvm_pmu_get_pmceid(struct kvm_vcpu *vcpu, bool pmceid1)
+> 
+> -- 
+> Thanks,
+> Oliver
