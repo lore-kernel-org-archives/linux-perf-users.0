@@ -2,119 +2,131 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A96C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 17:54:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0468C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 19:23:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233743AbjEYRy3 (ORCPT
+        id S243661AbjEYTXS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 13:54:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57576 "EHLO
+        Thu, 25 May 2023 15:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230265AbjEYRy2 (ORCPT
+        with ESMTP id S243688AbjEYTXC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 13:54:28 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32C1097;
-        Thu, 25 May 2023 10:54:27 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-973bf581759so128328366b.0;
-        Thu, 25 May 2023 10:54:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685037265; x=1687629265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y/20VApzN3sPBkZnwvcb54AXnS2bInta1+wgq5QOgNk=;
-        b=oPFaXJfLPwtyQ8WQccrT5LJWteQExDZlck7hQ8gV3hf2nc9G+/0BySXr22HsKUzmF4
-         9Di1OwPIY/19Mt7BETii5qHDnhYu1XOXOJPbC2lfFDbA/Kb6eb+4+wj3441d0t+M60sL
-         FCu78LPWypiTBBgyBI6eETM9558mdswP1U05UdIVYZpaUvOPHogvaF/ujUJ0RomnP1rD
-         9Jxo2LgGIaNZUEYKC8zm1r/hFCyuIjcZH9FZAIQjVbfiqsraqUk7BLkFVj0oa9QhargJ
-         0hMwvvVqh+q/OxQ9UcqL2Fj15UXlyi4Id2PyCkUlnckEtrGymRbvEW7SryyWCskwxECZ
-         BV8Q==
+        Thu, 25 May 2023 15:23:02 -0400
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0742AE57;
+        Thu, 25 May 2023 12:19:35 -0700 (PDT)
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-456f7ea8694so312199e0c.0;
+        Thu, 25 May 2023 12:19:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685037265; x=1687629265;
+        d=1e100.net; s=20221208; t=1685042277; x=1687634277;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y/20VApzN3sPBkZnwvcb54AXnS2bInta1+wgq5QOgNk=;
-        b=AzwCHLVTBJ0cP5CdBQS9lD68dHczoqnjNMXBeo67HVHtY2Up4FwdWlk6kNgRVgScwL
-         J+bz14RgohYErHYCLKEUeq6lWhnweA+BI8Vq2Er8kQumdVq7Y/qm4I3XqwAuvkd1fDRw
-         bsjeDJcDS/HoYze92yO3mcgUAWzI3gM9lmX9qrm5C/bCznZjTvbJQL0j774Z6OQfiGKj
-         oxIJvvTlLKdfYQ1Ij3NPOOeSMY+YAp/LDyjEHbPM2ERc9T7glPyrnCbDtMBu4zFxztya
-         UhDaANhF512iNX1hSwwEaJW1v7MEbIF+kvT0wXH4JP+1h/dQhHvOnb6tYqGVummvjtTe
-         foIg==
-X-Gm-Message-State: AC+VfDxugOH0IkRyZpyT47I80lj9S9dxljr8J2Lxw7P4HFI5FhCKvPWe
-        DR1ibhJlykhSwBcWkp3SoO5/liryaWH9ksxsSAk=
-X-Google-Smtp-Source: ACHHUZ4uYZNxBOT8583zqUCp1HxGXJcJEeFPbQbqIP0VbykWDy05PjW7yuUdg18pAwUBZmZYzK9+WAFtxN3EqV1tdgk=
-X-Received: by 2002:a17:907:36c9:b0:953:517a:8f1a with SMTP id
- bj9-20020a17090736c900b00953517a8f1amr2030819ejc.58.1685037265452; Thu, 25
- May 2023 10:54:25 -0700 (PDT)
+        bh=XUkevm3aMU5xLxVBa9KxEIFuZRkmPE748qzKxoDf9/0=;
+        b=dNZ3rmg6sV4BREbRboM9CuBrgR24asHz38JUEVp2l5Zx77M4xIhYBCYbOx15qkXAgq
+         /Xlae6PgTtVTfxIwOwKJF603ioO8shZhnO4oz8VdQwBskLPiagLq8k5aTuk1JtWe5d8j
+         gZfKwC75aJ8Efc3et4VdwqMplnJsMqdtO/gU0CPGcS8x02hA/ogjCkrj/4/w/H7Swksv
+         Z+F2jFNOTqessoEwGAWScSoOmpQ3nr/ASkXkuhIYz1UPfFh/h6mlSaeKusqbNIOVXa7d
+         t36KL2/tr+kTqcbJvtRWLoDQsuECUWCEaP+E3VpbWv0Ps6oW4ciDtYJV8IA5605bY91t
+         iGZw==
+X-Gm-Message-State: AC+VfDw+CSeWisxj/wWZo1Z9/PaGan7IyR1t5qFW1WjL4FwxTAsyAash
+        7OHIQ21CsjmRBExBRz5TD/A7etAJ/GQYu9FW6G4=
+X-Google-Smtp-Source: ACHHUZ70TCJa3LuotxEpuRt8HHeEdaR6EhrXfj0TDwMm/6pncpPKae8houpIaIJqkJH9JxLSLSk63tXSWWdYymK7Pv8=
+X-Received: by 2002:a1f:e604:0:b0:43f:e32a:c650 with SMTP id
+ d4-20020a1fe604000000b0043fe32ac650mr6364003vkh.15.1685042277355; Thu, 25 May
+ 2023 12:17:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230525000307.3202449-1-namhyung@kernel.org>
-In-Reply-To: <20230525000307.3202449-1-namhyung@kernel.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 25 May 2023 10:54:13 -0700
-Message-ID: <CAEf4BzbKtJ+xehJqzStiUEB67YbDFpydVSiLbNi2=WQt+8iDBQ@mail.gmail.com>
-Subject: Re: [PATCH] perf bpf filter: Fix a broken perf sample data naming in BPF
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+References: <20230525071133.2066610-1-irogers@google.com> <20230525071133.2066610-9-irogers@google.com>
+In-Reply-To: <20230525071133.2066610-9-irogers@google.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 25 May 2023 12:17:46 -0700
+Message-ID: <CAM9d7ci5XB7-PdcXchWW7bBFO_64B0M76rpY8xgkBYr3-mGW0Q@mail.gmail.com>
+Subject: Re: [PATCH v1 08/16] perf daemon: Dynamically allocate path to perf
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        bpf@vger.kernel.org
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        Ross Zwisler <zwisler@chromium.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 24, 2023 at 5:03=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Thu, May 25, 2023 at 12:12 AM Ian Rogers <irogers@google.com> wrote:
 >
-> BPF CO-RE requires 3 underscores for the ignored suffix rule but it
-> mistakenly used only 2.  Let's fix it.
+> Avoid a PATH_MAX array in __daemon (the .data section) by dynamically
+> allocating the memory.
 >
-> Fixes: 3a8b8fc31748 ("perf bpf filter: Support pre-5.16 kernels where 'me=
-m_hops' isn't in 'union perf_mem_data_src'")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/util/bpf_skel/sample_filter.bpf.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  tools/perf/builtin-daemon.c | 15 +++++++++++++--
+>  1 file changed, 13 insertions(+), 2 deletions(-)
 >
-
-Seems like that's the only remaining case. LGTM.
-
-Acked-by: Andrii Nakryiko <andrii@kernel.org>
-
-> diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/ut=
-il/bpf_skel/sample_filter.bpf.c
-> index cffe493af1ed..fb94f5280626 100644
-> --- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> @@ -25,7 +25,7 @@ struct perf_sample_data___new {
->  } __attribute__((preserve_access_index));
+> diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
+> index 34cbe3e959aa..adb5751c3ed0 100644
+> --- a/tools/perf/builtin-daemon.c
+> +++ b/tools/perf/builtin-daemon.c
+> @@ -90,7 +90,7 @@ struct daemon {
+>         char                    *base;
+>         struct list_head         sessions;
+>         FILE                    *out;
+> -       char                     perf[PATH_MAX];
+> +       char                    *perf;
+>         int                      signal_fd;
+>         time_t                   start;
+>  };
+> @@ -1490,6 +1490,15 @@ static int __cmd_ping(struct daemon *daemon, struct option parent_options[],
+>         return send_cmd(daemon, &cmd);
+>  }
 >
->  /* new kernel perf_mem_data_src definition */
-> -union perf_mem_data_src__new {
-> +union perf_mem_data_src___new {
->         __u64 val;
->         struct {
->                 __u64   mem_op:5,       /* type of opcode */
-> @@ -108,7 +108,7 @@ static inline __u64 perf_get_sample(struct bpf_perf_e=
-vent_data_kern *kctx,
->                 if (entry->part =3D=3D 7)
->                         return kctx->data->data_src.mem_blk;
->                 if (entry->part =3D=3D 8) {
-> -                       union perf_mem_data_src__new *data =3D (void *)&k=
-ctx->data->data_src;
-> +                       union perf_mem_data_src___new *data =3D (void *)&=
-kctx->data->data_src;
+> +static char *set_perf_exe(void)
+> +{
+> +       char path[PATH_MAX];
+> +
+> +       perf_exe(path, sizeof(path));
+> +       __daemon.perf = strdup(path);
+> +       return __daemon.perf;
+
+Then you need to free it somewhere.
+
+Thanks,
+Namhyung
+
+
+> +}
+> +
+>  int cmd_daemon(int argc, const char **argv)
+>  {
+>         struct option daemon_options[] = {
+> @@ -1503,7 +1512,9 @@ int cmd_daemon(int argc, const char **argv)
+>                 OPT_END()
+>         };
 >
->                         if (bpf_core_field_exists(data->mem_hops))
->                                 return data->mem_hops;
+> -       perf_exe(__daemon.perf, sizeof(__daemon.perf));
+> +       if (!set_perf_exe())
+> +               return -ENOMEM;
+> +
+>         __daemon.out = stdout;
+>
+>         argc = parse_options(argc, argv, daemon_options, daemon_usage,
 > --
-> 2.41.0.rc0.172.g3f132b7071-goog
->
+> 2.40.1.698.g37aff9b760-goog
 >
