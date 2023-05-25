@@ -2,203 +2,244 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF8BC77B73
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 03:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D53C77B73
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 05:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231126AbjEYDB2 (ORCPT
+        id S240073AbjEYFXA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 24 May 2023 23:01:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53476 "EHLO
+        Thu, 25 May 2023 01:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237697AbjEYDBZ (ORCPT
+        with ESMTP id S240079AbjEYFWe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 24 May 2023 23:01:25 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2068.outbound.protection.outlook.com [40.107.243.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5BC5135;
-        Wed, 24 May 2023 20:01:23 -0700 (PDT)
+        Thu, 25 May 2023 01:22:34 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2070.outbound.protection.outlook.com [40.107.92.70])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0A02705;
+        Wed, 24 May 2023 22:17:25 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rid7ySi8yRz04t4i+fbNE5QTjWiOYRVXTQLo5g8xKrGtzSapY1u4k7KsXM4ZL7oHbVipDuVr7QSQVEoOnOrSsrKZiGsk5SXuw2qOcDwD/WrbYeaCYZwXiKGO2rppvJaEJaZee8/2TM00FpE3WicbGSBfWe9kFcXhuAWths31t9W0ZVQH1g3ogQ/vLOztmnqo6I4rzYl1zld/QxcD/JeqjzB9YvZbVh7nnYcOGEQzrYsqUWgJrqNmsmy47kj3wt4AeyccSWsCZf3YW/1KrlBVZ8QCH+KK+QXU00/qHNlp7GkcF1d/oxw+/V9urjj08h/QuZ9WI15R9LynkjZKoyxVMg==
+ b=b9SlmhH99XvInGubPLwa4aad1KwxuIYOLUyYwcA2jRA+9viG2KSaA51ajHNQUSqTUY3+i4DGcW+9asNoOkTqdFhylSl8lLNNEF1K0b9eu7SFclMF9zpuY93fqmr/JcG0yaiODHh+4C7qcKyP9SUQicjhCYQbfkIC/ghk39v28tj17uQASjdeI3k1tuzuERA+L3X1/Bqi7cGQSzbTWyudb3fqzjwleYGlrkPW1TFsKImkF4Ph3BmA776BiYYYmTgNH8z3Na0WPbnSErY7MBEd8UryMfCtoyRfSXy/lXcyxbRCpuKzqkBoq80RSketza1f8tIjGIaEwoklZFn1rJpRGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=73GfXwqpxKUvu0Kte+RYQgpVzUKgtlerCnpSeyrJTqA=;
- b=I+0fYAUBbuQXJXX5gHLB5CKQjx9hYTaTByaqXib3Mc6Hjy2k6qdFooyj54C9opDORIjkMml4huHiLHQhcwudr8D8HjpwZ8DcaOf78+VzDPCAH32xzrVvU3BiXakpEVBU6/f1OjjNFZk6NZ+1NLAb0flIYq7ixV4ratop6VUgxksYY+vvgwAtzXl6KrBV0kSFHao14Al5UeFhcWUUP4JEG4nJdCQsXihQCJsEB2NShKEFZO2WjVFDtuQOd80sjbW3n4gxDnWFVgbN+E/OA7NpN77u5x5Oh2tnnqyaPI2rSb4AWAIPXOm7QvXqznOm3LgqN80Iva2JdLxbElmXKqHwgA==
+ bh=xrsGBhuHJGA2dLXysUO3284BM2XpPVyX1srwM1xo++Y=;
+ b=jZXPwAzZFHYIuwhxpcx97KDNniWHE9k+MAh9ByWA5ISmkDlW7urIrynk7BMmiGorYua3JOxVUGYiWojBJbD7fHBsfat2J8Nm5QnYCBRc7sa4RwPld61i/rJvsrwF+rAGtIHsuEqYLMsBFYO5qkvVvSdkwBYojtX1RlBEaxuaMqySGNQbt37kyXcqhQCTCdCzvbc794L6S1mfNiSf5XA2hIzZ+aZOv1illCGJVZaQQGfKi70gucP+bb9jo2Pcr7VrMmUqohjFHFr9CIPF5OGBB7LRMlw1FiUtBJYPqpvDeUA8RGRoQA7QmozDBUwL4hkP+2MzA/7GqYrl1tzqRSaRCg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=73GfXwqpxKUvu0Kte+RYQgpVzUKgtlerCnpSeyrJTqA=;
- b=vNRVhvumi8CY+P+g7yi9F6A96KpNHjmtX2Kz1LuqitQzDzUB8bzCVIdgYLoS1VePBqAKw4La4ElwYS72wZNStAcI9MCX23gBUVmqi2xEreHanhKnVq0sk5P7hrz0Z1u4HEvOXq3galIl2nT2JJsxa6bQIj9Um8XOH8HaXrpxpIw=
+ bh=xrsGBhuHJGA2dLXysUO3284BM2XpPVyX1srwM1xo++Y=;
+ b=Xuvk6GmQS8Q5b0kAgBZN5/r/axNVFJYvdoTNiYo/Ox9eNR+wJTQgFByb/iN3swt+DLtw7BKqFv9gcwwPGvA+eaq+WPN0kM4CutSC2sZZ+5Eg4X/MQqf4A/OKYDWJr6QQdq5G00fKELA5XlZMZzZNXSNcDmlQ3ckgHYhT8UzHsnU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW2PR12MB2379.namprd12.prod.outlook.com (2603:10b6:907:9::24)
- by IA0PR12MB8304.namprd12.prod.outlook.com (2603:10b6:208:3dc::13) with
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by PH7PR12MB6978.namprd12.prod.outlook.com (2603:10b6:510:1b8::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.28; Thu, 25 May
- 2023 03:01:21 +0000
-Received: from MW2PR12MB2379.namprd12.prod.outlook.com
- ([fe80::b197:512:a4ca:6e9c]) by MW2PR12MB2379.namprd12.prod.outlook.com
- ([fe80::b197:512:a4ca:6e9c%4]) with mapi id 15.20.6411.028; Thu, 25 May 2023
- 03:01:21 +0000
-Message-ID: <d06cac04-00b5-651d-14af-378fc25f37c4@amd.com>
-Date:   Thu, 25 May 2023 08:31:09 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.1
-Subject: Re: [PATCH] perf test: Fix perf stat JSON output test
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.25; Thu, 25 May
+ 2023 05:17:21 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::b4a6:94bb:6895:645]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::b4a6:94bb:6895:645%7]) with mapi id 15.20.6411.028; Thu, 25 May 2023
+ 05:17:21 +0000
+Message-ID: <f02c78e2-34b9-4985-640a-279dae1004a9@amd.com>
+Date:   Thu, 25 May 2023 10:46:01 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
+To:     Nathan Chancellor <nathan@kernel.org>
+Cc:     peterz@infradead.org, namhyung@kernel.org, eranian@google.com,
+        acme@kernel.org, mark.rutland@arm.com, jolsa@kernel.org,
+        irogers@google.com, bp@alien8.de, kan.liang@linux.intel.com,
+        adrian.hunter@intel.com, maddy@linux.ibm.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com, maz@kernel.org, oliver.upton@linux.dev,
+        kvmarm@lists.linux.dev, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20230504110003.2548-1-ravi.bangoria@amd.com>
+ <20230504110003.2548-4-ravi.bangoria@amd.com>
+ <20230524214133.GA2359762@dev-arch.thelio-3990X>
 Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230524210600.3095830-1-namhyung@kernel.org>
-From:   K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <20230524210600.3095830-1-namhyung@kernel.org>
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20230524214133.GA2359762@dev-arch.thelio-3990X>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0072.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:23::17) To MW2PR12MB2379.namprd12.prod.outlook.com
- (2603:10b6:907:9::24)
+X-ClientProxiedBy: PN2PR01CA0188.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:e8::11) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW2PR12MB2379:EE_|IA0PR12MB8304:EE_
-X-MS-Office365-Filtering-Correlation-Id: 83868ab6-4ba6-4b1f-0919-08db5ccc50c1
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|PH7PR12MB6978:EE_
+X-MS-Office365-Filtering-Correlation-Id: e00d1c7e-ac10-47f5-bd7c-08db5cdf510a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: eDc7BLNO+WedrtPKAnofwlnzUOFMWZyTNtlhfsV5lxvl3uV6sUDwGFRpI1TKsg4e8ZENpA1xsqlelg/5dH34qarZ2eBx0EEG3t8uZEvKPzQH8MOWIgxFMyU1Vj10eSULkNKCnL1G/zItDbQBH3e9R3+0fEwpBUd4TJTjtNBUF3p6ynAUToqs6D4dbxYCHvXkzQZyuK8nP8oWZZ1oLLRQEmlbstYN9A6kizSa/T8KUsqaxYuv+Fc3ypnOtZl78O1tLfpkqjwAezPY8PB15DtWmU2UHy8JdAReYkjvZYZ7wh8YU7ap/z4LQo1n26em62cbh4LukTkSK9LGC6Xn5YFo6BkJO1e/g99U8Dx2HbSjq8GJJOQndm/DIpdfrv2obRsP3edzyM5ZeOnIlm0SX6eD4+AODPCjnWg3Fi7SVhLS5iqNTNDPA0MAgE1Vhb3Pwb6et5O0zxKBV/Jcu3Aw51nIlZEDo+SqinpSyO1Iz7CIfgT6p9GnzEAxNdpreVtJgD4CTsyP/bdNKPt2q+sDvmwnFT6v3fNFTdDw7UtHliafB0tdBv6SwZ7LWfL+1Mdj09sHFn2dTvYWZHKG8L8yhi3P4SPc05IdHh4N0ba/6GoPA0fvVnrFqEaSjcaWzqO6e2cpPiwiXRHtqwG4qwesaah03w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB2379.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(346002)(396003)(376002)(366004)(136003)(451199021)(53546011)(2616005)(8676002)(8936002)(6512007)(83380400001)(86362001)(31696002)(38100700002)(36756003)(6506007)(2906002)(41300700001)(66946007)(66556008)(66476007)(31686004)(6666004)(6486002)(316002)(26005)(4326008)(5660300002)(110136005)(54906003)(186003)(478600001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: OLIQLIAZQP7es2gekCHemI9BeO+Z9jakybIva7dzkcjkXvbrYoVaUH/w9bEQmifxiR0HnQ4Eq8u4BHZ4dcYN6/8JgqNdmu6RxKEQIwiBaZQMbuZAtLwuO7Zdrbhqh+Op9oe2shXjPd2BV1ae6r+zeW6a++f3J/C6I6IfT12NF03uiFhzX64nhAQr8Y9k6xDTG/+Bqgg+zYC3SLGjhUpu8yWQA5iE9VxE5zwuCaqvHG8DnTwLuUcQClPPgVvJmMslLlBSuPMkdCBt31iRu8LGM05lq8yav6lCLE9yZp9Yxg6LCWxQdttz94Jp83ssprZCiWIz4GZmsS4G8nD6r8ggsjr4DRbgNF98prZCJYLhkIRWLgj66yB1JIN0CCaMhGkLbja1ysp3wrfYFtOhsDGvu369628EiI/x1LKc1fe9KwavI2PjiPHYZTOgcKTnpoJYlvHa8aF+QCXQUe5PSt7T/Ov2A0Y+HMgqP8gdC0mQ3OhiGJYQAfh6Bzg0aQfZ+3EX1JafbdHfK0oOqULWwka1+UIII9G1Umpu00yctktAWZJXizg0+vKVmvrNODYUdvDZeZsRGe9HdfNmxBtdXNSBrc0hH5I5fDpk/3oL4CEhyFu5vyI+l7849zlyLJbJ+P1QWEGZgJlShgOlEnd/WB48tw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(346002)(376002)(39860400002)(366004)(84040400005)(451199021)(316002)(31686004)(38100700002)(66556008)(6916009)(66476007)(4326008)(66946007)(41300700001)(6666004)(478600001)(6486002)(86362001)(5660300002)(8676002)(8936002)(31696002)(186003)(7416002)(53546011)(6512007)(6506007)(26005)(2906002)(44832011)(83380400001)(36756003)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MDBRUUlVb2dQaGdVSlpXdWpWWndwelV5QXJ6T1ZESFBqVVZQb0hQNWRiNzhR?=
- =?utf-8?B?Tit6MWp5ZHZEcTZPUWM4eE5SbCtWczdmY1dQZExPa1VHZFM0eGZsaXpuKzBv?=
- =?utf-8?B?Vm9oc2ZQYmtVVXFOVE1qUDh6QkgzZ1E5aUtjTWRldldyRWtoL2svTzhLZThZ?=
- =?utf-8?B?c0swU3hmQlhYaEdxdWw2RFFnNi8wbU1FOE5qMVhoa2ZDdStUYzNkM1FYbTRV?=
- =?utf-8?B?RFM4SlBrdXZiNkRoWTRYVmlmTEZLa0tDNWJHamJORnRHeVlMc0ZoMHhBZ3Jx?=
- =?utf-8?B?WlV3Wk5yY1RRK3pyMHFnSENnaGFkUGVUem5nQnJxYzd5cW5CblQ3bWViek9B?=
- =?utf-8?B?V1RSa00wNTExUnk2R1AwbnQ0aUZ3dkFhZmRYOWZhYjNKeE9KTFdSSjB5R0M2?=
- =?utf-8?B?VzgxdmNEclI1aS9nVmxjOFdsZ2g1aElnbllxNGs5K1dRdWY4ZHJ5NXNDSnIz?=
- =?utf-8?B?V0VGMzNaTUZSUDhLajR6MllMUEVWdEVrMGMzTXFwcDRKL041MnRLVUNSRisx?=
- =?utf-8?B?SHJyWDZDOWtlRnlKU3RWL3FLMGZ2WGF6MHFkNXgyMXpldkNFcEZkRm1aci9Y?=
- =?utf-8?B?T0YxT0d5Y3IySGRlaVAwdis0OTM0R0ZkSHJ3dVFtKzdpMVVLMXh4OFZOcmZ5?=
- =?utf-8?B?T0pJdHJGQk1hSWVVeDBoUWUxa2Z1WmxxRTFjalR2K3V2Smc5aGJXUkJCdS90?=
- =?utf-8?B?NFNVNWVJQ2NaTzBZdmR1R3laNjlIakdmYXlvNEJ2L25xeGt4MW1zK2VVQmFx?=
- =?utf-8?B?Qno2WWdIeTFRTFdhaVd3UVVmdmt5bEMzYzQveG1pSW9OWFVWR2FkaFlJOVQy?=
- =?utf-8?B?N1BSMThCRTk1VWFkNXZndC9XMDdDeDFCcTFnclovSzVsclE3VlpNNHM4dXFJ?=
- =?utf-8?B?VlN3QVF5TE1UVXV5Z0pmaHhxWWFXYjdvaWpVTkVWSHhIdHZvVXY3TDVBUEJX?=
- =?utf-8?B?bEVDYVI2MCtSamc0Rm92ekFFYW1aKy9yczZ1MFFRbldRZFdmRUdTM3ZHUmg0?=
- =?utf-8?B?K1BMaE11emxoZFc3d0FnVnoxbXptcGF0SWY3YlJkUjFrMjBUNkVKejIvVkJ1?=
- =?utf-8?B?dUVxNXpMSVpDdUZWZFNXcC9RNTlIc29HRWZVQzVqRXIzNlNZZ3Q4a1h0VXpZ?=
- =?utf-8?B?RWNFdDk1QlJIN0Y4UWJWLzgwQVFTUXppMUlzSEhrS295NVQyQUhyTTd3bEhC?=
- =?utf-8?B?bDNQWEthSXo3a2NGY2srN3Z0Q3Q2dFl1QzhOZGNnMTZVT1ZoZzI4TVBkcTBK?=
- =?utf-8?B?UnNTZWVKd082WEpmVEVPMTUvaGRscFNDdXBDZGw5V3BhMXhTLy80R0dNQkpQ?=
- =?utf-8?B?WnRXTDliRzhVMkhHazRVQzluQTZCb25FVXVnblhVU0Y3REtteklGSkQwQkoy?=
- =?utf-8?B?UEN1c2NXWGJqcGo5MEdDYlovMUxNZk92RVRiaXc4b2dwQjVtb0ZHNExYV21p?=
- =?utf-8?B?VmFBbzg3WnVwMW9TWFR5czZ0RTFSb2NpYkIrR2tTaEp0T09iK28yVEIrSTI2?=
- =?utf-8?B?WGQ4MmdQOUxBTklJTEliYkdjUnNrN0ZHT1NWLzdOY2VmOWU4V1FGZlNRTnR3?=
- =?utf-8?B?Tkw2NXhkRTNaYjMveFc3ZVZDbGY3QnhVTFg2eW53OHBOK0ZlcmlENlc0RDB5?=
- =?utf-8?B?YW93Ty9IWFduWlhLWWpKR0ZwZWVSbkxGRnlrSDBQS3dTUUVFN1BnYThRT2RX?=
- =?utf-8?B?eFJpNWRiWFBudjdudVBUSkNIcmJvWkRwMEwrQ2tXd0RaRGYvVlo5cmdmWElV?=
- =?utf-8?B?THJySlRjckFCdUY5S0dzSEJtVXpyaDZGeENzV1BzZVJZeThtTlRSUzI5YkFv?=
- =?utf-8?B?SmdHWlZuTjYwRDhuRG9iSFFlYUV4UjhUaXJKS1UrbjdXUTY4UTBwM2Y1N1Vz?=
- =?utf-8?B?WXZXbmFLTG9zOXlYUi9MZTZYTTZmTmxMZ3NBcDQ2NlJpNTZhbFh6dGNZRklm?=
- =?utf-8?B?YVRQbnFGdEVEcVJOc0VXLzNDRWl3VityVkNCWWJyTVRudkp4UXFUR1NpK3Q2?=
- =?utf-8?B?aEVCL0tTTU93MWVFNXQzWGJVSXFFRitzNWw5RTFkUnpZK0d4RXg5SzRBcEds?=
- =?utf-8?B?OUlWc0ZpOStOM3YyVDl3UjV5Uzl1RE9SZU4rNXI1VVlML0FmK3BhUlk5L3hO?=
- =?utf-8?Q?FBaztBzMtJ+6M4WVsqYxTlnRU?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZXN1d2thRmNIWlRLYzRjMjB3YWZuU3ZDRHg2R2p2Wm1ELytyWTZLb0dsTlFD?=
+ =?utf-8?B?clB5aGRvR0xJR0pOMVJZMUZnNTJIOUFvMFBKOWp5MFpSdXRLTzF4UkpGRmkv?=
+ =?utf-8?B?SnVMekQyYXZpN1RURWkwVUxEV0VlNDlCcDE2M3hMK2hrSjFuN0hkOEk5L1Ew?=
+ =?utf-8?B?TzgvVzJ3N2JtL2hsemJuYVM3NkVpcDBTSk9QZTNoVk5FeTlQbnptOE9US2x0?=
+ =?utf-8?B?QmQ5bTFkcTFuSTljN2RkUW9qOUJJZ0RzVXd2VHhsV0MzQTV4NEs2SDJSaEho?=
+ =?utf-8?B?dFNYZkFnWTJDUmJmYXR6UW5TZ1VTRnQ1KysrV21xNVJoOFBoNnhtaGs3bEZS?=
+ =?utf-8?B?cG5UZWtvUGJUR2tSdDB3YWNjMmVtRFdPeWRRbG02Q1pCRUxYR3dKL1pQejJJ?=
+ =?utf-8?B?Zk5NMzIwZnUzS0RjdS9adDJrZHQ0cmJFZ3FrVVA4OEZ0TzF3R1ZZSmMzS3R2?=
+ =?utf-8?B?OU1lbFBLUm8wcENsMmhnTjI2SE4xUTlmdzUrT3pYdkRDMkJKUlpyRFErRU4r?=
+ =?utf-8?B?ZmJxVlFUWUROVVNjdzQ4Z3YrUHorai9CTW1rWExKOWFBVlUrOGRXZ3dBMTJq?=
+ =?utf-8?B?RDQ5NS84S3NoSkx5L0hJMC9pbFp4Y3hTWnd4R2xEUEhobDZaZGcrNVF6SWdr?=
+ =?utf-8?B?YmZjcWNZbDNmc0QvNFIrSXhiV0lMZ3VoQWZQd3ZzSFdnYmw5RXBHWGxNUTRJ?=
+ =?utf-8?B?QTkzNkpvRWRYdzc5eUZBb053ODJjTWVXR01RVDR4MzVhYjFKclJpSGdVL2Vh?=
+ =?utf-8?B?Y2IweHpNTlZQeVg3YVBJTm9zZmxrc2MvVW5BQW11V2Z2bDgzcHZrS1VFMHlY?=
+ =?utf-8?B?cDFsaEdrNWdBN1VNVnRSQUpJM1NEN1VFVnpvZlV1cFd4K2xUQ2NGS2R5aTlF?=
+ =?utf-8?B?N29rbDRWdnJ4Y0QzWk9WNGZrRXJvN1dlN2N2aDA3dWx6akJhb25lMjc4NTNE?=
+ =?utf-8?B?K3dsSkovZ1dna2VTVUxEdXRoNkwvby9JSGZjQ25LQmlhcTB4YzFQbGhEbEo2?=
+ =?utf-8?B?Mkd4U21TbVU1TVUvUVlYdmM0K1Q0bDNFWlpVYVZ5ZnlQWm9YaFB1amxuUkMz?=
+ =?utf-8?B?QnM2K2k1bmtXZFRrVlFuQlg0b25VTkk5WXFuWVN0bUdoemtGa2VYREFTVm5q?=
+ =?utf-8?B?bHJJaWM0ZTZKaC80TjNWOVYzTk1VSGtqODV3M2s2WTZWOFNYT25oNU1EcE4r?=
+ =?utf-8?B?MGVyYlZ3UVU1d0dUVWxmUEJGajlLTzM4VTdaOHBiclhyQ2ZscHg1UHBadDNn?=
+ =?utf-8?B?ZEhNOVhYM3JuZmlPMkNUU1NuYVBKdTBPQ2phUFRnMnExK01oVytsVHN0T2Nz?=
+ =?utf-8?B?V2FXaGVYMkpsZ3czUlB5YWlpcmtpZFdJQWFSekxCZFVtVU1CYklMVnpCSTdJ?=
+ =?utf-8?B?blJpbU1QRlhCbVFIUHRWK2tLQk9vTXhlVFg3dnZyM2dDOWZyZWcyNm16SW5h?=
+ =?utf-8?B?V0FFWjR5bFIvMjYxUjJMOGZIRWV5TTNqRnlZeXBDUXNSRmhxN2RJazlWekMw?=
+ =?utf-8?B?MjU5WEhBcmxmWFhLRmk5RHh1NVBpK0FYZzdRL2hCejIycGlmbmV2MzZDN1k4?=
+ =?utf-8?B?ZndTMWNiUTNhR0w3S0xZOU5NOUV4NW9KaGtOMEFER2RYZGd3NjU5KzVLKy95?=
+ =?utf-8?B?S0Y1UjFGakwxU1R5OG1JcExZdkVJT3YxeVZQM29RR1dvQ2w3TUorNkR5cDBL?=
+ =?utf-8?B?VmVRUzVMeUlaNTRldDNyc3JJdzVhR3hQNHNmM1hpUDR2d0FIMFdxV2JQZUR0?=
+ =?utf-8?B?Y1k5Qy9udDlSVDdHNFRqc3RaVGhrV01zUkMzRUNBVkR4Q1V1aXRMVmM3N2hr?=
+ =?utf-8?B?U0hnR2J1NzhncW4xL09hYVFMSDZ4YXhJWW44NFNWZlNMSE9GNTBKb0pUeXFy?=
+ =?utf-8?B?WkpBUVJLRWU5TG5XUmcvWDhScXZTRHBWcmxvRmVkOWlxWWpiUHd1cHMxVktG?=
+ =?utf-8?B?RzM1aUFuRGt3a2grQ1BnZEp1N1VTUHNNNkZITlJGY1BWbHpyU0MraHBtMHlN?=
+ =?utf-8?B?amNDSUVqTzRkNTEzdmtaTTg5UmVXSDdXcUZlYkEzejc0R1QybStXZnRld1o2?=
+ =?utf-8?B?Sm9UMDQrdnNBSTRUbE1hYmtCWHdST2VhbFprVndwSTd0d0dVczJUTVFUYUdx?=
+ =?utf-8?Q?l91LcKrGSAFAgyJFeIxObilBb?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83868ab6-4ba6-4b1f-0919-08db5ccc50c1
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB2379.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e00d1c7e-ac10-47f5-bd7c-08db5cdf510a
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2023 03:01:20.4976
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 May 2023 05:17:21.4454
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uspsgQ0AmyJkXlOF1O0W6h2mLve1PKfIfB3hyrISjpIMdFv4ACyXEbK5+AKKy6wPmFyrO6wywVliVHQN/HNn8Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8304
+X-MS-Exchange-CrossTenant-UserPrincipalName: A+R5Zw9rZqQ1TTt8kh5v1cYp110+zGR71xh5BEhIuztJU6DrTTm00KUJzjRnuFqz6Bx5J2WMx7BJRDp7ky+1YA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6978
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Namhyung,
+Hi Nathan,
 
-On 5/25/2023 2:36 AM, Namhyung Kim wrote:
-> The recent --per-cache option test caused a problem.  According to
-> the option name, I think it should check args.per_cache instead of
-> args.per_cache_instance.
+On 25-May-23 3:11 AM, Nathan Chancellor wrote:
+> Hi Ravi,
 > 
->   $ sudo ./perf test -v 99
->    99: perf stat JSON output linter                                    :
->   --- start ---
->   test child forked, pid 3086101
->   Checking json output: no args [Success]
->   Checking json output: system wide [Success]
->   Checking json output: interval [Success]
->   Checking json output: event [Success]
->   Checking json output: per thread [Success]
->   Checking json output: per node [Success]
->   Checking json output: system wide no aggregation [Success]
->   Checking json output: per core [Success]
->   Checking json output: per cache_instance Test failed for input:
->   ...
->   Traceback (most recent call last):
->     File "linux/tools/perf/tests/shell/lib/perf_json_output_lint.py", line 88, in <module>
->       elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cache_instance:
->   AttributeError: 'Namespace' object has no attribute 'per_cache_instance'
->   test child finished with -1
->   ---- end ----
->   perf stat JSON output linter: FAILED!
+> + arm64 KVM folks
 > 
-> Fixes: bfce728db317 ("pert tests: Add tests for new "perf stat --per-cache" aggregation option")
-
-Another oversight on my part. Thank you for fixing this :)
-
-   $ sudo perf test -v 99
-   99: perf stat JSON output linter                                    :
-   --- start ---
-   test child forked, pid 25046
-   Checking json output: no args [Success]
-   Checking json output: system wide [Success]
-   Checking json output: interval [Success]
-   Checking json output: event [Success]
-   Checking json output: per thread [Success]
-   Checking json output: per node [Success]
-   Checking json output: system wide no aggregation [Success]
-   Checking json output: per core [Success]
-   Checking json output: per cache_instance [Success]
-   Checking json output: per die [Success]
-   Checking json output: per socket [Success]
-   test child finished with 0
-   ---- end ----
-   perf stat JSON output linter: Ok
-
-Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
-
-> Cc: K Prateek Nayak <kprateek.nayak@amd.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/shell/lib/perf_json_output_lint.py | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Thu, May 04, 2023 at 04:30:02PM +0530, Ravi Bangoria wrote:
+>> Searching for the right pmu by iterating over all pmus is no longer
+>> required since all pmus now *must* be present in the 'pmu_idr' list.
+>> So, remove linear searching code.
+>>
+>> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>> ---
+>>  kernel/events/core.c | 37 +++++++++++++------------------------
+>>  1 file changed, 13 insertions(+), 24 deletions(-)
+>>
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 0695bb9fbbb6..eba2b8595115 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -11630,38 +11630,27 @@ static struct pmu *perf_init_event(struct perf_event *event)
+>>  	}
+>>  
+>>  again:
+>> +	ret = -ENOENT;
+>>  	rcu_read_lock();
+>>  	pmu = idr_find(&pmu_idr, type);
+>>  	rcu_read_unlock();
+>> -	if (pmu) {
+>> -		if (event->attr.type != type && type != PERF_TYPE_RAW &&
+>> -		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
+>> -			goto fail;
+>> -
+>> -		ret = perf_try_init_event(pmu, event);
+>> -		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+>> -			type = event->attr.type;
+>> -			goto again;
+>> -		}
+>> +	if (!pmu)
+>> +		goto fail;
+>>  
+>> -		if (ret)
+>> -			pmu = ERR_PTR(ret);
+>> +	if (event->attr.type != type && type != PERF_TYPE_RAW &&
+>> +	    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
+>> +		goto fail;
+>>  
+>> -		goto unlock;
+>> +	ret = perf_try_init_event(pmu, event);
+>> +	if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+>> +		type = event->attr.type;
+>> +		goto again;
+>>  	}
+>>  
+>> -	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+>> -		ret = perf_try_init_event(pmu, event);
+>> -		if (!ret)
+>> -			goto unlock;
+>> -
+>> -		if (ret != -ENOENT) {
+>> -			pmu = ERR_PTR(ret);
+>> -			goto unlock;
+>> -		}
+>> -	}
+>>  fail:
+>> -	pmu = ERR_PTR(-ENOENT);
+>> +	if (ret)
+>> +		pmu = ERR_PTR(ret);
+>> +
+>>  unlock:
+>>  	srcu_read_unlock(&pmus_srcu, idx);
+>>  
+>> -- 
+>> 2.40.0
+>>
 > 
-> diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> index 4acaaed5560d..b81582a89d36 100644
-> --- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> +++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
-> @@ -85,7 +85,7 @@ Lines = args.file.readlines()
->      expected_items = 7
->    elif args.interval or args.per_thread or args.system_wide_no_aggr:
->      expected_items = 8
-> -  elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cache_instance:
-> +  elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cache:
->      expected_items = 9
->    else:
->      # If no option is specified, don't check the number of items.
+> My apologies if this has already been reported or fixed already, I did a
+> search of lore.kernel.org and did not find anything. This patch as
+> commit 9551fbb64d09 ("perf/core: Remove pmu linear searching code") in
+> -next breaks starting QEMU with KVM enabled on two of my arm64 machines:
+> 
+> $ qemu-system-aarch64 \
+>     -display none \
+>     -nodefaults \
+>     -machine virt,gic-version=max \
+>     -append 'console=ttyAMA0 earlycon' \
+>     -kernel arch/arm64/boot/Image.gz \
+>     -initrd rootfs.cpio \
+>     -cpu host \
+>     -enable-kvm \
+>     -m 512m \
+>     -smp 8 \
+>     -serial mon:stdio
+> qemu-system-aarch64: PMU: KVM_SET_DEVICE_ATTR: No such device
+> qemu-system-aarch64: failed to set irq for PMU
+> 
+> In the kernel log, I see
+> 
+> [   42.944952] kvm: pmu event creation failed -2
+> 
+> I am not sure if this issue is unexpected as a result of this change or
+> if there is something that needs to change on the arm64 KVM side (it
+> appears the kernel message comes from arch/arm64/kvm/pmu-emul.c).
 
---
-Thanks and Regards,
-Prateek
+Thanks for reporting it.
+
+Based on these detail, I feel the pmu registration failed in the host,
+most probably because pmu driver did not pass pmu name while calling
+perf_pmu_register(). Consequently kvm also failed while trying to use
+it for guest. Can you please check host kernel logs.
+
+I'm sorry but I neither have Arm board to try myself not I'm familiar
+with the Arm architecture. So I'll need your help to diagnose it.
+
+Ravi
