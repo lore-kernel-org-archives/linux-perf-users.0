@@ -2,179 +2,90 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65888C7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 07:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4170C77B7E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 08:29:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239124AbjEYHUq (ORCPT
+        id S235794AbjEYI3U (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 03:20:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52454 "EHLO
+        Thu, 25 May 2023 04:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238828AbjEYHUl (ORCPT
+        with ESMTP id S239793AbjEYI3R (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 03:20:41 -0400
-X-Greylist: delayed 525 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 25 May 2023 00:20:34 PDT
-Received: from out-29.mta0.migadu.com (out-29.mta0.migadu.com [91.218.175.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 043D8E50
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 00:20:34 -0700 (PDT)
-Date:   Thu, 25 May 2023 07:11:41 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1684998707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Iz6y8y6khpMjAIZq8YDzvt5EdSkB55kQXDEISakUjns=;
-        b=n5fwCDL0eOfW/wMfQaEDC7YPW1PyI/z1kdA2egEpwnmCwAgLo6k/aKjPTwXqblxRRbrb1N
-        8y4t1/2lEN/k8VnpE5HDLiWIQHitDjOln1g/tMw09KqO44sdTgg+9U1z3VDc+sRV6R0SgL
-        b+rXGgr4sY4156ZeAAntGIINkL4C6IY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Oliver Upton <oliver.upton@linux.dev>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Nathan Chancellor <nathan@kernel.org>, peterz@infradead.org,
-        namhyung@kernel.org, eranian@google.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
-        bp@alien8.de, kan.liang@linux.intel.com, adrian.hunter@intel.com,
-        maddy@linux.ibm.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com, maz@kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
-Message-ID: <ZG8KLbZSECiYaKFc@linux.dev>
-References: <20230504110003.2548-1-ravi.bangoria@amd.com>
- <20230504110003.2548-4-ravi.bangoria@amd.com>
- <20230524214133.GA2359762@dev-arch.thelio-3990X>
- <f02c78e2-34b9-4985-640a-279dae1004a9@amd.com>
+        Thu, 25 May 2023 04:29:17 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C4C3186;
+        Thu, 25 May 2023 01:29:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685003356; x=1716539356;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QHA0PUM2kozuFhevzuFcZbE8+0O6nv9jDPUSc6oHy+0=;
+  b=Oa/X3pAI5cc/rRPJSSM1MKyWZ2WWWogCuk8mwtwS6mHLGtfyfb2cqvUh
+   xOXZnEnjS/rx4AcOOD5yBnsSci8AWSHs7uHlyrgUrd9CweWYH8oc4zPjz
+   yc4eKOUeXiKtq6OLcIyhwHfPGzu5v4GUG0j/HIRcO8EVooQjXzEV4VY53
+   0AzQFZZMcGgm6P3fyqXITxCFLLeDky37/9v8bwmGhbt7E4q/lk1y16J6e
+   d/osCyYRcpaNVnSsM3YxyxJ/xqu1SAYJKGE/Kh2dFhS6EN3xaFruyIt1j
+   UBUQySyii+c8iQ0EXt35smTv/uVYN64+FmAulk3COfMFhL+Wr9YqOa71O
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="338400398"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
+   d="scan'208";a="338400398"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 01:29:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="707914632"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
+   d="scan'208";a="707914632"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.208.63])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 01:29:12 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH V3 0/1] perf tools: Allow config terms with breakpoints
+Date:   Thu, 25 May 2023 11:29:01 +0300
+Message-Id: <20230525082902.25332-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f02c78e2-34b9-4985-640a-279dae1004a9@amd.com>
-X-Migadu-Flow: FLOW_OUT
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 25, 2023 at 10:46:01AM +0530, Ravi Bangoria wrote:
-> On 25-May-23 3:11 AM, Nathan Chancellor wrote:
-> > My apologies if this has already been reported or fixed already, I did a
-> > search of lore.kernel.org and did not find anything. This patch as
-> > commit 9551fbb64d09 ("perf/core: Remove pmu linear searching code") in
-> > -next breaks starting QEMU with KVM enabled on two of my arm64 machines:
-> > 
-> > $ qemu-system-aarch64 \
-> >     -display none \
-> >     -nodefaults \
-> >     -machine virt,gic-version=max \
-> >     -append 'console=ttyAMA0 earlycon' \
-> >     -kernel arch/arm64/boot/Image.gz \
-> >     -initrd rootfs.cpio \
-> >     -cpu host \
-> >     -enable-kvm \
-> >     -m 512m \
-> >     -smp 8 \
-> >     -serial mon:stdio
-> > qemu-system-aarch64: PMU: KVM_SET_DEVICE_ATTR: No such device
-> > qemu-system-aarch64: failed to set irq for PMU
-> > 
-> > In the kernel log, I see
-> > 
-> > [   42.944952] kvm: pmu event creation failed -2
-> > 
-> > I am not sure if this issue is unexpected as a result of this change or
-> > if there is something that needs to change on the arm64 KVM side (it
-> > appears the kernel message comes from arch/arm64/kvm/pmu-emul.c).
-> 
-> Thanks for reporting it.
-> 
-> Based on these detail, I feel the pmu registration failed in the host,
-> most probably because pmu driver did not pass pmu name while calling
-> perf_pmu_register(). Consequently kvm also failed while trying to use
-> it for guest. Can you please check host kernel logs.
+Hi
 
-The PMUv3 driver does pass a name, but it relies on getting back an
-allocated pmu id as @type is -1 in the call to perf_pmu_register().
+Here is a patch (V3) to the event parser for breakpoint events.
+I am not that familiar with flex / bison, but it seemed to
+need trailing context to stop the mem event colon and slash
+delimiters from getting mixed up with delimiters for config
+terms or event modifiers.  Please look closely at that.
 
-What actually broke is how KVM probes for a default core PMU to use for
-a guest. kvm_pmu_probe_armpmu() creates a counter w/ PERF_TYPE_RAW and
-reads the pmu from the returned perf_event. The linear search had the
-effect of eventually stumbling on the correct core PMU and succeeding.
 
-Perf folks: is this WAI for heterogenous systems?
+Changes in V3:
 
-Either way, the whole KVM end of this scheme is a bit clunky, and I
-believe it to be unneccessary at this point as we maintain a list of
-core PMU instances that KVM is able to virtualize. We can just walk
-that to find a default PMU to use.
+      Add Ian's Reviewed-by
+      Re-base
 
-Not seeing any issues on -next with the below diff. If this works for
-folks I can actually wrap it up in a patch and send it out.
+Changes in V2:
 
-diff --git a/arch/arm64/kvm/pmu-emul.c b/arch/arm64/kvm/pmu-emul.c
-index 45727d50d18d..cbc0b662b7f8 100644
---- a/arch/arm64/kvm/pmu-emul.c
-+++ b/arch/arm64/kvm/pmu-emul.c
-@@ -694,47 +694,26 @@ void kvm_host_pmu_init(struct arm_pmu *pmu)
- 
- static struct arm_pmu *kvm_pmu_probe_armpmu(void)
- {
--	struct perf_event_attr attr = { };
--	struct perf_event *event;
--	struct arm_pmu *pmu = NULL;
--
--	/*
--	 * Create a dummy event that only counts user cycles. As we'll never
--	 * leave this function with the event being live, it will never
--	 * count anything. But it allows us to probe some of the PMU
--	 * details. Yes, this is terrible.
--	 */
--	attr.type = PERF_TYPE_RAW;
--	attr.size = sizeof(attr);
--	attr.pinned = 1;
--	attr.disabled = 0;
--	attr.exclude_user = 0;
--	attr.exclude_kernel = 1;
--	attr.exclude_hv = 1;
--	attr.exclude_host = 1;
--	attr.config = ARMV8_PMUV3_PERFCTR_CPU_CYCLES;
--	attr.sample_period = GENMASK(63, 0);
-+	struct arm_pmu *arm_pmu = NULL, *tmp;
-+	struct arm_pmu_entry *entry;
-+	int cpu;
- 
--	event = perf_event_create_kernel_counter(&attr, -1, current,
--						 kvm_pmu_perf_overflow, &attr);
-+	mutex_lock(&arm_pmus_lock);
-+	cpu = get_cpu();
- 
--	if (IS_ERR(event)) {
--		pr_err_once("kvm: pmu event creation failed %ld\n",
--			    PTR_ERR(event));
--		return NULL;
--	}
-+	list_for_each_entry(entry, &arm_pmus, entry) {
-+		tmp = entry->arm_pmu;
- 
--	if (event->pmu) {
--		pmu = to_arm_pmu(event->pmu);
--		if (pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_NI ||
--		    pmu->pmuver == ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
--			pmu = NULL;
-+		if (cpumask_test_cpu(cpu, &tmp->supported_cpus)) {
-+			arm_pmu = tmp;
-+			break;
-+		}
- 	}
- 
--	perf_event_disable(event);
--	perf_event_release_kernel(event);
-+	put_cpu();
-+	mutex_unlock(&arm_pmus_lock);
- 
--	return pmu;
-+	return arm_pmu;
- }
- 
- u64 kvm_pmu_get_pmceid(struct kvm_vcpu *vcpu, bool pmceid1)
+      Add comments to tools/perf/util/parse-events.l
+      Add a test for 2 mem events back to back with config terms
 
--- 
-Thanks,
-Oliver
+
+Adrian Hunter (1):
+      perf tools: Allow config terms with breakpoints
+
+ tools/perf/tests/parse-events.c | 157 ++++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/parse-events.c  |  23 +++++-
+ tools/perf/util/parse-events.h  |   6 +-
+ tools/perf/util/parse-events.l  |  23 +++++-
+ tools/perf/util/parse-events.y  |  42 ++++++-----
+ 5 files changed, 224 insertions(+), 27 deletions(-)
+
+
+Regards
+Adrian
