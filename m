@@ -2,360 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF41C7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 16:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A96C77B7E
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 17:54:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240858AbjEYQ1i (ORCPT
+        id S233743AbjEYRy3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 12:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37552 "EHLO
+        Thu, 25 May 2023 13:54:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240695AbjEYQ1K (ORCPT
+        with ESMTP id S230265AbjEYRy2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 12:27:10 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82063E5A;
-        Thu, 25 May 2023 09:27:00 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 34E5221C65;
-        Thu, 25 May 2023 16:26:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1685032018; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qBSf8dQvqenvM4XuaXqBfFlxjVrL5fPe+CB4lmnXjuk=;
-        b=C4s+hdIyCnXmGRzN2XmAwfRTIB+9xRT+DvPlRO3vRcui7FbrbO1JQDWFx0rfTnZPSjX5i1
-        rRTvdTF0fGM/eRmPRJQYStRfQXRzvjlNo/ZL8IUHR6kuT7x8QzWCoJZmsiqU3ukACJ1fan
-        DauIAYjaJf8QRWaSlI7nNnrfcF7cPGY=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id A2C412C141;
-        Thu, 25 May 2023 16:26:55 +0000 (UTC)
-Date:   Thu, 25 May 2023 18:26:52 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Stephane Eranian <eranian@google.com>, mpe@ellerman.id.au,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, Sumit Garg <sumit.garg@linaro.org>,
-        npiggin@gmail.com, davem@davemloft.net,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, sparclinux@vger.kernel.org,
-        christophe.leroy@csgroup.eu,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        ravi.v.shankar@intel.com, Randy Dunlap <rdunlap@infradead.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Ian Rogers <irogers@google.com>, ito-yuichi@fujitsu.com,
-        ricardo.neri@intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Colin Cross <ccross@android.com>
-Subject: Re: [PATCH v5 14/18] watchdog/hardlockup: detect hard lockups using
- secondary (buddy) CPUs
-Message-ID: <ZG-MTPSZakRDl2CP@alley>
-References: <20230519101840.v5.18.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
- <20230519101840.v5.14.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
+        Thu, 25 May 2023 13:54:28 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32C1097;
+        Thu, 25 May 2023 10:54:27 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-973bf581759so128328366b.0;
+        Thu, 25 May 2023 10:54:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685037265; x=1687629265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y/20VApzN3sPBkZnwvcb54AXnS2bInta1+wgq5QOgNk=;
+        b=oPFaXJfLPwtyQ8WQccrT5LJWteQExDZlck7hQ8gV3hf2nc9G+/0BySXr22HsKUzmF4
+         9Di1OwPIY/19Mt7BETii5qHDnhYu1XOXOJPbC2lfFDbA/Kb6eb+4+wj3441d0t+M60sL
+         FCu78LPWypiTBBgyBI6eETM9558mdswP1U05UdIVYZpaUvOPHogvaF/ujUJ0RomnP1rD
+         9Jxo2LgGIaNZUEYKC8zm1r/hFCyuIjcZH9FZAIQjVbfiqsraqUk7BLkFVj0oa9QhargJ
+         0hMwvvVqh+q/OxQ9UcqL2Fj15UXlyi4Id2PyCkUlnckEtrGymRbvEW7SryyWCskwxECZ
+         BV8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685037265; x=1687629265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y/20VApzN3sPBkZnwvcb54AXnS2bInta1+wgq5QOgNk=;
+        b=AzwCHLVTBJ0cP5CdBQS9lD68dHczoqnjNMXBeo67HVHtY2Up4FwdWlk6kNgRVgScwL
+         J+bz14RgohYErHYCLKEUeq6lWhnweA+BI8Vq2Er8kQumdVq7Y/qm4I3XqwAuvkd1fDRw
+         bsjeDJcDS/HoYze92yO3mcgUAWzI3gM9lmX9qrm5C/bCznZjTvbJQL0j774Z6OQfiGKj
+         oxIJvvTlLKdfYQ1Ij3NPOOeSMY+YAp/LDyjEHbPM2ERc9T7glPyrnCbDtMBu4zFxztya
+         UhDaANhF512iNX1hSwwEaJW1v7MEbIF+kvT0wXH4JP+1h/dQhHvOnb6tYqGVummvjtTe
+         foIg==
+X-Gm-Message-State: AC+VfDxugOH0IkRyZpyT47I80lj9S9dxljr8J2Lxw7P4HFI5FhCKvPWe
+        DR1ibhJlykhSwBcWkp3SoO5/liryaWH9ksxsSAk=
+X-Google-Smtp-Source: ACHHUZ4uYZNxBOT8583zqUCp1HxGXJcJEeFPbQbqIP0VbykWDy05PjW7yuUdg18pAwUBZmZYzK9+WAFtxN3EqV1tdgk=
+X-Received: by 2002:a17:907:36c9:b0:953:517a:8f1a with SMTP id
+ bj9-20020a17090736c900b00953517a8f1amr2030819ejc.58.1685037265452; Thu, 25
+ May 2023 10:54:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230519101840.v5.14.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
+References: <20230525000307.3202449-1-namhyung@kernel.org>
+In-Reply-To: <20230525000307.3202449-1-namhyung@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 25 May 2023 10:54:13 -0700
+Message-ID: <CAEf4BzbKtJ+xehJqzStiUEB67YbDFpydVSiLbNi2=WQt+8iDBQ@mail.gmail.com>
+Subject: Re: [PATCH] perf bpf filter: Fix a broken perf sample data naming in BPF
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri 2023-05-19 10:18:38, Douglas Anderson wrote:
-> Implement a hardlockup detector that doesn't doesn't need any extra
-> arch-specific support code to detect lockups. Instead of using
-> something arch-specific we will use the buddy system, where each CPU
-> watches out for another one. Specifically, each CPU will use its
-> softlockup hrtimer to check that the next CPU is processing hrtimer
-> interrupts by verifying that a counter is increasing.
-> 
-> --- a/kernel/watchdog.c
-> +++ b/kernel/watchdog.c
-> @@ -85,7 +85,7 @@ __setup("nmi_watchdog=", hardlockup_panic_setup);
->  
->  #endif /* CONFIG_HARDLOCKUP_DETECTOR */
->  
-> -#if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
-> +#if defined(CONFIG_HARDLOCKUP_DETECTOR_COUNTS_HRTIMER)
->  
->  static DEFINE_PER_CPU(atomic_t, hrtimer_interrupts);
->  static DEFINE_PER_CPU(int, hrtimer_interrupts_saved);
-> @@ -106,6 +106,14 @@ notrace void arch_touch_nmi_watchdog(void)
->  }
->  EXPORT_SYMBOL(arch_touch_nmi_watchdog);
->  
-> +void watchdog_hardlockup_touch_cpu(unsigned int cpu)
-> +{
-> +	per_cpu(watchdog_hardlockup_touched, cpu) = true;
-> +
-> +	/* Match with smp_rmb() in watchdog_hardlockup_check() */
-> +	smp_wmb();
+On Wed, May 24, 2023 at 5:03=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> BPF CO-RE requires 3 underscores for the ignored suffix rule but it
+> mistakenly used only 2.  Let's fix it.
+>
+> Fixes: 3a8b8fc31748 ("perf bpf filter: Support pre-5.16 kernels where 'me=
+m_hops' isn't in 'union perf_mem_data_src'")
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/bpf_skel/sample_filter.bpf.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
 
-It is great that you described where the related barrier is.
+Seems like that's the only remaining case. LGTM.
 
-Another important information is what exactly is synchronized.
-And I am actually not sure what we are synchronizing here.
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-My understanding is that a write barrier should synchronize
-related writes, for example:
-
-	X = ...;
-	/* Make sure that X is modified before Y */
-	smp_wmb();
-	Y = ...;
-
-And the related read barrier should synchronize the related reads,
-for example:
-
-	if (test(Y)) {
-		/*
-		 * Make sure that we use the updated X when
-		 * we saw the updated Y.
-		 */
-		 smp_rmb();
-		 do_something(X);
-	 }
-
-IMHO, we do not need any barrier here because we have only
-one variable "watchdog_hardlockup_touched" here.
-watchdog_hardlockup_check() will either see the updated value
-or not. But it does not synchronize it against any other
-variables or values.
-
-> +}
-> +
->  static bool is_hardlockup(unsigned int cpu)
->  {
->  	int hrint = atomic_read(&per_cpu(hrtimer_interrupts, cpu));
-> @@ -443,11 +454,15 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
->  	struct pt_regs *regs = get_irq_regs();
->  	int duration;
->  	int softlockup_all_cpu_backtrace = sysctl_softlockup_all_cpu_backtrace;
-> +	unsigned long hrtimer_interrupts;
->  
->  	if (!watchdog_enabled)
->  		return HRTIMER_NORESTART;
->  
-> -	watchdog_hardlockup_kick();
-> +	hrtimer_interrupts = watchdog_hardlockup_kick();
-> +
-> +	/* test for hardlockups */
-
-I would omit the comment. It is not valid when perf detector is used.
-And checking the buddy is clear from the function name.
-
-> +	watchdog_buddy_check_hardlockup(hrtimer_interrupts);
-
-I would personally move this into watchdog_hardlockup_kick().
-watchdog_timer_fn() is already complex enough. And checking
-the buddy when kicking a CPU makes sense.
-
-Also I would not pass "hrtimer_interrupts". I guess that it is
-just an optimization. It is an extra churn in the code. IMHO,
-is is not wort it. This code does not need to be super optimized.
-
-> +
-
->  
->  	/* kick the softlockup detector */
->  	if (completion_done(this_cpu_ptr(&softlockup_completion))) {
-> diff --git a/kernel/watchdog_buddy.c b/kernel/watchdog_buddy.c
-> new file mode 100644
-> index 000000000000..fee45af2e5bd
-> --- /dev/null
-> +++ b/kernel/watchdog_buddy.c
-> @@ -0,0 +1,93 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#include <linux/cpu.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/kernel.h>
-> +#include <linux/nmi.h>
-> +#include <linux/percpu-defs.h>
-> +
-> +static cpumask_t __read_mostly watchdog_cpus;
-> +
-> +static unsigned int watchdog_next_cpu(unsigned int cpu)
-> +{
-> +	cpumask_t cpus = watchdog_cpus;
-
-A copy should be done by cpumask_copy().
-
-But the question is why a copy would be needed. When called from
-watchdog_buddy_check_hardlockup(), this function is not sychronized
-against the CPU hotplug. And even the copying would be racy.
-
-IMHO, the copy does not help much and we do not need it.
-
-The only important this is that this function would return
-a valid CPU. And I think that it is guarantted because
-CPU0 could not be disabled.
-
-> +	unsigned int next_cpu;
-> +
-> +	next_cpu = cpumask_next(cpu, &cpus);
-> +	if (next_cpu >= nr_cpu_ids)
-> +		next_cpu = cpumask_first(&cpus);
-> +
-> +	if (next_cpu == cpu)
-> +		return nr_cpu_ids;
->> +	return next_cpu;
-> +}
-> +
-> +int __init watchdog_hardlockup_probe(void)
-> +{
-> +	return 0;
-> +}
-> +
-> +void watchdog_hardlockup_enable(unsigned int cpu)
-> +{
-> +	unsigned int next_cpu;
-> +
-> +	/*
-> +	 * The new CPU will be marked online before the hrtimer interrupt
-> +	 * gets a chance to run on it. If another CPU tests for a
-> +	 * hardlockup on the new CPU before it has run its the hrtimer
-> +	 * interrupt, it will get a false positive. Touch the watchdog on
-> +	 * the new CPU to delay the check for at least 3 sampling periods
-> +	 * to guarantee one hrtimer has run on the new CPU.
-> +	 */
-> +	watchdog_hardlockup_touch_cpu(cpu);
-> +
-> +	/*
-> +	 * We are going to check the next CPU. Our watchdog_hrtimer
-> +	 * need not be zero if the CPU has already been online earlier.
-> +	 * Touch the watchdog on the next CPU to avoid false positive
-> +	 * if we try to check it in less then 3 interrupts.
-> +	 */
-> +	next_cpu = watchdog_next_cpu(cpu);
-> +	if (next_cpu < nr_cpu_ids)
-> +		watchdog_hardlockup_touch_cpu(next_cpu);
-
-Thinking loudly:
-
-This feels racy when many CPUs are enabled/disabled in parallel.
-I am not 100% sure it it can happen though.
-
-My understanding is that it can't happen because the CPU hotplug
-is serialized by cpu_add_remove_lock.
-
-So, this seems to work after all.
-
-> +
-> +	cpumask_set_cpu(cpu, &watchdog_cpus);
-> +}
-> +
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1035,10 +1035,55 @@ config BOOTPARAM_SOFTLOCKUP_PANIC
->  
->  	  Say N if unsure.
->  
-> -config HARDLOCKUP_DETECTOR_PERF
-> +# Both the "perf" and "buddy" hardlockup detectors count hrtimer
-> +# interrupts. This config enables functions managing this common code.
-> +config HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
->  	bool
->  	select SOFTLOCKUP_DETECTOR
->  
-> +config HARDLOCKUP_DETECTOR_PERF
-> +	bool
-> +	depends on HAVE_HARDLOCKUP_DETECTOR_PERF
-> +	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
-> +
-> +config HARDLOCKUP_DETECTOR_BUDDY
-> +	bool
-> +	depends on SMP
-> +	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
-> +
-> +# For hardlockup detectors you can have one directly provided by the arch
-> +# or use a "non-arch" one. If you're using a "non-arch" one that is
-> +# further divided the perf hardlockup detector (which, confusingly, needs
-> +# arch-provided perf support) and the buddy hardlockup detector (which just
-> +# needs SMP). In either case, using the "non-arch" code conflicts with
-> +# the NMI watchdog code (which is sometimes used directly and sometimes used
-> +# by the arch-provided hardlockup detector).
-> +config HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
-> +	bool
-> +	depends on (HAVE_HARDLOCKUP_DETECTOR_PERF || SMP) && !HAVE_NMI_WATCHDOG
-> +	default y
-> +
-> +config HARDLOCKUP_DETECTOR_PREFER_BUDDY
-> +	bool "Prefer the buddy CPU hardlockup detector"
-> +	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH && HAVE_HARDLOCKUP_DETECTOR_PERF && SMP
-
-Huh, I have big troubles to scratch my head around this check:
-
-       HAVE_HARDLOCKUP_DETECTOR_NON_ARCH depends on HAVE_HARDLOCKUP_DETECTOR_PERF and SMP
-
-       and this depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH and again
-	       on HAVE_HARDLOCKUP_DETECTOR_PERF and SMP.
-
-> +	help
-> +	  Say Y here to prefer the buddy hardlockup detector over the perf one.
-> +
-> +	  With the buddy detector, each CPU uses its softlockup hrtimer
-> +	  to check that the next CPU is processing hrtimer interrupts by
-> +	  verifying that a counter is increasing.
-> +
-> +	  This hardlockup detector is useful on systems that don't have
-> +	  an arch-specific hardlockup detector or if resources needed
-> +	  for the hardlockup detector are better used for other things.
-> +
-> +# This will select the appropriate non-arch hardlockdup detector
-> +config HARDLOCKUP_DETECTOR_NON_ARCH
-> +	bool
-> +	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
-> +	select HARDLOCKUP_DETECTOR_BUDDY if !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_PREFER_BUDDY
-> +	select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY
-> +
->  #
->  # Enables a timestamp based low pass filter to compensate for perf based
->  # hard lockup detection which runs too fast due to turbo modes.
-> @@ -1053,9 +1098,10 @@ config HARDLOCKUP_CHECK_TIMESTAMP
->  config HARDLOCKUP_DETECTOR
->  	bool "Detect Hard Lockups"
->  	depends on DEBUG_KERNEL && !S390
-
-Is there any reason why S390 could not or do not want to use the buddy
-hardlockup detector.
-
-> -	depends on HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETECTOR_ARCH
-> +	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH || HAVE_HARDLOCKUP_DETECTOR_ARCH
->  	select LOCKUP_DETECTOR
-> -	select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF
-> +	select HARDLOCKUP_DETECTOR_NON_ARCH if HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
-
-Anyway, the configuration of the hard lockup detectors is insane and
-this patchset makes it even worse, especially the new
-HARDLOCKUP_DETECTOR_NON_ARCH stuff.
-
-It seems that sparc, powerpc and s390 are somehow special. Do you
-still have in mind how they are distinguished using the Kconfig
-variables?
-
-For example, I am pretty confused by the meaning of HAVE_NMI_WATCHDOG.
-
-And sparc has its own variant of
-watchdog_hardlockup_enable()/disable(). It means that it is
-arch-specific. Does it work with the 13th patch which made
-watchdog_hardlockup_enable()/disable() to be watchdog-hardlockup-type
-specific? Is is somehow related to HAVE_NMI_WATCHDOG?
-Does this replace the entire watchdog only only the enable part?
-
-I think that we need to make this more straightforward. But I first
-need to understand the existing maze of config variables.
-
-Best Regards,
-Petr
+> diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/ut=
+il/bpf_skel/sample_filter.bpf.c
+> index cffe493af1ed..fb94f5280626 100644
+> --- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> @@ -25,7 +25,7 @@ struct perf_sample_data___new {
+>  } __attribute__((preserve_access_index));
+>
+>  /* new kernel perf_mem_data_src definition */
+> -union perf_mem_data_src__new {
+> +union perf_mem_data_src___new {
+>         __u64 val;
+>         struct {
+>                 __u64   mem_op:5,       /* type of opcode */
+> @@ -108,7 +108,7 @@ static inline __u64 perf_get_sample(struct bpf_perf_e=
+vent_data_kern *kctx,
+>                 if (entry->part =3D=3D 7)
+>                         return kctx->data->data_src.mem_blk;
+>                 if (entry->part =3D=3D 8) {
+> -                       union perf_mem_data_src__new *data =3D (void *)&k=
+ctx->data->data_src;
+> +                       union perf_mem_data_src___new *data =3D (void *)&=
+kctx->data->data_src;
+>
+>                         if (bpf_core_field_exists(data->mem_hops))
+>                                 return data->mem_hops;
+> --
+> 2.41.0.rc0.172.g3f132b7071-goog
+>
+>
