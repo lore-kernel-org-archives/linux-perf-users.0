@@ -2,54 +2,54 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3FBC7EE29
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 21:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5176C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 22:09:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235214AbjEYVUn (ORCPT
+        id S230474AbjEYWJc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 17:20:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33966 "EHLO
+        Thu, 25 May 2023 18:09:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232016AbjEYVUn (ORCPT
+        with ESMTP id S229931AbjEYWJb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 17:20:43 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38056195;
-        Thu, 25 May 2023 14:20:42 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-64d18d772bdso276607b3a.3;
-        Thu, 25 May 2023 14:20:42 -0700 (PDT)
+        Thu, 25 May 2023 18:09:31 -0400
+Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD21512F;
+        Thu, 25 May 2023 15:09:30 -0700 (PDT)
+Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-53f04fdd77dso30938a12.3;
+        Thu, 25 May 2023 15:09:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685049641; x=1687641641;
+        d=gmail.com; s=20221208; t=1685052570; x=1687644570;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=45SuE5tqoQ9NMHm14LfNKKCQI6JSEw3tNHdyDgpIw7s=;
-        b=Ndi8URAN5vHTz0bC2Q7OVlxN3AK2sCndjWHABSvRm9nbF5fn4ZXFeimGpbGBda43Ho
-         RoPfDpYH3U+Pzob+GqEvecnebL1ca5e9tSk54SEY8gnqiu1a45A9VkR5Ee7eLWbPVe1F
-         UQdOuztfkHpn1+dCPgTmv8Cgo311zeaUy+hEnFTAkiRTWa2u+E526k7UAipC7O/OQeDv
-         mH3nqfv348ul7HoBIaGK4mPAy8tSqObwa6z2x2FFDyuJx8fOSTMWRtEa25LaLd2+7YEs
-         cgpEteXtiN3DojMy4WMPp7JY1HZM8497v+vqK6sXYTGYHd3CkziKEU7pImqcH7h170q0
-         0v+w==
+        bh=9M8nWoD6KWrYcLP+c2xne+17Aj3PiuijAzZBCy4tnBM=;
+        b=UPuy1ySXcvpF9xExgdv8gW5kMgOc2DwvioFjAxKAKh+6uTzCldGq2K7xENFEspkCu+
+         qZWDD88GK3bkynGTXLt13sfLNqKlBvkpQgUb9UK3KdYvYShADVw0zOhDJU3qXELSBGFW
+         oUZ6tt9i4w+/Uilw7d7sp+xQUj7z1DtjwAyica3LRQv47gBekQad074dUmna9zEFbOUZ
+         dX9+epKGt6YUAAUABolRNL5OE+uyq+VyLLGPoeZC1/5BZNjGj2gL+bx4C8JXklRvvqLK
+         n6HLZ4v7tCua1qpM2vL5y+WyleIoO8y9ODPU4MT1XXtjYG2p29ICT7CYZwhpxAcRTXRU
+         SrRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685049641; x=1687641641;
+        d=1e100.net; s=20221208; t=1685052570; x=1687644570;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:sender:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=45SuE5tqoQ9NMHm14LfNKKCQI6JSEw3tNHdyDgpIw7s=;
-        b=inAf6i+D61DQIaQkmYZpFLddnAWnFA2BbFZG3S7Vuu1px6yG0jGovCqV0OiQeD16uX
-         mZBf3/8excShOcostjQ61dPzIGAHQ9NDG7yqvMn2WG2WI41mh67bAqUQn4LmUyhvMQ9d
-         3vKOuchYJUZSBlYuUEJ0k0WEw5RdjibeatEM+JmrsdgO21bPxsx6LkvuPd/UtRQVOiwz
-         skzuNdprFiKmJA+223co+SWfDVf8UPsIJqozLvrxyl8gtTgJCGFYWqCtAyg9ZIXsT/JB
-         41tJleR8D6TwhoZjetMxwliUADc560ZstCutGe3+zRReoNyMrizrG6iDBYT6HHPJdjkb
-         jTlw==
-X-Gm-Message-State: AC+VfDx5SxzSijSJY/hmE2KqnR7J0E7dBvKfW50zgje988rAiOootTPH
-        NcFNkiowI5GW/qhQLX4DsDA=
-X-Google-Smtp-Source: ACHHUZ7FPZD5wWjzyBxVjlaa3d/WQeREicaIKDqhWFMoUB2Zy3LJMo3nKvJBEnQB8qBJRiiWebsoaQ==
-X-Received: by 2002:a05:6a00:1ac7:b0:64b:7c1d:518e with SMTP id f7-20020a056a001ac700b0064b7c1d518emr13583pfv.31.1685049641387;
-        Thu, 25 May 2023 14:20:41 -0700 (PDT)
+        bh=9M8nWoD6KWrYcLP+c2xne+17Aj3PiuijAzZBCy4tnBM=;
+        b=eS+Qor0hLklVu6wEMrJaRgZC3/eWLjGtL5LsFT5zNJsSSIaasQfPWfsUBWFjOrTuQ0
+         0O+Pd252nPj2yp45dgojF/Zoz2TDu63gfGXMPTGGz8xk+0vma+JXs+0scgDxyZdfSVr/
+         8ajRj92MWs1j0vSfFU2JSEB9Y+NWjlX6uMCOOG6Oaze9SlJENiiRQL6EsLZb+3GMtpvw
+         9vzqIr7gz35K/PpIvVHANVdPnKNaBeuHy8k+lv302bwi7cG+Ek11TcX30u2cMYqcN6SQ
+         a9jdGTxZRi43Er+rzOoHDWU+KW3x7yxUSpJaO/wzUjCTnCjz9aZVFArUyxOlbQyavr5U
+         7aaw==
+X-Gm-Message-State: AC+VfDyipTZEKcbNFMtUF8TB9Ffed3qS0c5qHFhCM8Tw4GOAcOunKkp+
+        03jOmCMHp51VpMSV6k7btj4=
+X-Google-Smtp-Source: ACHHUZ5xulfWCfPzYH9/YLwNiNbqV0qi7EXkYL11ysjOWGGrhN+EHNomXiXdAkVZm2KUiWB8cNLwrw==
+X-Received: by 2002:a17:902:8210:b0:1ae:6882:5bc4 with SMTP id x16-20020a170902821000b001ae68825bc4mr104977pln.64.1685052570159;
+        Thu, 25 May 2023 15:09:30 -0700 (PDT)
 Received: from moohyul.svl.corp.google.com ([2620:15c:2d4:203:7217:977f:12fc:72e0])
-        by smtp.gmail.com with ESMTPSA id l11-20020a62be0b000000b0064f46570bb7sm1522820pff.167.2023.05.25.14.20.40
+        by smtp.gmail.com with ESMTPSA id x6-20020a170902ea8600b001a6ed2d0ef8sm1851390plb.273.2023.05.25.15.09.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 May 2023 14:20:40 -0700 (PDT)
+        Thu, 25 May 2023 15:09:29 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -59,11 +59,10 @@ Cc:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH] perf ftrace latency: Remove unnecessary "--" from --use-nsec option
-Date:   Thu, 25 May 2023 14:20:38 -0700
-Message-ID: <20230525212038.3535851-1-namhyung@kernel.org>
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH] tools lib subcmd: Show parent options in help
+Date:   Thu, 25 May 2023 15:09:27 -0700
+Message-ID: <20230525220927.3544192-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -71,8 +70,12 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The option name should not have the dashes.  Current version shows four
-dashes for the option.
+I've just realized that help message in a subcommand didn't show one
+in the parent command.  Since the option parser understands the parent,
+display code should do the same.  For example, `perf ftrace latency -h`
+should show options in the `perf ftrace` command too.
+
+Before:
 
   $ perf ftrace latency -h
 
@@ -82,29 +85,75 @@ dashes for the option.
       or: perf ftrace {trace|latency} [<options>] -- [<command>] [<options>]
 
       -b, --use-bpf         Use BPF to measure function latency
-      -n, ----use-nsec      Use nano-second histogram
+      -n, --use-nsec        Use nano-second histogram
       -T, --trace-funcs <func>
                             Show latency of given function
 
-Fixes: 84005bb61486 ("perf ftrace latency: Add -n/--use-nsec option")
+After:
+
+  $ perf ftrace latency -h
+
+   Usage: perf ftrace [<options>] [<command>]
+      or: perf ftrace [<options>] -- [<command>] [<options>]
+      or: perf ftrace {trace|latency} [<options>] [<command>]
+      or: perf ftrace {trace|latency} [<options>] -- [<command>] [<options>]
+
+      -a, --all-cpus        System-wide collection from all CPUs
+      -b, --use-bpf         Use BPF to measure function latency
+      -C, --cpu <cpu>       List of cpus to monitor
+      -n, --use-nsec        Use nano-second histogram
+      -p, --pid <pid>       Trace on existing process id
+      -T, --trace-funcs <func>
+                            Show latency of given function
+      -v, --verbose         Be more verbose
+          --tid <tid>       Trace on existing thread id (exclusive to --pid)
+
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-ftrace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/subcmd/parse-options.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index ad2a9ae041f6..ac2e6c75f912 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -1177,7 +1177,7 @@ int cmd_ftrace(int argc, const char **argv)
- 	OPT_BOOLEAN('b', "use-bpf", &ftrace.target.use_bpf,
- 		    "Use BPF to measure function latency"),
- #endif
--	OPT_BOOLEAN('n', "--use-nsec", &ftrace.use_nsec,
-+	OPT_BOOLEAN('n', "use-nsec", &ftrace.use_nsec,
- 		    "Use nano-second histogram"),
- 	OPT_PARENT(common_options),
- 	};
+diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
+index 9fa75943f2ed..41de97671c72 100644
+--- a/tools/lib/subcmd/parse-options.c
++++ b/tools/lib/subcmd/parse-options.c
+@@ -806,18 +806,28 @@ static int option__cmp(const void *va, const void *vb)
+ 
+ static struct option *options__order(const struct option *opts)
+ {
+-	int nr_opts = 0, nr_group = 0, len;
+-	const struct option *o = opts;
+-	struct option *opt, *ordered, *group;
++	int nr_opts = 0, nr_group = 0, nr_parent = 0, len;
++	const struct option *o, *p = opts;
++	struct option *opt, *ordered = NULL, *group;
+ 
+-	for (o = opts; o->type != OPTION_END; o++)
++retry:
++	for (o = p; o->type != OPTION_END; o++)
+ 		++nr_opts;
+ 
+-	len = sizeof(*o) * (nr_opts + 1);
+-	ordered = malloc(len);
+-	if (!ordered)
++	len = sizeof(*o) * (nr_opts + !o->parent);
++	group = realloc(ordered, len);
++	if (!group)
+ 		goto out;
+-	memcpy(ordered, opts, len);
++	ordered = group;
++	memcpy(&ordered[nr_parent], p, sizeof(*o) * (nr_opts - nr_parent));
++
++	if (o->parent) {
++		p = o->parent;
++		nr_parent = nr_opts;
++		goto retry;
++	}
++	/* copy the last OPTION_END */
++	memcpy(&ordered[nr_opts], o, sizeof(*o));
+ 
+ 	/* sort each option group individually */
+ 	for (opt = group = ordered; opt->type != OPTION_END; opt++) {
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
