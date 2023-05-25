@@ -2,551 +2,400 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58010C7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 08:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4C7C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Thu, 25 May 2023 10:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239807AbjEYI3V (ORCPT
+        id S241018AbjEYKTT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 04:29:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54446 "EHLO
+        Thu, 25 May 2023 06:19:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239810AbjEYI3T (ORCPT
+        with ESMTP id S240951AbjEYKTG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 04:29:19 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C77B18C;
-        Thu, 25 May 2023 01:29:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685003357; x=1716539357;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nOO6fuerbaV7gjlAnz/FGqZJGpg2JP7madlqfSgTrak=;
-  b=YZJn7vskv6lCvRfgzIrcc7+8oR5DLMqWyBC7BOZDJigVZo6chxSNvPzu
-   y/AW7YY7sKFO/dpeLnpKKZNLc+b19p7aMQJDYuy90QV86KUe3cOd43+Q8
-   CfsHg6uhcmpmafld0fUlsDLhPBlFSj6aRGPmqPMtAdunZVjpeSMvLRZEI
-   QnCXznRrwFjaLQyK524a5L5oWumRG3VK9496Bw7ISgdN/wk5p5FpHmw2p
-   fNY8tPtsikTdNrxRKgXjk8yoDiN+BPeby8D4hf+kSHCgIezD5vlkBh0cJ
-   j3Y2QJ9d4f5mGED58Yt0SkgYIhqlVW1jI+7FFTSrZsSdfINQ+VDi1jrW8
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="338400399"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="338400399"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 01:29:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="707914648"
-X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
-   d="scan'208";a="707914648"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO ahunter-VirtualBox.home\044ger.corp.intel.com) ([10.251.208.63])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 01:29:14 -0700
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH V3 1/1] perf tools: Allow config terms with breakpoints
-Date:   Thu, 25 May 2023 11:29:02 +0300
-Message-Id: <20230525082902.25332-2-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230525082902.25332-1-adrian.hunter@intel.com>
-References: <20230525082902.25332-1-adrian.hunter@intel.com>
+        Thu, 25 May 2023 06:19:06 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B079E1981
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 03:17:46 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-25376483f66so922613a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 03:17:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685009866; x=1687601866;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rpA2qRKei0vuQWg7WivexftxwqtN0FJS5K1mnk8Xp9Q=;
+        b=iFC7MCy+AdhSjU19PaSHuCS4Bzyw+UIiryKqk/qlP0tvLWtuhFkIU/7hGAZoY0H2Cf
+         OynvLLyg00CLqMWG5dEu01tMBpDQGEqExGFrFOSKjXaH4TcmSzB657o38yUloZQ4IQqP
+         cnDOBNps0Vt9N/4tR0K+W2XfyoQAsF4Y2yo5mVTZIEfK5xU7un+k7f1JIzR/Z4VQJizl
+         vxZQpmMEt6qSK19r91+Dn/hnfPCp6NkCvdQHVLtJUIgaNqoVodUMhiGejQ3sivLLspx+
+         4juYjyFL8tORRl8bIKIAPaxaRuNWfMojpgHe7MyR1eliXaweqcAprAxPyrEG023JRgTF
+         LQVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685009866; x=1687601866;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rpA2qRKei0vuQWg7WivexftxwqtN0FJS5K1mnk8Xp9Q=;
+        b=C60uqvYKnYV4oaD6Up5o39xWqwr2yGTcqUiGWO/PXJwLLjDqZyH6jsNmh/5BzkZQxJ
+         ynF5YIEx+0/FfgGDCUroD+WphQJbkPV6G5HTjlNAJ7kI+X9Rc0ltUA/X5ReRjyLvgDo1
+         wPhwVhn1N8+wct9aDLsLjU/NmJ7PDmigtEGJCllPJODf4+MAiD22nlWMlfJpMb0cJM7i
+         3h5/kD4Erjf6fp78jdGq4l4N7NEAhIBCZ9JyXS5n54h4gVujWNXF5crL5LYGX3Lg4CNn
+         OfDF+VT0FZprXVJrW0p+EItS+LMTrF8YLdEFxne4xKOYL56UOCtaV73Or9QZtDNxyFgm
+         PPnA==
+X-Gm-Message-State: AC+VfDwzzLF1IDh79ogM1A1vixEhVLYJ2Z3LCg0L4+EOeFmZeukkbUjU
+        zUnB5PvHPyT9ZBQCeRkYHEGoFvKO/7pW7qcWUqxk5w==
+X-Google-Smtp-Source: ACHHUZ5mANbysferI4O/KX0qA84+906buswsa1TtKIYfQRf9qOxq3ayYiLF8pef5oORZ7iYKafgM9iRHdklEcPrC7Mg=
+X-Received: by 2002:a17:90a:cb8c:b0:253:440b:7aed with SMTP id
+ a12-20020a17090acb8c00b00253440b7aedmr1191192pju.32.1685009865729; Thu, 25
+ May 2023 03:17:45 -0700 (PDT)
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+References: <20230524131958.2139331-1-james.clark@arm.com> <20230524131958.2139331-2-james.clark@arm.com>
+In-Reply-To: <20230524131958.2139331-2-james.clark@arm.com>
+From:   Mike Leach <mike.leach@linaro.org>
+Date:   Thu, 25 May 2023 11:17:34 +0100
+Message-ID: <CAJ9a7VhYsVrMdebx6sRNU9N1S6MbxSfRpziapSFbFm9twnnJgg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] perf cs-etm: Only track threads instead of PID and TIDs
+To:     James Clark <james.clark@arm.com>
+Cc:     coresight@lists.linaro.org, denik@chromium.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add config terms to the parsing of breakpoint events. Extend "Test event
-parsing" to also cover using a confg term.
+On Wed, 24 May 2023 at 14:20, James Clark <james.clark@arm.com> wrote:
+>
+> PIDs and TIDs are already contained within the thread struct, so to
+> avoid inconsistencies drop the extra members on the etm queue and only
+> use the thread struct.
+>
+> At the same time stop using the 'unknown' thread. In a later commit
+> we will be making samples from multiple machines so it will be better
+> to use the idle thread of each machine rather than overlapping unknown
+> threads. Using the idle thread is also better because kernel addresses
+> with a previously unknown thread will now be assigned to a real kernel
+> thread.
+>
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  tools/perf/util/cs-etm.c | 124 ++++++++++++---------------------------
+>  1 file changed, 38 insertions(+), 86 deletions(-)
+>
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 91299cc56bf7..ebffc9052561 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -46,8 +46,6 @@ struct cs_etm_auxtrace {
+>         struct auxtrace_heap heap;
+>         struct itrace_synth_opts synth_opts;
+>         struct perf_session *session;
+> -       struct machine *machine;
+> -       struct thread *unknown_thread;
+>         struct perf_tsc_conversion tc;
+>
+>         /*
+> @@ -84,7 +82,6 @@ struct cs_etm_auxtrace {
+>
+>  struct cs_etm_traceid_queue {
+>         u8 trace_chan_id;
+> -       pid_t pid, tid;
+>         u64 period_instructions;
+>         size_t last_branch_pos;
+>         union perf_event *event_buf;
+> @@ -480,9 +477,9 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
+>         cs_etm__clear_packet_queue(&tidq->packet_queue);
+>
+>         queue = &etmq->etm->queues.queue_array[etmq->queue_nr];
+> -       tidq->tid = queue->tid;
+> -       tidq->pid = -1;
+>         tidq->trace_chan_id = trace_chan_id;
+> +       tidq->thread = machine__findnew_thread(&etm->session->machines.host, -1,
+> +                                              queue->tid);
+>
+>         tidq->packet = zalloc(sizeof(struct cs_etm_packet));
+>         if (!tidq->packet)
+> @@ -863,7 +860,6 @@ static void cs_etm__free(struct perf_session *session)
+>         for (i = 0; i < aux->num_cpu; i++)
+>                 zfree(&aux->metadata[i]);
+>
+> -       thread__zput(aux->unknown_thread);
+>         zfree(&aux->metadata);
+>         zfree(&aux);
+>  }
+> @@ -882,7 +878,7 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+>  {
+>         struct machine *machine;
+>
+> -       machine = etmq->etm->machine;
+> +       machine = &etmq->etm->session->machines.host;
+>
+>         if (address >= machine__kernel_start(machine)) {
+>                 if (machine__is_host(machine))
+> @@ -905,8 +901,6 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
+>         u8  cpumode;
+>         u64 offset;
+>         int len;
+> -       struct thread *thread;
+> -       struct machine *machine;
+>         struct addr_location al;
+>         struct dso *dso;
+>         struct cs_etm_traceid_queue *tidq;
+> @@ -914,20 +908,12 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
+>         if (!etmq)
+>                 return 0;
+>
+> -       machine = etmq->etm->machine;
+>         cpumode = cs_etm__cpu_mode(etmq, address);
+>         tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
+>         if (!tidq)
+>                 return 0;
+>
+> -       thread = tidq->thread;
+> -       if (!thread) {
+> -               if (cpumode != PERF_RECORD_MISC_KERNEL)
+> -                       return 0;
+> -               thread = etmq->etm->unknown_thread;
+> -       }
+> -
+> -       if (!thread__find_map(thread, cpumode, address, &al))
+> +       if (!thread__find_map(tidq->thread, cpumode, address, &al))
+>                 return 0;
+>
+>         dso = map__dso(al.map);
+> @@ -942,7 +928,8 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
+>
+>         map__load(al.map);
+>
+> -       len = dso__data_read_offset(dso, machine, offset, buffer, size);
+> +       len = dso__data_read_offset(dso, maps__machine(tidq->thread->maps),
+> +                                   offset, buffer, size);
+>
+>         if (len <= 0) {
+>                 ui__warning_once("CS ETM Trace: Missing DSO. Use 'perf archive' or debuginfod to export data from the traced system.\n"
+> @@ -1303,39 +1290,31 @@ cs_etm__get_trace(struct cs_etm_queue *etmq)
+>         return etmq->buf_len;
+>  }
+>
+> -static void cs_etm__set_pid_tid_cpu(struct cs_etm_auxtrace *etm,
+> -                                   struct cs_etm_traceid_queue *tidq)
+> +static void cs_etm__set_thread(struct cs_etm_auxtrace *etm,
+> +                              struct cs_etm_traceid_queue *tidq, pid_t tid)
+>  {
+> -       if ((!tidq->thread) && (tidq->tid != -1))
+> -               tidq->thread = machine__find_thread(etm->machine, -1,
+> -                                                   tidq->tid);
+> +       struct machine *machine = &etm->session->machines.host;
+> +
+> +       if (tid != -1) {
+> +               thread__zput(tidq->thread);
+> +               tidq->thread = machine__find_thread(machine, -1, tid);
+> +       }
+>
+> -       if (tidq->thread)
+> -               tidq->pid = tidq->thread->pid_;
+> +       /* Couldn't find a known thread */
+> +       if (!tidq->thread)
+> +               tidq->thread = machine__idle_thread(machine);
+>  }
+>
+>  int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
+>                          pid_t tid, u8 trace_chan_id)
+>  {
+> -       int cpu, err = -EINVAL;
+> -       struct cs_etm_auxtrace *etm = etmq->etm;
+>         struct cs_etm_traceid_queue *tidq;
+>
+>         tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
+>         if (!tidq)
+> -               return err;
+> -
+> -       if (cs_etm__get_cpu(trace_chan_id, &cpu) < 0)
+> -               return err;
+> -
+> -       err = machine__set_current_tid(etm->machine, cpu, tid, tid);
+> -       if (err)
+> -               return err;
+> -
+> -       tidq->tid = tid;
+> -       thread__zput(tidq->thread);
+> +               return -EINVAL;
+>
+> -       cs_etm__set_pid_tid_cpu(etm, tidq);
+> +       cs_etm__set_thread(etmq->etm, tidq, tid);
+>         return 0;
+>  }
+>
+> @@ -1412,8 +1391,8 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+>         sample.time = cs_etm__resolve_sample_time(etmq, tidq);
+>
+>         sample.ip = addr;
+> -       sample.pid = tidq->pid;
+> -       sample.tid = tidq->tid;
+> +       sample.pid = tidq->thread->pid_;
+> +       sample.tid = tidq->thread->tid;
+>         sample.id = etmq->etm->instructions_id;
+>         sample.stream_id = etmq->etm->instructions_id;
+>         sample.period = period;
+> @@ -1471,8 +1450,8 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+>         sample.time = cs_etm__resolve_sample_time(etmq, tidq);
+>
+>         sample.ip = ip;
+> -       sample.pid = tidq->pid;
+> -       sample.tid = tidq->tid;
+> +       sample.pid = tidq->thread->pid_;
+> +       sample.tid = tidq->thread->tid;
+>         sample.addr = cs_etm__first_executed_instr(tidq->packet);
+>         sample.id = etmq->etm->branches_id;
+>         sample.stream_id = etmq->etm->branches_id;
+> @@ -2466,11 +2445,6 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+>                 if (!etmq)
+>                         continue;
+>
+> -               /*
+> -                * Per-cpu mode has contextIDs in the trace and the decoder
+> -                * calls cs_etm__set_pid_tid_cpu() automatically so no need
+> -                * to do this here
+> -                */
+>                 if (etm->per_thread_decoding) {
+>                         tidq = cs_etm__etmq_get_traceid_queue(
+>                                 etmq, CS_ETM_PER_THREAD_TRACEID);
+> @@ -2478,10 +2452,8 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+>                         if (!tidq)
+>                                 continue;
+>
+> -                       if ((tid == -1) || (tidq->tid == tid)) {
+> -                               cs_etm__set_pid_tid_cpu(etm, tidq);
+> +                       if (tid == -1 || tidq->thread->tid == tid)
+>                                 cs_etm__run_per_thread_timeless_decoder(etmq);
+> -                       }
+>                 } else
+>                         cs_etm__run_per_cpu_timeless_decoder(etmq);
+>         }
+> @@ -2611,10 +2583,12 @@ static int cs_etm__process_itrace_start(struct cs_etm_auxtrace *etm,
+>                 return 0;
+>
+>         /*
+> -        * Add the tid/pid to the log so that we can get a match when
+> -        * we get a contextID from the decoder.
+> +        * Add the tid/pid to the log so that we can get a match when we get a
+> +        * contextID from the decoder. Only track for the host: only kernel
+> +        * trace is supported for guests which wouldn't need pids so this should
+> +        * be fine.
+>          */
+> -       th = machine__findnew_thread(etm->machine,
+> +       th = machine__findnew_thread(&etm->session->machines.host,
+>                                      event->itrace_start.pid,
+>                                      event->itrace_start.tid);
+>         if (!th)
+> @@ -2647,10 +2621,12 @@ static int cs_etm__process_switch_cpu_wide(struct cs_etm_auxtrace *etm,
+>                 return 0;
+>
+>         /*
+> -        * Add the tid/pid to the log so that we can get a match when
+> -        * we get a contextID from the decoder.
+> +        * Add the tid/pid to the log so that we can get a match when we get a
+> +        * contextID from the decoder. Only track for the host: only kernel
+> +        * trace is supported for guests which wouldn't need pids so this should
+> +        * be fine.
+>          */
+> -       th = machine__findnew_thread(etm->machine,
+> +       th = machine__findnew_thread(&etm->session->machines.host,
+>                                      event->context_switch.next_prev_pid,
+>                                      event->context_switch.next_prev_tid);
+>         if (!th)
+> @@ -3259,7 +3235,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+>         }
+>
+>         etm->session = session;
+> -       etm->machine = &session->machines.host;
+>
+>         etm->num_cpu = num_cpu;
+>         etm->pmu_type = (unsigned int) ((ptr[CS_PMU_TYPE_CPUS] >> 32) & 0xffffffff);
+> @@ -3286,27 +3261,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+>         if (err)
+>                 return err;
+>
+> -       etm->unknown_thread = thread__new(999999999, 999999999);
+> -       if (!etm->unknown_thread) {
+> -               err = -ENOMEM;
+> -               goto err_free_queues;
+> -       }
+> -
+> -       /*
+> -        * Initialize list node so that at thread__zput() we can avoid
+> -        * segmentation fault at list_del_init().
+> -        */
+> -       INIT_LIST_HEAD(&etm->unknown_thread->node);
+> -
+> -       err = thread__set_comm(etm->unknown_thread, "unknown", 0);
+> -       if (err)
+> -               goto err_delete_thread;
+> -
+> -       if (thread__init_maps(etm->unknown_thread, etm->machine)) {
+> -               err = -ENOMEM;
+> -               goto err_delete_thread;
+> -       }
+> -
+>         etm->tc.time_shift = tc->time_shift;
+>         etm->tc.time_mult = tc->time_mult;
+>         etm->tc.time_zero = tc->time_zero;
+> @@ -3318,7 +3272,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+>         }
+>         err = cs_etm__synth_events(etm, session);
+>         if (err)
+> -               goto err_delete_thread;
+> +               goto err_free_queues;
+>
+>         /*
+>          * Map Trace ID values to CPU metadata.
+> @@ -3348,7 +3302,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+>                                         session->header.data_size,
+>                                         cs_etm__process_aux_hw_id_cb, &aux_hw_id_found);
+>         if (err)
+> -               goto err_delete_thread;
+> +               goto err_free_queues;
+>
+>         /* if HW ID found then clear any unused metadata ID values */
+>         if (aux_hw_id_found)
+> @@ -3358,17 +3312,15 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+>                 err = cs_etm__map_trace_ids_metadata(num_cpu, metadata);
+>
+>         if (err)
+> -               goto err_delete_thread;
+> +               goto err_free_queues;
+>
+>         err = cs_etm__queue_aux_records(session);
+>         if (err)
+> -               goto err_delete_thread;
+> +               goto err_free_queues;
+>
+>         etm->data_queued = etm->queues.populated;
+>         return 0;
+>
+> -err_delete_thread:
+> -       thread__zput(etm->unknown_thread);
+>  err_free_queues:
+>         auxtrace_queues__free(&etm->queues);
+>         session->auxtrace = NULL;
+> --
+> 2.34.1
+>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
 
-This makes breakpoint events consistent with other events which already
-support config terms.
-
-Example:
-
-  $ cat dr_test.c
-  #include <unistd.h>
-  #include <stdio.h>
-
-  void func0(void)
-  {
-  }
-
-  int main()
-  {
-          printf("func0 %p\n", &func0);
-          while (1) {
-                  func0();
-                  usleep(100000);
-          }
-          return 0;
-  }
-  $ gcc -g -O0 -o dr_test dr_test.c
-  $ ./dr_test &
-  [2] 19646
-  func0 0x55feb98dd169
-  $ perf record -e mem:0x55feb98dd169:x/name=breakpoint/ -p 19646 -- sleep 0.5
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.017 MB perf.data (5 samples) ]
-  $ perf script
-      dr_test 19646  5632.956628:          1 breakpoint:      55feb98dd169 func0+0x0 (/home/ahunter/git/work/dr_test)
-      dr_test 19646  5633.056866:          1 breakpoint:      55feb98dd169 func0+0x0 (/home/ahunter/git/work/dr_test)
-      dr_test 19646  5633.157084:          1 breakpoint:      55feb98dd169 func0+0x0 (/home/ahunter/git/work/dr_test)
-      dr_test 19646  5633.257309:          1 breakpoint:      55feb98dd169 func0+0x0 (/home/ahunter/git/work/dr_test)
-      dr_test 19646  5633.357532:          1 breakpoint:      55feb98dd169 func0+0x0 (/home/ahunter/git/work/dr_test)
-  $ sudo perf test "Test event parsing"
-    6: Parse event definition strings                                  :
-    6.1: Test event parsing                                            : Ok
-  $ sudo perf test -v "Test event parsing" |& grep mem
-  running test 8 'mem:0'
-  running test 9 'mem:0:x'
-  running test 10 'mem:0:r'
-  running test 11 'mem:0:w'
-  running test 19 'mem:0:u'
-  running test 20 'mem:0:x:k'
-  running test 21 'mem:0:r:hp'
-  running test 22 'mem:0:w:up'
-  running test 26 'mem:0:rw'
-  running test 27 'mem:0:rw:kp'
-  running test 42 'mem:0/1'
-  running test 43 'mem:0/2:w'
-  running test 44 'mem:0/4:rw:u'
-  running test 58 'mem:0/name=breakpoint/'
-  running test 59 'mem:0:x/name=breakpoint/'
-  running test 60 'mem:0:r/name=breakpoint/'
-  running test 61 'mem:0:w/name=breakpoint/'
-  running test 62 'mem:0/name=breakpoint/u'
-  running test 63 'mem:0:x/name=breakpoint/k'
-  running test 64 'mem:0:r/name=breakpoint/hp'
-  running test 65 'mem:0:w/name=breakpoint/up'
-  running test 66 'mem:0:rw/name=breakpoint/'
-  running test 67 'mem:0:rw/name=breakpoint/kp'
-  running test 68 'mem:0/1/name=breakpoint/'
-  running test 69 'mem:0/2:w/name=breakpoint/'
-  running test 70 'mem:0/4:rw/name=breakpoint/u'
-  running test 71 'mem:0/1/name=breakpoint1/,mem:0/4:rw/name=breakpoint2/'
-
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
-
-
-Changes in V3:
-
-      Add Ian's Reviewed-by
-      Re-base
-
-Changes in V2:
-
-      Add comments to tools/perf/util/parse-events.l
-      Add a test for 2 mem events back to back with config terms
-
-
- tools/perf/tests/parse-events.c | 157 ++++++++++++++++++++++++++++++++
- tools/perf/util/parse-events.c  |  23 ++++-
- tools/perf/util/parse-events.h  |   6 +-
- tools/perf/util/parse-events.l  |  23 ++++-
- tools/perf/util/parse-events.y  |  42 +++++----
- 5 files changed, 224 insertions(+), 27 deletions(-)
-
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 72a10bed84fd..399f1bc12b0c 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -482,6 +482,93 @@ static int test__checkevent_breakpoint_rw_modifier(struct evlist *evlist)
- 	return test__checkevent_breakpoint_rw(evlist);
- }
- 
-+static int test__checkevent_breakpoint_modifier_name(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
-+	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
-+	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-+	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
-+	TEST_ASSERT_VAL("wrong name",
-+			!strcmp(evsel__name(evsel), "breakpoint"));
-+
-+	return test__checkevent_breakpoint(evlist);
-+}
-+
-+static int test__checkevent_breakpoint_x_modifier_name(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
-+	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
-+	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-+	TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
-+	TEST_ASSERT_VAL("wrong name",
-+			!strcmp(evsel__name(evsel), "breakpoint"));
-+
-+	return test__checkevent_breakpoint_x(evlist);
-+}
-+
-+static int test__checkevent_breakpoint_r_modifier_name(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
-+	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
-+	TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
-+	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
-+	TEST_ASSERT_VAL("wrong name",
-+			!strcmp(evsel__name(evsel), "breakpoint"));
-+
-+	return test__checkevent_breakpoint_r(evlist);
-+}
-+
-+static int test__checkevent_breakpoint_w_modifier_name(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
-+	TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
-+	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-+	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
-+	TEST_ASSERT_VAL("wrong name",
-+			!strcmp(evsel__name(evsel), "breakpoint"));
-+
-+	return test__checkevent_breakpoint_w(evlist);
-+}
-+
-+static int test__checkevent_breakpoint_rw_modifier_name(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong exclude_user", evsel->core.attr.exclude_user);
-+	TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
-+	TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
-+	TEST_ASSERT_VAL("wrong precise_ip", evsel->core.attr.precise_ip);
-+	TEST_ASSERT_VAL("wrong name",
-+			!strcmp(evsel__name(evsel), "breakpoint"));
-+
-+	return test__checkevent_breakpoint_rw(evlist);
-+}
-+
-+static int test__checkevent_breakpoint_2_events(struct evlist *evlist)
-+{
-+	struct evsel *evsel = evlist__first(evlist);
-+
-+	TEST_ASSERT_VAL("wrong number of entries", 2 == evlist->core.nr_entries);
-+
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakpoint1"));
-+
-+	evsel = evsel__next(evsel);
-+
-+	TEST_ASSERT_VAL("wrong type", PERF_TYPE_BREAKPOINT == evsel->core.attr.type);
-+	TEST_ASSERT_VAL("wrong name", !strcmp(evsel__name(evsel), "breakpoint2"));
-+
-+	return TEST_OK;
-+}
-+
- static int test__checkevent_pmu(struct evlist *evlist)
- {
- 
-@@ -1901,6 +1988,76 @@ static const struct evlist_test test__events[] = {
- 		.check = test__term_equal_legacy,
- 		/* 9 */
- 	},
-+	{
-+		.name  = "mem:0/name=breakpoint/",
-+		.check = test__checkevent_breakpoint,
-+		/* 0 */
-+	},
-+	{
-+		.name  = "mem:0:x/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_x,
-+		/* 1 */
-+	},
-+	{
-+		.name  = "mem:0:r/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_r,
-+		/* 2 */
-+	},
-+	{
-+		.name  = "mem:0:w/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_w,
-+		/* 3 */
-+	},
-+	{
-+		.name  = "mem:0/name=breakpoint/u",
-+		.check = test__checkevent_breakpoint_modifier_name,
-+		/* 4 */
-+	},
-+	{
-+		.name  = "mem:0:x/name=breakpoint/k",
-+		.check = test__checkevent_breakpoint_x_modifier_name,
-+		/* 5 */
-+	},
-+	{
-+		.name  = "mem:0:r/name=breakpoint/hp",
-+		.check = test__checkevent_breakpoint_r_modifier_name,
-+		/* 6 */
-+	},
-+	{
-+		.name  = "mem:0:w/name=breakpoint/up",
-+		.check = test__checkevent_breakpoint_w_modifier_name,
-+		/* 7 */
-+	},
-+	{
-+		.name  = "mem:0:rw/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_rw,
-+		/* 8 */
-+	},
-+	{
-+		.name  = "mem:0:rw/name=breakpoint/kp",
-+		.check = test__checkevent_breakpoint_rw_modifier_name,
-+		/* 9 */
-+	},
-+	{
-+		.name  = "mem:0/1/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_len,
-+		/* 0 */
-+	},
-+	{
-+		.name  = "mem:0/2:w/name=breakpoint/",
-+		.check = test__checkevent_breakpoint_len_w,
-+		/* 1 */
-+	},
-+	{
-+		.name  = "mem:0/4:rw/name=breakpoint/u",
-+		.check = test__checkevent_breakpoint_len_rw_modifier,
-+		/* 2 */
-+	},
-+	{
-+		.name  = "mem:0/1/name=breakpoint1/,mem:0/4:rw/name=breakpoint2/",
-+		.check = test__checkevent_breakpoint_2_events,
-+		/* 3 */
-+	},
- };
- 
- static const struct evlist_test test__events_pmu[] = {
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index b93264f8a37c..cfa25441a94d 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -939,10 +939,14 @@ do {					\
- 	return 0;
- }
- 
--int parse_events_add_breakpoint(struct list_head *list, int *idx,
--				u64 addr, char *type, u64 len)
-+int parse_events_add_breakpoint(struct parse_events_state *parse_state,
-+				struct list_head *list,
-+				u64 addr, char *type, u64 len,
-+				struct list_head *head_config __maybe_unused)
- {
- 	struct perf_event_attr attr;
-+	LIST_HEAD(config_terms);
-+	const char *name;
- 
- 	memset(&attr, 0, sizeof(attr));
- 	attr.bp_addr = addr;
-@@ -963,8 +967,19 @@ int parse_events_add_breakpoint(struct list_head *list, int *idx,
- 	attr.type = PERF_TYPE_BREAKPOINT;
- 	attr.sample_period = 1;
- 
--	return add_event(list, idx, &attr, /*name=*/NULL, /*mertic_id=*/NULL,
--			 /*config_terms=*/NULL);
-+	if (head_config) {
-+		if (config_attr(&attr, head_config, parse_state->error,
-+				config_term_common))
-+			return -EINVAL;
-+
-+		if (get_config_terms(head_config, &config_terms))
-+			return -ENOMEM;
-+	}
-+
-+	name = get_config_name(head_config);
-+
-+	return add_event(list, &parse_state->idx, &attr, name, /*mertic_id=*/NULL,
-+			 &config_terms);
- }
- 
- static int check_type_val(struct parse_events_term *term,
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 2021fe145410..b0eb95f93e9c 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -185,8 +185,10 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 			   struct parse_events_state *parse_state,
- 			   struct list_head *head_config);
- int parse_events__decode_legacy_cache(const char *name, int pmu_type, __u64 *config);
--int parse_events_add_breakpoint(struct list_head *list, int *idx,
--				u64 addr, char *type, u64 len);
-+int parse_events_add_breakpoint(struct parse_events_state *parse_state,
-+				struct list_head *list,
-+				u64 addr, char *type, u64 len,
-+				struct list_head *head_config);
- int parse_events_add_pmu(struct parse_events_state *parse_state,
- 			 struct list_head *list, char *name,
- 			 struct list_head *head_config,
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 6deb70c25984..7629af3d5c7c 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -190,11 +190,16 @@ name		[a-zA-Z_*?\[\]][a-zA-Z0-9_*?.\[\]!\-]*
- name_tag	[\'][a-zA-Z_*?\[\]][a-zA-Z0-9_*?\-,\.\[\]:=]*[\']
- name_minus	[a-zA-Z_*?][a-zA-Z0-9\-_*?.:]*
- drv_cfg_term	[a-zA-Z0-9_\.]+(=[a-zA-Z0-9_*?\.:]+)?
--/* If you add a modifier you need to update check_modifier() */
-+/*
-+ * If you add a modifier you need to update check_modifier().
-+ * Also, the letters in modifier_event must not be in modifier_bp.
-+ */
- modifier_event	[ukhpPGHSDIWeb]+
- modifier_bp	[rwx]{1,3}
- lc_type 	(L1-dcache|l1-d|l1d|L1-data|L1-icache|l1-i|l1i|L1-instruction|LLC|L2|dTLB|d-tlb|Data-TLB|iTLB|i-tlb|Instruction-TLB|branch|branches|bpu|btb|bpc|node)
- lc_op_result	(load|loads|read|store|stores|write|prefetch|prefetches|speculative-read|speculative-load|refs|Reference|ops|access|misses|miss)
-+digit		[0-9]
-+non_digit	[^0-9]
- 
- %%
- 
-@@ -304,8 +309,20 @@ r0x{num_raw_hex}	{ return str(yyscanner, PE_RAW); }
- 
- <mem>{
- {modifier_bp}		{ return str(yyscanner, PE_MODIFIER_BP); }
--:			{ return ':'; }
--"/"			{ return '/'; }
-+	/*
-+	 * The colon before memory access modifiers can get mixed up with the
-+	 * colon before event modifiers. Fortunately none of the option letters
-+	 * are the same, so trailing context can be used disambiguate the two
-+	 * cases.
-+	 */
-+":"/{modifier_bp}	{ return str(yyscanner, PE_BP_COLON); }
-+	/*
-+	 * The slash before memory length can get mixed up with the slash before
-+	 * config terms. Fortunately config terms do not start with a numeric
-+	 * digit, so trailing context can be used disambiguate the two cases.
-+	 */
-+"/"/{digit}		{ return str(yyscanner, PE_BP_SLASH); }
-+"/"/{non_digit}		{ BEGIN(config); return '/'; }
- {num_dec}		{ return value(yyscanner, 10); }
- {num_hex}		{ return value(yyscanner, 16); }
- 	/*
-diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-index 4e1f5de35be8..51944dd06115 100644
---- a/tools/perf/util/parse-events.y
-+++ b/tools/perf/util/parse-events.y
-@@ -58,7 +58,7 @@ static void free_list_evsel(struct list_head* list_evsel)
- %token PE_EVENT_NAME
- %token PE_RAW PE_NAME
- %token PE_BPF_OBJECT PE_BPF_SOURCE
--%token PE_MODIFIER_EVENT PE_MODIFIER_BP
-+%token PE_MODIFIER_EVENT PE_MODIFIER_BP PE_BP_COLON PE_BP_SLASH
- %token PE_LEGACY_CACHE
- %token PE_PREFIX_MEM PE_PREFIX_RAW PE_PREFIX_GROUP
- %token PE_ERROR
-@@ -79,6 +79,8 @@ static void free_list_evsel(struct list_head* list_evsel)
- %type <str> PE_LEGACY_CACHE
- %type <str> PE_MODIFIER_EVENT
- %type <str> PE_MODIFIER_BP
-+%type <str> PE_BP_COLON
-+%type <str> PE_BP_SLASH
- %type <str> PE_EVENT_NAME
- %type <str> PE_KERNEL_PMU_EVENT PE_PMU_EVENT_FAKE
- %type <str> PE_DRV_CFG_TERM
-@@ -274,7 +276,7 @@ event_def
- event_def: event_pmu |
- 	   event_legacy_symbol |
- 	   event_legacy_cache sep_dc |
--	   event_legacy_mem |
-+	   event_legacy_mem sep_dc |
- 	   event_legacy_tracepoint sep_dc |
- 	   event_legacy_numeric sep_dc |
- 	   event_legacy_raw sep_dc |
-@@ -502,16 +504,16 @@ PE_LEGACY_CACHE opt_event_config
- }
- 
- event_legacy_mem:
--PE_PREFIX_MEM PE_VALUE '/' PE_VALUE ':' PE_MODIFIER_BP sep_dc
-+PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
- {
--	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
- 	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	err = parse_events_add_breakpoint(list, &parse_state->idx,
--					  $2, $6, $4);
-+	err = parse_events_add_breakpoint(_parse_state, list,
-+					  $2, $6, $4, $7);
-+	parse_events_terms__delete($7);
- 	free($6);
- 	if (err) {
- 		free(list);
-@@ -520,31 +522,33 @@ PE_PREFIX_MEM PE_VALUE '/' PE_VALUE ':' PE_MODIFIER_BP sep_dc
- 	$$ = list;
- }
- |
--PE_PREFIX_MEM PE_VALUE '/' PE_VALUE sep_dc
-+PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE opt_event_config
- {
--	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	if (parse_events_add_breakpoint(list, &parse_state->idx,
--					$2, NULL, $4)) {
-+	err = parse_events_add_breakpoint(_parse_state, list,
-+					  $2, NULL, $4, $5);
-+	parse_events_terms__delete($5);
-+	if (err) {
- 		free(list);
- 		YYABORT;
- 	}
- 	$$ = list;
- }
- |
--PE_PREFIX_MEM PE_VALUE ':' PE_MODIFIER_BP sep_dc
-+PE_PREFIX_MEM PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
- {
--	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
- 	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	err = parse_events_add_breakpoint(list, &parse_state->idx,
--					  $2, $4, 0);
-+	err = parse_events_add_breakpoint(_parse_state, list,
-+					  $2, $4, 0, $5);
-+	parse_events_terms__delete($5);
- 	free($4);
- 	if (err) {
- 		free(list);
-@@ -553,15 +557,17 @@ PE_PREFIX_MEM PE_VALUE ':' PE_MODIFIER_BP sep_dc
- 	$$ = list;
- }
- |
--PE_PREFIX_MEM PE_VALUE sep_dc
-+PE_PREFIX_MEM PE_VALUE opt_event_config
- {
--	struct parse_events_state *parse_state = _parse_state;
- 	struct list_head *list;
-+	int err;
- 
- 	list = alloc_list();
- 	ABORT_ON(!list);
--	if (parse_events_add_breakpoint(list, &parse_state->idx,
--					$2, NULL, 0)) {
-+	err = parse_events_add_breakpoint(_parse_state, list,
-+					  $2, NULL, 0, $3);
-+	parse_events_terms__delete($3);
-+	if (err) {
- 		free(list);
- 		YYABORT;
- 	}
 -- 
-2.34.1
-
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
