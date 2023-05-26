@@ -2,58 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7089C7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5571BC7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:35:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243360AbjEZSfc (ORCPT
+        id S236757AbjEZSfp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 14:35:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44260 "EHLO
+        Fri, 26 May 2023 14:35:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243395AbjEZSe6 (ORCPT
+        with ESMTP id S243066AbjEZSfK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 14:34:58 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188E7E4D
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:40 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5654c7f991bso26833997b3.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:40 -0700 (PDT)
+        Fri, 26 May 2023 14:35:10 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24C06E57
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:43 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba81b238ee8so2294098276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685126080; x=1687718080;
+        d=google.com; s=20221208; t=1685126082; x=1687718082;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=xIZMpXPJ1dQ5s5NJpJTXLqv0Dy6GNIIEqB7VSkKLPVU=;
-        b=5V7orP06jmDLBBXQbP6UcRYzgABu9vELxgXsdLr9L8wEqPxNVIE9LCYmrYGWLhJTF8
-         lTYXhnYekALzZ0mJGasQ2tAQ56/+/yNdAzm0G62yd/o3YyKOCRlWYwAPt6AYgPIWYrOT
-         BsodmpJk3C11+qh8TAY6uxUdRS6v4PXkuqUeT9pv1IXjGqupZmxd7w27241x7Ja8mfVo
-         9NXeGl5zfuBE6w/1zTajEGjvNE9+j0Vv8NxmzwB+E4R0hWAuyg9/9lP0kX5aguOcJhST
-         J3neLzlzCKSAbvDGM54MhZa3oQQ14ks39cYx0v6rfDLmus6MaN/qdy4paYxZisengb8a
-         ImbA==
+        bh=ZlCp8PAHlNCmunobQkdPrQHDqUHTnoSBSsPrysF0mwY=;
+        b=Plkd/xuqK7M9SwlLAM21/d2FaIm8z5gDewz3SZdNEOECc+gV7lFjw6+UKO10fmBMZB
+         pIXWE5awCZwwtkj1BDl0EmV/jGe2DVd34bup9DBTV9CgoWd5eeg+AbMzKlerhNR7X/Gw
+         705gC8RpQCNguftIohd3ITPASIdqZ3kZbzcMgE28J3d3Ucwo/ZMCZke1RsbUoVXb0caA
+         1vdqJ9f5BW4pqGgv/GFN30r/jEQnHeCvvO6RpFr+ppnBAyIBQIqTPKDgaeFxhAKwZVKu
+         ny4EnnAWZ0rbuqFG19Kx2w6R+3Eqg4AEaVFkyrlT/mdtSGwWjLf8PD5ulwuJj1DfqdQb
+         6/dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685126080; x=1687718080;
+        d=1e100.net; s=20221208; t=1685126082; x=1687718082;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xIZMpXPJ1dQ5s5NJpJTXLqv0Dy6GNIIEqB7VSkKLPVU=;
-        b=jCtD3LchCgDBpXpl+DtNw4w1oJB6tAdyPe2s1yz28frw0JczIvnzRzkfOJYfbihBmj
-         Qr5fgOG05p7aSrjpNJ+r4G2F+6LwEWzOU7dzQssZ1zXXe+qdQ5XvvTkEesIwN/VrDFC5
-         b/sTpUewe2QUwDAeV6A6SDnNssI1CL0uoXdjr/rF3WNqQVZf7LiHtweDmztlVeX4uAR8
-         rwX2VrHPBuUoxLruybPo+VYNTP20hjoxjOu/SSSUgmC5KCvYlZ5lBdA9kqchPJxvkwGh
-         BbKl8fEp9Lmzqc0cbYdbLlDZkPzQGQjrHsDkF9RULo2Czfy37IZnHDGSFJua0yQnNXCE
-         a80A==
-X-Gm-Message-State: AC+VfDyeUo18tcSa/XwJ2+zNeOntN7z5MOBvmcwRbXVQlp8jSnxtfGr2
-        4NhNb2NLBRVu4evEgex7MTBZ8clNIumJ
-X-Google-Smtp-Source: ACHHUZ5XqMKoVFQeOJB2IJzmU6NazOhnjZ2ccmm6/S/dj5/4ymEx1N+DWEf1VQXl9QyS8f4KREh3raln5CL9
+        bh=ZlCp8PAHlNCmunobQkdPrQHDqUHTnoSBSsPrysF0mwY=;
+        b=K19UZZHJc2SvDd5YKskCU5x74iLMiPatOuzhVUGNef8HD5KoZRh0qCTQ6WCIqkL24z
+         8XMEynAJ5iqceoE2lLt0FbgQNdu9Pr7O0xU9tHf2nmcvFxokIzo9iLWspuLYgypncHkW
+         atyjPAOTrnUeJwVDkglgnWjQS7HqH5B+VG9pvuqGJqCA1D1IihNzkm1R0Ue7AFk0fPge
+         k8TLINzJdBvQRgqRKAW5E3fs/ra2SbvYe4HJ9MZDry0s+cfiOsbHy/4uYtUanQLGcqlm
+         oHxqn3KfoJp78sG8enTaKL/ybmArz+tF7BMln2SU+9IvEE88VfkkMqaewgrz7ysduEPr
+         9VmQ==
+X-Gm-Message-State: AC+VfDyE2eDssRNVxCdPtxh96AUYYbL1xX85B6WAWjHCJYYTkOOLo5jA
+        btiLfvnAO8MuDlQKpqXQaLs+TAGA6Pg9
+X-Google-Smtp-Source: ACHHUZ6QAA72EtRyWFuSRwlWtGxsChIoyKoEFA62TrkZKniW/edvWdeG+Lum4DcHWumM9PH4R0IeDIbeBU87
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a81:ed06:0:b0:54f:bb71:c7b3 with SMTP id
- k6-20020a81ed06000000b0054fbb71c7b3mr1567729ywm.9.1685126080090; Fri, 26 May
- 2023 11:34:40 -0700 (PDT)
-Date:   Fri, 26 May 2023 11:33:58 -0700
+ (user=irogers job=sendgmr) by 2002:a25:fc1c:0:b0:bac:7086:c9b2 with SMTP id
+ v28-20020a25fc1c000000b00bac7086c9b2mr992311ybd.12.1685126082416; Fri, 26 May
+ 2023 11:34:42 -0700 (PDT)
+Date:   Fri, 26 May 2023 11:33:59 -0700
 In-Reply-To: <20230526183401.2326121-1-irogers@google.com>
-Message-Id: <20230526183401.2326121-14-irogers@google.com>
+Message-Id: <20230526183401.2326121-15-irogers@google.com>
 Mime-Version: 1.0
 References: <20230526183401.2326121-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v2 13/16] perf scripting-engines: Move static to local variable
+Subject: [PATCH v2 14/16] tools api fs: Dynamically allocate cgroupfs mount
+ point cache
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -82,60 +83,55 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Avoid 16,384 bytes in .bss by stack allocating two bitmaps.
+Move the cgroupfs_cache_entry 4128 byte array out of .bss.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/scripting-engines/trace-event-perl.c   | 4 ++--
- tools/perf/util/scripting-engines/trace-event-python.c | 5 +++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ tools/lib/api/fs/cgroup.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 039d0365ad41..65b761d83a1f 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -67,8 +67,6 @@ INTERP my_perl;
- #define TRACE_EVENT_TYPE_MAX				\
- 	((1 << (sizeof(unsigned short) * 8)) - 1)
+diff --git a/tools/lib/api/fs/cgroup.c b/tools/lib/api/fs/cgroup.c
+index 1573dae4259d..250629a09423 100644
+--- a/tools/lib/api/fs/cgroup.c
++++ b/tools/lib/api/fs/cgroup.c
+@@ -14,7 +14,7 @@ struct cgroupfs_cache_entry {
+ };
  
--static DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
--
- extern struct scripting_context *scripting_context;
+ /* just cache last used one */
+-static struct cgroupfs_cache_entry cached;
++static struct cgroupfs_cache_entry *cached;
  
- static char *cur_field_name;
-@@ -353,7 +351,9 @@ static void perl_process_tracepoint(struct perf_sample *sample,
- 	void *data = sample->raw_data;
- 	unsigned long long nsecs = sample->time;
- 	const char *comm = thread__comm_str(thread);
-+	DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
+ int cgroupfs_find_mountpoint(char *buf, size_t maxlen, const char *subsys)
+ {
+@@ -24,9 +24,9 @@ int cgroupfs_find_mountpoint(char *buf, size_t maxlen, const char *subsys)
+ 	char *p, *path;
+ 	char mountpoint[PATH_MAX];
  
-+	bitmap_zero(events_defined, TRACE_EVENT_TYPE_MAX);
- 	dSP;
+-	if (!strcmp(cached.subsys, subsys)) {
+-		if (strlen(cached.mountpoint) < maxlen) {
+-			strcpy(buf, cached.mountpoint);
++	if (cached && !strcmp(cached->subsys, subsys)) {
++		if (strlen(cached->mountpoint) < maxlen) {
++			strcpy(buf, cached->mountpoint);
+ 			return 0;
+ 		}
+ 		return -1;
+@@ -91,8 +91,13 @@ int cgroupfs_find_mountpoint(char *buf, size_t maxlen, const char *subsys)
+ 	free(line);
+ 	fclose(fp);
  
- 	if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 41d4f9e6a8b7..40964078f92f 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -93,8 +93,6 @@ PyMODINIT_FUNC PyInit_perf_trace_context(void);
- #define TRACE_EVENT_TYPE_MAX				\
- 	((1 << (sizeof(unsigned short) * 8)) - 1)
- 
--static DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
--
- #define N_COMMON_FIELDS	7
- 
- static char *cur_field_name;
-@@ -934,6 +932,9 @@ static void python_process_tracepoint(struct perf_sample *sample,
- 	unsigned long long nsecs = sample->time;
- 	const char *comm = thread__comm_str(al->thread);
- 	const char *default_handler_name = "trace_unhandled";
-+	DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
+-	strncpy(cached.subsys, subsys, sizeof(cached.subsys) - 1);
+-	strcpy(cached.mountpoint, mountpoint);
++	if (!cached)
++		cached = calloc(1, sizeof(*cached));
 +
-+	bitmap_zero(events_defined, TRACE_EVENT_TYPE_MAX);
++	if (cached) {
++		strncpy(cached->subsys, subsys, sizeof(cached->subsys) - 1);
++		strcpy(cached->mountpoint, mountpoint);
++	}
  
- 	if (!event) {
- 		snprintf(handler_name, sizeof(handler_name),
+ 	if (mountpoint[0] && strlen(mountpoint) < maxlen) {
+ 		strcpy(buf, mountpoint);
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
