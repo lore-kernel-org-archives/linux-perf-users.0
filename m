@@ -2,144 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8D6C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 21:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0312DC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 22:41:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244443AbjEZV5x (ORCPT
+        id S230074AbjEZWlr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 17:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48680 "EHLO
+        Fri, 26 May 2023 18:41:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244414AbjEZV50 (ORCPT
+        with ESMTP id S229716AbjEZWlq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 17:57:26 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E4519C
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 14:56:42 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-56536dd5f79so30388427b3.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 14:56:42 -0700 (PDT)
+        Fri, 26 May 2023 18:41:46 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB83E9C
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 15:41:44 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-3f6c6320d4eso28381cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 15:41:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685138132; x=1687730132;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=I37rqh5cG8jyPI8CnkZDKw7uLKTCQzZXDibgw5Pks+s=;
-        b=7vbUEjTg++uSRlxt9/L8w7EUfHc0cEng9J5xXYzkNK4RtEub32q+k1MjWS4ZoqgJVp
-         bPakSgV6smTXGiuXxRwa+gbjMAHBndhZ0m4m7hRjgRVz+pMZzBDU+8jPInIiyMCbcDFO
-         zhK0BCKwSsIXCqjGxY8icTH2xYVL8LcmhKtERl7jtq5kBg03lb5Z8+c5XjLm5udvEf+w
-         qaU1g/frJAEfQgaE+aXUU1tmJcdcdkPHa3fqhn0uMJwn2rLJicoPv8aiFc4gkXi+Pacw
-         g7/MqOE388AMWjIY+OcZdDllz8WfOf9h9CoQZCpSqa4kUAuh8KytEZ9C0cTpfsm172eC
-         Arsw==
+        d=google.com; s=20221208; t=1685140904; x=1687732904;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zwkGmpNLMpawlS1hBtryEj+jCY8h/pnAE4lAJWcxTi4=;
+        b=TaMAAV6xkMalo8ldUpPnsOinYazSt7ArN8neHplTXQd3QNNZqjh2vdzUuvQjDaGQZM
+         ikp14z6pbfFLw88G/8huqVTWct4i2LjNEb1HK0UImLhlg1ggf8nCC7rHGKCTlkfCXa+o
+         g39TZSYEpge8CXQr56Plau6Tl5AtXBLKTceJVumsIM+sMBOiCQr874Uo+ewRlcu9PI2G
+         gnGWn5G8x+YkI6DWzcehORahypzMAXvTdAxK/2WbnbsqhsII5sO3Tu/vsug0EqvySlBy
+         GmtMiiB3wOMynHUGA5l64qLKfojs75YKdoG3j7My/D4rPMSaC0r5WXrzTlqMNg1sR5Pz
+         I/PQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685138132; x=1687730132;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I37rqh5cG8jyPI8CnkZDKw7uLKTCQzZXDibgw5Pks+s=;
-        b=D8ZMOeGaSV1lHgzXK4Lw6DMYzYlu9dPl1pY5HtpgqOT3NLuvS1ENVk04xn6hzByuZ6
-         12ENQkzaI3cXFPjt5/90njulXqYvw/oLTuDCpfHPoFxWJPamhPea+0Xw1CgRH/V9hFAE
-         QS7VPiXQyeyMAEiIVD9c9N3pY0zssP8Zqt/Lmdq4WBQ/yyt3yI/3bXz1pEJktkl8znhx
-         xGZt9Fla4KqdfAysD87AaEh/yCgguhETw9fMsy+FO5zYthpfJKGtRwFWtfUygRQIi/5f
-         qAKLbWDFQaOyv3jXH4HwB09HNv+AnNyWT/h1+t8I4yMZaR0z74U7PFDQDbVkM4vYFf+s
-         v5cQ==
-X-Gm-Message-State: AC+VfDwZBl807+btXXQ5YDqq8z++pJFP6SHM+TExM+iO7R3+YMgP5tCE
-        DcRntTMmc0Q+JzHcd5+NahVq1OVprmNb
-X-Google-Smtp-Source: ACHHUZ48ljorUNxuemfq25gYwZO+QkJCDIdXd2cai4k6TFvPbsNPR0m3OMWBkqmC6SCuVN9fnpWdn+ntMCja
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a81:d84a:0:b0:562:837:122f with SMTP id
- n10-20020a81d84a000000b005620837122fmr1901844ywl.9.1685138132485; Fri, 26 May
- 2023 14:55:32 -0700 (PDT)
-Date:   Fri, 26 May 2023 14:54:10 -0700
-In-Reply-To: <20230526215410.2435674-1-irogers@google.com>
-Message-Id: <20230526215410.2435674-36-irogers@google.com>
-Mime-Version: 1.0
-References: <20230526215410.2435674-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v4 35/35] perf pmu: Remove is_pmu_hybrid
+        d=1e100.net; s=20221208; t=1685140904; x=1687732904;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zwkGmpNLMpawlS1hBtryEj+jCY8h/pnAE4lAJWcxTi4=;
+        b=VM9WQWBCZM50JAK3F7fbbaBIin6eJGqb6igDq++Gqz5LIVHSiMsehMf3zeVAMrHSy7
+         Ic1yaZ1t4IveJEIrwkq2MXEHdUNaIJD4khgvAo2/K6LKNLANeaxz9ecWhCM+3/68AIO1
+         yLitzGjCo34aWP6XCmWx7j1YonyNDa8bhBoi6ebvvR38aLOnreun/zMxmBSnLP1QiaIq
+         3mGfrIPpmZuln3hcxMtPdw4fbC5kpdXMMSV7673Ga6h9ZmsXgMPsc8oQs0B8znxWZ4BG
+         tqXLjSmNIMfe2bZwtOsCoqg0fOq47tUtSchmWLiyhjGUGOvI9Pg1hu22TRM95tymrC2m
+         6C6Q==
+X-Gm-Message-State: AC+VfDykM68q0/0iCexPD6IUpzbnL8/p9ZLDCGtBxAATsPH8hiApcGxY
+        Hg2YC6l9KxdKN+fWP+nUKsB53VL4ChqrG+l7qP5hrg==
+X-Google-Smtp-Source: ACHHUZ4dNXUIH5tFqniZBC5Q3UQeXlRCvoJ+PJF7hfLIL9YEqpTTdAG55WTuChgfsgcOAHQJKLuD2ctPWLy2FIwL6Eo=
+X-Received: by 2002:a05:622a:148e:b0:3f8:e0a:3e66 with SMTP id
+ t14-20020a05622a148e00b003f80e0a3e66mr30166qtx.3.1685140903703; Fri, 26 May
+ 2023 15:41:43 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230524210600.3095830-1-namhyung@kernel.org> <d06cac04-00b5-651d-14af-378fc25f37c4@amd.com>
+In-Reply-To: <d06cac04-00b5-651d-14af-378fc25f37c4@amd.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+Date:   Fri, 26 May 2023 15:41:29 -0700
+Message-ID: <CAP-5=fVMR0Y1=_W2scQBg_uWceOHrHaZ2GMwOai4Veq7OaGJ4A@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Fix perf stat JSON output test
+To:     K Prateek Nayak <kprateek.nayak@amd.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ming Wang <wangming01@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Users have been removed or switched to using pmu->is_core with
-perf_pmus__num_core_pmus() > 1.
+On Wed, May 24, 2023 at 8:01=E2=80=AFPM K Prateek Nayak <kprateek.nayak@amd=
+.com> wrote:
+>
+> Hello Namhyung,
+>
+> On 5/25/2023 2:36 AM, Namhyung Kim wrote:
+> > The recent --per-cache option test caused a problem.  According to
+> > the option name, I think it should check args.per_cache instead of
+> > args.per_cache_instance.
+> >
+> >   $ sudo ./perf test -v 99
+> >    99: perf stat JSON output linter                                    =
+:
+> >   --- start ---
+> >   test child forked, pid 3086101
+> >   Checking json output: no args [Success]
+> >   Checking json output: system wide [Success]
+> >   Checking json output: interval [Success]
+> >   Checking json output: event [Success]
+> >   Checking json output: per thread [Success]
+> >   Checking json output: per node [Success]
+> >   Checking json output: system wide no aggregation [Success]
+> >   Checking json output: per core [Success]
+> >   Checking json output: per cache_instance Test failed for input:
+> >   ...
+> >   Traceback (most recent call last):
+> >     File "linux/tools/perf/tests/shell/lib/perf_json_output_lint.py", l=
+ine 88, in <module>
+> >       elif args.per_core or args.per_socket or args.per_node or args.pe=
+r_die or args.per_cache_instance:
+> >   AttributeError: 'Namespace' object has no attribute 'per_cache_instan=
+ce'
+> >   test child finished with -1
+> >   ---- end ----
+> >   perf stat JSON output linter: FAILED!
+> >
+> > Fixes: bfce728db317 ("pert tests: Add tests for new "perf stat --per-ca=
+che" aggregation option")
+>
+> Another oversight on my part. Thank you for fixing this :)
+>
+>    $ sudo perf test -v 99
+>    99: perf stat JSON output linter                                    :
+>    --- start ---
+>    test child forked, pid 25046
+>    Checking json output: no args [Success]
+>    Checking json output: system wide [Success]
+>    Checking json output: interval [Success]
+>    Checking json output: event [Success]
+>    Checking json output: per thread [Success]
+>    Checking json output: per node [Success]
+>    Checking json output: system wide no aggregation [Success]
+>    Checking json output: per core [Success]
+>    Checking json output: per cache_instance [Success]
+>    Checking json output: per die [Success]
+>    Checking json output: per socket [Success]
+>    test child finished with 0
+>    ---- end ----
+>    perf stat JSON output linter: Ok
+>
+> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/util/pmu.c | 7 +------
- tools/perf/util/pmu.h | 1 -
- 2 files changed, 1 insertion(+), 7 deletions(-)
+Thanks Namhyung and Prateek, Arnaldo could we get this in
+perf-tools-next so that the failing test goes away?
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7102084dd3aa..0520aa9fe991 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1417,11 +1417,6 @@ bool is_pmu_core(const char *name)
- 	return !strcmp(name, "cpu") || is_sysfs_pmu_core(name);
- }
- 
--bool is_pmu_hybrid(const char *name)
--{
--	return !strcmp(name, "cpu_atom") || !strcmp(name, "cpu_core");
--}
--
- bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
- {
- 	return pmu->is_core;
-@@ -1429,7 +1424,7 @@ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
- 
- bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
- {
--	return !is_pmu_hybrid(pmu->name);
-+	return pmu->is_core && perf_pmus__num_core_pmus() > 1;
- }
- 
- bool perf_pmu__have_event(const struct perf_pmu *pmu, const char *name)
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 02fec0a7d4c8..287f593b15c7 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -221,7 +221,6 @@ int perf_pmu__format_parse(int dirfd, struct list_head *head);
- void perf_pmu__del_formats(struct list_head *formats);
- 
- bool is_pmu_core(const char *name);
--bool is_pmu_hybrid(const char *name);
- bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
- bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu);
- bool perf_pmu__have_event(const struct perf_pmu *pmu, const char *name);
--- 
-2.41.0.rc0.172.g3f132b7071-goog
+Acked-by: Ian Rogers <irogers@google.com>
 
+> > Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/tests/shell/lib/perf_json_output_lint.py | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tool=
+s/perf/tests/shell/lib/perf_json_output_lint.py
+> > index 4acaaed5560d..b81582a89d36 100644
+> > --- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
+> > +++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+> > @@ -85,7 +85,7 @@ Lines =3D args.file.readlines()
+> >      expected_items =3D 7
+> >    elif args.interval or args.per_thread or args.system_wide_no_aggr:
+> >      expected_items =3D 8
+> > -  elif args.per_core or args.per_socket or args.per_node or args.per_d=
+ie or args.per_cache_instance:
+> > +  elif args.per_core or args.per_socket or args.per_node or args.per_d=
+ie or args.per_cache:
+> >      expected_items =3D 9
+> >    else:
+> >      # If no option is specified, don't check the number of items.
+>
+> --
+> Thanks and Regards,
+> Prateek
