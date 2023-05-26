@@ -2,255 +2,213 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC83C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:33:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F01EC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:34:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236289AbjEZSd3 (ORCPT
+        id S230064AbjEZSeT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 14:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43070 "EHLO
+        Fri, 26 May 2023 14:34:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjEZSd2 (ORCPT
+        with ESMTP id S242548AbjEZSeN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 14:33:28 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5727A12A
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:33:27 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f5dbd8f677so7885e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:33:27 -0700 (PDT)
+        Fri, 26 May 2023 14:34:13 -0400
+Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 756321AC
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:10 -0700 (PDT)
+Received: by mail-pj1-x1049.google.com with SMTP id 98e67ed59e1d1-2562fbb193bso620839a91.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685126006; x=1687718006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6JxMzvds2avNOsdPi6D0GZaG3j3Kl1uN/P97Wgte3QU=;
-        b=7xxgvyNUGXl5HU9jjrwJr/FubM7qSVcguv9rPoQB4Iz9na0uCeBSJHUnYpn0FbxE4M
-         2xbkZcJEOH/9oh5wezLYASGa6Rxx7XlxtBcKiIpbIXtvut1NGw0Pg6v553DULx9Gppgo
-         nKiaa6JEY+L80L3vqLz+b76lq+YEAOi/dXWcitgBPMew+E5HFW48U4YLvAATM8gDrFYi
-         K6bb7YJzUG9bZI3j6EF9DuSo8P1WswEByShxV85cYpJdWZfwjLgmuLX6JMxOHbVUGGI7
-         N1vkWH60WDUPtHkf+SU8gqjnzbD85CYOTrtOaQCMQS3piCgblVQSVTDap55M2xr+SmM8
-         5ZwQ==
+        d=google.com; s=20221208; t=1685126050; x=1687718050;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IVzXsABWVrToZ7tRwJqLE05TXfsenHHrgF1lCArhyQ8=;
+        b=5DYIRQ/PY53leU21RViYdnXrQS4045s8ZG4DtABzUSV2B1DWp7Z+3Ng2a95y+VsNdG
+         /EOh0yYGdGZrs0Xoh3KnpybfJFL98Sh0oBEDUTpnL6TvVAsINKu4aBq3dxxaRToOyhB6
+         Kgs77o1IXKrk+QZ82PSejlOp6Jb1g9ImA5SIrSp2srHUQIofsTlDP3H4ek1nKt/HwpjZ
+         QisdWKCRIi4awYrSNgE2l9tJUX1vTaWOzq/AQLIEQIlOZplDj/OJ2fIEeTqEWTJwdm+a
+         QWJPuxE4nIsfMuO0lUgAKPiq3RQvpc85UZAySI6P+SL9+DLV7cIVuL0Q/8O5gjnNZVBe
+         ELGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685126006; x=1687718006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6JxMzvds2avNOsdPi6D0GZaG3j3Kl1uN/P97Wgte3QU=;
-        b=bfeQCEhACrkXWdd+3vk0TgOpKCesrf3IRp2n04ChDoBkdmEDcX/6tcI5T3zeWcYbG0
-         LedVo1/EBUqsPTPTMwfzHE0dyNaKAb24TfKYLpjH5NhWHOdRFxRB9axrspK/p/0Ez52j
-         6U0amMxmTAuy+xzu5e5gvadJF8zihgqgYOtnLxdRD4U5mfPv4Z5XztxcdykEiMlHdL+J
-         urdDwFuZYeBY2bSrrTAF28QiciLeYttMZ+/slcTmU2vLzAQ31crfh3ZjYbji/3tHhajo
-         VECyY0qaL/Xa7TBmAcKsk+/EDIcqIkcBXPIiHnN0cTTmoCurGelXBgGGQzzNUT8dK80l
-         gsHw==
-X-Gm-Message-State: AC+VfDyNKEtpO1cI5ZI4a5A+JpiaAMTQX/JHYFsXe9JmNqZxrJBpT3qB
-        XWFb/Qeh2QIIaeL3VOD0EgNCwoWEP4OWswJv+nIE+Q==
-X-Google-Smtp-Source: ACHHUZ4Ht4O6eiX9Fvhjel4y4La3TeEMwH6xuB2HxJ1w7YnSgrBrraonrQVSiq0saRKb5PQDBjgaWsNxm+dPHOJnb6I=
-X-Received: by 2002:a05:600c:314a:b0:3f5:f63:d490 with SMTP id
- h10-20020a05600c314a00b003f50f63d490mr14241wmo.5.1685126005614; Fri, 26 May
- 2023 11:33:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230524221831.1741381-1-irogers@google.com> <20230524221831.1741381-17-irogers@google.com>
- <3d943607-645e-be8d-3a68-90e62e402c3d@linux.intel.com>
-In-Reply-To: <3d943607-645e-be8d-3a68-90e62e402c3d@linux.intel.com>
+        d=1e100.net; s=20221208; t=1685126050; x=1687718050;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IVzXsABWVrToZ7tRwJqLE05TXfsenHHrgF1lCArhyQ8=;
+        b=Ovy9fzy5TqLQOFtm/Cpqd/7B0S2Oa0zIKjbrLajw8NTHJxQh9vYmyzZ0X0k5F2h4ZC
+         EzkGiA8PRAnTTueLM+HBbCtLoyNVXbL9qqvYnsS7u/mMJuZ/V21SAeFbqAv7oMU5i9Z7
+         oSHouRtMx4sdgiZwNiKbh3dIiODklAuf9Gv7o/Y2GJNoklrlNprcoYoo3Avw6ZbJ5jr/
+         7Kpr5kv0OGMBKofeP/B3nnt+RbuJI6Ya6xlJqi+shXznLjYE0mPXJJX4tsyEz5ikFIWs
+         cV5kntoIZ6K8P+aExs/VZ5g+IJViAUuJM+EeI2UTpGKR7NQ04jzbvvaFHS0hmytIhk8A
+         317w==
+X-Gm-Message-State: AC+VfDyfBBuSk8WBiqXPjHBCK/FmvsJQtmr0oZtqXnGetDHEwqzxHdQX
+        4Q4rvQeAD2LDeOvHU1Nr11HeYzjaWS4h
+X-Google-Smtp-Source: ACHHUZ64A571kAdtoquIAqZhXYDAWk7Pcy8C1D6koWOlDQ3LjZVliWTNq+S9lKeEEbW0qROw3Le1Flt/WvXS
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
+ (user=irogers job=sendgmr) by 2002:a17:90a:9904:b0:246:6a3a:6aec with SMTP id
+ b4-20020a17090a990400b002466a3a6aecmr716829pjp.4.1685126049889; Fri, 26 May
+ 2023 11:34:09 -0700 (PDT)
+Date:   Fri, 26 May 2023 11:33:45 -0700
+Message-Id: <20230526183401.2326121-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
+Subject: [PATCH v2 00/16] Address some perf memory/data size issues
 From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 May 2023 11:33:13 -0700
-Message-ID: <CAP-5=fWJXthOUF+ma1Z+MT2yfpA81did=-0hA3tREvAqNoAzww@mail.gmail.com>
-Subject: Re: [PATCH v3 16/35] perf pmu: Remove perf_pmu__hybrid_mounted
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        Ross Zwisler <zwisler@chromium.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ming Wang <wangming01@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
         Sean Christopherson <seanjc@google.com>,
-        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 26, 2023 at 11:14=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.=
-com> wrote:
->
->
->
-> On 2023-05-24 6:18 p.m., Ian Rogers wrote:
-> > perf_pmu__hybrid_mounted is used to detect whether cpu_core or
-> > cpu_atom is mounted with a non-empty cpus file by
-> > pmu_lookup. pmu_lookup will attempt to read the cpus file too and so
-> > the check can be folded into this.
-> >
-> > Checking hybrid_mounted in pmu_is_uncore is redundant as the next
-> > cpumask read will fail returning false.
-> >
-> > Reduce the scope of perf_pmu__find_hybrid_pmu by making it static.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/pmu-hybrid.c | 15 +--------------
-> >  tools/perf/util/pmu-hybrid.h |  3 ---
-> >  tools/perf/util/pmu.c        | 26 ++++++++++++++------------
-> >  3 files changed, 15 insertions(+), 29 deletions(-)
-> >
-> > diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.=
-c
-> > index bc4cb0738c35..7fe943dd3217 100644
-> > --- a/tools/perf/util/pmu-hybrid.c
-> > +++ b/tools/perf/util/pmu-hybrid.c
-> > @@ -18,20 +18,7 @@
-> >
-> >  LIST_HEAD(perf_pmu__hybrid_pmus);
-> >
-> > -bool perf_pmu__hybrid_mounted(const char *name)
-> > -{
-> > -     int cpu;
-> > -     char pmu_name[PATH_MAX];
-> > -     struct perf_pmu pmu =3D {.name =3D pmu_name};
-> > -
-> > -     if (strncmp(name, "cpu_", 4))
-> > -             return false;
-> > -
-> > -     strlcpy(pmu_name, name, sizeof(pmu_name));
-> > -     return perf_pmu__scan_file(&pmu, "cpus", "%u", &cpu) > 0;
-> > -}
-> > -
-> > -struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
-> > +static struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
-> >  {
-> >       struct perf_pmu *pmu;
-> >
-> > diff --git a/tools/perf/util/pmu-hybrid.h b/tools/perf/util/pmu-hybrid.=
-h
-> > index 206b94931531..8dbcae935020 100644
-> > --- a/tools/perf/util/pmu-hybrid.h
-> > +++ b/tools/perf/util/pmu-hybrid.h
-> > @@ -13,9 +13,6 @@ extern struct list_head perf_pmu__hybrid_pmus;
-> >  #define perf_pmu__for_each_hybrid_pmu(pmu)   \
-> >       list_for_each_entry(pmu, &perf_pmu__hybrid_pmus, hybrid_list)
-> >
-> > -bool perf_pmu__hybrid_mounted(const char *name);
-> > -
-> > -struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name);
-> >  bool perf_pmu__is_hybrid(const char *name);
-> >
-> >  static inline int perf_pmu__hybrid_pmu_num(void)
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index cd94abe7a87a..e9f3e6a777c0 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -617,9 +617,6 @@ static bool pmu_is_uncore(int dirfd, const char *na=
-me)
-> >  {
-> >       int fd;
-> >
-> > -     if (perf_pmu__hybrid_mounted(name))
-> > -             return false;
-> > -
-> >       fd =3D perf_pmu__pathname_fd(dirfd, name, "cpumask", O_PATH);
-> >       if (fd < 0)
-> >               return false;
-> > @@ -900,6 +897,16 @@ static int pmu_max_precise(int dirfd, struct perf_=
-pmu *pmu)
-> >       return max_precise;
-> >  }
-> >
-> > +/**
-> > + * perf_pmu__skip_empty_cpus() - should pmu_lookup skip the named PMU =
-if the
-> > + *      cpus or cpumask file isn't present?
-> > + * @name: Name of PMU.
-> > + */
-> > +static bool perf_pmu__skip_empty_cpus(const char *name)
-> > +{
-> > +     return !strcmp(name, "cpu_core") || !strcmp(name, "cpu_atom");
->
-> Can we use the below to replace?
-> return !strncmp(name, "cpu_", 4);
->
-> Otherwise, anytime a new core PMU name is introduced, I have to patch
-> the function.
+Try to reduce the data size of the perf command. Before these patches
+a stripped non-debug binary was:
 
-I dislike this function but was carrying it forward, I think we can
-get rid of it. The point of erroring is to not have core PMUs when
-there are no online CPUs associated with it. For existing core PMUs
-this just isn't something that can happen as otherwise what CPU are
-you running on. For hybrid it can happen and we know we care because
-the PMU's type is core. So why not change the error to be when the cpu
-map is empty and the CPU is core? I'm going to assume that my logic is
-sound and change the code in v4, but please complain.
+$ size -A perf
+perf  :
+section                  size       addr
+.interp                    28        848
+.note.gnu.property         32        880
+.note.gnu.build-id         36        912
+.note.ABI-tag              32        948
+.gnu.hash               24628        984
+.dynsym                 88920      25616
+.dynstr                 70193     114536
+.gnu.version             7410     184730
+.gnu.version_r            800     192144
+.rela.dyn              460824     192944
+.rela.plt               14784     653768
+.init                      23     671744
+.plt                     9872     671776
+.plt.got                   24     681648
+.text                 2279182     681680
+.noinstr.text             476    2960864
+.fini                       9    2961340
+.rodata               7042922    2961408
+.eh_frame_hdr           42844   10004332
+.eh_frame              226496   10047176
+.tbss                      48   10279720
+.init_array                16   10279720
+.fini_array                 8   10279736
+.data.rel.ro            53376   10279744
+.dynamic                  736   10333120
+.got                      328   10333856
+.got.plt                 4952   10334184
+.data                  391088   10339136
+.bss                   285776   10730240
+.comment                   31          0
+Total                11005894
 
-Thanks,
-Ian
+And after:
+perf  :
+section                  size       addr
+.interp                    28        848
+.note.gnu.property         32        880
+.note.gnu.build-id         36        912
+.note.ABI-tag              32        948
+.gnu.hash               24628        984
+.dynsym                 88944      25616
+.dynstr                 70217     114560
+.gnu.version             7412     184778
+.gnu.version_r            816     192192
+.rela.dyn              460824     193008
+.rela.plt               14808     653832
+.init                      23     671744
+.plt                     9888     671776
+.plt.got                   24     681664
+.text                 2280446     681696
+.noinstr.text             476    2962144
+.fini                       9    2962620
+.rodata               7048746    2965504
+.eh_frame_hdr           42852   10014252
+.eh_frame              226568   10057104
+.tbss                      48   10285640
+.init_array                16   10285640
+.fini_array                 8   10285656
+.data.rel.ro           301408   10285664
+.dynamic                  736   10587072
+.got                      328   10587808
+.got.plt                 4960   10588136
+.data                  100464   10593152
+.bss                    22512   10693632
+.comment                   31          0
+Total                10707320
 
-> Thanks,
-> Kan
->
-> > +}
-> > +
-> >  static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_name)
-> >  {
-> >       struct perf_pmu *pmu;
-> > @@ -907,15 +914,8 @@ static struct perf_pmu *pmu_lookup(int dirfd, cons=
-t char *lookup_name)
-> >       LIST_HEAD(aliases);
-> >       __u32 type;
-> >       char *name =3D pmu_find_real_name(lookup_name);
-> > -     bool is_hybrid =3D perf_pmu__hybrid_mounted(name);
-> >       char *alias_name;
-> >
-> > -     /*
-> > -      * Check pmu name for hybrid and the pmu may be invalid in sysfs
-> > -      */
-> > -     if (!strncmp(name, "cpu_", 4) && !is_hybrid)
-> > -             return NULL;
-> > -
-> >       /*
-> >        * The pmu data we store & need consists of the pmu
-> >        * type value and format definitions. Load both right
-> > @@ -935,8 +935,10 @@ static struct perf_pmu *pmu_lookup(int dirfd, cons=
-t char *lookup_name)
-> >               return NULL;
-> >
-> >       pmu->cpus =3D pmu_cpumask(dirfd, name);
-> > -     pmu->name =3D strdup(name);
-> > +     if (!pmu->cpus && perf_pmu__skip_empty_cpus(name))
-> > +             goto err;
-> >
-> > +     pmu->name =3D strdup(name);
-> >       if (!pmu->name)
-> >               goto err;
-> >
-> > @@ -967,7 +969,7 @@ static struct perf_pmu *pmu_lookup(int dirfd, const=
- char *lookup_name)
-> >       list_splice(&aliases, &pmu->aliases);
-> >       list_add_tail(&pmu->list, &pmus);
-> >
-> > -     if (is_hybrid)
-> > +     if (!strcmp(name, "cpu_core") || !strcmp(name, "cpu_atom"))
-> >               list_add_tail(&pmu->hybrid_list, &perf_pmu__hybrid_pmus);
-> >       else
-> >               INIT_LIST_HEAD(&pmu->hybrid_list);
+The binary has reduced in size by 298,574 bytes. The .bss, that
+doesn't count toward file size, is reduced by 263,254 bytes. At
+runtime this could reduce the footprint up to 561,828 bytes. This is
+still just a fraction of the .rodata section's size of 7,048,746
+bytes, that mainly contains the converted json events. The .rodata
+section needn't all be mapped at the same time.
+
+The changes are largely removing static variables and replacing them
+with local or dynamically allocated memory. A common issue was having
+paths in statics for the sake of returning a non-stack pointer to a
+buffer, so the APIs were changed to pass buffers in.
+
+v2. Address review comments from Namhyung, thanks!
+
+Ian Rogers (16):
+  perf header: Make nodes dynamic in write_mem_topology
+  perf test x86: insn-x86 test data is immutable so mark it const
+  perf test x86: intel-pt-test data is immutable so mark it const
+  perf trace: Make some large static arrays const
+  perf trace beauty: Make MSR arrays const
+  tools api fs: Avoid large static PATH_MAX arrays
+  tools lib api fs tracing_path: Remove two unused MAX_PATH paths
+  perf daemon: Dynamically allocate path to perf
+  perf lock: Dynamically allocate lockhash_table
+  perf timechart: Make large arrays dynamic
+  perf probe: Dynamically allocate params memory
+  perf path: Make mkpath thread safe
+  perf scripting-engines: Move static to local variable
+  tools api fs: Dynamically allocate cgroupfs mount point cache
+  perf test pmu: Avoid 2 static path arrays
+  libsubcmd: Avoid two path statics
+
+ tools/lib/api/fs/cgroup.c                     |  17 ++-
+ tools/lib/api/fs/fs.c                         |  25 +++-
+ tools/lib/api/fs/tracing_path.c               |  17 +--
+ tools/lib/subcmd/exec-cmd.c                   |  35 +++--
+ tools/perf/arch/x86/tests/insn-x86.c          |  10 +-
+ tools/perf/arch/x86/tests/intel-pt-test.c     |  14 +-
+ tools/perf/builtin-config.c                   |   4 +-
+ tools/perf/builtin-daemon.c                   |  44 +++---
+ tools/perf/builtin-help.c                     |   4 +-
+ tools/perf/builtin-lock.c                     |  20 ++-
+ tools/perf/builtin-probe.c                    | 133 ++++++++++--------
+ tools/perf/builtin-timechart.c                |  48 +++++--
+ tools/perf/builtin-trace.c                    |  33 +++--
+ tools/perf/tests/pmu.c                        |  17 +--
+ tools/perf/trace/beauty/beauty.h              |   2 +-
+ .../perf/trace/beauty/tracepoints/x86_msr.sh  |   6 +-
+ tools/perf/util/cache.h                       |   2 +-
+ tools/perf/util/config.c                      |   3 +-
+ tools/perf/util/header.c                      |  41 +++---
+ tools/perf/util/path.c                        |  35 +----
+ .../util/scripting-engines/trace-event-perl.c |   4 +-
+ .../scripting-engines/trace-event-python.c    |   5 +-
+ 22 files changed, 297 insertions(+), 222 deletions(-)
+
+-- 
+2.41.0.rc0.172.g3f132b7071-goog
+
