@@ -2,58 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8771CC7EE23
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB66CC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237441AbjEZSeT (ORCPT
+        id S242694AbjEZSe0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 14:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43652 "EHLO
+        Fri, 26 May 2023 14:34:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbjEZSeQ (ORCPT
+        with ESMTP id S242415AbjEZSeW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 14:34:16 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E65116
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:12 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-1ae3f6df1afso12320545ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:12 -0700 (PDT)
+        Fri, 26 May 2023 14:34:22 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53BEF1BB
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:15 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-babb52dbb00so2722480276.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685126052; x=1687718052;
+        d=google.com; s=20221208; t=1685126054; x=1687718054;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=ebDmAKcMgjMG509wnFyrTUPwJyUM0h3NbQ8A7cysfQ0=;
-        b=OV1TvpXGpGm5MLs6Mh/URj5q11pFxOE0Pq/aTWDMR9PFQN1iMItLpAMs3hSe5FPK6B
-         TCrvq4wBk0Bt6Ro0RPhK4ENdsqMhutdlHfG4j2n6GJQnkvpVr6IBB0qujDx+I6VJ1wU3
-         R5i+XfuZp7r05tkVfaMfD1mU1PEdnBXufxosZghTLlAnmbnHSm3UrrCC/ji6wFQ+LrjP
-         1xz+2nv0nqllptmrqwhYDEAekiiNNuB6OE8UQWvtRkzb486aVxo3isWty86FkFB0zUVY
-         iGLWO5vHReTy+cvNcwofn4j4NaUofXC1GTs8lUQvcBYqWp7ZmUPbe78t34xNThF9ExWv
-         S/Gg==
+        bh=rhs20KFbrBjMvIkaCaPHOIOyU5CqMAw5GkT0rX0TX0U=;
+        b=pDsfCR/qApd6BnNf5BC300XSLP2L05MlgSQ/+ZqWZ3VQmMjw4LHyrVtWRt03skSLoI
+         3ubDd7OwPnvf3CKmlqt9hJodEoCcRbQBzDr1oIaDNNewcZ5aJdnSGU1/LrGfohkCGu3u
+         GMUW+z2+VWYhlPciW/c3oBk78a+bx0ItNwaXGGh+UCAaaAKMfOcKbYrdNO5/tdC0rDzK
+         NU2qxy0/rSKHcTxt+lZuSrGE6rpmeqsegRhDeuXl0xf2VDShbDU1xAC+ba8Jpx2QFmQq
+         Q4tph4YXASgoo+KuJVAuenGVuKWZAGR/AWDGO4v0pSa69npEyf0nMDiz4NcUU9enCocq
+         TaFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685126052; x=1687718052;
+        d=1e100.net; s=20221208; t=1685126054; x=1687718054;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ebDmAKcMgjMG509wnFyrTUPwJyUM0h3NbQ8A7cysfQ0=;
-        b=A4GoI2Q/CNJSlaGpo0mAIIcSEdOAJ2MP2/YOSSsoJ55p2jWi7QQIKJeSFob8nj4WEJ
-         iuXBHlA9qc+4N1bLJhwdZ63wy5ERmR40gGOJqK4YBla/3GsJ/WSsSpyvUPGCo0fZY0zc
-         IFidtVEpX2K0pJUg/UmG8UlvMIevyGDwbPS+pz2wFos2jU0uBqBnfE+LvjIzfAAoRpbY
-         uhdudFHTDTYM5Y5gMko5nwqlubWGJ76PjN4TzP0Kv476kMoTOookE423H0F6YqUFCzLS
-         cJ6mGlQEUxbXt0EId9guM/HISyIaZzSPCvqLa3KUB7/6h2pf7aLypC9zVb5477jFm9CP
-         lzEg==
-X-Gm-Message-State: AC+VfDx5YnGULwCOOakN7qxGSqxSsNcs62dBb/Jsl5sfjeEYI+zGUrpZ
-        wJB+ndBVf9hQ1sdCcIOnKT2j3nZtxCTl
-X-Google-Smtp-Source: ACHHUZ7/hC7A5d3iCEZFXKr8J780KUcDmxhUabVPrKmWkXgja76tEtD0TOBYgcVxSXpNsAWc4fIgyEln64Zh
+        bh=rhs20KFbrBjMvIkaCaPHOIOyU5CqMAw5GkT0rX0TX0U=;
+        b=f9Nm6vPjDwgBdhWGE5J4mKiIuWqes8yX8+u35Vl1I5f6SPfa4AV0I9hndERJxgMXjW
+         Qyw9FTJ005riJlDObNCmUHiknEOee1ZXB5INn+gMLbp5+hco7hLK2NTXZFhxSisvQ5i4
+         03pcypZKzIbFZQLa+RM9OPutpCDKfjbGeR2gw6ZTJRiQ3b00igSIhokaZ2sokEX+KfSn
+         AqEyossevaHgDFwNU8CeozIV7CcbmpkF2w5zGQwQ0ruO5xbfPE0TiAKGDd8vrE9MEfGE
+         cln07e2Kgfa+N2VWwEecyckcmj1kOIurfsmU2BOM7K4TpLAB0u0r56IiFbOaUC3r5RtG
+         hL3A==
+X-Gm-Message-State: AC+VfDz0ELd4zKXUhoV0pHMSoDU/lw59DqrP7asdCX6zdt8S9remVsWT
+        V+n/KCE+0DDO/GkhjYH92XFMh4Oei2T3
+X-Google-Smtp-Source: ACHHUZ6+rvkIOvNHoGwO95tDYhf6xgF/LAx36BZB1O5qRld+APf77syKzYKfTngPqwODAWdeN/l+yodizVw+
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a17:902:c948:b0:1a9:baa8:359f with SMTP id
- i8-20020a170902c94800b001a9baa8359fmr890440pla.6.1685126052431; Fri, 26 May
- 2023 11:34:12 -0700 (PDT)
-Date:   Fri, 26 May 2023 11:33:46 -0700
+ (user=irogers job=sendgmr) by 2002:a25:8211:0:b0:bad:14ac:f22e with SMTP id
+ q17-20020a258211000000b00bad14acf22emr999303ybk.5.1685126054570; Fri, 26 May
+ 2023 11:34:14 -0700 (PDT)
+Date:   Fri, 26 May 2023 11:33:47 -0700
 In-Reply-To: <20230526183401.2326121-1-irogers@google.com>
-Message-Id: <20230526183401.2326121-2-irogers@google.com>
+Message-Id: <20230526183401.2326121-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20230526183401.2326121-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v2 01/16] perf header: Make nodes dynamic in write_mem_topology
+Subject: [PATCH v2 02/16] perf test x86: insn-x86 test data is immutable so
+ mark it const
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -82,115 +83,57 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Avoid a large static array, dynamically allocate the nodes avoiding a
-hard coded limited as well.
+This allows the movement of some sizeable data arrays (168,624bytes)
+to .data.relro. Without PIE or the strings it could be moved to
+.rodata.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/header.c | 41 ++++++++++++++++++++++++----------------
- 1 file changed, 25 insertions(+), 16 deletions(-)
+ tools/perf/arch/x86/tests/insn-x86.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 2dde3ca20de5..f3c0cd8f6244 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -24,6 +24,7 @@
- #include <bpf/libbpf.h>
- #endif
- #include <perf/cpumap.h>
-+#include <tools/libc_compat.h> // reallocarray
+diff --git a/tools/perf/arch/x86/tests/insn-x86.c b/tools/perf/arch/x86/tests/insn-x86.c
+index 735257d205b5..7b5eb8baf0f2 100644
+--- a/tools/perf/arch/x86/tests/insn-x86.c
++++ b/tools/perf/arch/x86/tests/insn-x86.c
+@@ -18,14 +18,14 @@ struct test_data {
+ 	const char *asm_rep;
+ };
  
- #include "dso.h"
- #include "evlist.h"
-@@ -1396,13 +1397,14 @@ static int memory_node__sort(const void *a, const void *b)
- 	return na->node - nb->node;
+-struct test_data test_data_32[] = {
++const struct test_data test_data_32[] = {
+ #include "insn-x86-dat-32.c"
+ 	{{0x0f, 0x01, 0xee}, 3, 0, NULL, NULL, "0f 01 ee             \trdpkru"},
+ 	{{0x0f, 0x01, 0xef}, 3, 0, NULL, NULL, "0f 01 ef             \twrpkru"},
+ 	{{0}, 0, 0, NULL, NULL, NULL},
+ };
+ 
+-struct test_data test_data_64[] = {
++const struct test_data test_data_64[] = {
+ #include "insn-x86-dat-64.c"
+ 	{{0x0f, 0x01, 0xee}, 3, 0, NULL, NULL, "0f 01 ee             \trdpkru"},
+ 	{{0x0f, 0x01, 0xef}, 3, 0, NULL, NULL, "0f 01 ef             \twrpkru"},
+@@ -97,7 +97,7 @@ static int get_branch(const char *branch_str)
+ 	return -1;
  }
  
--static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
-+static int build_mem_topology(struct memory_node **nodesp, u64 *cntp)
+-static int test_data_item(struct test_data *dat, int x86_64)
++static int test_data_item(const struct test_data *dat, int x86_64)
  {
- 	char path[PATH_MAX];
- 	struct dirent *ent;
- 	DIR *dir;
--	u64 cnt = 0;
+ 	struct intel_pt_insn intel_pt_insn;
+ 	int op, branch, ret;
+@@ -147,9 +147,9 @@ static int test_data_item(struct test_data *dat, int x86_64)
+ 	return 0;
+ }
+ 
+-static int test_data_set(struct test_data *dat_set, int x86_64)
++static int test_data_set(const struct test_data *dat_set, int x86_64)
+ {
+-	struct test_data *dat;
++	const struct test_data *dat;
  	int ret = 0;
-+	size_t cnt = 0, size = 0;
-+	struct memory_node *nodes = NULL;
  
- 	scnprintf(path, PATH_MAX, "%s/devices/system/node/",
- 		  sysfs__mountpoint());
-@@ -1426,26 +1428,32 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
- 		if (r != 1)
- 			continue;
- 
--		if (WARN_ONCE(cnt >= size,
--			"failed to write MEM_TOPOLOGY, way too many nodes\n")) {
--			closedir(dir);
--			return -1;
--		}
-+		if (cnt >= size) {
-+			struct memory_node *new_nodes =
-+				reallocarray(nodes, cnt + 4, sizeof(*nodes));
- 
-+			if (!new_nodes) {
-+				pr_err("Failed to write MEM_TOPOLOGY, size %zd nodes\n", size);
-+				ret = -ENOMEM;
-+				goto out;
-+			}
-+			nodes = new_nodes;
-+			size += 4;
-+		}
- 		ret = memory_node__read(&nodes[cnt++], idx);
- 	}
--
--	*cntp = cnt;
-+out:
- 	closedir(dir);
--
--	if (!ret)
-+	if (!ret) {
-+		*cntp = cnt;
-+		*nodesp = nodes;
- 		qsort(nodes, cnt, sizeof(nodes[0]), memory_node__sort);
-+	} else
-+		free(nodes);
- 
- 	return ret;
- }
- 
--#define MAX_MEMORY_NODES 2000
--
- /*
-  * The MEM_TOPOLOGY holds physical memory map for every
-  * node in system. The format of data is as follows:
-@@ -1464,8 +1472,8 @@ static int build_mem_topology(struct memory_node *nodes, u64 size, u64 *cntp)
- static int write_mem_topology(struct feat_fd *ff __maybe_unused,
- 			      struct evlist *evlist __maybe_unused)
- {
--	static struct memory_node nodes[MAX_MEMORY_NODES];
--	u64 bsize, version = 1, i, nr;
-+	struct memory_node *nodes = NULL;
-+	u64 bsize, version = 1, i, nr = 0;
- 	int ret;
- 
- 	ret = sysfs__read_xll("devices/system/memory/block_size_bytes",
-@@ -1473,7 +1481,7 @@ static int write_mem_topology(struct feat_fd *ff __maybe_unused,
- 	if (ret)
- 		return ret;
- 
--	ret = build_mem_topology(&nodes[0], MAX_MEMORY_NODES, &nr);
-+	ret = build_mem_topology(&nodes, &nr);
- 	if (ret)
- 		return ret;
- 
-@@ -1508,6 +1516,7 @@ static int write_mem_topology(struct feat_fd *ff __maybe_unused,
- 	}
- 
- out:
-+	free(nodes);
- 	return ret;
- }
- 
+ 	for (dat = dat_set; dat->expected_length; dat++) {
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
