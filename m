@@ -2,341 +2,149 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9969C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 19:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236B6C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 19:50:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230048AbjEZTpC (ORCPT
+        id S237140AbjEZTuA (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 15:45:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58434 "EHLO
+        Fri, 26 May 2023 15:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243067AbjEZTou (ORCPT
+        with ESMTP id S229950AbjEZTt7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 15:44:50 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A32E1B6
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 12:44:48 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-babb79a17b8so1534356276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 12:44:48 -0700 (PDT)
+        Fri, 26 May 2023 15:49:59 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70AF9E;
+        Fri, 26 May 2023 12:49:57 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1afbc02c602so19119635ad.1;
+        Fri, 26 May 2023 12:49:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685130288; x=1687722288;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PCEuHB+EAhk+z6YgMVeylt+nnvBXz0KV/fMFiqSw75M=;
-        b=00c8A4WdV3GcZZCBWyJI3N171+nLyljMSnaQpXe6v9LMUp01Hu3fn5FEAKGT4ivB1N
-         P5EcKBGfI5YekKMp+h2uaJGZvCpu0i6Kwh88bNnZRTBInCk6jnIZQodHPCrq/smVsoJH
-         MDFnTBJMiEb2bx5MKmw0kcUg00X+YbE8YdtiBuQxbvaCvgN7xTBMX/nBYdCqhIET3xX6
-         dtgh9TYGlzpv6vBYzN4Nr/vgLC3ztLDpjjJa1tR4fZGHw8Gk6PQkoTwi1QtXC/UVMX/j
-         rZBw7OgFAxMuzWFVjzvrSWJn7iKPVMf7jd5bl/1TwJJSr/oxBH9eLtuSElxitNpSyJ//
-         datQ==
+        d=gmail.com; s=20221208; t=1685130597; x=1687722597;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2I0hQQzW2yDargibYWu+DA87dItM0w7zY2FsfJCnPOc=;
+        b=FEaZIJ9A8oOy00alMc7o2MKrBaJuo41U7UYtyYXnyI6zwjaq7K8zGUSjpwXzKDECDS
+         ayEhzaApqjvXvWihVb0SROvdi345okSy72sMe1Pjre8AtKFSRzPozyp+jCp+aX6/780F
+         mmyT4JSziG5WBeLVSqRcWgsY9RrYP/f9qN8AauiVRZM3q0j6OcxBFygf42GwPkt9qmZV
+         2SqkRYKuHldaqSsTq7pYstdQ7YRIgcXWDWTpGzj7/BbwVUGnDW4LNqBSw0ep8RtpYjCf
+         8Bbz9mN+A5JM1j1y4gSRV07Fi4VQ+RNBb+dzm27ADiHVVcOZuEh831zPqExmfZYLPMN4
+         WMaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685130288; x=1687722288;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+        d=1e100.net; s=20221208; t=1685130597; x=1687722597;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PCEuHB+EAhk+z6YgMVeylt+nnvBXz0KV/fMFiqSw75M=;
-        b=QwhNEul8s1o7zUSf73VvW3X27hRgloqlPZ0bHterCMxAAgGRGn4V79jp7zqWjnVqdf
-         uUtaEcYnFw8PdfNwGutlQ1TSXqR9rnvwQTAMAJWHZh3qbjiy3mEapFz1pyvajBQRZ8N+
-         PeBKKHiB9Obmsw3TLZhrmEM/eXHckVrWex5qAy03UpcCvEH6VZJEN17B8or1mUuvqQYC
-         40KBjXIfKpCGBdOmxk4qe2/OV3yW139x9TiFtdW2fOqtP+joFwTcNayGOcCLycZSnpvs
-         yUULt3F4fofQub8v7CZtdhFmohkLLiAlt652MFlWuXNvyDf3lfxo5CTZYidQT0UgvRan
-         AJgg==
-X-Gm-Message-State: AC+VfDzGqXimrr0xjpmkxRG06jhJc2MPycu++jelY7/GmPebB7Yw999D
-        YF0GVv7KQqu47FvnV9Z2+Pl0Uv/ynbJI
-X-Google-Smtp-Source: ACHHUZ4w9+UOJ8hpR92L+iuqXV2CCmM6jGTjaatKscEYXFC++9uOkF55WjICj/Btteh9ifUfJVf9/dcy0/O/
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a25:d8a:0:b0:ba8:2415:f27c with SMTP id
- 132-20020a250d8a000000b00ba82415f27cmr1536907ybn.3.1685130288399; Fri, 26 May
- 2023 12:44:48 -0700 (PDT)
-Date:   Fri, 26 May 2023 12:44:41 -0700
-In-Reply-To: <20230526194442.2355872-1-irogers@google.com>
-Message-Id: <20230526194442.2355872-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20230526194442.2355872-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v3 1/2] perf evsel: evsel__group_pmu_name fixes
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        bh=2I0hQQzW2yDargibYWu+DA87dItM0w7zY2FsfJCnPOc=;
+        b=ifNRzn/+0+XN15nifGF1fUORt8UNJViILRHzooqlWtqPVpv11nv9X2GlHTRTz2Y9Il
+         0AGtf0DwkAGBWM5iLhaud0ptobVH9JQurcVbd2E2VmByuu3ZWpy+f59VKl8gJfr5XVYO
+         CWp0yMQMKH8aF7cKHtWD/7iFfwOW9zXb77KyoSi8xW+z0GQYFmSY070F0Nu5kwtUv07S
+         v9is91e1RkgO+hyG6OppsVshUARr5+hxmrWKLObCbXo/XGDDn4nFcBMAiTbHa0k+5oSz
+         x2+2d3hRp6AaeRjw8ejU+w9kTsQ7pxxGtMe2vUjefGAxjmYsG1MbsQuaWTl04l+5hL0J
+         MVDA==
+X-Gm-Message-State: AC+VfDxxmf9pbNPYo5MdlekfcxALRvAP5C1cAHRUrjdJLgUDP+SlL6gz
+        GzYzXhgua8GleESfdQJyhr0=
+X-Google-Smtp-Source: ACHHUZ6l5IG3mC3AStAa0GO7GoPS0h5QjiyFPJlsnQJYzQQrp9Ldv7mbYMr3Nw9jnE5NPtrwd1sWZg==
+X-Received: by 2002:a17:902:db10:b0:1af:ccc9:ce65 with SMTP id m16-20020a170902db1000b001afccc9ce65mr6704plx.28.1685130596833;
+        Fri, 26 May 2023 12:49:56 -0700 (PDT)
+Received: from yoga ([2400:1f00:13:58f8:114f:2b88:a753:89bb])
+        by smtp.gmail.com with ESMTPSA id y7-20020a17090322c700b001aaeaa27dd5sm3594561plg.252.2023.05.26.12.49.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 May 2023 12:49:56 -0700 (PDT)
+From:   Anup Sharma <anupnewsmail@gmail.com>
+X-Google-Original-From: Anup Sharma <AnupSharma>
+Date:   Sat, 27 May 2023 01:19:47 +0530
+To:     Ian Rogers <irogers@google.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Anup Sharma <anupnewsmail@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Sandipan Das <sandipan.das@amd.com>,
-        James Clark <james.clark@arm.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Rob Herring <robh@kernel.org>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
+Message-ID: <ZHENW4HOIo0F6FnN@yoga>
+References: <ZG5kjDN63HqqMuJJ@yoga>
+ <CAM9d7ciUsJM1kZhGbhQUfdxq1rsvLig2C-mAki13a92EjW37kw@mail.gmail.com>
+ <CAP-5=fVekEnC1s=xUG-jFeL20qM=EPNkPO8aw8bcg4cVM=m5wg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVekEnC1s=xUG-jFeL20qM=EPNkPO8aw8bcg4cVM=m5wg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Previously the evsel__group_pmu_name would iterate the evsel's group,
-however, the list of evsels aren't yet sorted and so the loop may
-terminate prematurely. It is also not desirable to iterate the list of
-evsels during list_sort as the list may be broken. Precompute the
-group_pmu_name for the evsel before sorting, as part of the
-computation and only if necessary, iterate the whole list looking for
-group members so that being sorted isn't necessary.
+On Fri, May 26, 2023 at 08:17:44AM -0700, Ian Rogers wrote:
+> On Thu, May 25, 2023 at 1:53 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi Anup,
+> >
+> > On Wed, May 24, 2023 at 12:25 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
+> > >
+> > > Hello everyone,
+> > >
+> > > I'm happy to share that I'll be working on adding support for Firefox's Gecko profile format.
+> > > This format is utilized by the Firefox profiler, which is a powerful tool for performance analysis
+> > > and debugging. By enhancing the perf data command to generate perf.data files in the Gecko
+> > > profile format, it will allow us to leverage the capabilities of the Firefox profiler for visualizing
+> > > and analyzing the performance data.
+> > >
+> > > As a starter task, I have created a test for testing the perf data JSON converter command.
+> > > I'm also looking for a few more starter tasks related to this project. I would greatly appreciate
+> > > your advice and guidance.
+> > >
+> > > In my effort to identify any existing bugs, I have enabled flags like 'fsanitize=address' to detect
+> > > potential issues but have not found any :). Additionally, I am running perf data commands to ensure
+> > > that all use cases are handled properly.
+> >
+> > Great, good to know it works well with asan for the basic use cases at least.
+> >
+> > >
+> > > I have one question regarding the installation process. Typically, I navigate to the perf directory,
+> > > run 'make', and then cp 'perf' to '/usr/bin'. However, I noticed that by default, perf is installed in
+> > > the '~/bin/perf' directory. Could someone please clarify why this is the case? Furthermore, I would
+> > > like to know how all of you compile the perf tree.
+> >
+> > I guess $HOME is the default prefix unless you set it to other, then
+> > make install will put
+> > the binary there.  You can make sure if your PATH contains the ~/bin and use it.
+> >
+> > But it's also possible you can run the perf without installing.  I
+> > have a symlink in
+> > my tmp directory to point to the recent build of the binary and use it
+> > always. :)
+> > To build, you can either 'cd tools/perf; make' or 'make -C tools/perf'
+> > in the top
+> > level linux source tree.  I also pass "BUILD_BPF_SKEL=1" to enable BPF.
+> >
+> > Thanks,
+> > Namhyung
+> 
+> I quite often test with address sanitizer, I do this by passing to make:
+> DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame- pointer
+> -fsanitize=address" NO_LIBTRACEEVENT=1
+> 
+> The libtraceevent exclusion is to avoid false address sanitizer
+> warnings in libtraceevent (it wasn't compiled with address sanitizer).
+> The other flags are to make the code easier to debug. A good place to
+> start for a description of the build flags is Makefile.perf:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Makefile.perf?h=perf-tools-next
+> 
+> There's also some description here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Documentation/Build.txt?h=perf-tools-next
+> 
+> Perhaps you can suggest improvements :-)
+>
 
-Move the group pmu name computation to parse-events.c given the closer
-dependency on the behavior of
-parse_events__sort_events_and_fix_groups.
+Thanks Namhyung and Ian for your suggestions. I'll try them out and let you know if I have any questions.
 
-Fixes: 7abf0bccaaec ("perf evsel: Add function to compute group PMU name")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/evsel.c        | 31 ++++-----------
- tools/perf/util/evsel.h        |  2 +-
- tools/perf/util/parse-events.c | 70 ++++++++++++++++++++++++++++------
- 3 files changed, 67 insertions(+), 36 deletions(-)
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 42d6dfacf191..a3c24d2e8ca3 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -291,6 +291,7 @@ void evsel__init(struct evsel *evsel,
- 	evsel->per_pkg_mask  = NULL;
- 	evsel->collect_stat  = false;
- 	evsel->pmu_name      = NULL;
-+	evsel->group_pmu_name = NULL;
- 	evsel->skippable     = false;
- }
- 
-@@ -390,6 +391,11 @@ struct evsel *evsel__clone(struct evsel *orig)
- 		if (evsel->pmu_name == NULL)
- 			goto out_err;
- 	}
-+	if (orig->group_pmu_name) {
-+		evsel->group_pmu_name = strdup(orig->group_pmu_name);
-+		if (evsel->group_pmu_name == NULL)
-+			goto out_err;
-+	}
- 	if (orig->filter) {
- 		evsel->filter = strdup(orig->filter);
- 		if (evsel->filter == NULL)
-@@ -786,30 +792,6 @@ bool evsel__name_is(struct evsel *evsel, const char *name)
- 	return !strcmp(evsel__name(evsel), name);
- }
- 
--const char *evsel__group_pmu_name(const struct evsel *evsel)
--{
--	struct evsel *leader = evsel__leader(evsel);
--	struct evsel *pos;
--
--	/*
--	 * Software events may be in a group with other uncore PMU events. Use
--	 * the pmu_name of the first non-software event to avoid breaking the
--	 * software event out of the group.
--	 *
--	 * Aux event leaders, like intel_pt, expect a group with events from
--	 * other PMUs, so substitute the AUX event's PMU in this case.
--	 */
--	if (evsel->core.attr.type == PERF_TYPE_SOFTWARE || evsel__is_aux_event(leader)) {
--		/* Starting with the leader, find the first event with a named PMU. */
--		for_each_group_evsel(pos, leader) {
--			if (pos->pmu_name)
--				return pos->pmu_name;
--		}
--	}
--
--	return evsel->pmu_name ?: "cpu";
--}
--
- const char *evsel__metric_id(const struct evsel *evsel)
- {
- 	if (evsel->metric_id)
-@@ -1491,6 +1473,7 @@ void evsel__exit(struct evsel *evsel)
- 	zfree(&evsel->group_name);
- 	zfree(&evsel->name);
- 	zfree(&evsel->pmu_name);
-+	zfree(&evsel->group_pmu_name);
- 	zfree(&evsel->unit);
- 	zfree(&evsel->metric_id);
- 	evsel__zero_per_pkg(evsel);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 429b172cc94d..6d9536ecbc7b 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -72,6 +72,7 @@ struct evsel {
- 		char			*name;
- 		char			*group_name;
- 		const char		*pmu_name;
-+		const char		*group_pmu_name;
- #ifdef HAVE_LIBTRACEEVENT
- 		struct tep_event	*tp_format;
- #endif
-@@ -287,7 +288,6 @@ int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size);
- int __evsel__hw_cache_type_op_res_name(u8 type, u8 op, u8 result, char *bf, size_t size);
- const char *evsel__name(struct evsel *evsel);
- bool evsel__name_is(struct evsel *evsel, const char *name);
--const char *evsel__group_pmu_name(const struct evsel *evsel);
- const char *evsel__metric_id(const struct evsel *evsel);
- 
- static inline bool evsel__is_tool(const struct evsel *evsel)
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 47ee628a65bb..ac67bb667cd9 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -1983,6 +1983,42 @@ int parse_events_terms(struct list_head *terms, const char *str)
- 	return ret;
- }
- 
-+static int evsel__compute_group_pmu_name(struct evsel *evsel,
-+					  const struct list_head *head)
-+{
-+	struct evsel *leader = evsel__leader(evsel);
-+	struct evsel *pos;
-+	const char *group_pmu_name = evsel->pmu_name ?: "cpu";
-+
-+	/*
-+	 * Software events may be in a group with other uncore PMU events. Use
-+	 * the pmu_name of the first non-software event to avoid breaking the
-+	 * software event out of the group.
-+	 *
-+	 * Aux event leaders, like intel_pt, expect a group with events from
-+	 * other PMUs, so substitute the AUX event's PMU in this case.
-+	 */
-+	if (evsel->core.attr.type == PERF_TYPE_SOFTWARE || evsel__is_aux_event(leader)) {
-+		/*
-+		 * Starting with the leader, find the first event with a named
-+		 * PMU. for_each_group_(member|evsel) isn't used as the list
-+		 * isn't yet sorted putting evsel's in the same group together.
-+		 */
-+		if (leader->pmu_name) {
-+			group_pmu_name = leader->pmu_name;
-+		} else if (leader->core.nr_members > 1) {
-+			list_for_each_entry(pos, head, core.node) {
-+				if (evsel__leader(pos) == leader && pos->pmu_name) {
-+					group_pmu_name = pos->pmu_name;
-+					break;
-+				}
-+			}
-+		}
-+	}
-+	evsel->group_pmu_name = strdup(group_pmu_name);
-+	return evsel->group_pmu_name ? 0 : -ENOMEM;
-+}
-+
- __weak int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- {
- 	/* Order by insertion index. */
-@@ -2002,7 +2038,11 @@ static int evlist__cmp(void *state, const struct list_head *l, const struct list
- 
- 	/*
- 	 * First sort by grouping/leader. Read the leader idx only if the evsel
--	 * is part of a group, as -1 indicates no group.
-+	 * is part of a group, by default ungrouped events will be sorted
-+	 * relative to grouped events based on where the first ungrouped event
-+	 * occurs. If both events don't have a group we want to fall-through to
-+	 * the arch specific sorting, that can reorder and fix things like
-+	 * Intel's topdown events.
- 	 */
- 	if (lhs_core->leader != lhs_core || lhs_core->nr_members > 1) {
- 		lhs_has_group = true;
-@@ -2018,8 +2058,8 @@ static int evlist__cmp(void *state, const struct list_head *l, const struct list
- 
- 	/* Group by PMU if there is a group. Groups can't span PMUs. */
- 	if (lhs_has_group && rhs_has_group) {
--		lhs_pmu_name = evsel__group_pmu_name(lhs);
--		rhs_pmu_name = evsel__group_pmu_name(rhs);
-+		lhs_pmu_name = lhs->group_pmu_name;
-+		rhs_pmu_name = rhs->group_pmu_name;
- 		ret = strcmp(lhs_pmu_name, rhs_pmu_name);
- 		if (ret)
- 			return ret;
-@@ -2029,13 +2069,14 @@ static int evlist__cmp(void *state, const struct list_head *l, const struct list
- 	return arch_evlist__cmp(lhs, rhs);
- }
- 
--static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
-+static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- {
- 	int idx = 0, unsorted_idx = -1;
- 	struct evsel *pos, *cur_leader = NULL;
- 	struct perf_evsel *cur_leaders_grp = NULL;
- 	bool idx_changed = false;
- 	int orig_num_leaders = 0, num_leaders = 0;
-+	int ret;
- 
- 	/*
- 	 * Compute index to insert ungrouped events at. Place them where the
-@@ -2044,6 +2085,10 @@ static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
- 	list_for_each_entry(pos, list, core.node) {
- 		const struct evsel *pos_leader = evsel__leader(pos);
- 
-+		ret = evsel__compute_group_pmu_name(pos, list);
-+		if (ret)
-+			return ret;
-+
- 		if (pos == pos_leader)
- 			orig_num_leaders++;
- 
-@@ -2068,7 +2113,7 @@ static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
- 	idx = 0;
- 	list_for_each_entry(pos, list, core.node) {
- 		const struct evsel *pos_leader = evsel__leader(pos);
--		const char *pos_pmu_name = evsel__group_pmu_name(pos);
-+		const char *pos_pmu_name = pos->group_pmu_name;
- 		const char *cur_leader_pmu_name, *pos_leader_pmu_name;
- 		bool force_grouped = arch_evsel__must_be_in_group(pos);
- 
-@@ -2085,7 +2130,7 @@ static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
- 		if (!cur_leader)
- 			cur_leader = pos;
- 
--		cur_leader_pmu_name = evsel__group_pmu_name(cur_leader);
-+		cur_leader_pmu_name = cur_leader->group_pmu_name;
- 		if ((cur_leaders_grp != pos->core.leader && !force_grouped) ||
- 		    strcmp(cur_leader_pmu_name, pos_pmu_name)) {
- 			/* Event is for a different group/PMU than last. */
-@@ -2097,7 +2142,7 @@ static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
- 			 */
- 			cur_leaders_grp = pos->core.leader;
- 		}
--		pos_leader_pmu_name = evsel__group_pmu_name(pos_leader);
-+		pos_leader_pmu_name = pos_leader->group_pmu_name;
- 		if (strcmp(pos_leader_pmu_name, pos_pmu_name) || force_grouped) {
- 			/*
- 			 * Event's PMU differs from its leader's. Groups can't
-@@ -2114,7 +2159,7 @@ static bool parse_events__sort_events_and_fix_groups(struct list_head *list)
- 			num_leaders++;
- 		pos_leader->core.nr_members++;
- 	}
--	return idx_changed || num_leaders != orig_num_leaders;
-+	return (idx_changed || num_leaders != orig_num_leaders) ? 1 : 0;
- }
- 
- int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filter,
-@@ -2131,7 +2176,7 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
- 		.pmu_filter = pmu_filter,
- 		.match_legacy_cache_terms = true,
- 	};
--	int ret;
-+	int ret, ret2;
- 
- 	ret = parse_events__scanner(str, &parse_state);
- 
-@@ -2140,8 +2185,11 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
- 		return -1;
- 	}
- 
--	if (parse_events__sort_events_and_fix_groups(&parse_state.list) &&
--	    warn_if_reordered && !parse_state.wild_card_pmus)
-+	ret2 = parse_events__sort_events_and_fix_groups(&parse_state.list);
-+	if (ret2 < 0)
-+		return ret;
-+
-+	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus)
- 		pr_warning("WARNING: events were regrouped to match PMUs\n");
- 
- 	/*
--- 
-2.41.0.rc0.172.g3f132b7071-goog
-
+> Thanks,
+> Ian
+> 
+> > >
+> > > Thank you for your support and I'm looking forward to collaborating with you on this project!
