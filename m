@@ -2,156 +2,128 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4703C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 02:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A32F8C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 05:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230194AbjEZClL (ORCPT
+        id S229479AbjEZFjz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 25 May 2023 22:41:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60018 "EHLO
+        Fri, 26 May 2023 01:39:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229631AbjEZClI (ORCPT
+        with ESMTP id S229850AbjEZFjy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 25 May 2023 22:41:08 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 524CDD9
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 19:41:07 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3f600a6a890so34605e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 19:41:07 -0700 (PDT)
+        Fri, 26 May 2023 01:39:54 -0400
+Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D6E2199
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 22:39:52 -0700 (PDT)
+Received: by mail-vk1-xa2c.google.com with SMTP id 71dfb90a1353d-456e4f4ea83so85778e0c.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 25 May 2023 22:39:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685068866; x=1687660866;
+        d=linaro.org; s=google; t=1685079591; x=1687671591;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zUzk7xsdgJU7M6GKVkRONbmBW/W1VsolmG1MhtnbW4k=;
-        b=dewv9/nOBEAzMMod+HXOrJ8nBG3gmuVk08ABPHupoSdpSx+7jxn5yueVp3w2S3nQR5
-         dVwzByUhHIuOJwycmURLANkZpcqXcccLLvNNFiWCeYTktW72fiRXLExhXMq3Tg0gdLqQ
-         xqL+o3eBlXJjpy3ija2AJz09T0JXh6eMj+bLhfyWcE7+QhSZo+nxPSmLumbyMBvvyKYI
-         h0f28YcmKLp0GCEMCVKWRmn8ioJG8Bh4l5OGA8k3U3obCQdTmz6MFaV56wXuLV0CJU+P
-         kO/D0B9dSVRI7EXyi7s0TCWI1DFHS5yo/ge6o3eKNtIugLRDv9KId1tdAjQO3nu7wmoB
-         z58Q==
+        bh=8S20EpxC0jYqjEdVLeuZpI5et5CF0gwUWywR2BM1QKQ=;
+        b=HjPkzZFhNcN47pTjWy00/2W8LzsulrTckq+2FiyTCWDCn+W3Avug/sChlVelvbSk4T
+         BHSRMp8f/J9Ys1AaoTG6mP3+SmC6LnpNSSXJbuHC1NXygNq069wlYoBoz2Ge8bgOufUK
+         VeW/0En/8moVGwCxvLgTsuqutGHV6g8UH1UrTNYkN4klcEeGTKekFYnDjz+K+TYgHFeN
+         WAvzgsiI+NvuHqcIdLKCoqc5c9ZoMaUqYhJ/grjDY5K+93HOxXUQL2UWVWqi67aBjmCU
+         yCxDHnzCYjhPWqxST9qQ2X9zj+IIhwaUIeXcW47OYw4Mh872iyb0sV8pfFyc3KOHxhlC
+         SNCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685068866; x=1687660866;
+        d=1e100.net; s=20221208; t=1685079591; x=1687671591;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zUzk7xsdgJU7M6GKVkRONbmBW/W1VsolmG1MhtnbW4k=;
-        b=HCfk5hQ/lC1opzzLpFhoWiOilaIaeO78VYbu2P3m2SUsGA9sjxmjVIWQ5XK9xGArTw
-         g30DOaa0cT0X+sMYAP13Hyk27KOw9MFayTFCldzcIZN5XYKkkLxG5tG7WpCw3CSzgmzo
-         5z4bqrjuBxVeViS+2yKZfsmuMn9r+sKDxiv79lhzR1KDO7JqsdPIF2IzrLjGYUFrzPgy
-         hMGjHOsqCcATSHS/In22oE0lbbqDTGxJ6ANladafSCeIWRALx2r+tVMu8HjKzdpa0DWh
-         k+4aJjGCuo5IHQZ+L+8njC+bW8eUUCekH2hcZXCzpEGfZwOd5hzYQ46wtqr2/kyUNmwL
-         GsoA==
-X-Gm-Message-State: AC+VfDzqJsSqswNw/ZHHHQnmHJl7bTNfR79VLyBN8s2DsQF/GYS7+nZe
-        lZFmr70Eh3547PHaUjFpVpJ980ylS00DjPPT+rESFQ==
-X-Google-Smtp-Source: ACHHUZ4QzeNdp7xwQYla9g2PgfBIKJhYYQ7jBl6vEfMdWSyheJWdeijLtuAek583y0Or3Q2gs+Jn36lvshbq/hm7nHU=
-X-Received: by 2002:a05:600c:4711:b0:3f5:f63:d490 with SMTP id
- v17-20020a05600c471100b003f50f63d490mr2819wmo.5.1685068865714; Thu, 25 May
- 2023 19:41:05 -0700 (PDT)
+        bh=8S20EpxC0jYqjEdVLeuZpI5et5CF0gwUWywR2BM1QKQ=;
+        b=NP5AC99FjMNFZbyin2X/g9KE44+BOrVsNsAcf56jqgGne6j7VhWW1c9B68AgXwlt4C
+         PG15b804LXl5Fu2BYTY7XxVp5TzVb5oVCcxuSw1VuXQ5XKVj90oWXxCOOnQ2GzkSiT36
+         dbcUArkqzPPxgTo+EaPlx2S914+mRpKQmm83cqx+qWkMefD2l35IrsHDKodF9ldlOlCP
+         pcDCj/hG7eXdpuhPxzDcABRmmEACQ6qyARAWUDWrA4QULheShJBNlmM3hTNYtZ468mun
+         0Lykb0GHSIB6ayvzGlRKywnb4EIJKWwQe9KrIEqBn9A8yNBo1Vjr9HrYPU/IbybVkk8Q
+         X2CA==
+X-Gm-Message-State: AC+VfDyUIuX7BB3sEowVjlXdiUr55c2AAar39wUFeH34pALORspfHqRi
+        4qcSgFu0a3XL7xULcV5h5lIhbkI2T9TOzCGSFElaSg==
+X-Google-Smtp-Source: ACHHUZ6SISstX0iLvYrXJgi52QO9jWx5aTs73MrvJ3WfJIQHyb4MaDC7DJJGXlH18HF/RbDIl8P1FzmNV2RUA/yR7rM=
+X-Received: by 2002:a1f:5e02:0:b0:457:400a:f3fc with SMTP id
+ s2-20020a1f5e02000000b00457400af3fcmr170510vkb.2.1685079591105; Thu, 25 May
+ 2023 22:39:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230525071133.2066610-1-irogers@google.com> <20230525071133.2066610-9-irogers@google.com>
- <CAM9d7ci5XB7-PdcXchWW7bBFO_64B0M76rpY8xgkBYr3-mGW0Q@mail.gmail.com>
-In-Reply-To: <CAM9d7ci5XB7-PdcXchWW7bBFO_64B0M76rpY8xgkBYr3-mGW0Q@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 25 May 2023 19:40:53 -0700
-Message-ID: <CAP-5=fX7_sFV=xGoefpLm_kRMSos7Ec5Df0WwL-k8x6Z4ZKjeg@mail.gmail.com>
-Subject: Re: [PATCH v1 08/16] perf daemon: Dynamically allocate path to perf
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+References: <CA+G9fYtCCTxT78c0T+5JFw+sN01ZnX_kvBBgDLoVLfPARc9ZuA@mail.gmail.com>
+ <CAEXW_YQwBy9xNRV9Xrdti46cC8vNE8nOocoL9pRrhjNMGdEWeg@mail.gmail.com>
+In-Reply-To: <CAEXW_YQwBy9xNRV9Xrdti46cC8vNE8nOocoL9pRrhjNMGdEWeg@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 26 May 2023 11:09:39 +0530
+Message-ID: <CA+G9fYs3LT9OaKVZw9C3v3YxGPBk6ZWCdqur=hL-XoLM5rgtww@mail.gmail.com>
+Subject: Re: Perf: RIP: 0010:__schedule on qemu-x86_64
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux-stable <stable@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, rcu <rcu@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        Ross Zwisler <zwisler@chromium.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        K Prateek Nayak <kprateek.nayak@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+        Ingo Molnar <mingo@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 25, 2023 at 12:17=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> On Thu, May 25, 2023 at 12:12=E2=80=AFAM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > Avoid a PATH_MAX array in __daemon (the .data section) by dynamically
-> > allocating the memory.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/builtin-daemon.c | 15 +++++++++++++--
-> >  1 file changed, 13 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-> > index 34cbe3e959aa..adb5751c3ed0 100644
-> > --- a/tools/perf/builtin-daemon.c
-> > +++ b/tools/perf/builtin-daemon.c
-> > @@ -90,7 +90,7 @@ struct daemon {
-> >         char                    *base;
-> >         struct list_head         sessions;
-> >         FILE                    *out;
-> > -       char                     perf[PATH_MAX];
-> > +       char                    *perf;
-> >         int                      signal_fd;
-> >         time_t                   start;
-> >  };
-> > @@ -1490,6 +1490,15 @@ static int __cmd_ping(struct daemon *daemon, str=
-uct option parent_options[],
-> >         return send_cmd(daemon, &cmd);
-> >  }
-> >
-> > +static char *set_perf_exe(void)
-> > +{
-> > +       char path[PATH_MAX];
-> > +
-> > +       perf_exe(path, sizeof(path));
-> > +       __daemon.perf =3D strdup(path);
-> > +       return __daemon.perf;
->
-> Then you need to free it somewhere.
+HI Joel,
 
-For leak sanitizer, if an allocation is reachable from a global then
-it isn't considered a leak. I'll address this in v2.
-
-Thanks,
-Ian
-
-> Thanks,
-> Namhyung
+On Thu, 25 May 2023 at 20:51, Joel Fernandes <joel@joelfernandes.org> wrote=
+:
 >
+> Hello Naresh,
 >
-> > +}
-> > +
-> >  int cmd_daemon(int argc, const char **argv)
-> >  {
-> >         struct option daemon_options[] =3D {
-> > @@ -1503,7 +1512,9 @@ int cmd_daemon(int argc, const char **argv)
-> >                 OPT_END()
-> >         };
+> On Wed, May 24, 2023 at 5:02=E2=80=AFAM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
 > >
-> > -       perf_exe(__daemon.perf, sizeof(__daemon.perf));
-> > +       if (!set_perf_exe())
-> > +               return -ENOMEM;
-> > +
-> >         __daemon.out =3D stdout;
+> > Following kernel crash noticed while running perf testing on qemu-x86_6=
+4
+> > with stable-rc 6.3.4-rc2 + kselftest merge configs.
 > >
-> >         argc =3D parse_options(argc, argv, daemon_options, daemon_usage=
-,
-> > --
-> > 2.40.1.698.g37aff9b760-goog
+> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 > >
+> > logs:
+> > =3D=3D=3D=3D=3D
+> > INFO: Performing perf record test...
+> >
+> > Parse sched tracepoints fields: Ok
+> >  16: syscalls:sys_enter_openat event fields     :
+> > --- start ---
+> > test child forked, pid 255
+> > <4>[  152.221288] int3: 0000 [#1] PREEMPT SMP PTI
+> > <4>[  152.221564] CPU: 0 PID: 255 Comm: perf Not tainted 6.3.4-rc2 #1
+> > <4>[  152.221607] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+> > BIOS 1.14.0-2 04/01/2014
+> > <4>[  152.221733] RIP: 0010:__schedule+0x29e/0xaa0
+
+<trim>
+
+> I wonder if this is a deadlock related to runqueue lock since another
+> CPU call stack are similarly in schedule.
+>
+> I tried to run gdb on your vmlinux but it does not have symbols, would
+> it be possible for you to provide a copy of vmlinux with symbols?
+
+DEBUG_INFO not enabled on this build.
+
+>
+> Were you able to narrow down the commit/release using git bisect to
+> see when it started happening?
+
+I will bisect this problem and get back to you.
+
+>
+> Thank you,
+>
+>  - Joel
+
+- Naresh
