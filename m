@@ -2,102 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 919BFC7EE23
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16323C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:27:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242855AbjEZSZB (ORCPT
+        id S236768AbjEZS1A (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 14:25:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40032 "EHLO
+        Fri, 26 May 2023 14:27:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242595AbjEZSYy (ORCPT
+        with ESMTP id S229694AbjEZS07 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 14:24:54 -0400
+        Fri, 26 May 2023 14:26:59 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1985BC;
-        Fri, 26 May 2023 11:24:53 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93A87BC;
+        Fri, 26 May 2023 11:26:58 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3EDC96523C;
-        Fri, 26 May 2023 18:24:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ACCFC433D2;
-        Fri, 26 May 2023 18:24:52 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3170065242;
+        Fri, 26 May 2023 18:26:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EDE3C433EF;
+        Fri, 26 May 2023 18:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685125492;
-        bh=iS5Q0u6jWqOCDWLbpL0S6ehmQI7x1tzANmo51W13qVs=;
+        s=k20201202; t=1685125617;
+        bh=Oja/HpwcowuZ4xGEUw808hComU3CB3F0uGr7JPCiE/0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PkgSlkZ086gPKa45iq9Ijr9TAOnzML9ur1Pg3bsmM3H27uj5kklmLUYpv7NvYP2zx
-         pS476xA23/xrq3923USG9cWfgGDZ15qpgA2UduK3EaRASo5aW4/WP6qVp+sjNTAwK+
-         QDj4N1dBFZPXsQAPpAz5x73iIo47zEeJToh2WYJRmB+5W8o/f3h1danp0ECYk7sbvF
-         z/dC7lnJuVhZmgCOYKKG/0LLi1zXS8xTcwk8PptOClLgi8EmSU+4mYWgavPXqnTITd
-         NdyvF29t+SkOdT3jeCW5iiazuhFHJnjMikHj/opIu7vTFpeIQHdPG/Vr7zGmziy9j+
-         5fxMKBsgWVTCQ==
+        b=jFV1N5qA2aH5iKoBckU0DoREQuy2HLI48ewrmBuBTQGE/hZAA9fOZHS9S3dpSCJr1
+         /JSZBUuMUBZS/7U4KiMsBCOZh3XnSjuiym7oCC55h8sfDRC+LZO/rmgcIh0pMtlwNI
+         bQmzCpRy+4ogflm8nHB4ekOPoZb+u7vNQeGG6ct280oiAgiGzXW/nj1AbAn0Vvcak0
+         V6/rKye+R/GcIuNDZm3NBnwmuwOkYcVHvGXwAHETQ0VjxiiStc3hXHN0jUDnG1WTJU
+         1S8Nr7DhNRFp9kVRT9mJ/gEKORzamPV/Y/RgqVvNU0Bv8tFXGQVYMnLubFvS6/aQJ+
+         iZS0lpQ2JNGeQ==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A7B47403B5; Fri, 26 May 2023 15:24:49 -0300 (-03)
-Date:   Fri, 26 May 2023 15:24:49 -0300
+        id 3CDD3403B5; Fri, 26 May 2023 15:26:55 -0300 (-03)
+Date:   Fri, 26 May 2023 15:26:55 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Qi Liu <liuqi115@huawei.com>, Leo Yan <leo.yan@linaro.org>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf arm: Fix include path
-Message-ID: <ZHD5cRAR+Sk0bIeA@kernel.org>
-References: <20230515165039.544045-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf build: Don't compile demangle-cxx.cpp if not
+ necessary
+Message-ID: <ZHD57wlaQnY9dqEB@kernel.org>
+References: <20230417192546.99923-1-irogers@google.com>
+ <CAP-5=fXuKqU=ZD4G3t1H=dD1SMghiVXHj5YTFhX+Jj98jAiVUg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230515165039.544045-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXuKqU=ZD4G3t1H=dD1SMghiVXHj5YTFhX+Jj98jAiVUg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, May 15, 2023 at 09:50:39AM -0700, Ian Rogers escreveu:
-> Change "../cs-etm.h" to just "../../../util/cs-etm.h" as ../cs-etm.h
-> doesn't exist.
+Em Wed, Apr 26, 2023 at 10:27:42PM -0700, Ian Rogers escreveu:
+> On Mon, Apr 17, 2023 at 12:25 PM Ian Rogers <irogers@google.com> wrote:
+> >
+> > demangle-cxx.cpp requires a C++ compiler, but feature checks may fail
+> > because of the absence of this. Add a CONFIG_CXX_DEMANGLE so that the
+> > source isn't built if not supported. Copy libbfd and cplus demangle
+> > variants to a weak symbol-elf.c version so they aren't dependent on
+> > C++. These variants are only built with the build option
+> > BUILD_NONDISTRO=1.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Testing on arm and noticed we hadn't picked this one up.
 
 Thanks, applied.
 
 - Arnaldo
 
  
-> Suggested-by: Leo Yan <leo.yan@linaro.org>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/arch/arm/util/pmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Thanks,
+> Ian
 > 
-> diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
-> index 860a8b42b4b5..a9623b128ece 100644
-> --- a/tools/perf/arch/arm/util/pmu.c
-> +++ b/tools/perf/arch/arm/util/pmu.c
-> @@ -12,7 +12,7 @@
->  #include "arm-spe.h"
->  #include "hisi-ptt.h"
->  #include "../../../util/pmu.h"
-> -#include "../cs-etm.h"
-> +#include "../../../util/cs-etm.h"
->  
->  struct perf_event_attr
->  *perf_pmu__get_default_config(struct perf_pmu *pmu __maybe_unused)
-> -- 
-> 2.40.1.606.ga4b1b128d6-goog
-> 
+> > ---
+> >  tools/perf/Makefile.config   |  1 +
+> >  tools/perf/util/Build        |  2 +-
+> >  tools/perf/util/symbol-elf.c | 27 +++++++++++++++++++++++++++
+> >  3 files changed, 29 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index 71442c54c25f..5f0f24b56f50 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -923,6 +923,7 @@ ifndef NO_DEMANGLE
+> >      EXTLIBS += -lstdc++
+> >      CFLAGS += -DHAVE_CXA_DEMANGLE_SUPPORT
+> >      CXXFLAGS += -DHAVE_CXA_DEMANGLE_SUPPORT
+> > +    $(call detected,CONFIG_CXX_DEMANGLE)
+> >    endif
+> >    ifdef BUILD_NONDISTRO
+> >      ifeq ($(filter -liberty,$(EXTLIBS)),)
+> > diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> > index bd18fe5f2719..f9df1df1eec0 100644
+> > --- a/tools/perf/util/Build
+> > +++ b/tools/perf/util/Build
+> > @@ -214,7 +214,7 @@ perf-$(CONFIG_ZSTD) += zstd.o
+> >
+> >  perf-$(CONFIG_LIBCAP) += cap.o
+> >
+> > -perf-y += demangle-cxx.o
+> > +perf-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
+> >  perf-y += demangle-ocaml.o
+> >  perf-y += demangle-java.o
+> >  perf-y += demangle-rust.o
+> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> > index 35724f6a84fa..cd08bdb9824f 100644
+> > --- a/tools/perf/util/symbol-elf.c
+> > +++ b/tools/perf/util/symbol-elf.c
+> > @@ -31,6 +31,13 @@
+> >  #include <bfd.h>
+> >  #endif
+> >
+> > +#if defined(HAVE_LIBBFD_SUPPORT) || defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
+> > +#ifndef DMGL_PARAMS
+> > +#define DMGL_PARAMS     (1 << 0)  /* Include function args */
+> > +#define DMGL_ANSI       (1 << 1)  /* Include const, volatile, etc */
+> > +#endif
+> > +#endif
+> > +
+> >  #ifndef EM_AARCH64
+> >  #define EM_AARCH64     183  /* ARM 64 bit */
+> >  #endif
+> > @@ -271,6 +278,26 @@ static bool want_demangle(bool is_kernel_sym)
+> >         return is_kernel_sym ? symbol_conf.demangle_kernel : symbol_conf.demangle;
+> >  }
+> >
+> > +/*
+> > + * Demangle C++ function signature, typically replaced by demangle-cxx.cpp
+> > + * version.
+> > + */
+> > +__weak char *cxx_demangle_sym(const char *str __maybe_unused, bool params __maybe_unused,
+> > +                             bool modifiers __maybe_unused)
+> > +{
+> > +#ifdef HAVE_LIBBFD_SUPPORT
+> > +       int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+> > +
+> > +       return bfd_demangle(NULL, str, flags);
+> > +#elif defined(HAVE_CPLUS_DEMANGLE_SUPPORT)
+> > +       int flags = (params ? DMGL_PARAMS : 0) | (modifiers ? DMGL_ANSI : 0);
+> > +
+> > +       return cplus_demangle(str, flags);
+> > +#else
+> > +       return NULL;
+> > +#endif
+> > +}
+> > +
+> >  static char *demangle_sym(struct dso *dso, int kmodule, const char *elf_name)
+> >  {
+> >         char *demangled = NULL;
+> > --
+> > 2.40.0.634.g4ca3ef3211-goog
+> >
 
 -- 
 
