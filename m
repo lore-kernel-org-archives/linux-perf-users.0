@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F12BBC7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:35:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C98B1C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:35:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242588AbjEZSfF (ORCPT
+        id S243431AbjEZSf1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 14:35:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44076 "EHLO
+        Fri, 26 May 2023 14:35:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243226AbjEZSek (ORCPT
+        with ESMTP id S243261AbjEZSex (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 14:34:40 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AAE9189
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:34 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-564fb1018bcso26955007b3.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:34 -0700 (PDT)
+        Fri, 26 May 2023 14:34:53 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA4510D7
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:38 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-565a33c35b1so21711437b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685126073; x=1687718073;
+        d=google.com; s=20221208; t=1685126078; x=1687718078;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=K4mau+kNTkjearkZEwOGLqNrVUMBNYPnc3BA4EgUGCw=;
-        b=1Px+qIzRsUdsP2fgrQLU4KStunvwa9NLpoiulRIDIQ6fNeD/JSY5sLj6lKfDw2YQNn
-         hAhwLk2UDkapjkHomGS2RIYEXpcdCRoJxtVqr190r8nGLv9gtDUCWW7iYnKzge0yfFyX
-         dqfcp8cYoT3G55yCvYtOMtGzKWHrSJ2qeh5zia2bexPzDYVSfeCJQxCSuMFyFldWqbq3
-         U7VbtyR7Hped8uRJuRelNSl+6JXi9OF/y8m4a+FINFEz1dnA5AfVU9b+mvGgrX8bDEBG
-         QMyd5w4V8mfUupr2gWu5ZbTrShoWm3fOVr8QbhHhGuvUQlXvEdoHjLEf9NMkwlP7h5lM
-         Kx0w==
+        bh=Bcu52ZFroNNUdqyZRIxQffX6dxZ/uHK2VwVobLtSsPQ=;
+        b=5o/Nx7rLPrNfsjQlkkwWwKM8wDGHmv5Dybvj9q2PYboM4W3EidbHkxN5I0Oo/rs7S0
+         khUL+qXGYgFBPOGZw1ae+0f82yoyabEVbgKZ/qilDA7Ug1LN0wdETQjZq8sReEFkF5Mv
+         slV7gSy5Zol+0tUuJlF3l4ebDn3ItoOkCofhzx67roW6klSVhkf7ihzbKKPLxMglfgnw
+         Y1av5YxUp3V8cTSuTyoO1q5tubptBAPkPxO7k0DDTlK9EAXklj+sSHCCQustodKl/2mk
+         N9qqMsUWaAmTRHrbC6zYr+ToTwBFtjy4OdY4Rt/VgF4zqdacRrr/XbD85TIDdPiEtydd
+         UZNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685126073; x=1687718073;
+        d=1e100.net; s=20221208; t=1685126078; x=1687718078;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K4mau+kNTkjearkZEwOGLqNrVUMBNYPnc3BA4EgUGCw=;
-        b=U85SOsd1MUsGKUDjRs5dZdX3CWSxD2Viz+51XimogksAFzBdYzAZEl3v8ZEH9O9X5b
-         XfeR14kujfP2fVB3nGz+yoCgiNv/3V17fs0CcrQ2ncJ93korAqnSVk2E6aFzw5DVHa7b
-         e9xe9yLj/CiHNxHGNu3QTKOGT2APXRqh79tL5A6h5LvQD/h8eFF6+4qPLnCpwTffdYN9
-         eETI+IGtdjvwZ4BLs9EXTRTEOf6as1l+VBHbYbewwifCTnWAaIWTRcmABa1LQLEnmhsl
-         cRzxCMvw1JeLJGH1AZCe2HJVuT4Sw+fv8X+IR8L7CUgRw0fI4KwzzS9pzVsGkdUTuSdU
-         9AbQ==
-X-Gm-Message-State: AC+VfDwy+Q0D9I5CQlp9q5fWBV3/Bt4xiC7Run7Y1HalYR4pogdjSKNH
-        cwkbERJOON3bfxbO4pTWGYZh0ARduW8/
-X-Google-Smtp-Source: ACHHUZ4/ooV4uN9q1A338rkeLKvKvQrlTdkMU6a1DjOKnscVR49yyllBcTY0DiYg18FNUOwR0poOCFfbqAqH
+        bh=Bcu52ZFroNNUdqyZRIxQffX6dxZ/uHK2VwVobLtSsPQ=;
+        b=Pb6DPd9EDpm1d6ZnNrUX/QS7XYb4j818gjs+dNP5dkyXKoTUqFu09Vx431hYOcVRRj
+         qBcXvG1m7OJgmKa+4scFCkj1UDpGaQKIE/JncTD92uP4vkKZk4yIh6TcUCmISAzSWoAM
+         sHSGsbPkCo6JpFBa1l6t3OvFE0xu6THnsEnF1f1wg5bA/FS9ZwSjWKJ4sVuNTC6xR9Zy
+         iA4fZmif9O1cuYYmCYDx49aJBWvD2EImySTU1T/vYBY1dNTvpqUtW3DH1Z+tSyKtVR9c
+         jpIOrtpSD6mNGkKTmsVWyRfnVLmXfYIfiKPHojJNd5Gxtq7qJczwr/cax+SH0ZteFS3F
+         T9OQ==
+X-Gm-Message-State: AC+VfDyVBxx4jb1dtKL3DujueIi26NbbIZzjzh1O7QO+sy0cEuIfLSfN
+        gz8dQrNnxbFN4li4KobE8smfz0MVt7mj
+X-Google-Smtp-Source: ACHHUZ40dfijm94RJq2Q31obwmB+WB5iBglw4oyCn9Mp3VcGTYG7tjYdBlampUIaFb0Y5I554ax/Hm8uUwv9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a81:d84a:0:b0:562:837:122f with SMTP id
- n10-20020a81d84a000000b005620837122fmr1614586ywl.9.1685126073356; Fri, 26 May
- 2023 11:34:33 -0700 (PDT)
-Date:   Fri, 26 May 2023 11:33:55 -0700
+ (user=irogers job=sendgmr) by 2002:a81:4309:0:b0:561:987e:d22 with SMTP id
+ q9-20020a814309000000b00561987e0d22mr1566047ywa.1.1685126077827; Fri, 26 May
+ 2023 11:34:37 -0700 (PDT)
+Date:   Fri, 26 May 2023 11:33:57 -0700
 In-Reply-To: <20230526183401.2326121-1-irogers@google.com>
-Message-Id: <20230526183401.2326121-11-irogers@google.com>
+Message-Id: <20230526183401.2326121-13-irogers@google.com>
 Mime-Version: 1.0
 References: <20230526183401.2326121-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v2 10/16] perf timechart: Make large arrays dynamic
+Subject: [PATCH v2 12/16] perf path: Make mkpath thread safe
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -82,99 +82,162 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Allocate start time and state arrays when command starts rather than
-using 114,688 bytes in .bss.
+Avoid 4 static arrays for paths, pass in a char[] buffer to use. Makes
+mkpath thread safe for the small number of users. Also removes 16,384
+bytes from .bss.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-timechart.c | 48 +++++++++++++++++++++++++++-------
- 1 file changed, 39 insertions(+), 9 deletions(-)
+ tools/perf/builtin-config.c |  4 +++-
+ tools/perf/builtin-help.c   |  4 +++-
+ tools/perf/util/cache.h     |  2 +-
+ tools/perf/util/config.c    |  3 ++-
+ tools/perf/util/path.c      | 35 +++++------------------------------
+ 5 files changed, 14 insertions(+), 34 deletions(-)
 
-diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
-index bce1cf896f9c..829d99fecfd0 100644
---- a/tools/perf/builtin-timechart.c
-+++ b/tools/perf/builtin-timechart.c
-@@ -315,10 +315,10 @@ static void pid_put_sample(struct timechart *tchart, int pid, int type,
+diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
+index 2603015f98be..2e8363778935 100644
+--- a/tools/perf/builtin-config.c
++++ b/tools/perf/builtin-config.c
+@@ -12,6 +12,7 @@
+ #include "util/debug.h"
+ #include "util/config.h"
+ #include <linux/string.h>
++#include <limits.h>
+ #include <stdio.h>
+ #include <stdlib.h>
  
- #define MAX_CPUS 4096
+@@ -157,7 +158,8 @@ int cmd_config(int argc, const char **argv)
+ {
+ 	int i, ret = -1;
+ 	struct perf_config_set *set;
+-	char *user_config = mkpath("%s/.perfconfig", getenv("HOME"));
++	char path[PATH_MAX];
++	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
+ 	const char *config_filename;
+ 	bool changed = false;
  
--static u64 cpus_cstate_start_times[MAX_CPUS];
--static int cpus_cstate_state[MAX_CPUS];
--static u64 cpus_pstate_start_times[MAX_CPUS];
--static u64 cpus_pstate_state[MAX_CPUS];
-+static u64 *cpus_cstate_start_times;
-+static int *cpus_cstate_state;
-+static u64 *cpus_pstate_start_times;
-+static u64 *cpus_pstate_state;
+diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
+index 3e7f52054fac..b2a368ae295a 100644
+--- a/tools/perf/builtin-help.c
++++ b/tools/perf/builtin-help.c
+@@ -19,6 +19,7 @@
+ #include <linux/string.h>
+ #include <linux/zalloc.h>
+ #include <errno.h>
++#include <limits.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -389,9 +390,10 @@ static int get_html_page_path(char **page_path, const char *page)
+ {
+ 	struct stat st;
+ 	const char *html_path = system_path(PERF_HTML_PATH);
++	char path[PATH_MAX];
  
- static int process_comm_event(struct perf_tool *tool,
- 			      union perf_event *event,
-@@ -1981,12 +1981,34 @@ int cmd_timechart(int argc, const char **argv)
- 		"perf timechart record [<options>]",
- 		NULL
- 	};
-+	int ret;
-+
-+	cpus_cstate_start_times = calloc(MAX_CPUS, sizeof(*cpus_cstate_start_times));
-+	if (!cpus_cstate_start_times)
-+		return -ENOMEM;
-+	cpus_cstate_state = calloc(MAX_CPUS, sizeof(*cpus_cstate_state));
-+	if (!cpus_cstate_state) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+	cpus_pstate_start_times = calloc(MAX_CPUS, sizeof(*cpus_pstate_start_times));
-+	if (!cpus_pstate_start_times) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+	cpus_pstate_state = calloc(MAX_CPUS, sizeof(*cpus_pstate_state));
-+	if (!cpus_pstate_state) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
- 	argc = parse_options_subcommand(argc, argv, timechart_options, timechart_subcommands,
- 			timechart_usage, PARSE_OPT_STOP_AT_NON_OPTION);
- 
- 	if (tchart.power_only && tchart.tasks_only) {
- 		pr_err("-P and -T options cannot be used at the same time.\n");
--		return -1;
-+		ret = -1;
-+		goto out;
- 	}
- 
- 	if (argc && strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
-@@ -1996,17 +2018,25 @@ int cmd_timechart(int argc, const char **argv)
- 
- 		if (tchart.power_only && tchart.tasks_only) {
- 			pr_err("-P and -T options cannot be used at the same time.\n");
--			return -1;
-+			ret = -1;
-+			goto out;
- 		}
- 
- 		if (tchart.io_only)
--			return timechart__io_record(argc, argv);
-+			ret = timechart__io_record(argc, argv);
- 		else
--			return timechart__record(&tchart, argc, argv);
-+			ret = timechart__record(&tchart, argc, argv);
-+		goto out;
- 	} else if (argc)
- 		usage_with_options(timechart_usage, timechart_options);
- 
- 	setup_pager();
- 
--	return __cmd_timechart(&tchart, output_name);
-+	ret = __cmd_timechart(&tchart, output_name);
-+out:
-+	zfree(&cpus_cstate_start_times);
-+	zfree(&cpus_cstate_state);
-+	zfree(&cpus_pstate_start_times);
-+	zfree(&cpus_pstate_state);
-+	return ret;
+ 	/* Check that we have a perf documentation directory. */
+-	if (stat(mkpath("%s/perf.html", html_path), &st)
++	if (stat(mkpath(path, sizeof(path), "%s/perf.html", html_path), &st)
+ 	    || !S_ISREG(st.st_mode)) {
+ 		pr_err("'%s': not a documentation directory.", html_path);
+ 		return -1;
+diff --git a/tools/perf/util/cache.h b/tools/perf/util/cache.h
+index 9f2e36ef5072..0b61840d4226 100644
+--- a/tools/perf/util/cache.h
++++ b/tools/perf/util/cache.h
+@@ -26,6 +26,6 @@ static inline int is_absolute_path(const char *path)
+ 	return path[0] == '/';
  }
+ 
+-char *mkpath(const char *fmt, ...) __printf(1, 2);
++char *mkpath(char *path_buf, size_t sz, const char *fmt, ...) __printf(3, 4);
+ 
+ #endif /* __PERF_CACHE_H */
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 658170b8dcef..f340dc73db6d 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -543,6 +543,7 @@ static char *home_perfconfig(void)
+ 	const char *home = NULL;
+ 	char *config;
+ 	struct stat st;
++	char path[PATH_MAX];
+ 
+ 	home = getenv("HOME");
+ 
+@@ -554,7 +555,7 @@ static char *home_perfconfig(void)
+ 	if (!home || !*home || !perf_config_global())
+ 		return NULL;
+ 
+-	config = strdup(mkpath("%s/.perfconfig", home));
++	config = strdup(mkpath(path, sizeof(path), "%s/.perfconfig", home));
+ 	if (config == NULL) {
+ 		pr_warning("Not enough memory to process %s/.perfconfig, ignoring it.\n", home);
+ 		return NULL;
+diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
+index ce80b79be103..00adf872bf00 100644
+--- a/tools/perf/util/path.c
++++ b/tools/perf/util/path.c
+@@ -1,16 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/*
+- * I'm tired of doing "vsnprintf()" etc just to open a
+- * file, so here's a "return static buffer with printf"
+- * interface for paths.
+- *
+- * It's obviously not thread-safe. Sue me. But it's quite
+- * useful for doing things like
+- *
+- *   f = open(mkpath("%s/%s.perf", base, name), O_RDONLY);
+- *
+- * which is what it's designed for.
+- */
+ #include "path.h"
+ #include "cache.h"
+ #include <linux/kernel.h>
+@@ -22,18 +10,6 @@
+ #include <dirent.h>
+ #include <unistd.h>
+ 
+-static char bad_path[] = "/bad-path/";
+-/*
+- * One hack:
+- */
+-static char *get_pathname(void)
+-{
+-	static char pathname_array[4][PATH_MAX];
+-	static int idx;
+-
+-	return pathname_array[3 & ++idx];
+-}
+-
+ static char *cleanup_path(char *path)
+ {
+ 	/* Clean it up */
+@@ -45,18 +21,17 @@ static char *cleanup_path(char *path)
+ 	return path;
+ }
+ 
+-char *mkpath(const char *fmt, ...)
++char *mkpath(char *path_buf, size_t sz, const char *fmt, ...)
+ {
+ 	va_list args;
+ 	unsigned len;
+-	char *pathname = get_pathname();
+ 
+ 	va_start(args, fmt);
+-	len = vsnprintf(pathname, PATH_MAX, fmt, args);
++	len = vsnprintf(path_buf, sz, fmt, args);
+ 	va_end(args);
+-	if (len >= PATH_MAX)
+-		return bad_path;
+-	return cleanup_path(pathname);
++	if (len >= sz)
++		strncpy(path_buf, "/bad-path/", sz);
++	return cleanup_path(path_buf);
+ }
+ 
+ int path__join(char *bf, size_t size, const char *path1, const char *path2)
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
