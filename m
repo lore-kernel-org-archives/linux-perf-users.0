@@ -2,167 +2,506 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99911C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 10:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F72C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 12:32:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242330AbjEZKBN (ORCPT
+        id S242955AbjEZMcN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 06:01:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53976 "EHLO
+        Fri, 26 May 2023 08:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242803AbjEZKBK (ORCPT
+        with ESMTP id S237056AbjEZMcM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 06:01:10 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22478194;
-        Fri, 26 May 2023 03:00:59 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QSL3h0Glcz67bgN;
-        Fri, 26 May 2023 17:58:56 +0800 (CST)
-Received: from SecurePC-101-06.china.huawei.com (10.122.247.231) by
- lhrpeml500005.china.huawei.com (7.191.163.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Fri, 26 May 2023 11:00:56 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
-        <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
-        <dan.j.williams@intel.com>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <linuxarm@huawei.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Namhyung Kim <namhyung@gmail.com>,
-        Stephane Eranian <eranian@google.com>
-Subject: [PATCH v7 5/5] docs: perf: Minimal introduction the the CXL PMU device and driver
-Date:   Fri, 26 May 2023 10:58:24 +0100
-Message-ID: <20230526095824.16336-6-Jonathan.Cameron@huawei.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230526095824.16336-1-Jonathan.Cameron@huawei.com>
-References: <20230526095824.16336-1-Jonathan.Cameron@huawei.com>
+        Fri, 26 May 2023 08:32:12 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D0AE73;
+        Fri, 26 May 2023 05:31:32 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 986451F8AE;
+        Fri, 26 May 2023 12:29:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1685104199; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WhfCogRNdmmsvJU5CjDqdyyExEkgp9ppc07tbwxSsOg=;
+        b=UBlT9ISwUDHYPeMb+a+ztXThl86vi9IDG6M9ms/XS0tVW0/E2hbhprn7RRLeyq1C45+D/b
+        UHhvn1UnkoPvxRIU7hyiv3JpraRb3fXflpZJXSH2dOTVPbnALq5BAMR9pbIBcE99YuCZJK
+        S6IfNcRb2vDTizhuODQNL5WRubLUMN8=
+Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 3EB022D38D;
+        Fri, 26 May 2023 12:29:56 +0000 (UTC)
+Date:   Fri, 26 May 2023 14:29:53 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Stephane Eranian <eranian@google.com>, mpe@ellerman.id.au,
+        Tzung-Bi Shih <tzungbi@chromium.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linuxppc-dev@lists.ozlabs.org, Sumit Garg <sumit.garg@linaro.org>,
+        npiggin@gmail.com, davem@davemloft.net,
+        Marc Zyngier <maz@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>, sparclinux@vger.kernel.org,
+        christophe.leroy@csgroup.eu,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        ravi.v.shankar@intel.com, Randy Dunlap <rdunlap@infradead.org>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Ian Rogers <irogers@google.com>, ito-yuichi@fujitsu.com,
+        ricardo.neri@intel.com, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Colin Cross <ccross@android.com>
+Subject: Re: [PATCH v5 14/18] watchdog/hardlockup: detect hard lockups using
+ secondary (buddy) CPUs
+Message-ID: <ZHCmQXECccH7ctq2@alley>
+References: <20230519101840.v5.18.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
+ <20230519101840.v5.14.I6bf789d21d0c3d75d382e7e51a804a7a51315f2c@changeid>
+ <ZG-MTPSZakRDl2CP@alley>
+ <CAD=FV=XNgevGRrD8cAsq03RwDX=n0i6d=4VDxWDKo-g3DQ07dA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.122.247.231]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=XNgevGRrD8cAsq03RwDX=n0i6d=4VDxWDKo-g3DQ07dA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Very basic introduction to the device and the current driver support
-provided. I expect to expand on this in future versions of this patch
-set.
+On Thu 2023-05-25 13:08:04, Doug Anderson wrote:
+> Hi,
+> 
+> On Thu, May 25, 2023 at 9:27 AM Petr Mladek <pmladek@suse.com> wrote:
+> >
+> > On Fri 2023-05-19 10:18:38, Douglas Anderson wrote:
+> > > Implement a hardlockup detector that doesn't doesn't need any extra
+> > > arch-specific support code to detect lockups. Instead of using
+> > > something arch-specific we will use the buddy system, where each CPU
+> > > watches out for another one. Specifically, each CPU will use its
+> > > softlockup hrtimer to check that the next CPU is processing hrtimer
+> > > interrupts by verifying that a counter is increasing.
+> > >
+> > > --- a/kernel/watchdog.c
+> > > +++ b/kernel/watchdog.c
+> > > @@ -85,7 +85,7 @@ __setup("nmi_watchdog=", hardlockup_panic_setup);
+> > >
+> > >  #endif /* CONFIG_HARDLOCKUP_DETECTOR */
+> > >
+> > > -#if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
+> > > +#if defined(CONFIG_HARDLOCKUP_DETECTOR_COUNTS_HRTIMER)
+> > >
+> > >  static DEFINE_PER_CPU(atomic_t, hrtimer_interrupts);
+> > >  static DEFINE_PER_CPU(int, hrtimer_interrupts_saved);
+> > > @@ -106,6 +106,14 @@ notrace void arch_touch_nmi_watchdog(void)
+> > >  }
+> > >  EXPORT_SYMBOL(arch_touch_nmi_watchdog);
+> > >
+> > > +void watchdog_hardlockup_touch_cpu(unsigned int cpu)
+> > > +{
+> > > +     per_cpu(watchdog_hardlockup_touched, cpu) = true;
+> > > +
+> > > +     /* Match with smp_rmb() in watchdog_hardlockup_check() */
+> > > +     smp_wmb();
+> >
+> > It is great that you described where the related barrier is.
+> >
+> > Another important information is what exactly is synchronized.
+> > And I am actually not sure what we are synchronizing here.
+> >
+> > My understanding is that a write barrier should synchronize
+> > related writes, for example:
+> >
+> >         X = ...;
+> >         /* Make sure that X is modified before Y */
+> >         smp_wmb();
+> >         Y = ...;
+> >
+> > And the related read barrier should synchronize the related reads,
+> > for example:
+> >
+> >         if (test(Y)) {
+> >                 /*
+> >                  * Make sure that we use the updated X when
+> >                  * we saw the updated Y.
+> >                  */
+> >                  smp_rmb();
+> >                  do_something(X);
+> >          }
+> >
+> > IMHO, we do not need any barrier here because we have only
+> > one variable "watchdog_hardlockup_touched" here.
+> > watchdog_hardlockup_check() will either see the updated value
+> > or not. But it does not synchronize it against any other
+> > variables or values.
+> 
+> Fair. These barriers were present in the original buddy lockup
+> detector that we've been carrying in ChromeOS but that doesn't
+> necessarily mean that they were there for a good reason.
+> 
+> Reasoning about weakly ordered memory always makes my brain hurt and I
+> never feel confident at the end that I got the right answer and, of
+> course, this is coupled by the fact that if I have a logic error in my
+> reasoning that it might cause a rare / subtle bug. :(
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Sure. Lockless code is complicated.
 
----
-v7
-- Added explict -a to command line examples to make it obvious the
-  counters apply only to all CPUs (no per thread or per process).
----
- Documentation/admin-guide/perf/cxl.rst   | 68 ++++++++++++++++++++++++
- Documentation/admin-guide/perf/index.rst |  1 +
- MAINTAINERS                              |  1 +
- 3 files changed, 70 insertions(+)
+> When possible I
+> try to write code that uses full blown locks to make it easier to
+> reason about (even if less efficient),
 
-diff --git a/Documentation/admin-guide/perf/cxl.rst b/Documentation/admin-guide/perf/cxl.rst
-new file mode 100644
-index 000000000000..9233ea0d0b10
---- /dev/null
-+++ b/Documentation/admin-guide/perf/cxl.rst
-@@ -0,0 +1,68 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+======================================
-+CXL Performance Monitoring Unit (CPMU)
-+======================================
-+
-+The CXL rev 3.0 specification provides a definition of CXL Performance
-+Monitoring Unit in section 13.2: Performance Monitoring.
-+
-+CXL components (e.g. Root Port, Switch Upstream Port, End Point) may have
-+any number of CPMU instances. CPMU capabilities are fully discoverable from
-+the devices. The specification provides event definitions for all CXL protocol
-+message types and a set of additional events for things commonly counted on
-+CXL devices (e.g. DRAM events).
-+
-+CPMU driver
-+===========
-+
-+The CPMU driver registers a perf PMU with the name pmu_mem<X>.<Y> on the CXL bus
-+representing the Yth CPMU for memX.
-+
-+    /sys/bus/cxl/device/pmu_mem<X>.<Y>
-+
-+The associated PMU is registered as
-+
-+   /sys/bus/event_sources/devices/cxl_pmu_mem<X>.<Y>
-+
-+In common with other CXL bus devices, the id has no specific meaning and the
-+relationship to specific CXL device should be established via the device parent
-+of the device on the CXL bus.
-+
-+PMU driver provides description of available events and filter options in sysfs.
-+
-+The "format" directory describes all formats of the config (event vendor id,
-+group id and mask) config1 (threshold, filter enables) and config2 (filter
-+parameters) fields of the perf_event_attr structure.  The "events" directory
-+describes all documented events show in perf list.
-+
-+The events shown in perf list are the most fine grained events with a single
-+bit of the event mask set. More general events may be enable by setting
-+multiple mask bits in config. For example, all Device to Host Read Requests
-+may be captured on a single counter by setting the bits for all of
-+
-+* d2h_req_rdcurr
-+* d2h_req_rdown
-+* d2h_req_rdshared
-+* d2h_req_rdany
-+* d2h_req_rdownnodata
-+
-+Example of usage::
-+
-+  $#perf list
-+  cxl_pmu_mem0.0/clock_ticks/                        [Kernel PMU event]
-+  cxl_pmu_mem0.0/d2h_req_rdshared/                   [Kernel PMU event]
-+  cxl_pmu_mem0.0/h2d_req_snpcur/                     [Kernel PMU event]
-+  cxl_pmu_mem0.0/h2d_req_snpdata/                    [Kernel PMU event]
-+  cxl_pmu_mem0.0/h2d_req_snpinv/                     [Kernel PMU event]
-+  -----------------------------------------------------------
-+
-+  $# perf stat -a -e cxl_pmu_mem0.0/clock_ticks/ -e cxl_pmu_mem0.0/d2h_req_rdshared/
-+
-+Vendor specific events may also be available and if so can be used via
-+
-+  $# perf stat -a -e cxl_pmu_mem0.0/vid=VID,gid=GID,mask=MASK/
-+
-+The driver does not support sampling so "perf record" is unsupported.
-+It only supports system-wide counting so attaching to a task is
-+unsupported.
-diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
-index 9de64a40adab..f60be04e4e33 100644
---- a/Documentation/admin-guide/perf/index.rst
-+++ b/Documentation/admin-guide/perf/index.rst
-@@ -21,3 +21,4 @@ Performance monitor support
-    alibaba_pmu
-    nvidia-pmu
-    meson-ddr-pmu
-+   cxl
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 976b3e982d3a..5388b5c2e5bb 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5195,6 +5195,7 @@ COMPUTE EXPRESS LINK PMU (CPMU)
- M:	Jonathan Cameron <jonathan.cameron@huawei.com>
- L:	linux-cxl@vger.kernel.org
- S:	Maintained
-+F:	Documentation/admin-guide/perf/cxl.rst
- F:	drivers/perf/cxl_pmu.c
+Makes sense. There should be a good reason to use lockless code
+because it is complicated to do it right and maintain.
+
+> but that's not necessarily
+> possible here. While we obviously don't just want to sprinkle barriers
+> all over the code, IMO it's not a terrible sin to put a barrier in a
+> case where it makes it easier to reason about the order of things.
+
+I understand this. Well, it is always important to describe the
+the reason why the barrier was added there. Even when it is wrong,
+it gives a clue what was the motivation. Otherwise, it is hard
+to do any changes on the code later.
+
+I guess that it might be more problematic for you because
+you probably are not the original author.
+
+> In any case, I guess in this case I would worry about some sort of
+> ordering race when enabling / disabling the buddy lockup detector. At
+> the end of the buddy's watchdog_hardlockup_enable() /
+> watchdog_hardlockup_disable() we adjust the "watchdog_cpus" which
+> changes buddy assignments. Without a barrier, I _think_ it would be
+> possible for a new CPU to notice the change in buddies without
+> noticing the touch. Does that match your understanding? Now when
+> reasoning about CPUs going online/offline we need to consider this
+> extra case and we have to decide if there's any chance it could lead
+> to a false lockup detection. With the memory barriers here, it's a
+> little easier to think about.
+
+This makes sense. I did not think about the hotplug scenario.
+
+Well, I suggest to move the barriers into the buddy code and describe
+it there. It does not make sense to use the barriers for the perf
+hardlockup.
+
+I mean something like:
+
+diff --git a/kernel/watchdog_buddy.c b/kernel/watchdog_buddy.c
+index fee45af2e5bd..ebe71dcb55e6 100644
+--- a/kernel/watchdog_buddy.c
++++ b/kernel/watchdog_buddy.c
+@@ -52,6 +52,13 @@ void watchdog_hardlockup_enable(unsigned int cpu)
+ 	if (next_cpu < nr_cpu_ids)
+ 		watchdog_hardlockup_touch_cpu(next_cpu);
  
- CONEXANT ACCESSRUNNER USB DRIVER
--- 
-2.39.2
++	/*
++	 * Makes sure that watchdog is touched on this CPU before
++	 * other CPUs could see it in watchdog_cpus. The counter
++	 * part is in watchdog_buddy_check_hardlockup().
++	 */
++	smp_wmb();
++
+ 	cpumask_set_cpu(cpu, &watchdog_cpus);
+ }
+ 
+@@ -69,6 +76,13 @@ void watchdog_hardlockup_disable(unsigned int cpu)
+ 	if (next_cpu < nr_cpu_ids)
+ 		watchdog_hardlockup_touch_cpu(next_cpu);
+ 
++	/*
++	 * Makes sure that watchdog is touched on the next CPU before
++	 * this CPU disappear in watchdog_cpus. The counter part is in
++	 * watchdog_buddy_check_hardlockup().
++	 */
++	smp_wmb();
++
+ 	cpumask_clear_cpu(cpu, &watchdog_cpus);
+ }
+ 
+@@ -89,5 +103,12 @@ void watchdog_buddy_check_hardlockup(unsigned long hrtimer_interrupts)
+ 	if (next_cpu >= nr_cpu_ids)
+ 		return;
+ 
++	/*
++	 * Make sure that the watchdog was touched on next CPU when
++	 * watchdog_next_cpu() returned another one because of
++	 * a change in watchdog_hardlockup_enable()/disable().
++	 */
++	smp_rmb();
++
+ 	watchdog_hardlockup_check(next_cpu, NULL);
+ }
 
+> Did the above convince you about keeping the barriers? If so, do you
+> have any suggested comment that would make it clearer?
+> 
+> 
+> > > +}
+> > > +
+> > >  static bool is_hardlockup(unsigned int cpu)
+> > >  {
+> > >       int hrint = atomic_read(&per_cpu(hrtimer_interrupts, cpu));
+> > > @@ -443,11 +454,15 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+> > >       struct pt_regs *regs = get_irq_regs();
+> > >       int duration;
+> > >       int softlockup_all_cpu_backtrace = sysctl_softlockup_all_cpu_backtrace;
+> > > +     unsigned long hrtimer_interrupts;
+> > >
+> > >       if (!watchdog_enabled)
+> > >               return HRTIMER_NORESTART;
+> > >
+> > > -     watchdog_hardlockup_kick();
+> > > +     hrtimer_interrupts = watchdog_hardlockup_kick();
+> > > +
+> > > +     /* test for hardlockups */
+> >
+> > I would omit the comment. It is not valid when perf detector is used.
+> > And checking the buddy is clear from the function name.
+> >
+> > > +     watchdog_buddy_check_hardlockup(hrtimer_interrupts);
+> >
+> > I would personally move this into watchdog_hardlockup_kick().
+> > watchdog_timer_fn() is already complex enough. And checking
+> > the buddy when kicking a CPU makes sense.
+> 
+> Sure, I'll add that to my list of things to follow-up with.
+> 
+> 
+> > Also I would not pass "hrtimer_interrupts". I guess that it is
+> > just an optimization. It is an extra churn in the code. IMHO,
+> > is is not wort it. This code does not need to be super optimized.
+> 
+> The main reason I did it is that "hrtimer_interrupts" is static to
+> watchdog.c now. If I don't pass it in then I have to make it
+> non-static and add it to the header. That also means anyone looking at
+> the variable and figuring out how it is read/written needs to go
+> search for other people that reference it. I feel like it's cleaner to
+> just pass it in. If you feel strongly that I should change this then
+> let me know, but otherwise I'll plan to leave this how I have it.
+
+I do not have strong opinion. For me, the more important change is
+to move watchdog_buddy_check_hardlockup() into
+watchdog_hardlockup_kick(). watchdog_timer_fn() is already too complex.
+
+> 
+> > >       /* kick the softlockup detector */
+> > >       if (completion_done(this_cpu_ptr(&softlockup_completion))) {
+> > > --- a/lib/Kconfig.debug
+> > > +++ b/lib/Kconfig.debug
+> > > @@ -1035,10 +1035,55 @@ config BOOTPARAM_SOFTLOCKUP_PANIC
+> > >
+> > >         Say N if unsure.
+> > >
+> > > -config HARDLOCKUP_DETECTOR_PERF
+> > > +# Both the "perf" and "buddy" hardlockup detectors count hrtimer
+> > > +# interrupts. This config enables functions managing this common code.
+> > > +config HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> > >       bool
+> > >       select SOFTLOCKUP_DETECTOR
+> > >
+> > > +config HARDLOCKUP_DETECTOR_PERF
+> > > +     bool
+> > > +     depends on HAVE_HARDLOCKUP_DETECTOR_PERF
+> > > +     select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> > > +
+> > > +config HARDLOCKUP_DETECTOR_BUDDY
+> > > +     bool
+> > > +     depends on SMP
+> > > +     select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+> > > +
+> > > +# For hardlockup detectors you can have one directly provided by the arch
+> > > +# or use a "non-arch" one. If you're using a "non-arch" one that is
+> > > +# further divided the perf hardlockup detector (which, confusingly, needs
+> > > +# arch-provided perf support) and the buddy hardlockup detector (which just
+> > > +# needs SMP). In either case, using the "non-arch" code conflicts with
+> > > +# the NMI watchdog code (which is sometimes used directly and sometimes used
+> > > +# by the arch-provided hardlockup detector).
+> > > +config HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+> > > +     bool
+> > > +     depends on (HAVE_HARDLOCKUP_DETECTOR_PERF || SMP) && !HAVE_NMI_WATCHDOG
+> > > +     default y
+> > > +
+> > > +config HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> > > +     bool "Prefer the buddy CPU hardlockup detector"
+> > > +     depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH && HAVE_HARDLOCKUP_DETECTOR_PERF && SMP
+> >
+> > Huh, I have big troubles to scratch my head around this check:
+> >
+> >        HAVE_HARDLOCKUP_DETECTOR_NON_ARCH depends on HAVE_HARDLOCKUP_DETECTOR_PERF and SMP
+> >
+> >        and this depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH and again
+> >                on HAVE_HARDLOCKUP_DETECTOR_PERF and SMP.
+> 
+> The goal is to have "HARDLOCKUP_DETECTOR_PREFER_BUDDY" to show up as
+> an option if there is an option _other_ than the buddy. If there's not
+> more than one hardlockup detector to pick from then there's no reason
+> to ask the person configuring the kernel which one they'd prefer. At
+> the moment, if you have an "arch" lockup detector then you're stuck
+> with it, so you only get a choice if a "perf" detector is available
+> and you've got SMP.
+> 
+> Ah, so I guess this could be simplified to:
+> 
+> depends on HAVE_HARDLOCKUP_DETECTOR_PERF && SMP
+
+Yes, this is much better.
+
+> OK, I'll add that to the list.
+> 
+> 
+> > > +     help
+> > > +       Say Y here to prefer the buddy hardlockup detector over the perf one.
+> > > +
+> > > +       With the buddy detector, each CPU uses its softlockup hrtimer
+> > > +       to check that the next CPU is processing hrtimer interrupts by
+> > > +       verifying that a counter is increasing.
+> > > +
+> > > +       This hardlockup detector is useful on systems that don't have
+> > > +       an arch-specific hardlockup detector or if resources needed
+> > > +       for the hardlockup detector are better used for other things.
+> > > +
+> > > +# This will select the appropriate non-arch hardlockdup detector
+> > > +config HARDLOCKUP_DETECTOR_NON_ARCH
+> > > +     bool
+> > > +     depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+> > > +     select HARDLOCKUP_DETECTOR_BUDDY if !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> > > +     select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> > > +
+> > >  #
+> > >  # Enables a timestamp based low pass filter to compensate for perf based
+> > >  # hard lockup detection which runs too fast due to turbo modes.
+> > > @@ -1053,9 +1098,10 @@ config HARDLOCKUP_CHECK_TIMESTAMP
+> > >  config HARDLOCKUP_DETECTOR
+> > >       bool "Detect Hard Lockups"
+> > >       depends on DEBUG_KERNEL && !S390
+> >
+> > Is there any reason why S390 could not or do not want to use the buddy
+> > hardlockup detector.
+> 
+> This isn't a new dependency, but it's a good question. Looking at the
+> git history, I see commit dea20a3fbdd0 ("[PATCH] Disable
+> DETECT_SOFTLOCKUP for s390"). ...and it looks like the softlockup
+> detector still says it's broken on s390. That would mean that the
+> buddy detector is broken too.
+
+It seems that s390 wanted to disable the watchdog completely, see
+the commit  dea20a3fbdd08e5 ("[PATCH] Disable DETECT_SOFTLOCKUP for s390")
+because they got too many false positives.
+
+> 
+> > > -     depends on HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETECTOR_ARCH
+> > > +     depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH || HAVE_HARDLOCKUP_DETECTOR_ARCH
+> > >       select LOCKUP_DETECTOR
+> > > -     select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF
+> > > +     select HARDLOCKUP_DETECTOR_NON_ARCH if HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+> >
+> > Anyway, the configuration of the hard lockup detectors is insane and
+> > this patchset makes it even worse, especially the new
+> > HARDLOCKUP_DETECTOR_NON_ARCH stuff.
+> >
+> > It seems that sparc, powerpc and s390 are somehow special. Do you
+> > still have in mind how they are distinguished using the Kconfig
+> > variables?
+> >
+> > For example, I am pretty confused by the meaning of HAVE_NMI_WATCHDOG.
+> >
+> > And sparc has its own variant of
+> > watchdog_hardlockup_enable()/disable(). It means that it is
+> > arch-specific. Does it work with the 13th patch which made
+> > watchdog_hardlockup_enable()/disable() to be watchdog-hardlockup-type
+> > specific? Is is somehow related to HAVE_NMI_WATCHDOG?
+> > Does this replace the entire watchdog only only the enable part?
+> >
+> > I think that we need to make this more straightforward. But I first
+> > need to understand the existing maze of config variables.
+> 
+> I agree that it's confusing. I'm obviously biased, but IMO it's less
+> confusing after my patchset than before. ;-) The state of the world
+> before my patchset set a pretty low bar.
+> 
+> As far as I understand it, at an architecture-level you can choose any
+> _ONE_ of the following:
+> 
+> a) Implement bits needed for the the "perf" hardlockup detector. x86
+> has done this, some configs of powerpc do this, and arm64 now after my
+> patch series. This is HAVE_HARDLOCKUP_DETECTOR_PERF.
+> 
+> b) Implement your own totally separate hardlockup detector that
+> doesn't use any of the common "perf" code but still looks the same to
+> userspace (same sysctls, etc). Only powerpc does this (in some
+> configs). As per conversations in previous versions of my patch
+> series, apparently powerpc's version is quite fancy and maybe someday
+> people can move some of these features to the common code. This is
+> HAVE_HARDLOCKUP_DETECTOR_ARCH.
+> 
+> c) Don't implement the full features of a hardlockup detector but
+> still have the basics. In the very least, I think it doesn't support
+> the sysctls "hardlockup_panic" and "hardlockup_all_cpu_backtrace". It
+> doesn't support the kernel command line parameter "nmi_watchdog=". I
+> don't know for sure if there are any other differences. Only sparc64
+> does this. This is HAVE_NMI_WATCHDOG. Confusingly,
+> HAVE_HARDLOCKUP_DETECTOR_ARCH selects HAVE_NMI_WATCHDOG.
+> 
+> d) Don't implement _any_ hardlockup detector of any sort. After my
+> patchset you can still end up with "buddy" if you have SMP.
+>
+> One thing that would probably help would be to bring sparc64 to a full
+> "arch" hardlockup implementation and then get rid of the special case.
+> That seems a bit outside my scope, though if someone wanted to post
+> patches for that I'd be willing to give them a review.
+
+It would be nice but it might be problematic if we do not have
+access to the hardware.
+
+> I guess other than that, the best we could try to do is to rename some
+> configs and/or add some subconfigs to describe certain features? Maybe
+> HAVE_NMI_WATCHDOG => HAVE_HARDLOCKUP_DETECTOR_ARCH_BASIC_FEATURES
+> would help? I'd love to come up with a better name for
+> HAVE_HARDLOCKUP_DETECTOR_NON_ARCH but I couldn't come up with one.
+> Maybe the unwieldy  "HAVE_HARDLOCKUP_DETECTOR_THAT_COUNTS_HRTIMER"?
+
+Renaming the config variables seems to be the best solution at the moment.
+IMHO, it would be nice to have something like:
+
+  + CONFIG_HARDLOCKUP_DETECTOR for code shared by all hardlockup
+    detectors
+
+  + CONFIG_HARDLOCKUP_DETECTOR_PERF for code using kernel/watchdog_perf.c
+
+  + CONFIG_HARDLOCKUP_DETECTOR_BUDDY for code using
+	  kernel/watchdog_buddy.c
+
+  + HAVE_HARDLOCKUP_DETECTOR_PERF set by architectures that support
+	  using kernel/watchdog_perf.c
+
+  + HAVE_HARDLOCKUP_DETECTOR_ARCH set by architectures that have
+	alternative implementation of the hardlockup detector
+
+  + CONFIG_HARDLOCKUP_DETECTOR_PREFER_BUDDY
+	Allow to prefer the buddy detector when _PERF or _ARCH
+	is available as well.
+
+  + HAVE_HARDLOCKUP_PANIC
+  + HAVE_HARDLOCKUP_ALL_CPU_BACKTRACE
+	set when the earchitecture support these features and
+	used for the sysfs interface
+
+> If you have concrete suggestions for what would be cleaner, let me
+> know and I can queue up a patch. ...or I'm happy to review a patch.
+
+I am not sure how complicated it would be to rename the config
+variables to somehing sane. I am sorry I do not have time to
+prepare the patches at the moment.
+
+I'll let Andrew to decide if he would require this cleanup to accept
+the patchset.
+
+Best Regards,
+Petr
