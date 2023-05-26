@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98B1C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7089C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:35:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243431AbjEZSf1 (ORCPT
+        id S243360AbjEZSfc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 14:35:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43876 "EHLO
+        Fri, 26 May 2023 14:35:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243261AbjEZSex (ORCPT
+        with ESMTP id S243395AbjEZSe6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 14:34:53 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA4510D7
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:38 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-565a33c35b1so21711437b3.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:38 -0700 (PDT)
+        Fri, 26 May 2023 14:34:58 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 188E7E4D
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:40 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5654c7f991bso26833997b3.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 11:34:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685126078; x=1687718078;
+        d=google.com; s=20221208; t=1685126080; x=1687718080;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Bcu52ZFroNNUdqyZRIxQffX6dxZ/uHK2VwVobLtSsPQ=;
-        b=5o/Nx7rLPrNfsjQlkkwWwKM8wDGHmv5Dybvj9q2PYboM4W3EidbHkxN5I0Oo/rs7S0
-         khUL+qXGYgFBPOGZw1ae+0f82yoyabEVbgKZ/qilDA7Ug1LN0wdETQjZq8sReEFkF5Mv
-         slV7gSy5Zol+0tUuJlF3l4ebDn3ItoOkCofhzx67roW6klSVhkf7ihzbKKPLxMglfgnw
-         Y1av5YxUp3V8cTSuTyoO1q5tubptBAPkPxO7k0DDTlK9EAXklj+sSHCCQustodKl/2mk
-         N9qqMsUWaAmTRHrbC6zYr+ToTwBFtjy4OdY4Rt/VgF4zqdacRrr/XbD85TIDdPiEtydd
-         UZNg==
+        bh=xIZMpXPJ1dQ5s5NJpJTXLqv0Dy6GNIIEqB7VSkKLPVU=;
+        b=5V7orP06jmDLBBXQbP6UcRYzgABu9vELxgXsdLr9L8wEqPxNVIE9LCYmrYGWLhJTF8
+         lTYXhnYekALzZ0mJGasQ2tAQ56/+/yNdAzm0G62yd/o3YyKOCRlWYwAPt6AYgPIWYrOT
+         BsodmpJk3C11+qh8TAY6uxUdRS6v4PXkuqUeT9pv1IXjGqupZmxd7w27241x7Ja8mfVo
+         9NXeGl5zfuBE6w/1zTajEGjvNE9+j0Vv8NxmzwB+E4R0hWAuyg9/9lP0kX5aguOcJhST
+         J3neLzlzCKSAbvDGM54MhZa3oQQ14ks39cYx0v6rfDLmus6MaN/qdy4paYxZisengb8a
+         ImbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685126078; x=1687718078;
+        d=1e100.net; s=20221208; t=1685126080; x=1687718080;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Bcu52ZFroNNUdqyZRIxQffX6dxZ/uHK2VwVobLtSsPQ=;
-        b=Pb6DPd9EDpm1d6ZnNrUX/QS7XYb4j818gjs+dNP5dkyXKoTUqFu09Vx431hYOcVRRj
-         qBcXvG1m7OJgmKa+4scFCkj1UDpGaQKIE/JncTD92uP4vkKZk4yIh6TcUCmISAzSWoAM
-         sHSGsbPkCo6JpFBa1l6t3OvFE0xu6THnsEnF1f1wg5bA/FS9ZwSjWKJ4sVuNTC6xR9Zy
-         iA4fZmif9O1cuYYmCYDx49aJBWvD2EImySTU1T/vYBY1dNTvpqUtW3DH1Z+tSyKtVR9c
-         jpIOrtpSD6mNGkKTmsVWyRfnVLmXfYIfiKPHojJNd5Gxtq7qJczwr/cax+SH0ZteFS3F
-         T9OQ==
-X-Gm-Message-State: AC+VfDyVBxx4jb1dtKL3DujueIi26NbbIZzjzh1O7QO+sy0cEuIfLSfN
-        gz8dQrNnxbFN4li4KobE8smfz0MVt7mj
-X-Google-Smtp-Source: ACHHUZ40dfijm94RJq2Q31obwmB+WB5iBglw4oyCn9Mp3VcGTYG7tjYdBlampUIaFb0Y5I554ax/Hm8uUwv9
+        bh=xIZMpXPJ1dQ5s5NJpJTXLqv0Dy6GNIIEqB7VSkKLPVU=;
+        b=jCtD3LchCgDBpXpl+DtNw4w1oJB6tAdyPe2s1yz28frw0JczIvnzRzkfOJYfbihBmj
+         Qr5fgOG05p7aSrjpNJ+r4G2F+6LwEWzOU7dzQssZ1zXXe+qdQ5XvvTkEesIwN/VrDFC5
+         b/sTpUewe2QUwDAeV6A6SDnNssI1CL0uoXdjr/rF3WNqQVZf7LiHtweDmztlVeX4uAR8
+         rwX2VrHPBuUoxLruybPo+VYNTP20hjoxjOu/SSSUgmC5KCvYlZ5lBdA9kqchPJxvkwGh
+         BbKl8fEp9Lmzqc0cbYdbLlDZkPzQGQjrHsDkF9RULo2Czfy37IZnHDGSFJua0yQnNXCE
+         a80A==
+X-Gm-Message-State: AC+VfDyeUo18tcSa/XwJ2+zNeOntN7z5MOBvmcwRbXVQlp8jSnxtfGr2
+        4NhNb2NLBRVu4evEgex7MTBZ8clNIumJ
+X-Google-Smtp-Source: ACHHUZ5XqMKoVFQeOJB2IJzmU6NazOhnjZ2ccmm6/S/dj5/4ymEx1N+DWEf1VQXl9QyS8f4KREh3raln5CL9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a81:4309:0:b0:561:987e:d22 with SMTP id
- q9-20020a814309000000b00561987e0d22mr1566047ywa.1.1685126077827; Fri, 26 May
- 2023 11:34:37 -0700 (PDT)
-Date:   Fri, 26 May 2023 11:33:57 -0700
+ (user=irogers job=sendgmr) by 2002:a81:ed06:0:b0:54f:bb71:c7b3 with SMTP id
+ k6-20020a81ed06000000b0054fbb71c7b3mr1567729ywm.9.1685126080090; Fri, 26 May
+ 2023 11:34:40 -0700 (PDT)
+Date:   Fri, 26 May 2023 11:33:58 -0700
 In-Reply-To: <20230526183401.2326121-1-irogers@google.com>
-Message-Id: <20230526183401.2326121-13-irogers@google.com>
+Message-Id: <20230526183401.2326121-14-irogers@google.com>
 Mime-Version: 1.0
 References: <20230526183401.2326121-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v2 12/16] perf path: Make mkpath thread safe
+Subject: [PATCH v2 13/16] perf scripting-engines: Move static to local variable
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -82,162 +82,60 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Avoid 4 static arrays for paths, pass in a char[] buffer to use. Makes
-mkpath thread safe for the small number of users. Also removes 16,384
-bytes from .bss.
+Avoid 16,384 bytes in .bss by stack allocating two bitmaps.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-config.c |  4 +++-
- tools/perf/builtin-help.c   |  4 +++-
- tools/perf/util/cache.h     |  2 +-
- tools/perf/util/config.c    |  3 ++-
- tools/perf/util/path.c      | 35 +++++------------------------------
- 5 files changed, 14 insertions(+), 34 deletions(-)
+ tools/perf/util/scripting-engines/trace-event-perl.c   | 4 ++--
+ tools/perf/util/scripting-engines/trace-event-python.c | 5 +++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
-index 2603015f98be..2e8363778935 100644
---- a/tools/perf/builtin-config.c
-+++ b/tools/perf/builtin-config.c
-@@ -12,6 +12,7 @@
- #include "util/debug.h"
- #include "util/config.h"
- #include <linux/string.h>
-+#include <limits.h>
- #include <stdio.h>
- #include <stdlib.h>
+diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
+index 039d0365ad41..65b761d83a1f 100644
+--- a/tools/perf/util/scripting-engines/trace-event-perl.c
++++ b/tools/perf/util/scripting-engines/trace-event-perl.c
+@@ -67,8 +67,6 @@ INTERP my_perl;
+ #define TRACE_EVENT_TYPE_MAX				\
+ 	((1 << (sizeof(unsigned short) * 8)) - 1)
  
-@@ -157,7 +158,8 @@ int cmd_config(int argc, const char **argv)
- {
- 	int i, ret = -1;
- 	struct perf_config_set *set;
--	char *user_config = mkpath("%s/.perfconfig", getenv("HOME"));
-+	char path[PATH_MAX];
-+	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
- 	const char *config_filename;
- 	bool changed = false;
- 
-diff --git a/tools/perf/builtin-help.c b/tools/perf/builtin-help.c
-index 3e7f52054fac..b2a368ae295a 100644
---- a/tools/perf/builtin-help.c
-+++ b/tools/perf/builtin-help.c
-@@ -19,6 +19,7 @@
- #include <linux/string.h>
- #include <linux/zalloc.h>
- #include <errno.h>
-+#include <limits.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-@@ -389,9 +390,10 @@ static int get_html_page_path(char **page_path, const char *page)
- {
- 	struct stat st;
- 	const char *html_path = system_path(PERF_HTML_PATH);
-+	char path[PATH_MAX];
- 
- 	/* Check that we have a perf documentation directory. */
--	if (stat(mkpath("%s/perf.html", html_path), &st)
-+	if (stat(mkpath(path, sizeof(path), "%s/perf.html", html_path), &st)
- 	    || !S_ISREG(st.st_mode)) {
- 		pr_err("'%s': not a documentation directory.", html_path);
- 		return -1;
-diff --git a/tools/perf/util/cache.h b/tools/perf/util/cache.h
-index 9f2e36ef5072..0b61840d4226 100644
---- a/tools/perf/util/cache.h
-+++ b/tools/perf/util/cache.h
-@@ -26,6 +26,6 @@ static inline int is_absolute_path(const char *path)
- 	return path[0] == '/';
- }
- 
--char *mkpath(const char *fmt, ...) __printf(1, 2);
-+char *mkpath(char *path_buf, size_t sz, const char *fmt, ...) __printf(3, 4);
- 
- #endif /* __PERF_CACHE_H */
-diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
-index 658170b8dcef..f340dc73db6d 100644
---- a/tools/perf/util/config.c
-+++ b/tools/perf/util/config.c
-@@ -543,6 +543,7 @@ static char *home_perfconfig(void)
- 	const char *home = NULL;
- 	char *config;
- 	struct stat st;
-+	char path[PATH_MAX];
- 
- 	home = getenv("HOME");
- 
-@@ -554,7 +555,7 @@ static char *home_perfconfig(void)
- 	if (!home || !*home || !perf_config_global())
- 		return NULL;
- 
--	config = strdup(mkpath("%s/.perfconfig", home));
-+	config = strdup(mkpath(path, sizeof(path), "%s/.perfconfig", home));
- 	if (config == NULL) {
- 		pr_warning("Not enough memory to process %s/.perfconfig, ignoring it.\n", home);
- 		return NULL;
-diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
-index ce80b79be103..00adf872bf00 100644
---- a/tools/perf/util/path.c
-+++ b/tools/perf/util/path.c
-@@ -1,16 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--/*
-- * I'm tired of doing "vsnprintf()" etc just to open a
-- * file, so here's a "return static buffer with printf"
-- * interface for paths.
-- *
-- * It's obviously not thread-safe. Sue me. But it's quite
-- * useful for doing things like
-- *
-- *   f = open(mkpath("%s/%s.perf", base, name), O_RDONLY);
-- *
-- * which is what it's designed for.
-- */
- #include "path.h"
- #include "cache.h"
- #include <linux/kernel.h>
-@@ -22,18 +10,6 @@
- #include <dirent.h>
- #include <unistd.h>
- 
--static char bad_path[] = "/bad-path/";
--/*
-- * One hack:
-- */
--static char *get_pathname(void)
--{
--	static char pathname_array[4][PATH_MAX];
--	static int idx;
+-static DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
 -
--	return pathname_array[3 & ++idx];
--}
+ extern struct scripting_context *scripting_context;
+ 
+ static char *cur_field_name;
+@@ -353,7 +351,9 @@ static void perl_process_tracepoint(struct perf_sample *sample,
+ 	void *data = sample->raw_data;
+ 	unsigned long long nsecs = sample->time;
+ 	const char *comm = thread__comm_str(thread);
++	DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
+ 
++	bitmap_zero(events_defined, TRACE_EVENT_TYPE_MAX);
+ 	dSP;
+ 
+ 	if (evsel->core.attr.type != PERF_TYPE_TRACEPOINT)
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 41d4f9e6a8b7..40964078f92f 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -93,8 +93,6 @@ PyMODINIT_FUNC PyInit_perf_trace_context(void);
+ #define TRACE_EVENT_TYPE_MAX				\
+ 	((1 << (sizeof(unsigned short) * 8)) - 1)
+ 
+-static DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
 -
- static char *cleanup_path(char *path)
- {
- 	/* Clean it up */
-@@ -45,18 +21,17 @@ static char *cleanup_path(char *path)
- 	return path;
- }
+ #define N_COMMON_FIELDS	7
  
--char *mkpath(const char *fmt, ...)
-+char *mkpath(char *path_buf, size_t sz, const char *fmt, ...)
- {
- 	va_list args;
- 	unsigned len;
--	char *pathname = get_pathname();
+ static char *cur_field_name;
+@@ -934,6 +932,9 @@ static void python_process_tracepoint(struct perf_sample *sample,
+ 	unsigned long long nsecs = sample->time;
+ 	const char *comm = thread__comm_str(al->thread);
+ 	const char *default_handler_name = "trace_unhandled";
++	DECLARE_BITMAP(events_defined, TRACE_EVENT_TYPE_MAX);
++
++	bitmap_zero(events_defined, TRACE_EVENT_TYPE_MAX);
  
- 	va_start(args, fmt);
--	len = vsnprintf(pathname, PATH_MAX, fmt, args);
-+	len = vsnprintf(path_buf, sz, fmt, args);
- 	va_end(args);
--	if (len >= PATH_MAX)
--		return bad_path;
--	return cleanup_path(pathname);
-+	if (len >= sz)
-+		strncpy(path_buf, "/bad-path/", sz);
-+	return cleanup_path(path_buf);
- }
- 
- int path__join(char *bf, size_t size, const char *path1, const char *path2)
+ 	if (!event) {
+ 		snprintf(handler_name, sizeof(handler_name),
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
