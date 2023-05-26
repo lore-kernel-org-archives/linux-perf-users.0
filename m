@@ -2,51 +2,49 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A80C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 09:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190E6C7EE2D
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 09:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243037AbjEZJYg convert rfc822-to-8bit (ORCPT
+        id S243120AbjEZJ1V (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 05:24:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35236 "EHLO
+        Fri, 26 May 2023 05:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243035AbjEZJYf (ORCPT
+        with ESMTP id S242632AbjEZJ1K (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 05:24:35 -0400
+        Fri, 26 May 2023 05:27:10 -0400
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56EAD1A2;
-        Fri, 26 May 2023 02:24:32 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QSKFc4JZkz67lH1;
-        Fri, 26 May 2023 17:22:28 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AFB135;
+        Fri, 26 May 2023 02:27:09 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QSKFY2DVYz6H7kP;
+        Fri, 26 May 2023 17:22:25 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 26 May
- 2023 10:24:29 +0100
-Date:   Fri, 26 May 2023 10:24:28 +0100
+ 2023 10:27:06 +0100
+Date:   Fri, 26 May 2023 10:27:05 +0100
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Stephane Eranian <eranian@google.com>
-CC:     Namhyung Kim <namhyung@gmail.com>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
-        <mark.rutland@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <acme@kernel.org>, <dan.j.williams@intel.com>,
+To:     Namhyung Kim <namhyung@gmail.com>
+CC:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
+        <mingo@redhat.com>, <acme@kernel.org>, <dan.j.williams@intel.com>,
         <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        "Dave Jiang" <dave.jiang@intel.com>
+        "Dave Jiang" <dave.jiang@intel.com>,
+        Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH v6 4/5] perf: CXL Performance Monitoring Unit driver
-Message-ID: <20230526102428.00002b6a@Huawei.com>
-In-Reply-To: <CABPqkBQpXAq=uk5-vx-FkYJV1nrtugit_ExFqGgQCKGQC2no6w@mail.gmail.com>
+Message-ID: <20230526102705.00003345@Huawei.com>
+In-Reply-To: <CAM9d7ciPW67QRRwRsY3-ouEM6wM0YdX+qnkkqYmTXRLwJcgqkA@mail.gmail.com>
 References: <20230413142617.15995-1-Jonathan.Cameron@huawei.com>
         <20230413142617.15995-5-Jonathan.Cameron@huawei.com>
         <CAM9d7ciPW67QRRwRsY3-ouEM6wM0YdX+qnkkqYmTXRLwJcgqkA@mail.gmail.com>
-        <CABPqkBQpXAq=uk5-vx-FkYJV1nrtugit_ExFqGgQCKGQC2no6w@mail.gmail.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
 X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
@@ -55,58 +53,39 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 25 May 2023 18:18:55 -0700
-Stephane Eranian <eranian@google.com> wrote:
 
-> On Thu, May 25, 2023 at 6:06 PM Namhyung Kim <namhyung@gmail.com> wrote:
-> >
-> > Add Stephane to CC.
-> >
-> > On Thu, Apr 13, 2023 at 7:35 AM Jonathan Cameron
-> > <Jonathan.Cameron@huawei.com> wrote:  
-> > >
-> > > CXL rev 3.0 introduces a standard performance monitoring hardware
-> > > block to CXL. Instances are discovered using CXL Register Locator DVSEC
-> > > entries. Each CXL component may have multiple PMUs.
-> > >
-> > > This initial driver supports a subset of types of counter.
-> > > It supports counters that are either fixed or configurable, but requires
-> > > that they support the ability to freeze and write value whilst frozen.
-> > >
-> > > Development done with QEMU model which will be posted shortly.
-> > >
-> > > Example:
-> > >
-> > > $ perf stat -e cxl_pmu_mem0.0/h2d_req_snpcur/ -e cpmu0/h2d_req_snpdata/ -e cpmu0/clock_ticks/ sleep 1
-> > >
-> > > Performance counter stats for 'system wide':
-> > >  
+Hi Namhyung,
+
+> > +static int cxl_pmu_event_init(struct perf_event *event)
+> > +{
+> > +       struct cxl_pmu_info *info = pmu_to_cxl_pmu_info(event->pmu);
+> > +
+> > +       event->cpu = info->on_cpu;  
 > 
-> Unless I am mistaken, I don't think this output corresponds to the
-> cmdline above. I think the -a is missing.
-> I don't think you can measure CXL traffic per-thread. Please confirm.
-> Thanks.
+> Why not change the event->cpu after validation is done?
 
-It doesn't seem to make any difference whether I include -a or not and
-the perf man page says 
-
-       -a, --all-cpus
-           system-wide collection from all CPUs (default if no target is
-           specified)
-
-However I'm not sure what target means in this case as there is no
-mention of it anywhere else in the perf-stat man page.  My guess is thread
-or process provided by -p or -t.  So default applies in the above command line.
-Doesn't hurt to be more explicit though, so I've added -a.
-
-The command line is wrong however as I failed to update the device name
-for the 2nd and 3rd events.
+Sure. Whilst I think it's harmless,
+it logically makes more sense to do it a few lines later
+so I'll move it to the end of this function.
 
 
 > 
-> >  
-> > > 96,757,023,244,321      cxl_pmu_mem0.0/h2d_req_snpcur/
-> > > 96,757,023,244,365      cxl_pmu_mem0.0/h2d_req_snpdata/
-> > > 193,514,046,488,653      cxl_pmu_mem0.0/clock_ticks/
-> > >
-> > >        1.090539600 seconds time elapsed
+> Thanks,
+> Namhyung
+> 
+> 
+> > +       /* Top level type sanity check - is this a Hardware Event being requested */
+> > +       if (event->attr.type != event->pmu->type)
+> > +               return -ENOENT;
+> > +
+> > +       if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+> > +               return -EOPNOTSUPP;
+> > +       /* TODO: Validation of any filter */
+> > +
+> > +       /*
+> > +        * Verify that it is possible to count what was requested. Either must
+> > +        * be a fixed counter that is a precise match or a configurable counter
+> > +        * where this is a subset.
+> > +        */
+> > +       return cxl_pmu_get_event_idx(event, NULL, NULL);
+> > +}
