@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72208C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 19:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77724C77B73
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 19:45:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242168AbjEZTos (ORCPT
+        id S230322AbjEZTpD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 15:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58414 "EHLO
+        Fri, 26 May 2023 15:45:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230322AbjEZTor (ORCPT
+        with ESMTP id S243269AbjEZTow (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 15:44:47 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D45BD
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 12:44:46 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-babb79a17b8so1534328276.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 12:44:46 -0700 (PDT)
+        Fri, 26 May 2023 15:44:52 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C5E99E
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 12:44:51 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba82ed6e450so2407273276.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 12:44:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685130286; x=1687722286;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Ao0iXi5t0xlQzOCpiGrMaghimyku8bQxK75df2szPg8=;
-        b=bDkloEG0Rnw1JsC3vOV7ZxpKphAXsXrNTAi+MuZ+WeHz8dO7ziObIIR2rTuqtCZsKB
-         7iiymEgNUxbRZD0TjfDMZUdoLVzdV9SGBEfwfBpfmK8Q86MmkNeuetfImWPlMMNqDp7Z
-         6Fc0sYzpiQ/vlaz3IfjMCmk7BMyybUCz3FedhrzoPEv9g9P58M9ikGMhvE/GVZg8w0fw
-         VeUHinS9P8mOHNZJCVgnyVHn3KnA3Uy2rYW+kW3vBDGoVYF3UNhfAKju0E33wUPz2lff
-         SgXzHjAyV0xqUz4/QjKIIPeKPi4o8ZxGvA6CRubu4RP+fQEiB9egSAyH6MFcFTNuHXd1
-         KIuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685130286; x=1687722286;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20221208; t=1685130290; x=1687722290;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ao0iXi5t0xlQzOCpiGrMaghimyku8bQxK75df2szPg8=;
-        b=lkbfblz9RAX25SI2c9qqF3OYn0dllopE9DYBCJ/Ha91rSlFAHtpdztQMjJh7UUjd1H
-         jrveYnjtCnchDZq1YXBG/7Fcli/WIiIQ//L1HCl8FnUXEghKbLVn72ej7CYbJnOpi9DM
-         /YYde/MLAkTL8IzRIhcMEgAkDcONFh/M3OdV5XMzZxEQu45f+qYIAxwX+KtvlW1MbOZF
-         3qJQaAYqqtc/Hif69l8TyvM18uGG7z7zZDy4vueaA4ifQQxUU/CZRYYOrLPyFk9PkJmp
-         wFjUgLFn7pcitbMhzRJIZjinWWT+qUEppxybKZN5dborImr6Va9+Y2/MdISnGANLcCIq
-         0GHQ==
-X-Gm-Message-State: AC+VfDxo1mC7xrFU4XlnQSn54YMBcApMBYtGiDTJYql9zq6WP3OzIXLY
-        LjTs/C9i0nNt+1YjB+PYhGMRaQ3fT6Cr
-X-Google-Smtp-Source: ACHHUZ4QPxMg2MEKujpTlVEQB8eOlGqGBxBCiCGE4MUqS4avAb2neblRB5Vf4a39srNyN6USuHERbzQDoNaI
+        bh=xjbMXf/jBCxB/sH0FkQPUm1SvrJy5PH1+LA+XDb0Zps=;
+        b=CSctNJp4S2q0DHrryM39VvBZdpM8b8CWJpmP/Q8o9UqglncEroGPepL0FsNvI60yMt
+         B6Q4rqPzGsNOOGFkhy7F/HIDdyTq37p6I+BanaCyLBpXsrEpSal/BBzV35RTPVOpKgyh
+         cFfFLGntgqWb/3V6Q/+Y0ktWmj/SzpUY2a32i1ViTx5PWJrC62fi76ZeO94yGOgVDx24
+         ULDEk4zzHWt+wEgQC6s514iQ3blhMm4ao4OhHOQDcBGYgcMSpDSu43sMHA/kXnpCVbEM
+         7Kfxd+HNnuObRfdIWMi3VDfD6izgY79eMmOeBiVCCB0NqIpMMQHAlOGQZXqmNqJkZEfj
+         UCtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685130290; x=1687722290;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xjbMXf/jBCxB/sH0FkQPUm1SvrJy5PH1+LA+XDb0Zps=;
+        b=EVMxktc4K0G7+3UuBw8JEQaYzCi4usczUVLWVY++A0ERMrTkMZm4JrcKJgHgScbQw+
+         lwO1sWYlu/YqllOJkbdJ3g3t6WHwjLuEniT8brqm70rgbIBO3OhtJJL+g1lcP1zrPar6
+         0QXHFt7GSGf7rWGKhKq/XV1jSCNkIiyciufAE0kRkh8Fe8MNdyMGHohJwd0RSWkLgYNc
+         ffR4Is8NeRRjxeSJaNv533a61hIeUho1rflfjUmzag41MeDCIwmSIj7Ll32ujqoi1+5j
+         lOi/CBoOIMBGVA4z9adygkA/31WTHAfb+5j7ZfEq62/UEUPCM0jEclPALDHhmHfSQNZP
+         fAGw==
+X-Gm-Message-State: AC+VfDz0m26o3eVPK8JjhqCaXsGlxcc2HXPzVoEiAaB0DInMQKcI9aTE
+        ZihPj4BYch4mvJYrtiGNecrluV+wTFHA
+X-Google-Smtp-Source: ACHHUZ4pHyEoD9K2o0Xh8qppwGD7sUhniJqD+UOaHDb0zLqYmdzSraJe1E6XyX8y6Y9/+6eIJkuIvsZV7OGM
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a05:6902:4ef:b0:ba8:2e69:9e06 with SMTP id
- w15-20020a05690204ef00b00ba82e699e06mr1530393ybs.1.1685130286062; Fri, 26 May
- 2023 12:44:46 -0700 (PDT)
-Date:   Fri, 26 May 2023 12:44:40 -0700
-Message-Id: <20230526194442.2355872-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:4296:0:b0:ba8:3e1a:3fd6 with SMTP id
+ p144-20020a254296000000b00ba83e1a3fd6mr1107185yba.3.1685130290583; Fri, 26
+ May 2023 12:44:50 -0700 (PDT)
+Date:   Fri, 26 May 2023 12:44:42 -0700
+In-Reply-To: <20230526194442.2355872-1-irogers@google.com>
+Message-Id: <20230526194442.2355872-3-irogers@google.com>
 Mime-Version: 1.0
+References: <20230526194442.2355872-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v3 0/2] Fixes from evsel__group_pmu_name asan error
+Subject: [PATCH v3 2/2] perf evsel: for_each_group fixes
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,27 +77,70 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-evsel__group_pmu_name triggered an asan error as a list_head was cast
-to an evsel, when it was the head, and the accessed as if it were a
-full evsel. Further investigation showed problematic list iteration
-for evsel__group_pmu_name whilst the list was being sorted so switch
-to pre-computation.
+Address/memory sanitizer was reporting issues in evsel__group_pmu_name
+because the for_each_group_evsel loop didn't terminate when the head
+was reached, the head would then be cast and accessed as an evsel
+leading to invalid memory accesses. Fix for_each_group_member and
+for_each_group_evsel to terminate at the list head. Note,
+evsel__group_pmu_name no longer iterates the group, but the problem is
+present regardless.
 
-v3: Rebase on perf-tools-next (branch getting ready for 6.5) rather
-    than perf-tools (fixes for 6.4).
-v2: Address review comments/feedback from Adrian Hunter
-    <adrian.hunter@intel.com>.
-
-Ian Rogers (2):
-  perf evsel: evsel__group_pmu_name fixes
-  perf evsel: for_each_group fixes
-
- tools/perf/util/evsel.c         | 31 ++++-----------
- tools/perf/util/evsel.h         | 26 +++++++-----
+Fixes: 717e263fc354 ("perf report: Show group description when event group is enabled")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/evsel.h         | 24 ++++++++++++++++--------
  tools/perf/util/evsel_fprintf.c |  1 +
- tools/perf/util/parse-events.c  | 70 +++++++++++++++++++++++++++------
- 4 files changed, 84 insertions(+), 44 deletions(-)
+ 2 files changed, 17 insertions(+), 8 deletions(-)
 
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 6d9536ecbc7b..5e8371613565 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -459,16 +459,24 @@ static inline int evsel__group_idx(struct evsel *evsel)
+ }
+ 
+ /* Iterates group WITHOUT the leader. */
+-#define for_each_group_member(_evsel, _leader) 					\
+-for ((_evsel) = list_entry((_leader)->core.node.next, struct evsel, core.node); \
+-     (_evsel) && (_evsel)->core.leader == (&_leader->core);					\
+-     (_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
++#define for_each_group_member_head(_evsel, _leader, _head)				\
++for ((_evsel) = list_entry((_leader)->core.node.next, struct evsel, core.node);		\
++	(_evsel) && &(_evsel)->core.node != (_head) &&					\
++	(_evsel)->core.leader == &(_leader)->core;					\
++	(_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
++
++#define for_each_group_member(_evsel, _leader)				\
++	for_each_group_member_head(_evsel, _leader, &(_leader)->evlist->core.entries)
+ 
+ /* Iterates group WITH the leader. */
+-#define for_each_group_evsel(_evsel, _leader) 					\
+-for ((_evsel) = _leader; 							\
+-     (_evsel) && (_evsel)->core.leader == (&_leader->core);					\
+-     (_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
++#define for_each_group_evsel_head(_evsel, _leader, _head)				\
++for ((_evsel) = _leader;								\
++	(_evsel) && &(_evsel)->core.node != (_head) &&					\
++	(_evsel)->core.leader == &(_leader)->core;					\
++	(_evsel) = list_entry((_evsel)->core.node.next, struct evsel, core.node))
++
++#define for_each_group_evsel(_evsel, _leader)				\
++	for_each_group_evsel_head(_evsel, _leader, &(_leader)->evlist->core.entries)
+ 
+ static inline bool evsel__has_branch_callstack(const struct evsel *evsel)
+ {
+diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+index 79e42d66f55b..a1655fd7ed9b 100644
+--- a/tools/perf/util/evsel_fprintf.c
++++ b/tools/perf/util/evsel_fprintf.c
+@@ -2,6 +2,7 @@
+ #include <inttypes.h>
+ #include <stdio.h>
+ #include <stdbool.h>
++#include "util/evlist.h"
+ #include "evsel.h"
+ #include "util/evsel_fprintf.h"
+ #include "util/event.h"
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
