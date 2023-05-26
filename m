@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4F6C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5B4C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 18:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229923AbjEZSON (ORCPT
+        id S229966AbjEZSRS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 14:14:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34150 "EHLO
+        Fri, 26 May 2023 14:17:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjEZSOM (ORCPT
+        with ESMTP id S230121AbjEZSRR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 14:14:12 -0400
+        Fri, 26 May 2023 14:17:17 -0400
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA9CFB;
-        Fri, 26 May 2023 11:14:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BEB412A;
+        Fri, 26 May 2023 11:17:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685124847; x=1716660847;
+  t=1685125032; x=1716661032;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=K2ENXNgMbOAexBjvSimJoEftL7uQ3dH9YuP4uGasPRY=;
-  b=iuYLJy/v8RTlnX3anSbA/8lz+Fb4szJst/ohY3skuYwPSEDPt5cZN1o7
-   RPtvvDE0iJ82q0rXrv3lT5RUZQqSIyoXygfBPB4Ke4qeU1p3OAI6rC4Ok
-   72ljX3EwH233WbPhkGKFQcnv/Enma7LMDd95kWvuqxb6X3AHDZiCNLVNp
-   BJyrOdW9cyIWx+4iDQuKl1vGKRAORWclloBK9itWaMue8RGt/dBOpAFQJ
-   vQ8wrQ3UxTsT5vfbS8Rjrga+wLuTCMtmIAZrAOtlzR6IVfcZ1bOSkQFiu
-   ugHvUeMfMHI4DZXRl577faEcNRAS7MyAWwlH764HOaCPBK1MSEqmZXJzQ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="353111777"
+  bh=o3P5GMOHUbd1RynT+xVq4dnw3tawyMZSbeXlFyQDd1A=;
+  b=gbo5vNywOta5U3Bs9JQzwOXT2iy/h/g/29nVGUCnXCFjBwEZuonFCUOx
+   2QxMrDNgzWcb6B1WIKGgI+QOuV1WNYmQGD6nIoUL/qsgtSLuFgBIvJaa2
+   BxL0o+xcm8yDmCJba+iUc+46JLQScXsTztVMFSYa0iQtYEAERPUI0qFAD
+   3gHo0nJ62IKyFV3nqhfxjCTKAG4OOslPDFzWidMx4BAWoeriWqp5oQaZT
+   o8UE1VsOx0vEs/D7mePviJZosJIr5ogQOZQPhLPA9HzrGRCHV0HsKVOzg
+   1pLslJ+WbI3pYOQg+bHUBDayZQtkd5kZQOhul8pVfNSnY/wye1PhTaYOS
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="353113061"
 X-IronPort-AV: E=Sophos;i="6.00,194,1681196400"; 
-   d="scan'208";a="353111777"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2023 11:14:05 -0700
+   d="scan'208";a="353113061"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 May 2023 11:17:10 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="1035448877"
+X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="795170762"
 X-IronPort-AV: E=Sophos;i="6.00,194,1681196400"; 
-   d="scan'208";a="1035448877"
+   d="scan'208";a="795170762"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga005.fm.intel.com with ESMTP; 26 May 2023 11:14:04 -0700
+  by FMSMGA003.fm.intel.com with ESMTP; 26 May 2023 11:17:09 -0700
 Received: from [10.209.100.85] (kliang2-mobl1.ccr.corp.intel.com [10.209.100.85])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 8F368580D72;
-        Fri, 26 May 2023 11:14:00 -0700 (PDT)
-Message-ID: <3d943607-645e-be8d-3a68-90e62e402c3d@linux.intel.com>
-Date:   Fri, 26 May 2023 14:13:59 -0400
+        by linux.intel.com (Postfix) with ESMTPS id C6AC95807E2;
+        Fri, 26 May 2023 11:17:05 -0700 (PDT)
+Message-ID: <ff66c90b-b59e-5720-dd88-f15311a74e50@linux.intel.com>
+Date:   Fri, 26 May 2023 14:17:04 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.1
-Subject: Re: [PATCH v3 16/35] perf pmu: Remove perf_pmu__hybrid_mounted
+Subject: Re: [PATCH v3 00/35] PMU refactoring and improvements
 Content-Language: en-US
 To:     Ian Rogers <irogers@google.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
@@ -84,9 +84,8 @@ To:     Ian Rogers <irogers@google.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org
 References: <20230524221831.1741381-1-irogers@google.com>
- <20230524221831.1741381-17-irogers@google.com>
 From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20230524221831.1741381-17-irogers@google.com>
+In-Reply-To: <20230524221831.1741381-1-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -95,139 +94,146 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 2023-05-24 6:18 p.m., Ian Rogers wrote:
-> perf_pmu__hybrid_mounted is used to detect whether cpu_core or
-> cpu_atom is mounted with a non-empty cpus file by
-> pmu_lookup. pmu_lookup will attempt to read the cpus file too and so
-> the check can be folded into this.
+On 2023-05-24 6:17 p.m., Ian Rogers wrote:
+> Separate the code in pmu.[ch] into the set/list of PMUs and the code
+> for a particular PMU. Move the set/list of PMUs code into
+> pmus.[ch]. Clean up hybrid code and remove hybrid PMU list, it is
+> sufficient to scan PMUs looking for core ones. Add core PMU list and
+> perf_pmus__scan_core that just reads core PMUs. Switch code that skips
+> non-core PMUs during a perf_pmus__scan, to use the
+> perf_pmus__scan_core variant. Don't scan sysfs for PMUs if all such
+> PMUs have been previously scanned/loaded. Scanning just core PMUs, for
+> the cases it is applicable, can improve the sysfs reading time by more
+> than 4 fold on my laptop, as servers generally have many more uncore
+> PMUs the improvement there should be larger:
 > 
-> Checking hybrid_mounted in pmu_is_uncore is redundant as the next
-> cpumask read will fail returning false.
+> ```
+> $ perf bench internals pmu-scan -i 1000
+> Computing performance of sysfs PMU event scan for 1000 times
+>   Average core PMU scanning took: 989.231 usec (+- 1.535 usec)
+>   Average PMU scanning took: 4309.425 usec (+- 74.322 usec)
+> ```
 > 
-> Reduce the scope of perf_pmu__find_hybrid_pmu by making it static.
+> The patch "perf pmu: Separate pmu and pmus" moves and renames a lot of
+> functions, and is consequently large. The changes are trivial, but
+> kept together to keep the overall number of patches more reasonable.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/pmu-hybrid.c | 15 +--------------
->  tools/perf/util/pmu-hybrid.h |  3 ---
->  tools/perf/util/pmu.c        | 26 ++++++++++++++------------
->  3 files changed, 15 insertions(+), 29 deletions(-)
-> 
-> diff --git a/tools/perf/util/pmu-hybrid.c b/tools/perf/util/pmu-hybrid.c
-> index bc4cb0738c35..7fe943dd3217 100644
-> --- a/tools/perf/util/pmu-hybrid.c
-> +++ b/tools/perf/util/pmu-hybrid.c
-> @@ -18,20 +18,7 @@
->  
->  LIST_HEAD(perf_pmu__hybrid_pmus);
->  
-> -bool perf_pmu__hybrid_mounted(const char *name)
-> -{
-> -	int cpu;
-> -	char pmu_name[PATH_MAX];
-> -	struct perf_pmu pmu = {.name = pmu_name};
-> -
-> -	if (strncmp(name, "cpu_", 4))
-> -		return false;
-> -
-> -	strlcpy(pmu_name, name, sizeof(pmu_name));
-> -	return perf_pmu__scan_file(&pmu, "cpus", "%u", &cpu) > 0;
-> -}
-> -
-> -struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
-> +static struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name)
->  {
->  	struct perf_pmu *pmu;
->  
-> diff --git a/tools/perf/util/pmu-hybrid.h b/tools/perf/util/pmu-hybrid.h
-> index 206b94931531..8dbcae935020 100644
-> --- a/tools/perf/util/pmu-hybrid.h
-> +++ b/tools/perf/util/pmu-hybrid.h
-> @@ -13,9 +13,6 @@ extern struct list_head perf_pmu__hybrid_pmus;
->  #define perf_pmu__for_each_hybrid_pmu(pmu)	\
->  	list_for_each_entry(pmu, &perf_pmu__hybrid_pmus, hybrid_list)
->  
-> -bool perf_pmu__hybrid_mounted(const char *name);
-> -
-> -struct perf_pmu *perf_pmu__find_hybrid_pmu(const char *name);
->  bool perf_pmu__is_hybrid(const char *name);
->  
->  static inline int perf_pmu__hybrid_pmu_num(void)
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index cd94abe7a87a..e9f3e6a777c0 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -617,9 +617,6 @@ static bool pmu_is_uncore(int dirfd, const char *name)
->  {
->  	int fd;
->  
-> -	if (perf_pmu__hybrid_mounted(name))
-> -		return false;
-> -
->  	fd = perf_pmu__pathname_fd(dirfd, name, "cpumask", O_PATH);
->  	if (fd < 0)
->  		return false;
-> @@ -900,6 +897,16 @@ static int pmu_max_precise(int dirfd, struct perf_pmu *pmu)
->  	return max_precise;
->  }
->  
-> +/**
-> + * perf_pmu__skip_empty_cpus() - should pmu_lookup skip the named PMU if the
-> + *      cpus or cpumask file isn't present?
-> + * @name: Name of PMU.
-> + */
-> +static bool perf_pmu__skip_empty_cpus(const char *name)
-> +{
-> +	return !strcmp(name, "cpu_core") || !strcmp(name, "cpu_atom");
 
-Can we use the below to replace?
-return !strncmp(name, "cpu_", 4);
+Other than the small suggestion in patch 16, the patch set looks good to
+me. Thanks Ian!
 
-Otherwise, anytime a new core PMU name is introduced, I have to patch
-the function.
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
 Thanks,
 Kan
 
-> +}
-> +
->  static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_name)
->  {
->  	struct perf_pmu *pmu;
-> @@ -907,15 +914,8 @@ static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_name)
->  	LIST_HEAD(aliases);
->  	__u32 type;
->  	char *name = pmu_find_real_name(lookup_name);
-> -	bool is_hybrid = perf_pmu__hybrid_mounted(name);
->  	char *alias_name;
->  
-> -	/*
-> -	 * Check pmu name for hybrid and the pmu may be invalid in sysfs
-> -	 */
-> -	if (!strncmp(name, "cpu_", 4) && !is_hybrid)
-> -		return NULL;
-> -
->  	/*
->  	 * The pmu data we store & need consists of the pmu
->  	 * type value and format definitions. Load both right
-> @@ -935,8 +935,10 @@ static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_name)
->  		return NULL;
->  
->  	pmu->cpus = pmu_cpumask(dirfd, name);
-> -	pmu->name = strdup(name);
-> +	if (!pmu->cpus && perf_pmu__skip_empty_cpus(name))
-> +		goto err;
->  
-> +	pmu->name = strdup(name);
->  	if (!pmu->name)
->  		goto err;
->  
-> @@ -967,7 +969,7 @@ static struct perf_pmu *pmu_lookup(int dirfd, const char *lookup_name)
->  	list_splice(&aliases, &pmu->aliases);
->  	list_add_tail(&pmu->list, &pmus);
->  
-> -	if (is_hybrid)
-> +	if (!strcmp(name, "cpu_core") || !strcmp(name, "cpu_atom"))
->  		list_add_tail(&pmu->hybrid_list, &perf_pmu__hybrid_pmus);
->  	else
->  		INIT_LIST_HEAD(&pmu->hybrid_list);
+> v3. Address fixing hybrid user specified CPU maps by doing it in
+>     propagate maps. Remove nearly all references to cpu_core/cpu_atom
+>     in particular by removing is_pmu_hybrid - hybrid is now >1 core
+>     PMU. Addresses comments by Kan and Namhyung.
+> v2. Address Kan's review comments wrt "cycles" -> "cycles:P" and
+>     "uncore_pmus" -> "other_pmus".
+> 
+> Ian Rogers (35):
+>   perf cpumap: Add intersect function
+>   perf tests: Organize cpu_map tests into a single suite
+>   perf cpumap: Add equal function
+>   libperf cpumap: Add "any CPU"/dummy test function
+>   perf pmu: Detect ARM and hybrid PMUs with sysfs
+>   perf pmu: Add is_core to pmu
+>   perf evsel: Add is_pmu_core inorder to interpret own_cpus
+>   perf pmu: Add CPU map for "cpu" PMUs
+>   perf evlist: Propagate user CPU maps intersecting core PMU maps
+>   perf evlist: Allow has_user_cpus to be set on hybrid
+>   perf target: Remove unused hybrid value
+>   perf tools: Warn if no user requested CPUs match PMU's CPUs
+>   perf evlist: Remove evlist__warn_hybrid_group
+>   perf evlist: Remove __evlist__add_default
+>   perf evlist: Reduce scope of evlist__has_hybrid
+>   perf pmu: Remove perf_pmu__hybrid_mounted
+>   perf pmu: Rewrite perf_pmu__has_hybrid to avoid list
+>   perf x86: Iterate hybrid PMUs as core PMUs
+>   perf topology: Avoid hybrid list for hybrid topology
+>   perf evsel: Compute is_hybrid from PMU being core
+>   perf header: Avoid hybrid PMU list in write_pmu_caps
+>   perf metrics: Remove perf_pmu__is_hybrid use
+>   perf stat: Avoid hybrid PMU list
+>   perf mem: Avoid hybrid PMU list
+>   perf pmu: Remove perf_pmu__hybrid_pmus list
+>   perf pmus: Prefer perf_pmu__scan over perf_pmus__for_each_pmu
+>   perf x86 mem: minor refactor to is_mem_loads_aux_event
+>   perf pmu: Separate pmu and pmus
+>   perf pmus: Split pmus list into core and other
+>   perf pmus: Allow just core PMU scanning
+>   perf pmus: Avoid repeated sysfs scanning
+>   perf pmus: Ensure all PMUs are read for find_by_type
+>   perf pmus: Add function to return count of core PMUs
+>   perf pmus: Remove perf_pmus__has_hybrid
+>   perf pmu: Remove is_pmu_hybrid
+> 
+>  tools/lib/perf/cpumap.c                 |  61 +++
+>  tools/lib/perf/evlist.c                 |  25 +-
+>  tools/lib/perf/include/internal/evsel.h |   9 +
+>  tools/lib/perf/include/perf/cpumap.h    |  14 +
+>  tools/perf/arch/arm/util/auxtrace.c     |   7 +-
+>  tools/perf/arch/arm/util/cs-etm.c       |   4 +-
+>  tools/perf/arch/arm64/util/pmu.c        |   6 +-
+>  tools/perf/arch/x86/tests/hybrid.c      |   7 +-
+>  tools/perf/arch/x86/util/auxtrace.c     |   5 +-
+>  tools/perf/arch/x86/util/evlist.c       |  25 +-
+>  tools/perf/arch/x86/util/evsel.c        |  27 +-
+>  tools/perf/arch/x86/util/intel-bts.c    |   4 +-
+>  tools/perf/arch/x86/util/intel-pt.c     |   4 +-
+>  tools/perf/arch/x86/util/mem-events.c   |  17 +-
+>  tools/perf/arch/x86/util/perf_regs.c    |  15 +-
+>  tools/perf/arch/x86/util/topdown.c      |   5 +-
+>  tools/perf/bench/pmu-scan.c             |  60 +--
+>  tools/perf/builtin-c2c.c                |   9 +-
+>  tools/perf/builtin-list.c               |   4 +-
+>  tools/perf/builtin-mem.c                |   9 +-
+>  tools/perf/builtin-record.c             |  29 +-
+>  tools/perf/builtin-stat.c               |  14 +-
+>  tools/perf/builtin-top.c                |  10 +-
+>  tools/perf/tests/attr.c                 |  11 +-
+>  tools/perf/tests/builtin-test.c         |   4 +-
+>  tools/perf/tests/cpumap.c               |  92 ++++-
+>  tools/perf/tests/event_groups.c         |   7 +-
+>  tools/perf/tests/parse-events.c         |  15 +-
+>  tools/perf/tests/parse-metric.c         |   9 +-
+>  tools/perf/tests/pmu-events.c           |   6 +-
+>  tools/perf/tests/switch-tracking.c      |  14 +-
+>  tools/perf/tests/tests.h                |   4 +-
+>  tools/perf/tests/topology.c             |  16 +-
+>  tools/perf/util/Build                   |   2 -
+>  tools/perf/util/cpumap.c                |   4 +-
+>  tools/perf/util/cpumap.h                |   4 +-
+>  tools/perf/util/cputopo.c               |  12 +-
+>  tools/perf/util/env.c                   |   5 +-
+>  tools/perf/util/evlist-hybrid.c         | 162 --------
+>  tools/perf/util/evlist-hybrid.h         |  15 -
+>  tools/perf/util/evlist.c                |  64 +++-
+>  tools/perf/util/evlist.h                |   9 +-
+>  tools/perf/util/evsel.c                 |  60 +--
+>  tools/perf/util/evsel.h                 |   3 -
+>  tools/perf/util/header.c                |  27 +-
+>  tools/perf/util/mem-events.c            |  25 +-
+>  tools/perf/util/metricgroup.c           |   9 +-
+>  tools/perf/util/parse-events.c          |  25 +-
+>  tools/perf/util/parse-events.y          |   3 +-
+>  tools/perf/util/pfm.c                   |   6 +-
+>  tools/perf/util/pmu-hybrid.c            |  52 ---
+>  tools/perf/util/pmu-hybrid.h            |  32 --
+>  tools/perf/util/pmu.c                   | 483 ++----------------------
+>  tools/perf/util/pmu.h                   |  25 +-
+>  tools/perf/util/pmus.c                  | 465 ++++++++++++++++++++++-
+>  tools/perf/util/pmus.h                  |  15 +-
+>  tools/perf/util/print-events.c          |  15 +-
+>  tools/perf/util/python-ext-sources      |   1 -
+>  tools/perf/util/stat-display.c          |  19 +-
+>  tools/perf/util/target.h                |   1 -
+>  60 files changed, 1002 insertions(+), 1089 deletions(-)
+>  delete mode 100644 tools/perf/util/evlist-hybrid.c
+>  delete mode 100644 tools/perf/util/evlist-hybrid.h
+>  delete mode 100644 tools/perf/util/pmu-hybrid.c
+>  delete mode 100644 tools/perf/util/pmu-hybrid.h
+> 
