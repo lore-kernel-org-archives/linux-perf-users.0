@@ -2,115 +2,111 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800C8C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 06:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5A80C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 09:24:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242145AbjEZGxN (ORCPT
+        id S243037AbjEZJYg convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 02:53:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45342 "EHLO
+        Fri, 26 May 2023 05:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231495AbjEZGxM (ORCPT
+        with ESMTP id S243035AbjEZJYf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 02:53:12 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FDA7AD;
-        Thu, 25 May 2023 23:53:11 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b011cffe7fso1710555ad.1;
-        Thu, 25 May 2023 23:53:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685083991; x=1687675991;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FhgPHBRfrFbllTEWP/7rhf7JubE15swpXRJxG4NX2SU=;
-        b=otEd7naekpqQVL9gmTAOKnw+M+aU6LJr6kClb8Rj0Pp7ZIa7kW1godawweZf7p+2m+
-         ijg95ghhXeOYmndR3a+ssJ7iQApQP0C6XlBlNWcOFiY7QbUmmbrCVwQb2wNqFBr8L+U8
-         0r/4pICSVvVgQoIzfPC9o/VSZirDhTLh4iQl2jMHNzEvdtWX66sK6gpOdztUycGdVVjQ
-         GwT45dPdCkEoiKrYhy2eQEVMV2/vDvsmCutLabOU/CnNqlMJ6DrIg2pdfJ9qk4EGf5fT
-         ojRbMmq8PhoM12Gk3dypemdft6YzBKaQvgJvFkHPiNSk8CQ6q9aGlDItXNQPAUnr13QU
-         tMLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685083991; x=1687675991;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=FhgPHBRfrFbllTEWP/7rhf7JubE15swpXRJxG4NX2SU=;
-        b=YryVCjFtO3nVlf2hjLIhQT/M0HwPWVSsfJojMuNQI+UmEZm1NkbzCdvuNUcu45Uko5
-         ZrbxNC2jwP1Ji7xKfSWZxGJYtLR+UfprnHS6/g/KSNro8wnOIX7BfSJfKuqR0xwD6JMo
-         b/yTdW/er5Y+MY+XbtbXzPMn3sxHlsnOeJxRloOGtMce43o/Aoc4BHkev/ToEkwRSmD+
-         TCaGjH+pltGs98GT6FtSQyInkyspJitFnhhFLbZl1Yg2pdAIozLZjdtRkZLTPAn7AIyJ
-         BePAayYVXXS1rljNQMer7EE4/Lp4V4Nuj/6KQXZvu4NRrIsIWng8El7pzT/Q1CwJCPuu
-         4Vlw==
-X-Gm-Message-State: AC+VfDzNfUC1Uggoa5vcVPoKTE8vACR4Qb5BM/jTzT48pL8ur3SW5bTh
-        +qDT+DsKhFDaZEZy7Iwm5Xc=
-X-Google-Smtp-Source: ACHHUZ5FxN4/aChKs2p3DpXwSW/h5KMNhBNs+G6GphMNltwiFt7kwu/SsnxF23ODS2XueD3eZ32MCA==
-X-Received: by 2002:a17:903:2092:b0:1ab:1a6:34bc with SMTP id d18-20020a170903209200b001ab01a634bcmr1133666plc.9.1685083990657;
-        Thu, 25 May 2023 23:53:10 -0700 (PDT)
-Received: from localhost ([2605:59c8:148:ba10:17de:b2c5:b0ad:62a7])
-        by smtp.gmail.com with ESMTPSA id g4-20020a170902740400b001b01448ba72sm450174pll.215.2023.05.25.23.53.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 May 2023 23:53:10 -0700 (PDT)
-Date:   Thu, 25 May 2023 23:53:09 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
-        bpf@vger.kernel.org
-Message-ID: <64705755d6ae_2023020859@john.notmuch>
-In-Reply-To: <20230525000307.3202449-1-namhyung@kernel.org>
-References: <20230525000307.3202449-1-namhyung@kernel.org>
-Subject: RE: [PATCH] perf bpf filter: Fix a broken perf sample data naming in
- BPF
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Fri, 26 May 2023 05:24:35 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56EAD1A2;
+        Fri, 26 May 2023 02:24:32 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QSKFc4JZkz67lH1;
+        Fri, 26 May 2023 17:22:28 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 26 May
+ 2023 10:24:29 +0100
+Date:   Fri, 26 May 2023 10:24:28 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Stephane Eranian <eranian@google.com>
+CC:     Namhyung Kim <namhyung@gmail.com>,
+        Liang Kan <kan.liang@linux.intel.com>,
+        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
+        <mark.rutland@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <acme@kernel.org>, <dan.j.williams@intel.com>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        "Dave Jiang" <dave.jiang@intel.com>
+Subject: Re: [PATCH v6 4/5] perf: CXL Performance Monitoring Unit driver
+Message-ID: <20230526102428.00002b6a@Huawei.com>
+In-Reply-To: <CABPqkBQpXAq=uk5-vx-FkYJV1nrtugit_ExFqGgQCKGQC2no6w@mail.gmail.com>
+References: <20230413142617.15995-1-Jonathan.Cameron@huawei.com>
+        <20230413142617.15995-5-Jonathan.Cameron@huawei.com>
+        <CAM9d7ciPW67QRRwRsY3-ouEM6wM0YdX+qnkkqYmTXRLwJcgqkA@mail.gmail.com>
+        <CABPqkBQpXAq=uk5-vx-FkYJV1nrtugit_ExFqGgQCKGQC2no6w@mail.gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Namhyung Kim wrote:
-> BPF CO-RE requires 3 underscores for the ignored suffix rule but it
-> mistakenly used only 2.  Let's fix it.
-> 
-> Fixes: 3a8b8fc31748 ("perf bpf filter: Support pre-5.16 kernels where 'mem_hops' isn't in 'union perf_mem_data_src'")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/bpf_skel/sample_filter.bpf.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> index cffe493af1ed..fb94f5280626 100644
-> --- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
-> @@ -25,7 +25,7 @@ struct perf_sample_data___new {
->  } __attribute__((preserve_access_index));
->  
->  /* new kernel perf_mem_data_src definition */
-> -union perf_mem_data_src__new {
-> +union perf_mem_data_src___new {
->  	__u64 val;
->  	struct {
->  		__u64   mem_op:5,	/* type of opcode */
-> @@ -108,7 +108,7 @@ static inline __u64 perf_get_sample(struct bpf_perf_event_data_kern *kctx,
->  		if (entry->part == 7)
->  			return kctx->data->data_src.mem_blk;
->  		if (entry->part == 8) {
-> -			union perf_mem_data_src__new *data = (void *)&kctx->data->data_src;
-> +			union perf_mem_data_src___new *data = (void *)&kctx->data->data_src;
->  
->  			if (bpf_core_field_exists(data->mem_hops))
->  				return data->mem_hops;
-> -- 
-> 2.41.0.rc0.172.g3f132b7071-goog
-> 
-> 
+On Thu, 25 May 2023 18:18:55 -0700
+Stephane Eranian <eranian@google.com> wrote:
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+> On Thu, May 25, 2023 at 6:06 PM Namhyung Kim <namhyung@gmail.com> wrote:
+> >
+> > Add Stephane to CC.
+> >
+> > On Thu, Apr 13, 2023 at 7:35 AM Jonathan Cameron
+> > <Jonathan.Cameron@huawei.com> wrote:  
+> > >
+> > > CXL rev 3.0 introduces a standard performance monitoring hardware
+> > > block to CXL. Instances are discovered using CXL Register Locator DVSEC
+> > > entries. Each CXL component may have multiple PMUs.
+> > >
+> > > This initial driver supports a subset of types of counter.
+> > > It supports counters that are either fixed or configurable, but requires
+> > > that they support the ability to freeze and write value whilst frozen.
+> > >
+> > > Development done with QEMU model which will be posted shortly.
+> > >
+> > > Example:
+> > >
+> > > $ perf stat -e cxl_pmu_mem0.0/h2d_req_snpcur/ -e cpmu0/h2d_req_snpdata/ -e cpmu0/clock_ticks/ sleep 1
+> > >
+> > > Performance counter stats for 'system wide':
+> > >  
+> 
+> Unless I am mistaken, I don't think this output corresponds to the
+> cmdline above. I think the -a is missing.
+> I don't think you can measure CXL traffic per-thread. Please confirm.
+> Thanks.
+
+It doesn't seem to make any difference whether I include -a or not and
+the perf man page says 
+
+       -a, --all-cpus
+           system-wide collection from all CPUs (default if no target is
+           specified)
+
+However I'm not sure what target means in this case as there is no
+mention of it anywhere else in the perf-stat man page.  My guess is thread
+or process provided by -p or -t.  So default applies in the above command line.
+Doesn't hurt to be more explicit though, so I've added -a.
+
+The command line is wrong however as I failed to update the device name
+for the 2nd and 3rd events.
+
+
+> 
+> >  
+> > > 96,757,023,244,321      cxl_pmu_mem0.0/h2d_req_snpcur/
+> > > 96,757,023,244,365      cxl_pmu_mem0.0/h2d_req_snpdata/
+> > > 193,514,046,488,653      cxl_pmu_mem0.0/clock_ticks/
+> > >
+> > >        1.090539600 seconds time elapsed
