@@ -2,61 +2,68 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236B6C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 19:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA338C77B73
+	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 21:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237140AbjEZTuA (ORCPT
+        id S242576AbjEZVlN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 15:50:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32818 "EHLO
+        Fri, 26 May 2023 17:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229950AbjEZTt7 (ORCPT
+        with ESMTP id S231341AbjEZVlM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 15:49:59 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B70AF9E;
-        Fri, 26 May 2023 12:49:57 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1afbc02c602so19119635ad.1;
-        Fri, 26 May 2023 12:49:57 -0700 (PDT)
+        Fri, 26 May 2023 17:41:12 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F79F7
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 14:41:08 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3f606e111d3so7255e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 14:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685130597; x=1687722597;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2I0hQQzW2yDargibYWu+DA87dItM0w7zY2FsfJCnPOc=;
-        b=FEaZIJ9A8oOy00alMc7o2MKrBaJuo41U7UYtyYXnyI6zwjaq7K8zGUSjpwXzKDECDS
-         ayEhzaApqjvXvWihVb0SROvdi345okSy72sMe1Pjre8AtKFSRzPozyp+jCp+aX6/780F
-         mmyT4JSziG5WBeLVSqRcWgsY9RrYP/f9qN8AauiVRZM3q0j6OcxBFygf42GwPkt9qmZV
-         2SqkRYKuHldaqSsTq7pYstdQ7YRIgcXWDWTpGzj7/BbwVUGnDW4LNqBSw0ep8RtpYjCf
-         8Bbz9mN+A5JM1j1y4gSRV07Fi4VQ+RNBb+dzm27ADiHVVcOZuEh831zPqExmfZYLPMN4
-         WMaQ==
+        d=google.com; s=20221208; t=1685137267; x=1687729267;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GCGba+6rmP3oFWlLxeG7HrMtI5cN+T+JVky+Yx/c6wM=;
+        b=6pGLppNOwQz8D06a1Xq8N32BV2ybg2X/MHWeKdCBb0vDiM8BPnMcU1spg8QurVMJIa
+         YQ4Ke3SATtI2Trp+eBqg85Ybt8ayx9Nehiwn4d+b532eixwGwZcHzFX+veGL2IL/rcgX
+         Tc3ZnU6jDqYtiLyOlPeTxqaJNkUnRfc5TkhFgzBp9J1raB72QvEVJRZFUfaiK8oKMtqH
+         xDg60A1yax9qCg2DR9PSnGd5Qpvm5CYnc932ediYC1UUJrtM1VDGzssfrXa11wwVoM22
+         LvtPgbjPdYdb65IvN+pnAM/7D5ge+BPdMbbyKOTysHzjgq4wa7Kxxes2pUdH8XxuhEjr
+         d4lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685130597; x=1687722597;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2I0hQQzW2yDargibYWu+DA87dItM0w7zY2FsfJCnPOc=;
-        b=ifNRzn/+0+XN15nifGF1fUORt8UNJViILRHzooqlWtqPVpv11nv9X2GlHTRTz2Y9Il
-         0AGtf0DwkAGBWM5iLhaud0ptobVH9JQurcVbd2E2VmByuu3ZWpy+f59VKl8gJfr5XVYO
-         CWp0yMQMKH8aF7cKHtWD/7iFfwOW9zXb77KyoSi8xW+z0GQYFmSY070F0Nu5kwtUv07S
-         v9is91e1RkgO+hyG6OppsVshUARr5+hxmrWKLObCbXo/XGDDn4nFcBMAiTbHa0k+5oSz
-         x2+2d3hRp6AaeRjw8ejU+w9kTsQ7pxxGtMe2vUjefGAxjmYsG1MbsQuaWTl04l+5hL0J
-         MVDA==
-X-Gm-Message-State: AC+VfDxxmf9pbNPYo5MdlekfcxALRvAP5C1cAHRUrjdJLgUDP+SlL6gz
-        GzYzXhgua8GleESfdQJyhr0=
-X-Google-Smtp-Source: ACHHUZ6l5IG3mC3AStAa0GO7GoPS0h5QjiyFPJlsnQJYzQQrp9Ldv7mbYMr3Nw9jnE5NPtrwd1sWZg==
-X-Received: by 2002:a17:902:db10:b0:1af:ccc9:ce65 with SMTP id m16-20020a170902db1000b001afccc9ce65mr6704plx.28.1685130596833;
-        Fri, 26 May 2023 12:49:56 -0700 (PDT)
-Received: from yoga ([2400:1f00:13:58f8:114f:2b88:a753:89bb])
-        by smtp.gmail.com with ESMTPSA id y7-20020a17090322c700b001aaeaa27dd5sm3594561plg.252.2023.05.26.12.49.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 May 2023 12:49:56 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Sat, 27 May 2023 01:19:47 +0530
-To:     Ian Rogers <irogers@google.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        Anup Sharma <anupnewsmail@gmail.com>,
+        d=1e100.net; s=20221208; t=1685137267; x=1687729267;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GCGba+6rmP3oFWlLxeG7HrMtI5cN+T+JVky+Yx/c6wM=;
+        b=P8jaWzriY/nYyHqN7dPxlW9Xj/x3eiWjfm2u1ikBz43KlBY5V6OrHHuAJM9jBOCZRu
+         wc8LNwz3D2oJWh11yIwmd49df0TFTiIhusSMYJQqZxJ8wbVkkuCKzhjJwC3PmPyRP++r
+         bCBVKyIInsIDln2XTqZUM6/A71P+asfX4480RF2iT2ZBjXhLHB7ugfq/7DbQzQbSqiM0
+         wAiyZwpbTqkgkhmxj91eRjvvIzY5Naiwqdx9d+Hx3nXyxEw4KPRnGV7/SFDwHQTDhkWi
+         3qCcDJFgKJ53CynIKCOpeYaSbiDyw5ywx/5LFViaJXVoNupybK/PkNplThIZJ5JZ8/OC
+         lYfg==
+X-Gm-Message-State: AC+VfDywoQwlI0u3e5ZK19g3Zbt9ZAypPsWAwe46WAuKrZ+y4ajbQ2ry
+        3r95I/fV4g8visTnrje7PDkGATQ5jVUF+ka27vS2Ew==
+X-Google-Smtp-Source: ACHHUZ4DoTymeb5+7502s5BwYQGVvVlqFioCiuVbgzAeZYam9rLSpWhBZZZL3rnD8qy0ydu7MYgCK09a9St+s1WKD+k=
+X-Received: by 2002:a05:600c:1d24:b0:3f1:9a3d:4f7f with SMTP id
+ l36-20020a05600c1d2400b003f19a3d4f7fmr12859wms.1.1685137266820; Fri, 26 May
+ 2023 14:41:06 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230524221831.1741381-1-irogers@google.com> <20230524221831.1741381-10-irogers@google.com>
+ <CAM9d7ci21E+BFHPtbx4iO=pcgs2Y7ZCCVsjD-b5OWMdPLb0-6A@mail.gmail.com>
+In-Reply-To: <CAM9d7ci21E+BFHPtbx4iO=pcgs2Y7ZCCVsjD-b5OWMdPLb0-6A@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 26 May 2023 14:40:54 -0700
+Message-ID: <CAP-5=fVbn54AH3-YQ1OtUL=0f8o1V7iJh9LpZeZCk2x8SvX_Ag@mail.gmail.com>
+Subject: Re: [PATCH v3 09/35] perf evlist: Propagate user CPU maps
+ intersecting core PMU maps
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -64,87 +71,187 @@ Cc:     Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
-Message-ID: <ZHENW4HOIo0F6FnN@yoga>
-References: <ZG5kjDN63HqqMuJJ@yoga>
- <CAM9d7ciUsJM1kZhGbhQUfdxq1rsvLig2C-mAki13a92EjW37kw@mail.gmail.com>
- <CAP-5=fVekEnC1s=xUG-jFeL20qM=EPNkPO8aw8bcg4cVM=m5wg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVekEnC1s=xUG-jFeL20qM=EPNkPO8aw8bcg4cVM=m5wg@mail.gmail.com>
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ming Wang <wangming01@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 26, 2023 at 08:17:44AM -0700, Ian Rogers wrote:
-> On Thu, May 25, 2023 at 1:53 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Anup,
-> >
-> > On Wed, May 24, 2023 at 12:25 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> > >
-> > > Hello everyone,
-> > >
-> > > I'm happy to share that I'll be working on adding support for Firefox's Gecko profile format.
-> > > This format is utilized by the Firefox profiler, which is a powerful tool for performance analysis
-> > > and debugging. By enhancing the perf data command to generate perf.data files in the Gecko
-> > > profile format, it will allow us to leverage the capabilities of the Firefox profiler for visualizing
-> > > and analyzing the performance data.
-> > >
-> > > As a starter task, I have created a test for testing the perf data JSON converter command.
-> > > I'm also looking for a few more starter tasks related to this project. I would greatly appreciate
-> > > your advice and guidance.
-> > >
-> > > In my effort to identify any existing bugs, I have enabled flags like 'fsanitize=address' to detect
-> > > potential issues but have not found any :). Additionally, I am running perf data commands to ensure
-> > > that all use cases are handled properly.
-> >
-> > Great, good to know it works well with asan for the basic use cases at least.
-> >
-> > >
-> > > I have one question regarding the installation process. Typically, I navigate to the perf directory,
-> > > run 'make', and then cp 'perf' to '/usr/bin'. However, I noticed that by default, perf is installed in
-> > > the '~/bin/perf' directory. Could someone please clarify why this is the case? Furthermore, I would
-> > > like to know how all of you compile the perf tree.
-> >
-> > I guess $HOME is the default prefix unless you set it to other, then
-> > make install will put
-> > the binary there.  You can make sure if your PATH contains the ~/bin and use it.
-> >
-> > But it's also possible you can run the perf without installing.  I
-> > have a symlink in
-> > my tmp directory to point to the recent build of the binary and use it
-> > always. :)
-> > To build, you can either 'cd tools/perf; make' or 'make -C tools/perf'
-> > in the top
-> > level linux source tree.  I also pass "BUILD_BPF_SKEL=1" to enable BPF.
-> >
-> > Thanks,
-> > Namhyung
-> 
-> I quite often test with address sanitizer, I do this by passing to make:
-> DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame- pointer
-> -fsanitize=address" NO_LIBTRACEEVENT=1
-> 
-> The libtraceevent exclusion is to avoid false address sanitizer
-> warnings in libtraceevent (it wasn't compiled with address sanitizer).
-> The other flags are to make the code easier to debug. A good place to
-> start for a description of the build flags is Makefile.perf:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Makefile.perf?h=perf-tools-next
-> 
-> There's also some description here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Documentation/Build.txt?h=perf-tools-next
-> 
-> Perhaps you can suggest improvements :-)
+On Wed, May 24, 2023 at 10:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
+> Hi Ian,
+>
+> On Wed, May 24, 2023 at 3:19=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > The CPU map for a non-core PMU gives a default CPU value for
+> > perf_event_open. For core PMUs the CPU map lists all CPUs the evsel
+> > may be opened on. If there are >1 core PMU, the CPU maps will list the
+> > CPUs for that core PMU, but the user_requested_cpus may contain CPUs
+> > that are invalid for the PMU and cause perf_event_open to fail. To
+> > avoid this, when propagating the CPU map for core PMUs intersect it
+> > with the CPU map of the PMU (the evsel's "own_cpus").
+> >
+> > Add comments to __perf_evlist__propagate_maps to explain its somewhat
+> > complex behavior.
+>
+> Thanks for tackling this.  There are many assumptions on this code
+> which make this code hard to understand.  I think we need to list
+> all possible cases and make the logic as simple as possible.
+>
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/lib/perf/evlist.c | 25 ++++++++++++++++++++-----
+> >  1 file changed, 20 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> > index 81e8b5fcd8ba..b8b066d0dc5e 100644
+> > --- a/tools/lib/perf/evlist.c
+> > +++ b/tools/lib/perf/evlist.c
+> > @@ -36,18 +36,33 @@ void perf_evlist__init(struct perf_evlist *evlist)
+> >  static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+> >                                           struct perf_evsel *evsel)
+> >  {
+> > -       /*
+> > -        * We already have cpus for evsel (via PMU sysfs) so
+> > -        * keep it, if there's no target cpu list defined.
+> > -        */
+>
+> So basically this code is only needed when the user specified a cpu list.
+> Otherwise evsels can use their own cpus.  But it's a kind of sad that
+> libperf does not have a notion of PMU (with a cpu map) yet.
+>
+> I think we have the following cases.  Please tell me if I miss some.
+>
+> 1. non-hybrid core PMU: It used to not have a cpu map, but you added it
+>    in this patchset to cover all (online) CPUs.  So it'd be ok to treat t=
+hem as
+>    same as the hybrid PMUs.
+>
+> 2. hybrid core PMU: It has a cpu map to cover possible CPUs and the
+>    user requested cpu map should be intersected with its map.
 
-Thanks Namhyung and Ian for your suggestions. I'll try them out and let you know if I have any questions.
+Right, and these two cases should be just considered as core PMU
+cases, where there can be >1 core PMU.
 
+> 3. uncore PMU: It has a cpu map to indicate CPUs to handle event
+>    settings but it's allowed to read the event from other CPUs (at least
+>    for Intel CPUs).  That means it can just use the user request cpu map.
+
+Yep, but uncore can be a confusing name as it means things not in the
+core and doesn't include, say the interconnect, that Intel calls
+offcore. In pmus.c at the end of this series we have a list of core
+pmus and other pmus.
+
+> 4. dummy event: It can be marked as system-wide to get the sideband
+>    events from all CPUs.  Then it should ignore the user requested cpu
+>    map.  Otherwise it should be treated as other events.
+
+Agreed. Typically dummy is regarded as a software event but the PMU
+for software events has an empty CPU map.
+
+> 5. tool event: It's used for perf stat and has a hardcoded cpu map for
+>    CPU 0.  Not sure if it can accept other CPUs but it seems we can ignor=
+e
+>    the user requested cpu map.
+
+Tool events have their PMU type set to software but then we special
+case things prior to say displaying the name or reading a counter. The
+CPU maps are never used to my knowledge and the enable/running times
+look questionable for user and system time.
+
+> 6. other event: No restrictions.  It can use the user requested cpu map.
+
+Here there are software, tracepoint and breakpoint events and there is
+no PMU provided CPU map. There are sysfs PMUs for these but they don't
+provide a CPU map.
+
+I think the thing that stems from this is the comment on evsel
+system_wide is stale:
+
+/*
+* system_wide is for events that need to be on every CPU, irrespective
+* of user requested CPUs or threads. Map propagation will set cpus to
+* this event's own_cpus, whereby they will contribute to evlist
+* all_cpus.
+*/
+
+If this were true then the empty software PMU's CPU map would be
+copied to dummy events when instead every CPU is being requested. I'll
+tweak the comment in v4.
+
+Thanks,
+Ian
+
+
+> >         if (evsel->system_wide) {
+> > +               /* System wide: set the cpu map of the evsel to all onl=
+ine CPUs. */
+> >                 perf_cpu_map__put(evsel->cpus);
+> >                 evsel->cpus =3D perf_cpu_map__new(NULL);
+> > +       } else if (evlist->has_user_cpus && evsel->is_pmu_core) {
+> > +               /*
+> > +                * User requested CPUs on a core PMU, ensure the reques=
+ted CPUs
+> > +                * are valid by intersecting with those of the PMU.
+> > +                */
+> > +               perf_cpu_map__put(evsel->cpus);
+> > +               evsel->cpus =3D perf_cpu_map__intersect(evlist->user_re=
+quested_cpus, evsel->own_cpus);
+> >         } else if (!evsel->own_cpus || evlist->has_user_cpus ||
+> > -                  (!evsel->requires_cpu && perf_cpu_map__empty(evlist-=
+>user_requested_cpus))) {
+> > +               (!evsel->requires_cpu && perf_cpu_map__has_any_cpu(evli=
+st->user_requested_cpus))) {
+> > +               /*
+> > +                * The PMU didn't specify a default cpu map, this isn't=
+ a core
+> > +                * event and the user requested CPUs or the evlist user
+> > +                * requested CPUs have the "any CPU" (aka dummy) CPU va=
+lue. In
+> > +                * which case use the user requested CPUs rather than t=
+he PMU
+> > +                * ones.
+> > +                */
+> >                 perf_cpu_map__put(evsel->cpus);
+> >                 evsel->cpus =3D perf_cpu_map__get(evlist->user_requeste=
+d_cpus);
+> >         } else if (evsel->cpus !=3D evsel->own_cpus) {
+> > +               /*
+> > +                * No user requested cpu map but the PMU cpu map doesn'=
+t match
+> > +                * the evsel's. Reset it back to the PMU cpu map.
+> > +                */
+>
+> Not sure if it actually happens.
+>
 > Thanks,
-> Ian
-> 
-> > >
-> > > Thank you for your support and I'm looking forward to collaborating with you on this project!
+> Namhyung
+>
+>
+> >                 perf_cpu_map__put(evsel->cpus);
+> >                 evsel->cpus =3D perf_cpu_map__get(evsel->own_cpus);
+> >         }
+> > --
+> > 2.40.1.698.g37aff9b760-goog
+> >
