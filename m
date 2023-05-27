@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C496C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3651C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231535AbjE0HWq (ORCPT
+        id S231611AbjE0HWt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 03:22:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55658 "EHLO
+        Sat, 27 May 2023 03:22:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230483AbjE0HWj (ORCPT
+        with ESMTP id S231433AbjE0HWp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 03:22:39 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D51E125
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:37 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-565c380565dso18757817b3.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:37 -0700 (PDT)
+        Sat, 27 May 2023 03:22:45 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D95B919C
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:42 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba802c775caso3314562276.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685172156; x=1687764156;
+        d=google.com; s=20221208; t=1685172162; x=1687764162;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YmLTisiNizeIrXvrjhg9xDfBg2TQz5BFZHX1FeqqDUw=;
-        b=EoBHDkjVPKfZAdSXiiUd20zvhFzUg/tYFH+HyrLhGVARc5vROiiqN1i4oWDPmXgi9j
-         +0xs62mESMgE8b9umeAwcEnMYaxvZqa1biwzAQsrCrjmcDiGm+h6OZw+PVO3NOPBCzgC
-         Zpn5UZhSUpR9C32IQtp2dppGevbqjx20YdLSe39shf36hi/Xg+4Me1yPB0VId66Yd+yq
-         b92MyiGMgOr2Zm6SxW5z8lRxKKtAs8f6enyXr70EkxYwglAtBFWjgdh5nUpkorkK5rHV
-         6K0a81BsEXF2u3Fiy8b/+0zOuJy1L5Q0ER2hC6nJeg84gjLA9rtvyqnYl3dPd7trlOYf
-         AI8A==
+        bh=zl5H/LAaMs6H1Jjaws3sJN4knTClvax7RvoNDB4HmA4=;
+        b=izxX1osE27tCWV0OzJi+hTySjyCv62aYDAMrZ/xEIVznRxWgrSVPb/40HLjHaotabb
+         Y1WjfQ7m5cMnGVw7wfQMFD6XKxOaVEsO0jaFcpdgK3I0s5s1oi9nXiY0xuFW2jouex1B
+         zaG96feJeImRD/nTuaKK4IhLCRAE+xhc09+5DaikPJeJ/ihMTbPvES4HrtmLFbAqkerf
+         wJM8gmOzsOp7QKKfQW0BSdUH64EaoUNK24pUUQPfdZ4NweR8BBmZ5XWYdxSHCTAUPd/x
+         OoDofjKzLiLtwlxatWHQzSM9OK3TARBzT3U7bNEYiLLAqqdifF+OUQK+B6POjIcMlLIm
+         pBUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685172156; x=1687764156;
+        d=1e100.net; s=20221208; t=1685172162; x=1687764162;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YmLTisiNizeIrXvrjhg9xDfBg2TQz5BFZHX1FeqqDUw=;
-        b=Z9zefxX6AfCebWkM9ENKGLtW8FuJ2z/Y7ZNcGC/TLywZbWMjuC+XPB31JzWupEIZG8
-         QkskrD8oBOpebkt0uBpQnSSQXQVSCFNKINKGEKWEvriLQ0NfVsdtCcRVj+HGMBi2iZD4
-         ErS5ONztscxU591xF97QVlj1yayaSjw8mYit035tV/yUZ67/Osx2dwDnCiNoUAhvyV9m
-         6MNCR1MJ9uxb1eBfOPdB0LKFG6xKQ7wV96m6tthIDA0yAsZoOChJeGA1ggiCkWSS1JNn
-         FAQsOIO+WATis5Vknh7QJlEt/RrJhG9UQRXQXhIp85r+gtFiNit1kNOd5ufvUzCwxRNS
-         w8mA==
-X-Gm-Message-State: AC+VfDxD3sO9079UjMMZQKJ0K/6AUtpnnmPII9hEnAMa5yHDMD7uAyyc
-        5i+QYwQBQRBFSSk6/UoOcR5sFnSYSFAu
-X-Google-Smtp-Source: ACHHUZ7EF+v83A4j5vcqObk72beR2nK+Str1BgMDIl73nSTXjDZKqr4ZRkyKHLaCwRmwJSSDv+8LEYBz6T7r
+        bh=zl5H/LAaMs6H1Jjaws3sJN4knTClvax7RvoNDB4HmA4=;
+        b=QPdHKd1ODNeXmdyiBNA/aUZphShgmTLYPWdFnCNVEcPFW7DXx4CvmDAa3qvFZisITw
+         rTomm+2aHN+8C1crrJSiieOMBXnJdaJaq8+Pk/rhLFqsDnAYb8Kbh+DPiWWC1omj1MyA
+         NLWcQwXk4j9rwiwgIXYuvU9gME5iWX+9VBB9vzP3VAQ6t4O/fIsfdxjuRby6fVYfh4ZH
+         fnPOpPJ3HMi1DN36UA5rOVMEZPWj30covnzPQmGU/0JYjWwAcdxQAlWfGTXbOOl1ZJov
+         bqm7vBU2mWMMs6zBJZjSA0SLs38zA9u3FwN36RJKCKd6U7KYF1XVE+i3pxZgQLY4ABdg
+         fhqg==
+X-Gm-Message-State: AC+VfDz76SXvt3MEzb4sGfvERnDLK7FyEBZyaRbqEbiOXt2GmQNS3fNb
+        UGeLXeuY9Qmn874wDNi3mGGfVMGPS9fr
+X-Google-Smtp-Source: ACHHUZ5G9WGtp0OnJwUzf+KtanBkWlscLf5i0qI04IEzVz12+3i0Lf2rmeQtbSTG9y2ZWnRCWuyDq8prE3K4
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a81:4319:0:b0:55d:e173:8a73 with SMTP id
- q25-20020a814319000000b0055de1738a73mr1011285ywa.2.1685172156731; Sat, 27 May
- 2023 00:22:36 -0700 (PDT)
-Date:   Sat, 27 May 2023 00:21:38 -0700
+ (user=irogers job=sendgmr) by 2002:a25:8211:0:b0:ba6:e7ee:bb99 with SMTP id
+ q17-20020a258211000000b00ba6e7eebb99mr2344524ybk.12.1685172161878; Sat, 27
+ May 2023 00:22:41 -0700 (PDT)
+Date:   Sat, 27 May 2023 00:21:40 -0700
 In-Reply-To: <20230527072210.2900565-1-irogers@google.com>
-Message-Id: <20230527072210.2900565-3-irogers@google.com>
+Message-Id: <20230527072210.2900565-5-irogers@google.com>
 Mime-Version: 1.0
 References: <20230527072210.2900565-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v5 02/34] perf cpumap: Add equal function
+Subject: [PATCH v5 04/34] perf pmu: Detect ARM and hybrid PMUs with sysfs
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -93,115 +93,106 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Equality is a useful property to compare after merging and
-intersecting maps.
+is_arm_pmu_core detects a core PMU via the presence of a "cpus" file
+rather than a "cpumask" file. This pattern holds for hybrid PMUs so
+rename the function and remove redundant perf_pmu__is_hybrid
+tests.
+
+Add a new helper is_pmu_hybrid similar to is_pmu_core.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/lib/perf/cpumap.c              | 21 ++++++++++++++++
- tools/lib/perf/include/perf/cpumap.h |  2 ++
- tools/perf/tests/cpumap.c            | 37 ++++++++++++++++++++++++++++
- 3 files changed, 60 insertions(+)
+ tools/perf/util/pmu.c | 29 ++++++++++++++++++-----------
+ tools/perf/util/pmu.h |  1 +
+ 2 files changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index ec3f4ac8b1e2..98d7cb24a158 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -335,6 +335,27 @@ bool perf_cpu_map__has(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
- 	return perf_cpu_map__idx(cpus, cpu) != -1;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index f4f0afbc391c..7392cec725bf 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -643,12 +643,14 @@ static char *pmu_id(const char *name)
+ 	return str;
  }
  
-+bool perf_cpu_map__equal(const struct perf_cpu_map *lhs, const struct perf_cpu_map *rhs)
-+{
-+	int nr;
-+
-+	if (lhs == rhs)
-+		return true;
-+
-+	if (!lhs || !rhs)
-+		return false;
-+
-+	nr = __perf_cpu_map__nr(lhs);
-+	if (nr != __perf_cpu_map__nr(rhs))
-+		return false;
-+
-+	for (int idx = 0; idx < nr; idx++) {
-+		if (__perf_cpu_map__cpu(lhs, idx).cpu != __perf_cpu_map__cpu(rhs, idx).cpu)
-+			return false;
-+	}
-+	return true;
-+}
-+
- struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
+-/*
+- *  PMU CORE devices have different name other than cpu in sysfs on some
+- *  platforms.
+- *  Looking for possible sysfs files to identify the arm core device.
++/**
++ * is_sysfs_pmu_core() - PMU CORE devices have different name other than cpu in
++ *         sysfs on some platforms like ARM or Intel hybrid. Looking for
++ *         possible the cpus file in sysfs files to identify whether this is a
++ *         core device.
++ * @name: The PMU name such as "cpu_atom".
+  */
+-static int is_arm_pmu_core(const char *name)
++static int is_sysfs_pmu_core(const char *name)
  {
- 	struct perf_cpu result = {
-diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index b4c9a827a88a..cedfc26d944e 100644
---- a/tools/lib/perf/include/perf/cpumap.h
-+++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -33,6 +33,8 @@ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
- LIBPERF_API bool perf_cpu_map__empty(const struct perf_cpu_map *map);
- LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map);
- LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, struct perf_cpu cpu);
-+LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
-+				     const struct perf_cpu_map *rhs);
+ 	char path[PATH_MAX];
  
- #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
- 	for ((idx) = 0, (cpu) = perf_cpu_map__cpu(cpus, idx);	\
-diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-index 83805690c209..7730fc2ab40b 100644
---- a/tools/perf/tests/cpumap.c
-+++ b/tools/perf/tests/cpumap.c
-@@ -211,11 +211,48 @@ static int test__cpu_map_intersect(struct test_suite *test __maybe_unused,
- 	return ret;
- }
+@@ -814,7 +816,7 @@ void pmu_add_cpu_aliases_table(struct list_head *head, struct perf_pmu *pmu,
+ 	struct pmu_add_cpu_aliases_map_data data = {
+ 		.head = head,
+ 		.name = pmu->name,
+-		.cpu_name = is_arm_pmu_core(pmu->name) ? pmu->name : "cpu",
++		.cpu_name = is_sysfs_pmu_core(pmu->name) ? pmu->name : "cpu",
+ 		.pmu = pmu,
+ 	};
  
-+static int test__cpu_map_equal(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-+{
-+	struct perf_cpu_map *any = perf_cpu_map__dummy_new();
-+	struct perf_cpu_map *one = perf_cpu_map__new("1");
-+	struct perf_cpu_map *two = perf_cpu_map__new("2");
-+	struct perf_cpu_map *empty = perf_cpu_map__intersect(one, two);
-+	struct perf_cpu_map *pair = perf_cpu_map__new("1-2");
-+	struct perf_cpu_map *tmp;
-+	struct perf_cpu_map *maps[] = {empty, any, one, two, pair};
-+
-+	for (size_t i = 0; i < ARRAY_SIZE(maps); i++) {
-+		/* Maps equal themself. */
-+		TEST_ASSERT_VAL("equal", perf_cpu_map__equal(maps[i], maps[i]));
-+		for (size_t j = 0; j < ARRAY_SIZE(maps); j++) {
-+			/* Maps dont't equal each other. */
-+			if (i == j)
-+				continue;
-+			TEST_ASSERT_VAL("not equal", !perf_cpu_map__equal(maps[i], maps[j]));
-+		}
-+	}
-+
-+	/* Maps equal made maps. */
-+	tmp = perf_cpu_map__merge(perf_cpu_map__get(one), two);
-+	TEST_ASSERT_VAL("pair", perf_cpu_map__equal(pair, tmp));
-+	perf_cpu_map__put(tmp);
-+
-+	tmp = perf_cpu_map__intersect(pair, one);
-+	TEST_ASSERT_VAL("one", perf_cpu_map__equal(one, tmp));
-+	perf_cpu_map__put(tmp);
-+
-+	for (size_t i = 0; i < ARRAY_SIZE(maps); i++)
-+		perf_cpu_map__put(maps[i]);
-+
-+	return TEST_OK;
+@@ -1647,22 +1649,27 @@ static int cmp_sevent(const void *a, const void *b)
+ 
+ bool is_pmu_core(const char *name)
+ {
+-	return !strcmp(name, "cpu") || is_arm_pmu_core(name);
++	return !strcmp(name, "cpu") || is_sysfs_pmu_core(name);
 +}
 +
- static struct test_case tests__cpu_map[] = {
- 	TEST_CASE("Synthesize cpu map", cpu_map_synthesize),
- 	TEST_CASE("Print cpu map", cpu_map_print),
- 	TEST_CASE("Merge cpu map", cpu_map_merge),
- 	TEST_CASE("Intersect cpu map", cpu_map_intersect),
-+	TEST_CASE("Equal cpu map", cpu_map_equal),
- 	{	.name = NULL, }
- };
++bool is_pmu_hybrid(const char *name)
++{
++	return !strcmp(name, "cpu_atom") || !strcmp(name, "cpu_core");
+ }
  
+ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+ {
+-	return is_pmu_core(pmu->name) || perf_pmu__is_hybrid(pmu->name);
++	return is_pmu_core(pmu->name);
+ }
+ 
+ bool perf_pmu__supports_wildcard_numeric(const struct perf_pmu *pmu)
+ {
+-	return is_pmu_core(pmu->name) || perf_pmu__is_hybrid(pmu->name);
++	return is_pmu_core(pmu->name);
+ }
+ 
+ bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
+ {
+-	return !perf_pmu__is_hybrid(pmu->name);
++	return !is_pmu_hybrid(pmu->name);
+ }
+ 
+ static bool pmu_alias_is_duplicate(struct sevent *alias_a,
+@@ -1716,7 +1723,7 @@ void print_pmu_events(const struct print_callbacks *print_cb, void *print_state)
+ 	pmu = NULL;
+ 	j = 0;
+ 	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
+-		bool is_cpu = is_pmu_core(pmu->name) || perf_pmu__is_hybrid(pmu->name);
++		bool is_cpu = is_pmu_core(pmu->name);
+ 
+ 		list_for_each_entry(event, &pmu->aliases, list) {
+ 			aliases[j].event = event;
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 0e0cb6283594..f50919f1b34c 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -220,6 +220,7 @@ void perf_pmu__del_formats(struct list_head *formats);
+ struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu);
+ 
+ bool is_pmu_core(const char *name);
++bool is_pmu_hybrid(const char *name);
+ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
+ bool perf_pmu__supports_wildcard_numeric(const struct perf_pmu *pmu);
+ bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu);
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
