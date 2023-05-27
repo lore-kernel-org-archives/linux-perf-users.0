@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E95AC7EE23
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA669C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231859AbjE0H0u (ORCPT
+        id S232291AbjE0H1m (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 03:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57584 "EHLO
+        Sat, 27 May 2023 03:27:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232596AbjE0HZR (ORCPT
+        with ESMTP id S232185AbjE0H1D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 03:25:17 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5A41BB
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:24:38 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-565a33c35b1so30741437b3.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:24:38 -0700 (PDT)
+        Sat, 27 May 2023 03:27:03 -0400
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3A70173B
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:26:15 -0700 (PDT)
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-556011695d1so30782847b3.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685172219; x=1687764219;
+        d=google.com; s=20221208; t=1685172232; x=1687764232;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=kWjpW1u76sBxbsm1hYEhA0qZQ3555o3L2cIJC7DUwoI=;
-        b=wBi4n8uFTdA3TszUXpCO8GKYB2uqcL4Vn0FqZlNbP1LOQK1BVmm7fF3l2JaCleCDC6
-         33wxtblEfCpqmbkyharFERKKEItaJEJAgPnDVWqK5Nq/2j4d1CWYZPudPXsTbuOzIyKZ
-         wQdtuDG0uOcF6RR5xCksRwyUT4pEuoHvB4brApBxYHVzaQb5uc7udU5MiNWxh3PNYk2B
-         Wh18NBKanrun3bGONgRozrXoYFsw2jb20t7Xk/3BS1x1UAQC+L1GcjdXGHejgYRM+93T
-         Sf58Fu/qAZ/kAEAa8d6AovzKAWeoflzGzliHn239rljOJ6T5rGHSIeUsvNFEtU79wFeD
-         k+yg==
+        bh=I37rqh5cG8jyPI8CnkZDKw7uLKTCQzZXDibgw5Pks+s=;
+        b=JbaNTb+YoFBnILHze5B/sosyUm2MQP4Y0jSpgE6FaHOPiwbbxJRmEIw9vuZN0VhkXs
+         rboTkzWd7Sw+pkmZvebpDXVN90UnkVKIj82VLkm8mTqJHEEJxsJxr2Z1tXHLAOGL4H3E
+         kMV+E4kmR+rr29EnsOQs3QbH1dAVsrcOcuHnmeG/Z+/FyXu9CSX/3ijEYMczyoRo/d3B
+         qHygUAFcT4AlyEJmP0HGJnsBzoc7gqzozDrFRvJaWYQ4m09f8/X53tcaTtiT53LXYCyi
+         gmvSR0h6sT2Pz0YuhnE8Yt6w045BVknASZuz8iBog8fae1znZJyK9PhmRPH1GN3aHyTm
+         T/0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685172219; x=1687764219;
+        d=1e100.net; s=20221208; t=1685172232; x=1687764232;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kWjpW1u76sBxbsm1hYEhA0qZQ3555o3L2cIJC7DUwoI=;
-        b=MqCKNZWOMsYUuZ2ZWWA6sPaCCT3EhsnzA581oTXTkBmrxLX6ezEuTD18OOBrRO8mQ1
-         nzcKB41S0m6DSrBR4fIEWLUxMhLEwGcDmmX/wVhKXU0qzLMksnn51JrU5Z8HqgiuytTW
-         InXK+wKX2bzdUtUzw3HHObwZu6raiIOkIsuPflX8FyqHfIfsQoSUWzLVKYZwnaVpdPdI
-         Sj5V0bCbujxCnfumAPlNy5F9lsvmNtQu7PC9dGqS6mrOUZGKnp1wkbAzd39tWYLJ5i+m
-         bLDpnWamSLs/7/7lhmg02ox0QBC3YNVYIxCQQGNZzNnl20wwsVN3O8eIZcicTBCSb11M
-         nlmA==
-X-Gm-Message-State: AC+VfDwlBkLHJjUS3a7a3blPS8p/PnnL8hZBdgZWL0y0KTz2Ad4svkzo
-        C7Y2k5axa6SN/xFlv3qvgfghK2X33Nol
-X-Google-Smtp-Source: ACHHUZ7i1HCsYIElA4iQQBEJl+fhXqsKclMNBO4YCra2KTWKzYk4pfQkBbhwUQG7aKApbscqoqRV5WKo/Zp0
+        bh=I37rqh5cG8jyPI8CnkZDKw7uLKTCQzZXDibgw5Pks+s=;
+        b=Lkx981RVddESJ55tYFSfET5SfamKqByJ6i5JXpM7b/rtWlm3URc+DyHg9RmAKZqPmz
+         u2c/3h0wR0NmHfxw/IJcPsFzyhk3zcZpjpKPp4vG1JoPa5B9IbH/IqfLTio4oTnUF0Ge
+         vCahOlkLMB+kx25HsVNphYf2DiPUWHMrXJVuBGnnSj8vmHpNdtKYoNAiX3/ut5KILekO
+         SKJ9n0ihoJJQg0xdP3ruvsGli5kC+wESZmW8sspDIHDUqCeHAgt7yEEdjaf8nd9MHaGy
+         lg4EAY/iKdQDK7fJFxnJNYmWuIHF6LWjNh90rw7ZbPbo97SZbz7XSCxR5S+/k5mBSQiG
+         9Pdg==
+X-Gm-Message-State: AC+VfDwH5iwYXrkSjN0KQ3EF1wyMdID33AkLe821h9sx2hkA7fTjjKsY
+        qDm9DvwZdyxGW5jQn0fAXKUn/5CK57fs
+X-Google-Smtp-Source: ACHHUZ78KBA1JUa2cvAkqw//UTMkAV6kfTQbeH4HIqu8smct7E2eumOweassg456g7kOaLPz3uV8vDzZ5jU9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a81:8d44:0:b0:561:81b:7369 with SMTP id
- w4-20020a818d44000000b00561081b7369mr2447926ywj.8.1685172218828; Sat, 27 May
- 2023 00:23:38 -0700 (PDT)
-Date:   Sat, 27 May 2023 00:22:04 -0700
+ (user=irogers job=sendgmr) by 2002:a25:84c8:0:b0:ba8:90c9:f7bd with SMTP id
+ x8-20020a2584c8000000b00ba890c9f7bdmr1556932ybm.6.1685172232617; Sat, 27 May
+ 2023 00:23:52 -0700 (PDT)
+Date:   Sat, 27 May 2023 00:22:10 -0700
 In-Reply-To: <20230527072210.2900565-1-irogers@google.com>
-Message-Id: <20230527072210.2900565-29-irogers@google.com>
+Message-Id: <20230527072210.2900565-35-irogers@google.com>
 Mime-Version: 1.0
 References: <20230527072210.2900565-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v5 28/34] perf pmus: Split pmus list into core and other
+Subject: [PATCH v5 34/34] perf pmu: Remove is_pmu_hybrid
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -93,128 +93,53 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Split the pmus list into core and other. This will later allow for
-the core and other pmus to be populated separately.
+Users have been removed or switched to using pmu->is_core with
+perf_pmus__num_core_pmus() > 1.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/util/pmus.c | 52 ++++++++++++++++++++++++++++++------------
- 1 file changed, 38 insertions(+), 14 deletions(-)
+ tools/perf/util/pmu.c | 7 +------
+ tools/perf/util/pmu.h | 1 -
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 58ff7937e9b7..4ef4fecd335f 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -12,13 +12,19 @@
- #include "pmu.h"
- #include "print-events.h"
- 
--static LIST_HEAD(pmus);
-+static LIST_HEAD(core_pmus);
-+static LIST_HEAD(other_pmus);
- 
- void perf_pmus__destroy(void)
- {
- 	struct perf_pmu *pmu, *tmp;
- 
--	list_for_each_entry_safe(pmu, tmp, &pmus, list) {
-+	list_for_each_entry_safe(pmu, tmp, &core_pmus, list) {
-+		list_del(&pmu->list);
-+
-+		perf_pmu__delete(pmu);
-+	}
-+	list_for_each_entry_safe(pmu, tmp, &other_pmus, list) {
- 		list_del(&pmu->list);
- 
- 		perf_pmu__delete(pmu);
-@@ -29,7 +35,12 @@ static struct perf_pmu *pmu_find(const char *name)
- {
- 	struct perf_pmu *pmu;
- 
--	list_for_each_entry(pmu, &pmus, list) {
-+	list_for_each_entry(pmu, &core_pmus, list) {
-+		if (!strcmp(pmu->name, name) ||
-+		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
-+			return pmu;
-+	}
-+	list_for_each_entry(pmu, &other_pmus, list) {
- 		if (!strcmp(pmu->name, name) ||
- 		    (pmu->alias_name && !strcmp(pmu->alias_name, name)))
- 			return pmu;
-@@ -53,7 +64,7 @@ struct perf_pmu *perf_pmus__find(const char *name)
- 		return pmu;
- 
- 	dirfd = perf_pmu__event_source_devices_fd();
--	pmu = perf_pmu__lookup(&pmus, dirfd, name);
-+	pmu = perf_pmu__lookup(is_pmu_core(name) ? &core_pmus : &other_pmus, dirfd, name);
- 	close(dirfd);
- 
- 	return pmu;
-@@ -72,7 +83,7 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
- 	if (pmu)
- 		return pmu;
- 
--	return perf_pmu__lookup(&pmus, dirfd, name);
-+	return perf_pmu__lookup(is_pmu_core(name) ? &core_pmus : &other_pmus, dirfd, name);
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 7102084dd3aa..0520aa9fe991 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1417,11 +1417,6 @@ bool is_pmu_core(const char *name)
+ 	return !strcmp(name, "cpu") || is_sysfs_pmu_core(name);
  }
  
- /* Add all pmus in sysfs to pmu list: */
-@@ -93,7 +104,7 @@ static void pmu_read_sysfs(void)
- 	while ((dent = readdir(dir))) {
- 		if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, ".."))
- 			continue;
--		/* add to static LIST_HEAD(pmus): */
-+		/* add to static LIST_HEAD(core_pmus) or LIST_HEAD(other_pmus): */
- 		perf_pmu__find2(fd, dent->d_name);
- 	}
- 
-@@ -104,24 +115,37 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
- {
- 	struct perf_pmu *pmu;
- 
--	list_for_each_entry(pmu, &pmus, list)
-+	list_for_each_entry(pmu, &core_pmus, list) {
- 		if (pmu->type == type)
- 			return pmu;
+-bool is_pmu_hybrid(const char *name)
+-{
+-	return !strcmp(name, "cpu_atom") || !strcmp(name, "cpu_core");
+-}
 -
-+	}
-+	list_for_each_entry(pmu, &other_pmus, list) {
-+		if (pmu->type == type)
-+			return pmu;
-+	}
- 	return NULL;
+ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+ {
+ 	return pmu->is_core;
+@@ -1429,7 +1424,7 @@ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+ 
+ bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
+ {
+-	return !is_pmu_hybrid(pmu->name);
++	return pmu->is_core && perf_pmus__num_core_pmus() > 1;
  }
  
-+/*
-+ * pmu iterator: If pmu is NULL, we start at the begin, otherwise return the
-+ * next pmu. Returns NULL on end.
-+ */
- struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu)
- {
--	/*
--	 * pmu iterator: If pmu is NULL, we start at the begin,
--	 * otherwise return the next pmu. Returns NULL on end.
--	 */
-+	bool use_core_pmus = !pmu || pmu->is_core;
-+
- 	if (!pmu) {
- 		pmu_read_sysfs();
--		pmu = list_prepare_entry(pmu, &pmus, list);
-+		pmu = list_prepare_entry(pmu, &core_pmus, list);
-+	}
-+	if (use_core_pmus) {
-+		list_for_each_entry_continue(pmu, &core_pmus, list)
-+			return pmu;
-+
-+		pmu = NULL;
-+		pmu = list_prepare_entry(pmu, &other_pmus, list);
- 	}
--	list_for_each_entry_continue(pmu, &pmus, list)
-+	list_for_each_entry_continue(pmu, &other_pmus, list)
- 		return pmu;
- 	return NULL;
- }
+ bool perf_pmu__have_event(const struct perf_pmu *pmu, const char *name)
+diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
+index 02fec0a7d4c8..287f593b15c7 100644
+--- a/tools/perf/util/pmu.h
++++ b/tools/perf/util/pmu.h
+@@ -221,7 +221,6 @@ int perf_pmu__format_parse(int dirfd, struct list_head *head);
+ void perf_pmu__del_formats(struct list_head *formats);
+ 
+ bool is_pmu_core(const char *name);
+-bool is_pmu_hybrid(const char *name);
+ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
+ bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu);
+ bool perf_pmu__have_event(const struct perf_pmu *pmu, const char *name);
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
