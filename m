@@ -2,270 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86316C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 01:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A254C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 01:42:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234665AbjE0BkU (ORCPT
+        id S242720AbjE0Bm2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 21:40:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34296 "EHLO
+        Fri, 26 May 2023 21:42:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbjE0BkU (ORCPT
+        with ESMTP id S242588AbjE0Bm1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 21:40:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DAC6DF;
-        Fri, 26 May 2023 18:40:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 19BF4654DB;
-        Sat, 27 May 2023 01:40:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 095C3C433D2;
-        Sat, 27 May 2023 01:40:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685151617;
-        bh=bzPSHshNTNmkwKbbGErp/iXjKs3YdX4PXm7q24OS41o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pk8pNEovts8QepOLlARq1dPvxlNf41Vw0zwziAwxDKrnuIrlTTGptl9vHbosKn3SM
-         fwdLQKNUImRegMEql3sWMd7hy7SxCiOIHutE4M5bFOfnT2HaeBDYMvRtWAHtg0FHqR
-         o0KNjFhVdvedGJY+/ppfIgRz9/GA9hc1SGoM0lzeEzsdC/OI75HhGXaV+wdW4jNn0v
-         ZQNiap37c8fHrpYCMdCjZlDvo7rfTzv6+LMqmuMepd92QopeCDQ5epMFCb7kzbHqJF
-         t/cLXyHU62m/adJrCPBe3g6qgSaqlM6EvdIgHWPA06nUatu2J7OxREWohTHMBTzCmg
-         7Bh+/uKaYfcig==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 2622B403B5; Fri, 26 May 2023 22:40:14 -0300 (-03)
-Date:   Fri, 26 May 2023 22:40:14 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ming Wang <wangming01@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 03/35] perf cpumap: Add equal function
-Message-ID: <ZHFffgMt1fHzbc55@kernel.org>
-References: <20230526215410.2435674-1-irogers@google.com>
- <20230526215410.2435674-4-irogers@google.com>
- <ZHFdnEpNMKq7EbWh@kernel.org>
+        Fri, 26 May 2023 21:42:27 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 060CE1BC
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 18:42:16 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-64d3491609fso1197287b3a.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 18:42:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1685151736; x=1687743736;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g8Wyvy6HPwlh6VYOHfNA0dxsOkmR5hf4tUOLdIYH19M=;
+        b=jVupxr9tkpNoY2DPpNO8ve9RV3dt+XdDWaO2WoRtWo7O726zDUiL2HAAxcH6LHl3N4
+         zg+XiJ3Z3hMClz9oQWCKKIy9P9nGkLhMbC/8iyvrxOUDtLp+WDuMwpTv3zKUdQXrfkDP
+         KJUkxWt47+5T+11hbTnQ8sD/sndKaFgdvy0fU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685151736; x=1687743736;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g8Wyvy6HPwlh6VYOHfNA0dxsOkmR5hf4tUOLdIYH19M=;
+        b=RlSH11UXgWN6J5AwOw001CWucCEAadFyXsIqRmk68MqfmMkMha4nsr/pL7EoIkwgrE
+         SrhcY6nthjcJxgipQgtt0QzxmvDOjPXiEbaX3oO+UoaesO/F0crntZDvi0zSqhaP/uKB
+         KqeMYdOVvNYJV12VkHZrnXQh9wZhg0B2g3HPA8nc3kYT6meZN26qIZG99uoFoOobNdb6
+         UzhNLp6czmjfsQbAvcNkgTYQ5z5baz+iLsrPOPzN3h4/l29sgJ1+lepX7yIcB7onYYVB
+         qAjq+0DckgY6UKrZrniIMyfCd0AinfKn1aJEpZ24i91xwilSdY6VSN4NI1Zdsu5IGyjY
+         5NUQ==
+X-Gm-Message-State: AC+VfDzwkvkezYZW5op0CpNAH2DCWRvYIrzz1/nOuBm4OWRcEPREdH/E
+        ST85lt27QBvA/3JwYjngTrQROQ==
+X-Google-Smtp-Source: ACHHUZ4GAy/oEImCC0hpOXpTjNUo0Dhy+rQj32IqoVkt1EVytgp7ZHhTjG/XebwId5tT/CXJZBdMDQ==
+X-Received: by 2002:a05:6a00:190e:b0:63b:8afe:a4dc with SMTP id y14-20020a056a00190e00b0063b8afea4dcmr5524785pfi.30.1685151736256;
+        Fri, 26 May 2023 18:42:16 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:4015:7255:c79a:26d7])
+        by smtp.gmail.com with ESMTPSA id x25-20020aa79199000000b0063b8ddf77f7sm3202440pfa.211.2023.05.26.18.42.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 May 2023 18:42:15 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        sparclinux@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-perf-users@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 00/10] watchdog: Cleanup / fixes after buddy series v5 reviews
+Date:   Fri, 26 May 2023 18:41:30 -0700
+Message-ID: <20230527014153.2793931-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZHFdnEpNMKq7EbWh@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, May 26, 2023 at 10:32:12PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Fri, May 26, 2023 at 02:53:38PM -0700, Ian Rogers escreveu:
-> > Equality is a useful property to compare after merging and
-> > intersecting maps.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> > ---
-> >  tools/lib/perf/cpumap.c              | 21 ++++++++++++++++
-> >  tools/lib/perf/include/perf/cpumap.h |  2 ++
-> >  tools/perf/tests/cpumap.c            | 37 ++++++++++++++++++++++++++++
-> >  3 files changed, 60 insertions(+)
-> > 
-> > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> > index d4f3a1a12522..48595a3ad69c 100644
-> > --- a/tools/lib/perf/cpumap.c
-> > +++ b/tools/lib/perf/cpumap.c
-> > @@ -321,6 +321,27 @@ bool perf_cpu_map__has(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
-> >  	return perf_cpu_map__idx(cpus, cpu) != -1;
-> >  }
-> >  
-> > +bool perf_cpu_map__equal(const struct perf_cpu_map *lhs, const struct perf_cpu_map *rhs)
-> > +{
-> > +	int nr;
-> > +
-> > +	if (lhs == rhs)
-> > +		return true;
-> > +
-> > +	if (!lhs || !rhs)
-> > +		return false;
-> > +
-> > +	nr = perf_cpu_map__nr(lhs);
-> > +	if (nr != perf_cpu_map__nr(rhs))
-> > +		return false;
-> > +
-> > +	for (int idx = 0; idx < nr; idx++) {
-> > +		if (RC_CHK_ACCESS(lhs)->map[idx].cpu != RC_CHK_ACCESS(rhs)->map[idx].cpu)
-> > +			return false;
-> 
-> Don't we have an accessor to avoid this RC_CHK_ACCESS()-> access?
- 
- In the following patch you use it:
 
-+bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map)
-+{
-+       return map && perf_cpu_map__cpu(map, 0).cpu == -1;
-+}
+This patch series attempts to finish resolving the feedback received
+from Petr Mladek on the v5 series I posted. Andrew has already landed
+v5 so I'm posting this as additional patches.
 
-But it does extra checks you did already:
+Probably the only thing that wasn't fully as clean as Petr requested
+was the Kconfig stuff. I couldn't find a better way to express it
+without a more major overhaul. In the very least, I renamed "NON_ARCH"
+to "PERF_OR_BUDDY" in the hopes that will make it marginally better.
 
-struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
-{
-        struct perf_cpu result = {
-                .cpu = -1
-        };
-
-        if (cpus && idx < RC_CHK_ACCESS(cpus)->nr)
-                return RC_CHK_ACCESS(cpus)->map[idx];
-
-        return result;
-}
-
-Usually we have:
-
-struct perf_cpu __perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
-{
-	return RC_CHK_ACCESS(cpus)->map[idx];
-}
-
-struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
-{
-        struct perf_cpu result = {
-                .cpu = -1
-        };
-
-        if (cpus && idx < __perf_cpu_map__nr(cpus))
-                return __perf_cpu_map__cpu(cpus, idx);
-
-        return result;
-}
-
-Then you would have:
-
-bool perf_cpu_map__equal(const struct perf_cpu_map *lhs, const struct perf_cpu_map *rhs)
-{
-	int nr;
-
-	if (lhs == rhs)
-		return true;
-
-	if (!lhs || !rhs)
-		return false;
-
-	nr = __perf_cpu_map__nr(lhs);  // no need to check lhs again for NULL
-	if (nr != __perf_cpu_map__nr(rhs)) // ditto for rhs
-		return false;
-
-	for (int idx = 0; idx < nr; idx++) {
-		if (__perf_cpu_map__cpu(lhs, idx)->cpu != __perf_cpu_map__cpu(rhs, idx)->cpu)
-			return false;
+Nothing in this series is terribly critical and even the bugfixes are
+small. However, it does cleanup a few things that were pointed out in
+review.
 
 
-> > +	}
-> > +	return true;
-> > +}
-> > +
-> >  struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
-> >  {
-> >  	struct perf_cpu result = {
-> > diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-> > index 0466c4216fbb..d0ae9552f8e2 100644
-> > --- a/tools/lib/perf/include/perf/cpumap.h
-> > +++ b/tools/lib/perf/include/perf/cpumap.h
-> > @@ -28,6 +28,8 @@ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
-> >  LIBPERF_API bool perf_cpu_map__empty(const struct perf_cpu_map *map);
-> >  LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map);
-> >  LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, struct perf_cpu cpu);
-> > +LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
-> > +				     const struct perf_cpu_map *rhs);
-> >  
-> >  #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
-> >  	for ((idx) = 0, (cpu) = perf_cpu_map__cpu(cpus, idx);	\
-> > diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-> > index 83805690c209..7730fc2ab40b 100644
-> > --- a/tools/perf/tests/cpumap.c
-> > +++ b/tools/perf/tests/cpumap.c
-> > @@ -211,11 +211,48 @@ static int test__cpu_map_intersect(struct test_suite *test __maybe_unused,
-> >  	return ret;
-> >  }
-> >  
-> > +static int test__cpu_map_equal(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-> > +{
-> > +	struct perf_cpu_map *any = perf_cpu_map__dummy_new();
-> > +	struct perf_cpu_map *one = perf_cpu_map__new("1");
-> > +	struct perf_cpu_map *two = perf_cpu_map__new("2");
-> > +	struct perf_cpu_map *empty = perf_cpu_map__intersect(one, two);
-> > +	struct perf_cpu_map *pair = perf_cpu_map__new("1-2");
-> > +	struct perf_cpu_map *tmp;
-> > +	struct perf_cpu_map *maps[] = {empty, any, one, two, pair};
-> > +
-> > +	for (size_t i = 0; i < ARRAY_SIZE(maps); i++) {
-> > +		/* Maps equal themself. */
-> > +		TEST_ASSERT_VAL("equal", perf_cpu_map__equal(maps[i], maps[i]));
-> > +		for (size_t j = 0; j < ARRAY_SIZE(maps); j++) {
-> > +			/* Maps dont't equal each other. */
-> > +			if (i == j)
-> > +				continue;
-> > +			TEST_ASSERT_VAL("not equal", !perf_cpu_map__equal(maps[i], maps[j]));
-> > +		}
-> > +	}
-> > +
-> > +	/* Maps equal made maps. */
-> > +	tmp = perf_cpu_map__merge(perf_cpu_map__get(one), two);
-> > +	TEST_ASSERT_VAL("pair", perf_cpu_map__equal(pair, tmp));
-> > +	perf_cpu_map__put(tmp);
-> > +
-> > +	tmp = perf_cpu_map__intersect(pair, one);
-> > +	TEST_ASSERT_VAL("one", perf_cpu_map__equal(one, tmp));
-> > +	perf_cpu_map__put(tmp);
-> > +
-> > +	for (size_t i = 0; i < ARRAY_SIZE(maps); i++)
-> > +		perf_cpu_map__put(maps[i]);
-> > +
-> > +	return TEST_OK;
-> > +}
-> > +
-> >  static struct test_case tests__cpu_map[] = {
-> >  	TEST_CASE("Synthesize cpu map", cpu_map_synthesize),
-> >  	TEST_CASE("Print cpu map", cpu_map_print),
-> >  	TEST_CASE("Merge cpu map", cpu_map_merge),
-> >  	TEST_CASE("Intersect cpu map", cpu_map_intersect),
-> > +	TEST_CASE("Equal cpu map", cpu_map_equal),
-> >  	{	.name = NULL, }
-> >  };
-> >  
-> > -- 
-> > 2.41.0.rc0.172.g3f132b7071-goog
-> > 
-> 
-> -- 
-> 
-> - Arnaldo
+Douglas Anderson (10):
+  watchdog/hardlockup: Keep kernel.nmi_watchdog sysctl as 0444 if probe
+    fails
+  watchdog/hardlockup: HAVE_NMI_WATCHDOG must implement
+    watchdog_hardlockup_probe()
+  watchdog/hardlockup: Don't use raw_cpu_ptr() in
+    watchdog_hardlockup_kick()
+  watchdog/hardlockup: In watchdog_hardlockup_check() use cpumask_copy()
+  watchdog/hardlockup: remove softlockup comment in touch_nmi_watchdog()
+  watchdog/buddy: Cleanup how watchdog_buddy_check_hardlockup() is
+    called
+  watchdog/buddy: Don't copy the cpumask in watchdog_next_cpu()
+  watchdog/buddy: Simplify the dependency for
+    HARDLOCKUP_DETECTOR_PREFER_BUDDY
+  watchdog/hardlockup: Move SMP barriers from common code to buddy code
+  watchdog/hardlockup: Rename HAVE_HARDLOCKUP_DETECTOR_NON_ARCH to
+    ..._PERF_OR_BUDDY
+
+ arch/Kconfig            |  3 +-
+ arch/sparc/kernel/nmi.c |  5 +++
+ include/linux/nmi.h     | 14 ++-------
+ kernel/watchdog.c       | 68 ++++++++++++++++++-----------------------
+ kernel/watchdog_buddy.c | 28 ++++++++++++++---
+ lib/Kconfig.debug       | 14 ++++-----
+ 6 files changed, 70 insertions(+), 62 deletions(-)
 
 -- 
+2.41.0.rc0.172.g3f132b7071-goog
 
-- Arnaldo
