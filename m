@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38449C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1236C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:25:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232431AbjE0HZ5 (ORCPT
+        id S237984AbjE0HZ6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 03:25:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57788 "EHLO
+        Sat, 27 May 2023 03:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232356AbjE0HZd (ORCPT
+        with ESMTP id S238352AbjE0HZf (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 03:25:33 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7EBC1B3
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:24:55 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-565a336caa0so37972437b3.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:24:55 -0700 (PDT)
+        Sat, 27 May 2023 03:25:35 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29EA3E4F
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:24:59 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-56561689700so35754737b3.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:24:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685172226; x=1687764226;
+        d=google.com; s=20221208; t=1685172228; x=1687764228;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=WOjxsGu2+B4s1nXlsSxqdUIWzY+WQ/eQBroudZlXVAc=;
-        b=AVnwhtM1wdpkw3CJ7HsX0RDZfTFX/pEkwAGAWCV7/hRHJ4J0yOIPWqyAASLL2u73nJ
-         gvyyx59B6uXL0+qMegAG0kP2a+YryTO3t8gAgMk1bLtR1P0qiQHYXnGCumb5aE/r6N1R
-         gvDgFF2ewevrUOYMsevNyB0Tk9kiPlLAgR+OCj0a+tSWlrrACoMDIJJ9+dodIL4NFhoY
-         3iXdpNTIpJf8A/fRTcMZ+IkH6GI7IqPHR4pkmexQsr+YFiSl+32WwrsDcEMAe5Bi+nAI
-         d7AJprG6Kg7DgYmQdJj7T097SICzCCIGuYWOixj2YyYo3ZmP7INFzSW9oJ2T4jG7AQQK
-         Vcbw==
+        bh=vW2lbdpPJdg/r6QP2GPnX5xgemELHxkJ0mClCQxJlXE=;
+        b=uzUf12s9yhSlYHSWmPiamqaCVuzarvHr//Lm3DeLpVKdny3NM9/V4jdSVhPz97qJ2Z
+         zXDz7kmXqMq6TuJ7kVtu6iRDSxuMPsaktdVicJl/2LUt7mvU3hkvlS0RZ/PUFMvHEdRb
+         bmkiZnQCjYARbtk2klizoAF+iHSJecfkOgsol1lce+OFn6dTQYFH6UcHaoK+QEFhK66+
+         VvzxQpV/7+xHnJXmQDDkJHX0wKljLw43fqnRKTSqkuah8ckch6ocmsbLAmcnIZ9tFRxt
+         Brvk0DA3A5NajeZfU0Lefd1WNkiI/yZ3oJshq/nzIhM89W9QU3/+Tb9/ZE0leh1MG8iQ
+         RETg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685172226; x=1687764226;
+        d=1e100.net; s=20221208; t=1685172228; x=1687764228;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WOjxsGu2+B4s1nXlsSxqdUIWzY+WQ/eQBroudZlXVAc=;
-        b=Oa7sv2iso4jdWPCS855B1HVwxWdQM63j90KzcKTZxCaUAsdlxPoAxeGKeGQK5kMt3E
-         CRiP9BUpDu+PDb3oTxgpMo/cbALtyB8efbfR7bzofD2G9Xav9Azm+Ei4BIsaie8EyAMs
-         a262uAYeSUXfUsZKGlqc39Y3JEZlLgVB0tMeq7Q7Tc9ySyNmEC9ztLkqs2DXFfxBWFkm
-         DVP3Dz7hthbFGZfa0tz3GDH752E5wF29GyzVVTkNzPxSSjTt6uv1ZYYdWIWVYEhDTc7t
-         qkjNWJDarPYMNCgOZ2DYG/cwkFr82Zv2cdVwV250uMiRE3F+Wfx4Ptr5YfbklgBfBOUl
-         Djtg==
-X-Gm-Message-State: AC+VfDz6awM6B2dEbmt325xFFro124oU/nwtsZo47Z6E6TERy6puQVAU
-        gOGAT4uCy1y4k8E26oegtL4XUBRWXSQI
-X-Google-Smtp-Source: ACHHUZ5/i16LNalMfBwII3JCx4rf904hDS6a04mrt2BehMZqCpV2KLS1sxrn8ww6hAtmUEqPo7knz1Y1KKfb
+        bh=vW2lbdpPJdg/r6QP2GPnX5xgemELHxkJ0mClCQxJlXE=;
+        b=fgxtV7mRGonHMIEVcvDfTmo5bvWE6o6EF7RDTmQWlQSLGl8fxd5zteNemJWdzyLEgJ
+         nJRZLQcx4UAcpc0nn57bdnO49qdYblxkN7U5NCqTSVUkZFShrGnuLIbruNopHG8I12Vp
+         u7hhgp5zJf49LY5+UsK+3EBVhJd9dlOmz0vWN79AqLuc1tWj6ji9ApVMKmkz9cBufBtr
+         vUfzp6EjfvJYT2pdOBN78a9Oz6HUs0ZWiuVC4dV5u4dNfSglTtzTdCqKR87wZEGbqQzV
+         E5iostcBScod1NWUTVdGHVTOGgiCFzB+Br7+ncvZVp8271z31Ez0AczMyX+rMazXtpso
+         gihQ==
+X-Gm-Message-State: AC+VfDzXMJGfK7gSqDi76ySJyhZGRknrAv6wTROlNYC3WIM4GFPkAvIo
+        nM55Bsy2c6/2puwmDh0peffE3nyjGSo6
+X-Google-Smtp-Source: ACHHUZ41cQH6jnf4yOyAOqUAG71xGg12eViK6KDqDuQxV2LkUGIWW0ZK2l5nXD9R1+F00kcT4YFSjXiekF6n
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a81:d84a:0:b0:562:837:122f with SMTP id
- n10-20020a81d84a000000b005620837122fmr2559264ywl.9.1685172226092; Sat, 27 May
- 2023 00:23:46 -0700 (PDT)
-Date:   Sat, 27 May 2023 00:22:07 -0700
+ (user=irogers job=sendgmr) by 2002:a81:c90b:0:b0:565:9abf:e057 with SMTP id
+ o11-20020a81c90b000000b005659abfe057mr2579814ywi.9.1685172228274; Sat, 27 May
+ 2023 00:23:48 -0700 (PDT)
+Date:   Sat, 27 May 2023 00:22:08 -0700
 In-Reply-To: <20230527072210.2900565-1-irogers@google.com>
-Message-Id: <20230527072210.2900565-32-irogers@google.com>
+Message-Id: <20230527072210.2900565-33-irogers@google.com>
 Mime-Version: 1.0
 References: <20230527072210.2900565-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v5 31/34] perf pmus: Ensure all PMUs are read for find_by_type
+Subject: [PATCH v5 32/34] perf pmus: Add function to return count of core PMUs
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -93,56 +93,67 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf_pmus__find_by_type may be called for something like a raw event,
-in which case the PMU isn't guaranteed to have been looked up. Add a
-second check to make sure all PMUs are loaded.
+Add perf_pmus__num_core_pmus that will count core PMUs holding the
+result in a static. Reuse for perf_pmus__num_mem_pmus.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/util/pmus.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ tools/perf/util/pmus.c | 21 ++++++++++++++-------
+ tools/perf/util/pmus.h |  1 +
+ 2 files changed, 15 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 2c512345191d..6ecccb5ad03e 100644
+index 6ecccb5ad03e..bf927aed162e 100644
 --- a/tools/perf/util/pmus.c
 +++ b/tools/perf/util/pmus.c
-@@ -142,7 +142,7 @@ static void pmu_read_sysfs(bool core_only)
- 	}
- }
+@@ -229,14 +229,8 @@ const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
  
--struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
-+static struct perf_pmu *__perf_pmus__find_by_type(unsigned int type)
+ int perf_pmus__num_mem_pmus(void)
  {
- 	struct perf_pmu *pmu;
- 
-@@ -150,6 +150,7 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
- 		if (pmu->type == type)
- 			return pmu;
- 	}
-+
- 	list_for_each_entry(pmu, &other_pmus, list) {
- 		if (pmu->type == type)
- 			return pmu;
-@@ -157,6 +158,18 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
- 	return NULL;
+-	struct perf_pmu *pmu = NULL;
+-	int count = 0;
+-
+ 	/* All core PMUs are for mem events. */
+-	while ((pmu = perf_pmus__scan_core(pmu)) != NULL)
+-		count++;
+-
+-	return count;
++	return perf_pmus__num_core_pmus();
  }
  
-+struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
+ /** Struct for ordering events as output in perf list. */
+@@ -488,6 +482,19 @@ bool perf_pmus__has_hybrid(void)
+ 	return has_hybrid;
+ }
+ 
++int perf_pmus__num_core_pmus(void)
 +{
-+	struct perf_pmu *pmu = __perf_pmus__find_by_type(type);
++	static int count;
 +
-+	if (pmu || read_sysfs_all_pmus)
-+		return pmu;
++	if (!count) {
++		struct perf_pmu *pmu = NULL;
 +
-+	pmu_read_sysfs(/*core_only=*/false);
-+	pmu = __perf_pmus__find_by_type(type);
-+	return pmu;
++		while ((pmu = perf_pmus__scan_core(pmu)) != NULL)
++			count++;
++	}
++	return count;
 +}
 +
- /*
-  * pmu iterator: If pmu is NULL, we start at the begin, otherwise return the
-  * next pmu. Returns NULL on end.
+ struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
+ {
+ 	struct perf_pmu *pmu = evsel->pmu;
+diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+index 9de0222ed52b..27400a027d41 100644
+--- a/tools/perf/util/pmus.h
++++ b/tools/perf/util/pmus.h
+@@ -19,5 +19,6 @@ int perf_pmus__num_mem_pmus(void);
+ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *print_state);
+ bool perf_pmus__have_event(const char *pname, const char *name);
+ bool perf_pmus__has_hybrid(void);
++int perf_pmus__num_core_pmus(void);
+ 
+ #endif /* __PMUS_H */
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
