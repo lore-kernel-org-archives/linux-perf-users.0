@@ -2,52 +2,52 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75206C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 01:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F10C7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 01:42:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244077AbjE0Bm4 (ORCPT
+        id S243342AbjE0Bm5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 21:42:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35892 "EHLO
+        Fri, 26 May 2023 21:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243628AbjE0Bms (ORCPT
+        with ESMTP id S243830AbjE0Bmt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 21:42:48 -0400
-Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A600E58
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 18:42:27 -0700 (PDT)
-Received: by mail-pf1-x434.google.com with SMTP id d2e1a72fcca58-64d426e63baso1828465b3a.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 18:42:27 -0700 (PDT)
+        Fri, 26 May 2023 21:42:49 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 086BC1BC
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 18:42:29 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-64d57cd373fso1972063b3a.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 18:42:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685151747; x=1687743747;
+        d=chromium.org; s=google; t=1685151748; x=1687743748;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3LzYkR+VFFLH6wRBHL6FlKd+tRCEo62Tgi4gzgiGicM=;
-        b=MJPM8uBHWtcGykg6NBnTXOlp/wt/zisapv2LqVrNAXkdImxD++McjkPouYYjhNBMZ/
-         FtnMFxUfnwDPpZ8d3KsgOQlpZlNtaUXpmKC4q99ybOisJ5hfu5QhtX1wrIemYl3fq166
-         Chku98BUooqaBLPGzQqvfd2wrHxDC0QaznFMY=
+        bh=cAUIzM0ipEZnJ+DKEACmhXTzJMTqgJKwduhWCKwpQIQ=;
+        b=Q025PITc8JDv9dJTfN7tctFHTJNnpaJy29WWhsH2ZPNUoOboOZYviwhQysV0Gmhli6
+         56fngg0HA+HuSP7ILjSstqS+Mhqo+R8NkGbp1+jpakojtJHDkgDTve7zASH3nWRB6R5B
+         bOOBqThle1HJJLIUfe8O4ba5IMukCJE/7Qfis=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685151747; x=1687743747;
+        d=1e100.net; s=20221208; t=1685151748; x=1687743748;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3LzYkR+VFFLH6wRBHL6FlKd+tRCEo62Tgi4gzgiGicM=;
-        b=Pdq/qqN3eNdCXTHwnz/n4f2rajBeevDmp6/sx4bjGI2lEYAG8s+ZiKxxLyQj6pc/ek
-         HnEwnD7XzucNR4UZytKYf5Y3XnA2zu83fep76mmqTfA2ONuMFhp9l6yY1NICZQtDeJjU
-         26aWMORmIvDIOphre4F4lUxn6DjEeNsNcbqHJ+3V/AzCxU9H0qY0JmXLzjIphMaWDV0r
-         iHXhTaLs8SlsBc59rXAigWBO32PjpCK3ukBz1nNHfIqjGTLHbbGWLAuS8obHPMeu9blN
-         YiFzJMZjEy8nO/x+1vPhW0iF5gwwFXoJLA72Wfd8VX4dDVmLTIqv4KEFvUBghNjeytLQ
-         pGYw==
-X-Gm-Message-State: AC+VfDygUiIC9sHjx7NUnPYxKaGIaog/MSAEYWKNtJhwx1+eOJ5TaWDP
-        +TGd7UNvT1+GLoRdsqMuoUKWew==
-X-Google-Smtp-Source: ACHHUZ49rllat2/JyQzbGZ3WjkseglfJC0pbWMXitDuVE2AIZugbceGuvm9VVDVfo56QxxDU2q8Bew==
-X-Received: by 2002:aa7:888e:0:b0:63b:8eeb:77b8 with SMTP id z14-20020aa7888e000000b0063b8eeb77b8mr6362327pfe.13.1685151746880;
-        Fri, 26 May 2023 18:42:26 -0700 (PDT)
+        bh=cAUIzM0ipEZnJ+DKEACmhXTzJMTqgJKwduhWCKwpQIQ=;
+        b=YC0bOO9aEcbu9PDRcJAa2Esquoy3ds7+PFvti9jlD39YexO3m2HJambxX+r10yFIBV
+         zQCfKe6SMDJEyNW3N73vL2EQcVWPYYPEWGqiDRf3OeZ4JAlj//iQUeAuSoWrwVr0cS9e
+         2p5akmgTBHCGKeIJ6taCwInY875sp0sAp0V0eBKhR20K78wqupDrb9ynp/8xhfB+Y2ZY
+         EYK32ERI1Iwgs+q10eMcPOY3eaFUFXoXyLoj1bkJ3J1omDC1nqLuBuT7h6y0RGWQmE6t
+         Ll7RQi3+Y5ZL8NDEXjVLJ58T4Mv1t8eGLttwD/+1eWIcP1M+9Had/flSu2QQ0kRF3LcA
+         Bbmg==
+X-Gm-Message-State: AC+VfDwia1397qTnVqczjiByOi2ZIrXjooFsLc5DhQUF2mCZGrtwC5/o
+        ox9q7hcxdbYdtxLnGoq23Bys1w==
+X-Google-Smtp-Source: ACHHUZ7CuB7PPQInlPEZH0k1cEJvxZtnt0cbbm9xAfq9bZv1LojzgB0/25WLra3jsMmghAsHAYATEg==
+X-Received: by 2002:a05:6a20:7351:b0:105:3e47:7504 with SMTP id v17-20020a056a20735100b001053e477504mr902971pzc.11.1685151748589;
+        Fri, 26 May 2023 18:42:28 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:4015:7255:c79a:26d7])
-        by smtp.gmail.com with ESMTPSA id x25-20020aa79199000000b0063b8ddf77f7sm3202440pfa.211.2023.05.26.18.42.25
+        by smtp.gmail.com with ESMTPSA id x25-20020aa79199000000b0063b8ddf77f7sm3202440pfa.211.2023.05.26.18.42.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 May 2023 18:42:26 -0700 (PDT)
+        Fri, 26 May 2023 18:42:28 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Petr Mladek <pmladek@suse.com>,
         Andrew Morton <akpm@linux-foundation.org>
@@ -60,9 +60,9 @@ Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
         "David S . Miller" <davem@davemloft.net>,
         linux-perf-users@vger.kernel.org,
         Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 06/10] watchdog/buddy: Cleanup how watchdog_buddy_check_hardlockup() is called
-Date:   Fri, 26 May 2023 18:41:36 -0700
-Message-ID: <20230526184139.6.I006c7d958a1ea5c4e1e4dc44a25596d9bb5fd3ba@changeid>
+Subject: [PATCH 07/10] watchdog/buddy: Don't copy the cpumask in watchdog_next_cpu()
+Date:   Fri, 26 May 2023 18:41:37 -0700
+Message-ID: <20230526184139.7.If466f9a2b50884cbf6a1d8ad05525a2c17069407@changeid>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
 In-Reply-To: <20230527014153.2793931-1-dianders@chromium.org>
 References: <20230527014153.2793931-1-dianders@chromium.org>
@@ -72,100 +72,36 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In the patch ("watchdog/hardlockup: detect hard lockups using
-secondary (buddy) CPUs"), we added a call from the common watchdog.c
-file into the buddy. That call could be done more cleanly.
-Specifically:
-1. If we move the call into watchdog_hardlockup_kick() then it keeps
-   watchdog_timer_fn() simpler.
-2. We don't need to pass an "unsigned long" to the buddy for the timer
-   count. In the patch ("watchdog/hardlockup: add a "cpu" param to
-   watchdog_hardlockup_check()") the count was changed to "atomic_t"
-   which is backed by an int, so we should match types.
+There's no reason to make a copy of the "watchdog_cpus" locally in
+watchdog_next_cpu(). Making a copy wouldn't make things any more race
+free and we're just reading the value so there's no need for a copy.
 
 Suggested-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
 
- include/linux/nmi.h     |  4 ++--
- kernel/watchdog.c       | 15 +++++++--------
- kernel/watchdog_buddy.c |  2 +-
- 3 files changed, 10 insertions(+), 11 deletions(-)
+ kernel/watchdog_buddy.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-index 6c6a5ce77c66..43893e5f858a 100644
---- a/include/linux/nmi.h
-+++ b/include/linux/nmi.h
-@@ -114,9 +114,9 @@ void watchdog_hardlockup_disable(unsigned int cpu);
- void lockup_detector_reconfigure(void);
- 
- #ifdef CONFIG_HARDLOCKUP_DETECTOR_BUDDY
--void watchdog_buddy_check_hardlockup(unsigned long hrtimer_interrupts);
-+void watchdog_buddy_check_hardlockup(int hrtimer_interrupts);
- #else
--static inline void watchdog_buddy_check_hardlockup(unsigned long hrtimer_interrupts) {}
-+static inline void watchdog_buddy_check_hardlockup(int hrtimer_interrupts) {}
- #endif
- 
- /**
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 85f4839b6faf..6cc46b8e3d07 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -131,9 +131,12 @@ static bool is_hardlockup(unsigned int cpu)
- 	return false;
- }
- 
--static unsigned long watchdog_hardlockup_kick(void)
-+static void watchdog_hardlockup_kick(void)
- {
--	return atomic_inc_return(this_cpu_ptr(&hrtimer_interrupts));
-+	int new_interrupts;
-+
-+	new_interrupts = atomic_inc_return(this_cpu_ptr(&hrtimer_interrupts));
-+	watchdog_buddy_check_hardlockup(new_interrupts);
- }
- 
- void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs)
-@@ -195,7 +198,7 @@ void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs)
- 
- #else /* CONFIG_HARDLOCKUP_DETECTOR_COUNTS_HRTIMER */
- 
--static inline unsigned long watchdog_hardlockup_kick(void) { return 0; }
-+static inline void watchdog_hardlockup_kick(void) { }
- 
- #endif /* !CONFIG_HARDLOCKUP_DETECTOR_COUNTS_HRTIMER */
- 
-@@ -449,15 +452,11 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 	struct pt_regs *regs = get_irq_regs();
- 	int duration;
- 	int softlockup_all_cpu_backtrace = sysctl_softlockup_all_cpu_backtrace;
--	unsigned long hrtimer_interrupts;
- 
- 	if (!watchdog_enabled)
- 		return HRTIMER_NORESTART;
- 
--	hrtimer_interrupts = watchdog_hardlockup_kick();
--
--	/* test for hardlockups */
--	watchdog_buddy_check_hardlockup(hrtimer_interrupts);
-+	watchdog_hardlockup_kick();
- 
- 	/* kick the softlockup detector */
- 	if (completion_done(this_cpu_ptr(&softlockup_completion))) {
 diff --git a/kernel/watchdog_buddy.c b/kernel/watchdog_buddy.c
-index fee45af2e5bd..3ffc5f2ede5a 100644
+index 3ffc5f2ede5a..2ef88722c5e7 100644
 --- a/kernel/watchdog_buddy.c
 +++ b/kernel/watchdog_buddy.c
-@@ -72,7 +72,7 @@ void watchdog_hardlockup_disable(unsigned int cpu)
- 	cpumask_clear_cpu(cpu, &watchdog_cpus);
- }
+@@ -10,12 +10,11 @@ static cpumask_t __read_mostly watchdog_cpus;
  
--void watchdog_buddy_check_hardlockup(unsigned long hrtimer_interrupts)
-+void watchdog_buddy_check_hardlockup(int hrtimer_interrupts)
+ static unsigned int watchdog_next_cpu(unsigned int cpu)
  {
+-	cpumask_t cpus = watchdog_cpus;
  	unsigned int next_cpu;
  
+-	next_cpu = cpumask_next(cpu, &cpus);
++	next_cpu = cpumask_next(cpu, &watchdog_cpus);
+ 	if (next_cpu >= nr_cpu_ids)
+-		next_cpu = cpumask_first(&cpus);
++		next_cpu = cpumask_first(&watchdog_cpus);
+ 
+ 	if (next_cpu == cpu)
+ 		return nr_cpu_ids;
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
