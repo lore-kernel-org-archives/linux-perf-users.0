@@ -2,147 +2,203 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E5EC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Fri, 26 May 2023 23:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0034C77B73
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 01:32:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229755AbjEZXI7 (ORCPT
+        id S231330AbjE0BcS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 19:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52288 "EHLO
+        Fri, 26 May 2023 21:32:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjEZXI6 (ORCPT
+        with ESMTP id S231216AbjE0BcS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 19:08:58 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121F3D3
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 16:08:55 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4f4d6decbbaso438e87.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 16:08:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685142533; x=1687734533;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aQm0gmotPrah6x+grG9q4OwSJysvwUdj8gXMKuWCdC8=;
-        b=sJ5pts3CkcZKHn18wl7moOPNvmEb8/PxK5QstS0Xqh9krzYqbQb88sbsWymquOiGsi
-         9s0cosROtiL9u77X1WlRhNUfz6EYVaWSS9yR1K1UWa8O4XFz2U4VE6EkwsTLYFR2Paly
-         HGoHFM1+lFsxf1R39b6UtQvZW6tYCUP9/h5JYB2j3BCZ2YY8eBkXB96J2FT+r2/5ykID
-         lejf2JVXrHVge6lxekxHYZw00RUhrNDLXuBjZ2ko+yU+lpcNFnxmyAnbzSLZOu459M3P
-         9A8mky7uYToFBXcBUN2UiqIKaqvObuKH5RHeUdAsDayIQcxKpowLMbmkdrjZM1uuNjOV
-         R/iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685142533; x=1687734533;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aQm0gmotPrah6x+grG9q4OwSJysvwUdj8gXMKuWCdC8=;
-        b=T1gSRxBvOBTpm6rnvEhRegQKBKtArb7o9WKZWJH9SzHQi43YabSFOu3FcrB/9buwHT
-         dtO3PqgfVRdi0LX4UjnGzB/drWFZkFt216Rkd8YMp4MiOupa4HbyERHkDRlxxU0s1P+m
-         zjWQmVUNAI/5DHGeORypisRGPd1k6FcFQ5dAPNLXL+81K3tgu3HWxAAwoTzaGb2rnlVe
-         uIzTmWd9aGCsaD8+l7JjPvN+hL00P7pwjAYguuBH6pY+lopMnh/CSjY8i58g7YT9niUt
-         4clAEjK+9NuzCazs4ORhBgQtSqgPGehpYmCqx6TQGmkiu5xDH+l6R4XvrlZ6RZloSNuC
-         Ri8g==
-X-Gm-Message-State: AC+VfDxHB3CRrF2RcwAPHDyGwtSJO+UOwda5me91hMXvdTQ0Vo/bFsmR
-        DDnmwdWWGMx7cu7zJYj3TnV2XIEidzt/I95P2e7iTQ==
-X-Google-Smtp-Source: ACHHUZ7a8zznLZd4lC0AduIo/JFkybDmh4b51Aye1LX/4ZElq5Y8xpY1F0uk+ktmYVc2ax/VATPKbTUA5Vr7GtECDXw=
-X-Received: by 2002:a05:600c:3b8d:b0:3f1:9396:6fbf with SMTP id
- n13-20020a05600c3b8d00b003f193966fbfmr67517wms.4.1685142060245; Fri, 26 May
- 2023 16:01:00 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230504110003.2548-1-ravi.bangoria@amd.com> <20230504110003.2548-4-ravi.bangoria@amd.com>
- <20230524214133.GA2359762@dev-arch.thelio-3990X> <f02c78e2-34b9-4985-640a-279dae1004a9@amd.com>
- <ZG8KLbZSECiYaKFc@linux.dev> <20230525142031.GU83892@hirez.programming.kicks-ass.net>
- <ZG+FLdP2kkfI1m2Z@linux.dev>
-In-Reply-To: <ZG+FLdP2kkfI1m2Z@linux.dev>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 May 2023 16:00:47 -0700
-Message-ID: <CAP-5=fWYbzmTETgqJ11y22=JaXDM0gnb4qR6KYeRGmFXw08f-Q@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
-To:     Oliver Upton <oliver.upton@linux.dev>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 26 May 2023 21:32:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B299DC3;
+        Fri, 26 May 2023 18:32:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C8FB654DB;
+        Sat, 27 May 2023 01:32:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 103B1C433D2;
+        Sat, 27 May 2023 01:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685151135;
+        bh=UWaVRWh97QkaKEW+3Y55uies+J/z/xLzCy793JnQzLs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ayFWnoKZQfFcHXHqX2xr3q6x1Kk9cRXYQN468s3bNVp/yn5Ytmx1rGfKv2ZoFHrdo
+         7XasElUlyzsv7vLbnax0sJ4srG2cTei178XGz1d1/RC0RqQuU/6nLnVIcICV6SLjoA
+         NSNMnf1Ue522UoF1RVlDYdkDGPNRG28nsCuzfP+vob3ZA6XqvwuvZLeS3u6/Cfgdsg
+         KtVhmSt3Yx6X9yjH7xmuxk7l2v76dEFINH+PQ1VduQW8DSpLdZZlh2/Ihpiq2GJIbM
+         SMSbENaedwJ7YzAn2qJNHQb0jLoUUjUSS2fp0a7OJRQTCogP/BAbXjCTnDbntejMFO
+         hEw1lWYNaurYA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 99129403B5; Fri, 26 May 2023 22:32:12 -0300 (-03)
+Date:   Fri, 26 May 2023 22:32:12 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
         Ravi Bangoria <ravi.bangoria@amd.com>,
-        Nathan Chancellor <nathan@kernel.org>, namhyung@kernel.org,
-        eranian@google.com, acme@kernel.org, mark.rutland@arm.com,
-        jolsa@kernel.org, bp@alien8.de, kan.liang@linux.intel.com,
-        adrian.hunter@intel.com, maddy@linux.ibm.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com, maz@kernel.org, kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ming Wang <wangming01@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4 03/35] perf cpumap: Add equal function
+Message-ID: <ZHFdnEpNMKq7EbWh@kernel.org>
+References: <20230526215410.2435674-1-irogers@google.com>
+ <20230526215410.2435674-4-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230526215410.2435674-4-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 25, 2023 at 8:56=E2=80=AFAM Oliver Upton <oliver.upton@linux.de=
-v> wrote:
->
-> On Thu, May 25, 2023 at 04:20:31PM +0200, Peter Zijlstra wrote:
-> > On Thu, May 25, 2023 at 07:11:41AM +0000, Oliver Upton wrote:
-> >
-> > > The PMUv3 driver does pass a name, but it relies on getting back an
-> > > allocated pmu id as @type is -1 in the call to perf_pmu_register().
-> > >
-> > > What actually broke is how KVM probes for a default core PMU to use f=
-or
-> > > a guest. kvm_pmu_probe_armpmu() creates a counter w/ PERF_TYPE_RAW an=
-d
-> > > reads the pmu from the returned perf_event. The linear search had the
-> > > effect of eventually stumbling on the correct core PMU and succeeding=
-.
-> > >
-> > > Perf folks: is this WAI for heterogenous systems?
-> >
-> > TBH, I'm not sure. hetero and virt don't mix very well AFAIK and I'm no=
-t
-> > sure what ARM64 does here.
-> >
-> > IIRC the only way is to hard affine things; that is, force vCPU of
-> > 'type' to the pCPU mask of 'type' CPUs.
->
-> We provide absolutely no illusion of consistency across implementations.
-> Userspace can select the PMU type, and then it is a userspace problem
-> affining vCPUs to the right pCPUs.
->
-> And if they get that wrong, we just bail and refuse to run the vCPU.
->
-> > If you don't do that; or let userspace 'override' that, things go
-> > sideways *real* fast.
->
-> Oh yeah, and I wish PMUs were the only problem with these hetero
-> systems...
+Em Fri, May 26, 2023 at 02:53:38PM -0700, Ian Rogers escreveu:
+> Equality is a useful property to compare after merging and
+> intersecting maps.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  tools/lib/perf/cpumap.c              | 21 ++++++++++++++++
+>  tools/lib/perf/include/perf/cpumap.h |  2 ++
+>  tools/perf/tests/cpumap.c            | 37 ++++++++++++++++++++++++++++
+>  3 files changed, 60 insertions(+)
+> 
+> diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
+> index d4f3a1a12522..48595a3ad69c 100644
+> --- a/tools/lib/perf/cpumap.c
+> +++ b/tools/lib/perf/cpumap.c
+> @@ -321,6 +321,27 @@ bool perf_cpu_map__has(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
+>  	return perf_cpu_map__idx(cpus, cpu) != -1;
+>  }
+>  
+> +bool perf_cpu_map__equal(const struct perf_cpu_map *lhs, const struct perf_cpu_map *rhs)
+> +{
+> +	int nr;
+> +
+> +	if (lhs == rhs)
+> +		return true;
+> +
+> +	if (!lhs || !rhs)
+> +		return false;
+> +
+> +	nr = perf_cpu_map__nr(lhs);
+> +	if (nr != perf_cpu_map__nr(rhs))
+> +		return false;
+> +
+> +	for (int idx = 0; idx < nr; idx++) {
+> +		if (RC_CHK_ACCESS(lhs)->map[idx].cpu != RC_CHK_ACCESS(rhs)->map[idx].cpu)
+> +			return false;
 
-Just to add some context from what I understand. There are inbuilt
-type numbers for PMUs:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/include=
-/uapi/linux/perf_event.h?h=3Dperf-tools-next#n34
-so the PMU generally called /sys/devices/cpu should have type 4 (ARM
-give it another name). For heterogeneous ARM there is a single PMU and
-the same events are programmed regardless of whether it is a big or a
-little core - the cpumask lists all CPUs. On heterogeneous (aka
-hybrid) Intel there are two PMUs, the performance cores have a PMU
-called /sys/devices/cpu_core and it has type 4, the atom cores have a
-PMU of /sys/devices/cpu_atom and on my Alderlake the type number is 8.
-The cpu_core and cpu_atom PMUs list the CPUs that are valid for raw
-style events, where the config values in perf_event_attr contains all
-of the event programming data. There are also legacy events of
-PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE where to specify the PMU the
-type is encoded in the high (and unused) 32-bits of config - so the
-type would be something like PERF_TYPE_HARDWARE and then config would
-be "value | (4 << 32)" for the performance core or "value | (8 << 32)"
-for the atom.
+Don't we have an accessor to avoid this RC_CHK_ACCESS()-> access?
 
-If the vCPU and pCPUs mappings vary then there is a chance to change
-the CPU mask on heterogeneous Intel, but it seems if the event is open
-and you move from between core types then things are going to break.
+> +	}
+> +	return true;
+> +}
+> +
+>  struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
+>  {
+>  	struct perf_cpu result = {
+> diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+> index 0466c4216fbb..d0ae9552f8e2 100644
+> --- a/tools/lib/perf/include/perf/cpumap.h
+> +++ b/tools/lib/perf/include/perf/cpumap.h
+> @@ -28,6 +28,8 @@ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
+>  LIBPERF_API bool perf_cpu_map__empty(const struct perf_cpu_map *map);
+>  LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map);
+>  LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, struct perf_cpu cpu);
+> +LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
+> +				     const struct perf_cpu_map *rhs);
+>  
+>  #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
+>  	for ((idx) = 0, (cpu) = perf_cpu_map__cpu(cpus, idx);	\
+> diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
+> index 83805690c209..7730fc2ab40b 100644
+> --- a/tools/perf/tests/cpumap.c
+> +++ b/tools/perf/tests/cpumap.c
+> @@ -211,11 +211,48 @@ static int test__cpu_map_intersect(struct test_suite *test __maybe_unused,
+>  	return ret;
+>  }
+>  
+> +static int test__cpu_map_equal(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+> +{
+> +	struct perf_cpu_map *any = perf_cpu_map__dummy_new();
+> +	struct perf_cpu_map *one = perf_cpu_map__new("1");
+> +	struct perf_cpu_map *two = perf_cpu_map__new("2");
+> +	struct perf_cpu_map *empty = perf_cpu_map__intersect(one, two);
+> +	struct perf_cpu_map *pair = perf_cpu_map__new("1-2");
+> +	struct perf_cpu_map *tmp;
+> +	struct perf_cpu_map *maps[] = {empty, any, one, two, pair};
+> +
+> +	for (size_t i = 0; i < ARRAY_SIZE(maps); i++) {
+> +		/* Maps equal themself. */
+> +		TEST_ASSERT_VAL("equal", perf_cpu_map__equal(maps[i], maps[i]));
+> +		for (size_t j = 0; j < ARRAY_SIZE(maps); j++) {
+> +			/* Maps dont't equal each other. */
+> +			if (i == j)
+> +				continue;
+> +			TEST_ASSERT_VAL("not equal", !perf_cpu_map__equal(maps[i], maps[j]));
+> +		}
+> +	}
+> +
+> +	/* Maps equal made maps. */
+> +	tmp = perf_cpu_map__merge(perf_cpu_map__get(one), two);
+> +	TEST_ASSERT_VAL("pair", perf_cpu_map__equal(pair, tmp));
+> +	perf_cpu_map__put(tmp);
+> +
+> +	tmp = perf_cpu_map__intersect(pair, one);
+> +	TEST_ASSERT_VAL("one", perf_cpu_map__equal(one, tmp));
+> +	perf_cpu_map__put(tmp);
+> +
+> +	for (size_t i = 0; i < ARRAY_SIZE(maps); i++)
+> +		perf_cpu_map__put(maps[i]);
+> +
+> +	return TEST_OK;
+> +}
+> +
+>  static struct test_case tests__cpu_map[] = {
+>  	TEST_CASE("Synthesize cpu map", cpu_map_synthesize),
+>  	TEST_CASE("Print cpu map", cpu_map_print),
+>  	TEST_CASE("Merge cpu map", cpu_map_merge),
+>  	TEST_CASE("Intersect cpu map", cpu_map_intersect),
+> +	TEST_CASE("Equal cpu map", cpu_map_equal),
+>  	{	.name = NULL, }
+>  };
+>  
+> -- 
+> 2.41.0.rc0.172.g3f132b7071-goog
+> 
 
-Thanks,
-Ian
+-- 
 
-> > Mark gonna have to look at this.
->
-> Cool. I'll go ahead with the KVM cleanup regardless of the outcome.
->
-> --
-> Thanks,
-> Oliver
+- Arnaldo
