@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF39C77B73
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38449C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231200AbjE0HZz (ORCPT
+        id S232431AbjE0HZ5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 03:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57282 "EHLO
+        Sat, 27 May 2023 03:25:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238159AbjE0HZZ (ORCPT
+        with ESMTP id S232356AbjE0HZd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 03:25:25 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26D7B10D2
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:24:45 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba8338f20bdso1962822276.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:24:45 -0700 (PDT)
+        Sat, 27 May 2023 03:25:33 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7EBC1B3
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:24:55 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-565a336caa0so37972437b3.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:24:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685172221; x=1687764221;
+        d=google.com; s=20221208; t=1685172226; x=1687764226;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=AvOFktmZ18nS/HCcMlE9rSltFDUN+kAB81vilLkev+w=;
-        b=PNYDMLEbna0rRDQUiNeN2XkC8tV5KqJYAdK5q1k1O3VXJdHgv2aCgMQUDmPeZ+XDb+
-         VLihx/7Dd7Z/cK0HmA8yCjfsvw00J6frH61XQ7ORX3MQaDfvAAcyUIogA201VMAx12or
-         e88/a296wREHlyuE5G/yF50gBy3CQjL+DHKPYWOp+6Hq4EOuVWxGQ2QFt9mXAs2ABMNP
-         NTxmg85qp+2ArfpmNxGZaniFtCquce9lMOWVVdjAhIoFnoHSaP+xkP3YeHq1zTzhQUYe
-         iFdGAc3GOd+Uq+vqiVktpNhi4X/GktMfJXyTFnw7vADPOEZj9vcLfxkmCV57UYunZw67
-         AI6g==
+        bh=WOjxsGu2+B4s1nXlsSxqdUIWzY+WQ/eQBroudZlXVAc=;
+        b=AVnwhtM1wdpkw3CJ7HsX0RDZfTFX/pEkwAGAWCV7/hRHJ4J0yOIPWqyAASLL2u73nJ
+         gvyyx59B6uXL0+qMegAG0kP2a+YryTO3t8gAgMk1bLtR1P0qiQHYXnGCumb5aE/r6N1R
+         gvDgFF2ewevrUOYMsevNyB0Tk9kiPlLAgR+OCj0a+tSWlrrACoMDIJJ9+dodIL4NFhoY
+         3iXdpNTIpJf8A/fRTcMZ+IkH6GI7IqPHR4pkmexQsr+YFiSl+32WwrsDcEMAe5Bi+nAI
+         d7AJprG6Kg7DgYmQdJj7T097SICzCCIGuYWOixj2YyYo3ZmP7INFzSW9oJ2T4jG7AQQK
+         Vcbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685172221; x=1687764221;
+        d=1e100.net; s=20221208; t=1685172226; x=1687764226;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AvOFktmZ18nS/HCcMlE9rSltFDUN+kAB81vilLkev+w=;
-        b=CGMbaoMGVW/ROcrT2Tez/ZLx1UKvjnG5WHomEK+jtNRHCn+n+eTQgqNM2aAKjPvuxJ
-         RIhuRsjj3d0KDmP7wONGsCwpeQxngx3T6LQCPGWLOfNAmEs893fUfkaSX0Eg09OeCs3J
-         Az537UkVLQKip8KOU47gUwvAHKHbXHcxx6kE0RsJOy5a35bIzkfvVp5I161SjJ56p6ev
-         hmRGgyaDEsmL9PrKEgURnJ6g7RMcIishJviXZ+2PK2DKeewPhkDL+hrVex5NTycLMaIK
-         53+eXoGYYHoEIl7/MHnAwl/3e7Sv1lbxtvnIJlj1vctOpdw4F/bvqvw2or536fygUtjn
-         JKrQ==
-X-Gm-Message-State: AC+VfDzJhVek4IgRYPmQ7V5SlDG1hhMSIfhC6vzQNCNBLctAeT61732w
-        SvhWRp96wWb7CrMOcDlHVw/rNE1+6Dig
-X-Google-Smtp-Source: ACHHUZ4fskukFp4UAg4K4KUIh5Sd0Z9irXKjDfzEGxEumzP0Te+CG6wUsjYKhTEujBIQCnqM2hsYk2EGpfK8
+        bh=WOjxsGu2+B4s1nXlsSxqdUIWzY+WQ/eQBroudZlXVAc=;
+        b=Oa7sv2iso4jdWPCS855B1HVwxWdQM63j90KzcKTZxCaUAsdlxPoAxeGKeGQK5kMt3E
+         CRiP9BUpDu+PDb3oTxgpMo/cbALtyB8efbfR7bzofD2G9Xav9Azm+Ei4BIsaie8EyAMs
+         a262uAYeSUXfUsZKGlqc39Y3JEZlLgVB0tMeq7Q7Tc9ySyNmEC9ztLkqs2DXFfxBWFkm
+         DVP3Dz7hthbFGZfa0tz3GDH752E5wF29GyzVVTkNzPxSSjTt6uv1ZYYdWIWVYEhDTc7t
+         qkjNWJDarPYMNCgOZ2DYG/cwkFr82Zv2cdVwV250uMiRE3F+Wfx4Ptr5YfbklgBfBOUl
+         Djtg==
+X-Gm-Message-State: AC+VfDz6awM6B2dEbmt325xFFro124oU/nwtsZo47Z6E6TERy6puQVAU
+        gOGAT4uCy1y4k8E26oegtL4XUBRWXSQI
+X-Google-Smtp-Source: ACHHUZ5/i16LNalMfBwII3JCx4rf904hDS6a04mrt2BehMZqCpV2KLS1sxrn8ww6hAtmUEqPo7knz1Y1KKfb
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a25:3d2:0:b0:bac:a1d4:dbf6 with SMTP id
- 201-20020a2503d2000000b00baca1d4dbf6mr2270513ybd.6.1685172221104; Sat, 27 May
- 2023 00:23:41 -0700 (PDT)
-Date:   Sat, 27 May 2023 00:22:05 -0700
+ (user=irogers job=sendgmr) by 2002:a81:d84a:0:b0:562:837:122f with SMTP id
+ n10-20020a81d84a000000b005620837122fmr2559264ywl.9.1685172226092; Sat, 27 May
+ 2023 00:23:46 -0700 (PDT)
+Date:   Sat, 27 May 2023 00:22:07 -0700
 In-Reply-To: <20230527072210.2900565-1-irogers@google.com>
-Message-Id: <20230527072210.2900565-30-irogers@google.com>
+Message-Id: <20230527072210.2900565-32-irogers@google.com>
 Mime-Version: 1.0
 References: <20230527072210.2900565-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v5 29/34] perf pmus: Allow just core PMU scanning
+Subject: [PATCH v5 31/34] perf pmus: Ensure all PMUs are read for find_by_type
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -93,480 +93,56 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Scanning all PMUs is expensive as all PMUs sysfs entries are loaded,
-benchmarking shows more than 4x the cost:
-
-```
-$ perf bench internals pmu-scan -i 1000
-Computing performance of sysfs PMU event scan for 1000 times
-  Average core PMU scanning took: 989.231 usec (+- 1.535 usec)
-  Average PMU scanning took: 4309.425 usec (+- 74.322 usec)
-```
-
-Add new perf_pmus__scan_core routine that scans just core
-PMUs. Replace perf_pmus__scan calls with perf_pmus__scan_core when
-non-core PMUs are being ignored.
+perf_pmus__find_by_type may be called for something like a raw event,
+in which case the PMU isn't guaranteed to have been looked up. Add a
+second check to make sure all PMUs are loaded.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/arch/arm64/util/pmu.c     |  5 +--
- tools/perf/arch/x86/util/evlist.c    |  5 +--
- tools/perf/arch/x86/util/perf_regs.c |  8 ++---
- tools/perf/bench/pmu-scan.c          | 50 ++++++++++++++++------------
- tools/perf/tests/pmu-events.c        |  5 +--
- tools/perf/util/cputopo.c            | 12 +++----
- tools/perf/util/header.c             |  5 +--
- tools/perf/util/mem-events.c         | 14 ++------
- tools/perf/util/parse-events.c       | 13 +++-----
- tools/perf/util/pmu.c                | 10 ------
- tools/perf/util/pmu.h                |  2 --
- tools/perf/util/pmus.c               | 30 ++++++++++++-----
- tools/perf/util/pmus.h               |  1 +
- tools/perf/util/print-events.c       | 11 +++---
- 14 files changed, 75 insertions(+), 96 deletions(-)
+ tools/perf/util/pmus.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/arm64/util/pmu.c b/tools/perf/arch/arm64/util/pmu.c
-index 2504d43a39a7..561de0cb6b95 100644
---- a/tools/perf/arch/arm64/util/pmu.c
-+++ b/tools/perf/arch/arm64/util/pmu.c
-@@ -11,10 +11,7 @@ static struct perf_pmu *pmu__find_core_pmu(void)
- {
- 	struct perf_pmu *pmu = NULL;
- 
--	while ((pmu = perf_pmus__scan(pmu))) {
--		if (!is_pmu_core(pmu->name))
--			continue;
--
-+	while ((pmu = perf_pmus__scan_core(pmu))) {
- 		/*
- 		 * The cpumap should cover all CPUs. Otherwise, some CPUs may
- 		 * not support some events or have different event IDs.
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index 03240c640c7f..8a6a0b98b976 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -33,13 +33,10 @@ static int ___evlist__add_default_attrs(struct evlist *evlist,
- 			continue;
- 		}
- 
--		while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 			struct perf_cpu_map *cpus;
- 			struct evsel *evsel;
- 
--			if (!pmu->is_core)
--				continue;
--
- 			evsel = evsel__new(attrs + i);
- 			if (evsel == NULL)
- 				goto out_delete_partial_list;
-diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
-index befa7f3659b9..116384f19baf 100644
---- a/tools/perf/arch/x86/util/perf_regs.c
-+++ b/tools/perf/arch/x86/util/perf_regs.c
-@@ -300,11 +300,9 @@ uint64_t arch__intr_reg_mask(void)
- 		 * The same register set is supported among different hybrid PMUs.
- 		 * Only check the first available one.
- 		 */
--		while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--			if (pmu->is_core) {
--				type = pmu->type;
--				break;
--			}
-+		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+			type = pmu->type;
-+			break;
- 		}
- 		attr.config |= type << PERF_PMU_TYPE_SHIFT;
- 	}
-diff --git a/tools/perf/bench/pmu-scan.c b/tools/perf/bench/pmu-scan.c
-index 51cae2d03353..c7d207f8e13c 100644
---- a/tools/perf/bench/pmu-scan.c
-+++ b/tools/perf/bench/pmu-scan.c
-@@ -22,6 +22,7 @@ struct pmu_scan_result {
- 	int nr_aliases;
- 	int nr_formats;
- 	int nr_caps;
-+	bool is_core;
- };
- 
- static const struct option options[] = {
-@@ -53,6 +54,7 @@ static int save_result(void)
- 		r = results + nr_pmus;
- 
- 		r->name = strdup(pmu->name);
-+		r->is_core = pmu->is_core;
- 		r->nr_caps = pmu->nr_caps;
- 
- 		r->nr_aliases = 0;
-@@ -72,7 +74,7 @@ static int save_result(void)
- 	return 0;
- }
- 
--static int check_result(void)
-+static int check_result(bool core_only)
- {
- 	struct pmu_scan_result *r;
- 	struct perf_pmu *pmu;
-@@ -81,6 +83,9 @@ static int check_result(void)
- 
- 	for (int i = 0; i < nr_pmus; i++) {
- 		r = &results[i];
-+		if (core_only && !r->is_core)
-+			continue;
-+
- 		pmu = perf_pmus__find(r->name);
- 		if (pmu == NULL) {
- 			pr_err("Cannot find PMU %s\n", r->name);
-@@ -130,7 +135,6 @@ static int run_pmu_scan(void)
- 	struct timeval start, end, diff;
- 	double time_average, time_stddev;
- 	u64 runtime_us;
--	unsigned int i;
- 	int ret;
- 
- 	init_stats(&stats);
-@@ -142,26 +146,30 @@ static int run_pmu_scan(void)
- 		return -1;
- 	}
- 
--	for (i = 0; i < iterations; i++) {
--		gettimeofday(&start, NULL);
--		perf_pmus__scan(NULL);
--		gettimeofday(&end, NULL);
--
--		timersub(&end, &start, &diff);
--		runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
--		update_stats(&stats, runtime_us);
--
--		ret = check_result();
--		perf_pmus__destroy();
--		if (ret < 0)
--			break;
-+	for (int j = 0; j < 2; j++) {
-+		bool core_only = (j == 0);
-+
-+		for (unsigned int i = 0; i < iterations; i++) {
-+			gettimeofday(&start, NULL);
-+			if (core_only)
-+				perf_pmus__scan_core(NULL);
-+			else
-+				perf_pmus__scan(NULL);
-+			gettimeofday(&end, NULL);
-+			timersub(&end, &start, &diff);
-+			runtime_us = diff.tv_sec * USEC_PER_SEC + diff.tv_usec;
-+			update_stats(&stats, runtime_us);
-+
-+			ret = check_result(core_only);
-+			perf_pmus__destroy();
-+			if (ret < 0)
-+				break;
-+		}
-+		time_average = avg_stats(&stats);
-+		time_stddev = stddev_stats(&stats);
-+		pr_info("  Average%s PMU scanning took: %.3f usec (+- %.3f usec)\n",
-+			core_only ? " core" : "", time_average, time_stddev);
- 	}
--
--	time_average = avg_stats(&stats);
--	time_stddev = stddev_stats(&stats);
--	pr_info("  Average PMU scanning took: %.3f usec (+- %.3f usec)\n",
--		time_average, time_stddev);
--
- 	delete_result();
- 	return 0;
- }
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 64ecb7845af4..64383fc34ef1 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -709,12 +709,9 @@ static int test__aliases(struct test_suite *test __maybe_unused,
- 	struct perf_pmu *pmu = NULL;
- 	unsigned long i;
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 		int count = 0;
- 
--		if (!is_pmu_core(pmu->name))
--			continue;
--
- 		if (list_empty(&pmu->format)) {
- 			pr_debug2("skipping testing core PMU %s\n", pmu->name);
- 			continue;
-diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
-index 4578c26747e1..729142ec9a9a 100644
---- a/tools/perf/util/cputopo.c
-+++ b/tools/perf/util/cputopo.c
-@@ -477,10 +477,9 @@ struct hybrid_topology *hybrid_topology__new(void)
- 	if (!perf_pmus__has_hybrid())
- 		return NULL;
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--		if (pmu->is_core)
--			nr++;
--	}
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL)
-+		nr++;
-+
- 	if (nr == 0)
- 		return NULL;
- 
-@@ -489,10 +488,7 @@ struct hybrid_topology *hybrid_topology__new(void)
- 		return NULL;
- 
- 	tp->nr = nr;
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--		if (!pmu->is_core)
--			continue;
--
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 		if (load_hybrid_node(&tp->nodes[i], pmu)) {
- 			hybrid_topology__delete(tp);
- 			return NULL;
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index e6d8ecd7a08e..2dde3ca20de5 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1607,10 +1607,7 @@ static int write_pmu_caps(struct feat_fd *ff,
- 	 */
- 	if (perf_pmus__has_hybrid()) {
- 		pmu = NULL;
--		while ((pmu = perf_pmus__scan(pmu))) {
--			if (!pmu->is_core)
--				continue;
--
-+		while ((pmu = perf_pmus__scan_core(pmu))) {
- 			ret = __write_pmu_caps(ff, pmu, true);
- 			if (ret < 0)
- 				return ret;
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index 08ac3ea2e366..c5596230a308 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -136,10 +136,7 @@ int perf_mem_events__init(void)
- 		} else {
- 			struct perf_pmu *pmu = NULL;
- 
--			while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--				if (!pmu->is_core)
--					continue;
--
-+			while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 				scnprintf(sysfs_name, sizeof(sysfs_name),
- 					  e->sysfs_name, pmu->name);
- 				e->supported |= perf_mem_event__supported(mnt, sysfs_name);
-@@ -176,10 +173,7 @@ static void perf_mem_events__print_unsupport_hybrid(struct perf_mem_event *e,
- 	char sysfs_name[100];
- 	struct perf_pmu *pmu = NULL;
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--		if (!pmu->is_core)
--			continue;
--
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 		scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name,
- 			  pmu->name);
- 		if (!perf_mem_event__supported(mnt, sysfs_name)) {
-@@ -217,9 +211,7 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
- 				return -1;
- 			}
- 
--			while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--				if (!pmu->is_core)
--					continue;
-+			while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 				rec_argv[i++] = "-e";
- 				s = perf_mem_events__name(j, pmu->name);
- 				if (s) {
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index be544f948be2..e0c3f2037477 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -453,15 +453,12 @@ int parse_events_add_cache(struct list_head *list, int *idx, const char *name,
- 	const char *config_name = get_config_name(head_config);
- 	const char *metric_id = get_config_metric_id(head_config);
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+	/* Legacy cache events are only supported by core PMUs. */
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 		LIST_HEAD(config_terms);
- 		struct perf_event_attr attr;
- 		int ret;
- 
--		/* Skip unsupported PMUs. */
--		if (!perf_pmu__supports_legacy_cache(pmu))
--			continue;
--
- 		if (parse_events__filter_pmu(parse_state, pmu))
- 			continue;
- 
-@@ -1481,12 +1478,10 @@ int parse_events_add_numeric(struct parse_events_state *parse_state,
- 		return __parse_events_add_numeric(parse_state, list, /*pmu=*/NULL,
- 						  type, config, head_config);
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
-+	/* Wildcards on numeric values are only supported by core PMUs. */
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 		int ret;
- 
--		if (!perf_pmu__supports_wildcard_numeric(pmu))
--			continue;
--
- 		if (parse_events__filter_pmu(parse_state, pmu))
- 			continue;
- 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 05056305fb58..7102084dd3aa 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1427,21 +1427,11 @@ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
- 	return pmu->is_core;
- }
- 
--bool perf_pmu__supports_wildcard_numeric(const struct perf_pmu *pmu)
--{
--	return pmu->is_core;
--}
--
- bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
- {
- 	return !is_pmu_hybrid(pmu->name);
- }
- 
--bool perf_pmu__is_mem_pmu(const struct perf_pmu *pmu)
--{
--	return pmu->is_core;
--}
--
- bool perf_pmu__have_event(const struct perf_pmu *pmu, const char *name)
- {
- 	struct perf_pmu_alias *alias;
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index f1f3e8a2e00e..02fec0a7d4c8 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -223,9 +223,7 @@ void perf_pmu__del_formats(struct list_head *formats);
- bool is_pmu_core(const char *name);
- bool is_pmu_hybrid(const char *name);
- bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu);
--bool perf_pmu__supports_wildcard_numeric(const struct perf_pmu *pmu);
- bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu);
--bool perf_pmu__is_mem_pmu(const struct perf_pmu *pmu);
- bool perf_pmu__have_event(const struct perf_pmu *pmu, const char *name);
- 
- FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name);
 diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 4ef4fecd335f..de7fc36519c9 100644
+index 2c512345191d..6ecccb5ad03e 100644
 --- a/tools/perf/util/pmus.c
 +++ b/tools/perf/util/pmus.c
-@@ -87,7 +87,7 @@ static struct perf_pmu *perf_pmu__find2(int dirfd, const char *name)
+@@ -142,7 +142,7 @@ static void pmu_read_sysfs(bool core_only)
+ 	}
  }
  
- /* Add all pmus in sysfs to pmu list: */
--static void pmu_read_sysfs(void)
-+static void pmu_read_sysfs(bool core_only)
+-struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
++static struct perf_pmu *__perf_pmus__find_by_type(unsigned int type)
  {
- 	int fd;
- 	DIR *dir;
-@@ -104,6 +104,8 @@ static void pmu_read_sysfs(void)
- 	while ((dent = readdir(dir))) {
- 		if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, ".."))
- 			continue;
-+		if (core_only && !is_pmu_core(dent->d_name))
-+			continue;
- 		/* add to static LIST_HEAD(core_pmus) or LIST_HEAD(other_pmus): */
- 		perf_pmu__find2(fd, dent->d_name);
- 	}
-@@ -135,7 +137,7 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu)
- 	bool use_core_pmus = !pmu || pmu->is_core;
+ 	struct perf_pmu *pmu;
  
- 	if (!pmu) {
--		pmu_read_sysfs();
-+		pmu_read_sysfs(/*core_only=*/false);
- 		pmu = list_prepare_entry(pmu, &core_pmus, list);
+@@ -150,6 +150,7 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
+ 		if (pmu->type == type)
+ 			return pmu;
  	}
- 	if (use_core_pmus) {
-@@ -150,6 +152,18 @@ struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu)
++
+ 	list_for_each_entry(pmu, &other_pmus, list) {
+ 		if (pmu->type == type)
+ 			return pmu;
+@@ -157,6 +158,18 @@ struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
  	return NULL;
  }
  
-+struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu)
++struct perf_pmu *perf_pmus__find_by_type(unsigned int type)
 +{
-+	if (!pmu) {
-+		pmu_read_sysfs(/*core_only=*/true);
-+		pmu = list_prepare_entry(pmu, &core_pmus, list);
-+	}
-+	list_for_each_entry_continue(pmu, &core_pmus, list)
++	struct perf_pmu *pmu = __perf_pmus__find_by_type(type);
++
++	if (pmu || read_sysfs_all_pmus)
 +		return pmu;
 +
-+	return NULL;
++	pmu_read_sysfs(/*core_only=*/false);
++	pmu = __perf_pmus__find_by_type(type);
++	return pmu;
 +}
 +
- const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
- {
- 	struct perf_pmu *pmu = NULL;
-@@ -176,10 +190,10 @@ int perf_pmus__num_mem_pmus(void)
- 	struct perf_pmu *pmu = NULL;
- 	int count = 0;
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--		if (perf_pmu__is_mem_pmu(pmu))
--			count++;
--	}
-+	/* All core PMUs are for mem events. */
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL)
-+		count++;
-+
- 	return count;
- }
- 
-@@ -421,8 +435,8 @@ bool perf_pmus__has_hybrid(void)
- 	if (!hybrid_scanned) {
- 		struct perf_pmu *pmu = NULL;
- 
--		while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--			if (pmu->is_core && is_pmu_hybrid(pmu->name)) {
-+		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+			if (is_pmu_hybrid(pmu->name)) {
- 				has_hybrid = true;
- 				break;
- 			}
-diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-index 2a771d9f8da7..9de0222ed52b 100644
---- a/tools/perf/util/pmus.h
-+++ b/tools/perf/util/pmus.h
-@@ -11,6 +11,7 @@ struct perf_pmu *perf_pmus__find(const char *name);
- struct perf_pmu *perf_pmus__find_by_type(unsigned int type);
- 
- struct perf_pmu *perf_pmus__scan(struct perf_pmu *pmu);
-+struct perf_pmu *perf_pmus__scan_core(struct perf_pmu *pmu);
- 
- const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str);
- 
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index 9cee7bb7a561..7a5f87392720 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -272,12 +272,11 @@ int print_hwcache_events(const struct print_callbacks *print_cb, void *print_sta
- 	struct perf_pmu *pmu = NULL;
- 	const char *event_type_descriptor = event_type_descriptors[PERF_TYPE_HW_CACHE];
- 
--	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
--		/*
--		 * Skip uncore PMUs for performance. PERF_TYPE_HW_CACHE type
--		 * attributes can accept software PMUs in the extended type, so
--		 * also skip.
--		 */
-+	/*
-+	 * Only print core PMUs, skipping uncore for performance and
-+	 * PERF_TYPE_SOFTWARE that can succeed in opening legacy cache evenst.
-+	 */
-+	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
- 		if (pmu->is_uncore || pmu->type == PERF_TYPE_SOFTWARE)
- 			continue;
- 
+ /*
+  * pmu iterator: If pmu is NULL, we start at the begin, otherwise return the
+  * next pmu. Returns NULL on end.
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
