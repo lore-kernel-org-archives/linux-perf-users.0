@@ -2,60 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 563EDC77B73
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 09:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06ECC77B73
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 09:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231586AbjE0JGr (ORCPT
+        id S231783AbjE0JwP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 05:06:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59194 "EHLO
+        Sat, 27 May 2023 05:52:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229717AbjE0JGq (ORCPT
+        with ESMTP id S231925AbjE0JwN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 05:06:46 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E7D124
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 02:06:45 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-64d3578c25bso2103806b3a.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 02:06:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685178405; x=1687770405;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Th/2CdkYSffxqn+a5kfATTdZzNBhiqjv8/1oEFRsaQ8=;
-        b=swpKci/XFYc82knSogXS3iRF6oaRbVxcKOC3km53iIFTc4IUoWmJLA5Ym/gTJVjirQ
-         IDmaUDmh3mK9Wgg4abfbgEMHihj1W3Kpb+XX16Supshd9Y1UFFRZapWsGbJ4eWUIKNnP
-         vXKFUU5W+Tl01eJeicZII5BFwIAhq2c5wgctdvDywSvxO519UV5GeX/wcfKFeD/ylHTp
-         97iv6To8vC0uc9iuhm1vXbUh3GrikszWBxu7CfJ3fi/ON5ktra8+b0GgLomyoGJPL/rY
-         HKICfPdWZxQj6nKtsquTYDZLzpFPo5XqhtKGwq+5VR944qkR2hI6ygkiygv2icjPnq6P
-         EULQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685178405; x=1687770405;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Th/2CdkYSffxqn+a5kfATTdZzNBhiqjv8/1oEFRsaQ8=;
-        b=H5wixmOpgaVwVZ/eMzG8DbDFcZp8meLW05jCghWAgEgXP246SOSkXUHGgOsfFr3BTc
-         XzHz5iONkKMKoJNr2iQhtfz1mJcdlL/ZSXXn16f7tuNofzj2YZQnXPmOGFlPD1RXks1n
-         G13mUi78uqastcEwVZ3GzhS59iOgKraxP9fNBtsy1EyyIyaK/zU/q3+uvsKYbEV9H+QD
-         foBya7fn8LC6/uTr2JygZmmcpziPYC882B3nb0BhGD1clw8ugNJcb6JdRcyI0dWWhJtx
-         qJOE31CJdZI8dxux6BxK1UugQ/VF71b6I9d5rUgPvcuzrSTyKm4rq8OluxxCVO26TEYa
-         mncQ==
-X-Gm-Message-State: AC+VfDzbIk97RA7F4nb7KkHQJlgEy/g4Pf45Hy6b0tE/B9r/hYM2vrVA
-        WiVp7GOsUweOnbeVN6mw1TUJug==
-X-Google-Smtp-Source: ACHHUZ63xJO8hiOlOALtVX+qtnyTR/xYlZeXvYN1YQQY4IJsTzbGd/KqW7Hj7EUIzCZiXPdl/kM2Jg==
-X-Received: by 2002:a05:6a00:891:b0:643:d40c:7db1 with SMTP id q17-20020a056a00089100b00643d40c7db1mr6866644pfj.3.1685178404926;
-        Sat, 27 May 2023 02:06:44 -0700 (PDT)
-Received: from leoy-yangtze.lan ([107.151.177.126])
-        by smtp.gmail.com with ESMTPSA id j12-20020aa78dcc000000b0064928cb5f03sm3797231pfr.69.2023.05.27.02.06.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 May 2023 02:06:44 -0700 (PDT)
-Date:   Sat, 27 May 2023 17:06:35 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     coresight@lists.linaro.org, denik@chromium.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
+        Sat, 27 May 2023 05:52:13 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2051.outbound.protection.outlook.com [40.107.244.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E3F619C;
+        Sat, 27 May 2023 02:52:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NJMACilEQJGTrmpQMNO9q/t6cq4Mf6VnWxqLsmaGzc8=;
+ b=eqHV85Ovun+uGsvsMFjt3ug55O25ueBZQBkv5rbYRkb0KqFujMC3KKpZaPhxGAKmY2CGKN7q1OtL528rxEge/yt02NADcoDj28xg5WE09mSyYaRaIxcs1Hz3NYK3ypGfPJl6kfEOT7ahWZ2dQ+dJFEWJTjgD+jNtVQvMp4odPAlEozp5rn1ZgVG1QFeG6V2Bvah2jjviUMLQmAPDWcfAthowwORYbPYLPnOJ7l8cwkrra/Hf8Iy9qbmP+DFSvPZzhZ1afV3inW9Gan7Nn+9YczrNUdBeCLB8BwHatw4Vf2OMgTNiSAq6NkkAvskOZMO0iLWUYt2u37P86VU1Xn3M4g==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by MN2PR12MB4534.namprd12.prod.outlook.com (2603:10b6:208:24f::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.19; Sat, 27 May
+ 2023 09:52:03 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f7a7:a561:87e9:5fab]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f7a7:a561:87e9:5fab%6]) with mapi id 15.20.6433.017; Sat, 27 May 2023
+ 09:52:02 +0000
+Date:   Sat, 27 May 2023 06:52:01 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Lorenzo Stoakes <lstoakes@gmail.com>
+Cc:     Arnd Bergmann <arnd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -65,98 +49,83 @@ Cc:     coresight@lists.linaro.org, denik@chromium.org,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] perf cs-etm: Use previous thread for branch sample
- source IP
-Message-ID: <20230527090635.GB886420@leoy-yangtze.lan>
-References: <20230524131958.2139331-1-james.clark@arm.com>
- <20230524131958.2139331-3-james.clark@arm.com>
-MIME-Version: 1.0
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] [suggestion] mm/gup: avoid IS_ERR_OR_NULL
+Message-ID: <ZHHSwRzksE+KukTK@nvidia.com>
+References: <20230519093953.10972-1-arnd@kernel.org>
+ <5b071f65-7f87-4a7b-a76a-f4a1c1568ae7@lucifer.local>
+ <ZGf1hV7iEQyqAim5@ziepe.ca>
+ <1ca47b8a-292c-47ab-aa6f-ca24fdfc0d3c@lucifer.local>
+ <ZGiEEPXdAMnKqkqx@nvidia.com>
+ <0bc9dc2b-0da6-4d5c-96af-e21aa287eecb@lucifer.local>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230524131958.2139331-3-james.clark@arm.com>
+In-Reply-To: <0bc9dc2b-0da6-4d5c-96af-e21aa287eecb@lucifer.local>
+X-ClientProxiedBy: BN9P221CA0009.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:408:10a::17) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|MN2PR12MB4534:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6aeb085b-1bcc-4708-c9a4-08db5e980574
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: e+TfNNBS1KqH7r4KFTAZADQmohmMs6R5McsieJxoUVYEOypzXHbQXunVB+K/KWV/gK2mt0/+6gd8POFtslYCmxRTU3zGCsSA/pGdrh5WORJvwOMge6V7BLZrXaExVmx3rKLJsazCMVrHa5UopX2x5FV7rJsOHYm3qLW+WmKtDH2i/UhS/c8Z0A2dgOLdACPiUPKKVb/6FwA1g3oW/oe3s6u0ma6zYm8mE5SjaSM4Fgzg+1a5BLlBXksXX4sW0YbQB3zYZ4FQ4IkfV5238JlwWEhM2nXjc+p0y8DlnvM1/HUSLtgtR44YOj6tzAa/V0as6JmmWYCxJEyKJWa5CdCsm7g7sqrHZfw+Y18EDeJ3LKIykTrRMYGHJ1OyWrHyrz57npN57DaE0JCIXFq7H4+WEeoRHh6sye0+KW2tXuVMe8ocltYHPDAqQYZU7ttvdgu7n3KC+F7wpw3kbVB8v194Lhe+oc9BMTild/9YqqtSMSG6IYmYV6MV6FonezU6w3dO+hFjJbT+c4uveYi7FEfj7esFo4/6LgPOXZ5PmINGgKmmBvXrYo6Sza2hz8cZYjghrZZlCu2u6pBGEeWbnuJ2QpfyF3mWYa4nQztukdcuHas=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(39860400002)(366004)(396003)(346002)(451199021)(316002)(6512007)(6506007)(2616005)(8676002)(8936002)(86362001)(5660300002)(7416002)(6486002)(478600001)(54906003)(26005)(186003)(83380400001)(41300700001)(6916009)(2906002)(4744005)(36756003)(4326008)(66946007)(66476007)(66556008)(38100700002)(67856001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?T+CgMhijvn57ihQGtt8M1420yXrP3EjjXyLd0mueYyzFLGVLEhs51wQSlTfO?=
+ =?us-ascii?Q?U80lbcbQFueaoYhHViSwXeMIQJFg2wV7g08MaOu7XeSM/rqT+GzM1wB2/fJe?=
+ =?us-ascii?Q?5Dz9OXhsrbnTn9Z6wloHxE2ejkx3BHhfegBphqkatPDSqPJFxjG4xmG/Ptef?=
+ =?us-ascii?Q?gfu6PZPKYKG9VaO8xj6nwZ7YPnZcA74HNDYpPJZR7nrJd2QBfgTnTlHG9XPv?=
+ =?us-ascii?Q?Z+UVqGjlZmpB+cqrVvXboN+7tXS8sQt/BZuqPMO/D8YFnCWyD9gqQ+Dp0FXy?=
+ =?us-ascii?Q?Wov3ul4zY+VzzCZYO2fzNHdUbRGxYhVTA8sq7wvz+q1rhZtNXymcHpit3Egx?=
+ =?us-ascii?Q?+NcUmvCHbtiwfQ/RrTqmc2JMw0j5WdvQYI3ZsryAISDeI5Dtb2SAUUlNQAJ0?=
+ =?us-ascii?Q?VLXpqaVBfleBU05esPY4pc2haLYsuEQ08rjzGHXrxg9s8jzGLZCDlxVnkP7F?=
+ =?us-ascii?Q?Ff7vVEF+NmzxTC6RLc8SLFox73vAAMvp4bV+txBYHpc4cxyGkJsZggh4gM4E?=
+ =?us-ascii?Q?XM91MhgB78FIl5R1ZESGKOjFtaAHHWLiH56sFLQb0t8x6/WOr6RvFAFJsNK1?=
+ =?us-ascii?Q?iTBILbEqmQvDy0dbx+zzQ4zy0iRu8QujWr6LylWlahImpE8F6xtyayX40d8V?=
+ =?us-ascii?Q?HzL4ye+liiPcEB4JJGhflQnXVpMnk4E1cpWMSsjmS7LdQWPjNqjkkkDeq67Q?=
+ =?us-ascii?Q?RxP39ljRvOkO0sbFreOdMrvYaEZSzYVRIi2bVWvJfMMh69ir8kAOZhROnJHt?=
+ =?us-ascii?Q?TnYI5BRxTo1Wp4JtqSu2tryCzLTrC/n9D3YjEto/sCa3itoDEAY+sokAkz1G?=
+ =?us-ascii?Q?W5Kh0LREIFAz0wc2hSldh+C8brDoHhRV9r8lt7rbakgbbFP+w5/PT0cShss9?=
+ =?us-ascii?Q?aVEKxj2apSSvdii8F1VGWEv5AfqRwE1qCJigebSzxkTR6xsGtXs3veyTvFBV?=
+ =?us-ascii?Q?GSU3ifPIyxr6thqY4ldAUiKqixh9RrtTnSW5plUUWgVVpUkrR+BEeZ9tKPn1?=
+ =?us-ascii?Q?9fK3N2wZoysuz9UDsqRd+KNNDr+KEsjqecAc9dl1TGFcjbp3D/MKbY0YZW4U?=
+ =?us-ascii?Q?f1QKP/dcc4WYnx9LMO2KfPLGL3U1pUgwiP1WMxg2TeOFIKmfpt9v8VZhulc6?=
+ =?us-ascii?Q?/aa7ZBrRP+WEbdBTuPlMMLhBloLU2HUaH7tejuu2dYLQZ+VixOA2ZCgJ9rAa?=
+ =?us-ascii?Q?CParYk8P8NDcTXvh2oJxvvXFGizUJ7uRgNuMc+ceFffvAh3Jh0r90rVyaVRk?=
+ =?us-ascii?Q?wuBS13AVBHd/EGMd8LQ0xuHmd/CByQiaJUr3sXLjRoOPHLMxuyEr0canA+G0?=
+ =?us-ascii?Q?KHMjIQvdxF5WdXSp/61L57smON/MsMcFq6j2CMdqgMwRWA1GFcCQ5uZJqpKn?=
+ =?us-ascii?Q?g+lJUAgK1nLNRYcDh2RbazUy6gNfLnnxQQyg62ogFLt/buvut8uciK0AjhFK?=
+ =?us-ascii?Q?ZC4CueCg5SbtDOpgQ2TOBTSYbfsHmsDCeRbwCFo4SpRtLHWUTkbvxZ9vlLL/?=
+ =?us-ascii?Q?VrtCKpJ6qWOohTK+5rd6wc7S45wd/Q9gJ/QZ7AghpHTIIhT1zjNAvb3INS6P?=
+ =?us-ascii?Q?6fH1KEx/2i4+OrqRXPY=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6aeb085b-1bcc-4708-c9a4-08db5e980574
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2023 09:52:02.8011
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iy0KwulSDMECO5ylbspC8XqmAP9kFkZio/d5zpuLoTdVGzRHHUM1km8HsGitvbKP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4534
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 24, 2023 at 02:19:56PM +0100, James Clark wrote:
-> Branch samples currently use the IP of the previous packet as the from
-> IP, and the IP of the current packet as the to IP. But it incorrectly
-> uses the current thread. In some cases like a jump into a different
-> exception level this will attribute to the incorrect process.
-
-It's about the timing that branch has taken or not taken :)
-
-If we think the branch sample as 'branch has taken', then current code
-is doning right thing, otherwise, we need this fix.
-
-> Fix it by tracking the previous thread in the same way the previous
-> packet is tracked.
+On Sat, May 20, 2023 at 10:12:40AM +0100, Lorenzo Stoakes wrote:
+> > No, this returning 0 on failure is a foot gun. Failing to pin a single
+> > page is always an error, the only question is what sub reason caused
+> > the error to happen. There is no third case where it is not an error.
 > 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->  tools/perf/util/cs-etm.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index ebffc9052561..a997fe79d458 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -86,6 +86,7 @@ struct cs_etm_traceid_queue {
->  	size_t last_branch_pos;
->  	union perf_event *event_buf;
->  	struct thread *thread;
-> +	struct thread *prev_thread;
->  	struct branch_stack *last_branch;
->  	struct branch_stack *last_branch_rb;
->  	struct cs_etm_packet *prev_packet;
-> @@ -480,6 +481,7 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->  	tidq->trace_chan_id = trace_chan_id;
->  	tidq->thread = machine__findnew_thread(&etm->session->machines.host, -1,
->  					       queue->tid);
-> +	tidq->prev_thread = machine__idle_thread(&etm->session->machines.host);
->  
->  	tidq->packet = zalloc(sizeof(struct cs_etm_packet));
->  	if (!tidq->packet)
-> @@ -616,6 +618,8 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
->  		tmp = tidq->packet;
->  		tidq->packet = tidq->prev_packet;
->  		tidq->prev_packet = tmp;
-> +		thread__put(tidq->prev_thread);
-> +		tidq->prev_thread = thread__get(tidq->thread);
+> The uprobe path thinks otherwise, but maybe the answer is that we just need
+> to -EFAULT on missing VMA and -EPERM on invalid flags.
 
-Maybe cs_etm__packet_swap() is not the best place to update
-"tidq->prev_thread", since swapping packet doesn't mean it's necessarily
-thread switching; can we move this change into the cs_etm__set_thread()?
+I think uprobe is just broken to think there is a third outcome. Let's
+just fix it instead of trying to pretend it makes sense.
 
-Thanks,
-Leo
-
->  	}
->  }
->  
-> @@ -791,6 +795,7 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
->  		/* Free this traceid_queue from the array */
->  		tidq = etmq->traceid_queues[idx];
->  		thread__zput(tidq->thread);
-> +		thread__zput(tidq->prev_thread);
->  		zfree(&tidq->event_buf);
->  		zfree(&tidq->last_branch);
->  		zfree(&tidq->last_branch_rb);
-> @@ -1450,8 +1455,8 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
->  	sample.time = cs_etm__resolve_sample_time(etmq, tidq);
->  
->  	sample.ip = ip;
-> -	sample.pid = tidq->thread->pid_;
-> -	sample.tid = tidq->thread->tid;
-> +	sample.pid = tidq->prev_thread->pid_;
-> +	sample.tid = tidq->prev_thread->tid;
->  	sample.addr = cs_etm__first_executed_instr(tidq->packet);
->  	sample.id = etmq->etm->branches_id;
->  	sample.stream_id = etmq->etm->branches_id;
-> -- 
-> 2.34.1
-> 
+Jason
