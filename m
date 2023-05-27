@@ -2,251 +2,239 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A842C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 06:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A493EC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229550AbjE0G0k convert rfc822-to-8bit (ORCPT
+        id S229779AbjE0HWf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 02:26:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51044 "EHLO
+        Sat, 27 May 2023 03:22:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjE0G0g (ORCPT
+        with ESMTP id S229472AbjE0HWe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 02:26:36 -0400
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9F1116;
-        Fri, 26 May 2023 23:26:34 -0700 (PDT)
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-786470fd7a3so443942241.3;
-        Fri, 26 May 2023 23:26:34 -0700 (PDT)
+        Sat, 27 May 2023 03:22:34 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E23AB1
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:32 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bac6a453dd5so1992912276.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1685172152; x=1687764152;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NGWf+L/VcfKupqK7RDYqdaWUdhRLep+TBxkX8UJHW6M=;
+        b=MEzQsh4plHzLOcg0/U2n7THihasp1FbgrIzFLLb0Etu8rnl7jblXx8JL3Ps++9oZsQ
+         rtUL2l32AfsiiTbPhEEvmZ4y364F2Bh3Eg3tQlqUykwAJV96hJW+PQDusC/21QJph/3r
+         cxJZUPpPuh8L4DexuF8kKNqM/g3zgNDGeL5EaGURRWsJ8dtGViG+fR6tTJ8sH6TZAcTq
+         Skvj9pkfpaqFHwI2G5monT41yYhu1LPUHgcKPlrQR2sAnZymFQScKjXUjjBCx81L524H
+         kWQ2umvKDOlR2drwOduAyR4XoU65FfQS96Bj87ms+gwGtvN0+RNYOFYyQ/VFA5XZgUmK
+         kbwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685168794; x=1687760794;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K1Vo/4/ITtOwqXGKuD1nMtQeDHz1HuSSJxIWcuEXzLo=;
-        b=TbAdKBIgSrv3BNl1t5qhDNT8Y4YVzdBt7yOxDRkjk1eLHXJWSXRUoxnosuQM5G8zRI
-         /lnKEnZ7hNYqj7tjLTT6tsW5LBdtnAP0sVBJ5VmvNT4F89rbqpFxRgJ01EgQZFUdnUMM
-         vYS3AEUOTIPrIFAL1kTaLRQS0i6RymhjsAnXMkRHbYBatqhuJ10Xcdy+JlBH7ENbnEXx
-         23foDNEdnvqZn1KNLdGrsBLoG74B7WoJt95pv7PrVZotOtETDfbHoc6kkcTysmz7qxXh
-         w45e/Tle3JAubrNN4EePjFFreWaurTYtoSwhzb1CrjWys5FhrgzobHFUUBIpz+byhms3
-         2b3w==
-X-Gm-Message-State: AC+VfDxJnS1OB4tusxKwSZMer55TA8+Ovr7unZ+VKaIPK3RF0SzQei3p
-        lgMpRCpziUrn/iK44QlWlpTI3zrgZQenf+5qXSBduaED
-X-Google-Smtp-Source: ACHHUZ4qiF9t3D55NoKQ9D5GwJSNuwvnwC0H6JaWL4e3r96sJzQGoM3aFS2cNc5htnvlCr58J7n6PEi7SwemCwUAnv8=
-X-Received: by 2002:a1f:cac6:0:b0:45a:8582:126d with SMTP id
- a189-20020a1fcac6000000b0045a8582126dmr438138vkg.8.1685168793866; Fri, 26 May
- 2023 23:26:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230526095824.16336-1-Jonathan.Cameron@huawei.com> <20230526095824.16336-5-Jonathan.Cameron@huawei.com>
-In-Reply-To: <20230526095824.16336-5-Jonathan.Cameron@huawei.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Fri, 26 May 2023 23:26:22 -0700
-Message-ID: <CAM9d7cgYZs4DqLmjPZCYDVrp-KVYoZYDyJHLwB1fOM7ZdzM2Pg@mail.gmail.com>
-Subject: Re: [PATCH v7 4/5] perf: CXL Performance Monitoring Unit driver
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Liang Kan <kan.liang@linux.intel.com>, linux-cxl@vger.kernel.org,
-        peterz@infradead.org, mark.rutland@arm.com, will@kernel.org,
-        dan.j.williams@intel.com, mingo@redhat.com, acme@kernel.org,
-        linuxarm@huawei.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Stephane Eranian <eranian@google.com>
+        d=1e100.net; s=20221208; t=1685172152; x=1687764152;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NGWf+L/VcfKupqK7RDYqdaWUdhRLep+TBxkX8UJHW6M=;
+        b=LNxAZ5VAE0Stf16IXuuosGcGc9mY5dV69H4tcXy6ZxvFhZdg3PzndVsTLHumCadnzN
+         oGhKYOqxU9KAoY2MWjkrIhLHeIkxHwczR9obvgC4R6LbLMmhlTt7k/+hUVr3FybVz8p1
+         6c/3ehTYlZ+LP+lxo7Z+XCbD3idrEBGiyajfCLKiNKQKQ0vQWLBiZtbxwIxG+xrNMumI
+         aGeuA/3XsUpcL0tTpPDqheevVBrm6U0/0cKVVGZnQJqnCJmdKbzQzHnZRj2DhqT4pnqz
+         tUiD9OKdFhT2VZOXaH0D5DuX63sTe4dDPAwgntD9QzgbUQU5HQWpCg4JBuHgvFnz1kSa
+         3Hxw==
+X-Gm-Message-State: AC+VfDzST27yY65Au4ZaD2hE6FMK15CXoPZcn47ALlOocG+XCSkZH2lD
+        ePqJQub0u/P2o8FL3F38rFNwtgxuf6QH
+X-Google-Smtp-Source: ACHHUZ63IAJGh1PlsIPDQbimPXfhJjI0hTsX+sAHIiV/TCgtai6V2rd4xbPRvIR/YoJUgHZjA66wrHJFY1Es
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
+ (user=irogers job=sendgmr) by 2002:a25:ad83:0:b0:ba9:9a4f:a40 with SMTP id
+ z3-20020a25ad83000000b00ba99a4f0a40mr2289016ybi.13.1685172152019; Sat, 27 May
+ 2023 00:22:32 -0700 (PDT)
+Date:   Sat, 27 May 2023 00:21:36 -0700
+Message-Id: <20230527072210.2900565-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
+Subject: [PATCH v5 00/34] PMU refactoring and improvements
+From:   Ian Rogers <irogers@google.com>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ming Wang <wangming01@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 26, 2023 at 3:00 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
-> CXL rev 3.0 introduces a standard performance monitoring hardware
-> block to CXL. Instances are discovered using CXL Register Locator DVSEC
-> entries. Each CXL component may have multiple PMUs.
->
-> This initial driver supports a subset of types of counter.
-> It supports counters that are either fixed or configurable, but requires
-> that they support the ability to freeze and write value whilst frozen.
->
-> Development done with QEMU model which will be posted shortly.
->
-> Example:
->
-> $ perf stat -a -e cxl_pmu_mem0.0/h2d_req_snpcur/ -e cxl_pmu_mem0.0/h2d_req_snpdata/ -e cxl_pmu_mem0.0/clock_ticks/ sleep 1
->
-> Performance counter stats for 'system wide':
->
-> 96,757,023,244,321      cxl_pmu_mem0.0/h2d_req_snpcur/
-> 96,757,023,244,365      cxl_pmu_mem0.0/h2d_req_snpdata/
-> 193,514,046,488,653      cxl_pmu_mem0.0/clock_ticks/
->
->        1.090539600 seconds time elapsed
->
-> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> ---
-> v7: THanks to Namhyung and Stephane for reviews
->  - Set the cpu for an event only after validation checks.
->  - Added -a to make perf default of all CPUs explicit in command line.
->  - Fix wrong event names in example.
-> ---
+Separate the code in pmu.[ch] into the set/list of PMUs and the code
+for a particular PMU. Move the set/list of PMUs code into
+pmus.[ch]. Clean up hybrid code and remove hybrid PMU list, it is
+sufficient to scan PMUs looking for core ones. Add core PMU list and
+perf_pmus__scan_core that just reads core PMUs. Switch code that skips
+non-core PMUs during a perf_pmus__scan, to use the
+perf_pmus__scan_core variant. Don't scan sysfs for PMUs if all such
+PMUs have been previously scanned/loaded. Scanning just core PMUs, for
+the cases it is applicable, can improve the sysfs reading time by more
+than 4 fold on my laptop, as servers generally have many more uncore
+PMUs the improvement there should be larger:
 
-[SNIP]
-> +static void cxl_pmu_event_start(struct perf_event *event, int flags)
-> +{
-> +       struct cxl_pmu_info *info = pmu_to_cxl_pmu_info(event->pmu);
-> +       struct hw_perf_event *hwc = &event->hw;
-> +       void __iomem *base = info->base;
-> +       u64 cfg;
-> +
-> +       /*
-> +        * All paths to here should either set these flags directly or
-> +        * call cxl_pmu_event_stop() which will ensure the correct state.
-> +        */
-> +       if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
-> +               return;
-> +
-> +       WARN_ON_ONCE(!(hwc->state & PERF_HES_UPTODATE));
-> +       hwc->state = 0;
-> +
-> +       /*
-> +        * Currently only hdm filter control is implemnted, this code will
+```
+$ perf bench internals pmu-scan -i 1000
+Computing performance of sysfs PMU event scan for 1000 times
+  Average core PMU scanning took: 989.231 usec (+- 1.535 usec)
+  Average PMU scanning took: 4309.425 usec (+- 74.322 usec)
+```
 
-Typo: implemented
+The patch "perf pmu: Separate pmu and pmus" moves and renames a lot of
+functions, and is consequently large. The changes are trivial, but
+kept together to keep the overall number of patches more reasonable.
 
-> +        * want generalizing when more filters are added.
-> +        */
-> +       if (info->filter_hdm) {
-> +               if (cxl_pmu_config1_hdm_filter_en(event))
-> +                       cfg = cxl_pmu_config2_get_hdm_decoder(event);
-> +               else
-> +                       cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
-> +               writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
-> +       }
-> +
-> +       cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
-> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
-> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
-> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_ENABLE, 1);
-> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_EDGE,
-> +                         cxl_pmu_config1_get_edge(event) ? 1 : 0);
-> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INVERT,
-> +                         cxl_pmu_config1_get_invert(event) ? 1 : 0);
-> +
-> +       /* Fixed purpose counters have next two fields RO */
-> +       if (test_bit(hwc->idx, info->conf_counter_bm)) {
-> +               cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK,
-> +                                 hwc->event_base);
-> +               cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENTS_MSK,
-> +                                 cxl_pmu_config_get_mask(event));
-> +       }
-> +       cfg &= ~CXL_PMU_COUNTER_CFG_THRESHOLD_MSK;
-> +       /*
-> +        * For events that generate only 1 count per clock the CXL 3.0 spec
-> +        * states the threshold shall be set to 1 but if set to 0 it will
-> +        * count the raw value anwyay?
+v5. Add helper functions for cpumap as suggested by Arnaldo. Fixes
+    missing symbols in importing perf into python, found by building
+    with:
+    https://lore.kernel.org/lkml/20230527055517.2711487-1-irogers@google.com/
+v4. On patch 16 (perf pmu: Remove perf_pmu__hybrid_mounted) remove the
+    handling of no cpus for a hybrid core PMU following discussion
+    with Kan:
+    https://lore.kernel.org/lkml/20230524221831.1741381-17-irogers@google.com/
+    On patch 9 (perf evlist: Propagate user CPU maps intersecting core
+    PMU maps) fix the comment on struct perf_evsel's system_wide
+    variable from conversation with Namhyung:
+    https://lore.kernel.org/lkml/20230524221831.1741381-10-irogers@google.com/
+    Adds Kan's reviewed-by.
+v3. Address fixing hybrid user specified CPU maps by doing it in
+    propagate maps. Remove nearly all references to cpu_core/cpu_atom
+    in particular by removing is_pmu_hybrid - hybrid is now >1 core
+    PMU. Addresses comments by Kan and Namhyung.
+v2. Address Kan's review comments wrt "cycles" -> "cycles:P" and
+    "uncore_pmus" -> "other_pmus".
 
-Typo: anyway?
+Ian Rogers (34):
+  perf cpumap: Add internal nr and cpu accessors
+  perf cpumap: Add equal function
+  libperf cpumap: Add "any CPU"/dummy test function
+  perf pmu: Detect ARM and hybrid PMUs with sysfs
+  perf pmu: Add is_core to pmu
+  perf evsel: Add is_pmu_core inorder to interpret own_cpus
+  perf pmu: Add CPU map for "cpu" PMUs
+  perf evlist: Propagate user CPU maps intersecting core PMU maps
+  perf evlist: Allow has_user_cpus to be set on hybrid
+  perf target: Remove unused hybrid value
+  perf tools: Warn if no user requested CPUs match PMU's CPUs
+  perf evlist: Remove evlist__warn_hybrid_group
+  perf evlist: Remove __evlist__add_default
+  perf evlist: Reduce scope of evlist__has_hybrid
+  perf pmu: Remove perf_pmu__hybrid_mounted
+  perf pmu: Rewrite perf_pmu__has_hybrid to avoid list
+  perf x86: Iterate hybrid PMUs as core PMUs
+  perf topology: Avoid hybrid list for hybrid topology
+  perf evsel: Compute is_hybrid from PMU being core
+  perf header: Avoid hybrid PMU list in write_pmu_caps
+  perf metrics: Remove perf_pmu__is_hybrid use
+  perf stat: Avoid hybrid PMU list
+  perf mem: Avoid hybrid PMU list
+  perf pmu: Remove perf_pmu__hybrid_pmus list
+  perf pmus: Prefer perf_pmu__scan over perf_pmus__for_each_pmu
+  perf x86 mem: minor refactor to is_mem_loads_aux_event
+  perf pmu: Separate pmu and pmus
+  perf pmus: Split pmus list into core and other
+  perf pmus: Allow just core PMU scanning
+  perf pmus: Avoid repeated sysfs scanning
+  perf pmus: Ensure all PMUs are read for find_by_type
+  perf pmus: Add function to return count of core PMUs
+  perf pmus: Remove perf_pmus__has_hybrid
+  perf pmu: Remove is_pmu_hybrid
 
-> +        * There is no definition of what events will count multiple per cycle
-> +        * and hence to which non 1 values of threshold can apply.
-> +        * (CXL 3.0 8.2.7.2.1 Counter Configuration - threshold field definition)
-> +        */
-> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_THRESHOLD_MSK,
-> +                         cxl_pmu_config1_get_threshold(event));
-> +       writeq(cfg, base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
-> +
-> +       local64_set(&hwc->prev_count, 0);
-> +       writeq(0, base + CXL_PMU_COUNTER_REG(hwc->idx));
-> +
-> +       perf_event_update_userpage(event);
-> +}
-> +
+ tools/lib/perf/cpumap.c                 | 100 +++--
+ tools/lib/perf/evlist.c                 |  25 +-
+ tools/lib/perf/include/internal/evsel.h |  15 +-
+ tools/lib/perf/include/perf/cpumap.h    |  12 +
+ tools/perf/arch/arm/util/auxtrace.c     |   7 +-
+ tools/perf/arch/arm/util/cs-etm.c       |   4 +-
+ tools/perf/arch/arm64/util/pmu.c        |   6 +-
+ tools/perf/arch/x86/tests/hybrid.c      |   7 +-
+ tools/perf/arch/x86/util/auxtrace.c     |   5 +-
+ tools/perf/arch/x86/util/evlist.c       |  25 +-
+ tools/perf/arch/x86/util/evsel.c        |  27 +-
+ tools/perf/arch/x86/util/intel-bts.c    |   4 +-
+ tools/perf/arch/x86/util/intel-pt.c     |   4 +-
+ tools/perf/arch/x86/util/mem-events.c   |  17 +-
+ tools/perf/arch/x86/util/perf_regs.c    |  15 +-
+ tools/perf/arch/x86/util/topdown.c      |   5 +-
+ tools/perf/bench/pmu-scan.c             |  60 +--
+ tools/perf/builtin-c2c.c                |   9 +-
+ tools/perf/builtin-list.c               |   4 +-
+ tools/perf/builtin-mem.c                |   9 +-
+ tools/perf/builtin-record.c             |  29 +-
+ tools/perf/builtin-stat.c               |  14 +-
+ tools/perf/builtin-top.c                |  10 +-
+ tools/perf/tests/attr.c                 |  11 +-
+ tools/perf/tests/cpumap.c               |  37 ++
+ tools/perf/tests/event_groups.c         |   7 +-
+ tools/perf/tests/parse-events.c         |  15 +-
+ tools/perf/tests/parse-metric.c         |   9 +-
+ tools/perf/tests/pmu-events.c           |   6 +-
+ tools/perf/tests/switch-tracking.c      |  14 +-
+ tools/perf/tests/topology.c             |  16 +-
+ tools/perf/util/Build                   |   2 -
+ tools/perf/util/cpumap.c                |   4 +-
+ tools/perf/util/cpumap.h                |   4 +-
+ tools/perf/util/cputopo.c               |  12 +-
+ tools/perf/util/env.c                   |   5 +-
+ tools/perf/util/evlist-hybrid.c         | 162 --------
+ tools/perf/util/evlist-hybrid.h         |  15 -
+ tools/perf/util/evlist.c                |  64 +++-
+ tools/perf/util/evlist.h                |   9 +-
+ tools/perf/util/evsel.c                 |  60 +--
+ tools/perf/util/evsel.h                 |   3 -
+ tools/perf/util/header.c                |  27 +-
+ tools/perf/util/mem-events.c            |  25 +-
+ tools/perf/util/metricgroup.c           |   9 +-
+ tools/perf/util/parse-events.c          |  25 +-
+ tools/perf/util/parse-events.y          |   3 +-
+ tools/perf/util/pfm.c                   |   6 +-
+ tools/perf/util/pmu-hybrid.c            |  52 ---
+ tools/perf/util/pmu-hybrid.h            |  32 --
+ tools/perf/util/pmu.c                   | 470 +-----------------------
+ tools/perf/util/pmu.h                   |  25 +-
+ tools/perf/util/pmus.c                  | 465 ++++++++++++++++++++++-
+ tools/perf/util/pmus.h                  |  15 +-
+ tools/perf/util/print-events.c          |  15 +-
+ tools/perf/util/python-ext-sources      |   1 -
+ tools/perf/util/python.c                |  14 +
+ tools/perf/util/stat-display.c          |  19 +-
+ tools/perf/util/target.h                |   1 -
+ 59 files changed, 960 insertions(+), 1112 deletions(-)
+ delete mode 100644 tools/perf/util/evlist-hybrid.c
+ delete mode 100644 tools/perf/util/evlist-hybrid.h
+ delete mode 100644 tools/perf/util/pmu-hybrid.c
+ delete mode 100644 tools/perf/util/pmu-hybrid.h
 
-[SNIP]
-> +
-> +static int cxl_pmu_online_cpu(unsigned int cpu, struct hlist_node *node)
-> +{
-> +       struct cxl_pmu_info *info = hlist_entry_safe(node, struct cxl_pmu_info, node);
-> +
-> +       if (info->on_cpu != -1)
-> +               return 0;
-> +
-> +       info->on_cpu = cpu;
-> +       /*
-> +        * CPU HP lock is held so we should be guaranteed that the CPU hasn't yet
-> +        * gone away again.
-> +        */
-> +       WARN_ON(irq_set_affinity(info->irq, cpumask_of(cpu)));
-> +
-> +       return 0;
-> +}
-> +
-> +static int cxl_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
-> +{
-> +       struct cxl_pmu_info *info = hlist_entry_safe(node, struct cxl_pmu_info, node);
-> +       unsigned int target;
-> +
-> +       if (info->on_cpu != cpu)
-> +               return 0;
-> +
-> +       info->on_cpu = -1;
-> +       target = cpumask_any_but(cpu_online_mask, cpu);
-> +       if (target >= nr_cpu_ids) {
-> +               dev_err(info->pmu.dev, "Unable to find a suitable CPU\n");
-> +               return 0;
-> +       }
-> +
-> +       perf_pmu_migrate_context(&info->pmu, cpu, target);
-> +       info->on_cpu = target;
-> +       /*
-> +        * CPU HP lock is held so we should be guaranteed that this CPU hasn't yet
-> +        * gone away.
-> +        */
-> +       WARN_ON(irq_set_affinity(info->irq, cpumask_of(target)));
-> +
-> +       return 0;
-> +}
+-- 
+2.41.0.rc0.172.g3f132b7071-goog
 
-IIUC a CXL PMU hardware (say cxl_pmu_mem0.0) is shared across
-all CPUs and it would return the same value when read from any CPU,
-right?
-
-Thanks,
-Namhyung
-
-
-> +
-> +static __init int cxl_pmu_init(void)
-> +{
-> +       int rc;
-> +
-> +       rc = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-> +                                    "AP_PERF_CXL_PMU_ONLINE",
-> +                                    cxl_pmu_online_cpu, cxl_pmu_offline_cpu);
-> +       if (rc < 0)
-> +               return rc;
-> +       cxl_pmu_cpuhp_state_num = rc;
-> +
-> +       rc = cxl_driver_register(&cxl_pmu_driver);
-> +       if (rc)
-> +               cpuhp_remove_multi_state(cxl_pmu_cpuhp_state_num);
-> +
-> +       return rc;
-> +}
-> +
-> +static __exit void cxl_pmu_exit(void)
-> +{
-> +       cxl_driver_unregister(&cxl_pmu_driver);
-> +       cpuhp_remove_multi_state(cxl_pmu_cpuhp_state_num);
-> +}
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_IMPORT_NS(CXL);
-> +module_init(cxl_pmu_init);
-> +module_exit(cxl_pmu_exit);
-> +MODULE_ALIAS_CXL(CXL_DEVICE_PMU);
-> --
-> 2.39.2
->
