@@ -2,125 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FD3C77B73
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 01:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C191C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 01:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbjE0BnC (ORCPT
+        id S238040AbjE0Bpn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 21:43:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35964 "EHLO
+        Fri, 26 May 2023 21:45:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237999AbjE0Bmy (ORCPT
+        with ESMTP id S243481AbjE0Bpi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 21:42:54 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FC6D114
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 18:42:34 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-64d2ca9ef0cso1124086b3a.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 18:42:34 -0700 (PDT)
+        Fri, 26 May 2023 21:45:38 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2511EE6B
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 18:45:06 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-30ac4e7f37bso793363f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 18:45:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685151754; x=1687743754;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JxNnTqvzGhDuJSCmbsa+rtoHfqlXA4TJSz9TjwxMeho=;
-        b=ShJfBqA9ft7ncDs0dOFd2RPnmhJyBiEjNx2LZ1p8J3ek51VUldJqNKK6EfAx/6LMhv
-         I51cZ9p9OhuJ3HYRQJPDRwiiLTttUI75WZhav7nrw8b5x+FhEcc5+eyfOPfL9y63jllh
-         02RO3yac0QfbIeTbVj1CHjUWHigjgjdAjKjnQ=
+        d=linaro.org; s=google; t=1685151846; x=1687743846;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ri/mthOsR+FC7s1/H/J1smTMHriaL5bub6hFt3L7yNE=;
+        b=qzKXlM7bDcnP8FYpH+hgQu6YAHWqCXYjZ7LEN9tFjXPIEEV93/kCYNn0wSyxxTBiLw
+         u7h18hNVtd2vAsOW4BtLDbf+lTr61rtgu0u4DSwqFDYJHfUBLa81hwmKL4a4M3ydMm76
+         0TzNtGUnkaGHQbdnqyVotJXZqlwNYXItrBG66FpKzi6/JF9Bm8NN4Zeqjskvbsmi/oGk
+         so4NatIaAGbiTwNgDy1E+AHp2yeUfrlO6j0dXDxehEtnJL8gD5vaj0BlaICMDm3TiZXR
+         VgU7AKCCEugx6pd2OnJc3ckNZdNI/UFOvpML77xO+p06+Wn92ORzX1FZ5YH+twxN/NUd
+         Xwvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685151754; x=1687743754;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JxNnTqvzGhDuJSCmbsa+rtoHfqlXA4TJSz9TjwxMeho=;
-        b=OO7qphWV2PVfr5/YDB/02EjOWQv/WAGJ26pfetuoPOpSgXLsj1Rakx9LEfAK6HiK+l
-         bs9xIkH7JoCTlJtjMkrj7VUc+i81QqQAk4epI6nR67ShJEdKD9kD5GsnazOkv3+pD5W2
-         52w/NsIUGMO3fSDUwKxc4dtGdED1wu/wgpD+d0bIstRPxJWZh4ew5tucub4cB6chGCoi
-         hkF6A5yGvPBRxs2wTXF5MEVgaBWSjo8A3LawbZ0uXb2jFhwdPydevMj0ibQIl30zKACw
-         vsa9hWpZgFOOmiOIreFTQe/2x4gKge98mHauNTUc1DHUDpjd0+kJb/Hi3i3N7C44fa92
-         CkJg==
-X-Gm-Message-State: AC+VfDyYVZRE0Nsw3XZzpjtLDFiBOPZe1PFOtwZFAABhQkYOkhxzzDBL
-        c8S++Z3itLX8A57kaMNIvbkmOw==
-X-Google-Smtp-Source: ACHHUZ44oKfcxHCQB35NN8gNpgRMYCCD+rINnjdYYnIa0h9+Lp5g65zql8hV6FRXqlU+zWxTf6WHVg==
-X-Received: by 2002:a05:6a00:3911:b0:63b:7fc0:a4af with SMTP id fh17-20020a056a00391100b0063b7fc0a4afmr5852154pfb.26.1685151753915;
-        Fri, 26 May 2023 18:42:33 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:9d:2:4015:7255:c79a:26d7])
-        by smtp.gmail.com with ESMTPSA id x25-20020aa79199000000b0063b8ddf77f7sm3202440pfa.211.2023.05.26.18.42.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 May 2023 18:42:33 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH 10/10] watchdog/hardlockup: Rename HAVE_HARDLOCKUP_DETECTOR_NON_ARCH to ..._PERF_OR_BUDDY
-Date:   Fri, 26 May 2023 18:41:40 -0700
-Message-ID: <20230526184139.10.I821fe7609e57608913fe05abd8f35b343e7a9aae@changeid>
-X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-In-Reply-To: <20230527014153.2793931-1-dianders@chromium.org>
-References: <20230527014153.2793931-1-dianders@chromium.org>
+        d=1e100.net; s=20221208; t=1685151846; x=1687743846;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ri/mthOsR+FC7s1/H/J1smTMHriaL5bub6hFt3L7yNE=;
+        b=A90LerQgsr22Mww6pyoASHmBlluehtSS2FAYS6znJkq6oIiaTNH9Q1J8dhA1nQ5yhf
+         /mjKluSHDJPZdfhA4JrstAc1Rufx/feYemB3bxLFpOqA9FWreRZpf78ShPT3phJ5fziT
+         M65dcW7uydLt1N6m3tjnks840ghS6Q2yKdjm3+9yaawWXrjWRsATln2wwuh1wRWqSMjQ
+         NZugSXqY9EwxaGJHdF62kExHtRXMzcbH0y0g+6PyMsVky0Y2elZ1Syk15oPPZqM3548p
+         N3rGSj1qFcetdC9O3Rr4MQLvp1LYBQ55QDRwse7auOxrUKVIrxe2kB7udI2jVT9aOJnk
+         qtVw==
+X-Gm-Message-State: AC+VfDxXUPPLiH9/CeHIi6xyRe0YWSvqbokNHlW0JUkTlQlNS/ZMT1Hw
+        RBvJ4ojJ69UsPIoF2Vw5Vf2wuo0QvTPwpw/0Wwsu2w==
+X-Google-Smtp-Source: ACHHUZ6ZawPDKx7a8SGXdmOLKwXFTngn5C4MeWa2OyPUHjgySBUOAzaZd1fyftY3wtOoH7ZLX6RjcGxIdzOpHyG1wN4=
+X-Received: by 2002:adf:e94f:0:b0:2ef:ba4f:c821 with SMTP id
+ m15-20020adfe94f000000b002efba4fc821mr2588316wrn.36.1685151846445; Fri, 26
+ May 2023 18:44:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1684837327-18203-1-git-send-email-yangtiezhu@loongson.cn>
+ <1684837327-18203-2-git-send-email-yangtiezhu@loongson.cn>
+ <CAJ1xhMUZoO66b=LNVnjBN1GbHvXdo2b2y+YeONC36Ok=Xn5XFg@mail.gmail.com>
+ <49e98308-ab8d-5811-66a8-9e17f22bb8c4@loongson.cn> <CAJ1xhMV=WaYbdGpiRedLUGnYp8JLzcP81Ksw1k1610xeHCiGBA@mail.gmail.com>
+ <2932e212-ba17-090b-761b-b18e8f9c33e8@loongson.cn>
+In-Reply-To: <2932e212-ba17-090b-761b-b18e8f9c33e8@loongson.cn>
+From:   Leo Yan <leo.yan@linaro.org>
+Date:   Sat, 27 May 2023 09:43:55 +0800
+Message-ID: <CALZQ+UN0y29mJUypfSUHCLkMHzBVQTVU0i95MtHG3U+VzS+5Og@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf arm64: Handle __NR3264_ prefixed syscall number
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Hans-Peter Nilsson <hp@axis.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-HAVE_HARDLOCKUP_DETECTOR_NON_ARCH is a mouthful and
-confusing. HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY is even more of a
-mouthful, but probably less confusing. Rename the Kconfig names.
+On Wed, May 24, 2023 at 03:18:28PM +0800, Tiezhu Yang wrote:
+> On 05/24/2023 02:43 PM, Alexander Kapshuk wrote:
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+[...]
 
- lib/Kconfig.debug | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> Yes, there are only 2 patterns such as "__NR_" and "__NR3264_",
+> I confirmed that in include/uapi/asm-generic/unistd.h.
+>
+> > routines, they may be combined into a single sub routine like so:
+> > awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
+> >         sub("^#define __NR(3264)?_", "")
+> >         print | "sort -k2 -n"
+> > }'
 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index eb1edd5905bc..b9e162698a82 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1058,7 +1058,7 @@ config HARDLOCKUP_DETECTOR_BUDDY
- # needs SMP). In either case, using the "non-arch" code conflicts with
- # the NMI watchdog code (which is sometimes used directly and sometimes used
- # by the arch-provided hardlockup detector).
--config HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
-+config HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
- 	bool
- 	depends on (HAVE_HARDLOCKUP_DETECTOR_PERF || SMP) && !HAVE_NMI_WATCHDOG
- 	default y
-@@ -1077,10 +1077,10 @@ config HARDLOCKUP_DETECTOR_PREFER_BUDDY
- 	  an arch-specific hardlockup detector or if resources needed
- 	  for the hardlockup detector are better used for other things.
- 
--# This will select the appropriate non-arch hardlockdup detector
--config HARDLOCKUP_DETECTOR_NON_ARCH
-+# This will select the appropriate non-arch hardlockup detector
-+config HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
- 	bool
--	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
-+	depends on HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
- 	select HARDLOCKUP_DETECTOR_BUDDY if !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_PREFER_BUDDY
- 	select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY
- 
-@@ -1098,9 +1098,9 @@ config HARDLOCKUP_CHECK_TIMESTAMP
- config HARDLOCKUP_DETECTOR
- 	bool "Detect Hard Lockups"
- 	depends on DEBUG_KERNEL && !S390
--	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH || HAVE_HARDLOCKUP_DETECTOR_ARCH
-+	depends on HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY || HAVE_HARDLOCKUP_DETECTOR_ARCH
- 	select LOCKUP_DETECTOR
--	select HARDLOCKUP_DETECTOR_NON_ARCH if HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
-+	select HARDLOCKUP_DETECTOR_PERF_OR_BUDDY if HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
- 
- 	help
- 	  Say Y here to enable the kernel to act as a watchdog to detect
--- 
-2.41.0.rc0.172.g3f132b7071-goog
+Thanks for improving this, Tiezhu and Alexander.
 
+The format between '[46]' and '[__NR3264_ftruncate]' has changed back
+and forth for several times due to various reasons ;)
+
+Above change is a good improvement for me and I tested at my side
+with below commands:
+
+  $ aarch64-linux-gnu-gcc -E -dM -x c -I tools/include/uapi/ \
+    tools/include/uapi/asm-generic/unistd.h \
+    | awk '$2 ~ "__NR" && $3 !~ "__NR3264_" { sub("^#define
+__NR(3264)?_", ""); print | "sort -k2 -n"}'
+
+The result looks good to me.  You are welcome to add my review tag:
+
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
