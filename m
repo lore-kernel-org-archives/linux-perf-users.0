@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 281BFC77B7C
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4331AC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:22:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229762AbjE0HWj (ORCPT
+        id S231508AbjE0HWp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 03:22:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55636 "EHLO
+        Sat, 27 May 2023 03:22:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230162AbjE0HWh (ORCPT
+        with ESMTP id S231228AbjE0HWl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 03:22:37 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A639134
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:35 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5659c7dad06so36675377b3.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:35 -0700 (PDT)
+        Sat, 27 May 2023 03:22:41 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4038E135
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:40 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-bad475920a8so1165529276.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685172154; x=1687764154;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NKwlyXDvi4TAib/MQHOSHwUj1vOGQp2Gy0+IiR3d+yk=;
-        b=3wumILkNEhrY/9Q+oY5UUhrbJtDs5zxOJ1sDZiXZbiYFgYU356YvQ+XjLxrQeqX7Uh
-         f3/GBV0a+AXlicQodNnx9QJA+kIsthYO/x7ZJlT+A0X4ly49zE6CvjxL4rb/B4vaL9G7
-         LuZhZmgIKNzJ+cTooHtX7Emqz9cXm6x/tmQc6uM++7t9TRTwnehAYSjMhz0XPQ32+YJc
-         4zG++FGJzmcx0FQ7Aq1HaKdrs+l6Ff/5qyMUo5oAcXtcQL4LmT5qbHMhZ3E2qy6Hj9Ar
-         nUWEillBQssWjibj4y2LWlpPMHVGkyJiaH/9vRnk6sTlQW6XOvzx5K2zzGjRISHVGWMx
-         cjcQ==
+        d=google.com; s=20221208; t=1685172159; x=1687764159;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h/IfzR0PqTlQjshfXa1Gk+Wb9K4Bgq3zLGbFa1hs2Y0=;
+        b=uv/J/j690VyP3Vt8AeocE8BDGK93yzo4ik+vLkbLL6lR94OjspqqjeFZ5S+D5Jxr9A
+         DNQYqLa+7rTD3UJxJFn/LfenDBwFoHgd91XRaJXPShrvCgEWCoxD/V+KBS5+a8rdK5pY
+         yi55i5UjKsWgbkbfV4Ru6wvUjiQC3wOy/vHfONVDQajAJW4Rj1JgPK2lCp0H8k9SatAY
+         AXBaMn2h+tqFDCzM4Xn5wsDqYTLCkGr8UstLqHZZI+4UKhmUo3DR2DQQ34PVba5ZTi7q
+         vVvCk1gzwNcJRRTS8aPGVQqksnFjP9/Byl4R0ppWxr+VG/vDm/jF52VrtIf1JNiCSszG
+         P4pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685172154; x=1687764154;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NKwlyXDvi4TAib/MQHOSHwUj1vOGQp2Gy0+IiR3d+yk=;
-        b=iRtTMX32bry2NJarW4zZ+mozqUkVFzn/2Wj1tQlh5cApvV7KuqJ16I84L7h6MEeZKR
-         E8YmucVfDBQsrduCGaBsf1V9Y7zkNgu/prdUHp9eJP3jw0oTU9RKH4VILTlemUlGqYlo
-         7KigRtyFVzCosYZWzcZYbJeDLIUnUfQvTDCbqM0qwsgn0o1+3+dVZvyHvOC5oXJGqQU1
-         ELrMtQ5JwlYpRUFggM5isRNBUefqPgtbgzXBdCtCm28IGrrMdcPG8PRQcHV9yPox76Fd
-         5SPIO1llIKw4uymgneuSH0Dlyl7BLURobi9NwO/6QIgM5NKqiGfsuSycJqlRNAIF3QS9
-         tFQw==
-X-Gm-Message-State: AC+VfDzyjYhH1Y+VxMenItMIBEvQBJudea19Ol0iwBJEqzbAvUF+rmvB
-        5Yd6TEkWyyslEVnGyIWzTrMg002XS0uC
-X-Google-Smtp-Source: ACHHUZ5nn19zZfoX2OmJ785N7mYI0VfRvjROK/lia39ta2xMAHyKZpNv5WUFuWlL0Uc0XhHztbUVznHkidoO
+        d=1e100.net; s=20221208; t=1685172159; x=1687764159;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h/IfzR0PqTlQjshfXa1Gk+Wb9K4Bgq3zLGbFa1hs2Y0=;
+        b=mCGpMZYiaYyvhf40jRQwTF/cy6P0B34stf/EaJKa338dJhk45MWEAALBz+zI0vm9zt
+         K2PUNtqYY4iip4rJRJAdq6zV9qR+660MwBLbnzrhH+Ly9WptZLs2p0ypmpZYKEixHnG6
+         mLgBTSnBBg1Tlb+pQj50kSdFoY4jZTHbOdlawfpov31PEbHuy/TyFDtr2VodyhsDedN/
+         iNSflYK4ntMv8jvsfui0qE10RLF/+875Dtst1sswl8qgabb+7Bsp/soCPRYXpK6mG8ro
+         SVrjIokTOOGcMoPz1IdwqiW5fM7byOX5t4m2Eoxfvno3tRDvkeyd+uGgAB9CtJiVW2Cv
+         2B6w==
+X-Gm-Message-State: AC+VfDxTx+sXipq4WEtvmx9m3OSROOY/EfxeAUpm9+AGEFy5Tg4bbz2Q
+        tBht2ObS5yAbhuKsE3CA8myilsq21dEl
+X-Google-Smtp-Source: ACHHUZ5r1DxtGLNUWNB+GABolc7sWBN1A8ru+XnUY/niymG3liCjstTV/fgQ0owgDcu6AkMXuBVlb33Sl8Lq
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a81:ef02:0:b0:565:bb48:2b57 with SMTP id
- o2-20020a81ef02000000b00565bb482b57mr2044422ywm.0.1685172154287; Sat, 27 May
- 2023 00:22:34 -0700 (PDT)
-Date:   Sat, 27 May 2023 00:21:37 -0700
+ (user=irogers job=sendgmr) by 2002:a25:b31c:0:b0:b94:6989:7fa6 with SMTP id
+ l28-20020a25b31c000000b00b9469897fa6mr841825ybj.4.1685172159462; Sat, 27 May
+ 2023 00:22:39 -0700 (PDT)
+Date:   Sat, 27 May 2023 00:21:39 -0700
 In-Reply-To: <20230527072210.2900565-1-irogers@google.com>
-Message-Id: <20230527072210.2900565-2-irogers@google.com>
+Message-Id: <20230527072210.2900565-4-irogers@google.com>
 Mime-Version: 1.0
 References: <20230527072210.2900565-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v5 01/34] perf cpumap: Add internal nr and cpu accessors
+Subject: [PATCH v5 03/34] libperf cpumap: Add "any CPU"/dummy test function
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -88,198 +88,76 @@ To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-These accessors assume the map is non-null. Rewrite functions to use
-rather than direct accesses. This also fixes a build regression for
-REFCNT_CHECKING in the intersect function.
+It is common in the code currently to test a map for "empty" when in
+fact the "any CPU"/dummy value of -1 is being sought. Add a new
+function to enable this and document the behavior of two other
+functions. The term "any CPU" comes from perf_event_open, where the
+value is consumed, but it is more typical in the code to see this
+value/map referred to as the dummy value. This could be misleading due
+to the dummy event and also dummy not being intention revealing, so it
+is hoped to migrate the code to referring to this as "any CPU".
 
-Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/lib/perf/cpumap.c | 74 +++++++++++++++++++++++++----------------
- 1 file changed, 45 insertions(+), 29 deletions(-)
+ tools/lib/perf/cpumap.c              |  5 +++++
+ tools/lib/perf/include/perf/cpumap.h | 10 ++++++++++
+ 2 files changed, 15 insertions(+)
 
 diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index d4f3a1a12522..ec3f4ac8b1e2 100644
+index 98d7cb24a158..2a5a29217374 100644
 --- a/tools/lib/perf/cpumap.c
 +++ b/tools/lib/perf/cpumap.c
-@@ -99,6 +99,11 @@ static int cmp_cpu(const void *a, const void *b)
- 	return cpu_a->cpu - cpu_b->cpu;
+@@ -356,6 +356,11 @@ bool perf_cpu_map__equal(const struct perf_cpu_map *lhs, const struct perf_cpu_m
+ 	return true;
  }
  
-+static struct perf_cpu __perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
++bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map)
 +{
-+	return RC_CHK_ACCESS(cpus)->map[idx];
++	return map && __perf_cpu_map__cpu(map, 0).cpu == -1;
 +}
 +
- static struct perf_cpu_map *cpu_map__trim_new(int nr_cpus, const struct perf_cpu *tmp_cpus)
- {
- 	size_t payload_size = nr_cpus * sizeof(struct perf_cpu);
-@@ -111,8 +116,12 @@ static struct perf_cpu_map *cpu_map__trim_new(int nr_cpus, const struct perf_cpu
- 		/* Remove dups */
- 		j = 0;
- 		for (i = 0; i < nr_cpus; i++) {
--			if (i == 0 || RC_CHK_ACCESS(cpus)->map[i].cpu != RC_CHK_ACCESS(cpus)->map[i - 1].cpu)
--				RC_CHK_ACCESS(cpus)->map[j++].cpu = RC_CHK_ACCESS(cpus)->map[i].cpu;
-+			if (i == 0 ||
-+			    __perf_cpu_map__cpu(cpus, i).cpu !=
-+			    __perf_cpu_map__cpu(cpus, i - 1).cpu) {
-+				RC_CHK_ACCESS(cpus)->map[j++].cpu =
-+					__perf_cpu_map__cpu(cpus, i).cpu;
-+			}
- 		}
- 		perf_cpu_map__set_nr(cpus, j);
- 		assert(j <= nr_cpus);
-@@ -269,26 +278,31 @@ struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list)
- 	return cpus;
- }
- 
-+static int __perf_cpu_map__nr(const struct perf_cpu_map *cpus)
-+{
-+	return RC_CHK_ACCESS(cpus)->nr;
-+}
-+
- struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
+ struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
  {
  	struct perf_cpu result = {
- 		.cpu = -1
- 	};
+diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
+index cedfc26d944e..e38d859a384d 100644
+--- a/tools/lib/perf/include/perf/cpumap.h
++++ b/tools/lib/perf/include/perf/cpumap.h
+@@ -18,6 +18,9 @@ struct perf_cache {
  
--	if (cpus && idx < RC_CHK_ACCESS(cpus)->nr)
--		return RC_CHK_ACCESS(cpus)->map[idx];
-+	if (cpus && idx < __perf_cpu_map__nr(cpus))
-+		return __perf_cpu_map__cpu(cpus, idx);
+ struct perf_cpu_map;
  
- 	return result;
- }
++/**
++ * perf_cpu_map__dummy_new - a map with a singular "any CPU"/dummy -1 value.
++ */
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__default_new(void);
+ LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
+@@ -30,11 +33,18 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *or
+ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
+ LIBPERF_API struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
+ LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
++/**
++ * perf_cpu_map__empty - is map either empty or the "any CPU"/dummy value.
++ */
+ LIBPERF_API bool perf_cpu_map__empty(const struct perf_cpu_map *map);
+ LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map);
+ LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, struct perf_cpu cpu);
+ LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
+ 				     const struct perf_cpu_map *rhs);
++/**
++ * perf_cpu_map__any_cpu - Does the map contain the "any CPU"/dummy -1 value?
++ */
++LIBPERF_API bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map);
  
- int perf_cpu_map__nr(const struct perf_cpu_map *cpus)
- {
--	return cpus ? RC_CHK_ACCESS(cpus)->nr : 1;
-+	return cpus ? __perf_cpu_map__nr(cpus) : 1;
- }
- 
- bool perf_cpu_map__empty(const struct perf_cpu_map *map)
- {
--	return map ? RC_CHK_ACCESS(map)->map[0].cpu == -1 : true;
-+	return map ? __perf_cpu_map__cpu(map, 0).cpu == -1 : true;
- }
- 
- int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
-@@ -299,10 +313,10 @@ int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu)
- 		return -1;
- 
- 	low = 0;
--	high = RC_CHK_ACCESS(cpus)->nr;
-+	high = __perf_cpu_map__nr(cpus);
- 	while (low < high) {
- 		int idx = (low + high) / 2;
--		struct perf_cpu cpu_at_idx = RC_CHK_ACCESS(cpus)->map[idx];
-+		struct perf_cpu cpu_at_idx = __perf_cpu_map__cpu(cpus, idx);
- 
- 		if (cpu_at_idx.cpu == cpu.cpu)
- 			return idx;
-@@ -328,7 +342,9 @@ struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
- 	};
- 
- 	// cpu_map__trim_new() qsort()s it, cpu_map__default_new() sorts it as well.
--	return RC_CHK_ACCESS(map)->nr > 0 ? RC_CHK_ACCESS(map)->map[RC_CHK_ACCESS(map)->nr - 1] : result;
-+	return __perf_cpu_map__nr(map) > 0
-+		? __perf_cpu_map__cpu(map, __perf_cpu_map__nr(map) - 1)
-+		: result;
- }
- 
- /** Is 'b' a subset of 'a'. */
-@@ -336,15 +352,15 @@ bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu
- {
- 	if (a == b || !b)
- 		return true;
--	if (!a || RC_CHK_ACCESS(b)->nr > RC_CHK_ACCESS(a)->nr)
-+	if (!a || __perf_cpu_map__nr(b) > __perf_cpu_map__nr(a))
- 		return false;
- 
--	for (int i = 0, j = 0; i < RC_CHK_ACCESS(a)->nr; i++) {
--		if (RC_CHK_ACCESS(a)->map[i].cpu > RC_CHK_ACCESS(b)->map[j].cpu)
-+	for (int i = 0, j = 0; i < __perf_cpu_map__nr(a); i++) {
-+		if (__perf_cpu_map__cpu(a, i).cpu > __perf_cpu_map__cpu(b, j).cpu)
- 			return false;
--		if (RC_CHK_ACCESS(a)->map[i].cpu == RC_CHK_ACCESS(b)->map[j].cpu) {
-+		if (__perf_cpu_map__cpu(a, i).cpu == __perf_cpu_map__cpu(b, j).cpu) {
- 			j++;
--			if (j == RC_CHK_ACCESS(b)->nr)
-+			if (j == __perf_cpu_map__nr(b))
- 				return true;
- 		}
- 	}
-@@ -374,27 +390,27 @@ struct perf_cpu_map *perf_cpu_map__merge(struct perf_cpu_map *orig,
- 		return perf_cpu_map__get(other);
- 	}
- 
--	tmp_len = RC_CHK_ACCESS(orig)->nr + RC_CHK_ACCESS(other)->nr;
-+	tmp_len = __perf_cpu_map__nr(orig) + __perf_cpu_map__nr(other);
- 	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
- 	if (!tmp_cpus)
- 		return NULL;
- 
- 	/* Standard merge algorithm from wikipedia */
- 	i = j = k = 0;
--	while (i < RC_CHK_ACCESS(orig)->nr && j < RC_CHK_ACCESS(other)->nr) {
--		if (RC_CHK_ACCESS(orig)->map[i].cpu <= RC_CHK_ACCESS(other)->map[j].cpu) {
--			if (RC_CHK_ACCESS(orig)->map[i].cpu == RC_CHK_ACCESS(other)->map[j].cpu)
-+	while (i < __perf_cpu_map__nr(orig) && j < __perf_cpu_map__nr(other)) {
-+		if (__perf_cpu_map__cpu(orig, i).cpu <= __perf_cpu_map__cpu(other, j).cpu) {
-+			if (__perf_cpu_map__cpu(orig, i).cpu == __perf_cpu_map__cpu(other, j).cpu)
- 				j++;
--			tmp_cpus[k++] = RC_CHK_ACCESS(orig)->map[i++];
-+			tmp_cpus[k++] = __perf_cpu_map__cpu(orig, i++);
- 		} else
--			tmp_cpus[k++] = RC_CHK_ACCESS(other)->map[j++];
-+			tmp_cpus[k++] = __perf_cpu_map__cpu(other, j++);
- 	}
- 
--	while (i < RC_CHK_ACCESS(orig)->nr)
--		tmp_cpus[k++] = RC_CHK_ACCESS(orig)->map[i++];
-+	while (i < __perf_cpu_map__nr(orig))
-+		tmp_cpus[k++] = __perf_cpu_map__cpu(orig, i++);
- 
--	while (j < RC_CHK_ACCESS(other)->nr)
--		tmp_cpus[k++] = RC_CHK_ACCESS(other)->map[j++];
-+	while (j < __perf_cpu_map__nr(other))
-+		tmp_cpus[k++] = __perf_cpu_map__cpu(other, j++);
- 	assert(k <= tmp_len);
- 
- 	merged = cpu_map__trim_new(k, tmp_cpus);
-@@ -416,20 +432,20 @@ struct perf_cpu_map *perf_cpu_map__intersect(struct perf_cpu_map *orig,
- 	if (perf_cpu_map__is_subset(orig, other))
- 		return perf_cpu_map__get(other);
- 
--	tmp_len = max(orig->nr, other->nr);
-+	tmp_len = max(__perf_cpu_map__nr(orig), __perf_cpu_map__nr(other));
- 	tmp_cpus = malloc(tmp_len * sizeof(struct perf_cpu));
- 	if (!tmp_cpus)
- 		return NULL;
- 
- 	i = j = k = 0;
--	while (i < orig->nr && j < other->nr) {
--		if (orig->map[i].cpu < other->map[j].cpu)
-+	while (i < __perf_cpu_map__nr(orig) && j < __perf_cpu_map__nr(other)) {
-+		if (__perf_cpu_map__cpu(orig, i).cpu < __perf_cpu_map__cpu(other, j).cpu)
- 			i++;
--		else if (orig->map[i].cpu > other->map[j].cpu)
-+		else if (__perf_cpu_map__cpu(orig, i).cpu > __perf_cpu_map__cpu(other, j).cpu)
- 			j++;
- 		else {
- 			j++;
--			tmp_cpus[k++] = orig->map[i++];
-+			tmp_cpus[k++] = __perf_cpu_map__cpu(orig, i++);
- 		}
- 	}
- 	if (k)
+ #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)		\
+ 	for ((idx) = 0, (cpu) = perf_cpu_map__cpu(cpus, idx);	\
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
