@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BACA6C77B73
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 08:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 563EDC77B73
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 09:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230486AbjE0IpV (ORCPT
+        id S231586AbjE0JGr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 04:45:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55196 "EHLO
+        Sat, 27 May 2023 05:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230348AbjE0IpT (ORCPT
+        with ESMTP id S229717AbjE0JGq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 04:45:19 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D13EEA
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 01:45:18 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1b026657a6fso3287425ad.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 01:45:18 -0700 (PDT)
+        Sat, 27 May 2023 05:06:46 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E7D124
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 02:06:45 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-64d3578c25bso2103806b3a.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 02:06:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685177117; x=1687769117;
+        d=linaro.org; s=google; t=1685178405; x=1687770405;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SxfTUXbnWmBRUc886FyVC6jPZyTD4gw8D2EeLiltj74=;
-        b=rJJNGoleoEj4PF5ihl8SaikjG59QvyBzhIRHpmVQWAhl9tdzQh8lMm0wkZBsd48a8P
-         vgewPCcX5+b4QgBKeW8i9ke/qfOqg54NIdcCp0zNjLk0KUgmuy54Q8WLzwjDQwK/vygd
-         nZswWRguk6aDwUg/MvvLw5/vmIMVmqDMFM17XVoOoHyAoSvXlqMQaXm7KbwhAIZ0N9el
-         TwZpkOXbljCc7meg5ZBP44Y7wP5bDJFs/8XyQFJez2i8gAODGce8wQnN+QUswlZKoJ/e
-         xsMpkidkH0MupFHE1bfsfFTB//GcLmhN+CU/t5DGjbr5NCMEAuRS6XIPNNLi2NUdQ6Zr
-         Oqfg==
+        bh=Th/2CdkYSffxqn+a5kfATTdZzNBhiqjv8/1oEFRsaQ8=;
+        b=swpKci/XFYc82knSogXS3iRF6oaRbVxcKOC3km53iIFTc4IUoWmJLA5Ym/gTJVjirQ
+         IDmaUDmh3mK9Wgg4abfbgEMHihj1W3Kpb+XX16Supshd9Y1UFFRZapWsGbJ4eWUIKNnP
+         vXKFUU5W+Tl01eJeicZII5BFwIAhq2c5wgctdvDywSvxO519UV5GeX/wcfKFeD/ylHTp
+         97iv6To8vC0uc9iuhm1vXbUh3GrikszWBxu7CfJ3fi/ON5ktra8+b0GgLomyoGJPL/rY
+         HKICfPdWZxQj6nKtsquTYDZLzpFPo5XqhtKGwq+5VR944qkR2hI6ygkiygv2icjPnq6P
+         EULQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685177117; x=1687769117;
+        d=1e100.net; s=20221208; t=1685178405; x=1687770405;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SxfTUXbnWmBRUc886FyVC6jPZyTD4gw8D2EeLiltj74=;
-        b=UasgF2t5E9ZwD1LU37GqcE4R0YjQkZjKyrsxBVbjQRjrSy1/Ri9QCjamoog368IdY+
-         I7ktPTh9Wdc0EVtlFDQxKutqkGCcpuDIoZ4FwJ3KRBxVr3S7cO8KZgUWeSd0OMgD4mKC
-         YYYTN97g9c1EamXMTZF1sSBf/wyLr0MzsX2/S7ISi4I/f1/wPXx5UsDQyQqVIb+suLK4
-         c4PTph1RHyY272KFCpUaev/8EefbWbmG29Lk1E1WcIebCra0m5/bFp7itz/u0qUz+S9o
-         4QZ/p/V5hWESqGDKTQ9sGZZqpPZFbckhd+HNnSH+kx0icmH/T/s6ZfeE03PRLAG0zlea
-         aGfg==
-X-Gm-Message-State: AC+VfDxDVBmkp/uwO9Jj3c6gyCWDOYZki/bkzTzQToBDHBVA5eJdYzf+
-        AXQqyBQhf1Z++mBm+CINoAOebw==
-X-Google-Smtp-Source: ACHHUZ7PpiRCFC4cLVG7ZqBupOFxy0aKx+ktwgz6NXV5xlsp7a59vvro9tDIzg9pfAn04G0vjwNLFg==
-X-Received: by 2002:a17:902:f68e:b0:1b0:2658:db20 with SMTP id l14-20020a170902f68e00b001b02658db20mr1996760plg.53.1685177117367;
-        Sat, 27 May 2023 01:45:17 -0700 (PDT)
+        bh=Th/2CdkYSffxqn+a5kfATTdZzNBhiqjv8/1oEFRsaQ8=;
+        b=H5wixmOpgaVwVZ/eMzG8DbDFcZp8meLW05jCghWAgEgXP246SOSkXUHGgOsfFr3BTc
+         XzHz5iONkKMKoJNr2iQhtfz1mJcdlL/ZSXXn16f7tuNofzj2YZQnXPmOGFlPD1RXks1n
+         G13mUi78uqastcEwVZ3GzhS59iOgKraxP9fNBtsy1EyyIyaK/zU/q3+uvsKYbEV9H+QD
+         foBya7fn8LC6/uTr2JygZmmcpziPYC882B3nb0BhGD1clw8ugNJcb6JdRcyI0dWWhJtx
+         qJOE31CJdZI8dxux6BxK1UugQ/VF71b6I9d5rUgPvcuzrSTyKm4rq8OluxxCVO26TEYa
+         mncQ==
+X-Gm-Message-State: AC+VfDzbIk97RA7F4nb7KkHQJlgEy/g4Pf45Hy6b0tE/B9r/hYM2vrVA
+        WiVp7GOsUweOnbeVN6mw1TUJug==
+X-Google-Smtp-Source: ACHHUZ63xJO8hiOlOALtVX+qtnyTR/xYlZeXvYN1YQQY4IJsTzbGd/KqW7Hj7EUIzCZiXPdl/kM2Jg==
+X-Received: by 2002:a05:6a00:891:b0:643:d40c:7db1 with SMTP id q17-20020a056a00089100b00643d40c7db1mr6866644pfj.3.1685178404926;
+        Sat, 27 May 2023 02:06:44 -0700 (PDT)
 Received: from leoy-yangtze.lan ([107.151.177.126])
-        by smtp.gmail.com with ESMTPSA id a2-20020a170902ecc200b001adfe981c77sm4432877plh.285.2023.05.27.01.45.10
+        by smtp.gmail.com with ESMTPSA id j12-20020aa78dcc000000b0064928cb5f03sm3797231pfr.69.2023.05.27.02.06.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 May 2023 01:45:16 -0700 (PDT)
-Date:   Sat, 27 May 2023 16:45:06 +0800
+        Sat, 27 May 2023 02:06:44 -0700 (PDT)
+Date:   Sat, 27 May 2023 17:06:35 +0800
 From:   Leo Yan <leo.yan@linaro.org>
 To:     James Clark <james.clark@arm.com>
 Cc:     coresight@lists.linaro.org, denik@chromium.org,
@@ -69,347 +69,94 @@ Cc:     coresight@lists.linaro.org, denik@chromium.org,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] perf cs-etm: Only track threads instead of PID and
- TIDs
-Message-ID: <20230527084506.GA886420@leoy-yangtze.lan>
+Subject: Re: [PATCH 2/4] perf cs-etm: Use previous thread for branch sample
+ source IP
+Message-ID: <20230527090635.GB886420@leoy-yangtze.lan>
 References: <20230524131958.2139331-1-james.clark@arm.com>
- <20230524131958.2139331-2-james.clark@arm.com>
+ <20230524131958.2139331-3-james.clark@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230524131958.2139331-2-james.clark@arm.com>
+In-Reply-To: <20230524131958.2139331-3-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 24, 2023 at 02:19:55PM +0100, James Clark wrote:
-> PIDs and TIDs are already contained within the thread struct, so to
-> avoid inconsistencies drop the extra members on the etm queue and only
-> use the thread struct.
+On Wed, May 24, 2023 at 02:19:56PM +0100, James Clark wrote:
+> Branch samples currently use the IP of the previous packet as the from
+> IP, and the IP of the current packet as the to IP. But it incorrectly
+> uses the current thread. In some cases like a jump into a different
+> exception level this will attribute to the incorrect process.
+
+It's about the timing that branch has taken or not taken :)
+
+If we think the branch sample as 'branch has taken', then current code
+is doning right thing, otherwise, we need this fix.
+
+> Fix it by tracking the previous thread in the same way the previous
+> packet is tracked.
 > 
-> At the same time stop using the 'unknown' thread. In a later commit
-> we will be making samples from multiple machines so it will be better
-> to use the idle thread of each machine rather than overlapping unknown
-> threads. Using the idle thread is also better because kernel addresses
-> with a previously unknown thread will now be assigned to a real kernel
-> thread.
-
-Using the idle thread to replace the 'unknown' thread is good thing
-for me, though we will introduce imprecise statistics for idle thread,
-but the inaccuration is not big in this case.
-
 > Signed-off-by: James Clark <james.clark@arm.com>
 > ---
->  tools/perf/util/cs-etm.c | 124 ++++++++++++---------------------------
->  1 file changed, 38 insertions(+), 86 deletions(-)
+>  tools/perf/util/cs-etm.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 > 
 > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 91299cc56bf7..ebffc9052561 100644
+> index ebffc9052561..a997fe79d458 100644
 > --- a/tools/perf/util/cs-etm.c
 > +++ b/tools/perf/util/cs-etm.c
-> @@ -46,8 +46,6 @@ struct cs_etm_auxtrace {
->  	struct auxtrace_heap heap;
->  	struct itrace_synth_opts synth_opts;
->  	struct perf_session *session;
-> -	struct machine *machine;
-> -	struct thread *unknown_thread;
->  	struct perf_tsc_conversion tc;
->  
->  	/*
-> @@ -84,7 +82,6 @@ struct cs_etm_auxtrace {
->  
->  struct cs_etm_traceid_queue {
->  	u8 trace_chan_id;
-> -	pid_t pid, tid;
->  	u64 period_instructions;
+> @@ -86,6 +86,7 @@ struct cs_etm_traceid_queue {
 >  	size_t last_branch_pos;
 >  	union perf_event *event_buf;
-> @@ -480,9 +477,9 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->  	cs_etm__clear_packet_queue(&tidq->packet_queue);
->  
->  	queue = &etmq->etm->queues.queue_array[etmq->queue_nr];
-> -	tidq->tid = queue->tid;
-> -	tidq->pid = -1;
+>  	struct thread *thread;
+> +	struct thread *prev_thread;
+>  	struct branch_stack *last_branch;
+>  	struct branch_stack *last_branch_rb;
+>  	struct cs_etm_packet *prev_packet;
+> @@ -480,6 +481,7 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
 >  	tidq->trace_chan_id = trace_chan_id;
-> +	tidq->thread = machine__findnew_thread(&etm->session->machines.host, -1,
-> +					       queue->tid);
+>  	tidq->thread = machine__findnew_thread(&etm->session->machines.host, -1,
+>  					       queue->tid);
+> +	tidq->prev_thread = machine__idle_thread(&etm->session->machines.host);
 >  
 >  	tidq->packet = zalloc(sizeof(struct cs_etm_packet));
 >  	if (!tidq->packet)
-> @@ -863,7 +860,6 @@ static void cs_etm__free(struct perf_session *session)
->  	for (i = 0; i < aux->num_cpu; i++)
->  		zfree(&aux->metadata[i]);
->  
-> -	thread__zput(aux->unknown_thread);
->  	zfree(&aux->metadata);
->  	zfree(&aux);
->  }
-> @@ -882,7 +878,7 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
->  {
->  	struct machine *machine;
->  
-> -	machine = etmq->etm->machine;
-> +	machine = &etmq->etm->session->machines.host;
->  
->  	if (address >= machine__kernel_start(machine)) {
->  		if (machine__is_host(machine))
-> @@ -905,8 +901,6 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
->  	u8  cpumode;
->  	u64 offset;
->  	int len;
-> -	struct thread *thread;
-> -	struct machine *machine;
->  	struct addr_location al;
->  	struct dso *dso;
->  	struct cs_etm_traceid_queue *tidq;
-> @@ -914,20 +908,12 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
->  	if (!etmq)
->  		return 0;
->  
-> -	machine = etmq->etm->machine;
->  	cpumode = cs_etm__cpu_mode(etmq, address);
->  	tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
->  	if (!tidq)
->  		return 0;
->  
-> -	thread = tidq->thread;
-> -	if (!thread) {
-> -		if (cpumode != PERF_RECORD_MISC_KERNEL)
-> -			return 0;
-> -		thread = etmq->etm->unknown_thread;
-> -	}
-> -
-> -	if (!thread__find_map(thread, cpumode, address, &al))
-> +	if (!thread__find_map(tidq->thread, cpumode, address, &al))
->  		return 0;
->  
->  	dso = map__dso(al.map);
-> @@ -942,7 +928,8 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
->  
->  	map__load(al.map);
->  
-> -	len = dso__data_read_offset(dso, machine, offset, buffer, size);
-> +	len = dso__data_read_offset(dso, maps__machine(tidq->thread->maps),
-> +				    offset, buffer, size);
->  
->  	if (len <= 0) {
->  		ui__warning_once("CS ETM Trace: Missing DSO. Use 'perf archive' or debuginfod to export data from the traced system.\n"
-> @@ -1303,39 +1290,31 @@ cs_etm__get_trace(struct cs_etm_queue *etmq)
->  	return etmq->buf_len;
+> @@ -616,6 +618,8 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
+>  		tmp = tidq->packet;
+>  		tidq->packet = tidq->prev_packet;
+>  		tidq->prev_packet = tmp;
+> +		thread__put(tidq->prev_thread);
+> +		tidq->prev_thread = thread__get(tidq->thread);
+
+Maybe cs_etm__packet_swap() is not the best place to update
+"tidq->prev_thread", since swapping packet doesn't mean it's necessarily
+thread switching; can we move this change into the cs_etm__set_thread()?
+
+Thanks,
+Leo
+
+>  	}
 >  }
 >  
-> -static void cs_etm__set_pid_tid_cpu(struct cs_etm_auxtrace *etm,
-> -				    struct cs_etm_traceid_queue *tidq)
-> +static void cs_etm__set_thread(struct cs_etm_auxtrace *etm,
-> +			       struct cs_etm_traceid_queue *tidq, pid_t tid)
->  {
-> -	if ((!tidq->thread) && (tidq->tid != -1))
-> -		tidq->thread = machine__find_thread(etm->machine, -1,
-> -						    tidq->tid);
-> +	struct machine *machine = &etm->session->machines.host;
-> +
-> +	if (tid != -1) {
-> +		thread__zput(tidq->thread);
-> +		tidq->thread = machine__find_thread(machine, -1, tid);
-> +	}
->  
-> -	if (tidq->thread)
-> -		tidq->pid = tidq->thread->pid_;
-> +	/* Couldn't find a known thread */
-> +	if (!tidq->thread)
-> +		tidq->thread = machine__idle_thread(machine);
->  }
->  
->  int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
->  			 pid_t tid, u8 trace_chan_id)
->  {
-> -	int cpu, err = -EINVAL;
-> -	struct cs_etm_auxtrace *etm = etmq->etm;
->  	struct cs_etm_traceid_queue *tidq;
->  
->  	tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
->  	if (!tidq)
-> -		return err;
-> -
-> -	if (cs_etm__get_cpu(trace_chan_id, &cpu) < 0)
-> -		return err;
-> -
-> -	err = machine__set_current_tid(etm->machine, cpu, tid, tid);
-
-If we don't invoke machine__set_current_tid(), 'thread->cpu' will not
-updated anymore.
-
-Seems this is fine since cs-etm uses 'tidq->packet->cpu' to assign
-sample's cpu instead of using 'thread->cpu'.
-
-So the change LGTM:
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
-
-> -	if (err)
-> -		return err;
-> -
-> -	tidq->tid = tid;
-> -	thread__zput(tidq->thread);
-> +		return -EINVAL;
->  
-> -	cs_etm__set_pid_tid_cpu(etm, tidq);
-> +	cs_etm__set_thread(etmq->etm, tidq, tid);
->  	return 0;
->  }
->  
-> @@ -1412,8 +1391,8 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->  	sample.time = cs_etm__resolve_sample_time(etmq, tidq);
->  
->  	sample.ip = addr;
-> -	sample.pid = tidq->pid;
-> -	sample.tid = tidq->tid;
-> +	sample.pid = tidq->thread->pid_;
-> +	sample.tid = tidq->thread->tid;
->  	sample.id = etmq->etm->instructions_id;
->  	sample.stream_id = etmq->etm->instructions_id;
->  	sample.period = period;
-> @@ -1471,8 +1450,8 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+> @@ -791,6 +795,7 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
+>  		/* Free this traceid_queue from the array */
+>  		tidq = etmq->traceid_queues[idx];
+>  		thread__zput(tidq->thread);
+> +		thread__zput(tidq->prev_thread);
+>  		zfree(&tidq->event_buf);
+>  		zfree(&tidq->last_branch);
+>  		zfree(&tidq->last_branch_rb);
+> @@ -1450,8 +1455,8 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
 >  	sample.time = cs_etm__resolve_sample_time(etmq, tidq);
 >  
 >  	sample.ip = ip;
-> -	sample.pid = tidq->pid;
-> -	sample.tid = tidq->tid;
-> +	sample.pid = tidq->thread->pid_;
-> +	sample.tid = tidq->thread->tid;
+> -	sample.pid = tidq->thread->pid_;
+> -	sample.tid = tidq->thread->tid;
+> +	sample.pid = tidq->prev_thread->pid_;
+> +	sample.tid = tidq->prev_thread->tid;
 >  	sample.addr = cs_etm__first_executed_instr(tidq->packet);
 >  	sample.id = etmq->etm->branches_id;
 >  	sample.stream_id = etmq->etm->branches_id;
-> @@ -2466,11 +2445,6 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
->  		if (!etmq)
->  			continue;
->  
-> -		/*
-> -		 * Per-cpu mode has contextIDs in the trace and the decoder
-> -		 * calls cs_etm__set_pid_tid_cpu() automatically so no need
-> -		 * to do this here
-> -		 */
->  		if (etm->per_thread_decoding) {
->  			tidq = cs_etm__etmq_get_traceid_queue(
->  				etmq, CS_ETM_PER_THREAD_TRACEID);
-> @@ -2478,10 +2452,8 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
->  			if (!tidq)
->  				continue;
->  
-> -			if ((tid == -1) || (tidq->tid == tid)) {
-> -				cs_etm__set_pid_tid_cpu(etm, tidq);
-> +			if (tid == -1 || tidq->thread->tid == tid)
->  				cs_etm__run_per_thread_timeless_decoder(etmq);
-> -			}
->  		} else
->  			cs_etm__run_per_cpu_timeless_decoder(etmq);
->  	}
-> @@ -2611,10 +2583,12 @@ static int cs_etm__process_itrace_start(struct cs_etm_auxtrace *etm,
->  		return 0;
->  
->  	/*
-> -	 * Add the tid/pid to the log so that we can get a match when
-> -	 * we get a contextID from the decoder.
-> +	 * Add the tid/pid to the log so that we can get a match when we get a
-> +	 * contextID from the decoder. Only track for the host: only kernel
-> +	 * trace is supported for guests which wouldn't need pids so this should
-> +	 * be fine.
->  	 */
-> -	th = machine__findnew_thread(etm->machine,
-> +	th = machine__findnew_thread(&etm->session->machines.host,
->  				     event->itrace_start.pid,
->  				     event->itrace_start.tid);
->  	if (!th)
-> @@ -2647,10 +2621,12 @@ static int cs_etm__process_switch_cpu_wide(struct cs_etm_auxtrace *etm,
->  		return 0;
->  
->  	/*
-> -	 * Add the tid/pid to the log so that we can get a match when
-> -	 * we get a contextID from the decoder.
-> +	 * Add the tid/pid to the log so that we can get a match when we get a
-> +	 * contextID from the decoder. Only track for the host: only kernel
-> +	 * trace is supported for guests which wouldn't need pids so this should
-> +	 * be fine.
->  	 */
-> -	th = machine__findnew_thread(etm->machine,
-> +	th = machine__findnew_thread(&etm->session->machines.host,
->  				     event->context_switch.next_prev_pid,
->  				     event->context_switch.next_prev_tid);
->  	if (!th)
-> @@ -3259,7 +3235,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  	}
->  
->  	etm->session = session;
-> -	etm->machine = &session->machines.host;
->  
->  	etm->num_cpu = num_cpu;
->  	etm->pmu_type = (unsigned int) ((ptr[CS_PMU_TYPE_CPUS] >> 32) & 0xffffffff);
-> @@ -3286,27 +3261,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  	if (err)
->  		return err;
->  
-> -	etm->unknown_thread = thread__new(999999999, 999999999);
-> -	if (!etm->unknown_thread) {
-> -		err = -ENOMEM;
-> -		goto err_free_queues;
-> -	}
-> -
-> -	/*
-> -	 * Initialize list node so that at thread__zput() we can avoid
-> -	 * segmentation fault at list_del_init().
-> -	 */
-> -	INIT_LIST_HEAD(&etm->unknown_thread->node);
-> -
-> -	err = thread__set_comm(etm->unknown_thread, "unknown", 0);
-> -	if (err)
-> -		goto err_delete_thread;
-> -
-> -	if (thread__init_maps(etm->unknown_thread, etm->machine)) {
-> -		err = -ENOMEM;
-> -		goto err_delete_thread;
-> -	}
-> -
->  	etm->tc.time_shift = tc->time_shift;
->  	etm->tc.time_mult = tc->time_mult;
->  	etm->tc.time_zero = tc->time_zero;
-> @@ -3318,7 +3272,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  	}
->  	err = cs_etm__synth_events(etm, session);
->  	if (err)
-> -		goto err_delete_thread;
-> +		goto err_free_queues;
->  
->  	/*
->  	 * Map Trace ID values to CPU metadata.
-> @@ -3348,7 +3302,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  					session->header.data_size,
->  					cs_etm__process_aux_hw_id_cb, &aux_hw_id_found);
->  	if (err)
-> -		goto err_delete_thread;
-> +		goto err_free_queues;
->  
->  	/* if HW ID found then clear any unused metadata ID values */
->  	if (aux_hw_id_found)
-> @@ -3358,17 +3312,15 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  		err = cs_etm__map_trace_ids_metadata(num_cpu, metadata);
->  
->  	if (err)
-> -		goto err_delete_thread;
-> +		goto err_free_queues;
->  
->  	err = cs_etm__queue_aux_records(session);
->  	if (err)
-> -		goto err_delete_thread;
-> +		goto err_free_queues;
->  
->  	etm->data_queued = etm->queues.populated;
->  	return 0;
->  
-> -err_delete_thread:
-> -	thread__zput(etm->unknown_thread);
->  err_free_queues:
->  	auxtrace_queues__free(&etm->queues);
->  	session->auxtrace = NULL;
 > -- 
 > 2.34.1
 > 
