@@ -2,310 +2,251 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D001C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 06:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A842C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 06:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbjE0GFo (ORCPT
+        id S229550AbjE0G0k convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 02:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
+        Sat, 27 May 2023 02:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230024AbjE0GFn (ORCPT
+        with ESMTP id S229472AbjE0G0g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 02:05:43 -0400
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D95187
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 23:05:40 -0700 (PDT)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-3f600a6a890so25635e9.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 May 2023 23:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685167539; x=1687759539;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h+VqRQExtTrH9S+FZIicKy2SoxXeKIv5Pl5YKkb8yOU=;
-        b=0aX8fI0SmbVTXsAjji1whY6LJ8jtL5lF0rCQz0h+106ZDqNGnd+zznZFBoRES0Gavs
-         19AHNoWNmevaE1bGaGvFnOfqKtdKMDylrVGDzT02lgzOYNBsX/tCWC5cjd7UmfS9XW5/
-         m/d/zhxUaZTF5O/q/J3xsJMYglPWxfHm9lMbT5pfZf/MMwBL77VusnKCo4oGQYgXNml0
-         3HCAaPVnsA1d9lGFqtThfmAuQuPDGGa86NZcSG4KHBxXynESFjyyNj/h/bgrGKZPtjx7
-         REcfiMtIBLbN1+9L4goesoiVv4LagFQAfmCizxmij273EoGT/ceuXq2igv1A0nMijdIX
-         kz1w==
+        Sat, 27 May 2023 02:26:36 -0400
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD9F1116;
+        Fri, 26 May 2023 23:26:34 -0700 (PDT)
+Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-786470fd7a3so443942241.3;
+        Fri, 26 May 2023 23:26:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685167539; x=1687759539;
+        d=1e100.net; s=20221208; t=1685168794; x=1687760794;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=h+VqRQExtTrH9S+FZIicKy2SoxXeKIv5Pl5YKkb8yOU=;
-        b=O6kk+u1qoIUu1PH2N4Fje8mHMsGoWEi2YL80pYGDFpZ1A+156SHIacroqfkwSX0GEi
-         nbVVuNaQIBFwV3GUWHFFmnXftyn77hsAjR9Ff5jdZczLx0p61NB5hbgA8w49s4ZvUPYJ
-         9SJ8PIHf+r3lnqSgaMIzS0pjpJwk36bt6gW6DLhZR86Xeg/BlASlfTjy284FVT2KwtFd
-         mWGdYqfkkbUk7FlfKw4OLbiDURImkb0dHEIn3hiBrlhs5hrNdACXqRAc2oDViYCEoF9D
-         GMltvcBLKHt5yy1YzNkZobrcBTXqyUzrlynlMItKV/uSeVLuT/JbWR6mntsWk1kJUah6
-         tdww==
-X-Gm-Message-State: AC+VfDyZQ+lw1G/nAjZHQ02HfZ1h+ZaAxTJjP12ipaxIC+uVkyQn85ak
-        SPbqADpWUkxY9ZczhZyQrwH1khUd4/0NPcnNTWOIIg==
-X-Google-Smtp-Source: ACHHUZ6H+Busoinm6NiPQ0cJPOPkyYSQt0m+kJyVmjqmN3/IvUGJzwl1XDEwh9hZej5CuP36g4gCGAeED2POqCRVRTY=
-X-Received: by 2002:a1c:5408:0:b0:3f1:758c:dd23 with SMTP id
- i8-20020a1c5408000000b003f1758cdd23mr63579wmb.7.1685167538607; Fri, 26 May
- 2023 23:05:38 -0700 (PDT)
+        bh=K1Vo/4/ITtOwqXGKuD1nMtQeDHz1HuSSJxIWcuEXzLo=;
+        b=TbAdKBIgSrv3BNl1t5qhDNT8Y4YVzdBt7yOxDRkjk1eLHXJWSXRUoxnosuQM5G8zRI
+         /lnKEnZ7hNYqj7tjLTT6tsW5LBdtnAP0sVBJ5VmvNT4F89rbqpFxRgJ01EgQZFUdnUMM
+         vYS3AEUOTIPrIFAL1kTaLRQS0i6RymhjsAnXMkRHbYBatqhuJ10Xcdy+JlBH7ENbnEXx
+         23foDNEdnvqZn1KNLdGrsBLoG74B7WoJt95pv7PrVZotOtETDfbHoc6kkcTysmz7qxXh
+         w45e/Tle3JAubrNN4EePjFFreWaurTYtoSwhzb1CrjWys5FhrgzobHFUUBIpz+byhms3
+         2b3w==
+X-Gm-Message-State: AC+VfDxJnS1OB4tusxKwSZMer55TA8+Ovr7unZ+VKaIPK3RF0SzQei3p
+        lgMpRCpziUrn/iK44QlWlpTI3zrgZQenf+5qXSBduaED
+X-Google-Smtp-Source: ACHHUZ4qiF9t3D55NoKQ9D5GwJSNuwvnwC0H6JaWL4e3r96sJzQGoM3aFS2cNc5htnvlCr58J7n6PEi7SwemCwUAnv8=
+X-Received: by 2002:a1f:cac6:0:b0:45a:8582:126d with SMTP id
+ a189-20020a1fcac6000000b0045a8582126dmr438138vkg.8.1685168793866; Fri, 26 May
+ 2023 23:26:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230526215410.2435674-1-irogers@google.com> <20230526215410.2435674-4-irogers@google.com>
- <ZHFdnEpNMKq7EbWh@kernel.org> <ZHFffgMt1fHzbc55@kernel.org>
-In-Reply-To: <ZHFffgMt1fHzbc55@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 26 May 2023 23:05:25 -0700
-Message-ID: <CAP-5=fUEd9tRnnqzRogz5CUD8OZJMLE8kEcvROiYo4FEXzv8HQ@mail.gmail.com>
-Subject: Re: [PATCH v4 03/35] perf cpumap: Add equal function
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ming Wang <wangming01@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
+References: <20230526095824.16336-1-Jonathan.Cameron@huawei.com> <20230526095824.16336-5-Jonathan.Cameron@huawei.com>
+In-Reply-To: <20230526095824.16336-5-Jonathan.Cameron@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 26 May 2023 23:26:22 -0700
+Message-ID: <CAM9d7cgYZs4DqLmjPZCYDVrp-KVYoZYDyJHLwB1fOM7ZdzM2Pg@mail.gmail.com>
+Subject: Re: [PATCH v7 4/5] perf: CXL Performance Monitoring Unit driver
+To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     Liang Kan <kan.liang@linux.intel.com>, linux-cxl@vger.kernel.org,
+        peterz@infradead.org, mark.rutland@arm.com, will@kernel.org,
+        dan.j.williams@intel.com, mingo@redhat.com, acme@kernel.org,
+        linuxarm@huawei.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Stephane Eranian <eranian@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 26, 2023 at 6:40=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Fri, May 26, 2023 at 3:00 AM Jonathan Cameron
+<Jonathan.Cameron@huawei.com> wrote:
 >
-> Em Fri, May 26, 2023 at 10:32:12PM -0300, Arnaldo Carvalho de Melo escrev=
-eu:
-> > Em Fri, May 26, 2023 at 02:53:38PM -0700, Ian Rogers escreveu:
-> > > Equality is a useful property to compare after merging and
-> > > intersecting maps.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> > > ---
-> > >  tools/lib/perf/cpumap.c              | 21 ++++++++++++++++
-> > >  tools/lib/perf/include/perf/cpumap.h |  2 ++
-> > >  tools/perf/tests/cpumap.c            | 37 ++++++++++++++++++++++++++=
-++
-> > >  3 files changed, 60 insertions(+)
-> > >
-> > > diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-> > > index d4f3a1a12522..48595a3ad69c 100644
-> > > --- a/tools/lib/perf/cpumap.c
-> > > +++ b/tools/lib/perf/cpumap.c
-> > > @@ -321,6 +321,27 @@ bool perf_cpu_map__has(const struct perf_cpu_map=
- *cpus, struct perf_cpu cpu)
-> > >     return perf_cpu_map__idx(cpus, cpu) !=3D -1;
-> > >  }
-> > >
-> > > +bool perf_cpu_map__equal(const struct perf_cpu_map *lhs, const struc=
-t perf_cpu_map *rhs)
-> > > +{
-> > > +   int nr;
-> > > +
-> > > +   if (lhs =3D=3D rhs)
-> > > +           return true;
-> > > +
-> > > +   if (!lhs || !rhs)
-> > > +           return false;
-> > > +
-> > > +   nr =3D perf_cpu_map__nr(lhs);
-> > > +   if (nr !=3D perf_cpu_map__nr(rhs))
-> > > +           return false;
-> > > +
-> > > +   for (int idx =3D 0; idx < nr; idx++) {
-> > > +           if (RC_CHK_ACCESS(lhs)->map[idx].cpu !=3D RC_CHK_ACCESS(r=
-hs)->map[idx].cpu)
-> > > +                   return false;
-> >
-> > Don't we have an accessor to avoid this RC_CHK_ACCESS()-> access?
+> CXL rev 3.0 introduces a standard performance monitoring hardware
+> block to CXL. Instances are discovered using CXL Register Locator DVSEC
+> entries. Each CXL component may have multiple PMUs.
 >
->  In the following patch you use it:
+> This initial driver supports a subset of types of counter.
+> It supports counters that are either fixed or configurable, but requires
+> that they support the ability to freeze and write value whilst frozen.
 >
-> +bool perf_cpu_map__has_any_cpu(const struct perf_cpu_map *map)
+> Development done with QEMU model which will be posted shortly.
+>
+> Example:
+>
+> $ perf stat -a -e cxl_pmu_mem0.0/h2d_req_snpcur/ -e cxl_pmu_mem0.0/h2d_req_snpdata/ -e cxl_pmu_mem0.0/clock_ticks/ sleep 1
+>
+> Performance counter stats for 'system wide':
+>
+> 96,757,023,244,321      cxl_pmu_mem0.0/h2d_req_snpcur/
+> 96,757,023,244,365      cxl_pmu_mem0.0/h2d_req_snpdata/
+> 193,514,046,488,653      cxl_pmu_mem0.0/clock_ticks/
+>
+>        1.090539600 seconds time elapsed
+>
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> ---
+> v7: THanks to Namhyung and Stephane for reviews
+>  - Set the cpu for an event only after validation checks.
+>  - Added -a to make perf default of all CPUs explicit in command line.
+>  - Fix wrong event names in example.
+> ---
+
+[SNIP]
+> +static void cxl_pmu_event_start(struct perf_event *event, int flags)
 > +{
-> +       return map && perf_cpu_map__cpu(map, 0).cpu =3D=3D -1;
+> +       struct cxl_pmu_info *info = pmu_to_cxl_pmu_info(event->pmu);
+> +       struct hw_perf_event *hwc = &event->hw;
+> +       void __iomem *base = info->base;
+> +       u64 cfg;
+> +
+> +       /*
+> +        * All paths to here should either set these flags directly or
+> +        * call cxl_pmu_event_stop() which will ensure the correct state.
+> +        */
+> +       if (WARN_ON_ONCE(!(hwc->state & PERF_HES_STOPPED)))
+> +               return;
+> +
+> +       WARN_ON_ONCE(!(hwc->state & PERF_HES_UPTODATE));
+> +       hwc->state = 0;
+> +
+> +       /*
+> +        * Currently only hdm filter control is implemnted, this code will
+
+Typo: implemented
+
+> +        * want generalizing when more filters are added.
+> +        */
+> +       if (info->filter_hdm) {
+> +               if (cxl_pmu_config1_hdm_filter_en(event))
+> +                       cfg = cxl_pmu_config2_get_hdm_decoder(event);
+> +               else
+> +                       cfg = GENMASK(15, 0); /* No filtering if 0xFFFF_FFFF */
+> +               writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
+> +       }
+> +
+> +       cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
+> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
+> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_ENABLE, 1);
+> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_EDGE,
+> +                         cxl_pmu_config1_get_edge(event) ? 1 : 0);
+> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INVERT,
+> +                         cxl_pmu_config1_get_invert(event) ? 1 : 0);
+> +
+> +       /* Fixed purpose counters have next two fields RO */
+> +       if (test_bit(hwc->idx, info->conf_counter_bm)) {
+> +               cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK,
+> +                                 hwc->event_base);
+> +               cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENTS_MSK,
+> +                                 cxl_pmu_config_get_mask(event));
+> +       }
+> +       cfg &= ~CXL_PMU_COUNTER_CFG_THRESHOLD_MSK;
+> +       /*
+> +        * For events that generate only 1 count per clock the CXL 3.0 spec
+> +        * states the threshold shall be set to 1 but if set to 0 it will
+> +        * count the raw value anwyay?
+
+Typo: anyway?
+
+> +        * There is no definition of what events will count multiple per cycle
+> +        * and hence to which non 1 values of threshold can apply.
+> +        * (CXL 3.0 8.2.7.2.1 Counter Configuration - threshold field definition)
+> +        */
+> +       cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_THRESHOLD_MSK,
+> +                         cxl_pmu_config1_get_threshold(event));
+> +       writeq(cfg, base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
+> +
+> +       local64_set(&hwc->prev_count, 0);
+> +       writeq(0, base + CXL_PMU_COUNTER_REG(hwc->idx));
+> +
+> +       perf_event_update_userpage(event);
 > +}
->
-> But it does extra checks you did already:
->
-> struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int id=
-x)
-> {
->         struct perf_cpu result =3D {
->                 .cpu =3D -1
->         };
->
->         if (cpus && idx < RC_CHK_ACCESS(cpus)->nr)
->                 return RC_CHK_ACCESS(cpus)->map[idx];
->
->         return result;
-> }
->
-> Usually we have:
->
-> struct perf_cpu __perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int =
-idx)
-> {
->         return RC_CHK_ACCESS(cpus)->map[idx];
-> }
->
-> struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int id=
-x)
-> {
->         struct perf_cpu result =3D {
->                 .cpu =3D -1
->         };
->
->         if (cpus && idx < __perf_cpu_map__nr(cpus))
->                 return __perf_cpu_map__cpu(cpus, idx);
->
->         return result;
-> }
->
-> Then you would have:
->
-> bool perf_cpu_map__equal(const struct perf_cpu_map *lhs, const struct per=
-f_cpu_map *rhs)
-> {
->         int nr;
->
->         if (lhs =3D=3D rhs)
->                 return true;
->
->         if (!lhs || !rhs)
->                 return false;
->
->         nr =3D __perf_cpu_map__nr(lhs);  // no need to check lhs again fo=
-r NULL
->         if (nr !=3D __perf_cpu_map__nr(rhs)) // ditto for rhs
->                 return false;
->
->         for (int idx =3D 0; idx < nr; idx++) {
->                 if (__perf_cpu_map__cpu(lhs, idx)->cpu !=3D __perf_cpu_ma=
-p__cpu(rhs, idx)->cpu)
->                         return false;
->
+> +
 
-Thanks, I'll update for v5. Fwiw, on intersect, I keep forgetting to
-mention that this was sent previously as:
-https://lore.kernel.org/lkml/20220408035616.1356953-4-irogers@google.com/
+[SNIP]
+> +
+> +static int cxl_pmu_online_cpu(unsigned int cpu, struct hlist_node *node)
+> +{
+> +       struct cxl_pmu_info *info = hlist_entry_safe(node, struct cxl_pmu_info, node);
+> +
+> +       if (info->on_cpu != -1)
+> +               return 0;
+> +
+> +       info->on_cpu = cpu;
+> +       /*
+> +        * CPU HP lock is held so we should be guaranteed that the CPU hasn't yet
+> +        * gone away again.
+> +        */
+> +       WARN_ON(irq_set_affinity(info->irq, cpumask_of(cpu)));
+> +
+> +       return 0;
+> +}
+> +
+> +static int cxl_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
+> +{
+> +       struct cxl_pmu_info *info = hlist_entry_safe(node, struct cxl_pmu_info, node);
+> +       unsigned int target;
+> +
+> +       if (info->on_cpu != cpu)
+> +               return 0;
+> +
+> +       info->on_cpu = -1;
+> +       target = cpumask_any_but(cpu_online_mask, cpu);
+> +       if (target >= nr_cpu_ids) {
+> +               dev_err(info->pmu.dev, "Unable to find a suitable CPU\n");
+> +               return 0;
+> +       }
+> +
+> +       perf_pmu_migrate_context(&info->pmu, cpu, target);
+> +       info->on_cpu = target;
+> +       /*
+> +        * CPU HP lock is held so we should be guaranteed that this CPU hasn't yet
+> +        * gone away.
+> +        */
+> +       WARN_ON(irq_set_affinity(info->irq, cpumask_of(target)));
+> +
+> +       return 0;
+> +}
 
-Ian
+IIUC a CXL PMU hardware (say cxl_pmu_mem0.0) is shared across
+all CPUs and it would return the same value when read from any CPU,
+right?
 
-> > > +   }
-> > > +   return true;
-> > > +}
-> > > +
-> > >  struct perf_cpu perf_cpu_map__max(const struct perf_cpu_map *map)
-> > >  {
-> > >     struct perf_cpu result =3D {
-> > > diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/in=
-clude/perf/cpumap.h
-> > > index 0466c4216fbb..d0ae9552f8e2 100644
-> > > --- a/tools/lib/perf/include/perf/cpumap.h
-> > > +++ b/tools/lib/perf/include/perf/cpumap.h
-> > > @@ -28,6 +28,8 @@ LIBPERF_API int perf_cpu_map__nr(const struct perf_=
-cpu_map *cpus);
-> > >  LIBPERF_API bool perf_cpu_map__empty(const struct perf_cpu_map *map)=
-;
-> > >  LIBPERF_API struct perf_cpu perf_cpu_map__max(const struct perf_cpu_=
-map *map);
-> > >  LIBPERF_API bool perf_cpu_map__has(const struct perf_cpu_map *map, s=
-truct perf_cpu cpu);
-> > > +LIBPERF_API bool perf_cpu_map__equal(const struct perf_cpu_map *lhs,
-> > > +                                const struct perf_cpu_map *rhs);
-> > >
-> > >  #define perf_cpu_map__for_each_cpu(cpu, idx, cpus)         \
-> > >     for ((idx) =3D 0, (cpu) =3D perf_cpu_map__cpu(cpus, idx);   \
-> > > diff --git a/tools/perf/tests/cpumap.c b/tools/perf/tests/cpumap.c
-> > > index 83805690c209..7730fc2ab40b 100644
-> > > --- a/tools/perf/tests/cpumap.c
-> > > +++ b/tools/perf/tests/cpumap.c
-> > > @@ -211,11 +211,48 @@ static int test__cpu_map_intersect(struct test_=
-suite *test __maybe_unused,
-> > >     return ret;
-> > >  }
-> > >
-> > > +static int test__cpu_map_equal(struct test_suite *test __maybe_unuse=
-d, int subtest __maybe_unused)
-> > > +{
-> > > +   struct perf_cpu_map *any =3D perf_cpu_map__dummy_new();
-> > > +   struct perf_cpu_map *one =3D perf_cpu_map__new("1");
-> > > +   struct perf_cpu_map *two =3D perf_cpu_map__new("2");
-> > > +   struct perf_cpu_map *empty =3D perf_cpu_map__intersect(one, two);
-> > > +   struct perf_cpu_map *pair =3D perf_cpu_map__new("1-2");
-> > > +   struct perf_cpu_map *tmp;
-> > > +   struct perf_cpu_map *maps[] =3D {empty, any, one, two, pair};
-> > > +
-> > > +   for (size_t i =3D 0; i < ARRAY_SIZE(maps); i++) {
-> > > +           /* Maps equal themself. */
-> > > +           TEST_ASSERT_VAL("equal", perf_cpu_map__equal(maps[i], map=
-s[i]));
-> > > +           for (size_t j =3D 0; j < ARRAY_SIZE(maps); j++) {
-> > > +                   /* Maps dont't equal each other. */
-> > > +                   if (i =3D=3D j)
-> > > +                           continue;
-> > > +                   TEST_ASSERT_VAL("not equal", !perf_cpu_map__equal=
-(maps[i], maps[j]));
-> > > +           }
-> > > +   }
-> > > +
-> > > +   /* Maps equal made maps. */
-> > > +   tmp =3D perf_cpu_map__merge(perf_cpu_map__get(one), two);
-> > > +   TEST_ASSERT_VAL("pair", perf_cpu_map__equal(pair, tmp));
-> > > +   perf_cpu_map__put(tmp);
-> > > +
-> > > +   tmp =3D perf_cpu_map__intersect(pair, one);
-> > > +   TEST_ASSERT_VAL("one", perf_cpu_map__equal(one, tmp));
-> > > +   perf_cpu_map__put(tmp);
-> > > +
-> > > +   for (size_t i =3D 0; i < ARRAY_SIZE(maps); i++)
-> > > +           perf_cpu_map__put(maps[i]);
-> > > +
-> > > +   return TEST_OK;
-> > > +}
-> > > +
-> > >  static struct test_case tests__cpu_map[] =3D {
-> > >     TEST_CASE("Synthesize cpu map", cpu_map_synthesize),
-> > >     TEST_CASE("Print cpu map", cpu_map_print),
-> > >     TEST_CASE("Merge cpu map", cpu_map_merge),
-> > >     TEST_CASE("Intersect cpu map", cpu_map_intersect),
-> > > +   TEST_CASE("Equal cpu map", cpu_map_equal),
-> > >     {       .name =3D NULL, }
-> > >  };
-> > >
-> > > --
-> > > 2.41.0.rc0.172.g3f132b7071-goog
-> > >
-> >
-> > --
-> >
-> > - Arnaldo
->
+Thanks,
+Namhyung
+
+
+> +
+> +static __init int cxl_pmu_init(void)
+> +{
+> +       int rc;
+> +
+> +       rc = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+> +                                    "AP_PERF_CXL_PMU_ONLINE",
+> +                                    cxl_pmu_online_cpu, cxl_pmu_offline_cpu);
+> +       if (rc < 0)
+> +               return rc;
+> +       cxl_pmu_cpuhp_state_num = rc;
+> +
+> +       rc = cxl_driver_register(&cxl_pmu_driver);
+> +       if (rc)
+> +               cpuhp_remove_multi_state(cxl_pmu_cpuhp_state_num);
+> +
+> +       return rc;
+> +}
+> +
+> +static __exit void cxl_pmu_exit(void)
+> +{
+> +       cxl_driver_unregister(&cxl_pmu_driver);
+> +       cpuhp_remove_multi_state(cxl_pmu_cpuhp_state_num);
+> +}
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_IMPORT_NS(CXL);
+> +module_init(cxl_pmu_init);
+> +module_exit(cxl_pmu_exit);
+> +MODULE_ALIAS_CXL(CXL_DEVICE_PMU);
 > --
+> 2.39.2
 >
-> - Arnaldo
