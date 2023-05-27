@@ -2,59 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D33C77B73
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B77EC77B7C
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 07:23:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230288AbjE0HXT (ORCPT
+        id S231668AbjE0HXc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 03:23:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56172 "EHLO
+        Sat, 27 May 2023 03:23:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231714AbjE0HXE (ORCPT
+        with ESMTP id S231372AbjE0HXO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 03:23:04 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C60C135
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:53 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba82ed6e450so3218358276.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:52 -0700 (PDT)
+        Sat, 27 May 2023 03:23:14 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6360710CC
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:57 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5657dbf8cecso30207287b3.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 00:22:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685172172; x=1687764172;
+        d=google.com; s=20221208; t=1685172176; x=1687764176;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6VCKvRGvQOyrxybTaQrpXvOpYk1EydxEOVUgh/PqmgI=;
-        b=yV1YZNOsvfeF4Ft293I2i0bt5grnyJq5eVrNGq/gtSC3F/RgJNaIZhMktW37517hxO
-         rof3nnNYGR/xHOPf25XZqdFVhDeQXyElDr5mQE/HnNITL60AcuZ0Q4xLCR8Po5aWKycf
-         cg26fe0UkDqsuMJP2PbvP4i2YEZKPeV/TC6PHtTivv7tQzoVb06r3uWpM1G1qSi/dhIN
-         dTl2NIeqYJjyTILMSjOxLZiiOhs8MfVJNJpuvSEGaHjlDrvPPyFBDG2Uy1O/6YwW6y1D
-         Z/KMbDXZpkXpfOJosj4KbCDjkf6SnPGvaTheTL0xAm83+xHi4G8/Z3wtNq/ExN3NiZ9V
-         LA7A==
+        bh=EJDTWFJvEsCqEFcR+09p/LfLUHaIhto6iTEyBvf82vg=;
+        b=feEPYnKtve9bpYAcmwdWjuf9tDRk8oSi4VoTBHVxiiL4m6sDY5jbBgovteYm0L/Sp7
+         TjkgxkhULbRDU4CMslHYyEtBeyDeQ/m49LLHa3t9m696jHZIV9mvqWkKqSOT9nH833qL
+         2VIgPJh4vGJHEE+4s1dLgrQPnTedxEjWEJiKiY1ApmL/hDRDghngvJ70pt2aQ2LZlJf+
+         h9WdJrr7Tdnt3WWnkjukXpvbUr6FSbaM/kAQt7muZJ2R+s64YWd3qTHbf6T4wE7+UoEB
+         nvs0ecYmbMiBPBVbNLtywierMbpQLEIT90L7hP2Lu6BREiCda6xTqe0qg+lcaWagMzsN
+         m7sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685172172; x=1687764172;
+        d=1e100.net; s=20221208; t=1685172176; x=1687764176;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6VCKvRGvQOyrxybTaQrpXvOpYk1EydxEOVUgh/PqmgI=;
-        b=Px2X5el8ZYup/xl5cyxbOZcdp/RYkws4vAmOzOyyhUaa3Xsxm2Uvk/fQYptU/K+kft
-         8Kt0uUTdMXR8wT4f6eiblGrsDuFxy78JhXia3I/a72zJaJiY7WBySFPdG8RjcEGZaP7O
-         ip8ImtDbAKbW451hOrzCrvAFNdv0PXYdw+WGiHK4faj+Cy0sUfSZ+j+30OfLjgGxOQ0d
-         WJ4najX51lMx0oJemZZr366XWI1B040qlcDY2b9bYowHdcqJiQEDyRvSy5okiFEDuDWi
-         dAxB/HrjfZ1pWE6TuIicdMkqnTA/qbklqfetYuwZ/e3SDsD+NIvXZ+zYxZw3lLBnajmC
-         kGlg==
-X-Gm-Message-State: AC+VfDxstFe9IEIUA15C5RXXnDQm4ZW0ITLLTwvJWPmkb6fnTwdwPeDv
-        cj3fsbRqvLwPYvQF27fo9JSohKpa7wzS
-X-Google-Smtp-Source: ACHHUZ5JeQ9nyVEs3oW+zOQKSK/IHbI+WzsmAygnPimX7a4dLNlsSwWaFNTetcMS7UG08rHYiIQSghAtW2ax
+        bh=EJDTWFJvEsCqEFcR+09p/LfLUHaIhto6iTEyBvf82vg=;
+        b=K2hbIZwIafvHIaMHTggmll5iUFoFc3Bb7cHVvOi9/WYsKLR5G73Xlpm/WLfBmj03zR
+         AX3mbXbTbURLDNwgwmp6+9FoBuot5wCuwv8hV7LDnPVnx/cPSDsjcF+95kJbtRi/IqY9
+         ZfkL49eEA1F6HwuBMyy4dZlFa6YNuy2IgmWnTqji1zNbNA3m71kuFH2rspsWYMTPaUAq
+         1c0Wx8hN35CS2+IHUdopyt25QD3B8s3SmOyNOPRdDR44JZI/C9PcY6LSJ/FHUlwar55k
+         13C7lMOJaNmNKUgpC7JzS0V3KuopsDGDUQYXgNlZO5CnbM3r0yhUFTDGhtyBxESCbqin
+         wmOQ==
+X-Gm-Message-State: AC+VfDzEtXraJgoWSjtBDyrWih8ybEbrpEKgUy87pOsILDlY34Im/tQB
+        HRU/hSTSnO9epnIBj3yEUw2Rk9q2ufEZ
+X-Google-Smtp-Source: ACHHUZ5O4UjV5BQjzirb1q5Z+yJ9MJMCKfvf+O6mA3Z6mhtgKlXRb0Gy5I4yBTaVjQzDIZhdgNRrzdk8ot/q
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3b4e:312c:644:a642])
- (user=irogers job=sendgmr) by 2002:a25:8211:0:b0:ba7:5bec:7772 with SMTP id
- q17-20020a258211000000b00ba75bec7772mr1632189ybk.5.1685172171783; Sat, 27 May
- 2023 00:22:51 -0700 (PDT)
-Date:   Sat, 27 May 2023 00:21:44 -0700
+ (user=irogers job=sendgmr) by 2002:a81:ae0c:0:b0:559:e97a:cb21 with SMTP id
+ m12-20020a81ae0c000000b00559e97acb21mr2442213ywh.9.1685172176150; Sat, 27 May
+ 2023 00:22:56 -0700 (PDT)
+Date:   Sat, 27 May 2023 00:21:46 -0700
 In-Reply-To: <20230527072210.2900565-1-irogers@google.com>
-Message-Id: <20230527072210.2900565-9-irogers@google.com>
+Message-Id: <20230527072210.2900565-11-irogers@google.com>
 Mime-Version: 1.0
 References: <20230527072210.2900565-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v5 08/34] perf evlist: Propagate user CPU maps intersecting
- core PMU maps
+Subject: [PATCH v5 10/34] perf target: Remove unused hybrid value
 From:   Ian Rogers <irogers@google.com>
 To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
@@ -94,85 +93,55 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The CPU map for a non-core PMU gives a default CPU value for
-perf_event_open. For core PMUs the CPU map lists all CPUs the evsel
-may be opened on. If there are >1 core PMU, the CPU maps will list the
-CPUs for that core PMU, but the user_requested_cpus may contain CPUs
-that are invalid for the PMU and cause perf_event_open to fail. To
-avoid this, when propagating the CPU map for core PMUs intersect it
-with the CPU map of the PMU (the evsel's "own_cpus").
-
-Add comments to __perf_evlist__propagate_maps to explain its somewhat
-complex behavior. Fix the related comments for system_wide in struct
-perf_evsel.
+Previously this was used to modify CPU map propagation, but it is now
+unnecessary as map propagation ensure core PMUs only have valid PMUs
+in the CPU map from user requested CPUs.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/lib/perf/evlist.c                 | 25 ++++++++++++++++++++-----
- tools/lib/perf/include/internal/evsel.h |  6 +++---
- 2 files changed, 23 insertions(+), 8 deletions(-)
+ tools/perf/builtin-record.c | 2 --
+ tools/perf/builtin-stat.c   | 1 -
+ tools/perf/util/target.h    | 1 -
+ 3 files changed, 4 deletions(-)
 
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 81e8b5fcd8ba..b8b066d0dc5e 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -36,18 +36,33 @@ void perf_evlist__init(struct perf_evlist *evlist)
- static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
- 					  struct perf_evsel *evsel)
- {
--	/*
--	 * We already have cpus for evsel (via PMU sysfs) so
--	 * keep it, if there's no target cpu list defined.
--	 */
- 	if (evsel->system_wide) {
-+		/* System wide: set the cpu map of the evsel to all online CPUs. */
- 		perf_cpu_map__put(evsel->cpus);
- 		evsel->cpus = perf_cpu_map__new(NULL);
-+	} else if (evlist->has_user_cpus && evsel->is_pmu_core) {
-+		/*
-+		 * User requested CPUs on a core PMU, ensure the requested CPUs
-+		 * are valid by intersecting with those of the PMU.
-+		 */
-+		perf_cpu_map__put(evsel->cpus);
-+		evsel->cpus = perf_cpu_map__intersect(evlist->user_requested_cpus, evsel->own_cpus);
- 	} else if (!evsel->own_cpus || evlist->has_user_cpus ||
--		   (!evsel->requires_cpu && perf_cpu_map__empty(evlist->user_requested_cpus))) {
-+		(!evsel->requires_cpu && perf_cpu_map__has_any_cpu(evlist->user_requested_cpus))) {
-+		/*
-+		 * The PMU didn't specify a default cpu map, this isn't a core
-+		 * event and the user requested CPUs or the evlist user
-+		 * requested CPUs have the "any CPU" (aka dummy) CPU value. In
-+		 * which case use the user requested CPUs rather than the PMU
-+		 * ones.
-+		 */
- 		perf_cpu_map__put(evsel->cpus);
- 		evsel->cpus = perf_cpu_map__get(evlist->user_requested_cpus);
- 	} else if (evsel->cpus != evsel->own_cpus) {
-+		/*
-+		 * No user requested cpu map but the PMU cpu map doesn't match
-+		 * the evsel's. Reset it back to the PMU cpu map.
-+		 */
- 		perf_cpu_map__put(evsel->cpus);
- 		evsel->cpus = perf_cpu_map__get(evsel->own_cpus);
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index ec0f2d5f189f..d152ab04a209 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -4204,8 +4204,6 @@ int cmd_record(int argc, const char **argv)
+ 		goto out;
  	}
-diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
-index 4d6f2a032f45..5cd220a61962 100644
---- a/tools/lib/perf/include/internal/evsel.h
-+++ b/tools/lib/perf/include/internal/evsel.h
-@@ -62,9 +62,9 @@ struct perf_evsel {
- 	int			 nr_members;
- 	/*
- 	 * system_wide is for events that need to be on every CPU, irrespective
--	 * of user requested CPUs or threads. Map propagation will set cpus to
--	 * this event's own_cpus, whereby they will contribute to evlist
--	 * all_cpus.
-+	 * of user requested CPUs or threads. Tha main example of this is the
-+	 * dummy event. Map propagation will set cpus for this event to all CPUs
-+	 * as software PMU events like dummy, have a CPU map that is empty.
- 	 */
- 	bool			 system_wide;
- 	/*
+ 
+-	rec->opts.target.hybrid = perf_pmu__has_hybrid();
+-
+ 	if (callchain_param.enabled && callchain_param.record_mode == CALLCHAIN_FP)
+ 		arch__add_leaf_frame_record_opts(&rec->opts);
+ 
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 176deeb8ee66..8d4c4f4ca8ea 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2730,7 +2730,6 @@ int cmd_stat(int argc, const char **argv)
+ 		goto out;
+ 	}
+ 
+-	target.hybrid = perf_pmu__has_hybrid();
+ 	if (evlist__create_maps(evsel_list, &target) < 0) {
+ 		if (target__has_task(&target)) {
+ 			pr_err("Problems finding threads of monitor\n");
+diff --git a/tools/perf/util/target.h b/tools/perf/util/target.h
+index 880f1af7f6ad..d582cae8e105 100644
+--- a/tools/perf/util/target.h
++++ b/tools/perf/util/target.h
+@@ -17,7 +17,6 @@ struct target {
+ 	bool	     default_per_cpu;
+ 	bool	     per_thread;
+ 	bool	     use_bpf;
+-	bool	     hybrid;
+ 	int	     initial_delay;
+ 	const char   *attr_map;
+ };
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
