@@ -2,408 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A065C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 01:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D734EC7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 01:48:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238103AbjE0Bp6 (ORCPT
+        id S238024AbjE0Bs4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 26 May 2023 21:45:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38788 "EHLO
+        Fri, 26 May 2023 21:48:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237583AbjE0Bpz (ORCPT
+        with ESMTP id S229985AbjE0Bsz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 26 May 2023 21:45:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59ED1FB;
-        Fri, 26 May 2023 18:45:33 -0700 (PDT)
+        Fri, 26 May 2023 21:48:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 479D5114;
+        Fri, 26 May 2023 18:48:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 25065617C3;
-        Sat, 27 May 2023 01:45:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CF14C433EF;
-        Sat, 27 May 2023 01:45:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D6F2161032;
+        Sat, 27 May 2023 01:48:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 181FEC433D2;
+        Sat, 27 May 2023 01:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685151925;
-        bh=jWg2ubvJDgLw8hoGNig/7tjb1LiEjtQF+MV9ioJEH2U=;
+        s=k20201202; t=1685152133;
+        bh=4mmYOZvNxvMfe1IUufij5Lxc6zDSw4qsl3m4tlE5ekc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kk0mmwgD15XAqvZqFSC3+eVJA2ItIh1UHhmddP9xpwYUwvSYE/PkMbf9CEB9rMEU6
-         Iady2NAqcGn4+G+/Zyam6T3oRQR4r7qZ5+MmhzSPHigMCTEJaMe9zAEhvl79tsJ2A5
-         kD+uOu54LFjurPu2F0h6T9nyc9KpXXrBnXq7YozNUgtmJiSW6B39GbgGPb2sdSJCP6
-         OxOBgYxwWYP/R188p6YBUB0a0xkqKzYw7rRTroxs19D6FU8ndXUOODv36Bbmb1vqDI
-         qFkEhnjDXD1cRcLbhYk+XVBTzmgFoHhjjfNX1xOHN5G4+drlk3G9os69IthsTKmpvf
-         TIw+TmnyQRxZg==
+        b=q9vBh/ULEZy1gUw5IVHbetfP2uNUTMt6WwztNmEwPdbDzeAhiykNErou+fOo0jymS
+         ygkNNILUhxPWXIjEGH8B6vYDhP1UkRxPghCppxFS12KRDbjhn1OZ+TsNd9tgpVp6bE
+         di6CsMBtf82C/JMwVR7rBAyosrsPWvs3eZBkkX3sbe6F2UhMp3rhYoWmGstase/Sl0
+         6ao/GVhWc+oMWMqmxsUseEdFsTdmd2Yrcx7GKd7YUEK6BtPrFMtJV20dFdcYUBGCK7
+         saqfyd2G931ZZ4nNNAv2hLHg8uiMMTH2fl1DBL7DGe5uHeUMPp2IRvMwcRxmkd5+lJ
+         +wQkzwA0tKwUg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4C265403B5; Fri, 26 May 2023 22:45:22 -0300 (-03)
-Date:   Fri, 26 May 2023 22:45:22 -0300
+        id E6798403B5; Fri, 26 May 2023 22:48:50 -0300 (-03)
+Date:   Fri, 26 May 2023 22:48:50 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+Cc:     K Prateek Nayak <kprateek.nayak@amd.com>,
         Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ming Wang <wangming01@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 14/35] perf evlist: Remove __evlist__add_default
-Message-ID: <ZHFgsu0l8MtcfFFJ@kernel.org>
-References: <20230526215410.2435674-1-irogers@google.com>
- <20230526215410.2435674-15-irogers@google.com>
+Subject: Re: [PATCH] perf test: Fix perf stat JSON output test
+Message-ID: <ZHFhghGjBRPH3UpB@kernel.org>
+References: <20230524210600.3095830-1-namhyung@kernel.org>
+ <d06cac04-00b5-651d-14af-378fc25f37c4@amd.com>
+ <CAP-5=fVMR0Y1=_W2scQBg_uWceOHrHaZ2GMwOai4Veq7OaGJ4A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230526215410.2435674-15-irogers@google.com>
+In-Reply-To: <CAP-5=fVMR0Y1=_W2scQBg_uWceOHrHaZ2GMwOai4Veq7OaGJ4A@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, May 26, 2023 at 02:53:49PM -0700, Ian Rogers escreveu:
-> __evlist__add_default adds a cycles event to a typically empty evlist
-> and was extended for hybrid with evlist__add_default_hybrid, as more
-> than 1 PMU was necessary. Rather than have dedicated logic for the
-> cycles event, this change switches to parsing 'cycles:P' which will
-> handle wildcarding the PMUs appropriately for hybrid.
-
-I think I reported this earlier, but at this point 'perf test python'
-breaks, I fixed it in the tmp.perf-tools-next:
-
- 19: 'import perf' in python                                         : FAILED!
-⬢[acme@toolbox perf-tools-next]$ git log --oneline -1
-fe4f622c4fc7a02a (HEAD) perf evlist: Remove __evlist__add_default
-⬢[acme@toolbox perf-tools-next]$
-⬢[acme@toolbox perf-tools-next]$ perf test -v python
-Couldn't bump rlimit(MEMLOCK), failures may take place when creating BPF maps, etc
- 19: 'import perf' in python                                         :
---- start ---
-test child forked, pid 2976621
-python usage test: "echo "import sys ; sys.path.append('/tmp/build/perf-tools-next/python'); import perf" | '/usr/bin/python3' "
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ImportError: /tmp/build/perf-tools-next/python/perf.cpython-310-x86_64-linux-gnu.so: undefined symbol: parse_event
-test child finished with -1
----- end ----
-'import perf' in python: FAILED!
-⬢[acme@toolbox perf-tools-next]$
-
-Probably there will be a few more cases in the next patches, please
-check.
-
-- Arnaldo
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  tools/perf/arch/x86/util/evsel.c | 20 --------------
->  tools/perf/builtin-record.c      | 13 +++------
->  tools/perf/builtin-top.c         | 10 ++++---
->  tools/perf/util/evlist-hybrid.c  | 25 -----------------
->  tools/perf/util/evlist-hybrid.h  |  1 -
->  tools/perf/util/evlist.c         | 22 ++++++---------
->  tools/perf/util/evlist.h         |  7 -----
->  tools/perf/util/evsel.c          | 46 --------------------------------
->  tools/perf/util/evsel.h          |  3 ---
->  9 files changed, 17 insertions(+), 130 deletions(-)
+Em Fri, May 26, 2023 at 03:41:29PM -0700, Ian Rogers escreveu:
+> On Wed, May 24, 2023 at 8:01 PM K Prateek Nayak <kprateek.nayak@amd.com> wrote:
+> >
+> > Hello Namhyung,
+> >
+> > On 5/25/2023 2:36 AM, Namhyung Kim wrote:
+> > > The recent --per-cache option test caused a problem.  According to
+> > > the option name, I think it should check args.per_cache instead of
+> > > args.per_cache_instance.
+> > >
+> > >   $ sudo ./perf test -v 99
+> > >    99: perf stat JSON output linter                                    :
+> > >   --- start ---
+> > >   test child forked, pid 3086101
+> > >   Checking json output: no args [Success]
+> > >   Checking json output: system wide [Success]
+> > >   Checking json output: interval [Success]
+> > >   Checking json output: event [Success]
+> > >   Checking json output: per thread [Success]
+> > >   Checking json output: per node [Success]
+> > >   Checking json output: system wide no aggregation [Success]
+> > >   Checking json output: per core [Success]
+> > >   Checking json output: per cache_instance Test failed for input:
+> > >   ...
+> > >   Traceback (most recent call last):
+> > >     File "linux/tools/perf/tests/shell/lib/perf_json_output_lint.py", line 88, in <module>
+> > >       elif args.per_core or args.per_socket or args.per_node or args.per_die or args.per_cache_instance:
+> > >   AttributeError: 'Namespace' object has no attribute 'per_cache_instance'
+> > >   test child finished with -1
+> > >   ---- end ----
+> > >   perf stat JSON output linter: FAILED!
+> > >
+> > > Fixes: bfce728db317 ("pert tests: Add tests for new "perf stat --per-cache" aggregation option")
+> >
+> > Another oversight on my part. Thank you for fixing this :)
+> >
+> >    $ sudo perf test -v 99
+> >    99: perf stat JSON output linter                                    :
+> >    --- start ---
+> >    test child forked, pid 25046
+> >    Checking json output: no args [Success]
+> >    Checking json output: system wide [Success]
+> >    Checking json output: interval [Success]
+> >    Checking json output: event [Success]
+> >    Checking json output: per thread [Success]
+> >    Checking json output: per node [Success]
+> >    Checking json output: system wide no aggregation [Success]
+> >    Checking json output: per core [Success]
+> >    Checking json output: per cache_instance [Success]
+> >    Checking json output: per die [Success]
+> >    Checking json output: per socket [Success]
+> >    test child finished with 0
+> >    ---- end ----
+> >    perf stat JSON output linter: Ok
+> >
+> > Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
 > 
-> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
-> index ea3972d785d1..153cdca94cd4 100644
-> --- a/tools/perf/arch/x86/util/evsel.c
-> +++ b/tools/perf/arch/x86/util/evsel.c
-> @@ -16,26 +16,6 @@ void arch_evsel__set_sample_weight(struct evsel *evsel)
->  	evsel__set_sample_bit(evsel, WEIGHT_STRUCT);
->  }
->  
-> -void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr)
-> -{
-> -	struct perf_env env = { .total_mem = 0, } ;
-> -
-> -	if (!perf_env__cpuid(&env))
-> -		return;
-> -
-> -	/*
-> -	 * On AMD, precise cycles event sampling internally uses IBS pmu.
-> -	 * But IBS does not have filtering capabilities and perf by default
-> -	 * sets exclude_guest = 1. This makes IBS pmu event init fail and
-> -	 * thus perf ends up doing non-precise sampling. Avoid it by clearing
-> -	 * exclude_guest.
-> -	 */
-> -	if (env.cpuid && strstarts(env.cpuid, "AuthenticAMD"))
-> -		attr->exclude_guest = 0;
-> -
-> -	free(env.cpuid);
-> -}
-> -
->  /* Check whether the evsel's PMU supports the perf metrics */
->  bool evsel__sys_has_perf_metrics(const struct evsel *evsel)
->  {
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index 88f7b4241153..d80b54a6f450 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -4161,18 +4161,11 @@ int cmd_record(int argc, const char **argv)
->  		record.opts.tail_synthesize = true;
->  
->  	if (rec->evlist->core.nr_entries == 0) {
-> -		if (perf_pmu__has_hybrid()) {
-> -			err = evlist__add_default_hybrid(rec->evlist,
-> -							 !record.opts.no_samples);
-> -		} else {
-> -			err = __evlist__add_default(rec->evlist,
-> -						    !record.opts.no_samples);
-> -		}
-> +		bool can_profile_kernel = perf_event_paranoid_check(1);
->  
-> -		if (err < 0) {
-> -			pr_err("Not enough memory for event selector list\n");
-> +		err = parse_event(rec->evlist, can_profile_kernel ? "cycles:P" : "cycles:Pu");
-> +		if (err)
->  			goto out;
-> -		}
->  	}
->  
->  	if (rec->opts.target.tid && !rec->opts.no_inherit_set)
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 48ee49e95c5e..27a7f068207d 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1653,10 +1653,12 @@ int cmd_top(int argc, const char **argv)
->  	if (annotate_check_args(&top.annotation_opts) < 0)
->  		goto out_delete_evlist;
->  
-> -	if (!top.evlist->core.nr_entries &&
-> -	    evlist__add_default(top.evlist) < 0) {
-> -		pr_err("Not enough memory for event selector list\n");
-> -		goto out_delete_evlist;
-> +	if (!top.evlist->core.nr_entries) {
-> +		bool can_profile_kernel = perf_event_paranoid_check(1);
-> +		int err = parse_event(top.evlist, can_profile_kernel ? "cycles:P" : "cycles:Pu");
-> +
-> +		if (err)
-> +			goto out_delete_evlist;
->  	}
->  
->  	status = evswitch__init(&top.evswitch, top.evlist, stderr);
-> diff --git a/tools/perf/util/evlist-hybrid.c b/tools/perf/util/evlist-hybrid.c
-> index 0f59c80f27b2..64f78d06fe19 100644
-> --- a/tools/perf/util/evlist-hybrid.c
-> +++ b/tools/perf/util/evlist-hybrid.c
-> @@ -16,31 +16,6 @@
->  #include <perf/evsel.h>
->  #include <perf/cpumap.h>
->  
-> -int evlist__add_default_hybrid(struct evlist *evlist, bool precise)
-> -{
-> -	struct evsel *evsel;
-> -	struct perf_pmu *pmu;
-> -	__u64 config;
-> -	struct perf_cpu_map *cpus;
-> -
-> -	perf_pmu__for_each_hybrid_pmu(pmu) {
-> -		config = PERF_COUNT_HW_CPU_CYCLES |
-> -			 ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT);
-> -		evsel = evsel__new_cycles(precise, PERF_TYPE_HARDWARE,
-> -					  config);
-> -		if (!evsel)
-> -			return -ENOMEM;
-> -
-> -		cpus = perf_cpu_map__get(pmu->cpus);
-> -		evsel->core.cpus = cpus;
-> -		evsel->core.own_cpus = perf_cpu_map__get(cpus);
-> -		evsel->pmu_name = strdup(pmu->name);
-> -		evlist__add(evlist, evsel);
-> -	}
-> -
-> -	return 0;
-> -}
-> -
->  bool evlist__has_hybrid(struct evlist *evlist)
->  {
->  	struct evsel *evsel;
-> diff --git a/tools/perf/util/evlist-hybrid.h b/tools/perf/util/evlist-hybrid.h
-> index 4b000eda6626..0cded76eb344 100644
-> --- a/tools/perf/util/evlist-hybrid.h
-> +++ b/tools/perf/util/evlist-hybrid.h
-> @@ -7,7 +7,6 @@
->  #include "evlist.h"
->  #include <unistd.h>
->  
-> -int evlist__add_default_hybrid(struct evlist *evlist, bool precise);
->  bool evlist__has_hybrid(struct evlist *evlist);
->  
->  #endif /* __PERF_EVLIST_HYBRID_H */
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 9dfa977193b3..63f8821a5395 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -93,8 +93,15 @@ struct evlist *evlist__new(void)
->  struct evlist *evlist__new_default(void)
->  {
->  	struct evlist *evlist = evlist__new();
-> +	bool can_profile_kernel;
-> +	int err;
-> +
-> +	if (!evlist)
-> +		return NULL;
->  
-> -	if (evlist && evlist__add_default(evlist)) {
-> +	can_profile_kernel = perf_event_paranoid_check(1);
-> +	err = parse_event(evlist, can_profile_kernel ? "cycles:P" : "cycles:Pu");
-> +	if (err) {
->  		evlist__delete(evlist);
->  		evlist = NULL;
->  	}
-> @@ -237,19 +244,6 @@ static void evlist__set_leader(struct evlist *evlist)
->  	perf_evlist__set_leader(&evlist->core);
->  }
->  
-> -int __evlist__add_default(struct evlist *evlist, bool precise)
-> -{
-> -	struct evsel *evsel;
-> -
-> -	evsel = evsel__new_cycles(precise, PERF_TYPE_HARDWARE,
-> -				  PERF_COUNT_HW_CPU_CYCLES);
-> -	if (evsel == NULL)
-> -		return -ENOMEM;
-> -
-> -	evlist__add(evlist, evsel);
-> -	return 0;
-> -}
-> -
->  static struct evsel *evlist__dummy_event(struct evlist *evlist)
->  {
->  	struct perf_event_attr attr = {
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index 5e7ff44f3043..664c6bf7b3e0 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -100,13 +100,6 @@ void evlist__delete(struct evlist *evlist);
->  void evlist__add(struct evlist *evlist, struct evsel *entry);
->  void evlist__remove(struct evlist *evlist, struct evsel *evsel);
->  
-> -int __evlist__add_default(struct evlist *evlist, bool precise);
-> -
-> -static inline int evlist__add_default(struct evlist *evlist)
-> -{
-> -	return __evlist__add_default(evlist, true);
-> -}
-> -
->  int evlist__add_attrs(struct evlist *evlist, struct perf_event_attr *attrs, size_t nr_attrs);
->  
->  int __evlist__add_default_attrs(struct evlist *evlist,
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 8c8f371ea2b5..1df8f967d2eb 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -316,48 +316,6 @@ struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
->  	return evsel;
->  }
->  
-> -static bool perf_event_can_profile_kernel(void)
-> -{
-> -	return perf_event_paranoid_check(1);
-> -}
-> -
-> -struct evsel *evsel__new_cycles(bool precise __maybe_unused, __u32 type, __u64 config)
-> -{
-> -	struct perf_event_attr attr = {
-> -		.type	= type,
-> -		.config	= config,
-> -		.exclude_kernel	= !perf_event_can_profile_kernel(),
-> -	};
-> -	struct evsel *evsel;
-> -
-> -	event_attr_init(&attr);
-> -
-> -	/*
-> -	 * Now let the usual logic to set up the perf_event_attr defaults
-> -	 * to kick in when we return and before perf_evsel__open() is called.
-> -	 */
-> -	evsel = evsel__new(&attr);
-> -	if (evsel == NULL)
-> -		goto out;
-> -
-> -	arch_evsel__fixup_new_cycles(&evsel->core.attr);
-> -
-> -	evsel->precise_max = true;
-> -
-> -	/* use asprintf() because free(evsel) assumes name is allocated */
-> -	if (asprintf(&evsel->name, "cycles%s%s%.*s",
-> -		     (attr.precise_ip || attr.exclude_kernel) ? ":" : "",
-> -		     attr.exclude_kernel ? "u" : "",
-> -		     attr.precise_ip ? attr.precise_ip + 1 : 0, "ppp") < 0)
-> -		goto error_free;
-> -out:
-> -	return evsel;
-> -error_free:
-> -	evsel__delete(evsel);
-> -	evsel = NULL;
-> -	goto out;
-> -}
-> -
->  int copy_config_terms(struct list_head *dst, struct list_head *src)
->  {
->  	struct evsel_config_term *pos, *tmp;
-> @@ -1131,10 +1089,6 @@ void __weak arch_evsel__set_sample_weight(struct evsel *evsel)
->  	evsel__set_sample_bit(evsel, WEIGHT);
->  }
->  
-> -void __weak arch_evsel__fixup_new_cycles(struct perf_event_attr *attr __maybe_unused)
-> -{
-> -}
-> -
->  void __weak arch__post_evsel_config(struct evsel *evsel __maybe_unused,
->  				    struct perf_event_attr *attr __maybe_unused)
->  {
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index df8928745fc6..429b172cc94d 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -243,8 +243,6 @@ static inline struct evsel *evsel__newtp(const char *sys, const char *name)
->  }
->  #endif
->  
-> -struct evsel *evsel__new_cycles(bool precise, __u32 type, __u64 config);
-> -
->  #ifdef HAVE_LIBTRACEEVENT
->  struct tep_event *event_format__new(const char *sys, const char *name);
->  #endif
-> @@ -312,7 +310,6 @@ void __evsel__reset_sample_bit(struct evsel *evsel, enum perf_event_sample_forma
->  void evsel__set_sample_id(struct evsel *evsel, bool use_sample_identifier);
->  
->  void arch_evsel__set_sample_weight(struct evsel *evsel);
-> -void arch_evsel__fixup_new_cycles(struct perf_event_attr *attr);
->  void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr);
->  
->  int evsel__set_filter(struct evsel *evsel, const char *filter);
-> -- 
-> 2.41.0.rc0.172.g3f132b7071-goog
+> Thanks Namhyung and Prateek, Arnaldo could we get this in
+> perf-tools-next so that the failing test goes away?
 > 
+> Acked-by: Ian Rogers <irogers@google.com>
 
--- 
+Applied and pushed to perf-tools-next, please continue from there.
+
+⬢[acme@toolbox perf-tools-next]$ git log --oneline -10
+540c910c65a94fb4 (HEAD -> perf-tools-next) perf test: Fix perf stat JSON output test
+5cebb33fd929dc67 perf tests: Organize cpu_map tests into a single suite
+237d41d4a2d7d45e perf cpumap: Add intersect function
+6ac2230b55d392e6 perf vendor events intel: Add metricgroup descriptions for all models
+66c6e0c100277175 perf jevents: Add support for metricgroup descriptions
+bfce728db3179042 pert tests: Add tests for new "perf stat --per-cache" aggregation option
+aab667ca8837e45f perf stat: Add "--per-cache" aggregation option and document it
+4b87406a3b590888 perf stat record: Save cache level information
+995ed074b829f293 perf stat: Setup the foundation to allow aggregation based on cache topology
+2b72cec9eef19d73 perf: Extract building cache level for a CPU into separate function
+⬢[acme@toolbox perf-tools-next]$
 
 - Arnaldo
