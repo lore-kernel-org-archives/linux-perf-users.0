@@ -2,276 +2,169 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73FECC77B7E
-	for <linux-perf-users@archiver.kernel.org>; Sun, 28 May 2023 22:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DED0C7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Sun, 28 May 2023 23:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbjE1WtA (ORCPT
+        id S229628AbjE1XHu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 28 May 2023 18:49:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52526 "EHLO
+        Sun, 28 May 2023 19:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjE1Ws7 (ORCPT
+        with ESMTP id S229596AbjE1XHt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 28 May 2023 18:48:59 -0400
-Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA63DB9
-        for <linux-perf-users@vger.kernel.org>; Sun, 28 May 2023 15:48:57 -0700 (PDT)
-Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3f70597707eso955e9.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 28 May 2023 15:48:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685314131; x=1687906131;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eaS3n103hIYL7yW3nPuZEJfFcA+bMqzC6kPjpg8rVt0=;
-        b=yf9ruA7sOwxGlOK376BD7b57V5Pj07Wt3hx+K9WYJrZvw86h+P2DRCU0jrbGYWAlbi
-         jIelM7hNQK9FRFNgycQFUU3h2BIcPYttisMG160LqbAd/AiSIo7EeEsHL798dsQwcGli
-         3/gqzPehE2/J668mgYgIM4esYUS8S3p5IWzPGnMa02MZda+0ujCuRX7aq4t2odIfUUst
-         qToXw/q/csQ3OBfXX5VEfk0dgCoI2oo3Cg1nZDx+fGNmmTIv1HbhwhITpCt9A128KyMy
-         sUyUE7CNAw0gbgePDSDKBBV48M7RCezucP6BViEy8hlURAu5uZYWxlB5Z6cNdfI0mMMl
-         dWlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685314131; x=1687906131;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eaS3n103hIYL7yW3nPuZEJfFcA+bMqzC6kPjpg8rVt0=;
-        b=a+zKLfpPdBfvArO0TeJyz1eT193fdtqSBRBsPtAY2c50EMFQ0gMe6a2l5le2S1ULNt
-         GrLANW/JZAWALxdcGQF8t3SHzdbwBGBv6pRahOVjtmmIplPZvuy4VIpO44sG62gT9e6L
-         4q9zh6kXSjz52Rq1QVbzTj20slrpCIlolJK/9PnreJG9pD4E3Ji+nlIOoj0aLkaLEgkK
-         BadIdHshykM3zuoLtGzJciII/oZrbQE9/nrTrO0M2U6fKRFlRbmB4BJGzJQDMzn/yP6W
-         /ULMWwM4VM8/OgXFBL66iPNZ5C7OuW/ESMHHn3iTSkzv/zOWVUwxw4eHAYxk07TBBueL
-         q0tQ==
-X-Gm-Message-State: AC+VfDwAyp6tG5Cb/A/RSXNh7YFtb+DmDRj2vYKMxXQBDUPRmPJ7VWGb
-        /kBWMHQbavsH7+Mh01rV4l4eiA1ss4/76lgBGu87X+eUZWOZDD88h86QRA==
-X-Google-Smtp-Source: ACHHUZ7HdcZ0P+3gCNzySNaxjI7JaL0fLYvKfLHtowb9QDBHRmndyPwpLDKSCyJ0uBclTgN2IixeuMksF8+ewhPYG5Q=
-X-Received: by 2002:a05:600c:4f02:b0:3f4:2736:b5eb with SMTP id
- l2-20020a05600c4f0200b003f42736b5ebmr325470wmq.1.1685314131129; Sun, 28 May
- 2023 15:48:51 -0700 (PDT)
+        Sun, 28 May 2023 19:07:49 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2055.outbound.protection.outlook.com [40.107.244.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BA2CBD;
+        Sun, 28 May 2023 16:07:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G+pWCLnJctL3m1MSYxb8kWaEVK9c2K2N1xbGupzyrLS3YPyVcQUu8tnQKhaQr9mDkIh52kgQJ4xE0/Q8zpKVAU5tqr+/ABgSa4xb0ccVXHOo1K0hldyX8WltMqn+OlLlmB2bGRGplLzyRRdnERohD/qPWlk4YKrVMAa6lBXgXmfAzbal8nIpuECJV/fb0Kl65lEXPAmLtC7KV2l/MCdV8UUcvnFD4791LMuaqMAXRRwpQQr+SCq1gNIBjvz4+OdC+08mCgqvSl5BAl4n34inW2SlWARrdyHlHklzJVKLgsRSH9ZW7aS4QMzEu+rY3pwLkrXIVYrbpda9nbfy2ZNkKQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=whttZjuMLBKtK4pt9ivmDU7tlWZnt6gbrj4fax/kmuY=;
+ b=h/xd0EMOZA7ohNTnYVonf6OPp9o/wD466JmaT7yhW2ipjpoEcVJKXA3T7rsnbN5k1MzX+kGwJcN34wLIUyEX5Jbp4reZYuAEmcN3/Mu4az5OYwf4BSDEZjUXcwmwTrEt6d7HUcm1A9SBjgs8TGlnL4ayCWxVHbjidcDiDDdgUQIMbxSfTYD/b2J2+x7iSsFrLTUppFZh9+XH3uD9mfU92048+DXHNYtBpiOZGCv5/7drK78zcG1F2R1FO+XRCPs60WWz0nIdHsKAI490//LRzXsOwFsklISXEdtOmRgrVqikn2bygQYQx3jaXx05va97+ylfT7xb9cFPlg18WaOg0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=whttZjuMLBKtK4pt9ivmDU7tlWZnt6gbrj4fax/kmuY=;
+ b=c4eBu5zjgyQvzyYup+0EDgREO/HF7KHqBoSVQ9SSjCt/6M6sfc6knQvtukcRjI5YZsKD9w/mWeTd+huTQ3Y8r48NGjcNpFuPhG96f4+qsObbJGIkqCwzHQ4OQVsIuFCgcbBlxTkmKqFWOufuyallJoRrGoSrDK0XWUj33RlSPwyQIJ3a/VXMN97JqdPw4zDs38XM2vnTWU6qfVXOyQN59UlVl166Upv5Hkt6QdzS2IZJ5hh0i0312KVvlqWtDtqLNunV3q1VbMxHAb/5cdqkqA0ZeDYZypGki1fBq6m03Hj6fWjedrrXOL5pk3+ZgOK0VsTcUJSJp/732Cd066bh5g==
+Received: from BY5PR17CA0045.namprd17.prod.outlook.com (2603:10b6:a03:167::22)
+ by SJ2PR12MB8691.namprd12.prod.outlook.com (2603:10b6:a03:541::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.22; Sun, 28 May
+ 2023 23:07:42 +0000
+Received: from CO1NAM11FT035.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:a03:167:cafe::45) by BY5PR17CA0045.outlook.office365.com
+ (2603:10b6:a03:167::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.21 via Frontend
+ Transport; Sun, 28 May 2023 23:07:42 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CO1NAM11FT035.mail.protection.outlook.com (10.13.175.36) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6455.20 via Frontend Transport; Sun, 28 May 2023 23:07:42 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Sun, 28 May 2023
+ 16:07:33 -0700
+Received: from [10.110.48.28] (10.126.230.35) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Sun, 28 May
+ 2023 16:07:32 -0700
+Message-ID: <0dc304c7-c11d-d4ce-a6aa-c0992ca8b9af@nvidia.com>
+Date:   Sun, 28 May 2023 16:07:31 -0700
 MIME-Version: 1.0
-From:   Ian Rogers <irogers@google.com>
-Date:   Sun, 28 May 2023 15:48:31 -0700
-Message-ID: <CAP-5=fVMnYMKFGBypCGWOB9uq_zgOiQhuiXUy+o3ej0b0JuMGQ@mail.gmail.com>
-Subject: LTO builds
-To:     linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] [suggestion] mm/gup: avoid IS_ERR_OR_NULL
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        Lorenzo Stoakes <lstoakes@gmail.com>
+CC:     Arnd Bergmann <arnd@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Arnaldo Carvalho de Melo" <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Alexander Shishkin" <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        "Adrian Hunter" <adrian.hunter@intel.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-perf-users@vger.kernel.org>
+References: <20230519093953.10972-1-arnd@kernel.org>
+ <5b071f65-7f87-4a7b-a76a-f4a1c1568ae7@lucifer.local>
+ <ZGf1hV7iEQyqAim5@ziepe.ca>
+ <1ca47b8a-292c-47ab-aa6f-ca24fdfc0d3c@lucifer.local>
+ <ZGiEEPXdAMnKqkqx@nvidia.com>
+ <0bc9dc2b-0da6-4d5c-96af-e21aa287eecb@lucifer.local>
+ <ZHHSwRzksE+KukTK@nvidia.com>
+ <617c2e26-8450-4a35-9b47-c0482921f030@lucifer.local>
+ <ZHN/u5hefVwsIdDN@nvidia.com>
+Content-Language: en-US
+From:   John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <ZHN/u5hefVwsIdDN@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.230.35]
+X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT035:EE_|SJ2PR12MB8691:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4e2d4b8f-556b-4c69-999c-08db5fd05764
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 0muwWiNaUzfubMlgf+VpwKWd6tyfw4ilPQ0J1VsT7Y2dyX3eOjZ26DIaK19jV/NU0GZd8dFjFBCx7eyFneb3EFK9zhznmnYW9btMIyTgwpeJznZ4PeG1wfS60l7F95BR7AAbsyyYRs4sdIdDGYQDglAJL01Lt8V8iU38vz0eJ/vZHBXm4d5nt9rcvzbyezLkgkiRYfEAasmP2OKlsW184bRehAWEjURfGM1RmECJksUFUPy/gvSBOksjWtiriPPgSaeUdSdBEFAYw8u9nPmL7kmXohwOoVWWZkTDsi4QlSPIuDYkN/+atL6sZbf3R16sf/i2zAKPTXM7dKRolK7zYJnPhAVYnYmQxUB6RgjPq4aO4U4AiAg9Bzg8/Mx6CQTOtxHibazRAnbcRBBLq/DhidB1Chqtl50gccUyhnYRlMCTYiSFV2NEmqpnI5H+K/n/4GZLQWZyUgyqNix9cUI4fVzSraqvxp87ogOqXNzIw9mCeBrBuyHfz48YKWxnYcFawbTUSCSUxXoqyKQ8a23QtGmp4tRI76tuH6k+J4QfiFduFlfLzLtFrMs+gD/ExxcuEdMQhmmoGhPeJ5+m7QVerxAaKUnZxaOf5KGc2TW5AvvksY88WUwuQYewr2RO8WgFx20NdkrR7qns5eab9dm8Wt19EhSY0awFwSDEVj4P7WNb0dU9ZC8wmce0WFtzaREbsVZKL6WtRxsHbe5gU1ds2itCj145DIWlVbuuvladLW9+e1VzyQhBJJlOfFFaVgrnP2EGBsLj2cktG0x+XRuO/Q==
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(136003)(396003)(39860400002)(451199021)(46966006)(40470700004)(36840700001)(16526019)(186003)(26005)(53546011)(316002)(2906002)(40480700001)(40460700003)(5660300002)(41300700001)(36756003)(7416002)(8676002)(8936002)(478600001)(82740400003)(7636003)(356005)(36860700001)(31686004)(16576012)(54906003)(110136005)(426003)(336012)(4326008)(82310400005)(31696002)(86362001)(2616005)(47076005)(70586007)(70206006)(83380400001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 May 2023 23:07:42.5697
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4e2d4b8f-556b-4c69-999c-08db5fd05764
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT035.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8691
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+On 5/28/23 09:22, Jason Gunthorpe wrote:
+> On Sun, May 28, 2023 at 04:13:44PM +0100, Lorenzo Stoakes wrote:
+>> On Sat, May 27, 2023 at 06:52:01AM -0300, Jason Gunthorpe wrote:
+>>> On Sat, May 20, 2023 at 10:12:40AM +0100, Lorenzo Stoakes wrote:
+>>>>> No, this returning 0 on failure is a foot gun. Failing to pin a single
+>>>>> page is always an error, the only question is what sub reason caused
+>>>>> the error to happen. There is no third case where it is not an error.
+>>>>
+>>>> The uprobe path thinks otherwise, but maybe the answer is that we just need
+>>>> to -EFAULT on missing VMA and -EPERM on invalid flags.
+>>>
+>>> I think uprobe is just broken to think there is a third outcome. Let's
+>>> just fix it instead of trying to pretend it makes sense.
+>>
+>> Sure, will take a look at that if I get a chance. We can at the very least
+>> adjust get_user_page_vma_remote() with this fixed.
 
-I just wanted to post on this as I think others may be interested,
-perhaps in the future the standard non-"DEBUG=3D1" build can be LTO. I
-played around a bit with LTO builds for the perf tool. clang worked if
-I did:
-$ make -C tools/perf O=3D/tmp/perf EXTRA_CFLAGS=3D"-flto"
-EXTRA_CXXFLAGS=3D"-flto" CC=3Dclang CXX=3Dclang++ LD=3Dld.lld
+Great!
 
-However, gcc didn't compile without the hacky patch at the end, and
-then it failed with link time issues:
+We've had previous discussions about getting rid of this pseudo-tristate
+errno in gup, so I just wanted to mention that I'm also glad to see the
+movement toward, "return some pages, or else a -errno". That's progress.
 
-```
-$ make -C tools/perf O=3D/tmp/perf EXTRA_CFLAGS=3D"-flto"
-EXTRA_CXXFLAGS=3D"-flto" CC=3Dgcc CXX=3Dg++ LD=3Dld.lld
-make: Entering directory '~/kernel.org/tools/perf'
-  BUILD:   Doing 'make -j16' parallel build
-Warning: Kernel ABI header at 'tools/include/uapi/linux/perf_event.h'
-differs from latest version at 'include/uapi/linux/perf_event.h'
-diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event=
-.h
-Warning: Kernel ABI header at
-'tools/arch/arm64/include/uapi/asm/perf_regs.h' differs from latest
-version at 'arch/arm64/include/uapi/asm/perf_regs.h'
-diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h
-arch/arm64/include/uapi/asm/perf_regs.h
-Warning: Kernel ABI header at 'tools/include/linux/coresight-pmu.h'
-differs from latest version at 'include/linux/coresight-pmu.h'
-diff -u tools/include/linux/coresight-pmu.h include/linux/coresight-pmu.h
-Makefile.config:602: No sys/sdt.h found, no SDT events are defined,
-please install systemtap-sdt-devel or systemtap-sdt-dev
-Makefile.config:985: No libcap found, disables capability support,
-please install libcap-devel/libcap-dev
-Makefile.config:998: No numa.h found, disables 'perf bench numa mem'
-benchmark, please install numactl-devel/libnuma-devel/libnuma-dev
-Makefile.config:1057: No libbabeltrace found, disables 'perf data' CTF
-format support, please install
-libbabeltrace-dev[el]/libbabeltrace-ctf-dev
 
-Auto-detecting system features:
-...                                   dwarf: [ on  ]
-...                      dwarf_getlocations: [ on  ]
-...                                   glibc: [ on  ]
-...                                  libbfd: [ on  ]
-...                          libbfd-buildid: [ on  ]
-...                                  libcap: [ OFF ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ OFF ]
-...                  numa_num_possible_cpus: [ OFF ]
-...                                 libperl: [ on  ]
-...                               libpython: [ on  ]
-...                               libcrypto: [ on  ]
-...                               libunwind: [ on  ]
-...                      libdw-dwarf-unwind: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                               get_cpuid: [ on  ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
+>>
+>> Do you feel that a partially successful pinning for other GUP callers
+>> should equally be treated as an error (and pages unpinned -> return error
+>> code)? In that instance we'd need to audit things somewhat.
+> 
+> That seems more deeply ingrained at least, I'm not as keen to change
+> it as to get rid of the 0 return result.
+> 
 
-  INSTALL libsubcmd_headers
-  INSTALL libapi_headers
-  INSTALL libperf_headers
-  INSTALL libsymbol_headers
-  INSTALL libbpf_headers
-  LINK    /tmp/perf/perf
-lto-wrapper: warning: using serial compilation of 50 LTRANS jobs
-lto-wrapper: note: see the =E2=80=98-flto=E2=80=99 option documentation for=
- more information
-/usr/bin/ld: /tmp/cclv2Qid.ltrans3.ltrans.o: in function `script_fetch_insn=
-':
-~/kernel.org/tools/perf/arch/x86/util/archinsn.c:23: undefined
-reference to `insn_decode'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans32.ltrans.o: in function
-`inline_list__append_record':
-~/kernel.org/tools/perf/util/symbol-elf.c:286: undefined reference to
-`cxx_demangle_sym'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans37.ltrans.o: in function
-`dso__synthesize_plt_symbols':
-~/kernel.org/tools/perf/util/symbol-elf.c:286: undefined reference to
-`cxx_demangle_sym'
-/usr/bin/ld: ~/kernel.org/tools/perf/util/symbol-elf.c:286: undefined
-reference to `cxx_demangle_sym'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans37.ltrans.o: in function `dso__demangle_sy=
-m':
-~/kernel.org/tools/perf/util/symbol-elf.c:286: undefined reference to
-`cxx_demangle_sym'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans37.ltrans.o: in function
-`dso__load_sym_internal.lto_priv.0':
-~/kernel.org/tools/perf/util/symbol-elf.c:286: undefined reference to
-`cxx_demangle_sym'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans41.ltrans.o: in function `arch_fetch_insn'=
-:
-~/kernel.org/tools/perf/arch/x86/util/archinsn.c:23: undefined
-reference to `insn_decode'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans49.ltrans.o: in function
-`perf_sample__fprintf_insn.isra.0':
-~/kernel.org/tools/perf/arch/x86/util/archinsn.c:23: undefined
-reference to `insn_decode'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans10.ltrans.o:(.data.rel.ro+0x28):
-undefined reference to `memset_orig'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans10.ltrans.o:(.data.rel.ro+0x40):
-undefined reference to `__memset'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans10.ltrans.o:(.data.rel+0x28):
-undefined reference to `memcpy_orig'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans10.ltrans.o:(.data.rel+0x40):
-undefined reference to `__memcpy'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans33.ltrans.o: in function `__intel_pt_log_i=
-nsn':
-~/kernel.org/tools/perf/util/intel-pt-decoder/intel-pt-log.c:236:
-undefined reference to `intel_pt_insn_desc'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans33.ltrans.o: in function
-`__intel_pt_log_insn_no_data':
-~/kernel.org/tools/perf/util/intel-pt-decoder/intel-pt-log.c:251:
-undefined reference to `intel_pt_insn_desc'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans34.ltrans.o: in function
-`intel_pt_sample_flags':
-~/kernel.org/tools/perf/util/intel-pt.c:1503: undefined reference to
-`intel_pt_insn_type'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans34.ltrans.o: in function
-`intel_pt_walk_next_insn':
-~/kernel.org/tools/perf/util/intel-pt.c:860: undefined reference to
-`intel_pt_get_insn'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans35.ltrans.o: in function
-`intel_bts_process_queue':
-~/kernel.org/tools/perf/util/intel-bts.c:335: undefined reference to
-`intel_pt_get_insn'
-/usr/bin/ld: ~/kernel.org/tools/perf/util/intel-bts.c:390: undefined
-reference to `intel_pt_insn_type'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans42.ltrans.o: in function `test_data_item':
-~/kernel.org/tools/perf/arch/x86/tests/insn-x86.c:106: undefined
-reference to `insn_decode'
-/usr/bin/ld: ~/kernel.org/tools/perf/arch/x86/tests/insn-x86.c:122:
-undefined reference to `intel_pt_get_insn'
-/usr/bin/ld: /tmp/cclv2Qid.ltrans42.ltrans.o: in function
-`test__arch_unwind_sample':
-~/kernel.org/tools/perf/arch/x86/tests/dwarf-unwind.c:72: undefined
-reference to `perf_regs_load'
-collect2: error: ld returned 1 exit status
-make[2]: *** [Makefile.perf:682: /tmp/perf/perf] Error 1
-make[1]: *** [Makefile.perf:236: sub-make] Error 2
-make: *** [Makefile:70: all] Error 2
-make: Leaving directory '~/kernel.org/tools/perf'
-```
+Yes. It's not just "audit things somewhat", it's more like, "change
+quite a few call sites, some of which actually gather sets of partial
+results in a retry loop". So some actual coding changes there.
 
-A number of the link time issues are with C++ code and assembly code.
-I played around with options like AR=3Dgcc-ar but without success. I
-wondered if people on the list had thoughts on how to get this to
-work.
 
-Thanks,
-Ian
+thanks,
+-- 
+John Hubbard
+NVIDIA
 
-Patch:
-```
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-tes=
-t.c
-index aa44fdc84763..6bf13e052fff 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -33,9 +33,7 @@
-static bool dont_fork;
-const char *dso_to_test;
-
--struct test_suite *__weak arch_tests[] =3D {
--       NULL,
--};
-+extern struct test_suite *__weak arch_tests[];
-
-static struct test_suite *generic_tests[] =3D {
-       &suite__vmlinux_matches_kallsyms,
-diff --git a/tools/perf/tests/stat.c b/tools/perf/tests/stat.c
-index 500974040fe3..706780fb5695 100644
---- a/tools/perf/tests/stat.c
-+++ b/tools/perf/tests/stat.c
-@@ -27,7 +27,7 @@ static int process_stat_config_event(struct
-perf_tool *tool __maybe_unused,
-                                    struct machine *machine __maybe_unused)
-{
-       struct perf_record_stat_config *config =3D &event->stat_config;
--       struct perf_stat_config stat_config;
-+       struct perf_stat_config stat_config =3D {};
-
-#define HAS(term, val) \
-       has_term(config, PERF_STAT_CONFIG_TERM__##term, val)
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.=
-c
-index e0c3f2037477..80ac426b7e6a 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -754,7 +754,7 @@ parse_events_config_bpf(struct parse_events_state
-*parse_state,
-                       struct list_head *head_config)
-{
-       struct parse_events_term *term;
--       int error_pos;
-+       int error_pos =3D 0;
-
-       if (!head_config || list_empty(head_config))
-               return 0;
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 0f7b8a8cdea6..cef1d4a41c05 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -707,7 +707,7 @@ size_t perf_event__fprintf_stat_round(union
-perf_event *event, FILE *fp)
-
-size_t perf_event__fprintf_stat_config(union perf_event *event, FILE *fp)
-{
--       struct perf_stat_config sc;
-+       struct perf_stat_config sc =3D {};
-       size_t ret;
-
-       perf_event__read_stat_config(&sc, &event->stat_config);
-```
