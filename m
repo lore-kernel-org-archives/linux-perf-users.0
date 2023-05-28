@@ -2,266 +2,320 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39659C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Sat, 27 May 2023 19:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F44C77B7E
+	for <linux-perf-users@archiver.kernel.org>; Sun, 28 May 2023 11:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229977AbjE0Tup (ORCPT
+        id S229533AbjE1LFd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 27 May 2023 15:50:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49668 "EHLO
+        Sun, 28 May 2023 07:05:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbjE0Tun (ORCPT
+        with ESMTP id S229447AbjE1LFc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 27 May 2023 15:50:43 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0FF9D8
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 12:50:41 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f606e111d3so20115e9.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 27 May 2023 12:50:41 -0700 (PDT)
+        Sun, 28 May 2023 07:05:32 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5337C3
+        for <linux-perf-users@vger.kernel.org>; Sun, 28 May 2023 04:05:27 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b0218c979cso9481665ad.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 28 May 2023 04:05:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685217040; x=1687809040;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LtUJ4v++OI133C3lQur1nn4btzIftcEOotoOe/VY9bI=;
-        b=h2IaDEykRUyy5myIVn3qgegjA5i6fVdO6k5kQUb3LLZ4aL0/EiLkyNBzKZ0D6r7fG8
-         jeP359cYkrIO5+JXb8Cq59Flx9HiZMA3Zg6cDx3oi+iOHyJhR04zt2KLRmYVcsWhOeBf
-         WZuRm/quq+pHOMbGpktyFwJv+ZgIeTZl1jeuiHv8Yk+ZJ+ubU8N2BRd87vnpY50dBQR9
-         BTjOxTlS+wAMkm9/hMHkHkwqqPHoGKVs1cTM6NlQ1MeD7z3SeBeqlzlgNXkVqssOzNJA
-         vtZaM1zeTFRV4Nv15d66NaUXrq/y3q5qHDRD46q7d9khjE21YiCGymo6n1hfHEqBvzAl
-         6otg==
+        d=linaro.org; s=google; t=1685271927; x=1687863927;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6kFVAo3EuhexKxn0naKo2wrq/yqwbGkE2Idl0RXG/vs=;
+        b=ynAteCmw31+RQ5h9pg+xWlM6m0rbMyE5D5UWV6SAHWtYGhFZZTsluqGnmPouGVvqEl
+         XpSInZr00r8tr3UzqlKTPvhQK5rQ5kD5Mb/jUT6ua84Z2txZ2dONn1smeI8lQMIcKZs4
+         l+rD5oNasQDfgFi6vetuZyncsO3+dNlxJMcDsnzIi6+7WIykjVpIQBOj9hr8j1pacRJg
+         YKd3G9K1N3bf5ZbVQxu1h2Sh8bV/ZetM3JLG9YJYv1yj58JHhy80wYGSox/7ZIOr0t0Z
+         br6tKtctmmOmjNs3HKzxa/EML4ov6mfwmMesDwrzJXA4JTeYBlxrWY31exwZMxalLbqM
+         zXrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685217040; x=1687809040;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LtUJ4v++OI133C3lQur1nn4btzIftcEOotoOe/VY9bI=;
-        b=GcRSPMvTeLnbVLFqOe8tjPAWa7Ozn4FfkD71k7cFcJsFPo+P4nH8rsdKERN+Ivp4ci
-         PGsGTio3z8R/P9u+KXIwIEJNLevUEXwbR8xjbzwO3Rqfrj5OLlCzszf49CANmtVdoCt+
-         UqIbdqslE7Gony2pe/8ElVlfnw+RQqM+TSPbc9ZTm4u5ks4ZaKpiJeEw5SOJ4GewQzm/
-         /hMdTjK6seNWSd7iUT7/3GOnmXMMnRPtJQfIfGE1/tIzv2EA/qw/xMiJYYr2+2maWsy/
-         Krwl8cJ2uycCfT2Rc4Kn/GpoeajV2G14ehkASvjuRDWUfo471DETOj++SwcmSbY1CqDJ
-         VFnQ==
-X-Gm-Message-State: AC+VfDx1BiLyGAPdE3pNou8v2FPmU+QRtR0LMGp+HcwCAza1CSZgzqpd
-        OUy+LkG2UDa59REsR31J2XwjfU21uuSyLV/LUUr6TQ==
-X-Google-Smtp-Source: ACHHUZ7FxP7iecFmZ9RaQFeLIbhNmx4WGH1ziBGuUIjrPZKMG4Raxil4pkHnfrou6hsED9sXakEEVop5p5RZiY13p4A=
-X-Received: by 2002:a05:600c:4f50:b0:3f1:73b8:b5fe with SMTP id
- m16-20020a05600c4f5000b003f173b8b5femr163101wmq.3.1685217040163; Sat, 27 May
- 2023 12:50:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230504110003.2548-1-ravi.bangoria@amd.com> <20230504110003.2548-4-ravi.bangoria@amd.com>
- <20230524214133.GA2359762@dev-arch.thelio-3990X> <f02c78e2-34b9-4985-640a-279dae1004a9@amd.com>
- <ZG8KLbZSECiYaKFc@linux.dev> <20230525142031.GU83892@hirez.programming.kicks-ass.net>
- <ZG+FLdP2kkfI1m2Z@linux.dev> <CAP-5=fWYbzmTETgqJ11y22=JaXDM0gnb4qR6KYeRGmFXw08f-Q@mail.gmail.com>
- <86jzwtdhmk.wl-maz@kernel.org> <CAP-5=fVW6KbUbbEfF3mEFvTfFDC5yKSjSpa+w3D55dG3CNUERw@mail.gmail.com>
- <86h6rxd3gh.wl-maz@kernel.org>
-In-Reply-To: <86h6rxd3gh.wl-maz@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Sat, 27 May 2023 12:50:28 -0700
-Message-ID: <CAP-5=fXTVgmFcRfYYJraGyNSkDOJqT_HOtkV-bMdjOwLox5rxg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Oliver Upton <oliver.upton@linux.dev>,
+        d=1e100.net; s=20221208; t=1685271927; x=1687863927;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6kFVAo3EuhexKxn0naKo2wrq/yqwbGkE2Idl0RXG/vs=;
+        b=M6TQpK8SMDWtFTgtbaJVmDP8uJBk8crBFJGZdNH5ZASveVQ4tJ6718ehV+7/3QoqEW
+         d8d9OrTzGn9JboUkB721mZLRSISPiDLAcPUxLyl+vQ0g8bu4I7r7xTt2KFBf51fB12VG
+         IgvYRbEbhVdD4guHF7sSbEJ4D+lw+K9VmAh1HWs4IGj2NKk19gHozsAyMuGJyf++FdfI
+         +Ue2p2iW8dfWRCpq6B48w0X2Hze8nuTVuRGDFQbLemCSlkCU8FcGBwlb4PkCpQT51LG0
+         i148z8iBraeR/jlXTsyS5GNnpEi+XBt7BXocd2y/oK2f8IqTlVC1RGgT71wLDOWQuRkX
+         1NDA==
+X-Gm-Message-State: AC+VfDxbrBBNccWTEhKn68NHXyo2195RronMX3hs9InSePpmK6Cw6fIm
+        B/e45FW/FaR+Fj8Wu5X1JNmPWw==
+X-Google-Smtp-Source: ACHHUZ6ho1Kbi8QKkO57xnUUpjE+FPJX3yw5tZzPnYTBTjnX6JxfPSzm5sIXCs7jyWnHq0zUGwO2cQ==
+X-Received: by 2002:a17:902:c94d:b0:1b0:1c05:561c with SMTP id i13-20020a170902c94d00b001b01c05561cmr8049496pla.40.1685271927241;
+        Sun, 28 May 2023 04:05:27 -0700 (PDT)
+Received: from leoy-yangtze.lan ([107.151.177.126])
+        by smtp.gmail.com with ESMTPSA id v2-20020a170902d68200b001b03842ab78sm931020ply.89.2023.05.28.04.05.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 May 2023 04:05:26 -0700 (PDT)
+Date:   Sun, 28 May 2023 19:05:16 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     coresight@lists.linaro.org, denik@chromium.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Nathan Chancellor <nathan@kernel.org>, namhyung@kernel.org,
-        eranian@google.com, acme@kernel.org, mark.rutland@arm.com,
-        jolsa@kernel.org, bp@alien8.de, kan.liang@linux.intel.com,
-        adrian.hunter@intel.com, maddy@linux.ibm.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com, kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] perf cs-etm: Track exception level
+Message-ID: <20230528110516.GC886420@leoy-yangtze.lan>
+References: <20230524131958.2139331-1-james.clark@arm.com>
+ <20230524131958.2139331-4-james.clark@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230524131958.2139331-4-james.clark@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, May 27, 2023 at 11:38=E2=80=AFAM Marc Zyngier <maz@kernel.org> wrot=
-e:
->
-> On Sat, 27 May 2023 18:00:13 +0100,
-> Ian Rogers <irogers@google.com> wrote:
-> >
-> > On Sat, May 27, 2023 at 6:32=E2=80=AFAM Marc Zyngier <maz@kernel.org> w=
-rote:
-> > >
-> > > On Sat, 27 May 2023 00:00:47 +0100,
-> > > Ian Rogers <irogers@google.com> wrote:
-> > > >
-> > > > On Thu, May 25, 2023 at 8:56=E2=80=AFAM Oliver Upton <oliver.upton@=
-linux.dev> wrote:
-> > > > >
-> > > > > On Thu, May 25, 2023 at 04:20:31PM +0200, Peter Zijlstra wrote:
-> > > > > > On Thu, May 25, 2023 at 07:11:41AM +0000, Oliver Upton wrote:
-> > > > > >
-> > > > > > > The PMUv3 driver does pass a name, but it relies on getting b=
-ack an
-> > > > > > > allocated pmu id as @type is -1 in the call to perf_pmu_regis=
-ter().
-> > > > > > >
-> > > > > > > What actually broke is how KVM probes for a default core PMU =
-to use for
-> > > > > > > a guest. kvm_pmu_probe_armpmu() creates a counter w/ PERF_TYP=
-E_RAW and
-> > > > > > > reads the pmu from the returned perf_event. The linear search=
- had the
-> > > > > > > effect of eventually stumbling on the correct core PMU and su=
-cceeding.
-> > > > > > >
-> > > > > > > Perf folks: is this WAI for heterogenous systems?
-> > > > > >
-> > > > > > TBH, I'm not sure. hetero and virt don't mix very well AFAIK an=
-d I'm not
-> > > > > > sure what ARM64 does here.
-> > > > > >
-> > > > > > IIRC the only way is to hard affine things; that is, force vCPU=
- of
-> > > > > > 'type' to the pCPU mask of 'type' CPUs.
-> > > > >
-> > > > > We provide absolutely no illusion of consistency across implement=
-ations.
-> > > > > Userspace can select the PMU type, and then it is a userspace pro=
-blem
-> > > > > affining vCPUs to the right pCPUs.
-> > > > >
-> > > > > And if they get that wrong, we just bail and refuse to run the vC=
-PU.
-> > > > >
-> > > > > > If you don't do that; or let userspace 'override' that, things =
-go
-> > > > > > sideways *real* fast.
-> > > > >
-> > > > > Oh yeah, and I wish PMUs were the only problem with these hetero
-> > > > > systems...
-> > > >
-> > > > Just to add some context from what I understand. There are inbuilt
-> > > > type numbers for PMUs:
-> > > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree=
-/include/uapi/linux/perf_event.h?h=3Dperf-tools-next#n34
-> > > > so the PMU generally called /sys/devices/cpu should have type 4 (AR=
-M
-> > > > give it another name). For heterogeneous ARM there is a single PMU =
-and
-> > > > the same events are programmed regardless of whether it is a big or=
- a
-> > > > little core - the cpumask lists all CPUs.
-> > >
-> > > I think you misunderstood the way heterogeneous arm64 systems are
-> > > described . Each CPU type gets its own PMU type, and its own event
-> > > list. Case in point:
-> > >
-> > > $ grep . /sys/devices/*pmu/{type,cpus}
-> > > /sys/devices/apple_avalanche_pmu/type:9
-> > > /sys/devices/apple_blizzard_pmu/type:8
-> > > /sys/devices/apple_avalanche_pmu/cpus:4-9
-> > > /sys/devices/apple_blizzard_pmu/cpus:0-3
-> > >
-> > > Type 4 (aka PERF_EVENT_RAW) is AFAICT just a way to encode the raw
-> > > event number, nothing else.
-> >
-> > Which PMU will a raw event open on?
->
-> On the PMU that matches the current CPU.
+On Wed, May 24, 2023 at 02:19:57PM +0100, James Clark wrote:
+> Currently we assume all trace belongs to the host machine so when
+> the decoder should be looking at the guest kernel maps it can crash
+> because it looks at the host ones instead.
+> 
+> Avoid one scenario (guest kernel running at EL1) by assigning the
+> default guest machine to this trace. For userspace trace it's still not
+> possible to determine guest vs host, but the PIDs should help in this
+> case.
+> 
+> Signed-off-by: James Clark <james.clark@arm.com>
+> ---
+>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  7 +-
+>  tools/perf/util/cs-etm.c                      | 64 ++++++++++++++-----
+>  tools/perf/util/cs-etm.h                      |  5 +-
+>  3 files changed, 56 insertions(+), 20 deletions(-)
+> 
+> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> index 82a27ab90c8b..ac227cd03eb0 100644
+> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+> @@ -573,12 +573,13 @@ cs_etm_decoder__set_tid(struct cs_etm_queue *etmq,
+>  		break;
+>  	}
+>  
+> +	if (cs_etm__etmq_set_tid_el(etmq, tid, trace_chan_id,
+> +				 elem->context.exception_level))
+> +		return OCSD_RESP_FATAL_SYS_ERR;
+> +
+>  	if (tid == -1)
+>  		return OCSD_RESP_CONT;
+>  
+> -	if (cs_etm__etmq_set_tid(etmq, tid, trace_chan_id))
+> -		return OCSD_RESP_FATAL_SYS_ERR;
+> -
+>  	/*
+>  	 * A timestamp is generated after a PE_CONTEXT element so make sure
+>  	 * to rely on that coming one.
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index a997fe79d458..b9ba19327f26 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/types.h>
+>  #include <linux/zalloc.h>
+>  
+> -#include <opencsd/ocsd_if_types.h>
+>  #include <stdlib.h>
+>  
+>  #include "auxtrace.h"
+> @@ -87,6 +86,8 @@ struct cs_etm_traceid_queue {
+>  	union perf_event *event_buf;
+>  	struct thread *thread;
+>  	struct thread *prev_thread;
+> +	ocsd_ex_level prev_el;
+> +	ocsd_ex_level el;
+>  	struct branch_stack *last_branch;
+>  	struct branch_stack *last_branch_rb;
+>  	struct cs_etm_packet *prev_packet;
+> @@ -479,6 +480,7 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
+>  
+>  	queue = &etmq->etm->queues.queue_array[etmq->queue_nr];
+>  	tidq->trace_chan_id = trace_chan_id;
+> +	tidq->el = tidq->prev_el = ocsd_EL_unknown;
+>  	tidq->thread = machine__findnew_thread(&etm->session->machines.host, -1,
+>  					       queue->tid);
+>  	tidq->prev_thread = machine__idle_thread(&etm->session->machines.host);
+> @@ -618,6 +620,7 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
+>  		tmp = tidq->packet;
+>  		tidq->packet = tidq->prev_packet;
+>  		tidq->prev_packet = tmp;
+> +		tidq->prev_el = tidq->el;
+>  		thread__put(tidq->prev_thread);
+>  		tidq->prev_thread = thread__get(tidq->thread);
+>  	}
+> @@ -879,11 +882,34 @@ static bool cs_etm__evsel_is_auxtrace(struct perf_session *session,
+>  	return evsel->core.attr.type == aux->pmu_type;
+>  }
+>  
+> -static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+> +static struct machine *cs_etm__get_machine(struct cs_etm_auxtrace *etm,
+> +					   ocsd_ex_level el)
+>  {
+> -	struct machine *machine;
+> +	/*
+> +	 * Not perfect, but assume anything in EL1 is the default guest, and
+> +	 * everything else is the host. nHVE and pKVM may not work with this
 
-Thanks. This should really be captured in the man page. Presumably
-that's the behavior with the -1 any CPU, and if a CPU is specified
-then the selected PMU will match that CPU?
+s/nHVE/nVHE ?
 
-> > Note, the raw events don't support
-> > the extended type that is present in PERF_TYPE_HARDWARE and
-> > PERF_TYPE_HW_CACHE:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/tree/includ=
-e/uapi/linux/perf_event.h#n41
-> > as the bits are already in use for being just plain config values.
->
-> I'm not sure how relevant this is to the numbering of PMUs on arm64.
+And it's good to say "if any virtulisation (e.g. pKVM) based on nVHE may
+not work with this ....".
 
-It matters because on the tool side you can group events, for example
-if you are measuring IPC then it makes sense that the instructions and
-cycles events are both multiplexed as part of a group. The
-instructions and cycles events have a type of PERF_TYPE_HARDWARE as
-this is hard coded into the event parser in perf. For perf we may
-specify this as:
-perf stat -e '{cycles,instructions}' ...
-When we open the events on a heterogeneous system the expectation is
-we get a group of cycles and instructions for each PMU, the extended
-type in the attribute for each event will be set to the type of the
-PMU the group is targeting. When we parse the events we have cycles
-events per PMU then instructions events per PMU, we then resort and
-regroup the events as you can't have a group spanning PMUs except in a
-few special cases like software events.
+> +	 * assumption. And distinguishing between guest and host userspaces
+> +	 * isn't currently supported either. Neither is multiple guest support.
+> +	 * All this does is reduce the likeliness of decode errors where we look
+> +	 * into the host kernel maps when it should have been the guest maps.
+> +	 */
+> +	switch (el) {
+> +	case ocsd_EL1:
+> +		return machines__find_guest(&etm->session->machines,
+> +					    DEFAULT_GUEST_KERNEL_ID);
 
-Now let's say we want to do a raw event from the json files, on Intel
-let's say we choose the INST_RETIRED.ANY event and we want to measure
-it with cycles:
-perf stat -e '{cycles,inst_retired.any}' ...
-The INST_RETIRED.ANY event will be matched on Intel with the PMUs
-"cpu_core" and "cpu_atom" on heterogeneous systems. The cycles event
-will be opened on two PMUs and the extended type set to each one. So
-we have differing perf_event_attr types, but we know it is valid to
-group the events because the raw event encoding's PMU type can be
-matched to the extended type of the hardware event.
+I share the same concern with Mike that this will break perf for any
+Armv8 CPUs with nVHE (like Cortex-CA53, etc).
 
-To better support the wildcard opening, sorting and grouping
-operations of events I want to have an ability in the perf tool to map
-a type number to a list of PMUs. Mapping a hardware/hw_cache type
-number to PMUs should give the set of core PMUs for a heterogeneous
-system. On heterogeneous Intel mapping a raw event (type 4) will give
-"cpu_core" but it sounds like on ARM, if no sysfs PMU has type number
-4, then we should map 4 to the set of core PMUs.
-
-Mapping a type number to a set of perf tool's representation of PMUs
-isn't current behavior, but hopefully you can see that ARM's behavior
-is differing from Intel's, for which I'd been basing the
-implementation so that we can support heterogeneous metrics, etc.
-
-I'm also confused what should be the behavior of something like:
-perf stat -e r0 ...
-The code is going to open the event on every core PMU with the config set t=
-o 0:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
-erf/util/parse-events.c?h=3Dperf-tools-next#n1485
-But perhaps the intent on ARM is that a single raw type event is
-opened? It seems the every core PMU behavior is more useful.
-
-> > I suspect not being type 4 is a bug on apple ARM here.
->
-> If that's a bug on this machine, it's a bug on all machines, at which
-> point it is the de-facto API:
->
-> $ grep . /sys/devices/armv8*/{type,cpus}
-> /sys/devices/armv8_cortex_a53/type:8
-> /sys/devices/armv8_cortex_a72/type:9
-> /sys/devices/armv8_cortex_a53/cpus:0-3
-> /sys/devices/armv8_cortex_a72/cpus:4-5
->
-> See, non-Apple HW. And now for a system with homogeneous CPUs:
->
-> $ grep . /sys/devices/armv8*/{type,cpus}
-> /sys/devices/armv8_pmuv3_0/type:8
-> /sys/devices/armv8_pmuv3_0/cpus:0-159
->
-> Still no type 4. I could go on for hours, I have plenty of HW around
-> me!
-
-This is good to know, thanks for doing the research. I agree that it
-is a de-facto API as this has happened. I'm hoping in the future we
-can compress some /sys/devices directories and use them as test input.
-It obviously won't be possible to open the events, etc. but we can
-test things like the event/metric parsing matches an expectation.
+You could see CoreSight has trace data "elem->context.vmid", when a
+guest kernel runs in EL1, can we use "elem->context.vmid" as a guest
+kernel ID and finally retrieve the corresponding machine pointer?
 
 Thanks,
-Ian
+Leo
 
-> So whatever your source of information is, it doesn't match reality.
-> Our PMUs are numbered arbitrarily, and have been so for... a very long
-> time. At least since perf_pmu_register has supported dynamic
-> registration (see 2e80a82a49c4c).
->
-> Thanks,
->
->         M.
->
-> --
-> Without deviation from the norm, progress is not possible.
+> +	case ocsd_EL3:
+> +	case ocsd_EL2:
+> +	case ocsd_EL0:
+> +	case ocsd_EL_unknown:
+> +	default:
+> +		return &etm->session->machines.host;
+> +	}
+> +}
+>  
+> -	machine = &etmq->etm->session->machines.host;
+> +static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address,
+> +			   ocsd_ex_level el)
+> +{
+> +	struct machine *machine = cs_etm__get_machine(etmq->etm, el);
+>  
+>  	if (address >= machine__kernel_start(machine)) {
+>  		if (machine__is_host(machine))
+> @@ -893,10 +919,14 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+>  	} else {
+>  		if (machine__is_host(machine))
+>  			return PERF_RECORD_MISC_USER;
+> -		else if (perf_guest)
+> +		else {
+> +			/*
+> +			 * Can't really happen at the moment because
+> +			 * cs_etm__get_machine() will always return
+> +			 * machines.host for any non EL1 trace.
+> +			 */
+>  			return PERF_RECORD_MISC_GUEST_USER;
+> -		else
+> -			return PERF_RECORD_MISC_HYPERVISOR;
+> +		}
+>  	}
+>  }
+>  
+> @@ -913,11 +943,12 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
+>  	if (!etmq)
+>  		return 0;
+>  
+> -	cpumode = cs_etm__cpu_mode(etmq, address);
+>  	tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
+>  	if (!tidq)
+>  		return 0;
+>  
+> +	cpumode = cs_etm__cpu_mode(etmq, address, tidq->el);
+> +
+>  	if (!thread__find_map(tidq->thread, cpumode, address, &al))
+>  		return 0;
+>  
+> @@ -1296,9 +1327,10 @@ cs_etm__get_trace(struct cs_etm_queue *etmq)
+>  }
+>  
+>  static void cs_etm__set_thread(struct cs_etm_auxtrace *etm,
+> -			       struct cs_etm_traceid_queue *tidq, pid_t tid)
+> +			       struct cs_etm_traceid_queue *tidq, pid_t tid,
+> +			       ocsd_ex_level el)
+>  {
+> -	struct machine *machine = &etm->session->machines.host;
+> +	struct machine *machine = cs_etm__get_machine(etm, el);
+>  
+>  	if (tid != -1) {
+>  		thread__zput(tidq->thread);
+> @@ -1308,10 +1340,12 @@ static void cs_etm__set_thread(struct cs_etm_auxtrace *etm,
+>  	/* Couldn't find a known thread */
+>  	if (!tidq->thread)
+>  		tidq->thread = machine__idle_thread(machine);
+> +
+> +	tidq->el = el;
+>  }
+>  
+> -int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
+> -			 pid_t tid, u8 trace_chan_id)
+> +int cs_etm__etmq_set_tid_el(struct cs_etm_queue *etmq, pid_t tid, u8 trace_chan_id,
+> +			 ocsd_ex_level el)
+>  {
+>  	struct cs_etm_traceid_queue *tidq;
+>  
+> @@ -1319,7 +1353,7 @@ int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
+>  	if (!tidq)
+>  		return -EINVAL;
+>  
+> -	cs_etm__set_thread(etmq->etm, tidq, tid);
+> +	cs_etm__set_thread(etmq->etm, tidq, tid, el);
+>  	return 0;
+>  }
+>  
+> @@ -1389,7 +1423,7 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+>  	struct perf_sample sample = {.ip = 0,};
+>  
+>  	event->sample.header.type = PERF_RECORD_SAMPLE;
+> -	event->sample.header.misc = cs_etm__cpu_mode(etmq, addr);
+> +	event->sample.header.misc = cs_etm__cpu_mode(etmq, addr, tidq->el);
+>  	event->sample.header.size = sizeof(struct perf_event_header);
+>  
+>  	/* Set time field based on etm auxtrace config. */
+> @@ -1448,7 +1482,7 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+>  	ip = cs_etm__last_executed_instr(tidq->prev_packet);
+>  
+>  	event->sample.header.type = PERF_RECORD_SAMPLE;
+> -	event->sample.header.misc = cs_etm__cpu_mode(etmq, ip);
+> +	event->sample.header.misc = cs_etm__cpu_mode(etmq, ip, tidq->prev_el);
+>  	event->sample.header.size = sizeof(struct perf_event_header);
+>  
+>  	/* Set time field based on etm auxtrace config. */
+> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> index 70cac0375b34..88e9b25a8a9f 100644
+> --- a/tools/perf/util/cs-etm.h
+> +++ b/tools/perf/util/cs-etm.h
+> @@ -232,10 +232,11 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+>  struct perf_event_attr *cs_etm_get_default_config(struct perf_pmu *pmu);
+>  
+>  #ifdef HAVE_CSTRACE_SUPPORT
+> +#include <opencsd/ocsd_if_types.h>
+>  int cs_etm__get_cpu(u8 trace_chan_id, int *cpu);
+>  int cs_etm__get_pid_fmt(u8 trace_chan_id, u64 *pid_fmt);
+> -int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
+> -			 pid_t tid, u8 trace_chan_id);
+> +int cs_etm__etmq_set_tid_el(struct cs_etm_queue *etmq, pid_t tid, u8 trace_chan_id,
+> +			 ocsd_ex_level el);
+>  bool cs_etm__etmq_is_timeless(struct cs_etm_queue *etmq);
+>  void cs_etm__etmq_set_traceid_queue_timestamp(struct cs_etm_queue *etmq,
+>  					      u8 trace_chan_id);
+> -- 
+> 2.34.1
+> 
