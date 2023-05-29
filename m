@@ -2,186 +2,124 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9B9FC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Mon, 29 May 2023 16:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF4FC7EE2C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 29 May 2023 17:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229650AbjE2Q2p (ORCPT
+        id S229571AbjE2RFm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 29 May 2023 12:28:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35664 "EHLO
+        Mon, 29 May 2023 13:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbjE2Q2n (ORCPT
+        with ESMTP id S229502AbjE2RFl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 29 May 2023 12:28:43 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FB06C4
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 May 2023 09:28:38 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-3f6c6320d4eso264821cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 May 2023 09:28:38 -0700 (PDT)
+        Mon, 29 May 2023 13:05:41 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB5CEB5
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 May 2023 10:05:39 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3f6a6e9d90dso304341cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 May 2023 10:05:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685377717; x=1687969717;
+        d=google.com; s=20221208; t=1685379939; x=1687971939;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QyZCj96iRF2jvhBEHv5YWxHz5llZW0keAn3B6U6pHG8=;
-        b=LXu7PHtOEjdQvmHjgAJQk2uWKbMEVo45NVLDdp1usGse4wFa6F2dChK67MuF6RrHVf
-         gK/I66s5dy1tabHwR9NRHA2SZXaxGnv6kRqUPlwBQbhvrOchDLfxVPfrZv7T3StVoEN0
-         cHFIwPBL3uqpendrz0cCIdpHdaTuxh83oVw9Nc77PKVUtxqEKKE3zhtas7kfZeY5efiQ
-         ne7lcAs9MIT//V6VsXW8IQHLQYbouI+HPAKWah92SrEIxx3HWAHmPJOjDczuH76MSvVa
-         1d7PMMIKd1aREI3fAilZsNBRTWMupgShBJaeooXPtReFUG5AR6qgx6yAdcKKrLYWkZN5
-         6DcQ==
+        bh=rwoMfWi97obMRCWCH25odgr0RjnVbHr4fnSsN464Q64=;
+        b=cyKzIaN5n4IEkAWYqYcz7ARQulcXV517rngzKO5u7FJbqGglnmsxa6uu0JpVvC5mv+
+         HrBjREOjysA+0RaOYkpC/IvflK1p+OC4ovSrIoSOFhBwOZpoyLqwdNpwf4WQZvPT+E5K
+         8QhHCvRhSLyw6950wYUzsNiqUiCvrd4zslDt3WbS5T7gbEpJlph9pteggyLDcdZf43I1
+         kk+4QiwU2zyeM3PBrmCrD6bPxgaX//2rFPiSXXt+tLIhRVy3p4WmP4EGs/PqB/P78cFu
+         pI/Hd4rc+JQxI4TDIsJLlpP4PKP2ZW8QzMy/DSXsYD0+dqUjVOM9CyywGwyXIrlFmZdE
+         FAkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685377717; x=1687969717;
+        d=1e100.net; s=20221208; t=1685379939; x=1687971939;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QyZCj96iRF2jvhBEHv5YWxHz5llZW0keAn3B6U6pHG8=;
-        b=ZYJFCTE2aGcbtzBjjMOvcRxgtr7WzidFhSAvOUMC6YCKmDxZPeekwBzIMlSY8KBcn5
-         Rlrlb1rtOW2KKfmM/3RbQxnRMNQytXWSQNH1pj1A1FWAZBuVhKHZU/K6/hbQsNk0h0Xz
-         wRqLUKA51kYGk/uj6CUUfwS0ddhyb8eRTqFhjU9/bAfQM9dyxmHmb53mz2oBiX7lhq3X
-         Sbe7EpR5j0b+2caj88xGZqQ6eeGBlUOiIhNxQjwWetlDfjVKQrkZdNNacFOs4a4km9Jp
-         kRwfqI31p1MotQEYZ9FbpDBSGTJj4cwp2QI8KRxeSjuLZbxSs7fd6mzoPKTNlg0dFoYR
-         6uSA==
-X-Gm-Message-State: AC+VfDwvpWXadB23O+kFZqHG2NzTVuACaYBy94PsFtrq5f94Y/qf7kiq
-        Kemc7W1DokkCBVNbYangal1BZ5urBODY9MCtL3QfmQ==
-X-Google-Smtp-Source: ACHHUZ7tNHeP+NRFPg8fNZtB39JwiTCATOyCnNlEnkEUjwVdhUB9OZhZ4wCiS7rYAJmb89kZZY+NbC48TvRQfGK+GhM=
-X-Received: by 2002:a05:622a:2d4:b0:3f7:ffc8:2f6f with SMTP id
- a20-20020a05622a02d400b003f7ffc82f6fmr403990qtx.28.1685377716957; Mon, 29 May
- 2023 09:28:36 -0700 (PDT)
+        bh=rwoMfWi97obMRCWCH25odgr0RjnVbHr4fnSsN464Q64=;
+        b=db538uyeGdsNbhfmV6QCcQUnEIntuT9W+ejBjU5ie5bykQomuKZ6Pf1sA1SE89S2lj
+         wZZcf6FRkZ95NcPlGPvfRATbWvadZtsJ2TBLmly06AOtadsYhkfdZZLbpdn0AOdcraBr
+         eDSuyTFcnmqxWujUyXe/SKaiBwMR4MqYWGwWSaaWtprVzv6bAVxAQU9Niv4yEE+4HUYD
+         0qIhFVXb3wiABeQk6RDwcUowXXFYfq4Cab6zIxLYeFkvazqC5LWClusxite3vPWy+vmQ
+         R3jZgfMDFlAZ4lD1lYaWcQWqhii40bENKmHuwT1W3LuTyRr1QF+3RZZW88fgNEWraeUb
+         Lj2w==
+X-Gm-Message-State: AC+VfDwzUkpjbdRqz8Xt1Y3bclHxbdpGQqHEdgPtErBUVvt3Bs3Lj8Ui
+        u20dOClMrxSzGnN0rCn8jU5IVaqO18CvfMlmqt/ohg==
+X-Google-Smtp-Source: ACHHUZ5KZq1BWV/GcKLg76iWYFUFlREK5iiRQxXX/nyiEq5TjEiRv6E8dspkBJQql+dC4FXCsM0xAVIfH0SxyW+V0rE=
+X-Received: by 2002:ac8:4e8a:0:b0:3f3:9b0b:8750 with SMTP id
+ 10-20020ac84e8a000000b003f39b0b8750mr361294qtp.17.1685379938842; Mon, 29 May
+ 2023 10:05:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <202305291525.df3ce28d-oliver.sang@intel.com>
-In-Reply-To: <202305291525.df3ce28d-oliver.sang@intel.com>
+References: <1685326994-11987-1-git-send-email-yangtiezhu@loongson.cn> <1685326994-11987-2-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1685326994-11987-2-git-send-email-yangtiezhu@loongson.cn>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 29 May 2023 09:28:25 -0700
-Message-ID: <CAP-5=fVjdEUnujbndX4eMqT2Hpuz3QUB6bW0MjcFt+Os-6ux9g@mail.gmail.com>
-Subject: Re: [linus:master] [perf parse] a4c7d7c502: perf-test.perf_pmu_event_count_group.count_group_cpu/branch-misses/_cpu/topdown-heavy-ops/_cpu/branch-misses/_R0.fail
-To:     kernel test robot <oliver.sang@intel.com>,
-        "Wang, Weilin" <weilin.wang@intel.com>
-Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
-        linux-kernel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Florian Fischer <florian.fischer@muhq.space>,
+Date:   Mon, 29 May 2023 10:05:26 -0700
+Message-ID: <CAP-5=fXkbBm52v9DC8jZm8Xr0uqKdvL7QfDmGN6j3=ZPRErLcA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] perf arm64: Rename create_table_from_c() to create_sc_table()
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        James Clark <james.clark@arm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Stephane Eranian <eranian@google.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
-        linux-perf-users@vger.kernel.org
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Hans-Peter Nilsson <hp@axis.com>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, May 29, 2023 at 12:30=E2=80=AFAM kernel test robot
-<oliver.sang@intel.com> wrote:
+On Sun, May 28, 2023 at 7:23=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
 >
+> After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
+> it has been removed the temporary C program and used shell to
+> generate syscall table, so let us rename create_table_from_c()
+> to create_sc_table() to avoid confusion.
 >
+> Suggested-by: Leo Yan <leo.yan@linaro.org>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> Hello,
+> diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/pe=
+rf/arch/arm64/entry/syscalls/mksyscalltbl
+> index 22cdf91..e530587 100755
+> --- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+> +++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
+> @@ -19,7 +19,7 @@ if ! test -r $input; then
+>         exit 1
+>  fi
 >
-> kernel test robot noticed "perf-test.perf_pmu_event_count_group.count_gro=
-up_cpu/branch-misses/_cpu/topdown-heavy-ops/_cpu/branch-misses/_R0.fail" on=
-:
+> -create_table_from_c()
+> +create_sc_table()
+>  {
+>         local sc nr last_sc
 >
-> commit: a4c7d7c502b935f3a8324d954de78aecf6940897 ("perf parse-events: War=
-n when events are regrouped")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
+> @@ -35,7 +35,7 @@ create_table()
+>  {
+>         echo "#include \"$input\""
+>         echo "static const char *syscalltbl_arm64[] =3D {"
 
-I'm having a hard time understanding the output from the test:
-
-1) the output is filled with sanitizer output that makes it look like
-a non-asan version of libc is being used, either that or we're missing
-asan interceptors for functions called by perf. This means the noise
-is much greater than the signal in the output.
-
-2) the referenced test doesn't appear to be part of the "perf test"
-set of tests. Are these additional tests that Intel have created?
-Could we get them moved to "perf test" which is used as a pre-submit
-and can help avoid regressions.
-
-Why a warning would cause this test to start failing I'm not sure.
-Given the amount of difficulty the harness has with asan I think
-there's a good chance this is a false positive. It could also be that
-the test expectations have changed and could have been fixed, which
-would break external tests that make assumptions on things like
-events. Moving the test to "perf test" would be the best way to
-resolve this.
+I know this isn't changed here, but this would be better as:
+echo "static const char *const syscalltbl_arm64[] =3D {"
+as the array itself, not just the strings, should never be changing.
 
 Thanks,
 Ian
 
-> [test failed on linux-next/master 6a3d37b4d885129561e1cef361216f00472f7d2=
-e]
->
-> in testcase: perf-test
-> version: perf-test-x86_64-git-1_20220520
-> with following parameters:
->
->         type: lkp
->         group: group-00
->
-> test-description: The internal Perf Test suite.
->
->
-> compiler: gcc-11
-> test machine: 224 threads 2 sockets Intel(R) Xeon(R) Platinum 8480+ (Sapp=
-hire Rapids) with 256G memory
->
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
->
->
->
->
-> If you fix the issue, kindly add following tag
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202305291525.df3ce28d-oliver.san=
-g@intel.com
->
->
->
-> perf kernel cpu PMU event count group test
-> Sun May 28 06:51:04 UTC 2023
-> 1 test cases pass for perf_pmu_event_count_group test. 1 test cases fail =
-for perf_pmu_event_count_group test.
-> Test Case count_group_cpu/topdown-fetch-lat/_cpu/mem-loads-aux/_cpu/branc=
-h-instructions/_R1 PASS!
-> Test Case count_group_cpu/branch-misses/_cpu/topdown-heavy-ops/_cpu/branc=
-h-misses/_R0 FAILED!
->
->
->
-> To reproduce:
->
->         git clone https://github.com/intel/lkp-tests.git
->         cd lkp-tests
->         sudo bin/lkp install job.yaml           # job file is attached in=
- this email
->         bin/lkp split-job --compatible job.yaml # generate the yaml file =
-for lkp run
->         sudo bin/lkp run generated-yaml-file
->
->         # if come across any failure that blocks the test,
->         # please remove ~/.lkp and /lkp dir to run from a clean state.
->
->
+> -       create_table_from_c
+> +       create_sc_table
+>         echo "};"
+>  }
 >
 > --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
->
+> 2.1.0
 >
