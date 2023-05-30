@@ -2,75 +2,171 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33C5C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 14:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9486EC77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 14:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233068AbjE3OQI (ORCPT
+        id S232377AbjE3O32 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 May 2023 10:16:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58228 "EHLO
+        Tue, 30 May 2023 10:29:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233000AbjE3OQH (ORCPT
+        with ESMTP id S230365AbjE3O3X (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 May 2023 10:16:07 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B3CF1;
-        Tue, 30 May 2023 07:15:38 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 71C5D1FD96;
-        Tue, 30 May 2023 14:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1685456136; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f03SjuaWbgPFKDNHkccYfxdvERRD4V1UOqT9AnVf20c=;
-        b=qwneuzT8aVE62UwAlpeyfFZ8eI36IDinEAOaWAF5L4znVMIaf6zMod/lkB42XEy/NcnL2A
-        C+hZu4NVw46mIT0SZgCF7kkibghDwAAeOiAUxhgDsFJLco5k09k1bbmKdbw6adC+Nk7rpu
-        CJ0MBEUmWwYed0L2p4tEgaYiUAzHSJQ=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id DEA372C141;
-        Tue, 30 May 2023 14:15:33 +0000 (UTC)
-Date:   Tue, 30 May 2023 16:15:33 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 01/10] watchdog/hardlockup: Keep kernel.nmi_watchdog
- sysctl as 0444 if probe fails
-Message-ID: <ZHYFBUnXmjAvhUFT@alley>
-References: <20230527014153.2793931-1-dianders@chromium.org>
- <20230526184139.1.I0d75971cc52a7283f495aac0bd5c3041aadc734e@changeid>
+        Tue, 30 May 2023 10:29:23 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CC78FE49;
+        Tue, 30 May 2023 07:28:59 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E3A816F2;
+        Tue, 30 May 2023 07:28:58 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B86233F663;
+        Tue, 30 May 2023 07:28:10 -0700 (PDT)
+Message-ID: <630ab636-107d-4b12-5454-2ee91ad43543@arm.com>
+Date:   Tue, 30 May 2023 15:28:09 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230526184139.1.I0d75971cc52a7283f495aac0bd5c3041aadc734e@changeid>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 2/4] perf cs-etm: Use previous thread for branch sample
+ source IP
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     coresight@lists.linaro.org, denik@chromium.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230524131958.2139331-1-james.clark@arm.com>
+ <20230524131958.2139331-3-james.clark@arm.com>
+ <20230527090635.GB886420@leoy-yangtze.lan>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230527090635.GB886420@leoy-yangtze.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri 2023-05-26 18:41:31, Douglas Anderson wrote:
-> The permissions for the kernel.nmi_watchdog sysctl have always been
-> set at compile time despite the fact that a watchdog can fail to
-> probe. Let's fix this and set the permissions based on whether the
-> hardlockup detector actually probed.
+
+
+On 27/05/2023 10:06, Leo Yan wrote:
+> On Wed, May 24, 2023 at 02:19:56PM +0100, James Clark wrote:
+>> Branch samples currently use the IP of the previous packet as the from
+>> IP, and the IP of the current packet as the to IP. But it incorrectly
+>> uses the current thread. In some cases like a jump into a different
+>> exception level this will attribute to the incorrect process.
 > 
-> Fixes: a994a3147e4c ("watchdog/hardlockup/perf: Implement init time detection of perf")
-> Reported-by: Petr Mladek <pmladek@suse.com>
-> Closes: https://lore.kernel.org/r/ZHCn4hNxFpY5-9Ki@alley
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> It's about the timing that branch has taken or not taken :)
+> 
+> If we think the branch sample as 'branch has taken', then current code
+> is doning right thing, otherwise, we need this fix.
+> 
 
-Looks good to me:
+If you diff the outputs side by side you can see it mainly has an effect
+where there is a discontinuity. At this point we set either the from or
+the to IPs to 0.
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+For example here is a before and after perf script output. Without the
+change it looks like stress was running before it actually was. The
+schedule function that was attributed to ls on the first line hasn't
+finished running yet. But it's attributed to stress on the second line
+even though the destination IP is 0 meaning we don't even know where it
+went.
 
-Best Regards,
-Petr
+Before:
+
+    ls  8350 [006] ... __schedule+0x394 => schedule+0x5c
+stress  8357 [006] ... schedule+0x84 => 0 [unknown]
+stress  8357 [006] ... 0 [unknown] => __unix_dgram_recvmsg+0x130
+
+After:
+
+    ls  8350 [006] ... __schedule+0x394 => schedule+0x5c
+    ls  8357 [006] ... schedule+0x84 => 0 [unknown]
+stress  8357 [006] ... 0 [unknown] => __unix_dgram_recvmsg+0x130
+
+I didn't see any decode differences that weren't around these
+discontinuity points, so it seems like a low risk change.
+
+>> Fix it by tracking the previous thread in the same way the previous
+>> packet is tracked.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> ---
+>>  tools/perf/util/cs-etm.c | 9 +++++++--
+>>  1 file changed, 7 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+>> index ebffc9052561..a997fe79d458 100644
+>> --- a/tools/perf/util/cs-etm.c
+>> +++ b/tools/perf/util/cs-etm.c
+>> @@ -86,6 +86,7 @@ struct cs_etm_traceid_queue {
+>>  	size_t last_branch_pos;
+>>  	union perf_event *event_buf;
+>>  	struct thread *thread;
+>> +	struct thread *prev_thread;
+>>  	struct branch_stack *last_branch;
+>>  	struct branch_stack *last_branch_rb;
+>>  	struct cs_etm_packet *prev_packet;
+>> @@ -480,6 +481,7 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
+>>  	tidq->trace_chan_id = trace_chan_id;
+>>  	tidq->thread = machine__findnew_thread(&etm->session->machines.host, -1,
+>>  					       queue->tid);
+>> +	tidq->prev_thread = machine__idle_thread(&etm->session->machines.host);
+>>  
+>>  	tidq->packet = zalloc(sizeof(struct cs_etm_packet));
+>>  	if (!tidq->packet)
+>> @@ -616,6 +618,8 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
+>>  		tmp = tidq->packet;
+>>  		tidq->packet = tidq->prev_packet;
+>>  		tidq->prev_packet = tmp;
+>> +		thread__put(tidq->prev_thread);
+>> +		tidq->prev_thread = thread__get(tidq->thread);
+> 
+> Maybe cs_etm__packet_swap() is not the best place to update
+> "tidq->prev_thread", since swapping packet doesn't mean it's necessarily
+> thread switching; can we move this change into the cs_etm__set_thread()?
+> 
+
+Yeah that might make more sense. I can move it there if we decide to
+keep this change.
+
+> Thanks,
+> Leo
+> 
+>>  	}
+>>  }
+>>  
+>> @@ -791,6 +795,7 @@ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
+>>  		/* Free this traceid_queue from the array */
+>>  		tidq = etmq->traceid_queues[idx];
+>>  		thread__zput(tidq->thread);
+>> +		thread__zput(tidq->prev_thread);
+>>  		zfree(&tidq->event_buf);
+>>  		zfree(&tidq->last_branch);
+>>  		zfree(&tidq->last_branch_rb);
+>> @@ -1450,8 +1455,8 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+>>  	sample.time = cs_etm__resolve_sample_time(etmq, tidq);
+>>  
+>>  	sample.ip = ip;
+>> -	sample.pid = tidq->thread->pid_;
+>> -	sample.tid = tidq->thread->tid;
+>> +	sample.pid = tidq->prev_thread->pid_;
+>> +	sample.tid = tidq->prev_thread->tid;
+>>  	sample.addr = cs_etm__first_executed_instr(tidq->packet);
+>>  	sample.id = etmq->etm->branches_id;
+>>  	sample.stream_id = etmq->etm->branches_id;
+>> -- 
+>> 2.34.1
+>>
