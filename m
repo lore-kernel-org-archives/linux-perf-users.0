@@ -2,295 +2,168 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726C4C7EE24
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 17:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F52FC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 18:20:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232034AbjE3RMO (ORCPT
+        id S230234AbjE3SUF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 May 2023 13:12:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44404 "EHLO
+        Tue, 30 May 2023 14:20:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232558AbjE3RMK (ORCPT
+        with ESMTP id S233385AbjE3STv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 May 2023 13:12:10 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A8F138;
-        Tue, 30 May 2023 10:11:56 -0700 (PDT)
+        Tue, 30 May 2023 14:19:51 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4369F118;
+        Tue, 30 May 2023 11:19:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685466716; x=1717002716;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=s8/r13r1r/ex5JQXe8BQ6VpuJpsaA2ZaBcMbtVqUvEU=;
-  b=Dx/NOi3dzYNZkLgxvQozl77qVGcRvaN6AFlu4s6g44rC2vFvySAWj/tu
-   3YTddT5N+B8AWKDf/szxyomtuvJeqB/Ya+uX3jVxK0JKoCIbkFT7uAu5r
-   W7RRC5gWeJgc8cuevU4A52hNSTYO35icki+nUAEwv7XRSNABdoxoPJS8u
-   W16bOxdari3NaMYxfB3bWfRPSc3Cxp1HFzWTWgF0q1UqZIS1YS1awzFwt
-   C394M2IzT5C9gc0BRmSntwdY83k0tW9KR/m2VbPB7Dn/GZk+s6ngRErWM
-   anLLMqoli7n5HRzanaqYBdrcf0F+VklX+TxSxR8DyXSiQyGjQnRQi4Cyd
+  t=1685470786; x=1717006786;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=T7EA1V1oqXH8HKig3T7i0KC7dQczNnLI4BPs3uMEHCk=;
+  b=Ddb2Jk0JlozB/TrRHThBxXpscYwNP0/QWebPeDvbYYnSNMODcdOZo25D
+   y+bY6jXQMtYyT/W6a/PFLZeKmy+yPNePWurCJA17LArzrpdnzhVKij38t
+   ZShdBNG1+xDiLVnxQIHd9aikgBtX+RDay8tXbsVFH9Rih8Gb+gchBnyon
+   jofPkGig/HS7xzqFmbbeZpzfDpCaZbQs+omdtNdHXMDi+xVSpgdLqKGvR
+   ySjksvS4Um+ozb74DyuuOGG5JN1rF3j6kgc4vjmmzrDBZJSHWXeDC5DCS
+   sjHl7D1KQgN+PYzEZXrHbFg4P9xuiP3RbkqatfqxnCfZJLLySNzEMmT83
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="339577858"
-X-IronPort-AV: E=Sophos;i="6.00,204,1681196400"; 
-   d="scan'208";a="339577858"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 10:10:33 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="344511456"
+X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
+   d="scan'208";a="344511456"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 11:19:45 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="850867027"
-X-IronPort-AV: E=Sophos;i="6.00,204,1681196400"; 
-   d="scan'208";a="850867027"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmsmga001.fm.intel.com with ESMTP; 30 May 2023 10:10:32 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="700739661"
+X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
+   d="scan'208";a="700739661"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orsmga007.jf.intel.com with ESMTP; 30 May 2023 11:19:45 -0700
 Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 30 May 2023 10:10:32 -0700
+ 15.1.2507.23; Tue, 30 May 2023 11:19:44 -0700
 Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
  fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 30 May 2023 10:10:31 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ 15.1.2507.23; Tue, 30 May 2023 11:19:44 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
  fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Tue, 30 May 2023 10:10:31 -0700
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.175)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.23 via Frontend Transport; Tue, 30 May 2023 11:19:44 -0700
+Received: from outbound.mail.protection.outlook.com (104.47.66.41) by
+ edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Tue, 30 May 2023 10:10:30 -0700
+ 15.1.2507.23; Tue, 30 May 2023 11:19:44 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=egFVtKfaEtq+AMwp97vWCBYt4NvzQks8mclMtRI/uVO8udNfR9TzRuw08wZFw+0GFoOwOtek7jFPX5cgqdrrJ/WMcrv1ikl4lM/LCgv3+v9B6J5QRf+mwcezG4LR9tdhdQUv1WcZAqkshMFTBIKcN9XwffdWwCVEoXqbZBHJ+w9JvWK8p8mYfVlqTSSzW+A5zHvS3ZwsP0MBc52N+Gq5YLKMZhgZCEp/oFm8AzD9JoqAbt2x7qRW//DtW0I6aN6HoT2KHx3D/MjKVZaoJGJQ1x9ISE1LUF4MaBbWa3HHeL4cdNKPtIyKw18Syd1umsJ14blHzI96q+RIJA1wcVLz2w==
+ b=cfqg8C8bGM+AT2bOpZI54RptFivZcOrp68upY+QR+IaSmhypVv21ZtGqshclNL84U8McPSw7nFQZu0Lr+nU3r+oatM1KKQVsIw+iTWhXgGp4EHgfMl5S4+rj32LrjypHQmNGjpUGrv97hT0UutzpUvNTylHLu9VCgNzveSF+Ved2iKqbOYrqLek4dyHUfv+aBaHlLMihDecpxVwi1Cn3wLk06vt2U3CRnATH8MfsPA8vRRfTURKVYLB5ND1zT0eLUOLv2r56AXY33wuMBQAB5Mi133Lh3CEA+XF7ZMagYD8OclBeovrtMceCEttphagtSHxqpBwHMPeLGldHNuoG4Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gu9q08E7S9FIlgXfMgICmUoWuuCucRLAR7KwE8HWbXU=;
- b=Qd7kJQlUQci66nOT++YzKhxHbzXfaVLruVUmpsYlJrUenJcV3gwas0a0h/PB6zmafv3hD8/thtB/6Lfv5w7VmVfaM4Z8Fhe66l3QURaQflcIG5cWNp5P6yRZfrTDNpaSn7+QJyAbUF2NEK26taOZKbPA9+fYLjobO8yU0bx+z9R9goa6YD643FiTHSo4IvSC6nTOX6sp6JRTr+Jfw6TTsZoRVMv/hXcIyvu3rne2xSAaPyN2RHY1tVOG1i7Tjkxu1Q8ZX4FC1U9qQG+wVk7hUP7vRnBDBN5+D86YNWWKx3YoZj0Z/0uY7oeAoWOXZ0UR7H4oL480z/hIHK5ZD2VpWg==
+ bh=m0Ui6ELm6jGyKCaqmWCseziHVSTA048pMTpDF8/Jqrs=;
+ b=C61NEVYNkKnEf2kRFphJcy/NQzO1KREa/RjbuZKe/gnvrFRZRvij/t+zpUJBbLEBOrmXC5Lm8FD2mS9xosaNbMTRq1m9KLabg1KXNiKHq7tlpc8/UuNMgl9G2cTf4BjGjE6lTZb//CWAC61litt5uSmGLFqKiWN84v2KJuSAlzUwqg10lBNY1Tfl8uE7LQRSbn1ZqmAnv2Q0aacF5DpEZI9irwt4VhmMHl1LmIk9PYDBcJO0Rcw7caPr/J7mCQ07yGNzbkRNP3lGsthAPavAMenwxi8KX5hDj5AhrkWlDBX03xIJy9KGN/QoE+TsqTiuKfpIHDA0dnbiMD5xageSkw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
- by CH3PR11MB7894.namprd11.prod.outlook.com (2603:10b6:610:12c::17) with
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CH3PR11MB8095.namprd11.prod.outlook.com (2603:10b6:610:154::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Tue, 30 May
- 2023 17:10:23 +0000
-Received: from PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6b5e:ef4b:bd3:36d2]) by PH7PR11MB5984.namprd11.prod.outlook.com
- ([fe80::6b5e:ef4b:bd3:36d2%4]) with mapi id 15.20.6433.022; Tue, 30 May 2023
- 17:10:23 +0000
-Message-ID: <670f8541-fbf2-8992-da88-78c3af925495@intel.com>
-Date:   Tue, 30 May 2023 10:10:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Betterbird/102.11.0
-Subject: Re: [PATCH v7 2/5] cxl: Add functions to get an instance of / count
- regblocks of a given type
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.22; Tue, 30 May
+ 2023 18:19:41 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::95c6:c77e:733b:eee5]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::95c6:c77e:733b:eee5%5]) with mapi id 15.20.6433.022; Tue, 30 May 2023
+ 18:19:41 +0000
+Date:   Tue, 30 May 2023 11:19:37 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
 To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Liang Kan <kan.liang@linux.intel.com>,
-        <linux-cxl@vger.kernel.org>, <peterz@infradead.org>,
-        <mark.rutland@arm.com>, <will@kernel.org>,
-        <dan.j.williams@intel.com>
-CC:     <mingo@redhat.com>, <acme@kernel.org>, <linuxarm@huawei.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>
+CC:     Liang Kan <kan.liang@linux.intel.com>, <linux-cxl@vger.kernel.org>,
+        <peterz@infradead.org>, <mark.rutland@arm.com>, <will@kernel.org>,
+        <dan.j.williams@intel.com>, <mingo@redhat.com>, <acme@kernel.org>,
+        <linuxarm@huawei.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         Davidlohr Bueso <dave@stgolabs.net>,
-        Namhyung Kim <namhyung@gmail.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
         Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v7 4/5] perf: CXL Performance Monitoring Unit driver
+Message-ID: <64763e39d9a78_168e29463@dwillia2-xfh.jf.intel.com.notmuch>
 References: <20230526095824.16336-1-Jonathan.Cameron@huawei.com>
- <20230526095824.16336-3-Jonathan.Cameron@huawei.com>
-Content-Language: en-US
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230526095824.16336-3-Jonathan.Cameron@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR13CA0029.namprd13.prod.outlook.com
- (2603:10b6:a03:180::42) To PH7PR11MB5984.namprd11.prod.outlook.com
- (2603:10b6:510:1e3::15)
+ <20230526095824.16336-5-Jonathan.Cameron@huawei.com>
+ <CAM9d7cgYZs4DqLmjPZCYDVrp-KVYoZYDyJHLwB1fOM7ZdzM2Pg@mail.gmail.com>
+ <20230530145001.00002560@Huawei.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230530145001.00002560@Huawei.com>
+X-ClientProxiedBy: BY5PR13CA0002.namprd13.prod.outlook.com
+ (2603:10b6:a03:180::15) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|CH3PR11MB7894:EE_
-X-MS-Office365-Filtering-Correlation-Id: 32c4c53c-10b4-45f0-6553-08db6130c127
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CH3PR11MB8095:EE_
+X-MS-Office365-Filtering-Correlation-Id: 96c3bae3-03b5-40f7-4caa-08db613a6fe8
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: EI7YUksaMqNU2lGjnRkNRjjfWtXyoqypR4/qDs9SthgC+bVcG9XuPGA7GuDrmnY7R5qnhHpjl1InPtI6UVt3tEbPtawSpKHHE/VAfn9cPZ8BvprPdQdwmgiFSdpDt4R36xPUWUqeN5L3OJFrFyBo7fjQ+hGZLtDqWI4TZ+zVYKO7he0g2NBbvD9Ue7vmv8gl6jKtAD/SWx7h9MZPobUD2DD9xPI4qiPHsfHImJBekaa/TZ6BfO1ej5avLuOeC4vX7BtYtpynQAhGbK1u100Atwd3SQS3+LVmrMC5sAHCQIoyBMgqFxmJqdLiySdq7FNTrSwDsN5T6wQppayaV1JcsdWbkRDddeyr3U6uf9FOyXA7S+VUf5F5xmIv8wti357bUjrf81UGnn27E6tR2hHWH7IcEPpMZUnZwzms89n731t7sUHX3X+x+dZ2u/GyTOstKC/dxj59aSgkPsgg8eNONR30Hp1EBAJwG1Uvg37kuh7an8GiXzBl/lsVdj7UPbFJMlGrHlMQVJpDcvdlAvvGY29UBThSM04DDu/oFuzdd1tBdE6Z/qmq/XInb48sTlzDN0Nb4zzhG02qnspAkH2jmb58KVj50r847KGOZgScyj3UVrhdrf9D8+3tLGyr6TOgvctNqYRR9r4LgQL3fISyAw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(376002)(136003)(366004)(396003)(39860400002)(451199021)(186003)(2616005)(38100700002)(41300700001)(31686004)(83380400001)(6512007)(6506007)(53546011)(26005)(6486002)(6666004)(478600001)(110136005)(54906003)(4326008)(82960400001)(66556008)(66946007)(66476007)(6636002)(316002)(5660300002)(8676002)(8936002)(44832011)(7416002)(2906002)(31696002)(86362001)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: EfNy2JKG1lnWjBmSjYMe9Fu1N+FyiMJu4kUTG14j84+oc8l5iAAdjZL5EERKxYoTT7GrKswSSkGf3HOIwAGlV2C/nrXogDEtmFNDhNQH2s25qE79k7Y3ZmTlEN8O2+JR2vpLVeMaMUfIMF7ItvRLI9u1dHD/E9MC0juPNCxJlW6rwG2GZYM92DfhGCnrgkBAbEMPFiR1Zti84iwHOmAynMmRqLQOOSX/PHNbMT+I4oERwYLKDmh8X0fI6AtCSJGDLXa2m3Lv0BVMU1Ew2arZSL5O7HHDFZNjReFj5n7sSPmsIqMNdgFKVW6MGk+Kzd51nicWpwh7yTxG+RarbdzrcsqOlHgHbmuHsnsqWKeS24OdfSF7wVMiAt7VsAMsNgfKG6J1YL2e7Zm15ecFl+ZueqCIK5PZk81w6nRWTUd5YpOGgNeFbcPwZerkh4tQkNw953UTomRqxvgyLmQZvKQSS0bOuzP+5n/E5l2tP3lwMM9Yzf807jEZYDjQciHvxo7XAbXgSzzuUSdkc6QdsaQpaZOhvZADr7pjCUp3rAAoja51355AW0q1ojbAvEq/oJMvZigHnezLNi6fl4+VitQ6utCwFukBHyaEZhqntwjscgA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(376002)(39860400002)(136003)(396003)(366004)(451199021)(186003)(9686003)(110136005)(2906002)(4326008)(6506007)(6512007)(54906003)(26005)(558084003)(5660300002)(86362001)(7416002)(478600001)(8676002)(8936002)(66946007)(66556008)(66476007)(6666004)(316002)(38100700002)(6486002)(41300700001)(966005)(82960400001)(15302535012);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aTljVEVTU0tYYUJ5QVU5ZnRMY0F0QXFMV2xhWk1uQTE3NndPNlp3Q0xXdWZD?=
- =?utf-8?B?a081ZWZHblVMbnJSSnZQcWJ2aEhXV3lHVjRyUjFGcjdwNVFNNU0yODZYWUNs?=
- =?utf-8?B?bmxzRnM0LytKdEJmTzZKSUw0eHJtK0tsVTFHeVh3REtLSWRWajFiNVc0eGVa?=
- =?utf-8?B?azY4REpxL0llSE5SNjNXUSsxQ3pOQlMwcXBiZlVyNVBHL3NIeWdpcStON05s?=
- =?utf-8?B?eGxrY3VieWpJOU1jb2g5QlZZNzNlNXlobGxkc1NRVTd5ODczVnNMWWpTaHBF?=
- =?utf-8?B?YjZvLytudnFlZnoyQXB1ZGxaVmRURWM2Ny8wNTZhYWZxRHkwRUVaWGQ1Rk9X?=
- =?utf-8?B?Z0EycEJtOUxOTkF3a1JmbGJ2TWtXdktyWDhUOUxwQktSNGU2TnlxNHo2YU9s?=
- =?utf-8?B?YTlhSnhzZFo3K3J5bGdrZkJWRWpwM0NPbWo4SjA3a2NhcDVpM0R2dStIS1Vh?=
- =?utf-8?B?YkU3U3VZeDc2cE9lQjIrcEhwdXNWaEtnbFBkaVdIcVpPYXFPS3pPSkpKOEFC?=
- =?utf-8?B?ZWwyZnhyeE8vNnk4T3lmSWJkMk1tTlJVN0VkcXFhbk9KTEh6eHVBMTV5blFC?=
- =?utf-8?B?MloxdUVmUWM0WFVibUtiSVh4ZzUyNFdkMy9JZktmc1NBYVNKY1JuWUxRd1pL?=
- =?utf-8?B?U3NtdllnK01kK21RYnpOOTMzN1BQRW4yTlcvU3k0eFRTYms0dXNYMWJaUWw0?=
- =?utf-8?B?dWpBREQ0YTRuZ1czak1KUEwwQnY4K0NwVlBYMC9HUEpub3AyOVZPTVBITlV0?=
- =?utf-8?B?T3RaNGdaK0hIUEZyOXhkaE43ZTdXSTd2Qk1ZOWFyQzR1cHc4ZnBWcWhCLzVK?=
- =?utf-8?B?NjQxbmpOSWM2VFAxK3RvL2I0MmJRR0Jjay9IdmN1dDFkVXVZYnBudlhsRWhC?=
- =?utf-8?B?bG9vbDMyc1dMQzdKZE9IN2JReUd1RVNmK2Q2MjNTeFF0SmFqdkJ3S2hON093?=
- =?utf-8?B?aGNYUnllZkg5bG5mS1BIYVliMFpQK0FaUTcyRGxnSjRFa2hjMnRoOGVKWDZN?=
- =?utf-8?B?eTMrUCtzUDhxTFhTdExmYStwZmNyN3UrNFp6SmRzeit1eWJjYlJkdlZNa25M?=
- =?utf-8?B?OGZjQjI3b3ZReVRKTnBMbi9aMnh4c3d4Mk9DR2VHNUJVVW1WRzhISUw3dnFN?=
- =?utf-8?B?Yi9MUGdBWTBySGJ5U09ESU1Yc0VNSEZWYXMrZUF6UWZxSFhSMDRab0tXQ0Fs?=
- =?utf-8?B?c3JjelE0azNTMC9JU1k5RzZ0RWg5dGYwdDQ1S2pkbnhJVmUwWWVZaUltSzZZ?=
- =?utf-8?B?alBZc2lWamd5ZnoyT3JVeUJoWG1nM1ExT0JiaCtidy9ETmI2VGdrOWthc1Mz?=
- =?utf-8?B?L2U0MHFkRFdyT1o5OTViaG56TUpCTWdSNFBhRlM3RzFlRm1VNWJwWjNlVVdV?=
- =?utf-8?B?dTg2Qk5jK3lYU052MFlMMG1HNnhGL2I1b1JIQ1RkamFYdGVFRlJOVTk1MWw0?=
- =?utf-8?B?cVNZV3pGaTByV2lGUUdZTjBWQzRrcXBxUHJtc0VaZmdHaXhYcDNsVGpWc2RH?=
- =?utf-8?B?Wk5xT3cvdFdJRHA2UjZJVW03bGhWRzA5TnpNVXF3NWt3akdlZkxMZmZpT1hk?=
- =?utf-8?B?RXdMeng3NDRsQzNjL2x0QVE4ZVVzNDZlN3pTNmU5aEtkYkt2b0pVaURlTGlh?=
- =?utf-8?B?OFovU1NLQUd0V25Ia1ZZd1lvS2ErdG9mVnhkRmFJYmgwcTVSb2c0QVFtOHRQ?=
- =?utf-8?B?RnJCejV3NkJhNERpZG5mUzE0U24wSGdjSy8yYjZpQU02cGJtelFMeCt4WE84?=
- =?utf-8?B?N1haS1JBZlkrT0s2ZHViaUxNYiswNk9nUTBkay93NWVBREFTMnFhRk43enNx?=
- =?utf-8?B?NHlwWEpXY0dQbjRxMkNEY2ZSQ09WSk8wNzZxYmpPR2JETWJZbGJ3UC9Lb1lM?=
- =?utf-8?B?cGFsQnBlZEFMZ1o5ZkZCRFRlTEZsZ290cnZDMEJIa2p0MXV1SSswYVQ5V2ZC?=
- =?utf-8?B?eUcrbllabnF1ZkhUMUQ3ZkhxQTIzTkhINk84bnpnQ0x0Nk90VDNaL1F5Qml0?=
- =?utf-8?B?TXFJOE5zZFQwZVA2Zm1XbWdaTTNzYktKSkhaNzcxR2xkSFZ4bTdWKzVkMVBj?=
- =?utf-8?B?K1lGcmloVlRzU0dkWGVabXl1Rm1MRG1Dd3pZbzRUb1E3d3lvK1hPcWV4bmpv?=
- =?utf-8?Q?MUwLIF36BWxl/bgHd5MDRRoMS?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32c4c53c-10b4-45f0-6553-08db6130c127
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?M55v4z8LTEhop8X6kQhUmdA4TvnuU7S0SUunGr5awbupBP5VtuecwnJHVIaq?=
+ =?us-ascii?Q?tiARjLVk6zHzAxUUrMu0Mzg2V6zIFQ0CtznmDJxRrR3JenovaYKPSrdQRrFe?=
+ =?us-ascii?Q?DC/0ZIgpsAw7RThXsV+mswXaxK0PbaFgxCuvql5+JpAx30Zf9ayGt40DAOhB?=
+ =?us-ascii?Q?Z6tOlzS9cXMm8lCtDSe2IWO9HHmBhfXmccYSL6lL8OnUsHoeG8Z9YjH+lHon?=
+ =?us-ascii?Q?MC5W8/dHudHHvFEcrVah2Ia1x0nMMahho/AdGlo2hsnwotPVdW9/o3R1DNLu?=
+ =?us-ascii?Q?mgU3MYZ6j+MMzCHexFeI5hfFabT4Ym1ER5bSx/u4HGcStupU46sx6uMB+tbj?=
+ =?us-ascii?Q?xHVoH3cXir3W5akI97hIR1gjhwC87p0PXQiRhugS2czudNXpO80dHVD2CqDc?=
+ =?us-ascii?Q?YCjC25mZguc+7cReaQKJIr7I2rSPdTJmEydqZqQb9U7mzui7BLEU9t4PAWzz?=
+ =?us-ascii?Q?Fa7Q+eEj0uE6x43p7CcV/s5APuyOuarbgK91oV3tydrW/XzoIYryT3QiVuBG?=
+ =?us-ascii?Q?kp+rOy6HM/NVXNlinDKEhCy09pB1Rb8463CfGtq4xiJAz+OIDDKAOkYjyoVS?=
+ =?us-ascii?Q?VbQlDqdGKVQmsM9+3CRrBBKU9k++a88ni1EW9EowUkjmuKtf0Nt8nu0Fo0Ol?=
+ =?us-ascii?Q?Of3y68Novvh/0OB5D4k3tWAGNgMVdEU1KOLAimGSk4tDnYFYGI9bBkWyS7rE?=
+ =?us-ascii?Q?GbfLOdZYBuVJFE1YjDrgfTBIMvoNVpeKWnZb2repAVq5Pnln0n6ye9e4P1wy?=
+ =?us-ascii?Q?oQXlDM4FY+lWYB6z+6+2jPC3J/hq1L5Yz6t2lRTRCYAKNwAT1a2h6kg8XKTi?=
+ =?us-ascii?Q?B6XpFneeWsM+dwq0bE/h1SZjbh1qToPzsisn3bqI+Vi53E4T9jbwiipOj2Re?=
+ =?us-ascii?Q?ksmEEHd/QIKF8NO6T5ZuesSv/CsejecsmULR61QKQD/BjWmwg0i0f68oEulN?=
+ =?us-ascii?Q?RqjtTjMxhUWxNguKY2eal7XEfcE3t8aVjWH4Ua75sSr2HMlkxTHVDCb+iFSl?=
+ =?us-ascii?Q?cD/wr4WVsZkZkAB7gftnK2f4llnw8PlscPgdv/dI2CzYpp0kroNkHjPziRuk?=
+ =?us-ascii?Q?0YWFNaeg4Q7O3U8xL4mcb73eM5eD3nAcAaWL4W7BUEbAIX/vNpDkYPDCi0T3?=
+ =?us-ascii?Q?ODIBxm01N8i4wYuG/mVuyXbI6BjvR+XJ8pHLaO4o2hQA49gKECIPlEW2rsLQ?=
+ =?us-ascii?Q?MfAAVDCIvtuqkYNKJgBmgjs7igV3goLnrnIDsjba9aOR0XuFBFmCS8J13g1u?=
+ =?us-ascii?Q?Tjvp1d7wMs0Qqi6oIiK1wZuQkJb1OrSnhLY/pLbg0X1c1p4fOBW+cO0sB7iS?=
+ =?us-ascii?Q?nDJVLPcb6Ru9WOu3xA3XypKV5RykC/0/DF8vRH4vjCFdUWInP1ht7hbAj0bl?=
+ =?us-ascii?Q?RfdAXO3PQoL65VeDd8kpliSh93o8Na1egfG/pJEgFmDClrFZIbS/8f/1Ggqb?=
+ =?us-ascii?Q?nrbKcYEGRvLGiCFNUh8uThkp1ArkSCkvO3rkxn5slkb9Ecz3CjYVR8/Xq08E?=
+ =?us-ascii?Q?x162vAR9HruZr8UG1sxQnqDmtvrw5a3GXEuUQjxs/FKtgyTML0BPs8FCoMC6?=
+ =?us-ascii?Q?BvoA4BSqNADLerQ6vgK5a4MZU/hYH09adRMhK3JiBvQBr20bvwuSd6EP5F3S?=
+ =?us-ascii?Q?hQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96c3bae3-03b5-40f7-4caa-08db613a6fe8
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2023 17:10:23.2120
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 May 2023 18:19:41.8084
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UeUH64nMCZcBumF3WOIXJb4v8Nk4l9aQjSUHK+YhhCe3Xfq0jU8TPVkS/UMUUh8e29Lv3b6FKjXZyxRHGgrvPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB7894
+X-MS-Exchange-CrossTenant-UserPrincipalName: GfPnL2kO0x8O7rtTk2OJCMxhvJccjmUn5+secJ15N2vMbdIVzmaDt5ZF4XHWKboQ9jVeRaPtnIbbjvTuAq6pvQUrTK0bTz63NQxBUxtyOXo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR11MB8095
 X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Jonathan Cameron wrote:
+> 
+> Hi,
+> 
+> Tidied up the typos. Thanks,
 
-On 5/26/23 02:58, Jonathan Cameron wrote:
-> Until the recently release CXL 3.0 specification, there
-> was only ever one instance of any given register block pointed
-> to by the Register Block Locator DVSEC. Now, the specification allows
-> for multiple CXL PMU instances, each with their own register block.
->
-> To enable this add cxl_find_regblock_instance() that takes an index
-> parameter and use that to implement cxl_count_regblock() and
-> cxl_find_regblock().
->
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Care to send that replacement patch? It looks like, in linux-next, no
+other tree has picked up:
 
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+http://lore.kernel.org/r/20230526095824.16336-2-Jonathan.Cameron@huawei.com
 
-
-> ---
->   drivers/cxl/core/regs.c | 59 ++++++++++++++++++++++++++++++++++++-----
->   drivers/cxl/cxl.h       |  3 +++
->   2 files changed, 56 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/cxl/core/regs.c b/drivers/cxl/core/regs.c
-> index 1476a0299c9b..4b9672db867d 100644
-> --- a/drivers/cxl/core/regs.c
-> +++ b/drivers/cxl/core/regs.c
-> @@ -286,20 +286,23 @@ static bool cxl_decode_regblock(struct pci_dev *pdev, u32 reg_lo, u32 reg_hi,
->   }
->   
->   /**
-> - * cxl_find_regblock() - Locate register blocks by type
-> + * cxl_find_regblock_instance() - Locate a register block by type / index
->    * @pdev: The CXL PCI device to enumerate.
->    * @type: Register Block Indicator id
->    * @map: Enumeration output, clobbered on error
-> + * @index: Index into which particular instance of a regblock wanted in the
-> + *	   order found in register locator DVSEC.
->    *
->    * Return: 0 if register block enumerated, negative error code otherwise
->    *
->    * A CXL DVSEC may point to one or more register blocks, search for them
-> - * by @type.
-> + * by @type and @index.
->    */
-> -int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
-> -		      struct cxl_register_map *map)
-> +int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
-> +			       struct cxl_register_map *map, int index)
->   {
->   	u32 regloc_size, regblocks;
-> +	int instance = 0;
->   	int regloc, i;
->   
->   	map->resource = CXL_RESOURCE_NONE;
-> @@ -323,15 +326,59 @@ int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
->   		if (!cxl_decode_regblock(pdev, reg_lo, reg_hi, map))
->   			continue;
->   
-> -		if (map->reg_type == type)
-> -			return 0;
-> +		if (map->reg_type == type) {
-> +			if (index == instance)
-> +				return 0;
-> +			instance++;
-> +		}
->   	}
->   
->   	map->resource = CXL_RESOURCE_NONE;
->   	return -ENODEV;
->   }
-> +EXPORT_SYMBOL_NS_GPL(cxl_find_regblock_instance, CXL);
-> +
-> +/**
-> + * cxl_find_regblock() - Locate register blocks by type
-> + * @pdev: The CXL PCI device to enumerate.
-> + * @type: Register Block Indicator id
-> + * @map: Enumeration output, clobbered on error
-> + *
-> + * Return: 0 if register block enumerated, negative error code otherwise
-> + *
-> + * A CXL DVSEC may point to one or more register blocks, search for them
-> + * by @type.
-> + */
-> +int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
-> +		      struct cxl_register_map *map)
-> +{
-> +	return cxl_find_regblock_instance(pdev, type, map, 0);
-> +}
->   EXPORT_SYMBOL_NS_GPL(cxl_find_regblock, CXL);
->   
-> +/**
-> + * cxl_count_regblock() - Count instances of a given regblock type.
-> + * @pdev: The CXL PCI device to enumerate.
-> + * @type: Register Block Indicator id
-> + *
-> + * Some regblocks may be repeated. Count how many instances.
-> + *
-> + * Return: count of matching regblocks.
-> + */
-> +int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type)
-> +{
-> +	struct cxl_register_map map;
-> +	int rc, count = 0;
-> +
-> +	while (1) {
-> +		rc = cxl_find_regblock_instance(pdev, type, &map, count);
-> +		if (rc)
-> +			return count;
-> +		count++;
-> +	}
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_count_regblock, CXL);
-> +
->   resource_size_t cxl_rcrb_to_component(struct device *dev,
->   				      resource_size_t rcrb,
->   				      enum cxl_rcrb which)
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 044a92d9813e..f6e2a9ea5f41 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -260,6 +260,9 @@ int cxl_map_device_regs(struct device *dev, struct cxl_device_regs *regs,
->   			struct cxl_register_map *map);
->   
->   enum cxl_regloc_type;
-> +int cxl_count_regblock(struct pci_dev *pdev, enum cxl_regloc_type type);
-> +int cxl_find_regblock_instance(struct pci_dev *pdev, enum cxl_regloc_type type,
-> +			       struct cxl_register_map *map, int index);
->   int cxl_find_regblock(struct pci_dev *pdev, enum cxl_regloc_type type,
->   		      struct cxl_register_map *map);
->   
+...so I'll queue that as well.
