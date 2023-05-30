@@ -2,105 +2,90 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C945C77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 09:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C24C77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 10:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231235AbjE3JvS (ORCPT
+        id S231376AbjE3KKi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 May 2023 05:51:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60006 "EHLO
+        Tue, 30 May 2023 06:10:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231177AbjE3JvO (ORCPT
+        with ESMTP id S231424AbjE3KKP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 May 2023 05:51:14 -0400
+        Tue, 30 May 2023 06:10:15 -0400
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D01E493;
-        Tue, 30 May 2023 02:51:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 92CE1FE
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 May 2023 03:10:04 -0700 (PDT)
 Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8Bx7OoNx3VkX4QCAA--.1286S3;
-        Tue, 30 May 2023 17:51:09 +0800 (CST)
+        by gateway (Coremail) with SMTP id _____8CxZ_F7y3Vk3YUCAA--.5810S3;
+        Tue, 30 May 2023 18:10:03 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxWdIJx3VkkmSAAA--.12317S5;
-        Tue, 30 May 2023 17:51:09 +0800 (CST)
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Axo8B6y3Vk_WqAAA--.12905S2;
+        Tue, 30 May 2023 18:10:02 +0800 (CST)
 From:   Tiezhu Yang <yangtiezhu@loongson.cn>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Hans-Peter Nilsson <hp@axis.com>,
-        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        loongson-kernel@lists.loongnix.cn
-Subject: [PATCH v3 3/5] perf arm64: Handle __NR3264_ prefixed syscall number
-Date:   Tue, 30 May 2023 17:51:03 +0800
-Message-Id: <1685440265-7021-4-git-send-email-yangtiezhu@loongson.cn>
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev
+Subject: [PATCH RESEND v3 0/5] perf tools: Modify mksyscalltbl
+Date:   Tue, 30 May 2023 18:09:56 +0800
+Message-Id: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn>
-X-CM-TRANSID: AQAAf8BxWdIJx3VkkmSAAA--.12317S5
+X-CM-TRANSID: AQAAf8Axo8B6y3Vk_WqAAA--.12905S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7trWxur1Dtw1xtw4ktF15CFg_yoW8JFW8pw
-        s3C34UtFZ5GF10kw1xur4jqFZ5CF4kJF1UKryjyrW3Crn8J345tr1YqasYkFW7Xw1xK3y5
-        Zr1FqFy5XF18Xw7anT9S1TB71UUUUbJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+X-Coremail-Antispam: 1Uk129KBjvJXoW7ZFWfKrWkJrW7Ar18tF43Jrb_yoW8Gr13pF
+        4Sk3srtrs5Xry8Aw1fur42qFWFkw1xJa4jqry0yrWYyrn8u34YyryrXas5GFWxX34fGrWU
+        ZF48Xry5JF1SqF7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
         qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bSkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        b3kYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
         1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1l84
-        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2kK
-        e7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-        0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWrXVW3AwAv7VC2z280
-        aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY1x0262
-        kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km
-        07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r
-        1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW7
-        JVWDJwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8VAvwI8IcIk0rV
-        WUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8
-        JrUvcSsGvfC2KfnxnUUI43ZEXa7IUnbAw7UUUUU==
+        wVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS
+        14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+        1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+        67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28Icx
+        kI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E
+        5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAV
+        WUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY
+        1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
+        0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x
+        07jbDGOUUUUU=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-After commit 9854e7ad35fe ("perf arm64: Simplify mksyscalltbl"),
-in the generated syscall table file syscalls.c, there exist some
-__NR3264_ prefixed syscall numbers such as [__NR3264_ftruncate],
-it looks like not so good, just do some small filter operations
-to handle __NR3264_ prefixed syscall number as a digital number.
+I'm sorry, somehow the patchset didn't reach mailing lists.
+Resending with a fewer people in the cc list, which probably
+was the reason.
 
-Without this patch:
+Thanks Alexander, Leo and Ian for your reviews and suggestions.
 
-  [__NR3264_ftruncate] = "ftruncate",
+v3:
+  -- Add a new patch to declare syscalltbl_*[] as const for all archs,
+     suggested by Ian.
+  -- Add a new patch to use max_nr to define SYSCALLTBL_ARM64_MAX_ID.
 
-With this patch:
+v2:
+  -- Add a new patch to rename create_table_from_c()
+     to create_sc_table(), suggested by Leo.
+  -- Simplify the shell script, suggested by Alexander.
 
-  [46] = "ftruncate",
+Tiezhu Yang (5):
+  perf tools: Declare syscalltbl_*[] as const for all archs
+  perf arm64: Rename create_table_from_c() to create_sc_table()
+  perf arm64: Handle __NR3264_ prefixed syscall number
+  perf arm64: Use max_nr to define SYSCALLTBL_ARM64_MAX_ID
+  perf LoongArch: Simplify mksyscalltbl
 
-Suggested-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/arch/arm64/entry/syscalls/mksyscalltbl | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  | 17 ++++-----
+ .../arch/loongarch/entry/syscalls/mksyscalltbl     | 40 +++++++---------------
+ tools/perf/arch/mips/entry/syscalls/mksyscalltbl   |  2 +-
+ .../perf/arch/powerpc/entry/syscalls/mksyscalltbl  |  2 +-
+ tools/perf/arch/s390/entry/syscalls/mksyscalltbl   |  2 +-
+ tools/perf/arch/x86/entry/syscalls/syscalltbl.sh   |  2 +-
+ tools/perf/util/syscalltbl.c                       | 14 ++++----
+ 7 files changed, 32 insertions(+), 47 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-index 84976dc..0bcd64a 100755
---- a/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-+++ b/tools/perf/arch/arm64/entry/syscalls/mksyscalltbl
-@@ -40,6 +40,7 @@ create_table()
- }
- 
- $gcc -E -dM -x c -I $incpath/include/uapi $input \
--	|sed -ne 's/^#define __NR_//p' \
--	|sort -t' ' -k2 -n	       \
-+	|awk '$2 ~ "__NR" && $3 !~ "__NR3264_" {
-+		sub("^#define __NR(3264)?_", "");
-+		print | "sort -k2 -n"}' \
- 	|create_table
 -- 
 2.1.0
 
