@@ -2,97 +2,82 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6C7C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 02:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3D4C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 04:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229977AbjE3COs (ORCPT
+        id S229987AbjE3E5h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 29 May 2023 22:14:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53520 "EHLO
+        Tue, 30 May 2023 00:57:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229903AbjE3COr (ORCPT
+        with ESMTP id S229614AbjE3E5g (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 29 May 2023 22:14:47 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E18B7
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 May 2023 19:14:45 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba2b9ecfadaso7732411276.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 May 2023 19:14:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685412884; x=1688004884;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=JhVHx6Y59p5BY8t5ggwZZWj9vUfyNel0Ky85ZYEFuAQ=;
-        b=InsqZGOJ8EtlyykvbzTnPldxO38j91PX4e0Wsotwu+NodzSXdYiMpivRU0QSwVhmgA
-         PvdDh/ml27/UcuJiGcxeh29Prl9V032QAtsU7qknhXV/mpBgHBxHNSnwOVK9xrbb48aR
-         FXu4mKQAINxI/zrIiQj1FIyg4ow3NLsZnoDSXcxdUtq6tHuzBVFuABOC5XqZeWs0DFHT
-         LXO3w2zFtyR4Uq3m5DwuE84v92IsXGfM07qGZryjSYmpD1opQNmBweK3brerWdHGe6jK
-         7EpQ2lj58OIRGuHdFp3j+6udKL3uKrm4iardBl4Bx8X5m08GDB4NIJovcYIPB9YD2V3r
-         yotw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685412884; x=1688004884;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JhVHx6Y59p5BY8t5ggwZZWj9vUfyNel0Ky85ZYEFuAQ=;
-        b=JvNNkci2SYnEIBxDemmJ6Mg2ijHGjnEaNe2H2vLMg3TwgiQ0my2KoJAjpFKVhKMd9B
-         33pWhv50WKMxfodrpiSfUKecQBZ6gUS3lvitrmiUmNX64PnvodwC3LDvCYle4ZUvVL7U
-         u1Iqfw7hOuP/3uPXdVPvnFFIRE1y68Lzs8XvPDObNazT3xQ7WluzHzF56NwFTmfinvXA
-         XlPL/xF2qsxsw8UH9M6k9trxQm3GPvdSSwyMU3jSkieyeGJwmBbGFw10LKW9qUJecTaT
-         MR+GVVlc6C6+zoX/LbDsdPDY8y3Tz11Sm+1rdSfLTt7WDzhGFmz6YjuANQgsoyj7ujBz
-         jWhw==
-X-Gm-Message-State: AC+VfDxHZiFySUrh8odG6mNUMNFV+j8h7+ptH4P9UsOX0CY2U2DvtxBM
-        Xn0N1zT+nAmiOMi8FAiMpp+gOYDHgKzE
-X-Google-Smtp-Source: ACHHUZ40kBnwrflyP7QwyQ27rx4j9fPFlP9lRnsFh7lo51Wo4mstGXpGsMCgJkQ0vA9xClr1/QSe2E7yORBu
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:8bc9:a316:5479:7adf])
- (user=irogers job=sendgmr) by 2002:a25:8412:0:b0:ba8:757c:2523 with SMTP id
- u18-20020a258412000000b00ba8757c2523mr577356ybk.9.1685412884707; Mon, 29 May
- 2023 19:14:44 -0700 (PDT)
-Date:   Mon, 29 May 2023 19:14:33 -0700
-Message-Id: <20230530021433.3107580-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v1] perf kvm: Fix powerpc build
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 30 May 2023 00:57:36 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D75C9;
+        Mon, 29 May 2023 21:57:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685422655; x=1716958655;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BsdtVrFGCJbQ+fRw/SSLLWJvAmhHbsbfCItALlMk470=;
+  b=GQCDc6WBp0Q9CKAhM98FUIYws+Luoff5PiAbjb5b29WY2h6JF0dal7iP
+   bOrwsnRKfGz1BVrP2dZX8QV7/miZ/BTi+3B9KkYq+puWGuE+zsxKsnR39
+   QY70ExO9dS8t00Al5YtEDrDYS80n+EREIyQdfVZGDazHYxzm+YwVP6Wca
+   A2mBWrh/7pV1g5WRcYI17Tfk3ml+Q9s7xGjR/uHd1Ce49fQ1/SrGtawpf
+   NkEz0GPmEyjx+MrOgqeeG1U5PWuyIgy4Teo774VdtTzdRogtmfihcCSAY
+   SNwtEt1K6hvZFqJZnT/RUtmpsx/5wa5Ec+RvE7yADvg9XTwWpGzEm90we
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="339405183"
+X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
+   d="scan'208";a="339405183"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 21:57:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10725"; a="830595390"
+X-IronPort-AV: E=Sophos;i="6.00,203,1681196400"; 
+   d="scan'208";a="830595390"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 May 2023 21:57:35 -0700
+Date:   Mon, 29 May 2023 21:57:33 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        Ross Zwisler <zwisler@chromium.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Yang Jihong <yangjihong1@huawei.com>,
         Kan Liang <kan.liang@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 00/16] Address some perf memory/data size issues
+Message-ID: <ZHWCPXKo2fFJmtlT@tassilo>
+References: <20230526183401.2326121-1-irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230526183401.2326121-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Missed function rename from pmu_have_event to perf_pmus__have_event.
 
-Fixes: 1eaf496ed386 ("perf pmu: Separate pmu and pmus")
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/arch/powerpc/util/kvm-stat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+FWIW I think the whole patchkit could be replaced with a one liner
+that disables THP for the BSS segment. I suspect that would be roughly
+equivalent for memory consumption because 4K pages that are never
+touched would never be allocated.
 
-diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
-index ea1220d66b67..1039e15c27c9 100644
---- a/tools/perf/arch/powerpc/util/kvm-stat.c
-+++ b/tools/perf/arch/powerpc/util/kvm-stat.c
-@@ -204,7 +204,7 @@ int kvm_add_default_arch_event(int *argc, const char **argv)
- 
- 	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
- 	if (!event) {
--		if (pmu_have_event("trace_imc", "trace_cycles")) {
-+		if (perf_pmus__have_event("trace_imc", "trace_cycles")) {
- 			argv[j++] = strdup("-e");
- 			argv[j++] = strdup("trace_imc/trace_cycles/");
- 			*argc += 2;
--- 
-2.41.0.rc0.172.g3f132b7071-goog
-
+-Andi
