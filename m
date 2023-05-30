@@ -2,81 +2,96 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F41C77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 21:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5671C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 22:16:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233252AbjE3VTc (ORCPT
+        id S233665AbjE3WQy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 May 2023 17:19:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46264 "EHLO
+        Tue, 30 May 2023 18:16:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233182AbjE3VTb (ORCPT
+        with ESMTP id S231794AbjE3WQy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 May 2023 17:19:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 823A5C9;
-        Tue, 30 May 2023 14:19:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 62B2A6338E;
-        Tue, 30 May 2023 21:19:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BDD1EC433D2;
-        Tue, 30 May 2023 21:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685481569;
-        bh=MP7q+lNYKFJ63yY8RKR7AjDujqQD2VMMzCdtQ8ySDRo=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=VtraeqWqAqCvsEQnCUwmchC9VMEbXYWMDVwYImuLb8QtBDpQ5xah8UKxVLxh60hXg
-         XeM+T4w5LPVfwZxXowB5FxgkgvNEE/+zyLXzue7jKT6++bq14ssoaK8xT+kSIuaKtA
-         P41jViKgDP/1wLjLTSFjQ2yBMyhaRErdoDslffq14B6VDSrO8psIifn777byCRL+5n
-         oSKORrOfv+ZkSiDsNS8/r6mVwKZJFaMfszgGaDPwv/GjdMy7IuttslbLCESKG8LvG/
-         WxAx9UM/RQdtxjEHyplQQCqRtIqSyEZ7p92v30wUMTVtPAJ2aQwqSfptLRNwZGHnAp
-         Y8iRSAS0wa8Iw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9BDB6E52BF5;
-        Tue, 30 May 2023 21:19:29 +0000 (UTC)
-Subject: Re: [GIT PULL] perf tools fixes for v6.4: 2nd batch
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20230530200210.2103158-1-acme@kernel.org>
-References: <20230530200210.2103158-1-acme@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20230530200210.2103158-1-acme@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.4-2-2023-05-30
-X-PR-Tracked-Commit-Id: c041d33bf7ec731bb71f47e4d45a7aec9e40b1b9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: afead42fdfcae714fb6ac41a5c323629cdb6f9ee
-Message-Id: <168548156962.4416.477884658906599496.pr-tracker-bot@kernel.org>
-Date:   Tue, 30 May 2023 21:19:29 +0000
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Clark Williams <williams@redhat.com>,
-        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Leo Yan <leo.yan@linaro.org>, Song Liu <song@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
+        Tue, 30 May 2023 18:16:54 -0400
+X-Greylist: delayed 2647 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 30 May 2023 15:16:51 PDT
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [217.182.43.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1815B2;
+        Tue, 30 May 2023 15:16:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=misterjones.org; s=dkim20211231; h=Content-Transfer-Encoding:Content-Type:
+        Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=FBurYPzx/P+7K1ew3kZobFLL4iaIkaDFy2j8U6Qpz1k=; b=PrFh6GN2xQH9skp71JIvMYYZaa
+        LIncg4/qmMiMllhKjO0lm7V+jeUI82BEwQLByUUAghydE1/mNpBjPAFZxF/yFfbyTn8nsMdQeUSbR
+        OEr1HsLJqZTQHAmq56LqgMRFdTxnKVGD0y76WBVYNFE4D2oZXvth2yJnWyst2zD+NHUnTgfrQ1N6U
+        WaLi50qb9DwIS2HyDgVmbqvJ4obeEl5evjdhTYneYt9QNWwVwe9b+TNkygw4wGNt3zdrZSp2l7nAW
+        jOl3suEKcaOT7lfI/++mLLo3alWHhHY5LB9GyOfqDPMxchXKDcGQDouye+89sfLH1hmIK1F27HgFX
+        t1m/q0pA==;
+Received: from disco-boy.misterjones.org ([217.182.43.188] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@misterjones.org>)
+        id 1q46x5-001SHy-2X;
+        Tue, 30 May 2023 22:32:23 +0100
+MIME-Version: 1.0
+Date:   Tue, 30 May 2023 22:32:22 +0100
+From:   Marc Zyngier <maz@misterjones.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        dri-devel@lists.freedesktop.org, kvmarm@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        samba-technical@lists.samba.org
+Subject: Re: [linux-next:master] BUILD REGRESSION
+ 8c33787278ca8db73ad7d23f932c8c39b9f6e543
+In-Reply-To: <20230530182123.UilBt%lkp@intel.com>
+References: <20230530182123.UilBt%lkp@intel.com>
+User-Agent: Roundcube Webmail/1.4.13
+Message-ID: <d65700431ed60877d3ec8e88e1211a97@misterjones.org>
+X-Sender: maz@misterjones.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 217.182.43.188
+X-SA-Exim-Rcpt-To: lkp@intel.com, akpm@linux-foundation.org, linux-mm@kvack.org, dri-devel@lists.freedesktop.org, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-perf-users@vger.kernel.org, samba-technical@lists.samba.org
+X-SA-Exim-Mail-From: maz@misterjones.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The pull request you sent on Tue, 30 May 2023 17:02:10 -0300:
+On 2023-05-30 19:21, kernel test robot wrote:
+> tree/branch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> master
+> branch HEAD: 8c33787278ca8db73ad7d23f932c8c39b9f6e543  Add linux-next
+> specific files for 20230530
+> 
+> Error/Warning reports:
+> 
+> https://lore.kernel.org/oe-kbuild-all/202305070840.X0G3ofjl-lkp@intel.com
+> 
+> Error/Warning: (recently discovered and may have been fixed)
+> 
+> include/drm/drm_print.h:456:39: error: format '%ld' expects argument
+> of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned
+> int'} [-Werror=format=]
+> 
+> Unverified Error/Warning (likely false positive, please contact us if
+> interested):
+> 
+> arch/arm64/kvm/mmu.c:147:3-9: preceding lock on line 140
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.4-2-2023-05-30
+This warning looks wrong. The "issue" seems that we acquire the lock
+before exiting the function, but the the whole point is that the
+lock is supposed to be held all along (it is dropped and then acquired
+again).
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/afead42fdfcae714fb6ac41a5c323629cdb6f9ee
+I guess the coccinelle checker doesn't spot this construct?
 
-Thank you!
-
+         M.
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Who you jivin' with that Cosmik Debris?
