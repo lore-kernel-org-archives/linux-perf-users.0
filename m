@@ -2,239 +2,138 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FABC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 09:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDBDC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 09:20:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229650AbjE3JMt (ORCPT
+        id S230435AbjE3JUU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 May 2023 05:12:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35312 "EHLO
+        Tue, 30 May 2023 05:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbjE3JMs (ORCPT
+        with ESMTP id S230409AbjE3JUG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 May 2023 05:12:48 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 31B36BE;
-        Tue, 30 May 2023 02:12:47 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FE412F4;
-        Tue, 30 May 2023 02:13:32 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B1D73F663;
-        Tue, 30 May 2023 02:12:44 -0700 (PDT)
-Message-ID: <612885c1-b58f-5bce-59dc-bf84b057048d@arm.com>
-Date:   Tue, 30 May 2023 10:12:47 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 4/4] perf cs-etm: Add exception level consistency check
-To:     Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linaro.org>
-Cc:     coresight@lists.linaro.org, denik@chromium.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Tue, 30 May 2023 05:20:06 -0400
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C45111D;
+        Tue, 30 May 2023 02:19:45 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0Vjt6nxN_1685438375;
+Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vjt6nxN_1685438375)
+          by smtp.aliyun-inc.com;
+          Tue, 30 May 2023 17:19:40 +0800
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
         Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230524131958.2139331-1-james.clark@arm.com>
- <20230524131958.2139331-5-james.clark@arm.com>
- <CAJ9a7VioqoCTLOKmPPbS9ogs9n+2sV3szn-ZSDE3+mZTEgP0UQ@mail.gmail.com>
-Content-Language: en-US
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CAJ9a7VioqoCTLOKmPPbS9ogs9n+2sV3szn-ZSDE3+mZTEgP0UQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>
+Subject: [PATCH v3 0/7] Add JSON metrics for arm CMN and Yitian710 DDR
+Date:   Tue, 30 May 2023 17:19:27 +0800
+Message-Id: <1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Changes since v2:
+- Refact cmn identifier and use model and revision to form identifier.
+- Let "Compat" support matching multiple identifier.
+- Improved the ali_drw PMU event alias Brief Description.
+- Update ali_drw PMU metric usage in documentation.
+
+Changes since RFC:
+- Refact arm-cmn PMU identifier.
+- Not add arm-cmn PMU aliasing currently because it's Eventcode is
+  difficult to define.
+- Rename ali_drw PMU identifier and Unit name.
+- Divide ali_drw PMU metric and aliasing into two patches.
+
+Add an identifier sysfs file for the yitian710 SoC DDR and arm CMN to
+allow userspace to identify the specific implementation of the device,
+so that the perf tool can match the corresponding uncore events and
+metrics through the identifier. Then added several general CMN metrics
+and yitian710 soc DDR metrics and events alias.
 
 
-On 25/05/2023 12:39, Mike Leach wrote:
-> Hi James,
-> 
-> My concern here is that for etmv3 trace, OpenCSD will only provide
-> memory spaces as either secure or non-secure, The ETMv3 does not
-> trace, and hence OpenCSD cannot provide the different ELs.
-> The memory callback will be either OCSD_MEM_SPACE_S or OCSD_MEM_SPACE_N.
-> 
+$perf list:
+...
+ali_drw:
+  chi_rxdat
+       [A packet at CHI RXDAT interface (write data). Unit: ali_drw]
+  chi_rxrsp
+       [A packet at CHI RXRSP interface. Unit: ali_drw]
+  chi_txdat
+       [A packet at CHI TXDAT interface (read data). Unit: ali_drw]
+  chi_txreq
+       [A packet at CHI TXREQ interface (request). Unit: ali_drw]
+  cycle
+       [The ddr cycle. Unit: ali_drw]
+...
+arm_cmn:
+  mc_message_retry_rate
+       [The memory controller request retries rate indicates whether the memory controller is the bottleneck. Unit: arm_cmn ]
+  rni_actual_read_bandwidth.all
+       [This event measure the actual bandwidth(MB/sec) that RN-I bridge sends to the interconnect. Unit: arm_cmn ]
+  rni_actual_write_bandwidth.all
+       [This event measures the actual write bandwidth(MB/sec) at RN-I bridges. Unit: arm_cmn ]
+  rni_retry_rate
+       [RN-I bridge retry rate indicates whether the memory controller is the bottleneck. Unit: arm_cmn ]
+  sbsx_actual_write_bandwidth.all
+       [sbsx actual write bandwidth(MB/sec). Unit: arm_cmn ]
+  sf_hit_rate
+       [Snoop filter hit rate can be used to measure the Snoop Filter efficiency. Unit: arm_cmn ]
+  slc_miss_rate
+       [The system level cache miss rate include. Unit: arm_cmn ]
+ali_drw:
+  ddr_read_bandwidth.all
+       [The ddr read bandwidth(MB/s). Unit: ali_drw ]
+  ddr_write_bandwidth.all
+       [The ddr write bandwidth(MB/s). Unit: ali_drw ]
+...
 
-As long as none of the bits are set for EL1-EL3 then no validation will
-be done so it should be fine. But I will try to test ETMv3.
+$perf stat -M ddr_read_bandwidth.all ./test
 
-> Can this patch - and the set handle this. (assuming perf supports our
-> ETMv3 coresight kernel driver)
+Performance counter stats for 'system wide':
 
-For the whole set, the tracked EL will stay as ocsd_EL_unknown and
-cs_etm__get_machine() will return host so the behavior will be unchanged
-from before. This is assuming OpenCSD will set the EL to unknown in
-elem->context.exception_level in this case.
+            38,150      hif_rd        #  2.4 MB/s  ddr_read_bandwidth.all
+     1,000,957,941 ns   duration_time
 
-> 
-> Regards
-> 
-> Mike
-> 
-> On Wed, 24 May 2023 at 14:20, James Clark <james.clark@arm.com> wrote:
->>
->> Assert that our own tracking of the exception level matches what
->> OpenCSD provides. OpenCSD doesn't distinguish between EL0 and EL1 in the
->> memory access callback so the extra tracking was required. But a rough
->> assert can still be done.
->>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  6 +--
->>  .../perf/util/cs-etm-decoder/cs-etm-decoder.h |  4 +-
->>  tools/perf/util/cs-etm.c                      | 37 +++++++++++++------
->>  3 files changed, 32 insertions(+), 15 deletions(-)
->>
->> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
->> index ac227cd03eb0..50b3c248d1e5 100644
->> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
->> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
->> @@ -52,15 +52,15 @@ struct cs_etm_decoder {
->>  static u32
->>  cs_etm_decoder__mem_access(const void *context,
->>                            const ocsd_vaddr_t address,
->> -                          const ocsd_mem_space_acc_t mem_space __maybe_unused,
->> +                          const ocsd_mem_space_acc_t mem_space,
->>                            const u8 trace_chan_id,
->>                            const u32 req_size,
->>                            u8 *buffer)
->>  {
->>         struct cs_etm_decoder *decoder = (struct cs_etm_decoder *) context;
->>
->> -       return decoder->mem_access(decoder->data, trace_chan_id,
->> -                                  address, req_size, buffer);
->> +       return decoder->mem_access(decoder->data, trace_chan_id, address,
->> +                                  req_size, buffer, mem_space);
->>  }
->>
->>  int cs_etm_decoder__add_mem_access_cb(struct cs_etm_decoder *decoder,
->> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
->> index 21d403f55d96..272c2efe78ee 100644
->> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
->> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
->> @@ -11,6 +11,7 @@
->>  #define INCLUDE__CS_ETM_DECODER_H__
->>
->>  #include <linux/types.h>
->> +#include <opencsd/ocsd_if_types.h>
->>  #include <stdio.h>
->>
->>  struct cs_etm_decoder;
->> @@ -19,7 +20,8 @@ struct cs_etm_packet_queue;
->>
->>  struct cs_etm_queue;
->>
->> -typedef u32 (*cs_etm_mem_cb_type)(struct cs_etm_queue *, u8, u64, size_t, u8 *);
->> +typedef u32 (*cs_etm_mem_cb_type)(struct cs_etm_queue *, u8, u64, size_t, u8 *,
->> +                                 const ocsd_mem_space_acc_t);
->>
->>  struct cs_etmv3_trace_params {
->>         u32 reg_ctrl;
->> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
->> index b9ba19327f26..ccf34ed8ddf2 100644
->> --- a/tools/perf/util/cs-etm.c
->> +++ b/tools/perf/util/cs-etm.c
->> @@ -931,7 +931,8 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address,
->>  }
->>
->>  static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
->> -                             u64 address, size_t size, u8 *buffer)
->> +                             u64 address, size_t size, u8 *buffer,
->> +                             const ocsd_mem_space_acc_t mem_space)
->>  {
->>         u8  cpumode;
->>         u64 offset;
->> @@ -947,6 +948,20 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
->>         if (!tidq)
->>                 return 0;
->>
->> +       /*
->> +        * We've already tracked EL along side the PID in cs_etm__set_thread()
->> +        * so double check that it matches what OpenCSD thinks as well. It
->> +        * doesn't distinguish between EL0 and EL1 for this mem access callback
->> +        * so we had to do the extra tracking.
->> +        */
->> +       if (mem_space & OCSD_MEM_SPACE_EL1N) {
->> +               /* Includes both non secure EL1 and EL0 */
->> +               assert(tidq->el == ocsd_EL1 || tidq->el == ocsd_EL0);
->> +       } else if (mem_space & OCSD_MEM_SPACE_EL2)
->> +               assert(tidq->el == ocsd_EL2);
->> +       else if (mem_space & OCSD_MEM_SPACE_EL3)
->> +               assert(tidq->el == ocsd_EL3);
->> +
->>         cpumode = cs_etm__cpu_mode(etmq, address, tidq->el);
->>
->>         if (!thread__find_map(tidq->thread, cpumode, address, &al))
->> @@ -1195,8 +1210,8 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
->>  {
->>         u8 instrBytes[2];
->>
->> -       cs_etm__mem_access(etmq, trace_chan_id, addr,
->> -                          ARRAY_SIZE(instrBytes), instrBytes);
->> +       cs_etm__mem_access(etmq, trace_chan_id, addr, ARRAY_SIZE(instrBytes),
->> +                          instrBytes, 0);
->>         /*
->>          * T32 instruction size is indicated by bits[15:11] of the first
->>          * 16-bit word of the instruction: 0b11101, 0b11110 and 0b11111
->> @@ -1387,8 +1402,8 @@ static void cs_etm__copy_insn(struct cs_etm_queue *etmq,
->>         else
->>                 sample->insn_len = 4;
->>
->> -       cs_etm__mem_access(etmq, trace_chan_id, sample->ip,
->> -                          sample->insn_len, (void *)sample->insn);
->> +       cs_etm__mem_access(etmq, trace_chan_id, sample->ip, sample->insn_len,
->> +                          (void *)sample->insn, 0);
->>  }
->>
->>  u64 cs_etm__convert_sample_time(struct cs_etm_queue *etmq, u64 cs_timestamp)
->> @@ -1940,8 +1955,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
->>                  * so below only read 2 bytes as instruction size for T32.
->>                  */
->>                 addr = end_addr - 2;
->> -               cs_etm__mem_access(etmq, trace_chan_id, addr,
->> -                                  sizeof(instr16), (u8 *)&instr16);
->> +               cs_etm__mem_access(etmq, trace_chan_id, addr, sizeof(instr16),
->> +                                  (u8 *)&instr16, 0);
->>                 if ((instr16 & 0xFF00) == 0xDF00)
->>                         return true;
->>
->> @@ -1956,8 +1971,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
->>                  * +---------+---------+-------------------------+
->>                  */
->>                 addr = end_addr - 4;
->> -               cs_etm__mem_access(etmq, trace_chan_id, addr,
->> -                                  sizeof(instr32), (u8 *)&instr32);
->> +               cs_etm__mem_access(etmq, trace_chan_id, addr, sizeof(instr32),
->> +                                  (u8 *)&instr32, 0);
->>                 if ((instr32 & 0x0F000000) == 0x0F000000 &&
->>                     (instr32 & 0xF0000000) != 0xF0000000)
->>                         return true;
->> @@ -1973,8 +1988,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
->>                  * +-----------------------+---------+-----------+
->>                  */
->>                 addr = end_addr - 4;
->> -               cs_etm__mem_access(etmq, trace_chan_id, addr,
->> -                                  sizeof(instr32), (u8 *)&instr32);
->> +               cs_etm__mem_access(etmq, trace_chan_id, addr, sizeof(instr32),
->> +                                  (u8 *)&instr32, 0);
->>                 if ((instr32 & 0xFFE0001F) == 0xd4000001)
->>                         return true;
->>
->> --
->> 2.34.1
->>
-> 
-> 
+       1.000957941 seconds time elapsed
+
+Jing Zhang (7):
+  driver/perf: Add identifier sysfs file for CMN
+  perf metric: Event "Compat" value supports matching multiple
+    identifiers
+  perf vendor events: Add JSON metrics for CMN
+  driver/perf: Add identifier sysfs file for Yitian 710 DDR
+  perf jevents: Add support for Yitian 710 DDR PMU aliasing
+  perf vendor events: Add JSON metrics for Yitian 710 DDR
+  docs: perf: Update metric usage for Alibaba's T-Head PMU driver
+
+ Documentation/admin-guide/perf/alibaba_pmu.rst     |   5 +
+ drivers/perf/alibaba_uncore_drw_pmu.c              |  27 ++
+ drivers/perf/arm-cmn.c                             |  79 ++++-
+ .../pmu-events/arch/arm64/arm/cmn/sys/metrics.json |  74 ++++
+ .../arm64/freescale/yitian710/sys/ali_drw.json     | 373 +++++++++++++++++++++
+ .../arm64/freescale/yitian710/sys/metrics.json     |  20 ++
+ tools/perf/pmu-events/jevents.py                   |   2 +
+ tools/perf/util/metricgroup.c                      |  24 +-
+ 8 files changed, 595 insertions(+), 9 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metrics.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/ali_drw.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json
+
+-- 
+1.8.3.1
+
