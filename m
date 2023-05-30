@@ -2,110 +2,138 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C41C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 19:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D571C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 20:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233182AbjE3TDo (ORCPT
+        id S230234AbjE3UCW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 May 2023 15:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46776 "EHLO
+        Tue, 30 May 2023 16:02:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232545AbjE3TDn (ORCPT
+        with ESMTP id S229540AbjE3UCV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 May 2023 15:03:43 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86D7CC5
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 May 2023 12:03:42 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-3f81ffc9065so39961cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 May 2023 12:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685473421; x=1688065421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/wg+eakYRQJkWFsR8VKHGbMsmZUbdUsVveMbi9l3IrU=;
-        b=3BmQfsxcutfEPmqGYcWZ6a1Z5O/lPh3rsVadxX5KMEHUjcanhGptNKJnGxEYxA80Pr
-         2ZP7LNROMrce7azCSMf2CZ6VOYrWdF1RepVCJBvUM/XqXsCYE/iGEvXSw1iscTlQLHDy
-         U6AWSOx0qz/RDoEbz3PDPZrrZ16/cArEZDOmC+QkNBFDC2O/n/8K4E70uW8KTDIqi817
-         FYURPHLzGtiDCCgHuHASq6MLJLq6VoYmte0kJ4QGj9YbtLMk+HGk9QjTb2UdHT5X3U8k
-         951Ivghweq5RhxWVyD7RHbRH6F4Mq3idiqIR92BMZQJOkCzkdAuPMPRJagF3dTBwxaMr
-         hbXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685473421; x=1688065421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/wg+eakYRQJkWFsR8VKHGbMsmZUbdUsVveMbi9l3IrU=;
-        b=Q8pdy1HdAqGGWGuLi5ccBzKPJFE6BeddUZU9ueNAagRIc/4aj0/M8Tk1tx7uKOqj7j
-         9Dh+yMBN3F6YqdIDb87xvTsxVFV4dCn+F8fjl0wvbJIr4SmWSesCk2J9FCBVTh3DpAr5
-         bAfh3wjm7L4776M0adEHyXyIZlCyeXj1736pfe11E7axp5ycmckJn+AHzXt8xw7o/MNS
-         Urd7V6TGQIDnNFjEqVplvyyuFbSnK+0k+E7SCTzMdNUIG35stnbolWj0GNbQ4GuakqEY
-         rjryx1eG2UVBjaYLki2jrk3CJs4igBUJO2SKhtIZ5lDzJrXLLjJo1OHnv0vDz/yEfO/J
-         U5QA==
-X-Gm-Message-State: AC+VfDwLgJRiUP1KgAr0T5Poiys+haY8xZFJt8JBPqsZpyRbJAhP87Ql
-        6OoTPoxcd9NT26Kc01UUr8g9B5qNpV12fx433oAAJw==
-X-Google-Smtp-Source: ACHHUZ4tQx7CHfFMGAthsUJbOk3tJkETYESkIEu6PzSgqVUmKF4lp6c4aKVS3iVEhQx3+aj/GpFZwh3LLrvIT/yC8HY=
-X-Received: by 2002:a05:622a:1a01:b0:3f8:3065:7fc5 with SMTP id
- f1-20020a05622a1a0100b003f830657fc5mr234549qtb.1.1685473421607; Tue, 30 May
- 2023 12:03:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 30 May 2023 12:03:30 -0700
-Message-ID: <CAP-5=fXvN1b+_krmFSL2=C31WZ3zKafnq=Bqw3ruBKFNzG_8Kw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v3 0/5] perf tools: Modify mksyscalltbl
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 30 May 2023 16:02:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F049D98;
+        Tue, 30 May 2023 13:02:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8C41363306;
+        Tue, 30 May 2023 20:02:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 281D1C4339B;
+        Tue, 30 May 2023 20:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685476938;
+        bh=CGnr4j1mtkj7XDAkxN9NmqrdZfInpVJvJRWjYYdVIDY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UAPsEDCuOlsvrqWdyGUXAB8+TTdpmAkSxEcPbDIDTz+qNOg98mZLJhoVWdCDWKE6r
+         ekAMQ37X+yjolRt43zkBSVXnzjGsl6/8qXghsT7lVEShVaHy8xi2r+AhGVRXtUlicI
+         3vqqY/Lk+jr+eKoVFJQSwp27vyViR+e9GLktRtFj3rpop+h/o9DBgV+lW4EsDg2yC8
+         ijls7SeSmogVw+DxxUa1m1yXNVVXH2R41vHkl7sKXGG0G6WQL86ZyDGQf196XWVJ0J
+         ixoy2HVRMZea1aKAjbqunzGE4C9b6DPTz9DIncz4Z7EfwK1J/WYblMpEDfjksi5nxr
+         QDaxPYb686gpQ==
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Clark Williams <williams@redhat.com>,
+        Kate Carcia <kcarcia@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        James Clark <james.clark@arm.com>,
+        Leo Yan <leo.yan@linaro.org>, Song Liu <song@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [GIT PULL] perf tools fixes for v6.4: 2nd batch
+Date:   Tue, 30 May 2023 17:02:10 -0300
+Message-Id: <20230530200210.2103158-1-acme@kernel.org>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 30, 2023 at 3:10=E2=80=AFAM Tiezhu Yang <yangtiezhu@loongson.cn=
-> wrote:
->
-> I'm sorry, somehow the patchset didn't reach mailing lists.
-> Resending with a fewer people in the cc list, which probably
-> was the reason.
->
-> Thanks Alexander, Leo and Ian for your reviews and suggestions.
+Hi Linus,
 
-Thanks for the consts!
+	Please consider pulling,
 
-Acked-by: Ian Rogers <irogers@google.com>
+Best regards,
 
-> v3:
->   -- Add a new patch to declare syscalltbl_*[] as const for all archs,
->      suggested by Ian.
->   -- Add a new patch to use max_nr to define SYSCALLTBL_ARM64_MAX_ID.
->
-> v2:
->   -- Add a new patch to rename create_table_from_c()
->      to create_sc_table(), suggested by Leo.
->   -- Simplify the shell script, suggested by Alexander.
->
-> Tiezhu Yang (5):
->   perf tools: Declare syscalltbl_*[] as const for all archs
->   perf arm64: Rename create_table_from_c() to create_sc_table()
->   perf arm64: Handle __NR3264_ prefixed syscall number
->   perf arm64: Use max_nr to define SYSCALLTBL_ARM64_MAX_ID
->   perf LoongArch: Simplify mksyscalltbl
->
->  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  | 17 ++++-----
->  .../arch/loongarch/entry/syscalls/mksyscalltbl     | 40 +++++++---------=
-------
->  tools/perf/arch/mips/entry/syscalls/mksyscalltbl   |  2 +-
->  .../perf/arch/powerpc/entry/syscalls/mksyscalltbl  |  2 +-
->  tools/perf/arch/s390/entry/syscalls/mksyscalltbl   |  2 +-
->  tools/perf/arch/x86/entry/syscalls/syscalltbl.sh   |  2 +-
->  tools/perf/util/syscalltbl.c                       | 14 ++++----
->  7 files changed, 32 insertions(+), 47 deletions(-)
->
-> --
-> 2.1.0
->
+- Arnaldo
+
+
+The following changes since commit 0d85b27b0cc6b5cf54567c5ad913a247a71583ce:
+
+  Merge tag '6.4-rc3-smb3-client-fixes' of git://git.samba.org/sfrench/cifs-2.6 (2023-05-25 19:23:18 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.4-2-2023-05-30
+
+for you to fetch changes up to c041d33bf7ec731bb71f47e4d45a7aec9e40b1b9:
+
+  perf evsel: Separate bpf_counter_list and bpf_filters, can be used at the same time (2023-05-26 16:03:43 -0300)
+
+----------------------------------------------------------------
+perf tools fixes for v6.4: 2nd batch
+
+- Fix BPF CO-RE naming convention for checking the availability of fields on
+  'union perf_mem_data_src' on the running kernel.
+
+- Remove the use of llvm-strip on BPF skel object files, not needed, fixes a
+  build breakage when the llvm package, that contains it in most distros, isn't
+  installed.
+
+- Fix tools that use both evsel->{bpf_counter_list,bpf_filters}, removing them from a
+  union.
+
+- Remove extra "--" from the 'perf ftrace latency' --use-nsec option,
+  previously it was working only when using the '-n' alternative.
+
+- Don't stop building when both binutils-devel and a C++ compiler isn't
+  available to compile the alternative C++ demangle support code, disable that
+  feature instead.
+
+- Sync the linux/in.h and coresight-pmu.h header copies with the kernel sources.
+
+- Fix relative include path to cs-etm.h.
+
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (1):
+      tools headers UAPI: Sync the linux/in.h with the kernel sources
+
+Ian Rogers (2):
+      perf arm: Fix include path to cs-etm.h
+      perf build: Don't compile demangle-cxx.cpp if not necessary
+
+James Clark (1):
+      perf cs-etm: Copy kernel coresight-pmu.h header
+
+Namhyung Kim (2):
+      perf ftrace latency: Remove unnecessary "--" from --use-nsec option
+      perf bpf filter: Fix a broken perf sample data naming for BPF CO-RE
+
+Song Liu (2):
+      perf bpf: Do not use llvm-strip on BPF binary
+      perf evsel: Separate bpf_counter_list and bpf_filters, can be used at the same time
+
+ tools/include/linux/coresight-pmu.h          | 13 -------------
+ tools/include/uapi/linux/in.h                |  1 +
+ tools/perf/Makefile.config                   |  1 +
+ tools/perf/Makefile.perf                     |  3 +--
+ tools/perf/arch/arm/util/pmu.c               |  2 +-
+ tools/perf/builtin-ftrace.c                  |  2 +-
+ tools/perf/util/Build                        |  2 +-
+ tools/perf/util/bpf_skel/sample_filter.bpf.c |  4 ++--
+ tools/perf/util/cs-etm.h                     | 13 +++++++++++++
+ tools/perf/util/evsel.c                      |  1 +
+ tools/perf/util/evsel.h                      |  6 ++----
+ tools/perf/util/symbol-elf.c                 | 27 +++++++++++++++++++++++++++
+ 12 files changed, 51 insertions(+), 24 deletions(-)
