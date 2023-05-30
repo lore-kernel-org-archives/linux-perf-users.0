@@ -2,71 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9290C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 15:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA12C7EE2C
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 15:06:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232258AbjE3PBJ (ORCPT
+        id S233145AbjE3PF7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 May 2023 11:01:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38480 "EHLO
+        Tue, 30 May 2023 11:05:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232793AbjE3PAr (ORCPT
+        with ESMTP id S233159AbjE3PFx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 May 2023 11:00:47 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A079B10D;
-        Tue, 30 May 2023 08:00:46 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 5DA861F8C8;
-        Tue, 30 May 2023 15:00:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1685458845; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Lzf8k9OeD6CxKARnPSlUMY/zE2d/0eZgKuThx3A5Fj4=;
-        b=EVny03Fpuk0L/eAxDq5AtkoQdDuOqfyJ7Ynis5eAo/QQE/uz4JFp9wkFa6GWJxxvIp89AX
-        qC2iLiX+no6dVa9Q1Ggo/++xFZeUCnro6XI6oWHE917EOtE/68yB2PQvonkyCzRTjHLJav
-        3s8c4Qs1zP94tZouCjAYz0nd2cpW40E=
-Received: from suse.cz (unknown [10.100.201.202])
+        Tue, 30 May 2023 11:05:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FBA121;
+        Tue, 30 May 2023 08:05:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 175C82C141;
-        Tue, 30 May 2023 15:00:45 +0000 (UTC)
-Date:   Tue, 30 May 2023 17:00:43 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 09/10] watchdog/hardlockup: Move SMP barriers from common
- code to buddy code
-Message-ID: <ZHYPmxdzl0tOB_uY@alley>
-References: <20230527014153.2793931-1-dianders@chromium.org>
- <20230526184139.9.I5ab0a0eeb0bd52fb23f901d298c72fa5c396e22b@changeid>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B743F63219;
+        Tue, 30 May 2023 15:05:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F12C433EF;
+        Tue, 30 May 2023 15:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685459104;
+        bh=jNNk+uMNRoA7Qd9nZx0RRfbd8TyvCtB4eZfArdxB/cI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PG/8L34vZjQpHcvAP8K6XWHVv8POvmKaiukMc7GdaF51AcOoSGhhXQfF8ESwlB6Qc
+         DqZIzb2oH0ihQwMzyRMq8zRvMmrYLW3aynzbr14TmXXCk8ai5okWaZsTPgb6jemnxx
+         TQ9Fs9LkUesSibtst2bAGshu1YtoivJ1I69897JU5xflDksOodTCCA3SHwP2m+WCeb
+         9kDTqlS1ZiF6Weni/x9CX8VLRsmesIzLTxtn0rtsGev+JiZcAe7aonplZuC+exbDdL
+         dewVM2SGuxZYeoIoSnXNPo4+gsE+eda0WFR+xhD4f/KtWEviSc9D1G9AMS7GXsV1v+
+         +EGyRfZlxSrXA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2B72040692; Tue, 30 May 2023 12:05:01 -0300 (-03)
+Date:   Tue, 30 May 2023 12:05:01 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v1] perf kvm: Fix powerpc build
+Message-ID: <ZHYQndjJ/lR3soZy@kernel.org>
+References: <20230530021433.3107580-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230526184139.9.I5ab0a0eeb0bd52fb23f901d298c72fa5c396e22b@changeid>
+In-Reply-To: <20230530021433.3107580-1-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri 2023-05-26 18:41:39, Douglas Anderson wrote:
-> It's been suggested that since the SMP barriers are only potentially
-> useful for the buddy hardlockup detector, not the perf hardlockup
-> detector, that the barriers belong in the buddy code. Let's move them
-> and add clearer comments about why they're needed.
+Em Mon, May 29, 2023 at 07:14:33PM -0700, Ian Rogers escreveu:
+> Missed function rename from pmu_have_event to perf_pmus__have_event.
 > 
-> Suggested-by: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Fixes: 1eaf496ed386 ("perf pmu: Separate pmu and pmus")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/arch/powerpc/util/kvm-stat.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+[acme@quaco perf-tools-next]$ grep perf_pmus__have_event tools/perf/util/*.h
+tools/perf/util/pmus.h:bool perf_pmus__have_event(const char *pname, const char *name);
+[acme@quaco perf-tools-next]$ vim tools/perf/arch/powerpc/util/kvm-stat.c
+[acme@quaco perf-tools-next]$ grep -w perf_pmus__have_event tools/perf/util/*.h
+tools/perf/util/pmus.h:bool perf_pmus__have_event(const char *pname, const char *name);
+[acme@quaco perf-tools-next]$ grep -w perf_pmus__have_event tools/perf/arch/powerpc/util/kvm-stat.c
+		if (perf_pmus__have_event("trace_imc", "trace_cycles")) {
+[acme@quaco perf-tools-next]$ grep util\/pmus.h tools/perf/arch/powerpc/util/kvm-stat.c
+[acme@quaco perf-tools-next]$ 
 
-Best Regards,
-Petr
+I'm adding the missing explicit:
+
+#include "util/pmus.h"
+
+to tools/perf/arch/powerpc/util/kvm-stat.c, ok?
+
+Also removing the now needless util/pmu.h include.
+
+Thanks,
+
+- Arnaldo
+ 
+> diff --git a/tools/perf/arch/powerpc/util/kvm-stat.c b/tools/perf/arch/powerpc/util/kvm-stat.c
+> index ea1220d66b67..1039e15c27c9 100644
+> --- a/tools/perf/arch/powerpc/util/kvm-stat.c
+> +++ b/tools/perf/arch/powerpc/util/kvm-stat.c
+> @@ -204,7 +204,7 @@ int kvm_add_default_arch_event(int *argc, const char **argv)
+>  
+>  	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
+>  	if (!event) {
+> -		if (pmu_have_event("trace_imc", "trace_cycles")) {
+> +		if (perf_pmus__have_event("trace_imc", "trace_cycles")) {
+>  			argv[j++] = strdup("-e");
+>  			argv[j++] = strdup("trace_imc/trace_cycles/");
+>  			*argc += 2;
+> -- 
+> 2.41.0.rc0.172.g3f132b7071-goog
+> 
+
+-- 
+
+- Arnaldo
