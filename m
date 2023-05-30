@@ -2,40 +2,56 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D571C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 20:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F41C77B73
+	for <linux-perf-users@archiver.kernel.org>; Tue, 30 May 2023 21:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230234AbjE3UCW (ORCPT
+        id S233252AbjE3VTc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 May 2023 16:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
+        Tue, 30 May 2023 17:19:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbjE3UCV (ORCPT
+        with ESMTP id S233182AbjE3VTb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 May 2023 16:02:21 -0400
+        Tue, 30 May 2023 17:19:31 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F049D98;
-        Tue, 30 May 2023 13:02:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 823A5C9;
+        Tue, 30 May 2023 14:19:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8C41363306;
-        Tue, 30 May 2023 20:02:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 281D1C4339B;
-        Tue, 30 May 2023 20:02:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 62B2A6338E;
+        Tue, 30 May 2023 21:19:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BDD1EC433D2;
+        Tue, 30 May 2023 21:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685476938;
-        bh=CGnr4j1mtkj7XDAkxN9NmqrdZfInpVJvJRWjYYdVIDY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UAPsEDCuOlsvrqWdyGUXAB8+TTdpmAkSxEcPbDIDTz+qNOg98mZLJhoVWdCDWKE6r
-         ekAMQ37X+yjolRt43zkBSVXnzjGsl6/8qXghsT7lVEShVaHy8xi2r+AhGVRXtUlicI
-         3vqqY/Lk+jr+eKoVFJQSwp27vyViR+e9GLktRtFj3rpop+h/o9DBgV+lW4EsDg2yC8
-         ijls7SeSmogVw+DxxUa1m1yXNVVXH2R41vHkl7sKXGG0G6WQL86ZyDGQf196XWVJ0J
-         ixoy2HVRMZea1aKAjbqunzGE4C9b6DPTz9DIncz4Z7EfwK1J/WYblMpEDfjksi5nxr
-         QDaxPYb686gpQ==
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
+        s=k20201202; t=1685481569;
+        bh=MP7q+lNYKFJ63yY8RKR7AjDujqQD2VMMzCdtQ8ySDRo=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=VtraeqWqAqCvsEQnCUwmchC9VMEbXYWMDVwYImuLb8QtBDpQ5xah8UKxVLxh60hXg
+         XeM+T4w5LPVfwZxXowB5FxgkgvNEE/+zyLXzue7jKT6++bq14ssoaK8xT+kSIuaKtA
+         P41jViKgDP/1wLjLTSFjQ2yBMyhaRErdoDslffq14B6VDSrO8psIifn777byCRL+5n
+         oSKORrOfv+ZkSiDsNS8/r6mVwKZJFaMfszgGaDPwv/GjdMy7IuttslbLCESKG8LvG/
+         WxAx9UM/RQdtxjEHyplQQCqRtIqSyEZ7p92v30wUMTVtPAJ2aQwqSfptLRNwZGHnAp
+         Y8iRSAS0wa8Iw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9BDB6E52BF5;
+        Tue, 30 May 2023 21:19:29 +0000 (UTC)
+Subject: Re: [GIT PULL] perf tools fixes for v6.4: 2nd batch
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20230530200210.2103158-1-acme@kernel.org>
+References: <20230530200210.2103158-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20230530200210.2103158-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.4-2-2023-05-30
+X-PR-Tracked-Commit-Id: c041d33bf7ec731bb71f47e4d45a7aec9e40b1b9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: afead42fdfcae714fb6ac41a5c323629cdb6f9ee
+Message-Id: <168548156962.4416.477884658906599496.pr-tracker-bot@kernel.org>
+Date:   Tue, 30 May 2023 21:19:29 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
@@ -48,92 +64,19 @@ Cc:     Ingo Molnar <mingo@kernel.org>,
         James Clark <james.clark@arm.com>,
         Leo Yan <leo.yan@linaro.org>, Song Liu <song@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v6.4: 2nd batch
-Date:   Tue, 30 May 2023 17:02:10 -0300
-Message-Id: <20230530200210.2103158-1-acme@kernel.org>
-X-Mailer: git-send-email 2.39.2
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Linus,
+The pull request you sent on Tue, 30 May 2023 17:02:10 -0300:
 
-	Please consider pulling,
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.4-2-2023-05-30
 
-Best regards,
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/afead42fdfcae714fb6ac41a5c323629cdb6f9ee
 
-- Arnaldo
+Thank you!
 
-
-The following changes since commit 0d85b27b0cc6b5cf54567c5ad913a247a71583ce:
-
-  Merge tag '6.4-rc3-smb3-client-fixes' of git://git.samba.org/sfrench/cifs-2.6 (2023-05-25 19:23:18 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v6.4-2-2023-05-30
-
-for you to fetch changes up to c041d33bf7ec731bb71f47e4d45a7aec9e40b1b9:
-
-  perf evsel: Separate bpf_counter_list and bpf_filters, can be used at the same time (2023-05-26 16:03:43 -0300)
-
-----------------------------------------------------------------
-perf tools fixes for v6.4: 2nd batch
-
-- Fix BPF CO-RE naming convention for checking the availability of fields on
-  'union perf_mem_data_src' on the running kernel.
-
-- Remove the use of llvm-strip on BPF skel object files, not needed, fixes a
-  build breakage when the llvm package, that contains it in most distros, isn't
-  installed.
-
-- Fix tools that use both evsel->{bpf_counter_list,bpf_filters}, removing them from a
-  union.
-
-- Remove extra "--" from the 'perf ftrace latency' --use-nsec option,
-  previously it was working only when using the '-n' alternative.
-
-- Don't stop building when both binutils-devel and a C++ compiler isn't
-  available to compile the alternative C++ demangle support code, disable that
-  feature instead.
-
-- Sync the linux/in.h and coresight-pmu.h header copies with the kernel sources.
-
-- Fix relative include path to cs-etm.h.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-----------------------------------------------------------------
-Arnaldo Carvalho de Melo (1):
-      tools headers UAPI: Sync the linux/in.h with the kernel sources
-
-Ian Rogers (2):
-      perf arm: Fix include path to cs-etm.h
-      perf build: Don't compile demangle-cxx.cpp if not necessary
-
-James Clark (1):
-      perf cs-etm: Copy kernel coresight-pmu.h header
-
-Namhyung Kim (2):
-      perf ftrace latency: Remove unnecessary "--" from --use-nsec option
-      perf bpf filter: Fix a broken perf sample data naming for BPF CO-RE
-
-Song Liu (2):
-      perf bpf: Do not use llvm-strip on BPF binary
-      perf evsel: Separate bpf_counter_list and bpf_filters, can be used at the same time
-
- tools/include/linux/coresight-pmu.h          | 13 -------------
- tools/include/uapi/linux/in.h                |  1 +
- tools/perf/Makefile.config                   |  1 +
- tools/perf/Makefile.perf                     |  3 +--
- tools/perf/arch/arm/util/pmu.c               |  2 +-
- tools/perf/builtin-ftrace.c                  |  2 +-
- tools/perf/util/Build                        |  2 +-
- tools/perf/util/bpf_skel/sample_filter.bpf.c |  4 ++--
- tools/perf/util/cs-etm.h                     | 13 +++++++++++++
- tools/perf/util/evsel.c                      |  1 +
- tools/perf/util/evsel.h                      |  6 ++----
- tools/perf/util/symbol-elf.c                 | 27 +++++++++++++++++++++++++++
- 12 files changed, 51 insertions(+), 24 deletions(-)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
