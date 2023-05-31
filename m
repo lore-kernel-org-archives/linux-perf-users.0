@@ -2,121 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FF6C77B7C
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 May 2023 06:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 334C0C77B7C
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 May 2023 08:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234295AbjEaGH3 convert rfc822-to-8bit (ORCPT
+        id S230201AbjEaIBH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 31 May 2023 02:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60242 "EHLO
+        Wed, 31 May 2023 04:01:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234219AbjEaGHW (ORCPT
+        with ESMTP id S235014AbjEaH71 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 May 2023 02:07:22 -0400
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33FF712B;
-        Tue, 30 May 2023 23:07:21 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-ba8a0500f4aso4531081276.3;
-        Tue, 30 May 2023 23:07:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685513240; x=1688105240;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=AGAFsENMxYrhxYj1uUMDHzCM9FHKp+CT1MSPohEI99A=;
-        b=df7noEEcB4E5ttSjsFbVIIgkMVpI5nnbnWelAxZNzYOPbInpNIvg1TMFUuggNUK/Vr
-         lJdX2C2StMKd0IxmGT49Isp6aBr8FhQfhePfseGtNOPLHsy6F0tqGuOL7rFVk9/0bXdY
-         DBHA5zZp1AJ23HifHFPMBjvU5ZMT9hBrc/ioyrVo4RHtHRzc1Y8NBEnDhaR1aDxHCMlN
-         Tdxj2mY52ycCudBpDVDNMKX6GrSxnm15CsGpgelDfbx+tngqfLph6H0A7yjJ9JRXHPkI
-         shAEVlkX7RjhNV1u3BUUBDTR3CqApQ8nebL2UDMWYjLJPa+qIZK4lTPX6+3Z2uGiMNqe
-         sr+A==
-X-Gm-Message-State: AC+VfDzdaJyJJMOdlkSjY11Ud2d5f9aipLKo6QtINIJ88oIxLC6D63gU
-        sBHPr6wjWSNfwq9JmQD/45dSkIJfxCsdfFRzahk=
-X-Google-Smtp-Source: ACHHUZ63lP1QyMnZoPKTqaKWdGrNbZSzHzLvF6o5BbUWjwtKnR4QgCy2i3jVSx6r1/nuhRDHv0vzrFTgOlhXuaEWuL8=
-X-Received: by 2002:a25:264b:0:b0:ba8:1732:e334 with SMTP id
- m72-20020a25264b000000b00ba81732e334mr5221414ybm.56.1685513240201; Tue, 30
- May 2023 23:07:20 -0700 (PDT)
+        Wed, 31 May 2023 03:59:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B746E48
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 00:58:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F96261AE0
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 07:58:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94880C433D2
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 07:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685519934;
+        bh=hxbnFvcj7klXi6leW6SPHVzuX3D3k7k/GJnOipo4VjY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=lljgg1R599BIJ8UtybuoA97k+0L4KeMVPyIqnfFKki8Ns0uqVoWdDZn+Qbc3zLvfl
+         nX61Hd7Cl51sG2HF1hhTMBsueHfx9bWk1iOddbKCZN2XAJLTIaH88zcR4eMmTAWvzb
+         d2hG7lOtOcAN/FbOOlSPrPqacQpqjtIp2B0teIH2d8j8EXA8NQ2Qjp7WB0rz5Go8g0
+         tUuZVjSiXmFSlO/3QNPP/nCWHYSzGGoo99rhkX8nyuI6ZuqaVsnHHb9+QWr0BdyrKN
+         yC8rgb+88UUzeEry7PkepdYjTtEYYw6Ln7iaDe82+XxX6O4Ih0CKzlwhmLYzlr8ftf
+         qVlB1xmLX40Ig==
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-51480d3e161so7350067a12.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 00:58:54 -0700 (PDT)
+X-Gm-Message-State: AC+VfDwT6jmpRRVWTraWyVs7iqpSrSrAI/w6ecNvUEiOjzQJQM6i3gHN
+        CCyxg2h6uuREapXysrqn2Ub8nhZk7PjkEGqEKQs=
+X-Google-Smtp-Source: ACHHUZ6ce3rGf8/cAdUYD+pV3Jetxof+lyoNKkYs03+HB1sOw6oKrTpikbqjJQ2lE/oe44I3VYEHa46ipGRWJ59yeBk=
+X-Received: by 2002:a17:907:7ea1:b0:96a:e7cc:b8b1 with SMTP id
+ qb33-20020a1709077ea100b0096ae7ccb8b1mr4200648ejc.56.1685519932849; Wed, 31
+ May 2023 00:58:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230526095824.16336-1-Jonathan.Cameron@huawei.com>
- <20230526095824.16336-5-Jonathan.Cameron@huawei.com> <CAM9d7cgYZs4DqLmjPZCYDVrp-KVYoZYDyJHLwB1fOM7ZdzM2Pg@mail.gmail.com>
- <20230530145001.00002560@Huawei.com>
-In-Reply-To: <20230530145001.00002560@Huawei.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 30 May 2023 23:07:09 -0700
-Message-ID: <CAM9d7ciiVrHEKTMCUFLwDq7uvpLb4U2uvLn+uVoQbfqDeAuh9Q@mail.gmail.com>
-Subject: Re: [PATCH v7 4/5] perf: CXL Performance Monitoring Unit driver
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Liang Kan <kan.liang@linux.intel.com>, linux-cxl@vger.kernel.org,
-        peterz@infradead.org, mark.rutland@arm.com, will@kernel.org,
-        dan.j.williams@intel.com, mingo@redhat.com, acme@kernel.org,
-        linuxarm@huawei.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Stephane Eranian <eranian@google.com>
+References: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
+From:   Huacai Chen <chenhuacai@kernel.org>
+Date:   Wed, 31 May 2023 15:58:41 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H7EjxoVg_FAV2hTAKjZYJJEeHiDcfo21=z3OYstboSvxw@mail.gmail.com>
+Message-ID: <CAAhV-H7EjxoVg_FAV2hTAKjZYJJEeHiDcfo21=z3OYstboSvxw@mail.gmail.com>
+Subject: Re: [PATCH RESEND v3 0/5] perf tools: Modify mksyscalltbl
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 30, 2023 at 6:50 AM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
->
->
-> Hi,
->
-> Tidied up the typos. Thanks,
->
-> > > +static int cxl_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
-> > > +{
-> > > +       struct cxl_pmu_info *info = hlist_entry_safe(node, struct cxl_pmu_info, node);
-> > > +       unsigned int target;
-> > > +
-> > > +       if (info->on_cpu != cpu)
-> > > +               return 0;
-> > > +
-> > > +       info->on_cpu = -1;
-> > > +       target = cpumask_any_but(cpu_online_mask, cpu);
-> > > +       if (target >= nr_cpu_ids) {
-> > > +               dev_err(info->pmu.dev, "Unable to find a suitable CPU\n");
-> > > +               return 0;
-> > > +       }
-> > > +
-> > > +       perf_pmu_migrate_context(&info->pmu, cpu, target);
-> > > +       info->on_cpu = target;
-> > > +       /*
-> > > +        * CPU HP lock is held so we should be guaranteed that this CPU hasn't yet
-> > > +        * gone away.
-> > > +        */
-> > > +       WARN_ON(irq_set_affinity(info->irq, cpumask_of(target)));
-> > > +
-> > > +       return 0;
-> > > +}
-> >
-> > IIUC a CXL PMU hardware (say cxl_pmu_mem0.0) is shared across
-> > all CPUs and it would return the same value when read from any CPU,
-> > right?
->
-> Correct, it will return the same value when used from any CPU.
-> I'm not sure what issue you are indicating.
->
-> My understanding is that, even for such cases, perf uses percpu
-> variables that mean we still have to ensure that the interrupt
-> handling occurs on the CPU we have migrated the context to.
->
-> There are a lot of similar driver in perf already from a quick
-> git grep cpumask_any_but\(cpu_online_mask,
->
-> It might be nice to enable perf to operate for these devices without
-> the percpu context though. I haven't looked into whether that
-> is worth doing.
+For the whole series,
+Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
 
-I was thinking if we could avoid IPIs for read from other
-CPUs.  It has PERF_EV_CAP_READ_ACTIVE_PKG for some uncore events
-which can be shared among CPUs in the same package
-to skip the IPI and to read it from the local CPU.
-
-But I think this can be a separate step.
-
-Thanks,
-Namhyung
+On Tue, May 30, 2023 at 6:10=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.cn=
+> wrote:
+>
+> I'm sorry, somehow the patchset didn't reach mailing lists.
+> Resending with a fewer people in the cc list, which probably
+> was the reason.
+>
+> Thanks Alexander, Leo and Ian for your reviews and suggestions.
+>
+> v3:
+>   -- Add a new patch to declare syscalltbl_*[] as const for all archs,
+>      suggested by Ian.
+>   -- Add a new patch to use max_nr to define SYSCALLTBL_ARM64_MAX_ID.
+>
+> v2:
+>   -- Add a new patch to rename create_table_from_c()
+>      to create_sc_table(), suggested by Leo.
+>   -- Simplify the shell script, suggested by Alexander.
+>
+> Tiezhu Yang (5):
+>   perf tools: Declare syscalltbl_*[] as const for all archs
+>   perf arm64: Rename create_table_from_c() to create_sc_table()
+>   perf arm64: Handle __NR3264_ prefixed syscall number
+>   perf arm64: Use max_nr to define SYSCALLTBL_ARM64_MAX_ID
+>   perf LoongArch: Simplify mksyscalltbl
+>
+>  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  | 17 ++++-----
+>  .../arch/loongarch/entry/syscalls/mksyscalltbl     | 40 +++++++---------=
+------
+>  tools/perf/arch/mips/entry/syscalls/mksyscalltbl   |  2 +-
+>  .../perf/arch/powerpc/entry/syscalls/mksyscalltbl  |  2 +-
+>  tools/perf/arch/s390/entry/syscalls/mksyscalltbl   |  2 +-
+>  tools/perf/arch/x86/entry/syscalls/syscalltbl.sh   |  2 +-
+>  tools/perf/util/syscalltbl.c                       | 14 ++++----
+>  7 files changed, 32 insertions(+), 47 deletions(-)
+>
+> --
+> 2.1.0
+>
+>
