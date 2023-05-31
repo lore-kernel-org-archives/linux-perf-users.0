@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8E2C77B73
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 May 2023 14:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7501CC7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 May 2023 14:27:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236150AbjEaOYc (ORCPT
+        id S236670AbjEaO1y (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 31 May 2023 10:24:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37262 "EHLO
+        Wed, 31 May 2023 10:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233151AbjEaOY2 (ORCPT
+        with ESMTP id S236790AbjEaO1s (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 May 2023 10:24:28 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEFF4194
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 07:24:18 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f623adec61so61410585e9.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 07:24:18 -0700 (PDT)
+        Wed, 31 May 2023 10:27:48 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567F31B0
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 07:27:41 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-30aa76048fbso4261878f8f.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 07:27:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1685543057; x=1688135057;
+        d=ventanamicro.com; s=google; t=1685543259; x=1688135259;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=UX4uQnFBny46FGtELxF82bEZ7MtHQbRmUfHqzbpy2lU=;
-        b=IfZ/Ty5r3Rvqpyw7mbNjCMOnUMNLWEjwe+gPBeXaNQKgtzbrn43qBaFsQ01WG62yjv
-         XME9SbyP0N5U1D9NoQRBkV9Zhqo1YGZZ53aXrSteaeilPxLX2+XbnbvtmK8KVitIuNum
-         BTw0oVjDbhu+LZvVe9vwdVAdbPm6FM6OrfIGRXCfRJwEyWbKyAxPmC0AxCpZ/t4lXnVG
-         ZEbjJhaOYnNF5I7VXOD2aSrPOgT/5V5ayPDbsai1cu/XzZW/x1EOnDPlftPM1zLUo5hK
-         LpNd3f3eYdQgduYWjrWRqJHgEFVdyS9CpXr7n4tqRw18zRe8skA+G5OYnlILCzE7fCiE
-         4hHQ==
+        bh=RZQfdwTjxzu5eTOjhFaQdoWnR4tOyHUVZ5eFRh/PK/c=;
+        b=i9po3clbzEzJ5aZJXp7NVJtbYUD67qaN17suS1XLMBFHgOJIzR9JhzXZI9ZJYqcXzB
+         kq/YSfSHb/X2mueCDVBd/l5QWcvxxlsWUUy88nrWZhX1ilWRtOOHcfJJ/0RS0jGhkCzU
+         6X+sfKFKK8FPnIqVwRUZZgmv8K9q2bbO9TfEFrndYZKJKeK3GOqAsVNNVqmSiDNc0YfN
+         XGf26cv2lKDNNG9JBv3HmW19c1DlT4oYqocIY9T/iywirimClxbKK+MiFqEKFT4zgJI+
+         Fxa3nzHXP1JUOKnsWrX1F7xw2VqyGsPWm1LrAxNcnujbuy78IrhQ6p5qAn14yj5SvUqb
+         wjmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685543057; x=1688135057;
+        d=1e100.net; s=20221208; t=1685543259; x=1688135259;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UX4uQnFBny46FGtELxF82bEZ7MtHQbRmUfHqzbpy2lU=;
-        b=guAQCp99a5+dYFemE4rvX1BZS0G1enZMh2sHKvlCfoIKnaf0a9kUkARr6jzK3zYP0z
-         X4D2yj/r/NeUIYA2S/JysqehwDLXMXsQm1bwJPpc+VIure15NyDD9Kl1PCQr+ffb/yMi
-         ali0FlYiuLWydX4NBDiTY+Bpl4L3NRy7ba/WOxXPWG0z/v93r+Le5/Sbr1Tu55LXTK4U
-         56hHTJ+g/06p0dwheUtc5LPw6EbtPMDa/M0KRfv/AZtSERsAWSiSDucIi8+cTP/caQuD
-         Oh2I0OD/4sJ5tZtP4xE6jCVQYVRFd74whXrRxstZneu71b5nyLX2rKQjoZ1mjLtvWHRP
-         EI3Q==
-X-Gm-Message-State: AC+VfDz/jKDAWVJ3ZOuBM1aWP0ydGaQhm68lvDXDH4yhQqZaooMhpz5k
-        QSWFqGxpuiPkpL61bm+yjDsm7w==
-X-Google-Smtp-Source: ACHHUZ5dPMhB9kse11TIMIIwrwKdudQXmklhlG9pDb6dSrstXMUpAu5VAPxTeBjZUNfqusU9DTLd+A==
-X-Received: by 2002:a1c:f30e:0:b0:3f6:e42:8f85 with SMTP id q14-20020a1cf30e000000b003f60e428f85mr4390658wmq.37.1685543057440;
-        Wed, 31 May 2023 07:24:17 -0700 (PDT)
+        bh=RZQfdwTjxzu5eTOjhFaQdoWnR4tOyHUVZ5eFRh/PK/c=;
+        b=S6CovfoJH9fkYHIR6Hv1mA0pcwLI+PV0v/3NgbQ193XU+nGL/6ElxPmOfGQ1HMqFly
+         MDPqxQPTnQ83GL9scnZzneaZRh5azE+4EoEWeDSTKq6XeCUXZo8m5pfsmCAaSWgbYu+9
+         lVNKSZfczyQIhaEG+q1H/Lw/5j+M0OY2F1WIXkYk3f1OfwbuPEY7JWikZ0recMB96Fgi
+         eoKU+tgi7QAflT/SAtFq3Qjh9L7AwR7YFyV66lEkEXEoy8apl2b7MyQYSf2WmKv55EOk
+         djxO8mjLMXT9EuHxd94WFJUQm+5IbtRC9xwo6LP5tF4nS0tkF9VlX3X+31djHRyLQJKV
+         4Uhw==
+X-Gm-Message-State: AC+VfDz01HMxnhg5DZxhWD4ByNlJupSOUNHBsar25gFoPQ6uNO1p4fUn
+        p5QEyTWD4Vv66kJLN2CKQXXnxQ==
+X-Google-Smtp-Source: ACHHUZ7faXqorHCT28+gR8386YvZ5DrWoH2MDLT9ZyAvgjAEryPUGFAdHDgZlqhXBtiXlNhK+JXJbg==
+X-Received: by 2002:adf:cd07:0:b0:30a:bf2b:e03c with SMTP id w7-20020adfcd07000000b0030abf2be03cmr4218382wrm.23.1685543259663;
+        Wed, 31 May 2023 07:27:39 -0700 (PDT)
 Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id u20-20020a05600c211400b003f4ebeaa970sm21044711wml.25.2023.05.31.07.24.16
+        by smtp.gmail.com with ESMTPSA id l4-20020a05600012c400b003047dc162f7sm7057593wrx.67.2023.05.31.07.27.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 07:24:17 -0700 (PDT)
-Date:   Wed, 31 May 2023 16:24:16 +0200
+        Wed, 31 May 2023 07:27:39 -0700 (PDT)
+Date:   Wed, 31 May 2023 16:27:38 +0200
 From:   Andrew Jones <ajones@ventanamicro.com>
 To:     Alexandre Ghiti <alexghiti@rivosinc.com>
 Cc:     Jonathan Corbet <corbet@lwn.net>,
@@ -71,34 +71,88 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 05/10] riscv: Prepare for user-space perf event mmap
- support
-Message-ID: <20230531-107c91fd5c1926f7c8a2a25d@orel>
+Subject: Re: [PATCH v2 06/10] drivers: perf: Implement perf event mmap
+ support in the legacy backend
+Message-ID: <20230531-705f2911e8d66938ece04905@orel>
 References: <20230512085321.13259-1-alexghiti@rivosinc.com>
- <20230512085321.13259-6-alexghiti@rivosinc.com>
+ <20230512085321.13259-7-alexghiti@rivosinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230512085321.13259-6-alexghiti@rivosinc.com>
+In-Reply-To: <20230512085321.13259-7-alexghiti@rivosinc.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 12, 2023 at 10:53:16AM +0200, Alexandre Ghiti wrote:
-> Provide all the necessary bits in the generic riscv pmu driver to be
-> able to mmap perf events in userspace: the heavy lifting lies in the
-> driver backend, namely the legacy and sbi implementations.
-> 
-> Note that arch_perf_update_userpage is almost a copy of arm64 code.
+On Fri, May 12, 2023 at 10:53:17AM +0200, Alexandre Ghiti wrote:
+> Implement the needed callbacks in the legacy driver so that we can
+> directly access the counters through perf in userspace.
 > 
 > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 > ---
->  arch/riscv/kernel/Makefile     |  2 +-
->  arch/riscv/kernel/perf_event.c | 58 ++++++++++++++++++++++++++++++++++
->  drivers/perf/riscv_pmu.c       | 41 ++++++++++++++++++++++++
->  include/linux/perf/riscv_pmu.h |  4 +++
->  4 files changed, 104 insertions(+), 1 deletion(-)
->  create mode 100644 arch/riscv/kernel/perf_event.c
+>  drivers/perf/riscv_pmu_legacy.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
+> index ffe09d857366..f0f5bd856f66 100644
+> --- a/drivers/perf/riscv_pmu_legacy.c
+> +++ b/drivers/perf/riscv_pmu_legacy.c
+> @@ -74,6 +74,31 @@ static void pmu_legacy_ctr_start(struct perf_event *event, u64 ival)
+>  	local64_set(&hwc->prev_count, initial_val);
+>  }
+>  
+> +static uint8_t pmu_legacy_csr_index(struct perf_event *event)
+> +{
+> +	return event->hw.idx;
+> +}
+> +
+> +static void pmu_legacy_event_mapped(struct perf_event *event, struct mm_struct *mm)
+> +{
+> +	/* In legacy mode, the first 3 CSRs are available. */
+
+Shouldn't this be
+
+ /* In legacy mode, the first and third CSR are available. */
+
+?
+
+> +	if (event->attr.config != PERF_COUNT_HW_CPU_CYCLES &&
+> +	    event->attr.config != PERF_COUNT_HW_INSTRUCTIONS)
+> +		return;
+> +
+> +	event->hw.flags |= PERF_EVENT_FLAG_USER_READ_CNT;
+> +}
+> +
+> +static void pmu_legacy_event_unmapped(struct perf_event *event, struct mm_struct *mm)
+> +{
+> +	/* In legacy mode, the first 3 CSRs are available. */
+
+same comment
+
+> +	if (event->attr.config != PERF_COUNT_HW_CPU_CYCLES &&
+> +	    event->attr.config != PERF_COUNT_HW_INSTRUCTIONS)
+> +		return;
+> +
+> +	event->hw.flags &= ~PERF_EVENT_FLAG_USER_READ_CNT;
+> +}
+> +
+>  /*
+>   * This is just a simple implementation to allow legacy implementations
+>   * compatible with new RISC-V PMU driver framework.
+> @@ -94,6 +119,9 @@ static void pmu_legacy_init(struct riscv_pmu *pmu)
+>  	pmu->ctr_get_width = NULL;
+>  	pmu->ctr_clear_idx = NULL;
+>  	pmu->ctr_read = pmu_legacy_read_ctr;
+> +	pmu->event_mapped = pmu_legacy_event_mapped;
+> +	pmu->event_unmapped = pmu_legacy_event_unmapped;
+> +	pmu->csr_index = pmu_legacy_csr_index;
+>  
+>  	perf_pmu_register(&pmu->pmu, RISCV_PMU_LEGACY_PDEV_NAME, PERF_TYPE_RAW);
+>  }
+> -- 
+> 2.37.2
 >
+
+Otherwise,
 
 Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
