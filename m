@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF32C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 May 2023 15:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E19C7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 May 2023 15:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234207AbjEaPMR (ORCPT
+        id S234249AbjEaPPU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 31 May 2023 11:12:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41710 "EHLO
+        Wed, 31 May 2023 11:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231565AbjEaPML (ORCPT
+        with ESMTP id S232584AbjEaPPT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 May 2023 11:12:11 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F61798
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 08:12:10 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4f4b256a0c9so6717236e87.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 08:12:10 -0700 (PDT)
+        Wed, 31 May 2023 11:15:19 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6956510E
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 08:15:18 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-970028cfb6cso1089759866b.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 08:15:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1685545928; x=1688137928;
+        d=ventanamicro.com; s=google; t=1685546117; x=1688138117;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M1o4Wjc1Cd+qea3/6BxW++NOPFclyS7iyVbzxq2yJnM=;
-        b=Xsh7wmb56AfkTGFNGfAoURmK0HS6z+XV2ALRtt5RWYeUEPKtRQN0zWKH1+/tWx2ChO
-         GMTXteP2EObzHUyg6W/oBG3Lpr9zCgHEPJpan34MRkH3YHo1Tpg9D0YtIngKFJuBMg5K
-         ukB1YMiBtgIxiccgf/cZWGDjHIzwtdp0XCOrimUjIsQyg1wOZzE81jLMMIl7dLRaGctF
-         uGb/kLmfRNLYi2shrOabraf5t0YD0HnT7diFftFD3pC4v77XXr/91T1h8KLLjTP+rRYf
-         Wc6YWE5/onF4g54mVyMS+rFk+4PkmWayq2iMlKRxZjekGE3HYQBpNA669F7LlnVSJALw
-         Rn5A==
+        bh=9Quu36W4GU+XEkXfM2HLo4LwzHXTkvm/qQekr1pKlqU=;
+        b=EnWJipeL/xECJsUZckQ/PI6Okm3OpnYm9/YkkMYAuk3P/bqTNKXslUDr063//zOFjl
+         7TkGPY+c6rxT3riSnJs4dfkOFL1JSr1F6ZLSTgB7cUj2q5n6iaqdFBB5WEQ18g1JM8fT
+         sSP/S8CJTMifcyxkncqI3ldVYQeaWYDnCWE4radlJZ5OgOQLjx+ghH6gq7+hRlKGxNkE
+         5X5njE0EAv8nCBA/rFRIIY1tJzsZ8mjg94Ol9mHnzBz7qIxr9Lm7FrsPq8XpyN+/lwuf
+         GWGe55ylkteuaAwtQSdTAM/DMBC2D/9iiPeB8h9J/2b9D1fY6CDz4mMTd5DxWFLLB+/2
+         fi9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685545928; x=1688137928;
+        d=1e100.net; s=20221208; t=1685546117; x=1688138117;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=M1o4Wjc1Cd+qea3/6BxW++NOPFclyS7iyVbzxq2yJnM=;
-        b=SUSjJbHvQnI2T7DT6tES7By2ZNXZ1d+Z95s2vNlXNm8lvJjeXvJvnZVPM5CF81TIIo
-         x9BeoaVqsn4m6MKEZ9uJXu5AqsncjTwDYqWr7UtLZQ7R2Aoa6yuVjWy/GqEyR3tPnwRL
-         mxfYmACiUyarN5LcCBrOiqH2Zlk5kcVbg2n+B2p11HbOD3pqp6R9cZ53syEwjrhIUS+0
-         Tp0jUXFB0/WwqIjEGkMMULjNbbvS+RsNx4qc4wYSrQbpzWW6ec8R5zTqRnHYcb/0+3Bu
-         X5h3ThkviPWWJSdsgSd7fzPduGyl8yD+EahjQWXHfCgM4ibi8dLfj+NzvaTRVgb60UdI
-         ywpQ==
-X-Gm-Message-State: AC+VfDxolt2U2MCGRq8IqoylC74hMgHSSiYDaBh1iR3Nw0WWovwMQZ7x
-        bZxpTgLI5Kuq8DrLigxtVpIkgg==
-X-Google-Smtp-Source: ACHHUZ6HFVOQ+2uUMoZbOvBiq8z2lgUqeyqmyxMd2ASVv3Wpmnk8xG5ixCshIzQtQNpCNFCqlxN6uA==
-X-Received: by 2002:ac2:518c:0:b0:4f3:baf9:8f8e with SMTP id u12-20020ac2518c000000b004f3baf98f8emr3047811lfi.4.1685545928497;
-        Wed, 31 May 2023 08:12:08 -0700 (PDT)
+        bh=9Quu36W4GU+XEkXfM2HLo4LwzHXTkvm/qQekr1pKlqU=;
+        b=gB46/Gfl3bseloNWp4o7GM74iEg7s32c6EjZUtjluQeqxQTY3FEuGQikoVfQuTDx98
+         wfdUU0YXmMw5mss03s/enqkD6kqsyhBhbcz+A1uTKtXCCC8yL/7U8M3sColQbQOnOe4C
+         8PdiNCQkHOQzCCdYrFlBeUfwvz3E+kmx7tQQJxt2YQJWmxVDzR0A/+bJvBKpb9lSISFp
+         P4506N8wkPFNls1W2Z2v5EjQuD158798sCIZPsC7ypcnjT49KgfddC+KhdeqbzKFov2T
+         XwnAYeZQ1RN6A1W98lJG1G6ExE5Fii8P4VHn4RyAiyQ4VIxZphqr9k8QRwkrm+QzfNm1
+         YBTQ==
+X-Gm-Message-State: AC+VfDzvhTf+ICHM/iwbXPDeO0AtFliw69cI7y5e+XDjRHGEUsdjKrU3
+        gXu9fdBcKPLJURwpTDNZ389Cjg==
+X-Google-Smtp-Source: ACHHUZ7j1l2WBgPDSQlv6cY9A1PO/csyIXY9okDefpzXWxmOVxxkXtn2tz+NimX7Si0YQM2HYlSmzw==
+X-Received: by 2002:a17:907:1c91:b0:96f:5cb3:df66 with SMTP id nb17-20020a1709071c9100b0096f5cb3df66mr6316144ejc.18.1685546116914;
+        Wed, 31 May 2023 08:15:16 -0700 (PDT)
 Received: from localhost (2001-1ae9-1c2-4c00-20f-c6b4-1e57-7965.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:20f:c6b4:1e57:7965])
-        by smtp.gmail.com with ESMTPSA id u5-20020a05600c00c500b003f0ad8d1c69sm24598389wmm.25.2023.05.31.08.12.07
+        by smtp.gmail.com with ESMTPSA id t11-20020a170906a10b00b009663115c8f8sm9236782ejy.152.2023.05.31.08.15.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 08:12:08 -0700 (PDT)
-Date:   Wed, 31 May 2023 17:12:07 +0200
+        Wed, 31 May 2023 08:15:16 -0700 (PDT)
+Date:   Wed, 31 May 2023 17:15:15 +0200
 From:   Andrew Jones <ajones@ventanamicro.com>
 To:     Alexandre Ghiti <alexghiti@rivosinc.com>
 Cc:     Jonathan Corbet <corbet@lwn.net>,
@@ -71,26 +71,51 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 09/10] tools: lib: perf: Implement riscv mmap support
-Message-ID: <20230531-5e82a25977cfe463e4db1cd1@orel>
+Subject: Re: [PATCH v2 10/10] perf: tests: Adapt mmap-basic.c for riscv
+Message-ID: <20230531-31bd9ddeaca8cb338f81ed14@orel>
 References: <20230512085321.13259-1-alexghiti@rivosinc.com>
- <20230512085321.13259-10-alexghiti@rivosinc.com>
+ <20230512085321.13259-11-alexghiti@rivosinc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230512085321.13259-10-alexghiti@rivosinc.com>
+In-Reply-To: <20230512085321.13259-11-alexghiti@rivosinc.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, May 12, 2023 at 10:53:20AM +0200, Alexandre Ghiti wrote:
-> riscv now support mmaping hardware counters so add what's needed to
-> take advantage of that in libperf.
+On Fri, May 12, 2023 at 10:53:21AM +0200, Alexandre Ghiti wrote:
+> riscv now supports mmaping hardware counters to userspace so adapt the test
+> to run on this architecture.
 > 
 > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 > ---
->  tools/lib/perf/mmap.c | 65 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
+>  tools/perf/tests/mmap-basic.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+> index e68ca6229756..f5075ca774f8 100644
+> --- a/tools/perf/tests/mmap-basic.c
+> +++ b/tools/perf/tests/mmap-basic.c
+> @@ -284,7 +284,7 @@ static struct test_case tests__basic_mmap[] = {
+>  			 "permissions"),
+>  	TEST_CASE_REASON("User space counter reading of instructions",
+>  			 mmap_user_read_instr,
+> -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
+> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
+>  			 "permissions"
+>  #else
+>  			 "unsupported"
+> @@ -292,7 +292,7 @@ static struct test_case tests__basic_mmap[] = {
+>  		),
+>  	TEST_CASE_REASON("User space counter reading of cycles",
+>  			 mmap_user_read_cycles,
+> -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
+> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
+>  			 "permissions"
+>  #else
+>  			 "unsupported"
+> -- 
+> 2.37.2
 >
 
 Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
