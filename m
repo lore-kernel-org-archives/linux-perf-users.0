@@ -2,60 +2,57 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6937C77B73
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 May 2023 22:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B39C2C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 May 2023 23:56:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbjEaWDQ (ORCPT
+        id S229557AbjEaX4B (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 31 May 2023 18:03:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56382 "EHLO
+        Wed, 31 May 2023 19:56:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjEaWDO (ORCPT
+        with ESMTP id S229491AbjEaX4B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 31 May 2023 18:03:14 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F8B136
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 15:02:58 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1b025aaeddbso21985ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 15:02:58 -0700 (PDT)
+        Wed, 31 May 2023 19:56:01 -0400
+Received: from mail-yb1-xb32.google.com (mail-yb1-xb32.google.com [IPv6:2607:f8b0:4864:20::b32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F9912F
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 16:55:58 -0700 (PDT)
+Received: by mail-yb1-xb32.google.com with SMTP id 3f1490d57ef6-b9a7e639656so237670276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 May 2023 16:55:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685570577; x=1688162577;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GM6H0mSVNqo8SpzwZ8nMwGApkrYbRcPDkJWQead2cJQ=;
-        b=rYVgkjVJL76OVSCpZsKWXttVFyRvghfrJXsvEfTCVQqnIIibWuMndNKffdDTgQ3BOw
-         cYK2JLdhc/oZkVHBGpWlwOCdRv5IyJ+++rPNzhwRkY8sASUIhBRBssfYtUYHnx2qWzbP
-         F4tn/6jab2VsEESn5glFwnz2pnMvkgXZwmOjUn8MEVSnU/5mFUmC44vUHVacf7a8CkG3
-         3gY365Y5wC/H/s/cbxZ+Rr3egwSqX2RBFRCjmmoov00ZBhcnzJIb9lVTJ1KbTfnFUnp9
-         ZwjhNBdH4/rn06dldolKTsox9uEiQhMJeml629VjGFfE+AirYl3r/SDKtIYGDnMK6nhJ
-         UZTQ==
+        d=linaro.org; s=google; t=1685577357; x=1688169357;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ffeGkCCxmZRXaX7kleQQatpanGiTdKsdCLgHFebf7mc=;
+        b=MDCGoRZhkbFSyrwM+BZajfxrFe4migeTv4EwyyMQbeTVfPN+J52+EtQYEbLRGR6rQH
+         2HeSjOG2CjZH03dICRBEuxiVmb+dvvP6HYD01cLmS1ZUL4G1qUtPZxgep5a5UlcULw/z
+         yJo5gpfkvRak7iZaAFq7+T2NH7ze2sYHDCYCIcuaIe4vHibmamyNO2NmlysHjFKhABdP
+         jx7b8Ae700tfB1aXArLg4Z1/uv6msoICNXZwZeFEOz+psstPKtkF3Y8+DlPSM0TF9LDM
+         ZmC1v7yrzKgLQmDy71Caka45zQ/f4FXWukeYn1nInSs/2N1+lPLy6YRv/k7uwxpKdvXR
+         b3Qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685570578; x=1688162578;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GM6H0mSVNqo8SpzwZ8nMwGApkrYbRcPDkJWQead2cJQ=;
-        b=GbMt+YxYGB6Ivba9Uja/ezRdiHDfMZkass/JlYu42SW6CUCHvmNUngizsYkS6fzvaa
-         mlM38PqofmJJEZ9koStc1STzC4S1Ymmyo3R9USfE8vCE6XT7kPoH5N01++sTdV2FtZBe
-         SWyt8H5A977D/pkE/eriQ3Fa6dVhFmbMI8kJGJ8hrwtZWl0tnc+YENS5MXCGfcXlr682
-         BHjkXcNHg9ahw3NyvI46cfOaN4KFGFKfN1VuOUjYRrubTCk6LYeX9VF4hb8Efd0RmeJS
-         wv1EoyUV5Lmvapwtgw9Rr86y56lB950iqmNkU5h3s8yPCcFDxWidz0QrcwtJYNHYbXfg
-         eOAw==
-X-Gm-Message-State: AC+VfDxJ3la6aKOq7WyGP6KD6PoMCEesV9UTWfjk3ychJWLz0xyy/fAS
-        ox9aZznWOiX4WPKr51kQe5fQ0HNJLNPWe8z1/fH5Gg==
-X-Google-Smtp-Source: ACHHUZ7mSC5S2tgNzxS8qsDxTU2WTAkHRb8bd8amnMZfp9IlLQwt2ks0SahohZw9AEz3B9qgrTe1CAAH3zY5aMvDFD0=
-X-Received: by 2002:a17:902:a606:b0:1b0:4a37:9ca7 with SMTP id
- u6-20020a170902a60600b001b04a379ca7mr15629plq.5.1685570577357; Wed, 31 May
- 2023 15:02:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230530232730.155084-1-irogers@google.com> <e9528b08-4d35-b01f-f3e7-861d92224f9c@linux.intel.com>
-In-Reply-To: <e9528b08-4d35-b01f-f3e7-861d92224f9c@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 31 May 2023 15:02:45 -0700
-Message-ID: <CAP-5=fWy5=0C3v0kr3OLMfJEQyu=eSswjeANMVrfC8VnZcUKjQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf parse-events: Wildcard most "numeric" events
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
+        d=1e100.net; s=20221208; t=1685577357; x=1688169357;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ffeGkCCxmZRXaX7kleQQatpanGiTdKsdCLgHFebf7mc=;
+        b=EKqdqFc7x8HAGD7oIvfH+yFrGZ0tFKqEFkrGEI0DucJV9AbyLA0F7dVNNsw70V5Jv2
+         qqHDjl3O7PhXMxQzNg9MjHyeDZsnDeGnKL8cxDLZCbbJ/59wgVN6jcfO3+Iq+7cVgXtG
+         Q2dV3yKCHazZP4ZzOIZm7kwNVhGaac/RYNpOmdOUPowz9amGw7JZ+1pszmXoDyHWdlO1
+         uicPbihJojrWFEQVRWbF1umc68xmj7vb6yrrD8ahZxtmkfC5Iciu/DggAOtIJNgkH5oR
+         InWMuChEG02zegg8eJ8C3raCC0uVvAVNr/WdBvVGjRVr4up0XgnPWPbSjYHOf7eDzbHW
+         oN/A==
+X-Gm-Message-State: AC+VfDyksFMRTjnXGKGbiQLg+ZY8NC9zaJ+FVd/F5vU8aW29L0bec+g9
+        wXTQ8wdizIhDChOftSkG+PPi9g==
+X-Google-Smtp-Source: ACHHUZ6njTT2rGRvIomrKde2z8U6i+z2vnjrl7WjICXc5t40i/G594dgSjmvG2Pa1k3fizXXmWDSpw==
+X-Received: by 2002:a25:264b:0:b0:ba8:4859:3eb1 with SMTP id m72-20020a25264b000000b00ba848593eb1mr8234829ybm.42.1685577357054;
+        Wed, 31 May 2023 16:55:57 -0700 (PDT)
+Received: from leoy-huanghe ([156.59.103.123])
+        by smtp.gmail.com with ESMTPSA id 18-20020a170902c25200b001b042c0939fsm1969251plg.99.2023.05.31.16.55.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 May 2023 16:55:56 -0700 (PDT)
+Date:   Thu, 1 Jun 2023 07:55:50 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -63,421 +60,40 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Hans-Peter Nilsson <hp@axis.com>,
+        Alexander Kapshuk <alexander.kapshuk@gmail.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Richter <tmricht@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Subject: Re: [PATCH v3 0/5] perf tools: Modify mksyscalltbl
+Message-ID: <20230531235455.GA132356@leoy-huanghe>
+References: <1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 31, 2023 at 7:04=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2023-05-30 7:27 p.m., Ian Rogers wrote:
-> > Numeric events are either raw events or those with ABI defined numbers
-> > matched by the lexer. All raw events that don't specify a PMU type
-> > should wildcard match on hybrid systems. So "cycles" should match each
-> > PMU type with an extended type, not just PERF_TYPE_HARDWARE.
-> >
-> > Change wildcard matching to add the event if wildcard PMU scanning
-> > fails, there will be no extended type but this best matches previous
-> > behavior.
-> >
-> > Only set the extended type when the event type supports it and when
-> > perf_pmus__supports_extended_type is true. This new function returns
-> > true if >1 core PMU and avoids potential errors on older kernels.
-> >
-> > Try to always pass a PMU for parse_events_add_numeric, update
-> > evsel__compute_group_pmu_name as software events will have a PMU and
-> > pmu_name rather than NULL. This makes homogeneous and heterogeneous
-> > PMU events more similar.
-> >
-> > Set a parse events error if a hardware term's PMU lookup fails to
-> > provide extra diagnostics.
->
-> I think the patch tries to fix two issues on hybrid.
-> - Perf fails to create hardware events for each core PMU when the PMU
-> type is not specified.
-> - When splitting a group with multiple PMUs, SW events should be created
-> for each new sub-groups.
+Hi Tiezhu,
 
-Sorry for that. The 2nd item isn't intended. The behavior of software
-events has changed as the code is now assigning all events it can a
-PMU, so software events get the software PMU and a pmu_name of
-"software".
+On Tue, May 30, 2023 at 05:51:00PM +0800, Tiezhu Yang wrote:
 
-> It works well for the first issue:
-> Before
->
-> # perf_old stat -e cycles ./hybrid.sh
->
->  Performance counter stats for './hybrid.sh':
->
->        420,833,619      cycles
->
->        1.219129587 seconds time elapsed
->
-> With the patch
->
-> # perf stat -e cycles ./hybrid.sh
->
->  Performance counter stats for './hybrid.sh':
->
->        420,691,729      cpu_core/cycles/
->        613,038,584      cpu_atom/cycles/
->                        (98.47%)
->
->        1.219057759 seconds time elapsed
+[...]
 
-Thanks for checking.
+> Tiezhu Yang (5):
+>   perf tools: Declare syscalltbl_*[] as const for all archs
+>   perf arm64: Rename create_table_from_c() to create_sc_table()
+>   perf arm64: Handle __NR3264_ prefixed syscall number
+>   perf arm64: Use max_nr to define SYSCALLTBL_ARM64_MAX_ID
+>   perf LoongArch: Simplify mksyscalltbl
 
-> For the second issue, the new behavior doesn't seem correct for me.
->
-> Before
->
-> ./perf_old stat -e '{data_read,faults}' --no-merge -a sleep 1
-> WARNING: events were regrouped to match PMUs
-> WARNING: grouped events cpus do not match.
-> Events with CPUs not matching the leader will be removed from the group.
->   anon group { data_read, faults }
->
->  Performance counter stats for 'system wide':
->
->              70.05 MiB  data_read [uncore_imc_free_running_0]
->              55.82 MiB  data_read [uncore_imc_free_running_1]
->                 77      faults
->
->        1.004216885 seconds time elapsed
->
->
-> With the patch
->
-> # ./perf stat -e '{data_read,faults}' --no-merge -a sleep 1
-> WARNING: events were regrouped to match PMUs
-> WARNING: grouped events cpus do not match.
-> Events with CPUs not matching the leader will be removed from the group.
->   anon group { data_read, faults, faults }
->
->  Performance counter stats for 'system wide':
->
->              53.51 MiB  data_read [uncore_imc_free_running_0]
->              39.04 MiB  data_read [uncore_imc_free_running_1]
->                 76      cpu_core/faults/
->                  2      cpu_atom/faults/
-
-This is wrong, the patch needs to exclude software events from
-wildcard PMU lookup. It probably makes sense to exclude anything that
-isn't PERF_TYPE_HARDWARE or PERF_TYPE_HW_CACHE.
-
-For PERF_TYPE_RAW, on heterogeneous Intel this matches 'cpu_core' but
-at least for ARM the expectation appears to be that this is all core
-PMUs. Given the confusion, and not extended type, it probably just
-makes sense not to wildcard it.
-
-> The faults is a SW event, but with a core PMU prefix. I think it's wrong.
->
-> According to the -vvv information, the faults doesn't seem be regrouped
-> with any uncore events.
->
-> perf_event_attr:
->   type                             1
->   size                             136
->   config                           0x2
->   sample_type                      IDENTIFIER
->   read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->   disabled                         1
->   inherit                          1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0 =3D 5
-> ------------------------------------------------------------
->
-> For the second issue, can we make the behavior unchanged for now?
-
-Yep. I wasn't aiming to change it.
-
-> BTW: It seems the current perf-tools-next branch has another regression
-> for the JSON event. The inst_retired.any should be available for both
-> atom and core. I believe I tried the below commands several days ago.
-> But it does't work now. I will check when the regression was introduced.
->
-> # ./perf stat -e inst_retired.any ./hybrid.sh
->
->  Performance counter stats for './hybrid.sh':
->
->      3,261,510,386      cpu_core/inst_retired.any/
->                        (99.07%)
->
->        1.218858763 seconds time elapsed
-
-Thanks, this was supposed to be unchanged for this patch. The matching
-logic is here:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
-erf/util/parse-events.y?h=3Dperf-tools-next#n284
-
-I have access to an Alderlake again now, so I'll test the patch and do
-the type changes mentioned above for v2.
+Either in my mail inbox or on lore site [1], it only shows up 3 patches
+but not the 5 patches.  Please consider to resend the series.
 
 Thanks,
-Ian
+Leo
 
-> Thanks,
-> Kan
->
-> >
-> > Reported-by: Kan Liang <kan.liang@linux.intel.com>
-> > Fixes: 8bc75f699c14 ("perf parse-events: Support wildcards on raw event=
-s")
-> > Signed-off-by: Ian Rogers <irogers@google.com>> ---
-> >  tools/perf/util/parse-events.c | 71 +++++++++++++++++++++-------------
-> >  tools/perf/util/parse-events.y |  4 +-
-> >  tools/perf/util/pmus.c         |  5 +++
-> >  tools/perf/util/pmus.h         |  1 +
-> >  4 files changed, 53 insertions(+), 28 deletions(-)
-> >
-> > diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-eve=
-nts.c
-> > index 7f047ac11168..58c9f34bcd95 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -372,7 +372,7 @@ static int config_attr(struct perf_event_attr *attr=
-,
-> >   *                                     contain hyphens and the longest=
- name
-> >   *                                     should always be selected.
-> >   */
-> > -int parse_events__decode_legacy_cache(const char *name, int pmu_type, =
-__u64 *config)
-> > +int parse_events__decode_legacy_cache(const char *name, int extended_p=
-mu_type, __u64 *config)
-> >  {
-> >       int len, cache_type =3D -1, cache_op =3D -1, cache_result =3D -1;
-> >       const char *name_end =3D &name[strlen(name) + 1];
-> > @@ -423,8 +423,9 @@ int parse_events__decode_legacy_cache(const char *n=
-ame, int pmu_type, __u64 *con
-> >       if (cache_result =3D=3D -1)
-> >               cache_result =3D PERF_COUNT_HW_CACHE_RESULT_ACCESS;
-> >
-> > -     *config =3D ((__u64)pmu_type << PERF_PMU_TYPE_SHIFT) |
-> > -             cache_type | (cache_op << 8) | (cache_result << 16);
-> > +     *config =3D cache_type | (cache_op << 8) | (cache_result << 16);
-> > +     if (perf_pmus__supports_extended_type())
-> > +             *config |=3D (__u64)extended_pmu_type << PERF_PMU_TYPE_SH=
-IFT;
-> >       return 0;
-> >  }
-> >
-> > @@ -1204,11 +1205,17 @@ static int config_term_pmu(struct perf_event_at=
-tr *attr,
-> >               const struct perf_pmu *pmu =3D perf_pmus__find_by_type(at=
-tr->type);
-> >
-> >               if (!pmu) {
-> > -                     pr_debug("Failed to find PMU for type %d", attr->=
-type);
-> > +                     char *err_str;
-> > +
-> > +                     if (asprintf(&err_str, "Failed to find PMU for ty=
-pe %d", attr->type) >=3D 0)
-> > +                             parse_events_error__handle(err, term->err=
-_term,
-> > +                                                        err_str, /*hel=
-p=3D*/NULL);
-> >                       return -EINVAL;
-> >               }
-> >               attr->type =3D PERF_TYPE_HARDWARE;
-> > -             attr->config =3D ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT=
-) | term->val.num;
-> > +             attr->config =3D term->val.num;
-> > +             if (perf_pmus__supports_extended_type())
-> > +                     attr->config |=3D (__u64)pmu->type << PERF_PMU_TY=
-PE_SHIFT;
-> >               return 0;
-> >       }
-> >       if (term->type_term =3D=3D PARSE_EVENTS__TERM_TYPE_USER ||
-> > @@ -1435,8 +1442,8 @@ int parse_events_add_tracepoint(struct list_head =
-*list, int *idx,
-> >
-> >  static int __parse_events_add_numeric(struct parse_events_state *parse=
-_state,
-> >                               struct list_head *list,
-> > -                             struct perf_pmu *pmu, u32 type, u64 confi=
-g,
-> > -                             struct list_head *head_config)
-> > +                             struct perf_pmu *pmu, u32 type, u32 exten=
-ded_type,
-> > +                             u64 config, struct list_head *head_config=
-)
-> >  {
-> >       struct perf_event_attr attr;
-> >       LIST_HEAD(config_terms);
-> > @@ -1446,6 +1453,10 @@ static int __parse_events_add_numeric(struct par=
-se_events_state *parse_state,
-> >       memset(&attr, 0, sizeof(attr));
-> >       attr.type =3D type;
-> >       attr.config =3D config;
-> > +     if (extended_type && (type =3D=3D PERF_TYPE_HARDWARE || type =3D=
-=3D PERF_TYPE_HW_CACHE)) {
-> > +             assert(perf_pmus__supports_extended_type());
-> > +             attr.config |=3D (u64)extended_type << PERF_PMU_TYPE_SHIF=
-T;
-> > +     };
-> >
-> >       if (head_config) {
-> >               if (config_attr(&attr, head_config, parse_state->error,
-> > @@ -1474,24 +1485,26 @@ int parse_events_add_numeric(struct parse_event=
-s_state *parse_state,
-> >       struct perf_pmu *pmu =3D NULL;
-> >       bool found_supported =3D false;
-> >
-> > -     if (!wildcard)
-> > -             return __parse_events_add_numeric(parse_state, list, /*pm=
-u=3D*/NULL,
-> > -                                               type, config, head_conf=
-ig);
-> > -
-> >       /* Wildcards on numeric values are only supported by core PMUs. *=
-/
-> > -     while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
-> > -             int ret;
-> > +     if (wildcard && perf_pmus__supports_extended_type()) {
-> > +             while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
-> > +                     int ret;
-> >
-> > -             if (parse_events__filter_pmu(parse_state, pmu))
-> > -                     continue;
-> > +                     found_supported =3D true;
-> > +                     if (parse_events__filter_pmu(parse_state, pmu))
-> > +                             continue;
-> >
-> > -             found_supported =3D true;
-> > -             ret =3D __parse_events_add_numeric(parse_state, list, pmu=
-, pmu->type,
-> > -                                              config, head_config);
-> > -             if (ret)
-> > -                     return ret;
-> > +                     ret =3D __parse_events_add_numeric(parse_state, l=
-ist, pmu,
-> > +                                                      type, pmu->type,
-> > +                                                      config, head_con=
-fig);
-> > +                     if (ret)
-> > +                             return ret;
-> > +             }
-> > +             if (found_supported)
-> > +                     return 0;
-> >       }
-> > -     return found_supported ? 0 : -EINVAL;
-> > +     return __parse_events_add_numeric(parse_state, list, perf_pmus__f=
-ind_by_type(type),
-> > +                                     type, /*extended_type=3D*/0, conf=
-ig, head_config);
-> >  }
-> >
-> >  int parse_events_add_tool(struct parse_events_state *parse_state,
-> > @@ -1989,7 +2002,10 @@ static int evsel__compute_group_pmu_name(struct =
-evsel *evsel,
-> >  {
-> >       struct evsel *leader =3D evsel__leader(evsel);
-> >       struct evsel *pos;
-> > -     const char *group_pmu_name =3D evsel->pmu_name ?: "cpu";
-> > +     const char *group_pmu_name =3D "cpu";
-> > +
-> > +     if (evsel->core.attr.type !=3D PERF_TYPE_SOFTWARE && evsel->pmu_n=
-ame)
-> > +             group_pmu_name =3D evsel->pmu_name;
-> >
-> >       /*
-> >        * Software events may be in a group with other uncore PMU events=
-. Use
-> > @@ -2002,14 +2018,17 @@ static int evsel__compute_group_pmu_name(struct=
- evsel *evsel,
-> >       if (evsel->core.attr.type =3D=3D PERF_TYPE_SOFTWARE || evsel__is_=
-aux_event(leader)) {
-> >               /*
-> >                * Starting with the leader, find the first event with a =
-named
-> > -              * PMU. for_each_group_(member|evsel) isn't used as the l=
-ist
-> > -              * isn't yet sorted putting evsel's in the same group tog=
-ether.
-> > +              * non-software PMU. for_each_group_(member|evsel) isn't =
-used as
-> > +              * the list isn't yet sorted putting evsel's in the same =
-group
-> > +              * together.
-> >                */
-> > -             if (leader->pmu_name) {
-> > +             if (leader->pmu_name && leader->core.attr.type !=3D PERF_=
-TYPE_SOFTWARE) {
-> >                       group_pmu_name =3D leader->pmu_name;
-> >               } else if (leader->core.nr_members > 1) {
-> >                       list_for_each_entry(pos, head, core.node) {
-> > -                             if (evsel__leader(pos) =3D=3D leader && p=
-os->pmu_name) {
-> > +                             if (evsel__leader(pos) =3D=3D leader &&
-> > +                                 pos->core.attr.type !=3D PERF_TYPE_SO=
-FTWARE &&
-> > +                                 pos->pmu_name) {
-> >                                       group_pmu_name =3D pos->pmu_name;
-> >                                       break;
-> >                               }
-> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-eve=
-nts.y
-> > index abd6ab460e12..48c21314cf6b 100644
-> > --- a/tools/perf/util/parse-events.y
-> > +++ b/tools/perf/util/parse-events.y
-> > @@ -449,7 +449,7 @@ value_sym '/' event_config '/'
-> >       list =3D alloc_list();
-> >       ABORT_ON(!list);
-> >       err =3D parse_events_add_numeric(_parse_state, list, type, config=
-, $3,
-> > -                                    /*wildcard=3D*/false);
-> > +                                    /*wildcard=3D*/true);
-> >       parse_events_terms__delete($3);
-> >       if (err) {
-> >               free_list_evsel(list);
-> > @@ -468,7 +468,7 @@ value_sym sep_slash_slash_dc
-> >       ABORT_ON(!list);
-> >       ABORT_ON(parse_events_add_numeric(_parse_state, list, type, confi=
-g,
-> >                                         /*head_config=3D*/NULL,
-> > -                                       /*wildcard=3D*/false));
-> > +                                       /*wildcard=3D*/true));
-> >       $$ =3D list;
-> >  }
-> >  |
-> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> > index 53f11f6ce878..e1d0a93147e5 100644
-> > --- a/tools/perf/util/pmus.c
-> > +++ b/tools/perf/util/pmus.c
-> > @@ -477,6 +477,11 @@ int perf_pmus__num_core_pmus(void)
-> >       return count;
-> >  }
-> >
-> > +bool perf_pmus__supports_extended_type(void)
-> > +{
-> > +     return perf_pmus__num_core_pmus() > 1;
-> > +}
-> > +
-> >  struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
-> >  {
-> >       struct perf_pmu *pmu =3D evsel->pmu;
-> > diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-> > index 1e710720aec7..d02ffea5d3a4 100644
-> > --- a/tools/perf/util/pmus.h
-> > +++ b/tools/perf/util/pmus.h
-> > @@ -19,5 +19,6 @@ int perf_pmus__num_mem_pmus(void);
-> >  void perf_pmus__print_pmu_events(const struct print_callbacks *print_c=
-b, void *print_state);
-> >  bool perf_pmus__have_event(const char *pname, const char *name);
-> >  int perf_pmus__num_core_pmus(void);
-> > +bool perf_pmus__supports_extended_type(void);
-> >
-> >  #endif /* __PMUS_H */
+[1] https://lore.kernel.org/lkml/1685440265-7021-1-git-send-email-yangtiezhu@loongson.cn/
