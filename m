@@ -2,202 +2,295 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A7BC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Wed, 31 May 2023 02:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40FCC77B73
+	for <linux-perf-users@archiver.kernel.org>; Wed, 31 May 2023 04:05:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231400AbjEaC7D (ORCPT
+        id S234206AbjEaEFC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 30 May 2023 22:59:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34838 "EHLO
+        Wed, 31 May 2023 00:05:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231373AbjEaC7C (ORCPT
+        with ESMTP id S234221AbjEaEE5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 30 May 2023 22:59:02 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90D6310B;
-        Tue, 30 May 2023 19:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685501940; x=1717037940;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BALmWeeuedFL0DVbHkciqCqCoX3nMmYQLv8f1PS7hc8=;
-  b=JHDtSqH+NTDhC1i5kPNP2xt4iuz/N9gWd1XZ+lRuqhRENlUwXzETW7en
-   MP47chDRAVAQyHjarYERRRreifZSuRXJ1JTldozhPFGVgaboJixGbJ0fY
-   u46V+S00JxFaEDX96q87+n9QY8Gpka9wuxP7gwb/hURZEVeCNqEYBT8vc
-   HkDdDRmEaA2sxf9iF0x57zjJc4NBhf9FTPB9/jjo9YwIZe0XUi7rTuGsF
-   q6AmGXPjrxH8e7J1Cu7wsdnWefGj8LIImoju3fcHsqkYVUcWFqgUIxRkp
-   lLVWWNk/uEcC/XYjEANmMcV4PWewT8in98IRA/DpaoAtgByqK5dK6lXNx
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="335465190"
-X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
-   d="scan'208";a="335465190"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 19:59:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="953432382"
-X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
-   d="scan'208";a="953432382"
-Received: from lkp-server01.sh.intel.com (HELO fb1ced2c09fb) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 30 May 2023 19:58:55 -0700
-Received: from kbuild by fb1ced2c09fb with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q4C35-00011j-0T;
-        Wed, 31 May 2023 02:58:55 +0000
-Date:   Wed, 31 May 2023 10:58:06 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Jing Zhang <renyu.zj@linux.alibaba.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Wed, 31 May 2023 00:04:57 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 48E2D118;
+        Tue, 30 May 2023 21:04:55 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 420CE15BF;
+        Tue, 30 May 2023 21:05:40 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.73.163])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7AA7F3F6C4;
+        Tue, 30 May 2023 21:04:49 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Brown <broonie@kernel.org>,
         James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: Re: [PATCH v3 1/7] driver/perf: Add identifier sysfs file for CMN
-Message-ID: <202305311005.YR2SisSe-lkp@intel.com>
-References: <1685438374-33287-2-git-send-email-renyu.zj@linux.alibaba.com>
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH V11 00/10] arm64/perf: Enable branch stack sampling
+Date:   Wed, 31 May 2023 09:34:18 +0530
+Message-Id: <20230531040428.501523-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1685438374-33287-2-git-send-email-renyu.zj@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Jing,
+This series enables perf branch stack sampling support on arm64 platform
+via a new arch feature called Branch Record Buffer Extension (BRBE). All
+relevant register definitions could be accessed here.
 
-kernel test robot noticed the following build warnings:
+https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
 
-[auto build test WARNING on tip/perf/core]
-[also build test WARNING on acme/perf/core arm-perf/for-next/perf linus/master v6.4-rc4 next-20230530]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This series applies on 6.4-rc4.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jing-Zhang/driver-perf-Add-identifier-sysfs-file-for-CMN/20230530-172139
-base:   tip/perf/core
-patch link:    https://lore.kernel.org/r/1685438374-33287-2-git-send-email-renyu.zj%40linux.alibaba.com
-patch subject: [PATCH v3 1/7] driver/perf: Add identifier sysfs file for CMN
-config: hexagon-buildonly-randconfig-r006-20230530 (https://download.01.org/0day-ci/archive/20230531/202305311005.YR2SisSe-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/c7483d062f1b91e98b028fa720b8a98b94ec9bc5
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Jing-Zhang/driver-perf-Add-identifier-sysfs-file-for-CMN/20230530-172139
-        git checkout c7483d062f1b91e98b028fa720b8a98b94ec9bc5
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=hexagon olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash drivers/perf/
+Changes in V11:
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202305311005.YR2SisSe-lkp@intel.com/
+- Fixed the crash for per-cpu events without event->pmu_ctx->task_ctx_data
 
-All warnings (new ones prefixed by >>):
+Changes in V10:
 
-   In file included from drivers/perf/arm-cmn.c:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:334:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __raw_readb(PCI_IOBASE + addr);
-                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-                                                           ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:37:51: note: expanded from macro '__le16_to_cpu'
-   #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
-                                                     ^
-   In file included from drivers/perf/arm-cmn.c:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:334:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-                                                           ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/little_endian.h:35:51: note: expanded from macro '__le32_to_cpu'
-   #define __le32_to_cpu(x) ((__force __u32)(__le32)(x))
-                                                     ^
-   In file included from drivers/perf/arm-cmn.c:9:
-   In file included from include/linux/interrupt.h:11:
-   In file included from include/linux/hardirq.h:11:
-   In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
-   In file included from include/asm-generic/hardirq.h:17:
-   In file included from include/linux/irq.h:20:
-   In file included from include/linux/io.h:13:
-   In file included from arch/hexagon/include/asm/io.h:334:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writeb(value, PCI_IOBASE + addr);
-                               ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-                                                         ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-           __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-                                                         ~~~~~~~~~~ ^
->> drivers/perf/arm-cmn.c:2379:41: warning: unused variable 'arm_cmn600_data' [-Wunused-const-variable]
-   static const struct arm_cmn_device_data arm_cmn600_data = {
-                                           ^
->> drivers/perf/arm-cmn.c:2384:41: warning: unused variable 'arm_cmn650_data' [-Wunused-const-variable]
-   static const struct arm_cmn_device_data arm_cmn650_data = {
-                                           ^
->> drivers/perf/arm-cmn.c:2389:41: warning: unused variable 'arm_cmn700_data' [-Wunused-const-variable]
-   static const struct arm_cmn_device_data arm_cmn700_data = {
-                                           ^
->> drivers/perf/arm-cmn.c:2394:41: warning: unused variable 'arm_ci700_data' [-Wunused-const-variable]
-   static const struct arm_cmn_device_data arm_ci700_data = {
-                                           ^
-   10 warnings generated.
+https://lore.kernel.org/all/20230517022410.722287-1-anshuman.khandual@arm.com/
 
+- Rebased the series on v6.4-rc2
+- Moved ARMV8 PMUV3 changes inside drivers/perf/arm_pmuv3.c
+- Moved BRBE driver changes inside drivers/perf/arm_brbe.[c|h]
+- Moved the WARN_ON() inside the if condition in armv8pmu_handle_irq()
 
-vim +/arm_cmn600_data +2379 drivers/perf/arm-cmn.c
+Changes in V9:
 
-  2378	
-> 2379	static const struct arm_cmn_device_data arm_cmn600_data = {
-  2380		.model_name = "arm_cmn600",
-  2381		.model = CMN600
-  2382	};
-  2383	
-> 2384	static const struct arm_cmn_device_data arm_cmn650_data = {
-  2385		.model_name = "arm_cmn650",
-  2386		.model = CMN650
-  2387	};
-  2388	
-> 2389	static const struct arm_cmn_device_data arm_cmn700_data = {
-  2390		.model_name = "arm_cmn700",
-  2391		.model = CMN700
-  2392	};
-  2393	
-> 2394	static const struct arm_cmn_device_data arm_ci700_data = {
-  2395		.model_name = "arm_ci700",
-  2396		.model = CI700
-  2397	};
-  2398	
+https://lore.kernel.org/all/20230315051444.1683170-1-anshuman.khandual@arm.com/
+
+- Fixed build problem with has_branch_stack() in arm64 header
+- BRBINF_EL1 definition has been changed from 'Sysreg' to 'SysregFields'
+- Renamed all BRBINF_EL1 call sites as BRBINFx_EL1 
+- Dropped static const char branch_filter_error_msg[]
+- Implemented a positive list check for BRBE supported perf branch filters
+- Added a comment in armv8pmu_handle_irq()
+- Implemented per-cpu allocation for struct branch_record records
+- Skipped looping through bank 1 if an invalid record is detected in bank 0
+- Added comment in armv8pmu_branch_read() explaining prohibited region etc
+- Added comment warning about erroneously marking transactions as aborted
+- Replaced the first argument (perf_branch_entry) in capture_brbe_flags()
+- Dropped the last argument (idx) in capture_brbe_flags()
+- Dropped the brbcr argument from capture_brbe_flags()
+- Used perf_sample_save_brstack() to capture branch records for perf_sample_data
+- Added comment explaining rationale for setting BRBCR_EL1_FZP for user only traces
+- Dropped BRBE prohibited state mechanism while in armv8pmu_branch_read()
+- Implemented event task context based branch records save mechanism
+
+Changes in V8:
+
+https://lore.kernel.org/all/20230123125956.1350336-1-anshuman.khandual@arm.com/
+
+- Replaced arm_pmu->features as arm_pmu->has_branch_stack, updated its helper
+- Added a comment and line break before arm_pmu->private element 
+- Added WARN_ON_ONCE() in helpers i.e armv8pmu_branch_[read|valid|enable|disable]()
+- Dropped comments in armv8pmu_enable_event() and armv8pmu_disable_event()
+- Replaced open bank encoding in BRBFCR_EL1 with SYS_FIELD_PREP()
+- Changed brbe_hw_attr->brbe_version from 'bool' to 'int'
+- Updated pr_warn() as pr_warn_once() with values in brbe_get_perf_[type|priv]()
+- Replaced all pr_warn_once() as pr_debug_once() in armv8pmu_branch_valid()
+- Added a comment in branch_type_to_brbcr() for the BRBCR_EL1 privilege settings
+- Modified the comment related to BRBINFx_EL1.LASTFAILED in capture_brbe_flags()   
+- Modified brbe_get_perf_entry_type() as brbe_set_perf_entry_type()
+- Renamed brbe_valid() as brbe_record_is_complete()
+- Renamed brbe_source() as brbe_record_is_source_only()
+- Renamed brbe_target() as brbe_record_is_target_only()
+- Inverted checks for !brbe_record_is_[target|source]_only() for info capture
+- Replaced 'fetch' with 'get' in all helpers that extract field value
+- Dropped 'static int brbe_current_bank' optimization in select_brbe_bank()
+- Dropped select_brbe_bank_index() completely, added capture_branch_entry()
+- Process captured branch entries in two separate loops one for each BRBE bank
+- Moved branch_records_alloc() inside armv8pmu_probe_pmu()
+- Added a forward declaration for the helper has_branch_stack()
+- Added new callbacks armv8pmu_private_alloc() and armv8pmu_private_free()
+- Updated armv8pmu_probe_pmu() to allocate the private structure before SMP call
+
+Changes in V7:
+
+https://lore.kernel.org/all/20230105031039.207972-1-anshuman.khandual@arm.com/
+
+- Folded [PATCH 7/7] into [PATCH 3/7] which enables branch stack sampling event
+- Defined BRBFCR_EL1_BRANCH_FILTERS, BRBCR_EL1_DEFAULT_CONFIG in the header
+- Defined BRBFCR_EL1_DEFAULT_CONFIG in the header
+- Updated BRBCR_EL1_DEFAULT_CONFIG with BRBCR_EL1_FZP
+- Defined BRBCR_EL1_DEFAULT_TS in the header
+- Updated BRBCR_EL1_DEFAULT_CONFIG with BRBCR_EL1_DEFAULT_TS
+- Moved BRBCR_EL1_DEFAULT_CONFIG check inside branch_type_to_brbcr()
+- Moved down BRBCR_EL1_CC, BRBCR_EL1_MPRED later in branch_type_to_brbcr()
+- Also set BRBE in paused state in armv8pmu_branch_disable()
+- Dropped brbe_paused(), set_brbe_paused() helpers
+- Extracted error string via branch_filter_error_msg[] for armv8pmu_branch_valid()
+- Replaced brbe_v1p1 with brbe_version in struct brbe_hw_attr
+- Added valid_brbe_[cc, format, version]() helpers
+- Split a separate brbe_attributes_probe() from armv8pmu_branch_probe()
+- Capture event->attr.branch_sample_type earlier in armv8pmu_branch_valid()
+- Defined enum brbe_bank_idx with possible values for BRBE bank indices
+- Changed armpmu->hw_attr into armpmu->private
+- Added missing space in stub definition for armv8pmu_branch_valid()
+- Replaced both kmalloc() with kzalloc()
+- Added BRBE_BANK_MAX_ENTRIES
+- Updated comment for capture_brbe_flags()
+- Updated comment for struct brbe_hw_attr
+- Dropped space after type cast in couple of places
+- Replaced inverse with negation for testing BRBCR_EL1_FZP in armv8pmu_branch_read()
+- Captured cpuc->branches->branch_entries[idx] in a local variable
+- Dropped saved_priv from armv8pmu_branch_read()
+- Reorganize PERF_SAMPLE_BRANCH_NO_[CYCLES|NO_FLAGS] related configuration
+- Replaced with FIELD_GET() and FIELD_PREP() wherever applicable
+- Replaced BRBCR_EL1_TS_PHYSICAL with BRBCR_EL1_TS_VIRTUAL
+- Moved valid_brbe_nr(), valid_brbe_cc(), valid_brbe_format(), valid_brbe_version()
+  select_brbe_bank(), select_brbe_bank_index() helpers inside the C implementation
+- Reorganized brbe_valid_nr() and dropped the pr_warn() message
+- Changed probe sequence in brbe_attributes_probe()
+- Added 'brbcr' argument into capture_brbe_flags() to ascertain correct state
+- Disable BRBE before disabling the PMU event counter
+- Enable PERF_SAMPLE_BRANCH_HV filters when is_kernel_in_hyp_mode()
+- Guard armv8pmu_reset() & armv8pmu_sched_task() with arm_pmu_branch_stack_supported()
+
+Changes in V6:
+
+https://lore.kernel.org/linux-arm-kernel/20221208084402.863310-1-anshuman.khandual@arm.com/
+
+- Restore the exception level privilege after reading the branch records
+- Unpause the buffer after reading the branch records
+- Decouple BRBCR_EL1_EXCEPTION/ERTN from perf event privilege level
+- Reworked BRBE implementation and branch stack sampling support on arm pmu
+- BRBE implementation is now part of overall ARMV8 PMU implementation
+- BRBE implementation moved from drivers/perf/ to inside arch/arm64/kernel/
+- CONFIG_ARM_BRBE_PMU renamed as CONFIG_ARM64_BRBE in arch/arm64/Kconfig
+- File moved - drivers/perf/arm_pmu_brbe.c -> arch/arm64/kernel/brbe.c
+- File moved - drivers/perf/arm_pmu_brbe.h -> arch/arm64/kernel/brbe.h
+- BRBE name has been dropped from struct arm_pmu and struct hw_pmu_events
+- BRBE name has been abstracted out as 'branches' in arm_pmu and hw_pmu_events
+- BRBE name has been abstracted out as 'branches' in ARMV8 PMU implementation
+- Added sched_task() callback into struct arm_pmu
+- Added 'hw_attr' into struct arm_pmu encapsulating possible PMU HW attributes
+- Dropped explicit attributes brbe_(v1p1, nr, cc, format) from struct arm_pmu
+- Dropped brbfcr, brbcr, registers scratch area from struct hw_pmu_events
+- Dropped brbe_users, brbe_context tracking in struct hw_pmu_events
+- Added 'features' tracking into struct arm_pmu with ARM_PMU_BRANCH_STACK flag
+- armpmu->hw_attr maps into 'struct brbe_hw_attr' inside BRBE implementation
+- Set ARM_PMU_BRANCH_STACK in 'arm_pmu->features' after successful BRBE probe
+- Added armv8pmu_branch_reset() inside armv8pmu_branch_enable()
+- Dropped brbe_supported() as events will be rejected via ARM_PMU_BRANCH_STACK
+- Dropped set_brbe_disabled() as well
+- Reformated armv8pmu_branch_valid() warnings while rejecting unsupported events
+
+Changes in V5:
+
+https://lore.kernel.org/linux-arm-kernel/20221107062514.2851047-1-anshuman.khandual@arm.com/
+
+- Changed BRBCR_EL1.VIRTUAL from 0b1 to 0b01
+- Changed BRBFCR_EL1.EnL into BRBFCR_EL1.EnI
+- Changed config ARM_BRBE_PMU from 'tristate' to 'bool'
+
+Changes in V4:
+
+https://lore.kernel.org/all/20221017055713.451092-1-anshuman.khandual@arm.com/
+
+- Changed ../tools/sysreg declarations as suggested
+- Set PERF_SAMPLE_BRANCH_STACK in data.sample_flags
+- Dropped perfmon_capable() check in armpmu_event_init()
+- s/pr_warn_once/pr_info in armpmu_event_init()
+- Added brbe_format element into struct pmu_hw_events
+- Changed v1p1 as brbe_v1p1 in struct pmu_hw_events
+- Dropped pr_info() from arm64_pmu_brbe_probe(), solved LOCKDEP warning
+
+Changes in V3:
+
+https://lore.kernel.org/all/20220929075857.158358-1-anshuman.khandual@arm.com/
+
+- Moved brbe_stack from the stack and now dynamically allocated
+- Return PERF_BR_PRIV_UNKNOWN instead of -1 in brbe_fetch_perf_priv()
+- Moved BRBIDR0, BRBCR, BRBFCR registers and fields into tools/sysreg
+- Created dummy BRBINF_EL1 field definitions in tools/sysreg
+- Dropped ARMPMU_EVT_PRIV framework which cached perfmon_capable()
+- Both exception and exception return branche records are now captured
+  only if the event has PERF_SAMPLE_BRANCH_KERNEL which would already
+  been checked in generic perf via perf_allow_kernel()
+
+Changes in V2:
+
+https://lore.kernel.org/all/20220908051046.465307-1-anshuman.khandual@arm.com/
+
+- Dropped branch sample filter helpers consolidation patch from this series 
+- Added new hw_perf_event.flags element ARMPMU_EVT_PRIV to cache perfmon_capable()
+- Use cached perfmon_capable() while configuring BRBE branch record filters
+
+Changes in V1:
+
+https://lore.kernel.org/linux-arm-kernel/20220613100119.684673-1-anshuman.khandual@arm.com/
+
+- Added CONFIG_PERF_EVENTS wrapper for all branch sample filter helpers
+- Process new perf branch types via PERF_BR_EXTEND_ABI
+
+Changes in RFC V2:
+
+https://lore.kernel.org/linux-arm-kernel/20220412115455.293119-1-anshuman.khandual@arm.com/
+
+- Added branch_sample_priv() while consolidating other branch sample filter helpers
+- Changed all SYS_BRBXXXN_EL1 register definition encodings per Marc
+- Changed the BRBE driver as per proposed BRBE related perf ABI changes (V5)
+- Added documentation for struct arm_pmu changes, updated commit message
+- Updated commit message for BRBE detection infrastructure patch
+- PERF_SAMPLE_BRANCH_KERNEL gets checked during arm event init (outside the driver)
+- Branch privilege state capture mechanism has now moved inside the driver
+
+Changes in RFC V1:
+
+https://lore.kernel.org/all/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: James Clark <james.clark@arm.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Suzuki Poulose <suzuki.poulose@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (10):
+  drivers: perf: arm_pmu: Add new sched_task() callback
+  arm64/perf: Add BRBE registers and fields
+  arm64/perf: Add branch stack support in struct arm_pmu
+  arm64/perf: Add branch stack support in struct pmu_hw_events
+  arm64/perf: Add branch stack support in ARMV8 PMU
+  arm64/perf: Enable branch stack events via FEAT_BRBE
+  arm64/perf: Add PERF_ATTACH_TASK_DATA to events with has_branch_stack()
+  arm64/perf: Add struct brbe_regset helper functions
+  arm64/perf: Implement branch records save on task sched out
+  arm64/perf: Implement branch records save on PMU IRQ
+
+ arch/arm64/include/asm/perf_event.h |  46 ++
+ arch/arm64/include/asm/sysreg.h     | 103 ++++
+ arch/arm64/tools/sysreg             | 159 ++++++
+ drivers/perf/Kconfig                |  11 +
+ drivers/perf/Makefile               |   1 +
+ drivers/perf/arm_brbe.c             | 762 ++++++++++++++++++++++++++++
+ drivers/perf/arm_brbe.h             | 270 ++++++++++
+ drivers/perf/arm_pmu.c              |  12 +-
+ drivers/perf/arm_pmuv3.c            | 105 +++-
+ include/linux/perf/arm_pmu.h        |  22 +-
+ 10 files changed, 1465 insertions(+), 26 deletions(-)
+ create mode 100644 drivers/perf/arm_brbe.c
+ create mode 100644 drivers/perf/arm_brbe.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
