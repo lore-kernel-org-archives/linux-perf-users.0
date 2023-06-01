@@ -2,128 +2,85 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9411CC7EE23
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 20:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24CA1C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 20:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231600AbjFAUVL (ORCPT
+        id S232421AbjFAUVP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 16:21:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48336 "EHLO
+        Thu, 1 Jun 2023 16:21:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231139AbjFAUU7 (ORCPT
+        with ESMTP id S232596AbjFAUVC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 16:20:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D94B1A6;
-        Thu,  1 Jun 2023 13:20:35 -0700 (PDT)
+        Thu, 1 Jun 2023 16:21:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED5A10EB;
+        Thu,  1 Jun 2023 13:20:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 24BB064978;
-        Thu,  1 Jun 2023 20:19:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E2E4C433D2;
-        Thu,  1 Jun 2023 20:19:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F5F56495F;
+        Thu,  1 Jun 2023 20:20:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E419FC4339B;
+        Thu,  1 Jun 2023 20:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685650777;
-        bh=RGs/SUKoPaxdkxluJ+b5vvGwrcwCDZO9iUhGSIQLzOE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iYn0faRCsPjSa/kRRtYadpBK2Nym8KAbriZULBoh8Yg7Qh4zlyruNg8YrJFo4IeYC
-         ua4AnK/AUipZ992fbbvqIFprmoGsNWt7vV9OLI5o8qcnf/7cFU8hzcs583bUKRA0Uq
-         XD4etari9U1zlWy3UoXY/rYcAG+DzpLTOJkup6Il7nkKwIJwWf38o/9jdyk64TRNyv
-         crChNj2APexeg2miknXqNJT1loPYIo41fL/UpIBd9Bmy3C7vjir55pO4YLRSciV5xq
-         X0mbRgTGCjcMHJVZx73Q33bv1kXrxZZE3kDrn4HxMerPwRWnzpVM5oLfOwb0dXtd2E
-         FIINcBhdL6eQg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C706F40692; Thu,  1 Jun 2023 17:19:34 -0300 (-03)
-Date:   Thu, 1 Jun 2023 17:19:34 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Rob Herring <robh@kernel.org>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf pmu: Only warn about unsupported configs once
-Message-ID: <ZHj9Vq6K6Oq9caZL@kernel.org>
-References: <20230601023644.587584-1-irogers@google.com>
- <CAM9d7ciz744BuEkjKRpRov4VsfASJHxskwzzE_L8mmekE6HuZA@mail.gmail.com>
+        s=k20201202; t=1685650819;
+        bh=tZKKg0LORH8+7Jf9bqksdik1OnIaetPXfVTt/qqjvyk=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=rIkomw20u6mEVDMn/IOEschDnoMpN2fPCMMXA8EoUDTpSMD91rxyy4KITCCT/5Twq
+         H/H6pjARN6F0tDaeAeV4qqRHTItgCy0RlCGe8UQfWCBAr9wyCH1xeiMcwXITkkmYBi
+         YaEs+RCqjaEAY/xPTDQIaWqICXicsvHA47LjbfEO+lhTdicr5TW3/dIVoi9sDXBS8q
+         wZ6yZE5JJOMpjdjbibUuwjsec2ihWAcFq5tppCHuduoshy3uk8mq8Mk2ZIpdWHUHD/
+         mCpCz0CXq708hpaP3/LKqqGTA9hqOdAUe//xp0Qf07/hBTlgD2M7FBIqJmvagj3LhU
+         N5FlL/a0EUOpQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C58B0C43162;
+        Thu,  1 Jun 2023 20:20:19 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ciz744BuEkjKRpRov4VsfASJHxskwzzE_L8mmekE6HuZA@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+Subject: Re: [PATCH] riscv: perf: Fix callchain parse error with kernel tracepoint
+ events
+From:   patchwork-bot+linux-riscv@kernel.org
+Message-Id: <168565081980.8603.14671777947375742178.git-patchwork-notify@kernel.org>
+Date:   Thu, 01 Jun 2023 20:20:19 +0000
+References: <20230601095355.1168910-1-ism.hong@gmail.com>
+In-Reply-To: <20230601095355.1168910-1-ism.hong@gmail.com>
+To:     Ism Hong <ism.hong@gmail.com>
+Cc:     linux-riscv@lists.infradead.org, ism.hong@realtek.com,
+        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jun 01, 2023 at 01:04:30PM -0700, Namhyung Kim escreveu:
-> On Wed, May 31, 2023 at 7:36 PM Ian Rogers <irogers@google.com> wrote:
-> >
-> > Avoid scanning format list for each event parsed.
-> 
-> Maybe it's better to change the subject that it's about format..
-> Other than that,
+Hello:
 
-Ok, I can fix that, applying.
- 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/pmu.c | 5 +++++
-> >  tools/perf/util/pmu.h | 5 +++++
-> >  2 files changed, 10 insertions(+)
-> >
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index 0520aa9fe991..204ce3f02e63 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -934,6 +934,11 @@ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu)
-> >  {
-> >         struct perf_pmu_format *format;
-> >
-> > +       if (pmu->formats_checked)
-> > +               return;
-> > +
-> > +       pmu->formats_checked = true;
-> > +
-> >         /* fake pmu doesn't have format list */
-> >         if (pmu == &perf_pmu__fake)
-> >                 return;
-> > diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> > index 287f593b15c7..7a1535dc1f12 100644
-> > --- a/tools/perf/util/pmu.h
-> > +++ b/tools/perf/util/pmu.h
-> > @@ -76,6 +76,11 @@ struct perf_pmu {
-> >          * specific code.
-> >          */
-> >         bool auxtrace;
-> > +       /**
-> > +        * @formats_checked: Only check PMU's formats are valid for
-> > +        * perf_event_attr once.
-> > +        */
-> > +       bool formats_checked;
-> >         /**
-> >          * @max_precise: Number of levels of :ppp precision supported by the
-> >          * PMU, read from
-> > --
-> > 2.41.0.rc0.172.g3f132b7071-goog
-> >
+This patch was applied to riscv/linux.git (fixes)
+by Palmer Dabbelt <palmer@rivosinc.com>:
 
+On Thu,  1 Jun 2023 17:53:55 +0800 you wrote:
+> For RISC-V, when tracing with tracepoint events, the IP and status are
+> set to 0, preventing the perf code parsing the callchain and resolving
+> the symbols correctly.
+> 
+>  ./ply 'tracepoint:kmem/kmem_cache_alloc { @[stack]=count(); }'
+>  @:
+>  { <STACKID4294967282> }: 1
+> 
+> [...]
+
+Here is the summary with links:
+  - riscv: perf: Fix callchain parse error with kernel tracepoint events
+    https://git.kernel.org/riscv/c/9a7e8ec0d4cc
+
+You are awesome, thank you!
 -- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-- Arnaldo
+
