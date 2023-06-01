@@ -2,102 +2,131 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511FAC7EE23
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 13:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C60BDC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 13:52:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233300AbjFANvc (ORCPT
+        id S233357AbjFANwQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 09:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49358 "EHLO
+        Thu, 1 Jun 2023 09:52:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233240AbjFANvb (ORCPT
+        with ESMTP id S231915AbjFANwO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 09:51:31 -0400
-Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B94180
-        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jun 2023 06:51:30 -0700 (PDT)
-Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-651e298be3fso177080b3a.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 06:51:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685627489; x=1688219489;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=coxbV7P2GzCNBRaVW6+2JdmaHILz4+kN/zkbCOLqpuo=;
-        b=Yd9SGVj66VlM90+c6INx9+Xtqcz7zSi0zGGnn8tSnB4a/1ieYzQPYZIkeXEydZ5eYp
-         My/osqYHgrjS0a27NyVFz0FDtiVTGn9BJkasT6DzfW3BF+Eqoqg+V5wbuq1nktCc31r3
-         yabgnNZwC4K32odDrAbMLOPmxwY9eDIHW4j2RSyNltZHljtLvWYZ709UvbV9GEirgoHg
-         136NjHTrQNACnXim1huk7wKT8yFtAcG+MimqOMvXV2LXqYNNXjGqKAZ9uTuXjqN541aI
-         6ZeRz4qxsZO7r0LY0Q2wdBSPsby82/SC5gVGsGqyWkkEUmqKBWmwZ3W6p51dN5pfbTbu
-         ybzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685627489; x=1688219489;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=coxbV7P2GzCNBRaVW6+2JdmaHILz4+kN/zkbCOLqpuo=;
-        b=UyE/ftR8pYUxyXV1Egq46qFmWFCcDcDAm38lU2jcxLCHXc1H3JlXWlJOzZ+ratuvcu
-         d9Wh1tzN1Lg5iNGsyyVd1XAOh79LlD1GjB3NMqdxa3imyc9NmG+cd/ehQN7wy+rgnHBT
-         JERF8cENeIsHBLhGty/EZv/gocwJL9bP2v1pxGL0os/SLaTSJ8RSow4WuvRsV66NmHgZ
-         SBTHKFQhqOg81Tb4glcWycjdhNg3MyIUrQjyBQjmvMoqLkdhZ6DBTFopDlNHYNbybQ3q
-         TDN01wrUL0BnGXDGOphstiCj9rdA8AHwXxPtoCWxQ9RdJ+AZ54LzquH0+bwBiEBIagvw
-         hjWA==
-X-Gm-Message-State: AC+VfDyjyvfd0Mye6extSKzZEiouYXtWhGO1RnFYF5X1mQnEG3pvJUdq
-        nZZP9toRWGDwEDoi6W47B+MyTE/Kw9k6eZZSIhvmZOQESV4=
-X-Google-Smtp-Source: ACHHUZ4NCJKPC8AW5wjrTvlrQZOym6SmGHpm1P197dC4o9jgEheZasjvyq4xwy0L6o9houLcoH7Pt9eqoHJtEHJHauY=
-X-Received: by 2002:a05:6a20:938a:b0:10b:e88f:598f with SMTP id
- x10-20020a056a20938a00b0010be88f598fmr12105994pzh.51.1685627489321; Thu, 01
- Jun 2023 06:51:29 -0700 (PDT)
+        Thu, 1 Jun 2023 09:52:14 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 806D319D;
+        Thu,  1 Jun 2023 06:52:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685627530; x=1717163530;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=CuACTIe8A0TwoGkPomhkNyZGUJBANVSuy0fG6EihahM=;
+  b=mBXNqss80vUQK0zKqv8r06RgAKFVwAVGiG7XzS1bVcOt3S0Mf17t5dkS
+   YS7F6EdSvw/AcmOyWwjB9ArMA2AVMiejmK6KeIar2cbab/khsemgboCCS
+   wO1FSKhDN18Z3AWpcI4sbk6ED3zyPXiwzdEUqHxddS2I/NNdKwUh+//2J
+   IZsOMQvc+DMaEXn+eO8cMKs+6rI9y1lpjP06ma8K4voKpFGE2St1KqPGx
+   XYif3UfuzRU9iSx4Alw+qTlL2nCoNUEs+PMwD7pzX30TWpbFSnedlcbRn
+   Fscb7qpmuXwy7kprZr+JR8z48L6NYXeD+dNO106f0BLZ2EMGRRx4gxWRX
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="441922533"
+X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
+   d="scan'208";a="441922533"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 06:52:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="819794663"
+X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
+   d="scan'208";a="819794663"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga002.fm.intel.com with ESMTP; 01 Jun 2023 06:52:09 -0700
+Received: from [10.212.129.33] (kliang2-mobl1.ccr.corp.intel.com [10.212.129.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id CEB6958088B;
+        Thu,  1 Jun 2023 06:52:07 -0700 (PDT)
+Message-ID: <7b23aee2-9fec-e07c-4ca1-076a061c558b@linux.intel.com>
+Date:   Thu, 1 Jun 2023 09:52:06 -0400
 MIME-Version: 1.0
-From:   RAJESH DASARI <raajeshdasari@gmail.com>
-Date:   Thu, 1 Jun 2023 16:51:18 +0300
-Message-ID: <CAPXMrf9mRG_uyEdkppJOjJxCREXjZsXGo2A_QEtwHM4G+nJoEA@mail.gmail.com>
-Subject: Reg: Perf report consuming too high memory
-To:     linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v2 1/4] perf pmu: Correct perf_pmu__auto_merge_stats
+ affecting hybrid
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Richter <tmricht@linux.ibm.com>
+References: <20230601082954.754318-1-irogers@google.com>
+ <20230601082954.754318-2-irogers@google.com>
+Content-Language: en-US
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20230601082954.754318-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi ,
-
-I am noticing high memory usage, oom killer is invoked and restarting
-our node while running perf report command.
-
- perf record -a  -g   sleep 120
-[ perf record: Woken up 2472 times to write data ]
-[ perf record: Captured and wrote 623.050 MB (3830374 samples) ]
-
-perf report
-
-  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
- 119877 root      20   0 7335760   7.0g 670244 S   0.0  59.7   0:22.23 perf
-
-perf report command is consuming more memory, oom killer is invoked.
-System details : kernel 5.4.242 + glibc 2.26 + gcc12
-I tried with perf 6.x versions but I still see more memory consumption.
-
-I tried the same experiment on a different system under the same load
-, this system has ( kernel 5.4.242 + glibc 2.24 + gcc 11)
-
-perf record -a  -g  sleep 120
-[ perf record: Woken up 1868 times to write data ]
-[ perf record: Captured and wrote 470.203 MB
-/tmp/rcpprofiling/data_cg.data (3828394 samples) ]
-
-perf report
-
-PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
-840045 root      20   0 1459520   1.4g 493380 R  98.1  11.8   0:31.21
-perf report
 
 
-I see that the more the perf.data file size, the more  memory it
-consumes, but in this case i only see 200MB difference between the
-perf.data file and also only 2k sample difference, but memory
-consumption is too high in the first system.
+On 2023-06-01 4:29 a.m., Ian Rogers wrote:
+> Flip the return value correcting a bug.
 
-What could be the reason, is this expected behaviour or how to debug
-why perf is consuming more memory here  . Please help me with this
-query .
+The bug is that perf fails to create a normal core event on each hybrid
+PMU even if the event is available on all hybrid PMUs.
+
+Without the patch,
+
+ # ./perf_old stat -e inst_retired.any -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+        21,760,495      cpu_core/inst_retired.any/
+
+       1.004010591 seconds time elapsed
+
+With the patch,
+
+ # ./perf stat -e inst_retired.any -a sleep 1
+
+ Performance counter stats for 'system wide':
+
+        19,874,833      cpu_core/inst_retired.any/
+         3,102,256      cpu_atom/inst_retired.any/
+
+       1.004081307 seconds time elapsed
+
+I think we need to fold the above to the description.
 
 Thanks,
-Rajesh Dasari.
+Kan
+> 
+> Fixes: 6b9da2607030 ("perf pmu: Remove is_pmu_hybrid")
+> Reported-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/pmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 0520aa9fe991..36e163f38368 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1424,7 +1424,7 @@ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+>  
+>  bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
+>  {
+> -	return pmu->is_core && perf_pmus__num_core_pmus() > 1;
+> +	return pmu->is_core && perf_pmus__num_core_pmus() == 1;
+>  }
+>  
+>  bool perf_pmu__have_event(const struct perf_pmu *pmu, const char *name)
