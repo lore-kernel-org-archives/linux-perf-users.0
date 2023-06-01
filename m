@@ -2,42 +2,43 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BA9C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 11:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B16BEC77B7E
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 11:20:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231926AbjFALTX (ORCPT
+        id S232180AbjFALUx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 07:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35640 "EHLO
+        Thu, 1 Jun 2023 07:20:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230222AbjFALTW (ORCPT
+        with ESMTP id S229589AbjFALUx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 07:19:22 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62245123;
-        Thu,  1 Jun 2023 04:19:21 -0700 (PDT)
+        Thu, 1 Jun 2023 07:20:53 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87535123;
+        Thu,  1 Jun 2023 04:20:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=k298/5fkUyGMQVZFoJngwDNksJ6FGeEJX961JrMA2G4=; b=IcuQb6Gb3H5ph6k4MgLyJ43Yw6
-        QFDMkrxLMRYR1xzUtFBXVk8ELrhj/aKtqB3FaPLPi2O4wvPHH74PLk2akm5wKnIx4RRQcxr2uFf28
-        AU8mQKRK1sH0GBhCQICt1PMSNksLKQfNRLfgQzapNPjeCekQCK6rJjdLNeRvxmxCky+mNyo+trpe7
-        ualPgeY6ag1fQOzZlqm3UgtCP06BNMYXfmeIntNYGhW7z5edNb/CPYINjXUSiSq67/7tZ5TrEuVQB
-        RlsdrWO9ZKtvpscuaPsWessl0SMiwewxHifD8kl2Q9ldZ84zXbhxdcqG+/93LuYtrgi5yNMXiaGmS
-        i0J9Ikyw==;
+        bh=Jzcx+R+c6UOqzz0gVG07uUa29kOBvr3x5e8X9TFuwcA=; b=oQ8d4cw3GAx07aySlQ39lT4A8H
+        prkDbHMJybq15SDspPHtVe9iiG+gfjkElttDpsY8z8UlgWtby1L64wWiDvn4LCC+WTcKHkzU2uCVU
+        Il3IG6TJVbBw9F0wcsP4EFmQr1my4e2Wh0UYpw8cam+gBKhpQJY7tpxiPeVWY1yhA82CNY6Fx9I5x
+        mM91gUzo12SNrcaM9a68ZIINX0H2/ZLb74OaH9RebDzycs3fze5p/lWol2AQOXOyvokCXPilqkWa5
+        +nhi4EoTnMscy882WT5oR/Y5l8hR6D2t88nbMSI93A02rL9M7UpKAB5iPK226BszP0ZiYxjDrPS8Q
+        i7+Eq3vg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q4gKY-008Jfd-D6; Thu, 01 Jun 2023 11:18:58 +0000
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q4gM0-00H940-1R;
+        Thu, 01 Jun 2023 11:20:28 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0091B30031F;
-        Thu,  1 Jun 2023 13:18:56 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 34D6630031F;
+        Thu,  1 Jun 2023 13:20:27 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DC97B202BDCB5; Thu,  1 Jun 2023 13:18:56 +0200 (CEST)
-Date:   Thu, 1 Jun 2023 13:18:56 +0200
+        id 2450C202BDCB6; Thu,  1 Jun 2023 13:20:27 +0200 (CEST)
+Date:   Thu, 1 Jun 2023 13:20:27 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     Thomas Richter <tmricht@linux.ibm.com>
 Cc:     Ian Rogers <irogers@google.com>, Marc Zyngier <maz@kernel.org>,
@@ -51,9 +52,8 @@ Cc:     Ian Rogers <irogers@google.com>, Marc Zyngier <maz@kernel.org>,
         sandipan.das@amd.com, ananth.narayan@amd.com,
         santosh.shukla@amd.com, kvmarm@lists.linux.dev
 Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
-Message-ID: <20230601111856.GW4253@hirez.programming.kicks-ass.net>
-References: <ZG+FLdP2kkfI1m2Z@linux.dev>
- <CAP-5=fWYbzmTETgqJ11y22=JaXDM0gnb4qR6KYeRGmFXw08f-Q@mail.gmail.com>
+Message-ID: <20230601112027.GI38236@hirez.programming.kicks-ass.net>
+References: <CAP-5=fWYbzmTETgqJ11y22=JaXDM0gnb4qR6KYeRGmFXw08f-Q@mail.gmail.com>
  <86jzwtdhmk.wl-maz@kernel.org>
  <CAP-5=fVW6KbUbbEfF3mEFvTfFDC5yKSjSpa+w3D55dG3CNUERw@mail.gmail.com>
  <86h6rxd3gh.wl-maz@kernel.org>
@@ -62,24 +62,30 @@ References: <ZG+FLdP2kkfI1m2Z@linux.dev>
  <a1f27798-0b06-7dc3-028b-038512947306@linux.ibm.com>
  <CAP-5=fVw3vSEu7yGFDnZi8c3VUFJu_XEZtY9ZcTsD7ip2imR6Q@mail.gmail.com>
  <aa2f8581-6440-87c0-1578-157719f7543e@linux.ibm.com>
+ <20230601111856.GW4253@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aa2f8581-6440-87c0-1578-157719f7543e@linux.ibm.com>
+In-Reply-To: <20230601111856.GW4253@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 01, 2023 at 01:02:30PM +0200, Thomas Richter wrote:
+On Thu, Jun 01, 2023 at 01:18:56PM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 01, 2023 at 01:02:30PM +0200, Thomas Richter wrote:
+> 
+> > PS: I have the feeling, it gets complicated to have multiple hardware PMUs
+> > per platform.
+> 
+> Recently someone was poking around giving the pmu device a parent, this
+> would, I think, result in sysfs links, which could be used to decide
+> what's what.
+> 
+> Core pmus would have the CPU device as their parent, while memory
+> controller thingies would link to the relevant node or something.
+> 
+> Ofc. all that's future-work/pending.
 
-> PS: I have the feeling, it gets complicated to have multiple hardware PMUs
-> per platform.
+https://lkml.kernel.org/r/20230404134225.13408-1-Jonathan.Cameron%40huawei.com
 
-Recently someone was poking around giving the pmu device a parent, this
-would, I think, result in sysfs links, which could be used to decide
-what's what.
-
-Core pmus would have the CPU device as their parent, while memory
-controller thingies would link to the relevant node or something.
-
-Ofc. all that's future-work/pending.
+https://lkml.kernel.org/r/20230531110011.13963-2-Jonathan.Cameron%40huawei.com
