@@ -2,131 +2,263 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0C8C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 16:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73865C77B7E
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 17:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230514AbjFAQPQ convert rfc822-to-8bit (ORCPT
+        id S231844AbjFARHt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 12:15:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38838 "EHLO
+        Thu, 1 Jun 2023 13:07:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230268AbjFAQPJ (ORCPT
+        with ESMTP id S231646AbjFARHs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 12:15:09 -0400
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D512137;
-        Thu,  1 Jun 2023 09:15:02 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-bacf685150cso1086880276.3;
-        Thu, 01 Jun 2023 09:15:02 -0700 (PDT)
+        Thu, 1 Jun 2023 13:07:48 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466EAE2;
+        Thu,  1 Jun 2023 10:07:47 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-5162d2373cdso1492265a12.3;
+        Thu, 01 Jun 2023 10:07:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685639266; x=1688231266;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r/Hv5zLm4y7cGqfEv37ODwcsKis46929s6CtwGx4OQs=;
+        b=hTk7to+1XPfOqcKothqd8L8WDan8VGX9Rih9txBgkxPaRkPDO0NkNJgsjf0PU7GZ3S
+         FLRjB6Dpgpa1cQ4epcci6Vic4VgchufqKfsB8FOMq2ZhDkPI2ZeEkI1mvLAr8t+qIL2W
+         H61flMBMUXzTs8XJcf0KemyR7CdoVQOLPghBYnmWFLyRrw4NQOUL2qHFnux9KkOGED4p
+         xl/XTkQVxLa7SIZ5LZG2xEhpCXthNFaFaCoke0HvJc9kzj697Z1pELnYUBF3by7wktBU
+         04ruqdboHDt+T3lHC/ABPvvpb5ph0bm0SE699W4Xx0y5L+3ka1LAbNgC3n6wFBIlAmrG
+         lXrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685636102; x=1688228102;
+        d=1e100.net; s=20221208; t=1685639266; x=1688231266;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f/1NXA3g5vtQuuMeJDuAQWen5/UkCvVUOcN647Fy61M=;
-        b=jGwbdx6f2hZ/cs/YDro3WmwSC66qLyR1R4V5uh34PqYkdvCP5b/bmt7NYdAQayqhwj
-         HucUq0LMjgGrfwhPlCMKEdPjQKq4CLeS4N4/jMoN0Hv/NrH5j0BgejwcEJoZgvsdfOCS
-         FrhSS/otIPwsOjS+TP2QorDFA4tp98RPede9PcyMz8WSCxfymMp8SErXtIXF0yg4Srrk
-         mADNMSeCi189KS0/BxMnOU3SSNZm6fC14rKqiDMRlLyQ4PTs53zZD2JJZvlpkC/nDZOO
-         QQYfyMxFXRsPjoS01XhDpF0AKJ9IVqKxWQ3mC1HdViSva86grJUt1/jsy5UTj7j2zU16
-         60Xg==
-X-Gm-Message-State: AC+VfDwjIYZ5PulRcDDsVYxXZ7g4k3Xk1lvP9ovsmXLcMvpClz0EVFv1
-        IcV82i7gg3sShbC5H+wltqEgyQSEXsPqCICKafw=
-X-Google-Smtp-Source: ACHHUZ5C6hpm7eeuqlLLRKZihFO+c28srM4A5ysTGbGIuNk3OUHNdIX1MA/PA16PAK8DiBuRTCLgiK7mXsTMv2xyF98=
-X-Received: by 2002:a25:ad09:0:b0:ba6:984a:2814 with SMTP id
- y9-20020a25ad09000000b00ba6984a2814mr371424ybi.23.1685636101679; Thu, 01 Jun
- 2023 09:15:01 -0700 (PDT)
+        bh=r/Hv5zLm4y7cGqfEv37ODwcsKis46929s6CtwGx4OQs=;
+        b=WENN38a/r+rzXLc6BvZlA5oO7UPXuBamWMZ5VGhblKbCz412F/HyVtVOnsCrunRBhA
+         SXkmnKScty0Ll5XDePql+fih3cElY0cz5bQLlz5YT71PFqjNZlniA+9zU7KbFSC+08Tm
+         mClhRCIgGm7zaQ1g03Jg8YY/oGlD3zN9ZFfYX7LojQEEjkXJ+9F7biAvATTlpD8aArYA
+         FmyQond29+yeQdULO4/U8z93ovkG0J4Lo7wNfi0hu5mqPj5sAJx4PY7Nd0lH20PMT025
+         PU84N8Lcy6HaeiRBa9iMy+72FKS+xigkVxIoFbNYQQHvQHBSqtB33fRmLtN8EhXgCCXR
+         XTcw==
+X-Gm-Message-State: AC+VfDwO+HBy5Q1f1vYipQHBw17D52G/ykQA/qpcTM5SOuuU92IsKjxY
+        c8XyMEWJ1g64o9/zQ78I+AG69BSy6wJRA4k5tTM=
+X-Google-Smtp-Source: ACHHUZ68Rt03Gh6Dmxmgiz1l+/QKs7LcN4MxdBJGRGImfKiPJcB5HOnJuRIUXUriuMHzWfVGPfnrvaSZfV1C0eOfLZM=
+X-Received: by 2002:a50:ee96:0:b0:510:e790:48fe with SMTP id
+ f22-20020a50ee96000000b00510e79048femr373949edr.6.1685639265566; Thu, 01 Jun
+ 2023 10:07:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230531203236.1602054-1-namhyung@kernel.org> <dfef9c42-5b84-6720-656f-5d3ac1d8ccf5@intel.com>
-In-Reply-To: <dfef9c42-5b84-6720-656f-5d3ac1d8ccf5@intel.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 1 Jun 2023 09:14:50 -0700
-Message-ID: <CAM9d7cjMLMExM_irC+ZXkDi65w95W6OpOihgrbB5X=jJgwyNeQ@mail.gmail.com>
-Subject: Re: [PATCH] perf script: Increase PID/TID width for output
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
+References: <20230531143533.196835-1-paniii94@gmail.com> <CAM9d7cgsP9cBq_Ui9-53zO0nLzBUK67goO1UcnqZ93Z4E7QcFQ@mail.gmail.com>
+ <CAOh+m7w8uE-2HKi=+gXL6sFbsPRGBfKA4eNT+kJTVhHhJmMSLw@mail.gmail.com> <CAM9d7cho4-JOWTex0GkScQA2kmg3ZU5bqbRbUb_mG3vsoQ9vng@mail.gmail.com>
+In-Reply-To: <CAM9d7cho4-JOWTex0GkScQA2kmg3ZU5bqbRbUb_mG3vsoQ9vng@mail.gmail.com>
+From:   Elisabeth Panholzer <paniii94@gmail.com>
+Date:   Thu, 1 Jun 2023 19:07:34 +0200
+Message-ID: <CAOh+m7xjH+q5pMV67+60sK59pH+HZg9=XkF5qBDtyUbK1jOxUg@mail.gmail.com>
+Subject: Re: [PATCH] Subject: perf jit: Fix incorrect file name in DWARF line table
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Adrian,
-
-On Wed, May 31, 2023 at 9:54 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
+On Thu, 1 Jun 2023 at 18:29, Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> On 31/05/23 23:32, Namhyung Kim wrote:
-> > On large systems, it's common that PID/TID is bigger than 5-digit and it
-> > makes the output unaligned.  Let's increase the width to 7.
+> Hello,
 >
-> Might be worth noting that currently the biggest PID_MAX_LIMIT
-> is 2^22 so pids don't get bigger than 7 digits presently.
+> On Thu, Jun 1, 2023 at 5:01=E2=80=AFAM Elisabeth Panholzer <paniii94@gmai=
+l.com> wrote:
+> >
+> > Hello again,
+> >
+> > On Wed, 31 May 2023 at 22:50, Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > Hello,
+> > >
+> > > On Wed, May 31, 2023 at 7:35=E2=80=AFAM elisabeth <paniii94@gmail.com=
+> wrote:
+> > > >
+> > > > Fix an issue where an incorrect file name was added in the DWARF li=
+ne table
+> > > > due to not checking the filename against the repeated name marker (=
+/xff/0).
+> > > > This can be seen with `objdump --dwarf=3Dline` on the ELF file afte=
+r perf inject.
+> > >
+> > > I'm not aware of the marker.  Could you please provide a link or some=
+thing?
+> > >
+> > > Thanks,
+> > > Namhyung
+> > >
+> > >
+> >
+> > The marker is mentioned in the tools/perf/util/jitdump.h header, this
+> > file describes the jitdump binary format. According to a comment in
+> > the =E2=80=98debug_entry=E2=80=99 struct in the =E2=80=98jitdump.h=E2=
+=80=99 file, a filename set to
+> > =E2=80=98\xff\0=E2=80=99 indicates that the name is the same as the one=
+ from the
+> > previous entry. When profiling applications in the browser together
+> > with v8, I noticed =E2=80=98perf inject --jit=E2=80=99 inserts a bogus =
+file name in
+> > the DWARF line table. This happens because in the perf source code in
+> > the file tools/perf/util/genelf-debug.c, in the function
+> > emit_lineno_info(), the debug entry file gets compared to the previous
+> > debug entry file. If they are not the same, a new filename is added to
+> > the DWARF line table. However, there is no check for =E2=80=98\xff\0=E2=
+=80=99, which
+> > indicates that it's the same file. As a result, =E2=80=98\xff\0=E2=80=
+=99 is inserted
+> > as the filename into the DWARF section. This not only makes =E2=80=98ob=
+jdump
+> > --dwarf=3Dline=E2=80=99 print bogus as the filename, but it also makes =
+no source
+> > code information show up in perf annotate.
+>
+> Thanks for your detailed answer.  It would be great if you could send it
+> to the mailing list so that others can see it as well.
+>
 
-Nice, will add that.
+I added the mailing lists to the cc again.
+
+> So it's from the jitdump format.  I thought it was a part of DWARF or
+> some other specification.
+
+It is part of the jitdump format, yes.
+The data from the jitdump, generated by for example v8, is just used
+to generate the ELF images and the DWARF data with 'perf inject
+--jit'.
 
 >
 > >
-> > Before:
-> >
-> >   $ perf script
-> >   ...
-> >            swapper     0 [006] 1540823.803935:    1369324 cycles:P:  ffffffff9c755588 ktime_get+0x18 ([kernel.kallsyms])
-> >        gvfsd-dnssd 95114 [004] 1540823.804164:    1643871 cycles:P:  ffffffff9cfdca5c __get_user_8+0x1c ([kernel.kallsyms])
-> >          perf-exec 1558582 [000] 1540823.804209:    1018714 cycles:P:  ffffffff9c924ab9 __slab_free+0x9 ([kernel.kallsyms])
-> >              nmcli 1558589 [007] 1540823.804384:    1859212 cycles:P:      7f70537a8ad8 __strchrnul_evex+0x18 (/usr/lib/x86_64-linux-gnu/libc.so.6>
-> >              sleep 1558582 [000] 1540823.804456:     987425 cycles:P:      7fd35bb27b30 _dl_init+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2>
-> >        dbus-daemon  3043 [003] 1540823.804575:    1564465 cycles:P:  ffffffff9cb2bb70 llist_add_batch+0x0 ([kernel.kallsyms])
-> >              gdbus 1558592 [001] 1540823.804766:    1315219 cycles:P:  ffffffff9c797b2e audit_filter_syscall+0x9e ([kernel.kallsyms])
-> >     NetworkManager  3452 [005] 1540823.805301:    1558782 cycles:P:      7fa957737748 g_bit_lock+0x58 (/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7400.5>
-> >
-> > After:
-> >
-> >   $ perf script
-> >   ...
-> >            swapper       0 [006] 1540823.803935:    1369324 cycles:P:  ffffffff9c755588 ktime_get+0x18 ([kernel.kallsyms])
-> >        gvfsd-dnssd   95114 [004] 1540823.804164:    1643871 cycles:P:  ffffffff9cfdca5c __get_user_8+0x1c ([kernel.kallsyms])
-> >          perf-exec 1558582 [000] 1540823.804209:    1018714 cycles:P:  ffffffff9c924ab9 __slab_free+0x9 ([kernel.kallsyms])
-> >              nmcli 1558589 [007] 1540823.804384:    1859212 cycles:P:      7f70537a8ad8 __strchrnul_evex+0x18 (/usr/lib/x86_64-linux-gnu/libc.so.6>
-> >              sleep 1558582 [000] 1540823.804456:     987425 cycles:P:      7fd35bb27b30 _dl_init+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2>
-> >        dbus-daemon    3043 [003] 1540823.804575:    1564465 cycles:P:  ffffffff9cb2bb70 llist_add_batch+0x0 ([kernel.kallsyms])
-> >              gdbus 1558592 [001] 1540823.804766:    1315219 cycles:P:  ffffffff9c797b2e audit_filter_syscall+0x9e ([kernel.kallsyms])
-> >     NetworkManager    3452 [005] 1540823.805301:    1558782 cycles:P:      7fa957737748 g_bit_lock+0x58 (/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7400.5>
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > Hope this makes it more clear,
+> > Elisabeth
 >
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+> Sure, it really helped, thanks.
+> Namhyung
+>
 
-Thanks for your review!
-Namhyung
-
+You're welcome.
 
 >
-> > ---
-> >  tools/perf/builtin-script.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
 > >
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index 029d5a597233..70549fc93b12 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -801,11 +801,11 @@ static int perf_sample__fprintf_start(struct perf_script *script,
-> >       }
-> >
-> >       if (PRINT_FIELD(PID) && PRINT_FIELD(TID))
-> > -             printed += fprintf(fp, "%5d/%-5d ", sample->pid, sample->tid);
-> > +             printed += fprintf(fp, "%7d/%-7d ", sample->pid, sample->tid);
-> >       else if (PRINT_FIELD(PID))
-> > -             printed += fprintf(fp, "%5d ", sample->pid);
-> > +             printed += fprintf(fp, "%7d ", sample->pid);
-> >       else if (PRINT_FIELD(TID))
-> > -             printed += fprintf(fp, "%5d ", sample->tid);
-> > +             printed += fprintf(fp, "%7d ", sample->tid);
-> >
-> >       if (PRINT_FIELD(CPU)) {
-> >               if (latency_format)
+> > > >
+> > > > Signed-off-by: Elisabeth Panholzer <elisabeth@leaningtech.com>
+
+
+On Thu, 1 Jun 2023 at 18:29, Namhyung Kim <namhyung@kernel.org> wrote:
 >
+> Hello,
+>
+> On Thu, Jun 1, 2023 at 5:01=E2=80=AFAM Elisabeth Panholzer <paniii94@gmai=
+l.com> wrote:
+> >
+> > Hello again,
+> >
+> > On Wed, 31 May 2023 at 22:50, Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > Hello,
+> > >
+> > > On Wed, May 31, 2023 at 7:35=E2=80=AFAM elisabeth <paniii94@gmail.com=
+> wrote:
+> > > >
+> > > > Fix an issue where an incorrect file name was added in the DWARF li=
+ne table
+> > > > due to not checking the filename against the repeated name marker (=
+/xff/0).
+> > > > This can be seen with `objdump --dwarf=3Dline` on the ELF file afte=
+r perf inject.
+> > >
+> > > I'm not aware of the marker.  Could you please provide a link or some=
+thing?
+> > >
+> > > Thanks,
+> > > Namhyung
+> > >
+> > >
+> >
+> > The marker is mentioned in the tools/perf/util/jitdump.h header, this
+> > file describes the jitdump binary format. According to a comment in
+> > the =E2=80=98debug_entry=E2=80=99 struct in the =E2=80=98jitdump.h=E2=
+=80=99 file, a filename set to
+> > =E2=80=98\xff\0=E2=80=99 indicates that the name is the same as the one=
+ from the
+> > previous entry. When profiling applications in the browser together
+> > with v8, I noticed =E2=80=98perf inject --jit=E2=80=99 inserts a bogus =
+file name in
+> > the DWARF line table. This happens because in the perf source code in
+> > the file tools/perf/util/genelf-debug.c, in the function
+> > emit_lineno_info(), the debug entry file gets compared to the previous
+> > debug entry file. If they are not the same, a new filename is added to
+> > the DWARF line table. However, there is no check for =E2=80=98\xff\0=E2=
+=80=99, which
+> > indicates that it's the same file. As a result, =E2=80=98\xff\0=E2=80=
+=99 is inserted
+> > as the filename into the DWARF section. This not only makes =E2=80=98ob=
+jdump
+> > --dwarf=3Dline=E2=80=99 print bogus as the filename, but it also makes =
+no source
+> > code information show up in perf annotate.
+>
+> Thanks for your detailed answer.  It would be great if you could send it
+> to the mailing list so that others can see it as well.
+>
+> So it's from the jitdump format.  I thought it was a part of DWARF or
+> some other specification.
+>
+> >
+> > Hope this makes it more clear,
+> > Elisabeth
+>
+> Sure, it really helped, thanks.
+> Namhyung
+>
+>
+> >
+> > > >
+> > > > Signed-off-by: elisabeth <paniii94@gmail.com>
+> > > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > > > Cc: Jiri Olsa <jolsa@kernel.org>
+> > > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > > ---
+> > > >  tools/perf/util/genelf_debug.c | 4 +++-
+> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/tools/perf/util/genelf_debug.c b/tools/perf/util/genel=
+f_debug.c
+> > > > index aa5dcc56b2ac..2928b59bb9a5 100644
+> > > > --- a/tools/perf/util/genelf_debug.c
+> > > > +++ b/tools/perf/util/genelf_debug.c
+> > > > @@ -349,6 +349,7 @@ static void emit_lineno_info(struct buffer_ext =
+*be,
+> > > >          */
+> > > >
+> > > >         /* start state of the state machine we take care of */
+> > > > +       char const repeated_name_marker[] =3D {'\xff', '\0'};
+> > > >         unsigned long last_vma =3D 0;
+> > > >         char const  *cur_filename =3D NULL;
+> > > >         unsigned long cur_file_idx =3D 0;
+> > > > @@ -363,7 +364,8 @@ static void emit_lineno_info(struct buffer_ext =
+*be,
+> > > >                 /*
+> > > >                  * check if filename changed, if so add it
+> > > >                  */
+> > > > -               if (!cur_filename || strcmp(cur_filename, ent->name=
+)) {
+> > > > +               if ((!cur_filename || strcmp(cur_filename, ent->nam=
+e)) &&
+> > > > +                       memcmp(repeated_name_marker, ent->name, siz=
+eof(repeated_name_marker)) !=3D 0) {
+> > > >                         emit_lne_define_filename(be, ent->name);
+> > > >                         cur_filename =3D ent->name;
+> > > >                         emit_set_file(be, ++cur_file_idx);
+> > > > --
+> > > > 2.34.1
+> > > >
