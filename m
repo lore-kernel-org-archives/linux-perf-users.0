@@ -2,73 +2,73 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1978EC7EE23
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 21:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62956C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 21:54:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232071AbjFAVqw (ORCPT
+        id S232596AbjFAVyj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 17:46:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60342 "EHLO
+        Thu, 1 Jun 2023 17:54:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231600AbjFAVqv (ORCPT
+        with ESMTP id S232594AbjFAVyi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 17:46:51 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E322180
-        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jun 2023 14:46:49 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id ca18e2360f4ac-77489b6f68cso15518639f.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 14:46:49 -0700 (PDT)
+        Thu, 1 Jun 2023 17:54:38 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0ED4107
+        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jun 2023 14:54:34 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3f6b20ad49dso11326981cf.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 14:54:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685656007; x=1688248007;
+        d=chromium.org; s=google; t=1685656473; x=1688248473;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NLtvBlY/v8HYwh0Fbm6omkkXXBfFwuezcGJpiAwvtOM=;
-        b=QtnSCxHxagh4VQ3GovimdDSMwUFqPZpIKpoLHSHYNCP9nEGGM0Do53iy3ASp3tFkZ+
-         6HUikCVHT+D4et2Zb92mv75et+TGku4fDTKu6vJijABaCquUcHthcN6EmMbxr/dSdxOF
-         +wWlwGxavTXq6WKpLSqHOkwjEfiE6ceoDHdzU=
+        bh=eogoQvqQO6ZvyvYBhcgWNYvozKgAFgLZqqjPS4QzrXk=;
+        b=Cpx2/ZvHEn/wD82g/5yqpL+CoMX9erbLBgapvrL3p4g8GU2IjxgdN612VRtznmSrDd
+         LMiAnN/sCLZZk58QB79VTxdmhLOmD+x0gfbfa0LDE6MixGbUd7ZhoR70l4mZ8crqgBMO
+         6ZvQE7Ns9OYic4BamJFUI6ygd0OSJ1QHW8CD4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685656007; x=1688248007;
+        d=1e100.net; s=20221208; t=1685656473; x=1688248473;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NLtvBlY/v8HYwh0Fbm6omkkXXBfFwuezcGJpiAwvtOM=;
-        b=CBWm2NCRqVsCG7LQ0wljWZIZOD/0R3ZAfkTjkVRHbuvKiCbKGw3W1UvAL1jFZ11Efi
-         6pdyusZmLdGeoOGcN/B9ZLVz7XZMdsDy0i7XfXgkT+8Q4ezVGzZFaGfFhxkqFs/QR3os
-         N8TiR6kdTgE0f3cXb1n9yPaTIm1BA8m81nOf021CEfIszXyH5baxAZ/7p6cuNj2iratm
-         lDOrg/+dltLxOGZ6MrBUmns9r4OTjPiQIMsL94DAK8R0q96Cx7xuOhmq8zaipWSI3UKT
-         zlUT5lQs2TnMAaE5ymz+CrhuinboAIyAyqrTXB+vkmJuDevC3kDvqPPxn8cfPp6lbWqI
-         +6IA==
-X-Gm-Message-State: AC+VfDzGkkGVdQQdKZNVJbOf7yAFttLEUnAdYjwWB/lsGHjqwaR/IfSU
-        bw/dqi2h3EquRPt5pVKNayBS9vwXLsIbpYbLYX8=
-X-Google-Smtp-Source: ACHHUZ5nLpRa6ckvR8SHx1n8GKGXbbrNFdft2YygK9XALCGkS6CCsiRcgROBoQz3XcV1X5EVic4UAw==
-X-Received: by 2002:a5d:8d06:0:b0:776:fce3:4769 with SMTP id p6-20020a5d8d06000000b00776fce34769mr467169ioj.20.1685656006714;
-        Thu, 01 Jun 2023 14:46:46 -0700 (PDT)
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com. [209.85.166.172])
-        by smtp.gmail.com with ESMTPSA id w13-20020a022a0d000000b0041669a9fb62sm2380016jaw.131.2023.06.01.14.46.43
+        bh=eogoQvqQO6ZvyvYBhcgWNYvozKgAFgLZqqjPS4QzrXk=;
+        b=DdU5IMGNL1nOMBpsKQz5qbQLcUQxbSMF5YYa1d6cJkobizVY4YlMjk24oL1TjbdHsq
+         ygcSmod5WEM1Wv/y9nZLxs2xv2auo5pTlj3jrsF8wbSMBvX7rn8a0uLkTP6yf4fC37TF
+         oWnCn07lqvrjiPEKcnHUM/SBK686RR6x6LdVEdenS/PxqTicqXjCxaLp38GT7E0P7LuC
+         3NWAKAJTyM5RAlXmy8f3BTc0F4CUppkFiuX5x4qLbpMT/TEmyNY2biSgSq9i4LCB7Khn
+         OdwllKZ21wVs8eUKBl9gfc15BN9MLeuiMCpVd7A/Xl2ZFaEfTKlzze1HQvwjuEWKCXNJ
+         DtLw==
+X-Gm-Message-State: AC+VfDxzNkDlY5KpQ9zYKownxes3CxKcKi+EwnaJb+pKH0vHjvqXRrpe
+        N907u9ONC5ebMmcLB6TuvoceqTNS95+COI7r7uQ=
+X-Google-Smtp-Source: ACHHUZ5k60tx8xHwYGpyxuTxCZcCAeUtQDzHNFmHY3CqausJB/gSOCJJliEfYs6PhnU2rb+dQL47WQ==
+X-Received: by 2002:a05:6214:416:b0:625:aa1a:b6d7 with SMTP id z22-20020a056214041600b00625aa1ab6d7mr13611020qvx.57.1685656473284;
+        Thu, 01 Jun 2023 14:54:33 -0700 (PDT)
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com. [209.85.160.181])
+        by smtp.gmail.com with ESMTPSA id de4-20020ad45844000000b006260adb2e32sm7084254qvb.85.2023.06.01.14.54.32
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Jun 2023 14:46:44 -0700 (PDT)
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-33bf12b5fb5so11305ab.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 14:46:43 -0700 (PDT)
-X-Received: by 2002:a05:6e02:17c7:b0:33b:7a45:a950 with SMTP id
- z7-20020a056e0217c700b0033b7a45a950mr70308ilu.18.1685656003076; Thu, 01 Jun
- 2023 14:46:43 -0700 (PDT)
+        Thu, 01 Jun 2023 14:54:33 -0700 (PDT)
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-3f81ffc9065so23781cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 14:54:32 -0700 (PDT)
+X-Received: by 2002:a05:6e02:214e:b0:33b:3d94:afb5 with SMTP id
+ d14-20020a056e02214e00b0033b3d94afb5mr11901ilv.25.1685656080333; Thu, 01 Jun
+ 2023 14:48:00 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230419225604.21204-1-dianders@chromium.org> <CAD=FV=Wny=iFQf2GGuC2qP9hy4FHzpiRpV=ZvxEW77DX02XGzQ@mail.gmail.com>
- <ZFvGqD//pm/lZb+p@FVFF77S0Q05N.cambridge.arm.com> <CAD=FV=WjX-XD6tX3hZq0GOh9e+Pc1jMMYP8DCc=u1YWQ2E5hYw@mail.gmail.com>
-In-Reply-To: <CAD=FV=WjX-XD6tX3hZq0GOh9e+Pc1jMMYP8DCc=u1YWQ2E5hYw@mail.gmail.com>
+References: <20230419225604.21204-1-dianders@chromium.org> <20230419155341.v8.7.I21d92f8974c8e4001a5982fea6c98da1bed33ef5@changeid>
+ <20230512134853.GA216623@aspen.lan> <CAD=FV=W4owWm4pVhXWKJpjFj75E=hzYkOZ6ZrZu2DqUF8Nt0cw@mail.gmail.com>
+In-Reply-To: <CAD=FV=W4owWm4pVhXWKJpjFj75E=hzYkOZ6ZrZu2DqUF8Nt0cw@mail.gmail.com>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 1 Jun 2023 14:46:26 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vx=64ZYqNvOBRHu-+yFWtxkzCyjAxZED2xEFqoMKvAqQ@mail.gmail.com>
-Message-ID: <CAD=FV=Vx=64ZYqNvOBRHu-+yFWtxkzCyjAxZED2xEFqoMKvAqQ@mail.gmail.com>
-Subject: Re: [PATCH v8 00/10] arm64: Add framework to turn an IPI as NMI
-To:     Mark Rutland <mark.rutland@arm.com>
+Date:   Thu, 1 Jun 2023 14:47:48 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WLAMv1rHiWWAoP8aTCpjWyzuHRuZtYAQRP3BwxFY0YNQ@mail.gmail.com>
+Message-ID: <CAD=FV=WLAMv1rHiWWAoP8aTCpjWyzuHRuZtYAQRP3BwxFY0YNQ@mail.gmail.com>
+Subject: Re: [PATCH v8 07/10] kgdb: Expose default CPUs roundup fallback mechanism
+To:     Daniel Thompson <daniel.thompson@linaro.org>
 Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
         Sumit Garg <sumit.garg@linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Marc Zyngier <maz@kernel.org>, ito-yuichi@fujitsu.com,
+        Marc Zyngier <maz@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, ito-yuichi@fujitsu.com,
         kgdb-bugreport@lists.sourceforge.net, Chen-Yu Tsai <wens@csie.org>,
         Masayoshi Mizuma <msys.mizuma@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -79,47 +79,8 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         Lecopzer Chen <lecopzer.chen@mediatek.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-perf-users@vger.kernel.org,
-        Alexandru Elisei <alexandru.elisei@arm.com>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Ben Dooks <ben-linux@fluff.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Guo Ren <guoren@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
         Jason Wessel <jason.wessel@windriver.com>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Jinyang He <hejinyang@loongson.cn>,
-        Joey Gouly <joey.gouly@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <f4bug@amsat.org>,
-        Pierre Gondois <Pierre.Gondois@arm.com>,
-        Qing Zhang <zhangqing@loongson.cn>,
-        "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>,
-        Russell King <linux@armlinux.org.uk>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        loongarch@lists.linux.dev, sparclinux@vger.kernel.org,
-        x86@kernel.org
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -128,136 +89,90 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hi,
 
-On Wed, May 10, 2023 at 9:42=E2=80=AFAM Doug Anderson <dianders@chromium.or=
+On Mon, May 15, 2023 at 4:21=E2=80=AFPM Doug Anderson <dianders@chromium.or=
 g> wrote:
 >
 > Hi,
 >
-> On Wed, May 10, 2023 at 9:30=E2=80=AFAM Mark Rutland <mark.rutland@arm.co=
-m> wrote:
+> On Fri, May 12, 2023 at 6:49=E2=80=AFAM Daniel Thompson
+> <daniel.thompson@linaro.org> wrote:
 > >
-> > On Wed, May 10, 2023 at 08:28:17AM -0700, Doug Anderson wrote:
-> > > Hi,
-> >
-> > Hi Doug,
-> >
-> > > On Wed, Apr 19, 2023 at 3:57=E2=80=AFPM Douglas Anderson <dianders@ch=
-romium.org> wrote:
-> > > > This is an attempt to resurrect Sumit's old patch series [1] that
-> > > > allowed us to use the arm64 pseudo-NMI to get backtraces of CPUs an=
-d
-> > > > also to round up CPUs in kdb/kgdb. The last post from Sumit that I
-> > > > could find was v7, so I called this series v8. I haven't copied all=
- of
-> > > > his old changelongs here, but you can find them from the link.
-> > > >
-> > > > Since v7, I have:
-> > > > * Addressed the small amount of feedback that was there for v7.
-> > > > * Rebased.
-> > > > * Added a new patch that prevents us from spamming the logs with id=
-le
-> > > >   tasks.
-> > > > * Added an extra patch to gracefully fall back to regular IPIs if
-> > > >   pseudo-NMIs aren't there.
-> > > >
-> > > > Since there appear to be a few different patches series related to
-> > > > being able to use NMIs to get stack traces of crashed systems, let =
-me
-> > > > try to organize them to the best of my understanding:
-> > > >
-> > > > a) This series. On its own, a) will (among other things) enable sta=
-ck
-> > > >    traces of all running processes with the soft lockup detector if
-> > > >    you've enabled the sysctl "kernel.softlockup_all_cpu_backtrace".=
- On
-> > > >    its own, a) doesn't give a hard lockup detector.
-> > > >
-> > > > b) A different recently-posted series [2] that adds a hard lockup
-> > > >    detector based on perf. On its own, b) gives a stack crawl of th=
-e
-> > > >    locked up CPU but no stack crawls of other CPUs (even if they're
-> > > >    locked too). Together with a) + b) we get everything (full locku=
-p
-> > > >    detect, full ability to get stack crawls).
-> > > >
-> > > > c) The old Android "buddy" hard lockup detector [3] that I'm
-> > > >    considering trying to upstream. If b) lands then I believe c) wo=
-uld
-> > > >    be redundant (at least for arm64). c) on its own is really only
-> > > >    useful on arm64 for platforms that can print CPU_DBGPCSR somehow
-> > > >    (see [4]). a) + c) is roughly as good as a) + b).
-> >
-> > > It's been 3 weeks and I haven't heard a peep on this series. That
-> > > means nobody has any objections and it's all good to land, right?
-> > > Right? :-P
-> >
-> > FWIW, there are still longstanding soundness issues in the arm64 pseudo=
--NMI
-> > support (and fixing that requires an overhaul of our DAIF / IRQ flag
-> > management, which I've been chipping away at for a number of releases),=
- so I
-> > hadn't looked at this in detail yet because the foundations are still s=
-omewhat
-> > dodgy.
-> >
-> > I appreciate that this has been around for a while, and it's on my queu=
+> > On Wed, Apr 19, 2023 at 03:56:01PM -0700, Douglas Anderson wrote:
+> > > From: Sumit Garg <sumit.garg@linaro.org>
+> > >
+> > > Add a new API kgdb_smp_call_nmi_hook() to expose default CPUs roundup
+> > > mechanism to a particular archichecture as a runtime fallback if it
+> > > detects to not support NMI roundup.
+> > >
+> > > Currently such an architecture example is arm64 supporting pseudo NMI=
+s
+> > > feature which is only available on platforms which have support for G=
+ICv3
+> > > or later version.
+> > >
+> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > > Tested-by: Chen-Yu Tsai <wens@csie.org>
+> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > > ---
+> > >
+> > > (no changes since v1)
+> > >
+> > >  include/linux/kgdb.h      | 12 ++++++++++++
+> > >  kernel/debug/debug_core.c |  8 +++++++-
+> > >  2 files changed, 19 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+> > > index 258cdde8d356..87713bd390f3 100644
+> > > --- a/include/linux/kgdb.h
+> > > +++ b/include/linux/kgdb.h
+> > > @@ -199,6 +199,18 @@ kgdb_arch_handle_qxfer_pkt(char *remcom_in_buffe=
+r,
+> > >
+> > >  extern void kgdb_call_nmi_hook(void *ignored);
+> > >
+> > > +/**
+> > > + *   kgdb_smp_call_nmi_hook - Provide default fallback mechanism to
+> > > + *                            round-up CPUs
+> > > + *
+> > > + *   If you're using the default implementation of kgdb_roundup_cpus=
+()
+> > > + *   this function will be called.  And if an arch detects at runtim=
 e to
-> > look at.
+> > > + *   not support NMI based roundup then it can fallback to default
+> > > + *   mechanism using this API.
+> > > + */
+> > > +
+> > > +extern void kgdb_smp_call_nmi_hook(void);
+> >
+> > Concept looks sensible but this is a terrible name for aa command to
+> > round up the CPUs using smp_call... functions. Whilst it is true it tha=
+t
+> > kgdb_roundup_cpus() does use kgdb_call_nmi_hook() internally that
+> > doesn't mean we should name functions after it. They should be named
+> > after what they are do, not how they do it.
+> >
+> > Something more like kgdb_roundup_cpus_with_smp_call() would be a much
+> > better name.
 >
-> Ah, thanks for the heads up! We've been thinking about turning this on
-> in production in ChromeOS because it will help us track down a whole
-> class of field-generated crash reports that are otherwise opaque to
-> us. It sounds as if maybe that's not a good idea quite yet? Do you
-> have any idea of how much farther along this needs to go?
-
-I'm still very interested in this topic. Do you have anything concrete
-that is broken? Your reply gives me the vibe that there have been a
-bunch of bugs found recently and, while there are no known issues,
-you're worried that there might be something lingering still. Is that
-correct, or do you have something concrete that's broken? Is this
-anything others could help with? I could make an attempt, or we might
-be able to rope some of the others interested in this topic and more
-GIC-knowledgeable to help?
-
-I still have a goal for turning this on for production but obviously
-don't want to make the device crashier because of it.
-
-Also: if this really has known bugs, should we put a big WARN_ON splat
-if anyone tries to turn on pseudo NMIs? Without that, it feels like
-it's a bit of a footgun.
-
-
-> ...of
-> course, we've also run into issues with Mediatek devices because they
-> don't save/restore GICR registers properly [1]. In theory, we might be
-> able to work around that in the kernel.
-
-To followup with this, we've formulated a plan for dealing with
-Mediatek Chromebooks. I doubt anyone is truly interested, but if
-anyone is the details are in the public Google bug tracker [1]. None
-of that should block lading the NMI backtrace series.
-
-
-> In any case, even if there are bugs that would prevent turning this on
-> for production, it still seems like we could still land this series.
-> It simply wouldn't do anything until someone turned on pseudo NMIs,
-> which wouldn't happen till the kinks are worked out.
+> Sounds good. I'm happy to spin with this rename, though I was kinda
+> hoping to drop ${SUBJECT} patch if folks were OK with patch #10 in
+> this series [1]. I personally think that's the right way to go but
+> it's unclear to me if arm64 maintainers will think it's a hack
+> (despite the fact that arm32 implements the "nmi" functions with
+> regular IPIs).
 >
-> ...actually, I guess I should say that if all the patches of the
-> current series do land then it actually _would_ still do something,
-> even without pseudo-NMI. Assuming the last patch looks OK, it would at
-> least start falling back to using regular IPIs to do backtraces. That
-> wouldn't get backtraces on hard locked up CPUs but it would be better
-> than what we have today where we don't get any backtraces. This would
-> get arm64 on par with arm32...
+> For now, maybe I'll think positive thoughts and hope that folks will
+> have the time to review the series soon. If another few weeks go by
+> then I'll send a v9 with just your comments addressed. If nothing
+> else, maybe you can land the kgdb parts in a tree targeting v6.5 and
+> then when arm64 folks have the bandwidth then it will be easier to get
+> them landed.
+>
+> [1] https://lore.kernel.org/r/20230419155341.v8.10.Ic3659997d6243139d0522=
+fc3afcdfd88d7a5f030@changeid
 
-The more I thought about it, the more I liked the idea of going full
-hog on the idea in patch #10. I've posted v9 [2] where I've really
-embraced the idea of falling back to a regular IPI if NMI isn't
-available. Hopefully it looks keen.
+Breadcrumbs: I've dropped this patch and several others in v9 [1] by
+embracing the idea of using a normal IPI as a fallback.
 
-[1] https://issuetracker.google.com/281831288
-[2] https://lore.kernel.org/r/20230601213440.2488667-1-dianders@chromium.or=
-g
-
--Doug
+[1] https://lore.kernel.org/r/20230601213440.2488667-1-dianders@chromium.or=
+g/
