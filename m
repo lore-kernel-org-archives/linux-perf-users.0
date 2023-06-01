@@ -2,129 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6E0C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 04:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9341AC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 08:30:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231145AbjFAEyq (ORCPT
+        id S232167AbjFAIaP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 00:54:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41812 "EHLO
+        Thu, 1 Jun 2023 04:30:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230087AbjFAEyp (ORCPT
+        with ESMTP id S232122AbjFAIaK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 00:54:45 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 198CD123;
-        Wed, 31 May 2023 21:54:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685595284; x=1717131284;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SewPFnvtVo+X+t6ckcZON8ckwT8Kc4YETG5Z6sGInsk=;
-  b=C5ZErqLUKgjrRJEEjgmbSm6jQVGwgU1bkB5kJ77Eb+QXKnvpSr43SK3+
-   4OlrYE7rYBpPMTWXxTCvczwbAUOzbpW65KGdyBoJWAhizdrlB8nDFompC
-   +oOIgyfJQ0r1xQDoKws5QaKmfwwtH/kNQeEFWrxHW7708OF/wWg41eRvw
-   c2qCAjan2Z9a5sRT7toR2hdjKqZizkyyM2QAP4JdLRKLjZWfkjZ7ZwcAB
-   JJOYlECIiaP0i1iOBHko7jhrJ019IyRHPR7bYkHRXpuFcn033bhQDqe2v
-   XxW7xPg9GqccVKLE70YwZGSzLR91kz0WydIsCCHeZHATUxW54+4esmcJG
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="335801689"
-X-IronPort-AV: E=Sophos;i="6.00,209,1681196400"; 
-   d="scan'208";a="335801689"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2023 21:54:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="953915731"
-X-IronPort-AV: E=Sophos;i="6.00,209,1681196400"; 
-   d="scan'208";a="953915731"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.54.252])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2023 21:54:41 -0700
-Message-ID: <dfef9c42-5b84-6720-656f-5d3ac1d8ccf5@intel.com>
-Date:   Thu, 1 Jun 2023 07:54:36 +0300
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.2
-Subject: Re: [PATCH] perf script: Increase PID/TID width for output
-To:     Namhyung Kim <namhyung@kernel.org>,
+        Thu, 1 Jun 2023 04:30:10 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1046BFB
+        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jun 2023 01:30:06 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-565c380565dso16407827b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 01:30:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1685608205; x=1688200205;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AJYoAZgPIiDuHSYNOWGMDwA/YHr80AahR9Q3zVEDTVM=;
+        b=IF2Q6WpNHXGykYNxyjo9CKJ30iM6bJuTd0E/lD8fUzwVbibgyfXzaplSgph4zbwRR3
+         ues5qwpJzCPps/4yXt+RektwBqd88CoOX88TUBahSwN/aC2OKxALnkh+pHXqd4FHlFzh
+         iO1eEA5oNWtcTillM3wP1fURdHYSJrPLZpQrtBK55z384G0U4XsiNcW7RIdp1hYquMfK
+         Q9Tbe3RG0f6KgO/NKqcKtQENCQmGB4QiYLkI12YBu78j+AyBk6ynttPouxPQ+9pyTCmR
+         Q/cauB+fj4yrnY8b/LC+O7LMalhfz1lsh+k8nwt2ajcPDP2L4B9+1qW9sBO3qw8GnIV+
+         KHjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685608205; x=1688200205;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AJYoAZgPIiDuHSYNOWGMDwA/YHr80AahR9Q3zVEDTVM=;
+        b=GdXmldtAi+voDBRO4NO3mKC+pJZijtNGbkyWLpvs7tl12C09xsTFsDyRm29sNpzeuU
+         dePU7iXLHCqwbex1hFHLmPuAbvrF0BI0DXeqB9SuP43zNAPLf8fdK8DWha3pnEJoxpTG
+         RsoIbmtZpeYftIn0DMvx51O3rAI8WaES7QgxG6wdtXnVvi7qoMXCCK3mBvcJyjQkway9
+         CHLB5+0iOGPSyDV96DwXBJ7mWQkEWt7bID8gSlUpYELS3trrvxknEWEuDF3COCBujMne
+         Io5VvM9jdHb8oC/ZjojnNcY02ZkyMWe2txjtDCYJDGCirP9VpdbSlHGNjHaa/BUwHFCw
+         C1vQ==
+X-Gm-Message-State: AC+VfDwk6C8TNDHWJ/ttuPqHVJEkLYuCyvL18idub4qSU+qSlniH9Gld
+        8nUOh84gPBVDx0w96vUtECtI/pExDr7J
+X-Google-Smtp-Source: ACHHUZ76F7YvzmYpsM2JRZi38NeqyIDY1FwbqlhWATkUQt6KUt5LS2Vbu6BDVQe9rMyV9NvlW7HiskEUssqB
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a344:94b4:9b8d:a089])
+ (user=irogers job=sendgmr) by 2002:a81:414b:0:b0:568:ed75:8b2f with SMTP id
+ f11-20020a81414b000000b00568ed758b2fmr720776ywk.0.1685608205264; Thu, 01 Jun
+ 2023 01:30:05 -0700 (PDT)
+Date:   Thu,  1 Jun 2023 01:29:50 -0700
+Message-Id: <20230601082954.754318-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
+Subject: [PATCH v2 0/4] Hybrid event parsing fixes
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230531203236.1602054-1-namhyung@kernel.org>
-Content-Language: en-US
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230531203236.1602054-1-namhyung@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Richter <tmricht@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 31/05/23 23:32, Namhyung Kim wrote:
-> On large systems, it's common that PID/TID is bigger than 5-digit and it
-> makes the output unaligned.  Let's increase the width to 7.
+Correct various issues that have come up in mailing list discussions,
+the most impactful of which is the wildcard opening of events of type
+PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE. But also try to avoid a
+parse-error without a warning, have more fall-back behaviors and be
+liberal with the definition of software events.
 
-Might be worth noting that currently the biggest PID_MAX_LIMIT
-is 2^22 so pids don't get bigger than 7 digits presently.
+The majority of the change is in correcting the parse-event test to
+match the new hybrid parsing.
 
-> 
-> Before:
-> 
->   $ perf script
->   ...
->            swapper     0 [006] 1540823.803935:    1369324 cycles:P:  ffffffff9c755588 ktime_get+0x18 ([kernel.kallsyms])
->        gvfsd-dnssd 95114 [004] 1540823.804164:    1643871 cycles:P:  ffffffff9cfdca5c __get_user_8+0x1c ([kernel.kallsyms])
->          perf-exec 1558582 [000] 1540823.804209:    1018714 cycles:P:  ffffffff9c924ab9 __slab_free+0x9 ([kernel.kallsyms])
->              nmcli 1558589 [007] 1540823.804384:    1859212 cycles:P:      7f70537a8ad8 __strchrnul_evex+0x18 (/usr/lib/x86_64-linux-gnu/libc.so.6>
->              sleep 1558582 [000] 1540823.804456:     987425 cycles:P:      7fd35bb27b30 _dl_init+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2>
->        dbus-daemon  3043 [003] 1540823.804575:    1564465 cycles:P:  ffffffff9cb2bb70 llist_add_batch+0x0 ([kernel.kallsyms])
->              gdbus 1558592 [001] 1540823.804766:    1315219 cycles:P:  ffffffff9c797b2e audit_filter_syscall+0x9e ([kernel.kallsyms])
->     NetworkManager  3452 [005] 1540823.805301:    1558782 cycles:P:      7fa957737748 g_bit_lock+0x58 (/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7400.5>
-> 
-> After:
-> 
->   $ perf script
->   ...
->            swapper       0 [006] 1540823.803935:    1369324 cycles:P:  ffffffff9c755588 ktime_get+0x18 ([kernel.kallsyms])
->        gvfsd-dnssd   95114 [004] 1540823.804164:    1643871 cycles:P:  ffffffff9cfdca5c __get_user_8+0x1c ([kernel.kallsyms])
->          perf-exec 1558582 [000] 1540823.804209:    1018714 cycles:P:  ffffffff9c924ab9 __slab_free+0x9 ([kernel.kallsyms])
->              nmcli 1558589 [007] 1540823.804384:    1859212 cycles:P:      7f70537a8ad8 __strchrnul_evex+0x18 (/usr/lib/x86_64-linux-gnu/libc.so.6>
->              sleep 1558582 [000] 1540823.804456:     987425 cycles:P:      7fd35bb27b30 _dl_init+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2>
->        dbus-daemon    3043 [003] 1540823.804575:    1564465 cycles:P:  ffffffff9cb2bb70 llist_add_batch+0x0 ([kernel.kallsyms])
->              gdbus 1558592 [001] 1540823.804766:    1315219 cycles:P:  ffffffff9c797b2e audit_filter_syscall+0x9e ([kernel.kallsyms])
->     NetworkManager    3452 [005] 1540823.805301:    1558782 cycles:P:      7fa957737748 g_bit_lock+0x58 (/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.7400.5>
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Ian Rogers (4):
+  perf pmu: Correct perf_pmu__auto_merge_stats affecting hybrid
+  perf evsel: Add verbose 3 print of evsel name when opening
+  perf parse-events: Wildcard most "numeric" events
+  perf test: Update parse-events expectations
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+ tools/perf/tests/parse-events.c | 1108 ++++++++++++++++---------------
+ tools/perf/util/evsel.c         |    1 +
+ tools/perf/util/parse-events.c  |  104 ++-
+ tools/perf/util/parse-events.y  |   10 +-
+ tools/perf/util/pmu.c           |   18 +-
+ tools/perf/util/pmu.h           |    5 +
+ tools/perf/util/pmus.c          |    5 +
+ tools/perf/util/pmus.h          |    1 +
+ 8 files changed, 698 insertions(+), 554 deletions(-)
 
-> ---
->  tools/perf/builtin-script.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 029d5a597233..70549fc93b12 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -801,11 +801,11 @@ static int perf_sample__fprintf_start(struct perf_script *script,
->  	}
->  
->  	if (PRINT_FIELD(PID) && PRINT_FIELD(TID))
-> -		printed += fprintf(fp, "%5d/%-5d ", sample->pid, sample->tid);
-> +		printed += fprintf(fp, "%7d/%-7d ", sample->pid, sample->tid);
->  	else if (PRINT_FIELD(PID))
-> -		printed += fprintf(fp, "%5d ", sample->pid);
-> +		printed += fprintf(fp, "%7d ", sample->pid);
->  	else if (PRINT_FIELD(TID))
-> -		printed += fprintf(fp, "%5d ", sample->tid);
-> +		printed += fprintf(fp, "%7d ", sample->tid);
->  
->  	if (PRINT_FIELD(CPU)) {
->  		if (latency_format)
+-- 
+2.41.0.rc0.172.g3f132b7071-goog
 
