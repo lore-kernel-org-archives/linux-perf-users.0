@@ -2,240 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FB8C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 13:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511FAC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 13:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232640AbjFAND4 (ORCPT
+        id S233300AbjFANvc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 09:03:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50260 "EHLO
+        Thu, 1 Jun 2023 09:51:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229880AbjFANDz (ORCPT
+        with ESMTP id S233240AbjFANvb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 09:03:55 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5D2E7;
-        Thu,  1 Jun 2023 06:03:53 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 2C0F221980;
-        Thu,  1 Jun 2023 13:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1685624632; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=u3dPTilvXGp8uxMn4l+Fg2INpSwUqim9wefqzjAgkeE=;
-        b=sWoQjeSwqeyLwmTMHbHRK38BwL4BPEazkQloeg0LItKG4j9/aawcmj88GFMKrHarpA8e0E
-        Ehq1Nt90b/lKIx9jbgcaGJiZEnTuSUReqF0MI+X4gZtM4+WPi/yWoq4XBhz7ZoTF3XDyX7
-        nrCbe+8EAxSy9O43hxhmGrxArfXGyzc=
-Received: from suse.cz (pmladek.udp.ovpn2.prg.suse.de [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 4B9812C142;
-        Thu,  1 Jun 2023 13:03:48 +0000 (UTC)
-Date:   Thu, 1 Jun 2023 15:03:44 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 10/10] watchdog/hardlockup: Rename
- HAVE_HARDLOCKUP_DETECTOR_NON_ARCH to ..._PERF_OR_BUDDY
-Message-ID: <ZHiXMK1QPlCpTmKV@alley>
-References: <20230527014153.2793931-1-dianders@chromium.org>
- <20230526184139.10.I821fe7609e57608913fe05abd8f35b343e7a9aae@changeid>
+        Thu, 1 Jun 2023 09:51:31 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34B94180
+        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jun 2023 06:51:30 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-651e298be3fso177080b3a.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 06:51:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685627489; x=1688219489;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=coxbV7P2GzCNBRaVW6+2JdmaHILz4+kN/zkbCOLqpuo=;
+        b=Yd9SGVj66VlM90+c6INx9+Xtqcz7zSi0zGGnn8tSnB4a/1ieYzQPYZIkeXEydZ5eYp
+         My/osqYHgrjS0a27NyVFz0FDtiVTGn9BJkasT6DzfW3BF+Eqoqg+V5wbuq1nktCc31r3
+         yabgnNZwC4K32odDrAbMLOPmxwY9eDIHW4j2RSyNltZHljtLvWYZ709UvbV9GEirgoHg
+         136NjHTrQNACnXim1huk7wKT8yFtAcG+MimqOMvXV2LXqYNNXjGqKAZ9uTuXjqN541aI
+         6ZeRz4qxsZO7r0LY0Q2wdBSPsby82/SC5gVGsGqyWkkEUmqKBWmwZ3W6p51dN5pfbTbu
+         ybzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685627489; x=1688219489;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=coxbV7P2GzCNBRaVW6+2JdmaHILz4+kN/zkbCOLqpuo=;
+        b=UyE/ftR8pYUxyXV1Egq46qFmWFCcDcDAm38lU2jcxLCHXc1H3JlXWlJOzZ+ratuvcu
+         d9Wh1tzN1Lg5iNGsyyVd1XAOh79LlD1GjB3NMqdxa3imyc9NmG+cd/ehQN7wy+rgnHBT
+         JERF8cENeIsHBLhGty/EZv/gocwJL9bP2v1pxGL0os/SLaTSJ8RSow4WuvRsV66NmHgZ
+         SBTHKFQhqOg81Tb4glcWycjdhNg3MyIUrQjyBQjmvMoqLkdhZ6DBTFopDlNHYNbybQ3q
+         TDN01wrUL0BnGXDGOphstiCj9rdA8AHwXxPtoCWxQ9RdJ+AZ54LzquH0+bwBiEBIagvw
+         hjWA==
+X-Gm-Message-State: AC+VfDyjyvfd0Mye6extSKzZEiouYXtWhGO1RnFYF5X1mQnEG3pvJUdq
+        nZZP9toRWGDwEDoi6W47B+MyTE/Kw9k6eZZSIhvmZOQESV4=
+X-Google-Smtp-Source: ACHHUZ4NCJKPC8AW5wjrTvlrQZOym6SmGHpm1P197dC4o9jgEheZasjvyq4xwy0L6o9houLcoH7Pt9eqoHJtEHJHauY=
+X-Received: by 2002:a05:6a20:938a:b0:10b:e88f:598f with SMTP id
+ x10-20020a056a20938a00b0010be88f598fmr12105994pzh.51.1685627489321; Thu, 01
+ Jun 2023 06:51:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230526184139.10.I821fe7609e57608913fe05abd8f35b343e7a9aae@changeid>
+From:   RAJESH DASARI <raajeshdasari@gmail.com>
+Date:   Thu, 1 Jun 2023 16:51:18 +0300
+Message-ID: <CAPXMrf9mRG_uyEdkppJOjJxCREXjZsXGo2A_QEtwHM4G+nJoEA@mail.gmail.com>
+Subject: Reg: Perf report consuming too high memory
+To:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri 2023-05-26 18:41:40, Douglas Anderson wrote:
-> HAVE_HARDLOCKUP_DETECTOR_NON_ARCH is a mouthful and
-> confusing. HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY is even more of a
-> mouthful, but probably less confusing. Rename the Kconfig names.
+Hi ,
 
-It is better. But I have an idea that might be even better.
+I am noticing high memory usage, oom killer is invoked and restarting
+our node while running perf report command.
 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  lib/Kconfig.debug | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-> index eb1edd5905bc..b9e162698a82 100644
-> --- a/lib/Kconfig.debug
-> +++ b/lib/Kconfig.debug
-> @@ -1058,7 +1058,7 @@ config HARDLOCKUP_DETECTOR_BUDDY
->  # needs SMP). In either case, using the "non-arch" code conflicts with
->  # the NMI watchdog code (which is sometimes used directly and sometimes used
->  # by the arch-provided hardlockup detector).
+ perf record -a  -g   sleep 120
+[ perf record: Woken up 2472 times to write data ]
+[ perf record: Captured and wrote 623.050 MB (3830374 samples) ]
 
-The comment above still uses the term "no-arch" and tries to
-explain the confusion around it.
+perf report
 
-> -config HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
-> +config HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
->  	bool
->  	depends on (HAVE_HARDLOCKUP_DETECTOR_PERF || SMP) && !HAVE_NMI_WATCHDOG
->  	default y
-> @@ -1077,10 +1077,10 @@ config HARDLOCKUP_DETECTOR_PREFER_BUDDY
->  	  an arch-specific hardlockup detector or if resources needed
->  	  for the hardlockup detector are better used for other things.
->  
-> -# This will select the appropriate non-arch hardlockdup detector
-> -config HARDLOCKUP_DETECTOR_NON_ARCH
-> +# This will select the appropriate non-arch hardlockup detector
-> +config HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
->  	bool
-> -	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
-> +	depends on HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
->  	select HARDLOCKUP_DETECTOR_BUDDY if !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_PREFER_BUDDY
->  	select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY
->  
-> @@ -1098,9 +1098,9 @@ config HARDLOCKUP_CHECK_TIMESTAMP
->  config HARDLOCKUP_DETECTOR
->  	bool "Detect Hard Lockups"
->  	depends on DEBUG_KERNEL && !S390
-> -	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH || HAVE_HARDLOCKUP_DETECTOR_ARCH
-> +	depends on HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY || HAVE_HARDLOCKUP_DETECTOR_ARCH
->  	select LOCKUP_DETECTOR
-> -	select HARDLOCKUP_DETECTOR_NON_ARCH if HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
-> +	select HARDLOCKUP_DETECTOR_PERF_OR_BUDDY if HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
->  
->  	help
->  	  Say Y here to enable the kernel to act as a watchdog to detect
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+ 119877 root      20   0 7335760   7.0g 670244 S   0.0  59.7   0:22.23 perf
 
-I am sorry but I am still confused by the logic. For me, it is far
-from clear what combinations are possible, impossible, and optional.
+perf report command is consuming more memory, oom killer is invoked.
+System details : kernel 5.4.242 + glibc 2.26 + gcc12
+I tried with perf 6.x versions but I still see more memory consumption.
 
-Especially, the effect of HAVE_NMI_WATCHDOG and
-HAVE_HARDLOCKUP_DETECTOR_ARCH is quite tricky.
+I tried the same experiment on a different system under the same load
+, this system has ( kernel 5.4.242 + glibc 2.24 + gcc 11)
 
-I was playing with it and came up with a more straightforward solution
-and found more possibilities how the simplify the logic. I am going
-to prepare a patchset that would replace this patch.
+perf record -a  -g  sleep 120
+[ perf record: Woken up 1868 times to write data ]
+[ perf record: Captured and wrote 470.203 MB
+/tmp/rcpprofiling/data_cg.data (3828394 samples) ]
 
-Just to get the idea. I made the following changes:
+perf report
 
-     + define the values in logical order:
-	+ HAVE_*
-	+ HARDLOCKUP_DETECTOR y/n value
-	+ HARDLOCKUP_DETECTOR_PREFER_BUDDY y/n value
-	+ HARDLOCKUP_DETECTOR_PERF decision based on above
-	+ HARDLOCKUP_DETECTOR_BUDDY decision based on above
-
-     + remove HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY,
-       instead, explicitly define the dependencies on all HAVE_*
-       variables to make it clear what it possible
-       and what is not possible
-
-     + remove HARDLOCKUP_DETECTOR_PERF_OR_BUDDY,
-       instead use "imply" in HARDLOCKUP_DETECTOR to trigger
-       re-evaluation of HARDLOCKUP_DETECTOR_PERF and
-       HARDLOCKUP_DETECTOR_BUDDY decisions
+PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+840045 root      20   0 1459520   1.4g 493380 R  98.1  11.8   0:31.21
+perf report
 
 
-My current version has the following in lib/Kconfig.devel:
+I see that the more the perf.data file size, the more  memory it
+consumes, but in this case i only see 200MB difference between the
+perf.data file and also only 2k sample difference, but memory
+consumption is too high in the first system.
 
---- cut ---
-config HAVE_HARDLOCKUP_DETECTOR_BUDDY
-	bool
-	depends on SMP
-	default y
+What could be the reason, is this expected behaviour or how to debug
+why perf is consuming more memory here  . Please help me with this
+query .
 
-#
-# arch/ can define HAVE_NMI_WATCHDOG to provide their own hard
-# lockup detector rather than the generic perf or buddy detector.
-#
-config HARDLOCKUP_DETECTOR
-	bool "Detect Hard Lockups"
-	depends on DEBUG_KERNEL && !S390
-	depends on HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETECTOR_BUDDY || HAVE_NMI_WATCHDOG
-	imply HARDLOCKUP_DETECTOR_PERF
-	imply HARDLOCKUP_DETECTOR_BUDDY
-	select LOCKUP_DETECTOR
-
-	help
-	  Say Y here to enable the kernel to act as a watchdog to detect
-	  hard lockups.
-
-	  Hardlockups are bugs that cause the CPU to loop in kernel mode
-	  for more than 10 seconds, without letting other interrupts have a
-	  chance to run.  The current stack trace is displayed upon detection
-	  and the system will stay locked up.
-
-#
-# The architecture-specific variant is always used when available,
-# see HAVE_NMI_WATCHDOG
-#
-config HARDLOCKUP_DETECTOR_PREFER_BUDDY
-	bool "Prefer the buddy CPU hardlockup detector"
-	depends on HARDLOCKUP_DETECTOR
-	depends on HAVE_HARDLOCKUP_DETECTOR_PERF && HAVE_HARDLOCKUP_DETECTOR_BUDDY && !HAVE_NMI_WATCHDOG
-	default n
-	help
-	  Say Y here to prefer the buddy hardlockup detector over the perf one.
-
-	  With the buddy detector, each CPU uses its softlockup hrtimer
-	  to check that the next CPU is processing hrtimer interrupts by
-	  verifying that a counter is increasing.
-
-	  This hardlockup detector is useful on systems that don't have
-	  an arch-specific hardlockup detector or if resources needed
-	  for the hardlockup detector are better used for other things.
-
-config HARDLOCKUP_DETECTOR_PERF
-	bool
-	depends on HARDLOCKUP_DETECTOR
-	depends on HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY && !HAVE_NMI_WATCHDOG
-	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
-
-config HARDLOCKUP_DETECTOR_BUDDY
-	bool
-	depends on HARDLOCKUP_DETECTOR
-	depends on HAVE_HARDLOCKUP_DETECTOR_BUDDY
-	depends on HARDLOCKUP_DETECTOR_PREFER_BUDDY || !HAVE_HARDLOCKUP_DETECTOR_PERF
-	depends on !HAVE_NMI_WATCHDOG
-	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
-
-# Both the "perf" and "buddy" hardlockup detectors need counting hrtimer
-# interrupts.
-config HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
-	bool
-	depends on HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_BUDDY
-	select SOFTLOCKUP_DETECTOR
---- cut ---
-
-Also I am going to break the dependency between HAVE_NMI_WATCHDOG and
-HAVE_HADRDLOCKUP_DETECTOR_ARCH. HAVE_NMI_WATCHDOG is needed only
-for the very special powerpc64 watchdog. I am going to make sure
-that it will be used only there and it will not be needed for
-sparc and arm. As a result, we would have 4 separate implementations:
-
-    + HAVE_HARDLOCKUP_DETECTOR_BUDDY enabled on any SMP system
-
-    + HAVE_HARDLOCKUP_DETECTOR_PERF enabled on architectures supporting
-	this perf-based solution
-
-    + HAVE_HARDLOCKUP_DETECTOR_ARCH enabled on architectures which
-	need another solution instead of the perf interface;
-	they would support the usual HARDLOCKUP_DETECTOR command
-	line parameters and sysctl interface
-
-    + HAVE_NMI_WATCHDOG enabled just on powerpc64; it is special
-	solution with its own command line parameters. Also it does
-	not support hardlockup sysctl interface. I think about
-	renaming it to HAVE_HARDLOCKUP_DETECTOR_POWERPC64 or
-	_CUSTOM.
-
-Best Regards,
-Petr
+Thanks,
+Rajesh Dasari.
