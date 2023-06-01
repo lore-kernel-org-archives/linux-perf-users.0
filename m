@@ -2,145 +2,287 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F038C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 09:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0B53C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 11:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231993AbjFAJz5 (ORCPT
+        id S231676AbjFALGO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 05:55:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36834 "EHLO
+        Thu, 1 Jun 2023 07:06:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233241AbjFAJyw (ORCPT
+        with ESMTP id S230268AbjFALGN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 05:54:52 -0400
-Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2475E4A;
-        Thu,  1 Jun 2023 02:54:25 -0700 (PDT)
-Received: by mail-yb1-xb34.google.com with SMTP id 3f1490d57ef6-ba827a34ba8so650563276.0;
-        Thu, 01 Jun 2023 02:54:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685613257; x=1688205257;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zaH3llwLH0tAOqLtLRXczT3GUAsS7Y/IWF3335BIolY=;
-        b=hjXp5ZbI1tlJjDcPbCXmNufvqRSSz3s4oTdiksj4GKMDFAgA7NKlJNKqPq194EcYFX
-         agZT+MCKNKTvwbDDwgys8q4pNgJYLaP2eDUbQI88Z+CVwNKP4TDaXJXoBGW12S4Ves/b
-         8vQuXF6i8vcvWMuu/FwL9oVdtr8Kser1Q+PoN7o9Ww3DJZIpXh0OEHwbWM03uxW3T/Ne
-         1aomh4hVxP7CLPShRYeWyyzWZyP82SY6We9BVv6KE0NdgF5qfQad4wZpddgFXMsu8TcB
-         c0MOhAsYNk7ot4/OGY5EsRvtKUMtTdaUeV0r7LBot3cxhXCePo2qDw2j3lrYjh0cpS7r
-         4Fcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685613257; x=1688205257;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zaH3llwLH0tAOqLtLRXczT3GUAsS7Y/IWF3335BIolY=;
-        b=bQjVcxDia4jXiwgEVz4ptryAXXgpBDSneiSHH5OUuRBJ6FxEYdpLw943uvWHhbUE5x
-         zwO30kt571bRbVQXiD91mc4gopzSmP38IJPZF8zD0Swf0fulEZmHWEHQ/iu0HlrUumDi
-         bZjovT1clHGOK8qyI0TWnXd0B8HwwXDscZ1IcflWxeWvux4EeSpy8Ix1b4jZ8Bky/dIh
-         54YcofU6ZEGKi5Qsz2tc11GJ4IskO5GOgxZDp+IurlxbIaylZYIp4wnthOgLjCDeNuVr
-         rgJl3r7yhcWUX1sGqmH8/h4ckrD1X6gjCPI2lhCy/qECXolaM04LR7D+t1cnc513eXVw
-         k1/w==
-X-Gm-Message-State: AC+VfDyrLFMc7jNbHnOZEjKL21Vs6QdwNEH6zyzHil3aHe08xcHwwjVb
-        TgMlGVc0HpTMhp3BPm5nyNk=
-X-Google-Smtp-Source: ACHHUZ550rvMwrfRHsgbKHeknHaOLsAcymRaAlrrMsiLxm58P0Ro0s262Yno9vUoRwSdC02V4Zp48A==
-X-Received: by 2002:a25:db83:0:b0:b9e:6d83:7bcf with SMTP id g125-20020a25db83000000b00b9e6d837bcfmr8351546ybf.27.1685613257117;
-        Thu, 01 Jun 2023 02:54:17 -0700 (PDT)
-Received: from ism-manjaro.realtek.com.tw (125-227-180-151.hinet-ip.hinet.net. [125.227.180.151])
-        by smtp.gmail.com with ESMTPSA id j10-20020a17090276ca00b0019a5aa7eab0sm3030356plt.54.2023.06.01.02.54.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jun 2023 02:54:16 -0700 (PDT)
-From:   Ism Hong <ism.hong@gmail.com>
-To:     ism.hong@realtek.com, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>
-Cc:     Ism Hong <ism.hong@gmail.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: [PATCH] riscv: perf: Fix callchain parse error with kernel tracepoint events
-Date:   Thu,  1 Jun 2023 17:53:55 +0800
-Message-Id: <20230601095355.1168910-1-ism.hong@gmail.com>
-X-Mailer: git-send-email 2.37.2
-MIME-Version: 1.0
+        Thu, 1 Jun 2023 07:06:13 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 293E1F2;
+        Thu,  1 Jun 2023 04:06:12 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 351At57K018580;
+        Thu, 1 Jun 2023 11:02:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=Tfr0WJBAMZ7HcGa+FXMjnKOcQ5ZhtjrOBu2OYyx3ED0=;
+ b=tL3hWm/r5T0lnpg6UdAPPiu1deHgZMVnPah+kHQO3o1ovspZ9h+zEYKZRrWO1VsGELf6
+ KqQXdDuyUE7wMkrUsXsF0veeZ5kMPwib2L5ZurlrZI9lH8LLNcXgJjw9B6QbevMKtttU
+ H4rdCrZ4hEEaGcFeT9/P7p6sTnNhhUJc14TJliaNnTrow3bssBBSwLL+GgGc6Y5t7ApU
+ lctHuXCFLi1xQcMiPIastEih1pRlKLJYiKmBKzVr6cdsRSRMJu/OXoTZoGqeZG9r323Y
+ OYLTDXNf7bKnpPSbA81mjlf4V9cHZ6Ezv6ZgT08BUD6R+cEGuHSkS0bdM98ybFml1BCg eA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qxt0hr79u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Jun 2023 11:02:37 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 351At6hJ018630;
+        Thu, 1 Jun 2023 11:02:36 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qxt0hr78c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Jun 2023 11:02:36 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 351704I8011520;
+        Thu, 1 Jun 2023 11:02:33 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3qu9g522ju-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 01 Jun 2023 11:02:33 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 351B2Vdm42140272
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 1 Jun 2023 11:02:31 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 522BD2004E;
+        Thu,  1 Jun 2023 11:02:31 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C92EE20043;
+        Thu,  1 Jun 2023 11:02:30 +0000 (GMT)
+Received: from [9.152.212.239] (unknown [9.152.212.239])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu,  1 Jun 2023 11:02:30 +0000 (GMT)
+Message-ID: <aa2f8581-6440-87c0-1578-157719f7543e@linux.ibm.com>
+Date:   Thu, 1 Jun 2023 13:02:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
+To:     Ian Rogers <irogers@google.com>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Nathan Chancellor <nathan@kernel.org>, namhyung@kernel.org,
+        eranian@google.com, acme@kernel.org, mark.rutland@arm.com,
+        jolsa@kernel.org, bp@alien8.de, kan.liang@linux.intel.com,
+        adrian.hunter@intel.com, maddy@linux.ibm.com, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com, kvmarm@lists.linux.dev
+References: <20230504110003.2548-1-ravi.bangoria@amd.com>
+ <20230504110003.2548-4-ravi.bangoria@amd.com>
+ <20230524214133.GA2359762@dev-arch.thelio-3990X>
+ <f02c78e2-34b9-4985-640a-279dae1004a9@amd.com> <ZG8KLbZSECiYaKFc@linux.dev>
+ <20230525142031.GU83892@hirez.programming.kicks-ass.net>
+ <ZG+FLdP2kkfI1m2Z@linux.dev>
+ <CAP-5=fWYbzmTETgqJ11y22=JaXDM0gnb4qR6KYeRGmFXw08f-Q@mail.gmail.com>
+ <86jzwtdhmk.wl-maz@kernel.org>
+ <CAP-5=fVW6KbUbbEfF3mEFvTfFDC5yKSjSpa+w3D55dG3CNUERw@mail.gmail.com>
+ <86h6rxd3gh.wl-maz@kernel.org>
+ <0075d8a9-2df4-86eb-8171-8995f59904e0@linux.ibm.com>
+ <CAP-5=fXo0t+buDrmf7SyTD97gmTWGoDAO2YXWyav+_79O3MZ0w@mail.gmail.com>
+ <a1f27798-0b06-7dc3-028b-038512947306@linux.ibm.com>
+ <CAP-5=fVw3vSEu7yGFDnZi8c3VUFJu_XEZtY9ZcTsD7ip2imR6Q@mail.gmail.com>
+Content-Language: en-US
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <CAP-5=fVw3vSEu7yGFDnZi8c3VUFJu_XEZtY9ZcTsD7ip2imR6Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: o3n4wIYJTnGjfax92N3nUdByl_UpL3Zo
+X-Proofpoint-GUID: lyONYjpzQy5cwArCYVv9fVjBxg18AULn
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-01_07,2023-05-31_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ priorityscore=1501 malwarescore=0 lowpriorityscore=0 bulkscore=0
+ clxscore=1015 mlxscore=0 adultscore=0 phishscore=0 suspectscore=0
+ impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2304280000 definitions=main-2306010098
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-For RISC-V, when tracing with tracepoint events, the IP and status are
-set to 0, preventing the perf code parsing the callchain and resolving
-the symbols correctly.
+On 5/31/23 22:20, Ian Rogers wrote:
+> On Wed, May 31, 2023 at 2:09 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
+>>
+>> On 5/30/23 16:00, Ian Rogers wrote:
+>>> ls /sys/devices/*/cpu*
+>>
+>> Hi Ian,
+>>
+>> here is the output yo requested:
+>>
+>> # ls /sys/devices/*/cpu*
+>> cpu0  cpu3  cpu6         hotplug     modalias  possible  smt
+>> cpu1  cpu4  cpu7         isolated    offline   present   uevent
+>> cpu2  cpu5  dispatching  kernel_max  online    rescan    vulnerabilities
+>> #
+>>
+>> In fact it is the same as
+>> # ls  /sys/devices/system/cpu/
+>> cpu0  cpu3  cpu6         hotplug     modalias  possible  smt
+>> cpu1  cpu4  cpu7         isolated    offline   present   uevent
+>> cpu2  cpu5  dispatching  kernel_max  online    rescan    vulnerabilities
+>> #
+>> This directory tree has nothing to do with events for perf, it is
+>> merely used to support CPU hotplug on s390.
+>>
+>> The PMUs on s390 are
+>> # ls -ld /sys/devices/{cpum_,pai_}*
+>> drwxr-xr-x 4 root root 0 May 25 15:45 /sys/devices/cpum_cf
+>> drwxr-xr-x 4 root root 0 May 25 15:45 /sys/devices/cpum_cf_diag
+>> drwxr-xr-x 4 root root 0 May 25 15:45 /sys/devices/cpum_sf
+>> drwxr-xr-x 4 root root 0 May 25 15:45 /sys/devices/pai_crypto
+>> drwxr-xr-x 4 root root 0 May 25 15:45 /sys/devices/pai_ext
+>> #
+>>
+>> I hope his helps.
+> 
+> Thanks Thomas,
+> 
+> The perf tool has a notion of "core" and "other" PMUs - other means
+> uncore and things like interconnect PMUs. The distinction matters as
+> PMUs may have a list of CPUs with them, for "other" PMUs the CPU list
+> (known in the tool as the CPU map) is a suggestion of the CPU to open
+> events on. For example, on my laptop:
+> ```
+> $ cat /sys/devices/system/cpu/online
+> 0-15
+> $ cat /sys/devices/uncore_imc_free_running_0/cpumask
+> 0
+> ```
+> So I have 16 "CPUs" and the memory controller is suggesting opening
+> the events on CPU 0. However, if I do:
+> ```
+> $ sudo perf stat -e 'uncore_imc_free_running_0/data_read/' -C 8 -a -A sleep 1
+> 
+> Performance counter stats for 'system wide':
+> 
+> CPU8                 4,617.60 MiB
+> uncore_imc_free_running_0/data_read/
+> 
+> 
+>       1.001094684 seconds time elapsed
+> ```
+> Then things are good and the event was recorded on CPU 8, even though
+> the cpumask of the PMU only said CPU 0.
+> 
+> For "core" PMUs the CPU map works differently. A CPU outside of the
+> map is an error. For example, if I have a heterogeneous system with 2
+> CPUs, the first CPU on 1 PMU and the second CPU on a different PMU, if
+> I try to open events for the wrong PMU  type for the CPU then it
+> should fail. The CPU map should be interpreted as the set of CPUs
+> events are valid on.
+> 
+> The logic to determine if a PMU is "core" or "other" is here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmu.c?h=perf-tools-next#n1417
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmu.c?h=perf-tools-next#n609
+> 
+> That is, a PMU is a "core" PMU if it is called "cpu" or if there is a
+> file called "cpus" inside the PMU's sysfs directory. It seems on s390
+> none of the PMUs are considered "core" and this is why we're having
+> issues.
+> 
+> Looking at:
+> https://lore.kernel.org/lkml/20180416132314.33249-1-tmricht@linux.ibm.com/
+> 
+> It would seem to make sense that "cpu", "cpum_cf" and "cpum_sf" should
+> all cause "is_pmu_core" to return true, From your output I suspect the
+> issue is that cpum_cf and cpum_sf both lack the "cpus" file - which is
+> also true on homogeneous x86's "cpu" PMU. We can fix the code with:
+> 
+> ```
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 0520aa9fe991..bdc3f3b148fc 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1414,7 +1414,9 @@ void perf_pmu__del_formats(struct list_head *formats)
+> 
+> bool is_pmu_core(const char *name)
+> {
+> -       return !strcmp(name, "cpu") || is_sysfs_pmu_core(name);
+> +       return !strcmp(name, "cpu") ||
+> +              !strcmp(name, "cpum_cf") || !strcmp(name, "cpum_sf") ||
+> +              is_sysfs_pmu_core(name);
+> }
+> 
+> bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+> ```
+> 
+> Wdyt? Thanks,
+> Ian
+> 
 
- ./ply 'tracepoint:kmem/kmem_cache_alloc { @[stack]=count(); }'
- @:
- { <STACKID4294967282> }: 1
+Ian, thanks very much for your help. I changed the code as you
+suggested and added s390's PMU cpum_cf as in
 
-The fix is to implement perf_arch_fetch_caller_regs for riscv, which
-fills several necessary registers used for callchain unwinding,
-including epc, sp, s0 and status. It's similar to commit b3eac0265bf6
-("arm: perf: Fix callchain parse error with kernel tracepoint events")
-and commit 5b09a094f2fb ("arm64: perf: Fix callchain parse error with
-kernel tracepoint events").
+bool is_pmu_core(const char *name)
+{
+        return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") ||
+               is_sysfs_pmu_core(name);
+}
 
-With this patch, callchain can be parsed correctly as:
+The result is much better, now the
+- test case 6.1 fails only 2 times and for a different reason:
+  running test 2 'r1a'
+  FAILED tests/parse-events.c:125 Raw PMU not matched
+  Event test failure: test 2 'r1a' rc -1
+  ...
+  running test 14 'r1a:kp'
+  FAILED tests/parse-events.c:125 Raw PMU not matched
+  Event test failure: test 14 'r1a:kp' rc -1
+  
+- test case 10.2 fails for an unknown event bp_l1_btb_correct.
+   10.2: PMU event map aliases         :
+   --- start ---
+   Using CPUID IBM,8561,703,T01,3.6,002f
+   testing aliases core PMU cpum_cf: no alias, alias_table->name=bp_l1_btb_correct
+   testing core PMU cpum_cf aliases: failed
+   ---- end ----
+   PMU events subtest 2: FAILED!
+- test case 68 now succeeds:
+  # ./perf test  68
+  68: Parse and process metrics        : Ok
+  #
 
- ./ply 'tracepoint:kmem/kmem_cache_alloc { @[stack]=count(); }'
- @:
- {
-         __traceiter_kmem_cache_alloc+68
-         __traceiter_kmem_cache_alloc+68
-         kmem_cache_alloc+354
-         __sigqueue_alloc+94
-         __send_signal_locked+646
-         send_signal_locked+154
-         do_send_sig_info+84
-         __kill_pgrp_info+130
-         kill_pgrp+60
-         isig+150
-         n_tty_receive_signal_char+36
-         n_tty_receive_buf_standard+2214
-         n_tty_receive_buf_common+280
-         n_tty_receive_buf2+26
-         tty_ldisc_receive_buf+34
-         tty_port_default_receive_buf+62
-         flush_to_ldisc+158
-         process_one_work+458
-         worker_thread+138
-         kthread+178
-         riscv_cpufeature_patch_func+832
-  }: 1
+Regarding test case 6.1: 
+Raw PMU not matched is printed in tests/parse-events.c::125
+Debugging revealed that function
+  test_event()
+  +--> parse_events() which returns 0
+  +--> e->check() ---> test__checkevent_raw()
+This function has TEST_ASSERT_VAL("Raw PMU not matched", raw_type_match);
+triggering -1 because the PMU has type 8 which is not PERF_TYPE_RAW
 
-This patch works both on RV32/RV64.
+Maybe make type >= PERF_TYPE_RAW to succeed the test?
 
-Signed-off-by: Ism Hong <ism.hong@gmail.com>
----
- arch/riscv/include/asm/perf_event.h | 7 +++++++
- 1 file changed, 7 insertions(+)
+Regarding test case 10.2: the event bp_l1_btb_correct does not exist on
+s390. It is defined in
+- pmu-events/empty-pmu-events.c
+- pmu-events/arch/test/test_soc/cpu/branch.json
+Not sure which one is used.
+But this event is unknown on s390
 
-diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
-index d42c901f9a97..665bbc9b2f84 100644
---- a/arch/riscv/include/asm/perf_event.h
-+++ b/arch/riscv/include/asm/perf_event.h
-@@ -10,4 +10,11 @@
- 
- #include <linux/perf_event.h>
- #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
-+
-+#define perf_arch_fetch_caller_regs(regs, __ip) { \
-+	(regs)->epc = (__ip); \
-+	(regs)->s0 = (unsigned long) __builtin_frame_address(0); \
-+	(regs)->sp = current_stack_pointer; \
-+	(regs)->status = SR_PP; \
-+}
- #endif /* _ASM_RISCV_PERF_EVENT_H */
+What is the best way to fix these issues.
+
+PS: I have the feeling, it gets complicated to have multiple hardware PMUs
+per platform.
+
 -- 
-2.37.2
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
