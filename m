@@ -2,90 +2,240 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B16BEC77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 11:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FB8C77B7E
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 13:03:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232180AbjFALUx (ORCPT
+        id S232640AbjFAND4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 07:20:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36100 "EHLO
+        Thu, 1 Jun 2023 09:03:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229589AbjFALUx (ORCPT
+        with ESMTP id S229880AbjFANDz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 07:20:53 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87535123;
-        Thu,  1 Jun 2023 04:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Jzcx+R+c6UOqzz0gVG07uUa29kOBvr3x5e8X9TFuwcA=; b=oQ8d4cw3GAx07aySlQ39lT4A8H
-        prkDbHMJybq15SDspPHtVe9iiG+gfjkElttDpsY8z8UlgWtby1L64wWiDvn4LCC+WTcKHkzU2uCVU
-        Il3IG6TJVbBw9F0wcsP4EFmQr1my4e2Wh0UYpw8cam+gBKhpQJY7tpxiPeVWY1yhA82CNY6Fx9I5x
-        mM91gUzo12SNrcaM9a68ZIINX0H2/ZLb74OaH9RebDzycs3fze5p/lWol2AQOXOyvokCXPilqkWa5
-        +nhi4EoTnMscy882WT5oR/Y5l8hR6D2t88nbMSI93A02rL9M7UpKAB5iPK226BszP0ZiYxjDrPS8Q
-        i7+Eq3vg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q4gM0-00H940-1R;
-        Thu, 01 Jun 2023 11:20:28 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 34D6630031F;
-        Thu,  1 Jun 2023 13:20:27 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2450C202BDCB6; Thu,  1 Jun 2023 13:20:27 +0200 (CEST)
-Date:   Thu, 1 Jun 2023 13:20:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     Ian Rogers <irogers@google.com>, Marc Zyngier <maz@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Nathan Chancellor <nathan@kernel.org>, namhyung@kernel.org,
-        eranian@google.com, acme@kernel.org, mark.rutland@arm.com,
-        jolsa@kernel.org, bp@alien8.de, kan.liang@linux.intel.com,
-        adrian.hunter@intel.com, maddy@linux.ibm.com, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v4 3/4] perf/core: Remove pmu linear searching code
-Message-ID: <20230601112027.GI38236@hirez.programming.kicks-ass.net>
-References: <CAP-5=fWYbzmTETgqJ11y22=JaXDM0gnb4qR6KYeRGmFXw08f-Q@mail.gmail.com>
- <86jzwtdhmk.wl-maz@kernel.org>
- <CAP-5=fVW6KbUbbEfF3mEFvTfFDC5yKSjSpa+w3D55dG3CNUERw@mail.gmail.com>
- <86h6rxd3gh.wl-maz@kernel.org>
- <0075d8a9-2df4-86eb-8171-8995f59904e0@linux.ibm.com>
- <CAP-5=fXo0t+buDrmf7SyTD97gmTWGoDAO2YXWyav+_79O3MZ0w@mail.gmail.com>
- <a1f27798-0b06-7dc3-028b-038512947306@linux.ibm.com>
- <CAP-5=fVw3vSEu7yGFDnZi8c3VUFJu_XEZtY9ZcTsD7ip2imR6Q@mail.gmail.com>
- <aa2f8581-6440-87c0-1578-157719f7543e@linux.ibm.com>
- <20230601111856.GW4253@hirez.programming.kicks-ass.net>
+        Thu, 1 Jun 2023 09:03:55 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F5D2E7;
+        Thu,  1 Jun 2023 06:03:53 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 2C0F221980;
+        Thu,  1 Jun 2023 13:03:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1685624632; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=u3dPTilvXGp8uxMn4l+Fg2INpSwUqim9wefqzjAgkeE=;
+        b=sWoQjeSwqeyLwmTMHbHRK38BwL4BPEazkQloeg0LItKG4j9/aawcmj88GFMKrHarpA8e0E
+        Ehq1Nt90b/lKIx9jbgcaGJiZEnTuSUReqF0MI+X4gZtM4+WPi/yWoq4XBhz7ZoTF3XDyX7
+        nrCbe+8EAxSy9O43hxhmGrxArfXGyzc=
+Received: from suse.cz (pmladek.udp.ovpn2.prg.suse.de [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 4B9812C142;
+        Thu,  1 Jun 2023 13:03:48 +0000 (UTC)
+Date:   Thu, 1 Jun 2023 15:03:44 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        sparclinux@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 10/10] watchdog/hardlockup: Rename
+ HAVE_HARDLOCKUP_DETECTOR_NON_ARCH to ..._PERF_OR_BUDDY
+Message-ID: <ZHiXMK1QPlCpTmKV@alley>
+References: <20230527014153.2793931-1-dianders@chromium.org>
+ <20230526184139.10.I821fe7609e57608913fe05abd8f35b343e7a9aae@changeid>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230601111856.GW4253@hirez.programming.kicks-ass.net>
+In-Reply-To: <20230526184139.10.I821fe7609e57608913fe05abd8f35b343e7a9aae@changeid>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 01, 2023 at 01:18:56PM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 01, 2023 at 01:02:30PM +0200, Thomas Richter wrote:
-> 
-> > PS: I have the feeling, it gets complicated to have multiple hardware PMUs
-> > per platform.
-> 
-> Recently someone was poking around giving the pmu device a parent, this
-> would, I think, result in sysfs links, which could be used to decide
-> what's what.
-> 
-> Core pmus would have the CPU device as their parent, while memory
-> controller thingies would link to the relevant node or something.
-> 
-> Ofc. all that's future-work/pending.
+On Fri 2023-05-26 18:41:40, Douglas Anderson wrote:
+> HAVE_HARDLOCKUP_DETECTOR_NON_ARCH is a mouthful and
+> confusing. HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY is even more of a
+> mouthful, but probably less confusing. Rename the Kconfig names.
 
-https://lkml.kernel.org/r/20230404134225.13408-1-Jonathan.Cameron%40huawei.com
+It is better. But I have an idea that might be even better.
 
-https://lkml.kernel.org/r/20230531110011.13963-2-Jonathan.Cameron%40huawei.com
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> 
+>  lib/Kconfig.debug | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index eb1edd5905bc..b9e162698a82 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -1058,7 +1058,7 @@ config HARDLOCKUP_DETECTOR_BUDDY
+>  # needs SMP). In either case, using the "non-arch" code conflicts with
+>  # the NMI watchdog code (which is sometimes used directly and sometimes used
+>  # by the arch-provided hardlockup detector).
+
+The comment above still uses the term "no-arch" and tries to
+explain the confusion around it.
+
+> -config HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+> +config HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
+>  	bool
+>  	depends on (HAVE_HARDLOCKUP_DETECTOR_PERF || SMP) && !HAVE_NMI_WATCHDOG
+>  	default y
+> @@ -1077,10 +1077,10 @@ config HARDLOCKUP_DETECTOR_PREFER_BUDDY
+>  	  an arch-specific hardlockup detector or if resources needed
+>  	  for the hardlockup detector are better used for other things.
+>  
+> -# This will select the appropriate non-arch hardlockdup detector
+> -config HARDLOCKUP_DETECTOR_NON_ARCH
+> +# This will select the appropriate non-arch hardlockup detector
+> +config HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
+>  	bool
+> -	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+> +	depends on HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
+>  	select HARDLOCKUP_DETECTOR_BUDDY if !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_PREFER_BUDDY
+>  	select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY
+>  
+> @@ -1098,9 +1098,9 @@ config HARDLOCKUP_CHECK_TIMESTAMP
+>  config HARDLOCKUP_DETECTOR
+>  	bool "Detect Hard Lockups"
+>  	depends on DEBUG_KERNEL && !S390
+> -	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH || HAVE_HARDLOCKUP_DETECTOR_ARCH
+> +	depends on HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY || HAVE_HARDLOCKUP_DETECTOR_ARCH
+>  	select LOCKUP_DETECTOR
+> -	select HARDLOCKUP_DETECTOR_NON_ARCH if HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+> +	select HARDLOCKUP_DETECTOR_PERF_OR_BUDDY if HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY
+>  
+>  	help
+>  	  Say Y here to enable the kernel to act as a watchdog to detect
+
+I am sorry but I am still confused by the logic. For me, it is far
+from clear what combinations are possible, impossible, and optional.
+
+Especially, the effect of HAVE_NMI_WATCHDOG and
+HAVE_HARDLOCKUP_DETECTOR_ARCH is quite tricky.
+
+I was playing with it and came up with a more straightforward solution
+and found more possibilities how the simplify the logic. I am going
+to prepare a patchset that would replace this patch.
+
+Just to get the idea. I made the following changes:
+
+     + define the values in logical order:
+	+ HAVE_*
+	+ HARDLOCKUP_DETECTOR y/n value
+	+ HARDLOCKUP_DETECTOR_PREFER_BUDDY y/n value
+	+ HARDLOCKUP_DETECTOR_PERF decision based on above
+	+ HARDLOCKUP_DETECTOR_BUDDY decision based on above
+
+     + remove HAVE_HARDLOCKUP_DETECTOR_PERF_OR_BUDDY,
+       instead, explicitly define the dependencies on all HAVE_*
+       variables to make it clear what it possible
+       and what is not possible
+
+     + remove HARDLOCKUP_DETECTOR_PERF_OR_BUDDY,
+       instead use "imply" in HARDLOCKUP_DETECTOR to trigger
+       re-evaluation of HARDLOCKUP_DETECTOR_PERF and
+       HARDLOCKUP_DETECTOR_BUDDY decisions
+
+
+My current version has the following in lib/Kconfig.devel:
+
+--- cut ---
+config HAVE_HARDLOCKUP_DETECTOR_BUDDY
+	bool
+	depends on SMP
+	default y
+
+#
+# arch/ can define HAVE_NMI_WATCHDOG to provide their own hard
+# lockup detector rather than the generic perf or buddy detector.
+#
+config HARDLOCKUP_DETECTOR
+	bool "Detect Hard Lockups"
+	depends on DEBUG_KERNEL && !S390
+	depends on HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETECTOR_BUDDY || HAVE_NMI_WATCHDOG
+	imply HARDLOCKUP_DETECTOR_PERF
+	imply HARDLOCKUP_DETECTOR_BUDDY
+	select LOCKUP_DETECTOR
+
+	help
+	  Say Y here to enable the kernel to act as a watchdog to detect
+	  hard lockups.
+
+	  Hardlockups are bugs that cause the CPU to loop in kernel mode
+	  for more than 10 seconds, without letting other interrupts have a
+	  chance to run.  The current stack trace is displayed upon detection
+	  and the system will stay locked up.
+
+#
+# The architecture-specific variant is always used when available,
+# see HAVE_NMI_WATCHDOG
+#
+config HARDLOCKUP_DETECTOR_PREFER_BUDDY
+	bool "Prefer the buddy CPU hardlockup detector"
+	depends on HARDLOCKUP_DETECTOR
+	depends on HAVE_HARDLOCKUP_DETECTOR_PERF && HAVE_HARDLOCKUP_DETECTOR_BUDDY && !HAVE_NMI_WATCHDOG
+	default n
+	help
+	  Say Y here to prefer the buddy hardlockup detector over the perf one.
+
+	  With the buddy detector, each CPU uses its softlockup hrtimer
+	  to check that the next CPU is processing hrtimer interrupts by
+	  verifying that a counter is increasing.
+
+	  This hardlockup detector is useful on systems that don't have
+	  an arch-specific hardlockup detector or if resources needed
+	  for the hardlockup detector are better used for other things.
+
+config HARDLOCKUP_DETECTOR_PERF
+	bool
+	depends on HARDLOCKUP_DETECTOR
+	depends on HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY && !HAVE_NMI_WATCHDOG
+	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+
+config HARDLOCKUP_DETECTOR_BUDDY
+	bool
+	depends on HARDLOCKUP_DETECTOR
+	depends on HAVE_HARDLOCKUP_DETECTOR_BUDDY
+	depends on HARDLOCKUP_DETECTOR_PREFER_BUDDY || !HAVE_HARDLOCKUP_DETECTOR_PERF
+	depends on !HAVE_NMI_WATCHDOG
+	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+
+# Both the "perf" and "buddy" hardlockup detectors need counting hrtimer
+# interrupts.
+config HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+	bool
+	depends on HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_BUDDY
+	select SOFTLOCKUP_DETECTOR
+--- cut ---
+
+Also I am going to break the dependency between HAVE_NMI_WATCHDOG and
+HAVE_HADRDLOCKUP_DETECTOR_ARCH. HAVE_NMI_WATCHDOG is needed only
+for the very special powerpc64 watchdog. I am going to make sure
+that it will be used only there and it will not be needed for
+sparc and arm. As a result, we would have 4 separate implementations:
+
+    + HAVE_HARDLOCKUP_DETECTOR_BUDDY enabled on any SMP system
+
+    + HAVE_HARDLOCKUP_DETECTOR_PERF enabled on architectures supporting
+	this perf-based solution
+
+    + HAVE_HARDLOCKUP_DETECTOR_ARCH enabled on architectures which
+	need another solution instead of the perf interface;
+	they would support the usual HARDLOCKUP_DETECTOR command
+	line parameters and sysctl interface
+
+    + HAVE_NMI_WATCHDOG enabled just on powerpc64; it is special
+	solution with its own command line parameters. Also it does
+	not support hardlockup sysctl interface. I think about
+	renaming it to HAVE_HARDLOCKUP_DETECTOR_POWERPC64 or
+	_CUSTOM.
+
+Best Regards,
+Petr
