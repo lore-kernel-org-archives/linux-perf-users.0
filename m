@@ -2,263 +2,296 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73865C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 17:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E486BC7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 17:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231844AbjFARHt (ORCPT
+        id S232172AbjFARcT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 13:07:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49656 "EHLO
+        Thu, 1 Jun 2023 13:32:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231646AbjFARHs (ORCPT
+        with ESMTP id S231790AbjFARcS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 13:07:48 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466EAE2;
-        Thu,  1 Jun 2023 10:07:47 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-5162d2373cdso1492265a12.3;
-        Thu, 01 Jun 2023 10:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685639266; x=1688231266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r/Hv5zLm4y7cGqfEv37ODwcsKis46929s6CtwGx4OQs=;
-        b=hTk7to+1XPfOqcKothqd8L8WDan8VGX9Rih9txBgkxPaRkPDO0NkNJgsjf0PU7GZ3S
-         FLRjB6Dpgpa1cQ4epcci6Vic4VgchufqKfsB8FOMq2ZhDkPI2ZeEkI1mvLAr8t+qIL2W
-         H61flMBMUXzTs8XJcf0KemyR7CdoVQOLPghBYnmWFLyRrw4NQOUL2qHFnux9KkOGED4p
-         xl/XTkQVxLa7SIZ5LZG2xEhpCXthNFaFaCoke0HvJc9kzj697Z1pELnYUBF3by7wktBU
-         04ruqdboHDt+T3lHC/ABPvvpb5ph0bm0SE699W4Xx0y5L+3ka1LAbNgC3n6wFBIlAmrG
-         lXrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685639266; x=1688231266;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r/Hv5zLm4y7cGqfEv37ODwcsKis46929s6CtwGx4OQs=;
-        b=WENN38a/r+rzXLc6BvZlA5oO7UPXuBamWMZ5VGhblKbCz412F/HyVtVOnsCrunRBhA
-         SXkmnKScty0Ll5XDePql+fih3cElY0cz5bQLlz5YT71PFqjNZlniA+9zU7KbFSC+08Tm
-         mClhRCIgGm7zaQ1g03Jg8YY/oGlD3zN9ZFfYX7LojQEEjkXJ+9F7biAvATTlpD8aArYA
-         FmyQond29+yeQdULO4/U8z93ovkG0J4Lo7wNfi0hu5mqPj5sAJx4PY7Nd0lH20PMT025
-         PU84N8Lcy6HaeiRBa9iMy+72FKS+xigkVxIoFbNYQQHvQHBSqtB33fRmLtN8EhXgCCXR
-         XTcw==
-X-Gm-Message-State: AC+VfDwO+HBy5Q1f1vYipQHBw17D52G/ykQA/qpcTM5SOuuU92IsKjxY
-        c8XyMEWJ1g64o9/zQ78I+AG69BSy6wJRA4k5tTM=
-X-Google-Smtp-Source: ACHHUZ68Rt03Gh6Dmxmgiz1l+/QKs7LcN4MxdBJGRGImfKiPJcB5HOnJuRIUXUriuMHzWfVGPfnrvaSZfV1C0eOfLZM=
-X-Received: by 2002:a50:ee96:0:b0:510:e790:48fe with SMTP id
- f22-20020a50ee96000000b00510e79048femr373949edr.6.1685639265566; Thu, 01 Jun
- 2023 10:07:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230531143533.196835-1-paniii94@gmail.com> <CAM9d7cgsP9cBq_Ui9-53zO0nLzBUK67goO1UcnqZ93Z4E7QcFQ@mail.gmail.com>
- <CAOh+m7w8uE-2HKi=+gXL6sFbsPRGBfKA4eNT+kJTVhHhJmMSLw@mail.gmail.com> <CAM9d7cho4-JOWTex0GkScQA2kmg3ZU5bqbRbUb_mG3vsoQ9vng@mail.gmail.com>
-In-Reply-To: <CAM9d7cho4-JOWTex0GkScQA2kmg3ZU5bqbRbUb_mG3vsoQ9vng@mail.gmail.com>
-From:   Elisabeth Panholzer <paniii94@gmail.com>
-Date:   Thu, 1 Jun 2023 19:07:34 +0200
-Message-ID: <CAOh+m7xjH+q5pMV67+60sK59pH+HZg9=XkF5qBDtyUbK1jOxUg@mail.gmail.com>
-Subject: Re: [PATCH] Subject: perf jit: Fix incorrect file name in DWARF line table
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 1 Jun 2023 13:32:18 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ABC6D1;
+        Thu,  1 Jun 2023 10:32:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685640736; x=1717176736;
+  h=date:from:to:cc:subject:message-id;
+  bh=PwsoXWiLBDAbQJFI4tD6NtsrJe7S2Evx4gR71sHvmOw=;
+  b=SyHE0gWlhbs/Uoa0obaOmw6eFiONuoaOgi7rGSb/0WmYJOqC/ZDK4XOf
+   tLVrKDTw6Y1+ArS1WaWOSifNyOjtEJaC8BsT6Au0S/8NewnrpQIBI2x08
+   5YGBx27C/4suo48o9WmqEaH3+KHhI67zFtlFjqDT7SWfZDxylWYisQCO3
+   xrb0A613OpvJNWUaGD7VJ6RFGchC3NOq/ddEdyXJccRHYy5/W1fF/eYwV
+   /CuILvyl8oUJQagKabYF/Z5dIr7ViTMIV8wOy7slStwz2D8TT3wY9PoWj
+   iIN58X2eFWXdc2KwBSG69TOeHZPcGxKkuFAnj85E5C/4oMJxsY0pw6s0H
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="335251261"
+X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
+   d="scan'208";a="335251261"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jun 2023 10:31:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="740441477"
+X-IronPort-AV: E=Sophos;i="6.00,210,1681196400"; 
+   d="scan'208";a="740441477"
+Received: from lkp-server01.sh.intel.com (HELO fb1ced2c09fb) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 01 Jun 2023 10:31:34 -0700
+Received: from kbuild by fb1ced2c09fb with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q4m97-0002XC-0h;
+        Thu, 01 Jun 2023 17:31:33 +0000
+Date:   Fri, 02 Jun 2023 01:30:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-cifs@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-xfs@vger.kernel.org,
+        netdev@vger.kernel.org, samba-technical@lists.samba.org
+Subject: [linux-next:master] BUILD REGRESSION
+ 571d71e886a5edc89b4ea6d0fe6f445282938320
+Message-ID: <20230601173059.4lk2w%lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, 1 Jun 2023 at 18:29, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hello,
->
-> On Thu, Jun 1, 2023 at 5:01=E2=80=AFAM Elisabeth Panholzer <paniii94@gmai=
-l.com> wrote:
-> >
-> > Hello again,
-> >
-> > On Wed, 31 May 2023 at 22:50, Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > On Wed, May 31, 2023 at 7:35=E2=80=AFAM elisabeth <paniii94@gmail.com=
-> wrote:
-> > > >
-> > > > Fix an issue where an incorrect file name was added in the DWARF li=
-ne table
-> > > > due to not checking the filename against the repeated name marker (=
-/xff/0).
-> > > > This can be seen with `objdump --dwarf=3Dline` on the ELF file afte=
-r perf inject.
-> > >
-> > > I'm not aware of the marker.  Could you please provide a link or some=
-thing?
-> > >
-> > > Thanks,
-> > > Namhyung
-> > >
-> > >
-> >
-> > The marker is mentioned in the tools/perf/util/jitdump.h header, this
-> > file describes the jitdump binary format. According to a comment in
-> > the =E2=80=98debug_entry=E2=80=99 struct in the =E2=80=98jitdump.h=E2=
-=80=99 file, a filename set to
-> > =E2=80=98\xff\0=E2=80=99 indicates that the name is the same as the one=
- from the
-> > previous entry. When profiling applications in the browser together
-> > with v8, I noticed =E2=80=98perf inject --jit=E2=80=99 inserts a bogus =
-file name in
-> > the DWARF line table. This happens because in the perf source code in
-> > the file tools/perf/util/genelf-debug.c, in the function
-> > emit_lineno_info(), the debug entry file gets compared to the previous
-> > debug entry file. If they are not the same, a new filename is added to
-> > the DWARF line table. However, there is no check for =E2=80=98\xff\0=E2=
-=80=99, which
-> > indicates that it's the same file. As a result, =E2=80=98\xff\0=E2=80=
-=99 is inserted
-> > as the filename into the DWARF section. This not only makes =E2=80=98ob=
-jdump
-> > --dwarf=3Dline=E2=80=99 print bogus as the filename, but it also makes =
-no source
-> > code information show up in perf annotate.
->
-> Thanks for your detailed answer.  It would be great if you could send it
-> to the mailing list so that others can see it as well.
->
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 571d71e886a5edc89b4ea6d0fe6f445282938320  Add linux-next specific files for 20230601
 
-I added the mailing lists to the cc again.
+Error/Warning reports:
 
-> So it's from the jitdump format.  I thought it was a part of DWARF or
-> some other specification.
+https://lore.kernel.org/oe-kbuild-all/202305230552.WOByQyYa-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202305311652.OP9x8xkW-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306010248.g3ZqQg4W-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306011356.MNtU7Q9Z-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306011435.2BxsHFUE-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306011753.7eXAmz0M-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306011915.bWdy8AJ8-lkp@intel.com
 
-It is part of the jitdump format, yes.
-The data from the jitdump, generated by for example v8, is just used
-to generate the ELF images and the DWARF data with 'perf inject
---jit'.
+Error/Warning: (recently discovered and may have been fixed)
 
->
-> >
-> > Hope this makes it more clear,
-> > Elisabeth
->
-> Sure, it really helped, thanks.
-> Namhyung
->
+drivers/net/dsa/qca/qca8k-leds.c:377:31: error: 'struct led_classdev' has no member named 'hw_control_is_supported'
+drivers/net/dsa/qca/qca8k-leds.c:378:31: error: 'struct led_classdev' has no member named 'hw_control_set'
+drivers/net/dsa/qca/qca8k-leds.c:379:31: error: 'struct led_classdev' has no member named 'hw_control_get'
+drivers/net/dsa/qca/qca8k-leds.c:380:31: error: 'struct led_classdev' has no member named 'hw_control_trigger'
+drivers/net/dsa/qca/qca8k-leds.c:406:18: error: no member named 'hw_control_get_device' in 'struct led_classdev'
+drivers/net/dsa/qca/qca8k-leds.c:406:31: error: 'struct led_classdev' has no member named 'hw_control_get_device'
+include/drm/drm_print.h:456:39: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
+include/linux/usb/typec_mux.h:76:33: warning: 'fwnode_typec_mux_get' used but never defined
+include/linux/usb/typec_mux.h:77:1: error: expected identifier or '('
+include/linux/usb/typec_mux.h:77:1: error: expected identifier or '(' before '{' token
+mm/zswap.c:1183:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
 
-You're welcome.
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
->
-> >
-> > > >
-> > > > Signed-off-by: Elisabeth Panholzer <elisabeth@leaningtech.com>
+arch/arm64/kvm/mmu.c:147:3-9: preceding lock on line 140
+fs/smb/client/cifsfs.c:982 cifs_smb3_do_mount() warn: possible memory leak of 'cifs_sb'
+fs/smb/client/cifssmb.c:4089 CIFSFindFirst() warn: missing error code? 'rc'
+fs/smb/client/cifssmb.c:4216 CIFSFindNext() warn: missing error code? 'rc'
+fs/smb/client/connect.c:2725 cifs_match_super() error: 'tlink' dereferencing possible ERR_PTR()
+fs/smb/client/connect.c:2924 generic_ip_connect() error: we previously assumed 'socket' could be null (see line 2912)
+fs/xfs/scrub/fscounters.c:459 xchk_fscounters() warn: ignoring unreachable code.
+kernel/events/uprobes.c:478 uprobe_write_opcode() warn: passing zero to 'PTR_ERR'
+{standard input}:1078: Error: pcrel too far
 
+Error/Warning ids grouped by kconfigs:
 
-On Thu, 1 Jun 2023 at 18:29, Namhyung Kim <namhyung@kernel.org> wrote:
->
-> Hello,
->
-> On Thu, Jun 1, 2023 at 5:01=E2=80=AFAM Elisabeth Panholzer <paniii94@gmai=
-l.com> wrote:
-> >
-> > Hello again,
-> >
-> > On Wed, 31 May 2023 at 22:50, Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > Hello,
-> > >
-> > > On Wed, May 31, 2023 at 7:35=E2=80=AFAM elisabeth <paniii94@gmail.com=
-> wrote:
-> > > >
-> > > > Fix an issue where an incorrect file name was added in the DWARF li=
-ne table
-> > > > due to not checking the filename against the repeated name marker (=
-/xff/0).
-> > > > This can be seen with `objdump --dwarf=3Dline` on the ELF file afte=
-r perf inject.
-> > >
-> > > I'm not aware of the marker.  Could you please provide a link or some=
-thing?
-> > >
-> > > Thanks,
-> > > Namhyung
-> > >
-> > >
-> >
-> > The marker is mentioned in the tools/perf/util/jitdump.h header, this
-> > file describes the jitdump binary format. According to a comment in
-> > the =E2=80=98debug_entry=E2=80=99 struct in the =E2=80=98jitdump.h=E2=
-=80=99 file, a filename set to
-> > =E2=80=98\xff\0=E2=80=99 indicates that the name is the same as the one=
- from the
-> > previous entry. When profiling applications in the browser together
-> > with v8, I noticed =E2=80=98perf inject --jit=E2=80=99 inserts a bogus =
-file name in
-> > the DWARF line table. This happens because in the perf source code in
-> > the file tools/perf/util/genelf-debug.c, in the function
-> > emit_lineno_info(), the debug entry file gets compared to the previous
-> > debug entry file. If they are not the same, a new filename is added to
-> > the DWARF line table. However, there is no check for =E2=80=98\xff\0=E2=
-=80=99, which
-> > indicates that it's the same file. As a result, =E2=80=98\xff\0=E2=80=
-=99 is inserted
-> > as the filename into the DWARF section. This not only makes =E2=80=98ob=
-jdump
-> > --dwarf=3Dline=E2=80=99 print bogus as the filename, but it also makes =
-no source
-> > code information show up in perf annotate.
->
-> Thanks for your detailed answer.  It would be great if you could send it
-> to the mailing list so that others can see it as well.
->
-> So it's from the jitdump format.  I thought it was a part of DWARF or
-> some other specification.
->
-> >
-> > Hope this makes it more clear,
-> > Elisabeth
->
-> Sure, it really helped, thanks.
-> Namhyung
->
->
-> >
-> > > >
-> > > > Signed-off-by: elisabeth <paniii94@gmail.com>
-> > > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > > Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> > > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
-> > > >  tools/perf/util/genelf_debug.c | 4 +++-
-> > > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/tools/perf/util/genelf_debug.c b/tools/perf/util/genel=
-f_debug.c
-> > > > index aa5dcc56b2ac..2928b59bb9a5 100644
-> > > > --- a/tools/perf/util/genelf_debug.c
-> > > > +++ b/tools/perf/util/genelf_debug.c
-> > > > @@ -349,6 +349,7 @@ static void emit_lineno_info(struct buffer_ext =
-*be,
-> > > >          */
-> > > >
-> > > >         /* start state of the state machine we take care of */
-> > > > +       char const repeated_name_marker[] =3D {'\xff', '\0'};
-> > > >         unsigned long last_vma =3D 0;
-> > > >         char const  *cur_filename =3D NULL;
-> > > >         unsigned long cur_file_idx =3D 0;
-> > > > @@ -363,7 +364,8 @@ static void emit_lineno_info(struct buffer_ext =
-*be,
-> > > >                 /*
-> > > >                  * check if filename changed, if so add it
-> > > >                  */
-> > > > -               if (!cur_filename || strcmp(cur_filename, ent->name=
-)) {
-> > > > +               if ((!cur_filename || strcmp(cur_filename, ent->nam=
-e)) &&
-> > > > +                       memcmp(repeated_name_marker, ent->name, siz=
-eof(repeated_name_marker)) !=3D 0) {
-> > > >                         emit_lne_define_filename(be, ent->name);
-> > > >                         cur_filename =3D ent->name;
-> > > >                         emit_set_file(be, ++cur_file_idx);
-> > > > --
-> > > > 2.34.1
-> > > >
+gcc_recent_errors
+|-- arc-randconfig-c004-20230531
+|   |-- include-linux-usb-typec_mux.h:error:expected-identifier-or-(-before-token
+|   `-- include-linux-usb-typec_mux.h:warning:fwnode_typec_mux_get-used-but-never-defined
+|-- arm64-randconfig-c033-20230531
+|   |-- arch-arm64-kvm-mmu.c:preceding-lock-on-line
+|   |-- include-linux-usb-typec_mux.h:error:expected-identifier-or-(-before-token
+|   `-- include-linux-usb-typec_mux.h:warning:fwnode_typec_mux_get-used-but-never-defined
+|-- arm64-randconfig-r001-20230531
+|   |-- drivers-net-dsa-qca-qca8k-leds.c:error:struct-led_classdev-has-no-member-named-hw_control_get
+|   |-- drivers-net-dsa-qca-qca8k-leds.c:error:struct-led_classdev-has-no-member-named-hw_control_get_device
+|   |-- drivers-net-dsa-qca-qca8k-leds.c:error:struct-led_classdev-has-no-member-named-hw_control_is_supported
+|   |-- drivers-net-dsa-qca-qca8k-leds.c:error:struct-led_classdev-has-no-member-named-hw_control_set
+|   `-- drivers-net-dsa-qca-qca8k-leds.c:error:struct-led_classdev-has-no-member-named-hw_control_trigger
+|-- arm64-randconfig-r016-20230601
+|   `-- include-linux-usb-typec_mux.h:error:expected-identifier-or-(-before-token
+|-- i386-allyesconfig
+|   `-- include-drm-drm_print.h:error:format-ld-expects-argument-of-type-long-int-but-argument-has-type-size_t-aka-unsigned-int
+|-- i386-randconfig-m021-20230531
+|   |-- fs-smb-client-cifsfs.c-cifs_smb3_do_mount()-warn:possible-memory-leak-of-cifs_sb
+|   |-- fs-smb-client-cifssmb.c-CIFSFindFirst()-warn:missing-error-code-rc
+|   |-- fs-smb-client-cifssmb.c-CIFSFindNext()-warn:missing-error-code-rc
+|   |-- fs-smb-client-connect.c-cifs_match_super()-error:tlink-dereferencing-possible-ERR_PTR()
+|   |-- fs-smb-client-connect.c-generic_ip_connect()-error:we-previously-assumed-socket-could-be-null-(see-line-)
+|   |-- fs-xfs-scrub-fscounters.c-xchk_fscounters()-warn:ignoring-unreachable-code.
+|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
+|-- riscv-randconfig-m031-20230531
+|   |-- drivers-gpu-drm-amd-amdgpu-amdgpu_gfx.c-amdgpu_gfx_enable_kcq()-warn:inconsistent-indenting
+|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
+|-- sh-allmodconfig
+|   `-- standard-input:Error:pcrel-too-far
+`-- x86_64-randconfig-m001-20230601
+    |-- fs-smb-client-cifsfs.c-cifs_smb3_do_mount()-warn:possible-memory-leak-of-cifs_sb
+    |-- fs-smb-client-cifssmb.c-CIFSFindFirst()-warn:missing-error-code-rc
+    |-- fs-smb-client-cifssmb.c-CIFSFindNext()-warn:missing-error-code-rc
+    |-- fs-smb-client-connect.c-cifs_match_super()-error:tlink-dereferencing-possible-ERR_PTR()
+    |-- fs-smb-client-connect.c-generic_ip_connect()-error:we-previously-assumed-socket-could-be-null-(see-line-)
+    `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
+clang_recent_errors
+|-- arm-randconfig-r006-20230531
+|   `-- include-linux-usb-typec_mux.h:error:expected-identifier-or-(
+|-- hexagon-randconfig-r045-20230531
+|   `-- mm-zswap.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-true
+|-- mips-randconfig-r003-20230531
+|   `-- drivers-net-dsa-qca-qca8k-leds.c:error:no-member-named-hw_control_get_device-in-struct-led_classdev
+|-- s390-randconfig-r044-20230531
+|   `-- mm-zswap.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-true
+`-- x86_64-randconfig-x063-20230531
+    `-- mm-zswap.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-true
+
+elapsed time: 799m
+
+configs tested: 134
+configs skipped: 7
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r006-20230531   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r034-20230531   gcc  
+arc                              alldefconfig   gcc  
+arc                              allyesconfig   gcc  
+arc          buildonly-randconfig-r005-20230531   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230531   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm          buildonly-randconfig-r001-20230531   gcc  
+arm                                 defconfig   gcc  
+arm                   milbeaut_m10v_defconfig   clang
+arm                  randconfig-r006-20230531   clang
+arm                  randconfig-r046-20230531   gcc  
+arm                        spear6xx_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r036-20230531   gcc  
+csky         buildonly-randconfig-r002-20230531   gcc  
+csky                                defconfig   gcc  
+hexagon              randconfig-r005-20230531   clang
+hexagon              randconfig-r022-20230531   clang
+hexagon              randconfig-r041-20230531   clang
+hexagon              randconfig-r045-20230531   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230531   gcc  
+i386                 randconfig-i002-20230531   gcc  
+i386                 randconfig-i003-20230531   gcc  
+i386                 randconfig-i004-20230531   gcc  
+i386                 randconfig-i005-20230531   gcc  
+i386                 randconfig-i006-20230531   gcc  
+i386                 randconfig-i011-20230531   clang
+i386                 randconfig-i012-20230531   clang
+i386                 randconfig-i013-20230531   clang
+i386                 randconfig-i014-20230531   clang
+i386                 randconfig-i015-20230531   clang
+i386                 randconfig-i016-20230531   clang
+i386                 randconfig-i051-20230531   gcc  
+i386                 randconfig-i052-20230531   gcc  
+i386                 randconfig-i053-20230531   gcc  
+i386                 randconfig-i054-20230531   gcc  
+i386                 randconfig-i055-20230531   gcc  
+i386                 randconfig-i056-20230531   gcc  
+i386                 randconfig-i061-20230531   gcc  
+i386                 randconfig-i062-20230531   gcc  
+i386                 randconfig-i063-20230531   gcc  
+i386                 randconfig-i064-20230531   gcc  
+i386                 randconfig-i065-20230531   gcc  
+i386                 randconfig-i066-20230531   gcc  
+i386                 randconfig-r004-20230531   gcc  
+i386                 randconfig-r016-20230531   clang
+ia64                         bigsur_defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r023-20230531   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze           randconfig-r013-20230531   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                           ip22_defconfig   clang
+mips                           jazz_defconfig   gcc  
+mips                malta_qemu_32r6_defconfig   clang
+mips                           mtx1_defconfig   clang
+mips                 randconfig-r003-20230531   clang
+mips                 randconfig-r012-20230531   gcc  
+nios2        buildonly-randconfig-r004-20230531   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r011-20230531   gcc  
+nios2                randconfig-r026-20230531   gcc  
+openrisc                            defconfig   gcc  
+openrisc             randconfig-r035-20230531   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                     akebono_defconfig   clang
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                   lite5200b_defconfig   clang
+powerpc                 mpc834x_itx_defconfig   gcc  
+powerpc              randconfig-r025-20230531   clang
+powerpc                     stx_gp3_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r042-20230531   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                          debug_defconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r002-20230531   gcc  
+s390                 randconfig-r031-20230531   gcc  
+s390                 randconfig-r044-20230531   clang
+sh                               allmodconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          urquell_defconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64              randconfig-r015-20230531   gcc  
+sparc64              randconfig-r033-20230531   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230531   gcc  
+x86_64               randconfig-a002-20230531   gcc  
+x86_64               randconfig-a003-20230531   gcc  
+x86_64               randconfig-a004-20230531   gcc  
+x86_64               randconfig-a005-20230531   gcc  
+x86_64               randconfig-a006-20230531   gcc  
+x86_64               randconfig-a011-20230531   clang
+x86_64               randconfig-a012-20230531   clang
+x86_64               randconfig-a013-20230531   clang
+x86_64               randconfig-a014-20230531   clang
+x86_64               randconfig-a015-20230531   clang
+x86_64               randconfig-a016-20230531   clang
+x86_64               randconfig-k001-20230531   clang
+x86_64               randconfig-x051-20230531   clang
+x86_64               randconfig-x052-20230531   clang
+x86_64               randconfig-x053-20230531   clang
+x86_64               randconfig-x054-20230531   clang
+x86_64               randconfig-x055-20230531   clang
+x86_64               randconfig-x056-20230531   clang
+x86_64               randconfig-x061-20230531   clang
+x86_64               randconfig-x063-20230531   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r014-20230531   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
