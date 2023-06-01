@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E2BC77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 08:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA71EC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 08:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232207AbjFAIaa (ORCPT
+        id S232244AbjFAIam (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 04:30:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40906 "EHLO
+        Thu, 1 Jun 2023 04:30:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232148AbjFAIaO (ORCPT
+        with ESMTP id S232087AbjFAIa1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 04:30:14 -0400
+        Thu, 1 Jun 2023 04:30:27 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0388F194
-        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jun 2023 01:30:08 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba8337ade1cso867894276.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 01:30:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F8E125
+        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jun 2023 01:30:11 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-babb51cb4d4so822909276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 01:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685608208; x=1688200208;
+        d=google.com; s=20221208; t=1685608211; x=1688200211;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=eBjsD43TTJUA5+5ML4PQTzZNVAmBu4fetqvUzrBnI2w=;
-        b=1hFDF13eappzpr3oR5mOqV2PzI8qzt9K5J+pc/kdAnx4yAuAu9g8YIXTNNLCcJYdBo
-         coUdghQLiKRTHFVSbF26jiQ1B7LKFDqfpYUFeha1HiYjyrFKjpFDR2JVLFjcbdkhQ2Uj
-         6phY7ul7piXiTomRmhI/DczWalXMFCReEKYYgJr0lvY42dyKcYJjVHCI92KXWLGgyqEW
-         mt22v0imRp53AZkxFrbFi5v5cHXMXzc0DsK4jRRGWEfHvWOp/erpBPbAydJn39+5yoqY
-         Nn1DGiJ6D/xebG+xlNatsvHqinN6tXr7lgHzuErj0Q0L0zSFDfYM1DdbL7wCjLFcvgmy
-         H1Jw==
+        bh=2W+D3X61SHji5TdcPTT7aQE7+SKMk9nGQHSrp9XR3js=;
+        b=hFIvLmGP3lv7GenwMucp7vgjD92bKKVaKTHzPrnD0d5s2WVEN+JDM4TmLgr1bPgKy1
+         7IjnHzCWR6v9OjFGON+bq8ILrk/5KyCBmclQhLXrjVcmxKksBw33B/w3G3YtehGwyaj3
+         5/pvgPkxiT739fYEk0zq8KuyIg12SXt8xRW9V5bkDXq5ArJu4hDz5dWZ1Bl4h0B3k57p
+         7GS5yHSKPem6KDK8XLnNVHoyQUcPiURYWAAjWIYExIORyP4qYAGBSnKVmox7VGE0fPBP
+         DE1oiy1aDLl5M4KG/5VKbR3FkAy3/+uVJYIumaGGr64vDXs5m6FB4mAlnbGkms9glEKs
+         +ohg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685608208; x=1688200208;
+        d=1e100.net; s=20221208; t=1685608211; x=1688200211;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eBjsD43TTJUA5+5ML4PQTzZNVAmBu4fetqvUzrBnI2w=;
-        b=kVa2Y24Djd58gEDxspFLDlzzfu+59DRDbSIJiIYXF2Bg2n5j5PLwrLWl7P7dpI7HfF
-         mbHamuPrShRsqQQ5n/ruqPGljKfh4C7H5wz404FOgIBwTluSQ/1hhHg1FRTfFzBio7PE
-         h/58juxCgaUfWHOPvj4Z1BqDvbK9VOG+LtQyTm4vrDrKWlmWoCzTenTTWcGxIYvdzyr3
-         S+fliTgkBvLwnhawIh1+oe0oAipMbSPP5PH0K/4Kl4DNyYDPaRBTO5zvDExHJVBNbBvm
-         nmuSIkWRN69H3nTRHPeHPyZvgp+QtoIWfIOKbBRXGSymnkdY/y+SU+XwD6glgz25Y+D9
-         969g==
-X-Gm-Message-State: AC+VfDw9wbKYTEjo/34u6DMS75a3v9lPUq74ciL/Ku2c+M/3ih8Lr/ZV
-        5Ri5q8UFbGmBcRmM2yiqH3KdRtPNIzjI
-X-Google-Smtp-Source: ACHHUZ7fLyH0WGyX4qvVX4LXezYFbkIR8CXYC9O9u/4ZdeyQBvLkHIMozZgAwCoHk+bdhrc0lAu1gnJ+N75R
+        bh=2W+D3X61SHji5TdcPTT7aQE7+SKMk9nGQHSrp9XR3js=;
+        b=W+JOyUQ2cz6aVaZnLneYySjR+qvr7Mr6na72aIx15aRsCArPlQbAquHVAG+tQd0/Dd
+         K7WCsw3NbGH31sk+cFChF5geMhD0on0qop8FwLM/45Dg5PuMzmml7vsOuYy/qnCegZtd
+         LhPGnH+IVsxQGjlP2O+0tyYq92N6oE7gnp9cePYwwNbDlh1hP9uj2zmCWTQ8tm8shznk
+         uX4S/vv94mZeSof7yTetk8fZcBJYhoEnRf3LkvAxs8bjCuIxSqHUCbrUlumz9pGQfKkJ
+         KKgwTW/GD0zM/UYIqzl5Ny+Q6Q3DYHnATGkPvAxKYysNU2t8VQNZjwV7Z6JOGtmD07jU
+         G7kw==
+X-Gm-Message-State: AC+VfDzAUQOdwwvnErVHar06a0YRvqXOEJnpUt4Hg2sCUsMivpHCpP19
+        UvGeZ+pnCUpQHaLxn4A74a/sF3gQprrG
+X-Google-Smtp-Source: ACHHUZ4CtvHxqbmMlOebUnOkHAbQEfnmI2HybhjxUjmo0bcgbzA6MKi2iuDhUt8X/cL0NStkjLBjtimTjIwJ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a344:94b4:9b8d:a089])
- (user=irogers job=sendgmr) by 2002:a05:6902:1022:b0:bb1:3606:6a29 with SMTP
- id x2-20020a056902102200b00bb136066a29mr2576163ybt.3.1685608208084; Thu, 01
- Jun 2023 01:30:08 -0700 (PDT)
-Date:   Thu,  1 Jun 2023 01:29:51 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:729:b0:bb1:445a:6f05 with SMTP id
+ l9-20020a056902072900b00bb1445a6f05mr2517804ybt.4.1685608211098; Thu, 01 Jun
+ 2023 01:30:11 -0700 (PDT)
+Date:   Thu,  1 Jun 2023 01:29:52 -0700
 In-Reply-To: <20230601082954.754318-1-irogers@google.com>
-Message-Id: <20230601082954.754318-2-irogers@google.com>
+Message-Id: <20230601082954.754318-3-irogers@google.com>
 Mime-Version: 1.0
 References: <20230601082954.754318-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v2 1/4] perf pmu: Correct perf_pmu__auto_merge_stats affecting hybrid
+Subject: [PATCH v2 2/4] perf evsel: Add verbose 3 print of evsel name when opening
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -75,28 +75,28 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Flip the return value correcting a bug.
+It is often useful to know not just the attribute and perf_event_open
+details when opening an evsel, but also the evsel's name. Add this
+debug output for verbose 3 so that it won't interfere with the current
+verbose 2 output.
 
-Fixes: 6b9da2607030 ("perf pmu: Remove is_pmu_hybrid")
-Reported-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 0520aa9fe991..36e163f38368 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1424,7 +1424,7 @@ bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 46da3f0bb47e..779bc2b574f4 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2038,6 +2038,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ fallback_missing_features:
+ 	evsel__disable_missing_features(evsel);
  
- bool perf_pmu__auto_merge_stats(const struct perf_pmu *pmu)
- {
--	return pmu->is_core && perf_pmus__num_core_pmus() > 1;
-+	return pmu->is_core && perf_pmus__num_core_pmus() == 1;
- }
++	pr_debug3("Opening: %s\n", evsel__name(evsel));
+ 	display_attr(&evsel->core.attr);
  
- bool perf_pmu__have_event(const struct perf_pmu *pmu, const char *name)
+ 	for (idx = start_cpu_map_idx; idx < end_cpu_map_idx; idx++) {
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
