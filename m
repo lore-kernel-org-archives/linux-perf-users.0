@@ -2,174 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3BC2C77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 09:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F038C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 09:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232538AbjFAJG3 (ORCPT
+        id S231993AbjFAJz5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 05:06:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33274 "EHLO
+        Thu, 1 Jun 2023 05:55:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232353AbjFAJG3 (ORCPT
+        with ESMTP id S233241AbjFAJyw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 05:06:29 -0400
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67686119;
-        Thu,  1 Jun 2023 02:06:21 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0Vk4g27q_1685610375;
-Received: from 30.221.149.38(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vk4g27q_1685610375)
-          by smtp.aliyun-inc.com;
-          Thu, 01 Jun 2023 17:06:16 +0800
-Message-ID: <0992b68a-8015-26f3-4a90-6ebde7877c8b@linux.alibaba.com>
-Date:   Thu, 1 Jun 2023 17:06:13 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.0
-Subject: Re: [PATCH v3 3/7] perf vendor events: Add JSON metrics for CMN
-To:     Shuai Xue <xueshuai@linux.alibaba.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+        Thu, 1 Jun 2023 05:54:52 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2475E4A;
+        Thu,  1 Jun 2023 02:54:25 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id 3f1490d57ef6-ba827a34ba8so650563276.0;
+        Thu, 01 Jun 2023 02:54:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685613257; x=1688205257;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zaH3llwLH0tAOqLtLRXczT3GUAsS7Y/IWF3335BIolY=;
+        b=hjXp5ZbI1tlJjDcPbCXmNufvqRSSz3s4oTdiksj4GKMDFAgA7NKlJNKqPq194EcYFX
+         agZT+MCKNKTvwbDDwgys8q4pNgJYLaP2eDUbQI88Z+CVwNKP4TDaXJXoBGW12S4Ves/b
+         8vQuXF6i8vcvWMuu/FwL9oVdtr8Kser1Q+PoN7o9Ww3DJZIpXh0OEHwbWM03uxW3T/Ne
+         1aomh4hVxP7CLPShRYeWyyzWZyP82SY6We9BVv6KE0NdgF5qfQad4wZpddgFXMsu8TcB
+         c0MOhAsYNk7ot4/OGY5EsRvtKUMtTdaUeV0r7LBot3cxhXCePo2qDw2j3lrYjh0cpS7r
+         4Fcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685613257; x=1688205257;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zaH3llwLH0tAOqLtLRXczT3GUAsS7Y/IWF3335BIolY=;
+        b=bQjVcxDia4jXiwgEVz4ptryAXXgpBDSneiSHH5OUuRBJ6FxEYdpLw943uvWHhbUE5x
+         zwO30kt571bRbVQXiD91mc4gopzSmP38IJPZF8zD0Swf0fulEZmHWEHQ/iu0HlrUumDi
+         bZjovT1clHGOK8qyI0TWnXd0B8HwwXDscZ1IcflWxeWvux4EeSpy8Ix1b4jZ8Bky/dIh
+         54YcofU6ZEGKi5Qsz2tc11GJ4IskO5GOgxZDp+IurlxbIaylZYIp4wnthOgLjCDeNuVr
+         rgJl3r7yhcWUX1sGqmH8/h4ckrD1X6gjCPI2lhCy/qECXolaM04LR7D+t1cnc513eXVw
+         k1/w==
+X-Gm-Message-State: AC+VfDyrLFMc7jNbHnOZEjKL21Vs6QdwNEH6zyzHil3aHe08xcHwwjVb
+        TgMlGVc0HpTMhp3BPm5nyNk=
+X-Google-Smtp-Source: ACHHUZ550rvMwrfRHsgbKHeknHaOLsAcymRaAlrrMsiLxm58P0Ro0s262Yno9vUoRwSdC02V4Zp48A==
+X-Received: by 2002:a25:db83:0:b0:b9e:6d83:7bcf with SMTP id g125-20020a25db83000000b00b9e6d837bcfmr8351546ybf.27.1685613257117;
+        Thu, 01 Jun 2023 02:54:17 -0700 (PDT)
+Received: from ism-manjaro.realtek.com.tw (125-227-180-151.hinet-ip.hinet.net. [125.227.180.151])
+        by smtp.gmail.com with ESMTPSA id j10-20020a17090276ca00b0019a5aa7eab0sm3030356plt.54.2023.06.01.02.54.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jun 2023 02:54:16 -0700 (PDT)
+From:   Ism Hong <ism.hong@gmail.com>
+To:     ism.hong@realtek.com, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1685438374-33287-4-git-send-email-renyu.zj@linux.alibaba.com>
- <a31c7578-93fe-193e-1c4b-fa8fa187f5dd@linux.alibaba.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <a31c7578-93fe-193e-1c4b-fa8fa187f5dd@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>
+Cc:     Ism Hong <ism.hong@gmail.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: [PATCH] riscv: perf: Fix callchain parse error with kernel tracepoint events
+Date:   Thu,  1 Jun 2023 17:53:55 +0800
+Message-Id: <20230601095355.1168910-1-ism.hong@gmail.com>
+X-Mailer: git-send-email 2.37.2
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+For RISC-V, when tracing with tracepoint events, the IP and status are
+set to 0, preventing the perf code parsing the callchain and resolving
+the symbols correctly.
 
+ ./ply 'tracepoint:kmem/kmem_cache_alloc { @[stack]=count(); }'
+ @:
+ { <STACKID4294967282> }: 1
 
-在 2023/5/31 上午10:43, Shuai Xue 写道:
-> 
-> 
-> On 2023/5/30 17:19, Jing Zhang wrote:
->> Add JSON metrics for arm CMN. Currently just add part of CMN PMU
->> metrics which are general and compatible for any SoC and CMN-ANY.
-> 
-> Is it a typo? You mean "any SoC integration with CMN-ANY" right?
-> 
+The fix is to implement perf_arch_fetch_caller_regs for riscv, which
+fills several necessary registers used for callchain unwinding,
+including epc, sp, s0 and status. It's similar to commit b3eac0265bf6
+("arm: perf: Fix callchain parse error with kernel tracepoint events")
+and commit 5b09a094f2fb ("arm64: perf: Fix callchain parse error with
+kernel tracepoint events").
 
-Yes, I will fix it in the next version.
+With this patch, callchain can be parsed correctly as:
 
-Thanks,
-Jing
+ ./ply 'tracepoint:kmem/kmem_cache_alloc { @[stack]=count(); }'
+ @:
+ {
+         __traceiter_kmem_cache_alloc+68
+         __traceiter_kmem_cache_alloc+68
+         kmem_cache_alloc+354
+         __sigqueue_alloc+94
+         __send_signal_locked+646
+         send_signal_locked+154
+         do_send_sig_info+84
+         __kill_pgrp_info+130
+         kill_pgrp+60
+         isig+150
+         n_tty_receive_signal_char+36
+         n_tty_receive_buf_standard+2214
+         n_tty_receive_buf_common+280
+         n_tty_receive_buf2+26
+         tty_ldisc_receive_buf+34
+         tty_port_default_receive_buf+62
+         flush_to_ldisc+158
+         process_one_work+458
+         worker_thread+138
+         kthread+178
+         riscv_cpufeature_patch_func+832
+  }: 1
 
-> Thanks,
-> Shuai
-> 
->>
->> Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
->> ---
->>  .../pmu-events/arch/arm64/arm/cmn/sys/metrics.json | 74 ++++++++++++++++++++++
->>  tools/perf/pmu-events/jevents.py                   |  1 +
->>  2 files changed, 75 insertions(+)
->>  create mode 100644 tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metrics.json
->>
->> diff --git a/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metrics.json b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metrics.json
->> new file mode 100644
->> index 0000000..e70ac1a
->> --- /dev/null
->> +++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metrics.json
->> @@ -0,0 +1,74 @@
->> +[
->> +	{
->> +		"MetricName": "slc_miss_rate",
->> +		"BriefDescription": "The system level cache miss rate include.",
->> +		"MetricGroup": "arm_cmn",
->> +		"MetricExpr": "hnf_cache_miss / hnf_slc_sf_cache_access",
->> +		"ScaleUnit": "100%",
->> +		"Unit": "arm_cmn",
->> +		"Compat": "arm_cmn600;arm_cmn650;arm_cmn700;arm_ci700"
->> +	},
->> +	{
->> +		"MetricName": "hnf_message_retry_rate",
->> +		"BriefDescription": "HN-F message retry rate indicates whether a lack of credits is causing the bottlenecks.",
->> +		"MetricGroup": "arm_cmn",
->> +		"MetricExpr": "hnf_pocq_retry / hnf_pocq_reqs_recvd",
->> +		"ScaleUnit": "100%",
->> +		"Unit": "arm_cmn",
->> +		"Compat": "arm_cmn600;arm_cmn650;arm_cmn700;arm_ci700"
->> +	},
->> +	{
->> +		"MetricName": "sf_hit_rate",
->> +		"BriefDescription": "Snoop filter hit rate can be used to measure the Snoop Filter efficiency.",
->> +		"MetricGroup": "arm_cmn",
->> +		"MetricExpr": "hnf_sf_hit / hnf_slc_sf_cache_access",
->> +		"ScaleUnit": "100%",
->> +		"Unit": "arm_cmn",
->> +		"Compat": "arm_cmn600;arm_cmn650;arm_cmn700;arm_ci700"
->> +	},
->> +	{
->> +		"MetricName": "mc_message_retry_rate",
->> +		"BriefDescription": "The memory controller request retries rate indicates whether the memory controller is the bottleneck.",
->> +		"MetricGroup": "arm_cmn",
->> +		"MetricExpr": "hnf_mc_retries / hnf_mc_reqs",
->> +		"ScaleUnit": "100%",
->> +		"Unit": "arm_cmn",
->> +		"Compat": "arm_cmn600;arm_cmn650;arm_cmn700;arm_ci700"
->> +	},
->> +	{
->> +		"MetricName": "rni_actual_read_bandwidth.all",
->> +		"BriefDescription": "This event measure the actual bandwidth(MB/sec) that RN-I bridge sends to the interconnect.",
->> +		"MetricGroup": "arm_cmn",
->> +		"MetricExpr": "rnid_rxdat_flits * 32 / 1e6 / duration_time",
->> +		"ScaleUnit": "1MB/s",
->> +		"Unit": "arm_cmn",
->> +		"Compat": "arm_cmn600;arm_cmn650;arm_cmn700;arm_ci700"
->> +	},
->> +	{
->> +		"MetricName": "rni_actual_write_bandwidth.all",
->> +		"BriefDescription": "This event measures the actual write bandwidth(MB/sec) at RN-I bridges.",
->> +		"MetricGroup": "arm_cmn",
->> +		"MetricExpr": "rnid_txdat_flits * 32 / 1e6 / duration_time",
->> +		"ScaleUnit": "1MB/s",
->> +		"Unit": "arm_cmn",
->> +		"Compat": "arm_cmn600;arm_cmn650;arm_cmn700;arm_ci700"
->> +	},
->> +	{
->> +		"MetricName": "rni_retry_rate",
->> +		"BriefDescription": "RN-I bridge retry rate indicates whether the memory controller is the bottleneck.",
->> +		"MetricGroup": "arm_cmn",
->> +		"MetricExpr": "rnid_txreq_flits_retried / rnid_txreq_flits_total",
->> +		"ScaleUnit": "100%",
->> +		"Unit": "arm_cmn",
->> +		"Compat": "arm_cmn600;arm_cmn650;arm_cmn700;arm_ci700"
->> +	},
->> +	{
->> +		"MetricName": "sbsx_actual_write_bandwidth.all",
->> +		"BriefDescription": "sbsx actual write bandwidth(MB/sec).",
->> +		"MetricGroup": "arm_cmn",
->> +		"MetricExpr": "sbsx_txdat_flitv * 32 / 1e6 / duration_time",
->> +		"ScaleUnit": "1MB/s",
->> +		"Unit": "arm_cmn",
->> +		"Compat": "arm_cmn600;arm_cmn650;arm_cmn700;arm_ci700"
->> +	}
->> +]
->> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
->> index 2bcd07c..7cff2c6 100755
->> --- a/tools/perf/pmu-events/jevents.py
->> +++ b/tools/perf/pmu-events/jevents.py
->> @@ -256,6 +256,7 @@ class JsonEvent:
->>            'DFPMC': 'amd_df',
->>            'cpu_core': 'cpu_core',
->>            'cpu_atom': 'cpu_atom',
->> +          'arm_cmn': 'arm_cmn',
->>        }
->>        return table[unit] if unit in table else f'uncore_{unit.lower()}'
->>  
+This patch works both on RV32/RV64.
+
+Signed-off-by: Ism Hong <ism.hong@gmail.com>
+---
+ arch/riscv/include/asm/perf_event.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
+index d42c901f9a97..665bbc9b2f84 100644
+--- a/arch/riscv/include/asm/perf_event.h
++++ b/arch/riscv/include/asm/perf_event.h
+@@ -10,4 +10,11 @@
+ 
+ #include <linux/perf_event.h>
+ #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
++
++#define perf_arch_fetch_caller_regs(regs, __ip) { \
++	(regs)->epc = (__ip); \
++	(regs)->s0 = (unsigned long) __builtin_frame_address(0); \
++	(regs)->sp = current_stack_pointer; \
++	(regs)->status = SR_PP; \
++}
+ #endif /* _ASM_RISCV_PERF_EVENT_H */
+-- 
+2.37.2
+
