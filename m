@@ -2,208 +2,196 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF0CC7EE2A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jun 2023 02:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E474C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jun 2023 05:19:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233416AbjFBClM convert rfc822-to-8bit (ORCPT
+        id S232019AbjFBFT2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 22:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50902 "EHLO
+        Fri, 2 Jun 2023 01:19:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233189AbjFBClL (ORCPT
+        with ESMTP id S229610AbjFBFT0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 22:41:11 -0400
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F38418D;
-        Thu,  1 Jun 2023 19:41:10 -0700 (PDT)
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-ba1815e12efso1465830276.3;
-        Thu, 01 Jun 2023 19:41:10 -0700 (PDT)
+        Fri, 2 Jun 2023 01:19:26 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A24B5197
+        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jun 2023 22:19:24 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3f81396e435so15565351cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 22:19:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685683164; x=1688275164;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cgn8PW+lCtxxCCTeMx5u+Sc8A20TKMpJWMc7H1tivLQ=;
+        b=goyJbV+k8ZDKjx5UP87VtW2qDfzW2th2S9s3LONil/75+ZdNAefUeZzW/GeeLO/J6b
+         djP+bt2+EwGXwubLGRlF2Eg9HaF1SAw705dSVETBr0UezW1Kp2O2plkx7zmlYf2eVB7o
+         0UUYOIDCTEhOZi3E62zEgE1hG3Abzvzsna96nOyC1TmeIJ8+ZZNU3kGu3OrmO+lvYgKC
+         tg7M53VUauyUBaxkusvEktOPY7kkxr6P66hLxK5DfVNv0iwdN7XEUW9/XVMvmcrewkYi
+         hap84qFhpBWH2H3kTRYYGIkUdLe3JvxUu42zEVpONzXCCNvOM1HZI6AYFDGqD3UgC1Ur
+         R9tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685673669; x=1688265669;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YVZyL/O31PWOCOA/BG7GrWW4VzwpPJxkkhP5MOBTY0I=;
-        b=TV3P8nE7l8W7YyS259p9ZoAOl5Bmh5VEBeK6dFZEUVO9dw3zwXfKx7BDRV1NQyrKld
-         8XdK9RTXrZ9Arqm4N+N44uwm9yVjrklD63/2nBOio6J0YC99wwo0GFmhWT+IumxrCvlG
-         kaIJ5mJXQqec9Eo33xcqzei0RteYFCKgVS+yL/yc8VsgBlRUfXgRR2xGa8/sEMp5Nuw0
-         GdvSrx8taqgR0Dno93womQKlEdJubeeOm95n3kBvf+ZtFNI95V9FNVIavmHLuBYMu7ou
-         PDfAnEWlefvaF+f2oU4KySYnxAzgZ3GlqJuyvcCDhmANMuzR4Zy2+glr85hxzNuLjMgD
-         iiDg==
-X-Gm-Message-State: AC+VfDyIrX+RQYFrmbeB/9hEY/iefChpslyEHtZX7ldrL6Sb3I05A1o9
-        QNwL3nKPo/EEl/Zcm4brsKGqOE0b+xwBGcdvAco=
-X-Google-Smtp-Source: ACHHUZ6Y19sHUXPnAHUMH7OeXfOEz3N2O7lT+04ZG9ZYlsL6EOk62eVasjT19xblc3/8/TgpqXLOxsEIKM73GJVxiiY=
-X-Received: by 2002:a25:a287:0:b0:ba6:a923:4744 with SMTP id
- c7-20020a25a287000000b00ba6a9234744mr1797524ybi.44.1685673669398; Thu, 01 Jun
- 2023 19:41:09 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1685683164; x=1688275164;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Cgn8PW+lCtxxCCTeMx5u+Sc8A20TKMpJWMc7H1tivLQ=;
+        b=G6yDJ997iXZ7ST0vemUtCafoNY0ihH5zz+8vKkN/aqDCBbwpLOlLGrBNKwddjW0YiC
+         Ax1Xxa5RJ88UDhAsFOsKWMj3LP5CFCxsf8zWjL1ytX99vypFU9cSE7+7e7M0iCMnRow4
+         M2NdOIv3SQfCZ1jSHxnyj4g1iMhW5Q5e28REKTdOW/liLVGYDYIqWLOt33QdTNveqwRH
+         gQsWjxUBZ3NkURXuk0f9rDtGTPq0G2CkTWMiZ0UhBxhzGV3Cu8c9d5OtDELZ0MHiA4ym
+         raq2ew6i03AleBk0ifuEWNZVmjmdj+p1JV1Kq6nO60CBsdWKN7xam5GGMR6/I5DjtX5b
+         yYFg==
+X-Gm-Message-State: AC+VfDydhWN1TqML6lhqeOgf6DEzbfwgPJExPA3sxh3NxjxKFO6tUt01
+        gBYsLSiKn+ML6E12VV4rVp3HOxHWBH5kUhzZBevOQw==
+X-Google-Smtp-Source: ACHHUZ7hxeFd4p3Vb0f2BnoHsB8raEXkauuS5wAkuzImHWRJBMnDmk3UJTywWEbxRNWJlKcCLXh6nuh69+hsoHACs1g=
+X-Received: by 2002:a05:622a:8e:b0:3f5:2582:65d9 with SMTP id
+ o14-20020a05622a008e00b003f5258265d9mr14935822qtw.26.1685683163680; Thu, 01
+ Jun 2023 22:19:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230531040428.501523-1-anshuman.khandual@arm.com> <20230531040428.501523-9-anshuman.khandual@arm.com>
-In-Reply-To: <20230531040428.501523-9-anshuman.khandual@arm.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 1 Jun 2023 19:40:58 -0700
-Message-ID: <CAM9d7cihqiUULBR7JoizDGySVYdOx3TH_CJV=QDpeck3p8z5wg@mail.gmail.com>
-Subject: Re: [PATCH V11 08/10] arm64/perf: Add struct brbe_regset helper functions
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
+References: <20230601213440.2488667-1-dianders@chromium.org>
+In-Reply-To: <20230601213440.2488667-1-dianders@chromium.org>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Fri, 2 Jun 2023 10:49:12 +0530
+Message-ID: <CAFA6WYNEuZK9OCchj1Na-yZ08ahQe+B=iGCuytqXz5XhUie=gA@mail.gmail.com>
+Subject: Re: [PATCH v9 0/7] arm64: Add debug IPI for backtraces / kgdb; try to
+ use NMI for it
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-perf-users@vger.kernel.org, ito-yuichi@fujitsu.com,
+        Chen-Yu Tsai <wens@csie.org>, Ard Biesheuvel <ardb@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        kgdb-bugreport@lists.sourceforge.net,
+        Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Lecopzer Chen <lecopzer.chen@mediatek.com>,
+        Andrey Konovalov <andreyknvl@gmail.com>,
+        Ben Dooks <ben-linux@fluff.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Wei Li <liwei391@huawei.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, May 30, 2023 at 9:15 PM Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
+Hi Doug,
+
+On Fri, 2 Jun 2023 at 03:07, Douglas Anderson <dianders@chromium.org> wrote:
 >
-> The primary abstraction level for fetching branch records from BRBE HW has
-> been changed as 'struct brbe_regset', which contains storage for all three
-> BRBE registers i.e BRBSRC, BRBTGT, BRBINF. Whether branch record processing
-> happens in the task sched out path, or in the PMU IRQ handling path, these
-> registers need to be extracted from the HW. Afterwards both live and stored
-> sets need to be stitched together to create final branch records set. This
-> adds required helper functions for such operations.
+> This is an attempt to resurrect Sumit's old patch series [1] that
+> allowed us to use the arm64 pseudo-NMI to get backtraces of CPUs and
+> also to round up CPUs in kdb/kgdb. The last post from Sumit that I
+> could find was v7, so I started my series at v8. I haven't copied all
+> of his old changelongs here, but you can find them from the link.
 >
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Tested-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
+> I'm really looking for a way to land this patch series. In response to
+> v8, Mark Rutland indicated [2] that he was worried about the soundness
+> of pseudo NMI. Those definitely need to get fixed, but IMO this patch
+> series could still land in the meantime. That would at least let
+> people test with it.
 
-[SNIP]
-> +
-> +static inline void copy_brbe_regset(struct brbe_regset *src, int src_idx,
-> +                                   struct brbe_regset *dst, int dst_idx)
-> +{
-> +       dst[dst_idx].brbinf = src[src_idx].brbinf;
-> +       dst[dst_idx].brbsrc = src[src_idx].brbsrc;
-> +       dst[dst_idx].brbtgt = src[src_idx].brbtgt;
-> +}
-> +
-> +/*
-> + * This function concatenates branch records from stored and live buffer
-> + * up to maximum nr_max records and the stored buffer holds the resultant
-> + * buffer. The concatenated buffer contains all the branch records from
-> + * the live buffer but might contain some from stored buffer considering
-> + * the maximum combined length does not exceed 'nr_max'.
-> + *
-> + *     Stored records  Live records
-> + *     ------------------------------------------------^
-> + *     |       S0      |       L0      |       Newest  |
-> + *     ---------------------------------               |
-> + *     |       S1      |       L1      |               |
-> + *     ---------------------------------               |
-> + *     |       S2      |       L2      |               |
-> + *     ---------------------------------               |
-> + *     |       S3      |       L3      |               |
-> + *     ---------------------------------               |
-> + *     |       S4      |       L4      |               nr_max
-> + *     ---------------------------------               |
-> + *     |               |       L5      |               |
-> + *     ---------------------------------               |
-> + *     |               |       L6      |               |
-> + *     ---------------------------------               |
-> + *     |               |       L7      |               |
-> + *     ---------------------------------               |
-> + *     |               |               |               |
-> + *     ---------------------------------               |
-> + *     |               |               |       Oldest  |
-> + *     ------------------------------------------------V
-> + *
-> + *
-> + * S0 is the newest in the stored records, where as L7 is the oldest in
-> + * the live reocords. Unless the live buffer is detetcted as being full
-> + * thus potentially dropping off some older records, L7 and S0 records
-> + * are contiguous in time for a user task context. The stitched buffer
-> + * here represents maximum possible branch records, contiguous in time.
-> + *
-> + *     Stored records  Live records
-> + *     ------------------------------------------------^
-> + *     |       L0      |       L0      |       Newest  |
-> + *     ---------------------------------               |
-> + *     |       L0      |       L1      |               |
-> + *     ---------------------------------               |
-> + *     |       L2      |       L2      |               |
-> + *     ---------------------------------               |
-> + *     |       L3      |       L3      |               |
-> + *     ---------------------------------               |
-> + *     |       L4      |       L4      |             nr_max
-> + *     ---------------------------------               |
-> + *     |       L5      |       L5      |               |
-> + *     ---------------------------------               |
-> + *     |       L6      |       L6      |               |
-> + *     ---------------------------------               |
-> + *     |       L7      |       L7      |               |
-> + *     ---------------------------------               |
-> + *     |       S0      |               |               |
-> + *     ---------------------------------               |
-> + *     |       S1      |               |    Oldest     |
-> + *     ------------------------------------------------V
-> + *     |       S2      | <----|
-> + *     -----------------      |
-> + *     |       S3      | <----| Dropped off after nr_max
-> + *     -----------------      |
-> + *     |       S4      | <----|
-> + *     -----------------
-> + */
-> +static int stitch_stored_live_entries(struct brbe_regset *stored,
-> +                                     struct brbe_regset *live,
-> +                                     int nr_stored, int nr_live,
-> +                                     int nr_max)
-> +{
-> +       int nr_total, nr_excess, nr_last, i;
-> +
-> +       nr_total = nr_stored + nr_live;
-> +       nr_excess = nr_total - nr_max;
-> +
-> +       /* Stored branch records in stitched buffer */
-> +       if (nr_live == nr_max)
-> +               nr_stored = 0;
-> +       else if (nr_excess > 0)
-> +               nr_stored -= nr_excess;
-> +
-> +       /* Stitched buffer branch records length */
-> +       if (nr_total > nr_max)
-> +               nr_last = nr_max;
-> +       else
-> +               nr_last = nr_total;
-> +
-> +       /* Move stored branch records */
-> +       for (i = 0; i < nr_stored; i++)
-> +               copy_brbe_regset(stored, i, stored, nr_last - nr_stored - 1 + i);
++1
 
-I'm afraid it can overwrite some entries if nr_live is small
-and nr_stored is big.  Why not use memmove()?
+>
+> Request for anyone reading this: please help indicate your support of
+> this patch series landing by replying, even if you don't have the
+> background for a full review. My suspicion is that there are a lot of
+> people who agree that this would be super useful to get landed.
+>
 
-Also I think it'd be simpler if you copy store to live.
-It'll save copying live in the IRQ but it will copy the
-whole content to store again for the sched switch.
+You can ofcourse count me in here. This will certainly bring NMI
+debugging capabilities to arm64 and I have been advocating for that
+since the advent of pseudo NMIs on arm64.
 
-Thanks,
-Namhyung
+> Since v8, I have cleaned up this patch series by integrating the 10th
+> patch from v8 [3] into the whole series. As part of this, I renamed
+> the "NMI IPI" to the "debug IPI" since it could now be backed by a
+> regular IPI in the case that pseudo NMIs weren't available. With the
+> fallback, this allowed me to drop some extra patches from the
+> series. This feels (to me) to be pretty clean and hopefully others
+> agree. Any patch I touched significantly I removed Masayoshi and
+> Chen-Yu's tags from.
+>
+> ...also in v8, I reorderd the patches a bit in a way that seemed a
+> little cleaner to me.
 
+This cleanup looks good to me.
 
-> +
-> +       /* Copy live branch records */
-> +       for (i = 0; i < nr_live; i++)
-> +               copy_brbe_regset(live, i, stored, i);
-> +
-> +       return nr_last;
-> +}
-> +
->  /*
->   * Generic perf branch filters supported on BRBE
->   *
+-Sumit
+
+>
+> Since v7, I have:
+> * Addressed the small amount of feedback that was there for v7.
+> * Rebased.
+> * Added a new patch that prevents us from spamming the logs with idle
+>   tasks.
+> * Added an extra patch to gracefully fall back to regular IPIs if
+>   pseudo-NMIs aren't there.
+>
+> It can be noted that this patch series works very well with the recent
+> "hardlockup" patches that have landed through Andrew Morton's tree and
+> are currently in linuxnext. It works especially well with the "buddy"
+> lockup detector.
+>
+> [1] https://lore.kernel.org/linux-arm-kernel/1604317487-14543-1-git-send-email-sumit.garg@linaro.org/
+> [2] https://lore.kernel.org/lkml/ZFvGqD%2F%2Fpm%2FlZb+p@FVFF77S0Q05N.cambridge.arm.com/
+> [3] https://lore.kernel.org/r/20230419155341.v8.10.Ic3659997d6243139d0522fc3afcdfd88d7a5f030@changeid/
+>
+> Changes in v9:
+> - Add a warning if we don't have enough IPIs for the NMI IPI
+> - Added comments that we might not be using NMI always.
+> - Added missing "inline"
+> - Added to commit message that this doesn't catch all cases.
+> - Fold in v8 patch #10 ("Fallback to a regular IPI if NMI isn't enabled")
+> - Moved header file out of "include" since it didn't need to be there.
+> - Remove arm64_supports_nmi()
+> - Remove fallback for when debug IPI isn't available.
+> - Renamed "NMI IPI" to "debug IPI" since it might not be backed by NMI.
+> - Update commit description
+> - arch_trigger_cpumask_backtrace() no longer returns bool
+>
+> Changes in v8:
+> - "Provide a stub kgdb_nmicallback() if !CONFIG_KGDB" new for v8
+> - "Tag the arm64 idle functions as __cpuidle" new for v8
+> - Removed "#ifdef CONFIG_SMP" since arm64 is always SMP
+> - debug_ipi_setup() and debug_ipi_teardown() no longer take cpu param
+>
+> Douglas Anderson (2):
+>   arm64: idle: Tag the arm64 idle functions as __cpuidle
+>   kgdb: Provide a stub kgdb_nmicallback() if !CONFIG_KGDB
+>
+> Sumit Garg (5):
+>   irqchip/gic-v3: Enable support for SGIs to act as NMIs
+>   arm64: Add framework for a debug IPI
+>   arm64: smp: Assign and setup the debug IPI
+>   arm64: ipi_debug: Add support for backtrace using the debug IPI
+>   arm64: kgdb: Roundup cpus using the debug IPI
+>
+>  arch/arm64/include/asm/irq.h  |   3 +
+>  arch/arm64/kernel/Makefile    |   2 +-
+>  arch/arm64/kernel/idle.c      |   4 +-
+>  arch/arm64/kernel/ipi_debug.c | 102 ++++++++++++++++++++++++++++++++++
+>  arch/arm64/kernel/ipi_debug.h |  13 +++++
+>  arch/arm64/kernel/kgdb.c      |  14 +++++
+>  arch/arm64/kernel/smp.c       |  11 ++++
+>  drivers/irqchip/irq-gic-v3.c  |  29 +++++++---
+>  include/linux/kgdb.h          |   1 +
+>  9 files changed, 168 insertions(+), 11 deletions(-)
+>  create mode 100644 arch/arm64/kernel/ipi_debug.c
+>  create mode 100644 arch/arm64/kernel/ipi_debug.h
+>
 > --
-> 2.25.1
+> 2.41.0.rc2.161.g9c6817b8e7-goog
 >
