@@ -2,208 +2,133 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3268BC7EE29
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jun 2023 08:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 782EAC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jun 2023 09:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234316AbjFBITK (ORCPT
+        id S233908AbjFBJt2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Jun 2023 04:19:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33298 "EHLO
+        Fri, 2 Jun 2023 05:49:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234272AbjFBITJ (ORCPT
+        with ESMTP id S233907AbjFBJt1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Jun 2023 04:19:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E015FEB
-        for <linux-perf-users@vger.kernel.org>; Fri,  2 Jun 2023 01:18:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685693901;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=e6dgcfRzwtu2q6ZQ7H261Q/6f1VW8EOruX+6XBOQKHE=;
-        b=D3eTQHfh3uD764qMtiQ3itjR5OkNa+ytU/G2S94oPnSPEbDxrvCXMR6DgJvxz7P+z4HnH2
-        GDJh3aGAGY3lNSBloNo/e+ZB8O4mMdc4wOW3b2Ep/UYTbP48zUWVbmCvHLZn0sYEOmQkZH
-        zohF0Zu/xzSg5SUrasyJ1kFjlBOiNso=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-468-hfm_teGCOESRR0UGvP-mcg-1; Fri, 02 Jun 2023 04:18:15 -0400
-X-MC-Unique: hfm_teGCOESRR0UGvP-mcg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CF2C4811E7F;
-        Fri,  2 Jun 2023 08:18:14 +0000 (UTC)
-Received: from samus.usersys.redhat.com (unknown [10.43.17.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3FBAF1121314;
-        Fri,  2 Jun 2023 08:18:13 +0000 (UTC)
-Date:   Fri, 2 Jun 2023 10:18:11 +0200
-From:   Artem Savkov <asavkov@redhat.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf tools: allow running annotation browser from
- c2c-report
-Message-ID: <20230602081811.GA240769@samus.usersys.redhat.com>
-References: <20230531115014.161454-1-asavkov@redhat.com>
- <20230531115014.161454-3-asavkov@redhat.com>
- <CAM9d7ci6h_f8WsRu3cyYPQJO8nuAXcsMX_T_+aLy_0t5_33tMA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ci6h_f8WsRu3cyYPQJO8nuAXcsMX_T_+aLy_0t5_33tMA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+        Fri, 2 Jun 2023 05:49:27 -0400
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CE1E7
+        for <linux-perf-users@vger.kernel.org>; Fri,  2 Jun 2023 02:49:24 -0700 (PDT)
+Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-64d24136685so1480530b3a.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jun 2023 02:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1685699364; x=1688291364;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DCKGULZsoKICMV26CUTZdo7HdnVdRStnPhClKySdS9k=;
+        b=PQqRUow9lA2xKadq+K+lIoRt1U2nCSlME0lf1zaBlemjzSpNhpQWCJ7rj2a0bGzZg7
+         5x3J33cl7mGEm+vAeNo2WvGwHqGAoPCq2nFq5ATEhgBzsQxFQO+AkoenBzMJoMFnqE1/
+         mfU0fNhztK9vSYyT4DJuzLoHaSYg2r9S+4zJFPeyRqex1Q54qeQnc3LBZaassJHrE1/0
+         WGa2BCpSsqUZBTk7R8nFbBjT5+gUF6QH4QlN15X7RLqMy6TH7wifvsVof6mcGDsDz7oV
+         +kUn8AZ7GhKwLEJ7NxXduAQQNevhCZw3FB77Roz9F1wEnESTVcnqZKEX1xdmX0kYMwAx
+         EipA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685699364; x=1688291364;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DCKGULZsoKICMV26CUTZdo7HdnVdRStnPhClKySdS9k=;
+        b=lhg9ZdMmAo1Uje2jh9ELWCWEnInWHgQZTcuRrhSv7WGBM8CZnQ65Zl/znd6Lyj+zIM
+         4cbV9q2LEPdiOSPYg7S2Tr37cwtt9miLS/NEFtAxoi2gYFAJYhdUa7CnPIJy/vCrCZLr
+         JxbCsaPc+inK6cQdx8WkB1ZZkyefeHdkauku/1OqZTuLSthWsHB2aMOdb9sQXCCjl7k+
+         q++aig5Dhw/unQ3p64nIDcCMByDGqPm86emQca/Xw1gXfLvQ+P64J062dNKxC6bteNbR
+         vYpD+Bo0C6/E1xmn8gzGon65jTZwXLhqcht8rWpZiRjYnMYss1y4Uarq4HC8F6ZsbdF1
+         H1ug==
+X-Gm-Message-State: AC+VfDyiVYjEElE66oo9C6+AMaTuWi5IBjAQwdpd+w9BQM0qJ532L8OE
+        mAyNho9n0n9/dymszWs3HHXbDA==
+X-Google-Smtp-Source: ACHHUZ6TUgpY9ey2wwkjQh+C1naTGHK3wVPXR9QPdK7UAtPFF/POMWycZivijRGjtCxnFamXqgdpXQ==
+X-Received: by 2002:a05:6a20:4284:b0:10c:322:72d5 with SMTP id o4-20020a056a20428400b0010c032272d5mr4866687pzj.23.1685699364448;
+        Fri, 02 Jun 2023 02:49:24 -0700 (PDT)
+Received: from hsinchu26.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id x7-20020aa793a7000000b006475f831838sm690174pff.30.2023.06.02.02.49.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Jun 2023 02:49:24 -0700 (PDT)
+From:   Eric Lin <eric.lin@sifive.com>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Cc:     greentime.hu@sifive.com, vincent.chen@sifive.com,
+        Eric Lin <eric.lin@sifive.com>
+Subject: [PATCH] perf/core: Add pmu stop before unthrottling to prevent WARNING
+Date:   Fri,  2 Jun 2023 09:48:41 +0000
+Message-Id: <20230602094841.1225-1-eric.lin@sifive.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Currently, during the perf sampling, if the perf interrupt takes too long,
+perf framework will lower the perf_event_max_sample_rate. This will limit
+the number of samples per timer tick (max_samples_per_tick) and set hwc->interrupts
+to MAX_INTERRUPTS within the __perf_event_account_interrupt() function.
 
-Thank you for the review.
+Afterward, the perf framework will unthrottle the event in the timer interrupt
+handler, which triggers the driver's *_pmu_start() function. Most of the driver's
+*_pmu_start() functions will check the event->hw.state to determine whether this
+event has stopped. If the event has not stopped, a WARN_ON_ONCE() warning
+will be triggered as shown below:
 
-On Thu, Jun 01, 2023 at 02:26:48PM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> On Wed, May 31, 2023 at 4:50 AM Artem Savkov <asavkov@redhat.com> wrote:
-> >
-> > Add a shortcut to run annotation browser for selected symbol from
-> > c2c report TUI.
-> >
-> > Signed-off-by: Artem Savkov <asavkov@redhat.com>
-> > ---
-> >  tools/perf/builtin-c2c.c | 76 +++++++++++++++++++++++++++++++++++++---
-> >  1 file changed, 71 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > index 05dfd98af170b..96e66289c2576 100644
-> > --- a/tools/perf/builtin-c2c.c
-> > +++ b/tools/perf/builtin-c2c.c
-> > @@ -19,11 +19,13 @@
+[ 2110.224723] ------------[ cut here ]------------
+[ 2110.224851] WARNING: CPU: 0 PID: 240 at drivers/perf/riscv_pmu.c:184 riscv_pmu_start+0x7c/0x8e
+[ 2110.225242] Modules linked in:
+[ 2110.225380] CPU: 0 PID: 240 Comm: ls Not tainted 6.4-rc4-g19d0788e9ef2 #1
+[ 2110.225574] Hardware name: SiFive (DT)
+[ 2110.225657] epc : riscv_pmu_start+0x7c/0x8e
+[ 2110.225834]  ra : riscv_pmu_start+0x28/0x8e
+[ 2110.225998] epc : ffffffff80aef864 ra : ffffffff80aef810 sp : ffff8f80004db6f0
+[ 2110.226135]  gp : ffffffff81c83750 tp : ffffaf80069f9bc0 t0 : ffff8f80004db6c0
+[ 2110.226245]  t1 : 0000000000000000 t2 : 000000000000001f s0 : ffff8f80004db720
+[ 2110.226367]  s1 : ffffaf8008ca1068 a0 : 0000ffffffffffff a1 : 0000000000000000
+[ 2110.226488]  a2 : 0000000000000001 a3 : 0000000000000870 a4 : 0000000000000000
+[ 2110.226605]  a5 : 0000000000000000 a6 : 0000000000000840 a7 : 0000000000000030
+[ 2110.226721]  s2 : 0000000000000000 s3 : ffffaf8005165800 s4 : ffffaf800424da00
+[ 2110.226838]  s5 : ffffffffffffffff s6 : ffffffff81cc7590 s7 : 0000000000000000
+[ 2110.226955]  s8 : 0000000000000006 s9 : 0000000000000001 s10: ffffaf807efbc340
+[ 2110.227064]  s11: ffffaf807efbbf00 t3 : ffffaf8006a16028 t4 : 00000000dbfbb796
+[ 2110.227180]  t5 : 0000000700000000 t6 : ffffaf8005269870
+[ 2110.227277] status: 0000000200000100 badaddr: 0000000000000000 cause: 0000000000000003
+[ 2110.227407] [<ffffffff80aef864>] riscv_pmu_start+0x7c/0x8e
+[ 2110.227622] [<ffffffff80185b56>] perf_adjust_freq_unthr_context+0x15e/0x174
+[ 2110.227961] [<ffffffff80188642>] perf_event_task_tick+0x88/0x9c
+[ 2110.228235] [<ffffffff800626a8>] scheduler_tick+0xfe/0x27c
+[ 2110.228463] [<ffffffff800b5640>] update_process_times+0x9a/0xba
+[ 2110.228690] [<ffffffff800c5bd4>] tick_sched_handle+0x32/0x66
+[ 2110.229007] [<ffffffff800c5e0c>] tick_sched_timer+0x64/0xb0
+[ 2110.229253] [<ffffffff800b5e50>] __hrtimer_run_queues+0x156/0x2f4
+[ 2110.229446] [<ffffffff800b6bdc>] hrtimer_interrupt+0xe2/0x1fe
+[ 2110.229637] [<ffffffff80acc9e8>] riscv_timer_interrupt+0x38/0x42
+[ 2110.229984] [<ffffffff80090a16>] handle_percpu_devid_irq+0x90/0x1d2
+[ 2110.230162] [<ffffffff8008a9f4>] generic_handle_domain_irq+0x28/0x36
 
-snip
+To prevent this warning, we should call the driver's *_pmu_stop() function before unthrottling
 
-> >  struct c2c_hists {
-> > @@ -79,6 +83,7 @@ struct c2c_hist_entry {
-> >          * because of its callchain dynamic entry
-> >          */
-> >         struct hist_entry       he;
-> > +       struct evsel            *evsel;
-> 
-> I'm not sure if it's needed.  It seems c2c command doesn't collect
-> samples per evsel.  It uses c2c.hists.hists for all evsels.  Then it
-> might not be worth keeping an evsel in a c2c_hist_entry and
-> just use a random evsel in the evlist.
-> 
+Signed-off-by: Eric Lin <eric.lin@sifive.com>
+---
+ kernel/events/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Right, but annotation browser does use it for line usage percentage
-calculation. So does this mean it won't be showing correct percentages
-whatever evsel is chosen and that's why it is possible to just select a
-random one?
-
-As far as I can tell evlist is not currently available in
-perf_c2c__browse_cacheline(), but it can be added to struct perf_c2c.
-
-> >  };
-
-snip
-
-> > +       " a             Annotate current symbol\n"
-> >         " n             Toggle Node details info \n"
-> >         " s             Toggle full length of symbol and source line columns \n"
-> >         " q             Return back to cacheline list \n";
-> > @@ -2650,6 +2670,44 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
-> >                 key = hist_browser__run(browser, "? - help", true, 0);
-> >
-> >                 switch (key) {
-> > +               case 'a':
-> 
-> I think it's better to factor this code out to a function.
-
-Ok, will do.
-
-> > +                       if (!browser->selection ||
-> > +                           !browser->selection->map ||
-> > +                           !browser->selection->map->dso ||
-> > +                           browser->selection->map->dso->annotate_warned) {
-> > +                               continue;
-> > +                       }
-> > +
-> > +                       ms.map = browser->selection->map;
-> > +
-> > +                       if (!browser->selection->sym) {
-> > +                               if (!browser->he_selection)
-> > +                                       continue;
-> > +
-> > +                               ms.sym = symbol__new_unresolved(browser->he_selection->ip,
-> > +                                                               browser->selection->map);
-> > +
-> > +                               if (!ms.sym)
-> > +                                       continue;
-> > +                       } else {
-> > +                               if (symbol__annotation(browser->selection->sym)->src == NULL) {
-> > +                                       ui_browser__warning(&browser->b, 0,
-> > +                                               "No samples for the \"%s\" symbol.\n\n",
-> > +                                               browser->selection->sym->name);
-> > +                                       continue;
-> > +                               }
-> > +                               ms.sym = browser->selection->sym;
-> > +                       }
-> > +
-> > +                       err = map_symbol__tui_annotate(&ms, c2c_he->evsel, browser->hbt, &c2c.annotation_opts);
-> > +
-> > +                       ui_browser__update_nr_entries(&browser->b, browser->hists->nr_entries);
-> 
-> c2c_browser__update_nr_entries() ?
-
-Will it change from the previous call before the while loop? This part
-was mostly copied over from do_annotate() in ui/browsers/hists.c so I am
-a bit hazy here. My understanding is that update_nr_entries and handle
-resize are called here mostly for refresh/reset of the ui and
-recalculation of number of entries is not needed
-
-> 
-> > +                       if ((err == 'q' || err == CTRL('c')) && browser->he_selection->branch_info)
-> 
-> Why check branch_info?
-
-This was copied over as well and the comment in hists.c states "offer
-option to annotate the other branch source or target (if they exists)
-when returning from annotate". So I now think this might not be needed
-here at all?
-
-> > +                                       continue;
-> > +                       if (err)
-> > +                               ui_browser__handle_resize(&browser->b);
-> > +
-> > +                       continue;
-> 
-> It'd be natural to use 'break' instead of 'continue' here.
-
-Yes, will change this.
-
-> >                 case 's':
-> >                         c2c.symbol_full = !c2c.symbol_full;
-
-snip
-
-> >         perf_session__delete(session);
-> >  out:
-> > +       annotation_options__init(&c2c.annotation_opts);
-> 
-> __exit() ?
-
-Ouch, thanks for noticing!
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index db016e418931..098c875abe88 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4128,6 +4128,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+ 
+ 		if (hwc->interrupts == MAX_INTERRUPTS) {
+ 			hwc->interrupts = 0;
++			event->pmu->stop(event, 0);
+ 			perf_log_throttle(event, 1);
+ 			event->pmu->start(event, 0);
+ 		}
 -- 
- Artem
+2.17.1
 
