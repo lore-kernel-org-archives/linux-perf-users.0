@@ -2,121 +2,103 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D55C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jun 2023 12:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6627BC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jun 2023 15:11:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235506AbjFBMi5 (ORCPT
+        id S236242AbjFBPLm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Jun 2023 08:38:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42012 "EHLO
+        Fri, 2 Jun 2023 11:11:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235124AbjFBMiu (ORCPT
+        with ESMTP id S236407AbjFBPLk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Jun 2023 08:38:50 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A39121AE;
-        Fri,  2 Jun 2023 05:38:40 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-97448470403so274267666b.1;
-        Fri, 02 Jun 2023 05:38:40 -0700 (PDT)
+        Fri, 2 Jun 2023 11:11:40 -0400
+Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D6FE52
+        for <linux-perf-users@vger.kernel.org>; Fri,  2 Jun 2023 08:11:14 -0700 (PDT)
+Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1b01d3bb571so11483075ad.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jun 2023 08:11:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685709519; x=1688301519;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nh+0N7gAaajlUQA9Pn27BgVBINuOBcCyPpKtQHaHnrE=;
-        b=iTJt9d04Vot5XFIg18UMJRaIBs2Wduoabj56wOgaCPtALfWNud3uLrafoJUUEcVrlX
-         7Kfrmn2Qm98+LBZfNKGnAq7HcA2wQD8Vlsz4GWowDYKfeRnspE+U/2O7zYNNffa7KpBr
-         GDZ8HVrGwYkhK6lgdAWffSz+JwVh55BbwTblwC2QeBWWGyypf+LTKXR+h1wDp7UO3HWh
-         CqaEbX3DltujTEEIKdDfHVFny0RACA7JblEBBlqS7JmhKnECX9E1u7QNAnCekkKSmYNN
-         I6qRwfOZRU281wMatz/vuQDTa4nI21L0M9/cR57seaBOYrD4NEu0A8nsL4/kaI5Erdi9
-         Gazw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685709519; x=1688301519;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1685718661; x=1688310661;
+        h=to:from:cc:content-transfer-encoding:mime-version:date:message-id
+         :subject:references:in-reply-to:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Nh+0N7gAaajlUQA9Pn27BgVBINuOBcCyPpKtQHaHnrE=;
-        b=QhbOIjKd7PC3HGoeVs4trpdwKmZpmbIRAUhanoFekSBBA6gOCzpDETgIZHyEeExtxB
-         Vxcky04chBN4skx3bMv4i3UEC1TUNnoTin+aUgRNbNFKeq1PDm8ncPDhPMXLOCtSkjBp
-         lUeugbAHep+dbJig0k6NZgDw7rBeDmgsTEMxf+Hdqi6QfbYwVWpuAHo+H1FCsf+QQMBQ
-         Zbm+xvKhXtreUZcc3bagz4Kt+r63tPSSMPd6iYrENCCQp5Pvgs4q3TZKohY6dH1HB2g1
-         0JnQHBGH182cmnYfdT3+5K8U+g8UOcWE7dLV/0PjGzK0i2L3lu4FSBl2YDmzoLXtzQFu
-         BJOQ==
-X-Gm-Message-State: AC+VfDxemhfq3o0a63Dxb98RS7FroKMw3lh9+A5wJD++P4o119I+T2yF
-        F5f9/VEkGFJ2Vrd1h5cuQAY=
-X-Google-Smtp-Source: ACHHUZ4RgXaxLPrfCQ3pJR2tdNW31uo0QjsRM7VK35mZ7ia6GjBzjfGPVCPD/WSzuCKhzsR7bCf8gQ==
-X-Received: by 2002:a17:907:a426:b0:96f:c988:93b with SMTP id sg38-20020a170907a42600b0096fc988093bmr11351938ejc.35.1685709518815;
-        Fri, 02 Jun 2023 05:38:38 -0700 (PDT)
-Received: from epleaning.kpn (2a02-a45b-7f00-1-8367-a07d-b687-2141.fixed6.kpn.net. [2a02:a45b:7f00:1:8367:a07d:b687:2141])
-        by smtp.gmail.com with ESMTPSA id ot12-20020a170906cccc00b0096f4c9ce526sm706249ejb.225.2023.06.02.05.38.38
+        bh=sFjFf9QHgSHlj44B9KI6vj2WvMIUXClf6uC8Orp896M=;
+        b=sZOmeXFx40HznLvZP3MtBtdm+lGPllVCu2O5BSqzyyMxXUEMK4UTbDUNRUl7DLtRnA
+         klyFQh/2w5mnjdVujmROdH4EzHFRagXr5W/wbjs5nE+JMafxvCA9EVWbv+Ifno8XvG7Z
+         xWRL+65CiBVxpO6a+ZS6ZiwdchnAF4spnitJC/5spZn8nFVb1BnTm29afQDct3BcKr7d
+         4fDBkjkUlMgYjZrFZbv8nhOELLLwUYmNLHDubDpxT548HljZzkVQzttCA65dKJXtogJq
+         YvmE0geSJdLx5qj/rddqcz79+a9+KilywkF0gK7bGYfYgXsVvzh+hJM2xQSpQR/qw7fD
+         izBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685718661; x=1688310661;
+        h=to:from:cc:content-transfer-encoding:mime-version:date:message-id
+         :subject:references:in-reply-to:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sFjFf9QHgSHlj44B9KI6vj2WvMIUXClf6uC8Orp896M=;
+        b=aHRa/rkkd7rUdsFa12573ZbhsATyCf2EU93xgKdrQnYUsYKp3hrtcxBqJIJ1+fr3i0
+         CZ568uIeu58VZFnV/SD5TD30m9zFOMUolMm6POPMo7IV4Et+KYpf8tEnTuOTaKNCy8Id
+         vpVMipzvbxpykTJS9acz0hSEofnF9imuuruadwvfN4Xplcos2t9KJ4eeHL4zwtsGG72q
+         29gWqrRBDew7x+3Du+ezeCpqNYUuEELkl+NfElz3VqVDmpV66pABUuI/i5HUtDO2AaiB
+         EIZILa7uNAXjVU9QVuazcubBYswxRPiBscII2Wc4JDoTmvHHSVAuErzEOgTo5X0VSeBi
+         PWpg==
+X-Gm-Message-State: AC+VfDyP9TFyCzktptfRUK4XTKN9mrUv1dpxOVItmJ4y7zcQdQH8ZSj2
+        pzrGlev67jLhn0vy/DYe2KRkbXU9BK2KVc+vgxA=
+X-Google-Smtp-Source: ACHHUZ5m9nXzekMPUkJhtVrD6dDGKXCV96hCHhEhhL18NuaQnxAQmnEqUiIBBKbi4QiZM8Xq4hhD8g==
+X-Received: by 2002:a17:902:dac4:b0:1ac:859a:5b5a with SMTP id q4-20020a170902dac400b001ac859a5b5amr332989plx.0.1685718661326;
+        Fri, 02 Jun 2023 08:11:01 -0700 (PDT)
+Received: from localhost ([135.180.227.0])
+        by smtp.gmail.com with ESMTPSA id x4-20020a170902a38400b0019a5aa7eab0sm1511912pla.54.2023.06.02.08.11.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jun 2023 05:38:38 -0700 (PDT)
-From:   Elisabeth <paniii94@gmail.com>
-To:     namhyung@kernel.org
-Cc:     elisabeth <paniii94@gmail.com>,
-        Elisabeth Panholzer <elisabeth@leaningtech.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: [PATCH v2] Subject: perf jit: Fix incorrect file name in DWARF line table
-Date:   Fri,  2 Jun 2023 14:38:15 +0200
-Message-Id: <20230602123815.255001-1-paniii94@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Fri, 02 Jun 2023 08:11:00 -0700 (PDT)
+In-Reply-To: <20230601095355.1168910-1-ism.hong@gmail.com>
+References: <20230601095355.1168910-1-ism.hong@gmail.com>
+Subject: Re: [PATCH] riscv: perf: Fix callchain parse error with kernel
+ tracepoint events
+Message-Id: <168571785998.17076.15304236067157396048.b4-ty@rivosinc.com>
+Date:   Fri, 02 Jun 2023 07:57:39 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-901c5
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@rivosinc.com>
+To:     ism.hong@realtek.com, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Ism Hong <ism.hong@gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: elisabeth <paniii94@gmail.com>
 
-Fixes an issue where an incorrect filename was added in the DWARF line table of
-an ELF object file when calling 'perf inject --jit' due to not checking the
-filename of a debug entry against the repeated name marker (/xff/0).
-The marker is mentioned in the tools/perf/util/jitdump.h header, which describes
-the jitdump binary format, and indicitates that the filename in a debug entry
-is the same as the previous enrty.
-In the function emit_lineno_info(), in the file tools/perf/util/genelf-debug.c,
-the debug entry filename gets compared to the previous entry filename. If they
-are not the same, a new filename is added to the DWARF line table. However,
-since there is no check against '\xff\0', in some cases '\xff\0' is inserted
-as the filename into the DWARF line table.
-This can be seen with `objdump --dwarf=line` on the ELF file after `perf inject --jit`.
-It also makes no source code information show up in 'perf annotate'.
+On Thu, 01 Jun 2023 17:53:55 +0800, Ism Hong wrote:
+> For RISC-V, when tracing with tracepoint events, the IP and status are
+> set to 0, preventing the perf code parsing the callchain and resolving
+> the symbols correctly.
+> 
+>  ./ply 'tracepoint:kmem/kmem_cache_alloc { @[stack]=count(); }'
+>  @:
+>  { <STACKID4294967282> }: 1
+> 
+> [...]
 
-Signed-off-by: Elisabeth Panholzer <elisabeth@leaningtech.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org
----
-Changes in v2:
-	- Made the commit message more descriptive
-	- Added a comment that mentions the jitdump format
-	- Changed memcmp() to strcmp()
+Applied, thanks!
 
- tools/perf/util/genelf_debug.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+[1/1] riscv: perf: Fix callchain parse error with kernel tracepoint events
+      https://git.kernel.org/palmer/c/9a7e8ec0d4cc
 
-diff --git a/tools/perf/util/genelf_debug.c b/tools/perf/util/genelf_debug.c
-index aa5dcc56b2ac..138fdf87eaa2 100644
---- a/tools/perf/util/genelf_debug.c
-+++ b/tools/perf/util/genelf_debug.c
-@@ -337,6 +337,9 @@ static void emit_lineno_info(struct buffer_ext *be,
- {
- 	size_t i;
- 
-+	/* as described in the jitdump format */
-+	const char repeated_name_marker[] = {'\xff', '\0'}; 
-+
- 	/*
- 	 * Machine state at start of a statement program
- 	 * address = 0
-@@ -363,7 +366,8 @@ static void emit_lineno_info(struct buffer_ext *be,
- 		/*
- 		 * check if filename changed, if so add it
- 		 */
--		if (!cur_filename || strcmp(cur_filename, ent->name)) {
-+		if ((!cur_filename || strcmp(cur_filename, ent->name)) &&
-+			strcmp(repeated_name_marker, ent->name)) {
- 			emit_lne_define_filename(be, ent->name);
- 			cur_filename = ent->name;
- 			emit_set_file(be, ++cur_file_idx);
+Best regards,
 -- 
-2.34.1
+Palmer Dabbelt <palmer@rivosinc.com>
 
