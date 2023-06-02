@@ -2,127 +2,144 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E5FC77B7E
-	for <linux-perf-users@archiver.kernel.org>; Thu,  1 Jun 2023 23:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D08C7EE2A
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jun 2023 01:45:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbjFAXbi (ORCPT
+        id S233778AbjFBBpU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 1 Jun 2023 19:31:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38492 "EHLO
+        Thu, 1 Jun 2023 21:45:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbjFAXbg (ORCPT
+        with ESMTP id S233805AbjFBBpO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 1 Jun 2023 19:31:36 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E93E5F
-        for <linux-perf-users@vger.kernel.org>; Thu,  1 Jun 2023 16:30:53 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-3f6a6e9d90dso104401cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Jun 2023 16:30:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685662240; x=1688254240;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZDXuQz1qQeNpZkf2zwjaSgqw94ILfaA6js26wXkpGJI=;
-        b=kvO3LFJRpceDEsaqJ4wzY4QHL0Q/9m1qVsiWdAxzeCjuwvUNVzAZ8K/BO8LlFyDtW7
-         EoJ7Bndoz54sG3KyoS+3JCHf99otukvAYYy3wDunZM31CHJU9Cz6/M4PRmcA+KZUaRCb
-         rL70IeNV8h+64IibmlvGwz0qQsxgNI50lGX+HtFsSWw1wzkf+Y2zDjXHpQiz1dLcnOiz
-         MXjh9O/2jIwwPOmFcZgQH4S4lI2lbkzI0WLC7cN1i29QhRC26nTxNIb4TCaxCcjfGkOM
-         UII2gTC/B+sUNFw2pjqfjpVfdkOaaJZaSyty7Ed1gqM1PRoXBFnCvhNvX59TYe/lCdGS
-         r70w==
+        Thu, 1 Jun 2023 21:45:14 -0400
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 154E819A;
+        Thu,  1 Jun 2023 18:45:13 -0700 (PDT)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-ba829e17aacso1656162276.0;
+        Thu, 01 Jun 2023 18:45:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685662240; x=1688254240;
+        d=1e100.net; s=20221208; t=1685670312; x=1688262312;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZDXuQz1qQeNpZkf2zwjaSgqw94ILfaA6js26wXkpGJI=;
-        b=kVMsnfQgo0qvqsr5IwgP7rOpYwJiLzTGaTSiXsc7LiSKlUXwIpu/4gQDFZZ3+NiMsk
-         O4kfbzxaY5wuHtFe5abp2Zew8yCX6hz8uydn1mmvZe0VE6htymVkbgixvs7Audh7Yqll
-         y+mSIB2lwdyrqy1TZ7BLhRJzGQaS5+FDFkQc2JpQTcX5JgLFUUSWpIOLuiIjXEV8PpLz
-         +hl6oMLN7oTxaKjRqSMNLQhOyxy9gDdQC7bu9T5ORoYD5V5w3QuCoTAW0AXokvs0CUmA
-         yajdx7jgheiPS5mMgrDzt7Eg/lifdhPxg5HVawmXeD+7+F9g3ebAhYfrL9QJMHrRZP9I
-         OVmg==
-X-Gm-Message-State: AC+VfDxQb3Gg1uvpcI7umDR5MC7zuT9nlwdY6ZzEx+BNBI9NyeEYF4W4
-        xJgxxL26FXdG0f0rpkIqPt5M2ZklFnW5U3zvyyW4zTIbjGiPAqC/6q3g4Q==
-X-Google-Smtp-Source: ACHHUZ6iTgWaxE8gGmK4eTtxsiJ3p1Qnpfm2k+bPOC4QaUVi/82PeanODNr9F1JxD5I0tTgjQBSWDg46iHzpwxxWAyY=
-X-Received: by 2002:a05:622a:1a28:b0:3ef:1c85:5b5e with SMTP id
- f40-20020a05622a1a2800b003ef1c855b5emr39366qtb.19.1685662239803; Thu, 01 Jun
- 2023 16:30:39 -0700 (PDT)
+        bh=L9MJQkBhtwwKWv5RYg7/ssZ/hoTZuhiN+qGeOfkLWAQ=;
+        b=RLRaOIml2mn9su/HRawc1CqNw5odiQOFuZmMWJStMJlQ+a8rjLpW1P48WpTh47L6Q2
+         0Ctghl7yBKakag6Y/upYZZ3uQ+cXM87uaRXQHQC9OfGhhNWABklhYT8/ZoG9V0cW7X8Z
+         //m1OE0n+qftvelIKt50jFlJxVqDxShhkuz3X6jpOTncZ9F2VYD+hE55m/+LLBh9nagx
+         eSwW2sXxpfgZ6XuuP9O3EXPaMYMyDBVWS2PoAe3elLVN/6ZX49f58D/5lnmYSpTLFqm9
+         Isu4Qy3l4e6i8oBmM3SQP3Ut59OgIfnK/N17jhJbBfQMfxjY0/4Q+FCPjhDBVc422PXN
+         X6nQ==
+X-Gm-Message-State: AC+VfDxQ5ZVovHV4iFRfwLZrvUQzkJ9Ykul2vPd/nhOuhDDYfPBHuftn
+        +gL2dph8NtYEK1sZInIQndcw80WCi66LGlPVFeNnmfjA
+X-Google-Smtp-Source: ACHHUZ4A+tgKfJzI54aXqcM8nK42xCurnWJ5rTaeKC7IhFVyPV0klo0TQmsqoYAt025oapu7mgNsPz14d/XbC7g4LaM=
+X-Received: by 2002:a25:507:0:b0:bad:347:cbdf with SMTP id 7-20020a250507000000b00bad0347cbdfmr1514782ybf.65.1685670311958;
+ Thu, 01 Jun 2023 18:45:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAPXMrf9mRG_uyEdkppJOjJxCREXjZsXGo2A_QEtwHM4G+nJoEA@mail.gmail.com>
-In-Reply-To: <CAPXMrf9mRG_uyEdkppJOjJxCREXjZsXGo2A_QEtwHM4G+nJoEA@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 1 Jun 2023 16:30:28 -0700
-Message-ID: <CAP-5=fXth=1qRgH6iNKt6eAWt4MM4Xd0jn8o65BD9SDq8v6uYg@mail.gmail.com>
-Subject: Re: Reg: Perf report consuming too high memory
-To:     RAJESH DASARI <raajeshdasari@gmail.com>
-Cc:     linux-perf-users@vger.kernel.org
+References: <20230531040428.501523-1-anshuman.khandual@arm.com> <20230531040428.501523-7-anshuman.khandual@arm.com>
+In-Reply-To: <20230531040428.501523-7-anshuman.khandual@arm.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Thu, 1 Jun 2023 18:45:00 -0700
+Message-ID: <CAM9d7cgvXwsoZqC8tG=X-rkCWEAeQVdyBFTMjMZg8EiX5Y=5Ew@mail.gmail.com>
+Subject: Re: [PATCH V11 06/10] arm64/perf: Enable branch stack events via FEAT_BRBE
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 1, 2023 at 6:51=E2=80=AFAM RAJESH DASARI <raajeshdasari@gmail.c=
-om> wrote:
->
-> Hi ,
->
-> I am noticing high memory usage, oom killer is invoked and restarting
-> our node while running perf report command.
->
->  perf record -a  -g   sleep 120
-> [ perf record: Woken up 2472 times to write data ]
-> [ perf record: Captured and wrote 623.050 MB (3830374 samples) ]
->
-> perf report
->
->   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMM=
-AND
->  119877 root      20   0 7335760   7.0g 670244 S   0.0  59.7   0:22.23 pe=
-rf
->
-> perf report command is consuming more memory, oom killer is invoked.
-> System details : kernel 5.4.242 + glibc 2.26 + gcc12
-> I tried with perf 6.x versions but I still see more memory consumption.
->
-> I tried the same experiment on a different system under the same load
-> , this system has ( kernel 5.4.242 + glibc 2.24 + gcc 11)
->
-> perf record -a  -g  sleep 120
-> [ perf record: Woken up 1868 times to write data ]
-> [ perf record: Captured and wrote 470.203 MB
-> /tmp/rcpprofiling/data_cg.data (3828394 samples) ]
->
-> perf report
->
-> PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAN=
-D
-> 840045 root      20   0 1459520   1.4g 493380 R  98.1  11.8   0:31.21
-> perf report
->
->
-> I see that the more the perf.data file size, the more  memory it
-> consumes, but in this case i only see 200MB difference between the
-> perf.data file and also only 2k sample difference, but memory
-> consumption is too high in the first system.
->
-> What could be the reason, is this expected behaviour or how to debug
-> why perf is consuming more memory here  . Please help me with this
-> query .
+Hello,
 
-Hi Rajesh,
+On Tue, May 30, 2023 at 9:21 PM Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+> This enables branch stack sampling events in ARMV8 PMU, via an architecture
+> feature FEAT_BRBE aka branch record buffer extension. This defines required
+> branch helper functions pmuv8pmu_branch_XXXXX() and the implementation here
+> is wrapped with a new config option CONFIG_ARM64_BRBE.
+>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Tested-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
 
-As you are using perf in system wide mode every running process has
-its memory map added to the perf.data file, this is so that a virtual
-address in a sample can be turned into a file offset. perf report will
-process the shared objects and even use objdump to annotate them. This
-can all be pretty costly in terms of memory but it sounds like perf is
-working-as-intended. Have you tried just attaching perf to the process
-you are interested in?
+[SNIP]
+> +void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+> +{
+> +       struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
+> +       u64 brbfcr, brbcr;
+> +       int idx, loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2, count;
+> +
+> +       brbcr = read_sysreg_s(SYS_BRBCR_EL1);
+> +       brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+> +
+> +       /* Ensure pause on PMU interrupt is enabled */
+> +       WARN_ON_ONCE(!(brbcr & BRBCR_EL1_FZP));
+> +
+> +       /* Pause the buffer */
+> +       write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+> +       isb();
+> +
+> +       /* Determine the indices for each loop */
+> +       loop1_idx1 = BRBE_BANK0_IDX_MIN;
+> +       if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
+> +               loop1_idx2 = brbe_attr->brbe_nr - 1;
+> +               loop2_idx1 = BRBE_BANK1_IDX_MIN;
+> +               loop2_idx2 = BRBE_BANK0_IDX_MAX;
+
+Is this to disable the bank1?  Maybe need a comment.
+
+
+> +       } else {
+> +               loop1_idx2 = BRBE_BANK0_IDX_MAX;
+> +               loop2_idx1 = BRBE_BANK1_IDX_MIN;
+> +               loop2_idx2 = brbe_attr->brbe_nr - 1;
+> +       }
+
+The loop2_idx1 is the same for both cases.  Maybe better
+to move it out of the if statement.
 
 Thanks,
-Ian
+Namhyung
 
-> Thanks,
-> Rajesh Dasari.
+
+> +
+> +       /* Loop through bank 0 */
+> +       select_brbe_bank(BRBE_BANK_IDX_0);
+> +       for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
+> +               if (!capture_branch_entry(cpuc, event, idx))
+> +                       goto skip_bank_1;
+> +       }
+> +
+> +       /* Loop through bank 1 */
+> +       select_brbe_bank(BRBE_BANK_IDX_1);
+> +       for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
+> +               if (!capture_branch_entry(cpuc, event, idx))
+> +                       break;
+> +       }
+> +
+> +skip_bank_1:
+> +       cpuc->branches->branch_stack.nr = idx;
+> +       cpuc->branches->branch_stack.hw_idx = -1ULL;
+> +       process_branch_aborts(cpuc);
+> +
+> +       /* Unpause the buffer */
+> +       write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+> +       isb();
+> +       armv8pmu_branch_reset();
+> +}
