@@ -2,133 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782EAC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jun 2023 09:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D56C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jun 2023 10:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233908AbjFBJt2 (ORCPT
+        id S235592AbjFBK0l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Jun 2023 05:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56012 "EHLO
+        Fri, 2 Jun 2023 06:26:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233907AbjFBJt1 (ORCPT
+        with ESMTP id S235614AbjFBK0E (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Jun 2023 05:49:27 -0400
-Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CE1E7
-        for <linux-perf-users@vger.kernel.org>; Fri,  2 Jun 2023 02:49:24 -0700 (PDT)
-Received: by mail-pf1-x42d.google.com with SMTP id d2e1a72fcca58-64d24136685so1480530b3a.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 02 Jun 2023 02:49:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1685699364; x=1688291364;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DCKGULZsoKICMV26CUTZdo7HdnVdRStnPhClKySdS9k=;
-        b=PQqRUow9lA2xKadq+K+lIoRt1U2nCSlME0lf1zaBlemjzSpNhpQWCJ7rj2a0bGzZg7
-         5x3J33cl7mGEm+vAeNo2WvGwHqGAoPCq2nFq5ATEhgBzsQxFQO+AkoenBzMJoMFnqE1/
-         mfU0fNhztK9vSYyT4DJuzLoHaSYg2r9S+4zJFPeyRqex1Q54qeQnc3LBZaassJHrE1/0
-         WGa2BCpSsqUZBTk7R8nFbBjT5+gUF6QH4QlN15X7RLqMy6TH7wifvsVof6mcGDsDz7oV
-         +kUn8AZ7GhKwLEJ7NxXduAQQNevhCZw3FB77Roz9F1wEnESTVcnqZKEX1xdmX0kYMwAx
-         EipA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685699364; x=1688291364;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DCKGULZsoKICMV26CUTZdo7HdnVdRStnPhClKySdS9k=;
-        b=lhg9ZdMmAo1Uje2jh9ELWCWEnInWHgQZTcuRrhSv7WGBM8CZnQ65Zl/znd6Lyj+zIM
-         4cbV9q2LEPdiOSPYg7S2Tr37cwtt9miLS/NEFtAxoi2gYFAJYhdUa7CnPIJy/vCrCZLr
-         JxbCsaPc+inK6cQdx8WkB1ZZkyefeHdkauku/1OqZTuLSthWsHB2aMOdb9sQXCCjl7k+
-         q++aig5Dhw/unQ3p64nIDcCMByDGqPm86emQca/Xw1gXfLvQ+P64J062dNKxC6bteNbR
-         vYpD+Bo0C6/E1xmn8gzGon65jTZwXLhqcht8rWpZiRjYnMYss1y4Uarq4HC8F6ZsbdF1
-         H1ug==
-X-Gm-Message-State: AC+VfDyiVYjEElE66oo9C6+AMaTuWi5IBjAQwdpd+w9BQM0qJ532L8OE
-        mAyNho9n0n9/dymszWs3HHXbDA==
-X-Google-Smtp-Source: ACHHUZ6TUgpY9ey2wwkjQh+C1naTGHK3wVPXR9QPdK7UAtPFF/POMWycZivijRGjtCxnFamXqgdpXQ==
-X-Received: by 2002:a05:6a20:4284:b0:10c:322:72d5 with SMTP id o4-20020a056a20428400b0010c032272d5mr4866687pzj.23.1685699364448;
-        Fri, 02 Jun 2023 02:49:24 -0700 (PDT)
-Received: from hsinchu26.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id x7-20020aa793a7000000b006475f831838sm690174pff.30.2023.06.02.02.49.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jun 2023 02:49:24 -0700 (PDT)
-From:   Eric Lin <eric.lin@sifive.com>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Cc:     greentime.hu@sifive.com, vincent.chen@sifive.com,
-        Eric Lin <eric.lin@sifive.com>
-Subject: [PATCH] perf/core: Add pmu stop before unthrottling to prevent WARNING
-Date:   Fri,  2 Jun 2023 09:48:41 +0000
-Message-Id: <20230602094841.1225-1-eric.lin@sifive.com>
-X-Mailer: git-send-email 2.17.1
+        Fri, 2 Jun 2023 06:26:04 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5009D172E
+        for <linux-perf-users@vger.kernel.org>; Fri,  2 Jun 2023 03:24:40 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CA101063;
+        Fri,  2 Jun 2023 03:25:25 -0700 (PDT)
+Received: from [10.57.60.80] (unknown [10.57.60.80])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 774913F7BD;
+        Fri,  2 Jun 2023 03:24:39 -0700 (PDT)
+Message-ID: <a63d33cf-de35-c41c-abb3-d55577e67d6d@arm.com>
+Date:   Fri, 2 Jun 2023 11:24:37 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: Reg: Perf report consuming too high memory
+To:     Ian Rogers <irogers@google.com>,
+        RAJESH DASARI <raajeshdasari@gmail.com>
+Cc:     linux-perf-users@vger.kernel.org
+References: <CAPXMrf9mRG_uyEdkppJOjJxCREXjZsXGo2A_QEtwHM4G+nJoEA@mail.gmail.com>
+ <CAP-5=fXth=1qRgH6iNKt6eAWt4MM4Xd0jn8o65BD9SDq8v6uYg@mail.gmail.com>
+Content-Language: en-US
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fXth=1qRgH6iNKt6eAWt4MM4Xd0jn8o65BD9SDq8v6uYg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Currently, during the perf sampling, if the perf interrupt takes too long,
-perf framework will lower the perf_event_max_sample_rate. This will limit
-the number of samples per timer tick (max_samples_per_tick) and set hwc->interrupts
-to MAX_INTERRUPTS within the __perf_event_account_interrupt() function.
 
-Afterward, the perf framework will unthrottle the event in the timer interrupt
-handler, which triggers the driver's *_pmu_start() function. Most of the driver's
-*_pmu_start() functions will check the event->hw.state to determine whether this
-event has stopped. If the event has not stopped, a WARN_ON_ONCE() warning
-will be triggered as shown below:
 
-[ 2110.224723] ------------[ cut here ]------------
-[ 2110.224851] WARNING: CPU: 0 PID: 240 at drivers/perf/riscv_pmu.c:184 riscv_pmu_start+0x7c/0x8e
-[ 2110.225242] Modules linked in:
-[ 2110.225380] CPU: 0 PID: 240 Comm: ls Not tainted 6.4-rc4-g19d0788e9ef2 #1
-[ 2110.225574] Hardware name: SiFive (DT)
-[ 2110.225657] epc : riscv_pmu_start+0x7c/0x8e
-[ 2110.225834]  ra : riscv_pmu_start+0x28/0x8e
-[ 2110.225998] epc : ffffffff80aef864 ra : ffffffff80aef810 sp : ffff8f80004db6f0
-[ 2110.226135]  gp : ffffffff81c83750 tp : ffffaf80069f9bc0 t0 : ffff8f80004db6c0
-[ 2110.226245]  t1 : 0000000000000000 t2 : 000000000000001f s0 : ffff8f80004db720
-[ 2110.226367]  s1 : ffffaf8008ca1068 a0 : 0000ffffffffffff a1 : 0000000000000000
-[ 2110.226488]  a2 : 0000000000000001 a3 : 0000000000000870 a4 : 0000000000000000
-[ 2110.226605]  a5 : 0000000000000000 a6 : 0000000000000840 a7 : 0000000000000030
-[ 2110.226721]  s2 : 0000000000000000 s3 : ffffaf8005165800 s4 : ffffaf800424da00
-[ 2110.226838]  s5 : ffffffffffffffff s6 : ffffffff81cc7590 s7 : 0000000000000000
-[ 2110.226955]  s8 : 0000000000000006 s9 : 0000000000000001 s10: ffffaf807efbc340
-[ 2110.227064]  s11: ffffaf807efbbf00 t3 : ffffaf8006a16028 t4 : 00000000dbfbb796
-[ 2110.227180]  t5 : 0000000700000000 t6 : ffffaf8005269870
-[ 2110.227277] status: 0000000200000100 badaddr: 0000000000000000 cause: 0000000000000003
-[ 2110.227407] [<ffffffff80aef864>] riscv_pmu_start+0x7c/0x8e
-[ 2110.227622] [<ffffffff80185b56>] perf_adjust_freq_unthr_context+0x15e/0x174
-[ 2110.227961] [<ffffffff80188642>] perf_event_task_tick+0x88/0x9c
-[ 2110.228235] [<ffffffff800626a8>] scheduler_tick+0xfe/0x27c
-[ 2110.228463] [<ffffffff800b5640>] update_process_times+0x9a/0xba
-[ 2110.228690] [<ffffffff800c5bd4>] tick_sched_handle+0x32/0x66
-[ 2110.229007] [<ffffffff800c5e0c>] tick_sched_timer+0x64/0xb0
-[ 2110.229253] [<ffffffff800b5e50>] __hrtimer_run_queues+0x156/0x2f4
-[ 2110.229446] [<ffffffff800b6bdc>] hrtimer_interrupt+0xe2/0x1fe
-[ 2110.229637] [<ffffffff80acc9e8>] riscv_timer_interrupt+0x38/0x42
-[ 2110.229984] [<ffffffff80090a16>] handle_percpu_devid_irq+0x90/0x1d2
-[ 2110.230162] [<ffffffff8008a9f4>] generic_handle_domain_irq+0x28/0x36
+On 02/06/2023 00:30, Ian Rogers wrote:
+> On Thu, Jun 1, 2023 at 6:51 AM RAJESH DASARI <raajeshdasari@gmail.com> wrote:
+>>
+>> Hi ,
+>>
+>> I am noticing high memory usage, oom killer is invoked and restarting
+>> our node while running perf report command.
+>>
+>>  perf record -a  -g   sleep 120
+>> [ perf record: Woken up 2472 times to write data ]
+>> [ perf record: Captured and wrote 623.050 MB (3830374 samples) ]
+>>
+>> perf report
+>>
+>>   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+>>  119877 root      20   0 7335760   7.0g 670244 S   0.0  59.7   0:22.23 perf
+>>
+>> perf report command is consuming more memory, oom killer is invoked.
+>> System details : kernel 5.4.242 + glibc 2.26 + gcc12
+>> I tried with perf 6.x versions but I still see more memory consumption.
+>>
+>> I tried the same experiment on a different system under the same load
+>> , this system has ( kernel 5.4.242 + glibc 2.24 + gcc 11)
+>>
+>> perf record -a  -g  sleep 120
+>> [ perf record: Woken up 1868 times to write data ]
+>> [ perf record: Captured and wrote 470.203 MB
+>> /tmp/rcpprofiling/data_cg.data (3828394 samples) ]
+>>
+>> perf report
+>>
+>> PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND
+>> 840045 root      20   0 1459520   1.4g 493380 R  98.1  11.8   0:31.21
+>> perf report
+>>
+>>
+>> I see that the more the perf.data file size, the more  memory it
+>> consumes, but in this case i only see 200MB difference between the
+>> perf.data file and also only 2k sample difference, but memory
+>> consumption is too high in the first system.
+>>
+>> What could be the reason, is this expected behaviour or how to debug
+>> why perf is consuming more memory here  . Please help me with this
+>> query .
+> 
+> Hi Rajesh,
+> 
+> As you are using perf in system wide mode every running process has
+> its memory map added to the perf.data file, this is so that a virtual
+> address in a sample can be turned into a file offset. perf report will
+> process the shared objects and even use objdump to annotate them. This
+> can all be pretty costly in terms of memory but it sounds like perf is
+> working-as-intended. Have you tried just attaching perf to the process
+> you are interested in?
+> 
 
-To prevent this warning, we should call the driver's *_pmu_stop() function before unthrottling
+For the mapped in binaries I would expect that to show up on virtual
+memory used rather than resident. For a 10 second -a sleep recording on
+my laptop perf report takes 5.9G of resident memory to show 476K samples.
 
-Signed-off-by: Eric Lin <eric.lin@sifive.com>
----
- kernel/events/core.c | 1 +
- 1 file changed, 1 insertion(+)
+Running it with 'valgrind --tool=massiv' then 'massif-visualizer' I can
+see it's pretty much all the allocations for the callchains:
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index db016e418931..098c875abe88 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4128,6 +4128,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- 
- 		if (hwc->interrupts == MAX_INTERRUPTS) {
- 			hwc->interrupts = 0;
-+			event->pmu->stop(event, 0);
- 			perf_log_throttle(event, 1);
- 			event->pmu->start(event, 0);
- 		}
--- 
-2.17.1
+ 4.7 GiB: zalloc (zalloc.c:8)
+  4.3GiB: fill_node (callchain.c:585)
+   4.3 GiB: add_child (callchain.c:646)
+    3.6 GiB: append_chain_children (callchain.c:906)
+     ...
 
+But this was a recording without --call-graph, so it's like it's using
+12KB per sample for one level of callchains (if you divide 5.9G by
+476K). Maybe that's not really an excessive amount of memory. It could
+probably be optimised a bit but maybe the issue is the default sample
+rate and using -a after all.
+
+> Thanks,
+> Ian
+> 
+>> Thanks,
+>> Rajesh Dasari.
