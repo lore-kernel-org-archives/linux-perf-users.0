@@ -2,251 +2,120 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 665D4C7EE2D
-	for <linux-perf-users@archiver.kernel.org>; Fri,  2 Jun 2023 17:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7AB0C7EE2C
+	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Jun 2023 01:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235888AbjFBRa5 (ORCPT
+        id S236588AbjFCBiM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 2 Jun 2023 13:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48644 "EHLO
+        Fri, 2 Jun 2023 21:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234562AbjFBRa4 (ORCPT
+        with ESMTP id S235959AbjFCBiM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 2 Jun 2023 13:30:56 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9991B5;
-        Fri,  2 Jun 2023 10:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685727055; x=1717263055;
-  h=date:from:to:cc:subject:message-id;
-  bh=95NNPKeCDWvKs2XdDPj6/a0IDRIxJ5J5Rri6CmgQVSQ=;
-  b=aX34bsmzLfefQxEbh+/0lxACfnsqiN5k3VMA0SJA917cUvvpiGUE1Yxp
-   oKIAMQ/LhmKrx2j3Ur78A6mML2jovHR8/0AhZ8hLZ9qjtEalVbWi8pIr+
-   PQ2m8DrfMpM1opLQbbUMQX/Wu8V/N+ckh0N6YdqPGqFOV3kkUlUZzbUam
-   nHj17AOqaHnmQAaZDDeO6zO92uDkH9LlacqQ3UhxThYFEmrhC91tKFmIg
-   SDbZFV4Yac8hIYR2EboRPe3G3DV1RhgGceuiQW+Qfcw4NmDboJ9ZBtuqj
-   jrsek8AjmHMfboXU+8J8kd+IH/HWCI1jo//zBBdrAoNvYkDg4arDcZQBp
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="421738289"
-X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
-   d="scan'208";a="421738289"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 10:30:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10729"; a="954575143"
-X-IronPort-AV: E=Sophos;i="6.00,213,1681196400"; 
-   d="scan'208";a="954575143"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Jun 2023 10:30:51 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q58by-0000mD-35;
-        Fri, 02 Jun 2023 17:30:50 +0000
-Date:   Sat, 03 Jun 2023 01:30:29 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        dri-devel@lists.freedesktop.org, linux-btrfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-xfs@vger.kernel.org, samba-technical@lists.samba.org
-Subject: [linux-next:master] BUILD REGRESSION
- bc708bbd8260ee4eb3428b0109f5f3be661fae46
-Message-ID: <20230602173029.dm5Hs%lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        Fri, 2 Jun 2023 21:38:12 -0400
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D1CA1B6;
+        Fri,  2 Jun 2023 18:38:10 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-bacf5b89da7so2976561276.2;
+        Fri, 02 Jun 2023 18:38:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685756289; x=1688348289;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gMdUwU9Lc9+VbG5jbwUz5cd6Cu7tJyrnLtx+vLrmeGI=;
+        b=CccsbsUOPQn873uXnKRGFH5EmU6ts6BlklM8F2EbjV59FqDv+24KsbDdy9nBNtmGMH
+         XLJoYYRqN+bcwNAyeDFeOqPTXdaisSSvD2ksE3UN6AyLDgKHKB3MUPHI9eTbN/tpy/+4
+         wIaly3MA3bYMha22Pp7gokgknauztmXjeTSn0ccdE1Dqm0hWwUCRsCqAl94y+w7LmHlR
+         Kp7C/C045SOSQyhvbtnHKch6qWDh8h6BUBdr4x1e9stkXc+ySMKHSswhmtj2SD56bdpE
+         qq9HH+WbkF+gexrfTNj3RgVMAUi3jOoR8ohkhwT4iAtqe/qPFM3uUF2F4of86M9PzqMM
+         zBkA==
+X-Gm-Message-State: AC+VfDw7h+SNGWqAVGs4KiLFlv0EcTmQLwbKpcBvacYvbKtZ5Sd64NaJ
+        a+kUeKEmXXEuCyjwalYyS6KKYFODdj7cxDIfWPs=
+X-Google-Smtp-Source: ACHHUZ7+wLs1wt8OkA+DRY/aQQwg3NrUU+RlXc7Y8KTZR41Qbd48tFmJQsnYlCRXGNd/tiB0kShwmi8vRUco/8YRlyU=
+X-Received: by 2002:a25:d653:0:b0:b9e:5d84:d859 with SMTP id
+ n80-20020a25d653000000b00b9e5d84d859mr4613556ybg.46.1685756289232; Fri, 02
+ Jun 2023 18:38:09 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230602123815.255001-1-paniii94@gmail.com>
+In-Reply-To: <20230602123815.255001-1-paniii94@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 2 Jun 2023 18:37:58 -0700
+Message-ID: <CAM9d7cixKroe7Bd8dmckngw20dA0gcfb-_sQgRkw5HiN-kPbFQ@mail.gmail.com>
+Subject: Re: [PATCH v2] Subject: perf jit: Fix incorrect file name in DWARF
+ line table
+To:     Elisabeth <paniii94@gmail.com>
+Cc:     Elisabeth Panholzer <elisabeth@leaningtech.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: bc708bbd8260ee4eb3428b0109f5f3be661fae46  Add linux-next specific files for 20230602
+Hello,
 
-Error/Warning reports:
+On Fri, Jun 2, 2023 at 5:38 AM Elisabeth <paniii94@gmail.com> wrote:
+>
+> From: elisabeth <paniii94@gmail.com>
+>
+> Fixes an issue where an incorrect filename was added in the DWARF line table of
+> an ELF object file when calling 'perf inject --jit' due to not checking the
+> filename of a debug entry against the repeated name marker (/xff/0).
+> The marker is mentioned in the tools/perf/util/jitdump.h header, which describes
+> the jitdump binary format, and indicitates that the filename in a debug entry
+> is the same as the previous enrty.
+> In the function emit_lineno_info(), in the file tools/perf/util/genelf-debug.c,
+> the debug entry filename gets compared to the previous entry filename. If they
+> are not the same, a new filename is added to the DWARF line table. However,
+> since there is no check against '\xff\0', in some cases '\xff\0' is inserted
+> as the filename into the DWARF line table.
+> This can be seen with `objdump --dwarf=line` on the ELF file after `perf inject --jit`.
+> It also makes no source code information show up in 'perf annotate'.
+>
+> Signed-off-by: Elisabeth Panholzer <elisabeth@leaningtech.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-perf-users@vger.kernel.org
 
-https://lore.kernel.org/oe-kbuild-all/202306011435.2BxsHFUE-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202306021936.OktTcMAT-lkp@intel.com
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Error/Warning: (recently discovered and may have been fixed)
+Thanks,
+Namhyung
 
-drivers/bus/fsl-mc/fsl-mc-allocator.c:108:12: warning: variable 'mc_bus_dev' is uninitialized when used here [-Wuninitialized]
-include/drm/drm_print.h:456:39: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
-mm/zswap.c:1210:6: warning: variable 'ret' is used uninitialized whenever 'if' condition is true [-Wsometimes-uninitialized]
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-fs/btrfs/volumes.c:6412 btrfs_map_block() error: we previously assumed 'mirror_num_ret' could be null (see line 6250)
-fs/smb/client/cifsfs.c:982 cifs_smb3_do_mount() warn: possible memory leak of 'cifs_sb'
-fs/smb/client/cifssmb.c:4089 CIFSFindFirst() warn: missing error code? 'rc'
-fs/smb/client/cifssmb.c:4216 CIFSFindNext() warn: missing error code? 'rc'
-fs/smb/client/connect.c:2725 cifs_match_super() error: 'tlink' dereferencing possible ERR_PTR()
-fs/smb/client/connect.c:2924 generic_ip_connect() error: we previously assumed 'socket' could be null (see line 2912)
-fs/xfs/scrub/fscounters.c:459 xchk_fscounters() warn: ignoring unreachable code.
-kernel/events/uprobes.c:478 uprobe_write_opcode() warn: passing zero to 'PTR_ERR'
-{standard input}:1078: Error: pcrel too far
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- i386-allyesconfig
-|   `-- include-drm-drm_print.h:error:format-ld-expects-argument-of-type-long-int-but-argument-has-type-size_t-aka-unsigned-int
-|-- i386-randconfig-m021-20230531
-|   |-- fs-smb-client-cifsfs.c-cifs_smb3_do_mount()-warn:possible-memory-leak-of-cifs_sb
-|   |-- fs-smb-client-cifssmb.c-CIFSFindFirst()-warn:missing-error-code-rc
-|   |-- fs-smb-client-cifssmb.c-CIFSFindNext()-warn:missing-error-code-rc
-|   |-- fs-smb-client-connect.c-cifs_match_super()-error:tlink-dereferencing-possible-ERR_PTR()
-|   |-- fs-smb-client-connect.c-generic_ip_connect()-error:we-previously-assumed-socket-could-be-null-(see-line-)
-|   |-- fs-xfs-scrub-fscounters.c-xchk_fscounters()-warn:ignoring-unreachable-code.
-|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-|-- sh-allmodconfig
-|   `-- standard-input:Error:pcrel-too-far
-`-- x86_64-randconfig-m001-20230531
-    |-- fs-btrfs-volumes.c-btrfs_map_block()-error:we-previously-assumed-mirror_num_ret-could-be-null-(see-line-)
-    |-- fs-smb-client-cifsfs.c-cifs_smb3_do_mount()-warn:possible-memory-leak-of-cifs_sb
-    |-- fs-smb-client-cifssmb.c-CIFSFindFirst()-warn:missing-error-code-rc
-    |-- fs-smb-client-cifssmb.c-CIFSFindNext()-warn:missing-error-code-rc
-    |-- fs-smb-client-connect.c-cifs_match_super()-error:tlink-dereferencing-possible-ERR_PTR()
-    |-- fs-smb-client-connect.c-generic_ip_connect()-error:we-previously-assumed-socket-could-be-null-(see-line-)
-    |-- fs-xfs-scrub-fscounters.c-xchk_fscounters()-warn:ignoring-unreachable-code.
-    `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-clang_recent_errors
-|-- arm64-randconfig-r012-20230602
-|   `-- drivers-bus-fsl-mc-fsl-mc-allocator.c:warning:variable-mc_bus_dev-is-uninitialized-when-used-here
-|-- hexagon-allmodconfig
-|   `-- mm-zswap.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-true
-|-- hexagon-randconfig-r045-20230531
-|   `-- mm-zswap.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-true
-`-- s390-randconfig-r044-20230531
-    `-- mm-zswap.c:warning:variable-ret-is-used-uninitialized-whenever-if-condition-is-true
-
-elapsed time: 726m
-
-configs tested: 122
-configs skipped: 5
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r004-20230531   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs103_defconfig   gcc  
-arc                      axs103_smp_defconfig   gcc  
-arc          buildonly-randconfig-r005-20230602   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230531   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                          gemini_defconfig   gcc  
-arm                            hisi_defconfig   gcc  
-arm                             mxs_defconfig   clang
-arm                           omap1_defconfig   clang
-arm                  randconfig-r046-20230531   gcc  
-arm                         s5pv210_defconfig   clang
-arm                           sunxi_defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64        buildonly-randconfig-r001-20230602   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r024-20230531   clang
-csky                             alldefconfig   gcc  
-csky         buildonly-randconfig-r004-20230602   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r005-20230531   gcc  
-hexagon              randconfig-r016-20230601   clang
-hexagon              randconfig-r041-20230531   clang
-hexagon              randconfig-r045-20230531   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230602   gcc  
-i386                 randconfig-i002-20230602   gcc  
-i386                 randconfig-i003-20230602   gcc  
-i386                 randconfig-i004-20230602   gcc  
-i386                 randconfig-i005-20230602   gcc  
-i386                 randconfig-i006-20230602   gcc  
-i386                 randconfig-i051-20230602   gcc  
-i386                 randconfig-i052-20230602   gcc  
-i386                 randconfig-i053-20230602   gcc  
-i386                 randconfig-i054-20230602   gcc  
-i386                 randconfig-i055-20230602   gcc  
-i386                 randconfig-i056-20230602   gcc  
-i386                 randconfig-i061-20230531   gcc  
-i386                 randconfig-i062-20230531   gcc  
-i386                 randconfig-i063-20230531   gcc  
-i386                 randconfig-i064-20230531   gcc  
-i386                 randconfig-i065-20230531   gcc  
-i386                 randconfig-i066-20230531   gcc  
-ia64                            zx1_defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                         apollo_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r013-20230601   gcc  
-m68k                 randconfig-r014-20230601   gcc  
-m68k                           sun3_defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                           ci20_defconfig   gcc  
-mips                      fuloong2e_defconfig   gcc  
-mips                           ip28_defconfig   clang
-mips                           xway_defconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r001-20230531   gcc  
-parisc       buildonly-randconfig-r006-20230602   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r011-20230601   gcc  
-parisc               randconfig-r036-20230531   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                      arches_defconfig   gcc  
-powerpc                        cell_defconfig   gcc  
-powerpc                      chrp32_defconfig   gcc  
-powerpc                       holly_defconfig   gcc  
-powerpc                  iss476-smp_defconfig   gcc  
-powerpc                       maple_defconfig   gcc  
-powerpc                     mpc83xx_defconfig   gcc  
-powerpc              randconfig-r006-20230531   gcc  
-powerpc              randconfig-r012-20230601   gcc  
-powerpc                     skiroot_defconfig   clang
-powerpc                     tqm8548_defconfig   gcc  
-powerpc                     tqm8560_defconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                    nommu_virt_defconfig   clang
-riscv                randconfig-r023-20230531   clang
-riscv                randconfig-r034-20230531   gcc  
-riscv                randconfig-r042-20230531   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r044-20230531   clang
-sh                               allmodconfig   gcc  
-sh                         apsh4a3a_defconfig   gcc  
-sh           buildonly-randconfig-r002-20230602   gcc  
-sh                   randconfig-r003-20230531   gcc  
-sh                   randconfig-r015-20230601   gcc  
-sh                   randconfig-r033-20230531   gcc  
-sh                           se7712_defconfig   gcc  
-sh                           se7751_defconfig   gcc  
-sh                              ul2_defconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r022-20230531   gcc  
-sparc64              randconfig-r002-20230531   gcc  
-sparc64              randconfig-r032-20230531   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r003-20230602   gcc  
-xtensa               randconfig-r031-20230531   gcc  
-xtensa               randconfig-r035-20230531   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+> Changes in v2:
+>         - Made the commit message more descriptive
+>         - Added a comment that mentions the jitdump format
+>         - Changed memcmp() to strcmp()
+>
+>  tools/perf/util/genelf_debug.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/genelf_debug.c b/tools/perf/util/genelf_debug.c
+> index aa5dcc56b2ac..138fdf87eaa2 100644
+> --- a/tools/perf/util/genelf_debug.c
+> +++ b/tools/perf/util/genelf_debug.c
+> @@ -337,6 +337,9 @@ static void emit_lineno_info(struct buffer_ext *be,
+>  {
+>         size_t i;
+>
+> +       /* as described in the jitdump format */
+> +       const char repeated_name_marker[] = {'\xff', '\0'};
+> +
+>         /*
+>          * Machine state at start of a statement program
+>          * address = 0
+> @@ -363,7 +366,8 @@ static void emit_lineno_info(struct buffer_ext *be,
+>                 /*
+>                  * check if filename changed, if so add it
+>                  */
+> -               if (!cur_filename || strcmp(cur_filename, ent->name)) {
+> +               if ((!cur_filename || strcmp(cur_filename, ent->name)) &&
+> +                       strcmp(repeated_name_marker, ent->name)) {
+>                         emit_lne_define_filename(be, ent->name);
+>                         cur_filename = ent->name;
+>                         emit_set_file(be, ++cur_file_idx);
+> --
+> 2.34.1
+>
