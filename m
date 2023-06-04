@@ -2,160 +2,110 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C30FC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Sat,  3 Jun 2023 04:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1EEC77B73
+	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Jun 2023 11:38:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbjFCErl (ORCPT
+        id S230437AbjFDLiS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 3 Jun 2023 00:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56102 "EHLO
+        Sun, 4 Jun 2023 07:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229619AbjFCErj (ORCPT
+        with ESMTP id S229788AbjFDLiR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 3 Jun 2023 00:47:39 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2079.outbound.protection.outlook.com [40.107.101.79])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5097E59;
-        Fri,  2 Jun 2023 21:47:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=efXdwnebSmvWPBKvQU87B4Pedb63wnSFGxh72SPadWdwihlUbm7u/DCbJ5UiWkmynfaBYbixAX3R+DR9Ze10rOfdaWKwZKl1x6wBmRJGOOgjd0Kmn9KPb2G5/CbYmD7u8MO9kWzldk1AT2OLA7e1TlX9B7H0OA0tOcii/nzWDKSOaTJDY6+mWi6rO9NclcJVIUv8FGZT+6Bzrtn+Ix/BBby0rYDjrTqjvPrymTrFQ2pz6NHiFE8oot9yBOqYhdEgLzl2D0jdYVoG8DUbdp1kkdQBbCZszcedSzio6YNo7Giux1yNt906uklJxDqpERHiTmAfT28VwCjk3rXxXm1PbA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TcfodoBZiXE4glcugY3TSGUlbVkK1tiF7Db6xDO8Cjg=;
- b=X8pmYXikUi30bIy5FTRiAVotsYQXxBjJgEGQHFPstmYoSjjw84aoR0Bpn4aOFB5qINKFdPcWHjkszmQRea3nTFfaYXQsdLg+dMlKTZ1JBYVxBdqfWLu0zPqCRR1YhYyJwEObnoECr9jBgK01N/b3b/r29ErsCIXw4cafXZj4L2240iv+RAewsqHhVgHZTVZtTvZlJv5VYKs7br3C4023J2XMSxvn5lyB7r3ws3LXS2uJV3N3K5heJYuFyi62Pr6xYNUUYmzxxm8Td3/ONaTeYXEzmYr2mZxV1uLuNEn7FOX+mGu+FHnMR3RshLmKHDsKclWs9Vz0YtvnxnDr1ICOAA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TcfodoBZiXE4glcugY3TSGUlbVkK1tiF7Db6xDO8Cjg=;
- b=VE5I9SEJeZ6r8iJz1tMfE15Zid+tGpPffykdP7m9vRynCo581ecFuK4sxJ6zECg1kRBd9kwQM4CWP1xtCsnSOPEYm8Dh5C55xRyg9205c48gHokfam2FV418XC/jDFequUJ6Z509882lOvAiIhlzQ9og9dCdnSvDN45lwEhzZ74=
-Received: from MW3PR05CA0025.namprd05.prod.outlook.com (2603:10b6:303:2b::30)
- by DM6PR12MB4268.namprd12.prod.outlook.com (2603:10b6:5:223::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Sat, 3 Jun
- 2023 04:47:33 +0000
-Received: from CO1NAM11FT026.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:2b:cafe::ab) by MW3PR05CA0025.outlook.office365.com
- (2603:10b6:303:2b::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.12 via Frontend
- Transport; Sat, 3 Jun 2023 04:47:32 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1NAM11FT026.mail.protection.outlook.com (10.13.175.67) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6455.28 via Frontend Transport; Sat, 3 Jun 2023 04:47:32 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 2 Jun
- 2023 23:47:20 -0500
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <irogers@google.com>, <acme@kernel.org>, <sfr@canb.auug.org.au>
-CC:     <ravi.bangoria@amd.com>, <suzuki.poulose@arm.com>,
-        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
-        <john.g.garry@oracle.com>, <will@kernel.org>,
-        <james.clark@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <adrian.hunter@intel.com>, <kjain@linux.ibm.com>,
-        <renyu.zj@linux.alibaba.com>, <kan.liang@linux.intel.com>,
-        <zhengjun.xing@linux.intel.com>, <maddy@linux.ibm.com>,
-        <atrajeev@linux.vnet.ibm.com>, <wangming01@loongson.cn>,
-        <chenhuacai@kernel.org>, <sandipan.das@amd.com>,
-        <9erthalion6@gmail.com>, <seanjc@google.com>, <robh@kernel.org>,
-        <tmricht@linux.ibm.com>, <tegongkang@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-perf-users@vger.kernel.org>
-Subject: [PATCH v2] perf test amd: Fix build failure with amd-ibs-via-core-pmu.c
-Date:   Sat, 3 Jun 2023 10:16:50 +0530
-Message-ID: <20230603044650.286-1-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <CAP-5=fUPZ7+nAcxBp5sFBfxzkOH8kzWkLV0uziHqxYC0cDbbDw@mail.gmail.com>
-References: <CAP-5=fUPZ7+nAcxBp5sFBfxzkOH8kzWkLV0uziHqxYC0cDbbDw@mail.gmail.com>
+        Sun, 4 Jun 2023 07:38:17 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87295DC
+        for <linux-perf-users@vger.kernel.org>; Sun,  4 Jun 2023 04:38:15 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-977d4a1cf0eso37276666b.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 04 Jun 2023 04:38:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685878694; x=1688470694;
+        h=content-transfer-encoding:cc:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2rusAMMBSsBeXYA05kondalVZp5FCvnTK7F71ZNyoHA=;
+        b=Hx+hqVphtxbMNEM4q6MqwH6e5HM2MEZhOZsLz7RcZBQ1fTsrGHwlYhiVzKhx4GcQ5l
+         aGKT8ihhXJjnhkn7f7BNZEUpyP+ac5oaanUG+3aJWLSQ0akF+LnG6W84LffssMXa4awX
+         gXcw23gxi740htLd7MPcS+ke9QtDdLYBpyRXITdHrdRqFxbgAkxAVXlaOwmnO9LPkUr8
+         b7z/Uj9BAjcAf1mdw5tLla90XRMqO2DmPGIb4wd633YqhHQf7QC4P0AAEHZxK+axYihU
+         JVMTkO+ZJJVbWcIV+g3JMQ6CepjW80oT69k5KhDCgNvVOyTcrtt9HRVYDJ4FGSP+FSEO
+         N5yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685878694; x=1688470694;
+        h=content-transfer-encoding:cc:to:subject:from:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2rusAMMBSsBeXYA05kondalVZp5FCvnTK7F71ZNyoHA=;
+        b=hZYl55928nTvkrlL1SK+5b3QSpNnBV70/0jrxC1YTVowMJqM0uQq7DasvsToe06o49
+         QzDjwFs+u2TWw0O+RC+YRqgog5xpaHRartoYJgsV2EzpvqlqyeHPnwTsX/n6higsXHrG
+         otXqlTeGUc9WV17tuJaLya1CWU6l1/xc9ovXoCHaQRu+YANYTs6NIVmru8aadOERFAxy
+         3kvLsVAZfm/2B3KlbJNxk4f+W65YMVf8yeElcjn4eeIUApzRrUnWV4haTAYjnUm2lLxt
+         MFndvDXeJbL35uB7NbRnsKMsBPwEtOWv2WT6GC/QYQ9eYT6ldxc+GBCDBTKyBaHUN2+V
+         v4bg==
+X-Gm-Message-State: AC+VfDwjmsrjXW+0ylpjRw5S2Tq+VLan7nkjUvoOtZfD8yJiNw5NNEGS
+        AIEmsJlZm3hYPkFJ0R3+VE7EPu959Ii8Fitfghk=
+X-Google-Smtp-Source: ACHHUZ4jFxPvDAEztjDERKQ4kdD7IgyPuWYCoXh2O0zZkoZdRwdA1z1k/JdpolPkyx0uECm1fBTKbQ==
+X-Received: by 2002:a17:907:3f27:b0:94b:d57e:9d4b with SMTP id hq39-20020a1709073f2700b0094bd57e9d4bmr3848146ejc.2.1685878693835;
+        Sun, 04 Jun 2023 04:38:13 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.199.204])
+        by smtp.gmail.com with ESMTPSA id g7-20020a1709063b0700b0097073f1ed84sm2947090ejf.4.2023.06.04.04.38.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 04 Jun 2023 04:38:13 -0700 (PDT)
+Message-ID: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+Date:   Sun, 4 Jun 2023 13:38:10 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT026:EE_|DM6PR12MB4268:EE_
-X-MS-Office365-Filtering-Correlation-Id: f82908ee-5e1e-4dd3-8b53-08db63eda4ef
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SZN5aqxu+PAkkEag3rWRuDbRUmCA0C93Fbktp3wI3+WLZfb+bx6MV8qaGxsQWy8TIfWYnhSA6r6g8cwLdFvGYOpCNvvTxs3JyT6pn2+IQkvzP0FJeHYzSjEQRaHVIBt3NoZotZcioOT+B+TrineV0uXrAe3o+CjgVtDm3dD1wgra8U8dkIbX1A2ojrGepaJPV6v6Z2Uk1VYRisFIuAk3MQxjs4P97RHo67EpcW/D4LclAlbJX6lCAM8NFoEun53Dbmg/JUgRvFIGt3GOVedwP9LYQW0r1scGke7T4C09KhZlZqGxM82FcHA38FA/aB7fDGvd41x/bkxydpo4siUO37UyekvUEX3lYtYUFXY2fDSoAyRHmiQmc6l6xuQCbiL1zOhmAOPCHzJm4gKYX9HJEN5RoV4usl8G7/KEkvbPoMfdma/9D2X7zj5ritbJ0i6pwzTFIpk+IoPwDUDWwe+5dhYiG5ZZSWcnnVJAEPj+sEp0QWbeAHjFA7pi/NHL5TP1D/8+drB3mN3XQoZtgDEkNjWdlYf9TAVRW45xrRzLb4B2jbe4017IwkGONwY7FC5aLW36HssTf/aUQ+m5mjsoIR/68XXsBnozYFgCK+KkaJad6Lp33K4GwkL25l4xxkDeMETgtjlUOEOzC9UNqG1t8kYWnDDAB4ckuNI8iNXUKHyOXCsg0aKqsZyTWdHp5/3zFOuwcUekQmdpv1DCYki4zXCT9ASG+CwjuJI2AphkR4L+aNDdEDXpp23LgvxsF7kfVg2PKSeHKgqAgSrqldSV5g==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(396003)(346002)(136003)(451199021)(46966006)(40470700004)(36840700001)(40480700001)(81166007)(110136005)(478600001)(8936002)(356005)(40460700003)(54906003)(44832011)(7416002)(7406005)(36756003)(5660300002)(82310400005)(2906002)(8676002)(86362001)(70206006)(4326008)(82740400003)(70586007)(316002)(41300700001)(2616005)(16526019)(186003)(1076003)(26005)(6666004)(7696005)(36860700001)(47076005)(426003)(336012)(83380400001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2023 04:47:32.7055
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f82908ee-5e1e-4dd3-8b53-08db63eda4ef
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT026.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4268
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
+To:     Ravi Bangoria <ravi.bangoria@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc:     mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
+        bp@alien8.de, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Since amd-ibs-via-core-pmu.c was applied via Peter's tree, some of
-the changes came via Arnaldo's tree did not reflect in this file,
-which is causing build failures.
+Hi,
 
-  arch/x86/tests/amd-ibs-via-core-pmu.c:47:25: error: ‘pmus’ undeclared
-  (first use in this function)
-     47 |         if (list_empty(&pmus))
-        |                         ^~~~
-  arch/x86/tests/amd-ibs-via-core-pmu.c:48:17: error: implicit declaration
-  of function ‘perf_pmu__scan’; did you mean
-  perf_pmus__scan’? [-Werror=implicit-function-declaration]
-     48 |                 perf_pmu__scan(NULL);
-        |                 ^~~~~~~~~~~~~~
-        |                 perf_pmus__scan
-  arch/x86/tests/amd-ibs-via-core-pmu.c:50:19: error: implicit declaration
-  of function ‘perf_pmu__find’; did you mean
-  perf_pmus__find’? [-Werror=implicit-function-declaration]
-     50 |         ibs_pmu = perf_pmu__find("ibs_op");
-        |                   ^~~~~~~~~~~~~~
-        |                   perf_pmus__find
+#regzbot introduced: 9551fbb64d09
 
-Fix those.
+Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
+searching code") as first one where all hardware events are gone from
+perf for ARMv7 Exynos5422 board.
 
-Fixes: 1eaf496ed386 ("perf pmu: Separate pmu and pmus")
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
-v1->v2:
-  - Remove unnecessary perf_pmus__scan(NULL) as suggested by Ian.
+Expected:
+perf list | grep "Hardware event"
+  branch-instructions OR branches                    [Hardware event]
+  branch-misses                                      [Hardware event]
+  bus-cycles                                         [Hardware event]
+  cache-misses                                       [Hardware event]
+  cache-references                                   [Hardware event]
+  cpu-cycles OR cycles                               [Hardware event]
+  instructions                                       [Hardware event]
 
- tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c b/tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c
-index 2902798ca5c1..78b1902f6f59 100644
---- a/tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c
-+++ b/tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c
-@@ -44,10 +44,7 @@ int test__amd_ibs_via_core_pmu(struct test_suite *test __maybe_unused,
- 	int ret = TEST_OK;
- 	int fd, i;
- 
--	if (list_empty(&pmus))
--		perf_pmu__scan(NULL);
--
--	ibs_pmu = perf_pmu__find("ibs_op");
-+	ibs_pmu = perf_pmus__find("ibs_op");
- 	if (!ibs_pmu)
- 		return TEST_SKIP;
- 
--- 
-2.40.1
+Result:
+empty, no hardware events
 
+1. Arch ARM Linux
+2. exynos_defconfig
+3. Board:
+   - Odroid HC1
+     ARMv7, octa-core (Cortex-A7+A15), Exynos5422 SoC
+     Systemd: v239
+
+4. perf version 6.1.0
+
+
+Best regards,
+Krzysztof
