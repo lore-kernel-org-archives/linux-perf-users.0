@@ -2,110 +2,317 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C1EEC77B73
-	for <linux-perf-users@archiver.kernel.org>; Sun,  4 Jun 2023 11:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5541C7EE2C
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 02:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230437AbjFDLiS (ORCPT
+        id S231308AbjFECnS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 4 Jun 2023 07:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36424 "EHLO
+        Sun, 4 Jun 2023 22:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229788AbjFDLiR (ORCPT
+        with ESMTP id S229449AbjFECnS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 4 Jun 2023 07:38:17 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87295DC
-        for <linux-perf-users@vger.kernel.org>; Sun,  4 Jun 2023 04:38:15 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-977d4a1cf0eso37276666b.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 04 Jun 2023 04:38:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685878694; x=1688470694;
-        h=content-transfer-encoding:cc:to:subject:from:content-language
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2rusAMMBSsBeXYA05kondalVZp5FCvnTK7F71ZNyoHA=;
-        b=Hx+hqVphtxbMNEM4q6MqwH6e5HM2MEZhOZsLz7RcZBQ1fTsrGHwlYhiVzKhx4GcQ5l
-         aGKT8ihhXJjnhkn7f7BNZEUpyP+ac5oaanUG+3aJWLSQ0akF+LnG6W84LffssMXa4awX
-         gXcw23gxi740htLd7MPcS+ke9QtDdLYBpyRXITdHrdRqFxbgAkxAVXlaOwmnO9LPkUr8
-         b7z/Uj9BAjcAf1mdw5tLla90XRMqO2DmPGIb4wd633YqhHQf7QC4P0AAEHZxK+axYihU
-         JVMTkO+ZJJVbWcIV+g3JMQ6CepjW80oT69k5KhDCgNvVOyTcrtt9HRVYDJ4FGSP+FSEO
-         N5yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685878694; x=1688470694;
-        h=content-transfer-encoding:cc:to:subject:from:content-language
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2rusAMMBSsBeXYA05kondalVZp5FCvnTK7F71ZNyoHA=;
-        b=hZYl55928nTvkrlL1SK+5b3QSpNnBV70/0jrxC1YTVowMJqM0uQq7DasvsToe06o49
-         QzDjwFs+u2TWw0O+RC+YRqgog5xpaHRartoYJgsV2EzpvqlqyeHPnwTsX/n6higsXHrG
-         otXqlTeGUc9WV17tuJaLya1CWU6l1/xc9ovXoCHaQRu+YANYTs6NIVmru8aadOERFAxy
-         3kvLsVAZfm/2B3KlbJNxk4f+W65YMVf8yeElcjn4eeIUApzRrUnWV4haTAYjnUm2lLxt
-         MFndvDXeJbL35uB7NbRnsKMsBPwEtOWv2WT6GC/QYQ9eYT6ldxc+GBCDBTKyBaHUN2+V
-         v4bg==
-X-Gm-Message-State: AC+VfDwjmsrjXW+0ylpjRw5S2Tq+VLan7nkjUvoOtZfD8yJiNw5NNEGS
-        AIEmsJlZm3hYPkFJ0R3+VE7EPu959Ii8Fitfghk=
-X-Google-Smtp-Source: ACHHUZ4jFxPvDAEztjDERKQ4kdD7IgyPuWYCoXh2O0zZkoZdRwdA1z1k/JdpolPkyx0uECm1fBTKbQ==
-X-Received: by 2002:a17:907:3f27:b0:94b:d57e:9d4b with SMTP id hq39-20020a1709073f2700b0094bd57e9d4bmr3848146ejc.2.1685878693835;
-        Sun, 04 Jun 2023 04:38:13 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.199.204])
-        by smtp.gmail.com with ESMTPSA id g7-20020a1709063b0700b0097073f1ed84sm2947090ejf.4.2023.06.04.04.38.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 04 Jun 2023 04:38:13 -0700 (PDT)
-Message-ID: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
-Date:   Sun, 4 Jun 2023 13:38:10 +0200
+        Sun, 4 Jun 2023 22:43:18 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5D2B6BC;
+        Sun,  4 Jun 2023 19:43:16 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 746CBD75;
+        Sun,  4 Jun 2023 19:44:01 -0700 (PDT)
+Received: from [10.162.41.6] (a077893.blr.arm.com [10.162.41.6])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44CA63F663;
+        Sun,  4 Jun 2023 19:43:10 -0700 (PDT)
+Message-ID: <58628cba-7ec4-b2b3-b993-14c2af1a67cb@arm.com>
+Date:   Mon, 5 Jun 2023 08:13:08 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
+ Thunderbird/102.11.0
+Subject: Re: [PATCH V11 05/10] arm64/perf: Add branch stack support in ARMV8
+ PMU
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230531040428.501523-1-anshuman.khandual@arm.com>
+ <20230531040428.501523-6-anshuman.khandual@arm.com>
+ <CAM9d7cioDUxzNos5b3ANkG-BkJUcROSGCG0gpLzSXnc-v6o9jw@mail.gmail.com>
 Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
-To:     Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc:     mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
-        bp@alien8.de, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <CAM9d7cioDUxzNos5b3ANkG-BkJUcROSGCG0gpLzSXnc-v6o9jw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Hello Namhyung,
 
-#regzbot introduced: 9551fbb64d09
+On 6/2/23 08:03, Namhyung Kim wrote:
+> On Tue, May 30, 2023 at 9:27 PM Anshuman Khandual
+> <anshuman.khandual@arm.com> wrote:
+>> This enables support for branch stack sampling event in ARMV8 PMU, checking
+>> has_branch_stack() on the event inside 'struct arm_pmu' callbacks. Although
+>> these branch stack helpers armv8pmu_branch_XXXXX() are just dummy functions
+>> for now. While here, this also defines arm_pmu's sched_task() callback with
+>> armv8pmu_sched_task(), which resets the branch record buffer on a sched_in.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Tested-by: James Clark <james.clark@arm.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/include/asm/perf_event.h | 33 +++++++++++++
+>>  drivers/perf/arm_pmuv3.c            | 76 ++++++++++++++++++++---------
+>>  2 files changed, 86 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/perf_event.h b/arch/arm64/include/asm/perf_event.h
+>> index eb7071c9eb34..7548813783ba 100644
+>> --- a/arch/arm64/include/asm/perf_event.h
+>> +++ b/arch/arm64/include/asm/perf_event.h
+>> @@ -24,4 +24,37 @@ extern unsigned long perf_misc_flags(struct pt_regs *regs);
+>>         (regs)->pstate = PSR_MODE_EL1h; \
+>>  }
+>>
+>> +struct pmu_hw_events;
+>> +struct arm_pmu;
+>> +struct perf_event;
+>> +
+>> +#ifdef CONFIG_PERF_EVENTS
+>> +static inline bool has_branch_stack(struct perf_event *event);
+>> +
+>> +static inline void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+>> +{
+>> +       WARN_ON_ONCE(!has_branch_stack(event));
+>> +}
+>> +
+>> +static inline bool armv8pmu_branch_valid(struct perf_event *event)
+>> +{
+>> +       WARN_ON_ONCE(!has_branch_stack(event));
+>> +       return false;
+>> +}
+>> +
+>> +static inline void armv8pmu_branch_enable(struct perf_event *event)
+>> +{
+>> +       WARN_ON_ONCE(!has_branch_stack(event));
+>> +}
+>> +
+>> +static inline void armv8pmu_branch_disable(struct perf_event *event)
+>> +{
+>> +       WARN_ON_ONCE(!has_branch_stack(event));
+>> +}
+>> +
+>> +static inline void armv8pmu_branch_probe(struct arm_pmu *arm_pmu) { }
+>> +static inline void armv8pmu_branch_reset(void) { }
+>> +static inline int armv8pmu_private_alloc(struct arm_pmu *arm_pmu) { return 0; }
+>> +static inline void armv8pmu_private_free(struct arm_pmu *arm_pmu) { }
+>> +#endif
+>>  #endif
+>> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+>> index c98e4039386d..86d803ff1ae3 100644
+>> --- a/drivers/perf/arm_pmuv3.c
+>> +++ b/drivers/perf/arm_pmuv3.c
+>> @@ -705,38 +705,21 @@ static void armv8pmu_enable_event(struct perf_event *event)
+>>          * Enable counter and interrupt, and set the counter to count
+>>          * the event that we're interested in.
+>>          */
+>> -
+>> -       /*
+>> -        * Disable counter
+>> -        */
+>>         armv8pmu_disable_event_counter(event);
+>> -
+>> -       /*
+>> -        * Set event.
+>> -        */
+>>         armv8pmu_write_event_type(event);
+>> -
+>> -       /*
+>> -        * Enable interrupt for this counter
+>> -        */
+>>         armv8pmu_enable_event_irq(event);
+>> -
+>> -       /*
+>> -        * Enable counter
+>> -        */
+>>         armv8pmu_enable_event_counter(event);
+>> +
+>> +       if (has_branch_stack(event))
+>> +               armv8pmu_branch_enable(event);
+>>  }
+>>
+>>  static void armv8pmu_disable_event(struct perf_event *event)
+>>  {
+>> -       /*
+>> -        * Disable counter
+>> -        */
+>> -       armv8pmu_disable_event_counter(event);
+>> +       if (has_branch_stack(event))
+>> +               armv8pmu_branch_disable(event);
+>>
+>> -       /*
+>> -        * Disable interrupt for this counter
+>> -        */
+>> +       armv8pmu_disable_event_counter(event);
+>>         armv8pmu_disable_event_irq(event);
+>>  }
+>>
+>> @@ -814,6 +797,11 @@ static irqreturn_t armv8pmu_handle_irq(struct arm_pmu *cpu_pmu)
+>>                 if (!armpmu_event_set_period(event))
+>>                         continue;
+>>
+>> +               if (has_branch_stack(event) && !WARN_ON(!cpuc->branches)) {
+>> +                       armv8pmu_branch_read(cpuc, event);
+>> +                       perf_sample_save_brstack(&data, event, &cpuc->branches->branch_stack);
+>> +               }
+>> +
+>>                 /*
+>>                  * Perf event overflow will queue the processing of the event as
+>>                  * an irq_work which will be taken care of in the handling of
+>> @@ -912,6 +900,14 @@ static int armv8pmu_user_event_idx(struct perf_event *event)
+>>         return event->hw.idx;
+>>  }
+>>
+>> +static void armv8pmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
+>> +{
+>> +       struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
+>> +
+>> +       if (sched_in && arm_pmu_branch_stack_supported(armpmu))
+>> +               armv8pmu_branch_reset();
+>> +}
+>> +
+>>  /*
+>>   * Add an event filter to a given event.
+>>   */
+>> @@ -982,6 +978,9 @@ static void armv8pmu_reset(void *info)
+>>                 pmcr |= ARMV8_PMU_PMCR_LP;
+>>
+>>         armv8pmu_pmcr_write(pmcr);
+>> +
+>> +       if (arm_pmu_branch_stack_supported(cpu_pmu))
+>> +               armv8pmu_branch_reset();
+>>  }
+>>
+>>  static int __armv8_pmuv3_map_event_id(struct arm_pmu *armpmu,
+>> @@ -1019,6 +1018,9 @@ static int __armv8_pmuv3_map_event(struct perf_event *event,
+>>
+>>         hw_event_id = __armv8_pmuv3_map_event_id(armpmu, event);
+>>
+>> +       if (has_branch_stack(event) && !armv8pmu_branch_valid(event))
+>> +               return -EOPNOTSUPP;
+>> +
+>>         /*
+>>          * CHAIN events only work when paired with an adjacent counter, and it
+>>          * never makes sense for a user to open one in isolation, as they'll be
+>> @@ -1135,6 +1137,21 @@ static void __armv8pmu_probe_pmu(void *info)
+>>                 cpu_pmu->reg_pmmir = read_pmmir();
+>>         else
+>>                 cpu_pmu->reg_pmmir = 0;
+>> +       armv8pmu_branch_probe(cpu_pmu);
+>> +}
+>> +
+>> +static int branch_records_alloc(struct arm_pmu *armpmu)
+>> +{
+>> +       struct pmu_hw_events *events;
+>> +       int cpu;
+>> +
+>> +       for_each_possible_cpu(cpu) {
+>> +               events = per_cpu_ptr(armpmu->hw_events, cpu);
+>> +               events->branches = kzalloc(sizeof(struct branch_records), GFP_KERNEL);
+>> +               if (!events->branches)
+>> +                       return -ENOMEM;
+>> +       }
+>> +       return 0;
+>>  }
+>>
+>>  static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>> @@ -1145,12 +1162,24 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>>         };
+>>         int ret;
+>>
+>> +       ret = armv8pmu_private_alloc(cpu_pmu);
+>> +       if (ret)
+>> +               return ret;
+> Wouldn't it be better to move it under the if statement below
+> if it's only needed for branch stack?
 
-Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
-searching code") as first one where all hardware events are gone from
-perf for ARMv7 Exynos5422 board.
+armv8pmu_private_alloc() allocates arm_pmu's private structure which stores
+the BRBE HW attributes during armv8pmu_branch_probe(), called from this SMP
+callback __armv8pmu_probe_pmu(). Hence without the structure being allocated
+and assigned, following smp_call_function_any() cannot execute successfully.
 
-Expected:
-perf list | grep "Hardware event"
-  branch-instructions OR branches                    [Hardware event]
-  branch-misses                                      [Hardware event]
-  bus-cycles                                         [Hardware event]
-  cache-misses                                       [Hardware event]
-  cache-references                                   [Hardware event]
-  cpu-cycles OR cycles                               [Hardware event]
-  instructions                                       [Hardware event]
+armv8pmu_private_alloc()
+	{
+		......
+		Allocates arm_pmu->private as single 'struct brbe_hw_attr'
+		Allocates arm_pmu->pmu.task_ctx_cache
+		......
+	}
 
+__armv8pmu_probe_pmu()
+	armv8pmu_branch_probe()
+		brbe_attributes_probe()
+		{
+			......
+			brbe_attr->brbe_version = brbe;
+			brbe_attr->brbe_format = brbe_get_format(brbidr);
+        		brbe_attr->brbe_cc = brbe_get_cc_bits(brbidr);
+        		brbe_attr->brbe_nr = brbe_get_numrec(brbidr);
+			......
+		}
 
-Result:
-empty, no hardware events
+armv8pmu_private_alloc() cannot be moved inside armv8pmu_branch_probe(),
+because there cannot be any allocation while being in a SMP call context.
 
-1. Arch ARM Linux
-2. exynos_defconfig
-3. Board:
-   - Odroid HC1
-     ARMv7, octa-core (Cortex-A7+A15), Exynos5422 SoC
-     Systemd: v239
+> 
+>> +
+>>         ret = smp_call_function_any(&cpu_pmu->supported_cpus,
+>>                                     __armv8pmu_probe_pmu,
+>>                                     &probe, 1);
+>>         if (ret)
+>>                 return ret;
+> Otherwise you might need to free it here.
+> 
+>> +       if (arm_pmu_branch_stack_supported(cpu_pmu)) {
+>> +               ret = branch_records_alloc(cpu_pmu);
+>> +               if (ret)
+>> +                       return ret;
+> And here too.
 
-4. perf version 6.1.0
+Not freeing the arm_pmu's private data, might not be a problem in cases
+where either pmu does not support BRBE or pmu probe itself fails. But for
+completeness, will change as following.
 
-
-Best regards,
-Krzysztof
+diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+index 9725a53d6799..fdbe52913cc7 100644
+--- a/drivers/perf/arm_pmuv3.c
++++ b/drivers/perf/arm_pmuv3.c
+@@ -1198,13 +1198,17 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+        ret = smp_call_function_any(&cpu_pmu->supported_cpus,
+                                    __armv8pmu_probe_pmu,
+                                    &probe, 1);
+-       if (ret)
++       if (ret) {
++               armv8pmu_private_free(cpu_pmu);
+                return ret;
++       }
+ 
+        if (arm_pmu_branch_stack_supported(cpu_pmu)) {
+                ret = branch_records_alloc(cpu_pmu);
+-               if (ret)
++               if (ret) {
++                       armv8pmu_private_free(cpu_pmu);
+                        return ret;
++               }
+        } else {
+                armv8pmu_private_free(cpu_pmu);
+        }
