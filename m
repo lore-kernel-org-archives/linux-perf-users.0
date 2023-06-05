@@ -2,137 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CE5C7EE2C
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 02:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5B71C7EE2C
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 03:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232657AbjFECqx (ORCPT
+        id S232516AbjFEDAJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 4 Jun 2023 22:46:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54592 "EHLO
+        Sun, 4 Jun 2023 23:00:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232680AbjFECqt (ORCPT
+        with ESMTP id S230437AbjFEDAI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 4 Jun 2023 22:46:49 -0400
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92A8510A;
-        Sun,  4 Jun 2023 19:46:46 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R821e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0VkIV8ZJ_1685933200;
-Received: from 30.221.149.40(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VkIV8ZJ_1685933200)
-          by smtp.aliyun-inc.com;
-          Mon, 05 Jun 2023 10:46:41 +0800
-Message-ID: <76fcb062-61a8-5f90-b39d-b5fb6da35652@linux.alibaba.com>
-Date:   Mon, 5 Jun 2023 10:46:36 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.0
-Subject: Re: [PATCH v3 2/7] perf metric: Event "Compat" value supports
- matching multiple identifiers
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1685438374-33287-3-git-send-email-renyu.zj@linux.alibaba.com>
- <c1d8ee9b-4839-1011-4dad-c4777d8f8224@oracle.com>
- <452e724b-2a2c-52fd-274b-60db7a7f730e@linux.alibaba.com>
- <c4b2fca8-602d-9c76-90a7-3eafd92da8bc@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <c4b2fca8-602d-9c76-90a7-3eafd92da8bc@oracle.com>
+        Sun, 4 Jun 2023 23:00:08 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2054.outbound.protection.outlook.com [40.107.92.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63BB1A1;
+        Sun,  4 Jun 2023 20:00:07 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NBg11iGTQL4zp0R/rmXuQB02qGcw5USu0xV6IDJXxLQOB2tM8G75k/kV4cPJBJNAuRCq5C7ir7YR9speBzth+3Ly9GuMgKHcwveLcTAuawgC8yvh5Lwi8ctugnzX/x7wK7s48UNiTzar7lOjiuJ36BwbngwGXoxmECcz+74XqZvgol51q23jbYDXDmTtm98N4KX1VWOXjXUi1qxYKXTNTRO5tactnL2tLifrddYgmCQre3G2Y0gIBdxSlrvwoRrI43OzpPyAP726xTryw5HUTTLbFXLogg6f6mWj7ttokFjmttgf5JHWJGKBtflKLpWAuRtjvI4HOMq71jkPVlNaAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qNvw7QJa5380MGZpoUcy0iccLHEi6eUyeZdom0hOd68=;
+ b=KV8GCkGrJJCB8yqIv+yhtnHGskrMDt6OsjZq2ss8OMl6e4NQbLa1Dh9KybSA0qmKUd7SByWPz3aUsmO1vxf3PuJwKwr6I9EeTHF3LK214L27cikKZrSw2WxluXEQ2BplU9Pi6w22vp8wx3XVK67XUz4X94qYUkRgP9aYX/1lkV1lGv69xMIihWJyCUGa5uheIhPvsyg7QdCeY5C5MTrTo3KgUjWA+paaT1+1TvuDtAqmH1PV/3VAIsAAif7WqkIyzwj1GeyBFF5cgwXY3v1RPOOBuAGymC8JuXdTFIUIiPg7YHM9ZMGngbCXyutHkQgIrJRS4eEfwFNQxXDmsP2oWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qNvw7QJa5380MGZpoUcy0iccLHEi6eUyeZdom0hOd68=;
+ b=tECc5bbS7cRz1XdXK8yGe5Kfi/xKqLoQvkqClbDShfBxfc4dPb2dQYZV21dk90y37wz8bIUjz0V/rPtuD+/FauEqa0MvxhHNF+qy5kpzvIzxuQlK4EneSS2EtDJlS2ZeTrgN41O4zos2eH/THLjyL7KE+gChCApN29tqL7QVtdI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by CY8PR12MB8066.namprd12.prod.outlook.com (2603:10b6:930:70::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.32; Mon, 5 Jun
+ 2023 03:00:05 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::b4a6:94bb:6895:645]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::b4a6:94bb:6895:645%3]) with mapi id 15.20.6455.030; Mon, 5 Jun 2023
+ 03:00:04 +0000
+Message-ID: <512e8b06-3ef4-66ae-5ca3-5a863a10c51f@amd.com>
+Date:   Mon, 5 Jun 2023 08:29:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
+        bp@alien8.de, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+Content-Language: en-US
+In-Reply-To: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0175.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26::30) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|CY8PR12MB8066:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6d587b48-669a-4a18-122a-08db6570f617
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qr2iYDebxadt7QMcLECrUX500Rek2ZjREeNwcklJw5m1VH7sAZpBxT+iDFCuKNDj0+RS8B8u94C3uUbK23cIZfV9BJeVJJ9M2tSKZkw+2Pl105sZJU4/fyJXuQTNTLI7TwFljxKdwm5BOizw6EQOT1CWKSTGw6t9A0OQrDD4H7PktIKIiwMenk8vALuEkhJcEwtQROtenIFZx0nnZdvTgx+nTl1hOWTEGPnupgPtbmqcg5yduob04Qt7rEwVBQ+zWrsGOWsAmArN3kIfW9XRXtt/BfMA4cKznOgP8f07ZjqVtm/FVPe0td/uVIZ7R9D6Ius/w/0KGaj7Pz3HAGQwwFguGizQznbGtzsE67OHcq2ub7k4LtvfYRNE4Z5nsM+0XDaKGSoqPEz6KSzWSo8S2qNrdSW8+QWmtZ++mS65p6uyH9h7EzzEv53XK3KybgdNzD4awIb6l5NqzoXbQp+n6MHd1peJfMlS03eegpfvko0CXLcT71T/JGErUSxfmzcqsh0IqFQU+1t6/qLKr1lvM51o2tGfhJ1SjDBkmOUeLkAJKyOvpHIXPvs39YrFKZYiP8hKDEaAOB+VzEe7FrqzTkNlmuxhL6+tB3WYSSN8dWhWnXNiD6tuW3hBZ3SiKLFnxOeq2hvUC7PSEqDUg7HA7A==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(376002)(39860400002)(346002)(136003)(396003)(451199021)(66476007)(66946007)(2906002)(4744005)(478600001)(31686004)(316002)(6916009)(4326008)(8936002)(8676002)(41300700001)(54906003)(44832011)(66556008)(6666004)(5660300002)(7416002)(6486002)(6512007)(53546011)(55236004)(6506007)(26005)(966005)(38100700002)(2616005)(186003)(36756003)(86362001)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZTdLQ1BjUmZqQVl6MURsbjFCbGtGZjJsOVFqSGNORDJRYzA3dGRwU0xkaGg3?=
+ =?utf-8?B?UHM0RjFXMXFOc2xLN1BSc1poWnhNbTZYRE5NY0RHampiSVhUTGx2eE5SWDY3?=
+ =?utf-8?B?ZW9YNjY1Qnh1aDNrUmRTTUlJUlVVeTF0clpZZlNGbjU3SkQyZUhLWG5oaHE4?=
+ =?utf-8?B?ckZHRGhpczFvUXZwU21xS0RFK2xMeWEvdFRRcitqWUw4QUVDOVZzOCtCWi9Y?=
+ =?utf-8?B?M25IV2tVYjkwSVhaWGtkeW1LUDRya1dHbWVsbFZJVTc1N2wxNEFBTnJUcit5?=
+ =?utf-8?B?TkRwUmx1T0REYnRINndCakJPUlYvOTJFOXZvdlRoQVYydnhuSllWTnB0VXQx?=
+ =?utf-8?B?MCs4SWFyL2VnMElrTDlqY2xOOVFaUWlPZ2VNbFhRUlpQZzJJb3BkaDVTeTlq?=
+ =?utf-8?B?R0ErSUlQQ0JVVmZibkhtZHhRODhsZEI4OFc5Y1JPMjd1RDd5TWVhV1FreStn?=
+ =?utf-8?B?dkZxTGkrUk5FSXhZOTNrNVdRM2IzT0srZVd2OVF4NGJwUHlHR1RjV0hlUjR1?=
+ =?utf-8?B?WlcySHV6elFmeVZEMXRMaEFaODVHdmJPWGRhMmNzZURHdVNtbjRDeUdZSVNS?=
+ =?utf-8?B?R2RHQ3g4a1Z0eTR0SVkxODFWS1JWM3FjWGk4OUVrQUdsN3ZsUDh2elVKN2cy?=
+ =?utf-8?B?SkJrd0tFcnplcG9zMEhrcVloa29id205MUZ3Y2Fqc0FnN3BxN3U2Uys0WUgw?=
+ =?utf-8?B?aWdvcFEzNm9aSHZiMzh0STg4ZHdNa0VtdHJRY09OK0JhQ2dxUlRaWHZBSkFo?=
+ =?utf-8?B?MTg0TnRxZHJQRUFhQ1U1cmo3NTVPR2p1WCt6eHNMUEt2b0VFTWJsaHJySkxy?=
+ =?utf-8?B?dnVRYTkveFY3ZGppMlAzQ1RJeVk0Y2JkeXJYQXJ4aW1zSGdjWWh2clJtaTZO?=
+ =?utf-8?B?VC9Pbi9aWVlBTnE0REVjS0tJSlhhMU5jZDZ0dkd1ZGppTS9rc2VJY1JNQTZD?=
+ =?utf-8?B?L1FEM0FRWGx6QlhSRFhxUW5ob3Q2VXhpZWVUSkROa1lqRWdLQjVFd3pZKzdX?=
+ =?utf-8?B?K1ZJYjVuRGk3Uys1TG9BSHBYNDVaM2FpV2Y4TlpOcS9vRTMrWi9LVzVNL1FM?=
+ =?utf-8?B?N3FVeXUxOTBFMVcyMi9VOUZjWUFoeXhxZkc2eUpncUlkTndvaDNtYkhsS1ln?=
+ =?utf-8?B?S0VDaFJ0eEwxRmlJL3ZlM0k5Y2VCQjc4OTdZc2M5bzVMcGU1UmI4RjVRMTFY?=
+ =?utf-8?B?cTNGUTJJZGttNSs1Q0YvWmZpZEtKTHJSVDVXREtWdkw5eUZ0UkZhOE9xbmh2?=
+ =?utf-8?B?MThqZUV5ZXcyUWxKUmtsc1diM0N4d0VNd1VQRzFTQVlXZmhWRXNrblBrZDJ5?=
+ =?utf-8?B?SDNpdWFwNGN4SFN3YXh5aFFDSHFtTUZOUXVaM05Ea3B2SXRhNW5sdGJyK3gv?=
+ =?utf-8?B?ODh3ejVQY0ZCazVYMVRWVmtjNVg2RVZWd09TVEJ6aGpsUWxQRW5Ca2xnY1Fw?=
+ =?utf-8?B?bFhUbVNTVkgvdHlIaEx5RGp0TXFVTHZqLzhYZU16MkNiMkxKcWY0MndjUGVw?=
+ =?utf-8?B?MEg3TjlFZTNaNXpkeHowNElMR2x6Mm9za0FSOEZQSXlHLzJpRUoyWmhxZDBW?=
+ =?utf-8?B?dmh6SlJFRjdSVEEwdlVYUzdMaHNMVzRwOVVFZWQvdy9oK3NEcUUxTDVUYUxY?=
+ =?utf-8?B?eUZwMnYyVjM3bHlldzdQWUZWMFRzZ2R2Sjk4V3Z2bExadHRaNUtjeXpsei9q?=
+ =?utf-8?B?S2oxL0YrS3o3Q1BpazVXalpzMzJRNGhBSmlvd1hsVUpqbTJkWHRkS2RuZEYz?=
+ =?utf-8?B?WXZkR1R2V1ZrK0p5ODVKNDBkR3dIUUhJYW4xK05MRnJYV3BCeU1xM0pWRHha?=
+ =?utf-8?B?TUJJU1d2R01XSHBBRGp2bEtmem5mQnNTRTB0UjhqOFNCbUZzMFJTRmdoOUtT?=
+ =?utf-8?B?ZkxCY0xkZTNjZDRPa2JpUFUrM2V2ZUl5cTRmVzY1RWNoV01vcFhoUTc5c2p2?=
+ =?utf-8?B?TFI3aXVhQ0MxV0FOamovSmpMeEo2RjErKzc0Z2w0VXVoZVFJcG9UOEFObTRV?=
+ =?utf-8?B?UmJ6aElUS3NFVHZ0ejFKM1E4eGNINU5pRmNBRW0yLzlJdGROdWdZMnlGVnZE?=
+ =?utf-8?B?VEdOeUlaYWJkRytVREhPamUzWUdKd0FMSDhsc0VUeFNOeVhTWTZzK0ZSQmM1?=
+ =?utf-8?Q?T+5GJLlVlwvWlhgv1TfQ+RZPf?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d587b48-669a-4a18-122a-08db6570f617
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jun 2023 03:00:04.6270
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: kceMnWHlcY8z2aL2Y2Zl6mpENqGukSuTeD3vdYgUlLUthZsLZ7rYOzWZAXSoYI/IKWqMoi5iRYWUv6xtfG/nLw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8066
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-在 2023/6/3 上午12:20, John Garry 写道:
-> On 01/06/2023 09:58, Jing Zhang wrote:
->>>  From checking the driver, it seems that we have model names "arm_cmn600" and "arm_cmn650". Are you saying that "arm_cmn600X" would match for those? I am most curious about how "arm_cmn600X" matches "arm_cmn650".
->>>
->> Hi John,
->>
->>  From patch #1 we have identifiers "arm_cmn600_0" and "arm_cmn650_0" etc. 
+On 04-Jun-23 5:08 PM, Krzysztof Kozlowski wrote:
+> Hi,
 > 
-> ok, I see. Your idea for the cmn driver HW identifier format is odd to me. Your HW identifier is a mix of the HW IP model name (from arm_cmn_device_data.model_name) with some the kernel revision identifier (from cmn_revision). The kernel revision identifier is an enum, and I don't think that it is a good idea to expose enum values through sysfs files.
+> #regzbot introduced: 9551fbb64d09
 > 
-> I assume that there is some ordering requirement for cmn_revision, considering that we have equality operations on the revision in the driver.
-> 
+> Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
+> searching code") as first one where all hardware events are gone from
+> perf for ARMv7 Exynos5422 board.
 
-Actually revision is a register value rather than an enumeration value. If I modify the revision to r0p0, etc., it is also possible, but I need
-to convert the enumeration to a string.
-
-
->> The identifier consists of model_name and revision.
->> The compatible value "arm_cmn600;arm_cmn650" can match the identifier "arm_cmn600_0" or "arm_cmn650_0". Maybe the message log
->> is not clear enough.
->>
->> For example in patch #3 the metric "slc_miss_rate" is a generic metric for cmn-any. So we can define:
->>
->> +    {
->> +        "MetricName": "slc_miss_rate",
->> +        "BriefDescription": "The system level cache miss rate include.",
->> +        "MetricGroup": "arm_cmn",
->> +        "MetricExpr": "hnf_cache_miss / hnf_slc_sf_cache_access",
->> +        "ScaleUnit": "100%",
->> +        "Unit": "arm_cmn",
->> +        "Compat": "arm_cmn600;arm_cmn650;arm_cmn700;arm_ci700"
->> +    },
->>
->>
->> It can match identifiers "arm_cmn600_{0,1,2..X}" or "arm_cmn650_{0,1,2..X}" or "arm_cmn700_{0,1,2..X}" or "arm_ci700_{ 0,1,2..X}".
->> In other words, it can match all identifiers prefixed with “arm_cmn600” or “arm_cmn650” or “arm_cmn700” or “arm_ci700”.
->>
->> If a new model arm_cmn driver with identifier "arm_cmn750_0", it will not be matched, but if a new revision arm_cmn driver with identifier
->> "arm_cmn700_4", it can be matched.
-> 
-> OK, I see what you mean. My confusion came about though your commit message on this same patch, which did not mention cmn650. I assumed that the example event which you were describing was supported for arm_cmn650 and you intentionally omitted it.
-> 
-
-Yes, I didn't write cmn650 in the commit message, just because I omitted it. I will add it in a later version.
-
->>
->>
->>>> Tokens in Unit field are delimited by ';'.
->>> Thanks for taking a stab at solving this problem.
->>>
->>> I have to admit that I am not the biggest fan of having multiple values to match in the "Compat" value possibly for every event. It doesn't really scale.
->>>
->>> I would hope that there are at least some events which we are guaranteed to always be present. From what Robin said on the v2 series, for the implementations which we care about, events are generally added per subsequent version. So we should have some base set of fixed events.
->>>
->>> If we are confident that we have a fixed set of base set of events, can we ensure that those events would not require this compat string which needs each version explicitly stated?
->>>
->> If we are sure that some events will always exist in subsequent versions, we can set the Compat field to "arm_cmn;arm_ci". After that,
->> whether it is a different model or a different revision of the cmn PMU, it will be compatible. That is, it matches all whose identifier
->> is prefixed with “arm_cmn” or “arm_ci”.
-> 
-> Sure, we could do something like that. Or if we are super-confident that every model and rev will support some event, then we can change perf tool to just not check Compat for that event.
-> 
-
-Yes, I have also thought about this solution. If it is an event supported by all versions, as long as it meets the Unit match, it does not need
-to check Compat. However, the current perf tools tool seems to ignore the "Unit" inspection for the metric event.
-
->>
->> Maybe it's not a perfect solution yet, looking forward to your suggestions.
-> 
-> Well first we need to define kernel HW identifier format. I don't know why we don't encode model and revision name, like "cmn650_r1p1". Robin?
-> 
-
-As mentioned earlier, revision is a register value rather than an enumeration value. If change revision to revision name, I need a more redundant
-operation of converting enumeration value to string. If you think changing the naming method to "cmn650_r1p1" is clearer, of course
-there is no problem.
+Is this inside KVM guest? Does this help:
+https://lore.kernel.org/all/20230525212723.3361524-1-oliver.upton@linux.dev
 
 Thanks,
-Jing
+Ravi
