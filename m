@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AECC77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 19:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 275ABC77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 19:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230282AbjFETa5 (ORCPT
+        id S233924AbjFEThH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jun 2023 15:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49762 "EHLO
+        Mon, 5 Jun 2023 15:37:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229878AbjFETa4 (ORCPT
+        with ESMTP id S234301AbjFEThG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2023 15:30:56 -0400
+        Mon, 5 Jun 2023 15:37:06 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888CFA7;
-        Mon,  5 Jun 2023 12:30:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE06BF3;
+        Mon,  5 Jun 2023 12:37:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 26F52629D3;
-        Mon,  5 Jun 2023 19:30:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BCB3C433EF;
-        Mon,  5 Jun 2023 19:30:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BDFC360FB9;
+        Mon,  5 Jun 2023 19:37:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD42FC433D2;
+        Mon,  5 Jun 2023 19:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685993454;
-        bh=ia8nqDQQ/+r4DW/QQfhhUBMTrcoQybz/65wIiSzsdBw=;
+        s=k20201202; t=1685993824;
+        bh=dqAyb6kizwHZb19wnwa8K3pIVaJ8dUwTjK36GjAsXRk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ET4WMAHUI4k0x6ZeST+XLtDoSQP+SrwSSLsgq2Pp8m9iNqLSghsxvIFs/fYXjBgOl
-         LAnrhKGPTVischSvRIUysHA22EN0m4fG+aDYYQJ5ni/nKqOnr0JippJOzLXzm/redM
-         PF+IC4pd7DXI0UZPH3uPZnyBxNARPHAYYEYP5i/0rHKVt2N7/0B9rUcYyZroVGd8uC
-         l2xrMTZ2TsNG8EINf6aMEpMxvNCLkrNMSm/ct8GPfyVQiGFQjS2U9DLjy006yCiBd/
-         sYf1sx8nXZcn5soiviSfQlcLEPeIZh1H9NShCVFfeDV5KtGePDp6asNkZVPqRitug5
-         Al3/b/nk0pj2w==
+        b=S1UNcPnEIM3mYaXFgMQliTBB1PETBYFerj1cZE9VoTCa+M9R6eV3lHrX18BYjssVR
+         SvnLkLn9ZQrWDOyj/KZjZsHBaPimWxe2gUxw7TOEys0ffWqvbiGDUPT5veFERqjhHe
+         2pu3VR7LvVIa+Wex678pDWCdwE4LLN5fKQJFURSExOSsrXUSvIJWEVoHjLxVWtpEkY
+         9HRylOvBhAoynehTrqVIcMmjIU/dm3I/y2WYUyiNoM0g2J1X8dytQ1VstA/q0Mlh0r
+         AK+HZjreI8JykBgAFlr5JENSmQspZvHqYB/jKvAxE4vHUZqxJ/CmU9OWxy+UD36xIB
+         O9z8FDm7CZD8A==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3635240692; Mon,  5 Jun 2023 16:30:51 -0300 (-03)
-Date:   Mon, 5 Jun 2023 16:30:51 -0300
+        id 44D4E40692; Mon,  5 Jun 2023 16:37:01 -0300 (-03)
+Date:   Mon, 5 Jun 2023 16:37:01 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -45,239 +45,371 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ahmad Yasin <ahmad.yasin@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>,
-        Weilin Wang <weilin.wang@intel.com>,
-        Edward Baker <edward.baker@intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] perf expr: Make the evaluation of & and | logical
- and lazy
-Message-ID: <ZH436w4Sesq57iu9@kernel.org>
-References: <20230504195803.3331775-1-irogers@google.com>
- <2abe618d-a2c4-3b22-ac9d-37bc91d05d41@linux.intel.com>
- <CAP-5=fX_j-iwuHBekCDFzQUGaOqigTXtyUa6npNCuR7ktF-3_A@mail.gmail.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tools headers: Make the difference output easier to
+ read
+Message-ID: <ZH45XeYtvkc56WtV@kernel.org>
+References: <20230605191346.1600336-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fX_j-iwuHBekCDFzQUGaOqigTXtyUa6npNCuR7ktF-3_A@mail.gmail.com>
+In-Reply-To: <20230605191346.1600336-1-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jun 05, 2023 at 10:32:18AM -0700, Ian Rogers escreveu:
-> On Thu, May 18, 2023 at 12:47 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
-> >
-> >
-> >
-> > On 2023-05-04 3:58 p.m., Ian Rogers wrote:
-> > > Currently the & and | operators are only used in metric thresholds
-> > > like (from the tma_retiring metric):
-> > > tma_retiring > 0.7 | tma_heavy_operations > 0.1
-> > >
-> > > Thresholds are always computed when present, but a lack events may
-> > > mean the threshold can't be computed. This happens with the option
-> > > --metric-no-threshold for say the metric tma_retiring on Tigerlake
-> > > model CPUs. To fully compute the threshold tma_heavy_operations is
-> > > needed and it needs the extra events of IDQ.MS_UOPS,
-> > > UOPS_DECODED.DEC0, cpu/UOPS_DECODED.DEC0,cmask=1/ and
-> > > IDQ.MITE_UOPS. So --metric-no-threshold is a useful option to reduce
-> > > the number of events needed and potentially multiplexing of events.
-> > >
-> > > Rather than just fail threshold computations like this, we may know a
-> > > result from just the left or right-hand side. So, for tma_retiring if
-> > > its value is "> 0.7" we know it is over the threshold. This allows the
-> > > metric to have the threshold coloring, when possible, without all the
-> > > counters being programmed.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> >
-> > The patch works well on my machine.
-> >
-> > Tested-by: Kan Liang <kan.liang@linux.intel.com>
-> >
-> > Thanks,
-> > Kan
+Em Mon, Jun 05, 2023 at 12:13:46PM -0700, Ian Rogers escreveu:
+> Add failures to an array and display it before exiting.
 > 
-> Arnaldo, could we take this set?
+> Before:
+> ```
+> Warning: Kernel ABI header at 'tools/include/uapi/linux/perf_event.h' differs from latest version at 'include/uapi/linux/perf_event.h'
+> diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
+> Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_regs.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_regs.h'
+> diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
+> Warning: Kernel ABI header at 'tools/arch/arm64/include/asm/cputype.h' differs from latest version at 'arch/arm64/include/asm/cputype.h'
+> diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+> ...
+> ```
+> 
+> After:
+> ```
+> Warning: Kernel ABI header differences:
+>   diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
+>   diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
+>   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+> ...
+> ```
 
-Thanks, applied.
+Here I'm seeing it twice, I was expecting what is in the cset log
+message, that looks perfect: shows what is different while keeping a
+line to cut'n'paste and indents the diff lines so that the warnings
+stand out in the output, can you please take a look?
 
-- Arnaldo
+⬢[acme@toolbox perf-tools-next]$ alias m
+alias m='perf stat -e cycles:u,instructions:u make -k BUILD_BPF_SKEL=1 CORESIGHT=1 PYTHON=python3 O=/tmp/build/perf-tools-next -C tools/perf install-bin && git status && perf test python'
+⬢[acme@toolbox perf-tools-next]$ m
+make: Entering directory '/var/home/acme/git/perf-tools-next/tools/perf'
+  BUILD:   Doing 'make -j32' parallel build
+tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
+tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
+tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+Warning: Kernel ABI header differences:
+  diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
+  diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm/perf_regs.h
+  diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
+
+  INSTALL libsubcmd_headers
 
  
-> Thanks,
-> Ian
+> The aim is to make the warnings easier to read and distinguish from
+> other Makefile warnings messages.
 > 
-> > >  tools/perf/tests/expr.c | 40 +++++++++++++++++++
-> > >  tools/perf/util/expr.y  | 86 +++++++++++++++++++++++++++++++++--------
-> > >  2 files changed, 109 insertions(+), 17 deletions(-)
-> > >
-> > > diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
-> > > index cbf0e0c74906..45c7fedb797a 100644
-> > > --- a/tools/perf/tests/expr.c
-> > > +++ b/tools/perf/tests/expr.c
-> > > @@ -184,6 +184,46 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
-> > >                       NULL, ctx) == 0);
-> > >       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> > >
-> > > +     /* The expression is a constant 0.0 without needing to evaluate EVENT1. */
-> > > +     expr__ctx_clear(ctx);
-> > > +     TEST_ASSERT_VAL("find ids",
-> > > +                     expr__find_ids("0 & EVENT1 > 0", NULL, ctx) == 0);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> > > +     expr__ctx_clear(ctx);
-> > > +     TEST_ASSERT_VAL("find ids",
-> > > +                     expr__find_ids("EVENT1 > 0 & 0", NULL, ctx) == 0);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> > > +     expr__ctx_clear(ctx);
-> > > +     TEST_ASSERT_VAL("find ids",
-> > > +                     expr__find_ids("1 & EVENT1 > 0", NULL, ctx) == 0);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> > > +     expr__ctx_clear(ctx);
-> > > +     TEST_ASSERT_VAL("find ids",
-> > > +                     expr__find_ids("EVENT1 > 0 & 1", NULL, ctx) == 0);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> > > +
-> > > +     /* The expression is a constant 1.0 without needing to evaluate EVENT1. */
-> > > +     expr__ctx_clear(ctx);
-> > > +     TEST_ASSERT_VAL("find ids",
-> > > +                     expr__find_ids("1 | EVENT1 > 0", NULL, ctx) == 0);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> > > +     expr__ctx_clear(ctx);
-> > > +     TEST_ASSERT_VAL("find ids",
-> > > +                     expr__find_ids("EVENT1 > 0 | 1", NULL, ctx) == 0);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
-> > > +     expr__ctx_clear(ctx);
-> > > +     TEST_ASSERT_VAL("find ids",
-> > > +                     expr__find_ids("0 | EVENT1 > 0", NULL, ctx) == 0);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> > > +     expr__ctx_clear(ctx);
-> > > +     TEST_ASSERT_VAL("find ids",
-> > > +                     expr__find_ids("EVENT1 > 0 | 0", NULL, ctx) == 0);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
-> > > +     TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
-> > > +
-> > >       /* Test toplogy constants appear well ordered. */
-> > >       expr__ctx_clear(ctx);
-> > >       TEST_ASSERT_VAL("#num_cpus", expr__parse(&num_cpus, ctx, "#num_cpus") == 0);
-> > > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
-> > > index 250e444bf032..6b110f9f95c9 100644
-> > > --- a/tools/perf/util/expr.y
-> > > +++ b/tools/perf/util/expr.y
-> > > @@ -123,20 +123,6 @@ static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
-> > >   * constant value using OP. Its invariant that there are no ids.  If computing
-> > >   * ids for non-constants union the set of IDs that must be computed.
-> > >   */
-> > > -#define BINARY_LONG_OP(RESULT, OP, LHS, RHS)                         \
-> > > -     if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
-> > > -             assert(LHS.ids == NULL);                                \
-> > > -             assert(RHS.ids == NULL);                                \
-> > > -             if (isnan(LHS.val) || isnan(RHS.val)) {                 \
-> > > -                     RESULT.val = NAN;                               \
-> > > -             } else {                                                \
-> > > -                     RESULT.val = (long)LHS.val OP (long)RHS.val;    \
-> > > -             }                                                       \
-> > > -             RESULT.ids = NULL;                                      \
-> > > -     } else {                                                        \
-> > > -             RESULT = union_expr(LHS, RHS);                          \
-> > > -     }
-> > > -
-> > >  #define BINARY_OP(RESULT, OP, LHS, RHS)                                      \
-> > >       if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
-> > >               assert(LHS.ids == NULL);                                \
-> > > @@ -213,9 +199,75 @@ expr: NUMBER
-> > >  }
-> > >  | ID                         { $$ = handle_id(ctx, $1, compute_ids, /*source_count=*/false); }
-> > >  | SOURCE_COUNT '(' ID ')'    { $$ = handle_id(ctx, $3, compute_ids, /*source_count=*/true); }
-> > > -| expr '|' expr { BINARY_LONG_OP($$, |, $1, $3); }
-> > > -| expr '&' expr { BINARY_LONG_OP($$, &, $1, $3); }
-> > > -| expr '^' expr { BINARY_LONG_OP($$, ^, $1, $3); }
-> > > +| expr '|' expr
-> > > +{
-> > > +     if (is_const($1.val) && is_const($3.val)) {
-> > > +             assert($1.ids == NULL);
-> > > +             assert($3.ids == NULL);
-> > > +             $$.ids = NULL;
-> > > +             $$.val = (fpclassify($1.val) == FP_ZERO && fpclassify($3.val) == FP_ZERO) ? 0 : 1;
-> > > +     } else if (is_const($1.val)) {
-> > > +             assert($1.ids == NULL);
-> > > +             if (fpclassify($1.val) == FP_ZERO) {
-> > > +                     $$ = $3;
-> > > +             } else {
-> > > +                     $$.val = 1;
-> > > +                     $$.ids = NULL;
-> > > +                     ids__free($3.ids);
-> > > +             }
-> > > +     } else if (is_const($3.val)) {
-> > > +             assert($3.ids == NULL);
-> > > +             if (fpclassify($3.val) == FP_ZERO) {
-> > > +                     $$ = $1;
-> > > +             } else {
-> > > +                     $$.val = 1;
-> > > +                     $$.ids = NULL;
-> > > +                     ids__free($1.ids);
-> > > +             }
-> > > +     } else {
-> > > +             $$ = union_expr($1, $3);
-> > > +     }
-> > > +}
-> > > +| expr '&' expr
-> > > +{
-> > > +     if (is_const($1.val) && is_const($3.val)) {
-> > > +             assert($1.ids == NULL);
-> > > +             assert($3.ids == NULL);
-> > > +             $$.val = (fpclassify($1.val) != FP_ZERO && fpclassify($3.val) != FP_ZERO) ? 1 : 0;
-> > > +             $$.ids = NULL;
-> > > +     } else if (is_const($1.val)) {
-> > > +             assert($1.ids == NULL);
-> > > +             if (fpclassify($1.val) != FP_ZERO) {
-> > > +                     $$ = $3;
-> > > +             } else {
-> > > +                     $$.val = 0;
-> > > +                     $$.ids = NULL;
-> > > +                     ids__free($3.ids);
-> > > +             }
-> > > +     } else if (is_const($3.val)) {
-> > > +             assert($3.ids == NULL);
-> > > +             if (fpclassify($3.val) != FP_ZERO) {
-> > > +                     $$ = $1;
-> > > +             } else {
-> > > +                     $$.val = 0;
-> > > +                     $$.ids = NULL;
-> > > +                     ids__free($1.ids);
-> > > +             }
-> > > +     } else {
-> > > +             $$ = union_expr($1, $3);
-> > > +     }
-> > > +}
-> > > +| expr '^' expr
-> > > +{
-> > > +     if (is_const($1.val) && is_const($3.val)) {
-> > > +             assert($1.ids == NULL);
-> > > +             assert($3.ids == NULL);
-> > > +             $$.val = (fpclassify($1.val) == FP_ZERO) != (fpclassify($3.val) == FP_ZERO) ? 1 : 0;
-> > > +             $$.ids = NULL;
-> > > +     } else {
-> > > +             $$ = union_expr($1, $3);
-> > > +     }
-> > > +}
-> > >  | expr '<' expr { BINARY_OP($$, <, $1, $3); }
-> > >  | expr '>' expr { BINARY_OP($$, >, $1, $3); }
-> > >  | expr '+' expr { BINARY_OP($$, +, $1, $3); }
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> v2. Is a rebase, avoids the warning message if there are no diffs,
+>     adds diff to the output for easier copy and paste.
+> ---
+>  tools/perf/check-headers.sh | 233 ++++++++++++++++++++----------------
+>  1 file changed, 129 insertions(+), 104 deletions(-)
+> 
+> diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
+> index 6f831ee2f60f..bcad6a7d8e5d 100755
+> --- a/tools/perf/check-headers.sh
+> +++ b/tools/perf/check-headers.sh
+> @@ -1,113 +1,122 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> -FILES='
+> -include/uapi/linux/const.h
+> -include/uapi/drm/drm.h
+> -include/uapi/drm/i915_drm.h
+> -include/uapi/linux/fadvise.h
+> -include/uapi/linux/fcntl.h
+> -include/uapi/linux/fs.h
+> -include/uapi/linux/fscrypt.h
+> -include/uapi/linux/kcmp.h
+> -include/uapi/linux/kvm.h
+> -include/uapi/linux/in.h
+> -include/uapi/linux/mount.h
+> -include/uapi/linux/openat2.h
+> -include/uapi/linux/perf_event.h
+> -include/uapi/linux/prctl.h
+> -include/uapi/linux/sched.h
+> -include/uapi/linux/stat.h
+> -include/uapi/linux/usbdevice_fs.h
+> -include/uapi/linux/vhost.h
+> -include/uapi/sound/asound.h
+> -include/linux/bits.h
+> -include/vdso/bits.h
+> -include/linux/const.h
+> -include/vdso/const.h
+> -include/linux/hash.h
+> -include/linux/list-sort.h
+> -include/uapi/linux/hw_breakpoint.h
+> -arch/x86/include/asm/disabled-features.h
+> -arch/x86/include/asm/required-features.h
+> -arch/x86/include/asm/cpufeatures.h
+> -arch/x86/include/asm/inat_types.h
+> -arch/x86/include/asm/emulate_prefix.h
+> -arch/x86/include/asm/irq_vectors.h
+> -arch/x86/include/asm/msr-index.h
+> -arch/x86/include/uapi/asm/prctl.h
+> -arch/x86/lib/x86-opcode-map.txt
+> -arch/x86/tools/gen-insn-attr-x86.awk
+> -arch/arm/include/uapi/asm/perf_regs.h
+> -arch/arm64/include/uapi/asm/perf_regs.h
+> -arch/loongarch/include/uapi/asm/perf_regs.h
+> -arch/mips/include/uapi/asm/perf_regs.h
+> -arch/powerpc/include/uapi/asm/perf_regs.h
+> -arch/s390/include/uapi/asm/perf_regs.h
+> -arch/x86/include/uapi/asm/perf_regs.h
+> -arch/x86/include/uapi/asm/kvm.h
+> -arch/x86/include/uapi/asm/kvm_perf.h
+> -arch/x86/include/uapi/asm/svm.h
+> -arch/x86/include/uapi/asm/unistd.h
+> -arch/x86/include/uapi/asm/vmx.h
+> -arch/powerpc/include/uapi/asm/kvm.h
+> -arch/s390/include/uapi/asm/kvm.h
+> -arch/s390/include/uapi/asm/kvm_perf.h
+> -arch/s390/include/uapi/asm/sie.h
+> -arch/arm/include/uapi/asm/kvm.h
+> -arch/arm64/include/uapi/asm/kvm.h
+> -arch/arm64/include/uapi/asm/unistd.h
+> -arch/alpha/include/uapi/asm/errno.h
+> -arch/mips/include/asm/errno.h
+> -arch/mips/include/uapi/asm/errno.h
+> -arch/parisc/include/uapi/asm/errno.h
+> -arch/powerpc/include/uapi/asm/errno.h
+> -arch/sparc/include/uapi/asm/errno.h
+> -arch/x86/include/uapi/asm/errno.h
+> -include/asm-generic/bitops/arch_hweight.h
+> -include/asm-generic/bitops/const_hweight.h
+> -include/asm-generic/bitops/__fls.h
+> -include/asm-generic/bitops/fls.h
+> -include/asm-generic/bitops/fls64.h
+> -include/linux/coresight-pmu.h
+> -include/uapi/asm-generic/errno.h
+> -include/uapi/asm-generic/errno-base.h
+> -include/uapi/asm-generic/ioctls.h
+> -include/uapi/asm-generic/mman-common.h
+> -include/uapi/asm-generic/unistd.h
+> -'
+> -
+> -SYNC_CHECK_FILES='
+> -arch/x86/include/asm/inat.h
+> -arch/x86/include/asm/insn.h
+> -arch/x86/lib/inat.c
+> -arch/x86/lib/insn.c
+> -'
+> +YELLOW='\033[0;33m'
+> +NC='\033[0m' # No Color
+> +
+> +declare -a FILES
+> +FILES=(
+> +  "include/uapi/linux/const.h"
+> +  "include/uapi/drm/drm.h"
+> +  "include/uapi/drm/i915_drm.h"
+> +  "include/uapi/linux/fadvise.h"
+> +  "include/uapi/linux/fcntl.h"
+> +  "include/uapi/linux/fs.h"
+> +  "include/uapi/linux/fscrypt.h"
+> +  "include/uapi/linux/kcmp.h"
+> +  "include/uapi/linux/kvm.h"
+> +  "include/uapi/linux/in.h"
+> +  "include/uapi/linux/mount.h"
+> +  "include/uapi/linux/openat2.h"
+> +  "include/uapi/linux/perf_event.h"
+> +  "include/uapi/linux/prctl.h"
+> +  "include/uapi/linux/sched.h"
+> +  "include/uapi/linux/stat.h"
+> +  "include/uapi/linux/usbdevice_fs.h"
+> +  "include/uapi/linux/vhost.h"
+> +  "include/uapi/sound/asound.h"
+> +  "include/linux/bits.h"
+> +  "include/vdso/bits.h"
+> +  "include/linux/const.h"
+> +  "include/vdso/const.h"
+> +  "include/linux/hash.h"
+> +  "include/linux/list-sort.h"
+> +  "include/uapi/linux/hw_breakpoint.h"
+> +  "arch/x86/include/asm/disabled-features.h"
+> +  "arch/x86/include/asm/required-features.h"
+> +  "arch/x86/include/asm/cpufeatures.h"
+> +  "arch/x86/include/asm/inat_types.h"
+> +  "arch/x86/include/asm/emulate_prefix.h"
+> +  "arch/x86/include/asm/irq_vectors.h"
+> +  "arch/x86/include/asm/msr-index.h"
+> +  "arch/x86/include/uapi/asm/prctl.h"
+> +  "arch/x86/lib/x86-opcode-map.txt"
+> +  "arch/x86/tools/gen-insn-attr-x86.awk"
+> +  "arch/arm/include/uapi/asm/perf_regs.h"
+> +  "arch/arm64/include/uapi/asm/perf_regs.h"
+> +  "arch/loongarch/include/uapi/asm/perf_regs.h"
+> +  "arch/mips/include/uapi/asm/perf_regs.h"
+> +  "arch/powerpc/include/uapi/asm/perf_regs.h"
+> +  "arch/s390/include/uapi/asm/perf_regs.h"
+> +  "arch/x86/include/uapi/asm/perf_regs.h"
+> +  "arch/x86/include/uapi/asm/kvm.h"
+> +  "arch/x86/include/uapi/asm/kvm_perf.h"
+> +  "arch/x86/include/uapi/asm/svm.h"
+> +  "arch/x86/include/uapi/asm/unistd.h"
+> +  "arch/x86/include/uapi/asm/vmx.h"
+> +  "arch/powerpc/include/uapi/asm/kvm.h"
+> +  "arch/s390/include/uapi/asm/kvm.h"
+> +  "arch/s390/include/uapi/asm/kvm_perf.h"
+> +  "arch/s390/include/uapi/asm/sie.h"
+> +  "arch/arm/include/uapi/asm/kvm.h"
+> +  "arch/arm64/include/uapi/asm/kvm.h"
+> +  "arch/arm64/include/uapi/asm/unistd.h"
+> +  "arch/alpha/include/uapi/asm/errno.h"
+> +  "arch/mips/include/asm/errno.h"
+> +  "arch/mips/include/uapi/asm/errno.h"
+> +  "arch/parisc/include/uapi/asm/errno.h"
+> +  "arch/powerpc/include/uapi/asm/errno.h"
+> +  "arch/sparc/include/uapi/asm/errno.h"
+> +  "arch/x86/include/uapi/asm/errno.h"
+> +  "include/asm-generic/bitops/arch_hweight.h"
+> +  "include/asm-generic/bitops/const_hweight.h"
+> +  "include/asm-generic/bitops/__fls.h"
+> +  "include/asm-generic/bitops/fls.h"
+> +  "include/asm-generic/bitops/fls64.h"
+> +  "include/linux/coresight-pmu.h"
+> +  "include/uapi/asm-generic/errno.h"
+> +  "include/uapi/asm-generic/errno-base.h"
+> +  "include/uapi/asm-generic/ioctls.h"
+> +  "include/uapi/asm-generic/mman-common.h"
+> +  "include/uapi/asm-generic/unistd.h"
+> +)
+> +
+> +declare -a SYNC_CHECK_FILES
+> +SYNC_CHECK_FILES=(
+> +  "arch/x86/include/asm/inat.h"
+> +  "arch/x86/include/asm/insn.h"
+> +  "arch/x86/lib/inat.c"
+> +  "arch/x86/lib/insn.c"
+> +)
+>  
+>  # These copies are under tools/perf/trace/beauty/ as they are not used to in
+>  # building object files only by scripts in tools/perf/trace/beauty/ to generate
+>  # tables that then gets included in .c files for things like id->string syscall
+>  # tables (and the reverse lookup as well: string -> id)
+>  
+> -BEAUTY_FILES='
+> -include/linux/socket.h
+> -'
+> +declare -a BEAUTY_FILES
+> +BEAUTY_FILES=(
+> +  "include/linux/socket.h"
+> +)
+> +
+> +declare -a FAILURES
+>  
+>  check_2 () {
+> -  file1=$1
+> -  file2=$2
+> +  tools_file=$1
+> +  orig_file=$2
+>  
+>    shift
+>    shift
+>  
+> -  cmd="diff $* $file1 $file2 > /dev/null"
+> +  cmd="diff $* $tools_file $orig_file > /dev/null"
+>  
+> -  test -f $file2 && {
+> -    eval $cmd || {
+> -      echo "Warning: Kernel ABI header at '$file1' differs from latest version at '$file2'" >&2
+> -      echo diff -u $file1 $file2
+> -    }
+> -  }
+> +  if [ -f "$orig_file" ] && ! eval "$cmd"
+> +  then
+> +    echo "$tools_file $orig_file"
+> +    FAILURES+=(
+> +      "$tools_file $orig_file"
+> +    )
+> +  fi
+>  }
+>  
+>  check () {
+> @@ -115,7 +124,7 @@ check () {
+>  
+>    shift
+>  
+> -  check_2 tools/$file $file $*
+> +  check_2 "tools/$file" "$file" $*
+>  }
+>  
+>  beauty_check () {
+> @@ -123,23 +132,29 @@ beauty_check () {
+>  
+>    shift
+>  
+> -  check_2 tools/perf/trace/beauty/$file $file $*
+> +  check_2 "tools/perf/trace/beauty/$file" "$file" $*
+>  }
+>  
+>  # Check if we have the kernel headers (tools/perf/../../include), else
+>  # we're probably on a detached tarball, so no point in trying to check
+>  # differences.
+> -test -d ../../include || exit 0
+> +if ! [ -d ../../include ]
+> +then
+> +  echo -e "${YELLOW}Warning${NC}: Skipped check-headers due to missing ../../include"
+> +  exit 0
+> +fi
+>  
+>  cd ../..
+>  
+>  # simple diff check
+> -for i in $FILES; do
+> -  check $i -B
+> +for i in "${FILES[@]}"
+> +do
+> +  check "$i" -B
+>  done
+>  
+> -for i in $SYNC_CHECK_FILES; do
+> -  check $i '-I "^.*\/\*.*__ignore_sync_check__.*\*\/.*$"'
+> +for i in "${SYNC_CHECK_FILES[@]}"
+> +do
+> +  check "$i" '-I "^.*\/\*.*__ignore_sync_check__.*\*\/.*$"'
+>  done
+>  
+>  # diff with extra ignore lines
+> @@ -160,8 +175,9 @@ check_2 tools/perf/arch/powerpc/entry/syscalls/syscall.tbl arch/powerpc/kernel/s
+>  check_2 tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kernel/syscalls/syscall.tbl
+>  check_2 tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/kernel/syscalls/syscall_n64.tbl
+>  
+> -for i in $BEAUTY_FILES; do
+> -  beauty_check $i -B
+> +for i in "${BEAUTY_FILES[@]}"
+> +do
+> +  beauty_check "$i" -B
+>  done
+>  
+>  # check duplicated library files
+> @@ -169,3 +185,12 @@ check_2 tools/perf/util/hashmap.h tools/lib/bpf/hashmap.h
+>  check_2 tools/perf/util/hashmap.c tools/lib/bpf/hashmap.c
+>  
+>  cd tools/perf
+> +
+> +if [ ${#FAILURES[@]} -gt 0 ]
+> +then
+> +  echo -e "${YELLOW}Warning${NC}: Kernel ABI header differences:"
+> +  for i in "${FAILURES[@]}"
+> +  do
+> +    echo "  diff -u $i"
+> +  done
+> +fi
+> -- 
+> 2.41.0.rc0.172.g3f132b7071-goog
+> 
 
 -- 
 
