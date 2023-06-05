@@ -2,154 +2,134 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15729C77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 12:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3732C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 13:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbjFEMFu (ORCPT
+        id S230503AbjFENjD (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jun 2023 08:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42994 "EHLO
+        Mon, 5 Jun 2023 09:39:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229815AbjFEMFt (ORCPT
+        with ESMTP id S230127AbjFENjC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2023 08:05:49 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7913F9C;
-        Mon,  5 Jun 2023 05:05:48 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9AA2D75;
-        Mon,  5 Jun 2023 05:06:33 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.25.215])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0275A3F663;
-        Mon,  5 Jun 2023 05:05:45 -0700 (PDT)
-Date:   Mon, 5 Jun 2023 13:05:36 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mon, 5 Jun 2023 09:39:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA2C92;
+        Mon,  5 Jun 2023 06:39:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4E87C622B8;
+        Mon,  5 Jun 2023 13:39:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77418C433D2;
+        Mon,  5 Jun 2023 13:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685972340;
+        bh=zmExzYudMwfGNEba20Z9ljtkQ0F7F9zZROAPpR26D08=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hLtoQOW0x/ny+YqsSNDz9uHGIatddat8GP9vRUK7Y+Zzjv8DiYo/OLSXI37rttcfB
+         wuHXW47vwDMMjAiwQJiX/IZCI/NN8E2JE+dftiZd+cUFCd6ZDCuNplc5l5fSGmhoVS
+         OGbp4h37qRWTwXxYFn6uwF2ITXKstg9GB6vok4gTDh6lcPqcdg2+owbrmW4kDeZ2RF
+         EIBASZBuNYItgUGrYaPYASp3M3m7IK/trTc/DPVFd8WKT2oHFAciLPUNGPRZMB+uPi
+         TQh4fbH3OxgmOWbZFA1ldhap6qH/RPM3Es0HTB7PcJq8fXlSrmLdNYKFuOZnKbMwPS
+         JKDvfMFJFYCYA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F22EA40692; Mon,  5 Jun 2023 10:38:57 -0300 (-03)
+Date:   Mon, 5 Jun 2023 10:38:57 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andre Fredette <anfredet@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Dave Tucker <datucker@redhat.com>,
+        Derek Barbosa <debarbos@redhat.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V11 05/10] arm64/perf: Add branch stack support in ARMV8
- PMU
-Message-ID: <ZH3PCqYt/UzoiVx3@FVFF77S0Q05N>
-References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-6-anshuman.khandual@arm.com>
+Subject: [FYI PATCH 1/1] perf bench: Add missing setlocale() call to allow
+ usage of %'d style formatting
+Message-ID: <ZH3lcepZ4tBYr1jv@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230531040428.501523-6-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 31, 2023 at 09:34:23AM +0530, Anshuman Khandual wrote:
-> This enables support for branch stack sampling event in ARMV8 PMU, checking
-> has_branch_stack() on the event inside 'struct arm_pmu' callbacks. Although
-> these branch stack helpers armv8pmu_branch_XXXXX() are just dummy functions
-> for now. While here, this also defines arm_pmu's sched_task() callback with
-> armv8pmu_sched_task(), which resets the branch record buffer on a sched_in.
-
-This generally looks good, but I have a few comments below.
-
-[...]
-
-> +static inline bool armv8pmu_branch_valid(struct perf_event *event)
-> +{
-> +	WARN_ON_ONCE(!has_branch_stack(event));
-> +	return false;
-> +}
-
-IIUC this is for validating the attr, so could we please name this
-armv8pmu_branch_attr_valid() ?
-
-[...]
-
-> +static int branch_records_alloc(struct arm_pmu *armpmu)
-> +{
-> +	struct pmu_hw_events *events;
-> +	int cpu;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		events = per_cpu_ptr(armpmu->hw_events, cpu);
-> +		events->branches = kzalloc(sizeof(struct branch_records), GFP_KERNEL);
-> +		if (!events->branches)
-> +			return -ENOMEM;
-> +	}
-> +	return 0;
-
-This leaks memory if any allocation fails, and the next patch replaces this
-code entirely.
-
-Please add this once in a working state. Either use the percpu allocation
-trick in the next patch from the start, or have this kzalloc() with a
-corresponding kfree() in an error path.
-
->  }
->  
->  static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
-> @@ -1145,12 +1162,24 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
->  	};
->  	int ret;
->  
-> +	ret = armv8pmu_private_alloc(cpu_pmu);
-> +	if (ret)
-> +		return ret;
-> +
->  	ret = smp_call_function_any(&cpu_pmu->supported_cpus,
->  				    __armv8pmu_probe_pmu,
->  				    &probe, 1);
->  	if (ret)
->  		return ret;
->  
-> +	if (arm_pmu_branch_stack_supported(cpu_pmu)) {
-> +		ret = branch_records_alloc(cpu_pmu);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		armv8pmu_private_free(cpu_pmu);
-> +	}
-
-I see from the next patch that "private" is four ints, so please just add that
-to struct arm_pmu under an ifdef CONFIG_ARM64_BRBE. That'll simplify this, and
-if we end up needing more space in future we can consider factoring it out.
-
-> +
->  	return probe.present ? 0 : -ENODEV;
->  }
-
-It also seems odd to ceck probe.present *after* checking
-arm_pmu_branch_stack_supported().
-
-With the allocation removed I think this can be written more clearly as:
-
-| static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
-| {
-|         struct armv8pmu_probe_info probe = {
-|                 .pmu = cpu_pmu,
-|                 .present = false,
-|         };   
-|         int ret; 
-| 
-|         ret = smp_call_function_any(&cpu_pmu->supported_cpus,
-|                                     __armv8pmu_probe_pmu,
-|                                     &probe, 1);
-|         if (ret)
-|                 return ret; 
-| 
-|         if (!probe.present)
-|                 return -ENODEV;
-| 
-|         if (arm_pmu_branch_stack_supported(cpu_pmu))
-|                 ret = branch_records_alloc(cpu_pmu);
-|              
-|         return ret; 
-| }
+FYI: I'm carrying this in the perf-tools-next branch,
 
 Thanks,
-Mark.
+
+- Arnaldo
+
+---
+
+Without this we were not getting the thousands separator for big
+numbers.
+
+Noticed while developing 'perf bench uprobe', but the use of %' predates
+that, for instance 'perf bench syscall' uses it.
+
+Before:
+
+  # perf bench uprobe all
+  # Running uprobe/baseline benchmark...
+  # Executed 1000 usleep(1000) calls
+       Total time: 1054082243ns
+
+   1054082.243000 nsecs/op
+
+  #
+
+After:
+
+  # perf bench uprobe all
+  # Running uprobe/baseline benchmark...
+  # Executed 1,000 usleep(1000) calls
+       Total time: 1,053,715,144ns
+
+   1,053,715.144000 nsecs/op
+
+  #
+
+Fixes: c2a08203052f8975 ("perf bench: Add basic syscall benchmark")
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Andre Fredette <anfredet@redhat.com>
+Cc: Clark Williams <williams@redhat.com>
+Cc: Dave Tucker <datucker@redhat.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Derek Barbosa <debarbos@redhat.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Tiezhu Yang <yangtiezhu@loongson.cn>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-bench.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/tools/perf/builtin-bench.c b/tools/perf/builtin-bench.c
+index 58f1cfe1eb34b329..db435b791a09b69b 100644
+--- a/tools/perf/builtin-bench.c
++++ b/tools/perf/builtin-bench.c
+@@ -21,6 +21,7 @@
+ #include "builtin.h"
+ #include "bench/bench.h"
+ 
++#include <locale.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -260,6 +261,7 @@ int cmd_bench(int argc, const char **argv)
+ 
+ 	/* Unbuffered output */
+ 	setvbuf(stdout, NULL, _IONBF, 0);
++	setlocale(LC_ALL, "");
+ 
+ 	if (argc < 2) {
+ 		/* No collection specified. */
+-- 
+2.37.1
+
