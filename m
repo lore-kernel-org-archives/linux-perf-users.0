@@ -2,213 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EF2C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 23:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3FDC7EE24
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 23:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231302AbjFEXt2 convert rfc822-to-8bit (ORCPT
+        id S232168AbjFEX5M convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jun 2023 19:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59486 "EHLO
+        Mon, 5 Jun 2023 19:57:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230150AbjFEXt1 (ORCPT
+        with ESMTP id S230328AbjFEX5L (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2023 19:49:27 -0400
+        Mon, 5 Jun 2023 19:57:11 -0400
 Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B6CEC;
-        Mon,  5 Jun 2023 16:49:26 -0700 (PDT)
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-bad102ce9eeso6052893276.0;
-        Mon, 05 Jun 2023 16:49:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B4BF2;
+        Mon,  5 Jun 2023 16:57:10 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-ba8374001abso6042088276.2;
+        Mon, 05 Jun 2023 16:57:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686008965; x=1688600965;
+        d=1e100.net; s=20221208; t=1686009430; x=1688601430;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yY5d/V8MfrMaTZ9YnTPCdi3pO6uRZ4QgR85u/BK5vQ8=;
-        b=IJx6+gdTbz1Va3yGo3fNO5DinNs9XWr6SR7m63cid3lS1BmYpivzyF4B0+ljd9CGwd
-         0rUfXcY3YAKNplQgyrYH7RGzSAQrgW8mYudiTcHksWQvSQgodhJqK73el5XirQwBYYiA
-         mBY/5m+tud1v/dffbpzlaO955VzTSiZ5CJx8Phnz9BanHgkHdbqc7lOwyVWdUrre8Z2I
-         bQJET0JWLxieYItPeGVo5GRChD/G+PUIx7jkru8Pjrlne7cepciH+TllrQfhQnZ5Yny3
-         bWQH7an3vFFz3sGEsDB5MJGxm+ZjApLKtfZd5XRZVrpeXml+HGzaGaKntYr4ETxf88Xo
-         C2sg==
-X-Gm-Message-State: AC+VfDyQedfNZYIuzdg/lL96FMIftJYCTcCR4MmiqWL0RibOvB3Q+GHT
-        +J+XmhgLuP5F7t1H8E1Jxop5lwj3Qx2r5vTyu14=
-X-Google-Smtp-Source: ACHHUZ5QaBOM4jsq5PEqc+/gCqzu8a1Q/qltI0rnQ+ttL7pR9eKQSKtoJ6nRtwz4F+mrKQTHdILvU/ZdO4r9Gpd4Muc=
-X-Received: by 2002:a25:2fd7:0:b0:bad:74d:f9ed with SMTP id
- v206-20020a252fd7000000b00bad074df9edmr156488ybv.2.1686008965638; Mon, 05 Jun
- 2023 16:49:25 -0700 (PDT)
+        bh=dT1VLgcbU914AmCWBxVB8Uqq7gnS8nT0HPPcjgOhVqA=;
+        b=AkXEPTzs2Ow/lRmO7T0kA4dNxsGqbM5gEQo6vZDx7pTP2Kzfbk4LztZ7bhzYYC0uZY
+         VZZalosfTHwPsMiVkb/lNJ9xmWX20Lf56u+439wCWtEAWVqUr24QAQjsY3xMaMmUb+Am
+         8qAHN0oHXGyBpyLZo6XR9EciJ4vHIq4JNYvD7rTnyIK/W3i9c/yVBD8ilwTDTOK7u6Ij
+         5/iyKPj4ldFjBgaE0SiG0TFJccsHgLN4+/uVnirTmobK2orpxXzme/sre0Ii9ZyytH/v
+         J0DD3ukCJnGC8w7S+SAD3HzZDeP2KhS7FXzGGp4QQ4b4Zzvc7GG6rkVc0edXQHDvyBjf
+         cCcA==
+X-Gm-Message-State: AC+VfDzVNs0URl2kVh5w5oF+BXXpg9+iqq6bFuEXA2tF9e0n2iuB7QCS
+        5+uiipxXKp0ye0YQQBgfK09SVDFEm9ewPjzq0TgbdFXERhXAbQ==
+X-Google-Smtp-Source: ACHHUZ6wxJN99gbp1wFCNM7foFqrCsQe1qe/8D+p4YucDPIiXBInk1KI8dw4snDZjTizyZbZiKZJAs78w3MQKcfhKLc=
+X-Received: by 2002:a25:8b87:0:b0:ba7:9c6f:e2de with SMTP id
+ j7-20020a258b87000000b00ba79c6fe2demr99896ybl.27.1686009429930; Mon, 05 Jun
+ 2023 16:57:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-9-anshuman.khandual@arm.com> <CAM9d7cihqiUULBR7JoizDGySVYdOx3TH_CJV=QDpeck3p8z5wg@mail.gmail.com>
- <a11beb49-7b4f-08f0-b1e2-782a0ba973ea@arm.com>
-In-Reply-To: <a11beb49-7b4f-08f0-b1e2-782a0ba973ea@arm.com>
+References: <20230524205054.3087004-1-namhyung@kernel.org> <d6ef6936-e885-46db-40d6-e3cfbd1b2c22@intel.com>
+In-Reply-To: <d6ef6936-e885-46db-40d6-e3cfbd1b2c22@intel.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 5 Jun 2023 16:49:14 -0700
-Message-ID: <CAM9d7cgzEJgNWvXn32cj82GaAvn3CPhE1PyLr+FtFfrauj0X6g@mail.gmail.com>
-Subject: Re: [PATCH V11 08/10] arm64/perf: Add struct brbe_regset helper functions
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
+Date:   Mon, 5 Jun 2023 16:56:58 -0700
+Message-ID: <CAM9d7cjoJL1+aHpmc-menWzYk_rfPV_UsDcmP0mXy0K2h6TPRA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf annotate: Handle x86 instruction suffix generally
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jun 4, 2023 at 8:15 PM Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
->
->
-> On 6/2/23 08:10, Namhyung Kim wrote:
-> > On Tue, May 30, 2023 at 9:15 PM Anshuman Khandual
-> > <anshuman.khandual@arm.com> wrote:
-> >>
-> >> The primary abstraction level for fetching branch records from BRBE HW has
-> >> been changed as 'struct brbe_regset', which contains storage for all three
-> >> BRBE registers i.e BRBSRC, BRBTGT, BRBINF. Whether branch record processing
-> >> happens in the task sched out path, or in the PMU IRQ handling path, these
-> >> registers need to be extracted from the HW. Afterwards both live and stored
-> >> sets need to be stitched together to create final branch records set. This
-> >> adds required helper functions for such operations.
-> >>
-> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> >> Cc: Will Deacon <will@kernel.org>
-> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> Cc: linux-arm-kernel@lists.infradead.org
-> >> Cc: linux-kernel@vger.kernel.org
-> >> Tested-by: James Clark <james.clark@arm.com>
-> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> >> ---
-> >
-> > [SNIP]
-> >> +
-> >> +static inline void copy_brbe_regset(struct brbe_regset *src, int src_idx,
-> >> +                                   struct brbe_regset *dst, int dst_idx)
-> >> +{
-> >> +       dst[dst_idx].brbinf = src[src_idx].brbinf;
-> >> +       dst[dst_idx].brbsrc = src[src_idx].brbsrc;
-> >> +       dst[dst_idx].brbtgt = src[src_idx].brbtgt;
-> >> +}
-> >> +
-> >> +/*
-> >> + * This function concatenates branch records from stored and live buffer
-> >> + * up to maximum nr_max records and the stored buffer holds the resultant
-> >> + * buffer. The concatenated buffer contains all the branch records from
-> >> + * the live buffer but might contain some from stored buffer considering
-> >> + * the maximum combined length does not exceed 'nr_max'.
-> >> + *
-> >> + *     Stored records  Live records
-> >> + *     ------------------------------------------------^
-> >> + *     |       S0      |       L0      |       Newest  |
-> >> + *     ---------------------------------               |
-> >> + *     |       S1      |       L1      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |       S2      |       L2      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |       S3      |       L3      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |       S4      |       L4      |               nr_max
-> >> + *     ---------------------------------               |
-> >> + *     |               |       L5      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |               |       L6      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |               |       L7      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |               |               |               |
-> >> + *     ---------------------------------               |
-> >> + *     |               |               |       Oldest  |
-> >> + *     ------------------------------------------------V
-> >> + *
-> >> + *
-> >> + * S0 is the newest in the stored records, where as L7 is the oldest in
-> >> + * the live reocords. Unless the live buffer is detetcted as being full
-> >> + * thus potentially dropping off some older records, L7 and S0 records
-> >> + * are contiguous in time for a user task context. The stitched buffer
-> >> + * here represents maximum possible branch records, contiguous in time.
-> >> + *
-> >> + *     Stored records  Live records
-> >> + *     ------------------------------------------------^
-> >> + *     |       L0      |       L0      |       Newest  |
-> >> + *     ---------------------------------               |
-> >> + *     |       L0      |       L1      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |       L2      |       L2      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |       L3      |       L3      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |       L4      |       L4      |             nr_max
-> >> + *     ---------------------------------               |
-> >> + *     |       L5      |       L5      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |       L6      |       L6      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |       L7      |       L7      |               |
-> >> + *     ---------------------------------               |
-> >> + *     |       S0      |               |               |
-> >> + *     ---------------------------------               |
-> >> + *     |       S1      |               |    Oldest     |
-> >> + *     ------------------------------------------------V
-> >> + *     |       S2      | <----|
-> >> + *     -----------------      |
-> >> + *     |       S3      | <----| Dropped off after nr_max
-> >> + *     -----------------      |
-> >> + *     |       S4      | <----|
-> >> + *     -----------------
-> >> + */
-> >> +static int stitch_stored_live_entries(struct brbe_regset *stored,
-> >> +                                     struct brbe_regset *live,
-> >> +                                     int nr_stored, int nr_live,
-> >> +                                     int nr_max)
-> >> +{
-> >> +       int nr_total, nr_excess, nr_last, i;
-> >> +
-> >> +       nr_total = nr_stored + nr_live;
-> >> +       nr_excess = nr_total - nr_max;
-> >> +
-> >> +       /* Stored branch records in stitched buffer */
-> >> +       if (nr_live == nr_max)
-> >> +               nr_stored = 0;
-> >> +       else if (nr_excess > 0)
-> >> +               nr_stored -= nr_excess;
-> >> +
-> >> +       /* Stitched buffer branch records length */
-> >> +       if (nr_total > nr_max)
-> >> +               nr_last = nr_max;
-> >> +       else
-> >> +               nr_last = nr_total;
-> >> +
-> >> +       /* Move stored branch records */
-> >> +       for (i = 0; i < nr_stored; i++)
-> >> +               copy_brbe_regset(stored, i, stored, nr_last - nr_stored - 1 + i);
-> >
-> > I'm afraid it can overwrite some entries if nr_live is small
-> > and nr_stored is big.  Why not use memmove()?
->
-> nr_stored is first adjusted with nr_excess if both live and stored entries combined
-> exceed the maximum branch records in the HW. I am wondering how it can override ?
+Hi Arnaldo,
 
-Say nr_stored = 40 and nr_live = 20, wouldn't it copy stored[0] to stored[20]?
-Then stored[20:39] will be lost.  Also I'm not sure "-1" is correct.
-
+On Wed, May 24, 2023 at 10:21 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
 >
+> On 24/05/23 23:50, Namhyung Kim wrote:
+> > In AT&T asm syntax, most of x86 instructions can have size suffix like
+> > b, w, l or q.  Instead of adding all these instructions in the table,
+> > we can handle them in a general way.
 > >
-> > Also I think it'd be simpler if you copy store to live.
-> > It'll save copying live in the IRQ but it will copy the
-> > whole content to store again for the sched switch.
+> > For example, it can try to find an instruction as is.  If not found,
+> > assuming it has a suffix and it'd try again without the suffix if it's
+> > one of the allowed suffixes.  This way, we can reduce the instruction
+> > table size for duplicated entries of the same instructions with a
+> > different suffix.
+> >
+> > If an instruction xyz and others like xyz<suffix> are completely
+> > different ones, then they both need to be listed in the table so that
+> > they can be found before the second attempt (without the suffix).
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 >
-> But how that is better than the current scheme ?
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-I guess normally the live buffer is full, then it can skip
-the copy and use the buffer directly for IRQ, right?
+Can you please pick this up?
 
 Thanks,
 Namhyung
+
+>
+> > ---
+> >  tools/perf/util/annotate.c | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> >
+> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> > index b708bbc49c9e..7f05f2a2aa83 100644
+> > --- a/tools/perf/util/annotate.c
+> > +++ b/tools/perf/util/annotate.c
+> > @@ -70,6 +70,7 @@ struct arch {
+> >       struct ins_ops  *(*associate_instruction_ops)(struct arch *arch, const char *name);
+> >       bool            sorted_instructions;
+> >       bool            initialized;
+> > +     const char      *insn_suffix;
+> >       void            *priv;
+> >       unsigned int    model;
+> >       unsigned int    family;
+> > @@ -179,6 +180,7 @@ static struct arch architectures[] = {
+> >               .init = x86__annotate_init,
+> >               .instructions = x86__instructions,
+> >               .nr_instructions = ARRAY_SIZE(x86__instructions),
+> > +             .insn_suffix = "bwlq",
+> >               .objdump =  {
+> >                       .comment_char = '#',
+> >               },
+> > @@ -720,6 +722,26 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name)
+> >       }
+> >
+> >       ins = bsearch(name, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
+> > +     if (ins)
+> > +             return ins->ops;
+> > +
+> > +     if (arch->insn_suffix) {
+> > +             char tmp[32];
+> > +             char suffix;
+> > +             size_t len = strlen(name);
+> > +
+> > +             if (len == 0 || len >= sizeof(tmp))
+> > +                     return NULL;
+> > +
+> > +             suffix = name[len - 1];
+> > +             if (strchr(arch->insn_suffix, suffix) == NULL)
+> > +                     return NULL;
+> > +
+> > +             strcpy(tmp, name);
+> > +             tmp[len - 1] = '\0'; /* remove the suffix and check again */
+> > +
+> > +             ins = bsearch(tmp, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
+> > +     }
+> >       return ins ? ins->ops : NULL;
+> >  }
+> >
+>
