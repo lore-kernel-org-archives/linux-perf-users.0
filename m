@@ -2,457 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35511C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 20:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EB9C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 20:28:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbjFEUUr (ORCPT
+        id S232278AbjFEU2O (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jun 2023 16:20:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44422 "EHLO
+        Mon, 5 Jun 2023 16:28:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233235AbjFEUUd (ORCPT
+        with ESMTP id S229625AbjFEU2O (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2023 16:20:33 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 758A59E
-        for <linux-perf-users@vger.kernel.org>; Mon,  5 Jun 2023 13:20:04 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-33dea7d5424so4695ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jun 2023 13:20:04 -0700 (PDT)
+        Mon, 5 Jun 2023 16:28:14 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 523B494
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Jun 2023 13:28:13 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-53f84f75bf4so1927449a12.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jun 2023 13:28:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685996404; x=1688588404;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7uF1ataoELCPxK/RLFPfq/jRAixemBv/oBBhahbL9Gg=;
-        b=czm7ZMqs5JQGq7FfPi36Kle2eIBOWz70bIEZBaIR915rz/F3EVf6iZcSWHC8R1SWmC
-         lLAljSHciFr1UExso7TrykMYKsbriFi1h8W9Dt8LHThMpag+mcrizhf7Fp7U5eVyOuAb
-         XNyzcILfv3YPn4s0oKiikKvyzK+3t3Vxm1bkhi6ncKDtimxt49bquDs6aqUnBP0xE7vq
-         cIDPw/2jYoO441TpDceFiCHFTfOsxdTZo1dvdMg2N8q4rbe+4ERBtxgz8xBx/Q3u+QXB
-         hCdrXWfLHeNEgKgd1+DWoul9FCL271Yg1bODq6DniH62sbe7UIapAf0ZWbCY3OmT52mA
-         JS0w==
+        d=google.com; s=20221208; t=1685996893; x=1688588893;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XnxfahBFhDdYZkXlZPUfdWCh0pSs+dY9UekTfoE8XFc=;
+        b=Q9T10dtnVViuYX7PiAM77gTQR0mNL3l97CIumpOUFIVSRAIJxcSd3D2ssFddid/ZER
+         4yvhaKqX+CXtWJOEEHsIF1yDBSZMgW+3U2Dg0QjFQ55IN/igthyx8QVzi7TuPneZdMSo
+         qBwAdbSf3nSWBH6RfewrhomP/I0PC2ahg28AHryNHnChrBkmAhLkUpbUku9HyU3wCGE5
+         ZrrC6SF/Tn+Z0D4LZdyOmwPRCfQS2rkd8UCnKCqnnJLzFS3Q+Tmbf6YTv1J+HigoQAk3
+         w8f7zo+pYQdVXX3jPv76zrwHgJEmr0M4X8TE03/0WaKp1+pSCpmpu4tGo/rWgZjL1i6y
+         DVOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685996404; x=1688588404;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7uF1ataoELCPxK/RLFPfq/jRAixemBv/oBBhahbL9Gg=;
-        b=RkWLjll0VTSFz9DfhYWYi37G03jWQl39mlaSkXco/gBitmOUU8/3dfSP5+ylhPg9c6
-         wiS5j2/312edZ+OK7ldxfosmGTzUHLszzVthBRdaI50KadeDJ9vryrmn7qmc/WI9/brH
-         CGzNdd9OXyR7Aw5YAV/C5LSqTqxXSmCq7oJAvc0AYXGozFMgFYqcMCYXspHnYCna1a72
-         eo50OlcYVMN+xHKXYX7trUvbGHInwwx9DwxryXtoQfyP5crzsf/vuJaIJI8LJrxMXw09
-         ACYA+nQI1ROtAYS5ljxCzELM+Q4xar5CJ/8dgBYWLiQAGwSLxdPLXbEnf698+pPHfap7
-         zLPQ==
-X-Gm-Message-State: AC+VfDyQJ6qYDBI65FmS+SY0mZY3Dy7i6r3i2iBgfpbTN0Qfw/YGe9VJ
-        0MQU67Nvo07PofCKAp7fPUHXZ2700wppf3R5ADhPuA==
-X-Google-Smtp-Source: ACHHUZ6Yu3KawSoR/1ciaVIxDoE0dHRVip7h/cD5sgOZSLnxoZ4YCRw61tYD7iCWIeJC2Qf3uBpR3ycqBIeJEwMyv0E=
-X-Received: by 2002:a05:6e02:180e:b0:33d:8444:c071 with SMTP id
- a14-20020a056e02180e00b0033d8444c071mr30136ilv.5.1685996403561; Mon, 05 Jun
- 2023 13:20:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230605191346.1600336-1-irogers@google.com> <ZH45XeYtvkc56WtV@kernel.org>
-In-Reply-To: <ZH45XeYtvkc56WtV@kernel.org>
+        d=1e100.net; s=20221208; t=1685996893; x=1688588893;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XnxfahBFhDdYZkXlZPUfdWCh0pSs+dY9UekTfoE8XFc=;
+        b=E8cxNg+IkBdcB0NNO9PuWtjeYdtxUkKv5ptuCmx+XTOGK+MXnBd5/Wl+IS/rfVZ9dA
+         JDX0BkCBOrdLSRi7vrneS7RSzhzco67HB0ejzrYlcznvxpzLDYtOXxzkcr52mjLE6l8d
+         aCMs7VQ1SjPJPv7u/NnqhmhC5gzF7woyxz82/27OUkF8X0ndG63LFOAXdB2tmWaF+dlh
+         +mU6TnVJL8YOnd9/K3UyjtH3bEFe58BA0VlYo5nYAyfx6sApgmKSTeQCWLr89hQsVWbq
+         iaaz1On9/YtBUYuwJJiRxED477bAVbju8w/cy5amsXPqnuCy7EYIg2hHUNglhcrc64sL
+         sAtA==
+X-Gm-Message-State: AC+VfDw9VBrqMSSeNy5hFtK1O+TLXK56fmxxkCY1FLbARrZv46p2Vw89
+        6usdYHPyPzOlv27fzAXZhvZt+qzI25Nh
+X-Google-Smtp-Source: ACHHUZ5bhfZTZzASA6Lnd8k7u3qSQLLP0zYksqWxf+mRuBv7Pszw2pIpT7PC1WG+Mphjo3kJ1B+xcPEnKtB/
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:bed9:39b9:3df1:2828])
+ (user=irogers job=sendgmr) by 2002:a63:f14c:0:b0:52c:4227:aa61 with SMTP id
+ o12-20020a63f14c000000b0052c4227aa61mr193290pgk.6.1685996892776; Mon, 05 Jun
+ 2023 13:28:12 -0700 (PDT)
+Date:   Mon,  5 Jun 2023 13:27:08 -0700
+Message-Id: <20230605202712.1690876-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
+Subject: [PATCH v2 0/4] Bring back vmlinux.h generation
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 5 Jun 2023 13:19:52 -0700
-Message-ID: <CAP-5=fV2S1iyjVnwM9ivGjyfCxkb+YUY-4y__=OLNHZnMs=9Wg@mail.gmail.com>
-Subject: Re: [PATCH v2] tools headers: Make the difference output easier to read
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        James Clark <james.clark@arm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 5, 2023 at 12:37=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Mon, Jun 05, 2023 at 12:13:46PM -0700, Ian Rogers escreveu:
-> > Add failures to an array and display it before exiting.
-> >
-> > Before:
-> > ```
-> > Warning: Kernel ABI header at 'tools/include/uapi/linux/perf_event.h' d=
-iffers from latest version at 'include/uapi/linux/perf_event.h'
-> > diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_e=
-vent.h
-> > Warning: Kernel ABI header at 'tools/arch/arm64/include/uapi/asm/perf_r=
-egs.h' differs from latest version at 'arch/arm64/include/uapi/asm/perf_reg=
-s.h'
-> > diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/includ=
-e/uapi/asm/perf_regs.h
-> > Warning: Kernel ABI header at 'tools/arch/arm64/include/asm/cputype.h' =
-differs from latest version at 'arch/arm64/include/asm/cputype.h'
-> > diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/c=
-putype.h
-> > ...
-> > ```
-> >
-> > After:
-> > ```
-> > Warning: Kernel ABI header differences:
-> >   diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf=
-_event.h
-> >   diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/incl=
-ude/uapi/asm/perf_regs.h
-> >   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm=
-/cputype.h
-> > ...
-> > ```
->
-> Here I'm seeing it twice, I was expecting what is in the cset log
-> message, that looks perfect: shows what is different while keeping a
-> line to cut'n'paste and indents the diff lines so that the warnings
-> stand out in the output, can you please take a look?
+Commit 760ebc45746b ("perf lock contention: Add empty 'struct rq' to
+satisfy libbpf 'runqueue' type verification") inadvertently created a
+declaration of 'struct rq' that conflicted with a generated
+vmlinux.h's:
 
-Yep, sorry I left in a debug echo.
+```
+util/bpf_skel/lock_contention.bpf.c:419:8: error: redefinition of 'rq'
+struct rq {};
+       ^
+/tmp/perf/util/bpf_skel/.tmp/../vmlinux.h:45630:8: note: previous definition is here
+struct rq {
+       ^
+1 error generated.
+```
 
-Ian
+Fix the issue by moving the declaration to vmlinux.h. So this can't
+happen again, bring back build support for generating vmlinux.h then
+add build tests.
 
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ alias m
-> alias m=3D'perf stat -e cycles:u,instructions:u make -k BUILD_BPF_SKEL=3D=
-1 CORESIGHT=3D1 PYTHON=3Dpython3 O=3D/tmp/build/perf-tools-next -C tools/pe=
-rf install-bin && git status && perf test python'
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ m
-> make: Entering directory '/var/home/acme/git/perf-tools-next/tools/perf'
->   BUILD:   Doing 'make -j32' parallel build
-> tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_event.h
-> tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/include/uapi/asm=
-/perf_regs.h
-> tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/cputype.h
-> Warning: Kernel ABI header differences:
->   diff -u tools/include/uapi/linux/perf_event.h include/uapi/linux/perf_e=
-vent.h
->   diff -u tools/arch/arm64/include/uapi/asm/perf_regs.h arch/arm64/includ=
-e/uapi/asm/perf_regs.h
->   diff -u tools/arch/arm64/include/asm/cputype.h arch/arm64/include/asm/c=
-putype.h
->
->   INSTALL libsubcmd_headers
->
->
-> > The aim is to make the warnings easier to read and distinguish from
-> > other Makefile warnings messages.
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> >
-> > v2. Is a rebase, avoids the warning message if there are no diffs,
-> >     adds diff to the output for easier copy and paste.
-> > ---
-> >  tools/perf/check-headers.sh | 233 ++++++++++++++++++++----------------
-> >  1 file changed, 129 insertions(+), 104 deletions(-)
-> >
-> > diff --git a/tools/perf/check-headers.sh b/tools/perf/check-headers.sh
-> > index 6f831ee2f60f..bcad6a7d8e5d 100755
-> > --- a/tools/perf/check-headers.sh
-> > +++ b/tools/perf/check-headers.sh
-> > @@ -1,113 +1,122 @@
-> > -#!/bin/sh
-> > +#!/bin/bash
-> >  # SPDX-License-Identifier: GPL-2.0
-> >
-> > -FILES=3D'
-> > -include/uapi/linux/const.h
-> > -include/uapi/drm/drm.h
-> > -include/uapi/drm/i915_drm.h
-> > -include/uapi/linux/fadvise.h
-> > -include/uapi/linux/fcntl.h
-> > -include/uapi/linux/fs.h
-> > -include/uapi/linux/fscrypt.h
-> > -include/uapi/linux/kcmp.h
-> > -include/uapi/linux/kvm.h
-> > -include/uapi/linux/in.h
-> > -include/uapi/linux/mount.h
-> > -include/uapi/linux/openat2.h
-> > -include/uapi/linux/perf_event.h
-> > -include/uapi/linux/prctl.h
-> > -include/uapi/linux/sched.h
-> > -include/uapi/linux/stat.h
-> > -include/uapi/linux/usbdevice_fs.h
-> > -include/uapi/linux/vhost.h
-> > -include/uapi/sound/asound.h
-> > -include/linux/bits.h
-> > -include/vdso/bits.h
-> > -include/linux/const.h
-> > -include/vdso/const.h
-> > -include/linux/hash.h
-> > -include/linux/list-sort.h
-> > -include/uapi/linux/hw_breakpoint.h
-> > -arch/x86/include/asm/disabled-features.h
-> > -arch/x86/include/asm/required-features.h
-> > -arch/x86/include/asm/cpufeatures.h
-> > -arch/x86/include/asm/inat_types.h
-> > -arch/x86/include/asm/emulate_prefix.h
-> > -arch/x86/include/asm/irq_vectors.h
-> > -arch/x86/include/asm/msr-index.h
-> > -arch/x86/include/uapi/asm/prctl.h
-> > -arch/x86/lib/x86-opcode-map.txt
-> > -arch/x86/tools/gen-insn-attr-x86.awk
-> > -arch/arm/include/uapi/asm/perf_regs.h
-> > -arch/arm64/include/uapi/asm/perf_regs.h
-> > -arch/loongarch/include/uapi/asm/perf_regs.h
-> > -arch/mips/include/uapi/asm/perf_regs.h
-> > -arch/powerpc/include/uapi/asm/perf_regs.h
-> > -arch/s390/include/uapi/asm/perf_regs.h
-> > -arch/x86/include/uapi/asm/perf_regs.h
-> > -arch/x86/include/uapi/asm/kvm.h
-> > -arch/x86/include/uapi/asm/kvm_perf.h
-> > -arch/x86/include/uapi/asm/svm.h
-> > -arch/x86/include/uapi/asm/unistd.h
-> > -arch/x86/include/uapi/asm/vmx.h
-> > -arch/powerpc/include/uapi/asm/kvm.h
-> > -arch/s390/include/uapi/asm/kvm.h
-> > -arch/s390/include/uapi/asm/kvm_perf.h
-> > -arch/s390/include/uapi/asm/sie.h
-> > -arch/arm/include/uapi/asm/kvm.h
-> > -arch/arm64/include/uapi/asm/kvm.h
-> > -arch/arm64/include/uapi/asm/unistd.h
-> > -arch/alpha/include/uapi/asm/errno.h
-> > -arch/mips/include/asm/errno.h
-> > -arch/mips/include/uapi/asm/errno.h
-> > -arch/parisc/include/uapi/asm/errno.h
-> > -arch/powerpc/include/uapi/asm/errno.h
-> > -arch/sparc/include/uapi/asm/errno.h
-> > -arch/x86/include/uapi/asm/errno.h
-> > -include/asm-generic/bitops/arch_hweight.h
-> > -include/asm-generic/bitops/const_hweight.h
-> > -include/asm-generic/bitops/__fls.h
-> > -include/asm-generic/bitops/fls.h
-> > -include/asm-generic/bitops/fls64.h
-> > -include/linux/coresight-pmu.h
-> > -include/uapi/asm-generic/errno.h
-> > -include/uapi/asm-generic/errno-base.h
-> > -include/uapi/asm-generic/ioctls.h
-> > -include/uapi/asm-generic/mman-common.h
-> > -include/uapi/asm-generic/unistd.h
-> > -'
-> > -
-> > -SYNC_CHECK_FILES=3D'
-> > -arch/x86/include/asm/inat.h
-> > -arch/x86/include/asm/insn.h
-> > -arch/x86/lib/inat.c
-> > -arch/x86/lib/insn.c
-> > -'
-> > +YELLOW=3D'\033[0;33m'
-> > +NC=3D'\033[0m' # No Color
-> > +
-> > +declare -a FILES
-> > +FILES=3D(
-> > +  "include/uapi/linux/const.h"
-> > +  "include/uapi/drm/drm.h"
-> > +  "include/uapi/drm/i915_drm.h"
-> > +  "include/uapi/linux/fadvise.h"
-> > +  "include/uapi/linux/fcntl.h"
-> > +  "include/uapi/linux/fs.h"
-> > +  "include/uapi/linux/fscrypt.h"
-> > +  "include/uapi/linux/kcmp.h"
-> > +  "include/uapi/linux/kvm.h"
-> > +  "include/uapi/linux/in.h"
-> > +  "include/uapi/linux/mount.h"
-> > +  "include/uapi/linux/openat2.h"
-> > +  "include/uapi/linux/perf_event.h"
-> > +  "include/uapi/linux/prctl.h"
-> > +  "include/uapi/linux/sched.h"
-> > +  "include/uapi/linux/stat.h"
-> > +  "include/uapi/linux/usbdevice_fs.h"
-> > +  "include/uapi/linux/vhost.h"
-> > +  "include/uapi/sound/asound.h"
-> > +  "include/linux/bits.h"
-> > +  "include/vdso/bits.h"
-> > +  "include/linux/const.h"
-> > +  "include/vdso/const.h"
-> > +  "include/linux/hash.h"
-> > +  "include/linux/list-sort.h"
-> > +  "include/uapi/linux/hw_breakpoint.h"
-> > +  "arch/x86/include/asm/disabled-features.h"
-> > +  "arch/x86/include/asm/required-features.h"
-> > +  "arch/x86/include/asm/cpufeatures.h"
-> > +  "arch/x86/include/asm/inat_types.h"
-> > +  "arch/x86/include/asm/emulate_prefix.h"
-> > +  "arch/x86/include/asm/irq_vectors.h"
-> > +  "arch/x86/include/asm/msr-index.h"
-> > +  "arch/x86/include/uapi/asm/prctl.h"
-> > +  "arch/x86/lib/x86-opcode-map.txt"
-> > +  "arch/x86/tools/gen-insn-attr-x86.awk"
-> > +  "arch/arm/include/uapi/asm/perf_regs.h"
-> > +  "arch/arm64/include/uapi/asm/perf_regs.h"
-> > +  "arch/loongarch/include/uapi/asm/perf_regs.h"
-> > +  "arch/mips/include/uapi/asm/perf_regs.h"
-> > +  "arch/powerpc/include/uapi/asm/perf_regs.h"
-> > +  "arch/s390/include/uapi/asm/perf_regs.h"
-> > +  "arch/x86/include/uapi/asm/perf_regs.h"
-> > +  "arch/x86/include/uapi/asm/kvm.h"
-> > +  "arch/x86/include/uapi/asm/kvm_perf.h"
-> > +  "arch/x86/include/uapi/asm/svm.h"
-> > +  "arch/x86/include/uapi/asm/unistd.h"
-> > +  "arch/x86/include/uapi/asm/vmx.h"
-> > +  "arch/powerpc/include/uapi/asm/kvm.h"
-> > +  "arch/s390/include/uapi/asm/kvm.h"
-> > +  "arch/s390/include/uapi/asm/kvm_perf.h"
-> > +  "arch/s390/include/uapi/asm/sie.h"
-> > +  "arch/arm/include/uapi/asm/kvm.h"
-> > +  "arch/arm64/include/uapi/asm/kvm.h"
-> > +  "arch/arm64/include/uapi/asm/unistd.h"
-> > +  "arch/alpha/include/uapi/asm/errno.h"
-> > +  "arch/mips/include/asm/errno.h"
-> > +  "arch/mips/include/uapi/asm/errno.h"
-> > +  "arch/parisc/include/uapi/asm/errno.h"
-> > +  "arch/powerpc/include/uapi/asm/errno.h"
-> > +  "arch/sparc/include/uapi/asm/errno.h"
-> > +  "arch/x86/include/uapi/asm/errno.h"
-> > +  "include/asm-generic/bitops/arch_hweight.h"
-> > +  "include/asm-generic/bitops/const_hweight.h"
-> > +  "include/asm-generic/bitops/__fls.h"
-> > +  "include/asm-generic/bitops/fls.h"
-> > +  "include/asm-generic/bitops/fls64.h"
-> > +  "include/linux/coresight-pmu.h"
-> > +  "include/uapi/asm-generic/errno.h"
-> > +  "include/uapi/asm-generic/errno-base.h"
-> > +  "include/uapi/asm-generic/ioctls.h"
-> > +  "include/uapi/asm-generic/mman-common.h"
-> > +  "include/uapi/asm-generic/unistd.h"
-> > +)
-> > +
-> > +declare -a SYNC_CHECK_FILES
-> > +SYNC_CHECK_FILES=3D(
-> > +  "arch/x86/include/asm/inat.h"
-> > +  "arch/x86/include/asm/insn.h"
-> > +  "arch/x86/lib/inat.c"
-> > +  "arch/x86/lib/insn.c"
-> > +)
-> >
-> >  # These copies are under tools/perf/trace/beauty/ as they are not used=
- to in
-> >  # building object files only by scripts in tools/perf/trace/beauty/ to=
- generate
-> >  # tables that then gets included in .c files for things like id->strin=
-g syscall
-> >  # tables (and the reverse lookup as well: string -> id)
-> >
-> > -BEAUTY_FILES=3D'
-> > -include/linux/socket.h
-> > -'
-> > +declare -a BEAUTY_FILES
-> > +BEAUTY_FILES=3D(
-> > +  "include/linux/socket.h"
-> > +)
-> > +
-> > +declare -a FAILURES
-> >
-> >  check_2 () {
-> > -  file1=3D$1
-> > -  file2=3D$2
-> > +  tools_file=3D$1
-> > +  orig_file=3D$2
-> >
-> >    shift
-> >    shift
-> >
-> > -  cmd=3D"diff $* $file1 $file2 > /dev/null"
-> > +  cmd=3D"diff $* $tools_file $orig_file > /dev/null"
-> >
-> > -  test -f $file2 && {
-> > -    eval $cmd || {
-> > -      echo "Warning: Kernel ABI header at '$file1' differs from latest=
- version at '$file2'" >&2
-> > -      echo diff -u $file1 $file2
-> > -    }
-> > -  }
-> > +  if [ -f "$orig_file" ] && ! eval "$cmd"
-> > +  then
-> > +    echo "$tools_file $orig_file"
-> > +    FAILURES+=3D(
-> > +      "$tools_file $orig_file"
-> > +    )
-> > +  fi
-> >  }
-> >
-> >  check () {
-> > @@ -115,7 +124,7 @@ check () {
-> >
-> >    shift
-> >
-> > -  check_2 tools/$file $file $*
-> > +  check_2 "tools/$file" "$file" $*
-> >  }
-> >
-> >  beauty_check () {
-> > @@ -123,23 +132,29 @@ beauty_check () {
-> >
-> >    shift
-> >
-> > -  check_2 tools/perf/trace/beauty/$file $file $*
-> > +  check_2 "tools/perf/trace/beauty/$file" "$file" $*
-> >  }
-> >
-> >  # Check if we have the kernel headers (tools/perf/../../include), else
-> >  # we're probably on a detached tarball, so no point in trying to check
-> >  # differences.
-> > -test -d ../../include || exit 0
-> > +if ! [ -d ../../include ]
-> > +then
-> > +  echo -e "${YELLOW}Warning${NC}: Skipped check-headers due to missing=
- ../../include"
-> > +  exit 0
-> > +fi
-> >
-> >  cd ../..
-> >
-> >  # simple diff check
-> > -for i in $FILES; do
-> > -  check $i -B
-> > +for i in "${FILES[@]}"
-> > +do
-> > +  check "$i" -B
-> >  done
-> >
-> > -for i in $SYNC_CHECK_FILES; do
-> > -  check $i '-I "^.*\/\*.*__ignore_sync_check__.*\*\/.*$"'
-> > +for i in "${SYNC_CHECK_FILES[@]}"
-> > +do
-> > +  check "$i" '-I "^.*\/\*.*__ignore_sync_check__.*\*\/.*$"'
-> >  done
-> >
-> >  # diff with extra ignore lines
-> > @@ -160,8 +175,9 @@ check_2 tools/perf/arch/powerpc/entry/syscalls/sysc=
-all.tbl arch/powerpc/kernel/s
-> >  check_2 tools/perf/arch/s390/entry/syscalls/syscall.tbl arch/s390/kern=
-el/syscalls/syscall.tbl
-> >  check_2 tools/perf/arch/mips/entry/syscalls/syscall_n64.tbl arch/mips/=
-kernel/syscalls/syscall_n64.tbl
-> >
-> > -for i in $BEAUTY_FILES; do
-> > -  beauty_check $i -B
-> > +for i in "${BEAUTY_FILES[@]}"
-> > +do
-> > +  beauty_check "$i" -B
-> >  done
-> >
-> >  # check duplicated library files
-> > @@ -169,3 +185,12 @@ check_2 tools/perf/util/hashmap.h tools/lib/bpf/ha=
-shmap.h
-> >  check_2 tools/perf/util/hashmap.c tools/lib/bpf/hashmap.c
-> >
-> >  cd tools/perf
-> > +
-> > +if [ ${#FAILURES[@]} -gt 0 ]
-> > +then
-> > +  echo -e "${YELLOW}Warning${NC}: Kernel ABI header differences:"
-> > +  for i in "${FAILURES[@]}"
-> > +  do
-> > +    echo "  diff -u $i"
-> > +  done
-> > +fi
-> > --
-> > 2.41.0.rc0.172.g3f132b7071-goog
-> >
->
-> --
->
-> - Arnaldo
+v2. Rebase on perf-tools-next. Add Andrii's acked-by. Add patch to
+    filter out kernels that lack a .BTF section and cause the build to
+    break.
+
+Ian Rogers (4):
+  perf build: Add ability to build with a generated vmlinux.h
+  perf bpf: Move the declaration of struct rq
+  perf test: Add build tests for BUILD_BPF_SKEL
+  perf build: Filter out BTF sources without a .BTF section
+
+ tools/perf/Makefile.config                    |  4 +++
+ tools/perf/Makefile.perf                      | 33 ++++++++++++++++++-
+ tools/perf/tests/make                         |  4 +++
+ tools/perf/util/bpf_skel/.gitignore           |  1 +
+ .../perf/util/bpf_skel/lock_contention.bpf.c  |  2 --
+ .../util/bpf_skel/{ => vmlinux}/vmlinux.h     | 10 ++++++
+ 6 files changed, 51 insertions(+), 3 deletions(-)
+ rename tools/perf/util/bpf_skel/{ => vmlinux}/vmlinux.h (90%)
+
+-- 
+2.41.0.rc0.172.g3f132b7071-goog
+
