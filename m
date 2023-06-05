@@ -2,140 +2,154 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D355C77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 10:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15729C77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 12:05:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbjFEK1R (ORCPT
+        id S229806AbjFEMFu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jun 2023 06:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48562 "EHLO
+        Mon, 5 Jun 2023 08:05:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229625AbjFEK1Q (ORCPT
+        with ESMTP id S229815AbjFEMFt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2023 06:27:16 -0400
+        Mon, 5 Jun 2023 08:05:49 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6FB3EA1;
-        Mon,  5 Jun 2023 03:27:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7913F9C;
+        Mon,  5 Jun 2023 05:05:48 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B40AD152B;
-        Mon,  5 Jun 2023 03:28:00 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.24.244])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 474AA3F793;
-        Mon,  5 Jun 2023 03:27:13 -0700 (PDT)
-Date:   Mon, 5 Jun 2023 11:27:10 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9AA2D75;
+        Mon,  5 Jun 2023 05:06:33 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.25.215])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0275A3F663;
+        Mon,  5 Jun 2023 05:05:45 -0700 (PDT)
+Date:   Mon, 5 Jun 2023 13:05:36 +0100
 From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>, jolsa@kernel.org,
-        irogers@google.com, bp@alien8.de, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
-Message-ID: <ZH24fi8MWALIV72Z@FVFF77S0Q05N>
-References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
- <ZH2KVyyC5oMr+Vk2@FVFF77S0Q05N>
- <20230605092731.GZ4253@hirez.programming.kicks-ass.net>
- <20230605101401.GL38236@hirez.programming.kicks-ass.net>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V11 05/10] arm64/perf: Add branch stack support in ARMV8
+ PMU
+Message-ID: <ZH3PCqYt/UzoiVx3@FVFF77S0Q05N>
+References: <20230531040428.501523-1-anshuman.khandual@arm.com>
+ <20230531040428.501523-6-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230605101401.GL38236@hirez.programming.kicks-ass.net>
+In-Reply-To: <20230531040428.501523-6-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 05, 2023 at 12:14:01PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 05, 2023 at 11:27:31AM +0200, Peter Zijlstra wrote:
-> 
-> > That said; given that this commit has been tagged twice now, I suppose I
-> > should go revert it and we'll try again after a more thorough audit.
-> 
-> I'll go queue this then...
-> 
-> ---
-> Subject: perf: Re-instate the linear PMU search
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Mon Jun  5 11:42:39 CEST 2023
-> 
-> Full revert of commit 9551fbb64d09 ("perf/core: Remove pmu linear
-> searching code").
-> 
-> Some architectures (notably arm/arm64) still relied on the linear
-> search in order to find the PMU that consumes
-> PERF_TYPE_{HARDWARE,HW_CACHE,RAW}.
-> 
-> This will need a more thorought audit and clean.
-> 
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Reported-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+On Wed, May 31, 2023 at 09:34:23AM +0530, Anshuman Khandual wrote:
+> This enables support for branch stack sampling event in ARMV8 PMU, checking
+> has_branch_stack() on the event inside 'struct arm_pmu' callbacks. Although
+> these branch stack helpers armv8pmu_branch_XXXXX() are just dummy functions
+> for now. While here, this also defines arm_pmu's sched_task() callback with
+> armv8pmu_sched_task(), which resets the branch record buffer on a sched_in.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+This generally looks good, but I have a few comments below.
 
-Thanks for sorting this out!
+[...]
 
-Mark.
+> +static inline bool armv8pmu_branch_valid(struct perf_event *event)
+> +{
+> +	WARN_ON_ONCE(!has_branch_stack(event));
+> +	return false;
+> +}
 
-> ---
->  kernel/events/core.c |   39 +++++++++++++++++++++++++--------------
->  1 file changed, 25 insertions(+), 14 deletions(-)
-> 
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -11630,27 +11630,38 @@ static struct pmu *perf_init_event(struc
->  	}
->  
->  again:
-> -	ret = -ENOENT;
->  	rcu_read_lock();
->  	pmu = idr_find(&pmu_idr, type);
->  	rcu_read_unlock();
-> -	if (!pmu)
-> -		goto fail;
-> +	if (pmu) {
-> +		if (event->attr.type != type && type != PERF_TYPE_RAW &&
-> +		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-> +			goto fail;
+IIUC this is for validating the attr, so could we please name this
+armv8pmu_branch_attr_valid() ?
+
+[...]
+
+> +static int branch_records_alloc(struct arm_pmu *armpmu)
+> +{
+> +	struct pmu_hw_events *events;
+> +	int cpu;
 > +
-> +		ret = perf_try_init_event(pmu, event);
-> +		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-> +			type = event->attr.type;
-> +			goto again;
-> +		}
->  
-> -	if (event->attr.type != type && type != PERF_TYPE_RAW &&
-> -	    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
-> -		goto fail;
-> -
-> -	ret = perf_try_init_event(pmu, event);
-> -	if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-> -		type = event->attr.type;
-> -		goto again;
-> +		if (ret)
-> +			pmu = ERR_PTR(ret);
-> +
-> +		goto unlock;
->  	}
->  
-> +	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
-> +		ret = perf_try_init_event(pmu, event);
-> +		if (!ret)
-> +			goto unlock;
-> +
-> +		if (ret != -ENOENT) {
-> +			pmu = ERR_PTR(ret);
-> +			goto unlock;
-> +		}
+> +	for_each_possible_cpu(cpu) {
+> +		events = per_cpu_ptr(armpmu->hw_events, cpu);
+> +		events->branches = kzalloc(sizeof(struct branch_records), GFP_KERNEL);
+> +		if (!events->branches)
+> +			return -ENOMEM;
 > +	}
->  fail:
-> -	if (ret)
-> -		pmu = ERR_PTR(ret);
-> -
-> +	pmu = ERR_PTR(-ENOENT);
->  unlock:
->  	srcu_read_unlock(&pmus_srcu, idx);
+> +	return 0;
+
+This leaks memory if any allocation fails, and the next patch replaces this
+code entirely.
+
+Please add this once in a working state. Either use the percpu allocation
+trick in the next patch from the start, or have this kzalloc() with a
+corresponding kfree() in an error path.
+
+>  }
 >  
+>  static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+> @@ -1145,12 +1162,24 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>  	};
+>  	int ret;
+>  
+> +	ret = armv8pmu_private_alloc(cpu_pmu);
+> +	if (ret)
+> +		return ret;
+> +
+>  	ret = smp_call_function_any(&cpu_pmu->supported_cpus,
+>  				    __armv8pmu_probe_pmu,
+>  				    &probe, 1);
+>  	if (ret)
+>  		return ret;
+>  
+> +	if (arm_pmu_branch_stack_supported(cpu_pmu)) {
+> +		ret = branch_records_alloc(cpu_pmu);
+> +		if (ret)
+> +			return ret;
+> +	} else {
+> +		armv8pmu_private_free(cpu_pmu);
+> +	}
+
+I see from the next patch that "private" is four ints, so please just add that
+to struct arm_pmu under an ifdef CONFIG_ARM64_BRBE. That'll simplify this, and
+if we end up needing more space in future we can consider factoring it out.
+
+> +
+>  	return probe.present ? 0 : -ENODEV;
+>  }
+
+It also seems odd to ceck probe.present *after* checking
+arm_pmu_branch_stack_supported().
+
+With the allocation removed I think this can be written more clearly as:
+
+| static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+| {
+|         struct armv8pmu_probe_info probe = {
+|                 .pmu = cpu_pmu,
+|                 .present = false,
+|         };   
+|         int ret; 
+| 
+|         ret = smp_call_function_any(&cpu_pmu->supported_cpus,
+|                                     __armv8pmu_probe_pmu,
+|                                     &probe, 1);
+|         if (ret)
+|                 return ret; 
+| 
+|         if (!probe.present)
+|                 return -ENODEV;
+| 
+|         if (arm_pmu_branch_stack_supported(cpu_pmu))
+|                 ret = branch_records_alloc(cpu_pmu);
+|              
+|         return ret; 
+| }
+
+Thanks,
+Mark.
