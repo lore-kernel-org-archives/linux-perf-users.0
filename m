@@ -2,131 +2,108 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E21C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 14:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E55C77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 14:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233895AbjFEObm (ORCPT
+        id S232530AbjFEOoR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jun 2023 10:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53834 "EHLO
+        Mon, 5 Jun 2023 10:44:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233448AbjFEObl (ORCPT
+        with ESMTP id S232958AbjFEOoP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2023 10:31:41 -0400
+        Mon, 5 Jun 2023 10:44:15 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79D85E9;
-        Mon,  5 Jun 2023 07:31:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0304EE9
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Jun 2023 07:44:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C1A462077;
-        Mon,  5 Jun 2023 14:31:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3745BC4339B;
-        Mon,  5 Jun 2023 14:31:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 939BB6172F
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Jun 2023 14:44:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCDDCC433D2;
+        Mon,  5 Jun 2023 14:44:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685975499;
-        bh=mrOtizINhh5fwcPJizUYE/rj2XWhdL1zZyiYvybGQy0=;
+        s=k20201202; t=1685976254;
+        bh=R6GScf/2m/FE3MMjEUfQt6ds1jbix6HnFEj8CKPfcI8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ipUDWWw91EH6WtuSoZK4XL6EcAt2gTqwhl+h3IOz3di7bYV00b/T/zOXk/p4Ju31h
-         c4AdttDWyfVpNILj2dEM9x3F7vusCqfB7bxt/TejnJmyRkzif3EKIcXYl54VxmHKL8
-         bQiIp0oLAoAsQVlNh2rbhqLTeLSXShn6is1Y2aaewZav/zEEUisL9ZxpxYm6KzuPVJ
-         oh7IxDtgC1Xse94PiLhzHr2teO1eAlow7zSV9NbMbL10lLxSL83SE87Fqm3WEwOYqE
-         2bUuLcFRAC1Mqxbx77lvECE55OK9AO+2snJL279hxAz51Aai6EevkbrgBQ0HmrEy2Q
-         F0pvcXDa5IP7w==
+        b=i/Isot8NJ9Dh8zyeRrG1spNbywS4TZpCCEA8icuEqSxJglUMyqu+minuFosPpGoH0
+         Qh+oBq9+pqvynpxX111TyfOID3K7GueWiGMXVH8AOO+CPGRwxDorZYQnnAgFP0uS2g
+         Hset6NuJ5jCBrBEXMyRupOvms2E0o/dVSr3BQbkm3MaxIt1fdONyz9WKlITc1vGb0Q
+         DHShieACNz1sjpp7KEjKmpysG2Gu5ewTGDVejZCuWlAKx8XAGJLBXfAMoi65zmIvdM
+         ca803T3EL3QEDeFbLqq/SIS1p/3sKYKkridQYH9yMLzPRXqEU1gqmXyKuB2x04RbUs
+         ng71KhrNREl1Q==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E3B0240692; Mon,  5 Jun 2023 11:31:36 -0300 (-03)
-Date:   Mon, 5 Jun 2023 11:31:36 -0300
+        id 3FB3040692; Mon,  5 Jun 2023 11:44:11 -0300 (-03)
+Date:   Mon, 5 Jun 2023 11:44:11 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc:     Andrew Jones <ajones@ventanamicro.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+To:     Ian Rogers <irogers@google.com>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 10/10] perf: tests: Adapt mmap-basic.c for riscv
-Message-ID: <ZH3xyJkEf1b51Ydy@kernel.org>
-References: <20230512085321.13259-1-alexghiti@rivosinc.com>
- <20230512085321.13259-11-alexghiti@rivosinc.com>
- <20230531-31bd9ddeaca8cb338f81ed14@orel>
- <ZH3ovt4WnTJuTinF@kernel.org>
- <CAHVXubhofC+WaSysWaxcTA2GdJAF8kTD3COBeQDAy25af_rSLg@mail.gmail.com>
+        linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev
+Subject: Re: [PATCH RESEND v3 0/5] perf tools: Modify mksyscalltbl
+Message-ID: <ZH30uwj7S72vxoX1@kernel.org>
+References: <1685441401-8709-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAP-5=fXvN1b+_krmFSL2=C31WZ3zKafnq=Bqw3ruBKFNzG_8Kw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHVXubhofC+WaSysWaxcTA2GdJAF8kTD3COBeQDAy25af_rSLg@mail.gmail.com>
+In-Reply-To: <CAP-5=fXvN1b+_krmFSL2=C31WZ3zKafnq=Bqw3ruBKFNzG_8Kw@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jun 05, 2023 at 04:00:12PM +0200, Alexandre Ghiti escreveu:
-> On Mon, Jun 5, 2023 at 3:53 PM Arnaldo Carvalho de Melo <acme@kernel.org>
-> wrote:
-> 
-> > Em Wed, May 31, 2023 at 05:15:15PM +0200, Andrew Jones escreveu:
-> > > On Fri, May 12, 2023 at 10:53:21AM +0200, Alexandre Ghiti wrote:
-> > > > riscv now supports mmaping hardware counters to userspace so adapt the
-> > test
-> > > > to run on this architecture.
-> > > >
-> > > > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > > > ---
-> > > >  tools/perf/tests/mmap-basic.c | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/tests/mmap-basic.c
-> > b/tools/perf/tests/mmap-basic.c
-> > > > index e68ca6229756..f5075ca774f8 100644
-> > > > --- a/tools/perf/tests/mmap-basic.c
-> > > > +++ b/tools/perf/tests/mmap-basic.c
-> > > > @@ -284,7 +284,7 @@ static struct test_case tests__basic_mmap[] = {
-> > > >                      "permissions"),
-> > > >     TEST_CASE_REASON("User space counter reading of instructions",
-> > > >                      mmap_user_read_instr,
-> > > > -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> > > > +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> > || __riscv_xlen == 64
-> > > >                      "permissions"
-> > > >  #else
-> > > >                      "unsupported"
-> > > > @@ -292,7 +292,7 @@ static struct test_case tests__basic_mmap[] = {
-> > > >             ),
-> > > >     TEST_CASE_REASON("User space counter reading of cycles",
-> > > >                      mmap_user_read_cycles,
-> > > > -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> > > > +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
-> > || __riscv_xlen == 64
-> > > >                      "permissions"
-> > > >  #else
-> > > >                      "unsupported"
-> > > > --
-> > > > 2.37.2
-> > > >
-> > >
-> > > Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Em Tue, May 30, 2023 at 12:03:30PM -0700, Ian Rogers escreveu:
+> On Tue, May 30, 2023 at 3:10 AM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 > >
-> > Was the kernel part merged upstream?
+> > I'm sorry, somehow the patchset didn't reach mailing lists.
+> > Resending with a fewer people in the cc list, which probably
+> > was the reason.
 > >
+> > Thanks Alexander, Leo and Ian for your reviews and suggestions.
 > 
-> No, I still haven't answered the reviews :)
+> Thanks for the consts!
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
 
-Ok, I'll then wait for it to happen to consider merging the userland
-parts,
+Thanks, applied.
 
-Thanks,
+- Arnaldo
+
+ 
+> > v3:
+> >   -- Add a new patch to declare syscalltbl_*[] as const for all archs,
+> >      suggested by Ian.
+> >   -- Add a new patch to use max_nr to define SYSCALLTBL_ARM64_MAX_ID.
+> >
+> > v2:
+> >   -- Add a new patch to rename create_table_from_c()
+> >      to create_sc_table(), suggested by Leo.
+> >   -- Simplify the shell script, suggested by Alexander.
+> >
+> > Tiezhu Yang (5):
+> >   perf tools: Declare syscalltbl_*[] as const for all archs
+> >   perf arm64: Rename create_table_from_c() to create_sc_table()
+> >   perf arm64: Handle __NR3264_ prefixed syscall number
+> >   perf arm64: Use max_nr to define SYSCALLTBL_ARM64_MAX_ID
+> >   perf LoongArch: Simplify mksyscalltbl
+> >
+> >  tools/perf/arch/arm64/entry/syscalls/mksyscalltbl  | 17 ++++-----
+> >  .../arch/loongarch/entry/syscalls/mksyscalltbl     | 40 +++++++---------------
+> >  tools/perf/arch/mips/entry/syscalls/mksyscalltbl   |  2 +-
+> >  .../perf/arch/powerpc/entry/syscalls/mksyscalltbl  |  2 +-
+> >  tools/perf/arch/s390/entry/syscalls/mksyscalltbl   |  2 +-
+> >  tools/perf/arch/x86/entry/syscalls/syscalltbl.sh   |  2 +-
+> >  tools/perf/util/syscalltbl.c                       | 14 ++++----
+> >  7 files changed, 32 insertions(+), 47 deletions(-)
+> >
+> > --
+> > 2.1.0
+> >
+
+-- 
 
 - Arnaldo
