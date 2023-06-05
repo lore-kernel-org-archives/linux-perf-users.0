@@ -2,103 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF47CC7EE3A
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 07:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8099C77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 07:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230308AbjFEHKs (ORCPT
+        id S229621AbjFEH0b (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jun 2023 03:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43174 "EHLO
+        Mon, 5 Jun 2023 03:26:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232101AbjFEHKk (ORCPT
+        with ESMTP id S231540AbjFEH0S (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2023 03:10:40 -0400
+        Mon, 5 Jun 2023 03:26:18 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 440A111A;
-        Mon,  5 Jun 2023 00:10:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A5F30DA;
+        Mon,  5 Jun 2023 00:26:15 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8936DD75;
-        Mon,  5 Jun 2023 00:11:08 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E98D6D75;
+        Mon,  5 Jun 2023 00:27:00 -0700 (PDT)
 Received: from FVFF77S0Q05N (unknown [10.57.24.244])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1C0223F793;
-        Mon,  5 Jun 2023 00:10:20 -0700 (PDT)
-Date:   Mon, 5 Jun 2023 08:10:15 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3454D3F793;
+        Mon,  5 Jun 2023 00:26:13 -0700 (PDT)
+Date:   Mon, 5 Jun 2023 08:26:10 +0100
 From:   Mark Rutland <mark.rutland@arm.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Cc:     jolsa@kernel.org, irogers@google.com, bp@alien8.de,
-        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
-Message-ID: <ZH2KVyyC5oMr+Vk2@FVFF77S0Q05N>
-References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V11 01/10] drivers: perf: arm_pmu: Add new sched_task()
+ callback
+Message-ID: <ZH2OErgGP+ettegI@FVFF77S0Q05N>
+References: <20230531040428.501523-1-anshuman.khandual@arm.com>
+ <20230531040428.501523-2-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
+In-Reply-To: <20230531040428.501523-2-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sun, Jun 04, 2023 at 01:38:10PM +0200, Krzysztof Kozlowski wrote:
-> Hi,
+On Wed, May 31, 2023 at 09:34:19AM +0530, Anshuman Khandual wrote:
+> This adds armpmu_sched_task(), as generic pmu's sched_task() override which
+> in turn can utilize a new arm_pmu.sched_task() callback when available from
+> the arm_pmu instance. This new callback will be used while enabling BRBE in
+> ARMV8 PMU.
 > 
-> #regzbot introduced: 9551fbb64d09
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Tested-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+> ---
+>  drivers/perf/arm_pmu.c       | 9 +++++++++
+>  include/linux/perf/arm_pmu.h | 1 +
+>  2 files changed, 10 insertions(+)
 > 
-> Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
-> searching code") as first one where all hardware events are gone from
-> perf for ARMv7 Exynos5422 board.
-
-I think that commit 9551fbb64d09 is just wrong.
-
-The commit message asserts:
-
-  Searching for the right pmu by iterating over all pmus is no longer
-  required since all pmus now *must* be present in the 'pmu_idr' list.
-  So, remove linear searching code.
-
-... and while each PMU has *some* entry in the pmu_idr list, for its dynamic
-type, that means that events with other types (e.g. PERF_TYPE_HARDWARE or
-PERF_TYPE_RAW) will fail to find a PMU in the IDR whereas they'd previously
-have been accepted by a PMU during the subsequent iteration over all PMUs.
-
-So that iteration is still required.
-
-How does this work on x86? Do you have pseudo-PMUs for PERF_TYPE_HARDWARE and
-PERF_TYPE_RAW ?
-
-Thanks,
-Mark.
-
-> Expected:
-> perf list | grep "Hardware event"
->   branch-instructions OR branches                    [Hardware event]
->   branch-misses                                      [Hardware event]
->   bus-cycles                                         [Hardware event]
->   cache-misses                                       [Hardware event]
->   cache-references                                   [Hardware event]
->   cpu-cycles OR cycles                               [Hardware event]
->   instructions                                       [Hardware event]
+> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
+> index 15bd1e34a88e..aada47e3b126 100644
+> --- a/drivers/perf/arm_pmu.c
+> +++ b/drivers/perf/arm_pmu.c
+> @@ -517,6 +517,14 @@ static int armpmu_event_init(struct perf_event *event)
+>  	return __hw_perf_event_init(event);
+>  }
+>  
+> +static void armpmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
+> +{
+> +	struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
+> +
+> +	if (armpmu->sched_task)
+> +		armpmu->sched_task(pmu_ctx, sched_in);
+> +}
+> +
+>  static void armpmu_enable(struct pmu *pmu)
+>  {
+>  	struct arm_pmu *armpmu = to_arm_pmu(pmu);
+> @@ -858,6 +866,7 @@ struct arm_pmu *armpmu_alloc(void)
+>  	}
+>  
+>  	pmu->pmu = (struct pmu) {
+> +		.sched_task	= armpmu_sched_task,
+>  		.pmu_enable	= armpmu_enable,
+>  		.pmu_disable	= armpmu_disable,
+>  		.event_init	= armpmu_event_init,
+> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+> index 525b5d64e394..f7fbd162ca4c 100644
+> --- a/include/linux/perf/arm_pmu.h
+> +++ b/include/linux/perf/arm_pmu.h
+> @@ -100,6 +100,7 @@ struct arm_pmu {
+>  	void		(*stop)(struct arm_pmu *);
+>  	void		(*reset)(void *);
+>  	int		(*map_event)(struct perf_event *event);
+> +	void		(*sched_task)(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
+>  	int		num_events;
+>  	bool		secure_access; /* 32-bit ARM only */
+>  #define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
+> -- 
+> 2.25.1
 > 
-> 
-> Result:
-> empty, no hardware events
-> 
-> 1. Arch ARM Linux
-> 2. exynos_defconfig
-> 3. Board:
->    - Odroid HC1
->      ARMv7, octa-core (Cortex-A7+A15), Exynos5422 SoC
->      Systemd: v239
-> 
-> 4. perf version 6.1.0
-> 
-> 
-> Best regards,
-> Krzysztof
