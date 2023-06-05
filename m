@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C04DC7EE23
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 07:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA968C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 08:00:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229455AbjFEH6b (ORCPT
+        id S231322AbjFEIAi (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jun 2023 03:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47246 "EHLO
+        Mon, 5 Jun 2023 04:00:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231719AbjFEH6Y (ORCPT
+        with ESMTP id S231451AbjFEIAg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2023 03:58:24 -0400
+        Mon, 5 Jun 2023 04:00:36 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A644E9;
-        Mon,  5 Jun 2023 00:58:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 889A6FD;
+        Mon,  5 Jun 2023 01:00:29 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A670D75;
-        Mon,  5 Jun 2023 00:59:07 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D29A2D75;
+        Mon,  5 Jun 2023 01:01:14 -0700 (PDT)
 Received: from FVFF77S0Q05N (unknown [10.57.24.244])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACF123F793;
-        Mon,  5 Jun 2023 00:58:19 -0700 (PDT)
-Date:   Mon, 5 Jun 2023 08:58:16 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 227813F793;
+        Mon,  5 Jun 2023 01:00:27 -0700 (PDT)
+Date:   Mon, 5 Jun 2023 09:00:24 +0100
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     Anshuman Khandual <anshuman.khandual@arm.com>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -35,31 +35,23 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V11 03/10] arm64/perf: Add branch stack support in struct
- arm_pmu
-Message-ID: <ZH2VmOUuZobZMcc/@FVFF77S0Q05N>
+Subject: Re: [PATCH V11 04/10] arm64/perf: Add branch stack support in struct
+ pmu_hw_events
+Message-ID: <ZH2WGBjf2PgiuRAg@FVFF77S0Q05N>
 References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-4-anshuman.khandual@arm.com>
+ <20230531040428.501523-5-anshuman.khandual@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230531040428.501523-4-anshuman.khandual@arm.com>
+In-Reply-To: <20230531040428.501523-5-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 31, 2023 at 09:34:21AM +0530, Anshuman Khandual wrote:
-> This updates 'struct arm_pmu' for branch stack sampling support later. This
-> adds a new 'features' element in the structure to track supported features,
-> and another 'private' element to encapsulate implementation attributes on a
-> given 'struct arm_pmu'. These updates here will help in tracking any branch
-> stack sampling support, which is being added later. This also adds a helper
-> arm_pmu_branch_stack_supported().
-> 
-> This also enables perf branch stack sampling event on all 'struct arm pmu',
-> supporting the feature but after removing the current gate that blocks such
-> events unconditionally in armpmu_event_init(). Instead a quick probe can be
-> initiated via arm_pmu_branch_stack_supported() to ascertain the support.
+On Wed, May 31, 2023 at 09:34:22AM +0530, Anshuman Khandual wrote:
+> This adds branch records buffer pointer in 'struct pmu_hw_events' which can
+> be used to capture branch records during PMU interrupt. This percpu pointer
+> here needs to be allocated first before usage.
 > 
 > Cc: Catalin Marinas <catalin.marinas@arm.com>
 > Cc: Will Deacon <will@kernel.org>
@@ -68,63 +60,40 @@ On Wed, May 31, 2023 at 09:34:21AM +0530, Anshuman Khandual wrote:
 > Cc: linux-kernel@vger.kernel.org
 > Tested-by: James Clark <james.clark@arm.com>
 > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  drivers/perf/arm_pmu.c       |  3 +--
->  include/linux/perf/arm_pmu.h | 12 +++++++++++-
->  2 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-> index aada47e3b126..d4a4f2bd89a5 100644
-> --- a/drivers/perf/arm_pmu.c
-> +++ b/drivers/perf/arm_pmu.c
-> @@ -510,8 +510,7 @@ static int armpmu_event_init(struct perf_event *event)
->  		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
->  		return -ENOENT;
->  
-> -	/* does not support taken branch sampling */
-> -	if (has_branch_stack(event))
-> +	if (has_branch_stack(event) && !arm_pmu_branch_stack_supported(armpmu))
->  		return -EOPNOTSUPP;
->  
->  	return __hw_perf_event_init(event);
-> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-> index f7fbd162ca4c..0da745eaf426 100644
-> --- a/include/linux/perf/arm_pmu.h
-> +++ b/include/linux/perf/arm_pmu.h
-> @@ -102,7 +102,9 @@ struct arm_pmu {
->  	int		(*map_event)(struct perf_event *event);
->  	void		(*sched_task)(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
->  	int		num_events;
-> -	bool		secure_access; /* 32-bit ARM only */
-> +	unsigned int	secure_access	: 1, /* 32-bit ARM only */
-> +			has_branch_stack: 1, /* 64-bit ARM only */
-> +			reserved	: 30;
->  #define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
->  	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
->  #define ARMV8_PMUV3_EXT_COMMON_EVENT_BASE	0x4000
-> @@ -118,8 +120,16 @@ struct arm_pmu {
->  
->  	/* Only to be used by ACPI probing code */
->  	unsigned long acpi_cpuid;
-> +
-> +	/* Implementation specific attributes */
-> +	void		*private;
->  };
->  
-> +static inline bool arm_pmu_branch_stack_supported(struct arm_pmu *armpmu)
-> +{
-> +	return armpmu->has_branch_stack;
-> +}
-
-Since this is a trivial test, and we already access the 'secure_access' field
-directly, I'd prefer we removed this helper and directly accessesed
-arm_pmu::has_branch_stack, e.g. with the logic in armpmu_event_init() being:
-
-	if (has_branch_stack(event) && !armpmu->has_branch_stack)
-		return -EOPNOTSUPP;
-
-With that:
 
 Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Mark.
+> ---
+>  include/linux/perf/arm_pmu.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+> index 0da745eaf426..694b241e456c 100644
+> --- a/include/linux/perf/arm_pmu.h
+> +++ b/include/linux/perf/arm_pmu.h
+> @@ -44,6 +44,13 @@ static_assert((PERF_EVENT_FLAG_ARCH & ARMPMU_EVT_47BIT) == ARMPMU_EVT_47BIT);
+>  	},								\
+>  }
+>  
+> +#define MAX_BRANCH_RECORDS 64
+> +
+> +struct branch_records {
+> +	struct perf_branch_stack	branch_stack;
+> +	struct perf_branch_entry	branch_entries[MAX_BRANCH_RECORDS];
+> +};
+> +
+>  /* The events for a given PMU register set. */
+>  struct pmu_hw_events {
+>  	/*
+> @@ -70,6 +77,8 @@ struct pmu_hw_events {
+>  	struct arm_pmu		*percpu_pmu;
+>  
+>  	int irq;
+> +
+> +	struct branch_records	*branches;
+>  };
+>  
+>  enum armpmu_attr_groups {
+> -- 
+> 2.25.1
+> 
