@@ -2,190 +2,115 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DADD4C7EE24
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 03:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A487C7EE2D
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 03:27:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231230AbjFEDPB (ORCPT
+        id S232729AbjFED1G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 4 Jun 2023 23:15:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32804 "EHLO
+        Sun, 4 Jun 2023 23:27:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232600AbjFEDO7 (ORCPT
+        with ESMTP id S232721AbjFED1D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 4 Jun 2023 23:14:59 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 115FFA9;
-        Sun,  4 Jun 2023 20:14:58 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 504A1D75;
-        Sun,  4 Jun 2023 20:15:43 -0700 (PDT)
-Received: from [10.162.41.6] (a077893.blr.arm.com [10.162.41.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 45FE03F663;
-        Sun,  4 Jun 2023 20:14:52 -0700 (PDT)
-Message-ID: <a11beb49-7b4f-08f0-b1e2-782a0ba973ea@arm.com>
-Date:   Mon, 5 Jun 2023 08:44:50 +0530
+        Sun, 4 Jun 2023 23:27:03 -0400
+Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6F7B1;
+        Sun,  4 Jun 2023 20:27:00 -0700 (PDT)
+Received: by mail-ot1-x32b.google.com with SMTP id 46e09a7af769-6b0d38ce700so3340536a34.2;
+        Sun, 04 Jun 2023 20:27:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685935619; x=1688527619;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dwal0L6sGBe4Tija8w5m6MusCvofbkwy4bszwLInaTI=;
+        b=Ay7nte0rxPqj9fVhJgbG/FHztxxZIqkOp5rra/Xzf5a4e+rzgaZeC1H6XoyG5cMJhY
+         uSD9j0Zo+Aqgo2EV//XbEAAD65l9aF8ROz6MXpVpLPSpoJQe9nj0ZmltyJrzTG2K9XO7
+         Er/Dhv2lvSCCQhm8X9KosKAVSfYwu4MJeV2sv1JzpqTrRAri7mV9QJiJFeJSeQ3KE5hq
+         /pO+acfGUR3MerUgYQwFhS5GdEFhVGNimbr9AEzEGt4lAcUBw6B3+yb0Id0pH/uea4Jz
+         EZURzWFxE8XroknUyx9pqZOLIvApTVvVNMxvgc1GXg0T5HdVtVWhAyQMKEcZvqPwtSr4
+         ORxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685935619; x=1688527619;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dwal0L6sGBe4Tija8w5m6MusCvofbkwy4bszwLInaTI=;
+        b=JoRWPG/EkzE4kUuwdJgSDx+KiEGtWSlrXW2+FyZABvL5Y49/ewETweD+eblFzvkzmR
+         nbieJLW8nIa2JFHU7QrzLo8X23aCkkxLA+0qnoeuJNWdWAjs4kjBCF5pGDI1cx9LP/sb
+         Wx54F0ENqOGtxm1j0AdC16Uz7t2FgsvnJVg6MlMO8dk3hWeBYAcQYz1D+38KZTMamQAg
+         u+8VVMSaO5IJwNWeBWyh0TPewNLcY4fEXzeQowplukusZwm7fXP3lq0DNHcNrvw/RLzN
+         7x9oIeWQdX7/e//8Yqr4UauW7D5VHkt0o5aFhnbXgHHIPrKSeiA1HY1zWs4/p4VmZ6/R
+         xOXw==
+X-Gm-Message-State: AC+VfDy6rnbLTFty51lxMKpx+rach7omoHfo71ETzxRiw1yxmYspO8f2
+        7dmiG1iaHEJI7NnZzVWBZEA=
+X-Google-Smtp-Source: ACHHUZ4W+cRsdWRORSzDYMPoa42K0S+ECjUK9kAXMfdNknMckwnftY5YdZavnMxICgOANNXm00QN2Q==
+X-Received: by 2002:a9d:7692:0:b0:6ab:bec:592f with SMTP id j18-20020a9d7692000000b006ab0bec592fmr8870075otl.17.1685935619041;
+        Sun, 04 Jun 2023 20:26:59 -0700 (PDT)
+Received: from debian.me (subs03-180-214-233-4.three.co.id. [180.214.233.4])
+        by smtp.gmail.com with ESMTPSA id s17-20020aa78291000000b006413e6e7578sm4230048pfm.5.2023.06.04.20.26.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Jun 2023 20:26:58 -0700 (PDT)
+Received: by debian.me (Postfix, from userid 1000)
+        id CDB3A106291; Mon,  5 Jun 2023 10:26:55 +0700 (WIB)
+Date:   Mon, 5 Jun 2023 10:26:55 +0700
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc:     mark.rutland@arm.com, jolsa@kernel.org, irogers@google.com,
+        bp@alien8.de, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION][BISECT] perf/core: Remove pmu linear searching code
+Message-ID: <ZH1V_-WXejzDsKXh@debian.me>
+References: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V11 08/10] arm64/perf: Add struct brbe_regset helper
- functions
-Content-Language: en-US
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-9-anshuman.khandual@arm.com>
- <CAM9d7cihqiUULBR7JoizDGySVYdOx3TH_CJV=QDpeck3p8z5wg@mail.gmail.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <CAM9d7cihqiUULBR7JoizDGySVYdOx3TH_CJV=QDpeck3p8z5wg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IrxVMi6lhpyOnVcO"
+Content-Disposition: inline
+In-Reply-To: <3abd3693-ad87-9abf-a762-337076638fcc@linaro.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
+--IrxVMi6lhpyOnVcO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 6/2/23 08:10, Namhyung Kim wrote:
-> On Tue, May 30, 2023 at 9:15 PM Anshuman Khandual
-> <anshuman.khandual@arm.com> wrote:
->>
->> The primary abstraction level for fetching branch records from BRBE HW has
->> been changed as 'struct brbe_regset', which contains storage for all three
->> BRBE registers i.e BRBSRC, BRBTGT, BRBINF. Whether branch record processing
->> happens in the task sched out path, or in the PMU IRQ handling path, these
->> registers need to be extracted from the HW. Afterwards both live and stored
->> sets need to be stitched together to create final branch records set. This
->> adds required helper functions for such operations.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Tested-by: James Clark <james.clark@arm.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
-> 
-> [SNIP]
->> +
->> +static inline void copy_brbe_regset(struct brbe_regset *src, int src_idx,
->> +                                   struct brbe_regset *dst, int dst_idx)
->> +{
->> +       dst[dst_idx].brbinf = src[src_idx].brbinf;
->> +       dst[dst_idx].brbsrc = src[src_idx].brbsrc;
->> +       dst[dst_idx].brbtgt = src[src_idx].brbtgt;
->> +}
->> +
->> +/*
->> + * This function concatenates branch records from stored and live buffer
->> + * up to maximum nr_max records and the stored buffer holds the resultant
->> + * buffer. The concatenated buffer contains all the branch records from
->> + * the live buffer but might contain some from stored buffer considering
->> + * the maximum combined length does not exceed 'nr_max'.
->> + *
->> + *     Stored records  Live records
->> + *     ------------------------------------------------^
->> + *     |       S0      |       L0      |       Newest  |
->> + *     ---------------------------------               |
->> + *     |       S1      |       L1      |               |
->> + *     ---------------------------------               |
->> + *     |       S2      |       L2      |               |
->> + *     ---------------------------------               |
->> + *     |       S3      |       L3      |               |
->> + *     ---------------------------------               |
->> + *     |       S4      |       L4      |               nr_max
->> + *     ---------------------------------               |
->> + *     |               |       L5      |               |
->> + *     ---------------------------------               |
->> + *     |               |       L6      |               |
->> + *     ---------------------------------               |
->> + *     |               |       L7      |               |
->> + *     ---------------------------------               |
->> + *     |               |               |               |
->> + *     ---------------------------------               |
->> + *     |               |               |       Oldest  |
->> + *     ------------------------------------------------V
->> + *
->> + *
->> + * S0 is the newest in the stored records, where as L7 is the oldest in
->> + * the live reocords. Unless the live buffer is detetcted as being full
->> + * thus potentially dropping off some older records, L7 and S0 records
->> + * are contiguous in time for a user task context. The stitched buffer
->> + * here represents maximum possible branch records, contiguous in time.
->> + *
->> + *     Stored records  Live records
->> + *     ------------------------------------------------^
->> + *     |       L0      |       L0      |       Newest  |
->> + *     ---------------------------------               |
->> + *     |       L0      |       L1      |               |
->> + *     ---------------------------------               |
->> + *     |       L2      |       L2      |               |
->> + *     ---------------------------------               |
->> + *     |       L3      |       L3      |               |
->> + *     ---------------------------------               |
->> + *     |       L4      |       L4      |             nr_max
->> + *     ---------------------------------               |
->> + *     |       L5      |       L5      |               |
->> + *     ---------------------------------               |
->> + *     |       L6      |       L6      |               |
->> + *     ---------------------------------               |
->> + *     |       L7      |       L7      |               |
->> + *     ---------------------------------               |
->> + *     |       S0      |               |               |
->> + *     ---------------------------------               |
->> + *     |       S1      |               |    Oldest     |
->> + *     ------------------------------------------------V
->> + *     |       S2      | <----|
->> + *     -----------------      |
->> + *     |       S3      | <----| Dropped off after nr_max
->> + *     -----------------      |
->> + *     |       S4      | <----|
->> + *     -----------------
->> + */
->> +static int stitch_stored_live_entries(struct brbe_regset *stored,
->> +                                     struct brbe_regset *live,
->> +                                     int nr_stored, int nr_live,
->> +                                     int nr_max)
->> +{
->> +       int nr_total, nr_excess, nr_last, i;
->> +
->> +       nr_total = nr_stored + nr_live;
->> +       nr_excess = nr_total - nr_max;
->> +
->> +       /* Stored branch records in stitched buffer */
->> +       if (nr_live == nr_max)
->> +               nr_stored = 0;
->> +       else if (nr_excess > 0)
->> +               nr_stored -= nr_excess;
->> +
->> +       /* Stitched buffer branch records length */
->> +       if (nr_total > nr_max)
->> +               nr_last = nr_max;
->> +       else
->> +               nr_last = nr_total;
->> +
->> +       /* Move stored branch records */
->> +       for (i = 0; i < nr_stored; i++)
->> +               copy_brbe_regset(stored, i, stored, nr_last - nr_stored - 1 + i);
-> 
-> I'm afraid it can overwrite some entries if nr_live is small
-> and nr_stored is big.  Why not use memmove()?
+On Sun, Jun 04, 2023 at 01:38:10PM +0200, Krzysztof Kozlowski wrote:
+> Hi,
+>=20
+> #regzbot introduced: 9551fbb64d09
+>=20
+> Bisect pointed to commit 9551fbb64d09 ("perf/core: Remove pmu linear
+> searching code") as first one where all hardware events are gone from
+> perf for ARMv7 Exynos5422 board.
 
-nr_stored is first adjusted with nr_excess if both live and stored entries combined
-exceed the maximum branch records in the HW. I am wondering how it can override ?
+Fixing up regzbot entry title:
 
-> 
-> Also I think it'd be simpler if you copy store to live.
-> It'll save copying live in the IRQ but it will copy the
-> whole content to store again for the sched switch.
+#regzbot title: All Exynos5422 hardware events are gone from perf due to re=
+moving pmu linear searching code
 
-But how that is better than the current scheme ?
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--IrxVMi6lhpyOnVcO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZH1V/wAKCRD2uYlJVVFO
+o/RiAP9rzLBOEEPKnBvjwy3gCOa2Atg4tW8EaJSjiILhC9vE7wD8CWr+6XulOmFf
+vEyQi5u81HGW/Wdd3xItqgKg0kT8dAg=
+=gvFv
+-----END PGP SIGNATURE-----
+
+--IrxVMi6lhpyOnVcO--
