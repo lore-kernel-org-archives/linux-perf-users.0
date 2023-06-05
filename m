@@ -2,63 +2,43 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDEF8C77B73
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 19:14:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AECC77B73
+	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 19:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235280AbjFETOl (ORCPT
+        id S230282AbjFETa5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jun 2023 15:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39380 "EHLO
+        Mon, 5 Jun 2023 15:30:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231238AbjFETOi (ORCPT
+        with ESMTP id S229878AbjFETa4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2023 15:14:38 -0400
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1494C114
-        for <linux-perf-users@vger.kernel.org>; Mon,  5 Jun 2023 12:14:34 -0700 (PDT)
-Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-33d928a268eso31915ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jun 2023 12:14:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685992473; x=1688584473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xyL91Ec69lqQv1cIeAH4Hob9qDym4MqPZUuyevd3R8g=;
-        b=jXB+Z7R1bUy16bQtNnF/M7OCBmgsTgJcWjiLkVx5tWQwzvzZKrrREsGFh3FB60Zmc4
-         mTKQG1kEgqW1xh9f6Gy81vr7OGZwCA33ZSSa3pziU4SQdXfur+Rn7K8jc9aCtWBsQwVQ
-         bOLvWSWpx54SLeXlVgMcYqKiVMpimpSAO3fvop0uW6W79SPgRnGSxiPqtb6Db5HW26ou
-         pTAQ7ZSJPgyQTRvrN79IUm83ANOvVmzKtSzBQIDieDH4QWEgFLXn9tNdqotHzF04MGyg
-         0wwmeSGDvgZS2qz7plot8Kb+62nWwndGzYH+M2o1qlUjTdwq3sLN8Cc0khlaZ9rUATsl
-         z88Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685992473; x=1688584473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xyL91Ec69lqQv1cIeAH4Hob9qDym4MqPZUuyevd3R8g=;
-        b=fAskhChV07+DRWVaNtxIKCSyYpgVLywyI8pxePH7uqYazyYY5RPQFNBQc7lUX3TYz6
-         NfMMWOnlr0Ro8F7xYmN5XFPe2chTINbssvtt+1vDhdRquYKAODxL7YBuo+TiSbAqyJ1f
-         8CeygGeoAP4t0YJ2K3pyIN80Z9QJ9taaVtAavWomZWNO6eFCjC5JN+GlhawBfJvjTFoV
-         nsg3088UKWPNZaWgGA+XVYZV9Rt8jRI0nYxDYZh/a5DgiTFFIZZTpldx/lLTl/8b1kfA
-         YHQpeC7B1ED4c2gfvAZFpkZNPZnRrX0byWwVVwxszsLW2B+5tRl6C1Fky66/Gkyc8je5
-         autA==
-X-Gm-Message-State: AC+VfDy0cPhQYykJaFXD3A9TRa8+UFRLb2uZJ78wbhkUG2TUx8bgCtvP
-        QFobWSWCrgVUSYQ03bPj99IxbeFVx9bep+RnQzOAyA==
-X-Google-Smtp-Source: ACHHUZ6rYSRmEK2A9Buvh4btbinrCfMTRWuZimZRs3lS+f5OxIwk3+ZAurfM7dLslT7TFPLsqza3h46NyyJP9qDqyPw=
-X-Received: by 2002:a05:6e02:17cb:b0:33d:6c0e:83c0 with SMTP id
- z11-20020a056e0217cb00b0033d6c0e83c0mr11732ilu.27.1685992473307; Mon, 05 Jun
- 2023 12:14:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230522204047.800543-1-irogers@google.com> <CAEf4BzZ28xz=bUuFoaWRzKjxOEpv2SRJ08rOycDiX0OchGSQEA@mail.gmail.com>
- <CAP-5=fUj9eTGLDxEpc=Xp082O-mQ_4ALp=2VPFHCvAVq8gO-JQ@mail.gmail.com> <ZH4vru4zR8UlIdEN@kernel.org>
-In-Reply-To: <ZH4vru4zR8UlIdEN@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 5 Jun 2023 12:14:21 -0700
-Message-ID: <CAP-5=fVhMSBk0Q0az7O=OdXtfiktqdxg9GaXdjOFCPPSS25GZA@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] Bring back vmlinux.h generation
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+        Mon, 5 Jun 2023 15:30:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888CFA7;
+        Mon,  5 Jun 2023 12:30:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 26F52629D3;
+        Mon,  5 Jun 2023 19:30:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BCB3C433EF;
+        Mon,  5 Jun 2023 19:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685993454;
+        bh=ia8nqDQQ/+r4DW/QQfhhUBMTrcoQybz/65wIiSzsdBw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ET4WMAHUI4k0x6ZeST+XLtDoSQP+SrwSSLsgq2Pp8m9iNqLSghsxvIFs/fYXjBgOl
+         LAnrhKGPTVischSvRIUysHA22EN0m4fG+aDYYQJ5ni/nKqOnr0JippJOzLXzm/redM
+         PF+IC4pd7DXI0UZPH3uPZnyBxNARPHAYYEYP5i/0rHKVt2N7/0B9rUcYyZroVGd8uC
+         l2xrMTZ2TsNG8EINf6aMEpMxvNCLkrNMSm/ct8GPfyVQiGFQjS2U9DLjy006yCiBd/
+         sYf1sx8nXZcn5soiviSfQlcLEPeIZh1H9NShCVFfeDV5KtGePDp6asNkZVPqRitug5
+         Al3/b/nk0pj2w==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3635240692; Mon,  5 Jun 2023 16:30:51 -0300 (-03)
+Date:   Mon, 5 Jun 2023 16:30:51 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -66,81 +46,239 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         James Clark <james.clark@arm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Yang Jihong <yangjihong1@huawei.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Ahmad Yasin <ahmad.yasin@intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>,
+        Weilin Wang <weilin.wang@intel.com>,
+        Edward Baker <edward.baker@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v1 1/2] perf expr: Make the evaluation of & and | logical
+ and lazy
+Message-ID: <ZH436w4Sesq57iu9@kernel.org>
+References: <20230504195803.3331775-1-irogers@google.com>
+ <2abe618d-a2c4-3b22-ac9d-37bc91d05d41@linux.intel.com>
+ <CAP-5=fX_j-iwuHBekCDFzQUGaOqigTXtyUa6npNCuR7ktF-3_A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX_j-iwuHBekCDFzQUGaOqigTXtyUa6npNCuR7ktF-3_A@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 5, 2023 at 11:55=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Mon, Jun 05, 2023 at 10:18:51AM -0700, Ian Rogers escreveu:
-> > On Mon, May 22, 2023 at 4:35=E2=80=AFPM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Mon, May 22, 2023 at 1:41=E2=80=AFPM Ian Rogers <irogers@google.co=
-m> wrote:
-> > > >
-> > > > Commit 760ebc45746b ("perf lock contention: Add empty 'struct rq' t=
-o
-> > > > satisfy libbpf 'runqueue' type verification") inadvertently created=
- a
-> > > > declaration of 'struct rq' that conflicted with a generated
-> > > > vmlinux.h's:
-> > > >
-> > > > ```
-> > > > util/bpf_skel/lock_contention.bpf.c:419:8: error: redefinition of '=
-rq'
-> > > > struct rq {};
-> > > >        ^
-> > > > /tmp/perf/util/bpf_skel/.tmp/../vmlinux.h:45630:8: note: previous d=
-efinition is here
-> > > > struct rq {
-> > > >        ^
-> > > > 1 error generated.
-> > > > ```
-> > > >
-> > > > Fix the issue by moving the declaration to vmlinux.h. So this can't
-> > > > happen again, bring back build support for generating vmlinux.h the=
-n
-> > > > add build tests.
-> > > >
-> > > > Ian Rogers (3):
-> > > >   perf build: Add ability to build with a generated vmlinux.h
-> > > >   perf bpf: Move the declaration of struct rq
-> > > >   perf test: Add build tests for BUILD_BPF_SKEL
-> > > >
-> > > >  tools/perf/Makefile.config                       |  4 ++++
-> > > >  tools/perf/Makefile.perf                         | 16 ++++++++++++=
-+++-
-> > > >  tools/perf/tests/make                            |  4 ++++
-> > > >  tools/perf/util/bpf_skel/.gitignore              |  1 +
-> > > >  tools/perf/util/bpf_skel/lock_contention.bpf.c   |  2 --
-> > > >  tools/perf/util/bpf_skel/{ =3D> vmlinux}/vmlinux.h | 10 ++++++++++
-> > > >  6 files changed, 34 insertions(+), 3 deletions(-)
-> > > >  rename tools/perf/util/bpf_skel/{ =3D> vmlinux}/vmlinux.h (90%)
-> > > >
-> > > > --
-> > > > 2.40.1.698.g37aff9b760-goog
-> > > >
-> > > >
-> > >
-> > > LGTM, for the series:
-> > >
-> > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Em Mon, Jun 05, 2023 at 10:32:18AM -0700, Ian Rogers escreveu:
+> On Thu, May 18, 2023 at 12:47 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
 > >
-> > Arnaldo, could we take this set?
->
-> This one isn't applying right now on perf-tools-next.
->
-> - Arnaldo
+> >
+> >
+> > On 2023-05-04 3:58 p.m., Ian Rogers wrote:
+> > > Currently the & and | operators are only used in metric thresholds
+> > > like (from the tma_retiring metric):
+> > > tma_retiring > 0.7 | tma_heavy_operations > 0.1
+> > >
+> > > Thresholds are always computed when present, but a lack events may
+> > > mean the threshold can't be computed. This happens with the option
+> > > --metric-no-threshold for say the metric tma_retiring on Tigerlake
+> > > model CPUs. To fully compute the threshold tma_heavy_operations is
+> > > needed and it needs the extra events of IDQ.MS_UOPS,
+> > > UOPS_DECODED.DEC0, cpu/UOPS_DECODED.DEC0,cmask=1/ and
+> > > IDQ.MITE_UOPS. So --metric-no-threshold is a useful option to reduce
+> > > the number of events needed and potentially multiplexing of events.
+> > >
+> > > Rather than just fail threshold computations like this, we may know a
+> > > result from just the left or right-hand side. So, for tma_retiring if
+> > > its value is "> 0.7" we know it is over the threshold. This allows the
+> > > metric to have the threshold coloring, when possible, without all the
+> > > counters being programmed.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> >
+> > The patch works well on my machine.
+> >
+> > Tested-by: Kan Liang <kan.liang@linux.intel.com>
+> >
+> > Thanks,
+> > Kan
+> 
+> Arnaldo, could we take this set?
 
-I'll rebase and resend.
+Thanks, applied.
 
-Thanks,
-Ian
+- Arnaldo
+
+ 
+> Thanks,
+> Ian
+> 
+> > >  tools/perf/tests/expr.c | 40 +++++++++++++++++++
+> > >  tools/perf/util/expr.y  | 86 +++++++++++++++++++++++++++++++++--------
+> > >  2 files changed, 109 insertions(+), 17 deletions(-)
+> > >
+> > > diff --git a/tools/perf/tests/expr.c b/tools/perf/tests/expr.c
+> > > index cbf0e0c74906..45c7fedb797a 100644
+> > > --- a/tools/perf/tests/expr.c
+> > > +++ b/tools/perf/tests/expr.c
+> > > @@ -184,6 +184,46 @@ static int test__expr(struct test_suite *t __maybe_unused, int subtest __maybe_u
+> > >                       NULL, ctx) == 0);
+> > >       TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
+> > >
+> > > +     /* The expression is a constant 0.0 without needing to evaluate EVENT1. */
+> > > +     expr__ctx_clear(ctx);
+> > > +     TEST_ASSERT_VAL("find ids",
+> > > +                     expr__find_ids("0 & EVENT1 > 0", NULL, ctx) == 0);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
+> > > +     expr__ctx_clear(ctx);
+> > > +     TEST_ASSERT_VAL("find ids",
+> > > +                     expr__find_ids("EVENT1 > 0 & 0", NULL, ctx) == 0);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
+> > > +     expr__ctx_clear(ctx);
+> > > +     TEST_ASSERT_VAL("find ids",
+> > > +                     expr__find_ids("1 & EVENT1 > 0", NULL, ctx) == 0);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
+> > > +     expr__ctx_clear(ctx);
+> > > +     TEST_ASSERT_VAL("find ids",
+> > > +                     expr__find_ids("EVENT1 > 0 & 1", NULL, ctx) == 0);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
+> > > +
+> > > +     /* The expression is a constant 1.0 without needing to evaluate EVENT1. */
+> > > +     expr__ctx_clear(ctx);
+> > > +     TEST_ASSERT_VAL("find ids",
+> > > +                     expr__find_ids("1 | EVENT1 > 0", NULL, ctx) == 0);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
+> > > +     expr__ctx_clear(ctx);
+> > > +     TEST_ASSERT_VAL("find ids",
+> > > +                     expr__find_ids("EVENT1 > 0 | 1", NULL, ctx) == 0);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 0);
+> > > +     expr__ctx_clear(ctx);
+> > > +     TEST_ASSERT_VAL("find ids",
+> > > +                     expr__find_ids("0 | EVENT1 > 0", NULL, ctx) == 0);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
+> > > +     expr__ctx_clear(ctx);
+> > > +     TEST_ASSERT_VAL("find ids",
+> > > +                     expr__find_ids("EVENT1 > 0 | 0", NULL, ctx) == 0);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__size(ctx->ids) == 1);
+> > > +     TEST_ASSERT_VAL("find ids", hashmap__find(ctx->ids, "EVENT1", &val_ptr));
+> > > +
+> > >       /* Test toplogy constants appear well ordered. */
+> > >       expr__ctx_clear(ctx);
+> > >       TEST_ASSERT_VAL("#num_cpus", expr__parse(&num_cpus, ctx, "#num_cpus") == 0);
+> > > diff --git a/tools/perf/util/expr.y b/tools/perf/util/expr.y
+> > > index 250e444bf032..6b110f9f95c9 100644
+> > > --- a/tools/perf/util/expr.y
+> > > +++ b/tools/perf/util/expr.y
+> > > @@ -123,20 +123,6 @@ static struct ids handle_id(struct expr_parse_ctx *ctx, char *id,
+> > >   * constant value using OP. Its invariant that there are no ids.  If computing
+> > >   * ids for non-constants union the set of IDs that must be computed.
+> > >   */
+> > > -#define BINARY_LONG_OP(RESULT, OP, LHS, RHS)                         \
+> > > -     if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
+> > > -             assert(LHS.ids == NULL);                                \
+> > > -             assert(RHS.ids == NULL);                                \
+> > > -             if (isnan(LHS.val) || isnan(RHS.val)) {                 \
+> > > -                     RESULT.val = NAN;                               \
+> > > -             } else {                                                \
+> > > -                     RESULT.val = (long)LHS.val OP (long)RHS.val;    \
+> > > -             }                                                       \
+> > > -             RESULT.ids = NULL;                                      \
+> > > -     } else {                                                        \
+> > > -             RESULT = union_expr(LHS, RHS);                          \
+> > > -     }
+> > > -
+> > >  #define BINARY_OP(RESULT, OP, LHS, RHS)                                      \
+> > >       if (!compute_ids || (is_const(LHS.val) && is_const(RHS.val))) { \
+> > >               assert(LHS.ids == NULL);                                \
+> > > @@ -213,9 +199,75 @@ expr: NUMBER
+> > >  }
+> > >  | ID                         { $$ = handle_id(ctx, $1, compute_ids, /*source_count=*/false); }
+> > >  | SOURCE_COUNT '(' ID ')'    { $$ = handle_id(ctx, $3, compute_ids, /*source_count=*/true); }
+> > > -| expr '|' expr { BINARY_LONG_OP($$, |, $1, $3); }
+> > > -| expr '&' expr { BINARY_LONG_OP($$, &, $1, $3); }
+> > > -| expr '^' expr { BINARY_LONG_OP($$, ^, $1, $3); }
+> > > +| expr '|' expr
+> > > +{
+> > > +     if (is_const($1.val) && is_const($3.val)) {
+> > > +             assert($1.ids == NULL);
+> > > +             assert($3.ids == NULL);
+> > > +             $$.ids = NULL;
+> > > +             $$.val = (fpclassify($1.val) == FP_ZERO && fpclassify($3.val) == FP_ZERO) ? 0 : 1;
+> > > +     } else if (is_const($1.val)) {
+> > > +             assert($1.ids == NULL);
+> > > +             if (fpclassify($1.val) == FP_ZERO) {
+> > > +                     $$ = $3;
+> > > +             } else {
+> > > +                     $$.val = 1;
+> > > +                     $$.ids = NULL;
+> > > +                     ids__free($3.ids);
+> > > +             }
+> > > +     } else if (is_const($3.val)) {
+> > > +             assert($3.ids == NULL);
+> > > +             if (fpclassify($3.val) == FP_ZERO) {
+> > > +                     $$ = $1;
+> > > +             } else {
+> > > +                     $$.val = 1;
+> > > +                     $$.ids = NULL;
+> > > +                     ids__free($1.ids);
+> > > +             }
+> > > +     } else {
+> > > +             $$ = union_expr($1, $3);
+> > > +     }
+> > > +}
+> > > +| expr '&' expr
+> > > +{
+> > > +     if (is_const($1.val) && is_const($3.val)) {
+> > > +             assert($1.ids == NULL);
+> > > +             assert($3.ids == NULL);
+> > > +             $$.val = (fpclassify($1.val) != FP_ZERO && fpclassify($3.val) != FP_ZERO) ? 1 : 0;
+> > > +             $$.ids = NULL;
+> > > +     } else if (is_const($1.val)) {
+> > > +             assert($1.ids == NULL);
+> > > +             if (fpclassify($1.val) != FP_ZERO) {
+> > > +                     $$ = $3;
+> > > +             } else {
+> > > +                     $$.val = 0;
+> > > +                     $$.ids = NULL;
+> > > +                     ids__free($3.ids);
+> > > +             }
+> > > +     } else if (is_const($3.val)) {
+> > > +             assert($3.ids == NULL);
+> > > +             if (fpclassify($3.val) != FP_ZERO) {
+> > > +                     $$ = $1;
+> > > +             } else {
+> > > +                     $$.val = 0;
+> > > +                     $$.ids = NULL;
+> > > +                     ids__free($1.ids);
+> > > +             }
+> > > +     } else {
+> > > +             $$ = union_expr($1, $3);
+> > > +     }
+> > > +}
+> > > +| expr '^' expr
+> > > +{
+> > > +     if (is_const($1.val) && is_const($3.val)) {
+> > > +             assert($1.ids == NULL);
+> > > +             assert($3.ids == NULL);
+> > > +             $$.val = (fpclassify($1.val) == FP_ZERO) != (fpclassify($3.val) == FP_ZERO) ? 1 : 0;
+> > > +             $$.ids = NULL;
+> > > +     } else {
+> > > +             $$ = union_expr($1, $3);
+> > > +     }
+> > > +}
+> > >  | expr '<' expr { BINARY_OP($$, <, $1, $3); }
+> > >  | expr '>' expr { BINARY_OP($$, >, $1, $3); }
+> > >  | expr '+' expr { BINARY_OP($$, +, $1, $3); }
+
+-- 
+
+- Arnaldo
