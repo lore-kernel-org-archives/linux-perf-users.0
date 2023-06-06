@@ -2,192 +2,124 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2ABC77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 11:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E50C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 12:26:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232782AbjFFLRE (ORCPT
+        id S229866AbjFFM0b (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jun 2023 07:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48782 "EHLO
+        Tue, 6 Jun 2023 08:26:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229803AbjFFLRD (ORCPT
+        with ESMTP id S229835AbjFFM03 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2023 07:17:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A338DB1
-        for <linux-perf-users@vger.kernel.org>; Tue,  6 Jun 2023 04:16:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686050180;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=N0sKgVlueJOT01kIpStlVpZoquMJIjLQCB74eD8luzc=;
-        b=LhYiwAJRqTbek1HPX0RU3MMGf1+yJNWKgy0zdfSHPKdnJHuSS+OprFKtA2UboOrrNuuQad
-        0z9tYJxoRtf15cQ1JIQeu8pcrJm3UhHi2yFuJl1/BR54i9l++4+SNnCTq1JO9dVAiDZH15
-        eFywLzwnXilOyswwLNQ4rC+aWE0SHog=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-301-3Gy0ke__MGOVrOSUblgnHQ-1; Tue, 06 Jun 2023 07:16:19 -0400
-X-MC-Unique: 3Gy0ke__MGOVrOSUblgnHQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 51C8B3C14107;
-        Tue,  6 Jun 2023 11:16:19 +0000 (UTC)
-Received: from Diego (unknown [10.39.208.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5EBCAC1603B;
-        Tue,  6 Jun 2023 11:16:17 +0000 (UTC)
-Date:   Tue, 6 Jun 2023 13:16:14 +0200 (CEST)
-From:   Michael Petlan <mpetlan@redhat.com>
-X-X-Sender: Michael@Diego
-To:     acme@kernel.org
-cc:     linux-perf-users@vger.kernel.org, acme@redhat.com,
-        qzhao@redhat.com, cjense@google.com, irogers@google.com
-Subject: Re: [PATCH 1/2] perf stat: Fix JSON metric printout for multiple
- metrics per line
-In-Reply-To: <alpine.LRH.2.20.2305221405430.13334@Diego>
-Message-ID: <alpine.LRH.2.20.2306061315480.13334@Diego>
-References: <20230120134039.17788-1-mpetlan@redhat.com> <20230120134039.17788-2-mpetlan@redhat.com> <alpine.LRH.2.20.2305221405430.13334@Diego>
-User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+        Tue, 6 Jun 2023 08:26:29 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9720710C7;
+        Tue,  6 Jun 2023 05:26:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686054388; x=1717590388;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rjRBgamwSeRSfHezoWT0bmvktJ8N6eyh4nvQHsFNuDQ=;
+  b=fhfvs9MEvSU7P5uTfW+4YJwKRPX73M6vMEt3T5btWxmxMl67XuA9JUoE
+   DdO77wx5r6xJuSc+W9iwPE9DkU/31o9Q3Y5N/wqA3v0ETLtQNQj3xMfgU
+   Y2Lt0LZFYfZzSyuDysTadtFOkk72TivxpIsv/6Dm0TUNR7JL+s9OBHn4n
+   7WCXb0OWxfr9gOcXC58VD0Ggcr83YePYJxqfXvGIE2tzBo4l1GTavu3R7
+   Ma2ufr3s+JHOTi3nWpahC9fxc7bZHsZ5nHchx+HcVe3WfZAPkatS1bMPA
+   sOq3IWx2DfahYuXKB7QfzJSDcyq0HZvGdsvBSAJ9V/y20Ssyyud2VVfMe
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="443031643"
+X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
+   d="scan'208";a="443031643"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 05:26:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="883321208"
+X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
+   d="scan'208";a="883321208"
+Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 06 Jun 2023 05:26:23 -0700
+Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q6VlW-0005Dv-21;
+        Tue, 06 Jun 2023 12:26:22 +0000
+Date:   Tue, 6 Jun 2023 20:26:13 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Andrii Nakryiko <andrii@kernel.org>
+Subject: Re: [PATCH v2 1/4] perf build: Add ability to build with a generated
+ vmlinux.h
+Message-ID: <202306062005.DdBIyoSS-lkp@intel.com>
+References: <20230605202712.1690876-2-irogers@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230605202712.1690876-2-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Gently ping...
+Hi Ian,
 
-On Mon, 22 May 2023, Michael Petlan wrote:
-> Hello Ian and Arnaldo,
-> 
-> I've recently got back to the JSON test failures. In January, I post two
-> patches within a patchset. I see that Ian has updated the testcase code,
-> so the second patch is probably no more needed. However I don't see this
-> one applied upstream yet, although it seemed on the list, it had got some
-> acks. Has it been forgotten somehow?
-> 
-> To remind, since the JSON printer engine wasn't ready to print multiple
-> metrics per line, the JSON output got screwed up in that situation. The
-> situation happened on some SPR CPUs, where Top-Down metrics are supported.
-> 
-> The patch below fixes the printer to handle this situation correctly.
-> 
-> I remember someone saying that the whole printer engine needs to be
-> refactored some day, but I'd think that before that happens, it'd be
-> nice to have it fixed...
-> 
-> What do you think?
-> 
-> Regards,
-> Michael
-> 
-> On Fri, 20 Jan 2023, Michael Petlan wrote:
-> > JSON printing engine used to always print metric (even when there should
-> > be none and other engines (std, csv) would not print it) and the metric
-> > used to always close the line by printing a closing curly bracket.
-> > 
-> > This caused invalid JSON output being generated for top-down metrics,
-> > when multiple metrics are printed on a single line, so the broken output
-> > might have looked like:
-> > 
-> >   ... "metric-value" : 15.564203, "metric-unit" : \
-> >   "Memory Bound"}"metric-value" : 14.007787, "metric-unit" : "Core Bound"}
-> > 
-> > To fix it, print always the separating comma BEFORE the key:value pairs
-> > and close the line outside of the JSON metric printing routine.
-> > 
-> > Fixes: df936cadfb58 ("perf stat: Add JSON output option")
-> > 
-> > Signed-off-by: Michael Petlan <mpetlan@redhat.com>
-> > ---
-> >  tools/perf/util/stat-display.c | 28 ++++++++++++++++------------
-> >  1 file changed, 16 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> > index 8bd8b0142630..8f80f6b566d0 100644
-> > --- a/tools/perf/util/stat-display.c
-> > +++ b/tools/perf/util/stat-display.c
-> > @@ -86,7 +86,7 @@ static void print_running_json(struct perf_stat_config *config, u64 run, u64 ena
-> >  
-> >  	if (run != ena)
-> >  		enabled_percent = 100 * run / ena;
-> > -	fprintf(config->output, "\"event-runtime\" : %" PRIu64 ", \"pcnt-running\" : %.2f, ",
-> > +	fprintf(config->output, ", \"event-runtime\" : %" PRIu64 ", \"pcnt-running\" : %.2f",
-> >  		run, enabled_percent);
-> >  }
-> >  
-> > @@ -121,7 +121,7 @@ static void print_noise_pct_csv(struct perf_stat_config *config,
-> >  static void print_noise_pct_json(struct perf_stat_config *config,
-> >  				 double pct)
-> >  {
-> > -	fprintf(config->output, "\"variance\" : %.2f, ", pct);
-> > +	fprintf(config->output, ", \"variance\" : %.2f", pct);
-> >  }
-> >  
-> >  static void print_noise_pct(struct perf_stat_config *config,
-> > @@ -165,7 +165,7 @@ static void print_cgroup_csv(struct perf_stat_config *config, const char *cgrp_n
-> >  
-> >  static void print_cgroup_json(struct perf_stat_config *config, const char *cgrp_name)
-> >  {
-> > -	fprintf(config->output, "\"cgroup\" : \"%s\", ", cgrp_name);
-> > +	fprintf(config->output, ", \"cgroup\" : \"%s\"", cgrp_name);
-> >  }
-> >  
-> >  static void print_cgroup(struct perf_stat_config *config, struct cgroup *cgrp)
-> > @@ -431,10 +431,11 @@ static void print_metric_json(struct perf_stat_config *config __maybe_unused,
-> >  	struct outstate *os = ctx;
-> >  	FILE *out = os->fh;
-> >  
-> > -	fprintf(out, "\"metric-value\" : %f, ", val);
-> > -	fprintf(out, "\"metric-unit\" : \"%s\"", unit);
-> > -	if (!config->metric_only)
-> > -		fprintf(out, "}");
-> > +	if (unit == NULL || fmt == NULL)
-> > +		return;
-> > +
-> > +	fprintf(out, ", \"metric-value\" : %f", val);
-> > +	fprintf(out, ", \"metric-unit\" : \"%s\"", unit);
-> >  }
-> >  
-> >  static void new_line_json(struct perf_stat_config *config, void *ctx)
-> > @@ -623,14 +624,14 @@ static void print_counter_value_json(struct perf_stat_config *config,
-> >  	const char *bad_count = evsel->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED;
-> >  
-> >  	if (ok)
-> > -		fprintf(output, "\"counter-value\" : \"%f\", ", avg);
-> > +		fprintf(output, "\"counter-value\" : \"%f\"", avg);
-> >  	else
-> > -		fprintf(output, "\"counter-value\" : \"%s\", ", bad_count);
-> > +		fprintf(output, "\"counter-value\" : \"%s\"", bad_count);
-> >  
-> >  	if (evsel->unit)
-> > -		fprintf(output, "\"unit\" : \"%s\", ", evsel->unit);
-> > +		fprintf(output, ", \"unit\" : \"%s\"", evsel->unit);
-> >  
-> > -	fprintf(output, "\"event\" : \"%s\", ", evsel__name(evsel));
-> > +	fprintf(output, ", \"event\" : \"%s\"", evsel__name(evsel));
-> >  }
-> >  
-> >  static void print_counter_value(struct perf_stat_config *config,
-> > @@ -835,8 +836,11 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
-> >  
-> >  	printout(config, os, uval, run, ena, avg, s);
-> >  
-> > -	if (!metric_only)
-> > +	if (!metric_only) {
-> > +		if (config->json_output)
-> > +			fputc('}', output);
-> >  		fputc('\n', output);
-> > +	}
-> >  }
-> >  
-> >  static void print_metric_begin(struct perf_stat_config *config,
-> > -- 
-> > 2.18.4
-> > 
-> > 
-> 
-> 
+kernel test robot noticed the following build warnings:
 
+[auto build test WARNING on acme/perf/core]
+[also build test WARNING on tip/master tip/auto-latest linus/master v6.4-rc5 next-20230606]
+[cannot apply to tip/perf/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/perf-build-Add-ability-to-build-with-a-generated-vmlinux-h/20230606-043106
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
+patch link:    https://lore.kernel.org/r/20230605202712.1690876-2-irogers%40google.com
+patch subject: [PATCH v2 1/4] perf build: Add ability to build with a generated vmlinux.h
+config: i386-randconfig-i052-20230605 (https://download.01.org/0day-ci/archive/20230606/202306062005.DdBIyoSS-lkp@intel.com/config)
+compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project.git 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
+reproduce (this is a W=1 build):
+        mkdir -p ~/bin
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        git remote add acme https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+        git fetch acme perf/core
+        git checkout acme/perf/core
+        b4 shazam https://lore.kernel.org/r/20230605202712.1690876-2-irogers@google.com
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=i386 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202306062005.DdBIyoSS-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> tools/perf/util/bpf_skel/vmlinux/vmlinux.h: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/arm64/tags/.gitignore: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/arm64/tags/Makefile: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/arm64/tags/run_tags_test.sh: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/arm64/tags/tags_test.c: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/kvm/.gitignore: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/kvm/Makefile: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/kvm/config: warning: ignored by one of the .gitignore files
+   tools/testing/selftests/kvm/settings: warning: ignored by one of the .gitignore files
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
