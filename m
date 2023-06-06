@@ -2,343 +2,222 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 028E7C7EE43
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 20:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E35DCC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 23:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232123AbjFFU0A (ORCPT
+        id S240278AbjFFXTs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jun 2023 16:26:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
+        Tue, 6 Jun 2023 19:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239103AbjFFUY7 (ORCPT
+        with ESMTP id S240273AbjFFXTZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2023 16:24:59 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDE131720;
-        Tue,  6 Jun 2023 13:24:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686083095; x=1717619095;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=g+xUHi1fTjia7fSveKZnvWZINB/XXD4YygkHxiyObK0=;
-  b=Tk50HxIq+as39XhxEOcLJQGBJqTitPX9epX3BWqaG7qrS/5Xacxym2/l
-   L75Ll1lWhx6Nd/Ipwvjpjekcg6zVhFOYKdmBBxTASFQpLkp3vWV6sSyl9
-   fNsnqkOEMW92eJ6veA/oUUBW0kCmfwt8g5pjpvRKAtGAGUAr7UyR2IpCy
-   RXa+pJezz1n9zTGD4W1P+dmjdPK7jnX3qf+lA/hKNzK9ZyiwcIHDeY/f9
-   xr2ssWggsR92E3DZIX+s5l3VSX1SiuCV9qwN5iqO9ETWZHPa2tk7cakpt
-   ybD7O6YzKeE3sqSIcAp+I3cDrstUgTeNeD/JE43t1yP6wwFLy8KjcOmeD
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="422631169"
-X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
-   d="scan'208";a="422631169"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 13:24:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="821808467"
-X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
-   d="scan'208";a="821808467"
-Received: from a0cec87da3f2.jf.intel.com (HELO worker-node-1.jf.intel.com) ([10.165.55.163])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Jun 2023 13:24:53 -0700
-From:   Weilin Wang <weilin.wang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        Tue, 6 Jun 2023 19:19:25 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C051FEE
+        for <linux-perf-users@vger.kernel.org>; Tue,  6 Jun 2023 16:18:25 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id e9e14a558f8ab-33dea7d5424so27285ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jun 2023 16:18:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1686093504; x=1688685504;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LusODyImi6kShYo7SZgAczgtmkpNpRiKl/lmOqpWzfY=;
+        b=bHLLRfURdxNvPqhE2bfaZQ8ll3eh6shs0txawB+xbLvB7SA+cWOK7VhX0QUN79LyYI
+         lCnTvE7jFUQoWSifn5m0Lys+Y0Dm/RZ9FHkfeJl+BM6/6+5ayQbUXgmiqg3xQhBVEa/J
+         d0iTjx6j5/szWelj86ck4UuNSFm3gb6L9AsDhijZu7qcK84dWa0Ab2F4oTHIwI9iN2Qs
+         cGTtqyfmHiTrw87RP+8KCCyCWVQVRpK3VGKy96HHt6qMgFQd9ABAhrjTCMAUWrHtRSw0
+         FED1Gj5DnAAcqhYaqiWxyvoLJMBl4bZjrI4SY1fRdAO+QCPEfM6xrRse1TkgacsnkBMw
+         Y0/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686093504; x=1688685504;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LusODyImi6kShYo7SZgAczgtmkpNpRiKl/lmOqpWzfY=;
+        b=D7AAlfO5Mq8OmaWTkQqUaHXwkYFhkolKNRVoBpu0BUlvqc+lLbZ+IghH4UuFIGmZXi
+         L4f5M1e5kmBtQCT7Py2X5ANvLu3HsptzJBxg7NC4yfpK0Iz4VYKPyiL4EecvqkdlLnIw
+         rKNFMaJ63uizFst8R1vam4Pp5woyIDbbtlNqXDZ3nRiz+ALHS9+jSa2clINTo8+JVd+N
+         uZ+H0ERRuSucDH8Mazk+/q56C9f1+P3OmpM3xQ+6M+ngMuONCAfcpDX88Ci0PUoa/hYW
+         iVNjS0mZamLnByLdQkl3uuUdbDnJVxLivFTxuVcYbynPzG5DQpsha33/fJnbUB8uoazk
+         8AWA==
+X-Gm-Message-State: AC+VfDzRYpGHtPT4nARVoA9ENf7M5JADq/7KXoVIG+pLHI4zuiQjuMrH
+        w+2ttKArSzeiiQ2NoQiNAX9E/lgi9TyxCccS71MMhH/1HIGSr3b9ASw=
+X-Google-Smtp-Source: ACHHUZ7jN0OEqtUnQoxqE/pZb1cT4FFdk/SorQIEprthyAmFz43w0VOL5ChrKbF0ApvtiecmOAmx0rjnyMt4BE2Js3E=
+X-Received: by 2002:a05:6e02:214a:b0:33b:cea:ce70 with SMTP id
+ d10-20020a056e02214a00b0033b0ceace70mr26326ilv.25.1686093504340; Tue, 06 Jun
+ 2023 16:18:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230605202712.1690876-1-irogers@google.com> <20230605202712.1690876-2-irogers@google.com>
+ <ZH6gZgcwAbDrEiqX@krava> <CAP-5=fWgQDrgDJ_UFuo_G5NaCzR5vWrRyvQ-_qpvFP0p0q18+w@mail.gmail.com>
+ <ZH91mGxFpDPcCFKY@kernel.org>
+In-Reply-To: <ZH91mGxFpDPcCFKY@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Tue, 6 Jun 2023 16:18:13 -0700
+Message-ID: <CAP-5=fUscgwO-G0FSZeM6SyPZVe=Kg+t-s+2txjUrc_qbP+cDg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] perf build: Add ability to build with a generated vmlinux.h
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Weilin Wang <weilin.wang@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, Alt@vger.kernel.org,
-        Samantha <samantha.alt@intel.com>, Taylor@vger.kernel.org,
-        Perry <perry.taylor@intel.com>, Biggers@vger.kernel.org,
-        Caleb <caleb.biggers@intel.com>
-Subject: [PATCH v1 3/3] perf test: Rerun failed metrics with longer workload
-Date:   Tue,  6 Jun 2023 13:24:21 -0700
-Message-Id: <20230606202421.2628401-4-weilin.wang@intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230606202421.2628401-1-weilin.wang@intel.com>
-References: <20230606202421.2628401-1-weilin.wang@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        James Clark <james.clark@arm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Rerun failed metrics with longer workload to avoid false failure because
-sometimes metric value test fails when running in very short amount of
-time.
+On Tue, Jun 6, 2023 at 11:06=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Mon, Jun 05, 2023 at 09:25:54PM -0700, Ian Rogers escreveu:
+> > On Mon, Jun 5, 2023 at 7:57=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> w=
+rote:
+> > >
+> > > On Mon, Jun 05, 2023 at 01:27:09PM -0700, Ian Rogers wrote:
+> > > > Commit a887466562b4 ("perf bpf skels: Stop using vmlinux.h generate=
+d
+> > > > from BTF, use subset of used structs + CO-RE") made it so that
+> > > > vmlinux.h was uncondtionally included from
+> > > > tools/perf/util/vmlinux.h. This change reverts part of that change =
+(so
+> > > > that vmlinux.h is once again generated) and makes it so that the
+> > > > vmlinux.h used at build time is selected from the VMLINUX_H
+> > > > variable. By default the VMLINUX_H variable is set to the vmlinux.h
+> > > > added in change a887466562b4, but if GEN_VMLINUX_H=3D1 is passed on=
+ the
+> > > > build command line then the previous generation behavior kicks in.
+> > > >
+> > > > The build with GEN_VMLINUX_H=3D1 currently fails with:
+> > > > ```
+> > > > util/bpf_skel/lock_contention.bpf.c:419:8: error: redefinition of '=
+rq'
+> > > > struct rq {};
+> > > >        ^
+> > > > /tmp/perf/util/bpf_skel/.tmp/../vmlinux.h:45630:8: note: previous d=
+efinition is here
+> > > > struct rq {
+> > > >        ^
+> > > > 1 error generated.
+> > > > ```
+> > > >
+> > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> > > > ---
+> > > >  tools/perf/Makefile.config                       |  4 ++++
+> > > >  tools/perf/Makefile.perf                         | 16 ++++++++++++=
++++-
+> > > >  tools/perf/util/bpf_skel/.gitignore              |  1 +
+> > > >  tools/perf/util/bpf_skel/{ =3D> vmlinux}/vmlinux.h |  0
+> > > >  4 files changed, 20 insertions(+), 1 deletion(-)
+> > > >  rename tools/perf/util/bpf_skel/{ =3D> vmlinux}/vmlinux.h (100%)
+> > >
+> > > looks good, but I don't understand why you moved the vmlinux.h
+> > >
+> > > jirka
+> >
+> > Dumb reason, as headers in the same directory take priority, I had to
+> > move the vmlinux.h out of the directory with the C code for skeletons
+> > so that it could be selected via a -I.
+>
+> Can this be in a separate patch, i.e. moving vmlinux to a separate
+> directory? I was going to cherry pick the 'struct rq' fix but then it
+> touches the vmlinux/vmlinux.h file that is in this first patch that has
+> review comments.
 
-Signed-off-by: Weilin Wang <weilin.wang@intel.com>
----
- .../tests/shell/lib/perf_metric_validation.py | 129 +++++++++++-------
- 1 file changed, 83 insertions(+), 46 deletions(-)
+I think the comments were more of a question of why the move?
+Hopefully I answered that, the move is necessary to defeat the include
+path order preferring files in the same directory. We need the move,
+we could vary the directory name.
 
-diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
-index 7d789d7e2807..658eee86351b 100644
---- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-+++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-@@ -11,8 +11,9 @@ class Validator:
-         self.rulefname = rulefname
-         self.reportfname = reportfname
-         self.rules = None
--        self.collectlist=metrics
--        self.metrics = set(metrics)
-+        self.collectlist:str = metrics
-+        self.metrics = self.__set_metrics(metrics)
-+        self.allowlist = set()
-         self.tolerance = t
- 
-         self.workloads = [x for x in workload.split(",") if x]
-@@ -41,6 +42,12 @@ class Validator:
-         self.debug = debug
-         self.fullrulefname = fullrulefname
- 
-+    def __set_metrics(self, metrics=''):
-+        if metrics != '':
-+            return set(metrics.split(","))
-+        else:
-+            return set()
-+
-     def read_json(self, filename: str) -> dict:
-         try:
-             with open(Path(filename).resolve(), "r") as f:
-@@ -113,7 +120,7 @@ class Validator:
-         All future test(s) on this metric will fail.
- 
-         @param name: name of the metric
--        @returns: list with value found in self.results; list is empty when not value found.
-+        @returns: list with value found in self.results; list is empty when value is not found.
-         """
-         results = []
-         data = self.results[ridx] if ridx in self.results else self.results[0]
-@@ -123,7 +130,6 @@ class Validator:
-             elif name.replace('.', '1').isdigit():
-                 results.append(float(name))
-             else:
--                self.errlist.append("Metric '%s' is not collected or the value format is incorrect"%(name))
-                 self.ignoremetrics.add(name)
-         return results
- 
-@@ -138,27 +144,32 @@ class Validator:
-         Failure: when metric value is negative or not provided.
-         Metrics with negative value will be added into the self.failtests['PositiveValueTest'] and self.ignoremetrics.
-         """
--        negmetric = set()
--        missmetric = set()
-+        negmetric = dict()
-         pcnt = 0
-         tcnt = 0
-+        rerun = list()
-         for name, val in self.get_results().items():
--            if val is None or val == '':
--                missmetric.add(name)
--                self.errlist.append("Metric '%s' is not collected"%(name))
--            elif val < 0:
--                negmetric.add("{0}(={1:.4f})".format(name, val))
--                self.collectlist[0].append(name)
-+            if val < 0:
-+                negmetric[name] = val
-+                rerun.append(name)
-             else:
-                 pcnt += 1
-             tcnt += 1
-+        if len(rerun) > 0:
-+            second_results = dict()
-+            self.second_test(rerun, second_results)
-+            for name, val in second_results.items():
-+                if name not in negmetric: continue
-+                if val >= 0:
-+                    del negmetric[name]
-+                    pcnt += 1
- 
-         self.failtests['PositiveValueTest']['Total Tests'] = tcnt
-         self.failtests['PositiveValueTest']['Passed Tests'] = pcnt
--        if len(negmetric) or len(missmetric)> 0:
--            self.ignoremetrics.update(negmetric)
--            self.ignoremetrics.update(missmetric)
--            self.failtests['PositiveValueTest']['Failed Tests'].append({'NegativeValue':list(negmetric), 'MissingValue':list(missmetric)})
-+        if len(negmetric.keys()):
-+            self.ignoremetrics.update(negmetric.keys())
-+            negmessage = ["{0}(={1:.4f})".format(name, val) for name, val in negmetric.items()]
-+            self.failtests['PositiveValueTest']['Failed Tests'].append({'NegativeValue': negmessage})
- 
-         return
- 
-@@ -259,21 +270,36 @@ class Validator:
-         metrics = rule['Metrics']
-         passcnt = 0
-         totalcnt = 0
--        faillist = []
-+        faillist = list()
-+        failures = dict()
-+        rerun = list()
-         for m in metrics:
-             totalcnt += 1
-             result = self.get_value(m['Name'])
--            if len(result) > 0 and self.check_bound(result[0], lbv, ubv, t):
-+            if len(result) > 0 and self.check_bound(result[0], lbv, ubv, t) or m['Name'] in self.allowlist:
-                 passcnt += 1
-             else:
--                faillist.append({'MetricName':m['Name'], 'CollectedValue':result})
--                self.collectlist[0].append(m['Name'])
-+                failures[m['Name']] = result
-+                rerun.append(m['Name'])
-+
-+        if len(rerun) > 0:
-+            second_results = dict()
-+            self.second_test(rerun, second_results)
-+            for name, val in second_results.items():
-+                if name not in failures: continue
-+                if self.check_bound(val, lbv, ubv, t):
-+                    passcnt += 1
-+                    del failures[name]
-+                else:
-+                    failures[name] = val
-+                    self.results[0][name] = val
- 
-         self.totalcnt += totalcnt
-         self.passedcnt += passcnt
-         self.failtests['SingleMetricTest']['Total Tests'] += totalcnt
-         self.failtests['SingleMetricTest']['Passed Tests'] += passcnt
--        if len(faillist) != 0:
-+        if len(failures.keys()) != 0:
-+            faillist = [{'MetricName':name, 'CollectedValue':val} for name, val in failures.items()]
-             self.failtests['SingleMetricTest']['Failed Tests'].append({'RuleIndex':rule['RuleIndex'],
-                                                                        'RangeLower': rule['RangeLower'],
-                                                                        'RangeUpper': rule['RangeUpper'],
-@@ -316,7 +342,7 @@ class Validator:
-         return True
- 
-     # Start of Collector and Converter
--    def convert(self, data: list, idx: int):
-+    def convert(self, data: list, metricvalues:dict):
-         """
-         Convert collected metric data from the -j output to dict of {metric_name:value}.
-         """
-@@ -326,20 +352,29 @@ class Validator:
-                 if "metric-unit" in result and result["metric-unit"] != "(null)" and result["metric-unit"] != "":
-                     name = result["metric-unit"].split("  ")[1] if len(result["metric-unit"].split("  ")) > 1 \
-                         else result["metric-unit"]
--                    if idx not in self.results: self.results[idx] = dict()
--                    self.results[idx][name.lower()] = result["metric-value"]
-+                    metricvalues[name.lower()] = result["metric-value"]
-             except ValueError as error:
-                 continue
-         return
- 
--    def collect_perf(self, data_file: str, workload: str):
-+    def _run_perf(self, metric, workload: str):
-+        tool = 'perf'
-+        command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
-+        wl = workload.split()
-+        command.extend(wl)
-+        print(" ".join(command))
-+        cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
-+        data = [x+'}' for x in cmd.stderr.split('}\n') if x]
-+        return data
-+
-+
-+    def collect_perf(self, workload: str):
-         """
-         Collect metric data with "perf stat -M" on given workload with -a and -j.
-         """
-         self.results = dict()
--        tool = 'perf'
-         print(f"Starting perf collection")
--        print(f"Workload: {workload}")
-+        print(f"Long workload: {workload}")
-         collectlist = dict()
-         if self.collectlist != "":
-             collectlist[0] = {x for x in self.collectlist.split(",")}
-@@ -353,17 +388,20 @@ class Validator:
-                     collectlist[rule["RuleIndex"]] = [",".join(list(set(metrics)))]
- 
-         for idx, metrics in collectlist.items():
--            if idx == 0: wl = "sleep 0.5".split()
--            else: wl = workload.split()
-+            if idx == 0: wl = "true"
-+            else: wl = workload
-             for metric in metrics:
--                command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
--                command.extend(wl)
--                print(" ".join(command))
--                cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
--                data = [x+'}' for x in cmd.stderr.split('}\n') if x]
--                self.convert(data, idx)
--        self.collectlist = dict()
--        self.collectlist[0] = list()
-+                data = self._run_perf(metric, wl)
-+                if idx not in self.results: self.results[idx] = dict()
-+                self.convert(data, self.results[idx])
-+        return
-+
-+    def second_test(self, collectlist, second_results):
-+        workload = self.workloads[self.wlidx]
-+        for metric in collectlist:
-+            data = self._run_perf(metric, workload)
-+            self.convert(data, second_results)
-+
-     # End of Collector and Converter
- 
-     # Start of Rule Generator
-@@ -381,7 +419,7 @@ class Validator:
-                 if 'MetricName' not in m:
-                     print("Warning: no metric name")
-                     continue
--                name = m['MetricName']
-+                name = m['MetricName'].lower()
-                 self.metrics.add(name)
-                 if 'ScaleUnit' in m and (m['ScaleUnit'] == '1%' or m['ScaleUnit'] == '100%'):
-                     self.pctgmetrics.add(name.lower())
-@@ -391,14 +429,12 @@ class Validator:
- 
-         return
- 
--    def remove_unsupported_rules(self, rules, allowlist: set = None):
--        for m in allowlist:
--            self.metrics.discard(m)
-+    def remove_unsupported_rules(self, rules):
-         new_rules = []
-         for rule in rules:
-             add_rule = True
-             for m in rule["Metrics"]:
--                if m["Name"] not in self.metrics:
-+                if m["Name"] in self.allowlist or m["Name"] not in self.metrics:
-                     add_rule = False
-                     break
-             if add_rule:
-@@ -415,15 +451,15 @@ class Validator:
-         """
-         data = self.read_json(self.rulefname)
-         rules = data['RelationshipRules']
--        allowlist = set(data['AllowList'])
--        self.rules = self.remove_unsupported_rules(rules, allowlist)
-+        self.allowlist = set([name.lower() for name in data['AllowList']])
-+        self.rules = self.remove_unsupported_rules(rules)
-         pctgrule = {'RuleIndex':0,
-                     'TestType':'SingleMetricTest',
-                     'RangeLower':'0',
-                     'RangeUpper': '100',
-                     'ErrorThreshold': self.tolerance,
-                     'Description':'Metrics in percent unit have value with in [0, 100]',
--                    'Metrics': [{'Name': m} for m in self.pctgmetrics]}
-+                    'Metrics': [{'Name': m.lower()} for m in self.pctgmetrics]}
-         self.rules.append(pctgrule)
- 
-         # Re-index all rules to avoid repeated RuleIndex
-@@ -479,8 +515,9 @@ class Validator:
-             self.parse_perf_metrics()
-         self.create_rules()
-         for i in range(0, len(self.workloads)):
-+            self.wlidx = i
-             self._init_data()
--            self.collect_perf(self.datafname, self.workloads[i])
-+            self.collect_perf(self.workloads[i])
-             # Run positive value test
-             self.pos_val_test()
-             for r in self.rules:
--- 
-2.39.1
+Thanks,
+Ian
 
+> - Arnaldo
+>
+> > Thanks,
+> > Ian
+> >
+> > > >
+> > > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.confi=
+g
+> > > > index a794d9eca93d..08d4e7eaa721 100644
+> > > > --- a/tools/perf/Makefile.config
+> > > > +++ b/tools/perf/Makefile.config
+> > > > @@ -680,6 +680,10 @@ ifdef BUILD_BPF_SKEL
+> > > >    CFLAGS +=3D -DHAVE_BPF_SKEL
+> > > >  endif
+> > > >
+> > > > +ifndef GEN_VMLINUX_H
+> > > > +  VMLINUX_H=3D$(src-perf)/util/bpf_skel/vmlinux/vmlinux.h
+> > > > +endif
+> > > > +
+> > > >  dwarf-post-unwind :=3D 1
+> > > >  dwarf-post-unwind-text :=3D BUG
+> > > >
+> > > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > > > index f48794816d82..f1840af195c0 100644
+> > > > --- a/tools/perf/Makefile.perf
+> > > > +++ b/tools/perf/Makefile.perf
+> > > > @@ -1080,7 +1080,21 @@ $(BPFTOOL): | $(SKEL_TMP_OUT)
+> > > >       $(Q)CFLAGS=3D $(MAKE) -C ../bpf/bpftool \
+> > > >               OUTPUT=3D$(SKEL_TMP_OUT)/ bootstrap
+> > > >
+> > > > -$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) | $(SKEL_=
+TMP_OUT)
+> > > > +VMLINUX_BTF_PATHS ?=3D $(if $(O),$(O)/vmlinux)                    =
+     \
+> > > > +                  $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux) =
+   \
+> > > > +                  ../../vmlinux                                   =
+   \
+> > > > +                  /sys/kernel/btf/vmlinux                         =
+   \
+> > > > +                  /boot/vmlinux-$(shell uname -r)
+> > > > +VMLINUX_BTF ?=3D $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PA=
+THS))))
+> > > > +
+> > > > +$(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL)
+> > > > +ifeq ($(VMLINUX_H),)
+> > > > +     $(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@
+> > > > +else
+> > > > +     $(Q)cp "$(VMLINUX_H)" $@
+> > > > +endif
+> > > > +
+> > > > +$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OU=
+T)/vmlinux.h | $(SKEL_TMP_OUT)
+> > > >       $(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -Wall -Werror $(BPF=
+_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
+> > > >         -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@
+> > > >
+> > > > diff --git a/tools/perf/util/bpf_skel/.gitignore b/tools/perf/util/=
+bpf_skel/.gitignore
+> > > > index 7a1c832825de..cd01455e1b53 100644
+> > > > --- a/tools/perf/util/bpf_skel/.gitignore
+> > > > +++ b/tools/perf/util/bpf_skel/.gitignore
+> > > > @@ -1,3 +1,4 @@
+> > > >  # SPDX-License-Identifier: GPL-2.0-only
+> > > >  .tmp
+> > > >  *.skel.h
+> > > > +vmlinux.h
+> > > > diff --git a/tools/perf/util/bpf_skel/vmlinux.h b/tools/perf/util/b=
+pf_skel/vmlinux/vmlinux.h
+> > > > similarity index 100%
+> > > > rename from tools/perf/util/bpf_skel/vmlinux.h
+> > > > rename to tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> > > > --
+> > > > 2.41.0.rc0.172.g3f132b7071-goog
+> > > >
+>
+> --
+>
+> - Arnaldo
