@@ -2,133 +2,193 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F896C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 07:37:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71805C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 10:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232210AbjFFHhp (ORCPT
+        id S229532AbjFFKf1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jun 2023 03:37:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48874 "EHLO
+        Tue, 6 Jun 2023 06:35:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231626AbjFFHho (ORCPT
+        with ESMTP id S237082AbjFFKfF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2023 03:37:44 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2075.outbound.protection.outlook.com [40.107.220.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93177118;
-        Tue,  6 Jun 2023 00:37:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QpoeoGXtDYscRrqAYDMjsAj4LJrRWFSkewWYdseX5aGWn12hmRSpZusjEylLbAR23eWDBXLoicjgA2TyBbfmdW8ANL0Y7YszWpejva9oKXHPWeSb7ABOWaZzPul6huDDuCqaKIqeMg1Uvd+XxumOZftLoiKwmdjnXvNrc7nmkdj9MM9xXsMLP/vjVGJlLxmxpW0gtq1gvFAoMXNERHIlRqXRaU7Cb39l8HdkZ9CSBa9N3rxW7VWgYxA2mv7IjBcsFcl5KUXJ6/uzzK8bTD5o8ilCXFIz5c50sJIlwBOWXAGASzbOMk5ZhGihMxFIHLG9SAMZa7ubzceleHO0yxjlGg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uZAocU/kbcT+u4sJYs2D9vcBdZmZGmxocz++RhO7pnU=;
- b=DlBdoXwVjhmcrgXYCSRM4S3gSmqTWeEPPiwKcznVFkkwMikJ46O9heg17DVfaTnGhoVK4gcNoV4jSx3BONTeTqHEn6M7tSe5w52Ewo4piIS2WHqBYGPSRTzSEirF22pGSNQoBZObTUl4hUHmpYLE9Y6dUCFV6bFXsnMQQ4pQEckZAQQ3K+WBjpWW7yNzwXVOnnUooEzExforrft8ZzB5rwF4x6DkNEjy0V0z/ptM6MWjNN6d7jzq2do4wnhO2OjrRRngF32kLPg3jNAZQY35zNPrLjGNAgUTnPe7es0XwsSTOFG73QFu/HNSkFMRC6d2CmkTfhTRvQXCXAB2kxdoEA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uZAocU/kbcT+u4sJYs2D9vcBdZmZGmxocz++RhO7pnU=;
- b=ffv6RpTnvz/ZcQcsdtIPcI8iayDvhoyxJpFbeUUT0OvYAqO666fEyaHa2pgqM1TSapD25OXNpJJvH5Ol6KX4MgOYZ9nl5ZQGJ47ia06gLDyG+6Yqp6uJ+k7TtO4MxqT6i+146w8X8Xo39NOic6wl4Fo8OxwSxKo836/uZmKdslc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by BL3PR12MB6546.namprd12.prod.outlook.com (2603:10b6:208:38d::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Tue, 6 Jun
- 2023 07:37:40 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::b4a6:94bb:6895:645]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::b4a6:94bb:6895:645%3]) with mapi id 15.20.6455.030; Tue, 6 Jun 2023
- 07:37:40 +0000
-Message-ID: <a147f06d-aa47-764f-07e1-43fc60313ac7@amd.com>
-Date:   Tue, 6 Jun 2023 13:07:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: perf: arch/x86/tests/amd-ibs-via-core-pmu.c:47:25: error: 'pmus'
- undeclared
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux-perf-users@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <CA+G9fYtVYhyCtD-ExKj7tOJbj9nykxkBs7dxHKo5v_H+kqG1Gg@mail.gmail.com>
+        Tue, 6 Jun 2023 06:35:05 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0356D10E2;
+        Tue,  6 Jun 2023 03:34:47 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02A8B2F4;
+        Tue,  6 Jun 2023 03:35:32 -0700 (PDT)
+Received: from [10.163.44.166] (unknown [10.163.44.166])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF9B23F587;
+        Tue,  6 Jun 2023 03:34:34 -0700 (PDT)
+Message-ID: <ba396c30-6719-1dfb-77c2-9f7e1715b57c@arm.com>
+Date:   Tue, 6 Jun 2023 16:04:25 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH V11 05/10] arm64/perf: Add branch stack support in ARMV8
+ PMU
 Content-Language: en-US
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <CA+G9fYtVYhyCtD-ExKj7tOJbj9nykxkBs7dxHKo5v_H+kqG1Gg@mail.gmail.com>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230531040428.501523-1-anshuman.khandual@arm.com>
+ <20230531040428.501523-6-anshuman.khandual@arm.com>
+ <ZH3PCqYt/UzoiVx3@FVFF77S0Q05N>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ZH3PCqYt/UzoiVx3@FVFF77S0Q05N>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0082.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:9a::17) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|BL3PR12MB6546:EE_
-X-MS-Office365-Filtering-Correlation-Id: 598dd88a-fe1d-48e1-af48-08db6660e83a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GMy6bjwCnkLQS3SIMinvDZHi53zXh/t/UrINohO2ZvXXVQchPgT48xnn2/5RGjQUMAUFzaWndbVdy64Swy4ZaHbyAoRixgOpEuHg+NHRXGx2rTXUUjvCy3gj+5Lh02vXx6Ac8SxdGLUQ2DDBho68my2MZONNveiZ4KJFc1SAgOrveGMs2BuYSwJJ4TMqOnYKZM0zgOZQ+v/NfDIxV/B1lTprUs/MVkHYkzj6JujTmw6HmjR+Uw/fp6quYGfwr5sdw9sk9hAHTAmt1r3SmQlsykb/tWOKyAkE9eF3X9AsyMIajM+ADYWu/vplXPaCNwkJNyK6hssexq0Ah3FGXrnKWmFnwjs8IGDJdl8yF0k8EylxQAo1n+l9vRnDEjPpuQWiAGWTZkS1vxihmOMpCE7QiklJP87f00ZqPmWwjzVleO+07MXL5kKeU1ncB5LQpIiqWVPQNvg+7O93vCFUY5/ai9qzScH7v+RP6gcHvA+nHjc28+xDxQOabfbJxp6puU254PiF/gTOs51CI/NprFLvzYhH4tndWaXyQUjvz29DWmWreV2RkFoBNbe6wPmrcVa8sJ9eisP3XVkyQwYmE2AXrVBhWAUVhqI1MAZT2WvWaS7wbOcJ8oGzKesKZTo0an1s
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(366004)(346002)(136003)(396003)(451199021)(66476007)(66946007)(478600001)(4326008)(31686004)(2906002)(316002)(8936002)(41300700001)(8676002)(44832011)(110136005)(54906003)(66556008)(6666004)(5660300002)(6486002)(6512007)(53546011)(6506007)(26005)(966005)(38100700002)(2616005)(186003)(83380400001)(36756003)(86362001)(558084003)(31696002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a1RUeVc4bk1NTS82dHFSd3JIaktCcE1DZE9FNzVkckQ1dzNxVHRrVWZhWlpS?=
- =?utf-8?B?K3l4ZHh3bGswM1RzcytnbkZuN3Y2WjFVK2lWOEM5Q2lZVytNa2RTb3NWK1NW?=
- =?utf-8?B?dXRnWHpwRWNSeWt0NklKMzhwVU9XbEYzV2R6dTVydVlIUE5rTkgzU0xlczFN?=
- =?utf-8?B?NkM4NUhvS01ZczlsSUFwTkNETjhGZ3V3VllFbVR3RzF2OHcrTzl0bnd4UTRG?=
- =?utf-8?B?Vk9CT2JiU1JnYUNyb1d3eEdoOURJbWx6WThLK1J5cWVlMnJGOTZMMGlhSnhS?=
- =?utf-8?B?d2VqVVR5dnI5WnlWdGltNFQ0akM2TmM1VUxOSWRiemFSZGlmWWN1NGZQcUph?=
- =?utf-8?B?OWlDYnA1eFZ1Vnh0WFhLRy9wWEY4NjdDSCtYUEFtNDBIQWpwcUdtdVNSR3kw?=
- =?utf-8?B?Zk5ZdHVsVXhoMk9JTE1BMGZLY3VJUlpPeUFPWmpNc1dWTHcrNEpBQ2c0NzFQ?=
- =?utf-8?B?aTFzZjgzdThScGY3RGtLeE5Ka0pPazhjUjBKblZHM3pUY1hQOVlDU2hsTmFs?=
- =?utf-8?B?VFJEZ0lheUFWOEF2TksweXE0SlUrVUx0ZTJxTW1iUjY2QmZER1Y1VU5QWnNP?=
- =?utf-8?B?RE5kclZsSGZNWUJFYXNKMkR4Kys5OWxISmxLcjVOdUIxOGFnamt6OG5KcXZ2?=
- =?utf-8?B?WXNuQUdTTTVjam5GbVZuL1dBR1FBN296Vzd1Z0NYTG12NjJtQjRBaG14SjZU?=
- =?utf-8?B?TCs4RVVLNllGUy9BaGlIRVJia3FSU2lGV2x3TUpGUFJWbXdGS2FVbTB3ZkpN?=
- =?utf-8?B?UlpUMVJjK1VaWEdBSUE1V1ZteUVEQnlNa3BUTGJ0cWg5WkhTdGpYN2ZidWFZ?=
- =?utf-8?B?UjZUYS9hQVJ6cTVlVSt6SzFDdC81VjVTWVB5Z1F1RXRKZkV5enhjZzE4b3V5?=
- =?utf-8?B?M2JYNVkrU2dpd3BPemV2R1FrRldvTzNnQlNRNVM2UFVCTjQwKzBmbXUzYWdj?=
- =?utf-8?B?d1RmVGM3S2hLUnBibUQxOHRjYWVFOVk1TzhWUGNoeTh2cGswenk0U3hKQmdN?=
- =?utf-8?B?NUlhTy9CZC9DMXlrWEMzYW9oelJDRUNqQ2g1blFqOFRUaXNHeGNHS29UZWJQ?=
- =?utf-8?B?dGN1ZXlkem04alBSeFY1aXgvcWdtMUFnUkh4bnJRdklpQzZoMHhDdENBY2Jp?=
- =?utf-8?B?R0p1eG13RERVTU5ZcUozdk9vQWlhd0RySENGZkpQbnM4M1NnWnNQb0VIZlFz?=
- =?utf-8?B?Z1k0WjdEcy9Eb2VsbUFIQnFuSnpsZnRhcjhQaWd2dWhPOFVjSW5Yamt6WXB4?=
- =?utf-8?B?ZktNZWYyY0gxUmI2YkhsTmFpd2JucVgzQkxyQjlncTZmTURRN0luNzhNQ1Rt?=
- =?utf-8?B?aHkrNzgrUUhzYUU2RXZYWkxmR2E4Ukt0K0JvMFp0YmNDZ3hlV3pjZlBYRWxD?=
- =?utf-8?B?a2hzdmtrOEJERXVRaS9zVEFhakZseFowbEp4SGU2Yi9iNEN5d3ovWmtkVExE?=
- =?utf-8?B?RGEreHR6TlM3RG1ISmpDOWdibGZyeXJhclhUTWZsY3dMUUdaOUxNcHF5cHBq?=
- =?utf-8?B?SzFtaHZScDVmZk1rdE9zUzV3a3NUYTJKd0xkTGU4T1R5aUNDR2pkeGYwekNY?=
- =?utf-8?B?akV4Q0xGMzNNWmlZYncwaENIZURNV1lMU1Bsd2JWNnVyTHJZYUxETGEzR2FN?=
- =?utf-8?B?Ri9kSHNBaTg4Q3ZvZGE1QjNkRnkzMGxQTW9hWCtzcDRzMUJPYjAzZUtGY3pC?=
- =?utf-8?B?bDdGOG9iaERoSUE0Mk9Nd1hPYWRSa3ZuQ2h0cXhKWm8vdkltekFpNGhNUml3?=
- =?utf-8?B?WlU4Uk4rYXhCN0lDV0xsNjcwN2pLSzExR3N1UUpFMm5USUJQNnlWcUZ4OW5j?=
- =?utf-8?B?enNFVmx1bTJ6YU5CcWZ5SG5EdmhBOHcxQzdFdEpjMWpzOXFvWVZyd0NQYzN1?=
- =?utf-8?B?alovZXhWK1BGMFk4dW9CZDMyKzgvMUtuUjc1VE9tTWsycFREUGRBZGswL3BU?=
- =?utf-8?B?Vmt1WXVPUUdLeE9UbFpCNDZiWWtEWnQ1NkJNbG1DT0RmekFYbHNDKzByQjVS?=
- =?utf-8?B?M3JOWFRTM2tZdUdYdGxiS3BEeEg3NTRrMjhaeTA2eHBHOVhLNWlYdjRyK3VG?=
- =?utf-8?B?Kzh1MnB1NnlXTHYyb2JRTFBaOXBEbUJNcS92VTlUV0RCaEpOWnA4bmt5a1dP?=
- =?utf-8?Q?PsHpA+irgdKjQqrkEyBgixhVc?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 598dd88a-fe1d-48e1-af48-08db6660e83a
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2023 07:37:40.6192
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1+PtD9FimlRgWvQICcHHYiqOf4bkfYWXuUsw/S2q3jLkUtm3UwU48JjiZRrAai9rh5CODh6j1pCzh4Wa76Di0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6546
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 06-Jun-23 12:19 PM, Naresh Kamboju wrote:
-> Following warnings and errors noticed while building perf x86_64,
+
+
+On 6/5/23 17:35, Mark Rutland wrote:
+> On Wed, May 31, 2023 at 09:34:23AM +0530, Anshuman Khandual wrote:
+>> This enables support for branch stack sampling event in ARMV8 PMU, checking
+>> has_branch_stack() on the event inside 'struct arm_pmu' callbacks. Although
+>> these branch stack helpers armv8pmu_branch_XXXXX() are just dummy functions
+>> for now. While here, this also defines arm_pmu's sched_task() callback with
+>> armv8pmu_sched_task(), which resets the branch record buffer on a sched_in.
 > 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> This generally looks good, but I have a few comments below.
+> 
+> [...]
+> 
+>> +static inline bool armv8pmu_branch_valid(struct perf_event *event)
+>> +{
+>> +	WARN_ON_ONCE(!has_branch_stack(event));
+>> +	return false;
+>> +}
+> 
+> IIUC this is for validating the attr, so could we please name this
+> armv8pmu_branch_attr_valid() ?
 
-Thanks. Here is the fix:
+Sure, will change the name and updated call sites.
 
-https://lore.kernel.org/lkml/20230603044650.286-1-ravi.bangoria@amd.com
+> 
+> [...]
+> 
+>> +static int branch_records_alloc(struct arm_pmu *armpmu)
+>> +{
+>> +	struct pmu_hw_events *events;
+>> +	int cpu;
+>> +
+>> +	for_each_possible_cpu(cpu) {
+>> +		events = per_cpu_ptr(armpmu->hw_events, cpu);
+>> +		events->branches = kzalloc(sizeof(struct branch_records), GFP_KERNEL);
+>> +		if (!events->branches)
+>> +			return -ENOMEM;
+>> +	}
+>> +	return 0;
+> 
+> This leaks memory if any allocation fails, and the next patch replaces this
+> code entirely.
+
+Okay.
+
+> 
+> Please add this once in a working state. Either use the percpu allocation
+> trick in the next patch from the start, or have this kzalloc() with a
+> corresponding kfree() in an error path.
+
+I will change branch_records_alloc() as suggested in the next patch's thread
+and fold those changes here in this patch.
+
+> 
+>>  }
+>>  
+>>  static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>> @@ -1145,12 +1162,24 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>>  	};
+>>  	int ret;
+>>  
+>> +	ret = armv8pmu_private_alloc(cpu_pmu);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>>  	ret = smp_call_function_any(&cpu_pmu->supported_cpus,
+>>  				    __armv8pmu_probe_pmu,
+>>  				    &probe, 1);
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> +	if (arm_pmu_branch_stack_supported(cpu_pmu)) {
+>> +		ret = branch_records_alloc(cpu_pmu);
+>> +		if (ret)
+>> +			return ret;
+>> +	} else {
+>> +		armv8pmu_private_free(cpu_pmu);
+>> +	}
+> 
+> I see from the next patch that "private" is four ints, so please just add that
+> to struct arm_pmu under an ifdef CONFIG_ARM64_BRBE. That'll simplify this, and
+> if we end up needing more space in future we can consider factoring it out.
+
+struct arm_pmu {
+	........................................
+        /* Implementation specific attributes */
+        void            *private;
+}
+
+private pointer here creates an abstraction for given pmu implementation
+to hide attribute details without making it known to core arm pmu layer.
+Although adding ifdef CONFIG_ARM64_BRBE solves the problem as mentioned
+above, it does break that abstraction. Currently arm_pmu layer is aware
+about 'branch records' but not about BRBE in particular which the driver
+adds later on. I suggest we should not break that abstraction.
+
+Instead a global 'static struct brbe_hw_attr' in drivers/perf/arm_brbe.c
+can be initialized into arm_pmu->private during armv8pmu_branch_probe(),
+which will also solve the allocation-free problem. Also similar helpers
+armv8pmu_task_ctx_alloc()/free() could be defined to manage task context
+cache i.e arm_pmu->pmu.task_ctx_cache independently.
+
+But now armv8pmu_task_ctx_alloc() can be called after pmu probe confirms
+to have arm_pmu->has_branch_stack.
+
+> 
+>> +
+>>  	return probe.present ? 0 : -ENODEV;
+>>  }
+> 
+> It also seems odd to ceck probe.present *after* checking
+> arm_pmu_branch_stack_supported().
+
+I will reorganize as suggested below.
+
+> 
+> With the allocation removed I think this can be written more clearly as:
+> 
+> | static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+> | {
+> |         struct armv8pmu_probe_info probe = {
+> |                 .pmu = cpu_pmu,
+> |                 .present = false,
+> |         };   
+> |         int ret; 
+> | 
+> |         ret = smp_call_function_any(&cpu_pmu->supported_cpus,
+> |                                     __armv8pmu_probe_pmu,
+> |                                     &probe, 1);
+> |         if (ret)
+> |                 return ret; > | 
+> |         if (!probe.present)
+> |                 return -ENODEV;
+> | 
+> |         if (arm_pmu_branch_stack_supported(cpu_pmu))
+> |                 ret = branch_records_alloc(cpu_pmu);
+> |              
+> |         return ret; 
+> | }
