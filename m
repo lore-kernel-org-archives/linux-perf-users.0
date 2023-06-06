@@ -2,140 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3FDC7EE24
-	for <linux-perf-users@archiver.kernel.org>; Mon,  5 Jun 2023 23:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CDEC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 00:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232168AbjFEX5M convert rfc822-to-8bit (ORCPT
+        id S231439AbjFFAom (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 5 Jun 2023 19:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60860 "EHLO
+        Mon, 5 Jun 2023 20:44:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230328AbjFEX5L (ORCPT
+        with ESMTP id S231297AbjFFAol (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 5 Jun 2023 19:57:11 -0400
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2B4BF2;
-        Mon,  5 Jun 2023 16:57:10 -0700 (PDT)
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-ba8374001abso6042088276.2;
-        Mon, 05 Jun 2023 16:57:10 -0700 (PDT)
+        Mon, 5 Jun 2023 20:44:41 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E977DEA
+        for <linux-perf-users@vger.kernel.org>; Mon,  5 Jun 2023 17:44:39 -0700 (PDT)
+Received: by mail-qk1-x72d.google.com with SMTP id af79cd13be357-75d4dd6f012so330342585a.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Jun 2023 17:44:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686012279; x=1688604279;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=QwXkWl+7MQW6GzGU3J2RZHBvZFwshO4sBu7pWGFeYvo=;
+        b=vwScrcjXbyq6LpzyZ1bhrn8PcIqJno1ASzFEyfSvfFoB1XwgKyzD6L1B9b+QSlWQHC
+         D7Bpl8U0B+yZQ8iVrpKCnEC1ib2i5LoG9p9NiEjhGUiRajTjWFGdf6lNa3I/NIA/pWLq
+         SuspPkFWaskic/SYcVFV/IDWldL+PyxSZWQz0vq/dhjBD2eEDYxc9PkkdsD+XM/F9k1D
+         EfYlzxhWOuehThvDuH8uNlPXbaUOwjoyqTPSwN9f9+EfYX3DC68EqeR5UYg6DK71ZugE
+         mtD/HGgtyjOwTjaEwvqSY6K+qnVE3UFfdgTP1mPf3fhu0l0ky7QtSPGXsKolZoBsclvG
+         HuTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686009430; x=1688601430;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dT1VLgcbU914AmCWBxVB8Uqq7gnS8nT0HPPcjgOhVqA=;
-        b=AkXEPTzs2Ow/lRmO7T0kA4dNxsGqbM5gEQo6vZDx7pTP2Kzfbk4LztZ7bhzYYC0uZY
-         VZZalosfTHwPsMiVkb/lNJ9xmWX20Lf56u+439wCWtEAWVqUr24QAQjsY3xMaMmUb+Am
-         8qAHN0oHXGyBpyLZo6XR9EciJ4vHIq4JNYvD7rTnyIK/W3i9c/yVBD8ilwTDTOK7u6Ij
-         5/iyKPj4ldFjBgaE0SiG0TFJccsHgLN4+/uVnirTmobK2orpxXzme/sre0Ii9ZyytH/v
-         J0DD3ukCJnGC8w7S+SAD3HzZDeP2KhS7FXzGGp4QQ4b4Zzvc7GG6rkVc0edXQHDvyBjf
-         cCcA==
-X-Gm-Message-State: AC+VfDzVNs0URl2kVh5w5oF+BXXpg9+iqq6bFuEXA2tF9e0n2iuB7QCS
-        5+uiipxXKp0ye0YQQBgfK09SVDFEm9ewPjzq0TgbdFXERhXAbQ==
-X-Google-Smtp-Source: ACHHUZ6wxJN99gbp1wFCNM7foFqrCsQe1qe/8D+p4YucDPIiXBInk1KI8dw4snDZjTizyZbZiKZJAs78w3MQKcfhKLc=
-X-Received: by 2002:a25:8b87:0:b0:ba7:9c6f:e2de with SMTP id
- j7-20020a258b87000000b00ba79c6fe2demr99896ybl.27.1686009429930; Mon, 05 Jun
- 2023 16:57:09 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230524205054.3087004-1-namhyung@kernel.org> <d6ef6936-e885-46db-40d6-e3cfbd1b2c22@intel.com>
-In-Reply-To: <d6ef6936-e885-46db-40d6-e3cfbd1b2c22@intel.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 5 Jun 2023 16:56:58 -0700
-Message-ID: <CAM9d7cjoJL1+aHpmc-menWzYk_rfPV_UsDcmP0mXy0K2h6TPRA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf annotate: Handle x86 instruction suffix generally
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        d=1e100.net; s=20221208; t=1686012279; x=1688604279;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QwXkWl+7MQW6GzGU3J2RZHBvZFwshO4sBu7pWGFeYvo=;
+        b=egO4XTIYYhMe0nwBpoxBTdJzZ32E1hr8KovU7UlvT8d0mMizHF3XoAdmD8LfUF+K1Y
+         J2HdeST/sR4PANhrlNdgCuvt1jYMTGw4nyRsxGk3LWMEsKeoq+uJcRpJ3J/MLri3SQbg
+         9PzK1zRpN/S07CZv8UKev/DKOu7XNUJ8xqfP0Gcf8Kx6tzA50NpAZdgVI/J24bTRcUyA
+         zl0yETfRtQfDjvkEmIFYymk4CIVrTK7cn+YAC+5zRXaDp/K8Nxdi8iTcW4DoWyhXGsL9
+         smUcwYr7H0GbzHqDlviDGIsda4VP/4ZvW9SnVxmtrdN9ZzoaWbocv7Hn3gQA59MW58sF
+         T5OA==
+X-Gm-Message-State: AC+VfDw3mO1m/TmziPbSQ0amDHTuRMJqq86cYtrc0T5vWhIotuwrswss
+        XQumvEQhHftavPUdHXHjRziBBg==
+X-Google-Smtp-Source: ACHHUZ6CcyK00SR6UmeBHYlbP3/C6TgEnZeMgQsozw24ilXFNavcd5CVDJd+AOdm0DjBLZNHAsTN0g==
+X-Received: by 2002:a05:620a:8b12:b0:75e:badf:fde3 with SMTP id qw18-20020a05620a8b1200b0075ebadffde3mr343883qkn.75.1686012278982;
+        Mon, 05 Jun 2023 17:44:38 -0700 (PDT)
+Received: from leoy-huanghe ([156.59.96.151])
+        by smtp.gmail.com with ESMTPSA id 6-20020a17090a194600b0025977e25290sm1617484pjh.3.2023.06.05.17.44.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jun 2023 17:44:38 -0700 (PDT)
+Date:   Tue, 6 Jun 2023 08:44:31 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     coresight@lists.linaro.org, denik@chromium.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Kan Liang <kan.liang@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] perf cs-etm: Use previous thread for branch sample
+ source IP
+Message-ID: <20230606004415.GA18315@leoy-huanghe>
+References: <20230524131958.2139331-1-james.clark@arm.com>
+ <20230524131958.2139331-3-james.clark@arm.com>
+ <20230527090635.GB886420@leoy-yangtze.lan>
+ <630ab636-107d-4b12-5454-2ee91ad43543@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <630ab636-107d-4b12-5454-2ee91ad43543@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+On Tue, May 30, 2023 at 03:28:09PM +0100, James Clark wrote:
 
-On Wed, May 24, 2023 at 10:21 PM Adrian Hunter <adrian.hunter@intel.com> wrote:
->
-> On 24/05/23 23:50, Namhyung Kim wrote:
-> > In AT&T asm syntax, most of x86 instructions can have size suffix like
-> > b, w, l or q.  Instead of adding all these instructions in the table,
-> > we can handle them in a general way.
-> >
-> > For example, it can try to find an instruction as is.  If not found,
-> > assuming it has a suffix and it'd try again without the suffix if it's
-> > one of the allowed suffixes.  This way, we can reduce the instruction
-> > table size for duplicated entries of the same instructions with a
-> > different suffix.
-> >
-> > If an instruction xyz and others like xyz<suffix> are completely
-> > different ones, then they both need to be listed in the table so that
-> > they can be found before the second attempt (without the suffix).
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+[...]
 
-Can you please pick this up?
+> > On Wed, May 24, 2023 at 02:19:56PM +0100, James Clark wrote:
+> >> Branch samples currently use the IP of the previous packet as the from
+> >> IP, and the IP of the current packet as the to IP. But it incorrectly
+> >> uses the current thread. In some cases like a jump into a different
+> >> exception level this will attribute to the incorrect process.
+> > 
+> > It's about the timing that branch has taken or not taken :)
+> > 
+> > If we think the branch sample as 'branch has taken', then current code
+> > is doning right thing, otherwise, we need this fix.
+> > 
+> 
+> If you diff the outputs side by side you can see it mainly has an effect
+> where there is a discontinuity. At this point we set either the from or
+> the to IPs to 0.
+> 
+> For example here is a before and after perf script output. Without the
+> change it looks like stress was running before it actually was. The
+> schedule function that was attributed to ls on the first line hasn't
+> finished running yet. But it's attributed to stress on the second line
+> even though the destination IP is 0 meaning we don't even know where it
+> went.
 
-Thanks,
-Namhyung
+Yeah, this is a good improvement for me.  Thanks for sharing the
+detailed comparison result.
 
->
-> > ---
-> >  tools/perf/util/annotate.c | 22 ++++++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >
-> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> > index b708bbc49c9e..7f05f2a2aa83 100644
-> > --- a/tools/perf/util/annotate.c
-> > +++ b/tools/perf/util/annotate.c
-> > @@ -70,6 +70,7 @@ struct arch {
-> >       struct ins_ops  *(*associate_instruction_ops)(struct arch *arch, const char *name);
-> >       bool            sorted_instructions;
-> >       bool            initialized;
-> > +     const char      *insn_suffix;
-> >       void            *priv;
-> >       unsigned int    model;
-> >       unsigned int    family;
-> > @@ -179,6 +180,7 @@ static struct arch architectures[] = {
-> >               .init = x86__annotate_init,
-> >               .instructions = x86__instructions,
-> >               .nr_instructions = ARRAY_SIZE(x86__instructions),
-> > +             .insn_suffix = "bwlq",
-> >               .objdump =  {
-> >                       .comment_char = '#',
-> >               },
-> > @@ -720,6 +722,26 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name)
-> >       }
-> >
-> >       ins = bsearch(name, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
-> > +     if (ins)
-> > +             return ins->ops;
-> > +
-> > +     if (arch->insn_suffix) {
-> > +             char tmp[32];
-> > +             char suffix;
-> > +             size_t len = strlen(name);
-> > +
-> > +             if (len == 0 || len >= sizeof(tmp))
-> > +                     return NULL;
-> > +
-> > +             suffix = name[len - 1];
-> > +             if (strchr(arch->insn_suffix, suffix) == NULL)
-> > +                     return NULL;
-> > +
-> > +             strcpy(tmp, name);
-> > +             tmp[len - 1] = '\0'; /* remove the suffix and check again */
-> > +
-> > +             ins = bsearch(tmp, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
-> > +     }
-> >       return ins ? ins->ops : NULL;
-> >  }
-> >
->
+> Before:
+> 
+>     ls  8350 [006] ... __schedule+0x394 => schedule+0x5c
+> stress  8357 [006] ... schedule+0x84 => 0 [unknown]
+> stress  8357 [006] ... 0 [unknown] => __unix_dgram_recvmsg+0x130
+> 
+> After:
+> 
+>     ls  8350 [006] ... __schedule+0x394 => schedule+0x5c
+>     ls  8357 [006] ... schedule+0x84 => 0 [unknown]
+> stress  8357 [006] ... 0 [unknown] => __unix_dgram_recvmsg+0x130
+> 
+> I didn't see any decode differences that weren't around these
+> discontinuity points, so it seems like a low risk change.
+
+[...]
+
+> >> @@ -480,6 +481,7 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
+> >>  	tidq->trace_chan_id = trace_chan_id;
+> >>  	tidq->thread = machine__findnew_thread(&etm->session->machines.host, -1,
+> >>  					       queue->tid);
+> >> +	tidq->prev_thread = machine__idle_thread(&etm->session->machines.host);
+> >>  
+> >>  	tidq->packet = zalloc(sizeof(struct cs_etm_packet));
+> >>  	if (!tidq->packet)
+> >> @@ -616,6 +618,8 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
+> >>  		tmp = tidq->packet;
+> >>  		tidq->packet = tidq->prev_packet;
+> >>  		tidq->prev_packet = tmp;
+> >> +		thread__put(tidq->prev_thread);
+> >> +		tidq->prev_thread = thread__get(tidq->thread);
+> > 
+> > Maybe cs_etm__packet_swap() is not the best place to update
+> > "tidq->prev_thread", since swapping packet doesn't mean it's necessarily
+> > thread switching; can we move this change into the cs_etm__set_thread()?
+> > 
+> 
+> Yeah that might make more sense. I can move it there if we decide to
+> keep this change.
+
+Please refine the patch for this.  Thanks and sorry my late replying.
+
+Leo
