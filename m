@@ -2,124 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E50C7EE24
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 12:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16698C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 14:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbjFFM0b (ORCPT
+        id S236520AbjFFOHb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jun 2023 08:26:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58446 "EHLO
+        Tue, 6 Jun 2023 10:07:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229835AbjFFM03 (ORCPT
+        with ESMTP id S237676AbjFFOHG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2023 08:26:29 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9720710C7;
-        Tue,  6 Jun 2023 05:26:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686054388; x=1717590388;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rjRBgamwSeRSfHezoWT0bmvktJ8N6eyh4nvQHsFNuDQ=;
-  b=fhfvs9MEvSU7P5uTfW+4YJwKRPX73M6vMEt3T5btWxmxMl67XuA9JUoE
-   DdO77wx5r6xJuSc+W9iwPE9DkU/31o9Q3Y5N/wqA3v0ETLtQNQj3xMfgU
-   Y2Lt0LZFYfZzSyuDysTadtFOkk72TivxpIsv/6Dm0TUNR7JL+s9OBHn4n
-   7WCXb0OWxfr9gOcXC58VD0Ggcr83YePYJxqfXvGIE2tzBo4l1GTavu3R7
-   Ma2ufr3s+JHOTi3nWpahC9fxc7bZHsZ5nHchx+HcVe3WfZAPkatS1bMPA
-   sOq3IWx2DfahYuXKB7QfzJSDcyq0HZvGdsvBSAJ9V/y20Ssyyud2VVfMe
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="443031643"
-X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
-   d="scan'208";a="443031643"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 05:26:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="883321208"
-X-IronPort-AV: E=Sophos;i="6.00,221,1681196400"; 
-   d="scan'208";a="883321208"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 06 Jun 2023 05:26:23 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q6VlW-0005Dv-21;
-        Tue, 06 Jun 2023 12:26:22 +0000
-Date:   Tue, 6 Jun 2023 20:26:13 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Tue, 6 Jun 2023 10:07:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 995B510CC;
+        Tue,  6 Jun 2023 07:07:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D18916312E;
+        Tue,  6 Jun 2023 14:07:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 128ACC4339B;
+        Tue,  6 Jun 2023 14:07:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686060423;
+        bh=3M1vwx9dTwVXjFdm37zRRtpfI/afK0Lm2/FTFWCBkvY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jtnySrd0kbY8YO+HlrsJbhOYjqHDytkM7mcCBw6QVaDGcB1em2L0zXLXESf76RnHM
+         Se92Ajsnyfuy9SmC+AAOGxJLWJYvMjU4l88w4tcTcxiBwxlTWVhZsnK/JUcMb0TYkj
+         6ZBUOv15lAC8PQGF/iuLYDdq3UitwSkwLbmEARpZUZ3CcQNFvZa2aWT/w8O9ES3V0Z
+         n/8ZVBixBKSCZUi8jjXLLPVzNZeInKNqFiek4Pvisvub/xv12vbAGfb+CpgfJLKggk
+         JyfVboe6l/bl2KNKBW5blXVdhC0deyvbORIGAMhgTncA9kX1gCS7cTpADmET1Rzz3y
+         Rmf0nnkWEzuAA==
+Date:   Tue, 6 Jun 2023 23:06:58 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        Andrii Nakryiko <andrii@kernel.org>
-Subject: Re: [PATCH v2 1/4] perf build: Add ability to build with a generated
- vmlinux.h
-Message-ID: <202306062005.DdBIyoSS-lkp@intel.com>
-References: <20230605202712.1690876-2-irogers@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230605202712.1690876-2-irogers@google.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] perf annotate: Handle x86 instruction suffix
+ generally
+Message-Id: <20230606230658.c1b478f905c82a9f7005034d@kernel.org>
+In-Reply-To: <20230524205054.3087004-1-namhyung@kernel.org>
+References: <20230524205054.3087004-1-namhyung@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+On Wed, 24 May 2023 13:50:53 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-kernel test robot noticed the following build warnings:
+> In AT&T asm syntax, most of x86 instructions can have size suffix like
+> b, w, l or q.  Instead of adding all these instructions in the table,
+> we can handle them in a general way.
+> 
+> For example, it can try to find an instruction as is.  If not found,
+> assuming it has a suffix and it'd try again without the suffix if it's
+> one of the allowed suffixes.  This way, we can reduce the instruction
+> table size for duplicated entries of the same instructions with a
+> different suffix.
+> 
+> If an instruction xyz and others like xyz<suffix> are completely
+> different ones, then they both need to be listed in the table so that
+> they can be found before the second attempt (without the suffix).
 
-[auto build test WARNING on acme/perf/core]
-[also build test WARNING on tip/master tip/auto-latest linus/master v6.4-rc5 next-20230606]
-[cannot apply to tip/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Looks good to me.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ian-Rogers/perf-build-Add-ability-to-build-with-a-generated-vmlinux-h/20230606-043106
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git perf/core
-patch link:    https://lore.kernel.org/r/20230605202712.1690876-2-irogers%40google.com
-patch subject: [PATCH v2 1/4] perf build: Add ability to build with a generated vmlinux.h
-config: i386-randconfig-i052-20230605 (https://download.01.org/0day-ci/archive/20230606/202306062005.DdBIyoSS-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project.git 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git remote add acme https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-        git fetch acme perf/core
-        git checkout acme/perf/core
-        b4 shazam https://lore.kernel.org/r/20230605202712.1690876-2-irogers@google.com
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306062005.DdBIyoSS-lkp@intel.com/
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/annotate.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index b708bbc49c9e..7f05f2a2aa83 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -70,6 +70,7 @@ struct arch {
+>  	struct ins_ops  *(*associate_instruction_ops)(struct arch *arch, const char *name);
+>  	bool		sorted_instructions;
+>  	bool		initialized;
+> +	const char	*insn_suffix;
+>  	void		*priv;
+>  	unsigned int	model;
+>  	unsigned int	family;
+> @@ -179,6 +180,7 @@ static struct arch architectures[] = {
+>  		.init = x86__annotate_init,
+>  		.instructions = x86__instructions,
+>  		.nr_instructions = ARRAY_SIZE(x86__instructions),
+> +		.insn_suffix = "bwlq",
+>  		.objdump =  {
+>  			.comment_char = '#',
+>  		},
+> @@ -720,6 +722,26 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name)
+>  	}
+>  
+>  	ins = bsearch(name, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
+> +	if (ins)
+> +		return ins->ops;
+> +
+> +	if (arch->insn_suffix) {
+> +		char tmp[32];
+> +		char suffix;
+> +		size_t len = strlen(name);
+> +
+> +		if (len == 0 || len >= sizeof(tmp))
+> +			return NULL;
+> +
+> +		suffix = name[len - 1];
+> +		if (strchr(arch->insn_suffix, suffix) == NULL)
+> +			return NULL;
+> +
+> +		strcpy(tmp, name);
+> +		tmp[len - 1] = '\0'; /* remove the suffix and check again */
+> +
+> +		ins = bsearch(tmp, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
+> +	}
+>  	return ins ? ins->ops : NULL;
+>  }
+>  
+> -- 
+> 2.41.0.rc0.172.g3f132b7071-goog
+> 
 
-All warnings (new ones prefixed by >>):
-
->> tools/perf/util/bpf_skel/vmlinux/vmlinux.h: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/arm64/tags/.gitignore: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/arm64/tags/Makefile: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/arm64/tags/run_tags_test.sh: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/arm64/tags/tags_test.c: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/kvm/.gitignore: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/kvm/Makefile: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/kvm/config: warning: ignored by one of the .gitignore files
-   tools/testing/selftests/kvm/settings: warning: ignored by one of the .gitignore files
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
