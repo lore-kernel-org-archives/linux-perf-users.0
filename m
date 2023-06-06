@@ -2,139 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F59C77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 04:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB65C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 05:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231947AbjFFEre (ORCPT
+        id S234194AbjFFFAm (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jun 2023 00:47:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36214 "EHLO
+        Tue, 6 Jun 2023 01:00:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbjFFErd (ORCPT
+        with ESMTP id S232645AbjFFFAl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2023 00:47:33 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 43F10109;
-        Mon,  5 Jun 2023 21:47:32 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 899ABAB6;
-        Mon,  5 Jun 2023 21:48:17 -0700 (PDT)
-Received: from [10.163.44.58] (unknown [10.163.44.58])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD7093F587;
-        Mon,  5 Jun 2023 21:47:24 -0700 (PDT)
-Message-ID: <1a8965ed-1210-2350-1c97-aebc27d005b7@arm.com>
-Date:   Tue, 6 Jun 2023 10:17:20 +0530
+        Tue, 6 Jun 2023 01:00:41 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F63196;
+        Mon,  5 Jun 2023 22:00:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686027639; x=1717563639;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=eIUAsbJdL5hO7Ybe0uE+3+sTJNj411vUQzur9r3Syv4=;
+  b=KAwnYhTFIE3OhhbVDlC05KI3s4/jwZB5qXCZeEUWfKwik+bO23LqlMx9
+   ww2vkvBg2JeyxZ400HAi3v4j/frM92Lm0UY5k2mP6rBdnCtysuq/UPxEX
+   WRT/Yioe0BguUtWOTzURxzsQ7eT+Mai8Iof5W7g62pGKkt3Em0JUFz25Z
+   FgxFGMQ0aabx5GwgpFSY8YCtuU/Uc5opXdF9rWI+ZW5fKvRjvMTu4obqa
+   YvFPN1Q4J3bYyHwbVM7xWXdWP7t1RMMETfXsdPrIuLrqAmM8M7zdy1kHz
+   7Lv+IOdwY7XhSID0zMvcKTZ3KOYIQkVu6nnwovAFOlv0M0yMHug90yUUP
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="359017134"
+X-IronPort-AV: E=Sophos;i="6.00,219,1681196400"; 
+   d="scan'208";a="359017134"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 22:00:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="708923710"
+X-IronPort-AV: E=Sophos;i="6.00,219,1681196400"; 
+   d="scan'208";a="708923710"
+Received: from cutzinge-mobl2.amr.corp.intel.com (HELO [10.0.2.15]) ([10.252.56.224])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jun 2023 22:00:37 -0700
+Message-ID: <afe1c05a-2b77-c3d8-aacf-b4c7bebb8bf8@intel.com>
+Date:   Tue, 6 Jun 2023 08:00:33 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V11 03/10] arm64/perf: Add branch stack support in struct
- arm_pmu
-Content-Language: en-US
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Firefox/102.0 Thunderbird/102.11.2
+Subject: Re: [PATCH V3 0/1] perf tools: Allow config terms with breakpoints
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-4-anshuman.khandual@arm.com>
- <ZH2VmOUuZobZMcc/@FVFF77S0Q05N>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <ZH2VmOUuZobZMcc/@FVFF77S0Q05N>
+References: <20230525082902.25332-1-adrian.hunter@intel.com>
+Content-Language: en-US
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230525082902.25332-1-adrian.hunter@intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 6/5/23 13:28, Mark Rutland wrote:
-> On Wed, May 31, 2023 at 09:34:21AM +0530, Anshuman Khandual wrote:
->> This updates 'struct arm_pmu' for branch stack sampling support later. This
->> adds a new 'features' element in the structure to track supported features,
->> and another 'private' element to encapsulate implementation attributes on a
->> given 'struct arm_pmu'. These updates here will help in tracking any branch
->> stack sampling support, which is being added later. This also adds a helper
->> arm_pmu_branch_stack_supported().
->>
->> This also enables perf branch stack sampling event on all 'struct arm pmu',
->> supporting the feature but after removing the current gate that blocks such
->> events unconditionally in armpmu_event_init(). Instead a quick probe can be
->> initiated via arm_pmu_branch_stack_supported() to ascertain the support.
->>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Will Deacon <will@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Tested-by: James Clark <james.clark@arm.com>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  drivers/perf/arm_pmu.c       |  3 +--
->>  include/linux/perf/arm_pmu.h | 12 +++++++++++-
->>  2 files changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
->> index aada47e3b126..d4a4f2bd89a5 100644
->> --- a/drivers/perf/arm_pmu.c
->> +++ b/drivers/perf/arm_pmu.c
->> @@ -510,8 +510,7 @@ static int armpmu_event_init(struct perf_event *event)
->>  		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
->>  		return -ENOENT;
->>  
->> -	/* does not support taken branch sampling */
->> -	if (has_branch_stack(event))
->> +	if (has_branch_stack(event) && !arm_pmu_branch_stack_supported(armpmu))
->>  		return -EOPNOTSUPP;
->>  
->>  	return __hw_perf_event_init(event);
->> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
->> index f7fbd162ca4c..0da745eaf426 100644
->> --- a/include/linux/perf/arm_pmu.h
->> +++ b/include/linux/perf/arm_pmu.h
->> @@ -102,7 +102,9 @@ struct arm_pmu {
->>  	int		(*map_event)(struct perf_event *event);
->>  	void		(*sched_task)(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
->>  	int		num_events;
->> -	bool		secure_access; /* 32-bit ARM only */
->> +	unsigned int	secure_access	: 1, /* 32-bit ARM only */
->> +			has_branch_stack: 1, /* 64-bit ARM only */
->> +			reserved	: 30;
->>  #define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
->>  	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
->>  #define ARMV8_PMUV3_EXT_COMMON_EVENT_BASE	0x4000
->> @@ -118,8 +120,16 @@ struct arm_pmu {
->>  
->>  	/* Only to be used by ACPI probing code */
->>  	unsigned long acpi_cpuid;
->> +
->> +	/* Implementation specific attributes */
->> +	void		*private;
->>  };
->>  
->> +static inline bool arm_pmu_branch_stack_supported(struct arm_pmu *armpmu)
->> +{
->> +	return armpmu->has_branch_stack;
->> +}
+On 25/05/23 11:29, Adrian Hunter wrote:
+> Hi
 > 
-> Since this is a trivial test, and we already access the 'secure_access' field
-> directly, I'd prefer we removed this helper and directly accessesed
-> arm_pmu::has_branch_stack, e.g. with the logic in armpmu_event_init() being:
+> Here is a patch (V3) to the event parser for breakpoint events.
+> I am not that familiar with flex / bison, but it seemed to
+> need trailing context to stop the mem event colon and slash
+> delimiters from getting mixed up with delimiters for config
+> terms or event modifiers.  Please look closely at that.
 > 
-> 	if (has_branch_stack(event) && !armpmu->has_branch_stack)
-> 		return -EOPNOTSUPP;
+> 
+> Changes in V3:
+> 
+>       Add Ian's Reviewed-by
+>       Re-base
 
-Sure, will drop the helper and change as suggested in all the call sites.
+Still applies.  Any more comments?
 
 > 
-> With that:
+> Changes in V2:
 > 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>       Add comments to tools/perf/util/parse-events.l
+>       Add a test for 2 mem events back to back with config terms
 > 
-> Mark.
+> 
+> Adrian Hunter (1):
+>       perf tools: Allow config terms with breakpoints
+> 
+>  tools/perf/tests/parse-events.c | 157 ++++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/parse-events.c  |  23 +++++-
+>  tools/perf/util/parse-events.h  |   6 +-
+>  tools/perf/util/parse-events.l  |  23 +++++-
+>  tools/perf/util/parse-events.y  |  42 ++++++-----
+>  5 files changed, 224 insertions(+), 27 deletions(-)
+> 
+> 
+> Regards
+> Adrian
+
