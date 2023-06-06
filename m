@@ -2,103 +2,131 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 165C8C7EE24
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 18:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0868C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 18:16:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233468AbjFFSHh (ORCPT
+        id S238076AbjFFSQY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jun 2023 14:07:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
+        Tue, 6 Jun 2023 14:16:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238105AbjFFSHg (ORCPT
+        with ESMTP id S231429AbjFFSQU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2023 14:07:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71BBD10DF;
-        Tue,  6 Jun 2023 11:07:35 -0700 (PDT)
+        Tue, 6 Jun 2023 14:16:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73912170D;
+        Tue,  6 Jun 2023 11:16:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0E7A2635DA;
-        Tue,  6 Jun 2023 18:07:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432DEC433D2;
-        Tue,  6 Jun 2023 18:07:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 05D0863651;
+        Tue,  6 Jun 2023 18:16:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A68BC433EF;
+        Tue,  6 Jun 2023 18:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686074854;
-        bh=7lLqWH4ip8VH/3WA/LhtLtBwcCFutgrU/RLWoVwcJ40=;
+        s=k20201202; t=1686075362;
+        bh=inb0aKFlhB3adnPbM4bwwgiQcbLSDywTmtGkBf4rPHQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UHHxQUQ4V+KV78PfL6CvVJsFoeJAzA5U5czMdfVkZkrWXJsqa4dKgiceE7YSvy2y0
-         TlTXjyHSDwX4Udet2BCZm8fdoWAFWY0vyRu7Se30RUQkqdboydkcKR8/cB4x5xlNkL
-         nwYvh/YBRiRGSe21I5v+KbMy0W8eMCecZ2zQ25uG4Q52VtOSYbygACO06L2NqwG2pv
-         EBf8pTb5TjxWj+58oDzlKaLhINIFqJjPA0XX7iUHSE+p5nn9q58wftWbvqJKaNzJfi
-         fabQ8qvRyNZw5EvIKZ11BpanKscjth34kkQtACBxPITrwHszk1+EvPChrvP2avDMdh
-         gziMzj3NzRMLA==
+        b=CYp8Ca9Ca/V2e/bNn3Fx6RZ5GmcNa2941KImmjIOK9QBOjCaZ2kXs1JXVYuD/mB+o
+         o8PAAF1MX2LCJdA6xTLd4WfbJjM6m2hr7EAv92ZyQTe6M6Z8aZtZBTVmguvz2kjOYN
+         3H+JAFgOyA7qLXnYEkvc33PXIhffIo+fCAu+5xmI4zEUoIJ8oxzzfabnEPmjIlDvGQ
+         +roEqvxjzY1ejwFBB1+UHnRBZUyX707pAz8YuIMYdnJeuRK6RMOIVQjjsLZq5XYEKw
+         VmXemURxWvj+9+04Pa3P+qKPY3jIf/EkvyKcDY8sBB07iiUyKSSVPgRuHHOx8iH3//
+         WLAYlutU14hYg==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1059A40692; Tue,  6 Jun 2023 15:07:32 -0300 (-03)
-Date:   Tue, 6 Jun 2023 15:07:32 -0300
+        id 86CF340692; Tue,  6 Jun 2023 15:15:59 -0300 (-03)
+Date:   Tue, 6 Jun 2023 15:15:59 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
-        denik@chromium.org, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf cs-etm: Track exception level
-Message-ID: <ZH915HtVcUnLxHsd@kernel.org>
-References: <20230524131958.2139331-1-james.clark@arm.com>
- <ZH47LeSnwY2uKs//@kernel.org>
- <20230606004648.GB18315@leoy-huanghe>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V3 0/1] perf tools: Allow config terms with breakpoints
+Message-ID: <ZH933yJMYTr0cC+N@kernel.org>
+References: <20230525082902.25332-1-adrian.hunter@intel.com>
+ <afe1c05a-2b77-c3d8-aacf-b4c7bebb8bf8@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230606004648.GB18315@leoy-huanghe>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <afe1c05a-2b77-c3d8-aacf-b4c7bebb8bf8@intel.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jun 06, 2023 at 08:46:48AM +0800, Leo Yan escreveu:
-> Hi Arnaldo,
-> 
-> On Mon, Jun 05, 2023 at 04:44:45PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, May 24, 2023 at 02:19:54PM +0100, James Clark escreveu:
-> > > Some fixes to support an issue reported by Denis Nikitin where decoding
-> > > trace that contains different EL1 and EL2 kernels can crash or go into
-> > > an infinite loop because the wrong kernel maps are used for the decode.
-> > > 
-> > > This still doesn't support distinguishing guest and host userspace,
-> > > we'd still have to fix the timestamps and do a bit more work to
-> > > correlate that. And I've removed PERF_RECORD_MISC_HYPERVISOR as a
-> > > possible outcome of cs_etm__cpu_mode(). As far as I know this could
-> > > never have been returned anyway because machine__is_host(machine) was
-> > > always true due to session.machines.host being hard coded. And I'm not
-> > > sure of the relevance of the difference between PERF_RECORD_MISC_KERNEL
-> > > and PERF_RECORD_MISC_HYPERVISOR in this scenario.
-> > > 
-> > > The first commit is a tidy up, second fixes a bug that I found when
-> > > comparing the exception level and thread of branch records, the third
-> > > is the main fix, and the last commit is some extra error checking. 
-> > > 
-> > > Applies to acme/perf-tools (4e111f0cf0)
+Em Tue, Jun 06, 2023 at 08:00:33AM +0300, Adrian Hunter escreveu:
+> On 25/05/23 11:29, Adrian Hunter wrote:
+> > Hi
 > > 
-> > So there seems to be agreement the first two patches can be applied? May
-> > I go ahead and do that now?
+> > Here is a patch (V3) to the event parser for breakpoint events.
+> > I am not that familiar with flex / bison, but it seemed to
+> > need trailing context to stop the mem event colon and slash
+> > delimiters from getting mixed up with delimiters for config
+> > terms or event modifiers.  Please look closely at that.
+> > 
+> > 
+> > Changes in V3:
+> > 
+> >       Add Ian's Reviewed-by
+> >       Re-base
 > 
-> Could you pick up the first patch in this series?
-> 
-> I would like ask James to refine a bit for the second patch.
+> Still applies.  Any more comments?
 
-Ok, left just the first patch on my local perf-tools-next branch, will
-go public when tested.
+Tried it now, twice, once after removing the O= build dir:
+
+  CC      /tmp/build/perf-tools-next/tests/event-times.o
+  CC      /tmp/build/perf-tools-next/tests/expr.o
+  BISON   /tmp/build/perf-tools-next/util/parse-events-bison.c
+util/parse-events.y:508.24-34: warning: unused value: $3 [-Wother]
+  508 | PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
+      |                        ^~~~~~~~~~~
+util/parse-events.y:508.45-55: warning: unused value: $5 [-Wother]
+  508 | PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
+      |                                             ^~~~~~~~~~~
+util/parse-events.y:526.24-34: warning: unused value: $3 [-Wother]
+  526 | PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE opt_event_config
+      |                        ^~~~~~~~~~~
+util/parse-events.y:543.24-34: warning: unused value: $3 [-Wother]
+  543 | PE_PREFIX_MEM PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
+      |                        ^~~~~~~~~~~
+  CC      /tmp/build/perf-tools-next/tests/backward-ring-buffer.o
+
+
+⬢[acme@toolbox perf-tools-next]$ cat /etc/redhat-release
+Fedora release 36 (Thirty Six)
+
+⬢[acme@toolbox perf-tools-next]$ rpm -q bison
+bison-3.8.2-2.fc36.x86_64
+⬢[acme@toolbox perf-tools-next]$ rpm -q flex
+flex-2.6.4-10.fc36.x86_64
+⬢[acme@toolbox perf-tools-next]$
+
+
+- Arnaldo
+ 
+> > 
+> > Changes in V2:
+> > 
+> >       Add comments to tools/perf/util/parse-events.l
+> >       Add a test for 2 mem events back to back with config terms
+> > 
+> > 
+> > Adrian Hunter (1):
+> >       perf tools: Allow config terms with breakpoints
+> > 
+> >  tools/perf/tests/parse-events.c | 157 ++++++++++++++++++++++++++++++++++++++++
+> >  tools/perf/util/parse-events.c  |  23 +++++-
+> >  tools/perf/util/parse-events.h  |   6 +-
+> >  tools/perf/util/parse-events.l  |  23 +++++-
+> >  tools/perf/util/parse-events.y  |  42 ++++++-----
+> >  5 files changed, 224 insertions(+), 27 deletions(-)
+> > 
+> > 
+> > Regards
+> > Adrian
+> 
+
+-- 
 
 - Arnaldo
