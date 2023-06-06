@@ -2,181 +2,152 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AF8C77B73
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 16:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4D3C7EE24
+	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 18:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233520AbjFFQ1f (ORCPT
+        id S237469AbjFFSAM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jun 2023 12:27:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59714 "EHLO
+        Tue, 6 Jun 2023 14:00:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232821AbjFFQ1f (ORCPT
+        with ESMTP id S233537AbjFFSAM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2023 12:27:35 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DC13A126;
-        Tue,  6 Jun 2023 09:27:33 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28D8C2F4;
-        Tue,  6 Jun 2023 09:28:19 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 754013F6C4;
-        Tue,  6 Jun 2023 09:27:31 -0700 (PDT)
-Message-ID: <fb5d1641-0eb1-8282-6a2a-48b32ea6c804@arm.com>
-Date:   Tue, 6 Jun 2023 17:27:26 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3 2/7] perf metric: Event "Compat" value supports
- matching multiple identifiers
-Content-Language: en-GB
-To:     John Garry <john.g.garry@oracle.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Tue, 6 Jun 2023 14:00:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 457A910CA;
+        Tue,  6 Jun 2023 11:00:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CA5D4632CF;
+        Tue,  6 Jun 2023 18:00:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF3FFC433EF;
+        Tue,  6 Jun 2023 18:00:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686074409;
+        bh=PLuf57EhVfN+pzuJMTQc3DpS8E0teEzKSJLSsmxE3ms=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gyUtHkQrJzRJgPO0kIvGWmbM/g65OIvt5y8qiFe2hg843c8Ku3KaLFrXKkbx73A5B
+         O2g2baBlIP5tw3qqHng6MgJowAEZi7UQqVLzZjXI8UQIctIsp6OQUrJJb7p/AorbiU
+         m6Goxhsl5js0B9JYnmTSgMTmmZ0g7z4QMJOmM8L5iF6wKVzLK99sDr8UozX78b4bKG
+         TJK4FY1OfHhSbYbU1+mIqz+vfjxkfLhAs508IdazNXFL3lqn6+kZ0vi04buOg65JyN
+         0EGoSklj5yG8Amcojv+CICp1Ap8d61+F8E3GoZpHPdmPWMYD/iLMzEaotzHt1fDY/5
+         CufjpRR+0E+Fg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 2E0ED40692; Tue,  6 Jun 2023 15:00:06 -0300 (-03)
+Date:   Tue, 6 Jun 2023 15:00:06 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1685438374-33287-3-git-send-email-renyu.zj@linux.alibaba.com>
- <c1d8ee9b-4839-1011-4dad-c4777d8f8224@oracle.com>
- <452e724b-2a2c-52fd-274b-60db7a7f730e@linux.alibaba.com>
- <c4b2fca8-602d-9c76-90a7-3eafd92da8bc@oracle.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <c4b2fca8-602d-9c76-90a7-3eafd92da8bc@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] perf annotate: Handle x86 instruction suffix
+ generally
+Message-ID: <ZH90JspD7JP7i1LZ@kernel.org>
+References: <20230524205054.3087004-1-namhyung@kernel.org>
+ <20230606230658.c1b478f905c82a9f7005034d@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230606230658.c1b478f905c82a9f7005034d@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 02/06/2023 5:20 pm, John Garry wrote:
-> On 01/06/2023 09:58, Jing Zhang wrote:
->>>  From checking the driver, it seems that we have model names 
->>> "arm_cmn600" and "arm_cmn650". Are you saying that "arm_cmn600X" 
->>> would match for those? I am most curious about how "arm_cmn600X" 
->>> matches "arm_cmn650".
->>>
->> Hi John,
->>
->>  From patch #1 we have identifiers "arm_cmn600_0" and "arm_cmn650_0" etc. 
+Em Tue, Jun 06, 2023 at 11:06:58PM +0900, Masami Hiramatsu escreveu:
+> On Wed, 24 May 2023 13:50:53 -0700
+> Namhyung Kim <namhyung@kernel.org> wrote:
 > 
-> ok, I see. Your idea for the cmn driver HW identifier format is odd to 
-> me. Your HW identifier is a mix of the HW IP model name (from 
-> arm_cmn_device_data.model_name) with some the kernel revision identifier 
-> (from cmn_revision). The kernel revision identifier is an enum, and I 
-> don't think that it is a good idea to expose enum values through sysfs 
-> files.
+> > In AT&T asm syntax, most of x86 instructions can have size suffix like
+> > b, w, l or q.  Instead of adding all these instructions in the table,
+> > we can handle them in a general way.
+> > 
+> > For example, it can try to find an instruction as is.  If not found,
+> > assuming it has a suffix and it'd try again without the suffix if it's
+> > one of the allowed suffixes.  This way, we can reduce the instruction
+> > table size for duplicated entries of the same instructions with a
+> > different suffix.
+> > 
+> > If an instruction xyz and others like xyz<suffix> are completely
+> > different ones, then they both need to be listed in the table so that
+> > they can be found before the second attempt (without the suffix).
 > 
-> I assume that there is some ordering requirement for cmn_revision, 
-> considering that we have equality operations on the revision in the driver.
-
-That enum does actually follow the revision identifiers as provided by 
-the hardware (see CMN_CFGM_PID2_REVISION), so I don't see any major 
-issue with putting it into user ABI. And TBH I think I would prefer to 
-just use a numeric value rather than have to maintain yet more tables of 
-strings which given the usage model here would effectively only mangle a 
-matchable value into a different matchable value anyway.
-
-I am inclined to agree that the mix between part 
-driver-generated-string, part hardware-value looks a little funky. I 
-still need to check with the hardware team exactly how the part number 
-field from PERIPH_ID_0/1 is "configuration-dependent", and whether there 
-might actually be a chance of using that as well.
-
-One nagging doubt that remains for metrics are any baked-in assumptions 
-which may not always simply depend on the product version - for instance 
-it happens to be the case currently that everything has a fixed flit 
-size of 256 bits, hence the magic "32" in the bandwidth calculations, 
-but if that ever became configurable in some future product, we may 
-potentially have a problem guaranteeing a meaningful calculation.
-
->> The identifier consists of model_name and revision.
->> The compatible value "arm_cmn600;arm_cmn650" can match the identifier 
->> "arm_cmn600_0" or "arm_cmn650_0". Maybe the message log
->> is not clear enough.
->>
->> For example in patch #3 the metric "slc_miss_rate" is a generic metric 
->> for cmn-any. So we can define:
->>
->> +    {
->> +        "MetricName": "slc_miss_rate",
->> +        "BriefDescription": "The system level cache miss rate include.",
->> +        "MetricGroup": "arm_cmn",
->> +        "MetricExpr": "hnf_cache_miss / hnf_slc_sf_cache_access",
->> +        "ScaleUnit": "100%",
->> +        "Unit": "arm_cmn",
->> +        "Compat": "arm_cmn600;arm_cmn650;arm_cmn700;arm_ci700"
->> +    },
->>
->>
->> It can match identifiers "arm_cmn600_{0,1,2..X}" or 
->> "arm_cmn650_{0,1,2..X}" or "arm_cmn700_{0,1,2..X}" or "arm_ci700_{ 
->> 0,1,2..X}".
->> In other words, it can match all identifiers prefixed with 
->> “arm_cmn600” or “arm_cmn650” or “arm_cmn700” or “arm_ci700”.
->>
->> If a new model arm_cmn driver with identifier "arm_cmn750_0", it will 
->> not be matched, but if a new revision arm_cmn driver with identifier
->> "arm_cmn700_4", it can be matched.
+> Looks good to me.
 > 
-> OK, I see what you mean. My confusion came about though your commit 
-> message on this same patch, which did not mention cmn650. I assumed that 
-> the example event which you were describing was supported for arm_cmn650 
-> and you intentionally omitted it.
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks, applied both patches.
+
+- Arnaldo
+
+ 
+> > 
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/annotate.c | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> > 
+> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> > index b708bbc49c9e..7f05f2a2aa83 100644
+> > --- a/tools/perf/util/annotate.c
+> > +++ b/tools/perf/util/annotate.c
+> > @@ -70,6 +70,7 @@ struct arch {
+> >  	struct ins_ops  *(*associate_instruction_ops)(struct arch *arch, const char *name);
+> >  	bool		sorted_instructions;
+> >  	bool		initialized;
+> > +	const char	*insn_suffix;
+> >  	void		*priv;
+> >  	unsigned int	model;
+> >  	unsigned int	family;
+> > @@ -179,6 +180,7 @@ static struct arch architectures[] = {
+> >  		.init = x86__annotate_init,
+> >  		.instructions = x86__instructions,
+> >  		.nr_instructions = ARRAY_SIZE(x86__instructions),
+> > +		.insn_suffix = "bwlq",
+> >  		.objdump =  {
+> >  			.comment_char = '#',
+> >  		},
+> > @@ -720,6 +722,26 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name)
+> >  	}
+> >  
+> >  	ins = bsearch(name, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
+> > +	if (ins)
+> > +		return ins->ops;
+> > +
+> > +	if (arch->insn_suffix) {
+> > +		char tmp[32];
+> > +		char suffix;
+> > +		size_t len = strlen(name);
+> > +
+> > +		if (len == 0 || len >= sizeof(tmp))
+> > +			return NULL;
+> > +
+> > +		suffix = name[len - 1];
+> > +		if (strchr(arch->insn_suffix, suffix) == NULL)
+> > +			return NULL;
+> > +
+> > +		strcpy(tmp, name);
+> > +		tmp[len - 1] = '\0'; /* remove the suffix and check again */
+> > +
+> > +		ins = bsearch(tmp, arch->instructions, nmemb, sizeof(struct ins), ins__key_cmp);
+> > +	}
+> >  	return ins ? ins->ops : NULL;
+> >  }
+> >  
+> > -- 
+> > 2.41.0.rc0.172.g3f132b7071-goog
+> > 
 > 
->>
->>
->>>> Tokens in Unit field are delimited by ';'.
->>> Thanks for taking a stab at solving this problem.
->>>
->>> I have to admit that I am not the biggest fan of having multiple 
->>> values to match in the "Compat" value possibly for every event. It 
->>> doesn't really scale.
->>>
->>> I would hope that there are at least some events which we are 
->>> guaranteed to always be present. From what Robin said on the v2 
->>> series, for the implementations which we care about, events are 
->>> generally added per subsequent version. So we should have some base 
->>> set of fixed events.
-
-Note that there's a slight difference between "present" and "valid", 
-e.g. in the current driver-internal aliases, all MTSX events are marked 
-CMN_ANY, meaning they're considered valid on any CMN configuration with 
-an MTSX node, regardless of model. The events don't exist on CMN-600 or 
-CMN-650, but that's because the MTSX itself wasn't a thing yet, so for 
-simplicity we don't have to bother considering the events invalid when 
-we know they will always be non-present and thus filtered anyway.
-
->>> If we are confident that we have a fixed set of base set of events, 
->>> can we ensure that those events would not require this compat string 
->>> which needs each version explicitly stated?
->>>
->> If we are sure that some events will always exist in subsequent 
->> versions, we can set the Compat field to "arm_cmn;arm_ci". After that,
->> whether it is a different model or a different revision of the cmn 
->> PMU, it will be compatible. That is, it matches all whose identifier
->> is prefixed with “arm_cmn” or “arm_ci”.
 > 
-> Sure, we could do something like that. Or if we are super-confident that 
-> every model and rev will support some event, then we can change perf 
-> tool to just not check Compat for that event.
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-The majority of events have stayed unchanged since the introduction of 
-their respective node type, so assuming we already have a basic match on 
-the PMU name to know which JSON to be looking at in the first place, I'd 
-imagine the Compat field could be optional, and only needed for events 
-which first appear in a subsequent revision or model, or the fiddly 
-cases like where DVM node events got entirely rewritten in CMN-650.
+-- 
 
-Thanks,
-Robin.
+- Arnaldo
