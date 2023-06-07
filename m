@@ -2,139 +2,90 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62595C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 15:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22B8C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 16:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241517AbjFGP2B (ORCPT
+        id S230042AbjFGQ1W (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jun 2023 11:28:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37640 "EHLO
+        Wed, 7 Jun 2023 12:27:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240785AbjFGP1l (ORCPT
+        with ESMTP id S229683AbjFGQ1V (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Jun 2023 11:27:41 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081322116;
-        Wed,  7 Jun 2023 08:27:09 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 02A9B21A11;
-        Wed,  7 Jun 2023 15:26:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1686151576; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UpwWRWvSJqy3T03ZY2JlbzZD9kWCp/NCykWW9d7sd1g=;
-        b=ror0Tusl1A4DBNmBYTkOot8hbHrSVjNcZ9FY2pwERAt1+clj7LJkXRHFWMQ/23qz+0TP6T
-        L0Y2STOeyZIftm9lb1yBJvu8qGmXXlOBCaK3kgHnHLaI2SmmyG+svuxj+aX4dSbodUZupp
-        j9a3mj67Hm7ygPMkrSlCW5O0X/eWAyU=
-Received: from alley.suse.cz (unknown [10.100.201.202])
-        by relay2.suse.de (Postfix) with ESMTP id 823902C141;
-        Wed,  7 Jun 2023 15:26:15 +0000 (UTC)
-From:   Petr Mladek <pmladek@suse.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org, Petr Mladek <pmladek@suse.com>
-Subject: [PATCH 7/7] watchdog/hardlockup: Define HARDLOCKUP_DETECTOR_ARCH
-Date:   Wed,  7 Jun 2023 17:24:32 +0200
-Message-Id: <20230607152432.5435-8-pmladek@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20230607152432.5435-1-pmladek@suse.com>
-References: <20230607152432.5435-1-pmladek@suse.com>
+        Wed, 7 Jun 2023 12:27:21 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AD419BC;
+        Wed,  7 Jun 2023 09:27:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686155240; x=1717691240;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=1t0YBmHwyxZmGA+01w7vD6GxXoMOf6lhCQFoyeHgFVQ=;
+  b=ZuZFTBNUCd8gFy0XEHYnmviJS4to1O5I/zHuMC0LWuOYDgRJYYq+j1TI
+   hjnxZZ57dWN4JN9B/wDk/U1Gn6IPKv+RFgtIkHEBsZ4gh+/wtWoSbRGUa
+   g6uY0o90ntHdL8hdWeT99/7JYFXXqWz/GWZHpRQJFuqMNoXci+RH47HYY
+   Fk74hojYm8dI3JiWCNSIcNDj0uSjaYjCP8RTMxMUyFPzmmTir0Pfv77cp
+   lgIPXB2ZGfH7R+RR7K3+lYwnQFJTwv6ZQ6mGFcJHwSDZEhc6aG+BESguT
+   V1MZW+PXtNRO3iHcJRumTyS8hY6r7P2Cu9PEj4TIBNhzB5X+5QtgaangV
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="355892612"
+X-IronPort-AV: E=Sophos;i="6.00,224,1681196400"; 
+   d="scan'208";a="355892612"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2023 09:27:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="774697652"
+X-IronPort-AV: E=Sophos;i="6.00,224,1681196400"; 
+   d="scan'208";a="774697652"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Jun 2023 09:27:19 -0700
+From:   kan.liang@linux.intel.com
+To:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        irogers@google.com, namhyung@kernel.org, jolsa@kernel.org,
+        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com,
+        Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 1/8] perf metric: Fix no group check
+Date:   Wed,  7 Jun 2023 09:26:53 -0700
+Message-Id: <20230607162700.3234712-2-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20230607162700.3234712-1-kan.liang@linux.intel.com>
+References: <20230607162700.3234712-1-kan.liang@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The HAVE_ prefix means that the code could be enabled. Add another
-variable for HAVE_HARDLOCKUP_DETECTOR_ARCH without this prefix.
-It will be set when it should be built. It will make it compatible
-with the other hardlockup detectors.
+From: Kan Liang <kan.liang@linux.intel.com>
 
-The change allows to clean up dependencies of PPC_WATCHDOG
-and HAVE_HARDLOCKUP_DETECTOR_PERF definitions for powerpc.
+The no group check fails if there is more than one meticgroup in the
+metricgroup_no_group.
 
-As a result HAVE_HARDLOCKUP_DETECTOR_PERF has the same dependencies
-on arm, x86, powerpc architectures.
+The first parameter of the match_metric() should be the string, while
+the substring should be the second parameter.
 
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Fixes: ccc66c609280 ("perf metric: JSON flag to not group events if gathering a metric group")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- arch/powerpc/Kconfig | 5 ++---
- include/linux/nmi.h  | 2 +-
- lib/Kconfig.debug    | 9 +++++++++
- 3 files changed, 12 insertions(+), 4 deletions(-)
+ tools/perf/util/metricgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 539d1f03ff42..987e730740d7 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -90,8 +90,7 @@ config NMI_IPI
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 70ef2e23a710..74f2d8efc02d 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1175,7 +1175,7 @@ static int metricgroup__add_metric_callback(const struct pmu_metric *pm,
  
- config PPC_WATCHDOG
- 	bool
--	depends on HARDLOCKUP_DETECTOR
--	depends on HAVE_HARDLOCKUP_DETECTOR_ARCH
-+	depends on HARDLOCKUP_DETECTOR_ARCH
- 	default y
- 	help
- 	  This is a placeholder when the powerpc hardlockup detector
-@@ -240,7 +239,7 @@ config PPC
- 	select HAVE_GCC_PLUGINS			if GCC_VERSION >= 50200   # plugin support on gcc <= 5.1 is buggy on PPC
- 	select HAVE_GENERIC_VDSO
- 	select HAVE_HARDLOCKUP_DETECTOR_ARCH	if PPC_BOOK3S_64 && SMP
--	select HAVE_HARDLOCKUP_DETECTOR_PERF	if PERF_EVENTS && HAVE_PERF_EVENTS_NMI && !HAVE_HARDLOCKUP_DETECTOR_ARCH
-+	select HAVE_HARDLOCKUP_DETECTOR_PERF	if PERF_EVENTS && HAVE_PERF_EVENTS_NMI
- 	select HAVE_HW_BREAKPOINT		if PERF_EVENTS && (PPC_BOOK3S || PPC_8xx)
- 	select HAVE_IOREMAP_PROT
- 	select HAVE_IRQ_TIME_ACCOUNTING
-diff --git a/include/linux/nmi.h b/include/linux/nmi.h
-index 515d6724f469..ec808ebd36ba 100644
---- a/include/linux/nmi.h
-+++ b/include/linux/nmi.h
-@@ -9,7 +9,7 @@
- #include <asm/irq.h>
+ 	if (pm->metric_expr && match_pm_metric(pm, data->pmu, data->metric_name)) {
+ 		bool metric_no_group = data->metric_no_group ||
+-			match_metric(data->metric_name, pm->metricgroup_no_group);
++			match_metric(pm->metricgroup_no_group, data->metric_name);
  
- /* Arch specific watchdogs might need to share extra watchdog-related APIs. */
--#if defined(CONFIG_HAVE_HARDLOCKUP_DETECTOR_ARCH) || defined(CONFIG_HARDLOCKUP_DETECTOR_SPARC64)
-+#if defined(CONFIG_HARDLOCKUP_DETECTOR_ARCH) || defined(CONFIG_HARDLOCKUP_DETECTOR_SPARC64)
- #include <asm/nmi.h>
- #endif
- 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 116904e65d9f..97853ca54dc7 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -1056,6 +1056,7 @@ config HARDLOCKUP_DETECTOR
- 	depends on HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETECTOR_BUDDY || HAVE_HARDLOCKUP_DETECTOR_ARCH
- 	imply HARDLOCKUP_DETECTOR_PERF
- 	imply HARDLOCKUP_DETECTOR_BUDDY
-+	imply HARDLOCKUP_DETECTOR_ARCH
- 	select LOCKUP_DETECTOR
- 
- 	help
-@@ -1102,6 +1103,14 @@ config HARDLOCKUP_DETECTOR_BUDDY
- 	depends on !HAVE_HARDLOCKUP_DETECTOR_ARCH
- 	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
- 
-+config HARDLOCKUP_DETECTOR_ARCH
-+	bool
-+	depends on HARDLOCKUP_DETECTOR
-+	depends on HAVE_HARDLOCKUP_DETECTOR_ARCH
-+	help
-+	  The arch-specific implementation of the hardlockup detector is
-+	  available.
-+
- #
- # Both the "perf" and "buddy" hardlockup detectors count hrtimer
- # interrupts. This config enables functions managing this common code.
+ 		data->has_match = true;
+ 		ret = add_metric(data->list, pm, data->modifier, metric_no_group,
 -- 
-2.35.3
+2.35.1
 
