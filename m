@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3EDC7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 01:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0D1C7EE37
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 01:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240653AbjFGBqB (ORCPT
+        id S240491AbjFGBqC (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jun 2023 21:46:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34324 "EHLO
+        Tue, 6 Jun 2023 21:46:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240501AbjFGBoj (ORCPT
+        with ESMTP id S240565AbjFGBol (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2023 21:44:39 -0400
+        Tue, 6 Jun 2023 21:44:41 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E5F19AE
-        for <linux-perf-users@vger.kernel.org>; Tue,  6 Jun 2023 18:44:38 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bb3a35ba742so2216308276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jun 2023 18:44:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B52C619B9
+        for <linux-perf-users@vger.kernel.org>; Tue,  6 Jun 2023 18:44:40 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-babb79a17b8so8088304276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jun 2023 18:44:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686102277; x=1688694277;
+        d=google.com; s=20221208; t=1686102280; x=1688694280;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=w532lnbGp5anOsc290HQqo7yKb1jpgu9WE3T8mTec4I=;
-        b=4Ah77oIcW1fhi4PUaWNVyQCtlDy0ODJswvsNp12X68m9YC8jPYB0wJjfd6u9Nes/qM
-         WyyQujj/FsWMFXlvbodKx9omh3hxJTA8Uzg3HFoKmEIM/4ZXwapKkMv/J4GriQEMoMxK
-         YH6zmrmTRduNvHTbQI16cu3VXzfSd+04P8SdbixqbWrtaMQm+DPgD8pGSVIx6KnvG12E
-         /LsrP+9Ui0xoiwCUGBT8mDlfuLWX+nI5VPmXw+d4/M5gvRf4ahFqHPMpDTdJjkqfjB4r
-         lVY40iPLtZBNOI6+2oGaNs8iPKdw3FbkJaZxO/havOEgdW4CiJu+WhvCcJduPdjNd8TX
-         3Caw==
+        bh=Lh3ZPj+Wzo2hfjfSWit72WLXRXJmKCjosdWMK8GGHUA=;
+        b=3o9qJWhUHNoQNGjubcZF65jCf+kylBRuNrh/H8uqZh8T9IE7SSsDbQdJAJqkGygZ/M
+         XUmP4BGq/x9wgJBAhBViGncUpwNN2utiZ9qBzS74mgWQA9TAd1yT6PxKwrY6axXJfoka
+         xLBd+y1FTCyaQ8wtCWDkY7jTYi1N/aIH8fzG2ptJwcuGV1neC/CfhkzGgXRMnmez4ToI
+         7zfazA3RCOCqNCGwYQ3piafzBFPOCEl6Iiy3qDsgKJQSvSkzxH1q4Czl9Fgamm0CXqul
+         SQ8P0Iql/omNg2GbZcfLUD+dqe8nJ4RmJNzdOs2uPS4ts5K1aUmvO3nFu0WoPgZ4IAnz
+         QZzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686102277; x=1688694277;
+        d=1e100.net; s=20221208; t=1686102280; x=1688694280;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w532lnbGp5anOsc290HQqo7yKb1jpgu9WE3T8mTec4I=;
-        b=CoO4PKr08wiVo2z55smjz7IZ3eeuqztR8271fnw3HGNF5uI9s+ghMm/HTFw0AI5Ioq
-         /CrBsp/Ko9uszTYYFGq3HkLyrqlJxhpSd3AbkeeePp4fN3NZ4A8dvquj+sQc00Fjg6C4
-         fjEe8eIJw8FfoYYaOQ819ZUs96MnuxFm2vS7WjpdFoy/oYETGsgcOF2IjSKT0/p2T02s
-         fm1LJeP0mtnFrIP8Yl3Pe8dgmsS6N18g9Gw4gdsaVhkidtzoFWyvX3JiO6ZttEC4k9vW
-         IBp1ZXeTWKq7oX6taDcLcDn6HKVrCmwFRkjdQlQ1opvS69YT6CLsL5EtKZ8rVp08zeI1
-         f3Dg==
-X-Gm-Message-State: AC+VfDxKg6VJYG8BPrJNQfH8kIjf1GjdG0lFeMklpNz95ronT+/dTQfJ
-        1Ux+K6cP2sZdEIL5m5U0gcVdtJ6CdVsi
-X-Google-Smtp-Source: ACHHUZ5K3q2BRZQ3BVaY4x+Gz/kg1NLcmTS5uYFGmWeNZGZJl9FEpVaiPom/EYkG6lni3/0N8BD8dY+UkiA/
+        bh=Lh3ZPj+Wzo2hfjfSWit72WLXRXJmKCjosdWMK8GGHUA=;
+        b=Cy5DUhkjJpC1WTowSqqi9R/ChJGbfrD+OKejSI96hR+a5OSduElDix/4c1eoaJsniW
+         QnTHedP4UH/SQcAduFFyzU9C2jQs31hqyb0iGR/s69kXXVg/+bYVsBGF2x0UyP2DxjHn
+         nHJlVSyLzjAzsXWxrG/gfLss910Sw9U/ScsZdxb/frwLEeDiQ9jBsczffEN0iIE6cpq4
+         CqApAWVPn0brKpuK69kfoX6+UpJZ3QVC4BcrZnmBpzXfHXNwDC+pS2ygC+iqNT0L5EOX
+         CNPzm6gwi+4rxBJjdltW1ufYHjtoWu6LUK28PiNcZvlt1ORAkPxDwCXgopreCVJOUh8C
+         KCYQ==
+X-Gm-Message-State: AC+VfDwquceauBRmQ790loDeDLV4Ht61J1K2q8R3TqiJb46WiG/fmldi
+        1oAcSxniVLykaAy97lmUModTT4+tyiLk
+X-Google-Smtp-Source: ACHHUZ5k0RG8X6zpnvumVsnIGTroi8c4VO2eafr6KT17+45l3nZ2TRcZyfvFyEu2jFiCKaPHKnGy224Junv5
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3c35:209f:5d38:b7a1])
- (user=irogers job=sendgmr) by 2002:a05:6902:1204:b0:bac:f582:ef18 with SMTP
- id s4-20020a056902120400b00bacf582ef18mr2308600ybu.5.1686102277621; Tue, 06
- Jun 2023 18:44:37 -0700 (PDT)
-Date:   Tue,  6 Jun 2023 18:43:45 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:1206:b0:bb1:f26d:b18d with SMTP
+ id s6-20020a056902120600b00bb1f26db18dmr2138419ybu.13.1686102279962; Tue, 06
+ Jun 2023 18:44:39 -0700 (PDT)
+Date:   Tue,  6 Jun 2023 18:43:46 -0700
 In-Reply-To: <20230607014353.3172466-1-irogers@google.com>
-Message-Id: <20230607014353.3172466-13-irogers@google.com>
+Message-Id: <20230607014353.3172466-14-irogers@google.com>
 Mime-Version: 1.0
 References: <20230607014353.3172466-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v1 12/20] perf intel-pt: Fix missed put and leak
+Subject: [PATCH v1 13/20] perf evlist: Free stats in all evlist destruction
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -102,33 +102,49 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add missing put and free, detected with leak sanitizer.
+There is no evsel free stats, freeing in the evlist__delete ensures
+memory leaks are avoided. Issues detected with "perf stat report" and
+leak sanitizer, perf stat uses perf_session__delete to free the
+evlist. Add dummy symbol for python build.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/intel-pt.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/evlist.c | 2 ++
+ tools/perf/util/python.c | 4 ++++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 783ce61c6d25..dbf0bc71a63b 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -1280,6 +1280,7 @@ static void intel_pt_add_br_stack(struct intel_pt *pt,
- 				     pt->kernel_start);
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 82c0b3d0c822..7ef43f72098e 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -31,6 +31,7 @@
+ #include "util/pmu.h"
+ #include "util/sample.h"
+ #include "util/bpf-filter.h"
++#include "util/stat.h"
+ #include "util/util.h"
+ #include <signal.h>
+ #include <unistd.h>
+@@ -171,6 +172,7 @@ void evlist__delete(struct evlist *evlist)
+ 	if (evlist == NULL)
+ 		return;
  
- 	sample->branch_stack = pt->br_stack;
-+	thread__put(thread);
++	evlist__free_stats(evlist);
+ 	evlist__munmap(evlist);
+ 	evlist__close(evlist);
+ 	evlist__purge(evlist);
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 8de1b759bbaa..a7b2cb05dc86 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -1494,3 +1494,7 @@ void test_attr__open(struct perf_event_attr *attr, pid_t pid, struct perf_cpu cp
+                      int fd, int group_fd, unsigned long flags)
+ {
  }
- 
- /* INTEL_PT_LBR_0, INTEL_PT_LBR_1 and INTEL_PT_LBR_2 */
-@@ -3580,6 +3581,7 @@ static void intel_pt_free(struct perf_session *session)
- 	zfree(&pt->chain);
- 	zfree(&pt->filter);
- 	zfree(&pt->time_ranges);
-+	zfree(&pt->br_stack);
- 	free(pt);
- }
- 
++
++void evlist__free_stats(struct evlist *evlist)
++{
++}
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
