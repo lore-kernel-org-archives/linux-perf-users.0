@@ -2,222 +2,200 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E35DCC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Tue,  6 Jun 2023 23:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65D6C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 00:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240278AbjFFXTs (ORCPT
+        id S234514AbjFGA5I (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jun 2023 19:19:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49062 "EHLO
+        Tue, 6 Jun 2023 20:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240273AbjFFXTZ (ORCPT
+        with ESMTP id S234458AbjFGA5H (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2023 19:19:25 -0400
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C051FEE
-        for <linux-perf-users@vger.kernel.org>; Tue,  6 Jun 2023 16:18:25 -0700 (PDT)
-Received: by mail-il1-x129.google.com with SMTP id e9e14a558f8ab-33dea7d5424so27285ab.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jun 2023 16:18:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686093504; x=1688685504;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LusODyImi6kShYo7SZgAczgtmkpNpRiKl/lmOqpWzfY=;
-        b=bHLLRfURdxNvPqhE2bfaZQ8ll3eh6shs0txawB+xbLvB7SA+cWOK7VhX0QUN79LyYI
-         lCnTvE7jFUQoWSifn5m0Lys+Y0Dm/RZ9FHkfeJl+BM6/6+5ayQbUXgmiqg3xQhBVEa/J
-         d0iTjx6j5/szWelj86ck4UuNSFm3gb6L9AsDhijZu7qcK84dWa0Ab2F4oTHIwI9iN2Qs
-         cGTtqyfmHiTrw87RP+8KCCyCWVQVRpK3VGKy96HHt6qMgFQd9ABAhrjTCMAUWrHtRSw0
-         FED1Gj5DnAAcqhYaqiWxyvoLJMBl4bZjrI4SY1fRdAO+QCPEfM6xrRse1TkgacsnkBMw
-         Y0/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686093504; x=1688685504;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LusODyImi6kShYo7SZgAczgtmkpNpRiKl/lmOqpWzfY=;
-        b=D7AAlfO5Mq8OmaWTkQqUaHXwkYFhkolKNRVoBpu0BUlvqc+lLbZ+IghH4UuFIGmZXi
-         L4f5M1e5kmBtQCT7Py2X5ANvLu3HsptzJBxg7NC4yfpK0Iz4VYKPyiL4EecvqkdlLnIw
-         rKNFMaJ63uizFst8R1vam4Pp5woyIDbbtlNqXDZ3nRiz+ALHS9+jSa2clINTo8+JVd+N
-         uZ+H0ERRuSucDH8Mazk+/q56C9f1+P3OmpM3xQ+6M+ngMuONCAfcpDX88Ci0PUoa/hYW
-         iVNjS0mZamLnByLdQkl3uuUdbDnJVxLivFTxuVcYbynPzG5DQpsha33/fJnbUB8uoazk
-         8AWA==
-X-Gm-Message-State: AC+VfDzRYpGHtPT4nARVoA9ENf7M5JADq/7KXoVIG+pLHI4zuiQjuMrH
-        w+2ttKArSzeiiQ2NoQiNAX9E/lgi9TyxCccS71MMhH/1HIGSr3b9ASw=
-X-Google-Smtp-Source: ACHHUZ7jN0OEqtUnQoxqE/pZb1cT4FFdk/SorQIEprthyAmFz43w0VOL5ChrKbF0ApvtiecmOAmx0rjnyMt4BE2Js3E=
-X-Received: by 2002:a05:6e02:214a:b0:33b:cea:ce70 with SMTP id
- d10-20020a056e02214a00b0033b0ceace70mr26326ilv.25.1686093504340; Tue, 06 Jun
- 2023 16:18:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230605202712.1690876-1-irogers@google.com> <20230605202712.1690876-2-irogers@google.com>
- <ZH6gZgcwAbDrEiqX@krava> <CAP-5=fWgQDrgDJ_UFuo_G5NaCzR5vWrRyvQ-_qpvFP0p0q18+w@mail.gmail.com>
- <ZH91mGxFpDPcCFKY@kernel.org>
-In-Reply-To: <ZH91mGxFpDPcCFKY@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 6 Jun 2023 16:18:13 -0700
-Message-ID: <CAP-5=fUscgwO-G0FSZeM6SyPZVe=Kg+t-s+2txjUrc_qbP+cDg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] perf build: Add ability to build with a generated vmlinux.h
+        Tue, 6 Jun 2023 20:57:07 -0400
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B761728;
+        Tue,  6 Jun 2023 17:57:04 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4QbTSn3mlLz4x2c;
+        Wed,  7 Jun 2023 10:56:57 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+        s=201702; t=1686099422;
+        bh=k56jEU2ViEAn2/eGC8DhZ9t/fIq2mRoRRD7wYVTLs68=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FGl+omh82Vv4jaVNMc+afltpnJ1JUx45tyoPHvWMYcjdt/LlDYElF5ZRuwC2KLZHX
+         t+x8uElM34LTJEQi0obzdLoTOkN8+in6RN6vxkNFtfLAQ9yNfNLMT5PKT+MQFDIjpq
+         MbRyiMkQdolx7g4SPeb41LrlltsrkM7sVyN3UzBxi0cJjMiDGJIFbPxWu+MOQ/bmTs
+         0q+r7K3tlAKA395fM0KJPDf5NJD4t5yJhq7OMl6N/SNr/DZ320Wm9pjxtg/M3I+3qw
+         W5DsGN6BNPKIPin5xyk/XTRCb/2eMrScoJ7vkHGLWQqIyPG4Tng+eal+GbYeutNFJV
+         UDPj8QNi1H7tg==
+Date:   Wed, 7 Jun 2023 10:56:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Andrii Nakryiko <andrii@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>, irogers@google.com,
+        suzuki.poulose@arm.com, mike.leach@linaro.org, leo.yan@linaro.org,
+        john.g.garry@oracle.com, will@kernel.org, james.clark@arm.com,
+        mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, adrian.hunter@intel.com, kjain@linux.ibm.com,
+        renyu.zj@linux.alibaba.com, kan.liang@linux.intel.com,
+        zhengjun.xing@linux.intel.com, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, wangming01@loongson.cn,
+        chenhuacai@kernel.org, sandipan.das@amd.com, 9erthalion6@gmail.com,
+        seanjc@google.com, robh@kernel.org, tmricht@linux.ibm.com,
+        tegongkang@gmail.com, linux-kernel@vger.kernel.org,
+        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf test amd: Fix build failure with
+ amd-ibs-via-core-pmu.c
+Message-ID: <20230607105656.1f2f8b89@canb.auug.org.au>
+In-Reply-To: <20230606142436.153750d9@canb.auug.org.au>
+References: <CAP-5=fUPZ7+nAcxBp5sFBfxzkOH8kzWkLV0uziHqxYC0cDbbDw@mail.gmail.com>
+        <20230603044650.286-1-ravi.bangoria@amd.com>
+        <ZH3w7TWRQZsPqhB2@kernel.org>
+        <20230606142436.153750d9@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/ZpeoibezJ3cg31_biwxtWat";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 6, 2023 at 11:06=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Mon, Jun 05, 2023 at 09:25:54PM -0700, Ian Rogers escreveu:
-> > On Mon, Jun 5, 2023 at 7:57=E2=80=AFPM Jiri Olsa <olsajiri@gmail.com> w=
+--Sig_/ZpeoibezJ3cg31_biwxtWat
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+On Tue, 6 Jun 2023 14:24:36 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
 rote:
-> > >
-> > > On Mon, Jun 05, 2023 at 01:27:09PM -0700, Ian Rogers wrote:
-> > > > Commit a887466562b4 ("perf bpf skels: Stop using vmlinux.h generate=
-d
-> > > > from BTF, use subset of used structs + CO-RE") made it so that
-> > > > vmlinux.h was uncondtionally included from
-> > > > tools/perf/util/vmlinux.h. This change reverts part of that change =
-(so
-> > > > that vmlinux.h is once again generated) and makes it so that the
-> > > > vmlinux.h used at build time is selected from the VMLINUX_H
-> > > > variable. By default the VMLINUX_H variable is set to the vmlinux.h
-> > > > added in change a887466562b4, but if GEN_VMLINUX_H=3D1 is passed on=
- the
-> > > > build command line then the previous generation behavior kicks in.
-> > > >
-> > > > The build with GEN_VMLINUX_H=3D1 currently fails with:
-> > > > ```
-> > > > util/bpf_skel/lock_contention.bpf.c:419:8: error: redefinition of '=
-rq'
-> > > > struct rq {};
-> > > >        ^
-> > > > /tmp/perf/util/bpf_skel/.tmp/../vmlinux.h:45630:8: note: previous d=
-efinition is here
-> > > > struct rq {
-> > > >        ^
-> > > > 1 error generated.
-> > > > ```
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > > > ---
-> > > >  tools/perf/Makefile.config                       |  4 ++++
-> > > >  tools/perf/Makefile.perf                         | 16 ++++++++++++=
-+++-
-> > > >  tools/perf/util/bpf_skel/.gitignore              |  1 +
-> > > >  tools/perf/util/bpf_skel/{ =3D> vmlinux}/vmlinux.h |  0
-> > > >  4 files changed, 20 insertions(+), 1 deletion(-)
-> > > >  rename tools/perf/util/bpf_skel/{ =3D> vmlinux}/vmlinux.h (100%)
-> > >
-> > > looks good, but I don't understand why you moved the vmlinux.h
-> > >
-> > > jirka
+>
+> On Mon, 5 Jun 2023 11:27:57 -0300 Arnaldo Carvalho de Melo <acme@kernel.o=
+rg> wrote:
 > >
-> > Dumb reason, as headers in the same directory take priority, I had to
-> > move the vmlinux.h out of the directory with the C code for skeletons
-> > so that it could be selected via a -I.
->
-> Can this be in a separate patch, i.e. moving vmlinux to a separate
-> directory? I was going to cherry pick the 'struct rq' fix but then it
-> touches the vmlinux/vmlinux.h file that is in this first patch that has
-> review comments.
+> > How are things like this resolved in linux-next? =20
+>=20
+> Well, if it produces a conflict (or a build failure due to a semantic
+> conflict) I will fix it up (maybe using a separate patch such as this)
+> and report it so that the maintainers know that they need to let Linus
+> know about this when he merges their trees.
+>=20
+> But since neither of those things has happened (it seems that an
+> allmodconfig build does not build the tests), I can still take this
+> patch and use it to fix up the tip tree merge (since that happens after
+> the perf tree merge) starting tomorrow and report it as above.  I will
+> then keep applying this patch to the merge until it is no longer needed.
+>=20
+> Please send me the actual patch. (I am assuming that the patch applies
+> on top of a recent linux-next release?)
 
-I think the comments were more of a question of why the move?
-Hopefully I answered that, the move is necessary to defeat the include
-path order preferring files in the same directory. We need the move,
-we could vary the directory name.
+I fetched the patch from lore and have applied it to the tip tree merge
+from today.  So the tip and perf folks need to remember to tell Linus
+about this fix up patch when they send their pull requests during the
+merge window.  I have included the patch here just to be sure.
 
-Thanks,
-Ian
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <irogers@google.com>, <acme@kernel.org>, <sfr@canb.auug.org.au>
+CC:     <ravi.bangoria@amd.com>, <suzuki.poulose@arm.com>,
+        <mike.leach@linaro.org>, <leo.yan@linaro.org>,
+        <john.g.garry@oracle.com>, <will@kernel.org>,
+        <james.clark@arm.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <adrian.hunter@intel.com>, <kjain@linux.ibm.com>,
+        <renyu.zj@linux.alibaba.com>, <kan.liang@linux.intel.com>,
+        <zhengjun.xing@linux.intel.com>, <maddy@linux.ibm.com>,
+        <atrajeev@linux.vnet.ibm.com>, <wangming01@loongson.cn>,
+        <chenhuacai@kernel.org>, <sandipan.das@amd.com>,
+        <9erthalion6@gmail.com>, <seanjc@google.com>, <robh@kernel.org>,
+        <tmricht@linux.ibm.com>, <tegongkang@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-perf-users@vger.kernel.org>
+Subject: [PATCH v2] perf test amd: Fix build failure with amd-ibs-via-core-=
+pmu.c
+Date:   Sat, 3 Jun 2023 10:16:50 +0530
+Message-ID: <20230603044650.286-1-ravi.bangoria@amd.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=3D"UTF-8"
+Content-Transfer-Encoding: 8bit
 
-> - Arnaldo
->
-> > Thanks,
-> > Ian
-> >
-> > > >
-> > > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.confi=
-g
-> > > > index a794d9eca93d..08d4e7eaa721 100644
-> > > > --- a/tools/perf/Makefile.config
-> > > > +++ b/tools/perf/Makefile.config
-> > > > @@ -680,6 +680,10 @@ ifdef BUILD_BPF_SKEL
-> > > >    CFLAGS +=3D -DHAVE_BPF_SKEL
-> > > >  endif
-> > > >
-> > > > +ifndef GEN_VMLINUX_H
-> > > > +  VMLINUX_H=3D$(src-perf)/util/bpf_skel/vmlinux/vmlinux.h
-> > > > +endif
-> > > > +
-> > > >  dwarf-post-unwind :=3D 1
-> > > >  dwarf-post-unwind-text :=3D BUG
-> > > >
-> > > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> > > > index f48794816d82..f1840af195c0 100644
-> > > > --- a/tools/perf/Makefile.perf
-> > > > +++ b/tools/perf/Makefile.perf
-> > > > @@ -1080,7 +1080,21 @@ $(BPFTOOL): | $(SKEL_TMP_OUT)
-> > > >       $(Q)CFLAGS=3D $(MAKE) -C ../bpf/bpftool \
-> > > >               OUTPUT=3D$(SKEL_TMP_OUT)/ bootstrap
-> > > >
-> > > > -$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) | $(SKEL_=
-TMP_OUT)
-> > > > +VMLINUX_BTF_PATHS ?=3D $(if $(O),$(O)/vmlinux)                    =
-     \
-> > > > +                  $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux) =
-   \
-> > > > +                  ../../vmlinux                                   =
-   \
-> > > > +                  /sys/kernel/btf/vmlinux                         =
-   \
-> > > > +                  /boot/vmlinux-$(shell uname -r)
-> > > > +VMLINUX_BTF ?=3D $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PA=
-THS))))
-> > > > +
-> > > > +$(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL)
-> > > > +ifeq ($(VMLINUX_H),)
-> > > > +     $(QUIET_GEN)$(BPFTOOL) btf dump file $< format c > $@
-> > > > +else
-> > > > +     $(Q)cp "$(VMLINUX_H)" $@
-> > > > +endif
-> > > > +
-> > > > +$(SKEL_TMP_OUT)/%.bpf.o: util/bpf_skel/%.bpf.c $(LIBBPF) $(SKEL_OU=
-T)/vmlinux.h | $(SKEL_TMP_OUT)
-> > > >       $(QUIET_CLANG)$(CLANG) -g -O2 -target bpf -Wall -Werror $(BPF=
-_INCLUDE) $(TOOLS_UAPI_INCLUDE) \
-> > > >         -c $(filter util/bpf_skel/%.bpf.c,$^) -o $@
-> > > >
-> > > > diff --git a/tools/perf/util/bpf_skel/.gitignore b/tools/perf/util/=
-bpf_skel/.gitignore
-> > > > index 7a1c832825de..cd01455e1b53 100644
-> > > > --- a/tools/perf/util/bpf_skel/.gitignore
-> > > > +++ b/tools/perf/util/bpf_skel/.gitignore
-> > > > @@ -1,3 +1,4 @@
-> > > >  # SPDX-License-Identifier: GPL-2.0-only
-> > > >  .tmp
-> > > >  *.skel.h
-> > > > +vmlinux.h
-> > > > diff --git a/tools/perf/util/bpf_skel/vmlinux.h b/tools/perf/util/b=
-pf_skel/vmlinux/vmlinux.h
-> > > > similarity index 100%
-> > > > rename from tools/perf/util/bpf_skel/vmlinux.h
-> > > > rename to tools/perf/util/bpf_skel/vmlinux/vmlinux.h
-> > > > --
-> > > > 2.41.0.rc0.172.g3f132b7071-goog
-> > > >
->
-> --
->
-> - Arnaldo
+Since amd-ibs-via-core-pmu.c was applied via Peter's tree, some of
+the changes came via Arnaldo's tree did not reflect in this file,
+which is causing build failures.
+
+  arch/x86/tests/amd-ibs-via-core-pmu.c:47:25: error: =E2=80=98pmus=E2=80=
+=99 undeclared
+  (first use in this function)
+     47 |         if (list_empty(&pmus))
+        |                         ^~~~
+  arch/x86/tests/amd-ibs-via-core-pmu.c:48:17: error: implicit declaration
+  of function =E2=80=98perf_pmu__scan=E2=80=99; did you mean
+  perf_pmus__scan=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+     48 |                 perf_pmu__scan(NULL);
+        |                 ^~~~~~~~~~~~~~
+        |                 perf_pmus__scan
+  arch/x86/tests/amd-ibs-via-core-pmu.c:50:19: error: implicit declaration
+  of function =E2=80=98perf_pmu__find=E2=80=99; did you mean
+  perf_pmus__find=E2=80=99? [-Werror=3Dimplicit-function-declaration]
+     50 |         ibs_pmu =3D perf_pmu__find("ibs_op");
+        |                   ^~~~~~~~~~~~~~
+        |                   perf_pmus__find
+
+Fix those.
+
+Fixes: 1eaf496ed386 ("perf pmu: Separate pmu and pmus")
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+---
+v1->v2:
+  - Remove unnecessary perf_pmus__scan(NULL) as suggested by Ian.
+
+ tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c b/tools/perf/=
+arch/x86/tests/amd-ibs-via-core-pmu.c
+index 2902798ca5c1..78b1902f6f59 100644
+--- a/tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c
++++ b/tools/perf/arch/x86/tests/amd-ibs-via-core-pmu.c
+@@ -44,10 +44,7 @@ int test__amd_ibs_via_core_pmu(struct test_suite *test _=
+_maybe_unused,
+ 	int ret =3D TEST_OK;
+ 	int fd, i;
+=20
+-	if (list_empty(&pmus))
+-		perf_pmu__scan(NULL);
+-
+-	ibs_pmu =3D perf_pmu__find("ibs_op");
++	ibs_pmu =3D perf_pmus__find("ibs_op");
+ 	if (!ibs_pmu)
+ 		return TEST_SKIP;
+=20
+--=20
+2.40.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/ZpeoibezJ3cg31_biwxtWat
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmR/1dgACgkQAVBC80lX
+0GwEqQgApkQtYT6BEX7UvGVKbn52sWwZYKrdQ1DWsGofGs+4lLUpn1xaSUlKzgti
+kToeuGImVORge1pkFEHQmqZdiAOgw3++JnysEXuqwDgENj6Ryqhxu+18ES+FESuN
+YKddRznS9/lDG/V2iO7VFRIYzTY1XJVkjmcmhJWFt/NnP3hjdXw63cvPaanb+3oj
+xShRuVdMifVYY9ApLM7gU4mCQhBWHp6n5VcihdSkI9+MevC63FJnDv+v6Bssq7oi
+qS3VoNouc/rZ7ZMxYDqRUVadH9f2O3PR74DZ7fx1c4hHQR3ee6x2wDLDjOURa0xl
+MS/l4I74SWG2fedTtFaY/l7wH+hFgA==
+=9mrs
+-----END PGP SIGNATURE-----
+
+--Sig_/ZpeoibezJ3cg31_biwxtWat--
