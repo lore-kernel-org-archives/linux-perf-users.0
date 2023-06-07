@@ -2,229 +2,152 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E47C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 16:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B17DC77B7A
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 23:34:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229660AbjFGQuR convert rfc822-to-8bit (ORCPT
+        id S230193AbjFGXei (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jun 2023 12:50:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36916 "EHLO
+        Wed, 7 Jun 2023 19:34:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjFGQuQ (ORCPT
+        with ESMTP id S229614AbjFGXeh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Jun 2023 12:50:16 -0400
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFDEC1FC0;
-        Wed,  7 Jun 2023 09:50:14 -0700 (PDT)
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-55a35e2a430so1591586eaf.0;
-        Wed, 07 Jun 2023 09:50:14 -0700 (PDT)
+        Wed, 7 Jun 2023 19:34:37 -0400
+Received: from mail-io1-xd2b.google.com (mail-io1-xd2b.google.com [IPv6:2607:f8b0:4864:20::d2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCA6D10F8
+        for <linux-perf-users@vger.kernel.org>; Wed,  7 Jun 2023 16:34:35 -0700 (PDT)
+Received: by mail-io1-xd2b.google.com with SMTP id ca18e2360f4ac-775ebe161c5so359483739f.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jun 2023 16:34:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1686180874; x=1688772874;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oKEziAGkCW2jO8QMx9VTvzfLmO/bLdAIdfdMBgrtF0Q=;
+        b=F6wdPzX5FUDEq0AnubAA0X0oRetMIiPWDnCmAd7XJ7qbkBXIQqOUAfDYB/XoT80xhV
+         3geAQrbCc6Er52EjNMUsfbQc3ILUnH0//avnz8c5O+0MdNWqhWcsMkG8UX69MmVNxvFJ
+         vkkbkVW1pnxPONFY6dZLVQpGAhXMjj2z4mswI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686156612; x=1688748612;
+        d=1e100.net; s=20221208; t=1686180874; x=1688772874;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4Uznm7d6ydDZWyl996H+0J1qZvqt3MWV+OPBkSeFo+4=;
-        b=BED/IIH3ggEYYvOW8djgDDeFMrxnu2iGYc5prYpI6AOmoKCRbvU0v9evn1Jx8qCkAM
-         hyRD3Uh4os4bfNmds7WzzZMQo3iZ0WhQftYUgsv9KtSW+Y/P64AjQ0d0tvydITAgXgcG
-         5+h0OpHKghWC1/JxVu93cZLEB6T9dNbBcfoA4KOg6ktBVMicwLaKd8ausraIQly8rRPA
-         1x/aTizH4DWgasHedMcfQefhLaBbTxxWrODCqmXYwYYfRYXYhxKAoXkRsLGhFnK4OHnm
-         8AZeV/Qw4CsKrNsPo0an5Qx7lu7VkHqZ1X+PhQbpV/mkTGBp8T1+qNBIYyCacIE30pRS
-         PaGw==
-X-Gm-Message-State: AC+VfDxlDyYqslHwfskHknBVcCSW7d+OZvSTQOVjHeDUgLiB8m1Qt7iX
-        p6zbNJkmL/ngCUkFd9MaA+oKe7yrtdtxf6E2YUY=
-X-Google-Smtp-Source: ACHHUZ4PogHEyFUd2JRwXoZWDFD7DiApzpT3ICDjwp6kSfVBf9/6QpmL83jKQP41xZrIchHmlKLOb1entcFJMIe/LiM=
-X-Received: by 2002:a05:6359:399:b0:129:c526:bddb with SMTP id
- eg25-20020a056359039900b00129c526bddbmr1790108rwb.13.1686156612356; Wed, 07
- Jun 2023 09:50:12 -0700 (PDT)
+        bh=oKEziAGkCW2jO8QMx9VTvzfLmO/bLdAIdfdMBgrtF0Q=;
+        b=fqzOQ65rIOsDV9qO6yt0/FCGBZKA40B0z6V0jpGIO4fC4WQkIAH66mfvy44bwyr4jP
+         B4ID1/G/30YuJflq7Ti3ZmYyCV6W0F3Mqxf/gE70QORCFFXAqjdw9ZVkRZbCKbfVEWsO
+         MiiTnMgL+N3xvEaaEz+8kvm1qmwSiBMOCtGALxSZ9BkpAJ9g5yXti7HYGvL8aUFvHAlA
+         33E20UDTYLEutYTmT50jDWHeBtr2uJHcn3mhuPPfQTwOIgBiUVVfSLc8uFqkjxPbV5Kp
+         zPO1SA6+Xa9IrnCrROGC+RA/jLJ/8e56I5q/IYFXbdlQS7N4bzZf/LYEQjZPpqlmaSug
+         AdOw==
+X-Gm-Message-State: AC+VfDzoV+jGjx51ze9v1m7oIXrR2F7AYzxjjs4xTHVD8KTTgrjwPSba
+        LqD7VrBIxu76j0txcw6eXnwYqpHBgwOmblPlk/c=
+X-Google-Smtp-Source: ACHHUZ5y2VR86vouFPQl3FtewuLlu0FZ9JJnsSWezNcs9gqf/PB7DoZSswgKSS/jTKdVickIp4pnPQ==
+X-Received: by 2002:a5e:c80d:0:b0:76c:4db8:c1ea with SMTP id y13-20020a5ec80d000000b0076c4db8c1eamr11542861iol.10.1686180874058;
+        Wed, 07 Jun 2023 16:34:34 -0700 (PDT)
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com. [209.85.166.173])
+        by smtp.gmail.com with ESMTPSA id x25-20020a02ac99000000b0041855b3a685sm1667970jan.150.2023.06.07.16.34.33
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 07 Jun 2023 16:34:33 -0700 (PDT)
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-33b7f217dd0so56305ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jun 2023 16:34:33 -0700 (PDT)
+X-Received: by 2002:a92:c26d:0:b0:338:9f6a:d54a with SMTP id
+ h13-20020a92c26d000000b003389f6ad54amr93121ild.24.1686180872621; Wed, 07 Jun
+ 2023 16:34:32 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230531115014.161454-1-asavkov@redhat.com> <20230531115014.161454-3-asavkov@redhat.com>
- <CAM9d7ci6h_f8WsRu3cyYPQJO8nuAXcsMX_T_+aLy_0t5_33tMA@mail.gmail.com> <20230602081811.GA240769@samus.usersys.redhat.com>
-In-Reply-To: <20230602081811.GA240769@samus.usersys.redhat.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 7 Jun 2023 09:50:01 -0700
-Message-ID: <CAM9d7chAYCmOe84cjeHtRmwvio-NWDaoxEyA4cgx3nOg+xZ8gA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf tools: allow running annotation browser from c2c-report
-To:     Artem Savkov <asavkov@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
+References: <20230607152432.5435-1-pmladek@suse.com> <20230607152432.5435-2-pmladek@suse.com>
+In-Reply-To: <20230607152432.5435-2-pmladek@suse.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 7 Jun 2023 16:34:20 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=X4Sp=ZE4DWob-W0NzRm00K7wOWxyyCCaHUHNPPinsjhg@mail.gmail.com>
+Message-ID: <CAD=FV=X4Sp=ZE4DWob-W0NzRm00K7wOWxyyCCaHUHNPPinsjhg@mail.gmail.com>
+Subject: Re: [PATCH 1/7] watchdog/hardlockup: Sort hardlockup detector related
+ config values a logical way
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        sparclinux@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi,
 
-Sorry for the late reply.
+On Wed, Jun 7, 2023 at 8:25=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
+:
+>
+> There are four possible variants of hardlockup detectors:
+>
+>   + buddy: available when SMP is set.
+>
+>   + perf: available when HAVE_HARDLOCKUP_DETECTOR_PERF is set.
+>
+>   + arch-specific: available when HAVE_HARDLOCKUP_DETECTOR_ARCH is set.
+>
+>   + sparc64 special variant: available when HAVE_NMI_WATCHDOG is set
+>         and HAVE_HARDLOCKUP_DETECTOR_ARCH is not set.
+>
+> Only one hardlockup detector can be compiled in. The selection is done
+> using quite complex dependencies between several CONFIG variables.
+> The following patches will try to make it more straightforward.
+>
+> As a first step, reorder the definitions of the various CONFIG variables.
+> The logical order is:
+>
+>    1. HAVE_* variables define available variants. They are typically
+>       defined in the arch/ config files.
+>
+>    2. HARDLOCKUP_DETECTOR y/n variable defines whether the hardlockup
+>       detector is enabled at all.
+>
+>    3. HARDLOCKUP_DETECTOR_PREFER_BUDDY y/n variable defines whether
+>       the buddy detector should be preferred over the perf one.
+>       Note that the arch specific variants are always preferred when
+>       available.
+>
+>    4. HARDLOCKUP_DETECTOR_PERF/BUDDY variables define whether the given
+>       detector is enabled in the end.
+>
+>    5. HAVE_HARDLOCKUP_DETECTOR_NON_ARCH and HARDLOCKUP_DETECTOR_NON_ARCH
+>       are temporary variables that are going to be removed in
+>       a followup patch.
+>
+> The patch just shuffles the definitions. It should not change the existin=
+g
+> behavior.
+>
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  lib/Kconfig.debug | 112 +++++++++++++++++++++++-----------------------
+>  1 file changed, 56 insertions(+), 56 deletions(-)
 
-On Fri, Jun 2, 2023 at 1:18 AM Artem Savkov <asavkov@redhat.com> wrote:
->
-> Hello,
->
-> Thank you for the review.
->
-> On Thu, Jun 01, 2023 at 02:26:48PM -0700, Namhyung Kim wrote:
-> > Hello,
-> >
-> > On Wed, May 31, 2023 at 4:50 AM Artem Savkov <asavkov@redhat.com> wrote:
-> > >
-> > > Add a shortcut to run annotation browser for selected symbol from
-> > > c2c report TUI.
-> > >
-> > > Signed-off-by: Artem Savkov <asavkov@redhat.com>
-> > > ---
-> > >  tools/perf/builtin-c2c.c | 76 +++++++++++++++++++++++++++++++++++++---
-> > >  1 file changed, 71 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > > index 05dfd98af170b..96e66289c2576 100644
-> > > --- a/tools/perf/builtin-c2c.c
-> > > +++ b/tools/perf/builtin-c2c.c
-> > > @@ -19,11 +19,13 @@
->
-> snip
->
-> > >  struct c2c_hists {
-> > > @@ -79,6 +83,7 @@ struct c2c_hist_entry {
-> > >          * because of its callchain dynamic entry
-> > >          */
-> > >         struct hist_entry       he;
-> > > +       struct evsel            *evsel;
-> >
-> > I'm not sure if it's needed.  It seems c2c command doesn't collect
-> > samples per evsel.  It uses c2c.hists.hists for all evsels.  Then it
-> > might not be worth keeping an evsel in a c2c_hist_entry and
-> > just use a random evsel in the evlist.
-> >
->
-> Right, but annotation browser does use it for line usage percentage
-> calculation. So does this mean it won't be showing correct percentages
-> whatever evsel is chosen and that's why it is possible to just select a
-> random one?
+I don't really have any strong opinions, so I'm fine with this. In
+general I think the ordering I picked tried to match the existing
+"style" which generally tried to list configs and then select them
+below. To me the existing style makes more sense when thinking about
+writing C code without having to put a pile of prototypes at the top
+of your file: you define things higher in the file and reference them
+below. For instance, the old style (before any of my patches) had:
 
-Right, annotation can be correct but c2c hist entry is not tied to an evsel
-so there's no need to save the evsel for each hist entry.
+config SOFTLOCKUP_DETECTOR:
+  ... blah blah blah ...
 
->
-> As far as I can tell evlist is not currently available in
-> perf_c2c__browse_cacheline(), but it can be added to struct perf_c2c.
+config HARDLOCKUP_DETECTOR_PERF:
+  select SOFTLOCKUP_DETECTOR
 
-Sure, please do.
+config HARDLOCKUP_DETECTOR:
+  ... blah blah blah ...
+  select LOCKUP_DETECTOR
+  select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF
 
->
-> > >  };
->
-> snip
->
-> > > +       " a             Annotate current symbol\n"
-> > >         " n             Toggle Node details info \n"
-> > >         " s             Toggle full length of symbol and source line columns \n"
-> > >         " q             Return back to cacheline list \n";
-> > > @@ -2650,6 +2670,44 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
-> > >                 key = hist_browser__run(browser, "? - help", true, 0);
-> > >
-> > >                 switch (key) {
-> > > +               case 'a':
-> >
-> > I think it's better to factor this code out to a function.
->
-> Ok, will do.
->
-> > > +                       if (!browser->selection ||
-> > > +                           !browser->selection->map ||
-> > > +                           !browser->selection->map->dso ||
-> > > +                           browser->selection->map->dso->annotate_warned) {
-> > > +                               continue;
-> > > +                       }
-> > > +
-> > > +                       ms.map = browser->selection->map;
-> > > +
-> > > +                       if (!browser->selection->sym) {
-> > > +                               if (!browser->he_selection)
-> > > +                                       continue;
-> > > +
-> > > +                               ms.sym = symbol__new_unresolved(browser->he_selection->ip,
-> > > +                                                               browser->selection->map);
-> > > +
-> > > +                               if (!ms.sym)
-> > > +                                       continue;
-> > > +                       } else {
-> > > +                               if (symbol__annotation(browser->selection->sym)->src == NULL) {
-> > > +                                       ui_browser__warning(&browser->b, 0,
-> > > +                                               "No samples for the \"%s\" symbol.\n\n",
-> > > +                                               browser->selection->sym->name);
-> > > +                                       continue;
-> > > +                               }
-> > > +                               ms.sym = browser->selection->sym;
-> > > +                       }
-> > > +
-> > > +                       err = map_symbol__tui_annotate(&ms, c2c_he->evsel, browser->hbt, &c2c.annotation_opts);
-> > > +
-> > > +                       ui_browser__update_nr_entries(&browser->b, browser->hists->nr_entries);
-> >
-> > c2c_browser__update_nr_entries() ?
->
-> Will it change from the previous call before the while loop? This part
-> was mostly copied over from do_annotate() in ui/browsers/hists.c so I am
-> a bit hazy here. My understanding is that update_nr_entries and handle
-> resize are called here mostly for refresh/reset of the ui and
-> recalculation of number of entries is not needed
+Your new style seems to be the opposite of that.
 
-Hmm.. right.  I thought you should check the number of entries again but
-c2c doesn't have filtering or hierarchy output so you can use
-hists->nr_entries always.
-
-But now I wonder if it's really needed as the annotate will use its own
-browser so the c2c browser won't be affected.
-
->
-> >
-> > > +                       if ((err == 'q' || err == CTRL('c')) && browser->he_selection->branch_info)
-> >
-> > Why check branch_info?
->
-> This was copied over as well and the comment in hists.c states "offer
-> option to annotate the other branch source or target (if they exists)
-> when returning from annotate". So I now think this might not be needed
-> here at all?
-
-Yeah, I don't think we need it.
-
-Thanks,
-Namhyung
-
-
->
-> > > +                                       continue;
-> > > +                       if (err)
-> > > +                               ui_browser__handle_resize(&browser->b);
-> > > +
-> > > +                       continue;
-> >
-> > It'd be natural to use 'break' instead of 'continue' here.
->
-> Yes, will change this.
->
-> > >                 case 's':
-> > >                         c2c.symbol_full = !c2c.symbol_full;
->
-> snip
->
-> > >         perf_session__delete(session);
-> > >  out:
-> > > +       annotation_options__init(&c2c.annotation_opts);
-> >
-> > __exit() ?
->
-> Ouch, thanks for noticing!
->
-> --
->  Artem
->
+-Doug
