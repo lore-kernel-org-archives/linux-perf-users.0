@@ -2,56 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F199C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 05:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E5B4C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 05:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231956AbjFGFCA (ORCPT
+        id S234660AbjFGFCF (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jun 2023 01:02:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56380 "EHLO
+        Wed, 7 Jun 2023 01:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231824AbjFGFB7 (ORCPT
+        with ESMTP id S234315AbjFGFCC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Jun 2023 01:01:59 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B529AE7E
-        for <linux-perf-users@vger.kernel.org>; Tue,  6 Jun 2023 22:01:58 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-569ca440bf0so39821577b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jun 2023 22:01:58 -0700 (PDT)
+        Wed, 7 Jun 2023 01:02:02 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E8D110D5
+        for <linux-perf-users@vger.kernel.org>; Tue,  6 Jun 2023 22:02:01 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-bb397723627so2633013276.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jun 2023 22:02:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686114118; x=1688706118;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QvFi009GvUhOjM1RbLEv9NwcPxaGqqvSNJxQoAxRjS0=;
-        b=vW/A1GC/wbZqorAlFqZNL8iWKoE4whibGqUyFC0L6jPjX5lhAzhXMA/ADgJBVJ5bHI
-         naRwZdeLS1N/D81KP5rkupydoYZgWclSYIJkRo1xvCO+gQ9e53tbA5Vld3nCc+QMngzl
-         9nuZQ1xB+HA2jnO9W5Q7fPelFYUF/FXxuo9TZpuNuftN7S17Xfa2UBp9ZdIKvVvQyt3J
-         xhMmhkS34U0+eWDie+q84TH03bhox6RH/MoSTv2647hm3o1weyNLncj6U8Yz0Dd4A6O5
-         mw4cWOJGgAZMN3lqgySFBg4QqfFliZOKNWuiQVNZlOJnytkFRGATuzwdw43do24L5pmi
-         9SYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686114118; x=1688706118;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20221208; t=1686114120; x=1688706120;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=QvFi009GvUhOjM1RbLEv9NwcPxaGqqvSNJxQoAxRjS0=;
-        b=F6a93FbR/JPV1wZopIHUiRQwpAWD9U1RGb/YlUwPWp5XCSNM5EufVsWvARDKCy2YN/
-         tPnpJtJIKfZ693wp/cSiwh6Ro1yuAaoOhUrDVk0vUVPWmpHs4YL5yy+Q+xIj5R7XniBh
-         i5J7XgTUPFttcdMCZ+XHTlwH6r47D4fDsdFY3sFrcHuSvTRqL5zjG4Q9/eWoBmXBGSmZ
-         G7Y18fNxq3DCAUwgmqLu9Va12xOb6mPuGIJAHu7QxsSiUp7VNMvxOGhty1A/qvhfGJej
-         bkTEO0otH2dETaTmK7LoIRmOtjwz2KSgseZkY4pAmmZDVKhLqO5+wS0CYTrdSDErMKZL
-         Oa7A==
-X-Gm-Message-State: AC+VfDzC0I5h0Aayu5gTOFfzNKcC/CisnIuh91STlRT8eS7LCSsWvSP3
-        waSdCncgEldK+/S4VNwGXDkQWA6rIhXq
-X-Google-Smtp-Source: ACHHUZ6Vptuh7rpIg3guxouK2GwApLkfX1l+4RVrKhqAIHgtz2ACf15XrQZFJx/5uA/BI9L0MNH05zhSVqe2
+        bh=mRAyICdxSGyrBKbLP2q4JA92wKF4IQsTca6ujv0oJ70=;
+        b=SHF6+czYmJSPg6CZsTHIGpB42/zXg7RQ6fEyMR23JmXNKA+j4cxDeul7zicrPLVN/H
+         i2vHXmUndfahQN11iLH6nXBf1jh9zmTG//HYu3RrNYt32jQxLZywPxVux8KXrcC6ciTf
+         oWY3N5KP4h5DEF9Hn0fGWBdkgpaSPHbF1hIkbb1BGgIZLIkGFNHGs1TW3bV82U9e1mOE
+         +55e7vyctEknl0nWgCsPTyRguZ1I7OH/yLB7DUVKDkoiJE27UBOMqZWRjDg/Wx7sdKQN
+         AfA7DelBpgGUriA0BUDNTTgOHElZoZrXx4NVv0iswaSUkKTu9PxD8/zX9UPiS3Nn0EhC
+         OJ3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686114120; x=1688706120;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mRAyICdxSGyrBKbLP2q4JA92wKF4IQsTca6ujv0oJ70=;
+        b=iSNZLvrBcZDnCW0AZRElI8YG/D4PPiQTCrDHcX4eivRAbvqrSlRVU30XeCJWbKc11A
+         wbrX6uS9n07vqt0tiAuXDtFjYOZ4X0RkOMBrVMQPrfosMqI9sn1jCc3j/abe4VULoU9U
+         4yulE3BG+sXL+J/CFUgrQM8Dfxa4SDL5YNv1DcbyDMaNEWyB+WaUNOVJANuAxOd1NPa/
+         F8IXgm8Cl0M9MXRXNq+w7mzcZw7RIWO+LQd/HKxf2QCEVb3Fu6JzzCQhYWDAYcOqE/BW
+         1x7Ee2+QhH5RXoC863Vx17bPExD7lEOW2giMyrg0RBZrtWjquCysVnZV2rQii8QbNf+r
+         WptA==
+X-Gm-Message-State: AC+VfDzxoKiLuQca+sjnzqjWtB1EP5IzTmzfu9xa/3GjABwEhI1b7vFo
+        elluDuXl2A73FbSKwpE5CjLziJMmMddh
+X-Google-Smtp-Source: ACHHUZ7swUdFlK8MwbVV27uiqLr02j263EZVgmxsJeTDgCt7riuy9Ee8MBI/tBz8zvJMekA2PK7yM+17+T8g
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3c35:209f:5d38:b7a1])
- (user=irogers job=sendgmr) by 2002:a81:ac08:0:b0:552:d924:a304 with SMTP id
- k8-20020a81ac08000000b00552d924a304mr2179004ywh.4.1686114117942; Tue, 06 Jun
- 2023 22:01:57 -0700 (PDT)
-Date:   Tue,  6 Jun 2023 22:01:45 -0700
-Message-Id: <20230607050148.3248353-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:d15:0:b0:bac:7086:c9b2 with SMTP id
+ 21-20020a250d15000000b00bac7086c9b2mr1521872ybn.12.1686114120259; Tue, 06 Jun
+ 2023 22:02:00 -0700 (PDT)
+Date:   Tue,  6 Jun 2023 22:01:46 -0700
+In-Reply-To: <20230607050148.3248353-1-irogers@google.com>
+Message-Id: <20230607050148.3248353-2-irogers@google.com>
 Mime-Version: 1.0
+References: <20230607050148.3248353-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v1 0/2] Fix leak sanitizer warnings in perf top
+Subject: [PATCH v1 1/2] perf annotate: Fix parse_objdump_line memory leak
 From:   Ian Rogers <irogers@google.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -70,17 +72,43 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-With these two patches perf top/report/script will largely run without
-leak sanitizer warnings.
+fileloc is used to hold a previous line, before overwriting it ensure
+the previous contents is freed. Free the storage once done in
+symbol__disassemble.
 
-Ian Rogers (2):
-  perf annotate: Fix parse_objdump_line memory leak
-  perf top: Add exit routine for main thread
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/annotate.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- tools/perf/builtin-top.c   | 11 ++++++++++-
- tools/perf/util/annotate.c |  3 ++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
-
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index b708bbc49c9e..fc5f44535ebe 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -1524,6 +1524,7 @@ static int symbol__parse_objdump_line(struct symbol *sym,
+ 	/* /filename:linenr ? Save line number and ignore. */
+ 	if (regexec(&file_lineno, parsed_line, 2, match, 0) == 0) {
+ 		*line_nr = atoi(parsed_line + match[1].rm_so);
++		free(*fileloc);
+ 		*fileloc = strdup(parsed_line);
+ 		return 0;
+ 	}
+@@ -1572,7 +1573,6 @@ static int symbol__parse_objdump_line(struct symbol *sym,
+ 	}
+ 
+ 	annotation_line__add(&dl->al, &notes->src->source);
+-
+ 	return 0;
+ }
+ 
+@@ -2114,6 +2114,7 @@ static int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 		nline++;
+ 	}
+ 	free(line);
++	free(fileloc);
+ 
+ 	err = finish_command(&objdump_process);
+ 	if (err)
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
