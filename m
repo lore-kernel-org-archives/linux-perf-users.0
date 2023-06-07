@@ -2,67 +2,67 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347CBC77B7A
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 23:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14080C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 23:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232172AbjFGXh6 (ORCPT
+        id S230183AbjFGXnJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jun 2023 19:37:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46398 "EHLO
+        Wed, 7 Jun 2023 19:43:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233353AbjFGXh5 (ORCPT
+        with ESMTP id S229659AbjFGXnI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Jun 2023 19:37:57 -0400
-Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E973426AF
-        for <linux-perf-users@vger.kernel.org>; Wed,  7 Jun 2023 16:37:36 -0700 (PDT)
-Received: by mail-io1-xd31.google.com with SMTP id ca18e2360f4ac-777b4c9e341so206237339f.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jun 2023 16:37:36 -0700 (PDT)
+        Wed, 7 Jun 2023 19:43:08 -0400
+Received: from mail-oi1-x22d.google.com (mail-oi1-x22d.google.com [IPv6:2607:f8b0:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 694D6212B
+        for <linux-perf-users@vger.kernel.org>; Wed,  7 Jun 2023 16:43:07 -0700 (PDT)
+Received: by mail-oi1-x22d.google.com with SMTP id 5614622812f47-39a3f165ac5so42098b6e.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jun 2023 16:43:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686181055; x=1688773055;
+        d=chromium.org; s=google; t=1686181386; x=1688773386;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EN7QCcXv3GhQ50KYCOkYuc7v8/KdYJA2Wdn7x5ACZBs=;
-        b=j7P34YHOYHXEN5m6sprm1z9RILqU45cM7iBZf0UUjkLN1Z8TxMe0YIqzljyllJP9ST
-         fYCIbYR3iz8BZ5MSlJeSjjWgcEsLHQnEq4teh4pJEa3UXp/iCGFoHb5zOeC1XYxEkZMM
-         6V9aevVsYko4O4sbDW2MpZ5T2WuA3Ec5vQy9s=
+        bh=GavxFaHwlTnRx3gt9uObRrogsyEG4oEATw/XGEuAuMI=;
+        b=jo7abgemSwouf2eZ5x1CqzH/x0i9O3mDwBr5hdEkTwjuzcmlBcBwfkgp+g+8z/oJo8
+         8pg9aB1C1osS61nQNaZMoMUW1fBSAK7WFXXzpk5fz2iWg29ztpgAFIsfODr4y0FyV5wu
+         q9RVzJ3N8m4CGohrXrmDH6k+WP6gT1UIQVQaU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686181055; x=1688773055;
+        d=1e100.net; s=20221208; t=1686181386; x=1688773386;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EN7QCcXv3GhQ50KYCOkYuc7v8/KdYJA2Wdn7x5ACZBs=;
-        b=ZIS7QNr6FcAP3lN6nt5lhRZ7buwFQ0XnBh4m8dnHjwa5/hYSZJAsAsdmGOm+izND/e
-         KhYP7NQSRYn1JcrP33s7c0M+UIu5Bcnj7XEMTdlvcv2CTbYWzzbDarIzDGRKcDhUVv+a
-         sX/0Hsx72fr2XTS9fdD5FOrbGykxxNbnwHeVtSc9gkhnuZnAKQPhVIWVQpqG6cmsNfkm
-         vYT8CKBt+WWzo6LtMenDAK0qPjwG8+FT4FjctilwceXF8hWuYQzMEbRboVzpoDMEIULl
-         a55RQsnr3NzQOXKmgPU2fXb5Jb+JiCbpSKclgX+eGH5vXiEC2eh5KvrinIw/FrSXaFPD
-         ydUg==
-X-Gm-Message-State: AC+VfDwsUS17BJ899qjo94CXnVwsDU1d6PJbBNFHlGZyqB6ubR9Vgihz
-        eeC+1stK/+nytloeFx7bDnExaFHwaqd6NFQ2lF0=
-X-Google-Smtp-Source: ACHHUZ6ezowOlxkQ2oI/YrBFzGY+hhKDoB8btMROh9J4mZB5O5PvT6+EVO4bK0KL5V2aHMrTPzp9WQ==
-X-Received: by 2002:a6b:e218:0:b0:77a:c808:3c89 with SMTP id z24-20020a6be218000000b0077ac8083c89mr1910294ioc.20.1686181055449;
-        Wed, 07 Jun 2023 16:37:35 -0700 (PDT)
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com. [209.85.166.181])
-        by smtp.gmail.com with ESMTPSA id b23-20020a02c997000000b0040bbfad3e28sm3712860jap.96.2023.06.07.16.37.32
+        bh=GavxFaHwlTnRx3gt9uObRrogsyEG4oEATw/XGEuAuMI=;
+        b=Dw0XMm1ezcPUyiaJGNVBgEYW+r2UmbChGYYrQfUCcq3OFMWKjZ0/EeJl2lh8zl0hxd
+         01c3NTy6jrrWkG6mvh6TtRl5txfvJsDRrtxpwAFqDPg2esw8FG26gw7uC7SDLpSu/7fe
+         RvQUzeMgEKFZ2ytIVGNKrQGrjS5HXHKLAWMBb38FkLP7Y+p+Ht9DTdVLMaiTy0ANatrG
+         4C9wGZlNQNGubEpSIh7r69xx1rf5818CwxWhU1Uwq0Yf64DIblNzVA0LoqRhgWRMHuRu
+         x/sJXKP92D1v6cOuNLwnc+9SCFrQ3ueEmdlFZv8YFIyy0iNd6l6Gti9c3N9EZLGJSqs+
+         FZaw==
+X-Gm-Message-State: AC+VfDwqxyCTGicZ2vgPNGDHOuS4h/9Y1CRdaYwWhXDMg+/4krE6+TN+
+        KLgMps4KZ9e/0wZmSlcTSmskeR9LMcQGcGmOCr8=
+X-Google-Smtp-Source: ACHHUZ522m0cTEfDX9XLz/soplvWoXd8b4TJVgKIucrSaIpcTH1rechvtwVkZegIOk+XbM1BU8bGvw==
+X-Received: by 2002:a05:6808:201:b0:39c:40c0:703c with SMTP id l1-20020a056808020100b0039c40c0703cmr6931060oie.1.1686181386123;
+        Wed, 07 Jun 2023 16:43:06 -0700 (PDT)
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com. [209.85.167.172])
+        by smtp.gmail.com with ESMTPSA id p4-20020acad804000000b00395f2c84b81sm6283432oig.54.2023.06.07.16.43.05
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Jun 2023 16:37:34 -0700 (PDT)
-Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-33d928a268eso54845ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jun 2023 16:37:32 -0700 (PDT)
-X-Received: by 2002:a92:c54d:0:b0:33e:6b65:6f78 with SMTP id
- a13-20020a92c54d000000b0033e6b656f78mr16557ilj.27.1686181051931; Wed, 07 Jun
- 2023 16:37:31 -0700 (PDT)
+        Wed, 07 Jun 2023 16:43:05 -0700 (PDT)
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-39a505b901dso52123b6e.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Jun 2023 16:43:05 -0700 (PDT)
+X-Received: by 2002:a5e:a611:0:b0:777:aa56:f5e9 with SMTP id
+ q17-20020a5ea611000000b00777aa56f5e9mr11095206ioi.16.1686180931677; Wed, 07
+ Jun 2023 16:35:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230607152432.5435-1-pmladek@suse.com>
-In-Reply-To: <20230607152432.5435-1-pmladek@suse.com>
+References: <20230607152432.5435-1-pmladek@suse.com> <20230607152432.5435-4-pmladek@suse.com>
+In-Reply-To: <20230607152432.5435-4-pmladek@suse.com>
 From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 7 Jun 2023 16:37:20 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W=xamTf6BUmp-Yg-SEEgE8GRKw6Pnfv6t=Hviywj-N-g@mail.gmail.com>
-Message-ID: <CAD=FV=W=xamTf6BUmp-Yg-SEEgE8GRKw6Pnfv6t=Hviywj-N-g@mail.gmail.com>
-Subject: Re: [PATCH 0/7] watchdog/hardlockup: Cleanup configuration of
- hardlockup detectors
+Date:   Wed, 7 Jun 2023 16:35:19 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XvUAeKFAcOD_xaT2to45=CCiKJMRbi-uxgrZ4mWN7hZg@mail.gmail.com>
+Message-ID: <CAD=FV=XvUAeKFAcOD_xaT2to45=CCiKJMRbi-uxgrZ4mWN7hZg@mail.gmail.com>
+Subject: Re: [PATCH 3/7] watchdog/hardlockup: Declare arch_touch_nmi_watchdog()
+ only in linux/nmi.h
 To:     Petr Mladek <pmladek@suse.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
@@ -84,18 +84,59 @@ Hi,
 On Wed, Jun 7, 2023 at 8:25=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
 :
 >
-> Hi,
+> arch_touch_nmi_watchdog() needs a different implementation for various
+> hardlockup detector implementations. And it does nothing when
+> any hardlockup detector is not build at all.
+
+s/build/built/
+
+
+> arch_touch_nmi_watchdog() has to be declared in linux/nmi.h. It is done
+> directly in this header file for the perf and buddy detectors. And it
+> is done in the included asm/linux.h for arch specific detectors.
 >
-> this patchset is supposed to replace the last patch in the patchset clean=
-ing
-> up after introducing the buddy detector, see
-> https://lore.kernel.org/r/20230526184139.10.I821fe7609e57608913fe05abd8f3=
-5b343e7a9aae@changeid
+> The reason probably is that the arch specific variants build the code
+> using another conditions. For example, powerpc64/sparc64 builds the code
+> when CONFIG_PPC_WATCHDOG is enabled.
+>
+> Another reason might be that these architectures define more functions
+> in asm/nmi.h anyway.
+>
+> However the generic code actually knows the information. The config
+> variables HAVE_NMI_WATCHDOG and HAVE_HARDLOCKUP_DETECTOR_ARCH are used
+> to decide whether to build the buddy detector.
+>
+> In particular, CONFIG_HARDLOCKUP_DETECTOR is set only when a generic
+> or arch-specific hardlockup detector is built. The only exception
+> is sparc64 which ignores the global HARDLOCKUP_DETECTOR switch.
+>
+> The information about sparc64 is a bit complicated. The hardlockup
+> detector is built there when CONFIG_HAVE_NMI_WATCHDOG is set and
+> CONFIG_HAVE_HARDLOCKUP_DETECTOR_ARCH is not set.
+>
+> People might wonder whether this change really makes things easier.
+> The motivation is:
+>
+>   + The current logic in linux/nmi.h is far from obvious.
+>     For example, arch_touch_nmi_watchdog() is defined as {} when
+>     neither CONFIG_HARDLOCKUP_DETECTOR_COUNTS_HRTIMER nor
+>     CONFIG_HAVE_NMI_WATCHDOG is defined.
+>
+>   + The change synchronizes the checks in lib/Kconfig.debug and
+>     in the generic code.
+>
+>   + It is a step that will help cleaning HAVE_NMI_WATCHDOG related
+>     checks.
+>
+> The change should not change the existing behavior.
+>
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  arch/powerpc/include/asm/nmi.h |  2 --
+>  arch/sparc/include/asm/nmi.h   |  1 -
+>  include/linux/nmi.h            | 13 ++++++++++---
+>  3 files changed, 10 insertions(+), 6 deletions(-)
 
-I will let Andrew chime in with his preference, but so far I haven't
-seen him dropping and/or modifying any patches that he's picked up in
-this series. I see that he's already picked up the patch that you're
-"replacing". I wonder if it would be easier for him if you just built
-atop that?
+This looks right and is a nice cleanup.
 
--Doug
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
