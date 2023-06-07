@@ -2,342 +2,229 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F80AC8300C
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 16:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34E47C7EE25
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 16:50:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbjFGQkl (ORCPT
+        id S229660AbjFGQuR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jun 2023 12:40:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59716 "EHLO
+        Wed, 7 Jun 2023 12:50:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbjFGQkj (ORCPT
+        with ESMTP id S229529AbjFGQuQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Jun 2023 12:40:39 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF1AD1FC2;
-        Wed,  7 Jun 2023 09:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686156038; x=1717692038;
-  h=date:from:to:cc:subject:message-id;
-  bh=GqKYxnubSgI/pE7wcj7bL/DYozmNTzniYDllwQ8VGnI=;
-  b=IlcXsEYU5osmmKzgoWUE+cze9oF8zu6jVhPVnt1qJL49r0n+W9LX/+rB
-   24QZySQgRYyK4eKVXED2zP92dJT7hvDzN7dTo0fzwMOuKN5ov+vSBwFs0
-   K3jkz/zTVVOjMXYDTth1L5dMhAnSesQMKudlQQ+TQFUW4V7w59vd2AmaH
-   /lwuedLT1o/apV2S1XqH9Gk7Y8VjCQfPSAud1mPuk0EgR5pwY1gtt2eX/
-   P+TKjvWPiVMx3dDNN3TcUTqtmSwG2RfhPOIOI9Z0WRkOMUIKN5DlME6MJ
-   aNYYRpkZs1XsvTRAVbLanCG5/jd0HGm8zdH1jtS1kXQsPISJTXXeh4zbc
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="341695969"
-X-IronPort-AV: E=Sophos;i="6.00,224,1681196400"; 
-   d="scan'208";a="341695969"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2023 09:40:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="712726946"
-X-IronPort-AV: E=Sophos;i="6.00,224,1681196400"; 
-   d="scan'208";a="712726946"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Jun 2023 09:40:24 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q6wCu-0006kl-0a;
-        Wed, 07 Jun 2023 16:40:24 +0000
-Date:   Thu, 08 Jun 2023 00:39:37 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        bpf@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kasan-dev@googlegroups.com, kunit-dev@googlegroups.com,
-        kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org
-Subject: [linux-next:master] BUILD REGRESSION
- abbd8bb42915d9ed06df11b430bf4ecb3d8ac5ad
-Message-ID: <20230607163937.ZTc-D%lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        Wed, 7 Jun 2023 12:50:16 -0400
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFDEC1FC0;
+        Wed,  7 Jun 2023 09:50:14 -0700 (PDT)
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-55a35e2a430so1591586eaf.0;
+        Wed, 07 Jun 2023 09:50:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686156612; x=1688748612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4Uznm7d6ydDZWyl996H+0J1qZvqt3MWV+OPBkSeFo+4=;
+        b=BED/IIH3ggEYYvOW8djgDDeFMrxnu2iGYc5prYpI6AOmoKCRbvU0v9evn1Jx8qCkAM
+         hyRD3Uh4os4bfNmds7WzzZMQo3iZ0WhQftYUgsv9KtSW+Y/P64AjQ0d0tvydITAgXgcG
+         5+h0OpHKghWC1/JxVu93cZLEB6T9dNbBcfoA4KOg6ktBVMicwLaKd8ausraIQly8rRPA
+         1x/aTizH4DWgasHedMcfQefhLaBbTxxWrODCqmXYwYYfRYXYhxKAoXkRsLGhFnK4OHnm
+         8AZeV/Qw4CsKrNsPo0an5Qx7lu7VkHqZ1X+PhQbpV/mkTGBp8T1+qNBIYyCacIE30pRS
+         PaGw==
+X-Gm-Message-State: AC+VfDxlDyYqslHwfskHknBVcCSW7d+OZvSTQOVjHeDUgLiB8m1Qt7iX
+        p6zbNJkmL/ngCUkFd9MaA+oKe7yrtdtxf6E2YUY=
+X-Google-Smtp-Source: ACHHUZ4PogHEyFUd2JRwXoZWDFD7DiApzpT3ICDjwp6kSfVBf9/6QpmL83jKQP41xZrIchHmlKLOb1entcFJMIe/LiM=
+X-Received: by 2002:a05:6359:399:b0:129:c526:bddb with SMTP id
+ eg25-20020a056359039900b00129c526bddbmr1790108rwb.13.1686156612356; Wed, 07
+ Jun 2023 09:50:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230531115014.161454-1-asavkov@redhat.com> <20230531115014.161454-3-asavkov@redhat.com>
+ <CAM9d7ci6h_f8WsRu3cyYPQJO8nuAXcsMX_T_+aLy_0t5_33tMA@mail.gmail.com> <20230602081811.GA240769@samus.usersys.redhat.com>
+In-Reply-To: <20230602081811.GA240769@samus.usersys.redhat.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 7 Jun 2023 09:50:01 -0700
+Message-ID: <CAM9d7chAYCmOe84cjeHtRmwvio-NWDaoxEyA4cgx3nOg+xZ8gA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] perf tools: allow running annotation browser from c2c-report
+To:     Artem Savkov <asavkov@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: abbd8bb42915d9ed06df11b430bf4ecb3d8ac5ad  Add linux-next specific files for 20230607
+Hello,
 
-Error/Warning reports:
+Sorry for the late reply.
 
-https://lore.kernel.org/oe-kbuild-all/202305132244.DwzBUcUd-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202306021936.OktTcMAT-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202306051812.1YdWyZca-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202306071513.vCmugxAi-lkp@intel.com
+On Fri, Jun 2, 2023 at 1:18 AM Artem Savkov <asavkov@redhat.com> wrote:
+>
+> Hello,
+>
+> Thank you for the review.
+>
+> On Thu, Jun 01, 2023 at 02:26:48PM -0700, Namhyung Kim wrote:
+> > Hello,
+> >
+> > On Wed, May 31, 2023 at 4:50 AM Artem Savkov <asavkov@redhat.com> wrote:
+> > >
+> > > Add a shortcut to run annotation browser for selected symbol from
+> > > c2c report TUI.
+> > >
+> > > Signed-off-by: Artem Savkov <asavkov@redhat.com>
+> > > ---
+> > >  tools/perf/builtin-c2c.c | 76 +++++++++++++++++++++++++++++++++++++---
+> > >  1 file changed, 71 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> > > index 05dfd98af170b..96e66289c2576 100644
+> > > --- a/tools/perf/builtin-c2c.c
+> > > +++ b/tools/perf/builtin-c2c.c
+> > > @@ -19,11 +19,13 @@
+>
+> snip
+>
+> > >  struct c2c_hists {
+> > > @@ -79,6 +83,7 @@ struct c2c_hist_entry {
+> > >          * because of its callchain dynamic entry
+> > >          */
+> > >         struct hist_entry       he;
+> > > +       struct evsel            *evsel;
+> >
+> > I'm not sure if it's needed.  It seems c2c command doesn't collect
+> > samples per evsel.  It uses c2c.hists.hists for all evsels.  Then it
+> > might not be worth keeping an evsel in a c2c_hist_entry and
+> > just use a random evsel in the evlist.
+> >
+>
+> Right, but annotation browser does use it for line usage percentage
+> calculation. So does this mean it won't be showing correct percentages
+> whatever evsel is chosen and that's why it is possible to just select a
+> random one?
 
-Error/Warning: (recently discovered and may have been fixed)
+Right, annotation can be correct but c2c hist entry is not tied to an evsel
+so there's no need to save the evsel for each hist entry.
 
-ERROR: modpost: "lynx_pcs_destroy" [drivers/net/ethernet/stmicro/stmmac/stmmac.ko] undefined!
-drivers/bus/fsl-mc/fsl-mc-allocator.c:108:12: warning: variable 'mc_bus_dev' is uninitialized when used here [-Wuninitialized]
-drivers/cpufreq/cpufreq-dt-platdev.c:105:34: warning: 'blocklist' defined but not used [-Wunused-const-variable=]
-drivers/cpufreq/cpufreq-dt-platdev.c:18:34: warning: 'allowlist' defined but not used [-Wunused-const-variable=]
-drivers/net/ethernet/altera/altera_tse_main.c:1419: undefined reference to `lynx_pcs_create_mdiodev'
-drivers/net/ethernet/altera/altera_tse_main.c:1473: undefined reference to `lynx_pcs_destroy'
-include/drm/drm_print.h:456:39: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
-lib/kunit/executor_test.c:138:4: error: cast from 'void (*)(const void *)' to 'kunit_action_t *' (aka 'void (*)(void *)') converts to incompatible function type [-Werror,-Wcast-function-type-strict]
-microblaze-linux-ld: (.text+0x14a4): undefined reference to `lynx_pcs_destroy'
-nios2-linux-ld: drivers/net/ethernet/altera/altera_tse_main.c:1451: undefined reference to `lynx_pcs_destroy'
-tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:330:18: warning: no previous prototype for 'bpf_kfunc_call_test_offset' [-Wmissing-prototypes]
-tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:336:1: warning: no previous prototype for 'bpf_kfunc_call_memb_acquire' [-Wmissing-prototypes]
-tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:342:18: warning: no previous prototype for 'bpf_kfunc_call_memb1_release' [-Wmissing-prototypes]
-tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:394:18: warning: no previous prototype for 'bpf_kfunc_call_test_fail1' [-Wmissing-prototypes]
-tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:398:18: warning: no previous prototype for 'bpf_kfunc_call_test_fail2' [-Wmissing-prototypes]
-tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:402:18: warning: no previous prototype for 'bpf_kfunc_call_test_fail3' [-Wmissing-prototypes]
-tools/testing/selftests/bpf/bpf_testmod/bpf_testmod.c:410:18: warning: no previous prototype for 'bpf_kfunc_call_test_mem_len_fail1' [-Wmissing-prototypes]
+>
+> As far as I can tell evlist is not currently available in
+> perf_c2c__browse_cacheline(), but it can be added to struct perf_c2c.
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+Sure, please do.
 
-arch/arm64/kvm/mmu.c:147:3-9: preceding lock on line 140
-drivers/clk/qcom/gpucc-sm8550.c:37:22: sparse: sparse: decimal constant 2300000000 is between LONG_MAX and ULONG_MAX. For C99 that means long long, C90 compilers are very likely to produce unsigned long (and a warning) here
-drivers/clk/qcom/videocc-sm8550.c:34:22: sparse: sparse: decimal constant 2300000000 is between LONG_MAX and ULONG_MAX. For C99 that means long long, C90 compilers are very likely to produce unsigned long (and a warning) here
-drivers/nvme/host/pr.c:268:23-26: ERROR: reference preceded by free on line 278
-drivers/pci/endpoint/functions/pci-epf-mhi.c:362:2-9: line 362 is redundant because platform_get_irq() already prints an error
-drivers/usb/cdns3/cdns3-starfive.c:23: warning: expecting prototype for cdns3(). Prototype was for USB_STRAP_HOST() instead
-drivers/usb/typec/tcpm/qcom/qcom_pmic_typec_pdphy.c:217:30: sparse: sparse: incorrect type in argument 1 (different base types)
-kernel/events/uprobes.c:478 uprobe_write_opcode() warn: passing zero to 'PTR_ERR'
-lib/kunit/test.c:336 __kunit_abort() warn: ignoring unreachable code.
+>
+> > >  };
+>
+> snip
+>
+> > > +       " a             Annotate current symbol\n"
+> > >         " n             Toggle Node details info \n"
+> > >         " s             Toggle full length of symbol and source line columns \n"
+> > >         " q             Return back to cacheline list \n";
+> > > @@ -2650,6 +2670,44 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
+> > >                 key = hist_browser__run(browser, "? - help", true, 0);
+> > >
+> > >                 switch (key) {
+> > > +               case 'a':
+> >
+> > I think it's better to factor this code out to a function.
+>
+> Ok, will do.
+>
+> > > +                       if (!browser->selection ||
+> > > +                           !browser->selection->map ||
+> > > +                           !browser->selection->map->dso ||
+> > > +                           browser->selection->map->dso->annotate_warned) {
+> > > +                               continue;
+> > > +                       }
+> > > +
+> > > +                       ms.map = browser->selection->map;
+> > > +
+> > > +                       if (!browser->selection->sym) {
+> > > +                               if (!browser->he_selection)
+> > > +                                       continue;
+> > > +
+> > > +                               ms.sym = symbol__new_unresolved(browser->he_selection->ip,
+> > > +                                                               browser->selection->map);
+> > > +
+> > > +                               if (!ms.sym)
+> > > +                                       continue;
+> > > +                       } else {
+> > > +                               if (symbol__annotation(browser->selection->sym)->src == NULL) {
+> > > +                                       ui_browser__warning(&browser->b, 0,
+> > > +                                               "No samples for the \"%s\" symbol.\n\n",
+> > > +                                               browser->selection->sym->name);
+> > > +                                       continue;
+> > > +                               }
+> > > +                               ms.sym = browser->selection->sym;
+> > > +                       }
+> > > +
+> > > +                       err = map_symbol__tui_annotate(&ms, c2c_he->evsel, browser->hbt, &c2c.annotation_opts);
+> > > +
+> > > +                       ui_browser__update_nr_entries(&browser->b, browser->hists->nr_entries);
+> >
+> > c2c_browser__update_nr_entries() ?
+>
+> Will it change from the previous call before the while loop? This part
+> was mostly copied over from do_annotate() in ui/browsers/hists.c so I am
+> a bit hazy here. My understanding is that update_nr_entries and handle
+> resize are called here mostly for refresh/reset of the ui and
+> recalculation of number of entries is not needed
 
-Error/Warning ids grouped by kconfigs:
+Hmm.. right.  I thought you should check the number of entries again but
+c2c doesn't have filtering or hierarchy output so you can use
+hists->nr_entries always.
 
-gcc_recent_errors
-|-- arc-allyesconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- arm-allmodconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- arm-allyesconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- arm64-allyesconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- arm64-randconfig-c004-20230607
-|   `-- arch-arm64-kvm-mmu.c:preceding-lock-on-line
-|-- csky-randconfig-s053-20230607
-|   |-- drivers-clk-qcom-gpucc-sm8550.c:sparse:sparse:decimal-constant-is-between-LONG_MAX-and-ULONG_MAX.-For-C99-that-means-long-long-C90-compilers-are-very-likely-to-produce-unsigned-long-(and-a-warning)-he
-|   `-- drivers-clk-qcom-videocc-sm8550.c:sparse:sparse:decimal-constant-is-between-LONG_MAX-and-ULONG_MAX.-For-C99-that-means-long-long-C90-compilers-are-very-likely-to-produce-unsigned-long-(and-a-warning)-
-|-- i386-allyesconfig
-|   |-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|   `-- include-drm-drm_print.h:error:format-ld-expects-argument-of-type-long-int-but-argument-has-type-size_t-aka-unsigned-int
-|-- i386-randconfig-m021-20230607
-|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
-|-- m68k-allmodconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- microblaze-randconfig-c041-20230607
-|   `-- drivers-nvme-host-pr.c:ERROR:reference-preceded-by-free-on-line
-|-- microblaze-randconfig-c044-20230607
-|   `-- microblaze-linux-ld:(.text):undefined-reference-to-lynx_pcs_destroy
-|-- mips-allmodconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- nios2-defconfig
-|   |-- drivers-net-ethernet-altera-altera_tse_main.c:undefined-reference-to-lynx_pcs_create_mdiodev
-|   |-- drivers-net-ethernet-altera-altera_tse_main.c:undefined-reference-to-lynx_pcs_destroy
-|   `-- nios2-linux-ld:drivers-net-ethernet-altera-altera_tse_main.c:undefined-reference-to-lynx_pcs_destroy
-|-- openrisc-randconfig-s052-20230607
-|   |-- drivers-clk-qcom-gpucc-sm8550.c:sparse:sparse:decimal-constant-is-between-LONG_MAX-and-ULONG_MAX.-For-C99-that-means-long-long-C90-compilers-are-very-likely-to-produce-unsigned-long-(and-a-warning)-he
-|   |-- drivers-clk-qcom-videocc-sm8550.c:sparse:sparse:decimal-constant-is-between-LONG_MAX-and-ULONG_MAX.-For-C99-that-means-long-long-C90-compilers-are-very-likely-to-produce-unsigned-long-(and-a-warning)-
-|   |-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|   `-- drivers-usb-typec-tcpm-qcom-qcom_pmic_typec_pdphy.c:sparse:sparse:incorrect-type-in-argument-(different-base-types)-expected-unsigned-short-usertype-header-got-restricted-__le16-const-usertype-header
-|-- parisc-randconfig-s042-20230607
-|   |-- drivers-clk-qcom-videocc-sm8550.c:sparse:sparse:decimal-constant-is-between-LONG_MAX-and-ULONG_MAX.-For-C99-that-means-long-long-C90-compilers-are-very-likely-to-produce-unsigned-long-(and-a-warning)-
-|   `-- mm-kfence-core.c:sparse:sparse:cast-to-restricted-__le64
-|-- powerpc-allmodconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- powerpc-randconfig-c031-20230607
-|   `-- drivers-pci-endpoint-functions-pci-epf-mhi.c:line-is-redundant-because-platform_get_irq()-already-prints-an-error
-|-- riscv-allmodconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- riscv-defconfig
-|   `-- ERROR:lynx_pcs_destroy-drivers-net-ethernet-stmicro-stmmac-stmmac.ko-undefined
-|-- riscv-rv32_defconfig
-|   `-- ERROR:lynx_pcs_destroy-drivers-net-ethernet-stmicro-stmmac-stmmac.ko-undefined
-|-- s390-allmodconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- s390-allyesconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- sh-randconfig-m041-20230607
-|   `-- lib-kunit-test.c-__kunit_abort()-warn:ignoring-unreachable-code.
-|-- x86_64-allyesconfig
-|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
-|-- x86_64-randconfig-c044-20230607
-|   |-- drivers-cpufreq-cpufreq-dt-platdev.c:warning:allowlist-defined-but-not-used
-|   `-- drivers-cpufreq-cpufreq-dt-platdev.c:warning:blocklist-defined-but-not-used
-|-- x86_64-randconfig-k001-20230607
-|   |-- tools-testing-selftests-bpf-bpf_testmod-bpf_testmod.c:warning:no-previous-prototype-for-bpf_kfunc_call_memb1_release
-|   |-- tools-testing-selftests-bpf-bpf_testmod-bpf_testmod.c:warning:no-previous-prototype-for-bpf_kfunc_call_memb_acquire
-|   |-- tools-testing-selftests-bpf-bpf_testmod-bpf_testmod.c:warning:no-previous-prototype-for-bpf_kfunc_call_test_fail1
-|   |-- tools-testing-selftests-bpf-bpf_testmod-bpf_testmod.c:warning:no-previous-prototype-for-bpf_kfunc_call_test_fail2
-|   |-- tools-testing-selftests-bpf-bpf_testmod-bpf_testmod.c:warning:no-previous-prototype-for-bpf_kfunc_call_test_fail3
-|   |-- tools-testing-selftests-bpf-bpf_testmod-bpf_testmod.c:warning:no-previous-prototype-for-bpf_kfunc_call_test_mem_len_fail1
-|   `-- tools-testing-selftests-bpf-bpf_testmod-bpf_testmod.c:warning:no-previous-prototype-for-bpf_kfunc_call_test_offset
-|-- x86_64-randconfig-x062-20230607
-|   `-- drivers-net-ethernet-altera-altera_tse_main.c:undefined-reference-to-lynx_pcs_destroy
-`-- x86_64-randconfig-x066-20230607
-    `-- ERROR:lynx_pcs_destroy-drivers-net-ethernet-stmicro-stmmac-stmmac.ko-undefined
-clang_recent_errors
-|-- arm64-randconfig-r036-20230607
-|   `-- drivers-bus-fsl-mc-fsl-mc-allocator.c:warning:variable-mc_bus_dev-is-uninitialized-when-used-here
-|-- i386-randconfig-i002-20230607
-|   `-- drivers-bus-fsl-mc-fsl-mc-allocator.c:warning:variable-mc_bus_dev-is-uninitialized-when-used-here
-|-- i386-randconfig-i061-20230607
-|   `-- drivers-bus-fsl-mc-fsl-mc-allocator.c:warning:variable-mc_bus_dev-is-uninitialized-when-used-here
-`-- riscv-randconfig-r032-20230607
-    `-- lib-kunit-executor_test.c:error:cast-from-void-(-)(const-void-)-to-kunit_action_t-(aka-void-(-)(void-)-)-converts-to-incompatible-function-type-Werror-Wcast-function-type-strict
+But now I wonder if it's really needed as the annotate will use its own
+browser so the c2c browser won't be affected.
 
-elapsed time: 721m
+>
+> >
+> > > +                       if ((err == 'q' || err == CTRL('c')) && browser->he_selection->branch_info)
+> >
+> > Why check branch_info?
+>
+> This was copied over as well and the comment in hists.c states "offer
+> option to annotate the other branch source or target (if they exists)
+> when returning from annotate". So I now think this might not be needed
+> here at all?
 
-configs tested: 143
-configs skipped: 6
+Yeah, I don't think we need it.
 
-tested configs:
-alpha                            alldefconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha        buildonly-randconfig-r002-20230607   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                     haps_hs_smp_defconfig   gcc  
-arc                  randconfig-r002-20230607   gcc  
-arc                  randconfig-r016-20230607   gcc  
-arc                  randconfig-r033-20230607   gcc  
-arc                  randconfig-r043-20230607   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         assabet_defconfig   gcc  
-arm                                 defconfig   gcc  
-arm                           h3600_defconfig   gcc  
-arm                            hisi_defconfig   gcc  
-arm                           imxrt_defconfig   gcc  
-arm                  randconfig-r046-20230607   clang
-arm                          sp7021_defconfig   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r003-20230607   clang
-arm64                randconfig-r036-20230607   clang
-csky         buildonly-randconfig-r003-20230607   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r014-20230607   clang
-hexagon              randconfig-r041-20230607   clang
-hexagon              randconfig-r045-20230607   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r005-20230607   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230607   clang
-i386                 randconfig-i002-20230607   clang
-i386                 randconfig-i003-20230607   clang
-i386                 randconfig-i004-20230607   clang
-i386                 randconfig-i005-20230607   clang
-i386                 randconfig-i006-20230607   clang
-i386                 randconfig-i011-20230607   gcc  
-i386                 randconfig-i012-20230607   gcc  
-i386                 randconfig-i051-20230607   clang
-i386                 randconfig-i052-20230607   clang
-i386                 randconfig-i053-20230607   clang
-i386                 randconfig-i054-20230607   clang
-i386                 randconfig-i055-20230607   clang
-i386                 randconfig-i056-20230607   clang
-i386                 randconfig-i061-20230607   clang
-i386                 randconfig-i062-20230607   clang
-i386                 randconfig-i063-20230607   clang
-i386                 randconfig-i064-20230607   clang
-i386                 randconfig-i065-20230607   clang
-i386                 randconfig-i066-20230607   clang
-i386                 randconfig-r022-20230607   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch    buildonly-randconfig-r004-20230607   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r021-20230607   gcc  
-loongarch            randconfig-r024-20230607   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5275evb_defconfig   gcc  
-m68k                            mac_defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                         bigsur_defconfig   gcc  
-mips                 randconfig-r004-20230607   gcc  
-mips                 randconfig-r031-20230607   gcc  
-mips                        vocore2_defconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r026-20230607   gcc  
-openrisc             randconfig-r023-20230607   gcc  
-openrisc             randconfig-r032-20230607   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                     ksi8560_defconfig   clang
-powerpc                      makalu_defconfig   gcc  
-powerpc                       maple_defconfig   gcc  
-powerpc                      ppc6xx_defconfig   gcc  
-powerpc              randconfig-r005-20230607   clang
-powerpc              randconfig-r023-20230607   gcc  
-powerpc                 xes_mpc85xx_defconfig   clang
-riscv                            alldefconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r022-20230607   gcc  
-riscv                randconfig-r042-20230607   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r006-20230607   clang
-s390                 randconfig-r024-20230607   gcc  
-s390                 randconfig-r044-20230607   gcc  
-sh                               allmodconfig   gcc  
-sh                         ap325rxa_defconfig   gcc  
-sh                          sdk7780_defconfig   gcc  
-sparc        buildonly-randconfig-r006-20230607   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r015-20230607   gcc  
-sparc                randconfig-r026-20230607   gcc  
-sparc                       sparc64_defconfig   gcc  
-sparc64              randconfig-r021-20230607   gcc  
-sparc64              randconfig-r034-20230607   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230607   clang
-x86_64               randconfig-a002-20230607   clang
-x86_64               randconfig-a003-20230607   clang
-x86_64               randconfig-a004-20230607   clang
-x86_64               randconfig-a005-20230607   clang
-x86_64               randconfig-a006-20230607   clang
-x86_64               randconfig-a011-20230607   gcc  
-x86_64               randconfig-a012-20230607   gcc  
-x86_64               randconfig-a013-20230607   gcc  
-x86_64               randconfig-a014-20230607   gcc  
-x86_64               randconfig-a015-20230607   gcc  
-x86_64               randconfig-a016-20230607   gcc  
-x86_64               randconfig-k001-20230607   gcc  
-x86_64               randconfig-x051-20230607   gcc  
-x86_64               randconfig-x052-20230607   gcc  
-x86_64               randconfig-x053-20230607   gcc  
-x86_64               randconfig-x054-20230607   gcc  
-x86_64               randconfig-x055-20230607   gcc  
-x86_64               randconfig-x056-20230607   gcc  
-x86_64               randconfig-x061-20230607   gcc  
-x86_64               randconfig-x062-20230607   gcc  
-x86_64               randconfig-x063-20230607   gcc  
-x86_64               randconfig-x064-20230607   gcc  
-x86_64               randconfig-x065-20230607   gcc  
-x86_64               randconfig-x066-20230607   gcc  
-x86_64                               rhel-8.3   gcc  
-xtensa                  nommu_kc705_defconfig   gcc  
-xtensa               randconfig-r011-20230607   gcc  
-xtensa               randconfig-r012-20230607   gcc  
-xtensa               randconfig-r035-20230607   gcc  
+Thanks,
+Namhyung
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
+>
+> > > +                                       continue;
+> > > +                       if (err)
+> > > +                               ui_browser__handle_resize(&browser->b);
+> > > +
+> > > +                       continue;
+> >
+> > It'd be natural to use 'break' instead of 'continue' here.
+>
+> Yes, will change this.
+>
+> > >                 case 's':
+> > >                         c2c.symbol_full = !c2c.symbol_full;
+>
+> snip
+>
+> > >         perf_session__delete(session);
+> > >  out:
+> > > +       annotation_options__init(&c2c.annotation_opts);
+> >
+> > __exit() ?
+>
+> Ouch, thanks for noticing!
+>
+> --
+>  Artem
+>
