@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC1AC7EE29
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 01:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B19BDC7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 01:46:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240572AbjFGBqD (ORCPT
+        id S240589AbjFGBqI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 6 Jun 2023 21:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35334 "EHLO
+        Tue, 6 Jun 2023 21:46:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240570AbjFGBoo (ORCPT
+        with ESMTP id S240585AbjFGBoq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 6 Jun 2023 21:44:44 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC1E1BC7
-        for <linux-perf-users@vger.kernel.org>; Tue,  6 Jun 2023 18:44:43 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-5689bcc5f56so102379017b3.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jun 2023 18:44:43 -0700 (PDT)
+        Tue, 6 Jun 2023 21:44:46 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3298B1FCE
+        for <linux-perf-users@vger.kernel.org>; Tue,  6 Jun 2023 18:44:45 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-568a8704f6dso102345207b3.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jun 2023 18:44:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686102282; x=1688694282;
+        d=google.com; s=20221208; t=1686102284; x=1688694284;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=h5i/HcXWZK6yNAnvq9kN2ruEXhS3nctm8EhXDDQYxW0=;
-        b=t7gIuC7RMSZxifslee8OkIZwaZvgm8eHWrgQsoRbPEqRSzohhLm5euXvuOaHTMGjTW
-         ZQClMPQyMlfx1RwmBzKAQvCsfJOaqsVeBK4ngDOTz1Eh7sRrslTD4+9cNSM5YFstL4p6
-         Pfeqp3G0SF2J6BRCKSbjLoM158ia7k30ps3q/fyd+LAg9RF5185Ion/Z4bs6ke9rs8uI
-         IhpznhPojPzY9Eyow9Ff4Jirl7l6AC6o9kttvqYEZsjSu2XeB9liT7TWhpi/47lQHrP1
-         Hw31TFt/y9n9bOl+SCCVm82dnuV+Yku5+kXZX0GNKqtGjMFHVVckk0jUGtRvSVOO2KX0
-         RpDg==
+        bh=Wg608H21VywQV17FYEJQzmeGbvSJZFZmCrQOqYvdbrQ=;
+        b=Mp6konrADVL+r/RypaI/wa9bkKBtNFGLSrryt6LQNP3gpo9rqLMzpl4NpNPFInZK5x
+         2Xf/y8SE3JllYicl1RrvycyR9c+YDUN+qpZX09ZtAN8/InDBiAM3suwPKrrDd03Nu+Rw
+         6z/87/U1VBLHA1S90Ti2ZbC1aGQkRk8PIxh018BaJ8e5znaiM1DkqIncYQ3EywmUi4oM
+         WIGm8ZAf2LdIIT0MZUkJY2gCxw/eQDvwcGwG+BYzq7BiKqxPA+VGFNE6i8S7qL7+A+T/
+         lfkDmEuIl054e2itV4FXdkmaDSeWFZDT1ZPCFXTigWURYAeoZAopUrOTKCY6ijFkvOOu
+         gAJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686102282; x=1688694282;
+        d=1e100.net; s=20221208; t=1686102284; x=1688694284;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h5i/HcXWZK6yNAnvq9kN2ruEXhS3nctm8EhXDDQYxW0=;
-        b=A0ORTfyfElYAHDhfKuJGVbl2xcclu3VPm/y7GYS9U8u/poT3KZCiOrbH3FkCMvJ1W2
-         CIXB7FJOnIqQJnU93r4zpR/pL/deRB0Ry+Ixk2j1PW7kFyrFmn7UHZ5NBuZzRNrvDis4
-         hmHT81a0rYq5d/2FUFXeyXI1G4F/LlaAGNlSdwT4UjKjX9J33euFaLx9gR23xf5arC3J
-         QuDIg9FvgKBu0ZSXBUayZd8eskWfBUVIAl83v8PqkyPdcvTI1QcFi2R6bjvbR3238eXI
-         QoAqFVFiNGsdJQ3EClNwjMcDPW+NAd13QYJ5v+gGKq8hTPHMiWOXAKqxh66Kso4huUyE
-         G94w==
-X-Gm-Message-State: AC+VfDx3CLW21wD/COLVMr+P5mk8Abm/TfvvQ2ugznihI0d5k2XEeTI5
-        B3ZW0D8xZ5lvClMnffmwoH8uY5byfp6m
-X-Google-Smtp-Source: ACHHUZ6sXa4pQEp7493QMMx/+lFm2yYaX/H67xkftwZIrCy4G77CgeVMKsJI+bSIONd37E/2O8+CJYx/NMxP
+        bh=Wg608H21VywQV17FYEJQzmeGbvSJZFZmCrQOqYvdbrQ=;
+        b=RzbWD1lxUSB4HyYskoMWba+nD06MfaKODeTt2Cjfl19NnEsv4YBaHJbCoI6tEOOvMk
+         04um2zNzqQNZl8fZ/a1BvYB8VqdvUqhHSjnWhMNowi5z7dDaGDoTOLmgAHbRYXSOukDG
+         qL9Ds+I8/hH8esmqW3cqjcrub0+1gyFZQb4koeaBte43GfwffMbw3NkWN5wPbdBk4QDq
+         F9oK4FENv2OT800r8xMczmu8+fX+ZsZsNmDN7htZW8EZQUfxqrkoJDlydL49V2nfzVLn
+         9KRdnEyPdU+xaGm81XyyBh5IrGPyZlMJhiTgjoxbgi/Q4dDlF1CHgwGvt+5BkQI16qY+
+         UERg==
+X-Gm-Message-State: AC+VfDxraS/452iYqUACrshAGl9Ne5Ta8M72uO0zPsUfIBLU/JDcexs1
+        TWfnoSW8X68ImEdaLKRDbym/ra1qavcx
+X-Google-Smtp-Source: ACHHUZ4dmJcqnnrUfPvPiLDilO76aOm556UMNf2RdYxYeymQ/5xTB+p2huyxjiCVxRNBr/2ZTRUFrzVnJzsc
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3c35:209f:5d38:b7a1])
- (user=irogers job=sendgmr) by 2002:a81:ac57:0:b0:565:9bee:22e0 with SMTP id
- z23-20020a81ac57000000b005659bee22e0mr2032744ywj.0.1686102282285; Tue, 06 Jun
- 2023 18:44:42 -0700 (PDT)
-Date:   Tue,  6 Jun 2023 18:43:47 -0700
+ (user=irogers job=sendgmr) by 2002:a81:ad1c:0:b0:55d:6af3:1e2c with SMTP id
+ l28-20020a81ad1c000000b0055d6af31e2cmr2025412ywh.3.1686102284355; Tue, 06 Jun
+ 2023 18:44:44 -0700 (PDT)
+Date:   Tue,  6 Jun 2023 18:43:48 -0700
 In-Reply-To: <20230607014353.3172466-1-irogers@google.com>
-Message-Id: <20230607014353.3172466-15-irogers@google.com>
+Message-Id: <20230607014353.3172466-16-irogers@google.com>
 Mime-Version: 1.0
 References: <20230607014353.3172466-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v1 14/20] perf python: Avoid 2 leak sanitizer issues
+Subject: [PATCH v1 15/20] perf jit: Fix two thread leaks
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -102,45 +102,33 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Leak sanitizer complains about the variable size bf allocation and
-store to bf if sized 0.
+As reported by leak sanitizer with reference count checking.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/scripting-engines/trace-event-python.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/perf/util/jitdump.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 6b89eec98dd7..59944fef8108 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -735,6 +735,9 @@ static void regs_map(struct regs_dump *regs, uint64_t mask, const char *arch, ch
- 	unsigned int i = 0, r;
- 	int printed = 0;
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index 2380b41a4caa..6b2b96c16ccd 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -800,6 +800,7 @@ static void jit_add_pid(struct machine *machine, pid_t pid)
+ 	}
  
-+	if (size <= 0)
-+		return;
-+
- 	bf[0] = 0;
- 
- 	if (!regs || !regs->regs)
-@@ -764,7 +767,7 @@ static void set_regs_in_dict(PyObject *dict,
- 	 * 10 chars is for register name.
- 	 */
- 	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
--	char bf[size];
-+	char *bf = malloc(size);
- 
- 	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, sizeof(bf));
- 
-@@ -775,6 +778,7 @@ static void set_regs_in_dict(PyObject *dict,
- 
- 	pydict_set_item_string_decref(dict, "uregs",
- 			_PyUnicode_FromString(bf));
-+	free(bf);
+ 	thread__set_priv(thread, (void *)true);
++	thread__put(thread);
  }
  
- static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
+ static bool jit_has_pid(struct machine *machine, pid_t pid)
+@@ -811,6 +812,7 @@ static bool jit_has_pid(struct machine *machine, pid_t pid)
+ 		return false;
+ 
+ 	priv = thread__priv(thread);
++	thread__put(thread);
+ 	return (bool)priv;
+ }
+ 
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
