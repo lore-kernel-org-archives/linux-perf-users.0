@@ -2,120 +2,220 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF94C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 05:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF743C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 05:33:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234756AbjFGFCH (ORCPT
+        id S233780AbjFGFdQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jun 2023 01:02:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56430 "EHLO
+        Wed, 7 Jun 2023 01:33:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232045AbjFGFCE (ORCPT
+        with ESMTP id S233747AbjFGFdP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Jun 2023 01:02:04 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4085EE7E
-        for <linux-perf-users@vger.kernel.org>; Tue,  6 Jun 2023 22:02:03 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-568ab5c813eso114850677b3.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Jun 2023 22:02:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686114122; x=1688706122;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4ikiqQuTZUJiABEoiUDyLUaakiCQM83ZBVgIUJ5qyiw=;
-        b=n2XMZRp5Bhjmhnf1S7FOdeGul2K9HH1o1TAnJwUhWb9F6vmziwkWV6fdF2lI0p533B
-         5GOT5AyErh8jVZ59k3YBHwfAxFO3fyhOCVGdHLmIaZPpzfvkdeojUsmmJJ05IHPsFCgB
-         te03hoMvX1btHIiA5whK5kbe/eZ7KRGl3Dsyp/h0acEPNPi6mD7ojbjncT+eoGIRnv2W
-         zag/KXcJDcGV3+24y9FiynmTW6LgZhcdShPNKO+qvHNy3TontHHuhAPeqgSWxNkntcBL
-         h4ZEtkb+XNmulicM133xPFaLtmZk7/qvXW2fWFQJQhju+MseCuZB4CwCd4QyBEyHvrvH
-         uwyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686114122; x=1688706122;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4ikiqQuTZUJiABEoiUDyLUaakiCQM83ZBVgIUJ5qyiw=;
-        b=jM2PAETrThdz2BJGKKhQlTcp8vzSOsDR84r7yZVripEYjkE5K8pcgvgxdHkWeUGsnv
-         MTVrw6p1Gh6T3nZ/LfP8iTxhjUvneUbCf470UXsPPYwXGmjsYK/mlyeH7/yzrRwNwWwU
-         7CXC08PaCPnSBgq8EF/U6CsD+jp2Afm2Jcql8aDH7B53hgvM8sTB9VZnl4e0EBXNpTth
-         BazIKyEUgH7JAVtN0hX2NQQdfmaeMwkvK45pH1ZpQMuveAA5/hxWdQSLJeV1l2Jxyhxj
-         p5lW07Fz7d4eltdxtht6sArTZ4xM5OmROqmbN85fSRlGzEX7oEKpSFoHAlIG3NPK4bEV
-         akkA==
-X-Gm-Message-State: AC+VfDwi/bj9aJC8gkWn5otyYDqjsyqj0B6vt7U4vimkitbL/hxovSty
-        ZsDeEr5mKzxFiGo2UTkVkfg2cympwS+q
-X-Google-Smtp-Source: ACHHUZ491PewUGRspEK6o4fbP8WWZS2GrSxlW/3LEce2E79lrob6kU82jnQTpePQ2QSMvfvryDhahMawa3NP
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:3c35:209f:5d38:b7a1])
- (user=irogers job=sendgmr) by 2002:a05:6902:124f:b0:ba8:2e68:7715 with SMTP
- id t15-20020a056902124f00b00ba82e687715mr2405214ybu.2.1686114122502; Tue, 06
- Jun 2023 22:02:02 -0700 (PDT)
-Date:   Tue,  6 Jun 2023 22:01:47 -0700
-In-Reply-To: <20230607050148.3248353-1-irogers@google.com>
-Message-Id: <20230607050148.3248353-3-irogers@google.com>
-Mime-Version: 1.0
-References: <20230607050148.3248353-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH v1 2/2] perf top: Add exit routine for main thread
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andres Freund <andres@anarazel.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 7 Jun 2023 01:33:15 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58CC119AA;
+        Tue,  6 Jun 2023 22:33:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686115994; x=1717651994;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=WKqGJ0Cr8W1DLMfOa7ITnpvqsLwc+JD5KKUCEXVA6mc=;
+  b=lUHlv87GSYq+MjTjhm+H1nBMzt5fbTvDNS4GZwDS7ISz0rx4T/X4mrLi
+   jywpi+U/wWF8MhbeZ/TYsNP6g4ZVsEHBG2wIanD31QMl1BUXvFmWZop6v
+   OzZiaoAQ2jGnYD56wlrPts5CmvE74NFtR14D2RjJ7P8cOplH+L0irfMWs
+   MP/D2Js9ywcNPagMSjN8BOe2jmwtH1zHKIKaIQmSnXxH8YqlnfvsOJjWC
+   NZP2qsaGbaPdCnNFBDvDGDq6bzU0w8vuSG+U2E8WM7Wiwb7UbTxu7PEmT
+   E9wW+8w2RH9oyRun5jtTl17x+oJ02epXLUzHtP1AZRJxqf84zYtm4L0dv
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="337251616"
+X-IronPort-AV: E=Sophos;i="6.00,223,1681196400"; 
+   d="scan'208";a="337251616"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 22:33:13 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="853693801"
+X-IronPort-AV: E=Sophos;i="6.00,223,1681196400"; 
+   d="scan'208";a="853693801"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.47.234])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 22:33:12 -0700
+Message-ID: <f7228dc9-fe18-a8e3-7d3f-52922e0e1113@intel.com>
+Date:   Wed, 7 Jun 2023 08:33:07 +0300
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.12.0
+Subject: Re: [PATCH V3 0/1] perf tools: Allow config terms with breakpoints
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20230525082902.25332-1-adrian.hunter@intel.com>
+ <afe1c05a-2b77-c3d8-aacf-b4c7bebb8bf8@intel.com>
+ <ZH933yJMYTr0cC+N@kernel.org> <ZH+Havh+xRIfwa4n@kernel.org>
+ <9a3776f9-9c9e-b23f-9f18-91b4b5b8364d@intel.com>
+Content-Language: en-US
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <9a3776f9-9c9e-b23f-9f18-91b4b5b8364d@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add exit_process_thread that reverses init_process_thread. This avoids
-leak sanitizer reporting memory leaks.
+On 6/06/23 22:37, Adrian Hunter wrote:
+> On 6/06/23 22:22, Arnaldo Carvalho de Melo wrote:
+>> Em Tue, Jun 06, 2023 at 03:15:59PM -0300, Arnaldo Carvalho de Melo escreveu:
+>>> Em Tue, Jun 06, 2023 at 08:00:33AM +0300, Adrian Hunter escreveu:
+>>>> On 25/05/23 11:29, Adrian Hunter wrote:
+>>>>> Hi
+>>>>>
+>>>>> Here is a patch (V3) to the event parser for breakpoint events.
+>>>>> I am not that familiar with flex / bison, but it seemed to
+>>>>> need trailing context to stop the mem event colon and slash
+>>>>> delimiters from getting mixed up with delimiters for config
+>>>>> terms or event modifiers.  Please look closely at that.
+>>>>>
+>>>>>
+>>>>> Changes in V3:
+>>>>>
+>>>>>       Add Ian's Reviewed-by
+>>>>>       Re-base
+>>>>
+>>>> Still applies.  Any more comments?
+>>>
+>>> Tried it now, twice, once after removing the O= build dir:
+>>>
+>>>   CC      /tmp/build/perf-tools-next/tests/event-times.o
+>>>   CC      /tmp/build/perf-tools-next/tests/expr.o
+>>>   BISON   /tmp/build/perf-tools-next/util/parse-events-bison.c
+>>> util/parse-events.y:508.24-34: warning: unused value: $3 [-Wother]
+>>>   508 | PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
+>>>       |                        ^~~~~~~~~~~
+>>> util/parse-events.y:508.45-55: warning: unused value: $5 [-Wother]
+>>>   508 | PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
+>>>       |                                             ^~~~~~~~~~~
+>>> util/parse-events.y:526.24-34: warning: unused value: $3 [-Wother]
+>>>   526 | PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE opt_event_config
+>>>       |                        ^~~~~~~~~~~
+>>> util/parse-events.y:543.24-34: warning: unused value: $3 [-Wother]
+>>>   543 | PE_PREFIX_MEM PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
+>>>       |                        ^~~~~~~~~~~
+>>>   CC      /tmp/build/perf-tools-next/tests/backward-ring-buffer.o
+>>
+>> But it doesn't _break_ the build, just warns thiis when generating the
+>> .c file, the next build it notices it is already generated, no warnings.
+> 
+> The build script I was using has a flaw.  It doesn't show warnings
+> unless the build fails, assuming warnings are errors.  But these
+> are not.
+> 
+> The first hack that came to mind, and seems to work, is:
+> 
+> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+> index bbfb8110947c..dd36be3832b6 100644
+> --- a/tools/perf/util/parse-events.y
+> +++ b/tools/perf/util/parse-events.y
+> @@ -510,6 +510,8 @@ PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event
+>  	struct list_head *list;
+>  	int err;
+>  
+> +	$3 = $3;
+> +	$5 = $5;
+>  	list = alloc_list();
+>  	ABORT_ON(!list);
+>  	err = parse_events_add_breakpoint(_parse_state, list,
+> @@ -528,6 +530,7 @@ PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE opt_event_config
+>  	struct list_head *list;
+>  	int err;
+>  
+> +	$3 = $3;
+>  	list = alloc_list();
+>  	ABORT_ON(!list);
+>  	err = parse_events_add_breakpoint(_parse_state, list,
+> @@ -545,6 +548,7 @@ PE_PREFIX_MEM PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
+>  	struct list_head *list;
+>  	int err;
+>  
+> +	$3 = $3;
+>  	list = alloc_list();
+>  	ABORT_ON(!list);
+>  	err = parse_events_add_breakpoint(_parse_state, list,
+> 
+> 
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Maybe this is cleaner:
+
+
+From: Adrian Hunter <adrian.hunter@intel.com>
+Date: Wed, 7 Jun 2023 08:12:29 +0300
+Subject: [PATCH] perf tools: Suppress bison unused value warnings
+
+Patch "perf tools: Allow config terms with breakpoints" introduced
+parse tokens for colons and slashes within breakpoint parsing to
+prevent mix up with colons and slashes related to config terms.
+
+The token values are not needed but introduce bison "unused value"
+warnings.
+
+Suppress those warnings.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- tools/perf/builtin-top.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ tools/perf/util/parse-events.h | 4 ++++
+ tools/perf/util/parse-events.y | 7 +++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 99010dfa5760..c363c04e16df 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -392,7 +392,7 @@ static void prompt_percent(int *target, const char *msg)
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index b0eb95f93e9c..5fdc1f33f57e 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -228,6 +228,10 @@ void parse_events_error__handle(struct parse_events_error *err, int idx,
+ void parse_events_error__print(struct parse_events_error *err,
+ 			       const char *event);
  
- static void perf_top__prompt_symbol(struct perf_top *top, const char *msg)
- {
--	char *buf = malloc(0), *p;
-+	char *buf = NULL, *p;
- 	struct hist_entry *syme = top->sym_filter_entry, *n, *found = NULL;
- 	struct hists *hists = evsel__hists(top->sym_evsel);
- 	struct rb_node *next;
-@@ -1227,6 +1227,14 @@ static void init_process_thread(struct perf_top *top)
- 	cond_init(&top->qe.cond);
- }
- 
-+static void exit_process_thread(struct perf_top *top)
++static inline void parse_events_unused_value(const void *x __maybe_unused)
 +{
-+	ordered_events__free(&top->qe.data[0]);
-+	ordered_events__free(&top->qe.data[1]);
-+	mutex_destroy(&top->qe.mutex);
-+	cond_destroy(&top->qe.cond);
 +}
 +
- static int __cmd_top(struct perf_top *top)
- {
- 	struct record_opts *opts = &top->record_opts;
-@@ -1357,6 +1365,7 @@ static int __cmd_top(struct perf_top *top)
- 	cond_signal(&top->qe.cond);
- 	pthread_join(thread_process, NULL);
- 	perf_set_singlethreaded();
-+	exit_process_thread(top);
- 	return ret;
- }
+ #ifdef HAVE_LIBELF_SUPPORT
+ /*
+  * If the probe point starts with '%',
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index bbfb8110947c..0c3d086cc22a 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -510,6 +510,9 @@ PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event
+ 	struct list_head *list;
+ 	int err;
  
++	parse_events_unused_value(&$3);
++	parse_events_unused_value(&$5);
++
+ 	list = alloc_list();
+ 	ABORT_ON(!list);
+ 	err = parse_events_add_breakpoint(_parse_state, list,
+@@ -528,6 +531,8 @@ PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE opt_event_config
+ 	struct list_head *list;
+ 	int err;
+ 
++	parse_events_unused_value(&$3);
++
+ 	list = alloc_list();
+ 	ABORT_ON(!list);
+ 	err = parse_events_add_breakpoint(_parse_state, list,
+@@ -545,6 +550,8 @@ PE_PREFIX_MEM PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
+ 	struct list_head *list;
+ 	int err;
+ 
++	parse_events_unused_value(&$3);
++
+ 	list = alloc_list();
+ 	ABORT_ON(!list);
+ 	err = parse_events_add_breakpoint(_parse_state, list,
 -- 
-2.41.0.rc0.172.g3f132b7071-goog
+2.34.1
+
 
