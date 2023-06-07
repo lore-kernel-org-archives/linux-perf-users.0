@@ -2,141 +2,232 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562E7C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 13:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D36D5C7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 15:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240221AbjFGNsY (ORCPT
+        id S241336AbjFGP0H (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jun 2023 09:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32962 "EHLO
+        Wed, 7 Jun 2023 11:26:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240459AbjFGNsW (ORCPT
+        with ESMTP id S241338AbjFGPZo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 7 Jun 2023 09:48:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B5E1FC8;
-        Wed,  7 Jun 2023 06:48:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 62FE263F9C;
-        Wed,  7 Jun 2023 13:48:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D9B8C4339E;
-        Wed,  7 Jun 2023 13:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686145691;
-        bh=wf2XVFNUEgH+dPenf4U/GenfgafdyccvlWF1Dp+rFHM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l7XHq6YO7SuvCp5ZPMGFBBhOT0+DObP+Fft8vLFS/PJgrWhszhHbDuTgj+RpS3hNs
-         s7m2gCGV4CAr4/2/dCtlj6ui4oURAdLGa+8o+NrzWywqX+Z3DZN9ZK1nWcyTS7NjzT
-         CgkoaxXb3W1DQVvRwVbTbrAkkBgFZXAILcax2fazhBrgWdBZ2q8B4CGRt7qdRll2gM
-         NvNtUyUYQ0KNWe4V5IsMJsJhoJGvNp2W/Tc0u5CveuYK7nP7D5F1/95reK+evbTRwM
-         HrBMBpWzh/A9xSeXcXpuNNDijir1m2yTwU8LKaR9pXu/srfpYNxbmkvoqzuUCFi6Ta
-         Eneaq0snhGMJg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1392D40692; Wed,  7 Jun 2023 10:48:09 -0300 (-03)
-Date:   Wed, 7 Jun 2023 10:48:08 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V3 0/1] perf tools: Allow config terms with breakpoints
-Message-ID: <ZICKmA1kcDa2nG53@kernel.org>
-References: <20230525082902.25332-1-adrian.hunter@intel.com>
- <afe1c05a-2b77-c3d8-aacf-b4c7bebb8bf8@intel.com>
- <ZH933yJMYTr0cC+N@kernel.org>
- <ZH+Havh+xRIfwa4n@kernel.org>
- <9a3776f9-9c9e-b23f-9f18-91b4b5b8364d@intel.com>
- <f7228dc9-fe18-a8e3-7d3f-52922e0e1113@intel.com>
+        Wed, 7 Jun 2023 11:25:44 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E4F1FE2;
+        Wed,  7 Jun 2023 08:25:16 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 1272D21A14;
+        Wed,  7 Jun 2023 15:25:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1686151512; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z73Hgt9VQI6/zRBZSc9gAAdc0TQ1/JxriitS4YskKt4=;
+        b=WvUnL4M2ZajH9kIJjqnSxPG4Jw6lPlouZDretV2OfImMo7vuS+U/fZxB2dAEYvMPeTGFAo
+        Hu1l9MdEam4iY7zNNegb38tLQ/tRx7Wknuzn3k6fBasUvDQkxgIzTGYe/YpW5KKokFnTM1
+        9pgt9zHd0hkQqrHWUzdcHKSW6KI2g0w=
+Received: from alley.suse.cz (unknown [10.100.201.202])
+        by relay2.suse.de (Postfix) with ESMTP id 8E3402C141;
+        Wed,  7 Jun 2023 15:25:11 +0000 (UTC)
+From:   Petr Mladek <pmladek@suse.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Douglas Anderson <dianders@chromium.org>
+Cc:     kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        sparclinux@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-perf-users@vger.kernel.org, Petr Mladek <pmladek@suse.com>
+Subject: [PATCH 1/7] watchdog/hardlockup: Sort hardlockup detector related config values a logical way
+Date:   Wed,  7 Jun 2023 17:24:26 +0200
+Message-Id: <20230607152432.5435-2-pmladek@suse.com>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20230607152432.5435-1-pmladek@suse.com>
+References: <20230607152432.5435-1-pmladek@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f7228dc9-fe18-a8e3-7d3f-52922e0e1113@intel.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jun 07, 2023 at 08:33:07AM +0300, Adrian Hunter escreveu:
-> Maybe this is cleaner:
+There are four possible variants of hardlockup detectors:
 
-It is, I folded it into your original patch, thanks!
+  + buddy: available when SMP is set.
 
-- Arnaldo
+  + perf: available when HAVE_HARDLOCKUP_DETECTOR_PERF is set.
+
+  + arch-specific: available when HAVE_HARDLOCKUP_DETECTOR_ARCH is set.
+
+  + sparc64 special variant: available when HAVE_NMI_WATCHDOG is set
+	and HAVE_HARDLOCKUP_DETECTOR_ARCH is not set.
+
+Only one hardlockup detector can be compiled in. The selection is done
+using quite complex dependencies between several CONFIG variables.
+The following patches will try to make it more straightforward.
+
+As a first step, reorder the definitions of the various CONFIG variables.
+The logical order is:
+
+   1. HAVE_* variables define available variants. They are typically
+      defined in the arch/ config files.
+
+   2. HARDLOCKUP_DETECTOR y/n variable defines whether the hardlockup
+      detector is enabled at all.
+
+   3. HARDLOCKUP_DETECTOR_PREFER_BUDDY y/n variable defines whether
+      the buddy detector should be preferred over the perf one.
+      Note that the arch specific variants are always preferred when
+      available.
+
+   4. HARDLOCKUP_DETECTOR_PERF/BUDDY variables define whether the given
+      detector is enabled in the end.
+
+   5. HAVE_HARDLOCKUP_DETECTOR_NON_ARCH and HARDLOCKUP_DETECTOR_NON_ARCH
+      are temporary variables that are going to be removed in
+      a followup patch.
+
+The patch just shuffles the definitions. It should not change the existing
+behavior.
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+ lib/Kconfig.debug | 112 +++++++++++++++++++++++-----------------------
+ 1 file changed, 56 insertions(+), 56 deletions(-)
+
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index ed7b01c4bd41..3e91fa33c7a0 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1035,62 +1035,6 @@ config BOOTPARAM_SOFTLOCKUP_PANIC
  
-> 
-> From: Adrian Hunter <adrian.hunter@intel.com>
-> Date: Wed, 7 Jun 2023 08:12:29 +0300
-> Subject: [PATCH] perf tools: Suppress bison unused value warnings
-> 
-> Patch "perf tools: Allow config terms with breakpoints" introduced
-> parse tokens for colons and slashes within breakpoint parsing to
-> prevent mix up with colons and slashes related to config terms.
-> 
-> The token values are not needed but introduce bison "unused value"
-> warnings.
-> 
-> Suppress those warnings.
-> 
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
->  tools/perf/util/parse-events.h | 4 ++++
->  tools/perf/util/parse-events.y | 7 +++++++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-> index b0eb95f93e9c..5fdc1f33f57e 100644
-> --- a/tools/perf/util/parse-events.h
-> +++ b/tools/perf/util/parse-events.h
-> @@ -228,6 +228,10 @@ void parse_events_error__handle(struct parse_events_error *err, int idx,
->  void parse_events_error__print(struct parse_events_error *err,
->  			       const char *event);
->  
-> +static inline void parse_events_unused_value(const void *x __maybe_unused)
-> +{
-> +}
-> +
->  #ifdef HAVE_LIBELF_SUPPORT
->  /*
->   * If the probe point starts with '%',
-> diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
-> index bbfb8110947c..0c3d086cc22a 100644
-> --- a/tools/perf/util/parse-events.y
-> +++ b/tools/perf/util/parse-events.y
-> @@ -510,6 +510,9 @@ PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event
->  	struct list_head *list;
->  	int err;
->  
-> +	parse_events_unused_value(&$3);
-> +	parse_events_unused_value(&$5);
-> +
->  	list = alloc_list();
->  	ABORT_ON(!list);
->  	err = parse_events_add_breakpoint(_parse_state, list,
-> @@ -528,6 +531,8 @@ PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE opt_event_config
->  	struct list_head *list;
->  	int err;
->  
-> +	parse_events_unused_value(&$3);
-> +
->  	list = alloc_list();
->  	ABORT_ON(!list);
->  	err = parse_events_add_breakpoint(_parse_state, list,
-> @@ -545,6 +550,8 @@ PE_PREFIX_MEM PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
->  	struct list_head *list;
->  	int err;
->  
-> +	parse_events_unused_value(&$3);
-> +
->  	list = alloc_list();
->  	ABORT_ON(!list);
->  	err = parse_events_add_breakpoint(_parse_state, list,
-> -- 
-> 2.34.1
-> 
-> 
-
+ 	  Say N if unsure.
+ 
+-# Both the "perf" and "buddy" hardlockup detectors count hrtimer
+-# interrupts. This config enables functions managing this common code.
+-config HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+-	bool
+-	select SOFTLOCKUP_DETECTOR
+-
+-config HARDLOCKUP_DETECTOR_PERF
+-	bool
+-	depends on HAVE_HARDLOCKUP_DETECTOR_PERF
+-	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+-
+-config HARDLOCKUP_DETECTOR_BUDDY
+-	bool
+-	depends on SMP
+-	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
+-
+-# For hardlockup detectors you can have one directly provided by the arch
+-# or use a "non-arch" one. If you're using a "non-arch" one that is
+-# further divided the perf hardlockup detector (which, confusingly, needs
+-# arch-provided perf support) and the buddy hardlockup detector (which just
+-# needs SMP). In either case, using the "non-arch" code conflicts with
+-# the NMI watchdog code (which is sometimes used directly and sometimes used
+-# by the arch-provided hardlockup detector).
+-config HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+-	bool
+-	depends on (HAVE_HARDLOCKUP_DETECTOR_PERF || SMP) && !HAVE_NMI_WATCHDOG
+-	default y
+-
+-config HARDLOCKUP_DETECTOR_PREFER_BUDDY
+-	bool "Prefer the buddy CPU hardlockup detector"
+-	depends on HAVE_HARDLOCKUP_DETECTOR_PERF && SMP
+-	help
+-	  Say Y here to prefer the buddy hardlockup detector over the perf one.
+-
+-	  With the buddy detector, each CPU uses its softlockup hrtimer
+-	  to check that the next CPU is processing hrtimer interrupts by
+-	  verifying that a counter is increasing.
+-
+-	  This hardlockup detector is useful on systems that don't have
+-	  an arch-specific hardlockup detector or if resources needed
+-	  for the hardlockup detector are better used for other things.
+-
+-# This will select the appropriate non-arch hardlockdup detector
+-config HARDLOCKUP_DETECTOR_NON_ARCH
+-	bool
+-	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
+-	select HARDLOCKUP_DETECTOR_BUDDY if !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_PREFER_BUDDY
+-	select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY
+-
+-#
+-# Enables a timestamp based low pass filter to compensate for perf based
+-# hard lockup detection which runs too fast due to turbo modes.
+-#
+-config HARDLOCKUP_CHECK_TIMESTAMP
+-	bool
+-
+ #
+ # arch/ can define HAVE_HARDLOCKUP_DETECTOR_ARCH to provide their own hard
+ # lockup detector rather than the perf based detector.
+@@ -1111,6 +1055,62 @@ config HARDLOCKUP_DETECTOR
+ 	  chance to run.  The current stack trace is displayed upon detection
+ 	  and the system will stay locked up.
+ 
++config HARDLOCKUP_DETECTOR_PREFER_BUDDY
++	bool "Prefer the buddy CPU hardlockup detector"
++	depends on HAVE_HARDLOCKUP_DETECTOR_PERF && SMP
++	help
++	  Say Y here to prefer the buddy hardlockup detector over the perf one.
++
++	  With the buddy detector, each CPU uses its softlockup hrtimer
++	  to check that the next CPU is processing hrtimer interrupts by
++	  verifying that a counter is increasing.
++
++	  This hardlockup detector is useful on systems that don't have
++	  an arch-specific hardlockup detector or if resources needed
++	  for the hardlockup detector are better used for other things.
++
++config HARDLOCKUP_DETECTOR_PERF
++	bool
++	depends on HAVE_HARDLOCKUP_DETECTOR_PERF
++	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
++
++config HARDLOCKUP_DETECTOR_BUDDY
++	bool
++	depends on SMP
++	select HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
++
++# Both the "perf" and "buddy" hardlockup detectors count hrtimer
++# interrupts. This config enables functions managing this common code.
++config HARDLOCKUP_DETECTOR_COUNTS_HRTIMER
++	bool
++	select SOFTLOCKUP_DETECTOR
++
++# For hardlockup detectors you can have one directly provided by the arch
++# or use a "non-arch" one. If you're using a "non-arch" one that is
++# further divided the perf hardlockup detector (which, confusingly, needs
++# arch-provided perf support) and the buddy hardlockup detector (which just
++# needs SMP). In either case, using the "non-arch" code conflicts with
++# the NMI watchdog code (which is sometimes used directly and sometimes used
++# by the arch-provided hardlockup detector).
++config HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
++	bool
++	depends on (HAVE_HARDLOCKUP_DETECTOR_PERF || SMP) && !HAVE_NMI_WATCHDOG
++	default y
++
++# This will select the appropriate non-arch hardlockdup detector
++config HARDLOCKUP_DETECTOR_NON_ARCH
++	bool
++	depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH
++	select HARDLOCKUP_DETECTOR_BUDDY if !HAVE_HARDLOCKUP_DETECTOR_PERF || HARDLOCKUP_DETECTOR_PREFER_BUDDY
++	select HARDLOCKUP_DETECTOR_PERF if HAVE_HARDLOCKUP_DETECTOR_PERF && !HARDLOCKUP_DETECTOR_PREFER_BUDDY
++
++#
++# Enables a timestamp based low pass filter to compensate for perf based
++# hard lockup detection which runs too fast due to turbo modes.
++#
++config HARDLOCKUP_CHECK_TIMESTAMP
++	bool
++
+ config BOOTPARAM_HARDLOCKUP_PANIC
+ 	bool "Panic (Reboot) On Hard Lockups"
+ 	depends on HARDLOCKUP_DETECTOR
 -- 
+2.35.3
 
-- Arnaldo
