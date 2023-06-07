@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B37C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 16:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D03C83005
+	for <linux-perf-users@archiver.kernel.org>; Wed,  7 Jun 2023 16:27:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231837AbjFGQ1h (ORCPT
+        id S231643AbjFGQ1i (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 7 Jun 2023 12:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49522 "EHLO
+        Wed, 7 Jun 2023 12:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231466AbjFGQ1d (ORCPT
+        with ESMTP id S231556AbjFGQ1d (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Wed, 7 Jun 2023 12:27:33 -0400
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9549D1BF9;
-        Wed,  7 Jun 2023 09:27:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4A4C1FC8;
+        Wed,  7 Jun 2023 09:27:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686155245; x=1717691245;
+  t=1686155247; x=1717691247;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=2C7aCX6G2hhSoQAmNKGVuPpL/IuHX6KOy5Rdk4ABEOg=;
-  b=cRph+muB+AaRpZho2OlaIW41cA1IYQg0nb1QzUL6I1Xa2bNfqI/QhVHZ
-   DcF5OLy6JEclw5rzzI/75WctVh2q4JKaKKnrL2W/m5iD8+HGMr3hM27QA
-   kBL5dHsIPTt/v2/FMj7hqQ/02IPU+19383XqEVfnTITVf/wTlt6rLHqka
-   1pt0+jWXiZToosqOMmyuPYCTwd3XBusXsFtti5M1MRUpUs6w+H2LoMjMt
-   n6d5JeteQ3AtNhhHS9nRhcm/1BkP8ksJ3tC92JVHO3seQTQwnx4BK4MU9
-   qQevtMgZHMpb6vQPYdhfBcuwhuKE63J7X3EaDbUoEVfai+6XC8gc4RZE3
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="355892666"
+  bh=nDFGuYU/fWQ64S00Ylbe8Fwu73ikBHRCTGZrVvEniZI=;
+  b=gvMwdtIg3jCMCPyPhV8V+fn73j4S8Mpjjsz0BfHSvZWT8ERMaiu2Vr9D
+   NrA+IWAlCoIYAnkg1Lp72+TIfENnNPyeSLsx9JpQnRD/igQ0E+8TLKZFj
+   FoyfXU1Se2G0x/RkEhWq6po2gI/OAqqdpx7pHURmzJ+Fz1QDAr9nQj2OH
+   WcMkJVv7/D0rvDNocE9Hwb80aIqjNhJKdkqGc1TGYhvG3wSc+lymTswRQ
+   ZMKp6pSn7sZSm2hAmxLFwXYAatUU8SFV9EPoMX8+zOcRM9lgP8TiRw7/F
+   bf8UhI0Kyyq+83CNAtORkCc1i00iSPRn3UCrdD+fKJkvhmDfo9LjJhRr0
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="355892685"
 X-IronPort-AV: E=Sophos;i="6.00,224,1681196400"; 
-   d="scan'208";a="355892666"
+   d="scan'208";a="355892685"
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2023 09:27:23 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2023 09:27:24 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="774697678"
+X-IronPort-AV: E=McAfee;i="6600,9927,10734"; a="774697688"
 X-IronPort-AV: E=Sophos;i="6.00,224,1681196400"; 
-   d="scan'208";a="774697678"
+   d="scan'208";a="774697688"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Jun 2023 09:27:22 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 07 Jun 2023 09:27:23 -0700
 From:   kan.liang@linux.intel.com
 To:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
         irogers@google.com, namhyung@kernel.org, jolsa@kernel.org,
@@ -47,9 +47,9 @@ To:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 6/8] perf stat,metrics: New metricgroup output for the default mode
-Date:   Wed,  7 Jun 2023 09:26:58 -0700
-Message-Id: <20230607162700.3234712-7-kan.liang@linux.intel.com>
+Subject: [PATCH 8/8] perf test: Add test case for the standard perf stat output
+Date:   Wed,  7 Jun 2023 09:27:00 -0700
+Message-Id: <20230607162700.3234712-9-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20230607162700.3234712-1-kan.liang@linux.intel.com>
 References: <20230607162700.3234712-1-kan.liang@linux.intel.com>
@@ -61,405 +61,280 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-In the default mode, the current output of the metricgroup include both
-events and metrics, which is not necessary and just makes the output
-hard to read. Since different ARCHs (even different generations in the
-same ARCH) may use different events. The output also vary on different
-platforms.
-
-For a metricgroup, only outputting the value of each metric is good
-enough.
-
-Current perf may append different metric groups to the same leader
-event, or append the metrics from the same metricgroup to different
-events. That could bring confusion when perf only prints the
-metricgroup output mode. For example, print the same metricgroup name
-several times.
-Reorganize metricgroup for the default mode and make sure that
-a metricgroup can only be appended to one event.
-Sort the metricgroup for the default mode by the name of the
-metricgroup.
-
-Add a new field default_metricgroup in evsel to indicate an event of
-the default metricgroup. For those events, printout() should print
-the metricgroup name rather than events.
-
-Add print_metricgroup_header() to print out the metricgroup name in
-different output formats.
-
-On SPR
-Before:
-
- ./perf_old stat sleep 1
-
- Performance counter stats for 'sleep 1':
-
-              0.54 msec task-clock:u                     #    0.001 CPUs utilized
-                 0      context-switches:u               #    0.000 /sec
-                 0      cpu-migrations:u                 #    0.000 /sec
-                68      page-faults:u                    #  125.445 K/sec
-           540,970      cycles:u                         #    0.998 GHz
-           556,325      instructions:u                   #    1.03  insn per cycle
-           123,602      branches:u                       #  228.018 M/sec
-             6,889      branch-misses:u                  #    5.57% of all branches
-         3,245,820      TOPDOWN.SLOTS:u                  #     18.4 %  tma_backend_bound
-                                                  #     17.2 %  tma_retiring
-                                                  #     23.1 %  tma_bad_speculation
-                                                  #     41.4 %  tma_frontend_bound
-           564,859      topdown-retiring:u
-         1,370,999      topdown-fe-bound:u
-           603,271      topdown-be-bound:u
-           744,874      topdown-bad-spec:u
-            12,661      INT_MISC.UOP_DROPPING:u          #   23.357 M/sec
-
-       1.001798215 seconds time elapsed
-
-       0.000193000 seconds user
-       0.001700000 seconds sys
-
-After:
-
-$ ./perf stat sleep 1
-
- Performance counter stats for 'sleep 1':
-
-              0.51 msec task-clock:u                     #    0.001 CPUs utilized
-                 0      context-switches:u               #    0.000 /sec
-                 0      cpu-migrations:u                 #    0.000 /sec
-                68      page-faults:u                    #  132.683 K/sec
-           545,228      cycles:u                         #    1.064 GHz
-           555,509      instructions:u                   #    1.02  insn per cycle
-           123,574      branches:u                       #  241.120 M/sec
-             6,957      branch-misses:u                  #    5.63% of all branches
-                        TopdownL1                 #     17.5 %  tma_backend_bound
-                                                  #     22.6 %  tma_bad_speculation
-                                                  #     42.7 %  tma_frontend_bound
-                                                  #     17.1 %  tma_retiring
-                        TopdownL2                 #     21.8 %  tma_branch_mispredicts
-                                                  #     11.5 %  tma_core_bound
-                                                  #     13.4 %  tma_fetch_bandwidth
-                                                  #     29.3 %  tma_fetch_latency
-                                                  #      2.7 %  tma_heavy_operations
-                                                  #     14.5 %  tma_light_operations
-                                                  #      0.8 %  tma_machine_clears
-                                                  #      6.1 %  tma_memory_bound
-
-       1.001712086 seconds time elapsed
-
-       0.000151000 seconds user
-       0.001618000 seconds sys
-
+Add a new test case to verify the standard perf stat output with
+different options.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/builtin-stat.c      |   1 +
- tools/perf/util/evsel.h        |   1 +
- tools/perf/util/metricgroup.c  | 106 ++++++++++++++++++++++++++++++++-
- tools/perf/util/metricgroup.h  |   1 +
- tools/perf/util/stat-display.c |  69 ++++++++++++++++++++-
- 5 files changed, 172 insertions(+), 6 deletions(-)
+ tools/perf/tests/shell/stat+std_output.sh | 259 ++++++++++++++++++++++
+ 1 file changed, 259 insertions(+)
+ create mode 100755 tools/perf/tests/shell/stat+std_output.sh
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index 2269b3e90e9b..b274cc264d56 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2172,6 +2172,7 @@ static int add_default_attributes(void)
- 
- 			evlist__for_each_entry(metric_evlist, metric_evsel) {
- 				metric_evsel->skippable = true;
-+				metric_evsel->default_metricgroup = true;
- 			}
- 			evlist__splice_list_tail(evsel_list, &metric_evlist->core.entries);
- 			evlist__delete(metric_evlist);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 36a32e4ca168..61b1385108f4 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -130,6 +130,7 @@ struct evsel {
- 	bool			reset_group;
- 	bool			errored;
- 	bool			needs_auxtrace_mmap;
-+	bool			default_metricgroup;
- 	struct hashmap		*per_pkg_mask;
- 	int			err;
- 	struct {
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index efafa02db5e5..22181ce4f27f 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -79,6 +79,7 @@ static struct rb_node *metric_event_new(struct rblist *rblist __maybe_unused,
- 		return NULL;
- 	memcpy(me, entry, sizeof(struct metric_event));
- 	me->evsel = ((struct metric_event *)entry)->evsel;
-+	me->default_metricgroup_name = NULL;
- 	INIT_LIST_HEAD(&me->head);
- 	return &me->nd;
- }
-@@ -1133,14 +1134,19 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
- /**
-  * metric_list_cmp - list_sort comparator that sorts metrics with more events to
-  *                   the front. tool events are excluded from the count.
-+ *                   For the default metrics, sort them by metricgroup name.
-  */
--static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
-+static int metric_list_cmp(void *priv, const struct list_head *l,
- 			   const struct list_head *r)
- {
- 	const struct metric *left = container_of(l, struct metric, nd);
- 	const struct metric *right = container_of(r, struct metric, nd);
- 	struct expr_id_data *data;
- 	int i, left_count, right_count;
-+	bool is_default = *(bool *)priv;
+diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
+new file mode 100755
+index 000000000000..b9db0f245450
+--- /dev/null
++++ b/tools/perf/tests/shell/stat+std_output.sh
+@@ -0,0 +1,259 @@
++#!/bin/bash
++# perf stat STD output linter
++# SPDX-License-Identifier: GPL-2.0
++# Tests various perf stat STD output commands for
++# default event and metricgroup
 +
-+	if (is_default && left->default_metricgroup_name && right->default_metricgroup_name)
-+		return strcmp(left->default_metricgroup_name, right->default_metricgroup_name);
- 
- 	left_count = hashmap__size(left->pctx->ids);
- 	perf_tool_event__for_each_event(i) {
-@@ -1497,6 +1503,91 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 	return ret;
- }
- 
-+static struct metric_event *
-+metricgroup__lookup_default_metricgroup(struct rblist *metric_events,
-+					struct evsel *evsel,
-+					struct metric *m)
-+{
-+	struct metric_event *me;
-+	char *name;
-+	int err;
++set -e
 +
-+	me = metricgroup__lookup(metric_events, evsel, true);
-+	if (!me->default_metricgroup_name) {
-+		if (m->pmu && strcmp(m->pmu, "cpu"))
-+			err = asprintf(&name, "%s (%s)", m->default_metricgroup_name, m->pmu);
-+		else
-+			err = asprintf(&name, "%s", m->default_metricgroup_name);
-+		if (err < 0)
-+			return NULL;
-+		me->default_metricgroup_name = name;
-+	}
-+	if (!strncmp(m->default_metricgroup_name,
-+		     me->default_metricgroup_name,
-+		     strlen(m->default_metricgroup_name)))
-+		return me;
++skip_test=0
 +
-+	return NULL;
++stat_output=$(mktemp /tmp/__perf_test.stat_output.std.XXXXX)
++
++event_name=(cpu-clock task-clock context-switches cpu-migrations page-faults cycles instructions branches branch-misses stalled-cycles-frontend stalled-cycles-backend)
++event_metric=("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "GHz" "insn per cycle" "/sec" "of all branches" "frontend cycles idle" "backend cycles idle")
++
++metricgroup_name=(TopdownL1 TopdownL2)
++
++cleanup() {
++  rm -f "${stat_output}"
++
++  trap - EXIT TERM INT
 +}
 +
-+static struct metric_event *
-+metricgroup__lookup_create(struct rblist *metric_events,
-+			   struct evsel **evsel,
-+			   struct list_head *metric_list,
-+			   struct metric *m,
-+			   bool is_default)
++trap_cleanup() {
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
++
++function commachecker()
 +{
-+	struct metric_event *me;
-+	struct metric *cur;
-+	struct evsel *ev;
-+	size_t i;
++	local -i cnt=0
++	local prefix=1
 +
-+	if (!is_default)
-+		return metricgroup__lookup(metric_events, evsel[0], true);
++	case "$1"
++	in "--interval")	prefix=2
++	;; "--per-thread")	prefix=2
++	;; "--system-wide-no-aggr")	prefix=2
++	;; "--per-core")	prefix=3
++	;; "--per-socket")	prefix=3
++	;; "--per-node")	prefix=3
++	;; "--per-die")		prefix=3
++	;; "--per-cache")	prefix=3
++	esac
 +
-+	/*
-+	 * If the metric group has been attached to a previous
-+	 * event/metric, use that metric event.
-+	 */
-+	list_for_each_entry(cur, metric_list, nd) {
-+		if (cur == m)
-+			break;
-+		if (cur->pmu && strcmp(m->pmu, cur->pmu))
-+			continue;
-+		if (strncmp(m->default_metricgroup_name,
-+			    cur->default_metricgroup_name,
-+			    strlen(m->default_metricgroup_name)))
-+			continue;
-+		if (!cur->evlist)
-+			continue;
-+		evlist__for_each_entry(cur->evlist, ev) {
-+			me = metricgroup__lookup(metric_events, ev, false);
-+			if (!strncmp(m->default_metricgroup_name,
-+				     me->default_metricgroup_name,
-+				     strlen(m->default_metricgroup_name)))
-+				return me;
++	while read line
++	do
++		# Ignore initial "started on" comment.
++		x=${line:0:1}
++		[ "$x" = "#" ] && continue
++		# Ignore initial blank line.
++		[ "$line" = "" ] && continue
++		# Ignore "Performance counter stats"
++		x=${line:0:25}
++		[ "$x" = "Performance counter stats" ] && continue
++		# Ignore "seconds time elapsed" and break
++		[[ "$line" == *"time elapsed"* ]] && break
++
++		main_body=$(echo $line | cut -d' ' -f$prefix-)
++		x=${main_body%#*}
++		# Check default metricgroup
++		y=$(echo $x | tr -d ' ')
++		[ "$y" = "" ] && continue
++		for i in "${!metricgroup_name[@]}"; do
++			[[ "$y" == *"${metricgroup_name[$i]}"* ]] && break
++		done
++		[[ "$y" == *"${metricgroup_name[$i]}"* ]] && continue
++
++		# Check default event
++		for i in "${!event_name[@]}"; do
++			[[ "$x" == *"${event_name[$i]}"* ]] && break
++		done
++
++		[[ ! "$x" == *"${event_name[$i]}"* ]] && {
++			echo "Unknown event name in $line" 1>&2
++			exit 1;
 +		}
-+	}
 +
-+	/*
-+	 * Different metric groups may append to the same leader event.
-+	 * For example, TopdownL1 and TopdownL2 are appended to the
-+	 * TOPDOWN.SLOTS event.
-+	 * Split it and append the new metric group to the next available
-+	 * event.
-+	 */
-+	me = metricgroup__lookup_default_metricgroup(metric_events, evsel[0], m);
-+	if (me)
-+		return me;
-+
-+	for (i = 1; i < hashmap__size(m->pctx->ids); i++) {
-+		me = metricgroup__lookup_default_metricgroup(metric_events, evsel[i], m);
-+		if (me)
-+			return me;
-+	}
-+	return NULL;
-+}
-+
- static int parse_groups(struct evlist *perf_evlist,
- 			const char *pmu, const char *str,
- 			bool metric_no_group,
-@@ -1512,6 +1603,7 @@ static int parse_groups(struct evlist *perf_evlist,
- 	LIST_HEAD(metric_list);
- 	struct metric *m;
- 	bool tool_events[PERF_TOOL_MAX] = {false};
-+	bool is_default = !strcmp(str, "Default");
- 	int ret;
- 
- 	if (metric_events_list->nr_entries == 0)
-@@ -1523,7 +1615,7 @@ static int parse_groups(struct evlist *perf_evlist,
- 		goto out;
- 
- 	/* Sort metrics from largest to smallest. */
--	list_sort(NULL, &metric_list, metric_list_cmp);
-+	list_sort((void *)&is_default, &metric_list, metric_list_cmp);
- 
- 	if (!metric_no_merge) {
- 		struct expr_parse_ctx *combined = NULL;
-@@ -1603,7 +1695,15 @@ static int parse_groups(struct evlist *perf_evlist,
- 			goto out;
- 		}
- 
--		me = metricgroup__lookup(metric_events_list, metric_events[0], true);
-+		me = metricgroup__lookup_create(metric_events_list,
-+						metric_events,
-+						&metric_list, m,
-+						is_default);
-+		if (!me) {
-+			pr_err("Cannot create metric group for default!\n");
-+			ret = -EINVAL;
-+			goto out;
++		# Check event metric if it exists
++		[[ ! "$main_body" == *"#"* ]] && continue
++		[[ ! "$main_body" == *"${event_metric[$i]}"* ]] && {
++			echo "wrong event metric. expected ${event_metric[$i]} in $line" 1>&2
++			exit 1;
 +		}
- 
- 		expr = malloc(sizeof(struct metric_expr));
- 		if (!expr) {
-diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
-index bf18274c15df..e3609b853213 100644
---- a/tools/perf/util/metricgroup.h
-+++ b/tools/perf/util/metricgroup.h
-@@ -22,6 +22,7 @@ struct cgroup;
- struct metric_event {
- 	struct rb_node nd;
- 	struct evsel *evsel;
-+	char *default_metricgroup_name;
- 	struct list_head head; /* list of metric_expr */
- };
- 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index a2bbdc25d979..efe5fd04c033 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -21,10 +21,12 @@
- #include "iostat.h"
- #include "pmu.h"
- #include "pmus.h"
-+#include "metricgroup.h"
- 
- #define CNTR_NOT_SUPPORTED	"<not supported>"
- #define CNTR_NOT_COUNTED	"<not counted>"
- 
-+#define MGROUP_LEN   50
- #define METRIC_LEN   38
- #define EVNAME_LEN   32
- #define COUNTS_LEN   18
-@@ -707,6 +709,55 @@ static bool evlist__has_hybrid(struct evlist *evlist)
- 	return false;
- }
- 
-+static void print_metricgroup_header_json(struct perf_stat_config *config,
-+					  struct outstate *os __maybe_unused,
-+					  const char *metricgroup_name)
-+{
-+	fprintf(config->output, "\"metricgroup\" : \"%s\"}", metricgroup_name);
-+	new_line_json(config, (void *)os);
++	done < "${stat_output}"
++	return 0
 +}
 +
-+static void print_metricgroup_header_csv(struct perf_stat_config *config,
-+					 struct outstate *os,
-+					 const char *metricgroup_name)
++# Return true if perf_event_paranoid is > $1 and not running as root.
++function ParanoidAndNotRoot()
 +{
-+	int i;
-+
-+	for (i = 0; i < os->nfields; i++)
-+		fputs(config->csv_sep, os->fh);
-+	fprintf(config->output, "%s", metricgroup_name);
-+	new_line_csv(config, (void *)os);
++	 [ $(id -u) != 0 ] && [ $(cat /proc/sys/kernel/perf_event_paranoid) -gt $1 ]
 +}
 +
-+static void print_metricgroup_header_std(struct perf_stat_config *config,
-+					 struct outstate *os __maybe_unused,
-+					 const char *metricgroup_name)
++check_no_args()
 +{
-+	int n = fprintf(config->output, " %*s", EVNAME_LEN, metricgroup_name);
-+
-+	fprintf(config->output, "%*s", MGROUP_LEN - n - 1, "");
++	echo -n "Checking STD output: no args "
++	perf stat -o "${stat_output}" true
++        commachecker --no-args
++	echo "[Success]"
 +}
 +
-+static void print_metricgroup_header(struct perf_stat_config *config,
-+				     struct outstate *os,
-+				     struct evsel *counter,
-+				     double noise, u64 run, u64 ena,
-+				     const char *metricgroup_name)
++check_system_wide()
 +{
-+	aggr_printout(config, os->evsel, os->id, os->aggr_nr);
-+
-+	print_noise(config, counter, noise, /*before_metric=*/true);
-+	print_running(config, run, ena, /*before_metric=*/true);
-+
-+	if (config->json_output) {
-+		print_metricgroup_header_json(config, os, metricgroup_name);
-+	} else if (config->csv_output) {
-+		print_metricgroup_header_csv(config, os, metricgroup_name);
-+	} else
-+		print_metricgroup_header_std(config, os, metricgroup_name);
-+
++	echo -n "Checking STD output: system wide "
++	if ParanoidAndNotRoot 0
++	then
++		echo "[Skip] paranoid and not root"
++		return
++	fi
++	perf stat -a -o "${stat_output}" true
++        commachecker --system-wide
++	echo "[Success]"
 +}
 +
- static void printout(struct perf_stat_config *config, struct outstate *os,
- 		     double uval, u64 run, u64 ena, double noise, int aggr_idx)
- {
-@@ -751,10 +802,17 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
- 	out.force_header = false;
- 
- 	if (!config->metric_only) {
--		abs_printout(config, os->id, os->aggr_nr, counter, uval, ok);
-+		if (counter->default_metricgroup) {
-+			struct metric_event *me;
- 
--		print_noise(config, counter, noise, /*before_metric=*/true);
--		print_running(config, run, ena, /*before_metric=*/true);
-+			me = metricgroup__lookup(&config->metric_events, counter, false);
-+			print_metricgroup_header(config, os, counter, noise, run, ena,
-+						 me->default_metricgroup_name);
-+		} else {
-+			abs_printout(config, os->id, os->aggr_nr, counter, uval, ok);
-+			print_noise(config, counter, noise, /*before_metric=*/true);
-+			print_running(config, run, ena, /*before_metric=*/true);
-+		}
- 	}
- 
- 	if (ok) {
-@@ -883,6 +941,11 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
- 	if (counter->merged_stat)
- 		return;
- 
-+	/* Only print the metric group for the default mode */
-+	if (counter->default_metricgroup &&
-+	    !metricgroup__lookup(&config->metric_events, counter, false))
-+		return;
++check_system_wide_no_aggr()
++{
++	echo -n "Checking STD output: system wide no aggregation "
++	if ParanoidAndNotRoot 0
++	then
++		echo "[Skip] paranoid and not root"
++		return
++	fi
++	perf stat -A -a --no-merge -o "${stat_output}" true
++        commachecker --system-wide-no-aggr
++	echo "[Success]"
++}
 +
- 	uniquify_counter(config, counter);
- 
- 	val = aggr->counts.val;
++check_interval()
++{
++	echo -n "Checking STD output: interval "
++	perf stat -I 1000 -o "${stat_output}" true
++        commachecker --interval
++	echo "[Success]"
++}
++
++
++check_per_core()
++{
++	echo -n "Checking STD output: per core "
++	if ParanoidAndNotRoot 0
++	then
++		echo "[Skip] paranoid and not root"
++		return
++	fi
++	perf stat --per-core -a -o "${stat_output}" true
++        commachecker --per-core
++	echo "[Success]"
++}
++
++check_per_thread()
++{
++	echo -n "Checking STD output: per thread "
++	if ParanoidAndNotRoot 0
++	then
++		echo "[Skip] paranoid and not root"
++		return
++	fi
++	perf stat --per-thread -a -o "${stat_output}" true
++        commachecker --per-thread
++	echo "[Success]"
++}
++
++check_per_cache_instance()
++{
++	echo -n "Checking STD output: per cache instance "
++	if ParanoidAndNotRoot 0
++	then
++		echo "[Skip] paranoid and not root"
++		return
++	fi
++	perf stat  --per-cache -a true 2>&1 | commachecker --per-cache
++	echo "[Success]"
++}
++
++check_per_die()
++{
++	echo -n "Checking STD output: per die "
++	if ParanoidAndNotRoot 0
++	then
++		echo "[Skip] paranoid and not root"
++		return
++	fi
++	perf stat --per-die -a -o "${stat_output}" true
++        commachecker --per-die
++	echo "[Success]"
++}
++
++check_per_node()
++{
++	echo -n "Checking STD output: per node "
++	if ParanoidAndNotRoot 0
++	then
++		echo "[Skip] paranoid and not root"
++		return
++	fi
++	perf stat --per-node -a -o "${stat_output}" true
++        commachecker --per-node
++	echo "[Success]"
++}
++
++check_per_socket()
++{
++	echo -n "Checking STD output: per socket "
++	if ParanoidAndNotRoot 0
++	then
++		echo "[Skip] paranoid and not root"
++		return
++	fi
++	perf stat --per-socket -a -o "${stat_output}" true
++        commachecker --per-socket
++	echo "[Success]"
++}
++
++# The perf stat options for per-socket, per-core, per-die
++# and -A ( no_aggr mode ) uses the info fetched from this
++# directory: "/sys/devices/system/cpu/cpu*/topology". For
++# example, socket value is fetched from "physical_package_id"
++# file in topology directory.
++# Reference: cpu__get_topology_int in util/cpumap.c
++# If the platform doesn't expose topology information, values
++# will be set to -1. For example, incase of pSeries platform
++# of powerpc, value for  "physical_package_id" is restricted
++# and set to -1. Check here validates the socket-id read from
++# topology file before proceeding further
++
++FILE_LOC="/sys/devices/system/cpu/cpu*/topology/"
++FILE_NAME="physical_package_id"
++
++check_for_topology()
++{
++	if ! ParanoidAndNotRoot 0
++	then
++		socket_file=`ls $FILE_LOC/$FILE_NAME | head -n 1`
++		[ -z $socket_file ] && return 0
++		socket_id=`cat $socket_file`
++		[ $socket_id == -1 ] && skip_test=1
++		return 0
++	fi
++}
++
++check_for_topology
++check_no_args
++check_system_wide
++check_interval
++check_per_thread
++check_per_node
++if [ $skip_test -ne 1 ]
++then
++	check_system_wide_no_aggr
++	check_per_core
++	check_per_cache_instance
++	check_per_die
++	check_per_socket
++else
++	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
++fi
++cleanup
++exit 0
 -- 
 2.35.1
 
