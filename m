@@ -2,26 +2,26 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7050C7EE43
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 11:00:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5E2C83003
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 11:00:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235560AbjFHLAK (ORCPT
+        id S235536AbjFHLAL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 07:00:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60664 "EHLO
+        Thu, 8 Jun 2023 07:00:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235606AbjFHK76 (ORCPT
+        with ESMTP id S235939AbjFHLAE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 06:59:58 -0400
+        Thu, 8 Jun 2023 07:00:04 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 35E7F11A;
-        Thu,  8 Jun 2023 03:59:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EA4EA136;
+        Thu,  8 Jun 2023 04:00:02 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 650D01042;
-        Thu,  8 Jun 2023 04:00:41 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 319451042;
+        Thu,  8 Jun 2023 04:00:48 -0700 (PDT)
 Received: from e127643.broadband (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6CBBA3F71E;
-        Thu,  8 Jun 2023 03:59:53 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3966D3F71E;
+        Thu,  8 Jun 2023 04:00:00 -0700 (PDT)
 From:   James Clark <james.clark@arm.com>
 To:     coresight@lists.linaro.org
 Cc:     James Clark <james.clark@arm.com>,
@@ -41,9 +41,9 @@ Cc:     James Clark <james.clark@arm.com>,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/5] perf cs-etm: Only track threads instead of PID and TIDs
-Date:   Thu,  8 Jun 2023 11:59:25 +0100
-Message-Id: <20230608105930.1389276-2-james.clark@arm.com>
+Subject: [PATCH v2 3/5] perf cs-etm: Make PID format accessible from struct cs_etm_auxtrace
+Date:   Thu,  8 Jun 2023 11:59:27 +0100
+Message-Id: <20230608105930.1389276-4-james.clark@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230608105930.1389276-1-james.clark@arm.com>
 References: <20230608105930.1389276-1-james.clark@arm.com>
@@ -53,321 +53,170 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-PIDs and TIDs are already contained within the thread struct, so to
-avoid inconsistencies drop the extra members on the etm queue and only
-use the thread struct.
+To avoid every user of PID format having to use their own static
+local variable, cache it on initialisation and change the accessor to
+take struct cs_etm_auxtrace.
 
-At the same time stop using the 'unknown' thread. In a later commit
-we will be making samples from multiple machines so it will be better
-to use the idle thread of each machine rather than overlapping unknown
-threads. Using the idle thread is also better because kernel addresses
-with a previously unknown thread will now be assigned to a real kernel
-thread.
-
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/util/cs-etm.c | 124 ++++++++++++---------------------------
- 1 file changed, 38 insertions(+), 86 deletions(-)
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c | 20 ++-------
+ tools/perf/util/cs-etm.c                      | 42 ++++++++++++-------
+ tools/perf/util/cs-etm.h                      |  8 +++-
+ 3 files changed, 37 insertions(+), 33 deletions(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 91299cc56bf7..ebffc9052561 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -46,8 +46,6 @@ struct cs_etm_auxtrace {
- 	struct auxtrace_heap heap;
- 	struct itrace_synth_opts synth_opts;
- 	struct perf_session *session;
--	struct machine *machine;
--	struct thread *unknown_thread;
- 	struct perf_tsc_conversion tc;
- 
- 	/*
-@@ -84,7 +82,6 @@ struct cs_etm_auxtrace {
- 
- struct cs_etm_traceid_queue {
- 	u8 trace_chan_id;
--	pid_t pid, tid;
- 	u64 period_instructions;
- 	size_t last_branch_pos;
- 	union perf_event *event_buf;
-@@ -480,9 +477,9 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
- 	cs_etm__clear_packet_queue(&tidq->packet_queue);
- 
- 	queue = &etmq->etm->queues.queue_array[etmq->queue_nr];
--	tidq->tid = queue->tid;
--	tidq->pid = -1;
- 	tidq->trace_chan_id = trace_chan_id;
-+	tidq->thread = machine__findnew_thread(&etm->session->machines.host, -1,
-+					       queue->tid);
- 
- 	tidq->packet = zalloc(sizeof(struct cs_etm_packet));
- 	if (!tidq->packet)
-@@ -863,7 +860,6 @@ static void cs_etm__free(struct perf_session *session)
- 	for (i = 0; i < aux->num_cpu; i++)
- 		zfree(&aux->metadata[i]);
- 
--	thread__zput(aux->unknown_thread);
- 	zfree(&aux->metadata);
- 	zfree(&aux);
- }
-@@ -882,7 +878,7 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+index 82a27ab90c8b..2af641d26866 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+@@ -541,34 +541,22 @@ cs_etm_decoder__set_tid(struct cs_etm_queue *etmq,
+ 			const uint8_t trace_chan_id)
  {
- 	struct machine *machine;
- 
--	machine = etmq->etm->machine;
-+	machine = &etmq->etm->session->machines.host;
- 
- 	if (address >= machine__kernel_start(machine)) {
- 		if (machine__is_host(machine))
-@@ -905,8 +901,6 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 	u8  cpumode;
- 	u64 offset;
- 	int len;
--	struct thread *thread;
--	struct machine *machine;
- 	struct addr_location al;
- 	struct dso *dso;
- 	struct cs_etm_traceid_queue *tidq;
-@@ -914,20 +908,12 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 	if (!etmq)
- 		return 0;
- 
--	machine = etmq->etm->machine;
- 	cpumode = cs_etm__cpu_mode(etmq, address);
- 	tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
- 	if (!tidq)
- 		return 0;
- 
--	thread = tidq->thread;
--	if (!thread) {
--		if (cpumode != PERF_RECORD_MISC_KERNEL)
--			return 0;
--		thread = etmq->etm->unknown_thread;
--	}
--
--	if (!thread__find_map(thread, cpumode, address, &al))
-+	if (!thread__find_map(tidq->thread, cpumode, address, &al))
- 		return 0;
- 
- 	dso = map__dso(al.map);
-@@ -942,7 +928,8 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
- 
- 	map__load(al.map);
- 
--	len = dso__data_read_offset(dso, machine, offset, buffer, size);
-+	len = dso__data_read_offset(dso, maps__machine(tidq->thread->maps),
-+				    offset, buffer, size);
- 
- 	if (len <= 0) {
- 		ui__warning_once("CS ETM Trace: Missing DSO. Use 'perf archive' or debuginfod to export data from the traced system.\n"
-@@ -1303,39 +1290,31 @@ cs_etm__get_trace(struct cs_etm_queue *etmq)
- 	return etmq->buf_len;
- }
- 
--static void cs_etm__set_pid_tid_cpu(struct cs_etm_auxtrace *etm,
--				    struct cs_etm_traceid_queue *tidq)
-+static void cs_etm__set_thread(struct cs_etm_auxtrace *etm,
-+			       struct cs_etm_traceid_queue *tidq, pid_t tid)
- {
--	if ((!tidq->thread) && (tidq->tid != -1))
--		tidq->thread = machine__find_thread(etm->machine, -1,
--						    tidq->tid);
-+	struct machine *machine = &etm->session->machines.host;
-+
-+	if (tid != -1) {
-+		thread__zput(tidq->thread);
-+		tidq->thread = machine__find_thread(machine, -1, tid);
-+	}
- 
--	if (tidq->thread)
--		tidq->pid = tidq->thread->pid_;
-+	/* Couldn't find a known thread */
-+	if (!tidq->thread)
-+		tidq->thread = machine__idle_thread(machine);
- }
- 
- int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
- 			 pid_t tid, u8 trace_chan_id)
- {
--	int cpu, err = -EINVAL;
--	struct cs_etm_auxtrace *etm = etmq->etm;
- 	struct cs_etm_traceid_queue *tidq;
- 
- 	tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
- 	if (!tidq)
--		return err;
--
--	if (cs_etm__get_cpu(trace_chan_id, &cpu) < 0)
--		return err;
--
--	err = machine__set_current_tid(etm->machine, cpu, tid, tid);
--	if (err)
--		return err;
--
--	tidq->tid = tid;
--	thread__zput(tidq->thread);
-+		return -EINVAL;
- 
--	cs_etm__set_pid_tid_cpu(etm, tidq);
-+	cs_etm__set_thread(etmq->etm, tidq, tid);
- 	return 0;
- }
- 
-@@ -1412,8 +1391,8 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 	sample.time = cs_etm__resolve_sample_time(etmq, tidq);
- 
- 	sample.ip = addr;
--	sample.pid = tidq->pid;
--	sample.tid = tidq->tid;
-+	sample.pid = tidq->thread->pid_;
-+	sample.tid = tidq->thread->tid;
- 	sample.id = etmq->etm->instructions_id;
- 	sample.stream_id = etmq->etm->instructions_id;
- 	sample.period = period;
-@@ -1471,8 +1450,8 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
- 	sample.time = cs_etm__resolve_sample_time(etmq, tidq);
- 
- 	sample.ip = ip;
--	sample.pid = tidq->pid;
--	sample.tid = tidq->tid;
-+	sample.pid = tidq->thread->pid_;
-+	sample.tid = tidq->thread->tid;
- 	sample.addr = cs_etm__first_executed_instr(tidq->packet);
- 	sample.id = etmq->etm->branches_id;
- 	sample.stream_id = etmq->etm->branches_id;
-@@ -2466,11 +2445,6 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 		if (!etmq)
- 			continue;
- 
--		/*
--		 * Per-cpu mode has contextIDs in the trace and the decoder
--		 * calls cs_etm__set_pid_tid_cpu() automatically so no need
--		 * to do this here
--		 */
- 		if (etm->per_thread_decoding) {
- 			tidq = cs_etm__etmq_get_traceid_queue(
- 				etmq, CS_ETM_PER_THREAD_TRACEID);
-@@ -2478,10 +2452,8 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 			if (!tidq)
- 				continue;
- 
--			if ((tid == -1) || (tidq->tid == tid)) {
--				cs_etm__set_pid_tid_cpu(etm, tidq);
-+			if (tid == -1 || tidq->thread->tid == tid)
- 				cs_etm__run_per_thread_timeless_decoder(etmq);
--			}
- 		} else
- 			cs_etm__run_per_cpu_timeless_decoder(etmq);
- 	}
-@@ -2611,10 +2583,12 @@ static int cs_etm__process_itrace_start(struct cs_etm_auxtrace *etm,
- 		return 0;
- 
- 	/*
--	 * Add the tid/pid to the log so that we can get a match when
--	 * we get a contextID from the decoder.
-+	 * Add the tid/pid to the log so that we can get a match when we get a
-+	 * contextID from the decoder. Only track for the host: only kernel
-+	 * trace is supported for guests which wouldn't need pids so this should
-+	 * be fine.
- 	 */
--	th = machine__findnew_thread(etm->machine,
-+	th = machine__findnew_thread(&etm->session->machines.host,
- 				     event->itrace_start.pid,
- 				     event->itrace_start.tid);
- 	if (!th)
-@@ -2647,10 +2621,12 @@ static int cs_etm__process_switch_cpu_wide(struct cs_etm_auxtrace *etm,
- 		return 0;
- 
- 	/*
--	 * Add the tid/pid to the log so that we can get a match when
--	 * we get a contextID from the decoder.
-+	 * Add the tid/pid to the log so that we can get a match when we get a
-+	 * contextID from the decoder. Only track for the host: only kernel
-+	 * trace is supported for guests which wouldn't need pids so this should
-+	 * be fine.
- 	 */
--	th = machine__findnew_thread(etm->machine,
-+	th = machine__findnew_thread(&etm->session->machines.host,
- 				     event->context_switch.next_prev_pid,
- 				     event->context_switch.next_prev_tid);
- 	if (!th)
-@@ -3259,7 +3235,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	}
- 
- 	etm->session = session;
--	etm->machine = &session->machines.host;
- 
- 	etm->num_cpu = num_cpu;
- 	etm->pmu_type = (unsigned int) ((ptr[CS_PMU_TYPE_CPUS] >> 32) & 0xffffffff);
-@@ -3286,27 +3261,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	if (err)
- 		return err;
- 
--	etm->unknown_thread = thread__new(999999999, 999999999);
--	if (!etm->unknown_thread) {
--		err = -ENOMEM;
--		goto err_free_queues;
--	}
+ 	pid_t tid = -1;
+-	static u64 pid_fmt;
+-	int ret;
 -
 -	/*
--	 * Initialize list node so that at thread__zput() we can avoid
--	 * segmentation fault at list_del_init().
+-	 * As all the ETMs run at the same exception level, the system should
+-	 * have the same PID format crossing CPUs.  So cache the PID format
+-	 * and reuse it for sequential decoding.
 -	 */
--	INIT_LIST_HEAD(&etm->unknown_thread->node);
--
--	err = thread__set_comm(etm->unknown_thread, "unknown", 0);
--	if (err)
--		goto err_delete_thread;
--
--	if (thread__init_maps(etm->unknown_thread, etm->machine)) {
--		err = -ENOMEM;
--		goto err_delete_thread;
+-	if (!pid_fmt) {
+-		ret = cs_etm__get_pid_fmt(trace_chan_id, &pid_fmt);
+-		if (ret)
+-			return OCSD_RESP_FATAL_SYS_ERR;
 -	}
--
- 	etm->tc.time_shift = tc->time_shift;
- 	etm->tc.time_mult = tc->time_mult;
- 	etm->tc.time_zero = tc->time_zero;
-@@ -3318,7 +3272,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 	}
- 	err = cs_etm__synth_events(etm, session);
- 	if (err)
--		goto err_delete_thread;
-+		goto err_free_queues;
  
  	/*
- 	 * Map Trace ID values to CPU metadata.
-@@ -3348,7 +3302,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 					session->header.data_size,
- 					cs_etm__process_aux_hw_id_cb, &aux_hw_id_found);
+ 	 * Process the PE_CONTEXT packets if we have a valid contextID or VMID.
+ 	 * If the kernel is running at EL2, the PID is traced in CONTEXTIDR_EL2
+ 	 * as VMID, Bit ETM_OPT_CTXTID2 is set in this case.
+ 	 */
+-	switch (pid_fmt) {
+-	case BIT(ETM_OPT_CTXTID):
++	switch (cs_etm__get_pid_fmt(etmq)) {
++	case CS_ETM_PIDFMT_CTXTID:
+ 		if (elem->context.ctxt_id_valid)
+ 			tid = elem->context.context_id;
+ 		break;
+-	case BIT(ETM_OPT_CTXTID2):
++	case CS_ETM_PIDFMT_CTXTID2:
+ 		if (elem->context.vmid_valid)
+ 			tid = elem->context.vmid;
+ 		break;
++	case CS_ETM_PIDFMT_NONE:
+ 	default:
+ 		break;
+ 	}
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index a997fe79d458..e0904f276e89 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -78,6 +78,7 @@ struct cs_etm_auxtrace {
+ 	u64 instructions_id;
+ 	u64 **metadata;
+ 	unsigned int pmu_type;
++	enum cs_etm_pid_fmt pid_fmt;
+ };
+ 
+ struct cs_etm_traceid_queue {
+@@ -170,44 +171,46 @@ int cs_etm__get_cpu(u8 trace_chan_id, int *cpu)
+ }
+ 
+ /*
+- * The returned PID format is presented by two bits:
++ * The returned PID format is presented as an enum:
+  *
+- *   Bit ETM_OPT_CTXTID: CONTEXTIDR or CONTEXTIDR_EL1 is traced;
+- *   Bit ETM_OPT_CTXTID2: CONTEXTIDR_EL2 is traced.
++ *   CS_ETM_PIDFMT_CTXTID: CONTEXTIDR or CONTEXTIDR_EL1 is traced.
++ *   CS_ETM_PIDFMT_CTXTID2: CONTEXTIDR_EL2 is traced.
++ *   CS_ETM_PIDFMT_NONE: No context IDs
+  *
+  * It's possible that the two bits ETM_OPT_CTXTID and ETM_OPT_CTXTID2
+  * are enabled at the same time when the session runs on an EL2 kernel.
+  * This means the CONTEXTIDR_EL1 and CONTEXTIDR_EL2 both will be
+  * recorded in the trace data, the tool will selectively use
+  * CONTEXTIDR_EL2 as PID.
++ *
++ * The result is cached in etm->pid_fmt so this function only needs to be called
++ * when processing the aux info.
+  */
+-int cs_etm__get_pid_fmt(u8 trace_chan_id, u64 *pid_fmt)
++static enum cs_etm_pid_fmt cs_etm__init_pid_fmt(u64 *metadata)
+ {
+-	struct int_node *inode;
+-	u64 *metadata, val;
+-
+-	inode = intlist__find(traceid_list, trace_chan_id);
+-	if (!inode)
+-		return -EINVAL;
+-
+-	metadata = inode->priv;
++	u64 val;
+ 
+ 	if (metadata[CS_ETM_MAGIC] == __perf_cs_etmv3_magic) {
+ 		val = metadata[CS_ETM_ETMCR];
+ 		/* CONTEXTIDR is traced */
+ 		if (val & BIT(ETM_OPT_CTXTID))
+-			*pid_fmt = BIT(ETM_OPT_CTXTID);
++			return CS_ETM_PIDFMT_CTXTID;
+ 	} else {
+ 		val = metadata[CS_ETMV4_TRCCONFIGR];
+ 		/* CONTEXTIDR_EL2 is traced */
+ 		if (val & (BIT(ETM4_CFG_BIT_VMID) | BIT(ETM4_CFG_BIT_VMID_OPT)))
+-			*pid_fmt = BIT(ETM_OPT_CTXTID2);
++			return CS_ETM_PIDFMT_CTXTID2;
+ 		/* CONTEXTIDR_EL1 is traced */
+ 		else if (val & BIT(ETM4_CFG_BIT_CTXTID))
+-			*pid_fmt = BIT(ETM_OPT_CTXTID);
++			return CS_ETM_PIDFMT_CTXTID;
+ 	}
+ 
+-	return 0;
++	return CS_ETM_PIDFMT_NONE;
++}
++
++enum cs_etm_pid_fmt cs_etm__get_pid_fmt(struct cs_etm_queue *etmq)
++{
++	return etmq->etm->pid_fmt;
+ }
+ 
+ static int cs_etm__map_trace_id(u8 trace_chan_id, u64 *cpu_metadata)
+@@ -3227,6 +3230,13 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 		goto err_free_metadata;
+ 	}
+ 
++	/*
++	 * As all the ETMs run at the same exception level, the system should
++	 * have the same PID format crossing CPUs.  So cache the PID format
++	 * and reuse it for sequential decoding.
++	 */
++	etm->pid_fmt = cs_etm__init_pid_fmt(metadata[0]);
++
+ 	err = auxtrace_queues__init(&etm->queues);
  	if (err)
--		goto err_delete_thread;
-+		goto err_free_queues;
+ 		goto err_free_etm;
+diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+index ecca40787ac9..2f47f4ec5b27 100644
+--- a/tools/perf/util/cs-etm.h
++++ b/tools/perf/util/cs-etm.h
+@@ -244,9 +244,15 @@ int cs_etm__process_auxtrace_info(union perf_event *event,
+ 				  struct perf_session *session);
+ struct perf_event_attr *cs_etm_get_default_config(struct perf_pmu *pmu);
  
- 	/* if HW ID found then clear any unused metadata ID values */
- 	if (aux_hw_id_found)
-@@ -3358,17 +3312,15 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 		err = cs_etm__map_trace_ids_metadata(num_cpu, metadata);
- 
- 	if (err)
--		goto err_delete_thread;
-+		goto err_free_queues;
- 
- 	err = cs_etm__queue_aux_records(session);
- 	if (err)
--		goto err_delete_thread;
-+		goto err_free_queues;
- 
- 	etm->data_queued = etm->queues.populated;
- 	return 0;
- 
--err_delete_thread:
--	thread__zput(etm->unknown_thread);
- err_free_queues:
- 	auxtrace_queues__free(&etm->queues);
- 	session->auxtrace = NULL;
++enum cs_etm_pid_fmt {
++	CS_ETM_PIDFMT_NONE,
++	CS_ETM_PIDFMT_CTXTID,
++	CS_ETM_PIDFMT_CTXTID2
++};
++
+ #ifdef HAVE_CSTRACE_SUPPORT
+ int cs_etm__get_cpu(u8 trace_chan_id, int *cpu);
+-int cs_etm__get_pid_fmt(u8 trace_chan_id, u64 *pid_fmt);
++enum pid_fmt cs_etm__get_pid_fmt(struct cs_etm_queue *etmq);
+ int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
+ 			 pid_t tid, u8 trace_chan_id);
+ bool cs_etm__etmq_is_timeless(struct cs_etm_queue *etmq);
 -- 
 2.34.1
 
