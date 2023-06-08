@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA568C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 23:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6907C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 23:31:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237354AbjFHXap (ORCPT
+        id S237440AbjFHXa7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 19:30:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
+        Thu, 8 Jun 2023 19:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237334AbjFHXaN (ORCPT
+        with ESMTP id S237421AbjFHXaS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 19:30:13 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC31A30FB
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 16:29:52 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-babb79a17b8so1672539276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 16:29:52 -0700 (PDT)
+        Thu, 8 Jun 2023 19:30:18 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E9B3583
+        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 16:29:54 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bacd408046cso1595430276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 16:29:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686266991; x=1688858991;
+        d=google.com; s=20221208; t=1686266994; x=1688858994;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=HiAGlNZo6LXveOEFDnkkT89wkMT4puWq+yhAGi6vKP8=;
-        b=u+3QXdLeECEvsv94B0MruS/YOXHDhV0YcI12nIU2fPum5/LYqTXJMF1kvVgDLAhd69
-         TB+RJB7OC/HHWpeh7KmqrHAPzNPPTDPs/OmNWO/o2KRujpqU/fSwzhmFr09RuWuqyC/T
-         BzZ0/9JGdYaugJO93/OcTlcUa5DARHOIMgR1ocJWkQzbY1sSYakwLv32CJlgOR6HBARC
-         gz455L472xGEXQfKqdk8T6z6OfDB3KCJWYfUVI/PGvFTO5mLQXvHOBkfeWWeIOYweQM1
-         /mrxG3oQpV1hhk+hqqFyeAEW0j9hksyd5d3ot94/g5G8yPxOtDBBg8z3j82W+cBjX+b7
-         8aNw==
+        bh=dsHeOnEMfHd9s4DOJfCHWE1AXrbWG8qUbRavLpQo6Y4=;
+        b=u/Qq25sb4E3B/YN9x8AfhOptxhinrbUgxpyj6i2VnVhF2falloUPeEVua2xI7eTgZ6
+         9Y8toDrNHLnYKnplX5n9qqM33bvduJatdErNYGQESFU0FadeY7tKHF1ahdrkv1yFddlL
+         pBErliZx0UsK/W9S1qORmBxXTTCtDepCNQwf5bwE/uLFWIr+VSqant5bxtav5gTlrcaA
+         F/9rW8q3tuQS+6PEX6dtl46wyFTCxHPwHHMr0gxri3Ghal/QZje/aOk408AxeUO8F0Qh
+         udCQ04uab2R7IuY1HP8r9ROZBB4/Mt1ChYs+oD+J3Rg1CRWI+cA8UMoUJ4cb+g9hNUig
+         TXfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686266991; x=1688858991;
+        d=1e100.net; s=20221208; t=1686266994; x=1688858994;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HiAGlNZo6LXveOEFDnkkT89wkMT4puWq+yhAGi6vKP8=;
-        b=jFtQf70HF1wBCMnx5dYbXK+/gJfpRVoIdWzZft0GqVw4RHV0TtDuSl8danWF+HRrwB
-         50uG7hA49VyyDaXrJNqvfb5EexgN1E8k7QAgHccJdZohbtN1ba7aJ2C+fr01XeC4INn6
-         //RAKod8m1eXVvIfYj4tnJW6nVzn22DOgwC3epQzsT4qVGyn18OITklSpiz7yGc0QIxi
-         BnmTsMNJloPzx7DbWZzmaqJ+m5URs5u0n1sQZeMHwJBcoji6+fTLn7lHuZZksiz7OLu+
-         xBFtDPyA2c783oBXpIxap/Ln+narUc3jIdXz5TIRg+YkfJbs1cAeDKOeympYcP1x7BPY
-         CEfA==
-X-Gm-Message-State: AC+VfDwmkv/+mTfu5EnlCvjhojvkDFwmhLc8fnDCmssT50co/LlYcVrI
-        2Al+1tpyAPD9OKxWr2pFelNH9NGZtOTn
-X-Google-Smtp-Source: ACHHUZ4V8g7YSjAMhsnMLI/N9elrTcMGdXKg6JQGvTOe1tUTMtyI07H4+/X7cQCtnKGmMy/p1PmmgQPPI/lf
+        bh=dsHeOnEMfHd9s4DOJfCHWE1AXrbWG8qUbRavLpQo6Y4=;
+        b=h8ynCvxc8iawoicR9qrGBxLYjC8ylPoT3dUGBGo23BEEJfXJZCOLjYKIHIDQp0kntP
+         o36mixdCv65KeSJMdU/NSMXbeeVll27cq0yWBpkpSrW2t289LQR4RDzbAqdl+y6eEDtJ
+         z2D3FJBWJZ6QxQoTdmLtSv7vdQLR2m0+uGWishWFRVQ/cMsNrQeWK3zVw6WWJHAWAHN3
+         1WXssJKSyYbPHXxwKCv0/k1ZffPjJvpgcKU7eUC/2lbHYzbHC2RNxNTTgiZlrS5FdA2b
+         EW3sNkScC/kLQhh/XitIJl5OD3YcKZgIYKyYuy4nTOn4/TbW1STxEbXEn+tV9WfMRvfD
+         3CsA==
+X-Gm-Message-State: AC+VfDy5R4kIyoysDg/ZqbeefieILfdqpRA9g5LY2hQVEuO3j8dODrX/
+        irQMJwxKBO4XcZoY6b6ELfi/VdIjhUXX
+X-Google-Smtp-Source: ACHHUZ72ScCy5hQCMHWZ9ZJ+Q/Hjmqux3MK2aSfNgD4ALpiCGxXMG3yuJqiTHTTc+k5GHvXKXHBsUuFK+hDJ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c3e5:ebc6:61e5:c73f])
- (user=irogers job=sendgmr) by 2002:a25:588:0:b0:ba8:3e2d:58f8 with SMTP id
- 130-20020a250588000000b00ba83e2d58f8mr611466ybf.5.1686266991630; Thu, 08 Jun
- 2023 16:29:51 -0700 (PDT)
-Date:   Thu,  8 Jun 2023 16:28:13 -0700
+ (user=irogers job=sendgmr) by 2002:a25:240f:0:b0:bad:600:1833 with SMTP id
+ k15-20020a25240f000000b00bad06001833mr605870ybk.0.1686266993757; Thu, 08 Jun
+ 2023 16:29:53 -0700 (PDT)
+Date:   Thu,  8 Jun 2023 16:28:14 -0700
 In-Reply-To: <20230608232823.4027869-1-irogers@google.com>
-Message-Id: <20230608232823.4027869-17-irogers@google.com>
+Message-Id: <20230608232823.4027869-18-irogers@google.com>
 Mime-Version: 1.0
 References: <20230608232823.4027869-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v2 16/26] perf symbol-elf: Correct holding a reference
+Subject: [PATCH v2 17/26] perf maps: Fix overlapping memory leak
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -99,32 +99,25 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If a reference is held, don't put it as this will confuse reference
-count checking.
+Add a missed free detected by leak sanitizer.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/symbol-elf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/maps.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 63882a4db5c7..e6493d1cc251 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1389,11 +1389,11 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
- 			/* Ensure maps are correctly ordered */
- 			if (kmaps) {
- 				int err;
-+				struct map *tmp = map__get(map);
- 
--				map__get(map);
- 				maps__remove(kmaps, map);
- 				err = maps__insert(kmaps, map);
--				map__put(map);
-+				map__put(tmp);
- 				if (err)
- 					return err;
- 			}
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 5206a6433117..233438c95b53 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -374,6 +374,7 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
+ 		}
+ put_map:
+ 		map__put(pos->map);
++		free(pos);
+ 	}
+ 	up_write(maps__lock(maps));
+ 	return err;
 -- 
 2.41.0.162.gfafddb0af9-goog
 
