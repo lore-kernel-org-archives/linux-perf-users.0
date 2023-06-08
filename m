@@ -2,266 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FA2C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 10:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E570EC7EE25
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 10:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232637AbjFHKNl (ORCPT
+        id S236054AbjFHKTZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 06:13:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37218 "EHLO
+        Thu, 8 Jun 2023 06:19:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231837AbjFHKNk (ORCPT
+        with ESMTP id S236096AbjFHKTU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 06:13:40 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 630552D63;
-        Thu,  8 Jun 2023 03:13:27 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9095EAB6;
-        Thu,  8 Jun 2023 03:14:12 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 773E13F71E;
-        Thu,  8 Jun 2023 03:13:25 -0700 (PDT)
-Message-ID: <290b577c-4740-d2e2-d236-c8bbe2f907b9@arm.com>
-Date:   Thu, 8 Jun 2023 11:13:24 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V11 05/10] arm64/perf: Add branch stack support in ARMV8
- PMU
-Content-Language: en-US
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Thu, 8 Jun 2023 06:19:20 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C19F2D61;
+        Thu,  8 Jun 2023 03:19:09 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id B432321A43;
+        Thu,  8 Jun 2023 10:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1686219547; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qH7hbjRKkb1LYOldC3fpKEsvGCEPNOpUQ3QVueg8k94=;
+        b=ubBBzAI5Jfq44AopMPQk7sptKMpk3Olqv9uhKFbg+3Qb27Tdk/x97Pdyyc+g9TQwuCFTsM
+        sxXE4W276BgmPZExKbxUU8w/ic4r8NBjuASLGMi/hqOy977FBzx5XUeDmft7/KnI19WFQl
+        f0SCXK/ToeHSmXXB1qhFGEf3wPR4kmA=
+Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 8228C2C141;
+        Thu,  8 Jun 2023 10:19:06 +0000 (UTC)
+Date:   Thu, 8 Jun 2023 12:19:02 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        sparclinux@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
         linux-perf-users@vger.kernel.org
-References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-6-anshuman.khandual@arm.com>
- <ZH3PCqYt/UzoiVx3@FVFF77S0Q05N>
- <ba396c30-6719-1dfb-77c2-9f7e1715b57c@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <ba396c30-6719-1dfb-77c2-9f7e1715b57c@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/7] watchdog/hardlockup: Sort hardlockup detector
+ related config values a logical way
+Message-ID: <ZIGrFiGhUiO6OOsa@alley>
+References: <20230607152432.5435-1-pmladek@suse.com>
+ <20230607152432.5435-2-pmladek@suse.com>
+ <CAD=FV=X4Sp=ZE4DWob-W0NzRm00K7wOWxyyCCaHUHNPPinsjhg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=X4Sp=ZE4DWob-W0NzRm00K7wOWxyyCCaHUHNPPinsjhg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 06/06/2023 11:34, Anshuman Khandual wrote:
+On Wed 2023-06-07 16:34:20, Doug Anderson wrote:
+> Hi,
 > 
+> On Wed, Jun 7, 2023 at 8:25 AM Petr Mladek <pmladek@suse.com> wrote:
+> > Only one hardlockup detector can be compiled in. The selection is done
+> > using quite complex dependencies between several CONFIG variables.
+> > The following patches will try to make it more straightforward.
+> >
+> > As a first step, reorder the definitions of the various CONFIG variables.
+> > The logical order is:
+> >
+> >    1. HAVE_* variables define available variants. They are typically
+> >       defined in the arch/ config files.
+> >
+> >    2. HARDLOCKUP_DETECTOR y/n variable defines whether the hardlockup
+> >       detector is enabled at all.
+> >
+> >    3. HARDLOCKUP_DETECTOR_PREFER_BUDDY y/n variable defines whether
+> >       the buddy detector should be preferred over the perf one.
+> >       Note that the arch specific variants are always preferred when
+> >       available.
+> >
+> >    4. HARDLOCKUP_DETECTOR_PERF/BUDDY variables define whether the given
+> >       detector is enabled in the end.
+> >
+> >    5. HAVE_HARDLOCKUP_DETECTOR_NON_ARCH and HARDLOCKUP_DETECTOR_NON_ARCH
+> >       are temporary variables that are going to be removed in
+> >       a followup patch.
+> >
 > 
-> On 6/5/23 17:35, Mark Rutland wrote:
->> On Wed, May 31, 2023 at 09:34:23AM +0530, Anshuman Khandual wrote:
->>> This enables support for branch stack sampling event in ARMV8 PMU, checking
->>> has_branch_stack() on the event inside 'struct arm_pmu' callbacks. Although
->>> these branch stack helpers armv8pmu_branch_XXXXX() are just dummy functions
->>> for now. While here, this also defines arm_pmu's sched_task() callback with
->>> armv8pmu_sched_task(), which resets the branch record buffer on a sched_in.
->>
->> This generally looks good, but I have a few comments below.
->>
->> [...]
->>
->>> +static inline bool armv8pmu_branch_valid(struct perf_event *event)
->>> +{
->>> +	WARN_ON_ONCE(!has_branch_stack(event));
->>> +	return false;
->>> +}
->>
->> IIUC this is for validating the attr, so could we please name this
->> armv8pmu_branch_attr_valid() ?
+> I don't really have any strong opinions, so I'm fine with this. In
+> general I think the ordering I picked tried to match the existing
+> "style" which generally tried to list configs and then select them
+> below. To me the existing style makes more sense when thinking about
+> writing C code
+
+I know. My motivation was the following:
+
+1. Kconfig is not C. My view is that it is more like a menu. There is a
+   top level item. If the top level is enabled then there is a submenu
+   with a more detailed selection of various variants and options.
+
+2. The current logic is quite complicated from my POV. And it was
+   even before your patchset. For example,
+   HAVE_HARDLOCKUP_DETECTOR_BUDDY is defined as:
+
+	config HAVE_HARDLOCKUP_DETECTOR_BUDDY
+		bool
+		depends on SMP
+		default y
+
+   One would expect that it would be enabled on SMP system.
+   But the final value depends on many other variables
+   which are defined using relatively complex conditions,
+   especially HARDLOCKUP_DETECTOR, HAVE_HARDLOCKUP_DETECTOR_NON_ARCH,
+   and HARDLOCKUP_DETECTOR_NON_ARCH.
+
+   Understanding the logic is even more complicated because Kconfig is
+   not indexed by cscope.
+
+Important: The logic used at the end of the patchset actually
+   follows the C style. It defines how the various variables
+   depend on each other from top to bottom.
+
 > 
-> Sure, will change the name and updated call sites.
-> 
->>
->> [...]
->>
->>> +static int branch_records_alloc(struct arm_pmu *armpmu)
->>> +{
->>> +	struct pmu_hw_events *events;
->>> +	int cpu;
->>> +
->>> +	for_each_possible_cpu(cpu) {
+> config SOFTLOCKUP_DETECTOR:
+>   ... blah blah blah ...
 
-Shouldn't this be supported_pmus ? i.e.
-	for_each_cpu(cpu, &armpmu->supported_cpus) {
+This one is actually defined in the menu-like order:
 
+	config SOFTLOCKUP_DETECTOR
 
->>> +		events = per_cpu_ptr(armpmu->hw_events, cpu);
->>> +		events->branches = kzalloc(sizeof(struct branch_records), GFP_KERNEL);
->>> +		if (!events->branches)
->>> +			return -ENOMEM;
+	config BOOTPARAM_SOFTLOCKUP_PANIC
+		depends on SOFTLOCKUP_DETECTOR
 
-Do we need to free the allocated branches already ?
+It is because the custom option depends on the top level one.
+This is exactly what I would like to achieve with HARDLOCKUP
+variables in this patchset.
 
->>> +	}
-
-
-May be:
-	int ret = 0;
-
-	for_each_cpu(cpu, &armpmu->supported_cpus) {
-		events = per_cpu_ptr(armpmu->hw_events, cpu);
-		events->branches = kzalloc(sizeof(struct 		branch_records), GFP_KERNEL);
-		
-		if (!events->branches) {
-			ret = -ENOMEM;
-			break;
-		}
-	}
-
-	if (!ret)
-		return 0;
-
-	for_each_cpu(cpu, &armpmu->supported_cpus) {
-		events = per_cpu_ptr(armpmu->hw_events, cpu);
-		if (!events->branches)
-			break;
-		kfree(events->branches);
-	}
-	return ret;
-	
->>> +	return 0;
->>
->> This leaks memory if any allocation fails, and the next patch replaces this
->> code entirely.
-> 
-> Okay.
-> 
->>
->> Please add this once in a working state. Either use the percpu allocation
->> trick in the next patch from the start, or have this kzalloc() with a
->> corresponding kfree() in an error path.
-> 
-> I will change branch_records_alloc() as suggested in the next patch's thread
-> and fold those changes here in this patch.
-> 
->>
->>>   }
->>>   
->>>   static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
->>> @@ -1145,12 +1162,24 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
->>>   	};
->>>   	int ret;
->>>   
->>> +	ret = armv8pmu_private_alloc(cpu_pmu);
->>> +	if (ret)
->>> +		return ret;
->>> +
->>>   	ret = smp_call_function_any(&cpu_pmu->supported_cpus,
->>>   				    __armv8pmu_probe_pmu,
->>>   				    &probe, 1);
->>>   	if (ret)
->>>   		return ret;
->>>   
->>> +	if (arm_pmu_branch_stack_supported(cpu_pmu)) {
->>> +		ret = branch_records_alloc(cpu_pmu);
->>> +		if (ret)
->>> +			return ret;
->>> +	} else {
->>> +		armv8pmu_private_free(cpu_pmu);
->>> +	}
->>
->> I see from the next patch that "private" is four ints, so please just add that
->> to struct arm_pmu under an ifdef CONFIG_ARM64_BRBE. That'll simplify this, and
->> if we end up needing more space in future we can consider factoring it out.
-> 
-> struct arm_pmu {
-> 	........................................
->          /* Implementation specific attributes */
->          void            *private;
-> }
-> 
-> private pointer here creates an abstraction for given pmu implementation
-> to hide attribute details without making it known to core arm pmu layer.
-> Although adding ifdef CONFIG_ARM64_BRBE solves the problem as mentioned
-> above, it does break that abstraction. Currently arm_pmu layer is aware
-> about 'branch records' but not about BRBE in particular which the driver
-> adds later on. I suggest we should not break that abstraction.
-> 
-> Instead a global 'static struct brbe_hw_attr' in drivers/perf/arm_brbe.c
-> can be initialized into arm_pmu->private during armv8pmu_branch_probe(),
-> which will also solve the allocation-free problem. Also similar helpers
-> armv8pmu_task_ctx_alloc()/free() could be defined to manage task context
-> cache i.e arm_pmu->pmu.task_ctx_cache independently.
-> 
-> But now armv8pmu_task_ctx_alloc() can be called after pmu probe confirms
-> to have arm_pmu->has_branch_stack.
-> 
->>
->>> +
->>>   	return probe.present ? 0 : -ENODEV;
->>>   }
->>
->> It also seems odd to ceck probe.present *after* checking
->> arm_pmu_branch_stack_supported().
-> 
-> I will reorganize as suggested below.
-> 
->>
->> With the allocation removed I think this can be written more clearly as:
->>
->> | static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
->> | {
->> |         struct armv8pmu_probe_info probe = {
->> |                 .pmu = cpu_pmu,
->> |                 .present = false,
->> |         };
->> |         int ret;
->> |
->> |         ret = smp_call_function_any(&cpu_pmu->supported_cpus,
->> |                                     __armv8pmu_probe_pmu,
->> |                                     &probe, 1);
->> |         if (ret)
->> |                 return ret; > |
->> |         if (!probe.present)
->> |                 return -ENODEV;
->> |
->> |         if (arm_pmu_branch_stack_supported(cpu_pmu))
->> |                 ret = branch_records_alloc(cpu_pmu);
->> |
->> |         return ret;
->> | }
-
-Could we not simplify this as below and keep the abstraction, since we
-already have it ?
-
- >> | static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
- >> | {
- >> |         struct armv8pmu_probe_info probe = {
- >> |                 .pmu = cpu_pmu,
- >> |                 .present = false,
- >> |         };
- >> |         int ret;
- >> |
- >> |         ret = smp_call_function_any(&cpu_pmu->supported_cpus,
- >> |                                     __armv8pmu_probe_pmu,
- >> |                                     &probe, 1);
- >> |         if (ret)
- >> |                 return ret;
- >> |         if (!probe.present)
- >> |                 return -ENODEV;
- >> |
- >> |  	     if (!arm_pmu_branch_stack_supported(cpu_pmu))
- >> |		     return 0;
- >> |
- >> |	     ret = armv8pmu_private_alloc(cpu_pmu);
- >> |	     if (ret)
- >> |		 return ret;
- >> |		
- >> |	      ret = branch_records_alloc(cpu_pmu);
- >> |	      if (ret)
- >> |		  armv8pmu_private_free(cpu_pmu);
- >> |		
- >> |        return ret;
- >> | }
-
-
-Suzuki
-
+Best Regards,
+Petr
