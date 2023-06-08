@@ -2,136 +2,289 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D781C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 13:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDECC7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 16:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236125AbjFHNzk (ORCPT
+        id S236799AbjFHQl2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 09:55:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37488 "EHLO
+        Thu, 8 Jun 2023 12:41:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231626AbjFHNzj (ORCPT
+        with ESMTP id S236873AbjFHQkq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 09:55:39 -0400
-Received: from mail-io1-xd36.google.com (mail-io1-xd36.google.com [IPv6:2607:f8b0:4864:20::d36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0329A1BD
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 06:55:38 -0700 (PDT)
-Received: by mail-io1-xd36.google.com with SMTP id ca18e2360f4ac-77ac30e95caso22139539f.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 06:55:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686232537; x=1688824537;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=27Vs9lje4ue6a9YND5XSnEpnS9VI2Lo/geXINpFnbB8=;
-        b=oVg83mrTBUl29PTk+RqO5MA1BbM29G9oM3VedLfG6Qy1nJ9HCw3ztfODFjNfW/5Foj
-         PV9ypqz1v+8NtZyWCWnd+W4r6KFZUVomawer+u+FDGofP56S8HQjCx39B7+Wj2Mltud4
-         3FUSID/L+JQ3Q0AHzm5LxcJ0wqiK8FdELAXCA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686232537; x=1688824537;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=27Vs9lje4ue6a9YND5XSnEpnS9VI2Lo/geXINpFnbB8=;
-        b=aZB+KqnPetv+/K3BCCT3A7R3Qd7/IKmN/xhs/orMx1Noa3A9j4wrbHkJIe6atyRlS9
-         mIvrR+mUKodnnuuOt1/DWoas+kcyVNxkvtQUG49I8wW+Sazho7gjwShc74rkgeKVwDPA
-         w/lqz+9upg/0F1vaCtCwcvZJHnAo1UaNuv9VKK3E+SQHDlfxc5OQH5HQJCGtgh1juMu5
-         YZ6kuOc7w0o8oGYGmHQL7Snuup53U9iBW0vDZb3EKdis2LU4znOeI1bDK0Y8jX3INw0M
-         mx/kNoNqMEPviLZ9ro5HHbzyTZghRYFAacQzCkKaGmki4PRVdSqkTOVicjkU4c7ZHNX7
-         jyBQ==
-X-Gm-Message-State: AC+VfDytIO4SaZa/56CfXtVh9ZRjayyC/1jMFap/+OWM/K2PX65OgQG0
-        bhSNsYd3JBBfCx/bjeSiIH8bG31lu1J3mBl/SRw=
-X-Google-Smtp-Source: ACHHUZ7+bDye1jhKpSQRdiaV6Ym6Nrf5XZj8Vp3EI90t3cBnC7V7jIgru6mRfOqXPmpmAR1X6NgAJg==
-X-Received: by 2002:a5e:c111:0:b0:76c:71dc:55f3 with SMTP id v17-20020a5ec111000000b0076c71dc55f3mr11363560iol.6.1686232536733;
-        Thu, 08 Jun 2023 06:55:36 -0700 (PDT)
-Received: from mail-il1-f180.google.com (mail-il1-f180.google.com. [209.85.166.180])
-        by smtp.gmail.com with ESMTPSA id j25-20020a02cb19000000b0040f8d42c110sm287974jap.95.2023.06.08.06.55.35
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Jun 2023 06:55:35 -0700 (PDT)
-Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-33d928a268eso121305ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 06:55:35 -0700 (PDT)
-X-Received: by 2002:a05:6e02:1a82:b0:32f:7715:4482 with SMTP id
- k2-20020a056e021a8200b0032f77154482mr109894ilv.4.1686232535228; Thu, 08 Jun
- 2023 06:55:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230607152432.5435-1-pmladek@suse.com> <20230607152432.5435-3-pmladek@suse.com>
- <CAD=FV=WRzaLbLQ65usGeFq3ya=DV8cYyHQina_721EFoSTdBGA@mail.gmail.com> <ZIG1Qi0iUjTKICQM@alley>
-In-Reply-To: <ZIG1Qi0iUjTKICQM@alley>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 8 Jun 2023 06:55:23 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XzueJia--Zv4cAofzk7yocmP-7K8wa4doAN8pzED_hZA@mail.gmail.com>
-Message-ID: <CAD=FV=XzueJia--Zv4cAofzk7yocmP-7K8wa4doAN8pzED_hZA@mail.gmail.com>
-Subject: Re: [PATCH 2/7] watchdog/hardlockup: Make the config checks more straightforward
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 8 Jun 2023 12:40:46 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B46EF2D44;
+        Thu,  8 Jun 2023 09:40:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686242408; x=1717778408;
+  h=date:from:to:cc:subject:message-id;
+  bh=F7UVQxLgpyB+XxwUND8Ji+HgcMvfRX9thOkFLT6lrY8=;
+  b=Y+xTad3f0gqPwLxRGp9hKo2Vw1EmYPibCrkkmcDls1WY2gLCOE0ckBB8
+   hDanNhILoya7is4IXkx66Faae0B+92WVwQjz1E5xiIPz34ZOpEbTb+1Ne
+   9C7GyrWqDBPQSfXkQ1xbV/A/pvNhbHrJxa9HOmjS+ilKQ/X77ozbkaAzS
+   YvOJxAJUfZ+kcR+NH/xdC8gxnoQ9OyRCsOE9D7vJeeAcZWzhzRTeOj2B6
+   jyRw9OF3AFXpM1If/7MU79SvqOV4AQdYAexZnoKm0gmjfMtDPUFkRjak5
+   RRWsbLyliXtwnQrp607xnBbnzuSsEW3QK8EMhk1jhYrmHgWIXoW2axju/
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="354852421"
+X-IronPort-AV: E=Sophos;i="6.00,227,1681196400"; 
+   d="scan'208";a="354852421"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jun 2023 09:39:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10735"; a="822672133"
+X-IronPort-AV: E=Sophos;i="6.00,227,1681196400"; 
+   d="scan'208";a="822672133"
+Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 08 Jun 2023 09:39:29 -0700
+Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q7IfY-00083P-1a;
+        Thu, 08 Jun 2023 16:39:28 +0000
+Date:   Fri, 09 Jun 2023 00:38:32 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        dri-devel@lists.freedesktop.org, linux-cifs@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-usb@vger.kernel.org, samba-technical@lists.samba.org
+Subject: [linux-next:master] BUILD REGRESSION
+ db10f126048021b86e43a5d6a335ec49dec10155
+Message-ID: <202306090001.ng1n5qxC-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: db10f126048021b86e43a5d6a335ec49dec10155  Add linux-next specific files for 20230608
 
-On Thu, Jun 8, 2023 at 4:02=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrote=
-:
->
-> > >  config HARDLOCKUP_DETECTOR
-> > >         bool "Detect Hard Lockups"
-> > >         depends on DEBUG_KERNEL && !S390
-> > > -       depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH || HAVE_HARDLOCK=
-UP_DETECTOR_ARCH
-> > > +       depends on ((HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP=
-_DETECTOR_BUDDY) && !HAVE_NMI_WATCHDOG) || HAVE_HARDLOCKUP_DETECTOR_ARCH
-> >
-> > Adding the dependency to buddy (see ablove) would simplify the above
-> > to just this:
-> >
-> > depends on HAVE_HARDLOCKUP_DETECTOR_PERF ||
-> > HAVE_HARDLOCKUP_DETECTOR_BUDDY || HAVE_HARDLOCKUP_DETECTOR_ARCH
->
-> This is exactly what I do not want. It would just move the check
-> somewhere else. But it would make the logic harder to understand.
+Error/Warning reports:
 
-Hmmm. To me, it felt easier to understand by moving this into the
-"HAVE_HARDLOCKUP_DETECTOR_BUDDY". To me it was pretty easy to say "if
-an architecture defined its own arch-specific watchdog then buddy
-can't be enabled" and that felt like it fit cleanly within the
-"HAVE_HARDLOCKUP_DETECTOR_BUDDY" definition. It got rid of _a lot_ of
-other special cases / checks elsewhere and felt quite a bit cleaner to
-me. I only had to think about the conflict between the "buddy" and
-"nmi" watchdogs once when I understood
-"HAVE_HARDLOCKUP_DETECTOR_BUDDY".
+https://lore.kernel.org/oe-kbuild-all/202306081708.gtVAcXsh-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306082325.7vvIeVZo-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306082341.UQtCM8PO-lkp@intel.com
 
+Error/Warning: (recently discovered and may have been fixed)
 
-> > As per above, it's simply a responsibility of architectures not to
-> > define that they have both "perf" if they have the NMI watchdog, so
-> > it's just buddy to worry about.
->
-> Where is this documented, please?
-> Is it safe to assume this?
+ERROR: modpost: "uv_info" [drivers/s390/char/uvdevice.ko] undefined!
+drivers/leds/leds-cht-wcove.c:142:21: warning: no previous prototype for 'cht_wc_leds_brightness_get' [-Wmissing-prototypes]
+include/drm/drm_print.h:456:39: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
+include/drm/drm_print.h:456:39: warning: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
 
-It's not well documented and I agree that it could be improved. Right
-now, HAVE_NMI_WATCHDOG is documented to say that the architecture
-"defines its own arch_touch_nmi_watchdog()". Looking before my
-patches, you can see that "kernel/watchdog_hld.c" (the "perf" detector
-code) unconditionally defines arch_touch_nmi_watchdog(). That would
-give you a linker error.
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
+drivers/usb/cdns3/cdns3-starfive.c:23: warning: expecting prototype for cdns3(). Prototype was for USB_STRAP_HOST() instead
+fs/smb/client/cifsfs.c:982 cifs_smb3_do_mount() warn: possible memory leak of 'cifs_sb'
+fs/smb/client/cifssmb.c:4089 CIFSFindFirst() warn: missing error code? 'rc'
+fs/smb/client/cifssmb.c:4216 CIFSFindNext() warn: missing error code? 'rc'
+fs/smb/client/connect.c:2725 cifs_match_super() error: 'tlink' dereferencing possible ERR_PTR()
+fs/smb/client/connect.c:2924 generic_ip_connect() error: we previously assumed 'socket' could be null (see line 2912)
+fs/smb/server/oplock.c:1013 find_same_lease_key() warn: missing error code 'err'
+kernel/events/uprobes.c:478 uprobe_write_opcode() warn: passing zero to 'PTR_ERR'
+{standard input}:1118: Error: unrecognized symbol type ""
 
-> I would personally prefer to ensure this by the config check.
-> It is even better than documentation because nobody reads
-> documentation ;-)
+Error/Warning ids grouped by kconfigs:
 
-Sure. IMO this should be documented as close as possible to the root
-of the problem. Make "HAVE_NMI_WATCHDOG" depend on
-"!HAVE_HARDLOCKUP_DETECTOR_PERF". That expresses that an architecture
-is not allowed to declare that it has both.
+gcc_recent_errors
+|-- i386-allyesconfig
+|   `-- include-drm-drm_print.h:error:format-ld-expects-argument-of-type-long-int-but-argument-has-type-size_t-aka-unsigned-int
+|-- i386-buildonly-randconfig-r004-20230608
+|   `-- include-drm-drm_print.h:warning:format-ld-expects-argument-of-type-long-int-but-argument-has-type-size_t-aka-unsigned-int
+|-- i386-randconfig-i004-20230608
+|   `-- include-drm-drm_print.h:error:format-ld-expects-argument-of-type-long-int-but-argument-has-type-size_t-aka-unsigned-int
+|-- i386-randconfig-m021-20230608
+|   |-- fs-smb-client-cifsfs.c-cifs_smb3_do_mount()-warn:possible-memory-leak-of-cifs_sb
+|   |-- fs-smb-client-cifssmb.c-CIFSFindFirst()-warn:missing-error-code-rc
+|   |-- fs-smb-client-cifssmb.c-CIFSFindNext()-warn:missing-error-code-rc
+|   |-- fs-smb-client-connect.c-cifs_match_super()-error:tlink-dereferencing-possible-ERR_PTR()
+|   |-- fs-smb-client-connect.c-generic_ip_connect()-error:we-previously-assumed-socket-could-be-null-(see-line-)
+|   `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
+|-- i386-randconfig-m031-20230608
+|   |-- fs-smb-client-cifsfs.c-cifs_smb3_do_mount()-warn:possible-memory-leak-of-cifs_sb
+|   |-- fs-smb-client-cifssmb.c-CIFSFindFirst()-warn:missing-error-code-rc
+|   |-- fs-smb-client-cifssmb.c-CIFSFindNext()-warn:missing-error-code-rc
+|   |-- fs-smb-client-connect.c-cifs_match_super()-error:tlink-dereferencing-possible-ERR_PTR()
+|   |-- fs-smb-client-connect.c-generic_ip_connect()-error:we-previously-assumed-socket-could-be-null-(see-line-)
+|   `-- fs-smb-server-oplock.c-find_same_lease_key()-warn:missing-error-code-err
+|-- riscv-allmodconfig
+|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
+|-- riscv-allyesconfig
+|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
+|-- s390-randconfig-s041-20230608
+|   `-- ERROR:uv_info-drivers-s390-char-uvdevice.ko-undefined
+|-- sh-allmodconfig
+|   `-- standard-input:Error:unrecognized-symbol-type
+|-- sh-allyesconfig
+|   `-- standard-input:Error:unrecognized-symbol-type
+`-- x86_64-allyesconfig
+    `-- drivers-leds-leds-cht-wcove.c:warning:no-previous-prototype-for-cht_wc_leds_brightness_get
+
+elapsed time: 733m
+
+configs tested: 155
+configs skipped: 8
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r015-20230608   gcc  
+alpha                randconfig-r022-20230608   gcc  
+alpha                randconfig-r025-20230608   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r024-20230608   gcc  
+arc                  randconfig-r043-20230608   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm          buildonly-randconfig-r005-20230608   gcc  
+arm                                 defconfig   clang
+arm                                 defconfig   gcc  
+arm                      footbridge_defconfig   gcc  
+arm                  randconfig-r006-20230608   clang
+arm                  randconfig-r016-20230608   gcc  
+arm                  randconfig-r046-20230608   gcc  
+arm                         socfpga_defconfig   clang
+arm                        spear3xx_defconfig   clang
+arm                           u8500_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky         buildonly-randconfig-r004-20230608   gcc  
+csky                                defconfig   gcc  
+hexagon      buildonly-randconfig-r003-20230608   clang
+hexagon              randconfig-r041-20230608   clang
+hexagon              randconfig-r045-20230608   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230608   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230608   gcc  
+i386                 randconfig-i002-20230608   gcc  
+i386                 randconfig-i003-20230608   gcc  
+i386                 randconfig-i004-20230608   gcc  
+i386                 randconfig-i005-20230608   gcc  
+i386                 randconfig-i006-20230608   gcc  
+i386                 randconfig-i011-20230608   clang
+i386                 randconfig-i012-20230608   clang
+i386                 randconfig-i013-20230608   clang
+i386                 randconfig-i015-20230608   clang
+i386                 randconfig-i051-20230608   gcc  
+i386                 randconfig-i052-20230608   gcc  
+i386                 randconfig-i053-20230608   gcc  
+i386                 randconfig-i054-20230608   gcc  
+i386                 randconfig-i055-20230608   gcc  
+i386                 randconfig-i056-20230608   gcc  
+i386                 randconfig-i061-20230608   gcc  
+i386                 randconfig-i062-20230608   gcc  
+i386                 randconfig-i063-20230608   gcc  
+i386                 randconfig-i064-20230608   gcc  
+i386                 randconfig-i065-20230608   gcc  
+i386                 randconfig-i066-20230608   gcc  
+i386                 randconfig-r026-20230608   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch    buildonly-randconfig-r001-20230608   gcc  
+loongarch    buildonly-randconfig-r002-20230608   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r036-20230608   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                          atari_defconfig   gcc  
+m68k         buildonly-randconfig-r005-20230608   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r003-20230608   gcc  
+m68k                           virt_defconfig   gcc  
+microblaze           randconfig-r015-20230608   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                     cu1830-neo_defconfig   clang
+mips                      maltasmvp_defconfig   gcc  
+mips                  maltasmvp_eva_defconfig   gcc  
+mips                 randconfig-r004-20230608   clang
+mips                       rbtx49xx_defconfig   clang
+nios2        buildonly-randconfig-r002-20230608   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r012-20230608   gcc  
+nios2                randconfig-r032-20230608   gcc  
+openrisc             randconfig-r011-20230608   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r005-20230608   gcc  
+parisc               randconfig-r021-20230608   gcc  
+parisc64                            defconfig   gcc  
+powerpc                     akebono_defconfig   clang
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                 canyonlands_defconfig   gcc  
+powerpc                    ge_imp3a_defconfig   clang
+powerpc               mpc834x_itxgp_defconfig   clang
+powerpc                      ppc64e_defconfig   clang
+powerpc              randconfig-r013-20230608   clang
+powerpc                    socrates_defconfig   clang
+powerpc                     tqm8540_defconfig   clang
+powerpc                     tqm8541_defconfig   gcc  
+powerpc                     tqm8560_defconfig   clang
+powerpc                 xes_mpc85xx_defconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv        buildonly-randconfig-r006-20230608   clang
+riscv                               defconfig   gcc  
+riscv                randconfig-r014-20230608   clang
+riscv                randconfig-r023-20230608   clang
+riscv                randconfig-r042-20230608   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230608   clang
+sh                               allmodconfig   gcc  
+sh                               j2_defconfig   gcc  
+sparc                            alldefconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc        buildonly-randconfig-r003-20230608   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r016-20230608   gcc  
+sparc                randconfig-r035-20230608   gcc  
+sparc                       sparc64_defconfig   gcc  
+sparc64              randconfig-r013-20230608   gcc  
+sparc64              randconfig-r031-20230608   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230608   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230608   gcc  
+x86_64               randconfig-a002-20230608   gcc  
+x86_64               randconfig-a003-20230608   gcc  
+x86_64               randconfig-a004-20230608   gcc  
+x86_64               randconfig-a005-20230608   gcc  
+x86_64               randconfig-a006-20230608   gcc  
+x86_64               randconfig-a011-20230608   clang
+x86_64               randconfig-a012-20230608   clang
+x86_64               randconfig-a013-20230608   clang
+x86_64               randconfig-a014-20230608   clang
+x86_64               randconfig-a015-20230608   clang
+x86_64               randconfig-a016-20230608   clang
+x86_64               randconfig-r034-20230608   gcc  
+x86_64               randconfig-x051-20230608   clang
+x86_64               randconfig-x052-20230608   clang
+x86_64               randconfig-x053-20230608   clang
+x86_64               randconfig-x054-20230608   clang
+x86_64               randconfig-x055-20230608   clang
+x86_64               randconfig-x056-20230608   clang
+x86_64               randconfig-x061-20230608   clang
+x86_64               randconfig-x062-20230608   clang
+x86_64               randconfig-x063-20230608   clang
+x86_64               randconfig-x064-20230608   clang
+x86_64               randconfig-x065-20230608   clang
+x86_64               randconfig-x066-20230608   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa               randconfig-r033-20230608   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
