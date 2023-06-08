@@ -2,139 +2,71 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D841C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 12:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5A5C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 13:25:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236180AbjFHM5G (ORCPT
+        id S236250AbjFHNZs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 08:57:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39656 "EHLO
+        Thu, 8 Jun 2023 09:25:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233162AbjFHM5E (ORCPT
+        with ESMTP id S234352AbjFHNZr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 08:57:04 -0400
-Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DDC52727;
-        Thu,  8 Jun 2023 05:56:54 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 54C02320090B;
-        Thu,  8 Jun 2023 08:56:52 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Thu, 08 Jun 2023 08:56:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1686229011; x=1686315411; bh=87
-        pYxZKtAnGH9oKy6pFHT1xHGz/WCvjygA8bIAeiKlA=; b=ZeX8L7pUZ5UIpOMY9M
-        9g1j8HgG7+kWRpcbfg5uyET+fH7MKKs1mmJd5GiTBtyG3e4Kb2S8oySTp2FMKVD5
-        6cPeO3EdjyqNf0z8ONTk7Y4xvff+IrOd/IEXcnucUJGHtunt79pl/8nMv5FddrAG
-        uQycTyVPowhwXFFmqqICRAUW8Rc8su6sZcA/n9xK4gkWZLq4FLGKG2+b/ofZFCuf
-        AMrvTTYFhxmA+huvu4Cjp75ap2Sf7MJK9JQ3pOVGdml0Q2jBbC5ggWY9QzN5MNkV
-        6Cu7hWpbrBfBHGI32iWeZ+txnWuzY/rdQ0nguYoFIEmTdH+KuW0pvhtt0TNXW/yQ
-        JP2A==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1686229011; x=1686315411; bh=87pYxZKtAnGH9
-        oKy6pFHT1xHGz/WCvjygA8bIAeiKlA=; b=U6XRVjfP+EHUDQvBv8cPL9pD/KGwo
-        iw0KnKWmDepSUXHsue7XYEEv3jSKmc5VneLRFAnbB7bjvWnjZAFimwr1xI3aZ2r2
-        RdXIfnuvROK2EFMWjCfwC3PBH93ikfGkGtdqsK5mas70L80DoSDFO8TKCaTh4eHz
-        K+ZspG/2pADrn/0PYTVFOIEgwbfucSZzMW91caxx97W+pzHbK9rkgf+0+vkf4oDD
-        jH5hLErq64lWlh17sXL7u3Td79LGnkb4UvXKtQw37hle5MqhD6Sfrp8G6cLyNfqi
-        QTut/2emZSYLnRuBAzk7rDPI0a305yR06UG65WJAnPVfPk2TBPYkBuvMA==
-X-ME-Sender: <xms:EtCBZE-D_kjWYp3ANnherykbAzIjPaixWoyhxXwJLmuQI-kmX5DxFw>
-    <xme:EtCBZMv-IJXp1mQnNzIiUM2AEt48SGWGnXLai4h_XUzypiLIXrG4wXRCGc1U27CR_
-    sWJ2VBCAcRl0hKP7ME>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgedtiedgheekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepkeehtefguddvleejvdeileeifffhueevgedvheeiudfhueevgfehkeeitedu
-    keeknecuffhomhgrihhnpehsohhurhgtvgifrghrvgdrohhrghenucevlhhushhtvghruf
-    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:EtCBZKA2ewgTjhAvvYw7qmycGR9cVe-qDicg_oFDY4J69jtsZIvlug>
-    <xmx:EtCBZEdu7a-GJfOfcHAOiHAuoCAzbOXNlKWUPk55Fe3Mbg8D-CEnpQ>
-    <xmx:EtCBZJOC47AwohdFIRwPvxQhiJzPrz-2u8vWBLIbN9yK_NXQPYV6NQ>
-    <xmx:E9CBZGcuZlRzBuBBOm-YYYm5GycL4W2eCqAow4fI1BtYmFRYOd5HOA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 9B111B60086; Thu,  8 Jun 2023 08:56:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-447-ge2460e13b3-fm-20230525.001-ge2460e13
-Mime-Version: 1.0
-Message-Id: <a3a4f48a-07d4-4ed9-bc53-5d383428bdd2@app.fastmail.com>
-In-Reply-To: <76d3be65-91df-7969-5303-38231a7df926@loongson.cn>
-References: <1683615903-10862-1-git-send-email-yangtiezhu@loongson.cn>
- <b9624545-2c80-49a1-ac3c-39264a591f7b@app.fastmail.com>
- <76d3be65-91df-7969-5303-38231a7df926@loongson.cn>
-Date:   Thu, 08 Jun 2023 14:56:30 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Tiezhu Yang" <yangtiezhu@loongson.cn>
-Cc:     Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-s390@vger.kernel.org, llvm@lists.linux.dev,
-        linux-ia64@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-parisc@vger.kernel.org, x86@kernel.org,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-alpha@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        loongson-kernel@lists.loongnix.cn
-Subject: Re: [RFC PATCH] asm-generic: Unify uapi bitsperlong.h
-Content-Type: text/plain
+        Thu, 8 Jun 2023 09:25:47 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21C1E4A;
+        Thu,  8 Jun 2023 06:25:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kT+CSh674tD6IDPwdGpH0CMcraDHp8mLaU8ZvFqdy7U=; b=PCephHGRr5xu+LZk4lGEVP0fm7
+        ANXBkWh4Npo9wMyuuVIDitGFbyE+uRenm6VSZMGi/1BEqEcqH9HQm94/2fWPqs3R+Q2CQhXGcl7lU
+        0f4CMb1huvyMbgbX88+cmSvz1Fj1AR/Gm0Pfjd4fBv7KCrGqTYnxcC4NSeZzWKip2KrnzQUynGNM2
+        TI5rz9l2WwQfvzJcFHy4Up3Pfm7lCfeRGLLxhTJVbAx24pFkr4QqA9vuaqcErfIm/jX61OnF0Tpqn
+        wa91sqld+hyydkMilV80kKKitXmxtS5Gpb4QUIZfAsPxVIfX++w3/m2LVZjsdQ0QZ4yuyHNhbtaRc
+        JWP5+WgA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q7Fdu-00FV8E-Cc; Thu, 08 Jun 2023 13:25:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F31133001E7;
+        Thu,  8 Jun 2023 15:25:33 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B0AB223FF6AD1; Thu,  8 Jun 2023 15:25:33 +0200 (CEST)
+Date:   Thu, 8 Jun 2023 15:25:33 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Artem Savkov <asavkov@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] perf tools: annotation browser from c2c tui
+Message-ID: <20230608132533.GL998233@hirez.programming.kicks-ass.net>
+References: <20230608084407.140323-1-asavkov@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230608084407.140323-1-asavkov@redhat.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 8, 2023, at 09:04, Tiezhu Yang wrote:
-> On 05/09/2023 05:37 PM, Arnd Bergmann wrote:
->> On Tue, May 9, 2023, at 09:05, Tiezhu Yang wrote:
->>
->> I think we are completely safe on the architectures that were
->> added since the linux-3.x days (arm64, riscv, csky, openrisc,
->> loongarch, nios2, and hexagon), but for the older ones there
->> is a regression risk. Especially on targets that are not that
->> actively maintained (sparc, alpha, ia64, sh, ...) there is
->> a good chance that users are stuck on ancient toolchains.
->> It's probably also a safe assumption that anyone with an older
->> libc version won't be using the latest kernel headers, so
->> I think we can still do this across architectures if both
->> glibc and musl already require a compiler that is new enough,
->> or alternatively if we know that the kernel headers require
->> a new compiler for other reasons and nobody has complained.
->>
->> For glibc, it looks the minimum compiler version was raised
->> from gcc-5 to gcc-8 four years ago, so we should be fine.
->>
->> In musl, the documentation states that at least gcc-3.4 or
->> clang-3.2 are required, which probably predate the
->> __SIZEOF_LONG__ macro. On the other hand, musl was only
->> released in 2011, and building musl itself explicitly
->> does not require kernel uapi headers, so this may not
->> be too critical.
->>
->> There is also uClibc, but I could not find any minimum
->> supported compiler version for that. Most commonly, this
->> one is used for cross-build environments, so it's also
->> less likely to have libc/gcc/headers being wildly out of
->> sync. Not sure.
->>
->>       Arnd
->>
->> [1] https://sourceware.org/pipermail/libc-alpha/2019-January/101010.html
->>
->
-> Thanks Arnd for the detailed reply.
-> Any more comments? What should I do in the next step?
+On Thu, Jun 08, 2023 at 10:44:05AM +0200, Artem Savkov wrote:
+> These patches add ability to start annotation browser from c2c report
+> tui. The idea comes from Arnaldo's "Profiling Data Structures" talk [1].
+> 
+> [1]: http://vger.kernel.org/~acme/prez/linux-plumbers-2022/
 
-I think the summary is "it's probably fine", but I don't know
-for sure, and it may not be worth the benefit.
+So what are the plans for doing IP to datatype::member resolution and
+deleting this C2C abomination?
 
-Maybe you can prepare a v2 that only does this for the newer
-architectures I mentioned above, with and an explanation and
-link to my above reply in the file comments?
-
-      Arnd
+/me still regretting ever letting c2c happen..
