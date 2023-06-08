@@ -2,51 +2,51 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA367C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 17:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 875CEC7EE29
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 21:09:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231144AbjFHR2k convert rfc822-to-8bit (ORCPT
+        id S236200AbjFHVJ3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 13:28:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51086 "EHLO
+        Thu, 8 Jun 2023 17:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229667AbjFHR2j (ORCPT
+        with ESMTP id S237021AbjFHVJ1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 13:28:39 -0400
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7AB9E;
-        Thu,  8 Jun 2023 10:28:38 -0700 (PDT)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-565ba2c7554so7636127b3.3;
-        Thu, 08 Jun 2023 10:28:38 -0700 (PDT)
+        Thu, 8 Jun 2023 17:09:27 -0400
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A88BB30D3;
+        Thu,  8 Jun 2023 14:09:18 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-bacfa9fa329so1174508276.0;
+        Thu, 08 Jun 2023 14:09:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686245316; x=1688837316;
+        d=1e100.net; s=20221208; t=1686258558; x=1688850558;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ukFo/mzaJtMm9NEOqRAOU0pEFyqxCrPdzo2ZbG7FqxE=;
-        b=IaBP9TSW+dgCFpdxrta5/k5cztQ8hT37kGbOEHwcWOS+wwO7HmdbNKYNI+T0xiVw0E
-         nvSoKyHYMcHCZFWVEoD9MHXmjyDHBE8pim2JAfL0c5SR8cpMUBn2q0a5NB00vlOdFAQx
-         ilvfZ5bGA5IU1cNEg6qWXZB6VUtqiVZDZn3eRXdvQ7dDEUHJ/kT/EEQlzHSBEKDxDTFH
-         5ZV0klUCyLkLJvlfR7yCOAJaduy0f/bjjI1VaSejPsZqhz/Nx2tbujm8PRJMnmHpGeRm
-         kF8hNm9tW6tMbdH5xte4kdSnHpaOwXLzZU8cbU+Mxi30mseidEU94M3euLFqXM4Xu7EH
-         xxkw==
-X-Gm-Message-State: AC+VfDxALD5WYcF5LahL2p8ebBVE0jkzBy8WFJdpli/2SDFVdoX6q2Il
-        aqqdHUwpPtGlIL2/2RNFHFNA00MY3SwOExbeOfw=
-X-Google-Smtp-Source: ACHHUZ7fsOJ6Yp4YMwR5f8pgMTPyH1KciEOlp94ErYqWbvPQDQqEBj7yh7plMrGmXL3g9avlKlZqmJWnUFeqZZUuTlY=
-X-Received: by 2002:a81:69d5:0:b0:565:3749:c24d with SMTP id
- e204-20020a8169d5000000b005653749c24dmr392314ywc.14.1686245316074; Thu, 08
- Jun 2023 10:28:36 -0700 (PDT)
+        bh=RSyw6qf+FqNzsYEWzuRM5QiQmAyiFWZ9iK/UDhMvxuA=;
+        b=etsNKmEgF8KQfORpsEkKmYOkjsActJ0bOOB131/OGGz4I6+pXj71WZnVvD5M00ZgvE
+         5QhkMsKP3UWWt4rhKKkKrSFc+iWqZEEruQK+ImoEqLBqVufPq6SRGcime4EFoM67Up6Y
+         EBlzTbb+CMjBX9XcBlkVNb+gGGq4S4v/I3zZ85vwaIyavneqKG38CEjdqXVbMV8jqWcc
+         MATf3UZAcJcWbNbsifYWTAMmQQk52pR0vpBOq035BU+JNJ9wvRD5zuVoc3zF9zgQD42l
+         wdRsvL1BwJNAZPh5NgmcjiP9Phg6DFfO9vfdWmSPImSxLvvTRvB8WX2PHSpjKKod/Tfg
+         41gg==
+X-Gm-Message-State: AC+VfDwpRk8wkJm8voc8IE1vFqzZb9F4Ymptq96mC8N8LugITgtCodpB
+        NgF42/FxPB0ZXuOs6mlo9sssKaWmDGSAGur14ObmqW0R
+X-Google-Smtp-Source: ACHHUZ5t61NXy4P694dVP8XqYDtJ1I50buDty/yh8k/r9svoNIcqgPJcNQB3qlQ4h8YxC0kKH4hjTVxEv2qrwNXyKf0=
+X-Received: by 2002:a25:37d2:0:b0:ba7:7cbe:1080 with SMTP id
+ e201-20020a2537d2000000b00ba77cbe1080mr736104yba.62.1686258557687; Thu, 08
+ Jun 2023 14:09:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230608084407.140323-1-asavkov@redhat.com> <20230608132533.GL998233@hirez.programming.kicks-ass.net>
-In-Reply-To: <20230608132533.GL998233@hirez.programming.kicks-ass.net>
+References: <20230608084407.140323-1-asavkov@redhat.com>
+In-Reply-To: <20230608084407.140323-1-asavkov@redhat.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 8 Jun 2023 10:28:24 -0700
-Message-ID: <CAM9d7cguD5Qo72sa4TjYokMKBfVRkLmGKNk_Z4stF=6W0x2bSA@mail.gmail.com>
+Date:   Thu, 8 Jun 2023 14:09:06 -0700
+Message-ID: <CAM9d7cgvtuqMeQx8ehLCLw_Ur9Ju-VzDrakzFJxnxvFjdsWk_g@mail.gmail.com>
 Subject: Re: [PATCH v2 0/2] perf tools: annotation browser from c2c tui
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Artem Savkov <asavkov@redhat.com>,
-        linux-perf-users@vger.kernel.org,
+To:     Artem Savkov <asavkov@redhat.com>
+Cc:     linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
@@ -59,24 +59,51 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Peter,
+Hello,
 
-On Thu, Jun 8, 2023 at 6:25 AM Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, Jun 8, 2023 at 1:44 AM Artem Savkov <asavkov@redhat.com> wrote:
 >
-> On Thu, Jun 08, 2023 at 10:44:05AM +0200, Artem Savkov wrote:
-> > These patches add ability to start annotation browser from c2c report
-> > tui. The idea comes from Arnaldo's "Profiling Data Structures" talk [1].
-> >
-> > [1]: http://vger.kernel.org/~acme/prez/linux-plumbers-2022/
->
-> So what are the plans for doing IP to datatype::member resolution and
-> deleting this C2C abomination?
+> These patches add ability to start annotation browser from c2c report
+> tui. The idea comes from Arnaldo's "Profiling Data Structures" talk [1].
 
-I'm working on it and hoping to post an RFC soonish.. but no plan to kill
-c2c entirely :)
+I was thinking about how it works and realized that it didn't collect
+samples by symbol.  Then I'm not sure if the result is meaningful.
+I think it'd show a random symbol that touched the cache line
+first.  The same cache line can be accessed from other locations
+but it cannot know where they are.
+
+Also different instructions in a function (symbol) would access a
+different cache line.  The annotate output just shows any memory
+access.  So it might be good to check the instruction at the point
+but others should not be considered related.
+
+Hmm.. I suspect even the same instruction will hit the different
+cache lines at different times.  Then probably the annotation
+won't work well in terms of correlating cache lines.
 
 Thanks,
 Namhyung
 
 >
-> /me still regretting ever letting c2c happen..
+> [1]: http://vger.kernel.org/~acme/prez/linux-plumbers-2022/
+>
+> v1->v2: Addressed comments from Namhyung Kim
+> - No longer saving evsel for each hist entry, using evlist__first
+>   instead.
+> - Factored out preparations to call annotation browser to do_annotate()
+>   function
+> - Other small fixes and adjustments.
+>
+> Artem Savkov (2):
+>   perf util: move symbol__new_unresolved() to util/symbol.c
+>   perf tools: allow running annotation browser from c2c-report
+>
+>  tools/perf/builtin-c2c.c       | 73 +++++++++++++++++++++++++++++++---
+>  tools/perf/ui/browsers/hists.c | 22 ----------
+>  tools/perf/util/symbol.c       | 22 ++++++++++
+>  tools/perf/util/symbol.h       |  1 +
+>  4 files changed, 91 insertions(+), 27 deletions(-)
+>
+> --
+> 2.40.1
+>
