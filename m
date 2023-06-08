@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B048C7EE45
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 23:30:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 040F2C8300C
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 23:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237218AbjFHXaH (ORCPT
+        id S237283AbjFHXaI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 19:30:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46940 "EHLO
+        Thu, 8 Jun 2023 19:30:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237187AbjFHX3e (ORCPT
+        with ESMTP id S237276AbjFHX3r (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 19:29:34 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 518E330E0
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 16:29:32 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-561ceb5b584so16134237b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 16:29:32 -0700 (PDT)
+        Thu, 8 Jun 2023 19:29:47 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4DAC30E5
+        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 16:29:34 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bb2fae9b286so1434263276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 16:29:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686266971; x=1688858971;
+        d=google.com; s=20221208; t=1686266974; x=1688858974;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=YK7vivTUvVnngeLWzmeZQ8bqT/OVbRyCOXzMTcRsZMs=;
-        b=h0zjH+hUAGfTVAZ7FUCUWS+twdPiVH3SkQmolEIxSW6NKYWlfbX93GzrWc0xPE87rf
-         GCtKAcWHTFnmrRx0x6g+aMCnF7/smB+83LTuyDWpYDRcBrXRI/peA8iy6uqEdPuoCgj1
-         mPwWGkuikA6MRqCdj7bkDOG2NI8ry+HbmvIEhZhn1iD9NXqlyOaZpSxwAplOp0GWqF7z
-         h5TYTJfZ7Jeg/PmuzM79qNA7lNueWIaXYZdQqBZO3NpBdb7VYJ4HTbfCk4DNYH3QTFZW
-         3PgUNJ4Hc4UT5cofyQPEGCkxVMzE1BLJp/+LuT/CPLshhnrbL8XBMMKqqmuVgW9aQ3vW
-         4uZQ==
+        bh=lMdtNGTBh3+qqarzoiXGjMMQ5QKS2zkBmCpcE9AaZG8=;
+        b=qvrNwAa6I8cb8TBsqGY45Cz9ZY5hg90lpgYn1T72mITq/cH1zTVmGZFFIfHSrQzepJ
+         MDlAHp3MdRqDh7CrwO9hV6e2y+x7NM8TaojgbiBmaUcEM3FwPhq4ciB6ctzUKbpor/2l
+         aPyb8HRkdWMaFXWVLuOgsDjkQjIWdlo8BNNCKX1/P80tufvQYnogwiRxMJFx81lGbKk7
+         GcAkvRCWL2LQc7GTtWtVcbuYKt/hWkscrxD2oe48rtQ8W1objUdTtp2QBQNbRfCwRhHJ
+         CMLcFdB/6T4HUmmcL7QoCzQvG3eb0YQOl6xXhNxG4SWvdPpyoo0dpGi5TRVHv2Rulyph
+         cQbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686266971; x=1688858971;
+        d=1e100.net; s=20221208; t=1686266974; x=1688858974;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YK7vivTUvVnngeLWzmeZQ8bqT/OVbRyCOXzMTcRsZMs=;
-        b=UZSCTuhYMfWZMAkvuGPbDY+9eETGJYsvrgCK3tV3QZ/k8k269jow7nLq2SLsfQnvcw
-         OJLX37aywwfIfrYT3rELg4Zl3DH0RFs/a2zvKIZ75dJNpdn7m5jTJYt4UfNjA5WQcxsh
-         QQ3sPAgK8jEGdKNxDknkL8ooVVRSLNFLC+GdyC53iFeBut6X2v8xNE2LzO/3YX9Nnd7g
-         jPizgx8AhW0Z86rnbQNKIbu/XuAXNKSDeoNAh8VVaIexHWOpFzir9VqvkUrfTe6qbk5C
-         NY1HRnjojmLUAzbfHBUeuGX5tRm0Q7RdwTlXV24e1lERKRRnk1e0JGcnO5swbLVeXuND
-         iCUw==
-X-Gm-Message-State: AC+VfDy2jiJrs86AnZOoebO2SOkOetmi5l1RhRSLMxWeS8KI+kJbXUbE
-        VZF2CulPN4oD9o1LdMMVp5gDOxx2Jm/A
-X-Google-Smtp-Source: ACHHUZ7lFo/l4NRGaS+SLLEGSLVGTsSlh5Hy8OpV3peTtU6WbuCKJ2Yl1mIVlrFEjceAhvhpmJc2Y0yNelZO
+        bh=lMdtNGTBh3+qqarzoiXGjMMQ5QKS2zkBmCpcE9AaZG8=;
+        b=ZdBOqLo8QZ8TDRieZm2L7IVqy082kCpbbnsBwZYX3Rja2/G4pjoRmuknkUhBbiW/aZ
+         Yg0a03++wFIHv42rv4NlLRkW7oAGTWFH/O48jsDED1QFvR2X5TwqpvFe3+AVlMXK1Ep0
+         B5qYFlQBapWDQ1fxp6dQ9ld7ekjkDrZze6/E3QKHYiHEjr/EtHFQMGYlOxdkxhJJbUv3
+         u717X1LNp9mUcZK5Ls6Uzz4+v/B7gD7HCDc9A0K88bGsxacg2+eNERhYxmA/NxouIYjs
+         mcjc/mi6HW0HnV9r6feiGvm4zyf2BCQMlpjK+OaDlTr86Dyz4nysnS7fXCwzuUQLg4VD
+         2UpQ==
+X-Gm-Message-State: AC+VfDxdOUs18qFkrsGa+YmMbJu/fny2Q8tfIRK/RI3VpfvxeD2FBzU5
+        oHteL74lobE9AjfK6+KUxNTIVI2bdXIb
+X-Google-Smtp-Source: ACHHUZ7umrASYnYvCzdFpWOm1U1RbfrT9D+RXK03wWYWPutn42WIip4GkHo95/6dlPdNDq9S81nCc3kqD1Pz
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c3e5:ebc6:61e5:c73f])
- (user=irogers job=sendgmr) by 2002:a81:ad59:0:b0:561:c9c0:98d9 with SMTP id
- l25-20020a81ad59000000b00561c9c098d9mr673787ywk.4.1686266971518; Thu, 08 Jun
- 2023 16:29:31 -0700 (PDT)
-Date:   Thu,  8 Jun 2023 16:28:05 -0700
+ (user=irogers job=sendgmr) by 2002:a25:c585:0:b0:bad:e8b:17d4 with SMTP id
+ v127-20020a25c585000000b00bad0e8b17d4mr335389ybe.7.1686266974158; Thu, 08 Jun
+ 2023 16:29:34 -0700 (PDT)
+Date:   Thu,  8 Jun 2023 16:28:06 -0700
 In-Reply-To: <20230608232823.4027869-1-irogers@google.com>
-Message-Id: <20230608232823.4027869-9-irogers@google.com>
+Message-Id: <20230608232823.4027869-10-irogers@google.com>
 Mime-Version: 1.0
 References: <20230608232823.4027869-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v2 08/26] perf machine: Make delete_threads part of machine__exit
+Subject: [PATCH v2 09/26] perf report: Avoid thread leak
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -99,104 +99,25 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The code required threads to be deleted before machine__exit was
-called or the threads would be leaked. This was error prone so move
-the delete_threads into machine__exit.
+Caught with address sanitizer and reference count checking.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/code-reading.c       | 1 -
- tools/perf/tests/dwarf-unwind.c       | 1 -
- tools/perf/tests/mmap-thread-lookup.c | 1 -
- tools/perf/tests/symbols.c            | 1 -
- tools/perf/util/machine.c             | 1 +
- tools/perf/util/session.c             | 6 ------
- 6 files changed, 1 insertion(+), 10 deletions(-)
+ tools/perf/builtin-report.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index 2a7b2b6f5286..ed3815163d1b 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -721,7 +721,6 @@ static int do_test_code_reading(bool try_kcore)
- 	evlist__delete(evlist);
- 	perf_cpu_map__put(cpus);
- 	perf_thread_map__put(threads);
--	machine__delete_threads(machine);
- 	machine__delete(machine);
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 0b091a8983a5..a31a23af5547 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -839,6 +839,7 @@ static struct task *tasks_list(struct task *task, struct machine *machine)
+ 		return ERR_PTR(-ENOENT);
  
- 	return err;
-diff --git a/tools/perf/tests/dwarf-unwind.c b/tools/perf/tests/dwarf-unwind.c
-index ee983b677a6a..d01aa931fe81 100644
---- a/tools/perf/tests/dwarf-unwind.c
-+++ b/tools/perf/tests/dwarf-unwind.c
-@@ -235,7 +235,6 @@ noinline int test__dwarf_unwind(struct test_suite *test __maybe_unused,
- 	thread__put(thread);
- 
-  out:
--	machine__delete_threads(machine);
- 	machine__delete(machine);
- 	return err;
+ 	parent_task = thread__priv(parent_thread);
++	thread__put(parent_thread);
+ 	list_add_tail(&task->list, &parent_task->children);
+ 	return tasks_list(parent_task, machine);
  }
-diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
-index 3891a2a3b46f..ddd1da9a4ba9 100644
---- a/tools/perf/tests/mmap-thread-lookup.c
-+++ b/tools/perf/tests/mmap-thread-lookup.c
-@@ -208,7 +208,6 @@ static int mmap_events(synth_cb synth)
- 		addr_location__exit(&al);
- 	}
- 
--	machine__delete_threads(machine);
- 	machine__delete(machine);
- 	return err;
- }
-diff --git a/tools/perf/tests/symbols.c b/tools/perf/tests/symbols.c
-index 2d1aa42d36a9..16e1c5502b09 100644
---- a/tools/perf/tests/symbols.c
-+++ b/tools/perf/tests/symbols.c
-@@ -38,7 +38,6 @@ static int init_test_info(struct test_info *ti)
- static void exit_test_info(struct test_info *ti)
- {
- 	thread__put(ti->thread);
--	machine__delete_threads(ti->machine);
- 	machine__delete(ti->machine);
- }
- 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 261188766307..46af5e9748c9 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -256,6 +256,7 @@ void machine__exit(struct machine *machine)
- 	zfree(&machine->current_tid);
- 	zfree(&machine->kallsyms_filename);
- 
-+	machine__delete_threads(machine);
- 	for (i = 0; i < THREADS__TABLE_SIZE; i++) {
- 		struct threads *threads = &machine->threads[i];
- 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 65ac9f7fdf7e..00d18c74c090 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -278,11 +278,6 @@ struct perf_session *__perf_session__new(struct perf_data *data,
- 	return ERR_PTR(ret);
- }
- 
--static void perf_session__delete_threads(struct perf_session *session)
--{
--	machine__delete_threads(&session->machines.host);
--}
--
- static void perf_decomp__release_events(struct decomp *next)
- {
- 	struct decomp *decomp;
-@@ -305,7 +300,6 @@ void perf_session__delete(struct perf_session *session)
- 	auxtrace__free(session);
- 	auxtrace_index__free(&session->auxtrace_index);
- 	perf_session__destroy_kernel_maps(session);
--	perf_session__delete_threads(session);
- 	perf_decomp__release_events(session->decomp_data.decomp);
- 	perf_env__exit(&session->header.env);
- 	machines__exit(&session->machines);
 -- 
 2.41.0.162.gfafddb0af9-goog
 
