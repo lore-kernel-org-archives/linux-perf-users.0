@@ -2,163 +2,239 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD03FC7EE37
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 23:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD63EC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 23:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237052AbjFHXYJ (ORCPT
+        id S236639AbjFHX30 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 19:24:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43940 "EHLO
+        Thu, 8 Jun 2023 19:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236869AbjFHXYG (ORCPT
+        with ESMTP id S237089AbjFHX3O (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 19:24:06 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA0830D6;
-        Thu,  8 Jun 2023 16:24:05 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6549df4321aso1164375b3a.2;
-        Thu, 08 Jun 2023 16:24:05 -0700 (PDT)
+        Thu, 8 Jun 2023 19:29:14 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC7330DF
+        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 16:29:12 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-56991d8e2b0so13680177b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 16:29:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686266645; x=1688858645;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y7Oi+GH5jDhIbsSZz3UzpQ6ZcXdqQl0c/NxuRLG3Zcw=;
-        b=irxIeUO7Sd4FnxQuFjTG37xSzBx7D8IgOOOQsFiJAHBjXP1HO6u+yDSa51dmefB0+k
-         XHcS4pexrVO6+m9HkQPk6Q6fRwQ8kSSWD/LGDdCnkN1K0sxp64aWX23tz3WzLoc3LNnH
-         NYyKTcf7zoq6w3/+GA0X5AILWB+41KJL3KL0DX2TdXZb29opIdkUsyOiiJAiCQBxN4lv
-         oUrqpXW7/DWbdjbhNXGAceVfdUIedUuuuljZUmM5l4YW+ksmT/E36a6TKY/pO0R6pvVk
-         khgr9RR4C+RZaLtoscCG1y/R99ot2xLPnMjPzZgO9KSdzNLPEu21nTIsFswLwgEwKlUE
-         rHfQ==
+        d=google.com; s=20221208; t=1686266951; x=1688858951;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PUR1BaDg5UCDJ5L3mZfey+gmQnRwkETeHewM4NWReSw=;
+        b=I41YQStEQO3vr784nVk2AuN2KmcI6CYImyY6oj9xMSOL/Yo/n5AgLeGczhU8NFwLQe
+         ttny74OBfkuK6f8/wAMn399t38lrgo1DziPG3fqg2E8EOzKtpOmCLUIlu9VJl+oy96a6
+         HTs8mk3Q5WH2kmszROgWDPIekrDqjw5P+L9RKWeN+cf/s7N46twWudk+coNyz4KuYyQr
+         ZbHH0YlckfKFgDJvgw6uV2fJIEg454LWFtRqaHxPfRNDcZsyr7rFBGWMgz5hpVhqY1KR
+         W05OV+dPXayUdvhMkc4RX1/SbZlFDM6BolOt44PIQkCnZ9wnUmpKbi+Ww0jFE5uiRpgF
+         l3oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686266645; x=1688858645;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Y7Oi+GH5jDhIbsSZz3UzpQ6ZcXdqQl0c/NxuRLG3Zcw=;
-        b=ETblhsc5OJncjrbK8GZPDC7NHxbDQfif3u6Og583CHxINjCCMCgtlrU4Xso8kynFoC
-         BOVqLdaTn4PPDsU8dfdqqhgbwj2rZps9fuJmlUtuaMsrvFrde2T2VGORsmy+ZdfWLoi5
-         VtGxl6nt+9S626r2KnmxfdiBDecuG+dNOqs9PTwp4dMSOdg2xnucZ76Utta1DhDktObb
-         pPqqwppPfPNPACGgBSWatNHxcdGrdHghOSkvlvXuBLYj/WG53cpLCAomTF3ueVBbNGmF
-         3B3I0mvXpHTGqEjeAOZsFfQXMdt121uabcYMbVM2JJVdP4N37SIirhyf54lxpLor1OV8
-         qUWQ==
-X-Gm-Message-State: AC+VfDwM+KpbIp9TlVfAZgkGmYLivChVFvZVueB2vHrcTcI7QZ5OJ9pI
-        6eHTeVL0jOLDAPlQg/1KdIU=
-X-Google-Smtp-Source: ACHHUZ4LpecJsdJU4HIoQH1QPQw7XoW2hNQCfBMwLah1Rfx1muXidyhttKX7pnYRYmxhDRR0BDqmLA==
-X-Received: by 2002:a05:6a20:7d90:b0:10a:cb95:5aa3 with SMTP id v16-20020a056a207d9000b0010acb955aa3mr9639139pzj.7.1686266645318;
-        Thu, 08 Jun 2023 16:24:05 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6700:7f00:c14c:6e39:cb7d:ad66])
-        by smtp.gmail.com with ESMTPSA id e18-20020a656792000000b0053f1d55676fsm1618203pgr.2.2023.06.08.16.24.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jun 2023 16:24:04 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Stephane Eranian <eranian@google.com>
-Subject: [PATCH 3/3] perf test: Add test of libpfm4 events
-Date:   Thu,  8 Jun 2023 16:24:00 -0700
-Message-ID: <20230608232400.3056312-4-namhyung@kernel.org>
+        d=1e100.net; s=20221208; t=1686266951; x=1688858951;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PUR1BaDg5UCDJ5L3mZfey+gmQnRwkETeHewM4NWReSw=;
+        b=FruBpljuZElp/UBmXaaH08K+T6931/dmKXiPZzcp4JYZk4We1i28Or/cuGWIcA2bNn
+         KDQpC+lMXCbPo8k7JI6z5nmZa22O+L76JgbAHAvUXsY5Tf77hEVIqnFHHb0awWSSXn6g
+         R9HVvYZptZVHAMF/NRV8PcBU/q15yLo9UnDPImABZMby0M63v8BWV3qST3UyVstIOl6W
+         KapvC90KhGEo2saeUV8DCzEyv1QSjy/wqvVhFZqaphzebmA2Jlu5VT46Pl6/RoPooYaq
+         hIRwYb8eobTs0lCNzTM9+IXjVCXu8HgHfB8yrELUWLmJ+qtp3Vo/AHLiDaTxEg+ReaUz
+         StQQ==
+X-Gm-Message-State: AC+VfDxEbQd32YPJgbitwWoR4w0symhLPAm2Mu0m6Kj/rYngBIBUJ9v7
+        mn7Tb7DPELqbZPlsWO+q8oc3c0Di3Vas
+X-Google-Smtp-Source: ACHHUZ7nvCcbtXwbQ8tPrBNQ7joytk73IzC7nG/F+wmEeTixEorelfj8HzfbCMpJUhp83IeyIqzk8iZHWWnX
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c3e5:ebc6:61e5:c73f])
+ (user=irogers job=sendgmr) by 2002:a81:b64e:0:b0:561:856f:69d3 with SMTP id
+ h14-20020a81b64e000000b00561856f69d3mr607499ywk.7.1686266951355; Thu, 08 Jun
+ 2023 16:29:11 -0700 (PDT)
+Date:   Thu,  8 Jun 2023 16:27:57 -0700
+Message-Id: <20230608232823.4027869-1-irogers@google.com>
+Mime-Version: 1.0
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-In-Reply-To: <20230608232400.3056312-1-namhyung@kernel.org>
-References: <20230608232400.3056312-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v2 00/26] Fix memory leaks (was reference count checking for thread)
+From:   Ian Rogers <irogers@google.com>
+To:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        ye xingchen <ye.xingchen@zte.com.cn>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        Changbin Du <changbin.du@huawei.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Yuan Can <yuancan@huawei.com>,
+        Brian Robbins <brianrob@linux.microsoft.com>,
+        liuwenyu <liuwenyu7@huawei.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Fangrui Song <maskray@google.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+Use leak sanitizer and reference count checking to fix outstanding
+memory leaks in "perf top" or those discovered in "perf test". Also
+fix address sanitizer issues discovered.
 
-  $ ./perf test -v 102
-  102: perf all libpfm4 events test                                    :
-  --- start ---
-  test child forked, pid 3030994
-  Testing ix86arch::UNHALTED_CORE_CYCLES
-  Testing ix86arch::INSTRUCTION_RETIRED
-  Testing ix86arch::UNHALTED_REFERENCE_CYCLES
-  Testing ix86arch::LLC_REFERENCES
-  Testing ix86arch::LLC_MISSES
-  Testing ix86arch::BRANCH_INSTRUCTIONS_RETIRED
-  Testing ix86arch::MISPREDICTED_BRANCH_RETIRED
-  Testing perf_raw::r0000
-  Testing icl::UNHALTED_CORE_CYCLES
-  Testing icl::UNHALTED_REFERENCE_CYCLES
-  ...
-  test child finished with 0
-  ---- end ----
-  perf all libpfm4 events test: Ok
+Add reference count checking to thread after first refactoring bits of
+the code, such as making the thread red-black tree non-invasive (so
+the thread it references is easier to reference count, rather than
+having 3 potential references). Part of this refactoring also removes
+the dead thread list because if we held a reference here the threads
+would never die and anything else has questionable
+correctness.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/stat_all_pfm.sh | 51 ++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100755 tools/perf/tests/shell/stat_all_pfm.sh
+addr_location is made into its own C/header file to capture the init,
+exit and copy code.
 
-diff --git a/tools/perf/tests/shell/stat_all_pfm.sh b/tools/perf/tests/shell/stat_all_pfm.sh
-new file mode 100755
-index 000000000000..4d004f777a6e
---- /dev/null
-+++ b/tools/perf/tests/shell/stat_all_pfm.sh
-@@ -0,0 +1,51 @@
-+#!/bin/sh
-+# perf all libpfm4 events test
-+# SPDX-License-Identifier: GPL-2.0
-+
-+if perf version --build-options | grep HAVE_LIBPFM | grep -q OFF
-+then
-+  echo "Skipping, no libpfm4 support"
-+  exit 2
-+fi
-+
-+err=0
-+for p in $(perf list --raw-dump pfm)
-+do
-+  if echo "$p" | grep -q unc_
-+  then
-+    echo "Skipping uncore event '$p' that may require additional options."
-+    continue
-+  fi
-+  echo "Testing $p"
-+  result=$(perf stat --pfm-events "$p" true 2>&1)
-+  x=$?
-+  if echo "$result" | grep -q "failed to parse event $p : invalid or missing unit mask"
-+  then
-+    continue
-+  fi
-+  if test "$x" -ne "0"
-+  then
-+    echo "Unexpected exit code '$x'"
-+    err=1
-+  fi
-+  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>"
-+  then
-+    # We failed to see the event and it is supported. Possibly the workload was
-+    # too small so retry with something longer.
-+    result=$(perf stat --pfm-events "$p" perf bench internals synthesize 2>&1)
-+    x=$?
-+    if test "$x" -ne "0"
-+    then
-+      echo "Unexpected exit code '$x'"
-+      err=1
-+    fi
-+    if ! echo "$result" | grep -q "$p"
-+    then
-+      echo "Event '$p' not printed in:"
-+      echo "$result"
-+      err=1
-+    fi
-+  fi
-+done
-+
-+exit "$err"
+Refactor and change callchain_cursor to come from a pthread key so
+that a destructor can run on pthreads exiting.
+
+Fix additional outstanding memory leak and reference count issues to
+the point that "perf test" compiled with address sanitizer but without
+libtraceevent passes all but one test - libtraceevent reports leaks
+within its own code, most likely as it isn't compiled with
+sanitizers. The remaining failing test is "68: Test dwarf unwind" and
+that has address sanitizer issues as it uses memcpy to access the
+stack within the process - we likely want to skip parts of the test
+with sanitizers enabled.
+
+v2. Include extra fixes for callchain cursor, addr2line and related
+    "perf top" fixes, as well as the 2 patches in:
+    https://lore.kernel.org/lkml/20230607050148.3248353-1-irogers@google.com/
+
+Ian Rogers (26):
+  perf thread: Remove notion of dead threads
+  perf thread: Make threads rbtree non-invasive
+  perf thread: Add accessor functions for thread
+  perf maps: Make delete static, always use put
+  perf addr_location: Move to its own header
+  perf addr_location: Add init/exit/copy functions
+  perf thread: Add reference count checking
+  perf machine: Make delete_threads part of machine__exit
+  perf report: Avoid thread leak
+  perf header: Ensure bitmaps are freed
+  perf stat: Avoid evlist leak
+  perf intel-pt: Fix missed put and leak
+  perf evlist: Free stats in all evlist destruction
+  perf python: Avoid 2 leak sanitizer issues
+  perf jit: Fix two thread leaks
+  perf symbol-elf: Correct holding a reference
+  perf maps: Fix overlapping memory leak
+  perf machine: Fix leak of kernel dso
+  perf machine: Don't leak module maps
+  perf map/maps/thread: Changes to reference counting
+  perf annotate: Fix parse_objdump_line memory leak
+  perf top: Add exit routine for main thread
+  perf header: Avoid out-of-bounds read
+  perf callchain: Use pthread keys for tls callchain_cursor
+  perf srcline: Change free_srcline to zfree_srcline
+  perf hist: Fix srcline memory leak
+
+ tools/perf/arch/arm/tests/dwarf-unwind.c      |   2 +-
+ tools/perf/arch/arm64/tests/dwarf-unwind.c    |   2 +-
+ tools/perf/arch/powerpc/tests/dwarf-unwind.c  |   2 +-
+ tools/perf/arch/x86/tests/dwarf-unwind.c      |   2 +-
+ tools/perf/builtin-annotate.c                 |  28 +-
+ tools/perf/builtin-c2c.c                      |  22 +-
+ tools/perf/builtin-diff.c                     |  20 +-
+ tools/perf/builtin-inject.c                   |   4 +-
+ tools/perf/builtin-kmem.c                     |  13 +-
+ tools/perf/builtin-kwork.c                    |  15 +-
+ tools/perf/builtin-mem.c                      |   4 +-
+ tools/perf/builtin-report.c                   |  21 +-
+ tools/perf/builtin-sched.c                    |  80 ++---
+ tools/perf/builtin-script.c                   | 123 ++++----
+ tools/perf/builtin-stat.c                     |   1 +
+ tools/perf/builtin-timechart.c                |  11 +-
+ tools/perf/builtin-top.c                      |  19 +-
+ tools/perf/builtin-trace.c                    |  38 ++-
+ .../scripts/python/Perf-Trace-Util/Context.c  |   4 +-
+ tools/perf/tests/code-reading.c               |   6 +-
+ tools/perf/tests/dwarf-unwind.c               |   1 -
+ tools/perf/tests/hists_common.c               |   2 +-
+ tools/perf/tests/hists_cumulate.c             |  18 +-
+ tools/perf/tests/hists_filter.c               |  11 +-
+ tools/perf/tests/hists_link.c                 |  20 +-
+ tools/perf/tests/hists_output.c               |  12 +-
+ tools/perf/tests/maps.c                       |   2 +-
+ tools/perf/tests/mmap-thread-lookup.c         |   5 +-
+ tools/perf/tests/perf-targz-src-pkg           |   5 +-
+ tools/perf/tests/symbols.c                    |   1 -
+ tools/perf/tests/thread-maps-share.c          |  13 +-
+ tools/perf/trace/beauty/pid.c                 |   4 +-
+ tools/perf/ui/browsers/hists.c                |  19 +-
+ tools/perf/ui/hist.c                          |   5 +-
+ tools/perf/ui/stdio/hist.c                    |   2 +-
+ tools/perf/util/Build                         |   1 +
+ tools/perf/util/addr_location.c               |  44 +++
+ tools/perf/util/addr_location.h               |  31 ++
+ tools/perf/util/annotate.c                    |   5 +-
+ tools/perf/util/arm-spe.c                     |   4 +-
+ tools/perf/util/block-info.c                  |   4 +-
+ tools/perf/util/build-id.c                    |   2 +
+ tools/perf/util/callchain.c                   |  68 +++-
+ tools/perf/util/callchain.h                   |   4 +-
+ tools/perf/util/cs-etm.c                      |  28 +-
+ tools/perf/util/data-convert-json.c           |  16 +-
+ tools/perf/util/db-export.c                   |  30 +-
+ tools/perf/util/dlfilter.c                    |  17 +-
+ tools/perf/util/event.c                       |  37 +--
+ tools/perf/util/evlist.c                      |   2 +
+ tools/perf/util/evsel_fprintf.c               |   8 +-
+ tools/perf/util/header.c                      |  14 +-
+ tools/perf/util/hist.c                        |  59 ++--
+ tools/perf/util/intel-bts.c                   |   2 +-
+ tools/perf/util/intel-pt.c                    |  88 +++---
+ tools/perf/util/jitdump.c                     |  12 +-
+ tools/perf/util/machine.c                     | 292 +++++++++---------
+ tools/perf/util/map.c                         |   4 +-
+ tools/perf/util/maps.c                        |   5 +-
+ tools/perf/util/maps.h                        |   9 +-
+ tools/perf/util/python.c                      |   4 +
+ .../scripting-engines/trace-event-python.c    |  40 ++-
+ tools/perf/util/session.c                     |   8 +-
+ tools/perf/util/sort.c                        |  12 +-
+ tools/perf/util/srcline.c                     |  15 +-
+ tools/perf/util/srcline.h                     |   2 +-
+ tools/perf/util/symbol-elf.c                  |   4 +-
+ tools/perf/util/symbol.h                      |  17 +-
+ tools/perf/util/thread-stack.c                |  25 +-
+ tools/perf/util/thread.c                      | 222 +++++++------
+ tools/perf/util/thread.h                      | 210 ++++++++++++-
+ tools/perf/util/unwind-libdw.c                |  27 +-
+ tools/perf/util/unwind-libunwind-local.c      |  19 +-
+ tools/perf/util/unwind-libunwind.c            |   2 +-
+ tools/perf/util/vdso.c                        |   2 +-
+ 75 files changed, 1210 insertions(+), 722 deletions(-)
+ create mode 100644 tools/perf/util/addr_location.c
+ create mode 100644 tools/perf/util/addr_location.h
+
 -- 
 2.41.0.162.gfafddb0af9-goog
 
