@@ -2,60 +2,32 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4F8C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 10:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AD0C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 11:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235151AbjFHKcU (ORCPT
+        id S235190AbjFHLAK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 06:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47662 "EHLO
+        Thu, 8 Jun 2023 07:00:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234955AbjFHKcT (ORCPT
+        with ESMTP id S235242AbjFHK7w (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 06:32:19 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227082113
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 03:32:18 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-2564dc37c3eso1210025a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 03:32:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686220337; x=1688812337;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y+5ci3F9H5iPKnXYZzOcI9CsPolbMf1gP+o5j9926rE=;
-        b=dB9UrO6+ganb89zL52J2NM7LMln/CXJYT3Ib25+RSZwbv4F/6ChFJg/VDk9RbFjzik
-         VhDMxj8/R/htZAVwp2b4d85Hr25nKbuOMpw4P4k9mrOrK6Z/NqWcb6artb55cx7WWV81
-         gzIQq/8uxxilLBVYBrcmwIlA5nJDFzGj4I2ZB2J3wK8H5EkAUlCcrndOo2Km63eC6Vbi
-         Lq2WeyQ1pcjT+YQ6+Bgv2nA45x6HTHe2GzZ2HrwXdFVC27hw7+9MvGDp3FWT1tO1knE8
-         qrGnj7CbGi+N3Z/H4qT+/7+Ig0nxSc4t0DcQ7qKLTeDQRyCggj6P4TSu/IuQLWavUjNB
-         SsDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686220337; x=1688812337;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y+5ci3F9H5iPKnXYZzOcI9CsPolbMf1gP+o5j9926rE=;
-        b=M5ySdLwvXzQeIUdTrBWD9qcwARMpOBCAuxdbVribbroZmBHtftOeLsARLx1Rkg35LI
-         s88oGx3oUDIFxJO2tBPdOe0dpF5tEIhXgtosFJIDN2jPdjZo9m8ZmUewGGxywYEa4tP1
-         VgUKrUoIJBavi4/cNgmieJvKYaqFHIlcaltTEzKxL0fRfZX+Wd0vR6w/Nvy0cDoXgL5e
-         uR8e786ai/yjNzI+OVha6TarqjvJ7dXajThdS04zU2UovbIWLc5TqaNUH8CO3TngEG0o
-         7Nc7A9D4SUqtDGcM4HRd58llPmKYwOR26Q0DUo+JuEpoHblZADJXYrgQq+kvY8t2jd96
-         2pQQ==
-X-Gm-Message-State: AC+VfDwm085ytp0alj9v8vti+BEQhbxGuovrH995beX2de5+9evVg+ci
-        CRoi85X3iVzFIYcsfNpDg5eocA==
-X-Google-Smtp-Source: ACHHUZ5Np9xRp10Pl2SNolMvnYQDv8n3Gci/B5QYG/MyQLvSXo5r+3o35BlAoAlijQ6sgMTWKzXn+A==
-X-Received: by 2002:a17:90a:fa0d:b0:256:7d07:c8a1 with SMTP id cm13-20020a17090afa0d00b002567d07c8a1mr2058796pjb.12.1686220337457;
-        Thu, 08 Jun 2023 03:32:17 -0700 (PDT)
-Received: from leoy-huanghe ([156.59.39.101])
-        by smtp.gmail.com with ESMTPSA id 15-20020a17090a01cf00b00252d960a8dfsm2962730pjd.16.2023.06.08.03.32.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jun 2023 03:32:17 -0700 (PDT)
-Date:   Thu, 8 Jun 2023 18:32:10 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     coresight@lists.linaro.org, denik@chromium.org,
+        Thu, 8 Jun 2023 06:59:52 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A018BE57;
+        Thu,  8 Jun 2023 03:59:50 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89150AB6;
+        Thu,  8 Jun 2023 04:00:35 -0700 (PDT)
+Received: from e127643.broadband (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8DFB03F71E;
+        Thu,  8 Jun 2023 03:59:47 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     coresight@lists.linaro.org
+Cc:     James Clark <james.clark@arm.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -69,74 +41,57 @@ Cc:     coresight@lists.linaro.org, denik@chromium.org,
         Will Deacon <will@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] perf cs-etm: Use previous thread for branch sample
- source IP
-Message-ID: <20230608103210.GC123723@leoy-huanghe>
-References: <20230524131958.2139331-1-james.clark@arm.com>
- <20230524131958.2139331-3-james.clark@arm.com>
- <20230527090635.GB886420@leoy-yangtze.lan>
- <630ab636-107d-4b12-5454-2ee91ad43543@arm.com>
- <1e7aa657-6d1e-9e7c-95cb-b32d307abe93@arm.com>
- <20230608102555.GB123723@leoy-huanghe>
+Subject: [PATCH v2 0/5] perf cs-etm: Track exception level
+Date:   Thu,  8 Jun 2023 11:59:24 +0100
+Message-Id: <20230608105930.1389276-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230608102555.GB123723@leoy-huanghe>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 06:25:55PM +0800, Leo Yan wrote:
+Changes since v1:
 
-[...]
+  * Always assume host kernel when the trace was captured at EL1 (nVHE)
+  * Fix EL validation to work with ETMv3
+  * Add a commit to make PID format accessible from struct
+    cs_etm_auxtrace
 
+======
 
-> Seems to me, this is a synchronization issue between the field
-> 'tidq->prev_thread' and 'tidq->prev_packet'.
-> 
-> It's still hard for me to understand "two adjacent packets on the same
-> thread will say they branched from the previous thread that ran", IIUC,
-> even we move thread swapping into cs_etm__set_thread(), if the two
-> adjacent packets are in the same thread context, we can skip to update
-> fields 'tidq->prev_thread' and 'tidq->prev_packet'.
+Some fixes to support an issue reported by Denis Nikitin where decoding
+trace that contains different EL1 and EL2 kernels can crash or go into
+an infinite loop because the wrong kernel maps are used for the decode.
 
-Sorry for typo, here should be:
+This still doesn't support distinguishing guest and host userspace,
+we'd still have to fix the timestamps and do a bit more work to
+correlate that. And I've removed PERF_RECORD_MISC_HYPERVISOR as a
+possible outcome of cs_etm__cpu_mode(). As far as I know this could
+never have been returned anyway because machine__is_host(machine) was
+always true due to session.machines.host being hard coded. And I'm not
+sure of the relevance of the difference between PERF_RECORD_MISC_KERNEL
+and PERF_RECORD_MISC_HYPERVISOR in this scenario.
 
-... skip to update fields 'tidq->prev_thread' and 'tidq->thread'.
+The first commit is a tidy up, second fixes a bug that I found when
+comparing the exception level and thread of branch records, the third
+is the main fix, and the last commit is some extra error checking. 
 
-> So I am curious if below cs_etm__set_thread() works or not?
-> 
-> static void cs_etm__set_thread(struct cs_etm_auxtrace *etm,
-> 			       struct cs_etm_traceid_queue *tidq, pid_t tid)
-> {
-> 	struct machine *machine = &etm->session->machines.host;
-> 
-> 	/* No context switching, bail out */
-> 	if ((tidq->thread->tid != tid)
-> 		return;
-> 
-> 	/* If tid is -1, we simply use idle thread context */
-> 	if (tid == -1)
-> 		goto find_idle_thread;
-> 
-> 	/*
-> 	 * The new incoming tid is different from current thread,
-> 	 * so it's to switch to the next thread context.
-> 	 */
-> 
-> 	/* Swap thread contexts */
-> 	thread__put(tidq->prev_thread);
-> 	tidq->prev_thread = thread__get(tidq->thread);
-> 
-> 	/* Find thread context for new tid */
-> 	thread__zput(tidq->thread);
-> 	tidq->thread = machine__find_thread(machine, -1, tid);
-> 
-> find_idle_thread:
-> 	/* Couldn't find a known thread */
-> 	if (!tidq->thread)
-> 		tidq->thread = machine__idle_thread(machine);
-> }
-> 
-> Thanks,
-> Leo
+Applies to acme/perf-tools (48b1320a67)
+
+James Clark (5):
+  perf cs-etm: Only track threads instead of PID and TIDs
+  perf cs-etm: Use previous thread for branch sample source IP
+  perf cs-etm: Make PID format accessible from struct cs_etm_auxtrace
+  perf cs-etm: Track exception level
+  perf cs-etm: Add exception level consistency check
+
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  33 +--
+ .../perf/util/cs-etm-decoder/cs-etm-decoder.h |   4 +-
+ tools/perf/util/cs-etm.c                      | 273 ++++++++++--------
+ tools/perf/util/cs-etm.h                      |  13 +-
+ 4 files changed, 175 insertions(+), 148 deletions(-)
+
+-- 
+2.34.1
+
