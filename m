@@ -2,142 +2,166 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E570EC7EE25
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 10:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64C9C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 10:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236054AbjFHKTZ (ORCPT
+        id S236107AbjFHK0F (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 06:19:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41436 "EHLO
+        Thu, 8 Jun 2023 06:26:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236096AbjFHKTU (ORCPT
+        with ESMTP id S235821AbjFHK0E (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 06:19:20 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C19F2D61;
-        Thu,  8 Jun 2023 03:19:09 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id B432321A43;
-        Thu,  8 Jun 2023 10:19:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1686219547; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qH7hbjRKkb1LYOldC3fpKEsvGCEPNOpUQ3QVueg8k94=;
-        b=ubBBzAI5Jfq44AopMPQk7sptKMpk3Olqv9uhKFbg+3Qb27Tdk/x97Pdyyc+g9TQwuCFTsM
-        sxXE4W276BgmPZExKbxUU8w/ic4r8NBjuASLGMi/hqOy977FBzx5XUeDmft7/KnI19WFQl
-        f0SCXK/ToeHSmXXB1qhFGEf3wPR4kmA=
-Received: from suse.cz (pmladek.tcp.ovpn2.prg.suse.de [10.100.208.146])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 8228C2C141;
-        Thu,  8 Jun 2023 10:19:06 +0000 (UTC)
-Date:   Thu, 8 Jun 2023 12:19:02 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/7] watchdog/hardlockup: Sort hardlockup detector
- related config values a logical way
-Message-ID: <ZIGrFiGhUiO6OOsa@alley>
-References: <20230607152432.5435-1-pmladek@suse.com>
- <20230607152432.5435-2-pmladek@suse.com>
- <CAD=FV=X4Sp=ZE4DWob-W0NzRm00K7wOWxyyCCaHUHNPPinsjhg@mail.gmail.com>
+        Thu, 8 Jun 2023 06:26:04 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C6CFE2
+        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 03:26:03 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-65299178ac5so370286b3a.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 03:26:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686219962; x=1688811962;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3xkH3r1pvwgUrEo7Gtm0dIWmSa6nSh/lG9Vqe1Of73g=;
+        b=nCZY15shRf0+YCOaFOuY8X6w310iPAZUYi5ASkQz/GUc+4dSc2cReU0+52jpmuft1b
+         zgRskJqRB9fkL8XXnZXtSGXpDEiQT3BsO1De6EkspTxOfkC7L1/My9JygCq3fEI5DVi3
+         gIZ8n1z9SzT8oR85zl9AJLdkOhhKpzMKA38CfDUFMNh3BPtoHjzUjRbbrn29AMGqT0F/
+         zu2wsnbm1hwaE4pjxWEmVcbQkkPkVGvF5UzRSs4IG0HYp0380HCk0LZjOxYvbLkanv/1
+         2eahg6XTZb7T4cCEZtQIc/e0qfI3USBtTHh1PlSGPKru2u9a+yQrVvaFuDoJ9Ic/yvd4
+         s/zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686219962; x=1688811962;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3xkH3r1pvwgUrEo7Gtm0dIWmSa6nSh/lG9Vqe1Of73g=;
+        b=CEMaCm92c5J2yZ1e8xUCqAIf1q9JmIIHuXJ7oFacveJQT2Wb8uH217dq3S2wymHmWx
+         GCqnhn+BAorpi6c0m+1jidab6D/QDPWWKz+c2FdPxQhr8VUKYfSnfThROIUfWYosYCUB
+         yQZTWXhcvQyV2d7ofKgDbAErasyInZleIJP+gbCR+sDQOBlZ+9FGUuTHUXw3HQGwK0dr
+         UJPUJYAbXxh17C1xr8M3tFQh9zOnwfVUDgmouYK+6qe1tPJjq1gBPAt4iYbKvskCHXkP
+         45fdCJuyhw7csMTA2kYLAIcwZ22FEqomKEXVCzfTmoGJZ/JxLdDEXur1s2nTfasTwpGH
+         Vo+g==
+X-Gm-Message-State: AC+VfDyWatB0fT7NcwL8ezploKKudWacPArPYci6sjUpmtmNIcuqt/7F
+        onvHO9/CNhd76pzZG6nHGHwK9w==
+X-Google-Smtp-Source: ACHHUZ5JTCRE7fcyNWts+H2vn0LEXWHBO6ClckfueGh8B+IzoyS9r/drZKEBPVRJZZdzupk6aKns1w==
+X-Received: by 2002:a05:6a00:3a26:b0:659:3031:5037 with SMTP id fj38-20020a056a003a2600b0065930315037mr9799968pfb.3.1686219962556;
+        Thu, 08 Jun 2023 03:26:02 -0700 (PDT)
+Received: from leoy-huanghe ([156.59.39.101])
+        by smtp.gmail.com with ESMTPSA id m23-20020aa79017000000b006410f4f3ecdsm822251pfo.83.2023.06.08.03.25.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jun 2023 03:26:02 -0700 (PDT)
+Date:   Thu, 8 Jun 2023 18:25:55 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     coresight@lists.linaro.org, denik@chromium.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] perf cs-etm: Use previous thread for branch sample
+ source IP
+Message-ID: <20230608102555.GB123723@leoy-huanghe>
+References: <20230524131958.2139331-1-james.clark@arm.com>
+ <20230524131958.2139331-3-james.clark@arm.com>
+ <20230527090635.GB886420@leoy-yangtze.lan>
+ <630ab636-107d-4b12-5454-2ee91ad43543@arm.com>
+ <1e7aa657-6d1e-9e7c-95cb-b32d307abe93@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=X4Sp=ZE4DWob-W0NzRm00K7wOWxyyCCaHUHNPPinsjhg@mail.gmail.com>
+In-Reply-To: <1e7aa657-6d1e-9e7c-95cb-b32d307abe93@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed 2023-06-07 16:34:20, Doug Anderson wrote:
-> Hi,
+On Thu, Jun 08, 2023 at 10:34:42AM +0100, James Clark wrote:
+
+[...]
+
+> >>> @@ -616,6 +618,8 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
+> >>>  		tmp = tidq->packet;
+> >>>  		tidq->packet = tidq->prev_packet;
+> >>>  		tidq->prev_packet = tmp;
+> >>> +		thread__put(tidq->prev_thread);
+> >>> +		tidq->prev_thread = thread__get(tidq->thread);
+> >>
+> >> Maybe cs_etm__packet_swap() is not the best place to update
+> >> "tidq->prev_thread", since swapping packet doesn't mean it's necessarily
+> >> thread switching; can we move this change into the cs_etm__set_thread()?
+> >>
+> > 
+> > Yeah that might make more sense. I can move it there if we decide to
+> > keep this change.
+> > 
 > 
-> On Wed, Jun 7, 2023 at 8:25 AM Petr Mladek <pmladek@suse.com> wrote:
-> > Only one hardlockup detector can be compiled in. The selection is done
-> > using quite complex dependencies between several CONFIG variables.
-> > The following patches will try to make it more straightforward.
-> >
-> > As a first step, reorder the definitions of the various CONFIG variables.
-> > The logical order is:
-> >
-> >    1. HAVE_* variables define available variants. They are typically
-> >       defined in the arch/ config files.
-> >
-> >    2. HARDLOCKUP_DETECTOR y/n variable defines whether the hardlockup
-> >       detector is enabled at all.
-> >
-> >    3. HARDLOCKUP_DETECTOR_PREFER_BUDDY y/n variable defines whether
-> >       the buddy detector should be preferred over the perf one.
-> >       Note that the arch specific variants are always preferred when
-> >       available.
-> >
-> >    4. HARDLOCKUP_DETECTOR_PERF/BUDDY variables define whether the given
-> >       detector is enabled in the end.
-> >
-> >    5. HAVE_HARDLOCKUP_DETECTOR_NON_ARCH and HARDLOCKUP_DETECTOR_NON_ARCH
-> >       are temporary variables that are going to be removed in
-> >       a followup patch.
-> >
-> 
-> I don't really have any strong opinions, so I'm fine with this. In
-> general I think the ordering I picked tried to match the existing
-> "style" which generally tried to list configs and then select them
-> below. To me the existing style makes more sense when thinking about
-> writing C code
+> Unfortunately I don't think I can make this change. It seems like
+> putting the previous thread swap in  cs_etm__set_thread() has different
+> semantics to keeping all the swaps together in cs_etm__packet_swap().
 
-I know. My motivation was the following:
+Thanks for trying this.
 
-1. Kconfig is not C. My view is that it is more like a menu. There is a
-   top level item. If the top level is enabled then there is a submenu
-   with a more detailed selection of various variants and options.
+> This is because if you swap the thread in cs_etm__packet_swap() the
+> previous packet and next packet can have the _same_ thread if there
+> happened to be no change. However if you only swap previous thread in
+> cs_etm__set_thread(), that means that the previous thread is always
+> different to the next one. This has a huge difference on the decoding
+> because two adjacent packets on the same thread will say they branched
+> from the previous thread that ran, not the previous thread on the
+> previous packet.
 
-2. The current logic is quite complicated from my POV. And it was
-   even before your patchset. For example,
-   HAVE_HARDLOCKUP_DETECTOR_BUDDY is defined as:
+Seems to me, this is a synchronization issue between the field
+'tidq->prev_thread' and 'tidq->prev_packet'.
 
-	config HAVE_HARDLOCKUP_DETECTOR_BUDDY
-		bool
-		depends on SMP
-		default y
+It's still hard for me to understand "two adjacent packets on the same
+thread will say they branched from the previous thread that ran", IIUC,
+even we move thread swapping into cs_etm__set_thread(), if the two
+adjacent packets are in the same thread context, we can skip to update
+fields 'tidq->prev_thread' and 'tidq->prev_packet'.
 
-   One would expect that it would be enabled on SMP system.
-   But the final value depends on many other variables
-   which are defined using relatively complex conditions,
-   especially HARDLOCKUP_DETECTOR, HAVE_HARDLOCKUP_DETECTOR_NON_ARCH,
-   and HARDLOCKUP_DETECTOR_NON_ARCH.
+So I am curious if below cs_etm__set_thread() works or not?
 
-   Understanding the logic is even more complicated because Kconfig is
-   not indexed by cscope.
+static void cs_etm__set_thread(struct cs_etm_auxtrace *etm,
+			       struct cs_etm_traceid_queue *tidq, pid_t tid)
+{
+	struct machine *machine = &etm->session->machines.host;
 
-Important: The logic used at the end of the patchset actually
-   follows the C style. It defines how the various variables
-   depend on each other from top to bottom.
+	/* No context switching, bail out */
+	if ((tidq->thread->tid != tid)
+		return;
 
-> 
-> config SOFTLOCKUP_DETECTOR:
->   ... blah blah blah ...
+	/* If tid is -1, we simply use idle thread context */
+	if (tid == -1)
+		goto find_idle_thread;
 
-This one is actually defined in the menu-like order:
+	/*
+	 * The new incoming tid is different from current thread,
+	 * so it's to switch to the next thread context.
+	 */
 
-	config SOFTLOCKUP_DETECTOR
+	/* Swap thread contexts */
+	thread__put(tidq->prev_thread);
+	tidq->prev_thread = thread__get(tidq->thread);
 
-	config BOOTPARAM_SOFTLOCKUP_PANIC
-		depends on SOFTLOCKUP_DETECTOR
+	/* Find thread context for new tid */
+	thread__zput(tidq->thread);
+	tidq->thread = machine__find_thread(machine, -1, tid);
 
-It is because the custom option depends on the top level one.
-This is exactly what I would like to achieve with HARDLOCKUP
-variables in this patchset.
+find_idle_thread:
+	/* Couldn't find a known thread */
+	if (!tidq->thread)
+		tidq->thread = machine__idle_thread(machine);
+}
 
-Best Regards,
-Petr
+Thanks,
+Leo
