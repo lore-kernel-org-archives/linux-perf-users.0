@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05499C8300C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 23:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AC4C7EE25
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 23:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237142AbjFHX3a (ORCPT
+        id S237178AbjFHX3e (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 19:29:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46710 "EHLO
+        Thu, 8 Jun 2023 19:29:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235563AbjFHX3Y (ORCPT
+        with ESMTP id S237161AbjFHX3c (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 19:29:24 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2A7C30E8
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 16:29:19 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-568fa455b8fso15298337b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 16:29:19 -0700 (PDT)
+        Thu, 8 Jun 2023 19:29:32 -0400
+Received: from mail-pg1-x549.google.com (mail-pg1-x549.google.com [IPv6:2607:f8b0:4864:20::549])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B7D830D4
+        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 16:29:27 -0700 (PDT)
+Received: by mail-pg1-x549.google.com with SMTP id 41be03b00d2f7-517bad1b8c5so232152a12.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 16:29:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686266959; x=1688858959;
+        d=google.com; s=20221208; t=1686266966; x=1688858966;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=fRj5/w2UOA0JOC/Xe07Iujyc9z+S2cbsaeq7FmsqXDU=;
-        b=3EjdbJdsNYOeUhtii9EKtnbRkPhm67RmngBae/kT1z0LRVA/inT9GWkMD9HhDiwLqL
-         l0Zhf4J/LzlSrmPLSTmlVmLkzWidwmwluVYvexZJiAiL/3IaYsHs88H40KIWwjrqqc+B
-         HG41D/gem27yV8QvqPKrJ5IT7h9gvl+1T7ZZWULiRf8Hf2FxmgeoQuH1k/+SVIhRPnV3
-         mpcW//kQe2EjOXs2YRIYVj3d5bPpi/e2ffxJv0aHhmczbPl5I6D+cr3Pr5f1nhfwnDRl
-         xNugUNIE4bm/JhcUBoCp2CMsBRFMjWOqD6dhQwGczXlYSeylgQv8UbNz/cQLOppBRrAM
-         J1DQ==
+        bh=kjATaEFKnu3AxVMXvUzymAs1Q8GEb5ijJWr8l8ZMBuI=;
+        b=L5m7+zFRnG2OaMCtRHfv1dL7EvBwYdevUAqImj02nP8bfiJtw8FhY3cVdhJCsgifZA
+         8WP2aCrm7afFY9x8yj5UnjzolzEtQ3po0lzf/Q0Q05vDXhjFyagsUR7IVxCnbcFrPSEO
+         igMDXC144zNWoYE2VWPZgmN33EHFVg4RLrIp9Ap812CbSWBATPD65vsevxYHnujH9IbW
+         F/s7LcAWUQjIJBGXr6rSIyfC+wBvV3V6wO1qQzgxppaokYXO8Qjv/Jxi7T8ODm5pOqm2
+         lkBcdejYt7OBNlb5rCy4QM0bWsCkpFdJqt8ukv93qpEV56NRYVMzvbKinzvW+d8uzKll
+         jgTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686266959; x=1688858959;
+        d=1e100.net; s=20221208; t=1686266966; x=1688858966;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fRj5/w2UOA0JOC/Xe07Iujyc9z+S2cbsaeq7FmsqXDU=;
-        b=Ndq9clJZD0o3gQAKa+uJrwi2XQbj8VjclOdhlGL5v7vVLvktsLdxg5SimAZXZt6zZd
-         55KFJ0LqaXUOZEXAuEYC/zI1VjxJuvH7plMek15a8WTPAPIkX1YKasqC+VPZ/alngaf8
-         LIs/QZHcnBBCBYx1eSzTZziOm2IGLfY4s/tFnWUAZ16+Y3K74JTjjPUnJBv/JiF3rDjA
-         YXsD6w7/06PJ9t3lJ36QGgNcXgUH8VuAC/AcWK4YO5E1yjfL4/YyRPgwIWcn2LH/JRoq
-         6F+3zEMlzotaUa0QZh99AvD+fuDdOP0SZKY5qXQqukWsAhtAfp7kCSPSCHIgn7UPP5YX
-         dcZg==
-X-Gm-Message-State: AC+VfDzJnlTucEEFDKSwkS4o17ITSNLy9id5T//U6gLG0y4Cuc+ZtYFd
-        NjruUorVjgzNU1glIWGirPld+U2lZQU2
-X-Google-Smtp-Source: ACHHUZ4cBigZfPaCOmaoqRi5ygdASgmHJgUBIvwbO94FNfE0e7C65vCYglk4kMzc23yCQoxngaZpXsrOLUxF
+        bh=kjATaEFKnu3AxVMXvUzymAs1Q8GEb5ijJWr8l8ZMBuI=;
+        b=Jg2kkigIKWBuGGjiNbxxWuw9ahMQPH5wp7SFjDSYYnqV01W1c0V0bkAitQgdsb99ZS
+         zXbK5VpRdlAIKhFELsfwPfMgpUWE9rBpQ9YW56JEWRg51LJEGkylXcmDm4MjAC4Lb7E6
+         zBOnud4XngIXDWHkY2FuYl3Bg/lIVt3bPndjYXFbpL66Uetl+3iItHwC71IkJ0hneovZ
+         MGXwndB5Z13MfDtIKL9oBFy0JtPjDT58pKWjpE1CqAgZ+3U+vjU7EeIurhYpcdDTaZTA
+         Zkz2lDtmDEzEQp8o0GMeh3zREhzT/uPgR1bR2qC2b5rqvwM/siCqzsPMxWJnu6xNF4W8
+         6lgw==
+X-Gm-Message-State: AC+VfDwo2xFRswF+DjadzfuI05unoTsmlqlfoHEJMdGk00lLAnDDSVb4
+        peR1nJswf2RNMPkmt8DOl1lKuz84m4DA
+X-Google-Smtp-Source: ACHHUZ6bwgHIFee9zw5KXtI7HDtjdNuwo3IPnGTwyXCgbHDTE1yqglPQ+eZ7zAKC73k888gez3h64WtSCFZm
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c3e5:ebc6:61e5:c73f])
- (user=irogers job=sendgmr) by 2002:a81:b710:0:b0:55d:6af3:1e2c with SMTP id
- v16-20020a81b710000000b0055d6af31e2cmr627416ywh.3.1686266958935; Thu, 08 Jun
- 2023 16:29:18 -0700 (PDT)
-Date:   Thu,  8 Jun 2023 16:28:00 -0700
+ (user=irogers job=sendgmr) by 2002:a65:670b:0:b0:53f:32cf:bcd1 with SMTP id
+ u11-20020a65670b000000b0053f32cfbcd1mr168368pgf.5.1686266966456; Thu, 08 Jun
+ 2023 16:29:26 -0700 (PDT)
+Date:   Thu,  8 Jun 2023 16:28:03 -0700
 In-Reply-To: <20230608232823.4027869-1-irogers@google.com>
-Message-Id: <20230608232823.4027869-4-irogers@google.com>
+Message-Id: <20230608232823.4027869-7-irogers@google.com>
 Mime-Version: 1.0
 References: <20230608232823.4027869-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v2 03/26] perf thread: Add accessor functions for thread
+Subject: [PATCH v2 06/26] perf addr_location: Add init/exit/copy functions
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -99,2244 +99,1914 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Using accessors will make it easier to add reference count checking in
-later patches.
+struct addr_location holds references to multiple reference counted
+objects. Add init/exit functions to make maintenance of those more
+consistent with the rest of the code and to try to avoid
+leaks. Modification of thread reference counts isn't included in this
+change.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/arch/arm/tests/dwarf-unwind.c      |   2 +-
- tools/perf/arch/arm64/tests/dwarf-unwind.c    |   2 +-
- tools/perf/arch/powerpc/tests/dwarf-unwind.c  |   2 +-
- tools/perf/arch/x86/tests/dwarf-unwind.c      |   2 +-
- tools/perf/builtin-c2c.c                      |   6 +-
- tools/perf/builtin-inject.c                   |   2 +-
- tools/perf/builtin-kmem.c                     |   2 +-
- tools/perf/builtin-report.c                   |  12 +-
- tools/perf/builtin-sched.c                    |  51 +++--
- tools/perf/builtin-script.c                   |  20 +-
- tools/perf/builtin-top.c                      |   2 +-
- tools/perf/builtin-trace.c                    |  26 ++-
- .../scripts/python/Perf-Trace-Util/Context.c  |   4 +-
- tools/perf/tests/code-reading.c               |   2 +-
- tools/perf/tests/hists_common.c               |   2 +-
- tools/perf/tests/hists_cumulate.c             |   1 -
- tools/perf/tests/hists_output.c               |   2 +-
- tools/perf/tests/perf-targz-src-pkg           |   5 +-
- tools/perf/tests/thread-maps-share.c          |  13 +-
- tools/perf/trace/beauty/pid.c                 |   4 +-
- tools/perf/ui/browsers/hists.c                |  19 +-
- tools/perf/ui/stdio/hist.c                    |   2 +-
- tools/perf/util/arm-spe.c                     |   4 +-
- tools/perf/util/cs-etm.c                      |   2 +-
- tools/perf/util/data-convert-json.c           |   8 +-
- tools/perf/util/db-export.c                   |  16 +-
- tools/perf/util/dlfilter.c                    |   4 +-
- tools/perf/util/event.c                       |   6 +-
- tools/perf/util/hist.c                        |   6 +-
- tools/perf/util/intel-bts.c                   |   2 +-
- tools/perf/util/intel-pt.c                    |  12 +-
- tools/perf/util/jitdump.c                     |  10 +-
- tools/perf/util/machine.c                     |  91 +++++----
- tools/perf/util/map.c                         |   2 +-
- tools/perf/util/maps.c                        |   2 +-
- .../scripting-engines/trace-event-python.c    |  14 +-
- tools/perf/util/session.c                     |   2 +-
- tools/perf/util/sort.c                        |  10 +-
- tools/perf/util/thread-stack.c                |  25 +--
- tools/perf/util/thread.c                      | 161 +++++++--------
- tools/perf/util/thread.h                      | 188 +++++++++++++++++-
- tools/perf/util/unwind-libdw.c                |   6 +-
- tools/perf/util/unwind-libunwind-local.c      |   6 +-
- tools/perf/util/unwind-libunwind.c            |   2 +-
- tools/perf/util/vdso.c                        |   2 +-
- 45 files changed, 485 insertions(+), 279 deletions(-)
+ tools/perf/builtin-annotate.c                 | 28 ++++---
+ tools/perf/builtin-c2c.c                      | 12 ++-
+ tools/perf/builtin-diff.c                     | 16 ++--
+ tools/perf/builtin-inject.c                   |  2 +
+ tools/perf/builtin-kmem.c                     | 11 ++-
+ tools/perf/builtin-kwork.c                    | 15 +++-
+ tools/perf/builtin-mem.c                      |  4 +-
+ tools/perf/builtin-report.c                   |  6 +-
+ tools/perf/builtin-sched.c                    |  2 +
+ tools/perf/builtin-script.c                   | 77 +++++++++++--------
+ tools/perf/builtin-timechart.c                | 11 ++-
+ tools/perf/builtin-top.c                      |  6 +-
+ tools/perf/builtin-trace.c                    | 10 ++-
+ tools/perf/tests/code-reading.c               |  3 +-
+ tools/perf/tests/hists_cumulate.c             | 17 ++--
+ tools/perf/tests/hists_filter.c               | 11 ++-
+ tools/perf/tests/hists_link.c                 | 18 +++--
+ tools/perf/tests/hists_output.c               | 10 ++-
+ tools/perf/tests/mmap-thread-lookup.c         |  4 +-
+ tools/perf/util/addr_location.c               | 30 +++++++-
+ tools/perf/util/addr_location.h               |  5 +-
+ tools/perf/util/build-id.c                    |  2 +
+ tools/perf/util/cs-etm.c                      | 20 +++--
+ tools/perf/util/data-convert-json.c           |  8 +-
+ tools/perf/util/db-export.c                   |  4 +-
+ tools/perf/util/dlfilter.c                    | 13 +++-
+ tools/perf/util/event.c                       | 16 ++--
+ tools/perf/util/evsel_fprintf.c               |  8 +-
+ tools/perf/util/hist.c                        |  8 +-
+ tools/perf/util/intel-pt.c                    | 66 +++++++++++-----
+ tools/perf/util/machine.c                     | 35 +++++----
+ .../scripting-engines/trace-event-python.c    | 10 ++-
+ tools/perf/util/thread.c                      | 13 +++-
+ tools/perf/util/unwind-libdw.c                | 21 ++++-
+ tools/perf/util/unwind-libunwind-local.c      | 13 +++-
+ 35 files changed, 369 insertions(+), 166 deletions(-)
 
-diff --git a/tools/perf/arch/arm/tests/dwarf-unwind.c b/tools/perf/arch/arm/tests/dwarf-unwind.c
-index 566fb6c0eae7..9bc304cb7762 100644
---- a/tools/perf/arch/arm/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/arm/tests/dwarf-unwind.c
-@@ -26,7 +26,7 @@ static int sample_ustack(struct perf_sample *sample,
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 425a7e2fd6fb..aeeb801f1ed7 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -184,7 +184,7 @@ static int hist_iter__branch_callback(struct hist_entry_iter *iter,
  
- 	sp = (unsigned long) regs[PERF_REG_ARM_SP];
+ static int process_branch_callback(struct evsel *evsel,
+ 				   struct perf_sample *sample,
+-				   struct addr_location *al __maybe_unused,
++				   struct addr_location *al,
+ 				   struct perf_annotate *ann,
+ 				   struct machine *machine)
+ {
+@@ -195,21 +195,29 @@ static int process_branch_callback(struct evsel *evsel,
+ 		.hide_unresolved	= symbol_conf.hide_unresolved,
+ 		.ops		= &hist_iter_branch,
+ 	};
+-
+ 	struct addr_location a;
++	int ret;
  
--	map = maps__find(thread->maps, (u64)sp);
-+	map = maps__find(thread__maps(thread), (u64)sp);
- 	if (!map) {
- 		pr_debug("failed to get stack map\n");
- 		free(buf);
-diff --git a/tools/perf/arch/arm64/tests/dwarf-unwind.c b/tools/perf/arch/arm64/tests/dwarf-unwind.c
-index 90a7ef293ce7..b2603d0d3737 100644
---- a/tools/perf/arch/arm64/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/arm64/tests/dwarf-unwind.c
-@@ -26,7 +26,7 @@ static int sample_ustack(struct perf_sample *sample,
+-	if (machine__resolve(machine, &a, sample) < 0)
+-		return -1;
++	addr_location__init(&a);
++	if (machine__resolve(machine, &a, sample) < 0) {
++		ret = -1;
++		goto out;
++	}
  
- 	sp = (unsigned long) regs[PERF_REG_ARM64_SP];
+-	if (a.sym == NULL)
+-		return 0;
++	if (a.sym == NULL) {
++		ret = 0;
++		goto out;
++	}
  
--	map = maps__find(thread->maps, (u64)sp);
-+	map = maps__find(thread__maps(thread), (u64)sp);
- 	if (!map) {
- 		pr_debug("failed to get stack map\n");
- 		free(buf);
-diff --git a/tools/perf/arch/powerpc/tests/dwarf-unwind.c b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-index 32fffb593fbf..5ecf82893b84 100644
---- a/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/powerpc/tests/dwarf-unwind.c
-@@ -26,7 +26,7 @@ static int sample_ustack(struct perf_sample *sample,
+ 	if (a.map != NULL)
+ 		map__dso(a.map)->hit = 1;
  
- 	sp = (unsigned long) regs[PERF_REG_POWERPC_R1];
+ 	hist__account_cycles(sample->branch_stack, al, sample, false, NULL);
  
--	map = maps__find(thread->maps, (u64)sp);
-+	map = maps__find(thread__maps(thread), (u64)sp);
- 	if (!map) {
- 		pr_debug("failed to get stack map\n");
- 		free(buf);
-diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
-index 497593be80f2..5bfec3345d59 100644
---- a/tools/perf/arch/x86/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
-@@ -26,7 +26,7 @@ static int sample_ustack(struct perf_sample *sample,
+-	return hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
++	ret = hist_entry_iter__add(&iter, &a, PERF_MAX_STACK_DEPTH, ann);
++out:
++	addr_location__exit(&a);
++	return ret;
+ }
  
- 	sp = (unsigned long) regs[PERF_REG_X86_SP];
+ static bool has_annotation(struct perf_annotate *ann)
+@@ -272,10 +280,12 @@ static int process_sample_event(struct perf_tool *tool,
+ 	struct addr_location al;
+ 	int ret = 0;
  
--	map = maps__find(thread->maps, (u64)sp);
-+	map = maps__find(thread__maps(thread), (u64)sp);
- 	if (!map) {
- 		pr_debug("failed to get stack map\n");
- 		free(buf);
++	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		pr_warning("problem processing %d event, skipping it.\n",
+ 			   event->header.type);
+-		return -1;
++		ret = -1;
++		goto out_put;
+ 	}
+ 
+ 	if (ann->cpu_list && !test_bit(sample->cpu, ann->cpu_bitmap))
+@@ -288,7 +298,7 @@ static int process_sample_event(struct perf_tool *tool,
+ 		ret = -1;
+ 	}
+ out_put:
+-	addr_location__put(&al);
++	addr_location__exit(&al);
+ 	return ret;
+ }
+ 
 diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 05dfd98af170..ee41a96f0c73 100644
+index ee41a96f0c73..530a44a59f41 100644
 --- a/tools/perf/builtin-c2c.c
 +++ b/tools/perf/builtin-c2c.c
-@@ -293,7 +293,7 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
+@@ -286,10 +286,12 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
+ 	struct mem_info *mi, *mi_dup;
+ 	int ret;
+ 
++	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		pr_debug("problem processing %d event, skipping it.\n",
+ 			 event->header.type);
+-		return -1;
++		ret = -1;
++		goto out;
  	}
  
  	if (c2c.stitch_lbr)
--		al.thread->lbr_stitch_enable = true;
-+		thread__set_lbr_stitch_enable(al.thread, true);
+@@ -301,8 +303,10 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
+ 		goto out;
  
- 	ret = sample__resolve_callchain(sample, &callchain_cursor, NULL,
- 					evsel, &al, sysctl_perf_event_max_stack);
-@@ -1149,14 +1149,14 @@ pid_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- {
- 	int width = c2c_width(fmt, hpp, he->hists);
+ 	mi = sample__resolve_mem(sample, &al);
+-	if (mi == NULL)
+-		return -ENOMEM;
++	if (mi == NULL) {
++		ret = -ENOMEM;
++		goto out;
++	}
  
--	return scnprintf(hpp->buf, hpp->size, "%*d", width, he->thread->pid_);
-+	return scnprintf(hpp->buf, hpp->size, "%*d", width, thread__pid(he->thread));
- }
- 
- static int64_t
- pid_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
- 	struct hist_entry *left, struct hist_entry *right)
- {
--	return left->thread->pid_ - right->thread->pid_;
-+	return thread__pid(left->thread) - thread__pid(right->thread);
- }
- 
- static int64_t
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 61766eead4f4..d9e96d4624c6 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -417,7 +417,7 @@ static struct dso *findnew_dso(int pid, int tid, const char *filename,
+ 	/*
+ 	 * The mi object is released in hists__add_entry_ops,
+@@ -368,7 +372,7 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
  	}
  
- 	vdso = is_vdso_map(filename);
--	nsi = nsinfo__get(thread->nsinfo);
-+	nsi = nsinfo__get(thread__nsinfo(thread));
+ out:
+-	addr_location__put(&al);
++	addr_location__exit(&al);
+ 	return ret;
  
- 	if (vdso) {
- 		/* The vdso maps are always on the host and not the
+ free_mi:
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index dbb0562d6a4f..ca39657ee407 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -409,15 +409,17 @@ static int diff__process_sample_event(struct perf_tool *tool,
+ 		return 0;
+ 	}
+ 
++	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		pr_warning("problem processing %d event, skipping it.\n",
+ 			   event->header.type);
+-		return -1;
++		ret = -1;
++		goto out;
+ 	}
+ 
+ 	if (cpu_list && !test_bit(sample->cpu, cpu_bitmap)) {
+ 		ret = 0;
+-		goto out_put;
++		goto out;
+ 	}
+ 
+ 	switch (compute) {
+@@ -426,7 +428,7 @@ static int diff__process_sample_event(struct perf_tool *tool,
+ 					  NULL, NULL, NULL, sample, true)) {
+ 			pr_warning("problem incrementing symbol period, "
+ 				   "skipping event\n");
+-			goto out_put;
++			goto out;
+ 		}
+ 
+ 		hist__account_cycles(sample->branch_stack, &al, sample, false,
+@@ -437,7 +439,7 @@ static int diff__process_sample_event(struct perf_tool *tool,
+ 		if (hist_entry_iter__add(&iter, &al, PERF_MAX_STACK_DEPTH,
+ 					 NULL)) {
+ 			pr_debug("problem adding hist entry, skipping event\n");
+-			goto out_put;
++			goto out;
+ 		}
+ 		break;
+ 
+@@ -446,7 +448,7 @@ static int diff__process_sample_event(struct perf_tool *tool,
+ 				      true)) {
+ 			pr_warning("problem incrementing symbol period, "
+ 				   "skipping event\n");
+-			goto out_put;
++			goto out;
+ 		}
+ 	}
+ 
+@@ -460,8 +462,8 @@ static int diff__process_sample_event(struct perf_tool *tool,
+ 	if (!al.filtered)
+ 		hists->stats.total_non_filtered_period += sample->period;
+ 	ret = 0;
+-out_put:
+-	addr_location__put(&al);
++out:
++	addr_location__exit(&al);
+ 	return ret;
+ }
+ 
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index d9e96d4624c6..d19a1b862306 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -743,6 +743,7 @@ int perf_event__inject_buildid(struct perf_tool *tool, union perf_event *event,
+ 	struct addr_location al;
+ 	struct thread *thread;
+ 
++	addr_location__init(&al);
+ 	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
+ 	if (thread == NULL) {
+ 		pr_err("problem processing %d event, skipping it.\n",
+@@ -763,6 +764,7 @@ int perf_event__inject_buildid(struct perf_tool *tool, union perf_event *event,
+ 	thread__put(thread);
+ repipe:
+ 	perf_event__repipe(tool, event, sample, machine);
++	addr_location__exit(&al);
+ 	return 0;
+ }
+ 
 diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
-index 2150eeced892..fe9439a4fd66 100644
+index fe9439a4fd66..a11f280d20bd 100644
 --- a/tools/perf/builtin-kmem.c
 +++ b/tools/perf/builtin-kmem.c
-@@ -964,7 +964,7 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
- 	if (perf_kmem__skip_sample(sample))
- 		return 0;
+@@ -399,7 +399,9 @@ static u64 find_callsite(struct evsel *evsel, struct perf_sample *sample)
+ 	struct addr_location al;
+ 	struct machine *machine = &kmem_session->machines.host;
+ 	struct callchain_cursor_node *node;
++	u64 result;
  
--	dump_printf(" ... thread: %s:%d\n", thread__comm_str(thread), thread->tid);
-+	dump_printf(" ... thread: %s:%d\n", thread__comm_str(thread), thread__tid(thread));
++	addr_location__init(&al);
+ 	if (alloc_func_list == NULL) {
+ 		if (build_alloc_func_list() < 0)
+ 			goto out;
+@@ -427,16 +429,19 @@ static u64 find_callsite(struct evsel *evsel, struct perf_sample *sample)
+ 			else
+ 				addr = node->ip;
  
- 	if (evsel->handler != NULL) {
- 		tracepoint_handler f = evsel->handler;
+-			return addr;
++			result = addr;
++			goto out;
+ 		} else
+ 			pr_debug3("skipping alloc function: %s\n", caller->name);
+ 
+ 		callchain_cursor_advance(&callchain_cursor);
+ 	}
+ 
+-out:
+ 	pr_debug2("unknown callsite: %"PRIx64 "\n", sample->ip);
+-	return sample->ip;
++	result = sample->ip;
++out:
++	addr_location__exit(&al);
++	return result;
+ }
+ 
+ struct sort_dimension {
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index a9395c52b23b..2d80aef4eccc 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -739,17 +739,22 @@ static int timehist_exit_event(struct perf_kwork *kwork,
+ 	struct kwork_atom *atom = NULL;
+ 	struct kwork_work *work = NULL;
+ 	struct addr_location al;
++	int ret = 0;
+ 
++	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		pr_debug("Problem processing event, skipping it\n");
+-		return -1;
++		ret = -1;
++		goto out;
+ 	}
+ 
+ 	atom = work_pop_atom(kwork, class, KWORK_TRACE_EXIT,
+ 			     KWORK_TRACE_ENTRY, evsel, sample,
+ 			     machine, &work);
+-	if (work == NULL)
+-		return -1;
++	if (work == NULL) {
++		ret = -1;
++		goto out;
++	}
+ 
+ 	if (atom != NULL) {
+ 		work->nr_atoms++;
+@@ -757,7 +762,9 @@ static int timehist_exit_event(struct perf_kwork *kwork,
+ 		atom_del(atom);
+ 	}
+ 
+-	return 0;
++out:
++	addr_location__exit(&al);
++	return ret;
+ }
+ 
+ static struct kwork_class kwork_irq;
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 960bfd4b732a..51499c20da01 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -199,9 +199,11 @@ dump_raw_samples(struct perf_tool *tool,
+ 	char str[PAGE_SIZE_NAME_LEN];
+ 	struct dso *dso = NULL;
+ 
++	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		fprintf(stderr, "problem processing %d event, skipping it.\n",
+ 				event->header.type);
++		addr_location__exit(&al);
+ 		return -1;
+ 	}
+ 
+@@ -256,7 +258,7 @@ dump_raw_samples(struct perf_tool *tool,
+ 		dso ? dso->long_name : "???",
+ 		al.sym ? al.sym->name : "???");
+ out_put:
+-	addr_location__put(&al);
++	addr_location__exit(&al);
+ 	return 0;
+ }
+ 
 diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index c7d526283baf..8ea6ab18534a 100644
+index 8ea6ab18534a..0b091a8983a5 100644
 --- a/tools/perf/builtin-report.c
 +++ b/tools/perf/builtin-report.c
-@@ -292,7 +292,7 @@ static int process_sample_event(struct perf_tool *tool,
+@@ -285,10 +285,12 @@ static int process_sample_event(struct perf_tool *tool,
+ 	if (evswitch__discard(&rep->evswitch, evsel))
+ 		return 0;
+ 
++	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		pr_debug("problem processing %d event, skipping it.\n",
+ 			 event->header.type);
+-		return -1;
++		ret = -1;
++		goto out_put;
  	}
  
  	if (rep->stitch_lbr)
--		al.thread->lbr_stitch_enable = true;
-+		thread__set_lbr_stitch_enable(al.thread, true);
+@@ -331,7 +333,7 @@ static int process_sample_event(struct perf_tool *tool,
+ 	if (ret < 0)
+ 		pr_debug("problem adding hist entry, skipping event\n");
+ out_put:
+-	addr_location__put(&al);
++	addr_location__exit(&al);
+ 	return ret;
+ }
  
- 	if (symbol_conf.hide_unresolved && al.sym == NULL)
- 		goto out_put;
-@@ -829,10 +829,10 @@ static struct task *tasks_list(struct task *task, struct machine *machine)
- 		return NULL;
- 
- 	/* Last one in the chain. */
--	if (thread->ppid == -1)
-+	if (thread__ppid(thread) == -1)
- 		return task;
- 
--	parent_thread = machine__find_thread(machine, -1, thread->ppid);
-+	parent_thread = machine__find_thread(machine, -1, thread__ppid(thread));
- 	if (!parent_thread)
- 		return ERR_PTR(-ENOENT);
- 
-@@ -869,12 +869,12 @@ static void task__print_level(struct task *task, FILE *fp, int level)
- 	struct thread *thread = task->thread;
- 	struct task *child;
- 	int comm_indent = fprintf(fp, "  %8d %8d %8d |%*s",
--				  thread->pid_, thread->tid, thread->ppid,
--				  level, "");
-+				  thread__pid(thread), thread__tid(thread),
-+				  thread__ppid(thread), level, "");
- 
- 	fprintf(fp, "%s\n", thread__comm_str(thread));
- 
--	maps__fprintf_task(thread->maps, comm_indent, fp);
-+	maps__fprintf_task(thread__maps(thread), comm_indent, fp);
- 
- 	if (!list_empty(&task->children)) {
- 		list_for_each_entry(child, &task->children, list)
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 3a30c2ac5b47..fd37468c4f62 100644
+index fd37468c4f62..c75ad82a6729 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -916,12 +916,12 @@ static int replay_fork_event(struct perf_sched *sched,
+@@ -2584,6 +2584,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+ 	int rc = 0;
+ 	int state = evsel__intval(evsel, sample, "prev_state");
  
- 	if (verbose > 0) {
- 		printf("fork event\n");
--		printf("... parent: %s/%d\n", thread__comm_str(parent), parent->tid);
--		printf("...  child: %s/%d\n", thread__comm_str(child), child->tid);
-+		printf("... parent: %s/%d\n", thread__comm_str(parent), thread__tid(parent));
-+		printf("...  child: %s/%d\n", thread__comm_str(child), thread__tid(child));
- 	}
++	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		pr_err("problem processing %d event. skipping it\n",
+ 		       event->header.type);
+@@ -2692,6 +2693,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
  
--	register_pid(sched, parent->tid, thread__comm_str(parent));
--	register_pid(sched, child->tid, thread__comm_str(child));
-+	register_pid(sched, thread__tid(parent), thread__comm_str(parent));
-+	register_pid(sched, thread__tid(child), thread__comm_str(child));
- out_put:
- 	thread__put(child);
- 	thread__put(parent);
-@@ -1316,7 +1316,7 @@ static int latency_migrate_task_event(struct perf_sched *sched,
- 	if (!atoms) {
- 		if (thread_atoms_insert(sched, migrant))
- 			goto out_put;
--		register_pid(sched, migrant->tid, thread__comm_str(migrant));
-+		register_pid(sched, thread__tid(migrant), thread__comm_str(migrant));
- 		atoms = thread_atoms_search(&sched->atom_root, migrant, &sched->cmp_pid);
- 		if (!atoms) {
- 			pr_err("migration-event: Internal tree error");
-@@ -1359,10 +1359,13 @@ static void output_lat_thread(struct perf_sched *sched, struct work_atoms *work_
- 	sched->all_runtime += work_list->total_runtime;
- 	sched->all_count   += work_list->nb_atoms;
+ 	evsel__save_time(evsel, sample->time, sample->cpu);
  
--	if (work_list->num_merged > 1)
--		ret = printf("  %s:(%d) ", thread__comm_str(work_list->thread), work_list->num_merged);
--	else
--		ret = printf("  %s:%d ", thread__comm_str(work_list->thread), work_list->thread->tid);
-+	if (work_list->num_merged > 1) {
-+		ret = printf("  %s:(%d) ", thread__comm_str(work_list->thread),
-+			     work_list->num_merged);
-+	} else {
-+		ret = printf("  %s:%d ", thread__comm_str(work_list->thread),
-+			     thread__tid(work_list->thread));
-+	}
- 
- 	for (i = 0; i < 24 - ret; i++)
- 		printf(" ");
-@@ -1380,11 +1383,15 @@ static void output_lat_thread(struct perf_sched *sched, struct work_atoms *work_
- 
- static int pid_cmp(struct work_atoms *l, struct work_atoms *r)
- {
-+	pid_t l_tid, r_tid;
-+
- 	if (l->thread == r->thread)
- 		return 0;
--	if (l->thread->tid < r->thread->tid)
-+	l_tid = thread__tid(l->thread);
-+	r_tid = thread__tid(r->thread);
-+	if (l_tid < r_tid)
- 		return -1;
--	if (l->thread->tid > r->thread->tid)
-+	if (l_tid > r_tid)
- 		return 1;
- 	return (int)(l->thread - r->thread);
++	addr_location__exit(&al);
+ 	return rc;
  }
-@@ -1679,14 +1686,14 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
  
- 	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
- 	color_fprintf(stdout, color, "  %12s secs ", stimestamp);
--	if (new_shortname || tr->comm_changed || (verbose > 0 && sched_in->tid)) {
-+	if (new_shortname || tr->comm_changed || (verbose > 0 && thread__tid(sched_in))) {
- 		const char *pid_color = color;
- 
- 		if (thread__has_color(sched_in))
- 			pid_color = COLOR_PIDS;
- 
- 		color_fprintf(stdout, pid_color, "%s => %s:%d",
--		       tr->shortname, thread__comm_str(sched_in), sched_in->tid);
-+			tr->shortname, thread__comm_str(sched_in), thread__tid(sched_in));
- 		tr->comm_changed = false;
- 	}
- 
-@@ -1948,8 +1955,8 @@ static char *timehist_get_commstr(struct thread *thread)
- {
- 	static char str[32];
- 	const char *comm = thread__comm_str(thread);
--	pid_t tid = thread->tid;
--	pid_t pid = thread->pid_;
-+	pid_t tid = thread__tid(thread);
-+	pid_t pid = thread__pid(thread);
- 	int n;
- 
- 	if (pid == 0)
-@@ -2032,7 +2039,7 @@ static char task_state_char(struct thread *thread, int state)
- 	unsigned bit = state ? ffs(state) : 0;
- 
- 	/* 'I' for idle */
--	if (thread->tid == 0)
-+	if (thread__tid(thread) == 0)
- 		return 'I';
- 
- 	return bit < sizeof(state_to_char) - 1 ? state_to_char[bit] : '?';
-@@ -2067,7 +2074,7 @@ static void timehist_print_sample(struct perf_sched *sched,
- 		for (i = 0; i < max_cpus; ++i) {
- 			/* flag idle times with 'i'; others are sched events */
- 			if (i == sample->cpu)
--				c = (thread->tid == 0) ? 'i' : 's';
-+				c = (thread__tid(thread) == 0) ? 'i' : 's';
- 			else
- 				c = ' ';
- 			printf("%c", c);
-@@ -2094,7 +2101,7 @@ static void timehist_print_sample(struct perf_sched *sched,
- 	if (sched->show_wakeups && !sched->show_next)
- 		printf("  %-*s", comm_width, "");
- 
--	if (thread->tid == 0)
-+	if (thread__tid(thread) == 0)
- 		goto out;
- 
- 	if (sched->show_callchain)
-@@ -2626,7 +2633,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
- 			t = ptime->end;
- 	}
- 
--	if (!sched->idle_hist || thread->tid == 0) {
-+	if (!sched->idle_hist || thread__tid(thread) == 0) {
- 		if (!cpu_list || test_bit(sample->cpu, cpu_bitmap))
- 			timehist_update_runtime_stats(tr, t, tprev);
- 
-@@ -2634,7 +2641,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
- 			struct idle_thread_runtime *itr = (void *)tr;
- 			struct thread_runtime *last_tr;
- 
--			BUG_ON(thread->tid != 0);
-+			BUG_ON(thread__tid(thread) != 0);
- 
- 			if (itr->last_thread == NULL)
- 				goto out;
-@@ -2719,7 +2726,7 @@ static void print_thread_runtime(struct thread *t,
- 	float stddev;
- 
- 	printf("%*s   %5d  %9" PRIu64 " ",
--	       comm_width, timehist_get_commstr(t), t->ppid,
-+	       comm_width, timehist_get_commstr(t), thread__ppid(t),
- 	       (u64) r->run_stats.n);
- 
- 	print_sched_time(r->total_run_time, 8);
-@@ -2739,7 +2746,7 @@ static void print_thread_waittime(struct thread *t,
- 				  struct thread_runtime *r)
- {
- 	printf("%*s   %5d  %9" PRIu64 " ",
--	       comm_width, timehist_get_commstr(t), t->ppid,
-+	       comm_width, timehist_get_commstr(t), thread__ppid(t),
- 	       (u64) r->run_stats.n);
- 
- 	print_sched_time(r->total_run_time, 8);
 diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index b02ad386a55b..e756290de2ac 100644
+index e756290de2ac..784d478c2e05 100644
 --- a/tools/perf/builtin-script.c
 +++ b/tools/perf/builtin-script.c
-@@ -1142,7 +1142,7 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
- 	if (!al.map)
+@@ -919,7 +919,6 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+ {
+ 	struct branch_stack *br = sample->branch_stack;
+ 	struct branch_entry *entries = perf_sample__branch_entries(sample);
+-	struct addr_location alf, alt;
+ 	u64 i, from, to;
+ 	int printed = 0;
+ 
+@@ -930,20 +929,22 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+ 		from = entries[i].from;
+ 		to   = entries[i].to;
+ 
++		printed += fprintf(fp, " 0x%"PRIx64, from);
+ 		if (PRINT_FIELD(DSO)) {
+-			memset(&alf, 0, sizeof(alf));
+-			memset(&alt, 0, sizeof(alt));
++			struct addr_location alf, alt;
++
++			addr_location__init(&alf);
++			addr_location__init(&alt);
+ 			thread__find_map_fb(thread, sample->cpumode, from, &alf);
+ 			thread__find_map_fb(thread, sample->cpumode, to, &alt);
+-		}
+ 
+-		printed += fprintf(fp, " 0x%"PRIx64, from);
+-		if (PRINT_FIELD(DSO))
+ 			printed += map__fprintf_dsoname_dsoff(alf.map, PRINT_FIELD(DSOFF), alf.addr, fp);
+-
+-		printed += fprintf(fp, "/0x%"PRIx64, to);
+-		if (PRINT_FIELD(DSO))
++			printed += fprintf(fp, "/0x%"PRIx64, to);
+ 			printed += map__fprintf_dsoname_dsoff(alt.map, PRINT_FIELD(DSOFF), alt.addr, fp);
++			addr_location__exit(&alt);
++			addr_location__exit(&alf);
++		} else
++			printed += fprintf(fp, "/0x%"PRIx64, to);
+ 
+ 		printed += print_bstack_flags(fp, entries + i);
+ 	}
+@@ -957,7 +958,6 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+ {
+ 	struct branch_stack *br = sample->branch_stack;
+ 	struct branch_entry *entries = perf_sample__branch_entries(sample);
+-	struct addr_location alf, alt;
+ 	u64 i, from, to;
+ 	int printed = 0;
+ 
+@@ -965,9 +965,10 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
  		return 0;
- 	ret = map__fprintf_srccode(al.map, al.addr, stdout,
--		    &thread->srccode_state);
-+				   thread__srccode_state(thread));
- 	if (ret)
- 		ret += printf("\n");
- 	return ret;
-@@ -1439,7 +1439,7 @@ static int perf_sample__fprintf_callindent(struct perf_sample *sample,
- 	 * The 'return' has already been popped off the stack so the depth has
- 	 * to be adjusted to match the 'call'.
- 	 */
--	if (thread->ts && sample->flags & PERF_IP_FLAG_RETURN)
-+	if (thread__ts(thread) && sample->flags & PERF_IP_FLAG_RETURN)
- 		depth += 1;
  
- 	name = resolve_branch_sym(sample, evsel, thread, al, addr_al, &ip);
-@@ -1577,7 +1577,7 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
- 	printed += fprintf(fp, "\n");
- 	if (PRINT_FIELD(SRCCODE)) {
- 		int ret = map__fprintf_srccode(al->map, al->addr, stdout,
--					 &thread->srccode_state);
-+					       thread__srccode_state(thread));
- 		if (ret) {
- 			printed += ret;
- 			printed += printf("\n");
-@@ -2086,9 +2086,9 @@ static bool show_event(struct perf_sample *sample,
- 	if (!symbol_conf.graph_function)
- 		return true;
+ 	for (i = 0; i < br->nr; i++) {
++		struct addr_location alf, alt;
  
--	if (thread->filter) {
--		if (depth <= thread->filter_entry_depth) {
--			thread->filter = false;
-+	if (thread__filter(thread)) {
-+		if (depth <= thread__filter_entry_depth(thread)) {
-+			thread__set_filter(thread, false);
- 			return false;
- 		}
- 		return true;
-@@ -2105,8 +2105,8 @@ static bool show_event(struct perf_sample *sample,
- 		while (*s) {
- 			unsigned len = strcspn(s, ",");
- 			if (nlen == len && !strncmp(name, s, len)) {
--				thread->filter = true;
--				thread->filter_entry_depth = depth;
-+				thread__set_filter(thread, true);
-+				thread__set_filter_entry_depth(thread, depth);
- 				return true;
- 			}
- 			s += len;
-@@ -2186,7 +2186,7 @@ static void process_event(struct perf_script *script,
- 		struct callchain_cursor *cursor = NULL;
+-		memset(&alf, 0, sizeof(alf));
+-		memset(&alt, 0, sizeof(alt));
++		addr_location__init(&alf);
++		addr_location__init(&alt);
+ 		from = entries[i].from;
+ 		to   = entries[i].to;
  
- 		if (script->stitch_lbr)
--			al->thread->lbr_stitch_enable = true;
-+			thread__set_lbr_stitch_enable(al->thread, true);
- 
- 		if (symbol_conf.use_callchain && sample->callchain &&
- 		    thread__resolve_callchain(al->thread, &callchain_cursor, evsel,
-@@ -2241,7 +2241,7 @@ static void process_event(struct perf_script *script,
- 
- 	if (PRINT_FIELD(SRCCODE)) {
- 		if (map__fprintf_srccode(al->map, al->addr, stdout,
--					 &thread->srccode_state))
-+					 thread__srccode_state(thread)))
- 			printf("\n");
- 	}
- 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 27a7f068207d..9d3cbebb9b79 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -777,7 +777,7 @@ static void perf_event__process_sample(struct perf_tool *tool,
- 		return;
- 
- 	if (top->stitch_lbr)
--		al.thread->lbr_stitch_enable = true;
-+		thread__set_lbr_stitch_enable(al.thread, true);
- 
- 	if (!machine->kptr_restrict_warned &&
- 	    symbol_conf.kptr_restrict &&
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index b0dd202d14eb..4c9bec39423b 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1386,12 +1386,13 @@ static int thread__read_fd_path(struct thread *thread, int fd)
- 	struct stat st;
- 	int ret;
- 
--	if (thread->pid_ == thread->tid) {
-+	if (thread__pid(thread) == thread__tid(thread)) {
- 		scnprintf(linkname, sizeof(linkname),
--			  "/proc/%d/fd/%d", thread->pid_, fd);
-+			  "/proc/%d/fd/%d", thread__pid(thread), fd);
- 	} else {
- 		scnprintf(linkname, sizeof(linkname),
--			  "/proc/%d/task/%d/fd/%d", thread->pid_, thread->tid, fd);
-+			  "/proc/%d/task/%d/fd/%d",
-+			  thread__pid(thread), thread__tid(thread), fd);
- 	}
- 
- 	if (lstat(linkname, &st) < 0 || st.st_size + 1 > (off_t)sizeof(pathname))
-@@ -1559,7 +1560,7 @@ static size_t trace__fprintf_comm_tid(struct trace *trace, struct thread *thread
- 	if (trace->multiple_threads) {
- 		if (trace->show_comm)
- 			printed += fprintf(fp, "%.14s/", thread__comm_str(thread));
--		printed += fprintf(fp, "%d ", thread->tid);
-+		printed += fprintf(fp, "%d ", thread__tid(thread));
+@@ -982,6 +983,8 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+ 		if (PRINT_FIELD(DSO))
+ 			printed += map__fprintf_dsoname_dsoff(alt.map, PRINT_FIELD(DSOFF), alt.addr, fp);
+ 		printed += print_bstack_flags(fp, entries + i);
++		addr_location__exit(&alt);
++		addr_location__exit(&alf);
  	}
  
  	return printed;
-@@ -2205,7 +2206,8 @@ static void thread__update_stats(struct thread *thread, struct thread_trace *ttr
- 				memset(new_errnos + stats->max_errno, 0, (err - stats->max_errno) * sizeof(u32));
- 			} else {
- 				pr_debug("Not enough memory for errno stats for thread \"%s\"(%d/%d), results will be incomplete\n",
--					 thread__comm_str(thread), thread->pid_, thread->tid);
-+					 thread__comm_str(thread), thread__pid(thread),
-+					 thread__tid(thread));
- 				return;
- 			}
- 
-@@ -2550,7 +2552,7 @@ errno_print: {
- 
- 		if (child != NULL) {
- 			fprintf(trace->output, "%ld", ret);
--			if (child->comm_set)
-+			if (thread__comm_set(child))
- 				fprintf(trace->output, " (%s)", thread__comm_str(child));
- 			thread__put(child);
- 		}
-@@ -3616,14 +3618,16 @@ static int trace__set_filter_loop_pids(struct trace *trace)
- 	struct thread *thread = machine__find_thread(trace->host, pids[0], pids[0]);
- 
- 	while (thread && nr < ARRAY_SIZE(pids)) {
--		struct thread *parent = machine__find_thread(trace->host, thread->ppid, thread->ppid);
-+		struct thread *parent = machine__find_thread(trace->host,
-+							     thread__ppid(thread),
-+							     thread__ppid(thread));
- 
- 		if (parent == NULL)
- 			break;
- 
- 		if (!strcmp(thread__comm_str(parent), "sshd") ||
- 		    strstarts(thread__comm_str(parent), "gnome-terminal")) {
--			pids[nr++] = parent->tid;
-+			pids[nr++] = thread__tid(parent);
- 			break;
- 		}
- 		thread = parent;
-@@ -4322,7 +4326,7 @@ static size_t trace__fprintf_thread(FILE *fp, struct thread *thread, struct trac
- 
- 	ratio = (double)ttrace->nr_events / trace->nr_events * 100.0;
- 
--	printed += fprintf(fp, " %s (%d), ", thread__comm_str(thread), thread->tid);
-+	printed += fprintf(fp, " %s (%d), ", thread__comm_str(thread), thread__tid(thread));
- 	printed += fprintf(fp, "%lu events, ", ttrace->nr_events);
- 	printed += fprintf(fp, "%.1f%%", ratio);
- 	if (ttrace->pfmaj)
-@@ -4344,7 +4348,9 @@ static unsigned long thread__nr_events(struct thread_trace *ttrace)
- 	return ttrace ? ttrace->nr_events : 0;
- }
- 
--DEFINE_RESORT_RB(threads, (thread__nr_events(a->thread->priv) < thread__nr_events(b->thread->priv)),
-+DEFINE_RESORT_RB(threads,
-+		(thread__nr_events(thread__priv(a->thread)) <
-+		 thread__nr_events(thread__priv(b->thread))),
- 	struct thread *thread;
- )
+@@ -993,7 +996,6 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
  {
-diff --git a/tools/perf/scripts/python/Perf-Trace-Util/Context.c b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-index 53b1587db403..3954bd1587ce 100644
---- a/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-+++ b/tools/perf/scripts/python/Perf-Trace-Util/Context.c
-@@ -100,8 +100,8 @@ static PyObject *perf_sample_insn(PyObject *obj, PyObject *args)
- 	if (!c)
- 		return NULL;
+ 	struct branch_stack *br = sample->branch_stack;
+ 	struct branch_entry *entries = perf_sample__branch_entries(sample);
+-	struct addr_location alf, alt;
+ 	u64 i, from, to;
+ 	int printed = 0;
  
--	if (c->sample->ip && !c->sample->insn_len && c->al->thread->maps) {
--		struct machine *machine =  maps__machine(c->al->thread->maps);
-+	if (c->sample->ip && !c->sample->insn_len && thread__maps(c->al->thread)) {
-+		struct machine *machine =  maps__machine(thread__maps(c->al->thread));
- 
- 		script_fetch_insn(c->sample, c->al->thread, machine);
- 	}
-diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
-index efe026a35010..9d8eefbebd48 100644
---- a/tools/perf/tests/code-reading.c
-+++ b/tools/perf/tests/code-reading.c
-@@ -269,7 +269,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
- 		len = map__end(al.map) - addr;
- 
- 	/* Read the object code using perf */
--	ret_len = dso__data_read_offset(dso, maps__machine(thread->maps),
-+	ret_len = dso__data_read_offset(dso, maps__machine(thread__maps(thread)),
- 					al.addr, buf1, len);
- 	if (ret_len != len) {
- 		pr_debug("dso__data_read_offset failed\n");
-diff --git a/tools/perf/tests/hists_common.c b/tools/perf/tests/hists_common.c
-index 745ab18d17db..d08add0f4da6 100644
---- a/tools/perf/tests/hists_common.c
-+++ b/tools/perf/tests/hists_common.c
-@@ -211,7 +211,7 @@ void print_hists_out(struct hists *hists)
- 			struct dso *dso = map__dso(he->ms.map);
- 
- 			pr_info("%2d: entry: %8s:%5d [%-8s] %20s: period = %"PRIu64"/%"PRIu64"\n",
--				i, thread__comm_str(he->thread), he->thread->tid,
-+				i, thread__comm_str(he->thread), thread__tid(he->thread),
- 				dso->short_name,
- 				he->ms.sym->name, he->stat.period,
- 				he->stat_acc ? he->stat_acc->period : 0);
-diff --git a/tools/perf/tests/hists_cumulate.c b/tools/perf/tests/hists_cumulate.c
-index 8c0e3f334747..62b9c6461ea6 100644
---- a/tools/perf/tests/hists_cumulate.c
-+++ b/tools/perf/tests/hists_cumulate.c
-@@ -162,7 +162,6 @@ typedef int (*test_fn_t)(struct evsel *, struct machine *);
- #define DSO(he)   (map__dso(he->ms.map)->short_name)
- #define SYM(he)   (he->ms.sym->name)
- #define CPU(he)   (he->cpu)
--#define PID(he)   (he->thread->tid)
- #define DEPTH(he) (he->callchain->max_depth)
- #define CDSO(cl)  (map__dso(cl->ms.map)->short_name)
- #define CSYM(cl)  (cl->ms.sym->name)
-diff --git a/tools/perf/tests/hists_output.c b/tools/perf/tests/hists_output.c
-index cebd5226bb12..cd2094c13e1e 100644
---- a/tools/perf/tests/hists_output.c
-+++ b/tools/perf/tests/hists_output.c
-@@ -128,7 +128,7 @@ typedef int (*test_fn_t)(struct evsel *, struct machine *);
- #define DSO(he)   (map__dso(he->ms.map)->short_name)
- #define SYM(he)   (he->ms.sym->name)
- #define CPU(he)   (he->cpu)
--#define PID(he)   (he->thread->tid)
-+#define PID(he)   (thread__tid(he->thread))
- 
- /* default sort keys (no field) */
- static int test1(struct evsel *evsel, struct machine *machine)
-diff --git a/tools/perf/tests/perf-targz-src-pkg b/tools/perf/tests/perf-targz-src-pkg
-index fae26b1cf08f..b3075c168cb2 100755
---- a/tools/perf/tests/perf-targz-src-pkg
-+++ b/tools/perf/tests/perf-targz-src-pkg
-@@ -7,16 +7,17 @@
- # be in such tarball, which sometimes gets broken when we move files around,
- # like when we made some files that were in tools/perf/ available to other tools/
- # codebases by moving it to tools/include/, etc.
-+set -e
- 
- PERF=$1
- cd ${PERF}/../..
--make perf-targz-src-pkg > /dev/null
-+make perf-targz-src-pkg
- TARBALL=$(ls -rt perf-*.tar.gz)
- TMP_DEST=$(mktemp -d)
- tar xf ${TARBALL} -C $TMP_DEST
- rm -f ${TARBALL}
- cd - > /dev/null
--make -C $TMP_DEST/perf*/tools/perf > /dev/null
-+make -C $TMP_DEST/perf*/tools/perf
- RC=$?
- rm -rf ${TMP_DEST}
- exit $RC
-diff --git a/tools/perf/tests/thread-maps-share.c b/tools/perf/tests/thread-maps-share.c
-index 858e725318a9..faf980b26252 100644
---- a/tools/perf/tests/thread-maps-share.c
-+++ b/tools/perf/tests/thread-maps-share.c
-@@ -42,13 +42,13 @@ static int test__thread_maps_share(struct test_suite *test __maybe_unused, int s
- 	TEST_ASSERT_VAL("failed to create threads",
- 			leader && t1 && t2 && t3 && other);
- 
--	maps = leader->maps;
-+	maps = thread__maps(leader);
- 	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(maps__refcnt(maps)), 4);
- 
- 	/* test the maps pointer is shared */
--	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(maps) == RC_CHK_ACCESS(t1->maps));
--	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(maps) == RC_CHK_ACCESS(t2->maps));
--	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(maps) == RC_CHK_ACCESS(t3->maps));
-+	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(maps) == RC_CHK_ACCESS(thread__maps(t1)));
-+	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(maps) == RC_CHK_ACCESS(thread__maps(t2)));
-+	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(maps) == RC_CHK_ACCESS(thread__maps(t3)));
- 
- 	/*
- 	 * Verify the other leader was created by previous call.
-@@ -70,10 +70,11 @@ static int test__thread_maps_share(struct test_suite *test __maybe_unused, int s
- 	machine__remove_thread(machine, other);
- 	machine__remove_thread(machine, other_leader);
- 
--	other_maps = other->maps;
-+	other_maps = thread__maps(other);
- 	TEST_ASSERT_EQUAL("wrong refcnt", refcount_read(maps__refcnt(other_maps)), 2);
- 
--	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(other_maps) == RC_CHK_ACCESS(other_leader->maps));
-+	TEST_ASSERT_VAL("maps don't match", RC_CHK_ACCESS(other_maps) ==
-+					    RC_CHK_ACCESS(thread__maps(other_leader)));
- 
- 	/* release thread group */
- 	thread__put(t3);
-diff --git a/tools/perf/trace/beauty/pid.c b/tools/perf/trace/beauty/pid.c
-index 1a6acc46807b..8f9c9950f8ba 100644
---- a/tools/perf/trace/beauty/pid.c
-+++ b/tools/perf/trace/beauty/pid.c
-@@ -8,10 +8,10 @@ size_t syscall_arg__scnprintf_pid(char *bf, size_t size, struct syscall_arg *arg
- 	struct thread *thread = machine__findnew_thread(trace->host, pid, pid);
- 
- 	if (thread != NULL) {
--		if (!thread->comm_set)
-+		if (!thread__comm_set(thread))
- 			thread__set_comm_from_proc(thread);
- 
--		if (thread->comm_set)
-+		if (thread__comm_set(thread))
- 			printed += scnprintf(bf + printed, size - printed,
- 					     " (%s)", thread__comm_str(thread));
- 		thread__put(thread);
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 69c81759a64f..c7ad9e003080 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2533,13 +2533,15 @@ do_zoom_thread(struct hist_browser *browser, struct popup_action *act)
- 		thread__zput(browser->hists->thread_filter);
- 		ui_helpline__pop();
- 	} else {
-+		const char *comm_set_str =
-+			thread__comm_set(thread) ? thread__comm_str(thread) : "";
-+
- 		if (hists__has(browser->hists, thread)) {
- 			ui_helpline__fpush("To zoom out press ESC or ENTER + \"Zoom out of %s(%d) thread\"",
--					   thread->comm_set ? thread__comm_str(thread) : "",
--					   thread->tid);
-+					   comm_set_str, thread__tid(thread));
- 		} else {
- 			ui_helpline__fpush("To zoom out press ESC or ENTER + \"Zoom out of %s thread\"",
--					   thread->comm_set ? thread__comm_str(thread) : "");
-+					   comm_set_str);
- 		}
- 
- 		browser->hists->thread_filter = thread__get(thread);
-@@ -2557,20 +2559,19 @@ add_thread_opt(struct hist_browser *browser, struct popup_action *act,
- 	       char **optstr, struct thread *thread)
- {
- 	int ret;
-+	const char *comm_set_str, *in_out;
- 
- 	if ((!hists__has(browser->hists, thread) &&
- 	     !hists__has(browser->hists, comm)) || thread == NULL)
+@@ -1001,9 +1003,10 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
  		return 0;
  
-+	in_out = browser->hists->thread_filter ? "out of" : "into";
-+	comm_set_str = thread__comm_set(thread) ? thread__comm_str(thread) : "";
- 	if (hists__has(browser->hists, thread)) {
- 		ret = asprintf(optstr, "Zoom %s %s(%d) thread",
--			       browser->hists->thread_filter ? "out of" : "into",
--			       thread->comm_set ? thread__comm_str(thread) : "",
--			       thread->tid);
-+			       in_out, comm_set_str, thread__tid(thread));
- 	} else {
--		ret = asprintf(optstr, "Zoom %s %s thread",
--			       browser->hists->thread_filter ? "out of" : "into",
--			       thread->comm_set ? thread__comm_str(thread) : "");
-+		ret = asprintf(optstr, "Zoom %s %s thread", in_out, comm_set_str);
+ 	for (i = 0; i < br->nr; i++) {
++		struct addr_location alf, alt;
+ 
+-		memset(&alf, 0, sizeof(alf));
+-		memset(&alt, 0, sizeof(alt));
++		addr_location__init(&alf);
++		addr_location__init(&alt);
+ 		from = entries[i].from;
+ 		to   = entries[i].to;
+ 
+@@ -1022,6 +1025,8 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
+ 		if (PRINT_FIELD(DSO))
+ 			printed += map__fprintf_dsoname_dsoff(alt.map, PRINT_FIELD(DSOFF), alt.addr, fp);
+ 		printed += print_bstack_flags(fp, entries + i);
++		addr_location__exit(&alt);
++		addr_location__exit(&alf);
  	}
- 	if (ret < 0)
+ 
+ 	return printed;
+@@ -1036,6 +1041,7 @@ static int grab_bb(u8 *buffer, u64 start, u64 end,
+ 	struct addr_location al;
+ 	bool kernel;
+ 	struct dso *dso;
++	int ret = 0;
+ 
+ 	if (!start || !end)
  		return 0;
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index f36270485168..b849caace398 100644
---- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -885,7 +885,7 @@ size_t hists__fprintf(struct hists *hists, bool show_header, int max_rows,
- 		}
- 
- 		if (h->ms.map == NULL && verbose > 1) {
--			maps__fprintf(h->thread->maps, fp);
-+			maps__fprintf(thread__maps(h->thread), fp);
- 			fprintf(fp, "%.10s end\n", graph_dotted_line);
- 		}
- 	}
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 7b36ba6b4079..afbd5869f6bf 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -254,9 +254,9 @@ static void arm_spe_set_pid_tid_cpu(struct arm_spe *spe,
+@@ -1057,7 +1063,6 @@ static int grab_bb(u8 *buffer, u64 start, u64 end,
+ 		return -ENXIO;
  	}
  
- 	if (speq->thread) {
--		speq->pid = speq->thread->pid_;
-+		speq->pid = thread__pid(speq->thread);
- 		if (queue->cpu == -1)
--			speq->cpu = speq->thread->cpu;
-+			speq->cpu = thread__cpu(speq->thread);
- 	}
- }
- 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 0f5be4ad24ba..b550c7393155 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1311,7 +1311,7 @@ static void cs_etm__set_pid_tid_cpu(struct cs_etm_auxtrace *etm,
- 						    tidq->tid);
- 
- 	if (tidq->thread)
--		tidq->pid = tidq->thread->pid_;
-+		tidq->pid = thread__pid(tidq->thread);
- }
- 
- int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
-diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
-index 653709ab867a..291591e303cd 100644
---- a/tools/perf/util/data-convert-json.c
-+++ b/tools/perf/util/data-convert-json.c
-@@ -172,13 +172,13 @@ static int process_sample_event(struct perf_tool *tool,
- 	output_json_format(out, false, 2, "{");
- 
- 	output_json_key_format(out, false, 3, "timestamp", "%" PRIi64, sample->time);
--	output_json_key_format(out, true, 3, "pid", "%i", al.thread->pid_);
--	output_json_key_format(out, true, 3, "tid", "%i", al.thread->tid);
-+	output_json_key_format(out, true, 3, "pid", "%i", thread__pid(al.thread));
-+	output_json_key_format(out, true, 3, "tid", "%i", thread__tid(al.thread));
- 
- 	if ((sample_type & PERF_SAMPLE_CPU))
- 		output_json_key_format(out, true, 3, "cpu", "%i", sample->cpu);
--	else if (al.thread->cpu >= 0)
--		output_json_key_format(out, true, 3, "cpu", "%i", al.thread->cpu);
-+	else if (thread__cpu(al.thread) >= 0)
-+		output_json_key_format(out, true, 3, "cpu", "%i", thread__cpu(al.thread));
- 
- 	output_json_key_string(out, true, 3, "comm", thread__comm_str(al.thread));
- 
-diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
-index 84c970c11794..751fd53bfd93 100644
---- a/tools/perf/util/db-export.c
-+++ b/tools/perf/util/db-export.c
-@@ -64,13 +64,13 @@ int db_export__thread(struct db_export *dbe, struct thread *thread,
- {
- 	u64 main_thread_db_id = 0;
- 
--	if (thread->db_id)
-+	if (thread__db_id(thread))
+-	memset(&al, 0, sizeof(al));
+ 	if (end - start > MAXBB - MAXINSN) {
+ 		if (last)
+ 			pr_debug("\tbrstack does not reach to final jump (%" PRIx64 "-%" PRIx64 ")\n", start, end);
+@@ -1066,13 +1071,14 @@ static int grab_bb(u8 *buffer, u64 start, u64 end,
  		return 0;
- 
--	thread->db_id = ++dbe->thread_last_db_id;
-+	thread__set_db_id(thread, ++dbe->thread_last_db_id);
- 
- 	if (main_thread)
--		main_thread_db_id = main_thread->db_id;
-+		main_thread_db_id = thread__db_id(main_thread);
- 
- 	if (dbe->export_thread)
- 		return dbe->export_thread(dbe, thread, main_thread_db_id,
-@@ -251,7 +251,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
- 		 */
- 		al.sym = node->ms.sym;
- 		al.map = node->ms.map;
--		al.maps = thread->maps;
-+		al.maps = thread__maps(thread);
- 		al.addr = node->ip;
- 
- 		if (al.map && !al.sym)
-@@ -321,7 +321,7 @@ static int db_export__threads(struct db_export *dbe, struct thread *thread,
- 		 * For a non-main thread, db_export__comm_thread() must be
- 		 * called only if thread has not previously been exported.
- 		 */
--		bool export_comm_thread = comm && !thread->db_id;
-+		bool export_comm_thread = comm && !thread__db_id(thread);
- 
- 		err = db_export__thread(dbe, thread, machine, main_thread);
- 		if (err)
-@@ -529,16 +529,16 @@ static int db_export__pid_tid(struct db_export *dbe, struct machine *machine,
- 	struct thread *main_thread;
- 	int err = 0;
- 
--	if (!thread || !thread->comm_set)
-+	if (!thread || !thread__comm_set(thread))
- 		goto out_put;
- 
--	*is_idle = !thread->pid_ && !thread->tid;
-+	*is_idle = !thread__pid(thread) && !thread__tid(thread);
- 
- 	main_thread = thread__main_thread(machine, thread);
- 
- 	err = db_export__threads(dbe, thread, main_thread, machine, comm_ptr);
- 
--	*db_id = thread->db_id;
-+	*db_id = thread__db_id(thread);
- 
- 	thread__put(main_thread);
- out_put:
-diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
-index 16238f823a5e..8016f21dc0b8 100644
---- a/tools/perf/util/dlfilter.c
-+++ b/tools/perf/util/dlfilter.c
-@@ -197,8 +197,8 @@ static const __u8 *dlfilter__insn(void *ctx, __u32 *len)
- 		if (!al->thread && machine__resolve(d->machine, al, d->sample) < 0)
- 			return NULL;
- 
--		if (al->thread->maps) {
--			struct machine *machine = maps__machine(al->thread->maps);
-+		if (thread__maps(al->thread)) {
-+			struct machine *machine = maps__machine(thread__maps(al->thread));
- 
- 			if (machine)
- 				script_fetch_insn(d->sample, al->thread, machine);
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index e8b0666d913c..e1ce7cb5e421 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -573,7 +573,7 @@ int perf_event__process(struct perf_tool *tool __maybe_unused,
- struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
- 			     struct addr_location *al)
- {
--	struct maps *maps = thread->maps;
-+	struct maps *maps = thread__maps(thread);
- 	struct machine *machine = maps__machine(maps);
- 	bool load_map = false;
- 
-@@ -639,7 +639,7 @@ struct map *thread__find_map_fb(struct thread *thread, u8 cpumode, u64 addr,
- 				struct addr_location *al)
- {
- 	struct map *map = thread__find_map(thread, cpumode, addr, al);
--	struct machine *machine = maps__machine(thread->maps);
-+	struct machine *machine = maps__machine(thread__maps(thread));
- 	u8 addr_cpumode = machine__addr_cpumode(machine, cpumode, addr);
- 
- 	if (map || addr_cpumode == cpumode)
-@@ -696,7 +696,7 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
- 	if (thread == NULL)
- 		return -1;
- 
--	dump_printf(" ... thread: %s:%d\n", thread__comm_str(thread), thread->tid);
-+	dump_printf(" ... thread: %s:%d\n", thread__comm_str(thread), thread__tid(thread));
- 	thread__find_map(thread, sample->cpumode, sample->ip, al);
- 	dso = al->map ? map__dso(al->map) : NULL;
- 	dump_printf(" ...... dso: %s\n",
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 3c9301a26dfc..4bc3affbe891 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -2778,12 +2778,12 @@ int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool sh
- 		if (hists__has(hists, thread)) {
- 			printed += scnprintf(bf + printed, size - printed,
- 				    ", Thread: %s(%d)",
--				     (thread->comm_set ? thread__comm_str(thread) : ""),
--				    thread->tid);
-+				    (thread__comm_set(thread) ? thread__comm_str(thread) : ""),
-+					thread__tid(thread));
- 		} else {
- 			printed += scnprintf(bf + printed, size - printed,
- 				    ", Thread: %s",
--				     (thread->comm_set ? thread__comm_str(thread) : ""));
-+				    (thread__comm_set(thread) ? thread__comm_str(thread) : ""));
- 		}
- 	}
- 	if (dso)
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 2c8147a62203..ec1b3bd9f530 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -456,7 +456,7 @@ static int intel_bts_process_queue(struct intel_bts_queue *btsq, u64 *timestamp)
- 		thread = machine__find_thread(btsq->bts->machine, -1,
- 					      btsq->tid);
- 		if (thread)
--			btsq->pid = thread->pid_;
-+			btsq->pid = thread__pid(thread);
- 	} else {
- 		thread = machine__findnew_thread(btsq->bts->machine, btsq->pid,
- 						 btsq->tid);
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index dde2ca77a005..45c7e7722916 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -1428,13 +1428,13 @@ static int intel_pt_get_guest_from_sideband(struct intel_pt_queue *ptq)
- 		ptq->guest_machine = machine;
  	}
  
--	vcpu = ptq->thread ? ptq->thread->guest_cpu : -1;
-+	vcpu = ptq->thread ? thread__guest_cpu(ptq->thread) : -1;
- 	if (vcpu < 0)
- 		return -1;
- 
- 	tid = machine__get_current_tid(machine, vcpu);
- 
--	if (ptq->guest_thread && ptq->guest_thread->tid != tid)
-+	if (ptq->guest_thread && thread__tid(ptq->guest_thread) != tid)
- 		thread__zput(ptq->guest_thread);
- 
- 	if (!ptq->guest_thread) {
-@@ -1444,7 +1444,7 @@ static int intel_pt_get_guest_from_sideband(struct intel_pt_queue *ptq)
- 	}
- 
- 	ptq->guest_machine_pid = machine_pid;
--	ptq->guest_pid = ptq->guest_thread->pid_;
-+	ptq->guest_pid = thread__pid(ptq->guest_thread);
- 	ptq->guest_tid = tid;
- 	ptq->vcpu = vcpu;
- 
-@@ -1467,9 +1467,9 @@ static void intel_pt_set_pid_tid_cpu(struct intel_pt *pt,
- 		ptq->thread = machine__find_thread(pt->machine, -1, ptq->tid);
- 
- 	if (ptq->thread) {
--		ptq->pid = ptq->thread->pid_;
-+		ptq->pid = thread__pid(ptq->thread);
- 		if (queue->cpu == -1)
--			ptq->cpu = ptq->thread->cpu;
-+			ptq->cpu = thread__cpu(ptq->thread);
- 	}
- 
- 	if (pt->have_guest_sideband && intel_pt_get_guest_from_sideband(ptq)) {
-@@ -3074,7 +3074,7 @@ static void intel_pt_sample_set_pid_tid_cpu(struct intel_pt_queue *ptq,
- 	if (ptq->pid == -1) {
- 		ptq->thread = machine__find_thread(m, -1, ptq->tid);
- 		if (ptq->thread)
--			ptq->pid = ptq->thread->pid_;
-+			ptq->pid = thread__pid(ptq->thread);
- 		return;
- 	}
- 
-diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 28e49502db5e..2380b41a4caa 100644
---- a/tools/perf/util/jitdump.c
-+++ b/tools/perf/util/jitdump.c
-@@ -799,17 +799,19 @@ static void jit_add_pid(struct machine *machine, pid_t pid)
- 		return;
- 	}
- 
--	thread->priv = (void *)1;
-+	thread__set_priv(thread, (void *)true);
- }
- 
- static bool jit_has_pid(struct machine *machine, pid_t pid)
- {
- 	struct thread *thread = machine__find_thread(machine, pid, pid);
-+	void *priv;
- 
- 	if (!thread)
++	addr_location__init(&al);
+ 	if (!thread__find_map(thread, *cpumode, start, &al) || (dso = map__dso(al.map)) == NULL) {
+ 		pr_debug("\tcannot resolve %" PRIx64 "-%" PRIx64 "\n", start, end);
 -		return 0;
-+		return false;
- 
--	return (bool)thread->priv;
-+	priv = thread__priv(thread);
-+	return (bool)priv;
- }
- 
- int
-@@ -833,7 +835,7 @@ jit_process(struct perf_session *session,
- 		return 0;
++		goto out;
+ 	}
+ 	if (dso->data.status == DSO_DATA_STATUS_ERROR) {
+ 		pr_debug("\tcannot resolve %" PRIx64 "-%" PRIx64 "\n", start, end);
+-		return 0;
++		goto out;
  	}
  
--	nsi = nsinfo__get(thread->nsinfo);
-+	nsi = nsinfo__get(thread__nsinfo(thread));
- 	thread__put(thread);
- 
- 	/*
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index cbf092e32ee9..5d34d60a0045 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -77,13 +77,14 @@ static int thread_rb_node__cmp_tid(const void *key, const struct rb_node *nd)
- {
- 	int to_find = (int) *((pid_t *)key);
- 
--	return to_find - (int)rb_entry(nd, struct thread_rb_node, rb_node)->thread->tid;
-+	return to_find - (int)thread__tid(rb_entry(nd, struct thread_rb_node, rb_node)->thread);
+ 	/* Load maps to ensure dso->is_64_bit has been updated */
+@@ -1086,7 +1092,10 @@ static int grab_bb(u8 *buffer, u64 start, u64 end,
+ 	if (len <= 0)
+ 		pr_debug("\tcannot fetch code for block at %" PRIx64 "-%" PRIx64 "\n",
+ 			start, end);
+-	return len;
++	ret = len;
++out:
++	addr_location__exit(&al);
++	return ret;
  }
  
- static struct thread_rb_node *thread_rb_node__find(const struct thread *th,
- 						   struct rb_root *tree)
- {
--	struct rb_node *nd = rb_find(&th->tid, tree, thread_rb_node__cmp_tid);
-+	pid_t to_find = thread__tid(th);
-+	struct rb_node *nd = rb_find(&to_find, tree, thread_rb_node__cmp_tid);
+ static int map__fprintf_srccode(struct map *map, u64 addr, FILE *fp, struct srccode_state *state)
+@@ -1137,14 +1146,16 @@ static int print_srccode(struct thread *thread, u8 cpumode, uint64_t addr)
+ 	struct addr_location al;
+ 	int ret = 0;
  
- 	return rb_entry(nd, struct thread_rb_node, rb_node);
+-	memset(&al, 0, sizeof(al));
++	addr_location__init(&al);
+ 	thread__find_map(thread, cpumode, addr, &al);
+ 	if (!al.map)
+-		return 0;
++		goto out;
+ 	ret = map__fprintf_srccode(al.map, al.addr, stdout,
+ 				   thread__srccode_state(thread));
+ 	if (ret)
+ 		ret += printf("\n");
++out:
++	addr_location__exit(&al);
+ 	return ret;
  }
-@@ -440,7 +441,7 @@ static struct thread *findnew_guest_code(struct machine *machine,
- 		return NULL;
  
- 	/* Assume maps are set up if there are any */
--	if (maps__nr_maps(thread->maps))
-+	if (maps__nr_maps(thread__maps(thread)))
- 		return thread;
- 
- 	host_thread = machine__find_thread(host_machine, -1, pid);
-@@ -453,7 +454,7 @@ static struct thread *findnew_guest_code(struct machine *machine,
- 	 * Guest code can be found in hypervisor process at the same address
- 	 * so copy host maps.
- 	 */
--	err = maps__clone(thread, host_thread->maps);
-+	err = maps__clone(thread, thread__maps(host_thread));
- 	thread__put(host_thread);
- 	if (err)
- 		goto out_err;
-@@ -518,45 +519,45 @@ static void machine__update_thread_pid(struct machine *machine,
+@@ -1179,14 +1190,13 @@ static int ip__fprintf_sym(uint64_t addr, struct thread *thread,
+ 			   struct perf_event_attr *attr, FILE *fp)
  {
- 	struct thread *leader;
+ 	struct addr_location al;
+-	int off, printed = 0;
+-
+-	memset(&al, 0, sizeof(al));
++	int off, printed = 0, ret = 0;
  
--	if (pid == th->pid_ || pid == -1 || th->pid_ != -1)
-+	if (pid == thread__pid(th) || pid == -1 || thread__pid(th) != -1)
- 		return;
++	addr_location__init(&al);
+ 	thread__find_map(thread, cpumode, addr, &al);
  
--	th->pid_ = pid;
-+	thread__set_pid(th, pid);
+ 	if ((*lastsym) && al.addr >= (*lastsym)->start && al.addr < (*lastsym)->end)
+-		return 0;
++		goto out;
  
--	if (th->pid_ == th->tid)
-+	if (thread__pid(th) == thread__tid(th))
- 		return;
+ 	al.cpu = cpu;
+ 	al.sym = NULL;
+@@ -1194,7 +1204,7 @@ static int ip__fprintf_sym(uint64_t addr, struct thread *thread,
+ 		al.sym = map__find_symbol(al.map, al.addr);
  
--	leader = __machine__findnew_thread(machine, th->pid_, th->pid_);
-+	leader = __machine__findnew_thread(machine, thread__pid(th), thread__pid(th));
- 	if (!leader)
- 		goto out_err;
+ 	if (!al.sym)
+-		return 0;
++		goto out;
  
--	if (!leader->maps)
--		leader->maps = maps__new(machine);
-+	if (!thread__maps(leader))
-+		thread__set_maps(leader, maps__new(machine));
+ 	if (al.addr < al.sym->end)
+ 		off = al.addr - al.sym->start;
+@@ -1209,7 +1219,10 @@ static int ip__fprintf_sym(uint64_t addr, struct thread *thread,
+ 	printed += fprintf(fp, "\n");
+ 	*lastsym = al.sym;
  
--	if (!leader->maps)
-+	if (!thread__maps(leader))
- 		goto out_err;
+-	return printed;
++	ret = printed;
++out:
++	addr_location__exit(&al);
++	return ret;
+ }
  
--	if (th->maps == leader->maps)
-+	if (thread__maps(th) == thread__maps(leader))
- 		return;
+ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+@@ -1371,6 +1384,7 @@ static int perf_sample__fprintf_addr(struct perf_sample *sample,
+ 	struct addr_location al;
+ 	int printed = fprintf(fp, "%16" PRIx64, sample->addr);
  
--	if (th->maps) {
-+	if (thread__maps(th)) {
- 		/*
- 		 * Maps are created from MMAP events which provide the pid and
- 		 * tid.  Consequently there never should be any maps on a thread
- 		 * with an unknown pid.  Just print an error if there are.
- 		 */
--		if (!maps__empty(th->maps))
-+		if (!maps__empty(thread__maps(th)))
- 			pr_err("Discarding thread maps for %d:%d\n",
--			       th->pid_, th->tid);
--		maps__put(th->maps);
-+				thread__pid(th), thread__tid(th));
-+		maps__put(thread__maps(th));
++	addr_location__init(&al);
+ 	if (!sample_addr_correlates_sym(attr))
+ 		goto out;
+ 
+@@ -1387,6 +1401,7 @@ static int perf_sample__fprintf_addr(struct perf_sample *sample,
+ 	if (PRINT_FIELD(DSO))
+ 		printed += map__fprintf_dsoname_dsoff(al.map, PRINT_FIELD(DSOFF), al.addr, fp);
+ out:
++	addr_location__exit(&al);
+ 	return printed;
+ }
+ 
+@@ -2338,8 +2353,8 @@ static int process_sample_event(struct perf_tool *tool,
+ 	int ret = 0;
+ 
+ 	/* Set thread to NULL to indicate addr_al and al are not initialized */
+-	addr_al.thread = NULL;
+-	al.thread = NULL;
++	addr_location__init(&al);
++	addr_location__init(&addr_al);
+ 
+ 	ret = dlfilter__filter_event_early(dlfilter, event, sample, evsel, machine, &al, &addr_al);
+ 	if (ret) {
+@@ -2405,8 +2420,8 @@ static int process_sample_event(struct perf_tool *tool,
  	}
  
--	th->maps = maps__get(leader->maps);
-+	thread__set_maps(th, maps__get(thread__maps(leader)));
  out_put:
- 	thread__put(leader);
- 	return;
- out_err:
--	pr_err("Failed to join map groups for %d:%d\n", th->pid_, th->tid);
-+	pr_err("Failed to join map groups for %d:%d\n", thread__pid(th), thread__tid(th));
- 	goto out_put;
+-	if (al.thread)
+-		addr_location__put(&al);
++	addr_location__exit(&addr_al);
++	addr_location__exit(&al);
+ 	return ret;
  }
  
-@@ -573,7 +574,7 @@ __threads__get_last_match(struct threads *threads, struct machine *machine,
+diff --git a/tools/perf/builtin-timechart.c b/tools/perf/builtin-timechart.c
+index 829d99fecfd0..19d4542ea18a 100644
+--- a/tools/perf/builtin-timechart.c
++++ b/tools/perf/builtin-timechart.c
+@@ -498,7 +498,6 @@ static const char *cat_backtrace(union perf_event *event,
+ 	char *p = NULL;
+ 	size_t p_len;
+ 	u8 cpumode = PERF_RECORD_MISC_USER;
+-	struct addr_location tal;
+ 	struct ip_callchain *chain = sample->callchain;
+ 	FILE *f = open_memstream(&p, &p_len);
  
- 	th = threads->last_match;
- 	if (th != NULL) {
--		if (th->tid == tid) {
-+		if (thread__tid(th) == tid) {
- 			machine__update_thread_pid(machine, th, pid);
- 			return thread__get(th);
+@@ -507,6 +506,7 @@ static const char *cat_backtrace(union perf_event *event,
+ 		return NULL;
+ 	}
+ 
++	addr_location__init(&al);
+ 	if (!chain)
+ 		goto exit;
+ 
+@@ -518,6 +518,7 @@ static const char *cat_backtrace(union perf_event *event,
+ 
+ 	for (i = 0; i < chain->nr; i++) {
+ 		u64 ip;
++		struct addr_location tal;
+ 
+ 		if (callchain_param.order == ORDER_CALLEE)
+ 			ip = chain->ips[i];
+@@ -544,20 +545,22 @@ static const char *cat_backtrace(union perf_event *event,
+ 				 * Discard all.
+ 				 */
+ 				zfree(&p);
+-				goto exit_put;
++				goto exit;
+ 			}
+ 			continue;
  		}
-@@ -632,13 +633,13 @@ static struct thread *____machine__findnew_thread(struct machine *machine,
- 		parent = *p;
- 		th = rb_entry(parent, struct thread_rb_node, rb_node)->thread;
  
--		if (th->tid == tid) {
-+		if (thread__tid(th) == tid) {
- 			threads__set_last_match(threads, th);
- 			machine__update_thread_pid(machine, th, pid);
- 			return thread__get(th);
- 		}
- 
--		if (tid < th->tid)
-+		if (tid < thread__tid(th))
- 			p = &(*p)->rb_left;
- 		else {
- 			p = &(*p)->rb_right;
-@@ -2049,7 +2050,7 @@ int machine__process_mmap_event(struct machine *machine, union perf_event *event
- static void __machine__remove_thread(struct machine *machine, struct thread_rb_node *nd,
- 				     struct thread *th, bool lock)
- {
--	struct threads *threads = machine__threads(machine, th->tid);
-+	struct threads *threads = machine__threads(machine, thread__tid(th));
- 
- 	if (!nd)
- 		nd = thread_rb_node__find(th, &threads->entries.rb_root);
-@@ -2060,7 +2061,7 @@ static void __machine__remove_thread(struct machine *machine, struct thread_rb_n
- 	if (lock)
- 		down_write(&threads->lock);
- 
--	BUG_ON(refcount_read(&th->refcnt) == 0);
-+	BUG_ON(refcount_read(thread__refcnt(th)) == 0);
- 
- 	thread__put(nd->thread);
- 	rb_erase_cached(&nd->rb_node, &threads->entries);
-@@ -2099,9 +2100,9 @@ int machine__process_fork_event(struct machine *machine, union perf_event *event
- 	 * (fork) event that would have removed the thread was lost. Assume the
- 	 * latter case and continue on as best we can.
- 	 */
--	if (parent->pid_ != (pid_t)event->fork.ppid) {
-+	if (thread__pid(parent) != (pid_t)event->fork.ppid) {
- 		dump_printf("removing erroneous parent thread %d/%d\n",
--			    parent->pid_, parent->tid);
-+			    thread__pid(parent), thread__tid(parent));
- 		machine__remove_thread(machine, parent);
- 		thread__put(parent);
- 		parent = machine__findnew_thread(machine, event->fork.ppid,
-@@ -2511,7 +2512,7 @@ static void save_lbr_cursor_node(struct thread *thread,
- 				 struct callchain_cursor *cursor,
- 				 int idx)
- {
--	struct lbr_stitch *lbr_stitch = thread->lbr_stitch;
-+	struct lbr_stitch *lbr_stitch = thread__lbr_stitch(thread);
- 
- 	if (!lbr_stitch)
- 		return;
-@@ -2553,7 +2554,7 @@ static int lbr_callchain_add_lbr_ip(struct thread *thread,
- 	 * in callchain_cursor_commit() when the writing session is closed.
- 	 * Using curr and pos to track the current cursor node.
- 	 */
--	if (thread->lbr_stitch) {
-+	if (thread__lbr_stitch(thread)) {
- 		cursor->curr = NULL;
- 		cursor->pos = cursor->nr;
- 		if (cursor->nr) {
-@@ -2581,7 +2582,7 @@ static int lbr_callchain_add_lbr_ip(struct thread *thread,
- 		 * But does not need to save current cursor node for entry 0.
- 		 * It's impossible to stitch the whole LBRs of previous sample.
- 		 */
--		if (thread->lbr_stitch && (cursor->pos != cursor->nr)) {
-+		if (thread__lbr_stitch(thread) && (cursor->pos != cursor->nr)) {
- 			if (!cursor->curr)
- 				cursor->curr = cursor->first;
- 			else
-@@ -2634,7 +2635,7 @@ static int lbr_callchain_add_lbr_ip(struct thread *thread,
- static int lbr_callchain_add_stitched_lbr_ip(struct thread *thread,
- 					     struct callchain_cursor *cursor)
- {
--	struct lbr_stitch *lbr_stitch = thread->lbr_stitch;
-+	struct lbr_stitch *lbr_stitch = thread__lbr_stitch(thread);
- 	struct callchain_cursor_node *cnode;
- 	struct stitch_list *stitch_node;
- 	int err;
-@@ -2658,7 +2659,7 @@ static int lbr_callchain_add_stitched_lbr_ip(struct thread *thread,
- 
- static struct stitch_list *get_stitch_node(struct thread *thread)
- {
--	struct lbr_stitch *lbr_stitch = thread->lbr_stitch;
-+	struct lbr_stitch *lbr_stitch = thread__lbr_stitch(thread);
- 	struct stitch_list *stitch_node;
- 
- 	if (!list_empty(&lbr_stitch->free_lists)) {
-@@ -2682,7 +2683,7 @@ static bool has_stitched_lbr(struct thread *thread,
- 	struct branch_entry *cur_entries = perf_sample__branch_entries(cur);
- 	struct branch_stack *prev_stack = prev->branch_stack;
- 	struct branch_entry *prev_entries = perf_sample__branch_entries(prev);
--	struct lbr_stitch *lbr_stitch = thread->lbr_stitch;
-+	struct lbr_stitch *lbr_stitch = thread__lbr_stitch(thread);
- 	int i, j, nr_identical_branches = 0;
- 	struct stitch_list *stitch_node;
- 	u64 cur_base, distance;
-@@ -2746,27 +2747,29 @@ static bool has_stitched_lbr(struct thread *thread,
- 
- static bool alloc_lbr_stitch(struct thread *thread, unsigned int max_lbr)
- {
--	if (thread->lbr_stitch)
-+	if (thread__lbr_stitch(thread))
- 		return true;
- 
--	thread->lbr_stitch = zalloc(sizeof(*thread->lbr_stitch));
--	if (!thread->lbr_stitch)
-+	thread__set_lbr_stitch(thread, zalloc(sizeof(struct lbr_stitch)));
-+	if (!thread__lbr_stitch(thread))
- 		goto err;
- 
--	thread->lbr_stitch->prev_lbr_cursor = calloc(max_lbr + 1, sizeof(struct callchain_cursor_node));
--	if (!thread->lbr_stitch->prev_lbr_cursor)
-+	thread__lbr_stitch(thread)->prev_lbr_cursor =
-+		calloc(max_lbr + 1, sizeof(struct callchain_cursor_node));
-+	if (!thread__lbr_stitch(thread)->prev_lbr_cursor)
- 		goto free_lbr_stitch;
- 
--	INIT_LIST_HEAD(&thread->lbr_stitch->lists);
--	INIT_LIST_HEAD(&thread->lbr_stitch->free_lists);
-+	INIT_LIST_HEAD(&thread__lbr_stitch(thread)->lists);
-+	INIT_LIST_HEAD(&thread__lbr_stitch(thread)->free_lists);
- 
- 	return true;
- 
- free_lbr_stitch:
--	zfree(&thread->lbr_stitch);
-+	free(thread__lbr_stitch(thread));
-+	thread__set_lbr_stitch(thread, NULL);
- err:
- 	pr_warning("Failed to allocate space for stitched LBRs. Disable LBR stitch\n");
--	thread->lbr_stitch_enable = false;
-+	thread__set_lbr_stitch_enable(thread, false);
- 	return false;
- }
- 
-@@ -2802,9 +2805,9 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
- 	if (i == chain_nr)
- 		return 0;
- 
--	if (thread->lbr_stitch_enable && !sample->no_hw_idx &&
-+	if (thread__lbr_stitch_enable(thread) && !sample->no_hw_idx &&
- 	    (max_lbr > 0) && alloc_lbr_stitch(thread, max_lbr)) {
--		lbr_stitch = thread->lbr_stitch;
-+		lbr_stitch = thread__lbr_stitch(thread);
- 
- 		stitched_lbr = has_stitched_lbr(thread, sample,
- 						&lbr_stitch->prev_sample,
-@@ -2884,7 +2887,7 @@ static int find_prev_cpumode(struct ip_callchain *chain, struct thread *thread,
- static u64 get_leaf_frame_caller(struct perf_sample *sample,
- 		struct thread *thread, int usr_idx)
- {
--	if (machine__normalized_is(maps__machine(thread->maps), "arm64"))
-+	if (machine__normalized_is(maps__machine(thread__maps(thread)), "arm64"))
- 		return get_leaf_frame_caller_aarch64(sample, thread, usr_idx);
- 	else
- 		return 0;
-@@ -3265,7 +3268,7 @@ int machine__set_current_tid(struct machine *machine, int cpu, pid_t pid,
- 	if (!thread)
- 		return -ENOMEM;
- 
--	thread->cpu = cpu;
-+	thread__set_cpu(thread, cpu);
- 	thread__put(thread);
- 
- 	return 0;
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index 4d9944bbf5e4..ae1d54d4880a 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -137,7 +137,7 @@ struct map *map__new(struct machine *machine, u64 start, u64 len,
- 		no_dso = is_no_dso_memory(filename);
- 		map->prot = prot;
- 		map->flags = flags;
--		nsi = nsinfo__get(thread->nsinfo);
-+		nsi = nsinfo__get(thread__nsinfo(thread));
- 
- 		if ((anon || no_dso) && nsi && (prot & PROT_EXEC)) {
- 			snprintf(newfilename, sizeof(newfilename),
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 1aeb1db58fe5..5ae6379a1b42 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -384,7 +384,7 @@ int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp)
-  */
- int maps__clone(struct thread *thread, struct maps *parent)
- {
--	struct maps *maps = thread->maps;
-+	struct maps *maps = thread__maps(thread);
- 	int err;
- 	struct map_rb_node *rb_node;
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 40964078f92f..f3d262e871ac 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1163,11 +1163,11 @@ static int python_export_thread(struct db_export *dbe, struct thread *thread,
- 
- 	t = tuple_new(5);
- 
--	tuple_set_d64(t, 0, thread->db_id);
-+	tuple_set_d64(t, 0, thread__db_id(thread));
- 	tuple_set_d64(t, 1, machine->db_id);
- 	tuple_set_d64(t, 2, main_thread_db_id);
--	tuple_set_s32(t, 3, thread->pid_);
--	tuple_set_s32(t, 4, thread->tid);
-+	tuple_set_s32(t, 3, thread__pid(thread));
-+	tuple_set_s32(t, 4, thread__tid(thread));
- 
- 	call_object(tables->thread_handler, t, "thread_table");
- 
-@@ -1186,7 +1186,7 @@ static int python_export_comm(struct db_export *dbe, struct comm *comm,
- 
- 	tuple_set_d64(t, 0, comm->db_id);
- 	tuple_set_string(t, 1, comm__str(comm));
--	tuple_set_d64(t, 2, thread->db_id);
-+	tuple_set_d64(t, 2, thread__db_id(thread));
- 	tuple_set_d64(t, 3, comm->start);
- 	tuple_set_s32(t, 4, comm->exec);
- 
-@@ -1207,7 +1207,7 @@ static int python_export_comm_thread(struct db_export *dbe, u64 db_id,
- 
- 	tuple_set_d64(t, 0, db_id);
- 	tuple_set_d64(t, 1, comm->db_id);
--	tuple_set_d64(t, 2, thread->db_id);
-+	tuple_set_d64(t, 2, thread__db_id(thread));
- 
- 	call_object(tables->comm_thread_handler, t, "comm_thread_table");
- 
-@@ -1292,7 +1292,7 @@ static void python_export_sample_table(struct db_export *dbe,
- 	tuple_set_d64(t, 0, es->db_id);
- 	tuple_set_d64(t, 1, es->evsel->db_id);
- 	tuple_set_d64(t, 2, maps__machine(es->al->maps)->db_id);
--	tuple_set_d64(t, 3, es->al->thread->db_id);
-+	tuple_set_d64(t, 3, thread__db_id(es->al->thread));
- 	tuple_set_d64(t, 4, es->comm_db_id);
- 	tuple_set_d64(t, 5, es->dso_db_id);
- 	tuple_set_d64(t, 6, es->sym_db_id);
-@@ -1382,7 +1382,7 @@ static int python_export_call_return(struct db_export *dbe,
- 	t = tuple_new(14);
- 
- 	tuple_set_d64(t, 0, cr->db_id);
--	tuple_set_d64(t, 1, cr->thread->db_id);
-+	tuple_set_d64(t, 1, thread__db_id(cr->thread));
- 	tuple_set_d64(t, 2, comm_db_id);
- 	tuple_set_d64(t, 3, cr->cp->db_id);
- 	tuple_set_d64(t, 4, cr->call_time);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index e2806791c76a..65ac9f7fdf7e 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2807,7 +2807,7 @@ static int perf_session__set_guest_cpu(struct perf_session *session, pid_t pid,
- 
- 	if (!thread)
- 		return -ENOMEM;
--	thread->guest_cpu = guest_cpu;
-+	thread__set_guest_cpu(thread, guest_cpu);
- 	thread__put(thread);
- 
- 	return 0;
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 650cd8df4041..5e45c770f91d 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -108,7 +108,7 @@ static int64_t cmp_null(const void *l, const void *r)
- static int64_t
- sort__thread_cmp(struct hist_entry *left, struct hist_entry *right)
- {
--	return right->thread->tid - left->thread->tid;
-+	return thread__tid(right->thread) - thread__tid(left->thread);
- }
- 
- static int hist_entry__thread_snprintf(struct hist_entry *he, char *bf,
-@@ -117,7 +117,7 @@ static int hist_entry__thread_snprintf(struct hist_entry *he, char *bf,
- 	const char *comm = thread__comm_str(he->thread);
- 
- 	width = max(7U, width) - 8;
--	return repsep_snprintf(bf, size, "%7d:%-*.*s", he->thread->tid,
-+	return repsep_snprintf(bf, size, "%7d:%-*.*s", thread__tid(he->thread),
- 			       width, width, comm ?: "");
- }
- 
-@@ -1543,8 +1543,10 @@ sort__dcacheline_cmp(struct hist_entry *left, struct hist_entry *right)
- 	    !l_dso->id.ino && !l_dso->id.ino_generation) {
- 		/* userspace anonymous */
- 
--		if (left->thread->pid_ > right->thread->pid_) return -1;
--		if (left->thread->pid_ < right->thread->pid_) return 1;
-+		if (thread__pid(left->thread) > thread__pid(right->thread))
-+			return -1;
-+		if (thread__pid(left->thread) < thread__pid(right->thread))
-+			return 1;
- 	}
- 
- addr:
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 4b85c1728012..374d142e7390 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -112,7 +112,7 @@ struct thread_stack {
-  */
- static inline bool thread_stack__per_cpu(struct thread *thread)
- {
--	return !(thread->tid || thread->pid_);
-+	return !(thread__tid(thread) || thread__pid(thread));
- }
- 
- static int thread_stack__grow(struct thread_stack *ts)
-@@ -155,8 +155,8 @@ static int thread_stack__init(struct thread_stack *ts, struct thread *thread,
- 		ts->br_stack_sz = br_stack_sz;
- 	}
- 
--	if (thread->maps && maps__machine(thread->maps)) {
--		struct machine *machine = maps__machine(thread->maps);
-+	if (thread__maps(thread) && maps__machine(thread__maps(thread))) {
-+		struct machine *machine = maps__machine(thread__maps(thread));
- 		const char *arch = perf_env__arch(machine->env);
- 
- 		ts->kernel_start = machine__kernel_start(machine);
-@@ -175,7 +175,7 @@ static struct thread_stack *thread_stack__new(struct thread *thread, int cpu,
- 					      bool callstack,
- 					      unsigned int br_stack_sz)
- {
--	struct thread_stack *ts = thread->ts, *new_ts;
-+	struct thread_stack *ts = thread__ts(thread), *new_ts;
- 	unsigned int old_sz = ts ? ts->arr_sz : 0;
- 	unsigned int new_sz = 1;
- 
-@@ -189,8 +189,8 @@ static struct thread_stack *thread_stack__new(struct thread *thread, int cpu,
- 		if (ts)
- 			memcpy(new_ts, ts, old_sz * sizeof(*ts));
- 		new_ts->arr_sz = new_sz;
--		zfree(&thread->ts);
--		thread->ts = new_ts;
-+		free(thread__ts(thread));
-+		thread__set_ts(thread, new_ts);
- 		ts = new_ts;
- 	}
- 
-@@ -207,7 +207,7 @@ static struct thread_stack *thread_stack__new(struct thread *thread, int cpu,
- 
- static struct thread_stack *thread__cpu_stack(struct thread *thread, int cpu)
- {
--	struct thread_stack *ts = thread->ts;
-+	struct thread_stack *ts = thread__ts(thread);
- 
- 	if (cpu < 0)
- 		cpu = 0;
-@@ -232,7 +232,7 @@ static inline struct thread_stack *thread__stack(struct thread *thread,
- 	if (thread_stack__per_cpu(thread))
- 		return thread__cpu_stack(thread, cpu);
- 
--	return thread->ts;
-+	return thread__ts(thread);
- }
- 
- static int thread_stack__push(struct thread_stack *ts, u64 ret_addr,
-@@ -363,7 +363,7 @@ static int __thread_stack__flush(struct thread *thread, struct thread_stack *ts)
- 
- int thread_stack__flush(struct thread *thread)
- {
--	struct thread_stack *ts = thread->ts;
-+	struct thread_stack *ts = thread__ts(thread);
- 	unsigned int pos;
- 	int err = 0;
- 
-@@ -502,13 +502,14 @@ static void thread_stack__reset(struct thread *thread, struct thread_stack *ts)
- 
- void thread_stack__free(struct thread *thread)
- {
--	struct thread_stack *ts = thread->ts;
-+	struct thread_stack *ts = thread__ts(thread);
- 	unsigned int pos;
- 
- 	if (ts) {
- 		for (pos = 0; pos < ts->arr_sz; pos++)
- 			__thread_stack__free(thread, ts + pos);
--		zfree(&thread->ts);
-+		free(thread__ts(thread));
-+		thread__set_ts(thread, NULL);
- 	}
- }
- 
-@@ -1127,7 +1128,7 @@ int thread_stack__process(struct thread *thread, struct comm *comm,
- 		ts->rstate = X86_RETPOLINE_POSSIBLE;
- 
- 	/* Flush stack on exec */
--	if (ts->comm != comm && thread->pid_ == thread->tid) {
-+	if (ts->comm != comm && thread__pid(thread) == thread__tid(thread)) {
- 		err = __thread_stack__flush(thread, ts);
- 		if (err)
- 			return err;
-diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
-index 38d300e3e4d3..9a1db3be6436 100644
---- a/tools/perf/util/thread.c
-+++ b/tools/perf/util/thread.c
-@@ -21,19 +21,20 @@
- 
- int thread__init_maps(struct thread *thread, struct machine *machine)
- {
--	pid_t pid = thread->pid_;
-+	pid_t pid = thread__pid(thread);
- 
--	if (pid == thread->tid || pid == -1) {
--		thread->maps = maps__new(machine);
-+	if (pid == thread__tid(thread) || pid == -1) {
-+		thread__set_maps(thread, maps__new(machine));
- 	} else {
- 		struct thread *leader = __machine__findnew_thread(machine, pid, pid);
++		addr_location__init(&tal);
+ 		tal.filtered = 0;
+ 		if (thread__find_symbol(al.thread, cpumode, ip, &tal))
+ 			fprintf(f, "..... %016" PRIx64 " %s\n", ip, tal.sym->name);
+ 		else
+ 			fprintf(f, "..... %016" PRIx64 "\n", ip);
 +
- 		if (leader) {
--			thread->maps = maps__get(leader->maps);
-+			thread__set_maps(thread, maps__get(thread__maps(leader)));
- 			thread__put(leader);
- 		}
++		addr_location__exit(&tal);
+ 	}
+-exit_put:
+-	addr_location__put(&al);
+ exit:
++	addr_location__exit(&al);
+ 	fclose(f);
+ 
+ 	return p;
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 9d3cbebb9b79..99010dfa5760 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -773,8 +773,9 @@ static void perf_event__process_sample(struct perf_tool *tool,
+ 	if (event->header.misc & PERF_RECORD_MISC_EXACT_IP)
+ 		top->exact_samples++;
+ 
++	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0)
+-		return;
++		goto out;
+ 
+ 	if (top->stitch_lbr)
+ 		thread__set_lbr_stitch_enable(al.thread, true);
+@@ -848,7 +849,8 @@ static void perf_event__process_sample(struct perf_tool *tool,
+ 		mutex_unlock(&hists->lock);
  	}
  
--	return thread->maps ? 0 : -1;
-+	return thread__maps(thread) ? 0 : -1;
+-	addr_location__put(&al);
++out:
++	addr_location__exit(&al);
  }
  
- struct thread *thread__new(pid_t pid, pid_t tid)
-@@ -43,16 +44,16 @@ struct thread *thread__new(pid_t pid, pid_t tid)
- 	struct thread *thread = zalloc(sizeof(*thread));
+ static void
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 4c9bec39423b..6a1e75f06832 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2418,13 +2418,15 @@ static int trace__resolve_callchain(struct trace *trace, struct evsel *evsel,
+ 	int max_stack = evsel->core.attr.sample_max_stack ?
+ 			evsel->core.attr.sample_max_stack :
+ 			trace->max_stack;
+-	int err;
++	int err = -1;
  
- 	if (thread != NULL) {
--		thread->pid_ = pid;
--		thread->tid = tid;
--		thread->ppid = -1;
--		thread->cpu = -1;
--		thread->guest_cpu = -1;
--		thread->lbr_stitch_enable = false;
--		INIT_LIST_HEAD(&thread->namespaces_list);
--		INIT_LIST_HEAD(&thread->comm_list);
--		init_rwsem(&thread->namespaces_lock);
--		init_rwsem(&thread->comm_lock);
-+		thread__set_pid(thread, pid);
-+		thread__set_tid(thread, tid);
-+		thread__set_ppid(thread, -1);
-+		thread__set_cpu(thread, -1);
-+		thread__set_guest_cpu(thread, -1);
-+		thread__set_lbr_stitch_enable(thread, false);
-+		INIT_LIST_HEAD(thread__namespaces_list(thread));
-+		INIT_LIST_HEAD(thread__comm_list(thread));
-+		init_rwsem(thread__namespaces_lock(thread));
-+		init_rwsem(thread__comm_lock(thread));
++	addr_location__init(&al);
+ 	if (machine__resolve(trace->host, &al, sample) < 0)
+-		return -1;
++		goto out;
  
- 		comm_str = malloc(32);
- 		if (!comm_str)
-@@ -64,11 +65,11 @@ struct thread *thread__new(pid_t pid, pid_t tid)
- 		if (!comm)
- 			goto err_thread;
- 
--		list_add(&comm->list, &thread->comm_list);
--		refcount_set(&thread->refcnt, 1);
-+		list_add(&comm->list, thread__comm_list(thread));
-+		refcount_set(thread__refcnt(thread), 1);
- 		/* Thread holds first ref to nsdata. */
- 		thread->nsinfo = nsinfo__new(pid);
--		srccode_state_init(&thread->srccode_state);
-+		srccode_state_init(thread__srccode_state(thread));
- 	}
- 
- 	return thread;
-@@ -85,30 +86,30 @@ void thread__delete(struct thread *thread)
- 
- 	thread_stack__free(thread);
- 
--	if (thread->maps) {
--		maps__put(thread->maps);
--		thread->maps = NULL;
-+	if (thread__maps(thread)) {
-+		maps__put(thread__maps(thread));
-+		thread__set_maps(thread, NULL);
- 	}
--	down_write(&thread->namespaces_lock);
-+	down_write(thread__namespaces_lock(thread));
- 	list_for_each_entry_safe(namespaces, tmp_namespaces,
--				 &thread->namespaces_list, list) {
-+				 thread__namespaces_list(thread), list) {
- 		list_del_init(&namespaces->list);
- 		namespaces__free(namespaces);
- 	}
--	up_write(&thread->namespaces_lock);
-+	up_write(thread__namespaces_lock(thread));
- 
--	down_write(&thread->comm_lock);
--	list_for_each_entry_safe(comm, tmp_comm, &thread->comm_list, list) {
-+	down_write(thread__comm_lock(thread));
-+	list_for_each_entry_safe(comm, tmp_comm, thread__comm_list(thread), list) {
- 		list_del_init(&comm->list);
- 		comm__free(comm);
- 	}
--	up_write(&thread->comm_lock);
-+	up_write(thread__comm_lock(thread));
- 
- 	nsinfo__zput(thread->nsinfo);
--	srccode_state_free(&thread->srccode_state);
-+	srccode_state_free(thread__srccode_state(thread));
- 
--	exit_rwsem(&thread->namespaces_lock);
--	exit_rwsem(&thread->comm_lock);
-+	exit_rwsem(thread__namespaces_lock(thread));
-+	exit_rwsem(thread__comm_lock(thread));
- 	thread__free_stitch_list(thread);
- 	free(thread);
- }
-@@ -116,31 +117,31 @@ void thread__delete(struct thread *thread)
- struct thread *thread__get(struct thread *thread)
- {
- 	if (thread)
--		refcount_inc(&thread->refcnt);
-+		refcount_inc(thread__refcnt(thread));
- 	return thread;
- }
- 
- void thread__put(struct thread *thread)
- {
--	if (thread && refcount_dec_and_test(&thread->refcnt))
-+	if (thread && refcount_dec_and_test(thread__refcnt(thread)))
- 		thread__delete(thread);
- }
- 
--static struct namespaces *__thread__namespaces(const struct thread *thread)
-+static struct namespaces *__thread__namespaces(struct thread *thread)
- {
--	if (list_empty(&thread->namespaces_list))
-+	if (list_empty(thread__namespaces_list(thread)))
- 		return NULL;
- 
--	return list_first_entry(&thread->namespaces_list, struct namespaces, list);
-+	return list_first_entry(thread__namespaces_list(thread), struct namespaces, list);
- }
- 
- struct namespaces *thread__namespaces(struct thread *thread)
- {
- 	struct namespaces *ns;
- 
--	down_read(&thread->namespaces_lock);
-+	down_read(thread__namespaces_lock(thread));
- 	ns = __thread__namespaces(thread);
--	up_read(&thread->namespaces_lock);
-+	up_read(thread__namespaces_lock(thread));
- 
- 	return ns;
- }
-@@ -154,7 +155,7 @@ static int __thread__set_namespaces(struct thread *thread, u64 timestamp,
- 	if (!new)
- 		return -ENOMEM;
- 
--	list_add(&new->list, &thread->namespaces_list);
-+	list_add(&new->list, thread__namespaces_list(thread));
- 
- 	if (timestamp && curr) {
- 		/*
-@@ -174,25 +175,25 @@ int thread__set_namespaces(struct thread *thread, u64 timestamp,
- {
- 	int ret;
- 
--	down_write(&thread->namespaces_lock);
-+	down_write(thread__namespaces_lock(thread));
- 	ret = __thread__set_namespaces(thread, timestamp, event);
--	up_write(&thread->namespaces_lock);
-+	up_write(thread__namespaces_lock(thread));
- 	return ret;
- }
- 
--struct comm *thread__comm(const struct thread *thread)
-+struct comm *thread__comm(struct thread *thread)
- {
--	if (list_empty(&thread->comm_list))
-+	if (list_empty(thread__comm_list(thread)))
- 		return NULL;
- 
--	return list_first_entry(&thread->comm_list, struct comm, list);
-+	return list_first_entry(thread__comm_list(thread), struct comm, list);
- }
- 
--struct comm *thread__exec_comm(const struct thread *thread)
-+struct comm *thread__exec_comm(struct thread *thread)
- {
- 	struct comm *comm, *last = NULL, *second_last = NULL;
- 
--	list_for_each_entry(comm, &thread->comm_list, list) {
-+	list_for_each_entry(comm, thread__comm_list(thread), list) {
- 		if (comm->exec)
- 			return comm;
- 		second_last = last;
-@@ -205,7 +206,7 @@ struct comm *thread__exec_comm(const struct thread *thread)
- 	 * thread, that is very probably wrong. Prefer a later comm to avoid
- 	 * that case.
- 	 */
--	if (second_last && !last->start && thread->pid_ == thread->tid)
-+	if (second_last && !last->start && thread__pid(thread) == thread__tid(thread))
- 		return second_last;
- 
- 	return last;
-@@ -217,7 +218,7 @@ static int ____thread__set_comm(struct thread *thread, const char *str,
- 	struct comm *new, *curr = thread__comm(thread);
- 
- 	/* Override the default :tid entry */
--	if (!thread->comm_set) {
-+	if (!thread__comm_set(thread)) {
- 		int err = comm__override(curr, str, timestamp, exec);
- 		if (err)
- 			return err;
-@@ -225,13 +226,13 @@ static int ____thread__set_comm(struct thread *thread, const char *str,
- 		new = comm__new(str, timestamp, exec);
- 		if (!new)
- 			return -ENOMEM;
--		list_add(&new->list, &thread->comm_list);
-+		list_add(&new->list, thread__comm_list(thread));
- 
- 		if (exec)
--			unwind__flush_access(thread->maps);
-+			unwind__flush_access(thread__maps(thread));
- 	}
- 
--	thread->comm_set = true;
-+	thread__set_comm_set(thread, true);
- 
- 	return 0;
- }
-@@ -241,9 +242,9 @@ int __thread__set_comm(struct thread *thread, const char *str, u64 timestamp,
- {
- 	int ret;
- 
--	down_write(&thread->comm_lock);
-+	down_write(thread__comm_lock(thread));
- 	ret = ____thread__set_comm(thread, str, timestamp, exec);
--	up_write(&thread->comm_lock);
-+	up_write(thread__comm_lock(thread));
- 	return ret;
- }
- 
-@@ -255,7 +256,7 @@ int thread__set_comm_from_proc(struct thread *thread)
- 	int err = -1;
- 
- 	if (!(snprintf(path, sizeof(path), "%d/task/%d/comm",
--		       thread->pid_, thread->tid) >= (int)sizeof(path)) &&
-+		       thread__pid(thread), thread__tid(thread)) >= (int)sizeof(path)) &&
- 	    procfs__read_str(path, &comm, &sz) == 0) {
- 		comm[sz - 1] = '\0';
- 		err = thread__set_comm(thread, comm, 0);
-@@ -264,7 +265,7 @@ int thread__set_comm_from_proc(struct thread *thread)
+ 	err = thread__resolve_callchain(al.thread, cursor, evsel, sample, NULL, NULL, max_stack);
+-	addr_location__put(&al);
++out:
++	addr_location__exit(&al);
  	return err;
  }
  
--static const char *__thread__comm_str(const struct thread *thread)
-+static const char *__thread__comm_str(struct thread *thread)
- {
- 	const struct comm *comm = thread__comm(thread);
+@@ -2893,6 +2895,7 @@ static int trace__pgfault(struct trace *trace,
+ 	int err = -1;
+ 	int callchain_ret = 0;
  
-@@ -278,9 +279,9 @@ const char *thread__comm_str(struct thread *thread)
- {
- 	const char *str;
++	addr_location__init(&al);
+ 	thread = machine__findnew_thread(trace->host, sample->pid, sample->tid);
  
--	down_read(&thread->comm_lock);
-+	down_read(thread__comm_lock(thread));
- 	str = __thread__comm_str(thread);
--	up_read(&thread->comm_lock);
-+	up_read(thread__comm_lock(thread));
- 
- 	return str;
- }
-@@ -289,23 +290,23 @@ static int __thread__comm_len(struct thread *thread, const char *comm)
- {
- 	if (!comm)
- 		return 0;
--	thread->comm_len = strlen(comm);
-+	thread__set_comm_len(thread, strlen(comm));
- 
--	return thread->comm_len;
-+	return thread__var_comm_len(thread);
+ 	if (sample->callchain) {
+@@ -2953,6 +2956,7 @@ static int trace__pgfault(struct trace *trace,
+ 	err = 0;
+ out_put:
+ 	thread__put(thread);
++	addr_location__exit(&al);
+ 	return err;
  }
  
- /* CHECKME: it should probably better return the max comm len from its comm list */
- int thread__comm_len(struct thread *thread)
- {
--	int comm_len = thread->comm_len;
-+	int comm_len = thread__var_comm_len(thread);
+diff --git a/tools/perf/tests/code-reading.c b/tools/perf/tests/code-reading.c
+index 9d8eefbebd48..2a7b2b6f5286 100644
+--- a/tools/perf/tests/code-reading.c
++++ b/tools/perf/tests/code-reading.c
+@@ -241,6 +241,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
  
- 	if (!comm_len) {
- 		const char *comm;
+ 	pr_debug("Reading object code for memory address: %#"PRIx64"\n", addr);
  
--		down_read(&thread->comm_lock);
-+		down_read(thread__comm_lock(thread));
- 		comm = __thread__comm_str(thread);
- 		comm_len = __thread__comm_len(thread, comm);
--		up_read(&thread->comm_lock);
-+		up_read(thread__comm_lock(thread));
++	addr_location__init(&al);
+ 	if (!thread__find_map(thread, cpumode, addr, &al) || !map__dso(al.map)) {
+ 		if (cpumode == PERF_RECORD_MISC_HYPERVISOR) {
+ 			pr_debug("Hypervisor address can not be resolved - skipping\n");
+@@ -366,7 +367,7 @@ static int read_object_code(u64 addr, size_t len, u8 cpumode,
+ 	}
+ 	pr_debug("Bytes read match those read by objdump\n");
+ out:
+-	map__put(al.map);
++	addr_location__exit(&al);
+ 	return err;
+ }
+ 
+diff --git a/tools/perf/tests/hists_cumulate.c b/tools/perf/tests/hists_cumulate.c
+index 62b9c6461ea6..71dacb0fec4d 100644
+--- a/tools/perf/tests/hists_cumulate.c
++++ b/tools/perf/tests/hists_cumulate.c
+@@ -8,8 +8,8 @@
+ #include "util/evsel.h"
+ #include "util/evlist.h"
+ #include "util/machine.h"
+-#include "util/thread.h"
+ #include "util/parse-events.h"
++#include "util/thread.h"
+ #include "tests/tests.h"
+ #include "tests/hists_common.h"
+ #include <linux/kernel.h>
+@@ -84,6 +84,7 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
+ 	struct perf_sample sample = { .period = 1000, };
+ 	size_t i;
+ 
++	addr_location__init(&al);
+ 	for (i = 0; i < ARRAY_SIZE(fake_samples); i++) {
+ 		struct hist_entry_iter iter = {
+ 			.evsel = evsel,
+@@ -107,20 +108,22 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
+ 
+ 		if (hist_entry_iter__add(&iter, &al, sysctl_perf_event_max_stack,
+ 					 NULL) < 0) {
+-			addr_location__put(&al);
+ 			goto out;
+ 		}
+ 
+-		fake_samples[i].thread = al.thread;
++		thread__put(fake_samples[i].thread);
++		fake_samples[i].thread = thread__get(al.thread);
+ 		map__put(fake_samples[i].map);
+-		fake_samples[i].map = al.map;
++		fake_samples[i].map = map__get(al.map);
+ 		fake_samples[i].sym = al.sym;
  	}
  
- 	return comm_len;
-@@ -313,33 +314,33 @@ int thread__comm_len(struct thread *thread)
++	addr_location__exit(&al);
+ 	return TEST_OK;
  
- size_t thread__fprintf(struct thread *thread, FILE *fp)
- {
--	return fprintf(fp, "Thread %d %s\n", thread->tid, thread__comm_str(thread)) +
--	       maps__fprintf(thread->maps, fp);
-+	return fprintf(fp, "Thread %d %s\n", thread__tid(thread), thread__comm_str(thread)) +
-+	       maps__fprintf(thread__maps(thread), fp);
+ out:
+ 	pr_debug("Not enough memory for adding a hist entry\n");
++	addr_location__exit(&al);
+ 	return TEST_FAIL;
  }
  
- int thread__insert_map(struct thread *thread, struct map *map)
+@@ -152,8 +155,10 @@ static void put_fake_samples(void)
  {
- 	int ret;
+ 	size_t i;
  
--	ret = unwind__prepare_access(thread->maps, map, NULL);
-+	ret = unwind__prepare_access(thread__maps(thread), map, NULL);
- 	if (ret)
- 		return ret;
- 
--	maps__fixup_overlappings(thread->maps, map, stderr);
--	return maps__insert(thread->maps, map);
-+	maps__fixup_overlappings(thread__maps(thread), map, stderr);
-+	return maps__insert(thread__maps(thread), map);
+-	for (i = 0; i < ARRAY_SIZE(fake_samples); i++)
+-		map__put(fake_samples[i].map);
++	for (i = 0; i < ARRAY_SIZE(fake_samples); i++) {
++		map__zput(fake_samples[i].map);
++		thread__zput(fake_samples[i].thread);
++	}
  }
  
- static int __thread__prepare_access(struct thread *thread)
+ typedef int (*test_fn_t)(struct evsel *, struct machine *);
+diff --git a/tools/perf/tests/hists_filter.c b/tools/perf/tests/hists_filter.c
+index 98eff5935a1c..4b2e4f2fbe48 100644
+--- a/tools/perf/tests/hists_filter.c
++++ b/tools/perf/tests/hists_filter.c
+@@ -8,6 +8,7 @@
+ #include "util/evlist.h"
+ #include "util/machine.h"
+ #include "util/parse-events.h"
++#include "util/thread.h"
+ #include "tests/tests.h"
+ #include "tests/hists_common.h"
+ #include <linux/kernel.h>
+@@ -53,6 +54,7 @@ static int add_hist_entries(struct evlist *evlist,
+ 	struct perf_sample sample = { .period = 100, };
+ 	size_t i;
+ 
++	addr_location__init(&al);
+ 	/*
+ 	 * each evsel will have 10 samples but the 4th sample
+ 	 * (perf [perf] main) will be collapsed to an existing entry
+@@ -84,21 +86,22 @@ static int add_hist_entries(struct evlist *evlist,
+ 			al.socket = fake_samples[i].socket;
+ 			if (hist_entry_iter__add(&iter, &al,
+ 						 sysctl_perf_event_max_stack, NULL) < 0) {
+-				addr_location__put(&al);
+ 				goto out;
+ 			}
+ 
+-			fake_samples[i].thread = al.thread;
++			thread__put(fake_samples[i].thread);
++			fake_samples[i].thread = thread__get(al.thread);
+ 			map__put(fake_samples[i].map);
+-			fake_samples[i].map = al.map;
++			fake_samples[i].map = map__get(al.map);
+ 			fake_samples[i].sym = al.sym;
+ 		}
+ 	}
+-
++	addr_location__exit(&al);
+ 	return 0;
+ 
+ out:
+ 	pr_debug("Not enough memory for adding a hist entry\n");
++	addr_location__exit(&al);
+ 	return TEST_FAIL;
+ }
+ 
+diff --git a/tools/perf/tests/hists_link.c b/tools/perf/tests/hists_link.c
+index 141e2972e34f..12bad8840699 100644
+--- a/tools/perf/tests/hists_link.c
++++ b/tools/perf/tests/hists_link.c
+@@ -8,6 +8,7 @@
+ #include "machine.h"
+ #include "map.h"
+ #include "parse-events.h"
++#include "thread.h"
+ #include "hists_common.h"
+ #include "util/mmap.h"
+ #include <errno.h>
+@@ -70,6 +71,7 @@ static int add_hist_entries(struct evlist *evlist, struct machine *machine)
+ 	struct perf_sample sample = { .period = 1, .weight = 1, };
+ 	size_t i = 0, k;
+ 
++	addr_location__init(&al);
+ 	/*
+ 	 * each evsel will have 10 samples - 5 common and 5 distinct.
+ 	 * However the second evsel also has a collapsed entry for
+@@ -90,13 +92,13 @@ static int add_hist_entries(struct evlist *evlist, struct machine *machine)
+ 			he = hists__add_entry(hists, &al, NULL,
+ 					      NULL, NULL, NULL, &sample, true);
+ 			if (he == NULL) {
+-				addr_location__put(&al);
+ 				goto out;
+ 			}
+ 
+-			fake_common_samples[k].thread = al.thread;
++			thread__put(fake_common_samples[k].thread);
++			fake_common_samples[k].thread = thread__get(al.thread);
+ 			map__put(fake_common_samples[k].map);
+-			fake_common_samples[k].map = al.map;
++			fake_common_samples[k].map = map__get(al.map);
+ 			fake_common_samples[k].sym = al.sym;
+ 		}
+ 
+@@ -110,20 +112,22 @@ static int add_hist_entries(struct evlist *evlist, struct machine *machine)
+ 			he = hists__add_entry(hists, &al, NULL,
+ 					      NULL, NULL, NULL, &sample, true);
+ 			if (he == NULL) {
+-				addr_location__put(&al);
+ 				goto out;
+ 			}
+ 
+-			fake_samples[i][k].thread = al.thread;
+-			fake_samples[i][k].map = al.map;
++			thread__put(fake_samples[i][k].thread);
++			fake_samples[i][k].thread = thread__get(al.thread);
++			map__put(fake_samples[i][k].map);
++			fake_samples[i][k].map = map__get(al.map);
+ 			fake_samples[i][k].sym = al.sym;
+ 		}
+ 		i++;
+ 	}
+ 
++	addr_location__exit(&al);
+ 	return 0;
+-
+ out:
++	addr_location__exit(&al);
+ 	pr_debug("Not enough memory for adding a hist entry\n");
+ 	return -1;
+ }
+diff --git a/tools/perf/tests/hists_output.c b/tools/perf/tests/hists_output.c
+index cd2094c13e1e..ba1cccf57049 100644
+--- a/tools/perf/tests/hists_output.c
++++ b/tools/perf/tests/hists_output.c
+@@ -54,6 +54,7 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
+ 	struct perf_sample sample = { .period = 100, };
+ 	size_t i;
+ 
++	addr_location__init(&al);
+ 	for (i = 0; i < ARRAY_SIZE(fake_samples); i++) {
+ 		struct hist_entry_iter iter = {
+ 			.evsel = evsel,
+@@ -73,20 +74,21 @@ static int add_hist_entries(struct hists *hists, struct machine *machine)
+ 
+ 		if (hist_entry_iter__add(&iter, &al, sysctl_perf_event_max_stack,
+ 					 NULL) < 0) {
+-			addr_location__put(&al);
+ 			goto out;
+ 		}
+ 
+ 		fake_samples[i].thread = al.thread;
+ 		map__put(fake_samples[i].map);
+-		fake_samples[i].map = al.map;
++		fake_samples[i].map = map__get(al.map);
+ 		fake_samples[i].sym = al.sym;
+ 	}
+ 
++	addr_location__exit(&al);
+ 	return TEST_OK;
+ 
+ out:
+ 	pr_debug("Not enough memory for adding a hist entry\n");
++	addr_location__exit(&al);
+ 	return TEST_FAIL;
+ }
+ 
+@@ -118,8 +120,10 @@ static void put_fake_samples(void)
  {
- 	bool initialized = false;
- 	int err = 0;
--	struct maps *maps = thread->maps;
-+	struct maps *maps = thread__maps(thread);
- 	struct map_rb_node *rb_node;
+ 	size_t i;
  
- 	down_read(maps__lock(maps));
+-	for (i = 0; i < ARRAY_SIZE(fake_samples); i++)
++	for (i = 0; i < ARRAY_SIZE(fake_samples); i++) {
+ 		map__put(fake_samples[i].map);
++		fake_samples[i].map = NULL;
++	}
+ }
  
- 	maps__for_each_entry(maps, rb_node) {
--		err = unwind__prepare_access(thread->maps, rb_node->map, &initialized);
-+		err = unwind__prepare_access(thread__maps(thread), rb_node->map, &initialized);
- 		if (err || initialized)
+ typedef int (*test_fn_t)(struct evsel *, struct machine *);
+diff --git a/tools/perf/tests/mmap-thread-lookup.c b/tools/perf/tests/mmap-thread-lookup.c
+index 898eda55b7a8..3891a2a3b46f 100644
+--- a/tools/perf/tests/mmap-thread-lookup.c
++++ b/tools/perf/tests/mmap-thread-lookup.c
+@@ -187,6 +187,7 @@ static int mmap_events(synth_cb synth)
+ 		struct addr_location al;
+ 		struct thread *thread;
+ 
++		addr_location__init(&al);
+ 		thread = machine__findnew_thread(machine, getpid(), td->tid);
+ 
+ 		pr_debug("looking for map %p\n", td->map);
+@@ -199,11 +200,12 @@ static int mmap_events(synth_cb synth)
+ 		if (!al.map) {
+ 			pr_debug("failed, couldn't find map\n");
+ 			err = -1;
++			addr_location__exit(&al);
  			break;
- 	}
-@@ -362,21 +363,22 @@ static int thread__prepare_access(struct thread *thread)
- static int thread__clone_maps(struct thread *thread, struct thread *parent, bool do_maps_clone)
- {
- 	/* This is new thread, we share map groups for process. */
--	if (thread->pid_ == parent->pid_)
-+	if (thread__pid(thread) == thread__pid(parent))
- 		return thread__prepare_access(thread);
+ 		}
  
--	if (thread->maps == parent->maps) {
-+	if (thread__maps(thread) == thread__maps(parent)) {
- 		pr_debug("broken map groups on thread %d/%d parent %d/%d\n",
--			 thread->pid_, thread->tid, parent->pid_, parent->tid);
-+			 thread__pid(thread), thread__tid(thread),
-+			 thread__pid(parent), thread__tid(parent));
+ 		pr_debug("map %p, addr %" PRIx64 "\n", al.map, map__start(al.map));
+-		map__put(al.map);
++		addr_location__exit(&al);
+ 	}
+ 
+ 	machine__delete_threads(machine);
+diff --git a/tools/perf/util/addr_location.c b/tools/perf/util/addr_location.c
+index c73fc2aa236c..51825ef8c0ab 100644
+--- a/tools/perf/util/addr_location.c
++++ b/tools/perf/util/addr_location.c
+@@ -1,16 +1,44 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "addr_location.h"
+ #include "map.h"
++#include "maps.h"
+ #include "thread.h"
+ 
++void addr_location__init(struct addr_location *al)
++{
++	al->thread = NULL;
++	al->maps = NULL;
++	al->map = NULL;
++	al->sym = NULL;
++	al->srcline = NULL;
++	al->addr = 0;
++	al->level = 0;
++	al->filtered = 0;
++	al->cpumode = 0;
++	al->cpu = 0;
++	al->socket = 0;
++}
++
+ /*
+  * The preprocess_sample method will return with reference counts for the
+  * in it, when done using (and perhaps getting ref counts if needing to
+  * keep a pointer to one of those entries) it must be paired with
+  * addr_location__put(), so that the refcounts can be decremented.
+  */
+-void addr_location__put(struct addr_location *al)
++void addr_location__exit(struct addr_location *al)
+ {
+ 	map__zput(al->map);
+ 	thread__zput(al->thread);
++	maps__zput(al->maps);
++}
++
++void addr_location__copy(struct addr_location *dst, struct addr_location *src)
++{
++	thread__put(dst->thread);
++	maps__put(dst->maps);
++	map__put(dst->map);
++	*dst = *src;
++	dst->thread = thread__get(src->thread);
++	dst->maps = maps__get(src->maps);
++	dst->map = map__get(src->map);
+ }
+diff --git a/tools/perf/util/addr_location.h b/tools/perf/util/addr_location.h
+index 7dfa7417c0fe..d8ac0428dff2 100644
+--- a/tools/perf/util/addr_location.h
++++ b/tools/perf/util/addr_location.h
+@@ -23,6 +23,9 @@ struct addr_location {
+ 	s32	      socket;
+ };
+ 
+-void addr_location__put(struct addr_location *al);
++void addr_location__init(struct addr_location *al);
++void addr_location__exit(struct addr_location *al);
++
++void addr_location__copy(struct addr_location *dst, struct addr_location *src);
+ 
+ #endif /* __PERF_ADDR_LOCATION */
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index 06a8cd88cbef..36728222a5b4 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -58,9 +58,11 @@ int build_id__mark_dso_hit(struct perf_tool *tool __maybe_unused,
+ 		return -1;
+ 	}
+ 
++	addr_location__init(&al);
+ 	if (thread__find_map(thread, sample->cpumode, sample->ip, &al))
+ 		map__dso(al.map)->hit = 1;
+ 
++	addr_location__exit(&al);
+ 	thread__put(thread);
+ 	return 0;
+ }
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index b550c7393155..416f2ddc3895 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -910,33 +910,35 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
+ 	struct addr_location al;
+ 	struct dso *dso;
+ 	struct cs_etm_traceid_queue *tidq;
++	int ret = 0;
+ 
+ 	if (!etmq)
  		return 0;
+ 
++	addr_location__init(&al);
+ 	machine = etmq->etm->machine;
+ 	cpumode = cs_etm__cpu_mode(etmq, address);
+ 	tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
+ 	if (!tidq)
+-		return 0;
++		goto out;
+ 
+ 	thread = tidq->thread;
+ 	if (!thread) {
+ 		if (cpumode != PERF_RECORD_MISC_KERNEL)
+-			return 0;
++			goto out;
+ 		thread = etmq->etm->unknown_thread;
  	}
- 	/* But this one is new process, copy maps. */
--	return do_maps_clone ? maps__clone(thread, parent->maps) : 0;
-+	return do_maps_clone ? maps__clone(thread, thread__maps(parent)) : 0;
+ 
+ 	if (!thread__find_map(thread, cpumode, address, &al))
+-		return 0;
++		goto out;
+ 
+ 	dso = map__dso(al.map);
+ 	if (!dso)
+-		return 0;
++		goto out;
+ 
+ 	if (dso->data.status == DSO_DATA_STATUS_ERROR &&
+ 	    dso__data_status_seen(dso, DSO_DATA_STATUS_SEEN_ITRACE))
+-		return 0;
++		goto out;
+ 
+ 	offset = map__map_ip(al.map, address);
+ 
+@@ -953,10 +955,12 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
+ 				    dso->long_name ? dso->long_name : "Unknown");
+ 			dso->auxtrace_warned = true;
+ 		}
+-		return 0;
++		goto out;
+ 	}
+-
+-	return len;
++	ret = len;
++out:
++	addr_location__exit(&al);
++	return ret;
  }
  
- int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bool do_maps_clone)
+ static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
+diff --git a/tools/perf/util/data-convert-json.c b/tools/perf/util/data-convert-json.c
+index 291591e303cd..5bb3c2ba95ca 100644
+--- a/tools/perf/util/data-convert-json.c
++++ b/tools/perf/util/data-convert-json.c
+@@ -154,12 +154,14 @@ static int process_sample_event(struct perf_tool *tool,
  {
--	if (parent->comm_set) {
-+	if (thread__comm_set(parent)) {
- 		const char *comm = thread__comm_str(parent);
- 		int err;
- 		if (!comm)
-@@ -386,7 +388,7 @@ int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bo
- 			return err;
+ 	struct convert_json *c = container_of(tool, struct convert_json, tool);
+ 	FILE *out = c->out;
+-	struct addr_location al, tal;
++	struct addr_location al;
+ 	u64 sample_type = __evlist__combined_sample_type(evsel->evlist);
+ 	u8 cpumode = PERF_RECORD_MISC_USER;
+ 
++	addr_location__init(&al);
+ 	if (machine__resolve(machine, &al, sample) < 0) {
+ 		pr_err("Sample resolution failed!\n");
++		addr_location__exit(&al);
+ 		return -1;
  	}
  
--	thread->ppid = parent->tid;
-+	thread__set_ppid(thread, thread__tid(parent));
- 	return thread__clone_maps(thread, parent, do_maps_clone);
+@@ -190,6 +192,7 @@ static int process_sample_event(struct perf_tool *tool,
+ 
+ 		for (i = 0; i < sample->callchain->nr; ++i) {
+ 			u64 ip = sample->callchain->ips[i];
++			struct addr_location tal;
+ 
+ 			if (ip >= PERF_CONTEXT_MAX) {
+ 				switch (ip) {
+@@ -215,8 +218,10 @@ static int process_sample_event(struct perf_tool *tool,
+ 			else
+ 				fputc(',', out);
+ 
++			addr_location__init(&tal);
+ 			ok = thread__find_symbol(al.thread, cpumode, ip, &tal);
+ 			output_sample_callchain_entry(tool, ip, ok ? &tal : NULL);
++			addr_location__exit(&tal);
+ 		}
+ 	} else {
+ 		output_sample_callchain_entry(tool, sample->ip, &al);
+@@ -245,6 +250,7 @@ static int process_sample_event(struct perf_tool *tool,
+ 	}
+ #endif
+ 	output_json_format(out, false, 2, "}");
++	addr_location__exit(&al);
+ 	return 0;
  }
  
-@@ -410,13 +412,13 @@ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
+diff --git a/tools/perf/util/db-export.c b/tools/perf/util/db-export.c
+index 751fd53bfd93..6184696dc266 100644
+--- a/tools/perf/util/db-export.c
++++ b/tools/perf/util/db-export.c
+@@ -239,16 +239,17 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
+ 		struct addr_location al;
+ 		u64 dso_db_id = 0, sym_db_id = 0, offset = 0;
  
- struct thread *thread__main_thread(struct machine *machine, struct thread *thread)
- {
--	if (thread->pid_ == thread->tid)
-+	if (thread__pid(thread) == thread__tid(thread))
- 		return thread__get(thread);
+-		memset(&al, 0, sizeof(al));
  
--	if (thread->pid_ == -1)
-+	if (thread__pid(thread) == -1)
+ 		node = callchain_cursor_current(&callchain_cursor);
+ 		if (!node)
+ 			break;
++
+ 		/*
+ 		 * Handle export of symbol and dso for this node by
+ 		 * constructing an addr_location struct and then passing it to
+ 		 * db_ids_from_al() to perform the export.
+ 		 */
++		addr_location__init(&al);
+ 		al.sym = node->ms.sym;
+ 		al.map = node->ms.map;
+ 		al.maps = thread__maps(thread);
+@@ -265,6 +266,7 @@ static struct call_path *call_path_from_sample(struct db_export *dbe,
+ 					     kernel_start);
+ 
+ 		callchain_cursor_advance(&callchain_cursor);
++		addr_location__exit(&al);
+ 	}
+ 
+ 	/* Reset the callchain order to its prior value. */
+diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
+index 8016f21dc0b8..46f74b2344db 100644
+--- a/tools/perf/util/dlfilter.c
++++ b/tools/perf/util/dlfilter.c
+@@ -258,6 +258,7 @@ static __s32 dlfilter__object_code(void *ctx, __u64 ip, void *buf, __u32 len)
+ 	struct addr_location a;
+ 	struct map *map;
+ 	u64 offset;
++	__s32 ret;
+ 
+ 	if (!d->ctx_valid)
+ 		return -1;
+@@ -272,16 +273,22 @@ static __s32 dlfilter__object_code(void *ctx, __u64 ip, void *buf, __u32 len)
+ 	    machine__kernel_ip(d->machine, ip) == machine__kernel_ip(d->machine, d->sample->ip))
+ 		goto have_map;
+ 
++	addr_location__init(&a);
+ 	thread__find_map_fb(al->thread, d->sample->cpumode, ip, &a);
+-	if (!a.map)
+-		return -1;
++	if (!a.map) {
++		ret = -1;
++		goto out;
++	}
+ 
+ 	map = a.map;
+ have_map:
+ 	offset = map__map_ip(map, ip);
+ 	if (ip + len >= map__end(map))
+ 		len = map__end(map) - ip;
+-	return dso__data_read_offset(map__dso(map), d->machine, offset, buf, len);
++	ret = dso__data_read_offset(map__dso(map), d->machine, offset, buf, len);
++out:
++	addr_location__exit(&a);
++	return ret;
+ }
+ 
+ static const struct perf_dlfilter_fns perf_dlfilter_fns = {
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 6ee23145ee7e..2fcfba38fc48 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -486,6 +486,7 @@ size_t perf_event__fprintf_text_poke(union perf_event *event, struct machine *ma
+ 	if (machine) {
+ 		struct addr_location al;
+ 
++		addr_location__init(&al);
+ 		al.map = map__get(maps__find(machine__kernel_maps(machine), tp->addr));
+ 		if (al.map && map__load(al.map) >= 0) {
+ 			al.addr = map__map_ip(al.map, tp->addr);
+@@ -493,7 +494,7 @@ size_t perf_event__fprintf_text_poke(union perf_event *event, struct machine *ma
+ 			if (al.sym)
+ 				ret += symbol__fprintf_symname_offs(al.sym, &al, fp);
+ 		}
+-		map__put(al.map);
++		addr_location__exit(&al);
+ 	}
+ 	ret += fprintf(fp, " old len %u new len %u\n", tp->old_len, tp->new_len);
+ 	old = true;
+@@ -577,8 +578,10 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+ 	struct machine *machine = maps__machine(maps);
+ 	bool load_map = false;
+ 
+-	al->maps = maps;
+-	al->thread = thread;
++	maps__zput(al->maps);
++	map__zput(al->map);
++	thread__zput(al->thread);
++
+ 	al->addr = addr;
+ 	al->cpumode = cpumode;
+ 	al->filtered = 0;
+@@ -590,13 +593,13 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+ 
+ 	if (cpumode == PERF_RECORD_MISC_KERNEL && perf_host) {
+ 		al->level = 'k';
+-		al->maps = maps = machine__kernel_maps(machine);
++		maps = machine__kernel_maps(machine);
+ 		load_map = true;
+ 	} else if (cpumode == PERF_RECORD_MISC_USER && perf_host) {
+ 		al->level = '.';
+ 	} else if (cpumode == PERF_RECORD_MISC_GUEST_KERNEL && perf_guest) {
+ 		al->level = 'g';
+-		al->maps = maps = machine__kernel_maps(machine);
++		maps = machine__kernel_maps(machine);
+ 		load_map = true;
+ 	} else if (cpumode == PERF_RECORD_MISC_GUEST_USER && perf_guest) {
+ 		al->level = 'u';
+@@ -615,7 +618,8 @@ struct map *thread__find_map(struct thread *thread, u8 cpumode, u64 addr,
+ 
  		return NULL;
+ 	}
+-
++	al->maps = maps__get(maps);
++	al->thread = thread__get(thread);
+ 	al->map = map__get(maps__find(maps, al->addr));
+ 	if (al->map != NULL) {
+ 		/*
+diff --git a/tools/perf/util/evsel_fprintf.c b/tools/perf/util/evsel_fprintf.c
+index a1655fd7ed9b..cf45ca0e768f 100644
+--- a/tools/perf/util/evsel_fprintf.c
++++ b/tools/perf/util/evsel_fprintf.c
+@@ -128,8 +128,6 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 	bool first = true;
  
--	return machine__find_thread(machine, thread->pid_, thread->pid_);
-+	return machine__find_thread(machine, thread__pid(thread), thread__pid(thread));
+ 	if (sample->callchain) {
+-		struct addr_location node_al;
+-
+ 		callchain_cursor_commit(cursor);
+ 
+ 		while (1) {
+@@ -159,9 +157,12 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 				printed += fprintf(fp, "%c%16" PRIx64, s, node->ip);
+ 
+ 			if (print_sym) {
++				struct addr_location node_al;
++
++				addr_location__init(&node_al);
+ 				printed += fprintf(fp, " ");
+ 				node_al.addr = addr;
+-				node_al.map  = map;
++				node_al.map  = map__get(map);
+ 
+ 				if (print_symoffset) {
+ 					printed += __symbol__fprintf_symname_offs(sym, &node_al,
+@@ -171,6 +172,7 @@ int sample__fprintf_callchain(struct perf_sample *sample, int left_alignment,
+ 					printed += __symbol__fprintf_symname(sym, &node_al,
+ 									     print_unknown_as_addr, fp);
+ 				}
++				addr_location__exit(&node_al);
+ 			}
+ 
+ 			if (print_dso && (!sym || !sym->inlined))
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 4bc3affbe891..a4c1b617f6e4 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -588,7 +588,7 @@ static void hist_entry__add_callchain_period(struct hist_entry *he, u64 period)
+ 
+ static struct hist_entry *hists__findnew_entry(struct hists *hists,
+ 					       struct hist_entry *entry,
+-					       struct addr_location *al,
++					       const struct addr_location *al,
+ 					       bool sample_self)
+ {
+ 	struct rb_node **p;
+@@ -927,8 +927,10 @@ iter_next_branch_entry(struct hist_entry_iter *iter, struct addr_location *al)
+ 	if (iter->curr >= iter->total)
+ 		return 0;
+ 
+-	al->maps = bi[i].to.ms.maps;
+-	al->map = bi[i].to.ms.map;
++	maps__put(al->maps);
++	al->maps = maps__get(bi[i].to.ms.maps);
++	map__put(al->map);
++	al->map = map__get(bi[i].to.ms.map);
+ 	al->sym = bi[i].to.ms.sym;
+ 	al->addr = bi[i].to.addr;
+ 	return 1;
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 45c7e7722916..783ce61c6d25 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -754,13 +754,15 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 	struct addr_location al;
+ 	unsigned char buf[INTEL_PT_INSN_BUF_SZ];
+ 	ssize_t len;
+-	int x86_64;
++	int x86_64, ret = 0;
+ 	u8 cpumode;
+ 	u64 offset, start_offset, start_ip;
+ 	u64 insn_cnt = 0;
+ 	bool one_map = true;
+ 	bool nr;
+ 
++
++	addr_location__init(&al);
+ 	intel_pt_insn->length = 0;
+ 
+ 	if (to_ip && *ip == to_ip)
+@@ -773,19 +775,22 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 		if (ptq->pt->have_guest_sideband) {
+ 			if (!ptq->guest_machine || ptq->guest_machine_pid != ptq->pid) {
+ 				intel_pt_log("ERROR: guest sideband but no guest machine\n");
+-				return -EINVAL;
++				ret = -EINVAL;
++				goto out_ret;
+ 			}
+ 		} else if ((!symbol_conf.guest_code && cpumode != PERF_RECORD_MISC_GUEST_KERNEL) ||
+ 			   intel_pt_get_guest(ptq)) {
+ 			intel_pt_log("ERROR: no guest machine\n");
+-			return -EINVAL;
++			ret = -EINVAL;
++			goto out_ret;
+ 		}
+ 		machine = ptq->guest_machine;
+ 		thread = ptq->guest_thread;
+ 		if (!thread) {
+ 			if (cpumode != PERF_RECORD_MISC_GUEST_KERNEL) {
+ 				intel_pt_log("ERROR: no guest thread\n");
+-				return -EINVAL;
++				ret = -EINVAL;
++				goto out_ret;
+ 			}
+ 			thread = ptq->unknown_guest_thread;
+ 		}
+@@ -794,7 +799,8 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 		if (!thread) {
+ 			if (cpumode != PERF_RECORD_MISC_KERNEL) {
+ 				intel_pt_log("ERROR: no thread\n");
+-				return -EINVAL;
++				ret = -EINVAL;
++				goto out_ret;
+ 			}
+ 			thread = ptq->pt->unknown_thread;
+ 		}
+@@ -808,13 +814,17 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 				intel_pt_log("ERROR: thread has no dso for %#" PRIx64 "\n", *ip);
+ 			else
+ 				intel_pt_log("ERROR: thread has no map for %#" PRIx64 "\n", *ip);
+-			return -EINVAL;
++			addr_location__exit(&al);
++			ret = -EINVAL;
++			goto out_ret;
+ 		}
+ 		dso = map__dso(al.map);
+ 
+ 		if (dso->data.status == DSO_DATA_STATUS_ERROR &&
+-		    dso__data_status_seen(dso, DSO_DATA_STATUS_SEEN_ITRACE))
+-			return -ENOENT;
++			dso__data_status_seen(dso, DSO_DATA_STATUS_SEEN_ITRACE)) {
++			ret = -ENOENT;
++			goto out_ret;
++		}
+ 
+ 		offset = map__map_ip(al.map, *ip);
+ 
+@@ -833,7 +843,8 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 				intel_pt_insn->rel = e->rel;
+ 				memcpy(intel_pt_insn->buf, e->insn, INTEL_PT_INSN_BUF_SZ);
+ 				intel_pt_log_insn_no_data(intel_pt_insn, *ip);
+-				return 0;
++				ret = 0;
++				goto out_ret;
+ 			}
+ 		}
+ 
+@@ -854,11 +865,14 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 					     offset);
+ 				if (intel_pt_enable_logging)
+ 					dso__fprintf(dso, intel_pt_log_fp());
+-				return -EINVAL;
++				ret = -EINVAL;
++				goto out_ret;
+ 			}
+ 
+-			if (intel_pt_get_insn(buf, len, x86_64, intel_pt_insn))
+-				return -EINVAL;
++			if (intel_pt_get_insn(buf, len, x86_64, intel_pt_insn)) {
++				ret = -EINVAL;
++				goto out_ret;
++			}
+ 
+ 			intel_pt_log_insn(intel_pt_insn, *ip);
+ 
+@@ -909,17 +923,20 @@ static int intel_pt_walk_next_insn(struct intel_pt_insn *intel_pt_insn,
+ 
+ 		e = intel_pt_cache_lookup(map__dso(al.map), machine, start_offset);
+ 		if (e)
+-			return 0;
++			goto out_ret;
+ 	}
+ 
+ 	/* Ignore cache errors */
+ 	intel_pt_cache_add(map__dso(al.map), machine, start_offset, insn_cnt,
+ 			   *ip - start_ip, intel_pt_insn);
+ 
+-	return 0;
++out_ret:
++	addr_location__exit(&al);
++	return ret;
+ 
+ out_no_cache:
+ 	*insn_cnt_ptr = insn_cnt;
++	addr_location__exit(&al);
+ 	return 0;
  }
  
- int thread__memcpy(struct thread *thread, struct machine *machine,
-@@ -447,7 +449,7 @@ int thread__memcpy(struct thread *thread, struct machine *machine,
+@@ -968,6 +985,7 @@ static int __intel_pt_pgd_ip(uint64_t ip, void *data)
+ 	struct addr_location al;
+ 	u8 cpumode;
+ 	u64 offset;
++	int res;
  
- void thread__free_stitch_list(struct thread *thread)
- {
--	struct lbr_stitch *lbr_stitch = thread->lbr_stitch;
-+	struct lbr_stitch *lbr_stitch = thread__lbr_stitch(thread);
- 	struct stitch_list *pos, *tmp;
+ 	if (ptq->state->to_nr) {
+ 		if (intel_pt_guest_kernel_ip(ip))
+@@ -984,12 +1002,15 @@ static int __intel_pt_pgd_ip(uint64_t ip, void *data)
+ 	if (!thread)
+ 		return -EINVAL;
  
- 	if (!lbr_stitch)
-@@ -464,5 +466,6 @@ void thread__free_stitch_list(struct thread *thread)
- 	}
++	addr_location__init(&al);
+ 	if (!thread__find_map(thread, cpumode, ip, &al) || !map__dso(al.map))
+ 		return -EINVAL;
  
- 	zfree(&lbr_stitch->prev_lbr_cursor);
--	zfree(&thread->lbr_stitch);
-+	free(thread__lbr_stitch(thread));
-+	thread__set_lbr_stitch(thread, NULL);
- }
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 3b3f9fb5a916..b103992c3831 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -96,8 +96,8 @@ static inline int thread__set_comm(struct thread *thread, const char *comm,
- int thread__set_comm_from_proc(struct thread *thread);
+ 	offset = map__map_ip(al.map, ip);
  
- int thread__comm_len(struct thread *thread);
--struct comm *thread__comm(const struct thread *thread);
--struct comm *thread__exec_comm(const struct thread *thread);
-+struct comm *thread__comm(struct thread *thread);
-+struct comm *thread__exec_comm(struct thread *thread);
- const char *thread__comm_str(struct thread *thread);
- int thread__insert_map(struct thread *thread, struct map *map);
- int thread__fork(struct thread *thread, struct thread *parent, u64 timestamp, bool do_maps_clone);
-@@ -121,6 +121,126 @@ void thread__find_cpumode_addr_location(struct thread *thread, u64 addr,
- int thread__memcpy(struct thread *thread, struct machine *machine,
- 		   void *buf, u64 ip, int len, bool *is64bit);
- 
-+static inline struct maps *thread__maps(struct thread *thread)
-+{
-+	return thread->maps;
-+}
-+
-+static inline void thread__set_maps(struct thread *thread, struct maps *maps)
-+{
-+	thread->maps = maps;
-+}
-+
-+static inline pid_t thread__pid(const struct thread *thread)
-+{
-+	return thread->pid_;
-+}
-+
-+static inline void thread__set_pid(struct thread *thread, pid_t pid_)
-+{
-+	thread->pid_ = pid_;
-+}
-+
-+static inline pid_t thread__tid(const struct thread *thread)
-+{
-+	return thread->tid;
-+}
-+
-+static inline void thread__set_tid(struct thread *thread, pid_t tid)
-+{
-+	thread->tid = tid;
-+}
-+
-+static inline pid_t thread__ppid(const struct thread *thread)
-+{
-+	return thread->ppid;
-+}
-+
-+static inline void thread__set_ppid(struct thread *thread, pid_t ppid)
-+{
-+	thread->ppid = ppid;
-+}
-+
-+static inline int thread__cpu(const struct thread *thread)
-+{
-+	return thread->cpu;
-+}
-+
-+static inline void thread__set_cpu(struct thread *thread, int cpu)
-+{
-+	thread->cpu = cpu;
-+}
-+
-+static inline int thread__guest_cpu(const struct thread *thread)
-+{
-+	return thread->guest_cpu;
-+}
-+
-+static inline void thread__set_guest_cpu(struct thread *thread, int guest_cpu)
-+{
-+	thread->guest_cpu = guest_cpu;
-+}
-+
-+static inline refcount_t *thread__refcnt(struct thread *thread)
-+{
-+	return &thread->refcnt;
-+}
-+
-+static inline bool thread__comm_set(const struct thread *thread)
-+{
-+	return thread->comm_set;
-+}
-+
-+static inline void thread__set_comm_set(struct thread *thread, bool set)
-+{
-+	thread->comm_set = set;
-+}
-+
-+static inline int thread__var_comm_len(const struct thread *thread)
-+{
-+	return thread->comm_len;
-+}
-+
-+static inline void thread__set_comm_len(struct thread *thread, int len)
-+{
-+	thread->comm_len = len;
-+}
-+
-+static inline struct list_head *thread__namespaces_list(struct thread *thread)
-+{
-+	return &thread->namespaces_list;
-+}
-+
-+static inline int thread__namespaces_list_empty(const struct thread *thread)
-+{
-+	return list_empty(&thread->namespaces_list);
-+}
-+
-+static inline struct rw_semaphore *thread__namespaces_lock(struct thread *thread)
-+{
-+	return &thread->namespaces_lock;
-+}
-+
-+static inline struct list_head *thread__comm_list(struct thread *thread)
-+{
-+	return &thread->comm_list;
-+}
-+
-+static inline struct rw_semaphore *thread__comm_lock(struct thread *thread)
-+{
-+	return &thread->comm_lock;
-+}
-+
-+static inline u64 thread__db_id(const struct thread *thread)
-+{
-+	return thread->db_id;
-+}
-+
-+static inline void thread__set_db_id(struct thread *thread, u64 db_id)
-+{
-+	thread->db_id = db_id;
-+}
-+
- static inline void *thread__priv(struct thread *thread)
- {
- 	return thread->priv;
-@@ -131,6 +251,66 @@ static inline void thread__set_priv(struct thread *thread, void *p)
- 	thread->priv = p;
+-	return intel_pt_match_pgd_ip(ptq->pt, ip, offset, map__dso(al.map)->long_name);
++	res = intel_pt_match_pgd_ip(ptq->pt, ip, offset, map__dso(al.map)->long_name);
++	addr_location__exit(&al);
++	return res;
  }
  
-+static inline struct thread_stack *thread__ts(struct thread *thread)
-+{
-+	return thread->ts;
-+}
-+
-+static inline void thread__set_ts(struct thread *thread, struct thread_stack *ts)
-+{
-+	thread->ts = ts;
-+}
-+
-+static inline struct nsinfo *thread__nsinfo(struct thread *thread)
-+{
-+	return thread->nsinfo;
-+}
-+
-+static inline struct srccode_state *thread__srccode_state(struct thread *thread)
-+{
-+	return &thread->srccode_state;
-+}
-+
-+static inline bool thread__filter(const struct thread *thread)
-+{
-+	return thread->filter;
-+}
-+
-+static inline void thread__set_filter(struct thread *thread, bool filter)
-+{
-+	thread->filter = filter;
-+}
-+
-+static inline int thread__filter_entry_depth(const struct thread *thread)
-+{
-+	return thread->filter_entry_depth;
-+}
-+
-+static inline void thread__set_filter_entry_depth(struct thread *thread, int depth)
-+{
-+	thread->filter_entry_depth = depth;
-+}
-+
-+static inline bool thread__lbr_stitch_enable(const struct thread *thread)
-+{
-+	return thread->lbr_stitch_enable;
-+}
-+
-+static inline void thread__set_lbr_stitch_enable(struct thread *thread, bool en)
-+{
-+	thread->lbr_stitch_enable = en;
-+}
-+
-+static inline struct lbr_stitch	*thread__lbr_stitch(struct thread *thread)
-+{
-+	return thread->lbr_stitch;
-+}
-+
-+static inline void thread__set_lbr_stitch(struct thread *thread, struct lbr_stitch *lbrs)
-+{
-+	thread->lbr_stitch = lbrs;
-+}
-+
- static inline bool thread__is_filtered(struct thread *thread)
+ static bool intel_pt_pgd_ip(uint64_t ip, void *data)
+@@ -3372,20 +3393,22 @@ static int intel_pt_text_poke(struct intel_pt *pt, union perf_event *event)
+ 	/* Assume text poke begins in a basic block no more than 4096 bytes */
+ 	int cnt = 4096 + event->text_poke.new_len;
+ 	struct thread *thread = pt->unknown_thread;
+-	struct addr_location al = { .map = NULL };
++	struct addr_location al;
+ 	struct machine *machine = pt->machine;
+ 	struct intel_pt_cache_entry *e;
+ 	u64 offset;
++	int ret = 0;
+ 
++	addr_location__init(&al);
+ 	if (!event->text_poke.new_len)
+-		return 0;
++		goto out;
+ 
+ 	for (; cnt; cnt--, addr--) {
+ 		struct dso *dso;
+ 
+ 		if (intel_pt_find_map(thread, cpumode, addr, &al)) {
+ 			if (addr < event->text_poke.addr)
+-				return 0;
++				goto out;
+ 			continue;
+ 		}
+ 
+@@ -3406,15 +3429,16 @@ static int intel_pt_text_poke(struct intel_pt *pt, union perf_event *event)
+ 			 * branch instruction before the text poke address.
+ 			 */
+ 			if (e->branch != INTEL_PT_BR_NO_BRANCH)
+-				return 0;
++				goto out;
+ 		} else {
+ 			intel_pt_cache_invalidate(dso, machine, offset);
+ 			intel_pt_log("Invalidated instruction cache for %s at %#"PRIx64"\n",
+ 				     dso->long_name, addr);
+ 		}
+ 	}
+-
+-	return 0;
++out:
++	addr_location__exit(&al);
++	return ret;
+ }
+ 
+ static int intel_pt_process_event(struct perf_session *session,
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 8972c852d3bd..9fcf357a4d53 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2221,7 +2221,7 @@ static void ip__resolve_ams(struct thread *thread,
  {
- 	if (symbol_conf.comm_list &&
-@@ -139,12 +319,12 @@ static inline bool thread__is_filtered(struct thread *thread)
+ 	struct addr_location al;
+ 
+-	memset(&al, 0, sizeof(al));
++	addr_location__init(&al);
+ 	/*
+ 	 * We cannot use the header.misc hint to determine whether a
+ 	 * branch stack address is user, kernel, guest, hypervisor.
+@@ -2234,11 +2234,12 @@ static void ip__resolve_ams(struct thread *thread,
+ 	ams->addr = ip;
+ 	ams->al_addr = al.addr;
+ 	ams->al_level = al.level;
+-	ams->ms.maps = al.maps;
++	ams->ms.maps = maps__get(al.maps);
+ 	ams->ms.sym = al.sym;
+-	ams->ms.map = al.map;
++	ams->ms.map = map__get(al.map);
+ 	ams->phys_addr = 0;
+ 	ams->data_page_size = 0;
++	addr_location__exit(&al);
+ }
+ 
+ static void ip__resolve_data(struct thread *thread,
+@@ -2247,18 +2248,19 @@ static void ip__resolve_data(struct thread *thread,
+ {
+ 	struct addr_location al;
+ 
+-	memset(&al, 0, sizeof(al));
++	addr_location__init(&al);
+ 
+ 	thread__find_symbol(thread, m, addr, &al);
+ 
+ 	ams->addr = addr;
+ 	ams->al_addr = al.addr;
+ 	ams->al_level = al.level;
+-	ams->ms.maps = al.maps;
++	ams->ms.maps = maps__get(al.maps);
+ 	ams->ms.sym = al.sym;
+-	ams->ms.map = al.map;
++	ams->ms.map = map__get(al.map);
+ 	ams->phys_addr = phys_addr;
+ 	ams->data_page_size = daddr_page_size;
++	addr_location__exit(&al);
+ }
+ 
+ struct mem_info *sample__resolve_mem(struct perf_sample *sample,
+@@ -2319,10 +2321,11 @@ static int add_callchain_ip(struct thread *thread,
+ {
+ 	struct map_symbol ms;
+ 	struct addr_location al;
+-	int nr_loop_iter = 0, err;
++	int nr_loop_iter = 0, err = 0;
+ 	u64 iter_cycles = 0;
+ 	const char *srcline = NULL;
+ 
++	addr_location__init(&al);
+ 	al.filtered = 0;
+ 	al.sym = NULL;
+ 	al.srcline = NULL;
+@@ -2348,9 +2351,10 @@ static int add_callchain_ip(struct thread *thread,
+ 				 * Discard all.
+ 				 */
+ 				callchain_cursor_reset(cursor);
+-				return 1;
++				err = 1;
++				goto out;
+ 			}
+-			return 0;
++			goto out;
+ 		}
+ 		thread__find_symbol(thread, *cpumode, ip, &al);
+ 	}
+@@ -2363,31 +2367,32 @@ static int add_callchain_ip(struct thread *thread,
+ 		  symbol__match_regex(al.sym, &ignore_callees_regex)) {
+ 			/* Treat this symbol as the root,
+ 			   forgetting its callees. */
+-			*root_al = al;
++			addr_location__copy(root_al, &al);
+ 			callchain_cursor_reset(cursor);
+ 		}
  	}
  
- 	if (symbol_conf.pid_list &&
--	    !intlist__has_entry(symbol_conf.pid_list, thread->pid_)) {
-+	    !intlist__has_entry(symbol_conf.pid_list, thread__pid(thread))) {
- 		return true;
+ 	if (symbol_conf.hide_unresolved && al.sym == NULL)
+-		return 0;
++		goto out;
+ 
+ 	if (iter) {
+ 		nr_loop_iter = iter->nr_loop_iter;
+ 		iter_cycles = iter->cycles;
  	}
  
- 	if (symbol_conf.tid_list &&
--	    !intlist__has_entry(symbol_conf.tid_list, thread->tid)) {
-+	    !intlist__has_entry(symbol_conf.tid_list, thread__tid(thread))) {
- 		return true;
+-	ms.maps = al.maps;
+-	ms.map = al.map;
++	ms.maps = maps__get(al.maps);
++	ms.map = map__get(al.map);
+ 	ms.sym = al.sym;
+ 
+ 	if (!branch && append_inlines(cursor, &ms, ip) == 0)
+-		return 0;
++		goto out;
+ 
+ 	srcline = callchain_srcline(&ms, al.addr);
+ 	err = callchain_cursor_append(cursor, ip, &ms,
+ 				      branch, flags, nr_loop_iter,
+ 				      iter_cycles, branch_from, srcline);
+-	map__put(al.map);
++out:
++	addr_location__exit(&al);
+ 	return err;
+ }
+ 
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index f3d262e871ac..d7c99028c6e6 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -469,9 +469,11 @@ static PyObject *python_process_callchain(struct perf_sample *sample,
+ 				struct addr_location node_al;
+ 				unsigned long offset;
+ 
++				addr_location__init(&node_al);
+ 				node_al.addr = map__map_ip(map, node->ip);
+-				node_al.map  = map;
++				node_al.map  = map__get(map);
+ 				offset = get_offset(node->ms.sym, &node_al);
++				addr_location__exit(&node_al);
+ 
+ 				pydict_set_item_string_decref(
+ 					pyelem, "sym_off",
+@@ -539,6 +541,7 @@ static PyObject *python_process_brstack(struct perf_sample *sample,
+ 		pydict_set_item_string_decref(pyelem, "cycles",
+ 		    PyLong_FromUnsignedLongLong(entries[i].flags.cycles));
+ 
++		addr_location__init(&al);
+ 		thread__find_map_fb(thread, sample->cpumode,
+ 				    entries[i].from, &al);
+ 		dsoname = get_dsoname(al.map);
+@@ -551,6 +554,7 @@ static PyObject *python_process_brstack(struct perf_sample *sample,
+ 		pydict_set_item_string_decref(pyelem, "to_dsoname",
+ 					      _PyUnicode_FromString(dsoname));
+ 
++		addr_location__exit(&al);
+ 		PyList_Append(pylist, pyelem);
+ 		Py_DECREF(pyelem);
  	}
+@@ -594,7 +598,6 @@ static PyObject *python_process_brstacksym(struct perf_sample *sample,
+ 	PyObject *pylist;
+ 	u64 i;
+ 	char bf[512];
+-	struct addr_location al;
+ 
+ 	pylist = PyList_New(0);
+ 	if (!pylist)
+@@ -605,7 +608,9 @@ static PyObject *python_process_brstacksym(struct perf_sample *sample,
+ 
+ 	for (i = 0; i < br->nr; i++) {
+ 		PyObject *pyelem;
++		struct addr_location al;
+ 
++		addr_location__init(&al);
+ 		pyelem = PyDict_New();
+ 		if (!pyelem)
+ 			Py_FatalError("couldn't create Python dictionary");
+@@ -644,6 +649,7 @@ static PyObject *python_process_brstacksym(struct perf_sample *sample,
+ 
+ 		PyList_Append(pylist, pyelem);
+ 		Py_DECREF(pyelem);
++		addr_location__exit(&al);
+ 	}
+ 
+ exit:
+diff --git a/tools/perf/util/thread.c b/tools/perf/util/thread.c
+index 9a1db3be6436..bee4ac1051ee 100644
+--- a/tools/perf/util/thread.c
++++ b/tools/perf/util/thread.c
+@@ -432,18 +432,25 @@ int thread__memcpy(struct thread *thread, struct machine *machine,
+ 	if (machine__kernel_ip(machine, ip))
+ 		cpumode = PERF_RECORD_MISC_KERNEL;
+ 
+-	if (!thread__find_map(thread, cpumode, ip, &al))
+-	       return -1;
++	addr_location__init(&al);
++	if (!thread__find_map(thread, cpumode, ip, &al)) {
++		addr_location__exit(&al);
++		return -1;
++	}
+ 
+ 	dso = map__dso(al.map);
+ 
+-	if( !dso || dso->data.status == DSO_DATA_STATUS_ERROR || map__load(al.map) < 0)
++	if (!dso || dso->data.status == DSO_DATA_STATUS_ERROR || map__load(al.map) < 0) {
++		addr_location__exit(&al);
+ 		return -1;
++	}
+ 
+ 	offset = map__map_ip(al.map, ip);
+ 	if (is64bit)
+ 		*is64bit = dso->is_64_bit;
+ 
++	addr_location__exit(&al);
++
+ 	return dso__data_read_offset(dso, machine, offset, buf, len);
+ }
  
 diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index bdccfc511b7e..3723b5e31b2a 100644
+index 3723b5e31b2a..83eea968482e 100644
 --- a/tools/perf/util/unwind-libdw.c
 +++ b/tools/perf/util/unwind-libdw.c
-@@ -230,7 +230,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 	struct unwind_info *ui, ui_buf = {
- 		.sample		= data,
- 		.thread		= thread,
--		.machine	= RC_CHK_ACCESS(thread->maps)->machine,
-+		.machine	= RC_CHK_ACCESS(thread__maps(thread))->machine,
- 		.cb		= cb,
- 		.arg		= arg,
- 		.max_stack	= max_stack,
-@@ -260,11 +260,11 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 	if (err)
- 		goto out;
+@@ -90,8 +90,12 @@ static int __report_module(struct addr_location *al, u64 ip,
+ static int report_module(u64 ip, struct unwind_info *ui)
+ {
+ 	struct addr_location al;
++	int res;
  
--	err = !dwfl_attach_state(ui->dwfl, EM_NONE, thread->tid, &callbacks, ui);
-+	err = !dwfl_attach_state(ui->dwfl, EM_NONE, thread__tid(thread), &callbacks, ui);
- 	if (err)
- 		goto out;
+-	return __report_module(&al, ip, ui);
++	addr_location__init(&al);
++	res = __report_module(&al, ip, ui);
++	addr_location__exit(&al);
++	return res;
+ }
  
--	err = dwfl_getthread_frames(ui->dwfl, thread->tid, frame_callback, ui);
-+	err = dwfl_getthread_frames(ui->dwfl, thread__tid(thread), frame_callback, ui);
+ /*
+@@ -104,8 +108,11 @@ static int entry(u64 ip, struct unwind_info *ui)
+ 	struct unwind_entry *e = &ui->entries[ui->idx++];
+ 	struct addr_location al;
  
- 	if (err && ui->max_stack != max_stack)
- 		err = 0;
+-	if (__report_module(&al, ip, ui))
++	addr_location__init(&al);
++	if (__report_module(&al, ip, ui)) {
++		addr_location__exit(&al);
+ 		return -1;
++	}
+ 
+ 	e->ip	  = ip;
+ 	e->ms.maps = al.maps;
+@@ -116,6 +123,7 @@ static int entry(u64 ip, struct unwind_info *ui)
+ 		 al.sym ? al.sym->name : "''",
+ 		 ip,
+ 		 al.map ? map__map_ip(al.map, ip) : (u64) 0);
++	addr_location__exit(&al);
+ 	return 0;
+ }
+ 
+@@ -136,17 +144,22 @@ static int access_dso_mem(struct unwind_info *ui, Dwarf_Addr addr,
+ 	ssize_t size;
+ 	struct dso *dso;
+ 
++	addr_location__init(&al);
+ 	if (!thread__find_map(ui->thread, PERF_RECORD_MISC_USER, addr, &al)) {
+ 		pr_debug("unwind: no map for %lx\n", (unsigned long)addr);
+-		return -1;
++		goto out_fail;
+ 	}
+ 	dso = map__dso(al.map);
+ 	if (!dso)
+-		return -1;
++		goto out_fail;
+ 
+ 	size = dso__data_read_addr(dso, al.map, ui->machine, addr, (u8 *) data, sizeof(*data));
+ 
++	addr_location__exit(&al);
+ 	return !(size == sizeof(*data));
++out_fail:
++	addr_location__exit(&al);
++	return -1;
+ }
+ 
+ static bool memory_read(Dwfl *dwfl __maybe_unused, Dwarf_Addr addr, Dwarf_Word *result,
 diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 83dd79dcd597..11f3fc95aa11 100644
+index 11f3fc95aa11..36bf5100bad2 100644
 --- a/tools/perf/util/unwind-libunwind-local.c
 +++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -325,7 +325,7 @@ static int read_unwind_spec_eh_frame(struct dso *dso, struct unwind_info *ui,
- 			return -EINVAL;
- 	}
- 
--	maps__for_each_entry(ui->thread->maps, map_node) {
-+	maps__for_each_entry(thread__maps(ui->thread), map_node) {
- 		struct map *map = map_node->map;
- 		u64 start = map__start(map);
- 
-@@ -719,7 +719,7 @@ static int get_entries(struct unwind_info *ui, unwind_entry_cb_t cb,
- 	 */
- 	if (max_stack - 1 > 0) {
- 		WARN_ONCE(!ui->thread, "WARNING: ui->thread is NULL");
--		addr_space = maps__addr_space(ui->thread->maps);
-+		addr_space = maps__addr_space(thread__maps(ui->thread));
- 
- 		if (addr_space == NULL)
- 			return -1;
-@@ -769,7 +769,7 @@ static int _unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 	struct unwind_info ui = {
- 		.sample       = data,
- 		.thread       = thread,
--		.machine      = maps__machine(thread->maps),
-+		.machine      = maps__machine(thread__maps(thread)),
- 		.best_effort  = best_effort
- 	};
- 
-diff --git a/tools/perf/util/unwind-libunwind.c b/tools/perf/util/unwind-libunwind.c
-index 375d23d9a590..76cd63de80a8 100644
---- a/tools/perf/util/unwind-libunwind.c
-+++ b/tools/perf/util/unwind-libunwind.c
-@@ -89,7 +89,7 @@ int unwind__get_entries(unwind_entry_cb_t cb, void *arg,
- 			 struct perf_sample *data, int max_stack,
- 			 bool best_effort)
+@@ -416,7 +416,12 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+ static struct map *find_map(unw_word_t ip, struct unwind_info *ui)
  {
--	const struct unwind_libunwind_ops *ops = maps__unwind_libunwind_ops(thread->maps);
-+	const struct unwind_libunwind_ops *ops = maps__unwind_libunwind_ops(thread__maps(thread));
+ 	struct addr_location al;
+-	return thread__find_map(ui->thread, PERF_RECORD_MISC_USER, ip, &al);
++	struct map *ret;
++
++	addr_location__init(&al);
++	ret = thread__find_map(ui->thread, PERF_RECORD_MISC_USER, ip, &al);
++	addr_location__exit(&al);
++	return ret;
+ }
  
- 	if (ops)
- 		return ops->get_entries(cb, arg, thread, data, max_stack, best_effort);
-diff --git a/tools/perf/util/vdso.c b/tools/perf/util/vdso.c
-index ec777ee11493..ae3eee69b659 100644
---- a/tools/perf/util/vdso.c
-+++ b/tools/perf/util/vdso.c
-@@ -146,7 +146,7 @@ static enum dso_type machine__thread_dso_type(struct machine *machine,
- 	enum dso_type dso_type = DSO__TYPE_UNKNOWN;
- 	struct map_rb_node *rb_node;
+ static int
+@@ -631,7 +636,9 @@ static int entry(u64 ip, struct thread *thread,
+ {
+ 	struct unwind_entry e;
+ 	struct addr_location al;
++	int ret;
  
--	maps__for_each_entry(thread->maps, rb_node) {
-+	maps__for_each_entry(thread__maps(thread), rb_node) {
- 		struct dso *dso = map__dso(rb_node->map);
++	addr_location__init(&al);
+ 	e.ms.sym = thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
+ 	e.ip     = ip;
+ 	e.ms.map = al.map;
+@@ -642,7 +649,9 @@ static int entry(u64 ip, struct thread *thread,
+ 		 ip,
+ 		 al.map ? map__map_ip(al.map, ip) : (u64) 0);
  
- 		if (!dso || dso->long_name[0] != '/')
+-	return cb(&e, arg);
++	ret = cb(&e, arg);
++	addr_location__exit(&al);
++	return ret;
+ }
+ 
+ static void display_error(int err)
 -- 
 2.41.0.162.gfafddb0af9-goog
 
