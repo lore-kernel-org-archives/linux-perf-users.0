@@ -2,71 +2,137 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5A5C7EE23
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 13:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB32C7EE37
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 13:46:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236250AbjFHNZs (ORCPT
+        id S235828AbjFHNqq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 09:25:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53284 "EHLO
+        Thu, 8 Jun 2023 09:46:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234352AbjFHNZr (ORCPT
+        with ESMTP id S235440AbjFHNqp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 09:25:47 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D21C1E4A;
-        Thu,  8 Jun 2023 06:25:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kT+CSh674tD6IDPwdGpH0CMcraDHp8mLaU8ZvFqdy7U=; b=PCephHGRr5xu+LZk4lGEVP0fm7
-        ANXBkWh4Npo9wMyuuVIDitGFbyE+uRenm6VSZMGi/1BEqEcqH9HQm94/2fWPqs3R+Q2CQhXGcl7lU
-        0f4CMb1huvyMbgbX88+cmSvz1Fj1AR/Gm0Pfjd4fBv7KCrGqTYnxcC4NSeZzWKip2KrnzQUynGNM2
-        TI5rz9l2WwQfvzJcFHy4Up3Pfm7lCfeRGLLxhTJVbAx24pFkr4QqA9vuaqcErfIm/jX61OnF0Tpqn
-        wa91sqld+hyydkMilV80kKKitXmxtS5Gpb4QUIZfAsPxVIfX++w3/m2LVZjsdQ0QZ4yuyHNhbtaRc
-        JWP5+WgA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q7Fdu-00FV8E-Cc; Thu, 08 Jun 2023 13:25:34 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id F31133001E7;
-        Thu,  8 Jun 2023 15:25:33 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B0AB223FF6AD1; Thu,  8 Jun 2023 15:25:33 +0200 (CEST)
-Date:   Thu, 8 Jun 2023 15:25:33 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Artem Savkov <asavkov@redhat.com>
-Cc:     linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] perf tools: annotation browser from c2c tui
-Message-ID: <20230608132533.GL998233@hirez.programming.kicks-ass.net>
-References: <20230608084407.140323-1-asavkov@redhat.com>
+        Thu, 8 Jun 2023 09:46:45 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC8026B3;
+        Thu,  8 Jun 2023 06:46:44 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 103221FDCA;
+        Thu,  8 Jun 2023 13:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1686232003; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2KBbWiKkW090r6xpGGTvZasEo61erYv6UtVsy3logoc=;
+        b=HqK/AlDpvfGbTNDmGl55bMAaRj6QwKTZptYCWk/8avkFYFqLmq4bw6Sw0GLb/IrsNS/G57
+        8gK1NfadlvJi1Meb9tkQezNlillNl9LFNkb33uQxqs8z0wBiQjM/DsuMQveTjApYL/MMhg
+        MqyEbMnJuAYDNVYk5+VBUPnksHEqbWY=
+Received: from suse.cz (unknown [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 46C822C141;
+        Thu,  8 Jun 2023 13:46:41 +0000 (UTC)
+Date:   Thu, 8 Jun 2023 15:46:38 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        sparclinux@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 4/7] watchdog/hardlockup: Enable HAVE_NMI_WATCHDOG only
+ on sparc64
+Message-ID: <ZIHbvlw05razk-oJ@alley>
+References: <20230607152432.5435-1-pmladek@suse.com>
+ <20230607152432.5435-5-pmladek@suse.com>
+ <CAD=FV=VV3Y7KoZWPtZfmfRsUCftAgo_CLRDazrYSgbR2XJKf=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230608084407.140323-1-asavkov@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD=FV=VV3Y7KoZWPtZfmfRsUCftAgo_CLRDazrYSgbR2XJKf=g@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 10:44:05AM +0200, Artem Savkov wrote:
-> These patches add ability to start annotation browser from c2c report
-> tui. The idea comes from Arnaldo's "Profiling Data Structures" talk [1].
+On Wed 2023-06-07 16:36:35, Doug Anderson wrote:
+> Hi,
 > 
-> [1]: http://vger.kernel.org/~acme/prez/linux-plumbers-2022/
+> On Wed, Jun 7, 2023 at 8:25 AM Petr Mladek <pmladek@suse.com> wrote:
+> >
+> > diff --git a/arch/Kconfig b/arch/Kconfig
+> > index 13c6e596cf9e..57f15babe188 100644
+> > --- a/arch/Kconfig
+> > +++ b/arch/Kconfig
+> > @@ -404,10 +404,9 @@ config HAVE_NMI_WATCHDOG
+> >         depends on HAVE_NMI
+> >         bool
+> >         help
+> > -         The arch provides its own hardlockup detector implementation instead
+> > +         Sparc64 provides its own hardlockup detector implementation instead
+> >           of the generic perf one.
+> 
+> It's a little weird to document generic things with the specifics of
+> the user. The exception, IMO, is when something is deprecated.
+> Personally, it would sound less weird to me to say something like:
 
-So what are the plans for doing IP to datatype::member resolution and
-deleting this C2C abomination?
+Or I could replace "The arch" by "Sparc64" in the 5th patch which
+renames the variable to HAVE_HARDLOCKUP_DETECTOR_SPARC64. It will
+not longer be a generic thing...
 
-/me still regretting ever letting c2c happen..
+Or I could squash the two patches. I did not want to do too many
+changes at the same time. But it might actually make sense to
+do this in one step.
+
+> 
+> > diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> > index d201f5d3876b..4b4aa0f941f9 100644
+> > --- a/lib/Kconfig.debug
+> > +++ b/lib/Kconfig.debug
+> > @@ -1050,15 +1050,13 @@ config HAVE_HARDLOCKUP_DETECTOR_BUDDY
+> >  #      sparc64: has a custom implementation which is not using the common
+> >  #              hardlockup command line options and sysctl interface.
+> >  #
+> > -# Note that HAVE_NMI_WATCHDOG is used to distinguish the sparc64 specific
+> > -# implementaion. It is automatically enabled also for other arch-specific
+> > -# variants which set HAVE_HARDLOCKUP_DETECTOR_ARCH. It makes the check
+> > -# of avaialable and supported variants quite tricky.
+> > +# Note that HAVE_NMI_WATCHDOG is set when the sparc64 specific implementation
+> > +# is used.
+> >  #
+> >  config HARDLOCKUP_DETECTOR
+> >         bool "Detect Hard Lockups"
+> > -       depends on DEBUG_KERNEL && !S390
+> > -       depends on ((HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETECTOR_BUDDY) && !HAVE_NMI_WATCHDOG) || HAVE_HARDLOCKUP_DETECTOR_ARCH
+> > +       depends on DEBUG_KERNEL && !S390 && !HAVE_NMI_WATCHDOG
+> > +       depends on HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETECTOR_BUDDY || HAVE_HARDLOCKUP_DETECTOR_ARCH
+> 
+> If you add the "!HAVE_NMI_WATCHDOG" as a dependency to
+> HAVE_HARDLOCKUP_DETECTOR_BUDDY, as discussed in a previous patch, you
+> can skip adding it here.
+
+It it related to the 2nd patch. Let's discuss it there.
+
+> 
+> >         imply HARDLOCKUP_DETECTOR_PERF
+> >         imply HARDLOCKUP_DETECTOR_BUDDY
+> >         select LOCKUP_DETECTOR
+> > @@ -1079,7 +1077,7 @@ config HARDLOCKUP_DETECTOR_PREFER_BUDDY
+> >         bool "Prefer the buddy CPU hardlockup detector"
+> >         depends on HARDLOCKUP_DETECTOR
+> >         depends on HAVE_HARDLOCKUP_DETECTOR_PERF && HAVE_HARDLOCKUP_DETECTOR_BUDDY
+> > -       depends on !HAVE_NMI_WATCHDOG
+> > +       depends on !HAVE_HARLOCKUP_DETECTOR_ARCH
+> 
+> Don't need this. Architectures never are allowed to define
+> HAVE_HARDLOCKUP_DETECTOR_PERF and HAVE_HARLOCKUP_DETECTOR_ARCH
+
+Same here...
+
+Best Regards,
+Petr
