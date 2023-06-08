@@ -2,228 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3592FC7EE43
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 12:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D841C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 12:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236605AbjFHMyb (ORCPT
+        id S236180AbjFHM5G (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 08:54:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36548 "EHLO
+        Thu, 8 Jun 2023 08:57:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236673AbjFHMyW (ORCPT
+        with ESMTP id S233162AbjFHM5E (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 08:54:22 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D7430E5;
-        Thu,  8 Jun 2023 05:54:07 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id d2e1a72fcca58-655d1fc8ad8so325552b3a.1;
-        Thu, 08 Jun 2023 05:54:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686228839; x=1688820839;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=j8UhG+qvAj194kl8IInt/AKhDQlK5jONroHH725iWxI=;
-        b=ela0zpz2yGpujgwMtjD7eFeSiUgq+13PeDj366P+Lol0HdL5cKcKJ3frWiWN56qn4m
-         JmJPUuOyfq6Ntu134M9lVeX6Z3xOgnM45UZYpav5ReWMNkMnmeHJad/ALnhH7JUxCD4C
-         YX7qwvfgw3TqyWgMWS2E2+YpRwfl0/m0wLkmhkZtgD5VOGVZvJo4w2kOdq5JnwdhklG8
-         6KUC/VzhVfYOwC4oTGbm7wXVgdrNldXXSl+dAqj1kKgAMmKWXvixQELkUkz1rNhuBk88
-         z5cGIf0srvnjJZEfc015umX3c1AXtCBW2DOugflYxPRDwK/+92Vk9IKZEVTBgqK7M7IQ
-         tQlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686228839; x=1688820839;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=j8UhG+qvAj194kl8IInt/AKhDQlK5jONroHH725iWxI=;
-        b=SPoAPIQieodWeaNGA8ZkmfS3x6LEQHVLwaQve6yCYkay+c7YgaLwFz/I2oh/Yr8zoi
-         2D/qtcbPTGU2y8P/YtjFfqXEpZgz7fK0RxAKd+TAK1wwFzAsEmFs85LUqA0PyuTerse4
-         jXRE2G0Qwdn58TIH2SB+p02rO9denCn2tKDLXYEXK/KtKJpy63xmHxqNP5t+aE1QOlgY
-         U8jw5Na7FLD7W8hfV5pO3vClNk7TPxDBuOWb/K6niL4CyliVygfxtRr8YP2s3iHl4K6I
-         MBAFr3wXpRC2IvEKBaRRUrTepJkP2gJWU+Byhjjz5bqxgBfTPNQRgm2yiX2SYvaGMsZL
-         5GNw==
-X-Gm-Message-State: AC+VfDw9FQ1MR5vMsAW9Dh1ppc6aaN0GWp7WOEWm3EqFoiayYzWj37U9
-        zt+5XAzt3JhoiFYk7zQwnmg=
-X-Google-Smtp-Source: ACHHUZ5qjaUmyv7cI/3oOnnwSzfvkQykcz8emxEeehLW5M+A9pm0rV/YS1OQqB821Dcmtj6EwuedUg==
-X-Received: by 2002:a05:6a00:ad0:b0:638:edbc:74ca with SMTP id c16-20020a056a000ad000b00638edbc74camr5312557pfl.0.1686228838588;
-        Thu, 08 Jun 2023 05:53:58 -0700 (PDT)
-Received: from yoga ([202.131.132.46])
-        by smtp.gmail.com with ESMTPSA id c16-20020aa781d0000000b0063f0068cf6csm1048047pfn.198.2023.06.08.05.53.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jun 2023 05:53:57 -0700 (PDT)
-From:   Anup Sharma <anupnewsmail@gmail.com>
-X-Google-Original-From: Anup Sharma <AnupSharma>
-Date:   Thu, 8 Jun 2023 18:23:49 +0530
-To:     Ian Rogers <irogers@google.com>
-Cc:     Anup Sharma <anupnewsmail@gmail.com>,
-        linux-perf-users@vger.kernel.org,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC] Adding Support for Firefox's Gecko Profile Format
-Message-ID: <ZIHPXV5/ZopqcSSc@yoga>
-References: <ZG5kjDN63HqqMuJJ@yoga>
- <CAM9d7ciUsJM1kZhGbhQUfdxq1rsvLig2C-mAki13a92EjW37kw@mail.gmail.com>
- <CAP-5=fVekEnC1s=xUG-jFeL20qM=EPNkPO8aw8bcg4cVM=m5wg@mail.gmail.com>
- <ZHENW4HOIo0F6FnN@yoga>
- <ZHkEWse0NVZhwKR7@yoga>
- <ZH5YBBWW5ANckoMp@yoga>
- <CAP-5=fU7ukrQSh_8OwH9C+a-EwCamCrMaZxjqDhE9f+bFJwQBQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU7ukrQSh_8OwH9C+a-EwCamCrMaZxjqDhE9f+bFJwQBQ@mail.gmail.com>
+        Thu, 8 Jun 2023 08:57:04 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DDC52727;
+        Thu,  8 Jun 2023 05:56:54 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id 54C02320090B;
+        Thu,  8 Jun 2023 08:56:52 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 08 Jun 2023 08:56:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1686229011; x=1686315411; bh=87
+        pYxZKtAnGH9oKy6pFHT1xHGz/WCvjygA8bIAeiKlA=; b=ZeX8L7pUZ5UIpOMY9M
+        9g1j8HgG7+kWRpcbfg5uyET+fH7MKKs1mmJd5GiTBtyG3e4Kb2S8oySTp2FMKVD5
+        6cPeO3EdjyqNf0z8ONTk7Y4xvff+IrOd/IEXcnucUJGHtunt79pl/8nMv5FddrAG
+        uQycTyVPowhwXFFmqqICRAUW8Rc8su6sZcA/n9xK4gkWZLq4FLGKG2+b/ofZFCuf
+        AMrvTTYFhxmA+huvu4Cjp75ap2Sf7MJK9JQ3pOVGdml0Q2jBbC5ggWY9QzN5MNkV
+        6Cu7hWpbrBfBHGI32iWeZ+txnWuzY/rdQ0nguYoFIEmTdH+KuW0pvhtt0TNXW/yQ
+        JP2A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1686229011; x=1686315411; bh=87pYxZKtAnGH9
+        oKy6pFHT1xHGz/WCvjygA8bIAeiKlA=; b=U6XRVjfP+EHUDQvBv8cPL9pD/KGwo
+        iw0KnKWmDepSUXHsue7XYEEv3jSKmc5VneLRFAnbB7bjvWnjZAFimwr1xI3aZ2r2
+        RdXIfnuvROK2EFMWjCfwC3PBH93ikfGkGtdqsK5mas70L80DoSDFO8TKCaTh4eHz
+        K+ZspG/2pADrn/0PYTVFOIEgwbfucSZzMW91caxx97W+pzHbK9rkgf+0+vkf4oDD
+        jH5hLErq64lWlh17sXL7u3Td79LGnkb4UvXKtQw37hle5MqhD6Sfrp8G6cLyNfqi
+        QTut/2emZSYLnRuBAzk7rDPI0a305yR06UG65WJAnPVfPk2TBPYkBuvMA==
+X-ME-Sender: <xms:EtCBZE-D_kjWYp3ANnherykbAzIjPaixWoyhxXwJLmuQI-kmX5DxFw>
+    <xme:EtCBZMv-IJXp1mQnNzIiUM2AEt48SGWGnXLai4h_XUzypiLIXrG4wXRCGc1U27CR_
+    sWJ2VBCAcRl0hKP7ME>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgedtiedgheekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepkeehtefguddvleejvdeileeifffhueevgedvheeiudfhueevgfehkeeitedu
+    keeknecuffhomhgrihhnpehsohhurhgtvgifrghrvgdrohhrghenucevlhhushhtvghruf
+    hiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:EtCBZKA2ewgTjhAvvYw7qmycGR9cVe-qDicg_oFDY4J69jtsZIvlug>
+    <xmx:EtCBZEdu7a-GJfOfcHAOiHAuoCAzbOXNlKWUPk55Fe3Mbg8D-CEnpQ>
+    <xmx:EtCBZJOC47AwohdFIRwPvxQhiJzPrz-2u8vWBLIbN9yK_NXQPYV6NQ>
+    <xmx:E9CBZGcuZlRzBuBBOm-YYYm5GycL4W2eCqAow4fI1BtYmFRYOd5HOA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 9B111B60086; Thu,  8 Jun 2023 08:56:50 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-447-ge2460e13b3-fm-20230525.001-ge2460e13
+Mime-Version: 1.0
+Message-Id: <a3a4f48a-07d4-4ed9-bc53-5d383428bdd2@app.fastmail.com>
+In-Reply-To: <76d3be65-91df-7969-5303-38231a7df926@loongson.cn>
+References: <1683615903-10862-1-git-send-email-yangtiezhu@loongson.cn>
+ <b9624545-2c80-49a1-ac3c-39264a591f7b@app.fastmail.com>
+ <76d3be65-91df-7969-5303-38231a7df926@loongson.cn>
+Date:   Thu, 08 Jun 2023 14:56:30 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Tiezhu Yang" <yangtiezhu@loongson.cn>
+Cc:     Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-s390@vger.kernel.org, llvm@lists.linux.dev,
+        linux-ia64@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-parisc@vger.kernel.org, x86@kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-alpha@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        loongson-kernel@lists.loongnix.cn
+Subject: Re: [RFC PATCH] asm-generic: Unify uapi bitsperlong.h
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 07, 2023 at 11:58:57PM -0700, Ian Rogers wrote:
-> On Mon, Jun 5, 2023 at 2:47 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> >
-> > On Fri, Jun 02, 2023 at 02:19:30AM +0530, Anup Sharma wrote:
-> > > On Sat, May 27, 2023 at 01:19:47AM +0530, Anup Sharma wrote:
-> > > > On Fri, May 26, 2023 at 08:17:44AM -0700, Ian Rogers wrote:
-> > > > > On Thu, May 25, 2023 at 1:53 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > > > >
-> > > > > > Hi Anup,
-> > > > > >
-> > > > > > On Wed, May 24, 2023 at 12:25 PM Anup Sharma <anupnewsmail@gmail.com> wrote:
-> > > > > > >
-> > > > > > > Hello everyone,
-> > > > > > >
-> > > > > > > I'm happy to share that I'll be working on adding support for Firefox's Gecko profile format.
-> > > > > > > This format is utilized by the Firefox profiler, which is a powerful tool for performance analysis
-> > > > > > > and debugging. By enhancing the perf data command to generate perf.data files in the Gecko
-> > > > > > > profile format, it will allow us to leverage the capabilities of the Firefox profiler for visualizing
-> > > > > > > and analyzing the performance data.
-> > > > > > >
-> > > > > > > As a starter task, I have created a test for testing the perf data JSON converter command.
-> > > > > > > I'm also looking for a few more starter tasks related to this project. I would greatly appreciate
-> > > > > > > your advice and guidance.
-> > > > > > >
-> > > > > > > In my effort to identify any existing bugs, I have enabled flags like 'fsanitize=address' to detect
-> > > > > > > potential issues but have not found any :). Additionally, I am running perf data commands to ensure
-> > > > > > > that all use cases are handled properly.
-> > > > > >
-> > > > > > Great, good to know it works well with asan for the basic use cases at least.
-> > > > > >
-> > > > > > >
-> > > > > > > I have one question regarding the installation process. Typically, I navigate to the perf directory,
-> > > > > > > run 'make', and then cp 'perf' to '/usr/bin'. However, I noticed that by default, perf is installed in
-> > > > > > > the '~/bin/perf' directory. Could someone please clarify why this is the case? Furthermore, I would
-> > > > > > > like to know how all of you compile the perf tree.
-> > > > > >
-> > > > > > I guess $HOME is the default prefix unless you set it to other, then
-> > > > > > make install will put
-> > > > > > the binary there.  You can make sure if your PATH contains the ~/bin and use it.
-> > > > > >
-> > > > > > But it's also possible you can run the perf without installing.  I
-> > > > > > have a symlink in
-> > > > > > my tmp directory to point to the recent build of the binary and use it
-> > > > > > always. :)
-> > > > > > To build, you can either 'cd tools/perf; make' or 'make -C tools/perf'
-> > > > > > in the top
-> > > > > > level linux source tree.  I also pass "BUILD_BPF_SKEL=1" to enable BPF.
-> > > > > >
-> > > > > > Thanks,
-> > > > > > Namhyung
-> > > > >
-> > > > > I quite often test with address sanitizer, I do this by passing to make:
-> > > > > DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame- pointer
-> > > > > -fsanitize=address" NO_LIBTRACEEVENT=1
-> > > > >
-> > > > > The libtraceevent exclusion is to avoid false address sanitizer
-> > > > > warnings in libtraceevent (it wasn't compiled with address sanitizer).
-> > > > > The other flags are to make the code easier to debug. A good place to
-> > > > > start for a description of the build flags is Makefile.perf:
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Makefile.perf?h=perf-tools-next
-> > > > >
-> > > > > There's also some description here:
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/Documentation/Build.txt?h=perf-tools-next
-> > > > >
-> > > > > Perhaps you can suggest improvements :-)
-> > > > >
-> > > >
-> > > > Thanks Namhyung and Ian for your suggestions. I'll try them out and let you know if I have any questions.
-> > > >
-> > >
-> > > Hello all,
-> > >
-> > > Thank you for participating in today's office hours and helping me clarify my doubts.
-> > > One topic that emerged from our discussion is the choice of programming language
-> > > for writing the converter. I am considering using Python as it offers convenient
-> > > libraries for JSON manipulation. However, I need to investigate whether Python is
-> > > enabled by default in most of the Linux distributions that ship with perf, as its
-> > > absence could pose a potential obstacle.
-> > >
-> > > Additionally, two profile formats are available: Gecko profile format and Processed profile format[1].
-> > > Upon discussing on Firefox Profiler matrix channel, they recommended opting for the Processed format,
-> > > as it will be supported in future releases as well. Therefore, I intend to begin by working with the
-> > > Processed format and evaluate the results. If any of you have suggestions regarding the choice of
-> > > format, I would greatly appreciate your input.
-> > >
-> > > Later on, I will address concerns I have regarding the file-loading process.
-> > > Once again, thank you all for your time.
-> >
-> > I wanted to provide an update on my exploration of various tools
-> > and methods to generate a profiler format. In my experimentation, I
-> > considered following command as a reference.
-> >
-> > perf record -F 99 -g -- perf test -w noploop
-> >
-> > The command generated perf.data file has been used with three
-> > different tools to generate the required format and uploaded them to
-> > profiler.firefox.com. Interestingly, I noticed distinct call trees in
-> > each of the three cases. I find myself in a state of confusion regarding
-> > which result to consider as a reference. Here are the outcomes:
-> >
-> >     1. Result obtained using perf script: https://share.firefox.dev/3qxEt7F
-> >     2. Result obtained using samply:https://share.firefox.dev/3OZsha2
-> >     3. Result obtained using simpleperf gecko_profile_generator: https://share.firefox.dev/45Q2BTe
-> >
-> > I would greatly appreciate any guidance or suggestions in this matter.
-> 
-> Hi Anup,
-> 
-> of the 3 outcomes the perf script output looks best. Is the reason
-> using the processed profile format? For the other two the major issue
-> appears to be symbolization. Presumably with the first perf script is
-> helping out. I'm not sure why the simpleperf stacks are truncated.
-> Sorry to not be of more use, presumably you've looked into this more
-> and we can discuss this in the office hours tomorrow.
+On Thu, Jun 8, 2023, at 09:04, Tiezhu Yang wrote:
+> On 05/09/2023 05:37 PM, Arnd Bergmann wrote:
+>> On Tue, May 9, 2023, at 09:05, Tiezhu Yang wrote:
+>>
+>> I think we are completely safe on the architectures that were
+>> added since the linux-3.x days (arm64, riscv, csky, openrisc,
+>> loongarch, nios2, and hexagon), but for the older ones there
+>> is a regression risk. Especially on targets that are not that
+>> actively maintained (sparc, alpha, ia64, sh, ...) there is
+>> a good chance that users are stuck on ancient toolchains.
+>> It's probably also a safe assumption that anyone with an older
+>> libc version won't be using the latest kernel headers, so
+>> I think we can still do this across architectures if both
+>> glibc and musl already require a compiler that is new enough,
+>> or alternatively if we know that the kernel headers require
+>> a new compiler for other reasons and nobody has complained.
+>>
+>> For glibc, it looks the minimum compiler version was raised
+>> from gcc-5 to gcc-8 four years ago, so we should be fine.
+>>
+>> In musl, the documentation states that at least gcc-3.4 or
+>> clang-3.2 are required, which probably predate the
+>> __SIZEOF_LONG__ macro. On the other hand, musl was only
+>> released in 2011, and building musl itself explicitly
+>> does not require kernel uapi headers, so this may not
+>> be too critical.
+>>
+>> There is also uClibc, but I could not find any minimum
+>> supported compiler version for that. Most commonly, this
+>> one is used for cross-build environments, so it's also
+>> less likely to have libc/gcc/headers being wildly out of
+>> sync. Not sure.
+>>
+>>       Arnd
+>>
+>> [1] https://sourceware.org/pipermail/libc-alpha/2019-January/101010.html
+>>
+>
+> Thanks Arnd for the detailed reply.
+> Any more comments? What should I do in the next step?
 
-The issue does not appear to be related to the processed or gecko profile format.
-Despite specifying the path to the debug symbols using the -symfs option, the 
-simpleperf gecko_profile_generator script is unable to detect the debug symbols 
-in my system. I have confirmed that the permissions are correct.
+I think the summary is "it's probably fine", but I don't know
+for sure, and it may not be worth the benefit.
 
-Here is the basic output: 
+Maybe you can prepare a v2 that only does this for the newer
+architectures I mentioned above, with and an explanation and
+link to my above reply in the file comments?
 
-root@yoga:/home/anup/perf/simpleperf/scripts# ./gecko_profile_generator.py -i 
-perf.data | gzip > profiler.gz
-python3 W 06-08 18:13:27 160392 160392 dso.cpp:446] /usr/lib/x86_64-linux-gnu/
-ld-linux-x86-64.so.2 doesn't contain symbol table
-python3 W 06-08 18:13:27 160392 160392 dso.cpp:446] /usr/lib/x86_64-linux-gnu/
-libc.so.6 doesn't contain symbol table
-
-> 
-> Thanks,
-> Ian
-> 
-> > > Thanks,
-> > > Anup
-> > >
-> > > [1] https://github.com/firefox-devtools/profiler/blob/main/docs-developer/custom-importer.md
-> > >
-> > > > > Thanks,
-> > > > > Ian
-> > > > >
-> > > > > > >
-> > > > > > > Thank you for your support and I'm looking forward to collaborating with you on this project!
+      Arnd
