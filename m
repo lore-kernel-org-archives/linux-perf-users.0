@@ -2,58 +2,58 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040F2C8300C
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 23:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C13EC7EE23
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 23:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237283AbjFHXaI (ORCPT
+        id S237302AbjFHXaJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 19:30:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47224 "EHLO
+        Thu, 8 Jun 2023 19:30:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237276AbjFHX3r (ORCPT
+        with ESMTP id S237379AbjFHX3s (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 19:29:47 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4DAC30E5
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 16:29:34 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bb2fae9b286so1434263276.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 16:29:34 -0700 (PDT)
+        Thu, 8 Jun 2023 19:29:48 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AAF13580
+        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 16:29:37 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-5655d99da53so25389637b3.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 16:29:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686266974; x=1688858974;
+        d=google.com; s=20221208; t=1686266976; x=1688858976;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=lMdtNGTBh3+qqarzoiXGjMMQ5QKS2zkBmCpcE9AaZG8=;
-        b=qvrNwAa6I8cb8TBsqGY45Cz9ZY5hg90lpgYn1T72mITq/cH1zTVmGZFFIfHSrQzepJ
-         MDlAHp3MdRqDh7CrwO9hV6e2y+x7NM8TaojgbiBmaUcEM3FwPhq4ciB6ctzUKbpor/2l
-         aPyb8HRkdWMaFXWVLuOgsDjkQjIWdlo8BNNCKX1/P80tufvQYnogwiRxMJFx81lGbKk7
-         GcAkvRCWL2LQc7GTtWtVcbuYKt/hWkscrxD2oe48rtQ8W1objUdTtp2QBQNbRfCwRhHJ
-         CMLcFdB/6T4HUmmcL7QoCzQvG3eb0YQOl6xXhNxG4SWvdPpyoo0dpGi5TRVHv2Rulyph
-         cQbg==
+        bh=HYQaZtuHl/SxeGLPx3KYJtDk+ilAjOX/gkAdD1/27NA=;
+        b=fBJl3wcz+FnbBgSbRGxXixBnK3jNLSuIKoFf166vI/z37Q4wIcVYPmW50NKtSp9UgF
+         rvr7Vycm6Wb545G0pPRanvDdHAxrKWNJYkGc8Cmt8RYCACXwUGF/iIgTa75YwhW6PV8M
+         mKbs+2jj1XRyRcyBNZLzm3S68U4QfnBSrHCRrxCTe8VZcEJxXqnwaqFgKSsS9LhNsvdM
+         tl5boNkQ9DOfVLIFy8QP8zuGyB+ZRB6QpW44Y8AgMfKg/dSL2Zi7fb7dxcr7cS8GtvBr
+         vUG+miDiAkxObR0Wne3r2jVUorOhIbFbcFXuzN7/NEbTmZrBQnQK7BN7zEnfzQDZf8N8
+         FOdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686266974; x=1688858974;
+        d=1e100.net; s=20221208; t=1686266976; x=1688858976;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lMdtNGTBh3+qqarzoiXGjMMQ5QKS2zkBmCpcE9AaZG8=;
-        b=ZdBOqLo8QZ8TDRieZm2L7IVqy082kCpbbnsBwZYX3Rja2/G4pjoRmuknkUhBbiW/aZ
-         Yg0a03++wFIHv42rv4NlLRkW7oAGTWFH/O48jsDED1QFvR2X5TwqpvFe3+AVlMXK1Ep0
-         B5qYFlQBapWDQ1fxp6dQ9ld7ekjkDrZze6/E3QKHYiHEjr/EtHFQMGYlOxdkxhJJbUv3
-         u717X1LNp9mUcZK5Ls6Uzz4+v/B7gD7HCDc9A0K88bGsxacg2+eNERhYxmA/NxouIYjs
-         mcjc/mi6HW0HnV9r6feiGvm4zyf2BCQMlpjK+OaDlTr86Dyz4nysnS7fXCwzuUQLg4VD
-         2UpQ==
-X-Gm-Message-State: AC+VfDxdOUs18qFkrsGa+YmMbJu/fny2Q8tfIRK/RI3VpfvxeD2FBzU5
-        oHteL74lobE9AjfK6+KUxNTIVI2bdXIb
-X-Google-Smtp-Source: ACHHUZ7umrASYnYvCzdFpWOm1U1RbfrT9D+RXK03wWYWPutn42WIip4GkHo95/6dlPdNDq9S81nCc3kqD1Pz
+        bh=HYQaZtuHl/SxeGLPx3KYJtDk+ilAjOX/gkAdD1/27NA=;
+        b=aqXP+D60nHjyts+ynxCaftz4v7Oz/Hf1Tyrhb5pST+rVEs5f4/yDeerkA/UjTjLgFx
+         ctMj6XMoOZBzvka+6x7cnCrar6iGOEtc0oaojR7SfZNqQPFcmT+8dCsqURXnBSBlJ8Tz
+         o8exi7hWCdbwU3+oFQIIukLQRLxMCYoZ+qgFJ0G0AOoqMnuU0CLRqJsBjw0WGrjucuSy
+         Y1K6eEe5SdPHfjtpuifBrlCM/gI8JxTZ+jsGlDVgwBXLD6p59l2uF+QtlsJ55ZkdhLD0
+         pB/nXDlUwIb7t5w0Z3+/lRjHsXWIiWth2LmpyKflLuNQXO1SCowVRdN/zl7Vcaqw61BU
+         JGIg==
+X-Gm-Message-State: AC+VfDzHznc5ZrLGmraof3adu5MyWJsR9JeBIwjgEVZqFaiGuaX5MBT8
+        EPPyrpxVR8xFHvSUMNrboKmudYPx8PyU
+X-Google-Smtp-Source: ACHHUZ7PFDauXoTjxwgQr/iJ4YUhlHM8t/3S93+ayPur0CSD8Tq5qW6atfbI5j1wzr7n1r7hPNg/mO9mlqzf
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c3e5:ebc6:61e5:c73f])
- (user=irogers job=sendgmr) by 2002:a25:c585:0:b0:bad:e8b:17d4 with SMTP id
- v127-20020a25c585000000b00bad0e8b17d4mr335389ybe.7.1686266974158; Thu, 08 Jun
- 2023 16:29:34 -0700 (PDT)
-Date:   Thu,  8 Jun 2023 16:28:06 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:2901:b0:55d:9e7c:72c0 with SMTP
+ id eg1-20020a05690c290100b0055d9e7c72c0mr648158ywb.0.1686266976710; Thu, 08
+ Jun 2023 16:29:36 -0700 (PDT)
+Date:   Thu,  8 Jun 2023 16:28:07 -0700
 In-Reply-To: <20230608232823.4027869-1-irogers@google.com>
-Message-Id: <20230608232823.4027869-10-irogers@google.com>
+Message-Id: <20230608232823.4027869-11-irogers@google.com>
 Mime-Version: 1.0
 References: <20230608232823.4027869-1-irogers@google.com>
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v2 09/26] perf report: Avoid thread leak
+Subject: [PATCH v2 10/26] perf header: Ensure bitmaps are freed
 From:   Ian Rogers <irogers@google.com>
 To:     John Garry <john.g.garry@oracle.com>,
         Will Deacon <will@kernel.org>,
@@ -99,25 +99,51 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Caught with address sanitizer and reference count checking.
+memory_node bitmaps need a bitmap_free to avoid memory leaks. Caught
+by leak sanitizer.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-report.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/header.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 0b091a8983a5..a31a23af5547 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -839,6 +839,7 @@ static struct task *tasks_list(struct task *task, struct machine *machine)
- 		return ERR_PTR(-ENOENT);
- 
- 	parent_task = thread__priv(parent_thread);
-+	thread__put(parent_thread);
- 	list_add_tail(&task->list, &parent_task->children);
- 	return tasks_list(parent_task, machine);
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index d85b39079c31..3db7c1fae71e 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1389,6 +1389,14 @@ static int memory_node__read(struct memory_node *n, unsigned long idx)
+ 	return 0;
  }
+ 
++static void memory_node__delete_nodes(struct memory_node *nodesp, u64 cnt)
++{
++	for (u64 i = 0; i < cnt; i++)
++		bitmap_free(nodesp[i].set);
++
++	free(nodesp);
++}
++
+ static int memory_node__sort(const void *a, const void *b)
+ {
+ 	const struct memory_node *na = a;
+@@ -1449,7 +1457,7 @@ static int build_mem_topology(struct memory_node **nodesp, u64 *cntp)
+ 		*nodesp = nodes;
+ 		qsort(nodes, cnt, sizeof(nodes[0]), memory_node__sort);
+ 	} else
+-		free(nodes);
++		memory_node__delete_nodes(nodes, cnt);
+ 
+ 	return ret;
+ }
+@@ -1516,7 +1524,7 @@ static int write_mem_topology(struct feat_fd *ff __maybe_unused,
+ 	}
+ 
+ out:
+-	free(nodes);
++	memory_node__delete_nodes(nodes, nr);
+ 	return ret;
+ }
+ 
 -- 
 2.41.0.162.gfafddb0af9-goog
 
