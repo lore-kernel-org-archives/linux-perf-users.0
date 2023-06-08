@@ -2,43 +2,43 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A52FC7EE25
-	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 08:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C13C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Thu,  8 Jun 2023 08:45:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235662AbjFHIp2 (ORCPT
+        id S235687AbjFHIpa (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 8 Jun 2023 04:45:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41900 "EHLO
+        Thu, 8 Jun 2023 04:45:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235579AbjFHIpP (ORCPT
+        with ESMTP id S235583AbjFHIpQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 8 Jun 2023 04:45:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FCC9270B
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 01:44:28 -0700 (PDT)
+        Thu, 8 Jun 2023 04:45:16 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF762199D
+        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 01:44:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686213867;
+        s=mimecast20190719; t=1686213866;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XnU7vO/Lef60I/awCgl/js8i+Cy2VjkJQlcit7aefu0=;
-        b=MYD9UenuKFw2ri6/TZCabKRn05JjiseV/6Gdv3qunPrfvW2fCCKHEkcxrvpamSB8FALzUV
-        GWT3ABmNSWdk5nBDZtgIdYyAp9Db/utk6ZFVxmFedn3HhglWtSNfPEQWS70RhRd6itpT13
-        vs5NPaEsHnRMGOuOtI42FhfU5k/k9K0=
+        bh=3gAyEuwafL/hxITBiKfoUbav1sLZb6lLFuGPfJnHhTI=;
+        b=OHspO7M2D5z84L+/3wlXCSQeb8pay2LLlhZAAQ0J09BE/Gp/hRjYi0IkPQWjO1VqGWdBqj
+        RVlKBxxo6NPYHQil782xh1Cz7YiiXEn9/TdGc7hGRx1zAZJkvRDtbXjFCNzCXFPe+YwGc/
+        aLhcRcBkVfdG8YBq7f7xzFtMvJYNRKg=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-561-D11iVY6IP12GX1ipyT5aEQ-1; Thu, 08 Jun 2023 04:44:24 -0400
-X-MC-Unique: D11iVY6IP12GX1ipyT5aEQ-1
+ us-mta-516-cx6GekNUMTCtxgoAxaBUuw-1; Thu, 08 Jun 2023 04:44:23 -0400
+X-MC-Unique: cx6GekNUMTCtxgoAxaBUuw-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1F361811E7F;
-        Thu,  8 Jun 2023 08:44:24 +0000 (UTC)
-Received: from samus.usersys.redhat.com (unknown [10.43.17.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 82E9E40CFD46;
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 49D738037AD;
         Thu,  8 Jun 2023 08:44:22 +0000 (UTC)
+Received: from samus.usersys.redhat.com (unknown [10.43.17.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ACC9340CFD46;
+        Thu,  8 Jun 2023 08:44:20 +0000 (UTC)
 From:   Artem Savkov <asavkov@redhat.com>
 To:     linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -50,9 +50,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-kernel@vger.kernel.org, Artem Savkov <asavkov@redhat.com>
-Subject: [PATCH v2 2/2] perf tools: allow running annotation browser from c2c-report
-Date:   Thu,  8 Jun 2023 10:44:07 +0200
-Message-Id: <20230608084407.140323-3-asavkov@redhat.com>
+Subject: [PATCH v2 1/2] perf util: move symbol__new_unresolved() to util/symbol.c
+Date:   Thu,  8 Jun 2023 10:44:06 +0200
+Message-Id: <20230608084407.140323-2-asavkov@redhat.com>
 In-Reply-To: <20230608084407.140323-1-asavkov@redhat.com>
 References: <20230608084407.140323-1-asavkov@redhat.com>
 MIME-Version: 1.0
@@ -62,175 +62,94 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Add a shortcut to run annotation browser for selected symbol from
-c2c report TUI.
+Make symbol__new_unresolved() available through util/symbol.h
+so it can be later used from builtin-c2c.
 
 Signed-off-by: Artem Savkov <asavkov@redhat.com>
 ---
- tools/perf/builtin-c2c.c | 73 +++++++++++++++++++++++++++++++++++++---
- 1 file changed, 68 insertions(+), 5 deletions(-)
+ tools/perf/ui/browsers/hists.c | 22 ----------------------
+ tools/perf/util/symbol.c       | 22 ++++++++++++++++++++++
+ tools/perf/util/symbol.h       |  1 +
+ 3 files changed, 23 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 05dfd98af170b..dce8604837aec 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -24,6 +24,7 @@
- #include <perf/cpumap.h>
- #include <subcmd/pager.h>
- #include <subcmd/parse-options.h>
-+#include "map.h"
- #include "map_symbol.h"
- #include "mem-events.h"
- #include "session.h"
-@@ -43,6 +44,8 @@
- #include "ui/progress.h"
- #include "pmus.h"
- #include "string2.h"
-+#include "util/annotate.h"
-+#include "util/dso.h"
- #include "util/util.h"
- 
- struct c2c_hists {
-@@ -111,6 +114,9 @@ struct perf_c2c {
- 	char			*cl_sort;
- 	char			*cl_resort;
- 	char			*cl_output;
-+
-+	struct evlist		  *evlist;
-+	struct annotation_options annotation_opts;
- };
- 
- enum {
-@@ -327,6 +333,9 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
- 	c2c_he__set_node(c2c_he, sample);
- 
- 	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
-+	if (use_browser == 1 && al.map != NULL && al.sym != NULL)
-+		hist_entry__inc_addr_samples(he, sample, evsel, al.addr);
-+
- 	ret = hist_entry__append_callchain(he, sample);
- 
- 	if (!ret) {
-@@ -364,6 +373,9 @@ static int process_sample_event(struct perf_tool *tool __maybe_unused,
- 		c2c_he__set_node(c2c_he, sample);
- 
- 		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
-+		if (use_browser == 1 && al.map != NULL && al.sym != NULL)
-+			hist_entry__inc_addr_samples(he, sample, evsel, al.addr);
-+
- 		ret = hist_entry__append_callchain(he, sample);
- 	}
- 
-@@ -2612,6 +2624,43 @@ c2c_cacheline_browser__new(struct hists *hists, struct hist_entry *he)
- 	return browser;
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index 69c81759a64f9..10d2243d27504 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2471,28 +2471,6 @@ do_annotate(struct hist_browser *browser, struct popup_action *act)
+ 	return 0;
  }
  
-+static void do_annotate(struct hist_browser *browser, struct evsel *evsel) {
-+	struct map_symbol ms = { NULL, NULL, NULL };
+-static struct symbol *symbol__new_unresolved(u64 addr, struct map *map)
+-{
+-	struct annotated_source *src;
+-	struct symbol *sym;
+-	char name[64];
+-
+-	snprintf(name, sizeof(name), "%.*" PRIx64, BITS_PER_LONG / 4, addr);
+-
+-	sym = symbol__new(addr, ANNOTATION_DUMMY_LEN, 0, 0, name);
+-	if (sym) {
+-		src = symbol__hists(sym, 1);
+-		if (!src) {
+-			symbol__delete(sym);
+-			return NULL;
+-		}
+-
+-		dso__insert_symbol(map__dso(map), sym);
+-	}
+-
+-	return sym;
+-}
+-
+ static int
+ add_annotate_opt(struct hist_browser *browser __maybe_unused,
+ 		 struct popup_action *act, char **optstr,
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 6b9c55784b56a..297a903f72777 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -294,6 +294,28 @@ void maps__fixup_end(struct maps *maps)
+ 	up_write(maps__lock(maps));
+ }
+ 
++struct symbol *symbol__new_unresolved(u64 addr, struct map *map)
++{
++	struct annotated_source *src;
++	struct symbol *sym;
++	char name[64];
 +
-+	if (!browser->selection ||
-+	    !browser->selection->map ||
-+	    !browser->selection->map->dso ||
-+	    browser->selection->map->dso->annotate_warned) {
-+		return;
-+	}
++	snprintf(name, sizeof(name), "%.*" PRIx64, BITS_PER_LONG / 4, addr);
 +
-+	ms.map = browser->selection->map;
-+
-+	if (!browser->selection->sym) {
-+		if (!browser->he_selection)
-+			return;
-+
-+		ms.sym = symbol__new_unresolved(browser->he_selection->ip,
-+						browser->selection->map);
-+
-+		if (!ms.sym)
-+			return;
-+	} else {
-+		if (symbol__annotation(browser->selection->sym)->src == NULL) {
-+			ui_browser__warning(&browser->b, 0,
-+				"No samples for the \"%s\" symbol.\n\n",
-+				browser->selection->sym->name);
-+			return;
++	sym = symbol__new(addr, ANNOTATION_DUMMY_LEN, 0, 0, name);
++	if (sym) {
++		src = symbol__hists(sym, 1);
++		if (!src) {
++			symbol__delete(sym);
++			return NULL;
 +		}
-+		ms.sym = browser->selection->sym;
++
++		dso__insert_symbol(map__dso(map), sym);
 +	}
 +
-+	map_symbol__tui_annotate(&ms, evsel, browser->hbt, &c2c.annotation_opts);
-+
-+	ui_browser__update_nr_entries(&browser->b, browser->hists->nr_entries);
-+	ui_browser__handle_resize(&browser->b);
++	return sym;
 +}
 +
- static int perf_c2c__browse_cacheline(struct hist_entry *he)
+ struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, const char *name)
  {
- 	struct c2c_hist_entry *c2c_he;
-@@ -2621,6 +2670,7 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
- 	int key = -1;
- 	static const char help[] =
- 	" ENTER         Toggle callchains (if present) \n"
-+	" a             Annotate current symbol\n"
- 	" n             Toggle Node details info \n"
- 	" s             Toggle full length of symbol and source line columns \n"
- 	" q             Return back to cacheline list \n";
-@@ -2650,6 +2700,9 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
- 		key = hist_browser__run(browser, "? - help", true, 0);
+ 	size_t namelen = strlen(name) + 1;
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index 7558735543c25..4d47748716627 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -176,6 +176,7 @@ void symbol__exit(void);
+ void symbol__elf_init(void);
+ int symbol__annotation_init(void);
  
- 		switch (key) {
-+		case 'a':
-+			do_annotate(browser, evlist__first(c2c.evlist));
-+			break;
- 		case 's':
- 			c2c.symbol_full = !c2c.symbol_full;
- 			break;
-@@ -3045,6 +3098,10 @@ static int perf_c2c__report(int argc, const char **argv)
- 	int err = 0;
- 	const char *output_str, *sort_str = NULL;
- 
-+	annotation_options__init(&c2c.annotation_opts);
-+
-+	hists__init();
-+
- 	argc = parse_options(argc, argv, options, report_c2c_usage,
- 			     PARSE_OPT_STOP_AT_NON_OPTION);
- 	if (argc)
-@@ -3118,6 +3175,16 @@ static int perf_c2c__report(int argc, const char **argv)
- 	if (err)
- 		goto out_mem2node;
- 
-+	c2c.evlist = session->evlist;
-+
-+	if (c2c.use_stdio) {
-+		use_browser = 0;
-+	} else {
-+		use_browser = 1;
-+		symbol__annotation_init();
-+		annotation_config__init(&c2c.annotation_opts);
-+	}
-+
- 	if (symbol__init(&session->header.env) < 0)
- 		goto out_mem2node;
- 
-@@ -3127,11 +3194,6 @@ static int perf_c2c__report(int argc, const char **argv)
- 		goto out_mem2node;
- 	}
- 
--	if (c2c.use_stdio)
--		use_browser = 0;
--	else
--		use_browser = 1;
--
- 	setup_browser(false);
- 
- 	err = perf_session__process_events(session);
-@@ -3202,6 +3264,7 @@ static int perf_c2c__report(int argc, const char **argv)
- out_session:
- 	perf_session__delete(session);
- out:
-+	annotation_options__exit(&c2c.annotation_opts);
- 	return err;
- }
- 
++struct symbol *symbol__new_unresolved(u64 addr, struct map *map);
+ struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, const char *name);
+ size_t __symbol__fprintf_symname_offs(const struct symbol *sym,
+ 				      const struct addr_location *al,
 -- 
 2.40.1
 
