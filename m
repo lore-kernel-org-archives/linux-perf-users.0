@@ -2,298 +2,202 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3589BC7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 10:03:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B623C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 11:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239178AbjFIKDG (ORCPT
+        id S230128AbjFILA5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 06:03:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50624 "EHLO
+        Fri, 9 Jun 2023 07:00:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242009AbjFIKCS (ORCPT
+        with ESMTP id S238722AbjFILAd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 06:02:18 -0400
+        Fri, 9 Jun 2023 07:00:33 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7FF766583;
-        Fri,  9 Jun 2023 02:54:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9BF6A210C;
+        Fri,  9 Jun 2023 04:00:31 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8BEEAB6;
-        Fri,  9 Jun 2023 02:55:21 -0700 (PDT)
-Received: from [10.57.25.114] (unknown [10.57.25.114])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B17923F587;
-        Fri,  9 Jun 2023 02:54:34 -0700 (PDT)
-Message-ID: <3f5f69e4-9324-152c-6581-8855a3dbb221@arm.com>
-Date:   Fri, 9 Jun 2023 10:54:33 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F394AB6;
+        Fri,  9 Jun 2023 04:01:16 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BE693F587;
+        Fri,  9 Jun 2023 04:00:28 -0700 (PDT)
+Message-ID: <2e075792-7af8-209b-082b-48d687387463@arm.com>
+Date:   Fri, 9 Jun 2023 12:00:27 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.1
-Subject: Re: [PATCH V11 05/10] arm64/perf: Add branch stack support in ARMV8
- PMU
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 2/4] perf cs-etm: Use previous thread for branch sample
+ source IP
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     coresight@lists.linaro.org, denik@chromium.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-6-anshuman.khandual@arm.com>
- <ZH3PCqYt/UzoiVx3@FVFF77S0Q05N>
- <ba396c30-6719-1dfb-77c2-9f7e1715b57c@arm.com>
- <290b577c-4740-d2e2-d236-c8bbe2f907b9@arm.com>
- <78cb22e2-c46e-d62d-fefc-b7963737499e@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <78cb22e2-c46e-d62d-fefc-b7963737499e@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230524131958.2139331-1-james.clark@arm.com>
+ <20230524131958.2139331-3-james.clark@arm.com>
+ <20230527090635.GB886420@leoy-yangtze.lan>
+ <630ab636-107d-4b12-5454-2ee91ad43543@arm.com>
+ <1e7aa657-6d1e-9e7c-95cb-b32d307abe93@arm.com>
+ <20230608102555.GB123723@leoy-huanghe>
+From:   James Clark <james.clark@arm.com>
+In-Reply-To: <20230608102555.GB123723@leoy-huanghe>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 09/06/2023 05:00, Anshuman Khandual wrote:
+
+
+On 08/06/2023 11:25, Leo Yan wrote:
+> On Thu, Jun 08, 2023 at 10:34:42AM +0100, James Clark wrote:
 > 
+> [...]
 > 
-> On 6/8/23 15:43, Suzuki K Poulose wrote:
->> On 06/06/2023 11:34, Anshuman Khandual wrote:
+>>>>> @@ -616,6 +618,8 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
+>>>>>  		tmp = tidq->packet;
+>>>>>  		tidq->packet = tidq->prev_packet;
+>>>>>  		tidq->prev_packet = tmp;
+>>>>> +		thread__put(tidq->prev_thread);
+>>>>> +		tidq->prev_thread = thread__get(tidq->thread);
+>>>>
+>>>> Maybe cs_etm__packet_swap() is not the best place to update
+>>>> "tidq->prev_thread", since swapping packet doesn't mean it's necessarily
+>>>> thread switching; can we move this change into the cs_etm__set_thread()?
+>>>>
 >>>
+>>> Yeah that might make more sense. I can move it there if we decide to
+>>> keep this change.
 >>>
->>> On 6/5/23 17:35, Mark Rutland wrote:
->>>> On Wed, May 31, 2023 at 09:34:23AM +0530, Anshuman Khandual wrote:
->>>>> This enables support for branch stack sampling event in ARMV8 PMU, checking
->>>>> has_branch_stack() on the event inside 'struct arm_pmu' callbacks. Although
->>>>> these branch stack helpers armv8pmu_branch_XXXXX() are just dummy functions
->>>>> for now. While here, this also defines arm_pmu's sched_task() callback with
->>>>> armv8pmu_sched_task(), which resets the branch record buffer on a sched_in.
->>>>
->>>> This generally looks good, but I have a few comments below.
->>>>
->>>> [...]
->>>>
->>>>> +static inline bool armv8pmu_branch_valid(struct perf_event *event)
->>>>> +{
->>>>> +    WARN_ON_ONCE(!has_branch_stack(event));
->>>>> +    return false;
->>>>> +}
->>>>
->>>> IIUC this is for validating the attr, so could we please name this
->>>> armv8pmu_branch_attr_valid() ?
->>>
->>> Sure, will change the name and updated call sites.
->>>
->>>>
->>>> [...]
->>>>
->>>>> +static int branch_records_alloc(struct arm_pmu *armpmu)
->>>>> +{
->>>>> +    struct pmu_hw_events *events;
->>>>> +    int cpu;
->>>>> +
->>>>> +    for_each_possible_cpu(cpu) {
 >>
->> Shouldn't this be supported_pmus ? i.e.
->>      for_each_cpu(cpu, &armpmu->supported_cpus) {
->>
->>
->>>>> +        events = per_cpu_ptr(armpmu->hw_events, cpu);
->>>>> +        events->branches = kzalloc(sizeof(struct branch_records), GFP_KERNEL);
->>>>> +        if (!events->branches)
->>>>> +            return -ENOMEM;
->>
->> Do we need to free the allocated branches already ?
+>> Unfortunately I don't think I can make this change. It seems like
+>> putting the previous thread swap in  cs_etm__set_thread() has different
+>> semantics to keeping all the swaps together in cs_etm__packet_swap().
 > 
-> This gets fixed in the next patch via per-cpu allocation. I will
-> move and fold the code block in here. Updated function will look
-> like the following.
+> Thanks for trying this.
 > 
-> static int branch_records_alloc(struct arm_pmu *armpmu)
+>> This is because if you swap the thread in cs_etm__packet_swap() the
+>> previous packet and next packet can have the _same_ thread if there
+>> happened to be no change. However if you only swap previous thread in
+>> cs_etm__set_thread(), that means that the previous thread is always
+>> different to the next one. This has a huge difference on the decoding
+>> because two adjacent packets on the same thread will say they branched
+>> from the previous thread that ran, not the previous thread on the
+>> previous packet.
+> 
+> Seems to me, this is a synchronization issue between the field
+> 'tidq->prev_thread' and 'tidq->prev_packet'.
+> 
+> It's still hard for me to understand "two adjacent packets on the same
+> thread will say they branched from the previous thread that ran", IIUC,
+> even we move thread swapping into cs_etm__set_thread(), if the two
+> adjacent packets are in the same thread context, we can skip to update
+> fields 'tidq->prev_thread' and 'tidq->prev_packet'.
+> 
+> So I am curious if below cs_etm__set_thread() works or not?
+> 
+> static void cs_etm__set_thread(struct cs_etm_auxtrace *etm,
+> 			       struct cs_etm_traceid_queue *tidq, pid_t tid)
 > {
->          struct branch_records __percpu *records;
->          int cpu;
+> 	struct machine *machine = &etm->session->machines.host;
 > 
->          records = alloc_percpu_gfp(struct branch_records, GFP_KERNEL);
->          if (!records)
->                  return -ENOMEM;
+> 	/* No context switching, bail out */
+> 	if ((tidq->thread->tid != tid)
+> 		return;
 > 
->          /*
->           * FIXME: Memory allocated via records gets completely
->           * consumed here, never required to be freed up later. Hence
->           * losing access to on stack 'records' is acceptable.
->           * Otherwise this alloc handle has to be saved some where.
->           */
->          for_each_possible_cpu(cpu) {
->                  struct pmu_hw_events *events_cpu;
->                  struct branch_records *records_cpu;
+> 	/* If tid is -1, we simply use idle thread context */
+> 	if (tid == -1)
+> 		goto find_idle_thread;
 > 
->                  events_cpu = per_cpu_ptr(armpmu->hw_events, cpu);
->                  records_cpu = per_cpu_ptr(records, cpu);
->                  events_cpu->branches = records_cpu;
->          }
->          return 0;
+> 	/*
+> 	 * The new incoming tid is different from current thread,
+> 	 * so it's to switch to the next thread context.
+> 	 */
+> 
+> 	/* Swap thread contexts */
+> 	thread__put(tidq->prev_thread);
+> 	tidq->prev_thread = thread__get(tidq->thread);
+> 
+> 	/* Find thread context for new tid */
+> 	thread__zput(tidq->thread);
+> 	tidq->thread = machine__find_thread(machine, -1, tid);
+> 
+> find_idle_thread:
+> 	/* Couldn't find a known thread */
+> 	if (!tidq->thread)
+> 		tidq->thread = machine__idle_thread(machine);
 > }
 > 
-> Regarding the cpumask argument in for_each_cpu().
-> 
-> - hw_events is a __percpu pointer in struct arm_pmu
-> 
-> 	- pmu->hw_events = alloc_percpu_gfp(struct pmu_hw_events, GFP_KERNEL)
-> 
-> 
-> - 'records' above is being allocated via alloc_percpu_gfp()
-> 
-> 	- records = alloc_percpu_gfp(struct branch_records, GFP_KERNEL)
 
+I tried this change but I still don't think it's giving the right
+results. Tracking previous thread in cs_etm__set_thread() changes the
+semantics of being "the thread for the previous packet" to being "the
+previous different thread of an unknown old packet". If you imagine the
+packets and thread changes are like this (where <d> is a discontinuity
+packet):
 
-> 
-> If 'armpmu->supported_cpus' mask gets used instead of possible cpu mask,
-> would not there be some dangling per-cpu branch_record allocated areas,
-> that remain unsigned ? Assigning all of them back into hw_events should
-> be harmless.
+    <--thread 1--> <--thread 2-------------------> <------thread 3-->
+<d> <--packet 1--> <d> <--packet 2--> <packet 3--> <d> <--packet 4-->
 
-Thats because you are using alloc_percpu for records ? With the current
-proposed code, if there are two different arm_pmus on the system, you
-would end up wasting 1xper_cpu branch_records ? And if there are 3,
-2xper_cpu gets wasted ?
+Branches are generated using the last IP of the previous packet, and the
+first IP of the next packet, ignoring everything in between as they are
+just sequential instructions.
 
-> 
->>
->>>>> +    }
->>
->>
->> May be:
->>      int ret = 0;
->>
->>      for_each_cpu(cpu, &armpmu->supported_cpus) {
->>          events = per_cpu_ptr(armpmu->hw_events, cpu);
->>          events->branches = kzalloc(sizeof(struct         branch_records), GFP_KERNEL);
->>         
->>          if (!events->branches) {
->>              ret = -ENOMEM;
->>              break;
->>          }
->>      }
->>
->>      if (!ret)
->>          return 0;
->>
->>      for_each_cpu(cpu, &armpmu->supported_cpus) {
->>          events = per_cpu_ptr(armpmu->hw_events, cpu);
->>          if (!events->branches)
->>              break;
->>          kfree(events->branches);
->>      }
->>      return ret;
->>      
->>>>> +    return 0;
->>>>
->>>> This leaks memory if any allocation fails, and the next patch replaces this
->>>> code entirely.
->>>
->>> Okay.
->>>
->>>>
->>>> Please add this once in a working state. Either use the percpu allocation
->>>> trick in the next patch from the start, or have this kzalloc() with a
->>>> corresponding kfree() in an error path.
->>>
->>> I will change branch_records_alloc() as suggested in the next patch's thread
->>> and fold those changes here in this patch.
->>>
->>>>
->>>>>    }
->>>>>      static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
->>>>> @@ -1145,12 +1162,24 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
->>>>>        };
->>>>>        int ret;
->>>>>    +    ret = armv8pmu_private_alloc(cpu_pmu);
->>>>> +    if (ret)
->>>>> +        return ret;
->>>>> +
->>>>>        ret = smp_call_function_any(&cpu_pmu->supported_cpus,
->>>>>                        __armv8pmu_probe_pmu,
->>>>>                        &probe, 1);
->>>>>        if (ret)
->>>>>            return ret;
->>>>>    +    if (arm_pmu_branch_stack_supported(cpu_pmu)) {
->>>>> +        ret = branch_records_alloc(cpu_pmu);
->>>>> +        if (ret)
->>>>> +            return ret;
->>>>> +    } else {
->>>>> +        armv8pmu_private_free(cpu_pmu);
->>>>> +    }
->>>>
->>>> I see from the next patch that "private" is four ints, so please just add that
->>>> to struct arm_pmu under an ifdef CONFIG_ARM64_BRBE. That'll simplify this, and
->>>> if we end up needing more space in future we can consider factoring it out.
->>>
->>> struct arm_pmu {
->>>      ........................................
->>>           /* Implementation specific attributes */
->>>           void            *private;
->>> }
->>>
->>> private pointer here creates an abstraction for given pmu implementation
->>> to hide attribute details without making it known to core arm pmu layer.
->>> Although adding ifdef CONFIG_ARM64_BRBE solves the problem as mentioned
->>> above, it does break that abstraction. Currently arm_pmu layer is aware
->>> about 'branch records' but not about BRBE in particular which the driver
->>> adds later on. I suggest we should not break that abstraction.
->>>
->>> Instead a global 'static struct brbe_hw_attr' in drivers/perf/arm_brbe.c
->>> can be initialized into arm_pmu->private during armv8pmu_branch_probe(),
->>> which will also solve the allocation-free problem. Also similar helpers
->>> armv8pmu_task_ctx_alloc()/free() could be defined to manage task context
->>> cache i.e arm_pmu->pmu.task_ctx_cache independently.
->>>
->>> But now armv8pmu_task_ctx_alloc() can be called after pmu probe confirms
->>> to have arm_pmu->has_branch_stack.
->>>
->>>>
->>>>> +
->>>>>        return probe.present ? 0 : -ENODEV;
->>>>>    }
->>>>
->>>> It also seems odd to ceck probe.present *after* checking
->>>> arm_pmu_branch_stack_supported().
->>>
->>> I will reorganize as suggested below.
->>>
->>>>
->>>> With the allocation removed I think this can be written more clearly as:
->>>>
->>>> | static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
->>>> | {
->>>> |         struct armv8pmu_probe_info probe = {
->>>> |                 .pmu = cpu_pmu,
->>>> |                 .present = false,
->>>> |         };
->>>> |         int ret;
->>>> |
->>>> |         ret = smp_call_function_any(&cpu_pmu->supported_cpus,
->>>> |                                     __armv8pmu_probe_pmu,
->>>> |                                     &probe, 1);
->>>> |         if (ret)
->>>> |                 return ret; > |
->>>> |         if (!probe.present)
->>>> |                 return -ENODEV;
->>>> |
->>>> |         if (arm_pmu_branch_stack_supported(cpu_pmu))
->>>> |                 ret = branch_records_alloc(cpu_pmu);
->>>> |
->>>> |         return ret;
->>>> | }
->>
->> Could we not simplify this as below and keep the abstraction, since we
->> already have it ?
-> 
-> No, there is an allocation dependency before the smp call context.
+So assuming there are discontinuity packets between the thread switches
+we should get:
 
-Ok, I wasn't aware of that. Could we not read whatever we need to know
-about the brbe in armv8pmu_probe_info and process it at the caller here?
-And then do the the private_alloc etc as we need ?
+  thread 1 branches from packet 1 to 0x0
+  thread 2 branches from 0x0 to packet 2
+  thread 2 branches from packet 2 to packet 3
+  thread 2 branches from packet 3 to 0x0
+  thread 3 branches from 0x0 to packet 4
 
-Suzuki
+By tracking the previous thread for each packet, packet 2 and 3 stay in
+thread 2.
 
+If we track the previous thread instead, then both packet 2 and 3 would
+continue to look like they branch from thread 1 like this:
+
+  thread ? branches from packet 1 to 0x0
+  thread 1 branches from 0x0 to packet 2
+  thread 1 branches from packet 2 to packet 3
+  thread 1 branches from packet 3 to 0x0
+  thread 2 branches from 0x0 to packet 4
+
+Everything gets shifted back by 1 thread. I don't see the issue of
+keeping all the swap stuff together in one place. Maybe there is an
+issue with the naming of prev_thread? It's not really the previous
+thread, it's the previous _packets_ thread. It might be the same thread
+as the current one if there was no switch:
+
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index ca01109c3fc4..f3c73c86010a 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -86,8 +86,8 @@ struct cs_etm_traceid_queue {
+        size_t last_branch_pos;
+        union perf_event *event_buf;
+        struct thread *thread;
+-       struct thread *prev_thread;
+-       ocsd_ex_level prev_el;
++       struct thread *prev_packet_thread;
++       ocsd_ex_level prev_packet_el;
+        ocsd_ex_level el;
+        struct branch_stack *last_branch;
+
+> Thanks,
+> Leo
