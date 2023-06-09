@@ -2,218 +2,88 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FA4C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 12:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA98BC8300C
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 13:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbjFIMr5 (ORCPT
+        id S240659AbjFINFT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 08:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51222 "EHLO
+        Fri, 9 Jun 2023 09:05:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230464AbjFIMrZ (ORCPT
+        with ESMTP id S232498AbjFINFR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 08:47:25 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6178E2136;
-        Fri,  9 Jun 2023 05:47:23 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B628AB6;
-        Fri,  9 Jun 2023 05:48:08 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.38.153])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F31F3F6C4;
-        Fri,  9 Jun 2023 05:47:21 -0700 (PDT)
-Date:   Fri, 9 Jun 2023 13:47:18 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V11 06/10] arm64/perf: Enable branch stack events via
- FEAT_BRBE
-Message-ID: <ZIMfVsF50cODuOYx@FVFF77S0Q05N.cambridge.arm.com>
-References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-7-anshuman.khandual@arm.com>
- <ZH3mhorKNo77hsv5@FVFF77S0Q05N>
- <e960d5d5-07a8-2049-7d0a-07268ecfe36a@arm.com>
+        Fri, 9 Jun 2023 09:05:17 -0400
+Received: from xry111.site (xry111.site [89.208.246.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC9EF2D70;
+        Fri,  9 Jun 2023 06:05:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+        s=default; t=1686315913;
+        bh=hT63nSeqfXe+w/wcTH/EVqDDlEdDBDYjRZhYbxbpM9E=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=npo+qrCHsIrTavth6RFp9whOgzBlVXmzRzYXUH+dxBlx16fsDq62B5M0BsrtN4VtJ
+         1fdfpCWNVPfQBRPxlsk/T5jnywsDDxzlQF9T3tubgjW3v4DrYce6kTsX/rRJiWMx5i
+         hBEItCRBrPuBf/r8DMY+d6WFyBryIiRnxabHdAlU=
+Received: from [192.168.124.11] (unknown [113.140.11.3])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+        (Client did not present a certificate)
+        (Authenticated sender: xry111@xry111.site)
+        by xry111.site (Postfix) with ESMTPSA id 48AE16638D;
+        Fri,  9 Jun 2023 09:05:09 -0400 (EDT)
+Message-ID: <5de9d69817138f2ccae0867b5ccb602dcfa007a3.camel@xry111.site>
+Subject: Re: [RFC PATCH] asm-generic: Unify uapi bitsperlong.h
+From:   Xi Ruoyao <xry111@xry111.site>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>, Arnd Bergmann <arnd@arndb.de>
+Cc:     Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-s390@vger.kernel.org, llvm@lists.linux.dev,
+        linux-ia64@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-parisc@vger.kernel.org, x86@kernel.org,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-alpha@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        bpf@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        loongson-kernel@lists.loongnix.cn
+Date:   Fri, 09 Jun 2023 21:05:07 +0800
+In-Reply-To: <ca4c4968-411d-4e2c-543e-ffb62413ddef@loongson.cn>
+References: <1683615903-10862-1-git-send-email-yangtiezhu@loongson.cn>
+         <b9624545-2c80-49a1-ac3c-39264a591f7b@app.fastmail.com>
+         <76d3be65-91df-7969-5303-38231a7df926@loongson.cn>
+         <a3a4f48a-07d4-4ed9-bc53-5d383428bdd2@app.fastmail.com>
+         <ca4c4968-411d-4e2c-543e-ffb62413ddef@loongson.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e960d5d5-07a8-2049-7d0a-07268ecfe36a@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 10:52:37AM +0530, Anshuman Khandual wrote:
-> [...]
-> 
-> On 6/5/23 19:13, Mark Rutland wrote:
-> >> +void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
-> >> +{
-> >> +	struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
-> >> +	u64 brbfcr, brbcr;
-> >> +	int idx, loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2, count;
-> >> +
-> >> +	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
-> >> +	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-> >> +
-> >> +	/* Ensure pause on PMU interrupt is enabled */
-> >> +	WARN_ON_ONCE(!(brbcr & BRBCR_EL1_FZP));
-> >> +
-> >> +	/* Pause the buffer */
-> >> +	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
-> >> +	isb();
-> >> +
-> >> +	/* Determine the indices for each loop */
-> >> +	loop1_idx1 = BRBE_BANK0_IDX_MIN;
-> >> +	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
-> >> +		loop1_idx2 = brbe_attr->brbe_nr - 1;
-> >> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
-> >> +		loop2_idx2 = BRBE_BANK0_IDX_MAX;
-> >> +	} else {
-> >> +		loop1_idx2 = BRBE_BANK0_IDX_MAX;
-> >> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
-> >> +		loop2_idx2 = brbe_attr->brbe_nr - 1;
-> >> +	}
-> >> +
-> >> +	/* Loop through bank 0 */
-> >> +	select_brbe_bank(BRBE_BANK_IDX_0);
-> >> +	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
-> >> +		if (!capture_branch_entry(cpuc, event, idx))
-> >> +			goto skip_bank_1;
-> >> +	}
-> >> +
-> >> +	/* Loop through bank 1 */
-> >> +	select_brbe_bank(BRBE_BANK_IDX_1);
-> >> +	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
-> >> +		if (!capture_branch_entry(cpuc, event, idx))
-> >> +			break;
-> >> +	}
-> >> +
-> >> +skip_bank_1:
-> >> +	cpuc->branches->branch_stack.nr = idx;
-> >> +	cpuc->branches->branch_stack.hw_idx = -1ULL;
-> >> +	process_branch_aborts(cpuc);
-> >> +
-> >> +	/* Unpause the buffer */
-> >> +	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
-> >> +	isb();
-> >> +	armv8pmu_branch_reset();
-> >> +}
-> > The loop indicies are rather difficult to follow, and I think those can be made
-> > quite a lot simpler if split out, e.g.
-> > 
-> > | int __armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
-> > | {
-> > | 	struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
-> > | 	int nr_hw_entries = brbe_attr->brbe_nr;
-> > | 	int idx;
-> 
-> I guess idx needs an init to 0.
+On Fri, 2023-06-09 at 14:50 +0800, Tiezhu Yang wrote:
 
-Yes, sorry, that should have been:
+/* snip */
 
-	int idx = 0;
+> > > > In musl, the documentation states that at least gcc-3.4 or
+> > > > clang-3.2 are required, which probably predate the
+> > > > __SIZEOF_LONG__ macro.
 
-> > | 
-> > | 	select_brbe_bank(BRBE_BANK_IDX_0);
-> > | 	while (idx < nr_hw_entries && idx < BRBE_BANK0_IDX_MAX) {
-> > | 		if (!capture_branch_entry(cpuc, event, idx))
-> > | 			return idx;
-> > | 		idx++;
-> > | 	}
-> > | 
-> > | 	select_brbe_bank(BRBE_BANK_IDX_1);
-> > | 	while (idx < nr_hw_entries && idx < BRBE_BANK1_IDX_MAX) {
-> > | 		if (!capture_branch_entry(cpuc, event, idx))
-> > | 			return idx;
-> > | 		idx++;
-> > | 	}
-> > | 
-> > | 	return idx;
-> > | }
-> 
-> These loops are better than the proposed one with indices, will update.
+Indeed, I've digged some history and __SIZEOF_LONG__ was added into GCC-
+4.3 (in 2008).  And I didn't realize the bitsperlong.h in tools
+directory is a copy from uapi.
 
-Great!
+> > > > On the other hand, musl was only
+> > > > released in 2011, and building musl itself explicitly
+> > > > does not require kernel uapi headers, so this may not
+> > > > be too critical.
 
-> > | 
-> > | void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
-> > | {
-> > | 	u64 brbfcr, brbcr;
-> > | 	int nr;
-> > | 
-> > | 	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
-> > | 	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-> > | 
-> > | 	/* Ensure pause on PMU interrupt is enabled */
-> > | 	WARN_ON_ONCE(!(brbcr & BRBCR_EL1_FZP));
-> > | 
-> > | 	/* Pause the buffer */
-> > | 	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
-> > | 	isb();
-> > | 
-> > | 	nr = __armv8pmu_branch_read(cpus, event);
-> > | 
-> > | 	cpuc->branches->branch_stack.nr = nr;
-> > | 	cpuc->branches->branch_stack.hw_idx = -1ULL;
-> > | 	process_branch_aborts(cpuc);
-> > | 
-> > | 	/* Unpause the buffer */
-> > | 	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
-> > | 	isb();
-> > | 	armv8pmu_branch_reset();
-> > | }
-> > 
-> > Looking at <linux/perf_event.h> I see:
-> > 
-> > | /*
-> > |  * branch stack layout:
-> > |  *  nr: number of taken branches stored in entries[]
-> > |  *  hw_idx: The low level index of raw branch records
-> > |  *          for the most recent branch.
-> > |  *          -1ULL means invalid/unknown.
-> > |  *
-> > |  * Note that nr can vary from sample to sample
-> > |  * branches (to, from) are stored from most recent
-> > |  * to least recent, i.e., entries[0] contains the most
-> > |  * recent branch.
-> > |  * The entries[] is an abstraction of raw branch records,
-> > |  * which may not be stored in age order in HW, e.g. Intel LBR.
-> > |  * The hw_idx is to expose the low level index of raw
-> > |  * branch record for the most recent branch aka entries[0].
-> > |  * The hw_idx index is between -1 (unknown) and max depth,
-> > |  * which can be retrieved in /sys/devices/cpu/caps/branches.
-> > |  * For the architectures whose raw branch records are
-> > |  * already stored in age order, the hw_idx should be 0.
-> > |  */
-> > | struct perf_branch_stack {
-> > |         __u64                           nr;  
-> > |         __u64                           hw_idx;
-> > |         struct perf_branch_entry        entries[];
-> > | };
-> > 
-> > ... which seems to indicate we should be setting hw_idx to 0, since IIUC our
-> > records are in age order.
-> Branch records are indeed in age order, sure will change hw_idx as 0. Earlier
-> figured that there was no need for hw_idx and hence marked it as -1UL similar
-> to other platforms like powerpc.
+> Only arm64, riscv and loongarch belong to the newer architectures
+> which are related with this change, I am not sure it is necessary
+> to "unify" uapi bitsperlong.h for them.
 
-That's fair enough; looking at power_pmu_bhrb_read() in
-arch/powerpc/perf/core-book3s.c, I see a comment:
+At least it will stop the engineers working on "the next architecture"
+from adding an unneeded bitsperlong.h :).
 
-	Branches are read most recent first (ie. mfbhrb 0 is
-	the most recent branch).
 
-... which suggests that should be 0 also, or that the documentation is wrong.
-
-Do you know how the perf tool consumes this?
-
-Thanks,
-Mark.
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
