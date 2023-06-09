@@ -2,343 +2,276 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B057C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 16:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C025C7EE45
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 16:53:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242181AbjFIQ1C (ORCPT
+        id S230016AbjFIQxs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 12:27:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40178 "EHLO
+        Fri, 9 Jun 2023 12:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242007AbjFIQ0z (ORCPT
+        with ESMTP id S229518AbjFIQxr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 12:26:55 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291933A8C;
-        Fri,  9 Jun 2023 09:26:49 -0700 (PDT)
+        Fri, 9 Jun 2023 12:53:47 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 634B33A89;
+        Fri,  9 Jun 2023 09:53:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686328009; x=1717864009;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=q2cuOexLZH4SnGBwsELA7mCsEQlEVUrKhgHRwoL0rJI=;
-  b=DUQgCQFuALj0CPIvZsu3CDrRNoUWDpgXlGfXVjXCF31FG0wWJzOdQnod
-   Pk3elIXAjSFourS2LWSqqpE27BeqczvRTX8SDk/bkrkbqunfk2vel5Tk6
-   LQCI/9m2ol5EsEOB3HDji+BqFZDKlw4Z4Dy1fDrxXaDe8D3j7mAWn2bfU
-   X2k1I8mC/75X9yguHHZRYf4uy/3x0gmV3eZynKpUL1+JVpdLbRoE+xuzX
-   236NiWnUzDvEfFFvVBrRlMqeT1hw2YejIWfyj2l9As4cGdUXHGxNVe/EI
-   pSE2bQziKSYI+3WsZlAa6JC1VaKcEc/lDvlce9u/184UT7i0uz2F+qqsT
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="355123928"
+  t=1686329625; x=1717865625;
+  h=date:from:to:cc:subject:message-id;
+  bh=JAWK//mHu4QV1YFotj0qDhrypark3wKg/MHiFxQrmtg=;
+  b=XwvPQHKILVD4RYNyEJ8XWRQzulDT2sXEhgxwZoLAPsx3l2/AdMEoAle0
+   bi9nzbPgcTC2IBxX8u4rGWupq2ICimNIMJEwf8ZSRD9tKQsP4jd5xj2qE
+   IeaXQY4eB++Cm91sCsJqdSFa7GM7Wod3KCmt8mgQm9RSRGighRbsWUs1v
+   EGiSEciqrqcNjVSoAfnYEmSPmKxiA4TXbKLrhrPhURagOj4g51OcVHMNu
+   Z9ZUYcbK7cJDMIhcRhldeNnN+t4BRAhM48CRLfLsxBrLn79TsJ0YN2FPY
+   LE0UcZFnrjtty/+EQNoBMZwxQKzjJ+dVnP0YQRW/xcprA9uRWRzf6mTWp
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="338000296"
 X-IronPort-AV: E=Sophos;i="6.00,229,1681196400"; 
-   d="scan'208";a="355123928"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 09:26:48 -0700
+   d="scan'208";a="338000296"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 09:53:39 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="800269728"
+X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="957215847"
 X-IronPort-AV: E=Sophos;i="6.00,229,1681196400"; 
-   d="scan'208";a="800269728"
-Received: from a0cec87da3f2.jf.intel.com (HELO worker-node-1.jf.intel.com) ([10.165.55.163])
-  by FMSMGA003.fm.intel.com with ESMTP; 09 Jun 2023 09:26:45 -0700
-From:   Weilin Wang <weilin.wang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Weilin Wang <weilin.wang@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Subject: [PATCH v2 3/3] perf test: Rerun failed metrics with longer workload
-Date:   Fri,  9 Jun 2023 09:26:25 -0700
-Message-Id: <20230609162625.100897-4-weilin.wang@intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230609162625.100897-1-weilin.wang@intel.com>
-References: <20230609162625.100897-1-weilin.wang@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="957215847"
+Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 09 Jun 2023 09:53:37 -0700
+Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q7fMm-0009Eo-0m;
+        Fri, 09 Jun 2023 16:53:36 +0000
+Date:   Sat, 10 Jun 2023 00:53:06 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-btrfs@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org
+Subject: [linux-next:master] BUILD REGRESSION
+ 53ab6975c12d1ad86c599a8927e8c698b144d669
+Message-ID: <202306100045.iM5qbyCz-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Rerun failed metrics with longer workload to avoid false failure because
-sometimes metric value test fails when running in very short amount of
-time.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 53ab6975c12d1ad86c599a8927e8c698b144d669  Add linux-next specific files for 20230609
 
-Signed-off-by: Weilin Wang <weilin.wang@intel.com>
----
- .../tests/shell/lib/perf_metric_validation.py | 129 +++++++++++-------
- 1 file changed, 83 insertions(+), 46 deletions(-)
+Error/Warning reports:
 
-diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
-index e59941089350..fd39b50371d0 100644
---- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-+++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-@@ -11,8 +11,9 @@ class Validator:
-         self.rulefname = rulefname
-         self.reportfname = reportfname
-         self.rules = None
--        self.collectlist=metrics
--        self.metrics = set(metrics)
-+        self.collectlist:str = metrics
-+        self.metrics = self.__set_metrics(metrics)
-+        self.skiplist = set()
-         self.tolerance = t
- 
-         self.workloads = [x for x in workload.split(",") if x]
-@@ -41,6 +42,12 @@ class Validator:
-         self.debug = debug
-         self.fullrulefname = fullrulefname
- 
-+    def __set_metrics(self, metrics=''):
-+        if metrics != '':
-+            return set(metrics.split(","))
-+        else:
-+            return set()
-+
-     def read_json(self, filename: str) -> dict:
-         try:
-             with open(Path(filename).resolve(), "r") as f:
-@@ -113,7 +120,7 @@ class Validator:
-         All future test(s) on this metric will fail.
- 
-         @param name: name of the metric
--        @returns: list with value found in self.results; list is empty when not value found.
-+        @returns: list with value found in self.results; list is empty when value is not found.
-         """
-         results = []
-         data = self.results[ridx] if ridx in self.results else self.results[0]
-@@ -123,7 +130,6 @@ class Validator:
-             elif name.replace('.', '1').isdigit():
-                 results.append(float(name))
-             else:
--                self.errlist.append("Metric '%s' is not collected or the value format is incorrect"%(name))
-                 self.ignoremetrics.add(name)
-         return results
- 
-@@ -138,27 +144,32 @@ class Validator:
-         Failure: when metric value is negative or not provided.
-         Metrics with negative value will be added into the self.failtests['PositiveValueTest'] and self.ignoremetrics.
-         """
--        negmetric = set()
--        missmetric = set()
-+        negmetric = dict()
-         pcnt = 0
-         tcnt = 0
-+        rerun = list()
-         for name, val in self.get_results().items():
--            if val is None or val == '':
--                missmetric.add(name)
--                self.errlist.append("Metric '%s' is not collected"%(name))
--            elif val < 0:
--                negmetric.add("{0}(={1:.4f})".format(name, val))
--                self.collectlist[0].append(name)
-+            if val < 0:
-+                negmetric[name] = val
-+                rerun.append(name)
-             else:
-                 pcnt += 1
-             tcnt += 1
-+        if len(rerun) > 0:
-+            second_results = dict()
-+            self.second_test(rerun, second_results)
-+            for name, val in second_results.items():
-+                if name not in negmetric: continue
-+                if val >= 0:
-+                    del negmetric[name]
-+                    pcnt += 1
- 
-         self.failtests['PositiveValueTest']['Total Tests'] = tcnt
-         self.failtests['PositiveValueTest']['Passed Tests'] = pcnt
--        if len(negmetric) or len(missmetric)> 0:
--            self.ignoremetrics.update(negmetric)
--            self.ignoremetrics.update(missmetric)
--            self.failtests['PositiveValueTest']['Failed Tests'].append({'NegativeValue':list(negmetric), 'MissingValue':list(missmetric)})
-+        if len(negmetric.keys()):
-+            self.ignoremetrics.update(negmetric.keys())
-+            negmessage = ["{0}(={1:.4f})".format(name, val) for name, val in negmetric.items()]
-+            self.failtests['PositiveValueTest']['Failed Tests'].append({'NegativeValue': negmessage})
- 
-         return
- 
-@@ -259,21 +270,36 @@ class Validator:
-         metrics = rule['Metrics']
-         passcnt = 0
-         totalcnt = 0
--        faillist = []
-+        faillist = list()
-+        failures = dict()
-+        rerun = list()
-         for m in metrics:
-             totalcnt += 1
-             result = self.get_value(m['Name'])
--            if len(result) > 0 and self.check_bound(result[0], lbv, ubv, t):
-+            if len(result) > 0 and self.check_bound(result[0], lbv, ubv, t) or m['Name'] in self.skiplist:
-                 passcnt += 1
-             else:
--                faillist.append({'MetricName':m['Name'], 'CollectedValue':result})
--                self.collectlist[0].append(m['Name'])
-+                failures[m['Name']] = result
-+                rerun.append(m['Name'])
-+
-+        if len(rerun) > 0:
-+            second_results = dict()
-+            self.second_test(rerun, second_results)
-+            for name, val in second_results.items():
-+                if name not in failures: continue
-+                if self.check_bound(val, lbv, ubv, t):
-+                    passcnt += 1
-+                    del failures[name]
-+                else:
-+                    failures[name] = val
-+                    self.results[0][name] = val
- 
-         self.totalcnt += totalcnt
-         self.passedcnt += passcnt
-         self.failtests['SingleMetricTest']['Total Tests'] += totalcnt
-         self.failtests['SingleMetricTest']['Passed Tests'] += passcnt
--        if len(faillist) != 0:
-+        if len(failures.keys()) != 0:
-+            faillist = [{'MetricName':name, 'CollectedValue':val} for name, val in failures.items()]
-             self.failtests['SingleMetricTest']['Failed Tests'].append({'RuleIndex':rule['RuleIndex'],
-                                                                        'RangeLower': rule['RangeLower'],
-                                                                        'RangeUpper': rule['RangeUpper'],
-@@ -316,7 +342,7 @@ class Validator:
-         return True
- 
-     # Start of Collector and Converter
--    def convert(self, data: list, idx: int):
-+    def convert(self, data: list, metricvalues:dict):
-         """
-         Convert collected metric data from the -j output to dict of {metric_name:value}.
-         """
-@@ -326,20 +352,29 @@ class Validator:
-                 if "metric-unit" in result and result["metric-unit"] != "(null)" and result["metric-unit"] != "":
-                     name = result["metric-unit"].split("  ")[1] if len(result["metric-unit"].split("  ")) > 1 \
-                         else result["metric-unit"]
--                    if idx not in self.results: self.results[idx] = dict()
--                    self.results[idx][name.lower()] = result["metric-value"]
-+                    metricvalues[name.lower()] = result["metric-value"]
-             except ValueError as error:
-                 continue
-         return
- 
--    def collect_perf(self, data_file: str, workload: str):
-+    def _run_perf(self, metric, workload: str):
-+        tool = 'perf'
-+        command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
-+        wl = workload.split()
-+        command.extend(wl)
-+        print(" ".join(command))
-+        cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
-+        data = [x+'}' for x in cmd.stderr.split('}\n') if x]
-+        return data
-+
-+
-+    def collect_perf(self, workload: str):
-         """
-         Collect metric data with "perf stat -M" on given workload with -a and -j.
-         """
-         self.results = dict()
--        tool = 'perf'
-         print(f"Starting perf collection")
--        print(f"Workload: {workload}")
-+        print(f"Long workload: {workload}")
-         collectlist = dict()
-         if self.collectlist != "":
-             collectlist[0] = {x for x in self.collectlist.split(",")}
-@@ -353,17 +388,20 @@ class Validator:
-                     collectlist[rule["RuleIndex"]] = [",".join(list(set(metrics)))]
- 
-         for idx, metrics in collectlist.items():
--            if idx == 0: wl = "sleep 0.5".split()
--            else: wl = workload.split()
-+            if idx == 0: wl = "true"
-+            else: wl = workload
-             for metric in metrics:
--                command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
--                command.extend(wl)
--                print(" ".join(command))
--                cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
--                data = [x+'}' for x in cmd.stderr.split('}\n') if x]
--                self.convert(data, idx)
--        self.collectlist = dict()
--        self.collectlist[0] = list()
-+                data = self._run_perf(metric, wl)
-+                if idx not in self.results: self.results[idx] = dict()
-+                self.convert(data, self.results[idx])
-+        return
-+
-+    def second_test(self, collectlist, second_results):
-+        workload = self.workloads[self.wlidx]
-+        for metric in collectlist:
-+            data = self._run_perf(metric, workload)
-+            self.convert(data, second_results)
-+
-     # End of Collector and Converter
- 
-     # Start of Rule Generator
-@@ -381,7 +419,7 @@ class Validator:
-                 if 'MetricName' not in m:
-                     print("Warning: no metric name")
-                     continue
--                name = m['MetricName']
-+                name = m['MetricName'].lower()
-                 self.metrics.add(name)
-                 if 'ScaleUnit' in m and (m['ScaleUnit'] == '1%' or m['ScaleUnit'] == '100%'):
-                     self.pctgmetrics.add(name.lower())
-@@ -391,14 +429,12 @@ class Validator:
- 
-         return
- 
--    def remove_unsupported_rules(self, rules, skiplist: set = None):
--        for m in skiplist:
--            self.metrics.discard(m)
-+    def remove_unsupported_rules(self, rules):
-         new_rules = []
-         for rule in rules:
-             add_rule = True
-             for m in rule["Metrics"]:
--                if m["Name"] not in self.metrics:
-+                if m["Name"] in self.skiplist or m["Name"] not in self.metrics:
-                     add_rule = False
-                     break
-             if add_rule:
-@@ -415,15 +451,15 @@ class Validator:
-         """
-         data = self.read_json(self.rulefname)
-         rules = data['RelationshipRules']
--        skiplist = set(data['SkipList'])
--        self.rules = self.remove_unsupported_rules(rules, skiplist)
-+        self.skiplist = set([name.lower() for name in data['SkipList']])
-+        self.rules = self.remove_unsupported_rules(rules)
-         pctgrule = {'RuleIndex':0,
-                     'TestType':'SingleMetricTest',
-                     'RangeLower':'0',
-                     'RangeUpper': '100',
-                     'ErrorThreshold': self.tolerance,
-                     'Description':'Metrics in percent unit have value with in [0, 100]',
--                    'Metrics': [{'Name': m} for m in self.pctgmetrics]}
-+                    'Metrics': [{'Name': m.lower()} for m in self.pctgmetrics]}
-         self.rules.append(pctgrule)
- 
-         # Re-index all rules to avoid repeated RuleIndex
-@@ -479,8 +515,9 @@ class Validator:
-             self.parse_perf_metrics()
-         self.create_rules()
-         for i in range(0, len(self.workloads)):
-+            self.wlidx = i
-             self._init_data()
--            self.collect_perf(self.datafname, self.workloads[i])
-+            self.collect_perf(self.workloads[i])
-             # Run positive value test
-             self.pos_val_test()
-             for r in self.rules:
+https://lore.kernel.org/oe-kbuild-all/202306081708.gtVAcXsh-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306082341.UQtCM8PO-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306100035.VTusNhm4-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306100056.Z3G9GUfT-lkp@intel.com
+
+Error/Warning: (recently discovered and may have been fixed)
+
+drivers/gpu/drm/i915/pxp/intel_pxp_gsccs.c:113:17: warning: format specifies type 'long' but the argument has type 'size_t' (aka 'unsigned int') [-Wformat]
+drivers/gpu/drm/i915/pxp/intel_pxp_gsccs.c:147:17: warning: format specifies type 'long' but the argument has type 'size_t' (aka 'unsigned int') [-Wformat]
+drivers/leds/leds-cht-wcove.c:144:21: warning: no previous prototype for 'cht_wc_leds_brightness_get' [-Wmissing-prototypes]
+drivers/scsi/FlashPoint.c:1712:12: warning: stack frame size (1056) exceeds limit (1024) in 'FlashPoint_HandleInterrupt' [-Wframe-larger-than]
+include/drm/drm_print.h:456:39: error: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
+include/drm/drm_print.h:456:39: warning: format '%ld' expects argument of type 'long int', but argument 4 has type 'size_t' {aka 'unsigned int'} [-Wformat=]
+uvdevice.c:(.init.text+0x2e): undefined reference to `uv_info'
+
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+drivers/net/ethernet/emulex/benet/be_main.c:2460 be_rx_compl_process_gro() error: buffer overflow '((skb_end_pointer(skb)))->frags' 17 <= u16max
+drivers/usb/cdns3/cdns3-starfive.c:23: warning: expecting prototype for cdns3(). Prototype was for USB_STRAP_HOST() instead
+fs/btrfs/volumes.c:6407 btrfs_map_block() error: we previously assumed 'mirror_num_ret' could be null (see line 6245)
+kernel/events/uprobes.c:478 uprobe_write_opcode() warn: passing zero to 'PTR_ERR'
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- i386-allyesconfig
+|   |-- drivers-leds-leds-cht-wcove.c:warning:no-previous-prototype-for-cht_wc_leds_brightness_get
+|   `-- include-drm-drm_print.h:error:format-ld-expects-argument-of-type-long-int-but-argument-has-type-size_t-aka-unsigned-int
+|-- i386-randconfig-i004-20230608
+|   `-- include-drm-drm_print.h:error:format-ld-expects-argument-of-type-long-int-but-argument-has-type-size_t-aka-unsigned-int
+|-- i386-randconfig-i062-20230608
+|   `-- include-drm-drm_print.h:warning:format-ld-expects-argument-of-type-long-int-but-argument-has-type-size_t-aka-unsigned-int
+|-- riscv-allmodconfig
+|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
+|-- riscv-allyesconfig
+|   `-- drivers-usb-cdns3-cdns3-starfive.c:warning:expecting-prototype-for-cdns3().-Prototype-was-for-USB_STRAP_HOST()-instead
+|-- s390-randconfig-r044-20230609
+|   `-- uvdevice.c:(.init.text):undefined-reference-to-uv_info
+|-- x86_64-allyesconfig
+|   `-- drivers-leds-leds-cht-wcove.c:warning:no-previous-prototype-for-cht_wc_leds_brightness_get
+`-- x86_64-randconfig-m001-20230608
+    |-- drivers-net-ethernet-emulex-benet-be_main.c-be_rx_compl_process_gro()-error:buffer-overflow-((skb_end_pointer(skb)))-frags-u16max
+    |-- fs-btrfs-volumes.c-btrfs_map_block()-error:we-previously-assumed-mirror_num_ret-could-be-null-(see-line-)
+    `-- kernel-events-uprobes.c-uprobe_write_opcode()-warn:passing-zero-to-PTR_ERR
+clang_recent_errors
+|-- i386-randconfig-i014-20230608
+|   `-- drivers-gpu-drm-i915-pxp-intel_pxp_gsccs.c:warning:format-specifies-type-long-but-the-argument-has-type-size_t-(aka-unsigned-int-)
+|-- i386-randconfig-r026-20230608
+|   `-- drivers-gpu-drm-i915-pxp-intel_pxp_gsccs.c:warning:format-specifies-type-long-but-the-argument-has-type-size_t-(aka-unsigned-int-)
+`-- powerpc-allmodconfig
+    `-- drivers-scsi-FlashPoint.c:warning:stack-frame-size-()-exceeds-limit-()-in-FlashPoint_HandleInterrupt
+
+elapsed time: 729m
+
+configs tested: 149
+configs skipped: 6
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                         haps_hs_defconfig   gcc  
+arc                  randconfig-r011-20230608   gcc  
+arc                  randconfig-r033-20230608   gcc  
+arc                  randconfig-r043-20230608   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                       aspeed_g4_defconfig   clang
+arm                                 defconfig   gcc  
+arm                      footbridge_defconfig   gcc  
+arm                            hisi_defconfig   gcc  
+arm                           imxrt_defconfig   gcc  
+arm                  randconfig-r006-20230608   clang
+arm                  randconfig-r046-20230608   gcc  
+arm                        spear6xx_defconfig   gcc  
+arm                           stm32_defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r024-20230608   clang
+csky                                defconfig   gcc  
+hexagon      buildonly-randconfig-r001-20230608   clang
+hexagon              randconfig-r041-20230608   clang
+hexagon              randconfig-r045-20230608   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r006-20230608   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230608   gcc  
+i386                 randconfig-i002-20230608   gcc  
+i386                 randconfig-i003-20230608   gcc  
+i386                 randconfig-i004-20230608   gcc  
+i386                 randconfig-i005-20230608   gcc  
+i386                 randconfig-i006-20230608   gcc  
+i386                 randconfig-i011-20230608   clang
+i386                 randconfig-i012-20230608   clang
+i386                 randconfig-i013-20230608   clang
+i386                 randconfig-i014-20230608   clang
+i386                 randconfig-i015-20230608   clang
+i386                 randconfig-i016-20230608   clang
+i386                 randconfig-i051-20230608   gcc  
+i386                 randconfig-i052-20230608   gcc  
+i386                 randconfig-i053-20230608   gcc  
+i386                 randconfig-i054-20230608   gcc  
+i386                 randconfig-i055-20230608   gcc  
+i386                 randconfig-i061-20230608   gcc  
+i386                 randconfig-i062-20230608   gcc  
+i386                 randconfig-i063-20230608   gcc  
+i386                 randconfig-i064-20230608   gcc  
+i386                 randconfig-i065-20230608   gcc  
+i386                 randconfig-i066-20230608   gcc  
+i386                 randconfig-r023-20230608   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch                 loongson3_defconfig   gcc  
+loongarch            randconfig-r004-20230608   gcc  
+loongarch            randconfig-r025-20230608   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                          atari_defconfig   gcc  
+m68k                       bvme6000_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        mvme16x_defconfig   gcc  
+microblaze           randconfig-r034-20230608   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          ath79_defconfig   clang
+mips                     cu1000-neo_defconfig   clang
+mips                          malta_defconfig   clang
+mips                      malta_kvm_defconfig   clang
+mips                        maltaup_defconfig   clang
+mips                           rs90_defconfig   clang
+nios2                               defconfig   gcc  
+openrisc             randconfig-r015-20230608   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r016-20230608   gcc  
+parisc64                            defconfig   gcc  
+powerpc                      acadia_defconfig   clang
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                     asp8347_defconfig   gcc  
+powerpc                        cell_defconfig   gcc  
+powerpc                     ep8248e_defconfig   gcc  
+powerpc                        fsp2_defconfig   clang
+powerpc                    gamecube_defconfig   clang
+powerpc                     ksi8560_defconfig   clang
+powerpc                 mpc8560_ads_defconfig   clang
+powerpc              randconfig-r012-20230608   clang
+powerpc              randconfig-r021-20230608   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r032-20230608   gcc  
+riscv                randconfig-r036-20230608   gcc  
+riscv                randconfig-r042-20230608   clang
+riscv                          rv32_defconfig   gcc  
+s390                             alldefconfig   clang
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390         buildonly-randconfig-r005-20230608   clang
+s390                                defconfig   gcc  
+s390                 randconfig-r013-20230608   clang
+s390                 randconfig-r014-20230608   clang
+s390                 randconfig-r044-20230608   clang
+sh                               allmodconfig   gcc  
+sh           buildonly-randconfig-r003-20230608   gcc  
+sh                          kfr2r09_defconfig   gcc  
+sh                         microdev_defconfig   gcc  
+sh                     sh7710voipgw_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc        buildonly-randconfig-r002-20230608   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r005-20230608   gcc  
+sparc                randconfig-r031-20230608   gcc  
+sparc                randconfig-r035-20230608   gcc  
+sparc64              randconfig-r001-20230608   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r004-20230608   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230608   gcc  
+x86_64               randconfig-a002-20230608   gcc  
+x86_64               randconfig-a003-20230608   gcc  
+x86_64               randconfig-a004-20230608   gcc  
+x86_64               randconfig-a005-20230608   gcc  
+x86_64               randconfig-a006-20230608   gcc  
+x86_64               randconfig-a011-20230608   clang
+x86_64               randconfig-a012-20230608   clang
+x86_64               randconfig-a013-20230608   clang
+x86_64               randconfig-a014-20230608   clang
+x86_64               randconfig-a015-20230608   clang
+x86_64               randconfig-a016-20230608   clang
+x86_64               randconfig-x051-20230608   clang
+x86_64               randconfig-x052-20230608   clang
+x86_64               randconfig-x053-20230608   clang
+x86_64               randconfig-x054-20230608   clang
+x86_64               randconfig-x055-20230608   clang
+x86_64               randconfig-x056-20230608   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                           alldefconfig   gcc  
+xtensa                generic_kc705_defconfig   gcc  
+
 -- 
-2.39.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
