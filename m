@@ -2,130 +2,94 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A39C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 12:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCAEC7EE25
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 12:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240249AbjFIMWS (ORCPT
+        id S238967AbjFIMhl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 08:22:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34042 "EHLO
+        Fri, 9 Jun 2023 08:37:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240431AbjFIMV6 (ORCPT
+        with ESMTP id S231612AbjFIMhl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 08:21:58 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 179D5210D;
-        Fri,  9 Jun 2023 05:21:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
- s=s31663417; t=1686313292; x=1686918092; i=georgmueller@gmx.net;
- bh=rDJ96Ond18rti0M0ERtO5yAhZ7vSgGDs74k8wtklLaA=;
- h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
- b=HDtUWG55ofayJttAlrqBl7m1HtZoGsiTdGqaWH4/p/VA8RsCQrKTACPgBhYK+YMlvTGIlX1
- j5uXYlpzqJQsBUHasIk+pPrh2W56x4PgVIhE/sJDiEXtAsdXrYHqqDETJLc0/VXALevMjGGt2
- /WnO7zLBJj9qx0y0iFQWRGYPze1iC9e+sEa3Z2GC2Fi0Wa9tZdkhxXqCsNvL7bVwoN9Rurv1O
- FBdlRvP5yyJ/baSDHvaFCdZEsPKJwHuiKU0/BOBjATYBO6Qh7x0aE2qx/XEOQp1ePNk45a2OF
- k7fXdSA5werNWCjrYHowDwuxKHR6scs80ROmGwV1EFN7vb7WoyCw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [10.54.0.101] ([79.246.89.172]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MrhQ6-1pmrIu16qC-00nkDC; Fri, 09
- Jun 2023 14:21:32 +0200
-Message-ID: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
-Date:   Fri, 9 Jun 2023 14:21:30 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 3/3] tools/perf: Fix to get declared file name from
- clang DWARF5
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Fri, 9 Jun 2023 08:37:41 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 00F7A1A2;
+        Fri,  9 Jun 2023 05:37:39 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04D55AB6;
+        Fri,  9 Jun 2023 05:38:25 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.38.153])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BEE0D3F6C4;
+        Fri,  9 Jun 2023 05:37:37 -0700 (PDT)
+Date:   Fri, 9 Jun 2023 13:37:32 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <166731050151.2100653.8202870942871353491.stgit@devnote3>
- <166731052936.2100653.13380621874859467731.stgit@devnote3>
-Content-Language: en-US
-From:   =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>
-In-Reply-To: <166731052936.2100653.13380621874859467731.stgit@devnote3>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4YgK/ryWsH9FYmn+Uvzb6n4O/gu9LSWq35UPCgte30kDd9x2/Fn
- 6Qo7lUkXlG4H0u05zCBb3IrHuyhew9B99nKdKc2EeexO3p4EHy+JZoVKly5KftUy3+zJsBb
- ExZ1RcwoSCj/6lOc+QyqWZ6D9qL7yiqLuarR6R852mTCeJSCg1G6r2syD4mG3PF/1BMGxEs
- AoRbY+V4cYRhUF+iLR3PQ==
-UI-OutboundReport: notjunk:1;M01:P0:rPVGmtrfnhk=;+FiGbdS4umrSz0yeBOLaZJLLOJO
- o7opFQwJ5SKBd9p7F6u63m2PZ5kZBeybH+GPVct7XNWNF3XxOIpR/PGslJ3f0a+/VovW7ZpWq
- b2sc3blbASpD0M5Ki1PKHlCAr6OCo0zFL/AxWNOxgz3m7ncr3fijgIGssJD4LPQd0aATx8F+0
- TJ1zobZwm9wwl0H3Wm/aOq42Z/5gt+PlARbiaKs0embDnGUrv/fYAj/Q/C9GELlIWsFnpDNO+
- JhKkgshJGillPi6dhw/KwQYP10uIzF/w88vFyzdZrPPmAWzFqIc56GskI7BcMl2WcW8E/sf4u
- GzWg8dl8IOEnnEmWjjckkT07Re5xgDzxP1T+B48mne23z0QpafS7xIQXbZo7WbJ/QckCrU5C1
- 3w7nqKYYa0yIXbJZzQlTO9OTYApGx/k1mclUzvZWVqJVjbhFPZOGXtOalzPIvCnwxux3aMb80
- bflfqTF0gFkpgurDWTe1FHE89YenUU2p++eBKKqXNNFyJ7czLLUSthBAPzL/ZLPHfiPypTZKJ
- dZgliEAuxmk0x3mB5VR07S4rTKh9xq0Fz1cSI86NHwFq8dzkiWFCU4Zwm/pDrsSPqb4R3sPtd
- Kx1mpL7Ca05xX0HNPjLIOGT8odYoEpq03BxU2AYD168hTp6lS5scRQV5kmj8gWFK4B9hlSwUq
- 9iflACzYmk0reWKSwBl36s7YHqhgyMahYkVq4RretDDE7rLdW0KyUDeBK63l50qL1mimqnaEw
- 8ZkIv41ujCZcbHFmzqLWTVUqOLu3Q9DCMV/7UgElcfogRbpQtayc9vpW42q38EnnqC5KRMoka
- vsZrYbj1MJz2nJGy3rPuBz5I/bsBQxh9fUn4zfqqOZrUwafudu8kPF85b4q7lZibozTfAAFtU
- QazWfb1VnSj2C95NxmwLEiNa2b4D9XWVcd0YxpJQfJtvUeBswLJMdKCPVUosezTomFkpKQB2g
- u0dcyAsZH8Wxfjx95j+2dnzcHTI=
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V11 06/10] arm64/perf: Enable branch stack events via
+ FEAT_BRBE
+Message-ID: <ZIMdDMSjnNfx6q+n@FVFF77S0Q05N.cambridge.arm.com>
+References: <20230531040428.501523-1-anshuman.khandual@arm.com>
+ <20230531040428.501523-7-anshuman.khandual@arm.com>
+ <ZH3mhorKNo77hsv5@FVFF77S0Q05N>
+ <006be03c-43da-6482-6bc4-83fe65dcd706@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <006be03c-43da-6482-6bc4-83fe65dcd706@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+On Fri, Jun 09, 2023 at 10:00:09AM +0530, Anshuman Khandual wrote:
+> >> +static u64 branch_type_to_brbcr(int branch_type)
+> >> +{
+> >> +	u64 brbcr = BRBCR_EL1_DEFAULT_TS;
+> >> +
+> >> +	/*
+> >> +	 * BRBE need not be paused on PMU interrupt while tracing only
+> >> +	 * the user space, bcause it will automatically be inside the
+> >> +	 * prohibited region. But even after PMU overflow occurs, the
+> >> +	 * interrupt could still take much more cycles, before it can
+> >> +	 * be taken and by that time BRBE will have been overwritten.
+> >> +	 * Let's enable pause on PMU interrupt mechanism even for user
+> >> +	 * only traces.
+> >> +	 */
+> >> +	brbcr |= BRBCR_EL1_FZP;
+> > I think this is trying to say that we *should* use FZP when sampling the
+> > kernel (due to IRQ latency), and *can* safely use it when sampling userspace,
+> > so it would be good to explain it that way around.
+> 
+> Agreed, following updated comment explains why we should enable FZP
+> when sampling kernel, otherwise BRBE will capture unwanted records.
+> It also explains why we should enable FZP even when sampling user
+> space due to IRQ latency.
+> 
+>         /*
+>          * BRBE should be paused on PMU interrupt while tracing kernel
+>          * space to stop capturing further branch records. Otherwise
+>          * interrupt handler branch records might get into the samples
+>          * which is not desired.
+>          *
+>          * BRBE need not be paused on PMU interrupt while tracing only
+>          * the user space, because it will automatically be inside the
+>          * prohibited region. But even after PMU overflow occurs, the
+>          * interrupt could still take much more cycles, before it can
+>          * be taken and by that time BRBE will have been overwritten.
+>          * Hence enable pause on PMU interrupt mechanism even for user
+>          * only traces as well.
+>          */
+>         brbcr |= BRBCR_EL1_FZP;
 
-Am 01.11.22 um 14:48 schrieb Masami Hiramatsu (Google):
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->
-> Fix to get the declared file name even if it uses file index 0
-> in DWARF5, using custom die_get_decl_file() function.
->
+Thanks; I think that's a lot clearer!
 
-this patch breaks perf probe on fedora 38.
-
-I was trying to a add a probe to systemd-logind using kernel-6.3.6-200.fc3=
-8.x86_64 with kernel-tools-6.3.3-200.fc38.x86_64.
-
-When trying to add a probe, I get the following message:
-
-# perf probe -x /usr/lib/systemd/systemd-logind --funcs=3D"match_unit_remo=
-ved"
-match_unit_removed
-
-Function exists and was found:
-
-# perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
-A function DIE doesn't have decl_line. Maybe broken DWARF?
-A function DIE doesn't have decl_line. Maybe broken DWARF?
-Probe point 'match_unit_removed' not found.
-   Error: Failed to add events.
-
-When reverting dc9a5d2ccd5c823cc05cafe75fcf19b682d8152c, I was able to add=
- the probe point:
-
-# ./perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
-Added new event:
-   probe_systemd:match_unit_removed (on match_unit_removed in /usr/lib/sys=
-temd/systemd-logind)
-
-You can now use it in all perf tools, such as:
-
-	perf record -e probe_systemd:match_unit_removed -aR sleep 1
-
-
-Probe point is then visible with and without this commit:
-
-# perf probe -l
-   probe_systemd:match_unit_removed (on match_unit_removed in /usr/lib/sys=
-temd/systemd-logind)
-# ./perf probe -l
-   probe_systemd:match_unit_removed (on match_unit_removed@../src/login/lo=
-gind-dbus.c in /usr/lib/systemd/systemd-logind)
-
-
-Best regards,
-Georg
+Mark.
