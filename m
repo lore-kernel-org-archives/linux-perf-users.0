@@ -2,136 +2,148 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ED4C87FDC
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 04:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FB1C7EE43
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 04:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238449AbjFIEdO (ORCPT
+        id S229697AbjFIEk4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 00:33:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44540 "EHLO
+        Fri, 9 Jun 2023 00:40:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238437AbjFIEdC (ORCPT
+        with ESMTP id S229496AbjFIEkz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 00:33:02 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECC473590
-        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 21:32:56 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-569fee67d9dso30528377b3.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 21:32:56 -0700 (PDT)
+        Fri, 9 Jun 2023 00:40:55 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7790030E8
+        for <linux-perf-users@vger.kernel.org>; Thu,  8 Jun 2023 21:40:54 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id e9e14a558f8ab-33d928a268eso216515ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Jun 2023 21:40:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686285175; x=1688877175;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ASHCbqrtMwwghLa6ldqtFIr9DVtYxGlsru2IeiO0chg=;
-        b=zI3WfmrJTWofT6Q5ncQ6jKrXFR1E3mo9Hit36AdOzyBeM6PnVVNbAQ0WNi65k/+zcA
-         pR2aXpJwJaskgwdpY+kRv/hyUfkVL91tivrmkolRVBjmQdoGjBGJK8oZSBVLsoqMge2S
-         m/lWXRXuPDMh/9dfkqwUN7EO5npxmr1P+sWYJUgYfC7vyvYirx7VbhA7HDJw1f+GYZ1K
-         URTRPQTOWSQMbs0l9jWvaD1fHKYrDJLDjBvCQUkYBykXnnQniZAFVt+rref9n3kl/MF0
-         jAgELj+szWLc9gT7BHTUJeXYu9loowgmmr1rSX6Hfxtz8VUyMus1WO5K8VcaKT/GzcZQ
-         nf8Q==
+        d=google.com; s=20221208; t=1686285654; x=1688877654;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WctVijjK+PCqOwFmysl43LsrrAqXcmJG+wVLVPPGK9g=;
+        b=LI82naPsaC/+dYDlxTaENt7V74zG+hG+8etdK/sKAQ0PSFINCTxC+FXyyMIzTt/K7M
+         L+V2ijDwHzY/VcIOVAfaVwu1edhDmeRGimjWYbI2AuBLtdZWYQmewNknc4EdmeHa1e7m
+         TxTfTSeXeXlqAB3X7YMI648BpWd7k/IjSZU8kIbZ0KSZKqGkcihsTLrgxa0yKQlKVEdC
+         xB02NgxMEs/D9MAWd8bj7ggVN3PBrmwIaD5D8nb91VXBUlz5v6RSe+3uEpqcT/0BeUU+
+         8I0L7ue01xc19O701ZjD0XWel5DLbjlnA/9OBVBBY7ZZk/t+x+T1tsL8QBfCxyK6I0VO
+         c0gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686285175; x=1688877175;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ASHCbqrtMwwghLa6ldqtFIr9DVtYxGlsru2IeiO0chg=;
-        b=Jl6daSrIWfnVjQx5sebunDVnosLROcJ+2iHcjNqcf8PRn5RnVnkZpem2YP6RJe+jDx
-         J8+tQFeuLS7Zme/Quu0fwd5OGJ0+Pm0LhX/mO3zlCxnmNwm7tcUhdzXghtl80nY0iolv
-         39YcNJXAuigHF+bY0rLIt7ViXDfYGRZjMDB0O17mF861flOESH5qHf8Lltz/2E3JUnsN
-         uk0lNZLaGR16U4DveOkQF4l+IlXNJFzGlsRxp6cz0nUHQhpFesVrNZR2lU1jMiw0XPqF
-         ZaaiesbCKoz1sMLbwpvXqSfZHZ4I3SFeFluF3FlAD6DOKuvutMq2skaszEEoEcLYUnUs
-         ZgRQ==
-X-Gm-Message-State: AC+VfDzzx08asj94DY+2VxCtXBl6kBjQnU1c9KEsS0Z2s9lYdc8kA2fP
-        T3wti84TMSeWFBbBMmc4L6jimybFo93p
-X-Google-Smtp-Source: ACHHUZ4iB6nP+HsqtQdFaFGqIVReKInr9ZAzZ0P6gBKiMmd7L9cSwiggbWzNxk1AoADQfIFADF2Se2xAo5yp
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:c3e5:ebc6:61e5:c73f])
- (user=irogers job=sendgmr) by 2002:a81:ae59:0:b0:557:616:7d63 with SMTP id
- g25-20020a81ae59000000b0055706167d63mr538367ywk.1.1686285175731; Thu, 08 Jun
- 2023 21:32:55 -0700 (PDT)
-Date:   Thu,  8 Jun 2023 21:32:40 -0700
-In-Reply-To: <20230609043240.43890-1-irogers@google.com>
-Message-Id: <20230609043240.43890-5-irogers@google.com>
-Mime-Version: 1.0
-References: <20230609043240.43890-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v3 4/4] perf build: Filter out BTF sources without a .BTF section
+        d=1e100.net; s=20221208; t=1686285654; x=1688877654;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WctVijjK+PCqOwFmysl43LsrrAqXcmJG+wVLVPPGK9g=;
+        b=GmXWZtQh/FaPN8eOnY+5GsDIbZw8uyPdHjwHhkLzmYNDRy7PKPFljKFjPMXosfMtXp
+         gZtyemP6a5HhQa2W6YWsODvBLXnZ8ZS+hoouWPG490JfBlDTtRWCJU5A2x9vJ6CGyrE7
+         jJbuB9DlTkJHr9psR7/9Q+9VO9P+7jceWeoRSMiFwomVk3mVVXAiq8Zo6H4yiSOaXjMt
+         6GO9baFSX7eYGR+mzIFWVzMVy1aUCsbjQV7phXiTFwBgsFak4vNU+k8XXdNDV4go0O7L
+         kLfk2rj+pygVefARkq00uOlUBGtaX6ZrWsXR+SYMYl7YNkcern/Uq8IdYLVDwS7p3ayt
+         kZzA==
+X-Gm-Message-State: AC+VfDxs3N6elGHR0sXr8sir2JLv5s4z7y48Y/IR6WN4BBG0pbzIl+V7
+        bVkDkNyyWmQX7J1QoUvsxkFOJvWM3BV0ozf5NIzlaw==
+X-Google-Smtp-Source: ACHHUZ6g3S3eCkQr0Cq1l0j9GFF36Yvjnpmx6WE+39uupEOPHAtfRnGT74BrmWjAzChFIiEr4jsHV+MqZAk6GvRUcow=
+X-Received: by 2002:a92:c244:0:b0:33a:e716:a76e with SMTP id
+ k4-20020a92c244000000b0033ae716a76emr291878ilo.28.1686285653709; Thu, 08 Jun
+ 2023 21:40:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230527072210.2900565-1-irogers@google.com> <20230527072210.2900565-29-irogers@google.com>
+ <b8efdc75-253c-ad88-f82f-90c626a26592@amd.com>
+In-Reply-To: <b8efdc75-253c-ad88-f82f-90c626a26592@amd.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+Date:   Thu, 8 Jun 2023 21:40:42 -0700
+Message-ID: <CAP-5=fXg-4NWOhOoTCfNm3aWp_rd6PWcq5NyZ7xwinbuDPUtZg@mail.gmail.com>
+Subject: Re: [PATCH v5 28/34] perf pmus: Split pmus list into core and other
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        James Clark <james.clark@arm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
+        Kajol Jain <kjain@linux.ibm.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Ming Wang <wangming01@loongson.cn>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Sandipan Das <sandipan.das@amd.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Kang Minchul <tegongkang@gmail.com>,
+        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-If generating vmlinux.h, make the code to generate it more tolerant by
-filtering out paths to kernels that lack a .BTF section.
+On Thu, Jun 8, 2023 at 9:01=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.com=
+> wrote:
+>
+> Hi Ian,
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.perf | 29 ++++++++++++++++++++++++++---
- 1 file changed, 26 insertions(+), 3 deletions(-)
+Hi Ravi,
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index f1840af195c0..e440793fc6ca 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -193,6 +193,7 @@ FLEX    ?= flex
- BISON   ?= bison
- STRIP   = strip
- AWK     = awk
-+READELF ?= readelf
- 
- # include Makefile.config by default and rule out
- # non-config cases
-@@ -1080,12 +1081,34 @@ $(BPFTOOL): | $(SKEL_TMP_OUT)
- 	$(Q)CFLAGS= $(MAKE) -C ../bpf/bpftool \
- 		OUTPUT=$(SKEL_TMP_OUT)/ bootstrap
- 
--VMLINUX_BTF_PATHS ?= $(if $(O),$(O)/vmlinux)				\
-+# Paths to search for a kernel to generate vmlinux.h from.
-+VMLINUX_BTF_ELF_PATHS ?= $(if $(O),$(O)/vmlinux)			\
- 		     $(if $(KBUILD_OUTPUT),$(KBUILD_OUTPUT)/vmlinux)	\
- 		     ../../vmlinux					\
--		     /sys/kernel/btf/vmlinux				\
- 		     /boot/vmlinux-$(shell uname -r)
--VMLINUX_BTF ?= $(abspath $(firstword $(wildcard $(VMLINUX_BTF_PATHS))))
-+
-+# Paths to BTF information.
-+VMLINUX_BTF_BTF_PATHS ?= /sys/kernel/btf/vmlinux
-+
-+# Filter out kernels that don't exist or without a BTF section.
-+VMLINUX_BTF_ELF_ABSPATHS ?= $(abspath $(wildcard $(VMLINUX_BTF_ELF_PATHS)))
-+VMLINUX_BTF_PATHS ?= $(shell for file in $(VMLINUX_BTF_ELF_ABSPATHS); \
-+			do \
-+				if [ -f $$file ] && ($(READELF) -S "$$file" | grep -q .BTF); \
-+				then \
-+					echo "$$file"; \
-+				fi; \
-+			done) \
-+			$(wildcard $(VMLINUX_BTF_BTF_PATHS))
-+
-+# Select the first as the source of vmlinux.h.
-+VMLINUX_BTF ?= $(firstword $(VMLINUX_BTF_PATHS))
-+
-+ifeq ($(VMLINUX_H),)
-+  ifeq ($(VMLINUX_BTF),)
-+    $(error Missing bpftool input for generating vmlinux.h)
-+  endif
-+endif
- 
- $(SKEL_OUT)/vmlinux.h: $(VMLINUX_BTF) $(BPFTOOL)
- ifeq ($(VMLINUX_H),)
--- 
-2.41.0.162.gfafddb0af9-goog
+> On 27-May-23 12:52 PM, Ian Rogers wrote:
+> > Split the pmus list into core and other. This will later allow for
+> > the core and other pmus to be populated separately.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+> > ---
+> >  tools/perf/util/pmus.c | 52 ++++++++++++++++++++++++++++++------------
+> >  1 file changed, 38 insertions(+), 14 deletions(-)
+> >
+> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > index 58ff7937e9b7..4ef4fecd335f 100644
+> > --- a/tools/perf/util/pmus.c
+> > +++ b/tools/perf/util/pmus.c
+> > @@ -12,13 +12,19 @@
+> >  #include "pmu.h"
+> >  #include "print-events.h"
+> >
+> > -static LIST_HEAD(pmus);
+> > +static LIST_HEAD(core_pmus);
+> > +static LIST_HEAD(other_pmus);
+>
+> AMD ibs_fetch// and ibs_op// PMUs are per SMT-thread and are independent =
+of
+> core hw pmu. I wonder where does IBS fit. Currently it's part of other_pm=
+us.
+> So, is it safe to assume that other_pmus are not just uncore pmus? In tha=
+t
+> case shall we add a comment here?
 
+I'm a fan of comments. The code has landed in perf-tools-next:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/util/pmus.c?h=3Dperf-tools-next
+Do you have any suggestions on wording? I've had limited success
+adding glossary terms, for example, offcore vs uncore:
+https://perf.wiki.kernel.org/index.php/Glossary#Offcore
+I think offcore is a more interconnect related term, but I'd prefer
+not to be inventing the definitions. I'd like it if we could be less
+ambiguous in the code and provide useful information on the wiki, so
+help appreciated :-)
+
+Thanks,
+Ian
+
+> Thanks,
+> Ravi
