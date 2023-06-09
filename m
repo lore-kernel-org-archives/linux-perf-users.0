@@ -2,90 +2,298 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DF6C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 09:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3589BC7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 10:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239891AbjFIJMi (ORCPT
+        id S239178AbjFIKDG (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 05:12:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38618 "EHLO
+        Fri, 9 Jun 2023 06:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241365AbjFIJLy (ORCPT
+        with ESMTP id S242009AbjFIKCS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 05:11:54 -0400
+        Fri, 9 Jun 2023 06:02:18 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5E51D1FFA
-        for <linux-perf-users@vger.kernel.org>; Fri,  9 Jun 2023 02:07:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7FF766583;
+        Fri,  9 Jun 2023 02:54:37 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 567A8AB6;
-        Fri,  9 Jun 2023 02:07:33 -0700 (PDT)
-Received: from [192.168.1.3] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A225A3F71E;
-        Fri,  9 Jun 2023 02:06:47 -0700 (PDT)
-Message-ID: <874963e2-f97e-b463-1351-b00640b0f67b@arm.com>
-Date:   Fri, 9 Jun 2023 10:06:46 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8BEEAB6;
+        Fri,  9 Jun 2023 02:55:21 -0700 (PDT)
+Received: from [10.57.25.114] (unknown [10.57.25.114])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B17923F587;
+        Fri,  9 Jun 2023 02:54:34 -0700 (PDT)
+Message-ID: <3f5f69e4-9324-152c-6581-8855a3dbb221@arm.com>
+Date:   Fri, 9 Jun 2023 10:54:33 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: Some questions about using the perf tool in ARM-SPE
-Content-Language: en-US
-To:     =?UTF-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.1
+Subject: Re: [PATCH V11 05/10] arm64/perf: Add branch stack support in ARMV8
+ PMU
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org
-References: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
-From:   James Clark <james.clark@arm.com>
-In-Reply-To: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20230531040428.501523-1-anshuman.khandual@arm.com>
+ <20230531040428.501523-6-anshuman.khandual@arm.com>
+ <ZH3PCqYt/UzoiVx3@FVFF77S0Q05N>
+ <ba396c30-6719-1dfb-77c2-9f7e1715b57c@arm.com>
+ <290b577c-4740-d2e2-d236-c8bbe2f907b9@arm.com>
+ <78cb22e2-c46e-d62d-fefc-b7963737499e@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <78cb22e2-c46e-d62d-fefc-b7963737499e@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On 09/06/2023 05:00, Anshuman Khandual wrote:
+> 
+> 
+> On 6/8/23 15:43, Suzuki K Poulose wrote:
+>> On 06/06/2023 11:34, Anshuman Khandual wrote:
+>>>
+>>>
+>>> On 6/5/23 17:35, Mark Rutland wrote:
+>>>> On Wed, May 31, 2023 at 09:34:23AM +0530, Anshuman Khandual wrote:
+>>>>> This enables support for branch stack sampling event in ARMV8 PMU, checking
+>>>>> has_branch_stack() on the event inside 'struct arm_pmu' callbacks. Although
+>>>>> these branch stack helpers armv8pmu_branch_XXXXX() are just dummy functions
+>>>>> for now. While here, this also defines arm_pmu's sched_task() callback with
+>>>>> armv8pmu_sched_task(), which resets the branch record buffer on a sched_in.
+>>>>
+>>>> This generally looks good, but I have a few comments below.
+>>>>
+>>>> [...]
+>>>>
+>>>>> +static inline bool armv8pmu_branch_valid(struct perf_event *event)
+>>>>> +{
+>>>>> +    WARN_ON_ONCE(!has_branch_stack(event));
+>>>>> +    return false;
+>>>>> +}
+>>>>
+>>>> IIUC this is for validating the attr, so could we please name this
+>>>> armv8pmu_branch_attr_valid() ?
+>>>
+>>> Sure, will change the name and updated call sites.
+>>>
+>>>>
+>>>> [...]
+>>>>
+>>>>> +static int branch_records_alloc(struct arm_pmu *armpmu)
+>>>>> +{
+>>>>> +    struct pmu_hw_events *events;
+>>>>> +    int cpu;
+>>>>> +
+>>>>> +    for_each_possible_cpu(cpu) {
+>>
+>> Shouldn't this be supported_pmus ? i.e.
+>>      for_each_cpu(cpu, &armpmu->supported_cpus) {
+>>
+>>
+>>>>> +        events = per_cpu_ptr(armpmu->hw_events, cpu);
+>>>>> +        events->branches = kzalloc(sizeof(struct branch_records), GFP_KERNEL);
+>>>>> +        if (!events->branches)
+>>>>> +            return -ENOMEM;
+>>
+>> Do we need to free the allocated branches already ?
+> 
+> This gets fixed in the next patch via per-cpu allocation. I will
+> move and fold the code block in here. Updated function will look
+> like the following.
+> 
+> static int branch_records_alloc(struct arm_pmu *armpmu)
+> {
+>          struct branch_records __percpu *records;
+>          int cpu;
+> 
+>          records = alloc_percpu_gfp(struct branch_records, GFP_KERNEL);
+>          if (!records)
+>                  return -ENOMEM;
+> 
+>          /*
+>           * FIXME: Memory allocated via records gets completely
+>           * consumed here, never required to be freed up later. Hence
+>           * losing access to on stack 'records' is acceptable.
+>           * Otherwise this alloc handle has to be saved some where.
+>           */
+>          for_each_possible_cpu(cpu) {
+>                  struct pmu_hw_events *events_cpu;
+>                  struct branch_records *records_cpu;
+> 
+>                  events_cpu = per_cpu_ptr(armpmu->hw_events, cpu);
+>                  records_cpu = per_cpu_ptr(records, cpu);
+>                  events_cpu->branches = records_cpu;
+>          }
+>          return 0;
+> }
+> 
+> Regarding the cpumask argument in for_each_cpu().
+> 
+> - hw_events is a __percpu pointer in struct arm_pmu
+> 
+> 	- pmu->hw_events = alloc_percpu_gfp(struct pmu_hw_events, GFP_KERNEL)
+> 
+> 
+> - 'records' above is being allocated via alloc_percpu_gfp()
+> 
+> 	- records = alloc_percpu_gfp(struct branch_records, GFP_KERNEL)
 
 
-On 09/06/2023 08:14, 蔡沅信 wrote:
-> hi linux-perf-users
 > 
-> I glad perf tool can support ARM-SPE.
-> however, I have encountered some problems in using
-> My perf tool version is 6.1. I compiled it to run on an Android system
-> "Here are my questions"
-> 
-> 1.I can't use the perf c2c function to analyze, i'm not sure if it
-> only supports certain hardware architectures
-> 
->>> user_shell:/data/local/tmp # ./perf c2c report
->>> Failed setup nodes
-> 
-> 2.I get more information via the command /.perf report --mem-mode but
-> I'm confused about the data
-> 
-> Snoop  Locked  Blocked     Local INSTR Latency
-> ......         ..........  .       ..................
-> N/A            No          N/A           0
-> N/A            No          N/A           0
-> N/A            No          N/A           0
-> N/A            No          N/A           0
-> .               ,                .
-> .
-> .
-> I have observed a lot of data about Snoop&Locked&Blocked&Local INSTR
-> Latency and their results are always N/A&No&N/A&0 which makes me feel
-> like it is not supported. Please give me some information about it and
-> introduction.
-> 
-> Many Thanks
-> Best Regards
-> Zack.
+> If 'armpmu->supported_cpus' mask gets used instead of possible cpu mask,
+> would not there be some dangling per-cpu branch_record allocated areas,
+> that remain unsigned ? Assigning all of them back into hw_events should
+> be harmless.
 
-Hi Zack,
+Thats because you are using alloc_percpu for records ? With the current
+proposed code, if there are two different arm_pmus on the system, you
+would end up wasting 1xper_cpu branch_records ? And if there are 3,
+2xper_cpu gets wasted ?
 
-I wasn't able to reproduce your issue on Ubuntu, it could be something
-to do with Android.
+> 
+>>
+>>>>> +    }
+>>
+>>
+>> May be:
+>>      int ret = 0;
+>>
+>>      for_each_cpu(cpu, &armpmu->supported_cpus) {
+>>          events = per_cpu_ptr(armpmu->hw_events, cpu);
+>>          events->branches = kzalloc(sizeof(struct         branch_records), GFP_KERNEL);
+>>         
+>>          if (!events->branches) {
+>>              ret = -ENOMEM;
+>>              break;
+>>          }
+>>      }
+>>
+>>      if (!ret)
+>>          return 0;
+>>
+>>      for_each_cpu(cpu, &armpmu->supported_cpus) {
+>>          events = per_cpu_ptr(armpmu->hw_events, cpu);
+>>          if (!events->branches)
+>>              break;
+>>          kfree(events->branches);
+>>      }
+>>      return ret;
+>>      
+>>>>> +    return 0;
+>>>>
+>>>> This leaks memory if any allocation fails, and the next patch replaces this
+>>>> code entirely.
+>>>
+>>> Okay.
+>>>
+>>>>
+>>>> Please add this once in a working state. Either use the percpu allocation
+>>>> trick in the next patch from the start, or have this kzalloc() with a
+>>>> corresponding kfree() in an error path.
+>>>
+>>> I will change branch_records_alloc() as suggested in the next patch's thread
+>>> and fold those changes here in this patch.
+>>>
+>>>>
+>>>>>    }
+>>>>>      static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>>>>> @@ -1145,12 +1162,24 @@ static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>>>>>        };
+>>>>>        int ret;
+>>>>>    +    ret = armv8pmu_private_alloc(cpu_pmu);
+>>>>> +    if (ret)
+>>>>> +        return ret;
+>>>>> +
+>>>>>        ret = smp_call_function_any(&cpu_pmu->supported_cpus,
+>>>>>                        __armv8pmu_probe_pmu,
+>>>>>                        &probe, 1);
+>>>>>        if (ret)
+>>>>>            return ret;
+>>>>>    +    if (arm_pmu_branch_stack_supported(cpu_pmu)) {
+>>>>> +        ret = branch_records_alloc(cpu_pmu);
+>>>>> +        if (ret)
+>>>>> +            return ret;
+>>>>> +    } else {
+>>>>> +        armv8pmu_private_free(cpu_pmu);
+>>>>> +    }
+>>>>
+>>>> I see from the next patch that "private" is four ints, so please just add that
+>>>> to struct arm_pmu under an ifdef CONFIG_ARM64_BRBE. That'll simplify this, and
+>>>> if we end up needing more space in future we can consider factoring it out.
+>>>
+>>> struct arm_pmu {
+>>>      ........................................
+>>>           /* Implementation specific attributes */
+>>>           void            *private;
+>>> }
+>>>
+>>> private pointer here creates an abstraction for given pmu implementation
+>>> to hide attribute details without making it known to core arm pmu layer.
+>>> Although adding ifdef CONFIG_ARM64_BRBE solves the problem as mentioned
+>>> above, it does break that abstraction. Currently arm_pmu layer is aware
+>>> about 'branch records' but not about BRBE in particular which the driver
+>>> adds later on. I suggest we should not break that abstraction.
+>>>
+>>> Instead a global 'static struct brbe_hw_attr' in drivers/perf/arm_brbe.c
+>>> can be initialized into arm_pmu->private during armv8pmu_branch_probe(),
+>>> which will also solve the allocation-free problem. Also similar helpers
+>>> armv8pmu_task_ctx_alloc()/free() could be defined to manage task context
+>>> cache i.e arm_pmu->pmu.task_ctx_cache independently.
+>>>
+>>> But now armv8pmu_task_ctx_alloc() can be called after pmu probe confirms
+>>> to have arm_pmu->has_branch_stack.
+>>>
+>>>>
+>>>>> +
+>>>>>        return probe.present ? 0 : -ENODEV;
+>>>>>    }
+>>>>
+>>>> It also seems odd to ceck probe.present *after* checking
+>>>> arm_pmu_branch_stack_supported().
+>>>
+>>> I will reorganize as suggested below.
+>>>
+>>>>
+>>>> With the allocation removed I think this can be written more clearly as:
+>>>>
+>>>> | static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+>>>> | {
+>>>> |         struct armv8pmu_probe_info probe = {
+>>>> |                 .pmu = cpu_pmu,
+>>>> |                 .present = false,
+>>>> |         };
+>>>> |         int ret;
+>>>> |
+>>>> |         ret = smp_call_function_any(&cpu_pmu->supported_cpus,
+>>>> |                                     __armv8pmu_probe_pmu,
+>>>> |                                     &probe, 1);
+>>>> |         if (ret)
+>>>> |                 return ret; > |
+>>>> |         if (!probe.present)
+>>>> |                 return -ENODEV;
+>>>> |
+>>>> |         if (arm_pmu_branch_stack_supported(cpu_pmu))
+>>>> |                 ret = branch_records_alloc(cpu_pmu);
+>>>> |
+>>>> |         return ret;
+>>>> | }
+>>
+>> Could we not simplify this as below and keep the abstraction, since we
+>> already have it ?
+> 
+> No, there is an allocation dependency before the smp call context.
 
-It looks like the error "Failed setup nodes" comes from the
-setup_nodes() function. Can you debug it to see exactly which part of it
-is failing? I see it's something to do with numa nodes, maybe that
-doesn't work on Android or you need to add some numa stuff to the kernel
-config. Or the function needs to handle missing data differently.
+Ok, I wasn't aware of that. Could we not read whatever we need to know
+about the brbe in armv8pmu_probe_info and process it at the caller here?
+And then do the the private_alloc etc as we need ?
 
-James
+Suzuki
+
