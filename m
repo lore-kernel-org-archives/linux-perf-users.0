@@ -2,135 +2,91 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D55C7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 07:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8239DC7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 07:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230135AbjFIHOZ (ORCPT
+        id S238335AbjFIHPs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 03:14:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36108 "EHLO
+        Fri, 9 Jun 2023 03:15:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230230AbjFIHOY (ORCPT
+        with ESMTP id S238438AbjFIHPe (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 03:14:24 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 647F2272A;
-        Fri,  9 Jun 2023 00:14:23 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43818AB6;
-        Fri,  9 Jun 2023 00:15:08 -0700 (PDT)
-Received: from [10.163.44.201] (unknown [10.163.44.201])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B954E3F71E;
-        Fri,  9 Jun 2023 00:14:17 -0700 (PDT)
-Message-ID: <584cb976-4e21-5dc2-bce2-cd6c3b5d1613@arm.com>
-Date:   Fri, 9 Jun 2023 12:44:12 +0530
+        Fri, 9 Jun 2023 03:15:34 -0400
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E59A73AA0
+        for <linux-perf-users@vger.kernel.org>; Fri,  9 Jun 2023 00:15:10 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-33be5dbb90cso6372335ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 09 Jun 2023 00:15:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686294910; x=1688886910;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=UXcHU2bOUKkWG5SrVEt81jnMq95uggPNWPX7wKWbtNg=;
+        b=DDVTwl6UbenNG8sm1EXOMA1noQRXglL2vDdGiiu6eNyACe3PExAuCeakQWsOf1pzsN
+         V8+A0eXD9RbAz+VaKZmnw1+klObBGb3weU/pl+k9wGhj/MiBErsN7GNsGZTgXx2j7EDe
+         zWZ1u01FjJ4P72N1xJ5AD4VXCcjv8EN8v0mkTHWuDctxUILb9nk80LYobqGJFid8j2Ug
+         J6Kl1hUKA9H6bsjbYBMfUporCGUGhW2A8Csp3VFBHEqob4g+KzVbx+6T+CzaE9PlIFKx
+         COOhLJ38rW5ZJYWMS7LtnWqqHgsQEiHS2jXG5ignAHqEL2xYZXJBwLHM78YuTIW53ZSD
+         nMZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686294910; x=1688886910;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=UXcHU2bOUKkWG5SrVEt81jnMq95uggPNWPX7wKWbtNg=;
+        b=JwFH7TZ4nFc0jpkpLstaTRQ8DfxiNlXonZno97jOn2BY2b8bTEyaNtLedVYDZGq0JF
+         wNV47QwRMR9ig7i+KH28JOrWetP1nl/qJDG6leQ1UB9Yvq+inVOkErsNXjGSbHLFmMhb
+         7c2mXncgSY6POUNnDMlpH3qgPudXN4TbKLbsWfEcf9P1HSusQczE8LQbJ+et68jX1DNC
+         g8o3SzNwMsQyDennRkXJkCUKO7KCcpDojCaGonWjhfyWO4dpoyPQ1k9dyXaTfStre5p6
+         s1NWiYzLxpj++pOLwB2+aUbAueo8SqkZoVqD94zxLaFiCSelGTRVTV7gMQMctqs5ugr1
+         56Zw==
+X-Gm-Message-State: AC+VfDzleNJkRlKqBpcjTr83oIBo+OTL0S6S0HPgr6vmBk1BcuQCjqrw
+        wSWfBzF176p02pWqH2bn3nuR+PQBX19e6rSgvwiNkNC6ssA=
+X-Google-Smtp-Source: ACHHUZ4CwlLS9vrxJK1IcSKBz+kWkAPxkuBSAYXHZHWjAEyFgHrVSCUrUbDIRdK39OHN2KC96avZ28IRirM8JarAo14=
+X-Received: by 2002:a92:cf08:0:b0:33d:c0e1:9cb2 with SMTP id
+ c8-20020a92cf08000000b0033dc0e19cb2mr841495ilo.27.1686294909698; Fri, 09 Jun
+ 2023 00:15:09 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH V11 05/10] arm64/perf: Add branch stack support in ARMV8
- PMU
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-6-anshuman.khandual@arm.com>
- <ZH3PCqYt/UzoiVx3@FVFF77S0Q05N>
- <ba396c30-6719-1dfb-77c2-9f7e1715b57c@arm.com>
- <290b577c-4740-d2e2-d236-c8bbe2f907b9@arm.com>
-Content-Language: en-US
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <290b577c-4740-d2e2-d236-c8bbe2f907b9@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From:   =?UTF-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>
+Date:   Fri, 9 Jun 2023 15:14:58 +0800
+Message-ID: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
+Subject: Some questions about using the perf tool in ARM-SPE
+To:     linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-[..]
+hi linux-perf-users
 
-On 6/8/23 15:43, Suzuki K Poulose wrote:
->>> | static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
->>> | {
->>> |         struct armv8pmu_probe_info probe = {
->>> |                 .pmu = cpu_pmu,
->>> |                 .present = false,
->>> |         };
->>> |         int ret;
->>> |
->>> |         ret = smp_call_function_any(&cpu_pmu->supported_cpus,
->>> |                                     __armv8pmu_probe_pmu,
->>> |                                     &probe, 1);
->>> |         if (ret)
->>> |                 return ret;
->>> |         if (!probe.present)
->>> |                 return -ENODEV;
->>> |
->>> |           if (!arm_pmu_branch_stack_supported(cpu_pmu))
->>> |             return 0;
->>> |
->>> |         ret = armv8pmu_private_alloc(cpu_pmu);
->>> |         if (ret)
->>> |         return ret;
->>> |       
->>> |          ret = branch_records_alloc(cpu_pmu);
->>> |          if (ret)
->>> |          armv8pmu_private_free(cpu_pmu);
->>> |       
->>> |        return ret;
->>> | }
+I glad perf tool can support ARM-SPE.
+however, I have encountered some problems in using
+My perf tool version is 6.1. I compiled it to run on an Android system
+"Here are my questions"
 
+1.I can't use the perf c2c function to analyze, i'm not sure if it
+only supports certain hardware architectures
 
-After splitting the task ctx cache management from pmu private data
-management, the above function will look something like this taking
-care of all error path freeing as well.
+>>user_shell:/data/local/tmp # ./perf c2c report
+>> Failed setup nodes
 
-static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
-{
-        struct armv8pmu_probe_info probe = {
-                .pmu = cpu_pmu,
-                .present = false,
-        };
-        int ret;
+2.I get more information via the command /.perf report --mem-mode but
+I'm confused about the data
 
-        ret = armv8pmu_private_alloc(cpu_pmu);
-        if (ret)
-                return ret;
+Snoop  Locked  Blocked     Local INSTR Latency
+......         ..........  .       ..................
+N/A            No          N/A           0
+N/A            No          N/A           0
+N/A            No          N/A           0
+N/A            No          N/A           0
+.               ,                .
+.
+.
+I have observed a lot of data about Snoop&Locked&Blocked&Local INSTR
+Latency and their results are always N/A&No&N/A&0 which makes me feel
+like it is not supported. Please give me some information about it and
+introduction.
 
-        ret = smp_call_function_any(&cpu_pmu->supported_cpus,
-                                    __armv8pmu_probe_pmu,
-                                    &probe, 1);
-        if (ret)
-                goto probe_err;
-
-        if (!probe.present) {
-                ret = -ENODEV;
-                goto probe_err;
-        }
-
-        if (cpu_pmu->has_branch_stack) {
-                ret = armv8pmu_task_ctx_cache_alloc(cpu_pmu);
-                if (ret)
-                        goto probe_err;
-
-                ret = branch_records_alloc(cpu_pmu);
-                if (ret) {
-                        armv8pmu_task_ctx_cache_free(cpu_pmu);
-                        goto probe_err;
-                }
-                return 0;
-        }
-        armv8pmu_private_free(cpu_pmu);
-        return 0;
-
-probe_err:
-        armv8pmu_private_free(cpu_pmu);
-        return ret;
-}
+Many Thanks
+Best Regards
+Zack.
