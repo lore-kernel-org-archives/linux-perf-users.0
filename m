@@ -2,213 +2,175 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99310C7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 23:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5FCC7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 23:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231938AbjFIXyd (ORCPT
+        id S229664AbjFIX6i (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 19:54:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41986 "EHLO
+        Fri, 9 Jun 2023 19:58:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229733AbjFIXyc (ORCPT
+        with ESMTP id S229470AbjFIX6i (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 19:54:32 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D701E35B0
-        for <linux-perf-users@vger.kernel.org>; Fri,  9 Jun 2023 16:54:30 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-bb3cb542875so3244991276.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 09 Jun 2023 16:54:30 -0700 (PDT)
+        Fri, 9 Jun 2023 19:58:38 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 040963594
+        for <linux-perf-users@vger.kernel.org>; Fri,  9 Jun 2023 16:58:37 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-3f9d619103dso33191cf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 09 Jun 2023 16:58:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686354870; x=1688946870;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=oNyUS02eW/yXFIAlgFDfwEmFoe9Pd7uSEDgKLORvHjM=;
-        b=V11apG9LHOwhutH46QHmQ0gFKrfNaC6p1CizyVW65E2n8EhG+rIvmW285qgxYWdy68
-         Am892SzAOwS/ktZ92R2Inm+9rHnmpjZH5EtYHOE9rLiXEl33z6EZLwsx3lkKfCfkYfNa
-         dnpiTxRdkt2Aha2k3I1IdY+WUUBb6EnCjBrF+YbO1s2z1W1d4daY7/xMLd+PqX6c2ZN7
-         1l4pasEPgSopAcpHBehgcFW+gl/CqZK9N+iAoO9Xm2e0ZieeV+dpSeNsvOeXcKMNRuf4
-         /fEJf+7N7JW8da5CtMIl/WIre12zkDa/wtXnudrUI7oozutQxWyOqfMhHfJ4n0RSogMw
-         bEDA==
+        d=google.com; s=20221208; t=1686355116; x=1688947116;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VG+l7S0lT2DdlK4X8NsVJWxVQsk8ZZV0CX3smb3kA7I=;
+        b=RG3aSSxqo4fPy2tdK8HUKyxo97jG9KlauybfddDx4EjeKd/+YOuqH3MWKdERTpZW0X
+         6QtvxQuPCOHlr74+Vw2Rt2vvAXjr77/rc6XIUGCOhw9hUFIN6jIvSKMCvfygyF38iQ3R
+         l9BiKU05Q61RFqJEP94cO54p2iw3nMtqAoPLdO9HgnoRniXoO3UMAcP7+/JmEXdOZ4tN
+         qTbL+HNtSIvY3xV7oUDJiEDR1bELo4ioSc0kqQ7/OtfkCPNn78IeqYll5o96658w1y36
+         Hrk2+jM5O9CMvMmBZVlUehcQ+q5xk9U0QN0io3h12PbxqsuJEUwJUxkpvi76UgkCAoqn
+         Ahqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686354870; x=1688946870;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oNyUS02eW/yXFIAlgFDfwEmFoe9Pd7uSEDgKLORvHjM=;
-        b=On2MAErR5mfhyG1ZoP5Uc8En8rC7eP0WBKr4N+QxINt8wk6q4upnxD5CvXAC/lTl08
-         vTLLDMQYX+kBN8cg+kmrRsMVykYGiTvOqYe7RhGJTOT4UGM3uxvdqpF+mH2aENA4uzjs
-         0bmjHEi3trqNEGvJxU2h7+7H09vdrN5SKNIHO67vxYPtpoGf2beZNN3tVkENwfwLhnAb
-         UeKL1hdqnIBOpuA/zpGKezSj8Rkkld3CfxxVhZqWyALIDfp+iBE8MZiwwjQhzqgNW03J
-         LsRNu4IHO73dlChM8/qysOqcg0cbbjtO+LiMcB8UYp1VlN4yll2+dKZVBj2s5OQzg5gR
-         OcnQ==
-X-Gm-Message-State: AC+VfDxZUaHQ5G1BdEEf2VSRwzywCSGm5dw9oDYwZANh5P7ZWtU4jmPq
-        eEtoERmQBWvKM2+EP//JRwZoc6ibC8RA
-X-Google-Smtp-Source: ACHHUZ4PMyCkdCSyENQFYB0qETjtjOg/fcbawc434c4hu5aAPdXX7kCJC4yurstliqdU7VqpZ+H7i4hZQlWz
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:55f2:1922:c44b:472d])
- (user=irogers job=sendgmr) by 2002:a25:da09:0:b0:bbe:8486:5895 with SMTP id
- n9-20020a25da09000000b00bbe84865895mr1408283ybf.1.1686354870144; Fri, 09 Jun
- 2023 16:54:30 -0700 (PDT)
-Date:   Fri,  9 Jun 2023 16:54:19 -0700
-In-Reply-To: <20230609235419.204624-1-irogers@google.com>
-Message-Id: <20230609235419.204624-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20230609235419.204624-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 2/2] perf srcline: Make sentinel reading for binutils
- addr2line more robust
+        d=1e100.net; s=20221208; t=1686355116; x=1688947116;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VG+l7S0lT2DdlK4X8NsVJWxVQsk8ZZV0CX3smb3kA7I=;
+        b=PoG9wNiKNbvu0BRNrsIeBIcsJ0Jq119TUXeGNfM+BmMEpHy9jptgqG4tk5jaItogTO
+         QU4Rpb0k2BrlSI0QBsNO5y/jFrO/TFwJLdd7dtgeryRmN6biL/h2GxXuqL1UEw1/Jt6/
+         LBadFt0cacHTiTg1kxD7SmGU0Q8j04GCCBMASZ4rV7tdw6OEvkGYeQU/rIugXmyDVdKb
+         mF851Ujt5sf56CdNoy1APee8/iTkgoimMd1LwJmHjI/M3hQno4x1htnZdrgugnmNrgxC
+         jd+/KaoX9muMdIwKVF3RBcAcWD910+HnJh+GVlGm6sW3dddvMKkXn1YhkOC3jdjbYQiN
+         jnwA==
+X-Gm-Message-State: AC+VfDxnBOIGyoF1utY/kGiPqVBvWnCEXaOb474zEKQcr4l4pUhQC4VC
+        xWZ4SyanTWdduiczIO+t1oE3apo0IlV7GHdMjCT/H7VHWAfWO6pcBPyqXg==
+X-Google-Smtp-Source: ACHHUZ5HMe/H+kpS49Xk82F0DTAqyjUWIVE8QUP4Qk+/JDA79GYl79LotU5kgv0Zo52HORYiY6IW+mguyK22om1UHRw=
+X-Received: by 2002:ac8:7fc3:0:b0:3f8:8c06:c53b with SMTP id
+ b3-20020ac87fc3000000b003f88c06c53bmr59755qtk.0.1686355116057; Fri, 09 Jun
+ 2023 16:58:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230609033128.ujodex56vkha2ifr@M910t> <CAP-5=fVWhp_cMpgwTRiO+bC7tKKGvKsavRVVDW-k9qYB7ZoXWg@mail.gmail.com>
+In-Reply-To: <CAP-5=fVWhp_cMpgwTRiO+bC7tKKGvKsavRVVDW-k9qYB7ZoXWg@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        Changbin Du <changbin.du@huawei.com>
+Date:   Fri, 9 Jun 2023 16:58:24 -0700
+Message-ID: <CAP-5=fWRpZSYcuuiSKGL4cS+SDBaSA6GBXJuw-gQAir+4EsagA@mail.gmail.com>
+Subject: Re: [Issue] perf report gets stuck at addr2line
+To:     Changbin Du <changbin.du@huawei.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The addr2line process is sent an address then multiple function,
-filename:line "records" are read. To detect the end of output a ',' is
-sent and for llvm-addr2line a ',' is then read back showing the end of
-addrline's output. For binutils addr2line the ',' translates to
-address 0 and we expect the bogus filename marker "??:0" (see
-filename_split) to be sent from addr2line. For some kernels address 0
-may have a mapping and so a seemingly valid inline output is given and
-breaking the sentinel discovery:
+On Thu, Jun 8, 2023 at 10:13=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Thu, Jun 8, 2023 at 8:31=E2=80=AFPM Changbin Du <changbin.du@huawei.co=
+m> wrote:
+> >
+> > Hello,
+> > I tried perf of mainline built on Ubuntu 20.04 and it gets stuck when r=
+eporting.
+> >
+> > $ sudo lsb_release -d
+> > Description:    Ubuntu 20.04.6 LTS
+> > $ sudo perf record -g ls
+> > $ perf report --stdio
+> > [stuck]
+> >
+> > It seems this addr2line binary was't working as perf expected. I found =
+below
+> > error:
+> > addr2line: addr2line configuration failed
+> >
+> > Then I ran addr2line manually:
+> >
+> > $ addr2line -v
+> > GNU addr2line (GNU Binutils for Ubuntu) 2.34
+> > Copyright (C) 2020 Free Software Foundation, Inc.
+> > ...
+> > $ addr2line -e .debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b=
+54/elf -i -f
+> > ,
+> > __per_cpu_start
+> > ??:?
+> >
+> > The addr2line_configure() expects a '?' but we got '_'.
+> >
+> > I am not sure whether this is related to Ian's change but it works on v=
+6.3.
+>
+> Thanks Changbin,
+>
+> I see this too:
+> ```
+> $ addr2line -e vmlinux -f -i
+> ,
+> __per_cpu_start
+> ./arch/x86/kernel/cpu/common.c:1850
+> ^C
+> $ llvm-addr2line -e vmlinux -f -i
+> ,
+> ,
+> $ addr2line -e `which true` -f -i
+> ,
+> ??
+> ??:0
+> $ nm vmlinux|grep __per_cpu_start
+> 0000000000000000 D __per_cpu_start
+> ```
+> 6.3 was largely the same as 6.2 as Linus asked we let patches bake on
+> linux-next. So the llvm-addr2line support may not have been there in
+> 6.3. Presumably this is 6.4 you are testing. I think this is a
+> separate issue to:
+> https://lore.kernel.org/lkml/20230608061812.3715566-1-irogers@google.com/
+>
+> We could change the configure for vmlinux, reading it say from
+> a2l->argv. Perhaps we can use a different sentinel value, but some
+> experiments there:
+> ```
+> $ addr2line -e vmlinux -f -i
+> FFFFFFFFFFFFFFFF
+> ??
+> ??:0
+> ^C
+> $ llvm-addr2line -e vmlinux -f -i
+> FFFFFFFFFFFFFFFF
+> __init_scratch_end
+> ??:0
+> ```
+> Part of the problem is we need a sentinel value that gives the same
+> number of lines of output whether it is llvm or binutils.
+>
+> We could have broken and binutils be the same, but this is still going
+> to cause issues. The problem is we send ',' to addr2line to detect
+> when it has finished sending output by it writing out question marks.
+> binutils addr2line is now not writing the ?s as it looks to turn any
+> invalid input to 0 and dump the symbol for that. This behavior is
+> unchanged by my patches, so I suspect the problem has happened from a
+> kernel change.
 
-```
-$ addr2line -e vmlinux -f -i
-,
-__per_cpu_start
-./arch/x86/kernel/cpu/common.c:1850
-```
+Hi Changbin,
 
-To avoid this problem enable the address dumping for addr2line (the -a
-option). If an address of 0x0000000000000000 is read then this is the
-sentinel value working around the problem above. The filename_split
-still needs to check for "??:0" as bogus non-zero addresses also need
-handling.
+I think I found a way around the problem by enabling address dumping
+from addr2line. I've sent the patches here:
+https://lore.kernel.org/lkml/20230609235419.204624-1-irogers@google.com/
+but only lightly tested them. Could you please take a look and send a
+Tested-by ?
 
-Reported-by: Changbin Du <changbin.du@huawei.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/srcline.c | 61 ++++++++++++++++++++++++++++++++++-----
- 1 file changed, 53 insertions(+), 8 deletions(-)
+It is probably too late to get this into 6.4.0, but we can add a Fixes
+tag so that it gets picked into 6.4.1. The patches here are on the
+perf-tools-next tree targeting Linux 6.5.
 
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index fc85cdd6c8f9..c99a001453b4 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -406,7 +406,7 @@ static struct child_process *addr2line_subprocess_init(const char *addr2line_pat
- 	const char *argv[] = {
- 		addr2line_path ?: "addr2line",
- 		"-e", binary_path,
--		"-i", "-f", NULL
-+		"-a", "-i", "-f", NULL
- 	};
- 	struct child_process *a2l = zalloc(sizeof(*a2l));
- 	int start_command_status = 0;
-@@ -461,10 +461,10 @@ static enum a2l_style addr2line_configure(struct child_process *a2l, const char
- 			style = LLVM;
- 			cached = true;
- 			lines = 1;
--		} else if (ch == '?') {
-+		} else if (ch == '0') {
- 			style = GNU_BINUTILS;
- 			cached = true;
--			lines = 2;
-+			lines = 3;
- 		} else {
- 			if (!symbol_conf.disable_add2line_warn) {
- 				char *output;
-@@ -516,20 +516,64 @@ static int read_addr2line_record(struct io *io,
- 	if (line_nr != NULL)
- 		*line_nr = 0;
- 
-+	/*
-+	 * Read the first line. Without an error this will be either an address
-+	 * like 0x1234 or for llvm-addr2line the sentinal ',' character.
-+	 */
- 	if (io__getline(io, &line, &line_len) < 0 || !line_len)
- 		goto error;
- 
--	if (style == LLVM && line_len == 2 && line[0] == ',') {
--		zfree(&line);
--		return 0;
-+	if (style == LLVM) {
-+		if (line_len == 2 && line[0] == ',') {
-+			zfree(&line);
-+			return 0;
-+		}
-+	} else {
-+		int zero_count = 0, non_zero_count = 0;
-+
-+		/* The address should always start 0x. */
-+		if (line_len < 2 || line[0] != '0' || line[1] != 'x')
-+			goto error;
-+
-+		for (size_t i = 2; i < line_len; i++) {
-+			if (line[i] == '0')
-+				zero_count++;
-+			else
-+				non_zero_count++;
-+		}
-+		if (!non_zero_count) {
-+			int ch;
-+
-+			if (!zero_count) {
-+				/* Line was erroneous just '0x'. */
-+				goto error;
-+			}
-+			/*
-+			 * Line was 0x0..0, the sentinel for binutils. Remove
-+			 * the function and filename lines.
-+			 */
-+			zfree(&line);
-+			do {
-+				ch = io__get_char(io);
-+			} while (ch > 0 && ch != '\n');
-+			do {
-+				ch = io__get_char(io);
-+			} while (ch > 0 && ch != '\n');
-+			return 0;
-+		}
- 	}
- 
-+	/* Read the second function name line. */
-+	if (io__getline(io, &line, &line_len) < 0 || !line_len)
-+		goto error;
-+
- 	if (function != NULL)
- 		*function = strdup(strim(line));
- 
- 	zfree(&line);
- 	line_len = 0;
- 
-+	/* Read the third filename and line number line. */
- 	if (io__getline(io, &line, &line_len) < 0 || !line_len)
- 		goto error;
- 
-@@ -633,8 +677,9 @@ static int addr2line(const char *dso_name, u64 addr,
- 		goto out;
- 	case 0:
- 		/*
--		 * The first record was invalid, so return failure, but first read another
--		 * record, since we asked a junk question and have to clear the answer out.
-+		 * The first record was invalid, so return failure, but first
-+		 * read another record, since we sent a sentinel ',' for the
-+		 * sake of detected the last inlined function.
- 		 */
- 		switch (read_addr2line_record(&io, a2l_style, NULL, NULL, NULL)) {
- 		case -1:
--- 
-2.41.0.162.gfafddb0af9-goog
+Thanks,
+Ian
 
+
+> Thanks,
+> Ian
+>
+> > --
+> > Cheers,
+> > Changbin Du
