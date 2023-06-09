@@ -2,396 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9178C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 22:40:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76D8C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 23:54:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229517AbjFIWk2 (ORCPT
+        id S229939AbjFIXyb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 18:40:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47688 "EHLO
+        Fri, 9 Jun 2023 19:54:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjFIWk1 (ORCPT
+        with ESMTP id S229733AbjFIXya (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 18:40:27 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A33A35BC
-        for <linux-perf-users@vger.kernel.org>; Fri,  9 Jun 2023 15:40:26 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-babb3528ce5so2881268276.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 09 Jun 2023 15:40:26 -0700 (PDT)
+        Fri, 9 Jun 2023 19:54:30 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAD5235B1
+        for <linux-perf-users@vger.kernel.org>; Fri,  9 Jun 2023 16:54:28 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba81b238ee8so2802770276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 09 Jun 2023 16:54:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686350425; x=1688942425;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+        d=google.com; s=20221208; t=1686354868; x=1688946868;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=VJ/oCWzA+yOfgNosg7yCARX3f3WD532lX89SwknwbFE=;
-        b=up80m5SgFVzhZozVGd7h5+yoFepYS10VKiUM7q0OAiqDntEVj7GafQ14HZn+uPBk64
-         6n2gAkyi3+fXuv8Sw/b3tlssJq9ft2kCgJYnz88+DTzbvRS7vVqkJOGeKHJopvjSecWt
-         i00r7gSkfgUm36l++A7YZ1Yl8Q0zClAmnzTOvJK0u51yoWHaJVvU6xT02NjjiEw9xLX8
-         Z8NawuDU+eCmx4FngQI50q4FboVe5yWrWYMFujM9BrhzzdXgyHKT10KTwONMbJMWhdR8
-         eb1ZWbvlDOiJ583IRtGINOq3NvFd1aeTj027/vw8u4/w/PJudjREkjY8uU2l8Ngksapy
-         Dg2A==
+        bh=cZRa8J45tSEoIBwwMfP3oeiIjnBxryB3tiHQ4mYVspA=;
+        b=A0YP3D1MDS6ipDOhIWcopNNcD1QYcBlz/2xVJXWlJnEcbGaUxeiAs8tAUYkIngCOa8
+         MQo2PIbwQsXAFY1yuFQGkjf3bvgbdqa3mrQBK2i0yIO5RLeYwe/tpXG6AkOgOrci1IM6
+         ee3XPIDjmnxTfAdqa01/cUYTAwXqQaBt3LihZqFiSQfj+Jb56vCWeBQ0D7e3X0KHZvuN
+         yynmKcETGjwSFfENJ2wUnkXz3Ho9B6qnkXADkQCciNzXPJ2rCD22RrDxLcS5y4lyZldw
+         C5JPSBAZ0ooPspDHdyJ11GeQVbOA4ixy1f+h1W52hL6Td8d6Y+NofNCoJTEmAYSVrDGh
+         4PwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686350425; x=1688942425;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=1e100.net; s=20221208; t=1686354868; x=1688946868;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=VJ/oCWzA+yOfgNosg7yCARX3f3WD532lX89SwknwbFE=;
-        b=fXImcuzzPCR0zEqYuunzXuFwTetnjNwlglDRwYXdw9cO2pXFPhVSaChQ1JZpqF4u/b
-         su8ePTybaxpqKlTrge00gaF5Z0jK11tqkVwcxa0ZzgFyUFpBxt17qAn6QR7OQ/IQ4DiX
-         Lv7A+Qu0c3HQwORIDJ0BrORWSm8durjQVmbn9SzYBAvww3FHb6WgLswpslRFhJyG2BrE
-         3aCIH1HJo144ECl4C9SUJ9vAcmWU9tWTaKJSX7MMSjEoqPvCspvMneaGIVfgkM9HRzH1
-         Cr/Olq7439bpxVLR4zzCMhHpLY7fMuTd5yOzTy/dvvcG6ewzz3qRk1DfzRDRLKSfPt7W
-         eC1Q==
-X-Gm-Message-State: AC+VfDxvelcAInv+m7NvISUcKRja1Vsb8xeCeKri3P4DJg9JZLnV7eh4
-        xucgid7Qw4vBI7/qrfAz8OzLRiTT5xbk
-X-Google-Smtp-Source: ACHHUZ4QD/zHlekmm6G++eWjoFjIqxdft4G6xFO/NIzF/aNyLSaHnGtFgWHuzpnDDHO4X5aO01Vp5iGLUT1G
+        bh=cZRa8J45tSEoIBwwMfP3oeiIjnBxryB3tiHQ4mYVspA=;
+        b=aqxGHwpaTf2uYynK8711Zc0Grtznx/L6PmzYbyldW2CUT96Mx3OSVPPVwlhg11CFI3
+         Nwe8B768CvfNV1VT0hhNoWyBZ4mpl1/PyGEnmU2xj4gUYImIUxJXdYMiY9QB2wQ2m9TF
+         lSMq993D1QefecuwEJg53PnYCuyOLqRUHmtReMVFZMjop8Wq/5lUp1VTa/61FTVEviNW
+         z6pQIHFezPj4RnsRE34K65Rcv8Y9QQjyCjFrtUrXPyqC0sbJAsqXkTP+3HX5srYKB3kx
+         4sTmZ5d1IhPxTM93op8Vz4/GcrwqTvlZk99bwVOYbg3WgcUHTshUaxS74JHw+dQ4s+Gg
+         sojA==
+X-Gm-Message-State: AC+VfDwXjmjX0ogk86riz6YrBHdnRJU3nRxx7NVpdZisjTy+3TSptGCs
+        6XrvsHWABodX9Vz14I90ZaVXz7VmaoZb
+X-Google-Smtp-Source: ACHHUZ5r3Yz2yKKHzyS3K5w8FkkkyUAesFC0U/xNjOAbG5oeaKw2Nxnz2IOd1Bgz+HxxkgCovA9JoZEHUQJh
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:55f2:1922:c44b:472d])
- (user=irogers job=sendgmr) by 2002:a25:ab87:0:b0:bad:252:9f73 with SMTP id
- v7-20020a25ab87000000b00bad02529f73mr711064ybi.0.1686350425476; Fri, 09 Jun
- 2023 15:40:25 -0700 (PDT)
-Date:   Fri,  9 Jun 2023 15:40:04 -0700
-Message-Id: <20230609224004.180988-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:1085:b0:ba8:cbd2:61b3 with SMTP
+ id v5-20020a056902108500b00ba8cbd261b3mr731327ybu.5.1686354868009; Fri, 09
+ Jun 2023 16:54:28 -0700 (PDT)
+Date:   Fri,  9 Jun 2023 16:54:18 -0700
+Message-Id: <20230609235419.204624-1-irogers@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1] tools api fs: More thread safety for global filesystem variables
+Subject: [PATCH v1 1/2] perf srcline: Make addr2line configuration failure
+ more verbose
 From:   Ian Rogers <irogers@google.com>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ian Rogers <irogers@google.com>
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Tom Rix <trix@redhat.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        Changbin Du <changbin.du@huawei.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Multiple threads, such as with "perf top", may race to initialize a
-file system path like hugetlbfs. The racy initialization of the path
-leads to at least memory leaks. To avoid this initialize each fs for
-reading the mount point path with pthread_once.
-
-Mounting the file system may also be racy, so introduce a mutex over
-the function. This does mean that the path is being accessed with and
-without a mutex, which is inherently racy but hopefully benign,
-especially as there are fewer callers to fs__mount.
-
-Remove the fs__entries by directly using global variables, this was
-done as no argument like the index can be passed to the init once
-routine.
-
-Issue found and tested with "perf top" and address sanitizer.
+To aid debugging why it fails. Also, combine the loops for reading a
+line for the llvm/binutils cases.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/fs/fs.c | 211 +++++++++++++++++-------------------------
- 1 file changed, 86 insertions(+), 125 deletions(-)
+ tools/perf/util/srcline.c | 34 +++++++++++++++++++++-------------
+ 1 file changed, 21 insertions(+), 13 deletions(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index 22d34a0be8b4..5cb0eeec2c8a 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -1,4 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0
-+#include <assert.h>
- #include <ctype.h>
- #include <errno.h>
- #include <limits.h>
-@@ -10,6 +11,7 @@
- #include <sys/types.h>
- #include <sys/stat.h>
- #include <fcntl.h>
-+#include <pthread.h>
- #include <unistd.h>
- #include <sys/mount.h>
- 
-@@ -43,7 +45,7 @@
- #define BPF_FS_MAGIC           0xcafe4a11
- #endif
- 
--static const char * const sysfs__fs_known_mountpoints[] = {
-+static const char * const sysfs__known_mountpoints[] = {
- 	"/sys",
- 	0,
- };
-@@ -86,69 +88,70 @@ static const char * const bpf_fs__known_mountpoints[] = {
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index b8e596528d7e..fc85cdd6c8f9 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -441,7 +441,7 @@ enum a2l_style {
+ 	LLVM,
  };
  
- struct fs {
--	const char		*name;
--	const char * const	*mounts;
-+	const char *		 const name;
-+	const char * const *	 const mounts;
- 	char			*path;
--	bool			 found;
--	bool			 checked;
--	long			 magic;
--};
--
--enum {
--	FS__SYSFS   = 0,
--	FS__PROCFS  = 1,
--	FS__DEBUGFS = 2,
--	FS__TRACEFS = 3,
--	FS__HUGETLBFS = 4,
--	FS__BPF_FS = 5,
-+	pthread_mutex_t		 mount_mutex;
-+	const long		 magic;
- };
- 
- #ifndef TRACEFS_MAGIC
- #define TRACEFS_MAGIC 0x74726163
- #endif
- 
--static struct fs fs__entries[] = {
--	[FS__SYSFS] = {
--		.name	= "sysfs",
--		.mounts	= sysfs__fs_known_mountpoints,
--		.magic	= SYSFS_MAGIC,
--		.checked = false,
--	},
--	[FS__PROCFS] = {
--		.name	= "proc",
--		.mounts	= procfs__known_mountpoints,
--		.magic	= PROC_SUPER_MAGIC,
--		.checked = false,
--	},
--	[FS__DEBUGFS] = {
--		.name	= "debugfs",
--		.mounts	= debugfs__known_mountpoints,
--		.magic	= DEBUGFS_MAGIC,
--		.checked = false,
--	},
--	[FS__TRACEFS] = {
--		.name	= "tracefs",
--		.mounts	= tracefs__known_mountpoints,
--		.magic	= TRACEFS_MAGIC,
--		.checked = false,
--	},
--	[FS__HUGETLBFS] = {
--		.name	= "hugetlbfs",
--		.mounts = hugetlbfs__known_mountpoints,
--		.magic	= HUGETLBFS_MAGIC,
--		.checked = false,
--	},
--	[FS__BPF_FS] = {
--		.name	= "bpf",
--		.mounts = bpf_fs__known_mountpoints,
--		.magic	= BPF_FS_MAGIC,
--		.checked = false,
--	},
--};
-+static void fs__init_once(struct fs *fs);
-+static const char *fs__mountpoint(const struct fs *fs);
-+static const char *fs__mount(struct fs *fs);
-+
-+#define FS(lower_name, fs_name, upper_name)		\
-+static struct fs fs__##lower_name = {			\
-+	.name = #fs_name,				\
-+	.mounts = lower_name##__known_mountpoints,	\
-+	.magic = upper_name##_MAGIC,			\
-+	.mount_mutex = PTHREAD_MUTEX_INITIALIZER,	\
-+};							\
-+							\
-+static void lower_name##_init_once(void)		\
-+{							\
-+	struct fs *fs = &fs__##lower_name;		\
-+							\
-+	fs__init_once(fs);				\
-+}							\
-+							\
-+const char *lower_name##__mountpoint(void)		\
-+{							\
-+	static pthread_once_t init_once = PTHREAD_ONCE_INIT;	\
-+	struct fs *fs = &fs__##lower_name;		\
-+							\
-+	pthread_once(&init_once, lower_name##_init_once);	\
-+	return fs__mountpoint(fs);			\
-+}							\
-+							\
-+const char *lower_name##__mount(void)			\
-+{							\
-+	const char *mountpoint = lower_name##__mountpoint();	\
-+	struct fs *fs = &fs__##lower_name;		\
-+							\
-+	if (mountpoint)					\
-+		return mountpoint;			\
-+							\
-+	return fs__mount(fs);				\
-+}							\
-+							\
-+bool lower_name##__configured(void)			\
-+{							\
-+	return lower_name##__mountpoint() != NULL;	\
-+}
-+
-+FS(sysfs, sysfs, SYSFS);
-+FS(procfs, procfs, PROC_SUPER);
-+FS(debugfs, debugfs, DEBUGFS);
-+FS(tracefs, tracefs, TRACEFS);
-+FS(hugetlbfs, hugetlbfs, HUGETLBFS);
-+FS(bpf_fs, bpf, BPF_FS);
- 
- static bool fs__read_mounts(struct fs *fs)
+-static enum a2l_style addr2line_configure(struct child_process *a2l)
++static enum a2l_style addr2line_configure(struct child_process *a2l, const char *dso_name)
  {
--	bool found = false;
- 	char type[100];
- 	FILE *fp;
- 	char path[PATH_MAX + 1];
-@@ -157,22 +160,17 @@ static bool fs__read_mounts(struct fs *fs)
- 	if (fp == NULL)
- 		return false;
+ 	static bool cached;
+ 	static enum a2l_style style;
+@@ -450,6 +450,7 @@ static enum a2l_style addr2line_configure(struct child_process *a2l)
+ 		char buf[128];
+ 		struct io io;
+ 		int ch;
++		int lines;
  
--	while (!found &&
--	       fscanf(fp, "%*s %" STR(PATH_MAX) "s %99s %*s %*d %*d\n",
-+	while (fscanf(fp, "%*s %" STR(PATH_MAX) "s %99s %*s %*d %*d\n",
- 		      path, type) == 2) {
- 
- 		if (strcmp(type, fs->name) == 0) {
--			free(fs->path);
- 			fs->path = strdup(path);
--			if (!fs->path)
--				return false;
--			found = true;
-+			fclose(fp);
-+			return fs->path != NULL;
+ 		if (write(a2l->in, ",\n", 2) != 2)
+ 			return BROKEN;
+@@ -459,19 +460,29 @@ static enum a2l_style addr2line_configure(struct child_process *a2l)
+ 		if (ch == ',') {
+ 			style = LLVM;
+ 			cached = true;
++			lines = 1;
+ 		} else if (ch == '?') {
+ 			style = GNU_BINUTILS;
+ 			cached = true;
++			lines = 2;
+ 		} else {
+-			style = BROKEN;
++			if (!symbol_conf.disable_add2line_warn) {
++				char *output;
++				size_t output_len;
++
++				io__getline(&io, &output, &output_len);
++				pr_warning("%s %s: addr2line configuration failed\n",
++					   __func__, dso_name);
++				pr_warning("\t%c%s\n", ch, output);
++			}
++			return BROKEN;
  		}
+-		do {
++		while (lines) {
+ 			ch = io__get_char(&io);
+-		} while (ch > 0 && ch != '\n');
+-		if (style == GNU_BINUTILS) {
+-			do {
+-				ch = io__get_char(&io);
+-			} while (ch > 0 && ch != '\n');
++			if (ch <= 0)
++				break;
++			if (ch == '\n')
++				lines--;
+ 		}
+ 		/* Ignore SIGPIPE in the event addr2line exits. */
+ 		signal(SIGPIPE, SIG_IGN);
+@@ -591,12 +602,9 @@ static int addr2line(const char *dso_name, u64 addr,
+ 			pr_warning("%s %s: addr2line_subprocess_init failed\n", __func__, dso_name);
+ 		goto out;
  	}
--
- 	fclose(fp);
--	fs->checked = true;
--	return fs->found = found;
-+	return false;
- }
+-	a2l_style = addr2line_configure(a2l);
+-	if (a2l_style == BROKEN) {
+-		if (!symbol_conf.disable_add2line_warn)
+-			pr_warning("%s: addr2line configuration failed\n", __func__);
++	a2l_style = addr2line_configure(a2l, dso_name);
++	if (a2l_style == BROKEN)
+ 		goto out;
+-	}
  
- static int fs__valid_mount(const char *fs, long magic)
-@@ -194,11 +192,9 @@ static bool fs__check_mounts(struct fs *fs)
- 	ptr = fs->mounts;
- 	while (*ptr) {
- 		if (fs__valid_mount(*ptr, fs->magic) == 0) {
--			free(fs->path);
- 			fs->path = strdup(*ptr);
- 			if (!fs->path)
- 				return false;
--			fs->found = true;
- 			return true;
- 		}
- 		ptr++;
-@@ -236,45 +232,26 @@ static bool fs__env_override(struct fs *fs)
- 	if (!override_path)
- 		return false;
- 
--	free(fs->path);
- 	fs->path = strdup(override_path);
- 	if (!fs->path)
- 		return false;
--	fs->found = true;
--	fs->checked = true;
- 	return true;
- }
- 
--static const char *fs__get_mountpoint(struct fs *fs)
-+static void fs__init_once(struct fs *fs)
- {
--	if (fs__env_override(fs))
--		return fs->path;
--
--	if (fs__check_mounts(fs))
--		return fs->path;
--
--	if (fs__read_mounts(fs))
--		return fs->path;
--
--	return NULL;
-+	if (!fs__env_override(fs) &&
-+	    !fs__check_mounts(fs) &&
-+	    !fs__read_mounts(fs)) {
-+		assert(!fs->path);
-+	} else {
-+		assert(fs->path);
-+	}
- }
- 
--static const char *fs__mountpoint(int idx)
-+static const char *fs__mountpoint(const struct fs *fs)
- {
--	struct fs *fs = &fs__entries[idx];
--
--	if (fs->found)
--		return (const char *)fs->path;
--
--	/* the mount point was already checked for the mount point
--	 * but and did not exist, so return NULL to avoid scanning again.
--	 * This makes the found and not found paths cost equivalent
--	 * in case of multiple calls.
--	 */
--	if (fs->checked)
--		return NULL;
--
--	return fs__get_mountpoint(fs);
-+	return fs->path;
- }
- 
- static const char *mount_overload(struct fs *fs)
-@@ -289,45 +266,29 @@ static const char *mount_overload(struct fs *fs)
- 	return getenv(upper_name) ?: *fs->mounts;
- }
- 
--static const char *fs__mount(int idx)
-+static const char *fs__mount(struct fs *fs)
- {
--	struct fs *fs = &fs__entries[idx];
- 	const char *mountpoint;
- 
--	if (fs__mountpoint(idx))
--		return (const char *)fs->path;
-+	pthread_mutex_lock(&fs->mount_mutex);
- 
--	mountpoint = mount_overload(fs);
-+	/* Check if path found inside the mutex to avoid races with other callers of mount. */
-+	mountpoint = fs__mountpoint(fs);
-+	if (mountpoint)
-+		goto out;
- 
--	if (mount(NULL, mountpoint, fs->name, 0, NULL) < 0)
--		return NULL;
--
--	return fs__check_mounts(fs) ? fs->path : NULL;
--}
-+	mountpoint = mount_overload(fs);
- 
--#define FS(name, idx)				\
--const char *name##__mountpoint(void)		\
--{						\
--	return fs__mountpoint(idx);		\
--}						\
--						\
--const char *name##__mount(void)			\
--{						\
--	return fs__mount(idx);			\
--}						\
--						\
--bool name##__configured(void)			\
--{						\
--	return name##__mountpoint() != NULL;	\
-+	if (mount(NULL, mountpoint, fs->name, 0, NULL) == 0 &&
-+	    fs__valid_mount(mountpoint, fs->magic) == 0) {
-+		fs->path = strdup(mountpoint);
-+		mountpoint = fs->path;
-+	}
-+out:
-+	pthread_mutex_unlock(&fs->mount_mutex);
-+	return mountpoint;
- }
- 
--FS(sysfs,   FS__SYSFS);
--FS(procfs,  FS__PROCFS);
--FS(debugfs, FS__DEBUGFS);
--FS(tracefs, FS__TRACEFS);
--FS(hugetlbfs, FS__HUGETLBFS);
--FS(bpf_fs, FS__BPF_FS);
--
- int filename__read_int(const char *filename, int *value)
- {
- 	char line[64];
+ 	/*
+ 	 * Send our request and then *deliberately* send something that can't be interpreted as
 -- 
 2.41.0.162.gfafddb0af9-goog
 
