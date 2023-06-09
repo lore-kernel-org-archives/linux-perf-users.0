@@ -2,40 +2,40 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C7CC7EE29
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 14:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87AD7C7EE25
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 14:19:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231828AbjFIORs (ORCPT
+        id S241258AbjFIOTV (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 10:17:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43698 "EHLO
+        Fri, 9 Jun 2023 10:19:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231134AbjFIORr (ORCPT
+        with ESMTP id S241306AbjFIOSy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 10:17:47 -0400
+        Fri, 9 Jun 2023 10:18:54 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1A830E5;
-        Fri,  9 Jun 2023 07:17:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000E73C04;
+        Fri,  9 Jun 2023 07:18:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C1FB361D32;
-        Fri,  9 Jun 2023 14:17:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E724DC4339B;
-        Fri,  9 Jun 2023 14:17:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A42260F55;
+        Fri,  9 Jun 2023 14:18:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C2AC433D2;
+        Fri,  9 Jun 2023 14:18:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686320265;
-        bh=dwVgdncCcYDj2hwb+9JaEVfH+lUQWzk/oa0ZMJ0g83Q=;
+        s=k20201202; t=1686320329;
+        bh=Zb/QrR0wax3Fy/77ML8eioj8ePs8p5HDZtXKHZi0OSk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bcxaqp/DQ+I9UtNrpBdehBwpsXR4syK8aVC2JrCLRX81P4gijnPmZ1xgtIwJ5Nl5C
-         4ckG5W2i6Gdiw+FPuuBnNeJrIEWG/StZQrvjhMIdu0ZUXKB/RdLZwx2xDbxu9X3txl
-         Nzl0gndPSqh1cEZ7I6wI2Z5idDzqtFYq3nO3TFu3IopUhSb0xARu4NPaCG/aGazYwf
-         RuhTnnw6X/vf8q932pwaofOkFdgaJ1PByHW5gty8dHZIU3rWpqbPCsY1B+RhK6tQ6z
-         +SL8uwzcmWflu+wIJcdJIC6H9YY8NLcuCpYuPg1SERvWHuWSfZtG87gcLpFuHYfKwk
-         hEIsLwe4loUfg==
+        b=VNkOU9Yf/y5hFxZkd6DOQzmPPRc8S1Z9E3pRJK/Mo7rmYwqBlXXDfis5s//61/A68
+         bOqAscNaLFMi30ewJKsrgbHzYSAFvEXCpZldJp7Iqm34KnOUWe/VqcuGMH7OsFgwgF
+         /+QLEbuRi/j6cj6PQ+osk7eimHr5ZBkEehceehhBpfUAINIwrNkEzUxdXN6KZQc4ul
+         VEwskEqhS93eH408uwB1KvKVonJq1bjbSNnCbeZqVI3h4Tnkrl/jrHAzCCelpijC3X
+         S6xtrzCip0lpRuTCdRQoIlgKSBRntL1JudGe1kLfSj+T/eAxTe3ISzP0dlY09tft8O
+         YiuqY9EgHKLWA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 20E2140692; Fri,  9 Jun 2023 11:17:42 -0300 (-03)
-Date:   Fri, 9 Jun 2023 11:17:42 -0300
+        id 61ADA40692; Fri,  9 Jun 2023 11:18:46 -0300 (-03)
+Date:   Fri, 9 Jun 2023 11:18:46 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
 Cc:     John Garry <john.g.garry@oracle.com>,
@@ -75,102 +75,163 @@ Cc:     John Garry <john.g.garry@oracle.com>,
         Fangrui Song <maskray@google.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-perf-users@vger.kernel.org, coresight@lists.linaro.org
-Subject: Re: [PATCH v2 04/26] perf maps: Make delete static, always use put
-Message-ID: <ZIM0hlZ01pKI6ylJ@kernel.org>
+Subject: Re: [PATCH v2 05/26] perf addr_location: Move to its own header
+Message-ID: <ZIM0xpF5qxojDaqW@kernel.org>
 References: <20230608232823.4027869-1-irogers@google.com>
- <20230608232823.4027869-5-irogers@google.com>
+ <20230608232823.4027869-6-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230608232823.4027869-5-irogers@google.com>
+In-Reply-To: <20230608232823.4027869-6-irogers@google.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jun 08, 2023 at 04:28:01PM -0700, Ian Rogers escreveu:
-> Address/leak sanitizer with reference count checking can identify the
-> location of leaks, so use put rather than delete to avoid free-ing
-> memory when the reference count is >1. Add maps__zput to ensure the
-> variable is cleared.
+Em Thu, Jun 08, 2023 at 04:28:02PM -0700, Ian Rogers escreveu:
+> addr_location is a common abstraction, move it into its own header and
+> source file in preparation for wider clean up.
 
-Applied.
+Thanks, applied.
 
 - Arnaldo
+
  
 > Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/tests/maps.c   | 2 +-
->  tools/perf/util/machine.c | 2 +-
->  tools/perf/util/maps.c    | 2 +-
->  tools/perf/util/maps.h    | 9 ++++++++-
->  4 files changed, 11 insertions(+), 4 deletions(-)
+>  tools/perf/util/Build           |  1 +
+>  tools/perf/util/addr_location.c | 16 ++++++++++++++++
+>  tools/perf/util/addr_location.h | 28 ++++++++++++++++++++++++++++
+>  tools/perf/util/event.c         | 12 ------------
+>  tools/perf/util/symbol.h        | 17 +----------------
+>  5 files changed, 46 insertions(+), 28 deletions(-)
+>  create mode 100644 tools/perf/util/addr_location.c
+>  create mode 100644 tools/perf/util/addr_location.h
 > 
-> diff --git a/tools/perf/tests/maps.c b/tools/perf/tests/maps.c
-> index 8c0eb5cf8bb5..5bb1123a91a7 100644
-> --- a/tools/perf/tests/maps.c
-> +++ b/tools/perf/tests/maps.c
-> @@ -140,7 +140,7 @@ static int test__maps__merge_in(struct test_suite *t __maybe_unused, int subtest
->  	ret = check_maps(merged3, ARRAY_SIZE(merged3), maps);
->  	TEST_ASSERT_VAL("merge check failed", !ret);
->  
-> -	maps__delete(maps);
-> +	maps__zput(maps);
->  	return TEST_OK;
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index c449741adf30..ff2fd1a36bb8 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -1,4 +1,5 @@
+>  perf-y += arm64-frame-pointer-unwind-support.o
+> +perf-y += addr_location.o
+>  perf-y += annotate.o
+>  perf-y += block-info.o
+>  perf-y += block-range.o
+> diff --git a/tools/perf/util/addr_location.c b/tools/perf/util/addr_location.c
+> new file mode 100644
+> index 000000000000..c73fc2aa236c
+> --- /dev/null
+> +++ b/tools/perf/util/addr_location.c
+> @@ -0,0 +1,16 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "addr_location.h"
+> +#include "map.h"
+> +#include "thread.h"
+> +
+> +/*
+> + * The preprocess_sample method will return with reference counts for the
+> + * in it, when done using (and perhaps getting ref counts if needing to
+> + * keep a pointer to one of those entries) it must be paired with
+> + * addr_location__put(), so that the refcounts can be decremented.
+> + */
+> +void addr_location__put(struct addr_location *al)
+> +{
+> +	map__zput(al->map);
+> +	thread__zput(al->thread);
+> +}
+> diff --git a/tools/perf/util/addr_location.h b/tools/perf/util/addr_location.h
+> new file mode 100644
+> index 000000000000..7dfa7417c0fe
+> --- /dev/null
+> +++ b/tools/perf/util/addr_location.h
+> @@ -0,0 +1,28 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __PERF_ADDR_LOCATION
+> +#define __PERF_ADDR_LOCATION 1
+> +
+> +#include <linux/types.h>
+> +
+> +struct thread;
+> +struct maps;
+> +struct map;
+> +struct symbol;
+> +
+> +struct addr_location {
+> +	struct thread *thread;
+> +	struct maps   *maps;
+> +	struct map    *map;
+> +	struct symbol *sym;
+> +	const char    *srcline;
+> +	u64	      addr;
+> +	char	      level;
+> +	u8	      filtered;
+> +	u8	      cpumode;
+> +	s32	      cpu;
+> +	s32	      socket;
+> +};
+> +
+> +void addr_location__put(struct addr_location *al);
+> +
+> +#endif /* __PERF_ADDR_LOCATION */
+> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+> index e1ce7cb5e421..6ee23145ee7e 100644
+> --- a/tools/perf/util/event.c
+> +++ b/tools/perf/util/event.c
+> @@ -767,18 +767,6 @@ int machine__resolve(struct machine *machine, struct addr_location *al,
+>  	return 0;
 >  }
 >  
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 5d34d60a0045..8972c852d3bd 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -248,7 +248,7 @@ void machine__exit(struct machine *machine)
->  		return;
->  
->  	machine__destroy_kernel_maps(machine);
-> -	maps__delete(machine->kmaps);
-> +	maps__zput(machine->kmaps);
->  	dsos__exit(&machine->dsos);
->  	machine__exit_vdso(machine);
->  	zfree(&machine->root_dir);
-> diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-> index 5ae6379a1b42..5206a6433117 100644
-> --- a/tools/perf/util/maps.c
-> +++ b/tools/perf/util/maps.c
-> @@ -171,7 +171,7 @@ struct maps *maps__new(struct machine *machine)
->  	return result;
->  }
->  
-> -void maps__delete(struct maps *maps)
-> +static void maps__delete(struct maps *maps)
+> -/*
+> - * The preprocess_sample method will return with reference counts for the
+> - * in it, when done using (and perhaps getting ref counts if needing to
+> - * keep a pointer to one of those entries) it must be paired with
+> - * addr_location__put(), so that the refcounts can be decremented.
+> - */
+> -void addr_location__put(struct addr_location *al)
+> -{
+> -	map__zput(al->map);
+> -	thread__zput(al->thread);
+> -}
+> -
+>  bool is_bts_event(struct perf_event_attr *attr)
 >  {
->  	maps__exit(maps);
->  	unwind__finish_access(maps);
-> diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-> index d2963456cfbe..83144e0645ed 100644
-> --- a/tools/perf/util/maps.h
-> +++ b/tools/perf/util/maps.h
-> @@ -57,13 +57,20 @@ struct kmap {
+>  	return attr->type == PERF_TYPE_HARDWARE &&
+> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+> index 7558735543c2..5ca8665dd2c1 100644
+> --- a/tools/perf/util/symbol.h
+> +++ b/tools/perf/util/symbol.h
+> @@ -9,6 +9,7 @@
+>  #include <linux/list.h>
+>  #include <linux/rbtree.h>
+>  #include <stdio.h>
+> +#include "addr_location.h"
+>  #include "path.h"
+>  #include "symbol_conf.h"
+>  #include "spark.h"
+> @@ -120,22 +121,6 @@ struct ref_reloc_sym {
+>  	u64		unrelocated_addr;
 >  };
 >  
->  struct maps *maps__new(struct machine *machine);
-> -void maps__delete(struct maps *maps);
->  bool maps__empty(struct maps *maps);
->  int maps__clone(struct thread *thread, struct maps *parent);
->  
->  struct maps *maps__get(struct maps *maps);
->  void maps__put(struct maps *maps);
->  
-> +static inline void __maps__zput(struct maps **map)
-> +{
-> +	maps__put(*map);
-> +	*map = NULL;
-> +}
-> +
-> +#define maps__zput(map) __maps__zput(&map)
-> +
->  static inline struct rb_root *maps__entries(struct maps *maps)
->  {
->  	return &RC_CHK_ACCESS(maps)->entries;
+> -struct addr_location {
+> -	struct thread *thread;
+> -	struct maps   *maps;
+> -	struct map    *map;
+> -	struct symbol *sym;
+> -	const char    *srcline;
+> -	u64	      addr;
+> -	char	      level;
+> -	u8	      filtered;
+> -	u8	      cpumode;
+> -	s32	      cpu;
+> -	s32	      socket;
+> -};
+> -
+> -void addr_location__put(struct addr_location *al);
+> -
+>  int dso__load(struct dso *dso, struct map *map);
+>  int dso__load_vmlinux(struct dso *dso, struct map *map,
+>  		      const char *vmlinux, bool vmlinux_allocated);
 > -- 
 > 2.41.0.162.gfafddb0af9-goog
 > 
