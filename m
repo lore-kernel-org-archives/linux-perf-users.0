@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCAEC7EE25
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 12:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AADC7EE29
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 12:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238967AbjFIMhl (ORCPT
+        id S240166AbjFIMml (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 08:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46564 "EHLO
+        Fri, 9 Jun 2023 08:42:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231612AbjFIMhl (ORCPT
+        with ESMTP id S231244AbjFIMmk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 08:37:41 -0400
+        Fri, 9 Jun 2023 08:42:40 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 00F7A1A2;
-        Fri,  9 Jun 2023 05:37:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4D3AF210A;
+        Fri,  9 Jun 2023 05:42:39 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04D55AB6;
-        Fri,  9 Jun 2023 05:38:25 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67B61AB6;
+        Fri,  9 Jun 2023 05:43:24 -0700 (PDT)
 Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.38.153])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BEE0D3F6C4;
-        Fri,  9 Jun 2023 05:37:37 -0700 (PDT)
-Date:   Fri, 9 Jun 2023 13:37:32 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D34D3F6C4;
+        Fri,  9 Jun 2023 05:42:37 -0700 (PDT)
+Date:   Fri, 9 Jun 2023 13:42:34 +0100
 From:   Mark Rutland <mark.rutland@arm.com>
 To:     Anshuman Khandual <anshuman.khandual@arm.com>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -37,59 +37,96 @@ Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH V11 06/10] arm64/perf: Enable branch stack events via
  FEAT_BRBE
-Message-ID: <ZIMdDMSjnNfx6q+n@FVFF77S0Q05N.cambridge.arm.com>
+Message-ID: <ZIMeOt6XdhjPdXHC@FVFF77S0Q05N.cambridge.arm.com>
 References: <20230531040428.501523-1-anshuman.khandual@arm.com>
  <20230531040428.501523-7-anshuman.khandual@arm.com>
  <ZH3mhorKNo77hsv5@FVFF77S0Q05N>
- <006be03c-43da-6482-6bc4-83fe65dcd706@arm.com>
+ <cd1d272b-4794-d0d8-af43-aba4b7484b22@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <006be03c-43da-6482-6bc4-83fe65dcd706@arm.com>
+In-Reply-To: <cd1d272b-4794-d0d8-af43-aba4b7484b22@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 10:00:09AM +0530, Anshuman Khandual wrote:
-> >> +static u64 branch_type_to_brbcr(int branch_type)
-> >> +{
-> >> +	u64 brbcr = BRBCR_EL1_DEFAULT_TS;
-> >> +
-> >> +	/*
-> >> +	 * BRBE need not be paused on PMU interrupt while tracing only
-> >> +	 * the user space, bcause it will automatically be inside the
-> >> +	 * prohibited region. But even after PMU overflow occurs, the
-> >> +	 * interrupt could still take much more cycles, before it can
-> >> +	 * be taken and by that time BRBE will have been overwritten.
-> >> +	 * Let's enable pause on PMU interrupt mechanism even for user
-> >> +	 * only traces.
-> >> +	 */
-> >> +	brbcr |= BRBCR_EL1_FZP;
-> > I think this is trying to say that we *should* use FZP when sampling the
-> > kernel (due to IRQ latency), and *can* safely use it when sampling userspace,
-> > so it would be good to explain it that way around.
+On Fri, Jun 09, 2023 at 10:17:19AM +0530, Anshuman Khandual wrote:
+> On 6/5/23 19:13, Mark Rutland wrote:
+> >> +/*
+> >> + * A branch record with BRBINFx_EL1.LASTFAILED set, implies that all
+> >> + * preceding consecutive branch records, that were in a transaction
+> >> + * (i.e their BRBINFx_EL1.TX set) have been aborted.
+> >> + *
+> >> + * Similarly BRBFCR_EL1.LASTFAILED set, indicate that all preceding
+> >> + * consecutive branch records up to the last record, which were in a
+> >> + * transaction (i.e their BRBINFx_EL1.TX set) have been aborted.
+> >> + *
+> >> + * --------------------------------- -------------------
+> >> + * | 00 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX success]
+> >> + * --------------------------------- -------------------
+> >> + * | 01 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX success]
+> >> + * --------------------------------- -------------------
+> >> + * | 02 | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 0 |
+> >> + * --------------------------------- -------------------
+> >> + * | 03 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
+> >> + * --------------------------------- -------------------
+> >> + * | 04 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
+> >> + * --------------------------------- -------------------
+> >> + * | 05 | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 1 |
+> >> + * --------------------------------- -------------------
+> >> + * | .. | BRBSRC | BRBTGT | BRBINF | | TX = 0 | LF = 0 |
+> >> + * --------------------------------- -------------------
+> >> + * | 61 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
+> >> + * --------------------------------- -------------------
+> >> + * | 62 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
+> >> + * --------------------------------- -------------------
+> >> + * | 63 | BRBSRC | BRBTGT | BRBINF | | TX = 1 | LF = 0 | [TX failed]
+> >> + * --------------------------------- -------------------
+> >> + *
+> >> + * BRBFCR_EL1.LASTFAILED == 1
+> >> + *
+> >> + * BRBFCR_EL1.LASTFAILED fails all those consecutive, in transaction
+> >> + * branches records near the end of the BRBE buffer.
+> >> + *
+> >> + * Architecture does not guarantee a non transaction (TX = 0) branch
+> >> + * record between two different transactions. So it is possible that
+> >> + * a subsequent lastfailed record (TX = 0, LF = 1) might erroneously
+> >> + * mark more than required transactions as aborted.
+> >> + */
+> > Linux doesn't currently support TME (and IIUC no-one has built it), so can't we
+> > delete the transaction handling for now? We can add a comment with somehing like:
+> > 
+> > /*
+> >  * TODO: add transaction handling for TME.
+> >  */
+> > 
+> > Assuming no-one has built TME, we might also be able to get an architectural
+> > fix to disambiguate the boundary between two transactions, and avoid the
+> > problem described above.
+> > 
+> > [...]
+> > 
 > 
-> Agreed, following updated comment explains why we should enable FZP
-> when sampling kernel, otherwise BRBE will capture unwanted records.
-> It also explains why we should enable FZP even when sampling user
-> space due to IRQ latency.
-> 
->         /*
->          * BRBE should be paused on PMU interrupt while tracing kernel
->          * space to stop capturing further branch records. Otherwise
->          * interrupt handler branch records might get into the samples
->          * which is not desired.
->          *
->          * BRBE need not be paused on PMU interrupt while tracing only
->          * the user space, because it will automatically be inside the
->          * prohibited region. But even after PMU overflow occurs, the
->          * interrupt could still take much more cycles, before it can
->          * be taken and by that time BRBE will have been overwritten.
->          * Hence enable pause on PMU interrupt mechanism even for user
->          * only traces as well.
->          */
->         brbcr |= BRBCR_EL1_FZP;
+> OR can leave this unchanged for now. Then update it if and when the relevant
+> architectural fix comes in. The current TME branch records handling here, is
+> as per the current architectural specification.
 
-Thanks; I think that's a lot clearer!
+My rationale for deleting it is that it cannot be used and cannot be tested,
+since the kernel doesn't support TME, and there are no TME implementations out
+there. If and when we support TME in the kernel, this is very likely to have
+bit-rotted.
 
+I'd be happy to link to the current version, e.g.
+
+/*
+ * TODO: add transaction handling for FEAT_TME. See:
+ *
+ * https://lore.kernel.org/linux-arm-kernel/20230531040428.501523-7-anshuman.khandual@arm.com/
+ */
+
+I do appreciate that time and effort has gone into writing this, but IMO it's
+more distracting than helpful at present, and deleting it makes this easier to
+review and maintain.
+
+Thanks,
 Mark.
