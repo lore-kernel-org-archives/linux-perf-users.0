@@ -2,145 +2,129 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E731C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 08:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43220C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Fri,  9 Jun 2023 08:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239937AbjFIICU (ORCPT
+        id S240728AbjFIIjj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 04:02:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39452 "EHLO
+        Fri, 9 Jun 2023 04:39:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239947AbjFIICE (ORCPT
+        with ESMTP id S240987AbjFIIj0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 04:02:04 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 05C9A4215;
-        Fri,  9 Jun 2023 01:00:08 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D423AB6;
-        Fri,  9 Jun 2023 00:59:44 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.25.215])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF6613F71E;
-        Fri,  9 Jun 2023 00:58:53 -0700 (PDT)
-Date:   Fri, 9 Jun 2023 08:58:49 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Ravi Bangoria <ravi.bangoria@amd.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
+        Fri, 9 Jun 2023 04:39:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B4A3588
+        for <linux-perf-users@vger.kernel.org>; Fri,  9 Jun 2023 01:38:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686299862;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rR8fywPwRtyfJmihJnn8NzH4PZYiEhORvDsUjX9xfDQ=;
+        b=N8Fat/3nGrfdf1V9o3/bNx2rWCphDgf+rl5vXBreHZVyXH5kdbqJITW44R7eHKOmU12/Yp
+        YckpmTBXRLyBV9rsi/gcjOk5eCZqRCPXCGXF1L8GAJt+bcjAQWUEhLaaatDAxonm0QWW0S
+        ILTLW9j8AX1UkKO2jIBQlo9H2Yp+ANY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-198-T9NDEMyCNFm2bR-hrOzDug-1; Fri, 09 Jun 2023 04:37:35 -0400
+X-MC-Unique: T9NDEMyCNFm2bR-hrOzDug-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2DF068030CF;
+        Fri,  9 Jun 2023 08:37:35 +0000 (UTC)
+Received: from samus.usersys.redhat.com (unknown [10.43.17.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A02D51121314;
+        Fri,  9 Jun 2023 08:37:33 +0000 (UTC)
+Date:   Fri, 9 Jun 2023 10:37:31 +0200
+From:   Artem Savkov <asavkov@redhat.com>
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Zhengjun Xing <zhengjun.xing@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Ming Wang <wangming01@loongson.cn>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Sandipan Das <sandipan.das@amd.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Ali Saidi <alisaidi@amazon.com>, Rob Herring <robh@kernel.org>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Kang Minchul <tegongkang@gmail.com>,
-        linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 28/34] perf pmus: Split pmus list into core and other
-Message-ID: <ZILbubiZPNg2M/JY@FVFF77S0Q05N>
-References: <20230527072210.2900565-1-irogers@google.com>
- <20230527072210.2900565-29-irogers@google.com>
- <b8efdc75-253c-ad88-f82f-90c626a26592@amd.com>
- <CAP-5=fXg-4NWOhOoTCfNm3aWp_rd6PWcq5NyZ7xwinbuDPUtZg@mail.gmail.com>
- <7c7d9279-25b0-328e-af41-66c2096febaa@amd.com>
- <CAP-5=fUPYjG2J-bxcBf8h1JW34FGQwEbSo4uDbbi+GTGmvGMtg@mail.gmail.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] perf tools: annotation browser from c2c tui
+Message-ID: <20230609083731.GA168559@samus.usersys.redhat.com>
+References: <20230608084407.140323-1-asavkov@redhat.com>
+ <CAM9d7cgvtuqMeQx8ehLCLw_Ur9Ju-VzDrakzFJxnxvFjdsWk_g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUPYjG2J-bxcBf8h1JW34FGQwEbSo4uDbbi+GTGmvGMtg@mail.gmail.com>
+In-Reply-To: <CAM9d7cgvtuqMeQx8ehLCLw_Ur9Ju-VzDrakzFJxnxvFjdsWk_g@mail.gmail.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 10:35:02PM -0700, Ian Rogers wrote:
-> On Thu, Jun 8, 2023 at 10:30 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> >
-> > On 09-Jun-23 10:10 AM, Ian Rogers wrote:
-> > > On Thu, Jun 8, 2023 at 9:01 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
-> > >>
-> > >> Hi Ian,
-> > >
-> > > Hi Ravi,
-> > >
-> > >> On 27-May-23 12:52 PM, Ian Rogers wrote:
-> > >>> Split the pmus list into core and other. This will later allow for
-> > >>> the core and other pmus to be populated separately.
-> > >>>
-> > >>> Signed-off-by: Ian Rogers <irogers@google.com>
-> > >>> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> > >>> ---
-> > >>>  tools/perf/util/pmus.c | 52 ++++++++++++++++++++++++++++++------------
-> > >>>  1 file changed, 38 insertions(+), 14 deletions(-)
-> > >>>
-> > >>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> > >>> index 58ff7937e9b7..4ef4fecd335f 100644
-> > >>> --- a/tools/perf/util/pmus.c
-> > >>> +++ b/tools/perf/util/pmus.c
-> > >>> @@ -12,13 +12,19 @@
-> > >>>  #include "pmu.h"
-> > >>>  #include "print-events.h"
-> > >>>
-> > >>> -static LIST_HEAD(pmus);
-> > >>> +static LIST_HEAD(core_pmus);
-> > >>> +static LIST_HEAD(other_pmus);
-> > >>
-> > >> AMD ibs_fetch// and ibs_op// PMUs are per SMT-thread and are independent of
-> > >> core hw pmu. I wonder where does IBS fit. Currently it's part of other_pmus.
-> > >> So, is it safe to assume that other_pmus are not just uncore pmus? In that
-> > >> case shall we add a comment here?
-> > >
-> > > I'm a fan of comments. The code has landed in perf-tools-next:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmus.c?h=perf-tools-next
-> > > Do you have any suggestions on wording? I've had limited success
-> > > adding glossary terms, for example, offcore vs uncore:
-> > > https://perf.wiki.kernel.org/index.php/Glossary#Offcore
-> > > I think offcore is a more interconnect related term, but I'd prefer
-> > > not to be inventing the definitions. I'd like it if we could be less
-> > > ambiguous in the code and provide useful information on the wiki, so
-> > > help appreciated :-)
-> >
-> > Does this look good?
-> >
-> > /*
-> >  * core_pmus:  A PMU belongs to core_pmus if it's name is "cpu" or it's sysfs
-> >  *             directory contains "cpus" file. All PMUs belonging to core_pmus
-> >  *             must have pmu->is_core=1. If there are more than one PMUs in
-> >  *             this list, perf interprets it as a heterogeneous platform.
+On Thu, Jun 08, 2023 at 02:09:06PM -0700, Namhyung Kim wrote:
+> Hello,
 > 
+> On Thu, Jun 8, 2023 at 1:44 AM Artem Savkov <asavkov@redhat.com> wrote:
+> >
+> > These patches add ability to start annotation browser from c2c report
+> > tui. The idea comes from Arnaldo's "Profiling Data Structures" talk [1].
 > 
-> Looks good but a nit here. It is heterogeneous from point-of-view of
-> PMUs, there are ARM systems where they are heterogenous with big and
-> little cores but they have a single homogeneous PMU driver. The perf
-> tool will treat them as homogeneous.
+> I was thinking about how it works and realized that it didn't collect
+> samples by symbol.  Then I'm not sure if the result is meaningful.
+> I think it'd show a random symbol that touched the cache line
+> first.  The same cache line can be accessed from other locations
+> but it cannot know where they are.
+> 
+> Also different instructions in a function (symbol) would access a
+> different cache line.  The annotate output just shows any memory
+> access.  So it might be good to check the instruction at the point
+> but others should not be considered related.
+> 
+> Hmm.. I suspect even the same instruction will hit the different
+> cache lines at different times.  Then probably the annotation
+> won't work well in terms of correlating cache lines.
 
-For the sake of the comment: there's a little more nuance here.
+The annotation hotkey is only added to the cacheline detailed view where
+we do have symbol instruction information. The idea is to give the user
+ability to quickly jump to source code/disassembly directly from c2c
+TUI.
 
-The intent is that each distinct micro-architecture has its own PMU instance,
-but some people write their device trees incorrectly with a single pmu node
-rather than separate pmu nodes per micro-architecture.
+The hit percentages in annotation view don't make much sense in this
+case though, so maybe it is better to use dummy evsel so that none are
+shown.
 
-That should be viewed as a FW bug, even if we have to deal with it here.
+> Thanks,
+> Namhyung
+> 
+> >
+> > [1]: http://vger.kernel.org/~acme/prez/linux-plumbers-2022/
+> >
+> > v1->v2: Addressed comments from Namhyung Kim
+> > - No longer saving evsel for each hist entry, using evlist__first
+> >   instead.
+> > - Factored out preparations to call annotation browser to do_annotate()
+> >   function
+> > - Other small fixes and adjustments.
+> >
+> > Artem Savkov (2):
+> >   perf util: move symbol__new_unresolved() to util/symbol.c
+> >   perf tools: allow running annotation browser from c2c-report
+> >
+> >  tools/perf/builtin-c2c.c       | 73 +++++++++++++++++++++++++++++++---
+> >  tools/perf/ui/browsers/hists.c | 22 ----------
+> >  tools/perf/util/symbol.c       | 22 ++++++++++
+> >  tools/perf/util/symbol.h       |  1 +
+> >  4 files changed, 91 insertions(+), 27 deletions(-)
+> >
+> > --
+> > 2.40.1
+> >
+> 
 
-Thanks,
-Mark.
+-- 
+ Artem
+
