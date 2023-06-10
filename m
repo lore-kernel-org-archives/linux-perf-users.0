@@ -2,134 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAB0C77B7A
-	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Jun 2023 09:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 995E4C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Jun 2023 22:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229724AbjFJJq1 (ORCPT
+        id S232570AbjFJWOc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 10 Jun 2023 05:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40262 "EHLO
+        Sat, 10 Jun 2023 18:14:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbjFJJqY (ORCPT
+        with ESMTP id S232501AbjFJWOb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 10 Jun 2023 05:46:24 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3BF2D41;
-        Sat, 10 Jun 2023 02:46:22 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QdXyb6TvkzqSJ1;
-        Sat, 10 Jun 2023 17:41:27 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sat, 10 Jun 2023 17:46:19 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v2] perf stat: Add missing newline in pr_err messages
-Date:   Sat, 10 Jun 2023 09:44:41 +0000
-Message-ID: <20230610094441.221525-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
+        Sat, 10 Jun 2023 18:14:31 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1466535A9;
+        Sat, 10 Jun 2023 15:14:29 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3f7e7fc9fe6so29986385e9.3;
+        Sat, 10 Jun 2023 15:14:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686435267; x=1689027267;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=c2K/vXSH1Ru9AaenLQ5OAeVVoA6HlojAGRwcG2Pghjc=;
+        b=SGn5PIik8gN8dqE4k/E+IsJtqnyqDxb95wJKsl121SuxxSvea6ULwN8lU1NQgJM5q/
+         pARoJYhuzw/fL5YrZvYvGyycKPUPMqbz6bGf6200C+eCThOwLMtClp0QJVPnWayNb+9h
+         LFXJ3KX9dBayCjdiLtpgEmqBBscxvetE0NsdrHSISMKWTWcoY7rUTeK2fp1xJHq8RrMM
+         45jXAXi6kNCEG57HvxtzvmRGcq93JHeM1PcaGhSkPxjqnUyFYoBtuYb+gUCvWlmOyxym
+         DLpGmhwVaSryTBlQ7pyjzZcdf3IYbWx6ejRxPVr9LGRlcDexixKIWV2U3I9PEhjx5a57
+         +2Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686435267; x=1689027267;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c2K/vXSH1Ru9AaenLQ5OAeVVoA6HlojAGRwcG2Pghjc=;
+        b=eYcAKMNqu/l9lwj4kQCPaRhWQmbXrfOYFwdbdl/5K1t5IQvXbEQbUEtIo4FUr52trw
+         EdNjTSIFP06iFEOHU0wQIiL8wGKWjZvDkC4k1SIrQqWCoBMXhEh0xy7QvhyZbIuAVxbT
+         6+h7IRCDqYEq7EmHAoOpXxV4t9pR6ygtk1LSfiqirMR8UloHk0yPKrtgW7NWejF8v/2r
+         gewrC6kmi2O2RX9Pk2Kgqx4uOcV72UJ86xbYbbUyvGS8JlZtzXWOntrjrvKEbx9p+5Of
+         jFe1661m4DnrXZfEZU00G9m+KJ9T0E0vyvCC5z9FlOvJ0R9N0H19DYyVhbT5ZgCTc1G+
+         3fmQ==
+X-Gm-Message-State: AC+VfDxWQnXQaQZed4pH2VCbSTcPdMFjVJLhKzKolZ+DWFH4zX874MEo
+        Qcx4u3THefydAychCO6cPDw=
+X-Google-Smtp-Source: ACHHUZ5eWA+QdMw7r2dwC1sGRE7jCl/a51OBoeOdvayFX/bkMTA6R/FI2DHP43FwKQ8kzRfloO/vQQ==
+X-Received: by 2002:a7b:c84c:0:b0:3f6:76e:604b with SMTP id c12-20020a7bc84c000000b003f6076e604bmr4180596wml.0.1686435267228;
+        Sat, 10 Jun 2023 15:14:27 -0700 (PDT)
+Received: from krava ([213.235.133.42])
+        by smtp.gmail.com with ESMTPSA id k15-20020a7bc40f000000b003f7f1b3aff1sm6742250wmi.26.2023.06.10.15.14.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Jun 2023 15:14:26 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Sun, 11 Jun 2023 00:14:23 +0200
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        James Clark <james.clark@arm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] Bring back vmlinux.h generation
+Message-ID: <ZIT1v4oUKJreqd/I@krava>
+References: <20230609043240.43890-1-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230609043240.43890-1-irogers@google.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The newline is missing for error messages in add_default_attributes()
+On Thu, Jun 08, 2023 at 09:32:36PM -0700, Ian Rogers wrote:
+> Commit 760ebc45746b ("perf lock contention: Add empty 'struct rq' to
+> satisfy libbpf 'runqueue' type verification") inadvertently created a
+> declaration of 'struct rq' that conflicted with a generated
+> vmlinux.h's:
+> 
+> ```
+> util/bpf_skel/lock_contention.bpf.c:419:8: error: redefinition of 'rq'
+> struct rq {};
+>        ^
+> /tmp/perf/util/bpf_skel/.tmp/../vmlinux.h:45630:8: note: previous definition is here
+> struct rq {
+>        ^
+> 1 error generated.
+> ```
+> 
+> Fix the issue by moving the declaration to vmlinux.h. So this can't
+> happen again, bring back build support for generating vmlinux.h then
+> add build tests.
+> 
+> v3. Address Namhyung's comments on filtering ELF files with readelf.
 
-Before:
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-  # perf stat --topdown
-  Topdown requested but the topdown metric groups aren't present.
-  (See perf list the metric groups have names like TopdownL1)#
+jirka
 
-After:
-
-  # perf stat --topdown
-  Topdown requested but the topdown metric groups aren't present.
-  (See perf list the metric groups have names like TopdownL1)
-  #
-
-In addition, perf_stat_init_aggr_mode() and perf_stat_init_aggr_mode_file()
-have the same problem, fixed by the way.
-
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
-
-Changes since v1:
- - Correct commit title to `pr_err`
-
- tools/perf/builtin-stat.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index b9ad32f21e57..78644ae538c4 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1398,7 +1398,7 @@ static int perf_stat_init_aggr_mode(void)
- 		stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.user_requested_cpus,
- 							 get_id, /*data=*/NULL, needs_sort);
- 		if (!stat_config.aggr_map) {
--			pr_err("cannot build %s map", aggr_mode__string[stat_config.aggr_mode]);
-+			pr_err("cannot build %s map\n", aggr_mode__string[stat_config.aggr_mode]);
- 			return -1;
- 		}
- 		stat_config.aggr_get_id = aggr_mode__get_id(stat_config.aggr_mode);
-@@ -1650,7 +1650,7 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
- 	stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.user_requested_cpus,
- 						 get_id, env, needs_sort);
- 	if (!stat_config.aggr_map) {
--		pr_err("cannot build %s map", aggr_mode__string[stat_config.aggr_mode]);
-+		pr_err("cannot build %s map\n", aggr_mode__string[stat_config.aggr_mode]);
- 		return -1;
- 	}
- 	stat_config.aggr_get_id = aggr_mode__get_id_file(stat_config.aggr_mode);
-@@ -1789,7 +1789,7 @@ static int add_default_attributes(void)
- 		 * on an architecture test for such a metric name.
- 		 */
- 		if (!metricgroup__has_metric("transaction")) {
--			pr_err("Missing transaction metrics");
-+			pr_err("Missing transaction metrics\n");
- 			return -1;
- 		}
- 		return metricgroup__parse_groups(evsel_list, "transaction",
-@@ -1805,7 +1805,7 @@ static int add_default_attributes(void)
- 		int smi;
- 
- 		if (sysfs__read_int(FREEZE_ON_SMI_PATH, &smi) < 0) {
--			pr_err("freeze_on_smi is not supported.");
-+			pr_err("freeze_on_smi is not supported.\n");
- 			return -1;
- 		}
- 
-@@ -1818,7 +1818,7 @@ static int add_default_attributes(void)
- 		}
- 
- 		if (!metricgroup__has_metric("smi")) {
--			pr_err("Missing smi metrics");
-+			pr_err("Missing smi metrics\n");
- 			return -1;
- 		}
- 
-@@ -1843,7 +1843,7 @@ static int add_default_attributes(void)
- 
- 		if (!max_level) {
- 			pr_err("Topdown requested but the topdown metric groups aren't present.\n"
--				"(See perf list the metric groups have names like TopdownL1)");
-+				"(See perf list the metric groups have names like TopdownL1)\n");
- 			return -1;
- 		}
- 		if (stat_config.topdown_level > max_level) {
--- 
-2.30.GIT
-
+> v2. Rebase on perf-tools-next. Add Andrii's acked-by. Add patch to
+>     filter out kernels that lack a .BTF section and cause the build to
+>     break.
+> 
+> Ian Rogers (4):
+>   perf build: Add ability to build with a generated vmlinux.h
+>   perf bpf: Move the declaration of struct rq
+>   perf test: Add build tests for BUILD_BPF_SKEL
+>   perf build: Filter out BTF sources without a .BTF section
+> 
+>  tools/perf/Makefile.config                    |  4 ++
+>  tools/perf/Makefile.perf                      | 39 ++++++++++++++++++-
+>  tools/perf/tests/make                         |  4 ++
+>  tools/perf/util/bpf_skel/.gitignore           |  1 +
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  |  2 -
+>  .../util/bpf_skel/{ => vmlinux}/vmlinux.h     | 10 +++++
+>  6 files changed, 57 insertions(+), 3 deletions(-)
+>  rename tools/perf/util/bpf_skel/{ => vmlinux}/vmlinux.h (90%)
+> 
+> -- 
+> 2.41.0.162.gfafddb0af9-goog
+> 
