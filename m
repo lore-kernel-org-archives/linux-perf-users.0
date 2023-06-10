@@ -2,27 +2,27 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40701C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Jun 2023 09:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAB0C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Jun 2023 09:46:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230339AbjFJJmO (ORCPT
+        id S229724AbjFJJq1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 10 Jun 2023 05:42:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39680 "EHLO
+        Sat, 10 Jun 2023 05:46:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbjFJJmN (ORCPT
+        with ESMTP id S229649AbjFJJqY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 10 Jun 2023 05:42:13 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D6F32D41;
-        Sat, 10 Jun 2023 02:42:10 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QdXxH0TdVzLmjK;
-        Sat, 10 Jun 2023 17:40:19 +0800 (CST)
+        Sat, 10 Jun 2023 05:46:24 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A3BF2D41;
+        Sat, 10 Jun 2023 02:46:22 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QdXyb6TvkzqSJ1;
+        Sat, 10 Jun 2023 17:41:27 +0800 (CST)
 Received: from localhost.localdomain (10.67.174.95) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sat, 10 Jun 2023 17:42:04 +0800
+ 15.1.2507.23; Sat, 10 Jun 2023 17:46:19 +0800
 From:   Yang Jihong <yangjihong1@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
@@ -30,15 +30,15 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
 CC:     <yangjihong1@huawei.com>
-Subject: [PATCH] perf stat: Add missing newline in pr_error messages
-Date:   Sat, 10 Jun 2023 09:40:26 +0000
-Message-ID: <20230610094026.220687-1-yangjihong1@huawei.com>
+Subject: [PATCH v2] perf stat: Add missing newline in pr_err messages
+Date:   Sat, 10 Jun 2023 09:44:41 +0000
+Message-ID: <20230610094441.221525-1-yangjihong1@huawei.com>
 X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -65,6 +65,10 @@ have the same problem, fixed by the way.
 
 Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 ---
+
+Changes since v1:
+ - Correct commit title to `pr_err`
+
  tools/perf/builtin-stat.c | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
