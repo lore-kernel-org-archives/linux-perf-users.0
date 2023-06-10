@@ -2,340 +2,130 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E978C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Jun 2023 02:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40701C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Sat, 10 Jun 2023 09:42:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232846AbjFJCdw (ORCPT
+        id S230339AbjFJJmO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 9 Jun 2023 22:33:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48676 "EHLO
+        Sat, 10 Jun 2023 05:42:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230185AbjFJCdv (ORCPT
+        with ESMTP id S229649AbjFJJmN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 9 Jun 2023 22:33:51 -0400
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B384F35B6
-        for <linux-perf-users@vger.kernel.org>; Fri,  9 Jun 2023 19:33:49 -0700 (PDT)
-Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-53f04fdd77dso891958a12.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 09 Jun 2023 19:33:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686364429; x=1688956429;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=V+TP2T19FLHbxj1l53UvgzYdwbtMohqVKDwqwF982rw=;
-        b=G1E1F9WSS4+1fkzUZ7Mp4inia74sPOxPgs88tlf7BBDNPK1OVmlabBpOoaA60N4hX7
-         b6xgY8/viGCwxWjSBVva4HA9vpmewqsvqUVyE44hlHwwe1UF7YtgQMx6YqBNu6L1L8Q4
-         m0tVnk8JtiXdiot4nv/qZua+iY93UX6Ym6pjMUTipeGvPLjHXIT1brPpYgQWdpPRMUp6
-         G8Ve9zJ6bopm9885SCTk0xYRbH8zS2J2l86TsFvSK7yKRGnavS3hRXEldQoCzdUXvUvL
-         RI+hdcRFc/8IMLjn0GhkQ+ZP/Ju/mPXLnT+DF5w5r2+CB/xLzmGRqFf3V7ioMcS/anBU
-         cCsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686364429; x=1688956429;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V+TP2T19FLHbxj1l53UvgzYdwbtMohqVKDwqwF982rw=;
-        b=CQeasg7wtTexl3hQfLZz7PUaaKx8GXc+1uPOrhmplEGUQ+9qdk+mwPFOJbp3sSW0ZH
-         JRySMzcjyh+xatmMTjyF/xqD1SoqTgn56d+V2vPiDu68odNYz9qSPWRVI+KLX0/Gw7uE
-         I3mv3x8XdLIxni09YTvZQfBDfbjK3J4GrtteUT1EGFdDCSWqXVmk8Dky7JKbhTIReYxB
-         e4kQcQtZZROvyFvAtatthDcCN4PnZfwpYSPrDq2CpwUou799hHgI+futAXtwuTWgsZ5o
-         QHHvGqVPOivc/YoC/vPxJkEpxZVnZyhuFoJCDh9/PCOPDQgLD9DJ5sPvUjuwDMRuVNds
-         8Shg==
-X-Gm-Message-State: AC+VfDwQcjsrh1HjLOxYkpa7rmi60w9M+q42OLdiH3Vc3ULq6BbHxggh
-        LKbv26UzRZ0U5dYkHXWaQWBFlA==
-X-Google-Smtp-Source: ACHHUZ6D23hSKxYpLazYa38zXVd1CIvdlcTn/RZJBWicF0Z3UOq5HXvM6qXYYtF5c2mZwM90IdZZTA==
-X-Received: by 2002:a05:6a20:1584:b0:10b:b166:8836 with SMTP id h4-20020a056a20158400b0010bb1668836mr2965108pzj.47.1686364428966;
-        Fri, 09 Jun 2023 19:33:48 -0700 (PDT)
-Received: from leoy-huanghe ([156.59.39.107])
-        by smtp.gmail.com with ESMTPSA id j26-20020aa7929a000000b0064b0326494asm3197288pfa.150.2023.06.09.19.33.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 19:33:48 -0700 (PDT)
-Date:   Sat, 10 Jun 2023 10:33:35 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     coresight@lists.linaro.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] perf cs-etm: Track exception level
-Message-ID: <20230610023335.GC174906@leoy-huanghe>
-References: <20230608105930.1389276-1-james.clark@arm.com>
- <20230608105930.1389276-5-james.clark@arm.com>
+        Sat, 10 Jun 2023 05:42:13 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D6F32D41;
+        Sat, 10 Jun 2023 02:42:10 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QdXxH0TdVzLmjK;
+        Sat, 10 Jun 2023 17:40:19 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Sat, 10 Jun 2023 17:42:04 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH] perf stat: Add missing newline in pr_error messages
+Date:   Sat, 10 Jun 2023 09:40:26 +0000
+Message-ID: <20230610094026.220687-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230608105930.1389276-5-james.clark@arm.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 11:59:28AM +0100, James Clark wrote:
-> Currently we assume all trace belongs to the host machine so when
-> the decoder should be looking at the guest kernel maps it can crash
-> because it looks at the host ones instead.
-> 
-> Avoid one scenario (guest kernel running at EL1) by assigning the
-> default guest machine to this trace. For userspace trace it's still not
-> possible to determine guest vs host, but the PIDs should help in this
-> case.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
+The newline is missing for error messages in add_default_attributes()
 
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Before:
 
-Just input a thought for support both host and guest machines, seems to
-me, a feasibe solution is CoreSight can extend its capability to trace
-below system registers together:
+  # perf stat --topdown
+  Topdown requested but the topdown metric groups aren't present.
+  (See perf list the metric groups have names like TopdownL1)#
 
-- VTTBR_EL2.vmid
-- CONTEXTIDR_EL2
-- CONTEXTIDR_EL1
+After:
 
-So:
+  # perf stat --topdown
+  Topdown requested but the topdown metric groups aren't present.
+  (See perf list the metric groups have names like TopdownL1)
+  #
 
-VTTBR_EL2.vmid == 0: host machine, CONTEXTIDR_EL2 is for tracing PID
-VTTBR_EL2.vmid != 0: guest machine, CONTEXTIDR_EL1 is for tracing PID
+In addition, perf_stat_init_aggr_mode() and perf_stat_init_aggr_mode_file()
+have the same problem, fixed by the way.
 
-So far we only can trace either CONTEXTIDR_EL2 (and it's even a bit
-mess that we save CONTEXTIDR_EL2 into 'elem->context.vmid') or
-CONTEXTIDR_EL1, this is the main reason it's hard for perf to
-distinguish host and guest.  I know you might have discussed this yet,
-here I just record some ideas in case later we can review it.
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/builtin-stat.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Thanks,
-Leo
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index b9ad32f21e57..78644ae538c4 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -1398,7 +1398,7 @@ static int perf_stat_init_aggr_mode(void)
+ 		stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.user_requested_cpus,
+ 							 get_id, /*data=*/NULL, needs_sort);
+ 		if (!stat_config.aggr_map) {
+-			pr_err("cannot build %s map", aggr_mode__string[stat_config.aggr_mode]);
++			pr_err("cannot build %s map\n", aggr_mode__string[stat_config.aggr_mode]);
+ 			return -1;
+ 		}
+ 		stat_config.aggr_get_id = aggr_mode__get_id(stat_config.aggr_mode);
+@@ -1650,7 +1650,7 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
+ 	stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.user_requested_cpus,
+ 						 get_id, env, needs_sort);
+ 	if (!stat_config.aggr_map) {
+-		pr_err("cannot build %s map", aggr_mode__string[stat_config.aggr_mode]);
++		pr_err("cannot build %s map\n", aggr_mode__string[stat_config.aggr_mode]);
+ 		return -1;
+ 	}
+ 	stat_config.aggr_get_id = aggr_mode__get_id_file(stat_config.aggr_mode);
+@@ -1789,7 +1789,7 @@ static int add_default_attributes(void)
+ 		 * on an architecture test for such a metric name.
+ 		 */
+ 		if (!metricgroup__has_metric("transaction")) {
+-			pr_err("Missing transaction metrics");
++			pr_err("Missing transaction metrics\n");
+ 			return -1;
+ 		}
+ 		return metricgroup__parse_groups(evsel_list, "transaction",
+@@ -1805,7 +1805,7 @@ static int add_default_attributes(void)
+ 		int smi;
+ 
+ 		if (sysfs__read_int(FREEZE_ON_SMI_PATH, &smi) < 0) {
+-			pr_err("freeze_on_smi is not supported.");
++			pr_err("freeze_on_smi is not supported.\n");
+ 			return -1;
+ 		}
+ 
+@@ -1818,7 +1818,7 @@ static int add_default_attributes(void)
+ 		}
+ 
+ 		if (!metricgroup__has_metric("smi")) {
+-			pr_err("Missing smi metrics");
++			pr_err("Missing smi metrics\n");
+ 			return -1;
+ 		}
+ 
+@@ -1843,7 +1843,7 @@ static int add_default_attributes(void)
+ 
+ 		if (!max_level) {
+ 			pr_err("Topdown requested but the topdown metric groups aren't present.\n"
+-				"(See perf list the metric groups have names like TopdownL1)");
++				"(See perf list the metric groups have names like TopdownL1)\n");
+ 			return -1;
+ 		}
+ 		if (stat_config.topdown_level > max_level) {
+-- 
+2.30.GIT
 
-> ---
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  7 +-
->  tools/perf/util/cs-etm.c                      | 75 +++++++++++++++----
->  tools/perf/util/cs-etm.h                      |  7 +-
->  3 files changed, 67 insertions(+), 22 deletions(-)
-> 
-> diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> index 2af641d26866..44c49acd6bff 100644
-> --- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> +++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
-> @@ -561,12 +561,13 @@ cs_etm_decoder__set_tid(struct cs_etm_queue *etmq,
->  		break;
->  	}
->  
-> +	if (cs_etm__etmq_set_tid_el(etmq, tid, trace_chan_id,
-> +				    elem->context.exception_level))
-> +		return OCSD_RESP_FATAL_SYS_ERR;
-> +
->  	if (tid == -1)
->  		return OCSD_RESP_CONT;
->  
-> -	if (cs_etm__etmq_set_tid(etmq, tid, trace_chan_id))
-> -		return OCSD_RESP_FATAL_SYS_ERR;
-> -
->  	/*
->  	 * A timestamp is generated after a PE_CONTEXT element so make sure
->  	 * to rely on that coming one.
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index e0904f276e89..916e86f003f4 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -14,7 +14,6 @@
->  #include <linux/types.h>
->  #include <linux/zalloc.h>
->  
-> -#include <opencsd/ocsd_if_types.h>
->  #include <stdlib.h>
->  
->  #include "auxtrace.h"
-> @@ -88,6 +87,8 @@ struct cs_etm_traceid_queue {
->  	union perf_event *event_buf;
->  	struct thread *thread;
->  	struct thread *prev_thread;
-> +	ocsd_ex_level prev_el;
-> +	ocsd_ex_level el;
->  	struct branch_stack *last_branch;
->  	struct branch_stack *last_branch_rb;
->  	struct cs_etm_packet *prev_packet;
-> @@ -482,6 +483,7 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->  
->  	queue = &etmq->etm->queues.queue_array[etmq->queue_nr];
->  	tidq->trace_chan_id = trace_chan_id;
-> +	tidq->el = tidq->prev_el = ocsd_EL_unknown;
->  	tidq->thread = machine__findnew_thread(&etm->session->machines.host, -1,
->  					       queue->tid);
->  	tidq->prev_thread = machine__idle_thread(&etm->session->machines.host);
-> @@ -621,6 +623,7 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
->  		tmp = tidq->packet;
->  		tidq->packet = tidq->prev_packet;
->  		tidq->prev_packet = tmp;
-> +		tidq->prev_el = tidq->el;
->  		thread__put(tidq->prev_thread);
->  		tidq->prev_thread = thread__get(tidq->thread);
->  	}
-> @@ -882,11 +885,43 @@ static bool cs_etm__evsel_is_auxtrace(struct perf_session *session,
->  	return evsel->core.attr.type == aux->pmu_type;
->  }
->  
-> -static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
-> +static struct machine *cs_etm__get_machine(struct cs_etm_queue *etmq,
-> +					   ocsd_ex_level el)
->  {
-> -	struct machine *machine;
-> +	enum cs_etm_pid_fmt pid_fmt = cs_etm__get_pid_fmt(etmq);
->  
-> -	machine = &etmq->etm->session->machines.host;
-> +	/*
-> +	 * For any virtualisation based on nVHE (e.g. pKVM), or host kernels
-> +	 * running at EL1 assume everything is the host.
-> +	 */
-> +	if (pid_fmt == CS_ETM_PIDFMT_CTXTID)
-> +		return &etmq->etm->session->machines.host;
-> +
-> +	/*
-> +	 * Not perfect, but otherwise assume anything in EL1 is the default
-> +	 * guest, and everything else is the host. Distinguishing between guest
-> +	 * and host userspaces isn't currently supported either. Neither is
-> +	 * multiple guest support. All this does is reduce the likeliness of
-> +	 * decode errors where we look into the host kernel maps when it should
-> +	 * have been the guest maps.
-> +	 */
-> +	switch (el) {
-> +	case ocsd_EL1:
-> +		return machines__find_guest(&etmq->etm->session->machines,
-> +					    DEFAULT_GUEST_KERNEL_ID);
-> +	case ocsd_EL3:
-> +	case ocsd_EL2:
-> +	case ocsd_EL0:
-> +	case ocsd_EL_unknown:
-> +	default:
-> +		return &etmq->etm->session->machines.host;
-> +	}
-> +}
-> +
-> +static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address,
-> +			   ocsd_ex_level el)
-> +{
-> +	struct machine *machine = cs_etm__get_machine(etmq, el);
->  
->  	if (address >= machine__kernel_start(machine)) {
->  		if (machine__is_host(machine))
-> @@ -896,10 +931,14 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
->  	} else {
->  		if (machine__is_host(machine))
->  			return PERF_RECORD_MISC_USER;
-> -		else if (perf_guest)
-> +		else {
-> +			/*
-> +			 * Can't really happen at the moment because
-> +			 * cs_etm__get_machine() will always return
-> +			 * machines.host for any non EL1 trace.
-> +			 */
->  			return PERF_RECORD_MISC_GUEST_USER;
-> -		else
-> -			return PERF_RECORD_MISC_HYPERVISOR;
-> +		}
->  	}
->  }
->  
-> @@ -916,11 +955,12 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
->  	if (!etmq)
->  		return 0;
->  
-> -	cpumode = cs_etm__cpu_mode(etmq, address);
->  	tidq = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
->  	if (!tidq)
->  		return 0;
->  
-> +	cpumode = cs_etm__cpu_mode(etmq, address, tidq->el);
-> +
->  	if (!thread__find_map(tidq->thread, cpumode, address, &al))
->  		return 0;
->  
-> @@ -1298,10 +1338,11 @@ cs_etm__get_trace(struct cs_etm_queue *etmq)
->  	return etmq->buf_len;
->  }
->  
-> -static void cs_etm__set_thread(struct cs_etm_auxtrace *etm,
-> -			       struct cs_etm_traceid_queue *tidq, pid_t tid)
-> +static void cs_etm__set_thread(struct cs_etm_queue *etmq,
-> +			       struct cs_etm_traceid_queue *tidq, pid_t tid,
-> +			       ocsd_ex_level el)
->  {
-> -	struct machine *machine = &etm->session->machines.host;
-> +	struct machine *machine = cs_etm__get_machine(etmq, el);
->  
->  	if (tid != -1) {
->  		thread__zput(tidq->thread);
-> @@ -1311,10 +1352,12 @@ static void cs_etm__set_thread(struct cs_etm_auxtrace *etm,
->  	/* Couldn't find a known thread */
->  	if (!tidq->thread)
->  		tidq->thread = machine__idle_thread(machine);
-> +
-> +	tidq->el = el;
->  }
->  
-> -int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
-> -			 pid_t tid, u8 trace_chan_id)
-> +int cs_etm__etmq_set_tid_el(struct cs_etm_queue *etmq, pid_t tid,
-> +			    u8 trace_chan_id, ocsd_ex_level el)
->  {
->  	struct cs_etm_traceid_queue *tidq;
->  
-> @@ -1322,7 +1365,7 @@ int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
->  	if (!tidq)
->  		return -EINVAL;
->  
-> -	cs_etm__set_thread(etmq->etm, tidq, tid);
-> +	cs_etm__set_thread(etmq, tidq, tid, el);
->  	return 0;
->  }
->  
-> @@ -1392,7 +1435,7 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
->  	struct perf_sample sample = {.ip = 0,};
->  
->  	event->sample.header.type = PERF_RECORD_SAMPLE;
-> -	event->sample.header.misc = cs_etm__cpu_mode(etmq, addr);
-> +	event->sample.header.misc = cs_etm__cpu_mode(etmq, addr, tidq->el);
->  	event->sample.header.size = sizeof(struct perf_event_header);
->  
->  	/* Set time field based on etm auxtrace config. */
-> @@ -1451,7 +1494,7 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
->  	ip = cs_etm__last_executed_instr(tidq->prev_packet);
->  
->  	event->sample.header.type = PERF_RECORD_SAMPLE;
-> -	event->sample.header.misc = cs_etm__cpu_mode(etmq, ip);
-> +	event->sample.header.misc = cs_etm__cpu_mode(etmq, ip, tidq->prev_el);
->  	event->sample.header.size = sizeof(struct perf_event_header);
->  
->  	/* Set time field based on etm auxtrace config. */
-> diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-> index 2f47f4ec5b27..7cca37887917 100644
-> --- a/tools/perf/util/cs-etm.h
-> +++ b/tools/perf/util/cs-etm.h
-> @@ -251,10 +251,11 @@ enum cs_etm_pid_fmt {
->  };
->  
->  #ifdef HAVE_CSTRACE_SUPPORT
-> +#include <opencsd/ocsd_if_types.h>
->  int cs_etm__get_cpu(u8 trace_chan_id, int *cpu);
-> -enum pid_fmt cs_etm__get_pid_fmt(struct cs_etm_queue *etmq);
-> -int cs_etm__etmq_set_tid(struct cs_etm_queue *etmq,
-> -			 pid_t tid, u8 trace_chan_id);
-> +enum cs_etm_pid_fmt cs_etm__get_pid_fmt(struct cs_etm_queue *etmq);
-> +int cs_etm__etmq_set_tid_el(struct cs_etm_queue *etmq, pid_t tid,
-> +			    u8 trace_chan_id, ocsd_ex_level el);
->  bool cs_etm__etmq_is_timeless(struct cs_etm_queue *etmq);
->  void cs_etm__etmq_set_traceid_queue_timestamp(struct cs_etm_queue *etmq,
->  					      u8 trace_chan_id);
-> -- 
-> 2.34.1
-> 
