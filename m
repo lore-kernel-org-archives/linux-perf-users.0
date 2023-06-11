@@ -2,351 +2,300 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABA6C7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Sun, 11 Jun 2023 07:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 456FCC7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Sun, 11 Jun 2023 17:03:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231566AbjFKH2D (ORCPT
+        id S229523AbjFKRDE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 11 Jun 2023 03:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58060 "EHLO
+        Sun, 11 Jun 2023 13:03:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232999AbjFKH17 (ORCPT
+        with ESMTP id S232555AbjFKRDD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 11 Jun 2023 03:27:59 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C282115
-        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jun 2023 00:27:58 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bc8c062d542so495768276.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jun 2023 00:27:58 -0700 (PDT)
+        Sun, 11 Jun 2023 13:03:03 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B982E64
+        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jun 2023 10:03:01 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-3f9b7de94e7so231501cf.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jun 2023 10:03:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686468477; x=1689060477;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XsobhHP4TT4FYszQpT6KcQr5X8Uh2ycHvLaNzS1NXUU=;
-        b=ANaywSsA2O3GF7p/PPSYqlzdyw8+wxOaFWdm2bpj3jgUwXpuWbSKvG7smNO9gyj8Z0
-         dB2v+dJO4MfCfxqX7GrY9J48NJDlVbxwtA1KkcZChJW5XNv0oPqpoh1aDyEGLgk48wJv
-         AxqLUUkyJHCWbkbWDvRuX9ZcPqPGWepL7iTR9OqCA5RQQUZCGhMrBpI5nCKsbm5B2J4P
-         GCcZhWSXgeXLPyOmp6yC8Pv3dKYmhYNiX/thKCQK8PeYj6bzTw4c8GDLmTIh/c2mLmSV
-         qL+KaY9pBAAgzEjWAsUR+5/C+g8uRMDG+nKexoLgpBAz7KGNNpvsOXVNYl3iJmSDet+u
-         6LkA==
+        d=google.com; s=20221208; t=1686502980; x=1689094980;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UxeoHOZYaH8t6ghE/iZba4B+L8prc3MRJkS4u8iwn+k=;
+        b=ybr6I0abcnIdAfJm/R1lxdxe3DZkZr8t7NcW7rwbcz3qcGpOaFVhErccTBggG5/iuA
+         ypOl9b0L3lVLECC5NZubIIPzBi5llrROgGh70AZv/lWZJuc7ABXIG2/1jNEy1yp6zT2Z
+         uW2yMWetTjL2uiPL9rTcZ6+CnCFYWFZ5mgvkgNIg3DSjdPaPVDOb5NGYQx3OA3wmNrL9
+         YTH1jOJXUzRaXVG4kLxTOhnRYiSGqieIYD5QEjUETEPqHwdxOKx/MEUAH+Q1IqxpkAue
+         aKWr+SXZS1xnaPHN+BztouN2vPRXjnoW6M8LfBADCfp+w6f5Rw4YBfZWw4fQ6M4JUY3i
+         Y0dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686468477; x=1689060477;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XsobhHP4TT4FYszQpT6KcQr5X8Uh2ycHvLaNzS1NXUU=;
-        b=IjohcmkmOL78Eo87dT6fR0CPFDFeP6qKw7Ig2eySyb08XazJG9e5mi4l+eonR5DOwY
-         34HBG0KMq/Q2b1OoAXTqzEoPaS6Ssc7EaqUY1weaX+otxhMn8SpKlztj5xQfprcnPhYk
-         9Rz7YoU20Q86ubG9vQTF10mukLEVFexM1Q9HSleefSZOFR8TTfwuTQXLSxaEMZrSUUKG
-         2TqDFh7af7dq8N+YXEUZDJYP+wRJWoF0Cs1hfRoscDh44lNpeV3mRmCfU4pt/s07I7Nn
-         LW5tcWd1/lb4HOlM/qyULBXw/krXDs58sppcM+mWHE86fgfbBrG8vLpQvroEJvxbH96D
-         KzBw==
-X-Gm-Message-State: AC+VfDxnAWxMomwgmdc6TTUqi6/t92Xb95AvFXdbkP8cw8Y8AbFnCLhz
-        N4R/9cI+zegLAnsImIeUzqmPRo2QtAik
-X-Google-Smtp-Source: ACHHUZ622mEHWQffL3YUe9F73Cz/TO68VKtkkBi51cr3pk0ZuRf/TiE0ktL9yPKxIrvV76/GBSgnCdMhrSau
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:737b:2b94:75b5:9fb7])
- (user=irogers job=sendgmr) by 2002:a05:6902:1085:b0:ba8:337a:d8a3 with SMTP
- id v5-20020a056902108500b00ba8337ad8a3mr3327852ybu.11.1686468477622; Sun, 11
- Jun 2023 00:27:57 -0700 (PDT)
-Date:   Sun, 11 Jun 2023 00:27:50 -0700
-In-Reply-To: <20230611072751.637227-1-irogers@google.com>
-Message-Id: <20230611072751.637227-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20230611072751.637227-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 2/2] perf annotation: Switch lock from a mutex to a sharded_mutex
+        d=1e100.net; s=20221208; t=1686502980; x=1689094980;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UxeoHOZYaH8t6ghE/iZba4B+L8prc3MRJkS4u8iwn+k=;
+        b=gotjqxw2nI2FtAcsNLrGmsxk7anuFNKb/BP18Sn8dwr9FUPSGeVhWe0VZbf3+XL0DE
+         UWW6g2IXP8SEWCQX6uXhFrzaOxSd3w5t2hn4wN+stN8N905CwkP63LlPeMJG7Pjlvb/m
+         koGXM7DDPxpjQyJYI9VrcjekF9DTU6r6VfHIaijM2zbjOvCfWE8SQt3jr/U062LfxbwN
+         UoupluTiUozlutQOsUv57RbKu+Xd3+2ar8HMsKmLAlyygp/6FnmLOERQKAPdfzaNfNs8
+         plG/rwbPl7WpsL4KBCw043GmsI8Wb1vaVzZS3sdebn/+u83CqVhJkNaoHtVvsxstWg3I
+         +zoA==
+X-Gm-Message-State: AC+VfDyDftfHblYtSxiO7hd0Gf2Q0zFomhIONy6vohwoAsxT1wqwnvfy
+        e3r158u7NJQNXWMrLT1B/Uu1W09EuL7ssWJcdmbgCxSqoBi7bxUaXHoJkA==
+X-Google-Smtp-Source: ACHHUZ6OmztjnyM1lSKv0aLgQvbflZi2KvGBZipiXimCbLuUI1TLx48iES8mmOXXc4Titx6AZ25d8p+UfdR+b3KlZuI=
+X-Received: by 2002:ac8:7c53:0:b0:3f9:ad2e:4801 with SMTP id
+ o19-20020ac87c53000000b003f9ad2e4801mr169445qtv.17.1686502980484; Sun, 11 Jun
+ 2023 10:03:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAPXMrf9mRG_uyEdkppJOjJxCREXjZsXGo2A_QEtwHM4G+nJoEA@mail.gmail.com>
+ <CAP-5=fXth=1qRgH6iNKt6eAWt4MM4Xd0jn8o65BD9SDq8v6uYg@mail.gmail.com>
+ <a63d33cf-de35-c41c-abb3-d55577e67d6d@arm.com> <36dd3607-fe6e-6f79-3932-f96b554c1d1e@arm.com>
+ <aa998b2c-fa35-8e71-fe54-a5bffcfa30ae@arm.com>
+In-Reply-To: <aa998b2c-fa35-8e71-fe54-a5bffcfa30ae@arm.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Yuan Can <yuancan@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Date:   Sun, 11 Jun 2023 10:02:48 -0700
+Message-ID: <CAP-5=fXQR5JeKyfgXG2-j_Ay61xhZPP0j+VtsNkW=e3--_Hr0g@mail.gmail.com>
+Subject: Re: Reg: Perf report consuming too high memory
+To:     Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     RAJESH DASARI <raajeshdasari@gmail.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Remove the "struct mutex lock" variable from annotation that is
-allocated per symbol. This removes in the region of 40 bytes per
-symbol allocation. Use a sharded mutex where the number of shards is
-set to the number of CPUs. Assuming good hashing of the annotation
-(done based on the pointer), this means in order to contend there
-needs to be more threads than CPUs, which is not currently true in any
-perf command. Were contention an issue it is straightforward to
-increase the number of shards in the mutex.
+On Fri, Jun 2, 2023 at 3:45=E2=80=AFAM James Clark <james.clark@arm.com> wr=
+ote:
+>
+>
+>
+> On 02/06/2023 11:36, James Clark wrote:
+> >
+> >
+> > On 02/06/2023 11:24, James Clark wrote:
+> >>
+> >>
+> >> On 02/06/2023 00:30, Ian Rogers wrote:
+> >>> On Thu, Jun 1, 2023 at 6:51=E2=80=AFAM RAJESH DASARI <raajeshdasari@g=
+mail.com> wrote:
+> >>>>
+> >>>> Hi ,
+> >>>>
+> >>>> I am noticing high memory usage, oom killer is invoked and restartin=
+g
+> >>>> our node while running perf report command.
+> >>>>
+> >>>>  perf record -a  -g   sleep 120
+> >>>> [ perf record: Woken up 2472 times to write data ]
+> >>>> [ perf record: Captured and wrote 623.050 MB (3830374 samples) ]
+> >>>>
+> >>>> perf report
+> >>>>
+> >>>>   PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+=
+ COMMAND
+> >>>>  119877 root      20   0 7335760   7.0g 670244 S   0.0  59.7   0:22.=
+23 perf
+> >>>>
+> >>>> perf report command is consuming more memory, oom killer is invoked.
+> >>>> System details : kernel 5.4.242 + glibc 2.26 + gcc12
+> >>>> I tried with perf 6.x versions but I still see more memory consumpti=
+on.
+> >>>>
+> >>>> I tried the same experiment on a different system under the same loa=
+d
+> >>>> , this system has ( kernel 5.4.242 + glibc 2.24 + gcc 11)
+> >>>>
+> >>>> perf record -a  -g  sleep 120
+> >>>> [ perf record: Woken up 1868 times to write data ]
+> >>>> [ perf record: Captured and wrote 470.203 MB
+> >>>> /tmp/rcpprofiling/data_cg.data (3828394 samples) ]
+> >>>>
+> >>>> perf report
+> >>>>
+> >>>> PID USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ C=
+OMMAND
+> >>>> 840045 root      20   0 1459520   1.4g 493380 R  98.1  11.8   0:31.2=
+1
+> >>>> perf report
+> >>>>
+> >>>>
+> >>>> I see that the more the perf.data file size, the more  memory it
+> >>>> consumes, but in this case i only see 200MB difference between the
+> >>>> perf.data file and also only 2k sample difference, but memory
+> >>>> consumption is too high in the first system.
+> >>>>
+> >>>> What could be the reason, is this expected behaviour or how to debug
+> >>>> why perf is consuming more memory here  . Please help me with this
+> >>>> query .
+> >>>
+> >>> Hi Rajesh,
+> >>>
+> >>> As you are using perf in system wide mode every running process has
+> >>> its memory map added to the perf.data file, this is so that a virtual
+> >>> address in a sample can be turned into a file offset. perf report wil=
+l
+> >>> process the shared objects and even use objdump to annotate them. Thi=
+s
+> >>> can all be pretty costly in terms of memory but it sounds like perf i=
+s
+> >>> working-as-intended. Have you tried just attaching perf to the proces=
+s
+> >>> you are interested in?
+> >>>
+> >>
+> >> For the mapped in binaries I would expect that to show up on virtual
+> >> memory used rather than resident. For a 10 second -a sleep recording o=
+n
+> >> my laptop perf report takes 5.9G of resident memory to show 476K sampl=
+es.
+> >>
+> >> Running it with 'valgrind --tool=3Dmassiv' then 'massif-visualizer' I =
+can
+> >> see it's pretty much all the allocations for the callchains:
+> >>
+> >>  4.7 GiB: zalloc (zalloc.c:8)
+> >>   4.3GiB: fill_node (callchain.c:585)
+> >>    4.3 GiB: add_child (callchain.c:646)
+> >>     3.6 GiB: append_chain_children (callchain.c:906)
+> >>      ...
+> >>
+> >> But this was a recording without --call-graph, so it's like it's using
+> >> 12KB per sample for one level of callchains (if you divide 5.9G by
+> >> 476K). Maybe that's not really an excessive amount of memory. It could
+> >> probably be optimised a bit but maybe the issue is the default sample
+> >> rate and using -a after all.
+> >>
+> >
+> > Actually if I open it with --call-graph=3Dnone it only uses 670MB of
+> > resident memory. So a pretty huge reduction, and the report doesn't loo=
+k
+> > so much different because it wasn't recorded with callgraphs in the
+> > first place. That could help with your issue Rajesh.
+> >
+>
+> Oh sorry I see the -g short form is for default --call-graphs, so that
+> explains it. All my top results in the report were only 1 deep but
+> that's probably because of debug symbols or something. There are
+> probably other much longer ones elsewhere in the report so my
+> calculation above can be disregarded.
 
-On my Debian/glibc based machine, this reduces the size of struct
-annotation from 136 bytes to 96 bytes, or nearly 30%.
+Fwiw, I think there are a number of low hanging fruits for improving
+the memory usage. One problem we've had is with memory leaks. With
+this patch series that Arnaldo has in tmp.perf-tools-next
+(https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/):
+https://lore.kernel.org/lkml/20230608232823.4027869-1-irogers@google.com/
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-top.c          | 14 +++----
- tools/perf/ui/browsers/annotate.c | 10 ++---
- tools/perf/util/annotate.c        | 66 ++++++++++++++++++++++++++-----
- tools/perf/util/annotate.h        | 11 ++++--
- 4 files changed, 77 insertions(+), 24 deletions(-)
+we are address and leak sanitizer clean. The work is based on the
+reference count checking, which was controversial when first proposed,
+was merged in 6.4 and now with the patch series leak sanitizer is
+saying there are no memory leaks. It'd be great if people could check
+that leak sanitizer is good when running not on x86-64.
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index c363c04e16df..1baa2acb3ced 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -137,10 +137,10 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 	}
- 
- 	notes = symbol__annotation(sym);
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 
- 	if (!symbol__hists(sym, top->evlist->core.nr_entries)) {
--		mutex_unlock(&notes->lock);
-+		annotation__unlock(notes);
- 		pr_err("Not enough memory for annotating '%s' symbol!\n",
- 		       sym->name);
- 		sleep(1);
-@@ -156,7 +156,7 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 		pr_err("Couldn't annotate %s: %s\n", sym->name, msg);
- 	}
- 
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- 	return err;
- }
- 
-@@ -211,12 +211,12 @@ static void perf_top__record_precise_ip(struct perf_top *top,
- 
- 	notes = symbol__annotation(sym);
- 
--	if (!mutex_trylock(&notes->lock))
-+	if (!annotation__trylock(notes))
- 		return;
- 
- 	err = hist_entry__inc_addr_samples(he, sample, evsel, ip);
- 
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- 
- 	if (unlikely(err)) {
- 		/*
-@@ -253,7 +253,7 @@ static void perf_top__show_details(struct perf_top *top)
- 	symbol = he->ms.sym;
- 	notes = symbol__annotation(symbol);
- 
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 
- 	symbol__calc_percent(symbol, evsel);
- 
-@@ -274,7 +274,7 @@ static void perf_top__show_details(struct perf_top *top)
- 	if (more != 0)
- 		printf("%d lines not displayed, maybe increase display entries [e]\n", more);
- out_unlock:
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- }
- 
- static void perf_top__resort_hists(struct perf_top *t)
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 70bad42b807b..ccdb2cd11fbf 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -314,7 +314,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
- 
- 	browser->entries = RB_ROOT;
- 
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 
- 	symbol__calc_percent(sym, evsel);
- 
-@@ -343,7 +343,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
- 		}
- 		disasm_rb_tree__insert(browser, &pos->al);
- 	}
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- 
- 	browser->curr_hot = rb_last(&browser->entries);
- }
-@@ -470,10 +470,10 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 	}
- 
- 	notes = symbol__annotation(dl->ops.target.sym);
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 
- 	if (!symbol__hists(dl->ops.target.sym, evsel->evlist->core.nr_entries)) {
--		mutex_unlock(&notes->lock);
-+		annotation__unlock(notes);
- 		ui__warning("Not enough memory for annotating '%s' symbol!\n",
- 			    dl->ops.target.sym->name);
- 		return true;
-@@ -482,7 +482,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 	target_ms.maps = ms->maps;
- 	target_ms.map = ms->map;
- 	target_ms.sym = dl->ops.target.sym;
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- 	symbol__tui_annotate(&target_ms, evsel, hbt, browser->opts);
- 	sym_title(ms->sym, ms->map, title, sizeof(title), browser->opts->percent_type);
- 	ui_browser__show_title(&browser->b, title);
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index bde890cfa620..310dde7b3419 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -32,6 +32,7 @@
- #include "block-range.h"
- #include "string2.h"
- #include "util/event.h"
-+#include "util/sharded_mutex.h"
- #include "arch/common.h"
- #include "namespaces.h"
- #include <regex.h>
-@@ -856,7 +857,7 @@ void symbol__annotate_zero_histograms(struct symbol *sym)
- {
- 	struct annotation *notes = symbol__annotation(sym);
- 
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 	if (notes->src != NULL) {
- 		memset(notes->src->histograms, 0,
- 		       notes->src->nr_histograms * notes->src->sizeof_sym_hist);
-@@ -864,7 +865,7 @@ void symbol__annotate_zero_histograms(struct symbol *sym)
- 			memset(notes->src->cycles_hist, 0,
- 				symbol__size(sym) * sizeof(struct cyc_hist));
- 	}
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- }
- 
- static int __symbol__account_cycles(struct cyc_hist *ch,
-@@ -1121,7 +1122,7 @@ void annotation__compute_ipc(struct annotation *notes, size_t size)
- 	notes->hit_insn = 0;
- 	notes->cover_insn = 0;
- 
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 	for (offset = size - 1; offset >= 0; --offset) {
- 		struct cyc_hist *ch;
- 
-@@ -1140,7 +1141,7 @@ void annotation__compute_ipc(struct annotation *notes, size_t size)
- 			notes->have_cycles = true;
- 		}
- 	}
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- }
- 
- int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample,
-@@ -1291,17 +1292,64 @@ int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool r
- 	return ins__scnprintf(&dl->ins, bf, size, &dl->ops, max_ins_name);
- }
- 
--void annotation__init(struct annotation *notes)
-+void annotation__exit(struct annotation *notes)
- {
--	mutex_init(&notes->lock);
-+	annotated_source__delete(notes->src);
- }
- 
--void annotation__exit(struct annotation *notes)
-+static struct sharded_mutex *sharded_mutex;
-+
-+static void annotation__init_sharded_mutex(void)
- {
--	annotated_source__delete(notes->src);
--	mutex_destroy(&notes->lock);
-+	/* As many mutexes as there are CPUs. */
-+	sharded_mutex = sharded_mutex__new(cpu__max_present_cpu().cpu);
-+}
-+
-+static size_t annotation__hash(const struct annotation *notes)
-+{
-+	return ((size_t)notes) >> 4;
- }
- 
-+static struct mutex *annotation__get_mutex(const struct annotation *notes)
-+{
-+	static pthread_once_t once = PTHREAD_ONCE_INIT;
-+
-+	pthread_once(&once, annotation__init_sharded_mutex);
-+	if (!sharded_mutex)
-+		return NULL;
-+
-+	return sharded_mutex__get_mutex(sharded_mutex, annotation__hash(notes));
-+}
-+
-+void annotation__lock(struct annotation *notes)
-+	NO_THREAD_SAFETY_ANALYSIS
-+{
-+	struct mutex *mutex = annotation__get_mutex(notes);
-+
-+	if (mutex)
-+		mutex_lock(mutex);
-+}
-+
-+void annotation__unlock(struct annotation *notes)
-+	NO_THREAD_SAFETY_ANALYSIS
-+{
-+	struct mutex *mutex = annotation__get_mutex(notes);
-+
-+	if (mutex)
-+		mutex_unlock(mutex);
-+}
-+
-+bool annotation__trylock(struct annotation *notes)
-+{
-+	struct mutex *mutex = annotation__get_mutex(notes);
-+
-+	if (!mutex)
-+		return false;
-+
-+	return mutex_trylock(mutex);
-+}
-+
-+
- static void annotation_line__add(struct annotation_line *al, struct list_head *head)
- {
- 	list_add_tail(&al->node, head);
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 1c6335b8333a..962780559176 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -271,8 +271,7 @@ struct annotated_source {
- 	struct sym_hist	   *histograms;
- };
- 
--struct annotation {
--	struct mutex lock;
-+struct LOCKABLE annotation {
- 	u64			max_coverage;
- 	u64			start;
- 	u64			hit_cycles;
-@@ -298,9 +297,15 @@ struct annotation {
- 	struct annotated_source *src;
- };
- 
--void annotation__init(struct annotation *notes);
-+static inline void annotation__init(struct annotation *notes __maybe_unused)
-+{
-+}
- void annotation__exit(struct annotation *notes);
- 
-+void annotation__lock(struct annotation *notes) EXCLUSIVE_LOCK_FUNCTION(*notes);
-+void annotation__unlock(struct annotation *notes) UNLOCK_FUNCTION(*notes);
-+bool annotation__trylock(struct annotation *notes) EXCLUSIVE_TRYLOCK_FUNCTION(true, *notes);
-+
- static inline int annotation__cycles_width(struct annotation *notes)
- {
- 	if (notes->have_cycles && notes->options->show_minmax_cycle)
--- 
-2.41.0.162.gfafddb0af9-goog
+When I've looked in the past the most costly thing in terms of RAM has
+been symbols:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/util/symbol.h?h=3Dperf-tools-next#n44
 
+Threads have mmaps (known as maps in the code) so that virtual
+addresses in samples can be looked up, mmaps have dsos and dsos have
+symbols associated with particular addresses. Symbols are dynamically
+sized as they have the name of the symbol as an array after the
+struct. They are also dynamically sized as they may have a things
+before them as documented in the comment:
+
+/**
+ * A symtab entry. When allocated this may be preceded by an annotation (se=
+e
+ * symbol__annotation), a browser_index (see symbol__browser_index) and rb_=
+node
+ * to sort by name (see struct symbol_name_rb_node).
+ */
+
+So taking these in turn:
+ - symbol__annotation puts a "struct annotation" before the symbol:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/util/annotate.h?h=3Dperf-tools-next#n274
+
+    the struct annotation is not cheap and these patches get rid of
+the largest part of it, the mutex:
+https://lore.kernel.org/lkml/20230611072751.637227-1-irogers@google.com/
+
+   There is still more that can be done with struct annotation. The widths:
+
+struct {
+u8 addr;
+u8 jumps;
+u8 target;
+u8 min_addr;
+u8 max_addr;
+u8 max_ins_name;
+} widths;
+
+   Are to do with UI printing. Do we really need to allocate these for
+every symbol even if we've not run perf annotate? It seems they can
+move into "struct annotated_source" saving 6 bytes in cases like perf
+top. The cycles and IPC data:
+
+u64 hit_cycles;
+u64 hit_insn;
+unsigned int total_insn;
+unsigned int cover_insn;
+
+   is filled in optionally if annotate2 is run:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/util/symbol.h?h=3Dperf-tools-next#n66
+
+   but we allocate the space regardless. Perhaps this can be a lazy
+initialization pattern or the data moved to "struct annotated_source".
+Perhaps a logical conclusion for that is to just make the value
+preceding symbol a lazily created "struct annotation *".
+
+ - the browser index is a u32 only present if verbose is enabled and
+that has a FIXME:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/ui/browsers/map.c?h=3Dperf-tools-next#n42
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/builtin-report.c?h=3Dperf-tools-next#n1670
+
+ - sort by name requires an rb_node, so 3 pointers:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/util/symbol.h?h=3Dperf-tools-next#n97
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/i=
+nclude/linux/rbtree.h?h=3Dperf-tools-next#n23
+
+   The main things that name sorting is used for is finding names in a
+dso. For the same complexity we could switch to an array of "struct
+symbol *" where the array is sorted by symbol name. The search
+complexity would still be O(n*log(n)) and the creation complexity
+would still be O(n*log(n)), but the overhead would be 1 pointer (in
+the array) instead of 3 in symbol. There is also an iterator to
+iterate by name:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/util/map.h?h=3Dperf-tools-next#n145
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/util/symbol.c?h=3Dperf-tools-next#n593
+
+   but it should be straightforward to scan the array rather than the rbtre=
+e.
+
+I think we should be able to get the symbol overhead to be half of
+what it is presently in cases like perf top and perf report, but I may
+be overlooking things. With the 0 memory leaks that
+perf-tools-next/Linux 6.5 is bringing, I think we may be in good shape
+to unload dsos/symbols based on memory pressure. We should be able to
+make perf commands run in a lot less RAM and patches improving this
+would be welcome.
+
+Thanks,
+Ian
+
+> >>> Thanks,
+> >>> Ian
+> >>>
+> >>>> Thanks,
+> >>>> Rajesh Dasari.
