@@ -2,117 +2,116 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9662C88CB6
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 14:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA24AC88CB6
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 15:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237856AbjFLO6P (ORCPT
+        id S239125AbjFLPF0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 10:58:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33262 "EHLO
+        Mon, 12 Jun 2023 11:05:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231664AbjFLO6O (ORCPT
+        with ESMTP id S238250AbjFLPFZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 10:58:14 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A07ABC;
-        Mon, 12 Jun 2023 07:58:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Rk8v+7kKodlj+QyW1PLHimqi/kwmEy+ooh8DhXxGMfo=; b=cCetaJ92daXjWoUXGnXBaLp3G6
-        bfsOQ1OWAcEFEJY4ZyCfhLwYZhNtlBf2Q7eU5R0SwM+OVsv5Js6EZajuBVSOtdg3OzxRcoS0/pGsK
-        rN7uHzgtVMTdhoztYnTdwDjksS6LY2Ug0o+8ErBQnX4BinayqXaLoz+MIZ1p7Jz65BjQUB0b64sQh
-        978qcWTKz5Hquf/2s6rk6wXFOCc8XdIjjElQn1T2wzOthUodNWdIl8tRw3zq0t2uDPSB0mVxHdHIA
-        ElLTgPNN/1E14vY/pxD9iJDXzQ39Ifc3ndqahbL/6RYEzca06s/q4F2o0fBvtbMq60B9iaqPCEw+M
-        f7IMNJiA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8ize-008uDO-1L;
-        Mon, 12 Jun 2023 14:58:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EE33330058D;
-        Mon, 12 Jun 2023 16:58:05 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CC3B821F7F9D1; Mon, 12 Jun 2023 16:58:05 +0200 (CEST)
-Date:   Mon, 12 Jun 2023 16:58:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
-        gregkh@linuxfoundation.org, pbonzini@redhat.com,
-        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
-        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
-        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
-        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
-        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org,
-        frederic@kernel.org, quic_neeraju@quicinc.com,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
-        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
-        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
-        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
-        luc.vanoostenryck@gmail.com
-Subject: Re: [PATCH v3 26/57] perf: Simplify event_function*()
-Message-ID: <20230612145805.GD83892@hirez.programming.kicks-ass.net>
-References: <20230612090713.652690195@infradead.org>
- <20230612093539.371360635@infradead.org>
- <1cbdae4a-d6ad-4dd8-aa75-9e226c4416fe@kadam.mountain>
+        Mon, 12 Jun 2023 11:05:25 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6B98019A;
+        Mon, 12 Jun 2023 08:05:18 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E60F91FB;
+        Mon, 12 Jun 2023 08:06:02 -0700 (PDT)
+Received: from e127643.broadband (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7782A3F5A1;
+        Mon, 12 Jun 2023 08:05:15 -0700 (PDT)
+From:   James Clark <james.clark@arm.com>
+To:     linux-perf-users@vger.kernel.org
+Cc:     James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] perf map: Fix refcount errors on Arm with -DREFCNT_CHECKING=1
+Date:   Mon, 12 Jun 2023 16:04:24 +0100
+Message-Id: <20230612150424.198914-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1cbdae4a-d6ad-4dd8-aa75-9e226c4416fe@kadam.mountain>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 05:46:47PM +0300, Dan Carpenter wrote:
-> On Mon, Jun 12, 2023 at 11:07:39AM +0200, Peter Zijlstra wrote:
-> > @@ -224,17 +243,15 @@ static int event_function(void *info)
-> >  	int ret = 0;
-> >  
-> >  	lockdep_assert_irqs_disabled();
-> > +	guard(perf_ctx_lock)(cpuctx, task_ctx);
-> >  
-> > -	perf_ctx_lock(cpuctx, task_ctx);
-> >  	/*
-> >  	 * Since we do the IPI call without holding ctx->lock things can have
-> >  	 * changed, double check we hit the task we set out to hit.
-> >  	 */
-> >  	if (ctx->task) {
-> > -		if (ctx->task != current) {
-> > -			ret = -ESRCH;
-> > -			goto unlock;
-> > -		}
-> > +		if (ctx->task != current)
-> > +			return -ESRCH;
-> >  
-> >  		/*
-> >  		 * We only use event_function_call() on established contexts,
-> > @@ -254,8 +271,6 @@ static int event_function(void *info)
-> >  	}
-> >  
-> >  	efs->func(event, cpuctx, ctx, efs->data);
-> > -unlock:
-> > -	perf_ctx_unlock(cpuctx, task_ctx);
-> >  
-> >  	return ret;
-> 
-> 
-> We can change this to a return 0; and get rid of the "ret" variable.
+When quitting after running a perf report, the refcount checker finds
+some double frees. The issue is that map__put() is called on a function
+argument so it removes the refcount wrapper that someone else was using.
 
-This and the previous one, done!
+Fix it by only calling map__put() on a reference that is owned by this
+function.
+
+Signed-off-by: James Clark <james.clark@arm.com>
+---
+ tools/perf/util/symbol-elf.c | 9 +++++----
+ tools/perf/util/symbol.c     | 9 +++++----
+ 2 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 63882a4db5c7..ec0d7810bbb0 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1365,6 +1365,7 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 	struct dso *curr_dso = *curr_dsop;
+ 	struct map *curr_map;
+ 	char dso_name[PATH_MAX];
++	struct map *map_ref;
+ 
+ 	/* Adjust symbol to map to file offset */
+ 	if (adjust_kernel_syms)
+@@ -1390,10 +1391,10 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+ 			if (kmaps) {
+ 				int err;
+ 
+-				map__get(map);
+-				maps__remove(kmaps, map);
+-				err = maps__insert(kmaps, map);
+-				map__put(map);
++				map_ref = map__get(map);
++				maps__remove(kmaps, map_ref);
++				err = maps__insert(kmaps, map_ref);
++				map__put(map_ref);
+ 				if (err)
+ 					return err;
+ 			}
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 6b9c55784b56..b3034fd5c0af 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -1368,6 +1368,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 	int err, fd;
+ 	char kcore_filename[PATH_MAX];
+ 	u64 stext;
++	struct map *map_ref;
+ 
+ 	if (!kmaps)
+ 		return -EINVAL;
+@@ -1464,10 +1465,10 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 			map__set_map_ip(map, map__map_ip_ptr(new_map));
+ 			map__set_unmap_ip(map, map__unmap_ip_ptr(new_map));
+ 			/* Ensure maps are correctly ordered */
+-			map__get(map);
+-			maps__remove(kmaps, map);
+-			err = maps__insert(kmaps, map);
+-			map__put(map);
++			map_ref = map__get(map);
++			maps__remove(kmaps, map_ref);
++			err = maps__insert(kmaps, map_ref);
++			map__put(map_ref);
+ 			map__put(new_map);
+ 			if (err)
+ 				goto out_err;
+-- 
+2.34.1
+
