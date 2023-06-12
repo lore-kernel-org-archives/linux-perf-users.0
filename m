@@ -2,45 +2,45 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C826EC7EE25
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C160C7EE43
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232840AbjFLJ4J (ORCPT
+        id S235719AbjFLJ4L (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
+        Mon, 12 Jun 2023 05:56:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230332AbjFLJyd (ORCPT
+        with ESMTP id S232392AbjFLJyV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:33 -0400
+        Mon, 12 Jun 2023 05:54:21 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8882618B;
-        Mon, 12 Jun 2023 02:39:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D994C09;
+        Mon, 12 Jun 2023 02:38:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=U4i7z1jGLLioJYi9TDEcLiRvRYzXl6AqAACZeSAVHVg=; b=SBLpIgKh9BvTgin8OgClkKlYXg
-        X5ams+FHzFQ6G1lMnSouT1mDdb4OLsixaSq0XGTpb8qMCrU112HpuhNQoPMpu5LuKgc0l67v7cO1h
-        u5ptXidisQWMYnTu9VRqL7lCU0qSFMrhITDD9gjBmwe8Ob3g4CMGsAIsrtG8NhdHIlElo7XiHuBGk
-        i6CUfsyeQ89E6j6aUDbi6UnyyLpJP5feQWE/A/0f7bznVuaG82q1C6WO47OsY3j0TTRUJpg1Of5WA
-        IRcAI8pTAmFoYuUbcG3n6PWRD/wAaLyzUwLu2dB3lMCN4lr3Q2ZxqN2zU2caRGifvgztAd6QumekK
-        vRuQDjXw==;
+        bh=vDHS8Plr2cencdpiH/auo6E776oNoOhgYdcpKlgKc4Q=; b=XfspiS8Usbqb2dpT01GShTpXYF
+        0wwyX4AcSTYBMwe4XCE0JXv0GEXukM5Z+wJrQ5ydemtoQKvufj+e0HtUrkEv50Xk/7NS5f+kXoBH9
+        NRHSIXz+gP5a9fY839hRRMg3XMU8GiI1b3Pt7sMPV4OqaS+t6EGwmATXLiqnN97MCbKsORuHO2Pr8
+        vz3ITtR3OFV8f2JSdzAkJYccKWoz7g4QT5P8RYF55XvZaHjj/8iBTBPAQu9E+hOhqdBtj1hgmbPlJ
+        c78PyIoTct3THwyJGFh1bmBuUYmoopUkjAyRnngrF2sMB5pJoA+wZWUNb+w3pp3J3RKYPSrqc3iKz
+        xqluhn6g==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0m-008kQu-39;
-        Mon, 12 Jun 2023 09:39:00 +0000
+        id 1q8e0g-008kPA-1f;
+        Mon, 12 Jun 2023 09:38:51 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F7FB303383;
-        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 04CC13031B9;
+        Mon, 12 Jun 2023 11:38:49 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id D03BE30A77B70; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093540.253514702@infradead.org>
+        id 53B9E30A77B56; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093538.640502622@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:51 +0200
+Date:   Mon, 12 Jun 2023 11:07:29 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -68,7 +68,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 38/57] perf: Simplify IOC_SET_OUTPUT
+Subject: [PATCH v3 16/57] sched: Simplify sched_{set,get}affinity()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -76,49 +76,115 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Use guards to reduce gotos and simplify control flow.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ kernel/sched/core.c |   53 +++++++++++++---------------------------------------
+ 1 file changed, 14 insertions(+), 39 deletions(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5762,6 +5762,11 @@ static inline struct fd perf_fdget(int f
- 	return f;
- }
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8258,39 +8258,24 @@ long sched_setaffinity(pid_t pid, const
+ {
+ 	struct affinity_context ac;
+ 	struct cpumask *user_mask;
+-	struct task_struct *p;
+ 	int retval;
  
-+static inline bool is_perf_fd(struct fd fd)
-+{
-+	return fd.file && fd.file->f_op == &perf_fops;
-+}
-+
- static int perf_event_set_output(struct perf_event *event,
- 				 struct perf_event *output_event);
- static int perf_event_set_filter(struct perf_event *event, void __user *arg);
-@@ -5807,19 +5812,15 @@ static long _perf_ioctl(struct perf_even
+-	rcu_read_lock();
+-
+-	p = find_process_by_pid(pid);
+-	if (!p) {
+-		rcu_read_unlock();
++	CLASS(find_get_task, p)(pid);
++	if (!p)
+ 		return -ESRCH;
+-	}
  
- 	case PERF_EVENT_IOC_SET_OUTPUT:
- 	{
--		int ret;
- 		if (arg != -1) {
- 			struct perf_event *output_event;
--			struct fd output = perf_fdget(arg);
--			if (!output.file)
-+			CLASS(fd, output)(arg);
-+			if (!is_perf_fd(output))
- 				return -EBADF;
- 			output_event = output.file->private_data;
--			ret = perf_event_set_output(event, output_event);
--			fdput(output);
--		} else {
--			ret = perf_event_set_output(event, NULL);
-+			return perf_event_set_output(event, output_event);
- 		}
--		return ret;
-+		return perf_event_set_output(event, NULL);
+-	/* Prevent p going away */
+-	get_task_struct(p);
+-	rcu_read_unlock();
+-
+-	if (p->flags & PF_NO_SETAFFINITY) {
+-		retval = -EINVAL;
+-		goto out_put_task;
+-	}
++	if (p->flags & PF_NO_SETAFFINITY)
++		return -EINVAL;
+ 
+ 	if (!check_same_owner(p)) {
+-		rcu_read_lock();
+-		if (!ns_capable(__task_cred(p)->user_ns, CAP_SYS_NICE)) {
+-			rcu_read_unlock();
+-			retval = -EPERM;
+-			goto out_put_task;
+-		}
+-		rcu_read_unlock();
++		guard(rcu)();
++		if (!ns_capable(__task_cred(p)->user_ns, CAP_SYS_NICE))
++			return -EPERM;
  	}
  
- 	case PERF_EVENT_IOC_SET_FILTER:
+ 	retval = security_task_setscheduler(p);
+ 	if (retval)
+-		goto out_put_task;
++		return retval;
+ 
+ 	/*
+ 	 * With non-SMP configs, user_cpus_ptr/user_mask isn't used and
+@@ -8300,8 +8285,7 @@ long sched_setaffinity(pid_t pid, const
+ 	if (user_mask) {
+ 		cpumask_copy(user_mask, in_mask);
+ 	} else if (IS_ENABLED(CONFIG_SMP)) {
+-		retval = -ENOMEM;
+-		goto out_put_task;
++		return -ENOMEM;
+ 	}
+ 
+ 	ac = (struct affinity_context){
+@@ -8313,8 +8297,6 @@ long sched_setaffinity(pid_t pid, const
+ 	retval = __sched_setaffinity(p, &ac);
+ 	kfree(ac.user_mask);
+ 
+-out_put_task:
+-	put_task_struct(p);
+ 	return retval;
+ }
+ 
+@@ -8356,28 +8338,21 @@ SYSCALL_DEFINE3(sched_setaffinity, pid_t
+ long sched_getaffinity(pid_t pid, struct cpumask *mask)
+ {
+ 	struct task_struct *p;
+-	unsigned long flags;
+ 	int retval;
+ 
+-	rcu_read_lock();
+-
+-	retval = -ESRCH;
++	guard(rcu)();
+ 	p = find_process_by_pid(pid);
+ 	if (!p)
+-		goto out_unlock;
++		return -ESRCH;
+ 
+ 	retval = security_task_getscheduler(p);
+ 	if (retval)
+-		goto out_unlock;
++		return retval;
+ 
+-	raw_spin_lock_irqsave(&p->pi_lock, flags);
++	guard(raw_spinlock_irqsave)(&p->pi_lock);
+ 	cpumask_and(mask, &p->cpus_mask, cpu_active_mask);
+-	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
+ 
+-out_unlock:
+-	rcu_read_unlock();
+-
+-	return retval;
++	return 0;
+ }
+ 
+ /**
 
 
