@@ -2,323 +2,194 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B25F3C7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 17:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DC5C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 18:04:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231252AbjFLR75 (ORCPT
+        id S233757AbjFLSES (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 13:59:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59330 "EHLO
+        Mon, 12 Jun 2023 14:04:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237044AbjFLR7x (ORCPT
+        with ESMTP id S232414AbjFLSER (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 13:59:53 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6421E4A
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 10:59:46 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3f9d619103dso27391cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 10:59:46 -0700 (PDT)
+        Mon, 12 Jun 2023 14:04:17 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E75D6E67;
+        Mon, 12 Jun 2023 11:04:15 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-3f86b426371so1263311cf.2;
+        Mon, 12 Jun 2023 11:04:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686592786; x=1689184786;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1686593055; x=1689185055;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ILFhlbqLVYCkvMkd83ZOGAmp4d8jQSiKbMxbQnZD5rA=;
-        b=tdMkRizyfMWaXZvmVYCuSYSVv7+zDgFuO1ZU7MleR5M8JC17ke+8ydQweTOJ1zbPmU
-         1NRV3R/B5c1A5vEpe019yI1Hc+7oFSldlRgyqJpd3F132cvciHFG2l8UwYgKZYuJKvlx
-         YLoDCZYWVSNgVtxwzCDfG7x743wTlnoQxEIi5KpiXCsracw//U6gR41Na4ea5ELqOfOX
-         NQVm64FoeOuhMYYT++BMj00g7bMr9GpiTxoVEEi6z/EOuKMc1ccTRoQl8teYzYGVoaos
-         bgA7yvaPTLi+lSenAmx8lDOEaX2NQHRA9kavD5yhgIVPwt6eAfhH0BMg3KrcxX+0gD2E
-         +2cg==
+        bh=APHh3Nys4coEeSeVUj0oYbJvBI1pNrqCMzlNnyXighg=;
+        b=RlK7II8xo4KN6uK+P4qhzADQcHADQU0gppNv539F+MhnKzEzKl8kGFT+Ezt4JxpxNz
+         7H/6mXli4RYeNG3JvnaHG+6pEY+/L6AhxTll8ico20yxchoZKOUg1s/qwQHyEtGLYNaO
+         CNIbdTO9hw6Mw6K0vzpoGDrUVcJOk6ebSmTL3/UxyfZalzNQPwzXkRbh72etZAQhjUmt
+         kKoWtLNSO+hisLiT3gnrY0zT1UN0bfHj8ag59Bdg3pzucOp/IyNtNhAlGiE+1zs0pW1P
+         SZQh8VyJa716lOLNnSBr5pFjltIYIowqnN2V9u9zM1TffiEnQ85BHYxD+NJBxpC9ikoN
+         ev8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686592786; x=1689184786;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1686593055; x=1689185055;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ILFhlbqLVYCkvMkd83ZOGAmp4d8jQSiKbMxbQnZD5rA=;
-        b=e/rbYkpCRr/8jmQhlX3ICCdlFX+jSGo8xv9TgYAJtxSi4Sb+Z/qPKD3vCo5cYASUuY
-         UnsBAmCMz3jlWEwe7tyj//fdb18tWfcU1SEA8qq6b4YiV5JxyMnI2/hlfFmJDDN6wLib
-         /10SclMox54itlz2NIHy2OjkWQMVpzri4nfltUcKUS1AQ+4RniZKzE1QQIepoNg2Qvnk
-         W026FeUYaLK4HsWoXQcXkgVYCz+OZoc6X9ikSVaXuVh+92O6bdUghN+yFJQAgvkbjbLM
-         Z7vHlkqUF8RDRcgXbPnLXtKFBlwJzPRnqLNMBWFpCe3/GzgCaGPIujZyub/03DPsHcfk
-         VdDg==
-X-Gm-Message-State: AC+VfDz8E+9jw425MeEto850Iarc9FrXmyIChpKuqDmFfG9qnZ+UmY4t
-        Hs6jmkmeYrDaQp7R6SDTuuTsGF0azl5hy6GsIGd0qQ==
-X-Google-Smtp-Source: ACHHUZ4bUM8GRJd5hVVOzLx255CUquI4ffTrwuQNTvagqC6syOQfcoCVYYTHioGEnalkJNjwbHb4niB5dw4dIvZm8q4=
-X-Received: by 2002:a05:622a:1187:b0:3f9:f877:1129 with SMTP id
- m7-20020a05622a118700b003f9f8771129mr220710qtk.29.1686592785710; Mon, 12 Jun
- 2023 10:59:45 -0700 (PDT)
+        bh=APHh3Nys4coEeSeVUj0oYbJvBI1pNrqCMzlNnyXighg=;
+        b=UfTX+TRyDPbCGtFKRB56ZIIoG7hARKg8AaFvzHR7lJ/Y1wrtBfQJnRXU8fs20JuW0G
+         iVqoD0f7H4jMWP5SlGo7jVZ0MbsD2VaqKfmlnyCbCK6q1tLNj4/e1SnBuA7IpvDOasvn
+         80+aixYy2KwlkF+of1if08GW/ScxVgxKktyRI61c3IwWOtdMqmO/3eaf1/7ZREPtwj6G
+         pJ+swxkhOi1edPlorRL5M5XxJUIMWEYJcEbPZDIujgd1LOtcNI1FObFjL29yxRrphpyf
+         Acjknf33Ri7GkfgH2eTrCkOQxdkZmQlWDjDM6HkFRRvzgv2wGEeGyJbvOIOIt6kdaoMN
+         4E2Q==
+X-Gm-Message-State: AC+VfDy0gUAjH1dlou8oiRrgwx7736F5hOXLrApuA3ISjSFptlnNfXCc
+        MEH37jB3nTHYNDHBadam9Hb7lDOkn3ueog==
+X-Google-Smtp-Source: ACHHUZ7ML49zNQagpfER6wDv/GUGVjh5/MoH60xXGePMiPJtC5YbXkHtPnkF3gTHEwLccMuOTIpyow==
+X-Received: by 2002:a05:622a:1aa9:b0:3f6:b1ad:97e with SMTP id s41-20020a05622a1aa900b003f6b1ad097emr13458092qtc.7.1686593055052;
+        Mon, 12 Jun 2023 11:04:15 -0700 (PDT)
+Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
+        by smtp.gmail.com with ESMTPSA id v6-20020ac87286000000b003f9baa693c7sm3559182qto.10.2023.06.12.11.04.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 11:04:14 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailauth.nyi.internal (Postfix) with ESMTP id F0CAF27C005B;
+        Mon, 12 Jun 2023 14:04:13 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 12 Jun 2023 14:04:14 -0400
+X-ME-Sender: <xms:G16HZMNVqrczWrJlBmlnmqA_k3VHCkZKlMPdezVbzttdNLWyMeO7AA>
+    <xme:G16HZC_STa5f_J1Ybm3vIOtNUX_iLnkPp03GgxwojQJDKxWUBr_Q46NhzKb6vWa5r
+    -nornpYBqdvPEKyjA>
+X-ME-Received: <xmr:G16HZDQQrZ5x6VPJNoKo17C11asfBTkCA-eOYIgUM-UuAnY6m9Ho6o41wZE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeduhedguddulecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
+    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
+    grthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveei
+    udffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
+    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
+    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
+    higihmvgdrnhgrmhgv
+X-ME-Proxy: <xmx:G16HZEsKElmlwO8YuPshs7AS1ebBAVUXDJnxxwDMfVVRxRO3KKyrbw>
+    <xmx:G16HZEeIVeVKGtqa1UMPTB_17IzjM2rVfekKaW8Fhyyyk4iJPLKq4A>
+    <xmx:G16HZI1sNTLC6pSjNuJVN7hWHveas8tMSgvQ6XiG4SAK3POvuTV5Ng>
+    <xmx:HV6HZCDb8rZpMmG2YODQuMZ_Pvj-i2G7rXcV5Kybq1j8UczScNQIKdIYfb0>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 12 Jun 2023 14:04:10 -0400 (EDT)
+Date:   Mon, 12 Jun 2023 11:02:28 -0700
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
+        gregkh@linuxfoundation.org, pbonzini@redhat.com,
+        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
+        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
+        mingo@redhat.com, longman@redhat.com, dennis@kernel.org,
+        tj@kernel.org, cl@linux.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
+        joel@joelfernandes.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
+        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
+        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+        john.johansen@canonical.com, paul@paul-moore.com,
+        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
+        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
+        luc.vanoostenryck@gmail.com
+Subject: Re: [PATCH v3 08/57] sched: Simplify wake_up_if_idle()
+Message-ID: <ZIddtMiTj8Kktq1z@boqun-archlinux>
+References: <20230612090713.652690195@infradead.org>
+ <20230612093537.977924652@infradead.org>
 MIME-Version: 1.0
-References: <20230612150424.198914-1-james.clark@arm.com> <CAP-5=fWu0yCSCB__prps2g=JRDScbhWuimPJHUsU0S_c0ywDhg@mail.gmail.com>
- <ZIdWBl+MZYKI83Mb@kernel.org> <ZIdYkRHj8tkaxgED@kernel.org>
-In-Reply-To: <ZIdYkRHj8tkaxgED@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 12 Jun 2023 10:59:34 -0700
-Message-ID: <CAP-5=fWpBSG5kJygrYQ7SSN7iRWodV+CUpME84BkmKpLJvmjeQ@mail.gmail.com>
-Subject: Re: [PATCH] perf map: Fix refcount errors on Arm with -DREFCNT_CHECKING=1
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230612093537.977924652@infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 10:40=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Mon, Jun 12, 2023 at 02:29:42PM -0300, Arnaldo Carvalho de Melo escrev=
-eu:
-> > Em Mon, Jun 12, 2023 at 09:32:30AM -0700, Ian Rogers escreveu:
-> > > On Mon, Jun 12, 2023 at 8:05=E2=80=AFAM James Clark <james.clark@arm.=
-com> wrote:
-> > > >
-> > > > When quitting after running a perf report, the refcount checker fin=
-ds
-> > > > some double frees. The issue is that map__put() is called on a func=
-tion
-> > > > argument so it removes the refcount wrapper that someone else was u=
-sing.
-> > > >
-> > > > Fix it by only calling map__put() on a reference that is owned by t=
-his
-> > > > function.
-> > > >
-> > > > Signed-off-by: James Clark <james.clark@arm.com>
-> > >
-> > > Acked-by: Ian Rogers <irogers@google.com>
-> > >
-> > > > ---
-> > > >  tools/perf/util/symbol-elf.c | 9 +++++----
-> > > >  tools/perf/util/symbol.c     | 9 +++++----
-> > > >  2 files changed, 10 insertions(+), 8 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-=
-elf.c
-> > > > index 63882a4db5c7..ec0d7810bbb0 100644
-> > > > --- a/tools/perf/util/symbol-elf.c
-> > > > +++ b/tools/perf/util/symbol-elf.c
-> > > > @@ -1365,6 +1365,7 @@ static int dso__process_kernel_symbol(struct =
-dso *dso, struct map *map,
-> > > >         struct dso *curr_dso =3D *curr_dsop;
-> > > >         struct map *curr_map;
-> > > >         char dso_name[PATH_MAX];
-> > > > +       struct map *map_ref;
-> > >
-> > > nit: can we narrow the scope of this by moving it to the scope where =
-it is used.
-> >
-> > Which is what you did in a patch I already processed, its only in
-> > tmp.perf-tools-next as I was going thru the other patches, but this one
-> > is there already.
-> >
-> > I'm checking the tools/perf/util/symbol.c part.
->
-> I narrowed the scope and removed the symbol-elf.c part, end result:
->
-> From 6fd34445b8c94aa7f519fb0b1ed45c7ef9f6cc4e Mon Sep 17 00:00:00 2001
-> From: James Clark <james.clark@arm.com>
-> Date: Mon, 12 Jun 2023 16:04:24 +0100
-> Subject: [PATCH 1/1] perf map: Fix double 'struct map' reference free fou=
-nd
->  with -DREFCNT_CHECKING=3D1
->
-> When quitting after running a 'perf report', the refcount checker finds
-> some double frees. The issue is that map__put() is called on a function
-> argument so it removes the refcount wrapper that someone else was using.
->
-> Fix it by only calling map__put() on a reference that is owned by this
-> function.
->
-> Committer notes:
->
-> Narrowed the map_ref scope as suggested by Ian, removed the symbol-elf
-> part as it was already fixed by another patch, from Ian.
->
-> Signed-off-by: James Clark <james.clark@arm.com>
-> Acked-by: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Link: https://lore.kernel.org/r/20230612150424.198914-1-james.clark@arm.c=
-om
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Thanks Arnaldo! I think we should be able to automate finding these
-issues with the warn_unused_result function attribute:
-
-```
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 66a87b3d9965..2c77c28ff000 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -172,7 +172,7 @@ struct map *map__new2(u64 start, struct dso *dso);
-void map__delete(struct map *map);
-struct map *map__clone(struct map *map);
-
--static inline struct map *map__get(struct map *map)
-+__attribute__ ((warn_unused_result)) static inline struct map
-*map__get(struct map *map)
-{
-       struct map *result;
-
-diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-index 83144e0645ed..5b74465316dd 100644
---- a/tools/perf/util/maps.h
-+++ b/tools/perf/util/maps.h
-@@ -60,7 +60,7 @@ struct maps *maps__new(struct machine *machine);
-bool maps__empty(struct maps *maps);
-int maps__clone(struct thread *thread, struct maps *parent);
-
--struct maps *maps__get(struct maps *maps);
-+struct maps *maps__get(struct maps *maps) __attribute__ ((warn_unused_resu=
-lt));
-void maps__put(struct maps *maps);
-
-static inline void __maps__zput(struct maps **map)
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index 8c0731c6cbb7..04e1878b9551 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -50,7 +50,7 @@ int nsinfo__init(struct nsinfo *nsi);
-struct nsinfo *nsinfo__new(pid_t pid);
-struct nsinfo *nsinfo__copy(const struct nsinfo *nsi);
-
--struct nsinfo *nsinfo__get(struct nsinfo *nsi);
-+struct nsinfo *nsinfo__get(struct nsinfo *nsi) __attribute__
-((warn_unused_result));
-void nsinfo__put(struct nsinfo *nsi);
-
-bool nsinfo__need_setns(const struct nsinfo *nsi);
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 9068a21ce0fa..c6228252b093 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -71,7 +71,7 @@ struct thread *thread__new(pid_t pid, pid_t tid);
-irogers@irogers-glaptop0:~/kernel.org$ git diff
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 66a87b3d9965..2c77c28ff000 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -172,7 +172,7 @@ struct map *map__new2(u64 start, struct dso *dso);
-void map__delete(struct map *map);
-struct map *map__clone(struct map *map);
-
--static inline struct map *map__get(struct map *map)
-+__attribute__ ((warn_unused_result)) static inline struct map
-*map__get(struct map *map)
-{
-       struct map *result;
-
-diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
-index 83144e0645ed..5b74465316dd 100644
---- a/tools/perf/util/maps.h
-+++ b/tools/perf/util/maps.h
-@@ -60,7 +60,7 @@ struct maps *maps__new(struct machine *machine);
-bool maps__empty(struct maps *maps);
-int maps__clone(struct thread *thread, struct maps *parent);
-
--struct maps *maps__get(struct maps *maps);
-+struct maps *maps__get(struct maps *maps) __attribute__ ((warn_unused_resu=
-lt));
-void maps__put(struct maps *maps);
-
-static inline void __maps__zput(struct maps **map)
-diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
-index 8c0731c6cbb7..04e1878b9551 100644
---- a/tools/perf/util/namespaces.h
-+++ b/tools/perf/util/namespaces.h
-@@ -50,7 +50,7 @@ int nsinfo__init(struct nsinfo *nsi);
-struct nsinfo *nsinfo__new(pid_t pid);
-struct nsinfo *nsinfo__copy(const struct nsinfo *nsi);
-
--struct nsinfo *nsinfo__get(struct nsinfo *nsi);
-+struct nsinfo *nsinfo__get(struct nsinfo *nsi) __attribute__
-((warn_unused_result));
-void nsinfo__put(struct nsinfo *nsi);
-
-bool nsinfo__need_setns(const struct nsinfo *nsi);
-diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
-index 9068a21ce0fa..c6228252b093 100644
---- a/tools/perf/util/thread.h
-+++ b/tools/perf/util/thread.h
-@@ -71,7 +71,7 @@ struct thread *thread__new(pid_t pid, pid_t tid);
-int thread__init_maps(struct thread *thread, struct machine *machine);
-void thread__delete(struct thread *thread);
-
--struct thread *thread__get(struct thread *thread);
-+struct thread *thread__get(struct thread *thread) __attribute__
-((warn_unused_result));
-void thread__put(struct thread *thread);
-
-static inline void __thread__zput(struct thread **thread)
-```
-
-This shows the problem like:
-```
-util/symbol.c: In function =E2=80=98dso__load_kcore=E2=80=99:
-util/symbol.c:1467:25: error: ignoring return value of =E2=80=98map__get=E2=
-=80=99
-declared with attribute =E2=80=98warn_unused_result=E2=80=99 [-Werror=3Dunu=
-sed-result]
-1467 |                         map__get(map);
-     |
-```
-
-I double checked and the symbol.c issue was the only one in my build
-environment. Using warn_unused_result should be done via compiler.h
-which is a bit more than the patch above.
-
-Thanks,
-Ian
-
+On Mon, Jun 12, 2023 at 11:07:21AM +0200, Peter Zijlstra wrote:
+> Use guards to reduce gotos and simplify control flow.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > ---
->  tools/perf/util/symbol.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 6b9c55784b56a4be..d275d3bef7d54a40 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1458,16 +1458,18 @@ static int dso__load_kcore(struct dso *dso, struc=
-t map *map,
->                 list_del_init(&new_node->node);
->
->                 if (RC_CHK_ACCESS(new_map) =3D=3D RC_CHK_ACCESS(replaceme=
-nt_map)) {
-> +                       struct map *map_ref;
+>  kernel/sched/core.c  |   20 ++++++--------------
+>  kernel/sched/sched.h |   15 +++++++++++++++
+>  2 files changed, 21 insertions(+), 14 deletions(-)
+> 
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3872,21 +3872,13 @@ static void __ttwu_queue_wakelist(struct
+>  void wake_up_if_idle(int cpu)
+>  {
+>  	struct rq *rq = cpu_rq(cpu);
+> -	struct rq_flags rf;
+>  
+> -	rcu_read_lock();
+> -
+> -	if (!is_idle_task(rcu_dereference(rq->curr)))
+> -		goto out;
+> -
+> -	rq_lock_irqsave(rq, &rf);
+> -	if (is_idle_task(rq->curr))
+> -		resched_curr(rq);
+> -	/* Else CPU is not idle, do nothing here: */
+> -	rq_unlock_irqrestore(rq, &rf);
+> -
+> -out:
+> -	rcu_read_unlock();
+> +	guard(rcu)();
+> +	if (is_idle_task(rcu_dereference(rq->curr))) {
+> +		guard(rq_lock)(rq);
+
+We assume that irq must be disabled when this function called?
+Otherwise, I don't understand why this is not
+
+	guard(rq_lock_irqsave)(rq);
+
+?
+
+Regards,
+Boqun
+
+> +		if (is_idle_task(rq->curr))
+> +			resched_curr(rq);
+> +	}
+>  }
+>  
+>  bool cpus_share_cache(int this_cpu, int that_cpu)
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1678,6 +1678,21 @@ rq_unlock(struct rq *rq, struct rq_flags
+>  	raw_spin_rq_unlock(rq);
+>  }
+>  
+> +DEFINE_LOCK_GUARD_1(rq_lock, struct rq,
+> +		    rq_lock(_T->lock, &_T->rf),
+> +		    rq_unlock(_T->lock, &_T->rf),
+> +		    struct rq_flags rf)
 > +
->                         map__set_start(map, map__start(new_map));
->                         map__set_end(map, map__end(new_map));
->                         map__set_pgoff(map, map__pgoff(new_map));
->                         map__set_map_ip(map, map__map_ip_ptr(new_map));
->                         map__set_unmap_ip(map, map__unmap_ip_ptr(new_map)=
-);
->                         /* Ensure maps are correctly ordered */
-> -                       map__get(map);
-> -                       maps__remove(kmaps, map);
-> -                       err =3D maps__insert(kmaps, map);
-> -                       map__put(map);
-> +                       map_ref =3D map__get(map);
-> +                       maps__remove(kmaps, map_ref);
-> +                       err =3D maps__insert(kmaps, map_ref);
-> +                       map__put(map_ref);
->                         map__put(new_map);
->                         if (err)
->                                 goto out_err;
-> --
-> 2.37.1
->
+> +DEFINE_LOCK_GUARD_1(rq_lock_irq, struct rq,
+> +		    rq_lock_irq(_T->lock, &_T->rf),
+> +		    rq_unlock_irq(_T->lock, &_T->rf),
+> +		    struct rq_flags rf)
+> +
+> +DEFINE_LOCK_GUARD_1(rq_lock_irqsave, struct rq,
+> +		    rq_lock_irqsave(_T->lock, &_T->rf),
+> +		    rq_unlock_irqrestore(_T->lock, &_T->rf),
+> +		    struct rq_flags rf)
+> +
+>  static inline struct rq *
+>  this_rq_lock_irq(struct rq_flags *rf)
+>  	__acquires(rq->lock)
+> 
+> 
