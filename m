@@ -2,44 +2,45 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFF3C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F896C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235728AbjFLJ4N (ORCPT
+        id S235737AbjFLJ4P (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:56:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33886 "EHLO
+        Mon, 12 Jun 2023 05:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231173AbjFLJyX (ORCPT
+        with ESMTP id S233804AbjFLJys (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F3E55FF0;
-        Mon, 12 Jun 2023 02:38:57 -0700 (PDT)
+        Mon, 12 Jun 2023 05:54:48 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07AB14C18;
+        Mon, 12 Jun 2023 02:39:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=mq5JO2tPl8C7SILOfz/KwJIcnobnm9UFdJaARgXH410=; b=AMcWXrFAvQk7IooWq5vsQKOUpX
-        c+43fYmu8uTkx0XjpUhBb5rLhhZTpeo7fFtrFQ6gX1Ie/h4dDKHWEhenT13VsLCQtYF4J8qBvnqTN
-        Rb7fXamtrAdhJIYp7XX1thb9d5mecYu5DsgQSqMp7US340Et8Gvt1QM3WZU+8S6FEN+rhyMOUXAIr
-        zrgte1I7kA8l7tRuTCoT+JXSeh785ZZ203dX7QWjb/gjzrBXnKJDRygq4P+8awKyHb5qZx9laV/87
-        GV7BCj0gIl7rPXAFdcBqCQXcR9zo9IGdzN5vsPxOEsYOaEA/IqiNceS6vjnqf815nn9bTlK1cd3oY
-        AFlkOulA==;
+        bh=ICqqJG5l0sWCX8xrZRxbU0jefpCN2MYfe0yl/+VCRM4=; b=CKNAf/OLveGu3h4G35M1XEIV5u
+        NBuElad+1Cyz7hAjxLmdiofAlNZ59WVXwN3CrP9Gfl4Ccdi/+VZXviefm9IV8ZOsEiIAALkH+ZQeM
+        JSCshvWoOk2ye0l3PailK5L7O/HIe+rzqBLavcMqSUulNXyI0lqc5mlQE1RAC+EzaqyQPBUzKfid5
+        LYfkCZS8vnyRr2VmNLRD6E8uxxm0Qg99fQqc78oc6Bz3sD5VsR472rJ6vx1URMn7VGFn0WBGdm0KG
+        /Q43F20jOaH5vDTomYkIeci0EFi5Mfq3RUVPKf9bOojvjiudIa4EFwja6+7exCspONRew6SwRyHT0
+        wI+FO4zQ==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0f-002N8u-IH; Mon, 12 Jun 2023 09:38:49 +0000
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q8e0n-008kR8-1I;
+        Mon, 12 Jun 2023 09:39:04 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6C280302680;
-        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F98B3033B5;
+        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id F111730A210B0; Mon, 12 Jun 2023 11:38:47 +0200 (CEST)
-Message-ID: <20230612093537.536441207@infradead.org>
+        id CA60630A77B6F; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093540.181605463@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:15 +0200
+Date:   Mon, 12 Jun 2023 11:07:50 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -67,7 +68,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 02/57] apparmor: Free up __cleanup() name
+Subject: [PATCH v3 37/57] perf: Simplify perf_read_group()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,42 +76,66 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In order to use __cleanup for __attribute__((__cleanup__(func))) the
-name must not be used for anything else. Avoid the conflict.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- security/apparmor/include/lib.h |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/events/core.c |   30 +++++++++++-------------------
+ 1 file changed, 11 insertions(+), 19 deletions(-)
 
---- a/security/apparmor/include/lib.h
-+++ b/security/apparmor/include/lib.h
-@@ -232,7 +232,7 @@ void aa_policy_destroy(struct aa_policy
-  */
- #define fn_label_build(L, P, GFP, FN)					\
- ({									\
--	__label__ __cleanup, __done;					\
-+	__label__ __do_cleanup, __done;					\
- 	struct aa_label *__new_;					\
- 									\
- 	if ((L)->size > 1) {						\
-@@ -250,7 +250,7 @@ void aa_policy_destroy(struct aa_policy
- 			__new_ = (FN);					\
- 			AA_BUG(!__new_);				\
- 			if (IS_ERR(__new_))				\
--				goto __cleanup;				\
-+				goto __do_cleanup;			\
- 			__lvec[__j++] = __new_;				\
- 		}							\
- 		for (__j = __count = 0; __j < (L)->size; __j++)		\
-@@ -272,7 +272,7 @@ void aa_policy_destroy(struct aa_policy
- 			vec_cleanup(profile, __pvec, __count);		\
- 		} else							\
- 			__new_ = NULL;					\
--__cleanup:								\
-+__do_cleanup:								\
- 		vec_cleanup(label, __lvec, (L)->size);			\
- 	} else {							\
- 		(P) = labels_profile(L);				\
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5472,11 +5472,10 @@ static int perf_read_group(struct perf_e
+ 	struct perf_event *leader = event->group_leader, *child;
+ 	struct perf_event_context *ctx = leader->ctx;
+ 	int ret;
+-	u64 *values;
+ 
+ 	lockdep_assert_held(&ctx->mutex);
+ 
+-	values = kzalloc(event->read_size, GFP_KERNEL);
++	u64 *values __free(kfree) = kzalloc(event->read_size, GFP_KERNEL);
+ 	if (!values)
+ 		return -ENOMEM;
+ 
+@@ -5486,29 +5485,22 @@ static int perf_read_group(struct perf_e
+ 	 * By locking the child_mutex of the leader we effectively
+ 	 * lock the child list of all siblings.. XXX explain how.
+ 	 */
+-	mutex_lock(&leader->child_mutex);
+-
+-	ret = __perf_read_group_add(leader, read_format, values);
+-	if (ret)
+-		goto unlock;
+-
+-	list_for_each_entry(child, &leader->child_list, child_list) {
+-		ret = __perf_read_group_add(child, read_format, values);
++	scoped_guard (mutex, &leader->child_mutex) {
++		ret = __perf_read_group_add(leader, read_format, values);
+ 		if (ret)
+-			goto unlock;
+-	}
++			return ret;
+ 
+-	mutex_unlock(&leader->child_mutex);
++		list_for_each_entry(child, &leader->child_list, child_list) {
++			ret = __perf_read_group_add(child, read_format, values);
++			if (ret)
++				return ret;
++		}
++	}
+ 
+ 	ret = event->read_size;
+ 	if (copy_to_user(buf, values, event->read_size))
+-		ret = -EFAULT;
+-	goto out;
++		return -EFAULT;
+ 
+-unlock:
+-	mutex_unlock(&leader->child_mutex);
+-out:
+-	kfree(values);
+ 	return ret;
+ }
+ 
 
 
