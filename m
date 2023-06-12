@@ -2,116 +2,93 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32846C7EE43
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 10:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A277C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 10:42:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235151AbjFLKlv (ORCPT
+        id S233917AbjFLKm2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 06:41:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48372 "EHLO
+        Mon, 12 Jun 2023 06:42:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232210AbjFLKld (ORCPT
+        with ESMTP id S233967AbjFLKmE (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 06:41:33 -0400
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10B5D319D4
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 03:25:52 -0700 (PDT)
-Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso2800206a12.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 03:25:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686565543; x=1689157543;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iMnNoTCuZfel8amFbSTUxxwKPaBvxjJNJh4C0Qnn6hk=;
-        b=i7mL1d80g/JXGdpILDUxbA10HUt2ReMbJ3U4ba9yLqvDwn3nDTK8KiLT5tphL3OJbU
-         TL4RQ0eM45axl6bwoBS2zhORCysIxFNKHUJkEhtHjxVWDaVz4YysA21f+rX5jIZH/dsP
-         4feZLgEPzJJWw64eTxM3vA3d2tSblhpmD1Moi58/M5v6yOrrTWLUBcMMDoOAaBqd8BMz
-         q6HTpIIVW08tF3bwWihfns82Mi0MZmwStgRpbvuOrQXZWMSpoGpJF7tT+Qu/S/xaiabQ
-         ywj7U2Kl+qNIZsSx/wlfXLWhYL7Ik0PJgNwmd+ZVJtPk8q2RvMNntqstm9LvwEVPWyGW
-         0YXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686565543; x=1689157543;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iMnNoTCuZfel8amFbSTUxxwKPaBvxjJNJh4C0Qnn6hk=;
-        b=WDOr+UtaAfbChyPfLz6ycAk08udQrwFWdtuzegEpskrh43MgQv2uD2Con8I2QB7LlT
-         6h9LnKlvhJcR0MXXh+WdjVVYwxoNYm/7h3VqYTcy8CrxSOf7GU2gpP3H8n/9hG7nOqlR
-         2zpYC3Js/en7XzkkS8OeZIn3l6dRA1/P+qX80r09mTGJWkdNlBzB2roVXWI9TZH3pHwl
-         X/LLP1TgA4ita5qCVvJFrl4E7qPhM5fUmpqHyWfneIhDTHamEhUbVain+CskH9O5KfLF
-         8k9+zvMplRpJBsUZEHCdTLeUEIkZzDlVaWlY8z+AxuiIIyLwKX2GfZVUNfGA/bfC9eu1
-         pdiw==
-X-Gm-Message-State: AC+VfDxx9Lqb/cz9VXtgcAXfusD6U9QUacys2L3m4XHeGdf3z0LDqgLg
-        mAp5BIbeavdl559239BLyWDG6Q==
-X-Google-Smtp-Source: ACHHUZ7vr2Sb/VrxeuRSU/zkdi+fwgLM95jBKLP8RyrWo+b0yzuj4avNzR7Mbo3sLB8yejlIkXIvkg==
-X-Received: by 2002:a17:90a:4c:b0:25b:cb3c:b5ac with SMTP id 12-20020a17090a004c00b0025bcb3cb5acmr3995793pjb.6.1686565543531;
-        Mon, 12 Jun 2023 03:25:43 -0700 (PDT)
-Received: from leoy-huanghe.lan (211-75-219-201.hinet-ip.hinet.net. [211.75.219.201])
-        by smtp.gmail.com with ESMTPSA id pt1-20020a17090b3d0100b002500df72713sm9077644pjb.7.2023.06.12.03.25.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 03:25:43 -0700 (PDT)
-Date:   Mon, 12 Jun 2023 18:25:37 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Baolin Wang <baolin.wang@linux.alibaba.com>
-Subject: Re: [PATCH 1/2] perf/core: Bail out early if the request AUX area is
- out of bound
-Message-ID: <20230612102537.GF217089@leoy-huanghe.lan>
-References: <20230612052452.53425-1-xueshuai@linux.alibaba.com>
- <20230612052452.53425-2-xueshuai@linux.alibaba.com>
- <20230612073821.GB217089@leoy-huanghe.lan>
- <5fe7c14e-4dd4-3e7f-ece4-75da36c3b6c3@linux.alibaba.com>
- <20230612100502.GE217089@leoy-huanghe.lan>
+        Mon, 12 Jun 2023 06:42:04 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C0228231;
+        Mon, 12 Jun 2023 03:26:27 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Qfnrk72zNzTl2n;
+        Mon, 12 Jun 2023 18:25:42 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Mon, 12 Jun 2023 18:26:10 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+Subject: [RFC] Adding support for setting the affinity of the recording
+ process
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
+Date:   Mon, 12 Jun 2023 18:26:10 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230612100502.GE217089@leoy-huanghe.lan>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 06:05:02PM +0800, Leo Yan wrote:
-> On Mon, Jun 12, 2023 at 04:35:07PM +0800, Shuai Xue wrote:
-> 
-> [...]
-> 
-> > > Furthermore, I believe the AUX trace pages are only mapped for VMA
-> > > (continuous virtual address), the kernel will defer to map to physical
-> > > pages (which means it's not necessarily continuous physical pages)
-> > > when handling data abort caused by accessing the pages.
-> > 
-> > I don't know why the rb->aux_pages is limit to allocated with continuous physical pages.
-> > so I just add a check to avoid oops and report a proper error code -EINVAL to
-> > user.
-> > 
-> > I would like to use vmalloc() family to replace kmalloc() so that we could support
-> > allocate a more large AUX area if it is not necessarily continuous physical pages.
-> > Should we remove the restriction?
-> 
-> As you said, we are now able to support a maximum AUX trace buffer
-> size of up to 2GiB, and AUX trace buffer is per CPU wise.
+Hello everyone,
 
-Ouch, I reviewed my notes and correct myself:
+Currently, perf-record supports profiling an existing process, thread, 
+or a specified command.
 
-For per thread mode, perf tool only allocates one generic ring buffer
-and one AUX ring buffer for the whole session; for the system wide mode,
-perf allocates the generic ring buffer and the AUX ring buffer per CPU
-wise.
+Sometimes we may need to set CPU affinity of the target process before 
+recording:
 
-> Seems to me, 2GiB AUX buffer per CPU is big enough for most tracing
-> scenarios, right?  Except you can provide profiling scenario which
-> must use bigger buffer size.
+   # taskset -pc <cpus> <pid>
+   # perf record -p <pid> -- sleep 10
 
-But I think this question is still valid.
+or:
 
-> Another factor is the allocation of buffers from kmalloc() offers better
-> performance compared to allocation from vmalloc(), this is also
-> important for perf core layer.
-> 
-> Thanks,
-> Leo
+   # perf record -- `taskset -c <cpus> COMMAND`
+
+I'm thinking about getting perf to support setting the affinity of the 
+recording process, for example:
+
+1. set the CPU affinity of the <pid1> process to <cpus1>, <pid2> process 
+to <cpus2>,  and record:
+
+   # perf record -p <pid1>/<cpus1>:<pid2>/<cpus2> -- sleep 10
+
+and
+
+2. set CPU affinity of the COMMAND and record:
+
+   # perf record --taskset-command <cpus> COMMAND
+
+In doing so, perf, as an observer, actually changes some of the 
+properties of the target process, which may be contrary to the purpose 
+of perf tool.
+
+
+Will we consider accepting this approach?
+
+Thanks,
+Yang.
