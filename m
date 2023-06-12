@@ -2,45 +2,45 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88006C83005
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D10BAC7EE25
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233917AbjFLJ42 (ORCPT
+        id S234703AbjFLJ4a (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:56:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33442 "EHLO
+        Mon, 12 Jun 2023 05:56:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234182AbjFLJyw (ORCPT
+        with ESMTP id S234230AbjFLJyw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Mon, 12 Jun 2023 05:54:52 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A8864C19;
-        Mon, 12 Jun 2023 02:39:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 442CF135;
+        Mon, 12 Jun 2023 02:39:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=9OWN91/cXOLRfmVSj/c39yenMABydmgJP4BxXsEr7m4=; b=ODMSw25KlwnbIZwtM8Ooplwz3S
-        avsg1C00hw0ZNaZy9SLLjMZe48szqJxUiobcK4beCgvel6ihAYx2CB/a5nHYQfhh+vAHV4C8Cmzs9
-        sHrFLrQ8JgaSA/kQmUkLW4qOpTYgvv7KZlHNVaG4mFStN9gg4I9vNmU5SCLRgi1KP1mNG2IqtUsMx
-        Bn2lgUNR5mJw4d6qus/8zp5DlFSOnjyVpqcuU6rRQsEHrG6c+y/Y3B/BEKX+tLP83TTc2c2wVlwgW
-        ZQhT0qliAPMSaNLZeLP4zzJpsXK4sXqa3/eS25o+5DQB5pDBPNuzZ9bbmC1N5UaAjMUFBVYOytSF3
-        R2+1UEzw==;
+        bh=Xqf5W2yYJrVz/DQlZr8jQFSxQY35vT93yf3RiRPsU+E=; b=SEfMUFGLcxrsWLLqD4rqRZBdOB
+        DMO5LkBgWnb7vye/D7ZkfEdHNA4LQN6b5bn5RL58pOT0LP8Ukx+j7rtkbDL66kKKuWwzQP+0IzjuJ
+        AdEfjN1fLmHqDivsqL1q0OX0YaAfdn6s/zz1LJAh4NMZPXKCPKTrw61PW7pZt7bEWpZBjhknZF1Pu
+        rfeTs7IyGKdFRPRXNbUm16+QK2kGeQ4AWFVZtGzK5KzTe3Y1gWTmt95W3FGRtzT13/BNtcln9du7r
+        HSmORkIVWTlySqAFUGzgBWHME1IieCrv8NsH6CweYmH/tOmp7EBCw7d+LXsHQCoDcEPhMni22BNIN
+        vlnEfTKA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0x-008kTl-30;
-        Mon, 12 Jun 2023 09:39:15 +0000
+        id 1q8e0m-008kQh-0J;
+        Mon, 12 Jun 2023 09:39:23 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 783DC30615A;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2EC853032B4;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 3757230A79088; Mon, 12 Jun 2023 11:38:49 +0200 (CEST)
-Message-ID: <20230612093541.524967360@infradead.org>
+        id B3A0A30A77B6B; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093539.895253662@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:08:08 +0200
+Date:   Mon, 12 Jun 2023 11:07:46 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -68,7 +68,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 55/57] perf: Simplify find_get_context()
+Subject: [PATCH v3 33/57] perf: Simplify perf_adjust_freq_unthr_context()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -79,77 +79,49 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   46 ++++++++++++++++++----------------------------
- 1 file changed, 18 insertions(+), 28 deletions(-)
+ kernel/events/core.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -1202,6 +1202,8 @@ static void put_ctx(struct perf_event_co
- 	}
- }
+@@ -4100,7 +4100,7 @@ perf_adjust_freq_unthr_context(struct pe
+ 	if (!(ctx->nr_freq || unthrottle))
+ 		return;
  
-+DEFINE_FREE(put_ctx, struct perf_event_context *, if (_T) put_ctx(_T))
-+
- /*
-  * Because of perf_event::ctx migration in sys_perf_event_open::move_group and
-  * perf_pmu_migrate_context() we need some magic.
-@@ -4718,41 +4720,29 @@ find_get_context(struct task_struct *tas
- 		if (clone_ctx)
- 			put_ctx(clone_ctx);
- 	} else {
--		ctx = alloc_perf_context(task);
--		err = -ENOMEM;
--		if (!ctx)
--			goto errout;
--
--		err = 0;
--		mutex_lock(&task->perf_event_mutex);
--		/*
--		 * If it has already passed perf_event_exit_task().
--		 * we must see PF_EXITING, it takes this mutex too.
--		 */
--		if (task->flags & PF_EXITING)
--			err = -ESRCH;
--		else if (task->perf_event_ctxp)
--			err = -EAGAIN;
--		else {
--			get_ctx(ctx);
--			++ctx->pin_count;
--			rcu_assign_pointer(task->perf_event_ctxp, ctx);
--		}
--		mutex_unlock(&task->perf_event_mutex);
-+		struct perf_event_context *new __free(put_ctx) =
-+			alloc_perf_context(task);
-+		if (!new)
-+			return ERR_PTR(-ENOMEM);
+-	raw_spin_lock(&ctx->lock);
++	guard(raw_spinlock)(&ctx->lock);
  
--		if (unlikely(err)) {
--			put_ctx(ctx);
-+		scoped_guard (mutex, &task->perf_event_mutex) {
-+			/*
-+			 * If it has already passed perf_event_exit_task().
-+			 * we must see PF_EXITING, it takes this mutex too.
-+			 */
-+			if (task->flags & PF_EXITING)
-+				return ERR_PTR(-ESRCH);
+ 	list_for_each_entry_rcu(event, &ctx->event_list, event_entry) {
+ 		if (event->state != PERF_EVENT_STATE_ACTIVE)
+@@ -4110,7 +4110,7 @@ perf_adjust_freq_unthr_context(struct pe
+ 		if (!event_filter_match(event))
+ 			continue;
  
--			if (err == -EAGAIN)
-+			if (task->perf_event_ctxp)
- 				goto retry;
--			goto errout;
-+
-+			ctx = get_ctx(no_free_ptr(new));
-+			++ctx->pin_count;
-+			rcu_assign_pointer(task->perf_event_ctxp, ctx);
+-		perf_pmu_disable(event->pmu);
++		guard(perf_pmu_disable)(event->pmu);
+ 
+ 		hwc = &event->hw;
+ 
+@@ -4121,7 +4121,7 @@ perf_adjust_freq_unthr_context(struct pe
  		}
- 	}
  
- 	return ctx;
+ 		if (!event->attr.freq || !event->attr.sample_freq)
+-			goto next;
++			continue;
+ 
+ 		/*
+ 		 * stop the event and update event->count
+@@ -4143,11 +4143,7 @@ perf_adjust_freq_unthr_context(struct pe
+ 			perf_adjust_period(event, period, delta, false);
+ 
+ 		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
+-	next:
+-		perf_pmu_enable(event->pmu);
+ 	}
 -
--errout:
--	return ERR_PTR(err);
+-	raw_spin_unlock(&ctx->lock);
  }
  
- DEFINE_CLASS(find_get_ctx, struct perf_event_context *,
+ /*
 
 
