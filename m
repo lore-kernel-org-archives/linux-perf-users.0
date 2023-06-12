@@ -2,105 +2,251 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0677DC7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 10:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D2ECC7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 10:32:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230287AbjFLK1L (ORCPT
+        id S234787AbjFLKcu (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 06:27:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33830 "EHLO
+        Mon, 12 Jun 2023 06:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232343AbjFLK1A (ORCPT
+        with ESMTP id S231359AbjFLKcV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 06:27:00 -0400
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14AE536E37
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 03:06:28 -0700 (PDT)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6537d2a8c20so3266673b3a.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 03:06:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686564308; x=1689156308;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FBOb/U0RqfC5AxKUFvKlMDVQJb0zRdeSC6F/8xGEJFw=;
-        b=LBQ3BljnQGxIzf87eWYR5E5Qak8frDZ78Lod4++Bh8iZ4VII5iXjAoj4BhKBnrAk3J
-         veJthmMisy1tJoT50qACfrqjypIPLD+ncUDbLjtIo20RJlhRXrzggnO3OEOyJrVKrQ4K
-         Az1yBCopvMuCCnRUlcXpb1eK3v2QNQ+FzU5yocBH9KhR3La53av/CM5HSHJQULbHIi1q
-         dm+pkp9bjgLGDeNDTFXDXC6IQKsgr7g/8zy3lgqZeBPh166HySqNtzgFBLdAVTvlytJI
-         f1RUtjZwqTlwXSgSoiPZLY4dQsiS19fLQYwckxmdM1EpWf30zOf/bm9JbCuSD0soEsXK
-         uXlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686564308; x=1689156308;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FBOb/U0RqfC5AxKUFvKlMDVQJb0zRdeSC6F/8xGEJFw=;
-        b=GPAHioL3cVny6+QrNVkLYk/TPxyxxYTSKHE/Pq7nORla3Iv6XMXiPLmmwbSdsPip55
-         iEWZc+JEsNJBDtlGM3xaTYS86cT9UcOeORAcbiHEYh7JDNMDYgYh1fbs81oHN3kgxhRJ
-         sFJJhILqH5movJ4eNWwHamBRlWD+ms9LFPwbJ/K3RVKv3LhyKK8i6A626GtK5bysZ5SH
-         cC/W5zUuDsAhS2ZI0L9pI90VgIfZKg5DXNF+Ne6in04ivcag+cLo7gQ7t6sSXL2w0R3O
-         qYa+roLEr2Q8rR+qcvg4QI7W1bvHuAiwe8PIkxmrpZ3AIjal5bzrsFygU6h2QYTAb0qW
-         NfaA==
-X-Gm-Message-State: AC+VfDzm2W82ftksKqzaCKdzGycaekG5E13Y1Vod4joVy5/E/VfOVM9Z
-        8scrKjGawGguV+GB3TC/LFudiUx3D+vQborWwsrUTWT8
-X-Google-Smtp-Source: ACHHUZ4KCzP/G4lYu52oALkIYWunkw8ZVaCyIXstDCU3a451MIoJ4eGWvKOqUJaHFn+xmbS8zXrglA==
-X-Received: by 2002:a17:902:daca:b0:1ae:5b7:e437 with SMTP id q10-20020a170902daca00b001ae05b7e437mr7314292plx.4.1686564307842;
-        Mon, 12 Jun 2023 03:05:07 -0700 (PDT)
-Received: from leoy-huanghe.lan (211-75-219-201.hinet-ip.hinet.net. [211.75.219.201])
-        by smtp.gmail.com with ESMTPSA id u24-20020a170902a61800b001ae5d21f760sm7832848plq.146.2023.06.12.03.05.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 03:05:07 -0700 (PDT)
-Date:   Mon, 12 Jun 2023 18:05:02 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Baolin Wang <baolin.wang@linux.alibaba.com>
-Subject: Re: [PATCH 1/2] perf/core: Bail out early if the request AUX area is
- out of bound
-Message-ID: <20230612100502.GE217089@leoy-huanghe.lan>
-References: <20230612052452.53425-1-xueshuai@linux.alibaba.com>
- <20230612052452.53425-2-xueshuai@linux.alibaba.com>
- <20230612073821.GB217089@leoy-huanghe.lan>
- <5fe7c14e-4dd4-3e7f-ece4-75da36c3b6c3@linux.alibaba.com>
+        Mon, 12 Jun 2023 06:32:21 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F1E527AB5;
+        Mon, 12 Jun 2023 03:13:45 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83B282F4;
+        Mon, 12 Jun 2023 03:13:30 -0700 (PDT)
+Received: from [192.168.0.146] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 300A13F663;
+        Mon, 12 Jun 2023 03:12:37 -0700 (PDT)
+Message-ID: <65b7c83f-7fab-3f4e-bff8-9a60937dc207@arm.com>
+Date:   Mon, 12 Jun 2023 15:42:38 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5fe7c14e-4dd4-3e7f-ece4-75da36c3b6c3@linux.alibaba.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH V11 06/10] arm64/perf: Enable branch stack events via
+ FEAT_BRBE
+Content-Language: en-US
+To:     James Clark <james.clark@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230531040428.501523-1-anshuman.khandual@arm.com>
+ <20230531040428.501523-7-anshuman.khandual@arm.com>
+ <ZH3mhorKNo77hsv5@FVFF77S0Q05N>
+ <e960d5d5-07a8-2049-7d0a-07268ecfe36a@arm.com>
+ <ZIMfVsF50cODuOYx@FVFF77S0Q05N.cambridge.arm.com>
+ <510f88f2-574c-097f-7299-2842b1cf432d@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <510f88f2-574c-097f-7299-2842b1cf432d@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 04:35:07PM +0800, Shuai Xue wrote:
 
-[...]
 
-> > Furthermore, I believe the AUX trace pages are only mapped for VMA
-> > (continuous virtual address), the kernel will defer to map to physical
-> > pages (which means it's not necessarily continuous physical pages)
-> > when handling data abort caused by accessing the pages.
+On 6/9/23 19:04, James Clark wrote:
 > 
-> I don't know why the rb->aux_pages is limit to allocated with continuous physical pages.
-> so I just add a check to avoid oops and report a proper error code -EINVAL to
-> user.
 > 
-> I would like to use vmalloc() family to replace kmalloc() so that we could support
-> allocate a more large AUX area if it is not necessarily continuous physical pages.
-> Should we remove the restriction?
+> On 09/06/2023 13:47, Mark Rutland wrote:
+>> On Fri, Jun 09, 2023 at 10:52:37AM +0530, Anshuman Khandual wrote:
+>>> [...]
+>>>
+>>> On 6/5/23 19:13, Mark Rutland wrote:
+>>>>> +void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+>>>>> +{
+>>>>> +	struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
+>>>>> +	u64 brbfcr, brbcr;
+>>>>> +	int idx, loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2, count;
+>>>>> +
+>>>>> +	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
+>>>>> +	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+>>>>> +
+>>>>> +	/* Ensure pause on PMU interrupt is enabled */
+>>>>> +	WARN_ON_ONCE(!(brbcr & BRBCR_EL1_FZP));
+>>>>> +
+>>>>> +	/* Pause the buffer */
+>>>>> +	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+>>>>> +	isb();
+>>>>> +
+>>>>> +	/* Determine the indices for each loop */
+>>>>> +	loop1_idx1 = BRBE_BANK0_IDX_MIN;
+>>>>> +	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
+>>>>> +		loop1_idx2 = brbe_attr->brbe_nr - 1;
+>>>>> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
+>>>>> +		loop2_idx2 = BRBE_BANK0_IDX_MAX;
+>>>>> +	} else {
+>>>>> +		loop1_idx2 = BRBE_BANK0_IDX_MAX;
+>>>>> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
+>>>>> +		loop2_idx2 = brbe_attr->brbe_nr - 1;
+>>>>> +	}
+>>>>> +
+>>>>> +	/* Loop through bank 0 */
+>>>>> +	select_brbe_bank(BRBE_BANK_IDX_0);
+>>>>> +	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
+>>>>> +		if (!capture_branch_entry(cpuc, event, idx))
+>>>>> +			goto skip_bank_1;
+>>>>> +	}
+>>>>> +
+>>>>> +	/* Loop through bank 1 */
+>>>>> +	select_brbe_bank(BRBE_BANK_IDX_1);
+>>>>> +	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
+>>>>> +		if (!capture_branch_entry(cpuc, event, idx))
+>>>>> +			break;
+>>>>> +	}
+>>>>> +
+>>>>> +skip_bank_1:
+>>>>> +	cpuc->branches->branch_stack.nr = idx;
+>>>>> +	cpuc->branches->branch_stack.hw_idx = -1ULL;
+>>>>> +	process_branch_aborts(cpuc);
+>>>>> +
+>>>>> +	/* Unpause the buffer */
+>>>>> +	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+>>>>> +	isb();
+>>>>> +	armv8pmu_branch_reset();
+>>>>> +}
+>>>> The loop indicies are rather difficult to follow, and I think those can be made
+>>>> quite a lot simpler if split out, e.g.
+>>>>
+>>>> | int __armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+>>>> | {
+>>>> | 	struct brbe_hw_attr *brbe_attr = (struct brbe_hw_attr *)cpuc->percpu_pmu->private;
+>>>> | 	int nr_hw_entries = brbe_attr->brbe_nr;
+>>>> | 	int idx;
+>>>
+>>> I guess idx needs an init to 0.
+>>
+>> Yes, sorry, that should have been:
+>>
+>> 	int idx = 0;
+>>
+>>>> | 
+>>>> | 	select_brbe_bank(BRBE_BANK_IDX_0);
+>>>> | 	while (idx < nr_hw_entries && idx < BRBE_BANK0_IDX_MAX) {
+>>>> | 		if (!capture_branch_entry(cpuc, event, idx))
+>>>> | 			return idx;
+>>>> | 		idx++;
+>>>> | 	}
+>>>> | 
+>>>> | 	select_brbe_bank(BRBE_BANK_IDX_1);
+>>>> | 	while (idx < nr_hw_entries && idx < BRBE_BANK1_IDX_MAX) {
+>>>> | 		if (!capture_branch_entry(cpuc, event, idx))
+>>>> | 			return idx;
+>>>> | 		idx++;
+>>>> | 	}
+>>>> | 
+>>>> | 	return idx;
+>>>> | }
+>>>
+>>> These loops are better than the proposed one with indices, will update.
+>>
+>> Great!
+>>
+>>>> | 
+>>>> | void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
+>>>> | {
+>>>> | 	u64 brbfcr, brbcr;
+>>>> | 	int nr;
+>>>> | 
+>>>> | 	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
+>>>> | 	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
+>>>> | 
+>>>> | 	/* Ensure pause on PMU interrupt is enabled */
+>>>> | 	WARN_ON_ONCE(!(brbcr & BRBCR_EL1_FZP));
+>>>> | 
+>>>> | 	/* Pause the buffer */
+>>>> | 	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+>>>> | 	isb();
+>>>> | 
+>>>> | 	nr = __armv8pmu_branch_read(cpus, event);
+>>>> | 
+>>>> | 	cpuc->branches->branch_stack.nr = nr;
+>>>> | 	cpuc->branches->branch_stack.hw_idx = -1ULL;
+>>>> | 	process_branch_aborts(cpuc);
+>>>> | 
+>>>> | 	/* Unpause the buffer */
+>>>> | 	write_sysreg_s(brbfcr & ~BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
+>>>> | 	isb();
+>>>> | 	armv8pmu_branch_reset();
+>>>> | }
+>>>>
+>>>> Looking at <linux/perf_event.h> I see:
+>>>>
+>>>> | /*
+>>>> |  * branch stack layout:
+>>>> |  *  nr: number of taken branches stored in entries[]
+>>>> |  *  hw_idx: The low level index of raw branch records
+>>>> |  *          for the most recent branch.
+>>>> |  *          -1ULL means invalid/unknown.
+>>>> |  *
+>>>> |  * Note that nr can vary from sample to sample
+>>>> |  * branches (to, from) are stored from most recent
+>>>> |  * to least recent, i.e., entries[0] contains the most
+>>>> |  * recent branch.
+>>>> |  * The entries[] is an abstraction of raw branch records,
+>>>> |  * which may not be stored in age order in HW, e.g. Intel LBR.
+>>>> |  * The hw_idx is to expose the low level index of raw
+>>>> |  * branch record for the most recent branch aka entries[0].
+>>>> |  * The hw_idx index is between -1 (unknown) and max depth,
+>>>> |  * which can be retrieved in /sys/devices/cpu/caps/branches.
+>>>> |  * For the architectures whose raw branch records are
+>>>> |  * already stored in age order, the hw_idx should be 0.
+>>>> |  */
+>>>> | struct perf_branch_stack {
+>>>> |         __u64                           nr;  
+>>>> |         __u64                           hw_idx;
+>>>> |         struct perf_branch_entry        entries[];
+>>>> | };
+>>>>
+>>>> ... which seems to indicate we should be setting hw_idx to 0, since IIUC our
+>>>> records are in age order.
+>>> Branch records are indeed in age order, sure will change hw_idx as 0. Earlier
+>>> figured that there was no need for hw_idx and hence marked it as -1UL similar
+>>> to other platforms like powerpc.
+>>
+>> That's fair enough; looking at power_pmu_bhrb_read() in
+>> arch/powerpc/perf/core-book3s.c, I see a comment:
+>>
+>> 	Branches are read most recent first (ie. mfbhrb 0 is
+>> 	the most recent branch).
+>>
+>> ... which suggests that should be 0 also, or that the documentation is wrong.
+>>
+>> Do you know how the perf tool consumes this?
+>>
+>> Thanks,
+>> Mark.
+> 
+> It looks like it's a unique ID/last position updated in the LBR FIFO and
+> it's used to stitch callchains together when the stack depth exceeds the
+> buffer size. Perf takes the previous one that got filled to the limit
+> and and the new one and stitches them together if the hw_idx matches.
 
-As you said, we are now able to support a maximum AUX trace buffer
-size of up to 2GiB, and AUX trace buffer is per CPU wise.
+Right.
 
-Seems to me, 2GiB AUX buffer per CPU is big enough for most tracing
-scenarios, right?  Except you can provide profiling scenario which
-must use bigger buffer size.
+> 
+> There are some options in perf you need to provide to make it happen, so
+> I think for BRBE it doesn't matter what value is assigned to it. -1
+> seems to be a 'not used' value which we should probably set in case the
+> event is opened with PERF_SAMPLE_BRANCH_HW_INDEX
 
-Another factor is the allocation of buffers from kmalloc() offers better
-performance compared to allocation from vmalloc(), this is also
-important for perf core layer.
+-1 indeed did seem like a "not used" option rather than an "unkwown" option.
+ 
+> 
+> You could also fail to open the event if PERF_SAMPLE_BRANCH_HW_INDEX is
+> set, and that would save writing out -1 every time for every branch
+> stack. Although it's not enabled by default, so maybe that's not necessary.
 
-Thanks,
-Leo
+Yeah blocking events with PERF_SAMPLE_BRANCH_HW_INDEX is not necessary IMHO.
