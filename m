@@ -2,112 +2,127 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EDDC7EE43
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 23:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89020C7EE43
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 23:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238136AbjFLXlM (ORCPT
+        id S238332AbjFLXzS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 19:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40788 "EHLO
+        Mon, 12 Jun 2023 19:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238039AbjFLXlK (ORCPT
+        with ESMTP id S236202AbjFLXzR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 19:41:10 -0400
-Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0BB7124;
-        Mon, 12 Jun 2023 16:41:07 -0700 (PDT)
-Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-1a6b7060862so191157fac.2;
-        Mon, 12 Jun 2023 16:41:07 -0700 (PDT)
+        Mon, 12 Jun 2023 19:55:17 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB391718
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 16:55:16 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-3f98276f89cso59191cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 16:55:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686613267; x=1689205267;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1686614115; x=1689206115;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2idTz1dI6R8Bw9mKAT+NEGNVBgEcKr2rXGyUpAj9+VU=;
-        b=mB7cvxaim/8ZW9lHIU6lPRBtBVdQGyUyF7w/Ves7I7UzY9aln8lv2zFB8x6FiAsoQx
-         evbQJQlxpWjEMLrfL05DdfpvfCKwiCayTx8Cihk32yBvYSvP6vUkjx5kX6Ulaq5L4i2o
-         iflgiWkANNwHQrkF59utzROQChv2vSRy47uBfgVsNt/aUHDprnSjyx6qOzEATxjsXSSf
-         ZQSE7au3F3SwDnx9Z7EDfc4TQl0jMqmBh4HGj8cVygjsOs5zb9ShcNDij2Lt2gQHAInF
-         LZZZq/4JvuOkTln9n5GXrLwd6CDpMURymHyBXCYeKBaHOPaignGE83NFu8k1M5B0G9Qc
-         6VrA==
+        bh=/TZTKvgWXslw1lwI6vHB1nhET0MRMTi1UfiLA9Au4ic=;
+        b=exJ46dVQ/JmnaOG+CxMLsTt0wih9TMmhYpzoJoTFDrakBi+obl7ZQ817CMNuGL3XYp
+         d6yqcPeUAVuStSWFoSHTROUuUQsTrf3XU07B25yd1nVgWfWY426G/3uu5D8OGkIVZvph
+         6QqUDjluWaOLPsrLJvzub2+ldQJY07qqh7K4h8DC3CLF5Vj+/zAmXHJ5xfg1rFj4bUiK
+         TD8WFEfy80/YOsiZRCr57F4nyapcWegWgZPqemc5Lj3228pEiuj6JNWW3lVGeEdi5AzB
+         rNrqU4rm9MCscSGnl2xLz6pS+n0OcP9cut84CVhk7Z5D0Xt4eN5Qlug4XNgWtj9zDcUT
+         uPHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686613267; x=1689205267;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2idTz1dI6R8Bw9mKAT+NEGNVBgEcKr2rXGyUpAj9+VU=;
-        b=K0p0lA5Bk0JLLaiIegJV9rqz+q/tBPBXjgzyCJFqby03MAo9QQR2Pi3C5LbEskUgIz
-         HHJEWd/wO8HabovFCqexTd+p58NqqgkAovYMB9XxgUkBvSMcLFMh/lvXQxypHJIPdrvi
-         x4DIlM2T3bG+jYcnL0csXDqYNv/Wn7sUnZkdOzEUvqk/a2e+bW2Q/+XeuCinDQaojlEN
-         qsNeVBkYcpjYomIagsSsg/1EoGHseHEX87/9mz0hxHbfDJbtbYj53uS6WdybUbcWNldm
-         rOsSwERSQQvOuoq942TfsiEUz1Dt75J+v/6Ii9pauuqUDUk143x/d+8soUKLZyzXr05n
-         4Ufw==
-X-Gm-Message-State: AC+VfDzAWThQyAb7elIbvZ8G16EUXyC5/FenfzjvxqT+eTGSrvH+eVQj
-        g/aZLsaxgwhzMkt+8XCc/KjQtOF/Iac=
-X-Google-Smtp-Source: ACHHUZ7HqPKNH19sewXwfiGUfXwY44Aclu+I1FQs4blBB3V2M4vlAWC878Vcx4n1rF33vjkSM6fkwA==
-X-Received: by 2002:a05:6871:555:b0:177:809e:ead3 with SMTP id t21-20020a056871055500b00177809eead3mr7199845oal.41.1686613266879;
-        Mon, 12 Jun 2023 16:41:06 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:1e19:385a:b5d0:f4a2])
-        by smtp.gmail.com with ESMTPSA id t12-20020a62ea0c000000b00643355ff6a6sm7565619pfh.99.2023.06.12.16.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 16:41:06 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
+        d=1e100.net; s=20221208; t=1686614115; x=1689206115;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/TZTKvgWXslw1lwI6vHB1nhET0MRMTi1UfiLA9Au4ic=;
+        b=d4zj41ocEh2I03n9bAMWRhbRvfQIqxpDoTt09uYZbZRY4ePCVnyyT9yL3pN5oxNKzR
+         mRcbXulv6DLc40FBelRUDlmEEEA34X5c/Ushrxe4e3c+MkZYErVF46cCtm63kDY3Is1b
+         w8f2QsSs54nQcYfqhKGz4EJmyKID6XwVnjkbkNclAJ2Ibmu9neo13VkhvhxUNO8hPAfP
+         728+LS0UhvyohrAQnDeK7I3GulTIB5c5ziX5hR8sUfStPv47v+kQSy2JmkDvDqMC/SSq
+         iCib+zj49fo57uSdHCNSWtuR8bchcEYVN6/CklkbpC5AyJt3Z6E+viv7aRNrBMtj6Mkg
+         Qp3w==
+X-Gm-Message-State: AC+VfDyXlJQR2iIJU6ACCEfygfiZFWBYTGEUjkB+bAgEv8M4X+XEeA+c
+        os3qznRROqwSGNpEjK6vX4YaFzKKwyqhJU4MHnnQPA==
+X-Google-Smtp-Source: ACHHUZ4gtNf3oUkKVDoBwfN3WBAinn8qkE/cIS+GMBRsPsZvQS7qfBsTQsGKygeoHk4toeHSJCT62PXL6DZzf+OzBh4=
+X-Received: by 2002:a05:622a:247:b0:3ef:4319:c6c5 with SMTP id
+ c7-20020a05622a024700b003ef4319c6c5mr36692qtx.19.1686614115514; Mon, 12 Jun
+ 2023 16:55:15 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230612230026.3887586-1-namhyung@kernel.org>
+In-Reply-To: <20230612230026.3887586-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 12 Jun 2023 16:55:03 -0700
+Message-ID: <CAP-5=fUpXtoaiLkJW_f5Z1q+iW6ibvRKZb3xWR945g+30x-NNw@mail.gmail.com>
+Subject: Re: [PATCH] perf annotate: Allow whitespace between insn operands
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 2/2] perf dwarf-aux: Allow unnamed struct/union/enum
-Date:   Mon, 12 Jun 2023 16:41:02 -0700
-Message-ID: <20230612234102.3909116-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-In-Reply-To: <20230612234102.3909116-1-namhyung@kernel.org>
-References: <20230612234102.3909116-1-namhyung@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-It's possible some struct/union/enum type don't have type name.  Allow
-the empty name after "struct"/"union"/"enum" string rather than fail.
+On Mon, Jun 12, 2023 at 4:00=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> The llvm-objdump adds a space between the operands while GNU objdump
+> does not.  Allow a space to handle the both.
+>
+> In GNU objdump:
+>
+>   Disassembly of section .text:                                      here
+>                                                                       |
+>   ffffffff81000000 <_stext>:                                          v
+>   ffffffff81000000:     48 8d 25 51 1f 40 01    lea    0x1401f51(%rip),%r=
+sp
+>   ffffffff81000007:     e8 d4 00 00 00          call   ffffffff810000e0 <=
+verify_cpu>
+>   ffffffff8100000c:     48 8d 3d ed ff ff ff    lea    -0x13(%rip),%rdi
+>
+> In llvm-objdump:
+>
+>   Disassembly of section .text:                                      here
+>                                                                        |
+>   ffffffff81000000 <startup_64>:                                       v
+>   ffffffff81000000: 48 8d 25 51 1f 40 01        leaq    20979537(%rip), %=
+rsp
+>   ffffffff81000007: e8 d4 00 00 00              callq   0xffffffff810000e=
+0 <verify_cpu>
+>   ffffffff8100000c: 48 8d 3d ed ff ff ff        leaq    -19(%rip), %rdi
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/dwarf-aux.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Acked-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 1ac88b79687d..759434552653 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -1074,16 +1074,18 @@ int die_get_typename(Dwarf_Die *vr_die, struct strbuf *buf)
- 		/* Function pointer */
- 		return strbuf_add(buf, "(function_type)", 15);
- 	} else {
--		if (!dwarf_diename(&type))
--			return -ENOENT;
-+		const char *name = dwarf_diename(&type);
-+
- 		if (tag == DW_TAG_union_type)
- 			tmp = "union ";
- 		else if (tag == DW_TAG_structure_type)
- 			tmp = "struct ";
- 		else if (tag == DW_TAG_enumeration_type)
- 			tmp = "enum ";
-+		else if (name == NULL)
-+			return -ENOENT;
- 		/* Write a base name */
--		return strbuf_addf(buf, "%s%s", tmp, dwarf_diename(&type));
-+		return strbuf_addf(buf, "%s%s", tmp, name ?: "");
- 	}
- 	ret = die_get_typename(&type, buf);
- 	return ret ? ret : strbuf_addstr(buf, tmp);
--- 
-2.41.0.162.gfafddb0af9-goog
+Thanks,
+Ian
 
+> ---
+>  tools/perf/util/annotate.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 9171102dd3ad..3eab6c29eaa5 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -585,7 +585,7 @@ static int mov__parse(struct arch *arch, struct ins_o=
+perands *ops, struct map_sy
+>         if (ops->source.raw =3D=3D NULL)
+>                 return -1;
+>
+> -       target =3D ++s;
+> +       target =3D skip_spaces(++s);
+>         comment =3D strchr(s, arch->objdump.comment_char);
+>
+>         if (comment !=3D NULL)
+> --
+> 2.41.0.162.gfafddb0af9-goog
+>
