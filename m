@@ -2,104 +2,232 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6473C88CB7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 14:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D456ACA9EAC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 14:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237206AbjFLONc (ORCPT
+        id S237347AbjFLOO3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 10:13:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54574 "EHLO
+        Mon, 12 Jun 2023 10:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235611AbjFLONb (ORCPT
+        with ESMTP id S237389AbjFLOOI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 10:13:31 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA6619C;
-        Mon, 12 Jun 2023 07:13:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YuoSYIwzlBxsdlS3Y9eVTjnDcsmeIQ/DnljZgcOBaZw=; b=UNNP3dhdds+BYyVoIihlLYDIuP
-        i78JDjPyJ+sF2YTyRdyxBNLZMvXGy6ZopXlqg7B4xmGDSR+RUb06Puhjbs2jQBfQiclvJRQWg61Jh
-        yRFenIN3Uumo2fDaSL7nOqYsX1YBe514S1e802EzV1jngbVnWthj5PbR6UeZc7KvsR2HK8/ETWqgy
-        P+ElA9T4urPvZJvFRVp13ytWhZKRoHrk2/Tt2kv62NmutmV3veM9oyWllo6NvJ9bA8DtDiBTUTvF+
-        Cyf8hCKoVSBeEfMbk5Ra0DDfVuP2CT8k/Dwbi7ggyw8n17BtGxYJszaA852cXqBGHBX6YeqQ4bwQp
-        VkuHCqZw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8iIN-002hro-Mc; Mon, 12 Jun 2023 14:13:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B81D030058D;
-        Mon, 12 Jun 2023 16:13:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8F4B12BFD8191; Mon, 12 Jun 2023 16:13:22 +0200 (CEST)
-Date:   Mon, 12 Jun 2023 16:13:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
-        pbonzini@redhat.com, masahiroy@kernel.org, nathan@kernel.org,
-        ndesaulniers@google.com, nicolas@fjasle.eu,
-        catalin.marinas@arm.com, will@kernel.org, vkoul@kernel.org,
-        trix@redhat.com, ojeda@kernel.org, mingo@redhat.com,
-        longman@redhat.com, boqun.feng@gmail.com, dennis@kernel.org,
-        tj@kernel.org, cl@linux.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
-        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
-        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
-        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
-        luc.vanoostenryck@gmail.com
-Subject: Re: [PATCH v3 46/57] perf: Simplify pmu_dev_alloc()
-Message-ID: <20230612141322.GA83892@hirez.programming.kicks-ass.net>
-References: <20230612090713.652690195@infradead.org>
- <20230612093540.850386350@infradead.org>
- <20230612094400.GG4253@hirez.programming.kicks-ass.net>
- <2023061226-grumpily-entire-f06a@gregkh>
+        Mon, 12 Jun 2023 10:14:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FAD1701;
+        Mon, 12 Jun 2023 07:14:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B4196270D;
+        Mon, 12 Jun 2023 14:14:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9839C433A4;
+        Mon, 12 Jun 2023 14:14:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686579242;
+        bh=XKAc4oEQwFOunEp6+0l4oCNn34lssdjYl3TNCxaYBp0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ku7V6j+mf2IydhmeppDY6x8/yaAzXpvQUe3dk6jDEW/+hNYO2qUb6GttGzoxqjXeI
+         54mqZwpI9mKOVqzKXV4KxDBnAaBIJMagy+Qa93bRAVyRYtK3R4Lja+I7NhwPU6iYNq
+         saCh0Gt5du4FnYUTzypjWrqGFGwIIgCQtCQDWMZ7TairS0olB2LAQla4AKGM5AOGEh
+         fGPTl0ZgvoW0b/6PON1iq/fpWXFMgtVoP8S2sqXThZ0lkkQUYwxQgxFsu2BBC6zEXV
+         hGCx3fEb/FwZsXkjTELiEWtXhEWLJa3L7H+f7WaokbkksEs2Wsi/ImEfjMa5xJSPuj
+         G9SODAOXDHswA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1D6ED40692; Mon, 12 Jun 2023 11:13:59 -0300 (-03)
+Date:   Mon, 12 Jun 2023 11:13:59 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        ye xingchen <ye.xingchen@zte.com.cn>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        Changbin Du <changbin.du@huawei.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Yuan Can <yuancan@huawei.com>,
+        Brian Robbins <brianrob@linux.microsoft.com>,
+        liuwenyu <liuwenyu7@huawei.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Fangrui Song <maskray@google.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org
+Subject: Re: [PATCH v2 26/26] perf hist: Fix srcline memory leak
+Message-ID: <ZIcoJytUEz4UgQYR@kernel.org>
+References: <20230608232823.4027869-1-irogers@google.com>
+ <20230608232823.4027869-27-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2023061226-grumpily-entire-f06a@gregkh>
+In-Reply-To: <20230608232823.4027869-27-irogers@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 03:35:49PM +0200, Greg KH wrote:
+Em Thu, Jun 08, 2023 at 04:28:23PM -0700, Ian Rogers escreveu:
+> srcline isn't freed if it is SRCLINE_UNKNOWN. Avoid strduping in this
+> case as such strdups are redundant and leak memory.
 
-> Ick, this is going to be a rough audit for bus code that gets converted
-> to this, BUT bonus is that once it's done, any changes to the middle of
-> the function should "just work", and it's a good task for an intern to
-> do :)
+The patch is ok as its what the rest of the code is doing, i.e. strcmp()
+to check if a srcline is the unknown one, but how about the following
+patch on top of yours?
 
-Hehe. The 'bonus' in all this is that if you get it wrong, it's the very
-likely success case that goes sideways and it should instantly explode.
+From 5163e54c1ed3d476f6b4e7f938861039bd4eec7c Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Mon, 12 Jun 2023 11:10:46 -0300
+Subject: [PATCH 1/1] perf srcline: Optimize comparision against
+ SRCLINE_UNKNOWN
 
-While all the unlikely error cases should all just work -- famous last
-words etc..
+This is a string constant that gets returned and then strcmp() around,
+we can instead just do a pointer comparision.
 
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: https://lore.kernel.org/lkml/
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/builtin-diff.c    | 4 ++--
+ tools/perf/util/block-info.c | 4 ++--
+ tools/perf/util/hist.c       | 2 +-
+ tools/perf/util/map.c        | 2 +-
+ tools/perf/util/sort.c       | 2 +-
+ tools/perf/util/srcline.c    | 2 +-
+ 6 files changed, 8 insertions(+), 8 deletions(-)
 
-Thanks!
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index eec89567ae483604..e8a1b16aa5f83f4f 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -1378,8 +1378,8 @@ static int cycles_printf(struct hist_entry *he, struct hist_entry *pair,
+ 	end_line = map__srcline(he->ms.map, bi->sym->start + bi->end,
+ 				he->ms.sym);
+ 
+-	if ((strncmp(start_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) != 0) &&
+-	    (strncmp(end_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) != 0)) {
++	if (start_line != SRCLINE_UNKNOWN &&
++	    end_line != SRCLINE_UNKNOWN) {
+ 		scnprintf(buf, sizeof(buf), "[%s -> %s] %4ld",
+ 			  start_line, end_line, block_he->diff.cycles);
+ 	} else {
+diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+index 08279b1b65e5a4b0..fe4c17248799f0a2 100644
+--- a/tools/perf/util/block-info.c
++++ b/tools/perf/util/block-info.c
+@@ -296,8 +296,8 @@ static int block_range_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+ 	end_line = map__srcline(he->ms.map, bi->sym->start + bi->end,
+ 				he->ms.sym);
+ 
+-	if ((strncmp(start_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) != 0) &&
+-	    (strncmp(end_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) != 0)) {
++	if (start_line != SRCLINE_UNKNOWN) &&
++	    end_line != SRCLINE_UNKNOWN) {
+ 		scnprintf(buf, sizeof(buf), "[%s -> %s]",
+ 			  start_line, end_line);
+ 	} else {
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 0a10bcc6ec95b5e0..3dc8a4968beb9c01 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -484,7 +484,7 @@ static int hist_entry__init(struct hist_entry *he,
+ 			goto err_infos;
+ 	}
+ 
+-	if (he->srcline && strcmp(he->srcline, SRCLINE_UNKNOWN)) {
++	if (he->srcline && he->srcline != SRCLINE_UNKNOWN) {
+ 		he->srcline = strdup(he->srcline);
+ 		if (he->srcline == NULL)
+ 			goto err_rawdata;
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index c77e2fce6a379e7f..f30d34903aa4eabe 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -496,7 +496,7 @@ int map__fprintf_srcline(struct map *map, u64 addr, const char *prefix,
+ 
+ 	if (dso) {
+ 		char *srcline = map__srcline(map, addr, NULL);
+-		if (strncmp(srcline, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) != 0)
++		if (srcline != SRCLINE_UNKNOWN)
+ 			ret = fprintf(fp, "%s%s", prefix, srcline);
+ 		zfree_srcline(&srcline);
+ 	}
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index 047c3606802f5b7f..6aa1c7f2b4448b30 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -643,7 +643,7 @@ static char *hist_entry__get_srcfile(struct hist_entry *e)
+ 
+ 	sf = __get_srcline(map__dso(map), map__rip_2objdump(map, e->ip),
+ 			 e->ms.sym, false, true, true, e->ip);
+-	if (!strcmp(sf, SRCLINE_UNKNOWN))
++	if (sf == SRCLINE_UNKNOWN)
+ 		return no_srcfile;
+ 	p = strchr(sf, ':');
+ 	if (p && *sf) {
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index b8e596528d7e7e5e..48a04f42b308b080 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -809,7 +809,7 @@ void zfree_srcline(char **srcline)
+ 	if (*srcline == NULL)
+ 		return;
+ 
+-	if (strcmp(*srcline, SRCLINE_UNKNOWN))
++	if (*srcline != SRCLINE_UNKNOWN)
+ 		free(*srcline);
+ 
+ 	*srcline = NULL;
+-- 
+2.39.2
 
-> Mind if I try this series to convert a more "normal" driver to see how
-> it works with that?  That's going to be the true test, see if the
-> changes make sense to someone who doesn't really know the internals of
-> the driver core like this...
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/hist.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index 77cb2cc83bb9..cc6f7f51faa5 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -484,7 +484,7 @@ static int hist_entry__init(struct hist_entry *he,
+>  			goto err_infos;
+>  	}
+>  
+> -	if (he->srcline) {
+> +	if (he->srcline && strcmp(he->srcline, SRCLINE_UNKNOWN)) {
+>  		he->srcline = strdup(he->srcline);
+>  		if (he->srcline == NULL)
+>  			goto err_rawdata;
+> -- 
+> 2.41.0.162.gfafddb0af9-goog
+> 
 
-Not at all, feel tree to have a go at that. I picked code I was familiar
-with, but it would ofc. be good to have others give it a spin too.
+-- 
+
+- Arnaldo
