@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9683C7EE43
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C01CC87FDE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235392AbjFLJzp (ORCPT
+        id S232628AbjFLJzr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60486 "EHLO
+        Mon, 12 Jun 2023 05:55:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231655AbjFLJy2 (ORCPT
+        with ESMTP id S231877AbjFLJya (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:28 -0400
+        Mon, 12 Jun 2023 05:54:30 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E505FF9;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A300A5FFF;
         Mon, 12 Jun 2023 02:39:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=TyEqnNyUrGcTyQQqxTQ7FjrgTS2UCJUv6R0g2vbKlfY=; b=rHHDliBQ2Qfw4zPxTfBy8QXX52
-        G14E6gPiy22JcNYH/Q5ary0q0YX91rEsCLNUeF2er4snB00oi8Lc4f2MMJZUwwWFKvHVk7GQuK7Zl
-        3ahxPQrajWWxBclXKLGynYx8r2sGJlK3yDh9HWCO7kIqSmTRqHGJsywLA/mKXJqegwQvkdaMSNva2
-        uJVrXhoSZLISp+eyXn3YfK2inTs+lOPkrCnxRe7XnCJ3h8JknStPhu9xVH8GzIG76/K6R5JUG74zu
-        XsZmZNsMpz5Ycxrzfr+Z6QJ1Wis1vJw2il0uWR+vhha6EcQ+HD/j4wtxTmR7enXrzcACCcjOxcx3G
-        mOVdO+3w==;
+        bh=ldnPYKUyHMdijInwVZoC1NuQUIqnzmW6aookZYRZh1U=; b=bJBHJIBXVRdeQP4T7XcXUY8iMH
+        di/jzbHG8QdRKgt7X5fFBZSQuExIhm4OtWcsQgbp82u82KzPGnsNgHCPG1r7wDa+Zf3Yybo+MMKKD
+        6kzpW7tb12oZwh2LWxC5mYsLBh3EeFF5Mx+gfLH4YWuoPB20Wmu38WpRv0/JFEDPN3I3WnPAdrUZG
+        N9RCoJPL7qvE55pcs319+8ceIKd9bh09dAM074UmAS+nhI32VGb65JKPNV7DU57u9vWRkuYFwBSRv
+        PUJltPdiKo1thqnI10zGjkLcJXnNDVTEEIJgdNDcoNHm4ClkGvI5OiDwY24bhEmzI8eSOZmwAqbCa
+        RgBj18Gg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0m-002NBu-ET; Mon, 12 Jun 2023 09:38:56 +0000
+        id 1q8e0l-002NB9-De; Mon, 12 Jun 2023 09:38:55 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3B8233032D0;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 18413303164;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id C402E30A77B6D; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093540.108251860@infradead.org>
+        id 7F8B230A77B61; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093539.300603001@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:49 +0200
+Date:   Mon, 12 Jun 2023 11:07:38 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -67,7 +67,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 36/57] perf: Simplify find_get_pmu_context()
+Subject: [PATCH v3 25/57] perf: Simplify perf_fget_light()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,68 +75,78 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Introduce fdnull and use it to simplify perf_fget_light() to either
+return a valid struct fd or not -- much like fdget() itself.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ include/linux/file.h |    7 ++++++-
+ kernel/events/core.c |   22 +++++++++++-----------
+ 2 files changed, 17 insertions(+), 12 deletions(-)
 
+--- a/include/linux/file.h
++++ b/include/linux/file.h
+@@ -59,6 +59,8 @@ static inline struct fd __to_fd(unsigned
+ 	return (struct fd){(struct file *)(v & ~3),v & 3};
+ }
+ 
++#define fdnull __to_fd(0)
++
+ static inline struct fd fdget(unsigned int fd)
+ {
+ 	return __to_fd(__fdget(fd));
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -4757,11 +4757,14 @@ find_get_context(struct task_struct *tas
- 	return ERR_PTR(err);
- }
+@@ -5802,18 +5802,17 @@ EXPORT_SYMBOL_GPL(perf_event_period);
  
-+/*
-+ * Returns a matching perf_event_pmu_context with elevated refcount or NULL.
-+ */
- static struct perf_event_pmu_context *
- find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
- 		     struct perf_event *event)
+ static const struct file_operations perf_fops;
+ 
+-static inline int perf_fget_light(int fd, struct fd *p)
++static inline struct fd perf_fdget(int fd)
  {
--	struct perf_event_pmu_context *new = NULL, *epc;
-+	struct perf_event_pmu_context *epc;
- 	void *task_ctx_data = NULL;
+ 	struct fd f = fdget(fd);
+ 	if (!f.file)
+-		return -EBADF;
++		return fdnull;
  
- 	if (!ctx->task) {
-@@ -4788,16 +4791,14 @@ find_get_pmu_context(struct pmu *pmu, st
- 		return epc;
+ 	if (f.file->f_op != &perf_fops) {
+ 		fdput(f);
+-		return -EBADF;
++		return fdnull;
  	}
- 
--	new = kzalloc(sizeof(*epc), GFP_KERNEL);
-+	void *new __free(kfree) = kzalloc(sizeof(*epc), GFP_KERNEL);
- 	if (!new)
--		return ERR_PTR(-ENOMEM);
-+		return NULL;
- 
- 	if (event->attach_state & PERF_ATTACH_TASK_DATA) {
- 		task_ctx_data = alloc_task_ctx_data(pmu);
--		if (!task_ctx_data) {
--			kfree(new);
--			return ERR_PTR(-ENOMEM);
--		}
-+		if (!task_ctx_data)
-+			return NULL;
- 	}
- 
- 	__perf_init_event_pmu_context(new, pmu);
-@@ -4820,8 +4821,7 @@ find_get_pmu_context(struct pmu *pmu, st
- 		}
- 	}
- 
--	epc = new;
--	new = NULL;
-+	epc = no_free_ptr(new);
- 
- 	list_add(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
- 	epc->ctx = ctx;
-@@ -4835,7 +4835,6 @@ find_get_pmu_context(struct pmu *pmu, st
- 	raw_spin_unlock_irq(&ctx->lock);
- 
- 	free_task_ctx_data(pmu, task_ctx_data);
--	kfree(new);
- 
- 	return epc;
+-	*p = f;
+-	return 0;
++	return f;
  }
+ 
+ static int perf_event_set_output(struct perf_event *event,
+@@ -5864,10 +5863,9 @@ static long _perf_ioctl(struct perf_even
+ 		int ret;
+ 		if (arg != -1) {
+ 			struct perf_event *output_event;
+-			struct fd output;
+-			ret = perf_fget_light(arg, &output);
+-			if (ret)
+-				return ret;
++			struct fd output = perf_fdget(arg);
++			if (!output.file)
++				return -EBADF;
+ 			output_event = output.file->private_data;
+ 			ret = perf_event_set_output(event, output_event);
+ 			fdput(output);
+@@ -12401,9 +12399,11 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		return event_fd;
+ 
+ 	if (group_fd != -1) {
+-		err = perf_fget_light(group_fd, &group);
+-		if (err)
++		group = perf_fdget(group_fd);
++		if (!group.file) {
++			err = -EBADF;
+ 			goto err_fd;
++		}
+ 		group_leader = group.file->private_data;
+ 		if (flags & PERF_FLAG_FD_OUTPUT)
+ 			output_event = group_leader;
 
 
