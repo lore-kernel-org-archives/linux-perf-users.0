@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4549C87FF1
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE8EC83005
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233394AbjFLJzi (ORCPT
+        id S233493AbjFLJzj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:55:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
+        Mon, 12 Jun 2023 05:55:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232091AbjFLJyX (ORCPT
+        with ESMTP id S229729AbjFLJyZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:23 -0400
+        Mon, 12 Jun 2023 05:54:25 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B5204C10;
-        Mon, 12 Jun 2023 02:38:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5A495FF4;
+        Mon, 12 Jun 2023 02:38:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=i7e4Ed2VApizqqMeLDQrTIcscOdlMDKi2d1+AvdLSfc=; b=wMzEZ40Omey0hsxhU/f3YtsHn5
-        zztcNlN85LbTkIssyfkfrL48NmxnO6Xui7xALjewqMlyvd6RZfe6D4fBUEzU8ivSmkwH/rB+mgo8T
-        DhIJ64bXK4MQAZHj4XNZbgTg99syxZL71a1nSxvAdXCC6Uq6WFU3Xo8Qau8qLevXW3vCcNOlO2hGd
-        kLRb3QAfPguHrywS9Q4UgqR5mxOfj+Fk/M4IRihmVpaRZyf1EnKiw6p0zeUoZx/4h4dCUGPxRMpDH
-        XqqMxcqWisvIc3MeLjMSkQ+D+XHT/6tgpmqY6cFvXD2CLwtL8aPDEHRB9Vg3FRPnxzDUV9pZfUiAM
-        GAqscdag==;
+        bh=A6Nf2exxWEURXKIPC4PisBIYNsQ8WOBsy7I8/r8MB2I=; b=nlawFV4XolW6/iduWLySiShjYw
+        cln2JRO/L02dwlVuY9LVrR5dx3MlqGFfL3bXKejT47tvNXSnylMRfCYpkyOmvJTJzxX3Dkuu3+U9V
+        GON9orGticGtLHDO7XjCtQWBLjBGPxQx9TE4ZfwC71+0DHPT+U64tMKz4/QcVn7XKWdGmg/vEjHlw
+        a6B5ZSoGuDL/jumilYTnXf3s+pZg++UlLBOa2U4Jw+Tlp8Uwlu4DsCd/18pgblJOjSG6PcbHyR8eK
+        n4RIv+2T9+h3z8iLYj3qab8IwhKRiOAXKJ0t/9uLH9RGFqp6GhdoTGkppi9FY/jUA+IXOCEJtextC
+        T/wQMAMA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0g-002N94-7B; Mon, 12 Jun 2023 09:38:50 +0000
+        id 1q8e0l-002NB5-60; Mon, 12 Jun 2023 09:38:55 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A9B5B302FB8;
-        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0E881302F75;
+        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 22F9530A70248; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093537.977924652@infradead.org>
+        id 725F830A77B5F; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093539.085862001@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:21 +0200
+Date:   Mon, 12 Jun 2023 11:07:35 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -67,7 +67,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 08/57] sched: Simplify wake_up_if_idle()
+Subject: [PATCH v3 22/57] perf: Fix cpuctx refcounting
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,67 +75,82 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use guards to reduce gotos and simplify control flow.
 
+
+Fixes: bd2756811766 ("perf: Rewrite core context handling")
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/sched/core.c  |   20 ++++++--------------
- kernel/sched/sched.h |   15 +++++++++++++++
- 2 files changed, 21 insertions(+), 14 deletions(-)
+ include/linux/perf_event.h |   13 ++++++++-----
+ kernel/events/core.c       |   16 ++++++++++++++++
+ 2 files changed, 24 insertions(+), 5 deletions(-)
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3872,21 +3872,13 @@ static void __ttwu_queue_wakelist(struct
- void wake_up_if_idle(int cpu)
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -841,11 +841,11 @@ struct perf_event {
+ };
+ 
+ /*
+- *           ,-----------------------[1:n]----------------------.
+- *           V                                                  V
+- * perf_event_context <-[1:n]-> perf_event_pmu_context <--- perf_event
+- *           ^                      ^     |                     |
+- *           `--------[1:n]---------'     `-[n:1]-> pmu <-[1:n]-'
++ *           ,-----------------------[1:n]------------------------.
++ *           V                                                    V
++ * perf_event_context <-[1:n]-> perf_event_pmu_context <-[1:n]- perf_event
++ *                                        |                       |
++ *                                        `--[n:1]-> pmu <-[1:n]--'
+  *
+  *
+  * struct perf_event_pmu_context  lifetime is refcount based and RCU freed
+@@ -863,6 +863,9 @@ struct perf_event {
+  * ctx->mutex pinning the configuration. Since we hold a reference on
+  * group_leader (through the filedesc) it can't go away, therefore it's
+  * associated pmu_ctx must exist and cannot change due to ctx->mutex.
++ *
++ * perf_event holds a refcount on perf_event_context
++ * perf_event holds a refcount on perf_event_pmu_context
+  */
+ struct perf_event_pmu_context {
+ 	struct pmu			*pmu;
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4809,6 +4809,11 @@ find_get_pmu_context(struct pmu *pmu, st
+ 	void *task_ctx_data = NULL;
+ 
+ 	if (!ctx->task) {
++		/*
++		 * perf_pmu_migrate_context() / __perf_pmu_install_event()
++		 * relies on the fact that find_get_pmu_context() cannot fail
++		 * for CPU contexts.
++		 */
+ 		struct perf_cpu_pmu_context *cpc;
+ 
+ 		cpc = per_cpu_ptr(pmu->cpu_pmu_context, event->cpu);
+@@ -12832,6 +12837,13 @@ static void __perf_pmu_install_event(str
  {
- 	struct rq *rq = cpu_rq(cpu);
--	struct rq_flags rf;
+ 	struct perf_event_pmu_context *epc;
  
--	rcu_read_lock();
--
--	if (!is_idle_task(rcu_dereference(rq->curr)))
--		goto out;
--
--	rq_lock_irqsave(rq, &rf);
--	if (is_idle_task(rq->curr))
--		resched_curr(rq);
--	/* Else CPU is not idle, do nothing here: */
--	rq_unlock_irqrestore(rq, &rf);
--
--out:
--	rcu_read_unlock();
-+	guard(rcu)();
-+	if (is_idle_task(rcu_dereference(rq->curr))) {
-+		guard(rq_lock)(rq);
-+		if (is_idle_task(rq->curr))
-+			resched_curr(rq);
-+	}
- }
++	/*
++	 * Now that the events are unused, put their old ctx and grab a
++	 * reference on the new context.
++	 */
++	put_ctx(event->ctx);
++	get_ctx(ctx);
++
+ 	event->cpu = cpu;
+ 	epc = find_get_pmu_context(pmu, ctx, event);
+ 	event->pmu_ctx = epc;
+@@ -12877,6 +12889,10 @@ void perf_pmu_migrate_context(struct pmu
+ 	struct perf_event_context *src_ctx, *dst_ctx;
+ 	LIST_HEAD(events);
  
- bool cpus_share_cache(int this_cpu, int that_cpu)
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1678,6 +1678,21 @@ rq_unlock(struct rq *rq, struct rq_flags
- 	raw_spin_rq_unlock(rq);
- }
++	/*
++	 * Since per-cpu context is persistent, no need to grab an extra
++	 * reference.
++	 */
+ 	src_ctx = &per_cpu_ptr(&perf_cpu_context, src_cpu)->ctx;
+ 	dst_ctx = &per_cpu_ptr(&perf_cpu_context, dst_cpu)->ctx;
  
-+DEFINE_LOCK_GUARD_1(rq_lock, struct rq,
-+		    rq_lock(_T->lock, &_T->rf),
-+		    rq_unlock(_T->lock, &_T->rf),
-+		    struct rq_flags rf)
-+
-+DEFINE_LOCK_GUARD_1(rq_lock_irq, struct rq,
-+		    rq_lock_irq(_T->lock, &_T->rf),
-+		    rq_unlock_irq(_T->lock, &_T->rf),
-+		    struct rq_flags rf)
-+
-+DEFINE_LOCK_GUARD_1(rq_lock_irqsave, struct rq,
-+		    rq_lock_irqsave(_T->lock, &_T->rf),
-+		    rq_unlock_irqrestore(_T->lock, &_T->rf),
-+		    struct rq_flags rf)
-+
- static inline struct rq *
- this_rq_lock_irq(struct rq_flags *rf)
- 	__acquires(rq->lock)
 
 
