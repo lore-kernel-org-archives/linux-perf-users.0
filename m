@@ -2,141 +2,165 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8032C7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 16:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0B2C7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 16:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235987AbjFLQ0E (ORCPT
+        id S236826AbjFLQcq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 12:26:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60004 "EHLO
+        Mon, 12 Jun 2023 12:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234091AbjFLQ0D (ORCPT
+        with ESMTP id S236930AbjFLQco (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 12:26:03 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E660E41
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:26:01 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-977c89c47bdso826841566b.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:26:01 -0700 (PDT)
+        Mon, 12 Jun 2023 12:32:44 -0400
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6755511B
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:32:43 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-3f98276f89cso387201cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1686587159; x=1689179159;
+        d=google.com; s=20221208; t=1686587562; x=1689179562;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q/KCMaMkVpL2TvKmUhvddPCRbVA7+Ro9TFJ9/0bVSYQ=;
-        b=AxRA6Yxp369A0lwdynqhAvhnCemrwfUQo4lHxkUSaO9vRP0wcKGNWNIQwNV55Op7Ca
-         JmL/zx+BHpRcomQuEEwvC6MSQkrhnT1gRZulUwxyLcqNo/iPaRB4+lnwi+ZWpb0pHPZ9
-         fYKEO9U31VSTj6BjJc1RWhmE53/4OZK23Kp5c=
+        bh=NPnmFMFnuOl/+BJYAWO3ZIJ9+gOdrJg+ZObFLjXbGV4=;
+        b=U5O+/GjXhoO8xW8lLDMVYZ/Qr5eD8/sXL0oRzcMjpqi4Vug2/Mr/R+sx3LOSPXQE7c
+         Y5Mn2pzTi09i2IC3zff02IB80QAc2wqTHFaoUiaRurYNdQlJJCGVw8zdqfRjQbXCkbRz
+         1/2FBZ3MJmjxIL67HTXV9CAxj5s+xfQq7GD7mmBKG6e8ewdPk7C3DmkCsddE64vgPaxP
+         GEDP7iLA6cOjErvcaDGYqKniqcF97I/folaEBVA99QQjtmtGBrLzbpIe7ePAO77Ougtq
+         1b6QLOG0l7Snqy08zomYHqBPqoptAgEPspKtK9dyugI3Y1+BXJixvo5307fLUKz01DsU
+         sZfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686587159; x=1689179159;
+        d=1e100.net; s=20221208; t=1686587562; x=1689179562;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q/KCMaMkVpL2TvKmUhvddPCRbVA7+Ro9TFJ9/0bVSYQ=;
-        b=dwUw5fIsGhGGlTp4c0BVzGRG/uCTnUzeCVBHFCkyX2dyx6ULvjQG8izeVcbIfFQEKu
-         2aLBmZNSQE5+s4TMpF2xElXx7L8bl/hygwYh5tk3uYINg19Zz+44LZKAukrN5uLu9DX4
-         3RGMVWZOiK7nI3MFkukbCmg5iqSEKQoRI6HV8ccoReNtcygx3qi/ps6usViApiSXzfdF
-         8T3VLTA0srJN8MGnoGAz7g/OhwBEuOhguoAaUxsqQJraNhNLJRXQQRePgLYW6K/OcOC0
-         2sEsGMaF5XcyjJQkQkjQ7R5h5iLxwipleDUByaV38MPMwM0uRFuQ3lX76cjTUJYwQ5Rb
-         Sl5g==
-X-Gm-Message-State: AC+VfDwRfUMYgwH3XTRfiQ2T/5TRmyO0a75dWGKVmhG2zDh8PcHdqfrQ
-        kg+K+Dqu4xRXXzw+SnHvbl7sRMRfMf74O1xrk8PLuHqn
-X-Google-Smtp-Source: ACHHUZ7bSOm3gq2TZ0EOTtihaZP/SgaJi+/px5M69Jsktdi8+ySmGbKqS38UPxY5a9QsMe1yetHBFA==
-X-Received: by 2002:a17:907:705:b0:96f:cde5:5f5e with SMTP id xb5-20020a170907070500b0096fcde55f5emr9540532ejb.29.1686587159604;
-        Mon, 12 Jun 2023 09:25:59 -0700 (PDT)
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com. [209.85.218.48])
-        by smtp.gmail.com with ESMTPSA id r23-20020a1709064d1700b009658475919csm5356598eju.188.2023.06.12.09.25.59
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jun 2023 09:25:59 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-977d6aa3758so828021966b.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:25:59 -0700 (PDT)
-X-Received: by 2002:aa7:d14e:0:b0:50b:c3f0:fb9d with SMTP id
- r14-20020aa7d14e000000b0050bc3f0fb9dmr5534541edo.41.1686586776585; Mon, 12
- Jun 2023 09:19:36 -0700 (PDT)
+        bh=NPnmFMFnuOl/+BJYAWO3ZIJ9+gOdrJg+ZObFLjXbGV4=;
+        b=WLbgJr/V9ubbiU3QZJMMqHZl2xlq8P/yEhEoykvwXbRrx8swmcjbwxpykQw99brjEy
+         ng+sghZ5/qQj8SifK3nOdMS0YkBI93DL8PQWZNdtslrdLJTiTFrAJmFekQjWsgkC8yin
+         /bdfU8Vz+VjldnV68Yk+GuGAvBqyCO1L4NJ1vbG1NtlC8WJj47PxjmLh0xbL8g7klzZp
+         ESdHvthDFv1eDbLgVB4ug+cUmccdcyj34Da0GNxBZXglbmWkta0cNUWV0NHcrZphw0Rf
+         oUsNBW3S2et5qj8h7zjnP6j7nVG8QhMkHcgwWqZAvVidVOZHMpoBEl2w2U6VHkM6rfzY
+         Pufg==
+X-Gm-Message-State: AC+VfDzMjpgQtpQuSwwbMGNtn5DoXDWBGCz0xgPpsvHQFTKy0dQb61uh
+        BfhrLSy2bjRAgA73DyIoE0ji1fOdOLE9t+UEfWbTpQ==
+X-Google-Smtp-Source: ACHHUZ46FOITq6RvpLNObfQl3PyLjBziM/Tc7wPAcrSxrHybd6NduppjKQkWwpWEO/shOsSsMra/siM4rGYYNLEFYi0=
+X-Received: by 2002:ac8:7f10:0:b0:3f8:3065:7fc5 with SMTP id
+ f16-20020ac87f10000000b003f830657fc5mr386846qtk.1.1686587562300; Mon, 12 Jun
+ 2023 09:32:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230612090713.652690195@infradead.org> <20230612093541.598260416@infradead.org>
-In-Reply-To: <20230612093541.598260416@infradead.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 12 Jun 2023 09:19:19 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh6JEk7wYECcMdbXHf5ST8PAkOyUXhE8x2kqT6to+Gn9Q@mail.gmail.com>
-Message-ID: <CAHk-=wh6JEk7wYECcMdbXHf5ST8PAkOyUXhE8x2kqT6to+Gn9Q@mail.gmail.com>
-Subject: Re: [PATCH v3 56/57] perf: Simplify perf_pmu_output_stop()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     keescook@chromium.org, gregkh@linuxfoundation.org,
-        pbonzini@redhat.com, masahiroy@kernel.org, nathan@kernel.org,
-        ndesaulniers@google.com, nicolas@fjasle.eu,
-        catalin.marinas@arm.com, will@kernel.org, vkoul@kernel.org,
-        trix@redhat.com, ojeda@kernel.org, mingo@redhat.com,
-        longman@redhat.com, boqun.feng@gmail.com, dennis@kernel.org,
-        tj@kernel.org, cl@linux.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
-        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
-        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
-        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
-        luc.vanoostenryck@gmail.com
+References: <20230612150424.198914-1-james.clark@arm.com>
+In-Reply-To: <20230612150424.198914-1-james.clark@arm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 12 Jun 2023 09:32:30 -0700
+Message-ID: <CAP-5=fWu0yCSCB__prps2g=JRDScbhWuimPJHUsU0S_c0ywDhg@mail.gmail.com>
+Subject: Re: [PATCH] perf map: Fix refcount errors on Arm with -DREFCNT_CHECKING=1
+To:     James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This patch looks completely broken to me.
-
-You now do
-
-                if (err =3D=3D -EAGAIN)
-                        goto restart;
-
-*within* the RCU-guarded section, and the "goto restart" will guard it agai=
-n.
-
-So no. Sending out a series of 57 patches that can have these kinds of
-bugs in it is not ok. By patch 56 (which just happened to come in
-fairly early for me), all sane peoples eyes have glazed over and they
-don't react to this kind of breakage any more.
-
-                Linus
-
-On Mon, Jun 12, 2023 at 2:39=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Mon, Jun 12, 2023 at 8:05=E2=80=AFAM James Clark <james.clark@arm.com> w=
+rote:
 >
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -7977,7 +7977,8 @@ static void perf_pmu_output_stop(struct
->         int err, cpu;
+> When quitting after running a perf report, the refcount checker finds
+> some double frees. The issue is that map__put() is called on a function
+> argument so it removes the refcount wrapper that someone else was using.
 >
->  restart:
-> -       rcu_read_lock();
-> +       /* cannot have a label in front of a decl */;
-> +       guard(rcu)();
->         list_for_each_entry_rcu(iter, &event->rb->event_list, rb_entry) {
->                 /*
->                  * For per-CPU events, we need to make sure that neither =
-they
-> @@ -7993,12 +7994,9 @@ static void perf_pmu_output_stop(struct
->                         continue;
+> Fix it by only calling map__put() on a reference that is owned by this
+> function.
 >
->                 err =3D cpu_function_call(cpu, __perf_pmu_output_stop, ev=
-ent);
-> -               if (err =3D=3D -EAGAIN) {
-> -                       rcu_read_unlock();
-> +               if (err =3D=3D -EAGAIN)
->                         goto restart;
-> -               }
->         }
-> -       rcu_read_unlock();
->  }
+> Signed-off-by: James Clark <james.clark@arm.com>
+
+Acked-by: Ian Rogers <irogers@google.com>
+
+> ---
+>  tools/perf/util/symbol-elf.c | 9 +++++----
+>  tools/perf/util/symbol.c     | 9 +++++----
+>  2 files changed, 10 insertions(+), 8 deletions(-)
+>
+> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> index 63882a4db5c7..ec0d7810bbb0 100644
+> --- a/tools/perf/util/symbol-elf.c
+> +++ b/tools/perf/util/symbol-elf.c
+> @@ -1365,6 +1365,7 @@ static int dso__process_kernel_symbol(struct dso *d=
+so, struct map *map,
+>         struct dso *curr_dso =3D *curr_dsop;
+>         struct map *curr_map;
+>         char dso_name[PATH_MAX];
+> +       struct map *map_ref;
+
+nit: can we narrow the scope of this by moving it to the scope where it is =
+used.
+
+>
+>         /* Adjust symbol to map to file offset */
+>         if (adjust_kernel_syms)
+> @@ -1390,10 +1391,10 @@ static int dso__process_kernel_symbol(struct dso =
+*dso, struct map *map,
+>                         if (kmaps) {
+>                                 int err;
+>
+> -                               map__get(map);
+> -                               maps__remove(kmaps, map);
+> -                               err =3D maps__insert(kmaps, map);
+> -                               map__put(map);
+> +                               map_ref =3D map__get(map);
+> +                               maps__remove(kmaps, map_ref);
+> +                               err =3D maps__insert(kmaps, map_ref);
+> +                               map__put(map_ref);
+>                                 if (err)
+>                                         return err;
+>                         }
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 6b9c55784b56..b3034fd5c0af 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1368,6 +1368,7 @@ static int dso__load_kcore(struct dso *dso, struct =
+map *map,
+>         int err, fd;
+>         char kcore_filename[PATH_MAX];
+>         u64 stext;
+> +       struct map *map_ref;
+
+nit: can we narrow the scope of this by moving it to the scope where it is =
+used.
+
+Thanks,
+Ian
+
+>
+>         if (!kmaps)
+>                 return -EINVAL;
+> @@ -1464,10 +1465,10 @@ static int dso__load_kcore(struct dso *dso, struc=
+t map *map,
+>                         map__set_map_ip(map, map__map_ip_ptr(new_map));
+>                         map__set_unmap_ip(map, map__unmap_ip_ptr(new_map)=
+);
+>                         /* Ensure maps are correctly ordered */
+> -                       map__get(map);
+> -                       maps__remove(kmaps, map);
+> -                       err =3D maps__insert(kmaps, map);
+> -                       map__put(map);
+> +                       map_ref =3D map__get(map);
+> +                       maps__remove(kmaps, map_ref);
+> +                       err =3D maps__insert(kmaps, map_ref);
+> +                       map__put(map_ref);
+>                         map__put(new_map);
+>                         if (err)
+>                                 goto out_err;
+> --
+> 2.34.1
+>
