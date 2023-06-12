@@ -2,45 +2,45 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48717C88C8B
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A27CC87FDC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235385AbjFLJzo (ORCPT
+        id S235401AbjFLJzq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:55:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32844 "EHLO
+        Mon, 12 Jun 2023 05:55:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233352AbjFLJyo (ORCPT
+        with ESMTP id S231797AbjFLJy3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:44 -0400
+        Mon, 12 Jun 2023 05:54:29 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA0D4C1F;
-        Mon, 12 Jun 2023 02:39:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F435FFB;
+        Mon, 12 Jun 2023 02:39:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=oJyDWnF7S8lcaog4Xmhyr6vhDojPiq7m8dz3r+ZsZG4=; b=rdH9P5/MC3KcY+M1BubJnq2SDA
-        VDGeL/wvRJ516ylJciShUfk/lLKhhrHMf84ST4NUiKTy2ExpNVzaIsxOt0cQrm7+eX/8udNe5etuq
-        a8fdjA1aakVHh17wbvSw2yH8JlQoRaJkmSyuc03oqmoc7UOXpLHURSRxkh0dVmI/veHKlufAu0gpY
-        Ns3St7yJnjxp7C9LWCYQAjUcurSze2tx9FwQXkuQqZEP3Medv20JQgxJrWc9w8JIbLUqKZH2b4jfd
-        jiWzkPTbr4fSMmiKp/dav0iBFlH+nbdDr15ksYyL2JPyPxZmPbWGcP2XPV4+cHOFrrcX0V4f4DCw+
-        S6QpV56A==;
+        d=infradead.org; s=desiato.20200630; h=Subject:Cc:To:From:Date:Message-ID:
+        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=B0zTaY9KKPrZ1tK1qkRJnGUNtZfdXptR/HzHjs1+iS4=; b=XQZ4FGxflXtqrO54lLAdhO230P
+        0eX2jASHQqZyaZNrOmMoEAP3MzmJ1PuCQQZsDzJJBywGmqEPEQHqvhlhW6xpMkYIB7cscPsZnMTPl
+        wda/YRaaOhoccHxY9GPvcZrmpGt4nCDyqnVSaswXky246eD7cW64gEprJmzd0jxHJVUT0l9r//0Pk
+        si1QkPjlyyiXYTzocQuwfczKtYj0dLOHYdp/NLE/KEPazV26d+77/ruWNTca7LUqUMS4HC8k/lh1H
+        dX6E3O3gMC+cI3mUHbifWMBmIlu4IhoS0cvWd9D1DJFJDkJUmucMJXsZhbMU02ynkCiQnt/FdIvcn
+        A8w/NYnw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0l-008kQN-0e;
-        Mon, 12 Jun 2023 09:38:55 +0000
+        id 1q8e0f-008kOl-0u;
+        Mon, 12 Jun 2023 09:38:49 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0E854302EA7;
-        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 22C4F30058D;
+        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 67EF730A77B58; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093538.942686455@infradead.org>
+        id E7CDA30A20814; Mon, 12 Jun 2023 11:38:47 +0200 (CEST)
+Message-ID: <20230612090713.652690195@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:33 +0200
+Date:   Mon, 12 Jun 2023 11:07:13 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -68,107 +68,64 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 20/57] sched: Simplify tg_set_cfs_bandwidth()
-References: <20230612090713.652690195@infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH v3 00/57] Scope-based Resource Management
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use guards to reduce gotos and simplify control flow.
+Hi,
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+After a wee bit of bike-shedding on the syntax/API of the thing I think we're
+in a reasonable shape.
+
+There's still the no_free_ptr() vs take_ptr() thing, but that can be easily
+sorted with a little script over the patches if we reach consensus.
+
+I've taken to converting kernel/sched/core.c and kernel/events/core.c to see
+how well this stuff actually works. Unlike last time, I've split them up into a
+gazillion little patches. Both for my sanity -- bisect is genius when you're
+trying to debug stuff in the middle of the night as well as reviewer sanity.
+
+These are by no means 'complete' convertions, I've mostly focussed on functions
+that had 'goto' in them. Since that's a large part of why I started on all this.
+
+x86_x64-defconfig boots and passes perf test. I'll go figure out how to point
+syzcaller at it.
+
+The patches have gone through a few cycles of 0day over the weekend, and mostly
+builds fine now.
+
+Dan Carpenter poked me about how sparse doesn't yet understand the __cleanup__
+attribute and seems to suffer from decl-after-stmt issues, so that might be
+something that needs attention.
+
+Anyway, does this look like something we can live with?
+
 ---
- include/linux/cpu.h |    2 ++
- kernel/sched/core.c |   42 +++++++++++++++++++++---------------------
- 2 files changed, 23 insertions(+), 21 deletions(-)
-
---- a/include/linux/cpu.h
-+++ b/include/linux/cpu.h
-@@ -148,6 +148,8 @@ static inline int remove_cpu(unsigned in
- static inline void smp_shutdown_nonboot_cpus(unsigned int primary_cpu) { }
- #endif	/* !CONFIG_HOTPLUG_CPU */
- 
-+DEFINE_LOCK_GUARD_0(cpus_read_lock, cpus_read_lock(), cpus_read_unlock())
-+
- #ifdef CONFIG_PM_SLEEP_SMP
- extern int freeze_secondary_cpus(int primary);
- extern void thaw_secondary_cpus(void);
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -10726,11 +10726,12 @@ static int tg_set_cfs_bandwidth(struct t
- 	 * Prevent race between setting of cfs_rq->runtime_enabled and
- 	 * unthrottle_offline_cfs_rqs().
- 	 */
--	cpus_read_lock();
--	mutex_lock(&cfs_constraints_mutex);
-+	guard(cpus_read_lock)();
-+	guard(mutex)(&cfs_constraints_mutex);
-+
- 	ret = __cfs_schedulable(tg, period, quota);
- 	if (ret)
--		goto out_unlock;
-+		return ret;
- 
- 	runtime_enabled = quota != RUNTIME_INF;
- 	runtime_was_enabled = cfs_b->quota != RUNTIME_INF;
-@@ -10740,39 +10741,38 @@ static int tg_set_cfs_bandwidth(struct t
- 	 */
- 	if (runtime_enabled && !runtime_was_enabled)
- 		cfs_bandwidth_usage_inc();
--	raw_spin_lock_irq(&cfs_b->lock);
--	cfs_b->period = ns_to_ktime(period);
--	cfs_b->quota = quota;
--	cfs_b->burst = burst;
--
--	__refill_cfs_bandwidth_runtime(cfs_b);
--
--	/* Restart the period timer (if active) to handle new period expiry: */
--	if (runtime_enabled)
--		start_cfs_bandwidth(cfs_b);
- 
--	raw_spin_unlock_irq(&cfs_b->lock);
-+	scoped_guard (raw_spinlock_irq, &cfs_b->lock) {
-+		cfs_b->period = ns_to_ktime(period);
-+		cfs_b->quota = quota;
-+		cfs_b->burst = burst;
-+
-+		__refill_cfs_bandwidth_runtime(cfs_b);
-+
-+		/*
-+		 * Restart the period timer (if active) to handle new
-+		 * period expiry:
-+		 */
-+		if (runtime_enabled)
-+			start_cfs_bandwidth(cfs_b);
-+	}
- 
- 	for_each_online_cpu(i) {
- 		struct cfs_rq *cfs_rq = tg->cfs_rq[i];
- 		struct rq *rq = cfs_rq->rq;
--		struct rq_flags rf;
- 
--		rq_lock_irq(rq, &rf);
-+		guard(rq_lock_irq)(rq);
- 		cfs_rq->runtime_enabled = runtime_enabled;
- 		cfs_rq->runtime_remaining = 0;
- 
- 		if (cfs_rq->throttled)
- 			unthrottle_cfs_rq(cfs_rq);
--		rq_unlock_irq(rq, &rf);
- 	}
-+
- 	if (runtime_was_enabled && !runtime_enabled)
- 		cfs_bandwidth_usage_dec();
--out_unlock:
--	mutex_unlock(&cfs_constraints_mutex);
--	cpus_read_unlock();
- 
--	return ret;
-+	return 0;
- }
- 
- static int tg_set_cfs_quota(struct task_group *tg, long cfs_quota_us)
-
+ Makefile                            |    6 +-
+ arch/arm64/kernel/vdso32/Makefile   |    2 -
+ drivers/dma/ioat/dma.c              |   12 +-
+ include/linux/cleanup.h             |  167 ++++
+ include/linux/compiler-clang.h      |    9 +
+ include/linux/compiler_attributes.h |    6 +
+ include/linux/cpu.h                 |    2 +
+ include/linux/device.h              |    7 +
+ include/linux/file.h                |   11 +
+ include/linux/irqflags.h            |    7 +
+ include/linux/mutex.h               |    4 +
+ include/linux/percpu.h              |    4 +
+ include/linux/perf_event.h          |   14 +-
+ include/linux/preempt.h             |    5 +
+ include/linux/rcupdate.h            |    3 +
+ include/linux/rwsem.h               |    8 +
+ include/linux/sched/task.h          |    2 +
+ include/linux/slab.h                |    3 +
+ include/linux/spinlock.h            |   31 +
+ include/linux/srcu.h                |    5 +
+ kernel/events/core.c                | 1642 +++++++++++++++--------------------
+ kernel/sched/core.c                 |  931 +++++++++-----------
+ kernel/sched/sched.h                |   40 +
+ scripts/checkpatch.pl               |    2 +-
+ security/apparmor/include/lib.h     |    6 +-
+ 25 files changed, 1433 insertions(+), 1496 deletions(-)
 
