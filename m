@@ -2,176 +2,151 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BF5C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 07:50:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D41C7EE25
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 08:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235724AbjFLHto (ORCPT
+        id S233052AbjFLIbp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 03:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57824 "EHLO
+        Mon, 12 Jun 2023 04:31:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235730AbjFLHtP (ORCPT
+        with ESMTP id S233082AbjFLIbP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 03:49:15 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22EE61710
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 00:48:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686556130; x=1718092130;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=D86qkQvt2UNWichTVqNgBXInDZW0aMfuRCZr9V4InUM=;
-  b=OpXnr4rAEjnXPDjip3hnHE7bvJaHOfccyf4B0grIlxrNdE/ftK86jS7Y
-   Jz0sZbo5Pl+xGNj2iz7tvjpcY8Hc2dtVkRW4qGSNUXMVKwsTiJekfLXq5
-   kcj+muJXTscIclm7RxeZQGn/QPRHl9BbYraYcqBXEOZ/eSz9GbW+ZYa0Q
-   BT/CV03ymhKZg7p3adgYnuIkeQ4oaPtGn0CQ2ehhs9I/Vg+3lTPfGlNYw
-   8GYFmZKAnR1lxTrFRWqcSN6CnnKZnd5KbfV+8ZhTS0Iu0hgZtAgRV3rmB
-   KtCcyeHJ3tDj26NG96H5pjE5GDFYG/fzTTeALOdUWbbXf+NqHw3EgRcdX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="338323126"
-X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="338323126"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jun 2023 23:40:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10738"; a="711087351"
-X-IronPort-AV: E=Sophos;i="6.00,236,1681196400"; 
-   d="scan'208";a="711087351"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga002.jf.intel.com with ESMTP; 11 Jun 2023 23:40:16 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sun, 11 Jun 2023 23:40:15 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sun, 11 Jun 2023 23:40:15 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Sun, 11 Jun 2023 23:40:15 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Sun, 11 Jun 2023 23:40:14 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F5kJHIIrHw8vTK8BE8mW2DS+7ELiTSnj2rRAhtiCYUmgW/4xIzxdFELKohVpt1206ktoe7I1Z8qXxAMf55G+H8FoBFnUi/gZ2XJbDiWYFMmIeh8cYr5I1Egkur7KRLRDIj35dPkh1U5MPlFyFTQxQ00JqEpfcL+oVpdhKlomFqrpQh9y4MIiyhXDgvpo2EPMd29+1iqJNyMgbFXyjDtslRs+tN8CYZKmuIpVUApnvbC9RxtyKBfakavT9T2/sll55xutjka/394NkFwRTeOKJ1WbdByHd/CgxpOVj7k2WLR1jdxM3Z0h5pwbU6pMc9me+hYD54JrQw4KggqUq9U76w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KFi1nplrKNiGVyqrIBtyLgQbt1BhngRvHZnE1bo5k5M=;
- b=PWMkE4+4NxDe24uxHWy//QjAb8yj5d17dC0KQiPbadvgxxdUUYPw7Oz0hfBmJuLzlOb3ucqp8xP4L3kqZVvNIkWYl6tFHjJAnX4p1DP6pYumH6fhGcF9CHNOejHWObf6g2esaTtXJ+TTxOiJVUAsk6F9LawN5qjc6GwGkfg9mQ5HphpNtgu1XfvDuHjWlSfyaciQpAszwA5VkaBuVp0/sGjBV3T98rlumLMzRI4o4ZVePg+NIpLBDvFMP5gNkRYdlDdsfbM9VAm16m/rf/bybmNREDRWlbrD05S5W8Xul9uO0jAPiFChlqlun/TjNZWsmwF8XCj7j2IjPcwztqb+gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
- by MN0PR11MB6232.namprd11.prod.outlook.com (2603:10b6:208:3c3::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Mon, 12 Jun
- 2023 06:40:12 +0000
-Received: from CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::5486:41e6:7c9e:740e]) by CY5PR11MB6392.namprd11.prod.outlook.com
- ([fe80::5486:41e6:7c9e:740e%7]) with mapi id 15.20.6477.028; Mon, 12 Jun 2023
- 06:40:12 +0000
-Date:   Mon, 12 Jun 2023 14:37:04 +0800
-From:   kernel test robot <yujie.liu@intel.com>
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     <oe-kbuild-all@lists.linux.dev>,
-        <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [acme:tmp.perf/core 89/117] tools/perf/util/pfm.c: util/cpumap.h is
- included more than once.
-Message-ID: <202306110636.2sTsiAcl-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-X-ClientProxiedBy: SI1PR02CA0053.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::8) To CY5PR11MB6392.namprd11.prod.outlook.com
- (2603:10b6:930:37::15)
+        Mon, 12 Jun 2023 04:31:15 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A671BCD
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 01:30:31 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id d9443c01a7336-1b3cc77ccbfso4491145ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 01:30:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686558631; x=1689150631;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eFGAwsuz5s5kzJpohBOGW3WNh70Z2kVA/PHw+tVDF5U=;
+        b=aXCvtRcCBodzXs2gYhRGruZ61wTSajof4N1wRPC9P5ue3dllAYfEMicmX7qVDEmX4V
+         JMPadU7fe11JLnUN3AKavtUKkLBezgXSkTt3DjVXljrNE0CM4rKFp15GakWkfBPlTWi8
+         5X/Ovz0p3ud4iLBwfzgkN7/qubWQWj8Z8xtLzuTsOoazq1dbWQnpRXFQFMiOIi+NPe3s
+         uG1zkmKmvmf1tS0NBcQ/wqHB6iMFlRlsNxAAT4BIwzuWDqYl3oLWPqv7ggLT0Zw3+U3j
+         6gUAzy8UpA3FGQQbDO4z4wcBbRSrd0U0oZVAQuKm++AoBMRzId9ho6SpA3DeHo83SFtI
+         A+Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686558631; x=1689150631;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eFGAwsuz5s5kzJpohBOGW3WNh70Z2kVA/PHw+tVDF5U=;
+        b=gOWIGb4ssNTV6CdGdlx9otj6uUcbPVSDV3Rh5wBcar71ZGowDY40RnAy9vH0P4X0GC
+         9w/23KueWB32gNxKlAxwW5qDe/0B9AcsdDT1uEh9OeZfMZfeP2O1T9Ayrf8u93kxjUHJ
+         dDKsHLHmJTB/ngd6fIysHHAYsGmObGYq0wnRnlAizFcw8aalXlpecKAVT9CrmyhdKKWH
+         8PcFo++zgl7KfOuqJ/ZohfEKZjRGeJ9gElKpZ93nHNMU5aRasJRn7Gt8Oh8nfwKB7kxV
+         NxD475vmTixDn9WzjnxBxpD+5Tflf2/8lV69NuKKUwlDj142aJKRsHjaAAgKoBlPi2Vh
+         dQRw==
+X-Gm-Message-State: AC+VfDz0F6YEVspw7DNCmXMhhKkQn+IqY1ECBMl/vzGneUfiIG0AJh7I
+        enPFdlZedn7PjeEs/isTSF7aww==
+X-Google-Smtp-Source: ACHHUZ4uOWN5GTEgc5P+n2WmHenRYF/9+wmdTNqGt9vVbANyW3hqvXOCZNR03l9pVFq9HJVYO4R23g==
+X-Received: by 2002:a17:903:124d:b0:1b1:b2fa:1903 with SMTP id u13-20020a170903124d00b001b1b2fa1903mr7027580plh.41.1686558630859;
+        Mon, 12 Jun 2023 01:30:30 -0700 (PDT)
+Received: from leoy-huanghe.lan (211-75-219-201.hinet-ip.hinet.net. [211.75.219.201])
+        by smtp.gmail.com with ESMTPSA id d9-20020a170902aa8900b001acaf7e22bdsm7641757plr.14.2023.06.12.01.30.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 01:30:30 -0700 (PDT)
+Date:   Mon, 12 Jun 2023 16:30:25 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>
+Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf/ring_buffer: Fix high-order allocations for AUX
+ space with correct MAX_ORDER limit
+Message-ID: <20230612083025.GC217089@leoy-huanghe.lan>
+References: <20230612052452.53425-1-xueshuai@linux.alibaba.com>
+ <20230612052452.53425-3-xueshuai@linux.alibaba.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR11MB6392:EE_|MN0PR11MB6232:EE_
-X-MS-Office365-Filtering-Correlation-Id: dc6aa1ad-7259-4382-7717-08db6b0fdfb3
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ikzNDtiFIRHNZvzAXjIW5yl66INwqEKC3a6Wl5fvAWxEQ9YnrpJ1GrCbVZybvvba3/5sAwmp1sdKWJpls0/7U4S4C2C20U9G9v2wfEuE6HG12LKaYUk9e+zU5MEmyhCam9DKvWtIikiRlSbcNF91927fOdHsRDSro7WD3Wn4j1eMUwIOa0TKyk/4I+DlSrDP0mOKT7bAxv1Nv9J425HiK2A2VcbfpPbRKCn3kfT6RBy3n6cK+jvSo71zEYFSFMSj+Kar3Sm1X8f6iqVu1mTaqiI7YAnOgJegC1i7ht3DzOXRRf7uZcpF3tIkMwpn6BxnZMEeOMshIZzu0bDEUZ0kI5mWk+ZtbfYDEhCcpPrL45CNjFgMiCsOC25Tly7VX06iqt1319LCrsSHjQ0u2irAtO+hoPBNCj0oUVew1hLgHfOQnvJkmeB76JFg5MtS34wmq2SftfRhP/51G6RCou+FWZX37d6XvVn/ru03yjp9OZ25cMWH8rUkCviTUh8hh+9MhxBk5hVE4kMeGoA9+hExAtN/0DvD029USTZB1aKr99k5xXvBdiQniLfIGmovFBnVoDr0UiWhRJuQv0tfeQob2g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(396003)(136003)(346002)(39860400002)(376002)(451199021)(84970400001)(316002)(41300700001)(36756003)(478600001)(66556008)(8676002)(82960400001)(66946007)(5660300002)(86362001)(66476007)(8936002)(38100700002)(6916009)(4326008)(6666004)(2616005)(2906002)(6486002)(966005)(83380400001)(186003)(1076003)(26005)(6512007)(6506007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?546w7qxDmCjPpV2mx84h8lKp6iXJRImiJmPiyGhenSnaOBTEaCRKSJKzWr/h?=
- =?us-ascii?Q?O62uLZl8q2F5DQmhYOAB99363SQqX2vbK/Hze5rb9WqLqvASOpVEmOQKkGjr?=
- =?us-ascii?Q?MoVEGiSN4LHYY84DqMrREnPugWvYDcu0N+uu9zMtRflYksyN72/nJiD8UCVb?=
- =?us-ascii?Q?rDDnpLMCQS09Ox495Ghpr7O8qiYk/mixRxIN7B3GsEcZhqT3vGpEiKkUF2i+?=
- =?us-ascii?Q?vY+VrkCWFD0pa0wgk93SVie/xae4bcMUBztzpV4X+24Tgjwl//GGAO963wHY?=
- =?us-ascii?Q?th/C7PBb1MOyzvaPYU0pI/VbgHS3VKVDiWfwkoehcgg8YeimYX9X5MdCOyVF?=
- =?us-ascii?Q?2dHtYbvf6uFZUI4DnWbjjQXtzoGCqT8QEvczInlM7csjccPnsxVLXlTMMTp0?=
- =?us-ascii?Q?ECTlj24fRkSkoPxtE8ISWzvnok/u3P5xnGJzjbo7OqE/6ngdsvBv7tLSMJR+?=
- =?us-ascii?Q?qy8E+dWL1DI2/KamFWNT/geuB4ATIzBfA93R9NkRQ2VC3A2XSseo5mcbD/x2?=
- =?us-ascii?Q?XIFUFXNm+Pf6EBPS3lWBbdgacONI9iQH2q9S1yNv3xrFHxs2JpY5nXjTPiY9?=
- =?us-ascii?Q?vu3gv6EFkRJgYm1mD9Y8Ce/nUnuyqkH4eoeyRiQhl2zbcg6JGebDBGpk3B+S?=
- =?us-ascii?Q?UExsW0EocXS6qu5CFszCYdy+Pe7w9P+N/f5+jw7CfkTQQCaIyjZZlj2dGsHp?=
- =?us-ascii?Q?sVCNhjOaHr6OFAZI2qep6plbUNl8Ydb3rGVO5xFOYLRJhOfoWu3qd7o/8E8S?=
- =?us-ascii?Q?kvejal/N8LdK6z+94OAU70ou2k3ZWdMRCjhYiQSo78ldZjonjOnf5rVEzNiD?=
- =?us-ascii?Q?gIEdSXHmMPqaLCdBmbEnaqfYx2Ea+fbZREv0AsOnoMuxHUvl/aG2oqEP0sit?=
- =?us-ascii?Q?Ay5yDApwx2N66mJLrDM9GhKNoekQNA/yn6A+0egAZE6bfkf8nGvdeQcF7VzG?=
- =?us-ascii?Q?ZNWOwrq9924CjN82z95Z40LMsXmEdqVYil8eeB6X4f7dhoIqbtZHtaGYq3nR?=
- =?us-ascii?Q?IyhkghjdjOKk55Lc08q2+KO7rSTfkzZgx9poT6fVHczxZNVESQa6u8hm8Zeh?=
- =?us-ascii?Q?R/EQ5ID/plHbiXLrb2b/93tvCsddoQmCyNBe7wmvS/wnuNtM9CUGtXN9E2mi?=
- =?us-ascii?Q?qELEX0U+pZ1X2TFIDbjZlzVtsoAqEL1xPr/Y26QRFWlNACTuiTEToZp3peJo?=
- =?us-ascii?Q?Fb7BeJSmEBQc0XDw1A8ID3zxHTcN1F70pv47mkIPT4U1nMGiF7svG/c+MFf7?=
- =?us-ascii?Q?Ssk6D3U7nDtAIs6acRFXtukYO6aSxphVpsRjWMkEYvjNDht+prL0kpgOdsrc?=
- =?us-ascii?Q?qq3JQjGgyRcCPMOmMa0zezPN5KYJqlAIxg6cl8NyeHJXvFTfb7xrxFvEV7oE?=
- =?us-ascii?Q?Q0PKmhF1O3ah5f45JMPs1tidE+AIae2K0f1b6gkrLgbpDza1523gt9IRiVWL?=
- =?us-ascii?Q?jg8HJLyVk4cpW3HXxWM5NDy8jBrIdWkktukmvJI3HXVBYTvrLluu7AXR/bWv?=
- =?us-ascii?Q?P69c/SUUhDo/UVdsAyT4bdCUn8XMFvgY8HbYmYVu30ZP6V70C3UjzdtCu0TV?=
- =?us-ascii?Q?fkvVZl2P0GT5HlKE0TZ2uo4q9dpYVvZYUB+klqMB?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc6aa1ad-7259-4382-7717-08db6b0fdfb3
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6392.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2023 06:40:12.7140
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cj+kTgDZF6QJPKkpojTqxajgFg/bUBDiNHXdn04zXnbplGamDhDMt6FPUWyKg6435dVB2+V4xJBSyq3/8D/aig==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6232
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230612052452.53425-3-xueshuai@linux.alibaba.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tmp.perf/core
-head:   fa9f16805e705fbb243a74b60f803cb33f1ce787
-commit: 975b6a641af18e471f9a8b764e26d202808cac16 [89/117] perf list: Check if libpfm4 event is supported
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+On Mon, Jun 12, 2023 at 01:24:52PM +0800, Shuai Xue wrote:
+> When perf-record with a large AUX area, e.g 2GB:
+> 
+>     #perf record -C 0 -m ,2G -e arm_spe_0// -- sleep 1
+> 
+> it reveals a WARNING with __alloc_pages:
+> 
+> [   48.888553] ------------[ cut here ]------------
+> [   48.888559] WARNING: CPU: 39 PID: 17438 at mm/page_alloc.c:5568 __alloc_pages+0x1ec/0x248
+> [   48.888569] Modules linked in: ip6table_filter(E) ip6_tables(E) iptable_filter(E) ebtable_nat(E) ebtables(E) vfat(E) fat(E) aes_ce_blk(E) aes_ce_cipher(E) crct10dif_ce(E) ghash_ce(E) sm4_ce_cipher(E) sm4(E) sha2_ce(E) sha256_arm64(E) sha1_ce(E) acpi_ipmi(E) sbsa_gwdt(E) sg(E) ipmi_si(E) ipmi_devintf(E) ipmi_msghandler(E) ip_tables(E) sd_mod(E) ast(E) drm_kms_helper(E) syscopyarea(E) sysfillrect(E) nvme(E) sysimgblt(E) i2c_algo_bit(E) nvme_core(E) drm_shmem_helper(E) ahci(E) t10_pi(E) libahci(E) drm(E) crc64_rocksoft(E) i40e(E) crc64(E) libata(E) i2c_core(E)
+> [   48.888610] CPU: 39 PID: 17438 Comm: perf Kdump: loaded Tainted: G            E      6.3.0-rc4+ #56
+> [   48.888613] Hardware name: Default Default/Default, BIOS 1.2.M1.AL.P.139.00 03/22/2023
+> [   48.888614] pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
+> [   48.888616] pc : __alloc_pages+0x1ec/0x248
+> [   48.888619] lr : rb_alloc_aux_page+0x78/0xe0
+> [   48.888622] sp : ffff800037c5b9e0
+> [   48.888623] pmr_save: 000000e0
+> [   48.888624] x29: ffff800037c5b9e0 x28: ffff00082743b800 x27: 0000000000000000
+> [   48.888627] x26: 0000000000080000 x25: ffff000000000000 x24: ffff000860b21380
+> [   48.888629] x23: ffff8000093fd3c0 x22: ffff00081a4a2080 x21: 000000000000000b
+> [   48.888631] x20: 0000000000000000 x19: 000000000000000b x18: 0000000000000020
+> [   48.888634] x17: 0000000000000000 x16: ffff800008f05be8 x15: ffff00081a4a2610
+> [   48.888636] x14: 0000000000000000 x13: 323173656761705f x12: ffff00477fffeb90
+> [   48.888638] x11: 0000000000000000 x10: 0000000000000000 x9 : ffff8000083608a0
+> [   48.888641] x8 : 0000000000000000 x7 : 0000000000000000 x6 : 0000000000000040
+> [   48.888643] x5 : 000000000007f400 x4 : 0000000000000000 x3 : 0000000000000000
+> [   48.888645] x2 : 0000000000000000 x1 : 0000000000000001 x0 : 0000000000012dc0
+> [   48.888648] Call trace:
+> [   48.888650]  __alloc_pages+0x1ec/0x248
+> [   48.888653]  rb_alloc_aux_page+0x78/0xe0
+> [   48.888654]  rb_alloc_aux+0x13c/0x298
+> [   48.888656]  perf_mmap+0x468/0x688
+> [   48.888659]  mmap_region+0x308/0x8a8
+> [   48.888662]  do_mmap+0x3c0/0x528
+> [   48.888664]  vm_mmap_pgoff+0xf4/0x1b8
+> [   48.888666]  ksys_mmap_pgoff+0x18c/0x218
+> [   48.888668]  __arm64_sys_mmap+0x38/0x58
+> [   48.888671]  invoke_syscall+0x50/0x128
+> [   48.888673]  el0_svc_common.constprop.0+0x58/0x188
+> [   48.888674]  do_el0_svc+0x34/0x50
+> [   48.888676]  el0_svc+0x34/0x108
+> [   48.888679]  el0t_64_sync_handler+0xb8/0xc0
+> [   48.888681]  el0t_64_sync+0x1a4/0x1a8
+> [   48.888686] ---[ end trace 0000000000000000 ]---
+> 
+> The problem is that the high-order pages for AUX area is allocated with
+> an order of MAX_ORDER. Obviously, this is a bogus.
+> 
+> Fix it with an order of MAX_ORDER - 1 at maximum.
+> 
+> Fixes: 0a4e38e64f5e ("perf: Support high-order allocations for AUX space")
+> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <yujie.liu@intel.com>
-| Closes: https://lore.kernel.org/r/202306110636.2sTsiAcl-lkp@intel.com/
+LGTM:
 
-includecheck warnings: (new ones prefixed by >>)
->> tools/perf/util/pfm.c: util/cpumap.h is included more than once.
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-vim +7 tools/perf/util/pfm.c
-
-   > 7	#include "util/cpumap.h"
-     8	#include "util/debug.h"
-     9	#include "util/event.h"
-    10	#include "util/evlist.h"
-    11	#include "util/evsel.h"
-    12	#include "util/parse-events.h"
-    13	#include "util/pmus.h"
-    14	#include "util/pfm.h"
-    15	#include "util/strbuf.h"
-  > 16	#include "util/cpumap.h"
-    17	#include "util/thread_map.h"
-    18	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
-
+> ---
+>  kernel/events/ring_buffer.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index 273a0fe..d6bbdb7 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -609,8 +609,8 @@ static struct page *rb_alloc_aux_page(int node, int order)
+>  {
+>  	struct page *page;
+>  
+> -	if (order > MAX_ORDER)
+> -		order = MAX_ORDER;
+> +	if (order >= MAX_ORDER)
+> +		order = MAX_ORDER - 1;
+>  
+>  	do {
+>  		page = alloc_pages_node(node, PERF_AUX_GFP, order);
+> -- 
+> 1.8.3.1
+> 
