@@ -2,81 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07B8C7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 15:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDB6C88CB2
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 15:27:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237367AbjFLPGU (ORCPT
+        id S235831AbjFLP1l (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 11:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
+        Mon, 12 Jun 2023 11:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231664AbjFLPGU (ORCPT
+        with ESMTP id S233303AbjFLP1k (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 11:06:20 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C320CC;
-        Mon, 12 Jun 2023 08:06:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=GkyHPB5PJqVXyya1HJmHa8ORABYaU/NCZ0d93W2Vf3I=; b=fmrdvYEEH5jeX2zgYzbnx/CKGN
-        BNUqZ4JZRQ1qqtjfGKTyQi/z8jnposyGDi/OuWzJp2qVZlDhAYqTdWlHOdDE0zTqVWRWQNVCTxDWl
-        C7pxtmwwpK0vDIJrqlqeY13CoGnlcOO8u2+6/TSxPNXgX/+8AEuq3i7PBq/es989dfXrwSbdji/KZ
-        LhRoBMyFLq1QgXXy16jBkyb4CcHdYP7umrZB2lM/BTuWrkt6NOS0rI8XbE5RD9BeKqo8n7v24thFl
-        Bk1HaX1aRU4BULWG0ECOR3JRWv/2x4zGLQjfNyxT98+jFk8hVMk2uzUDb+SjQLOc3zfGagayZpXev
-        x1GUo3sw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8j7F-008uNy-32;
-        Mon, 12 Jun 2023 15:05:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7A9CA30031B;
-        Mon, 12 Jun 2023 17:05:53 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5EBF520D70605; Mon, 12 Jun 2023 17:05:53 +0200 (CEST)
-Date:   Mon, 12 Jun 2023 17:05:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Yang Jihong <yangjihong1@huawei.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Mon, 12 Jun 2023 11:27:40 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0F36EE7B;
+        Mon, 12 Jun 2023 08:27:22 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBEA61FB;
+        Mon, 12 Jun 2023 08:28:06 -0700 (PDT)
+Received: from [192.168.1.3] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9DF2D3F5A1;
+        Mon, 12 Jun 2023 08:27:19 -0700 (PDT)
+Message-ID: <a24634f7-be80-6ca2-9df7-1624fe11c281@arm.com>
+Date:   Mon, 12 Jun 2023 16:27:07 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [RFC] Adding support for setting the affinity of the recording
+ process
+Content-Language: en-US
+To:     Yang Jihong <yangjihong1@huawei.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
+From:   James Clark <james.clark@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Adding support for setting the affinity of the recording
- process
-Message-ID: <20230612150553.GM4253@hirez.programming.kicks-ass.net>
-References: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
- <ZIcqmlHIfBbyZFDl@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZIcqmlHIfBbyZFDl@kernel.org>
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+In-Reply-To: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 11:24:26AM -0300, Arnaldo Carvalho de Melo wrote:
-> But could you please spell out the use case, why do you need this, is
-> this so common (for you) that you repeatedly need to first taskset, then
-> perf, etc?
 
-I'm thinking this is due to big.LITTLE things where the PMUs on the CPUs
-are different. Intel recently having stepped into this trainwreck,
-there's now a ton more people 'enjoying' it ...
 
-So what people often do it is affine the process to one type of CPU and
-then perf it so that their measurements are consistent.
+On 12/06/2023 11:26, Yang Jihong wrote:
+> Hello everyone,
+> 
+> Currently, perf-record supports profiling an existing process, thread,
+> or a specified command.
+> 
+> Sometimes we may need to set CPU affinity of the target process before
+> recording:
+> 
+>   # taskset -pc <cpus> <pid>
+>   # perf record -p <pid> -- sleep 10
+> 
+> or:
+> 
+>   # perf record -- `taskset -c <cpus> COMMAND`
+> 
+> I'm thinking about getting perf to support setting the affinity of the
+> recording process, for example:
+> 
+> 1. set the CPU affinity of the <pid1> process to <cpus1>, <pid2> process
+> to <cpus2>,  and record:
+> 
+>   # perf record -p <pid1>/<cpus1>:<pid2>/<cpus2> -- sleep 10
+> 
 
-It all sucks, but given the situation, it might be the best option :/
+I'm not sure if this is necessary. You can already do this with taskset
+when you launch the processes or for existing ones.
 
-Ian was working on improving the whole hybrid thing, perhaps he has more
-opinions.
+> and
+> 
+> 2. set CPU affinity of the COMMAND and record:
+> 
+>   # perf record --taskset-command <cpus> COMMAND
+> 
+> In doing so, perf, as an observer, actually changes some of the
+> properties of the target process, which may be contrary to the purpose
+> of perf tool.
+> 
+> 
+> Will we consider accepting this approach?
+> 
+
+For #2 I do this sometimes, but I prefix the perf command with taskset
+because otherwise there is a small time between when taskset does its
+thing and launching the child process that it runs in the wrong place.
+
+Then one issue with the above method is that perf itself gets pinned to
+those CPUs as well. I suppose that could influence your application but
+I've never had an issue with it.
+
+If you really can't live with perf also being pinned to those CPUs I
+would say it makes sense to add options for #2. Otherwise I would just
+run everything under taskset and no changes are needed.
+
+I think you would still need to have perf itself pinned to the CPUs just
+before it does the fork and exec, and then after that it can undo its
+pinning. Otherwise you'd still get that small time running on the wrong
+cores.
+
+James
+
+> Thanks,
+> Yang.
