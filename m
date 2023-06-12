@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7868DC8300C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57613C7EE25
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232334AbjFLJzZ (ORCPT
+        id S232389AbjFLJz0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:55:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33562 "EHLO
+        Mon, 12 Jun 2023 05:55:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233646AbjFLJyq (ORCPT
+        with ESMTP id S230408AbjFLJyY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:46 -0400
+        Mon, 12 Jun 2023 05:54:24 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A56E6191;
-        Mon, 12 Jun 2023 02:39:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7806B5FF2;
+        Mon, 12 Jun 2023 02:38:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=UxgZ8gBb/X/LH3e6EzhOyo9roeaslQ6np5gS0C0ZzJo=; b=HM14QRNLfsj2jCFI7z2tW4MkY6
-        GFgNx3SbksNmnhAVq0AjonGzUDtBI/Mo6iGgqC4Z3Yw0yJRHs5bUbLaUeIW6IvnXfKgBRJJjn7uNQ
-        8kP6DACk9mXjCQZNEWLx2zj6NQ4ximS2Z4sK1z90jL4Lq9e0i0OeQ8TlW7W1cqhcWYNvSCLkdgZmy
-        SqKNr9CxrQ7FW/sh5UaiKJ6haS90E/EgjU7MLEJJu+O0hcnzxUFea/kex+iIicCt101qYrkq6dqe6
-        AVToOOiTV/KbOAryV79BDSwPFxBb+4i3U0+K1JR+w5uDsypkLpq0y4RhhxnrjLRTPqtV8YNct2odK
-        /9QseCKw==;
+        bh=tN5fF7Wyh35qBJFCdjEuKMaMwIiqau8XmW0j2x/SMjk=; b=pTQEAHGpF5fz0pLIBta9z8QWvF
+        V3VTKbdm5MrZ6Uq6sIyVOPIlJRamTVCnfvzmEg5CiuDQWZwIOhMu3l9PZQuNwkMb8MTxXwLb05k1F
+        pXKfEwe9Z0i663rYdw9pUPCOE+2AHi/lm0RzSNXMm4U2w1iNa1ZIxBs9afcsQW/V20UMXzYer3WCT
+        zF9DC46u7wLZd3iCRc+AmRVnu9fCua5kGt94sVVOX6RESLLLndvS1OIwmKToKe+pfW/q3/OlKUMUJ
+        NzNjcl62XQoQkQaJg1jmU538/Cwb5EJWwMJr4XxONBZWuSlObMm3Fh7GXzLLBUAOiqFAhv2ZaNNZD
+        zVv+iV3g==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0t-002NHI-V0; Mon, 12 Jun 2023 09:39:04 +0000
+        id 1q8e0g-002N98-AY; Mon, 12 Jun 2023 09:38:50 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D877305ED3;
-        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D8E9630318E;
+        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 08B3F30A77B7C; Mon, 12 Jun 2023 11:38:49 +0200 (CEST)
-Message-ID: <20230612093540.850386350@infradead.org>
+        id 416A530A70ADF; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093538.393498853@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:59 +0200
+Date:   Mon, 12 Jun 2023 11:07:26 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -67,7 +67,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 46/57] perf: Simplify pmu_dev_alloc()
+Subject: [PATCH v3 13/57] sched: Simplify sched_core_cpu_{starting,deactivate}()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,94 +75,103 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Use guards to reduce gotos and simplify control flow.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   65 ++++++++++++++++++++++++---------------------------
- 1 file changed, 31 insertions(+), 34 deletions(-)
+ kernel/sched/core.c |   27 ++++++++++++---------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11285,49 +11285,46 @@ static void pmu_dev_release(struct devic
- 
- static int pmu_dev_alloc(struct pmu *pmu)
- {
--	int ret = -ENOMEM;
-+	int ret;
- 
--	pmu->dev = kzalloc(sizeof(struct device), GFP_KERNEL);
--	if (!pmu->dev)
--		goto out;
-+	struct device *dev __free(put_device) =
-+		kzalloc(sizeof(struct device), GFP_KERNEL);
-+	if (!dev)
-+		return -ENOMEM;
- 
--	pmu->dev->groups = pmu->attr_groups;
--	device_initialize(pmu->dev);
-+	dev->groups = pmu->attr_groups;
-+	device_initialize(dev);
- 
--	dev_set_drvdata(pmu->dev, pmu);
--	pmu->dev->bus = &pmu_bus;
--	pmu->dev->release = pmu_dev_release;
-+	dev_set_drvdata(dev, pmu);
-+	dev->bus = &pmu_bus;
-+	dev->release = pmu_dev_release;
- 
--	ret = dev_set_name(pmu->dev, "%s", pmu->name);
-+	ret = dev_set_name(dev, "%s", pmu->name);
- 	if (ret)
--		goto free_dev;
-+		return ret;
- 
--	ret = device_add(pmu->dev);
-+	ret = device_add(dev);
- 	if (ret)
--		goto free_dev;
-+		return ret;
- 
--	/* For PMUs with address filters, throw in an extra attribute: */
--	if (pmu->nr_addr_filters)
--		ret = device_create_file(pmu->dev, &dev_attr_nr_addr_filters);
--
--	if (ret)
--		goto del_dev;
-+	struct device *del __free(device_del) = dev;
- 
--	if (pmu->attr_update)
--		ret = sysfs_update_groups(&pmu->dev->kobj, pmu->attr_update);
--
--	if (ret)
--		goto del_dev;
--
--out:
--	return ret;
--
--del_dev:
--	device_del(pmu->dev);
--
--free_dev:
--	put_device(pmu->dev);
--	goto out;
-+	/* For PMUs with address filters, throw in an extra attribute: */
-+	if (pmu->nr_addr_filters) {
-+		ret = device_create_file(dev, &dev_attr_nr_addr_filters);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (pmu->attr_update) {
-+		ret = sysfs_update_groups(&dev->kobj, pmu->attr_update);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	no_free_ptr(del);
-+	pmu->dev = no_free_ptr(dev);
-+	return 0;
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6331,20 +6331,24 @@ static void queue_core_balance(struct rq
+ 	queue_balance_callback(rq, &per_cpu(core_balance_head, rq->cpu), sched_core_balance);
  }
  
- static struct lock_class_key cpuctx_mutex;
++DEFINE_LOCK_GUARD_1(core_lock, int,
++		    sched_core_lock(*_T->lock, &_T->flags),
++		    sched_core_unlock(*_T->lock, &_T->flags),
++		    unsigned long flags)
++
+ static void sched_core_cpu_starting(unsigned int cpu)
+ {
+ 	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
+ 	struct rq *rq = cpu_rq(cpu), *core_rq = NULL;
+-	unsigned long flags;
+ 	int t;
+ 
+-	sched_core_lock(cpu, &flags);
++	guard(core_lock)(&cpu);
+ 
+ 	WARN_ON_ONCE(rq->core != rq);
+ 
+ 	/* if we're the first, we'll be our own leader */
+ 	if (cpumask_weight(smt_mask) == 1)
+-		goto unlock;
++		return;
+ 
+ 	/* find the leader */
+ 	for_each_cpu(t, smt_mask) {
+@@ -6358,7 +6362,7 @@ static void sched_core_cpu_starting(unsi
+ 	}
+ 
+ 	if (WARN_ON_ONCE(!core_rq)) /* whoopsie */
+-		goto unlock;
++		return;
+ 
+ 	/* install and validate core_rq */
+ 	for_each_cpu(t, smt_mask) {
+@@ -6369,29 +6373,25 @@ static void sched_core_cpu_starting(unsi
+ 
+ 		WARN_ON_ONCE(rq->core != core_rq);
+ 	}
+-
+-unlock:
+-	sched_core_unlock(cpu, &flags);
+ }
+ 
+ static void sched_core_cpu_deactivate(unsigned int cpu)
+ {
+ 	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
+ 	struct rq *rq = cpu_rq(cpu), *core_rq = NULL;
+-	unsigned long flags;
+ 	int t;
+ 
+-	sched_core_lock(cpu, &flags);
++	guard(core_lock)(&cpu);
+ 
+ 	/* if we're the last man standing, nothing to do */
+ 	if (cpumask_weight(smt_mask) == 1) {
+ 		WARN_ON_ONCE(rq->core != rq);
+-		goto unlock;
++		return;
+ 	}
+ 
+ 	/* if we're not the leader, nothing to do */
+ 	if (rq->core != rq)
+-		goto unlock;
++		return;
+ 
+ 	/* find a new leader */
+ 	for_each_cpu(t, smt_mask) {
+@@ -6402,7 +6402,7 @@ static void sched_core_cpu_deactivate(un
+ 	}
+ 
+ 	if (WARN_ON_ONCE(!core_rq)) /* impossible */
+-		goto unlock;
++		return;
+ 
+ 	/* copy the shared state to the new leader */
+ 	core_rq->core_task_seq             = rq->core_task_seq;
+@@ -6424,9 +6424,6 @@ static void sched_core_cpu_deactivate(un
+ 		rq = cpu_rq(t);
+ 		rq->core = core_rq;
+ 	}
+-
+-unlock:
+-	sched_core_unlock(cpu, &flags);
+ }
+ 
+ static inline void sched_core_cpu_dying(unsigned int cpu)
 
 
