@@ -2,114 +2,281 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46BEC88CB2
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 14:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB997C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 14:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237863AbjFLO1L (ORCPT
+        id S237779AbjFLOqf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 10:27:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38260 "EHLO
+        Mon, 12 Jun 2023 10:46:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237829AbjFLO0u (ORCPT
+        with ESMTP id S237625AbjFLOq2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 10:26:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56CB71982;
-        Mon, 12 Jun 2023 07:24:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 901BA6152C;
-        Mon, 12 Jun 2023 14:24:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC0B2C433D2;
-        Mon, 12 Jun 2023 14:24:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686579869;
-        bh=8sAZD+hAvXQWVLROaSM5UrvaEx3cSXS0jloJ1FKhXDg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UbFAttbCT8XewMJnnbiDzVJvX5bcVvUfZK6SKm4RNZjwsX8j53ejjOM9jVluUtQ33
-         le43aa7pI99xCGft+eRu54DKT3UeNaeABuUEsQs2zSfUikoxLrm6ROr8Ru+D14BVoB
-         S56sAEvCIJpxsRa+GA5j5kN3eA1d2lE2+O1EdkQ1FxFhLod4C9fbUvJ+WNtWCcVIwE
-         h0Mtbd3IIpacz30Esx9LwYuWereyudzBpBxDKlALt9CSTpUxNttZs2YSy3tcPdY6wy
-         LZmWtIkr8JTet4EZIBKXIO0glQTBds1dmaQfejQbzAAY9X5eV8vP3hl+FhjGNVFz7X
-         H8XY5BcoBFJAg==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4ACEA40692; Mon, 12 Jun 2023 11:24:26 -0300 (-03)
-Date:   Mon, 12 Jun 2023 11:24:26 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Mon, 12 Jun 2023 10:46:28 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 539A8A8
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 07:46:27 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-3f9d619103dso346051cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 07:46:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1686581186; x=1689173186;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eaPmxqEpeaJR+RWpvgc6oPZytx2qIxyOn1fsy3TsqOY=;
+        b=VRU+InYCcZpTelAOH/3Dse96vo49RF6NcywDNha7tkAangBX0BEUrPnYT78SregrzU
+         9P5rk1vrc/sjNB8YWECOB++7jVyyn+tFaxPiJR7hfXzp/qsgIxHlsAf7NKo/+tEAgKg6
+         SaZRDFq0RbiTDddIdz9cMTsUj+/oS3ZozohryEteUjF4UMbssgOgTXD7MgsaiLbQJ+Qw
+         BFcWCZm9TtDXugG4BjsUKNtu7h5qlYOOYkN1ffJaQSbu3BT+yKns26xTPF5G8MQ+kg1+
+         CeMtL3kSA9NkpTrgOeesiKHU8uVf2GcaEBaSwcN4mD39bqB6AjV9lkre+My4AtGLMGgl
+         jXRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686581186; x=1689173186;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eaPmxqEpeaJR+RWpvgc6oPZytx2qIxyOn1fsy3TsqOY=;
+        b=RC8ItabbTlSM4/DJQ1ssF1Fz4zu1flKDbuBpDNAtG/Cxoh9i9uM/yIOdgT14BD/RZl
+         zHSbZP1jDLqVhgDbVNLGumKDk8d6J/1+ZH8mVEnQDwKogYk9ZXAOIgALR/xyZv7OTWnC
+         PVPrkHETRriRhLqv8QrW9BO085FRWjutMuzpQikev1nCT98DalkcfYNEBfTtVIbkneK0
+         GYhxU2hGRq5iAgo5N2vQsu0WBEhhMxfL281fb9iZlUV0BqTjF/Enom1QWPBjmmawTpjc
+         YQZMJU61TaVE1HK9PPLsbHHHEUsjuC1E2997v4vT/Acj+MOR0he6phkWmdFTeV61+I+p
+         p6/w==
+X-Gm-Message-State: AC+VfDwoeY7qS14TovahZthZkLq95DQXY1nH5WXdEX82sVp11OMxrCSy
+        F+uBleS+vNkZ6WOOYAwtl7bIk9/13KKFCLOupLTmTA==
+X-Google-Smtp-Source: ACHHUZ55F/W0Dacq5LPDdYKu+10SBuMBnRW0GP7N75n6EsQ4tqNo6zeDE2nTADw5muDPyz0U3fDNE5889w3Og092Q/4=
+X-Received: by 2002:a05:622a:1015:b0:3f6:97b4:1a4a with SMTP id
+ d21-20020a05622a101500b003f697b41a4amr368857qte.20.1686581186287; Mon, 12 Jun
+ 2023 07:46:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230608232823.4027869-1-irogers@google.com> <20230608232823.4027869-27-irogers@google.com>
+ <ZIcoJytUEz4UgQYR@kernel.org> <ZIcorZVu1z8jaPL/@kernel.org>
+In-Reply-To: <ZIcorZVu1z8jaPL/@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 12 Jun 2023 07:46:14 -0700
+Message-ID: <CAP-5=fXby-Yk3U4LCQeYkGU_E22kd92=dCnfb7DkN5iPYvCDGA@mail.gmail.com>
+Subject: Re: [PATCH v2 26/26] perf hist: Fix srcline memory leak
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] Adding support for setting the affinity of the recording
- process
-Message-ID: <ZIcqmlHIfBbyZFDl@kernel.org>
-References: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
-X-Url:  http://acmel.wordpress.com
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        ye xingchen <ye.xingchen@zte.com.cn>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        Changbin Du <changbin.du@huawei.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Yuan Can <yuancan@huawei.com>,
+        Brian Robbins <brianrob@linux.microsoft.com>,
+        liuwenyu <liuwenyu7@huawei.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Fangrui Song <maskray@google.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jun 12, 2023 at 06:26:10PM +0800, Yang Jihong escreveu:
-> Hello everyone,
-> 
-> Currently, perf-record supports profiling an existing process, thread, or a
-> specified command.
-> 
-> Sometimes we may need to set CPU affinity of the target process before
-> recording:
-> 
->   # taskset -pc <cpus> <pid>
->   # perf record -p <pid> -- sleep 10
-> 
-> or:
-> 
->   # perf record -- `taskset -c <cpus> COMMAND`
-> 
-> I'm thinking about getting perf to support setting the affinity of the
-> recording process, for example:
+On Mon, Jun 12, 2023 at 7:16=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> Em Mon, Jun 12, 2023 at 11:13:59AM -0300, Arnaldo Carvalho de Melo escrev=
+eu:
+> > Em Thu, Jun 08, 2023 at 04:28:23PM -0700, Ian Rogers escreveu:
+> > > srcline isn't freed if it is SRCLINE_UNKNOWN. Avoid strduping in this
+> > > case as such strdups are redundant and leak memory.
+> >
+> > The patch is ok as its what the rest of the code is doing, i.e. strcmp(=
+)
+> > to check if a srcline is the unknown one, but how about the following
+> > patch on top of yours?
+>
+> [acme@quaco perf-tools-next]$ strings ~/bin/perf | grep '??:0'
+> ??:0
+> SRCLINE_UNKNOWN ((char *) "??:0")
+> [acme@quaco perf-tools-next]$
 
-not of the 'recording process' but the 'observed process', right?
- 
-> 1. set the CPU affinity of the <pid1> process to <cpus1>, <pid2> process to
-> <cpus2>,  and record:
-> 
->   # perf record -p <pid1>/<cpus1>:<pid2>/<cpus2> -- sleep 10
+Agreed, the strcmps make me nervous as they won't distinguish heap
+from a global meaning we could end up with things like pointers to
+freed memory. The comparison with the global is always going to be
+same imo.
 
-but what would be the semantic for what is being observed? Would this
-result in it recording events on that CPU or just for that process (that
-now runs just on that CPU)?
+Acked-by: Ian Rogers <irogers@google.com>
 
-Without affinity setting that could mean: observe just that process when
-it runs on that CPU.
+Thanks,
+Ian
 
-But could you please spell out the use case, why do you need this, is
-this so common (for you) that you repeatedly need to first taskset, then
-perf, etc?
- 
-> and
-> 
-> 2. set CPU affinity of the COMMAND and record:
-> 
->   # perf record --taskset-command <cpus> COMMAND
-> 
-> In doing so, perf, as an observer, actually changes some of the properties
-> of the target process, which may be contrary to the purpose of perf tool.
-
-Up for discussion, but I don't think this is that much a problem if it
-streamlines common observability sessions/experimentations.
-
-> Will we consider accepting this approach?
-
-- Arnaldo
+> > From 5163e54c1ed3d476f6b4e7f938861039bd4eec7c Mon Sep 17 00:00:00 2001
+> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > Date: Mon, 12 Jun 2023 11:10:46 -0300
+> > Subject: [PATCH 1/1] perf srcline: Optimize comparision against
+> >  SRCLINE_UNKNOWN
+> >
+> > This is a string constant that gets returned and then strcmp() around,
+> > we can instead just do a pointer comparision.
+> >
+> > Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Link: https://lore.kernel.org/lkml/
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > ---
+> >  tools/perf/builtin-diff.c    | 4 ++--
+> >  tools/perf/util/block-info.c | 4 ++--
+> >  tools/perf/util/hist.c       | 2 +-
+> >  tools/perf/util/map.c        | 2 +-
+> >  tools/perf/util/sort.c       | 2 +-
+> >  tools/perf/util/srcline.c    | 2 +-
+> >  6 files changed, 8 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+> > index eec89567ae483604..e8a1b16aa5f83f4f 100644
+> > --- a/tools/perf/builtin-diff.c
+> > +++ b/tools/perf/builtin-diff.c
+> > @@ -1378,8 +1378,8 @@ static int cycles_printf(struct hist_entry *he, s=
+truct hist_entry *pair,
+> >       end_line =3D map__srcline(he->ms.map, bi->sym->start + bi->end,
+> >                               he->ms.sym);
+> >
+> > -     if ((strncmp(start_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)=
+) !=3D 0) &&
+> > -         (strncmp(end_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) =
+!=3D 0)) {
+> > +     if (start_line !=3D SRCLINE_UNKNOWN &&
+> > +         end_line !=3D SRCLINE_UNKNOWN) {
+> >               scnprintf(buf, sizeof(buf), "[%s -> %s] %4ld",
+> >                         start_line, end_line, block_he->diff.cycles);
+> >       } else {
+> > diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.=
+c
+> > index 08279b1b65e5a4b0..fe4c17248799f0a2 100644
+> > --- a/tools/perf/util/block-info.c
+> > +++ b/tools/perf/util/block-info.c
+> > @@ -296,8 +296,8 @@ static int block_range_entry(struct perf_hpp_fmt *f=
+mt, struct perf_hpp *hpp,
+> >       end_line =3D map__srcline(he->ms.map, bi->sym->start + bi->end,
+> >                               he->ms.sym);
+> >
+> > -     if ((strncmp(start_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)=
+) !=3D 0) &&
+> > -         (strncmp(end_line, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKNOWN)) =
+!=3D 0)) {
+> > +     if (start_line !=3D SRCLINE_UNKNOWN) &&
+> > +         end_line !=3D SRCLINE_UNKNOWN) {
+> >               scnprintf(buf, sizeof(buf), "[%s -> %s]",
+> >                         start_line, end_line);
+> >       } else {
+> > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> > index 0a10bcc6ec95b5e0..3dc8a4968beb9c01 100644
+> > --- a/tools/perf/util/hist.c
+> > +++ b/tools/perf/util/hist.c
+> > @@ -484,7 +484,7 @@ static int hist_entry__init(struct hist_entry *he,
+> >                       goto err_infos;
+> >       }
+> >
+> > -     if (he->srcline && strcmp(he->srcline, SRCLINE_UNKNOWN)) {
+> > +     if (he->srcline && he->srcline !=3D SRCLINE_UNKNOWN) {
+> >               he->srcline =3D strdup(he->srcline);
+> >               if (he->srcline =3D=3D NULL)
+> >                       goto err_rawdata;
+> > diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+> > index c77e2fce6a379e7f..f30d34903aa4eabe 100644
+> > --- a/tools/perf/util/map.c
+> > +++ b/tools/perf/util/map.c
+> > @@ -496,7 +496,7 @@ int map__fprintf_srcline(struct map *map, u64 addr,=
+ const char *prefix,
+> >
+> >       if (dso) {
+> >               char *srcline =3D map__srcline(map, addr, NULL);
+> > -             if (strncmp(srcline, SRCLINE_UNKNOWN, strlen(SRCLINE_UNKN=
+OWN)) !=3D 0)
+> > +             if (srcline !=3D SRCLINE_UNKNOWN)
+> >                       ret =3D fprintf(fp, "%s%s", prefix, srcline);
+> >               zfree_srcline(&srcline);
+> >       }
+> > diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+> > index 047c3606802f5b7f..6aa1c7f2b4448b30 100644
+> > --- a/tools/perf/util/sort.c
+> > +++ b/tools/perf/util/sort.c
+> > @@ -643,7 +643,7 @@ static char *hist_entry__get_srcfile(struct hist_en=
+try *e)
+> >
+> >       sf =3D __get_srcline(map__dso(map), map__rip_2objdump(map, e->ip)=
+,
+> >                        e->ms.sym, false, true, true, e->ip);
+> > -     if (!strcmp(sf, SRCLINE_UNKNOWN))
+> > +     if (sf =3D=3D SRCLINE_UNKNOWN)
+> >               return no_srcfile;
+> >       p =3D strchr(sf, ':');
+> >       if (p && *sf) {
+> > diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> > index b8e596528d7e7e5e..48a04f42b308b080 100644
+> > --- a/tools/perf/util/srcline.c
+> > +++ b/tools/perf/util/srcline.c
+> > @@ -809,7 +809,7 @@ void zfree_srcline(char **srcline)
+> >       if (*srcline =3D=3D NULL)
+> >               return;
+> >
+> > -     if (strcmp(*srcline, SRCLINE_UNKNOWN))
+> > +     if (*srcline !=3D SRCLINE_UNKNOWN)
+> >               free(*srcline);
+> >
+> >       *srcline =3D NULL;
+> > --
+> > 2.39.2
+> >
+> >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/util/hist.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> > > index 77cb2cc83bb9..cc6f7f51faa5 100644
+> > > --- a/tools/perf/util/hist.c
+> > > +++ b/tools/perf/util/hist.c
+> > > @@ -484,7 +484,7 @@ static int hist_entry__init(struct hist_entry *he=
+,
+> > >                     goto err_infos;
+> > >     }
+> > >
+> > > -   if (he->srcline) {
+> > > +   if (he->srcline && strcmp(he->srcline, SRCLINE_UNKNOWN)) {
+> > >             he->srcline =3D strdup(he->srcline);
+> > >             if (he->srcline =3D=3D NULL)
+> > >                     goto err_rawdata;
+> > > --
+> > > 2.41.0.162.gfafddb0af9-goog
+> > >
+> >
+> > --
+> >
+> > - Arnaldo
+>
+> --
+>
+> - Arnaldo
