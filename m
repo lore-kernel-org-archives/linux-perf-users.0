@@ -2,44 +2,45 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6069FC88C8E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB9BC87FE4
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235567AbjFLJz5 (ORCPT
+        id S235615AbjFLJz6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:55:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32864 "EHLO
+        Mon, 12 Jun 2023 05:55:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233509AbjFLJyp (ORCPT
+        with ESMTP id S232312AbjFLJyT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:45 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C7F24C21;
-        Mon, 12 Jun 2023 02:39:09 -0700 (PDT)
+        Mon, 12 Jun 2023 05:54:19 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476B449FD;
+        Mon, 12 Jun 2023 02:38:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=i6isNClAHvIMw2+OzbyxD8vRwSg4Nx0nqjzFU0CtSfM=; b=MxrQC5up24n4fUnoCZs9xhGydj
-        WPiaUY1fVHgP0zt4SgHjFl9bU1FTswRc5S3GTdIwagtnGxmM8g/mVm8h6tFslA0BkAIHCS0lsmsxf
-        mXYApR3w+00dThAGwRw5SSsaVtCEesX57GFzuJg1kHrKYomu8aDdoUGY1JDUE8JBHipCfa92Ifv/r
-        zd+VuHJHkrbYFig5uYcq1Hizv1HY2WFQ43Hgl/mswdSuUFAi9hjrs2LMVRGruHQWcuZ+8W1Fu1Q+7
-        OvClSB+9TLTaaO7D8ryJgXgnOZRmNV9glpRBLCdH+94Z9Be2B+yVwhI1KhGtwMx58ouJ9xNIuEfjs
-        v+1zP2IQ==;
+        bh=drbNuL55DYuL5wiscrlTnGAb/cO6SeGIhgtGTiA6PhQ=; b=VSEjB2saA1r44d+t/vL6tc5EoG
+        xB4CG9CBZHIyB4zdQuRxzQ1Q7TJzwADvt7PtjKTLVENXxebGGeYnzeA/aNRsjwtBQcBhdw4FFc4IK
+        0+1KXg+b3RLYPmQQvXAuMTENNKt/wXQirviZsGNYMJsc8yMv6AgbvSWbtKsnbfSzEoEJrRcd+lkte
+        4b7/355f2S3PVCwS3IueHM4tNu6LtFu8YsWTsDpFO14hwHxbY8on3IDwGHEQAM0/61U1d4CsGZOmx
+        CEkY9pA/PvCBwARY6IQ+Op5jTjaOmySf1HLi3LEoDC/B3NJHx/W2kOF67517FH7LjugtEYLajl9zJ
+        Q4ROTiZg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0u-002NHx-FF; Mon, 12 Jun 2023 09:39:04 +0000
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q8e0g-008kP0-13;
+        Mon, 12 Jun 2023 09:38:51 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5D94C30611B;
-        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BE76330313F;
+        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 0DD7E30A79080; Mon, 12 Jun 2023 11:38:49 +0200 (CEST)
-Message-ID: <20230612093540.931189374@infradead.org>
+        id 3207B30A70AC5; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093538.154498590@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:08:00 +0200
+Date:   Mon, 12 Jun 2023 11:07:23 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -67,7 +68,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 47/57] perf: Simplify perf_pmu_register()
+Subject: [PATCH v3 10/57] sched: Simplify sched_exec()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,104 +76,47 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Use guards to reduce gotos and simplify control flow.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   40 ++++++++++++++++------------------------
- 1 file changed, 16 insertions(+), 24 deletions(-)
+ kernel/sched/core.c |   21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11344,22 +11344,23 @@ void __perf_pmu_unregister(struct pmu *p
- 	free_pmu_context(pmu);
- }
- 
--int perf_pmu_register(struct pmu *pmu, const char *name, int type)
-+DEFINE_FREE(pmu_unregister, struct pmu *, if (_T) __perf_pmu_unregister(_T))
-+
-+int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5431,23 +5431,20 @@ unsigned int nr_iowait(void)
+ void sched_exec(void)
  {
- 	int cpu, ret, max = PERF_TYPE_MAX;
+ 	struct task_struct *p = current;
+-	unsigned long flags;
++	struct migration_arg arg;
+ 	int dest_cpu;
  
--	pmu->type = -1;
-+	_pmu->type = -1;
-+
-+	guard(mutex)(&pmus_lock);
-+	struct pmu *pmu __free(pmu_unregister) = _pmu;
- 
--	mutex_lock(&pmus_lock);
--	ret = -ENOMEM;
- 	pmu->pmu_disable_count = alloc_percpu(int);
- 	if (!pmu->pmu_disable_count)
+-	raw_spin_lock_irqsave(&p->pi_lock, flags);
+-	dest_cpu = p->sched_class->select_task_rq(p, task_cpu(p), WF_EXEC);
+-	if (dest_cpu == smp_processor_id())
 -		goto unlock;
-+		return -ENOMEM;
++	scoped_guard (raw_spinlock_irqsave, &p->pi_lock) {
++		dest_cpu = p->sched_class->select_task_rq(p, task_cpu(p), WF_EXEC);
++		if (dest_cpu == smp_processor_id())
++			return;
  
--	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n")) {
--		ret = -EINVAL;
--		goto free;
--	}
-+	if (WARN_ONCE(!name, "Can not register anonymous pmu.\n"))
-+		return -EINVAL;
+-	if (likely(cpu_active(dest_cpu))) {
+-		struct migration_arg arg = { p, dest_cpu };
++		if (unlikely(!cpu_active(dest_cpu)))
++			return;
  
- 	pmu->name = name;
- 
-@@ -11368,7 +11369,7 @@ int perf_pmu_register(struct pmu *pmu, c
- 
- 	ret = idr_alloc(&pmu_idr, pmu, max, 0, GFP_KERNEL);
- 	if (ret < 0)
--		goto free;
-+		return ret;
- 
- 	WARN_ON(type >= 0 && ret != type);
- 
-@@ -11377,13 +11378,12 @@ int perf_pmu_register(struct pmu *pmu, c
- 	if (pmu_bus_running && !pmu->dev) {
- 		ret = pmu_dev_alloc(pmu);
- 		if (ret)
--			goto free;
-+			return ret;
+-		raw_spin_unlock_irqrestore(&p->pi_lock, flags);
+-		stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
+-		return;
++		arg = (struct migration_arg){ p, dest_cpu };
  	}
- 
--	ret = -ENOMEM;
- 	pmu->cpu_pmu_context = alloc_percpu(struct perf_cpu_pmu_context);
- 	if (!pmu->cpu_pmu_context)
--		goto free;
-+		return -ENOMEM;
- 
- 	for_each_possible_cpu(cpu) {
- 		struct perf_cpu_pmu_context *cpc;
-@@ -11423,21 +11423,14 @@ int perf_pmu_register(struct pmu *pmu, c
- 
- 	list_add_rcu(&pmu->entry, &pmus);
- 	atomic_set(&pmu->exclusive_cnt, 0);
--	ret = 0;
 -unlock:
--	mutex_unlock(&pmus_lock);
--
--	return ret;
--
--free:
--	__perf_pmu_unregister(pmu);
--	goto unlock;
-+	no_free_ptr(pmu); // let it rip
-+	return 0;
+-	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
++	stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
  }
- EXPORT_SYMBOL_GPL(perf_pmu_register);
  
- void perf_pmu_unregister(struct pmu *pmu)
- {
--	mutex_lock(&pmus_lock);
-+	guard(mutex)(&pmus_lock);
- 	list_del_rcu(&pmu->entry);
- 
- 	/*
-@@ -11448,7 +11441,6 @@ void perf_pmu_unregister(struct pmu *pmu
- 	synchronize_rcu();
- 
- 	__perf_pmu_unregister(pmu);
--	mutex_unlock(&pmus_lock);
- }
- EXPORT_SYMBOL_GPL(perf_pmu_unregister);
- 
+ #endif
 
 
