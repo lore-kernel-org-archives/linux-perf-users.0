@@ -2,109 +2,161 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCFCC7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 18:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64E4C7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 18:55:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236989AbjFLSwe (ORCPT
+        id S235411AbjFLSza (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 14:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34474 "EHLO
+        Mon, 12 Jun 2023 14:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236905AbjFLSwd (ORCPT
+        with ESMTP id S229576AbjFLSz3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 14:52:33 -0400
+        Mon, 12 Jun 2023 14:55:29 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6265810C9;
-        Mon, 12 Jun 2023 11:52:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3EC318C;
+        Mon, 12 Jun 2023 11:55:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EB5B66202E;
-        Mon, 12 Jun 2023 18:52:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D205C433EF;
-        Mon, 12 Jun 2023 18:52:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3856060916;
+        Mon, 12 Jun 2023 18:55:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F8E6C433EF;
+        Mon, 12 Jun 2023 18:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686595951;
-        bh=MnmOvCi0xrEhhR2xjMfc6XM11ox3luiR0jJIXG6xoM4=;
+        s=k20201202; t=1686596127;
+        bh=ONXIez0vKmrr43qDMis8+baQaxtszu1bEx4H6HRpMpo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ltFffCaHICLCZv/KVjydDeGHwENlL+flObHfDBFaQpSTpb1vL1lbX7CIBoIdM26hn
-         sDRrPnJVmpW0PXmfF4mF70aDrKabOEdjAAwj5PaalYQgf3/rqphqhckP1z6omPHaAY
-         Juo19MkjGEpboQZq6nj7HztT8zmXJ7pCdArCLtdHdo4+HwiQYR3UX7pSlr0/vMZfMM
-         ltYj0wLgRKQ4u886Xuo2U0P4uEXUVn/Kr2jaCzqPhlwKZGBxcUnVDwgvt3fgAhQIXL
-         PH79XSzqwdecrmJQKBZ60tXln/ESye1HLtFwfora9NMz52eFkmOxKDrvPlwl4WGoeJ
-         /dWORCztVbbLA==
+        b=Zd8OUhNOmT1yyAs/JuUHTfp9vsDJicN2sz4c8xn1u8o7TIzggO6nP3VtDgTcyzeEm
+         judS8jM+NRwjwDTYHZjwCJBsLdwgoi7KP5KlGFpT2n0ExN2/3rdBncNqyIUq0rVFRq
+         Tw8GlCDPLKPQzDatI+tcXy3I8hM006qdT6qC3+X2/H5gx9qd1Q1slf6zCwOoHhruAz
+         LhrHvEPYIHf4NyX2xeXrwO3621Zjw0qUkBxVea3HEh/s8xYwB/pe4XrlK2W2PsRcPs
+         ZIcxm01BIK1MK2fOK8D9aXn4nWvzw+eZIo4PD4zd17D5I+qjBspJAApS0nHqabg4+h
+         U+LUP4GuDhUTA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C3B1540692; Mon, 12 Jun 2023 15:52:28 -0300 (-03)
-Date:   Mon, 12 Jun 2023 15:52:28 -0300
+        id 22FAA40692; Mon, 12 Jun 2023 15:55:25 -0300 (-03)
+Date:   Mon, 12 Jun 2023 15:55:25 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 1/5] lib subcmd: Avoid memory leak in exclude_cmds
-Message-ID: <ZIdpbMGu/V+VO8c+@kernel.org>
-References: <20230611233610.953456-1-irogers@google.com>
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf stat: Add missing newline in pr_err messages
+Message-ID: <ZIdqHeZOWCztKVe2@kernel.org>
+References: <20230610094441.221525-1-yangjihong1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230611233610.953456-1-irogers@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230610094441.221525-1-yangjihong1@huawei.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Sun, Jun 11, 2023 at 04:36:06PM -0700, Ian Rogers escreveu:
-> exclude_cmds will shorten the cmds names array, before doing so free
-> the removed entry.
-
-Thanks, applied.
-
-- Arnaldo
-
- 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/subcmd/help.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+Em Sat, Jun 10, 2023 at 09:44:41AM +0000, Yang Jihong escreveu:
+> The newline is missing for error messages in add_default_attributes()
 > 
-> diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
-> index bf02d62a3b2b..a66fb1a1a312 100644
-> --- a/tools/lib/subcmd/help.c
-> +++ b/tools/lib/subcmd/help.c
-> @@ -66,6 +66,7 @@ void exclude_cmds(struct cmdnames *cmds, struct cmdnames *excludes)
->  	while (ci < cmds->cnt && ei < excludes->cnt) {
->  		cmp = strcmp(cmds->names[ci]->name, excludes->names[ei]->name);
->  		if (cmp < 0) {
-> +			zfree(&cmds->names[cj]);
->  			cmds->names[cj++] = cmds->names[ci++];
->  		} else if (cmp == 0) {
->  			ci++;
-> @@ -75,9 +76,12 @@ void exclude_cmds(struct cmdnames *cmds, struct cmdnames *excludes)
+> Before:
+> 
+>   # perf stat --topdown
+>   Topdown requested but the topdown metric groups aren't present.
+>   (See perf list the metric groups have names like TopdownL1)#
+> 
+> After:
+> 
+>   # perf stat --topdown
+>   Topdown requested but the topdown metric groups aren't present.
+>   (See perf list the metric groups have names like TopdownL1)
+>   #
+> 
+> In addition, perf_stat_init_aggr_mode() and perf_stat_init_aggr_mode_file()
+> have the same problem, fixed by the way.
+
+Wait a bit till I push what I had to perf-tools-next, as it is not
+applying right now:
+
+⬢[acme@toolbox perf-tools-next]$ patch -p1 < ~/wb/1.patch
+patching file tools/perf/builtin-stat.c
+Hunk #1 succeeded at 1594 (offset 196 lines).
+Hunk #2 succeeded at 1910 (offset 260 lines).
+Hunk #3 FAILED at 1789.
+Hunk #4 succeeded at 2066 (offset 261 lines).
+Hunk #5 FAILED at 1818.
+Hunk #6 succeeded at 2104 (offset 261 lines).
+2 out of 6 hunks FAILED -- saving rejects to file tools/perf/builtin-stat.c.rej
+⬢[acme@toolbox perf-tools-next]$
+ 
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+> ---
+> 
+> Changes since v1:
+>  - Correct commit title to `pr_err`
+> 
+>  tools/perf/builtin-stat.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index b9ad32f21e57..78644ae538c4 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -1398,7 +1398,7 @@ static int perf_stat_init_aggr_mode(void)
+>  		stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.user_requested_cpus,
+>  							 get_id, /*data=*/NULL, needs_sort);
+>  		if (!stat_config.aggr_map) {
+> -			pr_err("cannot build %s map", aggr_mode__string[stat_config.aggr_mode]);
+> +			pr_err("cannot build %s map\n", aggr_mode__string[stat_config.aggr_mode]);
+>  			return -1;
 >  		}
+>  		stat_config.aggr_get_id = aggr_mode__get_id(stat_config.aggr_mode);
+> @@ -1650,7 +1650,7 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
+>  	stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.user_requested_cpus,
+>  						 get_id, env, needs_sort);
+>  	if (!stat_config.aggr_map) {
+> -		pr_err("cannot build %s map", aggr_mode__string[stat_config.aggr_mode]);
+> +		pr_err("cannot build %s map\n", aggr_mode__string[stat_config.aggr_mode]);
+>  		return -1;
 >  	}
+>  	stat_config.aggr_get_id = aggr_mode__get_id_file(stat_config.aggr_mode);
+> @@ -1789,7 +1789,7 @@ static int add_default_attributes(void)
+>  		 * on an architecture test for such a metric name.
+>  		 */
+>  		if (!metricgroup__has_metric("transaction")) {
+> -			pr_err("Missing transaction metrics");
+> +			pr_err("Missing transaction metrics\n");
+>  			return -1;
+>  		}
+>  		return metricgroup__parse_groups(evsel_list, "transaction",
+> @@ -1805,7 +1805,7 @@ static int add_default_attributes(void)
+>  		int smi;
 >  
-> -	while (ci < cmds->cnt)
-> +	while (ci < cmds->cnt) {
-> +		zfree(&cmds->names[cj]);
->  		cmds->names[cj++] = cmds->names[ci++];
-> -
-> +	}
-> +	for (ci = cj; ci < cmds->cnt; ci++)
-> +		zfree(&cmds->names[ci]);
->  	cmds->cnt = cj;
->  }
+>  		if (sysfs__read_int(FREEZE_ON_SMI_PATH, &smi) < 0) {
+> -			pr_err("freeze_on_smi is not supported.");
+> +			pr_err("freeze_on_smi is not supported.\n");
+>  			return -1;
+>  		}
 >  
+> @@ -1818,7 +1818,7 @@ static int add_default_attributes(void)
+>  		}
+>  
+>  		if (!metricgroup__has_metric("smi")) {
+> -			pr_err("Missing smi metrics");
+> +			pr_err("Missing smi metrics\n");
+>  			return -1;
+>  		}
+>  
+> @@ -1843,7 +1843,7 @@ static int add_default_attributes(void)
+>  
+>  		if (!max_level) {
+>  			pr_err("Topdown requested but the topdown metric groups aren't present.\n"
+> -				"(See perf list the metric groups have names like TopdownL1)");
+> +				"(See perf list the metric groups have names like TopdownL1)\n");
+>  			return -1;
+>  		}
+>  		if (stat_config.topdown_level > max_level) {
 > -- 
-> 2.41.0.162.gfafddb0af9-goog
+> 2.30.GIT
 > 
 
 -- 
