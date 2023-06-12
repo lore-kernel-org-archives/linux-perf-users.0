@@ -2,165 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4EDC88CB7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 17:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E10AC88CB2
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 17:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237147AbjFLRL4 (ORCPT
+        id S235701AbjFLRXs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 13:11:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55202 "EHLO
+        Mon, 12 Jun 2023 13:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233967AbjFLRLz (ORCPT
+        with ESMTP id S233399AbjFLRXq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 13:11:55 -0400
-Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55EBCE7E
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 10:11:54 -0700 (PDT)
-Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-1b3b7d2797aso17616455ad.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 10:11:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686589914; x=1689181914;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w/I8oU5lBx7O0AVCpvbGtKKitom6tdJ7McWrPGypDC4=;
-        b=wVF0xEYGM/V+zCU80xvyq4qwV0yj1hOdLFRqOeBG6rNq1mZS9axHGYBLeBI0WMdRIv
-         hkzXG+DQqyxUG3ZNJwhk4nvHa7dTDdVmUbtUbv0KonjLnpMhwIR++Zn+JYGYF4qpACy0
-         TBguC9jF/7RXSTOZFdVTFwDFoUFeZKO/TxKQvxwyOSfFBR1hlTDCsLQF3gJGrQKh0dM1
-         dnbBs1N9sWbWV7gnyAH3EvCgPH/tTgIbVrgHLUeG6DI/qTktPkH3U4iZQSPo6hQIH+Hn
-         C7b43aUeXSO/Vmzkm31QiJeIjfT3Lil1qVykh5WcPDzbPCKU8j1R2gFpw17raF0Nay2u
-         ptyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686589914; x=1689181914;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=w/I8oU5lBx7O0AVCpvbGtKKitom6tdJ7McWrPGypDC4=;
-        b=jc9rqtw21Mob/K7Dahe2gmhX72WL6YTjT+pfxou+p4u0D4ZmofKo8FVxTe01KGOdgu
-         yXEckgH5e4KFsVgkcGWynnfjaQ8PNVaP9JF2IiHTTnPMxGKECkLljp8MfYq9+EOHc7Nn
-         v+dT0X0rplUtfy28LF/QnHL4BhPE5nm6D9RUUMYCfMM1pmmLtaHV3qb6k4s9jlwqZtSA
-         sO6lagLzTewHBVBXddlm79VKGw7p9w81XTVKeihavN2MfTgcvzTLlKrBOad6qbsGDpaS
-         VxMxHwCJBrSLeuG6o+7jgqSzCbYuC+kyj9OCnK9L7UWvQy/uqaq9fBnA/V7Shzd3hrap
-         4kFQ==
-X-Gm-Message-State: AC+VfDwHueNI+YdYiPd6b9gIxgkQCsy30Kce5WEyft3o0yqB3qp/KINP
-        NvdRbsiwkbmyCW1GklsorZZIrbHQNOg=
-X-Google-Smtp-Source: ACHHUZ5v1c+CqyBwYivhK+DSqau5kQVmVjEZH0nAYmDaNR5inKzg30hD4xw/4ZnGEEzgZLpMXuBMN4uPSsY=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:8d81:b0:1b3:95a9:3fc3 with SMTP id
- v1-20020a1709028d8100b001b395a93fc3mr1303122plo.10.1686589913639; Mon, 12 Jun
- 2023 10:11:53 -0700 (PDT)
-Date:   Mon, 12 Jun 2023 10:11:51 -0700
-In-Reply-To: <CAHk-=wh6JEk7wYECcMdbXHf5ST8PAkOyUXhE8x2kqT6to+Gn9Q@mail.gmail.com>
-Mime-Version: 1.0
-References: <20230612090713.652690195@infradead.org> <20230612093541.598260416@infradead.org>
- <CAHk-=wh6JEk7wYECcMdbXHf5ST8PAkOyUXhE8x2kqT6to+Gn9Q@mail.gmail.com>
-Message-ID: <ZIdR18xG1jy8WdEp@google.com>
-Subject: Re: [PATCH v3 56/57] perf: Simplify perf_pmu_output_stop()
-From:   Sean Christopherson <seanjc@google.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>, keescook@chromium.org,
-        gregkh@linuxfoundation.org, pbonzini@redhat.com,
-        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
-        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
-        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
-        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
-        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org,
-        frederic@kernel.org, quic_neeraju@quicinc.com,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
-        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
-        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
-        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
-        luc.vanoostenryck@gmail.com
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 12 Jun 2023 13:23:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC828B2;
+        Mon, 12 Jun 2023 10:23:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 721F862905;
+        Mon, 12 Jun 2023 17:23:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F868C433A1;
+        Mon, 12 Jun 2023 17:23:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686590624;
+        bh=num+HBDgMxiuiJVhhkLVPXPpTBWWc1dgJNLDNOGS0Fk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uE12zDMfqRoci4thscAdp3EhSwgKJovJnYvOw3krcV88NGXiZRfF9rOltrCAswAXN
+         TfhY5m2ULY71VP3EtGag4nbFEWKPxzFyMuPG3QaaBg/FgP+axXyraqmxKkRVEr1jrU
+         F66fBJdtR7u5XF+bUxf0nc+uNB6UiSdxpS8WPdPSdUngO54Nwdyul+O0NltvPBgBM8
+         TvC8+1fybwIMNUxG4m6semSiG+yDfRzznvXhkjSxhCVJnuQm8vMTm8aA0J1tYNM/j8
+         U+YEG8QI3Byfa1wCkMeiCHNt8OmLMklpSKeGCgZAzvJPIay/RL6ThyyfZw0zP4XgJK
+         1ODSUu14Pl9WA==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D1BF540692; Mon, 12 Jun 2023 14:23:41 -0300 (-03)
+Date:   Mon, 12 Jun 2023 14:23:41 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        German Gomez <german.gomez@arm.com>,
+        Ali Saidi <alisaidi@amazon.com>,
+        Jing Zhang <renyu.zj@linux.alibaba.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        ye xingchen <ye.xingchen@zte.com.cn>,
+        Liam Howlett <liam.howlett@oracle.com>,
+        Dmitrii Dolgov <9erthalion6@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        K Prateek Nayak <kprateek.nayak@amd.com>,
+        Changbin Du <changbin.du@huawei.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        Yuan Can <yuancan@huawei.com>,
+        Brian Robbins <brianrob@linux.microsoft.com>,
+        liuwenyu <liuwenyu7@huawei.com>,
+        Ivan Babrou <ivan@cloudflare.com>,
+        Fangrui Song <maskray@google.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org
+Subject: Re: [PATCH v2 26/26] perf hist: Fix srcline memory leak
+Message-ID: <ZIdUncwTt2fBzxKh@kernel.org>
+References: <20230608232823.4027869-1-irogers@google.com>
+ <20230608232823.4027869-27-irogers@google.com>
+ <ZIcoJytUEz4UgQYR@kernel.org>
+ <ZIcorZVu1z8jaPL/@kernel.org>
+ <CAP-5=fXby-Yk3U4LCQeYkGU_E22kd92=dCnfb7DkN5iPYvCDGA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXby-Yk3U4LCQeYkGU_E22kd92=dCnfb7DkN5iPYvCDGA@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023, Linus Torvalds wrote:
-> This patch looks completely broken to me.
->=20
-> You now do
->=20
->                 if (err =3D=3D -EAGAIN)
->                         goto restart;
->=20
-> *within* the RCU-guarded section, and the "goto restart" will guard it ag=
-ain.
-
-What if we require that all guarded sections have explicit scoping?  E.g. d=
-rop
-the current version of guard() and rename scoped_guard() =3D> guard().  And=
- then
-figure out macro magic to guard an entire function?  E.g. something like
-
-  static void perf_pmu_output_stop(struct perf_event *event) fn_guard(rcu)
-  {
-	...
-  }
-
-or just "guard(rcu)" if possible.  IIUC, function scopes like that will be =
-possible
-once -Wdeclaration-after-statement goes away.
-
-Bugs aside, IMO guards that are buried in the middle of a function and impl=
-icitly
-scoped to the function are all too easy to overlook.  Requiring explicit sc=
-oping
-would make bugs like this easier to spot since the goto would jump out of s=
-cope
-(and I assume prematurely release the resource/lock?).  As a bonus, annotat=
-ing
-the function itself would also serve as documentation.
-
-The only downside is that the code for function-scoped locks that are acqui=
-red
-partway through the function would be more verbose and/or cumbersome to wri=
-te,
-but that can be mitigated to some extent, e.g. by moving the locked portion=
- to a
-separate helper.
-
-> On Mon, Jun 12, 2023 at 2:39=E2=80=AFAM Peter Zijlstra <peterz@infradead.=
-org> wrote:
+Em Mon, Jun 12, 2023 at 07:46:14AM -0700, Ian Rogers escreveu:
+> On Mon, Jun 12, 2023 at 7:16 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -7977,7 +7977,8 @@ static void perf_pmu_output_stop(struct
-> >         int err, cpu;
+> > Em Mon, Jun 12, 2023 at 11:13:59AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > Em Thu, Jun 08, 2023 at 04:28:23PM -0700, Ian Rogers escreveu:
+> > > > srcline isn't freed if it is SRCLINE_UNKNOWN. Avoid strduping in this
+> > > > case as such strdups are redundant and leak memory.
+> > >
+> > > The patch is ok as its what the rest of the code is doing, i.e. strcmp()
+> > > to check if a srcline is the unknown one, but how about the following
+> > > patch on top of yours?
 > >
-> >  restart:
-> > -       rcu_read_lock();
-> > +       /* cannot have a label in front of a decl */;
-> > +       guard(rcu)();
-> >         list_for_each_entry_rcu(iter, &event->rb->event_list, rb_entry)=
- {
-> >                 /*
-> >                  * For per-CPU events, we need to make sure that neithe=
-r they
-> > @@ -7993,12 +7994,9 @@ static void perf_pmu_output_stop(struct
-> >                         continue;
-> >
-> >                 err =3D cpu_function_call(cpu, __perf_pmu_output_stop, =
-event);
-> > -               if (err =3D=3D -EAGAIN) {
-> > -                       rcu_read_unlock();
-> > +               if (err =3D=3D -EAGAIN)
-> >                         goto restart;
-> > -               }
-> >         }
-> > -       rcu_read_unlock();
-> >  }
+> > [acme@quaco perf-tools-next]$ strings ~/bin/perf | grep '??:0'
+> > ??:0
+> > SRCLINE_UNKNOWN ((char *) "??:0")
+> > [acme@quaco perf-tools-next]$
+> 
+> Agreed, the strcmps make me nervous as they won't distinguish heap
+> from a global meaning we could end up with things like pointers to
+> freed memory. The comparison with the global is always going to be
+> same imo.
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+
+Thanks, applied and added your Acked-by.
+
+- Arnaldo
