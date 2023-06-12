@@ -2,180 +2,323 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B3AC88CB2
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 17:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25F3C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 17:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235721AbjFLRoY (ORCPT
+        id S231252AbjFLR75 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 13:44:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50632 "EHLO
+        Mon, 12 Jun 2023 13:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236160AbjFLRoT (ORCPT
+        with ESMTP id S237044AbjFLR7x (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 13:44:19 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCBEF192
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 10:44:17 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4f61d79b0f2so5686340e87.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 10:44:17 -0700 (PDT)
+        Mon, 12 Jun 2023 13:59:53 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6421E4A
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 10:59:46 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3f9d619103dso27391cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 10:59:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1686591856; x=1689183856;
+        d=google.com; s=20221208; t=1686592786; x=1689184786;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pFrxTaZ+omQeBxjp+PSzN1QlslHiKSQMtm5xmMsMGf8=;
-        b=gzsg1gE+12Xn34z46ONugADYicVTX4jbjp1lFJSI5DtPKn/6k/rFPer/mj045wqlI5
-         Pv1+ip9F2rj9LU/6AvmfdGoLN4JzH2gUBcG7O67iIQCeLwhZiEx6e175yx0LvzvMkKxp
-         bRulPXkxeLPi6UvSbNP9WiJ7AVqcJ92sa/sN8=
+        bh=ILFhlbqLVYCkvMkd83ZOGAmp4d8jQSiKbMxbQnZD5rA=;
+        b=tdMkRizyfMWaXZvmVYCuSYSVv7+zDgFuO1ZU7MleR5M8JC17ke+8ydQweTOJ1zbPmU
+         1NRV3R/B5c1A5vEpe019yI1Hc+7oFSldlRgyqJpd3F132cvciHFG2l8UwYgKZYuJKvlx
+         YLoDCZYWVSNgVtxwzCDfG7x743wTlnoQxEIi5KpiXCsracw//U6gR41Na4ea5ELqOfOX
+         NQVm64FoeOuhMYYT++BMj00g7bMr9GpiTxoVEEi6z/EOuKMc1ccTRoQl8teYzYGVoaos
+         bgA7yvaPTLi+lSenAmx8lDOEaX2NQHRA9kavD5yhgIVPwt6eAfhH0BMg3KrcxX+0gD2E
+         +2cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686591856; x=1689183856;
+        d=1e100.net; s=20221208; t=1686592786; x=1689184786;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pFrxTaZ+omQeBxjp+PSzN1QlslHiKSQMtm5xmMsMGf8=;
-        b=BtZ4/SUNFBaC3ULW7kAM3R0L9bInkhfgZyVReT3vmLpZHIMW4xi4wdBbGvAuzLouK6
-         aePPeb6jdC/OS2T5Odu+yNmgF7RT5Y9ABuvDzuSYq+7a4JvctjwA2r9HTVF2YeqQ6VPT
-         +Aiw/Sfc/7dKIKKfrxdNb5PKUGY/H8TfBaNk6E+GQrw3mydZUYmeIDv37TXb0xwZfVFu
-         2oudn44qdJPnwCn9/ZszJDs2MQFa48iq1ORyqTSSfoRWbEG1O6vWsLVULVXBUdQ/sgvk
-         wF5WV0VzIUWaP6RrxkKGvA2k3RwJ0CWRSXoyLxLKyejego3H6Dus6fL4bkkLB4t+Sh9S
-         SJNA==
-X-Gm-Message-State: AC+VfDw1hM0pX/r6NENNM+afUigRFD8n2VOihDZS+caT6Tx+1bu/SVCR
-        rF1dCXxHXKWyJZ0xlm2fjukETSouoq7QNNeahEP73r84
-X-Google-Smtp-Source: ACHHUZ7NPmAovGBtj9nbpconsRQow8LC9G/iecWODNBnUA6Ur31EYFFs1nqnfR4g/lXkGcBIp1fRgw==
-X-Received: by 2002:a19:4316:0:b0:4f3:ab4b:4d99 with SMTP id q22-20020a194316000000b004f3ab4b4d99mr4041599lfa.19.1686591856176;
-        Mon, 12 Jun 2023 10:44:16 -0700 (PDT)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com. [209.85.167.45])
-        by smtp.gmail.com with ESMTPSA id o14-20020a056512050e00b004f517c21ef0sm1509944lfb.82.2023.06.12.10.44.15
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jun 2023 10:44:16 -0700 (PDT)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-4f611ac39c5so5684697e87.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 10:44:15 -0700 (PDT)
-X-Received: by 2002:a05:6402:399:b0:516:afe9:f6f9 with SMTP id
- o25-20020a056402039900b00516afe9f6f9mr5415434edv.35.1686591835245; Mon, 12
- Jun 2023 10:43:55 -0700 (PDT)
+        bh=ILFhlbqLVYCkvMkd83ZOGAmp4d8jQSiKbMxbQnZD5rA=;
+        b=e/rbYkpCRr/8jmQhlX3ICCdlFX+jSGo8xv9TgYAJtxSi4Sb+Z/qPKD3vCo5cYASUuY
+         UnsBAmCMz3jlWEwe7tyj//fdb18tWfcU1SEA8qq6b4YiV5JxyMnI2/hlfFmJDDN6wLib
+         /10SclMox54itlz2NIHy2OjkWQMVpzri4nfltUcKUS1AQ+4RniZKzE1QQIepoNg2Qvnk
+         W026FeUYaLK4HsWoXQcXkgVYCz+OZoc6X9ikSVaXuVh+92O6bdUghN+yFJQAgvkbjbLM
+         Z7vHlkqUF8RDRcgXbPnLXtKFBlwJzPRnqLNMBWFpCe3/GzgCaGPIujZyub/03DPsHcfk
+         VdDg==
+X-Gm-Message-State: AC+VfDz8E+9jw425MeEto850Iarc9FrXmyIChpKuqDmFfG9qnZ+UmY4t
+        Hs6jmkmeYrDaQp7R6SDTuuTsGF0azl5hy6GsIGd0qQ==
+X-Google-Smtp-Source: ACHHUZ4bUM8GRJd5hVVOzLx255CUquI4ffTrwuQNTvagqC6syOQfcoCVYYTHioGEnalkJNjwbHb4niB5dw4dIvZm8q4=
+X-Received: by 2002:a05:622a:1187:b0:3f9:f877:1129 with SMTP id
+ m7-20020a05622a118700b003f9f8771129mr220710qtk.29.1686592785710; Mon, 12 Jun
+ 2023 10:59:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230612090713.652690195@infradead.org> <20230612093541.598260416@infradead.org>
- <CAHk-=wh6JEk7wYECcMdbXHf5ST8PAkOyUXhE8x2kqT6to+Gn9Q@mail.gmail.com> <ZIdR18xG1jy8WdEp@google.com>
-In-Reply-To: <ZIdR18xG1jy8WdEp@google.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 12 Jun 2023 10:43:38 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjGypJwDLvTVbYENicw85n0gbxO7JXjiv9_a+95Br+UTg@mail.gmail.com>
-Message-ID: <CAHk-=wjGypJwDLvTVbYENicw85n0gbxO7JXjiv9_a+95Br+UTg@mail.gmail.com>
-Subject: Re: [PATCH v3 56/57] perf: Simplify perf_pmu_output_stop()
-To:     Sean Christopherson <seanjc@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, keescook@chromium.org,
-        gregkh@linuxfoundation.org, pbonzini@redhat.com,
-        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
-        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
-        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
-        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
-        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org,
-        frederic@kernel.org, quic_neeraju@quicinc.com,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
-        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
-        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
-        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
-        luc.vanoostenryck@gmail.com
+References: <20230612150424.198914-1-james.clark@arm.com> <CAP-5=fWu0yCSCB__prps2g=JRDScbhWuimPJHUsU0S_c0ywDhg@mail.gmail.com>
+ <ZIdWBl+MZYKI83Mb@kernel.org> <ZIdYkRHj8tkaxgED@kernel.org>
+In-Reply-To: <ZIdYkRHj8tkaxgED@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Mon, 12 Jun 2023 10:59:34 -0700
+Message-ID: <CAP-5=fWpBSG5kJygrYQ7SSN7iRWodV+CUpME84BkmKpLJvmjeQ@mail.gmail.com>
+Subject: Re: [PATCH] perf map: Fix refcount errors on Arm with -DREFCNT_CHECKING=1
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 10:12=E2=80=AFAM Sean Christopherson <seanjc@google=
-.com> wrote:
+On Mon, Jun 12, 2023 at 10:40=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> What if we require that all guarded sections have explicit scoping?  E.g.=
- drop
-> the current version of guard() and rename scoped_guard() =3D> guard().  A=
-nd then
-> figure out macro magic to guard an entire function?
+> Em Mon, Jun 12, 2023 at 02:29:42PM -0300, Arnaldo Carvalho de Melo escrev=
+eu:
+> > Em Mon, Jun 12, 2023 at 09:32:30AM -0700, Ian Rogers escreveu:
+> > > On Mon, Jun 12, 2023 at 8:05=E2=80=AFAM James Clark <james.clark@arm.=
+com> wrote:
+> > > >
+> > > > When quitting after running a perf report, the refcount checker fin=
+ds
+> > > > some double frees. The issue is that map__put() is called on a func=
+tion
+> > > > argument so it removes the refcount wrapper that someone else was u=
+sing.
+> > > >
+> > > > Fix it by only calling map__put() on a reference that is owned by t=
+his
+> > > > function.
+> > > >
+> > > > Signed-off-by: James Clark <james.clark@arm.com>
+> > >
+> > > Acked-by: Ian Rogers <irogers@google.com>
+> > >
+> > > > ---
+> > > >  tools/perf/util/symbol-elf.c | 9 +++++----
+> > > >  tools/perf/util/symbol.c     | 9 +++++----
+> > > >  2 files changed, 10 insertions(+), 8 deletions(-)
+> > > >
+> > > > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-=
+elf.c
+> > > > index 63882a4db5c7..ec0d7810bbb0 100644
+> > > > --- a/tools/perf/util/symbol-elf.c
+> > > > +++ b/tools/perf/util/symbol-elf.c
+> > > > @@ -1365,6 +1365,7 @@ static int dso__process_kernel_symbol(struct =
+dso *dso, struct map *map,
+> > > >         struct dso *curr_dso =3D *curr_dsop;
+> > > >         struct map *curr_map;
+> > > >         char dso_name[PATH_MAX];
+> > > > +       struct map *map_ref;
+> > >
+> > > nit: can we narrow the scope of this by moving it to the scope where =
+it is used.
+> >
+> > Which is what you did in a patch I already processed, its only in
+> > tmp.perf-tools-next as I was going thru the other patches, but this one
+> > is there already.
+> >
+> > I'm checking the tools/perf/util/symbol.c part.
+>
+> I narrowed the scope and removed the symbol-elf.c part, end result:
+>
+> From 6fd34445b8c94aa7f519fb0b1ed45c7ef9f6cc4e Mon Sep 17 00:00:00 2001
+> From: James Clark <james.clark@arm.com>
+> Date: Mon, 12 Jun 2023 16:04:24 +0100
+> Subject: [PATCH 1/1] perf map: Fix double 'struct map' reference free fou=
+nd
+>  with -DREFCNT_CHECKING=3D1
+>
+> When quitting after running a 'perf report', the refcount checker finds
+> some double frees. The issue is that map__put() is called on a function
+> argument so it removes the refcount wrapper that someone else was using.
+>
+> Fix it by only calling map__put() on a reference that is owned by this
+> function.
+>
+> Committer notes:
+>
+> Narrowed the map_ref scope as suggested by Ian, removed the symbol-elf
+> part as it was already fixed by another patch, from Ian.
+>
+> Signed-off-by: James Clark <james.clark@arm.com>
+> Acked-by: Ian Rogers <irogers@google.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Link: https://lore.kernel.org/r/20230612150424.198914-1-james.clark@arm.c=
+om
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Hmm. I didn't love the excessive scoping, but most of the cases I was
-thinking about were for the freeing part, not the locking part.
+Thanks Arnaldo! I think we should be able to automate finding these
+issues with the warn_unused_result function attribute:
 
-I agree that explicit scoping might be a good idea for locks as a
-rule, but that "entire function" case _is_ a special case, and I don't
-see how to do it sanely with a scoping guard.
+```
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index 66a87b3d9965..2c77c28ff000 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -172,7 +172,7 @@ struct map *map__new2(u64 start, struct dso *dso);
+void map__delete(struct map *map);
+struct map *map__clone(struct map *map);
 
-Unless you accept ugly syntax like
+-static inline struct map *map__get(struct map *map)
++__attribute__ ((warn_unused_result)) static inline struct map
+*map__get(struct map *map)
+{
+       struct map *result;
 
-    int fn(..)
-    { scoped_guard(rcu)() {
-         ...
-    }}
+diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
+index 83144e0645ed..5b74465316dd 100644
+--- a/tools/perf/util/maps.h
++++ b/tools/perf/util/maps.h
+@@ -60,7 +60,7 @@ struct maps *maps__new(struct machine *machine);
+bool maps__empty(struct maps *maps);
+int maps__clone(struct thread *thread, struct maps *parent);
 
-which is just a violation of our usual scoping indentation rules.
+-struct maps *maps__get(struct maps *maps);
++struct maps *maps__get(struct maps *maps) __attribute__ ((warn_unused_resu=
+lt));
+void maps__put(struct maps *maps);
 
-Of course, at that point, the "scoped" part doesn't actually buy us
-anything either, so you'd probably just be better off listing all the
-guarding locks, and make it be
+static inline void __maps__zput(struct maps **map)
+diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
+index 8c0731c6cbb7..04e1878b9551 100644
+--- a/tools/perf/util/namespaces.h
++++ b/tools/perf/util/namespaces.h
+@@ -50,7 +50,7 @@ int nsinfo__init(struct nsinfo *nsi);
+struct nsinfo *nsinfo__new(pid_t pid);
+struct nsinfo *nsinfo__copy(const struct nsinfo *nsi);
 
-    int fn(..)
-    { guard(rcu)(); guard(mutex)(&mymutex); {
-         ...
-    }}
+-struct nsinfo *nsinfo__get(struct nsinfo *nsi);
++struct nsinfo *nsinfo__get(struct nsinfo *nsi) __attribute__
+((warn_unused_result));
+void nsinfo__put(struct nsinfo *nsi);
 
-or whatever.
+bool nsinfo__need_setns(const struct nsinfo *nsi);
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 9068a21ce0fa..c6228252b093 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -71,7 +71,7 @@ struct thread *thread__new(pid_t pid, pid_t tid);
+irogers@irogers-glaptop0:~/kernel.org$ git diff
+diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
+index 66a87b3d9965..2c77c28ff000 100644
+--- a/tools/perf/util/map.h
++++ b/tools/perf/util/map.h
+@@ -172,7 +172,7 @@ struct map *map__new2(u64 start, struct dso *dso);
+void map__delete(struct map *map);
+struct map *map__clone(struct map *map);
 
-Ugly, ugly.
+-static inline struct map *map__get(struct map *map)
++__attribute__ ((warn_unused_result)) static inline struct map
+*map__get(struct map *map)
+{
+       struct map *result;
 
-End result: I think the non-explicitly scoped syntax is pretty much
-required for sane use. The scoped version just causes too much
-indentation (or forces us to have the above kind of special "we don't
-indent this" rules).
+diff --git a/tools/perf/util/maps.h b/tools/perf/util/maps.h
+index 83144e0645ed..5b74465316dd 100644
+--- a/tools/perf/util/maps.h
++++ b/tools/perf/util/maps.h
+@@ -60,7 +60,7 @@ struct maps *maps__new(struct machine *machine);
+bool maps__empty(struct maps *maps);
+int maps__clone(struct thread *thread, struct maps *parent);
 
-> IIUC, function scopes like that will be possible once
-> -Wdeclaration-after-statement goes away.
+-struct maps *maps__get(struct maps *maps);
++struct maps *maps__get(struct maps *maps) __attribute__ ((warn_unused_resu=
+lt));
+void maps__put(struct maps *maps);
 
-Well, "-Wdeclaration-after-statement" already went away early in
-Peter's series, because without that you can't sanely do the normal
-"__free()" cleanup thng.
+static inline void __maps__zput(struct maps **map)
+diff --git a/tools/perf/util/namespaces.h b/tools/perf/util/namespaces.h
+index 8c0731c6cbb7..04e1878b9551 100644
+--- a/tools/perf/util/namespaces.h
++++ b/tools/perf/util/namespaces.h
+@@ -50,7 +50,7 @@ int nsinfo__init(struct nsinfo *nsi);
+struct nsinfo *nsinfo__new(pid_t pid);
+struct nsinfo *nsinfo__copy(const struct nsinfo *nsi);
 
-But no, it doesn't help the C syntax case.
+-struct nsinfo *nsinfo__get(struct nsinfo *nsi);
++struct nsinfo *nsinfo__get(struct nsinfo *nsi) __attribute__
+((warn_unused_result));
+void nsinfo__put(struct nsinfo *nsi);
 
-If you were to wrap a whole function with a macro, you need to do some
-rather ugly things. They are ugly things that we already do: see our
-whole "SYSCALL_DEFINEx()" set of macros, so it's not *impossible*, but
-it's not possible with normal C syntax (and the normal C
-preprocessor).
+bool nsinfo__need_setns(const struct nsinfo *nsi);
+diff --git a/tools/perf/util/thread.h b/tools/perf/util/thread.h
+index 9068a21ce0fa..c6228252b093 100644
+--- a/tools/perf/util/thread.h
++++ b/tools/perf/util/thread.h
+@@ -71,7 +71,7 @@ struct thread *thread__new(pid_t pid, pid_t tid);
+int thread__init_maps(struct thread *thread, struct machine *machine);
+void thread__delete(struct thread *thread);
 
-Of course, one way to do the "whole function scope" is to just do it
-in the caller, and not using the cleanup attribute at all.
+-struct thread *thread__get(struct thread *thread);
++struct thread *thread__get(struct thread *thread) __attribute__
+((warn_unused_result));
+void thread__put(struct thread *thread);
 
-IOW, we could have things like
+static inline void __thread__zput(struct thread **thread)
+```
 
-   #define WRAP(a,b,c) \
-        ({ __typeof__(b) __ret; a; __ret =3D (b); c; __ret; })
+This shows the problem like:
+```
+util/symbol.c: In function =E2=80=98dso__load_kcore=E2=80=99:
+util/symbol.c:1467:25: error: ignoring return value of =E2=80=98map__get=E2=
+=80=99
+declared with attribute =E2=80=98warn_unused_result=E2=80=99 [-Werror=3Dunu=
+sed-result]
+1467 |                         map__get(map);
+     |
+```
 
-and then you can do things like
+I double checked and the symbol.c issue was the only one in my build
+environment. Using warn_unused_result should be done via compiler.h
+which is a bit more than the patch above.
 
-   #define guard_fn_mutex(mutex, fn) \
-        WRAP(mutex_lock(mutex), fn, mutex_unlock(mutex))
+Thanks,
+Ian
 
-or
-
-   #define rcu_read_action(x) WRAP(rcu_read_lock(), x, rcu_read_unlock())
-
-and now you can easily guard the call-site (or any simple expression
-that doesn't include any non-local control flow). Nothing new and
-fancy required.
-
-But when you don't want to do the wrapping in the caller, you do want
-to have a non-scoping guard at the top of the function, I suspect.
-
-                 Linus
+> ---
+>  tools/perf/util/symbol.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 6b9c55784b56a4be..d275d3bef7d54a40 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1458,16 +1458,18 @@ static int dso__load_kcore(struct dso *dso, struc=
+t map *map,
+>                 list_del_init(&new_node->node);
+>
+>                 if (RC_CHK_ACCESS(new_map) =3D=3D RC_CHK_ACCESS(replaceme=
+nt_map)) {
+> +                       struct map *map_ref;
+> +
+>                         map__set_start(map, map__start(new_map));
+>                         map__set_end(map, map__end(new_map));
+>                         map__set_pgoff(map, map__pgoff(new_map));
+>                         map__set_map_ip(map, map__map_ip_ptr(new_map));
+>                         map__set_unmap_ip(map, map__unmap_ip_ptr(new_map)=
+);
+>                         /* Ensure maps are correctly ordered */
+> -                       map__get(map);
+> -                       maps__remove(kmaps, map);
+> -                       err =3D maps__insert(kmaps, map);
+> -                       map__put(map);
+> +                       map_ref =3D map__get(map);
+> +                       maps__remove(kmaps, map_ref);
+> +                       err =3D maps__insert(kmaps, map_ref);
+> +                       map__put(map_ref);
+>                         map__put(new_map);
+>                         if (err)
+>                                 goto out_err;
+> --
+> 2.37.1
+>
