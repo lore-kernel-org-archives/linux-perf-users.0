@@ -2,45 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A27CC87FDC
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9683C7EE43
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235401AbjFLJzq (ORCPT
+        id S235392AbjFLJzp (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:55:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33516 "EHLO
+        Mon, 12 Jun 2023 05:55:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231797AbjFLJy3 (ORCPT
+        with ESMTP id S231655AbjFLJy2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:29 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F435FFB;
+        Mon, 12 Jun 2023 05:54:28 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E505FF9;
         Mon, 12 Jun 2023 02:39:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Subject:Cc:To:From:Date:Message-ID:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=B0zTaY9KKPrZ1tK1qkRJnGUNtZfdXptR/HzHjs1+iS4=; b=XQZ4FGxflXtqrO54lLAdhO230P
-        0eX2jASHQqZyaZNrOmMoEAP3MzmJ1PuCQQZsDzJJBywGmqEPEQHqvhlhW6xpMkYIB7cscPsZnMTPl
-        wda/YRaaOhoccHxY9GPvcZrmpGt4nCDyqnVSaswXky246eD7cW64gEprJmzd0jxHJVUT0l9r//0Pk
-        si1QkPjlyyiXYTzocQuwfczKtYj0dLOHYdp/NLE/KEPazV26d+77/ruWNTca7LUqUMS4HC8k/lh1H
-        dX6E3O3gMC+cI3mUHbifWMBmIlu4IhoS0cvWd9D1DJFJDkJUmucMJXsZhbMU02ynkCiQnt/FdIvcn
-        A8w/NYnw==;
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=TyEqnNyUrGcTyQQqxTQ7FjrgTS2UCJUv6R0g2vbKlfY=; b=rHHDliBQ2Qfw4zPxTfBy8QXX52
+        G14E6gPiy22JcNYH/Q5ary0q0YX91rEsCLNUeF2er4snB00oi8Lc4f2MMJZUwwWFKvHVk7GQuK7Zl
+        3ahxPQrajWWxBclXKLGynYx8r2sGJlK3yDh9HWCO7kIqSmTRqHGJsywLA/mKXJqegwQvkdaMSNva2
+        uJVrXhoSZLISp+eyXn3YfK2inTs+lOPkrCnxRe7XnCJ3h8JknStPhu9xVH8GzIG76/K6R5JUG74zu
+        XsZmZNsMpz5Ycxrzfr+Z6QJ1Wis1vJw2il0uWR+vhha6EcQ+HD/j4wtxTmR7enXrzcACCcjOxcx3G
+        mOVdO+3w==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0f-008kOl-0u;
-        Mon, 12 Jun 2023 09:38:49 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q8e0m-002NBu-ET; Mon, 12 Jun 2023 09:38:56 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 22C4F30058D;
-        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3B8233032D0;
+        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id E7CDA30A20814; Mon, 12 Jun 2023 11:38:47 +0200 (CEST)
-Message-ID: <20230612090713.652690195@infradead.org>
+        id C402E30A77B6D; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093540.108251860@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:13 +0200
+Date:   Mon, 12 Jun 2023 11:07:49 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -68,64 +67,76 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 00/57] Scope-based Resource Management
+Subject: [PATCH v3 36/57] perf: Simplify find_get_pmu_context()
+References: <20230612090713.652690195@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
 
-After a wee bit of bike-shedding on the syntax/API of the thing I think we're
-in a reasonable shape.
-
-There's still the no_free_ptr() vs take_ptr() thing, but that can be easily
-sorted with a little script over the patches if we reach consensus.
-
-I've taken to converting kernel/sched/core.c and kernel/events/core.c to see
-how well this stuff actually works. Unlike last time, I've split them up into a
-gazillion little patches. Both for my sanity -- bisect is genius when you're
-trying to debug stuff in the middle of the night as well as reviewer sanity.
-
-These are by no means 'complete' convertions, I've mostly focussed on functions
-that had 'goto' in them. Since that's a large part of why I started on all this.
-
-x86_x64-defconfig boots and passes perf test. I'll go figure out how to point
-syzcaller at it.
-
-The patches have gone through a few cycles of 0day over the weekend, and mostly
-builds fine now.
-
-Dan Carpenter poked me about how sparse doesn't yet understand the __cleanup__
-attribute and seems to suffer from decl-after-stmt issues, so that might be
-something that needs attention.
-
-Anyway, does this look like something we can live with?
-
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- Makefile                            |    6 +-
- arch/arm64/kernel/vdso32/Makefile   |    2 -
- drivers/dma/ioat/dma.c              |   12 +-
- include/linux/cleanup.h             |  167 ++++
- include/linux/compiler-clang.h      |    9 +
- include/linux/compiler_attributes.h |    6 +
- include/linux/cpu.h                 |    2 +
- include/linux/device.h              |    7 +
- include/linux/file.h                |   11 +
- include/linux/irqflags.h            |    7 +
- include/linux/mutex.h               |    4 +
- include/linux/percpu.h              |    4 +
- include/linux/perf_event.h          |   14 +-
- include/linux/preempt.h             |    5 +
- include/linux/rcupdate.h            |    3 +
- include/linux/rwsem.h               |    8 +
- include/linux/sched/task.h          |    2 +
- include/linux/slab.h                |    3 +
- include/linux/spinlock.h            |   31 +
- include/linux/srcu.h                |    5 +
- kernel/events/core.c                | 1642 +++++++++++++++--------------------
- kernel/sched/core.c                 |  931 +++++++++-----------
- kernel/sched/sched.h                |   40 +
- scripts/checkpatch.pl               |    2 +-
- security/apparmor/include/lib.h     |    6 +-
- 25 files changed, 1433 insertions(+), 1496 deletions(-)
+ kernel/events/core.c |   19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -4757,11 +4757,14 @@ find_get_context(struct task_struct *tas
+ 	return ERR_PTR(err);
+ }
+ 
++/*
++ * Returns a matching perf_event_pmu_context with elevated refcount or NULL.
++ */
+ static struct perf_event_pmu_context *
+ find_get_pmu_context(struct pmu *pmu, struct perf_event_context *ctx,
+ 		     struct perf_event *event)
+ {
+-	struct perf_event_pmu_context *new = NULL, *epc;
++	struct perf_event_pmu_context *epc;
+ 	void *task_ctx_data = NULL;
+ 
+ 	if (!ctx->task) {
+@@ -4788,16 +4791,14 @@ find_get_pmu_context(struct pmu *pmu, st
+ 		return epc;
+ 	}
+ 
+-	new = kzalloc(sizeof(*epc), GFP_KERNEL);
++	void *new __free(kfree) = kzalloc(sizeof(*epc), GFP_KERNEL);
+ 	if (!new)
+-		return ERR_PTR(-ENOMEM);
++		return NULL;
+ 
+ 	if (event->attach_state & PERF_ATTACH_TASK_DATA) {
+ 		task_ctx_data = alloc_task_ctx_data(pmu);
+-		if (!task_ctx_data) {
+-			kfree(new);
+-			return ERR_PTR(-ENOMEM);
+-		}
++		if (!task_ctx_data)
++			return NULL;
+ 	}
+ 
+ 	__perf_init_event_pmu_context(new, pmu);
+@@ -4820,8 +4821,7 @@ find_get_pmu_context(struct pmu *pmu, st
+ 		}
+ 	}
+ 
+-	epc = new;
+-	new = NULL;
++	epc = no_free_ptr(new);
+ 
+ 	list_add(&epc->pmu_ctx_entry, &ctx->pmu_ctx_list);
+ 	epc->ctx = ctx;
+@@ -4835,7 +4835,6 @@ find_get_pmu_context(struct pmu *pmu, st
+ 	raw_spin_unlock_irq(&ctx->lock);
+ 
+ 	free_task_ctx_data(pmu, task_ctx_data);
+-	kfree(new);
+ 
+ 	return epc;
+ }
+
 
