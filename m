@@ -2,170 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12C76C7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 21:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4A3C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 23:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233046AbjFLVaS (ORCPT
+        id S229576AbjFLXAd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 17:30:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46848 "EHLO
+        Mon, 12 Jun 2023 19:00:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbjFLVaP (ORCPT
+        with ESMTP id S233202AbjFLXAb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 17:30:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2AC590;
-        Mon, 12 Jun 2023 14:30:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 84E3962AEB;
-        Mon, 12 Jun 2023 21:30:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3E4CC433D2;
-        Mon, 12 Jun 2023 21:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686605413;
-        bh=U52nlfJptELG0Pt6VjrxSD3IavwkMhBT7JDS3mBGqSY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aK/Isjmh6Xy5mmDf6W9Ee+Agc1+r+ipEE3P1T8W3Rd+TZAGpELt3N2TFr2tEqU82a
-         JqX3SdA5IDxpNuz8RlXslTmvm1irezEW/YOM7Hajm1Ov+p4zdcpI9lDuVBW0Pvr6ch
-         8j4zqWm/IVON+oshsww8/PtzSCVJd5eBplWswKUu6n4heFcqLcYNjA5Xxf9sEdr6KQ
-         PPixIK/+4OisMrzvuWcMpSlZy9o0TEoBeDF42Qj1KsS3Smd/YxKIBTIkY9ipqOyYEB
-         IVqSc9EeMk3kca/kFgIj+O1++FaFFVa03SHsaB7jIT1AOPgL1o327QhJlzYJ5tbKoZ
-         AObi+WPyz59kA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6BE8040692; Mon, 12 Jun 2023 18:30:11 -0300 (-03)
-Date:   Mon, 12 Jun 2023 18:30:11 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Andi Kleen <ak@linux.intel.com>
+        Mon, 12 Jun 2023 19:00:31 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24475C0;
+        Mon, 12 Jun 2023 16:00:30 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1b3b5a5134bso14775735ad.1;
+        Mon, 12 Jun 2023 16:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686610829; x=1689202829;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=X6hTdZSx7lI19BPB+NC6SvmJWqew8gyLq/5fpHGrdNU=;
+        b=s1STHSznp+8S8Qi+hRTW0MHhtF44u2FX+cRnVYL4zFZEMvG3FxkmdlQ9h1cn4IKbkF
+         CkEVgF1xmCWSEFHHNytRYJMLQcepjAUJA99UbV3CD1OqZPsoFY7XsD4nDQckdh+xa/Pp
+         cBhxUWjQYt93PwywYvQYinGLZn/eMYSuNTndRV6QLOy1B6qxBIow6IbcibUbKm9HRcwS
+         SuoaW8cuTJgUZ8ZzEdJT4K9TpAjjy+8Jl7+2BP+sssXQxKkDutaiBfNb8YAZKkDLrixO
+         i3d6FbQAMHAikGDY88bBrTfHLMSbnUuz5QXeFvl08nyQ76AVqlVGnw+U4wMLolx6YIQe
+         5Ftw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686610829; x=1689202829;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X6hTdZSx7lI19BPB+NC6SvmJWqew8gyLq/5fpHGrdNU=;
+        b=ijGAe4znHdt9+raHsWGzWUaTvB/jdlQa1lzVMvkVcTzHo3ev//jDow72D48zkWjJj+
+         NIgVk9S+3Rn/yhtXJRsGPE+/alx7uJib8shDoplwCLeOX5uVnFjnh960O9CGntSmuBMM
+         PeySsZ/8jBBDdFHTLPc9oKkNTkauAOlqKqG6u01N4+COLXRn700AA+rrWrZumEDPu1/d
+         7XOjMS7lc8dOt7fbPVzl9nEHthvlR5UGU663BoE+rCQ0w5RkktZn26OW8qetkDc8t0Te
+         9yNK4r2vDwPTLkpdXLaE8RXbntIaa/ISnwYEmyeqPfRhgCmNaZCxf5wEAOHZip4fuPM5
+         RPkQ==
+X-Gm-Message-State: AC+VfDwJAH/SBvSvK6eI18ro89KiyJdN4gJYRzgmWG4ixR+eiG3UOiol
+        PNU9Uwm+yf6AgPGDgkf4z9A=
+X-Google-Smtp-Source: ACHHUZ4Jbxl5JBhzMIwNbqJ2wmLJxK9hOPt+FezdqhNpze8ySOT9k1dSFnokZLsEu7sS4pbVyGDAGQ==
+X-Received: by 2002:a17:902:b949:b0:1af:b97c:2353 with SMTP id h9-20020a170902b94900b001afb97c2353mr6873421pls.15.1686610829423;
+        Mon, 12 Jun 2023 16:00:29 -0700 (PDT)
+Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:1e19:385a:b5d0:f4a2])
+        by smtp.gmail.com with ESMTPSA id r21-20020a170902ea5500b001b03a1a3151sm8841409plg.70.2023.06.12.16.00.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 16:00:28 -0700 (PDT)
+Sender: Namhyung Kim <namhyung@gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
 Cc:     Ian Rogers <irogers@google.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ali Saidi <alisaidi@amazon.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        ye xingchen <ye.xingchen@zte.com.cn>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        K Prateek Nayak <kprateek.nayak@amd.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Yuan Can <yuancan@huawei.com>,
-        Brian Robbins <brianrob@linux.microsoft.com>,
-        liuwenyu <liuwenyu7@huawei.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Fangrui Song <maskray@google.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org
-Subject: Re: [PATCH v2 26/26] perf hist: Fix srcline memory leak
-Message-ID: <ZIeOY4OZM2BeaUhC@kernel.org>
-References: <20230608232823.4027869-1-irogers@google.com>
- <20230608232823.4027869-27-irogers@google.com>
- <ZIcoJytUEz4UgQYR@kernel.org>
- <ZIcorZVu1z8jaPL/@kernel.org>
- <CAP-5=fXby-Yk3U4LCQeYkGU_E22kd92=dCnfb7DkN5iPYvCDGA@mail.gmail.com>
- <ZIdUncwTt2fBzxKh@kernel.org>
- <ZIeLMgsBm6cAUmHP@tassilo>
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH] perf annotate: Allow whitespace between insn operands
+Date:   Mon, 12 Jun 2023 16:00:26 -0700
+Message-ID: <20230612230026.3887586-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZIeLMgsBm6cAUmHP@tassilo>
-X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jun 12, 2023 at 02:16:34PM -0700, Andi Kleen escreveu:
-> On Mon, Jun 12, 2023 at 02:23:41PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Mon, Jun 12, 2023 at 07:46:14AM -0700, Ian Rogers escreveu:
-> > > On Mon, Jun 12, 2023 at 7:16 AM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > Em Mon, Jun 12, 2023 at 11:13:59AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > > > Em Thu, Jun 08, 2023 at 04:28:23PM -0700, Ian Rogers escreveu:
-> > > > > > srcline isn't freed if it is SRCLINE_UNKNOWN. Avoid strduping in this
-> > > > > > case as such strdups are redundant and leak memory.
-> > > > >
-> > > > > The patch is ok as its what the rest of the code is doing, i.e. strcmp()
-> > > > > to check if a srcline is the unknown one, but how about the following
-> > > > > patch on top of yours?
-> > > >
-> > > > [acme@quaco perf-tools-next]$ strings ~/bin/perf | grep '??:0'
-> > > > ??:0
-> > > > SRCLINE_UNKNOWN ((char *) "??:0")
-> > > > [acme@quaco perf-tools-next]$
-> > > 
-> > > Agreed, the strcmps make me nervous as they won't distinguish heap
-> > > from a global meaning we could end up with things like pointers to
-> > > freed memory. The comparison with the global is always going to be
-> > > same imo.
-> > > 
-> > > Acked-by: Ian Rogers <irogers@google.com>
-> > 
-> > Thanks, applied and added your Acked-by.
-> 
-> Actually was there another patch that turned it into a explicit global? 
-> 
-> At least in my tree it isn't:
-> 
-> util/srcline.h
-> 28:#define SRCLINE_UNKNOWN  ((char *) "??:0")
-> 
-> Without any explicit global it's a bit dangerous because you rely on the
-> linker doing string deduplication.  While it normally does that there might be
-> odd corner cases where it doesn't.
+The llvm-objdump adds a space between the operands while GNU objdump
+does not.  Allow a space to handle the both.
 
-Yeah, several gcc and clang versions complained with:
+In GNU objdump:
 
-2    65.38 almalinux:9                   : FAIL clang version 15.0.7 (Red Hat 15.0.7-2.el9)
-    builtin-diff.c:1381:17: error: result of comparison against a string literal is unspecified (use an explicit string comparison function instead) [-Werror,-Wstring-compare]
-            if (start_line != SRCLINE_UNKNOWN &&
+  Disassembly of section .text:                                      here
+                                                                      |
+  ffffffff81000000 <_stext>:                                          v
+  ffffffff81000000:	48 8d 25 51 1f 40 01 	lea    0x1401f51(%rip),%rsp
+  ffffffff81000007:	e8 d4 00 00 00       	call   ffffffff810000e0 <verify_cpu>
+  ffffffff8100000c:	48 8d 3d ed ff ff ff 	lea    -0x13(%rip),%rdi
 
-So I added the following on top:
+In llvm-objdump:
 
-diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-index 48a04f42b308b080..aec596a0b0bbec0f 100644
---- a/tools/perf/util/srcline.c
-+++ b/tools/perf/util/srcline.c
-@@ -23,6 +23,8 @@
+  Disassembly of section .text:                                      here
+                                                                       |
+  ffffffff81000000 <startup_64>:                                       v
+  ffffffff81000000: 48 8d 25 51 1f 40 01 	leaq	20979537(%rip), %rsp
+  ffffffff81000007: e8 d4 00 00 00       	callq	0xffffffff810000e0 <verify_cpu>
+  ffffffff8100000c: 48 8d 3d ed ff ff ff 	leaq	-19(%rip), %rdi
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 9171102dd3ad..3eab6c29eaa5 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -585,7 +585,7 @@ static int mov__parse(struct arch *arch, struct ins_operands *ops, struct map_sy
+ 	if (ops->source.raw == NULL)
+ 		return -1;
  
- bool srcline_full_filename;
+-	target = ++s;
++	target = skip_spaces(++s);
+ 	comment = strchr(s, arch->objdump.comment_char);
  
-+char *srcline__unknown = (char *)"??:0";
-+
- static const char *dso__name(struct dso *dso)
- {
- 	const char *dso_name;
-diff --git a/tools/perf/util/srcline.h b/tools/perf/util/srcline.h
-index a15c7db9058ece96..167645bcff0755e2 100644
---- a/tools/perf/util/srcline.h
-+++ b/tools/perf/util/srcline.h
-@@ -25,7 +25,8 @@ char *srcline__tree_find(struct rb_root_cached *tree, u64 addr);
- /* delete all srclines within the tree */
- void srcline__tree_delete(struct rb_root_cached *tree);
- 
--#define SRCLINE_UNKNOWN  ((char *) "??:0")
-+extern char *srcline__unknown;
-+#define SRCLINE_UNKNOWN srcline__unknown
- 
- struct inline_list {
- 	struct symbol		*symbol;
+ 	if (comment != NULL)
+-- 
+2.41.0.162.gfafddb0af9-goog
+
