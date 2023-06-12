@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED234C8300C
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B335C7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229695AbjFLJzS (ORCPT
+        id S230449AbjFLJzT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34046 "EHLO
+        Mon, 12 Jun 2023 05:55:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231684AbjFLJy2 (ORCPT
+        with ESMTP id S230361AbjFLJyW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:28 -0400
+        Mon, 12 Jun 2023 05:54:22 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E735FFA;
-        Mon, 12 Jun 2023 02:39:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F34E4C15;
+        Mon, 12 Jun 2023 02:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=RF7AlZRmRPruwiE6WSJ8fgsVWKVvpbmYdppCd/KBEkQ=; b=gufB5guI2wjztq+YIlaWdjMhyv
-        3LYfsbSy4unkOyd2ugwudXuVbPkgYZFtkZVII3Xqay+tH7nkG1yTdrFKTcjUHvpAa8Cf37YLpt3E8
-        pDLxbYYLfAa1grWsAGwn5LQLL4FRD+9IBx4VEM4Gmq/oyW3fFf8dLVvIRA7oBGmGxTO7R049FIU1t
-        r4XaxNuX7StfRoeJQ7EQPUjJFlffCIlkZhBv+EjHy6R48CogNzg2OSLrwlw3rCqTLDkgHr+w7wF/Q
-        ZOTFC2+xYVUW9aU01AvEkNjTt06XQEZg/5knH9qw46D4tqiWNFnLETrbsKjwwTivhd6RHKFM2hAvf
-        JA52UjPw==;
+        bh=2Fw/6pc13hFz4431UNCf/XS3M9fAIWcYfqPnXE09Ku4=; b=b6HhHqyRgVNIvJxJg3qz34xg3z
+        MclAequn3uyYDgQ5Z5i8iDgOLuz/qXGgm1oMBVoGifA2g41/aPpi+zdp37cuqoJp+mxC5cFvegIAx
+        PrGLhpLp6tRFNJ+xGJdm2Vl8NMuY2mfkHRUQqumE0N6uhf8Hwi+0jsjngOlSw1NjDNooe7ANlbed6
+        InipGNmagWluFfr2AZow7mI1sOKeySpJUvHBQ/S5Qm+hiYjBJavBgxNx9Q3pT2HaDMGuK1RCXjfIv
+        izn1MU80zDpXeVWyzMuTE3zNEGhTt+PqqObFqGdyck+4419X8FjSEtsb3NkqK5BrIhAd8Futl2USY
+        ItEsQUOQ==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0l-002NBd-VJ; Mon, 12 Jun 2023 09:38:56 +0000
+        id 1q8e0g-002N91-0z; Mon, 12 Jun 2023 09:38:50 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 27CCF3031BE;
-        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 86856302EA7;
+        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id A1B8930A77B67; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093539.682563843@infradead.org>
+        id 0FD3C30A6FEEC; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093537.762718530@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:43 +0200
+Date:   Mon, 12 Jun 2023 11:07:18 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -67,7 +67,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 30/57] perf: Simplify: *perf_event_{dis,en}able*()
+Subject: [PATCH v3 05/57] sched: Simplify get_nohz_timer_target()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,98 +75,46 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Use guards to reduce gotos and simplify control flow.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   51 ++++++++++++++++++++++-----------------------------
- 1 file changed, 22 insertions(+), 29 deletions(-)
+ kernel/sched/core.c |   15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -2415,7 +2415,7 @@ static void __perf_event_disable(struct
- 		update_cgrp_time_from_event(event);
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1097,25 +1097,22 @@ int get_nohz_timer_target(void)
+ 
+ 	hk_mask = housekeeping_cpumask(HK_TYPE_TIMER);
+ 
+-	rcu_read_lock();
++	guard(rcu)();
++
+ 	for_each_domain(cpu, sd) {
+ 		for_each_cpu_and(i, sched_domain_span(sd), hk_mask) {
+ 			if (cpu == i)
+ 				continue;
+ 
+-			if (!idle_cpu(i)) {
+-				cpu = i;
+-				goto unlock;
+-			}
++			if (!idle_cpu(i))
++				return i;
+ 		}
  	}
  
--	perf_pmu_disable(event->pmu_ctx->pmu);
-+	guard(perf_pmu_disable)(event->pmu_ctx->pmu);
- 
- 	if (event == event->group_leader)
- 		group_sched_out(event, ctx);
-@@ -2424,8 +2424,6 @@ static void __perf_event_disable(struct
- 
- 	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
- 	perf_cgroup_event_disable(event, ctx);
--
--	perf_pmu_enable(event->pmu_ctx->pmu);
+ 	if (default_cpu == -1)
+ 		default_cpu = housekeeping_any_cpu(HK_TYPE_TIMER);
+-	cpu = default_cpu;
+-unlock:
+-	rcu_read_unlock();
+-	return cpu;
++
++	return default_cpu;
  }
  
  /*
-@@ -2446,12 +2444,10 @@ static void _perf_event_disable(struct p
- {
- 	struct perf_event_context *ctx = event->ctx;
- 
--	raw_spin_lock_irq(&ctx->lock);
--	if (event->state <= PERF_EVENT_STATE_OFF) {
--		raw_spin_unlock_irq(&ctx->lock);
--		return;
-+	scoped_guard (raw_spinlock_irq, &ctx->lock) {
-+		if (event->state <= PERF_EVENT_STATE_OFF)
-+			return;
- 	}
--	raw_spin_unlock_irq(&ctx->lock);
- 
- 	event_function_call(event, __perf_event_disable, NULL);
- }
-@@ -2955,32 +2951,29 @@ static void _perf_event_enable(struct pe
- {
- 	struct perf_event_context *ctx = event->ctx;
- 
--	raw_spin_lock_irq(&ctx->lock);
--	if (event->state >= PERF_EVENT_STATE_INACTIVE ||
--	    event->state <  PERF_EVENT_STATE_ERROR) {
--out:
--		raw_spin_unlock_irq(&ctx->lock);
--		return;
--	}
-+	scoped_guard (raw_spinlock_irq, &ctx->lock) {
-+		if (event->state >= PERF_EVENT_STATE_INACTIVE ||
-+		    event->state <  PERF_EVENT_STATE_ERROR)
-+			return;
- 
--	/*
--	 * If the event is in error state, clear that first.
--	 *
--	 * That way, if we see the event in error state below, we know that it
--	 * has gone back into error state, as distinct from the task having
--	 * been scheduled away before the cross-call arrived.
--	 */
--	if (event->state == PERF_EVENT_STATE_ERROR) {
- 		/*
--		 * Detached SIBLING events cannot leave ERROR state.
-+		 * If the event is in error state, clear that first.
-+		 *
-+		 * That way, if we see the event in error state below, we know that it
-+		 * has gone back into error state, as distinct from the task having
-+		 * been scheduled away before the cross-call arrived.
- 		 */
--		if (event->event_caps & PERF_EV_CAP_SIBLING &&
--		    event->group_leader == event)
--			goto out;
-+		if (event->state == PERF_EVENT_STATE_ERROR) {
-+			/*
-+			 * Detached SIBLING events cannot leave ERROR state.
-+			 */
-+			if (event->event_caps & PERF_EV_CAP_SIBLING &&
-+			    event->group_leader == event)
-+				return;
- 
--		event->state = PERF_EVENT_STATE_OFF;
-+			event->state = PERF_EVENT_STATE_OFF;
-+		}
- 	}
--	raw_spin_unlock_irq(&ctx->lock);
- 
- 	event_function_call(event, __perf_event_enable, NULL);
- }
 
 
