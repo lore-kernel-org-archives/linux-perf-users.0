@@ -2,44 +2,45 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57613C7EE25
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AD7BC7EE45
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232389AbjFLJz0 (ORCPT
+        id S232559AbjFLJz3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:55:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33962 "EHLO
+        Mon, 12 Jun 2023 05:55:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230408AbjFLJyY (ORCPT
+        with ESMTP id S233724AbjFLJyr (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:24 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7806B5FF2;
-        Mon, 12 Jun 2023 02:38:58 -0700 (PDT)
+        Mon, 12 Jun 2023 05:54:47 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F854C20;
+        Mon, 12 Jun 2023 02:39:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=tN5fF7Wyh35qBJFCdjEuKMaMwIiqau8XmW0j2x/SMjk=; b=pTQEAHGpF5fz0pLIBta9z8QWvF
-        V3VTKbdm5MrZ6Uq6sIyVOPIlJRamTVCnfvzmEg5CiuDQWZwIOhMu3l9PZQuNwkMb8MTxXwLb05k1F
-        pXKfEwe9Z0i663rYdw9pUPCOE+2AHi/lm0RzSNXMm4U2w1iNa1ZIxBs9afcsQW/V20UMXzYer3WCT
-        zF9DC46u7wLZd3iCRc+AmRVnu9fCua5kGt94sVVOX6RESLLLndvS1OIwmKToKe+pfW/q3/OlKUMUJ
-        NzNjcl62XQoQkQaJg1jmU538/Cwb5EJWwMJr4XxONBZWuSlObMm3Fh7GXzLLBUAOiqFAhv2ZaNNZD
-        zVv+iV3g==;
+        bh=R8zokz8HpLYR/tS6Df4K9QtMMliKooDPknNNGx1Aq0A=; b=gDtWsQkYmCDnkEwKNGgB3R3yg5
+        AQY1YY9Pt79S6dVL6CWepHSUTi7Jk2ap0PirgoxJz1fjs1z3NKbdLaY23YcYonOyGm9p5ZcrqukWc
+        yahOpmdpqbTYWS9bKccGyNolDypM6QDGY9gdEy70lbk3rS4+jMW+Sv98MjpmckatRRRmbimMkq23O
+        vXAs7ycWwEeJNAkE/ixzJXGvLIQcTSvvlAur3TsCI9Ilrhz2nzXNDbdx1TsVCzn07sqZDE31KbMn4
+        EtMMfJoiXbcTAoBrqdc9gvRSE1k4X7as2PcuNqT2QlErwrhHL5omOT8gwrGh0frufhfqd9bor9oz2
+        0FAle/iA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0g-002N98-AY; Mon, 12 Jun 2023 09:38:50 +0000
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q8e0m-008kQd-03;
+        Mon, 12 Jun 2023 09:38:59 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D8E9630318E;
-        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 29CF5303287;
+        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 416A530A70ADF; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093538.393498853@infradead.org>
+        id A6ED730A77B69; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093539.753013700@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:26 +0200
+Date:   Mon, 12 Jun 2023 11:07:44 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -67,7 +68,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 13/57] sched: Simplify sched_core_cpu_{starting,deactivate}()
+Subject: [PATCH v3 31/57] perf: Simplify perf_event_modify_attr()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -75,103 +76,44 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Use guards to reduce gotos and simplify control flow.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/sched/core.c |   27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
+ kernel/events/core.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6331,20 +6331,24 @@ static void queue_core_balance(struct rq
- 	queue_balance_callback(rq, &per_cpu(core_balance_head, rq->cpu), sched_core_balance);
- }
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3172,7 +3172,7 @@ static int perf_event_modify_attr(struct
  
-+DEFINE_LOCK_GUARD_1(core_lock, int,
-+		    sched_core_lock(*_T->lock, &_T->flags),
-+		    sched_core_unlock(*_T->lock, &_T->flags),
-+		    unsigned long flags)
+ 	WARN_ON_ONCE(event->ctx->parent_ctx);
+ 
+-	mutex_lock(&event->child_mutex);
++	guard(mutex)(&event->child_mutex);
+ 	/*
+ 	 * Event-type-independent attributes must be copied before event-type
+ 	 * modification, which will validate that final attributes match the
+@@ -3181,16 +3181,16 @@ static int perf_event_modify_attr(struct
+ 	perf_event_modify_copy_attr(&event->attr, attr);
+ 	err = func(event, attr);
+ 	if (err)
+-		goto out;
++		return err;
 +
- static void sched_core_cpu_starting(unsigned int cpu)
- {
- 	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
- 	struct rq *rq = cpu_rq(cpu), *core_rq = NULL;
--	unsigned long flags;
- 	int t;
- 
--	sched_core_lock(cpu, &flags);
-+	guard(core_lock)(&cpu);
- 
- 	WARN_ON_ONCE(rq->core != rq);
- 
- 	/* if we're the first, we'll be our own leader */
- 	if (cpumask_weight(smt_mask) == 1)
--		goto unlock;
-+		return;
- 
- 	/* find the leader */
- 	for_each_cpu(t, smt_mask) {
-@@ -6358,7 +6362,7 @@ static void sched_core_cpu_starting(unsi
+ 	list_for_each_entry(child, &event->child_list, child_list) {
+ 		perf_event_modify_copy_attr(&child->attr, attr);
+ 		err = func(child, attr);
+ 		if (err)
+-			goto out;
++			return err;
  	}
- 
- 	if (WARN_ON_ONCE(!core_rq)) /* whoopsie */
--		goto unlock;
-+		return;
- 
- 	/* install and validate core_rq */
- 	for_each_cpu(t, smt_mask) {
-@@ -6369,29 +6373,25 @@ static void sched_core_cpu_starting(unsi
- 
- 		WARN_ON_ONCE(rq->core != core_rq);
- 	}
--
--unlock:
--	sched_core_unlock(cpu, &flags);
+-out:
+-	mutex_unlock(&event->child_mutex);
+-	return err;
++
++	return 0;
  }
  
- static void sched_core_cpu_deactivate(unsigned int cpu)
- {
- 	const struct cpumask *smt_mask = cpu_smt_mask(cpu);
- 	struct rq *rq = cpu_rq(cpu), *core_rq = NULL;
--	unsigned long flags;
- 	int t;
- 
--	sched_core_lock(cpu, &flags);
-+	guard(core_lock)(&cpu);
- 
- 	/* if we're the last man standing, nothing to do */
- 	if (cpumask_weight(smt_mask) == 1) {
- 		WARN_ON_ONCE(rq->core != rq);
--		goto unlock;
-+		return;
- 	}
- 
- 	/* if we're not the leader, nothing to do */
- 	if (rq->core != rq)
--		goto unlock;
-+		return;
- 
- 	/* find a new leader */
- 	for_each_cpu(t, smt_mask) {
-@@ -6402,7 +6402,7 @@ static void sched_core_cpu_deactivate(un
- 	}
- 
- 	if (WARN_ON_ONCE(!core_rq)) /* impossible */
--		goto unlock;
-+		return;
- 
- 	/* copy the shared state to the new leader */
- 	core_rq->core_task_seq             = rq->core_task_seq;
-@@ -6424,9 +6424,6 @@ static void sched_core_cpu_deactivate(un
- 		rq = cpu_rq(t);
- 		rq->core = core_rq;
- 	}
--
--unlock:
--	sched_core_unlock(cpu, &flags);
- }
- 
- static inline void sched_core_cpu_dying(unsigned int cpu)
+ static void __pmu_ctx_sched_out(struct perf_event_pmu_context *pmu_ctx,
 
 
