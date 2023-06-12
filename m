@@ -2,65 +2,66 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F983C7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 16:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A476DC88CB7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 16:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229946AbjFLQdQ (ORCPT
+        id S237213AbjFLQii (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 12:33:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36396 "EHLO
+        Mon, 12 Jun 2023 12:38:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235688AbjFLQdP (ORCPT
+        with ESMTP id S232468AbjFLQih (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 12:33:15 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B91F3183
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:33:14 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-9745d99cfccso795379266b.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:33:14 -0700 (PDT)
+        Mon, 12 Jun 2023 12:38:37 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA448E47
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:38:35 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4f62cf9755eso5326944e87.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:38:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1686587593; x=1689179593;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=XQ64AB6vFE2gCnLICKj93uVfxKBboA+BfLd8wCYY+0E=;
-        b=T0jmaOXVTGJvLPRlMSgfkKoGgvbEVfx8zreIUfbsLqRLZOmg/oOepGzOy+eN5tx9Sz
-         vx03Gr5Tp7GhC0MGBaMO38wE6cdY1OLH4GhRv1HsqTJGZO3Nw/iRHrQP9eoprYUM5q0R
-         Byq17Fw5jQCeYvxLl6W0RpITJo+BTZKwOBayI=
+        d=linux-foundation.org; s=google; t=1686587914; x=1689179914;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZkQkCR0zK+G1VvzG47ybOhl6nFuB5nGWY9v59LgjCEc=;
+        b=QfRYTQECfsBgMvyANysDt2RqPFsfrwgoAKZdmqX3rGzWsJ3gsg3tWM3BfT3YO28z7i
+         KO8y/9WDuNXKmWoTxT13cai/Wm7m4y6wPY83rl/OQK6dg+xMq3Nnii/t8HGOZfZRERRT
+         1ocjt3a3ZtBIwhfj1NR06ypynKgvg6npBjc6w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686587593; x=1689179593;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XQ64AB6vFE2gCnLICKj93uVfxKBboA+BfLd8wCYY+0E=;
-        b=UQQxrTmQL6KaK4d55JSEompwQocUQ/Tp3Igon1O9WCUf1CmEPx+7f+plf6/744/Wtp
-         ltVtprlL4gS4ixm/PmjsKPMYyKTgNCeGnfwrAYaHoPP76rPwJPIdqF5L4UuIfLUrdd7x
-         Yhdx4wQNDUy1Ozy+1+1uVszyLS2bILtSKcjCoj1r4Y5NKkreRk7dk7DfnOYw67HzBM3M
-         FfW9EfD6h0s3nzKZ/bz7zhLEduS/uUJjhKKtetXa7zdGdoorr0qFox7C4gGBX6TFlQbv
-         56XvqpZp9w6NwuC+94XbBDUtNXeTJIu0xYjtfU0YefF94pR0J5MSodGhm6+FFySk5c8e
-         mVuQ==
-X-Gm-Message-State: AC+VfDz/upp0PASL3EINMZ6pLmiRvSqlRz1t1BIXGKFCmdVYzyWEiem3
-        jWDgbtuK9LuPfUBZ/1PH56CJOQt2+zuWXugP7C1eKLcH
-X-Google-Smtp-Source: ACHHUZ7hSR3LrMU8DVnu3O1b4/shEQoYHS4SZnd34c3Eiz2uKDONeWGfrmiZZP8vJqiK+1GiiFq2JA==
-X-Received: by 2002:a17:907:9410:b0:982:30e3:ddcb with SMTP id dk16-20020a170907941000b0098230e3ddcbmr554965ejc.65.1686587593076;
-        Mon, 12 Jun 2023 09:33:13 -0700 (PDT)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
-        by smtp.gmail.com with ESMTPSA id r23-20020a1709064d1700b009658475919csm5363358eju.188.2023.06.12.09.33.12
+        d=1e100.net; s=20221208; t=1686587914; x=1689179914;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZkQkCR0zK+G1VvzG47ybOhl6nFuB5nGWY9v59LgjCEc=;
+        b=CZ2RZD/RGDiblphrw46AbwkqSpRUhx68d9rg6ejG+lFnYIT1ZMJNUn26zSRIVW6Ug5
+         KN00nSpXvYi6l0W+usLX/o68anBoRl8xFKMT3WWk91k5U3IV2L0t5t141i9WMLIFkXd2
+         PGhYxdxxV1/HfO4FKz7vWBNqUHhI94eYJ2XJiQmWP1urpT7Kqmjj9lGcXQrkoACk9Boz
+         NHlwGFb4+X4diU4Cw7BzhUsXT0eYFvNjLaIhHN8s8kj9PXEm8JZpejITnZj65jFK2aKF
+         LDwboGnXi1zPG/Y4eZzkt1V4b4/7+VVUbpNWpQT0YTbre7Iq9J1VRCCTF01BXetLsekx
+         zA1w==
+X-Gm-Message-State: AC+VfDyocU9RXUtNfD7VfJnWCupXJXLaVvXTeLvnf45UUDQfjeIhkaa1
+        f982fuFs0v3pfhFwP9XA/wnAXUAJUMPK/Swl4S01BuKh
+X-Google-Smtp-Source: ACHHUZ6SWczAruR2lePn3cFKE/xeh1pLQDo0vHISY0XtAoYdAbBgCKfcnX4NUDHOkU/41AbEy1KxhQ==
+X-Received: by 2002:a19:501e:0:b0:4ef:eeea:1b85 with SMTP id e30-20020a19501e000000b004efeeea1b85mr4707490lfb.18.1686587914038;
+        Mon, 12 Jun 2023 09:38:34 -0700 (PDT)
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
+        by smtp.gmail.com with ESMTPSA id t9-20020a19ad09000000b004f24e797c58sm1466831lfc.217.2023.06.12.09.38.33
         for <linux-perf-users@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Jun 2023 09:33:12 -0700 (PDT)
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-30fc6b513afso600474f8f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:33:12 -0700 (PDT)
-X-Received: by 2002:a05:6402:6d3:b0:514:93b2:f3b1 with SMTP id
- n19-20020a05640206d300b0051493b2f3b1mr5343956edy.40.1686587246075; Mon, 12
- Jun 2023 09:27:26 -0700 (PDT)
+        Mon, 12 Jun 2023 09:38:33 -0700 (PDT)
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-4f62cf9755eso5326908e87.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 09:38:33 -0700 (PDT)
+X-Received: by 2002:a19:e30c:0:b0:4f6:1779:b1c1 with SMTP id
+ a12-20020a19e30c000000b004f61779b1c1mr5015246lfh.48.1686587892415; Mon, 12
+ Jun 2023 09:38:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230612090713.652690195@infradead.org> <20230612093539.895253662@infradead.org>
-In-Reply-To: <20230612093539.895253662@infradead.org>
+References: <20230612090713.652690195@infradead.org>
+In-Reply-To: <20230612090713.652690195@infradead.org>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 12 Jun 2023 09:27:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgPtj9Y+nkMe+s20sntBPoadKL7GLxTr=mhfdONMR=iZg@mail.gmail.com>
-Message-ID: <CAHk-=wgPtj9Y+nkMe+s20sntBPoadKL7GLxTr=mhfdONMR=iZg@mail.gmail.com>
-Subject: Re: [PATCH v3 33/57] perf: Simplify perf_adjust_freq_unthr_context()
+Date:   Mon, 12 Jun 2023 09:37:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wj3jV+v63RA30eVpjHVyrGmmTF7d3ajdV=1wBU=5OHa=A@mail.gmail.com>
+Message-ID: <CAHk-=wj3jV+v63RA30eVpjHVyrGmmTF7d3ajdV=1wBU=5OHa=A@mail.gmail.com>
+Subject: Re: [PATCH v3 00/57] Scope-based Resource Management
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     keescook@chromium.org, gregkh@linuxfoundation.org,
         pbonzini@redhat.com, masahiroy@kernel.org, nathan@kernel.org,
@@ -88,33 +89,35 @@ Cc:     keescook@chromium.org, gregkh@linuxfoundation.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This seems to have the same pattern that I *think* it's entirely
-broken, ie you are doing that
+On Mon, Jun 12, 2023 at 2:39=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> These are by no means 'complete' convertions, I've mostly focussed on fun=
+ctions
+> that had 'goto' in them. Since that's a large part of why I started on al=
+l this.
 
-                guard(perf_pmu_disable)(event->pmu);
+So I found what looks like two patches being completely broken because
+the conversion was fundamentally misguided.
 
-inside a loop, and then you are randomly just removing the
+And honestly, by the end of walking through the patches I was just
+scanning so quickly that I might have missed some.
 
-               perf_pmu_enable(event->pmu);
+Let's make the rule be that
 
-at the end of the loop, or when you do a "continue"./
+ - max 10 patches in the series so that I think they were actually
+thought about, and people can actually review them
 
-That's not right.
+ - only clear "goto out of scope" conversions. When you see a
+"continue" or a "goto repeat", you TAKE A BIG STEP BACK.
 
-The thing does not not go out of scope when the loop *iterates*.
+Because this is all clever, and I am now happy with the syntax, but I
+am *not* happy with that 60-patch monster series with what looks like
+horrible bugs.
 
-It only goes out of scope when the loop *ends*.
-
-Big difference as far as cleanup goes.
-
-So you have not "simplified" the unlocking code, you've broken it. Now
-it no longer locks and unlocks for each iteration, it tries to re-lock
-every time.
-
-Or have I mis-understood something completely?
-
-               Linus
+             Linus
