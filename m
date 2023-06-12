@@ -2,47 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E10AC88CB2
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 17:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A680BECAA3F
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 17:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235701AbjFLRXs (ORCPT
+        id S229576AbjFLRaP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 13:23:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35106 "EHLO
+        Mon, 12 Jun 2023 13:30:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233399AbjFLRXq (ORCPT
+        with ESMTP id S237698AbjFLR3r (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 13:23:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC828B2;
-        Mon, 12 Jun 2023 10:23:45 -0700 (PDT)
+        Mon, 12 Jun 2023 13:29:47 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF519DB;
+        Mon, 12 Jun 2023 10:29:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 721F862905;
-        Mon, 12 Jun 2023 17:23:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F868C433A1;
-        Mon, 12 Jun 2023 17:23:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B888620E7;
+        Mon, 12 Jun 2023 17:29:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF4F2C433D2;
+        Mon, 12 Jun 2023 17:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686590624;
-        bh=num+HBDgMxiuiJVhhkLVPXPpTBWWc1dgJNLDNOGS0Fk=;
+        s=k20201202; t=1686590985;
+        bh=tVyezW3o2HAblHhWfBLLzXDJWYWq8x5ow1lKCcaOQkI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uE12zDMfqRoci4thscAdp3EhSwgKJovJnYvOw3krcV88NGXiZRfF9rOltrCAswAXN
-         TfhY5m2ULY71VP3EtGag4nbFEWKPxzFyMuPG3QaaBg/FgP+axXyraqmxKkRVEr1jrU
-         F66fBJdtR7u5XF+bUxf0nc+uNB6UiSdxpS8WPdPSdUngO54Nwdyul+O0NltvPBgBM8
-         TvC8+1fybwIMNUxG4m6semSiG+yDfRzznvXhkjSxhCVJnuQm8vMTm8aA0J1tYNM/j8
-         U+YEG8QI3Byfa1wCkMeiCHNt8OmLMklpSKeGCgZAzvJPIay/RL6ThyyfZw0zP4XgJK
-         1ODSUu14Pl9WA==
+        b=hgXZWmlOMWS0quDcXThICtAZ+0rkyiTG7asel0q5gUhCktm7Oliwo79T3YUOcWqE8
+         Q9qPEF4STvIBjwjg9Oa5MJ2tjoIE63DZ3zbk4BTF35APAkJuAYyV71e98NAFYCuG1z
+         ZivboAUfiXLvkTA4hJkyEU7WCGwaFNwtYF669u8uNjxHiqUIk5H19neSf9uc0+HgsK
+         7LyDMsI+oGuPYVJn3PC0NE3fd892RGzwo96Fcl9wZDfJutPFXH3O3uxffmo+dHUxDa
+         rsFElNU+xRUCKgN+jWlWOAOlH04q3NAil12NAR1cjROimwyHUtMeh/NStJvKjZM8i8
+         VWhWyhVfikWzA==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id D1BF540692; Mon, 12 Jun 2023 14:23:41 -0300 (-03)
-Date:   Mon, 12 Jun 2023 14:23:41 -0300
+        id 2DC1A40692; Mon, 12 Jun 2023 14:29:42 -0300 (-03)
+Date:   Mon, 12 Jun 2023 14:29:42 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ian Rogers <irogers@google.com>
-Cc:     John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
+Cc:     James Clark <james.clark@arm.com>,
+        linux-perf-users@vger.kernel.org,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -50,73 +47,116 @@ Cc:     John Garry <john.g.garry@oracle.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        German Gomez <german.gomez@arm.com>,
-        Ali Saidi <alisaidi@amazon.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        ye xingchen <ye.xingchen@zte.com.cn>,
-        Liam Howlett <liam.howlett@oracle.com>,
-        Dmitrii Dolgov <9erthalion6@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        K Prateek Nayak <kprateek.nayak@amd.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Steinar H. Gunderson" <sesse@google.com>,
-        Yuan Can <yuancan@huawei.com>,
-        Brian Robbins <brianrob@linux.microsoft.com>,
-        liuwenyu <liuwenyu7@huawei.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        Fangrui Song <maskray@google.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, coresight@lists.linaro.org
-Subject: Re: [PATCH v2 26/26] perf hist: Fix srcline memory leak
-Message-ID: <ZIdUncwTt2fBzxKh@kernel.org>
-References: <20230608232823.4027869-1-irogers@google.com>
- <20230608232823.4027869-27-irogers@google.com>
- <ZIcoJytUEz4UgQYR@kernel.org>
- <ZIcorZVu1z8jaPL/@kernel.org>
- <CAP-5=fXby-Yk3U4LCQeYkGU_E22kd92=dCnfb7DkN5iPYvCDGA@mail.gmail.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf map: Fix refcount errors on Arm with
+ -DREFCNT_CHECKING=1
+Message-ID: <ZIdWBl+MZYKI83Mb@kernel.org>
+References: <20230612150424.198914-1-james.clark@arm.com>
+ <CAP-5=fWu0yCSCB__prps2g=JRDScbhWuimPJHUsU0S_c0ywDhg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXby-Yk3U4LCQeYkGU_E22kd92=dCnfb7DkN5iPYvCDGA@mail.gmail.com>
+In-Reply-To: <CAP-5=fWu0yCSCB__prps2g=JRDScbhWuimPJHUsU0S_c0ywDhg@mail.gmail.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jun 12, 2023 at 07:46:14AM -0700, Ian Rogers escreveu:
-> On Mon, Jun 12, 2023 at 7:16 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
+Em Mon, Jun 12, 2023 at 09:32:30AM -0700, Ian Rogers escreveu:
+> On Mon, Jun 12, 2023 at 8:05 AM James Clark <james.clark@arm.com> wrote:
 > >
-> > Em Mon, Jun 12, 2023 at 11:13:59AM -0300, Arnaldo Carvalho de Melo escreveu:
-> > > Em Thu, Jun 08, 2023 at 04:28:23PM -0700, Ian Rogers escreveu:
-> > > > srcline isn't freed if it is SRCLINE_UNKNOWN. Avoid strduping in this
-> > > > case as such strdups are redundant and leak memory.
-> > >
-> > > The patch is ok as its what the rest of the code is doing, i.e. strcmp()
-> > > to check if a srcline is the unknown one, but how about the following
-> > > patch on top of yours?
+> > When quitting after running a perf report, the refcount checker finds
+> > some double frees. The issue is that map__put() is called on a function
+> > argument so it removes the refcount wrapper that someone else was using.
 > >
-> > [acme@quaco perf-tools-next]$ strings ~/bin/perf | grep '??:0'
-> > ??:0
-> > SRCLINE_UNKNOWN ((char *) "??:0")
-> > [acme@quaco perf-tools-next]$
-> 
-> Agreed, the strcmps make me nervous as they won't distinguish heap
-> from a global meaning we could end up with things like pointers to
-> freed memory. The comparison with the global is always going to be
-> same imo.
+> > Fix it by only calling map__put() on a reference that is owned by this
+> > function.
+> >
+> > Signed-off-by: James Clark <james.clark@arm.com>
 > 
 > Acked-by: Ian Rogers <irogers@google.com>
+> 
+> > ---
+> >  tools/perf/util/symbol-elf.c | 9 +++++----
+> >  tools/perf/util/symbol.c     | 9 +++++----
+> >  2 files changed, 10 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+> > index 63882a4db5c7..ec0d7810bbb0 100644
+> > --- a/tools/perf/util/symbol-elf.c
+> > +++ b/tools/perf/util/symbol-elf.c
+> > @@ -1365,6 +1365,7 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+> >         struct dso *curr_dso = *curr_dsop;
+> >         struct map *curr_map;
+> >         char dso_name[PATH_MAX];
+> > +       struct map *map_ref;
+> 
+> nit: can we narrow the scope of this by moving it to the scope where it is used.
 
-Thanks, applied and added your Acked-by.
+Which is what you did in a patch I already processed, its only in
+tmp.perf-tools-next as I was going thru the other patches, but this one
+is there already.
+
+I'm checking the tools/perf/util/symbol.c part.
+
+- Arnaldo
+ 
+> >
+> >         /* Adjust symbol to map to file offset */
+> >         if (adjust_kernel_syms)
+> > @@ -1390,10 +1391,10 @@ static int dso__process_kernel_symbol(struct dso *dso, struct map *map,
+> >                         if (kmaps) {
+> >                                 int err;
+> >
+> > -                               map__get(map);
+> > -                               maps__remove(kmaps, map);
+> > -                               err = maps__insert(kmaps, map);
+> > -                               map__put(map);
+> > +                               map_ref = map__get(map);
+> > +                               maps__remove(kmaps, map_ref);
+> > +                               err = maps__insert(kmaps, map_ref);
+> > +                               map__put(map_ref);
+> >                                 if (err)
+> >                                         return err;
+> >                         }
+> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> > index 6b9c55784b56..b3034fd5c0af 100644
+> > --- a/tools/perf/util/symbol.c
+> > +++ b/tools/perf/util/symbol.c
+> > @@ -1368,6 +1368,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+> >         int err, fd;
+> >         char kcore_filename[PATH_MAX];
+> >         u64 stext;
+> > +       struct map *map_ref;
+> 
+> nit: can we narrow the scope of this by moving it to the scope where it is used.
+> 
+> Thanks,
+> Ian
+> 
+> >
+> >         if (!kmaps)
+> >                 return -EINVAL;
+> > @@ -1464,10 +1465,10 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+> >                         map__set_map_ip(map, map__map_ip_ptr(new_map));
+> >                         map__set_unmap_ip(map, map__unmap_ip_ptr(new_map));
+> >                         /* Ensure maps are correctly ordered */
+> > -                       map__get(map);
+> > -                       maps__remove(kmaps, map);
+> > -                       err = maps__insert(kmaps, map);
+> > -                       map__put(map);
+> > +                       map_ref = map__get(map);
+> > +                       maps__remove(kmaps, map_ref);
+> > +                       err = maps__insert(kmaps, map_ref);
+> > +                       map__put(map_ref);
+> >                         map__put(new_map);
+> >                         if (err)
+> >                                 goto out_err;
+> > --
+> > 2.34.1
+> >
+
+-- 
 
 - Arnaldo
