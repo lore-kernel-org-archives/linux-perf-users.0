@@ -2,107 +2,93 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0910EC7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 02:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9E7C7EE23
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 02:35:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233202AbjFLCO0 (ORCPT
+        id S229597AbjFLCfw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 11 Jun 2023 22:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59320 "EHLO
+        Sun, 11 Jun 2023 22:35:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229754AbjFLCOZ (ORCPT
+        with ESMTP id S229902AbjFLCfv (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 11 Jun 2023 22:14:25 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 780B31BB
-        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jun 2023 19:14:23 -0700 (PDT)
+        Sun, 11 Jun 2023 22:35:51 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7855B19A;
+        Sun, 11 Jun 2023 19:35:49 -0700 (PDT)
 Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QfZvj1mfBzLmjC;
-        Mon, 12 Jun 2023 10:12:33 +0800 (CST)
-Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
- (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 12 Jun
- 2023 10:14:20 +0800
-Date:   Mon, 12 Jun 2023 10:14:05 +0800
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QfbJr4gx3zqTm2;
+        Mon, 12 Jun 2023 10:30:52 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Mon, 12 Jun 2023 10:35:46 +0800
 From:   Changbin Du <changbin.du@huawei.com>
-To:     Ian Rogers <irogers@google.com>
-CC:     Changbin Du <changbin.du@huawei.com>,
-        <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        <hw.huiwang@huawei.com>
-Subject: Re: [Issue] perf report gets stuck at addr2line
-Message-ID: <20230612021405.kcaccxchmb5juep4@M910t>
-References: <20230609033128.ujodex56vkha2ifr@M910t>
- <CAP-5=fVWhp_cMpgwTRiO+bC7tKKGvKsavRVVDW-k9qYB7ZoXWg@mail.gmail.com>
- <CAP-5=fWRpZSYcuuiSKGL4cS+SDBaSA6GBXJuw-gQAir+4EsagA@mail.gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <hw.huiwang@huawei.com>, Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH] perf/doc: revise the description about PR_TASK_PERF_EVENTS_{ENABLE,DISABLE}
+Date:   Mon, 12 Jun 2023 10:35:23 +0800
+Message-ID: <20230612023523.3918618-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWRpZSYcuuiSKGL4cS+SDBaSA6GBXJuw-gQAir+4EsagA@mail.gmail.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  kwepemi500013.china.huawei.com (7.221.188.120)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
->On Fri, Jun 09, 2023 at 04:58:24PM -0700, Ian Rogers wrote:
-> On Thu, Jun 8, 2023 at 10:13 PM Ian Rogers <irogers@google.com> wrote:
->
-[snip]
-> Hi Changbin,
-> 
-> I think I found a way around the problem by enabling address dumping
-> from addr2line. I've sent the patches here:
-> https://lore.kernel.org/lkml/20230609235419.204624-1-irogers@google.com/
-> but only lightly tested them. Could you please take a look and send a
-> Tested-by ?
-> 
-> It is probably too late to get this into 6.4.0, but we can add a Fixes
-> tag so that it gets picked into 6.4.1. The patches here are on the
-> perf-tools-next tree targeting Linux 6.5.
-> 
-> Thanks,
-> Ian
->
-Hi Ian,
-I applied your patches on mainline, the configuration error is gone, but still
-get stuck finally. Here is the back trace.
+The behavior of PR_TASK_PERF_EVENTS_{ENABLE,DISABLE} has been changed
+since v2.6.30, commit 082ff5a2767a ("perf_counter: Change pctrl()
+behaviour").
 
-#0  0x00001522c92bc392 in __libc_read (fd=..., buf=..., nbytes=...) at ../sysdeps/unix/sysv/linux/read.c:26
-#1  0x0000559e6bd0fdfb in read (__nbytes=..., __buf=..., __fd=...) at /usr/include/x86_64-linux-gnu/bits/unistd.h:44
-#2  io__get_char (io=...) at /work/linux/tools/perf/libapi/include/api/io.h:50
-#3  io__getline (line_len_out=..., line_out=..., io=...) at /work/linux/tools/perf/libapi/include/api/io.h:129
-#4  read_addr2line_record (io=..., style=..., function=..., filename=..., line_nr=...) at util/srcline.c:523
-#5  0x0000559e6bd111b4 in addr2line (dso_name=..., addr=..., file=..., line_nr=..., dso=..., unwind_inlines=..., node=..., sym=...) at util/srcline.c:722
-#6  0x0000559e6bd11e77 in addr2inlines (sym=..., dso=..., addr=..., dso_name=...) at util/srcline.c:773
-#7  dso__parse_addr_inlines (dso=..., addr=..., sym=...) at util/srcline.c:950
-#8  0x0000559e6bcc1de7 in append_inlines (cursor=..., ms=..., ip=...) at util/machine.c:3085
-#9  0x0000559e6bcc24e6 in add_callchain_ip (thread=..., cursor=..., parent=..., root_al=..., cpumode=..., ip=..., branch=..., flags=..., iter=..., branch_from=...) at util/machine.c:2375
-#10 0x0000559e6bcc3c1a in thread__resolve_callchain_sample (thread=..., cursor=..., evsel=..., sample=..., parent=..., root_al=..., max_stack=...) at util/machine.c:3055
-#11 0x0000559e6bcbe817 in sample__resolve_callchain (sample=..., cursor=..., parent=..., evsel=..., al=..., max_stack=...) at util/callchain.c:1098
-#12 0x0000559e6bcfb8c0 in hist_entry_iter__add (iter=..., al=..., max_stack_depth=..., arg=...) at util/hist.c:1222
-#13 0x0000559e6bbc9951 in process_sample_event (tool=..., event=..., sample=..., evsel=..., machine=...) at builtin-report.c:330
-#14 0x0000559e6bcd0193 in perf_session__deliver_event (session=..., event=..., tool=..., file_offset=..., file_path=...) at util/session.c:1645
-#15 0x0000559e6bcd5226 in do_flush (show_progress=..., oe=...) at util/ordered-events.c:245
-#16 __ordered_events__flush (oe=..., how=..., timestamp=...) at util/ordered-events.c:324
-#17 0x0000559e6bcd5a19 in __ordered_events__flush (timestamp=..., how=..., oe=...) at util/ordered-events.c:340
-#18 ordered_events__flush (how=..., oe=...) at util/ordered-events.c:342
-#19 ordered_events__flush (oe=..., how=...) at util/ordered-events.c:340
-#20 0x0000005b0000006e in ?? ()
-#21 0x68f3206410bcae00 in ?? ()
-#22 0x0000000000000000 in ?? ()
+This patch revises the documentation about these two prctl options to match
+the real behavior. The linux man pages should also be updated.
 
-> 
-> > Thanks,
-> > Ian
-> >
-> > > --
-> > > Cheers,
-> > > Changbin Du
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Changbin Du <changbin.du@huawei.com>
+---
+ tools/perf/design.txt | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
+diff --git a/tools/perf/design.txt b/tools/perf/design.txt
+index aa8cfeabb743..cc9a2716d5ec 100644
+--- a/tools/perf/design.txt
++++ b/tools/perf/design.txt
+@@ -439,16 +439,15 @@ Additionally, non-inherited overflow counters can use
+ 
+ to enable a counter for 'nr' events, after which it gets disabled again.
+ 
+-A process can enable or disable all the counter groups that are
+-attached to it, using prctl:
++A thread can enable or disable all the counter groups that are
++created by itself, using prctl:
+ 
+ 	prctl(PR_TASK_PERF_EVENTS_ENABLE);
+ 
+ 	prctl(PR_TASK_PERF_EVENTS_DISABLE);
+ 
+-This applies to all counters on the current process, whether created
+-by this process or by another, and doesn't affect any counters that
+-this process has created on other processes.  It only enables or
++This applies to all counters created by this thread, and doesn't affect any
++counters that created by other processes or threads.  It only enables or
+ disables the group leaders, not any other members in the groups.
+ 
+ 
 -- 
-Cheers,
-Changbin Du
+2.25.1
+
