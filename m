@@ -2,107 +2,110 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9F3C88CB5
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 14:00:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD78C88CB2
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 14:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232222AbjFLOAV (ORCPT
+        id S236955AbjFLOIy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 10:00:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46240 "EHLO
+        Mon, 12 Jun 2023 10:08:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236492AbjFLN7x (ORCPT
+        with ESMTP id S232814AbjFLOIx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 09:59:53 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ABE25198E;
-        Mon, 12 Jun 2023 06:59:27 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA4FB1FB;
-        Mon, 12 Jun 2023 07:00:10 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.27.163])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB8E63F71E;
-        Mon, 12 Jun 2023 06:59:20 -0700 (PDT)
-Date:   Mon, 12 Jun 2023 14:59:13 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net,
-        Stephane Eranian <eranian@google.com>, mpe@ellerman.id.au,
-        Tzung-Bi Shih <tzungbi@chromium.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org, Sumit Garg <sumit.garg@linaro.org>,
-        npiggin@gmail.com, davem@davemloft.net,
-        Marc Zyngier <maz@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>, sparclinux@vger.kernel.org,
-        christophe.leroy@csgroup.eu,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        ravi.v.shankar@intel.com, Randy Dunlap <rdunlap@infradead.org>,
-        Pingfan Liu <kernelfans@gmail.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lecopzer Chen <lecopzer.chen@mediatek.com>,
-        Ian Rogers <irogers@google.com>, ito-yuichi@fujitsu.com,
-        ricardo.neri@intel.com, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org,
-        Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v5 15/18] watchdog/perf: Add a weak function for an arch
- to detect if perf can use NMIs
-Message-ID: <ZIckscgmirrgxZ75@FVFF77S0Q05N>
-References: <20230519101840.v5.18.Ia44852044cdcb074f387e80df6b45e892965d4a1@changeid>
- <20230519101840.v5.15.Ic55cb6f90ef5967d8aaa2b503a4e67c753f64d3a@changeid>
- <ZIb0hd8djM+jJviF@FVFF77S0Q05N>
- <CAD=FV=WyLKygSsArCaSzid47Rz5=ozR6Yh9L6Q3JStpzF9Tn9w@mail.gmail.com>
+        Mon, 12 Jun 2023 10:08:53 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA361E7B;
+        Mon, 12 Jun 2023 07:08:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=0DnAgGwTA4yK+fgbpuGtXRFHoSZ33hlP/4ZXBRVYp+o=; b=E8ljFpn9WgTPZ/ghUHFMuqyFju
+        18HzrWeqfun7OJcAh9UGudekKNjDoGcljRZKBpo0giB5F3stC6nIUGSCxUkXXwyWbupj7TMNNuKil
+        C0qZaWmsOGRDfcykSbtXyDsqwC53N/ffa90WzdfiGbg2Nf9pQCUWBGvK3g5jRwQH2YMDU8gyWl9pL
+        ged32jUjfI4udvDbsKDUyg//e/7+o+wfbYlxZvJs2kevDwGt6B+NSKX3E7HM+/0Qg5oPE8qUAXM2V
+        UaedKnuMQ1UooxP67PAFhoTXHLFIQzhWzWL98n3HOLUYZnu4gcQCoT2BpnYrDpylDyx4RZbFXxW4d
+        S3FiX6nA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q8iDt-008t8U-1b;
+        Mon, 12 Jun 2023 14:08:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 21FAB30058D;
+        Mon, 12 Jun 2023 16:08:44 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id F09712BFD8191; Mon, 12 Jun 2023 16:08:43 +0200 (CEST)
+Date:   Mon, 12 Jun 2023 16:08:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
+        gregkh@linuxfoundation.org, pbonzini@redhat.com,
+        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
+        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
+        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
+        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org,
+        frederic@kernel.org, quic_neeraju@quicinc.com,
+        joel@joelfernandes.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
+        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
+        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+        john.johansen@canonical.com, paul@paul-moore.com,
+        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
+        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
+        luc.vanoostenryck@gmail.com
+Subject: Re: [PATCH v3 09/57] sched: Simplify ttwu()
+Message-ID: <20230612140843.GZ83892@hirez.programming.kicks-ass.net>
+References: <20230612090713.652690195@infradead.org>
+ <20230612093538.076428270@infradead.org>
+ <0012d943-6fd0-4b8d-9ec6-3d02aba75dcc@kadam.mountain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=WyLKygSsArCaSzid47Rz5=ozR6Yh9L6Q3JStpzF9Tn9w@mail.gmail.com>
+In-Reply-To: <0012d943-6fd0-4b8d-9ec6-3d02aba75dcc@kadam.mountain>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 06:55:37AM -0700, Doug Anderson wrote:
-> Mark,
+On Mon, Jun 12, 2023 at 04:51:17PM +0300, Dan Carpenter wrote:
+> On Mon, Jun 12, 2023 at 11:07:22AM +0200, Peter Zijlstra wrote:
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -3664,16 +3664,15 @@ ttwu_stat(struct task_struct *p, int cpu
+> >  		__schedstat_inc(p->stats.nr_wakeups_local);
+> >  	} else {
+> >  		struct sched_domain *sd;
+> > +		guard(rcu)();
+> >  
+> >  		__schedstat_inc(p->stats.nr_wakeups_remote);
+> > -		rcu_read_lock();
 > 
-> On Mon, Jun 12, 2023 at 3:33 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> >
-> > On Fri, May 19, 2023 at 10:18:39AM -0700, Douglas Anderson wrote:
-> > > On arm64, NMI support needs to be detected at runtime. Add a weak
-> > > function to the perf hardlockup detector so that an architecture can
-> > > implement it to detect whether NMIs are available.
-> > >
-> > > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > > ---
-> > > While I won't object to this patch landing, I consider it part of the
-> > > arm64 perf hardlockup effort. I would be OK with the earlier patches
-> > > in the series landing and then not landing ${SUBJECT} patch nor
-> > > anything else later.
-> >
-> > FWIW, everything prior to this looks fine to me, so I reckon it'd be worth
-> > splitting the series here and getting the buddy lockup detector in first, to
-> > avoid a log-jam on all the subsequent NMI bits.
-> 
-> I think the whole series has already landed in Andrew's tree,
-> including the arm64 "perf" lockup detector bits. I saw all the
-> notifications from Andrew go through over the weekend that they were
-> moved from an "unstable" branch to a "stable" one and I see them at:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/log/?h=mm-nonmm-stable
-> 
-> When I first saw Anderw land the arm64 perf lockup detector bits in
-> his unstable branch several weeks ago, I sent a private message to the
-> arm64 maintainers (yourself included) to make sure you were aware of
-> it and that it hadn't been caught in mail filters. I got the
-> impression that everything was OK. Is that not the case?
+> We can't put the guard(rcu)(); here?  I have unpublished static analysis
+> which assumes that the first and last statements guarded by a lock are
+> important.  But if we always put it at the top of the scope then we
+> lose that information.
 
-Sorry; I'm slowly catching up with a backlog of email, and I'm just behind.
+we can definitely put it there. that one schedstat doesn't matter either
+way around.
 
-Feel free to ignore this; sorry for the noise!
-
-If we spot anything going wrong in testing we can look at fixing those up.
-
-Thanks,
-Mark.
+> >  		for_each_domain(rq->cpu, sd) {
+> >  			if (cpumask_test_cpu(cpu, sched_domain_span(sd))) {
+> >  				__schedstat_inc(sd->ttwu_wake_remote);
+> >  				break;
+> >  			}
+> >  		}
+> > -		rcu_read_unlock();
+> >  	}
