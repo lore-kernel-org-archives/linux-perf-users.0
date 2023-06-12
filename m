@@ -2,45 +2,45 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DA5C7EE43
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C826EC7EE25
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235686AbjFLJ4I (ORCPT
+        id S232840AbjFLJ4J (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:56:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33460 "EHLO
+        Mon, 12 Jun 2023 05:56:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230186AbjFLJyT (ORCPT
+        with ESMTP id S230332AbjFLJyd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:19 -0400
+        Mon, 12 Jun 2023 05:54:33 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C79749FA;
-        Mon, 12 Jun 2023 02:38:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8882618B;
+        Mon, 12 Jun 2023 02:39:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=iuKjwptMM283OkeCg3rHRYfDPMncNnTiTfZUlZvzjjw=; b=eQ6OsD4kYVKLafcm5zMaXykUrJ
-        t3Yx8a+byrZdB944/0aNdLOqAmoLeWSa1sowLg19pvZhRfEGH12EfjQizZN73l+Q2lmgWVTy/jEN2
-        66w/tSoR035EtMK1QJrtp16Z85OKpvfSl1I8OLy7JSDS0vEBXw8vGKRffU4u96Gz85h50NrSym32v
-        8aadmJp7+8xctTmftjzi5KRquTBd3yr6fYIYX7v7Rb7TZGAQFPvFwW5JY6GaXXShnDrDMfhQWRx/H
-        Hx6pFtrNHcKkz/xQw6bxea1nVgSbzWPnczzWWwxrD46aGrv+zXbaZt8xVprl8zZZmhqQuJnaVP8+3
-        u9+4lFQg==;
+        bh=U4i7z1jGLLioJYi9TDEcLiRvRYzXl6AqAACZeSAVHVg=; b=SBLpIgKh9BvTgin8OgClkKlYXg
+        X5ams+FHzFQ6G1lMnSouT1mDdb4OLsixaSq0XGTpb8qMCrU112HpuhNQoPMpu5LuKgc0l67v7cO1h
+        u5ptXidisQWMYnTu9VRqL7lCU0qSFMrhITDD9gjBmwe8Ob3g4CMGsAIsrtG8NhdHIlElo7XiHuBGk
+        i6CUfsyeQ89E6j6aUDbi6UnyyLpJP5feQWE/A/0f7bznVuaG82q1C6WO47OsY3j0TTRUJpg1Of5WA
+        IRcAI8pTAmFoYuUbcG3n6PWRD/wAaLyzUwLu2dB3lMCN4lr3Q2ZxqN2zU2caRGifvgztAd6QumekK
+        vRuQDjXw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0f-008kOo-0K;
-        Mon, 12 Jun 2023 09:38:49 +0000
+        id 1q8e0m-008kQu-39;
+        Mon, 12 Jun 2023 09:39:00 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7FC1C302E28;
-        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F7FB303383;
+        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 0C29230A58077; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093537.693926033@infradead.org>
+        id D03BE30A77B70; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093540.253514702@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:17 +0200
+Date:   Mon, 12 Jun 2023 11:07:51 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -68,7 +68,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 04/57] kbuild: Drop -Wdeclaration-after-statement
+Subject: [PATCH v3 38/57] perf: Simplify IOC_SET_OUTPUT
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -76,54 +76,49 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-With the advent on scope-based resource management it comes really
-tedious to abide by the contraints of -Wdeclaration-after-statement.
 
-It will still be recommeneded to place declarations at the start of a
-scope where possible, but it will no longer be enforced.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- Makefile                          |    6 +-----
- arch/arm64/kernel/vdso32/Makefile |    2 --
- 2 files changed, 1 insertion(+), 7 deletions(-)
+ kernel/events/core.c |   17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
---- a/Makefile
-+++ b/Makefile
-@@ -447,8 +447,7 @@ HOSTRUSTC = rustc
- HOSTPKG_CONFIG	= pkg-config
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5762,6 +5762,11 @@ static inline struct fd perf_fdget(int f
+ 	return f;
+ }
  
- KBUILD_USERHOSTCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
--			 -O2 -fomit-frame-pointer -std=gnu11 \
--			 -Wdeclaration-after-statement
-+			 -O2 -fomit-frame-pointer -std=gnu11
- KBUILD_USERCFLAGS  := $(KBUILD_USERHOSTCFLAGS) $(USERCFLAGS)
- KBUILD_USERLDFLAGS := $(USERLDFLAGS)
++static inline bool is_perf_fd(struct fd fd)
++{
++	return fd.file && fd.file->f_op == &perf_fops;
++}
++
+ static int perf_event_set_output(struct perf_event *event,
+ 				 struct perf_event *output_event);
+ static int perf_event_set_filter(struct perf_event *event, void __user *arg);
+@@ -5807,19 +5812,15 @@ static long _perf_ioctl(struct perf_even
  
-@@ -1012,9 +1011,6 @@ endif
- # arch Makefile may override CC so keep this after arch Makefile is included
- NOSTDINC_FLAGS += -nostdinc
+ 	case PERF_EVENT_IOC_SET_OUTPUT:
+ 	{
+-		int ret;
+ 		if (arg != -1) {
+ 			struct perf_event *output_event;
+-			struct fd output = perf_fdget(arg);
+-			if (!output.file)
++			CLASS(fd, output)(arg);
++			if (!is_perf_fd(output))
+ 				return -EBADF;
+ 			output_event = output.file->private_data;
+-			ret = perf_event_set_output(event, output_event);
+-			fdput(output);
+-		} else {
+-			ret = perf_event_set_output(event, NULL);
++			return perf_event_set_output(event, output_event);
+ 		}
+-		return ret;
++		return perf_event_set_output(event, NULL);
+ 	}
  
--# warn about C99 declaration after statement
--KBUILD_CFLAGS += -Wdeclaration-after-statement
--
- # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
- KBUILD_CFLAGS += -Wvla
- 
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -65,11 +65,9 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-pr
-                -fno-strict-aliasing -fno-common \
-                -Werror-implicit-function-declaration \
-                -Wno-format-security \
--               -Wdeclaration-after-statement \
-                -std=gnu11
- VDSO_CFLAGS  += -O2
- # Some useful compiler-dependent flags from top-level Makefile
--VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement,)
- VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)
- VDSO_CFLAGS += -fno-strict-overflow
- VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
+ 	case PERF_EVENT_IOC_SET_FILTER:
 
 
