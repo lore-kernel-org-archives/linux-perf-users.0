@@ -2,45 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8138AC7EE25
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B576C87FDE
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235655AbjFLJ4C (ORCPT
+        id S235664AbjFLJ4F (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33560 "EHLO
+        Mon, 12 Jun 2023 05:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233425AbjFLJyp (ORCPT
+        with ESMTP id S231254AbjFLJy1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:45 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5F334C1D;
-        Mon, 12 Jun 2023 02:39:07 -0700 (PDT)
+        Mon, 12 Jun 2023 05:54:27 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16F1A5FF5;
+        Mon, 12 Jun 2023 02:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=szAn79F4mqfMUFH3NFua/nTnj8aGUQ8HGVR6NlJOzM4=; b=dmt6RRN5/6iW0nXv8WCs7Zhoq7
-        h66/OFpGSYq3NopaotDNajuFo8i5Abvywbk25Mkw64F7BKRPBDAMFErpkMVn5jc1JDWWixleXtBPh
-        TLPcdD6pTKzi2NGzuw4ny2PmQy/30yIqkBkkgI2XhvaBJgwGgdhaI4B8DWmnMj2mqvkcRzcAY6HRy
-        jk7gpJD/ftYk8Hikh4m2P22vJKm9NoD09zIFAZMUbUi4MpR8Yhp4gzJ6D7tuejbq/RRvcSqn4CrlB
-        sEMwyssBIPsqrQMHjdIJ8/AZRnWyKMbTE7D2j2333TyWpvcfxe9q1zhpgbPY6ZV8UERchXfhjI06e
-        QRlB8Skw==;
+        bh=zYnYxbpqthdvjZXSbX3mfTIRB+RNguvN2goMXYp9Xns=; b=C5N48YEmWa+xMIpR8Tid5fFCz1
+        4ts/IhHAlVB3Y7klukQjxw44QSTOVczdIgHCgTTbeHSL7aNXDjlvrZtOElLa8bHls8SaEi11a1yjW
+        m8kixqnVYt13JTML9cc4mFMTjjaeZEqje23QKPWH88Nmb5TXkjBZw9Qbm/tLMrNNaaBI01UM3PP4o
+        mnSnzt8+wc/j6RBeyZpxQSflkzM8u9BQdxPW12PhV7VkCm5m4D2Z6wf2b/Pbn8epVWSKozGvq5kEJ
+        r34sE5/kpDYtj9XvM/rxugO23nxtz5nDzFbm0JOBNbjS5cquGVt7sQ2Oz3swWIcXkshOgt0riH9zO
+        O7emOYuA==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0l-008kQP-0j;
-        Mon, 12 Jun 2023 09:38:56 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q8e0l-002NB7-86; Mon, 12 Jun 2023 09:38:55 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0E96F302F7E;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 16399302FB8;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 6C74530A77B5C; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093539.014199820@infradead.org>
+        id 75EFF30A77B5E; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093539.157685883@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:34 +0200
+Date:   Mon, 12 Jun 2023 11:07:36 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -68,7 +67,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 21/57] sched: Misc cleanups
+Subject: [PATCH v3 23/57] perf: Simplify perf_event_alloc() error path
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -76,425 +75,276 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Random remaining guard use...
+The error cleanup sequence in perf_event_alloc() is a subset of the
+existing _free_event() function (it must of course be).
+
+Split this out into __free_event() and simplify the error path.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/sched/core.c |  163 ++++++++++++++++++++--------------------------------
- 1 file changed, 63 insertions(+), 100 deletions(-)
+ include/linux/perf_event.h |    1 
+ kernel/events/core.c       |  129 ++++++++++++++++++++++-----------------------
+ 2 files changed, 66 insertions(+), 64 deletions(-)
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1454,16 +1454,12 @@ static void __uclamp_update_util_min_rt_
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -634,6 +634,7 @@ struct swevent_hlist {
+ #define PERF_ATTACH_ITRACE	0x10
+ #define PERF_ATTACH_SCHED_CB	0x20
+ #define PERF_ATTACH_CHILD	0x40
++#define PERF_ATTACH_EXCLUSIVE	0x80
  
- static void uclamp_update_util_min_rt_default(struct task_struct *p)
- {
--	struct rq_flags rf;
--	struct rq *rq;
--
- 	if (!rt_task(p))
- 		return;
- 
- 	/* Protect updates to p->uclamp_* */
--	rq = task_rq_lock(p, &rf);
-+	guard(task_rq_lock)(p);
- 	__uclamp_update_util_min_rt_default(p);
--	task_rq_unlock(rq, p, &rf);
- }
- 
- static inline struct uclamp_se
-@@ -1759,9 +1755,8 @@ static void uclamp_update_root_tg(void)
- 	uclamp_se_set(&tg->uclamp_req[UCLAMP_MAX],
- 		      sysctl_sched_uclamp_util_max, false);
- 
--	rcu_read_lock();
-+	guard(rcu)();
- 	cpu_util_update_eff(&root_task_group.css);
--	rcu_read_unlock();
- }
- #else
- static void uclamp_update_root_tg(void) { }
-@@ -1788,10 +1783,9 @@ static void uclamp_sync_util_min_rt_defa
- 	smp_mb__after_spinlock();
- 	read_unlock(&tasklist_lock);
- 
--	rcu_read_lock();
-+	guard(rcu)();
- 	for_each_process_thread(g, p)
- 		uclamp_update_util_min_rt_default(p);
--	rcu_read_unlock();
- }
- 
- static int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
-@@ -2243,10 +2237,9 @@ void migrate_disable(void)
- 		return;
+ struct bpf_prog;
+ struct perf_cgroup;
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5094,6 +5094,8 @@ static int exclusive_event_init(struct p
+ 			return -EBUSY;
  	}
  
--	preempt_disable();
-+	guard(preempt)();
- 	this_rq()->nr_pinned++;
- 	p->migration_disabled = 1;
--	preempt_enable();
- }
- EXPORT_SYMBOL_GPL(migrate_disable);
- 
-@@ -2270,7 +2263,7 @@ void migrate_enable(void)
- 	 * Ensure stop_task runs either before or after this, and that
- 	 * __set_cpus_allowed_ptr(SCA_MIGRATE_ENABLE) doesn't schedule().
- 	 */
--	preempt_disable();
-+	guard(preempt)();
- 	if (p->cpus_ptr != &p->cpus_mask)
- 		__set_cpus_allowed_ptr(p, &ac);
- 	/*
-@@ -2281,7 +2274,6 @@ void migrate_enable(void)
- 	barrier();
- 	p->migration_disabled = 0;
- 	this_rq()->nr_pinned--;
--	preempt_enable();
- }
- EXPORT_SYMBOL_GPL(migrate_enable);
- 
-@@ -3449,13 +3441,11 @@ unsigned long wait_task_inactive(struct
-  */
- void kick_process(struct task_struct *p)
- {
--	int cpu;
-+	guard(preempt)();
-+	int cpu = task_cpu(p);
- 
--	preempt_disable();
--	cpu = task_cpu(p);
- 	if ((cpu != smp_processor_id()) && task_curr(p))
- 		smp_send_reschedule(cpu);
--	preempt_enable();
- }
- EXPORT_SYMBOL_GPL(kick_process);
- 
-@@ -6300,8 +6290,9 @@ static void sched_core_balance(struct rq
- 	struct sched_domain *sd;
- 	int cpu = cpu_of(rq);
- 
--	preempt_disable();
--	rcu_read_lock();
-+	guard(preempt)();
-+	guard(rcu)();
++	event->attach_state |= PERF_ATTACH_EXCLUSIVE;
 +
- 	raw_spin_rq_unlock_irq(rq);
- 	for_each_domain(cpu, sd) {
- 		if (need_resched())
-@@ -6311,8 +6302,6 @@ static void sched_core_balance(struct rq
- 			break;
- 	}
- 	raw_spin_rq_lock_irq(rq);
--	rcu_read_unlock();
--	preempt_enable();
+ 	return 0;
  }
  
- static DEFINE_PER_CPU(struct balance_callback, core_balance_head);
-@@ -8169,8 +8158,6 @@ SYSCALL_DEFINE4(sched_getattr, pid_t, pi
- #ifdef CONFIG_SMP
- int dl_task_check_affinity(struct task_struct *p, const struct cpumask *mask)
+@@ -5101,14 +5103,13 @@ static void exclusive_event_destroy(stru
  {
--	int ret = 0;
+ 	struct pmu *pmu = event->pmu;
+ 
+-	if (!is_exclusive_pmu(pmu))
+-		return;
 -
- 	/*
- 	 * If the task isn't a deadline task or admission control is
- 	 * disabled then we don't care about affinity changes.
-@@ -8184,11 +8171,11 @@ int dl_task_check_affinity(struct task_s
- 	 * tasks allowed to run on all the CPUs in the task's
- 	 * root_domain.
- 	 */
--	rcu_read_lock();
-+	guard(rcu)();
- 	if (!cpumask_subset(task_rq(p)->rd->span, mask))
--		ret = -EBUSY;
--	rcu_read_unlock();
--	return ret;
-+		return -EBUSY;
+ 	/* see comment in exclusive_event_init() */
+ 	if (event->attach_state & PERF_ATTACH_TASK)
+ 		atomic_dec(&pmu->exclusive_cnt);
+ 	else
+ 		atomic_inc(&pmu->exclusive_cnt);
 +
-+	return 0;
++	event->attach_state &= ~PERF_ATTACH_EXCLUSIVE;
  }
- #endif
  
-@@ -9197,10 +9184,8 @@ int task_can_attach(struct task_struct *
- 	 * success of set_cpus_allowed_ptr() on all attached tasks
- 	 * before cpus_mask may be changed.
- 	 */
--	if (p->flags & PF_NO_SETAFFINITY) {
--		ret = -EINVAL;
--		goto out;
+ static bool exclusive_event_match(struct perf_event *e1, struct perf_event *e2)
+@@ -5143,38 +5144,22 @@ static bool exclusive_event_installable(
+ static void perf_addr_filters_splice(struct perf_event *event,
+ 				       struct list_head *head);
+ 
+-static void _free_event(struct perf_event *event)
++/* vs perf_event_alloc() error */
++static void __free_event(struct perf_event *event)
+ {
+-	irq_work_sync(&event->pending_irq);
+-
+-	unaccount_event(event);
+-
+-	security_perf_event_free(event);
+-
+-	if (event->rb) {
+-		/*
+-		 * Can happen when we close an event with re-directed output.
+-		 *
+-		 * Since we have a 0 refcount, perf_mmap_close() will skip
+-		 * over us; possibly making our ring_buffer_put() the last.
+-		 */
+-		mutex_lock(&event->mmap_mutex);
+-		ring_buffer_attach(event, NULL);
+-		mutex_unlock(&event->mmap_mutex);
 -	}
-+	if (p->flags & PF_NO_SETAFFINITY)
-+		return -EINVAL;
- 
- 	if (dl_task(p) && !cpumask_intersects(task_rq(p)->rd->span,
- 					      cs_effective_cpus)) {
-@@ -9211,7 +9196,6 @@ int task_can_attach(struct task_struct *
- 		ret = dl_cpu_busy(cpu, p);
+-
+-	if (is_cgroup_event(event))
+-		perf_detach_cgroup(event);
+-
+ 	if (!event->parent) {
+ 		if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
+ 			put_callchain_buffers();
  	}
  
--out:
+-	perf_event_free_bpf_prog(event);
+-	perf_addr_filters_splice(event, NULL);
+ 	kfree(event->addr_filter_ranges);
+ 
++	if (event->attach_state & PERF_ATTACH_EXCLUSIVE)
++		exclusive_event_destroy(event);
++
++	if (is_cgroup_event(event))
++		perf_detach_cgroup(event);
++
+ 	if (event->destroy)
+ 		event->destroy(event);
+ 
+@@ -5185,22 +5170,56 @@ static void _free_event(struct perf_even
+ 	if (event->hw.target)
+ 		put_task_struct(event->hw.target);
+ 
+-	if (event->pmu_ctx)
++	if (event->pmu_ctx) {
++		/*
++		 * put_pmu_ctx() needs an event->ctx reference, because of
++		 * epc->ctx.
++		 */
++		WARN_ON_ONCE(!event->ctx);
++		WARN_ON_ONCE(event->pmu_ctx->ctx != event->ctx);
+ 		put_pmu_ctx(event->pmu_ctx);
++	}
+ 
+ 	/*
+-	 * perf_event_free_task() relies on put_ctx() being 'last', in particular
+-	 * all task references must be cleaned up.
++	 * perf_event_free_task() relies on put_ctx() being 'last', in
++	 * particular all task references must be cleaned up.
+ 	 */
+ 	if (event->ctx)
+ 		put_ctx(event->ctx);
+ 
+-	exclusive_event_destroy(event);
+-	module_put(event->pmu->module);
++	if (event->pmu)
++		module_put(event->pmu->module);
+ 
+ 	call_rcu(&event->rcu_head, free_event_rcu);
+ }
+ 
++/* vs perf_event_alloc() success */
++static void _free_event(struct perf_event *event)
++{
++	irq_work_sync(&event->pending_irq);
++
++	unaccount_event(event);
++
++	security_perf_event_free(event);
++
++	if (event->rb) {
++		/*
++		 * Can happen when we close an event with re-directed output.
++		 *
++		 * Since we have a 0 refcount, perf_mmap_close() will skip
++		 * over us; possibly making our ring_buffer_put() the last.
++		 */
++		mutex_lock(&event->mmap_mutex);
++		ring_buffer_attach(event, NULL);
++		mutex_unlock(&event->mmap_mutex);
++	}
++
++	perf_event_free_bpf_prog(event);
++	perf_addr_filters_splice(event, NULL);
++
++	__free_event(event);
++}
++
+ /*
+  * Used to free events which have a known refcount of 1, such as in error paths
+  * where the event isn't exposed yet and inherited events.
+@@ -11591,8 +11610,10 @@ static int perf_try_init_event(struct pm
+ 			event->destroy(event);
+ 	}
+ 
+-	if (ret)
++	if (ret) {
++		event->pmu = NULL;
+ 		module_put(pmu->module);
++	}
+ 
  	return ret;
  }
+@@ -11918,7 +11939,7 @@ perf_event_alloc(struct perf_event_attr
+ 	 * See perf_output_read().
+ 	 */
+ 	if (attr->inherit && (attr->sample_type & PERF_SAMPLE_READ))
+-		goto err_ns;
++		goto err;
  
-@@ -10433,11 +10417,9 @@ static int cpu_cgroup_css_online(struct
+ 	if (!has_branch_stack(event))
+ 		event->attr.branch_sample_type = 0;
+@@ -11926,7 +11947,7 @@ perf_event_alloc(struct perf_event_attr
+ 	pmu = perf_init_event(event);
+ 	if (IS_ERR(pmu)) {
+ 		err = PTR_ERR(pmu);
+-		goto err_ns;
++		goto err;
+ 	}
  
- #ifdef CONFIG_UCLAMP_TASK_GROUP
- 	/* Propagate the effective uclamp value for the new group */
--	mutex_lock(&uclamp_mutex);
--	rcu_read_lock();
-+	guard(mutex)(&uclamp_mutex);
-+	guard(rcu)();
- 	cpu_util_update_eff(css);
--	rcu_read_unlock();
--	mutex_unlock(&uclamp_mutex);
- #endif
+ 	/*
+@@ -11936,24 +11957,24 @@ perf_event_alloc(struct perf_event_attr
+ 	 */
+ 	if (pmu->task_ctx_nr == perf_invalid_context && (task || cgroup_fd != -1)) {
+ 		err = -EINVAL;
+-		goto err_pmu;
++		goto err;
+ 	}
  
- 	return 0;
-@@ -10588,8 +10570,8 @@ static ssize_t cpu_uclamp_write(struct k
+ 	if (event->attr.aux_output &&
+ 	    !(pmu->capabilities & PERF_PMU_CAP_AUX_OUTPUT)) {
+ 		err = -EOPNOTSUPP;
+-		goto err_pmu;
++		goto err;
+ 	}
  
- 	static_branch_enable(&sched_uclamp_used);
+ 	if (cgroup_fd != -1) {
+ 		err = perf_cgroup_connect(cgroup_fd, event, attr, group_leader);
+ 		if (err)
+-			goto err_pmu;
++			goto err;
+ 	}
  
--	mutex_lock(&uclamp_mutex);
--	rcu_read_lock();
-+	guard(mutex)(&uclamp_mutex);
-+	guard(rcu)();
+ 	err = exclusive_event_init(event);
+ 	if (err)
+-		goto err_pmu;
++		goto err;
  
- 	tg = css_tg(of_css(of));
- 	if (tg->uclamp_req[clamp_id].value != req.util)
-@@ -10604,9 +10586,6 @@ static ssize_t cpu_uclamp_write(struct k
- 	/* Update effective clamps to track the most restrictive value */
- 	cpu_util_update_eff(of_css(of));
+ 	if (has_addr_filter(event)) {
+ 		event->addr_filter_ranges = kcalloc(pmu->nr_addr_filters,
+@@ -11961,7 +11982,7 @@ perf_event_alloc(struct perf_event_attr
+ 						    GFP_KERNEL);
+ 		if (!event->addr_filter_ranges) {
+ 			err = -ENOMEM;
+-			goto err_per_task;
++			goto err;
+ 		}
  
--	rcu_read_unlock();
--	mutex_unlock(&uclamp_mutex);
+ 		/*
+@@ -11986,41 +12007,21 @@ perf_event_alloc(struct perf_event_attr
+ 		if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN) {
+ 			err = get_callchain_buffers(attr->sample_max_stack);
+ 			if (err)
+-				goto err_addr_filters;
++				goto err;
+ 		}
+ 	}
+ 
+ 	err = security_perf_event_alloc(event);
+ 	if (err)
+-		goto err_callchain_buffer;
++		goto err;
+ 
+ 	/* symmetric to unaccount_event() in _free_event() */
+ 	account_event(event);
+ 
+ 	return event;
+ 
+-err_callchain_buffer:
+-	if (!event->parent) {
+-		if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
+-			put_callchain_buffers();
+-	}
+-err_addr_filters:
+-	kfree(event->addr_filter_ranges);
 -
- 	return nbytes;
- }
- 
-@@ -10632,10 +10611,10 @@ static inline void cpu_uclamp_print(stru
- 	u64 percent;
- 	u32 rem;
- 
--	rcu_read_lock();
--	tg = css_tg(seq_css(sf));
--	util_clamp = tg->uclamp_req[clamp_id].value;
--	rcu_read_unlock();
-+	scoped_guard (rcu) {
-+		tg = css_tg(seq_css(sf));
-+		util_clamp = tg->uclamp_req[clamp_id].value;
-+	}
- 
- 	if (util_clamp == SCHED_CAPACITY_SCALE) {
- 		seq_puts(sf, "max\n");
-@@ -10952,7 +10931,6 @@ static int tg_cfs_schedulable_down(struc
- 
- static int __cfs_schedulable(struct task_group *tg, u64 period, u64 quota)
- {
--	int ret;
- 	struct cfs_schedulable_data data = {
- 		.tg = tg,
- 		.period = period,
-@@ -10964,11 +10942,8 @@ static int __cfs_schedulable(struct task
- 		do_div(data.quota, NSEC_PER_USEC);
- 	}
- 
--	rcu_read_lock();
--	ret = walk_tg_tree(tg_cfs_schedulable_down, tg_nop, &data);
--	rcu_read_unlock();
+-err_per_task:
+-	exclusive_event_destroy(event);
 -
--	return ret;
-+	guard(rcu)();
-+	return walk_tg_tree(tg_cfs_schedulable_down, tg_nop, &data);
- }
- 
- static int cpu_cfs_stat_show(struct seq_file *sf, void *v)
-@@ -11529,14 +11504,12 @@ int __sched_mm_cid_migrate_from_fetch_ci
- 	 * are not the last task to be migrated from this cpu for this mm, so
- 	 * there is no need to move src_cid to the destination cpu.
- 	 */
--	rcu_read_lock();
-+	guard(rcu)();
- 	src_task = rcu_dereference(src_rq->curr);
- 	if (READ_ONCE(src_task->mm_cid_active) && src_task->mm == mm) {
--		rcu_read_unlock();
- 		t->last_mm_cid = -1;
- 		return -1;
- 	}
--	rcu_read_unlock();
- 
- 	return src_cid;
- }
-@@ -11580,18 +11553,17 @@ int __sched_mm_cid_migrate_from_try_stea
- 	 * the lazy-put flag, this task will be responsible for transitioning
- 	 * from lazy-put flag set to MM_CID_UNSET.
- 	 */
--	rcu_read_lock();
--	src_task = rcu_dereference(src_rq->curr);
--	if (READ_ONCE(src_task->mm_cid_active) && src_task->mm == mm) {
--		rcu_read_unlock();
--		/*
--		 * We observed an active task for this mm, there is therefore
--		 * no point in moving this cid to the destination cpu.
--		 */
--		t->last_mm_cid = -1;
--		return -1;
-+	scoped_guard (rcu) {
-+		src_task = rcu_dereference(src_rq->curr);
-+		if (READ_ONCE(src_task->mm_cid_active) && src_task->mm == mm) {
-+			/*
-+			 * We observed an active task for this mm, there is therefore
-+			 * no point in moving this cid to the destination cpu.
-+			 */
-+			t->last_mm_cid = -1;
-+			return -1;
-+		}
- 	}
--	rcu_read_unlock();
- 
- 	/*
- 	 * The src_cid is unused, so it can be unset.
-@@ -11664,7 +11636,6 @@ static void sched_mm_cid_remote_clear(st
- {
- 	struct rq *rq = cpu_rq(cpu);
- 	struct task_struct *t;
--	unsigned long flags;
- 	int cid, lazy_cid;
- 
- 	cid = READ_ONCE(pcpu_cid->cid);
-@@ -11699,23 +11670,21 @@ static void sched_mm_cid_remote_clear(st
- 	 * the lazy-put flag, that task will be responsible for transitioning
- 	 * from lazy-put flag set to MM_CID_UNSET.
- 	 */
--	rcu_read_lock();
--	t = rcu_dereference(rq->curr);
--	if (READ_ONCE(t->mm_cid_active) && t->mm == mm) {
--		rcu_read_unlock();
--		return;
-+	scoped_guard (rcu) {
-+		t = rcu_dereference(rq->curr);
-+		if (READ_ONCE(t->mm_cid_active) && t->mm == mm)
-+			return;
- 	}
--	rcu_read_unlock();
- 
- 	/*
- 	 * The cid is unused, so it can be unset.
- 	 * Disable interrupts to keep the window of cid ownership without rq
- 	 * lock small.
- 	 */
--	local_irq_save(flags);
--	if (try_cmpxchg(&pcpu_cid->cid, &lazy_cid, MM_CID_UNSET))
--		__mm_cid_put(mm, cid);
--	local_irq_restore(flags);
-+	scoped_guard (irqsave) {
-+		if (try_cmpxchg(&pcpu_cid->cid, &lazy_cid, MM_CID_UNSET))
-+			__mm_cid_put(mm, cid);
-+	}
- }
- 
- static void sched_mm_cid_remote_clear_old(struct mm_struct *mm, int cpu)
-@@ -11737,14 +11706,13 @@ static void sched_mm_cid_remote_clear_ol
- 	 * snapshot associated with this cid if an active task using the mm is
- 	 * observed on this rq.
- 	 */
--	rcu_read_lock();
--	curr = rcu_dereference(rq->curr);
--	if (READ_ONCE(curr->mm_cid_active) && curr->mm == mm) {
--		WRITE_ONCE(pcpu_cid->time, rq_clock);
--		rcu_read_unlock();
--		return;
-+	scoped_guard (rcu) {
-+		curr = rcu_dereference(rq->curr);
-+		if (READ_ONCE(curr->mm_cid_active) && curr->mm == mm) {
-+			WRITE_ONCE(pcpu_cid->time, rq_clock);
-+			return;
-+		}
- 	}
--	rcu_read_unlock();
- 
- 	if (rq_clock < pcpu_cid->time + SCHED_MM_CID_PERIOD_NS)
- 		return;
-@@ -11838,7 +11806,6 @@ void task_tick_mm_cid(struct rq *rq, str
- void sched_mm_cid_exit_signals(struct task_struct *t)
- {
- 	struct mm_struct *mm = t->mm;
--	struct rq_flags rf;
- 	struct rq *rq;
- 
- 	if (!mm)
-@@ -11846,7 +11813,7 @@ void sched_mm_cid_exit_signals(struct ta
- 
- 	preempt_disable();
- 	rq = this_rq();
--	rq_lock_irqsave(rq, &rf);
-+	guard(rq_lock_irqsave)(rq);
- 	preempt_enable_no_resched();	/* holding spinlock */
- 	WRITE_ONCE(t->mm_cid_active, 0);
- 	/*
-@@ -11856,13 +11823,11 @@ void sched_mm_cid_exit_signals(struct ta
- 	smp_mb();
- 	mm_cid_put(mm);
- 	t->last_mm_cid = t->mm_cid = -1;
--	rq_unlock_irqrestore(rq, &rf);
- }
- 
- void sched_mm_cid_before_execve(struct task_struct *t)
- {
- 	struct mm_struct *mm = t->mm;
--	struct rq_flags rf;
- 	struct rq *rq;
- 
- 	if (!mm)
-@@ -11870,7 +11835,7 @@ void sched_mm_cid_before_execve(struct t
- 
- 	preempt_disable();
- 	rq = this_rq();
--	rq_lock_irqsave(rq, &rf);
-+	guard(rq_lock_irqsave)(rq);
- 	preempt_enable_no_resched();	/* holding spinlock */
- 	WRITE_ONCE(t->mm_cid_active, 0);
- 	/*
-@@ -11880,13 +11845,11 @@ void sched_mm_cid_before_execve(struct t
- 	smp_mb();
- 	mm_cid_put(mm);
- 	t->last_mm_cid = t->mm_cid = -1;
--	rq_unlock_irqrestore(rq, &rf);
- }
- 
- void sched_mm_cid_after_execve(struct task_struct *t)
- {
- 	struct mm_struct *mm = t->mm;
--	struct rq_flags rf;
- 	struct rq *rq;
- 
- 	if (!mm)
-@@ -11894,16 +11857,16 @@ void sched_mm_cid_after_execve(struct ta
- 
- 	preempt_disable();
- 	rq = this_rq();
--	rq_lock_irqsave(rq, &rf);
--	preempt_enable_no_resched();	/* holding spinlock */
--	WRITE_ONCE(t->mm_cid_active, 1);
--	/*
--	 * Store t->mm_cid_active before loading per-mm/cpu cid.
--	 * Matches barrier in sched_mm_cid_remote_clear_old().
--	 */
--	smp_mb();
--	t->last_mm_cid = t->mm_cid = mm_cid_get(rq, mm);
--	rq_unlock_irqrestore(rq, &rf);
-+	scoped_guard (rq_lock_irqsave, rq) {
-+		preempt_enable_no_resched();	/* holding spinlock */
-+		WRITE_ONCE(t->mm_cid_active, 1);
-+		/*
-+		 * Store t->mm_cid_active before loading per-mm/cpu cid.
-+		 * Matches barrier in sched_mm_cid_remote_clear_old().
-+		 */
-+		smp_mb();
-+		t->last_mm_cid = t->mm_cid = mm_cid_get(rq, mm);
-+	}
- 	rseq_set_notify_resume(t);
+-err_pmu:
+-	if (is_cgroup_event(event))
+-		perf_detach_cgroup(event);
+-	if (event->destroy)
+-		event->destroy(event);
+-	module_put(pmu->module);
+-err_ns:
+-	if (event->hw.target)
+-		put_task_struct(event->hw.target);
+-	call_rcu(&event->rcu_head, free_event_rcu);
+-
++err:
++	__free_event(event);
+ 	return ERR_PTR(err);
  }
  
 
