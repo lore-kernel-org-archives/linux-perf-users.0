@@ -2,143 +2,238 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D3FC88CB2
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 18:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72A9C88CB7
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 18:44:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235410AbjFLSd2 (ORCPT
+        id S234786AbjFLSoO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 14:33:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53126 "EHLO
+        Mon, 12 Jun 2023 14:44:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232495AbjFLSd1 (ORCPT
+        with ESMTP id S229742AbjFLSoN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 14:33:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B62BD10CC;
-        Mon, 12 Jun 2023 11:32:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B1A0C62CF7;
-        Mon, 12 Jun 2023 18:32:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E12CCC4339C;
-        Mon, 12 Jun 2023 18:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686594775;
-        bh=WD6yfMd1Lig9EzPwhFo3GU2PEduL3upHoyMgQX0HNp0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y8rtO46J/yKiguHzzFrMJZbDczxiP6tNBlVVErJCCLqrefl7oHYqv0gvIi+XUTZ6d
-         egc04G7adjaGRDbFCet0xVxBXk7KRDjkP+LH4qHJeOvWBRbGkRCZGB10udcFWNf0ii
-         m3FVHNlJl1gNPlLs98KLuG97UtYg2R07tiC9CyhGbRvXJv65hgl8p92+waVzprV/qk
-         UxHm0UnbIvGA/UuqJpsiOnJmvO/udnUwZ1zijwAItWJsVi3PIkvJj1Si7g3ix/7t6G
-         T/D11UfKTAvesFpSKMIvqypkgOx0QS53KHpTjmOdI/wu3oQdJk/kVYsvFnZtok/8eg
-         uxGyh4xlVp8nA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 6D6E040692; Mon, 12 Jun 2023 15:32:52 -0300 (-03)
-Date:   Mon, 12 Jun 2023 15:32:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     coresight@lists.linaro.org,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/5] perf cs-etm: Track exception level
-Message-ID: <ZIdk1ArKuXLpKZT7@kernel.org>
-References: <20230612111403.100613-1-james.clark@arm.com>
+        Mon, 12 Jun 2023 14:44:13 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92519184;
+        Mon, 12 Jun 2023 11:44:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=DfpkQU/ATTdj8SQ8S2sycjFTHz0K1T3h41EdnH1FLuQ=; b=A2P3J1t+kFU71LJhv8EYFdMWC4
+        T5bWxDAMk4Zh6Ks3vN3nx/A/JGUVHTwElYJUZNilKGcMUm2/wKmIGvvQhZbLEeJmxCLwQb7JgKEFo
+        oe1Te5CWVP6D6Jd3D3BGxKIF5pHAKMWd0vocfR0UMPLHIGk4YW8LfF3onsgabmKUOz7IIXuZ9tVXA
+        DraFcLoaxsDxn2EMMxzeSqA3NFNVMbrPlCrT3g+7yCksa52VYLaJ6TQyQGxSTbuYLK18U0h5TAbUp
+        8Cc/c/PVbaGDnEQepe44h7OZsm2Tojs6bv9jwHMIpDa8+Cm2MNM3pUHP5H2SkF05k7TkZLbAV9Aoa
+        h7Xkpfhg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q8mWL-008yMw-1F;
+        Mon, 12 Jun 2023 18:44:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C6BFA30058D;
+        Mon, 12 Jun 2023 20:44:03 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 999F420D70605; Mon, 12 Jun 2023 20:44:03 +0200 (CEST)
+Date:   Mon, 12 Jun 2023 20:44:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     keescook@chromium.org, gregkh@linuxfoundation.org,
+        pbonzini@redhat.com, masahiroy@kernel.org, nathan@kernel.org,
+        ndesaulniers@google.com, nicolas@fjasle.eu,
+        catalin.marinas@arm.com, will@kernel.org, vkoul@kernel.org,
+        trix@redhat.com, ojeda@kernel.org, mingo@redhat.com,
+        longman@redhat.com, boqun.feng@gmail.com, dennis@kernel.org,
+        tj@kernel.org, cl@linux.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
+        joel@joelfernandes.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
+        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
+        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+        john.johansen@canonical.com, paul@paul-moore.com,
+        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
+        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
+        luc.vanoostenryck@gmail.com
+Subject: Re: [PATCH v3 33/57] perf: Simplify perf_adjust_freq_unthr_context()
+Message-ID: <20230612184403.GE83892@hirez.programming.kicks-ass.net>
+References: <20230612090713.652690195@infradead.org>
+ <20230612093539.895253662@infradead.org>
+ <CAHk-=wgPtj9Y+nkMe+s20sntBPoadKL7GLxTr=mhfdONMR=iZg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230612111403.100613-1-james.clark@arm.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <CAHk-=wgPtj9Y+nkMe+s20sntBPoadKL7GLxTr=mhfdONMR=iZg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Mon, Jun 12, 2023 at 12:13:57PM +0100, James Clark escreveu:
-> Changes since v2:
-> 
->   * Rename prev_thread -> prev_packet_thread and prev_el ->
->     prev_packet_el
->   * Add a comment about tracking the previous packet's thread
-> 
-> Changes since v1:
-> 
->   * Always assume host kernel when the trace was captured at EL1 (nVHE)
->   * Fix EL validation to work with ETMv3
->   * Add a commit to make PID format accessible from struct
->     cs_etm_auxtrace
+On Mon, Jun 12, 2023 at 09:27:09AM -0700, Linus Torvalds wrote:
 
-Please take a look in my tmp.perf-tools-next branch, there were some
-conflicts I had to fix as those files were touched by refactorings for
-addr_location and thread reference counting.
+> The thing does not not go out of scope when the loop *iterates*.
+> 
+> It only goes out of scope when the loop *ends*.
 
-⬢[acme@toolbox perf-tools-next]$ git log --oneline -10
-aa53fb2c482e70c2 (HEAD -> perf-tools-next) perf cs-etm: Add exception level consistency check
-2918e9895224541f perf cs-etm: Track exception level
-f492a33909829a75 perf cs-etm: Make PID format accessible from struct cs_etm_auxtrace
-e29ec19b0751c6b2 perf cs-etm: Use previous thread for branch sample source IP
-e9e03e9c3ca7088c perf cs-etm: Only track threads instead of PID and TIDs
-6fd34445b8c94aa7 perf map: Fix double 'struct map' reference free found with -DREFCNT_CHECKING=1
-e9c0a7f63e45e76f perf srcline: Optimize comparision against SRCLINE_UNKNOWN
-fd87a79c7ed62804 perf hist: Fix srcline memory leak
-933f9651d47cdda2 perf srcline: Change free_srcline to zfree_srcline
-d22cfb063bcc674e perf callchain: Use pthread keys for tls callchain_cursor
-⬢[acme@toolbox perf-tools-next]$
+> Or have I mis-understood something completely?
+
+I tried this before I used it and variables inside a for() loop have a
+scope of a single iteration.
 
 
-- Arnaldo
- 
-> ======
-> 
-> Some fixes to support an issue reported by Denis Nikitin where decoding
-> trace that contains different EL1 and EL2 kernels can crash or go into
-> an infinite loop because the wrong kernel maps are used for the decode.
-> 
-> This still doesn't support distinguishing guest and host userspace,
-> we'd still have to fix the timestamps and do a bit more work to
-> correlate that. And I've removed PERF_RECORD_MISC_HYPERVISOR as a
-> possible outcome of cs_etm__cpu_mode(). As far as I know this could
-> never have been returned anyway because machine__is_host(machine) was
-> always true due to session.machines.host being hard coded. And I'm not
-> sure of the relevance of the difference between PERF_RECORD_MISC_KERNEL
-> and PERF_RECORD_MISC_HYPERVISOR in this scenario.
-> 
-> The first commit is a tidy up, second fixes a bug that I found when
-> comparing the exception level and thread of branch records, the third
-> is the main fix, and the last commit is some extra error checking. 
-> 
-> Applies to acme/perf-tools-next (42713dafc)
-> 
-> James Clark (5):
->   perf cs-etm: Only track threads instead of PID and TIDs
->   perf cs-etm: Use previous thread for branch sample source IP
->   perf cs-etm: Make PID format accessible from struct cs_etm_auxtrace
->   perf cs-etm: Track exception level
->   perf cs-etm: Add exception level consistency check
-> 
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  33 +-
->  .../perf/util/cs-etm-decoder/cs-etm-decoder.h |   4 +-
->  tools/perf/util/cs-etm.c                      | 282 ++++++++++--------
->  tools/perf/util/cs-etm.h                      |  13 +-
->  4 files changed, 184 insertions(+), 148 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+$ gcc -O2 -o guard guard.c && ./guard
+spin_lock
+ponies
+__raw_spin_lock_irqsave
+can haz
+raw_spin_unlock_irqrestore
+mutex_lock
+mutex_unlock
+mutex_lock
+mutex_unlock
+mutex_lock
+mutex_unlock
+mutex_lock
+mutex_unlock
+mutex_lock
+mutex_unlock
+spin_unlock
 
--- 
 
-- Arnaldo
+
+---
+#include <stdio.h>
+#include <stdbool.h>
+
+typedef struct {
+} raw_spinlock_t;
+
+typedef struct {
+} spinlock_t;
+
+typedef struct {
+} mutex_t;
+
+void raw_spin_lock(raw_spinlock_t *)
+{
+	printf("%s\n", __FUNCTION__);
+}
+
+void raw_spin_unlock(raw_spinlock_t *)
+{
+	printf("%s\n", __FUNCTION__);
+}
+
+unsigned long __raw_spin_lock_irqsave(raw_spinlock_t *lock)
+{
+	printf("%s\n", __FUNCTION__);
+	return 0;
+}
+#define raw_spin_lock_irqsave(lock, flags) \
+	flags = __raw_spin_lock_irqsave(lock)
+
+void raw_spin_unlock_irqrestore(raw_spinlock_t *lock, unsigned long flags)
+{
+	printf("%s\n", __FUNCTION__);
+}
+
+void spin_lock(spinlock_t *)
+{
+	printf("%s\n", __FUNCTION__);
+}
+
+void spin_unlock(spinlock_t *)
+{
+	printf("%s\n", __FUNCTION__);
+}
+
+
+void mutex_lock(mutex_t *)
+{
+	printf("%s\n", __FUNCTION__);
+}
+
+void mutex_unlock(mutex_t *)
+{
+	printf("%s\n", __FUNCTION__);
+}
+
+#define DEFINE_LOCK_GUARD(_type, _Type, _Lock, _Unlock, ...)			\
+typedef struct {								\
+	_Type *lock;								\
+	__VA_ARGS__								\
+} lock_guard_##_type##_t;							\
+										\
+static inline void lock_guard_##_type##_cleanup(void *_g)	\
+{										\
+	lock_guard_##_type##_t *_G = _g; \
+	if (_G->lock) \
+	_Unlock;								\
+}										\
+										\
+static inline lock_guard_##_type##_t lock_guard_##_type##_init(_Type *lock)	\
+{										\
+	lock_guard_##_type##_t _g = { .lock = lock }, *_G = &_g;		\
+	_Lock;									\
+	return _g;								\
+}
+
+DEFINE_LOCK_GUARD(raw,   raw_spinlock_t,
+		  raw_spin_lock(_G->lock),
+		  raw_spin_unlock(_G->lock)
+		  )
+
+DEFINE_LOCK_GUARD(spin,  spinlock_t,
+		  spin_lock(_G->lock),
+		  spin_unlock(_G->lock)
+		  )
+
+DEFINE_LOCK_GUARD(mutex, mutex_t,
+		  mutex_lock(_G->lock),
+		  mutex_unlock(_G->lock)
+		  )
+
+DEFINE_LOCK_GUARD(raw_irqsave, raw_spinlock_t,
+		  raw_spin_lock_irqsave(_G->lock, _G->flags),
+		  raw_spin_unlock_irqrestore(_G->lock, _G->flags),
+		  unsigned long flags;
+		 )
+
+#define __cleanup(func) __attribute__((__cleanup__(func)))
+
+#define lock_guard(_type, _name, _ptr) \
+	lock_guard_##_type##_t _name __cleanup(lock_guard_##_type##_cleanup) = \
+	lock_guard_##_type##_init(_ptr)
+
+#define lock_scope(_type, _ptr) \
+	for (struct { lock_guard_##_type##_t guard ; bool done; } _scope __cleanup(lock_guard_##_type##_cleanup) = \
+	     { .guard = lock_guard_##_type##_init(_ptr), .done = false }; \
+	     !_scope.done; _scope.done = true)
+
+raw_spinlock_t raw_lock;
+spinlock_t lock;
+mutex_t mutex;
+
+void main(void)
+{
+	lock_guard(spin, guard, &lock);
+	printf("ponies\n");
+	lock_scope(raw_irqsave, &raw_lock) {
+		printf("can haz\n");
+	}
+
+	for (int i=0; i<5; i++) {
+		lock_guard(mutex, foo, &mutex);
+		continue;
+	}
+}
