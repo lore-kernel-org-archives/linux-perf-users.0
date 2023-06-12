@@ -2,224 +2,165 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B1EC7EE37
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 13:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A100C7EE25
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 13:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232343AbjFLNJP (ORCPT
+        id S231201AbjFLNLE (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 09:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48880 "EHLO
+        Mon, 12 Jun 2023 09:11:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230354AbjFLNJO (ORCPT
+        with ESMTP id S230354AbjFLNLD (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 09:09:14 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D632B1;
-        Mon, 12 Jun 2023 06:09:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 01D1F6177E;
-        Mon, 12 Jun 2023 13:09:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C71CC433D2;
-        Mon, 12 Jun 2023 13:09:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1686575352;
-        bh=kldEhr7D9gJHwst5fMBjWYAaKUy32U9RV5cywHwgxlw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KdjhOYZMZJPCGheaijLgPAgt3eC9enaqsE7t65R1YDtP6Ms2znOV/5aJ02XMt0RLk
-         KnhRTNlo/+vuYbd13rDF/4B522ytFAqedbWr4nmMnk8kIrci17kB987+kIxNeZ00AI
-         +6OVXQ3oNt1iNrvJoTGsTlKs3p9FPWXIKV3TIZdA=
-Date:   Mon, 12 Jun 2023 15:09:09 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
-        pbonzini@redhat.com, masahiroy@kernel.org, nathan@kernel.org,
-        ndesaulniers@google.com, nicolas@fjasle.eu,
-        catalin.marinas@arm.com, will@kernel.org, vkoul@kernel.org,
-        trix@redhat.com, ojeda@kernel.org, mingo@redhat.com,
-        longman@redhat.com, boqun.feng@gmail.com, dennis@kernel.org,
-        tj@kernel.org, cl@linux.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
-        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
-        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
-        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
-        luc.vanoostenryck@gmail.com
-Subject: Re: [PATCH v3 46/57] perf: Simplify pmu_dev_alloc()
-Message-ID: <2023061204-decal-flyable-6090@gregkh>
-References: <20230612090713.652690195@infradead.org>
- <20230612093540.850386350@infradead.org>
- <20230612094400.GG4253@hirez.programming.kicks-ass.net>
- <2023061213-knapsack-moonlike-e595@gregkh>
+        Mon, 12 Jun 2023 09:11:03 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01682A0
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 06:11:01 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QfsSZ0yBjztQr5;
+        Mon, 12 Jun 2023 21:08:30 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
+ (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 12 Jun
+ 2023 21:10:57 +0800
+Date:   Mon, 12 Jun 2023 21:10:42 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Ian Rogers <irogers@google.com>
+CC:     Changbin Du <changbin.du@huawei.com>,
+        <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        <hw.huiwang@huawei.com>
+Subject: Re: [Issue] perf report gets stuck at addr2line
+Message-ID: <20230612131042.vkwoaucccwdrhl5a@M910t>
+References: <20230609033128.ujodex56vkha2ifr@M910t>
+ <CAP-5=fVWhp_cMpgwTRiO+bC7tKKGvKsavRVVDW-k9qYB7ZoXWg@mail.gmail.com>
+ <CAP-5=fWRpZSYcuuiSKGL4cS+SDBaSA6GBXJuw-gQAir+4EsagA@mail.gmail.com>
+ <20230612021405.kcaccxchmb5juep4@M910t>
+ <CAP-5=fUySkKsAzx-O4-iLsqjhqd53vkx6Wmw+rj5UUrOB88h6A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <2023061213-knapsack-moonlike-e595@gregkh>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUySkKsAzx-O4-iLsqjhqd53vkx6Wmw+rj5UUrOB88h6A@mail.gmail.com>
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 02:18:03PM +0200, Greg KH wrote:
-> On Mon, Jun 12, 2023 at 11:44:00AM +0200, Peter Zijlstra wrote:
-> > On Mon, Jun 12, 2023 at 11:07:59AM +0200, Peter Zijlstra wrote:
-> > > 
-> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > > ---
-> > >  kernel/events/core.c |   65 ++++++++++++++++++++++++---------------------------
-> > >  1 file changed, 31 insertions(+), 34 deletions(-)
-> > > 
-> > > --- a/kernel/events/core.c
-> > > +++ b/kernel/events/core.c
-> > > @@ -11285,49 +11285,46 @@ static void pmu_dev_release(struct devic
-> > >  
-> > >  static int pmu_dev_alloc(struct pmu *pmu)
-> > >  {
-> > > +	int ret;
-> > >  
-> > > +	struct device *dev __free(put_device) =
-> > > +		kzalloc(sizeof(struct device), GFP_KERNEL);
-> > > +	if (!dev)
-> > > +		return -ENOMEM;
-> > >  
-> > > +	dev->groups = pmu->attr_groups;
-> > > +	device_initialize(dev);
-> > >  
-> > > +	dev_set_drvdata(dev, pmu);
-> > > +	dev->bus = &pmu_bus;
-> > > +	dev->release = pmu_dev_release;
-> > >  
-> > > +	ret = dev_set_name(dev, "%s", pmu->name);
-> > >  	if (ret)
-> > > +		return ret;
-> > >  
-> > > +	ret = device_add(dev);
-> > >  	if (ret)
-> > > +		return ret;
-> > >  
-> > > +	struct device *del __free(device_del) = dev;
-> > 
-> > Greg, I'm not much familiar with the whole device model, but it seems
-> > unfortunate to me that one has to call device_del() explicitly if we
-> > already have a put_device() queued.
-> > 
-> > Is there a saner way to write this?
+On Sun, Jun 11, 2023 at 09:05:24PM -0700, Ian Rogers wrote:
+> On Sun, Jun 11, 2023 at 7:14 PM Changbin Du <changbin.du@huawei.com> wrote:
+> >
+> > >On Fri, Jun 09, 2023 at 04:58:24PM -0700, Ian Rogers wrote:
+> > > On Thu, Jun 8, 2023 at 10:13 PM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > [snip]
+> > > Hi Changbin,
+> > >
+> > > I think I found a way around the problem by enabling address dumping
+> > > from addr2line. I've sent the patches here:
+> > > https://lore.kernel.org/lkml/20230609235419.204624-1-irogers@google.com/
+> > > but only lightly tested them. Could you please take a look and send a
+> > > Tested-by ?
+> > >
+> > > It is probably too late to get this into 6.4.0, but we can add a Fixes
+> > > tag so that it gets picked into 6.4.1. The patches here are on the
+> > > perf-tools-next tree targeting Linux 6.5.
+> > >
+> > > Thanks,
+> > > Ian
+> > >
+> > Hi Ian,
+> > I applied your patches on mainline, the configuration error is gone, but still
+> > get stuck finally. Here is the back trace.
+> >
+> > #0  0x00001522c92bc392 in __libc_read (fd=..., buf=..., nbytes=...) at ../sysdeps/unix/sysv/linux/read.c:26
+> > #1  0x0000559e6bd0fdfb in read (__nbytes=..., __buf=..., __fd=...) at /usr/include/x86_64-linux-gnu/bits/unistd.h:44
+> > #2  io__get_char (io=...) at /work/linux/tools/perf/libapi/include/api/io.h:50
+> > #3  io__getline (line_len_out=..., line_out=..., io=...) at /work/linux/tools/perf/libapi/include/api/io.h:129
+> > #4  read_addr2line_record (io=..., style=..., function=..., filename=..., line_nr=...) at util/srcline.c:523
+> > #5  0x0000559e6bd111b4 in addr2line (dso_name=..., addr=..., file=..., line_nr=..., dso=..., unwind_inlines=..., node=..., sym=...) at util/srcline.c:722
+> > #6  0x0000559e6bd11e77 in addr2inlines (sym=..., dso=..., addr=..., dso_name=...) at util/srcline.c:773
+> > #7  dso__parse_addr_inlines (dso=..., addr=..., sym=...) at util/srcline.c:950
+> > #8  0x0000559e6bcc1de7 in append_inlines (cursor=..., ms=..., ip=...) at util/machine.c:3085
+> > #9  0x0000559e6bcc24e6 in add_callchain_ip (thread=..., cursor=..., parent=..., root_al=..., cpumode=..., ip=..., branch=..., flags=..., iter=..., branch_from=...) at util/machine.c:2375
+> > #10 0x0000559e6bcc3c1a in thread__resolve_callchain_sample (thread=..., cursor=..., evsel=..., sample=..., parent=..., root_al=..., max_stack=...) at util/machine.c:3055
+> > #11 0x0000559e6bcbe817 in sample__resolve_callchain (sample=..., cursor=..., parent=..., evsel=..., al=..., max_stack=...) at util/callchain.c:1098
+> > #12 0x0000559e6bcfb8c0 in hist_entry_iter__add (iter=..., al=..., max_stack_depth=..., arg=...) at util/hist.c:1222
+> > #13 0x0000559e6bbc9951 in process_sample_event (tool=..., event=..., sample=..., evsel=..., machine=...) at builtin-report.c:330
+> > #14 0x0000559e6bcd0193 in perf_session__deliver_event (session=..., event=..., tool=..., file_offset=..., file_path=...) at util/session.c:1645
+> > #15 0x0000559e6bcd5226 in do_flush (show_progress=..., oe=...) at util/ordered-events.c:245
+> > #16 __ordered_events__flush (oe=..., how=..., timestamp=...) at util/ordered-events.c:324
+> > #17 0x0000559e6bcd5a19 in __ordered_events__flush (timestamp=..., how=..., oe=...) at util/ordered-events.c:340
+> > #18 ordered_events__flush (how=..., oe=...) at util/ordered-events.c:342
+> > #19 ordered_events__flush (oe=..., how=...) at util/ordered-events.c:340
+> > #20 0x0000005b0000006e in ?? ()
+> > #21 0x68f3206410bcae00 in ?? ()
+> > #22 0x0000000000000000 in ?? ()
 > 
-> Ok, the "problem" here is that you have decided to do the "complex" way
-> to initialize a struct device.  And as such, you have to do more
-> housekeeping than if you were to just use the simple interface.
+> Thanks Changbin, the backtrace shows that perf thinks addr2line is
+> going to write more output. These patches will cause an eventual
+> timeout:
+> https://lore.kernel.org/lkml/20230608061812.3715566-2-irogers@google.com/
+> I'm not sure how this situation can arise. Presumably you are using
+> binutils addr2line. Can you use gdb to work out what dso is causing
+> addr2line to stop like this? My guess would be vmlinux. If you can
+> find the dso and the address that was requested from addr2line, should
+> be in frame 5 in your backtrace, you can repeat the query on the
+> command line to see what addr2line is doing. Hopefully then we can
+> figure out why this caused the sentinel to be broken - the sentinel
+> needs to have address 0 or ',' if LLVM addr2line, or have a filename
+> line number of "??:0".
+>
+I am using binutils addr2line. It's vmlinux causes addr2line stuck. I added some
+logs in perf as below.
+
+$ ./perf --no-pager report --stdio
+# To display the perf.data header info, please use --header/--header-only options.
+#
+addr2line: /home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf, addr ffffffff81e000aa
+subprocess: addr2line -e /home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf -a -i -f
+read_addr2line_record
+io__getline: start
+io__getline: 0xffffffff81e000aa
+
+io__getline: start
+io__getline: entry_SYSCALL_64_after_hwframe
+
+io__getline: start
+io__getline: ??:?
+
+read_addr2line_record
+io__getline: start
+io__getline: 0x0000000000000000
+
+io__getline: start
+io__getline: __per_cpu_start
+
+io__getline: start
+io__getline: ??:?
+
+read_addr2line_record
+io__getline: start
+[stuck]
+
+> Thanks,
+> Ian
 > 
-> The rule is, after you call device_initialize() you HAVE to call
-> put_device() on the pointer if something goes wrong and you want to
-> clean up properly.  Unless you have called device_add(), and at that
-> point in time, then you HAVE to call device_del() if the device_add()
-> call succeeded.  If the device_add() call failed, then you HAVE to call
-> put_device().
-> 
-> Yeah, it's a pain, but you are trying to hand-roll code that is not a
-> "normal" path for a struct device, sorry.
-> 
-> I don't know if you really can encode all of that crazy logic in the
-> cleanup api, UNLESS you can "switch" the cleanup function at a point in
-> time (i.e. after device_add() is successful).  Is that possible?
-> 
-> Anyway, let me see about just cleaning up this code in general, I don't
-> think you need the complex interface here for a tiny struct device at
-> all, which would make this specific instance moot :)
-> 
-> Also, nit, you are racing with userspace by attempting to add new device
-> files _AFTER_ the device is registered with the driver core, this whole
-> thing can be made more simpler I hope, give me a bit...
+> > >
+> > > > Thanks,
+> > > > Ian
+> > > >
+> > > > > --
+> > > > > Cheers,
+> > > > > Changbin Du
+> >
+> > --
+> > Cheers,
+> > Changbin Du
 
-Nope, I was wrong, I can fix the race condition, but the logic here for
-how to init and clean up on errors is right, and you want this because
-you are a bus and so, you need the two-step init/teardown process,
-sorry.
-
-Here's the patch I came up with to get rid of the race, but doesn't
-really help you out here at all :(
-
-------------------------
-From foo@baz Mon Jun 12 03:07:54 PM CEST 2023
-Date: Mon, 12 Jun 2023 15:07:54 +0200
-To: Greg KH <gregkh@linuxfoundation.org>
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] perf/core: fix narrow startup race when creating the perf nr_addr_filters sysfs file
-
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index db016e418931..d2a6182ad090 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11351,9 +11351,32 @@ static DEVICE_ATTR_RW(perf_event_mux_interval_ms);
- static struct attribute *pmu_dev_attrs[] = {
- 	&dev_attr_type.attr,
- 	&dev_attr_perf_event_mux_interval_ms.attr,
-+	&dev_attr_nr_addr_filters.attr,
-+	NULL,
-+};
-+
-+static umode_t pmu_dev_is_visible(struct kobject *kobj, struct attribute *a, int n)
-+{
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct pmu *pmu = dev_get_drvdata(dev);
-+
-+	if (!pmu->nr_addr_filters)
-+		return 0;
-+
-+	return a->mode;
-+
-+	return 0;
-+}
-+
-+static struct attribute_group pmu_dev_attr_group = {
-+	.is_visible = pmu_dev_is_visible,
-+	.attrs = pmu_dev_attrs,
-+};
-+
-+const static struct attribute_group *pmu_dev_groups[] = {
-+	&pmu_dev_attr_group,
- 	NULL,
- };
--ATTRIBUTE_GROUPS(pmu_dev);
- 
- static int pmu_bus_running;
- static struct bus_type pmu_bus = {
-@@ -11389,18 +11412,11 @@ static int pmu_dev_alloc(struct pmu *pmu)
- 	if (ret)
- 		goto free_dev;
- 
--	/* For PMUs with address filters, throw in an extra attribute: */
--	if (pmu->nr_addr_filters)
--		ret = device_create_file(pmu->dev, &dev_attr_nr_addr_filters);
--
--	if (ret)
--		goto del_dev;
--
--	if (pmu->attr_update)
-+	if (pmu->attr_update) {
- 		ret = sysfs_update_groups(&pmu->dev->kobj, pmu->attr_update);
--
--	if (ret)
--		goto del_dev;
-+		if (ret)
-+			goto del_dev;
-+	}
- 
- out:
- 	return ret;
+-- 
+Cheers,
+Changbin Du
