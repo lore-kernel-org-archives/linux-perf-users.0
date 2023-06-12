@@ -2,45 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB9BC87FE4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62077C87FE7
 	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235615AbjFLJz6 (ORCPT
+        id S235595AbjFLJz6 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Mon, 12 Jun 2023 05:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33462 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232312AbjFLJyT (ORCPT
+        with ESMTP id S229454AbjFLJyb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:19 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476B449FD;
-        Mon, 12 Jun 2023 02:38:56 -0700 (PDT)
+        Mon, 12 Jun 2023 05:54:31 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F1F6185;
+        Mon, 12 Jun 2023 02:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=drbNuL55DYuL5wiscrlTnGAb/cO6SeGIhgtGTiA6PhQ=; b=VSEjB2saA1r44d+t/vL6tc5EoG
-        xB4CG9CBZHIyB4zdQuRxzQ1Q7TJzwADvt7PtjKTLVENXxebGGeYnzeA/aNRsjwtBQcBhdw4FFc4IK
-        0+1KXg+b3RLYPmQQvXAuMTENNKt/wXQirviZsGNYMJsc8yMv6AgbvSWbtKsnbfSzEoEJrRcd+lkte
-        4b7/355f2S3PVCwS3IueHM4tNu6LtFu8YsWTsDpFO14hwHxbY8on3IDwGHEQAM0/61U1d4CsGZOmx
-        CEkY9pA/PvCBwARY6IQ+Op5jTjaOmySf1HLi3LEoDC/B3NJHx/W2kOF67517FH7LjugtEYLajl9zJ
-        Q4ROTiZg==;
+        bh=IwZQFShSV/PIl8fTfPc9l4QCHQp32ssy80H3iz5Si2g=; b=n2QBRERGYOTGa4H4UfPiQMxml4
+        DlIa7Bh+E0wy752HUyfCxpdFro63TOC2IKp9jPE5GAfa1mJYpUhJg7mXGYIHTeDn9BySpGXGbyVd3
+        IwJesqbM7Wb3W3h6YpQgJKi2jBSkPrZDWblalKMV6HQ84Jsy2sFXbKyI8rcW+nAOW3dJ/b920m92P
+        rah0RrnGqtwQsyYb1dXy9/e8D1odgIYC+fkV2EbyFFqvSqo9mCNLgutnfVUAg637Ma+mnkR77qzmE
+        PZQFREWg0jB+r3RJ1GGStrlIluYtwark33oMb5t5WyJikLV3GNXnRWJf6oZ44tLapABjEhnCdDKM9
+        42/wgNSw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0g-008kP0-13;
-        Mon, 12 Jun 2023 09:38:51 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q8e0l-002NBI-II; Mon, 12 Jun 2023 09:38:55 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BE76330313F;
-        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 23BBA303196;
+        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 3207B30A70AC5; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093538.154498590@infradead.org>
+        id 8C04B30A77B63; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093539.371360635@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:23 +0200
+Date:   Mon, 12 Jun 2023 11:07:39 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -68,7 +67,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 10/57] sched: Simplify sched_exec()
+Subject: [PATCH v3 26/57] perf: Simplify event_function*()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -80,43 +79,101 @@ Use guards to reduce gotos and simplify control flow.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/sched/core.c |   21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+ kernel/events/core.c |   39 ++++++++++++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
 
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5431,23 +5431,20 @@ unsigned int nr_iowait(void)
- void sched_exec(void)
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -214,6 +214,25 @@ struct event_function_struct {
+ 	void *data;
+ };
+ 
++typedef struct {
++	struct perf_cpu_context *cpuctx;
++	struct perf_event_context *ctx;
++} class_perf_ctx_lock_t;
++
++static inline void class_perf_ctx_lock_destructor(class_perf_ctx_lock_t *_T)
++{
++	if (_T->cpuctx)
++		perf_ctx_unlock(_T->cpuctx, _T->ctx);
++}
++
++static inline class_perf_ctx_lock_t
++class_perf_ctx_lock_constructor(struct perf_cpu_context *cpuctx,
++				struct perf_event_context *ctx)
++{
++	perf_ctx_lock(cpuctx, ctx);
++	return (class_perf_ctx_lock_t){ cpuctx, ctx };
++}
++
+ static int event_function(void *info)
  {
- 	struct task_struct *p = current;
--	unsigned long flags;
-+	struct migration_arg arg;
- 	int dest_cpu;
+ 	struct event_function_struct *efs = info;
+@@ -224,17 +243,15 @@ static int event_function(void *info)
+ 	int ret = 0;
  
--	raw_spin_lock_irqsave(&p->pi_lock, flags);
--	dest_cpu = p->sched_class->select_task_rq(p, task_cpu(p), WF_EXEC);
--	if (dest_cpu == smp_processor_id())
--		goto unlock;
-+	scoped_guard (raw_spinlock_irqsave, &p->pi_lock) {
-+		dest_cpu = p->sched_class->select_task_rq(p, task_cpu(p), WF_EXEC);
-+		if (dest_cpu == smp_processor_id())
-+			return;
+ 	lockdep_assert_irqs_disabled();
++	guard(perf_ctx_lock)(cpuctx, task_ctx);
  
--	if (likely(cpu_active(dest_cpu))) {
--		struct migration_arg arg = { p, dest_cpu };
-+		if (unlikely(!cpu_active(dest_cpu)))
-+			return;
+-	perf_ctx_lock(cpuctx, task_ctx);
+ 	/*
+ 	 * Since we do the IPI call without holding ctx->lock things can have
+ 	 * changed, double check we hit the task we set out to hit.
+ 	 */
+ 	if (ctx->task) {
+-		if (ctx->task != current) {
+-			ret = -ESRCH;
+-			goto unlock;
+-		}
++		if (ctx->task != current)
++			return -ESRCH;
  
--		raw_spin_unlock_irqrestore(&p->pi_lock, flags);
--		stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
--		return;
-+		arg = (struct migration_arg){ p, dest_cpu };
+ 		/*
+ 		 * We only use event_function_call() on established contexts,
+@@ -254,8 +271,6 @@ static int event_function(void *info)
  	}
+ 
+ 	efs->func(event, cpuctx, ctx, efs->data);
 -unlock:
--	raw_spin_unlock_irqrestore(&p->pi_lock, flags);
-+	stop_one_cpu(task_cpu(p), migration_cpu_stop, &arg);
+-	perf_ctx_unlock(cpuctx, task_ctx);
+ 
+ 	return ret;
+ }
+@@ -329,11 +344,11 @@ static void event_function_local(struct
+ 		task_ctx = ctx;
+ 	}
+ 
+-	perf_ctx_lock(cpuctx, task_ctx);
++	guard(perf_ctx_lock)(cpuctx, task_ctx);
+ 
+ 	task = ctx->task;
+ 	if (task == TASK_TOMBSTONE)
+-		goto unlock;
++		return;
+ 
+ 	if (task) {
+ 		/*
+@@ -343,18 +358,16 @@ static void event_function_local(struct
+ 		 */
+ 		if (ctx->is_active) {
+ 			if (WARN_ON_ONCE(task != current))
+-				goto unlock;
++				return;
+ 
+ 			if (WARN_ON_ONCE(cpuctx->task_ctx != ctx))
+-				goto unlock;
++				return;
+ 		}
+ 	} else {
+ 		WARN_ON_ONCE(&cpuctx->ctx != ctx);
+ 	}
+ 
+ 	func(event, cpuctx, ctx, data);
+-unlock:
+-	perf_ctx_unlock(cpuctx, task_ctx);
  }
  
- #endif
+ #define PERF_FLAG_ALL (PERF_FLAG_FD_NO_GROUP |\
 
 
