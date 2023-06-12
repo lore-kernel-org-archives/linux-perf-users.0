@@ -2,45 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D89A8C7EE43
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7C1C8300C
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:55:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232848AbjFLJzc (ORCPT
+        id S230526AbjFLJzd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32898 "EHLO
+        Mon, 12 Jun 2023 05:55:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233682AbjFLJyr (ORCPT
+        with ESMTP id S231137AbjFLJyW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:47 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9764C1E;
-        Mon, 12 Jun 2023 02:39:10 -0700 (PDT)
+        Mon, 12 Jun 2023 05:54:22 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F24C4C13;
+        Mon, 12 Jun 2023 02:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=VwLJzq4wQCJ4xfIoCm0MOddWikggSaLNbFpG3XgsB1U=; b=dDnxyA36tfL2pJa+fjQ2VTeARz
-        uh5lFYPphgrzEScOZBiNSB/l0JET6lz9vuFxdA8IjoxWv//Mx3BL1bDtn1P4YIMrpV/FRB35iPjRQ
-        S/2hc5m9oTCtV65ICDia0XlNp2GJ0x2OKDtdrc7GG+LtRuBqj2191E0uWBwd1NiC6XGa9rjhVrcph
-        ZKoLG6i5q8+lBORMXKkBhDQwET2tp7pp2axVFoU3Tu0b7dxGOs6WD1mFYQPYjDOIn9x8uoZZFJBye
-        DG5AK1uryNKX7xiUVquINqYQD8O0H4yN8nueL4W+D6yuGI4G4JIeE0rBu/zP8xN1C128nOvfhbHfZ
-        MmQ71Gaw==;
+        bh=QOVoxBXTqeJRoOWdQft4bGcKCTL4UyZrQG32knsR3k0=; b=c+D11F7FSqbBnyBLSSfE5UYd1l
+        IvFPRzJeGLbLE977YxYQAS4g0jVtxP4+qS7e9sAEyGnpnM0/g6folbG9eSZv5iyY/d24GmbN9NGRN
+        /+RkwB8o1SLLroMJqf+HzAXEkGvwurDfZKEjFEq3/dV71E5Xp3YhCsfoKdyKyuyYpRdWWU4rMR6bN
+        7KySp2Drh9CXlO7audT1YOfwwh4FrL2zBrKIN+tMW03xlMnBm4G7PO6JWp8epOgTbND+XuyDvWtfY
+        wxdQXZn9Web1FeOuzgWYGEmPyXwuR9f6T2BwQc4dFBBrjDcoPkjo6/3va7mxH8xuCy9vdUYE8+v0P
+        IpzOAsYg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0o-008kRE-01;
-        Mon, 12 Jun 2023 09:39:03 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q8e0g-002N92-18; Mon, 12 Jun 2023 09:38:50 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4DD6E3033CE;
-        Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 964E7302F75;
+        Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id E135130A77B73; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
-Message-ID: <20230612093540.493651920@infradead.org>
+        id 14D9A30A70220; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093537.833273038@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:54 +0200
+Date:   Mon, 12 Jun 2023 11:07:19 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -68,7 +67,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 41/57] perf: Simplify __perf_event_output()
+Subject: [PATCH v3 06/57] sched: Simplify sysctl_sched_uclamp_handler()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -76,39 +75,51 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Use guards to reduce gotos and simplify control flow.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ kernel/sched/core.c |   11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7739,22 +7739,17 @@ __perf_event_output(struct perf_event *e
- 	int err;
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1801,7 +1801,8 @@ static int sysctl_sched_uclamp_handler(s
+ 	int old_min, old_max, old_min_rt;
+ 	int result;
  
- 	/* protect the callchain buffers */
--	rcu_read_lock();
-+	guard(rcu)();
+-	mutex_lock(&uclamp_mutex);
++	guard(mutex)(&uclamp_mutex);
++
+ 	old_min = sysctl_sched_uclamp_util_min;
+ 	old_max = sysctl_sched_uclamp_util_max;
+ 	old_min_rt = sysctl_sched_uclamp_util_min_rt_default;
+@@ -1810,7 +1811,7 @@ static int sysctl_sched_uclamp_handler(s
+ 	if (result)
+ 		goto undo;
+ 	if (!write)
+-		goto done;
++		return result;
  
- 	perf_prepare_sample(data, event, regs);
- 	perf_prepare_header(&header, data, event, regs);
+ 	if (sysctl_sched_uclamp_util_min > sysctl_sched_uclamp_util_max ||
+ 	    sysctl_sched_uclamp_util_max > SCHED_CAPACITY_SCALE	||
+@@ -1846,16 +1847,12 @@ static int sysctl_sched_uclamp_handler(s
+ 	 * Otherwise, keep it simple and do just a lazy update at each next
+ 	 * task enqueue time.
+ 	 */
 -
- 	err = output_begin(&handle, data, event, header.size);
- 	if (err)
--		goto exit;
--
-+		return err;
- 	perf_output_sample(&handle, &header, data, event);
--
- 	perf_output_end(&handle);
+-	goto done;
++	return result;
  
--exit:
--	rcu_read_unlock();
--	return err;
-+	return 0;
+ undo:
+ 	sysctl_sched_uclamp_util_min = old_min;
+ 	sysctl_sched_uclamp_util_max = old_max;
+ 	sysctl_sched_uclamp_util_min_rt_default = old_min_rt;
+-done:
+-	mutex_unlock(&uclamp_mutex);
+-
+ 	return result;
  }
- 
- void
+ #endif
 
 
