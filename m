@@ -2,369 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDC96C83005
-	for <linux-perf-users@archiver.kernel.org>; Sun, 11 Jun 2023 23:36:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0910EC7EE2E
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 02:14:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229754AbjFKXgn (ORCPT
+        id S233202AbjFLCO0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 11 Jun 2023 19:36:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41478 "EHLO
+        Sun, 11 Jun 2023 22:14:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232516AbjFKXgm (ORCPT
+        with ESMTP id S229754AbjFLCOZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 11 Jun 2023 19:36:42 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B415F193
-        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jun 2023 16:36:39 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-568a85f180dso55654897b3.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jun 2023 16:36:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686526599; x=1689118599;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0SRK1kSYCeqvK1qNU5OousMuIxmVIPnMAyM5t7CjMcw=;
-        b=ZwfYgwTDL/Y0LaE98Z7Zo5txUB+VdNB71y4+5t7W7WSXBMgQE+vK09m4GoeAoYx2W6
-         N8DkSi+CXOorYbQbn2daFm/buibMU3q2i57QqSHmQsIm7eAw5RQKw6dDliHKR/oRaLnz
-         GvSck+VcnvWO4/8xuEcAMONymH8jJNfViO+W6AWoVlpBIzVOHLByRk5s72dBpcU0+NWK
-         MUTJDymRHr0FD5WH5gS/joG6BCv2s16WhbrHFYvSoFOq7wbTXFyuqX4db1yQq1EHp+eM
-         ob2NNinkI2jPoKmOwcx5KIKalcTJCNjkqsdswUkjrGE4vdA4TNxuh9N1tl5NuLxfcsik
-         8xHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686526599; x=1689118599;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0SRK1kSYCeqvK1qNU5OousMuIxmVIPnMAyM5t7CjMcw=;
-        b=XQrdtXqQxwjNQdz5ik8etO5zBm5E+gznQDZIkqzgS3KXO22Pj++i4ffCrqFGITTIv0
-         Ix/EFghMvUNacoSOO14BdUVE0LBqyXcddpZH3JLxvh2NghOVfZnMS2gF37ncbcwCFqoZ
-         UpyuzXBaB4tJPVvIW7izdvs9vIKzkv89qrMiImmIcdtXfbX4B5JmTv1JnqEgBQOHCk7U
-         EKYk/5Pm1CeEs+m2zlSuihqywJPWghIVg2XOAysH2u82t8O8E1C9Lll4RpBFUrYBGU5K
-         8mQsKihxz9aIJ3nbRonMn1ybHur6UeB8l8ra4qDzDisPB+RDXZw0A88e4ZEBdHj0znei
-         YZMw==
-X-Gm-Message-State: AC+VfDwzCSybqiJ/TXXsiCcFWX3MnIYdAnmRpdi3g8l6OwDXtrcS+E+o
-        UwI9fa6zRI2bwD7ryF0MFLJ7Tj+SYY5E
-X-Google-Smtp-Source: ACHHUZ5NJiymLisecu9Z8qjcVQ5x9zy52GB7Htv/aTLR2Rbb1lsoOgxYcck5Lnjxb9fwct8DS4gMgKQxsBVm
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:aca9:d7c7:ed17:e760])
- (user=irogers job=sendgmr) by 2002:a81:b706:0:b0:56d:21a1:16a1 with SMTP id
- v6-20020a81b706000000b0056d21a116a1mr960686ywh.5.1686526598963; Sun, 11 Jun
- 2023 16:36:38 -0700 (PDT)
-Date:   Sun, 11 Jun 2023 16:36:09 -0700
-In-Reply-To: <20230611233610.953456-1-irogers@google.com>
-Message-Id: <20230611233610.953456-4-irogers@google.com>
-Mime-Version: 1.0
-References: <20230611233610.953456-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 4/5] perf bench futex: Avoid memory leaks from pthread_attr
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Sun, 11 Jun 2023 22:14:25 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 780B31BB
+        for <linux-perf-users@vger.kernel.org>; Sun, 11 Jun 2023 19:14:23 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QfZvj1mfBzLmjC;
+        Mon, 12 Jun 2023 10:12:33 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
+ (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Mon, 12 Jun
+ 2023 10:14:20 +0800
+Date:   Mon, 12 Jun 2023 10:14:05 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Ian Rogers <irogers@google.com>
+CC:     Changbin Du <changbin.du@huawei.com>,
+        <linux-perf-users@vger.kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Darren Hart <dvhart@infradead.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        "=?UTF-8?q?Andr=C3=A9=20Almeida?=" <andrealmeid@igalia.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        <hw.huiwang@huawei.com>
+Subject: Re: [Issue] perf report gets stuck at addr2line
+Message-ID: <20230612021405.kcaccxchmb5juep4@M910t>
+References: <20230609033128.ujodex56vkha2ifr@M910t>
+ <CAP-5=fVWhp_cMpgwTRiO+bC7tKKGvKsavRVVDW-k9qYB7ZoXWg@mail.gmail.com>
+ <CAP-5=fWRpZSYcuuiSKGL4cS+SDBaSA6GBXJuw-gQAir+4EsagA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWRpZSYcuuiSKGL4cS+SDBaSA6GBXJuw-gQAir+4EsagA@mail.gmail.com>
+X-Originating-IP: [10.110.54.157]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemi500013.china.huawei.com (7.221.188.120)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Remove code sharing the pthread_attr_t and initialize/destroy
-pthread_attr_t when needed. This avoids the same attribute being set
-that leak sanitizer reports as a memory leak.
+>On Fri, Jun 09, 2023 at 04:58:24PM -0700, Ian Rogers wrote:
+> On Thu, Jun 8, 2023 at 10:13 PM Ian Rogers <irogers@google.com> wrote:
+>
+[snip]
+> Hi Changbin,
+> 
+> I think I found a way around the problem by enabling address dumping
+> from addr2line. I've sent the patches here:
+> https://lore.kernel.org/lkml/20230609235419.204624-1-irogers@google.com/
+> but only lightly tested them. Could you please take a look and send a
+> Tested-by ?
+> 
+> It is probably too late to get this into 6.4.0, but we can add a Fixes
+> tag so that it gets picked into 6.4.1. The patches here are on the
+> perf-tools-next tree targeting Linux 6.5.
+> 
+> Thanks,
+> Ian
+>
+Hi Ian,
+I applied your patches on mainline, the configuration error is gone, but still
+get stuck finally. Here is the back trace.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/bench/futex-lock-pi.c       | 12 ++++++------
- tools/perf/bench/futex-requeue.c       | 12 ++++++------
- tools/perf/bench/futex-wake-parallel.c | 19 +++++++++++--------
- tools/perf/bench/futex-wake.c          | 12 ++++++------
- 4 files changed, 29 insertions(+), 26 deletions(-)
+#0  0x00001522c92bc392 in __libc_read (fd=..., buf=..., nbytes=...) at ../sysdeps/unix/sysv/linux/read.c:26
+#1  0x0000559e6bd0fdfb in read (__nbytes=..., __buf=..., __fd=...) at /usr/include/x86_64-linux-gnu/bits/unistd.h:44
+#2  io__get_char (io=...) at /work/linux/tools/perf/libapi/include/api/io.h:50
+#3  io__getline (line_len_out=..., line_out=..., io=...) at /work/linux/tools/perf/libapi/include/api/io.h:129
+#4  read_addr2line_record (io=..., style=..., function=..., filename=..., line_nr=...) at util/srcline.c:523
+#5  0x0000559e6bd111b4 in addr2line (dso_name=..., addr=..., file=..., line_nr=..., dso=..., unwind_inlines=..., node=..., sym=...) at util/srcline.c:722
+#6  0x0000559e6bd11e77 in addr2inlines (sym=..., dso=..., addr=..., dso_name=...) at util/srcline.c:773
+#7  dso__parse_addr_inlines (dso=..., addr=..., sym=...) at util/srcline.c:950
+#8  0x0000559e6bcc1de7 in append_inlines (cursor=..., ms=..., ip=...) at util/machine.c:3085
+#9  0x0000559e6bcc24e6 in add_callchain_ip (thread=..., cursor=..., parent=..., root_al=..., cpumode=..., ip=..., branch=..., flags=..., iter=..., branch_from=...) at util/machine.c:2375
+#10 0x0000559e6bcc3c1a in thread__resolve_callchain_sample (thread=..., cursor=..., evsel=..., sample=..., parent=..., root_al=..., max_stack=...) at util/machine.c:3055
+#11 0x0000559e6bcbe817 in sample__resolve_callchain (sample=..., cursor=..., parent=..., evsel=..., al=..., max_stack=...) at util/callchain.c:1098
+#12 0x0000559e6bcfb8c0 in hist_entry_iter__add (iter=..., al=..., max_stack_depth=..., arg=...) at util/hist.c:1222
+#13 0x0000559e6bbc9951 in process_sample_event (tool=..., event=..., sample=..., evsel=..., machine=...) at builtin-report.c:330
+#14 0x0000559e6bcd0193 in perf_session__deliver_event (session=..., event=..., tool=..., file_offset=..., file_path=...) at util/session.c:1645
+#15 0x0000559e6bcd5226 in do_flush (show_progress=..., oe=...) at util/ordered-events.c:245
+#16 __ordered_events__flush (oe=..., how=..., timestamp=...) at util/ordered-events.c:324
+#17 0x0000559e6bcd5a19 in __ordered_events__flush (timestamp=..., how=..., oe=...) at util/ordered-events.c:340
+#18 ordered_events__flush (how=..., oe=...) at util/ordered-events.c:342
+#19 ordered_events__flush (oe=..., how=...) at util/ordered-events.c:340
+#20 0x0000005b0000006e in ?? ()
+#21 0x68f3206410bcae00 in ?? ()
+#22 0x0000000000000000 in ?? ()
 
-diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
-index 2d0417949727..092cbd52db82 100644
---- a/tools/perf/bench/futex-lock-pi.c
-+++ b/tools/perf/bench/futex-lock-pi.c
-@@ -118,8 +118,7 @@ static void *workerfn(void *arg)
- 	return NULL;
- }
- 
--static void create_threads(struct worker *w, pthread_attr_t thread_attr,
--			   struct perf_cpu_map *cpu)
-+static void create_threads(struct worker *w, struct perf_cpu_map *cpu)
- {
- 	cpu_set_t *cpuset;
- 	unsigned int i;
-@@ -133,6 +132,9 @@ static void create_threads(struct worker *w, pthread_attr_t thread_attr,
- 	size = CPU_ALLOC_SIZE(nrcpus);
- 
- 	for (i = 0; i < params.nthreads; i++) {
-+		pthread_attr_t thread_attr;
-+
-+		pthread_attr_init(&thread_attr);
- 		worker[i].tid = i;
- 
- 		if (params.multi) {
-@@ -154,6 +156,7 @@ static void create_threads(struct worker *w, pthread_attr_t thread_attr,
- 			CPU_FREE(cpuset);
- 			err(EXIT_FAILURE, "pthread_create");
- 		}
-+		pthread_attr_destroy(&thread_attr);
- 	}
- 	CPU_FREE(cpuset);
- }
-@@ -163,7 +166,6 @@ int bench_futex_lock_pi(int argc, const char **argv)
- 	int ret = 0;
- 	unsigned int i;
- 	struct sigaction act;
--	pthread_attr_t thread_attr;
- 	struct perf_cpu_map *cpu;
- 
- 	argc = parse_options(argc, argv, options, bench_futex_lock_pi_usage, 0);
-@@ -203,11 +205,9 @@ int bench_futex_lock_pi(int argc, const char **argv)
- 	cond_init(&thread_worker);
- 
- 	threads_starting = params.nthreads;
--	pthread_attr_init(&thread_attr);
- 	gettimeofday(&bench__start, NULL);
- 
--	create_threads(worker, thread_attr, cpu);
--	pthread_attr_destroy(&thread_attr);
-+	create_threads(worker, cpu);
- 
- 	mutex_lock(&thread_lock);
- 	while (threads_starting)
-diff --git a/tools/perf/bench/futex-requeue.c b/tools/perf/bench/futex-requeue.c
-index 69ad896f556c..c0035990a33c 100644
---- a/tools/perf/bench/futex-requeue.c
-+++ b/tools/perf/bench/futex-requeue.c
-@@ -121,8 +121,7 @@ static void *workerfn(void *arg __maybe_unused)
- 	return NULL;
- }
- 
--static void block_threads(pthread_t *w,
--			  pthread_attr_t thread_attr, struct perf_cpu_map *cpu)
-+static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
- {
- 	cpu_set_t *cpuset;
- 	unsigned int i;
-@@ -137,6 +136,9 @@ static void block_threads(pthread_t *w,
- 
- 	/* create and block all threads */
- 	for (i = 0; i < params.nthreads; i++) {
-+		pthread_attr_t thread_attr;
-+
-+		pthread_attr_init(&thread_attr);
- 		CPU_ZERO_S(size, cpuset);
- 		CPU_SET_S(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu, size, cpuset);
- 
-@@ -149,6 +151,7 @@ static void block_threads(pthread_t *w,
- 			CPU_FREE(cpuset);
- 			err(EXIT_FAILURE, "pthread_create");
- 		}
-+		pthread_attr_destroy(&thread_attr);
- 	}
- 	CPU_FREE(cpuset);
- }
-@@ -165,7 +168,6 @@ int bench_futex_requeue(int argc, const char **argv)
- 	int ret = 0;
- 	unsigned int i, j;
- 	struct sigaction act;
--	pthread_attr_t thread_attr;
- 	struct perf_cpu_map *cpu;
- 
- 	argc = parse_options(argc, argv, options, bench_futex_requeue_usage, 0);
-@@ -209,7 +211,6 @@ int bench_futex_requeue(int argc, const char **argv)
- 
- 	init_stats(&requeued_stats);
- 	init_stats(&requeuetime_stats);
--	pthread_attr_init(&thread_attr);
- 	mutex_init(&thread_lock);
- 	cond_init(&thread_parent);
- 	cond_init(&thread_worker);
-@@ -219,7 +220,7 @@ int bench_futex_requeue(int argc, const char **argv)
- 		struct timeval start, end, runtime;
- 
- 		/* create, launch & block all threads */
--		block_threads(worker, thread_attr, cpu);
-+		block_threads(worker, cpu);
- 
- 		/* make sure all threads are already blocked */
- 		mutex_lock(&thread_lock);
-@@ -301,7 +302,6 @@ int bench_futex_requeue(int argc, const char **argv)
- 	cond_destroy(&thread_parent);
- 	cond_destroy(&thread_worker);
- 	mutex_destroy(&thread_lock);
--	pthread_attr_destroy(&thread_attr);
- 
- 	print_summary();
- 
-diff --git a/tools/perf/bench/futex-wake-parallel.c b/tools/perf/bench/futex-wake-parallel.c
-index 6682e49d0ee0..5ab0234d74e6 100644
---- a/tools/perf/bench/futex-wake-parallel.c
-+++ b/tools/perf/bench/futex-wake-parallel.c
-@@ -95,10 +95,12 @@ static void *waking_workerfn(void *arg)
- 	return NULL;
- }
- 
--static void wakeup_threads(struct thread_data *td, pthread_attr_t thread_attr)
-+static void wakeup_threads(struct thread_data *td)
- {
- 	unsigned int i;
-+	pthread_attr_t thread_attr;
- 
-+	pthread_attr_init(&thread_attr);
- 	pthread_attr_setdetachstate(&thread_attr, PTHREAD_CREATE_JOINABLE);
- 
- 	pthread_barrier_init(&barrier, NULL, params.nwakes + 1);
-@@ -122,6 +124,7 @@ static void wakeup_threads(struct thread_data *td, pthread_attr_t thread_attr)
- 			err(EXIT_FAILURE, "pthread_join");
- 
- 	pthread_barrier_destroy(&barrier);
-+	pthread_attr_destroy(&thread_attr);
- }
- 
- static void *blocked_workerfn(void *arg __maybe_unused)
-@@ -142,8 +145,7 @@ static void *blocked_workerfn(void *arg __maybe_unused)
- 	return NULL;
- }
- 
--static void block_threads(pthread_t *w, pthread_attr_t thread_attr,
--			  struct perf_cpu_map *cpu)
-+static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
- {
- 	cpu_set_t *cpuset;
- 	unsigned int i;
-@@ -158,6 +160,9 @@ static void block_threads(pthread_t *w, pthread_attr_t thread_attr,
- 
- 	/* create and block all threads */
- 	for (i = 0; i < params.nthreads; i++) {
-+		pthread_attr_t thread_attr;
-+
-+		pthread_attr_init(&thread_attr);
- 		CPU_ZERO_S(size, cpuset);
- 		CPU_SET_S(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu, size, cpuset);
- 
-@@ -170,6 +175,7 @@ static void block_threads(pthread_t *w, pthread_attr_t thread_attr,
- 			CPU_FREE(cpuset);
- 			err(EXIT_FAILURE, "pthread_create");
- 		}
-+		pthread_attr_destroy(&thread_attr);
- 	}
- 	CPU_FREE(cpuset);
- }
-@@ -238,7 +244,6 @@ int bench_futex_wake_parallel(int argc, const char **argv)
- 	int ret = 0;
- 	unsigned int i, j;
- 	struct sigaction act;
--	pthread_attr_t thread_attr;
- 	struct thread_data *waking_worker;
- 	struct perf_cpu_map *cpu;
- 
-@@ -294,7 +299,6 @@ int bench_futex_wake_parallel(int argc, const char **argv)
- 	init_stats(&wakeup_stats);
- 	init_stats(&waketime_stats);
- 
--	pthread_attr_init(&thread_attr);
- 	mutex_init(&thread_lock);
- 	cond_init(&thread_parent);
- 	cond_init(&thread_worker);
-@@ -305,7 +309,7 @@ int bench_futex_wake_parallel(int argc, const char **argv)
- 			err(EXIT_FAILURE, "calloc");
- 
- 		/* create, launch & block all threads */
--		block_threads(blocked_worker, thread_attr, cpu);
-+		block_threads(blocked_worker, cpu);
- 
- 		/* make sure all threads are already blocked */
- 		mutex_lock(&thread_lock);
-@@ -317,7 +321,7 @@ int bench_futex_wake_parallel(int argc, const char **argv)
- 		usleep(100000);
- 
- 		/* Ok, all threads are patiently blocked, start waking folks up */
--		wakeup_threads(waking_worker, thread_attr);
-+		wakeup_threads(waking_worker);
- 
- 		for (i = 0; i < params.nthreads; i++) {
- 			ret = pthread_join(blocked_worker[i], NULL);
-@@ -336,7 +340,6 @@ int bench_futex_wake_parallel(int argc, const char **argv)
- 	cond_destroy(&thread_parent);
- 	cond_destroy(&thread_worker);
- 	mutex_destroy(&thread_lock);
--	pthread_attr_destroy(&thread_attr);
- 
- 	print_summary();
- 
-diff --git a/tools/perf/bench/futex-wake.c b/tools/perf/bench/futex-wake.c
-index 9ecab6620a87..18a5894af8bb 100644
---- a/tools/perf/bench/futex-wake.c
-+++ b/tools/perf/bench/futex-wake.c
-@@ -95,8 +95,7 @@ static void print_summary(void)
- 	       rel_stddev_stats(waketime_stddev, waketime_avg));
- }
- 
--static void block_threads(pthread_t *w,
--			  pthread_attr_t thread_attr, struct perf_cpu_map *cpu)
-+static void block_threads(pthread_t *w, struct perf_cpu_map *cpu)
- {
- 	cpu_set_t *cpuset;
- 	unsigned int i;
-@@ -110,6 +109,9 @@ static void block_threads(pthread_t *w,
- 
- 	/* create and block all threads */
- 	for (i = 0; i < params.nthreads; i++) {
-+		pthread_attr_t thread_attr;
-+
-+		pthread_attr_init(&thread_attr);
- 		CPU_ZERO_S(size, cpuset);
- 		CPU_SET_S(perf_cpu_map__cpu(cpu, i % perf_cpu_map__nr(cpu)).cpu, size, cpuset);
- 
-@@ -122,6 +124,7 @@ static void block_threads(pthread_t *w,
- 			CPU_FREE(cpuset);
- 			err(EXIT_FAILURE, "pthread_create");
- 		}
-+		pthread_attr_destroy(&thread_attr);
- 	}
- 	CPU_FREE(cpuset);
- }
-@@ -138,7 +141,6 @@ int bench_futex_wake(int argc, const char **argv)
- 	int ret = 0;
- 	unsigned int i, j;
- 	struct sigaction act;
--	pthread_attr_t thread_attr;
- 	struct perf_cpu_map *cpu;
- 
- 	argc = parse_options(argc, argv, options, bench_futex_wake_usage, 0);
-@@ -178,7 +180,6 @@ int bench_futex_wake(int argc, const char **argv)
- 
- 	init_stats(&wakeup_stats);
- 	init_stats(&waketime_stats);
--	pthread_attr_init(&thread_attr);
- 	mutex_init(&thread_lock);
- 	cond_init(&thread_parent);
- 	cond_init(&thread_worker);
-@@ -188,7 +189,7 @@ int bench_futex_wake(int argc, const char **argv)
- 		struct timeval start, end, runtime;
- 
- 		/* create, launch & block all threads */
--		block_threads(worker, thread_attr, cpu);
-+		block_threads(worker, cpu);
- 
- 		/* make sure all threads are already blocked */
- 		mutex_lock(&thread_lock);
-@@ -228,7 +229,6 @@ int bench_futex_wake(int argc, const char **argv)
- 	cond_destroy(&thread_parent);
- 	cond_destroy(&thread_worker);
- 	mutex_destroy(&thread_lock);
--	pthread_attr_destroy(&thread_attr);
- 
- 	print_summary();
- 
+> 
+> > Thanks,
+> > Ian
+> >
+> > > --
+> > > Cheers,
+> > > Changbin Du
+
 -- 
-2.41.0.162.gfafddb0af9-goog
-
+Cheers,
+Changbin Du
