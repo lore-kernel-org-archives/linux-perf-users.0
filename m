@@ -2,44 +2,45 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2A4C7EE45
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81888C83005
 	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235797AbjFLJ4Z (ORCPT
+        id S235807AbjFLJ40 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:56:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32912 "EHLO
+        Mon, 12 Jun 2023 05:56:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233927AbjFLJyt (ORCPT
+        with ESMTP id S233960AbjFLJyt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Mon, 12 Jun 2023 05:54:49 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76FD6196;
-        Mon, 12 Jun 2023 02:39:15 -0700 (PDT)
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B766F10B;
+        Mon, 12 Jun 2023 02:39:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=+ABEd9mMVv/0QFeK6grpTerCWBoJWrrnVkIx9/E66Rs=; b=UTo4GrteI/bFbo9KHpO0OPwMGI
-        3uaOsWbK8QQKJpqqXdvWKe/1DuroVfEQe6X20N2c/d4VACYYWQBssFwlcwWzekErpAM0jQu1tZ9/e
-        +YjTJLibkb7RS+vl5QNs6CnVHMIIsZx26ITReWfpe+4LcyRYAR3GYYJnxqTgCp03WtkHryIoBvyNs
-        TXVQ6nIN0Wo13A75EEBRaNQgHJG89a01PYjHojcWPFAz9Lso8WCkbgk970fpgIc60tblrKHCu8q3T
-        ZNjg78iPZJ+jSlMlf+tB1JB3hzy3afqZWV9UZL/bFcehkWkvUp1ecRWM7hjJ4i7++5u7/hW81IfNT
-        RM5pjjLw==;
+        bh=ZQvmg1eOC4ujP8jeHKMUa0GcDNPOQum0WTJAKmNFtGA=; b=as17JFHf5X4sS4LnfYcat1PiC9
+        Ygl21SzRcEI+y+2s58m4VR+c7k+AqAwe8jlPtnzWmYl16IPdeW/wTda3t/Mn+GoaB6Ioy1Fvsxcy2
+        Yc7m5IWDLwQXyvHo1rqnA6Jd0Y/RCI4mTEKdvBgQKhW2SUqz6/ofm3f2FtyVL6QmqCFhXv+NfXBW9
+        jwT1Z54p5Lij0CfiCqCeWuIXPASZuIXQbi9qaYtAB9PxGVZuCAPJ0xBo+WgJ0/KwZTrb1lbhfQH4p
+        1LKUHGwtrRUZDPpZ0MI3ymQ1XUCHq292Bw25ogsKjYnaaZ9XHIUSkaTDUL7Zx23RRYEU3HshnTJui
+        hSQE7vqg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0u-002NHJ-0b; Mon, 12 Jun 2023 09:39:04 +0000
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q8e0n-008kRD-37;
+        Mon, 12 Jun 2023 09:39:06 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5EDDB306129;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 487FF3033CB;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 12B3030A79081; Mon, 12 Jun 2023 11:38:49 +0200 (CEST)
-Message-ID: <20230612093541.025480679@infradead.org>
+        id DC80030A77B72; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093540.407316252@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:08:01 +0200
+Date:   Mon, 12 Jun 2023 11:07:53 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -67,7 +68,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 48/57] perf: Simplify perf_init_event()
+Subject: [PATCH v3 40/57] perf: Simplify perf_mmap_close()/perf_aux_sample_output()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -78,83 +79,91 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |   31 ++++++++++++-------------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
+ kernel/events/core.c |   20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -11504,10 +11504,10 @@ static int perf_try_init_event(struct pm
- static struct pmu *perf_init_event(struct perf_event *event)
- {
- 	bool extended_type = false;
--	int idx, type, ret;
- 	struct pmu *pmu;
-+	int type, ret;
- 
--	idx = srcu_read_lock(&pmus_srcu);
-+	guard(srcu)(&pmus_srcu);
- 
- 	/*
- 	 * Save original type before calling pmu->event_init() since certain
-@@ -11520,7 +11520,7 @@ static struct pmu *perf_init_event(struc
- 		pmu = event->parent->pmu;
- 		ret = perf_try_init_event(pmu, event);
- 		if (!ret)
--			goto unlock;
-+			return pmu;
- 	}
- 
- 	/*
-@@ -11539,13 +11539,12 @@ static struct pmu *perf_init_event(struc
- 	}
- 
- again:
--	rcu_read_lock();
--	pmu = idr_find(&pmu_idr, type);
--	rcu_read_unlock();
-+	scoped_guard (rcu)
-+		pmu = idr_find(&pmu_idr, type);
- 	if (pmu) {
- 		if (event->attr.type != type && type != PERF_TYPE_RAW &&
- 		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
--			goto fail;
-+			return ERR_PTR(-ENOENT);
- 
- 		ret = perf_try_init_event(pmu, event);
- 		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
-@@ -11554,27 +11553,21 @@ static struct pmu *perf_init_event(struc
- 		}
- 
- 		if (ret)
--			pmu = ERR_PTR(ret);
-+			return ERR_PTR(ret);
- 
--		goto unlock;
-+		return pmu;
- 	}
- 
- 	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
- 		ret = perf_try_init_event(pmu, event);
- 		if (!ret)
--			goto unlock;
-+			return pmu;
- 
--		if (ret != -ENOENT) {
--			pmu = ERR_PTR(ret);
--			goto unlock;
--		}
-+		if (ret != -ENOENT)
-+			return ERR_PTR(ret);
- 	}
--fail:
--	pmu = ERR_PTR(-ENOENT);
--unlock:
--	srcu_read_unlock(&pmus_srcu, idx);
- 
--	return pmu;
-+	return ERR_PTR(-ENOENT);
+@@ -6179,6 +6179,9 @@ void ring_buffer_put(struct perf_buffer
+ 	call_rcu(&rb->rcu_head, rb_free_rcu);
  }
  
- static void attach_sb_event(struct perf_event *event)
++DEFINE_CLASS(ring_buffer_get, struct perf_buffer *, ring_buffer_put(_T),
++	     ring_buffer_get(event), struct perf_event *event)
++
+ static void perf_mmap_open(struct vm_area_struct *vma)
+ {
+ 	struct perf_event *event = vma->vm_file->private_data;
+@@ -6206,7 +6209,7 @@ static void perf_pmu_output_stop(struct
+ static void perf_mmap_close(struct vm_area_struct *vma)
+ {
+ 	struct perf_event *event = vma->vm_file->private_data;
+-	struct perf_buffer *rb = ring_buffer_get(event);
++	CLASS(ring_buffer_get, rb)(event);
+ 	struct user_struct *mmap_user = rb->mmap_user;
+ 	int mmap_locked = rb->mmap_locked;
+ 	unsigned long size = perf_data_size(rb);
+@@ -6245,14 +6248,14 @@ static void perf_mmap_close(struct vm_ar
+ 		detach_rest = true;
+ 
+ 	if (!atomic_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
+-		goto out_put;
++		return;
+ 
+ 	ring_buffer_attach(event, NULL);
+ 	mutex_unlock(&event->mmap_mutex);
+ 
+ 	/* If there's still other mmap()s of this buffer, we're done. */
+ 	if (!detach_rest)
+-		goto out_put;
++		return;
+ 
+ 	/*
+ 	 * No other mmap()s, detach from all other events that might redirect
+@@ -6309,9 +6312,6 @@ static void perf_mmap_close(struct vm_ar
+ 			&mmap_user->locked_vm);
+ 	atomic64_sub(mmap_locked, &vma->vm_mm->pinned_vm);
+ 	free_uid(mmap_user);
+-
+-out_put:
+-	ring_buffer_put(rb); /* could be last */
+ }
+ 
+ static const struct vm_operations_struct perf_mmap_vmops = {
+@@ -6962,14 +6962,13 @@ static void perf_aux_sample_output(struc
+ 				   struct perf_sample_data *data)
+ {
+ 	struct perf_event *sampler = event->aux_event;
+-	struct perf_buffer *rb;
+ 	unsigned long pad;
+ 	long size;
+ 
+ 	if (WARN_ON_ONCE(!sampler || !data->aux_size))
+ 		return;
+ 
+-	rb = ring_buffer_get(sampler);
++	CLASS(ring_buffer_get, rb)(sampler);
+ 	if (!rb)
+ 		return;
+ 
+@@ -6982,7 +6981,7 @@ static void perf_aux_sample_output(struc
+ 	 * like to know.
+ 	 */
+ 	if (WARN_ON_ONCE(size < 0))
+-		goto out_put;
++		return;
+ 
+ 	/*
+ 	 * The pad comes from ALIGN()ing data->aux_size up to u64 in
+@@ -6996,9 +6995,6 @@ static void perf_aux_sample_output(struc
+ 		u64 zero = 0;
+ 		perf_output_copy(handle, &zero, pad);
+ 	}
+-
+-out_put:
+-	ring_buffer_put(rb);
+ }
+ 
+ /*
 
 
