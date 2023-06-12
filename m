@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7063AC87FDE
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2A4C7EE45
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235766AbjFLJ4W (ORCPT
+        id S235797AbjFLJ4Z (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:56:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32910 "EHLO
+        Mon, 12 Jun 2023 05:56:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233889AbjFLJyt (ORCPT
+        with ESMTP id S233927AbjFLJyt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Mon, 12 Jun 2023 05:54:49 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A4BC4C24;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76FD6196;
         Mon, 12 Jun 2023 02:39:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=3znloSDHViiBmrAdv7OWZVEw7vUxAyx0B3A3/+Qs8bI=; b=IUO9OLx1TrVgcptK2MZb4c+Sn4
-        EVzHTvVu+xtHeRn8FXs+4TG6lnj2b3k/me7UG7IIb1KpO4T5GPw2+qWG9oATedUzq+NM70mcT4bti
-        HLzEMtejImfTANsC8sPs1gswHo/77zVVk6+JE8KGZDN2idZrQ91P2npzPnTaxcVqhdp7GM9v7xzqO
-        83Un7eDMkpuqONSKTCyszSRzP/K6jTfTnP438X5enxh5e8KELYoQkGq5KDulr1XMZqUpPzpwdVlsN
-        B70mhv8SwI8fCgJro8rqHKdeL6YR9k4RzfmXBv/eguvp03Eee6R4yJax4MoBvm6+4AfTeHzlm/+Ou
-        b0LlqYtg==;
+        bh=+ABEd9mMVv/0QFeK6grpTerCWBoJWrrnVkIx9/E66Rs=; b=UTo4GrteI/bFbo9KHpO0OPwMGI
+        3uaOsWbK8QQKJpqqXdvWKe/1DuroVfEQe6X20N2c/d4VACYYWQBssFwlcwWzekErpAM0jQu1tZ9/e
+        +YjTJLibkb7RS+vl5QNs6CnVHMIIsZx26ITReWfpe+4LcyRYAR3GYYJnxqTgCp03WtkHryIoBvyNs
+        TXVQ6nIN0Wo13A75EEBRaNQgHJG89a01PYjHojcWPFAz9Lso8WCkbgk970fpgIc60tblrKHCu8q3T
+        ZNjg78iPZJ+jSlMlf+tB1JB3hzy3afqZWV9UZL/bFcehkWkvUp1ecRWM7hjJ4i7++5u7/hW81IfNT
+        RM5pjjLw==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1q8e0z-002NO7-BS; Mon, 12 Jun 2023 09:39:09 +0000
+        id 1q8e0u-002NHJ-0b; Mon, 12 Jun 2023 09:39:04 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 822BF306161;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5EDDB306129;
         Mon, 12 Jun 2023 11:38:53 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 4309930A7A2A1; Mon, 12 Jun 2023 11:38:49 +0200 (CEST)
-Message-ID: <20230612093541.669724890@infradead.org>
+        id 12B3030A79081; Mon, 12 Jun 2023 11:38:49 +0200 (CEST)
+Message-ID: <20230612093541.025480679@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:08:10 +0200
+Date:   Mon, 12 Jun 2023 11:08:01 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -67,7 +67,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 57/57] perf: Simplify perf_install_in_context()
+Subject: [PATCH v3 48/57] perf: Simplify perf_init_event()
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -78,40 +78,83 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- kernel/events/core.c |    8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ kernel/events/core.c |   31 ++++++++++++-------------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2876,7 +2876,7 @@ perf_install_in_context(struct perf_even
- 	if (!task_function_call(task, __perf_install_in_context, event))
- 		return;
+@@ -11504,10 +11504,10 @@ static int perf_try_init_event(struct pm
+ static struct pmu *perf_init_event(struct perf_event *event)
+ {
+ 	bool extended_type = false;
+-	int idx, type, ret;
+ 	struct pmu *pmu;
++	int type, ret;
  
--	raw_spin_lock_irq(&ctx->lock);
-+	guard(raw_spinlock_irq)(&ctx->lock);
- 	task = ctx->task;
- 	if (WARN_ON_ONCE(task == TASK_TOMBSTONE)) {
- 		/*
-@@ -2884,19 +2884,15 @@ perf_install_in_context(struct perf_even
- 		 * cannot happen), and we hold ctx->mutex, which serializes us
- 		 * against perf_event_exit_task_context().
- 		 */
--		raw_spin_unlock_irq(&ctx->lock);
- 		return;
- 	}
+-	idx = srcu_read_lock(&pmus_srcu);
++	guard(srcu)(&pmus_srcu);
+ 
  	/*
- 	 * If the task is not running, ctx->lock will avoid it becoming so,
- 	 * thus we can safely install the event.
- 	 */
--	if (task_curr(task)) {
--		raw_spin_unlock_irq(&ctx->lock);
-+	if (task_curr(task))
- 		goto again;
--	}
- 	add_event_to_ctx(event, ctx);
--	raw_spin_unlock_irq(&ctx->lock);
+ 	 * Save original type before calling pmu->event_init() since certain
+@@ -11520,7 +11520,7 @@ static struct pmu *perf_init_event(struc
+ 		pmu = event->parent->pmu;
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (!ret)
+-			goto unlock;
++			return pmu;
+ 	}
+ 
+ 	/*
+@@ -11539,13 +11539,12 @@ static struct pmu *perf_init_event(struc
+ 	}
+ 
+ again:
+-	rcu_read_lock();
+-	pmu = idr_find(&pmu_idr, type);
+-	rcu_read_unlock();
++	scoped_guard (rcu)
++		pmu = idr_find(&pmu_idr, type);
+ 	if (pmu) {
+ 		if (event->attr.type != type && type != PERF_TYPE_RAW &&
+ 		    !(pmu->capabilities & PERF_PMU_CAP_EXTENDED_HW_TYPE))
+-			goto fail;
++			return ERR_PTR(-ENOENT);
+ 
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (ret == -ENOENT && event->attr.type != type && !extended_type) {
+@@ -11554,27 +11553,21 @@ static struct pmu *perf_init_event(struc
+ 		}
+ 
+ 		if (ret)
+-			pmu = ERR_PTR(ret);
++			return ERR_PTR(ret);
+ 
+-		goto unlock;
++		return pmu;
+ 	}
+ 
+ 	list_for_each_entry_rcu(pmu, &pmus, entry, lockdep_is_held(&pmus_srcu)) {
+ 		ret = perf_try_init_event(pmu, event);
+ 		if (!ret)
+-			goto unlock;
++			return pmu;
+ 
+-		if (ret != -ENOENT) {
+-			pmu = ERR_PTR(ret);
+-			goto unlock;
+-		}
++		if (ret != -ENOENT)
++			return ERR_PTR(ret);
+ 	}
+-fail:
+-	pmu = ERR_PTR(-ENOENT);
+-unlock:
+-	srcu_read_unlock(&pmus_srcu, idx);
+ 
+-	return pmu;
++	return ERR_PTR(-ENOENT);
  }
  
- /*
+ static void attach_sb_event(struct perf_event *event)
 
 
