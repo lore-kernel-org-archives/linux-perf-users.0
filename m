@@ -2,45 +2,45 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE264C7EE45
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DA5C7EE43
+	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 09:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235672AbjFLJ4H (ORCPT
+        id S235686AbjFLJ4I (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 05:56:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33450 "EHLO
+        Mon, 12 Jun 2023 05:56:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbjFLJyR (ORCPT
+        with ESMTP id S230186AbjFLJyT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 05:54:17 -0400
+        Mon, 12 Jun 2023 05:54:19 -0400
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6347649F6;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C79749FA;
         Mon, 12 Jun 2023 02:38:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=VyS6fqYhD/n91U5f9GQ+a8R8fakG8EouUVHj8V9PE00=; b=QruMXFdvJIpT6C4xhfbtXQc4F6
-        4BWAt2iZpXnuR4PZL/DqfGiytuUGSiJSOq/8VdBO2EL0m6XzvNtDiKZ1oLWkBo4Fjyp1SCW0HtowW
-        khBwKdFSkOaLE0NRU0h6wppJ/BJQbx6t+fi0YMOq8E+vtMHdfs8eGLnlXdcKkdtjJW1TZjuaLEaOi
-        xRrHYrmW0sm1wBcbePBmYSzXufFebgerY8jxwNA5ArsNL9JCWj7MuCccd5YfoqES1HrUtarXWvNv9
-        rTToGRe669jagMzznnXleX7c296r5JI6WREQfZY9f/DB2/IM2B7t9lrQeaDhqxwYfXOZ/h3jaM8KO
-        MM3mvBbQ==;
+        bh=iuKjwptMM283OkeCg3rHRYfDPMncNnTiTfZUlZvzjjw=; b=eQ6OsD4kYVKLafcm5zMaXykUrJ
+        t3Yx8a+byrZdB944/0aNdLOqAmoLeWSa1sowLg19pvZhRfEGH12EfjQizZN73l+Q2lmgWVTy/jEN2
+        66w/tSoR035EtMK1QJrtp16Z85OKpvfSl1I8OLy7JSDS0vEBXw8vGKRffU4u96Gz85h50NrSym32v
+        8aadmJp7+8xctTmftjzi5KRquTBd3yr6fYIYX7v7Rb7TZGAQFPvFwW5JY6GaXXShnDrDMfhQWRx/H
+        Hx6pFtrNHcKkz/xQw6bxea1nVgSbzWPnczzWWwxrD46aGrv+zXbaZt8xVprl8zZZmhqQuJnaVP8+3
+        u9+4lFQg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q8e0f-008kOm-0u;
+        id 1q8e0f-008kOo-0K;
         Mon, 12 Jun 2023 09:38:49 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 29BC6300E86;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7FC1C302E28;
         Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id ED20B240FDF93; Mon, 12 Jun 2023 11:38:47 +0200 (CEST)
-Message-ID: <20230612093537.467120754@infradead.org>
+        id 0C29230A58077; Mon, 12 Jun 2023 11:38:48 +0200 (CEST)
+Message-ID: <20230612093537.693926033@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 12 Jun 2023 11:07:14 +0200
+Date:   Mon, 12 Jun 2023 11:07:17 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     torvalds@linux-foundation.org, keescook@chromium.org,
         gregkh@linuxfoundation.org, pbonzini@redhat.com
@@ -68,7 +68,7 @@ Cc:     masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: [PATCH v3 01/57] dmaengine: ioat: Free up __cleanup() name
+Subject: [PATCH v3 04/57] kbuild: Drop -Wdeclaration-after-statement
 References: <20230612090713.652690195@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -76,65 +76,54 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In order to use __cleanup for __attribute__((__cleanup__(func))) the
-name must not be used for anything else. Avoid the conflict.
+With the advent on scope-based resource management it comes really
+tedious to abide by the contraints of -Wdeclaration-after-statement.
 
+It will still be recommeneded to place declarations at the start of a
+scope where possible, but it will no longer be enforced.
+
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- drivers/dma/ioat/dma.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ Makefile                          |    6 +-----
+ arch/arm64/kernel/vdso32/Makefile |    2 --
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -584,11 +584,11 @@ desc_get_errstat(struct ioatdma_chan *io
- }
+--- a/Makefile
++++ b/Makefile
+@@ -447,8 +447,7 @@ HOSTRUSTC = rustc
+ HOSTPKG_CONFIG	= pkg-config
  
- /**
-- * __cleanup - reclaim used descriptors
-+ * __ioat_cleanup - reclaim used descriptors
-  * @ioat_chan: channel (ring) to clean
-  * @phys_complete: zeroed (or not) completion address (from status)
-  */
--static void __cleanup(struct ioatdma_chan *ioat_chan, dma_addr_t phys_complete)
-+static void __ioat_cleanup(struct ioatdma_chan *ioat_chan, dma_addr_t phys_complete)
- {
- 	struct ioatdma_device *ioat_dma = ioat_chan->ioat_dma;
- 	struct ioat_ring_ent *desc;
-@@ -675,7 +675,7 @@ static void ioat_cleanup(struct ioatdma_
- 	spin_lock_bh(&ioat_chan->cleanup_lock);
+ KBUILD_USERHOSTCFLAGS := -Wall -Wmissing-prototypes -Wstrict-prototypes \
+-			 -O2 -fomit-frame-pointer -std=gnu11 \
+-			 -Wdeclaration-after-statement
++			 -O2 -fomit-frame-pointer -std=gnu11
+ KBUILD_USERCFLAGS  := $(KBUILD_USERHOSTCFLAGS) $(USERCFLAGS)
+ KBUILD_USERLDFLAGS := $(USERLDFLAGS)
  
- 	if (ioat_cleanup_preamble(ioat_chan, &phys_complete))
--		__cleanup(ioat_chan, phys_complete);
-+		__ioat_cleanup(ioat_chan, phys_complete);
+@@ -1012,9 +1011,6 @@ endif
+ # arch Makefile may override CC so keep this after arch Makefile is included
+ NOSTDINC_FLAGS += -nostdinc
  
- 	if (is_ioat_halted(*ioat_chan->completion)) {
- 		u32 chanerr = readl(ioat_chan->reg_base + IOAT_CHANERR_OFFSET);
-@@ -712,7 +712,7 @@ static void ioat_restart_channel(struct
+-# warn about C99 declaration after statement
+-KBUILD_CFLAGS += -Wdeclaration-after-statement
+-
+ # Variable Length Arrays (VLAs) should not be used anywhere in the kernel
+ KBUILD_CFLAGS += -Wvla
  
- 	ioat_quiesce(ioat_chan, 0);
- 	if (ioat_cleanup_preamble(ioat_chan, &phys_complete))
--		__cleanup(ioat_chan, phys_complete);
-+		__ioat_cleanup(ioat_chan, phys_complete);
- 
- 	__ioat_restart_chan(ioat_chan);
- }
-@@ -786,7 +786,7 @@ static void ioat_eh(struct ioatdma_chan
- 
- 	/* cleanup so tail points to descriptor that caused the error */
- 	if (ioat_cleanup_preamble(ioat_chan, &phys_complete))
--		__cleanup(ioat_chan, phys_complete);
-+		__ioat_cleanup(ioat_chan, phys_complete);
- 
- 	chanerr = readl(ioat_chan->reg_base + IOAT_CHANERR_OFFSET);
- 	pci_read_config_dword(pdev, IOAT_PCI_CHANERR_INT_OFFSET, &chanerr_int);
-@@ -943,7 +943,7 @@ void ioat_timer_event(struct timer_list
- 		/* timer restarted in ioat_cleanup_preamble
- 		 * and IOAT_COMPLETION_ACK cleared
- 		 */
--		__cleanup(ioat_chan, phys_complete);
-+		__ioat_cleanup(ioat_chan, phys_complete);
- 		goto unlock_out;
- 	}
- 
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -65,11 +65,9 @@ VDSO_CFLAGS += -Wall -Wundef -Wstrict-pr
+                -fno-strict-aliasing -fno-common \
+                -Werror-implicit-function-declaration \
+                -Wno-format-security \
+-               -Wdeclaration-after-statement \
+                -std=gnu11
+ VDSO_CFLAGS  += -O2
+ # Some useful compiler-dependent flags from top-level Makefile
+-VDSO_CFLAGS += $(call cc32-option,-Wdeclaration-after-statement,)
+ VDSO_CFLAGS += $(call cc32-option,-Wno-pointer-sign)
+ VDSO_CFLAGS += -fno-strict-overflow
+ VDSO_CFLAGS += $(call cc32-option,-Werror=strict-prototypes)
 
 
