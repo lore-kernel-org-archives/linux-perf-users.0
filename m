@@ -2,162 +2,148 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB77FC7EE29
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 07:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C52C77B7A
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 07:34:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238415AbjFMHEc (ORCPT
+        id S237456AbjFMHe0 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 03:04:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50506 "EHLO
+        Tue, 13 Jun 2023 03:34:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234905AbjFMHEc (ORCPT
+        with ESMTP id S234043AbjFMHeY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 03:04:32 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164A410F7;
-        Tue, 13 Jun 2023 00:04:29 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QgKCp6wPXzqTMw;
-        Tue, 13 Jun 2023 14:59:02 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 13 Jun 2023 15:03:58 +0800
-Subject: Re: [RFC] Adding support for setting the affinity of the recording
- process
-To:     Namhyung Kim <namhyung@kernel.org>
-CC:     James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
- <a24634f7-be80-6ca2-9df7-1624fe11c281@arm.com>
- <c291692c-7db8-b4cc-e17a-422c75ad8daa@huawei.com>
- <CAM9d7chqy-RztC943JOgRLcEHvKZN8rS542q3xxW63==KGY3CQ@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <c2f82ca1-8fda-bd0c-4162-3a9e5d867a75@huawei.com>
-Date:   Tue, 13 Jun 2023 15:03:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Tue, 13 Jun 2023 03:34:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CB8D10F7;
+        Tue, 13 Jun 2023 00:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tAKolwLuXUR1D5yD/hL0f+kZnHou+PxeYU9aqGSZlgk=; b=PJ7DjtI5p9Scuhe88BpMQDomP0
+        MKCJntJTn1U+Rd2ZhV3FQnt6v8jDArMbzoUNSNBw22KQvf4WZts+aU5TsuEO6LVgTBI9Lt5J5/tRM
+        J8ziNRHbscTBejaoYpXuU/l3qPuKSjn5T8wVUN8+JYdj713tuMnbHx+7gbgAdsmA8wZ38wg4ht6m7
+        i0+jX0ZKdElRGA4MizB5sMdH1s4BRkSbqJI4EUQFv5UwmALAHg55ZjQOv7/wSBKbBTi1uFQEMjskS
+        A/QCcZxrSOjGP5FrTd8O11G3S61ZxvJCh2x57TVAqR8kGkTdhlP7MuYlgXagHdz4r3FYQqRS+YNsG
+        xU47uqLA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q8yXh-003ev7-B0; Tue, 13 Jun 2023 07:34:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0C1E9300322;
+        Tue, 13 Jun 2023 09:34:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DB9FC262C92A1; Tue, 13 Jun 2023 09:34:15 +0200 (CEST)
+Date:   Tue, 13 Jun 2023 09:34:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
+        pbonzini@redhat.com, masahiroy@kernel.org, nathan@kernel.org,
+        ndesaulniers@google.com, nicolas@fjasle.eu,
+        catalin.marinas@arm.com, will@kernel.org, vkoul@kernel.org,
+        trix@redhat.com, ojeda@kernel.org, mingo@redhat.com,
+        longman@redhat.com, boqun.feng@gmail.com, dennis@kernel.org,
+        tj@kernel.org, cl@linux.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
+        joel@joelfernandes.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
+        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
+        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+        john.johansen@canonical.com, paul@paul-moore.com,
+        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
+        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
+        luc.vanoostenryck@gmail.com
+Subject: Re: [PATCH v3 46/57] perf: Simplify pmu_dev_alloc()
+Message-ID: <20230613073415.GP4253@hirez.programming.kicks-ass.net>
+References: <20230612090713.652690195@infradead.org>
+ <20230612093540.850386350@infradead.org>
+ <20230612094400.GG4253@hirez.programming.kicks-ass.net>
+ <2023061226-grumpily-entire-f06a@gregkh>
+ <20230612141322.GA83892@hirez.programming.kicks-ass.net>
+ <2023061217-mutable-curry-c2ac@gregkh>
 MIME-Version: 1.0
-In-Reply-To: <CAM9d7chqy-RztC943JOgRLcEHvKZN8rS542q3xxW63==KGY3CQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2023061217-mutable-curry-c2ac@gregkh>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+On Mon, Jun 12, 2023 at 05:44:59PM +0200, Greg KH wrote:
 
-On 2023/6/13 13:50, Namhyung Kim wrote:
-> Hello,
+> Then in the last part of the file, I abuse the DEFINE_FREE() to handle a
+> special case of removing a proc file if things go bad (and add a
+> DEFINE_FREE() for class_destroy(), which should go into
+> include/device/class.h.
 > 
-> On Mon, Jun 12, 2023 at 7:28 PM Yang Jihong <yangjihong1@huawei.com> wrote:
->>
->> Hello,
->>
->> On 2023/6/12 23:27, James Clark wrote:
->>>
->>>
->>> On 12/06/2023 11:26, Yang Jihong wrote:
->>>> Hello everyone,
->>>>
->>>> Currently, perf-record supports profiling an existing process, thread,
->>>> or a specified command.
->>>>
->>>> Sometimes we may need to set CPU affinity of the target process before
->>>> recording:
->>>>
->>>>     # taskset -pc <cpus> <pid>
->>>>     # perf record -p <pid> -- sleep 10
->>>>
->>>> or:
->>>>
->>>>     # perf record -- `taskset -c <cpus> COMMAND`
->>>>
->>>> I'm thinking about getting perf to support setting the affinity of the
->>>> recording process, for example:
->>>>
->>>> 1. set the CPU affinity of the <pid1> process to <cpus1>, <pid2> process
->>>> to <cpus2>,  and record:
->>>>
->>>>     # perf record -p <pid1>/<cpus1>:<pid2>/<cpus2> -- sleep 10
->>>>
->>>
->>> I'm not sure if this is necessary. You can already do this with taskset
->>> when you launch the processes or for existing ones.
->>
->> Yes, that's what we're doing now, and I'm thinking about whether perf
->> can support this "taskset" feature.
-> 
-> I agree with James that it looks out of scope of perf tools.
-> You can always use `taskset` for external processes.
-> 
-OK, so let's not consider this scenario.
->>
->>>
->>>> and
->>>>
->>>> 2. set CPU affinity of the COMMAND and record:
->>>>
->>>>     # perf record --taskset-command <cpus> COMMAND
->>>>
->>>> In doing so, perf, as an observer, actually changes some of the
->>>> properties of the target process, which may be contrary to the purpose
->>>> of perf tool.
->>>>
->>>>
->>>> Will we consider accepting this approach?
->>>>
->>>
->>> For #2 I do this sometimes, but I prefix the perf command with taskset
->>> because otherwise there is a small time between when taskset does its
->>> thing and launching the child process that it runs in the wrong place.
->>>
->>> Then one issue with the above method is that perf itself gets pinned to
->>> those CPUs as well. I suppose that could influence your application but
->>> I've never had an issue with it.
->>>
->>> If you really can't live with perf also being pinned to those CPUs I
->>> would say it makes sense to add options for #2. Otherwise I would just
->>> run everything under taskset and no changes are needed.
->>
->> If "perf" process and the target process are pinned to the same CPU,
->> and the CPU usage of the target process is high, the perf data
->> collection may be affected. Therefore, in this case, we may need to pin
->> the target process and "perf" to different CPUs.
->>
->>>
->>> I think you would still need to have perf itself pinned to the CPUs just
->>> before it does the fork and exec, and then after that it can undo its
->>> pinning. Otherwise you'd still get that small time running on the wrong
->>> cores.
->>>
->>
->> Thanks for your advice, or we can support setting different affinities
->> for the "perf" process and the target process.
-> 
-> When it comes to controlling `perf`, you can use --threads=<spec>
-> option which supports fairly complex control for parallelism and
-> affinity.
-> 
-Yes, we can ues --threads=<spec>
+> I've only test-built it, but is this the proper use of DEFINE_FREE()?
+> There wasn't much documentation :)
 
-In addition to the above, or we can simply add a parameter to pin the 
-COMMAND to specific cpus.
+Yes, this looks right.
 
-Thank you for your reply.
+> To be fair the end-result of misc_init() is much nicer and cleaner and
+> "obviously correct", which is good, even with the crazy proc file mess
+> in it.  So I like the idea overall, need to figure out when to use
+> DEFINE_CLASS() vs. DEFINE_FREE(), that isn't obvious to me.
 
-Thanks,
-Yang.
+CLASS is meant for things that have an obvious contructor as well as a
+destructor, that always go together. Like for example the lock things,
+they always pair a lock and unlock. But also things like:
+fdget()+fdput(), these can also always be paired, and if you want the
+file to escape you simply take yet another reference to prevent the
+fdput() from being the final.
+
+> Also, you can't put a DEFINE_FREE() within a function declaration, which
+> I guess makes sense, but the build warning is very odd when you attempt
+> it, mentioning an "invalid storage class".  Is that supposed to be able
+> to work?
+
+No, DEFINE_FREE() and DEFINE_CLASS() end up defining a bunch of inline
+functions, which can't be done inside another function.
+
+If only C would have lambda functions ... alas.
+
+> @@ -280,29 +268,24 @@ static char *misc_devnode(const struct device *dev, umode_t *mode)
+>  	return NULL;
+>  }
+>  
+> +DEFINE_FREE(class_destroy, struct class *, if (_T) class_destroy(_T));
+
+Documentation for class_create() says it will return ERR_PTR(), so then
+this should be something like:
+
+DEFINE_FRERE(class_destroy, struct class *, if (!IS_ERR_OR_NULL(_T)) class_destroy(_T))
+
+> +DEFINE_FREE(remove_proc, struct proc_dir_entry *, if (_T) remove_proc_entry("misc", NULL));
+>  static int __init misc_init(void)
+>  {
+> +	struct proc_dir_entry *ret __free(remove_proc) = proc_create_seq("misc", 0, NULL, &misc_seq_ops);
+> +	struct class *c __free(class_destroy) = class_create("misc");
+>  
+> +	if (IS_ERR(c))
+> +		return PTR_ERR(c);
+>  
+>  	if (register_chrdev(MISC_MAJOR, "misc", &misc_fops))
+> +		return -EIO;
+>  
+> +	c->devnode = misc_devnode;
+> +
+> +	misc_class = no_free_ptr(c);
+> +	no_free_ptr(ret);
+> +
+> +	return 0;
+>  }
+
+And yes, this does look nicer.
