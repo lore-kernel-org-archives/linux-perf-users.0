@@ -2,762 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB12C7EE43
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 06:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A02F4C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 06:42:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234981AbjFMGDi (ORCPT
+        id S232700AbjFMGmX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 02:03:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57038 "EHLO
+        Tue, 13 Jun 2023 02:42:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238415AbjFMGDh (ORCPT
+        with ESMTP id S231520AbjFMGmW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 02:03:37 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CD38E7B
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 23:03:31 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3f9b7de94e7so156651cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 23:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686636210; x=1689228210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UziJrvF2Qhmwo96g0q+2ZkUF3zv9dtfM4R2txpdZXxc=;
-        b=d5Co1JqEQdsqBW1S/n8ypcDK99V4Us9SlGYbSmgEds0iXqKrcIx4Co6lx83rywX75v
-         DUpprXuesq11D9XVPucwjC+4mH8LJwdT+UB3HG9j/IpgHo1RkTIndQbBTeIgChmkQR5u
-         taINUwBMHJW4zmrymv9F1VMfkBaJNKc9pTWF4ZnjVQR4RXSF6rybYhshIY8EWh1YzYUF
-         kO4VtSbGEs8uexSHS9jxLrYcGJrrdY/px/UwweyByC26RHnze4LlC86oQOanRBexKOX6
-         0wirrqI44Maxu2vF3Qn3HfG1A1gd6hJhZsqkXs2BIMdmFcruBCcDCpYJg3DYJRVBYwLm
-         c81w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686636210; x=1689228210;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UziJrvF2Qhmwo96g0q+2ZkUF3zv9dtfM4R2txpdZXxc=;
-        b=ieZ4EuqTlvYI+Xo5+hBa9GZq5M77m5NXxfbgMom3i2zEPgWBrQA5RGiQb+y/jN7IVR
-         p8UD4ZcBizEF/zmAs5VWsFiIaTye1ehHWmHDbjCWmzfM4URGa+KvSxixwfkOrSrEkRmy
-         R8LQqBP+KdxoIsRlW32jcD+TBrAqKXKoylgEn1u8r7EBwt16bN0SpIqYz5S9OjTyxI/o
-         IPNMWZqCAVkqHakhgmO5mgfJ8/Fj933KgU42fln9Xio3cmtL0ohRYHK1dwf0/O4G38+Q
-         QpmRB4SNJX4K370TEsIADsJBsQEnCZM1acFLakfRw60ML8+0aNC+QZRulN1esOPyivYC
-         Y2dw==
-X-Gm-Message-State: AC+VfDy7lIfDg3AtAtzslRLi4sYmh5d/I+hGNFshuLaqUPXhA/v/ZuDr
-        MVaif2idHkzSKMjSvYgcg2PAkwPOwhEUWDJxn++SK3jXoMWVGs9favhCQw==
-X-Google-Smtp-Source: ACHHUZ5bB5s7YYLq6Pgs5rw8wgVxdXCaqJ95oiDiGJOXPGY8cshJrujHdIjrayUOS6tza57OTvJ8gj2WEugY5b4Ivmo=
-X-Received: by 2002:a05:622a:e:b0:3f3:75c2:7466 with SMTP id
- x14-20020a05622a000e00b003f375c27466mr68218qtw.8.1686636210331; Mon, 12 Jun
- 2023 23:03:30 -0700 (PDT)
+        Tue, 13 Jun 2023 02:42:22 -0400
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 259AEE6B;
+        Mon, 12 Jun 2023 23:42:20 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Vl1.3ud_1686638534;
+Received: from 30.240.112.107(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vl1.3ud_1686638534)
+          by smtp.aliyun-inc.com;
+          Tue, 13 Jun 2023 14:42:15 +0800
+Message-ID: <ca66ecce-b8eb-ad22-2b25-bad8552ea5a4@linux.alibaba.com>
+Date:   Tue, 13 Jun 2023 14:42:13 +0800
 MIME-Version: 1.0
-References: <20230531154333.364167-1-irogers@google.com> <ZIdtO9xVsP6Ytb0q@kernel.org>
- <d844e513-2731-fab3-70bc-408c16e5dd55@intel.com>
-In-Reply-To: <d844e513-2731-fab3-70bc-408c16e5dd55@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 12 Jun 2023 23:03:18 -0700
-Message-ID: <CAP-5=fVM47-tTV7TCN40gtSF2XQMAh1PaMiRhBv88sL_eM0=sA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf tests x86: Generate entire instruction struct
- in C files
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.1
+Subject: Re: [PATCH 2/2] perf/ring_buffer: Fix high-order allocations for AUX
+ space with correct MAX_ORDER limit
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>
+Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        kirill@shutemov.name, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        bpf@vger.kernel.org
+References: <20230612052452.53425-1-xueshuai@linux.alibaba.com>
+ <20230612052452.53425-3-xueshuai@linux.alibaba.com>
+ <751cb217-4be0-ddfc-780b-87517a8e337a@arm.com>
+ <20230612090937.GD217089@leoy-huanghe.lan>
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20230612090937.GD217089@leoy-huanghe.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 10:01=E2=80=AFPM Adrian Hunter <adrian.hunter@intel=
-.com> wrote:
->
-> On 12/06/23 22:08, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, May 31, 2023 at 08:43:32AM -0700, Ian Rogers escreveu:
-> >> Generate the entire struct in the C files. Later changes will break
-> >> apart the struct and so two phases of output are necessary, this isn't
-> >> possible if part of the struct is declared in insn-x86.c.
-> >
-> > Adrian,
-> >
-> >       Could you please take a look at these two patches?
->
-> I will try to get to them today, but if you are worried about tests,
-> why not split them into another executable.  e.g. perf test runs
-> perf-test, where 'perf' is built without test support and 'perf-test'
-> is built with it.
 
-So two binaries would be more disk space and a bunch of re-engineering
-in things like tests, would perf-test be copied to perf for shell
-tests? Would we then need the json events in it? The json
-events/metrics are by far the biggest contributor to the binary size,
-but I have plans for them. In this case I was just going after a low
-hanging disk and runtime memory savings.
 
-Thanks,
-Ian
+On 2023/6/12 17:09, Leo Yan wrote:
+> On Mon, Jun 12, 2023 at 09:45:38AM +0100, James Clark wrote:
+> 
+> [...]
+> 
+>>> @@ -609,8 +609,8 @@ static struct page *rb_alloc_aux_page(int node, int order)
+>>>  {
+>>>  	struct page *page;
+>>>  
+>>> -	if (order > MAX_ORDER)
+>>> -		order = MAX_ORDER;
+>>> +	if (order >= MAX_ORDER)
+>>> +		order = MAX_ORDER - 1;
+>>>  
+>>>  	do {
+>>>  		page = alloc_pages_node(node, PERF_AUX_GFP, order);
+>>
+>>
+>> It seems like this was only just recently changed with this as the
+>> commit message (23baf83):
+>>
+>>    mm, treewide: redefine MAX_ORDER sanely
+>>
+>>   MAX_ORDER currently defined as number of orders page allocator
+>>   supports: user can ask buddy allocator for page order between 0 and
+>>   MAX_ORDER-1.
+>>
+>>   This definition is counter-intuitive and lead to number of bugs all
+>>   over the kernel.
+>>
+>>   Change the definition of MAX_ORDER to be inclusive: the range of
+>>   orders user can ask from buddy allocator is 0..MAX_ORDER now.
+>>
+>> It might be worth referring to this in the commit message or adding a
+>> fixes: reference. Or maybe this new change isn't quite right?
+> 
+> Good point.  If so, we don't need this patch anymore.
+> 
+> Thanks for reminding, James.
+> 
+> Leo
 
-> >
-> > Thanks in advance,
-> >
-> > - Arnaldo
-> >
-> >> The instructions rdpkru and wrpkru are already part of the source data
-> >> and so the duplicate values are removed from the structs in
-> >> insn-x86.c. erets and eretu won't assemble, so special case them for
-> >> x86-64.
-> >>
-> >> Signed-off-by: Ian Rogers <irogers@google.com>
-> >> ---
-> >>  .../perf/arch/x86/tests/gen-insn-x86-dat.awk  |   6 +-
-> >>  tools/perf/arch/x86/tests/gen-insn-x86-dat.sh |   4 +-
-> >>  tools/perf/arch/x86/tests/insn-x86-dat-32.c   |  65 +++----
-> >>  tools/perf/arch/x86/tests/insn-x86-dat-64.c   | 163 +++++++++--------=
--
-> >>  tools/perf/arch/x86/tests/insn-x86.c          |  23 ++-
-> >>  5 files changed, 138 insertions(+), 123 deletions(-)
-> >>
-> >> diff --git a/tools/perf/arch/x86/tests/gen-insn-x86-dat.awk b/tools/pe=
-rf/arch/x86/tests/gen-insn-x86-dat.awk
-> >> index 1a29f6379bde..5a7de9ff77e7 100644
-> >> --- a/tools/perf/arch/x86/tests/gen-insn-x86-dat.awk
-> >> +++ b/tools/perf/arch/x86/tests/gen-insn-x86-dat.awk
-> >> @@ -5,6 +5,7 @@
-> >>  #
-> >>
-> >>  BEGIN {
-> >> +    print "// SPDX-License-Identifier: GPL-2.0"
-> >>      print "/*"
-> >>      print " * Generated by gen-insn-x86-dat.sh and gen-insn-x86-dat.a=
-wk"
-> >>      print " * from insn-x86-dat-src.c for inclusion by insn-x86.c"
-> >> @@ -18,13 +19,16 @@ BEGIN {
-> >>
-> >>  / Start here / {
-> >>      going =3D 1
-> >> +    printf "static const struct test_data %s[] =3D {\n", struct_name
-> >>  }
-> >>
-> >>  / Stop here / {
-> >>      going =3D 0
-> >> +    print "{{0}, 0, 0, NULL, NULL, NULL},"
-> >> +    print "};"
-> >>  }
-> >>
-> >> -/^\s*[0-9a-fA-F]+\:/ {
-> >> +/^[[:blank:]]*[0-9a-fA-F]+:/ {
-> >>      if (going) {
-> >>              colon_pos =3D index($0, ":")
-> >>              useful_line =3D substr($0, colon_pos + 1)
-> >> diff --git a/tools/perf/arch/x86/tests/gen-insn-x86-dat.sh b/tools/per=
-f/arch/x86/tests/gen-insn-x86-dat.sh
-> >> index 0d0a003a9c5e..c087b9695cba 100755
-> >> --- a/tools/perf/arch/x86/tests/gen-insn-x86-dat.sh
-> >> +++ b/tools/perf/arch/x86/tests/gen-insn-x86-dat.sh
-> >> @@ -19,7 +19,7 @@ echo "Compiling insn-x86-dat-src.c to 64-bit object"
-> >>
-> >>  gcc -g -c insn-x86-dat-src.c
-> >>
-> >> -objdump -dSw insn-x86-dat-src.o | awk -f gen-insn-x86-dat.awk > insn-=
-x86-dat-64.c
-> >> +objdump -dSw insn-x86-dat-src.o | awk -v struct_name=3Dtest_data_64 -=
-f gen-insn-x86-dat.awk > insn-x86-dat-64.c
-> >>
-> >>  rm -f insn-x86-dat-src.o
-> >>
-> >> @@ -27,7 +27,7 @@ echo "Compiling insn-x86-dat-src.c to 32-bit object"
-> >>
-> >>  gcc -g -c -m32 insn-x86-dat-src.c
-> >>
-> >> -objdump -dSw insn-x86-dat-src.o | awk -f gen-insn-x86-dat.awk > insn-=
-x86-dat-32.c
-> >> +objdump -dSw insn-x86-dat-src.o | awk -v struct_name=3Dtest_data_32 -=
-f gen-insn-x86-dat.awk > insn-x86-dat-32.c
-> >>
-> >>  rm -f insn-x86-dat-src.o
-> >>
-> >> diff --git a/tools/perf/arch/x86/tests/insn-x86-dat-32.c b/tools/perf/=
-arch/x86/tests/insn-x86-dat-32.c
-> >> index ba429cadb18f..a4ad5a5d1cb6 100644
-> >> --- a/tools/perf/arch/x86/tests/insn-x86-dat-32.c
-> >> +++ b/tools/perf/arch/x86/tests/insn-x86-dat-32.c
-> >> @@ -5,8 +5,9 @@
-> >>   * Do not change this code.
-> >>  */
-> >>
-> >> +static const struct test_data test_data_32[] =3D {
-> >>  {{0x0f, 0x31, }, 2, 0, "", "",
-> >> -"0f 31                \trdtsc  ",},
-> >> +"0f 31                \trdtsc",},
-> >>  {{0xc4, 0xe2, 0x7d, 0x13, 0xeb, }, 5, 0, "", "",
-> >>  "c4 e2 7d 13 eb       \tvcvtph2ps %xmm3,%ymm5",},
-> >>  {{0x62, 0x81, 0x78, 0x56, 0x34, 0x12, }, 6, 0, "", "",
-> >> @@ -1686,19 +1687,19 @@
-> >>  {{0x0f, 0x1b, 0x84, 0x08, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "", "",
-> >>  "0f 1b 84 08 78 56 34 12 \tbndstx %bnd0,0x12345678(%eax,%ecx,1)",},
-> >>  {{0xf2, 0xe8, 0xfc, 0xff, 0xff, 0xff, }, 6, 0xfffffffc, "call", "unco=
-nditional",
-> >> -"f2 e8 fc ff ff ff    \tbnd call fce <main+0xfce>",},
-> >> +"f2 e8 fc ff ff ff    \tbnd call 14f7 <main+0x14f7>",},
-> >>  {{0xf2, 0xff, 0x10, }, 3, 0, "call", "indirect",
-> >>  "f2 ff 10             \tbnd call *(%eax)",},
-> >>  {{0xf2, 0xc3, }, 2, 0, "ret", "indirect",
-> >> -"f2 c3                \tbnd ret ",},
-> >> +"f2 c3                \tbnd ret",},
-> >>  {{0xf2, 0xe9, 0xfc, 0xff, 0xff, 0xff, }, 6, 0xfffffffc, "jmp", "uncon=
-ditional",
-> >> -"f2 e9 fc ff ff ff    \tbnd jmp fd9 <main+0xfd9>",},
-> >> +"f2 e9 fc ff ff ff    \tbnd jmp 1502 <main+0x1502>",},
-> >>  {{0xf2, 0xe9, 0xfc, 0xff, 0xff, 0xff, }, 6, 0xfffffffc, "jmp", "uncon=
-ditional",
-> >> -"f2 e9 fc ff ff ff    \tbnd jmp fdf <main+0xfdf>",},
-> >> +"f2 e9 fc ff ff ff    \tbnd jmp 1508 <main+0x1508>",},
-> >>  {{0xf2, 0xff, 0x21, }, 3, 0, "jmp", "indirect",
-> >>  "f2 ff 21             \tbnd jmp *(%ecx)",},
-> >>  {{0xf2, 0x0f, 0x85, 0xfc, 0xff, 0xff, 0xff, }, 7, 0xfffffffc, "jcc", =
-"conditional",
-> >> -"f2 0f 85 fc ff ff ff \tbnd jne fe9 <main+0xfe9>",},
-> >> +"f2 0f 85 fc ff ff ff \tbnd jne 1512 <main+0x1512>",},
-> >>  {{0x0f, 0x3a, 0xcc, 0xc1, 0x00, }, 5, 0, "", "",
-> >>  "0f 3a cc c1 00       \tsha1rnds4 $0x0,%xmm1,%xmm0",},
-> >>  {{0x0f, 0x3a, 0xcc, 0xd7, 0x91, }, 5, 0, "", "",
-> >> @@ -2002,7 +2003,7 @@
-> >>  {{0x0f, 0xae, 0x38, }, 3, 0, "", "",
-> >>  "0f ae 38             \tclflush (%eax)",},
-> >>  {{0x0f, 0xae, 0xf8, }, 3, 0, "", "",
-> >> -"0f ae f8             \tsfence ",},
-> >> +"0f ae f8             \tsfence",},
-> >>  {{0x66, 0x0f, 0xae, 0x30, }, 4, 0, "", "",
-> >>  "66 0f ae 30          \tclwb   (%eax)",},
-> >>  {{0x66, 0x0f, 0xae, 0x35, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "", "",
-> >> @@ -2012,7 +2013,7 @@
-> >>  {{0x0f, 0xae, 0x30, }, 3, 0, "", "",
-> >>  "0f ae 30             \txsaveopt (%eax)",},
-> >>  {{0x0f, 0xae, 0xf0, }, 3, 0, "", "",
-> >> -"0f ae f0             \tmfence ",},
-> >> +"0f ae f0             \tmfence",},
-> >>  {{0x0f, 0x1c, 0x00, }, 3, 0, "", "",
-> >>  "0f 1c 00             \tcldemote (%eax)",},
-> >>  {{0x0f, 0x1c, 0x05, 0x78, 0x56, 0x34, 0x12, }, 7, 0, "", "",
-> >> @@ -2038,17 +2039,17 @@
-> >>  {{0x0f, 0xc7, 0x9c, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "", "",
-> >>  "0f c7 9c c8 78 56 34 12 \txrstors 0x12345678(%eax,%ecx,8)",},
-> >>  {{0xf3, 0x0f, 0xae, 0x20, }, 4, 0, "", "",
-> >> -"f3 0f ae 20          \tptwritel (%eax)",},
-> >> +"f3 0f ae 20          \tptwrite (%eax)",},
-> >>  {{0xf3, 0x0f, 0xae, 0x25, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "", "",
-> >> -"f3 0f ae 25 78 56 34 12 \tptwritel 0x12345678",},
-> >> +"f3 0f ae 25 78 56 34 12 \tptwrite 0x12345678",},
-> >>  {{0xf3, 0x0f, 0xae, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "", =
-"",
-> >> -"f3 0f ae a4 c8 78 56 34 12 \tptwritel 0x12345678(%eax,%ecx,8)",},
-> >> +"f3 0f ae a4 c8 78 56 34 12 \tptwrite 0x12345678(%eax,%ecx,8)",},
-> >>  {{0xf3, 0x0f, 0xae, 0x20, }, 4, 0, "", "",
-> >> -"f3 0f ae 20          \tptwritel (%eax)",},
-> >> +"f3 0f ae 20          \tptwrite (%eax)",},
-> >>  {{0xf3, 0x0f, 0xae, 0x25, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "", "",
-> >> -"f3 0f ae 25 78 56 34 12 \tptwritel 0x12345678",},
-> >> +"f3 0f ae 25 78 56 34 12 \tptwrite 0x12345678",},
-> >>  {{0xf3, 0x0f, 0xae, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "", =
-"",
-> >> -"f3 0f ae a4 c8 78 56 34 12 \tptwritel 0x12345678(%eax,%ecx,8)",},
-> >> +"f3 0f ae a4 c8 78 56 34 12 \tptwrite 0x12345678(%eax,%ecx,8)",},
-> >>  {{0x66, 0x0f, 0xae, 0xf3, }, 4, 0, "", "",
-> >>  "66 0f ae f3          \ttpause %ebx",},
-> >>  {{0x67, 0xf3, 0x0f, 0xae, 0xf0, }, 5, 0, "", "",
-> >> @@ -2094,11 +2095,11 @@
-> >>  {{0x0f, 0xae, 0xac, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "", "",
-> >>  "0f ae ac c8 78 56 34 12 \txrstor 0x12345678(%eax,%ecx,8)",},
-> >>  {{0x0f, 0xae, 0xe8, }, 3, 0, "", "",
-> >> -"0f ae e8             \tlfence ",},
-> >> +"0f ae e8             \tlfence",},
-> >>  {{0xf3, 0x0f, 0x1e, 0xc8, }, 4, 0, "", "",
-> >>  "f3 0f 1e c8          \trdsspd %eax",},
-> >>  {{0xf3, 0x0f, 0x01, 0xea, }, 4, 0, "", "",
-> >> -"f3 0f 01 ea          \tsaveprevssp ",},
-> >> +"f3 0f 01 ea          \tsaveprevssp",},
-> >>  {{0xf3, 0x0f, 0x01, 0x28, }, 4, 0, "", "",
-> >>  "f3 0f 01 28          \trstorssp (%eax)",},
-> >>  {{0xf3, 0x0f, 0x01, 0x2d, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "", "",
-> >> @@ -2118,11 +2119,11 @@
-> >>  {{0x66, 0x0f, 0x38, 0xf5, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, =
-0, "", "",
-> >>  "66 0f 38 f5 94 c8 78 56 34 12 \twrussd %edx,0x12345678(%eax,%ecx,8)"=
-,},
-> >>  {{0xf3, 0x0f, 0x01, 0xe8, }, 4, 0, "", "",
-> >> -"f3 0f 01 e8          \tsetssbsy ",},
-> >> +"f3 0f 01 e8          \tsetssbsy",},
-> >>  {{0x0f, 0x01, 0xee, }, 3, 0, "", "",
-> >> -"0f 01 ee             \trdpkru ",},
-> >> +"0f 01 ee             \trdpkru",},
-> >>  {{0x0f, 0x01, 0xef, }, 3, 0, "", "",
-> >> -"0f 01 ef             \twrpkru ",},
-> >> +"0f 01 ef             \twrpkru",},
-> >>  {{0xf3, 0x0f, 0xae, 0x30, }, 4, 0, "", "",
-> >>  "f3 0f ae 30          \tclrssbsy (%eax)",},
-> >>  {{0xf3, 0x0f, 0xae, 0x35, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "", "",
-> >> @@ -2130,9 +2131,9 @@
-> >>  {{0xf3, 0x0f, 0xae, 0xb4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "", =
-"",
-> >>  "f3 0f ae b4 c8 78 56 34 12 \tclrssbsy 0x12345678(%eax,%ecx,8)",},
-> >>  {{0xf3, 0x0f, 0x1e, 0xfb, }, 4, 0, "", "",
-> >> -"f3 0f 1e fb          \tendbr32 ",},
-> >> +"f3 0f 1e fb          \tendbr32",},
-> >>  {{0xf3, 0x0f, 0x1e, 0xfa, }, 4, 0, "", "",
-> >> -"f3 0f 1e fa          \tendbr64 ",},
-> >> +"f3 0f 1e fa          \tendbr64",},
-> >>  {{0xff, 0xd0, }, 2, 0, "call", "indirect",
-> >>  "ff d0                \tcall   *%eax",},
-> >>  {{0xff, 0x10, }, 2, 0, "call", "indirect",
-> >> @@ -3110,18 +3111,24 @@
-> >>  {{0xf3, 0x0f, 0x3a, 0xf0, 0xc0, 0x00, }, 6, 0, "", "",
-> >>  "f3 0f 3a f0 c0 00    \threset $0x0",},
-> >>  {{0x0f, 0x01, 0xe8, }, 3, 0, "", "",
-> >> -"0f 01 e8             \tserialize ",},
-> >> +"0f 01 e8             \tserialize",},
-> >>  {{0xf2, 0x0f, 0x01, 0xe9, }, 4, 0, "", "",
-> >> -"f2 0f 01 e9          \txresldtrk ",},
-> >> +"f2 0f 01 e9          \txresldtrk",},
-> >>  {{0xf2, 0x0f, 0x01, 0xe8, }, 4, 0, "", "",
-> >> -"f2 0f 01 e8          \txsusldtrk ",},
-> >> +"f2 0f 01 e8          \txsusldtrk",},
-> >>  {{0x0f, 0x01, 0xcf, }, 3, 0, "", "",
-> >> -"0f 01 cf             \tencls  ",},
-> >> +"0f 01 cf             \tencls",},
-> >>  {{0x0f, 0x01, 0xd7, }, 3, 0, "", "",
-> >> -"0f 01 d7             \tenclu  ",},
-> >> +"0f 01 d7             \tenclu",},
-> >>  {{0x0f, 0x01, 0xc0, }, 3, 0, "", "",
-> >> -"0f 01 c0             \tenclv  ",},
-> >> +"0f 01 c0             \tenclv",},
-> >>  {{0x0f, 0x01, 0xc5, }, 3, 0, "", "",
-> >> -"0f 01 c5             \tpconfig ",},
-> >> +"0f 01 c5             \tpconfig",},
-> >>  {{0xf3, 0x0f, 0x09, }, 3, 0, "", "",
-> >> -"f3 0f 09             \twbnoinvd ",},
-> >> +"f3 0f 09             \twbnoinvd",},
-> >> +{{0x0f, 0x01, 0xee, }, 3, 0, "", "",
-> >> +"0f 01 ee             \trdpkru",},
-> >> +{{0x0f, 0x01, 0xef, }, 3, 0, "", "",
-> >> +"0f 01 ef             \twrpkru",},
-> >> +{{0}, 0, 0, NULL, NULL, NULL},
-> >> +};
-> >> diff --git a/tools/perf/arch/x86/tests/insn-x86-dat-64.c b/tools/perf/=
-arch/x86/tests/insn-x86-dat-64.c
-> >> index 3a47e98fec33..077ad34a30f2 100644
-> >> --- a/tools/perf/arch/x86/tests/insn-x86-dat-64.c
-> >> +++ b/tools/perf/arch/x86/tests/insn-x86-dat-64.c
-> >> @@ -5,8 +5,9 @@
-> >>   * Do not change this code.
-> >>  */
-> >>
-> >> +static const struct test_data test_data_64[] =3D {
-> >>  {{0x0f, 0x31, }, 2, 0, "", "",
-> >> -"0f 31                \trdtsc  ",},
-> >> +"0f 31                \trdtsc",},
-> >>  {{0xc4, 0xe2, 0x7d, 0x13, 0xeb, }, 5, 0, "", "",
-> >>  "c4 e2 7d 13 eb       \tvcvtph2ps %xmm3,%ymm5",},
-> >>  {{0x48, 0x0f, 0x41, 0xd8, }, 4, 0, "", "",
-> >> @@ -1742,19 +1743,19 @@
-> >>  {{0x0f, 0x1b, 0x84, 0x08, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "", "",
-> >>  "0f 1b 84 08 78 56 34 12 \tbndstx %bnd0,0x12345678(%rax,%rcx,1)",},
-> >>  {{0xf2, 0xe8, 0x00, 0x00, 0x00, 0x00, }, 6, 0, "call", "unconditional=
-",
-> >> -"f2 e8 00 00 00 00    \tbnd callq f22 <main+0xf22>",},
-> >> +"f2 e8 00 00 00 00    \tbnd call 16b5 <main+0x16b5>",},
-> >>  {{0x67, 0xf2, 0xff, 0x10, }, 4, 0, "call", "indirect",
-> >> -"67 f2 ff 10          \tbnd callq *(%eax)",},
-> >> +"67 f2 ff 10          \tbnd call *(%eax)",},
-> >>  {{0xf2, 0xc3, }, 2, 0, "ret", "indirect",
-> >> -"f2 c3                \tbnd retq ",},
-> >> +"f2 c3                \tbnd ret",},
-> >>  {{0xf2, 0xe9, 0x00, 0x00, 0x00, 0x00, }, 6, 0, "jmp", "unconditional"=
-,
-> >> -"f2 e9 00 00 00 00    \tbnd jmpq f2e <main+0xf2e>",},
-> >> +"f2 e9 00 00 00 00    \tbnd jmp 16c1 <main+0x16c1>",},
-> >>  {{0xf2, 0xe9, 0x00, 0x00, 0x00, 0x00, }, 6, 0, "jmp", "unconditional"=
-,
-> >> -"f2 e9 00 00 00 00    \tbnd jmpq f34 <main+0xf34>",},
-> >> +"f2 e9 00 00 00 00    \tbnd jmp 16c7 <main+0x16c7>",},
-> >>  {{0x67, 0xf2, 0xff, 0x21, }, 4, 0, "jmp", "indirect",
-> >> -"67 f2 ff 21          \tbnd jmpq *(%ecx)",},
-> >> +"67 f2 ff 21          \tbnd jmp *(%ecx)",},
-> >>  {{0xf2, 0x0f, 0x85, 0x00, 0x00, 0x00, 0x00, }, 7, 0, "jcc", "conditio=
-nal",
-> >> -"f2 0f 85 00 00 00 00 \tbnd jne f3f <main+0xf3f>",},
-> >> +"f2 0f 85 00 00 00 00 \tbnd jne 16d2 <main+0x16d2>",},
-> >>  {{0x0f, 0x3a, 0xcc, 0xc1, 0x00, }, 5, 0, "", "",
-> >>  "0f 3a cc c1 00       \tsha1rnds4 $0x0,%xmm1,%xmm0",},
-> >>  {{0x0f, 0x3a, 0xcc, 0xd7, 0x91, }, 5, 0, "", "",
-> >> @@ -2134,7 +2135,7 @@
-> >>  {{0x41, 0x0f, 0xae, 0x38, }, 4, 0, "", "",
-> >>  "41 0f ae 38          \tclflush (%r8)",},
-> >>  {{0x0f, 0xae, 0xf8, }, 3, 0, "", "",
-> >> -"0f ae f8             \tsfence ",},
-> >> +"0f ae f8             \tsfence",},
-> >>  {{0x66, 0x0f, 0xae, 0x30, }, 4, 0, "", "",
-> >>  "66 0f ae 30          \tclwb   (%rax)",},
-> >>  {{0x66, 0x41, 0x0f, 0xae, 0x30, }, 5, 0, "", "",
-> >> @@ -2150,7 +2151,7 @@
-> >>  {{0x41, 0x0f, 0xae, 0x30, }, 4, 0, "", "",
-> >>  "41 0f ae 30          \txsaveopt (%r8)",},
-> >>  {{0x0f, 0xae, 0xf0, }, 3, 0, "", "",
-> >> -"0f ae f0             \tmfence ",},
-> >> +"0f ae f0             \tmfence",},
-> >>  {{0x0f, 0x1c, 0x00, }, 3, 0, "", "",
-> >>  "0f 1c 00             \tcldemote (%rax)",},
-> >>  {{0x41, 0x0f, 0x1c, 0x00, }, 4, 0, "", "",
-> >> @@ -2282,7 +2283,7 @@
-> >>  {{0x41, 0x0f, 0xae, 0xac, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "", =
-"",
-> >>  "41 0f ae ac c8 78 56 34 12 \txrstor 0x12345678(%r8,%rcx,8)",},
-> >>  {{0x0f, 0xae, 0xe8, }, 3, 0, "", "",
-> >> -"0f ae e8             \tlfence ",},
-> >> +"0f ae e8             \tlfence",},
-> >>  {{0xf3, 0x0f, 0x1e, 0xc8, }, 4, 0, "", "",
-> >>  "f3 0f 1e c8          \trdsspd %eax",},
-> >>  {{0xf3, 0x41, 0x0f, 0x1e, 0xc8, }, 5, 0, "", "",
-> >> @@ -2292,7 +2293,7 @@
-> >>  {{0xf3, 0x49, 0x0f, 0x1e, 0xc8, }, 5, 0, "", "",
-> >>  "f3 49 0f 1e c8       \trdsspq %r8",},
-> >>  {{0xf3, 0x0f, 0x01, 0xea, }, 4, 0, "", "",
-> >> -"f3 0f 01 ea          \tsaveprevssp ",},
-> >> +"f3 0f 01 ea          \tsaveprevssp",},
-> >>  {{0xf3, 0x0f, 0x01, 0x28, }, 4, 0, "", "",
-> >>  "f3 0f 01 28          \trstorssp (%rax)",},
-> >>  {{0xf3, 0x41, 0x0f, 0x01, 0x28, }, 5, 0, "", "",
-> >> @@ -2344,11 +2345,11 @@
-> >>  {{0x66, 0x49, 0x0f, 0x38, 0xf5, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }=
-, 11, 0, "", "",
-> >>  "66 49 0f 38 f5 94 c8 78 56 34 12 \twrussq %rdx,0x12345678(%r8,%rcx,8=
-)",},
-> >>  {{0xf3, 0x0f, 0x01, 0xe8, }, 4, 0, "", "",
-> >> -"f3 0f 01 e8          \tsetssbsy ",},
-> >> +"f3 0f 01 e8          \tsetssbsy",},
-> >>  {{0x0f, 0x01, 0xee, }, 3, 0, "", "",
-> >> -"0f 01 ee             \trdpkru ",},
-> >> +"0f 01 ee             \trdpkru",},
-> >>  {{0x0f, 0x01, 0xef, }, 3, 0, "", "",
-> >> -"0f 01 ef             \twrpkru ",},
-> >> +"0f 01 ef             \twrpkru",},
-> >>  {{0xf3, 0x0f, 0xae, 0x30, }, 4, 0, "", "",
-> >>  "f3 0f ae 30          \tclrssbsy (%rax)",},
-> >>  {{0xf3, 0x41, 0x0f, 0xae, 0x30, }, 5, 0, "", "",
-> >> @@ -2360,105 +2361,105 @@
-> >>  {{0xf3, 0x41, 0x0f, 0xae, 0xb4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, =
-0, "", "",
-> >>  "f3 41 0f ae b4 c8 78 56 34 12 \tclrssbsy 0x12345678(%r8,%rcx,8)",},
-> >>  {{0xf3, 0x0f, 0x1e, 0xfb, }, 4, 0, "", "",
-> >> -"f3 0f 1e fb          \tendbr32 ",},
-> >> +"f3 0f 1e fb          \tendbr32",},
-> >>  {{0xf3, 0x0f, 0x1e, 0xfa, }, 4, 0, "", "",
-> >> -"f3 0f 1e fa          \tendbr64 ",},
-> >> +"f3 0f 1e fa          \tendbr64",},
-> >>  {{0xff, 0xd0, }, 2, 0, "call", "indirect",
-> >> -"ff d0                \tcallq  *%rax",},
-> >> +"ff d0                \tcall   *%rax",},
-> >>  {{0xff, 0x10, }, 2, 0, "call", "indirect",
-> >> -"ff 10                \tcallq  *(%rax)",},
-> >> +"ff 10                \tcall   *(%rax)",},
-> >>  {{0x41, 0xff, 0x10, }, 3, 0, "call", "indirect",
-> >> -"41 ff 10             \tcallq  *(%r8)",},
-> >> +"41 ff 10             \tcall   *(%r8)",},
-> >>  {{0xff, 0x14, 0x25, 0x78, 0x56, 0x34, 0x12, }, 7, 0, "call", "indirec=
-t",
-> >> -"ff 14 25 78 56 34 12 \tcallq  *0x12345678",},
-> >> +"ff 14 25 78 56 34 12 \tcall   *0x12345678",},
-> >>  {{0xff, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 7, 0, "call", "indirec=
-t",
-> >> -"ff 94 c8 78 56 34 12 \tcallq  *0x12345678(%rax,%rcx,8)",},
-> >> +"ff 94 c8 78 56 34 12 \tcall   *0x12345678(%rax,%rcx,8)",},
-> >>  {{0x41, 0xff, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "call", "i=
-ndirect",
-> >> -"41 ff 94 c8 78 56 34 12 \tcallq  *0x12345678(%r8,%rcx,8)",},
-> >> +"41 ff 94 c8 78 56 34 12 \tcall   *0x12345678(%r8,%rcx,8)",},
-> >>  {{0xf2, 0xff, 0xd0, }, 3, 0, "call", "indirect",
-> >> -"f2 ff d0             \tbnd callq *%rax",},
-> >> +"f2 ff d0             \tbnd call *%rax",},
-> >>  {{0xf2, 0xff, 0x10, }, 3, 0, "call", "indirect",
-> >> -"f2 ff 10             \tbnd callq *(%rax)",},
-> >> +"f2 ff 10             \tbnd call *(%rax)",},
-> >>  {{0xf2, 0x41, 0xff, 0x10, }, 4, 0, "call", "indirect",
-> >> -"f2 41 ff 10          \tbnd callq *(%r8)",},
-> >> +"f2 41 ff 10          \tbnd call *(%r8)",},
-> >>  {{0xf2, 0xff, 0x14, 0x25, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "call", "i=
-ndirect",
-> >> -"f2 ff 14 25 78 56 34 12 \tbnd callq *0x12345678",},
-> >> +"f2 ff 14 25 78 56 34 12 \tbnd call *0x12345678",},
-> >>  {{0xf2, 0xff, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "call", "i=
-ndirect",
-> >> -"f2 ff 94 c8 78 56 34 12 \tbnd callq *0x12345678(%rax,%rcx,8)",},
-> >> +"f2 ff 94 c8 78 56 34 12 \tbnd call *0x12345678(%rax,%rcx,8)",},
-> >>  {{0xf2, 0x41, 0xff, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "cal=
-l", "indirect",
-> >> -"f2 41 ff 94 c8 78 56 34 12 \tbnd callq *0x12345678(%r8,%rcx,8)",},
-> >> +"f2 41 ff 94 c8 78 56 34 12 \tbnd call *0x12345678(%r8,%rcx,8)",},
-> >>  {{0x3e, 0xff, 0xd0, }, 3, 0, "call", "indirect",
-> >> -"3e ff d0             \tnotrack callq *%rax",},
-> >> +"3e ff d0             \tnotrack call *%rax",},
-> >>  {{0x3e, 0xff, 0x10, }, 3, 0, "call", "indirect",
-> >> -"3e ff 10             \tnotrack callq *(%rax)",},
-> >> +"3e ff 10             \tnotrack call *(%rax)",},
-> >>  {{0x3e, 0x41, 0xff, 0x10, }, 4, 0, "call", "indirect",
-> >> -"3e 41 ff 10          \tnotrack callq *(%r8)",},
-> >> +"3e 41 ff 10          \tnotrack call *(%r8)",},
-> >>  {{0x3e, 0xff, 0x14, 0x25, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "call", "i=
-ndirect",
-> >> -"3e ff 14 25 78 56 34 12 \tnotrack callq *0x12345678",},
-> >> +"3e ff 14 25 78 56 34 12 \tnotrack call *0x12345678",},
-> >>  {{0x3e, 0xff, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "call", "i=
-ndirect",
-> >> -"3e ff 94 c8 78 56 34 12 \tnotrack callq *0x12345678(%rax,%rcx,8)",},
-> >> +"3e ff 94 c8 78 56 34 12 \tnotrack call *0x12345678(%rax,%rcx,8)",},
-> >>  {{0x3e, 0x41, 0xff, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "cal=
-l", "indirect",
-> >> -"3e 41 ff 94 c8 78 56 34 12 \tnotrack callq *0x12345678(%r8,%rcx,8)",=
-},
-> >> +"3e 41 ff 94 c8 78 56 34 12 \tnotrack call *0x12345678(%r8,%rcx,8)",}=
-,
-> >>  {{0x3e, 0xf2, 0xff, 0xd0, }, 4, 0, "call", "indirect",
-> >> -"3e f2 ff d0          \tnotrack bnd callq *%rax",},
-> >> +"3e f2 ff d0          \tnotrack bnd call *%rax",},
-> >>  {{0x3e, 0xf2, 0xff, 0x10, }, 4, 0, "call", "indirect",
-> >> -"3e f2 ff 10          \tnotrack bnd callq *(%rax)",},
-> >> +"3e f2 ff 10          \tnotrack bnd call *(%rax)",},
-> >>  {{0x3e, 0xf2, 0x41, 0xff, 0x10, }, 5, 0, "call", "indirect",
-> >> -"3e f2 41 ff 10       \tnotrack bnd callq *(%r8)",},
-> >> +"3e f2 41 ff 10       \tnotrack bnd call *(%r8)",},
-> >>  {{0x3e, 0xf2, 0xff, 0x14, 0x25, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "cal=
-l", "indirect",
-> >> -"3e f2 ff 14 25 78 56 34 12 \tnotrack bnd callq *0x12345678",},
-> >> +"3e f2 ff 14 25 78 56 34 12 \tnotrack bnd call *0x12345678",},
-> >>  {{0x3e, 0xf2, 0xff, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "cal=
-l", "indirect",
-> >> -"3e f2 ff 94 c8 78 56 34 12 \tnotrack bnd callq *0x12345678(%rax,%rcx=
-,8)",},
-> >> +"3e f2 ff 94 c8 78 56 34 12 \tnotrack bnd call *0x12345678(%rax,%rcx,=
-8)",},
-> >>  {{0x3e, 0xf2, 0x41, 0xff, 0x94, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, =
-0, "call", "indirect",
-> >> -"3e f2 41 ff 94 c8 78 56 34 12 \tnotrack bnd callq *0x12345678(%r8,%r=
-cx,8)",},
-> >> +"3e f2 41 ff 94 c8 78 56 34 12 \tnotrack bnd call *0x12345678(%r8,%rc=
-x,8)",},
-> >>  {{0xff, 0xe0, }, 2, 0, "jmp", "indirect",
-> >> -"ff e0                \tjmpq   *%rax",},
-> >> +"ff e0                \tjmp    *%rax",},
-> >>  {{0xff, 0x20, }, 2, 0, "jmp", "indirect",
-> >> -"ff 20                \tjmpq   *(%rax)",},
-> >> +"ff 20                \tjmp    *(%rax)",},
-> >>  {{0x41, 0xff, 0x20, }, 3, 0, "jmp", "indirect",
-> >> -"41 ff 20             \tjmpq   *(%r8)",},
-> >> +"41 ff 20             \tjmp    *(%r8)",},
-> >>  {{0xff, 0x24, 0x25, 0x78, 0x56, 0x34, 0x12, }, 7, 0, "jmp", "indirect=
-",
-> >> -"ff 24 25 78 56 34 12 \tjmpq   *0x12345678",},
-> >> +"ff 24 25 78 56 34 12 \tjmp    *0x12345678",},
-> >>  {{0xff, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 7, 0, "jmp", "indirect=
-",
-> >> -"ff a4 c8 78 56 34 12 \tjmpq   *0x12345678(%rax,%rcx,8)",},
-> >> +"ff a4 c8 78 56 34 12 \tjmp    *0x12345678(%rax,%rcx,8)",},
-> >>  {{0x41, 0xff, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "jmp", "in=
-direct",
-> >> -"41 ff a4 c8 78 56 34 12 \tjmpq   *0x12345678(%r8,%rcx,8)",},
-> >> +"41 ff a4 c8 78 56 34 12 \tjmp    *0x12345678(%r8,%rcx,8)",},
-> >>  {{0xf2, 0xff, 0xe0, }, 3, 0, "jmp", "indirect",
-> >> -"f2 ff e0             \tbnd jmpq *%rax",},
-> >> +"f2 ff e0             \tbnd jmp *%rax",},
-> >>  {{0xf2, 0xff, 0x20, }, 3, 0, "jmp", "indirect",
-> >> -"f2 ff 20             \tbnd jmpq *(%rax)",},
-> >> +"f2 ff 20             \tbnd jmp *(%rax)",},
-> >>  {{0xf2, 0x41, 0xff, 0x20, }, 4, 0, "jmp", "indirect",
-> >> -"f2 41 ff 20          \tbnd jmpq *(%r8)",},
-> >> +"f2 41 ff 20          \tbnd jmp *(%r8)",},
-> >>  {{0xf2, 0xff, 0x24, 0x25, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "jmp", "in=
-direct",
-> >> -"f2 ff 24 25 78 56 34 12 \tbnd jmpq *0x12345678",},
-> >> +"f2 ff 24 25 78 56 34 12 \tbnd jmp *0x12345678",},
-> >>  {{0xf2, 0xff, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "jmp", "in=
-direct",
-> >> -"f2 ff a4 c8 78 56 34 12 \tbnd jmpq *0x12345678(%rax,%rcx,8)",},
-> >> +"f2 ff a4 c8 78 56 34 12 \tbnd jmp *0x12345678(%rax,%rcx,8)",},
-> >>  {{0xf2, 0x41, 0xff, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "jmp=
-", "indirect",
-> >> -"f2 41 ff a4 c8 78 56 34 12 \tbnd jmpq *0x12345678(%r8,%rcx,8)",},
-> >> +"f2 41 ff a4 c8 78 56 34 12 \tbnd jmp *0x12345678(%r8,%rcx,8)",},
-> >>  {{0x3e, 0xff, 0xe0, }, 3, 0, "jmp", "indirect",
-> >> -"3e ff e0             \tnotrack jmpq *%rax",},
-> >> +"3e ff e0             \tnotrack jmp *%rax",},
-> >>  {{0x3e, 0xff, 0x20, }, 3, 0, "jmp", "indirect",
-> >> -"3e ff 20             \tnotrack jmpq *(%rax)",},
-> >> +"3e ff 20             \tnotrack jmp *(%rax)",},
-> >>  {{0x3e, 0x41, 0xff, 0x20, }, 4, 0, "jmp", "indirect",
-> >> -"3e 41 ff 20          \tnotrack jmpq *(%r8)",},
-> >> +"3e 41 ff 20          \tnotrack jmp *(%r8)",},
-> >>  {{0x3e, 0xff, 0x24, 0x25, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "jmp", "in=
-direct",
-> >> -"3e ff 24 25 78 56 34 12 \tnotrack jmpq *0x12345678",},
-> >> +"3e ff 24 25 78 56 34 12 \tnotrack jmp *0x12345678",},
-> >>  {{0x3e, 0xff, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 8, 0, "jmp", "in=
-direct",
-> >> -"3e ff a4 c8 78 56 34 12 \tnotrack jmpq *0x12345678(%rax,%rcx,8)",},
-> >> +"3e ff a4 c8 78 56 34 12 \tnotrack jmp *0x12345678(%rax,%rcx,8)",},
-> >>  {{0x3e, 0x41, 0xff, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "jmp=
-", "indirect",
-> >> -"3e 41 ff a4 c8 78 56 34 12 \tnotrack jmpq *0x12345678(%r8,%rcx,8)",}=
-,
-> >> +"3e 41 ff a4 c8 78 56 34 12 \tnotrack jmp *0x12345678(%r8,%rcx,8)",},
-> >>  {{0x3e, 0xf2, 0xff, 0xe0, }, 4, 0, "jmp", "indirect",
-> >> -"3e f2 ff e0          \tnotrack bnd jmpq *%rax",},
-> >> +"3e f2 ff e0          \tnotrack bnd jmp *%rax",},
-> >>  {{0x3e, 0xf2, 0xff, 0x20, }, 4, 0, "jmp", "indirect",
-> >> -"3e f2 ff 20          \tnotrack bnd jmpq *(%rax)",},
-> >> +"3e f2 ff 20          \tnotrack bnd jmp *(%rax)",},
-> >>  {{0x3e, 0xf2, 0x41, 0xff, 0x20, }, 5, 0, "jmp", "indirect",
-> >> -"3e f2 41 ff 20       \tnotrack bnd jmpq *(%r8)",},
-> >> +"3e f2 41 ff 20       \tnotrack bnd jmp *(%r8)",},
-> >>  {{0x3e, 0xf2, 0xff, 0x24, 0x25, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "jmp=
-", "indirect",
-> >> -"3e f2 ff 24 25 78 56 34 12 \tnotrack bnd jmpq *0x12345678",},
-> >> +"3e f2 ff 24 25 78 56 34 12 \tnotrack bnd jmp *0x12345678",},
-> >>  {{0x3e, 0xf2, 0xff, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 9, 0, "jmp=
-", "indirect",
-> >> -"3e f2 ff a4 c8 78 56 34 12 \tnotrack bnd jmpq *0x12345678(%rax,%rcx,=
-8)",},
-> >> +"3e f2 ff a4 c8 78 56 34 12 \tnotrack bnd jmp *0x12345678(%rax,%rcx,8=
-)",},
-> >>  {{0x3e, 0xf2, 0x41, 0xff, 0xa4, 0xc8, 0x78, 0x56, 0x34, 0x12, }, 10, =
-0, "jmp", "indirect",
-> >> -"3e f2 41 ff a4 c8 78 56 34 12 \tnotrack bnd jmpq *0x12345678(%r8,%rc=
-x,8)",},
-> >> +"3e f2 41 ff a4 c8 78 56 34 12 \tnotrack bnd jmp *0x12345678(%r8,%rcx=
-,8)",},
-> >>  {{0xc4, 0xe2, 0x78, 0x49, 0x04, 0xc8, }, 6, 0, "", "",
-> >>  "c4 e2 78 49 04 c8    \tldtilecfg (%rax,%rcx,8)",},
-> >>  {{0xc4, 0xc2, 0x78, 0x49, 0x04, 0xc8, }, 6, 0, "", "",
-> >> @@ -2486,7 +2487,7 @@
-> >>  {{0xc4, 0xc2, 0x79, 0x4b, 0x14, 0xc8, }, 6, 0, "", "",
-> >>  "c4 c2 79 4b 14 c8    \ttileloaddt1 (%r8,%rcx,8),%tmm2",},
-> >>  {{0xc4, 0xe2, 0x78, 0x49, 0xc0, }, 5, 0, "", "",
-> >> -"c4 e2 78 49 c0       \ttilerelease ",},
-> >> +"c4 e2 78 49 c0       \ttilerelease",},
-> >>  {{0xc4, 0xe2, 0x7a, 0x4b, 0x0c, 0xc8, }, 6, 0, "", "",
-> >>  "c4 e2 7a 4b 0c c8    \ttilestored %tmm1,(%rax,%rcx,8)",},
-> >>  {{0xc4, 0xc2, 0x7a, 0x4b, 0x14, 0xc8, }, 6, 0, "", "",
-> >> @@ -2496,17 +2497,17 @@
-> >>  {{0xc4, 0xe2, 0x7b, 0x49, 0xf8, }, 5, 0, "", "",
-> >>  "c4 e2 7b 49 f8       \ttilezero %tmm7",},
-> >>  {{0xf3, 0x0f, 0x01, 0xee, }, 4, 0, "", "",
-> >> -"f3 0f 01 ee          \tclui   ",},
-> >> +"f3 0f 01 ee          \tclui",},
-> >>  {{0xf3, 0x0f, 0xc7, 0xf0, }, 4, 0, "", "",
-> >>  "f3 0f c7 f0          \tsenduipi %rax",},
-> >>  {{0xf3, 0x41, 0x0f, 0xc7, 0xf0, }, 5, 0, "", "",
-> >>  "f3 41 0f c7 f0       \tsenduipi %r8",},
-> >>  {{0xf3, 0x0f, 0x01, 0xef, }, 4, 0, "", "",
-> >> -"f3 0f 01 ef          \tstui   ",},
-> >> +"f3 0f 01 ef          \tstui",},
-> >>  {{0xf3, 0x0f, 0x01, 0xed, }, 4, 0, "", "",
-> >> -"f3 0f 01 ed          \ttestui ",},
-> >> +"f3 0f 01 ed          \ttestui",},
-> >>  {{0xf3, 0x0f, 0x01, 0xec, }, 4, 0, "", "",
-> >> -"f3 0f 01 ec          \tuiret  ",},
-> >> +"f3 0f 01 ec          \tuiret",},
-> >>  {{0x62, 0xf5, 0x6c, 0x48, 0x58, 0xcb, }, 6, 0, "", "",
-> >>  "62 f5 6c 48 58 cb    \tvaddph %zmm3,%zmm2,%zmm1",},
-> >>  {{0x62, 0xf5, 0x6c, 0x48, 0x58, 0x8c, 0xc8, 0x78, 0x56, 0x34, 0x12, }=
-, 11, 0, "", "",
-> >> @@ -3880,18 +3881,24 @@
-> >>  {{0xf3, 0x0f, 0x3a, 0xf0, 0xc0, 0x00, }, 6, 0, "", "",
-> >>  "f3 0f 3a f0 c0 00    \threset $0x0",},
-> >>  {{0x0f, 0x01, 0xe8, }, 3, 0, "", "",
-> >> -"0f 01 e8             \tserialize ",},
-> >> +"0f 01 e8             \tserialize",},
-> >>  {{0xf2, 0x0f, 0x01, 0xe9, }, 4, 0, "", "",
-> >> -"f2 0f 01 e9          \txresldtrk ",},
-> >> +"f2 0f 01 e9          \txresldtrk",},
-> >>  {{0xf2, 0x0f, 0x01, 0xe8, }, 4, 0, "", "",
-> >> -"f2 0f 01 e8          \txsusldtrk ",},
-> >> +"f2 0f 01 e8          \txsusldtrk",},
-> >>  {{0x0f, 0x01, 0xcf, }, 3, 0, "", "",
-> >> -"0f 01 cf             \tencls  ",},
-> >> +"0f 01 cf             \tencls",},
-> >>  {{0x0f, 0x01, 0xd7, }, 3, 0, "", "",
-> >> -"0f 01 d7             \tenclu  ",},
-> >> +"0f 01 d7             \tenclu",},
-> >>  {{0x0f, 0x01, 0xc0, }, 3, 0, "", "",
-> >> -"0f 01 c0             \tenclv  ",},
-> >> +"0f 01 c0             \tenclv",},
-> >>  {{0x0f, 0x01, 0xc5, }, 3, 0, "", "",
-> >> -"0f 01 c5             \tpconfig ",},
-> >> +"0f 01 c5             \tpconfig",},
-> >>  {{0xf3, 0x0f, 0x09, }, 3, 0, "", "",
-> >> -"f3 0f 09             \twbnoinvd ",},
-> >> +"f3 0f 09             \twbnoinvd",},
-> >> +{{0x0f, 0x01, 0xee, }, 3, 0, "", "",
-> >> +"0f 01 ee             \trdpkru",},
-> >> +{{0x0f, 0x01, 0xef, }, 3, 0, "", "",
-> >> +"0f 01 ef             \twrpkru",},
-> >> +{{0}, 0, 0, NULL, NULL, NULL},
-> >> +};
-> >> diff --git a/tools/perf/arch/x86/tests/insn-x86.c b/tools/perf/arch/x8=
-6/tests/insn-x86.c
-> >> index 7b5eb8baf0f2..447f7ba1eff3 100644
-> >> --- a/tools/perf/arch/x86/tests/insn-x86.c
-> >> +++ b/tools/perf/arch/x86/tests/insn-x86.c
-> >> @@ -18,21 +18,8 @@ struct test_data {
-> >>      const char *asm_rep;
-> >>  };
-> >>
-> >> -const struct test_data test_data_32[] =3D {
-> >>  #include "insn-x86-dat-32.c"
-> >> -    {{0x0f, 0x01, 0xee}, 3, 0, NULL, NULL, "0f 01 ee             \trd=
-pkru"},
-> >> -    {{0x0f, 0x01, 0xef}, 3, 0, NULL, NULL, "0f 01 ef             \twr=
-pkru"},
-> >> -    {{0}, 0, 0, NULL, NULL, NULL},
-> >> -};
-> >> -
-> >> -const struct test_data test_data_64[] =3D {
-> >>  #include "insn-x86-dat-64.c"
-> >> -    {{0x0f, 0x01, 0xee}, 3, 0, NULL, NULL, "0f 01 ee             \trd=
-pkru"},
-> >> -    {{0x0f, 0x01, 0xef}, 3, 0, NULL, NULL, "0f 01 ef             \twr=
-pkru"},
-> >> -    {{0xf2, 0x0f, 0x01, 0xca}, 4, 0, "erets", "indirect", "f2 0f 01 c=
-a  \terets"},
-> >> -    {{0xf3, 0x0f, 0x01, 0xca}, 4, 0, "eretu", "indirect", "f3 0f 01 c=
-a  \teretu"},
-> >> -    {{0}, 0, 0, NULL, NULL, NULL},
-> >> -};
-> >>
-> >>  static int get_op(const char *op_str)
-> >>  {
-> >> @@ -156,6 +143,16 @@ static int test_data_set(const struct test_data *=
-dat_set, int x86_64)
-> >>              if (test_data_item(dat, x86_64))
-> >>                      ret =3D -1;
-> >>      }
-> >> +    if (x86_64) {
-> >> +            const struct test_data eret[] =3D {
-> >> +                    {{0xf2, 0x0f, 0x01, 0xca}, 4, 0,
-> >> +                     "erets", "indirect", "f2 0f 01 ca  \terets"},
-> >> +                    {{0xf3, 0x0f, 0x01, 0xca}, 4, 0,
-> >> +                     "eretu", "indirect", "f3 0f 01 ca  \teretu"},
-> >> +            };
-> >> +            if (test_data_item(&eret[0], x86_64) || test_data_item(&e=
-ret[1], x86_64))
-> >> +                    ret =3D -1;
-> >> +    }
-> >>
-> >>      return ret;
-> >>  }
-> >> --
-> >> 2.41.0.rc0.172.g3f132b7071-goog
-> >>
-> >
->
+Hi, Leo and James,
+
+I tested on the Linus master tree, the mentioned commit 23baf83 ("mm, treewide: redefine MAX_ORDER sanely")
+has fix this oops.
+
+I will drop out this patch, thank you :)
+
+Cheers,
+Shuai
