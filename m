@@ -2,158 +2,125 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C2FEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 17:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F2BEB64D0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 17:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235159AbjFMRFb (ORCPT
+        id S231876AbjFMRFf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 13:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41526 "EHLO
+        Tue, 13 Jun 2023 13:05:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235491AbjFMRFa (ORCPT
+        with ESMTP id S229590AbjFMRFc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 13:05:30 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9630E183
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 10:05:29 -0700 (PDT)
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35DGkW5G007782;
-        Tue, 13 Jun 2023 17:04:34 GMT
+        Tue, 13 Jun 2023 13:05:32 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33BD5183
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 10:05:31 -0700 (PDT)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35DGkqBH031019;
+        Tue, 13 Jun 2023 17:04:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=LUWWfN0fL/r8kWv5U3DzyZ1X0qXpgm0BC6QrDVF5Xyc=;
- b=fyU218VyvW+u3AWZ755LeISiNWH0gyp1UoGJVfY7pf6vEyTioPZP+jpcHXFFSw9LlDi/
- rFEFHnF4/yXpePSg7jHZGANbV+aQxr/JRJV9ZNZbgjlj02MW1052KXa34ZXbWSZ2OAsi
- IX9ZYD4tl23Yig8BZr7pAX+eM7YLAMEWf8QfosB0QVpjlya04ubRnHmxgrWjsWJ9FWY/
- vzgqVS7PYLQDRSS4AKnGrvmSGlM8xNIcxly97D8bv621NPkyssNPvV4XNdcXb3jbmmuj
- n53EiXr+zCukyFWhhKrJ5TuKVj+vb37YZtjD9OSE0r82vV9pA6SjxNXREWVj7zzjHfLJ jw== 
+ bh=VGgfsoeoLxM1hgHvIgMovQC4MJ/QGh1WHdficG7OZjE=;
+ b=C+ItTcpMeQyLEKJkfdjw2l86npqWzN6XS+6Eamfbtms7p82OwgCxL6n9Gn46GPEI5M4/
+ 9IYZc6fweUvI9wA7UDRWHJC3xCBnfM2dtvKumE2W/PJ6+QnO4HRCzmUOVg7q/sskFUBw
+ Q6Ljf+KkRe6whNKawH4fD94IFjXLzpBeHBYUuDK96pBLohMNAQFpjuwv5dMD85ZCekcd
+ 3ts/cM6P33F3n5zMELop68po1beblPCyUBxu2L+jxwqQJAzlrLA6VXmnfjoI2A+RCkN0
+ edp1BfR9vSqD9BV3MC5mFCnoNf4CKDs8YWWZSnIGfYgcKCQFbz1AVhLZAgPXKm9q7Qfr EA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6uvn0pyd-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6v94ge9s-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jun 2023 17:04:34 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35DGvDSF008324;
-        Tue, 13 Jun 2023 17:04:33 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6uvn0pw5-3
+        Tue, 13 Jun 2023 17:04:49 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35DH2I1E012477;
+        Tue, 13 Jun 2023 17:04:49 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6v94ge50-8
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jun 2023 17:04:33 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35D4xb4G019431;
-        Tue, 13 Jun 2023 16:42:36 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-        by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3r4gt4spya-1
+        Tue, 13 Jun 2023 17:04:49 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35DEQkgU031009;
+        Tue, 13 Jun 2023 16:43:05 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3r4gedsqbw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jun 2023 16:42:36 +0000
+        Tue, 13 Jun 2023 16:43:04 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35DGgWX142730050
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35DGh1fk12386896
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Jun 2023 16:42:33 GMT
+        Tue, 13 Jun 2023 16:43:01 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CFBF120043;
-        Tue, 13 Jun 2023 16:42:32 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6497D20040;
+        Tue, 13 Jun 2023 16:43:01 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C882620040;
-        Tue, 13 Jun 2023 16:42:29 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 3E1872004B;
+        Tue, 13 Jun 2023 16:42:58 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.43.111.115])
         by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 13 Jun 2023 16:42:29 +0000 (GMT)
+        Tue, 13 Jun 2023 16:42:58 +0000 (GMT)
 From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
         namhyung@kernel.org, ravi.bangoria@amd.com, john.g.garry@oracle.com
 Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
         kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        Anushree Mathur <anushree.mathur@linux.vnet.ibm.com>
-Subject: [PATCH 07/17] perf/tests/shell : Shellcheck fixes for perf test "test_arm_coresight.sh"
-Date:   Tue, 13 Jun 2023 22:11:35 +0530
-Message-Id: <20230613164145.50488-8-atrajeev@linux.vnet.ibm.com>
+        Aditya Gupta <adityag@linux.ibm.com>
+Subject: [PATCH 15/17] perf tests task_analyzer: fix bad substitution ${$1}
+Date:   Tue, 13 Jun 2023 22:11:43 +0530
+Message-Id: <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
 References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: HeVnWIhNcqr5RmNTD_GYmWI0aBPyj1QH
-X-Proofpoint-GUID: cRfUBAMnzrqlsYVS3kMG-_lkAgvnaPM0
+X-Proofpoint-ORIG-GUID: ao7N-pvivJscpjSgJqJwQ4VViDRdQJ53
+X-Proofpoint-GUID: 5i7VK6XuMKuPzoB5rphHRpExXc7iXK64
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
  definitions=2023-06-13_19,2023-06-12_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 clxscore=1011 spamscore=0 impostorscore=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 phishscore=0 mlxscore=0
- mlxlogscore=834 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2305260000 definitions=main-2306130151
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ impostorscore=0 phishscore=0 mlxlogscore=999 spamscore=0 clxscore=1015
+ suspectscore=0 adultscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306130151
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Anushree Mathur <anushree.mathur@linux.vnet.ibm.com>
+From: Aditya Gupta <adityag@linux.ibm.com>
 
-Fixed the following shellcheck issues in test_arm_coresight.sh file:
+${$1} gives bad substitution error on sh, bash, and zsh. This seems like
+a typo, and this patch modifies it to $1, since that is what it's usage
+looks like from wherever `check_exec_0` is called.
 
-In tools/perf/tests/shell/test_arm_coresight.sh line 31:
-        trap - exit term int
-               ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-                    ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-                         ^-^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
+This issue due to ${$1} caused all function calls to give error in
+`find_str_or_fail` line, and so no test runs completely. But
+'perf test "perf script task-analyzer tests"' wrongly reports
+that tests passed with the status OK, which is wrong considering
+the tests didn't even run completely
 
-In tools/perf/tests/shell/test_arm_coresight.sh line 35:
-trap cleanup_files exit term int
-                   ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-                        ^--^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-                             ^-^ SC2039: In POSIX sh, using lower/mixed case for signal names is undefined.
-
-In tools/perf/tests/shell/test_arm_coresight.sh line 92:
-        if [ $? -eq 0 -a -e "$1/enable_sink" ]; then
-                      ^-- SC2166: Prefer [ p ] && [ q ] as [ p -a q ] is not well defined.
-
-Fixed above warnings by:
-1)Capitalize signals(INT, TERM, EXIT) to avoid mixed/lower case naming of
-signals.
-2)Expression [p -a q] was not defined,changed it to [p] && [q] to avoid the
-ambiguity as this is older format using -a or -o ,now we use [p] && [q] in
-place of [p -a q] and [p] || [q] in place of [p -o q].
-
-Result after fixing the issues:
-
-shell$ shellcheck -S warning test_arm_coresight.sh
-shell$
-
+Fixes: e8478b84d6ba ("perf test: add new task-analyzer tests")
 Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Signed-off-by: Anushree Mathur <anushree.mathur@linux.vnet.ibm.com>
+Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
 ---
- tools/perf/tests/shell/test_arm_coresight.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/tests/shell/test_task_analyzer.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
-index 482009e17bda..f1bf5621160f 100755
---- a/tools/perf/tests/shell/test_arm_coresight.sh
-+++ b/tools/perf/tests/shell/test_arm_coresight.sh
-@@ -28,11 +28,11 @@ cleanup_files()
- 	rm -f ${perfdata}
- 	rm -f ${file}
- 	rm -f "${perfdata}.old"
--	trap - exit term int
-+	trap - EXIT TERM INT
- 	exit $glb_err
+diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
+index 4264b54b654b..84ab7e7f57d5 100755
+--- a/tools/perf/tests/shell/test_task_analyzer.sh
++++ b/tools/perf/tests/shell/test_task_analyzer.sh
+@@ -31,7 +31,7 @@ report() {
+ 
+ check_exec_0() {
+ 	if [ $? != 0 ]; then
+-		report 1 "invokation of ${$1} command failed"
++		report 1 "invocation of $1 command failed"
+ 	fi
  }
- 
--trap cleanup_files exit term int
-+trap cleanup_files EXIT TERM INT
- 
- record_touch_file() {
- 	echo "Recording trace (only user mode) with path: CPU$2 => $1"
-@@ -89,7 +89,7 @@ is_device_sink() {
- 	# cannot support perf PMU.
- 	echo "$1" | grep -E -q -v "tpiu"
- 
--	if [ $? -eq 0 -a -e "$1/enable_sink" ]; then
-+	if [ $? -eq 0 ] && [ -e "$1/enable_sink" ]; then
- 
- 		pmu_dev="/sys/bus/event_source/devices/cs_etm/sinks/$2"
  
 -- 
 2.39.1
