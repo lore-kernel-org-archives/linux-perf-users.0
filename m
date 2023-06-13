@@ -2,236 +2,207 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D032C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 13:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998EBC7EE29
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 13:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242521AbjFMNWn (ORCPT
+        id S240257AbjFMNXs (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 09:22:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36646 "EHLO
+        Tue, 13 Jun 2023 09:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242520AbjFMNWm (ORCPT
+        with ESMTP id S240273AbjFMNXs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 09:22:42 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C7C1B0;
-        Tue, 13 Jun 2023 06:22:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686662560; x=1718198560;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=iTN/9KhoPSZOXiQNvRTzJKESu5zFQUsvhnmUcEyqMBc=;
-  b=gc5ABRwNGXukVLTD7O3N46WGN/8t88L1JX3WK4rRVdfNzCM+ngYuMrqU
-   nSRZrGFOgTsCXOyYpm4mtLxdM8ddpYGtn4cnq9JhT6S6favVPAfvKxtV3
-   ll+CheSucouyqIkzohSWFRMqje1vYXE/D9hiRhwuUYSIFwp8Ucm2Bxsdf
-   nGYC/GwfpstBZERgpuBjMa1kmEd/W0rXBQuMFFMHX+WR6RI7nLV5IuE+l
-   TZJ0rbtw4sTerzpG+JV+YQ1cQeIY8daSnk12yXrLPeld1CdiuYt/a6Obz
-   cTh4pInV5FOpzmiUtQrm99qTgZ5dL+vBF7QjhCN2XmvM5k43u45tI/X3o
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="386725889"
-X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
-   d="scan'208";a="386725889"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 06:22:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="741425107"
-X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
-   d="scan'208";a="741425107"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.212.213])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 06:22:31 -0700
-Message-ID: <683fea7c-f5e9-fa20-f96b-f6233ed5d2a7@intel.com>
-Date:   Tue, 13 Jun 2023 16:22:26 +0300
+        Tue, 13 Jun 2023 09:23:48 -0400
+Received: from mail-ot1-x334.google.com (mail-ot1-x334.google.com [IPv6:2607:f8b0:4864:20::334])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A851E6
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 06:23:47 -0700 (PDT)
+Received: by mail-ot1-x334.google.com with SMTP id 46e09a7af769-6b28fc7a6dcso3851603a34.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 06:23:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686662626; x=1689254626;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yR5zmorCkKDaSbvaf9pNI6jJlWzgrKKfPwK8wVfaj5g=;
+        b=jKDURkE+bZ7y5cwkBT8w6pzqUNHaV7zZhqw5p5Hxvsb1YavF+N+inNUDwono5XTpqD
+         0/O5S8eWFOXMdDGH/fe+a78AyJcBwm1Y8rNZUHSjMlfu015bkNWLR4zNl5uvyjJDzSMf
+         Flw3EeT/yg/2kP8FqsEeli8atTK6mYKeynl0l+Zv9oXj+usLicRHUTSkFdXiMZxSACwJ
+         Uo4XZOxpEN6rYjkGHDqZvxXZfGEOAvd6ZJqTC4lrJLSWLB39whLzaf9qXY07WotFM5Lx
+         jfPxcg/jtKiYGTA1PoANbhne4sNglmrPGvedJtf/dI5JsZJLHny0yePfEFyr7L2Xa2ba
+         d7kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686662626; x=1689254626;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yR5zmorCkKDaSbvaf9pNI6jJlWzgrKKfPwK8wVfaj5g=;
+        b=YIk8nIo7TchUMe3vCs3G/Yw7GjXen1jV/CES2eeN/TSg2jIWff1UtBxKmzbcF5zPaG
+         vrqYolMt3XEHs3xZv5LPhYnJzk5A0m/i8I65Wn8GSZ72zZ3iHV0BLEhUgGXbD92aMeK+
+         a+XkurudXulCdwTlB3ZWbGP5++C1R+Otx1Tm6cus3OpjtLJz9fgd4IlfAEpgwKa9UqmX
+         DCoueFlNnxDCwo11csyKfLJPgC6GQ20tKqtOogaztlFxywKbIkbBEwWihWyi9SH4hzy2
+         qrr0QyGuCNOLwqPHTLr/sPedMvZt8f1bIsSUq/M3ESSPQXjtdQSRYLZQRuVchEL945mh
+         slGw==
+X-Gm-Message-State: AC+VfDzFJmUsi/xjA5BIxApoZSWe3SVMYnUhaqdX33wWslE+jibaXQ8i
+        QF9tydr+CQsoAfsnoKcPOqyCcVwEOgdrhe/T/I6SVTEWpKM=
+X-Google-Smtp-Source: ACHHUZ5DnLDxqypl3fW0UGmXGpeqkkRpmkBxCu5tD3//lebby8WULn/3Y6xKUXmY7oTEBOtrC3MT1AdT05oOsssO1JE=
+X-Received: by 2002:a05:6808:204:b0:39c:4779:d92 with SMTP id
+ l4-20020a056808020400b0039c47790d92mr7125702oie.51.1686662626173; Tue, 13 Jun
+ 2023 06:23:46 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.12.0
-Subject: Re: [PATCH v1 1/2] perf tests x86: Generate entire instruction struct
- in C files
-Content-Language: en-US
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-References: <20230531154333.364167-1-irogers@google.com>
- <ZIdtO9xVsP6Ytb0q@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <ZIdtO9xVsP6Ytb0q@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
+ <874963e2-f97e-b463-1351-b00640b0f67b@arm.com> <CALDTKqg01+xJ2xu218c_QH2PbX9wdhYOiJfDieCXL5PHWV-6FQ@mail.gmail.com>
+ <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com>
+In-Reply-To: <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com>
+From:   =?UTF-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>
+Date:   Tue, 13 Jun 2023 21:23:33 +0800
+Message-ID: <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
+Subject: Re: Some questions about using the perf tool in ARM-SPE
+To:     James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 12/06/23 22:08, Arnaldo Carvalho de Melo wrote:
-> Em Wed, May 31, 2023 at 08:43:32AM -0700, Ian Rogers escreveu:
->> Generate the entire struct in the C files. Later changes will break
->> apart the struct and so two phases of output are necessary, this isn't
->> possible if part of the struct is declared in insn-x86.c.
-> 
-> Adrian,
-> 
-> 	Could you please take a look at these two patches?
+OK
+I have a new discovery that c2c seems to support only certain Arm
+Neoverse (N1/N2/V1) CPUs, I wonder if cortex-X4 could support it?
 
-One of the considerations when adding the generated code
-was that it wouldn't have to be changed because the instructions
-do not change.
+Using the Arm Statistical Profiling Extension to detect false
+cache-line sharing | Blog | Linaro
 
-I would much prefer to move the test out of the default perf build.
+Thanks
+Zack
 
-Here is a patch to do that:
-
-
-From: Adrian Hunter <adrian.hunter@intel.com>
-Date: Tue, 13 Jun 2023 15:15:58 +0300
-Subject: [PATCH] perf tests: Make x86 new instructions test optional at build
- time
-
-The "x86 instruction decoder - new instructions" test takes up space but
-is only really useful to developers. Make it optional at build time.
-
-Add variable EXTRA_TESTS which must be defined in order to build perf
-with the test.
-
-Example:
-
-  Before:
-
-    $ make -C tools/perf clean >/dev/null
-    $ make -C tools/perf >/dev/null
-    Makefile.config:650: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
-    Makefile.config:1149: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
-      PERF_VERSION = 6.4.rc3.gd15b8c76c964
-    $ readelf -SW tools/perf/perf | grep '\.rela.dyn\|.rodata\|\.data.rel.ro'
-      [10] .rela.dyn         RELA            000000000002fcb0 02fcb0 0748b0 18   A  6   0  8
-      [18] .rodata           PROGBITS        00000000002eb000 2eb000 6bac00 00   A  0   0 32
-      [25] .data.rel.ro      PROGBITS        00000000009ea180 9e9180 04b540 00  WA  0   0 32
-
-  After:
-
-    $ make -C tools/perf clean >/dev/null
-    $ make -C tools/perf >/dev/null
-    Makefile.config:650: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
-    Makefile.config:1154: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
-      PERF_VERSION = 6.4.rc3.g4ea9c1569ea4
-    $ readelf -SW tools/perf/perf | grep '\.rela.dyn\|.rodata\|\.data.rel.ro'
-      [10] .rela.dyn         RELA            000000000002f3c8 02f3c8 036d68 18   A  6   0  8
-      [18] .rodata           PROGBITS        00000000002ac000 2ac000 68da80 00   A  0   0 32
-      [25] .data.rel.ro      PROGBITS        000000000097d440 97c440 022280 00  WA  0   0 32
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/Makefile.config               | 5 +++++
- tools/perf/Makefile.perf                 | 4 ++++
- tools/perf/arch/x86/include/arch-tests.h | 2 ++
- tools/perf/arch/x86/tests/Build          | 5 ++++-
- tools/perf/arch/x86/tests/arch-tests.c   | 4 ++++
- tools/perf/tests/make                    | 1 +
- 6 files changed, 20 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a794d9eca93d..9c5aa14a44cf 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1075,6 +1075,11 @@ ifndef NO_AUXTRACE
-   endif
- endif
- 
-+ifdef EXTRA_TESTS
-+    $(call detected,CONFIG_EXTRA_TESTS)
-+    CFLAGS += -DHAVE_EXTRA_TESTS
-+endif
-+
- ifndef NO_JVMTI
-   ifneq (,$(wildcard /usr/sbin/update-java-alternatives))
-     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index f48794816d82..b1e62a621f92 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -128,6 +128,10 @@ include ../scripts/utilities.mak
- #
- # Define BUILD_NONDISTRO to enable building an linking against libbfd and
- # libiberty distribution license incompatible libraries.
-+#
-+# Define EXTRA_TESTS to enable building extra tests useful mainly to perf
-+# developers, such as:
-+#	x86 instruction decoder - new instructions test
- 
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
-diff --git a/tools/perf/arch/x86/include/arch-tests.h b/tools/perf/arch/x86/include/arch-tests.h
-index 33d39c1d3e64..df133020d582 100644
---- a/tools/perf/arch/x86/include/arch-tests.h
-+++ b/tools/perf/arch/x86/include/arch-tests.h
-@@ -6,7 +6,9 @@ struct test_suite;
- 
- /* Tests */
- int test__rdpmc(struct test_suite *test, int subtest);
-+#ifdef HAVE_EXTRA_TESTS
- int test__insn_x86(struct test_suite *test, int subtest);
-+#endif
- int test__intel_pt_pkt_decoder(struct test_suite *test, int subtest);
- int test__intel_pt_hybrid_compat(struct test_suite *test, int subtest);
- int test__bp_modify(struct test_suite *test, int subtest);
-diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
-index 08cc8b9c931e..394771c00dca 100644
---- a/tools/perf/arch/x86/tests/Build
-+++ b/tools/perf/arch/x86/tests/Build
-@@ -4,5 +4,8 @@ perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
- perf-y += arch-tests.o
- perf-y += sample-parsing.o
- perf-y += hybrid.o
--perf-$(CONFIG_AUXTRACE) += insn-x86.o intel-pt-test.o
-+perf-$(CONFIG_AUXTRACE) += intel-pt-test.o
-+ifeq ($(CONFIG_EXTRA_TESTS),y)
-+perf-$(CONFIG_AUXTRACE) += insn-x86.o
-+endif
- perf-$(CONFIG_X86_64) += bp-modify.o
-diff --git a/tools/perf/arch/x86/tests/arch-tests.c b/tools/perf/arch/x86/tests/arch-tests.c
-index 147ad0638bbb..3f2b90c59f92 100644
---- a/tools/perf/arch/x86/tests/arch-tests.c
-+++ b/tools/perf/arch/x86/tests/arch-tests.c
-@@ -4,7 +4,9 @@
- #include "arch-tests.h"
- 
- #ifdef HAVE_AUXTRACE_SUPPORT
-+#ifdef HAVE_EXTRA_TESTS
- DEFINE_SUITE("x86 instruction decoder - new instructions", insn_x86);
-+#endif
- 
- static struct test_case intel_pt_tests[] = {
- 	TEST_CASE("Intel PT packet decoder", intel_pt_pkt_decoder),
-@@ -37,7 +39,9 @@ struct test_suite *arch_tests[] = {
- 	&suite__dwarf_unwind,
- #endif
- #ifdef HAVE_AUXTRACE_SUPPORT
-+#ifdef HAVE_EXTRA_TESTS
- 	&suite__insn_x86,
-+#endif
- 	&suite__intel_pt,
- #endif
- #if defined(__x86_64__)
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 8dd3f8090352..885cd321d67b 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -69,6 +69,7 @@ make_clean_all      := clean all
- make_python_perf_so := $(python_perf_so)
- make_debug          := DEBUG=1
- make_nondistro      := BUILD_NONDISTRO=1
-+make_extra_tests    := EXTRA_TESTS=1
- make_no_libperl     := NO_LIBPERL=1
- make_no_libpython   := NO_LIBPYTHON=1
- make_no_scripts     := NO_LIBPYTHON=1 NO_LIBPERL=1
--- 
-2.34.1
+<http://www.avg.com/email-signature?utm_medium=3Demail&utm_source=3Dlink&ut=
+m_campaign=3Dsig-email&utm_content=3Dwebmail>
+=E4=B9=BE=E6=B7=A8=E7=84=A1=E7=97=85=E6=AF=92=E3=80=82www.avg.com
+<http://www.avg.com/email-signature?utm_medium=3Demail&utm_source=3Dlink&ut=
+m_campaign=3Dsig-email&utm_content=3Dwebmail>
+<#DAB4FAD8-2DD7-40BB-A1B8-4E2AA1F9FDF2>
 
 
+James Clark <james.clark@arm.com> =E6=96=BC 2023=E5=B9=B46=E6=9C=8813=E6=97=
+=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=889:18=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> Hi Zack,
+>
+> It looks like you replied just to me rather than to the list. Are you
+> able to re-send this as a reply-all to the original post so others might
+> be able to help as well?
+>
+> Thanks
+> James
+>
+> On 12/06/2023 06:50, =E8=94=A1=E6=B2=85=E4=BF=A1 wrote:
+> > Hi James.
+> >
+> > After my debug experiment. I found that there are seven CPUs on my plat=
+form
+> > but I can't get them to work together
+> > The first setting is divided into three types of clusters. This part is=
+ set
+> > to three cluter through DTS
+> >
+> > user_shell:/sys/bus/event_source/devices # cat arm_spe_0/cpumask
+> > arm_spe_1/cpumask arm_spe_2/cpumask
+> > 7
+> > 4-6
+> > 0-3
+> >
+> > This makes it impossible for me to record the whole system together (cp=
+u
+> > 0-7). only one cluter can be recorded at the same time  thhe above is -=
+v
+> > information
+> >
+> > user_shell:/data/local/tmp # ./perf record -e
+> > arm_spe/branch_filter=3D1,load_filter=3D1,store_filter=3D1,ts_enable=3D=
+1,pct_enable=3D1,pa_enable=3D1,min_latency=3D10,jitter=3D1/
+> > -a  -v  --vmlinux ./vmlinux -o text.data
+> >  Warning: option `vmlinux' is being ignored because NO_DWARF=3D1
+> > DEBUGINFOD_URLS=3D
+> > nr_cblocks: 0
+> > affinity: SYS
+> > mmap flush: 1
+> > comp level: 0
+> > maps__set_modules_path_dir: cannot open
+> > /lib/modules/6.1.25-android14-5-maybe-dirty-mainline dir
+> > Problems setting modules path maps, continuing anyway...
+> > mmap size 528384B
+> > Control descriptor is not initialized
+> > ^C[ perf record: Woken up 51 times to write data ]
+> > failed to write feature CPUDESC
+> > failed to write feature NUMA_TOPOLOGY
+> > failed to write feature MEM_TOPOLOGY
+> > failed to write feature CPU_PMU_CAPS
+> > failed to write feature HYBRID_TOPOLOGY
+> > [ perf record: Captured and wrote 23.952 MB text.data ]
+> >
+> > Could give me some help can three cluter work together I think perf c2c
+> > should also work
+> > If I have left out any information you may need, please let me know!
+> >
+> > Many Thanks
+> > Best Regards
+> > Zack.
+> >
+> >
+> > James Clark <james.clark@arm.com> =E6=96=BC 2023=E5=B9=B46=E6=9C=889=E6=
+=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:06=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> >>
+> >>
+> >> On 09/06/2023 08:14, =E8=94=A1=E6=B2=85=E4=BF=A1 wrote:
+> >>> hi linux-perf-users
+> >>>
+> >>> I glad perf tool can support ARM-SPE.
+> >>> however, I have encountered some problems in using
+> >>> My perf tool version is 6.1. I compiled it to run on an Android syste=
+m
+> >>> "Here are my questions"
+> >>>
+> >>> 1.I can't use the perf c2c function to analyze, i'm not sure if it
+> >>> only supports certain hardware architectures
+> >>>
+> >>>>> user_shell:/data/local/tmp # ./perf c2c report
+> >>>>> Failed setup nodes
+> >>>
+> >>> 2.I get more information via the command /.perf report --mem-mode but
+> >>> I'm confused about the data
+> >>>
+> >>> Snoop  Locked  Blocked     Local INSTR Latency
+> >>> ......         ..........  .       ..................
+> >>> N/A            No          N/A           0
+> >>> N/A            No          N/A           0
+> >>> N/A            No          N/A           0
+> >>> N/A            No          N/A           0
+> >>> .               ,                .
+> >>> .
+> >>> .
+> >>> I have observed a lot of data about Snoop&Locked&Blocked&Local INSTR
+> >>> Latency and their results are always N/A&No&N/A&0 which makes me feel
+> >>> like it is not supported. Please give me some information about it an=
+d
+> >>> introduction.
+> >>>
+> >>> Many Thanks
+> >>> Best Regards
+> >>> Zack.
+> >>
+> >> Hi Zack,
+> >>
+> >> I wasn't able to reproduce your issue on Ubuntu, it could be something
+> >> to do with Android.
+> >>
+> >> It looks like the error "Failed setup nodes" comes from the
+> >> setup_nodes() function. Can you debug it to see exactly which part of =
+it
+> >> is failing? I see it's something to do with numa nodes, maybe that
+> >> doesn't work on Android or you need to add some numa stuff to the kern=
+el
+> >> config. Or the function needs to handle missing data differently.
+> >>
+> >> James
+> >>
+> >
