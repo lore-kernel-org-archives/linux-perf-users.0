@@ -2,127 +2,165 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89020C7EE43
-	for <linux-perf-users@archiver.kernel.org>; Mon, 12 Jun 2023 23:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B463C7EE2F
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 00:04:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238332AbjFLXzS (ORCPT
+        id S233046AbjFMAEh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 19:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46714 "EHLO
+        Mon, 12 Jun 2023 20:04:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236202AbjFLXzR (ORCPT
+        with ESMTP id S229532AbjFMAEg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 19:55:17 -0400
-Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BB391718
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 16:55:16 -0700 (PDT)
-Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-3f98276f89cso59191cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 16:55:16 -0700 (PDT)
+        Mon, 12 Jun 2023 20:04:36 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E192A1718
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 17:04:34 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3f9a81da5d7so119381cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 17:04:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686614115; x=1689206115;
+        d=google.com; s=20221208; t=1686614674; x=1689206674;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/TZTKvgWXslw1lwI6vHB1nhET0MRMTi1UfiLA9Au4ic=;
-        b=exJ46dVQ/JmnaOG+CxMLsTt0wih9TMmhYpzoJoTFDrakBi+obl7ZQ817CMNuGL3XYp
-         d6yqcPeUAVuStSWFoSHTROUuUQsTrf3XU07B25yd1nVgWfWY426G/3uu5D8OGkIVZvph
-         6QqUDjluWaOLPsrLJvzub2+ldQJY07qqh7K4h8DC3CLF5Vj+/zAmXHJ5xfg1rFj4bUiK
-         TD8WFEfy80/YOsiZRCr57F4nyapcWegWgZPqemc5Lj3228pEiuj6JNWW3lVGeEdi5AzB
-         rNrqU4rm9MCscSGnl2xLz6pS+n0OcP9cut84CVhk7Z5D0Xt4eN5Qlug4XNgWtj9zDcUT
-         uPHg==
+        bh=jFJb2DYUH4SPc/Q+szSqLA/RcQwAqBDcfYRno+8pMbs=;
+        b=qVHT92ewJyouaKu6MMLoTf39mDMIZMOAjBtx0r7Jpbqsr3ldbcktmvTft9a5QCGjde
+         vWS5CAJ4iUqojEq/8qIYpx+m1sF0a1hPNA75rzxp9buSPrUX4ARPJ2Og6xS3GTloDqsj
+         AFQBbSTeojJHas0T0aGzDBfqctU3jxn+U1JhxWREccfGwEIl+LqNrZXQxoC5mzPsw2DE
+         egLEnHH5iFUzlQHUpU4df6W+KK/lLzfKk2bj+KII22cyiA+1R1v+AJ5+J83mRrnrU58a
+         MDVpW7Y9qwOBiWFVG7eovI5AjG1p3ZnEX9zrvRMo6mkSimwQDd5tnNogQg+qbRz8eiqX
+         ybSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686614115; x=1689206115;
+        d=1e100.net; s=20221208; t=1686614674; x=1689206674;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/TZTKvgWXslw1lwI6vHB1nhET0MRMTi1UfiLA9Au4ic=;
-        b=d4zj41ocEh2I03n9bAMWRhbRvfQIqxpDoTt09uYZbZRY4ePCVnyyT9yL3pN5oxNKzR
-         mRcbXulv6DLc40FBelRUDlmEEEA34X5c/Ushrxe4e3c+MkZYErVF46cCtm63kDY3Is1b
-         w8f2QsSs54nQcYfqhKGz4EJmyKID6XwVnjkbkNclAJ2Ibmu9neo13VkhvhxUNO8hPAfP
-         728+LS0UhvyohrAQnDeK7I3GulTIB5c5ziX5hR8sUfStPv47v+kQSy2JmkDvDqMC/SSq
-         iCib+zj49fo57uSdHCNSWtuR8bchcEYVN6/CklkbpC5AyJt3Z6E+viv7aRNrBMtj6Mkg
-         Qp3w==
-X-Gm-Message-State: AC+VfDyXlJQR2iIJU6ACCEfygfiZFWBYTGEUjkB+bAgEv8M4X+XEeA+c
-        os3qznRROqwSGNpEjK6vX4YaFzKKwyqhJU4MHnnQPA==
-X-Google-Smtp-Source: ACHHUZ4gtNf3oUkKVDoBwfN3WBAinn8qkE/cIS+GMBRsPsZvQS7qfBsTQsGKygeoHk4toeHSJCT62PXL6DZzf+OzBh4=
-X-Received: by 2002:a05:622a:247:b0:3ef:4319:c6c5 with SMTP id
- c7-20020a05622a024700b003ef4319c6c5mr36692qtx.19.1686614115514; Mon, 12 Jun
- 2023 16:55:15 -0700 (PDT)
+        bh=jFJb2DYUH4SPc/Q+szSqLA/RcQwAqBDcfYRno+8pMbs=;
+        b=JhQ/mzIQ/08+S+xl51PxvTAvu7b8ZaDmkenajHktDCB4h89KmtwNaj/sy8Gt5zN0BA
+         1OjFunys4mk7bz60h6nIFkI+r4IDNVCr8yJzJBLbNfCz3ELnDRIh5anU5fMn48nvgUgC
+         Sf1dmRNGf5207/RDyNlqw9NBinzWWxr6dg7vhTLhu9fJid8Q3woMOmhWKGO29Zq67LUf
+         /LfPCXL5MM1jGo3f/qBubGRDQotIM4XLrm5rbKUjFOuGFItlwheMgwN9A5bjQY/U2lfc
+         9fno3WBS5scUyFXRFm4KZb/KjeZlTpl9CSGg/twZKEPGDS16C/AytX7O0UHQG7cb4v6L
+         0xJA==
+X-Gm-Message-State: AC+VfDxX7XwoB13UK/7JM8rkMUp9SAX9G1obw5Xn8G8L91xDoP6ECa/X
+        hLfZZLRRsi8AljN7ZwgehevYITXfAD+l5k0JB61kFA==
+X-Google-Smtp-Source: ACHHUZ6fIxnK/WgFoSTz0SP44PqYLAX1txVLnPtVREFcGCbCCxdcCF0KcpSDb4x58o/UgMZja+eg3H706VCHFM601Wg=
+X-Received: by 2002:a05:622a:100c:b0:3ef:3361:75d5 with SMTP id
+ d12-20020a05622a100c00b003ef336175d5mr1249qte.11.1686614673886; Mon, 12 Jun
+ 2023 17:04:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230612230026.3887586-1-namhyung@kernel.org>
-In-Reply-To: <20230612230026.3887586-1-namhyung@kernel.org>
+References: <20230609162625.100897-1-weilin.wang@intel.com>
+In-Reply-To: <20230609162625.100897-1-weilin.wang@intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 12 Jun 2023 16:55:03 -0700
-Message-ID: <CAP-5=fUpXtoaiLkJW_f5Z1q+iW6ibvRKZb3xWR945g+30x-NNw@mail.gmail.com>
-Subject: Re: [PATCH] perf annotate: Allow whitespace between insn operands
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+Date:   Mon, 12 Jun 2023 17:04:22 -0700
+Message-ID: <CAP-5=fVixzBLLiWnim8x6qcDOKH7uVfEWojTCP_H531Fhy7j-g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Add metric value validation test
+To:     Weilin Wang <weilin.wang@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 4:00=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Fri, Jun 9, 2023 at 9:26=E2=80=AFAM Weilin Wang <weilin.wang@intel.com> =
 wrote:
 >
-> The llvm-objdump adds a space between the operands while GNU objdump
-> does not.  Allow a space to handle the both.
+> This is the second version of metric value validation tests.
 >
-> In GNU objdump:
+> We made the following changes from v1 to v2:
+>  - Add python setting check [Ian]
+>  - Skip non-Intel architectures [Ian]
+>  - Rename allowlist to skiplist [Ian]
 >
->   Disassembly of section .text:                                      here
->                                                                       |
->   ffffffff81000000 <_stext>:                                          v
->   ffffffff81000000:     48 8d 25 51 1f 40 01    lea    0x1401f51(%rip),%r=
-sp
->   ffffffff81000007:     e8 d4 00 00 00          call   ffffffff810000e0 <=
-verify_cpu>
->   ffffffff8100000c:     48 8d 3d ed ff ff ff    lea    -0x13(%rip),%rdi
->
-> In llvm-objdump:
->
->   Disassembly of section .text:                                      here
->                                                                        |
->   ffffffff81000000 <startup_64>:                                       v
->   ffffffff81000000: 48 8d 25 51 1f 40 01        leaq    20979537(%rip), %=
-rsp
->   ffffffff81000007: e8 d4 00 00 00              callq   0xffffffff810000e=
-0 <verify_cpu>
->   ffffffff8100000c: 48 8d 3d ed ff ff ff        leaq    -19(%rip), %rdi
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> v1: https://lore.kernel.org/lkml/20230606202421.2628401-1-weilin.wang@int=
+el.com/
 
-Acked-by: Ian Rogers <irogers@google.com>
+Thanks Weilin,
+
+when I try the test on my Tigerlake laptop I encounter an error:
+
+```
+$ sudo perf test 105 -vv
+05: perf metrics value validation                                   :
+--- start ---
+test child forked, pid 1258192
+Launch python validation script
+./tools/perf/tests/shell/lib/perf_metric_validation.py
+Output will be stored in: /tmp/__perf_test.program.J2u5c
+Starting perf collection
+Long workload: perf bench futex hash -r 2 -s
+perf stat -j -M tma_mixing_vectors -a true
+...
+perf stat -j -M tma_retiring,tma_light_operations,tma_heavy_operations
+-a perf bench futex hash -r 2
+-s
+# Running 'futex/hash' benchmark:
+Run summary [PID 1258651]: 8 threads, each operating on 1024 [private]
+futexes for 2 secs.
+
+Averaged 953280 operations/sec (+- 1.07%), total secs =3D 2
+Traceback (most recent call last):
+ File "/home/irogers/kernel.org/./tools/perf/tests/shell/lib/perf_metric_va=
+lidation.py",
+line 571,
+in <module>
+   sys.exit(main())
+            ^^^^^^
+ File "/home/irogers/kernel.org/./tools/perf/tests/shell/lib/perf_metric_va=
+lidation.py",
+line 564,
+in main
+   ret =3D validator.test()
+         ^^^^^^^^^^^^^^^^
+ File "/home/irogers/kernel.org/./tools/perf/tests/shell/lib/perf_metric_va=
+lidation.py",
+line 522,
+in test
+   self.pos_val_test()
+ File "/home/irogers/kernel.org/./tools/perf/tests/shell/lib/perf_metric_va=
+lidation.py",
+line 152,
+in pos_val_test
+   if val < 0:
+      ^^^^^^^
+TypeError: '<' not supported between instances of 'str' and 'int'
+test child finished with -1
+---- end ----
+perf metrics value validation: FAILED!
+```
+
+Could you take a look?
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/util/annotate.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Weilin Wang (3):
+>   perf test: Add metric value validation test
+>   perf test: Add skip list for metrics known would fail
+>   perf test: Rerun failed metrics with longer workload
 >
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 9171102dd3ad..3eab6c29eaa5 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -585,7 +585,7 @@ static int mov__parse(struct arch *arch, struct ins_o=
-perands *ops, struct map_sy
->         if (ops->source.raw =3D=3D NULL)
->                 return -1;
+>  .../tests/shell/lib/perf_metric_validation.py | 574 ++++++++++++++++++
+>  .../lib/perf_metric_validation_rules.json     | 398 ++++++++++++
+>  tools/perf/tests/shell/stat_metrics_values.sh |  30 +
+>  3 files changed, 1002 insertions(+)
+>  create mode 100644 tools/perf/tests/shell/lib/perf_metric_validation.py
+>  create mode 100644 tools/perf/tests/shell/lib/perf_metric_validation_rul=
+es.json
+>  create mode 100755 tools/perf/tests/shell/stat_metrics_values.sh
 >
-> -       target =3D ++s;
-> +       target =3D skip_spaces(++s);
->         comment =3D strchr(s, arch->objdump.comment_char);
 >
->         if (comment !=3D NULL)
+> base-commit: 7cdda6998ee55140e64894e25048df7157344fc9
 > --
-> 2.41.0.162.gfafddb0af9-goog
+> 2.39.1
 >
