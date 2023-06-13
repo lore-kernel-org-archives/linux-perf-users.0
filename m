@@ -2,125 +2,326 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54786EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 17:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34537EB64D0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 17:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237979AbjFMRRB (ORCPT
+        id S238340AbjFMRSB (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 13:17:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47256 "EHLO
+        Tue, 13 Jun 2023 13:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238498AbjFMRQv (ORCPT
+        with ESMTP id S238315AbjFMRR5 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 13:16:51 -0400
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D8819B9;
-        Tue, 13 Jun 2023 10:16:48 -0700 (PDT)
-Received: by mail-yb1-xb2f.google.com with SMTP id 3f1490d57ef6-bc4ed01b5d4so2658243276.1;
-        Tue, 13 Jun 2023 10:16:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686676608; x=1689268608;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GjLD3Z65AFUlnzGeDipyFAWU3jGU3OlZnyaKrjFl94c=;
-        b=NJTC1I0w/bhJorLtWaQfWlvAtWyxNzM902NoozV2bocuew6IVQusNLYYsR92cHHh34
-         unbOiMyrOlD3s/F94VX5GDu2SQjvEyrkkCVvXZv0vCl4WevU6AQ6ZIdMUFLUnckMLnKh
-         1ggPVAdvsGV89dZLvZbdqcXLIhViqBG+eUvpfVmtpd9FUKi9KXDDsKu/A6ecBlK9bfFY
-         U+GH0IuIyae8Z6r5rUNf6HTxjNB2s069SP7thqFKZP/qBRTz2uFWG6P8hHn/f7Y3ASQv
-         h2+ET2Kjlc0MKvm5SWLSQbwT3w/z/0VybpT8padCUx9s5AgwciSPlOi/v4GahA52YR5P
-         jKtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686676608; x=1689268608;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GjLD3Z65AFUlnzGeDipyFAWU3jGU3OlZnyaKrjFl94c=;
-        b=OOPnGeAGuQO83JzkBIkaJVhXvgdr4B5xPEmqxjqtk2u+JIO57cjDHq/1pEpxOo+G9r
-         G4TT43m2QfT+XFZHAX/rfL11UXiJh5ONYefjkj7eS+uHu/gIz34GZh7p4MJHEnymKX4x
-         UDNJwaNgSsRj7a8iSBcxGplTo0u7OxL/UpKPzAJJsk4Cz4Mef0ZU+OwpmF9l43Zd7gQh
-         MyScbodXKxTtuDyGpzwtkiXbQRjWX9gjnP49E6QrLYpMMC+r4Hf12OfSpxqQMmAaOf6c
-         0eDZBa7FDCx3gGmEyv+7JDpXsabdGrKoZ52g3r/p4hlwx/HfauNRYBdXY+VR4x2sUVXL
-         8K4w==
-X-Gm-Message-State: AC+VfDx5Yyf1I5hqE5xKvjO7CCdjiYk1aUnLTWdpuMbcPG4atvnJpV7n
-        P3R7yPIRgzmYBsTk9PnyAWf0RUAqnqwtXAi+HxI=
-X-Google-Smtp-Source: ACHHUZ51FK9fEEG9Y7UGxjZoDZTvO/ng3orwCtq1nFE6ZDFpN49YC8tIKpnu/txR4noRhPPPOhU9rPNQ8Cv9H8lanlM=
-X-Received: by 2002:a25:8ca:0:b0:bc8:c035:cf4 with SMTP id 193-20020a2508ca000000b00bc8c0350cf4mr1912446ybi.17.1686676607731;
- Tue, 13 Jun 2023 10:16:47 -0700 (PDT)
+        Tue, 13 Jun 2023 13:17:57 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D1CB2172A;
+        Tue, 13 Jun 2023 10:17:55 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 823872F4;
+        Tue, 13 Jun 2023 10:18:40 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.39.126])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B390D3F663;
+        Tue, 13 Jun 2023 10:17:53 -0700 (PDT)
+Date:   Tue, 13 Jun 2023 18:17:51 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V11 08/10] arm64/perf: Add struct brbe_regset helper
+ functions
+Message-ID: <ZIikv0bW1xGeLf6B@FVFF77S0Q05N.cambridge.arm.com>
+References: <20230531040428.501523-1-anshuman.khandual@arm.com>
+ <20230531040428.501523-9-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-References: <20230612090713.652690195@infradead.org> <20230612093537.614161713@infradead.org>
-In-Reply-To: <20230612093537.614161713@infradead.org>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 13 Jun 2023 19:16:36 +0200
-Message-ID: <CANiq72mTjNzLhfhax761CPDUHj=zC6qa6i3hobMWYaCvmgBAJQ@mail.gmail.com>
-Subject: Re: [PATCH v3 03/57] locking: Introduce __cleanup() based infrastructure
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
-        gregkh@linuxfoundation.org, pbonzini@redhat.com,
-        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
-        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
-        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
-        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
-        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, paulmck@kernel.org,
-        frederic@kernel.org, quic_neeraju@quicinc.com,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
-        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
-        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
-        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
-        luc.vanoostenryck@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230531040428.501523-9-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 11:39=E2=80=AFAM Peter Zijlstra <peterz@infradead.o=
-rg> wrote:
->
-> --- a/include/linux/compiler_attributes.h
-> +++ b/include/linux/compiler_attributes.h
-> @@ -77,6 +77,12 @@
->  #define __attribute_const__             __attribute__((__const__))
->
->  /*
-> + *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.=
-html#index-cleanup-variable-attribute
-> + * clang: https://clang.llvm.org/docs/AttributeReference.html#cleanup
-> + */
-> +#define __cleanup(func)                        __attribute__((__cleanup_=
-_(func)))
-> +
+On Wed, May 31, 2023 at 09:34:26AM +0530, Anshuman Khandual wrote:
+> The primary abstraction level for fetching branch records from BRBE HW has
+> been changed as 'struct brbe_regset', which contains storage for all three
+> BRBE registers i.e BRBSRC, BRBTGT, BRBINF. Whether branch record processing
+> happens in the task sched out path, or in the PMU IRQ handling path, these
+> registers need to be extracted from the HW. Afterwards both live and stored
+> sets need to be stitched together to create final branch records set. This
+> adds required helper functions for such operations.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Tested-by: James Clark <james.clark@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+>  drivers/perf/arm_brbe.c | 163 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 163 insertions(+)
+> 
+> diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+> index 484842d8cf3e..759db681d673 100644
+> --- a/drivers/perf/arm_brbe.c
+> +++ b/drivers/perf/arm_brbe.c
+> @@ -44,6 +44,169 @@ static void select_brbe_bank(int bank)
+>  	isb();
+>  }
+>  
 > +/*
->   * Optional: only supported since gcc >=3D 9
->   * Optional: not supported by clang
->   *
+> + * This scans over BRBE register banks and captures individual branch reocrds
+> + * [BRBSRC, BRBTGT, BRBINF] into a pre-allocated 'struct brbe_regset' buffer,
+> + * until an invalid one gets encountered. The caller for this function needs
+> + * to ensure BRBE is an appropriate state before the records can be captured.
+> + */
+> +static int capture_brbe_regset(struct brbe_hw_attr *brbe_attr, struct brbe_regset *buf)
+> +{
+> +	int loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2;
+> +	int idx, count;
+> +
+> +	loop1_idx1 = BRBE_BANK0_IDX_MIN;
+> +	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
+> +		loop1_idx2 = brbe_attr->brbe_nr - 1;
+> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
+> +		loop2_idx2 = BRBE_BANK0_IDX_MAX;
+> +	} else {
+> +		loop1_idx2 = BRBE_BANK0_IDX_MAX;
+> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
+> +		loop2_idx2 = brbe_attr->brbe_nr - 1;
+> +	}
+> +
+> +	select_brbe_bank(BRBE_BANK_IDX_0);
+> +	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
+> +		buf[idx].brbinf = get_brbinf_reg(idx);
+> +		/*
+> +		 * There are no valid entries anymore on the buffer.
+> +		 * Abort the branch record processing to save some
+> +		 * cycles and also reduce the capture/process load
+> +		 * for the user space as well.
+> +		 */
+> +		if (brbe_invalid(buf[idx].brbinf))
+> +			return idx;
+> +
+> +		buf[idx].brbsrc = get_brbsrc_reg(idx);
+> +		buf[idx].brbtgt = get_brbtgt_reg(idx);
+> +	}
+> +
+> +	select_brbe_bank(BRBE_BANK_IDX_1);
+> +	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
+> +		buf[idx].brbinf = get_brbinf_reg(idx);
+> +		/*
+> +		 * There are no valid entries anymore on the buffer.
+> +		 * Abort the branch record processing to save some
+> +		 * cycles and also reduce the capture/process load
+> +		 * for the user space as well.
+> +		 */
+> +		if (brbe_invalid(buf[idx].brbinf))
+> +			return idx;
+> +
+> +		buf[idx].brbsrc = get_brbsrc_reg(idx);
+> +		buf[idx].brbtgt = get_brbtgt_reg(idx);
+> +	}
+> +	return idx;
+> +}
 
-`cleanup` goes before `const`, but apart from that, for compiler attributes=
-:
+As with __armv8pmu_branch_read(), the loop conditions are a bit hard to follow,
+and I believe that can be rewritten along the lines of the suggestion there.
 
-    Acked-by: Miguel Ojeda <ojeda@kernel.org>
+Looking at this, we now have a couple of places that will try to read the
+registers for an individual record, so it probably makes sense to facotr that
+into a helper, e.g.
 
-Thanks for bringing RAII/SBRM to the kernel!
+| static bool __read_brbe_regset(struct brbe_regset *entry, int idx)
+| {
+| 	u64 brbinf = get_brbinf_reg(idx);
+| 
+| 	if (brbe_invalid(brbinf))
+| 		return false;
+| 	
+| 	entry->brbinf = brbinf;
+| 	entry->brbsrc = get_brbsrc_reg(idx);
+| 	entry->brbtgt = get_brbtgt_reg(idx);
+| 
+| 	return true;
+| }
 
-Rust also behaves like the `__cleanup__` attribute, e.g. iterating on
-a loop destroys and constructs the variables defined inside the loop.
-Also breaking to an outer label/scope.
+... which can be used here, e.g.
 
-By the way, maybe some of the macros in `cleanup.h` read a bit better
-applying `clang-format` to it.
+| /*
+|  * Capture all records before the first invalid record, and return the number
+|  * of records captured.
+|  */
+| static int capture_brbe_regset(struct brbe_hw_attr *brbe_attr, struct brbe_regset *buf)
+| {
+| 
+| 	int nr_entries = brbe_attr->brbe_nr;
+| 	int idx = 0;
+| 	
+| 	select_brbe_bank(BRBE_BANK_IDX_0);
+| 	while (idx < nr_entries && IDX < BRBE_BANK0_IDX_MAX) {
+| 		if (__read_brbe_regset(&buf[idx], idx))
+| 			return idx;
+| 	}
+| 
+| 	select_brbe_bank(BRBE_BANK_IDX_1);
+| 	while (idx < nr_entries && IDX < BRBE_BANK1_IDX_MAX) {
+| 		if (__read_brbe_regset(&buf[idx], idx))
+| 			return idx;
+| 	}
+| 
+| 	return idx;
+| }
 
-Cheers,
-Miguel
+... and could be used to implement capture_branch_entry() in the patch before
+this.
+
+> +static inline void copy_brbe_regset(struct brbe_regset *src, int src_idx,
+> +				    struct brbe_regset *dst, int dst_idx)
+> +{
+> +	dst[dst_idx].brbinf = src[src_idx].brbinf;
+> +	dst[dst_idx].brbsrc = src[src_idx].brbsrc;
+> +	dst[dst_idx].brbtgt = src[src_idx].brbtgt;
+> +}
+
+C can do struct assignment, so this is the same as:
+
+| static inline void copy_brbe_regset(struct brbe_regset *src, int src_idx,
+| 				    struct brbe_regset *dst, int dst_idx)
+| {
+| 	dst[dst_idx] = src[src_idx];
+| }
+
+... and given that, it would be simpler and clearer to have that directly in
+the caller, so I don't think we need this helper function.
+
+> +/*
+> + * This function concatenates branch records from stored and live buffer
+> + * up to maximum nr_max records and the stored buffer holds the resultant
+> + * buffer. The concatenated buffer contains all the branch records from
+> + * the live buffer but might contain some from stored buffer considering
+> + * the maximum combined length does not exceed 'nr_max'.
+> + *
+> + *	Stored records	Live records
+> + *	------------------------------------------------^
+> + *	|	S0	|	L0	|	Newest	|
+> + *	---------------------------------		|
+> + *	|	S1	|	L1	|		|
+> + *	---------------------------------		|
+> + *	|	S2	|	L2	|		|
+> + *	---------------------------------		|
+> + *	|	S3	|	L3	|		|
+> + *	---------------------------------		|
+> + *	|	S4	|	L4	|		nr_max
+> + *	---------------------------------		|
+> + *	|		|	L5	|		|
+> + *	---------------------------------		|
+> + *	|		|	L6	|		|
+> + *	---------------------------------		|
+> + *	|		|	L7	|		|
+> + *	---------------------------------		|
+> + *	|		|		|		|
+> + *	---------------------------------		|
+> + *	|		|		|	Oldest	|
+> + *	------------------------------------------------V
+> + *
+> + *
+> + * S0 is the newest in the stored records, where as L7 is the oldest in
+> + * the live reocords. Unless the live buffer is detetcted as being full
+> + * thus potentially dropping off some older records, L7 and S0 records
+> + * are contiguous in time for a user task context. The stitched buffer
+> + * here represents maximum possible branch records, contiguous in time.
+> + *
+> + *	Stored records  Live records
+> + *	------------------------------------------------^
+> + *	|	L0	|	L0	|	Newest	|
+> + *	---------------------------------		|
+> + *	|	L0	|	L1	|		|
+> + *	---------------------------------		|
+> + *	|	L2	|	L2	|		|
+> + *	---------------------------------		|
+> + *	|	L3	|	L3	|		|
+> + *	---------------------------------		|
+> + *	|	L4	|	L4	|	      nr_max
+> + *	---------------------------------		|
+> + *	|	L5	|	L5	|		|
+> + *	---------------------------------		|
+> + *	|	L6	|	L6	|		|
+> + *	---------------------------------		|
+> + *	|	L7	|	L7	|		|
+> + *	---------------------------------		|
+> + *	|	S0	|		|		|
+> + *	---------------------------------		|
+> + *	|	S1	|		|    Oldest	|
+> + *	------------------------------------------------V
+> + *	|	S2	| <----|
+> + *	-----------------      |
+> + *	|	S3	| <----| Dropped off after nr_max
+> + *	-----------------      |
+> + *	|	S4	| <----|
+> + *	-----------------
+> + */
+> +static int stitch_stored_live_entries(struct brbe_regset *stored,
+> +				      struct brbe_regset *live,
+> +				      int nr_stored, int nr_live,
+> +				      int nr_max)
+> +{
+> +	int nr_total, nr_excess, nr_last, i;
+> +
+> +	nr_total = nr_stored + nr_live;
+> +	nr_excess = nr_total - nr_max;
+> +
+> +	/* Stored branch records in stitched buffer */
+> +	if (nr_live == nr_max)
+> +		nr_stored = 0;
+> +	else if (nr_excess > 0)
+> +		nr_stored -= nr_excess;
+> +
+> +	/* Stitched buffer branch records length */
+> +	if (nr_total > nr_max)
+> +		nr_last = nr_max;
+> +	else
+> +		nr_last = nr_total;
+> +
+> +	/* Move stored branch records */
+> +	for (i = 0; i < nr_stored; i++)
+> +		copy_brbe_regset(stored, i, stored, nr_last - nr_stored - 1 + i);
+> +
+> +	/* Copy live branch records */
+> +	for (i = 0; i < nr_live; i++)
+> +		copy_brbe_regset(live, i, stored, i);
+> +
+> +	return nr_last;
+> +}
+
+I think this can be written more simply as something like:
+
+static int stitch_stored_live_entries(struct brbe_regset *stored,
+				      struct brbe_regset *live,
+				      int nr_stored, int nr_live,
+				      int nr_max)
+{	
+	int nr_move = max(nr_stored, nr_max - nr_live);
+
+	/* Move the tail of the buffer to make room for the new entries */
+	memmove(&stored[nr_live], &stored[0], nr_move * sizeof(*stored));
+
+	/* Copy the new entries into the head of the buffer */
+	memcpy(stored[0], &live[0], nr_live * sizeof(*stored));
+
+	/* Return the number of entries in the stitched buffer */
+	return min(nr_live + nr_stored, nr_max);
+}
+
+... or if we could save this oldest-first, we could make it a circular buffer
+and avoid moving older entries.
+
+Thanks,
+Mark.
