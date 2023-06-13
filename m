@@ -2,101 +2,162 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02F4C7EE29
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 06:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB77FC7EE29
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 07:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232700AbjFMGmX (ORCPT
+        id S238415AbjFMHEc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 02:42:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39524 "EHLO
+        Tue, 13 Jun 2023 03:04:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231520AbjFMGmW (ORCPT
+        with ESMTP id S234905AbjFMHEc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 02:42:22 -0400
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 259AEE6B;
-        Mon, 12 Jun 2023 23:42:20 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Vl1.3ud_1686638534;
-Received: from 30.240.112.107(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vl1.3ud_1686638534)
-          by smtp.aliyun-inc.com;
-          Tue, 13 Jun 2023 14:42:15 +0800
-Message-ID: <ca66ecce-b8eb-ad22-2b25-bad8552ea5a4@linux.alibaba.com>
-Date:   Tue, 13 Jun 2023 14:42:13 +0800
+        Tue, 13 Jun 2023 03:04:32 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 164A410F7;
+        Tue, 13 Jun 2023 00:04:29 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QgKCp6wPXzqTMw;
+        Tue, 13 Jun 2023 14:59:02 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 13 Jun 2023 15:03:58 +0800
+Subject: Re: [RFC] Adding support for setting the affinity of the recording
+ process
+To:     Namhyung Kim <namhyung@kernel.org>
+CC:     James Clark <james.clark@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+References: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
+ <a24634f7-be80-6ca2-9df7-1624fe11c281@arm.com>
+ <c291692c-7db8-b4cc-e17a-422c75ad8daa@huawei.com>
+ <CAM9d7chqy-RztC943JOgRLcEHvKZN8rS542q3xxW63==KGY3CQ@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <c2f82ca1-8fda-bd0c-4162-3a9e5d867a75@huawei.com>
+Date:   Tue, 13 Jun 2023 15:03:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.1
-Subject: Re: [PATCH 2/2] perf/ring_buffer: Fix high-order allocations for AUX
- space with correct MAX_ORDER limit
+In-Reply-To: <CAM9d7chqy-RztC943JOgRLcEHvKZN8rS542q3xxW63==KGY3CQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
-To:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>
-Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        kirill@shutemov.name, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-References: <20230612052452.53425-1-xueshuai@linux.alibaba.com>
- <20230612052452.53425-3-xueshuai@linux.alibaba.com>
- <751cb217-4be0-ddfc-780b-87517a8e337a@arm.com>
- <20230612090937.GD217089@leoy-huanghe.lan>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20230612090937.GD217089@leoy-huanghe.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hello,
 
-
-On 2023/6/12 17:09, Leo Yan wrote:
-> On Mon, Jun 12, 2023 at 09:45:38AM +0100, James Clark wrote:
+On 2023/6/13 13:50, Namhyung Kim wrote:
+> Hello,
 > 
-> [...]
+> On Mon, Jun 12, 2023 at 7:28 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>
+>> Hello,
+>>
+>> On 2023/6/12 23:27, James Clark wrote:
+>>>
+>>>
+>>> On 12/06/2023 11:26, Yang Jihong wrote:
+>>>> Hello everyone,
+>>>>
+>>>> Currently, perf-record supports profiling an existing process, thread,
+>>>> or a specified command.
+>>>>
+>>>> Sometimes we may need to set CPU affinity of the target process before
+>>>> recording:
+>>>>
+>>>>     # taskset -pc <cpus> <pid>
+>>>>     # perf record -p <pid> -- sleep 10
+>>>>
+>>>> or:
+>>>>
+>>>>     # perf record -- `taskset -c <cpus> COMMAND`
+>>>>
+>>>> I'm thinking about getting perf to support setting the affinity of the
+>>>> recording process, for example:
+>>>>
+>>>> 1. set the CPU affinity of the <pid1> process to <cpus1>, <pid2> process
+>>>> to <cpus2>,  and record:
+>>>>
+>>>>     # perf record -p <pid1>/<cpus1>:<pid2>/<cpus2> -- sleep 10
+>>>>
+>>>
+>>> I'm not sure if this is necessary. You can already do this with taskset
+>>> when you launch the processes or for existing ones.
+>>
+>> Yes, that's what we're doing now, and I'm thinking about whether perf
+>> can support this "taskset" feature.
 > 
->>> @@ -609,8 +609,8 @@ static struct page *rb_alloc_aux_page(int node, int order)
->>>  {
->>>  	struct page *page;
->>>  
->>> -	if (order > MAX_ORDER)
->>> -		order = MAX_ORDER;
->>> +	if (order >= MAX_ORDER)
->>> +		order = MAX_ORDER - 1;
->>>  
->>>  	do {
->>>  		page = alloc_pages_node(node, PERF_AUX_GFP, order);
->>
->>
->> It seems like this was only just recently changed with this as the
->> commit message (23baf83):
->>
->>    mm, treewide: redefine MAX_ORDER sanely
->>
->>   MAX_ORDER currently defined as number of orders page allocator
->>   supports: user can ask buddy allocator for page order between 0 and
->>   MAX_ORDER-1.
->>
->>   This definition is counter-intuitive and lead to number of bugs all
->>   over the kernel.
->>
->>   Change the definition of MAX_ORDER to be inclusive: the range of
->>   orders user can ask from buddy allocator is 0..MAX_ORDER now.
->>
->> It might be worth referring to this in the commit message or adding a
->> fixes: reference. Or maybe this new change isn't quite right?
+> I agree with James that it looks out of scope of perf tools.
+> You can always use `taskset` for external processes.
 > 
-> Good point.  If so, we don't need this patch anymore.
+OK, so let's not consider this scenario.
+>>
+>>>
+>>>> and
+>>>>
+>>>> 2. set CPU affinity of the COMMAND and record:
+>>>>
+>>>>     # perf record --taskset-command <cpus> COMMAND
+>>>>
+>>>> In doing so, perf, as an observer, actually changes some of the
+>>>> properties of the target process, which may be contrary to the purpose
+>>>> of perf tool.
+>>>>
+>>>>
+>>>> Will we consider accepting this approach?
+>>>>
+>>>
+>>> For #2 I do this sometimes, but I prefix the perf command with taskset
+>>> because otherwise there is a small time between when taskset does its
+>>> thing and launching the child process that it runs in the wrong place.
+>>>
+>>> Then one issue with the above method is that perf itself gets pinned to
+>>> those CPUs as well. I suppose that could influence your application but
+>>> I've never had an issue with it.
+>>>
+>>> If you really can't live with perf also being pinned to those CPUs I
+>>> would say it makes sense to add options for #2. Otherwise I would just
+>>> run everything under taskset and no changes are needed.
+>>
+>> If "perf" process and the target process are pinned to the same CPU,
+>> and the CPU usage of the target process is high, the perf data
+>> collection may be affected. Therefore, in this case, we may need to pin
+>> the target process and "perf" to different CPUs.
+>>
+>>>
+>>> I think you would still need to have perf itself pinned to the CPUs just
+>>> before it does the fork and exec, and then after that it can undo its
+>>> pinning. Otherwise you'd still get that small time running on the wrong
+>>> cores.
+>>>
+>>
+>> Thanks for your advice, or we can support setting different affinities
+>> for the "perf" process and the target process.
 > 
-> Thanks for reminding, James.
+> When it comes to controlling `perf`, you can use --threads=<spec>
+> option which supports fairly complex control for parallelism and
+> affinity.
 > 
-> Leo
+Yes, we can ues --threads=<spec>
 
-Hi, Leo and James,
+In addition to the above, or we can simply add a parameter to pin the 
+COMMAND to specific cpus.
 
-I tested on the Linus master tree, the mentioned commit 23baf83 ("mm, treewide: redefine MAX_ORDER sanely")
-has fix this oops.
+Thank you for your reply.
 
-I will drop out this patch, thank you :)
-
-Cheers,
-Shuai
+Thanks,
+Yang.
