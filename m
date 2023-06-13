@@ -2,156 +2,154 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE18C7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 12:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F9EC7EE29
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 12:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240128AbjFMMc3 (ORCPT
+        id S238362AbjFMMzP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 08:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39350 "EHLO
+        Tue, 13 Jun 2023 08:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239539AbjFMMc2 (ORCPT
+        with ESMTP id S242494AbjFMMzF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 08:32:28 -0400
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE0410F9;
-        Tue, 13 Jun 2023 05:32:24 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0Vl2I24-_1686659534;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vl2I24-_1686659534)
-          by smtp.aliyun-inc.com;
-          Tue, 13 Jun 2023 20:32:18 +0800
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-To:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
-        james.clark@arm.com, leo.yan@linaro.org
-Cc:     mingo@redhat.com, baolin.wang@linux.alibaba.com, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@kernel.org, namhyung@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [Patch v2] perf/core: Bail out early if the request AUX area is out of bound
-Date:   Tue, 13 Jun 2023 20:32:11 +0800
-Message-Id: <20230613123211.58393-1-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 13 Jun 2023 08:55:05 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C18310D9
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 05:55:02 -0700 (PDT)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35DCm1h2025237;
+        Tue, 13 Jun 2023 12:54:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : to : from : subject : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=rsPuJJYG9Be+v3MNrxRf5oon4U570jj76RnQ/+s6rYE=;
+ b=Zio+rSPjxQd2glswJlXodTagaGKWd4rDK8GQkSVLkaSBrEyWoNE4FOZs7wGJek9yzh58
+ m9B79oe+sO9/ZI8E5vPhpOUorlxA0n6VzuXcX5X257L6MfsolHsQy6FX0d0tqlkg1YEp
+ cq2RgdaAu1M/JTYEZMAVV491PB3Z7qUpCm3fEuvallLuJKDCzXTC1E6xFHvBIv7AjJ1C
+ Uh3ljgFrXgHxsuH+7C75WL8U1P+KQSLFe9eYcKv9W8dCC8NZdH9iRjHnwY1XLU2qWI+o
+ 9EQ898jQ7N40kx/PXsJ6UiMkhpx2B0H0gzUQzN3+LGTWBx8uDspUG5RlIVe/HWVRPgu4 fA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6rrx84tq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Jun 2023 12:54:57 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35DCn4bs028478;
+        Tue, 13 Jun 2023 12:54:56 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6rrx84t0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Jun 2023 12:54:56 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35D50Jei029825;
+        Tue, 13 Jun 2023 12:54:54 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3r4gedsksr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Jun 2023 12:54:53 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35DCspb822545018
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Jun 2023 12:54:51 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64E9520043;
+        Tue, 13 Jun 2023 12:54:51 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4292E20040;
+        Tue, 13 Jun 2023 12:54:51 +0000 (GMT)
+Received: from [9.152.212.165] (unknown [9.152.212.165])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 13 Jun 2023 12:54:51 +0000 (GMT)
+Message-ID: <d5319870-7569-c353-1777-31ee090f8da8@linux.ibm.com>
+Date:   Tue, 13 Jun 2023 14:54:51 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US
+To:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Subject: perf test failures in linux-next on s390
+Organization: IBM
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: PEQljUgjj43kju_nG07H42ZkD2A9kOAF
+X-Proofpoint-ORIG-GUID: XsHYyAdu7tzs3zVDy9ai3GuW--VWU4up
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-13_04,2023-06-12_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ clxscore=1015 priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxscore=0
+ adultscore=0 impostorscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306130110
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When perf-record with a large AUX area, e.g 4GB, it fails with:
+Hi all,
 
-    #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
-    failed to mmap with 12 (Cannot allocate memory)
+I have run the perf test suite on the current 6.4rc6 kernel and see just one error:
+# ./perf test 2>&1 | fgrep FAILED
+fgrep: warning: fgrep is obsolescent; using grep -F
+ 42.3: BPF prologue generation                                       : FAILED!
+# 
 
-and it reveals a WARNING with __alloc_pages():
+However when I download the linux-next tree and build kernel and perf
+tool with the same kernel config file, I get a bunch of failing test cases,
+many with perf tool dumping core:
 
-[   66.595604] ------------[ cut here ]------------
-[   66.600206] WARNING: CPU: 44 PID: 17573 at mm/page_alloc.c:5568 __alloc_pages+0x1ec/0x248
-[   66.608375] Modules linked in: ip6table_filter(E) ip6_tables(E) iptable_filter(E) ebtable_nat(E) ebtables(E) aes_ce_blk(E) vfat(E) fat(E) aes_ce_cipher(E) crct10dif_ce(E) ghash_ce(E) sm4_ce_cipher(E) sm4(E) sha2_ce(E) sha256_arm64(E) sha1_ce(E) acpi_ipmi(E) sbsa_gwdt(E) sg(E) ipmi_si(E) ipmi_devintf(E) ipmi_msghandler(E) ip_tables(E) sd_mod(E) ast(E) drm_kms_helper(E) syscopyarea(E) sysfillrect(E) nvme(E) sysimgblt(E) i2c_algo_bit(E) nvme_core(E) drm_shmem_helper(E) ahci(E) t10_pi(E) libahci(E) drm(E) crc64_rocksoft(E) i40e(E) crc64(E) libata(E) i2c_core(E)
-[   66.657719] CPU: 44 PID: 17573 Comm: perf Kdump: loaded Tainted: G            E      6.3.0-rc4+ #58
-[   66.666749] Hardware name: Default Default/Default, BIOS 1.2.M1.AL.P.139.00 03/22/2023
-[   66.674650] pstate: 23400009 (nzCv daif +PAN -UAO +TCO +DIT -SSBS BTYPE=--)
-[   66.681597] pc : __alloc_pages+0x1ec/0x248
-[   66.685680] lr : __kmalloc_large_node+0xc0/0x1f8
-[   66.690285] sp : ffff800020523980
-[   66.693585] pmr_save: 000000e0
-[   66.696624] x29: ffff800020523980 x28: ffff000832975800 x27: 0000000000000000
-[   66.703746] x26: 0000000000100000 x25: 0000000000100000 x24: ffff8000083615d0
-[   66.710866] x23: 0000000000040dc0 x22: ffff000823d6d140 x21: 000000000000000b
-[   66.717987] x20: 000000000000000b x19: 0000000000000000 x18: 0000000000000030
-[   66.725108] x17: 0000000000000000 x16: ffff800008f05be8 x15: ffff000823d6d6d0
-[   66.732229] x14: 0000000000000000 x13: 343373656761705f x12: 726e202c30206574
-[   66.739350] x11: 00000000ffff7fff x10: 00000000ffff7fff x9 : ffff8000083af570
-[   66.746471] x8 : 00000000000bffe8 x7 : c0000000ffff7fff x6 : 000000000005fff4
-[   66.753592] x5 : 0000000000000000 x4 : ffff000823d6d8d8 x3 : 0000000000000000
-[   66.760713] x2 : 0000000000000000 x1 : 0000000000000001 x0 : 0000000000040dc0
-[   66.767834] Call trace:
-[   66.770267]  __alloc_pages+0x1ec/0x248
-[   66.774003]  __kmalloc_large_node+0xc0/0x1f8
-[   66.778259]  __kmalloc_node+0x134/0x1e8
-[   66.782081]  rb_alloc_aux+0xe0/0x298
-[   66.785643]  perf_mmap+0x440/0x660
-[   66.789031]  mmap_region+0x308/0x8a8
-[   66.792593]  do_mmap+0x3c0/0x528
-[   66.795807]  vm_mmap_pgoff+0xf4/0x1b8
-[   66.799456]  ksys_mmap_pgoff+0x18c/0x218
-[   66.803365]  __arm64_sys_mmap+0x38/0x58
-[   66.807187]  invoke_syscall+0x50/0x128
-[   66.810922]  el0_svc_common.constprop.0+0x58/0x188
-[   66.815698]  do_el0_svc+0x34/0x50
-[   66.818999]  el0_svc+0x34/0x108
-[   66.822127]  el0t_64_sync_handler+0xb8/0xc0
-[   66.826296]  el0t_64_sync+0x1a4/0x1a8
-[   66.829946] ---[ end trace 0000000000000000 ]---
+# perf test 2>&1 | fgrep FAILED
+fgrep: warning: fgrep is obsolescent; using grep -F
+  6.1: Test event parsing                                            : FAILED!
+ 10.3: Parsing of PMU event table metrics                            : FAILED!
+ 10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
+ 17: Setup struct perf_event_attr                                    : FAILED!
+ 24: Number of exit events of a simple workload                      : FAILED! core-dump
+ 28: Use a dummy software event to keep tracking                     : FAILED!
+ 35: Track with sched_switch                                         : FAILED!
+ 42.3: BPF prologue generation                                       : FAILED!
+ 66: Parse and process metrics                                       : FAILED!
+ 68: Event expansion for cgroups                                     : FAILED!
+ 69.2: Perf time to TSC                                              : FAILED! core-dump
+ 74: build id cache operations                                       : FAILED! core-dump
+ 81: kernel lock contention analysis test                            : FAILED!
+ 86: Zstd perf.data compression/decompression                        : FAILED! core-dump
+ 87: perf record tests                                               : FAILED! core-dump
+ 94: perf all metricgroups test                                      : FAILED!
+ 95: perf all metrics test                                           : FAILED!
+106: Test java symbol                                                : FAILED! core-dump
+#
 
-'rb->aux_pages' allocated by kcalloc() is a pointer array which is used to
-maintains AUX trace pages. The allocated page for this array is physically
-contiguous (and virtually contiguous) with an order of 0..MAX_ORDER. If the
-size of pointer array crosses the limitation set by MAX_ORDER, it reveals a
-WARNING.
+I am afraid this will show up pretty soon in the linux tree.
+I am going to look into each failure in the next few days.
 
-So bail out early with -EINVAL if the request AUX area is out of bound,
-e.g.:
+What I already found out is that many test cases now fail due to the
+event/PMU rework, here is one example:
 
-    #perf record -C 0 -m ,4G -e arm_spe_0// -- sleep 1
-    failed to mmap with 22 (Invalid argument)
+# perf test -Fvvvv 95
+95: perf all metrics test
+--- start ---
+Testing cpi
+....
+Metric 'transaction' not printed in:
+Error:
+The TX_NC_TABORT event is not supported.
+---- end ----
+perf all metrics test: FAILED!
+# ls -l /sys/devices/cpum_cf/events/TX_NC_TABORT
+-r--r--r--. 1 root root 4096 Jun 13 13:49 /sys/devices/cpum_cf/events/TX_NC_TABORT
+# 
 
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
-changes since v1:
-- drop out patch2 because it has been fixed on upstream (Thanks James for reminding)
-- move sanity check into rb_alloc_aux (per Leo)
-- add overflow check (per James)
----
- kernel/events/ring_buffer.c              | 13 +++++++++++++
- tools/perf/Documentation/perf-record.txt |  3 ++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+As can be seen, the event is definitely there and supported.
+This same test case succeeds in the linux tree!
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index a0433f37b024..e514aaba9d42 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -673,6 +673,7 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
- 	bool overwrite = !(flags & RING_BUFFER_WRITABLE);
- 	int node = (event->cpu == -1) ? -1 : cpu_to_node(event->cpu);
- 	int ret = -ENOMEM, max_order;
-+	size_t bytes;
- 
- 	if (!has_aux(event))
- 		return -EOPNOTSUPP;
-@@ -699,6 +700,18 @@ int rb_alloc_aux(struct perf_buffer *rb, struct perf_event *event,
- 		watermark = 0;
- 	}
- 
-+	/*
-+	 * 'rb->aux_pages' allocated by kcalloc() is a pointer array which is
-+	 * used to maintains AUX trace pages. The allocated page for this array
-+	 * is physically contiguous (and virtually contiguous) with an order of
-+	 * 0..MAX_ORDER. If the size of pointer array crosses the limitation set
-+	 * by MAX_ORDER, it reveals a WARNING.
-+	 *
-+	 * So bail out early if the request AUX area is out of bound.
-+	 */
-+	if (check_mul_overflow(nr_pages, sizeof(void *), &bytes) ||
-+	    get_order(bytes) > MAX_ORDER)
-+		return -EINVAL;
- 	rb->aux_pages = kcalloc_node(nr_pages, sizeof(void *), GFP_KERNEL,
- 				     node);
- 	if (!rb->aux_pages)
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 680396c56bd1..5d8d3ad084ed 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -290,7 +290,8 @@ OPTIONS
- 	specification with appended unit character - B/K/M/G. The
- 	size is rounded up to have nearest pages power of two value.
- 	Also, by adding a comma, the number of mmap pages for AUX
--	area tracing can be specified.
-+	area tracing can be specified. With MAX_ORDER set as 10 on
-+	arm64 platform , the maximum AUX area is limited to 2GiB.
- 
- -g::
- 	Enables call-graph (stack chain/backtrace) recording for both
+Hopefully I can sort out some of the failures before this code show up
+in the linux tree.
 -- 
-2.20.1.12.g72788fdb
-
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
