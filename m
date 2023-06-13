@@ -2,48 +2,54 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A43C88CB4
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 01:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E323C7EE43
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 02:03:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbjFMBcK (ORCPT
+        id S237308AbjFMCDt (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 21:32:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
+        Mon, 12 Jun 2023 22:03:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237654AbjFMBcK (ORCPT
+        with ESMTP id S229742AbjFMCDs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 21:32:10 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9590BE56;
-        Mon, 12 Jun 2023 18:32:08 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Qg9vk0XyQztQr4;
-        Tue, 13 Jun 2023 09:29:38 +0800 (CST)
+        Mon, 12 Jun 2023 22:03:48 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0AAE55;
+        Mon, 12 Jun 2023 19:03:45 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QgBYM5Phyz18Lnb;
+        Tue, 13 Jun 2023 09:58:47 +0800 (CST)
 Received: from [10.67.111.205] (10.67.111.205) by
  kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 13 Jun 2023 09:32:05 +0800
-Subject: Re: [PATCH v2] perf stat: Add missing newline in pr_err messages
+ 15.1.2507.23; Tue, 13 Jun 2023 10:03:42 +0800
+Subject: Re: [RFC] Adding support for setting the affinity of the recording
+ process
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230610094441.221525-1-yangjihong1@huawei.com>
- <ZIdqHeZOWCztKVe2@kernel.org>
+CC:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
+ <ZIcqmlHIfBbyZFDl@kernel.org>
 From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <cd1d5a4b-e69c-84c9-3e27-d197042df904@huawei.com>
-Date:   Tue, 13 Jun 2023 09:32:05 +0800
+Message-ID: <5531be0b-a421-fc92-9798-afdb58fc9336@huawei.com>
+Date:   Tue, 13 Jun 2023 10:03:41 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.6.1
 MIME-Version: 1.0
-In-Reply-To: <ZIdqHeZOWCztKVe2@kernel.org>
+In-Reply-To: <ZIcqmlHIfBbyZFDl@kernel.org>
 Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  kwepemm600003.china.huawei.com (7.193.23.202)
 X-CFilter-Loop: Reflected
 Precedence: bulk
@@ -52,30 +58,83 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 Hello,
 
-On 2023/6/13 2:55, Arnaldo Carvalho de Melo wrote:
-> Em Sat, Jun 10, 2023 at 09:44:41AM +0000, Yang Jihong escreveu:
->> The newline is missing for error messages in add_default_attributes()
+Sorry, I forgot to add another recipient in the last email. Send it again.
+
+On 2023/6/12 22:24, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Jun 12, 2023 at 06:26:10PM +0800, Yang Jihong escreveu:
+>> Hello everyone,
 >>
->> Before:
+>> Currently, perf-record supports profiling an existing process, thread, or a
+>> specified command.
 >>
->>    # perf stat --topdown
->>    Topdown requested but the topdown metric groups aren't present.
->>    (See perf list the metric groups have names like TopdownL1)#
+>> Sometimes we may need to set CPU affinity of the target process before
+>> recording:
 >>
->> After:
+>>    # taskset -pc <cpus> <pid>
+>>    # perf record -p <pid> -- sleep 10
 >>
->>    # perf stat --topdown
->>    Topdown requested but the topdown metric groups aren't present.
->>    (See perf list the metric groups have names like TopdownL1)
->>    #
+>> or:
 >>
->> In addition, perf_stat_init_aggr_mode() and perf_stat_init_aggr_mode_file()
->> have the same problem, fixed by the way.
+>>    # perf record -- `taskset -c <cpus> COMMAND`
+>>
+>> I'm thinking about getting perf to support setting the affinity of the
+>> recording process, for example:
 > 
-> Wait a bit till I push what I had to perf-tools-next, as it is not
-> applying right now:
-OK, I'm doing the patch based on the mainline, and if I need to do it 
-based on the perf-tools-next branch, I'll reissue it.
+> not of the 'recording process' but the 'observed process', right?
+> 
+
+
+Yes, it's the process of being observed.
+
+>> 1. set the CPU affinity of the <pid1> process to <cpus1>, <pid2> process to
+>> <cpus2>,  and record:
+>>
+>>    # perf record -p <pid1>/<cpus1>:<pid2>/<cpus2> -- sleep 10
+> 
+> but what would be the semantic for what is being observed? Would this
+> result in it recording events on that CPU or just for that process (that
+> now runs just on that CPU)?
+> 
+
+just for the process running on a specific CPU.
+
+> Without affinity setting that could mean: observe just that process when
+> it runs on that CPU.
+> 
+> But could you please spell out the use case, why do you need this, is
+> this so common (for you) that you repeatedly need to first taskset, then
+> perf, etc?
+
+As Peter said, big.LITTLE is a common scenario where a process may 
+behave differently on different CPUs.
+
+There are other scenarios. For example, if I run a server and a client 
+and do not set affinity for them, they may sometimes run on the same 
+NUMA node or on different NUMA nodes due to scheduling reasons.
+In this case, the performance may fluctuate due to reasons such as cache 
+miss.  When analyzing performance problems, we sometimes care about 
+stability.
+
+>   
+>> and
+>>
+>> 2. set CPU affinity of the COMMAND and record:
+>>
+>>    # perf record --taskset-command <cpus> COMMAND
+>>
+>> In doing so, perf, as an observer, actually changes some of the properties
+>> of the target process, which may be contrary to the purpose of perf tool.
+> 
+> Up for discussion, but I don't think this is that much a problem if it
+> streamlines common observability sessions/experimentations.
+
+If the perf is used to set the affinity of the observed process, it 
+actually interferes with some behavior of the target process (such as 
+affecting scheduling).
+In this scenario, the perf is not just a simple observer. Therefore, I 
+am not sure whether this behavior is acceptable.
+
+Thank you for your reply.
 
 Thanks,
 Yang.
