@@ -2,139 +2,332 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD24AC7EE2E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 02:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40ADEC7EE43
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 02:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237564AbjFMC2b (ORCPT
+        id S236081AbjFMCcR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 22:28:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42744 "EHLO
+        Mon, 12 Jun 2023 22:32:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239035AbjFMC20 (ORCPT
+        with ESMTP id S232146AbjFMCcP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 22:28:26 -0400
+        Mon, 12 Jun 2023 22:32:15 -0400
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15C55199E;
-        Mon, 12 Jun 2023 19:28:17 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QgC7p48VDzLq8m;
-        Tue, 13 Jun 2023 10:25:10 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 13 Jun 2023 10:28:14 +0800
-Subject: Re: [RFC] Adding support for setting the affinity of the recording
- process
-To:     James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-References: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
- <a24634f7-be80-6ca2-9df7-1624fe11c281@arm.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <c291692c-7db8-b4cc-e17a-422c75ad8daa@huawei.com>
-Date:   Tue, 13 Jun 2023 10:28:14 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C9C7E71
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 19:32:13 -0700 (PDT)
+Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QgCHK32GZzTkkk;
+        Tue, 13 Jun 2023 10:31:41 +0800 (CST)
+Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
+ (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 13 Jun
+ 2023 10:32:09 +0800
+Date:   Tue, 13 Jun 2023 10:31:55 +0800
+From:   Changbin Du <changbin.du@huawei.com>
+To:     Ian Rogers <irogers@google.com>
+CC:     Changbin Du <changbin.du@huawei.com>,
+        <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        <hw.huiwang@huawei.com>
+Subject: Re: [Issue] perf report gets stuck at addr2line
+Message-ID: <20230613023155.ewu4ipi3ldd7hevj@M910t>
+References: <20230609033128.ujodex56vkha2ifr@M910t>
+ <CAP-5=fVWhp_cMpgwTRiO+bC7tKKGvKsavRVVDW-k9qYB7ZoXWg@mail.gmail.com>
+ <CAP-5=fWRpZSYcuuiSKGL4cS+SDBaSA6GBXJuw-gQAir+4EsagA@mail.gmail.com>
+ <20230612021405.kcaccxchmb5juep4@M910t>
+ <CAP-5=fUySkKsAzx-O4-iLsqjhqd53vkx6Wmw+rj5UUrOB88h6A@mail.gmail.com>
+ <20230612131042.vkwoaucccwdrhl5a@M910t>
+ <20230612131750.yisfy7zan64beg7y@M910t>
+ <CAP-5=fWdvMVOiZDhqiz1R9hucz+6+ho_L3jBixqP3YLcJD7Lew@mail.gmail.com>
+ <20230613022017.wmukzivie4q3gmcp@M910t>
+ <CAP-5=fUcO1cgBhfYx-4RMBJC=fqMXjaD7jYw6SYvnZ-e+vVN-A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <a24634f7-be80-6ca2-9df7-1624fe11c281@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
+In-Reply-To: <CAP-5=fUcO1cgBhfYx-4RMBJC=fqMXjaD7jYw6SYvnZ-e+vVN-A@mail.gmail.com>
+X-Originating-IP: [10.110.54.157]
 X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+ kwepemi500013.china.huawei.com (7.221.188.120)
 X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
-
-On 2023/6/12 23:27, James Clark wrote:
+On Mon, Jun 12, 2023 at 07:25:41PM -0700, Ian Rogers wrote:
+> On Mon, Jun 12, 2023 at 7:20 PM Changbin Du <changbin.du@huawei.com> wrote:
+> >
+> > On Mon, Jun 12, 2023 at 08:55:14AM -0700, Ian Rogers wrote:
+> > > On Mon, Jun 12, 2023 at 6:18 AM Changbin Du <changbin.du@huawei.com> wrote:
+> > >
+> > > Thanks Changbin, this should have hit the 0x0...0 sentinel match:
+> > >
+> > > https://lore.kernel.org/lkml/20230609235419.204624-2-irogers@google.com/
+> > > + } else {
+> > > + int zero_count = 0, non_zero_count = 0;
+> > > +
+> > > + /* The address should always start 0x. */
+> > > + if (line_len < 2 || line[0] != '0' || line[1] != 'x')
+> > > + goto error;
+> > > +
+> > > + for (size_t i = 2; i < line_len; i++) {
+> > > + if (line[i] == '0')
+> > > + zero_count++;
+> > > + else
+> > > + non_zero_count++;
+> > > + }
+> > > + if (!non_zero_count) {
+> > > + int ch;
+> > > +
+> > > + if (!zero_count) {
+> > > + /* Line was erroneous just '0x'. */
+> > > + goto error;
+> > > + }
+> > > + /*
+> > > + * Line was 0x0..0, the sentinel for binutils. Remove
+> > > + * the function and filename lines.
+> > > + */
+> > > + zfree(&line);
+> > > + do {
+> > > + ch = io__get_char(io);
+> > > + } while (ch > 0 && ch != '\n');
+> > > + do {
+> > > + ch = io__get_char(io);
+> > > + } while (ch > 0 && ch != '\n');
+> > > + return 0;
+> > > + }
+> > >   }
+> > >
+> > > That doesn't use io__getline - so we've not matched the 0x0...0 case
+> > > to terminate the records. Could you add some logging/debug?
+> > >
+> > I printed every charactor got by io__get_char(), based on previous debug change.
+> > Please see logs below.
+> >
+> > # To display the perf.data header info, please use --header/--header-only options.
+> > #
+> > addr2line: /home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf, addr ffffffff81e000aa
+> > subprocess: addr2line -e /home/changbin/.debug/.build-id/5e/2fa721660d663f38b6e1aa98d6fa3776974b54/elf -a -i -f
+> > io__get_char: '0'
+> > io__get_char: 'x'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '
+> > '
+> > io__get_char: '_'
+> > io__get_char: '_'
+> > io__get_char: 'p'
+> > io__get_char: 'e'
+> > io__get_char: 'r'
+> > io__get_char: '_'
+> > io__get_char: 'c'
+> > io__get_char: 'p'
+> > io__get_char: 'u'
+> > io__get_char: '_'
+> > io__get_char: 's'
+> > io__get_char: 't'
+> > io__get_char: 'a'
+> > io__get_char: 'r'
+> > io__get_char: 't'
+> > io__get_char: '
+> > '
+> > io__get_char: '?'
+> > io__get_char: '?'
+> > io__get_char: ':'
+> > io__get_char: '?'
+> > io__get_char: '
+> > '
+> > read_addr2line_record
+> > io__getline: start
+> > io__get_char: '0'
+> > io__get_char: 'x'
+> > io__get_char: 'f'
+> > io__get_char: 'f'
+> > io__get_char: 'f'
+> > io__get_char: 'f'
+> > io__get_char: 'f'
+> > io__get_char: 'f'
+> > io__get_char: 'f'
+> > io__get_char: 'f'
+> > io__get_char: '8'
+> > io__get_char: '1'
+> > io__get_char: 'e'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: 'a'
+> > io__get_char: 'a'
+> > io__get_char: '
+> > '
+> > io__getline: 0xffffffff81e000aa
+> >
+> > io__getline: start
+> > io__get_char: 'e'
+> > io__get_char: 'n'
+> > io__get_char: 't'
+> > io__get_char: 'r'
+> > io__get_char: 'y'
+> > io__get_char: '_'
+> > io__get_char: 'S'
+> > io__get_char: 'Y'
+> > io__get_char: 'S'
+> > io__get_char: 'C'
+> > io__get_char: 'A'
+> > io__get_char: 'L'
+> > io__get_char: 'L'
+> > io__get_char: '_'
+> > io__get_char: '6'
+> > io__get_char: '4'
+> > io__get_char: '_'
+> > io__get_char: 'a'
+> > io__get_char: 'f'
+> > io__get_char: 't'
+> > io__get_char: 'e'
+> > io__get_char: 'r'
+> > io__get_char: '_'
+> > io__get_char: 'h'
+> > io__get_char: 'w'
+> > io__get_char: 'f'
+> > io__get_char: 'r'
+> > io__get_char: 'a'
+> > io__get_char: 'm'
+> > io__get_char: 'e'
+> > io__get_char: '
+> > '
+> > io__getline: entry_SYSCALL_64_after_hwframe
+> >
+> > io__getline: start
+> > io__get_char: '?'
+> > io__get_char: '?'
+> > io__get_char: ':'
+> > io__get_char: '?'
+> > io__get_char: '
+> > '
+> > io__getline: ??:?
+> >
+> > read_addr2line_record
+> > io__getline: start
+> > io__get_char: '0'
+> > io__get_char: 'x'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '0'
+> > io__get_char: '
+> > '
+> > io__getline: 0x0000000000000000
+> >
+> > io__getline: start
+> > io__get_char: '_'
+> > io__get_char: '_'
+> > io__get_char: 'p'
+> > io__get_char: 'e'
+> > io__get_char: 'r'
+> > io__get_char: '_'
+> > io__get_char: 'c'
+> > io__get_char: 'p'
+> > io__get_char: 'u'
+> > io__get_char: '_'
+> > io__get_char: 's'
+> > io__get_char: 't'
+> > io__get_char: 'a'
+> > io__get_char: 'r'
+> > io__get_char: 't'
+> > io__get_char: '
+> > '
+> > io__getline: __per_cpu_start
+> >
+> > io__getline: start
+> > io__get_char: '?'
+> > io__get_char: '?'
+> > io__get_char: ':'
+> > io__get_char: '?'
+> > io__get_char: '
+> > '
+> > io__getline: ??:?
+> >
+> > read_addr2line_record
+> > io__getline: start
+> > [stuck]
 > 
 > 
-> On 12/06/2023 11:26, Yang Jihong wrote:
->> Hello everyone,
->>
->> Currently, perf-record supports profiling an existing process, thread,
->> or a specified command.
->>
->> Sometimes we may need to set CPU affinity of the target process before
->> recording:
->>
->>    # taskset -pc <cpus> <pid>
->>    # perf record -p <pid> -- sleep 10
->>
->> or:
->>
->>    # perf record -- `taskset -c <cpus> COMMAND`
->>
->> I'm thinking about getting perf to support setting the affinity of the
->> recording process, for example:
->>
->> 1. set the CPU affinity of the <pid1> process to <cpus1>, <pid2> process
->> to <cpus2>,  and record:
->>
->>    # perf record -p <pid1>/<cpus1>:<pid2>/<cpus2> -- sleep 10
->>
+> Cool. Looks like the terminating '\n' is the issue. It is specified to
+> be part of getline. Can you tweak:
 > 
-> I'm not sure if this is necessary. You can already do this with taskset
-> when you launch the processes or for existing ones.
-
-Yes, that's what we're doing now, and I'm thinking about whether perf 
-can support this "taskset" feature.
-
+> + if (line[i] == '0')
+> + zero_count++;
+> + else
+> + non_zero_count++;
 > 
->> and
->>
->> 2. set CPU affinity of the COMMAND and record:
->>
->>    # perf record --taskset-command <cpus> COMMAND
->>
->> In doing so, perf, as an observer, actually changes some of the
->> properties of the target process, which may be contrary to the purpose
->> of perf tool.
->>
->>
->> Will we consider accepting this approach?
->>
+> to be:
 > 
-> For #2 I do this sometimes, but I prefix the perf command with taskset
-> because otherwise there is a small time between when taskset does its
-> thing and launching the child process that it runs in the wrong place.
-> 
-> Then one issue with the above method is that perf itself gets pinned to
-> those CPUs as well. I suppose that could influence your application but
-> I've never had an issue with it.
-> 
-> If you really can't live with perf also being pinned to those CPUs I
-> would say it makes sense to add options for #2. Otherwise I would just
-> run everything under taskset and no changes are needed.
-
-If "perf" process and the target process are pinned to the same CPU, 
-and the CPU usage of the target process is high, the perf data 
-collection may be affected. Therefore, in this case, we may need to pin 
-the target process and "perf" to different CPUs.
-
-> 
-> I think you would still need to have perf itself pinned to the CPUs just
-> before it does the fork and exec, and then after that it can undo its
-> pinning. Otherwise you'd still get that small time running on the wrong
-> cores.
+> + if (line[i] == '0')
+> + zero_count++;
+> + else if (line[i] != '\n')
+> + non_zero_count++;
 >
+Wonderful, this works. The issue is gone with this change. :)
 
-Thanks for your advice, or we can support setting different affinities 
-for the "perf" process and the target process.
+> Thanks,
+> Ian
+> 
+> > > Thanks,
+> > > Ian
+> > >
+> > > > > > Thanks,
+> > > > > > Ian
+> > > > > >
+> > > > > > > >
+> > > > > > > > > Thanks,
+> > > > > > > > > Ian
+> > > > > > > > >
+> > > > > > > > > > --
+> > > > > > > > > > Cheers,
+> > > > > > > > > > Changbin Du
+> > > > > > >
+> > > > > > > --
+> > > > > > > Cheers,
+> > > > > > > Changbin Du
+> > > > >
+> > > > > --
+> > > > > Cheers,
+> > > > > Changbin Du
+> > > >
+> > > > --
+> > > > Cheers,
+> > > > Changbin Du
+> >
+> > --
+> > Cheers,
+> > Changbin Du
 
-
-Thanks,
-Yang.
+-- 
+Cheers,
+Changbin Du
