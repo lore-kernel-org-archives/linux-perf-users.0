@@ -2,118 +2,177 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36F4EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 23:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18696EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 23:58:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230397AbjFMXyX (ORCPT
+        id S232550AbjFMX6E (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 19:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45376 "EHLO
+        Tue, 13 Jun 2023 19:58:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231261AbjFMXyV (ORCPT
+        with ESMTP id S232582AbjFMX6D (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 19:54:21 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F101A133
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 16:54:20 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-568a85f180dso1615637b3.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 16:54:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686700460; x=1689292460;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ODADh2/mryUBDglURqREmr6yodTQNUKqEDhn1SIiUKE=;
-        b=1+a4OAzheaxWB6Fs48FVvZhPMlhRhcAEKc+wZFy2mYaROQ4/CIjOqFzXHUiDSulmZB
-         okFdkxxSPhuwilNsWXqXOqcPgenucYnXrD9w0q57jtsob59xLOuW604UojdeMWqzhmW8
-         20HzmDMmHF6XylCkrKZ7n16H8+OnQMH2cSKgRxrVN4bPfx0Gj9d0G029yVzRSbz50ynD
-         gs3ot1rGqtxLVQxK1hWyU7JBEzoe9tYoQWf9XqyM1kI2dGENMym0mkFvdDFTS8m8DoWY
-         slKSQA1RpFGDM5gYMyLDziVJYn+AbUctI34bB5QPNUHAVqb+dYsoD/kEx/NxwWsNm1K8
-         K2TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686700460; x=1689292460;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ODADh2/mryUBDglURqREmr6yodTQNUKqEDhn1SIiUKE=;
-        b=XenxIjyRJ2wrAJwCSiOuaL/tqXj0NTeppkwtR+eam1MNw3zQBSqvejpca9edbluvU0
-         MVlyQLm7bI+uhAksk1xB/tO3yzujrhBF1MwDP4BFRjOlQcmNUyVNyxmjJiCWxRQb97aP
-         /tcyZJCQcDulU38sCRmBrjzUKiGOT6yYr4Xn+Cfa1B/bTkQ2/uIthSXQG4qahRIGvc9S
-         4WvjOhMaup1t2xpYcIGle08iaAvIi/imsAepKjA+XeLiuN3VffFvuaffgUdIECCzvyQi
-         FQnDv9qBUga+TnWIZl4cVrbuUEjw2pigMi+asMUrbglEcSsCk5oFy9zrEjgzEphqy4p7
-         Utgw==
-X-Gm-Message-State: AC+VfDyG3AWFrDxBsLtffVDdRr4opz/SbJGHdrUJi+7xt798fcfU9DYe
-        jY4MvsK/pG0jpw19nkRZDS2gHdzs2n9a
-X-Google-Smtp-Source: ACHHUZ4U/uezOjHFsiCHbijXEkHpLrUfWwcLpnZve1AsG4fg3JDmGads4DZMgM7+ZV1AQboeZXDXd32zmYT3
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:760e:823d:517d:3f56])
- (user=irogers job=sendgmr) by 2002:a81:b641:0:b0:56c:e6fa:6ce9 with SMTP id
- h1-20020a81b641000000b0056ce6fa6ce9mr125243ywk.8.1686700460239; Tue, 13 Jun
- 2023 16:54:20 -0700 (PDT)
-Date:   Tue, 13 Jun 2023 16:54:16 -0700
-Message-Id: <20230613235416.1650755-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1] perf tool x86: Fix perf_env memory leak
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 13 Jun 2023 19:58:03 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BFCC12E;
+        Tue, 13 Jun 2023 16:58:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686700682; x=1718236682;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=h+6OfsSluCawClvrO2Il9k8paXcrOgv8viJ3PyYy2tg=;
+  b=COmtgGaSqL4UDH3mYN889Ol1D43AZnNxKxk9jcmRX0cMlmMIhJxIULVR
+   3lwAZMsjZHAJcjgM2LMoP6QMDUBbF/E8x/yVDMkh2Rbay1IYEcvakTxfa
+   0jcVaV6NuPfdBNUq570ATfvfrpAaqxppQahg/d0RXGjINjo3sHYQ2pxZZ
+   /w8R0NECvzXSEto8G6v4YBYRMID7JH8yFW74zuCFbgLlXeNstDEjLaHbe
+   q6GbaBsOKmTGP47fQkotozU5mpPXCFQJ9PpgSGUmGzs383GpzCu06stjR
+   cfZp/iagC0QdszjsJchPlolSmfNT/WQr2Qn7HuzitxNX4fHERwVUisul2
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="343171431"
+X-IronPort-AV: E=Sophos;i="6.00,241,1681196400"; 
+   d="scan'208";a="343171431"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 16:58:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="958597777"
+X-IronPort-AV: E=Sophos;i="6.00,241,1681196400"; 
+   d="scan'208";a="958597777"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Jun 2023 16:58:01 -0700
+Received: from [10.251.24.95] (kliang2-mobl1.ccr.corp.intel.com [10.251.24.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 92FA8580BEE;
+        Tue, 13 Jun 2023 16:57:59 -0700 (PDT)
+Message-ID: <1d5f51e0-d187-14af-a349-437407404e5f@linux.intel.com>
+Date:   Tue, 13 Jun 2023 19:57:58 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH 2/8] perf evsel: Fix the annotation for hardware events on
+ hybrid
+Content-Language: en-US
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ian Rogers <irogers@google.com>, mingo@redhat.com,
+        peterz@infradead.org, namhyung@kernel.org, jolsa@kernel.org,
+        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        eranian@google.com, ahmad.yasin@intel.com
+References: <20230607162700.3234712-1-kan.liang@linux.intel.com>
+ <20230607162700.3234712-3-kan.liang@linux.intel.com>
+ <CAP-5=fVz1zgwdJVs1V7putUdp9wf-QKWH1Ky-heLoHWgnJu6dg@mail.gmail.com>
+ <7487eff9-5769-1701-ea1b-45dd5ab67c85@linux.intel.com>
+ <ZIjdDFJHYuK7rdmD@kernel.org>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <ZIjdDFJHYuK7rdmD@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Found by leak sanitizer:
-```
-==1632594==ERROR: LeakSanitizer: detected memory leaks
 
-Direct leak of 21 byte(s) in 1 object(s) allocated from:
-    #0 0x7f2953a7077b in __interceptor_strdup ../../../../src/libsanitizer/asan/asan_interceptors.cpp:439
-    #1 0x556701d6fbbf in perf_env__read_cpuid util/env.c:369
-    #2 0x556701d70589 in perf_env__cpuid util/env.c:465
-    #3 0x55670204bba2 in x86__is_amd_cpu arch/x86/util/env.c:14
-    #4 0x5567020487a2 in arch__post_evsel_config arch/x86/util/evsel.c:83
-    #5 0x556701d8f78b in evsel__config util/evsel.c:1366
-    #6 0x556701ef5872 in evlist__config util/record.c:108
-    #7 0x556701cd6bcd in test__PERF_RECORD tests/perf-record.c:112
-    #8 0x556701cacd07 in run_test tests/builtin-test.c:236
-    #9 0x556701cacfac in test_and_print tests/builtin-test.c:265
-    #10 0x556701cadddb in __cmd_test tests/builtin-test.c:402
-    #11 0x556701caf2aa in cmd_test tests/builtin-test.c:559
-    #12 0x556701d3b557 in run_builtin tools/perf/perf.c:323
-    #13 0x556701d3bac8 in handle_internal_command tools/perf/perf.c:377
-    #14 0x556701d3be90 in run_argv tools/perf/perf.c:421
-    #15 0x556701d3c3f8 in main tools/perf/perf.c:537
-    #16 0x7f2952a46189 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
 
-SUMMARY: AddressSanitizer: 21 byte(s) leaked in 1 allocation(s).
-```
+On 2023-06-13 5:18 p.m., Arnaldo Carvalho de Melo wrote:
+> Em Tue, Jun 13, 2023 at 04:06:59PM -0400, Liang, Kan escreveu:
+>>
+>>
+>> On 2023-06-13 3:35 p.m., Ian Rogers wrote:
+>>> On Wed, Jun 7, 2023 at 9:27 AM <kan.liang@linux.intel.com> wrote:
+>>>>
+>>>> From: Kan Liang <kan.liang@linux.intel.com>
+>>>>
+>>>> The annotation for hardware events is wrong on hybrid. For example,
+>>>>
+>>>>  # ./perf stat -a sleep 1
+>>>>
+>>>>  Performance counter stats for 'system wide':
+>>>>
+>>>>          32,148.85 msec cpu-clock                        #   32.000 CPUs utilized
+>>>>                374      context-switches                 #   11.633 /sec
+>>>>                 33      cpu-migrations                   #    1.026 /sec
+>>>>                295      page-faults                      #    9.176 /sec
+>>>>         18,979,960      cpu_core/cycles/                 #  590.378 K/sec
+>>>>        261,230,783      cpu_atom/cycles/                 #    8.126 M/sec                       (54.21%)
+>>>>         17,019,732      cpu_core/instructions/           #  529.404 K/sec
+>>>>         38,020,470      cpu_atom/instructions/           #    1.183 M/sec                       (63.36%)
+>>>>          3,296,743      cpu_core/branches/               #  102.546 K/sec
+>>>>          6,692,338      cpu_atom/branches/               #  208.167 K/sec                       (63.40%)
+>>>>             96,421      cpu_core/branch-misses/          #    2.999 K/sec
+>>>>          1,016,336      cpu_atom/branch-misses/          #   31.613 K/sec                       (63.38%)
+>>>>
+>>>> The hardware events have extended type on hybrid, but the evsel__match()
+>>>> doesn't take it into account.
+>>>>
+>>>> Add a mask to filter the extended type on hybrid when checking the config.
+>>>>
+>>>> With the patch,
+>>>>
+>>>>  # ./perf stat -a sleep 1
+>>>>
+>>>>  Performance counter stats for 'system wide':
+>>>>
+>>>>          32,139.90 msec cpu-clock                        #   32.003 CPUs utilized
+>>>>                343      context-switches                 #   10.672 /sec
+>>>>                 32      cpu-migrations                   #    0.996 /sec
+>>>>                 73      page-faults                      #    2.271 /sec
+>>>>         13,712,841      cpu_core/cycles/                 #    0.000 GHz
+>>>>        258,301,691      cpu_atom/cycles/                 #    0.008 GHz                         (54.20%)
+>>>>         12,428,163      cpu_core/instructions/           #    0.91  insn per cycle
+>>>>         37,786,557      cpu_atom/instructions/           #    2.76  insn per cycle              (63.35%)
+>>>>          2,418,826      cpu_core/branches/               #   75.259 K/sec
+>>>>          6,965,962      cpu_atom/branches/               #  216.739 K/sec                       (63.38%)
+>>>>             72,150      cpu_core/branch-misses/          #    2.98% of all branches
+>>>>          1,032,746      cpu_atom/branch-misses/          #   42.70% of all branches             (63.35%)
+>>>>
+>>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>>> ---
+>>>>  tools/perf/util/evsel.h       | 12 ++++++-----
+>>>>  tools/perf/util/stat-shadow.c | 39 +++++++++++++++++++----------------
+>>>>  2 files changed, 28 insertions(+), 23 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+>>>> index b365b449c6ea..36a32e4ca168 100644
+>>>> --- a/tools/perf/util/evsel.h
+>>>> +++ b/tools/perf/util/evsel.h
+>>>> @@ -350,9 +350,11 @@ u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sam
+>>>>
+>>>>  struct tep_format_field *evsel__field(struct evsel *evsel, const char *name);
+>>>>
+>>>> -#define evsel__match(evsel, t, c)              \
+>>>> +#define EVSEL_EVENT_MASK                       (~0ULL)
+>>>> +
+>>>> +#define evsel__match(evsel, t, c, m)                   \
+>>>>         (evsel->core.attr.type == PERF_TYPE_##t &&      \
+>>>> -        evsel->core.attr.config == PERF_COUNT_##c)
+>>>> +        (evsel->core.attr.config & m) == PERF_COUNT_##c)
+>>>
+>>> The EVSEL_EVENT_MASK here isn't very intention revealing, perhaps we
+>>> can remove it and do something like:
+>>>
+>>> static inline bool __evsel__match(const struct evsel *evsel, u32 type,
+>>> u64 config)
+>>> {
+>>>   if ((type == PERF_TYPE_HARDWARE || type ==PERF_TYPE_HW_CACHE)  &&
+>>> perf_pmus__supports_extended_type())
+>>>      return (evsel->core.attr.config & PERF_HW_EVENT_MASK) == config;
+>>>
+>>>   return evsel->core.attr.config == config;
+>>> }
+>>> #define evsel__match(evsel, t, c) __evsel__match(evsel, PERF_TYPE_##t,
+>>> PERF_COUNT_##c)
+>>
+>> Yes, the above code looks better. I will apply it in V2.
+> 
+> Please base v2 on tmp.perf-tools-next, tests are running and that branch
+> will become perf-tools-next.
+> 
 
-Fixes: daea405f5f06 ("perf tool x86: Consolidate is_amd check into single function")
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/arch/x86/util/env.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sure.
 
-diff --git a/tools/perf/arch/x86/util/env.c b/tools/perf/arch/x86/util/env.c
-index 33b87f8ac1cc..3e537ffb1353 100644
---- a/tools/perf/arch/x86/util/env.c
-+++ b/tools/perf/arch/x86/util/env.c
-@@ -13,7 +13,7 @@ bool x86__is_amd_cpu(void)
- 
- 	perf_env__cpuid(&env);
- 	is_amd = env.cpuid && strstarts(env.cpuid, "AuthenticAMD") ? 1 : -1;
--
-+	perf_env__exit(&env);
- ret:
- 	return is_amd >= 1 ? true : false;
- }
--- 
-2.41.0.162.gfafddb0af9-goog
+> Some patches from your series were cherry-picked there.
 
+Thanks.
+
+Kan
