@@ -2,160 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63542C7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 02:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9FBC7EE43
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 03:00:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232529AbjFMCjh (ORCPT
+        id S233046AbjFMDAW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 22:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45600 "EHLO
+        Mon, 12 Jun 2023 23:00:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237967AbjFMCjY (ORCPT
+        with ESMTP id S238922AbjFMDAU (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 22:39:24 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88A210FF;
-        Mon, 12 Jun 2023 19:39:22 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.57])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QgCLT2vpDz18M4r;
-        Tue, 13 Jun 2023 10:34:25 +0800 (CST)
-Received: from M910t (10.110.54.157) by kwepemi500013.china.huawei.com
- (7.221.188.120) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 13 Jun
- 2023 10:39:19 +0800
-Date:   Tue, 13 Jun 2023 10:39:04 +0800
-From:   Changbin Du <changbin.du@huawei.com>
-To:     Ian Rogers <irogers@google.com>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <llvm@lists.linux.dev>,
-        Changbin Du <changbin.du@huawei.com>
-Subject: Re: [PATCH v1 1/2] perf srcline: Make addr2line configuration
- failure more verbose
-Message-ID: <20230613023904.xlnfgzedfz4epjz3@M910t>
-References: <20230609235419.204624-1-irogers@google.com>
+        Mon, 12 Jun 2023 23:00:20 -0400
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 401F4EE;
+        Mon, 12 Jun 2023 20:00:18 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045170;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vl0GR0C_1686625213;
+Received: from 30.240.112.107(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vl0GR0C_1686625213)
+          by smtp.aliyun-inc.com;
+          Tue, 13 Jun 2023 11:00:15 +0800
+Message-ID: <0b3c6dfe-779e-2ee7-cfbc-aea6cfa3cf78@linux.alibaba.com>
+Date:   Tue, 13 Jun 2023 11:00:11 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230609235419.204624-1-irogers@google.com>
-X-Originating-IP: [10.110.54.157]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.1
+Subject: Re: [PATCH 1/2] perf/core: Bail out early if the request AUX area is
+ out of bound
+Content-Language: en-US
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Baolin Wang <baolin.wang@linux.alibaba.com>
+References: <20230612052452.53425-1-xueshuai@linux.alibaba.com>
+ <20230612052452.53425-2-xueshuai@linux.alibaba.com>
+ <20230612073821.GB217089@leoy-huanghe.lan>
+ <5fe7c14e-4dd4-3e7f-ece4-75da36c3b6c3@linux.alibaba.com>
+ <20230612100502.GE217089@leoy-huanghe.lan>
+ <20230612102537.GF217089@leoy-huanghe.lan>
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20230612102537.GF217089@leoy-huanghe.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 04:54:18PM -0700, Ian Rogers wrote:
-> To aid debugging why it fails. Also, combine the loops for reading a
-> line for the llvm/binutils cases.
+
+
+On 2023/6/12 18:25, Leo Yan wrote:
+> On Mon, Jun 12, 2023 at 06:05:02PM +0800, Leo Yan wrote:
+>> On Mon, Jun 12, 2023 at 04:35:07PM +0800, Shuai Xue wrote:
+>>
+>> [...]
+>>
+>>>> Furthermore, I believe the AUX trace pages are only mapped for VMA
+>>>> (continuous virtual address), the kernel will defer to map to physical
+>>>> pages (which means it's not necessarily continuous physical pages)
+>>>> when handling data abort caused by accessing the pages.
+>>>
+>>> I don't know why the rb->aux_pages is limit to allocated with continuous physical pages.
+>>> so I just add a check to avoid oops and report a proper error code -EINVAL to
+>>> user.
+>>>
+>>> I would like to use vmalloc() family to replace kmalloc() so that we could support
+>>> allocate a more large AUX area if it is not necessarily continuous physical pages.
+>>> Should we remove the restriction?
+>>
+>> As you said, we are now able to support a maximum AUX trace buffer
+>> size of up to 2GiB, and AUX trace buffer is per CPU wise.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/srcline.c | 34 +++++++++++++++++++++-------------
->  1 file changed, 21 insertions(+), 13 deletions(-)
+> Ouch, I reviewed my notes and correct myself:
 > 
-> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-> index b8e596528d7e..fc85cdd6c8f9 100644
-> --- a/tools/perf/util/srcline.c
-> +++ b/tools/perf/util/srcline.c
-> @@ -441,7 +441,7 @@ enum a2l_style {
->  	LLVM,
->  };
->  
-> -static enum a2l_style addr2line_configure(struct child_process *a2l)
-> +static enum a2l_style addr2line_configure(struct child_process *a2l, const char *dso_name)
->  {
->  	static bool cached;
->  	static enum a2l_style style;
-> @@ -450,6 +450,7 @@ static enum a2l_style addr2line_configure(struct child_process *a2l)
->  		char buf[128];
->  		struct io io;
->  		int ch;
-> +		int lines;
->  
->  		if (write(a2l->in, ",\n", 2) != 2)
->  			return BROKEN;
-> @@ -459,19 +460,29 @@ static enum a2l_style addr2line_configure(struct child_process *a2l)
->  		if (ch == ',') {
->  			style = LLVM;
->  			cached = true;
-> +			lines = 1;
->  		} else if (ch == '?') {
->  			style = GNU_BINUTILS;
->  			cached = true;
-> +			lines = 2;
->  		} else {
-> -			style = BROKEN;
-> +			if (!symbol_conf.disable_add2line_warn) {
-> +				char *output;
-This 'output' should be initialized to NULL.
-
-In file included from util/srcline.c:13:
-util/srcline.c: In function ‘addr2line’:
-/work/linux/tools/perf/libapi/include/api/io.h:130:2: error: ‘output’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
-  130 |  free(*line_out);
-      |  ^~~~~~~~~~~~~~~
-util/srcline.c:472:11: note: ‘output’ was declared here
-  472 |     char *output;
-      |           ^~~~~~
-cc1: all warnings being treated as errors
-make[4]: *** [/work/linux/tools/build/Makefile.build:97: util/srcline.o] Error 1
-
-
-> +				size_t output_len;
-> +
-> +				io__getline(&io, &output, &output_len);
-> +				pr_warning("%s %s: addr2line configuration failed\n",
-> +					   __func__, dso_name);
-> +				pr_warning("\t%c%s\n", ch, output);
-> +			}
-> +			return BROKEN;
->  		}
-> -		do {
-> +		while (lines) {
->  			ch = io__get_char(&io);
-> -		} while (ch > 0 && ch != '\n');
-> -		if (style == GNU_BINUTILS) {
-> -			do {
-> -				ch = io__get_char(&io);
-> -			} while (ch > 0 && ch != '\n');
-> +			if (ch <= 0)
-> +				break;
-> +			if (ch == '\n')
-> +				lines--;
->  		}
->  		/* Ignore SIGPIPE in the event addr2line exits. */
->  		signal(SIGPIPE, SIG_IGN);
-> @@ -591,12 +602,9 @@ static int addr2line(const char *dso_name, u64 addr,
->  			pr_warning("%s %s: addr2line_subprocess_init failed\n", __func__, dso_name);
->  		goto out;
->  	}
-> -	a2l_style = addr2line_configure(a2l);
-> -	if (a2l_style == BROKEN) {
-> -		if (!symbol_conf.disable_add2line_warn)
-> -			pr_warning("%s: addr2line configuration failed\n", __func__);
-> +	a2l_style = addr2line_configure(a2l, dso_name);
-> +	if (a2l_style == BROKEN)
->  		goto out;
-> -	}
->  
->  	/*
->  	 * Send our request and then *deliberately* send something that can't be interpreted as
-> -- 
-> 2.41.0.162.gfafddb0af9-goog
+> For per thread mode, perf tool only allocates one generic ring buffer
+> and one AUX ring buffer for the whole session; for the system wide mode,
+> perf allocates the generic ring buffer and the AUX ring buffer per CPU
+> wise.
 > 
+>> Seems to me, 2GiB AUX buffer per CPU is big enough for most tracing
+>> scenarios, right?  Except you can provide profiling scenario which
+>> must use bigger buffer size.
+> 
+> But I think this question is still valid.
+> 
+>> Another factor is the allocation of buffers from kmalloc() offers better
+>> performance compared to allocation from vmalloc(), this is also
+>> important for perf core layer.
 
--- 
-Cheers,
-Changbin Du
+I see, I don't have such profiling scenario, let's leave the restriction untouched
+and I will move the sanity check into rb_alloc_aux().
+
+>>
+>> Thanks,
+>> Leo
+
+Thank you.
+
+Best Regards,
+Shuai
