@@ -2,126 +2,148 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F2BEB64D0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE50EB64D8
 	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 17:05:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231876AbjFMRFf (ORCPT
+        id S230035AbjFMRFf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
         Tue, 13 Jun 2023 13:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41554 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229590AbjFMRFc (ORCPT
+        with ESMTP id S235279AbjFMRFc (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Tue, 13 Jun 2023 13:05:32 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33BD5183
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FD34189
         for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 10:05:31 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35DGkqBH031019;
-        Tue, 13 Jun 2023 17:04:50 GMT
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35DGi271032250;
+        Tue, 13 Jun 2023 17:04:40 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=VGgfsoeoLxM1hgHvIgMovQC4MJ/QGh1WHdficG7OZjE=;
- b=C+ItTcpMeQyLEKJkfdjw2l86npqWzN6XS+6Eamfbtms7p82OwgCxL6n9Gn46GPEI5M4/
- 9IYZc6fweUvI9wA7UDRWHJC3xCBnfM2dtvKumE2W/PJ6+QnO4HRCzmUOVg7q/sskFUBw
- Q6Ljf+KkRe6whNKawH4fD94IFjXLzpBeHBYUuDK96pBLohMNAQFpjuwv5dMD85ZCekcd
- 3ts/cM6P33F3n5zMELop68po1beblPCyUBxu2L+jxwqQJAzlrLA6VXmnfjoI2A+RCkN0
- edp1BfR9vSqD9BV3MC5mFCnoNf4CKDs8YWWZSnIGfYgcKCQFbz1AVhLZAgPXKm9q7Qfr EA== 
+ bh=gPP+FJMH6eItW39hUP4zGB1MaHTuTjdKJ5bFHUOBJMY=;
+ b=PgUbQZt+QAqudSJDjPTY+rpeNdWOtf0Gbd1J9/aoGHC2gh5yEn/+X3zXv3mG9SOP31xo
+ 4hUC6YGdHzBl9Jn2JobwEZ4aMyXKDemfOA843SncBJaxV4rkSCLYjIKrGbjj2dsGxOIZ
+ Hp10Vhgr5sMeJe6A/8UKJhGB40sIzaRpY6My+pufz0RXFHdLWkePGBwQq5yJV8kcm7rt
+ 0p/H7JdaUf9q8CH3baLZOWiAZccxfaw1zjiKtvgXkjajBRw9WP1Wn6h93QqbV000njiu
+ Civ2/eBdVnsBsv+gXnZ04fT4tqcALyjIiZPclRg9sS+I4FZY5xNp+nC8LePL6FuUfuZz 0w== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6v94ge9s-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6uues5cy-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jun 2023 17:04:49 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35DH2I1E012477;
-        Tue, 13 Jun 2023 17:04:49 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6v94ge50-8
+        Tue, 13 Jun 2023 17:04:39 +0000
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35DGi9xV000701;
+        Tue, 13 Jun 2023 17:04:39 GMT
+Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6uues5bu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jun 2023 17:04:49 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35DEQkgU031009;
-        Tue, 13 Jun 2023 16:43:05 GMT
+        Tue, 13 Jun 2023 17:04:38 +0000
+Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
+        by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35D3GqFW005469;
+        Tue, 13 Jun 2023 16:42:58 GMT
 Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3r4gedsqbw-1
+        by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3r4gt51prp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jun 2023 16:43:04 +0000
+        Tue, 13 Jun 2023 16:42:57 +0000
 Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35DGh1fk12386896
+        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35DGgsdo21365308
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Jun 2023 16:43:01 GMT
+        Tue, 13 Jun 2023 16:42:54 GMT
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6497D20040;
-        Tue, 13 Jun 2023 16:43:01 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 668FB2004B;
+        Tue, 13 Jun 2023 16:42:54 +0000 (GMT)
 Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3E1872004B;
-        Tue, 13 Jun 2023 16:42:58 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 596BA20043;
+        Tue, 13 Jun 2023 16:42:51 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.43.111.115])
         by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 13 Jun 2023 16:42:58 +0000 (GMT)
+        Tue, 13 Jun 2023 16:42:51 +0000 (GMT)
 From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
         namhyung@kernel.org, ravi.bangoria@amd.com, john.g.garry@oracle.com
 Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
         kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        Aditya Gupta <adityag@linux.ibm.com>
-Subject: [PATCH 15/17] perf tests task_analyzer: fix bad substitution ${$1}
-Date:   Tue, 13 Jun 2023 22:11:43 +0530
-Message-Id: <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com>
+        Geetika <geetika@linux.ibm.com>
+Subject: [PATCH 13/17] tools/perf/tests: Fix all POSIX sh warnings in perf shell test test_brstack.sh
+Date:   Tue, 13 Jun 2023 22:11:41 +0530
+Message-Id: <20230613164145.50488-14-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
 References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ao7N-pvivJscpjSgJqJwQ4VViDRdQJ53
-X-Proofpoint-GUID: 5i7VK6XuMKuPzoB5rphHRpExXc7iXK64
+X-Proofpoint-GUID: -q_CUr7Zlssr3piJpvPZQwWhje0SC3G8
+X-Proofpoint-ORIG-GUID: hVUXTl3HrS0mc_lHdVLZs83sZ4KkrULu
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
  definitions=2023-06-13_19,2023-06-12_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- impostorscore=0 phishscore=0 mlxlogscore=999 spamscore=0 clxscore=1015
- suspectscore=0 adultscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306130151
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 clxscore=1015 priorityscore=1501 lowpriorityscore=0
+ mlxlogscore=999 mlxscore=0 bulkscore=0 spamscore=0 phishscore=0
+ adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2305260000 definitions=main-2306130151
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Aditya Gupta <adityag@linux.ibm.com>
+From: Geetika <geetika@linux.ibm.com>
 
-${$1} gives bad substitution error on sh, bash, and zsh. This seems like
-a typo, and this patch modifies it to $1, since that is what it's usage
-looks like from wherever `check_exec_0` is called.
+Fix all the POSIX sh warnings in perf shell test test_brstack.sh
+Warnings fixed :
+* In POSIX sh, using lower/mixed case for signal names is undefined.
+Correcting that in this script.
+* In POSIX sh, 'local' is undefined.
+local is supported in many shells, but it's not in POSIX.
+In POSIX sh, you can adopt some convention to avoid accidentally
+overwriting variables names, e.g. prefixing with the function name,
+that is what I have done here.
 
-This issue due to ${$1} caused all function calls to give error in
-`find_str_or_fail` line, and so no test runs completely. But
-'perf test "perf script task-analyzer tests"' wrongly reports
-that tests passed with the status OK, which is wrong considering
-the tests didn't even run completely
-
-Fixes: e8478b84d6ba ("perf test: add new task-analyzer tests")
 Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+Signed-off-by: Geetika <geetika@linux.ibm.com>
 ---
- tools/perf/tests/shell/test_task_analyzer.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/tests/shell/test_brstack.sh | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
-index 4264b54b654b..84ab7e7f57d5 100755
---- a/tools/perf/tests/shell/test_task_analyzer.sh
-+++ b/tools/perf/tests/shell/test_task_analyzer.sh
-@@ -31,7 +31,7 @@ report() {
- 
- check_exec_0() {
- 	if [ $? != 0 ]; then
--		report 1 "invokation of ${$1} command failed"
-+		report 1 "invocation of $1 command failed"
- 	fi
+diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+index 1c49d8293003..09908d71c994 100755
+--- a/tools/perf/tests/shell/test_brstack.sh
++++ b/tools/perf/tests/shell/test_brstack.sh
+@@ -18,7 +18,7 @@ cleanup() {
+ 	rm -rf $TMPDIR
  }
  
+-trap cleanup exit term int
++trap cleanup EXIT TERM INT
+ 
+ test_user_branches() {
+ 	echo "Testing user branch stack sampling"
+@@ -47,17 +47,17 @@ test_user_branches() {
+ # first argument <arg0> is the argument passed to "--branch-stack <arg0>,save_type,u"
+ # second argument are the expected branch types for the given filter
+ test_filter() {
+-	local filter=$1
+-	local expect=$2
++	test_filter_filter=$1
++	test_filter_expect=$2
+ 
+-	echo "Testing branch stack filtering permutation ($filter,$expect)"
++	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
+ 
+-	perf record -o $TMPDIR/perf.data --branch-filter $filter,save_type,u -- ${TESTPROG} > /dev/null 2>&1
++	perf record -o $TMPDIR/perf.data --branch-filter $test_filter_filter,save_type,u -- ${TESTPROG} > /dev/null 2>&1
+ 	perf script -i $TMPDIR/perf.data --fields brstack | xargs -n1 > $TMPDIR/perf.script
+ 
+ 	# fail if we find any branch type that doesn't match any of the expected ones
+ 	# also consider UNKNOWN branch types (-)
+-	if grep -E -vm1 "^[^ ]*/($expect|-|( *))/.*$" $TMPDIR/perf.script; then
++	if grep -E -vm1 "^[^ ]*/($test_filter_expect|-|( *))/.*$" $TMPDIR/perf.script; then
+ 		return 1
+ 	fi
+ }
 -- 
 2.39.1
 
