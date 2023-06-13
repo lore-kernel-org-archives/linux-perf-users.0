@@ -2,170 +2,195 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2AB1EB64D8
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 19:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4418EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 19:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238578AbjFMTy0 (ORCPT
+        id S239627AbjFMT7h (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 15:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48160 "EHLO
+        Tue, 13 Jun 2023 15:59:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230456AbjFMTyZ (ORCPT
+        with ESMTP id S239622AbjFMT7h (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 15:54:25 -0400
+        Tue, 13 Jun 2023 15:59:37 -0400
 Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFEFB3
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:54:24 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-3f98276f89cso55501cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:54:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880FF173C
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:59:35 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-3f9b7de94e7so61471cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:59:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686686063; x=1689278063;
+        d=google.com; s=20221208; t=1686686374; x=1689278374;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7kaFNmrqlXNHl6myJJQwEsOqHgyEX905kiiiOT//v0E=;
-        b=Qo/exQHT36cb+zXUyJ2uhsj50qlk6woHq8nmHeIhTvlhuqtByy5ah0TJKBKiPmMZw8
-         H2iwmNk5t5tm//j1J2U+E17Kr4Yio8o/y/N5sC/oMc4Q08pJJbfqKNiwLzYQImpTt51x
-         d1zaTvuJ3T8Et1qV8VtPe/FWyGMjwtuztRCOjAraJSmhM8+ljMKKqtpxSa7IeRl6q+lD
-         vGOVxeoh8FUxtegF+KqR2qQcJdt7HO3vBB12OZXjdI+uHj0qu9a3R6CrMeXESML6CKGN
-         uOcbHiLLcbb7ZU2T4XZ/3I9rSrt7XvCCjn8xgUHCC3+L4O4/mbvryDWU5rAypGD3P8TV
-         nZwA==
+        bh=dWV4DFWiyG4Y2gp1F3lQmlOfZ0g9f1+o7b1sfIWxN8o=;
+        b=xF8nsIGqZpmzkzXfWBRX8HaN6qBTGNTuBKxXTlHdPNnO17gUJHJcEzMv1wVOeGHHPe
+         96jjt0n7+ECnGXTZVCzEB1oHri5EOqcxpXrcci5+uXeFVjLRPGtOfe6wVotAYNPXoIpf
+         XbVOVGB7XHwJyYKGSa1bExzC3ExfF3O5p0JFnL7pspZHWIVyLMO/K4mD0wFWeDauhyqB
+         iMuslgIxC+tgAy4KZNKi8BdAeZISwebp6VvyQETVg6XHBQAWhbxgaUONABvgcdVLErtT
+         UZ+wpy57kuFy+L3SEbujxMUWcnCcmhMgH6Sxs80M5YnwPxTgeCVWc/GyHm/IAx4K5YCI
+         0LPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686686063; x=1689278063;
+        d=1e100.net; s=20221208; t=1686686374; x=1689278374;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7kaFNmrqlXNHl6myJJQwEsOqHgyEX905kiiiOT//v0E=;
-        b=CERQiiRSqZ66/ydVrO8/9bnG4w7MwaVj+vE1vSgkJqq/FcMjcfypleaRo5EN0ApdIP
-         qGR1yi9YO+iDzF/Q3sfyKaHqApKjUC5PrlWJbKGMNERf+vmPrBhwP2zE1pBs1W1ExhoQ
-         KrB5sWB9FrRg2JIZ4DXZq8dj2jn1DMQJ7D+9h5hfSXpQpUEY7SCOM5aPTrtOlnyL/GQh
-         X18iNSqzKis3ZGwLhornhyrBVvxE3fUp+w0GnnKqex8feILtk2EK1X87XOGqSHGjDkrb
-         RsQIFsg0tV4RD8gDjqy8LVGMYjIbi2Odx9Rkx4nY10MAkFQWIaUI1s4pGlNgk9v19wpr
-         Sirw==
-X-Gm-Message-State: AC+VfDyu0O9elfr0Tx/wII1eVj7u4r4tj7BzgOdEM3gN/7q/vLcybIdd
-        HM5Mmj7H2jh5+CF/UtZ4wSAXBvbWyDSeeul3jpwviA==
-X-Google-Smtp-Source: ACHHUZ4YzZm7OoifKmmJgSwGRdJRZJ56jjZluRQ/w5pW4YLVSsvKxL4+BJJ8N/hAR1JJWv7rUSdIr6Nw8YumyN+B67g=
-X-Received: by 2002:ac8:7d84:0:b0:3ef:343b:fe7e with SMTP id
- c4-20020ac87d84000000b003ef343bfe7emr56480qtd.2.1686686063049; Tue, 13 Jun
- 2023 12:54:23 -0700 (PDT)
+        bh=dWV4DFWiyG4Y2gp1F3lQmlOfZ0g9f1+o7b1sfIWxN8o=;
+        b=RbubvUu6qyFzbLFw0njc3TW9lFPqoPLxs7DsZLfKPigyPsPJxY7qHurLZI62J4M9Ju
+         p9Kxe7Ru+/+GUeNN//KWeKPG4Q+Lyxt5UEOcdEPXOJpRD3dmBySpit7s8ih8T6Ed06z6
+         9j1KKoJXh1PE2uqaUkQHewgLjIVtE78qglfJ6Q5Dp9EEPhyXoMYG7MKb1FnN0AGXALVM
+         s89QltlyTvdlnR6DDzFYH5FafxS/AULvwJ6BAc3XY9ZjAZKhGoE94B4XCVhPXtZ2EkL9
+         1DNMIcz+JVZCCLwGT5Z+qxC3hrcvb3ctyaRtzR7blIACO8p0dOc08hVTuCXvDkJJP59A
+         PVug==
+X-Gm-Message-State: AC+VfDzPFOS1izCjOuw29/dVhoXXGmPYy4qMtylG5rN4DGH1MbW1mNqq
+        AOJ1pMWn4UUvzRuU/qCmSEQ6JNET6DlYhctk6qIPmA==
+X-Google-Smtp-Source: ACHHUZ74BGFtSbd/xN8foJZ5lpV2qvcGtNn2WorQx/FePZ23Ktnlyjq3EhaWijZOdmQx2K8MJnWqF1Emp0Xy2XeryTQ=
+X-Received: by 2002:a05:622a:43:b0:3ed:210b:e698 with SMTP id
+ y3-20020a05622a004300b003ed210be698mr39221qtw.7.1686686374446; Tue, 13 Jun
+ 2023 12:59:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230613191639.1547925-1-irogers@google.com> <ZIjIiPAfTwL/P1dt@kernel.org>
-In-Reply-To: <ZIjIiPAfTwL/P1dt@kernel.org>
+References: <20230607162700.3234712-1-kan.liang@linux.intel.com> <20230607162700.3234712-6-kan.liang@linux.intel.com>
+In-Reply-To: <20230607162700.3234712-6-kan.liang@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 13 Jun 2023 12:54:11 -0700
-Message-ID: <CAP-5=fUQC2homPem0C4gsmiTMhwnNA0Jau8ehg=WG_oXRq0-8Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] perf util: asprintf helper for leak sanitizer
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 13 Jun 2023 12:59:23 -0700
+Message-ID: <CAP-5=fU_5fkJZ49B2yxkS4usuKw9fXZ=o-oJo3n5-j5YTAWNvA@mail.gmail.com>
+Subject: Re: [PATCH 5/8] perf stat,jevents: Introduce Default tags for the
+ default mode
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 12:50=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Wed, Jun 7, 2023 at 9:27=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
 >
-> Em Tue, Jun 13, 2023 at 12:16:38PM -0700, Ian Rogers escreveu:
-> > asprintf is a source of memory leaks but produces bad stack traces on
-> > my Debian linux. This patch adds a simple asprintf implementation to
-> > util.c that works around it.
+> From: Kan Liang <kan.liang@linux.intel.com>
 >
-> So is this something to report to the glibc maintainers or debian?
+> Introduce a new metricgroup, Default, to tag all the metric groups which
+> will be collected in the default mode.
+>
+> Add a new field, DefaultMetricgroupName, in the JSON file to indicate
+> the real metric group name. It will be printed in the default output
+> to replace the event names.
+>
+> There is nothing changed for the output format.
+>
+> On SPR, both TopdownL1 and TopdownL2 are displayed in the default
+> output.
+>
+> On ARM, Intel ICL and later platforms (before SPR), only TopdownL1 is
+> displayed in the default output.
+>
+> Suggested-by: Stephane Eranian <eranian@google.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  tools/perf/builtin-stat.c          | 4 ++--
+>  tools/perf/pmu-events/jevents.py   | 5 +++--
+>  tools/perf/pmu-events/pmu-events.h | 1 +
+>  tools/perf/util/metricgroup.c      | 3 +++
+>  4 files changed, 9 insertions(+), 4 deletions(-)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index c87c6897edc9..2269b3e90e9b 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2154,14 +2154,14 @@ static int add_default_attributes(void)
+>                  * Add TopdownL1 metrics if they exist. To minimize
+>                  * multiplexing, don't request threshold computation.
+>                  */
+> -               if (metricgroup__has_metric(pmu, "TopdownL1")) {
+> +               if (metricgroup__has_metric(pmu, "Default")) {
+>                         struct evlist *metric_evlist =3D evlist__new();
+>                         struct evsel *metric_evsel;
+>
+>                         if (!metric_evlist)
+>                                 return -1;
+>
+> -                       if (metricgroup__parse_groups(metric_evlist, pmu,=
+ "TopdownL1",
+> +                       if (metricgroup__parse_groups(metric_evlist, pmu,=
+ "Default",
+>                                                         /*metric_no_group=
+=3D*/false,
+>                                                         /*metric_no_merge=
+=3D*/false,
+>                                                         /*metric_no_thres=
+hold=3D*/true,
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
+ents.py
+> index 7ed258be1829..12e80bb7939b 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -54,8 +54,8 @@ _json_event_attributes =3D [
+>  # Attributes that are in pmu_metric rather than pmu_event.
+>  _json_metric_attributes =3D [
+>      'pmu', 'metric_name', 'metric_group', 'metric_expr', 'metric_thresho=
+ld',
+> -    'desc', 'long_desc', 'unit', 'compat', 'metricgroup_no_group', 'aggr=
+_mode',
+> -    'event_grouping'
+> +    'desc', 'long_desc', 'unit', 'compat', 'metricgroup_no_group',
+> +    'default_metricgroup_name', 'aggr_mode', 'event_grouping'
+>  ]
+>  # Attributes that are bools or enum int values, encoded as '0', '1',...
+>  _json_enum_attributes =3D ['aggr_mode', 'deprecated', 'event_grouping', =
+'perpkg']
+> @@ -307,6 +307,7 @@ class JsonEvent:
+>      self.metric_name =3D jd.get('MetricName')
+>      self.metric_group =3D jd.get('MetricGroup')
+>      self.metricgroup_no_group =3D jd.get('MetricgroupNoGroup')
+> +    self.default_metricgroup_name =3D jd.get('DefaultMetricgroupName')
+>      self.event_grouping =3D convert_metric_constraint(jd.get('MetricCons=
+traint'))
+>      self.metric_expr =3D None
+>      if 'MetricExpr' in jd:
+> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/p=
+mu-events.h
+> index 8cd23d656a5d..caf59f23cd64 100644
+> --- a/tools/perf/pmu-events/pmu-events.h
+> +++ b/tools/perf/pmu-events/pmu-events.h
+> @@ -61,6 +61,7 @@ struct pmu_metric {
+>         const char *desc;
+>         const char *long_desc;
+>         const char *metricgroup_no_group;
+> +       const char *default_metricgroup_name;
+>         enum aggr_mode_class aggr_mode;
+>         enum metric_event_groups event_grouping;
+>  };
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+c
+> index 74f2d8efc02d..efafa02db5e5 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -137,6 +137,8 @@ struct metric {
+>          * output.
+>          */
+>         const char *metric_unit;
+> +       /** Optional default metric group name */
+> +       const char *default_metricgroup_name;
 
-*shrug* Folks appear to have been complaining about no option for
-nearly 10 years, motivated by profiling more than sanitizers. Perhaps
-I need to convince my employer to switch to Fedora.
+Adding a bit more to the comment would be useful, like:
 
-Thanks,
-Ian
+Optional name of the metric group reported if the Default metric group
+is being processed.
 
-> - Arnaldo
+>         /** Optional null terminated array of referenced metrics. */
+>         struct metric_ref *metric_refs;
+>         /**
+> @@ -219,6 +221,7 @@ static struct metric *metric__new(const struct pmu_me=
+tric *pm,
 >
-> > Before output:
-> > ```
-> > =3D=3D1541752=3D=3DERROR: LeakSanitizer: detected memory leaks
-> >
-> > Direct leak of 10 byte(s) in 1 object(s) allocated from:
-> >     #0 0x7f90c76b89cf in __interceptor_malloc ../../../../src/libsaniti=
-zer/asan/asan_malloc_linux.cpp:69
-> >     #1 0x7f90c649d2c7 in __vasprintf_internal libio/vasprintf.c:71
-> >     #2 0x55ad9b79afbf  (/tmp/perf/perf+0x850fbf)
-> >
-> > SUMMARY: AddressSanitizer: 10 byte(s) leaked in 1 allocation(s).
-> > ```
-> >
-> > After output:
-> > ```
-> > =3D=3D1545918=3D=3DERROR: LeakSanitizer: detected memory leaks
-> >
-> > Direct leak of 10 byte(s) in 1 object(s) allocated from:
-> >     #0 0x7f2755a7077b in __interceptor_strdup ../../../../src/libsaniti=
-zer/asan/asan_interceptors.cpp:439
-> >     #1 0x564986a8df31 in asprintf util/util.c:566
-> >     #2 0x5649869b5901 in metricgroup__lookup_default_metricgroup util/m=
-etricgroup.c:1520
-> >     #3 0x5649869b5e57 in metricgroup__lookup_create util/metricgroup.c:=
-1579
-> >     #4 0x5649869b6ddc in parse_groups util/metricgroup.c:1698
-> >     #5 0x5649869b7714 in metricgroup__parse_groups util/metricgroup.c:1=
-771
-> >     #6 0x5649867da9d5 in add_default_attributes tools/perf/builtin-stat=
-.c:2164
-> >     #7 0x5649867ddbfb in cmd_stat tools/perf/builtin-stat.c:2707
-> >     #8 0x5649868fa5a2 in run_builtin tools/perf/perf.c:323
-> >     #9 0x5649868fab13 in handle_internal_command tools/perf/perf.c:377
-> >     #10 0x5649868faedb in run_argv tools/perf/perf.c:421
-> >     #11 0x5649868fb443 in main tools/perf/perf.c:537
-> >     #12 0x7f2754846189 in __libc_start_call_main ../sysdeps/nptl/libc_s=
-tart_call_main.h:58
-> >
-> > SUMMARY: AddressSanitizer: 10 byte(s) leaked in 1 allocation(s).
-> > ```
-> >
-> > RFC: is this useful for others? Should we have a build flag for it?
-> > ---
-> >  tools/perf/util/util.c | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >
-> > diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-> > index c1fd9ba6d697..57eb528c5fed 100644
-> > --- a/tools/perf/util/util.c
-> > +++ b/tools/perf/util/util.c
-> > @@ -552,3 +552,22 @@ int sched_getcpu(void)
-> >       return -1;
-> >  }
-> >  #endif
-> > +
-> > +int asprintf(char **restrict strp, const char *restrict fmt, ...)
-> > +{
-> > +     char buf[1024];
-> > +     va_list ap;
-> > +     int size;
-> > +     char *result;
-> > +
-> > +     va_start(ap, fmt);
-> > +     size =3D vsnprintf(buf, sizeof(buf), fmt, ap);
-> > +     if (size < (int)sizeof(buf))
-> > +             result =3D strdup(buf);
-> > +     else
-> > +             size =3D vasprintf(&result, fmt, ap);
-> > +
-> > +     *strp =3D result;
-> > +     va_end(ap);
-> > +     return size;
-> > +}
-> > --
-> > 2.41.0.162.gfafddb0af9-goog
-> >
->
+>         m->pmu =3D pm->pmu ?: "cpu";
+>         m->metric_name =3D pm->metric_name;
+> +       m->default_metricgroup_name =3D pm->default_metricgroup_name;
+>         m->modifier =3D NULL;
+>         if (modifier) {
+>                 m->modifier =3D strdup(modifier);
 > --
+> 2.35.1
 >
-> - Arnaldo
