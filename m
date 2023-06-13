@@ -2,165 +2,80 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B463C7EE2F
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 00:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A43C88CB4
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 01:32:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233046AbjFMAEh (ORCPT
+        id S229733AbjFMBcK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 12 Jun 2023 20:04:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50248 "EHLO
+        Mon, 12 Jun 2023 21:32:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbjFMAEg (ORCPT
+        with ESMTP id S237654AbjFMBcK (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 12 Jun 2023 20:04:36 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E192A1718
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 17:04:34 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3f9a81da5d7so119381cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Jun 2023 17:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686614674; x=1689206674;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jFJb2DYUH4SPc/Q+szSqLA/RcQwAqBDcfYRno+8pMbs=;
-        b=qVHT92ewJyouaKu6MMLoTf39mDMIZMOAjBtx0r7Jpbqsr3ldbcktmvTft9a5QCGjde
-         vWS5CAJ4iUqojEq/8qIYpx+m1sF0a1hPNA75rzxp9buSPrUX4ARPJ2Og6xS3GTloDqsj
-         AFQBbSTeojJHas0T0aGzDBfqctU3jxn+U1JhxWREccfGwEIl+LqNrZXQxoC5mzPsw2DE
-         egLEnHH5iFUzlQHUpU4df6W+KK/lLzfKk2bj+KII22cyiA+1R1v+AJ5+J83mRrnrU58a
-         MDVpW7Y9qwOBiWFVG7eovI5AjG1p3ZnEX9zrvRMo6mkSimwQDd5tnNogQg+qbRz8eiqX
-         ybSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686614674; x=1689206674;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jFJb2DYUH4SPc/Q+szSqLA/RcQwAqBDcfYRno+8pMbs=;
-        b=JhQ/mzIQ/08+S+xl51PxvTAvu7b8ZaDmkenajHktDCB4h89KmtwNaj/sy8Gt5zN0BA
-         1OjFunys4mk7bz60h6nIFkI+r4IDNVCr8yJzJBLbNfCz3ELnDRIh5anU5fMn48nvgUgC
-         Sf1dmRNGf5207/RDyNlqw9NBinzWWxr6dg7vhTLhu9fJid8Q3woMOmhWKGO29Zq67LUf
-         /LfPCXL5MM1jGo3f/qBubGRDQotIM4XLrm5rbKUjFOuGFItlwheMgwN9A5bjQY/U2lfc
-         9fno3WBS5scUyFXRFm4KZb/KjeZlTpl9CSGg/twZKEPGDS16C/AytX7O0UHQG7cb4v6L
-         0xJA==
-X-Gm-Message-State: AC+VfDxX7XwoB13UK/7JM8rkMUp9SAX9G1obw5Xn8G8L91xDoP6ECa/X
-        hLfZZLRRsi8AljN7ZwgehevYITXfAD+l5k0JB61kFA==
-X-Google-Smtp-Source: ACHHUZ6fIxnK/WgFoSTz0SP44PqYLAX1txVLnPtVREFcGCbCCxdcCF0KcpSDb4x58o/UgMZja+eg3H706VCHFM601Wg=
-X-Received: by 2002:a05:622a:100c:b0:3ef:3361:75d5 with SMTP id
- d12-20020a05622a100c00b003ef336175d5mr1249qte.11.1686614673886; Mon, 12 Jun
- 2023 17:04:33 -0700 (PDT)
+        Mon, 12 Jun 2023 21:32:10 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9590BE56;
+        Mon, 12 Jun 2023 18:32:08 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Qg9vk0XyQztQr4;
+        Tue, 13 Jun 2023 09:29:38 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 13 Jun 2023 09:32:05 +0800
+Subject: Re: [PATCH v2] perf stat: Add missing newline in pr_err messages
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230610094441.221525-1-yangjihong1@huawei.com>
+ <ZIdqHeZOWCztKVe2@kernel.org>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <cd1d5a4b-e69c-84c9-3e27-d197042df904@huawei.com>
+Date:   Tue, 13 Jun 2023 09:32:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-References: <20230609162625.100897-1-weilin.wang@intel.com>
-In-Reply-To: <20230609162625.100897-1-weilin.wang@intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 12 Jun 2023 17:04:22 -0700
-Message-ID: <CAP-5=fVixzBLLiWnim8x6qcDOKH7uVfEWojTCP_H531Fhy7j-g@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Add metric value validation test
-To:     Weilin Wang <weilin.wang@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <ZIdqHeZOWCztKVe2@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 9, 2023 at 9:26=E2=80=AFAM Weilin Wang <weilin.wang@intel.com> =
-wrote:
->
-> This is the second version of metric value validation tests.
->
-> We made the following changes from v1 to v2:
->  - Add python setting check [Ian]
->  - Skip non-Intel architectures [Ian]
->  - Rename allowlist to skiplist [Ian]
->
-> v1: https://lore.kernel.org/lkml/20230606202421.2628401-1-weilin.wang@int=
-el.com/
+Hello,
 
-Thanks Weilin,
-
-when I try the test on my Tigerlake laptop I encounter an error:
-
-```
-$ sudo perf test 105 -vv
-05: perf metrics value validation                                   :
---- start ---
-test child forked, pid 1258192
-Launch python validation script
-./tools/perf/tests/shell/lib/perf_metric_validation.py
-Output will be stored in: /tmp/__perf_test.program.J2u5c
-Starting perf collection
-Long workload: perf bench futex hash -r 2 -s
-perf stat -j -M tma_mixing_vectors -a true
-...
-perf stat -j -M tma_retiring,tma_light_operations,tma_heavy_operations
--a perf bench futex hash -r 2
--s
-# Running 'futex/hash' benchmark:
-Run summary [PID 1258651]: 8 threads, each operating on 1024 [private]
-futexes for 2 secs.
-
-Averaged 953280 operations/sec (+- 1.07%), total secs =3D 2
-Traceback (most recent call last):
- File "/home/irogers/kernel.org/./tools/perf/tests/shell/lib/perf_metric_va=
-lidation.py",
-line 571,
-in <module>
-   sys.exit(main())
-            ^^^^^^
- File "/home/irogers/kernel.org/./tools/perf/tests/shell/lib/perf_metric_va=
-lidation.py",
-line 564,
-in main
-   ret =3D validator.test()
-         ^^^^^^^^^^^^^^^^
- File "/home/irogers/kernel.org/./tools/perf/tests/shell/lib/perf_metric_va=
-lidation.py",
-line 522,
-in test
-   self.pos_val_test()
- File "/home/irogers/kernel.org/./tools/perf/tests/shell/lib/perf_metric_va=
-lidation.py",
-line 152,
-in pos_val_test
-   if val < 0:
-      ^^^^^^^
-TypeError: '<' not supported between instances of 'str' and 'int'
-test child finished with -1
----- end ----
-perf metrics value validation: FAILED!
-```
-
-Could you take a look?
+On 2023/6/13 2:55, Arnaldo Carvalho de Melo wrote:
+> Em Sat, Jun 10, 2023 at 09:44:41AM +0000, Yang Jihong escreveu:
+>> The newline is missing for error messages in add_default_attributes()
+>>
+>> Before:
+>>
+>>    # perf stat --topdown
+>>    Topdown requested but the topdown metric groups aren't present.
+>>    (See perf list the metric groups have names like TopdownL1)#
+>>
+>> After:
+>>
+>>    # perf stat --topdown
+>>    Topdown requested but the topdown metric groups aren't present.
+>>    (See perf list the metric groups have names like TopdownL1)
+>>    #
+>>
+>> In addition, perf_stat_init_aggr_mode() and perf_stat_init_aggr_mode_file()
+>> have the same problem, fixed by the way.
+> 
+> Wait a bit till I push what I had to perf-tools-next, as it is not
+> applying right now:
+OK, I'm doing the patch based on the mainline, and if I need to do it 
+based on the perf-tools-next branch, I'll reissue it.
 
 Thanks,
-Ian
-
-> Weilin Wang (3):
->   perf test: Add metric value validation test
->   perf test: Add skip list for metrics known would fail
->   perf test: Rerun failed metrics with longer workload
->
->  .../tests/shell/lib/perf_metric_validation.py | 574 ++++++++++++++++++
->  .../lib/perf_metric_validation_rules.json     | 398 ++++++++++++
->  tools/perf/tests/shell/stat_metrics_values.sh |  30 +
->  3 files changed, 1002 insertions(+)
->  create mode 100644 tools/perf/tests/shell/lib/perf_metric_validation.py
->  create mode 100644 tools/perf/tests/shell/lib/perf_metric_validation_rul=
-es.json
->  create mode 100755 tools/perf/tests/shell/stat_metrics_values.sh
->
->
-> base-commit: 7cdda6998ee55140e64894e25048df7157344fc9
-> --
-> 2.39.1
->
+Yang.
