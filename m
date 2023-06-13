@@ -2,154 +2,236 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F9EC7EE29
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 12:55:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D032C7EE29
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 13:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238362AbjFMMzP (ORCPT
+        id S242521AbjFMNWn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 08:55:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50388 "EHLO
+        Tue, 13 Jun 2023 09:22:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242494AbjFMMzF (ORCPT
+        with ESMTP id S242520AbjFMNWm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 08:55:05 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C18310D9
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 05:55:02 -0700 (PDT)
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35DCm1h2025237;
-        Tue, 13 Jun 2023 12:54:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : to : from : subject : content-type :
- content-transfer-encoding; s=pp1;
- bh=rsPuJJYG9Be+v3MNrxRf5oon4U570jj76RnQ/+s6rYE=;
- b=Zio+rSPjxQd2glswJlXodTagaGKWd4rDK8GQkSVLkaSBrEyWoNE4FOZs7wGJek9yzh58
- m9B79oe+sO9/ZI8E5vPhpOUorlxA0n6VzuXcX5X257L6MfsolHsQy6FX0d0tqlkg1YEp
- cq2RgdaAu1M/JTYEZMAVV491PB3Z7qUpCm3fEuvallLuJKDCzXTC1E6xFHvBIv7AjJ1C
- Uh3ljgFrXgHxsuH+7C75WL8U1P+KQSLFe9eYcKv9W8dCC8NZdH9iRjHnwY1XLU2qWI+o
- 9EQ898jQ7N40kx/PXsJ6UiMkhpx2B0H0gzUQzN3+LGTWBx8uDspUG5RlIVe/HWVRPgu4 fA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6rrx84tq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jun 2023 12:54:57 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35DCn4bs028478;
-        Tue, 13 Jun 2023 12:54:56 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r6rrx84t0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jun 2023 12:54:56 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35D50Jei029825;
-        Tue, 13 Jun 2023 12:54:54 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3r4gedsksr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 13 Jun 2023 12:54:53 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35DCspb822545018
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Jun 2023 12:54:51 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 64E9520043;
-        Tue, 13 Jun 2023 12:54:51 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4292E20040;
-        Tue, 13 Jun 2023 12:54:51 +0000 (GMT)
-Received: from [9.152.212.165] (unknown [9.152.212.165])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 13 Jun 2023 12:54:51 +0000 (GMT)
-Message-ID: <d5319870-7569-c353-1777-31ee090f8da8@linux.ibm.com>
-Date:   Tue, 13 Jun 2023 14:54:51 +0200
+        Tue, 13 Jun 2023 09:22:42 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C7C1B0;
+        Tue, 13 Jun 2023 06:22:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686662560; x=1718198560;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=iTN/9KhoPSZOXiQNvRTzJKESu5zFQUsvhnmUcEyqMBc=;
+  b=gc5ABRwNGXukVLTD7O3N46WGN/8t88L1JX3WK4rRVdfNzCM+ngYuMrqU
+   nSRZrGFOgTsCXOyYpm4mtLxdM8ddpYGtn4cnq9JhT6S6favVPAfvKxtV3
+   ll+CheSucouyqIkzohSWFRMqje1vYXE/D9hiRhwuUYSIFwp8Ucm2Bxsdf
+   nGYC/GwfpstBZERgpuBjMa1kmEd/W0rXBQuMFFMHX+WR6RI7nLV5IuE+l
+   TZJ0rbtw4sTerzpG+JV+YQ1cQeIY8daSnk12yXrLPeld1CdiuYt/a6Obz
+   cTh4pInV5FOpzmiUtQrm99qTgZ5dL+vBF7QjhCN2XmvM5k43u45tI/X3o
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="386725889"
+X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
+   d="scan'208";a="386725889"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 06:22:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="741425107"
+X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
+   d="scan'208";a="741425107"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.251.212.213])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 06:22:31 -0700
+Message-ID: <683fea7c-f5e9-fa20-f96b-f6233ed5d2a7@intel.com>
+Date:   Tue, 13 Jun 2023 16:22:26 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
+ Firefox/102.0 Thunderbird/102.12.0
+Subject: Re: [PATCH v1 1/2] perf tests x86: Generate entire instruction struct
+ in C files
 Content-Language: en-US
-To:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ian Rogers <irogers@google.com>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Subject: perf test failures in linux-next on s390
-Organization: IBM
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+References: <20230531154333.364167-1-irogers@google.com>
+ <ZIdtO9xVsP6Ytb0q@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <ZIdtO9xVsP6Ytb0q@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: PEQljUgjj43kju_nG07H42ZkD2A9kOAF
-X-Proofpoint-ORIG-GUID: XsHYyAdu7tzs3zVDy9ai3GuW--VWU4up
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-13_04,2023-06-12_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- clxscore=1015 priorityscore=1501 bulkscore=0 lowpriorityscore=0 mlxscore=0
- adultscore=0 impostorscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306130110
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi all,
+On 12/06/23 22:08, Arnaldo Carvalho de Melo wrote:
+> Em Wed, May 31, 2023 at 08:43:32AM -0700, Ian Rogers escreveu:
+>> Generate the entire struct in the C files. Later changes will break
+>> apart the struct and so two phases of output are necessary, this isn't
+>> possible if part of the struct is declared in insn-x86.c.
+> 
+> Adrian,
+> 
+> 	Could you please take a look at these two patches?
 
-I have run the perf test suite on the current 6.4rc6 kernel and see just one error:
-# ./perf test 2>&1 | fgrep FAILED
-fgrep: warning: fgrep is obsolescent; using grep -F
- 42.3: BPF prologue generation                                       : FAILED!
-# 
+One of the considerations when adding the generated code
+was that it wouldn't have to be changed because the instructions
+do not change.
 
-However when I download the linux-next tree and build kernel and perf
-tool with the same kernel config file, I get a bunch of failing test cases,
-many with perf tool dumping core:
+I would much prefer to move the test out of the default perf build.
 
-# perf test 2>&1 | fgrep FAILED
-fgrep: warning: fgrep is obsolescent; using grep -F
-  6.1: Test event parsing                                            : FAILED!
- 10.3: Parsing of PMU event table metrics                            : FAILED!
- 10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
- 17: Setup struct perf_event_attr                                    : FAILED!
- 24: Number of exit events of a simple workload                      : FAILED! core-dump
- 28: Use a dummy software event to keep tracking                     : FAILED!
- 35: Track with sched_switch                                         : FAILED!
- 42.3: BPF prologue generation                                       : FAILED!
- 66: Parse and process metrics                                       : FAILED!
- 68: Event expansion for cgroups                                     : FAILED!
- 69.2: Perf time to TSC                                              : FAILED! core-dump
- 74: build id cache operations                                       : FAILED! core-dump
- 81: kernel lock contention analysis test                            : FAILED!
- 86: Zstd perf.data compression/decompression                        : FAILED! core-dump
- 87: perf record tests                                               : FAILED! core-dump
- 94: perf all metricgroups test                                      : FAILED!
- 95: perf all metrics test                                           : FAILED!
-106: Test java symbol                                                : FAILED! core-dump
-#
+Here is a patch to do that:
 
-I am afraid this will show up pretty soon in the linux tree.
-I am going to look into each failure in the next few days.
 
-What I already found out is that many test cases now fail due to the
-event/PMU rework, here is one example:
+From: Adrian Hunter <adrian.hunter@intel.com>
+Date: Tue, 13 Jun 2023 15:15:58 +0300
+Subject: [PATCH] perf tests: Make x86 new instructions test optional at build
+ time
 
-# perf test -Fvvvv 95
-95: perf all metrics test
---- start ---
-Testing cpi
-....
-Metric 'transaction' not printed in:
-Error:
-The TX_NC_TABORT event is not supported.
----- end ----
-perf all metrics test: FAILED!
-# ls -l /sys/devices/cpum_cf/events/TX_NC_TABORT
--r--r--r--. 1 root root 4096 Jun 13 13:49 /sys/devices/cpum_cf/events/TX_NC_TABORT
-# 
+The "x86 instruction decoder - new instructions" test takes up space but
+is only really useful to developers. Make it optional at build time.
 
-As can be seen, the event is definitely there and supported.
-This same test case succeeds in the linux tree!
+Add variable EXTRA_TESTS which must be defined in order to build perf
+with the test.
 
-Hopefully I can sort out some of the failures before this code show up
-in the linux tree.
+Example:
+
+  Before:
+
+    $ make -C tools/perf clean >/dev/null
+    $ make -C tools/perf >/dev/null
+    Makefile.config:650: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
+    Makefile.config:1149: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
+      PERF_VERSION = 6.4.rc3.gd15b8c76c964
+    $ readelf -SW tools/perf/perf | grep '\.rela.dyn\|.rodata\|\.data.rel.ro'
+      [10] .rela.dyn         RELA            000000000002fcb0 02fcb0 0748b0 18   A  6   0  8
+      [18] .rodata           PROGBITS        00000000002eb000 2eb000 6bac00 00   A  0   0 32
+      [25] .data.rel.ro      PROGBITS        00000000009ea180 9e9180 04b540 00  WA  0   0 32
+
+  After:
+
+    $ make -C tools/perf clean >/dev/null
+    $ make -C tools/perf >/dev/null
+    Makefile.config:650: No libunwind found. Please install libunwind-dev[el] >= 1.1 and/or set LIBUNWIND_DIR
+    Makefile.config:1154: libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev
+      PERF_VERSION = 6.4.rc3.g4ea9c1569ea4
+    $ readelf -SW tools/perf/perf | grep '\.rela.dyn\|.rodata\|\.data.rel.ro'
+      [10] .rela.dyn         RELA            000000000002f3c8 02f3c8 036d68 18   A  6   0  8
+      [18] .rodata           PROGBITS        00000000002ac000 2ac000 68da80 00   A  0   0 32
+      [25] .data.rel.ro      PROGBITS        000000000097d440 97c440 022280 00  WA  0   0 32
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/Makefile.config               | 5 +++++
+ tools/perf/Makefile.perf                 | 4 ++++
+ tools/perf/arch/x86/include/arch-tests.h | 2 ++
+ tools/perf/arch/x86/tests/Build          | 5 ++++-
+ tools/perf/arch/x86/tests/arch-tests.c   | 4 ++++
+ tools/perf/tests/make                    | 1 +
+ 6 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index a794d9eca93d..9c5aa14a44cf 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -1075,6 +1075,11 @@ ifndef NO_AUXTRACE
+   endif
+ endif
+ 
++ifdef EXTRA_TESTS
++    $(call detected,CONFIG_EXTRA_TESTS)
++    CFLAGS += -DHAVE_EXTRA_TESTS
++endif
++
+ ifndef NO_JVMTI
+   ifneq (,$(wildcard /usr/sbin/update-java-alternatives))
+     JDIR=$(shell /usr/sbin/update-java-alternatives -l | head -1 | awk '{print $$3}')
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index f48794816d82..b1e62a621f92 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -128,6 +128,10 @@ include ../scripts/utilities.mak
+ #
+ # Define BUILD_NONDISTRO to enable building an linking against libbfd and
+ # libiberty distribution license incompatible libraries.
++#
++# Define EXTRA_TESTS to enable building extra tests useful mainly to perf
++# developers, such as:
++#	x86 instruction decoder - new instructions test
+ 
+ # As per kernel Makefile, avoid funny character set dependencies
+ unexport LC_ALL
+diff --git a/tools/perf/arch/x86/include/arch-tests.h b/tools/perf/arch/x86/include/arch-tests.h
+index 33d39c1d3e64..df133020d582 100644
+--- a/tools/perf/arch/x86/include/arch-tests.h
++++ b/tools/perf/arch/x86/include/arch-tests.h
+@@ -6,7 +6,9 @@ struct test_suite;
+ 
+ /* Tests */
+ int test__rdpmc(struct test_suite *test, int subtest);
++#ifdef HAVE_EXTRA_TESTS
+ int test__insn_x86(struct test_suite *test, int subtest);
++#endif
+ int test__intel_pt_pkt_decoder(struct test_suite *test, int subtest);
+ int test__intel_pt_hybrid_compat(struct test_suite *test, int subtest);
+ int test__bp_modify(struct test_suite *test, int subtest);
+diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/Build
+index 08cc8b9c931e..394771c00dca 100644
+--- a/tools/perf/arch/x86/tests/Build
++++ b/tools/perf/arch/x86/tests/Build
+@@ -4,5 +4,8 @@ perf-$(CONFIG_DWARF_UNWIND) += dwarf-unwind.o
+ perf-y += arch-tests.o
+ perf-y += sample-parsing.o
+ perf-y += hybrid.o
+-perf-$(CONFIG_AUXTRACE) += insn-x86.o intel-pt-test.o
++perf-$(CONFIG_AUXTRACE) += intel-pt-test.o
++ifeq ($(CONFIG_EXTRA_TESTS),y)
++perf-$(CONFIG_AUXTRACE) += insn-x86.o
++endif
+ perf-$(CONFIG_X86_64) += bp-modify.o
+diff --git a/tools/perf/arch/x86/tests/arch-tests.c b/tools/perf/arch/x86/tests/arch-tests.c
+index 147ad0638bbb..3f2b90c59f92 100644
+--- a/tools/perf/arch/x86/tests/arch-tests.c
++++ b/tools/perf/arch/x86/tests/arch-tests.c
+@@ -4,7 +4,9 @@
+ #include "arch-tests.h"
+ 
+ #ifdef HAVE_AUXTRACE_SUPPORT
++#ifdef HAVE_EXTRA_TESTS
+ DEFINE_SUITE("x86 instruction decoder - new instructions", insn_x86);
++#endif
+ 
+ static struct test_case intel_pt_tests[] = {
+ 	TEST_CASE("Intel PT packet decoder", intel_pt_pkt_decoder),
+@@ -37,7 +39,9 @@ struct test_suite *arch_tests[] = {
+ 	&suite__dwarf_unwind,
+ #endif
+ #ifdef HAVE_AUXTRACE_SUPPORT
++#ifdef HAVE_EXTRA_TESTS
+ 	&suite__insn_x86,
++#endif
+ 	&suite__intel_pt,
+ #endif
+ #if defined(__x86_64__)
+diff --git a/tools/perf/tests/make b/tools/perf/tests/make
+index 8dd3f8090352..885cd321d67b 100644
+--- a/tools/perf/tests/make
++++ b/tools/perf/tests/make
+@@ -69,6 +69,7 @@ make_clean_all      := clean all
+ make_python_perf_so := $(python_perf_so)
+ make_debug          := DEBUG=1
+ make_nondistro      := BUILD_NONDISTRO=1
++make_extra_tests    := EXTRA_TESTS=1
+ make_no_libperl     := NO_LIBPERL=1
+ make_no_libpython   := NO_LIBPYTHON=1
+ make_no_scripts     := NO_LIBPYTHON=1 NO_LIBPERL=1
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.34.1
+
+
