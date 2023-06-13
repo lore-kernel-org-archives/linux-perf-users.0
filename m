@@ -2,52 +2,52 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5894EB64DD
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 19:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5419EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 19:47:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230430AbjFMTqd (ORCPT
+        id S232789AbjFMTrb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 15:46:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44164 "EHLO
+        Tue, 13 Jun 2023 15:47:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231284AbjFMTqb (ORCPT
+        with ESMTP id S231206AbjFMTra (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 15:46:31 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5923F10F7
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:46:30 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-65299178ac5so6302339b3a.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:46:30 -0700 (PDT)
+        Tue, 13 Jun 2023 15:47:30 -0400
+Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7898019A
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:47:28 -0700 (PDT)
+Received: by mail-oo1-xc31.google.com with SMTP id 006d021491bc7-55b171c1e16so4165755eaf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:47:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686685590; x=1689277590;
+        d=chromium.org; s=google; t=1686685648; x=1689277648;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mxeuPCO3GTvztmCaqFwBCrXNFMyoav37TQYPe5N2X2Q=;
-        b=ZXwqdQSU/HiRRBmiMo0Q4BulnluPAh2ryLShUC8dzGZsPXV27BS3mYaNw52krhQxmi
-         FDxiku3oDSIq7ETXuQ8zuIR6vPTTTiy5Uh+q09OiBHP7jNeYHGe8a87/wG4jR/UkKFXO
-         m0LB4L/wA3k4VB+TGrW72v2AVbhniQkqNzr60=
+        bh=/WhOeElaMsiD9GyeVbS/Kz/uOr4hArVsc6evONFkFnM=;
+        b=aeMNEMT7mnAhLHospPJ5V6vIYNCAcophNZar1VJgpYHxyFURQMMgUNDfiKxbq31qUx
+         /ntMLDU6dIgcpzP5jt5szoYlfgJOQ930p726r6qPC78stOnaYjfEWHjjMU58XMpu3dyx
+         I1eRXxTLecm0sTZY+o9wNW2LEqaDO5EnnyJcs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686685590; x=1689277590;
+        d=1e100.net; s=20221208; t=1686685648; x=1689277648;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mxeuPCO3GTvztmCaqFwBCrXNFMyoav37TQYPe5N2X2Q=;
-        b=hDdm6SoU/sjuG0l6KkithcngyHArBFKpA8JbpV9eTew7vPwXoXjy3HhPsf8yLP7sis
-         G6fpU9K4WOViIC8KCMe9FBOb+byyzh3y4vnVWLuPNk3Dj4cxSLDL0UNgUDQSkRE2PlkE
-         405J2wPQb2BmvvBFkEhp3Ep5sFKQchZRq4bmrUQf1yzg5mQOkg//G9QqVRalw/EXICqn
-         2MCFysPGC2B+SAiKpBqC4U7wWJ3G5nNK9h0m45SCVovI9a8RL1M6XTv21UwV9Ha9jdKI
-         qr49uA2TNAXpOvH6brVLsxObWQ3hWbW4gVKN3uTdqehbXFy43biPESkDNWID+liT0rg6
-         UEpA==
-X-Gm-Message-State: AC+VfDygEDQ3pietmvLrgCHSxsgBDmBpj8Hsz1xNi8JaTMgdQsQ5sCld
-        kmC6e2bWQrkrj4fIYQdcJ4bL9A==
-X-Google-Smtp-Source: ACHHUZ7jZ3mi9XpzJyAKqWF/U6Ou18xsuMhGoP192JvILRSeeC4WqAi7Cv8VWP4EnGr6RjXn0fMPJw==
-X-Received: by 2002:a05:6a00:1783:b0:662:c48b:47e2 with SMTP id s3-20020a056a00178300b00662c48b47e2mr19702410pfg.19.1686685589881;
-        Tue, 13 Jun 2023 12:46:29 -0700 (PDT)
+        bh=/WhOeElaMsiD9GyeVbS/Kz/uOr4hArVsc6evONFkFnM=;
+        b=KE+DeWKtgjsgI1sYf18JEx2ksP7Qy+FAit861tkdL47y6R9wWQNO1dNtmUmTUzGy8J
+         ZtgQmDNar7liMH86jMtV3iaXFGwu2XN45HAkklgYS7xm4YnYnJlqu3V4zjJwob9Q7hx+
+         48NCBNgF3KbbCxyEPLD859oG03ZTyt2pAbtnS5wEHxy35nuYpo4ZeQRNsIdeNEqd3n14
+         qyfBzZiPDhYrYfUk6hVbhL5YYu1zsw83CI4A9wydduNiL6fHA6LrLm2E31rxl7Ny9Bah
+         1kyCueob5j80L2lnfPuM3+0WOP88bUan5+kzpKApdHNWT/y9VLpoAKTKFlo1n/eFpaOl
+         +fIA==
+X-Gm-Message-State: AC+VfDxo8loHN9qVuMmJuXDcW+4fJV/3rFHEEkrjhZSdUPdW7DyZJDkv
+        dLy4dkQGeoQUhowdso41A+w3Fw==
+X-Google-Smtp-Source: ACHHUZ4U6UYeRfCrOKo1DH+SSAGfrV+G9PiakEqQJES8KDmPF0FcGGIFWyujt3k8m3pdnsxYnXqlng==
+X-Received: by 2002:aca:d0c:0:b0:398:c4ec:63bc with SMTP id 12-20020aca0d0c000000b00398c4ec63bcmr7585125oin.43.1686685647840;
+        Tue, 13 Jun 2023 12:47:27 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id t12-20020a62ea0c000000b00643355ff6a6sm9215426pfh.99.2023.06.13.12.46.29
+        by smtp.gmail.com with ESMTPSA id k67-20020a632446000000b005439aaf0301sm9683107pgk.64.2023.06.13.12.47.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jun 2023 12:46:29 -0700 (PDT)
-Date:   Tue, 13 Jun 2023 12:46:29 -0700
+        Tue, 13 Jun 2023 12:47:27 -0700 (PDT)
+Date:   Tue, 13 Jun 2023 12:47:26 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
@@ -75,67 +75,58 @@ Cc:     torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
         rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
         tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
         luc.vanoostenryck@gmail.com
-Subject: Re: [PATCH v3 03/57] locking: Introduce __cleanup() based
- infrastructure
-Message-ID: <202306131244.E8DF4CA166@keescook>
+Subject: Re: [PATCH v3 45/57] perf: Simplify perf_event_parse_addr_filter()
+Message-ID: <202306131247.3E617931@keescook>
 References: <20230612090713.652690195@infradead.org>
- <20230612093537.614161713@infradead.org>
- <20230613105522.GU4253@hirez.programming.kicks-ass.net>
+ <20230612093540.779825032@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230613105522.GU4253@hirez.programming.kicks-ass.net>
+In-Reply-To: <20230612093540.779825032@infradead.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 12:55:22PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 12, 2023 at 11:07:16AM +0200, Peter Zijlstra wrote:
-> 
-> > --- /dev/null
-> > +++ b/include/linux/cleanup.h
-> > @@ -0,0 +1,167 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef __LINUX_GUARDS_H
-> > +#define __LINUX_GUARDS_H
-> > +
-> > +#include <linux/compiler.h>
-> > +
-> > +/*
-> > + * DEFINE_FREE(name, type, free):
-> > + *	simple helper macro that defines the required wrapper for a __free()
-> > + *	based cleanup function. @free is an expression using '_T' to access
-> > + *	the variable.
-> > + *
-> > + * __free(name):
-> > + *	variable attribute to add a scoped based cleanup to the variable.
-> > + *
-> 
-> 	no_free_ptr(var):
-> 	  like a non-atomic xchg(var, NULL), such that the cleanup
-> 	  function will be inhibited -- provided it sanely deals with a
-> 	  NULL value.
-> 
-> > + * return_ptr(p):
-> > + *	returns p while inhibiting the __free().
-> > + *
-> > + * Ex.
-> > + *
-> > + * DEFINE_FREE(kfree, void *, if (_T) kfree(_T))
-> > + *
-> > + *	struct obj *p = kmalloc(...);
-> 
-> That should obviously have been:
-> 
-> 	struct obj *p __free(kfree) = kmalloc(...);
+On Mon, Jun 12, 2023 at 11:07:58AM +0200, Peter Zijlstra wrote:
+> XXX this code needs a cleanup
 
-Okay, good. I noticed that too. :)
+:)
 
-I also didn't see any users of the kfree helpers (maybe I missed them?)
-Maybe add at least one conversion just to have an example conversion for
-it too?
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/events/core.c |   56 ++++++++++++++++++++-------------------------------
+>  1 file changed, 22 insertions(+), 34 deletions(-)
+> 
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -10495,6 +10495,8 @@ static void free_filters_list(struct lis
+>  	}
+>  }
+>  
+> +DEFINE_FREE(filter_list, struct list_head *, if (_T) free_filters_list(_T))
+> +
+>  /*
+>   * Free existing address filters and optionally install new ones
+>   */
+> @@ -10658,13 +10660,15 @@ perf_event_parse_addr_filter(struct perf
+>  			     struct list_head *filters)
+>  {
+>  	struct perf_addr_filter *filter = NULL;
+> -	char *start, *orig, *filename = NULL;
+>  	substring_t args[MAX_OPT_ARGS];
+>  	int state = IF_STATE_ACTION, token;
+>  	unsigned int kernel = 0;
+> -	int ret = -EINVAL;
+> +	char *start;
+> +	int ret;
+>  
+> -	orig = fstr = kstrdup(fstr, GFP_KERNEL);
+> +	struct list_head *fguard __free(filter_list) = filters;
+> +	char *filename __free(kfree) = NULL;
+> +	char *orig __free(kfree) = fstr = kstrdup(fstr, GFP_KERNEL);
 
--Kees
+Ah! I see a kfree users. Sorry for the noise. :)
 
 -- 
 Kees Cook
