@@ -2,131 +2,216 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5419EB64D8
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 19:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7958EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 19:49:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232789AbjFMTrb (ORCPT
+        id S232005AbjFMTt1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 15:47:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44662 "EHLO
+        Tue, 13 Jun 2023 15:49:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231206AbjFMTra (ORCPT
+        with ESMTP id S229543AbjFMTtZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 15:47:30 -0400
-Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7898019A
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:47:28 -0700 (PDT)
-Received: by mail-oo1-xc31.google.com with SMTP id 006d021491bc7-55b171c1e16so4165755eaf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:47:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686685648; x=1689277648;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/WhOeElaMsiD9GyeVbS/Kz/uOr4hArVsc6evONFkFnM=;
-        b=aeMNEMT7mnAhLHospPJ5V6vIYNCAcophNZar1VJgpYHxyFURQMMgUNDfiKxbq31qUx
-         /ntMLDU6dIgcpzP5jt5szoYlfgJOQ930p726r6qPC78stOnaYjfEWHjjMU58XMpu3dyx
-         I1eRXxTLecm0sTZY+o9wNW2LEqaDO5EnnyJcs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686685648; x=1689277648;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/WhOeElaMsiD9GyeVbS/Kz/uOr4hArVsc6evONFkFnM=;
-        b=KE+DeWKtgjsgI1sYf18JEx2ksP7Qy+FAit861tkdL47y6R9wWQNO1dNtmUmTUzGy8J
-         ZtgQmDNar7liMH86jMtV3iaXFGwu2XN45HAkklgYS7xm4YnYnJlqu3V4zjJwob9Q7hx+
-         48NCBNgF3KbbCxyEPLD859oG03ZTyt2pAbtnS5wEHxy35nuYpo4ZeQRNsIdeNEqd3n14
-         qyfBzZiPDhYrYfUk6hVbhL5YYu1zsw83CI4A9wydduNiL6fHA6LrLm2E31rxl7Ny9Bah
-         1kyCueob5j80L2lnfPuM3+0WOP88bUan5+kzpKApdHNWT/y9VLpoAKTKFlo1n/eFpaOl
-         +fIA==
-X-Gm-Message-State: AC+VfDxo8loHN9qVuMmJuXDcW+4fJV/3rFHEEkrjhZSdUPdW7DyZJDkv
-        dLy4dkQGeoQUhowdso41A+w3Fw==
-X-Google-Smtp-Source: ACHHUZ4U6UYeRfCrOKo1DH+SSAGfrV+G9PiakEqQJES8KDmPF0FcGGIFWyujt3k8m3pdnsxYnXqlng==
-X-Received: by 2002:aca:d0c:0:b0:398:c4ec:63bc with SMTP id 12-20020aca0d0c000000b00398c4ec63bcmr7585125oin.43.1686685647840;
-        Tue, 13 Jun 2023 12:47:27 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id k67-20020a632446000000b005439aaf0301sm9683107pgk.64.2023.06.13.12.47.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jun 2023 12:47:27 -0700 (PDT)
-Date:   Tue, 13 Jun 2023 12:47:26 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     torvalds@linux-foundation.org, gregkh@linuxfoundation.org,
-        pbonzini@redhat.com, masahiroy@kernel.org, nathan@kernel.org,
-        ndesaulniers@google.com, nicolas@fjasle.eu,
-        catalin.marinas@arm.com, will@kernel.org, vkoul@kernel.org,
-        trix@redhat.com, ojeda@kernel.org, mingo@redhat.com,
-        longman@redhat.com, boqun.feng@gmail.com, dennis@kernel.org,
-        tj@kernel.org, cl@linux.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
-        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
-        joel@joelfernandes.org, josh@joshtriplett.org,
-        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
-        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
-        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
-        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
-        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
-        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
-        luc.vanoostenryck@gmail.com
-Subject: Re: [PATCH v3 45/57] perf: Simplify perf_event_parse_addr_filter()
-Message-ID: <202306131247.3E617931@keescook>
-References: <20230612090713.652690195@infradead.org>
- <20230612093540.779825032@infradead.org>
+        Tue, 13 Jun 2023 15:49:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02BEBB3;
+        Tue, 13 Jun 2023 12:49:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BDEF630A1;
+        Tue, 13 Jun 2023 19:49:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E76C433F0;
+        Tue, 13 Jun 2023 19:49:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686685764;
+        bh=PZv+XMCCXCRCZTRyomhmcyUv5X6MbpeqfAXOZO1XZHg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Fz0IA7ez5ZF4MV5aHTyCJY0Ezy31j4aPUmBxhFKQ1wpHWjr9tF3zHBamNfLTH04Kp
+         KmoB6/3c2tyui1Lc6MQgfrtoglFz7TZ4qkedqG3XkCp0ZAF9h5+3JzMEcpwMQN6khf
+         YVr6PHDfyRa0eyOEVkDT35axt5imHy33YzF8vMuloq/3tpHjU+2Mzs4JVHTF8JCBJ3
+         +vtNzt66GOu16UxWt8d2dodtx8E5e7aaFVuIshtWAc1n9ja/3F0pSvX7N3aGcLu0nm
+         qR+dYAkCRfejne3gwI2swXvXvouiKLEBYlqjo8SpE4ZUcFCGnAuNdsbhTT42ralVIZ
+         yv4naYMsd+c1g==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1A8E240692; Tue, 13 Jun 2023 16:49:21 -0300 (-03)
+Date:   Tue, 13 Jun 2023 16:49:21 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     irogers@google.com, jolsa@kernel.org, namhyung@kernel.org,
+        mark.rutland@arm.com, peterz@infradead.org,
+        adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        james.clark@arm.com, alisaidi@amazon.com, leo.yan@linaro.org,
+        maddy@linux.ibm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sandipan.das@amd.com,
+        ananth.narayan@amd.com, santosh.shukla@amd.com
+Subject: Re: [PATCH 2/4] perf tool x86: Consolidate is_amd check into single
+ function
+Message-ID: <ZIjIQZwqWD/r7f0W@kernel.org>
+References: <20230613095506.547-1-ravi.bangoria@amd.com>
+ <20230613095506.547-3-ravi.bangoria@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230612093540.779825032@infradead.org>
+In-Reply-To: <20230613095506.547-3-ravi.bangoria@amd.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 11:07:58AM +0200, Peter Zijlstra wrote:
-> XXX this code needs a cleanup
+Em Tue, Jun 13, 2023 at 03:25:04PM +0530, Ravi Bangoria escreveu:
+> There are multiple places where x86 specific code determines AMD vs
+> Intel arch and acts based on that. Consolidate those checks into a
+> single function.
 
-:)
+I'm cherry picking this one now.
 
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+- Arnaldo
+ 
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 > ---
->  kernel/events/core.c |   56 ++++++++++++++++++++-------------------------------
->  1 file changed, 22 insertions(+), 34 deletions(-)
+>  tools/perf/arch/x86/util/Build        |  1 +
+>  tools/perf/arch/x86/util/env.c        | 19 +++++++++++++++++++
+>  tools/perf/arch/x86/util/env.h        |  7 +++++++
+>  tools/perf/arch/x86/util/evsel.c      | 16 ++--------------
+>  tools/perf/arch/x86/util/mem-events.c | 19 ++-----------------
+>  5 files changed, 31 insertions(+), 31 deletions(-)
+>  create mode 100644 tools/perf/arch/x86/util/env.c
+>  create mode 100644 tools/perf/arch/x86/util/env.h
 > 
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10495,6 +10495,8 @@ static void free_filters_list(struct lis
->  	}
->  }
+> diff --git a/tools/perf/arch/x86/util/Build b/tools/perf/arch/x86/util/Build
+> index 195ccfdef7aa..005907cb97d8 100644
+> --- a/tools/perf/arch/x86/util/Build
+> +++ b/tools/perf/arch/x86/util/Build
+> @@ -10,6 +10,7 @@ perf-y += evlist.o
+>  perf-y += mem-events.o
+>  perf-y += evsel.o
+>  perf-y += iostat.o
+> +perf-y += env.o
 >  
-> +DEFINE_FREE(filter_list, struct list_head *, if (_T) free_filters_list(_T))
+>  perf-$(CONFIG_DWARF) += dwarf-regs.o
+>  perf-$(CONFIG_BPF_PROLOGUE) += dwarf-regs.o
+> diff --git a/tools/perf/arch/x86/util/env.c b/tools/perf/arch/x86/util/env.c
+> new file mode 100644
+> index 000000000000..33b87f8ac1cc
+> --- /dev/null
+> +++ b/tools/perf/arch/x86/util/env.c
+> @@ -0,0 +1,19 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "linux/string.h"
+> +#include "util/env.h"
+> +#include "env.h"
 > +
->  /*
->   * Free existing address filters and optionally install new ones
->   */
-> @@ -10658,13 +10660,15 @@ perf_event_parse_addr_filter(struct perf
->  			     struct list_head *filters)
->  {
->  	struct perf_addr_filter *filter = NULL;
-> -	char *start, *orig, *filename = NULL;
->  	substring_t args[MAX_OPT_ARGS];
->  	int state = IF_STATE_ACTION, token;
->  	unsigned int kernel = 0;
-> -	int ret = -EINVAL;
-> +	char *start;
-> +	int ret;
+> +bool x86__is_amd_cpu(void)
+> +{
+> +	struct perf_env env = { .total_mem = 0, };
+> +	static int is_amd; /* 0: Uninitialized, 1: Yes, -1: No */
+> +
+> +	if (is_amd)
+> +		goto ret;
+> +
+> +	perf_env__cpuid(&env);
+> +	is_amd = env.cpuid && strstarts(env.cpuid, "AuthenticAMD") ? 1 : -1;
+> +
+> +ret:
+> +	return is_amd >= 1 ? true : false;
+> +}
+> diff --git a/tools/perf/arch/x86/util/env.h b/tools/perf/arch/x86/util/env.h
+> new file mode 100644
+> index 000000000000..d78f080b6b3f
+> --- /dev/null
+> +++ b/tools/perf/arch/x86/util/env.h
+> @@ -0,0 +1,7 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _X86_ENV_H
+> +#define _X86_ENV_H
+> +
+> +bool x86__is_amd_cpu(void);
+> +
+> +#endif /* _X86_ENV_H */
+> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+> index 25da46c8cca9..512c2d885d24 100644
+> --- a/tools/perf/arch/x86/util/evsel.c
+> +++ b/tools/perf/arch/x86/util/evsel.c
+> @@ -8,6 +8,7 @@
+>  #include "linux/string.h"
+>  #include "evsel.h"
+>  #include "util/debug.h"
+> +#include "env.h"
 >  
-> -	orig = fstr = kstrdup(fstr, GFP_KERNEL);
-> +	struct list_head *fguard __free(filter_list) = filters;
-> +	char *filename __free(kfree) = NULL;
-> +	char *orig __free(kfree) = fstr = kstrdup(fstr, GFP_KERNEL);
-
-Ah! I see a kfree users. Sorry for the noise. :)
+>  #define IBS_FETCH_L3MISSONLY   (1ULL << 59)
+>  #define IBS_OP_L3MISSONLY      (1ULL << 16)
+> @@ -78,23 +79,10 @@ void arch__post_evsel_config(struct evsel *evsel, struct perf_event_attr *attr)
+>  {
+>  	struct perf_pmu *evsel_pmu, *ibs_fetch_pmu, *ibs_op_pmu;
+>  	static int warned_once;
+> -	/* 0: Uninitialized, 1: Yes, -1: No */
+> -	static int is_amd;
+>  
+> -	if (warned_once || is_amd == -1)
+> +	if (warned_once || !x86__is_amd_cpu())
+>  		return;
+>  
+> -	if (!is_amd) {
+> -		struct perf_env *env = evsel__env(evsel);
+> -
+> -		if (!perf_env__cpuid(env) || !env->cpuid ||
+> -		    !strstarts(env->cpuid, "AuthenticAMD")) {
+> -			is_amd = -1;
+> -			return;
+> -		}
+> -		is_amd = 1;
+> -	}
+> -
+>  	evsel_pmu = evsel__find_pmu(evsel);
+>  	if (!evsel_pmu)
+>  		return;
+> diff --git a/tools/perf/arch/x86/util/mem-events.c b/tools/perf/arch/x86/util/mem-events.c
+> index 32879d12a8d5..a8a782bcb121 100644
+> --- a/tools/perf/arch/x86/util/mem-events.c
+> +++ b/tools/perf/arch/x86/util/mem-events.c
+> @@ -5,6 +5,7 @@
+>  #include "map_symbol.h"
+>  #include "mem-events.h"
+>  #include "linux/string.h"
+> +#include "env.h"
+>  
+>  static char mem_loads_name[100];
+>  static bool mem_loads_name__init;
+> @@ -27,28 +28,12 @@ static struct perf_mem_event perf_mem_events_amd[PERF_MEM_EVENTS__MAX] = {
+>  	E("mem-ldst",	"ibs_op//",	"ibs_op"),
+>  };
+>  
+> -static int perf_mem_is_amd_cpu(void)
+> -{
+> -	struct perf_env env = { .total_mem = 0, };
+> -
+> -	perf_env__cpuid(&env);
+> -	if (env.cpuid && strstarts(env.cpuid, "AuthenticAMD"))
+> -		return 1;
+> -	return -1;
+> -}
+> -
+>  struct perf_mem_event *perf_mem_events__ptr(int i)
+>  {
+> -	/* 0: Uninitialized, 1: Yes, -1: No */
+> -	static int is_amd;
+> -
+>  	if (i >= PERF_MEM_EVENTS__MAX)
+>  		return NULL;
+>  
+> -	if (!is_amd)
+> -		is_amd = perf_mem_is_amd_cpu();
+> -
+> -	if (is_amd == 1)
+> +	if (x86__is_amd_cpu())
+>  		return &perf_mem_events_amd[i];
+>  
+>  	return &perf_mem_events_intel[i];
+> -- 
+> 2.40.1
+> 
 
 -- 
-Kees Cook
+
+- Arnaldo
