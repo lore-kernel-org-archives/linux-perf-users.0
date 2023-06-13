@@ -2,195 +2,115 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4418EB64D8
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 19:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37445EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 20:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239627AbjFMT7h (ORCPT
+        id S239870AbjFMUG4 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 15:59:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50352 "EHLO
+        Tue, 13 Jun 2023 16:06:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239622AbjFMT7h (ORCPT
+        with ESMTP id S239795AbjFMUGy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 15:59:37 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880FF173C
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:59:35 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-3f9b7de94e7so61471cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:59:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686686374; x=1689278374;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dWV4DFWiyG4Y2gp1F3lQmlOfZ0g9f1+o7b1sfIWxN8o=;
-        b=xF8nsIGqZpmzkzXfWBRX8HaN6qBTGNTuBKxXTlHdPNnO17gUJHJcEzMv1wVOeGHHPe
-         96jjt0n7+ECnGXTZVCzEB1oHri5EOqcxpXrcci5+uXeFVjLRPGtOfe6wVotAYNPXoIpf
-         XbVOVGB7XHwJyYKGSa1bExzC3ExfF3O5p0JFnL7pspZHWIVyLMO/K4mD0wFWeDauhyqB
-         iMuslgIxC+tgAy4KZNKi8BdAeZISwebp6VvyQETVg6XHBQAWhbxgaUONABvgcdVLErtT
-         UZ+wpy57kuFy+L3SEbujxMUWcnCcmhMgH6Sxs80M5YnwPxTgeCVWc/GyHm/IAx4K5YCI
-         0LPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686686374; x=1689278374;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dWV4DFWiyG4Y2gp1F3lQmlOfZ0g9f1+o7b1sfIWxN8o=;
-        b=RbubvUu6qyFzbLFw0njc3TW9lFPqoPLxs7DsZLfKPigyPsPJxY7qHurLZI62J4M9Ju
-         p9Kxe7Ru+/+GUeNN//KWeKPG4Q+Lyxt5UEOcdEPXOJpRD3dmBySpit7s8ih8T6Ed06z6
-         9j1KKoJXh1PE2uqaUkQHewgLjIVtE78qglfJ6Q5Dp9EEPhyXoMYG7MKb1FnN0AGXALVM
-         s89QltlyTvdlnR6DDzFYH5FafxS/AULvwJ6BAc3XY9ZjAZKhGoE94B4XCVhPXtZ2EkL9
-         1DNMIcz+JVZCCLwGT5Z+qxC3hrcvb3ctyaRtzR7blIACO8p0dOc08hVTuCXvDkJJP59A
-         PVug==
-X-Gm-Message-State: AC+VfDzPFOS1izCjOuw29/dVhoXXGmPYy4qMtylG5rN4DGH1MbW1mNqq
-        AOJ1pMWn4UUvzRuU/qCmSEQ6JNET6DlYhctk6qIPmA==
-X-Google-Smtp-Source: ACHHUZ74BGFtSbd/xN8foJZ5lpV2qvcGtNn2WorQx/FePZ23Ktnlyjq3EhaWijZOdmQx2K8MJnWqF1Emp0Xy2XeryTQ=
-X-Received: by 2002:a05:622a:43:b0:3ed:210b:e698 with SMTP id
- y3-20020a05622a004300b003ed210be698mr39221qtw.7.1686686374446; Tue, 13 Jun
- 2023 12:59:34 -0700 (PDT)
+        Tue, 13 Jun 2023 16:06:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CFC91732
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 13:06:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1559A6353C
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 20:06:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B11BC433F0;
+        Tue, 13 Jun 2023 20:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686686812;
+        bh=TDAL0PNjfKzexRJes9YMCwJd4LRCQtxHOJlAvxL4ucQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MPAq+9ZTxS2wXilNMI2iVJVGpBRMz6rfjPWVEKiRyej/IaTiGK/UGRJLMdTg7vDEb
+         lIwoSnsAW3bM2p2rsiJ65/vl6tgrDfJb2qjvz9FifYbUIqWU2QN2QDVtxUYppK3JSg
+         yKVQbnrg8FcGBhkaXKi+Y0bK+dbaQgM6Gv2MiYTiXgoaGmjeEobTj0stPEVwF1OeUA
+         uOu1K5o8g5x/FvFolLjkeR+m9rXf16/HCdbYEHMntkZz99hjKV4KkDkK0Otmz+kIX/
+         g90yiWczFZHOCBJ7+vWJAMvIArIWIN9O0rnQq2HD62F/Bv+tdXPqZfKAS98q0QmZuY
+         RCPmLgv+ywq2Q==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id A25B240692; Tue, 13 Jun 2023 17:06:49 -0300 (-03)
+Date:   Tue, 13 Jun 2023 17:06:49 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Petar Gligoric <petar.gligoric@rohde-schwarz.com>,
+        Hagen Paul Pfeifer <hagen@jauu.net>
+Cc:     jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
+        ravi.bangoria@amd.com, john.g.garry@oracle.com,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, Aditya Gupta <adityag@linux.ibm.com>
+Subject: Re: [PATCH 15/17] perf tests task_analyzer: fix bad substitution
+ ${$1}
+Message-ID: <ZIjMWUk/axKfMCM4@kernel.org>
+References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
+ <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20230607162700.3234712-1-kan.liang@linux.intel.com> <20230607162700.3234712-6-kan.liang@linux.intel.com>
-In-Reply-To: <20230607162700.3234712-6-kan.liang@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 13 Jun 2023 12:59:23 -0700
-Message-ID: <CAP-5=fU_5fkJZ49B2yxkS4usuKw9fXZ=o-oJo3n5-j5YTAWNvA@mail.gmail.com>
-Subject: Re: [PATCH 5/8] perf stat,jevents: Introduce Default tags for the
- default mode
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 7, 2023 at 9:27=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> Introduce a new metricgroup, Default, to tag all the metric groups which
-> will be collected in the default mode.
->
-> Add a new field, DefaultMetricgroupName, in the JSON file to indicate
-> the real metric group name. It will be printed in the default output
-> to replace the event names.
->
-> There is nothing changed for the output format.
->
-> On SPR, both TopdownL1 and TopdownL2 are displayed in the default
-> output.
->
-> On ARM, Intel ICL and later platforms (before SPR), only TopdownL1 is
-> displayed in the default output.
->
-> Suggested-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Em Tue, Jun 13, 2023 at 10:11:43PM +0530, Athira Rajeev escreveu:
+> From: Aditya Gupta <adityag@linux.ibm.com>
+> 
+> ${$1} gives bad substitution error on sh, bash, and zsh. This seems like
+> a typo, and this patch modifies it to $1, since that is what it's usage
+> looks like from wherever `check_exec_0` is called.
+
+Nicely spotted!
+
+Please add the people that last touched the problem to the cc list,
+specially when it fixes a bug.
+
+Thanks for adding a Fixes tag, that helps the stable@kernel.org guys to
+get this propagated to supported kernel releases.
+
+I've added the test author to the CC list in this message.
+
+thanks!
+
+- Arnaldo
+ 
+> This issue due to ${$1} caused all function calls to give error in
+> `find_str_or_fail` line, and so no test runs completely. But
+> 'perf test "perf script task-analyzer tests"' wrongly reports
+> that tests passed with the status OK, which is wrong considering
+> the tests didn't even run completely
+> 
+> Fixes: e8478b84d6ba ("perf test: add new task-analyzer tests")
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
 > ---
->  tools/perf/builtin-stat.c          | 4 ++--
->  tools/perf/pmu-events/jevents.py   | 5 +++--
->  tools/perf/pmu-events/pmu-events.h | 1 +
->  tools/perf/util/metricgroup.c      | 3 +++
->  4 files changed, 9 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index c87c6897edc9..2269b3e90e9b 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2154,14 +2154,14 @@ static int add_default_attributes(void)
->                  * Add TopdownL1 metrics if they exist. To minimize
->                  * multiplexing, don't request threshold computation.
->                  */
-> -               if (metricgroup__has_metric(pmu, "TopdownL1")) {
-> +               if (metricgroup__has_metric(pmu, "Default")) {
->                         struct evlist *metric_evlist =3D evlist__new();
->                         struct evsel *metric_evsel;
->
->                         if (!metric_evlist)
->                                 return -1;
->
-> -                       if (metricgroup__parse_groups(metric_evlist, pmu,=
- "TopdownL1",
-> +                       if (metricgroup__parse_groups(metric_evlist, pmu,=
- "Default",
->                                                         /*metric_no_group=
-=3D*/false,
->                                                         /*metric_no_merge=
-=3D*/false,
->                                                         /*metric_no_thres=
-hold=3D*/true,
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 7ed258be1829..12e80bb7939b 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -54,8 +54,8 @@ _json_event_attributes =3D [
->  # Attributes that are in pmu_metric rather than pmu_event.
->  _json_metric_attributes =3D [
->      'pmu', 'metric_name', 'metric_group', 'metric_expr', 'metric_thresho=
-ld',
-> -    'desc', 'long_desc', 'unit', 'compat', 'metricgroup_no_group', 'aggr=
-_mode',
-> -    'event_grouping'
-> +    'desc', 'long_desc', 'unit', 'compat', 'metricgroup_no_group',
-> +    'default_metricgroup_name', 'aggr_mode', 'event_grouping'
->  ]
->  # Attributes that are bools or enum int values, encoded as '0', '1',...
->  _json_enum_attributes =3D ['aggr_mode', 'deprecated', 'event_grouping', =
-'perpkg']
-> @@ -307,6 +307,7 @@ class JsonEvent:
->      self.metric_name =3D jd.get('MetricName')
->      self.metric_group =3D jd.get('MetricGroup')
->      self.metricgroup_no_group =3D jd.get('MetricgroupNoGroup')
-> +    self.default_metricgroup_name =3D jd.get('DefaultMetricgroupName')
->      self.event_grouping =3D convert_metric_constraint(jd.get('MetricCons=
-traint'))
->      self.metric_expr =3D None
->      if 'MetricExpr' in jd:
-> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/p=
-mu-events.h
-> index 8cd23d656a5d..caf59f23cd64 100644
-> --- a/tools/perf/pmu-events/pmu-events.h
-> +++ b/tools/perf/pmu-events/pmu-events.h
-> @@ -61,6 +61,7 @@ struct pmu_metric {
->         const char *desc;
->         const char *long_desc;
->         const char *metricgroup_no_group;
-> +       const char *default_metricgroup_name;
->         enum aggr_mode_class aggr_mode;
->         enum metric_event_groups event_grouping;
->  };
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index 74f2d8efc02d..efafa02db5e5 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -137,6 +137,8 @@ struct metric {
->          * output.
->          */
->         const char *metric_unit;
-> +       /** Optional default metric group name */
-> +       const char *default_metricgroup_name;
+>  tools/perf/tests/shell/test_task_analyzer.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
+> index 4264b54b654b..84ab7e7f57d5 100755
+> --- a/tools/perf/tests/shell/test_task_analyzer.sh
+> +++ b/tools/perf/tests/shell/test_task_analyzer.sh
+> @@ -31,7 +31,7 @@ report() {
+>  
+>  check_exec_0() {
+>  	if [ $? != 0 ]; then
+> -		report 1 "invokation of ${$1} command failed"
+> +		report 1 "invocation of $1 command failed"
+>  	fi
+>  }
+>  
+> -- 
+> 2.39.1
+> 
 
-Adding a bit more to the comment would be useful, like:
+-- 
 
-Optional name of the metric group reported if the Default metric group
-is being processed.
-
->         /** Optional null terminated array of referenced metrics. */
->         struct metric_ref *metric_refs;
->         /**
-> @@ -219,6 +221,7 @@ static struct metric *metric__new(const struct pmu_me=
-tric *pm,
->
->         m->pmu =3D pm->pmu ?: "cpu";
->         m->metric_name =3D pm->metric_name;
-> +       m->default_metricgroup_name =3D pm->default_metricgroup_name;
->         m->modifier =3D NULL;
->         if (modifier) {
->                 m->modifier =3D strdup(modifier);
-> --
-> 2.35.1
->
+- Arnaldo
