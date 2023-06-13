@@ -2,154 +2,188 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4DBFC7EE29
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 05:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A741EC88CB7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 05:56:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238463AbjFMFuT convert rfc822-to-8bit (ORCPT
+        id S234604AbjFMF4V convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 01:50:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53028 "EHLO
+        Tue, 13 Jun 2023 01:56:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234044AbjFMFuS (ORCPT
+        with ESMTP id S234474AbjFMF4U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 01:50:18 -0400
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A394193;
-        Mon, 12 Jun 2023 22:50:17 -0700 (PDT)
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4635c158e2aso1435245e0c.3;
-        Mon, 12 Jun 2023 22:50:17 -0700 (PDT)
+        Tue, 13 Jun 2023 01:56:20 -0400
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26E9618E;
+        Mon, 12 Jun 2023 22:56:19 -0700 (PDT)
+Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4652fcb2ac1so2100964e0c.1;
+        Mon, 12 Jun 2023 22:56:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686635416; x=1689227416;
+        d=1e100.net; s=20221208; t=1686635778; x=1689227778;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nsx620+1M90qrU4V38kYMgmC7IznSroVoq6oc0YB+sE=;
-        b=k8Z6HE2+obOa/WFEGowyR11EINKva/INij0RxavUqPvfa6IdPSum07+Bzd41mf7Wbq
-         DBJoWfiwM2+GctnEoKVcEbPFfmRZDpT5wqJVddZ/V5quLRT2xY9Y+Xv1EI7n6D2qYVH7
-         q7zLrDBDvTZwVocD4xWV/TLq1QNu+l79AwZCAI3V3GUoGJQXZucXg/ZyUWXxb+eJSOyp
-         1837Bu+sr9OMqAp3jKKrMJZNZlzYwFvfQ6sK7DuxieJ+Ie3Og7zDW0av4VySgafZh2d9
-         MGR1Os1CisMeIp0K/t0T+9VuocN1ikS4IqHAaaEi2uwv3T1+wkgO2Z7tS1paTekRm5l6
-         yzQg==
-X-Gm-Message-State: AC+VfDxFed4KIg6Ilyq1ULSHdLj9A0/tHS0+rDXBCJH2GXAOauUehdwW
-        IhtPkAPc/NrdMyPc3MR8CiXIVOiJa/wwlozT2Dw=
-X-Google-Smtp-Source: ACHHUZ75SSTZ8MOA1nBxrAdL89bFnviFrt8Aqn8XAGlNUqTsDWpLRPiQok+KBlPBcBEv5zJ5hZXMZ8HSdQYIG5MsE0Y=
-X-Received: by 2002:a1f:c192:0:b0:45e:890e:f3cc with SMTP id
- r140-20020a1fc192000000b0045e890ef3ccmr4237944vkf.4.1686635416471; Mon, 12
- Jun 2023 22:50:16 -0700 (PDT)
+        bh=CXoP/SfXeEJ/3wkZUjDn660T9VLgrFL+TBUwgZAoObU=;
+        b=iqLgDpZLQwdyissvPRLHjcy3JmFLoxoZlVg6GNaG/3XM1VcZQG8XM7fsRYdsJ9qe3x
+         h6dYWzAGUqVJpGGxy2rbb5eLFrkr4TdRt68ARWnvpbwNZ88kaoogpzWG5vKw28m5Zc2z
+         j2MW6uNU91YIjggpLap+bCd6gZdInnhL5yD2S0cTNsIot0GQxYSRY85L9P723AWjNF2+
+         s0LXlBa3Cr+AqwVuue2V1AvKXF5bpxnM06mpVMq6gdjGkddC60p5cwJ7iu5H0eW9F22t
+         Uk8B6Ec/O2Psjc9g8xA3kaKFFxdODwQyeZjpjwEIkg/w4uQD4aVcyD34lwhR+l/ZbSB8
+         FWLw==
+X-Gm-Message-State: AC+VfDyY3m5uxPLsxL/yO1LqtMgVoIFFUql31wF6aalpcZtw0GY5Rk2Z
+        nLa94QzqGF2YkvD6BzoWLzCysoxWm1jhdhXimWE=
+X-Google-Smtp-Source: ACHHUZ7Cj9u8WTOpvJ3k1N/xhXE9h8rxLIkzVesRwg9r4gsjesfbSe/X67dLrFf1E5Xf3TVgeqrXTm+8Y8tzoGTBqiw=
+X-Received: by 2002:a1f:4386:0:b0:45d:5914:80b with SMTP id
+ q128-20020a1f4386000000b0045d5914080bmr5911210vka.6.1686635778061; Mon, 12
+ Jun 2023 22:56:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <159de73b-fdd6-6df8-4f77-73c628fe641f@huawei.com>
- <a24634f7-be80-6ca2-9df7-1624fe11c281@arm.com> <c291692c-7db8-b4cc-e17a-422c75ad8daa@huawei.com>
-In-Reply-To: <c291692c-7db8-b4cc-e17a-422c75ad8daa@huawei.com>
+References: <20230612090713.652690195@infradead.org> <20230612093539.371360635@infradead.org>
+In-Reply-To: <20230612093539.371360635@infradead.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 12 Jun 2023 22:50:05 -0700
-Message-ID: <CAM9d7chqy-RztC943JOgRLcEHvKZN8rS542q3xxW63==KGY3CQ@mail.gmail.com>
-Subject: Re: [RFC] Adding support for setting the affinity of the recording process
-To:     Yang Jihong <yangjihong1@huawei.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
+Date:   Mon, 12 Jun 2023 22:56:06 -0700
+Message-ID: <CAM9d7cjz4cnEgV_oAnTOqyCWXDeD3ECYQFc=Uksct2-HKuFmiQ@mail.gmail.com>
+Subject: Re: [PATCH v3 26/57] perf: Simplify event_function*()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     torvalds@linux-foundation.org, keescook@chromium.org,
+        gregkh@linuxfoundation.org, pbonzini@redhat.com,
+        masahiroy@kernel.org, nathan@kernel.org, ndesaulniers@google.com,
+        nicolas@fjasle.eu, catalin.marinas@arm.com, will@kernel.org,
+        vkoul@kernel.org, trix@redhat.com, ojeda@kernel.org,
+        mingo@redhat.com, longman@redhat.com, boqun.feng@gmail.com,
+        dennis@kernel.org, tj@kernel.org, cl@linux.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, bristot@redhat.com, vschneid@redhat.com,
+        paulmck@kernel.org, frederic@kernel.org, quic_neeraju@quicinc.com,
+        joel@joelfernandes.org, josh@joshtriplett.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        rientjes@google.com, vbabka@suse.cz, roman.gushchin@linux.dev,
+        42.hyeyoo@gmail.com, apw@canonical.com, joe@perches.com,
+        dwaipayanray1@gmail.com, lukas.bulwahn@gmail.com,
+        john.johansen@canonical.com, paul@paul-moore.com,
+        jmorris@namei.org, serge@hallyn.com, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        llvm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+        rcu@vger.kernel.org, linux-security-module@vger.kernel.org,
+        tglx@linutronix.de, ravi.bangoria@amd.com, error27@gmail.com,
+        luc.vanoostenryck@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
+Hi Peter,
 
-On Mon, Jun 12, 2023 at 7:28 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+On Mon, Jun 12, 2023 at 2:39 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> Hello,
+> Use guards to reduce gotos and simplify control flow.
 >
-> On 2023/6/12 23:27, James Clark wrote:
-> >
-> >
-> > On 12/06/2023 11:26, Yang Jihong wrote:
-> >> Hello everyone,
-> >>
-> >> Currently, perf-record supports profiling an existing process, thread,
-> >> or a specified command.
-> >>
-> >> Sometimes we may need to set CPU affinity of the target process before
-> >> recording:
-> >>
-> >>    # taskset -pc <cpus> <pid>
-> >>    # perf record -p <pid> -- sleep 10
-> >>
-> >> or:
-> >>
-> >>    # perf record -- `taskset -c <cpus> COMMAND`
-> >>
-> >> I'm thinking about getting perf to support setting the affinity of the
-> >> recording process, for example:
-> >>
-> >> 1. set the CPU affinity of the <pid1> process to <cpus1>, <pid2> process
-> >> to <cpus2>,  and record:
-> >>
-> >>    # perf record -p <pid1>/<cpus1>:<pid2>/<cpus2> -- sleep 10
-> >>
-> >
-> > I'm not sure if this is necessary. You can already do this with taskset
-> > when you launch the processes or for existing ones.
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/events/core.c |   39 ++++++++++++++++++++++++++-------------
+>  1 file changed, 26 insertions(+), 13 deletions(-)
 >
-> Yes, that's what we're doing now, and I'm thinking about whether perf
-> can support this "taskset" feature.
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -214,6 +214,25 @@ struct event_function_struct {
+>         void *data;
+>  };
+>
+> +typedef struct {
+> +       struct perf_cpu_context *cpuctx;
+> +       struct perf_event_context *ctx;
+> +} class_perf_ctx_lock_t;
+> +
+> +static inline void class_perf_ctx_lock_destructor(class_perf_ctx_lock_t *_T)
+> +{
+> +       if (_T->cpuctx)
+> +               perf_ctx_unlock(_T->cpuctx, _T->ctx);
 
-I agree with James that it looks out of scope of perf tools.
-You can always use `taskset` for external processes.
-
->
-> >
-> >> and
-> >>
-> >> 2. set CPU affinity of the COMMAND and record:
-> >>
-> >>    # perf record --taskset-command <cpus> COMMAND
-> >>
-> >> In doing so, perf, as an observer, actually changes some of the
-> >> properties of the target process, which may be contrary to the purpose
-> >> of perf tool.
-> >>
-> >>
-> >> Will we consider accepting this approach?
-> >>
-> >
-> > For #2 I do this sometimes, but I prefix the perf command with taskset
-> > because otherwise there is a small time between when taskset does its
-> > thing and launching the child process that it runs in the wrong place.
-> >
-> > Then one issue with the above method is that perf itself gets pinned to
-> > those CPUs as well. I suppose that could influence your application but
-> > I've never had an issue with it.
-> >
-> > If you really can't live with perf also being pinned to those CPUs I
-> > would say it makes sense to add options for #2. Otherwise I would just
-> > run everything under taskset and no changes are needed.
->
-> If "perf" process and the target process are pinned to the same CPU,
-> and the CPU usage of the target process is high, the perf data
-> collection may be affected. Therefore, in this case, we may need to pin
-> the target process and "perf" to different CPUs.
->
-> >
-> > I think you would still need to have perf itself pinned to the CPUs just
-> > before it does the fork and exec, and then after that it can undo its
-> > pinning. Otherwise you'd still get that small time running on the wrong
-> > cores.
-> >
->
-> Thanks for your advice, or we can support setting different affinities
-> for the "perf" process and the target process.
-
-When it comes to controlling `perf`, you can use --threads=<spec>
-option which supports fairly complex control for parallelism and
-affinity.
+Shouldn't it be called unconditionally?
 
 Thanks,
 Namhyung
+
+> +}
+> +
+> +static inline class_perf_ctx_lock_t
+> +class_perf_ctx_lock_constructor(struct perf_cpu_context *cpuctx,
+> +                               struct perf_event_context *ctx)
+> +{
+> +       perf_ctx_lock(cpuctx, ctx);
+> +       return (class_perf_ctx_lock_t){ cpuctx, ctx };
+> +}
+> +
+>  static int event_function(void *info)
+>  {
+>         struct event_function_struct *efs = info;
+> @@ -224,17 +243,15 @@ static int event_function(void *info)
+>         int ret = 0;
+>
+>         lockdep_assert_irqs_disabled();
+> +       guard(perf_ctx_lock)(cpuctx, task_ctx);
+>
+> -       perf_ctx_lock(cpuctx, task_ctx);
+>         /*
+>          * Since we do the IPI call without holding ctx->lock things can have
+>          * changed, double check we hit the task we set out to hit.
+>          */
+>         if (ctx->task) {
+> -               if (ctx->task != current) {
+> -                       ret = -ESRCH;
+> -                       goto unlock;
+> -               }
+> +               if (ctx->task != current)
+> +                       return -ESRCH;
+>
+>                 /*
+>                  * We only use event_function_call() on established contexts,
+> @@ -254,8 +271,6 @@ static int event_function(void *info)
+>         }
+>
+>         efs->func(event, cpuctx, ctx, efs->data);
+> -unlock:
+> -       perf_ctx_unlock(cpuctx, task_ctx);
+>
+>         return ret;
+>  }
+> @@ -329,11 +344,11 @@ static void event_function_local(struct
+>                 task_ctx = ctx;
+>         }
+>
+> -       perf_ctx_lock(cpuctx, task_ctx);
+> +       guard(perf_ctx_lock)(cpuctx, task_ctx);
+>
+>         task = ctx->task;
+>         if (task == TASK_TOMBSTONE)
+> -               goto unlock;
+> +               return;
+>
+>         if (task) {
+>                 /*
+> @@ -343,18 +358,16 @@ static void event_function_local(struct
+>                  */
+>                 if (ctx->is_active) {
+>                         if (WARN_ON_ONCE(task != current))
+> -                               goto unlock;
+> +                               return;
+>
+>                         if (WARN_ON_ONCE(cpuctx->task_ctx != ctx))
+> -                               goto unlock;
+> +                               return;
+>                 }
+>         } else {
+>                 WARN_ON_ONCE(&cpuctx->ctx != ctx);
+>         }
+>
+>         func(event, cpuctx, ctx, data);
+> -unlock:
+> -       perf_ctx_unlock(cpuctx, task_ctx);
+>  }
+>
+>  #define PERF_FLAG_ALL (PERF_FLAG_FD_NO_GROUP |\
+>
+>
