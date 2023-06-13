@@ -2,115 +2,269 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37445EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 20:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F581EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 20:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239870AbjFMUG4 (ORCPT
+        id S240088AbjFMUHI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 16:06:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51808 "EHLO
+        Tue, 13 Jun 2023 16:07:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239795AbjFMUGy (ORCPT
+        with ESMTP id S239923AbjFMUHF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 16:06:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CFC91732
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 13:06:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 13 Jun 2023 16:07:05 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82E611BD2;
+        Tue, 13 Jun 2023 13:07:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686686824; x=1718222824;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=a804CwrYAf0HAv53XDNgBbhDn4VLOdfyX2TznE5mT1A=;
+  b=WdouPiOWx5ZsiN2tiUx5NH8tr4+yKz83UEPcFx90JTYBt9krYltYNJdC
+   enV6/a1vL2lfwkStB6BkR3ZvfNh8Di/Mht16itEVgrNeCU0aqXa//6MBs
+   tXhBQj3wFblDQoKSAvvH+XXoV4Ez/SBUCiaQRNmx5Ilv6hUSl95fmOPMY
+   0CQ1+UkTPCDfGEW7czlY8+j0Ucxry9MX2HzD4HJzxOZZ2Mvk0jG3Kasi9
+   jFUEOb2UJ35B8eo9xWsUgON8AtZ6Do/j7YG991+OuJjx+EHYBT98f1l+E
+   O213C0LxywAAhOyrtKNAAx/e4IRbyU18nExL/nEKGT13qAF+nL7NzIbUp
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="424323365"
+X-IronPort-AV: E=Sophos;i="6.00,240,1681196400"; 
+   d="scan'208";a="424323365"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 13:07:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10740"; a="885962361"
+X-IronPort-AV: E=Sophos;i="6.00,240,1681196400"; 
+   d="scan'208";a="885962361"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga005.jf.intel.com with ESMTP; 13 Jun 2023 13:07:02 -0700
+Received: from [10.251.24.95] (kliang2-mobl1.ccr.corp.intel.com [10.251.24.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1559A6353C
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 20:06:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B11BC433F0;
-        Tue, 13 Jun 2023 20:06:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686686812;
-        bh=TDAL0PNjfKzexRJes9YMCwJd4LRCQtxHOJlAvxL4ucQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MPAq+9ZTxS2wXilNMI2iVJVGpBRMz6rfjPWVEKiRyej/IaTiGK/UGRJLMdTg7vDEb
-         lIwoSnsAW3bM2p2rsiJ65/vl6tgrDfJb2qjvz9FifYbUIqWU2QN2QDVtxUYppK3JSg
-         yKVQbnrg8FcGBhkaXKi+Y0bK+dbaQgM6Gv2MiYTiXgoaGmjeEobTj0stPEVwF1OeUA
-         uOu1K5o8g5x/FvFolLjkeR+m9rXf16/HCdbYEHMntkZz99hjKV4KkDkK0Otmz+kIX/
-         g90yiWczFZHOCBJ7+vWJAMvIArIWIN9O0rnQq2HD62F/Bv+tdXPqZfKAS98q0QmZuY
-         RCPmLgv+ywq2Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A25B240692; Tue, 13 Jun 2023 17:06:49 -0300 (-03)
-Date:   Tue, 13 Jun 2023 17:06:49 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Petar Gligoric <petar.gligoric@rohde-schwarz.com>,
-        Hagen Paul Pfeifer <hagen@jauu.net>
-Cc:     jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
-        ravi.bangoria@amd.com, john.g.garry@oracle.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, Aditya Gupta <adityag@linux.ibm.com>
-Subject: Re: [PATCH 15/17] perf tests task_analyzer: fix bad substitution
- ${$1}
-Message-ID: <ZIjMWUk/axKfMCM4@kernel.org>
-References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
- <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com>
+        by linux.intel.com (Postfix) with ESMTPS id E5DF2580BF8;
+        Tue, 13 Jun 2023 13:07:00 -0700 (PDT)
+Message-ID: <7487eff9-5769-1701-ea1b-45dd5ab67c85@linux.intel.com>
+Date:   Tue, 13 Jun 2023 16:06:59 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH 2/8] perf evsel: Fix the annotation for hardware events on
+ hybrid
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
+References: <20230607162700.3234712-1-kan.liang@linux.intel.com>
+ <20230607162700.3234712-3-kan.liang@linux.intel.com>
+ <CAP-5=fVz1zgwdJVs1V7putUdp9wf-QKWH1Ky-heLoHWgnJu6dg@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fVz1zgwdJVs1V7putUdp9wf-QKWH1Ky-heLoHWgnJu6dg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jun 13, 2023 at 10:11:43PM +0530, Athira Rajeev escreveu:
-> From: Aditya Gupta <adityag@linux.ibm.com>
+
+
+On 2023-06-13 3:35 p.m., Ian Rogers wrote:
+> On Wed, Jun 7, 2023 at 9:27 AM <kan.liang@linux.intel.com> wrote:
+>>
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The annotation for hardware events is wrong on hybrid. For example,
+>>
+>>  # ./perf stat -a sleep 1
+>>
+>>  Performance counter stats for 'system wide':
+>>
+>>          32,148.85 msec cpu-clock                        #   32.000 CPUs utilized
+>>                374      context-switches                 #   11.633 /sec
+>>                 33      cpu-migrations                   #    1.026 /sec
+>>                295      page-faults                      #    9.176 /sec
+>>         18,979,960      cpu_core/cycles/                 #  590.378 K/sec
+>>        261,230,783      cpu_atom/cycles/                 #    8.126 M/sec                       (54.21%)
+>>         17,019,732      cpu_core/instructions/           #  529.404 K/sec
+>>         38,020,470      cpu_atom/instructions/           #    1.183 M/sec                       (63.36%)
+>>          3,296,743      cpu_core/branches/               #  102.546 K/sec
+>>          6,692,338      cpu_atom/branches/               #  208.167 K/sec                       (63.40%)
+>>             96,421      cpu_core/branch-misses/          #    2.999 K/sec
+>>          1,016,336      cpu_atom/branch-misses/          #   31.613 K/sec                       (63.38%)
+>>
+>> The hardware events have extended type on hybrid, but the evsel__match()
+>> doesn't take it into account.
+>>
+>> Add a mask to filter the extended type on hybrid when checking the config.
+>>
+>> With the patch,
+>>
+>>  # ./perf stat -a sleep 1
+>>
+>>  Performance counter stats for 'system wide':
+>>
+>>          32,139.90 msec cpu-clock                        #   32.003 CPUs utilized
+>>                343      context-switches                 #   10.672 /sec
+>>                 32      cpu-migrations                   #    0.996 /sec
+>>                 73      page-faults                      #    2.271 /sec
+>>         13,712,841      cpu_core/cycles/                 #    0.000 GHz
+>>        258,301,691      cpu_atom/cycles/                 #    0.008 GHz                         (54.20%)
+>>         12,428,163      cpu_core/instructions/           #    0.91  insn per cycle
+>>         37,786,557      cpu_atom/instructions/           #    2.76  insn per cycle              (63.35%)
+>>          2,418,826      cpu_core/branches/               #   75.259 K/sec
+>>          6,965,962      cpu_atom/branches/               #  216.739 K/sec                       (63.38%)
+>>             72,150      cpu_core/branch-misses/          #    2.98% of all branches
+>>          1,032,746      cpu_atom/branch-misses/          #   42.70% of all branches             (63.35%)
+>>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>  tools/perf/util/evsel.h       | 12 ++++++-----
+>>  tools/perf/util/stat-shadow.c | 39 +++++++++++++++++++----------------
+>>  2 files changed, 28 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+>> index b365b449c6ea..36a32e4ca168 100644
+>> --- a/tools/perf/util/evsel.h
+>> +++ b/tools/perf/util/evsel.h
+>> @@ -350,9 +350,11 @@ u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sam
+>>
+>>  struct tep_format_field *evsel__field(struct evsel *evsel, const char *name);
+>>
+>> -#define evsel__match(evsel, t, c)              \
+>> +#define EVSEL_EVENT_MASK                       (~0ULL)
+>> +
+>> +#define evsel__match(evsel, t, c, m)                   \
+>>         (evsel->core.attr.type == PERF_TYPE_##t &&      \
+>> -        evsel->core.attr.config == PERF_COUNT_##c)
+>> +        (evsel->core.attr.config & m) == PERF_COUNT_##c)
 > 
-> ${$1} gives bad substitution error on sh, bash, and zsh. This seems like
-> a typo, and this patch modifies it to $1, since that is what it's usage
-> looks like from wherever `check_exec_0` is called.
-
-Nicely spotted!
-
-Please add the people that last touched the problem to the cc list,
-specially when it fixes a bug.
-
-Thanks for adding a Fixes tag, that helps the stable@kernel.org guys to
-get this propagated to supported kernel releases.
-
-I've added the test author to the CC list in this message.
-
-thanks!
-
-- Arnaldo
- 
-> This issue due to ${$1} caused all function calls to give error in
-> `find_str_or_fail` line, and so no test runs completely. But
-> 'perf test "perf script task-analyzer tests"' wrongly reports
-> that tests passed with the status OK, which is wrong considering
-> the tests didn't even run completely
+> The EVSEL_EVENT_MASK here isn't very intention revealing, perhaps we
+> can remove it and do something like:
 > 
-> Fixes: e8478b84d6ba ("perf test: add new task-analyzer tests")
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> ---
->  tools/perf/tests/shell/test_task_analyzer.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> static inline bool __evsel__match(const struct evsel *evsel, u32 type,
+> u64 config)
+> {
+>   if ((type == PERF_TYPE_HARDWARE || type ==PERF_TYPE_HW_CACHE)  &&
+> perf_pmus__supports_extended_type())
+>      return (evsel->core.attr.config & PERF_HW_EVENT_MASK) == config;
 > 
-> diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
-> index 4264b54b654b..84ab7e7f57d5 100755
-> --- a/tools/perf/tests/shell/test_task_analyzer.sh
-> +++ b/tools/perf/tests/shell/test_task_analyzer.sh
-> @@ -31,7 +31,7 @@ report() {
->  
->  check_exec_0() {
->  	if [ $? != 0 ]; then
-> -		report 1 "invokation of ${$1} command failed"
-> +		report 1 "invocation of $1 command failed"
->  	fi
->  }
->  
-> -- 
-> 2.39.1
+>   return evsel->core.attr.config == config;
+> }
+> #define evsel__match(evsel, t, c) __evsel__match(evsel, PERF_TYPE_##t,
+> PERF_COUNT_##c)
+
+Yes, the above code looks better. I will apply it in V2.
+
+Thanks,
+Kan
 > 
-
--- 
-
-- Arnaldo
+> Thanks,
+> Ian
+> 
+>>
+>>  static inline bool evsel__match2(struct evsel *e1, struct evsel *e2)
+>>  {
+>> @@ -438,13 +440,13 @@ bool evsel__is_function_event(struct evsel *evsel);
+>>
+>>  static inline bool evsel__is_bpf_output(struct evsel *evsel)
+>>  {
+>> -       return evsel__match(evsel, SOFTWARE, SW_BPF_OUTPUT);
+>> +       return evsel__match(evsel, SOFTWARE, SW_BPF_OUTPUT, EVSEL_EVENT_MASK);
+>>  }
+>>
+>>  static inline bool evsel__is_clock(const struct evsel *evsel)
+>>  {
+>> -       return evsel__match(evsel, SOFTWARE, SW_CPU_CLOCK) ||
+>> -              evsel__match(evsel, SOFTWARE, SW_TASK_CLOCK);
+>> +       return evsel__match(evsel, SOFTWARE, SW_CPU_CLOCK, EVSEL_EVENT_MASK) ||
+>> +              evsel__match(evsel, SOFTWARE, SW_TASK_CLOCK, EVSEL_EVENT_MASK);
+>>  }
+>>
+>>  bool evsel__fallback(struct evsel *evsel, int err, char *msg, size_t msgsize);
+>> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
+>> index 1566a206ba42..074f38b57e2d 100644
+>> --- a/tools/perf/util/stat-shadow.c
+>> +++ b/tools/perf/util/stat-shadow.c
+>> @@ -6,6 +6,7 @@
+>>  #include "color.h"
+>>  #include "debug.h"
+>>  #include "pmu.h"
+>> +#include "pmus.h"
+>>  #include "rblist.h"
+>>  #include "evlist.h"
+>>  #include "expr.h"
+>> @@ -78,6 +79,8 @@ void perf_stat__reset_shadow_stats(void)
+>>
+>>  static enum stat_type evsel__stat_type(const struct evsel *evsel)
+>>  {
+>> +       u64 mask = perf_pmus__supports_extended_type() ? PERF_HW_EVENT_MASK : EVSEL_EVENT_MASK;
+>> +
+>>         /* Fake perf_hw_cache_op_id values for use with evsel__match. */
+>>         u64 PERF_COUNT_hw_cache_l1d_miss = PERF_COUNT_HW_CACHE_L1D |
+>>                 ((PERF_COUNT_HW_CACHE_OP_READ) << 8) |
+>> @@ -97,41 +100,41 @@ static enum stat_type evsel__stat_type(const struct evsel *evsel)
+>>
+>>         if (evsel__is_clock(evsel))
+>>                 return STAT_NSECS;
+>> -       else if (evsel__match(evsel, HARDWARE, HW_CPU_CYCLES))
+>> +       else if (evsel__match(evsel, HARDWARE, HW_CPU_CYCLES, mask))
+>>                 return STAT_CYCLES;
+>> -       else if (evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS))
+>> +       else if (evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS, mask))
+>>                 return STAT_INSTRUCTIONS;
+>> -       else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
+>> +       else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_FRONTEND, mask))
+>>                 return STAT_STALLED_CYCLES_FRONT;
+>> -       else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_BACKEND))
+>> +       else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_BACKEND, mask))
+>>                 return STAT_STALLED_CYCLES_BACK;
+>> -       else if (evsel__match(evsel, HARDWARE, HW_BRANCH_INSTRUCTIONS))
+>> +       else if (evsel__match(evsel, HARDWARE, HW_BRANCH_INSTRUCTIONS, mask))
+>>                 return STAT_BRANCHES;
+>> -       else if (evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES))
+>> +       else if (evsel__match(evsel, HARDWARE, HW_BRANCH_MISSES, mask))
+>>                 return STAT_BRANCH_MISS;
+>> -       else if (evsel__match(evsel, HARDWARE, HW_CACHE_REFERENCES))
+>> +       else if (evsel__match(evsel, HARDWARE, HW_CACHE_REFERENCES, mask))
+>>                 return STAT_CACHE_REFS;
+>> -       else if (evsel__match(evsel, HARDWARE, HW_CACHE_MISSES))
+>> +       else if (evsel__match(evsel, HARDWARE, HW_CACHE_MISSES, mask))
+>>                 return STAT_CACHE_MISSES;
+>> -       else if (evsel__match(evsel, HW_CACHE, HW_CACHE_L1D))
+>> +       else if (evsel__match(evsel, HW_CACHE, HW_CACHE_L1D, mask))
+>>                 return STAT_L1_DCACHE;
+>> -       else if (evsel__match(evsel, HW_CACHE, HW_CACHE_L1I))
+>> +       else if (evsel__match(evsel, HW_CACHE, HW_CACHE_L1I, mask))
+>>                 return STAT_L1_ICACHE;
+>> -       else if (evsel__match(evsel, HW_CACHE, HW_CACHE_LL))
+>> +       else if (evsel__match(evsel, HW_CACHE, HW_CACHE_LL, mask))
+>>                 return STAT_LL_CACHE;
+>> -       else if (evsel__match(evsel, HW_CACHE, HW_CACHE_DTLB))
+>> +       else if (evsel__match(evsel, HW_CACHE, HW_CACHE_DTLB, mask))
+>>                 return STAT_DTLB_CACHE;
+>> -       else if (evsel__match(evsel, HW_CACHE, HW_CACHE_ITLB))
+>> +       else if (evsel__match(evsel, HW_CACHE, HW_CACHE_ITLB, mask))
+>>                 return STAT_ITLB_CACHE;
+>> -       else if (evsel__match(evsel, HW_CACHE, hw_cache_l1d_miss))
+>> +       else if (evsel__match(evsel, HW_CACHE, hw_cache_l1d_miss, mask))
+>>                 return STAT_L1D_MISS;
+>> -       else if (evsel__match(evsel, HW_CACHE, hw_cache_l1i_miss))
+>> +       else if (evsel__match(evsel, HW_CACHE, hw_cache_l1i_miss, mask))
+>>                 return STAT_L1I_MISS;
+>> -       else if (evsel__match(evsel, HW_CACHE, hw_cache_ll_miss))
+>> +       else if (evsel__match(evsel, HW_CACHE, hw_cache_ll_miss, mask))
+>>                 return STAT_LL_MISS;
+>> -       else if (evsel__match(evsel, HW_CACHE, hw_cache_dtlb_miss))
+>> +       else if (evsel__match(evsel, HW_CACHE, hw_cache_dtlb_miss, mask))
+>>                 return STAT_DTLB_MISS;
+>> -       else if (evsel__match(evsel, HW_CACHE, hw_cache_itlb_miss))
+>> +       else if (evsel__match(evsel, HW_CACHE, hw_cache_itlb_miss, mask))
+>>                 return STAT_ITLB_MISS;
+>>         return STAT_NONE;
+>>  }
+>> --
+>> 2.35.1
+>>
