@@ -2,366 +2,209 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C0FEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 20:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC62EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 20:26:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240515AbjFMUVr (ORCPT
+        id S231720AbjFMU0m (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 16:21:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34684 "EHLO
+        Tue, 13 Jun 2023 16:26:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229815AbjFMUVn (ORCPT
+        with ESMTP id S230220AbjFMU0l (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 16:21:43 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6204AC5
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 13:21:42 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-3f9a81da5d7so70181cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 13:21:42 -0700 (PDT)
+        Tue, 13 Jun 2023 16:26:41 -0400
+Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0AFB199C
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 13:26:39 -0700 (PDT)
+Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-3f9b7de94e7so68651cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 13:26:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686687701; x=1689279701;
+        d=google.com; s=20221208; t=1686687999; x=1689279999;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+0Cy2vujaFKSDY95ZmH0ol5S2C2EMV/ACOqku8ieMcw=;
-        b=aqmVAmW/QwJ8tG2J7VEOnkJGL6QuO0tHCpFh6i20oWXnOI5bwChepbEsI4gaRivsoi
-         gKqzR1YJbo482DP0Aif9O7IJAAkuQup5tVzZaqxyNy3qljk66VIVcVKh4+ovANZkeyBe
-         dXoO2aivMvIqDg18wFe3gEdhVXTIDlt2iwbhyCNTlA1nWg7xw5MgD3fTZVbp6tTBq6bJ
-         pA1nEjShefn1Gk30S80p3YfEZEvTYe3fAWMvXqN8j9BP+9wDCOKiBfKZhfbThTeZvJQk
-         7thv67SFLWjA99JfjBMJUp2lRnDQRzXbH6I4RvXmbeAgi+Kl7VsDnTSu0DxpFvngOvF+
-         wrog==
+        bh=8MXw7AgKsvFMy/rEG8zyX+PB5rmlGQ9LjQTd+dl4O+8=;
+        b=lUltOv572sTPL14yhqAPP//gpwwea0YBue5CxvuCnK0TEd91pumFfC59ni5dCSZlj0
+         bGeoWu9B9eAdfl/ccIwNKuUuN17NtlShCMPv7KQMQKlMpw2/cF0CaEfZRO9/ZwWFd3Xt
+         O39NEw126P0E3KhEaXwZQLT9Ru/7hBJ8FvjN3gNIGEy0IFm6rIB1ujF97g5sk9I567Lz
+         nnLln+XSy5/9OG4TexiZFPgx8nQqSJhJK3yaEjpbCP/qSGPqZTft01cA3q/jgUgWwOje
+         5QH6sr1LL1116EMSv4t4rGJ47QepHXF0JpC1sTHe16LzaFdylW93jjr/5KrXT5eXoSRQ
+         ViwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686687701; x=1689279701;
+        d=1e100.net; s=20221208; t=1686687999; x=1689279999;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+0Cy2vujaFKSDY95ZmH0ol5S2C2EMV/ACOqku8ieMcw=;
-        b=B1VUpyCKWXH7rbdigz0yXu2JP0Tz4QQq+kMzpUsV8MxC2+LoygdWD4/nqA/AHMDLqb
-         XiaiLz+ktFSh4KRJLsSGW9lK83vK8v1UxCC+nKz5OHeW/BBc5jXRoTEUOdoZUmkFLaKd
-         IG1Ki7jHg1JF8LAADL43OVq3ImVwDvEnVTzkC5Ltv27pFUiDiiYXuDU3usshyGFepDzq
-         crqDdFHdePclCJF963eJ/iPyePYuGv0SyxfkK6+Mm+huFVRQjewHZ+BpeLp6w+h9dQzH
-         x0zV71dLxVHaDTsn8uMAHUND4LZnnvEjesbo5pPVCGc5h70vz51LD+P0xkERq8rz5Ofq
-         6H0Q==
-X-Gm-Message-State: AC+VfDxma/Kw+fq+nDMPZa40aY1jN1TCNV49F2y/1E+us7/deJXtl+7e
-        2ZzZr7YDg8fe/9TCTiu5YjuVVbnUtkQeSqH6cbN6lA==
-X-Google-Smtp-Source: ACHHUZ7FtTKF6BY6NqpaeF6aacL/pSEK+AEn81qDhoywfyv4zpPxc6f1V4uGmmUVIHopR5Cu7OTqKjfNRO7oiq2mvqw=
-X-Received: by 2002:a05:622a:11d1:b0:3e0:c2dd:fd29 with SMTP id
- n17-20020a05622a11d100b003e0c2ddfd29mr51724qtk.4.1686687701335; Tue, 13 Jun
- 2023 13:21:41 -0700 (PDT)
+        bh=8MXw7AgKsvFMy/rEG8zyX+PB5rmlGQ9LjQTd+dl4O+8=;
+        b=CyF0HnEVBQ/b8kaskEhkT5C9JS23JRuGbfBdnGt3L6CEQ1vC9cjBunqdUMYUfcMpDK
+         MfhtQe0TAAKHsvew/t0SHwHsBrnC11pYFSjWT20GD6ccw63TXtFZ9OZlQfKXghaLJxEx
+         A8rSAmeviFWfITgjzvZDrh7rT/Xie5pd1OdAtdnX/kVs/9hwCzV577zHrQHNzgrlWjNp
+         PKLdB8nzQXRZTUPlEKOFGZq8Zj9ldz+FmoI49BXVtDzDhQLCew7wjIsUE7Tl1PnSmDtg
+         TQ9HGhPEvM/sFVbjReb7L9I1dnlUdLsk5Ynv5WNtk3OkzUf3/nTzjlBQ2/uk/RG9bEmO
+         KzlQ==
+X-Gm-Message-State: AC+VfDwgbmVRvL0M2noJjeDEC7VsiP5WVKyFxfpKGeVCzflBgIVZK4Z0
+        o8WxuGkShcf+tqN8wpChiyWh3djAjcFssBEP1uTf+g==
+X-Google-Smtp-Source: ACHHUZ4uQZuhSTOe4dTOs18MKUj5/O5R7ff8xb8zaTfOd0WzF7q+UubK+8ZgqTP3Yj/W6mlieKDKTPOispTcpb38SDE=
+X-Received: by 2002:ac8:7e8b:0:b0:3f9:a986:f3a4 with SMTP id
+ w11-20020ac87e8b000000b003f9a986f3a4mr47357qtj.25.1686687998646; Tue, 13 Jun
+ 2023 13:26:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230607162700.3234712-1-kan.liang@linux.intel.com> <20230607162700.3234712-9-kan.liang@linux.intel.com>
-In-Reply-To: <20230607162700.3234712-9-kan.liang@linux.intel.com>
+References: <20230613182629.1500317-1-irogers@google.com> <ZIjGd79uWxgRF0og@kernel.org>
+In-Reply-To: <ZIjGd79uWxgRF0og@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 13 Jun 2023 13:21:30 -0700
-Message-ID: <CAP-5=fV7b=xGuSED88mNJ1k86mTt3YH185+PsedqWPYg4EL0zQ@mail.gmail.com>
-Subject: Re: [PATCH 8/8] perf test: Add test case for the standard perf stat output
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
+Date:   Tue, 13 Jun 2023 13:26:27 -0700
+Message-ID: <CAP-5=fVfHGm3hcJ=AMAGnhAA=bYSH47a77yw5-9N49RuuSw37A@mail.gmail.com>
+Subject: Re: [PATCH v1] perf parse-events: Avoid string for PE_BP_COLON, PE_BP_SLASH
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 7, 2023 at 9:27=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
+On Tue, Jun 13, 2023 at 12:41=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> From: Kan Liang <kan.liang@linux.intel.com>
+> Em Tue, Jun 13, 2023 at 11:26:29AM -0700, Ian Rogers escreveu:
+> > There's no need to read the string ':' or '/' for PE_BP_COLON or
+> > PE_BP_SLASH and doing so causes parse-events.y to leak memory.
+> >
+> > The original patch has a committer note about not using these tokens
+> > presumably as yacc spotted they were a memory leak because no
+> > %destructor could be run. Remove the unused token workaround as there
+> > is now no value associated with these tokens.
 >
-> Add a new test case to verify the standard perf stat output with
-> different options.
+> It looked like the compiler was the one warning (-Wother) about args not
+> being used, didn't made it clear those were possible memory leaks :-\
 >
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  tools/perf/tests/shell/stat+std_output.sh | 259 ++++++++++++++++++++++
->  1 file changed, 259 insertions(+)
->  create mode 100755 tools/perf/tests/shell/stat+std_output.sh
+>  util/parse-events.y:508.24-34: warning: unused value: $3 [-Wother]
+>    508 | PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIF=
+IER_BP opt_event_config
 >
-> diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests=
-/shell/stat+std_output.sh
-> new file mode 100755
-> index 000000000000..b9db0f245450
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/stat+std_output.sh
-> @@ -0,0 +1,259 @@
-> +#!/bin/bash
-> +# perf stat STD output linter
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Tests various perf stat STD output commands for
-> +# default event and metricgroup
-> +
-> +set -e
-> +
-> +skip_test=3D0
-> +
-> +stat_output=3D$(mktemp /tmp/__perf_test.stat_output.std.XXXXX)
-> +
-> +event_name=3D(cpu-clock task-clock context-switches cpu-migrations page-=
-faults cycles instructions branches branch-misses stalled-cycles-frontend s=
-talled-cycles-backend)
-> +event_metric=3D("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "GH=
-z" "insn per cycle" "/sec" "of all branches" "frontend cycles idle" "backen=
-d cycles idle")
-> +
-> +metricgroup_name=3D(TopdownL1 TopdownL2)
-> +
-> +cleanup() {
-> +  rm -f "${stat_output}"
-> +
-> +  trap - EXIT TERM INT
-> +}
-> +
-> +trap_cleanup() {
-> +  cleanup
-> +  exit 1
-> +}
-> +trap trap_cleanup EXIT TERM INT
-> +
-> +function commachecker()
-> +{
-> +       local -i cnt=3D0
-> +       local prefix=3D1
-> +
-> +       case "$1"
-> +       in "--interval")        prefix=3D2
-> +       ;; "--per-thread")      prefix=3D2
-> +       ;; "--system-wide-no-aggr")     prefix=3D2
-> +       ;; "--per-core")        prefix=3D3
-> +       ;; "--per-socket")      prefix=3D3
-> +       ;; "--per-node")        prefix=3D3
-> +       ;; "--per-die")         prefix=3D3
-> +       ;; "--per-cache")       prefix=3D3
-> +       esac
-> +
-> +       while read line
-> +       do
-> +               # Ignore initial "started on" comment.
-> +               x=3D${line:0:1}
-> +               [ "$x" =3D "#" ] && continue
-> +               # Ignore initial blank line.
-> +               [ "$line" =3D "" ] && continue
-> +               # Ignore "Performance counter stats"
-> +               x=3D${line:0:25}
-> +               [ "$x" =3D "Performance counter stats" ] && continue
-> +               # Ignore "seconds time elapsed" and break
-> +               [[ "$line" =3D=3D *"time elapsed"* ]] && break
-> +
-> +               main_body=3D$(echo $line | cut -d' ' -f$prefix-)
-> +               x=3D${main_body%#*}
-> +               # Check default metricgroup
-> +               y=3D$(echo $x | tr -d ' ')
-> +               [ "$y" =3D "" ] && continue
-> +               for i in "${!metricgroup_name[@]}"; do
-> +                       [[ "$y" =3D=3D *"${metricgroup_name[$i]}"* ]] && =
-break
-> +               done
-> +               [[ "$y" =3D=3D *"${metricgroup_name[$i]}"* ]] && continue
-> +
-> +               # Check default event
-> +               for i in "${!event_name[@]}"; do
-> +                       [[ "$x" =3D=3D *"${event_name[$i]}"* ]] && break
-> +               done
-> +
-> +               [[ ! "$x" =3D=3D *"${event_name[$i]}"* ]] && {
-> +                       echo "Unknown event name in $line" 1>&2
-> +                       exit 1;
-> +               }
-> +
-> +               # Check event metric if it exists
-> +               [[ ! "$main_body" =3D=3D *"#"* ]] && continue
-> +               [[ ! "$main_body" =3D=3D *"${event_metric[$i]}"* ]] && {
-> +                       echo "wrong event metric. expected ${event_metric=
-[$i]} in $line" 1>&2
-> +                       exit 1;
-> +               }
-> +       done < "${stat_output}"
-> +       return 0
-> +}
-> +
-> +# Return true if perf_event_paranoid is > $1 and not running as root.
-> +function ParanoidAndNotRoot()
-> +{
-> +        [ $(id -u) !=3D 0 ] && [ $(cat /proc/sys/kernel/perf_event_paran=
-oid) -gt $1 ]
-> +}
-> +
-> +check_no_args()
-> +{
-> +       echo -n "Checking STD output: no args "
-> +       perf stat -o "${stat_output}" true
-> +        commachecker --no-args
-> +       echo "[Success]"
-> +}
-> +
-> +check_system_wide()
-> +{
-> +       echo -n "Checking STD output: system wide "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat -a -o "${stat_output}" true
-> +        commachecker --system-wide
-> +       echo "[Success]"
-> +}
-> +
-> +check_system_wide_no_aggr()
-> +{
-> +       echo -n "Checking STD output: system wide no aggregation "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat -A -a --no-merge -o "${stat_output}" true
-> +        commachecker --system-wide-no-aggr
-> +       echo "[Success]"
-> +}
-> +
-> +check_interval()
-> +{
-> +       echo -n "Checking STD output: interval "
-> +       perf stat -I 1000 -o "${stat_output}" true
-> +        commachecker --interval
-> +       echo "[Success]"
-> +}
-> +
-> +
-> +check_per_core()
-> +{
-> +       echo -n "Checking STD output: per core "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-core -a -o "${stat_output}" true
-> +        commachecker --per-core
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_thread()
-> +{
-> +       echo -n "Checking STD output: per thread "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-thread -a -o "${stat_output}" true
-> +        commachecker --per-thread
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_cache_instance()
-> +{
-> +       echo -n "Checking STD output: per cache instance "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat  --per-cache -a true 2>&1 | commachecker --per-cache
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_die()
-> +{
-> +       echo -n "Checking STD output: per die "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-die -a -o "${stat_output}" true
-> +        commachecker --per-die
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_node()
-> +{
-> +       echo -n "Checking STD output: per node "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-node -a -o "${stat_output}" true
-> +        commachecker --per-node
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_socket()
-> +{
-> +       echo -n "Checking STD output: per socket "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-socket -a -o "${stat_output}" true
-> +        commachecker --per-socket
-> +       echo "[Success]"
-> +}
-> +
-> +# The perf stat options for per-socket, per-core, per-die
-> +# and -A ( no_aggr mode ) uses the info fetched from this
-> +# directory: "/sys/devices/system/cpu/cpu*/topology". For
-> +# example, socket value is fetched from "physical_package_id"
-> +# file in topology directory.
-> +# Reference: cpu__get_topology_int in util/cpumap.c
-> +# If the platform doesn't expose topology information, values
-> +# will be set to -1. For example, incase of pSeries platform
-> +# of powerpc, value for  "physical_package_id" is restricted
-> +# and set to -1. Check here validates the socket-id read from
-> +# topology file before proceeding further
-> +
-> +FILE_LOC=3D"/sys/devices/system/cpu/cpu*/topology/"
-> +FILE_NAME=3D"physical_package_id"
-> +
-> +check_for_topology()
-> +{
-> +       if ! ParanoidAndNotRoot 0
-> +       then
-> +               socket_file=3D`ls $FILE_LOC/$FILE_NAME | head -n 1`
-> +               [ -z $socket_file ] && return 0
-> +               socket_id=3D`cat $socket_file`
-> +               [ $socket_id =3D=3D -1 ] && skip_test=3D1
-> +               return 0
-> +       fi
-> +}
+> Anyway, I'll apply and test your patch.
+>
+> - Arnaldo
 
-Tests, great! This logic is taken from
-tools/perf/tests/shell/stat+csv_output.sh, could we share the
-implementation between that and here by moving the code into something
-in the lib directory?
+Thanks, I couldn't repro the problem but I know that's because I don't
+have your full container set up. Given my ignorance please help me fix
+the commit message, or I can update it in a v2 set, or possibly we'll
+need to bring back the unused logic.
 
-Thanks,
 Ian
 
-> +
-> +check_for_topology
-> +check_no_args
-> +check_system_wide
-> +check_interval
-> +check_per_thread
-> +check_per_node
-> +if [ $skip_test -ne 1 ]
-> +then
-> +       check_system_wide_no_aggr
-> +       check_per_core
-> +       check_per_cache_instance
-> +       check_per_die
-> +       check_per_socket
-> +else
-> +       echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, pe=
-r_die and per_socket since socket id exposed via topology is invalid"
-> +fi
-> +cleanup
-> +exit 0
-> --
-> 2.35.1
 >
+> > Fixes: f0617f526cb0 ("perf parse: Allow config terms with breakpoints")
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/parse-events.h | 4 ----
+> >  tools/perf/util/parse-events.l | 4 ++--
+> >  tools/perf/util/parse-events.y | 9 ---------
+> >  3 files changed, 2 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-eve=
+nts.h
+> > index 5fdc1f33f57e..b0eb95f93e9c 100644
+> > --- a/tools/perf/util/parse-events.h
+> > +++ b/tools/perf/util/parse-events.h
+> > @@ -228,10 +228,6 @@ void parse_events_error__handle(struct parse_event=
+s_error *err, int idx,
+> >  void parse_events_error__print(struct parse_events_error *err,
+> >                              const char *event);
+> >
+> > -static inline void parse_events_unused_value(const void *x __maybe_unu=
+sed)
+> > -{
+> > -}
+> > -
+> >  #ifdef HAVE_LIBELF_SUPPORT
+> >  /*
+> >   * If the probe point starts with '%',
+> > diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-eve=
+nts.l
+> > index 7629af3d5c7c..99335ec586ae 100644
+> > --- a/tools/perf/util/parse-events.l
+> > +++ b/tools/perf/util/parse-events.l
+> > @@ -315,13 +315,13 @@ r0x{num_raw_hex}        { return str(yyscanner, P=
+E_RAW); }
+> >        * are the same, so trailing context can be used disambiguate the=
+ two
+> >        * cases.
+> >        */
+> > -":"/{modifier_bp}    { return str(yyscanner, PE_BP_COLON); }
+> > +":"/{modifier_bp}    { return PE_BP_COLON; }
+> >       /*
+> >        * The slash before memory length can get mixed up with the slash=
+ before
+> >        * config terms. Fortunately config terms do not start with a num=
+eric
+> >        * digit, so trailing context can be used disambiguate the two ca=
+ses.
+> >        */
+> > -"/"/{digit}          { return str(yyscanner, PE_BP_SLASH); }
+> > +"/"/{digit}          { return PE_BP_SLASH; }
+> >  "/"/{non_digit}              { BEGIN(config); return '/'; }
+> >  {num_dec}            { return value(yyscanner, 10); }
+> >  {num_hex}            { return value(yyscanner, 16); }
+> > diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-eve=
+nts.y
+> > index 0c3d086cc22a..9f28d4b5502f 100644
+> > --- a/tools/perf/util/parse-events.y
+> > +++ b/tools/perf/util/parse-events.y
+> > @@ -80,8 +80,6 @@ static void free_list_evsel(struct list_head* list_ev=
+sel)
+> >  %type <str> PE_LEGACY_CACHE
+> >  %type <str> PE_MODIFIER_EVENT
+> >  %type <str> PE_MODIFIER_BP
+> > -%type <str> PE_BP_COLON
+> > -%type <str> PE_BP_SLASH
+> >  %type <str> PE_EVENT_NAME
+> >  %type <str> PE_KERNEL_PMU_EVENT PE_PMU_EVENT_FAKE
+> >  %type <str> PE_DRV_CFG_TERM
+> > @@ -510,9 +508,6 @@ PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_C=
+OLON PE_MODIFIER_BP opt_event
+> >       struct list_head *list;
+> >       int err;
+> >
+> > -     parse_events_unused_value(&$3);
+> > -     parse_events_unused_value(&$5);
+> > -
+> >       list =3D alloc_list();
+> >       ABORT_ON(!list);
+> >       err =3D parse_events_add_breakpoint(_parse_state, list,
+> > @@ -531,8 +526,6 @@ PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE opt_eve=
+nt_config
+> >       struct list_head *list;
+> >       int err;
+> >
+> > -     parse_events_unused_value(&$3);
+> > -
+> >       list =3D alloc_list();
+> >       ABORT_ON(!list);
+> >       err =3D parse_events_add_breakpoint(_parse_state, list,
+> > @@ -550,8 +543,6 @@ PE_PREFIX_MEM PE_VALUE PE_BP_COLON PE_MODIFIER_BP o=
+pt_event_config
+> >       struct list_head *list;
+> >       int err;
+> >
+> > -     parse_events_unused_value(&$3);
+> > -
+> >       list =3D alloc_list();
+> >       ABORT_ON(!list);
+> >       err =3D parse_events_add_breakpoint(_parse_state, list,
+> > --
+> > 2.41.0.162.gfafddb0af9-goog
+> >
+>
+> --
+>
+> - Arnaldo
