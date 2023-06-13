@@ -2,326 +2,166 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34537EB64D0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 17:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6BCEB64D0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 18:26:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238340AbjFMRSB (ORCPT
+        id S239370AbjFMS0n (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 13:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47954 "EHLO
+        Tue, 13 Jun 2023 14:26:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238315AbjFMRR5 (ORCPT
+        with ESMTP id S231346AbjFMS0l (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 13:17:57 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D1CB2172A;
-        Tue, 13 Jun 2023 10:17:55 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 823872F4;
-        Tue, 13 Jun 2023 10:18:40 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.39.126])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B390D3F663;
-        Tue, 13 Jun 2023 10:17:53 -0700 (PDT)
-Date:   Tue, 13 Jun 2023 18:17:51 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 13 Jun 2023 14:26:41 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 725B310CB
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 11:26:38 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bd5b8a9d82cso795884276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 11:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1686680797; x=1689272797;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=WvMVfl1WbDxqaWJUP4jTOe+ztVEZmNwWPMXr+gZbHUE=;
+        b=G39YdJ8wOdM1C69yLTN8U8l+iNpDIl3Id0EXeBecT65zG5PZZ2mXqaDwneqDVxK9Wz
+         BPAudXpNDQHC7Qbu4ydbg1xt83/Y0vc5zeyQXEfnt1jodtn3sviJu2FfiILRPIUV6KUy
+         jlE57YbOGwV6Y82Lj1lpyuGmLmxvRxRt6Vs4JBcaS9f4McaJTqXJMy8g1xcFpHXR8sd8
+         d73bkaYS3fbsopqvO98U2Xbq7WfvKTvoOTjjgK2tAKl2aGJcexX432QAHJqnC9+H2DJc
+         rXuIftkkWxYxubgqbRraziqH7Z6jkAwZKHHOR6tXWuueo+G6q/E8e56RXk9n4rbp/JQS
+         O/KA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686680797; x=1689272797;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WvMVfl1WbDxqaWJUP4jTOe+ztVEZmNwWPMXr+gZbHUE=;
+        b=SkzBPyXLr9K5sm/cKE/WcvOEgvu6u3O4ELpTP9U/+RsdaZn8yLwTRxeBa82tbBDkMR
+         7HrqRalp2EmkgUiixarYkzI3YfAE4bh9kPsbkMhQITzKql4tSOvO5jaMVuYS57Y4XeZk
+         ZGUeN3islGarnTO6/OYo8b/TMBMFEQk1/4EdQlwQK2OjXu3OsNDQal4Qt9WTb21PVD+b
+         AP9FP8atiex5FIra/o3w8xLN1zTviZIGASUf/LWI+D/ep6KceK4JaFm1pO+0GfDHbsxk
+         ie7oZuYisW643s6UmlrOyFvayv3ee/J57ac1MiCXkoMP2BMrKWe6qLV3INmkEh75Aicm
+         U1Hg==
+X-Gm-Message-State: AC+VfDw0SNTNhSQRTU5QRYHR21BrMmoevNdpqZuGuocUfzSerMi6R/wz
+        SMTj6ibpgjzq56vzkfWkYqNFqS/fHp7H
+X-Google-Smtp-Source: ACHHUZ5i6ml3ujak5mKh6Gh2Grqy408xn/nvtw8YEQKjViFjGcQWC+CTovKVHYcktruzNX4apdMyjTjctLv+
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a704:56d6:f79d:33e7])
+ (user=irogers job=sendgmr) by 2002:a05:6902:160b:b0:bcc:bc25:7296 with SMTP
+ id bw11-20020a056902160b00b00bccbc257296mr13317ybb.9.1686680797759; Tue, 13
+ Jun 2023 11:26:37 -0700 (PDT)
+Date:   Tue, 13 Jun 2023 11:26:29 -0700
+Message-Id: <20230613182629.1500317-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+Subject: [PATCH v1] perf parse-events: Avoid string for PE_BP_COLON, PE_BP_SLASH
+From:   Ian Rogers <irogers@google.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V11 08/10] arm64/perf: Add struct brbe_regset helper
- functions
-Message-ID: <ZIikv0bW1xGeLf6B@FVFF77S0Q05N.cambridge.arm.com>
-References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-9-anshuman.khandual@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230531040428.501523-9-anshuman.khandual@arm.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, May 31, 2023 at 09:34:26AM +0530, Anshuman Khandual wrote:
-> The primary abstraction level for fetching branch records from BRBE HW has
-> been changed as 'struct brbe_regset', which contains storage for all three
-> BRBE registers i.e BRBSRC, BRBTGT, BRBINF. Whether branch record processing
-> happens in the task sched out path, or in the PMU IRQ handling path, these
-> registers need to be extracted from the HW. Afterwards both live and stored
-> sets need to be stitched together to create final branch records set. This
-> adds required helper functions for such operations.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Tested-by: James Clark <james.clark@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  drivers/perf/arm_brbe.c | 163 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 163 insertions(+)
-> 
-> diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-> index 484842d8cf3e..759db681d673 100644
-> --- a/drivers/perf/arm_brbe.c
-> +++ b/drivers/perf/arm_brbe.c
-> @@ -44,6 +44,169 @@ static void select_brbe_bank(int bank)
->  	isb();
->  }
->  
-> +/*
-> + * This scans over BRBE register banks and captures individual branch reocrds
-> + * [BRBSRC, BRBTGT, BRBINF] into a pre-allocated 'struct brbe_regset' buffer,
-> + * until an invalid one gets encountered. The caller for this function needs
-> + * to ensure BRBE is an appropriate state before the records can be captured.
-> + */
-> +static int capture_brbe_regset(struct brbe_hw_attr *brbe_attr, struct brbe_regset *buf)
-> +{
-> +	int loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2;
-> +	int idx, count;
-> +
-> +	loop1_idx1 = BRBE_BANK0_IDX_MIN;
-> +	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
-> +		loop1_idx2 = brbe_attr->brbe_nr - 1;
-> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
-> +		loop2_idx2 = BRBE_BANK0_IDX_MAX;
-> +	} else {
-> +		loop1_idx2 = BRBE_BANK0_IDX_MAX;
-> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
-> +		loop2_idx2 = brbe_attr->brbe_nr - 1;
-> +	}
-> +
-> +	select_brbe_bank(BRBE_BANK_IDX_0);
-> +	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
-> +		buf[idx].brbinf = get_brbinf_reg(idx);
-> +		/*
-> +		 * There are no valid entries anymore on the buffer.
-> +		 * Abort the branch record processing to save some
-> +		 * cycles and also reduce the capture/process load
-> +		 * for the user space as well.
-> +		 */
-> +		if (brbe_invalid(buf[idx].brbinf))
-> +			return idx;
-> +
-> +		buf[idx].brbsrc = get_brbsrc_reg(idx);
-> +		buf[idx].brbtgt = get_brbtgt_reg(idx);
-> +	}
-> +
-> +	select_brbe_bank(BRBE_BANK_IDX_1);
-> +	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
-> +		buf[idx].brbinf = get_brbinf_reg(idx);
-> +		/*
-> +		 * There are no valid entries anymore on the buffer.
-> +		 * Abort the branch record processing to save some
-> +		 * cycles and also reduce the capture/process load
-> +		 * for the user space as well.
-> +		 */
-> +		if (brbe_invalid(buf[idx].brbinf))
-> +			return idx;
-> +
-> +		buf[idx].brbsrc = get_brbsrc_reg(idx);
-> +		buf[idx].brbtgt = get_brbtgt_reg(idx);
-> +	}
-> +	return idx;
-> +}
+There's no need to read the string ':' or '/' for PE_BP_COLON or
+PE_BP_SLASH and doing so causes parse-events.y to leak memory.
 
-As with __armv8pmu_branch_read(), the loop conditions are a bit hard to follow,
-and I believe that can be rewritten along the lines of the suggestion there.
+The original patch has a committer note about not using these tokens
+presumably as yacc spotted they were a memory leak because no
+%destructor could be run. Remove the unused token workaround as there
+is now no value associated with these tokens.
 
-Looking at this, we now have a couple of places that will try to read the
-registers for an individual record, so it probably makes sense to facotr that
-into a helper, e.g.
+Fixes: f0617f526cb0 ("perf parse: Allow config terms with breakpoints")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.h | 4 ----
+ tools/perf/util/parse-events.l | 4 ++--
+ tools/perf/util/parse-events.y | 9 ---------
+ 3 files changed, 2 insertions(+), 15 deletions(-)
 
-| static bool __read_brbe_regset(struct brbe_regset *entry, int idx)
-| {
-| 	u64 brbinf = get_brbinf_reg(idx);
-| 
-| 	if (brbe_invalid(brbinf))
-| 		return false;
-| 	
-| 	entry->brbinf = brbinf;
-| 	entry->brbsrc = get_brbsrc_reg(idx);
-| 	entry->brbtgt = get_brbtgt_reg(idx);
-| 
-| 	return true;
-| }
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index 5fdc1f33f57e..b0eb95f93e9c 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -228,10 +228,6 @@ void parse_events_error__handle(struct parse_events_error *err, int idx,
+ void parse_events_error__print(struct parse_events_error *err,
+ 			       const char *event);
+ 
+-static inline void parse_events_unused_value(const void *x __maybe_unused)
+-{
+-}
+-
+ #ifdef HAVE_LIBELF_SUPPORT
+ /*
+  * If the probe point starts with '%',
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 7629af3d5c7c..99335ec586ae 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -315,13 +315,13 @@ r0x{num_raw_hex}	{ return str(yyscanner, PE_RAW); }
+ 	 * are the same, so trailing context can be used disambiguate the two
+ 	 * cases.
+ 	 */
+-":"/{modifier_bp}	{ return str(yyscanner, PE_BP_COLON); }
++":"/{modifier_bp}	{ return PE_BP_COLON; }
+ 	/*
+ 	 * The slash before memory length can get mixed up with the slash before
+ 	 * config terms. Fortunately config terms do not start with a numeric
+ 	 * digit, so trailing context can be used disambiguate the two cases.
+ 	 */
+-"/"/{digit}		{ return str(yyscanner, PE_BP_SLASH); }
++"/"/{digit}		{ return PE_BP_SLASH; }
+ "/"/{non_digit}		{ BEGIN(config); return '/'; }
+ {num_dec}		{ return value(yyscanner, 10); }
+ {num_hex}		{ return value(yyscanner, 16); }
+diff --git a/tools/perf/util/parse-events.y b/tools/perf/util/parse-events.y
+index 0c3d086cc22a..9f28d4b5502f 100644
+--- a/tools/perf/util/parse-events.y
++++ b/tools/perf/util/parse-events.y
+@@ -80,8 +80,6 @@ static void free_list_evsel(struct list_head* list_evsel)
+ %type <str> PE_LEGACY_CACHE
+ %type <str> PE_MODIFIER_EVENT
+ %type <str> PE_MODIFIER_BP
+-%type <str> PE_BP_COLON
+-%type <str> PE_BP_SLASH
+ %type <str> PE_EVENT_NAME
+ %type <str> PE_KERNEL_PMU_EVENT PE_PMU_EVENT_FAKE
+ %type <str> PE_DRV_CFG_TERM
+@@ -510,9 +508,6 @@ PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event
+ 	struct list_head *list;
+ 	int err;
+ 
+-	parse_events_unused_value(&$3);
+-	parse_events_unused_value(&$5);
+-
+ 	list = alloc_list();
+ 	ABORT_ON(!list);
+ 	err = parse_events_add_breakpoint(_parse_state, list,
+@@ -531,8 +526,6 @@ PE_PREFIX_MEM PE_VALUE PE_BP_SLASH PE_VALUE opt_event_config
+ 	struct list_head *list;
+ 	int err;
+ 
+-	parse_events_unused_value(&$3);
+-
+ 	list = alloc_list();
+ 	ABORT_ON(!list);
+ 	err = parse_events_add_breakpoint(_parse_state, list,
+@@ -550,8 +543,6 @@ PE_PREFIX_MEM PE_VALUE PE_BP_COLON PE_MODIFIER_BP opt_event_config
+ 	struct list_head *list;
+ 	int err;
+ 
+-	parse_events_unused_value(&$3);
+-
+ 	list = alloc_list();
+ 	ABORT_ON(!list);
+ 	err = parse_events_add_breakpoint(_parse_state, list,
+-- 
+2.41.0.162.gfafddb0af9-goog
 
-... which can be used here, e.g.
-
-| /*
-|  * Capture all records before the first invalid record, and return the number
-|  * of records captured.
-|  */
-| static int capture_brbe_regset(struct brbe_hw_attr *brbe_attr, struct brbe_regset *buf)
-| {
-| 
-| 	int nr_entries = brbe_attr->brbe_nr;
-| 	int idx = 0;
-| 	
-| 	select_brbe_bank(BRBE_BANK_IDX_0);
-| 	while (idx < nr_entries && IDX < BRBE_BANK0_IDX_MAX) {
-| 		if (__read_brbe_regset(&buf[idx], idx))
-| 			return idx;
-| 	}
-| 
-| 	select_brbe_bank(BRBE_BANK_IDX_1);
-| 	while (idx < nr_entries && IDX < BRBE_BANK1_IDX_MAX) {
-| 		if (__read_brbe_regset(&buf[idx], idx))
-| 			return idx;
-| 	}
-| 
-| 	return idx;
-| }
-
-... and could be used to implement capture_branch_entry() in the patch before
-this.
-
-> +static inline void copy_brbe_regset(struct brbe_regset *src, int src_idx,
-> +				    struct brbe_regset *dst, int dst_idx)
-> +{
-> +	dst[dst_idx].brbinf = src[src_idx].brbinf;
-> +	dst[dst_idx].brbsrc = src[src_idx].brbsrc;
-> +	dst[dst_idx].brbtgt = src[src_idx].brbtgt;
-> +}
-
-C can do struct assignment, so this is the same as:
-
-| static inline void copy_brbe_regset(struct brbe_regset *src, int src_idx,
-| 				    struct brbe_regset *dst, int dst_idx)
-| {
-| 	dst[dst_idx] = src[src_idx];
-| }
-
-... and given that, it would be simpler and clearer to have that directly in
-the caller, so I don't think we need this helper function.
-
-> +/*
-> + * This function concatenates branch records from stored and live buffer
-> + * up to maximum nr_max records and the stored buffer holds the resultant
-> + * buffer. The concatenated buffer contains all the branch records from
-> + * the live buffer but might contain some from stored buffer considering
-> + * the maximum combined length does not exceed 'nr_max'.
-> + *
-> + *	Stored records	Live records
-> + *	------------------------------------------------^
-> + *	|	S0	|	L0	|	Newest	|
-> + *	---------------------------------		|
-> + *	|	S1	|	L1	|		|
-> + *	---------------------------------		|
-> + *	|	S2	|	L2	|		|
-> + *	---------------------------------		|
-> + *	|	S3	|	L3	|		|
-> + *	---------------------------------		|
-> + *	|	S4	|	L4	|		nr_max
-> + *	---------------------------------		|
-> + *	|		|	L5	|		|
-> + *	---------------------------------		|
-> + *	|		|	L6	|		|
-> + *	---------------------------------		|
-> + *	|		|	L7	|		|
-> + *	---------------------------------		|
-> + *	|		|		|		|
-> + *	---------------------------------		|
-> + *	|		|		|	Oldest	|
-> + *	------------------------------------------------V
-> + *
-> + *
-> + * S0 is the newest in the stored records, where as L7 is the oldest in
-> + * the live reocords. Unless the live buffer is detetcted as being full
-> + * thus potentially dropping off some older records, L7 and S0 records
-> + * are contiguous in time for a user task context. The stitched buffer
-> + * here represents maximum possible branch records, contiguous in time.
-> + *
-> + *	Stored records  Live records
-> + *	------------------------------------------------^
-> + *	|	L0	|	L0	|	Newest	|
-> + *	---------------------------------		|
-> + *	|	L0	|	L1	|		|
-> + *	---------------------------------		|
-> + *	|	L2	|	L2	|		|
-> + *	---------------------------------		|
-> + *	|	L3	|	L3	|		|
-> + *	---------------------------------		|
-> + *	|	L4	|	L4	|	      nr_max
-> + *	---------------------------------		|
-> + *	|	L5	|	L5	|		|
-> + *	---------------------------------		|
-> + *	|	L6	|	L6	|		|
-> + *	---------------------------------		|
-> + *	|	L7	|	L7	|		|
-> + *	---------------------------------		|
-> + *	|	S0	|		|		|
-> + *	---------------------------------		|
-> + *	|	S1	|		|    Oldest	|
-> + *	------------------------------------------------V
-> + *	|	S2	| <----|
-> + *	-----------------      |
-> + *	|	S3	| <----| Dropped off after nr_max
-> + *	-----------------      |
-> + *	|	S4	| <----|
-> + *	-----------------
-> + */
-> +static int stitch_stored_live_entries(struct brbe_regset *stored,
-> +				      struct brbe_regset *live,
-> +				      int nr_stored, int nr_live,
-> +				      int nr_max)
-> +{
-> +	int nr_total, nr_excess, nr_last, i;
-> +
-> +	nr_total = nr_stored + nr_live;
-> +	nr_excess = nr_total - nr_max;
-> +
-> +	/* Stored branch records in stitched buffer */
-> +	if (nr_live == nr_max)
-> +		nr_stored = 0;
-> +	else if (nr_excess > 0)
-> +		nr_stored -= nr_excess;
-> +
-> +	/* Stitched buffer branch records length */
-> +	if (nr_total > nr_max)
-> +		nr_last = nr_max;
-> +	else
-> +		nr_last = nr_total;
-> +
-> +	/* Move stored branch records */
-> +	for (i = 0; i < nr_stored; i++)
-> +		copy_brbe_regset(stored, i, stored, nr_last - nr_stored - 1 + i);
-> +
-> +	/* Copy live branch records */
-> +	for (i = 0; i < nr_live; i++)
-> +		copy_brbe_regset(live, i, stored, i);
-> +
-> +	return nr_last;
-> +}
-
-I think this can be written more simply as something like:
-
-static int stitch_stored_live_entries(struct brbe_regset *stored,
-				      struct brbe_regset *live,
-				      int nr_stored, int nr_live,
-				      int nr_max)
-{	
-	int nr_move = max(nr_stored, nr_max - nr_live);
-
-	/* Move the tail of the buffer to make room for the new entries */
-	memmove(&stored[nr_live], &stored[0], nr_move * sizeof(*stored));
-
-	/* Copy the new entries into the head of the buffer */
-	memcpy(stored[0], &live[0], nr_live * sizeof(*stored));
-
-	/* Return the number of entries in the stitched buffer */
-	return min(nr_live + nr_stored, nr_max);
-}
-
-... or if we could save this oldest-first, we could make it a circular buffer
-and avoid moving older entries.
-
-Thanks,
-Mark.
