@@ -2,142 +2,112 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622D6EB64D0
-	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 19:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD07EB64D0
+	for <linux-perf-users@archiver.kernel.org>; Tue, 13 Jun 2023 19:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbjFMTQu (ORCPT
+        id S237920AbjFMTXJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 15:16:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57990 "EHLO
+        Tue, 13 Jun 2023 15:23:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230322AbjFMTQt (ORCPT
+        with ESMTP id S237409AbjFMTXF (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 15:16:49 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 299FB122
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:16:48 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-565d1b86a64so76950877b3.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:16:48 -0700 (PDT)
+        Tue, 13 Jun 2023 15:23:05 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E42510F7
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:23:02 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1b3c43279c1so28915ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 12:23:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686683807; x=1689275807;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5I02Mxr8dEB2Fb/343TSS1xBJ+pa6R95MYlZ68AlcGA=;
-        b=6iM1g2V9GAkT4U8h/tzhArE5k9Yifetlf+FlODL6ab+YQJCBWSX9I/F/nlM2c5033p
-         6cU/fw6PIWGvlyuc+m2QsTNLsiQtkceOpqkTmJMPqXfAldJV7TVoL1bw+QJAQeOObKqp
-         O6hS0tHGW1fVuBsqTzQjveswh3FMPoq10dV8O7x7Wh6wYxGWATcoLbynK0livHk8TOhj
-         n5Wi3Mr2dnzAsWgc60yUuQTf6btWXAhWeNocjbyaBT/wnLcf14zjfaa2iCOBpF0gdGUe
-         1W5VhdxWNNgEni6zGzEnQACYIz65hAoD5u1rxUQG6rI+ETsH2/MgyezAq65623WtdDVr
-         SMqg==
+        d=google.com; s=20221208; t=1686684181; x=1689276181;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+D4HqqatbIO3Y5m0N5oSclLaQb1DH2u/EcPqTcyMdUY=;
+        b=iorkUsU5RLmVLaJi+JzfcC7MPYf/n2Ac/nb2cukiZxk1G/KaQLc9+4K94FCyRJuhw5
+         GH82dhntRG+u6Qw9YVx5gEj/jZcyP8BpvGig2WfVp9fdtA431QuPa7KJeQnEOwKuwJZO
+         vrNVeNnj4ZlWxaaF9mzj898LsAURLZAZTtFYhpH2ELPamtmZ+Y8T1g8F/KGosJpRjtW6
+         sVvDmra59MKl8xq2z8lU8sbMmm5ZgD4HhXrIiIVzO3xm5Z6nvOk6oj+vF88nGrWEiYb8
+         f7VddXZa8P/Y5MxoR0sIOuTXrOZlX8B6T/wCz5qD1VHKcjtTEjk57+ridBDNMbF0JBKk
+         27pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686683807; x=1689275807;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5I02Mxr8dEB2Fb/343TSS1xBJ+pa6R95MYlZ68AlcGA=;
-        b=dDRVikIHDWMf9t/3JVNekla40/2SI2zijvYgeTTfGa5Lz3qDprgTjRCePQL9s7ZEnq
-         ficXszHu3vxSRA3pZKzsmcDo++x3j6r2Q0bYKnVbUmkF/B27noanWnqxKsFrAiltWiv6
-         SFt/wLH9XrmZU+zu8JgrwLi+C0QG1USCD2EM8sYv0oKtiuUxlUMqrYubFVhcSdgiyQ8t
-         E6DjZI+QZ62Xow9KClW234pR0K4DlMysUlOedjuKQw/BJdPUaaquetXcoTciFT2BRu/4
-         IRV1f30BnjvjdoT+zTrzGCBUJ6PZ0GfJuhZiZyPgZmhGNsPB38qi+BJHhwM8UvLhuNLK
-         hqSA==
-X-Gm-Message-State: AC+VfDxicpcvOuF/dc+y/ZeQx5WzrqCLzofckM+Xk96WKHbL+yMXDXVO
-        coq1gGaO/9I1ZPtKlDoIJnYxpSH6WAxx
-X-Google-Smtp-Source: ACHHUZ7X6K8DA/1fzwdBW/Rnk8QVBeGKLKagCC3TlSFf4YVjLObHwYf6u2SdQactQSWQ33qRDRQpFO/kXBHm
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:a704:56d6:f79d:33e7])
- (user=irogers job=sendgmr) by 2002:a81:c905:0:b0:56f:f65f:53e5 with SMTP id
- o5-20020a81c905000000b0056ff65f53e5mr612110ywi.4.1686683807408; Tue, 13 Jun
- 2023 12:16:47 -0700 (PDT)
-Date:   Tue, 13 Jun 2023 12:16:38 -0700
-Message-Id: <20230613191639.1547925-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [RFC PATCH] perf util: asprintf helper for leak sanitizer
+        d=1e100.net; s=20221208; t=1686684181; x=1689276181;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+D4HqqatbIO3Y5m0N5oSclLaQb1DH2u/EcPqTcyMdUY=;
+        b=jaMX7ey1P/PvGxyTOJOsbqmPqFdFiNpqC70mHYIub8lq4HfO2ncOmAU+EXximtmxmR
+         NiU9URMxapTuJHAwIfmZpk2DaGAbF5cXBM8807rqXJmfFW0nFAMtlJKjAiFmST9vEW24
+         TdiN2+Y28onIJEJ0gUi7meaPy4u9Ss0aTrHsrU9ihl2FHzNmJ77Lh3qAMtLZ18d1b9gc
+         sFruZ2ljlMvF5klnDv0liNxvHHlTsZ72OSF8K+6olijoXSGX50BMDTqJ4iwKKvSrIP+p
+         CB8aCEmcyxEf0GohywI8b9fIol1+Zq7hDytfpS7K7h1ozuyjLqjapplnFKHKjMWWIf9g
+         /BHA==
+X-Gm-Message-State: AC+VfDyXFatBCupo9tABvdpinzWcAaX6TFZNhXER8Wfje9UKhkMtVEBQ
+        G0qx3kzJpgfOFHexRSEVrf2TqLPk14BlWgn6fPEFLg==
+X-Google-Smtp-Source: ACHHUZ7IdUcspwOvM0xXqtKaD2SAV/caVjerale3K/7e+6pfL57YVGqqlwDDCVLiMR2Yr6wlC5WOGtTN4AwNWHNau68=
+X-Received: by 2002:a17:902:c205:b0:1b3:b200:a3dc with SMTP id
+ 5-20020a170902c20500b001b3b200a3dcmr41025pll.2.1686684178700; Tue, 13 Jun
+ 2023 12:22:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230607162700.3234712-1-kan.liang@linux.intel.com> <20230607162700.3234712-2-kan.liang@linux.intel.com>
+In-Reply-To: <20230607162700.3234712-2-kan.liang@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 13 Jun 2023 12:22:46 -0700
+Message-ID: <CAP-5=fXcMobh7+12su=AvMs+3-GbRiGE4STMv9FjOYfphWzkAA@mail.gmail.com>
+Subject: Re: [PATCH 1/8] perf metric: Fix no group check
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-asprintf is a source of memory leaks but produces bad stack traces on
-my Debian linux. This patch adds a simple asprintf implementation to
-util.c that works around it.
+On Wed, Jun 7, 2023 at 9:27=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
+>
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> The no group check fails if there is more than one meticgroup in the
+> metricgroup_no_group.
+>
+> The first parameter of the match_metric() should be the string, while
+> the substring should be the second parameter.
+>
+> Fixes: ccc66c609280 ("perf metric: JSON flag to not group events if gathe=
+ring a metric group")
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-Before output:
-```
-==1541752==ERROR: LeakSanitizer: detected memory leaks
+Acked-by: Ian Rogers <irogers@google.com>
 
-Direct leak of 10 byte(s) in 1 object(s) allocated from:
-    #0 0x7f90c76b89cf in __interceptor_malloc ../../../../src/libsanitizer/asan/asan_malloc_linux.cpp:69
-    #1 0x7f90c649d2c7 in __vasprintf_internal libio/vasprintf.c:71
-    #2 0x55ad9b79afbf  (/tmp/perf/perf+0x850fbf)
+Thanks,
+Ian
 
-SUMMARY: AddressSanitizer: 10 byte(s) leaked in 1 allocation(s).
-```
-
-After output:
-```
-==1545918==ERROR: LeakSanitizer: detected memory leaks
-
-Direct leak of 10 byte(s) in 1 object(s) allocated from:
-    #0 0x7f2755a7077b in __interceptor_strdup ../../../../src/libsanitizer/asan/asan_interceptors.cpp:439
-    #1 0x564986a8df31 in asprintf util/util.c:566
-    #2 0x5649869b5901 in metricgroup__lookup_default_metricgroup util/metricgroup.c:1520
-    #3 0x5649869b5e57 in metricgroup__lookup_create util/metricgroup.c:1579
-    #4 0x5649869b6ddc in parse_groups util/metricgroup.c:1698
-    #5 0x5649869b7714 in metricgroup__parse_groups util/metricgroup.c:1771
-    #6 0x5649867da9d5 in add_default_attributes tools/perf/builtin-stat.c:2164
-    #7 0x5649867ddbfb in cmd_stat tools/perf/builtin-stat.c:2707
-    #8 0x5649868fa5a2 in run_builtin tools/perf/perf.c:323
-    #9 0x5649868fab13 in handle_internal_command tools/perf/perf.c:377
-    #10 0x5649868faedb in run_argv tools/perf/perf.c:421
-    #11 0x5649868fb443 in main tools/perf/perf.c:537
-    #12 0x7f2754846189 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-
-SUMMARY: AddressSanitizer: 10 byte(s) leaked in 1 allocation(s).
-```
-
-RFC: is this useful for others? Should we have a build flag for it?
----
- tools/perf/util/util.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index c1fd9ba6d697..57eb528c5fed 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -552,3 +552,22 @@ int sched_getcpu(void)
- 	return -1;
- }
- #endif
-+
-+int asprintf(char **restrict strp, const char *restrict fmt, ...)
-+{
-+	char buf[1024];
-+	va_list ap;
-+	int size;
-+	char *result;
-+
-+	va_start(ap, fmt);
-+	size = vsnprintf(buf, sizeof(buf), fmt, ap);
-+	if (size < (int)sizeof(buf))
-+		result = strdup(buf);
-+	else
-+		size = vasprintf(&result, fmt, ap);
-+
-+	*strp = result;
-+	va_end(ap);
-+	return size;
-+}
--- 
-2.41.0.162.gfafddb0af9-goog
-
+> ---
+>  tools/perf/util/metricgroup.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+c
+> index 70ef2e23a710..74f2d8efc02d 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -1175,7 +1175,7 @@ static int metricgroup__add_metric_callback(const s=
+truct pmu_metric *pm,
+>
+>         if (pm->metric_expr && match_pm_metric(pm, data->pmu, data->metri=
+c_name)) {
+>                 bool metric_no_group =3D data->metric_no_group ||
+> -                       match_metric(data->metric_name, pm->metricgroup_n=
+o_group);
+> +                       match_metric(pm->metricgroup_no_group, data->metr=
+ic_name);
+>
+>                 data->has_match =3D true;
+>                 ret =3D add_metric(data->list, pm, data->modifier, metric=
+_no_group,
+> --
+> 2.35.1
+>
