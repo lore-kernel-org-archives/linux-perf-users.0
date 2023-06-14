@@ -2,359 +2,173 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C8BEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 14:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7844C001DD
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 15:18:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235625AbjFNO5d (ORCPT
+        id S1343682AbjFNPSS (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 10:57:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41228 "EHLO
+        Wed, 14 Jun 2023 11:18:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236638AbjFNO5c (ORCPT
+        with ESMTP id S1343677AbjFNPSR (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 10:57:32 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766DB1A7
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 07:57:30 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-3f98276f89cso214371cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 07:57:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686754649; x=1689346649;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WwEcRzlFxXHK+vcC3gnSqYOFJE4wNjqS53AmFcw7MkM=;
-        b=K1sojI3T8ApKsQgj77IakvDfwe3BhMGmZmgBtDOokrz52vlwRL+k50uBugvJrUsRwl
-         boEJfUBYlurjmAEGNvu+Hz1ssNSe357Ri9LecCuoqcwpT/rBkHyaT62oNzOPhOhtGbbS
-         wgF4Prt41BxhJGEKUOEdkJmC9sz+hvyfaPO+/KQEkiw5OQ5Exc/ysUnCOsqLttYPPDM2
-         BZXRkO44TyuzXhA51+jbVxri95k6+IfV3TULoBUVmGBHsrfUW9xpWZe92feT/aHgUkR6
-         jb3pqODB+f0gnypWhj5qlHGnsxdqWbnuAO3Qy+2GxdTjB5FoyPlRo6Gdbs6JFxGUWXSW
-         pIpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686754649; x=1689346649;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WwEcRzlFxXHK+vcC3gnSqYOFJE4wNjqS53AmFcw7MkM=;
-        b=MepKPw+LRtbEYwRZIxC6CMgtlr6x78Y4DAXILSt8Y86IyyRXrEv0+6y2t8r0520Rp7
-         VvzBddSP5xijFFFjomgnK37s3sS9deOPdLEgn4zqH21keH92tRVwudxdTzaW+V/LaSF2
-         OZzK5EtATfbZlo2KQeB5VujRUUvYivzCfA2l/U4aMJri0eZ97ETzYELEzYBwfQQS+bR6
-         +wzqQtrms5VWBBgfls1n2VK1E+tsxJN94EXaWS9UUm3UdaFJ+al7YIF6RfSZ7Pq9jBae
-         GiiOkVk/G0bRAgVHxXfsLBs8jY+SGKLsIXCgHyJoE2mGgvTPv4wGmaiIAR+wUNSCQET+
-         0ymw==
-X-Gm-Message-State: AC+VfDzvQchrw2SElYQba9QPdNyH2TdUZxAyjQx412eS8WbdgWpjNPId
-        1kkCuLuN4BdIyp3hZnKMhdAJcOAhqIKQVzsuOSZ0h1o8FKrY9AwDQkKU4Q==
-X-Google-Smtp-Source: ACHHUZ71Ckt8LLfgCFLnyBQ5quym+7db7fRO878L3wqcQfT6Nszuoiu6jwilAt7zFjWiKNa8s8Wvzx5x7DjTxM13Xns=
-X-Received: by 2002:a05:622a:15cd:b0:3f8:5b2:aef0 with SMTP id
- d13-20020a05622a15cd00b003f805b2aef0mr292014qty.24.1686754649444; Wed, 14 Jun
- 2023 07:57:29 -0700 (PDT)
+        Wed, 14 Jun 2023 11:18:17 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50386198;
+        Wed, 14 Jun 2023 08:18:14 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Qh8BL43ksztQlf;
+        Wed, 14 Jun 2023 23:15:38 +0800 (CST)
+Received: from localhost.localdomain (10.67.174.95) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 14 Jun 2023 23:18:07 +0800
+From:   Yang Jihong <yangjihong1@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <yangjihong1@huawei.com>
+Subject: [PATCH] perf top & record: Fix segfault when default cycles event is not supported
+Date:   Wed, 14 Jun 2023 15:16:25 +0000
+Message-ID: <20230614151625.2077-1-yangjihong1@huawei.com>
+X-Mailer: git-send-email 2.30.GIT
 MIME-Version: 1.0
-References: <d5319870-7569-c353-1777-31ee090f8da8@linux.ibm.com>
- <CAP-5=fU+0VXckQiq3E8yqaySNZ+-DDZahEd1OY0uKPWnfFsafg@mail.gmail.com> <e7f0930a-a9fc-d768-a472-bd9af6fafdf5@linux.ibm.com>
-In-Reply-To: <e7f0930a-a9fc-d768-a472-bd9af6fafdf5@linux.ibm.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 14 Jun 2023 07:57:17 -0700
-Message-ID: <CAP-5=fWjqJH0h607cVb1T7pRxDeq4cZBz5TECMajpnkvVNWHEQ@mail.gmail.com>
-Subject: Re: perf test failures in linux-next on s390
-To:     Thomas Richter <tmricht@linux.ibm.com>
-Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.174.95]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 1:32=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
-om> wrote:
->
-> On 6/13/23 16:32, Ian Rogers wrote:
-> > On Tue, Jun 13, 2023 at 5:54=E2=80=AFAM Thomas Richter <tmricht@linux.i=
-bm.com> wrote:
-> >>
-> >> Hi all,
-> >>
-> >> I have run the perf test suite on the current 6.4rc6 kernel and see ju=
-st one error:
-> >> # ./perf test 2>&1 | fgrep FAILED
-> >> fgrep: warning: fgrep is obsolescent; using grep -F
-> >>  42.3: BPF prologue generation                                       :=
- FAILED!
-> >> #
-> >>
-> >> However when I download the linux-next tree and build kernel and perf
-> >> tool with the same kernel config file, I get a bunch of failing test c=
-ases,
-> >> many with perf tool dumping core:
-> >>
-> >> # perf test 2>&1 | fgrep FAILED
-> >> fgrep: warning: fgrep is obsolescent; using grep -F
-> >>   6.1: Test event parsing                                            :=
- FAILED!
-> >>  10.3: Parsing of PMU event table metrics                            :=
- FAILED!
-> >>  10.4: Parsing of PMU event table metrics with fake PMUs             :=
- FAILED!
-> >>  17: Setup struct perf_event_attr                                    :=
- FAILED!
-> >>  24: Number of exit events of a simple workload                      :=
- FAILED! core-dump
-> >>  28: Use a dummy software event to keep tracking                     :=
- FAILED!
-> >>  35: Track with sched_switch                                         :=
- FAILED!
-> >>  42.3: BPF prologue generation                                       :=
- FAILED!
-> >>  66: Parse and process metrics                                       :=
- FAILED!
-> >>  68: Event expansion for cgroups                                     :=
- FAILED!
-> >>  69.2: Perf time to TSC                                              :=
- FAILED! core-dump
-> >>  74: build id cache operations                                       :=
- FAILED! core-dump
-> >>  81: kernel lock contention analysis test                            :=
- FAILED!
-> >>  86: Zstd perf.data compression/decompression                        :=
- FAILED! core-dump
-> >>  87: perf record tests                                               :=
- FAILED! core-dump
-> >>  94: perf all metricgroups test                                      :=
- FAILED!
-> >>  95: perf all metrics test                                           :=
- FAILED!
-> >> 106: Test java symbol                                                :=
- FAILED! core-dump
-> >> #
-> >>
-> >> I am afraid this will show up pretty soon in the linux tree.
-> >> I am going to look into each failure in the next few days.
-> >>
-> >> What I already found out is that many test cases now fail due to the
-> >> event/PMU rework, here is one example:
-> >>
-> >> # perf test -Fvvvv 95
-> >> 95: perf all metrics test
-> >> --- start ---
-> >> Testing cpi
-> >> ....
-> >> Metric 'transaction' not printed in:
-> >> Error:
-> >> The TX_NC_TABORT event is not supported.
-> >> ---- end ----
-> >> perf all metrics test: FAILED!
-> >> # ls -l /sys/devices/cpum_cf/events/TX_NC_TABORT
-> >> -r--r--r--. 1 root root 4096 Jun 13 13:49 /sys/devices/cpum_cf/events/=
-TX_NC_TABORT
-> >> #
-> >>
-> >> As can be seen, the event is definitely there and supported.
-> >> This same test case succeeds in the linux tree!
-> >>
-> >> Hopefully I can sort out some of the failures before this code show up
-> >> in the linux tree.
-> >
-> > Thanks Thomas, to be clear this is what is in
-> > perf-tools-next/linux-next and not 6.4?
->
-> Ian,
->
-> thanks for your help.
-> Correct, I am talking about the linux-next repo. The linux repo is fine.
->
-> >
-> > Rather than try to do more complicated cases like the metrics tests,
-> > it makes sense to dig into why event parsing is failing. Test 6 first
-> > of all, could you give output?
-> >
-> > Thanks,
-> > Ian
-> >
-> We discussed some aspects of this about two weeks ago, but last week
-> I was on vacation and now I resumed my work on linux-next.
-> We run the linux-next perf test suite every night and I am concerned
-> and would like to get this sorted out before it hits Linux 6.5.
->
-> Here is the output on my linux-next tree built yesterday:
-> # uname -a
-> Linux a35lp67.lnxne.boe 6.4.0-rc6-next-20230613d-perf #2 \
->               SMP Tue Jun 13 15:18:43 CEST 2023 s390x GNU/Linux
-> # ./perf test -F 6
->   6: Parse event definition strings  :
->   6.1: Test event parsing            :Segmentation fault (core dumped)
-> #
-> # gdb perf
->   ....
->   (gdb) r test -F 6
->    6: Parse event definition strings                                  :
->   6.1: Test event parsing                                            :
-> Program received signal SIGSEGV, Segmentation fault.
-> __GI_strcmp () at ../sysdeps/s390/strcmp-vx.S:47
-> (gdb) where
-> #0  __GI_strcmp () at ../sysdeps/s390/strcmp-vx.S:47
-> #1  0x000000000110a18c in test__term_equal_term (evlist=3D0x152ea80) at t=
-ests/parse-events.c:1580
-> #2  0x000000000110a96a in test_event (e=3D0x14dc758 <test.events+1416>) a=
-t tests/parse-events.c:2209
-> #3  0x000000000110ac58 in test_events (events=3D0x14dc1d0 <test.events>, =
-cnt=3D61) at tests/parse-events.c:2260
-> #4  0x000000000110ad52 in test__events2 (test=3D0x1500758 <suite.parse_ev=
-ents>, subtest=3D0)
->     at tests/parse-events.c:2272
-> #5  0x00000000010f6fac in run_test (test=3D0x1500758 <suite.parse_events>=
-, subtest=3D0) at tests/builtin-test.c:236
-> #6  0x00000000010f7142 in test_and_print (t=3D0x1500758 <suite.parse_even=
-ts>, subtest=3D0) at tests/builtin-test.c:265
-> #7  0x00000000010f7b1e in __cmd_test (argc=3D1, argv=3D0x3ffffffa320, ski=
-plist=3D0x0) at tests/builtin-test.c:436
-> #8  0x00000000010f8404 in cmd_test (argc=3D1, argv=3D0x3ffffffa320) at te=
-sts/builtin-test.c:559
-> #9  0x00000000011473fc in run_builtin (p=3D0x14f60e8 <commands+600>, argc=
-=3D3, argv=3D0x3ffffffa320) at perf.c:323
-> #10 0x000000000114776e in handle_internal_command (argc=3D3, argv=3D0x3ff=
-ffffa320) at perf.c:377
-> #11 0x0000000001147980 in run_argv (argcp=3D0x3ffffff9f94, argv=3D0x3ffff=
-ff9f88) at perf.c:421
-> #12 0x0000000001147d48 in main (argc=3D3, argv=3D0x3ffffffa320) at perf.c=
-:537
-> (gdb)
->
-> To be honest, I am no expert on the yacc/bison/flex tool chain.
-> I understand a little bit about them, but that is it.
->
-> When I look at the output of perf test -Fvvvv 6 on linux-next, some thing=
-s seem odd,
-> I marked them with 3 question masks ???:
->
-> # ./perf test -Fvvv 6
->   6: Parse event definition strings     :
->   6.1: Test event parsing               :
-> --- start ---
-> running test 0 'syscalls:sys_enter_openat'
-> Using CPUID IBM,3931,704,A01,3.7,002f
-> running test 1 'syscalls:*'
-> running test 2 'r1a'
-> running test 3 '1:1'
-> running test 4 'instructions'
-> No PMU found for 'instructions'FAILED tests/parse-events.c:143 wrong numb=
-er of entries
-> Event test failure: test 4 'instructions'running test 5 'cycles/period=3D=
-100000,config2/'
-> ??? What is wrong here?
-> ??? Output on linux 6.4.0rc3:
-> ??? # ./perf stat -e instructions -- true
-> ???
-> ??? Performance counter stats for 'true':
-> ???
-> ???         2,965,720      instructions
-> ???
-> ???        0.002026832 seconds time elapsed
-> ???
-> ???        0.000056000 seconds user
-> ???        0.002048000 seconds sys
-> ??? #
-> ??? This is fine and works as expected. The s390 PMU for counters
-> ??? has a direct mapping for this. So we end up in the s390 PMU
-> ??? to retrieve the value.
-> ???
-> ??? Output on linux-next
-> ???# ./perf stat -e instructions -- true
-> ???
-> ??? Performance counter stats for 'true':
-> ???
-> ???              0.65 msec task-clock                       #    0.250 CP=
-Us utilized
-> ???                 0      context-switches                 #    0.000 /s=
-ec
-> ???                 0      cpu-migrations                   #    0.000 /s=
-ec
-> ???                49      page-faults                      #   75.375 K/=
-sec
-> ???         3,367,228      cycles                           #    5.180 GH=
-z
-> ???         2,880,270      instructions                     #    0.86  in=
-sn per cycle
-> ???   <not supported>      branches
-> ???   <not supported>      branch-misses
-> ???
-> ???       0.002599176 seconds time elapsed
-> ???
-> ???       0.000053000 seconds user
-> ???       0.002650000 seconds sys
-> ???
-> ???#
-> ??? Somehow we end up in a different PMU. The output is the same as if
-> ??? I do not specify an event at all. To reach the s390 specific PMU
-> ??? I have to add it explicitly as in:
-> ???# ./perf stat -e cpum_cf/instructions/ -- true
-> ???
-> ??? Performance counter stats for 'true':
-> ???
-> ???         2,814,522      cpum_cf/instructions/
-> ???
-> ???       0.001899881 seconds time elapsed
-> ???
-> ???       0.000050000 seconds user
-> ???       0.001928000 seconds sys
-> ???
-> ???]#
-> No PMU found for 'cycles/period=3D100000,config2/'FAILED tests/parse-even=
-ts.c:157 wrong number of entries
-> Event test failure: test 5 'cycles/period=3D100000,config2/'running test =
-6 'faults'
-> ...
-> ??? Similar output for basicly all events.
->
-> No PMU found for 'cycles'running test 59 'cycles/name=3Dname/'
-> No PMU found for 'name'Segmentation fault (core dumped)
->
-> Hope this helps.
->
-> PS: Should we keep the linux-perf-use mailing list as addressee? Not sure
-> if everybody else is interested in this?
+The perf-record and perf-top call parse_event() to add a cycles event to
+an empty evlist. For the system that does not support hardware cycles
+event, such as QEMU, the evlist is empty due to the following code process:
 
-Smaller list is okay. Could you send me a zip of the sysfs
-(/sys/devices) ? At least one issue is that the code didn't find a
-core PMU. On non-hybrid x86 this would be /sys/devices/cpu, I think we
-spoke about this before for s390 and there are >1. The issue here is
-that the test found 0, and we're trying to use PMUs in the code now as
-a way to sort events. There's code/comment in util/pmu.c:
+  parse_event(evlist, "cycles:P" or ""cycles:Pu")
+    parse_events(evlist, "cycles:P")
+      __parse_events
+        ...
+        ret = parse_events__scanner(str, &parse_state);
+        // ret = 0
+        ...
+        ret2 = parse_events__sort_events_and_fix_groups()
+        if (ret2 < 0)
+          return ret;
+        // The cycles event is not supported, here ret2 = -EINVAL,
+        // Here return 0.
+        ...
+        evlist__splice_list_tail(evlist)
+        // The code here does not execute to, so the evlist is still empty.
 
-'''
-/**
- * is_sysfs_pmu_core() - PMU CORE devices have different name other than cp=
-u in
- *         sysfs on some platforms like ARM or Intel hybrid. Looking for
- *         possible the cpus file in sysfs files to identify whether this i=
-s a
- *         core device.
- * @name: The PMU name such as "cpu_atom".
- */
-static int is_sysfs_pmu_core(const char *name)
-{
-char path[PATH_MAX];
+A null pointer occurs when the content in the evlist is accessed later.
 
-if (!perf_pmu__pathname_scnprintf(path, sizeof(path), name, "cpus"))
-return 0;
-return file_available(path);
-}
-...
-bool is_pmu_core(const char *name)
-{
-return !strcmp(name, "cpu") || is_sysfs_pmu_core(name);
-}
-'''
+Before:
 
-Thanks,
-Ian
+  # perf list hw
 
-> --
-> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
-y
-> --
-> Vorsitzender des Aufsichtsrats: Gregor Pillen
-> Gesch=C3=A4ftsf=C3=BChrung: David Faller
-> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
-tgart, HRB 243294
->
+  List of pre-defined events (to be used in -e or -M):
+
+  # perf record true
+  libperf: Miscounted nr_mmaps 0 vs 1
+  WARNING: No sample_id_all support, falling back to unordered processing
+  perf: Segmentation fault
+  Obtained 1 stack frames.
+  [0xc5beff]
+  Segmentation fault
+
+Solution:
+  If cycles event is not supported, try to fall back to cpu-clock event.
+
+After:
+  # perf record true
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.006 MB perf.data ]
+  #
+
+Fixes: 7b100989b4f6 ("perf evlist: Remove __evlist__add_default")
+Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+---
+ tools/perf/builtin-record.c |  4 +---
+ tools/perf/builtin-top.c    |  3 +--
+ tools/perf/util/evlist.c    | 18 ++++++++++++++++++
+ tools/perf/util/evlist.h    |  1 +
+ 4 files changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index aec18db7ff23..29ae2b84a63a 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -4161,9 +4161,7 @@ int cmd_record(int argc, const char **argv)
+ 		record.opts.tail_synthesize = true;
+ 
+ 	if (rec->evlist->core.nr_entries == 0) {
+-		bool can_profile_kernel = perf_event_paranoid_check(1);
+-
+-		err = parse_event(rec->evlist, can_profile_kernel ? "cycles:P" : "cycles:Pu");
++		err = evlist__add_default(rec->evlist);
+ 		if (err)
+ 			goto out;
+ 	}
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index c363c04e16df..798cb9252a5f 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1665,8 +1665,7 @@ int cmd_top(int argc, const char **argv)
+ 		goto out_delete_evlist;
+ 
+ 	if (!top.evlist->core.nr_entries) {
+-		bool can_profile_kernel = perf_event_paranoid_check(1);
+-		int err = parse_event(top.evlist, can_profile_kernel ? "cycles:P" : "cycles:Pu");
++		int err = evlist__add_default(top.evlist);
+ 
+ 		if (err)
+ 			goto out_delete_evlist;
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 7ef43f72098e..60efa762405e 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -287,6 +287,24 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
+ 	return evsel;
+ }
+ 
++int evlist__add_default(struct evlist *evlist)
++{
++	bool can_profile_kernel;
++	int err;
++
++	can_profile_kernel = perf_event_paranoid_check(1);
++	err = parse_event(evlist, can_profile_kernel ? "cycles:P" : "cycles:Pu");
++	if (err)
++		return err;
++
++	if (!evlist->core.nr_entries) {
++		pr_debug("The cycles event is not supported, trying to fall back to cpu-clock event\n");
++		return parse_event(evlist, "cpu-clock");
++	}
++
++	return 0;
++}
++
+ #ifdef HAVE_LIBTRACEEVENT
+ struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool system_wide)
+ {
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index 664c6bf7b3e0..47eea809ee91 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -116,6 +116,7 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs);
+ 
+ int evlist__add_dummy(struct evlist *evlist);
+ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide);
++int evlist__add_default(struct evlist *evlist);
+ static inline struct evsel *evlist__add_dummy_on_all_cpus(struct evlist *evlist)
+ {
+ 	return evlist__add_aux_dummy(evlist, true);
+-- 
+2.30.GIT
+
