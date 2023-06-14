@@ -2,219 +2,245 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C414EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 10:59:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C361DEB64DB
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 11:39:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234209AbjFNK7m (ORCPT
+        id S244245AbjFNLjk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 06:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59598 "EHLO
+        Wed, 14 Jun 2023 07:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235923AbjFNK7l (ORCPT
+        with ESMTP id S244085AbjFNLja (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 06:59:41 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 650F91BEF;
-        Wed, 14 Jun 2023 03:59:37 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E46941FB;
-        Wed, 14 Jun 2023 04:00:20 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.24.16])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60BB43F71E;
-        Wed, 14 Jun 2023 03:59:34 -0700 (PDT)
-Date:   Wed, 14 Jun 2023 11:59:28 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Wed, 14 Jun 2023 07:39:30 -0400
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2052.outbound.protection.outlook.com [40.107.94.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCB626BF;
+        Wed, 14 Jun 2023 04:38:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AKZJWy7q9FVBXtv2GK4gEq7J5fKowVrtasDaOKcE3u3wSozcZGVckwsCGS3nKuX6SGqqQLT5t/67HnsRsRWDNQH/iG1HmvTiR9BHb36CcRSsX18oSNpcWyAnHEJ0q0TRigHrg9yqgjSlk3YIUBYG7cZzoqyjyos2wpASMA+h6jRBqbcAb8ZczPMp7OnCtnL1k00hV4WQK8RsQyVH58nKQCNYc/EmcTFl4iQjpcNuw3DLP2X3n7pKep5yCzq8s9X9L86708xP+Ucc2sEgJeFeoGwrNqizacjnu+654SPEVWbfaXu6QYye7W4pVTtmyN8D818cwi1Q42LBkDTszuGIJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2lPexcpp1qpj9zRj8kTI3+HCyWD6SZUjLwJ8gXzhzuA=;
+ b=Bo4mTisBO/3a+jYOJpWDRAlNawiwOc4NpflgzvDuqbWdw4lyyMvzGkT/ULpeZXWhmOBJ5rdcRJ2z0lOhJKtBB9jHtdoHzZYiSGAKEdzkgDZuwwGBQ2/YajD7OuLYy6BcckaHNKMmN9BUfc6ZpE/0OqX8MdBx+8RueSezJvt3WP5lzXOeK0tTYg1OCckDp9IQUs+pvdkSzOWJd9iRPHsihwxVQsG/TXHQOx6NjeepLXogoLNS/q6I1eExLoRMzInip7tpU6sNKQFZC2KXOP77dr+txSp8Xrk/yGKt8OIgXL+5+t5dH3qkFPimk/h6uq5g1wQ4ozBj13XDWfqGJynu7g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2lPexcpp1qpj9zRj8kTI3+HCyWD6SZUjLwJ8gXzhzuA=;
+ b=WvDmKysCZC27VdIGODi6vUyc8bM+xjMezxNZcO1nNEwhlsQ0tTniBlBU6wcuLa+C/Eys2eX6aj7odBKqXsfoqQbDkQ0a5ITyYEkYE+K23/Ywnxz3TPyr7O3NJBL4VL0uqqSUYqn5otKJYXrftMrNRF7ENXuZfxVRLYy5UNwiBhI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB6137.namprd12.prod.outlook.com (2603:10b6:208:3eb::20)
+ by BL1PR12MB5269.namprd12.prod.outlook.com (2603:10b6:208:30b::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.37; Wed, 14 Jun
+ 2023 11:38:35 +0000
+Received: from IA1PR12MB6137.namprd12.prod.outlook.com
+ ([fe80::5f70:8e17:f854:91ed]) by IA1PR12MB6137.namprd12.prod.outlook.com
+ ([fe80::5f70:8e17:f854:91ed%4]) with mapi id 15.20.6455.045; Wed, 14 Jun 2023
+ 11:38:35 +0000
+Message-ID: <1320e6e3-c029-2a8c-e8b7-2cfbb781518a@amd.com>
+Date:   Wed, 14 Jun 2023 17:08:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH] perf test: Retry without grouping for all metrics test
+Content-Language: en-US
+To:     Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V11 08/10] arm64/perf: Add struct brbe_regset helper
- functions
-Message-ID: <ZImdkHxE6kX+dT5e@FVFF77S0Q05N>
-References: <20230531040428.501523-1-anshuman.khandual@arm.com>
- <20230531040428.501523-9-anshuman.khandual@arm.com>
- <ZIikv0bW1xGeLf6B@FVFF77S0Q05N.cambridge.arm.com>
- <2e91f218-e740-5b7d-fa8d-8fc43a6502a2@arm.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, kjain@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, barnali@linux.ibm.com,
+        ananth.narayan@amd.com, ravi.bangoria@amd.com,
+        santosh.shukla@amd.com
+References: <20230614090710.680330-1-sandipan.das@amd.com>
+From:   Ayush Jain <ayush.jain3@amd.com>
+In-Reply-To: <20230614090710.680330-1-sandipan.das@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0169.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:26::24) To IA1PR12MB6137.namprd12.prod.outlook.com
+ (2603:10b6:208:3eb::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2e91f218-e740-5b7d-fa8d-8fc43a6502a2@arm.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB6137:EE_|BL1PR12MB5269:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15de3cab-212c-4397-49e0-08db6ccbe32d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: o+P1rObzZqmbwYZTTvOizgcQic8BIqbOPYpO7IfJ702EcfsVuZtor3bX87PR/NKo9maGMVDL+/6FDxc/0p8Rzo2bBvhhPa50e4mfUvKzT8x1iD2vmiajcXuWitJ3QVJbUnDZIpG93oCE/ghcOhNtcTLftmukqGwTLiC9Y26DAbn/GR3B5U+sQC9CVgNC0FZ82hjyIXHbMkD1s/GwQgrT1SbsCkcbSMrwSYCm4Yugj9/jnoQ/1YpiaaxTkprvOwp4JTJowN/q3gDHUo7GI/0957X/G6CHSZCxs5jn4Djf3P0tHeKkAZcmDL27HrTc0Fq6PiHqwQAyoLLe17kbPER/jD68Vp6DG1nSGW2ivnUf5Jmm8Ub6Koyaydk30Cf2CzXk/pnX2zPCxAm2rNfpbTAJz5P93RCxp8/z4ckWm3yCfYPuyVfz6oJKOlM5y/i7E/eSucvZvBGeexP1yJxylSP17N4k2Jw1beCkWXf9SHusabeulAdzfcw8sTeXHIRPcV7p5oYKmpQQq+6tIgI4bT10GFASzkZ2tMdO7sbcmIwVXaTrFfZg/c+omZLmfzEAQMCiHr4oGXB8oKEduNc/hPa7k9pyOEADcKQoRnRIUCGOs+Q+o8nGT6lz18eL/cHP5R0+c7SLO74s57dNGUE/g04PGg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6137.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(39860400002)(376002)(366004)(346002)(451199021)(31686004)(7416002)(5660300002)(8676002)(8936002)(41300700001)(2906002)(316002)(478600001)(66556008)(66476007)(4326008)(66946007)(6666004)(6486002)(38100700002)(186003)(53546011)(31696002)(86362001)(83380400001)(2616005)(6506007)(26005)(6512007)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eVFtMlJOM05qNnFXaXJBaDk0K1JVcXhqeUxuNys1MXdBZzQzNnJsekwxa09S?=
+ =?utf-8?B?WndDVFlES3RxdndjUW04bmRRL2FNNjJpeGFRd0VpTVpsWXJETHFxTCszSzU0?=
+ =?utf-8?B?b3BVQkNUSHZtYzR0Y0ZLYUhuaGRmUWxwNHJ5QjRoazBDMmY2UTlIRmtYV3B4?=
+ =?utf-8?B?Uy9qUnNaYk8rZkFLNkIvdS9XalgyNkp5OS9ZMmR3am1iak1WUWViSEQ5Unlh?=
+ =?utf-8?B?YTJJaUNpTklaaUhIKzVZZTBqVW5aWGFUWEdSSEV6Yjk5RzV4UjgvVW40Zi9U?=
+ =?utf-8?B?aDN2aXcvREtUTTVtZ3Vnd2V6QVc4N0dQSlpLNGFjRUxiRkdlbXd5ZmhFbGJE?=
+ =?utf-8?B?R2lQYWdrVXkxYzZBTnI4c1pkWkdUSzJlOXBkTHFCenVEV2hwUGJCRmUySjht?=
+ =?utf-8?B?M0R2R3FDZHJTNmViQjJBSjdrOHNzUlFYczZNOTBTRnNibTFBZDB5RmNueTYw?=
+ =?utf-8?B?TDB2eWxFbndmQ0JBKzJOSElHbGtuNit4R1FiRWVoMlZKdDRubU5iRGMveVpy?=
+ =?utf-8?B?UktHekZJSi9FbnpvU05lM2dPWWx6MkRBVnhESXNGNFU3TFQyZUxJcE0xWXVR?=
+ =?utf-8?B?WGZsc3JSV0g4YTZoTEF3UVVmNklnT0NnNTZaNWp4RVNnd2lLN3l1S3dXd3V4?=
+ =?utf-8?B?a0ZEVnA0aTYvajhxMnNqeDdEYk1jcXBWcHEwQVd1Uzg4SlIwclNnM2huUWs4?=
+ =?utf-8?B?MDlkajQvTFRpMnB5T3hjalEvd3M4QVQ3R2hxMGtvMjNGcjlNUVQ4TWNVQjZX?=
+ =?utf-8?B?NmVqdHJJYThsTnEvbDMrOWdURWkrMWZOTWF0WDBiWURnVFkyakVHaXQ5NVNU?=
+ =?utf-8?B?SUgzZkRtTXZhdGw1NUR5bnUzdk9HaTN0TUR3eUlRTG9RVSs5Z2VmeDhnandn?=
+ =?utf-8?B?ZEE5Z2VXaGNKbmVzYzF0ZzErbDc2YzBkUFdIMlArSjR5TFRUbCtybVRaTjR0?=
+ =?utf-8?B?UjNCY3RYZjFTOWQzN1dkdC9VSzZ4dllMSXhUZFRqd1NQZ2JnTXlkWUZOZW9M?=
+ =?utf-8?B?TmM3cGt6ekY0SDNOSEVsUXVkRzEvVGF5YVNPVDJHWjJMbUpXWURCbDc1K0h1?=
+ =?utf-8?B?UGpEeGJyLzRsLzhSQkVSaWVjdnNFN1ZKZzVNWWdQeFZONjBKV3V3bWgxbERU?=
+ =?utf-8?B?em5Uc1ZhZk42SkdtbVVncXBMMXhhYzdoSzFpVE1MYVIxeUlRUWpIS2ZWMG5m?=
+ =?utf-8?B?RTVPVlNiRG9sdG0xZEd3RVRRREd4OHI5S3BWUmFtRkNRcmVEVUpRbkowVWt4?=
+ =?utf-8?B?ckpFOHpobFUwaHUzS0RKSUZyRjJuWGMyaTdlNmlVNFZmZXA0OE05eEVJZmlt?=
+ =?utf-8?B?RFhpb2pDRmJtTVlkVEpXbjk4ZDVGTXJ3NlVQWTJvU3hva3RRQUQwYmZNVDFP?=
+ =?utf-8?B?WGZYUXlDUnp4QUdZd1k2N0ZEMVk0OHBvNmNabUpteVdQM0NzSHZUZlp5TmNG?=
+ =?utf-8?B?cGNHSDZQTzVpRkZ6SHZjR3k1WjhoSEd3a2Z4dyttL0pqaS9ZSkN5OVhFM2pQ?=
+ =?utf-8?B?alFDNmdTWXFReVRHWlBWcnlDM1VubTV5b3FGTDRFNUNqdUlqR0N1aUpuZXpG?=
+ =?utf-8?B?dHBWOHVmTEdXZmhWTlY3eEkxVm5yakFCUnRMdk5PSEtxYzNTRjRESWJhTTBP?=
+ =?utf-8?B?cGlGNVNpR0RhM1VybjNIZ2NoZG5DM01DMXByZkJLb0Q2TEU0R2lpRE1zTGtH?=
+ =?utf-8?B?TWxmRjREamZzeTNGVVBhNzE4N3dHV2REUFpyTzVCbkRSSE53NC9jMFVnWW5R?=
+ =?utf-8?B?b0lJaHJCUy82M1ZFTTJnbS9LQ1VCc0YxZHAvSjhHbmk1eExtWGdMWVl0WDg3?=
+ =?utf-8?B?azJoTHVTK2FVU0tNY2NCSk5WalJscGNFa0FpRThSd3M5R2NVYThQM0VLV3cr?=
+ =?utf-8?B?ZFhXSW8xSzk0OUlSUDQ2WGRMb01oV0RiOGt6VUJYTmFYU0hMTU1nN1YyYlN0?=
+ =?utf-8?B?V1dtN3UrK0cwajZMSE1GTDRXQlpMbzdZUDg2d2NZajVaUUp2ZGJrY2o4Rm15?=
+ =?utf-8?B?NzhDN01mV3hRUXFBQWx0SDMvN0RsS21qaUhQTHIrQUMrazU5OVROTlBxbkNa?=
+ =?utf-8?B?OEVMcE03RlBNWHBDMWlsVWVUUWZoYU5KbytraTlnZ2FTU20zREYrcHRJQ09W?=
+ =?utf-8?Q?9McbHyKM8wlGpQsJO4A/nAAQp?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15de3cab-212c-4397-49e0-08db6ccbe32d
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6137.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2023 11:38:35.1806
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rOLl2JadJXSkNpK5s0f5uC4reSHY9k6KqoaRQfZaXQq3etMeeULgawt2A0zCeu2gllHB/axtEo7PCimdb0tuog==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5269
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 10:44:38AM +0530, Anshuman Khandual wrote:
-> On 6/13/23 22:47, Mark Rutland wrote:
-> >> +/*
-> >> + * This scans over BRBE register banks and captures individual branch reocrds
-> >> + * [BRBSRC, BRBTGT, BRBINF] into a pre-allocated 'struct brbe_regset' buffer,
-> >> + * until an invalid one gets encountered. The caller for this function needs
-> >> + * to ensure BRBE is an appropriate state before the records can be captured.
-> >> + */
-> >> +static int capture_brbe_regset(struct brbe_hw_attr *brbe_attr, struct brbe_regset *buf)
-> >> +{
-> >> +	int loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2;
-> >> +	int idx, count;
-> >> +
-> >> +	loop1_idx1 = BRBE_BANK0_IDX_MIN;
-> >> +	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
-> >> +		loop1_idx2 = brbe_attr->brbe_nr - 1;
-> >> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
-> >> +		loop2_idx2 = BRBE_BANK0_IDX_MAX;
-> >> +	} else {
-> >> +		loop1_idx2 = BRBE_BANK0_IDX_MAX;
-> >> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
-> >> +		loop2_idx2 = brbe_attr->brbe_nr - 1;
-> >> +	}
-> >> +
-> >> +	select_brbe_bank(BRBE_BANK_IDX_0);
-> >> +	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
-> >> +		buf[idx].brbinf = get_brbinf_reg(idx);
-> >> +		/*
-> >> +		 * There are no valid entries anymore on the buffer.
-> >> +		 * Abort the branch record processing to save some
-> >> +		 * cycles and also reduce the capture/process load
-> >> +		 * for the user space as well.
-> >> +		 */
-> >> +		if (brbe_invalid(buf[idx].brbinf))
-> >> +			return idx;
-> >> +
-> >> +		buf[idx].brbsrc = get_brbsrc_reg(idx);
-> >> +		buf[idx].brbtgt = get_brbtgt_reg(idx);
-> >> +	}
-> >> +
-> >> +	select_brbe_bank(BRBE_BANK_IDX_1);
-> >> +	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
-> >> +		buf[idx].brbinf = get_brbinf_reg(idx);
-> >> +		/*
-> >> +		 * There are no valid entries anymore on the buffer.
-> >> +		 * Abort the branch record processing to save some
-> >> +		 * cycles and also reduce the capture/process load
-> >> +		 * for the user space as well.
-> >> +		 */
-> >> +		if (brbe_invalid(buf[idx].brbinf))
-> >> +			return idx;
-> >> +
-> >> +		buf[idx].brbsrc = get_brbsrc_reg(idx);
-> >> +		buf[idx].brbtgt = get_brbtgt_reg(idx);
-> >> +	}
-> >> +	return idx;
-> >> +}
-> > 
-> > As with __armv8pmu_branch_read(), the loop conditions are a bit hard to follow,
-> > and I believe that can be rewritten along the lines of the suggestion there.
-> 
-> I have changed both the places (in separate patches) with suggested loop structure.
-> 
-> > 
-> > Looking at this, we now have a couple of places that will try to read the
-> > registers for an individual record, so it probably makes sense to facotr that
-> > into a helper, e.g.
-> 
-> There are indeed two places inside capture_brbe_regset() - one for each bank.
-> 
-> > 
-> > | static bool __read_brbe_regset(struct brbe_regset *entry, int idx)
-> > | {
-> > | 	u64 brbinf = get_brbinf_reg(idx);
-> > | 
-> > | 	if (brbe_invalid(brbinf))
-> > | 		return false;
-> > | 	
-> > | 	entry->brbinf = brbinf;
-> > | 	entry->brbsrc = get_brbsrc_reg(idx);
-> > | 	entry->brbtgt = get_brbtgt_reg(idx);
-> > | 
-> > | 	return true;
-> > | }
-> > 
-> > ... which can be used here, e.g.
-> > 
-> > | /*
-> > |  * Capture all records before the first invalid record, and return the number
-> > |  * of records captured.
-> > |  */
-> > | static int capture_brbe_regset(struct brbe_hw_attr *brbe_attr, struct brbe_regset *buf)
-> > | {
-> > | 
-> > | 	int nr_entries = brbe_attr->brbe_nr;
-> > | 	int idx = 0;
-> > | 	
-> > | 	select_brbe_bank(BRBE_BANK_IDX_0);
-> > | 	while (idx < nr_entries && IDX < BRBE_BANK0_IDX_MAX) {
-> > | 		if (__read_brbe_regset(&buf[idx], idx))
-> 
-> It should test !_read_brbe_regset(&buf[idx], idx)) instead as the error
-> case returns false.
+Hello Sandipan,
 
-Yes, my bad.
+Thank you for this patch,
 
-> >> +static int stitch_stored_live_entries(struct brbe_regset *stored,
-> >> +				      struct brbe_regset *live,
-> >> +				      int nr_stored, int nr_live,
-> >> +				      int nr_max)
-> >> +{
-> >> +	int nr_total, nr_excess, nr_last, i;
-> >> +
-> >> +	nr_total = nr_stored + nr_live;
-> >> +	nr_excess = nr_total - nr_max;
-> >> +
-> >> +	/* Stored branch records in stitched buffer */
-> >> +	if (nr_live == nr_max)
-> >> +		nr_stored = 0;
-> >> +	else if (nr_excess > 0)
-> >> +		nr_stored -= nr_excess;
-> >> +
-> >> +	/* Stitched buffer branch records length */
-> >> +	if (nr_total > nr_max)
-> >> +		nr_last = nr_max;
-> >> +	else
-> >> +		nr_last = nr_total;
-> >> +
-> >> +	/* Move stored branch records */
-> >> +	for (i = 0; i < nr_stored; i++)
-> >> +		copy_brbe_regset(stored, i, stored, nr_last - nr_stored - 1 + i);
-> >> +
-> >> +	/* Copy live branch records */
-> >> +	for (i = 0; i < nr_live; i++)
-> >> +		copy_brbe_regset(live, i, stored, i);
-> >> +
-> >> +	return nr_last;
-> >> +}
-> > 
-> > I think this can be written more simply as something like:
-> > 
-> > static int stitch_stored_live_entries(struct brbe_regset *stored,
-> > 				      struct brbe_regset *live,
-> > 				      int nr_stored, int nr_live,
-> > 				      int nr_max)
-> > {	
-> > 	int nr_move = max(nr_stored, nr_max - nr_live);
+On 6/14/2023 2:37 PM, Sandipan Das wrote:
+> There are cases where a metric uses more events than the number of
+> counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four data fabric
+> counters but the "nps1_die_to_dram" metric has eight events. By default,
+> the constituent events are placed in a group. Since the events cannot be
+> scheduled at the same time, the metric is not computed. The all metrics
+> test also fails because of this.
 > 
-> Should this compare be min() instead ?
-
-Yup, my bad again. That should be min().
-
-> > 	/* Move the tail of the buffer to make room for the new entries */
-> > 	memmove(&stored[nr_live], &stored[0], nr_move * sizeof(*stored));
-> > 
-> > 	/* Copy the new entries into the head of the buffer */
-> > 	memcpy(stored[0], &live[0], nr_live * sizeof(*stored));
-> > 
-> > 	/* Return the number of entries in the stitched buffer */
-> > 	return min(nr_live + nr_stored, nr_max);
-> > }
+> Before announcing failure, the test can try multiple options for each
+> available metric. After system-wide mode fails, retry once again with
+> the "--metric-no-group" option.
 > 
-> Otherwise this makes sense and simpler, will rework.
+> E.g.
+> 
+>    $ sudo perf test -v 100
+> 
+> Before:
+> 
+>    100: perf all metrics test                                           :
+>    --- start ---
+>    test child forked, pid 672731
+>    Testing branch_misprediction_ratio
+>    Testing all_remote_links_outbound
+>    Testing nps1_die_to_dram
+>    Metric 'nps1_die_to_dram' not printed in:
+>    Error:
+>    Invalid event (dram_channel_data_controller_4) in per-thread mode, enable system wide with '-a'.
+>    Testing macro_ops_dispatched
+>    Testing all_l2_cache_accesses
+>    Testing all_l2_cache_hits
+>    Testing all_l2_cache_misses
+>    Testing ic_fetch_miss_ratio
+>    Testing l2_cache_accesses_from_l2_hwpf
+>    Testing l2_cache_misses_from_l2_hwpf
+>    Testing op_cache_fetch_miss_ratio
+>    Testing l3_read_miss_latency
+>    Testing l1_itlb_misses
+>    test child finished with -1
+>    ---- end ----
+>    perf all metrics test: FAILED!
+> 
+> After:
+> 
+>    100: perf all metrics test                                           :
+>    --- start ---
+>    test child forked, pid 672887
+>    Testing branch_misprediction_ratio
+>    Testing all_remote_links_outbound
+>    Testing nps1_die_to_dram
+>    Testing macro_ops_dispatched
+>    Testing all_l2_cache_accesses
+>    Testing all_l2_cache_hits
+>    Testing all_l2_cache_misses
+>    Testing ic_fetch_miss_ratio
+>    Testing l2_cache_accesses_from_l2_hwpf
+>    Testing l2_cache_misses_from_l2_hwpf
+>    Testing op_cache_fetch_miss_ratio
+>    Testing l3_read_miss_latency
+>    Testing l1_itlb_misses
+>    test child finished with 0
+>    ---- end ----
+>    perf all metrics test: Ok
+> 
 
-Great!
+Issue gets resolved after applying this patch
 
-Thanks,
-Mark.
+   $ ./perf test 102 -vvv
+   $102: perf all metrics test                                           :
+   $--- start ---
+   $test child forked, pid 244991
+   $Testing branch_misprediction_ratio
+   $Testing all_remote_links_outbound
+   $Testing nps1_die_to_dram
+   $Testing all_l2_cache_accesses
+   $Testing all_l2_cache_hits
+   $Testing all_l2_cache_misses
+   $Testing ic_fetch_miss_ratio
+   $Testing l2_cache_accesses_from_l2_hwpf
+   $Testing l2_cache_misses_from_l2_hwpf
+   $Testing l3_read_miss_latency
+   $Testing l1_itlb_misses
+   $test child finished with 0
+   $---- end ----
+   $perf all metrics test: Ok
+
+> Reported-by: Ayush Jain <ayush.jain3@amd.com>
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+
+Tested-by: Ayush Jain <ayush.jain3@amd.com>
+
+> ---
+>   tools/perf/tests/shell/stat_all_metrics.sh | 7 +++++++
+>   1 file changed, 7 insertions(+)
+> 
+> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
+> index 54774525e18a..1e88ea8c5677 100755
+> --- a/tools/perf/tests/shell/stat_all_metrics.sh
+> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
+> @@ -16,6 +16,13 @@ for m in $(perf list --raw-dump metrics); do
+>     then
+>       continue
+>     fi
+> +  # Failed again, possibly there are not enough counters so retry system wide
+> +  # mode but without event grouping.
+> +  result=$(perf stat -M "$m" --metric-no-group -a sleep 0.01 2>&1)
+> +  if [[ "$result" =~ ${m:0:50} ]]
+> +  then
+> +    continue
+> +  fi
+>     # Failed again, possibly the workload was too small so retry with something
+>     # longer.
+>     result=$(perf stat -M "$m" perf bench internals synthesize 2>&1)
+
+Thanks & Regards,
+Ayush Jain
