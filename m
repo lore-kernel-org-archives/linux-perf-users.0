@@ -2,112 +2,122 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A71FEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 13:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B94EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 13:47:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236262AbjFNNmn (ORCPT
+        id S245114AbjFNNrk (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 09:42:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48942 "EHLO
+        Wed, 14 Jun 2023 09:47:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235356AbjFNNmm (ORCPT
+        with ESMTP id S245098AbjFNNrj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 09:42:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66B5D180;
-        Wed, 14 Jun 2023 06:42:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EFA0860B8B;
-        Wed, 14 Jun 2023 13:42:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA6EC433C9;
-        Wed, 14 Jun 2023 13:42:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686750160;
-        bh=Nb7CPj9aCc9W/md2YbvPak2r1D+IBPGs4lsh9DGHjqI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tYm9xOOmyBSZSk1WWZ2/9FZecbrunSb9YwoFSkRns5bi9Jk9X95EKx9cpXdX3nfCC
-         K8+7KtxvqZWcDeRygcMXc4uqXexSvcD8PsUG5+LmJjEFlmmt/JvmmWQRnni3zAgieA
-         ZiRrtyY6qg4htrRD7MHNI0O2WOwHXr/A3m9Mx1le1hHjHl7m1dbtMFuRVXfbaRVhGk
-         cqBZs/fAVkTtgCTKyKs4pL93fwwLxXt/OivL6Tg2VUrPN+HxqwhUAcW8K3B2HZaWAU
-         wLDzqCz0AoKdw1nA8ou7+V/+JxZVGrnYIRB+TM0aeMLcTdi8tBtaejdsRi9RtMV7Rj
-         NGc7A7e4MmfOQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 87F7D40692; Wed, 14 Jun 2023 10:42:37 -0300 (-03)
-Date:   Wed, 14 Jun 2023 10:42:37 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf tool x86: Fix perf_env memory leak
-Message-ID: <ZInDzUVOyuUda7A7@kernel.org>
-References: <20230613235416.1650755-1-irogers@google.com>
- <ZIkShy2yj1b0+GDv@kernel.org>
- <60477a13-1b8b-5aad-b635-73b9d8e3f734@amd.com>
+        Wed, 14 Jun 2023 09:47:39 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17FB9C
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 06:47:37 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4f624daccd1so8186026e87.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 06:47:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1686750453; x=1689342453;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=76di/i2mInmVCxeVKqtSRBrcXSBLthtuA5QqmKpv0gg=;
+        b=jlp8OxtI66wmx6ofvYbecBCQapH2lREmqablzfBh+9OExysu5k9h76l1tCeV8/J90c
+         4Z1ZouQnIxyCpFC63R+Y2e/3+b2Jxk5JrOBGOCsPtQ8f8vMjLIC0eQU8nmbwpRYwQPz+
+         zcnti9QTI56yIvgkrHHGpaaUQcJKbnO76la6Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686750453; x=1689342453;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=76di/i2mInmVCxeVKqtSRBrcXSBLthtuA5QqmKpv0gg=;
+        b=Z0+Cc33gO4/5pbv/sw+NuFvHV5Lw4JxHMVIh7Bi9b2dnaKqdpWJqGwJw+PCjdA5o5u
+         NO1zEPu2cKQTdpmOhY661+gfTwX4TN7/5FTWFkCz8BR6jvUzKYQxf3F7tuHvLKSAjQNc
+         5X7MaC2Nci11LcSOynbens5Tk5vx6x4Lq2ayYrnNUggIxAm5536zXxT8lovIYocKnygP
+         A3cqRjJlCBaw1latGvfCE2HhWtK8jWVfvA5p8U3LwOYWc9QwlepaxBxMkcub86D7N5kU
+         r5p9cnv+ob5b0a+9fLd6V5JsSqPV+bP2XYB/FEFE62fNA4PUWhGhABJhGJruzlCp9jIr
+         Wh+A==
+X-Gm-Message-State: AC+VfDzI517Osxn3ieHuWLFiCwxL5P1eIWHnWzYLAyUjK9nkWODlVqV5
+        uzrO4P/GcuqqyFdyj+sDeLjQOglKwshPjDaf6dWz4GEE
+X-Google-Smtp-Source: ACHHUZ6O6V+Y6LCP95dwOe0TCKA0JFxGS7HEppJaH5GNU7PTNlB9vYqgsHzBqtGyBp7WSNAFX8TRMQ==
+X-Received: by 2002:a19:760e:0:b0:4cc:96f8:f9c6 with SMTP id c14-20020a19760e000000b004cc96f8f9c6mr6484293lff.5.1686750452998;
+        Wed, 14 Jun 2023 06:47:32 -0700 (PDT)
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
+        by smtp.gmail.com with ESMTPSA id u3-20020aa7d543000000b00514bddcb87csm7893376edr.31.2023.06.14.06.47.31
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Jun 2023 06:47:32 -0700 (PDT)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-516500163b2so8280a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 06:47:31 -0700 (PDT)
+X-Received: by 2002:a50:9f82:0:b0:50b:c48c:8a25 with SMTP id
+ c2-20020a509f82000000b0050bc48c8a25mr104476edf.6.1686750451172; Wed, 14 Jun
+ 2023 06:47:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <60477a13-1b8b-5aad-b635-73b9d8e3f734@amd.com>
-X-Url:  http://acmel.wordpress.com
+References: <20230607152432.5435-1-pmladek@suse.com> <20230607152432.5435-3-pmladek@suse.com>
+ <CAD=FV=WRzaLbLQ65usGeFq3ya=DV8cYyHQina_721EFoSTdBGA@mail.gmail.com>
+ <ZIG1Qi0iUjTKICQM@alley> <CAD=FV=XzueJia--Zv4cAofzk7yocmP-7K8wa4doAN8pzED_hZA@mail.gmail.com>
+ <ZImWd62fXjsZildv@alley>
+In-Reply-To: <ZImWd62fXjsZildv@alley>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 14 Jun 2023 06:47:19 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=WP39nUmdeNjjTGx-XWhS4AgG5haHCfYjFUCEKckYVZDA@mail.gmail.com>
+Message-ID: <CAD=FV=WP39nUmdeNjjTGx-XWhS4AgG5haHCfYjFUCEKckYVZDA@mail.gmail.com>
+Subject: Re: [PATCH 2/7] watchdog/hardlockup: Make the config checks more straightforward
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        sparclinux@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Wed, Jun 14, 2023 at 08:52:43AM +0530, Ravi Bangoria escreveu:
-> On 14-Jun-23 6:36 AM, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Jun 13, 2023 at 04:54:16PM -0700, Ian Rogers escreveu:
-> >> Found by leak sanitizer:
-> >> ```
-> >> ==1632594==ERROR: LeakSanitizer: detected memory leaks
-> >>
-> >> Direct leak of 21 byte(s) in 1 object(s) allocated from:
-> >>     #0 0x7f2953a7077b in __interceptor_strdup ../../../../src/libsanitizer/asan/asan_interceptors.cpp:439
-> >>     #1 0x556701d6fbbf in perf_env__read_cpuid util/env.c:369
-> >>     #2 0x556701d70589 in perf_env__cpuid util/env.c:465
-> >>     #3 0x55670204bba2 in x86__is_amd_cpu arch/x86/util/env.c:14
-> >>     #4 0x5567020487a2 in arch__post_evsel_config arch/x86/util/evsel.c:83
-> >>     #5 0x556701d8f78b in evsel__config util/evsel.c:1366
-> >>     #6 0x556701ef5872 in evlist__config util/record.c:108
-> >>     #7 0x556701cd6bcd in test__PERF_RECORD tests/perf-record.c:112
-> >>     #8 0x556701cacd07 in run_test tests/builtin-test.c:236
-> >>     #9 0x556701cacfac in test_and_print tests/builtin-test.c:265
-> >>     #10 0x556701cadddb in __cmd_test tests/builtin-test.c:402
-> >>     #11 0x556701caf2aa in cmd_test tests/builtin-test.c:559
-> >>     #12 0x556701d3b557 in run_builtin tools/perf/perf.c:323
-> >>     #13 0x556701d3bac8 in handle_internal_command tools/perf/perf.c:377
-> >>     #14 0x556701d3be90 in run_argv tools/perf/perf.c:421
-> >>     #15 0x556701d3c3f8 in main tools/perf/perf.c:537
-> >>     #16 0x7f2952a46189 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-> >>
-> >> SUMMARY: AddressSanitizer: 21 byte(s) leaked in 1 allocation(s).
-> >> ```
-> >>
-> >> Fixes: daea405f5f06 ("perf tool x86: Consolidate is_amd check into single function")
-> > 
-> > Its a fix, yes, but it is not for this daea405f5f06 patch, he just moved the
-> > perf_mem_is_amd_cpu(), that was leaky, to a different file, the fixes is
-> > for  for:
-> > 
-> > f7b58cbdb3ff36eb ("perf mem/c2c: Add load store event mappings for
-> > AMD").
-> > 
-> > Right?
-> 
-> Yeah that's correct "Fixes" commit. Thanks for the fix Ian!
+Hi,
 
-Thanks, I'm taking that as an:
+On Wed, Jun 14, 2023 at 3:29=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
+e:
+>
+> It seems that we have entered into a bike shedding mode.
+> The following questions come to my mind:
+>
+>    1. Does this patchset improve the current state?
+>
+>    2. Maybe, it is not black&white. Is it possible to summarize
+>       what exactly got better and what got worse?
+>
+> Maybe, there is no need to do bike-shedding about every step
+> if the final result is reasonable and the steps are not
+> completely wrong.
+>
+> I just followed my intuition and tried to do some changes step
+> by step. I got lost many times so maybe the steps are not
+> ideal. Anyway, the steps helped me to understand the logic
+> and stay reasonably confident that they did not change
+> the behavior.
+>
+> I could rework the patchset. But I first need to know what
+> exactly is bad in the result. And eventually if there is more
+> logical way how to end there.
 
-Acked-by: Ravi Bangoria <ravi.bangoria@amd.com>
+Sure. I still feel like the end result of the CONFIG options after
+your whole patchset is easier to understand / cleaner by adjusting the
+dependencies as I have suggested. That being said, I agree that it is
+the type of thing that can be more a matter of personal preference. I
+do agree that, even if you don't take my suggestion of adjusting the
+dependencies, the end result of your patchset still makes things
+better than they were.
 
-Ok?
+...so if you really feel strongly that things are more understandable
+with the dependencies specified as you have, I won't stand in the way.
+I still think you need a v2, though, just to address other nits.
 
-- Arnaldo
+-Doug
