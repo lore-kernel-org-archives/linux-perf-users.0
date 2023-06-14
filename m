@@ -2,147 +2,219 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E212EC001B1
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 10:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C414EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 10:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242599AbjFNKav (ORCPT
+        id S234209AbjFNK7m (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 06:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40544 "EHLO
+        Wed, 14 Jun 2023 06:59:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244493AbjFNKae (ORCPT
+        with ESMTP id S235923AbjFNK7l (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 06:30:34 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB5733AA4;
-        Wed, 14 Jun 2023 03:29:18 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 653CF21C83;
-        Wed, 14 Jun 2023 10:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1686738557; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rhRpOEE0FKxbTYX/Job7y10yZH4TueIGHLBhWciCR2w=;
-        b=jJ+ALNsoAPJuxj3+WmnJdYwDSPIw7fH3gY97cONrkYcvme6b6gIAlQILJQKaiEWZBDWE+y
-        +5lNxbi2GlKwyPHV7zJEe68SriHx/afjuWaMhBfIPlhAZcuY/XGLQQc91eFEcIXkoRCR8r
-        XdyKtXz+yrqwb0V6rw5zk3u7kHRIQ0E=
-Received: from suse.cz (pmladek.udp.ovpn2.prg.suse.de [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 55CB82C141;
-        Wed, 14 Jun 2023 10:29:15 +0000 (UTC)
-Date:   Wed, 14 Jun 2023 12:29:11 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
+        Wed, 14 Jun 2023 06:59:41 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 650F91BEF;
+        Wed, 14 Jun 2023 03:59:37 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E46941FB;
+        Wed, 14 Jun 2023 04:00:20 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.24.16])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 60BB43F71E;
+        Wed, 14 Jun 2023 03:59:34 -0700 (PDT)
+Date:   Wed, 14 Jun 2023 11:59:28 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/7] watchdog/hardlockup: Make the config checks more
- straightforward
-Message-ID: <ZImWd62fXjsZildv@alley>
-References: <20230607152432.5435-1-pmladek@suse.com>
- <20230607152432.5435-3-pmladek@suse.com>
- <CAD=FV=WRzaLbLQ65usGeFq3ya=DV8cYyHQina_721EFoSTdBGA@mail.gmail.com>
- <ZIG1Qi0iUjTKICQM@alley>
- <CAD=FV=XzueJia--Zv4cAofzk7yocmP-7K8wa4doAN8pzED_hZA@mail.gmail.com>
+Subject: Re: [PATCH V11 08/10] arm64/perf: Add struct brbe_regset helper
+ functions
+Message-ID: <ZImdkHxE6kX+dT5e@FVFF77S0Q05N>
+References: <20230531040428.501523-1-anshuman.khandual@arm.com>
+ <20230531040428.501523-9-anshuman.khandual@arm.com>
+ <ZIikv0bW1xGeLf6B@FVFF77S0Q05N.cambridge.arm.com>
+ <2e91f218-e740-5b7d-fa8d-8fc43a6502a2@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAD=FV=XzueJia--Zv4cAofzk7yocmP-7K8wa4doAN8pzED_hZA@mail.gmail.com>
+In-Reply-To: <2e91f218-e740-5b7d-fa8d-8fc43a6502a2@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu 2023-06-08 06:55:23, Doug Anderson wrote:
-> Hi,
+On Wed, Jun 14, 2023 at 10:44:38AM +0530, Anshuman Khandual wrote:
+> On 6/13/23 22:47, Mark Rutland wrote:
+> >> +/*
+> >> + * This scans over BRBE register banks and captures individual branch reocrds
+> >> + * [BRBSRC, BRBTGT, BRBINF] into a pre-allocated 'struct brbe_regset' buffer,
+> >> + * until an invalid one gets encountered. The caller for this function needs
+> >> + * to ensure BRBE is an appropriate state before the records can be captured.
+> >> + */
+> >> +static int capture_brbe_regset(struct brbe_hw_attr *brbe_attr, struct brbe_regset *buf)
+> >> +{
+> >> +	int loop1_idx1, loop1_idx2, loop2_idx1, loop2_idx2;
+> >> +	int idx, count;
+> >> +
+> >> +	loop1_idx1 = BRBE_BANK0_IDX_MIN;
+> >> +	if (brbe_attr->brbe_nr <= BRBE_BANK_MAX_ENTRIES) {
+> >> +		loop1_idx2 = brbe_attr->brbe_nr - 1;
+> >> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
+> >> +		loop2_idx2 = BRBE_BANK0_IDX_MAX;
+> >> +	} else {
+> >> +		loop1_idx2 = BRBE_BANK0_IDX_MAX;
+> >> +		loop2_idx1 = BRBE_BANK1_IDX_MIN;
+> >> +		loop2_idx2 = brbe_attr->brbe_nr - 1;
+> >> +	}
+> >> +
+> >> +	select_brbe_bank(BRBE_BANK_IDX_0);
+> >> +	for (idx = 0, count = loop1_idx1; count <= loop1_idx2; idx++, count++) {
+> >> +		buf[idx].brbinf = get_brbinf_reg(idx);
+> >> +		/*
+> >> +		 * There are no valid entries anymore on the buffer.
+> >> +		 * Abort the branch record processing to save some
+> >> +		 * cycles and also reduce the capture/process load
+> >> +		 * for the user space as well.
+> >> +		 */
+> >> +		if (brbe_invalid(buf[idx].brbinf))
+> >> +			return idx;
+> >> +
+> >> +		buf[idx].brbsrc = get_brbsrc_reg(idx);
+> >> +		buf[idx].brbtgt = get_brbtgt_reg(idx);
+> >> +	}
+> >> +
+> >> +	select_brbe_bank(BRBE_BANK_IDX_1);
+> >> +	for (count = loop2_idx1; count <= loop2_idx2; idx++, count++) {
+> >> +		buf[idx].brbinf = get_brbinf_reg(idx);
+> >> +		/*
+> >> +		 * There are no valid entries anymore on the buffer.
+> >> +		 * Abort the branch record processing to save some
+> >> +		 * cycles and also reduce the capture/process load
+> >> +		 * for the user space as well.
+> >> +		 */
+> >> +		if (brbe_invalid(buf[idx].brbinf))
+> >> +			return idx;
+> >> +
+> >> +		buf[idx].brbsrc = get_brbsrc_reg(idx);
+> >> +		buf[idx].brbtgt = get_brbtgt_reg(idx);
+> >> +	}
+> >> +	return idx;
+> >> +}
+> > 
+> > As with __armv8pmu_branch_read(), the loop conditions are a bit hard to follow,
+> > and I believe that can be rewritten along the lines of the suggestion there.
 > 
-> On Thu, Jun 8, 2023 at 4:02 AM Petr Mladek <pmladek@suse.com> wrote:
-> >
-> > > >  config HARDLOCKUP_DETECTOR
-> > > >         bool "Detect Hard Lockups"
-> > > >         depends on DEBUG_KERNEL && !S390
-> > > > -       depends on HAVE_HARDLOCKUP_DETECTOR_NON_ARCH || HAVE_HARDLOCKUP_DETECTOR_ARCH
-> > > > +       depends on ((HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETECTOR_BUDDY) && !HAVE_NMI_WATCHDOG) || HAVE_HARDLOCKUP_DETECTOR_ARCH
-> > >
-> > > Adding the dependency to buddy (see ablove) would simplify the above
-> > > to just this:
-> > >
-> > > depends on HAVE_HARDLOCKUP_DETECTOR_PERF ||
-> > > HAVE_HARDLOCKUP_DETECTOR_BUDDY || HAVE_HARDLOCKUP_DETECTOR_ARCH
-> >
-> > This is exactly what I do not want. It would just move the check
-> > somewhere else. But it would make the logic harder to understand.
+> I have changed both the places (in separate patches) with suggested loop structure.
 > 
-> Hmmm. To me, it felt easier to understand by moving this into the
-> "HAVE_HARDLOCKUP_DETECTOR_BUDDY". To me it was pretty easy to say "if
-> an architecture defined its own arch-specific watchdog then buddy
-> can't be enabled" and that felt like it fit cleanly within the
-> "HAVE_HARDLOCKUP_DETECTOR_BUDDY" definition. It got rid of _a lot_ of
-> other special cases / checks elsewhere and felt quite a bit cleaner to
-> me. I only had to think about the conflict between the "buddy" and
-> "nmi" watchdogs once when I understood
-> "HAVE_HARDLOCKUP_DETECTOR_BUDDY".
+> > 
+> > Looking at this, we now have a couple of places that will try to read the
+> > registers for an individual record, so it probably makes sense to facotr that
+> > into a helper, e.g.
+> 
+> There are indeed two places inside capture_brbe_regset() - one for each bank.
+> 
+> > 
+> > | static bool __read_brbe_regset(struct brbe_regset *entry, int idx)
+> > | {
+> > | 	u64 brbinf = get_brbinf_reg(idx);
+> > | 
+> > | 	if (brbe_invalid(brbinf))
+> > | 		return false;
+> > | 	
+> > | 	entry->brbinf = brbinf;
+> > | 	entry->brbsrc = get_brbsrc_reg(idx);
+> > | 	entry->brbtgt = get_brbtgt_reg(idx);
+> > | 
+> > | 	return true;
+> > | }
+> > 
+> > ... which can be used here, e.g.
+> > 
+> > | /*
+> > |  * Capture all records before the first invalid record, and return the number
+> > |  * of records captured.
+> > |  */
+> > | static int capture_brbe_regset(struct brbe_hw_attr *brbe_attr, struct brbe_regset *buf)
+> > | {
+> > | 
+> > | 	int nr_entries = brbe_attr->brbe_nr;
+> > | 	int idx = 0;
+> > | 	
+> > | 	select_brbe_bank(BRBE_BANK_IDX_0);
+> > | 	while (idx < nr_entries && IDX < BRBE_BANK0_IDX_MAX) {
+> > | 		if (__read_brbe_regset(&buf[idx], idx))
+> 
+> It should test !_read_brbe_regset(&buf[idx], idx)) instead as the error
+> case returns false.
 
-I see. My problem with this approach was that the dependencies between
-the 4 alternative implementations were too distributed. It was
-necessary read many definitions to understand what was possible and
-what was not possible. And it is even more complicated when
-cscope does not support Kconfig.
+Yes, my bad.
 
-Also the above solves the buddy detector which is global.
+> >> +static int stitch_stored_live_entries(struct brbe_regset *stored,
+> >> +				      struct brbe_regset *live,
+> >> +				      int nr_stored, int nr_live,
+> >> +				      int nr_max)
+> >> +{
+> >> +	int nr_total, nr_excess, nr_last, i;
+> >> +
+> >> +	nr_total = nr_stored + nr_live;
+> >> +	nr_excess = nr_total - nr_max;
+> >> +
+> >> +	/* Stored branch records in stitched buffer */
+> >> +	if (nr_live == nr_max)
+> >> +		nr_stored = 0;
+> >> +	else if (nr_excess > 0)
+> >> +		nr_stored -= nr_excess;
+> >> +
+> >> +	/* Stitched buffer branch records length */
+> >> +	if (nr_total > nr_max)
+> >> +		nr_last = nr_max;
+> >> +	else
+> >> +		nr_last = nr_total;
+> >> +
+> >> +	/* Move stored branch records */
+> >> +	for (i = 0; i < nr_stored; i++)
+> >> +		copy_brbe_regset(stored, i, stored, nr_last - nr_stored - 1 + i);
+> >> +
+> >> +	/* Copy live branch records */
+> >> +	for (i = 0; i < nr_live; i++)
+> >> +		copy_brbe_regset(live, i, stored, i);
+> >> +
+> >> +	return nr_last;
+> >> +}
+> > 
+> > I think this can be written more simply as something like:
+> > 
+> > static int stitch_stored_live_entries(struct brbe_regset *stored,
+> > 				      struct brbe_regset *live,
+> > 				      int nr_stored, int nr_live,
+> > 				      int nr_max)
+> > {	
+> > 	int nr_move = max(nr_stored, nr_max - nr_live);
+> 
+> Should this compare be min() instead ?
 
-The same conflict has PERF which has arch-specific dependencies.
-Maybe, it can be disabled by a conflict in the arch/Kconfig.
-But then the PERF dependencies would be split into 3 config
-files: arch/Kconfig, lib/Kconfig.debug, arch/Kconfig/.
+Yup, my bad again. That should be min().
 
-Anyway, HAVE_*_BUDDY and HAVE_*_PERF should behave the same.
-Both should either explicitly conflict with HAVE_*_ARCH
-and HAVE_NMI_WATCHDOG. Or they both should be enabled when
-they are supported by the architecture and just ignored when
-choosing the final implementation.
+> > 	/* Move the tail of the buffer to make room for the new entries */
+> > 	memmove(&stored[nr_live], &stored[0], nr_move * sizeof(*stored));
+> > 
+> > 	/* Copy the new entries into the head of the buffer */
+> > 	memcpy(stored[0], &live[0], nr_live * sizeof(*stored));
+> > 
+> > 	/* Return the number of entries in the stitched buffer */
+> > 	return min(nr_live + nr_stored, nr_max);
+> > }
+> 
+> Otherwise this makes sense and simpler, will rework.
 
-My wish was to have consistent naming:
+Great!
 
-   + HAVE_HARDLOCKUP_DETECTOR_<impl> set when the the architecture
-       supports the particular implementation.
-
-  + HARDLOCKUP_DETECTOR_<impl> set when the implementation will
-       be used (built).
-
-
-Step aside:
-
-It seems that we have entered into a bike shedding mode.
-The following questions come to my mind:
-
-   1. Does this patchset improve the current state?
-
-   2. Maybe, it is not black&white. Is it possible to summarize
-      what exactly got better and what got worse?
-
-Maybe, there is no need to do bike-shedding about every step
-if the final result is reasonable and the steps are not
-completely wrong.
-
-I just followed my intuition and tried to do some changes step
-by step. I got lost many times so maybe the steps are not
-ideal. Anyway, the steps helped me to understand the logic
-and stay reasonably confident that they did not change
-the behavior.
-
-I could rework the patchset. But I first need to know what
-exactly is bad in the result. And eventually if there is more
-logical way how to end there.
-
-Best Regards,
-Petr
+Thanks,
+Mark.
