@@ -2,69 +2,63 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1705FEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 04:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0B0EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 04:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233929AbjFNEFV (ORCPT
+        id S232195AbjFNEof (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 00:05:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58418 "EHLO
+        Wed, 14 Jun 2023 00:44:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230479AbjFNEFU (ORCPT
+        with ESMTP id S242712AbjFNEn4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 00:05:20 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ED461996
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 21:05:19 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3f9d619103dso82581cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 21:05:19 -0700 (PDT)
+        Wed, 14 Jun 2023 00:43:56 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E68EC5
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 21:43:46 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-3f9b7de94e7so150401cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 21:43:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686715518; x=1689307518;
+        d=google.com; s=20221208; t=1686717825; x=1689309825;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gIjV3lWjaQkKhtqUtY90A9oM4YHalH9AYvGghINsmAo=;
-        b=Ab+rk0PFLtd1lJ/SnOCQR51a5iLHGIOJRhIdEKrg2X4QGiPyZkqyZm7yeHrAkEp2wG
-         vliMnu37mLhNh1puzH2MkAMWhy0DteIErnaNQWg4GqX4QVNHz4wo7GJuZE3TrkF4KZCN
-         IoEzayyO0JzhXASZtJnF1zWtKAOFDsoLEPBNSb3XnRpQfQIHPiESm50sjtShlCXXsXS8
-         cJj/e7qRb2jXDGf6bodrhs7HS/oRQ++4wtMVg6575Nj66Lq1/OiBZd5N60bXgpiRFxXt
-         o33LqQ7Lc/Bgdjz/Os2hm9hMjPDKvrKutuM+wg18TWhoriMy6UN/hoi7XUDYkuDPsMfU
-         y2FQ==
+        bh=xStsRUfwt3o1gdSJ2s0/TITPGbAEFU/Ue0fEGPIasQk=;
+        b=o1ZcBfYUpUqhK/eDBa8d1BZLnrTaqO+mpq2YE0uVA6w8pdtdmWJP5yF5LxarZ3UOx1
+         4TZEC6Hy6WEZb0qMVSxsJFbYoaGZ5MjQFAB9LTTblu/QvWo2gV2qruPsFHFyBJenIkvG
+         pZu6SUqYudGDeO1jcglkIkwoYL7vMHhIQzVWJgjK3YODYqIdgDg9lYO5l7ayLdmeV53q
+         cplKuBbrWLkPNWTydZ1MYxDRXlLkayeci2jXI8LRe9sjH0HptpUsTfP03OKx5P8RKlqe
+         JqnojCEe6lU+4flYogW0LdPxOgsQx3YYRnhOcBD5zgSroiVS8CHzcWK+hCWIiM0YlgGu
+         8shw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686715518; x=1689307518;
+        d=1e100.net; s=20221208; t=1686717825; x=1689309825;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gIjV3lWjaQkKhtqUtY90A9oM4YHalH9AYvGghINsmAo=;
-        b=B1T9uiGTXKIxPZL+hymCrVcMCcXG9K3n8haFV1Bs0LqQm0DVudNrSQW0CvGvxA9YSw
-         uIWo6CauzNMf4ZYiOgsGrdx+MNw1e4jb/xs8vdNTcnQHdzRbuVl6x+GLVXIg2nIva0HS
-         KLO2VnkMzjorzuAjS3H/2k0grATpoEKeLHZUL8Xc27isAPrjwKhXXehwW4JqAPQe6OSH
-         RJ6Y5oHFG7aSkIy4EdESEKUxHs5WyGsnYKTJ/NhJ5HuHp2ygOdqjOLiG2UyC3VuNhN6y
-         1LTdUNdwT3aMfYo/tS741mDUzpeHQhaod3n2lggqg2OZqntVPNVD6SFNvI8ajdG/T6Qr
-         aflg==
-X-Gm-Message-State: AC+VfDxIRDmSZgw5SENQU8xaipU8Ymvn1yyV4cEn8MaEGtZsWt3DNnOr
-        DObRCZYpNV+3unPMN+cUpNUcK+F0ru5dKN1qC4RyJQ==
-X-Google-Smtp-Source: ACHHUZ7PcxUCi6+GeOGY7IWcJYT/G2LdsUQZKXD4sWp7z4xf7uFvkgW36v0jWtxqTLRCPYgGaxNhArXBOgcPx5CdMKg=
-X-Received: by 2002:a05:622a:1707:b0:3fc:7fb0:ad3a with SMTP id
- h7-20020a05622a170700b003fc7fb0ad3amr164550qtk.24.1686715518273; Tue, 13 Jun
- 2023 21:05:18 -0700 (PDT)
+        bh=xStsRUfwt3o1gdSJ2s0/TITPGbAEFU/Ue0fEGPIasQk=;
+        b=fBMMQStUwfAEoumJ3tJl2BNbHv6adr7V5kUihjQPLfgRMvzxmt9/ShRF8Lz1LGnWwP
+         ACaOGrdWn5E1ojbU5jgmFrOZdbE3kVEaqaaHja7AqYYRwlC74lGuWjlUMasdwqZkNeJK
+         S9ZN7/oh7Ng0ZTm2Of24hTbOc4MJYycvL4b6pXCiqf8rP83fS3Z2W4u7CrRfqWh2LZWB
+         qK5Sp0Ewtbra9U2e1umjVDcFfE29p+BZ0kohxv26cBrAxL1+2G+5puEA6ysVwmNNjoSy
+         mnRtRUYsp9L3l29iHJR6Hdljxe8Z0T6cJEVW74R4M5KpNC6sjKCa0aDTtme1/xbJAHNw
+         sFPw==
+X-Gm-Message-State: AC+VfDz/2nUwg4Yp3hWIbb9wPbcfdVthZFNPqAYY+NlFhJH85fX+KjsN
+        2aw36KWSnBKJ1qjInnAwnJM/pFO781a2hkpY3/kVCQ==
+X-Google-Smtp-Source: ACHHUZ4OL9sIBmAtVDwp+dVs+Z6kDk/oIf/XsL/DfGPr7PN8H8rO2tnVAE26UuOfmXB4RQ4DbPv1fCriI9iSl6bvovg=
+X-Received: by 2002:ac8:5743:0:b0:3fa:7dbf:f268 with SMTP id
+ 3-20020ac85743000000b003fa7dbff268mr55189qtx.23.1686717825150; Tue, 13 Jun
+ 2023 21:43:45 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230613235416.1650755-1-irogers@google.com> <ZIkShy2yj1b0+GDv@kernel.org>
- <60477a13-1b8b-5aad-b635-73b9d8e3f734@amd.com>
-In-Reply-To: <60477a13-1b8b-5aad-b635-73b9d8e3f734@amd.com>
+References: <20230614033437.48549-1-luojianhong@cdjrlc.com> <475df60d9dd518e20ae9df396c60b69b@208suo.com>
+In-Reply-To: <475df60d9dd518e20ae9df396c60b69b@208suo.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Tue, 13 Jun 2023 21:05:05 -0700
-Message-ID: <CAP-5=fWc_rDCsnO13nhREa4pCxq=rKx4y0PVTR0Y0-Qud7_8dQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf tool x86: Fix perf_env memory leak
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Date:   Tue, 13 Jun 2023 21:43:32 -0700
+Message-ID: <CAP-5=fWtrQABXFnuAQWEuaFcvXJ5gaKf=gZUyTLqm8-aY9znrQ@mail.gmail.com>
+Subject: Re: [PATCH] perf bench: remove unneeded variable
+To:     baomingtong001@208suo.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
@@ -72,64 +66,43 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 8:24=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.co=
-m> wrote:
+On Tue, Jun 13, 2023 at 8:38=E2=80=AFPM <baomingtong001@208suo.com> wrote:
 >
-> On 14-Jun-23 6:36 AM, Arnaldo Carvalho de Melo wrote:
-> > Em Tue, Jun 13, 2023 at 04:54:16PM -0700, Ian Rogers escreveu:
-> >> Found by leak sanitizer:
-> >> ```
-> >> =3D=3D1632594=3D=3DERROR: LeakSanitizer: detected memory leaks
-> >>
-> >> Direct leak of 21 byte(s) in 1 object(s) allocated from:
-> >>     #0 0x7f2953a7077b in __interceptor_strdup ../../../../src/libsanit=
-izer/asan/asan_interceptors.cpp:439
-> >>     #1 0x556701d6fbbf in perf_env__read_cpuid util/env.c:369
-> >>     #2 0x556701d70589 in perf_env__cpuid util/env.c:465
-> >>     #3 0x55670204bba2 in x86__is_amd_cpu arch/x86/util/env.c:14
-> >>     #4 0x5567020487a2 in arch__post_evsel_config arch/x86/util/evsel.c=
-:83
-> >>     #5 0x556701d8f78b in evsel__config util/evsel.c:1366
-> >>     #6 0x556701ef5872 in evlist__config util/record.c:108
-> >>     #7 0x556701cd6bcd in test__PERF_RECORD tests/perf-record.c:112
-> >>     #8 0x556701cacd07 in run_test tests/builtin-test.c:236
-> >>     #9 0x556701cacfac in test_and_print tests/builtin-test.c:265
-> >>     #10 0x556701cadddb in __cmd_test tests/builtin-test.c:402
-> >>     #11 0x556701caf2aa in cmd_test tests/builtin-test.c:559
-> >>     #12 0x556701d3b557 in run_builtin tools/perf/perf.c:323
-> >>     #13 0x556701d3bac8 in handle_internal_command tools/perf/perf.c:37=
-7
-> >>     #14 0x556701d3be90 in run_argv tools/perf/perf.c:421
-> >>     #15 0x556701d3c3f8 in main tools/perf/perf.c:537
-> >>     #16 0x7f2952a46189 in __libc_start_call_main ../sysdeps/nptl/libc_=
-start_call_main.h:58
-> >>
-> >> SUMMARY: AddressSanitizer: 21 byte(s) leaked in 1 allocation(s).
-> >> ```
-> >>
-> >> Fixes: daea405f5f06 ("perf tool x86: Consolidate is_amd check into sin=
-gle function")
-> >
-> > Its a fix, yes, but it is not for this daea405f5f06 patch, he just move=
-d the
-> > perf_mem_is_amd_cpu(), that was leaky, to a different file, the fixes i=
-s
-> > for  for:
-> >
-> > f7b58cbdb3ff36eb ("perf mem/c2c: Add load store event mappings for
-> > AMD").
-> >
-> > Right?
+> fix the following coccicheck warning:
 >
-> Yeah that's correct "Fixes" commit. Thanks for the fix Ian!
+> tools/perf/bench/find-bit-bench.c:127:5-8: Unneeded variable: "err".
+> Return "0".
 >
-> Ravi
+> Signed-off-by: Mingtong Bao <baomingtong001@208suo.com>
 
-Thanks Arnaldo and Ravi. No worries on the fix, if you build with
-EXTRA_CFLAGS=3D"-fsanitize=3Daddress" then you should find "perf test" is
-now passing unless a memory leak has been introduced (address
-sanitizer coming with leak sanitizer).  Of course there could be
-memory leaks specific to AMD so please check it out :-)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
+
+> ---
+>   tools/perf/bench/find-bit-bench.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/bench/find-bit-bench.c
+> b/tools/perf/bench/find-bit-bench.c
+> index 7e25b0e413f6..70619bc73841 100644
+> --- a/tools/perf/bench/find-bit-bench.c
+> +++ b/tools/perf/bench/find-bit-bench.c
+> @@ -124,7 +124,7 @@ static int do_for_each_set_bit(unsigned int
+> num_bits)
+>
+>   int bench_mem_find_bit(int argc, const char **argv)
+>   {
+> -    int err =3D 0, i;
+> +    int i;
+>
+>       argc =3D parse_options(argc, argv, options, bench_usage, 0);
+>       if (argc) {
+> @@ -135,5 +135,5 @@ int bench_mem_find_bit(int argc, const char **argv)
+>       for (i =3D 1; i <=3D 2048; i <<=3D 1)
+>           do_for_each_set_bit(i);
+>
+> -    return err;
+> +    return 0;
+>   }
