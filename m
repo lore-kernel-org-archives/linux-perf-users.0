@@ -2,245 +2,748 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C361DEB64DB
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 11:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB016EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 13:40:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244245AbjFNLjk (ORCPT
+        id S244781AbjFNNkg (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 07:39:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49774 "EHLO
+        Wed, 14 Jun 2023 09:40:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244085AbjFNLja (ORCPT
+        with ESMTP id S235356AbjFNNkg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 07:39:30 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2052.outbound.protection.outlook.com [40.107.94.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCB626BF;
-        Wed, 14 Jun 2023 04:38:38 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AKZJWy7q9FVBXtv2GK4gEq7J5fKowVrtasDaOKcE3u3wSozcZGVckwsCGS3nKuX6SGqqQLT5t/67HnsRsRWDNQH/iG1HmvTiR9BHb36CcRSsX18oSNpcWyAnHEJ0q0TRigHrg9yqgjSlk3YIUBYG7cZzoqyjyos2wpASMA+h6jRBqbcAb8ZczPMp7OnCtnL1k00hV4WQK8RsQyVH58nKQCNYc/EmcTFl4iQjpcNuw3DLP2X3n7pKep5yCzq8s9X9L86708xP+Ucc2sEgJeFeoGwrNqizacjnu+654SPEVWbfaXu6QYye7W4pVTtmyN8D818cwi1Q42LBkDTszuGIJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2lPexcpp1qpj9zRj8kTI3+HCyWD6SZUjLwJ8gXzhzuA=;
- b=Bo4mTisBO/3a+jYOJpWDRAlNawiwOc4NpflgzvDuqbWdw4lyyMvzGkT/ULpeZXWhmOBJ5rdcRJ2z0lOhJKtBB9jHtdoHzZYiSGAKEdzkgDZuwwGBQ2/YajD7OuLYy6BcckaHNKMmN9BUfc6ZpE/0OqX8MdBx+8RueSezJvt3WP5lzXOeK0tTYg1OCckDp9IQUs+pvdkSzOWJd9iRPHsihwxVQsG/TXHQOx6NjeepLXogoLNS/q6I1eExLoRMzInip7tpU6sNKQFZC2KXOP77dr+txSp8Xrk/yGKt8OIgXL+5+t5dH3qkFPimk/h6uq5g1wQ4ozBj13XDWfqGJynu7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2lPexcpp1qpj9zRj8kTI3+HCyWD6SZUjLwJ8gXzhzuA=;
- b=WvDmKysCZC27VdIGODi6vUyc8bM+xjMezxNZcO1nNEwhlsQ0tTniBlBU6wcuLa+C/Eys2eX6aj7odBKqXsfoqQbDkQ0a5ITyYEkYE+K23/Ywnxz3TPyr7O3NJBL4VL0uqqSUYqn5otKJYXrftMrNRF7ENXuZfxVRLYy5UNwiBhI=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from IA1PR12MB6137.namprd12.prod.outlook.com (2603:10b6:208:3eb::20)
- by BL1PR12MB5269.namprd12.prod.outlook.com (2603:10b6:208:30b::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.37; Wed, 14 Jun
- 2023 11:38:35 +0000
-Received: from IA1PR12MB6137.namprd12.prod.outlook.com
- ([fe80::5f70:8e17:f854:91ed]) by IA1PR12MB6137.namprd12.prod.outlook.com
- ([fe80::5f70:8e17:f854:91ed%4]) with mapi id 15.20.6455.045; Wed, 14 Jun 2023
- 11:38:35 +0000
-Message-ID: <1320e6e3-c029-2a8c-e8b7-2cfbb781518a@amd.com>
-Date:   Wed, 14 Jun 2023 17:08:21 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.1
-Subject: Re: [PATCH] perf test: Retry without grouping for all metrics test
-Content-Language: en-US
-To:     Sandipan Das <sandipan.das@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, kjain@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, barnali@linux.ibm.com,
-        ananth.narayan@amd.com, ravi.bangoria@amd.com,
-        santosh.shukla@amd.com
-References: <20230614090710.680330-1-sandipan.das@amd.com>
-From:   Ayush Jain <ayush.jain3@amd.com>
-In-Reply-To: <20230614090710.680330-1-sandipan.das@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0169.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:26::24) To IA1PR12MB6137.namprd12.prod.outlook.com
- (2603:10b6:208:3eb::20)
+        Wed, 14 Jun 2023 09:40:36 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDA6F173C;
+        Wed, 14 Jun 2023 06:40:31 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-4f74cda5f1dso4184474e87.3;
+        Wed, 14 Jun 2023 06:40:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686750030; x=1689342030;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MdIVDFho3UzZ1Brrpoz+lXYtGNnByKzWzNr2ZcbD7hI=;
+        b=I0jQzMzuVfxMmItYDxd0kqdV/bHAOQD9zqlZEU/sdTIjQHGMAI9UGrFQ87VrtJSTrp
+         YZsOtvYD4Fx5QQ17bB+4bBASMTYrdExzsar9BHg6+PZSPAD8JMs96B69Hksq+q/lLIe5
+         VggjyDa8x3ow/uqdQ0AMH2WRKt2qn1XmHe/yB4ArD6wB8TI8P1BjFeFHNFB2KwnKnMNm
+         Kngeqrd7XwkrGDQkkihRsxGhrpU860n16FLS8Irz8WruE/zYcI+iQ17mLR+qN/3bdF5q
+         thFJc6DFboaWLtc1W+1LYAfk2JER5zb3CSPjCgDl5zHS9Kqh7YVoQST0A3bqmAZzgrYx
+         8VwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686750030; x=1689342030;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MdIVDFho3UzZ1Brrpoz+lXYtGNnByKzWzNr2ZcbD7hI=;
+        b=JVubr04AUScbb2zNMYEJ/pExzVZzB6ML1JKk3qNtc0KLX6aIpoChbWgmrt+GGFABms
+         y/UqbdsgjRQEDsrQ873bMikaTdiko0ejyDi3DIRxS5u/16NNIFTd7uY+1t1VS9kIS1lV
+         FIl2yw1q9ywv+3M9AJQOPS+bAJDTaDhlNd5kPcRXaTw6qKEADF5ioJEtgaVlNUtINNw4
+         NtuOJQ0cRYyHJqIdi7Qk1ObahD9yH9wyksJPerV24lqXizZVhsdOSez0iTkY+kBg+9o+
+         06oRoiS1/X7meRwxDDwdqh0qDuerl+iOlwk5wCvavQpHkqfTSPcTaMxPijVKxgesIEys
+         pVhA==
+X-Gm-Message-State: AC+VfDy6xndXfXkYYtm1kCuOcFz+OGHCBSEkXtjuQWYysP9NcEYXtS1m
+        MZ5/cNG7rkKjFQMCT8u89fU=
+X-Google-Smtp-Source: ACHHUZ5Psu2f9rx3jSw1hcYoYayQDyuN/0/Zx44QKs4j9cvwVwdv1CUpXiYoQ13XHw6VDt9XM8LhuQ==
+X-Received: by 2002:a19:661a:0:b0:4dd:9a38:fcc with SMTP id a26-20020a19661a000000b004dd9a380fccmr7713434lfc.63.1686750029538;
+        Wed, 14 Jun 2023 06:40:29 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id qp18-20020a170907207200b009786b73974fsm8069377ejb.145.2023.06.14.06.40.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jun 2023 06:40:29 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Wed, 14 Jun 2023 15:40:26 +0200
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 18/20] perf stat: Display event stats using aggr counts
+Message-ID: <ZInDSgrOzYSX124p@krava>
+References: <20221018020227.85905-1-namhyung@kernel.org>
+ <20221018020227.85905-19-namhyung@kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR12MB6137:EE_|BL1PR12MB5269:EE_
-X-MS-Office365-Filtering-Correlation-Id: 15de3cab-212c-4397-49e0-08db6ccbe32d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: o+P1rObzZqmbwYZTTvOizgcQic8BIqbOPYpO7IfJ702EcfsVuZtor3bX87PR/NKo9maGMVDL+/6FDxc/0p8Rzo2bBvhhPa50e4mfUvKzT8x1iD2vmiajcXuWitJ3QVJbUnDZIpG93oCE/ghcOhNtcTLftmukqGwTLiC9Y26DAbn/GR3B5U+sQC9CVgNC0FZ82hjyIXHbMkD1s/GwQgrT1SbsCkcbSMrwSYCm4Yugj9/jnoQ/1YpiaaxTkprvOwp4JTJowN/q3gDHUo7GI/0957X/G6CHSZCxs5jn4Djf3P0tHeKkAZcmDL27HrTc0Fq6PiHqwQAyoLLe17kbPER/jD68Vp6DG1nSGW2ivnUf5Jmm8Ub6Koyaydk30Cf2CzXk/pnX2zPCxAm2rNfpbTAJz5P93RCxp8/z4ckWm3yCfYPuyVfz6oJKOlM5y/i7E/eSucvZvBGeexP1yJxylSP17N4k2Jw1beCkWXf9SHusabeulAdzfcw8sTeXHIRPcV7p5oYKmpQQq+6tIgI4bT10GFASzkZ2tMdO7sbcmIwVXaTrFfZg/c+omZLmfzEAQMCiHr4oGXB8oKEduNc/hPa7k9pyOEADcKQoRnRIUCGOs+Q+o8nGT6lz18eL/cHP5R0+c7SLO74s57dNGUE/g04PGg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB6137.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(39860400002)(376002)(366004)(346002)(451199021)(31686004)(7416002)(5660300002)(8676002)(8936002)(41300700001)(2906002)(316002)(478600001)(66556008)(66476007)(4326008)(66946007)(6666004)(6486002)(38100700002)(186003)(53546011)(31696002)(86362001)(83380400001)(2616005)(6506007)(26005)(6512007)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eVFtMlJOM05qNnFXaXJBaDk0K1JVcXhqeUxuNys1MXdBZzQzNnJsekwxa09S?=
- =?utf-8?B?WndDVFlES3RxdndjUW04bmRRL2FNNjJpeGFRd0VpTVpsWXJETHFxTCszSzU0?=
- =?utf-8?B?b3BVQkNUSHZtYzR0Y0ZLYUhuaGRmUWxwNHJ5QjRoazBDMmY2UTlIRmtYV3B4?=
- =?utf-8?B?Uy9qUnNaYk8rZkFLNkIvdS9XalgyNkp5OS9ZMmR3am1iak1WUWViSEQ5Unlh?=
- =?utf-8?B?YTJJaUNpTklaaUhIKzVZZTBqVW5aWGFUWEdSSEV6Yjk5RzV4UjgvVW40Zi9U?=
- =?utf-8?B?aDN2aXcvREtUTTVtZ3Vnd2V6QVc4N0dQSlpLNGFjRUxiRkdlbXd5ZmhFbGJE?=
- =?utf-8?B?R2lQYWdrVXkxYzZBTnI4c1pkWkdUSzJlOXBkTHFCenVEV2hwUGJCRmUySjht?=
- =?utf-8?B?M0R2R3FDZHJTNmViQjJBSjdrOHNzUlFYczZNOTBTRnNibTFBZDB5RmNueTYw?=
- =?utf-8?B?TDB2eWxFbndmQ0JBKzJOSElHbGtuNit4R1FiRWVoMlZKdDRubU5iRGMveVpy?=
- =?utf-8?B?UktHekZJSi9FbnpvU05lM2dPWWx6MkRBVnhESXNGNFU3TFQyZUxJcE0xWXVR?=
- =?utf-8?B?WGZsc3JSV0g4YTZoTEF3UVVmNklnT0NnNTZaNWp4RVNnd2lLN3l1S3dXd3V4?=
- =?utf-8?B?a0ZEVnA0aTYvajhxMnNqeDdEYk1jcXBWcHEwQVd1Uzg4SlIwclNnM2huUWs4?=
- =?utf-8?B?MDlkajQvTFRpMnB5T3hjalEvd3M4QVQ3R2hxMGtvMjNGcjlNUVQ4TWNVQjZX?=
- =?utf-8?B?NmVqdHJJYThsTnEvbDMrOWdURWkrMWZOTWF0WDBiWURnVFkyakVHaXQ5NVNU?=
- =?utf-8?B?SUgzZkRtTXZhdGw1NUR5bnUzdk9HaTN0TUR3eUlRTG9RVSs5Z2VmeDhnandn?=
- =?utf-8?B?ZEE5Z2VXaGNKbmVzYzF0ZzErbDc2YzBkUFdIMlArSjR5TFRUbCtybVRaTjR0?=
- =?utf-8?B?UjNCY3RYZjFTOWQzN1dkdC9VSzZ4dllMSXhUZFRqd1NQZ2JnTXlkWUZOZW9M?=
- =?utf-8?B?TmM3cGt6ekY0SDNOSEVsUXVkRzEvVGF5YVNPVDJHWjJMbUpXWURCbDc1K0h1?=
- =?utf-8?B?UGpEeGJyLzRsLzhSQkVSaWVjdnNFN1ZKZzVNWWdQeFZONjBKV3V3bWgxbERU?=
- =?utf-8?B?em5Uc1ZhZk42SkdtbVVncXBMMXhhYzdoSzFpVE1MYVIxeUlRUWpIS2ZWMG5m?=
- =?utf-8?B?RTVPVlNiRG9sdG0xZEd3RVRRREd4OHI5S3BWUmFtRkNRcmVEVUpRbkowVWt4?=
- =?utf-8?B?ckpFOHpobFUwaHUzS0RKSUZyRjJuWGMyaTdlNmlVNFZmZXA0OE05eEVJZmlt?=
- =?utf-8?B?RFhpb2pDRmJtTVlkVEpXbjk4ZDVGTXJ3NlVQWTJvU3hva3RRQUQwYmZNVDFP?=
- =?utf-8?B?WGZYUXlDUnp4QUdZd1k2N0ZEMVk0OHBvNmNabUpteVdQM0NzSHZUZlp5TmNG?=
- =?utf-8?B?cGNHSDZQTzVpRkZ6SHZjR3k1WjhoSEd3a2Z4dyttL0pqaS9ZSkN5OVhFM2pQ?=
- =?utf-8?B?alFDNmdTWXFReVRHWlBWcnlDM1VubTV5b3FGTDRFNUNqdUlqR0N1aUpuZXpG?=
- =?utf-8?B?dHBWOHVmTEdXZmhWTlY3eEkxVm5yakFCUnRMdk5PSEtxYzNTRjRESWJhTTBP?=
- =?utf-8?B?cGlGNVNpR0RhM1VybjNIZ2NoZG5DM01DMXByZkJLb0Q2TEU0R2lpRE1zTGtH?=
- =?utf-8?B?TWxmRjREamZzeTNGVVBhNzE4N3dHV2REUFpyTzVCbkRSSE53NC9jMFVnWW5R?=
- =?utf-8?B?b0lJaHJCUy82M1ZFTTJnbS9LQ1VCc0YxZHAvSjhHbmk1eExtWGdMWVl0WDg3?=
- =?utf-8?B?azJoTHVTK2FVU0tNY2NCSk5WalJscGNFa0FpRThSd3M5R2NVYThQM0VLV3cr?=
- =?utf-8?B?ZFhXSW8xSzk0OUlSUDQ2WGRMb01oV0RiOGt6VUJYTmFYU0hMTU1nN1YyYlN0?=
- =?utf-8?B?V1dtN3UrK0cwajZMSE1GTDRXQlpMbzdZUDg2d2NZajVaUUp2ZGJrY2o4Rm15?=
- =?utf-8?B?NzhDN01mV3hRUXFBQWx0SDMvN0RsS21qaUhQTHIrQUMrazU5OVROTlBxbkNa?=
- =?utf-8?B?OEVMcE03RlBNWHBDMWlsVWVUUWZoYU5KbytraTlnZ2FTU20zREYrcHRJQ09W?=
- =?utf-8?Q?9McbHyKM8wlGpQsJO4A/nAAQp?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15de3cab-212c-4397-49e0-08db6ccbe32d
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB6137.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2023 11:38:35.1806
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rOLl2JadJXSkNpK5s0f5uC4reSHY9k6KqoaRQfZaXQq3etMeeULgawt2A0zCeu2gllHB/axtEo7PCimdb0tuog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5269
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221018020227.85905-19-namhyung@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Sandipan,
+On Mon, Oct 17, 2022 at 07:02:25PM -0700, Namhyung Kim wrote:
+> Now aggr counts are ready for use.  Convert the display routines to use
+> the aggr counts and update the shadow stat with them.  It doesn't need
+> to aggregate counts or collect aliases anymore during the display.  Get
+> rid of now unused struct perf_aggr_thread_value.
+> 
+> Note that there's a difference in the display order among the aggr mode.
+> For per-core/die/socket/node aggregation, it shows relevant events in
+> the same unit together, whereas global/thread/no aggregation it shows
+> the same events for different units together.  So it still uses separate
+> codes to display them due to the ordering.
+> 
+> One more thing to note is that it breaks per-core event display for now.
+> The next patch will fix it to have identical output as of now.
+> 
+> Acked-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Thank you for this patch,
+hi,
+this one seems to break 'perf stat -r X' not sure why so far..
 
-On 6/14/2023 2:37 PM, Sandipan Das wrote:
-> There are cases where a metric uses more events than the number of
-> counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four data fabric
-> counters but the "nps1_die_to_dram" metric has eight events. By default,
-> the constituent events are placed in a group. Since the events cannot be
-> scheduled at the same time, the metric is not computed. The all metrics
-> test also fails because of this.
-> 
-> Before announcing failure, the test can try multiple options for each
-> available metric. After system-wide mode fails, retry once again with
-> the "--metric-no-group" option.
-> 
-> E.g.
-> 
->    $ sudo perf test -v 100
-> 
-> Before:
-> 
->    100: perf all metrics test                                           :
->    --- start ---
->    test child forked, pid 672731
->    Testing branch_misprediction_ratio
->    Testing all_remote_links_outbound
->    Testing nps1_die_to_dram
->    Metric 'nps1_die_to_dram' not printed in:
->    Error:
->    Invalid event (dram_channel_data_controller_4) in per-thread mode, enable system wide with '-a'.
->    Testing macro_ops_dispatched
->    Testing all_l2_cache_accesses
->    Testing all_l2_cache_hits
->    Testing all_l2_cache_misses
->    Testing ic_fetch_miss_ratio
->    Testing l2_cache_accesses_from_l2_hwpf
->    Testing l2_cache_misses_from_l2_hwpf
->    Testing op_cache_fetch_miss_ratio
->    Testing l3_read_miss_latency
->    Testing l1_itlb_misses
->    test child finished with -1
->    ---- end ----
->    perf all metrics test: FAILED!
-> 
-> After:
-> 
->    100: perf all metrics test                                           :
->    --- start ---
->    test child forked, pid 672887
->    Testing branch_misprediction_ratio
->    Testing all_remote_links_outbound
->    Testing nps1_die_to_dram
->    Testing macro_ops_dispatched
->    Testing all_l2_cache_accesses
->    Testing all_l2_cache_hits
->    Testing all_l2_cache_misses
->    Testing ic_fetch_miss_ratio
->    Testing l2_cache_accesses_from_l2_hwpf
->    Testing l2_cache_misses_from_l2_hwpf
->    Testing op_cache_fetch_miss_ratio
->    Testing l3_read_miss_latency
->    Testing l1_itlb_misses
->    test child finished with 0
->    ---- end ----
->    perf all metrics test: Ok
-> 
+final counts seems to be accumulated instead of displaying average, like:
 
-Issue gets resolved after applying this patch
 
-   $ ./perf test 102 -vvv
-   $102: perf all metrics test                                           :
-   $--- start ---
-   $test child forked, pid 244991
-   $Testing branch_misprediction_ratio
-   $Testing all_remote_links_outbound
-   $Testing nps1_die_to_dram
-   $Testing all_l2_cache_accesses
-   $Testing all_l2_cache_hits
-   $Testing all_l2_cache_misses
-   $Testing ic_fetch_miss_ratio
-   $Testing l2_cache_accesses_from_l2_hwpf
-   $Testing l2_cache_misses_from_l2_hwpf
-   $Testing l3_read_miss_latency
-   $Testing l1_itlb_misses
-   $test child finished with 0
-   $---- end ----
-   $perf all metrics test: Ok
+with this patch:
 
-> Reported-by: Ayush Jain <ayush.jain3@amd.com>
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+	 Performance counter stats for './test_progs -n 103/1' (2 runs):
 
-Tested-by: Ayush Jain <ayush.jain3@amd.com>
+	       206,815,929      cycles:u                                                             ( +-  0.05% )
+	    16,052,747,533      cycles:k                                                             ( +-  0.10% )
+	    16,259,643,167      cycles                                                               ( +-  0.10% )
+
+		   1.98093 +- 0.00586 seconds time elapsed  ( +-  0.30% )
+
+
+without this patch:
+
+	 Performance counter stats for './test_progs -n 103/1' (2 runs):
+
+	       103,300,812      cycles:u                                                             ( +-  0.37% )
+	     8,016,856,866      cycles:k                                                             ( +-  0.32% )
+	     8,120,200,572      cycles                                                               ( +-  0.32% )
+
+		   1.97272 +- 0.00270 seconds time elapsed  ( +-  0.14% )
+
+
+any idea? ;-)
+
+thanks,
+jirka
+
+
+
 
 > ---
->   tools/perf/tests/shell/stat_all_metrics.sh | 7 +++++++
->   1 file changed, 7 insertions(+)
+>  tools/perf/util/stat-display.c | 421 ++++-----------------------------
+>  tools/perf/util/stat.c         |   5 -
+>  tools/perf/util/stat.h         |   9 -
+>  3 files changed, 49 insertions(+), 386 deletions(-)
 > 
-> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-> index 54774525e18a..1e88ea8c5677 100755
-> --- a/tools/perf/tests/shell/stat_all_metrics.sh
-> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
-> @@ -16,6 +16,13 @@ for m in $(perf list --raw-dump metrics); do
->     then
->       continue
->     fi
-> +  # Failed again, possibly there are not enough counters so retry system wide
-> +  # mode but without event grouping.
-> +  result=$(perf stat -M "$m" --metric-no-group -a sleep 0.01 2>&1)
-> +  if [[ "$result" =~ ${m:0:50} ]]
-> +  then
-> +    continue
-> +  fi
->     # Failed again, possibly the workload was too small so retry with something
->     # longer.
->     result=$(perf stat -M "$m" perf bench internals synthesize 2>&1)
-
-Thanks & Regards,
-Ayush Jain
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 4113aa86772f..bfae2784609c 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -442,31 +442,6 @@ static void print_metric_header(struct perf_stat_config *config,
+>  		fprintf(os->fh, "%*s ", config->metric_only_len, unit);
+>  }
+>  
+> -static int first_shadow_map_idx(struct perf_stat_config *config,
+> -				struct evsel *evsel, const struct aggr_cpu_id *id)
+> -{
+> -	struct perf_cpu_map *cpus = evsel__cpus(evsel);
+> -	struct perf_cpu cpu;
+> -	int idx;
+> -
+> -	if (config->aggr_mode == AGGR_NONE)
+> -		return perf_cpu_map__idx(cpus, id->cpu);
+> -
+> -	if (config->aggr_mode == AGGR_THREAD)
+> -		return id->thread_idx;
+> -
+> -	if (!config->aggr_get_id)
+> -		return 0;
+> -
+> -	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
+> -		struct aggr_cpu_id cpu_id = config->aggr_get_id(config, cpu);
+> -
+> -		if (aggr_cpu_id__equal(&cpu_id, id))
+> -			return idx;
+> -	}
+> -	return 0;
+> -}
+> -
+>  static void abs_printout(struct perf_stat_config *config,
+>  			 struct aggr_cpu_id id, int nr, struct evsel *evsel, double avg)
+>  {
+> @@ -537,7 +512,7 @@ static bool is_mixed_hw_group(struct evsel *counter)
+>  static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int nr,
+>  		     struct evsel *counter, double uval,
+>  		     char *prefix, u64 run, u64 ena, double noise,
+> -		     struct runtime_stat *st)
+> +		     struct runtime_stat *st, int map_idx)
+>  {
+>  	struct perf_stat_output_ctx out;
+>  	struct outstate os = {
+> @@ -648,8 +623,7 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+>  		print_running(config, run, ena);
+>  	}
+>  
+> -	perf_stat__print_shadow_stats(config, counter, uval,
+> -				first_shadow_map_idx(config, counter, &id),
+> +	perf_stat__print_shadow_stats(config, counter, uval, map_idx,
+>  				&out, &config->metric_events, st);
+>  	if (!config->csv_output && !config->metric_only && !config->json_output) {
+>  		print_noise(config, counter, noise);
+> @@ -657,34 +631,6 @@ static void printout(struct perf_stat_config *config, struct aggr_cpu_id id, int
+>  	}
+>  }
+>  
+> -static void aggr_update_shadow(struct perf_stat_config *config,
+> -			       struct evlist *evlist)
+> -{
+> -	int idx, s;
+> -	struct perf_cpu cpu;
+> -	struct aggr_cpu_id s2, id;
+> -	u64 val;
+> -	struct evsel *counter;
+> -	struct perf_cpu_map *cpus;
+> -
+> -	for (s = 0; s < config->aggr_map->nr; s++) {
+> -		id = config->aggr_map->map[s];
+> -		evlist__for_each_entry(evlist, counter) {
+> -			cpus = evsel__cpus(counter);
+> -			val = 0;
+> -			perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
+> -				s2 = config->aggr_get_id(config, cpu);
+> -				if (!aggr_cpu_id__equal(&s2, &id))
+> -					continue;
+> -				val += perf_counts(counter->counts, idx, 0)->val;
+> -			}
+> -			perf_stat__update_shadow_stats(counter, val,
+> -					first_shadow_map_idx(config, counter, &id),
+> -					&rt_stat);
+> -		}
+> -	}
+> -}
+> -
+>  static void uniquify_event_name(struct evsel *counter)
+>  {
+>  	char *new_name;
+> @@ -721,137 +667,51 @@ static void uniquify_event_name(struct evsel *counter)
+>  	counter->uniquified_name = true;
+>  }
+>  
+> -static void collect_all_aliases(struct perf_stat_config *config, struct evsel *counter,
+> -			    void (*cb)(struct perf_stat_config *config, struct evsel *counter, void *data,
+> -				       bool first),
+> -			    void *data)
+> +static bool hybrid_uniquify(struct evsel *evsel, struct perf_stat_config *config)
+>  {
+> -	struct evlist *evlist = counter->evlist;
+> -	struct evsel *alias;
+> -
+> -	alias = list_prepare_entry(counter, &(evlist->core.entries), core.node);
+> -	list_for_each_entry_continue (alias, &evlist->core.entries, core.node) {
+> -		/* Merge events with the same name, etc. but on different PMUs. */
+> -		if (!strcmp(evsel__name(alias), evsel__name(counter)) &&
+> -			alias->scale == counter->scale &&
+> -			alias->cgrp == counter->cgrp &&
+> -			!strcmp(alias->unit, counter->unit) &&
+> -			evsel__is_clock(alias) == evsel__is_clock(counter) &&
+> -			strcmp(alias->pmu_name, counter->pmu_name)) {
+> -			alias->merged_stat = true;
+> -			cb(config, alias, data, false);
+> -		}
+> -	}
+> +	return evsel__is_hybrid(evsel) && !config->hybrid_merge;
+>  }
+>  
+> -static bool hybrid_merge(struct evsel *counter, struct perf_stat_config *config,
+> -			 bool check)
+> +static void uniquify_counter(struct perf_stat_config *config, struct evsel *counter)
+>  {
+> -	if (evsel__is_hybrid(counter)) {
+> -		if (check)
+> -			return config->hybrid_merge;
+> -		else
+> -			return !config->hybrid_merge;
+> -	}
+> -
+> -	return false;
+> -}
+> -
+> -static bool collect_data(struct perf_stat_config *config, struct evsel *counter,
+> -			    void (*cb)(struct perf_stat_config *config, struct evsel *counter, void *data,
+> -				       bool first),
+> -			    void *data)
+> -{
+> -	if (counter->merged_stat)
+> -		return false;
+> -	cb(config, counter, data, true);
+> -	if (config->no_merge || hybrid_merge(counter, config, false))
+> +	if (config->no_merge || hybrid_uniquify(counter, config))
+>  		uniquify_event_name(counter);
+> -	else if (counter->auto_merge_stats || hybrid_merge(counter, config, true))
+> -		collect_all_aliases(config, counter, cb, data);
+> -	return true;
+> -}
+> -
+> -struct aggr_data {
+> -	u64 ena, run, val;
+> -	struct aggr_cpu_id id;
+> -	int nr;
+> -	int cpu_map_idx;
+> -};
+> -
+> -static void aggr_cb(struct perf_stat_config *config,
+> -		    struct evsel *counter, void *data, bool first)
+> -{
+> -	struct aggr_data *ad = data;
+> -	int idx;
+> -	struct perf_cpu cpu;
+> -	struct perf_cpu_map *cpus;
+> -	struct aggr_cpu_id s2;
+> -
+> -	cpus = evsel__cpus(counter);
+> -	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
+> -		struct perf_counts_values *counts;
+> -
+> -		s2 = config->aggr_get_id(config, cpu);
+> -		if (!aggr_cpu_id__equal(&s2, &ad->id))
+> -			continue;
+> -		if (first)
+> -			ad->nr++;
+> -		counts = perf_counts(counter->counts, idx, 0);
+> -		/*
+> -		 * When any result is bad, make them all to give
+> -		 * consistent output in interval mode.
+> -		 */
+> -		if (counts->ena == 0 || counts->run == 0 ||
+> -		    counter->counts->scaled == -1) {
+> -			ad->ena = 0;
+> -			ad->run = 0;
+> -			break;
+> -		}
+> -		ad->val += counts->val;
+> -		ad->ena += counts->ena;
+> -		ad->run += counts->run;
+> -	}
+>  }
+>  
+>  static void print_counter_aggrdata(struct perf_stat_config *config,
+>  				   struct evsel *counter, int s,
+>  				   char *prefix, bool metric_only,
+> -				   bool *first, struct perf_cpu cpu)
+> +				   bool *first)
+>  {
+> -	struct aggr_data ad;
+>  	FILE *output = config->output;
+>  	u64 ena, run, val;
+> -	int nr;
+> -	struct aggr_cpu_id id;
+>  	double uval;
+> +	struct perf_stat_evsel *ps = counter->stats;
+> +	struct perf_stat_aggr *aggr = &ps->aggr[s];
+> +	struct aggr_cpu_id id = config->aggr_map->map[s];
+> +	double avg = aggr->counts.val;
+>  
+> -	ad.id = id = config->aggr_map->map[s];
+> -	ad.val = ad.ena = ad.run = 0;
+> -	ad.nr = 0;
+> -	if (!collect_data(config, counter, aggr_cb, &ad))
+> +	if (counter->supported && aggr->nr == 0)
+>  		return;
+>  
+> -	if (perf_pmu__has_hybrid() && ad.ena == 0)
+> -		return;
+> +	uniquify_counter(config, counter);
+> +
+> +	val = aggr->counts.val;
+> +	ena = aggr->counts.ena;
+> +	run = aggr->counts.run;
+>  
+> -	nr = ad.nr;
+> -	ena = ad.ena;
+> -	run = ad.run;
+> -	val = ad.val;
+>  	if (*first && metric_only) {
+>  		*first = false;
+> -		aggr_printout(config, counter, id, nr);
+> +		aggr_printout(config, counter, id, aggr->nr);
+>  	}
+>  	if (prefix && !metric_only)
+>  		fprintf(output, "%s", prefix);
+>  
+>  	uval = val * counter->scale;
+> -	if (cpu.cpu != -1)
+> -		id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
+>  
+> -	printout(config, id, nr, counter, uval,
+> -		 prefix, run, ena, 1.0, &rt_stat);
+> +	printout(config, id, aggr->nr, counter, uval,
+> +		 prefix, run, ena, avg, &rt_stat, s);
+> +
+>  	if (!metric_only)
+>  		fputc('\n', output);
+>  }
+> @@ -869,8 +729,6 @@ static void print_aggr(struct perf_stat_config *config,
+>  	if (!config->aggr_map || !config->aggr_get_id)
+>  		return;
+>  
+> -	aggr_update_shadow(config, evlist);
+> -
+>  	/*
+>  	 * With metric_only everything is on a single line.
+>  	 * Without each counter has its own line.
+> @@ -881,188 +739,36 @@ static void print_aggr(struct perf_stat_config *config,
+>  
+>  		first = true;
+>  		evlist__for_each_entry(evlist, counter) {
+> +			if (counter->merged_stat)
+> +				continue;
+> +
+>  			print_counter_aggrdata(config, counter, s,
+> -					prefix, metric_only,
+> -					&first, (struct perf_cpu){ .cpu = -1 });
+> +					       prefix, metric_only,
+> +					       &first);
+>  		}
+>  		if (metric_only)
+>  			fputc('\n', output);
+>  	}
+>  }
+>  
+> -static int cmp_val(const void *a, const void *b)
+> -{
+> -	return ((struct perf_aggr_thread_value *)b)->val -
+> -		((struct perf_aggr_thread_value *)a)->val;
+> -}
+> -
+> -static struct perf_aggr_thread_value *sort_aggr_thread(
+> -					struct evsel *counter,
+> -					int *ret,
+> -					struct target *_target)
+> -{
+> -	int nthreads = perf_thread_map__nr(counter->core.threads);
+> -	int i = 0;
+> -	double uval;
+> -	struct perf_aggr_thread_value *buf;
+> -
+> -	buf = calloc(nthreads, sizeof(struct perf_aggr_thread_value));
+> -	if (!buf)
+> -		return NULL;
+> -
+> -	for (int thread = 0; thread < nthreads; thread++) {
+> -		int idx;
+> -		u64 ena = 0, run = 0, val = 0;
+> -
+> -		perf_cpu_map__for_each_idx(idx, evsel__cpus(counter)) {
+> -			struct perf_counts_values *counts =
+> -				perf_counts(counter->counts, idx, thread);
+> -
+> -			val += counts->val;
+> -			ena += counts->ena;
+> -			run += counts->run;
+> -		}
+> -
+> -		uval = val * counter->scale;
+> -
+> -		/*
+> -		 * Skip value 0 when enabling --per-thread globally,
+> -		 * otherwise too many 0 output.
+> -		 */
+> -		if (uval == 0.0 && target__has_per_thread(_target))
+> -			continue;
+> -
+> -		buf[i].counter = counter;
+> -		buf[i].id = aggr_cpu_id__empty();
+> -		buf[i].id.thread_idx = thread;
+> -		buf[i].uval = uval;
+> -		buf[i].val = val;
+> -		buf[i].run = run;
+> -		buf[i].ena = ena;
+> -		i++;
+> -	}
+> -
+> -	qsort(buf, i, sizeof(struct perf_aggr_thread_value), cmp_val);
+> -
+> -	if (ret)
+> -		*ret = i;
+> -
+> -	return buf;
+> -}
+> -
+> -static void print_aggr_thread(struct perf_stat_config *config,
+> -			      struct target *_target,
+> -			      struct evsel *counter, char *prefix)
+> -{
+> -	FILE *output = config->output;
+> -	int thread, sorted_threads;
+> -	struct aggr_cpu_id id;
+> -	struct perf_aggr_thread_value *buf;
+> -
+> -	buf = sort_aggr_thread(counter, &sorted_threads, _target);
+> -	if (!buf) {
+> -		perror("cannot sort aggr thread");
+> -		return;
+> -	}
+> -
+> -	for (thread = 0; thread < sorted_threads; thread++) {
+> -		if (prefix)
+> -			fprintf(output, "%s", prefix);
+> -
+> -		id = buf[thread].id;
+> -		printout(config, id, 0, buf[thread].counter, buf[thread].uval,
+> -			 prefix, buf[thread].run, buf[thread].ena, 1.0,
+> -			 &rt_stat);
+> -		fputc('\n', output);
+> -	}
+> -
+> -	free(buf);
+> -}
+> -
+> -struct caggr_data {
+> -	double avg, avg_enabled, avg_running;
+> -};
+> -
+> -static void counter_aggr_cb(struct perf_stat_config *config __maybe_unused,
+> -			    struct evsel *counter, void *data,
+> -			    bool first __maybe_unused)
+> -{
+> -	struct caggr_data *cd = data;
+> -	struct perf_counts_values *aggr = &counter->counts->aggr;
+> -
+> -	cd->avg += aggr->val;
+> -	cd->avg_enabled += aggr->ena;
+> -	cd->avg_running += aggr->run;
+> -}
+> -
+> -/*
+> - * Print out the results of a single counter:
+> - * aggregated counts in system-wide mode
+> - */
+> -static void print_counter_aggr(struct perf_stat_config *config,
+> -			       struct evsel *counter, char *prefix)
+> -{
+> -	bool metric_only = config->metric_only;
+> -	FILE *output = config->output;
+> -	double uval;
+> -	struct caggr_data cd = { .avg = 0.0 };
+> -
+> -	if (!collect_data(config, counter, counter_aggr_cb, &cd))
+> -		return;
+> -
+> -	if (prefix && !metric_only)
+> -		fprintf(output, "%s", prefix);
+> -
+> -	uval = cd.avg * counter->scale;
+> -	printout(config, aggr_cpu_id__empty(), 0, counter, uval, prefix, cd.avg_running,
+> -		 cd.avg_enabled, cd.avg, &rt_stat);
+> -	if (!metric_only)
+> -		fprintf(output, "\n");
+> -}
+> -
+> -static void counter_cb(struct perf_stat_config *config __maybe_unused,
+> -		       struct evsel *counter, void *data,
+> -		       bool first __maybe_unused)
+> -{
+> -	struct aggr_data *ad = data;
+> -
+> -	ad->val += perf_counts(counter->counts, ad->cpu_map_idx, 0)->val;
+> -	ad->ena += perf_counts(counter->counts, ad->cpu_map_idx, 0)->ena;
+> -	ad->run += perf_counts(counter->counts, ad->cpu_map_idx, 0)->run;
+> -}
+> -
+> -/*
+> - * Print out the results of a single counter:
+> - * does not use aggregated count in system-wide
+> - */
+>  static void print_counter(struct perf_stat_config *config,
+>  			  struct evsel *counter, char *prefix)
+>  {
+> -	FILE *output = config->output;
+> -	u64 ena, run, val;
+> -	double uval;
+> -	int idx;
+> -	struct perf_cpu cpu;
+> -	struct aggr_cpu_id id;
+> -
+> -	perf_cpu_map__for_each_cpu(cpu, idx, evsel__cpus(counter)) {
+> -		struct aggr_data ad = { .cpu_map_idx = idx };
+> -
+> -		if (!collect_data(config, counter, counter_cb, &ad))
+> -			return;
+> -		val = ad.val;
+> -		ena = ad.ena;
+> -		run = ad.run;
+> +	bool metric_only = config->metric_only;
+> +	bool first = false;
+> +	int s;
+>  
+> -		if (prefix)
+> -			fprintf(output, "%s", prefix);
+> +	/* AGGR_THREAD doesn't have config->aggr_get_id */
+> +	if (!config->aggr_map)
+> +		return;
+>  
+> -		uval = val * counter->scale;
+> -		id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
+> -		printout(config, id, 0, counter, uval, prefix,
+> -			 run, ena, 1.0, &rt_stat);
+> +	if (counter->merged_stat)
+> +		return;
+>  
+> -		fputc('\n', output);
+> +	for (s = 0; s < config->aggr_map->nr; s++) {
+> +		print_counter_aggrdata(config, counter, s,
+> +				       prefix, metric_only,
+> +				       &first);
+>  	}
+>  }
+>  
+> @@ -1081,6 +787,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>  			u64 ena, run, val;
+>  			double uval;
+>  			struct aggr_cpu_id id;
+> +			struct perf_stat_evsel *ps = counter->stats;
+>  			int counter_idx = perf_cpu_map__idx(evsel__cpus(counter), cpu);
+>  
+>  			if (counter_idx < 0)
+> @@ -1093,13 +800,13 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+>  				aggr_printout(config, counter, id, 0);
+>  				first = false;
+>  			}
+> -			val = perf_counts(counter->counts, counter_idx, 0)->val;
+> -			ena = perf_counts(counter->counts, counter_idx, 0)->ena;
+> -			run = perf_counts(counter->counts, counter_idx, 0)->run;
+> +			val = ps->aggr[counter_idx].counts.val;
+> +			ena = ps->aggr[counter_idx].counts.ena;
+> +			run = ps->aggr[counter_idx].counts.run;
+>  
+>  			uval = val * counter->scale;
+>  			printout(config, id, 0, counter, uval, prefix,
+> -				 run, ena, 1.0, &rt_stat);
+> +				 run, ena, 1.0, &rt_stat, counter_idx);
+>  		}
+>  		if (!first)
+>  			fputc('\n', config->output);
+> @@ -1135,8 +842,8 @@ static void print_metric_headers(struct perf_stat_config *config,
+>  	};
+>  	bool first = true;
+>  
+> -		if (config->json_output && !config->interval)
+> -			fprintf(config->output, "{");
+> +	if (config->json_output && !config->interval)
+> +		fprintf(config->output, "{");
+>  
+>  	if (prefix && !config->json_output)
+>  		fprintf(config->output, "%s", prefix);
+> @@ -1379,31 +1086,6 @@ static void print_footer(struct perf_stat_config *config)
+>  			"the same PMU. Try reorganizing the group.\n");
+>  }
+>  
+> -static void print_percore_thread(struct perf_stat_config *config,
+> -				 struct evsel *counter, char *prefix)
+> -{
+> -	int s;
+> -	struct aggr_cpu_id s2, id;
+> -	struct perf_cpu_map *cpus;
+> -	bool first = true;
+> -	int idx;
+> -	struct perf_cpu cpu;
+> -
+> -	cpus = evsel__cpus(counter);
+> -	perf_cpu_map__for_each_cpu(cpu, idx, cpus) {
+> -		s2 = config->aggr_get_id(config, cpu);
+> -		for (s = 0; s < config->aggr_map->nr; s++) {
+> -			id = config->aggr_map->map[s];
+> -			if (aggr_cpu_id__equal(&s2, &id))
+> -				break;
+> -		}
+> -
+> -		print_counter_aggrdata(config, counter, s,
+> -				       prefix, false,
+> -				       &first, cpu);
+> -	}
+> -}
+> -
+>  static void print_percore(struct perf_stat_config *config,
+>  			  struct evsel *counter, char *prefix)
+>  {
+> @@ -1416,15 +1098,14 @@ static void print_percore(struct perf_stat_config *config,
+>  		return;
+>  
+>  	if (config->percore_show_thread)
+> -		return print_percore_thread(config, counter, prefix);
+> +		return print_counter(config, counter, prefix);
+>  
+>  	for (s = 0; s < config->aggr_map->nr; s++) {
+>  		if (prefix && metric_only)
+>  			fprintf(output, "%s", prefix);
+>  
+>  		print_counter_aggrdata(config, counter, s,
+> -				prefix, metric_only,
+> -				&first, (struct perf_cpu){ .cpu = -1 });
+> +				       prefix, metric_only, &first);
+>  	}
+>  
+>  	if (metric_only)
+> @@ -1469,17 +1150,13 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+>  		print_aggr(config, evlist, prefix);
+>  		break;
+>  	case AGGR_THREAD:
+> -		evlist__for_each_entry(evlist, counter) {
+> -			print_aggr_thread(config, _target, counter, prefix);
+> -		}
+> -		break;
+>  	case AGGR_GLOBAL:
+>  		if (config->iostat_run)
+>  			iostat_print_counters(evlist, config, ts, prefix = buf,
+> -					      print_counter_aggr);
+> +					      print_counter);
+>  		else {
+>  			evlist__for_each_entry(evlist, counter) {
+> -				print_counter_aggr(config, counter, prefix);
+> +				print_counter(config, counter, prefix);
+>  			}
+>  			if (metric_only)
+>  				fputc('\n', config->output);
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index c0955a0427ab..0316557adce9 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -565,11 +565,6 @@ int perf_stat_process_counter(struct perf_stat_config *config,
+>  			evsel__name(counter), count[0], count[1], count[2]);
+>  	}
+>  
+> -	/*
+> -	 * Save the full runtime - to allow normalization during printout:
+> -	 */
+> -	perf_stat__update_shadow_stats(counter, *count, 0, &rt_stat);
+> -
+>  	return 0;
+>  }
+>  
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index 3d413ba8c68a..382a1ab92ce1 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -224,15 +224,6 @@ static inline void update_rusage_stats(struct rusage_stats *ru_stats, struct rus
+>  struct evsel;
+>  struct evlist;
+>  
+> -struct perf_aggr_thread_value {
+> -	struct evsel *counter;
+> -	struct aggr_cpu_id id;
+> -	double uval;
+> -	u64 val;
+> -	u64 run;
+> -	u64 ena;
+> -};
+> -
+>  bool __perf_stat_evsel__is(struct evsel *evsel, enum perf_stat_evsel_id id);
+>  
+>  #define perf_stat_evsel__is(evsel, id) \
+> -- 
+> 2.38.0.413.g74048e4d9e-goog
+> 
