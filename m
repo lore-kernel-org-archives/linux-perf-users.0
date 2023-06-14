@@ -2,298 +2,188 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58FDEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 08:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B01EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 09:07:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235148AbjFNIcO (ORCPT
+        id S243896AbjFNJH2 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 04:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57512 "EHLO
+        Wed, 14 Jun 2023 05:07:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243586AbjFNIcK (ORCPT
+        with ESMTP id S235295AbjFNJH2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 04:32:10 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9082C1BF7
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 01:32:05 -0700 (PDT)
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35E8OtiB027468;
-        Wed, 14 Jun 2023 08:32:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=iN3YFg9+lhOC9hGjR1YjSUu/Gs1s76JxC0AqOx6WOyg=;
- b=CcjTQj6BcTZaW0yM1qCLK+J+WYt7BbVqFwsq8v6s+JZNYxqkL6F91MFUuxM38Q6wTGTi
- wdbyKIh7W7+jXIvJbET6uHZwTktANmGoHjeHwA1EIFFvnSGY7fbMPE4a+v0ss/E4In3z
- 8b2sDJFoku78v3Vdm+9jFRtr8dNknJzIi0HYG0U2QTM+g2FtmbiGYz1dM99zCyPDFUW9
- wGDlXk9eyt8D0fwLJrgFHrUCn0bjBCj2myhRS4wn2fKA9iAQ+zlY+voRc8bRA97A4Wgb
- pNlnbIiX/xP0NbllAR17SfZz7ICTG5iK1N890PynS3G9ypczmM2G3RjX83F3RebR27jW wA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r7a150473-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Jun 2023 08:32:01 +0000
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35E8Vd5O015673;
-        Wed, 14 Jun 2023 08:32:00 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r7a15045y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Jun 2023 08:32:00 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35E5ruB1011846;
-        Wed, 14 Jun 2023 08:31:58 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3r4gt4t1at-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 14 Jun 2023 08:31:58 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35E8Vt3w15270562
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Jun 2023 08:31:55 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A609120049;
-        Wed, 14 Jun 2023 08:31:55 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7556F20040;
-        Wed, 14 Jun 2023 08:31:55 +0000 (GMT)
-Received: from [9.152.212.165] (unknown [9.152.212.165])
-        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 14 Jun 2023 08:31:55 +0000 (GMT)
-Message-ID: <e7f0930a-a9fc-d768-a472-bd9af6fafdf5@linux.ibm.com>
-Date:   Wed, 14 Jun 2023 10:31:55 +0200
+        Wed, 14 Jun 2023 05:07:28 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2056.outbound.protection.outlook.com [40.107.244.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F29A110C2;
+        Wed, 14 Jun 2023 02:07:26 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CfHLma4SpzUCdN1RiSW7zTaCINykjmblzGlAK+5xjNr31qxwacbs3u6rHUIZ3/D2HDM59YGNX5TWd2fh2agK5SkJzUP9Uz+zQ+zOPNTQDvtGFfpSaD/NHZeszk6ElxYg2DoBHJ3YHfj6Q52TWcEwMsWG95atVtCNyvrUTocRuNO1i0v85Am+EqmK60XaJjmXzMsV/7at6k+n7wNiWovRJ4ptLOFobWlgXqUnwuAFUJatIxrbW51EAmtuyiXOlAZ0Wol6zX2xU3vtWvMXEEk+vRz5USSxK/CMixftwAd3BYNUTQMH475tcVDU+sVKRrSvrZMEtrA3k3sSgIcEMDLI0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t++Lwtu/YJZf+goiNLSZ9QAb4BXOhAZarGP2bKrmzZY=;
+ b=Anz+HIBGFbMKF+Psn6KsnszD+SbA+SLpdSwWcbJ5qotsCx5j1uaaATTOCC+4Cfgp/fqQqGOkQmwSf652E+eojQC0OY3CHKgyDgjx43sd4aGIKdoMg6M63/HqpuH6b3eeAB8BvH4S0XfuS1KYmNgx8xafE7b0mueJqqULmAiY7aEyGgEa4qYbXiecOuVCClt5PVaGNqdy0yo2gf/A0Nnwu4q6GyCkBR089lBsrKngUGCydbP6yeNdnvAhi0i+u+0e5OftcEGbI03Q4u3fUwW+JZyGIuuzvYWDn8DAhTLTl3o0ESAXZiRZMg1Ejzx/tFvs32cUXPEWaw42KGo8jxi13A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t++Lwtu/YJZf+goiNLSZ9QAb4BXOhAZarGP2bKrmzZY=;
+ b=WreHyFImIU/7XOUcrOiyNernqpbRBHg04GXdJN42J+Npn/JvysQV2TvVmwq4JoKiSEpLSdzIyqt3pDh8ERQLo/cqzLRgtYexbIL6+mAKq11d911X5j9QtgRPn6moBrw1Wd0ipLqqB9oCXzMNJL7RcCzx1jnFYNZGLcsjAJ7d8+Y=
+Received: from SN7PR04CA0029.namprd04.prod.outlook.com (2603:10b6:806:f2::34)
+ by DS0PR12MB8197.namprd12.prod.outlook.com (2603:10b6:8:f1::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.37; Wed, 14 Jun
+ 2023 09:07:24 +0000
+Received: from SA2PEPF00001509.namprd04.prod.outlook.com
+ (2603:10b6:806:f2:cafe::8f) by SN7PR04CA0029.outlook.office365.com
+ (2603:10b6:806:f2::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.37 via Frontend
+ Transport; Wed, 14 Jun 2023 09:07:24 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SA2PEPF00001509.mail.protection.outlook.com (10.167.242.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6500.25 via Frontend Transport; Wed, 14 Jun 2023 09:07:24 +0000
+Received: from sindhu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 14 Jun
+ 2023 04:07:18 -0500
+From:   Sandipan Das <sandipan.das@amd.com>
+To:     <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <kjain@linux.ibm.com>,
+        <atrajeev@linux.vnet.ibm.com>, <barnali@linux.ibm.com>,
+        <ayush.jain3@amd.com>, <ananth.narayan@amd.com>,
+        <ravi.bangoria@amd.com>, <santosh.shukla@amd.com>,
+        <sandipan.das@amd.com>
+Subject: [PATCH] perf test: Retry without grouping for all metrics test
+Date:   Wed, 14 Jun 2023 14:37:10 +0530
+Message-ID: <20230614090710.680330-1-sandipan.das@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: perf test failures in linux-next on s390
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>
-References: <d5319870-7569-c353-1777-31ee090f8da8@linux.ibm.com>
- <CAP-5=fU+0VXckQiq3E8yqaySNZ+-DDZahEd1OY0uKPWnfFsafg@mail.gmail.com>
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <CAP-5=fU+0VXckQiq3E8yqaySNZ+-DDZahEd1OY0uKPWnfFsafg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mpYZ1Im6o66cbMhNxfl4O7x8_15XzzT1
-X-Proofpoint-ORIG-GUID: xXHEm6TRhBs-Hwi3aVvrklsdSfCLKxH4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-14_04,2023-06-12_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- suspectscore=0 adultscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 lowpriorityscore=0 spamscore=0 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306140073
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00001509:EE_|DS0PR12MB8197:EE_
+X-MS-Office365-Filtering-Correlation-Id: 38e52ab4-1496-48b4-34f5-08db6cb6c4d5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /IiemGv5mL5UMIEonzhjJEqBSrlCJiCwoWhsBaFWPjQ3dK2mEPD/6pw9BVorAkI0RAHY2Uydt2jPGCvWtri4CiZX3VayrdFQ5QeqBXoAHqOh9XSqsuLGPskHKkdzfGF1bd+KkSkPHKeu8dJWT2o+LOY9KA2sss4o3VvevnuRIHLowX40qoQGKkItSKobaQx+WrcsmOyyp9Q/c4BOJfDUtEl9lyo8/08pTBnxZkY0aqV0Win1S7/0vGoMriYLf5mOqS0UKRRMOGijEM02u1erodiG5QavZO7i9i8OKpgyYtjN75aKnbOpuHnW2lOfwgQLBC7bBe1DObmsG//N7P06/2a7fqQZl/5v/2+IJhkbDgbHwFqlQkd1FN7MngpTYRe+1ZmuODC2VCFdftKUMrgxO3jzke+k+t0Xk+NIizlig/qlb5VdKOYkLoNqXE7S8JbK88744s8RBCMfbg3h90ANzumFH2fD8NbzmuAiSk1+ji/i/gD4Aez3T1jeQ/aNP50/YkKFylHBZNlSlCZqqu3QS8w/cbwS9dSUOWqfOunufjX3VcvQLzOPSjpRsL2A1kKiuApxDQbIFpsXIHXkKq+HuW2KFCmC14OO7IG7TcxxlDxRkiO9/WrIxzKG8yJe71OdnutlEu1l78CHut8hkeIJriW4z3aZYQVL+ARNMOU/sH6GYemHOEpama4GCtyVnQ5zHJyuUb9IRanZy4AZKVVw7+3sDhmiHK0ZdFiy8/W8jj5WnvRrnj7lGyNQ7+DwsMvIoZ9TYsZ+go9T7xwJHZ8myw==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(396003)(346002)(39860400002)(451199021)(46966006)(40470700004)(36840700001)(7696005)(8936002)(26005)(40460700003)(8676002)(41300700001)(36860700001)(356005)(81166007)(478600001)(82740400003)(36756003)(82310400005)(86362001)(70586007)(70206006)(4326008)(1076003)(316002)(110136005)(54906003)(6666004)(40480700001)(44832011)(5660300002)(83380400001)(426003)(336012)(186003)(2616005)(16526019)(7416002)(47076005)(2906002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2023 09:07:24.4586
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38e52ab4-1496-48b4-34f5-08db6cb6c4d5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: SA2PEPF00001509.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8197
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 6/13/23 16:32, Ian Rogers wrote:
-> On Tue, Jun 13, 2023 at 5:54 AM Thomas Richter <tmricht@linux.ibm.com> wrote:
->>
->> Hi all,
->>
->> I have run the perf test suite on the current 6.4rc6 kernel and see just one error:
->> # ./perf test 2>&1 | fgrep FAILED
->> fgrep: warning: fgrep is obsolescent; using grep -F
->>  42.3: BPF prologue generation                                       : FAILED!
->> #
->>
->> However when I download the linux-next tree and build kernel and perf
->> tool with the same kernel config file, I get a bunch of failing test cases,
->> many with perf tool dumping core:
->>
->> # perf test 2>&1 | fgrep FAILED
->> fgrep: warning: fgrep is obsolescent; using grep -F
->>   6.1: Test event parsing                                            : FAILED!
->>  10.3: Parsing of PMU event table metrics                            : FAILED!
->>  10.4: Parsing of PMU event table metrics with fake PMUs             : FAILED!
->>  17: Setup struct perf_event_attr                                    : FAILED!
->>  24: Number of exit events of a simple workload                      : FAILED! core-dump
->>  28: Use a dummy software event to keep tracking                     : FAILED!
->>  35: Track with sched_switch                                         : FAILED!
->>  42.3: BPF prologue generation                                       : FAILED!
->>  66: Parse and process metrics                                       : FAILED!
->>  68: Event expansion for cgroups                                     : FAILED!
->>  69.2: Perf time to TSC                                              : FAILED! core-dump
->>  74: build id cache operations                                       : FAILED! core-dump
->>  81: kernel lock contention analysis test                            : FAILED!
->>  86: Zstd perf.data compression/decompression                        : FAILED! core-dump
->>  87: perf record tests                                               : FAILED! core-dump
->>  94: perf all metricgroups test                                      : FAILED!
->>  95: perf all metrics test                                           : FAILED!
->> 106: Test java symbol                                                : FAILED! core-dump
->> #
->>
->> I am afraid this will show up pretty soon in the linux tree.
->> I am going to look into each failure in the next few days.
->>
->> What I already found out is that many test cases now fail due to the
->> event/PMU rework, here is one example:
->>
->> # perf test -Fvvvv 95
->> 95: perf all metrics test
->> --- start ---
->> Testing cpi
->> ....
->> Metric 'transaction' not printed in:
->> Error:
->> The TX_NC_TABORT event is not supported.
->> ---- end ----
->> perf all metrics test: FAILED!
->> # ls -l /sys/devices/cpum_cf/events/TX_NC_TABORT
->> -r--r--r--. 1 root root 4096 Jun 13 13:49 /sys/devices/cpum_cf/events/TX_NC_TABORT
->> #
->>
->> As can be seen, the event is definitely there and supported.
->> This same test case succeeds in the linux tree!
->>
->> Hopefully I can sort out some of the failures before this code show up
->> in the linux tree.
-> 
-> Thanks Thomas, to be clear this is what is in
-> perf-tools-next/linux-next and not 6.4?
+There are cases where a metric uses more events than the number of
+counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four data fabric
+counters but the "nps1_die_to_dram" metric has eight events. By default,
+the constituent events are placed in a group. Since the events cannot be
+scheduled at the same time, the metric is not computed. The all metrics
+test also fails because of this.
 
-Ian,
+Before announcing failure, the test can try multiple options for each
+available metric. After system-wide mode fails, retry once again with
+the "--metric-no-group" option.
 
-thanks for your help.
-Correct, I am talking about the linux-next repo. The linux repo is fine.
+E.g.
 
-> 
-> Rather than try to do more complicated cases like the metrics tests,
-> it makes sense to dig into why event parsing is failing. Test 6 first
-> of all, could you give output?
-> 
-> Thanks,
-> Ian
-> 
-We discussed some aspects of this about two weeks ago, but last week
-I was on vacation and now I resumed my work on linux-next.
-We run the linux-next perf test suite every night and I am concerned
-and would like to get this sorted out before it hits Linux 6.5.
+  $ sudo perf test -v 100
 
-Here is the output on my linux-next tree built yesterday:
-# uname -a
-Linux a35lp67.lnxne.boe 6.4.0-rc6-next-20230613d-perf #2 \
-              SMP Tue Jun 13 15:18:43 CEST 2023 s390x GNU/Linux
-# ./perf test -F 6
-  6: Parse event definition strings  :
-  6.1: Test event parsing            :Segmentation fault (core dumped)
-#
-# gdb perf
-  ....
-  (gdb) r test -F 6
-   6: Parse event definition strings                                  :
-  6.1: Test event parsing                                            :
-Program received signal SIGSEGV, Segmentation fault.
-__GI_strcmp () at ../sysdeps/s390/strcmp-vx.S:47
-(gdb) where
-#0  __GI_strcmp () at ../sysdeps/s390/strcmp-vx.S:47
-#1  0x000000000110a18c in test__term_equal_term (evlist=0x152ea80) at tests/parse-events.c:1580
-#2  0x000000000110a96a in test_event (e=0x14dc758 <test.events+1416>) at tests/parse-events.c:2209
-#3  0x000000000110ac58 in test_events (events=0x14dc1d0 <test.events>, cnt=61) at tests/parse-events.c:2260
-#4  0x000000000110ad52 in test__events2 (test=0x1500758 <suite.parse_events>, subtest=0)
-    at tests/parse-events.c:2272
-#5  0x00000000010f6fac in run_test (test=0x1500758 <suite.parse_events>, subtest=0) at tests/builtin-test.c:236
-#6  0x00000000010f7142 in test_and_print (t=0x1500758 <suite.parse_events>, subtest=0) at tests/builtin-test.c:265
-#7  0x00000000010f7b1e in __cmd_test (argc=1, argv=0x3ffffffa320, skiplist=0x0) at tests/builtin-test.c:436
-#8  0x00000000010f8404 in cmd_test (argc=1, argv=0x3ffffffa320) at tests/builtin-test.c:559
-#9  0x00000000011473fc in run_builtin (p=0x14f60e8 <commands+600>, argc=3, argv=0x3ffffffa320) at perf.c:323
-#10 0x000000000114776e in handle_internal_command (argc=3, argv=0x3ffffffa320) at perf.c:377
-#11 0x0000000001147980 in run_argv (argcp=0x3ffffff9f94, argv=0x3ffffff9f88) at perf.c:421
-#12 0x0000000001147d48 in main (argc=3, argv=0x3ffffffa320) at perf.c:537
-(gdb)
+Before:
 
-To be honest, I am no expert on the yacc/bison/flex tool chain.
-I understand a little bit about them, but that is it.
+  100: perf all metrics test                                           :
+  --- start ---
+  test child forked, pid 672731
+  Testing branch_misprediction_ratio
+  Testing all_remote_links_outbound
+  Testing nps1_die_to_dram
+  Metric 'nps1_die_to_dram' not printed in:
+  Error:
+  Invalid event (dram_channel_data_controller_4) in per-thread mode, enable system wide with '-a'.
+  Testing macro_ops_dispatched
+  Testing all_l2_cache_accesses
+  Testing all_l2_cache_hits
+  Testing all_l2_cache_misses
+  Testing ic_fetch_miss_ratio
+  Testing l2_cache_accesses_from_l2_hwpf
+  Testing l2_cache_misses_from_l2_hwpf
+  Testing op_cache_fetch_miss_ratio
+  Testing l3_read_miss_latency
+  Testing l1_itlb_misses
+  test child finished with -1
+  ---- end ----
+  perf all metrics test: FAILED!
 
-When I look at the output of perf test -Fvvvv 6 on linux-next, some things seem odd,
-I marked them with 3 question masks ???:
+After:
 
-# ./perf test -Fvvv 6
-  6: Parse event definition strings     :
-  6.1: Test event parsing               :
---- start ---
-running test 0 'syscalls:sys_enter_openat'
-Using CPUID IBM,3931,704,A01,3.7,002f
-running test 1 'syscalls:*'
-running test 2 'r1a'
-running test 3 '1:1'
-running test 4 'instructions'
-No PMU found for 'instructions'FAILED tests/parse-events.c:143 wrong number of entries
-Event test failure: test 4 'instructions'running test 5 'cycles/period=100000,config2/'
-??? What is wrong here?
-??? Output on linux 6.4.0rc3:
-??? # ./perf stat -e instructions -- true
-???
-??? Performance counter stats for 'true':
-???
-???         2,965,720      instructions
-???
-???        0.002026832 seconds time elapsed
-???
-???        0.000056000 seconds user
-???        0.002048000 seconds sys
-??? #
-??? This is fine and works as expected. The s390 PMU for counters
-??? has a direct mapping for this. So we end up in the s390 PMU
-??? to retrieve the value.
-???
-??? Output on linux-next
-???# ./perf stat -e instructions -- true
-???
-??? Performance counter stats for 'true':
-???
-???              0.65 msec task-clock                       #    0.250 CPUs utilized
-???                 0      context-switches                 #    0.000 /sec
-???                 0      cpu-migrations                   #    0.000 /sec
-???                49      page-faults                      #   75.375 K/sec
-???         3,367,228      cycles                           #    5.180 GHz
-???         2,880,270      instructions                     #    0.86  insn per cycle
-???   <not supported>      branches
-???   <not supported>      branch-misses
-???
-???       0.002599176 seconds time elapsed
-???
-???       0.000053000 seconds user
-???       0.002650000 seconds sys
-???
-???#
-??? Somehow we end up in a different PMU. The output is the same as if
-??? I do not specify an event at all. To reach the s390 specific PMU
-??? I have to add it explicitly as in:
-???# ./perf stat -e cpum_cf/instructions/ -- true
-???
-??? Performance counter stats for 'true':
-???
-???         2,814,522      cpum_cf/instructions/
-???
-???       0.001899881 seconds time elapsed
-???
-???       0.000050000 seconds user
-???       0.001928000 seconds sys
-???
-???]#
-No PMU found for 'cycles/period=100000,config2/'FAILED tests/parse-events.c:157 wrong number of entries
-Event test failure: test 5 'cycles/period=100000,config2/'running test 6 'faults'
-...
-??? Similar output for basicly all events.
+  100: perf all metrics test                                           :
+  --- start ---
+  test child forked, pid 672887
+  Testing branch_misprediction_ratio
+  Testing all_remote_links_outbound
+  Testing nps1_die_to_dram
+  Testing macro_ops_dispatched
+  Testing all_l2_cache_accesses
+  Testing all_l2_cache_hits
+  Testing all_l2_cache_misses
+  Testing ic_fetch_miss_ratio
+  Testing l2_cache_accesses_from_l2_hwpf
+  Testing l2_cache_misses_from_l2_hwpf
+  Testing op_cache_fetch_miss_ratio
+  Testing l3_read_miss_latency
+  Testing l1_itlb_misses
+  test child finished with 0
+  ---- end ----
+  perf all metrics test: Ok
 
-No PMU found for 'cycles'running test 59 'cycles/name=name/'
-No PMU found for 'name'Segmentation fault (core dumped)
+Reported-by: Ayush Jain <ayush.jain3@amd.com>
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+---
+ tools/perf/tests/shell/stat_all_metrics.sh | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Hope this helps.
-
-PS: Should we keep the linux-perf-use mailing list as addressee? Not sure
-if everybody else is interested in this?
+diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
+index 54774525e18a..1e88ea8c5677 100755
+--- a/tools/perf/tests/shell/stat_all_metrics.sh
++++ b/tools/perf/tests/shell/stat_all_metrics.sh
+@@ -16,6 +16,13 @@ for m in $(perf list --raw-dump metrics); do
+   then
+     continue
+   fi
++  # Failed again, possibly there are not enough counters so retry system wide
++  # mode but without event grouping.
++  result=$(perf stat -M "$m" --metric-no-group -a sleep 0.01 2>&1)
++  if [[ "$result" =~ ${m:0:50} ]]
++  then
++    continue
++  fi
+   # Failed again, possibly the workload was too small so retry with something
+   # longer.
+   result=$(perf stat -M "$m" perf bench internals synthesize 2>&1)
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.34.1
 
