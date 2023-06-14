@@ -2,141 +2,165 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AE4EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 02:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA39FEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 02:21:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240060AbjFNCQy (ORCPT
+        id S230520AbjFNCVW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 22:16:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57852 "EHLO
+        Tue, 13 Jun 2023 22:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237417AbjFNCQx (ORCPT
+        with ESMTP id S232905AbjFNCVW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 22:16:53 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E6E19B6;
-        Tue, 13 Jun 2023 19:16:51 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Qgpv5727NzTl1c;
-        Wed, 14 Jun 2023 10:16:17 +0800 (CST)
-Received: from localhost.localdomain (10.67.174.95) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 14 Jun 2023 10:16:48 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <james.clark@arm.com>
-CC:     <yangjihong1@huawei.com>
-Subject: [PATCH v3] perf stat: Add missing newline in pr_err messages
-Date:   Wed, 14 Jun 2023 02:15:05 +0000
-Message-ID: <20230614021505.59856-1-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
+        Tue, 13 Jun 2023 22:21:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8358F19B6
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 19:21:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D6AC4602F8
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 02:21:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07036C433C8;
+        Wed, 14 Jun 2023 02:21:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686709276;
+        bh=1233ZXGXQFsQqyKN4SMgVEKVrMyXgWIXoP8CWIHdab8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aHfGPzSzYan4Zl5/64jVKdxEcdleJZ1HToAvQha1DxXdthJq4LAwUwuMmdhcc/3t2
+         qjqW0fQrJxHwwLzDRIdqPQzxRM09npWTmwxZdcwcuqy3SsWwPInxRpofJiYGeZcTU+
+         fA0+QcMLa6GJL24vE4vakuVs+5HouglFyVhBlsiAeFGIzbF0h8DtQVEkTGTpU3uwgK
+         pgxN8qrdCoc57u3WCL8CKFMqrYIHY8GulFJ5ohzAhAoJmaK10GBvwvNa47Hp9uCH6t
+         WpAlxI/XpJ0S5nLFL8a9Iz8/8+w9Iie9VfeC6s7VUzxtMz2cM1RZjoUtJt5SKIFLtq
+         YwRbM80cYluvg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 6153F40692; Tue, 13 Jun 2023 23:21:13 -0300 (-03)
+Date:   Tue, 13 Jun 2023 23:21:13 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
+        ravi.bangoria@amd.com, john.g.garry@oracle.com,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, Akanksha J N <akanksha@linux.ibm.com>,
+        Abhishek Singh Tomar <abhishek@linux.ibm.com>,
+        Saket <skb99@linux.vnet.ibm.com>,
+        Avnish Chouhan <avnish@linux.vnet.ibm.com>
+Subject: Re: [PATCH 06/17] tools/perf/tests: Fix shellcheck warnings for
+ trace+probe_vfs_getname.sh
+Message-ID: <ZIkkGSmS1luuBGkb@kernel.org>
+References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
+ <20230613164145.50488-7-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.95]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230613164145.50488-7-atrajeev@linux.vnet.ibm.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The newline is missing for error messages in add_default_attributes()
+Em Tue, Jun 13, 2023 at 10:11:34PM +0530, Athira Rajeev escreveu:
+> From: Akanksha J N <akanksha@linux.ibm.com>
+> 
+> Fix the shellcheck warnings on powerpc and x86 for testcase
+> trace+probe_vfs_getname.sh. Add quotes to prevent word splitting
+> which are caused by unquoted command expansions.
+> 
+> Before fix:
+> 
+> $ shellcheck -S warning trace+probe_vfs_getname.sh
+> 
+> 	In trace+probe_vfs_getname.sh line 13:
+> 	. $(dirname $0)/lib/probe.sh
+> 	  ^-----------^ SC2046 (warning): Quote this to prevent word splitting.
+> 
+> 	In trace+probe_vfs_getname.sh line 18:
+> 	. $(dirname $0)/lib/probe_vfs_getname.sh
+> 	  ^-----------^ SC2046 (warning): Quote this to prevent word splitting.
+> 
+> 	In trace+probe_vfs_getname.sh line 21:
+> 		evts=$(echo $(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/') | sed 's/ /,/')
+> 		            ^-- SC2046 (warning): Quote this to prevent word splitting.
+> 
+> 	100: Check open filename arg using perf trace + vfs_getname          : Ok
+> 
+> After the fix:
+> 
+> $ shellcheck -S warning trace+probe_vfs_getname.sh
+> 
+> 	100: Check open filename arg using perf trace + vfs_getname          : Ok
 
-Before:
+So, I tried this on x86_64, fedora and get:
 
-  # perf stat --topdown
-  Topdown requested but the topdown metric groups aren't present.
-  (See perf list the metric groups have names like TopdownL1)#
+[root@quaco ~]# perf test "trace + vfs"
+115: Check open filename arg using perf trace + vfs_getname          : FAILED!
+[root@quaco ~]# 
 
-After:
+Then, looking at the change:
 
-  # perf stat --topdown
-  Topdown requested but the topdown metric groups aren't present.
-  (See perf list the metric groups have names like TopdownL1)
-  #
 
-In addition, perf_stat_init_aggr_mode() and perf_stat_init_aggr_mode_file()
-have the same problem, fixed by the way.
+> -	evts=$(echo $(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/') | sed 's/ /,/')
+> +	evts=$(echo "$(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/')" | sed 's/ /,/')
 
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
-Acked-by: Ian Rogers <irogers@google.com>
-Reviewed-by: James Clark <james.clark@arm.com>
----
+So, before:
 
-Changes since v2:
- - Add Acked-by Ian Rogers
- - Add Reviewed-by James Clark
- - Format patch based on the perf-tools-next
+[root@quaco ~]# evts=$(echo $(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/') | sed 's/ /,/')
+[root@quaco ~]# echo $evts
+open,openat
+[root@quaco ~]#
 
-Changes since v1:
- - Correct commit title to `pr_err`
+Then after:
 
- tools/perf/builtin-stat.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+[root@quaco ~]# evts=$(echo "$(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/')" | sed 's/ /,/')
+[root@quaco ~]# echo $evts
+open openat
+[root@quaco ~]#
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index fc615bdeed4f..692de772f8ae 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -1594,7 +1594,7 @@ static int perf_stat_init_aggr_mode(void)
- 		stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.user_requested_cpus,
- 							 get_id, /*data=*/NULL, needs_sort);
- 		if (!stat_config.aggr_map) {
--			pr_err("cannot build %s map", aggr_mode__string[stat_config.aggr_mode]);
-+			pr_err("cannot build %s map\n", aggr_mode__string[stat_config.aggr_mode]);
- 			return -1;
- 		}
- 		stat_config.aggr_get_id = aggr_mode__get_id(stat_config.aggr_mode);
-@@ -1910,7 +1910,7 @@ static int perf_stat_init_aggr_mode_file(struct perf_stat *st)
- 	stat_config.aggr_map = cpu_aggr_map__new(evsel_list->core.user_requested_cpus,
- 						 get_id, env, needs_sort);
- 	if (!stat_config.aggr_map) {
--		pr_err("cannot build %s map", aggr_mode__string[stat_config.aggr_mode]);
-+		pr_err("cannot build %s map\n", aggr_mode__string[stat_config.aggr_mode]);
- 		return -1;
- 	}
- 	stat_config.aggr_get_id = aggr_mode__get_id_file(stat_config.aggr_mode);
-@@ -2050,7 +2050,7 @@ static int add_default_attributes(void)
- 		 * on an architecture test for such a metric name.
- 		 */
- 		if (!metricgroup__has_metric(pmu, "transaction")) {
--			pr_err("Missing transaction metrics");
-+			pr_err("Missing transaction metrics\n");
- 			return -1;
- 		}
- 		return metricgroup__parse_groups(evsel_list, pmu, "transaction",
-@@ -2066,7 +2066,7 @@ static int add_default_attributes(void)
- 		int smi;
- 
- 		if (sysfs__read_int(FREEZE_ON_SMI_PATH, &smi) < 0) {
--			pr_err("freeze_on_smi is not supported.");
-+			pr_err("freeze_on_smi is not supported.\n");
- 			return -1;
- 		}
- 
-@@ -2079,7 +2079,7 @@ static int add_default_attributes(void)
- 		}
- 
- 		if (!metricgroup__has_metric(pmu, "smi")) {
--			pr_err("Missing smi metrics");
-+			pr_err("Missing smi metrics\n");
- 			return -1;
- 		}
- 
-@@ -2104,7 +2104,7 @@ static int add_default_attributes(void)
- 
- 		if (!max_level) {
- 			pr_err("Topdown requested but the topdown metric groups aren't present.\n"
--				"(See perf list the metric groups have names like TopdownL1)");
-+				"(See perf list the metric groups have names like TopdownL1)\n");
- 			return -1;
- 		}
- 		if (stat_config.topdown_level > max_level) {
+Not equivalent, so I'm removing this patch, please check and resubmit,
+please.
+
+- Arnaldo
+
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> Signed-off-by: Akanksha J N <akanksha@linux.ibm.com>
+> Signed-off-by: Abhishek Singh Tomar <abhishek@linux.ibm.com>
+> Signed-off-by: Saket <skb99@linux.vnet.ibm.com>
+> Signed-off-by: Avnish Chouhan <avnish@linux.vnet.ibm.com>
+> ---
+>  tools/perf/tests/shell/trace+probe_vfs_getname.sh | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> index 0a4bac3dd77e..935eac7efa47 100755
+> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> @@ -10,15 +10,15 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
+>  
+> -. $(dirname $0)/lib/probe.sh
+> +. "$(dirname $0)"/lib/probe.sh
+>  
+>  skip_if_no_perf_probe || exit 2
+>  skip_if_no_perf_trace || exit 2
+>  
+> -. $(dirname $0)/lib/probe_vfs_getname.sh
+> +. "$(dirname $0)"/lib/probe_vfs_getname.sh
+>  
+>  trace_open_vfs_getname() {
+> -	evts=$(echo $(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/') | sed 's/ /,/')
+> +	evts=$(echo "$(perf list syscalls:sys_enter_open* 2>/dev/null | grep -E 'open(at)? ' | sed -r 's/.*sys_enter_([a-z]+) +\[.*$/\1/')" | sed 's/ /,/')
+>  	perf trace -e $evts touch $file 2>&1 | \
+>  	grep -E " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch\/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +${file}, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+>  }
+> -- 
+> 2.39.1
+> 
+
 -- 
-2.30.GIT
 
+- Arnaldo
