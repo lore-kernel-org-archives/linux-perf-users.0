@@ -2,122 +2,89 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B94EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 13:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38220EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 13:56:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245114AbjFNNrk (ORCPT
+        id S245309AbjFNN4D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 09:47:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52106 "EHLO
+        Wed, 14 Jun 2023 09:56:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59182 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245098AbjFNNrj (ORCPT
+        with ESMTP id S245271AbjFNN4B (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 09:47:39 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E17FB9C
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 06:47:37 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4f624daccd1so8186026e87.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 06:47:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686750453; x=1689342453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=76di/i2mInmVCxeVKqtSRBrcXSBLthtuA5QqmKpv0gg=;
-        b=jlp8OxtI66wmx6ofvYbecBCQapH2lREmqablzfBh+9OExysu5k9h76l1tCeV8/J90c
-         4Z1ZouQnIxyCpFC63R+Y2e/3+b2Jxk5JrOBGOCsPtQ8f8vMjLIC0eQU8nmbwpRYwQPz+
-         zcnti9QTI56yIvgkrHHGpaaUQcJKbnO76la6Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686750453; x=1689342453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=76di/i2mInmVCxeVKqtSRBrcXSBLthtuA5QqmKpv0gg=;
-        b=Z0+Cc33gO4/5pbv/sw+NuFvHV5Lw4JxHMVIh7Bi9b2dnaKqdpWJqGwJw+PCjdA5o5u
-         NO1zEPu2cKQTdpmOhY661+gfTwX4TN7/5FTWFkCz8BR6jvUzKYQxf3F7tuHvLKSAjQNc
-         5X7MaC2Nci11LcSOynbens5Tk5vx6x4Lq2ayYrnNUggIxAm5536zXxT8lovIYocKnygP
-         A3cqRjJlCBaw1latGvfCE2HhWtK8jWVfvA5p8U3LwOYWc9QwlepaxBxMkcub86D7N5kU
-         r5p9cnv+ob5b0a+9fLd6V5JsSqPV+bP2XYB/FEFE62fNA4PUWhGhABJhGJruzlCp9jIr
-         Wh+A==
-X-Gm-Message-State: AC+VfDzI517Osxn3ieHuWLFiCwxL5P1eIWHnWzYLAyUjK9nkWODlVqV5
-        uzrO4P/GcuqqyFdyj+sDeLjQOglKwshPjDaf6dWz4GEE
-X-Google-Smtp-Source: ACHHUZ6O6V+Y6LCP95dwOe0TCKA0JFxGS7HEppJaH5GNU7PTNlB9vYqgsHzBqtGyBp7WSNAFX8TRMQ==
-X-Received: by 2002:a19:760e:0:b0:4cc:96f8:f9c6 with SMTP id c14-20020a19760e000000b004cc96f8f9c6mr6484293lff.5.1686750452998;
-        Wed, 14 Jun 2023 06:47:32 -0700 (PDT)
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com. [209.85.208.49])
-        by smtp.gmail.com with ESMTPSA id u3-20020aa7d543000000b00514bddcb87csm7893376edr.31.2023.06.14.06.47.31
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Jun 2023 06:47:32 -0700 (PDT)
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-516500163b2so8280a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 06:47:31 -0700 (PDT)
-X-Received: by 2002:a50:9f82:0:b0:50b:c48c:8a25 with SMTP id
- c2-20020a509f82000000b0050bc48c8a25mr104476edf.6.1686750451172; Wed, 14 Jun
- 2023 06:47:31 -0700 (PDT)
+        Wed, 14 Jun 2023 09:56:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF289211F;
+        Wed, 14 Jun 2023 06:55:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6556D64293;
+        Wed, 14 Jun 2023 13:55:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F56FC433C8;
+        Wed, 14 Jun 2023 13:55:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686750953;
+        bh=ydJV9XHoa04OrhiQ37+4pyUHb6RE0YFbBZb6xOO+JRI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EQ3+21tHUpnj1idv4OHC9GbiNa6kDI9BaxIHRg2c1uX1kBx81mniTRFUclAXjJcpm
+         UAZDaJENjbcJd2TkQHNDsJKt5foS7Jj3Uu1E1l/WpNFLhZBpc+4SMqHz1M4YWDo45s
+         MFUXmukWvoz3i4VP2ZSvt4F5bbocvmPBvbk/iJfC3X/j6Bb52CYtV3WwwtzHdVBEWB
+         6SS4TE1rPpjx2TTdmQMsMcrev6QaaUIpqg3TmH9dTYFE/B45n/S0SUWv52vy8NPxoy
+         5uxB+Xne8LhsUQuvtlQXNVugkXLkE8bDPzt2z/GbZY64FMCOoBXBfBiAitFSz9nnEg
+         IM/Dik3xR/3pg==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id D3B9540692; Wed, 14 Jun 2023 10:55:50 -0300 (-03)
+Date:   Wed, 14 Jun 2023 10:55:50 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     baomingtong001@208suo.com
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf parse-events: Remove unneeded semicolon
+Message-ID: <ZInG5t2brWyKzvhy@kernel.org>
+References: <20230614080937.54937-1-luojianhong@cdjrlc.com>
+ <2c733a91717eae93119ba2226420fd8f@208suo.com>
 MIME-Version: 1.0
-References: <20230607152432.5435-1-pmladek@suse.com> <20230607152432.5435-3-pmladek@suse.com>
- <CAD=FV=WRzaLbLQ65usGeFq3ya=DV8cYyHQina_721EFoSTdBGA@mail.gmail.com>
- <ZIG1Qi0iUjTKICQM@alley> <CAD=FV=XzueJia--Zv4cAofzk7yocmP-7K8wa4doAN8pzED_hZA@mail.gmail.com>
- <ZImWd62fXjsZildv@alley>
-In-Reply-To: <ZImWd62fXjsZildv@alley>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 14 Jun 2023 06:47:19 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WP39nUmdeNjjTGx-XWhS4AgG5haHCfYjFUCEKckYVZDA@mail.gmail.com>
-Message-ID: <CAD=FV=WP39nUmdeNjjTGx-XWhS4AgG5haHCfYjFUCEKckYVZDA@mail.gmail.com>
-Subject: Re: [PATCH 2/7] watchdog/hardlockup: Make the config checks more straightforward
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2c733a91717eae93119ba2226420fd8f@208suo.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Em Wed, Jun 14, 2023 at 04:13:53PM +0800, baomingtong001@208suo.com escreveu:
+> ./tools/perf/util/parse-events.c:1466:2-3: Unneeded semicolon
 
-On Wed, Jun 14, 2023 at 3:29=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
-e:
->
-> It seems that we have entered into a bike shedding mode.
-> The following questions come to my mind:
->
->    1. Does this patchset improve the current state?
->
->    2. Maybe, it is not black&white. Is it possible to summarize
->       what exactly got better and what got worse?
->
-> Maybe, there is no need to do bike-shedding about every step
-> if the final result is reasonable and the steps are not
-> completely wrong.
->
-> I just followed my intuition and tried to do some changes step
-> by step. I got lost many times so maybe the steps are not
-> ideal. Anyway, the steps helped me to understand the logic
-> and stay reasonably confident that they did not change
-> the behavior.
->
-> I could rework the patchset. But I first need to know what
-> exactly is bad in the result. And eventually if there is more
-> logical way how to end there.
+Was this detected by some tool? Which one?
 
-Sure. I still feel like the end result of the CONFIG options after
-your whole patchset is easier to understand / cleaner by adjusting the
-dependencies as I have suggested. That being said, I agree that it is
-the type of thing that can be more a matter of personal preference. I
-do agree that, even if you don't take my suggestion of adjusting the
-dependencies, the end result of your patchset still makes things
-better than they were.
+- Arnaldo
+ 
+> Signed-off-by: Mingtong Bao <baomingtong001@208suo.com>
+> ---
+>  tools/perf/util/parse-events.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 629f7bd9fd59..42f84f61fabc 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1463,7 +1463,7 @@ static int __parse_events_add_numeric(struct
+> parse_events_state *parse_state,
+>      if (extended_type && (type == PERF_TYPE_HARDWARE || type ==
+> PERF_TYPE_HW_CACHE)) {
+>          assert(perf_pmus__supports_extended_type());
+>          attr.config |= (u64)extended_type << PERF_PMU_TYPE_SHIFT;
+> -    };
+> +    }
+> 
+>      if (head_config) {
+>          if (config_attr(&attr, head_config, parse_state->error,
 
-...so if you really feel strongly that things are more understandable
-with the dependencies specified as you have, I won't stand in the way.
-I still think you need a v2, though, just to address other nits.
+-- 
 
--Doug
+- Arnaldo
