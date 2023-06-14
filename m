@@ -2,344 +2,241 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2D3EB64D8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 20:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F998EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 22:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238478AbjFNUjB (ORCPT
+        id S235623AbjFNWD7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 16:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55786 "EHLO
+        Wed, 14 Jun 2023 18:03:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237070AbjFNUiy (ORCPT
+        with ESMTP id S229837AbjFNWD6 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 16:38:54 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DBEB269D;
-        Wed, 14 Jun 2023 13:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686775132; x=1718311132;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lx6VvDMUnfTWmZ+SOzq2AS5ZcPMg85xEXw9RWTbNa68=;
-  b=kmDdhhHkJ1o9tN42jP+iZfEi4OogWWvAQ0CPNieh4FPge6MwWQL4xvo0
-   wxuY3wZglgyO0PrOSSYxCOwVfhbbLHd0N0RwNgticiKnLW4Taw03iDpj4
-   s9fEpLtTCG0DxS5LDBIDqFFIWcmLDcEy5VT3g3lW1VXwtBCVZZp5/oCzi
-   H6SffFpbNCbcZZps6u3WS/NH1b624Jceo1lCgjKaNKziTGQXSNLRBzc6c
-   OrIlQFuNcCYudxMJGOg19PjRHUHRYCLqNYeLm+mzNU8gxTscQYJK76QLk
-   O1ZrVJB96jDG8GIC0vfQdF8AIW1gHVvtMN5QXnOhr04l7QdpQ06vjOi3g
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="361209041"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="361209041"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 13:38:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="741963198"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="741963198"
-Received: from a0cec87da3f2.jf.intel.com (HELO worker-node-1.jf.intel.com) ([10.165.55.163])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jun 2023 13:38:51 -0700
-From:   Weilin Wang <weilin.wang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Weilin Wang <weilin.wang@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>
-Subject: [PATCH v3 3/3] perf test: Rerun failed metrics with longer workload
-Date:   Wed, 14 Jun 2023 13:38:24 -0700
-Message-Id: <20230614203824.2895333-4-weilin.wang@intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230614203824.2895333-1-weilin.wang@intel.com>
-References: <CAP-5=fVixzBLLiWnim8x6qcDOKH7uVfEWojTCP_H531Fhy7j-g@mail.gmail.com>
- <20230614203824.2895333-1-weilin.wang@intel.com>
+        Wed, 14 Jun 2023 18:03:58 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE682698
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 15:03:57 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3f98276f89cso30711cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 15:03:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1686780236; x=1689372236;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7hBNzsqDA+ibibh6Quql+9MMSvftWOYFNSxUTSCrW9A=;
+        b=waQ12cIx29ruzEBjWasuZPAkcbUNyESfpjzBm/sofM4Ba5fd80/qEqEH4Vtn2MnlC/
+         McZM0JA2FfDbO9D9AXqxHMs3myciAe8MfnZXprubiA76wy41vYvDD0L/Kc0b9sOVoKXc
+         2VKpI5gWnv7/meQpohmXNBqKvSUF44HRQ2y16Bm1+aShU6ECmhMNDVb1S2ox0WJAUaQE
+         EjVOmvj4B4i2OUvgw9nsc4j1YuwKCpWQaeCYYSW84FtPT66HP1QOGtVvvasaPyKdq5lA
+         dpk7wHCKKjPEeVbhGwL/uUw05HrzlVMF2FYZ7kN61ib1JlXLlREgoD0qQnEpD+k4lxVw
+         z0gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686780236; x=1689372236;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7hBNzsqDA+ibibh6Quql+9MMSvftWOYFNSxUTSCrW9A=;
+        b=hYo+vHvY1jdmiAIyePBfiOK90/zJUkAUYgliQxhmfeZuBN0Gn5VNSm7qT4c3B52aWF
+         2U7O0eIdrTIE11ZhUcvTWBl4knd3trv38dcDgJx+j6dEyslhmL4vJGz+T6k+pOzT57p8
+         Ma1nGkU+nsUP5NseZS7jppsaIoG+QQiNcxy+oqXlwcSWVfTA7lWW5OoCxlx1fZaBqitf
+         5RW7Jj4m593XyXiFyHysOdmILKNjtog8k0PFh+7S4yQJNR3d4d/eAuCEJGmfciVxCB07
+         kgJa96UIqQh+GVDzRIu/ul/x4efZ5orKRhElRfInbeuHj5OaqF7OUbEYUGaYZV3nEKOx
+         K2lw==
+X-Gm-Message-State: AC+VfDzm17dJfVcKCRsMskA9OVbDsu9TrIEj1bmLQdS+3nUD9r9PxHRQ
+        s5p4HPkH9QgSVhMV0CvdpZnwhApLe5rdf7+UGDCCAA==
+X-Google-Smtp-Source: ACHHUZ42EHdoeQupLHIFSGWKznpqdzVEvwG490POEyFe+l0583GQrW1UuyjwqUW9Bb3LViSR+R/UaE2LjNzK64sFqE0=
+X-Received: by 2002:a05:622a:1108:b0:3f8:5b2:aef5 with SMTP id
+ e8-20020a05622a110800b003f805b2aef5mr12457qty.29.1686780235563; Wed, 14 Jun
+ 2023 15:03:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230614151625.2077-1-yangjihong1@huawei.com> <CAP-5=fUf0+7HwZ+AHUR0nRD5QnfPn9_CPMEdJZP_5goPfrPB+Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fUf0+7HwZ+AHUR0nRD5QnfPn9_CPMEdJZP_5goPfrPB+Q@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 14 Jun 2023 15:03:43 -0700
+Message-ID: <CAP-5=fVOXjjcusjv858SOGrnNgE2w2sb7zS=0sZUpdFfR1T_GA@mail.gmail.com>
+Subject: Re: [PATCH] perf top & record: Fix segfault when default cycles event
+ is not supported
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Rerun failed metrics with longer workload to avoid false failure because
-sometimes metric value test fails when running in very short amount of
-time. Skip rerun if equal to or more than 20 metrics fail.
+On Wed, Jun 14, 2023 at 9:18=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> On Wed, Jun 14, 2023 at 8:18=E2=80=AFAM Yang Jihong <yangjihong1@huawei.c=
+om> wrote:
+> >
+> > The perf-record and perf-top call parse_event() to add a cycles event t=
+o
+> > an empty evlist. For the system that does not support hardware cycles
+> > event, such as QEMU, the evlist is empty due to the following code proc=
+ess:
+> >
+> >   parse_event(evlist, "cycles:P" or ""cycles:Pu")
+> >     parse_events(evlist, "cycles:P")
+> >       __parse_events
+> >         ...
+> >         ret =3D parse_events__scanner(str, &parse_state);
+> >         // ret =3D 0
+> >         ...
+> >         ret2 =3D parse_events__sort_events_and_fix_groups()
+> >         if (ret2 < 0)
+> >           return ret;
+> >         // The cycles event is not supported, here ret2 =3D -EINVAL,
+> >         // Here return 0.
+> >         ...
+> >         evlist__splice_list_tail(evlist)
+> >         // The code here does not execute to, so the evlist is still em=
+pty.
+> >
+> > A null pointer occurs when the content in the evlist is accessed later.
+> >
+> > Before:
+> >
+> >   # perf list hw
+> >
+> >   List of pre-defined events (to be used in -e or -M):
+> >
+> >   # perf record true
+> >   libperf: Miscounted nr_mmaps 0 vs 1
+> >   WARNING: No sample_id_all support, falling back to unordered processi=
+ng
+> >   perf: Segmentation fault
+> >   Obtained 1 stack frames.
+> >   [0xc5beff]
+> >   Segmentation fault
+> >
+> > Solution:
+> >   If cycles event is not supported, try to fall back to cpu-clock event=
+.
+> >
+> > After:
+> >   # perf record true
+> >   [ perf record: Woken up 1 times to write data ]
+> >   [ perf record: Captured and wrote 0.006 MB perf.data ]
+> >   #
+> >
+> > Fixes: 7b100989b4f6 ("perf evlist: Remove __evlist__add_default")
+> > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>
+> Thanks, useful addition. The cpu-clock fall back wasn't present before
+> 7b100989b4f6 so is the fixes tag correct?
 
-Signed-off-by: Weilin Wang <weilin.wang@intel.com>
----
- .../tests/shell/lib/perf_metric_validation.py | 129 +++++++++++-------
- 1 file changed, 83 insertions(+), 46 deletions(-)
+Hmm... it should be coming from evsel__fallback:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/util/evsel.c?h=3Dtmp.perf-tools-next#n2840
+so we shouldn't duplicate that logic. The question is why we're not
+doing the fallback.
 
-diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
-index 3c3a9b4f8b82..50a34a9cc040 100644
---- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-+++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-@@ -11,8 +11,9 @@ class Validator:
-         self.rulefname = rulefname
-         self.reportfname = reportfname
-         self.rules = None
--        self.collectlist=metrics
--        self.metrics = set(metrics)
-+        self.collectlist:str = metrics
-+        self.metrics = self.__set_metrics(metrics)
-+        self.skiplist = set()
-         self.tolerance = t
- 
-         self.workloads = [x for x in workload.split(",") if x]
-@@ -41,6 +42,12 @@ class Validator:
-         self.debug = debug
-         self.fullrulefname = fullrulefname
- 
-+    def __set_metrics(self, metrics=''):
-+        if metrics != '':
-+            return set(metrics.split(","))
-+        else:
-+            return set()
-+
-     def read_json(self, filename: str) -> dict:
-         try:
-             with open(Path(filename).resolve(), "r") as f:
-@@ -113,7 +120,7 @@ class Validator:
-         All future test(s) on this metric will fail.
- 
-         @param name: name of the metric
--        @returns: list with value found in self.results; list is empty when not value found.
-+        @returns: list with value found in self.results; list is empty when value is not found.
-         """
-         results = []
-         data = self.results[ridx] if ridx in self.results else self.results[0]
-@@ -123,7 +130,6 @@ class Validator:
-             elif name.replace('.', '1').isdigit():
-                 results.append(float(name))
-             else:
--                self.errlist.append("Metric '%s' is not collected or the value format is incorrect"%(name))
-                 self.ignoremetrics.add(name)
-         return results
- 
-@@ -138,27 +144,32 @@ class Validator:
-         Failure: when metric value is negative or not provided.
-         Metrics with negative value will be added into the self.failtests['PositiveValueTest'] and self.ignoremetrics.
-         """
--        negmetric = set()
--        missmetric = set()
-+        negmetric = dict()
-         pcnt = 0
-         tcnt = 0
-+        rerun = list()
-         for name, val in self.get_results().items():
--            if val is None or val == '':
--                missmetric.add(name)
--                self.errlist.append("Metric '%s' is not collected"%(name))
--            elif val < 0:
--                negmetric.add("{0}(={1:.4f})".format(name, val))
--                self.collectlist[0].append(name)
-+            if val < 0:
-+                negmetric[name] = val
-+                rerun.append(name)
-             else:
-                 pcnt += 1
-             tcnt += 1
-+        if len(rerun) > 0 and len(rerun) < 20:
-+            second_results = dict()
-+            self.second_test(rerun, second_results)
-+            for name, val in second_results.items():
-+                if name not in negmetric: continue
-+                if val >= 0:
-+                    del negmetric[name]
-+                    pcnt += 1
- 
-         self.failtests['PositiveValueTest']['Total Tests'] = tcnt
-         self.failtests['PositiveValueTest']['Passed Tests'] = pcnt
--        if len(negmetric) or len(missmetric)> 0:
--            self.ignoremetrics.update(negmetric)
--            self.ignoremetrics.update(missmetric)
--            self.failtests['PositiveValueTest']['Failed Tests'].append({'NegativeValue':list(negmetric), 'MissingValue':list(missmetric)})
-+        if len(negmetric.keys()):
-+            self.ignoremetrics.update(negmetric.keys())
-+            negmessage = ["{0}(={1:.4f})".format(name, val) for name, val in negmetric.items()]
-+            self.failtests['PositiveValueTest']['Failed Tests'].append({'NegativeValue': negmessage})
- 
-         return
- 
-@@ -259,21 +270,36 @@ class Validator:
-         metrics = rule['Metrics']
-         passcnt = 0
-         totalcnt = 0
--        faillist = []
-+        faillist = list()
-+        failures = dict()
-+        rerun = list()
-         for m in metrics:
-             totalcnt += 1
-             result = self.get_value(m['Name'])
--            if len(result) > 0 and self.check_bound(result[0], lbv, ubv, t):
-+            if len(result) > 0 and self.check_bound(result[0], lbv, ubv, t) or m['Name'] in self.skiplist:
-                 passcnt += 1
-             else:
--                faillist.append({'MetricName':m['Name'], 'CollectedValue':result})
--                self.collectlist[0].append(m['Name'])
-+                failures[m['Name']] = result
-+                rerun.append(m['Name'])
-+
-+        if len(rerun) > 0 and len(rerun) < 20:
-+            second_results = dict()
-+            self.second_test(rerun, second_results)
-+            for name, val in second_results.items():
-+                if name not in failures: continue
-+                if self.check_bound(val, lbv, ubv, t):
-+                    passcnt += 1
-+                    del failures[name]
-+                else:
-+                    failures[name] = val
-+                    self.results[0][name] = val
- 
-         self.totalcnt += totalcnt
-         self.passedcnt += passcnt
-         self.failtests['SingleMetricTest']['Total Tests'] += totalcnt
-         self.failtests['SingleMetricTest']['Passed Tests'] += passcnt
--        if len(faillist) != 0:
-+        if len(failures.keys()) != 0:
-+            faillist = [{'MetricName':name, 'CollectedValue':val} for name, val in failures.items()]
-             self.failtests['SingleMetricTest']['Failed Tests'].append({'RuleIndex':rule['RuleIndex'],
-                                                                        'RangeLower': rule['RangeLower'],
-                                                                        'RangeUpper': rule['RangeUpper'],
-@@ -316,7 +342,7 @@ class Validator:
-         return True
- 
-     # Start of Collector and Converter
--    def convert(self, data: list, idx: int):
-+    def convert(self, data: list, metricvalues:dict):
-         """
-         Convert collected metric data from the -j output to dict of {metric_name:value}.
-         """
-@@ -326,20 +352,29 @@ class Validator:
-                 if "metric-unit" in result and result["metric-unit"] != "(null)" and result["metric-unit"] != "":
-                     name = result["metric-unit"].split("  ")[1] if len(result["metric-unit"].split("  ")) > 1 \
-                         else result["metric-unit"]
--                    if idx not in self.results: self.results[idx] = dict()
--                    self.results[idx][name.lower()] = float(result["metric-value"])
-+                    metricvalues[name.lower()] = float(result["metric-value"])
-             except ValueError as error:
-                 continue
-         return
- 
--    def collect_perf(self, data_file: str, workload: str):
-+    def _run_perf(self, metric, workload: str):
-+        tool = 'perf'
-+        command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
-+        wl = workload.split()
-+        command.extend(wl)
-+        print(" ".join(command))
-+        cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
-+        data = [x+'}' for x in cmd.stderr.split('}\n') if x]
-+        return data
-+
-+
-+    def collect_perf(self, workload: str):
-         """
-         Collect metric data with "perf stat -M" on given workload with -a and -j.
-         """
-         self.results = dict()
--        tool = 'perf'
-         print(f"Starting perf collection")
--        print(f"Workload: {workload}")
-+        print(f"Long workload: {workload}")
-         collectlist = dict()
-         if self.collectlist != "":
-             collectlist[0] = {x for x in self.collectlist.split(",")}
-@@ -353,17 +388,20 @@ class Validator:
-                     collectlist[rule["RuleIndex"]] = [",".join(list(set(metrics)))]
- 
-         for idx, metrics in collectlist.items():
--            if idx == 0: wl = "sleep 0.5".split()
--            else: wl = workload.split()
-+            if idx == 0: wl = "true"
-+            else: wl = workload
-             for metric in metrics:
--                command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
--                command.extend(wl)
--                print(" ".join(command))
--                cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
--                data = [x+'}' for x in cmd.stderr.split('}\n') if x]
--                self.convert(data, idx)
--        self.collectlist = dict()
--        self.collectlist[0] = list()
-+                data = self._run_perf(metric, wl)
-+                if idx not in self.results: self.results[idx] = dict()
-+                self.convert(data, self.results[idx])
-+        return
-+
-+    def second_test(self, collectlist, second_results):
-+        workload = self.workloads[self.wlidx]
-+        for metric in collectlist:
-+            data = self._run_perf(metric, workload)
-+            self.convert(data, second_results)
-+
-     # End of Collector and Converter
- 
-     # Start of Rule Generator
-@@ -381,7 +419,7 @@ class Validator:
-                 if 'MetricName' not in m:
-                     print("Warning: no metric name")
-                     continue
--                name = m['MetricName']
-+                name = m['MetricName'].lower()
-                 self.metrics.add(name)
-                 if 'ScaleUnit' in m and (m['ScaleUnit'] == '1%' or m['ScaleUnit'] == '100%'):
-                     self.pctgmetrics.add(name.lower())
-@@ -391,14 +429,12 @@ class Validator:
- 
-         return
- 
--    def remove_unsupported_rules(self, rules, skiplist: set = None):
--        for m in skiplist:
--            self.metrics.discard(m)
-+    def remove_unsupported_rules(self, rules):
-         new_rules = []
-         for rule in rules:
-             add_rule = True
-             for m in rule["Metrics"]:
--                if m["Name"] not in self.metrics:
-+                if m["Name"] in self.skiplist or m["Name"] not in self.metrics:
-                     add_rule = False
-                     break
-             if add_rule:
-@@ -415,15 +451,15 @@ class Validator:
-         """
-         data = self.read_json(self.rulefname)
-         rules = data['RelationshipRules']
--        skiplist = set(data['SkipList'])
--        self.rules = self.remove_unsupported_rules(rules, skiplist)
-+        self.skiplist = set([name.lower() for name in data['SkipList']])
-+        self.rules = self.remove_unsupported_rules(rules)
-         pctgrule = {'RuleIndex':0,
-                     'TestType':'SingleMetricTest',
-                     'RangeLower':'0',
-                     'RangeUpper': '100',
-                     'ErrorThreshold': self.tolerance,
-                     'Description':'Metrics in percent unit have value with in [0, 100]',
--                    'Metrics': [{'Name': m} for m in self.pctgmetrics]}
-+                    'Metrics': [{'Name': m.lower()} for m in self.pctgmetrics]}
-         self.rules.append(pctgrule)
- 
-         # Re-index all rules to avoid repeated RuleIndex
-@@ -479,8 +515,9 @@ class Validator:
-             self.parse_perf_metrics()
-         self.create_rules()
-         for i in range(0, len(self.workloads)):
-+            self.wlidx = i
-             self._init_data()
--            self.collect_perf(self.datafname, self.workloads[i])
-+            self.collect_perf(self.workloads[i])
-             # Run positive value test
-             self.pos_val_test()
-             for r in self.rules:
--- 
-2.39.1
+Thanks,
+Ian
 
+> Wrt segv, I'm beginning to think that we should always forcibly create
+> a core PMU even if we can't find one one in sysfs, my guess is that is
+> what triggers the segv.
+>
+> evlist__add_default doesn't really explain what the function is doing
+> and default can have >1 meaning. Perhaps, evlist__add_cycles.
+>
+> Thanks,
+> Ian
+>
+> > ---
+> >  tools/perf/builtin-record.c |  4 +---
+> >  tools/perf/builtin-top.c    |  3 +--
+> >  tools/perf/util/evlist.c    | 18 ++++++++++++++++++
+> >  tools/perf/util/evlist.h    |  1 +
+> >  4 files changed, 21 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+> > index aec18db7ff23..29ae2b84a63a 100644
+> > --- a/tools/perf/builtin-record.c
+> > +++ b/tools/perf/builtin-record.c
+> > @@ -4161,9 +4161,7 @@ int cmd_record(int argc, const char **argv)
+> >                 record.opts.tail_synthesize =3D true;
+> >
+> >         if (rec->evlist->core.nr_entries =3D=3D 0) {
+> > -               bool can_profile_kernel =3D perf_event_paranoid_check(1=
+);
+> > -
+> > -               err =3D parse_event(rec->evlist, can_profile_kernel ? "=
+cycles:P" : "cycles:Pu");
+> > +               err =3D evlist__add_default(rec->evlist);
+> >                 if (err)
+> >                         goto out;
+> >         }
+> > diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> > index c363c04e16df..798cb9252a5f 100644
+> > --- a/tools/perf/builtin-top.c
+> > +++ b/tools/perf/builtin-top.c
+> > @@ -1665,8 +1665,7 @@ int cmd_top(int argc, const char **argv)
+> >                 goto out_delete_evlist;
+> >
+> >         if (!top.evlist->core.nr_entries) {
+> > -               bool can_profile_kernel =3D perf_event_paranoid_check(1=
+);
+> > -               int err =3D parse_event(top.evlist, can_profile_kernel =
+? "cycles:P" : "cycles:Pu");
+> > +               int err =3D evlist__add_default(top.evlist);
+> >
+> >                 if (err)
+> >                         goto out_delete_evlist;
+> > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> > index 7ef43f72098e..60efa762405e 100644
+> > --- a/tools/perf/util/evlist.c
+> > +++ b/tools/perf/util/evlist.c
+> > @@ -287,6 +287,24 @@ struct evsel *evlist__add_aux_dummy(struct evlist =
+*evlist, bool system_wide)
+> >         return evsel;
+> >  }
+> >
+> > +int evlist__add_default(struct evlist *evlist)
+> > +{
+> > +       bool can_profile_kernel;
+> > +       int err;
+> > +
+> > +       can_profile_kernel =3D perf_event_paranoid_check(1);
+> > +       err =3D parse_event(evlist, can_profile_kernel ? "cycles:P" : "=
+cycles:Pu");
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       if (!evlist->core.nr_entries) {
+> > +               pr_debug("The cycles event is not supported, trying to =
+fall back to cpu-clock event\n");
+> > +               return parse_event(evlist, "cpu-clock");
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> >  #ifdef HAVE_LIBTRACEEVENT
+> >  struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool sys=
+tem_wide)
+> >  {
+> > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> > index 664c6bf7b3e0..47eea809ee91 100644
+> > --- a/tools/perf/util/evlist.h
+> > +++ b/tools/perf/util/evlist.h
+> > @@ -116,6 +116,7 @@ int arch_evlist__cmp(const struct evsel *lhs, const=
+ struct evsel *rhs);
+> >
+> >  int evlist__add_dummy(struct evlist *evlist);
+> >  struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system=
+_wide);
+> > +int evlist__add_default(struct evlist *evlist);
+> >  static inline struct evsel *evlist__add_dummy_on_all_cpus(struct evlis=
+t *evlist)
+> >  {
+> >         return evlist__add_aux_dummy(evlist, true);
+> > --
+> > 2.30.GIT
+> >
