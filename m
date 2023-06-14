@@ -2,88 +2,99 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0435CEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 02:49:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC77EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 02:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242411AbjFNCtA (ORCPT
+        id S233732AbjFNC7T (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 22:49:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37210 "EHLO
+        Tue, 13 Jun 2023 22:59:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242313AbjFNCso (ORCPT
+        with ESMTP id S233382AbjFNC7T (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 22:48:44 -0400
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A37F1FC1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 19:48:16 -0700 (PDT)
-Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1b3a9eae57cso27193325ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 19:48:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686710896; x=1689302896;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=k0YlFQAyWxbuL4Zsr4kr8EBosxhqQEgpBKxBIFTH5hE=;
-        b=KejiIVIHfhPCnwN1mYw9NB3AagkSdpS+LUX00U7yMb0BZFE8CAriat8e/7Pa/YmPDW
-         7N4n4SDA+y19EFfKUce9zSP0awfJ8ydt2d7Y4Kn4uTnseeQ/YMNbeH1XZjLv8FDsnemk
-         JmhfAvWtrlCE9jXrHErOgjxgUJ3PIQHY3zHTXLbGNjnN/WdwwKw9HiG+FPJpcIfkZ0uX
-         s8373Tzs4x5ddcaVnudyeXZ/ZiYzZO0c9sDHjkkJDR17NATD7IMBRjcnmQ8Z25j9+/Dg
-         v/x/lJHFeLdQqBBmzB6QX/5FmhpF9xDtm3cJJad9p8SfCWJLel/d7qKqmMsimtUTpcT9
-         byKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686710896; x=1689302896;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k0YlFQAyWxbuL4Zsr4kr8EBosxhqQEgpBKxBIFTH5hE=;
-        b=lwLU7wnHJbVgNPeMG+s+tznObfkXXHQjzgXIZFP+DMW24jvpnQSt6ArbBkVsa73mpv
-         l96XV94YFHzuTakzQklLiu5KhG34oia8Lyurvz5vDCEhGZeH6BB5QnHAxuehXmqn1Ser
-         htBi7vU7Yqwh8dseXicZz42khqeSXw8i2s3lUSaE90IHH3mUnpJjQetWKUaXQ8Mc9qH/
-         MWwhING0w331ud4VyC1SlvgdnF67vl04zi0vWszEPKRMeqGGJQVTiS6K0z26n1U7Rng0
-         tuDqJHdqfiHtjU9nonnP3I0snpmA7K7axMkEzVvl2Sg+9RYtYzQbX7G2KkYxG2aHgv5U
-         oXZw==
-X-Gm-Message-State: AC+VfDxeDZBT69FE0z+CY9IQs37lBuY3bhhgbLRPQQm5VFKLI3g2k5TI
-        Ipw93RPhu9On6We9wTjxVcSwuw==
-X-Google-Smtp-Source: ACHHUZ6ErTAXlm3FfgIHNOscl4ATQNoo6KtiqunTj/PImDO4p4fi/ERgK1MRsNStbB3teZwD3dotxA==
-X-Received: by 2002:a17:902:e744:b0:1b3:c4c1:ec4e with SMTP id p4-20020a170902e74400b001b3c4c1ec4emr402092plf.30.1686710895980;
-        Tue, 13 Jun 2023 19:48:15 -0700 (PDT)
-Received: from leoy-huanghe.lan (211-75-219-201.hinet-ip.hinet.net. [211.75.219.201])
-        by smtp.gmail.com with ESMTPSA id r20-20020a170902be1400b001a9b29b6759sm10964697pls.183.2023.06.13.19.48.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jun 2023 19:48:15 -0700 (PDT)
-Date:   Wed, 14 Jun 2023 10:48:10 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
-        irogers@google.com, namhyung@kernel.org, ravi.bangoria@amd.com,
-        john.g.garry@oracle.com, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
-        Sourabh Jain <sourabhjain@linux.ibm.com>
-Subject: Re: [PATCH 01/17] perf: get rid of unused import
-Message-ID: <20230614024810.GM217089@leoy-huanghe.lan>
-References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
- <20230613164145.50488-2-atrajeev@linux.vnet.ibm.com>
- <ZIjJYCL38UX9FIl4@kernel.org>
- <20230614015914.GL217089@leoy-huanghe.lan>
- <ZIknI2imecS5doHN@kernel.org>
+        Tue, 13 Jun 2023 22:59:19 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ABCA3CE;
+        Tue, 13 Jun 2023 19:59:17 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE9871FB;
+        Tue, 13 Jun 2023 20:00:01 -0700 (PDT)
+Received: from [10.163.46.15] (unknown [10.163.46.15])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D9DB3F663;
+        Tue, 13 Jun 2023 19:59:12 -0700 (PDT)
+Message-ID: <36489061-d646-ab9c-6365-d5f7e8ed5bd5@arm.com>
+Date:   Wed, 14 Jun 2023 08:29:10 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZIknI2imecS5doHN@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH V11 02/10] arm64/perf: Add BRBE registers and fields
+Content-Language: en-US
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+References: <20230531040428.501523-1-anshuman.khandual@arm.com>
+ <20230531040428.501523-3-anshuman.khandual@arm.com>
+ <ZIiZA+4G6n/mUZeL@FVFF77S0Q05N.cambridge.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ZIiZA+4G6n/mUZeL@FVFF77S0Q05N.cambridge.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 11:34:11PM -0300, Arnaldo Carvalho de Melo wrote:
 
-[...]
 
-> > Since have applied this patch, it's no need to give my review tag :)
+On 6/13/23 21:57, Mark Rutland wrote:
+> On Wed, May 31, 2023 at 09:34:20AM +0530, Anshuman Khandual wrote:
+>> This adds BRBE related register definitions and various other related field
+>> macros there in. These will be used subsequently in a BRBE driver which is
+>> being added later on.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Tested-by: James Clark <james.clark@arm.com>
+>> Reviewed-by: Mark Brown <broonie@kernel.org>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/include/asm/sysreg.h | 103 +++++++++++++++++++++
+>>  arch/arm64/tools/sysreg         | 159 ++++++++++++++++++++++++++++++++
+>>  2 files changed, 262 insertions(+)
 > 
-> No, I usually can  add a Reviewed-by tag even after having applied it to
-> my local tree, as I still need to run tests before making it available
-> via perf-tools-next, when I should not make any further changes.
+>> +SysregFields BRBINFx_EL1
+> 
+>> +Enum	1:0	VALID
+>> +	0b00	NONE
+>> +	0b01	TARGET
+>> +	0b10	SOURCE
+>> +	0b11	FULL
+>> +EndEnum
+> 
+> This looks correct...
+> 
+> [...]
+> 
+>> +Sysreg	BRBINFINJ_EL1	2	1	9	1	0
+> 
+>> +Enum	1:0	VALID
+>> +	0b00	NONE
+>> +	0b01	TARGET
+>> +	0b10	SOURCE
+>> +	0b00	FULL
+>> +EndEnum
+> 
+> ... but this clearly isn't.
 
-Understand now.  Here is my review tag:
-
-Reviewed-by: Leo Yan <leo.yan@linaro.org>
+Fixed VALID_FULL as 0b11.
