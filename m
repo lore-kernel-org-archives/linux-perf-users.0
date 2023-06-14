@@ -2,183 +2,139 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADDEEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 16:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 134CDEB64D8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 17:01:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232129AbjFNQko (ORCPT
+        id S230410AbjFNRBX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 12:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52284 "EHLO
+        Wed, 14 Jun 2023 13:01:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235966AbjFNQkS (ORCPT
+        with ESMTP id S229651AbjFNRBW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 12:40:18 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF421EC
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 09:40:17 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-33d928a268eso227895ab.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 09:40:17 -0700 (PDT)
+        Wed, 14 Jun 2023 13:01:22 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 023DA1FF7
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 10:01:21 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1b1b51ec3e9so5085ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 10:01:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686760817; x=1689352817;
+        d=google.com; s=20221208; t=1686762080; x=1689354080;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ruP+GyZYH4LxbCyC+eS55NOUZ4Djslwx0JaDdpKV0nA=;
-        b=xl+MNLTWWBgUoNFwnzqJGkdMUBpP9M39OjxechrhSjIVAXxOZN/KUacf5TY20Sv772
-         l9JBQucWaC5obuBxXoe42aeTZKU3AZlKVidoQtXzU5nWwDBeJiIDvlzYEgIrIve2qiMo
-         d3YnUOaD+JN2kdffImZ3PhuKkHGUlMCeRrMy3YGUiSM/MpxCOqdlo96bHNkuk6DjU9pF
-         u5gTdUPPOmJicj3v092hl82TpDs7lM/uCMNTk4R3Fjt5hni6+H7PyGComKNVHjVDHoXz
-         tkB3fMVTxnEXu0+mnc5EtoKfqbdJE9cVQORww7zRUut2kyixh/4pam2JINB2aYwROPw9
-         b2Sg==
+        bh=u2kXI5LNkO41mLohZbiucFhhM31sH24JRgQf7SGPXRE=;
+        b=HeL+ntfJBTcOvMFFBDo57E27h5R0X1NWCpeV0apMB7D9d1l+gOHc9Ldtc5hc9UNTO7
+         BJJt3gp13TgdGZ9RG1QZlDe6KCd4GxzT8y7r41xInAwyWQnfsTq7L9kCVee34CdoxfJ+
+         MXnBQSZmBM5/CTrLivrhG+Uh5H0vEKR/KsbCc8QmRn6dPj7kTEdH3flTmkQoqRkqX8Xw
+         MZ6A9SpMqL+MnTpvXT2TZofhajzPS3Ojf8VfGaIpNHLT+e3NcPLFFFffYAyGppzCyOd1
+         fvhGH6Xnq1QNT4q+2Y8FS2evGsHAEdLcAtGhVjKyggRu98+4FM9iZ1dN/g5PhB6hI566
+         pJTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686760817; x=1689352817;
+        d=1e100.net; s=20221208; t=1686762080; x=1689354080;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ruP+GyZYH4LxbCyC+eS55NOUZ4Djslwx0JaDdpKV0nA=;
-        b=QMj2FX6Nm5J1OsG3zoTHf1Lw4Oc3qXo9gpHGJGcN9Z2XMAwngmuIOh6lM3JrrI2CNT
-         1ws+LzIbhjpeA89xur7qg/z5D8K7i2Pvs1DAFBagFIa095QS2qDrfIEkKo2pFxrmRe4Z
-         4ZphvsqQS58egaf3bnOUuhHe99b3QHa6zPhV4dElrwNu7NKv6l8+uQJTCmmztxSXatt6
-         jm+2UKjfmxRhRzlwfpj4PzaHaTED7653DrU9Lk0WBanhecgQ3fvwSu9gAddoBSJ16gWa
-         U2XJmfGkOYqZ7jOnmxshk2FY8zPyt3wawq5j8JCehSp5yLsh83jan1/XcqSMnWdiIEru
-         8x4Q==
-X-Gm-Message-State: AC+VfDwfma9OZ37GkpdoxDf3kPH745jOQlpujz1JWIVWbaJEE1xZc+tz
-        zpHPI9tJNSn+tde5CGZQsqDlR53P+1muaDKXt8pYTA==
-X-Google-Smtp-Source: ACHHUZ4ExjVj5y92ljUlZnjZOFn5rxTIFsaGIRm2Qgu5g4Tt7LrdpcwgwQ1/+kAqzKKWJz7KKHourmLP6Nfcb/+fJP8=
-X-Received: by 2002:a05:6e02:1aad:b0:33b:4a8c:2147 with SMTP id
- l13-20020a056e021aad00b0033b4a8c2147mr260935ilv.8.1686760816976; Wed, 14 Jun
- 2023 09:40:16 -0700 (PDT)
+        bh=u2kXI5LNkO41mLohZbiucFhhM31sH24JRgQf7SGPXRE=;
+        b=iMKTuDSBfm8Aqjk/oSroPiyBDMi/4tNsHqFcH67iAp5JVyf6VCgFrCRHUIL8QM2Ab3
+         hbA+i42NROFUwRj64yczHVeRXtAzTKRR2VOoxjU4S4OCvwQWxzBRdYBDnuwIgHYlCb/E
+         NuLWMxK1dXi2FkDbPVqkTghioW55fhr6Fguq2CVGd9Wl08llnJP6LDe3AnV4PS0KV/E7
+         AmNNaY4thc8eur+fT3YxgLJr3kvh1KPCl6SfLwX1MOQYJC96jtaCPQovaIFaNUgv/4X6
+         acRRs3fUcrJw86SvfiNUybjxqaWmGp3wuJtVpjGmp/c2P0sPFqRbYTCaCtFyeDa/syo/
+         H15w==
+X-Gm-Message-State: AC+VfDwr2j5xR8IZhSEmTgm8GcD/nDReFZbObnwv/F/KRo5BokW/MMVh
+        8kDpGBnD3ZOvJl6oEauLVNqZYb1BAGSfBJqUM4hb+auR7+p1XCP99tHA4Q==
+X-Google-Smtp-Source: ACHHUZ5B/DaAcV4fbckyJd2R9kDuCJQl5kiBRpKXLS4cacoS8fEKoxQaZSafsbtdtzWYpp0ekFVusA9NhZQclOHBsF0=
+X-Received: by 2002:a17:903:18e:b0:1b0:cea:2952 with SMTP id
+ z14-20020a170903018e00b001b00cea2952mr200942plg.25.1686762079696; Wed, 14 Jun
+ 2023 10:01:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230614090710.680330-1-sandipan.das@amd.com>
-In-Reply-To: <20230614090710.680330-1-sandipan.das@amd.com>
+References: <CAP-5=fU10YCxZfq=dOUUPR0dRusbq=vzp5CqsOuz1aLVY16KAw@mail.gmail.com>
+ <CAP-5=fWOCE6+9MuiFziHz1o6Ej-FTDJa1fnkhYpifz7Rtazk8Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fWOCE6+9MuiFziHz1o6Ej-FTDJa1fnkhYpifz7Rtazk8Q@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 14 Jun 2023 09:40:05 -0700
-Message-ID: <CAP-5=fV9Fx99QmKWSqqDK23vF0dcTS+g-r-9zr6q0A2ZXWmCBw@mail.gmail.com>
-Subject: Re: [PATCH] perf test: Retry without grouping for all metrics test
-To:     Sandipan Das <sandipan.das@amd.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, adrian.hunter@intel.com,
-        kjain@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        barnali@linux.ibm.com, ayush.jain3@amd.com, ananth.narayan@amd.com,
-        ravi.bangoria@amd.com, santosh.shukla@amd.com
+Date:   Wed, 14 Jun 2023 10:01:08 -0700
+Message-ID: <CAP-5=fXf-FmKb=D4h5VgxQ=w3T3+Nn3AP4ExR9YjnKFB=4m7bA@mail.gmail.com>
+Subject: Re: Linux Perf Tool Office Hours
+To:     linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Anup Sharma <anupnewsmail@gmail.com>
+Cc:     Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 2:07=E2=80=AFAM Sandipan Das <sandipan.das@amd.com>=
- wrote:
->
-> There are cases where a metric uses more events than the number of
-> counters. E.g. AMD Zen, Zen 2 and Zen 3 processors have four data fabric
-> counters but the "nps1_die_to_dram" metric has eight events. By default,
-> the constituent events are placed in a group. Since the events cannot be
-> scheduled at the same time, the metric is not computed. The all metrics
-> test also fails because of this.
+Hi,
 
-Thanks Sandipan. So this is exposing a bug in the AMD data fabric PMU
-driver. When the events are added the driver should create a fake PMU,
-check that adding the group is valid and if not fail. The failure is
-picked up by the tool and it will remove the group.
+Office hours reminder. A chance to discuss topics of the day and for
+GSoC contributor sync.
 
-I appreciate the need for a time machine to make such a fix work. To
-workaround the issue with the metrics add:
-"MetricConstraint": "NO_GROUP_EVENTS",
-to each metric in the json.
-
-> Before announcing failure, the test can try multiple options for each
-> available metric. After system-wide mode fails, retry once again with
-> the "--metric-no-group" option.
->
-> E.g.
->
->   $ sudo perf test -v 100
->
-> Before:
->
->   100: perf all metrics test                                           :
->   --- start ---
->   test child forked, pid 672731
->   Testing branch_misprediction_ratio
->   Testing all_remote_links_outbound
->   Testing nps1_die_to_dram
->   Metric 'nps1_die_to_dram' not printed in:
->   Error:
->   Invalid event (dram_channel_data_controller_4) in per-thread mode, enab=
-le system wide with '-a'.
-
-This error doesn't relate to grouping, so I'm confused about having it
-in the commit message, aside from the test failure.
+Linux Perf Tool Office Hours
+Thursday, June 15 =C2=B7 9:00 =E2=80=93 9:45am
+Time zone: America/Los_Angeles
+Google Meet joining info
+Video call link: https://meet.google.com/jds-asbo-day
+Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 892=
+=E2=80=AC#
+More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
 
 Thanks,
 Ian
 
->   Testing macro_ops_dispatched
->   Testing all_l2_cache_accesses
->   Testing all_l2_cache_hits
->   Testing all_l2_cache_misses
->   Testing ic_fetch_miss_ratio
->   Testing l2_cache_accesses_from_l2_hwpf
->   Testing l2_cache_misses_from_l2_hwpf
->   Testing op_cache_fetch_miss_ratio
->   Testing l3_read_miss_latency
->   Testing l1_itlb_misses
->   test child finished with -1
->   ---- end ----
->   perf all metrics test: FAILED!
+On Wed, Jun 7, 2023 at 9:14=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
 >
-> After:
+> Hi,
 >
->   100: perf all metrics test                                           :
->   --- start ---
->   test child forked, pid 672887
->   Testing branch_misprediction_ratio
->   Testing all_remote_links_outbound
->   Testing nps1_die_to_dram
->   Testing macro_ops_dispatched
->   Testing all_l2_cache_accesses
->   Testing all_l2_cache_hits
->   Testing all_l2_cache_misses
->   Testing ic_fetch_miss_ratio
->   Testing l2_cache_accesses_from_l2_hwpf
->   Testing l2_cache_misses_from_l2_hwpf
->   Testing op_cache_fetch_miss_ratio
->   Testing l3_read_miss_latency
->   Testing l1_itlb_misses
->   test child finished with 0
->   ---- end ----
->   perf all metrics test: Ok
+> Office hours and chance for GSoC contributor sync slightly earlier at
+> 9am PT tomorrow:
 >
-> Reported-by: Ayush Jain <ayush.jain3@amd.com>
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-> ---
->  tools/perf/tests/shell/stat_all_metrics.sh | 7 +++++++
->  1 file changed, 7 insertions(+)
+> Linux Perf Tool Office Hours
+> Thursday, June 8 =C2=B7 9:00 =E2=80=93 9:45am
+> Time zone: America/Los_Angeles
+> Google Meet joining info
+> Video call link: https://meet.google.com/jds-asbo-day
+> Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 892=
+=E2=80=AC#
+> More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
 >
-> diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/test=
-s/shell/stat_all_metrics.sh
-> index 54774525e18a..1e88ea8c5677 100755
-> --- a/tools/perf/tests/shell/stat_all_metrics.sh
-> +++ b/tools/perf/tests/shell/stat_all_metrics.sh
-> @@ -16,6 +16,13 @@ for m in $(perf list --raw-dump metrics); do
->    then
->      continue
->    fi
-> +  # Failed again, possibly there are not enough counters so retry system=
- wide
-> +  # mode but without event grouping.
-> +  result=3D$(perf stat -M "$m" --metric-no-group -a sleep 0.01 2>&1)
-> +  if [[ "$result" =3D~ ${m:0:50} ]]
-> +  then
-> +    continue
-> +  fi
->    # Failed again, possibly the workload was too small so retry with some=
-thing
->    # longer.
->    result=3D$(perf stat -M "$m" perf bench internals synthesize 2>&1)
-> --
-> 2.34.1
+> If you'd like to randomly drop in, feel free. An issue I'm keen to
+> discuss is memory usage and memory leaks.
 >
+> Thanks,
+> Ian
+>
+> On Wed, May 31, 2023 at 10:00=E2=80=AFAM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > Hi,
+> >
+> > On Monday the Google Summer-of-Code officially started and Anup is
+> > this summer's contributor to the Linux perf tool! We've found in the
+> > past [1] that having office hours is a good chance for contributors to
+> > sync and also for those interested in the Linux perf tool to also
+> > connect and share their problems and experiences. As such we plan on
+> > running our first office hours for this summer tomorrow, the details
+> > are below:
+> >
+> > Linux Perf Tool Office Hours
+> > Thursday, June 1 =C2=B7 9:30 =E2=80=93 10:30am
+> > Time zone: America/Los_Angeles
+> > Google Meet joining info
+> > Video call link: https://meet.google.com/jds-asbo-day
+> > Or dial: =E2=80=AA(US) +1 458-242-4309=E2=80=AC PIN: =E2=80=AA817 018 8=
+92=E2=80=AC#
+> > More phone numbers: https://tel.meet/jds-asbo-day?pin=3D6629252256983
+> >
+> > Please ask me and I'll be more than happy to add you to the calendar
+> > invite for this. Over the summer we can adjust the timing of the
+> > office hours to maximize participation, etc. so please reach out and
+> > share concerns.
+> >
+> > Thanks,
+> > Ian
+> >
+> > [1] https://lore.kernel.org/linux-perf-users/CAP-5=3DfWiQHvYZp5R=3Duw4x=
+UwBiN1fBLBU8witPkYM+2r8tnYCOg@mail.gmail.com/
