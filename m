@@ -2,194 +2,359 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBC1EB64DB
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 14:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57C8BEB64D8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 14:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243772AbjFNObV (ORCPT
+        id S235625AbjFNO5d (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 10:31:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54438 "EHLO
+        Wed, 14 Jun 2023 10:57:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245436AbjFNObT (ORCPT
+        with ESMTP id S236638AbjFNO5c (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 10:31:19 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9026B26BC;
-        Wed, 14 Jun 2023 07:30:50 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35EDDqZN011686;
-        Wed, 14 Jun 2023 14:30:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=XKfpjj9325wc7Idp8DByKJ4RKzFx4GYMUK9ZJPTZXeY=;
- b=f/4FwFhBIim0mb20UrZXggc2VB+gj2iibUbfhVDxLJ8obIKREPYwDJw0YogkfD0gV1/W
- 83zmZ5YC1A64ARPp61iBlg9aZGJB5JBlUJB2U0U+fpsB5W4TdmMZszTLpTCY6BgigN21
- 485wFhg7Nh485vK1rpDr5A1asVJlt9Z+jbTHSGUKgRfw4ZbCj8Zs8xH6tAyFD+TdQnXl
- v4DMDFJ9po4efDqAs49H5Q/tc0jaKrMb44mYOK1WvDDhGl+FtnTGlDD77yuaxnPlpmmZ
- cjKt2tACBnUZjtn71uPw1LVbMiu7b+6b7FdEaz/hEoQ28j+dGzW7MeLRZBmU4huBnYan XQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3r4gstynbr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Jun 2023 14:30:14 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35EESLoP016206;
-        Wed, 14 Jun 2023 14:30:14 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2045.outbound.protection.outlook.com [104.47.51.45])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3r4fm5nmne-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 14 Jun 2023 14:30:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DF9Fo6GrX8Ed0Vlva2lNgZa6D/6WlgDvDJLZjJSs5Wxx/eD3M0Qix2silsdAS6si1YJhFqE+eNLtsw4Y5CzWI2tyxf3+ls38rupZ0IMoMzf2d0cmoIPheZCC1dpCh+Gd/43fiUN8HkXTip8y6ABVoqoeVqMuyrjl/wvV1Ix3IBoMhmZKz6LrTmZIYVlTGlam98GrxVCK8KVlCQQ3tiVnfFAGou7QS747HvlJuLM+OWRiXc3xQLJn+fqEsQkb++W6TxNH2/Pmz4G85jvoyH8q404dhGWU3JQK23thcJXkCcLTySzD4FEAEx1EeEBu48w6BNvyJoThU5E1xKHLeLdRMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XKfpjj9325wc7Idp8DByKJ4RKzFx4GYMUK9ZJPTZXeY=;
- b=ksuCl+8hNWynmmBsZ6YOrJ4GUhf0dJJJs04L5DlLmuNRz4E40lGnI10aexjLiE00PXO5xLWIlTWwwy2pslUf+UA6AqCERyatDkteeGLPqWshVoEbpa8VlxYLQDA04C1AcGrlqahO81ams71BtPL9tUbhj5MkiMMySFdYNKAxvmrm/Wq2EMekM0CCvDWxTCilD9LdsPipUPg+5Ksjy8ZH3Bx4ro7aG4OMBRYvw4sb1A4IafWkfeTpdI/V9LubGVNZD5ACr4w08/7rVNWhKj0p50hahDnQgvd5aoOMFp3S0Xenb9TZC/32xq5Z1EpNQrr36rJ07JUp0hQ7r7huJTOGmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        Wed, 14 Jun 2023 10:57:32 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766DB1A7
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 07:57:30 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-3f98276f89cso214371cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 07:57:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XKfpjj9325wc7Idp8DByKJ4RKzFx4GYMUK9ZJPTZXeY=;
- b=hcG38u+bO1Z6m3pywXcQ+GsN8rQ3v8TZSOC5acDbacEzMg8or84PiZgqtpGaCTgfVLqLrNeJm0BcCKm55VTekjEb4DTumqmS3AvyA/j+8iVM6ZwCaeOKxYsg/yhqeu81kdC58pLvKvxFh52ayBywJaS0ymrF/G4pthXgvotH8FI=
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
- by DM4PR10MB6110.namprd10.prod.outlook.com (2603:10b6:8:8b::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.28; Wed, 14 Jun
- 2023 14:30:12 +0000
-Received: from DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::e38:5b81:b87f:c1eb]) by DM6PR10MB4313.namprd10.prod.outlook.com
- ([fe80::e38:5b81:b87f:c1eb%7]) with mapi id 15.20.6477.037; Wed, 14 Jun 2023
- 14:30:12 +0000
-Message-ID: <adc68c05-3631-be63-3069-09bebf4956ef@oracle.com>
-Date:   Wed, 14 Jun 2023 15:30:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 4/8] perf vendor events arm64: Add default tags into
- topdown L1 metrics
-Content-Language: en-US
-To:     kan.liang@linux.intel.com, acme@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, irogers@google.com, namhyung@kernel.org,
-        jolsa@kernel.org, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-References: <20230607162700.3234712-1-kan.liang@linux.intel.com>
- <20230607162700.3234712-5-kan.liang@linux.intel.com>
-From:   John Garry <john.g.garry@oracle.com>
-Organization: Oracle Corporation
-In-Reply-To: <20230607162700.3234712-5-kan.liang@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO3P265CA0004.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:bb::9) To DM6PR10MB4313.namprd10.prod.outlook.com
- (2603:10b6:5:212::20)
+        d=google.com; s=20221208; t=1686754649; x=1689346649;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WwEcRzlFxXHK+vcC3gnSqYOFJE4wNjqS53AmFcw7MkM=;
+        b=K1sojI3T8ApKsQgj77IakvDfwe3BhMGmZmgBtDOokrz52vlwRL+k50uBugvJrUsRwl
+         boEJfUBYlurjmAEGNvu+Hz1ssNSe357Ri9LecCuoqcwpT/rBkHyaT62oNzOPhOhtGbbS
+         wgF4Prt41BxhJGEKUOEdkJmC9sz+hvyfaPO+/KQEkiw5OQ5Exc/ysUnCOsqLttYPPDM2
+         BZXRkO44TyuzXhA51+jbVxri95k6+IfV3TULoBUVmGBHsrfUW9xpWZe92feT/aHgUkR6
+         jb3pqODB+f0gnypWhj5qlHGnsxdqWbnuAO3Qy+2GxdTjB5FoyPlRo6Gdbs6JFxGUWXSW
+         pIpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686754649; x=1689346649;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WwEcRzlFxXHK+vcC3gnSqYOFJE4wNjqS53AmFcw7MkM=;
+        b=MepKPw+LRtbEYwRZIxC6CMgtlr6x78Y4DAXILSt8Y86IyyRXrEv0+6y2t8r0520Rp7
+         VvzBddSP5xijFFFjomgnK37s3sS9deOPdLEgn4zqH21keH92tRVwudxdTzaW+V/LaSF2
+         OZzK5EtATfbZlo2KQeB5VujRUUvYivzCfA2l/U4aMJri0eZ97ETzYELEzYBwfQQS+bR6
+         +wzqQtrms5VWBBgfls1n2VK1E+tsxJN94EXaWS9UUm3UdaFJ+al7YIF6RfSZ7Pq9jBae
+         GiiOkVk/G0bRAgVHxXfsLBs8jY+SGKLsIXCgHyJoE2mGgvTPv4wGmaiIAR+wUNSCQET+
+         0ymw==
+X-Gm-Message-State: AC+VfDzvQchrw2SElYQba9QPdNyH2TdUZxAyjQx412eS8WbdgWpjNPId
+        1kkCuLuN4BdIyp3hZnKMhdAJcOAhqIKQVzsuOSZ0h1o8FKrY9AwDQkKU4Q==
+X-Google-Smtp-Source: ACHHUZ71Ckt8LLfgCFLnyBQ5quym+7db7fRO878L3wqcQfT6Nszuoiu6jwilAt7zFjWiKNa8s8Wvzx5x7DjTxM13Xns=
+X-Received: by 2002:a05:622a:15cd:b0:3f8:5b2:aef0 with SMTP id
+ d13-20020a05622a15cd00b003f805b2aef0mr292014qty.24.1686754649444; Wed, 14 Jun
+ 2023 07:57:29 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|DM4PR10MB6110:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5ae64c87-48e7-4dcc-6d43-08db6ce3dcc5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: dxbNIcDLm8VHWbq4NFrxaYaxfCbY/UcY+/b4Gt+AVFmaUXXnHX56pBCkP9lJLn+xSffo8jrcd2gKR4dpIBYo6uL6HhCotc+kcSfLQcLIfSv8MWl66hd0O2tF+dlBn5dFJisOVUiFUgpaLhssrTYhFQkC87h59LyhyXUjuUVHig4mXqgNnbnrQ1vMctlE7lvzZKLzwe6vLRV5snp2VjF0On6hTCG3GXzVbhRK7kS8DNI2cnJTL4yonjUQFfBaftnUmphaQTb8kJhHr9JJejAzGljEZyDaqwGrMnUtgZjkOMNlOA/0GjsD9CbqRh2WBfjeJCWiwNq3qLA4DTjrTBqs3755/jgKS8tYBmGjEPXx1Y88y4qi6GSHxNgwj3z6Q+gpLC/jFCf9tAc19fx7DY4gYMMZ2v/Loq/hP7674Hf7DrPZ5YxVDc2Wwr4YkPT3nKtc7ztvDry9TCHpO/eLGmFQNJXjKAL6l37JLqVn4zS83qhRqaJaU1b5FQyyuqXeVrKFHwpc8hE7tE8GjxldmJVabySUJL/oCEdLWocwImfqGU/gHZKsxQ9n0ujz/vbruQ81fht+lPhUFXgrGHP/+Sbu/Vv3sJPW9TgvOP6+EN8NhL3F4gWIukjotaBULK3WdrpySRXXa53pJnH1gWs1u/6PhRMqT4WLILc1PunftWT/tAM=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(136003)(366004)(346002)(376002)(451199021)(6666004)(478600001)(7416002)(5660300002)(8676002)(8936002)(36756003)(2906002)(4744005)(86362001)(31696002)(66476007)(66556008)(66946007)(4326008)(38100700002)(316002)(921005)(41300700001)(53546011)(26005)(6506007)(6512007)(31686004)(2616005)(186003)(6486002)(36916002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?REY0Z2g1L1FuYVE1RFMwd2p4M2tjS2RHVW5qV3FUQ2k2YzVrMUw4L0VPdnJ0?=
- =?utf-8?B?Y0dQZ1RIM1N5THh1Uk5Za3FYeldzdHhaSXlmQ0RSa25VZWdSZUxTelBzWmU4?=
- =?utf-8?B?R2RLVUs5Z3NaMCtENXpqejZ3aWx2amU3VldDdGRRcEp5VmRVODdpYTE0TzI1?=
- =?utf-8?B?c3lXOTAwbFpoSXc2d2RTTlpjazVrWHZxRVJJeCtqVGI5NS85b25McCtUNi9n?=
- =?utf-8?B?cEw5VDBtT05uQmh4aWRaNTFTbUpZQjVjZEZqbUc5Y1h1eVZtaW1VMVM2TERi?=
- =?utf-8?B?WS9hQyt6OFJOTkxnaVMrU1lTRzVhQWY3YjJMVmp3cFRuQmYzNmRscGtIY1Zk?=
- =?utf-8?B?VytKcHl1QmdmRzR2SW9VZlpyUjFvalBPMEdETXNLcGE5TGxqZk5sd3pJNmhB?=
- =?utf-8?B?WVlER3liUEVUenB1WndFUnlKK2N3ekdwMXVoaWlxTlFFVnd6QzlnVWRFQmRJ?=
- =?utf-8?B?VmcxUWJuVEZKWmZWazhGbnFBemdDa3dkcXErL1JQKytvYXU0Y1RyeUJxbGV1?=
- =?utf-8?B?d3dTVmNrc2NGdlQ2OUgybHN3NFNtZm5BVW1tM2ZCNmgzZTVYZVhwdUNXUC9t?=
- =?utf-8?B?VmhvSkkzNFBMK0hUOEFHUy9OTnh3WHB3djdldzF2VTdhTUNRRXBOZUlNR2xK?=
- =?utf-8?B?ZVVIeThkNmQ3d2NaakNJTGFRME9rdXNxcGZhdkw5aHNnSUdRN1ZVWG1qd1J2?=
- =?utf-8?B?Q3J4ckRkY0tyeGhrWVQrSk5xaDdkYzBvUHBCMmtjMDVYeFpVQkFualV4aGx1?=
- =?utf-8?B?RGRMOGpPWFdSdWJNdXJ6RS9UOFdqZFdRd1g0allBNk9JQURad2ZqMGZ1QTRM?=
- =?utf-8?B?MlpBcWxIRVhncjAzT1VUbnlxS0VzcnpkK3ZqV1I5ZHRTVWhDMkYvQXpLc1hD?=
- =?utf-8?B?ZnkrM2FNeWFmTmJJUFBVMFdWRjJzK3U0WDJ3T2NPSllXdVdiSURpU0VmY3FV?=
- =?utf-8?B?bXM1Qjg2ZXhQK20xQUNLNjJkNWNsdkFZbTlFaUhwd2pvUklibm10VUc4dnJ1?=
- =?utf-8?B?cGg0c1ZRSWxnU05jQ2t2aWtYVXpjVnBMdGNHK2M4VTAwTEpIbXBQeFY2aWVr?=
- =?utf-8?B?bVJGeTRYdU1xSUUydzhpRDVsVHNVY3Y0YThxM25yZ2EwVElRSGxoc3UvNk9i?=
- =?utf-8?B?R0VGV2M3M3JTVXpEakRhU25DNjVTN040c3Bsb3pqKytnZ1d5QnNTK2NXRGZ1?=
- =?utf-8?B?ZHQ2SElhRjJBWkNuUERUTytUNlJ1aVU5d1dJVjU3ZlNSOFRyY3hPTVpITDdD?=
- =?utf-8?B?U1U5MHNmQWNrOGJTZEJJTkpTUDBuV0JhTm1wbVBkNkpSRnlrSVd3ZXhSdWRy?=
- =?utf-8?B?cjlUZVVvRWtQMHFmRExScGRIK0RTdDJQeENjMC9RMi8yMkJqcVB2VTlCRGhk?=
- =?utf-8?B?aWNKNW5rZEZLVGU0MUgrSzVpeStHb0FocWJqd1grSlVQTktOS0laeEpXZlBk?=
- =?utf-8?B?SFBwNCtCNHlXR1NONGIrUzVQWjVKTnREYWYwdllGNHR5MXladWxEM2wwd2kw?=
- =?utf-8?B?TDZmWGRXVXR0VUFMVkFnUlcvbm1PRytJWWFLdzN3dW5SamJjekVqeDBmS1A5?=
- =?utf-8?B?aUZwZHBqS1JERlNrUWRDWFZJNUFwZURuNm91cnJLalhSOTVLUlB5UURMekxE?=
- =?utf-8?B?T3dZd3Y1ZFpzWTdEczFDcmlUTkhaMVJjd2NZeU1OTWhZRkhOb0NTTzB1dXdS?=
- =?utf-8?B?algyVzZyMVVDVlltZTBDMVFzeXU0S0ZTWFgyMndpN3hMZlBuVzl3T0F6Yjh2?=
- =?utf-8?B?N0pFZ1dMbUNtdFJnck1SYWVKVlVGR1B3WStwWTFqYTFpZUVxdFpKUStYSFNx?=
- =?utf-8?B?K21oQzZJRnp6dWhpUEpFeGJzSG9VRlB6bnVFcEl5TXZYeDB6MXU0L0hLM2Nk?=
- =?utf-8?B?dnJrTVVFQTVBbVI3UmkranZYeHFYU0IveTBJKzIrMjBVL2o2bG45YTJwby9k?=
- =?utf-8?B?akNRdVFyL2tNNW5Fb0JxK1hySE5LVHNyaUpVa3dCT2JRSWhIaVNqSUhUWDVm?=
- =?utf-8?B?ZXFUS1F0bFJQM3hhZ280aTBDaHcrS2FxZmlkL2dhMzFGc0FtWEZWTk1vcXNj?=
- =?utf-8?B?RVNURExHUS8wZTRZWXUxMUlFeXYvWE42QXVjWmtDZHl6ZW1LTGZ3eWttMGtn?=
- =?utf-8?Q?fIJC+jfe8x8BgYsp40mjJFnFZ?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?T3dmLzZsUVFHWS81MUJPU1ZMNElhZWdjd3phNlNBL01MY1VuK28zKzV2aWtJ?=
- =?utf-8?B?OGFxaDVDTDc3UzlQb2pXeXNpTC9TRzArOEw1TGEyc2R3R2t0c281VUNLK0JY?=
- =?utf-8?B?aDkzM1ppcnl0MWNtTE9VclBidkVZSnprN3RWYzc3bWRFNHk4Uk10YVQyUDZB?=
- =?utf-8?B?YWtobVFnUXU5VXVHWWxZSnNJeGljZGp6M3J4L3RTV0dQcGlidVZwNHU1TWJX?=
- =?utf-8?B?bzhzR2NDa0dKNlQwQS8rNmVsQXBZWDFUOE8xV2dqNGVuN202SURuM2pNL0Zl?=
- =?utf-8?B?Q25GalgvNG81bTFSV2htbjRFbmtNTitRRjZLaEs5SElTYnhnZ3JMQU4xL0Q1?=
- =?utf-8?B?OFdhTHRUMDh1emtHY0dGSzQ2dnFMWGtaVTFkc2lhdFB3N090Qk5COXptMXRJ?=
- =?utf-8?B?ZFg4VGVUUTAwZUFPVE1pRGxKUy9UcVh5dUpYRFZZRzhHb0M2bEprMHNFQlpR?=
- =?utf-8?B?MklSL3dFajJiQU5rd0l5WEFKakYwbmpUZU0vRGkxZWw4R2JZOTBCL1ZPeHpu?=
- =?utf-8?B?RW5UaTN0R2ptaU5kaDQxOUppUXRqcElSRUNTemNzQjNTMklueUU4N21ZZkls?=
- =?utf-8?B?RmdXb2lqbU90UkRZTGNrNndXeGczYlYzQ1dNOHJZSUNrZWtKNzAxWkFpOFdo?=
- =?utf-8?B?VHVXaTM4Qi9tM0RjbWNBS0s2d2k1dWRWZXJrUXhwWDJGUm9YMkFja3NOaVNZ?=
- =?utf-8?B?ZGtOVmkxS3hENHJ4LzV2WllRc2ppSmRBOEliRmZmaU5iUkxOM0loZlgxb3dx?=
- =?utf-8?B?TlVhWkxNemdlcFNXZzNOeXF2OHpjNWtjVTAxSzJLdDlBM3M1aGNDQ3VlamxJ?=
- =?utf-8?B?SVhOTk9zdUNmUmc5ZCt4MTdPZCtmRVdBSTZBc0k0YVA5VmQxcGpqQ2k5RXhw?=
- =?utf-8?B?M2xISlBqcHhDU1hBTWlkZTQ4eDRHM25XNnVub3RBd2pIOUF1eFdhdzhrK0JB?=
- =?utf-8?B?VWdaeFUrSXhpb0ZRbXJMYTkzK3hVVmdKZjZuQ2NWSkw3YkkvRDFLU2U1eHph?=
- =?utf-8?B?bkFnUlIyWEVwN0RnVzl2UURMQWVua2xkdGVWemFtK25TNGtMcnlkenVxUm1q?=
- =?utf-8?B?OFRPRkNHUWE5WmFWejF3V1RLSnN3MzRoN25pQk42allyL2tJb25QY093N1hK?=
- =?utf-8?B?Mmk2Z1lieHFOaFRFOTBQZm1BSkp1S3lxS3doYTJvOE4rUXFDbnZYK1EzWUNN?=
- =?utf-8?B?dTR0eC9zdDhIdE1GM09kR1ZpajExSk1jSTBrM21RM2pqejFUQzdXcXJGYzR6?=
- =?utf-8?B?akpxMXlZdVpKZGpvTzgzekZHc21JaE9pNVBUelExbCtFbGtPNFYvS1E5ZkxW?=
- =?utf-8?Q?fnoNnkw/WtV5mMYivPLWN2rFaeP9skKRB1?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ae64c87-48e7-4dcc-6d43-08db6ce3dcc5
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jun 2023 14:30:12.3223
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5khO65XW1X4dTlUN9K/jslsoi9cwyoNzFIopET7DBzIHIXb4ID83quCGayup9wDEZ8iyc00LrP2BzZcLd1VNGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6110
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-14_10,2023-06-14_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- spamscore=0 malwarescore=0 adultscore=0 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
- definitions=main-2306140126
-X-Proofpoint-GUID: 3WmiqMR0_-yTdDposOTnO3mp3sqn-ZGB
-X-Proofpoint-ORIG-GUID: 3WmiqMR0_-yTdDposOTnO3mp3sqn-ZGB
+References: <d5319870-7569-c353-1777-31ee090f8da8@linux.ibm.com>
+ <CAP-5=fU+0VXckQiq3E8yqaySNZ+-DDZahEd1OY0uKPWnfFsafg@mail.gmail.com> <e7f0930a-a9fc-d768-a472-bd9af6fafdf5@linux.ibm.com>
+In-Reply-To: <e7f0930a-a9fc-d768-a472-bd9af6fafdf5@linux.ibm.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 14 Jun 2023 07:57:17 -0700
+Message-ID: <CAP-5=fWjqJH0h607cVb1T7pRxDeq4cZBz5TECMajpnkvVNWHEQ@mail.gmail.com>
+Subject: Re: perf test failures in linux-next on s390
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 07/06/2023 17:26, kan.liang@linux.intel.com wrote:
-> From: Kan Liang<kan.liang@linux.intel.com>
-> 
-> Add the default tags for ARM as well.
-> 
-> Signed-off-by: Kan Liang<kan.liang@linux.intel.com>
-> Cc: Jing Zhang<renyu.zj@linux.alibaba.com>
-> Cc: John Garry<john.g.garry@oracle.com>
+On Wed, Jun 14, 2023 at 1:32=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
+>
+> On 6/13/23 16:32, Ian Rogers wrote:
+> > On Tue, Jun 13, 2023 at 5:54=E2=80=AFAM Thomas Richter <tmricht@linux.i=
+bm.com> wrote:
+> >>
+> >> Hi all,
+> >>
+> >> I have run the perf test suite on the current 6.4rc6 kernel and see ju=
+st one error:
+> >> # ./perf test 2>&1 | fgrep FAILED
+> >> fgrep: warning: fgrep is obsolescent; using grep -F
+> >>  42.3: BPF prologue generation                                       :=
+ FAILED!
+> >> #
+> >>
+> >> However when I download the linux-next tree and build kernel and perf
+> >> tool with the same kernel config file, I get a bunch of failing test c=
+ases,
+> >> many with perf tool dumping core:
+> >>
+> >> # perf test 2>&1 | fgrep FAILED
+> >> fgrep: warning: fgrep is obsolescent; using grep -F
+> >>   6.1: Test event parsing                                            :=
+ FAILED!
+> >>  10.3: Parsing of PMU event table metrics                            :=
+ FAILED!
+> >>  10.4: Parsing of PMU event table metrics with fake PMUs             :=
+ FAILED!
+> >>  17: Setup struct perf_event_attr                                    :=
+ FAILED!
+> >>  24: Number of exit events of a simple workload                      :=
+ FAILED! core-dump
+> >>  28: Use a dummy software event to keep tracking                     :=
+ FAILED!
+> >>  35: Track with sched_switch                                         :=
+ FAILED!
+> >>  42.3: BPF prologue generation                                       :=
+ FAILED!
+> >>  66: Parse and process metrics                                       :=
+ FAILED!
+> >>  68: Event expansion for cgroups                                     :=
+ FAILED!
+> >>  69.2: Perf time to TSC                                              :=
+ FAILED! core-dump
+> >>  74: build id cache operations                                       :=
+ FAILED! core-dump
+> >>  81: kernel lock contention analysis test                            :=
+ FAILED!
+> >>  86: Zstd perf.data compression/decompression                        :=
+ FAILED! core-dump
+> >>  87: perf record tests                                               :=
+ FAILED! core-dump
+> >>  94: perf all metricgroups test                                      :=
+ FAILED!
+> >>  95: perf all metrics test                                           :=
+ FAILED!
+> >> 106: Test java symbol                                                :=
+ FAILED! core-dump
+> >> #
+> >>
+> >> I am afraid this will show up pretty soon in the linux tree.
+> >> I am going to look into each failure in the next few days.
+> >>
+> >> What I already found out is that many test cases now fail due to the
+> >> event/PMU rework, here is one example:
+> >>
+> >> # perf test -Fvvvv 95
+> >> 95: perf all metrics test
+> >> --- start ---
+> >> Testing cpi
+> >> ....
+> >> Metric 'transaction' not printed in:
+> >> Error:
+> >> The TX_NC_TABORT event is not supported.
+> >> ---- end ----
+> >> perf all metrics test: FAILED!
+> >> # ls -l /sys/devices/cpum_cf/events/TX_NC_TABORT
+> >> -r--r--r--. 1 root root 4096 Jun 13 13:49 /sys/devices/cpum_cf/events/=
+TX_NC_TABORT
+> >> #
+> >>
+> >> As can be seen, the event is definitely there and supported.
+> >> This same test case succeeds in the linux tree!
+> >>
+> >> Hopefully I can sort out some of the failures before this code show up
+> >> in the linux tree.
+> >
+> > Thanks Thomas, to be clear this is what is in
+> > perf-tools-next/linux-next and not 6.4?
+>
+> Ian,
+>
+> thanks for your help.
+> Correct, I am talking about the linux-next repo. The linux repo is fine.
+>
+> >
+> > Rather than try to do more complicated cases like the metrics tests,
+> > it makes sense to dig into why event parsing is failing. Test 6 first
+> > of all, could you give output?
+> >
+> > Thanks,
+> > Ian
+> >
+> We discussed some aspects of this about two weeks ago, but last week
+> I was on vacation and now I resumed my work on linux-next.
+> We run the linux-next perf test suite every night and I am concerned
+> and would like to get this sorted out before it hits Linux 6.5.
+>
+> Here is the output on my linux-next tree built yesterday:
+> # uname -a
+> Linux a35lp67.lnxne.boe 6.4.0-rc6-next-20230613d-perf #2 \
+>               SMP Tue Jun 13 15:18:43 CEST 2023 s390x GNU/Linux
+> # ./perf test -F 6
+>   6: Parse event definition strings  :
+>   6.1: Test event parsing            :Segmentation fault (core dumped)
+> #
+> # gdb perf
+>   ....
+>   (gdb) r test -F 6
+>    6: Parse event definition strings                                  :
+>   6.1: Test event parsing                                            :
+> Program received signal SIGSEGV, Segmentation fault.
+> __GI_strcmp () at ../sysdeps/s390/strcmp-vx.S:47
+> (gdb) where
+> #0  __GI_strcmp () at ../sysdeps/s390/strcmp-vx.S:47
+> #1  0x000000000110a18c in test__term_equal_term (evlist=3D0x152ea80) at t=
+ests/parse-events.c:1580
+> #2  0x000000000110a96a in test_event (e=3D0x14dc758 <test.events+1416>) a=
+t tests/parse-events.c:2209
+> #3  0x000000000110ac58 in test_events (events=3D0x14dc1d0 <test.events>, =
+cnt=3D61) at tests/parse-events.c:2260
+> #4  0x000000000110ad52 in test__events2 (test=3D0x1500758 <suite.parse_ev=
+ents>, subtest=3D0)
+>     at tests/parse-events.c:2272
+> #5  0x00000000010f6fac in run_test (test=3D0x1500758 <suite.parse_events>=
+, subtest=3D0) at tests/builtin-test.c:236
+> #6  0x00000000010f7142 in test_and_print (t=3D0x1500758 <suite.parse_even=
+ts>, subtest=3D0) at tests/builtin-test.c:265
+> #7  0x00000000010f7b1e in __cmd_test (argc=3D1, argv=3D0x3ffffffa320, ski=
+plist=3D0x0) at tests/builtin-test.c:436
+> #8  0x00000000010f8404 in cmd_test (argc=3D1, argv=3D0x3ffffffa320) at te=
+sts/builtin-test.c:559
+> #9  0x00000000011473fc in run_builtin (p=3D0x14f60e8 <commands+600>, argc=
+=3D3, argv=3D0x3ffffffa320) at perf.c:323
+> #10 0x000000000114776e in handle_internal_command (argc=3D3, argv=3D0x3ff=
+ffffa320) at perf.c:377
+> #11 0x0000000001147980 in run_argv (argcp=3D0x3ffffff9f94, argv=3D0x3ffff=
+ff9f88) at perf.c:421
+> #12 0x0000000001147d48 in main (argc=3D3, argv=3D0x3ffffffa320) at perf.c=
+:537
+> (gdb)
+>
+> To be honest, I am no expert on the yacc/bison/flex tool chain.
+> I understand a little bit about them, but that is it.
+>
+> When I look at the output of perf test -Fvvvv 6 on linux-next, some thing=
+s seem odd,
+> I marked them with 3 question masks ???:
+>
+> # ./perf test -Fvvv 6
+>   6: Parse event definition strings     :
+>   6.1: Test event parsing               :
+> --- start ---
+> running test 0 'syscalls:sys_enter_openat'
+> Using CPUID IBM,3931,704,A01,3.7,002f
+> running test 1 'syscalls:*'
+> running test 2 'r1a'
+> running test 3 '1:1'
+> running test 4 'instructions'
+> No PMU found for 'instructions'FAILED tests/parse-events.c:143 wrong numb=
+er of entries
+> Event test failure: test 4 'instructions'running test 5 'cycles/period=3D=
+100000,config2/'
+> ??? What is wrong here?
+> ??? Output on linux 6.4.0rc3:
+> ??? # ./perf stat -e instructions -- true
+> ???
+> ??? Performance counter stats for 'true':
+> ???
+> ???         2,965,720      instructions
+> ???
+> ???        0.002026832 seconds time elapsed
+> ???
+> ???        0.000056000 seconds user
+> ???        0.002048000 seconds sys
+> ??? #
+> ??? This is fine and works as expected. The s390 PMU for counters
+> ??? has a direct mapping for this. So we end up in the s390 PMU
+> ??? to retrieve the value.
+> ???
+> ??? Output on linux-next
+> ???# ./perf stat -e instructions -- true
+> ???
+> ??? Performance counter stats for 'true':
+> ???
+> ???              0.65 msec task-clock                       #    0.250 CP=
+Us utilized
+> ???                 0      context-switches                 #    0.000 /s=
+ec
+> ???                 0      cpu-migrations                   #    0.000 /s=
+ec
+> ???                49      page-faults                      #   75.375 K/=
+sec
+> ???         3,367,228      cycles                           #    5.180 GH=
+z
+> ???         2,880,270      instructions                     #    0.86  in=
+sn per cycle
+> ???   <not supported>      branches
+> ???   <not supported>      branch-misses
+> ???
+> ???       0.002599176 seconds time elapsed
+> ???
+> ???       0.000053000 seconds user
+> ???       0.002650000 seconds sys
+> ???
+> ???#
+> ??? Somehow we end up in a different PMU. The output is the same as if
+> ??? I do not specify an event at all. To reach the s390 specific PMU
+> ??? I have to add it explicitly as in:
+> ???# ./perf stat -e cpum_cf/instructions/ -- true
+> ???
+> ??? Performance counter stats for 'true':
+> ???
+> ???         2,814,522      cpum_cf/instructions/
+> ???
+> ???       0.001899881 seconds time elapsed
+> ???
+> ???       0.000050000 seconds user
+> ???       0.001928000 seconds sys
+> ???
+> ???]#
+> No PMU found for 'cycles/period=3D100000,config2/'FAILED tests/parse-even=
+ts.c:157 wrong number of entries
+> Event test failure: test 5 'cycles/period=3D100000,config2/'running test =
+6 'faults'
+> ...
+> ??? Similar output for basicly all events.
+>
+> No PMU found for 'cycles'running test 59 'cycles/name=3Dname/'
+> No PMU found for 'name'Segmentation fault (core dumped)
+>
+> Hope this helps.
+>
+> PS: Should we keep the linux-perf-use mailing list as addressee? Not sure
+> if everybody else is interested in this?
 
-Reviewed-by: John Garry <john.g.garry@oracle.com>
+Smaller list is okay. Could you send me a zip of the sysfs
+(/sys/devices) ? At least one issue is that the code didn't find a
+core PMU. On non-hybrid x86 this would be /sys/devices/cpu, I think we
+spoke about this before for s390 and there are >1. The issue here is
+that the test found 0, and we're trying to use PMUs in the code now as
+a way to sort events. There's code/comment in util/pmu.c:
 
-But does pmu-events/arch/arm64/hisilicon/hip08/metrics.json need to be 
-fixed up as well?
+'''
+/**
+ * is_sysfs_pmu_core() - PMU CORE devices have different name other than cp=
+u in
+ *         sysfs on some platforms like ARM or Intel hybrid. Looking for
+ *         possible the cpus file in sysfs files to identify whether this i=
+s a
+ *         core device.
+ * @name: The PMU name such as "cpu_atom".
+ */
+static int is_sysfs_pmu_core(const char *name)
+{
+char path[PATH_MAX];
+
+if (!perf_pmu__pathname_scnprintf(path, sizeof(path), name, "cpus"))
+return 0;
+return file_available(path);
+}
+...
+bool is_pmu_core(const char *name)
+{
+return !strcmp(name, "cpu") || is_sysfs_pmu_core(name);
+}
+'''
+
+Thanks,
+Ian
+
+> --
+> Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, German=
+y
+> --
+> Vorsitzender des Aufsichtsrats: Gregor Pillen
+> Gesch=C3=A4ftsf=C3=BChrung: David Faller
+> Sitz der Gesellschaft: B=C3=B6blingen / Registergericht: Amtsgericht Stut=
+tgart, HRB 243294
+>
