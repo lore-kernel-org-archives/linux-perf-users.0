@@ -2,128 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA3AEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 01:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0149FEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 14 Jun 2023 01:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232435AbjFNBGX (ORCPT
+        id S241935AbjFNBVO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 13 Jun 2023 21:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35716 "EHLO
+        Tue, 13 Jun 2023 21:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229584AbjFNBGW (ORCPT
+        with ESMTP id S230495AbjFNBVO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 13 Jun 2023 21:06:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60631BE6;
-        Tue, 13 Jun 2023 18:06:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A2DE63B33;
-        Wed, 14 Jun 2023 01:06:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53689C433C8;
-        Wed, 14 Jun 2023 01:06:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686704779;
-        bh=zhzrb0iO79rDeIfYMKbVMQbH6N3JHQjoiaodw6Vb1dk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tk0vDIyUq8DYbvefjPGnzL/vixx3I3lXSr/jlDWyHKinlSwtOpv9bxqlre5f7wcBc
-         VNOdL7MNDfuZ1JkfIMJAew3azxsgzC2jCNNsrq/rz6lhCU5yiiV7jJkVO1ZUxP1lpV
-         9g+7quniO4i3EMkNdZt5IyxiIJZE67J+Dl7vUtgAYaxy420f3BV4VX0+Rkc+rszY/K
-         nX3fodwN6JSlr0YJ2sLzTD56OcU94deo2faNqO8vruvwoD8fKBULTAxdMWwB69f+bh
-         H/gLXT65s+oKAhQxENeSsHgt3N87WPavnkqfu7w1wSupqEdIHncwgvqgTZoODVEGCE
-         ekkgUgEpnr6Zw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 723DD40692; Tue, 13 Jun 2023 22:06:15 -0300 (-03)
-Date:   Tue, 13 Jun 2023 22:06:15 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Tue, 13 Jun 2023 21:21:14 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A569C123
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 18:21:12 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-54fba092ef5so837432a12.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Jun 2023 18:21:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686705672; x=1689297672;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Y3HJWmlCMR1mIBGBb7/AYb1h6XObIBRabet2yfWnztE=;
+        b=X5dobPDJnYA4qsiSCnbNMy3Qd3X24vOGeOijsRmwiSmAhqPvFzFUv8YsNVAJQRYTCK
+         OG0G+OAn4yBfePLZuRE9/hrY7D8dHKcgkcZDL/Rxq2Ue9teISfGZYZly3x17QMrFOcWr
+         imbBSz7GUnE34sN0C9nYJQsu2QkSFJs5xe9AFYat5MJEFBpLqGmGQBNiAD5/AAPyBszL
+         xvE3Tw1jtFaSTe48CPGFTT84UXzW0bQRm500N2PvATCK07dFzZsmTF7SQT0rdwGA0KXn
+         nJwu/46uQYWYAagJCQ1dAD07laSIkpXb8tTAA32aRcKe5gQ4anH3z/TDuYgoa/KM32ZI
+         SMbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686705672; x=1689297672;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y3HJWmlCMR1mIBGBb7/AYb1h6XObIBRabet2yfWnztE=;
+        b=NYB2WKeJ6Dnj2NzaLPoB7XxKm+KrSR4RUpJTr8LI6CVHvZdAd4N5isEdzm5AOWg4m8
+         wgrcR7N2SMgMsHCu2c51ifWdxpA2d/u/p8j3DJl5pvKNMjGE1i9YSjPD0gWG/4Z3Vs4f
+         dTvwMiyn2TTzluPiXHOnxZ+Lq0lNcDkdaFJfgS34lByy98Q0gatslnyYG9Ob3gDISjlP
+         YUUMY8djrAlVPUKD0szJPp+5u/YNI6hzDceuGWk+BtO8uJ3MC3F3aSkGpP+Dl8gPuyJF
+         Vge+HTqPnuY15u66HzK/yWM0BR9OZu2wHrQGZNAhhS9qhHF9M9CrRLBFVYIJZAKyhiYL
+         65UA==
+X-Gm-Message-State: AC+VfDwVlCjVraRl/iIZdYHNQ6pu29Mpc5teJQBNxRBjtjw2KuCOhz5j
+        Acg9iuT2RWY3H3iXe2xkTJ0dIQ==
+X-Google-Smtp-Source: ACHHUZ77FmKF2KF3zfAvn9yOFxa7gwFJaNMhe/QqB7w76JnhWGrn7nVqDRNPipewLg5s2/4md9D1pw==
+X-Received: by 2002:a05:6a21:338b:b0:114:f824:655 with SMTP id yy11-20020a056a21338b00b00114f8240655mr376882pzb.58.1686705671860;
+        Tue, 13 Jun 2023 18:21:11 -0700 (PDT)
+Received: from leoy-huanghe.lan ([117.136.8.91])
+        by smtp.gmail.com with ESMTPSA id n15-20020aa7904f000000b0063d29df1589sm4068515pfo.136.2023.06.13.18.21.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jun 2023 18:21:11 -0700 (PDT)
+Date:   Wed, 14 Jun 2023 09:21:02 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     =?utf-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf tool x86: Fix perf_env memory leak
-Message-ID: <ZIkShy2yj1b0+GDv@kernel.org>
-References: <20230613235416.1650755-1-irogers@google.com>
+        Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Cc:     James Clark <james.clark@arm.com>, linux-perf-users@vger.kernel.org
+Subject: Re: Some questions about using the perf tool in ARM-SPE
+Message-ID: <20230614012102.GJ217089@leoy-huanghe.lan>
+References: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
+ <874963e2-f97e-b463-1351-b00640b0f67b@arm.com>
+ <CALDTKqg01+xJ2xu218c_QH2PbX9wdhYOiJfDieCXL5PHWV-6FQ@mail.gmail.com>
+ <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com>
+ <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230613235416.1650755-1-irogers@google.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Tue, Jun 13, 2023 at 04:54:16PM -0700, Ian Rogers escreveu:
-> Found by leak sanitizer:
-> ```
-> ==1632594==ERROR: LeakSanitizer: detected memory leaks
+Hi,
+
+On Tue, Jun 13, 2023 at 09:23:33PM +0800, 蔡沅信 wrote:
+> OK
+> I have a new discovery that c2c seems to support only certain Arm
+> Neoverse (N1/N2/V1) CPUs, I wonder if cortex-X4 could support it?
+
+Based on Cortex-X4 TRM [1], we can see Cortex-X4 has the same SPE data
+source packet format with Neoverse CPUs.  In theory, we can add
+Cortex-X4's MIDR into the neoverse_spe[] array in
+tools/perf/util/arm-spe.c to support Cortex-X4.
+
+Linux master branch misses the definition for Cortex-X4's MIDR [2],
+Mark.R / Suzuki / James, could you confirm if Arm has plan or already
+has patches for enabling Cortex-X4's MIDR?
+
+Come back to your current issue, as James said, seems the issue is
+related with NUMA (or CPU topology) which is missed in your kernel
+config, it's very unlikely related with CPU type, even Cortex-X4 is not
+supported, perf should still work for SPE packets except data source
+packet.  But your shared log is not related with decoding, anyway, you
+can try below change to rule out if the issue is related with CPU type:
+
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 7b36ba6b4079..3c3a3846f253 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -527,6 +527,7 @@ static u64 arm_spe__synth_data_source(const struct arm_spe_record *record, u64 m
+        else
+                return 0;
+
++       is_neoverse = 1;
+        if (is_neoverse)
+                arm_spe__synth_data_source_neoverse(record, &data_src);
+        else
+
+
+[1] https://developer.arm.com/documentation/102484/0001/Statistical-Profiling-Extension-support/Statistical-Profiling-Extension-data-source-packet
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm64/include/asm/cputype.h
+
+> Using the Arm Statistical Profiling Extension to detect false
+> cache-line sharing | Blog | Linaro
 > 
-> Direct leak of 21 byte(s) in 1 object(s) allocated from:
->     #0 0x7f2953a7077b in __interceptor_strdup ../../../../src/libsanitizer/asan/asan_interceptors.cpp:439
->     #1 0x556701d6fbbf in perf_env__read_cpuid util/env.c:369
->     #2 0x556701d70589 in perf_env__cpuid util/env.c:465
->     #3 0x55670204bba2 in x86__is_amd_cpu arch/x86/util/env.c:14
->     #4 0x5567020487a2 in arch__post_evsel_config arch/x86/util/evsel.c:83
->     #5 0x556701d8f78b in evsel__config util/evsel.c:1366
->     #6 0x556701ef5872 in evlist__config util/record.c:108
->     #7 0x556701cd6bcd in test__PERF_RECORD tests/perf-record.c:112
->     #8 0x556701cacd07 in run_test tests/builtin-test.c:236
->     #9 0x556701cacfac in test_and_print tests/builtin-test.c:265
->     #10 0x556701cadddb in __cmd_test tests/builtin-test.c:402
->     #11 0x556701caf2aa in cmd_test tests/builtin-test.c:559
->     #12 0x556701d3b557 in run_builtin tools/perf/perf.c:323
->     #13 0x556701d3bac8 in handle_internal_command tools/perf/perf.c:377
->     #14 0x556701d3be90 in run_argv tools/perf/perf.c:421
->     #15 0x556701d3c3f8 in main tools/perf/perf.c:537
->     #16 0x7f2952a46189 in __libc_start_call_main ../sysdeps/nptl/libc_start_call_main.h:58
-> 
-> SUMMARY: AddressSanitizer: 21 byte(s) leaked in 1 allocation(s).
-> ```
-> 
-> Fixes: daea405f5f06 ("perf tool x86: Consolidate is_amd check into single function")
-
-Its a fix, yes, but it is not for this daea405f5f06 patch, he just moved the
-perf_mem_is_amd_cpu(), that was leaky, to a different file, the fixes is
-for  for:
-
-f7b58cbdb3ff36eb ("perf mem/c2c: Add load store event mappings for
-AMD").
-
-Right?
-
-I'm fixing the fixes tag and applying the patch, thanks.
-
-- Arnaldo
-
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/arch/x86/util/env.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/env.c b/tools/perf/arch/x86/util/env.c
-> index 33b87f8ac1cc..3e537ffb1353 100644
-> --- a/tools/perf/arch/x86/util/env.c
-> +++ b/tools/perf/arch/x86/util/env.c
-> @@ -13,7 +13,7 @@ bool x86__is_amd_cpu(void)
->  
->  	perf_env__cpuid(&env);
->  	is_amd = env.cpuid && strstarts(env.cpuid, "AuthenticAMD") ? 1 : -1;
-> -
-> +	perf_env__exit(&env);
->  ret:
->  	return is_amd >= 1 ? true : false;
->  }
-> -- 
-> 2.41.0.162.gfafddb0af9-goog
-> 
-
--- 
-
-- Arnaldo
+> Thanks
+> Zack
