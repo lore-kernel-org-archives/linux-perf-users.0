@@ -2,131 +2,102 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2D4EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 10:02:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169B1EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 11:19:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244916AbjFOKCl (ORCPT
+        id S239387AbjFOLTj (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 06:02:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56024 "EHLO
+        Thu, 15 Jun 2023 07:19:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238766AbjFOKCk (ORCPT
+        with ESMTP id S234125AbjFOLTi (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 06:02:40 -0400
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1017195;
-        Thu, 15 Jun 2023 03:02:35 -0700 (PDT)
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AA24FFF805;
-        Thu, 15 Jun 2023 10:02:28 +0000 (UTC)
-Message-ID: <35dc3141-ac83-791c-7439-1c1f25ca95e8@ghiti.fr>
-Date:   Thu, 15 Jun 2023 12:02:28 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 10/10] perf: tests: Adapt mmap-basic.c for riscv
-Content-Language: en-US
-To:     Andrew Jones <ajones@ventanamicro.com>,
-        Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Thu, 15 Jun 2023 07:19:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C90E2707;
+        Thu, 15 Jun 2023 04:19:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A60EE634F3;
+        Thu, 15 Jun 2023 11:19:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F01ADC433C0;
+        Thu, 15 Jun 2023 11:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686827976;
+        bh=o6Td6MmrlfeRqs6XMwz0lA70wOPxQKNfW8M0/DTvPlM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jonMy9tBrVQSohpRudZA6CWZgFxkYGzBHD2lKG2dU2b8+XbKOWCus3mg+CSJlyG8o
+         Bf89KaPF+/WfnZSU18Qhd8Y/fW/oACqdBBthFSlwd4dOvBlNmPPBGGBj10Cbvvn3lV
+         3rUfwD15v4qKcQg9riEDNSTtonYoIjAiNe61Xk1b1BNMYfi1CznkRfbZ3OTySk383Y
+         gd+/VAeEk/hYPu1RcOK/gXviXhHG39e8wwGPkUPFgeQBO6IYF4dugjP4ikXEkW24B4
+         OdBO6ysOnlNbxmPchHiRKjFqVRkY+QcpD04MUWm8Vrxd1S6Xet9ZteH7zEpvg/y/rF
+         +Ask1nAh0qX4A==
+Date:   Thu, 15 Jun 2023 12:19:29 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     James Clark <james.clark@arm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-perf-users@vger.kernel.org, Aishwarya.TCV@arm.com,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20230512085321.13259-1-alexghiti@rivosinc.com>
- <20230512085321.13259-11-alexghiti@rivosinc.com>
- <20230531-31bd9ddeaca8cb338f81ed14@orel>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20230531-31bd9ddeaca8cb338f81ed14@orel>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] perf tools: Add a place to put kernel config
+ fragments for test runs
+Message-ID: <fb130fd5-7134-444b-a79c-658bff30c588@sirena.org.uk>
+References: <20230614140219.2335639-1-james.clark@arm.com>
+ <ZInLBt9q2F99gTg8@kernel.org>
+ <d02cce4a-47b1-a776-0d3a-a6a7c9a4d8fd@arm.com>
+ <20230615012546.GN217089@leoy-huanghe.lan>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Tme7hkpHpIGMJ5ts"
+Content-Disposition: inline
+In-Reply-To: <20230615012546.GN217089@leoy-huanghe.lan>
+X-Cookie: You are false data.
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 31/05/2023 17:15, Andrew Jones wrote:
-> On Fri, May 12, 2023 at 10:53:21AM +0200, Alexandre Ghiti wrote:
->> riscv now supports mmaping hardware counters to userspace so adapt the test
->> to run on this architecture.
->>
->> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->> ---
->>   tools/perf/tests/mmap-basic.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
->> index e68ca6229756..f5075ca774f8 100644
->> --- a/tools/perf/tests/mmap-basic.c
->> +++ b/tools/perf/tests/mmap-basic.c
->> @@ -284,7 +284,7 @@ static struct test_case tests__basic_mmap[] = {
->>   			 "permissions"),
->>   	TEST_CASE_REASON("User space counter reading of instructions",
->>   			 mmap_user_read_instr,
->> -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
->> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
->>   			 "permissions"
->>   #else
->>   			 "unsupported"
->> @@ -292,7 +292,7 @@ static struct test_case tests__basic_mmap[] = {
->>   		),
->>   	TEST_CASE_REASON("User space counter reading of cycles",
->>   			 mmap_user_read_cycles,
->> -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
->> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
->>   			 "permissions"
->>   #else
->>   			 "unsupported"
->> -- 
->> 2.37.2
->>
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+--Tme7hkpHpIGMJ5ts
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Jun 15, 2023 at 09:26:39AM +0800, Leo Yan wrote:
+> On Wed, Jun 14, 2023 at 03:19:12PM +0100, James Clark wrote:
 
-Thanks for your review Andrew, as usual, always helpful.
+> > >> The RFC is for discussion on folder placement and file naming etc.
 
-And sorry for the delay!
+> I am wandering if we can put these configurations into kselftest (the
+> folder tools/testing/selftests/).  You could see now kernel build has
+> already provided option to merge kernel configurations for kselftests.
 
-Alex
+Well, it'd be nice if the whole thing was a kselftest rather than it's
+own thing, that'd avoid the need for custom setup to run the tests.  But
+while it's not a kselftest it's not clear to me that it's a good fit.
 
+--Tme7hkpHpIGMJ5ts
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmSK88EACgkQJNaLcl1U
+h9BMVAf9FfveJwPe7nual8Q9ggs+55RseluL2cG95FfPxnobW0Wu7SDMBxYmS8+u
+uWlUeKLJD2NbnkFPaNnVcz4W0jEY48sz1sbvYZ+KunLaKx3dDb9/BZ4PRV5OYXwh
+a9ddcjuXWTVz48/4ji0dn00j13FBOLBr6Ybq2Ug0zeyzeUrQrbdAKFps1G48ch6A
+2brRoReSg+y91hoFN9esY2qxQwYjLHdsYgwJGizXSY9AvWVs0jBcE/KsmZty1adE
+/rzOrmkhuLiPNWluoauqpwbWJrmeGvXpBQAVGW6c81I45fpTZb4W418INZ0O6mNb
+lMMgQN0pzTft3zLvhTTYlgjCL25+4A==
+=2t6d
+-----END PGP SIGNATURE-----
+
+--Tme7hkpHpIGMJ5ts--
