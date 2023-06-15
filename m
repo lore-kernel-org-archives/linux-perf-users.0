@@ -2,134 +2,161 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F1FEEB64DB
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 07:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B35EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 07:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229473AbjFOHlV (ORCPT
+        id S238825AbjFOHlW (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 03:41:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54340 "EHLO
+        Thu, 15 Jun 2023 03:41:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245212AbjFOHjv (ORCPT
+        with ESMTP id S245533AbjFOHk1 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 03:39:51 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA4E630D4
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Jun 2023 00:39:20 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35F7ScCF002797;
-        Thu, 15 Jun 2023 07:38:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=1Sm3zdSn+qHJF3+Y6o+KAXvkzmFKEFt0XxoIHrK97TY=;
- b=o5XHUqO/41rRnxBpYj2GsRd+zF0gGT4n3Fr/zU4EUUeCmJYLdMEyiRIxU6QQ98iydC81
- jc2ODiKSPz2vgOKwr8RARDL/Z0sVGCdY/k6xGB3c251GjrIvV0qLM3falEHrLWtWOiTJ
- K7aDHuPSJ7Vne6PHZmgap0FzcAm/M5bu+n9kxnyU/MOv+I1J43wZnTFJMJe2HNevBgEn
- D92qvVKqswBcDQtv2y2Giz4dXdm8PZjPOoXTesJ8SoArgfMqAkp6VP3RfGFj5WnoWTwY
- YmQC2A/5zu3lgmOlrfUmAwX7KBN9btYS3+XC/qzX5/cVl8mc/oe/7TXzUptE993WyH6l aw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r7x9s0bf3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Jun 2023 07:38:15 +0000
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35F7T46I004636;
-        Thu, 15 Jun 2023 07:38:15 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r7x9s0bdp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Jun 2023 07:38:15 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35F3u9jG000832;
-        Thu, 15 Jun 2023 07:38:12 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3r4gee3eg4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 15 Jun 2023 07:38:12 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35F7c99T45941006
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Jun 2023 07:38:09 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11A9D2004E;
-        Thu, 15 Jun 2023 07:38:09 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCC7B20043;
-        Thu, 15 Jun 2023 07:38:06 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.120.107])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 15 Jun 2023 07:38:06 +0000 (GMT)
-From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        namhyung@kernel.org
-Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH 1/2] tools/perf/tests: perf all metrics test fails when perf_event access is restricted
-Date:   Thu, 15 Jun 2023 13:08:02 +0530
-Message-Id: <20230615073803.54481-1-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
+        Thu, 15 Jun 2023 03:40:27 -0400
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::222])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB1652953;
+        Thu, 15 Jun 2023 00:39:59 -0700 (PDT)
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+X-GND-Sasl: alex@ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4A1B84000F;
+        Thu, 15 Jun 2023 07:38:27 +0000 (UTC)
+Message-ID: <4c511218-eb54-0ec4-6820-265f06d91730@ghiti.fr>
+Date:   Thu, 15 Jun 2023 09:38:26 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dLvhuvfjgGTgLjkXPGWcnM_-hCVlOxGI
-X-Proofpoint-GUID: jeWgOoPaP430W9wY0i2-vC_vjMT_j97S
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-15_04,2023-06-14_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0
- malwarescore=0 clxscore=1015 mlxscore=0 phishscore=0 suspectscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306150063
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 06/10] drivers: perf: Implement perf event mmap support
+ in the legacy backend
+Content-Language: en-US
+To:     Andrew Jones <ajones@ventanamicro.com>,
+        Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Atish Patra <atishp@atishpatra.org>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20230512085321.13259-1-alexghiti@rivosinc.com>
+ <20230512085321.13259-7-alexghiti@rivosinc.com>
+ <20230531-705f2911e8d66938ece04905@orel>
+From:   Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20230531-705f2911e8d66938ece04905@orel>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Perf all metrics test fails as below when perf_event access
-is restricted.
 
-    ./perf test -v "perf all metrics test"
-    Metric 'Memory_RD_BW_Chip' not printed in:
-    Error:
-    Access to performance monitoring and observability operations is limited.
-    Enforced MAC policy settings (SELinux) can limit access to performance
-    —
-    access to performance monitoring and observability operations for processes
-    without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
-    —
-    test child finished with -1
-    ---- end ----
-    perf all metrics test: FAILED!
+On 31/05/2023 16:27, Andrew Jones wrote:
+> On Fri, May 12, 2023 at 10:53:17AM +0200, Alexandre Ghiti wrote:
+>> Implement the needed callbacks in the legacy driver so that we can
+>> directly access the counters through perf in userspace.
+>>
+>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+>> ---
+>>   drivers/perf/riscv_pmu_legacy.c | 28 ++++++++++++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
+>>
+>> diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
+>> index ffe09d857366..f0f5bd856f66 100644
+>> --- a/drivers/perf/riscv_pmu_legacy.c
+>> +++ b/drivers/perf/riscv_pmu_legacy.c
+>> @@ -74,6 +74,31 @@ static void pmu_legacy_ctr_start(struct perf_event *event, u64 ival)
+>>   	local64_set(&hwc->prev_count, initial_val);
+>>   }
+>>   
+>> +static uint8_t pmu_legacy_csr_index(struct perf_event *event)
+>> +{
+>> +	return event->hw.idx;
+>> +}
+>> +
+>> +static void pmu_legacy_event_mapped(struct perf_event *event, struct mm_struct *mm)
+>> +{
+>> +	/* In legacy mode, the first 3 CSRs are available. */
+> Shouldn't this be
+>
+>   /* In legacy mode, the first and third CSR are available. */
+>
+> ?
 
-The perf all metrics test picks the input events from
-"perf list --raw-dump metrics" and runs "perf stat -M "$m""
-for each of the metrics in the list. It fails here for some
-of the metrics which needs access, since it collects system
-wide resource details/statistics. Fix the testcase to skip
-those metric events.
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/perf/tests/shell/stat_all_metrics.sh | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Yes, I guess this comment is not right in this context, so I'll remove 
+the comment entirely as it does bring much.
 
-diff --git a/tools/perf/tests/shell/stat_all_metrics.sh b/tools/perf/tests/shell/stat_all_metrics.sh
-index 54774525e18a..14b96484a359 100755
---- a/tools/perf/tests/shell/stat_all_metrics.sh
-+++ b/tools/perf/tests/shell/stat_all_metrics.sh
-@@ -6,7 +6,9 @@ err=0
- for m in $(perf list --raw-dump metrics); do
-   echo "Testing $m"
-   result=$(perf stat -M "$m" true 2>&1)
--  if [[ "$result" =~ ${m:0:50} ]] || [[ "$result" =~ "<not supported>" ]]
-+  # Skip if there is no access to perf_events monitoring
-+  # and observability operations
-+  if [[ "$result" =~ ${m:0:50} ]] || [[ "$result" =~ "<not supported>" ]] || [[ "$result" =~ "Access to performance monitoring and observability operations is limited" ]]
-   then
-     continue
-   fi
--- 
-2.31.1
+
+>> +	if (event->attr.config != PERF_COUNT_HW_CPU_CYCLES &&
+>> +	    event->attr.config != PERF_COUNT_HW_INSTRUCTIONS)
+>> +		return;
+>> +
+>> +	event->hw.flags |= PERF_EVENT_FLAG_USER_READ_CNT;
+>> +}
+>> +
+>> +static void pmu_legacy_event_unmapped(struct perf_event *event, struct mm_struct *mm)
+>> +{
+>> +	/* In legacy mode, the first 3 CSRs are available. */
+> same comment
+>
+>> +	if (event->attr.config != PERF_COUNT_HW_CPU_CYCLES &&
+>> +	    event->attr.config != PERF_COUNT_HW_INSTRUCTIONS)
+>> +		return;
+>> +
+>> +	event->hw.flags &= ~PERF_EVENT_FLAG_USER_READ_CNT;
+>> +}
+>> +
+>>   /*
+>>    * This is just a simple implementation to allow legacy implementations
+>>    * compatible with new RISC-V PMU driver framework.
+>> @@ -94,6 +119,9 @@ static void pmu_legacy_init(struct riscv_pmu *pmu)
+>>   	pmu->ctr_get_width = NULL;
+>>   	pmu->ctr_clear_idx = NULL;
+>>   	pmu->ctr_read = pmu_legacy_read_ctr;
+>> +	pmu->event_mapped = pmu_legacy_event_mapped;
+>> +	pmu->event_unmapped = pmu_legacy_event_unmapped;
+>> +	pmu->csr_index = pmu_legacy_csr_index;
+>>   
+>>   	perf_pmu_register(&pmu->pmu, RISCV_PMU_LEGACY_PDEV_NAME, PERF_TYPE_RAW);
+>>   }
+>> -- 
+>> 2.37.2
+>>
+> Otherwise,
+>
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+
+
+Thanks!
 
