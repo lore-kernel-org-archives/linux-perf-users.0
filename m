@@ -2,207 +2,253 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7310DEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 12:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594A8EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 13:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240444AbjFOMKI (ORCPT
+        id S1344023AbjFONPJ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 08:10:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
+        Thu, 15 Jun 2023 09:15:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244277AbjFOMJu (ORCPT
+        with ESMTP id S1344095AbjFONOs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 08:09:50 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCBD1B2;
-        Thu, 15 Jun 2023 05:09:48 -0700 (PDT)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QhgS26pYJzLmwK;
-        Thu, 15 Jun 2023 19:44:18 +0800 (CST)
-Received: from [10.67.111.205] (10.67.111.205) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 15 Jun 2023 19:46:09 +0800
-Subject: Re: [PATCH] perf top & record: Fix segfault when default cycles event
- is not supported
-To:     Ian Rogers <irogers@google.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <jolsa@kernel.org>, <namhyung@kernel.org>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20230614151625.2077-1-yangjihong1@huawei.com>
- <CAP-5=fUf0+7HwZ+AHUR0nRD5QnfPn9_CPMEdJZP_5goPfrPB+Q@mail.gmail.com>
- <CAP-5=fVOXjjcusjv858SOGrnNgE2w2sb7zS=0sZUpdFfR1T_GA@mail.gmail.com>
- <668a6159-b7a8-ed25-d8fa-5584a4c04d37@huawei.com>
- <CAP-5=fX6nWRboZ2dWc1h_y0pe5TAgs0QC0qwCeaLcALfJ+5YEA@mail.gmail.com>
-From:   Yang Jihong <yangjihong1@huawei.com>
-Message-ID: <cc3a669d-570b-2f0d-ce0f-0f4bee417eb2@huawei.com>
-Date:   Thu, 15 Jun 2023 19:46:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.6.1
+        Thu, 15 Jun 2023 09:14:48 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7453596;
+        Thu, 15 Jun 2023 06:14:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686834865; x=1718370865;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rwNfSlwgid9qaCUU9SYoqzSKim/ZlTBt/ffrkcFdTMo=;
+  b=IpWzPlK4IBVhq+GBh583GSmqY4Cf9z6xdKVbZcZlfcJnBlhIJiidVv1t
+   v7j+zXjBu5LX5AQbN/xOUm3WnsE9bRH7+ZsZnxoSDorsju9fSzsXfFudQ
+   m36o6l9J+EccQOR50su0mEwEESAZn4LbWKtG5FQaQ6x5U7SXJKXlmFn0w
+   4HYrXgq8zmTz5UeXvy1Gmlp7SHJL3C5pYGFoa5PLUg+wJ6/KnS9Gl/qRi
+   m9rlJ4UMYAj7XoVmookHP/CutSunarJU7XrSHTn+eGgLGoT3Y4IyC46Ub
+   hhkcKRxY5SJFWrTRs7eUM9mTFwJhI9Z5p89AUTZU9E9EdvSF+SILGkcEU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="348580760"
+X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
+   d="scan'208";a="348580760"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 06:08:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="1042651395"
+X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
+   d="scan'208";a="1042651395"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga005.fm.intel.com with ESMTP; 15 Jun 2023 06:08:08 -0700
+Received: from [10.209.76.72] (kliang2-mobl1.ccr.corp.intel.com [10.209.76.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id E1C29580C9B;
+        Thu, 15 Jun 2023 06:08:06 -0700 (PDT)
+Message-ID: <3e933824-c119-335c-f092-8580704ea334@linux.intel.com>
+Date:   Thu, 15 Jun 2023 09:08:05 -0400
 MIME-Version: 1.0
-In-Reply-To: <CAP-5=fX6nWRboZ2dWc1h_y0pe5TAgs0QC0qwCeaLcALfJ+5YEA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH V2 4/8] perf metrics: Sort the Default metricgroup
 Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>
+Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
+References: <20230615001735.3643996-1-kan.liang@linux.intel.com>
+ <20230615001735.3643996-5-kan.liang@linux.intel.com>
+ <CAP-5=fWbLkyQpxxhfCmqit7p4WgHVUOCjsADm-XojcT5ppcv7g@mail.gmail.com>
+ <CAP-5=fU=jS6UmKdFziRq1Zt0c8FY+3XSrB9Xufw0BSHkGAcO-A@mail.gmail.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fU=jS6UmKdFziRq1Zt0c8FY+3XSrB9Xufw0BSHkGAcO-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.111.205]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
 
-On 2023/6/15 10:04, Ian Rogers wrote:
-> On Wed, Jun 14, 2023 at 6:55 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+
+On 2023-06-15 1:52 a.m., Ian Rogers wrote:
+> On Wed, Jun 14, 2023 at 9:30 PM Ian Rogers <irogers@google.com> wrote:
 >>
->> Hello,
->>
->> On 2023/6/15 6:03, Ian Rogers wrote:
->>> On Wed, Jun 14, 2023 at 9:18 AM Ian Rogers <irogers@google.com> wrote:
->>>>
->>>> On Wed, Jun 14, 2023 at 8:18 AM Yang Jihong <yangjihong1@huawei.com> wrote:
->>>>>
->>>>> The perf-record and perf-top call parse_event() to add a cycles event to
->>>>> an empty evlist. For the system that does not support hardware cycles
->>>>> event, such as QEMU, the evlist is empty due to the following code process:
->>>>>
->>>>>     parse_event(evlist, "cycles:P" or ""cycles:Pu")
->>>>>       parse_events(evlist, "cycles:P")
->>>>>         __parse_events
->>>>>           ...
->>>>>           ret = parse_events__scanner(str, &parse_state);
->>>>>           // ret = 0
->>>>>           ...
->>>>>           ret2 = parse_events__sort_events_and_fix_groups()
->>>>>           if (ret2 < 0)
->>>>>             return ret;
->>>>>           // The cycles event is not supported, here ret2 = -EINVAL,
->>>>>           // Here return 0.
->>>>>           ...
->>>>>           evlist__splice_list_tail(evlist)
->>>>>           // The code here does not execute to, so the evlist is still empty.
->>>>>
->>>>> A null pointer occurs when the content in the evlist is accessed later.
->>>>>
->>>>> Before:
->>>>>
->>>>>     # perf list hw
->>>>>
->>>>>     List of pre-defined events (to be used in -e or -M):
->>>>>
->>>>>     # perf record true
->>>>>     libperf: Miscounted nr_mmaps 0 vs 1
->>>>>     WARNING: No sample_id_all support, falling back to unordered processing
->>>>>     perf: Segmentation fault
->>>>>     Obtained 1 stack frames.
->>>>>     [0xc5beff]
->>>>>     Segmentation fault
->>>>>
->>>>> Solution:
->>>>>     If cycles event is not supported, try to fall back to cpu-clock event.
->>>>>
->>>>> After:
->>>>>     # perf record true
->>>>>     [ perf record: Woken up 1 times to write data ]
->>>>>     [ perf record: Captured and wrote 0.006 MB perf.data ]
->>>>>     #
->>>>>
->>>>> Fixes: 7b100989b4f6 ("perf evlist: Remove __evlist__add_default")
->>>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
->>>>
->>>> Thanks, useful addition. The cpu-clock fall back wasn't present before
->>>> 7b100989b4f6 so is the fixes tag correct?
+>> On Wed, Jun 14, 2023 at 5:18 PM <kan.liang@linux.intel.com> wrote:
 >>>
->>> Hmm... it should be coming from evsel__fallback:
->>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evsel.c?h=tmp.perf-tools-next#n2840
->>> so we shouldn't duplicate that logic. The question is why we're not
->>> doing the fallback.
+>>> From: Kan Liang <kan.liang@linux.intel.com>
 >>>
+>>> The new default mode will print the metrics as a metric group. The
+>>> metrics from the same metric group must be adjacent to each other in the
+>>> metric list. But the metric_list_cmp() sorts metrics by the number of
+>>> events.
+>>>
+>>> Add a new sort for the Default metricgroup, which sorts by
+>>> default_metricgroup_name and metric_name.
+>>>
+>>> Add is_default in the struct metric_event to indicate that it's from
+>>> the Default metricgroup.
+>>>
+>>> Store the displayed metricgroup name of the Default metricgroup into
+>>> the metric expr for output.
+>>>
+>>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>>> ---
+>>>  tools/perf/util/metricgroup.c | 35 +++++++++++++++++++++++++++++++++++
+>>>  tools/perf/util/metricgroup.h |  3 +++
+>>>  2 files changed, 38 insertions(+)
+>>>
+>>> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+>>> index 8b19644ade7d..acf86b15ee49 100644
+>>> --- a/tools/perf/util/metricgroup.c
+>>> +++ b/tools/perf/util/metricgroup.c
+>>> @@ -79,6 +79,7 @@ static struct rb_node *metric_event_new(struct rblist *rblist __maybe_unused,
+>>>                 return NULL;
+>>>         memcpy(me, entry, sizeof(struct metric_event));
+>>>         me->evsel = ((struct metric_event *)entry)->evsel;
+>>> +       me->is_default = false;
+>>>         INIT_LIST_HEAD(&me->head);
+>>>         return &me->nd;
+>>>  }
+>>> @@ -1160,6 +1161,25 @@ static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
+>>>         return right_count - left_count;
+>>>  }
+>>>
+>>> +/**
+>>> + * default_metricgroup_cmp - Implements complex key for the Default metricgroup
+>>> + *                          that first sorts by default_metricgroup_name, then
+>>> + *                          metric_name.
+>>> + */
+>>> +static int default_metricgroup_cmp(void *priv __maybe_unused,
+>>> +                                  const struct list_head *l,
+>>> +                                  const struct list_head *r)
+>>> +{
+>>> +       const struct metric *left = container_of(l, struct metric, nd);
+>>> +       const struct metric *right = container_of(r, struct metric, nd);
+>>> +       int diff = strcmp(right->default_metricgroup_name, left->default_metricgroup_name);
+>>> +
+>>> +       if (diff)
+>>> +               return diff;
+>>> +
+>>> +       return strcmp(right->metric_name, left->metric_name);
+>>> +}
+>>> +
+>>>  struct metricgroup__add_metric_data {
+>>>         struct list_head *list;
+>>>         const char *pmu;
+>>> @@ -1515,6 +1535,7 @@ static int parse_groups(struct evlist *perf_evlist,
+>>>         LIST_HEAD(metric_list);
+>>>         struct metric *m;
+>>>         bool tool_events[PERF_TOOL_MAX] = {false};
+>>> +       bool is_default = !strcmp(str, "Default");
+>>>         int ret;
+>>>
+>>>         if (metric_events_list->nr_entries == 0)
+>>> @@ -1549,6 +1570,9 @@ static int parse_groups(struct evlist *perf_evlist,
+>>>                         goto out;
+>>>         }
+>>>
+>>> +       if (is_default)
+>>> +               list_sort(NULL, &metric_list, default_metricgroup_cmp);
+>>> +
+>>>         list_for_each_entry(m, &metric_list, nd) {
+>>>                 struct metric_event *me;
+>>>                 struct evsel **metric_events;
+>>> @@ -1637,6 +1661,17 @@ static int parse_groups(struct evlist *perf_evlist,
+>>>                 expr->metric_unit = m->metric_unit;
+>>>                 expr->metric_events = metric_events;
+>>>                 expr->runtime = m->pctx->sctx.runtime;
+>>> +               if (m->pmu && strcmp(m->pmu, "cpu")) {
+>>> +                       char *name;
+>>> +
+>>> +                       if (asprintf(&name, "%s (%s)", m->default_metricgroup_name, m->pmu) < 0)
 >>
->> Yes, it's a bit of the same logic as evsel__fallback, or we can call
->> evlist__add_default() as before, simply create an evsel of hardware
->> cycles and add it directly to evlist.
+>> With EXTRA_CFLAGS="-fsanitize=address" this is causing:
 >>
->> Please confirm whether this solution is feasible. If it is feasible, I
->> will send a v2 version.
+>> $ perf test 7 -vv -F
+>>   7: PMU events                                                      :
+>> ...
+>>   7.5: Parsing of metric thresholds with fake PMUs                   :
+>> ...
+>> ==2072355==ERROR: LeakSanitizer: detected memory leaks
+>>
+>> Direct leak of 6199 byte(s) in 340 object(s) allocated from:
+>>    #0 0x7f24cce7077b in __interceptor_strdup
+>> ../../../../src/libsanitizer/asan/asan_interceptors.cp
+>> p:439
+>>    #1 0x55972b328abd in asprintf util/util.c:566
+>>    #2 0x55972b251dbd in parse_groups util/metricgroup.c:1667
+>>    #3 0x55972b25231f in metricgroup__parse_groups_test util/metricgroup.c:1719
+>>    #4 0x55972b139aff in test__parsing_callback tests/pmu-events.c:837
+>>    #5 0x55972b5119a9 in pmu_metrics_table_for_each_metric
+>> /tmp/perf/pmu-events/pmu-events.c:61641
+>>    #6 0x55972b511fdf in pmu_for_each_core_metric
+>> /tmp/perf/pmu-events/pmu-events.c:61742
+>>    #7 0x55972b13a3bc in test__parsing tests/pmu-events.c:898
+>>    #8 0x55972b106cd7 in run_test tests/builtin-test.c:236
+>>    #9 0x55972b106f7c in test_and_print tests/builtin-test.c:265
+>>    #10 0x55972b107f96 in __cmd_test tests/builtin-test.c:436
+>>    #11 0x55972b10927a in cmd_test tests/builtin-test.c:559
+>>    #12 0x55972b19584a in run_builtin
+>> /home/irogers/kernel.org/tools/perf/perf.c:323
+>>    #13 0x55972b195dbb in handle_internal_command
+>> /home/irogers/kernel.org/tools/perf/perf.c:377
+>>    #14 0x55972b196183 in run_argv /home/irogers/kernel.org/tools/perf/perf.c:421
+>>    #15 0x55972b1966eb in main /home/irogers/kernel.org/tools/perf/perf.c:537
+>>    #16 0x7f24cbe46189 in __libc_start_call_main
+>> ../sysdeps/nptl/libc_start_call_main.h:58
+>>
+>> SUMMARY: AddressSanitizer: 6199 byte(s) leaked in 340 allocation(s)
+>>
+>> As this is mixing allocated and unallocated strings, you like want to
+>> strdup the unallocated ones, then add a free to the exit routine.
+>>
+>> Thanks,
+>> Ian
 > 
-> The previous evlist__add_default logic didn't handle wildcard PMUs for
-> cycles, hence wanting to reuse the parse events logic. The error is
-> that the logic now isn't doing the fallback properly. I think an
-> evlist__add_cycles which uses evsel__fallback makes sense matching the
-> previous logic. I'd be happy if you took a look. I'll write a patch so
-> that the perf_pmus list of core PMUs is never empty.
+> Except for the memory leak, everything looks good here. Will ack with
+> the memory leak fix.
 > 
 
-The gdb calltrace for core dump is as follows:
-
-(gdb) bt
-#0  0x00000000005ffaa2 in __perf_cpu_map__nr (cpus=0x0) at cpumap.c:283
-#1  0x00000000005ffd17 in perf_cpu_map__max (map=0x0) at cpumap.c:371
-#2  0x0000000000565644 in cpu_map_data__alloc 
-(syn_data=syn_data@entry=0x7ffc843bff30, 
-header_size=header_size@entry=8) at util/synthetic-events.c:1273
-#3  0x0000000000568712 in cpu_map_event__new (map=<optimized out>) at 
-util/synthetic-events.c:1321
-#4  perf_event__synthesize_cpu_map (tool=tool@entry=0xc37580 <record>, 
-map=<optimized out>, process=process@entry=0x413a80 
-<process_synthesized_event>, machine=machine@entry=0x0) at 
-util/synthetic-events.c:1341
-#5  0x000000000041426e in record__synthesize (tail=tail@entry=false, 
-rec=0xc37580 <record>) at builtin-record.c:2050
-#6  0x0000000000415a0b in __cmd_record (argc=<optimized out>, 
-argv=<optimized out>, rec=0xc37580 <record>) at builtin-record.c:2512
-#7  0x0000000000418f22 in cmd_record (argc=<optimized out>, 
-argv=<optimized out>) at builtin-record.c:4260
-#8  0x00000000004babdd in run_builtin (p=p@entry=0xc3a0e8 
-<commands+264>, argc=argc@entry=2, argv=argv@entry=0x7ffc843c5b30) at 
-perf.c:323
-#9  0x0000000000401632 in handle_internal_command (argv=0x7ffc843c5b30, 
-argc=2) at perf.c:377
-#10 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at 
-perf.c:421
-#11 main (argc=2, argv=0x7ffc843c5b30) at perf.c:537
-
-The direct cause of the problem is that rec->evlist->core.all_cpus is 
-empty, resulting in null pointer access.
-
-The code process is as follows:
-
-cmd_record
-   parse_event(rec->evlist)
-   // Hardware cycle events should not be supported here, so rec->evlist 
-is empty
-   ...
-
-   evlist__create_maps(rec->evlist)
-     perf_evlist__set_maps(&rec->evlist->core)
-	  perf_evlist__propagate_maps(&rec->evlist->core)
-	    perf_evlist__for_each_evsel(&rec->evlist->core, evsel)
-		// because rec->evlist is empty, don't get into that 
-__perf_evlist__propagate_maps(), so rec->evlist->core.all_cpus is NULL.
-		  __perf_evlist__propagate_maps
-		    rec->evlist->core.all_cpus = perf_cpu_map__merge(evlist->all_cpus, 
-evsel->cpus);
-   ...
-
-   __cmd_record
-     record__synthesize
-       perf_event__synthesize_cpu_map(rec->evlist->core.all_cpus)
-         cpu_map_event__new(rec->evlist->core.all_cpus)
-		  cpu_map_data__alloc(rec->evlist->core.all_cpus)
-		    perf_cpu_map__max(rec->evlist->core.all_cpus)
-			  __perf_cpu_map__nr
-			  // Here null pointer access!
-	...
-	
-	record__open
-       evsel__fallback
-	  // Here fallback is just starting
-
+Thanks Ian. I will fix the memory leak and send a V3.
 
 Thanks,
-Yang
+Kan
+
+> Thanks,
+> Ian
+> 
+>>> +                               expr->default_metricgroup_name = m->default_metricgroup_name;
+>>> +                       else
+>>> +                               expr->default_metricgroup_name = name;
+>>> +               } else
+>>> +                       expr->default_metricgroup_name = m->default_metricgroup_name;
+>>> +               if (is_default)
+>>> +                       me->is_default = true;
+>>>                 list_add(&expr->nd, &me->head);
+>>>         }
+>>>
+>>> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
+>>> index bf18274c15df..d5325c6ec8e1 100644
+>>> --- a/tools/perf/util/metricgroup.h
+>>> +++ b/tools/perf/util/metricgroup.h
+>>> @@ -22,6 +22,7 @@ struct cgroup;
+>>>  struct metric_event {
+>>>         struct rb_node nd;
+>>>         struct evsel *evsel;
+>>> +       bool is_default; /* the metric evsel from the Default metricgroup */
+>>>         struct list_head head; /* list of metric_expr */
+>>>  };
+>>>
+>>> @@ -55,6 +56,8 @@ struct metric_expr {
+>>>          * more human intelligible) and then add "MiB" afterward when displayed.
+>>>          */
+>>>         const char *metric_unit;
+>>> +       /** Displayed metricgroup name of the Default metricgroup */
+>>> +       const char *default_metricgroup_name;
+>>>         /** Null terminated array of events used by the metric. */
+>>>         struct evsel **metric_events;
+>>>         /** Null terminated array of referenced metrics. */
+>>> --
+>>> 2.35.1
+>>>
