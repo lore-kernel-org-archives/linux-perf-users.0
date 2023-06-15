@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0312DEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 13:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70FCFEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 13:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344605AbjFONyl (ORCPT
+        id S1344628AbjFONyo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 09:54:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59516 "EHLO
+        Thu, 15 Jun 2023 09:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241356AbjFONyk (ORCPT
+        with ESMTP id S1344612AbjFONyl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 09:54:40 -0400
+        Thu, 15 Jun 2023 09:54:41 -0400
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7388E1FC3;
-        Thu, 15 Jun 2023 06:54:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62AFB1FD4;
+        Thu, 15 Jun 2023 06:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686837279; x=1718373279;
+  t=1686837280; x=1718373280;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pzcNb5kzn61KFdcjmKe2H8uk6m6tCd/c1IAgVezvkmo=;
-  b=UdgCB5w9RC+9Q8UwPeWd1lWxYWbLN6gFHG0/98Uywji7uQrQ648/Op1s
-   SXLL18IJr8q/j3gSy6CPfs8/PpGMJzAunMwUkf/niZb01Zm/ybPewkoal
-   fFzeyXn5eVMP998i1//p21Wt3BWImcDeh4p8AGnGyr+AB7+hvmZzBKVVN
-   4B+p1ERR4pemFmuZZwCmC+73IwB8OQdOVlOICEcPb37TKBiLUsMod6KGY
-   H0wMFAG70Rs5b2ptmO1JzMb5lUfJGJIQdeiVoPHkbUmOqm71Hy7aybWvn
-   KlnNxfwxxyiwtnOAnqblW03y8ZwrnMCnUvkX1CHHRO4Di91AeyZLrrt2L
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="356411384"
+  bh=15U0WIiyyq0rvPLxNQh5XmogtqMkEiklw2OKMcRnMoU=;
+  b=E5qf6IOfdIO0fdDCbB5lGlf57oEcOCQq0TZMwZj8HdtpcqEePYLnLjwY
+   5c/4dat+Em07tmRg+dh7SciFyqPNHDC0GlpokP5N1nAC1YXO24nP4/n2N
+   opzdVTsAVdrjI7x5eTQ0Ki5vwlax27Wh65Uh69cenXEoc5nhvYsmO3Wto
+   b/yOQdJIi5aWqJ94u5QYPl7XDJVOzt0oKm8sMCBmaUzIcx17vuvgA+0b4
+   BJXc48ArTKJPbifVlm9YjlTZ3EvBb4Mfna8OnIu4A5xJKeJnXkjohd7eH
+   EhVxRbPx39K2A+634RHdzwmkH8NDDfh9LNnGrTPZKW5rPbsd8gVKSf8Nw
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="356411398"
 X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="356411384"
+   d="scan'208";a="356411398"
 Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 06:54:38 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 06:54:40 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="782527046"
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="782527053"
 X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="782527046"
+   d="scan'208";a="782527053"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Jun 2023 06:54:36 -0700
+  by fmsmga004.fm.intel.com with ESMTP; 15 Jun 2023 06:54:38 -0700
 From:   kan.liang@linux.intel.com
 To:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
         irogers@google.com, namhyung@kernel.org, jolsa@kernel.org,
@@ -47,9 +47,9 @@ To:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 1/8] perf evsel: Fix the annotation for hardware events on hybrid
-Date:   Thu, 15 Jun 2023 06:53:08 -0700
-Message-Id: <20230615135315.3662428-2-kan.liang@linux.intel.com>
+Subject: [PATCH V3 3/8] perf stat,jevents: Introduce Default tags for the default mode
+Date:   Thu, 15 Jun 2023 06:53:10 -0700
+Message-Id: <20230615135315.3662428-4-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20230615135315.3662428-1-kan.liang@linux.intel.com>
 References: <20230615135315.3662428-1-kan.liang@linux.intel.com>
@@ -61,91 +61,111 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-The annotation for hardware events is wrong on hybrid. For example,
+Introduce a new metricgroup, Default, to tag all the metric groups which
+will be collected in the default mode.
 
- # ./perf stat -a sleep 1
+Add a new field, DefaultMetricgroupName, in the JSON file to indicate
+the real metric group name. It will be printed in the default output
+to replace the event names.
 
- Performance counter stats for 'system wide':
+There is nothing changed for the output format.
 
-         32,148.85 msec cpu-clock                        #   32.000 CPUs utilized
-               374      context-switches                 #   11.633 /sec
-                33      cpu-migrations                   #    1.026 /sec
-               295      page-faults                      #    9.176 /sec
-        18,979,960      cpu_core/cycles/                 #  590.378 K/sec
-       261,230,783      cpu_atom/cycles/                 #    8.126 M/sec                       (54.21%)
-        17,019,732      cpu_core/instructions/           #  529.404 K/sec
-        38,020,470      cpu_atom/instructions/           #    1.183 M/sec                       (63.36%)
-         3,296,743      cpu_core/branches/               #  102.546 K/sec
-         6,692,338      cpu_atom/branches/               #  208.167 K/sec                       (63.40%)
-            96,421      cpu_core/branch-misses/          #    2.999 K/sec
-         1,016,336      cpu_atom/branch-misses/          #   31.613 K/sec                       (63.38%)
+On SPR, both TopdownL1 and TopdownL2 are displayed in the default
+output.
 
-The hardware events have extended type on hybrid, but the evsel__match()
-doesn't take it into account.
+On ARM, Intel ICL and later platforms (before SPR), only TopdownL1 is
+displayed in the default output.
 
-Filter the config on hybrid before checking.
-
-With the patch,
-
- # ./perf stat -a sleep 1
-
- Performance counter stats for 'system wide':
-
-         32,139.90 msec cpu-clock                        #   32.003 CPUs utilized
-               343      context-switches                 #   10.672 /sec
-                32      cpu-migrations                   #    0.996 /sec
-                73      page-faults                      #    2.271 /sec
-        13,712,841      cpu_core/cycles/                 #    0.000 GHz
-       258,301,691      cpu_atom/cycles/                 #    0.008 GHz                         (54.20%)
-        12,428,163      cpu_core/instructions/           #    0.91  insn per cycle
-        37,786,557      cpu_atom/instructions/           #    2.76  insn per cycle              (63.35%)
-         2,418,826      cpu_core/branches/               #   75.259 K/sec
-         6,965,962      cpu_atom/branches/               #  216.739 K/sec                       (63.38%)
-            72,150      cpu_core/branch-misses/          #    2.98% of all branches
-         1,032,746      cpu_atom/branch-misses/          #   42.70% of all branches             (63.35%)
-
-Suggested-by: Ian Rogers <irogers@google.com>
+Suggested-by: Stephane Eranian <eranian@google.com>
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/util/evsel.h | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ tools/perf/builtin-stat.c          | 4 ++--
+ tools/perf/pmu-events/jevents.py   | 5 +++--
+ tools/perf/pmu-events/pmu-events.h | 1 +
+ tools/perf/util/metricgroup.c      | 6 ++++++
+ 4 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index b365b449c6ea..cc6fb3049b99 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -10,6 +10,7 @@
- #include <internal/evsel.h>
- #include <perf/evsel.h>
- #include "symbol_conf.h"
-+#include "pmus.h"
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index fc615bdeed4f..55601b4b5c34 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -2154,14 +2154,14 @@ static int add_default_attributes(void)
+ 		 * Add TopdownL1 metrics if they exist. To minimize
+ 		 * multiplexing, don't request threshold computation.
+ 		 */
+-		if (metricgroup__has_metric(pmu, "TopdownL1")) {
++		if (metricgroup__has_metric(pmu, "Default")) {
+ 			struct evlist *metric_evlist = evlist__new();
+ 			struct evsel *metric_evsel;
  
- struct bpf_object;
- struct cgroup;
-@@ -350,9 +351,19 @@ u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sam
+ 			if (!metric_evlist)
+ 				return -1;
  
- struct tep_format_field *evsel__field(struct evsel *evsel, const char *name);
+-			if (metricgroup__parse_groups(metric_evlist, pmu, "TopdownL1",
++			if (metricgroup__parse_groups(metric_evlist, pmu, "Default",
+ 							/*metric_no_group=*/false,
+ 							/*metric_no_merge=*/false,
+ 							/*metric_no_threshold=*/true,
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 7ed258be1829..12e80bb7939b 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -54,8 +54,8 @@ _json_event_attributes = [
+ # Attributes that are in pmu_metric rather than pmu_event.
+ _json_metric_attributes = [
+     'pmu', 'metric_name', 'metric_group', 'metric_expr', 'metric_threshold',
+-    'desc', 'long_desc', 'unit', 'compat', 'metricgroup_no_group', 'aggr_mode',
+-    'event_grouping'
++    'desc', 'long_desc', 'unit', 'compat', 'metricgroup_no_group',
++    'default_metricgroup_name', 'aggr_mode', 'event_grouping'
+ ]
+ # Attributes that are bools or enum int values, encoded as '0', '1',...
+ _json_enum_attributes = ['aggr_mode', 'deprecated', 'event_grouping', 'perpkg']
+@@ -307,6 +307,7 @@ class JsonEvent:
+     self.metric_name = jd.get('MetricName')
+     self.metric_group = jd.get('MetricGroup')
+     self.metricgroup_no_group = jd.get('MetricgroupNoGroup')
++    self.default_metricgroup_name = jd.get('DefaultMetricgroupName')
+     self.event_grouping = convert_metric_constraint(jd.get('MetricConstraint'))
+     self.metric_expr = None
+     if 'MetricExpr' in jd:
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index 8cd23d656a5d..caf59f23cd64 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -61,6 +61,7 @@ struct pmu_metric {
+ 	const char *desc;
+ 	const char *long_desc;
+ 	const char *metricgroup_no_group;
++	const char *default_metricgroup_name;
+ 	enum aggr_mode_class aggr_mode;
+ 	enum metric_event_groups event_grouping;
+ };
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 74f2d8efc02d..8b19644ade7d 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -137,6 +137,11 @@ struct metric {
+ 	 * output.
+ 	 */
+ 	const char *metric_unit;
++	/**
++	 * Optional name of the metric group reported
++	 * if the Default metric group is being processed.
++	 */
++	const char *default_metricgroup_name;
+ 	/** Optional null terminated array of referenced metrics. */
+ 	struct metric_ref *metric_refs;
+ 	/**
+@@ -219,6 +224,7 @@ static struct metric *metric__new(const struct pmu_metric *pm,
  
--#define evsel__match(evsel, t, c)		\
--	(evsel->core.attr.type == PERF_TYPE_##t &&	\
--	 evsel->core.attr.config == PERF_COUNT_##c)
-+static inline bool __evsel__match(const struct evsel *evsel, u32 type, u64 config)
-+{
-+	if (evsel->core.attr.type != type)
-+		return false;
-+
-+	if ((type == PERF_TYPE_HARDWARE || type == PERF_TYPE_HW_CACHE)  &&
-+	    perf_pmus__supports_extended_type())
-+		return (evsel->core.attr.config & PERF_HW_EVENT_MASK) == config;
-+
-+	return evsel->core.attr.config == config;
-+}
-+
-+#define evsel__match(evsel, t, c) __evsel__match(evsel, PERF_TYPE_##t, PERF_COUNT_##c)
- 
- static inline bool evsel__match2(struct evsel *e1, struct evsel *e2)
- {
+ 	m->pmu = pm->pmu ?: "cpu";
+ 	m->metric_name = pm->metric_name;
++	m->default_metricgroup_name = pm->default_metricgroup_name;
+ 	m->modifier = NULL;
+ 	if (modifier) {
+ 		m->modifier = strdup(modifier);
 -- 
 2.35.1
 
