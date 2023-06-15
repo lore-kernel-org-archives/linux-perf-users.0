@@ -2,250 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3291BEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 04:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0EECEB64DB
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 05:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237726AbjFOEab (ORCPT
+        id S230225AbjFOFRZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 00:30:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36520 "EHLO
+        Thu, 15 Jun 2023 01:17:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjFOEa3 (ORCPT
+        with ESMTP id S229853AbjFOFRY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 00:30:29 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA001BF8
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 21:30:28 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-3f98276f89cso87261cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 21:30:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686803427; x=1689395427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NpMkYu68kVCSeADHU3WzS0gNWUL6UGuCaTOSPQaWnBY=;
-        b=p36xzpFyQSMpMiJHPw0/Pdew2Stos4FU9DmAXYJwWjGHT56YbT2MCu7Ci8b/U23JpT
-         jdUzXZRwLx8pEUu2QsgnomXr+MbIo1mSSCUatUTumirV2XyQzDxYpCqjucb3osckFpHD
-         0zPi4YLRfN3ydsujAYJ+G4ZJeqf3j167CQAF2G9AHI30kcwJPM9auqEaTRjk8zuMTAab
-         efaScxq7ge81XrsuaZEnNrSX6+k5fqS2uZOHdAT4bJ7jdFy3OEwBMWmPP2a2hUa4xetY
-         bssvB7NQY560fnbKA6DramQoxR1pQdGgEAsXdgqeB85m/Ru8fK47dQ2FoYUB05aBmSdq
-         gTkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686803427; x=1689395427;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NpMkYu68kVCSeADHU3WzS0gNWUL6UGuCaTOSPQaWnBY=;
-        b=M7QQ64357aj6azBBXNCH0O2vFnRKceBCt7feDpiAu9CSga0QPJN4cHZRwch0sEnx5B
-         6x1JBtaQ2ST7pP2t6BHGBKFXWGIgb41YtRe/Mp2uAGUAlD9XPCAnVhhNPvNa7Gl+5V/X
-         rlVv1HEAXb373vY/sYcDlYYXZNBT3LPT1AVQtPhUNEsihG4NIGnBpxmF3RR9VBuZifYQ
-         gAuG6x3VR035drYZ7ZLeiS/3kxLhWi9Ixf2mEx8lZo/pNuTpwTxgPUtDR38UT9QXNXAG
-         eg+694q910tj/A+FoVZzlxyvRkTD32GkwOQQPicALu0aUkzPqcGfUIULSO1N3/9mC6jP
-         X1iw==
-X-Gm-Message-State: AC+VfDydTTeiHjG2Vxlq+PgsfkYjpUrfbX0clRPJ74SqqU7WxoU2N/92
-        J0ob+fTk6KPi2opJSsTuTUThB/aNAJl5phkN8JMd0g==
-X-Google-Smtp-Source: ACHHUZ7gl0OoSz/xmXaN/z+bmDucfMs5NuXGtC+sD0f5i5RdNTRhVV8pRvTQ2jcc3V2Rru+Bpud5QEtV8IYz5rcahrY=
-X-Received: by 2002:a05:622a:1447:b0:3f0:af20:1a37 with SMTP id
- v7-20020a05622a144700b003f0af201a37mr55182qtx.15.1686803427047; Wed, 14 Jun
- 2023 21:30:27 -0700 (PDT)
+        Thu, 15 Jun 2023 01:17:24 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2044.outbound.protection.outlook.com [40.107.223.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34C9626A8;
+        Wed, 14 Jun 2023 22:17:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TgsvaRSgFfCtB6jIpb5olgtayDYu8PCdkDkiTaBN3k7pgXeEpaD8Lh/rng2pEHSt0Q+D8AHN2VFPUwVA7J2dfv6swsZy0k8g9dkU2nD9Ik4Bt0QehZT+LwdtiAacYBc075hWVinFF5OhsRQHIsgMLngGMxZPbxQr3vLQjc3ZexVftwZ0MnGvNk24u3/K++bmkXqRSmcyqmuuU4WLTYLY0GQRA1aKjc7W7Btue5Avq/1CPhXZaHHeFjgRkNsZ+oR8aJvqht59FTEEbGDEDhK+lW343H20K4jxyeImLlix2F9VPpBRLANJ6JgBjYt3AB5etvZ6vYYt6h+wMNsIBATf8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EA2HwfBc/rc+96wzDGd3Qr9ckbBoPUwIJweGxFy08Ew=;
+ b=jJyFyLZ5eI9CDHq8QjJ/A/gVOtpFJar+WXC4T5az5BuiB4YXPQbdFnzWMywGwJjDtVTgT8xli5HNtPSsBU1waX1NxkLZC1v4dttPLIQ9CxOSh1BqrcgUL4IKBKvSUHbj4iTVluLWfLDCDjh12hTeNLqaGNP9LY4Prp2nB+fAXhdlzI5TSjC7ZfgYAKnmsSmyV47tMbQtI/AEoZtmKuEcw76KDKJMLJyVv2V0o2KHaerbgqHWst5Cf6/VSuJfLGRNRYwq3YC6FEow9zmztCqOVZQSkKlX3gq712v/nmysYi7oiLW6A5Au82QA4A5Wqz1G+6cdLJnUTtkXFAHYH4EYug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EA2HwfBc/rc+96wzDGd3Qr9ckbBoPUwIJweGxFy08Ew=;
+ b=C1oAJ6HiJY5q26nxCYc6rLUuxNsmyzEZSpHW7bUwWSJ+bQ2sTyuFSyqVC13R3Xorg/ZDftYmMWoTXOy0+VKjHl1ux91rwJwe+h+aDR49qiyKpskBX81QstGsWA3kf1D80oB4Rb/q0Sb/18jzpmKjpGaj9EVMDiwAmBzKTqx97W4=
+Received: from PH8PR05CA0013.namprd05.prod.outlook.com (2603:10b6:510:2cc::13)
+ by IA0PR12MB8861.namprd12.prod.outlook.com (2603:10b6:208:487::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.44; Thu, 15 Jun
+ 2023 05:17:19 +0000
+Received: from SN1PEPF0002529E.namprd05.prod.outlook.com
+ (2603:10b6:510:2cc:cafe::72) by PH8PR05CA0013.outlook.office365.com
+ (2603:10b6:510:2cc::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.26 via Frontend
+ Transport; Thu, 15 Jun 2023 05:17:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002529E.mail.protection.outlook.com (10.167.242.5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6500.27 via Frontend Transport; Thu, 15 Jun 2023 05:17:19 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 15 Jun
+ 2023 00:17:13 -0500
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <acme@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <irogers@google.com>, <jolsa@kernel.org>,
+        <namhyung@kernel.org>, <peterz@infradead.org>,
+        <james.clark@arm.com>, <alisaidi@amazon.com>, <leo.yan@linaro.org>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <mark.rutland@arm.com>, <maddy@linux.ibm.com>,
+        <tmricht@linux.ibm.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sandipan.das@amd.com>,
+        <ananth.narayan@amd.com>, <santosh.shukla@amd.com>
+Subject: [PATCH v2 0/3] perf mem amd: Fix few logic bugs
+Date:   Thu, 15 Jun 2023 10:46:57 +0530
+Message-ID: <20230615051700.1833-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230615001735.3643996-1-kan.liang@linux.intel.com> <20230615001735.3643996-5-kan.liang@linux.intel.com>
-In-Reply-To: <20230615001735.3643996-5-kan.liang@linux.intel.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 14 Jun 2023 21:30:15 -0700
-Message-ID: <CAP-5=fWbLkyQpxxhfCmqit7p4WgHVUOCjsADm-XojcT5ppcv7g@mail.gmail.com>
-Subject: Re: [PATCH V2 4/8] perf metrics: Sort the Default metricgroup
-To:     kan.liang@linux.intel.com
-Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002529E:EE_|IA0PR12MB8861:EE_
+X-MS-Office365-Filtering-Correlation-Id: bc85b971-e4fe-47ca-b327-08db6d5fca9c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: VrPUlcTk6+5lHXjxCp+jsaO+BHRkrOlDjjAN1Oq8FkKFiCQ7cTlOmGSTf5SIjkKF5zx3CJcVCyR0p4ITGfaTCdIy32Uoindp0fzfk6iQGALAgwW44D4EpRAiwxbDwXF/bKkDMlH34kh+mgg5cLZqPuI+GONQU1TLuLlveqmQlHQvCgG0J0faDVr8jXZE/dZk3hoLNTJ/bfmzWCyOKdulSo1U9qq+FiPHSQJvTDIG09qreRcqANyYVpCPZCp/gmxinBnWwKcSIyttMRcHClT73KWW47EdSql1AKs0Ni9XNamlgjZdvwlEPFsSldZ/tVJrp4mc0cuAHH4djC+BEKhSGE6qiA9FGSF4LHxy6Ldt0RGVnSajC7gX5mnyooyHXfCez3Mw8ZgzAP++U1Hqh1/X2vdXMcCyZKnFvuGMXCT//tJn1cuN+FyXNCymp8KsVk83dKr7Ke030uNhrUQ8O9sGa5djiAxLZh2GK7U1loE4/49NWQMa78zmvFKaI7krsRe3Kx43S0Mu9g1AEIkzXb0wF57nfiTgYHTzIOckI7EYnHEi77EP7zp6iO3mvrYLZ20hle+j0lqG1IydJ1jl+cQi504ccSmIvseEXj444KPAWMzytzMHfiXBJjreg8bpFUmMWRscDpWoC4WASZPS28dnW0zQA90wmijPILt3LDiJW0ODkqy54ynaiUQP0bucjBYaGtIlj7Oa7Xs6YClmUkW1H8MqN3FwxVwmUSS6UWoFKB2zSjQB94EIqDdXglDge75+hS9Kvt3X2SUJckVWj+rR6lECh1TTnIRdcwt7bh149YI=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(346002)(376002)(136003)(451199021)(46966006)(36840700001)(40470700004)(47076005)(83380400001)(2616005)(26005)(1076003)(41300700001)(316002)(966005)(36860700001)(16526019)(186003)(426003)(6666004)(7696005)(336012)(82310400005)(8936002)(36756003)(86362001)(40460700003)(7416002)(54906003)(44832011)(2906002)(478600001)(5660300002)(8676002)(356005)(70206006)(6916009)(82740400003)(40480700001)(81166007)(70586007)(4326008)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2023 05:17:19.1019
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc85b971-e4fe-47ca-b327-08db6d5fca9c
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: SN1PEPF0002529E.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8861
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 5:18=E2=80=AFPM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> The new default mode will print the metrics as a metric group. The
-> metrics from the same metric group must be adjacent to each other in the
-> metric list. But the metric_list_cmp() sorts metrics by the number of
-> events.
->
-> Add a new sort for the Default metricgroup, which sorts by
-> default_metricgroup_name and metric_name.
->
-> Add is_default in the struct metric_event to indicate that it's from
-> the Default metricgroup.
->
-> Store the displayed metricgroup name of the Default metricgroup into
-> the metric expr for output.
->
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  tools/perf/util/metricgroup.c | 35 +++++++++++++++++++++++++++++++++++
->  tools/perf/util/metricgroup.h |  3 +++
->  2 files changed, 38 insertions(+)
->
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index 8b19644ade7d..acf86b15ee49 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -79,6 +79,7 @@ static struct rb_node *metric_event_new(struct rblist *=
-rblist __maybe_unused,
->                 return NULL;
->         memcpy(me, entry, sizeof(struct metric_event));
->         me->evsel =3D ((struct metric_event *)entry)->evsel;
-> +       me->is_default =3D false;
->         INIT_LIST_HEAD(&me->head);
->         return &me->nd;
->  }
-> @@ -1160,6 +1161,25 @@ static int metric_list_cmp(void *priv __maybe_unus=
-ed, const struct list_head *l,
->         return right_count - left_count;
->  }
->
-> +/**
-> + * default_metricgroup_cmp - Implements complex key for the Default metr=
-icgroup
-> + *                          that first sorts by default_metricgroup_name=
-, then
-> + *                          metric_name.
-> + */
-> +static int default_metricgroup_cmp(void *priv __maybe_unused,
-> +                                  const struct list_head *l,
-> +                                  const struct list_head *r)
-> +{
-> +       const struct metric *left =3D container_of(l, struct metric, nd);
-> +       const struct metric *right =3D container_of(r, struct metric, nd)=
-;
-> +       int diff =3D strcmp(right->default_metricgroup_name, left->defaul=
-t_metricgroup_name);
-> +
-> +       if (diff)
-> +               return diff;
-> +
-> +       return strcmp(right->metric_name, left->metric_name);
-> +}
-> +
->  struct metricgroup__add_metric_data {
->         struct list_head *list;
->         const char *pmu;
-> @@ -1515,6 +1535,7 @@ static int parse_groups(struct evlist *perf_evlist,
->         LIST_HEAD(metric_list);
->         struct metric *m;
->         bool tool_events[PERF_TOOL_MAX] =3D {false};
-> +       bool is_default =3D !strcmp(str, "Default");
->         int ret;
->
->         if (metric_events_list->nr_entries =3D=3D 0)
-> @@ -1549,6 +1570,9 @@ static int parse_groups(struct evlist *perf_evlist,
->                         goto out;
->         }
->
-> +       if (is_default)
-> +               list_sort(NULL, &metric_list, default_metricgroup_cmp);
-> +
->         list_for_each_entry(m, &metric_list, nd) {
->                 struct metric_event *me;
->                 struct evsel **metric_events;
-> @@ -1637,6 +1661,17 @@ static int parse_groups(struct evlist *perf_evlist=
-,
->                 expr->metric_unit =3D m->metric_unit;
->                 expr->metric_events =3D metric_events;
->                 expr->runtime =3D m->pctx->sctx.runtime;
-> +               if (m->pmu && strcmp(m->pmu, "cpu")) {
-> +                       char *name;
-> +
-> +                       if (asprintf(&name, "%s (%s)", m->default_metricg=
-roup_name, m->pmu) < 0)
+Recent PMU refactoring changes[1] introduced a notion of core vs other
+PMUs and made perf mem/c2c code depend only on core PMUs, which is
+logically wrong for AMD as perf mem/c2c on AMD depends on IBS OP PMU,
+not the core PMU. Although user visible perf mem/c2c functionality is
+still working fine, internal code logic is wrong. Fix those.
 
-With EXTRA_CFLAGS=3D"-fsanitize=3Daddress" this is causing:
+[1] https://lore.kernel.org/r/20230527072210.2900565-1-irogers@google.com
 
-$ perf test 7 -vv -F
-  7: PMU events                                                      :
-...
-  7.5: Parsing of metric thresholds with fake PMUs                   :
-...
-=3D=3D2072355=3D=3DERROR: LeakSanitizer: detected memory leaks
+v1: https://lore.kernel.org/r/20230613095506.547-1-ravi.bangoria@amd.com
+v1->v2:
+ - Patch #2 of last version is already picked up by Arnaldo. So skip it.
+ - Scan all PMUs unconditionally in perf mem code instead of making it
+   conditional on arch.
 
-Direct leak of 6199 byte(s) in 340 object(s) allocated from:
-   #0 0x7f24cce7077b in __interceptor_strdup
-../../../../src/libsanitizer/asan/asan_interceptors.cp
-p:439
-   #1 0x55972b328abd in asprintf util/util.c:566
-   #2 0x55972b251dbd in parse_groups util/metricgroup.c:1667
-   #3 0x55972b25231f in metricgroup__parse_groups_test util/metricgroup.c:1=
-719
-   #4 0x55972b139aff in test__parsing_callback tests/pmu-events.c:837
-   #5 0x55972b5119a9 in pmu_metrics_table_for_each_metric
-/tmp/perf/pmu-events/pmu-events.c:61641
-   #6 0x55972b511fdf in pmu_for_each_core_metric
-/tmp/perf/pmu-events/pmu-events.c:61742
-   #7 0x55972b13a3bc in test__parsing tests/pmu-events.c:898
-   #8 0x55972b106cd7 in run_test tests/builtin-test.c:236
-   #9 0x55972b106f7c in test_and_print tests/builtin-test.c:265
-   #10 0x55972b107f96 in __cmd_test tests/builtin-test.c:436
-   #11 0x55972b10927a in cmd_test tests/builtin-test.c:559
-   #12 0x55972b19584a in run_builtin
-/home/irogers/kernel.org/tools/perf/perf.c:323
-   #13 0x55972b195dbb in handle_internal_command
-/home/irogers/kernel.org/tools/perf/perf.c:377
-   #14 0x55972b196183 in run_argv /home/irogers/kernel.org/tools/perf/perf.=
-c:421
-   #15 0x55972b1966eb in main /home/irogers/kernel.org/tools/perf/perf.c:53=
-7
-   #16 0x7f24cbe46189 in __libc_start_call_main
-../sysdeps/nptl/libc_start_call_main.h:58
+Ravi Bangoria (3):
+  perf pmus: Describe semantics of 'core_pmus' and 'other_pmus'
+  perf mem amd: Fix perf_pmus__num_mem_pmus()
+  perf mem: Scan all PMUs instead of just core ones
 
-SUMMARY: AddressSanitizer: 6199 byte(s) leaked in 340 allocation(s)
+ tools/perf/arch/x86/util/pmu.c | 12 ++++++++++++
+ tools/perf/util/mem-events.c   | 13 +++++++++----
+ tools/perf/util/pmus.c         | 17 ++++++++++++++++-
+ 3 files changed, 37 insertions(+), 5 deletions(-)
 
-As this is mixing allocated and unallocated strings, you like want to
-strdup the unallocated ones, then add a free to the exit routine.
+-- 
+2.40.1
 
-Thanks,
-Ian
-
-> +                               expr->default_metricgroup_name =3D m->def=
-ault_metricgroup_name;
-> +                       else
-> +                               expr->default_metricgroup_name =3D name;
-> +               } else
-> +                       expr->default_metricgroup_name =3D m->default_met=
-ricgroup_name;
-> +               if (is_default)
-> +                       me->is_default =3D true;
->                 list_add(&expr->nd, &me->head);
->         }
->
-> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
-h
-> index bf18274c15df..d5325c6ec8e1 100644
-> --- a/tools/perf/util/metricgroup.h
-> +++ b/tools/perf/util/metricgroup.h
-> @@ -22,6 +22,7 @@ struct cgroup;
->  struct metric_event {
->         struct rb_node nd;
->         struct evsel *evsel;
-> +       bool is_default; /* the metric evsel from the Default metricgroup=
- */
->         struct list_head head; /* list of metric_expr */
->  };
->
-> @@ -55,6 +56,8 @@ struct metric_expr {
->          * more human intelligible) and then add "MiB" afterward when dis=
-played.
->          */
->         const char *metric_unit;
-> +       /** Displayed metricgroup name of the Default metricgroup */
-> +       const char *default_metricgroup_name;
->         /** Null terminated array of events used by the metric. */
->         struct evsel **metric_events;
->         /** Null terminated array of referenced metrics. */
-> --
-> 2.35.1
->
