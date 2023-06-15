@@ -2,496 +2,323 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C46DEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 13:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D54C7EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 13:32:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241305AbjFON1q (ORCPT
+        id S1344058AbjFONc5 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 09:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39896 "EHLO
+        Thu, 15 Jun 2023 09:32:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241282AbjFON1p (ORCPT
+        with ESMTP id S1344006AbjFONc4 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 09:27:45 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59345272B
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Jun 2023 06:27:42 -0700 (PDT)
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id E709B3F8B1
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Jun 2023 13:27:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1686835657;
-        bh=pmiNPwgE3KMFqmooTFrN6Vn4u5JSaY1Dw1DCIEOod+Q=;
-        h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-         In-Reply-To:Content-Type;
-        b=rsqXzLby7DH7rJNMGL9k7VgUBMVPLaBAiJ3miD53gSKP8RS/rpXgVwvclOPxvW/de
-         Ee/NLyEqsbhIfmFEQpFvmYaOxhDlfofZCN28f63/wmzmR7Md0trmGnXcv4IbQ25VNU
-         miIxt9pw/sKIWOYvQ0LPVqdV+8EvhtsGkD56EiGQGMTSwrUyE6pdhMbcyiRkrBDdU/
-         XNYxvYlwldgNnC0fIlMd0lbk5nzr434VDqBXBc75+rn3VIdNe+Z/tAb9hzKGUfNILT
-         +NjyreX/ErgT5sFMPdPmIHF2j1oudw49524R8mUM+jAeeLZ2Qm1oT7ACPD9UHOz03A
-         QOA3kfG+0HAJw==
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-3f8d79fdd33so11596815e9.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Jun 2023 06:27:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686835657; x=1689427657;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pmiNPwgE3KMFqmooTFrN6Vn4u5JSaY1Dw1DCIEOod+Q=;
-        b=P/XkD32LTxCe4h+rVoOJJD2Fbl8X6stluRjXvgitq5bg4ySkQocmeGETynjkcLmYgB
-         oU7FTPYZoTLAirw5Yv3eTugJ/3eLJvpo0kl2+ISPEz0Y/+BO/jkVq50FJPb+wQs5gJzI
-         hM7GEGzR/8ct+7bQgQyNWuhoJfo/dNzHn9NFDJ4KAC9JAneTx5JsD9lu1KPQyU0I2rOq
-         e4HsoCInxccfnC0DK6lPgOFj66ghyuY+g2JFxLY6PE0GZhvGUkIxbnwBoWMg4oEXh2b+
-         xHWG7gEHuzn3Z0b2V7iVyEVLSHnMOJ/Rxij9toIf5E4LCcwN/YWGQmiINAxq4ZBhZx2c
-         WZCw==
-X-Gm-Message-State: AC+VfDzoSxzBCyeDpvODWwEgpXG6FKboRnw1Q3YF37mTd3xHbUa/BdpL
-        HRZez85MHSMlmdx7iarUDgtkOOYppokBtEhBdnMebP6HL7wOTEc5KRi7CEzx0TMedMpBcN+Zljh
-        PJYnXDSM9drATR/hPFxCxAuue8jv97StgBAiysvYvBdTYEME=
-X-Received: by 2002:adf:d0c7:0:b0:30f:d1e3:22b7 with SMTP id z7-20020adfd0c7000000b0030fd1e322b7mr4523132wrh.6.1686835657058;
-        Thu, 15 Jun 2023 06:27:37 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5tc18E1shmQlP6r5bTT/RRUzeEmZ44GxOZaz29SXvOsOZC9mLd47i2MmyxuogDSrd+n91t+A==
-X-Received: by 2002:adf:d0c7:0:b0:30f:d1e3:22b7 with SMTP id z7-20020adfd0c7000000b0030fd1e322b7mr4523106wrh.6.1686835656550;
-        Thu, 15 Jun 2023 06:27:36 -0700 (PDT)
-Received: from [192.168.123.67] (ip-084-119-033-219.um24.pools.vodafone-ip.de. [84.119.33.219])
-        by smtp.gmail.com with ESMTPSA id h17-20020a5d4311000000b003048477729asm21028155wrq.81.2023.06.15.06.27.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 15 Jun 2023 06:27:36 -0700 (PDT)
-Message-ID: <51af30bd-9913-8ba6-fa5e-d38e4617a7ef@canonical.com>
-Date:   Thu, 15 Jun 2023 15:27:35 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2 07/10] drivers: perf: Implement perf event mmap support
- in the SBI backend
-Content-Language: en-US
-To:     Atish Patra <atishp@atishpatra.org>
-Cc:     Alexandre Ghiti <alexghiti@rivosinc.com>,
-        Jonathan Corbet <corbet@lwn.net>,
+        Thu, 15 Jun 2023 09:32:56 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A425F2943;
+        Thu, 15 Jun 2023 06:32:53 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BEA31FB;
+        Thu, 15 Jun 2023 06:33:37 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.46.86])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B56A23F64C;
+        Thu, 15 Jun 2023 06:32:48 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Aurelien Jarno <aurelien@aurel32.net>,
-        Andreas Schwab <schwab@suse.de>,
-        Andrew Jones <ajones@ventanamicro.com>
-References: <20230512085321.13259-1-alexghiti@rivosinc.com>
- <20230512085321.13259-8-alexghiti@rivosinc.com>
- <20230531-7e3740ca04a3fe6e2fd25a01@orel>
- <CAOnJCULmOuP=EGuR7RXgkBU0LrQ9c++M43UXc1dy86kaLxOeVQ@mail.gmail.com>
-From:   Heinrich Schuchardt <heinrich.schuchardt@canonical.com>
-In-Reply-To: <CAOnJCULmOuP=EGuR7RXgkBU0LrQ9c++M43UXc1dy86kaLxOeVQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH V12 00/10] arm64/perf: Enable branch stack sampling
+Date:   Thu, 15 Jun 2023 19:02:29 +0530
+Message-Id: <20230615133239.442736-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 6/15/23 10:41, Atish Patra wrote:
-> On Wed, May 31, 2023 at 8:02 AM Andrew Jones <ajones@ventanamicro.com> wrote:
->>
->> On Fri, May 12, 2023 at 10:53:18AM +0200, Alexandre Ghiti wrote:
->>> We used to unconditionnally expose the cycle and instret csrs to
->>> userspace, which gives rise to security concerns.
->>>
->>> So now we only allow access to hw counters from userspace through the perf
->>> framework which will handle context switches, per-task events...etc. But
->>> as we cannot break userspace, we give the user the choice to go back to
->>> the previous behaviour by setting the sysctl perf_user_access.
->>>
->>> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->>> ---
->>>   arch/riscv/kernel/perf_event.c |  18 ++-
->>>   drivers/perf/riscv_pmu_sbi.c   | 194 ++++++++++++++++++++++++++++++++-
->>>   2 files changed, 205 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/arch/riscv/kernel/perf_event.c b/arch/riscv/kernel/perf_event.c
->>> index 94174a0fc251..3af9ca45b43f 100644
->>> --- a/arch/riscv/kernel/perf_event.c
->>> +++ b/arch/riscv/kernel/perf_event.c
->>> @@ -1,9 +1,13 @@
->>>   // SPDX-License-Identifier: GPL-2.0-only
->>> +#include <linux/perf/riscv_pmu.h>
->>>   #include <linux/sched_clock.h>
->>>
->>>   void arch_perf_update_userpage(struct perf_event *event,
->>>                               struct perf_event_mmap_page *userpg, u64 now)
->>>   {
->>> +#ifdef CONFIG_RISCV_PMU_SBI
->>> +     struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
->>> +#endif
->>
->> Can avoid this pair of #ifdef/#endif's by just declaring rvpmu inside the
->> if block below where it's needed. Or even just using to_riscv_pmu()
->> directly in place of rvpmu.
->>
->>>        struct clock_read_data *rd;
->>>        unsigned int seq;
->>>        u64 ns;
->>> @@ -14,7 +18,19 @@ void arch_perf_update_userpage(struct perf_event *event,
->>>        userpg->cap_user_rdpmc =
->>>                !!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
->>>
->>> -     userpg->pmc_width = 64;
->>> +#ifdef CONFIG_RISCV_PMU_SBI
->>> +     /*
->>> +      * The counters are 64-bit but the priv spec doesn't mandate all the
->>> +      * bits to be implemented: that's why, counter width can vary based on
->>> +      * the cpu vendor.
->>> +      */
->>> +     if (event->pmu->name &&
->>> +         !strncmp(event->pmu->name,
->>> +                  RISCV_PMU_PDEV_NAME, sizeof(RISCV_PMU_PDEV_NAME)))
->>> +             userpg->pmc_width = rvpmu->ctr_get_width(event->hw.idx) + 1;
->>> +     else
->>> +#endif
->>> +             userpg->pmc_width = 64;
->>
->> Can leave the initialization to 64 above the #ifdef CONFIG_RISCV_PMU_SBI
->> as is and drop the else.
->>
->>>
->>>        do {
->>>                rd = sched_clock_read_begin(&seq);
->>> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
->>> index 3b0ee2148054..d9bcc5cc6df5 100644
->>> --- a/drivers/perf/riscv_pmu_sbi.c
->>> +++ b/drivers/perf/riscv_pmu_sbi.c
->>> @@ -24,6 +24,14 @@
->>>   #include <asm/sbi.h>
->>>   #include <asm/hwcap.h>
->>>
->>> +#define SYSCTL_NO_USER_ACCESS        0
->>> +#define SYSCTL_USER_ACCESS   1
->>> +#define SYSCTL_LEGACY                2
->>> +
->>> +#define PERF_EVENT_FLAG_NO_USER_ACCESS       BIT(SYSCTL_NO_USER_ACCESS)
->>> +#define PERF_EVENT_FLAG_USER_ACCESS  BIT(SYSCTL_USER_ACCESS)
->>> +#define PERF_EVENT_FLAG_LEGACY               BIT(SYSCTL_LEGACY)
->>> +
->>>   PMU_FORMAT_ATTR(event, "config:0-47");
->>>   PMU_FORMAT_ATTR(firmware, "config:63");
->>>
->>> @@ -43,6 +51,9 @@ static const struct attribute_group *riscv_pmu_attr_groups[] = {
->>>        NULL,
->>>   };
->>>
->>> +/* Allow legacy access by default */
->>> +static int sysctl_perf_user_access __read_mostly = SYSCTL_LEGACY;
->>> +
->>
->> I'm still not in favor of this. Hopefully the distro discussions result in
->> it being changed.
->>
-> 
-> I did not see any feedback from distro guys. I talked to David (fedora
-> maintainer) and he is even okay with
-> SYSCTL_NO_USER_ACCESS :). I would love to hear back from others (cc'd
-> a few distro folks to this thread).
+This series enables perf branch stack sampling support on arm64 platform
+via a new arch feature called Branch Record Buffer Extension (BRBE). All
+relevant register definitions could be accessed here.
 
-In future we will have to support scenarios for confidential compute. 
-Here we have to avoid timing attacks against virtual machines. If access 
-to the cycle register is critical, this implies that hiding it behind a 
-sysctl setting is not good enough.
+https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
 
-If we keep this sysctl based access at all, it should be behind a 
-Kconfig setting that is disabled by default and were the help text 
-clearly indicates the security implications.
+This series applies on 6.4-rc6.
 
-Best regards
+Changes in V12:
 
-Heinrich
+- Replaced branch types with complete DIRECT/INDIRECT prefixes/suffixes
+- Replaced branch types with complete INSN/ALIGN prefixes/suffixes
+- Replaced return branch types as simple RET/ERET
+- Replaced time field GST_PHYSICAL as GUEST_PHYSICAL
+- Added 0 padding for BRBIDR0_EL1.NUMREC enum values
+- Dropped helper arm_pmu_branch_stack_supported()
+- Renamed armv8pmu_branch_valid() as armv8pmu_branch_attr_valid()
+- Separated perf_task_ctx_cache setup from arm_pmu private allocation
+- Collected changes to branch_records_alloc() in a single patch [5/10]
+- Reworked and cleaned up branch_records_alloc()
+- Reworked armv8pmu_branch_read() with new loop iterations in patch [6/10]
+- Reworked capture_brbe_regset() with new loop iterations in patch [8/10]
+- Updated the comment in branch_type_to_brbcr()
+- Fixed the comment before stitch_stored_live_entries()
+- Fixed BRBINFINJ_EL1 definition for VALID_FULL enum field
+- Factored out helper __read_brbe_regset() from capture_brbe_regset()
+- Dropped the helper copy_brbe_regset()
+- Simplified stitch_stored_live_entries() with memcpy(), memmove()
+- Reworked armv8pmu_probe_pmu() to bail out early with !probe.present
+- Rework brbe_attributes_probe() without 'struct brbe_hw_attr'
+- Dropped 'struct brbe_hw_attr' argument from capture_brbe_regset()
+- Dropped 'struct brbe_hw_attr' argument from brbe_branch_save()
+- Dropped arm_pmu->private and added arm_pmu->reg_trbidr instead
 
-> 
->>>   /*
->>>    * RISC-V doesn't have heterogeneous harts yet. This need to be part of
->>>    * per_cpu in case of harts with different pmu counters
->>> @@ -301,6 +312,11 @@ int riscv_pmu_get_hpm_info(u32 *hw_ctr_width, u32 *num_hw_ctr)
->>>   }
->>>   EXPORT_SYMBOL_GPL(riscv_pmu_get_hpm_info);
->>>
->>> +static uint8_t pmu_sbi_csr_index(struct perf_event *event)
->>> +{
->>> +     return pmu_ctr_list[event->hw.idx].csr - CSR_CYCLE;
->>> +}
->>> +
->>>   static unsigned long pmu_sbi_get_filter_flags(struct perf_event *event)
->>>   {
->>>        unsigned long cflags = 0;
->>> @@ -329,18 +345,34 @@ static int pmu_sbi_ctr_get_idx(struct perf_event *event)
->>>        struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
->>>        struct sbiret ret;
->>>        int idx;
->>> -     uint64_t cbase = 0;
->>> +     uint64_t cbase = 0, cmask = rvpmu->cmask;
->>>        unsigned long cflags = 0;
->>>
->>>        cflags = pmu_sbi_get_filter_flags(event);
->>> +
->>> +     /*
->>> +      * In legacy mode, we have to force the fixed counters for those events
->>> +      * but not in the user access mode as we want to use the other counters
->>> +      * that support sampling/filtering.
->>> +      */
->>> +     if (hwc->flags & PERF_EVENT_FLAG_LEGACY) {
->>> +             if (event->attr.config == PERF_COUNT_HW_CPU_CYCLES) {
->>> +                     cflags |= SBI_PMU_CFG_FLAG_SKIP_MATCH;
->>> +                     cmask = 1;
->>> +             } else if (event->attr.config == PERF_COUNT_HW_INSTRUCTIONS) {
->>> +                     cflags |= SBI_PMU_CFG_FLAG_SKIP_MATCH;
->>> +                     cmask = 1UL << (CSR_INSTRET - CSR_CYCLE);
->>> +             }
->>> +     }
->>> +
->>>        /* retrieve the available counter index */
->>>   #if defined(CONFIG_32BIT)
->>>        ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH, cbase,
->>> -                     rvpmu->cmask, cflags, hwc->event_base, hwc->config,
->>> +                     cmask, cflags, hwc->event_base, hwc->config,
->>>                        hwc->config >> 32);
->>>   #else
->>>        ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH, cbase,
->>> -                     rvpmu->cmask, cflags, hwc->event_base, hwc->config, 0);
->>> +                     cmask, cflags, hwc->event_base, hwc->config, 0);
->>>   #endif
->>>        if (ret.error) {
->>>                pr_debug("Not able to find a counter for event %lx config %llx\n",
->>> @@ -474,6 +506,14 @@ static u64 pmu_sbi_ctr_read(struct perf_event *event)
->>>        return val;
->>>   }
->>>
->>> +static void pmu_sbi_set_scounteren(void *arg)
->>> +{
->>> +     struct perf_event *event = (struct perf_event *)arg;
->>> +
->>> +     csr_write(CSR_SCOUNTEREN,
->>> +               csr_read(CSR_SCOUNTEREN) | (1 << pmu_sbi_csr_index(event)));
->>> +}
->>> +
->>>   static void pmu_sbi_ctr_start(struct perf_event *event, u64 ival)
->>>   {
->>>        struct sbiret ret;
->>> @@ -490,6 +530,18 @@ static void pmu_sbi_ctr_start(struct perf_event *event, u64 ival)
->>>        if (ret.error && (ret.error != SBI_ERR_ALREADY_STARTED))
->>>                pr_err("Starting counter idx %d failed with error %d\n",
->>>                        hwc->idx, sbi_err_map_linux_errno(ret.error));
->>> +
->>> +     if (hwc->flags & PERF_EVENT_FLAG_USER_ACCESS &&
->>> +         hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT)
->>> +             pmu_sbi_set_scounteren((void *)event);
->>> +}
->>> +
->>> +static void pmu_sbi_reset_scounteren(void *arg)
->>> +{
->>> +     struct perf_event *event = (struct perf_event *)arg;
->>> +
->>> +     csr_write(CSR_SCOUNTEREN,
->>> +               csr_read(CSR_SCOUNTEREN) & ~(1 << pmu_sbi_csr_index(event)));
->>>   }
->>>
->>>   static void pmu_sbi_ctr_stop(struct perf_event *event, unsigned long flag)
->>> @@ -497,6 +549,10 @@ static void pmu_sbi_ctr_stop(struct perf_event *event, unsigned long flag)
->>>        struct sbiret ret;
->>>        struct hw_perf_event *hwc = &event->hw;
->>>
->>> +     if (hwc->flags & PERF_EVENT_FLAG_USER_ACCESS &&
->>> +         hwc->flags & PERF_EVENT_FLAG_USER_READ_CNT)
->>> +             pmu_sbi_reset_scounteren((void *)event);
->>> +
->>>        ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP, hwc->idx, 1, flag, 0, 0, 0);
->>>        if (ret.error && (ret.error != SBI_ERR_ALREADY_STOPPED) &&
->>>                flag != SBI_PMU_STOP_FLAG_RESET)
->>> @@ -704,10 +760,13 @@ static int pmu_sbi_starting_cpu(unsigned int cpu, struct hlist_node *node)
->>>        struct cpu_hw_events *cpu_hw_evt = this_cpu_ptr(pmu->hw_events);
->>>
->>>        /*
->>> -      * Enable the access for CYCLE, TIME, and INSTRET CSRs from userspace,
->>> -      * as is necessary to maintain uABI compatibility.
->>> +      * We keep enabling userspace access to CYCLE, TIME and INSRET via the
->>> +      * legacy option but that will be removed in the future.
->>>         */
->>> -     csr_write(CSR_SCOUNTEREN, 0x7);
->>> +     if (sysctl_perf_user_access == SYSCTL_LEGACY)
->>> +             csr_write(CSR_SCOUNTEREN, 0x7);
->>> +     else
->>> +             csr_write(CSR_SCOUNTEREN, 0x2);
->>>
->>>        /* Stop all the counters so that they can be enabled from perf */
->>>        pmu_sbi_stop_all(pmu);
->>> @@ -851,6 +910,123 @@ static void riscv_pmu_destroy(struct riscv_pmu *pmu)
->>>        cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
->>>   }
->>>
->>> +static void pmu_sbi_event_init(struct perf_event *event)
->>> +{
->>> +     /*
->>> +      * The permissions are set at event_init so that we do not depend
->>> +      * on the sysctl value that can change.
->>> +      */
->>> +     if (sysctl_perf_user_access == SYSCTL_NO_USER_ACCESS)
->>> +             event->hw.flags |= PERF_EVENT_FLAG_NO_USER_ACCESS;
->>> +     else if (sysctl_perf_user_access == SYSCTL_USER_ACCESS)
->>> +             event->hw.flags |= PERF_EVENT_FLAG_USER_ACCESS;
->>> +     else
->>> +             event->hw.flags |= PERF_EVENT_FLAG_LEGACY;
->>> +}
->>> +
->>> +static void pmu_sbi_event_mapped(struct perf_event *event, struct mm_struct *mm)
->>> +{
->>> +     if (event->hw.flags & PERF_EVENT_FLAG_NO_USER_ACCESS)
->>> +             return;
->>> +
->>> +     /* In legacy mode, the first 3 CSRs are available. */
->>
->> first and third
->>
->>> +     if (event->hw.flags & PERF_EVENT_FLAG_LEGACY) {
->>> +             if (event->attr.config != PERF_COUNT_HW_CPU_CYCLES &&
->>> +                 event->attr.config != PERF_COUNT_HW_INSTRUCTIONS) {
->>> +                     return;
->>> +             }
->>> +     }
->>> +
->>> +     /*
->>> +      * The user mmapped the event to directly access it: this is where
->>> +      * we determine based on sysctl_perf_user_access if we grant userspace
->>> +      * the direct access to this event. That means that within the same
->>> +      * task, some events may be directly accessible and some other may not,
->>> +      * if the user changes the value of sysctl_perf_user_accesss in the
->>> +      * meantime.
->>> +      */
->>> +
->>> +     event->hw.flags |= PERF_EVENT_FLAG_USER_READ_CNT;
->>> +
->>> +     /*
->>> +      * We must enable userspace access *before* advertising in the user page
->>> +      * that it is possible to do so to avoid any race.
->>> +      * And we must notify all cpus here because threads that currently run
->>> +      * on other cpus will try to directly access the counter too without
->>> +      * calling pmu_sbi_ctr_start.
->>> +      */
->>> +     if (event->hw.flags & PERF_EVENT_FLAG_USER_ACCESS)
->>> +             on_each_cpu_mask(mm_cpumask(mm),
->>> +                              pmu_sbi_set_scounteren, (void *)event, 1);
->>> +}
->>> +
->>> +static void pmu_sbi_event_unmapped(struct perf_event *event, struct mm_struct *mm)
->>> +{
->>> +     if (event->hw.flags & PERF_EVENT_FLAG_NO_USER_ACCESS)
->>> +             return;
->>> +
->>> +     /* In legacy mode, the first 3 CSRs are available. */
->>
->> first and third
->>
->>> +     if (event->hw.flags & PERF_EVENT_FLAG_LEGACY) {
->>> +             if (event->attr.config != PERF_COUNT_HW_CPU_CYCLES &&
->>> +                 event->attr.config != PERF_COUNT_HW_INSTRUCTIONS) {
->>> +                     return;
->>> +             }
->>> +     }
->>> +
->>> +     /*
->>> +      * Here we can directly remove user access since the user does not have
->>> +      * access to the user page anymore so we avoid the racy window where the
->>> +      * user could have read cap_user_rdpmc to true right before we disable
->>> +      * it.
->>> +      */
->>> +     event->hw.flags &= ~PERF_EVENT_FLAG_USER_READ_CNT;
->>> +
->>> +     if (event->hw.flags & PERF_EVENT_FLAG_USER_ACCESS)
->>> +             on_each_cpu_mask(mm_cpumask(mm),
->>> +                              pmu_sbi_reset_scounteren, (void *)event, 1);
->>> +}
->>> +
->>> +static void riscv_pmu_update_counter_access(void *info)
->>> +{
->>> +     if (sysctl_perf_user_access == SYSCTL_LEGACY)
->>> +             csr_write(CSR_SCOUNTEREN, 0x7);
->>> +     else
->>> +             csr_write(CSR_SCOUNTEREN, 0x2);
->>> +}
->>> +
->>> +static int riscv_pmu_proc_user_access_handler(struct ctl_table *table,
->>> +                                           int write, void *buffer,
->>> +                                           size_t *lenp, loff_t *ppos)
->>> +{
->>> +     int prev = sysctl_perf_user_access;
->>> +     int ret = proc_dointvec_minmax(table, write, buffer, lenp, ppos);
->>> +
->>> +     /*
->>> +      * Test against the previous value since we clear SCOUNTEREN when
->>> +      * sysctl_perf_user_access is set to SYSCTL_USER_ACCESS, but we should
->>> +      * not do that if that was already the case.
->>> +      */
->>> +     if (ret || !write || prev == sysctl_perf_user_access)
->>> +             return ret;
->>> +
->>> +     on_each_cpu(riscv_pmu_update_counter_access, (void *)&prev, 1);
->>
->> Instead of passing prev shouldn't we pass NULL, as it's not used?
->>
->>> +
->>> +     return 0;
->>> +}
->>> +
->>> +static struct ctl_table sbi_pmu_sysctl_table[] = {
->>> +     {
->>> +             .procname       = "perf_user_access",
->>> +             .data           = &sysctl_perf_user_access,
->>> +             .maxlen         = sizeof(unsigned int),
->>> +             .mode           = 0644,
->>> +             .proc_handler   = riscv_pmu_proc_user_access_handler,
->>> +             .extra1         = SYSCTL_ZERO,
->>> +             .extra2         = SYSCTL_TWO,
->>> +     },
->>> +     { }
->>> +};
->>> +
->>>   static int pmu_sbi_device_probe(struct platform_device *pdev)
->>>   {
->>>        struct riscv_pmu *pmu = NULL;
->>> @@ -888,6 +1064,10 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
->>>        pmu->ctr_get_width = pmu_sbi_ctr_get_width;
->>>        pmu->ctr_clear_idx = pmu_sbi_ctr_clear_idx;
->>>        pmu->ctr_read = pmu_sbi_ctr_read;
->>> +     pmu->event_init = pmu_sbi_event_init;
->>> +     pmu->event_mapped = pmu_sbi_event_mapped;
->>> +     pmu->event_unmapped = pmu_sbi_event_unmapped;
->>> +     pmu->csr_index = pmu_sbi_csr_index;
->>>
->>>        ret = cpuhp_state_add_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
->>>        if (ret)
->>> @@ -901,6 +1081,8 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
->>>        if (ret)
->>>                goto out_unregister;
->>>
->>> +     register_sysctl("kernel", sbi_pmu_sysctl_table);
->>> +
->>>        return 0;
->>>
->>>   out_unregister:
->>> --
->>> 2.37.2
->>>
->>
->> Thanks,
->> drew
-> 
-> 
-> 
+Changes in V11:
+
+https://lore.kernel.org/all/20230531040428.501523-1-anshuman.khandual@arm.com/
+
+- Fixed the crash for per-cpu events without event->pmu_ctx->task_ctx_data
+
+Changes in V10:
+
+https://lore.kernel.org/all/20230517022410.722287-1-anshuman.khandual@arm.com/
+
+- Rebased the series on v6.4-rc2
+- Moved ARMV8 PMUV3 changes inside drivers/perf/arm_pmuv3.c
+- Moved BRBE driver changes inside drivers/perf/arm_brbe.[c|h]
+- Moved the WARN_ON() inside the if condition in armv8pmu_handle_irq()
+
+Changes in V9:
+
+https://lore.kernel.org/all/20230315051444.1683170-1-anshuman.khandual@arm.com/
+
+- Fixed build problem with has_branch_stack() in arm64 header
+- BRBINF_EL1 definition has been changed from 'Sysreg' to 'SysregFields'
+- Renamed all BRBINF_EL1 call sites as BRBINFx_EL1 
+- Dropped static const char branch_filter_error_msg[]
+- Implemented a positive list check for BRBE supported perf branch filters
+- Added a comment in armv8pmu_handle_irq()
+- Implemented per-cpu allocation for struct branch_record records
+- Skipped looping through bank 1 if an invalid record is detected in bank 0
+- Added comment in armv8pmu_branch_read() explaining prohibited region etc
+- Added comment warning about erroneously marking transactions as aborted
+- Replaced the first argument (perf_branch_entry) in capture_brbe_flags()
+- Dropped the last argument (idx) in capture_brbe_flags()
+- Dropped the brbcr argument from capture_brbe_flags()
+- Used perf_sample_save_brstack() to capture branch records for perf_sample_data
+- Added comment explaining rationale for setting BRBCR_EL1_FZP for user only traces
+- Dropped BRBE prohibited state mechanism while in armv8pmu_branch_read()
+- Implemented event task context based branch records save mechanism
+
+Changes in V8:
+
+https://lore.kernel.org/all/20230123125956.1350336-1-anshuman.khandual@arm.com/
+
+- Replaced arm_pmu->features as arm_pmu->has_branch_stack, updated its helper
+- Added a comment and line break before arm_pmu->private element 
+- Added WARN_ON_ONCE() in helpers i.e armv8pmu_branch_[read|valid|enable|disable]()
+- Dropped comments in armv8pmu_enable_event() and armv8pmu_disable_event()
+- Replaced open bank encoding in BRBFCR_EL1 with SYS_FIELD_PREP()
+- Changed brbe_hw_attr->brbe_version from 'bool' to 'int'
+- Updated pr_warn() as pr_warn_once() with values in brbe_get_perf_[type|priv]()
+- Replaced all pr_warn_once() as pr_debug_once() in armv8pmu_branch_valid()
+- Added a comment in branch_type_to_brbcr() for the BRBCR_EL1 privilege settings
+- Modified the comment related to BRBINFx_EL1.LASTFAILED in capture_brbe_flags()   
+- Modified brbe_get_perf_entry_type() as brbe_set_perf_entry_type()
+- Renamed brbe_valid() as brbe_record_is_complete()
+- Renamed brbe_source() as brbe_record_is_source_only()
+- Renamed brbe_target() as brbe_record_is_target_only()
+- Inverted checks for !brbe_record_is_[target|source]_only() for info capture
+- Replaced 'fetch' with 'get' in all helpers that extract field value
+- Dropped 'static int brbe_current_bank' optimization in select_brbe_bank()
+- Dropped select_brbe_bank_index() completely, added capture_branch_entry()
+- Process captured branch entries in two separate loops one for each BRBE bank
+- Moved branch_records_alloc() inside armv8pmu_probe_pmu()
+- Added a forward declaration for the helper has_branch_stack()
+- Added new callbacks armv8pmu_private_alloc() and armv8pmu_private_free()
+- Updated armv8pmu_probe_pmu() to allocate the private structure before SMP call
+
+Changes in V7:
+
+https://lore.kernel.org/all/20230105031039.207972-1-anshuman.khandual@arm.com/
+
+- Folded [PATCH 7/7] into [PATCH 3/7] which enables branch stack sampling event
+- Defined BRBFCR_EL1_BRANCH_FILTERS, BRBCR_EL1_DEFAULT_CONFIG in the header
+- Defined BRBFCR_EL1_DEFAULT_CONFIG in the header
+- Updated BRBCR_EL1_DEFAULT_CONFIG with BRBCR_EL1_FZP
+- Defined BRBCR_EL1_DEFAULT_TS in the header
+- Updated BRBCR_EL1_DEFAULT_CONFIG with BRBCR_EL1_DEFAULT_TS
+- Moved BRBCR_EL1_DEFAULT_CONFIG check inside branch_type_to_brbcr()
+- Moved down BRBCR_EL1_CC, BRBCR_EL1_MPRED later in branch_type_to_brbcr()
+- Also set BRBE in paused state in armv8pmu_branch_disable()
+- Dropped brbe_paused(), set_brbe_paused() helpers
+- Extracted error string via branch_filter_error_msg[] for armv8pmu_branch_valid()
+- Replaced brbe_v1p1 with brbe_version in struct brbe_hw_attr
+- Added valid_brbe_[cc, format, version]() helpers
+- Split a separate brbe_attributes_probe() from armv8pmu_branch_probe()
+- Capture event->attr.branch_sample_type earlier in armv8pmu_branch_valid()
+- Defined enum brbe_bank_idx with possible values for BRBE bank indices
+- Changed armpmu->hw_attr into armpmu->private
+- Added missing space in stub definition for armv8pmu_branch_valid()
+- Replaced both kmalloc() with kzalloc()
+- Added BRBE_BANK_MAX_ENTRIES
+- Updated comment for capture_brbe_flags()
+- Updated comment for struct brbe_hw_attr
+- Dropped space after type cast in couple of places
+- Replaced inverse with negation for testing BRBCR_EL1_FZP in armv8pmu_branch_read()
+- Captured cpuc->branches->branch_entries[idx] in a local variable
+- Dropped saved_priv from armv8pmu_branch_read()
+- Reorganize PERF_SAMPLE_BRANCH_NO_[CYCLES|NO_FLAGS] related configuration
+- Replaced with FIELD_GET() and FIELD_PREP() wherever applicable
+- Replaced BRBCR_EL1_TS_PHYSICAL with BRBCR_EL1_TS_VIRTUAL
+- Moved valid_brbe_nr(), valid_brbe_cc(), valid_brbe_format(), valid_brbe_version()
+  select_brbe_bank(), select_brbe_bank_index() helpers inside the C implementation
+- Reorganized brbe_valid_nr() and dropped the pr_warn() message
+- Changed probe sequence in brbe_attributes_probe()
+- Added 'brbcr' argument into capture_brbe_flags() to ascertain correct state
+- Disable BRBE before disabling the PMU event counter
+- Enable PERF_SAMPLE_BRANCH_HV filters when is_kernel_in_hyp_mode()
+- Guard armv8pmu_reset() & armv8pmu_sched_task() with arm_pmu_branch_stack_supported()
+
+Changes in V6:
+
+https://lore.kernel.org/linux-arm-kernel/20221208084402.863310-1-anshuman.khandual@arm.com/
+
+- Restore the exception level privilege after reading the branch records
+- Unpause the buffer after reading the branch records
+- Decouple BRBCR_EL1_EXCEPTION/ERTN from perf event privilege level
+- Reworked BRBE implementation and branch stack sampling support on arm pmu
+- BRBE implementation is now part of overall ARMV8 PMU implementation
+- BRBE implementation moved from drivers/perf/ to inside arch/arm64/kernel/
+- CONFIG_ARM_BRBE_PMU renamed as CONFIG_ARM64_BRBE in arch/arm64/Kconfig
+- File moved - drivers/perf/arm_pmu_brbe.c -> arch/arm64/kernel/brbe.c
+- File moved - drivers/perf/arm_pmu_brbe.h -> arch/arm64/kernel/brbe.h
+- BRBE name has been dropped from struct arm_pmu and struct hw_pmu_events
+- BRBE name has been abstracted out as 'branches' in arm_pmu and hw_pmu_events
+- BRBE name has been abstracted out as 'branches' in ARMV8 PMU implementation
+- Added sched_task() callback into struct arm_pmu
+- Added 'hw_attr' into struct arm_pmu encapsulating possible PMU HW attributes
+- Dropped explicit attributes brbe_(v1p1, nr, cc, format) from struct arm_pmu
+- Dropped brbfcr, brbcr, registers scratch area from struct hw_pmu_events
+- Dropped brbe_users, brbe_context tracking in struct hw_pmu_events
+- Added 'features' tracking into struct arm_pmu with ARM_PMU_BRANCH_STACK flag
+- armpmu->hw_attr maps into 'struct brbe_hw_attr' inside BRBE implementation
+- Set ARM_PMU_BRANCH_STACK in 'arm_pmu->features' after successful BRBE probe
+- Added armv8pmu_branch_reset() inside armv8pmu_branch_enable()
+- Dropped brbe_supported() as events will be rejected via ARM_PMU_BRANCH_STACK
+- Dropped set_brbe_disabled() as well
+- Reformated armv8pmu_branch_valid() warnings while rejecting unsupported events
+
+Changes in V5:
+
+https://lore.kernel.org/linux-arm-kernel/20221107062514.2851047-1-anshuman.khandual@arm.com/
+
+- Changed BRBCR_EL1.VIRTUAL from 0b1 to 0b01
+- Changed BRBFCR_EL1.EnL into BRBFCR_EL1.EnI
+- Changed config ARM_BRBE_PMU from 'tristate' to 'bool'
+
+Changes in V4:
+
+https://lore.kernel.org/all/20221017055713.451092-1-anshuman.khandual@arm.com/
+
+- Changed ../tools/sysreg declarations as suggested
+- Set PERF_SAMPLE_BRANCH_STACK in data.sample_flags
+- Dropped perfmon_capable() check in armpmu_event_init()
+- s/pr_warn_once/pr_info in armpmu_event_init()
+- Added brbe_format element into struct pmu_hw_events
+- Changed v1p1 as brbe_v1p1 in struct pmu_hw_events
+- Dropped pr_info() from arm64_pmu_brbe_probe(), solved LOCKDEP warning
+
+Changes in V3:
+
+https://lore.kernel.org/all/20220929075857.158358-1-anshuman.khandual@arm.com/
+
+- Moved brbe_stack from the stack and now dynamically allocated
+- Return PERF_BR_PRIV_UNKNOWN instead of -1 in brbe_fetch_perf_priv()
+- Moved BRBIDR0, BRBCR, BRBFCR registers and fields into tools/sysreg
+- Created dummy BRBINF_EL1 field definitions in tools/sysreg
+- Dropped ARMPMU_EVT_PRIV framework which cached perfmon_capable()
+- Both exception and exception return branche records are now captured
+  only if the event has PERF_SAMPLE_BRANCH_KERNEL which would already
+  been checked in generic perf via perf_allow_kernel()
+
+Changes in V2:
+
+https://lore.kernel.org/all/20220908051046.465307-1-anshuman.khandual@arm.com/
+
+- Dropped branch sample filter helpers consolidation patch from this series 
+- Added new hw_perf_event.flags element ARMPMU_EVT_PRIV to cache perfmon_capable()
+- Use cached perfmon_capable() while configuring BRBE branch record filters
+
+Changes in V1:
+
+https://lore.kernel.org/linux-arm-kernel/20220613100119.684673-1-anshuman.khandual@arm.com/
+
+- Added CONFIG_PERF_EVENTS wrapper for all branch sample filter helpers
+- Process new perf branch types via PERF_BR_EXTEND_ABI
+
+Changes in RFC V2:
+
+https://lore.kernel.org/linux-arm-kernel/20220412115455.293119-1-anshuman.khandual@arm.com/
+
+- Added branch_sample_priv() while consolidating other branch sample filter helpers
+- Changed all SYS_BRBXXXN_EL1 register definition encodings per Marc
+- Changed the BRBE driver as per proposed BRBE related perf ABI changes (V5)
+- Added documentation for struct arm_pmu changes, updated commit message
+- Updated commit message for BRBE detection infrastructure patch
+- PERF_SAMPLE_BRANCH_KERNEL gets checked during arm event init (outside the driver)
+- Branch privilege state capture mechanism has now moved inside the driver
+
+Changes in RFC V1:
+
+https://lore.kernel.org/all/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: James Clark <james.clark@arm.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Suzuki Poulose <suzuki.poulose@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (10):
+  drivers: perf: arm_pmu: Add new sched_task() callback
+  arm64/perf: Add BRBE registers and fields
+  arm64/perf: Add branch stack support in struct arm_pmu
+  arm64/perf: Add branch stack support in struct pmu_hw_events
+  arm64/perf: Add branch stack support in ARMV8 PMU
+  arm64/perf: Enable branch stack events via FEAT_BRBE
+  arm64/perf: Add PERF_ATTACH_TASK_DATA to events with has_branch_stack()
+  arm64/perf: Add struct brbe_regset helper functions
+  arm64/perf: Implement branch records save on task sched out
+  arm64/perf: Implement branch records save on PMU IRQ
+
+ arch/arm64/include/asm/perf_event.h |  46 ++
+ arch/arm64/include/asm/sysreg.h     | 103 ++++
+ arch/arm64/tools/sysreg             | 158 ++++++
+ drivers/perf/Kconfig                |  11 +
+ drivers/perf/Makefile               |   1 +
+ drivers/perf/arm_brbe.c             | 722 ++++++++++++++++++++++++++++
+ drivers/perf/arm_brbe.h             | 270 +++++++++++
+ drivers/perf/arm_pmu.c              |  12 +-
+ drivers/perf/arm_pmuv3.c            | 110 ++++-
+ include/linux/perf/arm_pmu.h        |  19 +-
+ 10 files changed, 1425 insertions(+), 27 deletions(-)
+ create mode 100644 drivers/perf/arm_brbe.c
+ create mode 100644 drivers/perf/arm_brbe.h
+
+-- 
+2.25.1
 
