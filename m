@@ -2,204 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B993EC001B0
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 01:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D79EEB64D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 01:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237131AbjFOBuJ (ORCPT
+        id S235457AbjFOBy7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 21:50:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48384 "EHLO
+        Wed, 14 Jun 2023 21:54:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240168AbjFOBt4 (ORCPT
+        with ESMTP id S240276AbjFOByy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 21:49:56 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E844EC
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 18:49:54 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3f9b7de94e7so114551cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 18:49:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686793793; x=1689385793;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MUGtQqvU4doNuraDYOeyIMqy4qa8mxp0g8G/zCpNJBo=;
-        b=3Mv27sSob3hnvKuUvL3GhR2J4Zug+RHsAbzy84j7grFB9UCkt7jfIecOwlmblOnMSu
-         fSZobWYEatbbU9bsg0RQGMrLx7gqLaHPMyRMW1P4XPQev2XkQszTJYIC2WevLfj40y+Q
-         5d5TyZCLlIc1BxEO12Ih9+C+CR4Ob+Ubm4q9QMBwSrLlNJZfHImfU1KCxmZHDykq6Xrt
-         uNa8QeKKkeqyty/4LUCkGVassMhskovsomi3LMqw6gmutN7KnJps2cd+T+zgH5qTjpbn
-         /gWF//Tvx7UeDdYMQ+O4QTaHyDn7A8GhLNYZkuZy3szjUGtlXhmmmZghlyswfM8HhVeZ
-         7fow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686793793; x=1689385793;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MUGtQqvU4doNuraDYOeyIMqy4qa8mxp0g8G/zCpNJBo=;
-        b=c72BhnLh/SHy4CYNT5Wm7R3YnU34CwnCSOiERXfSXmI1p/KT3RSfcw1FbOx6PqepDS
-         akXKx+RYcrAIlnZSKjbGsnh0/VhbLBIBUkiUkwYkcZ34bowZwGihPUPOOyfrgrvy+JmI
-         ic10UH5vPx4tvUiukjqiFUQ/x67YazoGcrPWyGQqgaBrHbVHqkkMnMYurh1k209UWEfp
-         RLtR0T6xxRVEYmzgFVv9PWQPGkg2rO234om/RpBevjBpQidQ6KzjXztpmVLBb25C3Bfq
-         dcwyYWeg7Yxh86lLF5ICeZ09bFHwcMTACGdQu0kMCrt2URaQdLQsavtUEdPAN6DEER3V
-         5ItQ==
-X-Gm-Message-State: AC+VfDzdiVRzwhLBzN35OyhKv9C2KV5+rF+FTsrdReft9fT3lyqBCXdE
-        ApxiudZFcNOTXtnJ5Cf5xTemfkWjsVC4voURkE4qOg==
-X-Google-Smtp-Source: ACHHUZ5OzkM+LrRZ88OrNNphLBUf+eDdvEyc3WQaRwb7gJ+Ywe27HFMwPFkXbELIdJ7l2Btkk8db8svt/LaE4HHJOIY=
-X-Received: by 2002:a05:622a:1748:b0:3f8:3065:7fc5 with SMTP id
- l8-20020a05622a174800b003f830657fc5mr39981qtk.1.1686793793518; Wed, 14 Jun
- 2023 18:49:53 -0700 (PDT)
+        Wed, 14 Jun 2023 21:54:54 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A39BA6;
+        Wed, 14 Jun 2023 18:54:53 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.56])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QhQG81z38zqTx4;
+        Thu, 15 Jun 2023 09:49:52 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 15 Jun 2023 09:54:50 +0800
+Subject: Re: [PATCH] perf top & record: Fix segfault when default cycles event
+ is not supported
+To:     Ian Rogers <irogers@google.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20230614151625.2077-1-yangjihong1@huawei.com>
+ <CAP-5=fUf0+7HwZ+AHUR0nRD5QnfPn9_CPMEdJZP_5goPfrPB+Q@mail.gmail.com>
+ <CAP-5=fVOXjjcusjv858SOGrnNgE2w2sb7zS=0sZUpdFfR1T_GA@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <668a6159-b7a8-ed25-d8fa-5584a4c04d37@huawei.com>
+Date:   Thu, 15 Jun 2023 09:54:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-References: <20230611072751.637227-1-irogers@google.com> <20230611072751.637227-2-irogers@google.com>
- <CAM9d7ci5zL8NWMrJVq4FQ242LNx0cQoY3Z32B+yuO2HFu6R1gA@mail.gmail.com>
-In-Reply-To: <CAM9d7ci5zL8NWMrJVq4FQ242LNx0cQoY3Z32B+yuO2HFu6R1gA@mail.gmail.com>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 14 Jun 2023 18:49:40 -0700
-Message-ID: <CAP-5=fXnqZxWVbgMcainpTPc6mSHjUu3y1tELjdRk2zfLM4bOw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] perf annotation: Switch lock from a mutex to a sharded_mutex
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Yuan Can <yuancan@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAP-5=fVOXjjcusjv858SOGrnNgE2w2sb7zS=0sZUpdFfR1T_GA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 5:34=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hi Ian,
->
-> On Sun, Jun 11, 2023 at 12:28=E2=80=AFAM Ian Rogers <irogers@google.com> =
-wrote:
-> >
-> > Remove the "struct mutex lock" variable from annotation that is
-> > allocated per symbol. This removes in the region of 40 bytes per
-> > symbol allocation. Use a sharded mutex where the number of shards is
-> > set to the number of CPUs. Assuming good hashing of the annotation
-> > (done based on the pointer), this means in order to contend there
-> > needs to be more threads than CPUs, which is not currently true in any
-> > perf command. Were contention an issue it is straightforward to
-> > increase the number of shards in the mutex.
-> >
-> > On my Debian/glibc based machine, this reduces the size of struct
-> > annotation from 136 bytes to 96 bytes, or nearly 30%.
->
-> That's quite a good improvement given the number of symbols
-> we can have in a report session!
->
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
->
-> [SNIP]
-> > @@ -1291,17 +1292,64 @@ int disasm_line__scnprintf(struct disasm_line *=
-dl, char *bf, size_t size, bool r
-> >         return ins__scnprintf(&dl->ins, bf, size, &dl->ops, max_ins_nam=
-e);
-> >  }
-> >
-> > -void annotation__init(struct annotation *notes)
-> > +void annotation__exit(struct annotation *notes)
-> >  {
-> > -       mutex_init(&notes->lock);
-> > +       annotated_source__delete(notes->src);
-> >  }
-> >
-> > -void annotation__exit(struct annotation *notes)
-> > +static struct sharded_mutex *sharded_mutex;
-> > +
-> > +static void annotation__init_sharded_mutex(void)
-> >  {
-> > -       annotated_source__delete(notes->src);
-> > -       mutex_destroy(&notes->lock);
-> > +       /* As many mutexes as there are CPUs. */
-> > +       sharded_mutex =3D sharded_mutex__new(cpu__max_present_cpu().cpu=
-);
-> > +}
-> > +
-> > +static size_t annotation__hash(const struct annotation *notes)
-> > +{
-> > +       return ((size_t)notes) >> 4;
->
-> But I'm afraid it might create more contention depending on the
-> malloc implementation.  If it always returns 128-byte (or 256)
-> aligned memory for this struct then it could always collide in the
-> slot 0 if the number of CPU is 8 or less, right?
+Hello,
 
-Right, I think we can use a secondary hash and hashmap.h has one lying
-around for us:
-https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
-erf/util/hashmap.h?h=3Dtmp.perf-tools-next#n15
-it will mean that the sharded locks will need to be a power of 2
-capacity. I'll work on a v2. Fwiw, the hash of a pointer for
-collection like those in abseil is just the pointer value, so I'll
-drop the shift to remove the low-bits once I'm using a more expensive
-hash function.
+On 2023/6/15 6:03, Ian Rogers wrote:
+> On Wed, Jun 14, 2023 at 9:18 AM Ian Rogers <irogers@google.com> wrote:
+>>
+>> On Wed, Jun 14, 2023 at 8:18 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>>
+>>> The perf-record and perf-top call parse_event() to add a cycles event to
+>>> an empty evlist. For the system that does not support hardware cycles
+>>> event, such as QEMU, the evlist is empty due to the following code process:
+>>>
+>>>    parse_event(evlist, "cycles:P" or ""cycles:Pu")
+>>>      parse_events(evlist, "cycles:P")
+>>>        __parse_events
+>>>          ...
+>>>          ret = parse_events__scanner(str, &parse_state);
+>>>          // ret = 0
+>>>          ...
+>>>          ret2 = parse_events__sort_events_and_fix_groups()
+>>>          if (ret2 < 0)
+>>>            return ret;
+>>>          // The cycles event is not supported, here ret2 = -EINVAL,
+>>>          // Here return 0.
+>>>          ...
+>>>          evlist__splice_list_tail(evlist)
+>>>          // The code here does not execute to, so the evlist is still empty.
+>>>
+>>> A null pointer occurs when the content in the evlist is accessed later.
+>>>
+>>> Before:
+>>>
+>>>    # perf list hw
+>>>
+>>>    List of pre-defined events (to be used in -e or -M):
+>>>
+>>>    # perf record true
+>>>    libperf: Miscounted nr_mmaps 0 vs 1
+>>>    WARNING: No sample_id_all support, falling back to unordered processing
+>>>    perf: Segmentation fault
+>>>    Obtained 1 stack frames.
+>>>    [0xc5beff]
+>>>    Segmentation fault
+>>>
+>>> Solution:
+>>>    If cycles event is not supported, try to fall back to cpu-clock event.
+>>>
+>>> After:
+>>>    # perf record true
+>>>    [ perf record: Woken up 1 times to write data ]
+>>>    [ perf record: Captured and wrote 0.006 MB perf.data ]
+>>>    #
+>>>
+>>> Fixes: 7b100989b4f6 ("perf evlist: Remove __evlist__add_default")
+>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>>
+>> Thanks, useful addition. The cpu-clock fall back wasn't present before
+>> 7b100989b4f6 so is the fixes tag correct?
+> 
+> Hmm... it should be coming from evsel__fallback:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evsel.c?h=tmp.perf-tools-next#n2840
+> so we shouldn't duplicate that logic. The question is why we're not
+> doing the fallback.
+> 
+
+Yes, it's a bit of the same logic as evsel__fallback, or we can call 
+evlist__add_default() as before, simply create an evsel of hardware 
+cycles and add it directly to evlist.
+
+Please confirm whether this solution is feasible. If it is feasible, I 
+will send a v2 version.
 
 Thanks,
-Ian
-
-> Thanks,
-> Namhyung
->
->
-> >  }
-> >
-> > +static struct mutex *annotation__get_mutex(const struct annotation *no=
-tes)
-> > +{
-> > +       static pthread_once_t once =3D PTHREAD_ONCE_INIT;
-> > +
-> > +       pthread_once(&once, annotation__init_sharded_mutex);
-> > +       if (!sharded_mutex)
-> > +               return NULL;
-> > +
-> > +       return sharded_mutex__get_mutex(sharded_mutex, annotation__hash=
-(notes));
-> > +}
-> > +
-> > +void annotation__lock(struct annotation *notes)
-> > +       NO_THREAD_SAFETY_ANALYSIS
-> > +{
-> > +       struct mutex *mutex =3D annotation__get_mutex(notes);
-> > +
-> > +       if (mutex)
-> > +               mutex_lock(mutex);
-> > +}
-> > +
-> > +void annotation__unlock(struct annotation *notes)
-> > +       NO_THREAD_SAFETY_ANALYSIS
-> > +{
-> > +       struct mutex *mutex =3D annotation__get_mutex(notes);
-> > +
-> > +       if (mutex)
-> > +               mutex_unlock(mutex);
-> > +}
-> > +
-> > +bool annotation__trylock(struct annotation *notes)
-> > +{
-> > +       struct mutex *mutex =3D annotation__get_mutex(notes);
-> > +
-> > +       if (!mutex)
-> > +               return false;
-> > +
-> > +       return mutex_trylock(mutex);
-> > +}
-> > +
-> > +
-> >  static void annotation_line__add(struct annotation_line *al, struct li=
-st_head *head)
-> >  {
-> >         list_add_tail(&al->node, head);
+Yang
