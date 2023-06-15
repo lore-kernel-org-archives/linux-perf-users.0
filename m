@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B320EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 06:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE672EB64DB
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 06:00:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238279AbjFOGAC (ORCPT
+        id S241164AbjFOGA3 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 02:00:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33300 "EHLO
+        Thu, 15 Jun 2023 02:00:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232419AbjFOGAA (ORCPT
+        with ESMTP id S243107AbjFOGAW (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 02:00:00 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7427226AF
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:59:57 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-3f9b7de94e7so158141cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:59:57 -0700 (PDT)
+        Thu, 15 Jun 2023 02:00:22 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 574472715
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 23:00:18 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3f9d619103dso105401cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 23:00:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686808796; x=1689400796;
+        d=google.com; s=20221208; t=1686808817; x=1689400817;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iwLXNvmJWq+30nrmcBy4VuXtVSXUFElMyNebY4rwbYw=;
-        b=Owki3kfyj2jk4cXw5jBbVygHfQAIZD3VYDTG+NbrBQCulZH5ObQ4CUviJo/EXG5P+m
-         R25V8eRW/AEYszvBDos9vZ4kQyt5zhmD6s3yVs+ECQYd5eTcg2iaBZPK+eeNpBTEtXyD
-         zH7NP8gYW6XmlryDXsmFm7Y46Snw393hLDfeYSanBBtNsYcTfRKzSql6zSCleVfg5GAh
-         JeiwhUB3sm+6oPUYmrOsyl/WRCNu2rJefUcsJeDWV3+2DFw/ytX8Qpk6Ay/zrKoP/H2Y
-         ZSgrEXrteAn4PWYmFEJC0DD+9Hdll5XqczH39W0w72uVhdv8C6Gk7H8IWjzEZp2Xj33D
-         kWug==
+        bh=2TSH9xGP+io54giLsogMK2zsosKwPnZ24iN0fmv6nts=;
+        b=uFbyA8iHEWqzgZiJfD6a7GJil6wKdK8i75hv2LSTEDTBaVyHgtNeQk1HnBkBCkTlTp
+         /kmm4Iq81UdYLq6XOJhxhxHcsSGtPLOVVpZ2gK1gxwGEdVgOMXzjOX8WuuQt//ZX2Pg0
+         ctOyuzDmwRaQYdTjpZ6e3HEdkz0/0vwzgnZE3B2qksobUT0Fylc30fCT4YvnNTh9NytR
+         fr0WQFIQetkIpKp/PIX7+65V1rxyo0TutZt24IKUsCU99F1+rXJZEJY5NJG0DP8qW96R
+         Pt6S6a8zZ4NLeAHXnEr8yoOLODCQx6672/Pceokz7gYP877aESlnWfjDDkOFfol5wEbL
+         3huw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686808796; x=1689400796;
+        d=1e100.net; s=20221208; t=1686808817; x=1689400817;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iwLXNvmJWq+30nrmcBy4VuXtVSXUFElMyNebY4rwbYw=;
-        b=mAq7+W7QlF14RGcIbIskoM1mBxHG0TJ4XIEwl2agyoJEQQCyjU/c3xaGqlhMsb/6UF
-         eazvLV+2kLO4pZMzm0XnAozQOAbotRO1t7Mk0cKfrmL7p3zOOrksDpjcq4+1Dw8OKoU9
-         hBBLcF+iCack5QjZz9xJN50RgJIHpPI15Lm0y4+bOSxqJJWnqZ2tJzul7sAX78DKiaoO
-         jREtcmF1brY/ELxOOZBqXlIiEX8Np3ID7TK3de0POLPqwjuzkP/8lfU8g4YNAyzgcEE3
-         CIXCyjxHvS2JIqQZ5QfVlQFCLb0520a3f4eds2iemZXEzkcjXmXqpg5xv0QhyGcwSC+s
-         yOIw==
-X-Gm-Message-State: AC+VfDwa0QrbMuzDb0NGBNfaht8jFn6dcM/DQnVlFzgZB1gygTEdOm6P
-        gOSS4mLkYVaVi14vKssP/enBdEpl7PDAVaCG/Zv8NQ==
-X-Google-Smtp-Source: ACHHUZ7dB7aOllkbSj8zY+iHzILOAFLv5ZA2onSNwUYkdbbXXcNBqzJe7ovQiDJJDF0+iaJ/++u3Xv6xSEQ9NsPU0l4=
-X-Received: by 2002:ac8:4e83:0:b0:3f9:a73b:57bb with SMTP id
- 3-20020ac84e83000000b003f9a73b57bbmr95837qtp.4.1686808796473; Wed, 14 Jun
- 2023 22:59:56 -0700 (PDT)
+        bh=2TSH9xGP+io54giLsogMK2zsosKwPnZ24iN0fmv6nts=;
+        b=eum3FAjgV7xLDX8vY1yN16Ll/k6JTzouePmsrG8/iENLvUItZXPMSTB2QlU+U60BEC
+         IIHN5YUyRk0rdBU3EHNZmKHFCzX60Sd/xVr1/NYdSHtXPBErk6JILr4l8DslklandrCr
+         QQeRgVlvHVhtp+E7zfeMiRCgkbnmIII0GE/zDfL/8yTksS8J5LwV72ra//5+Nl2YNkhx
+         rmfjP+bLpX7n9KZ+tHFzYV++J28nj5boOiJ1YPo1DKWVE0V9A3bKM7/Slmqq/KVLSQmG
+         CQZh0dJc718ZIddDF4+hTL6MT1Pq5s30aglAeQq/YF7quTnAR/wpkkbppy/fkvBJUZLp
+         vJoQ==
+X-Gm-Message-State: AC+VfDzLbxWy1ldWLDYws3yfNh2P+Yh8ZbDVoAHyOj4ecYYNCsEY+BzV
+        Q2an3i7SyUSEFukaN3cORVWKJJh5uxDt0v+3F+a2mA==
+X-Google-Smtp-Source: ACHHUZ7STKzYkVq+UK0FDMKH8vACkwBx9XboHMjyagaDSANCGQbuRRSHhD/B1bqBUrG8V9N2LRawu7LNos/42qRKy8Y=
+X-Received: by 2002:a05:622a:107:b0:3f8:1f30:a1f2 with SMTP id
+ u7-20020a05622a010700b003f81f30a1f2mr168763qtw.26.1686808817005; Wed, 14 Jun
+ 2023 23:00:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230615001735.3643996-1-kan.liang@linux.intel.com> <20230615001735.3643996-8-kan.liang@linux.intel.com>
-In-Reply-To: <20230615001735.3643996-8-kan.liang@linux.intel.com>
+References: <20230615001735.3643996-1-kan.liang@linux.intel.com> <20230615001735.3643996-9-kan.liang@linux.intel.com>
+In-Reply-To: <20230615001735.3643996-9-kan.liang@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 14 Jun 2023 22:59:44 -0700
-Message-ID: <CAP-5=fWHBjBtViACSsGDRN+R+BYYjnRfxqGak1ticwZ0hnZKMw@mail.gmail.com>
-Subject: Re: [PATCH V2 7/8] perf test: Move all the check functions of stat
- csv output to lib
+Date:   Wed, 14 Jun 2023 23:00:04 -0700
+Message-ID: <CAP-5=fVt+_taayKpj8_aQ6wnxMBCU8GrKmbfY-M01gOE=X=EUg@mail.gmail.com>
+Subject: Re: [PATCH V2 8/8] perf test: Add test case for the standard perf
+ stat output
 To:     kan.liang@linux.intel.com
 Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
         namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
@@ -71,9 +71,8 @@ On Wed, Jun 14, 2023 at 5:18=E2=80=AFPM <kan.liang@linux.intel.com> wrote:
 >
 > From: Kan Liang <kan.liang@linux.intel.com>
 >
-> These functions can be shared with the stat std output test.
->
-> There is no functional change.
+> Add a new test case to verify the standard perf stat output with
+> different options.
 >
 > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
@@ -83,401 +82,132 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/tests/shell/lib/stat_output.sh | 169 +++++++++++++++++++
->  tools/perf/tests/shell/stat+csv_output.sh | 188 ++--------------------
->  2 files changed, 184 insertions(+), 173 deletions(-)
->  create mode 100755 tools/perf/tests/shell/lib/stat_output.sh
+>  tools/perf/tests/shell/stat+std_output.sh | 108 ++++++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/stat+std_output.sh
 >
-> diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests=
-/shell/lib/stat_output.sh
+> diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests=
+/shell/stat+std_output.sh
 > new file mode 100755
-> index 000000000000..363979b1123d
+> index 000000000000..98cc3356a04a
 > --- /dev/null
-> +++ b/tools/perf/tests/shell/lib/stat_output.sh
-> @@ -0,0 +1,169 @@
+> +++ b/tools/perf/tests/shell/stat+std_output.sh
+> @@ -0,0 +1,108 @@
+> +#!/bin/bash
+> +# perf stat STD output linter
 > +# SPDX-License-Identifier: GPL-2.0
+> +# Tests various perf stat STD output commands for
+> +# default event and metricgroup
 > +
-> +# Return true if perf_event_paranoid is > $1 and not running as root.
-> +function ParanoidAndNotRoot()
-> +{
-> +        [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_pa=
-ranoid)" -gt $1 ]
-> +}
+> +set -e
 > +
-> +# $1 name $2 extra_opt
-> +check_no_args()
-> +{
-> +        echo -n "Checking $1 output: no args"
-> +        perf stat $2 true
-> +        commachecker --no-args
-> +        echo "[Success]"
-> +}
-> +
-> +check_system_wide()
-> +{
-> +       echo -n "Checking $1 output: system wide "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat -a $2 true
-> +       commachecker --system-wide
-> +       echo "[Success]"
-> +}
-> +
-> +check_system_wide_no_aggr()
-> +{
-> +       echo -n "Checking $1 output: system wide no aggregation "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat -A -a --no-merge $2 true
-> +       commachecker --system-wide-no-aggr
-> +       echo "[Success]"
-> +}
-> +
-> +check_interval()
-> +{
-> +       echo -n "Checking $1 output: interval "
-> +       perf stat -I 1000 $2 true
-> +       commachecker --interval
-> +       echo "[Success]"
-> +}
-> +
-> +check_event()
-> +{
-> +       echo -n "Checking $1 output: event "
-> +       perf stat -e cpu-clock $2 true
-> +       commachecker --event
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_core()
-> +{
-> +       echo -n "Checking $1 output: per core "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-core -a $2 true
-> +       commachecker --per-core
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_thread()
-> +{
-> +       echo -n "Checking $1 output: per thread "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-thread -a $2 true
-> +       commachecker --per-thread
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_cache_instance()
-> +{
-> +       echo -n "Checking $1 output: per cache instance "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-cache -a $2 true
-> +       commachecker --per-cache
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_die()
-> +{
-> +       echo -n "Checking $1 output: per die "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-die -a $2 true
-> +       commachecker --per-die
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_node()
-> +{
-> +       echo -n "Checking $1 output: per node "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-node -a $2 true
-> +       commachecker --per-node
-> +       echo "[Success]"
-> +}
-> +
-> +check_per_socket()
-> +{
-> +       echo -n "Checking $1 output: per socket "
-> +       if ParanoidAndNotRoot 0
-> +       then
-> +               echo "[Skip] paranoid and not root"
-> +               return
-> +       fi
-> +       perf stat --per-socket -a $2 true
-> +       commachecker --per-socket
-> +       echo "[Success]"
-> +}
-> +
-> +# The perf stat options for per-socket, per-core, per-die
-> +# and -A ( no_aggr mode ) uses the info fetched from this
-> +# directory: "/sys/devices/system/cpu/cpu*/topology". For
-> +# example, socket value is fetched from "physical_package_id"
-> +# file in topology directory.
-> +# Reference: cpu__get_topology_int in util/cpumap.c
-> +# If the platform doesn't expose topology information, values
-> +# will be set to -1. For example, incase of pSeries platform
-> +# of powerpc, value for  "physical_package_id" is restricted
-> +# and set to -1. Check here validates the socket-id read from
-> +# topology file before proceeding further
-> +
-> +FILE_LOC=3D"/sys/devices/system/cpu/cpu*/topology/"
-> +FILE_NAME=3D"physical_package_id"
-> +
-> +function check_for_topology()
-> +{
-> +       if ! ParanoidAndNotRoot 0
-> +       then
-> +               socket_file=3D`ls $FILE_LOC/$FILE_NAME | head -n 1`
-> +               [ -z $socket_file ] && {
-> +                       echo 0
-> +                       return
-> +               }
-> +               socket_id=3D`cat $socket_file`
-> +               [ $socket_id =3D=3D -1 ] && {
-> +                       echo 1
-> +                       return
-> +               }
-> +       fi
-> +       echo 0
-> +}
-> diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests=
-/shell/stat+csv_output.sh
-> index ed082daf839c..34a0701fee05 100755
-> --- a/tools/perf/tests/shell/stat+csv_output.sh
-> +++ b/tools/perf/tests/shell/stat+csv_output.sh
-> @@ -6,7 +6,8 @@
->
->  set -e
->
-> -skip_test=3D0
 > +. $(dirname $0)/lib/stat_output.sh
 > +
->  csv_sep=3D@
->
->  stat_output=3D$(mktemp /tmp/__perf_test.stat_output.csv.XXXXX)
-> @@ -63,181 +64,22 @@ function commachecker()
->         return 0
->  }
->
-> -# Return true if perf_event_paranoid is > $1 and not running as root.
-> -function ParanoidAndNotRoot()
-> -{
-> -        [ "$(id -u)" !=3D 0 ] && [ "$(cat /proc/sys/kernel/perf_event_pa=
-ranoid)" -gt $1 ]
-> -}
-> -
-> -check_no_args()
-> -{
-> -       echo -n "Checking CSV output: no args "
-> -       perf stat -x$csv_sep -o "${stat_output}" true
-> -        commachecker --no-args
-> -       echo "[Success]"
-> -}
-> -
-> -check_system_wide()
-> -{
-> -       echo -n "Checking CSV output: system wide "
-> -       if ParanoidAndNotRoot 0
-> -       then
-> -               echo "[Skip] paranoid and not root"
-> -               return
-> -       fi
-> -       perf stat -x$csv_sep -a -o "${stat_output}" true
-> -        commachecker --system-wide
-> -       echo "[Success]"
-> -}
-> -
-> -check_system_wide_no_aggr()
-> -{
-> -       echo -n "Checking CSV output: system wide no aggregation "
-> -       if ParanoidAndNotRoot 0
-> -       then
-> -               echo "[Skip] paranoid and not root"
-> -               return
-> -       fi
-> -       perf stat -x$csv_sep -A -a --no-merge -o "${stat_output}" true
-> -        commachecker --system-wide-no-aggr
-> -       echo "[Success]"
-> -}
-> -
-> -check_interval()
-> -{
-> -       echo -n "Checking CSV output: interval "
-> -       perf stat -x$csv_sep -I 1000 -o "${stat_output}" true
-> -        commachecker --interval
-> -       echo "[Success]"
-> -}
-> -
-> -
-> -check_event()
-> -{
-> -       echo -n "Checking CSV output: event "
-> -       perf stat -x$csv_sep -e cpu-clock -o "${stat_output}" true
-> -        commachecker --event
-> -       echo "[Success]"
-> -}
-> -
-> -check_per_core()
-> -{
-> -       echo -n "Checking CSV output: per core "
-> -       if ParanoidAndNotRoot 0
-> -       then
-> -               echo "[Skip] paranoid and not root"
-> -               return
-> -       fi
-> -       perf stat -x$csv_sep --per-core -a -o "${stat_output}" true
-> -        commachecker --per-core
-> -       echo "[Success]"
-> -}
-> -
-> -check_per_thread()
-> -{
-> -       echo -n "Checking CSV output: per thread "
-> -       if ParanoidAndNotRoot 0
-> -       then
-> -               echo "[Skip] paranoid and not root"
-> -               return
-> -       fi
-> -       perf stat -x$csv_sep --per-thread -a -o "${stat_output}" true
-> -        commachecker --per-thread
-> -       echo "[Success]"
-> -}
-> -
-> -check_per_cache_instance()
-> -{
-> -       echo -n "Checking CSV output: per cache instance "
-> -       if ParanoidAndNotRoot 0
-> -       then
-> -               echo "[Skip] paranoid and not root"
-> -               return
-> -       fi
-> -       perf stat -x$csv_sep --per-cache -a true 2>&1 | commachecker --pe=
-r-cache
-> -       echo "[Success]"
-> -}
-> -
-> -check_per_die()
-> -{
-> -       echo -n "Checking CSV output: per die "
-> -       if ParanoidAndNotRoot 0
-> -       then
-> -               echo "[Skip] paranoid and not root"
-> -               return
-> -       fi
-> -       perf stat -x$csv_sep --per-die -a -o "${stat_output}" true
-> -        commachecker --per-die
-> -       echo "[Success]"
-> -}
-> -
-> -check_per_node()
-> -{
-> -       echo -n "Checking CSV output: per node "
-> -       if ParanoidAndNotRoot 0
-> -       then
-> -               echo "[Skip] paranoid and not root"
-> -               return
-> -       fi
-> -       perf stat -x$csv_sep --per-node -a -o "${stat_output}" true
-> -        commachecker --per-node
-> -       echo "[Success]"
-> -}
-> -
-> -check_per_socket()
-> -{
-> -       echo -n "Checking CSV output: per socket "
-> -       if ParanoidAndNotRoot 0
-> -       then
-> -               echo "[Skip] paranoid and not root"
-> -               return
-> -       fi
-> -       perf stat -x$csv_sep --per-socket -a -o "${stat_output}" true
-> -        commachecker --per-socket
-> -       echo "[Success]"
-> -}
-> -
-> -# The perf stat options for per-socket, per-core, per-die
-> -# and -A ( no_aggr mode ) uses the info fetched from this
-> -# directory: "/sys/devices/system/cpu/cpu*/topology". For
-> -# example, socket value is fetched from "physical_package_id"
-> -# file in topology directory.
-> -# Reference: cpu__get_topology_int in util/cpumap.c
-> -# If the platform doesn't expose topology information, values
-> -# will be set to -1. For example, incase of pSeries platform
-> -# of powerpc, value for  "physical_package_id" is restricted
-> -# and set to -1. Check here validates the socket-id read from
-> -# topology file before proceeding further
-> -
-> -FILE_LOC=3D"/sys/devices/system/cpu/cpu*/topology/"
-> -FILE_NAME=3D"physical_package_id"
-> -
-> -check_for_topology()
-> -{
-> -       if ! ParanoidAndNotRoot 0
-> -       then
-> -               socket_file=3D`ls $FILE_LOC/$FILE_NAME | head -n 1`
-> -               [ -z $socket_file ] && return 0
-> -               socket_id=3D`cat $socket_file`
-> -               [ $socket_id =3D=3D -1 ] && skip_test=3D1
-> -               return 0
-> -       fi
-> -}
-> +perf_cmd=3D"-x$csv_sep -o ${stat_output}"
->
-> -check_for_topology
-> -check_no_args
-> -check_system_wide
-> -check_interval
-> -check_event
-> -check_per_thread
-> -check_per_node
+> +stat_output=3D$(mktemp /tmp/__perf_test.stat_output.std.XXXXX)
+> +
+> +event_name=3D(cpu-clock task-clock context-switches cpu-migrations page-=
+faults cycles instructions branches branch-misses stalled-cycles-frontend s=
+talled-cycles-backend)
+> +event_metric=3D("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "GH=
+z" "insn per cycle" "/sec" "of all branches" "frontend cycles idle" "backen=
+d cycles idle")
+> +
+> +metricgroup_name=3D(TopdownL1 TopdownL2)
+> +
+> +cleanup() {
+> +  rm -f "${stat_output}"
+> +
+> +  trap - EXIT TERM INT
+> +}
+> +
+> +trap_cleanup() {
+> +  cleanup
+> +  exit 1
+> +}
+> +trap trap_cleanup EXIT TERM INT
+> +
+> +function commachecker()
+> +{
+> +       local -i cnt=3D0
+> +       local prefix=3D1
+> +
+> +       case "$1"
+> +       in "--interval")        prefix=3D2
+> +       ;; "--per-thread")      prefix=3D2
+> +       ;; "--system-wide-no-aggr")     prefix=3D2
+> +       ;; "--per-core")        prefix=3D3
+> +       ;; "--per-socket")      prefix=3D3
+> +       ;; "--per-node")        prefix=3D3
+> +       ;; "--per-die")         prefix=3D3
+> +       ;; "--per-cache")       prefix=3D3
+> +       esac
+> +
+> +       while read line
+> +       do
+> +               # Ignore initial "started on" comment.
+> +               x=3D${line:0:1}
+> +               [ "$x" =3D "#" ] && continue
+> +               # Ignore initial blank line.
+> +               [ "$line" =3D "" ] && continue
+> +               # Ignore "Performance counter stats"
+> +               x=3D${line:0:25}
+> +               [ "$x" =3D "Performance counter stats" ] && continue
+> +               # Ignore "seconds time elapsed" and break
+> +               [[ "$line" =3D=3D *"time elapsed"* ]] && break
+> +
+> +               main_body=3D$(echo $line | cut -d' ' -f$prefix-)
+> +               x=3D${main_body%#*}
+> +               # Check default metricgroup
+> +               y=3D$(echo $x | tr -d ' ')
+> +               [ "$y" =3D "" ] && continue
+> +               for i in "${!metricgroup_name[@]}"; do
+> +                       [[ "$y" =3D=3D *"${metricgroup_name[$i]}"* ]] && =
+break
+> +               done
+> +               [[ "$y" =3D=3D *"${metricgroup_name[$i]}"* ]] && continue
+> +
+> +               # Check default event
+> +               for i in "${!event_name[@]}"; do
+> +                       [[ "$x" =3D=3D *"${event_name[$i]}"* ]] && break
+> +               done
+> +
+> +               [[ ! "$x" =3D=3D *"${event_name[$i]}"* ]] && {
+> +                       echo "Unknown event name in $line" 1>&2
+> +                       exit 1;
+> +               }
+> +
+> +               # Check event metric if it exists
+> +               [[ ! "$main_body" =3D=3D *"#"* ]] && continue
+> +               [[ ! "$main_body" =3D=3D *"${event_metric[$i]}"* ]] && {
+> +                       echo "wrong event metric. expected ${event_metric=
+[$i]} in $line" 1>&2
+> +                       exit 1;
+> +               }
+> +       done < "${stat_output}"
+> +       return 0
+> +}
+> +
+> +perf_cmd=3D"-o ${stat_output}"
+> +
 > +skip_test=3D$(check_for_topology)
-> +check_no_args "CSV" "$perf_cmd"
-> +check_system_wide "CSV" "$perf_cmd"
-> +check_interval "CSV" "$perf_cmd"
-> +check_event "CSV" "$perf_cmd"
-> +check_per_thread "CSV" "$perf_cmd"
-> +check_per_node "CSV" "$perf_cmd"
->  if [ $skip_test -ne 1 ]
->  then
-> -       check_system_wide_no_aggr
-> -       check_per_core
-> -       check_per_cache_instance
-> -       check_per_die
-> -       check_per_socket
-> +       check_system_wide_no_aggr "CSV" "$perf_cmd"
-> +       check_per_core "CSV" "$perf_cmd"
-> +       check_per_cache_instance "CSV" "$perf_cmd"
-> +       check_per_die "CSV" "$perf_cmd"
-> +       check_per_socket "CSV" "$perf_cmd"
->  else
->         echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, pe=
+> +check_no_args "STD" "$perf_cmd"
+> +check_system_wide "STD" "$perf_cmd"
+> +check_interval "STD" "$perf_cmd"
+> +check_per_thread "STD" "$perf_cmd"
+> +check_per_node "STD" "$perf_cmd"
+> +if [ $skip_test -ne 1 ]
+> +then
+> +       check_system_wide_no_aggr "STD" "$perf_cmd"
+> +       check_per_core "STD" "$perf_cmd"
+> +       check_per_cache_instance "STD" "$perf_cmd"
+> +       check_per_die "STD" "$perf_cmd"
+> +       check_per_socket "STD" "$perf_cmd"
+> +else
+> +       echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, pe=
 r_die and per_socket since socket id exposed via topology is invalid"
->  fi
+> +fi
+> +cleanup
+> +exit 0
 > --
 > 2.35.1
 >
