@@ -2,159 +2,183 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD38DEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 05:18:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8350EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 05:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbjFOFS1 (ORCPT
+        id S229586AbjFOFto (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 01:18:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49156 "EHLO
+        Thu, 15 Jun 2023 01:49:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242974AbjFOFSY (ORCPT
+        with ESMTP id S229511AbjFOFtm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 01:18:24 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2053.outbound.protection.outlook.com [40.107.93.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 490FA26AA;
-        Wed, 14 Jun 2023 22:18:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ogHhtXIEySsTD/DbumsGC82dhDtbv11BdPEYXZqD/ZPflF53+pkY7fc5yQFEMRCJDn3zEedG+tsOzcUe+YB/ZjQAhzgHVN/pw1BN4vX91d3hJU+6Hm+6ffGCEC8Xuv0QExg6Jw1BU/+0CyEH7j/1ISXfjAirAu1Nx/rWWwKaBzGc8L1a6WrCpd6uRm5JKDv7fE/MsEZsWsO9GPW90RJKSArhRairF30AazoW+9H7odKkrTp2VzJFw0gK6GV+RYHY5YoCiU7DzvG2GmuAe2kDe4OLLnH98KiVwhzahe4ANUp+9q7w+6smCZ3El4617CxwH+GZTMeRxJ3l/yT2aq2ijQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7ST+1N4AP2h9SfKLNCEbqV/wWYRWBNuR+dUrCdoQzSs=;
- b=ZzY4F0DTAUO06OJz7x5jndWJZQ8l2fEFW9UtuUfXanJ154qAScDkcUZJgPJCcF2G9vKbhxbPN+zkIR7B/v01CRYcaa9foqUzhvy97HukzIpLc3Eg9lnU4ufOqG1hVbmMYP3iXCQBz0zXfAI3PHMdfiKH6yJUFlbv9nbV++wisulPjLEfNusePR3oVGqYI2LQVascvogBsLgVHah2gmrZAvTVosliXa5W0nORkVzqJxkcLlcZbR0Byg2GRaukq//Iur2Dibowt5JvJ6h8VKjaTWDx4BnB7ylnkngJCYAdpddhIlhYkTkkVnfcumswPY7YLUBWpGrCTyGZKUAnbYSCBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7ST+1N4AP2h9SfKLNCEbqV/wWYRWBNuR+dUrCdoQzSs=;
- b=bI2VX1SXpi+1BxXlMR+/i5jGLeVAGwnthmS8CVIVGrvyB86Twh0pUM1kwnEjQvps/0FyXJO+HhagXPZMrW4UeQLn4DG+XqMWrfv9PxqUeWZJvgQsukRF+t/DkJHXGlUxy8SGeQi+ZCis3Q33mrv65FvVX498UaNkq1GUvd4Iu20=
-Received: from DS7PR07CA0019.namprd07.prod.outlook.com (2603:10b6:5:3af::7) by
- PH7PR12MB5710.namprd12.prod.outlook.com (2603:10b6:510:1e1::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.29; Thu, 15 Jun
- 2023 05:18:20 +0000
-Received: from DM6NAM11FT084.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:3af:cafe::85) by DS7PR07CA0019.outlook.office365.com
- (2603:10b6:5:3af::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.25 via Frontend
- Transport; Thu, 15 Jun 2023 05:18:20 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT084.mail.protection.outlook.com (10.13.172.132) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6500.25 via Frontend Transport; Thu, 15 Jun 2023 05:18:20 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 15 Jun
- 2023 00:18:14 -0500
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <acme@kernel.org>
-CC:     <ravi.bangoria@amd.com>, <irogers@google.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <james.clark@arm.com>, <alisaidi@amazon.com>, <leo.yan@linaro.org>,
-        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <mark.rutland@arm.com>, <maddy@linux.ibm.com>,
-        <tmricht@linux.ibm.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sandipan.das@amd.com>,
-        <ananth.narayan@amd.com>, <santosh.shukla@amd.com>
-Subject: [PATCH v2 3/3] perf mem: Scan all PMUs instead of just core ones
-Date:   Thu, 15 Jun 2023 10:47:00 +0530
-Message-ID: <20230615051700.1833-4-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230615051700.1833-1-ravi.bangoria@amd.com>
-References: <20230615051700.1833-1-ravi.bangoria@amd.com>
+        Thu, 15 Jun 2023 01:49:42 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CAC826AD
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:49:41 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-3f9b7de94e7so155391cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:49:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1686808180; x=1689400180;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4OtevX4Ed8o9vOu7pBdbUE0N/6rDWNEIM9CMGtbBiG8=;
+        b=uWJspio/ujbSrKrhjccdYpKoLZsnkwm2YqgJ5Wq9LWi1jTHtdfZkgus3kXPbvMe1UA
+         xv3Ou7GZxdhRKNr8ntrPNg1CYHhzSThtm+w/7FuvHOkFp4z+VUGvHu8FnW/1wY6oPryR
+         +luuGPw11CHqV65nP6gnXBaB0rzSml/T6qWODxyj0Ro35RE6gHAJpTp0sZVnSnTH4GWv
+         9h4jId8My+q0cOY4dbgPs5TND0rQ00KN//5giMLVhVGUcHiKdk7CDzqhUCVHIrYOdYsc
+         EC5xyQUvSaYZ7Wuq3r3astskW7hK3+sO54V9KHgfWtpDH8uuixzZHVdyjaK0/nsL1Pfs
+         7kSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686808180; x=1689400180;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4OtevX4Ed8o9vOu7pBdbUE0N/6rDWNEIM9CMGtbBiG8=;
+        b=MiI7A2f8tXLI7DNPd7nLLOgybZB2cI/FVtyWJYe7/pVediqWHzkmIedcNwEG4BfgTf
+         oEMCGnT6fDcjpDZ49+WKW31Y3LqkrKwa5D3oSDVOBMPVtdNd5AEQwmxLfBH+J2cam+T2
+         xkI7V3GlvZjnj+MicwKAuYpK3qBn0h3r+guy1vF3eXtV8ogcy4ASHDh8ZOFO3vtgXYKE
+         9RzlFM84MZCcFynFZ97JCLBP40WTMOFLpfAU1QoeGP/6x99n7C2bp2P0ETwKSKEIZbSR
+         tHSm27iTR2fUM9SdHWG5VWPwpvZbtb7YOR6i94XgOfhy/cJiEVbRT7WtbUFQW5zrr0pJ
+         3cMg==
+X-Gm-Message-State: AC+VfDwxQvM6TZUFj22dKhAca1ja/5GG+6bMmSx8eu18TMZNitxgdL8T
+        W5SkgduBLwOokj6UhIGFWeE+fBlhPy3/gkuUgBQvew==
+X-Google-Smtp-Source: ACHHUZ7RNsojShxUmQ/UvuWDYnPae06STozzKgRTOJNOQEoo2GLqpr4YDs4raGdjATmEs7zmc+BRLQAf2XDZ7512P5A=
+X-Received: by 2002:a05:622a:1988:b0:3f9:6930:1308 with SMTP id
+ u8-20020a05622a198800b003f969301308mr76070qtc.13.1686808180514; Wed, 14 Jun
+ 2023 22:49:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT084:EE_|PH7PR12MB5710:EE_
-X-MS-Office365-Filtering-Correlation-Id: e5d9c079-2ae8-4aa5-c804-08db6d5fef23
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Dq+6/Z1AQSLSw2xK3OorZ6RXlbeyMH8L+MBZZ7dFzs/oNe2Lt2JJk5yiiRmLpeXD8RCSSlIXmMAwCya6QZ4ph7Ax7l0iJNY2ZfZrw2188SiwZR4eoGiPnoDqM1sOawZ5hGA96jgYfxWrQ35TQf8MZZNRGedv/rO9MzF/y8bCSsv42hNkAQ1WSbXpgOBUD2r/6iHkbVsepBuLq5GWjclY1srbMtlKx1Ht6ZGIF4lev2r1isuIc7QsAx4UOreTKvmc5467DbORYIUg1wsUkwYmeemaOuJBCCheQjQ15ALyH6REVekJenScFpuvo1eoLp9MjPntmO1l9d6KSW1LkEQy2IrKwSaJumF3Qtg8EyyCXH2l54rrsUrEdMvK3Wo1N0s5ncPa9bwEu1eVPVH42tYLb+6IbebI6IZ5N+k+xeNm7s2x988wgkU5vloEtQpYfLvL8vPZwmiJ7kXMUX70ht03DcfKf89Lyr7QvAPmj6igSlWlmoLL3OsymM3pVKGFcczkJYlBCHa1qS2vB0O5iPGvv6/3q8OIAAze8wYbUC70oxBwaolfujYvCYkXYTbssql2cWMEdwdby92QMDRw05SgNcMY6GDSxzeE952G7TryNwxjHdA7NV+xmUBnOZy1G9wg+8trGbe13TYyAJxmKgaZCI/auOnOBcG1qjsIdnlsE8DLgKgrKHSKF/OtN3hqOFc9Qyyk0fguNq53b0Fv4QolMnUhpwVa6odof7EFmQQfKegOYKQHEJuW7xeRelzjQKQALTvOOrJi392H1TINmM+kAQ==
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(136003)(39860400002)(396003)(451199021)(36840700001)(46966006)(40470700004)(40460700003)(6916009)(6666004)(70206006)(316002)(70586007)(54906003)(4326008)(478600001)(36756003)(2616005)(82740400003)(86362001)(36860700001)(336012)(426003)(47076005)(83380400001)(186003)(1076003)(26005)(16526019)(41300700001)(356005)(5660300002)(8936002)(44832011)(7416002)(82310400005)(8676002)(7696005)(40480700001)(2906002)(81166007)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2023 05:18:20.3696
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e5d9c079-2ae8-4aa5-c804-08db6d5fef23
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT084.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5710
+References: <20230615001735.3643996-1-kan.liang@linux.intel.com> <20230615001735.3643996-2-kan.liang@linux.intel.com>
+In-Reply-To: <20230615001735.3643996-2-kan.liang@linux.intel.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 14 Jun 2023 22:49:28 -0700
+Message-ID: <CAP-5=fV2_7yWftPwd50r-OhxTdT3TKdZEdVsZAY7SE3UHRa=2A@mail.gmail.com>
+Subject: Re: [PATCH V2 1/8] perf evsel: Fix the annotation for hardware events
+ on hybrid
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Scanning only core PMUs is not sufficient on platforms like AMD since
-perf mem on AMD uses IBS OP PMU, which is independent of core PMU.
-Scan all PMUs instead of just core PMUs. There should be negligible
-performance overhead because of scanning all PMUs, so we should be okay.
+On Wed, Jun 14, 2023 at 5:18=E2=80=AFPM <kan.liang@linux.intel.com> wrote:
+>
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> The annotation for hardware events is wrong on hybrid. For example,
+>
+>  # ./perf stat -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>          32,148.85 msec cpu-clock                        #   32.000 CPUs =
+utilized
+>                374      context-switches                 #   11.633 /sec
+>                 33      cpu-migrations                   #    1.026 /sec
+>                295      page-faults                      #    9.176 /sec
+>         18,979,960      cpu_core/cycles/                 #  590.378 K/sec
+>        261,230,783      cpu_atom/cycles/                 #    8.126 M/sec=
+                       (54.21%)
+>         17,019,732      cpu_core/instructions/           #  529.404 K/sec
+>         38,020,470      cpu_atom/instructions/           #    1.183 M/sec=
+                       (63.36%)
+>          3,296,743      cpu_core/branches/               #  102.546 K/sec
+>          6,692,338      cpu_atom/branches/               #  208.167 K/sec=
+                       (63.40%)
+>             96,421      cpu_core/branch-misses/          #    2.999 K/sec
+>          1,016,336      cpu_atom/branch-misses/          #   31.613 K/sec=
+                       (63.38%)
+>
+> The hardware events have extended type on hybrid, but the evsel__match()
+> doesn't take it into account.
+>
+> Filter the config on hybrid before checking.
+>
+> With the patch,
+>
+>  # ./perf stat -a sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+>          32,139.90 msec cpu-clock                        #   32.003 CPUs =
+utilized
+>                343      context-switches                 #   10.672 /sec
+>                 32      cpu-migrations                   #    0.996 /sec
+>                 73      page-faults                      #    2.271 /sec
+>         13,712,841      cpu_core/cycles/                 #    0.000 GHz
+>        258,301,691      cpu_atom/cycles/                 #    0.008 GHz  =
+                       (54.20%)
+>         12,428,163      cpu_core/instructions/           #    0.91  insn =
+per cycle
+>         37,786,557      cpu_atom/instructions/           #    2.76  insn =
+per cycle              (63.35%)
+>          2,418,826      cpu_core/branches/               #   75.259 K/sec
+>          6,965,962      cpu_atom/branches/               #  216.739 K/sec=
+                       (63.38%)
+>             72,150      cpu_core/branch-misses/          #    2.98% of al=
+l branches
+>          1,032,746      cpu_atom/branch-misses/          #   42.70% of al=
+l branches             (63.35%)
+>
+> Suggested-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- tools/perf/util/mem-events.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-index be15aadb6b14..c07fe3a90722 100644
---- a/tools/perf/util/mem-events.c
-+++ b/tools/perf/util/mem-events.c
-@@ -130,7 +130,12 @@ int perf_mem_events__init(void)
- 		if (!e->tag)
- 			continue;
- 
--		while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+		/*
-+		 * Scan all PMUs not just core ones, since perf mem/c2c on
-+		 * platforms like AMD uses IBS OP PMU which is independent
-+		 * of core PMU.
-+		 */
-+		while ((pmu = perf_pmus__scan(pmu)) != NULL) {
- 			scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name, pmu->name);
- 			e->supported |= perf_mem_event__supported(mnt, sysfs_name);
- 		}
-@@ -165,7 +170,7 @@ static void perf_mem_events__print_unsupport_hybrid(struct perf_mem_event *e,
- 	char sysfs_name[100];
- 	struct perf_pmu *pmu = NULL;
- 
--	while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+	while ((pmu = perf_pmus__scan(pmu)) != NULL) {
- 		scnprintf(sysfs_name, sizeof(sysfs_name), e->sysfs_name,
- 			  pmu->name);
- 		if (!perf_mem_event__supported(mnt, sysfs_name)) {
-@@ -188,7 +193,7 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
- 		if (!e->record)
- 			continue;
- 
--		if (perf_pmus__num_core_pmus() == 1) {
-+		if (perf_pmus__num_mem_pmus() == 1) {
- 			if (!e->supported) {
- 				pr_err("failed: event '%s' not supported\n",
- 				       perf_mem_events__name(j, NULL));
-@@ -203,7 +208,7 @@ int perf_mem_events__record_args(const char **rec_argv, int *argv_nr,
- 				return -1;
- 			}
- 
--			while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
-+			while ((pmu = perf_pmus__scan(pmu)) != NULL) {
- 				rec_argv[i++] = "-e";
- 				s = perf_mem_events__name(j, pmu->name);
- 				if (s) {
--- 
-2.40.1
+Thanks,
+Ian
 
+> ---
+>  tools/perf/util/evsel.h | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index b365b449c6ea..cc6fb3049b99 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -10,6 +10,7 @@
+>  #include <internal/evsel.h>
+>  #include <perf/evsel.h>
+>  #include "symbol_conf.h"
+> +#include "pmus.h"
+>
+>  struct bpf_object;
+>  struct cgroup;
+> @@ -350,9 +351,19 @@ u64 format_field__intval(struct tep_format_field *fi=
+eld, struct perf_sample *sam
+>
+>  struct tep_format_field *evsel__field(struct evsel *evsel, const char *n=
+ame);
+>
+> -#define evsel__match(evsel, t, c)              \
+> -       (evsel->core.attr.type =3D=3D PERF_TYPE_##t &&      \
+> -        evsel->core.attr.config =3D=3D PERF_COUNT_##c)
+> +static inline bool __evsel__match(const struct evsel *evsel, u32 type, u=
+64 config)
+> +{
+> +       if (evsel->core.attr.type !=3D type)
+> +               return false;
+> +
+> +       if ((type =3D=3D PERF_TYPE_HARDWARE || type =3D=3D PERF_TYPE_HW_C=
+ACHE)  &&
+> +           perf_pmus__supports_extended_type())
+> +               return (evsel->core.attr.config & PERF_HW_EVENT_MASK) =3D=
+=3D config;
+> +
+> +       return evsel->core.attr.config =3D=3D config;
+> +}
+> +
+> +#define evsel__match(evsel, t, c) __evsel__match(evsel, PERF_TYPE_##t, P=
+ERF_COUNT_##c)
+>
+>  static inline bool evsel__match2(struct evsel *e1, struct evsel *e2)
+>  {
+> --
+> 2.35.1
+>
