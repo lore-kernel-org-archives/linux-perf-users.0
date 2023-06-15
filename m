@@ -2,20 +2,20 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ECBEB64DB
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 10:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2D4EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 10:02:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238985AbjFOKAS (ORCPT
+        id S244916AbjFOKCl (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 06:00:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54432 "EHLO
+        Thu, 15 Jun 2023 06:02:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237827AbjFOKAQ (ORCPT
+        with ESMTP id S238766AbjFOKCk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 06:00:16 -0400
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::222])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DDCC1A3;
-        Thu, 15 Jun 2023 03:00:14 -0700 (PDT)
+        Thu, 15 Jun 2023 06:02:40 -0400
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1017195;
+        Thu, 15 Jun 2023 03:02:35 -0700 (PDT)
 X-GND-Sasl: alex@ghiti.fr
 X-GND-Sasl: alex@ghiti.fr
 X-GND-Sasl: alex@ghiti.fr
@@ -39,15 +39,14 @@ X-GND-Sasl: alex@ghiti.fr
 X-GND-Sasl: alex@ghiti.fr
 X-GND-Sasl: alex@ghiti.fr
 X-GND-Sasl: alex@ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CBCA64000B;
-        Thu, 15 Jun 2023 10:00:01 +0000 (UTC)
-Message-ID: <653f51b6-9f6e-12f1-9165-541922bed7a9@ghiti.fr>
-Date:   Thu, 15 Jun 2023 12:00:01 +0200
+Received: by mail.gandi.net (Postfix) with ESMTPSA id AA24FFF805;
+        Thu, 15 Jun 2023 10:02:28 +0000 (UTC)
+Message-ID: <35dc3141-ac83-791c-7439-1c1f25ca95e8@ghiti.fr>
+Date:   Thu, 15 Jun 2023 12:02:28 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH v2 08/10] Documentation: admin-guide: Add riscv
- sysctl_perf_user_access
+Subject: Re: [PATCH v2 10/10] perf: tests: Adapt mmap-basic.c for riscv
 Content-Language: en-US
 To:     Andrew Jones <ajones@ventanamicro.com>,
         Alexandre Ghiti <alexghiti@rivosinc.com>
@@ -70,10 +69,10 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 References: <20230512085321.13259-1-alexghiti@rivosinc.com>
- <20230512085321.13259-9-alexghiti@rivosinc.com>
- <20230531-0707dc46df8078cd92711314@orel>
+ <20230512085321.13259-11-alexghiti@rivosinc.com>
+ <20230531-31bd9ddeaca8cb338f81ed14@orel>
 From:   Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20230531-0707dc46df8078cd92711314@orel>
+In-Reply-To: <20230531-31bd9ddeaca8cb338f81ed14@orel>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,65 +80,53 @@ List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
-On 31/05/2023 17:07, Andrew Jones wrote:
-> On Fri, May 12, 2023 at 10:53:19AM +0200, Alexandre Ghiti wrote:
->> riscv now uses this sysctl so document its usage for this architecture.
+On 31/05/2023 17:15, Andrew Jones wrote:
+> On Fri, May 12, 2023 at 10:53:21AM +0200, Alexandre Ghiti wrote:
+>> riscv now supports mmaping hardware counters to userspace so adapt the test
+>> to run on this architecture.
 >>
 >> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 >> ---
->>   Documentation/admin-guide/sysctl/kernel.rst | 24 +++++++++++++++++----
->>   1 file changed, 20 insertions(+), 4 deletions(-)
+>>   tools/perf/tests/mmap-basic.c | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
 >>
->> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
->> index 4b7bfea28cd7..93cd518ca94b 100644
->> --- a/Documentation/admin-guide/sysctl/kernel.rst
->> +++ b/Documentation/admin-guide/sysctl/kernel.rst
->> @@ -941,16 +941,32 @@ enabled, otherwise writing to this file will return ``-EBUSY``.
->>   The default value is 8.
->>   
->>   
->> -perf_user_access (arm64 only)
->> -=================================
->> +perf_user_access (arm64 and riscv only)
->> +=======================================
->> +
->> +Controls user space access for reading perf event counters.
->>   
->> -Controls user space access for reading perf event counters. When set to 1,
->> -user space can read performance monitor counter registers directly.
->> +arm64
->> +=====
->>   
->>   The default value is 0 (access disabled).
->> +When set to 1, user space can read performance monitor counter registers
->> +directly.
->>   
->>   See Documentation/arm64/perf.rst for more information.
->>   
->> +riscv
->> +=====
->> +
->> +When set to 0, user access is disabled.
->> +
->> +When set to 1, user space can read performance monitor counter registers
->> +directly only through perf, any direct access without perf intervention will
->> +trigger an illegal instruction.
->> +
->> +The default value is 2, which enables legacy mode (user space has direct
->> +access to cycle, time and insret CSRs only). Note that this legacy value
->> +is deprecated and will be removed once all userspace applications are fixed.
-> All modes can access the time CSR so I'm not sure if it should be pointed
-> out here as if it's an exception. Maybe we shouldn't point it out at all
-> or we should point it out for all three?
+>> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+>> index e68ca6229756..f5075ca774f8 100644
+>> --- a/tools/perf/tests/mmap-basic.c
+>> +++ b/tools/perf/tests/mmap-basic.c
+>> @@ -284,7 +284,7 @@ static struct test_case tests__basic_mmap[] = {
+>>   			 "permissions"),
+>>   	TEST_CASE_REASON("User space counter reading of instructions",
+>>   			 mmap_user_read_instr,
+>> -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
+>> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
+>>   			 "permissions"
+>>   #else
+>>   			 "unsupported"
+>> @@ -292,7 +292,7 @@ static struct test_case tests__basic_mmap[] = {
+>>   		),
+>>   	TEST_CASE_REASON("User space counter reading of cycles",
+>>   			 mmap_user_read_cycles,
+>> -#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__)
+>> +#if defined(__i386__) || defined(__x86_64__) || defined(__aarch64__) || __riscv_xlen == 64
+>>   			 "permissions"
+>>   #else
+>>   			 "unsupported"
+>> -- 
+>> 2.37.2
+>>
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
 
 
-Ok I removed the reference to the time CSR for the legacy mode and 
-instead added a note stating that this CSR is always accessible whatever 
-the mode.
+Thanks for your review Andrew, as usual, always helpful.
 
-Thanks!
+And sorry for the delay!
+
+Alex
 
 
 >
-> Thanks,
-> drew
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
