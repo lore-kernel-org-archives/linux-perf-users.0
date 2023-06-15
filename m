@@ -2,351 +2,250 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A87EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 04:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3291BEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 04:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241275AbjFOEHl (ORCPT
+        id S237726AbjFOEab (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 00:07:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59140 "EHLO
+        Thu, 15 Jun 2023 00:30:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242564AbjFOEHe (ORCPT
+        with ESMTP id S229529AbjFOEa3 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 00:07:34 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03EE82684
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 21:07:33 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-bb2a7308f21so1808393276.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 21:07:32 -0700 (PDT)
+        Thu, 15 Jun 2023 00:30:29 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CA001BF8
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 21:30:28 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-3f98276f89cso87261cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 21:30:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686802052; x=1689394052;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bs7AkyXl2mjrjvp9HsaM0ecdyMRx4pZb1A9MefPHc3M=;
-        b=GUjeAqhOuaQ0YMRAVwWyv8xT2uOFuiFIvVSuilcOSShB56Hw11N/DhAi5zwxEB1B1O
-         QCOV5+8kTMxk8yqYcIJVnvxbFjdjJYY1QNUOJtBd8y8BpjQiSrzKZi7YE4QjURHkDaBD
-         806cYw1XNBVnh45Fb9M+jXMhIZqKJBCgbDpoz23uhwSsLZiIFKpZsOxrVL6dUd9JHEY+
-         yYp6gZfq4PHwEzrrwwESo8pfcw7EfrDcy5hhnc5/qeTQLxLcSRxvcJksydlBtCjGtYtm
-         tgxe8onnWsvM69f67A6wo93RygJjiJcQcIsEu/CkvCoHOxtSJ+pCE0YNFoEtILjO4+k7
-         5brw==
+        d=google.com; s=20221208; t=1686803427; x=1689395427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NpMkYu68kVCSeADHU3WzS0gNWUL6UGuCaTOSPQaWnBY=;
+        b=p36xzpFyQSMpMiJHPw0/Pdew2Stos4FU9DmAXYJwWjGHT56YbT2MCu7Ci8b/U23JpT
+         jdUzXZRwLx8pEUu2QsgnomXr+MbIo1mSSCUatUTumirV2XyQzDxYpCqjucb3osckFpHD
+         0zPi4YLRfN3ydsujAYJ+G4ZJeqf3j167CQAF2G9AHI30kcwJPM9auqEaTRjk8zuMTAab
+         efaScxq7ge81XrsuaZEnNrSX6+k5fqS2uZOHdAT4bJ7jdFy3OEwBMWmPP2a2hUa4xetY
+         bssvB7NQY560fnbKA6DramQoxR1pQdGgEAsXdgqeB85m/Ru8fK47dQ2FoYUB05aBmSdq
+         gTkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686802052; x=1689394052;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bs7AkyXl2mjrjvp9HsaM0ecdyMRx4pZb1A9MefPHc3M=;
-        b=Tz4O1S/gsXLd7+ex9AQWkhhwpbJQCbwBJm7NqIlTzcz7g0SadLKj2yhSDd/rd4F/4X
-         Z3x0Ov/sf5OR0RiEn1Y27gixqSAfHUomurHgH4YQpPjg3wpJf4o4xUxeDlLV44tgCvFz
-         OkCC1yjx0RMYCl7IEZDOBNZ7h0evTzqPAIy2rCqiBTTFKplfqZpsPR5xVx7nyuqdQDqa
-         eASzNjLSMamGhTlHqUMy4p67IN9+XMKjtAJpBbgTcbguAfKrc9hvO+Yz4TYt+NS7xSdq
-         Sc9VT1ZQ1BTa0dKb5qj0nIa+TeLzV9Jw7lH5/aEX8cY0iB9UDaItB42prpmwZ9hz1Hix
-         ecGg==
-X-Gm-Message-State: AC+VfDyEqScSVyrW5rmUntoGA+D6D2A8bEQrTOG2hr7uOmXJepV1SUsX
-        e+k6qOv9wYTRrOu3F2VMjt3Vq+QgoiAT
-X-Google-Smtp-Source: ACHHUZ5SNMjJUg0QT2/TpCL6tfLo2hu80+oVTBivsNFMeV7DSgA3ljK+fVd/1MiqCAPrExfutxGju3E92RJv
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:768d:713f:8ce8:1d35])
- (user=irogers job=sendgmr) by 2002:a05:6902:1817:b0:ba8:5bdf:2e84 with SMTP
- id cf23-20020a056902181700b00ba85bdf2e84mr1803285ybb.10.1686802052220; Wed,
- 14 Jun 2023 21:07:32 -0700 (PDT)
-Date:   Wed, 14 Jun 2023 21:07:15 -0700
-In-Reply-To: <20230615040715.2064350-1-irogers@google.com>
-Message-Id: <20230615040715.2064350-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20230615040715.2064350-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v2 2/2] perf annotation: Switch lock from a mutex to a sharded_mutex
+        d=1e100.net; s=20221208; t=1686803427; x=1689395427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NpMkYu68kVCSeADHU3WzS0gNWUL6UGuCaTOSPQaWnBY=;
+        b=M7QQ64357aj6azBBXNCH0O2vFnRKceBCt7feDpiAu9CSga0QPJN4cHZRwch0sEnx5B
+         6x1JBtaQ2ST7pP2t6BHGBKFXWGIgb41YtRe/Mp2uAGUAlD9XPCAnVhhNPvNa7Gl+5V/X
+         rlVv1HEAXb373vY/sYcDlYYXZNBT3LPT1AVQtPhUNEsihG4NIGnBpxmF3RR9VBuZifYQ
+         gAuG6x3VR035drYZ7ZLeiS/3kxLhWi9Ixf2mEx8lZo/pNuTpwTxgPUtDR38UT9QXNXAG
+         eg+694q910tj/A+FoVZzlxyvRkTD32GkwOQQPicALu0aUkzPqcGfUIULSO1N3/9mC6jP
+         X1iw==
+X-Gm-Message-State: AC+VfDydTTeiHjG2Vxlq+PgsfkYjpUrfbX0clRPJ74SqqU7WxoU2N/92
+        J0ob+fTk6KPi2opJSsTuTUThB/aNAJl5phkN8JMd0g==
+X-Google-Smtp-Source: ACHHUZ7gl0OoSz/xmXaN/z+bmDucfMs5NuXGtC+sD0f5i5RdNTRhVV8pRvTQ2jcc3V2Rru+Bpud5QEtV8IYz5rcahrY=
+X-Received: by 2002:a05:622a:1447:b0:3f0:af20:1a37 with SMTP id
+ v7-20020a05622a144700b003f0af201a37mr55182qtx.15.1686803427047; Wed, 14 Jun
+ 2023 21:30:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230615001735.3643996-1-kan.liang@linux.intel.com> <20230615001735.3643996-5-kan.liang@linux.intel.com>
+In-Reply-To: <20230615001735.3643996-5-kan.liang@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Yuan Can <yuancan@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Date:   Wed, 14 Jun 2023 21:30:15 -0700
+Message-ID: <CAP-5=fWbLkyQpxxhfCmqit7p4WgHVUOCjsADm-XojcT5ppcv7g@mail.gmail.com>
+Subject: Re: [PATCH V2 4/8] perf metrics: Sort the Default metricgroup
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Remove the "struct mutex lock" variable from annotation that is
-allocated per symbol. This removes in the region of 40 bytes per
-symbol allocation. Use a sharded mutex where the number of shards is
-set to the number of CPUs. Assuming good hashing of the annotation
-(done based on the pointer), this means in order to contend there
-needs to be more threads than CPUs, which is not currently true in any
-perf command. Were contention an issue it is straightforward to
-increase the number of shards in the mutex.
+On Wed, Jun 14, 2023 at 5:18=E2=80=AFPM <kan.liang@linux.intel.com> wrote:
+>
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> The new default mode will print the metrics as a metric group. The
+> metrics from the same metric group must be adjacent to each other in the
+> metric list. But the metric_list_cmp() sorts metrics by the number of
+> events.
+>
+> Add a new sort for the Default metricgroup, which sorts by
+> default_metricgroup_name and metric_name.
+>
+> Add is_default in the struct metric_event to indicate that it's from
+> the Default metricgroup.
+>
+> Store the displayed metricgroup name of the Default metricgroup into
+> the metric expr for output.
+>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  tools/perf/util/metricgroup.c | 35 +++++++++++++++++++++++++++++++++++
+>  tools/perf/util/metricgroup.h |  3 +++
+>  2 files changed, 38 insertions(+)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+c
+> index 8b19644ade7d..acf86b15ee49 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -79,6 +79,7 @@ static struct rb_node *metric_event_new(struct rblist *=
+rblist __maybe_unused,
+>                 return NULL;
+>         memcpy(me, entry, sizeof(struct metric_event));
+>         me->evsel =3D ((struct metric_event *)entry)->evsel;
+> +       me->is_default =3D false;
+>         INIT_LIST_HEAD(&me->head);
+>         return &me->nd;
+>  }
+> @@ -1160,6 +1161,25 @@ static int metric_list_cmp(void *priv __maybe_unus=
+ed, const struct list_head *l,
+>         return right_count - left_count;
+>  }
+>
+> +/**
+> + * default_metricgroup_cmp - Implements complex key for the Default metr=
+icgroup
+> + *                          that first sorts by default_metricgroup_name=
+, then
+> + *                          metric_name.
+> + */
+> +static int default_metricgroup_cmp(void *priv __maybe_unused,
+> +                                  const struct list_head *l,
+> +                                  const struct list_head *r)
+> +{
+> +       const struct metric *left =3D container_of(l, struct metric, nd);
+> +       const struct metric *right =3D container_of(r, struct metric, nd)=
+;
+> +       int diff =3D strcmp(right->default_metricgroup_name, left->defaul=
+t_metricgroup_name);
+> +
+> +       if (diff)
+> +               return diff;
+> +
+> +       return strcmp(right->metric_name, left->metric_name);
+> +}
+> +
+>  struct metricgroup__add_metric_data {
+>         struct list_head *list;
+>         const char *pmu;
+> @@ -1515,6 +1535,7 @@ static int parse_groups(struct evlist *perf_evlist,
+>         LIST_HEAD(metric_list);
+>         struct metric *m;
+>         bool tool_events[PERF_TOOL_MAX] =3D {false};
+> +       bool is_default =3D !strcmp(str, "Default");
+>         int ret;
+>
+>         if (metric_events_list->nr_entries =3D=3D 0)
+> @@ -1549,6 +1570,9 @@ static int parse_groups(struct evlist *perf_evlist,
+>                         goto out;
+>         }
+>
+> +       if (is_default)
+> +               list_sort(NULL, &metric_list, default_metricgroup_cmp);
+> +
+>         list_for_each_entry(m, &metric_list, nd) {
+>                 struct metric_event *me;
+>                 struct evsel **metric_events;
+> @@ -1637,6 +1661,17 @@ static int parse_groups(struct evlist *perf_evlist=
+,
+>                 expr->metric_unit =3D m->metric_unit;
+>                 expr->metric_events =3D metric_events;
+>                 expr->runtime =3D m->pctx->sctx.runtime;
+> +               if (m->pmu && strcmp(m->pmu, "cpu")) {
+> +                       char *name;
+> +
+> +                       if (asprintf(&name, "%s (%s)", m->default_metricg=
+roup_name, m->pmu) < 0)
 
-On my Debian/glibc based machine, this reduces the size of struct
-annotation from 136 bytes to 96 bytes, or nearly 30%.
+With EXTRA_CFLAGS=3D"-fsanitize=3Daddress" this is causing:
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-top.c          | 14 +++----
- tools/perf/ui/browsers/annotate.c | 10 ++---
- tools/perf/util/annotate.c        | 66 ++++++++++++++++++++++++++-----
- tools/perf/util/annotate.h        | 11 ++++--
- 4 files changed, 77 insertions(+), 24 deletions(-)
+$ perf test 7 -vv -F
+  7: PMU events                                                      :
+...
+  7.5: Parsing of metric thresholds with fake PMUs                   :
+...
+=3D=3D2072355=3D=3DERROR: LeakSanitizer: detected memory leaks
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index c363c04e16df..1baa2acb3ced 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -137,10 +137,10 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 	}
- 
- 	notes = symbol__annotation(sym);
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 
- 	if (!symbol__hists(sym, top->evlist->core.nr_entries)) {
--		mutex_unlock(&notes->lock);
-+		annotation__unlock(notes);
- 		pr_err("Not enough memory for annotating '%s' symbol!\n",
- 		       sym->name);
- 		sleep(1);
-@@ -156,7 +156,7 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
- 		pr_err("Couldn't annotate %s: %s\n", sym->name, msg);
- 	}
- 
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- 	return err;
- }
- 
-@@ -211,12 +211,12 @@ static void perf_top__record_precise_ip(struct perf_top *top,
- 
- 	notes = symbol__annotation(sym);
- 
--	if (!mutex_trylock(&notes->lock))
-+	if (!annotation__trylock(notes))
- 		return;
- 
- 	err = hist_entry__inc_addr_samples(he, sample, evsel, ip);
- 
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- 
- 	if (unlikely(err)) {
- 		/*
-@@ -253,7 +253,7 @@ static void perf_top__show_details(struct perf_top *top)
- 	symbol = he->ms.sym;
- 	notes = symbol__annotation(symbol);
- 
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 
- 	symbol__calc_percent(symbol, evsel);
- 
-@@ -274,7 +274,7 @@ static void perf_top__show_details(struct perf_top *top)
- 	if (more != 0)
- 		printf("%d lines not displayed, maybe increase display entries [e]\n", more);
- out_unlock:
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- }
- 
- static void perf_top__resort_hists(struct perf_top *t)
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index 70bad42b807b..ccdb2cd11fbf 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -314,7 +314,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
- 
- 	browser->entries = RB_ROOT;
- 
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 
- 	symbol__calc_percent(sym, evsel);
- 
-@@ -343,7 +343,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
- 		}
- 		disasm_rb_tree__insert(browser, &pos->al);
- 	}
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- 
- 	browser->curr_hot = rb_last(&browser->entries);
- }
-@@ -470,10 +470,10 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 	}
- 
- 	notes = symbol__annotation(dl->ops.target.sym);
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 
- 	if (!symbol__hists(dl->ops.target.sym, evsel->evlist->core.nr_entries)) {
--		mutex_unlock(&notes->lock);
-+		annotation__unlock(notes);
- 		ui__warning("Not enough memory for annotating '%s' symbol!\n",
- 			    dl->ops.target.sym->name);
- 		return true;
-@@ -482,7 +482,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
- 	target_ms.maps = ms->maps;
- 	target_ms.map = ms->map;
- 	target_ms.sym = dl->ops.target.sym;
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- 	symbol__tui_annotate(&target_ms, evsel, hbt, browser->opts);
- 	sym_title(ms->sym, ms->map, title, sizeof(title), browser->opts->percent_type);
- 	ui_browser__show_title(&browser->b, title);
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index cdd1924a4418..7cae73bb7353 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -32,6 +32,7 @@
- #include "block-range.h"
- #include "string2.h"
- #include "util/event.h"
-+#include "util/sharded_mutex.h"
- #include "arch/common.h"
- #include "namespaces.h"
- #include <regex.h>
-@@ -856,7 +857,7 @@ void symbol__annotate_zero_histograms(struct symbol *sym)
- {
- 	struct annotation *notes = symbol__annotation(sym);
- 
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 	if (notes->src != NULL) {
- 		memset(notes->src->histograms, 0,
- 		       notes->src->nr_histograms * notes->src->sizeof_sym_hist);
-@@ -864,7 +865,7 @@ void symbol__annotate_zero_histograms(struct symbol *sym)
- 			memset(notes->src->cycles_hist, 0,
- 				symbol__size(sym) * sizeof(struct cyc_hist));
- 	}
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- }
- 
- static int __symbol__account_cycles(struct cyc_hist *ch,
-@@ -1121,7 +1122,7 @@ void annotation__compute_ipc(struct annotation *notes, size_t size)
- 	notes->hit_insn = 0;
- 	notes->cover_insn = 0;
- 
--	mutex_lock(&notes->lock);
-+	annotation__lock(notes);
- 	for (offset = size - 1; offset >= 0; --offset) {
- 		struct cyc_hist *ch;
- 
-@@ -1140,7 +1141,7 @@ void annotation__compute_ipc(struct annotation *notes, size_t size)
- 			notes->have_cycles = true;
- 		}
- 	}
--	mutex_unlock(&notes->lock);
-+	annotation__unlock(notes);
- }
- 
- int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample,
-@@ -1291,17 +1292,64 @@ int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool r
- 	return ins__scnprintf(&dl->ins, bf, size, &dl->ops, max_ins_name);
- }
- 
--void annotation__init(struct annotation *notes)
-+void annotation__exit(struct annotation *notes)
- {
--	mutex_init(&notes->lock);
-+	annotated_source__delete(notes->src);
- }
- 
--void annotation__exit(struct annotation *notes)
-+static struct sharded_mutex *sharded_mutex;
-+
-+static void annotation__init_sharded_mutex(void)
- {
--	annotated_source__delete(notes->src);
--	mutex_destroy(&notes->lock);
-+	/* As many mutexes as there are CPUs. */
-+	sharded_mutex = sharded_mutex__new(cpu__max_present_cpu().cpu);
-+}
-+
-+static size_t annotation__hash(const struct annotation *notes)
-+{
-+	return (size_t)notes;
- }
- 
-+static struct mutex *annotation__get_mutex(const struct annotation *notes)
-+{
-+	static pthread_once_t once = PTHREAD_ONCE_INIT;
-+
-+	pthread_once(&once, annotation__init_sharded_mutex);
-+	if (!sharded_mutex)
-+		return NULL;
-+
-+	return sharded_mutex__get_mutex(sharded_mutex, annotation__hash(notes));
-+}
-+
-+void annotation__lock(struct annotation *notes)
-+	NO_THREAD_SAFETY_ANALYSIS
-+{
-+	struct mutex *mutex = annotation__get_mutex(notes);
-+
-+	if (mutex)
-+		mutex_lock(mutex);
-+}
-+
-+void annotation__unlock(struct annotation *notes)
-+	NO_THREAD_SAFETY_ANALYSIS
-+{
-+	struct mutex *mutex = annotation__get_mutex(notes);
-+
-+	if (mutex)
-+		mutex_unlock(mutex);
-+}
-+
-+bool annotation__trylock(struct annotation *notes)
-+{
-+	struct mutex *mutex = annotation__get_mutex(notes);
-+
-+	if (!mutex)
-+		return false;
-+
-+	return mutex_trylock(mutex);
-+}
-+
-+
- static void annotation_line__add(struct annotation_line *al, struct list_head *head)
- {
- 	list_add_tail(&al->node, head);
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 1c6335b8333a..962780559176 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -271,8 +271,7 @@ struct annotated_source {
- 	struct sym_hist	   *histograms;
- };
- 
--struct annotation {
--	struct mutex lock;
-+struct LOCKABLE annotation {
- 	u64			max_coverage;
- 	u64			start;
- 	u64			hit_cycles;
-@@ -298,9 +297,15 @@ struct annotation {
- 	struct annotated_source *src;
- };
- 
--void annotation__init(struct annotation *notes);
-+static inline void annotation__init(struct annotation *notes __maybe_unused)
-+{
-+}
- void annotation__exit(struct annotation *notes);
- 
-+void annotation__lock(struct annotation *notes) EXCLUSIVE_LOCK_FUNCTION(*notes);
-+void annotation__unlock(struct annotation *notes) UNLOCK_FUNCTION(*notes);
-+bool annotation__trylock(struct annotation *notes) EXCLUSIVE_TRYLOCK_FUNCTION(true, *notes);
-+
- static inline int annotation__cycles_width(struct annotation *notes)
- {
- 	if (notes->have_cycles && notes->options->show_minmax_cycle)
--- 
-2.41.0.162.gfafddb0af9-goog
+Direct leak of 6199 byte(s) in 340 object(s) allocated from:
+   #0 0x7f24cce7077b in __interceptor_strdup
+../../../../src/libsanitizer/asan/asan_interceptors.cp
+p:439
+   #1 0x55972b328abd in asprintf util/util.c:566
+   #2 0x55972b251dbd in parse_groups util/metricgroup.c:1667
+   #3 0x55972b25231f in metricgroup__parse_groups_test util/metricgroup.c:1=
+719
+   #4 0x55972b139aff in test__parsing_callback tests/pmu-events.c:837
+   #5 0x55972b5119a9 in pmu_metrics_table_for_each_metric
+/tmp/perf/pmu-events/pmu-events.c:61641
+   #6 0x55972b511fdf in pmu_for_each_core_metric
+/tmp/perf/pmu-events/pmu-events.c:61742
+   #7 0x55972b13a3bc in test__parsing tests/pmu-events.c:898
+   #8 0x55972b106cd7 in run_test tests/builtin-test.c:236
+   #9 0x55972b106f7c in test_and_print tests/builtin-test.c:265
+   #10 0x55972b107f96 in __cmd_test tests/builtin-test.c:436
+   #11 0x55972b10927a in cmd_test tests/builtin-test.c:559
+   #12 0x55972b19584a in run_builtin
+/home/irogers/kernel.org/tools/perf/perf.c:323
+   #13 0x55972b195dbb in handle_internal_command
+/home/irogers/kernel.org/tools/perf/perf.c:377
+   #14 0x55972b196183 in run_argv /home/irogers/kernel.org/tools/perf/perf.=
+c:421
+   #15 0x55972b1966eb in main /home/irogers/kernel.org/tools/perf/perf.c:53=
+7
+   #16 0x7f24cbe46189 in __libc_start_call_main
+../sysdeps/nptl/libc_start_call_main.h:58
 
+SUMMARY: AddressSanitizer: 6199 byte(s) leaked in 340 allocation(s)
+
+As this is mixing allocated and unallocated strings, you like want to
+strdup the unallocated ones, then add a free to the exit routine.
+
+Thanks,
+Ian
+
+> +                               expr->default_metricgroup_name =3D m->def=
+ault_metricgroup_name;
+> +                       else
+> +                               expr->default_metricgroup_name =3D name;
+> +               } else
+> +                       expr->default_metricgroup_name =3D m->default_met=
+ricgroup_name;
+> +               if (is_default)
+> +                       me->is_default =3D true;
+>                 list_add(&expr->nd, &me->head);
+>         }
+>
+> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
+h
+> index bf18274c15df..d5325c6ec8e1 100644
+> --- a/tools/perf/util/metricgroup.h
+> +++ b/tools/perf/util/metricgroup.h
+> @@ -22,6 +22,7 @@ struct cgroup;
+>  struct metric_event {
+>         struct rb_node nd;
+>         struct evsel *evsel;
+> +       bool is_default; /* the metric evsel from the Default metricgroup=
+ */
+>         struct list_head head; /* list of metric_expr */
+>  };
+>
+> @@ -55,6 +56,8 @@ struct metric_expr {
+>          * more human intelligible) and then add "MiB" afterward when dis=
+played.
+>          */
+>         const char *metric_unit;
+> +       /** Displayed metricgroup name of the Default metricgroup */
+> +       const char *default_metricgroup_name;
+>         /** Null terminated array of events used by the metric. */
+>         struct evsel **metric_events;
+>         /** Null terminated array of referenced metrics. */
+> --
+> 2.35.1
+>
