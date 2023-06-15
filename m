@@ -2,20 +2,20 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036A3EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 07:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04599EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 07:18:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244737AbjFOHNA (ORCPT
+        id S244199AbjFOHSI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 03:13:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39338 "EHLO
+        Thu, 15 Jun 2023 03:18:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237984AbjFOHMX (ORCPT
+        with ESMTP id S244147AbjFOHRd (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 03:12:23 -0400
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::227])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7573B273A;
-        Thu, 15 Jun 2023 00:10:32 -0700 (PDT)
+        Thu, 15 Jun 2023 03:17:33 -0400
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1602954;
+        Thu, 15 Jun 2023 00:16:57 -0700 (PDT)
 X-GND-Sasl: alex@ghiti.fr
 X-GND-Sasl: alex@ghiti.fr
 X-GND-Sasl: alex@ghiti.fr
@@ -39,14 +39,15 @@ X-GND-Sasl: alex@ghiti.fr
 X-GND-Sasl: alex@ghiti.fr
 X-GND-Sasl: alex@ghiti.fr
 X-GND-Sasl: alex@ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D8B5B2000C;
-        Thu, 15 Jun 2023 07:10:24 +0000 (UTC)
-Message-ID: <84626c83-8806-d807-a7bf-b497f70e56fd@ghiti.fr>
-Date:   Thu, 15 Jun 2023 09:10:24 +0200
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 81EB640003;
+        Thu, 15 Jun 2023 07:16:51 +0000 (UTC)
+Message-ID: <25c378d3-8914-4f24-8ea9-0e2204c90727@ghiti.fr>
+Date:   Thu, 15 Jun 2023 09:16:51 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH v2 01/10] perf: Fix wrong comment about default event_idx
+Subject: Re: [PATCH v2 03/10] riscv: Make legacy counter enum match the HW
+ numbering
 Content-Language: en-US
 To:     Andrew Jones <ajones@ventanamicro.com>,
         Alexandre Ghiti <alexghiti@rivosinc.com>
@@ -69,55 +70,71 @@ Cc:     Jonathan Corbet <corbet@lwn.net>,
         linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
 References: <20230512085321.13259-1-alexghiti@rivosinc.com>
- <20230512085321.13259-2-alexghiti@rivosinc.com>
- <20230531-5678beb107af4b9805cbb611@orel>
+ <20230512085321.13259-4-alexghiti@rivosinc.com>
+ <20230531-ddb2d631e152526102f41d5e@orel>
 From:   Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20230531-5678beb107af4b9805cbb611@orel>
+In-Reply-To: <20230531-ddb2d631e152526102f41d5e@orel>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-On 31/05/2023 15:54, Andrew Jones wrote:
-> On Fri, May 12, 2023 at 10:53:12AM +0200, Alexandre Ghiti wrote:
->> event_idx default implementation returns 0, not idx + 1.
-> The comment was correct until commit c719f56092ad ("perf: Fix and clean
-> up initialization of pmu::event_idx"). I'm not sure that warrants a fixes
-> tag, but maybe a reference in the commit message.
-
-
-You're right, I'll add a reference, I don't think it deserves a 
-backport, that's just a comment.
-
-
+On 31/05/2023 16:01, Andrew Jones wrote:
+> On Fri, May 12, 2023 at 10:53:14AM +0200, Alexandre Ghiti wrote:
+>> RISCV_PMU_LEGACY_INSTRET used to be set to 1 whereas the offset of this
+>> hardware counter from CSR_CYCLE is actually 2: make this offset match the
+>> real hw offset so that we can directly expose those values to userspace.
+>>
 >> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 >> ---
->>   include/linux/perf_event.h | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>   drivers/perf/riscv_pmu_legacy.c | 7 +++++--
+>>   1 file changed, 5 insertions(+), 2 deletions(-)
 >>
->> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->> index d5628a7b5eaa..56fe43b20966 100644
->> --- a/include/linux/perf_event.h
->> +++ b/include/linux/perf_event.h
->> @@ -442,7 +442,8 @@ struct pmu {
+>> diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
+>> index ca9e20bfc7ac..0d8c9d8849ee 100644
+>> --- a/drivers/perf/riscv_pmu_legacy.c
+>> +++ b/drivers/perf/riscv_pmu_legacy.c
+>> @@ -12,8 +12,11 @@
+>>   #include <linux/perf/riscv_pmu.h>
+>>   #include <linux/platform_device.h>
 >>   
->>   	/*
->>   	 * Will return the value for perf_event_mmap_page::index for this event,
->> -	 * if no implementation is provided it will default to: event->hw.idx + 1.
->> +	 * if no implementation is provided it will default to 0 (see
->> +	 * perf_event_idx_default).
->>   	 */
->>   	int (*event_idx)		(struct perf_event *event); /*optional */
->>   
->> -- 
->> 2.37.2
->>
-> Otherwise,
->
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+>> -#define RISCV_PMU_LEGACY_CYCLE		0
+>> -#define RISCV_PMU_LEGACY_INSTRET	1
+>> +enum {
+>> +	RISCV_PMU_LEGACY_CYCLE,
+>> +	RISCV_PMU_LEGACY_TIME,
+>> +	RISCV_PMU_LEGACY_INSTRET
+>> +};
+> I guess this doesn't hurt, since these are just indices internal to this
+> driver, but it's a bit odd to also have a RISCV_PMU_LEGACY_TIME, when
+> the driver is only for cycle and instret, as its Kconfig help text says.
 
+
+I understand and you're right, that's weird, so I'll change that with 
+the following:
+
+diff --git a/drivers/perf/riscv_pmu_legacy.c 
+b/drivers/perf/riscv_pmu_legacy.c
+index ca9e20bfc7ac..6a000abc28bb 100644
+--- a/drivers/perf/riscv_pmu_legacy.c
++++ b/drivers/perf/riscv_pmu_legacy.c
+@@ -13,7 +13,7 @@
+  #include <linux/platform_device.h>
+
+  #define RISCV_PMU_LEGACY_CYCLE         0
+-#define RISCV_PMU_LEGACY_INSTRET       1
++#define RISCV_PMU_LEGACY_INSTRET       2
+
+  static bool pmu_init_done;
 
 Thanks!
 
+
+> Thanks,
+> drew
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
