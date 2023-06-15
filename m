@@ -2,137 +2,207 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F41EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 12:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7310DEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 12:10:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343922AbjFOMFX (ORCPT
+        id S240444AbjFOMKI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 08:05:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50890 "EHLO
+        Thu, 15 Jun 2023 08:10:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344861AbjFOMFJ (ORCPT
+        with ESMTP id S244277AbjFOMJu (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 08:05:09 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380333A81;
-        Thu, 15 Jun 2023 05:03:27 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1q9lMn-0002JV-L1; Thu, 15 Jun 2023 13:42:17 +0200
-Message-ID: <8f21a1ca-3bbb-f37d-47f6-35648d3d7763@leemhuis.info>
-Date:   Thu, 15 Jun 2023 13:42:16 +0200
+        Thu, 15 Jun 2023 08:09:50 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDCBD1B2;
+        Thu, 15 Jun 2023 05:09:48 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QhgS26pYJzLmwK;
+        Thu, 15 Jun 2023 19:44:18 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 15 Jun 2023 19:46:09 +0800
+Subject: Re: [PATCH] perf top & record: Fix segfault when default cycles event
+ is not supported
+To:     Ian Rogers <irogers@google.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20230614151625.2077-1-yangjihong1@huawei.com>
+ <CAP-5=fUf0+7HwZ+AHUR0nRD5QnfPn9_CPMEdJZP_5goPfrPB+Q@mail.gmail.com>
+ <CAP-5=fVOXjjcusjv858SOGrnNgE2w2sb7zS=0sZUpdFfR1T_GA@mail.gmail.com>
+ <668a6159-b7a8-ed25-d8fa-5584a4c04d37@huawei.com>
+ <CAP-5=fX6nWRboZ2dWc1h_y0pe5TAgs0QC0qwCeaLcALfJ+5YEA@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <cc3a669d-570b-2f0d-ce0f-0f4bee417eb2@huawei.com>
+Date:   Thu, 15 Jun 2023 19:46:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 3/3] tools/perf: Fix to get declared file name from
- clang DWARF5
-Content-Language: en-US, de-DE
-To:     =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-References: <166731050151.2100653.8202870942871353491.stgit@devnote3>
- <166731052936.2100653.13380621874859467731.stgit@devnote3>
- <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
-From:   "Linux regression tracking #adding (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAP-5=fX6nWRboZ2dWc1h_y0pe5TAgs0QC0qwCeaLcALfJ+5YEA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686830607;ed41629e;
-X-HE-SMSGID: 1q9lMn-0002JV-L1
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-[CCing the regression list, as it should be in the loop for regressions:
-https://docs.kernel.org/admin-guide/reporting-regressions.html]
+Hello,
 
-[TLDR: I'm adding this report to the list of tracked Linux kernel
-regressions; the text you find below is based on a few templates
-paragraphs you might have encountered already in similar form.
-See link in footer if these mails annoy you.]
-
-On 09.06.23 14:21, Georg Müller wrote:
-> 
-> Am 01.11.22 um 14:48 schrieb Masami Hiramatsu (Google):
->> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 2023/6/15 10:04, Ian Rogers wrote:
+> On Wed, Jun 14, 2023 at 6:55 PM Yang Jihong <yangjihong1@huawei.com> wrote:
 >>
->> Fix to get the declared file name even if it uses file index 0
->> in DWARF5, using custom die_get_decl_file() function.
+>> Hello,
 >>
+>> On 2023/6/15 6:03, Ian Rogers wrote:
+>>> On Wed, Jun 14, 2023 at 9:18 AM Ian Rogers <irogers@google.com> wrote:
+>>>>
+>>>> On Wed, Jun 14, 2023 at 8:18 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>>>>
+>>>>> The perf-record and perf-top call parse_event() to add a cycles event to
+>>>>> an empty evlist. For the system that does not support hardware cycles
+>>>>> event, such as QEMU, the evlist is empty due to the following code process:
+>>>>>
+>>>>>     parse_event(evlist, "cycles:P" or ""cycles:Pu")
+>>>>>       parse_events(evlist, "cycles:P")
+>>>>>         __parse_events
+>>>>>           ...
+>>>>>           ret = parse_events__scanner(str, &parse_state);
+>>>>>           // ret = 0
+>>>>>           ...
+>>>>>           ret2 = parse_events__sort_events_and_fix_groups()
+>>>>>           if (ret2 < 0)
+>>>>>             return ret;
+>>>>>           // The cycles event is not supported, here ret2 = -EINVAL,
+>>>>>           // Here return 0.
+>>>>>           ...
+>>>>>           evlist__splice_list_tail(evlist)
+>>>>>           // The code here does not execute to, so the evlist is still empty.
+>>>>>
+>>>>> A null pointer occurs when the content in the evlist is accessed later.
+>>>>>
+>>>>> Before:
+>>>>>
+>>>>>     # perf list hw
+>>>>>
+>>>>>     List of pre-defined events (to be used in -e or -M):
+>>>>>
+>>>>>     # perf record true
+>>>>>     libperf: Miscounted nr_mmaps 0 vs 1
+>>>>>     WARNING: No sample_id_all support, falling back to unordered processing
+>>>>>     perf: Segmentation fault
+>>>>>     Obtained 1 stack frames.
+>>>>>     [0xc5beff]
+>>>>>     Segmentation fault
+>>>>>
+>>>>> Solution:
+>>>>>     If cycles event is not supported, try to fall back to cpu-clock event.
+>>>>>
+>>>>> After:
+>>>>>     # perf record true
+>>>>>     [ perf record: Woken up 1 times to write data ]
+>>>>>     [ perf record: Captured and wrote 0.006 MB perf.data ]
+>>>>>     #
+>>>>>
+>>>>> Fixes: 7b100989b4f6 ("perf evlist: Remove __evlist__add_default")
+>>>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>>>>
+>>>> Thanks, useful addition. The cpu-clock fall back wasn't present before
+>>>> 7b100989b4f6 so is the fixes tag correct?
+>>>
+>>> Hmm... it should be coming from evsel__fallback:
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evsel.c?h=tmp.perf-tools-next#n2840
+>>> so we shouldn't duplicate that logic. The question is why we're not
+>>> doing the fallback.
+>>>
+>>
+>> Yes, it's a bit of the same logic as evsel__fallback, or we can call
+>> evlist__add_default() as before, simply create an evsel of hardware
+>> cycles and add it directly to evlist.
+>>
+>> Please confirm whether this solution is feasible. If it is feasible, I
+>> will send a v2 version.
 > 
-> this patch breaks perf probe on fedora 38.
+> The previous evlist__add_default logic didn't handle wildcard PMUs for
+> cycles, hence wanting to reuse the parse events logic. The error is
+> that the logic now isn't doing the fallback properly. I think an
+> evlist__add_cycles which uses evsel__fallback makes sense matching the
+> previous logic. I'd be happy if you took a look. I'll write a patch so
+> that the perf_pmus list of core PMUs is never empty.
 > 
-> I was trying to a add a probe to systemd-logind using
-> kernel-6.3.6-200.fc38.x86_64 with kernel-tools-6.3.3-200.fc38.x86_64.
-> 
-> When trying to add a probe, I get the following message:
-> 
-> # perf probe -x /usr/lib/systemd/systemd-logind
-> --funcs="match_unit_removed"
-> match_unit_removed
-> 
-> Function exists and was found:
-> 
-> # perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> Probe point 'match_unit_removed' not found.
->   Error: Failed to add events.
-> 
-> When reverting dc9a5d2ccd5c823cc05cafe75fcf19b682d8152c, I was able to
-> add the probe point:
-> 
-> # ./perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
-> Added new event:
->   probe_systemd:match_unit_removed (on match_unit_removed in
-> /usr/lib/systemd/systemd-logind)
-> 
-> You can now use it in all perf tools, such as:
-> 
->     perf record -e probe_systemd:match_unit_removed -aR sleep 1
-> 
-> 
-> Probe point is then visible with and without this commit:
-> 
-> # perf probe -l
->   probe_systemd:match_unit_removed (on match_unit_removed in
-> /usr/lib/systemd/systemd-logind)
-> # ./perf probe -l
->   probe_systemd:match_unit_removed (on
-> match_unit_removed@../src/login/logind-dbus.c in
-> /usr/lib/systemd/systemd-logind)
 
-Thanks for the report. To be sure the issue doesn't fall through the
-cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
-tracking bot:
+The gdb calltrace for core dump is as follows:
 
-#regzbot ^introduced dc9a5d2ccd5c823cc05cafe75fcf19b682d8152c
-#regzbot title tools/perf: adding a specific probe suddenly fails
-#regzbot ignore-activity
+(gdb) bt
+#0  0x00000000005ffaa2 in __perf_cpu_map__nr (cpus=0x0) at cpumap.c:283
+#1  0x00000000005ffd17 in perf_cpu_map__max (map=0x0) at cpumap.c:371
+#2  0x0000000000565644 in cpu_map_data__alloc 
+(syn_data=syn_data@entry=0x7ffc843bff30, 
+header_size=header_size@entry=8) at util/synthetic-events.c:1273
+#3  0x0000000000568712 in cpu_map_event__new (map=<optimized out>) at 
+util/synthetic-events.c:1321
+#4  perf_event__synthesize_cpu_map (tool=tool@entry=0xc37580 <record>, 
+map=<optimized out>, process=process@entry=0x413a80 
+<process_synthesized_event>, machine=machine@entry=0x0) at 
+util/synthetic-events.c:1341
+#5  0x000000000041426e in record__synthesize (tail=tail@entry=false, 
+rec=0xc37580 <record>) at builtin-record.c:2050
+#6  0x0000000000415a0b in __cmd_record (argc=<optimized out>, 
+argv=<optimized out>, rec=0xc37580 <record>) at builtin-record.c:2512
+#7  0x0000000000418f22 in cmd_record (argc=<optimized out>, 
+argv=<optimized out>) at builtin-record.c:4260
+#8  0x00000000004babdd in run_builtin (p=p@entry=0xc3a0e8 
+<commands+264>, argc=argc@entry=2, argv=argv@entry=0x7ffc843c5b30) at 
+perf.c:323
+#9  0x0000000000401632 in handle_internal_command (argv=0x7ffc843c5b30, 
+argc=2) at perf.c:377
+#10 run_argv (argcp=<synthetic pointer>, argv=<synthetic pointer>) at 
+perf.c:421
+#11 main (argc=2, argv=0x7ffc843c5b30) at perf.c:537
 
-This isn't a regression? This issue or a fix for it are already
-discussed somewhere else? It was fixed already? You want to clarify when
-the regression started to happen? Or point out I got the title or
-something else totally wrong? Then just reply and tell me -- ideally
-while also telling regzbot about it, as explained by the page listed in
-the footer of this mail.
+The direct cause of the problem is that rec->evlist->core.all_cpus is 
+empty, resulting in null pointer access.
 
-Developers: When fixing the issue, remember to add 'Link:' tags pointing
-to the report (the parent of this mail). See page linked in footer for
-details.
+The code process is as follows:
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+cmd_record
+   parse_event(rec->evlist)
+   // Hardware cycle events should not be supported here, so rec->evlist 
+is empty
+   ...
+
+   evlist__create_maps(rec->evlist)
+     perf_evlist__set_maps(&rec->evlist->core)
+	  perf_evlist__propagate_maps(&rec->evlist->core)
+	    perf_evlist__for_each_evsel(&rec->evlist->core, evsel)
+		// because rec->evlist is empty, don't get into that 
+__perf_evlist__propagate_maps(), so rec->evlist->core.all_cpus is NULL.
+		  __perf_evlist__propagate_maps
+		    rec->evlist->core.all_cpus = perf_cpu_map__merge(evlist->all_cpus, 
+evsel->cpus);
+   ...
+
+   __cmd_record
+     record__synthesize
+       perf_event__synthesize_cpu_map(rec->evlist->core.all_cpus)
+         cpu_map_event__new(rec->evlist->core.all_cpus)
+		  cpu_map_data__alloc(rec->evlist->core.all_cpus)
+		    perf_cpu_map__max(rec->evlist->core.all_cpus)
+			  __perf_cpu_map__nr
+			  // Here null pointer access!
+	...
+	
+	record__open
+       evsel__fallback
+	  // Here fallback is just starting
+
+
+Thanks,
+Yang
