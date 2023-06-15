@@ -2,60 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AA0EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 05:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA440EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 05:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240533AbjFOFvb (ORCPT
+        id S237219AbjFOFwv (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 01:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58122 "EHLO
+        Thu, 15 Jun 2023 01:52:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236510AbjFOFvT (ORCPT
+        with ESMTP id S237753AbjFOFwh (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 01:51:19 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5CF82963
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:51:04 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3f9b7de94e7so155841cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:51:04 -0700 (PDT)
+        Thu, 15 Jun 2023 01:52:37 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA60E297F
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:52:21 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-3f9b7de94e7so156271cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:52:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686808264; x=1689400264;
+        d=google.com; s=20221208; t=1686808341; x=1689400341;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MsujUUkIkGPb1RjMWNMneyCY+OpEp4SMkg0gPmgmeUE=;
-        b=mlAZdFUeclS9DSi1vYvLCC4ojnFxhm3xDeWmMBT9aqGrkJxw2o60JYFKNn50vwrFO6
-         E8F4Co3vexcVliW9eh/PVrGDfKBH7/MnXD8xAdQd1LVJD3ylzKUZw7EZkAh/dZtslWsI
-         Rr7+MnhO6N20zguLB0CPKX0UcBEZ9PCM3KIWQQUK/6XMRkWFWTdPOPf3vKPIbOaLrF5V
-         3kFbwxPrdEXlmSZ8BRZfBol1J9ggJYBHUZsFYVu/ZjkeCno/OT5PAPvZ+6fNCERJqA9E
-         5N7GlefGzoEiF3Grks8X9qJf2UhP23xLMQhz1RbodiQSJmCQ1G5++70tWjU9NFzo/zOx
-         7TLA==
+        bh=RvV1s9Ybihpk3I08Qn1WFec9efz9VOUQvHz72+VgOEs=;
+        b=7dB/GwIzS6IYN7XoGva93cZMfroWWgR9CNQQLJ28Crgkocf/mOANnSUoUhR8kdnj8c
+         x0wgOUoqpwUT+Y15Efe4mmpRNLio/84LxSZSWdRWNihX6sT2xE8dhUJP+ypNrvs5CT4d
+         Clw6NwecyRZ38q8LcI9/JmamPX6Js6H41yErMOj83tmvgRdeaYx1vO93HqP0yn07CZRT
+         BMP+ypzqMCUYp196eF0L9i0Uhpc1zLfj1PuaF4FZDuLvz4EjKjCoQz3ac7dKJj9Y0KH3
+         xVr3VTlMZCi/65ytGLFKuAgQgFLTewhquLdf4Ym8Vbq3e7E+LnhwDWA5xy8RzjUkbdam
+         rijg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686808264; x=1689400264;
+        d=1e100.net; s=20221208; t=1686808341; x=1689400341;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MsujUUkIkGPb1RjMWNMneyCY+OpEp4SMkg0gPmgmeUE=;
-        b=J5vf7KW3GKcK6FBbCJmT0PskQMdTJVPV61204XcCDTCiTsVOCJQHR7rdKjGi1zRJcx
-         Bs5Z7eeJl5rNRepQrnfFEZZIjW7Gqw+B4yKjathZRxAiXWaYEhh95/dAneULFSRPl7fM
-         54wf9O0P8y4S7LL+/jJadKiLn93zRv7oeak21PFjLS4A18kxtx+N6Hut7X+6qSuCko4L
-         KHBgA8r2nxPdSwdHhzd05ME/2a/HgCHylcNjvDlZCaQfnrsBUAgYtycTY4AhN5PSuoli
-         u6VXBxNXx4Iugbj/yA8LKNG+KMZDnzyy28ByKnLuw2B/hbdqthRBc506a+rKb7NuibEf
-         bmfA==
-X-Gm-Message-State: AC+VfDxFdm1eEAlsyBA4VGqHAKpkmGfaghPB4r+/MZ6SNKotE0zXtX51
-        Q8LJUnu5gKvBBu7AX35R2DYzirmP9Cn4UUKlH/7qEOOSRVwl0r5wZwnWHQ==
-X-Google-Smtp-Source: ACHHUZ5Uu0FVxoIBwPYCt4nTv+IsX/esPM7txZQn4rZdA2/67Zxorp+WhMMGXyQ/gkUpfRN8lM5zIAUgfG1qv5a6Hk0=
-X-Received: by 2002:ac8:5b08:0:b0:3e3:8c75:461 with SMTP id
- m8-20020ac85b08000000b003e38c750461mr82908qtw.6.1686808263729; Wed, 14 Jun
- 2023 22:51:03 -0700 (PDT)
+        bh=RvV1s9Ybihpk3I08Qn1WFec9efz9VOUQvHz72+VgOEs=;
+        b=SnzZu5I+flM/aKCQpWMv6JmYpwNV+Ew767zt7/NaKIY61AgE/OtMN6tauLsHlEL5wk
+         VN67BKSghh7tZB5ok2EW3A7M9/Nr3yw71w8WgOfQwcs3pBTwRAHdYO2BLPip+I3DP3Li
+         F0TVbmgZdnPFjXen53vQsDPJVsp/rlSj/ObprqJXKUub8F2WSxPpil5fMOVRfs+Xp6ia
+         +k7dyj+VzRgewjwCO1LD0CNnym8nAVVP+GDUbmOX2Hy4hIsLCmAy+pgWY37WTnudIkFL
+         17KbwfAo69ZXdY938IL+9FtENcmUbNcF2W5Lm5HYe2/Nh0w28SvrHHzczGwOyKvl7XlN
+         dkyQ==
+X-Gm-Message-State: AC+VfDyd6du1C5Wj2nsFYBMmyT/F4Z6QEkUAjg045M39B1g2YLPsGDBO
+        CIQ+LBZ5iZgWnqsAkJCkgaGekk5qg7/Seqidjyd7jg==
+X-Google-Smtp-Source: ACHHUZ7qgU3dpu4rIAx7AdmLtPFfR31Y7hYmj0/gpfjYTm1nVXytuQSca5mvnmmqFgME6Rir4dNf27KXa7PsZfwIs+0=
+X-Received: by 2002:a05:622a:1ba9:b0:3fa:7dbf:f268 with SMTP id
+ bp41-20020a05622a1ba900b003fa7dbff268mr60622qtb.23.1686808340786; Wed, 14 Jun
+ 2023 22:52:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230615001735.3643996-1-kan.liang@linux.intel.com> <20230615001735.3643996-4-kan.liang@linux.intel.com>
-In-Reply-To: <20230615001735.3643996-4-kan.liang@linux.intel.com>
+References: <20230615001735.3643996-1-kan.liang@linux.intel.com>
+ <20230615001735.3643996-5-kan.liang@linux.intel.com> <CAP-5=fWbLkyQpxxhfCmqit7p4WgHVUOCjsADm-XojcT5ppcv7g@mail.gmail.com>
+In-Reply-To: <CAP-5=fWbLkyQpxxhfCmqit7p4WgHVUOCjsADm-XojcT5ppcv7g@mail.gmail.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 14 Jun 2023 22:50:52 -0700
-Message-ID: <CAP-5=fUDg4aN-oQ6TkxFiTEwZJur_YS9cH05U4yUP8FzQaF28A@mail.gmail.com>
-Subject: Re: [PATCH V2 3/8] perf stat,jevents: Introduce Default tags for the
- default mode
+Date:   Wed, 14 Jun 2023 22:52:09 -0700
+Message-ID: <CAP-5=fU=jS6UmKdFziRq1Zt0c8FY+3XSrB9Xufw0BSHkGAcO-A@mail.gmail.com>
+Subject: Re: [PATCH V2 4/8] perf metrics: Sort the Default metricgroup
 To:     kan.liang@linux.intel.com
 Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
         namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
@@ -67,133 +67,201 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 5:18=E2=80=AFPM <kan.liang@linux.intel.com> wrote:
+On Wed, Jun 14, 2023 at 9:30=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> From: Kan Liang <kan.liang@linux.intel.com>
+> On Wed, Jun 14, 2023 at 5:18=E2=80=AFPM <kan.liang@linux.intel.com> wrote=
+:
+> >
+> > From: Kan Liang <kan.liang@linux.intel.com>
+> >
+> > The new default mode will print the metrics as a metric group. The
+> > metrics from the same metric group must be adjacent to each other in th=
+e
+> > metric list. But the metric_list_cmp() sorts metrics by the number of
+> > events.
+> >
+> > Add a new sort for the Default metricgroup, which sorts by
+> > default_metricgroup_name and metric_name.
+> >
+> > Add is_default in the struct metric_event to indicate that it's from
+> > the Default metricgroup.
+> >
+> > Store the displayed metricgroup name of the Default metricgroup into
+> > the metric expr for output.
+> >
+> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> > ---
+> >  tools/perf/util/metricgroup.c | 35 +++++++++++++++++++++++++++++++++++
+> >  tools/perf/util/metricgroup.h |  3 +++
+> >  2 files changed, 38 insertions(+)
+> >
+> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgrou=
+p.c
+> > index 8b19644ade7d..acf86b15ee49 100644
+> > --- a/tools/perf/util/metricgroup.c
+> > +++ b/tools/perf/util/metricgroup.c
+> > @@ -79,6 +79,7 @@ static struct rb_node *metric_event_new(struct rblist=
+ *rblist __maybe_unused,
+> >                 return NULL;
+> >         memcpy(me, entry, sizeof(struct metric_event));
+> >         me->evsel =3D ((struct metric_event *)entry)->evsel;
+> > +       me->is_default =3D false;
+> >         INIT_LIST_HEAD(&me->head);
+> >         return &me->nd;
+> >  }
+> > @@ -1160,6 +1161,25 @@ static int metric_list_cmp(void *priv __maybe_un=
+used, const struct list_head *l,
+> >         return right_count - left_count;
+> >  }
+> >
+> > +/**
+> > + * default_metricgroup_cmp - Implements complex key for the Default me=
+tricgroup
+> > + *                          that first sorts by default_metricgroup_na=
+me, then
+> > + *                          metric_name.
+> > + */
+> > +static int default_metricgroup_cmp(void *priv __maybe_unused,
+> > +                                  const struct list_head *l,
+> > +                                  const struct list_head *r)
+> > +{
+> > +       const struct metric *left =3D container_of(l, struct metric, nd=
+);
+> > +       const struct metric *right =3D container_of(r, struct metric, n=
+d);
+> > +       int diff =3D strcmp(right->default_metricgroup_name, left->defa=
+ult_metricgroup_name);
+> > +
+> > +       if (diff)
+> > +               return diff;
+> > +
+> > +       return strcmp(right->metric_name, left->metric_name);
+> > +}
+> > +
+> >  struct metricgroup__add_metric_data {
+> >         struct list_head *list;
+> >         const char *pmu;
+> > @@ -1515,6 +1535,7 @@ static int parse_groups(struct evlist *perf_evlis=
+t,
+> >         LIST_HEAD(metric_list);
+> >         struct metric *m;
+> >         bool tool_events[PERF_TOOL_MAX] =3D {false};
+> > +       bool is_default =3D !strcmp(str, "Default");
+> >         int ret;
+> >
+> >         if (metric_events_list->nr_entries =3D=3D 0)
+> > @@ -1549,6 +1570,9 @@ static int parse_groups(struct evlist *perf_evlis=
+t,
+> >                         goto out;
+> >         }
+> >
+> > +       if (is_default)
+> > +               list_sort(NULL, &metric_list, default_metricgroup_cmp);
+> > +
+> >         list_for_each_entry(m, &metric_list, nd) {
+> >                 struct metric_event *me;
+> >                 struct evsel **metric_events;
+> > @@ -1637,6 +1661,17 @@ static int parse_groups(struct evlist *perf_evli=
+st,
+> >                 expr->metric_unit =3D m->metric_unit;
+> >                 expr->metric_events =3D metric_events;
+> >                 expr->runtime =3D m->pctx->sctx.runtime;
+> > +               if (m->pmu && strcmp(m->pmu, "cpu")) {
+> > +                       char *name;
+> > +
+> > +                       if (asprintf(&name, "%s (%s)", m->default_metri=
+cgroup_name, m->pmu) < 0)
 >
-> Introduce a new metricgroup, Default, to tag all the metric groups which
-> will be collected in the default mode.
+> With EXTRA_CFLAGS=3D"-fsanitize=3Daddress" this is causing:
 >
-> Add a new field, DefaultMetricgroupName, in the JSON file to indicate
-> the real metric group name. It will be printed in the default output
-> to replace the event names.
+> $ perf test 7 -vv -F
+>   7: PMU events                                                      :
+> ...
+>   7.5: Parsing of metric thresholds with fake PMUs                   :
+> ...
+> =3D=3D2072355=3D=3DERROR: LeakSanitizer: detected memory leaks
 >
-> There is nothing changed for the output format.
+> Direct leak of 6199 byte(s) in 340 object(s) allocated from:
+>    #0 0x7f24cce7077b in __interceptor_strdup
+> ../../../../src/libsanitizer/asan/asan_interceptors.cp
+> p:439
+>    #1 0x55972b328abd in asprintf util/util.c:566
+>    #2 0x55972b251dbd in parse_groups util/metricgroup.c:1667
+>    #3 0x55972b25231f in metricgroup__parse_groups_test util/metricgroup.c=
+:1719
+>    #4 0x55972b139aff in test__parsing_callback tests/pmu-events.c:837
+>    #5 0x55972b5119a9 in pmu_metrics_table_for_each_metric
+> /tmp/perf/pmu-events/pmu-events.c:61641
+>    #6 0x55972b511fdf in pmu_for_each_core_metric
+> /tmp/perf/pmu-events/pmu-events.c:61742
+>    #7 0x55972b13a3bc in test__parsing tests/pmu-events.c:898
+>    #8 0x55972b106cd7 in run_test tests/builtin-test.c:236
+>    #9 0x55972b106f7c in test_and_print tests/builtin-test.c:265
+>    #10 0x55972b107f96 in __cmd_test tests/builtin-test.c:436
+>    #11 0x55972b10927a in cmd_test tests/builtin-test.c:559
+>    #12 0x55972b19584a in run_builtin
+> /home/irogers/kernel.org/tools/perf/perf.c:323
+>    #13 0x55972b195dbb in handle_internal_command
+> /home/irogers/kernel.org/tools/perf/perf.c:377
+>    #14 0x55972b196183 in run_argv /home/irogers/kernel.org/tools/perf/per=
+f.c:421
+>    #15 0x55972b1966eb in main /home/irogers/kernel.org/tools/perf/perf.c:=
+537
+>    #16 0x7f24cbe46189 in __libc_start_call_main
+> ../sysdeps/nptl/libc_start_call_main.h:58
 >
-> On SPR, both TopdownL1 and TopdownL2 are displayed in the default
-> output.
+> SUMMARY: AddressSanitizer: 6199 byte(s) leaked in 340 allocation(s)
 >
-> On ARM, Intel ICL and later platforms (before SPR), only TopdownL1 is
-> displayed in the default output.
+> As this is mixing allocated and unallocated strings, you like want to
+> strdup the unallocated ones, then add a free to the exit routine.
 >
-> Suggested-by: Stephane Eranian <eranian@google.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Thanks,
+> Ian
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Except for the memory leak, everything looks good here. Will ack with
+the memory leak fix.
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/builtin-stat.c          | 4 ++--
->  tools/perf/pmu-events/jevents.py   | 5 +++--
->  tools/perf/pmu-events/pmu-events.h | 1 +
->  tools/perf/util/metricgroup.c      | 6 ++++++
->  4 files changed, 12 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index fc615bdeed4f..55601b4b5c34 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -2154,14 +2154,14 @@ static int add_default_attributes(void)
->                  * Add TopdownL1 metrics if they exist. To minimize
->                  * multiplexing, don't request threshold computation.
->                  */
-> -               if (metricgroup__has_metric(pmu, "TopdownL1")) {
-> +               if (metricgroup__has_metric(pmu, "Default")) {
->                         struct evlist *metric_evlist =3D evlist__new();
->                         struct evsel *metric_evsel;
->
->                         if (!metric_evlist)
->                                 return -1;
->
-> -                       if (metricgroup__parse_groups(metric_evlist, pmu,=
- "TopdownL1",
-> +                       if (metricgroup__parse_groups(metric_evlist, pmu,=
- "Default",
->                                                         /*metric_no_group=
-=3D*/false,
->                                                         /*metric_no_merge=
-=3D*/false,
->                                                         /*metric_no_thres=
-hold=3D*/true,
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jev=
-ents.py
-> index 7ed258be1829..12e80bb7939b 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -54,8 +54,8 @@ _json_event_attributes =3D [
->  # Attributes that are in pmu_metric rather than pmu_event.
->  _json_metric_attributes =3D [
->      'pmu', 'metric_name', 'metric_group', 'metric_expr', 'metric_thresho=
-ld',
-> -    'desc', 'long_desc', 'unit', 'compat', 'metricgroup_no_group', 'aggr=
-_mode',
-> -    'event_grouping'
-> +    'desc', 'long_desc', 'unit', 'compat', 'metricgroup_no_group',
-> +    'default_metricgroup_name', 'aggr_mode', 'event_grouping'
->  ]
->  # Attributes that are bools or enum int values, encoded as '0', '1',...
->  _json_enum_attributes =3D ['aggr_mode', 'deprecated', 'event_grouping', =
-'perpkg']
-> @@ -307,6 +307,7 @@ class JsonEvent:
->      self.metric_name =3D jd.get('MetricName')
->      self.metric_group =3D jd.get('MetricGroup')
->      self.metricgroup_no_group =3D jd.get('MetricgroupNoGroup')
-> +    self.default_metricgroup_name =3D jd.get('DefaultMetricgroupName')
->      self.event_grouping =3D convert_metric_constraint(jd.get('MetricCons=
-traint'))
->      self.metric_expr =3D None
->      if 'MetricExpr' in jd:
-> diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/p=
-mu-events.h
-> index 8cd23d656a5d..caf59f23cd64 100644
-> --- a/tools/perf/pmu-events/pmu-events.h
-> +++ b/tools/perf/pmu-events/pmu-events.h
-> @@ -61,6 +61,7 @@ struct pmu_metric {
->         const char *desc;
->         const char *long_desc;
->         const char *metricgroup_no_group;
-> +       const char *default_metricgroup_name;
->         enum aggr_mode_class aggr_mode;
->         enum metric_event_groups event_grouping;
->  };
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
-c
-> index 74f2d8efc02d..8b19644ade7d 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -137,6 +137,11 @@ struct metric {
->          * output.
->          */
->         const char *metric_unit;
-> +       /**
-> +        * Optional name of the metric group reported
-> +        * if the Default metric group is being processed.
-> +        */
-> +       const char *default_metricgroup_name;
->         /** Optional null terminated array of referenced metrics. */
->         struct metric_ref *metric_refs;
->         /**
-> @@ -219,6 +224,7 @@ static struct metric *metric__new(const struct pmu_me=
-tric *pm,
->
->         m->pmu =3D pm->pmu ?: "cpu";
->         m->metric_name =3D pm->metric_name;
-> +       m->default_metricgroup_name =3D pm->default_metricgroup_name;
->         m->modifier =3D NULL;
->         if (modifier) {
->                 m->modifier =3D strdup(modifier);
-> --
-> 2.35.1
->
+> > +                               expr->default_metricgroup_name =3D m->d=
+efault_metricgroup_name;
+> > +                       else
+> > +                               expr->default_metricgroup_name =3D name=
+;
+> > +               } else
+> > +                       expr->default_metricgroup_name =3D m->default_m=
+etricgroup_name;
+> > +               if (is_default)
+> > +                       me->is_default =3D true;
+> >                 list_add(&expr->nd, &me->head);
+> >         }
+> >
+> > diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgrou=
+p.h
+> > index bf18274c15df..d5325c6ec8e1 100644
+> > --- a/tools/perf/util/metricgroup.h
+> > +++ b/tools/perf/util/metricgroup.h
+> > @@ -22,6 +22,7 @@ struct cgroup;
+> >  struct metric_event {
+> >         struct rb_node nd;
+> >         struct evsel *evsel;
+> > +       bool is_default; /* the metric evsel from the Default metricgro=
+up */
+> >         struct list_head head; /* list of metric_expr */
+> >  };
+> >
+> > @@ -55,6 +56,8 @@ struct metric_expr {
+> >          * more human intelligible) and then add "MiB" afterward when d=
+isplayed.
+> >          */
+> >         const char *metric_unit;
+> > +       /** Displayed metricgroup name of the Default metricgroup */
+> > +       const char *default_metricgroup_name;
+> >         /** Null terminated array of events used by the metric. */
+> >         struct evsel **metric_events;
+> >         /** Null terminated array of referenced metrics. */
+> > --
+> > 2.35.1
+> >
