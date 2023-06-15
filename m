@@ -2,131 +2,147 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF80EB64DB
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 07:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D61DEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 07:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237848AbjFOHZ4 (ORCPT
+        id S245162AbjFOHlN (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 03:25:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45738 "EHLO
+        Thu, 15 Jun 2023 03:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243228AbjFOHZy (ORCPT
+        with ESMTP id S245226AbjFOHjx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 03:25:54 -0400
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::224])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF594DF;
-        Thu, 15 Jun 2023 00:25:52 -0700 (PDT)
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BEB99E0004;
-        Thu, 15 Jun 2023 07:25:45 +0000 (UTC)
-Message-ID: <6d9fefd9-472c-b8d3-d871-b81bfdbe4f6d@ghiti.fr>
-Date:   Thu, 15 Jun 2023 09:25:45 +0200
+        Thu, 15 Jun 2023 03:39:53 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9754130E7
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Jun 2023 00:39:23 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35F7aYbq002445;
+        Thu, 15 Jun 2023 07:38:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=e+vXTENNj83eLaphzsrDFschLK/8vnU5fpDaxfL+HGU=;
+ b=fA7zIy7KWLwdzP9UgkkQU8C+a5SIDA9OvzI8G64XLQlj+l3WBoQxUhZBAT1ccoV8ja4F
+ 97oEDszpbFSGoN6G4jspKvvawCjuOf7BGDUYtbrTKkv3hHA5wAb28C5HWTXBmRQGlDff
+ JKrGY6pDW889myhN8pn5hntIo9seuuYGjjFzxZXWOG4HUlc8p9asnt81XTr+y6Jr8z1M
+ 99pONq/IvrcJeBfMWvcPWeo4Jw+Ix51ld0KvyIv3DZljoJS/QbRz7NwksOVAp58zLcZ3
+ 0hUYCEw7gSb8ng5dMeQMc9iQEC9YlGNmSR0G7HtbYhfTeqNNIWC83zv5nVMrH7ES5ttY oA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r7x6wg7aw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 15 Jun 2023 07:38:20 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35F7atMY006042;
+        Thu, 15 Jun 2023 07:38:20 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r7x6wg79m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 15 Jun 2023 07:38:20 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35F4aZsu002937;
+        Thu, 15 Jun 2023 07:38:17 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3r4gedthxf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 15 Jun 2023 07:38:17 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35F7cD3i22217240
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 15 Jun 2023 07:38:13 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C57E120040;
+        Thu, 15 Jun 2023 07:38:13 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C990B20043;
+        Thu, 15 Jun 2023 07:38:11 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.120.107])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 15 Jun 2023 07:38:11 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        namhyung@kernel.org
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH 2/2] tools/perf/tests: perf all metricgroups test fails when perf_event access is restricted
+Date:   Thu, 15 Jun 2023 13:08:03 +0530
+Message-Id: <20230615073803.54481-2-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20230615073803.54481-1-atrajeev@linux.vnet.ibm.com>
+References: <20230615073803.54481-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 04/10] drivers: perf: Rename riscv pmu driver
-Content-Language: en-US
-To:     Andrew Jones <ajones@ventanamicro.com>,
-        Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20230512085321.13259-1-alexghiti@rivosinc.com>
- <20230512085321.13259-5-alexghiti@rivosinc.com>
- <20230531-49ed4c2054db0abbacd03632@orel>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20230531-49ed4c2054db0abbacd03632@orel>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: pnVG3ScaMjWQjKKyIu_HrJcGrUU93bkq
+X-Proofpoint-ORIG-GUID: Gk3OkRG4hUMtA8aYXZ-4ZSJPiKme53Mg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-15_04,2023-06-14_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ bulkscore=0 impostorscore=0 spamscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 mlxscore=0 suspectscore=0 malwarescore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306150063
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Perf all metricgroups test fails as below when perf_event access
+is restricted.
 
-On 31/05/2023 16:09, Andrew Jones wrote:
-> On Fri, May 12, 2023 at 10:53:15AM +0200, Alexandre Ghiti wrote:
->> In addition to being more pretty, it will be useful in upcoming commits
->> to distinguish those pmu drivers from the other pmu drivers.
->>
->> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->> ---
->>   drivers/perf/riscv_pmu_legacy.c | 2 +-
->>   drivers/perf/riscv_pmu_sbi.c    | 2 +-
->>   2 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
->> index 0d8c9d8849ee..ffe09d857366 100644
->> --- a/drivers/perf/riscv_pmu_legacy.c
->> +++ b/drivers/perf/riscv_pmu_legacy.c
->> @@ -95,7 +95,7 @@ static void pmu_legacy_init(struct riscv_pmu *pmu)
->>   	pmu->ctr_clear_idx = NULL;
->>   	pmu->ctr_read = pmu_legacy_read_ctr;
->>   
->> -	perf_pmu_register(&pmu->pmu, "cpu", PERF_TYPE_RAW);
->> +	perf_pmu_register(&pmu->pmu, RISCV_PMU_LEGACY_PDEV_NAME, PERF_TYPE_RAW);
->>   }
->>   
->>   static int pmu_legacy_device_probe(struct platform_device *pdev)
->> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
->> index 70cb50fd41c2..3b0ee2148054 100644
->> --- a/drivers/perf/riscv_pmu_sbi.c
->> +++ b/drivers/perf/riscv_pmu_sbi.c
->> @@ -897,7 +897,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
->>   	if (ret)
->>   		goto out_unregister;
->>   
->> -	ret = perf_pmu_register(&pmu->pmu, "cpu", PERF_TYPE_RAW);
->> +	ret = perf_pmu_register(&pmu->pmu, RISCV_PMU_PDEV_NAME, PERF_TYPE_RAW);
-> Should we include "sbi" in this name?
+    ./perf test -v "perf all metricgroups test"
+    Testing Memory_BW
+    Error:
+    Access to performance monitoring and observability operations is limited.
+    Enforced MAC policy settings (SELinux) can limit access to performance
+    —
+    access to performance monitoring and observability operations for processes
+    without CAP_PERFMON, CAP_SYS_PTRACE or CAP_SYS_ADMIN Linux capability.
+    —
+    test child finished with -1
+    ---- end ----
+    perf all metricgroups test: FAILED!
 
+Fix the testcase to skip those metric events which needs perf_event access
+explicitly. The exit code of the testcase is based on return code of
+the perf stat command ( enabled by set -e option ). Hence save the
+exit status in a variable and use that to decide success or fail for the
+testcase.
 
-I'd say that it is safe to do so and I understand your point, @Atish WDYT?
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ tools/perf/tests/shell/stat_all_metricgroups.sh | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
+diff --git a/tools/perf/tests/shell/stat_all_metricgroups.sh b/tools/perf/tests/shell/stat_all_metricgroups.sh
+index cb35e488809a..fa86b562676a 100755
+--- a/tools/perf/tests/shell/stat_all_metricgroups.sh
++++ b/tools/perf/tests/shell/stat_all_metricgroups.sh
+@@ -2,11 +2,19 @@
+ # perf all metricgroups test
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-set -e
+-
+ for m in $(perf list --raw-dump metricgroups); do
+   echo "Testing $m"
+-  perf stat -M "$m" -a true
++  result=$(perf stat -M "$m" -a true 2>&1)
++  rc=$?
++  # Skip if there is no access to perf_events monitoring
++  # Otherwise exit based on the return code of perf comamnd.
++  if [[ "$result" =~ "Access to performance monitoring and observability operations is limited" ]]
++  then
++      continue
++  else
++      [ $rc -ne 0 ] && exit $rc
++  fi
++
+ done
+ 
+ exit 0
+-- 
+2.31.1
 
->
->>   	if (ret)
->>   		goto out_unregister;
->>   
->> -- 
->> 2.37.2
->>
-> Otherwise,
->
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
