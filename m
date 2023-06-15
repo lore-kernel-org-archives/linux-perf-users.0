@@ -2,161 +2,204 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B35EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 07:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2752EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 08:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238825AbjFOHlW (ORCPT
+        id S239368AbjFOIKZ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 03:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54420 "EHLO
+        Thu, 15 Jun 2023 04:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245533AbjFOHk1 (ORCPT
+        with ESMTP id S239145AbjFOIKY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 03:40:27 -0400
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::222])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB1652953;
-        Thu, 15 Jun 2023 00:39:59 -0700 (PDT)
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-X-GND-Sasl: alex@ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4A1B84000F;
-        Thu, 15 Jun 2023 07:38:27 +0000 (UTC)
-Message-ID: <4c511218-eb54-0ec4-6820-265f06d91730@ghiti.fr>
-Date:   Thu, 15 Jun 2023 09:38:26 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 06/10] drivers: perf: Implement perf event mmap support
- in the legacy backend
-Content-Language: en-US
-To:     Andrew Jones <ajones@ventanamicro.com>,
-        Alexandre Ghiti <alexghiti@rivosinc.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        Thu, 15 Jun 2023 04:10:24 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8551F1A3;
+        Thu, 15 Jun 2023 01:10:22 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-519b771f23aso1739697a12.1;
+        Thu, 15 Jun 2023 01:10:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686816621; x=1689408621;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OQKLPV7svhmFXU+YY6Z2XlGXEMzdG3pBcvTN7P5dgn4=;
+        b=DPMMQaiav3CPksaSlGQi1OmGyLof3HczsehsRRZbQBEfFtlNNnBnxuuTu/SY5YTuia
+         +Sx0uf/yEp8t3dYWj1ffJGkL7z7MrpyRMN7Vx2/4oMUmLAeC128ew/+d0XBvPlrA3E/S
+         rd48CUgHvIkEAZESZvatkrSGjUZGM/VoCEwAsl/qqbIbyLP4MjugbT4fyKCqnviINbMX
+         ln5FRujoUViiiFqosDrazXgBU2dA03foNPBF+q8vR5kIsTIJwzuydKylCCOqQAOA5L0I
+         Jp2DoCiVaoArqolQ7+aqAvLgESvj/GypiVKV4S4JkZwLWCKb7fjfn6kmvVF6cV9t4NZY
+         Jvmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686816621; x=1689408621;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OQKLPV7svhmFXU+YY6Z2XlGXEMzdG3pBcvTN7P5dgn4=;
+        b=bsDfIMRBKxz3gthJnlMsQnl8OU8LTLZpOfwsxELagsx7HOciPzyw4OQM6cvSNJ0gJg
+         zCJTm0kRxY5X7vl5Ie6dFQBMQRqlxJDfgXTw0RsFcveH319huRBKvAY7lHPYtjKgnyCX
+         LLYszmfMWLGvLdR6uzQTgIRxSxHUR8V+/Xw7St2ZfERf5s3cZ5zDBlbvkkiHEkJGr9Nb
+         QUdsOqczZXXFV3VEpN01w8DqoaKAfGOAZoa5Fm4/A/FejiyHiqkAv3WST6aNvM+YEsPO
+         Qo8awOLFVD1L70MN3/09gs+vgVMNW2pb77bqmSnjqTkV2tOjuViXj4zRxMETACGt0H0T
+         oSeg==
+X-Gm-Message-State: AC+VfDzs/QJtqaVAB2WPJ0KigI/5Ct/7SW8Ziz6f+2+HSGVytNXRaKlS
+        RvHV/ti3j2B2Ik2ygep9MNs=
+X-Google-Smtp-Source: ACHHUZ7Yu4GfUyPRFFA0QZbcc49O0I0TJbx78NV21zRT7vAoHc4cYSbthRFGE1Lk8n0MA6ur2Ndn4Q==
+X-Received: by 2002:a17:907:3e9f:b0:976:c9a6:4857 with SMTP id hs31-20020a1709073e9f00b00976c9a64857mr21640258ejc.57.1686816620649;
+        Thu, 15 Jun 2023 01:10:20 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id dk17-20020a170906f0d100b0097886843f75sm9150820ejb.177.2023.06.15.01.10.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jun 2023 01:10:20 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Thu, 15 Jun 2023 10:10:18 +0200
+To:     Ian Rogers <irogers@google.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Atish Patra <atishp@atishpatra.org>,
-        Anup Patel <anup@brainfault.org>,
-        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20230512085321.13259-1-alexghiti@rivosinc.com>
- <20230512085321.13259-7-alexghiti@rivosinc.com>
- <20230531-705f2911e8d66938ece04905@orel>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20230531-705f2911e8d66938ece04905@orel>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>, Andi Kleen <ak@linux.intel.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Xing Zhengjun <zhengjun.xing@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 18/20] perf stat: Display event stats using aggr counts
+Message-ID: <ZIrHatpIlo3Y2ZPQ@krava>
+References: <20221018020227.85905-1-namhyung@kernel.org>
+ <20221018020227.85905-19-namhyung@kernel.org>
+ <ZInDSgrOzYSX124p@krava>
+ <CAP-5=fX2ULvR7KFCwZN4wn1LSQmtJqQk7bK=T=BHdvnHuL=DdA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fX2ULvR7KFCwZN4wn1LSQmtJqQk7bK=T=BHdvnHuL=DdA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Wed, Jun 14, 2023 at 09:20:53AM -0700, Ian Rogers wrote:
+> On Wed, Jun 14, 2023 at 6:40 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >
+> > On Mon, Oct 17, 2022 at 07:02:25PM -0700, Namhyung Kim wrote:
+> > > Now aggr counts are ready for use.  Convert the display routines to use
+> > > the aggr counts and update the shadow stat with them.  It doesn't need
+> > > to aggregate counts or collect aliases anymore during the display.  Get
+> > > rid of now unused struct perf_aggr_thread_value.
+> > >
+> > > Note that there's a difference in the display order among the aggr mode.
+> > > For per-core/die/socket/node aggregation, it shows relevant events in
+> > > the same unit together, whereas global/thread/no aggregation it shows
+> > > the same events for different units together.  So it still uses separate
+> > > codes to display them due to the ordering.
+> > >
+> > > One more thing to note is that it breaks per-core event display for now.
+> > > The next patch will fix it to have identical output as of now.
+> > >
+> > > Acked-by: Ian Rogers <irogers@google.com>
+> > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> >
+> > hi,
+> > this one seems to break 'perf stat -r X' not sure why so far..
+> >
+> > final counts seems to be accumulated instead of displaying average, like:
+> >
+> >
+> > with this patch:
+> >
+> >          Performance counter stats for './test_progs -n 103/1' (2 runs):
+> >
+> >                206,815,929      cycles:u                                                             ( +-  0.05% )
+> >             16,052,747,533      cycles:k                                                             ( +-  0.10% )
+> >             16,259,643,167      cycles                                                               ( +-  0.10% )
+> >
+> >                    1.98093 +- 0.00586 seconds time elapsed  ( +-  0.30% )
+> >
+> >
+> > without this patch:
+> >
+> >          Performance counter stats for './test_progs -n 103/1' (2 runs):
+> >
+> >                103,300,812      cycles:u                                                             ( +-  0.37% )
+> >              8,016,856,866      cycles:k                                                             ( +-  0.32% )
+> >              8,120,200,572      cycles                                                               ( +-  0.32% )
+> >
+> >                    1.97272 +- 0.00270 seconds time elapsed  ( +-  0.14% )
+> >
+> >
+> > any idea? ;-)
+> 
+> Is this still broken in perf-tools-next? The patch is quite old and
+> there's been work in this area. I'm assuming yes, but thought it was
+> worth checking.
 
-On 31/05/2023 16:27, Andrew Jones wrote:
-> On Fri, May 12, 2023 at 10:53:17AM +0200, Alexandre Ghiti wrote:
->> Implement the needed callbacks in the legacy driver so that we can
->> directly access the counters through perf in userspace.
->>
->> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
->> ---
->>   drivers/perf/riscv_pmu_legacy.c | 28 ++++++++++++++++++++++++++++
->>   1 file changed, 28 insertions(+)
->>
->> diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
->> index ffe09d857366..f0f5bd856f66 100644
->> --- a/drivers/perf/riscv_pmu_legacy.c
->> +++ b/drivers/perf/riscv_pmu_legacy.c
->> @@ -74,6 +74,31 @@ static void pmu_legacy_ctr_start(struct perf_event *event, u64 ival)
->>   	local64_set(&hwc->prev_count, initial_val);
->>   }
->>   
->> +static uint8_t pmu_legacy_csr_index(struct perf_event *event)
->> +{
->> +	return event->hw.idx;
->> +}
->> +
->> +static void pmu_legacy_event_mapped(struct perf_event *event, struct mm_struct *mm)
->> +{
->> +	/* In legacy mode, the first 3 CSRs are available. */
-> Shouldn't this be
->
->   /* In legacy mode, the first and third CSR are available. */
->
-> ?
-
-
-Yes, I guess this comment is not right in this context, so I'll remove 
-the comment entirely as it does bring much.
-
-
->> +	if (event->attr.config != PERF_COUNT_HW_CPU_CYCLES &&
->> +	    event->attr.config != PERF_COUNT_HW_INSTRUCTIONS)
->> +		return;
->> +
->> +	event->hw.flags |= PERF_EVENT_FLAG_USER_READ_CNT;
->> +}
->> +
->> +static void pmu_legacy_event_unmapped(struct perf_event *event, struct mm_struct *mm)
->> +{
->> +	/* In legacy mode, the first 3 CSRs are available. */
-> same comment
->
->> +	if (event->attr.config != PERF_COUNT_HW_CPU_CYCLES &&
->> +	    event->attr.config != PERF_COUNT_HW_INSTRUCTIONS)
->> +		return;
->> +
->> +	event->hw.flags &= ~PERF_EVENT_FLAG_USER_READ_CNT;
->> +}
->> +
->>   /*
->>    * This is just a simple implementation to allow legacy implementations
->>    * compatible with new RISC-V PMU driver framework.
->> @@ -94,6 +119,9 @@ static void pmu_legacy_init(struct riscv_pmu *pmu)
->>   	pmu->ctr_get_width = NULL;
->>   	pmu->ctr_clear_idx = NULL;
->>   	pmu->ctr_read = pmu_legacy_read_ctr;
->> +	pmu->event_mapped = pmu_legacy_event_mapped;
->> +	pmu->event_unmapped = pmu_legacy_event_unmapped;
->> +	pmu->csr_index = pmu_legacy_csr_index;
->>   
->>   	perf_pmu_register(&pmu->pmu, RISCV_PMU_LEGACY_PDEV_NAME, PERF_TYPE_RAW);
->>   }
->> -- 
->> 2.37.2
->>
-> Otherwise,
->
-> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+yes
 
 
-Thanks!
+single run:
 
+	[root@krava perf]# ./perf stat -e cycles:u ./perf bench sched pipe
+	# Running 'sched/pipe' benchmark:
+	# Executed 1000000 pipe operations between two processes
+
+	     Total time: 4.725 [sec]
+
+	       4.725795 usecs/op
+		 211604 ops/sec
+
+	 Performance counter stats for './perf bench sched pipe':
+
+	       398,096,363      cycles:u                                                              
+
+	       4.737638715 seconds time elapsed
+
+	       0.227961000 seconds user
+	       4.348895000 seconds sys
+
+
+3 runs (with verbose):
+
+	[root@krava perf]# ./perf stat -v -r 3 -e cycles:u ./perf bench sched pipe
+	Using CPUID GenuineIntel-6-8C-1
+	Control descriptor is not initialized
+	[ perf stat: executing run #1 ... ]
+	# Running 'sched/pipe' benchmark:
+	# Executed 1000000 pipe operations between two processes
+
+	     Total time: 4.659 [sec]
+
+	       4.659396 usecs/op
+		 214620 ops/sec
+	cycles:u: 399150620 3866604490 3866604490
+	[ perf stat: executing run #2 ... ]
+	# Running 'sched/pipe' benchmark:
+	# Executed 1000000 pipe operations between two processes
+
+	     Total time: 4.656 [sec]
+
+	       4.656820 usecs/op
+		 214738 ops/sec
+	cycles:u: 795910540 7700776638 7700776638
+	[ perf stat: executing run #3 ... ]
+	# Running 'sched/pipe' benchmark:
+	# Executed 1000000 pipe operations between two processes
+
+	     Total time: 4.634 [sec]
+
+	       4.634090 usecs/op
+		 215792 ops/sec
+	cycles:u: 1189927957 11522039559 11522039559
+
+	 Performance counter stats for './perf bench sched pipe' (3 runs):
+
+	     1,189,927,957      cycles:u                                                                ( +- 19.18% )
+
+		    4.6611 +- 0.0102 seconds time elapsed  ( +-  0.22% )
+
+
+jirka
