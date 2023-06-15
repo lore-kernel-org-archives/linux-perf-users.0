@@ -2,461 +2,114 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E275FEB64DB
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 13:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 669FAEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 14:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244081AbjFONzc (ORCPT
+        id S238794AbjFOODb (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 09:55:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59580 "EHLO
+        Thu, 15 Jun 2023 10:03:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344642AbjFONyq (ORCPT
+        with ESMTP id S1344659AbjFOODa (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 09:54:46 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84ED71FF9;
-        Thu, 15 Jun 2023 06:54:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686837283; x=1718373283;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EOzWNHuA05l8t1lT/on7ueUWwrY92i0s8PwEvMAtVIs=;
-  b=NdukM1rXor77HpTTjpygOYIUTPmRhCQweDW3vN7WlyDVGaofLoL0+yLe
-   ItzRyBri1+qyZS4GKtCKPjzLtqWnkCr3Tb2V1g/ZJ7Un0qV+f1+jH4fCR
-   XOJ6OlMwjhp/SYg2t7iD6okBzKeNx11uugnj2iqSm3ZdJa7Fm97xcORzH
-   ITTG2EkDG/U7yY/LKLVDGVUAp0mCGAvSjqzjpHivvtFxeLYnnWWsvOMjw
-   8nMEexylfB4vRMWUpZgSbYCaWh0jyXj9I363sp82LeRMsrnvZ1P/8tREH
-   955+0AgrCpDYGBYqJ35PCrQEN/cjP6Yzy+tKVq1/B1AHJR3MxXreVqd5k
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="356411424"
-X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="356411424"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 06:54:42 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="782527069"
-X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="782527069"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Jun 2023 06:54:41 -0700
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        irogers@google.com, namhyung@kernel.org, jolsa@kernel.org,
-        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 7/8] perf test: Move all the check functions of stat csv output to lib
-Date:   Thu, 15 Jun 2023 06:53:14 -0700
-Message-Id: <20230615135315.3662428-8-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230615135315.3662428-1-kan.liang@linux.intel.com>
-References: <20230615135315.3662428-1-kan.liang@linux.intel.com>
+        Thu, 15 Jun 2023 10:03:30 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BFA51FE8;
+        Thu, 15 Jun 2023 07:03:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+ s=s31663417; t=1686837760; x=1687442560; i=georgmueller@gmx.net;
+ bh=iXLy0cXrEehKxf0tsrC//fveq+MM53eyH3CeZgX6K2U=;
+ h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:In-Reply-To;
+ b=CUrdfbixMn0FIOS9spWIoqykq5cS35aDnMBoEhbUkrdq2wbedpaIQL0MxaRiQiyKFk1pjw8
+ NML6bLNpuVdovlxPH+76nvFeOtZywUVUe7jCi2oVWoPK91E4L2AnLgxAUQgIGckWQZIWv2FNX
+ tyRC7vRZcbajQC8DVIWxGyutKb8nLR2wfLiFpdUlX+82WwsqVVXD4MLVKhD1zfCPovcVOyydx
+ HAOEUWJZLW3guOdYPNy+7cr+8CDVhHGuenBvCCsEc30vdrHG4e5y8fDCHUVw3n0dsKqxW8A49
+ CWZM8QCPNOI8W6xIUXDaQXwBbHZ+N3iZ7xudIUATiBYTxrWCBp/w==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [10.54.0.101] ([93.206.1.113]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mxm3K-1pv8Rl3Nq2-00zFzh; Thu, 15
+ Jun 2023 16:02:39 +0200
+Message-ID: <e42ada3c-f215-d5a5-f766-7f8aa1580667@gmx.net>
+Date:   Thu, 15 Jun 2023 16:02:37 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2 3/3] tools/perf: Fix to get declared file name from
+ clang DWARF5
+Content-Language: en-US
+From:   =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        regressions@lists.linux.dev
+References: <166731050151.2100653.8202870942871353491.stgit@devnote3>
+ <166731052936.2100653.13380621874859467731.stgit@devnote3>
+ <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
+In-Reply-To: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ktJkoSPE4EnqpzreQkqA3phFUsKqBpjSGlVvltL7n8kMHIHNn7i
+ D7PV7JZ2oTpxSOjkbxJB8K28PhosPii+K/rz3gCxufy9X5dkkPC7pjLPAPhktXG0R/4/J7F
+ GXAAXiVC7bKIYqe/s75aEKkZ+7IlEBUNgmRBfhsr3KHCQpcWjv7vZ3RjcbUvYRFN2TgyUfh
+ NEMpjMlodlsfPWKrTaI8g==
+UI-OutboundReport: notjunk:1;M01:P0:b3kHxBFFCTY=;a5HnLdNG4ub3LRU8oHkvMR+5cR/
+ 2k3s/H1JDMAiRfJR2tb+AWO74hyhYoMWEUApTLVeiF0qHZyro0DzJNvDViiY7uD/selPCkq/G
+ oIDRdWR2qvxo4Bt3kRyWA50mMztbC27VMKhbc9M4RDdezadlbMB7NhrAuikdftcRAXhN166R2
+ +xZp8kWY6ExxAz9arf3V270F/iqqS0JIqa1YUBzGNGGlQQDUEBWtV1jDhBf301esc2PGx1D0i
+ eGuANWdCNCT6hMFGAuxt8k+CwNBSfwTa2SjKyzK4ZjBfMvZrzHOHDv5Rd28ZRkYMRHgu2Fkdl
+ jH367TaL0kQStYUcTzwKUy3LtGcSF10FAm9kL/KtFQl1VRBcRB/GavHd1fNvxxd5ba/KP9SYF
+ i6AGbiarLpePi7Zi8vk1V5ZuI0mesomAWaL9oTQ/RldFqAWnnxbWx9Z64fgvLPIPVyMJX++n8
+ wPFOYy8oeGmQydlTkAEls5FKKYSq5yFHk6vii3374T97iHvFz6ODOMSqqCcYVDcyOGiKdImPV
+ /bKiz2inDg+Q7NDPyJ84ujt5FuUJiLZd0ucSK+XweJa+QeWUi2qUOm0NNei+YkUPyF+DKMwPw
+ JDUfinSWulLxAgFntxmbkIcSywAsw9shb7M5/EueasUacgI+aSqyuL7w5G1u8sXwvi0VHXY2R
+ BBmKecl9Lk+98CncYGTM+HwxzS0xY51YMuGaPb+pfVacl+rmq/YF8EoyZvHH64uJALQbwv3+c
+ pnqMOdknLFtIa7kUtrPPYKa6iRHvzEbKdzWWFuj0DAOr4PKYs6Zp0AVRhprVCFsE8GakkVnor
+ 3/PSYNG82dHCiWwB6Z+PV5uNVw54Nh6sle99VokidHKLEeMmMltL/tHAr47QA7i7zfCx/AMnn
+ SXS/cJmEZDh5Tee5ApTLt90gRqP5WkOaxl4fq39BBO/K/YMaA3rw24tRTNsO4mKUzFN9tXnk1
+ RUucXQ==
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Hi all,
 
-These functions can be shared with the stat std output test.
+I have found a solution for this bug and will post a patch later today.
 
-There is no functional change.
+Am 09.06.23 um 14:21 schrieb Georg M=C3=BCller:
+>
+> Am 01.11.22 um 14:48 schrieb Masami Hiramatsu (Google):
+>> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>
+>> Fix to get the declared file name even if it uses file index 0
+>> in DWARF5, using custom die_get_decl_file() function.
+>>
+>
+> this patch breaks perf probe on fedora 38.
+>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/tests/shell/lib/stat_output.sh | 169 +++++++++++++++++++
- tools/perf/tests/shell/stat+csv_output.sh | 188 ++--------------------
- 2 files changed, 184 insertions(+), 173 deletions(-)
- create mode 100755 tools/perf/tests/shell/lib/stat_output.sh
+The problem is that die_get_file_name() uses the wrong cu_die.
 
-diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests/shell/lib/stat_output.sh
-new file mode 100755
-index 000000000000..363979b1123d
---- /dev/null
-+++ b/tools/perf/tests/shell/lib/stat_output.sh
-@@ -0,0 +1,169 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+# Return true if perf_event_paranoid is > $1 and not running as root.
-+function ParanoidAndNotRoot()
-+{
-+	 [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
-+}
-+
-+# $1 name $2 extra_opt
-+check_no_args()
-+{
-+        echo -n "Checking $1 output: no args"
-+        perf stat $2 true
-+        commachecker --no-args
-+        echo "[Success]"
-+}
-+
-+check_system_wide()
-+{
-+	echo -n "Checking $1 output: system wide "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoid and not root"
-+		return
-+	fi
-+	perf stat -a $2 true
-+	commachecker --system-wide
-+	echo "[Success]"
-+}
-+
-+check_system_wide_no_aggr()
-+{
-+	echo -n "Checking $1 output: system wide no aggregation "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoid and not root"
-+		return
-+	fi
-+	perf stat -A -a --no-merge $2 true
-+	commachecker --system-wide-no-aggr
-+	echo "[Success]"
-+}
-+
-+check_interval()
-+{
-+	echo -n "Checking $1 output: interval "
-+	perf stat -I 1000 $2 true
-+	commachecker --interval
-+	echo "[Success]"
-+}
-+
-+check_event()
-+{
-+	echo -n "Checking $1 output: event "
-+	perf stat -e cpu-clock $2 true
-+	commachecker --event
-+	echo "[Success]"
-+}
-+
-+check_per_core()
-+{
-+	echo -n "Checking $1 output: per core "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoid and not root"
-+		return
-+	fi
-+	perf stat --per-core -a $2 true
-+	commachecker --per-core
-+	echo "[Success]"
-+}
-+
-+check_per_thread()
-+{
-+	echo -n "Checking $1 output: per thread "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoid and not root"
-+		return
-+	fi
-+	perf stat --per-thread -a $2 true
-+	commachecker --per-thread
-+	echo "[Success]"
-+}
-+
-+check_per_cache_instance()
-+{
-+	echo -n "Checking $1 output: per cache instance "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoid and not root"
-+		return
-+	fi
-+	perf stat --per-cache -a $2 true
-+	commachecker --per-cache
-+	echo "[Success]"
-+}
-+
-+check_per_die()
-+{
-+	echo -n "Checking $1 output: per die "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoid and not root"
-+		return
-+	fi
-+	perf stat --per-die -a $2 true
-+	commachecker --per-die
-+	echo "[Success]"
-+}
-+
-+check_per_node()
-+{
-+	echo -n "Checking $1 output: per node "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoid and not root"
-+		return
-+	fi
-+	perf stat --per-node -a $2 true
-+	commachecker --per-node
-+	echo "[Success]"
-+}
-+
-+check_per_socket()
-+{
-+	echo -n "Checking $1 output: per socket "
-+	if ParanoidAndNotRoot 0
-+	then
-+		echo "[Skip] paranoid and not root"
-+		return
-+	fi
-+	perf stat --per-socket -a $2 true
-+	commachecker --per-socket
-+	echo "[Success]"
-+}
-+
-+# The perf stat options for per-socket, per-core, per-die
-+# and -A ( no_aggr mode ) uses the info fetched from this
-+# directory: "/sys/devices/system/cpu/cpu*/topology". For
-+# example, socket value is fetched from "physical_package_id"
-+# file in topology directory.
-+# Reference: cpu__get_topology_int in util/cpumap.c
-+# If the platform doesn't expose topology information, values
-+# will be set to -1. For example, incase of pSeries platform
-+# of powerpc, value for  "physical_package_id" is restricted
-+# and set to -1. Check here validates the socket-id read from
-+# topology file before proceeding further
-+
-+FILE_LOC="/sys/devices/system/cpu/cpu*/topology/"
-+FILE_NAME="physical_package_id"
-+
-+function check_for_topology()
-+{
-+	if ! ParanoidAndNotRoot 0
-+	then
-+		socket_file=`ls $FILE_LOC/$FILE_NAME | head -n 1`
-+		[ -z $socket_file ] && {
-+			echo 0
-+			return
-+		}
-+		socket_id=`cat $socket_file`
-+		[ $socket_id == -1 ] && {
-+			echo 1
-+			return
-+		}
-+	fi
-+	echo 0
-+}
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
-index ed082daf839c..34a0701fee05 100755
---- a/tools/perf/tests/shell/stat+csv_output.sh
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -6,7 +6,8 @@
- 
- set -e
- 
--skip_test=0
-+. $(dirname $0)/lib/stat_output.sh
-+
- csv_sep=@
- 
- stat_output=$(mktemp /tmp/__perf_test.stat_output.csv.XXXXX)
-@@ -63,181 +64,22 @@ function commachecker()
- 	return 0
- }
- 
--# Return true if perf_event_paranoid is > $1 and not running as root.
--function ParanoidAndNotRoot()
--{
--	 [ "$(id -u)" != 0 ] && [ "$(cat /proc/sys/kernel/perf_event_paranoid)" -gt $1 ]
--}
--
--check_no_args()
--{
--	echo -n "Checking CSV output: no args "
--	perf stat -x$csv_sep -o "${stat_output}" true
--        commachecker --no-args
--	echo "[Success]"
--}
--
--check_system_wide()
--{
--	echo -n "Checking CSV output: system wide "
--	if ParanoidAndNotRoot 0
--	then
--		echo "[Skip] paranoid and not root"
--		return
--	fi
--	perf stat -x$csv_sep -a -o "${stat_output}" true
--        commachecker --system-wide
--	echo "[Success]"
--}
--
--check_system_wide_no_aggr()
--{
--	echo -n "Checking CSV output: system wide no aggregation "
--	if ParanoidAndNotRoot 0
--	then
--		echo "[Skip] paranoid and not root"
--		return
--	fi
--	perf stat -x$csv_sep -A -a --no-merge -o "${stat_output}" true
--        commachecker --system-wide-no-aggr
--	echo "[Success]"
--}
--
--check_interval()
--{
--	echo -n "Checking CSV output: interval "
--	perf stat -x$csv_sep -I 1000 -o "${stat_output}" true
--        commachecker --interval
--	echo "[Success]"
--}
--
--
--check_event()
--{
--	echo -n "Checking CSV output: event "
--	perf stat -x$csv_sep -e cpu-clock -o "${stat_output}" true
--        commachecker --event
--	echo "[Success]"
--}
--
--check_per_core()
--{
--	echo -n "Checking CSV output: per core "
--	if ParanoidAndNotRoot 0
--	then
--		echo "[Skip] paranoid and not root"
--		return
--	fi
--	perf stat -x$csv_sep --per-core -a -o "${stat_output}" true
--        commachecker --per-core
--	echo "[Success]"
--}
--
--check_per_thread()
--{
--	echo -n "Checking CSV output: per thread "
--	if ParanoidAndNotRoot 0
--	then
--		echo "[Skip] paranoid and not root"
--		return
--	fi
--	perf stat -x$csv_sep --per-thread -a -o "${stat_output}" true
--        commachecker --per-thread
--	echo "[Success]"
--}
--
--check_per_cache_instance()
--{
--	echo -n "Checking CSV output: per cache instance "
--	if ParanoidAndNotRoot 0
--	then
--		echo "[Skip] paranoid and not root"
--		return
--	fi
--	perf stat -x$csv_sep --per-cache -a true 2>&1 | commachecker --per-cache
--	echo "[Success]"
--}
--
--check_per_die()
--{
--	echo -n "Checking CSV output: per die "
--	if ParanoidAndNotRoot 0
--	then
--		echo "[Skip] paranoid and not root"
--		return
--	fi
--	perf stat -x$csv_sep --per-die -a -o "${stat_output}" true
--        commachecker --per-die
--	echo "[Success]"
--}
--
--check_per_node()
--{
--	echo -n "Checking CSV output: per node "
--	if ParanoidAndNotRoot 0
--	then
--		echo "[Skip] paranoid and not root"
--		return
--	fi
--	perf stat -x$csv_sep --per-node -a -o "${stat_output}" true
--        commachecker --per-node
--	echo "[Success]"
--}
--
--check_per_socket()
--{
--	echo -n "Checking CSV output: per socket "
--	if ParanoidAndNotRoot 0
--	then
--		echo "[Skip] paranoid and not root"
--		return
--	fi
--	perf stat -x$csv_sep --per-socket -a -o "${stat_output}" true
--        commachecker --per-socket
--	echo "[Success]"
--}
--
--# The perf stat options for per-socket, per-core, per-die
--# and -A ( no_aggr mode ) uses the info fetched from this
--# directory: "/sys/devices/system/cpu/cpu*/topology". For
--# example, socket value is fetched from "physical_package_id"
--# file in topology directory.
--# Reference: cpu__get_topology_int in util/cpumap.c
--# If the platform doesn't expose topology information, values
--# will be set to -1. For example, incase of pSeries platform
--# of powerpc, value for  "physical_package_id" is restricted
--# and set to -1. Check here validates the socket-id read from
--# topology file before proceeding further
--
--FILE_LOC="/sys/devices/system/cpu/cpu*/topology/"
--FILE_NAME="physical_package_id"
--
--check_for_topology()
--{
--	if ! ParanoidAndNotRoot 0
--	then
--		socket_file=`ls $FILE_LOC/$FILE_NAME | head -n 1`
--		[ -z $socket_file ] && return 0
--		socket_id=`cat $socket_file`
--		[ $socket_id == -1 ] && skip_test=1
--		return 0
--	fi
--}
-+perf_cmd="-x$csv_sep -o ${stat_output}"
- 
--check_for_topology
--check_no_args
--check_system_wide
--check_interval
--check_event
--check_per_thread
--check_per_node
-+skip_test=$(check_for_topology)
-+check_no_args "CSV" "$perf_cmd"
-+check_system_wide "CSV" "$perf_cmd"
-+check_interval "CSV" "$perf_cmd"
-+check_event "CSV" "$perf_cmd"
-+check_per_thread "CSV" "$perf_cmd"
-+check_per_node "CSV" "$perf_cmd"
- if [ $skip_test -ne 1 ]
- then
--	check_system_wide_no_aggr
--	check_per_core
--	check_per_cache_instance
--	check_per_die
--	check_per_socket
-+	check_system_wide_no_aggr "CSV" "$perf_cmd"
-+	check_per_core "CSV" "$perf_cmd"
-+	check_per_cache_instance "CSV" "$perf_cmd"
-+	check_per_die "CSV" "$perf_cmd"
-+	check_per_socket "CSV" "$perf_cmd"
- else
- 	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
- fi
--- 
-2.35.1
+I was pointed to the solution by reading elfutils commit e1db5cdc9:
 
+     dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
+     attribute. This means the attribute might come from a different DIE
+     in a different CU. If so, we need to use the CU associated with the
+     attribute, not the original DIE, to resolve the file name.
+
+The correct cu_die has to be obtained via
+
+     dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_mem)
+
+and then cu_die from the cu from attr_mem (dwarf_cu_die(attr_mem.cu, &cu_d=
+ie, ...)
+to obtain it) has to be used.
+
+Best regards,
+Georg
