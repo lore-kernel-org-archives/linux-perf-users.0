@@ -2,60 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA440EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 05:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7746FEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 05:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237219AbjFOFwv (ORCPT
+        id S233126AbjFOFyo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 01:52:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58968 "EHLO
+        Thu, 15 Jun 2023 01:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237753AbjFOFwh (ORCPT
+        with ESMTP id S230452AbjFOFyo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 01:52:37 -0400
-Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA60E297F
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:52:21 -0700 (PDT)
-Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-3f9b7de94e7so156271cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:52:21 -0700 (PDT)
+        Thu, 15 Jun 2023 01:54:44 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5387F26AA
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:54:41 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-3f98276f89cso107671cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 22:54:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686808341; x=1689400341;
+        d=google.com; s=20221208; t=1686808480; x=1689400480;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RvV1s9Ybihpk3I08Qn1WFec9efz9VOUQvHz72+VgOEs=;
-        b=7dB/GwIzS6IYN7XoGva93cZMfroWWgR9CNQQLJ28Crgkocf/mOANnSUoUhR8kdnj8c
-         x0wgOUoqpwUT+Y15Efe4mmpRNLio/84LxSZSWdRWNihX6sT2xE8dhUJP+ypNrvs5CT4d
-         Clw6NwecyRZ38q8LcI9/JmamPX6Js6H41yErMOj83tmvgRdeaYx1vO93HqP0yn07CZRT
-         BMP+ypzqMCUYp196eF0L9i0Uhpc1zLfj1PuaF4FZDuLvz4EjKjCoQz3ac7dKJj9Y0KH3
-         xVr3VTlMZCi/65ytGLFKuAgQgFLTewhquLdf4Ym8Vbq3e7E+LnhwDWA5xy8RzjUkbdam
-         rijg==
+        bh=95sU7bWVeZ8eAGPYEmmfCHTbh9MTYPM4EbBGJYmA8xE=;
+        b=qoKPejkdh5FMDHovoMQi/6C5mfI//AHmmUzNu2065x2Yp0DzjMROsdbDj3JSwVSbG0
+         YV9ayMzSSG0PtSI2vDdJXLJF0ZfrTVDKJf8fA5XhuQwOMNpTA9sIJKmv/coG0g8a/uDh
+         C14vQkE0ZkuA5+QXmXQec5DCxm0OsRpyo+LkJBDacUHVViLd3iGYt7ve5l0hN/8NQWhz
+         Wr4KAKctiCUAybXJl5qMObzPzLghwPa9IlLArB1wZQ8v9zeo4NfrkXdN3DLKfOJvVBmd
+         fiUksaJlWlsCrvxhturjX3ErBQ2HMv1mh2HhcHI26g+Zcdsc/+9Er0iygpquBnp16PhM
+         PeAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686808341; x=1689400341;
+        d=1e100.net; s=20221208; t=1686808480; x=1689400480;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RvV1s9Ybihpk3I08Qn1WFec9efz9VOUQvHz72+VgOEs=;
-        b=SnzZu5I+flM/aKCQpWMv6JmYpwNV+Ew767zt7/NaKIY61AgE/OtMN6tauLsHlEL5wk
-         VN67BKSghh7tZB5ok2EW3A7M9/Nr3yw71w8WgOfQwcs3pBTwRAHdYO2BLPip+I3DP3Li
-         F0TVbmgZdnPFjXen53vQsDPJVsp/rlSj/ObprqJXKUub8F2WSxPpil5fMOVRfs+Xp6ia
-         +k7dyj+VzRgewjwCO1LD0CNnym8nAVVP+GDUbmOX2Hy4hIsLCmAy+pgWY37WTnudIkFL
-         17KbwfAo69ZXdY938IL+9FtENcmUbNcF2W5Lm5HYe2/Nh0w28SvrHHzczGwOyKvl7XlN
-         dkyQ==
-X-Gm-Message-State: AC+VfDyd6du1C5Wj2nsFYBMmyT/F4Z6QEkUAjg045M39B1g2YLPsGDBO
-        CIQ+LBZ5iZgWnqsAkJCkgaGekk5qg7/Seqidjyd7jg==
-X-Google-Smtp-Source: ACHHUZ7qgU3dpu4rIAx7AdmLtPFfR31Y7hYmj0/gpfjYTm1nVXytuQSca5mvnmmqFgME6Rir4dNf27KXa7PsZfwIs+0=
-X-Received: by 2002:a05:622a:1ba9:b0:3fa:7dbf:f268 with SMTP id
- bp41-20020a05622a1ba900b003fa7dbff268mr60622qtb.23.1686808340786; Wed, 14 Jun
- 2023 22:52:20 -0700 (PDT)
+        bh=95sU7bWVeZ8eAGPYEmmfCHTbh9MTYPM4EbBGJYmA8xE=;
+        b=PZ792kmxmxYCz1TJv/aKa2X4vQY853Q+86XV+BwulfaTw258+zFfYLlk8EXEsgiPng
+         LVvIgttq/gxZLDpdNxDgs1qtERH5cAokJbVqCPKlAXgbMQ+rFqkqZEGb8DAtzf3g9qAX
+         onsuFi4GWXTRkbwvh2871x/dlC8Sg8dHFC+QmbH/cy03tuSAuLUDupitNos54/+/43oQ
+         tJEAvR3E4o29Fu/44OU2Jl2n58FyncmCHUgZQ7jiT02kG0xSc39qblOphpdhv51/dId0
+         g9mnWLNfCkFVyLCfXikbCM2YaNW/Q5omYCeWqqJYe48H7z9p2QmraomNNFilRXM4/b3M
+         QYRg==
+X-Gm-Message-State: AC+VfDwtJoc9qh0ZWL1LtOpSaZ7MWKP8jWE99xsgC2QyVaxz6H2wBgYn
+        EPbOqfmEGi3YW9xpgMdE6+st8euyqDiATGcmrJh4Xg==
+X-Google-Smtp-Source: ACHHUZ7zbx0jdFp9MbR4rZ4pyU8IsKygDKS2qwSwiHFYOxx0OJk2ptNFTrVegkG1DNBsRcATlf+/KGq6kQboQXmgMOc=
+X-Received: by 2002:a05:622a:1a86:b0:3f8:5b2:aeec with SMTP id
+ s6-20020a05622a1a8600b003f805b2aeecmr77332qtc.20.1686808480248; Wed, 14 Jun
+ 2023 22:54:40 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230615001735.3643996-1-kan.liang@linux.intel.com>
- <20230615001735.3643996-5-kan.liang@linux.intel.com> <CAP-5=fWbLkyQpxxhfCmqit7p4WgHVUOCjsADm-XojcT5ppcv7g@mail.gmail.com>
-In-Reply-To: <CAP-5=fWbLkyQpxxhfCmqit7p4WgHVUOCjsADm-XojcT5ppcv7g@mail.gmail.com>
+References: <20230615001735.3643996-1-kan.liang@linux.intel.com> <20230615001735.3643996-6-kan.liang@linux.intel.com>
+In-Reply-To: <20230615001735.3643996-6-kan.liang@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 14 Jun 2023 22:52:09 -0700
-Message-ID: <CAP-5=fU=jS6UmKdFziRq1Zt0c8FY+3XSrB9Xufw0BSHkGAcO-A@mail.gmail.com>
-Subject: Re: [PATCH V2 4/8] perf metrics: Sort the Default metricgroup
+Date:   Wed, 14 Jun 2023 22:54:28 -0700
+Message-ID: <CAP-5=fXS_6iWfo9Z3=evCHCvBn5uNXGX5TM79AGum-z+3wzdJw@mail.gmail.com>
+Subject: Re: [PATCH V2 5/8] perf stat: New metricgroup output for the default mode
 To:     kan.liang@linux.intel.com
 Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
         namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
@@ -67,201 +66,608 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 9:30=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
+On Wed, Jun 14, 2023 at 5:18=E2=80=AFPM <kan.liang@linux.intel.com> wrote:
 >
-> On Wed, Jun 14, 2023 at 5:18=E2=80=AFPM <kan.liang@linux.intel.com> wrote=
-:
-> >
-> > From: Kan Liang <kan.liang@linux.intel.com>
-> >
-> > The new default mode will print the metrics as a metric group. The
-> > metrics from the same metric group must be adjacent to each other in th=
-e
-> > metric list. But the metric_list_cmp() sorts metrics by the number of
-> > events.
-> >
-> > Add a new sort for the Default metricgroup, which sorts by
-> > default_metricgroup_name and metric_name.
-> >
-> > Add is_default in the struct metric_event to indicate that it's from
-> > the Default metricgroup.
-> >
-> > Store the displayed metricgroup name of the Default metricgroup into
-> > the metric expr for output.
-> >
-> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> > ---
-> >  tools/perf/util/metricgroup.c | 35 +++++++++++++++++++++++++++++++++++
-> >  tools/perf/util/metricgroup.h |  3 +++
-> >  2 files changed, 38 insertions(+)
-> >
-> > diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgrou=
-p.c
-> > index 8b19644ade7d..acf86b15ee49 100644
-> > --- a/tools/perf/util/metricgroup.c
-> > +++ b/tools/perf/util/metricgroup.c
-> > @@ -79,6 +79,7 @@ static struct rb_node *metric_event_new(struct rblist=
- *rblist __maybe_unused,
-> >                 return NULL;
-> >         memcpy(me, entry, sizeof(struct metric_event));
-> >         me->evsel =3D ((struct metric_event *)entry)->evsel;
-> > +       me->is_default =3D false;
-> >         INIT_LIST_HEAD(&me->head);
-> >         return &me->nd;
-> >  }
-> > @@ -1160,6 +1161,25 @@ static int metric_list_cmp(void *priv __maybe_un=
-used, const struct list_head *l,
-> >         return right_count - left_count;
-> >  }
-> >
-> > +/**
-> > + * default_metricgroup_cmp - Implements complex key for the Default me=
-tricgroup
-> > + *                          that first sorts by default_metricgroup_na=
-me, then
-> > + *                          metric_name.
-> > + */
-> > +static int default_metricgroup_cmp(void *priv __maybe_unused,
-> > +                                  const struct list_head *l,
-> > +                                  const struct list_head *r)
-> > +{
-> > +       const struct metric *left =3D container_of(l, struct metric, nd=
-);
-> > +       const struct metric *right =3D container_of(r, struct metric, n=
-d);
-> > +       int diff =3D strcmp(right->default_metricgroup_name, left->defa=
-ult_metricgroup_name);
-> > +
-> > +       if (diff)
-> > +               return diff;
-> > +
-> > +       return strcmp(right->metric_name, left->metric_name);
-> > +}
-> > +
-> >  struct metricgroup__add_metric_data {
-> >         struct list_head *list;
-> >         const char *pmu;
-> > @@ -1515,6 +1535,7 @@ static int parse_groups(struct evlist *perf_evlis=
-t,
-> >         LIST_HEAD(metric_list);
-> >         struct metric *m;
-> >         bool tool_events[PERF_TOOL_MAX] =3D {false};
-> > +       bool is_default =3D !strcmp(str, "Default");
-> >         int ret;
-> >
-> >         if (metric_events_list->nr_entries =3D=3D 0)
-> > @@ -1549,6 +1570,9 @@ static int parse_groups(struct evlist *perf_evlis=
-t,
-> >                         goto out;
-> >         }
-> >
-> > +       if (is_default)
-> > +               list_sort(NULL, &metric_list, default_metricgroup_cmp);
-> > +
-> >         list_for_each_entry(m, &metric_list, nd) {
-> >                 struct metric_event *me;
-> >                 struct evsel **metric_events;
-> > @@ -1637,6 +1661,17 @@ static int parse_groups(struct evlist *perf_evli=
-st,
-> >                 expr->metric_unit =3D m->metric_unit;
-> >                 expr->metric_events =3D metric_events;
-> >                 expr->runtime =3D m->pctx->sctx.runtime;
-> > +               if (m->pmu && strcmp(m->pmu, "cpu")) {
-> > +                       char *name;
-> > +
-> > +                       if (asprintf(&name, "%s (%s)", m->default_metri=
-cgroup_name, m->pmu) < 0)
+> From: Kan Liang <kan.liang@linux.intel.com>
 >
-> With EXTRA_CFLAGS=3D"-fsanitize=3Daddress" this is causing:
+> In the default mode, the current output of the metricgroup include both
+> events and metrics, which is not necessary and just makes the output
+> hard to read. Since different ARCHs (even different generations in the
+> same ARCH) may use different events. The output also vary on different
+> platforms.
 >
-> $ perf test 7 -vv -F
->   7: PMU events                                                      :
-> ...
->   7.5: Parsing of metric thresholds with fake PMUs                   :
-> ...
-> =3D=3D2072355=3D=3DERROR: LeakSanitizer: detected memory leaks
+> For a metricgroup, only outputting the value of each metric is good
+> enough.
 >
-> Direct leak of 6199 byte(s) in 340 object(s) allocated from:
->    #0 0x7f24cce7077b in __interceptor_strdup
-> ../../../../src/libsanitizer/asan/asan_interceptors.cp
-> p:439
->    #1 0x55972b328abd in asprintf util/util.c:566
->    #2 0x55972b251dbd in parse_groups util/metricgroup.c:1667
->    #3 0x55972b25231f in metricgroup__parse_groups_test util/metricgroup.c=
-:1719
->    #4 0x55972b139aff in test__parsing_callback tests/pmu-events.c:837
->    #5 0x55972b5119a9 in pmu_metrics_table_for_each_metric
-> /tmp/perf/pmu-events/pmu-events.c:61641
->    #6 0x55972b511fdf in pmu_for_each_core_metric
-> /tmp/perf/pmu-events/pmu-events.c:61742
->    #7 0x55972b13a3bc in test__parsing tests/pmu-events.c:898
->    #8 0x55972b106cd7 in run_test tests/builtin-test.c:236
->    #9 0x55972b106f7c in test_and_print tests/builtin-test.c:265
->    #10 0x55972b107f96 in __cmd_test tests/builtin-test.c:436
->    #11 0x55972b10927a in cmd_test tests/builtin-test.c:559
->    #12 0x55972b19584a in run_builtin
-> /home/irogers/kernel.org/tools/perf/perf.c:323
->    #13 0x55972b195dbb in handle_internal_command
-> /home/irogers/kernel.org/tools/perf/perf.c:377
->    #14 0x55972b196183 in run_argv /home/irogers/kernel.org/tools/perf/per=
-f.c:421
->    #15 0x55972b1966eb in main /home/irogers/kernel.org/tools/perf/perf.c:=
-537
->    #16 0x7f24cbe46189 in __libc_start_call_main
-> ../sysdeps/nptl/libc_start_call_main.h:58
+> Add a new field default_metricgroup in evsel to indicate an event of
+> the default metricgroup. For those events, printout() should print
+> the metricgroup name rather than each event.
 >
-> SUMMARY: AddressSanitizer: 6199 byte(s) leaked in 340 allocation(s)
+> Add perf_stat__skip_metric_event() to skip the evsel in the Default
+> metricgroup, if it's not running or not the metric event.
 >
-> As this is mixing allocated and unallocated strings, you like want to
-> strdup the unallocated ones, then add a free to the exit routine.
+> Add print_metricgroup_header_t to pass the functions which print the
+> display name of each metricgroup in the Default metricgroup. Support
+> all three output methods.
 >
-> Thanks,
-> Ian
+> Factor out perf_stat__print_shadow_stats_metricgroup() to print out
+> each metrics.
+>
+> On SPR
+> Before:
+>
+>  ./perf_old stat sleep 1
+>
+>  Performance counter stats for 'sleep 1':
+>
+>               0.54 msec task-clock:u                     #    0.001 CPUs =
+utilized
+>                  0      context-switches:u               #    0.000 /sec
+>                  0      cpu-migrations:u                 #    0.000 /sec
+>                 68      page-faults:u                    #  125.445 K/sec
+>            540,970      cycles:u                         #    0.998 GHz
+>            556,325      instructions:u                   #    1.03  insn =
+per cycle
+>            123,602      branches:u                       #  228.018 M/sec
+>              6,889      branch-misses:u                  #    5.57% of al=
+l branches
+>          3,245,820      TOPDOWN.SLOTS:u                  #     18.4 %  tm=
+a_backend_bound
+>                                                   #     17.2 %  tma_retir=
+ing
+>                                                   #     23.1 %  tma_bad_s=
+peculation
+>                                                   #     41.4 %  tma_front=
+end_bound
+>            564,859      topdown-retiring:u
+>          1,370,999      topdown-fe-bound:u
+>            603,271      topdown-be-bound:u
+>            744,874      topdown-bad-spec:u
+>             12,661      INT_MISC.UOP_DROPPING:u          #   23.357 M/sec
+>
+>        1.001798215 seconds time elapsed
+>
+>        0.000193000 seconds user
+>        0.001700000 seconds sys
+>
+> After:
+>
+> $ ./perf stat sleep 1
+>
+>  Performance counter stats for 'sleep 1':
+>
+>               0.51 msec task-clock:u                     #    0.001 CPUs =
+utilized
+>                  0      context-switches:u               #    0.000 /sec
+>                  0      cpu-migrations:u                 #    0.000 /sec
+>                 68      page-faults:u                    #  132.683 K/sec
+>            545,228      cycles:u                         #    1.064 GHz
+>            555,509      instructions:u                   #    1.02  insn =
+per cycle
+>            123,574      branches:u                       #  241.120 M/sec
+>              6,957      branch-misses:u                  #    5.63% of al=
+l branches
+>                         TopdownL1                 #     17.5 %  tma_backe=
+nd_bound
+>                                                   #     22.6 %  tma_bad_s=
+peculation
+>                                                   #     42.7 %  tma_front=
+end_bound
+>                                                   #     17.1 %  tma_retir=
+ing
+>                         TopdownL2                 #     21.8 %  tma_branc=
+h_mispredicts
+>                                                   #     11.5 %  tma_core_=
+bound
+>                                                   #     13.4 %  tma_fetch=
+_bandwidth
+>                                                   #     29.3 %  tma_fetch=
+_latency
+>                                                   #      2.7 %  tma_heavy=
+_operations
+>                                                   #     14.5 %  tma_light=
+_operations
+>                                                   #      0.8 %  tma_machi=
+ne_clears
+>                                                   #      6.1 %  tma_memor=
+y_bound
+>
+>        1.001712086 seconds time elapsed
+>
+>        0.000151000 seconds user
+>        0.001618000 seconds sys
+>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-Except for the memory leak, everything looks good here. Will ack with
-the memory leak fix.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> > +                               expr->default_metricgroup_name =3D m->d=
-efault_metricgroup_name;
-> > +                       else
-> > +                               expr->default_metricgroup_name =3D name=
-;
-> > +               } else
-> > +                       expr->default_metricgroup_name =3D m->default_m=
-etricgroup_name;
-> > +               if (is_default)
-> > +                       me->is_default =3D true;
-> >                 list_add(&expr->nd, &me->head);
-> >         }
-> >
-> > diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgrou=
-p.h
-> > index bf18274c15df..d5325c6ec8e1 100644
-> > --- a/tools/perf/util/metricgroup.h
-> > +++ b/tools/perf/util/metricgroup.h
-> > @@ -22,6 +22,7 @@ struct cgroup;
-> >  struct metric_event {
-> >         struct rb_node nd;
-> >         struct evsel *evsel;
-> > +       bool is_default; /* the metric evsel from the Default metricgro=
-up */
-> >         struct list_head head; /* list of metric_expr */
-> >  };
-> >
-> > @@ -55,6 +56,8 @@ struct metric_expr {
-> >          * more human intelligible) and then add "MiB" afterward when d=
-isplayed.
-> >          */
-> >         const char *metric_unit;
-> > +       /** Displayed metricgroup name of the Default metricgroup */
-> > +       const char *default_metricgroup_name;
-> >         /** Null terminated array of events used by the metric. */
-> >         struct evsel **metric_events;
-> >         /** Null terminated array of referenced metrics. */
-> > --
-> > 2.35.1
-> >
+> ---
+>  tools/perf/builtin-stat.c      |   1 +
+>  tools/perf/util/evsel.h        |   1 +
+>  tools/perf/util/stat-display.c | 108 ++++++++++++++++++++++++++++++---
+>  tools/perf/util/stat-shadow.c  | 108 +++++++++++++++++++++++++++++----
+>  tools/perf/util/stat.h         |  15 +++++
+>  5 files changed, 211 insertions(+), 22 deletions(-)
+>
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 55601b4b5c34..3f4e76f76f94 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2172,6 +2172,7 @@ static int add_default_attributes(void)
+>
+>                         evlist__for_each_entry(metric_evlist, metric_evse=
+l) {
+>                                 metric_evsel->skippable =3D true;
+> +                               metric_evsel->default_metricgroup =3D tru=
+e;
+>                         }
+>                         evlist__splice_list_tail(evsel_list, &metric_evli=
+st->core.entries);
+>                         evlist__delete(metric_evlist);
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index cc6fb3049b99..9f06d6cd5379 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -131,6 +131,7 @@ struct evsel {
+>         bool                    reset_group;
+>         bool                    errored;
+>         bool                    needs_auxtrace_mmap;
+> +       bool                    default_metricgroup; /* A member of the D=
+efault metricgroup */
+>         struct hashmap          *per_pkg_mask;
+>         int                     err;
+>         struct {
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
+y.c
+> index a2bbdc25d979..7329b3340f88 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -25,6 +25,7 @@
+>  #define CNTR_NOT_SUPPORTED     "<not supported>"
+>  #define CNTR_NOT_COUNTED       "<not counted>"
+>
+> +#define MGROUP_LEN   50
+>  #define METRIC_LEN   38
+>  #define EVNAME_LEN   32
+>  #define COUNTS_LEN   18
+> @@ -364,16 +365,27 @@ static void new_line_std(struct perf_stat_config *c=
+onfig __maybe_unused,
+>         os->newline =3D true;
+>  }
+>
+> -static void do_new_line_std(struct perf_stat_config *config,
+> -                           struct outstate *os)
+> +static inline void __new_line_std_csv(struct perf_stat_config *config,
+> +                                     struct outstate *os)
+>  {
+>         fputc('\n', os->fh);
+>         if (os->prefix)
+>                 fputs(os->prefix, os->fh);
+>         aggr_printout(config, os->evsel, os->id, os->aggr_nr);
+> +}
+> +
+> +static inline void __new_line_std(struct outstate *os)
+> +{
+> +       fprintf(os->fh, "                                                =
+ ");
+> +}
+> +
+> +static void do_new_line_std(struct perf_stat_config *config,
+> +                           struct outstate *os)
+> +{
+> +       __new_line_std_csv(config, os);
+>         if (config->aggr_mode =3D=3D AGGR_NONE)
+>                 fprintf(os->fh, "        ");
+> -       fprintf(os->fh, "                                                =
+ ");
+> +       __new_line_std(os);
+>  }
+>
+>  static void print_metric_std(struct perf_stat_config *config,
+> @@ -408,10 +420,7 @@ static void new_line_csv(struct perf_stat_config *co=
+nfig, void *ctx)
+>         struct outstate *os =3D ctx;
+>         int i;
+>
+> -       fputc('\n', os->fh);
+> -       if (os->prefix)
+> -               fprintf(os->fh, "%s", os->prefix);
+> -       aggr_printout(config, os->evsel, os->id, os->aggr_nr);
+> +       __new_line_std_csv(config, os);
+>         for (i =3D 0; i < os->nfields; i++)
+>                 fputs(config->csv_sep, os->fh);
+>  }
+> @@ -462,6 +471,54 @@ static void new_line_json(struct perf_stat_config *c=
+onfig, void *ctx)
+>         aggr_printout(config, os->evsel, os->id, os->aggr_nr);
+>  }
+>
+> +static void print_metricgroup_header_json(struct perf_stat_config *confi=
+g,
+> +                                         void *ctx,
+> +                                         const char *metricgroup_name)
+> +{
+> +       if (!metricgroup_name)
+> +               return;
+> +
+> +       fprintf(config->output, "\"metricgroup\" : \"%s\"}", metricgroup_=
+name);
+> +       new_line_json(config, ctx);
+> +}
+> +
+> +static void print_metricgroup_header_csv(struct perf_stat_config *config=
+,
+> +                                        void *ctx,
+> +                                        const char *metricgroup_name)
+> +{
+> +       struct outstate *os =3D ctx;
+> +       int i;
+> +
+> +       if (!metricgroup_name) {
+> +               /* Leave space for running and enabling */
+> +               for (i =3D 0; i < os->nfields - 2; i++)
+> +                       fputs(config->csv_sep, os->fh);
+> +               return;
+> +       }
+> +
+> +       for (i =3D 0; i < os->nfields; i++)
+> +               fputs(config->csv_sep, os->fh);
+> +       fprintf(config->output, "%s", metricgroup_name);
+> +       new_line_csv(config, ctx);
+> +}
+> +
+> +static void print_metricgroup_header_std(struct perf_stat_config *config=
+,
+> +                                        void *ctx,
+> +                                        const char *metricgroup_name)
+> +{
+> +       struct outstate *os =3D ctx;
+> +       int n;
+> +
+> +       if (!metricgroup_name) {
+> +               __new_line_std(os);
+> +               return;
+> +       }
+> +
+> +       n =3D fprintf(config->output, " %*s", EVNAME_LEN, metricgroup_nam=
+e);
+> +
+> +       fprintf(config->output, "%*s", MGROUP_LEN - n - 1, "");
+> +}
+> +
+>  /* Filter out some columns that don't work well in metrics only mode */
+>
+>  static bool valid_only_metric(const char *unit)
+> @@ -713,19 +770,23 @@ static void printout(struct perf_stat_config *confi=
+g, struct outstate *os,
+>         struct perf_stat_output_ctx out;
+>         print_metric_t pm;
+>         new_line_t nl;
+> +       print_metricgroup_header_t pmh;
+>         bool ok =3D true;
+>         struct evsel *counter =3D os->evsel;
+>
+>         if (config->csv_output) {
+>                 pm =3D config->metric_only ? print_metric_only_csv : prin=
+t_metric_csv;
+>                 nl =3D config->metric_only ? new_line_metric : new_line_c=
+sv;
+> +               pmh =3D print_metricgroup_header_csv;
+>                 os->nfields =3D 4 + (counter->cgrp ? 1 : 0);
+>         } else if (config->json_output) {
+>                 pm =3D config->metric_only ? print_metric_only_json : pri=
+nt_metric_json;
+>                 nl =3D config->metric_only ? new_line_metric : new_line_j=
+son;
+> +               pmh =3D print_metricgroup_header_json;
+>         } else {
+>                 pm =3D config->metric_only ? print_metric_only : print_me=
+tric_std;
+>                 nl =3D config->metric_only ? new_line_metric : new_line_s=
+td;
+> +               pmh =3D print_metricgroup_header_std;
+>         }
+>
+>         if (run =3D=3D 0 || ena =3D=3D 0 || counter->counts->scaled =3D=
+=3D -1) {
+> @@ -747,10 +808,11 @@ static void printout(struct perf_stat_config *confi=
+g, struct outstate *os,
+>
+>         out.print_metric =3D pm;
+>         out.new_line =3D nl;
+> +       out.print_metricgroup_header =3D pmh;
+>         out.ctx =3D os;
+>         out.force_header =3D false;
+>
+> -       if (!config->metric_only) {
+> +       if (!config->metric_only && !counter->default_metricgroup) {
+>                 abs_printout(config, os->id, os->aggr_nr, counter, uval, =
+ok);
+>
+>                 print_noise(config, counter, noise, /*before_metric=3D*/t=
+rue);
+> @@ -758,8 +820,31 @@ static void printout(struct perf_stat_config *config=
+, struct outstate *os,
+>         }
+>
+>         if (ok) {
+> -               perf_stat__print_shadow_stats(config, counter, uval, aggr=
+_idx,
+> -                                             &out, &config->metric_event=
+s);
+> +               if (!config->metric_only && counter->default_metricgroup)=
+ {
+> +                       void *from =3D NULL;
+> +
+> +                       aggr_printout(config, os->evsel, os->id, os->aggr=
+_nr);
+> +                       /* Print out all the metricgroup with the same me=
+tric event. */
+> +                       do {
+> +                               int num =3D 0;
+> +
+> +                               /* Print out the new line for the next ne=
+w metricgroup. */
+> +                               if (from) {
+> +                                       if (config->json_output)
+> +                                               new_line_json(config, (vo=
+id *)os);
+> +                                       else
+> +                                               __new_line_std_csv(config=
+, os);
+> +                               }
+> +
+> +                               print_noise(config, counter, noise, /*bef=
+ore_metric=3D*/true);
+> +                               print_running(config, run, ena, /*before_=
+metric=3D*/true);
+> +                               from =3D perf_stat__print_shadow_stats_me=
+tricgroup(config, counter, aggr_idx,
+> +                                                                        =
+        &num, from, &out,
+> +                                                                        =
+        &config->metric_events);
+> +                       } while (from !=3D NULL);
+> +               } else
+> +                       perf_stat__print_shadow_stats(config, counter, uv=
+al, aggr_idx,
+> +                                                     &out, &config->metr=
+ic_events);
+>         } else {
+>                 pm(config, os, /*color=3D*/NULL, /*format=3D*/NULL, /*uni=
+t=3D*/"", /*val=3D*/0);
+>         }
+> @@ -889,6 +974,9 @@ static void print_counter_aggrdata(struct perf_stat_c=
+onfig *config,
+>         ena =3D aggr->counts.ena;
+>         run =3D aggr->counts.run;
+>
+> +       if (perf_stat__skip_metric_event(counter, &config->metric_events,=
+ ena, run))
+> +               return;
+> +
+>         if (val =3D=3D 0 && should_skip_zero_counter(config, counter, &id=
+))
+>                 return;
+>
+> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.=
+c
+> index 1566a206ba42..b25974670d30 100644
+> --- a/tools/perf/util/stat-shadow.c
+> +++ b/tools/perf/util/stat-shadow.c
+> @@ -539,6 +539,83 @@ double test_generic_metric(struct metric_expr *mexp,=
+ int aggr_idx)
+>         return ratio;
+>  }
+>
+> +/**
+> + * perf_stat__print_shadow_stats_metricgroup - Print out metrics associa=
+ted with the evsel
+> + *                                            For the non-default, all m=
+etrics associated
+> + *                                            with the evsel are printed=
+.
+> + *                                            For the default mode, only=
+ the metrics from
+> + *                                            the same metricgroup and t=
+he name of the
+> + *                                            metricgroup are printed. T=
+o print the metrics
+> + *                                            from the next metricgroup =
+(if available),
+> + *                                            invoke the function with c=
+orrespoinding
+> + *                                            metric_expr.
+> + */
+> +void *perf_stat__print_shadow_stats_metricgroup(struct perf_stat_config =
+*config,
+> +                                               struct evsel *evsel,
+> +                                               int aggr_idx,
+> +                                               int *num,
+> +                                               void *from,
+> +                                               struct perf_stat_output_c=
+tx *out,
+> +                                               struct rblist *metric_eve=
+nts)
+> +{
+> +       struct metric_event *me;
+> +       struct metric_expr *mexp =3D from;
+> +       void *ctxp =3D out->ctx;
+> +       bool header_printed =3D false;
+> +       const char *name =3D NULL;
+> +       static const char *last_name;
+> +
+> +       me =3D metricgroup__lookup(metric_events, evsel, false);
+> +       if (me =3D=3D NULL)
+> +               return NULL;
+> +
+> +       if (!mexp)
+> +               mexp =3D list_first_entry(&me->head, typeof(*mexp), nd);
+> +
+> +       list_for_each_entry_from(mexp, &me->head, nd) {
+> +               /* Print the display name of the Default metricgroup */
+> +               if (me->is_default) {
+> +                       if (!name)
+> +                               name =3D mexp->default_metricgroup_name;
+> +                       /*
+> +                        * Two or more metricgroup may share the same met=
+ric
+> +                        * event, e.g., TopdownL1 and TopdownL2 on SPR.
+> +                        * Return and print the prefix, e.g., noise, runn=
+ing
+> +                        * for the next metricgroup.
+> +                        */
+> +                       if (strcmp(name, mexp->default_metricgroup_name))
+> +                               return (void *)mexp;
+> +                       /* Only print the name of the metricgroup once */
+> +                       if (!header_printed) {
+> +                               header_printed =3D true;
+> +                               if (!last_name || strcmp(last_name, name)=
+) {
+> +                                       /* Print out the name for the new=
+ metricgroup. */
+> +                                       out->print_metricgroup_header(con=
+fig, ctxp, name);
+> +                                       last_name =3D name;
+> +                               } else if (!strcmp(last_name, name)) {
+> +                                       /*
+> +                                        * A metricgroup may have several=
+ metric events,
+> +                                        * e.g.,TopdownL1 on e-core of AD=
+L.
+> +                                        * The name has been output by th=
+e first metric
+> +                                        * event. Only align with other m=
+etics from
+> +                                        * different metric events.
+> +                                        */
+> +                                       out->print_metricgroup_header(con=
+fig, ctxp, NULL);
+> +                               }
+> +                       }
+> +               }
+> +
+> +               if ((*num)++ > 0)
+> +                       out->new_line(config, ctxp);
+> +               generic_metric(config, mexp->metric_expr, mexp->metric_th=
+reshold,
+> +                              mexp->metric_events, mexp->metric_refs, ev=
+sel->name,
+> +                              mexp->metric_name, mexp->metric_unit, mexp=
+->runtime,
+> +                              aggr_idx, out);
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+>  void perf_stat__print_shadow_stats(struct perf_stat_config *config,
+>                                    struct evsel *evsel,
+>                                    double avg, int aggr_idx,
+> @@ -565,7 +642,6 @@ void perf_stat__print_shadow_stats(struct perf_stat_c=
+onfig *config,
+>         };
+>         print_metric_t print_metric =3D out->print_metric;
+>         void *ctxp =3D out->ctx;
+> -       struct metric_event *me;
+>         int num =3D 1;
+>
+>         if (config->iostat_run) {
+> @@ -592,18 +668,26 @@ void perf_stat__print_shadow_stats(struct perf_stat=
+_config *config,
+>                 }
+>         }
+>
+> -       if ((me =3D metricgroup__lookup(metric_events, evsel, false)) !=
+=3D NULL) {
+> -               struct metric_expr *mexp;
+> +       perf_stat__print_shadow_stats_metricgroup(config, evsel, aggr_idx=
+,
+> +                                                 &num, NULL, out, metric=
+_events);
+>
+> -               list_for_each_entry (mexp, &me->head, nd) {
+> -                       if (num++ > 0)
+> -                               out->new_line(config, ctxp);
+> -                       generic_metric(config, mexp->metric_expr, mexp->m=
+etric_threshold,
+> -                                      mexp->metric_events, mexp->metric_=
+refs, evsel->name,
+> -                                      mexp->metric_name, mexp->metric_un=
+it, mexp->runtime,
+> -                                      aggr_idx, out);
+> -               }
+> -       }
+>         if (num =3D=3D 0)
+>                 print_metric(config, ctxp, NULL, NULL, NULL, 0);
+>  }
+> +
+> +/**
+> + * perf_stat__skip_metric_event - Skip the evsel in the Default metricgr=
+oup,
+> + *                               if it's not running or not the metric e=
+vent.
+> + */
+> +bool perf_stat__skip_metric_event(struct evsel *evsel,
+> +                                 struct rblist *metric_events,
+> +                                 u64 ena, u64 run)
+> +{
+> +       if (!evsel->default_metricgroup)
+> +               return false;
+> +
+> +       if (!ena || !run)
+> +               return true;
+> +
+> +       return !metricgroup__lookup(metric_events, evsel, false);
+> +}
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index 7abff7cbb5a1..934f79778cea 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -158,11 +158,16 @@ typedef void (*print_metric_t)(struct perf_stat_con=
+fig *config,
+>                                const char *fmt, double val);
+>  typedef void (*new_line_t)(struct perf_stat_config *config, void *ctx);
+>
+> +/* Used to print the display name of the Default metricgroup for now. */
+> +typedef void (*print_metricgroup_header_t)(struct perf_stat_config *conf=
+ig,
+> +                                          void *ctx, const char *metricg=
+roup_name);
+> +
+>  void perf_stat__reset_shadow_stats(void);
+>  struct perf_stat_output_ctx {
+>         void *ctx;
+>         print_metric_t print_metric;
+>         new_line_t new_line;
+> +       print_metricgroup_header_t print_metricgroup_header;
+>         bool force_header;
+>  };
+>
+> @@ -171,6 +176,16 @@ void perf_stat__print_shadow_stats(struct perf_stat_=
+config *config,
+>                                    double avg, int aggr_idx,
+>                                    struct perf_stat_output_ctx *out,
+>                                    struct rblist *metric_events);
+> +bool perf_stat__skip_metric_event(struct evsel *evsel,
+> +                                 struct rblist *metric_events,
+> +                                 u64 ena, u64 run);
+> +void *perf_stat__print_shadow_stats_metricgroup(struct perf_stat_config =
+*config,
+> +                                               struct evsel *evsel,
+> +                                               int aggr_idx,
+> +                                               int *num,
+> +                                               void *from,
+> +                                               struct perf_stat_output_c=
+tx *out,
+> +                                               struct rblist *metric_eve=
+nts);
+>
+>  int evlist__alloc_stats(struct perf_stat_config *config,
+>                         struct evlist *evlist, bool alloc_raw);
+> --
+> 2.35.1
+>
