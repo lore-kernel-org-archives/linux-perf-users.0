@@ -2,650 +2,280 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B02CEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 20:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB320EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 22:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230016AbjFOUI5 (ORCPT
+        id S235017AbjFOWFP (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 16:08:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36040 "EHLO
+        Thu, 15 Jun 2023 18:05:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbjFOUIz (ORCPT
+        with ESMTP id S231231AbjFOWFO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 16:08:55 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0C71BC
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Jun 2023 13:08:53 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bc8c062d542so2876386276.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Jun 2023 13:08:53 -0700 (PDT)
+        Thu, 15 Jun 2023 18:05:14 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2FD2199
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Jun 2023 15:05:12 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3f9b7de94e7so88431cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Jun 2023 15:05:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686859732; x=1689451732;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=P0h1AfLb5+SYDY4leTKGs+3GnAXTpCzdB8osP/qzqno=;
-        b=48RKMW9S/NEZZck6/rh0vMkEdkVffvkkoVRvMgAgPT57BxwW+8J+Ma/H5gWTDpajoR
-         7aNNCvRPrqS67Iw4VHbJCR3/+kcZ4chHABBve04mrX+k3LxFVw5WX+fNlaAR1RP/KlrV
-         Xpwj3/QjKUU0sgE8Z2usunzJlU5wbmNLTgsWplL3FOsiGi9TpJdHh/YHKIhetuHHZamd
-         oijBMupZ/hRvqIGS21wfEDB2n+iVY81Rfi8ahGKF77rkMQuTOgwXgkSvPiAj9Wj6WAGn
-         KZjNl02EaZQTdYGine03Ig68a+DAHkOPD7JZhiIDNePnMrr0vrpb0GBwmsEMprfVlhUs
-         I3+A==
+        d=google.com; s=20221208; t=1686866712; x=1689458712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1MQdt51wzlPU/epwCZqMAyo1fEWwjjdz65gOqta5sgs=;
+        b=6KuVsRAAX1cTHUgLQIDTQiMXfdTgBCq7XDgl8UcGReAPo+JrpSeH/L1irmJKkD/nOI
+         9TvslKeaij02HStpl2UaoxaOGjuN98H62sqF7g2IPu7gTFjeBzNllGI0Rp9x1qNP/YWC
+         coY+xf0j11kJm7SDujs1yTg81iVIM7dBk/6eokl7Y24xG5ia3gkDRNwyuLhUaVBmY7uN
+         Gt5x4kUwnFKeCkfMAOcN41VduhUB2sJU/d77fsmczmSRh8ciCDWzsl9VGWAm8klDkfOH
+         cFJ+o/K4apvzgG+JKB3GKjG9LO62wtmr7VIedppVPxR54pIghoKsmMnT1s8fkJGTmR7x
+         vrBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686859732; x=1689451732;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=P0h1AfLb5+SYDY4leTKGs+3GnAXTpCzdB8osP/qzqno=;
-        b=HS9BA9VrmB3h9qpvEScFSbTBC7vy6bDpMTJ7x8My+CKPX0W/dQZ2RhsyHF1l6K2Z2J
-         kZw0MksH/eeKTlaUTLAgEn4TtVTLsRUF1OUcEiQK0AKCkfIkz9Af7lpKmlNSeF12MfnG
-         Ebnh2+1vMXk8lw9JZA10UOz7McP+F74Qjtmvdp9vzheFmFqNav0ZZMWbO9lpOR4lyjFd
-         9tlBjs9cuDvswA6rOZvpX2W29RlnKSxElriKnI97lk1BylqL4oNjy8Y+LVYeI1pZCrpm
-         d2Qp7QEdmhzJZZIqja4u73Dv35xKNzLs4jCDxQ3VzPB16tKd11HHQy3BA7YCi36jMD8q
-         FqHA==
-X-Gm-Message-State: AC+VfDxOI7R8LC9MoMcG0jYBpajEE/thXdLbgX7zOmxnG/yskSuRU0S+
-        hEjpUmSO0uOxSRG6Ocr1INhDrKAgdMP/
-X-Google-Smtp-Source: ACHHUZ5pkgN3YHQHXH1wYuaeyJxwq5bW9Xl0t13b1tGAqy0VN6yaBUp5ScKOVqaw2xIBbRXWeN7+pRxIAmdy
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2d4:203:768d:713f:8ce8:1d35])
- (user=irogers job=sendgmr) by 2002:a25:51c3:0:b0:bc9:3c66:cf1 with SMTP id
- f186-20020a2551c3000000b00bc93c660cf1mr28683ybb.0.1686859732323; Thu, 15 Jun
- 2023 13:08:52 -0700 (PDT)
-Date:   Thu, 15 Jun 2023 13:08:43 -0700
-Message-Id: <20230615200843.2459645-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1] perf symbol: Remove symbol_name_rb_node
+        d=1e100.net; s=20221208; t=1686866712; x=1689458712;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1MQdt51wzlPU/epwCZqMAyo1fEWwjjdz65gOqta5sgs=;
+        b=FWurX7v3r2J3kTkMIbJRNmlzr2K5a04fIFBEx3scNn4PLRHu4qU8HFg9xrg5OPXW3V
+         bRWyKIsLIcFrdmRyCOx/XcryMOor7o2/08U8xTrIjkR7SGkY+3KPRKRU3m7YnGtE7uMt
+         A8OTtxVxSxzJLHwujqDx2n9duu66LbhghwSk4x8tCRDcWMIN+T4i8h4LKFV7ry6nlYiR
+         4cNNdmKu6hoo0xpe027SBak4LjSqKZ3cxOh641txiJiUoNET0Yfnr+FsbCPGxGg1GQM8
+         HrG0XUXeinNDLd5Jy8K6C3qv7AWLjIk67ZfAB3znu730cg06eNu54eWWZwWb/IYs9+UF
+         pHTg==
+X-Gm-Message-State: AC+VfDwIjT4bqEHw/E5hY6mURvGuCaMlJqKfwExsfGmdHRLbER3/ANlz
+        V12mEdfhkD3iXavWsB14lgN33Wk/Uz6Fd68HtpFScg==
+X-Google-Smtp-Source: ACHHUZ5X+VfIBVKQbDcDVXcaMOSo7nueFY6eJ+T2GDU1wgd9WaKoDTKPyolJkytZ1KpqifCSIeBE9OY6dUsPaQVIw2g=
+X-Received: by 2002:a05:622a:110e:b0:3f8:5b2:aef5 with SMTP id
+ e14-20020a05622a110e00b003f805b2aef5mr310865qty.29.1686866711891; Thu, 15 Jun
+ 2023 15:05:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230615135315.3662428-1-kan.liang@linux.intel.com> <20230615135315.3662428-5-kan.liang@linux.intel.com>
+In-Reply-To: <20230615135315.3662428-5-kan.liang@linux.intel.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Carsten Haitzler <carsten.haitzler@arm.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 15 Jun 2023 15:05:00 -0700
+Message-ID: <CAP-5=fU9qZ8jb=etO0U3tpG3XuvZ_fX5CExVL_gQag55Q8bPfA@mail.gmail.com>
+Subject: Re: [PATCH V3 4/8] perf metrics: Sort the Default metricgroup
+To:     kan.liang@linux.intel.com
+Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Most perf commands want to sort symbols by name and this is done via
-an invasive rbtree that on 64-bit systems costs 24 bytes. Sorting the
-symbols in a DSO by name is optional and not done by default, however,
-if sorting is requested the 24 bytes is allocated for every
-symbol.
+On Thu, Jun 15, 2023 at 6:54=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
+>
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> The new default mode will print the metrics as a metric group. The
+> metrics from the same metric group must be adjacent to each other in the
+> metric list. But the metric_list_cmp() sorts metrics by the number of
+> events.
+>
+> Add a new sort for the Default metricgroup, which sorts by
+> default_metricgroup_name and metric_name.
+>
+> Add is_default in the struct metric_event to indicate that it's from
+> the Default metricgroup.
+>
+> Store the displayed metricgroup name of the Default metricgroup into
+> the metric expr for output.
+>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  tools/perf/util/metricgroup.c | 37 +++++++++++++++++++++++++++++++++++
+>  tools/perf/util/metricgroup.h |  3 +++
+>  2 files changed, 40 insertions(+)
+>
+> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.=
+c
+> index 8b19644ade7d..e20adbdd5b56 100644
+> --- a/tools/perf/util/metricgroup.c
+> +++ b/tools/perf/util/metricgroup.c
+> @@ -79,6 +79,7 @@ static struct rb_node *metric_event_new(struct rblist *=
+rblist __maybe_unused,
+>                 return NULL;
+>         memcpy(me, entry, sizeof(struct metric_event));
+>         me->evsel =3D ((struct metric_event *)entry)->evsel;
+> +       me->is_default =3D false;
+>         INIT_LIST_HEAD(&me->head);
+>         return &me->nd;
+>  }
+> @@ -1160,6 +1161,25 @@ static int metric_list_cmp(void *priv __maybe_unus=
+ed, const struct list_head *l,
+>         return right_count - left_count;
+>  }
+>
+> +/**
+> + * default_metricgroup_cmp - Implements complex key for the Default metr=
+icgroup
+> + *                          that first sorts by default_metricgroup_name=
+, then
+> + *                          metric_name.
+> + */
+> +static int default_metricgroup_cmp(void *priv __maybe_unused,
+> +                                  const struct list_head *l,
+> +                                  const struct list_head *r)
+> +{
+> +       const struct metric *left =3D container_of(l, struct metric, nd);
+> +       const struct metric *right =3D container_of(r, struct metric, nd)=
+;
+> +       int diff =3D strcmp(right->default_metricgroup_name, left->defaul=
+t_metricgroup_name);
+> +
+> +       if (diff)
+> +               return diff;
+> +
+> +       return strcmp(right->metric_name, left->metric_name);
+> +}
+> +
+>  struct metricgroup__add_metric_data {
+>         struct list_head *list;
+>         const char *pmu;
+> @@ -1515,6 +1535,7 @@ static int parse_groups(struct evlist *perf_evlist,
+>         LIST_HEAD(metric_list);
+>         struct metric *m;
+>         bool tool_events[PERF_TOOL_MAX] =3D {false};
+> +       bool is_default =3D !strcmp(str, "Default");
+>         int ret;
+>
+>         if (metric_events_list->nr_entries =3D=3D 0)
+> @@ -1549,6 +1570,9 @@ static int parse_groups(struct evlist *perf_evlist,
+>                         goto out;
+>         }
+>
+> +       if (is_default)
+> +               list_sort(NULL, &metric_list, default_metricgroup_cmp);
+> +
+>         list_for_each_entry(m, &metric_list, nd) {
+>                 struct metric_event *me;
+>                 struct evsel **metric_events;
+> @@ -1637,6 +1661,19 @@ static int parse_groups(struct evlist *perf_evlist=
+,
+>                 expr->metric_unit =3D m->metric_unit;
+>                 expr->metric_events =3D metric_events;
+>                 expr->runtime =3D m->pctx->sctx.runtime;
+> +               if (m->pmu && strcmp(m->pmu, "cpu")) {
 
-This change removes the rbtree and uses a sorted array of symbol
-pointers instead (costing 8 bytes per symbol). As the array is created
-on demand then there are further memory savings. The complexity of
-sorting the array and using the rbtree are the same.
+This shouldn't compare with a PMU name like this. What happens for
+memory bandwidth which could be logically with a memory controller
+PMU?
 
-To support going to the next symbol, the index of the current symbol
-needs to be passed around as a pair with the current symbol. This
-requires some API changes.
+> +                       char *name;
+> +
+> +                       if (asprintf(&name, "%s (%s)", m->default_metricg=
+roup_name, m->pmu) < 0)
+> +                               expr->default_metricgroup_name =3D m->def=
+ault_metricgroup_name;
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/builtin-kallsyms.c    |   1 -
- tools/perf/builtin-lock.c        |   2 -
- tools/perf/builtin-report.c      |   1 -
- tools/perf/tests/builtin-test.c  |   1 -
- tools/perf/tests/dlfilter-test.c |   4 +-
- tools/perf/ui/browsers/map.c     |   2 +-
- tools/perf/util/dso.c            |   7 +-
- tools/perf/util/dso.h            |   3 +-
- tools/perf/util/map.c            |   7 +-
- tools/perf/util/map.h            |  13 +--
- tools/perf/util/maps.c           |   2 +-
- tools/perf/util/probe-event.c    |  16 ++--
- tools/perf/util/symbol.c         | 131 ++++++++++++++++---------------
- tools/perf/util/symbol.h         |  12 +--
- tools/perf/util/symbol_conf.h    |   1 -
- tools/perf/util/symbol_fprintf.c |  10 +--
- 16 files changed, 103 insertions(+), 110 deletions(-)
+Who owns the string in this case? Can't you end up with
+default_metricgroup_name pointing to a freed string? I think this
+feels a lot more like output code, so I'm unclear why we're setting it
+up in the metric.
 
-diff --git a/tools/perf/builtin-kallsyms.c b/tools/perf/builtin-kallsyms.c
-index 3751df744577..7f75c5b73f26 100644
---- a/tools/perf/builtin-kallsyms.c
-+++ b/tools/perf/builtin-kallsyms.c
-@@ -62,7 +62,6 @@ int cmd_kallsyms(int argc, const char **argv)
- 	if (argc < 1)
- 		usage_with_options(kallsyms_usage, options);
- 
--	symbol_conf.sort_by_name = true;
- 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
- 	if (symbol__init(NULL) < 0)
- 		return -1;
-diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-index 8b505e1e5002..da36ace66d68 100644
---- a/tools/perf/builtin-lock.c
-+++ b/tools/perf/builtin-lock.c
-@@ -1774,7 +1774,6 @@ static int __cmd_report(bool display_info)
- 	}
- 
- 	/* for lock function check */
--	symbol_conf.sort_by_name = true;
- 	symbol_conf.allow_aliases = true;
- 	symbol__init(&session->header.env);
- 
-@@ -1904,7 +1903,6 @@ static int __cmd_contention(int argc, const char **argv)
- 		con.save_callstack = true;
- 
- 	/* for lock function check */
--	symbol_conf.sort_by_name = true;
- 	symbol_conf.allow_aliases = true;
- 	symbol__init(&session->header.env);
- 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index a31a23af5547..dcedfe00f04d 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1676,7 +1676,6 @@ int cmd_report(int argc, const char **argv)
- 			 * See symbol__browser_index.
- 			 */
- 			symbol_conf.priv_size += sizeof(u32);
--			symbol_conf.sort_by_name = true;
- 		}
- 		annotation_config__init(&report.annotation_opts);
- 	}
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index aa44fdc84763..1f6557ce3b0a 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -542,7 +542,6 @@ int cmd_test(int argc, const char **argv)
- 		return run_workload(workload, argc, argv);
- 
- 	symbol_conf.priv_size = sizeof(int);
--	symbol_conf.sort_by_name = true;
- 	symbol_conf.try_vmlinux_path = true;
- 
- 	if (symbol__init(NULL) < 0)
-diff --git a/tools/perf/tests/dlfilter-test.c b/tools/perf/tests/dlfilter-test.c
-index 086fd2179e41..5265b5185217 100644
---- a/tools/perf/tests/dlfilter-test.c
-+++ b/tools/perf/tests/dlfilter-test.c
-@@ -265,11 +265,11 @@ static int get_ip_addr(struct test_data *td)
- 	if (!map)
- 		return -1;
- 
--	sym = map__find_symbol_by_name(map, "foo");
-+	sym = map__find_symbol_by_name(map, "foo", /*idx=*/NULL);
- 	if (sym)
- 		td->foo = sym->start;
- 
--	sym = map__find_symbol_by_name(map, "bar");
-+	sym = map__find_symbol_by_name(map, "bar", /*idx=*/NULL);
- 	if (sym)
- 		td->bar = sym->start;
- 
-diff --git a/tools/perf/ui/browsers/map.c b/tools/perf/ui/browsers/map.c
-index 3d1b958d8832..2211e0638e89 100644
---- a/tools/perf/ui/browsers/map.c
-+++ b/tools/perf/ui/browsers/map.c
-@@ -59,7 +59,7 @@ static int map_browser__search(struct map_browser *browser)
- 		u64 addr = strtoull(target, NULL, 16);
- 		sym = map__find_symbol(browser->map, addr);
- 	} else
--		sym = map__find_symbol_by_name(browser->map, target);
-+		sym = map__find_symbol_by_name(browser->map, target, NULL);
- 
- 	if (sym != NULL) {
- 		u32 *idx = symbol__browser_index(sym);
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 046fbfcfdaab..bdfead36b83a 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -1320,7 +1320,9 @@ struct dso *dso__new_id(const char *name, struct dso_id *id)
- 			dso->id = *id;
- 		dso__set_long_name_id(dso, dso->name, id, false);
- 		dso__set_short_name(dso, dso->name, false);
--		dso->symbols = dso->symbol_names = RB_ROOT_CACHED;
-+		dso->symbols = RB_ROOT_CACHED;
-+		dso->symbol_names = NULL;
-+		dso->symbol_names_len = 0;
- 		dso->data.cache = RB_ROOT;
- 		dso->inlined_nodes = RB_ROOT_CACHED;
- 		dso->srclines = RB_ROOT_CACHED;
-@@ -1364,7 +1366,8 @@ void dso__delete(struct dso *dso)
- 	inlines__tree_delete(&dso->inlined_nodes);
- 	srcline__tree_delete(&dso->srclines);
- 	symbols__delete(&dso->symbols);
--
-+	dso->symbol_names_len = 0;
-+	zfree(&dso->symbol_names);
- 	if (dso->short_name_allocated) {
- 		zfree((char **)&dso->short_name);
- 		dso->short_name_allocated = false;
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index b23a157c914d..b41c9782c754 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -150,7 +150,8 @@ struct dso {
- 	struct rb_node	 rb_node;	/* rbtree node sorted by long name */
- 	struct rb_root	 *root;		/* root of rbtree that rb_node is in */
- 	struct rb_root_cached symbols;
--	struct rb_root_cached symbol_names;
-+	struct symbol	 **symbol_names;
-+	size_t		 symbol_names_len;
- 	struct rb_root_cached inlined_nodes;
- 	struct rb_root_cached srclines;
- 	struct {
-diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index f30d34903aa4..2db4fa186e3b 100644
---- a/tools/perf/util/map.c
-+++ b/tools/perf/util/map.c
-@@ -390,7 +390,7 @@ struct symbol *map__find_symbol(struct map *map, u64 addr)
- 	return dso__find_symbol(map__dso(map), addr);
- }
- 
--struct symbol *map__find_symbol_by_name(struct map *map, const char *name)
-+struct symbol *map__find_symbol_by_name(struct map *map, const char *name, size_t *idx)
- {
- 	struct dso *dso;
- 
-@@ -398,10 +398,9 @@ struct symbol *map__find_symbol_by_name(struct map *map, const char *name)
- 		return NULL;
- 
- 	dso = map__dso(map);
--	if (!dso__sorted_by_name(dso))
--		dso__sort_by_name(dso);
-+	dso__sort_by_name(dso);
- 
--	return dso__find_symbol_by_name(dso, name);
-+	return dso__find_symbol_by_name(dso, name, idx);
- }
- 
- struct map *map__clone(struct map *from)
-diff --git a/tools/perf/util/map.h b/tools/perf/util/map.h
-index 66a87b3d9965..70ab3297bebf 100644
---- a/tools/perf/util/map.h
-+++ b/tools/perf/util/map.h
-@@ -148,16 +148,17 @@ struct thread;
-  * @map: the 'struct map *' in which symbols are iterated
-  * @sym_name: the symbol name
-  * @pos: the 'struct symbol *' to use as a loop cursor
-+ * @idx: the cursor index in the symbol names array
-  */
--#define __map__for_each_symbol_by_name(map, sym_name, pos)	\
--	for (pos = map__find_symbol_by_name(map, sym_name);	\
-+#define __map__for_each_symbol_by_name(map, sym_name, pos, idx)		\
-+	for (pos = map__find_symbol_by_name(map, sym_name, &idx);	\
- 	     pos &&						\
- 	     !symbol__match_symbol_name(pos->name, sym_name,	\
- 					SYMBOL_TAG_INCLUDE__DEFAULT_ONLY); \
--	     pos = symbol__next_by_name(pos))
-+	     pos = dso__next_symbol_by_name(map__dso(map), &idx))
- 
--#define map__for_each_symbol_by_name(map, sym_name, pos)		\
--	__map__for_each_symbol_by_name(map, sym_name, (pos))
-+#define map__for_each_symbol_by_name(map, sym_name, pos, idx)	\
-+	__map__for_each_symbol_by_name(map, sym_name, (pos), idx)
- 
- void map__init(struct map *map,
- 	       u64 start, u64 end, u64 pgoff, struct dso *dso);
-@@ -201,7 +202,7 @@ int map__fprintf_srcline(struct map *map, u64 addr, const char *prefix,
- 
- int map__load(struct map *map);
- struct symbol *map__find_symbol(struct map *map, u64 addr);
--struct symbol *map__find_symbol_by_name(struct map *map, const char *name);
-+struct symbol *map__find_symbol_by_name(struct map *map, const char *name, size_t *idx);
- void map__fixup_start(struct map *map);
- void map__fixup_end(struct map *map);
- 
-diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
-index 233438c95b53..4ba474b3b94c 100644
---- a/tools/perf/util/maps.c
-+++ b/tools/perf/util/maps.c
-@@ -218,7 +218,7 @@ struct symbol *maps__find_symbol_by_name(struct maps *maps, const char *name, st
- 	down_read(maps__lock(maps));
- 
- 	maps__for_each_entry(maps, pos) {
--		sym = map__find_symbol_by_name(pos->map, name);
-+		sym = map__find_symbol_by_name(pos->map, name, NULL);
- 
- 		if (sym == NULL)
- 			continue;
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 6e2110d605fb..16822a8a540f 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -74,7 +74,6 @@ int init_probe_symbol_maps(bool user_only)
- {
- 	int ret;
- 
--	symbol_conf.sort_by_name = true;
- 	symbol_conf.allow_aliases = true;
- 	ret = symbol__init(NULL);
- 	if (ret < 0) {
-@@ -382,6 +381,7 @@ static int find_alternative_probe_point(struct debuginfo *dinfo,
- 	struct symbol *sym;
- 	u64 address = 0;
- 	int ret = -ENOENT;
-+	size_t idx;
- 
- 	/* This can work only for function-name based one */
- 	if (!pp->function || pp->file)
-@@ -392,7 +392,7 @@ static int find_alternative_probe_point(struct debuginfo *dinfo,
- 		return -EINVAL;
- 
- 	/* Find the address of given function */
--	map__for_each_symbol_by_name(map, pp->function, sym) {
-+	map__for_each_symbol_by_name(map, pp->function, sym, idx) {
- 		if (uprobes) {
- 			address = sym->start;
- 			if (sym->type == STT_GNU_IFUNC)
-@@ -3738,7 +3738,6 @@ int del_perf_probe_events(struct strfilter *filter)
- int show_available_funcs(const char *target, struct nsinfo *nsi,
- 			 struct strfilter *_filter, bool user)
- {
--        struct rb_node *nd;
- 	struct map *map;
- 	struct dso *dso;
- 	int ret;
-@@ -3767,17 +3766,16 @@ int show_available_funcs(const char *target, struct nsinfo *nsi,
- 		goto end;
- 	}
- 	dso = map__dso(map);
--	if (!dso__sorted_by_name(dso))
--		dso__sort_by_name(dso);
-+	dso__sort_by_name(dso);
- 
- 	/* Show all (filtered) symbols */
- 	setup_pager();
- 
--	for (nd = rb_first_cached(&dso->symbol_names); nd; nd = rb_next(nd)) {
--		struct symbol_name_rb_node *pos = rb_entry(nd, struct symbol_name_rb_node, rb_node);
-+	for (size_t i = 0; i < dso->symbol_names_len; i++) {
-+		struct symbol *pos = dso->symbol_names[i];
- 
--		if (strfilter__compare(_filter, pos->sym.name))
--			printf("%s\n", pos->sym.name);
-+		if (strfilter__compare(_filter, pos->name))
-+			printf("%s\n", pos->name);
- 	}
- end:
- 	map__put(map);
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index d275d3bef7d5..04bf77519179 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -440,38 +440,34 @@ static struct symbol *symbols__next(struct symbol *sym)
- 	return NULL;
- }
- 
--static void symbols__insert_by_name(struct rb_root_cached *symbols, struct symbol *sym)
-+static int symbols__sort_name_cmp(const void *vlhs, const void *vrhs)
- {
--	struct rb_node **p = &symbols->rb_root.rb_node;
--	struct rb_node *parent = NULL;
--	struct symbol_name_rb_node *symn, *s;
--	bool leftmost = true;
-+	const struct symbol *lhs = *((const struct symbol **)vlhs);
-+	const struct symbol *rhs = *((const struct symbol **)vrhs);
- 
--	symn = container_of(sym, struct symbol_name_rb_node, sym);
--
--	while (*p != NULL) {
--		parent = *p;
--		s = rb_entry(parent, struct symbol_name_rb_node, rb_node);
--		if (strcmp(sym->name, s->sym.name) < 0)
--			p = &(*p)->rb_left;
--		else {
--			p = &(*p)->rb_right;
--			leftmost = false;
--		}
--	}
--	rb_link_node(&symn->rb_node, parent, p);
--	rb_insert_color_cached(&symn->rb_node, symbols, leftmost);
-+	return strcmp(lhs->name, rhs->name);
- }
- 
--static void symbols__sort_by_name(struct rb_root_cached *symbols,
--				  struct rb_root_cached *source)
-+static struct symbol **symbols__sort_by_name(struct rb_root_cached *source, size_t *len)
- {
--	struct rb_node *nd;
-+	struct symbol **result;
-+	size_t i = 0, size = 0;
-+
-+	for (struct rb_node *nd = rb_first_cached(source); nd; nd = rb_next(nd))
-+		size++;
-+
-+	result = malloc(sizeof(*result) * size);
-+	if (!result)
-+		return NULL;
- 
--	for (nd = rb_first_cached(source); nd; nd = rb_next(nd)) {
-+	for (struct rb_node *nd = rb_first_cached(source); nd; nd = rb_next(nd)) {
- 		struct symbol *pos = rb_entry(nd, struct symbol, rb_node);
--		symbols__insert_by_name(symbols, pos);
-+
-+		result[i++] = pos;
- 	}
-+	qsort(result, size, sizeof(*result), symbols__sort_name_cmp);
-+	*len = size;
-+	return result;
- }
- 
- int symbol__match_symbol_name(const char *name, const char *str,
-@@ -491,48 +487,51 @@ int symbol__match_symbol_name(const char *name, const char *str,
- 		return arch__compare_symbol_names(name, str);
- }
- 
--static struct symbol *symbols__find_by_name(struct rb_root_cached *symbols,
-+static struct symbol *symbols__find_by_name(struct symbol *symbols[],
-+					    size_t symbols_len,
- 					    const char *name,
--					    enum symbol_tag_include includes)
-+					    enum symbol_tag_include includes,
-+					    size_t *found_idx)
- {
--	struct rb_node *n;
--	struct symbol_name_rb_node *s = NULL;
-+	size_t i, lower = 0, upper = symbols_len;
-+	struct symbol *s;
- 
--	if (symbols == NULL)
-+	if (!symbols_len)
- 		return NULL;
- 
--	n = symbols->rb_root.rb_node;
--
--	while (n) {
-+	while (lower < upper) {
- 		int cmp;
- 
--		s = rb_entry(n, struct symbol_name_rb_node, rb_node);
--		cmp = symbol__match_symbol_name(s->sym.name, name, includes);
-+		i = (lower + upper) / 2;
-+		s = symbols[i];
-+		cmp = symbol__match_symbol_name(s->name, name, includes);
- 
- 		if (cmp > 0)
--			n = n->rb_left;
-+			upper = i;
- 		else if (cmp < 0)
--			n = n->rb_right;
--		else
-+			lower = i + 1;
-+		else {
-+			if (found_idx)
-+				*found_idx = i;
- 			break;
-+		}
- 	}
--
--	if (n == NULL)
--		return NULL;
--
--	if (includes != SYMBOL_TAG_INCLUDE__DEFAULT_ONLY)
-+	if (includes != SYMBOL_TAG_INCLUDE__DEFAULT_ONLY) {
- 		/* return first symbol that has same name (if any) */
--		for (n = rb_prev(n); n; n = rb_prev(n)) {
--			struct symbol_name_rb_node *tmp;
-+		for (; i > 0; i--) {
-+			struct symbol *tmp = symbols[i - 1];
- 
--			tmp = rb_entry(n, struct symbol_name_rb_node, rb_node);
--			if (arch__compare_symbol_names(tmp->sym.name, s->sym.name))
-+			if (!arch__compare_symbol_names(tmp->name, s->name)) {
-+				if (found_idx)
-+					*found_idx = i - 1;
-+			} else
- 				break;
- 
- 			s = tmp;
- 		}
--
--	return &s->sym;
-+	}
-+	assert(!found_idx || s == symbols[*found_idx]);
-+	return s;
- }
- 
- void dso__reset_find_symbol_cache(struct dso *dso)
-@@ -590,31 +589,41 @@ struct symbol *dso__next_symbol(struct symbol *sym)
- 	return symbols__next(sym);
- }
- 
--struct symbol *symbol__next_by_name(struct symbol *sym)
-+struct symbol *dso__next_symbol_by_name(struct dso *dso, size_t *idx)
- {
--	struct symbol_name_rb_node *s = container_of(sym, struct symbol_name_rb_node, sym);
--	struct rb_node *n = rb_next(&s->rb_node);
-+	if (*idx + 1 >= dso->symbol_names_len)
-+		return NULL;
- 
--	return n ? &rb_entry(n, struct symbol_name_rb_node, rb_node)->sym : NULL;
-+	++*idx;
-+	return dso->symbol_names[*idx];
- }
- 
-  /*
-   * Returns first symbol that matched with @name.
-   */
--struct symbol *dso__find_symbol_by_name(struct dso *dso, const char *name)
-+struct symbol *dso__find_symbol_by_name(struct dso *dso, const char *name, size_t *idx)
- {
--	struct symbol *s = symbols__find_by_name(&dso->symbol_names, name,
--						 SYMBOL_TAG_INCLUDE__NONE);
-+	struct symbol *s = symbols__find_by_name(dso->symbol_names, dso->symbol_names_len,
-+						name, SYMBOL_TAG_INCLUDE__NONE, idx);
- 	if (!s)
--		s = symbols__find_by_name(&dso->symbol_names, name,
--					  SYMBOL_TAG_INCLUDE__DEFAULT_ONLY);
-+		s = symbols__find_by_name(dso->symbol_names, dso->symbol_names_len,
-+					name, SYMBOL_TAG_INCLUDE__DEFAULT_ONLY, idx);
- 	return s;
- }
- 
- void dso__sort_by_name(struct dso *dso)
- {
--	dso__set_sorted_by_name(dso);
--	return symbols__sort_by_name(&dso->symbol_names, &dso->symbols);
-+	mutex_lock(&dso->lock);
-+	if (!dso__sorted_by_name(dso)) {
-+		size_t len;
-+
-+		dso->symbol_names = symbols__sort_by_name(&dso->symbols, &len);
-+		if (dso->symbol_names) {
-+			dso->symbol_names_len = len;
-+			dso__set_sorted_by_name(dso);
-+		}
-+	}
-+	mutex_unlock(&dso->lock);
- }
- 
- /*
-@@ -2656,10 +2665,6 @@ int symbol__init(struct perf_env *env)
- 
- 	symbol__elf_init();
- 
--	if (symbol_conf.sort_by_name)
--		symbol_conf.priv_size += (sizeof(struct symbol_name_rb_node) -
--					  sizeof(struct symbol));
--
- 	if (symbol_conf.try_vmlinux_path && vmlinux_path__init(env) < 0)
- 		return -1;
- 
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 5ca8665dd2c1..af87c46b3f89 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -43,8 +43,7 @@ Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
- 
- /**
-  * A symtab entry. When allocated this may be preceded by an annotation (see
-- * symbol__annotation), a browser_index (see symbol__browser_index) and rb_node
-- * to sort by name (see struct symbol_name_rb_node).
-+ * symbol__annotation) and/or a browser_index (see symbol__browser_index).
-  */
- struct symbol {
- 	struct rb_node	rb_node;
-@@ -95,11 +94,6 @@ static inline size_t symbol__size(const struct symbol *sym)
- struct strlist;
- struct intlist;
- 
--struct symbol_name_rb_node {
--	struct rb_node	rb_node;
--	struct symbol	sym;
--};
--
- static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
- {
- 	return path__join(bf, size, symbol_conf.symfs, path);
-@@ -136,9 +130,9 @@ void dso__delete_symbol(struct dso *dso,
- 
- struct symbol *dso__find_symbol(struct dso *dso, u64 addr);
- struct symbol *dso__find_symbol_nocache(struct dso *dso, u64 addr);
--struct symbol *dso__find_symbol_by_name(struct dso *dso, const char *name);
- 
--struct symbol *symbol__next_by_name(struct symbol *sym);
-+struct symbol *dso__next_symbol_by_name(struct dso *dso, size_t *idx);
-+struct symbol *dso__find_symbol_by_name(struct dso *dso, const char *name, size_t *idx);
- 
- struct symbol *dso__first_symbol(struct dso *dso);
- struct symbol *dso__last_symbol(struct dso *dso);
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index f26f81eb8252..0b589570d1d0 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -18,7 +18,6 @@ struct symbol_conf {
- 			show_kernel_path,
- 			use_modules,
- 			allow_aliases,
--			sort_by_name,
- 			show_nr_samples,
- 			show_total_period,
- 			use_callchain,
-diff --git a/tools/perf/util/symbol_fprintf.c b/tools/perf/util/symbol_fprintf.c
-index d9e5ad040b6a..088f4abf230f 100644
---- a/tools/perf/util/symbol_fprintf.c
-+++ b/tools/perf/util/symbol_fprintf.c
-@@ -63,13 +63,11 @@ size_t dso__fprintf_symbols_by_name(struct dso *dso,
- 				    FILE *fp)
- {
- 	size_t ret = 0;
--	struct rb_node *nd;
--	struct symbol_name_rb_node *pos;
- 
--	for (nd = rb_first_cached(&dso->symbol_names); nd; nd = rb_next(nd)) {
--		pos = rb_entry(nd, struct symbol_name_rb_node, rb_node);
--		ret += fprintf(fp, "%s\n", pos->sym.name);
--	}
-+	for (size_t i = 0; i < dso->symbol_names_len; i++) {
-+		struct symbol *pos = dso->symbol_names[i];
- 
-+		ret += fprintf(fp, "%s\n", pos->name);
-+	}
- 	return ret;
- }
--- 
-2.41.0.162.gfafddb0af9-goog
+> +                       else {
+> +                               expr->default_metricgroup_name =3D strdup=
+(name);
 
+But name was just allocated, why strdup?
+
+This is still leaking it is just the strdup now leaks and not the asprintf:
+```
+=3D=3D2495793=3D=3DERROR: LeakSanitizer: detected memory leaks
+
+Direct leak of 6199 byte(s) in 340 object(s) allocated from:
+   #0 0x7f175c27077b in __interceptor_strdup
+../../../../src/libsanitizer/asan/asan_interceptors.cp
+p:439
+   #1 0x5596323b2a28 in parse_groups util/metricgroup.c:1670
+   #2 0x5596323b2f08 in metricgroup__parse_groups_test util/metricgroup.c:1=
+721
+   #3 0x5596322992bf in test__parsing_callback tests/pmu-events.c:837
+   #4 0x559632658ac6 in pmu_metrics_table_for_each_metric
+/tmp/perf/pmu-events/pmu-events.c:61641
+   #5 0x5596326590fc in pmu_for_each_core_metric
+/tmp/perf/pmu-events/pmu-events.c:61742
+   #6 0x559632299b7c in test__parsing tests/pmu-events.c:898
+   #7 0x5596322663b0 in run_test tests/builtin-test.c:236
+   #8 0x559632266655 in test_and_print tests/builtin-test.c:265
+   #9 0x55963226766f in __cmd_test tests/builtin-test.c:436
+   #10 0x559632268953 in cmd_test tests/builtin-test.c:559
+   #11 0x5596322f5916 in run_builtin
+/home/irogers/kernel.org/tools/perf/perf.c:323
+   #12 0x5596322f5e87 in handle_internal_command
+/home/irogers/kernel.org/tools/perf/perf.c:377
+   #13 0x5596322f624f in run_argv /home/irogers/kernel.org/tools/perf/perf.=
+c:421
+   #14 0x5596322f67b7 in main /home/irogers/kernel.org/tools/perf/perf.c:53=
+7
+   #15 0x7f175bebf189 in __libc_start_call_main
+../sysdeps/nptl/libc_start_call_main.h:58
+
+SUMMARY: AddressSanitizer: 6199 byte(s) leaked in 340 allocation(s).
+```
+
+> +                               free(name);
+> +                       }
+> +               } else
+> +                       expr->default_metricgroup_name =3D m->default_met=
+ricgroup_name;
+
+Who owns the string in this case? Can't you end up with
+default_metricgroup_name pointing to a freed string?
+
+I spent some time trying to rationalize this to add as a patch, but
+then the more I look at things like the strcmp with "cpu" my changes
+were going to modify behavior in a way that would need you to test and
+sign-off, so I'll hold back.
+
+To test with leak/address sanitizer use the tmp.perf-tools-next
+branch, I build with:
+$ make -C tools/perf O=3D/tmp/perf DEBUG=3D1 EXTRA_CFLAGS=3D"-O0 -g
+-fno-omit-frame-pointer -DREFCNT_CHECKING=3D1 -fsanitize=3Daddress"
+NO_LIBTRACEEVENT=3D1
+but the only bit you really need is "-fsanitize=3Daddress" which both
+clang and gcc support.
+
+Address sanitizer from apt-cache is:
+libasan6 - AddressSanitizer -- a fast memory error detector
+
+Fedora and other distro.s have it too.
+
+Thanks,
+Ian
+
+> +               if (is_default)
+> +                       me->is_default =3D true;
+>                 list_add(&expr->nd, &me->head);
+>         }
+>
+> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.=
+h
+> index bf18274c15df..d5325c6ec8e1 100644
+> --- a/tools/perf/util/metricgroup.h
+> +++ b/tools/perf/util/metricgroup.h
+> @@ -22,6 +22,7 @@ struct cgroup;
+>  struct metric_event {
+>         struct rb_node nd;
+>         struct evsel *evsel;
+> +       bool is_default; /* the metric evsel from the Default metricgroup=
+ */
+>         struct list_head head; /* list of metric_expr */
+>  };
+>
+> @@ -55,6 +56,8 @@ struct metric_expr {
+>          * more human intelligible) and then add "MiB" afterward when dis=
+played.
+>          */
+>         const char *metric_unit;
+> +       /** Displayed metricgroup name of the Default metricgroup */
+> +       const char *default_metricgroup_name;
+>         /** Null terminated array of events used by the metric. */
+>         struct evsel **metric_events;
+>         /** Null terminated array of referenced metrics. */
+> --
+> 2.35.1
+>
