@@ -2,168 +2,175 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4873BEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 00:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5AEEB64D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 01:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230214AbjFOAen convert rfc822-to-8bit (ORCPT
+        id S230108AbjFOB05 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 14 Jun 2023 20:34:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55450 "EHLO
+        Wed, 14 Jun 2023 21:26:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjFOAem (ORCPT
+        with ESMTP id S232281AbjFOB0x (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 14 Jun 2023 20:34:42 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 352BC2690;
-        Wed, 14 Jun 2023 17:34:41 -0700 (PDT)
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-3f9e5c011cfso24223881cf.1;
-        Wed, 14 Jun 2023 17:34:41 -0700 (PDT)
+        Wed, 14 Jun 2023 21:26:53 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3609026A4
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 18:26:52 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-666729f9093so962573b3a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 14 Jun 2023 18:26:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1686792411; x=1689384411;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=1wdQ4hMB3hMS0E+Dw9a/ZO6zl9PRKqCaZb3GUi1TdKI=;
+        b=PrHKGOCHbRXNdSaYeoH7o9qGme3TbtaEHWITt0X7F8NfAApQQkmc1dIPrkq6NfG0Do
+         YUKBoHm8rn0MpLQjL/QyQpzHhpthqRr50d0N7JBFTRL1jYIOrFckNy7CokvsdHdTyBSk
+         Jtud8z1dw9FV4rCJCF5fb0jaH4B7io+0Idw+MJ4wcsxxiLgtl7ewcUxpwUx1tAPccDci
+         Tk0dYm7I/Eg/SGeqjX7iKBx77LhcaFMkACA8MmEX+bLg+en2mZJiRuCHRF+5bU1o+TId
+         CanL0F+nDfR4nWlv8VhQAjSNm1PHtWJodEaLUyJ8lfxHubWQM1U8waxhjQn+YRahWKj1
+         GIqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686789280; x=1689381280;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mIPgl4LDsOUaAZ1cp5WBGvNgF28pOvHufeowonwOr60=;
-        b=lVZRNVavlDQMqsKuNlXtHUNeEWqNTHlG7xGzfuaid4MxwlE/HKE6ZtDb9y4gmX6uok
-         OQm7rN28BRGT7JxL5wl8f4GJ3HWwOD4nQUPw9XYpOnWcrcROA6S9KZCgwVlkggYx5XnH
-         M3J+9avV284YIH5h/86mvbhWFWvsO1zrbUBfHW700uEUbFkFzd85Dak65tvyXmfOpkem
-         WeKJk7OSo2qT0v2ixYrlDlmIX/q0FPvRFosqsoXElS+byl37lGQF5niKESbuJLetPQxY
-         ZORpxl6LAcr79eZBxjDVSzAseLs4EyRaFuz6Cj/odg5UREjS08SCZfMzlen0AyBq0rs/
-         wubQ==
-X-Gm-Message-State: AC+VfDyuA/g6OjG/QeYpzgyD9pVcsmdSBvBjjcmFwiUVSXGpihdKg0PA
-        veSacXBubWFI2oDDPjQLuBcHx0yTq11QAxKqRh8=
-X-Google-Smtp-Source: ACHHUZ7KB8Z9OUvf2UC6Hlca5S8aErvyd5gScVqNArSZPnbf00sX3OsGTavLXjoj0qQ3QX0crlKYh+0ZwdmveVwBWsM=
-X-Received: by 2002:a05:622a:4d:b0:3f6:af5f:29a6 with SMTP id
- y13-20020a05622a004d00b003f6af5f29a6mr4447482qtw.33.1686789280168; Wed, 14
- Jun 2023 17:34:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230611072751.637227-1-irogers@google.com> <20230611072751.637227-2-irogers@google.com>
-In-Reply-To: <20230611072751.637227-2-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 14 Jun 2023 17:34:29 -0700
-Message-ID: <CAM9d7ci5zL8NWMrJVq4FQ242LNx0cQoY3Z32B+yuO2HFu6R1gA@mail.gmail.com>
-Subject: Re: [PATCH v1 2/2] perf annotation: Switch lock from a mutex to a sharded_mutex
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
+        d=1e100.net; s=20221208; t=1686792411; x=1689384411;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1wdQ4hMB3hMS0E+Dw9a/ZO6zl9PRKqCaZb3GUi1TdKI=;
+        b=ipyee3lRsMAX2x+zAXIpxR7bkSB7i0Cbf4YVQYdjzyevGAIVX9uXXYBkmBmYEi6i0M
+         M/miXisG3rHo389at/2GI8hM6CUgcQgoSAdw2PcU8T7ZrNBOOvh8MaDVoKy48Q1bCA15
+         OnGTXbzYTScQB4oxehEMJfbcZZkaFNTRlfgelZ+al+LqDJAhWNVuz/2QX1XGnbQ0WBrn
+         preCA+qebbJnuJDkG5U/1rBOQIr4LnIEU8MSa5KlEPdTqonpai2Nd6GIKKyDy/6PNvlZ
+         My4Kj7VkH889pAddFVYSopi/7El5fVcbBAC7mlzBLeAVxviJccYo63YwjdOkeEyihs7h
+         YZkA==
+X-Gm-Message-State: AC+VfDwuIlNZ395bEA4V1ADD01w2pNcfzAjyq/HANEJ9f+0x2w5zrJEO
+        WjPOIsUwt0M8piLgY4aOCbHH7w==
+X-Google-Smtp-Source: ACHHUZ6X2rgbf5Oc9PcPxODJMLRh5TJDx7TL5LoTuVoB7Bt9V0A+4kfk+/VHsYVQFMPVY+tASAE7XQ==
+X-Received: by 2002:a05:6a21:6811:b0:118:b2e1:9adb with SMTP id wr17-20020a056a21681100b00118b2e19adbmr3114281pzb.61.1686792411552;
+        Wed, 14 Jun 2023 18:26:51 -0700 (PDT)
+Received: from leoy-huanghe.lan ([39.144.43.103])
+        by smtp.gmail.com with ESMTPSA id h25-20020aa786d9000000b0065055ad5754sm415054pfo.64.2023.06.14.18.26.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jun 2023 18:26:51 -0700 (PDT)
+Date:   Thu, 15 Jun 2023 09:26:39 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     James Clark <james.clark@arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-perf-users@vger.kernel.org, broonie@kernel.org,
+        Aishwarya.TCV@arm.com, Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Yuan Can <yuancan@huawei.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Andres Freund <andres@anarazel.de>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] perf tools: Add a place to put kernel config
+ fragments for test runs
+Message-ID: <20230615012546.GN217089@leoy-huanghe.lan>
+References: <20230614140219.2335639-1-james.clark@arm.com>
+ <ZInLBt9q2F99gTg8@kernel.org>
+ <d02cce4a-47b1-a776-0d3a-a6a7c9a4d8fd@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d02cce4a-47b1-a776-0d3a-a6a7c9a4d8fd@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+On Wed, Jun 14, 2023 at 03:19:12PM +0100, James Clark wrote:
+> On 14/06/2023 15:13, Arnaldo Carvalho de Melo wrote:
+> > Em Wed, Jun 14, 2023 at 03:02:19PM +0100, James Clark escreveu:
+> >> We are currently keeping something like this in our CI because defconfig
+> >> doesn't give full coverage. It's not complete yet, but is a starting
+> >> point as a place to add to when a specific test needs something extra to
+> >> run.
+> >>
+> >> The RFC is for discussion on folder placement and file naming etc.
 
-On Sun, Jun 11, 2023 at 12:28 AM Ian Rogers <irogers@google.com> wrote:
->
-> Remove the "struct mutex lock" variable from annotation that is
-> allocated per symbol. This removes in the region of 40 bytes per
-> symbol allocation. Use a sharded mutex where the number of shards is
-> set to the number of CPUs. Assuming good hashing of the annotation
-> (done based on the pointer), this means in order to contend there
-> needs to be more threads than CPUs, which is not currently true in any
-> perf command. Were contention an issue it is straightforward to
-> increase the number of shards in the mutex.
->
-> On my Debian/glibc based machine, this reduces the size of struct
-> annotation from 136 bytes to 96 bytes, or nearly 30%.
+I am wandering if we can put these configurations into kselftest (the
+folder tools/testing/selftests/).  You could see now kernel build has
+already provided option to merge kernel configurations for kselftests.
 
-That's quite a good improvement given the number of symbols
-we can have in a report session!
+> > Would be interesting to add the Kconfig maintainer to see if they have
+> > an opinion, Masahiro?
 
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
+Yeah, looking forward suggestions from Masahiro.
 
-[SNIP]
-> @@ -1291,17 +1292,64 @@ int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool r
->         return ins__scnprintf(&dl->ins, bf, size, &dl->ops, max_ins_name);
->  }
->
-> -void annotation__init(struct annotation *notes)
-> +void annotation__exit(struct annotation *notes)
->  {
-> -       mutex_init(&notes->lock);
-> +       annotated_source__delete(notes->src);
->  }
->
-> -void annotation__exit(struct annotation *notes)
-> +static struct sharded_mutex *sharded_mutex;
-> +
-> +static void annotation__init_sharded_mutex(void)
->  {
-> -       annotated_source__delete(notes->src);
-> -       mutex_destroy(&notes->lock);
-> +       /* As many mutexes as there are CPUs. */
-> +       sharded_mutex = sharded_mutex__new(cpu__max_present_cpu().cpu);
-> +}
-> +
-> +static size_t annotation__hash(const struct annotation *notes)
-> +{
-> +       return ((size_t)notes) >> 4;
+> > - Arnaldo
+> >  
+> 
+> One concern I have is that uname -m gives a different result to the
+> ARCH= option for a kernel build (ARCH=arm64). Probably the build time
+> version is more useful to us so maybe that should be the file name.
 
-But I'm afraid it might create more contention depending on the
-malloc implementation.  If it always returns 128-byte (or 256)
-aligned memory for this struct then it could always collide in the
-slot 0 if the number of CPU is 8 or less, right?
+If we want to fit into kernel's build system, I'd like to use "arm64"
+rather than "aarch64" as the folder name.
+
+Seems to me, it is a legacy issue for using "arm64" as ARCH variable in
+Makefile, given we cannot change this, then the folder name 'arm64' would
+be easier for us to extend kernel's Makefile for building kernel of perf
+testing?
+
+> Not sure what the x86 version is or if anyone is actually doing cross x86
+> builds...
+
+I don't understand this question and not sure if you are asking cross
+builds for kernel or perf.  Maybe a good reference for arch naming is
+the file scripts/subarch.include.
 
 Thanks,
-Namhyung
+Leo
 
-
->  }
->
-> +static struct mutex *annotation__get_mutex(const struct annotation *notes)
-> +{
-> +       static pthread_once_t once = PTHREAD_ONCE_INIT;
-> +
-> +       pthread_once(&once, annotation__init_sharded_mutex);
-> +       if (!sharded_mutex)
-> +               return NULL;
-> +
-> +       return sharded_mutex__get_mutex(sharded_mutex, annotation__hash(notes));
-> +}
-> +
-> +void annotation__lock(struct annotation *notes)
-> +       NO_THREAD_SAFETY_ANALYSIS
-> +{
-> +       struct mutex *mutex = annotation__get_mutex(notes);
-> +
-> +       if (mutex)
-> +               mutex_lock(mutex);
-> +}
-> +
-> +void annotation__unlock(struct annotation *notes)
-> +       NO_THREAD_SAFETY_ANALYSIS
-> +{
-> +       struct mutex *mutex = annotation__get_mutex(notes);
-> +
-> +       if (mutex)
-> +               mutex_unlock(mutex);
-> +}
-> +
-> +bool annotation__trylock(struct annotation *notes)
-> +{
-> +       struct mutex *mutex = annotation__get_mutex(notes);
-> +
-> +       if (!mutex)
-> +               return false;
-> +
-> +       return mutex_trylock(mutex);
-> +}
-> +
-> +
->  static void annotation_line__add(struct annotation_line *al, struct list_head *head)
->  {
->         list_add_tail(&al->node, head);
+> >> Signed-off-by: James Clark <james.clark@arm.com>
+> >> ---
+> >>  tools/perf/tests/config-fragments/README  |  7 +++++++
+> >>  tools/perf/tests/config-fragments/aarch64 |  1 +
+> >>  tools/perf/tests/config-fragments/config  | 11 +++++++++++
+> >>  3 files changed, 19 insertions(+)
+> >>  create mode 100644 tools/perf/tests/config-fragments/README
+> >>  create mode 100644 tools/perf/tests/config-fragments/aarch64
+> >>  create mode 100644 tools/perf/tests/config-fragments/config
+> >>
+> >> diff --git a/tools/perf/tests/config-fragments/README b/tools/perf/tests/config-fragments/README
+> >> new file mode 100644
+> >> index 000000000000..e816cfb1b96d
+> >> --- /dev/null
+> >> +++ b/tools/perf/tests/config-fragments/README
+> >> @@ -0,0 +1,7 @@
+> >> +This folder is for kernel config fragments that can be merged with
+> >> +defconfig to give full test coverage of a perf test run. This is only
+> >> +an optimistic set as some features require hardware support in order to
+> >> +pass and not skip.
+> >> +
+> >> +'config' is shared across all platforms, and for arch specific files,
+> >> +the file name should match that returned by 'uname -m'.
+> >> diff --git a/tools/perf/tests/config-fragments/aarch64 b/tools/perf/tests/config-fragments/aarch64
+> >> new file mode 100644
+> >> index 000000000000..64c4ab17cd58
+> >> --- /dev/null
+> >> +++ b/tools/perf/tests/config-fragments/aarch64
+> >> @@ -0,0 +1 @@
+> >> +CONFIG_CORESIGHT_SOURCE_ETM4X=y
+> >> diff --git a/tools/perf/tests/config-fragments/config b/tools/perf/tests/config-fragments/config
+> >> new file mode 100644
+> >> index 000000000000..c340b3195fca
+> >> --- /dev/null
+> >> +++ b/tools/perf/tests/config-fragments/config
+> >> @@ -0,0 +1,11 @@
+> >> +CONFIG_TRACEPOINTS=y
+> >> +CONFIG_STACKTRACE=y
+> >> +CONFIG_NOP_TRACER=y
+> >> +CONFIG_RING_BUFFER=y
+> >> +CONFIG_EVENT_TRACING=y
+> >> +CONFIG_CONTEXT_SWITCH_TRACER=y
+> >> +CONFIG_TRACING=y
+> >> +CONFIG_GENERIC_TRACER=y
+> >> +CONFIG_FTRACE=y
+> >> +CONFIG_FTRACE_SYSCALLS=y
+> >> +CONFIG_BRANCH_PROFILE_NONE=y
+> >> -- 
+> >> 2.34.1
+> >>
+> > 
