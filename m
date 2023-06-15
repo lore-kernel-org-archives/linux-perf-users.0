@@ -2,153 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7966CEB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 06:13:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF663EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 06:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237247AbjFOGNE (ORCPT
+        id S243227AbjFOG6D (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 02:13:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40496 "EHLO
+        Thu, 15 Jun 2023 02:58:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230254AbjFOGND (ORCPT
+        with ESMTP id S238189AbjFOG6C (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 02:13:03 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2079.outbound.protection.outlook.com [40.107.220.79])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22E361FC2;
-        Wed, 14 Jun 2023 23:13:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TJ39HQHZ1d6As56Xzlf1GTvcdt7RGEVWDjB4JsWEWSkIIR4qyPGO3zmEBYRtESMnARd+jNgyguO+1by417SLExpW9XDm0y4zVlHqkizAx86b7D5eEBRlPU15k4hTK9U1jJ3tL4Sb9cattPGgqZa095Den8v+Lu4C6+CPwJsgk3Pb9xcCBBEWDjRIw2qlHiCEm8p9dyvuoB5a3cRfQQceD2WYiLcZVB3gdV6semvE4VsAhMGpzPfHvdYg3gqh7iJaXirZUAmudnZTyRGuEq61yQi6cpKEopiIGCi1CUhE6Ygdg5TUXXQjQzm1O/AXgxFJEadLGekabMbTYhvAbe/akw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pMgiCeOszjF5fZvJtp1rctyKtfv/NpiiL+BB2blyvrw=;
- b=mmYiU0oG4eQXq24CvusdWcJPA9dUQFrE7jS7o33qwA2hEOHOu81kd/5pwQuBKUsdzfLwRDFHCKPQXwtzwxvQtnyEIm/UgYM+BbaE+qP0dRiowAKA9vfOPOFzmt6D2rUl4makUaGXNbMTU9gAQ1OoYo9HjKQbH64uLbxmioS/287BvrDMGD3H6jYKomhIR3CstPobXEFgINoLd8eNt3GwehFhqwLW3oIBNuVpMQcr52de+qw1rIoSz4P08K6hpuxQD3BWnyI+3awi4QhEij6SQj4gHUai7AeXyB3oSOvR/GWVoRy1rOavmBfCCzjT7zVCsX/j57dmWPAC0ciQGcz/dA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pMgiCeOszjF5fZvJtp1rctyKtfv/NpiiL+BB2blyvrw=;
- b=jvAOJxmbMNDJVivXGXRjL9bkOZ3vVhiPmK3sZov0Xmj1uUNuPwcbgyipAOFqnupZZACo3+odu4Rz027g7KKlo8MwjNCMlUQG3T/Xa9wWSGUAnNLbSBlo2ncqXfO3glNnyGeB+BL9oXwG+/d0JJcb2iA8At80DuAl6RjsIgrfu3M=
-Received: from DM5PR08CA0041.namprd08.prod.outlook.com (2603:10b6:4:60::30) by
- SN7PR12MB8819.namprd12.prod.outlook.com (2603:10b6:806:32a::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.37; Thu, 15 Jun
- 2023 06:12:59 +0000
-Received: from DM6NAM11FT096.eop-nam11.prod.protection.outlook.com
- (2603:10b6:4:60:cafe::c2) by DM5PR08CA0041.outlook.office365.com
- (2603:10b6:4:60::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.37 via Frontend
- Transport; Thu, 15 Jun 2023 06:12:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT096.mail.protection.outlook.com (10.13.173.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6500.27 via Frontend Transport; Thu, 15 Jun 2023 06:12:58 +0000
-Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 15 Jun
- 2023 01:12:52 -0500
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-To:     <acme@kernel.org>
-CC:     <ravi.bangoria@amd.com>, <irogers@google.com>, <jolsa@kernel.org>,
-        <namhyung@kernel.org>, <peterz@infradead.org>,
-        <james.clark@arm.com>, <alisaidi@amazon.com>, <leo.yan@linaro.org>,
+        Thu, 15 Jun 2023 02:58:02 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C68DF;
+        Wed, 14 Jun 2023 23:58:00 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QhY2l2msNztQxw;
+        Thu, 15 Jun 2023 14:55:27 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Thu, 15 Jun 2023 14:57:57 +0800
+Subject: Re: [PATCH] perf top & record: Fix segfault when default cycles event
+ is not supported
+To:     Ian Rogers <irogers@google.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
         <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-        <mark.rutland@arm.com>, <maddy@linux.ibm.com>,
-        <tmricht@linux.ibm.com>, <linux-perf-users@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sandipan.das@amd.com>,
-        <ananth.narayan@amd.com>, <santosh.shukla@amd.com>
-Subject: [PATCH v2.1 2/3] perf mem amd: Fix perf_pmus__num_mem_pmus()
-Date:   Thu, 15 Jun 2023 11:42:38 +0530
-Message-ID: <20230615061238.2042-1-ravi.bangoria@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <e63e6d33-6659-b63f-2716-c347aba7f525@amd.com>
-References: <e63e6d33-6659-b63f-2716-c347aba7f525@amd.com>
+        <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20230614151625.2077-1-yangjihong1@huawei.com>
+ <CAP-5=fUf0+7HwZ+AHUR0nRD5QnfPn9_CPMEdJZP_5goPfrPB+Q@mail.gmail.com>
+ <CAP-5=fVOXjjcusjv858SOGrnNgE2w2sb7zS=0sZUpdFfR1T_GA@mail.gmail.com>
+ <668a6159-b7a8-ed25-d8fa-5584a4c04d37@huawei.com>
+ <CAP-5=fX6nWRboZ2dWc1h_y0pe5TAgs0QC0qwCeaLcALfJ+5YEA@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <325b3a4c-b17e-67a8-da31-d5033878a157@huawei.com>
+Date:   Thu, 15 Jun 2023 14:57:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
+In-Reply-To: <CAP-5=fX6nWRboZ2dWc1h_y0pe5TAgs0QC0qwCeaLcALfJ+5YEA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT096:EE_|SN7PR12MB8819:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0a36cb81-ca19-413d-a3c0-08db6d679128
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: rRJd7T7SWI12qkVPhPmn/HgpCE5XPgIdBSvCiCKvWeyJGDlbz+SQZmHfGKOlf80yUkAGFYdKKJf7gO9IiclXGuXr6txr/sjMNo2q6AyarzOWTjWAzJPjdDF9AcYcFFd0Ksl76BF4V007e4hHiNzEbbWqm9Btd7heWtXanTr1Y5zLRhnD8yR3ABOZT6F8/VVk7JzI3AWx5j1bLd65Mf0rwboVp/zI6eUbW0/AS8Qi3lGqKzHMhpQF0q/FQJImvzNuPH8FyoPhB2/HtLlYUE7OJusk/gk7G7SPXs580cRuR/i6N6up1Urnak5x7mM3ABIGKaZUXNt1/UmHRcXjrf5UINtnWVrg+uBtoR/7Idqj0bWcJv0mwiR4Bp3rN018dWB1UIsPlLAHh8Kf2cYW4BBI+xmBBRl1k4alxJ0Wf/3OibYRVGbMvtRgARxMJLqzmA2DpQG156PZh8bqG7Y+9jgigAjzh4/4N6LFg8z6/UZlwQZ+Yzo03yJj24ukMFcD8dCZHQt6RUus9LBq7LijM/mExP0vcRmN2pCVOEuOrpY4Iy5ChZLunrVekrWENWAki/QUqQ+KHQcY7BDJ2NWUQ8OHQL/kD/puXm6SsRvAG7pv63sHTiZwhBKV7rx3e8H0YW6vletM00KzwJMR/w/rpUUvV46XJdWGq+z5PHlVOK9QH8kGZ3JX+iHs2/uJRQTNueiDar4q/viLATo3qzTeHDF1Mlfm5zLAQJfL3gemykMBCf7roDkT4OU95jMSSMScEw9/enBMuEotoCCfhZ5zXivzo2AGxUDybaPt9+zWisSrdB1CTQJYqUlbCJmeWiUyFbYr
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(39860400002)(346002)(376002)(451199021)(46966006)(36840700001)(40470700004)(36756003)(44832011)(2906002)(86362001)(82310400005)(7416002)(40480700001)(336012)(7696005)(83380400001)(6666004)(16526019)(36860700001)(186003)(26005)(1076003)(426003)(82740400003)(81166007)(356005)(40460700003)(54906003)(6916009)(70586007)(70206006)(4326008)(316002)(2616005)(5660300002)(8676002)(47076005)(8936002)(478600001)(41300700001)(101420200003)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2023 06:12:58.6694
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0a36cb81-ca19-413d-a3c0-08db6d679128
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT096.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8819
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-perf mem/c2c on AMD internally uses IBS OP PMU, not the core PMU. Also,
-AMD platforms does not have heterogeneous PMUs.
+Hello,
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
----
- tools/perf/arch/x86/util/pmu.c | 12 ++++++++++++
- tools/perf/util/pmus.c         |  2 +-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+On 2023/6/15 10:04, Ian Rogers wrote:
+> On Wed, Jun 14, 2023 at 6:55 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>
+>> Hello,
+>>
+>> On 2023/6/15 6:03, Ian Rogers wrote:
+>>> On Wed, Jun 14, 2023 at 9:18 AM Ian Rogers <irogers@google.com> wrote:
+>>>>
+>>>> On Wed, Jun 14, 2023 at 8:18 AM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>>>>
+>>>>> The perf-record and perf-top call parse_event() to add a cycles event to
+>>>>> an empty evlist. For the system that does not support hardware cycles
+>>>>> event, such as QEMU, the evlist is empty due to the following code process:
+>>>>>
+>>>>>     parse_event(evlist, "cycles:P" or ""cycles:Pu")
+>>>>>       parse_events(evlist, "cycles:P")
+>>>>>         __parse_events
+>>>>>           ...
+>>>>>           ret = parse_events__scanner(str, &parse_state);
+>>>>>           // ret = 0
+>>>>>           ...
+>>>>>           ret2 = parse_events__sort_events_and_fix_groups()
+>>>>>           if (ret2 < 0)
+>>>>>             return ret;
+>>>>>           // The cycles event is not supported, here ret2 = -EINVAL,
+>>>>>           // Here return 0.
+>>>>>           ...
+>>>>>           evlist__splice_list_tail(evlist)
+>>>>>           // The code here does not execute to, so the evlist is still empty.
+>>>>>
+>>>>> A null pointer occurs when the content in the evlist is accessed later.
+>>>>>
+>>>>> Before:
+>>>>>
+>>>>>     # perf list hw
+>>>>>
+>>>>>     List of pre-defined events (to be used in -e or -M):
+>>>>>
+>>>>>     # perf record true
+>>>>>     libperf: Miscounted nr_mmaps 0 vs 1
+>>>>>     WARNING: No sample_id_all support, falling back to unordered processing
+>>>>>     perf: Segmentation fault
+>>>>>     Obtained 1 stack frames.
+>>>>>     [0xc5beff]
+>>>>>     Segmentation fault
+>>>>>
+>>>>> Solution:
+>>>>>     If cycles event is not supported, try to fall back to cpu-clock event.
+>>>>>
+>>>>> After:
+>>>>>     # perf record true
+>>>>>     [ perf record: Woken up 1 times to write data ]
+>>>>>     [ perf record: Captured and wrote 0.006 MB perf.data ]
+>>>>>     #
+>>>>>
+>>>>> Fixes: 7b100989b4f6 ("perf evlist: Remove __evlist__add_default")
+>>>>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>>>>
+>>>> Thanks, useful addition. The cpu-clock fall back wasn't present before
+>>>> 7b100989b4f6 so is the fixes tag correct?
+>>>
+>>> Hmm... it should be coming from evsel__fallback:
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/evsel.c?h=tmp.perf-tools-next#n2840
+>>> so we shouldn't duplicate that logic. The question is why we're not
+>>> doing the fallback.
+>>>
+>>
+>> Yes, it's a bit of the same logic as evsel__fallback, or we can call
+>> evlist__add_default() as before, simply create an evsel of hardware
+>> cycles and add it directly to evlist.
+>>
+>> Please confirm whether this solution is feasible. If it is feasible, I
+>> will send a v2 version.
+> 
+> The previous evlist__add_default logic didn't handle wildcard PMUs for
+> cycles, hence wanting to reuse the parse events logic. The error is
+> that the logic now isn't doing the fallback properly. I think an
+> evlist__add_cycles which uses evsel__fallback makes sense matching the
+> previous logic. I'd be happy if you took a look. I'll write a patch so
+> that the perf_pmus list of core PMUs is never empty.
 
-diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-index 3c0de3370d7e..65d8cdff4d5f 100644
---- a/tools/perf/arch/x86/util/pmu.c
-+++ b/tools/perf/arch/x86/util/pmu.c
-@@ -14,6 +14,8 @@
- #include "../../../util/intel-bts.h"
- #include "../../../util/pmu.h"
- #include "../../../util/fncache.h"
-+#include "../../../util/pmus.h"
-+#include "env.h"
- 
- struct pmu_alias {
- 	char *name;
-@@ -168,3 +170,13 @@ char *pmu_find_alias_name(const char *name)
- 
- 	return __pmu_find_alias_name(name);
- }
-+
-+int perf_pmus__num_mem_pmus(void)
-+{
-+	/* AMD uses IBS OP pmu and not a core PMU for perf mem/c2c */
-+	if (x86__is_amd_cpu())
-+		return 1;
-+
-+	/* Intel uses core pmus for perf mem/c2c */
-+	return perf_pmus__num_core_pmus();
-+}
-diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-index 8c50ab8894b7..a2032c1b7644 100644
---- a/tools/perf/util/pmus.c
-+++ b/tools/perf/util/pmus.c
-@@ -242,7 +242,7 @@ const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
- 	return NULL;
- }
- 
--int perf_pmus__num_mem_pmus(void)
-+int __weak perf_pmus__num_mem_pmus(void)
- {
- 	/* All core PMUs are for mem events. */
- 	return perf_pmus__num_core_pmus();
--- 
-2.40.1
+Do you mean to do fallback when parsing events? Instead of doing it at 
+evsel__open?
 
+Okay, I'll re-patch it with this solution, and it looks like it should work.
+
+Thanks,
+Yang
