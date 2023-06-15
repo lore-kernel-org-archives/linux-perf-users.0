@@ -2,102 +2,137 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169B1EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 11:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7F41EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Thu, 15 Jun 2023 12:05:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239387AbjFOLTj (ORCPT
+        id S1343922AbjFOMFX (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 07:19:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43400 "EHLO
+        Thu, 15 Jun 2023 08:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234125AbjFOLTi (ORCPT
+        with ESMTP id S1344861AbjFOMFJ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 07:19:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C90E2707;
-        Thu, 15 Jun 2023 04:19:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A60EE634F3;
-        Thu, 15 Jun 2023 11:19:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F01ADC433C0;
-        Thu, 15 Jun 2023 11:19:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686827976;
-        bh=o6Td6MmrlfeRqs6XMwz0lA70wOPxQKNfW8M0/DTvPlM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jonMy9tBrVQSohpRudZA6CWZgFxkYGzBHD2lKG2dU2b8+XbKOWCus3mg+CSJlyG8o
-         Bf89KaPF+/WfnZSU18Qhd8Y/fW/oACqdBBthFSlwd4dOvBlNmPPBGGBj10Cbvvn3lV
-         3rUfwD15v4qKcQg9riEDNSTtonYoIjAiNe61Xk1b1BNMYfi1CznkRfbZ3OTySk383Y
-         gd+/VAeEk/hYPu1RcOK/gXviXhHG39e8wwGPkUPFgeQBO6IYF4dugjP4ikXEkW24B4
-         OdBO6ysOnlNbxmPchHiRKjFqVRkY+QcpD04MUWm8Vrxd1S6Xet9ZteH7zEpvg/y/rF
-         +Ask1nAh0qX4A==
-Date:   Thu, 15 Jun 2023 12:19:29 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     James Clark <james.clark@arm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        linux-perf-users@vger.kernel.org, Aishwarya.TCV@arm.com,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 15 Jun 2023 08:05:09 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380333A81;
+        Thu, 15 Jun 2023 05:03:27 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1q9lMn-0002JV-L1; Thu, 15 Jun 2023 13:42:17 +0200
+Message-ID: <8f21a1ca-3bbb-f37d-47f6-35648d3d7763@leemhuis.info>
+Date:   Thu, 15 Jun 2023 13:42:16 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v2 3/3] tools/perf: Fix to get declared file name from
+ clang DWARF5
+Content-Language: en-US, de-DE
+To:     =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] perf tools: Add a place to put kernel config
- fragments for test runs
-Message-ID: <fb130fd5-7134-444b-a79c-658bff30c588@sirena.org.uk>
-References: <20230614140219.2335639-1-james.clark@arm.com>
- <ZInLBt9q2F99gTg8@kernel.org>
- <d02cce4a-47b1-a776-0d3a-a6a7c9a4d8fd@arm.com>
- <20230615012546.GN217089@leoy-huanghe.lan>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Tme7hkpHpIGMJ5ts"
-Content-Disposition: inline
-In-Reply-To: <20230615012546.GN217089@leoy-huanghe.lan>
-X-Cookie: You are false data.
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <166731050151.2100653.8202870942871353491.stgit@devnote3>
+ <166731052936.2100653.13380621874859467731.stgit@devnote3>
+ <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
+From:   "Linux regression tracking #adding (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1686830607;ed41629e;
+X-HE-SMSGID: 1q9lMn-0002JV-L1
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
 
---Tme7hkpHpIGMJ5ts
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[TLDR: I'm adding this report to the list of tracked Linux kernel
+regressions; the text you find below is based on a few templates
+paragraphs you might have encountered already in similar form.
+See link in footer if these mails annoy you.]
 
-On Thu, Jun 15, 2023 at 09:26:39AM +0800, Leo Yan wrote:
-> On Wed, Jun 14, 2023 at 03:19:12PM +0100, James Clark wrote:
+On 09.06.23 14:21, Georg Müller wrote:
+> 
+> Am 01.11.22 um 14:48 schrieb Masami Hiramatsu (Google):
+>> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>
+>> Fix to get the declared file name even if it uses file index 0
+>> in DWARF5, using custom die_get_decl_file() function.
+>>
+> 
+> this patch breaks perf probe on fedora 38.
+> 
+> I was trying to a add a probe to systemd-logind using
+> kernel-6.3.6-200.fc38.x86_64 with kernel-tools-6.3.3-200.fc38.x86_64.
+> 
+> When trying to add a probe, I get the following message:
+> 
+> # perf probe -x /usr/lib/systemd/systemd-logind
+> --funcs="match_unit_removed"
+> match_unit_removed
+> 
+> Function exists and was found:
+> 
+> # perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> Probe point 'match_unit_removed' not found.
+>   Error: Failed to add events.
+> 
+> When reverting dc9a5d2ccd5c823cc05cafe75fcf19b682d8152c, I was able to
+> add the probe point:
+> 
+> # ./perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+> Added new event:
+>   probe_systemd:match_unit_removed (on match_unit_removed in
+> /usr/lib/systemd/systemd-logind)
+> 
+> You can now use it in all perf tools, such as:
+> 
+>     perf record -e probe_systemd:match_unit_removed -aR sleep 1
+> 
+> 
+> Probe point is then visible with and without this commit:
+> 
+> # perf probe -l
+>   probe_systemd:match_unit_removed (on match_unit_removed in
+> /usr/lib/systemd/systemd-logind)
+> # ./perf probe -l
+>   probe_systemd:match_unit_removed (on
+> match_unit_removed@../src/login/logind-dbus.c in
+> /usr/lib/systemd/systemd-logind)
 
-> > >> The RFC is for discussion on folder placement and file naming etc.
+Thanks for the report. To be sure the issue doesn't fall through the
+cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+tracking bot:
 
-> I am wandering if we can put these configurations into kselftest (the
-> folder tools/testing/selftests/).  You could see now kernel build has
-> already provided option to merge kernel configurations for kselftests.
+#regzbot ^introduced dc9a5d2ccd5c823cc05cafe75fcf19b682d8152c
+#regzbot title tools/perf: adding a specific probe suddenly fails
+#regzbot ignore-activity
 
-Well, it'd be nice if the whole thing was a kselftest rather than it's
-own thing, that'd avoid the need for custom setup to run the tests.  But
-while it's not a kselftest it's not clear to me that it's a good fit.
+This isn't a regression? This issue or a fix for it are already
+discussed somewhere else? It was fixed already? You want to clarify when
+the regression started to happen? Or point out I got the title or
+something else totally wrong? Then just reply and tell me -- ideally
+while also telling regzbot about it, as explained by the page listed in
+the footer of this mail.
 
---Tme7hkpHpIGMJ5ts
-Content-Type: application/pgp-signature; name="signature.asc"
+Developers: When fixing the issue, remember to add 'Link:' tags pointing
+to the report (the parent of this mail). See page linked in footer for
+details.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmSK88EACgkQJNaLcl1U
-h9BMVAf9FfveJwPe7nual8Q9ggs+55RseluL2cG95FfPxnobW0Wu7SDMBxYmS8+u
-uWlUeKLJD2NbnkFPaNnVcz4W0jEY48sz1sbvYZ+KunLaKx3dDb9/BZ4PRV5OYXwh
-a9ddcjuXWTVz48/4ji0dn00j13FBOLBr6Ybq2Ug0zeyzeUrQrbdAKFps1G48ch6A
-2brRoReSg+y91hoFN9esY2qxQwYjLHdsYgwJGizXSY9AvWVs0jBcE/KsmZty1adE
-/rzOrmkhuLiPNWluoauqpwbWJrmeGvXpBQAVGW6c81I45fpTZb4W418INZ0O6mNb
-lMMgQN0pzTft3zLvhTTYlgjCL25+4A==
-=2t6d
------END PGP SIGNATURE-----
-
---Tme7hkpHpIGMJ5ts--
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
