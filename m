@@ -2,89 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1CEEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 13:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3734EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 13:13:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344104AbjFPNFI (ORCPT
+        id S1345560AbjFPNNc (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jun 2023 09:05:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53392 "EHLO
+        Fri, 16 Jun 2023 09:13:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232355AbjFPNFH (ORCPT
+        with ESMTP id S1345557AbjFPNN0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jun 2023 09:05:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48C72D76;
-        Fri, 16 Jun 2023 06:05:06 -0700 (PDT)
+        Fri, 16 Jun 2023 09:13:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB2B3A92;
+        Fri, 16 Jun 2023 06:13:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5120B60C3C;
-        Fri, 16 Jun 2023 13:05:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A142C433C0;
-        Fri, 16 Jun 2023 13:05:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 732D263C50;
+        Fri, 16 Jun 2023 13:13:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800B0C433C8;
+        Fri, 16 Jun 2023 13:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686920705;
-        bh=SrO0CeEasmWz37MEWDUcwNmCFCb0teNkDoI5J3qhx4c=;
+        s=k20201202; t=1686921199;
+        bh=mQm8hu9ITzU2NnF6fwNpK5hC+oeccBOVUYKjkOQl508=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PGcQcMvEoVks3aMm/p5sUZangLQuMC4WBjKavKMF8tYvL5uw5QDalT/rvnIeOyegJ
-         FdZPc7CODn20x7zxuex+qlTdIp6I3X3hnDkcYfdiij7QQ5RLAJkh8mWURZJR2o3AH+
-         3FVLv0E9/KrZOVq+mdnkfMpdL2cpvsEHhWvD/wKmT3qVLyRyVbkgxOeuDOJV0dVGM/
-         T9K1b3F9sMyVQQRQ8t+96Dgo3Y6giwkqgj8lUjj6SZP0M9O4frX/ExwsT58EuPuzR0
-         sqOqmrb+IMyVkJdpi5zwRiNg9709EeTI7YH/qglKOPNy/qlksvizrT/oL/cT0K9U7g
-         eYBGxI4DDn9qw==
+        b=ACaJscHfqIULZp47slEzmb9Dku3lxAQzfhrqTCEzB3OaGvVZ8QubRrlnMHMJ/D177
+         ziiM2D08uxue+nX1YDXdgPjKiaxya3utOZd5TuaNucfNEW2VjwlJFe5ti6N2cM5rkW
+         wyFh5fMBAAQn6b0gciExzqnOLnIZwxzv599bF/kqIDdA/FQdjr7W7ypn6ZPdUSX5LL
+         4jXUvy9DiWh7WjWlKG4UTa7h2mdOw1au654inCAoRBIDYdOF/UB9NsKt9ftec9idB8
+         3kzrPLljxydEpRqzhrY3827HCH9LIa1Ox/CJ91KoyM9vkWlXGXAU+0ZMRQwFZBhn66
+         j6kMyW2l500zw==
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B7A9540692; Fri, 16 Jun 2023 10:05:02 -0300 (-03)
-Date:   Fri, 16 Jun 2023 10:05:02 -0300
+        id B91E240692; Fri, 16 Jun 2023 10:13:16 -0300 (-03)
+Date:   Fri, 16 Jun 2023 10:13:16 -0300
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Vincent Whitchurch <Vincent.Whitchurch@axis.com>
-Cc:     "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        kernel <kernel@axis.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf annotate: Work with vmlinux outside symfs
-Message-ID: <ZIxd/kINrMLfZ8cD@kernel.org>
-References: <20221125114210.2353820-1-vincent.whitchurch@axis.com>
- <28e5680b86806cb97f832f5646a0e2e9d8ee68f7.camel@axis.com>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [PATCH] perf test: fix failing test cases on linux-next for s390
+Message-ID: <ZIxf7A1jPiDUUdDt@kernel.org>
+References: <20230616081437.1932003-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <28e5680b86806cb97f832f5646a0e2e9d8ee68f7.camel@axis.com>
+In-Reply-To: <20230616081437.1932003-1-tmricht@linux.ibm.com>
 X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jun 16, 2023 at 10:21:52AM +0000, Vincent Whitchurch escreveu:
-> On Fri, 2022-11-25 at 12:42 +0100, Vincent Whitchurch wrote:
-> > It is currently possible to use --symfs along with a vmlinux which lies
-> > outside of the symfs by passing an absolute path to --vmlinux, thanks to
-> > the check in dso__load_vmlinux() which handles this explicitly.
-> > 
-> > However, the annotate code lacks this check and thus perf annotate does
-> > not work ("Internal error: Invalid -1 error code") for kernel functions
-> > with this combination.  Add the missing handling.
-> > 
-> > Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Em Fri, Jun 16, 2023 at 10:14:37AM +0200, Thomas Richter escreveu:
+> In linux-next tree the many test cases fail on s390x when running the
+> perf test suite, sometime the perf tool dumps core.
 > 
-> This patch was not merged and I did not receive any comments on it
-> either.  Should I resend it?  It still applies cleanly to current
-> mainline.  Thanks.
+> Output before:
+>   6.1: Test event parsing                               : FAILED!
+>  10.3: Parsing of PMU event table metrics               : FAILED!
+>  10.4: Parsing of PMU event table metrics with fake PMUs: FAILED!
+>  17: Setup struct perf_event_attr                       : FAILED!
+>  24: Number of exit events of a simple workload         : FAILED!
+>  26: Object code reading                                : FAILED!
+>  28: Use a dummy software event to keep tracking        : FAILED!
+>  35: Track with sched_switch                            : FAILED!
+>  42.3: BPF prologue generation                          : FAILED!
+>  66: Parse and process metrics                          : FAILED!
+>  68: Event expansion for cgroups                        : FAILED!
+>  69.2: Perf time to TSC                                 : FAILED!
+>  74: build id cache operations                          : FAILED!
+>  86: Zstd perf.data compression/decompression           : FAILED!
+>  87: perf record tests                                  : FAILED!
+> 106: Test java symbol                                   : FAILED!
+> 
+> The reason for all these failure is a missing PMU. On s390x
+> the PMU is named cpum_cf which is not detected as core PMU.
+> A similar patch was added before, see
+> commit 9bacbced0e32 ("perf list: Add s390 support for detailed PMU event description")
+> which got lost during the recent reworks. Add it again.
+> 
+> Output after:
+>  10.2: PMU event map aliases                            : FAILED!
+>  42.3: BPF prologue generation                          : FAILED!
+> 
+> Most test cases now work and there is not core dump anymore.
 
-Thanks for the ping, I checked  dso__load_vmlinux() and it has:
+So you're not fixing 'perf test', that is just what detects the problem,
+the part being fixed is the PMU code, so I'm rewriting the patch subject
+to:
 
-        if (vmlinux[0] == '/')
-                snprintf(symfs_vmlinux, sizeof(symfs_vmlinux), "%s", vmlinux);
-        else
-                symbol__join_symfs(symfs_vmlinux, vmlinux)
+[PATCH] perf pmu: Fix core PMU detection on s/390
 
-Exactly as you pointed out, applied.
+Have you bisected the problem to the first patch where this problem
+appears?
+
+- Arnaldo
+ 
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/pmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index fe64ad292d36..6142e4710a2f 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1419,7 +1419,7 @@ void perf_pmu__del_formats(struct list_head *formats)
+>  
+>  bool is_pmu_core(const char *name)
+>  {
+> -	return !strcmp(name, "cpu") || is_sysfs_pmu_core(name);
+> +	return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") || is_sysfs_pmu_core(name);
+>  }
+>  
+>  bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+> -- 
+> 2.39.2
+> 
+
+-- 
 
 - Arnaldo
