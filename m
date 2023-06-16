@@ -2,112 +2,89 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0714EEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 11:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1CEEB64DA
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 13:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344858AbjFPLxY (ORCPT
+        id S1344104AbjFPNFI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jun 2023 07:53:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38872 "EHLO
+        Fri, 16 Jun 2023 09:05:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344895AbjFPLxX (ORCPT
+        with ESMTP id S232355AbjFPNFH (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jun 2023 07:53:23 -0400
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A74B30CF;
-        Fri, 16 Jun 2023 04:53:20 -0700 (PDT)
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-311153ec442so507936f8f.1;
-        Fri, 16 Jun 2023 04:53:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686916399; x=1689508399;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=K7xAAjbq425WmYDF4eeJ0EL9NFPdHLP90wUaRqnBZNg=;
-        b=VVKAefyzUkhucd2zTeHlApagVyGIzoaYmHllvLtwtLKqhsQdGadoO6/n/a3KL0XMJ3
-         O40hvTcKLHyGCuiljhOd/P+7q5A6n9XyzREKNwl4V0A8ph2ryGdFFmMtjhdjdBcW8TRg
-         w+OhCNxrlruv8K8GoqhG/zxhpkJzLGl+d+akHhUBDMGkwN6nVpldTeHQZcohEr488oGD
-         SBiA78KIMqTMe9bfFxzfzsyZUy78NnBryk7XrQ+oOgAzEtQWH7MXjB34r1MDyx1QMw+w
-         uAUQH4bzKYmyevKeYLxSa3ZT3qe8WOMi1260ruPbyAOX5Qy/AuHCTyOqHSICEDXeiFbi
-         Fysg==
-X-Gm-Message-State: AC+VfDy1gHNULGgDFRX+OLDobNKPap93wwe/W3aUqkgm2Y85wJ8chFnp
-        YyQ3lmaWitGDohIFecK9KlI=
-X-Google-Smtp-Source: ACHHUZ4C/WnNCIQ/pEnyVUy8SsHLNOVG9gCLKC/TtXe77N0MNds+3hMpNKMB/fTZ31cAn5v5Awd4Fw==
-X-Received: by 2002:adf:e4c1:0:b0:30f:c71a:1b28 with SMTP id v1-20020adfe4c1000000b0030fc71a1b28mr6558770wrm.28.1686916398618;
-        Fri, 16 Jun 2023 04:53:18 -0700 (PDT)
-Received: from localhost (fwdproxy-cln-111.fbsv.net. [2a03:2880:31ff:6f::face:b00c])
-        by smtp.gmail.com with ESMTPSA id u24-20020a05600c00d800b003f7ead9be7fsm1954267wmm.38.2023.06.16.04.53.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Jun 2023 04:53:17 -0700 (PDT)
-From:   Breno Leitao <leitao@debian.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Sandipan Das <sandipan.das@amd.com>
-Cc:     leit@fb.com, dcostantino@meta.com,
-        linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS
-        SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH] perf/x86/amd: Do not WARN on every IRQ
-Date:   Fri, 16 Jun 2023 04:53:15 -0700
-Message-Id: <20230616115316.3652155-1-leitao@debian.org>
-X-Mailer: git-send-email 2.34.1
+        Fri, 16 Jun 2023 09:05:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48C72D76;
+        Fri, 16 Jun 2023 06:05:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5120B60C3C;
+        Fri, 16 Jun 2023 13:05:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A142C433C0;
+        Fri, 16 Jun 2023 13:05:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686920705;
+        bh=SrO0CeEasmWz37MEWDUcwNmCFCb0teNkDoI5J3qhx4c=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PGcQcMvEoVks3aMm/p5sUZangLQuMC4WBjKavKMF8tYvL5uw5QDalT/rvnIeOyegJ
+         FdZPc7CODn20x7zxuex+qlTdIp6I3X3hnDkcYfdiij7QQ5RLAJkh8mWURZJR2o3AH+
+         3FVLv0E9/KrZOVq+mdnkfMpdL2cpvsEHhWvD/wKmT3qVLyRyVbkgxOeuDOJV0dVGM/
+         T9K1b3F9sMyVQQRQ8t+96Dgo3Y6giwkqgj8lUjj6SZP0M9O4frX/ExwsT58EuPuzR0
+         sqOqmrb+IMyVkJdpi5zwRiNg9709EeTI7YH/qglKOPNy/qlksvizrT/oL/cT0K9U7g
+         eYBGxI4DDn9qw==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id B7A9540692; Fri, 16 Jun 2023 10:05:02 -0300 (-03)
+Date:   Fri, 16 Jun 2023 10:05:02 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Vincent Whitchurch <Vincent.Whitchurch@axis.com>
+Cc:     "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        kernel <kernel@axis.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf annotate: Work with vmlinux outside symfs
+Message-ID: <ZIxd/kINrMLfZ8cD@kernel.org>
+References: <20221125114210.2353820-1-vincent.whitchurch@axis.com>
+ <28e5680b86806cb97f832f5646a0e2e9d8ee68f7.camel@axis.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <28e5680b86806cb97f832f5646a0e2e9d8ee68f7.camel@axis.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On some systems, the Performance Counter Global Status Register is
-coming with reserved bits set, which causes the system to be unusable
-if a simple `perf top` runs. The system hits the WARN() thousands times
-while perf runs.
+Em Fri, Jun 16, 2023 at 10:21:52AM +0000, Vincent Whitchurch escreveu:
+> On Fri, 2022-11-25 at 12:42 +0100, Vincent Whitchurch wrote:
+> > It is currently possible to use --symfs along with a vmlinux which lies
+> > outside of the symfs by passing an absolute path to --vmlinux, thanks to
+> > the check in dso__load_vmlinux() which handles this explicitly.
+> > 
+> > However, the annotate code lacks this check and thus perf annotate does
+> > not work ("Internal error: Invalid -1 error code") for kernel functions
+> > with this combination.  Add the missing handling.
+> > 
+> > Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+> 
+> This patch was not merged and I did not receive any comments on it
+> either.  Should I resend it?  It still applies cleanly to current
+> mainline.  Thanks.
 
-WARNING: CPU: 18 PID: 20608 at arch/x86/events/amd/core.c:944 amd_pmu_v2_handle_irq+0x1be/0x2b0
+Thanks for the ping, I checked  dso__load_vmlinux() and it has:
 
-This happens because the "Performance Counter Global Status Register"
-(PerfCntGlobalStatus) MSR has bit 7 set. Bit 7 should be reserved according
-to the documentation (Figure 13-12 from "AMD64 Architecture Programmer’s
-Manual, Volume 2: System Programming, 24593"[1]
+        if (vmlinux[0] == '/')
+                snprintf(symfs_vmlinux, sizeof(symfs_vmlinux), "%s", vmlinux);
+        else
+                symbol__join_symfs(symfs_vmlinux, vmlinux)
 
-WARN_ONCE if any reserved bit is set, and sanitize the value to what the
-code is handling, so the overflow events continue to be handled for the
-number of events that are known to be sane.
+Exactly as you pointed out, applied.
 
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Fixes: 7685665c390d ("perf/x86/amd/core: Add PerfMonV2 overflow handling")
-
-[1] Link: https://www.amd.com/system/files/TechDocs/24593.pdf
----
- arch/x86/events/amd/core.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index bccea57dee81..809ddb15c122 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -909,6 +909,10 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
- 		status &= ~GLOBAL_STATUS_LBRS_FROZEN;
- 	}
- 
-+	amd_pmu_global_cntr_mask = (1ULL << x86_pmu.num_counters) - 1;
-+	WARN_ON_ONCE(status & ~amd_pmu_global_cntr_mask);
-+	status &= amd_pmu_global_cntr_mask;
-+
- 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
- 		if (!test_bit(idx, cpuc->active_mask))
- 			continue;
--- 
-2.34.1
-
+- Arnaldo
