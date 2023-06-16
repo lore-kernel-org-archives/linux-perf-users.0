@@ -2,210 +2,248 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C218EB64D8
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 22:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B37AEB64D8
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 22:42:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230132AbjFPWJR (ORCPT
+        id S231771AbjFPWmU (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jun 2023 18:09:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53036 "EHLO
+        Fri, 16 Jun 2023 18:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbjFPWJQ (ORCPT
+        with ESMTP id S229627AbjFPWmT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jun 2023 18:09:16 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C2AB5
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jun 2023 15:09:13 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-3fddc620055so38481cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jun 2023 15:09:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686953353; x=1689545353;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mj8CpQAE+1cLVAgDQiQwgKaiuYNs7JQDL4TMFX8aZ/8=;
-        b=rK4GBjhRwveidGYPaRho+hkgRrt9MmV3pkMchET1QkpFWWw7uw7VH/fbo+z/4pZ9Eg
-         XS+1axP/fIB0zbcJjzvZ152tb68rvGXEcurK237BcvXl0p5kgkNaxHTBeTeWaFKaCuRT
-         SBUPWDmBQEZTfw8oOmdO9WKZjX/mcGUvz+THg6JCwnDCy5Szgm6A7rs52pHiEsr++8R0
-         6Ss46oSZkJbmXzDx/el+52QPiZBtEHykm9otetJz30qTfXDKfFqoaOBh8e0ePI584l/W
-         fgMQ/iXalDZI1dZnswJKCrM29dHOzhg2WHtk5qewPsp5hhZi8L7y090Y/Y0kn3oXYc/R
-         /auw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686953353; x=1689545353;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mj8CpQAE+1cLVAgDQiQwgKaiuYNs7JQDL4TMFX8aZ/8=;
-        b=EoAQgfpP4EcMGAX2bkXssXy/D4V2YYoPG6XnF7dK8itR6mOZgsvW858MTmSxYyZluc
-         s6S49HEJ9fMdYAutYU8sYKFKMHGVYmdWrEnsAKsqzOnWeaQ/eudU3cqsuCAFViYEMmR6
-         aLnUzgNQu2/AWF55f/bOFlBit26xobKuzLCbJDz1LgTpMO6fiYfpm69KCE3DvW4g2OBA
-         PVqVHR6SVKlLKALLcgB8h9R2/3dxdgQ4de3AbUYm0XfQswSkaTWpSEzOQNNINZuXeHy8
-         JKsxiBsQwjUPgHOSv8jmzlVApys0L2yTdaCjOEhylsqn534vYzF9WgG3LqEmAzV1IrEb
-         ZNfg==
-X-Gm-Message-State: AC+VfDxRF28u2wiFr/6r9mJRHkNC+6yoZcQ1pDIbmKIcYOWPOYAg1S1c
-        /y7pp4pKpgtRbzVKVp6A+uxkIZjMvyt82kK2CmY6nw==
-X-Google-Smtp-Source: ACHHUZ4U36CUqDBZjr9M+DzshunXSrJ+TSjGU/dLImIo5TD5etwLc0PZ3s4bgLd2svZNolcJEeU+lRqWjvgQy5F2F8Y=
-X-Received: by 2002:ac8:5bc3:0:b0:3f8:5b2:aef2 with SMTP id
- b3-20020ac85bc3000000b003f805b2aef2mr678128qtb.26.1686953352735; Fri, 16 Jun
- 2023 15:09:12 -0700 (PDT)
+        Fri, 16 Jun 2023 18:42:19 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3B8A30FF;
+        Fri, 16 Jun 2023 15:42:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686955338; x=1718491338;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=7a3TirIk0DgbzMhkxvJ5A/R/k8z0zLStwpWEjALUqw8=;
+  b=ZZyWLr9oTsUeZvdk1DufyU5foWKOYj3rsmOwKf7xVF02usXVaTug6dGM
+   as5orS6wII5/KNcRYufkUnkH/1PppAbAnJmI1XTyKXLDi/Na8VlJ1FxeJ
+   1Y1Vgx6GcrvjxQ2P+3my33uTN3GTNpe9xBkx7uncaH9dieZ2BC9mdk6WZ
+   bz4ygZLxRsPpF0ufVFkz4c/xa1ngxIWL23XrL+YkqXirn47ybRE0bwP/L
+   y2NRaRXVBEQfb/GPVXJ5OsoSYCTM5vjl04QnFJVgDLxtf8ayRPlRpcJSl
+   pEK4p5c+nmp6m7b3gMmzFmS+N+vnxcmwB24RPn8Io4pGsGDQ+r0BqwuvQ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="359338642"
+X-IronPort-AV: E=Sophos;i="6.00,248,1681196400"; 
+   d="scan'208";a="359338642"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2023 15:42:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10743"; a="959773456"
+X-IronPort-AV: E=Sophos;i="6.00,248,1681196400"; 
+   d="scan'208";a="959773456"
+Received: from orsmsx602.amr.corp.intel.com ([10.22.229.15])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Jun 2023 15:42:11 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Fri, 16 Jun 2023 15:42:11 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Fri, 16 Jun 2023 15:42:11 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.48) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Fri, 16 Jun 2023 15:42:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ODI0N0owz7Ncr5+6KpE8EaSySeyYp4/tCWFORcMBdI/lSyZ2BScIsiWKlywXH+SSEcgaSFy7jOiaRt/4kcYx7Tz6d1wtokhinkJZIzGZFreM5rLRFfcqxWrdnHZwa1KKERlbM7Vh6r92nnbUEoMreQxxtb/HLokn9qvwxUT540o9TcbV759mwPW8SFnD602vZujDBvuDSnvNOQaNMKAFef6OOVZng3mwmCo2GcrEU5GVqvHsdLr/+TaB6LRSQt6Y+fBOgVLxwXXVl6inOfef8wFzNCYjhBX4Id3E1+oRwFsYpvvfe814FvX4FTvpe4DwnKfCc3jY0PXLWqfmMUky5A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l+ZVyKB77NT9ZS69gxJhnEaJremH5dJkxnmSrhlIPZo=;
+ b=ROU8ETRUUyWMENaITmzrzvmAd4AMdbOyNF5bZN5ag8GZnbSY27CcFxyDzfPNtnZt/Di/MNfRJKe1Ooa0dlcd7qoVSbKO92I7mbfSSPJzlD98Y2JbdTeSfALxWRv9lUjBEyxdEOrvAzD+EtFnuBq7tGxNXukbFvjucOw6+5JWXqwjHkfouY6JN0HZhWPCEbffpCfiygtU4DU7GTtDd9t5DgAkIHM6MCgEBfAY3zEq7q1k4gDKYWBHToZ0LlGD7aT1abjkRjciJOJCeua/GF2kMuUzX5/A80TpvsR9JBBgX4AyeB5MMZGMbN9fy1rO5YNWWoBIkL03r7Vb7kpeVejZSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com (2603:10b6:510:1e3::15)
+ by PH0PR11MB4999.namprd11.prod.outlook.com (2603:10b6:510:37::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.27; Fri, 16 Jun
+ 2023 22:42:03 +0000
+Received: from PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::ef38:9181:fb78:b528]) by PH7PR11MB5984.namprd11.prod.outlook.com
+ ([fe80::ef38:9181:fb78:b528%7]) with mapi id 15.20.6500.025; Fri, 16 Jun 2023
+ 22:42:03 +0000
+Message-ID: <cdd0b117-013a-8bc2-9cad-be8ac1a985f2@intel.com>
+Date:   Fri, 16 Jun 2023 15:41:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Betterbird/102.11.1
+Subject: Re: [PATCH v3 01/57] dmaengine: ioat: Free up __cleanup() name
+To:     Peter Zijlstra <peterz@infradead.org>,
+        <torvalds@linux-foundation.org>, <keescook@chromium.org>,
+        <gregkh@linuxfoundation.org>, <pbonzini@redhat.com>
+CC:     <masahiroy@kernel.org>, <nathan@kernel.org>,
+        <ndesaulniers@google.com>, <nicolas@fjasle.eu>,
+        <catalin.marinas@arm.com>, <will@kernel.org>, <vkoul@kernel.org>,
+        <trix@redhat.com>, <ojeda@kernel.org>, <mingo@redhat.com>,
+        <longman@redhat.com>, <boqun.feng@gmail.com>, <dennis@kernel.org>,
+        <tj@kernel.org>, <cl@linux.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <juri.lelli@redhat.com>,
+        <vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
+        <rostedt@goodmis.org>, <bsegall@google.com>, <mgorman@suse.de>,
+        <bristot@redhat.com>, <vschneid@redhat.com>, <paulmck@kernel.org>,
+        <frederic@kernel.org>, <quic_neeraju@quicinc.com>,
+        <joel@joelfernandes.org>, <josh@joshtriplett.org>,
+        <mathieu.desnoyers@efficios.com>, <jiangshanlai@gmail.com>,
+        <rientjes@google.com>, <vbabka@suse.cz>,
+        <roman.gushchin@linux.dev>, <42.hyeyoo@gmail.com>,
+        <apw@canonical.com>, <joe@perches.com>, <dwaipayanray1@gmail.com>,
+        <lukas.bulwahn@gmail.com>, <john.johansen@canonical.com>,
+        <paul@paul-moore.com>, <jmorris@namei.org>, <serge@hallyn.com>,
+        <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dmaengine@vger.kernel.org>, <llvm@lists.linux.dev>,
+        <linux-perf-users@vger.kernel.org>, <rcu@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>, <tglx@linutronix.de>,
+        <ravi.bangoria@amd.com>, <error27@gmail.com>,
+        <luc.vanoostenryck@gmail.com>
+References: <20230612090713.652690195@infradead.org>
+ <20230612093537.467120754@infradead.org>
+Content-Language: en-US
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230612093537.467120754@infradead.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0076.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c4::21) To PH7PR11MB5984.namprd11.prod.outlook.com
+ (2603:10b6:510:1e3::15)
 MIME-Version: 1.0
-References: <CAP-5=fU+0VXckQiq3E8yqaySNZ+-DDZahEd1OY0uKPWnfFsafg@mail.gmail.com>
- <e7f0930a-a9fc-d768-a472-bd9af6fafdf5@linux.ibm.com> <CAP-5=fWjqJH0h607cVb1T7pRxDeq4cZBz5TECMajpnkvVNWHEQ@mail.gmail.com>
- <a19a30b0-8f16-5871-6856-503eadf56e3c@linux.ibm.com> <ZIshkbmQR7oOFiHu@kernel.org>
- <CAP-5=fVYy6jMd9Nw7iqqsm_G-qW__Lo8kFeCocJ0W2no4XTbpg@mail.gmail.com>
- <ZIxza13x+AwApbQb@kernel.org> <ZIx1Y9mWc13huQt2@kernel.org>
- <CAP-5=fVpU6Bm1REcANEu2qsE5eQH2VOx2uz+X0VSoH76r_d7uQ@mail.gmail.com>
- <ZIyTlR+jJ27YKPVx@kernel.org> <ZIzYgImv61OGK1wA@kernel.org>
-In-Reply-To: <ZIzYgImv61OGK1wA@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 16 Jun 2023 15:09:00 -0700
-Message-ID: <CAP-5=fVLh8sv=SOBTMTv7D_Va9VCiVqa0pdSA0YR83dJxGSktw@mail.gmail.com>
-Subject: Re: Hybrid PMU issues on aarch64. was: Re: perf test failures in
- linux-next on s390
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        James Clark <james.clark@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Garry <john.g.garry@oracle.com>,
-        Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR11MB5984:EE_|PH0PR11MB4999:EE_
+X-MS-Office365-Filtering-Correlation-Id: 425b5faf-d7dd-48df-c3a2-08db6ebae765
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: cePV/U0+oC2aw2qbg3RcPMs8uflOLw/g5dzlwBqqby0PEi4zvhr9QJQluOu8lUuiaHmeF1whSHz75v+/IZ0CfKGECNJkbXnAE1i0RO9YNoCXwDSr2SKukX4NxicP/FRHPZnf7+WgxQKe1p4tcVSs64WA07qUxC+PQ00DNRG0GEGKxQfKI8b6e44ydA0yg3FwavBqbp2q+YAnvty2q0DJkMjfbQoAPu/dDVcue9Mlp8+bIzKprK68vloWFQo1QLpLGD2Ib/wcFpeMoLB8vr6i0bBshnw0c8jMtuY0rgrjJlCE/doAIpM+pqYioWsM9EfhwFoaNKowpdUNnufxLvMUXvTMe8yzmz7wSlTCYX+oCnLsyJK5cM9OuzkAuZPZx+qwDi9oDWsdLqBYAs+bHp20EIJ9IHZztxjKd30T4BM+8pDOHBTLchC4s+gZMGAoBioeKoiQ7LeSptM5xQlJq5AeRdXFevDhLvpLB0Mh1Z4nHQKmB0hAqIMPy8ntJTn6Qw+E8efEZ/TJLDicLf2JjZSTbNAHRHhutfEcvacal5B93mVqExxza56ViOPatiItZA+Vvg0crlQtqqVmBEeXA2AFr1t3pvxgzvsFOXwyLntxz3ARW2Tep5WFsZv4e6DJNgTzicpby30+FhBwxVo8PE6Mpg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB5984.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(136003)(376002)(366004)(346002)(39860400002)(451199021)(2906002)(186003)(2616005)(83380400001)(66556008)(66476007)(66946007)(6666004)(4326008)(82960400001)(41300700001)(6486002)(316002)(31696002)(86362001)(478600001)(38100700002)(36756003)(31686004)(44832011)(6506007)(6512007)(7366002)(26005)(7416002)(7406005)(53546011)(8936002)(8676002)(5660300002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OFMzc1F5cHBTSWVqQmFtOFNXY1d0dWxqVURpRjV1cUZLbGlTOWpHVTNZdkNr?=
+ =?utf-8?B?b1h1ZUpBWUxqdzdZVG1xSzBCemlhN25vSTl4dDVXK2lzVjkyTVpsTFV1aVRi?=
+ =?utf-8?B?WkhTeURjM045Y0VUUDRsZ2xlOG83U1F3VzIzenBBeDBLWmNTNlVZb2JHQXBl?=
+ =?utf-8?B?d01DakZ5bmhodjFwUDMvY0UyZzlWdDJqVy8weFkzbHEvdVlld1hTclRwMElr?=
+ =?utf-8?B?Y2pZWkJScXVGSlFkZk5XNE11R0MrazR2S2Z3MTJhSWN4dEEyWkRPa0tLOVp0?=
+ =?utf-8?B?QUx1NzN4bnNHZmpNWmpmUmVOcC85cTNBc0lZL0dNSms2M0M1NEpHS0tYKzJ3?=
+ =?utf-8?B?V1kwakFQSFZMb2tQbUYvdmlHTVBveWo3RTZvemtBUHNVR0VKTFE4eStIU2Qy?=
+ =?utf-8?B?dXdsTWFkSmJveDB4RzI0UUxFWVpCTjVwWmJSVHRYVWdST1QzNERGaUgxUlBn?=
+ =?utf-8?B?cncvbVp4aVQwQzFyZVNIM0w2VHUwNngxcTNRU004dmhsS0pHOHFCQitjN21W?=
+ =?utf-8?B?MXE0RFR0VzNFaWxQNWRyeXBzR3pvemtSU0RYZ0RGRU1lVnZJWW80b2tsczhL?=
+ =?utf-8?B?QjBkK1FmV0lPM2p5NSs1YWQwZ1JhVldRSVFBNkpCMnk2d2MxTUNsTUVMWU93?=
+ =?utf-8?B?MjhSeWZEcTZHN0dVblkybzJLZ2IzcThtWlBtaDE2OEtja3hXUTlhZ1UzSlg5?=
+ =?utf-8?B?akJWbHBaeEk2dnpXYlRJTU1SZEkwbnJ0eWNYc3NtcWtqWU10TkVvdjBwdG9R?=
+ =?utf-8?B?cXhRNnZmaFFjcGxPdzJXNDkrY3R0djNWajIrdTBZTElBSjJKVFlibWRCTzNt?=
+ =?utf-8?B?M0w5S1BUbVY4eEwxd2kzcFdqckhXSE1ONHZnVHN6aWFxVkxvbmtDeHhNYVQr?=
+ =?utf-8?B?blhqTVNyNmk2YXhxL0Fna1ZvSjdFRVlROHBHTkVDSTRQMlhxYy9EVmtqcVNn?=
+ =?utf-8?B?SVVEY2xnV2x3U0dBdEVrcjh4QUJzUnY0TUMvbG1wRjM5UUoxeW1RQU9DWDRp?=
+ =?utf-8?B?d1Nhek1QcW9hL1pPVnRRNW9nenJPZ1JJcVBXVEJoNUlyS0xYQ1pYMUlDL0lE?=
+ =?utf-8?B?U29Md0VvVXMyUTV2dFE1VVoxZzNsLzUxQWdySlB0V1JaWUxMZWQ4WWJTUEJu?=
+ =?utf-8?B?dlRZbXh3dVB3enloZ2NhNmJyTWtyYWdrY0k3SzMzTmF5VnlzdVdBWjhPbkZI?=
+ =?utf-8?B?ZisxSzlLL2JadWVvb3NqZFRCSEo1bW1nTTVoaEtEMVZqQXVWMjdKMVFqbWZQ?=
+ =?utf-8?B?MVNqN0wrU0c5NktkM1U3a0Jhdnlsa2tPWlRzRTRoKzRKYW5kRURHaitoeXIw?=
+ =?utf-8?B?U1VmM3lHVFNJZ3Jya3NKNFBocDJsOFkvT3UzRnVvdjgrK3hWalNjYjhpMnFZ?=
+ =?utf-8?B?YlM3OFpBY1VCOGFYdmJ3cDRUL2p0cHZNLzhNd2hhcmd6Uk95ZFVKaktBQktE?=
+ =?utf-8?B?YU1mVWUrbEljSTNEeXdNQzBHaGoxNnVqMVlDTktuWU9Ec2xRSExzY3hXelFr?=
+ =?utf-8?B?SnJ1WGlxMjMrNjNhbTdYZXVoNHBSd1UrZFB1cFVIN1ZWSmRqQXh0Q0Ywck9m?=
+ =?utf-8?B?MktwSmVyUHNYUUdiRjRsbHV1TWRjYnBBVCtnc29jcGxJbUY2TjRYb25tSnI0?=
+ =?utf-8?B?NEMrM1ZRcFduUTM1MVIzNXhKWnFGQTdweGlzOTBRbFpsQmQzbHVtQXlSTFhh?=
+ =?utf-8?B?WE9Uemk5Lyt1bFRHdlhJUFBDRDJFSzBVK2w4Qlk3bndKQmVTb2sxSEwwdy90?=
+ =?utf-8?B?bzM2VkI4dGwwekJ4Y1lyTkRGeVg3Qld4SEZFR1liU1Fac1JVc3JsTXkyaWp2?=
+ =?utf-8?B?c2xNMGkwOHozMENSU3MrL1BFK20xNlExMGU5aTRoUG1JY3dOMFhlSkswU09Z?=
+ =?utf-8?B?Q09BL2ZTTXpzazBsODdZMGQ5UTFiaklHM3k5WEFoWGFobTBKUVYxd2pYdmEv?=
+ =?utf-8?B?NFpzQU5OSzBSZFlVNC9QQ3pOS0hEYnZmcHNEd0lKZG01OW85alA2OHBaVE0r?=
+ =?utf-8?B?dkozWFRiekQ1Z05kVHMraU1XakRScXhwNzQwSnlwa3hRdm5ybWdrbTVYWUFn?=
+ =?utf-8?B?bHIvdU9rVzUrVVBuN3ZzMmNVM0gyZTVsUWNUTGRVSTY3bmhIbkRpTHlqTG1K?=
+ =?utf-8?Q?ZlGNr6xdD96jQKAIE+9jUcADQ?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 425b5faf-d7dd-48df-c3a2-08db6ebae765
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB5984.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2023 22:42:03.2096
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9hhGD8cQq5KDluag13cRXMq/w4XS8ROOSeKXGrnrFZojAyOSGayiw5ZcYMzsaTW6uCM25Bc8rCTmuj7R6oxYsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4999
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 2:47=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Fri, Jun 16, 2023 at 01:53:41PM -0300, Arnaldo Carvalho de Melo escrev=
-eu:
-> > > presumably with the #ifdef you just get 1 PMU - shame. I think rather
-> > > than do an #ifdef we can do something like call is_event_supported:
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/t=
-ools/perf/util/print-events.c?h=3Dperf-tools-next#n232
-> > > so:
-> > > bool perf_pmus__supports_extended_type(void)
-> > >   struct perf_pmu *pmu =3D NULL;
-> > >   if (perf_pmus__num_core_pmus() <=3D 1)
-> > >      return false;
-> > >   while((pmu =3D perf_pmus__scan_core(pmu) !=3D NULL) {
-> > >     return is_event_supported(PERF_TYPE_HARDWARE,
-> > > PERF_COUNT_HW_CPU_CYCLES | ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT);
-> > >  }
-> > > return false;
-> > > }
-> > > We probably don't want to do this for each call of
-> > > perf_pmus__supports_extended_type so you could use a static and
-> > > pthread_once, etc.
-> > >
-> > > This would mean if this regression is introduced elsewhere than ARM i=
-t
-> > > will self heal. It will also mean that when ARM support extended type=
-s
-> > > in the kernel, they will get the normal heterogeneous behavior.
-> >
-> > That looks better, I'll try it when I get back to my office.
->
-> End result, Ack?
->
 
-Acked-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+On 6/12/23 02:07, Peter Zijlstra wrote:
+> In order to use __cleanup for __attribute__((__cleanup__(func))) the
+> name must not be used for anything else. Avoid the conflict.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index a2032c1b7644..d891d72c824e 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -4,6 +4,7 @@
->  #include <subcmd/pager.h>
->  #include <sys/types.h>
->  #include <dirent.h>
-> +#include <pthread.h>
->  #include <string.h>
->  #include <unistd.h>
->  #include "debug.h"
-> @@ -492,9 +493,35 @@ int perf_pmus__num_core_pmus(void)
->         return count;
->  }
->
-> +static bool __perf_pmus__supports_extended_type(void)
-> +{
-> +       struct perf_pmu *pmu =3D NULL;
-> +
-> +       if (perf_pmus__num_core_pmus() <=3D 1)
-> +               return false;
-> +
-> +       while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
-> +               if (!is_event_supported(PERF_TYPE_HARDWARE, PERF_COUNT_HW=
-_CPU_CYCLES | ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT)))
-> +                       return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +static bool perf_pmus__do_support_extended_type;
-> +
-> +static void perf_pmus__init_supports_extended_type(void)
-> +{
-> +       perf_pmus__do_support_extended_type =3D __perf_pmus__supports_ext=
-ended_type();
-> +}
-> +
->  bool perf_pmus__supports_extended_type(void)
->  {
-> -       return perf_pmus__num_core_pmus() > 1;
-> +       static pthread_once_t extended_type_once =3D PTHREAD_ONCE_INIT;
-> +
-> +       pthread_once(&extended_type_once, perf_pmus__init_supports_extend=
-ed_type);
-> +
-> +       return perf_pmus__do_support_extended_type;
->  }
->
->  struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
-> diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-event=
-s.c
-> index 7a5f87392720..a7566edc86a3 100644
-> --- a/tools/perf/util/print-events.c
-> +++ b/tools/perf/util/print-events.c
-> @@ -229,7 +229,7 @@ void print_sdt_events(const struct print_callbacks *p=
-rint_cb, void *print_state)
->         strlist__delete(sdtlist);
->  }
->
-> -static bool is_event_supported(u8 type, u64 config)
-> +bool is_event_supported(u8 type, u64 config)
->  {
->         bool ret =3D true;
->         int open_return;
-> diff --git a/tools/perf/util/print-events.h b/tools/perf/util/print-event=
-s.h
-> index e75a3d7e3fe3..d7fab411e75c 100644
-> --- a/tools/perf/util/print-events.h
-> +++ b/tools/perf/util/print-events.h
-> @@ -3,6 +3,7 @@
->  #define __PERF_PRINT_EVENTS_H
->
->  #include <linux/perf_event.h>
-> +#include <linux/types.h>
->  #include <stdbool.h>
->
->  struct event_symbol;
-> @@ -36,5 +37,6 @@ void print_symbol_events(const struct print_callbacks *=
-print_cb, void *print_sta
->                          unsigned int max);
->  void print_tool_events(const struct print_callbacks *print_cb, void *pri=
-nt_state);
->  void print_tracepoint_events(const struct print_callbacks *print_cb, voi=
-d *print_state);
-> +bool is_event_supported(u8 type, u64 config);
->
->  #endif /* __PERF_PRINT_EVENTS_H */
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>   drivers/dma/ioat/dma.c |   12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> --- a/drivers/dma/ioat/dma.c
+> +++ b/drivers/dma/ioat/dma.c
+> @@ -584,11 +584,11 @@ desc_get_errstat(struct ioatdma_chan *io
+>   }
+>   
+>   /**
+> - * __cleanup - reclaim used descriptors
+> + * __ioat_cleanup - reclaim used descriptors
+>    * @ioat_chan: channel (ring) to clean
+>    * @phys_complete: zeroed (or not) completion address (from status)
+>    */
+> -static void __cleanup(struct ioatdma_chan *ioat_chan, dma_addr_t phys_complete)
+> +static void __ioat_cleanup(struct ioatdma_chan *ioat_chan, dma_addr_t phys_complete)
+>   {
+>   	struct ioatdma_device *ioat_dma = ioat_chan->ioat_dma;
+>   	struct ioat_ring_ent *desc;
+> @@ -675,7 +675,7 @@ static void ioat_cleanup(struct ioatdma_
+>   	spin_lock_bh(&ioat_chan->cleanup_lock);
+>   
+>   	if (ioat_cleanup_preamble(ioat_chan, &phys_complete))
+> -		__cleanup(ioat_chan, phys_complete);
+> +		__ioat_cleanup(ioat_chan, phys_complete);
+>   
+>   	if (is_ioat_halted(*ioat_chan->completion)) {
+>   		u32 chanerr = readl(ioat_chan->reg_base + IOAT_CHANERR_OFFSET);
+> @@ -712,7 +712,7 @@ static void ioat_restart_channel(struct
+>   
+>   	ioat_quiesce(ioat_chan, 0);
+>   	if (ioat_cleanup_preamble(ioat_chan, &phys_complete))
+> -		__cleanup(ioat_chan, phys_complete);
+> +		__ioat_cleanup(ioat_chan, phys_complete);
+>   
+>   	__ioat_restart_chan(ioat_chan);
+>   }
+> @@ -786,7 +786,7 @@ static void ioat_eh(struct ioatdma_chan
+>   
+>   	/* cleanup so tail points to descriptor that caused the error */
+>   	if (ioat_cleanup_preamble(ioat_chan, &phys_complete))
+> -		__cleanup(ioat_chan, phys_complete);
+> +		__ioat_cleanup(ioat_chan, phys_complete);
+>   
+>   	chanerr = readl(ioat_chan->reg_base + IOAT_CHANERR_OFFSET);
+>   	pci_read_config_dword(pdev, IOAT_PCI_CHANERR_INT_OFFSET, &chanerr_int);
+> @@ -943,7 +943,7 @@ void ioat_timer_event(struct timer_list
+>   		/* timer restarted in ioat_cleanup_preamble
+>   		 * and IOAT_COMPLETION_ACK cleared
+>   		 */
+> -		__cleanup(ioat_chan, phys_complete);
+> +		__ioat_cleanup(ioat_chan, phys_complete);
+>   		goto unlock_out;
+>   	}
+>   
+> 
+> 
