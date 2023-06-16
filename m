@@ -2,122 +2,117 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38777EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 14:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B361EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 14:05:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbjFPN77 (ORCPT
+        id S229685AbjFPOFT (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jun 2023 09:59:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51026 "EHLO
+        Fri, 16 Jun 2023 10:05:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345393AbjFPN75 (ORCPT
+        with ESMTP id S1345817AbjFPOFP (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jun 2023 09:59:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4D922720;
-        Fri, 16 Jun 2023 06:59:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2344863272;
-        Fri, 16 Jun 2023 13:59:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08048C433C0;
-        Fri, 16 Jun 2023 13:59:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686923995;
-        bh=gS7r5jiasHFa2ShPnNu4jMMlEMSQhNUP6kzWyo0GT10=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jM+620FTyLYA4YGcIOSYdRpdE49XQQrP/Tfjl/j4I2sWBZSTRFuL1O5267uw0G5rz
-         HpdMzmwtVk9ki3XdpaCsotEuZ2flZ003mEV9AE2FKk/ORZ0WFXA3NpH0Ov34yivl6R
-         gUMvD0GQgWOeyXjj+iATanjRMa6PlekOX05eOjQkLvX9zi1D0E+IWW495iiVCHPW1n
-         h1IOHOvFeDHk72SE4sRRSeEZ4efwNUx5gpLg1kU3Ttgc9xGZGwEe36Oj259yju3um6
-         g9jzRFJh0Lvt7S66j5utjc0sYfwVuVXYug4Zqp0cjTbD4mPbDbl0UxyupOCTYNeWQz
-         9JurQbDoI556Q==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id AB92240692; Fri, 16 Jun 2023 10:59:52 -0300 (-03)
-Date:   Fri, 16 Jun 2023 10:59:52 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     irogers@google.com, jolsa@kernel.org, namhyung@kernel.org,
-        peterz@infradead.org, james.clark@arm.com, alisaidi@amazon.com,
-        leo.yan@linaro.org, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, mark.rutland@arm.com,
-        maddy@linux.ibm.com, tmricht@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com
-Subject: Re: [PATCH v2.1 2/3] perf mem amd: Fix perf_pmus__num_mem_pmus()
-Message-ID: <ZIxq2FBX+qBoYIRv@kernel.org>
-References: <e63e6d33-6659-b63f-2716-c347aba7f525@amd.com>
- <20230615061238.2042-1-ravi.bangoria@amd.com>
+        Fri, 16 Jun 2023 10:05:15 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D806F3C04;
+        Fri, 16 Jun 2023 07:04:57 -0700 (PDT)
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-30fcde6a73cso546665f8f.2;
+        Fri, 16 Jun 2023 07:04:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686924233; x=1689516233;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lX3qyAy2K9wVkyWquOfum4ksPZ0rfQWIAZiVU0Bgd5A=;
+        b=URU/pOUtPm3w80kQuQ4wL6uqCG4NtWX52oeSiLoQWe1lXgGy03pmZQAr4d1giaaXoV
+         a4K8OTyTO5ZapmrlZdq7TdWsO6EjiDzzmBNgVwv9m4osakkIXfSEJU2as0Jl+FO8j5RK
+         9S/yHFHtCMaWCwDd2bQgib4cpSZlKIl76h5ZSZYbLLlCVDOjHKleul31J71GOQhsnwN7
+         UMC2cbN9+8Lf8C1V4Bn6I0cwj5J27ZgpHRmldAw002ESHzW/90VZC+nkxJgSg//iZKSI
+         tgDb0ZCJK6plDKAtelnQU+tj7B9zhE8HSt6wWBcFjuCxLEVly0j/wJBluci2IBuTctGs
+         VluQ==
+X-Gm-Message-State: AC+VfDzzX9YeM93NRq7NB6UpNz5H9kOEHM22T6Bhrr7Xi1QyP7XaXMvC
+        6IIWgoeJT5j4s6pLN/tYHMM=
+X-Google-Smtp-Source: ACHHUZ4BnvfwehA3ZVZrfqKrDxQBPRbv2M+9xY6ZO0Tf+/o2GmgCglvedHRXxLB6+z2/J1tve1a3kQ==
+X-Received: by 2002:adf:e8c8:0:b0:30a:e9a9:a4e4 with SMTP id k8-20020adfe8c8000000b0030ae9a9a4e4mr1430634wrn.51.1686924233019;
+        Fri, 16 Jun 2023 07:03:53 -0700 (PDT)
+Received: from gmail.com (fwdproxy-cln-014.fbsv.net. [2a03:2880:31ff:e::face:b00c])
+        by smtp.gmail.com with ESMTPSA id n11-20020adfe78b000000b0030fc666686bsm12802150wrm.85.2023.06.16.07.03.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Jun 2023 07:03:52 -0700 (PDT)
+Date:   Fri, 16 Jun 2023 07:03:50 -0700
+From:   Breno Leitao <leitao@debian.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Sandipan Das <sandipan.das@amd.com>, leit@fb.com,
+        dcostantino@meta.com,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf/x86/amd: Do not WARN on every IRQ
+Message-ID: <ZIxrxpYtffT0FtEx@gmail.com>
+References: <20230616115316.3652155-1-leitao@debian.org>
+ <20230616132954.GG4253@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230615061238.2042-1-ravi.bangoria@amd.com>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230616132954.GG4253@hirez.programming.kicks-ass.net>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jun 15, 2023 at 11:42:38AM +0530, Ravi Bangoria escreveu:
-> perf mem/c2c on AMD internally uses IBS OP PMU, not the core PMU. Also,
-> AMD platforms does not have heterogeneous PMUs.
-
-Thanks, applied the series.
-
-- Arnaldo
- 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  tools/perf/arch/x86/util/pmu.c | 12 ++++++++++++
->  tools/perf/util/pmus.c         |  2 +-
->  2 files changed, 13 insertions(+), 1 deletion(-)
+On Fri, Jun 16, 2023 at 03:29:54PM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 16, 2023 at 04:53:15AM -0700, Breno Leitao wrote:
+> > On some systems, the Performance Counter Global Status Register is
+> > coming with reserved bits set, which causes the system to be unusable
+> > if a simple `perf top` runs. The system hits the WARN() thousands times
+> > while perf runs.
+> > 
+> > WARNING: CPU: 18 PID: 20608 at arch/x86/events/amd/core.c:944 amd_pmu_v2_handle_irq+0x1be/0x2b0
+> > 
+> > This happens because the "Performance Counter Global Status Register"
+> > (PerfCntGlobalStatus) MSR has bit 7 set. Bit 7 should be reserved according
+> > to the documentation (Figure 13-12 from "AMD64 Architecture Programmer’s
+> > Manual, Volume 2: System Programming, 24593"[1]
 > 
-> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
-> index 3c0de3370d7e..65d8cdff4d5f 100644
-> --- a/tools/perf/arch/x86/util/pmu.c
-> +++ b/tools/perf/arch/x86/util/pmu.c
-> @@ -14,6 +14,8 @@
->  #include "../../../util/intel-bts.h"
->  #include "../../../util/pmu.h"
->  #include "../../../util/fncache.h"
-> +#include "../../../util/pmus.h"
-> +#include "env.h"
->  
->  struct pmu_alias {
->  	char *name;
-> @@ -168,3 +170,13 @@ char *pmu_find_alias_name(const char *name)
->  
->  	return __pmu_find_alias_name(name);
->  }
-> +
-> +int perf_pmus__num_mem_pmus(void)
-> +{
-> +	/* AMD uses IBS OP pmu and not a core PMU for perf mem/c2c */
-> +	if (x86__is_amd_cpu())
-> +		return 1;
-> +
-> +	/* Intel uses core pmus for perf mem/c2c */
-> +	return perf_pmus__num_core_pmus();
-> +}
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index 8c50ab8894b7..a2032c1b7644 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -242,7 +242,7 @@ const struct perf_pmu *perf_pmus__pmu_for_pmu_filter(const char *str)
->  	return NULL;
->  }
->  
-> -int perf_pmus__num_mem_pmus(void)
-> +int __weak perf_pmus__num_mem_pmus(void)
->  {
->  	/* All core PMUs are for mem events. */
->  	return perf_pmus__num_core_pmus();
-> -- 
-> 2.40.1
+> Would it then not make more sense to mask out bit7 before:
+
+It is more than bit 7. This is the register structure according to the document
+above:
+
+Bits 		Mnemonic		Description		 		Access type
+63:60	        Reserved RO
+59 		PMCF			Performance Counter Freeze		RO
+58 		LBRSF			Last Branch Record Stack Freeze 	RO
+57:6 		Reserved				 			RO
+5:0 		CNT_OF 			Counter overflow for PerfCnt[5:0] 	RO
+
+In the code, bit GLOBAL_STATUS_LBRS_FROZEN is handled and cleared before
+we reach my changes
+
+That said, your approach is almost similar to what I did, and I will be happy
+to change in order to make the code clearer.
+
+> +	status &= ~AMD_PMU_V2_GLOBAL_STATUS_RESERVED;
+> 	if (!status)
+> 		goto done;
 > 
+> ?
+> 
+> Aside from being reserved, why are these bits magically set all of a
+> sudden?
 
--- 
+That is probably a question to AMD.
 
-- Arnaldo
