@@ -2,389 +2,257 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C75EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 02:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C21DEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 02:39:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233175AbjFPCPK (ORCPT
+        id S233602AbjFPCjM (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 22:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41322 "EHLO
+        Thu, 15 Jun 2023 22:39:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229581AbjFPCPJ (ORCPT
+        with ESMTP id S230435AbjFPCjL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 22:15:09 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDBEC296A;
-        Thu, 15 Jun 2023 19:15:07 -0700 (PDT)
+        Thu, 15 Jun 2023 22:39:11 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A21F1297A;
+        Thu, 15 Jun 2023 19:39:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686881707; x=1718417707;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=i6dFmETFOd1K689FX6P/EGGimE+NEreeX3496pfSF/A=;
-  b=LX5UWVqtBSVstS2/CVRitqeBvaLQMOlZV5l3ryiBofSIMJ8M04hRKlTH
-   3i7Pe8MkFAMuVR65vDZBWxdqRcEhK/b/aW6slP8vIu2vko0v0aBv1BJKM
-   ymJDG5Bpj4JE51MU/pa7YD5RnYxLxL8OpikbEtNpWujsMEgo9E01zUCm5
-   hVZ0CCQUJz1TE9zWFANx4WlromfKCNhWhwVAfmq/89YTOVQSqTVJ3iOEn
-   qNg7CV2mlSC2/R1rOoS2LbtDhYsmAYVG41/27XfXS1Cnny4i1k911eAU+
-   pdwm2OBneSrBlQJDWBeTGL3jh4dS+ScaCENFMPhE4D14W/0Nx+qQDkU0E
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="343833538"
+  t=1686883149; x=1718419149;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pzWK+3N8OVojlhb7ZbBZC2yBcASqhqN8Hpy+nQhF7h8=;
+  b=fqdlzGgLFX/KqzzL4Suaw0oz1N250T5sJKl+wjCUjEcqS6zqg1KMBrO8
+   qC5J4/4MeNcPQrSPLuqVojPM9ZVubBlWs4iapoasiP2wikB7/1X/f1qRl
+   F/P56wSz1Q61HuisxgkKZUU67ph8G0l8G72Imf0sXNQS84LXVULPO8vWi
+   lkP59D2g0uCtRQv0M4DDEWSy2xX8rhY47uajWSyuVzbItS+xIFsidZIfO
+   U/qORy4apUvadvjFjpNK02MbA7+Ct/tNxZ2GmCAAMeYjUnAH++dLkDU3Z
+   LuYBc6FyaE7C7trIU6fsTn2aPEDXF4PWboeNfK6fwKfQmOqcFxtBDhhhY
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="348805548"
 X-IronPort-AV: E=Sophos;i="6.00,246,1681196400"; 
-   d="scan'208";a="343833538"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 19:15:07 -0700
+   d="scan'208";a="348805548"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 19:39:08 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="706903939"
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="857209759"
 X-IronPort-AV: E=Sophos;i="6.00,246,1681196400"; 
-   d="scan'208";a="706903939"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 15 Jun 2023 19:15:06 -0700
-Received: from [10.209.76.72] (kliang2-mobl1.ccr.corp.intel.com [10.209.76.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id AE435580919;
-        Thu, 15 Jun 2023 19:15:05 -0700 (PDT)
-Message-ID: <70597602-99bd-f72c-1b89-334b5a9453d1@linux.intel.com>
-Date:   Thu, 15 Jun 2023 22:15:04 -0400
+   d="scan'208";a="857209759"
+Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 15 Jun 2023 19:39:04 -0700
+Received: from kbuild by 783282924a45 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q9zMd-0000hn-2k;
+        Fri, 16 Jun 2023 02:39:03 +0000
+Date:   Fri, 16 Jun 2023 10:38:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V12 07/10] arm64/perf: Add PERF_ATTACH_TASK_DATA to
+ events with has_branch_stack()
+Message-ID: <202306161016.jJeqG6mc-lkp@intel.com>
+References: <20230615133239.442736-8-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH V3 4/8] perf metrics: Sort the Default metricgroup
-Content-Language: en-US
-To:     Ian Rogers <irogers@google.com>
-Cc:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
-References: <20230615135315.3662428-1-kan.liang@linux.intel.com>
- <20230615135315.3662428-5-kan.liang@linux.intel.com>
- <CAP-5=fU9qZ8jb=etO0U3tpG3XuvZ_fX5CExVL_gQag55Q8bPfA@mail.gmail.com>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fU9qZ8jb=etO0U3tpG3XuvZ_fX5CExVL_gQag55Q8bPfA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230615133239.442736-8-anshuman.khandual@arm.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+Hi Anshuman,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on arm64/for-next/core]
+[also build test ERROR on tip/perf/core acme/perf/core linus/master v6.4-rc6 next-20230615]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/drivers-perf-arm_pmu-Add-new-sched_task-callback/20230615-223352
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
+patch link:    https://lore.kernel.org/r/20230615133239.442736-8-anshuman.khandual%40arm.com
+patch subject: [PATCH V12 07/10] arm64/perf: Add PERF_ATTACH_TASK_DATA to events with has_branch_stack()
+config: arm-randconfig-r004-20230615 (https://download.01.org/0day-ci/archive/20230616/202306161016.jJeqG6mc-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
+reproduce (this is a W=1 build):
+        mkdir -p ~/bin
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        git remote add arm64 https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+        git fetch arm64 for-next/core
+        git checkout arm64/for-next/core
+        b4 shazam https://lore.kernel.org/r/20230615133239.442736-8-anshuman.khandual@arm.com
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/perf/
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202306161016.jJeqG6mc-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/perf/arm_pmuv3.c:148:45: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     148 |         [C(DTLB)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR,
+         |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:134:44: note: expanded from macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR'
+     134 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_WR                         0x004F
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:140:2: note: previous initialization is here
+     140 |         PERF_CACHE_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:43:31: note: expanded from macro 'PERF_CACHE_MAP_ALL_UNSUPPORTED'
+      43 |                 [0 ... C(RESULT_MAX) - 1] = CACHE_OP_UNSUPPORTED,       \
+         |                                             ^~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:35:31: note: expanded from macro 'CACHE_OP_UNSUPPORTED'
+      35 | #define CACHE_OP_UNSUPPORTED            0xFFFF
+         |                                         ^~~~~~
+   drivers/perf/arm_pmuv3.c:149:42: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     149 |         [C(DTLB)][C(OP_READ)][C(RESULT_MISS)]   = ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:131:50: note: expanded from macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD'
+     131 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_RD                  0x004C
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:140:2: note: previous initialization is here
+     140 |         PERF_CACHE_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:43:31: note: expanded from macro 'PERF_CACHE_MAP_ALL_UNSUPPORTED'
+      43 |                 [0 ... C(RESULT_MAX) - 1] = CACHE_OP_UNSUPPORTED,       \
+         |                                             ^~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:35:31: note: expanded from macro 'CACHE_OP_UNSUPPORTED'
+      35 | #define CACHE_OP_UNSUPPORTED            0xFFFF
+         |                                         ^~~~~~
+   drivers/perf/arm_pmuv3.c:150:43: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     150 |         [C(DTLB)][C(OP_WRITE)][C(RESULT_MISS)]  = ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:132:50: note: expanded from macro 'ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR'
+     132 | #define ARMV8_IMPDEF_PERFCTR_L1D_TLB_REFILL_WR                  0x004D
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:140:2: note: previous initialization is here
+     140 |         PERF_CACHE_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:43:31: note: expanded from macro 'PERF_CACHE_MAP_ALL_UNSUPPORTED'
+      43 |                 [0 ... C(RESULT_MAX) - 1] = CACHE_OP_UNSUPPORTED,       \
+         |                                             ^~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:35:31: note: expanded from macro 'CACHE_OP_UNSUPPORTED'
+      35 | #define CACHE_OP_UNSUPPORTED            0xFFFF
+         |                                         ^~~~~~
+   drivers/perf/arm_pmuv3.c:152:44: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     152 |         [C(NODE)][C(OP_READ)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD,
+         |                                                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:148:46: note: expanded from macro 'ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD'
+     148 | #define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_RD                      0x0060
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:140:2: note: previous initialization is here
+     140 |         PERF_CACHE_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:43:31: note: expanded from macro 'PERF_CACHE_MAP_ALL_UNSUPPORTED'
+      43 |                 [0 ... C(RESULT_MAX) - 1] = CACHE_OP_UNSUPPORTED,       \
+         |                                             ^~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:35:31: note: expanded from macro 'CACHE_OP_UNSUPPORTED'
+      35 | #define CACHE_OP_UNSUPPORTED            0xFFFF
+         |                                         ^~~~~~
+   drivers/perf/arm_pmuv3.c:153:45: warning: initializer overrides prior initialization of this subobject [-Winitializer-overrides]
+     153 |         [C(NODE)][C(OP_WRITE)][C(RESULT_ACCESS)] = ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR,
+         |                                                    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmuv3.h:149:46: note: expanded from macro 'ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR'
+     149 | #define ARMV8_IMPDEF_PERFCTR_BUS_ACCESS_WR                      0x0061
+         |                                                                 ^~~~~~
+   drivers/perf/arm_pmuv3.c:140:2: note: previous initialization is here
+     140 |         PERF_CACHE_MAP_ALL_UNSUPPORTED,
+         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:43:31: note: expanded from macro 'PERF_CACHE_MAP_ALL_UNSUPPORTED'
+      43 |                 [0 ... C(RESULT_MAX) - 1] = CACHE_OP_UNSUPPORTED,       \
+         |                                             ^~~~~~~~~~~~~~~~~~~~
+   include/linux/perf/arm_pmu.h:35:31: note: expanded from macro 'CACHE_OP_UNSUPPORTED'
+      35 | #define CACHE_OP_UNSUPPORTED            0xFFFF
+         |                                         ^~~~~~
+   drivers/perf/arm_pmuv3.c:714:3: error: call to undeclared function 'armv8pmu_branch_enable'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     714 |                 armv8pmu_branch_enable(event);
+         |                 ^
+   drivers/perf/arm_pmuv3.c:720:3: error: call to undeclared function 'armv8pmu_branch_disable'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     720 |                 armv8pmu_branch_disable(event);
+         |                 ^
+   drivers/perf/arm_pmuv3.c:805:4: error: call to undeclared function 'armv8pmu_branch_read'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     805 |                         armv8pmu_branch_read(cpuc, event);
+         |                         ^
+   drivers/perf/arm_pmuv3.c:805:4: note: did you mean 'armv8pmu_pmcr_read'?
+   drivers/perf/arm_pmuv3.c:430:19: note: 'armv8pmu_pmcr_read' declared here
+     430 | static inline u32 armv8pmu_pmcr_read(void)
+         |                   ^
+   drivers/perf/arm_pmuv3.c:912:3: error: call to undeclared function 'armv8pmu_branch_reset'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     912 |                 armv8pmu_branch_reset();
+         |                 ^
+   drivers/perf/arm_pmuv3.c:987:3: error: call to undeclared function 'armv8pmu_branch_reset'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     987 |                 armv8pmu_branch_reset();
+         |                 ^
+   drivers/perf/arm_pmuv3.c:1026:8: error: call to undeclared function 'armv8pmu_branch_attr_valid'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1026 |                 if (!armv8pmu_branch_attr_valid(event))
+         |                      ^
+   drivers/perf/arm_pmuv3.c:1148:2: error: call to undeclared function 'armv8pmu_branch_probe'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1148 |         armv8pmu_branch_probe(cpu_pmu);
+         |         ^
+>> drivers/perf/arm_pmuv3.c:1195:9: error: call to undeclared function 'armv8pmu_task_ctx_cache_alloc'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1195 |                 ret = armv8pmu_task_ctx_cache_alloc(cpu_pmu);
+         |                       ^
+>> drivers/perf/arm_pmuv3.c:1201:4: error: call to undeclared function 'armv8pmu_task_ctx_cache_free'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+    1201 |                         armv8pmu_task_ctx_cache_free(cpu_pmu);
+         |                         ^
+   55 warnings and 9 errors generated.
 
 
-On 2023-06-15 6:05 p.m., Ian Rogers wrote:
-> On Thu, Jun 15, 2023 at 6:54 AM <kan.liang@linux.intel.com> wrote:
->>
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> The new default mode will print the metrics as a metric group. The
->> metrics from the same metric group must be adjacent to each other in the
->> metric list. But the metric_list_cmp() sorts metrics by the number of
->> events.
->>
->> Add a new sort for the Default metricgroup, which sorts by
->> default_metricgroup_name and metric_name.
->>
->> Add is_default in the struct metric_event to indicate that it's from
->> the Default metricgroup.
->>
->> Store the displayed metricgroup name of the Default metricgroup into
->> the metric expr for output.
->>
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>  tools/perf/util/metricgroup.c | 37 +++++++++++++++++++++++++++++++++++
->>  tools/perf/util/metricgroup.h |  3 +++
->>  2 files changed, 40 insertions(+)
->>
->> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
->> index 8b19644ade7d..e20adbdd5b56 100644
->> --- a/tools/perf/util/metricgroup.c
->> +++ b/tools/perf/util/metricgroup.c
->> @@ -79,6 +79,7 @@ static struct rb_node *metric_event_new(struct rblist *rblist __maybe_unused,
->>                 return NULL;
->>         memcpy(me, entry, sizeof(struct metric_event));
->>         me->evsel = ((struct metric_event *)entry)->evsel;
->> +       me->is_default = false;
->>         INIT_LIST_HEAD(&me->head);
->>         return &me->nd;
->>  }
->> @@ -1160,6 +1161,25 @@ static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
->>         return right_count - left_count;
->>  }
->>
->> +/**
->> + * default_metricgroup_cmp - Implements complex key for the Default metricgroup
->> + *                          that first sorts by default_metricgroup_name, then
->> + *                          metric_name.
->> + */
->> +static int default_metricgroup_cmp(void *priv __maybe_unused,
->> +                                  const struct list_head *l,
->> +                                  const struct list_head *r)
->> +{
->> +       const struct metric *left = container_of(l, struct metric, nd);
->> +       const struct metric *right = container_of(r, struct metric, nd);
->> +       int diff = strcmp(right->default_metricgroup_name, left->default_metricgroup_name);
->> +
->> +       if (diff)
->> +               return diff;
->> +
->> +       return strcmp(right->metric_name, left->metric_name);
->> +}
->> +
->>  struct metricgroup__add_metric_data {
->>         struct list_head *list;
->>         const char *pmu;
->> @@ -1515,6 +1535,7 @@ static int parse_groups(struct evlist *perf_evlist,
->>         LIST_HEAD(metric_list);
->>         struct metric *m;
->>         bool tool_events[PERF_TOOL_MAX] = {false};
->> +       bool is_default = !strcmp(str, "Default");
->>         int ret;
->>
->>         if (metric_events_list->nr_entries == 0)
->> @@ -1549,6 +1570,9 @@ static int parse_groups(struct evlist *perf_evlist,
->>                         goto out;
->>         }
->>
->> +       if (is_default)
->> +               list_sort(NULL, &metric_list, default_metricgroup_cmp);
->> +
->>         list_for_each_entry(m, &metric_list, nd) {
->>                 struct metric_event *me;
->>                 struct evsel **metric_events;
->> @@ -1637,6 +1661,19 @@ static int parse_groups(struct evlist *perf_evlist,
->>                 expr->metric_unit = m->metric_unit;
->>                 expr->metric_events = metric_events;
->>                 expr->runtime = m->pctx->sctx.runtime;
->> +               if (m->pmu && strcmp(m->pmu, "cpu")) {
-> 
-> This shouldn't compare with a PMU name like this. What happens for
-> memory bandwidth which could be logically with a memory controller
-> PMU?
-> 
->> +                       char *name;
->> +
->> +                       if (asprintf(&name, "%s (%s)", m->default_metricgroup_name, m->pmu) < 0)
->> +                               expr->default_metricgroup_name = m->default_metricgroup_name;
-> 
-> Who owns the string in this case? Can't you end up with
-> default_metricgroup_name pointing to a freed string? I think this
-> feels a lot more like output code, so I'm unclear why we're setting it
-> up in the metric.
+vim +/armv8pmu_task_ctx_cache_alloc +1195 drivers/perf/arm_pmuv3.c
 
-Yes, we can decide when outputing the name. The below patch move it to
-the output code. I will do the modification in V4.
+  1176	
+  1177	static int armv8pmu_probe_pmu(struct arm_pmu *cpu_pmu)
+  1178	{
+  1179		struct armv8pmu_probe_info probe = {
+  1180			.pmu = cpu_pmu,
+  1181			.present = false,
+  1182		};
+  1183		int ret;
+  1184	
+  1185		ret = smp_call_function_any(&cpu_pmu->supported_cpus,
+  1186					    __armv8pmu_probe_pmu,
+  1187					    &probe, 1);
+  1188		if (ret)
+  1189			return ret;
+  1190	
+  1191		if (!probe.present)
+  1192			return -ENODEV;
+  1193	
+  1194		if (cpu_pmu->has_branch_stack) {
+> 1195			ret = armv8pmu_task_ctx_cache_alloc(cpu_pmu);
+  1196			if (ret)
+  1197				return ret;
+  1198	
+  1199			ret = branch_records_alloc(cpu_pmu);
+  1200			if (ret) {
+> 1201				armv8pmu_task_ctx_cache_free(cpu_pmu);
+  1202				return ret;
+  1203			}
+  1204		}
+  1205		return 0;
+  1206	}
+  1207	
 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index acf86b15ee49..a6a5ed44a679 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1661,17 +1661,8 @@ static int parse_groups(struct evlist *perf_evlist,
- 		expr->metric_unit = m->metric_unit;
- 		expr->metric_events = metric_events;
- 		expr->runtime = m->pctx->sctx.runtime;
--		if (m->pmu && strcmp(m->pmu, "cpu")) {
--			char *name;
--
--			if (asprintf(&name, "%s (%s)", m->default_metricgroup_name, m->pmu) < 0)
--				expr->default_metricgroup_name = m->default_metricgroup_name;
--			else
--				expr->default_metricgroup_name = name;
--		} else
--			expr->default_metricgroup_name = m->default_metricgroup_name;
--		if (is_default)
--			me->is_default = true;
-+		expr->default_metricgroup_name = m->default_metricgroup_name;
-+		me->is_default = is_default;
- 		list_add(&expr->nd, &me->head);
- 	}
-
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index b25974670d30..1440b0fc7d00 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -539,6 +539,42 @@ double test_generic_metric(struct metric_expr
-*mexp, int aggr_idx)
- 	return ratio;
- }
-
-+static void perf_stat__print_metricgroup_header(struct perf_stat_config
-*config,
-+						struct evsel *evsel,
-+						void *ctxp,
-+						const char *name,
-+						struct perf_stat_output_ctx *out)
-+{
-+	bool need_full_name = perf_pmus__num_core_pmus() > 1;
-+	static const char *last_name;
-+	static const char *last_pmu;
-+	char full_name[64];
-+
-+	/*
-+	 * A metricgroup may have several metric events,
-+	 * e.g.,TopdownL1 on e-core of ADL.
-+	 * The name has been output by the first metric
-+	 * event. Only align with other metics from
-+	 * different metric events.
-+	 */
-+	if (last_name && !strcmp(last_name, name)) {
-+		if (!need_full_name || !strcmp(last_pmu, evsel->pmu_name)) {
-+			out->print_metricgroup_header(config, ctxp, NULL);
-+			return;
-+		}
-+	}
-+
-+	if (need_full_name)
-+		scnprintf(full_name, sizeof(full_name), "%s (%s)", name,
-evsel->pmu_name);
-+	else
-+		scnprintf(full_name, sizeof(full_name), "%s", name);
-+
-+	out->print_metricgroup_header(config, ctxp, full_name);
-+
-+	last_name = name;
-+	last_pmu = evsel->pmu_name;
-+}
-+
- /**
-  * perf_stat__print_shadow_stats_metricgroup - Print out metrics
-associated with the evsel
-  *					       For the non-default, all metrics associated
-@@ -563,7 +599,6 @@ void
-*perf_stat__print_shadow_stats_metricgroup(struct perf_stat_config *config,
- 	void *ctxp = out->ctx;
- 	bool header_printed = false;
- 	const char *name = NULL;
--	static const char *last_name;
-
- 	me = metricgroup__lookup(metric_events, evsel, false);
- 	if (me == NULL)
-@@ -588,20 +623,8 @@ void
-*perf_stat__print_shadow_stats_metricgroup(struct perf_stat_config *config,
- 			/* Only print the name of the metricgroup once */
- 			if (!header_printed) {
- 				header_printed = true;
--				if (!last_name || strcmp(last_name, name)) {
--					/* Print out the name for the new metricgroup. */
--					out->print_metricgroup_header(config, ctxp, name);
--					last_name = name;
--				} else if (!strcmp(last_name, name)) {
--					/*
--					 * A metricgroup may have several metric events,
--					 * e.g.,TopdownL1 on e-core of ADL.
--					 * The name has been output by the first metric
--					 * event. Only align with other metics from
--					 * different metric events.
--					 */
--					out->print_metricgroup_header(config, ctxp, NULL);
--				}
-+				perf_stat__print_metricgroup_header(config, evsel, ctxp,
-+								    name, out);
- 			}
- 		}
-
-
-
-> 
->> +                       else {
->> +                               expr->default_metricgroup_name = strdup(name);
-> 
-> But name was just allocated, why strdup?
-> 
-> This is still leaking it is just the strdup now leaks and not the asprintf:
-> ```
-> ==2495793==ERROR: LeakSanitizer: detected memory leaks
-> 
-> Direct leak of 6199 byte(s) in 340 object(s) allocated from:
->    #0 0x7f175c27077b in __interceptor_strdup
-> ../../../../src/libsanitizer/asan/asan_interceptors.cp
-> p:439
->    #1 0x5596323b2a28 in parse_groups util/metricgroup.c:1670
->    #2 0x5596323b2f08 in metricgroup__parse_groups_test util/metricgroup.c:1721
->    #3 0x5596322992bf in test__parsing_callback tests/pmu-events.c:837
->    #4 0x559632658ac6 in pmu_metrics_table_for_each_metric
-> /tmp/perf/pmu-events/pmu-events.c:61641
->    #5 0x5596326590fc in pmu_for_each_core_metric
-> /tmp/perf/pmu-events/pmu-events.c:61742
->    #6 0x559632299b7c in test__parsing tests/pmu-events.c:898
->    #7 0x5596322663b0 in run_test tests/builtin-test.c:236
->    #8 0x559632266655 in test_and_print tests/builtin-test.c:265
->    #9 0x55963226766f in __cmd_test tests/builtin-test.c:436
->    #10 0x559632268953 in cmd_test tests/builtin-test.c:559
->    #11 0x5596322f5916 in run_builtin
-> /home/irogers/kernel.org/tools/perf/perf.c:323
->    #12 0x5596322f5e87 in handle_internal_command
-> /home/irogers/kernel.org/tools/perf/perf.c:377
->    #13 0x5596322f624f in run_argv /home/irogers/kernel.org/tools/perf/perf.c:421
->    #14 0x5596322f67b7 in main /home/irogers/kernel.org/tools/perf/perf.c:537
->    #15 0x7f175bebf189 in __libc_start_call_main
-> ../sysdeps/nptl/libc_start_call_main.h:58
-> 
-> SUMMARY: AddressSanitizer: 6199 byte(s) leaked in 340 allocation(s).
-> ```
-> 
->> +                               free(name);
->> +                       }
->> +               } else
->> +                       expr->default_metricgroup_name = m->default_metricgroup_name;
-> 
-> Who owns the string in this case? Can't you end up with
-> default_metricgroup_name pointing to a freed string?
-> 
-> I spent some time trying to rationalize this to add as a patch, but
-> then the more I look at things like the strcmp with "cpu" my changes
-> were going to modify behavior in a way that would need you to test and
-> sign-off, so I'll hold back.
-
-THe "cpu" check will be gone in v4.
-
-> 
-> To test with leak/address sanitizer use the tmp.perf-tools-next
-> branch, I build with:
-> $ make -C tools/perf O=/tmp/perf DEBUG=1 EXTRA_CFLAGS="-O0 -g
-> -fno-omit-frame-pointer -DREFCNT_CHECKING=1 -fsanitize=address"
-> NO_LIBTRACEEVENT=1
-> but the only bit you really need is "-fsanitize=address" which both
-> clang and gcc support.
-> 
-> Address sanitizer from apt-cache is:
-> libasan6 - AddressSanitizer -- a fast memory error detector
-> 
-> Fedora and other distro.s have it too.
-> 
-
-I still cannot reproduce the memory leaks even with the above command.
-I will remove the code in v4, so the memory leaks should be gone.
-
-Thanks,
-Kan
-
-> 
->> +               if (is_default)
->> +                       me->is_default = true;
->>                 list_add(&expr->nd, &me->head);
->>         }
->>
->> diff --git a/tools/perf/util/metricgroup.h b/tools/perf/util/metricgroup.h
->> index bf18274c15df..d5325c6ec8e1 100644
->> --- a/tools/perf/util/metricgroup.h
->> +++ b/tools/perf/util/metricgroup.h
->> @@ -22,6 +22,7 @@ struct cgroup;
->>  struct metric_event {
->>         struct rb_node nd;
->>         struct evsel *evsel;
->> +       bool is_default; /* the metric evsel from the Default metricgroup */
->>         struct list_head head; /* list of metric_expr */
->>  };
->>
->> @@ -55,6 +56,8 @@ struct metric_expr {
->>          * more human intelligible) and then add "MiB" afterward when displayed.
->>          */
->>         const char *metric_unit;
->> +       /** Displayed metricgroup name of the Default metricgroup */
->> +       const char *default_metricgroup_name;
->>         /** Null terminated array of events used by the metric. */
->>         struct evsel **metric_events;
->>         /** Null terminated array of referenced metrics. */
->> --
->> 2.35.1
->>
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
