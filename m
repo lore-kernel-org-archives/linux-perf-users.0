@@ -2,86 +2,101 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37629EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 01:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6276EB64D9
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 01:56:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbjFPB26 (ORCPT
+        id S238201AbjFPB4R (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 21:28:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54956 "EHLO
+        Thu, 15 Jun 2023 21:56:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbjFPB25 (ORCPT
+        with ESMTP id S229509AbjFPB4Q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 21:28:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45E0926A6;
-        Thu, 15 Jun 2023 18:28:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CC03A61376;
-        Fri, 16 Jun 2023 01:28:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2A63C433C8;
-        Fri, 16 Jun 2023 01:28:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686878936;
-        bh=Ska3k0W+hkdYi+l/Z5d9+NYh1dwYFpkhTmWNf3VmqZc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Z3nvgszhyVulqop8ji5FoK//jhcyaqPoCBTftcxu3O+WLlgf6Qt+gBaBTdmHGkHwW
-         p59LjBIdI5fdtPDjWMqZMzeq2TPOaYLFEHbk2f/wy3xfQHIwdr3V2JHBUpHKMpyoDV
-         CG5YqxXtmwZoah4AdlpH3970R1njWrVqfF/dXUqefGcoomaJDP63dsIe9gJ0VDqsXr
-         yBe9UQBkpm9O/OtlruCRGBuLgaf1MD9+NQy32Yoh8knnCz0ctYjOuVTKYHpnWkWuW7
-         zbF5DnuQRBshz66h6YoBjSX0vCYMEcJNONyjyWm/LdimQDWikWXIY6s9qqlkptMjWh
-         AiJ5NXBuXT3EA==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id B2B9640692; Thu, 15 Jun 2023 22:28:53 -0300 (-03)
-Date:   Thu, 15 Jun 2023 22:28:53 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     kan.liang@linux.intel.com
-Cc:     mingo@redhat.com, peterz@infradead.org, irogers@google.com,
-        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
-Subject: Re: [PATCH V3 0/8] New metricgroup output in perf stat default mode
-Message-ID: <ZIu61WSa17DvVtgt@kernel.org>
-References: <20230615135315.3662428-1-kan.liang@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230615135315.3662428-1-kan.liang@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+        Thu, 15 Jun 2023 21:56:16 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CCCB3AC;
+        Thu, 15 Jun 2023 18:56:14 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8DxSuo9wYtkVcoFAA--.12199S3;
+        Fri, 16 Jun 2023 09:56:13 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxC8o8wYtkjL0cAA--.6837S2;
+        Fri, 16 Jun 2023 09:56:13 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Subject: [PATCH] perf tools: Use "grep -F" instead of "fgrep"
+Date:   Fri, 16 Jun 2023 09:56:07 +0800
+Message-Id: <1686880567-30017-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf8BxC8o8wYtkjL0cAA--.6837S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7CFW7Kr4DCF1fJw1DGFy7twc_yoW8GF43pF
+        Z8Ca47tr4rJa4ktFZrCrsFqF47tr93ZFy8Cr1YgrsrJFn5X3WxJr13JF45uF15XFZYv3yF
+        ka97KF43GrW2vagCm3ZEXasCq-sJn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r4j6r4UJwAaw2AFwI0_Jw0_GFyle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+        Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_
+        WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+        JVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+        vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+        x2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
+        xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAF
+        wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jTq2NUUUUU=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Thu, Jun 15, 2023 at 06:53:07AM -0700, kan.liang@linux.intel.com escreveu:
-> The patch proposes a new output format which only outputting the value
-> of each metric and the metricgroup name. It can brings a clean and
-> consistent output format among ARCHs and generations.
-> 
-> The first patche is a bug fix for the current code.
-> 
-> The patches 2-5 introduce the new metricgroup output.
-> 
-> The patches 6-8 improve the tests to cover the default mode.
+There exists the following warning when execute perf test
+record+probe_libc_inet_pton.sh:
 
-I cherry picked 1-3 and 6, and pushed to the tmp.perf-tools-next branch
-at both my usual repository at:
+  fgrep: warning: fgrep is obsolescent; using grep -F
 
-git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tmp.perf-tools-next
+This is tested on Fedora 38, the version of grep is 3.8,
+the latest version of grep claims the fgrep is obsolete,
+use "grep -F" instead of "fgrep" to silence the warning.
 
-And also at the one we're transitioning to, and that Namhyung Kim has
-write access and will update while I'm in vacation in the next two
-weeks.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git tmp.perf-tools-next
+diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+index 0934fb0..89214a6 100755
+--- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
++++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+@@ -14,7 +14,7 @@
+ . "$(dirname "$0")/lib/probe_vfs_getname.sh"
+ 
+ libc=$(grep -w libc /proc/self/maps | head -1 | sed -r 's/.*[[:space:]](\/.*)/\1/g')
+-nm -Dg $libc 2>/dev/null | fgrep -q inet_pton || exit 254
++nm -Dg $libc 2>/dev/null | grep -F -q inet_pton || exit 254
+ 
+ event_pattern='probe_libc:inet_pton(\_[[:digit:]]+)?'
+ 
+@@ -94,7 +94,7 @@ delete_libc_inet_pton_event() {
+ }
+ 
+ # Check for IPv6 interface existence
+-ip a sh lo | fgrep -q inet6 || exit 2
++ip a sh lo | grep -F -q inet6 || exit 2
+ 
+ skip_if_no_perf_probe && \
+ add_libc_inet_pton_event && \
+-- 
+2.1.0
 
-Tomorrow I'll do more tests with it and then transition to
-perf-tools-next in both git repositories.
-
-Please prefer
-git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
-from now on.
-
-- Arnaldo
