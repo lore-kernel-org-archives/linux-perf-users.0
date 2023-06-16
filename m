@@ -2,141 +2,288 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC32EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 08:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7F2EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 08:28:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245523AbjFPIPE (ORCPT
+        id S234224AbjFPI20 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jun 2023 04:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55158 "EHLO
+        Fri, 16 Jun 2023 04:28:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245443AbjFPIPB (ORCPT
+        with ESMTP id S233149AbjFPI2Y (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jun 2023 04:15:01 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34106212B;
-        Fri, 16 Jun 2023 01:15:00 -0700 (PDT)
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35G7uQBD004275;
-        Fri, 16 Jun 2023 08:14:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=VByZWeWzZ3naFS8fcpvdWgQYsr2M5Fb1oU3dSy5AMDw=;
- b=WWXV8LSXK9AoR78PjQIFNSX3lbn39/4H62YNYmAT8dnXZ3nS/mwdDT0oc0thJNswufK7
- GzXTekU7Zdt0oHoLGhcwy7K0g+qEDwptzkaNSkRcZ0xUiV8DWEpax79k0oKXGxbiAI5P
- UVM4FnWHN9I8I0S0AHcDjwS+4iLM2AKHjlwliQaGlYi2AHL2DdxW6WL+bvGaVAQnwAv0
- C5izWi9eokaBmmFC2YNSGZuLtDLDfDcFH2Wv7t4/tNUQRGM4Y0wyBJPVH3F0pgggIkPO
- ZgByKAChwEVolQ6PY80x+a5y7BKXINFJAlU+rX8vz+Ww3gkkVfI3zvB4SxYrm/flpZgu uQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r8ksgghkc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Jun 2023 08:14:56 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35G80RbF018723;
-        Fri, 16 Jun 2023 08:14:56 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r8ksgghj8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Jun 2023 08:14:56 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35G81lY7001479;
-        Fri, 16 Jun 2023 08:14:53 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3r4gt5341t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 16 Jun 2023 08:14:53 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35G8Eopn22217462
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 16 Jun 2023 08:14:50 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3F38B20043;
-        Fri, 16 Jun 2023 08:14:50 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E48C92004B;
-        Fri, 16 Jun 2023 08:14:49 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 16 Jun 2023 08:14:49 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org, irogers@google.com, sumanthk@linux.ibm.com,
-        hca@linux.ibm.com
-Cc:     svens@linux.ibm.com, gor@linux.ibm.com,
-        Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf test: fix failing test cases on linux-next for s390
-Date:   Fri, 16 Jun 2023 10:14:37 +0200
-Message-Id: <20230616081437.1932003-1-tmricht@linux.ibm.com>
-X-Mailer: git-send-email 2.39.2
+        Fri, 16 Jun 2023 04:28:24 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A8852D71
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jun 2023 01:28:23 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2b45c289615so1257051fa.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jun 2023 01:28:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google; t=1686904101; x=1689496101;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LZCqAGjRKDvEoatemozoXx1FoWJTpUzjMGwy/qF8g/8=;
+        b=JwldKiQ0TB5xwMKUZIM3Sewt0gaaQKVVgk21JApvEvBQYPpsTN2Zqr4JqgFbWYFNmL
+         tzhVTu0yvEsEb4QsfVkIiDOD3KW80NFwC3yVhgsF9V3kZX6VLlQqjCMB0zlZtZK93yr3
+         alc0LbjCSWLj3u/pIpWKtOfZ2jAoqnO4GxYl4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686904101; x=1689496101;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LZCqAGjRKDvEoatemozoXx1FoWJTpUzjMGwy/qF8g/8=;
+        b=EMgAS1yZPxdiS7tRKO+wwWPBg7cbtp+fvgFpU5PoGfLHQW8x4SR+9hWUL3gZHUpqcG
+         /8mDF1CDSFKWMYCnX5u3BdGDgFpv6enQAsa3IA+p9hWvEMZuIbG9yqUmii/JA+T8hbNx
+         BMvyO0kmF3Zb28ej4vRdp6v6htPBzz2sX11FSR9lS6kjRp6yl2VXirzDzAUAj3aTQ0Jd
+         0kjkYO6AvD1DzWxY1K6Fw3MhtTSNPGfZGZNMAvwSY9srRwacHpxOFKh+Zy00bfcrKq0r
+         GXwHnv8CFxkH7fobROeFCzgmTtJAZtbU4huzpjKAGOA3EXMjN5gVn+02EZZ8SMGYQKN4
+         6fMw==
+X-Gm-Message-State: AC+VfDz+19V8VnnN2pgxxMh5izbtrNpqSN3oZxfFp6rxkIauI2LQ6LIC
+        L/5PfaQ8H8KzHqH5usmqRCH/7dD2nRDaVFmTn5mj
+X-Google-Smtp-Source: ACHHUZ56TziHoZxjzqlSenTHxGQzrOu7m8nSQ8jAwhCsCTSWZVoNUnVvDh+QFfMtHzF5cXvsWIqhYxl5XU8WgpNfj9Y=
+X-Received: by 2002:a2e:330f:0:b0:2a8:bd1f:a377 with SMTP id
+ d15-20020a2e330f000000b002a8bd1fa377mr1210632ljc.20.1686904101308; Fri, 16
+ Jun 2023 01:28:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: kaei6I5nu2Pv-FGyHVjV3uP6Xk5OBY2M
-X-Proofpoint-GUID: Ls4JWOa7kelEnYyjPu1JrufdfFzxRnW0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-16_04,2023-06-15_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 impostorscore=0 mlxscore=0 bulkscore=0
- adultscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306160071
+References: <20230512085321.13259-1-alexghiti@rivosinc.com> <20230512085321.13259-6-alexghiti@rivosinc.com>
+In-Reply-To: <20230512085321.13259-6-alexghiti@rivosinc.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Fri, 16 Jun 2023 01:28:09 -0700
+Message-ID: <CAOnJCUL8t-BMfLX0uvjbFK9TFVyqEdCnkYN9aE0hB4NXEtRHZw@mail.gmail.com>
+Subject: Re: [PATCH v2 05/10] riscv: Prepare for user-space perf event mmap support
+To:     Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Will Deacon <will@kernel.org>, Rob Herring <robh@kernel.org>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-In linux-next tree the many test cases fail on s390x when running the
-perf test suite, sometime the perf tool dumps core.
+On Fri, May 12, 2023 at 1:58=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosinc=
+.com> wrote:
+>
+> Provide all the necessary bits in the generic riscv pmu driver to be
+> able to mmap perf events in userspace: the heavy lifting lies in the
+> driver backend, namely the legacy and sbi implementations.
+>
+> Note that arch_perf_update_userpage is almost a copy of arm64 code.
+>
+> Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+> ---
+>  arch/riscv/kernel/Makefile     |  2 +-
+>  arch/riscv/kernel/perf_event.c | 58 ++++++++++++++++++++++++++++++++++
+>  drivers/perf/riscv_pmu.c       | 41 ++++++++++++++++++++++++
+>  include/linux/perf/riscv_pmu.h |  4 +++
+>  4 files changed, 104 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/riscv/kernel/perf_event.c
+>
+> diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+> index 4cf303a779ab..0d215fd9860d 100644
+> --- a/arch/riscv/kernel/Makefile
+> +++ b/arch/riscv/kernel/Makefile
+> @@ -70,7 +70,7 @@ obj-$(CONFIG_DYNAMIC_FTRACE)  +=3D mcount-dyn.o
+>
+>  obj-$(CONFIG_TRACE_IRQFLAGS)   +=3D trace_irq.o
+>
+> -obj-$(CONFIG_PERF_EVENTS)      +=3D perf_callchain.o
+> +obj-$(CONFIG_PERF_EVENTS)      +=3D perf_callchain.o perf_event.o
+>  obj-$(CONFIG_HAVE_PERF_REGS)   +=3D perf_regs.o
+>  obj-$(CONFIG_RISCV_SBI)                +=3D sbi.o
+>  ifeq ($(CONFIG_RISCV_SBI), y)
+> diff --git a/arch/riscv/kernel/perf_event.c b/arch/riscv/kernel/perf_even=
+t.c
+> new file mode 100644
+> index 000000000000..94174a0fc251
+> --- /dev/null
+> +++ b/arch/riscv/kernel/perf_event.c
+> @@ -0,0 +1,58 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +#include <linux/sched_clock.h>
+> +
+> +void arch_perf_update_userpage(struct perf_event *event,
+> +                              struct perf_event_mmap_page *userpg, u64 n=
+ow)
+> +{
+> +       struct clock_read_data *rd;
+> +       unsigned int seq;
+> +       u64 ns;
+> +
+> +       userpg->cap_user_time =3D 0;
+> +       userpg->cap_user_time_zero =3D 0;
+> +       userpg->cap_user_time_short =3D 0;
+> +       userpg->cap_user_rdpmc =3D
+> +               !!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT);
+> +
+> +       userpg->pmc_width =3D 64;
+> +
 
-Output before:
-  6.1: Test event parsing                               : FAILED!
- 10.3: Parsing of PMU event table metrics               : FAILED!
- 10.4: Parsing of PMU event table metrics with fake PMUs: FAILED!
- 17: Setup struct perf_event_attr                       : FAILED!
- 24: Number of exit events of a simple workload         : FAILED!
- 26: Object code reading                                : FAILED!
- 28: Use a dummy software event to keep tracking        : FAILED!
- 35: Track with sched_switch                            : FAILED!
- 42.3: BPF prologue generation                          : FAILED!
- 66: Parse and process metrics                          : FAILED!
- 68: Event expansion for cgroups                        : FAILED!
- 69.2: Perf time to TSC                                 : FAILED!
- 74: build id cache operations                          : FAILED!
- 86: Zstd perf.data compression/decompression           : FAILED!
- 87: perf record tests                                  : FAILED!
-106: Test java symbol                                   : FAILED!
+The counter width is 64 for cycle & instret. Other hpmcounter can have
+different width.
+This information should retrieved from counter info.
 
-The reason for all these failure is a missing PMU. On s390x
-the PMU is named cpum_cf which is not detected as core PMU.
-A similar patch was added before, see
-commit 9bacbced0e32 ("perf list: Add s390 support for detailed PMU event description")
-which got lost during the recent reworks. Add it again.
+> +       do {
+> +               rd =3D sched_clock_read_begin(&seq);
+> +
+> +               userpg->time_mult =3D rd->mult;
+> +               userpg->time_shift =3D rd->shift;
+> +               userpg->time_zero =3D rd->epoch_ns;
+> +               userpg->time_cycles =3D rd->epoch_cyc;
+> +               userpg->time_mask =3D rd->sched_clock_mask;
+> +
+> +               /*
+> +                * Subtract the cycle base, such that software that
+> +                * doesn't know about cap_user_time_short still 'works'
+> +                * assuming no wraps.
+> +                */
+> +               ns =3D mul_u64_u32_shr(rd->epoch_cyc, rd->mult, rd->shift=
+);
+> +               userpg->time_zero -=3D ns;
+> +
+> +       } while (sched_clock_read_retry(seq));
+> +
+> +       userpg->time_offset =3D userpg->time_zero - now;
+> +
+> +       /*
+> +        * time_shift is not expected to be greater than 31 due to
+> +        * the original published conversion algorithm shifting a
+> +        * 32-bit value (now specifies a 64-bit value) - refer
+> +        * perf_event_mmap_page documentation in perf_event.h.
+> +        */
+> +       if (userpg->time_shift =3D=3D 32) {
+> +               userpg->time_shift =3D 31;
+> +               userpg->time_mult >>=3D 1;
+> +       }
+> +
+> +       /*
+> +        * Internal timekeeping for enabled/running/stopped times
+> +        * is always computed with the sched_clock.
+> +        */
+> +       userpg->cap_user_time =3D 1;
+> +       userpg->cap_user_time_zero =3D 1;
+> +       userpg->cap_user_time_short =3D 1;
+> +}
+> diff --git a/drivers/perf/riscv_pmu.c b/drivers/perf/riscv_pmu.c
+> index ebca5eab9c9b..af69da268246 100644
+> --- a/drivers/perf/riscv_pmu.c
+> +++ b/drivers/perf/riscv_pmu.c
+> @@ -171,6 +171,8 @@ int riscv_pmu_event_set_period(struct perf_event *eve=
+nt)
+>
+>         local64_set(&hwc->prev_count, (u64)-left);
+>
+> +       perf_event_update_userpage(event);
+> +
+>         return overflow;
+>  }
+>
+> @@ -267,6 +269,9 @@ static int riscv_pmu_event_init(struct perf_event *ev=
+ent)
+>         hwc->idx =3D -1;
+>         hwc->event_base =3D mapped_event;
+>
+> +       if (rvpmu->event_init)
+> +               rvpmu->event_init(event);
+> +
+>         if (!is_sampling_event(event)) {
+>                 /*
+>                  * For non-sampling runs, limit the sample_period to half
+> @@ -283,6 +288,39 @@ static int riscv_pmu_event_init(struct perf_event *e=
+vent)
+>         return 0;
+>  }
+>
+> +static int riscv_pmu_event_idx(struct perf_event *event)
+> +{
+> +       struct riscv_pmu *rvpmu =3D to_riscv_pmu(event->pmu);
+> +
+> +       if (!(event->hw.flags & PERF_EVENT_FLAG_USER_READ_CNT))
+> +               return 0;
+> +
+> +       if (rvpmu->csr_index)
+> +               return rvpmu->csr_index(event) + 1;
+> +
+> +       return 0;
+> +}
+> +
+> +static void riscv_pmu_event_mapped(struct perf_event *event, struct mm_s=
+truct *mm)
+> +{
+> +       struct riscv_pmu *rvpmu =3D to_riscv_pmu(event->pmu);
+> +
+> +       if (rvpmu->event_mapped) {
+> +               rvpmu->event_mapped(event, mm);
+> +               perf_event_update_userpage(event);
+> +       }
+> +}
+> +
+> +static void riscv_pmu_event_unmapped(struct perf_event *event, struct mm=
+_struct *mm)
+> +{
+> +       struct riscv_pmu *rvpmu =3D to_riscv_pmu(event->pmu);
+> +
+> +       if (rvpmu->event_unmapped) {
+> +               rvpmu->event_unmapped(event, mm);
+> +               perf_event_update_userpage(event);
+> +       }
+> +}
+> +
+>  struct riscv_pmu *riscv_pmu_alloc(void)
+>  {
+>         struct riscv_pmu *pmu;
+> @@ -307,6 +345,9 @@ struct riscv_pmu *riscv_pmu_alloc(void)
+>         }
+>         pmu->pmu =3D (struct pmu) {
+>                 .event_init     =3D riscv_pmu_event_init,
+> +               .event_mapped   =3D riscv_pmu_event_mapped,
+> +               .event_unmapped =3D riscv_pmu_event_unmapped,
+> +               .event_idx      =3D riscv_pmu_event_idx,
+>                 .add            =3D riscv_pmu_add,
+>                 .del            =3D riscv_pmu_del,
+>                 .start          =3D riscv_pmu_start,
+> diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pm=
+u.h
+> index 9f70d94942e0..1452c8af3b67 100644
+> --- a/include/linux/perf/riscv_pmu.h
+> +++ b/include/linux/perf/riscv_pmu.h
+> @@ -55,6 +55,10 @@ struct riscv_pmu {
+>         void            (*ctr_start)(struct perf_event *event, u64 init_v=
+al);
+>         void            (*ctr_stop)(struct perf_event *event, unsigned lo=
+ng flag);
+>         int             (*event_map)(struct perf_event *event, u64 *confi=
+g);
+> +       void            (*event_init)(struct perf_event *event);
+> +       void            (*event_mapped)(struct perf_event *event, struct =
+mm_struct *mm);
+> +       void            (*event_unmapped)(struct perf_event *event, struc=
+t mm_struct *mm);
+> +       uint8_t         (*csr_index)(struct perf_event *event);
+>
+>         struct cpu_hw_events    __percpu *hw_events;
+>         struct hlist_node       node;
+> --
+> 2.37.2
+>
 
-Output after:
- 10.2: PMU event map aliases                            : FAILED!
- 42.3: BPF prologue generation                          : FAILED!
 
-Most test cases now work and there is not core dump anymore.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Cc: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index fe64ad292d36..6142e4710a2f 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1419,7 +1419,7 @@ void perf_pmu__del_formats(struct list_head *formats)
- 
- bool is_pmu_core(const char *name)
- {
--	return !strcmp(name, "cpu") || is_sysfs_pmu_core(name);
-+	return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") || is_sysfs_pmu_core(name);
- }
- 
- bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
--- 
-2.39.2
-
+--=20
+Regards,
+Atish
