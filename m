@@ -2,189 +2,94 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313BBEB64DB
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 03:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 621FFEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 03:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232050AbjFPDPl (ORCPT
+        id S232752AbjFPDST (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 15 Jun 2023 23:15:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40492 "EHLO
+        Thu, 15 Jun 2023 23:18:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242057AbjFPDPJ (ORCPT
+        with ESMTP id S242415AbjFPDRt (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 15 Jun 2023 23:15:09 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCD25297F;
-        Thu, 15 Jun 2023 20:15:01 -0700 (PDT)
+        Thu, 15 Jun 2023 23:17:49 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 556501FE8;
+        Thu, 15 Jun 2023 20:17:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686885301; x=1718421301;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=815xhyqBJVkUcTa8Wnb+dhIrshSrEjCMA06FFhOLA18=;
-  b=OHnhaKX2p9ab1owBuTAdcbyAgIGMQH0O77JsMC9sdcNdbGrOgy9wly9i
-   rRrqgY4hXvldSgPlsip7bEr55EG1QqhnudkSCS9E8k0mNhUn5HahCusHu
-   4sKflNS6O1EQVUu54BOfcXqf+8aP9d7l3VXcJxYAhOqaNSQSJoXTWD5bH
-   qqSElxSUgRb3fMTKp8qgkEC4S8qOTLaAws5bZxgE+0STH5k1gjvI7S4QB
-   tQAbTVWzPiPq0vkpreiAaxz/V5cSdBrPY/VzjWye9uR3LlA6wCgb49L3J
-   Ip+tHbMdzOHWPI2pof8mcqwP0tSkkkK5UrJ3Tk2jUAbxwm1/cUxkImlZ+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="338718222"
+  t=1686885457; x=1718421457;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=U669CxqKeYrlEExe4cllzHlyM9/w82AvKRW4naxbKxk=;
+  b=CebfMNlhaykDwxrND2bk4tQL9wqalb0uBhRR3JWcqFVcZYVkWBEp6FGj
+   Hj+vdJ03dqUBP0H/SFs5fwN/pEEpdahl8yzfaRqL9nWhZ6GAS3MBRW8DC
+   uUhVE3IRfMT+XN3efGkkzCIPEDySz1o9YGi1AgKZMsEnQXyIZJaiFqX7f
+   o46vW74OuA9PHJ2Q5656VyjhxkPC/HiMlUjmJZsVFBmMhRnMfzXRGa4yL
+   C2Y1P3AaMKNEN47WGr6xt66u2f2OoEpwlFFhrfpx1PhGkTkiMluNS48yt
+   JmANfP8yrwgOrVctMeCsWtQKr9v1UER8aU9Ow1R1OwwLvutufxF+Ht0n2
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="425034458"
 X-IronPort-AV: E=Sophos;i="6.00,246,1681196400"; 
-   d="scan'208";a="338718222"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 20:14:56 -0700
+   d="scan'208";a="425034458"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 20:17:36 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="825555628"
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="706922092"
 X-IronPort-AV: E=Sophos;i="6.00,246,1681196400"; 
-   d="scan'208";a="825555628"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmsmga002.fm.intel.com with ESMTP; 15 Jun 2023 20:14:55 -0700
-From:   kan.liang@linux.intel.com
-To:     acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        irogers@google.com, namhyung@kernel.org, jolsa@kernel.org,
-        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V4 4/5] perf test: Add test case for the standard perf stat output
-Date:   Thu, 15 Jun 2023 20:14:19 -0700
-Message-Id: <20230616031420.3751973-5-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20230616031420.3751973-1-kan.liang@linux.intel.com>
-References: <20230616031420.3751973-1-kan.liang@linux.intel.com>
+   d="scan'208";a="706922092"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga007.jf.intel.com with ESMTP; 15 Jun 2023 20:17:36 -0700
+Received: from [10.209.76.72] (kliang2-mobl1.ccr.corp.intel.com [10.209.76.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by linux.intel.com (Postfix) with ESMTPS id 84369580919;
+        Thu, 15 Jun 2023 20:17:34 -0700 (PDT)
+Message-ID: <c86fa926-ffef-9b43-a689-cb423324672e@linux.intel.com>
+Date:   Thu, 15 Jun 2023 23:17:33 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH 4/8] perf vendor events arm64: Add default tags into
+ topdown L1 metrics
+Content-Language: en-US
+To:     John Garry <john.g.garry@oracle.com>, acme@kernel.org,
+        mingo@redhat.com, peterz@infradead.org, irogers@google.com,
+        namhyung@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com,
+        Jing Zhang <renyu.zj@linux.alibaba.com>
+References: <20230607162700.3234712-1-kan.liang@linux.intel.com>
+ <20230607162700.3234712-5-kan.liang@linux.intel.com>
+ <adc68c05-3631-be63-3069-09bebf4956ef@oracle.com>
+From:   "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <adc68c05-3631-be63-3069-09bebf4956ef@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
 
-Add a new test case to verify the standard perf stat output with
-different options.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/tests/shell/stat+std_output.sh | 108 ++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
- create mode 100755 tools/perf/tests/shell/stat+std_output.sh
+On 2023-06-14 10:30 a.m., John Garry wrote:
+> On 07/06/2023 17:26, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang<kan.liang@linux.intel.com>
+>>
+>> Add the default tags for ARM as well.
+>>
+>> Signed-off-by: Kan Liang<kan.liang@linux.intel.com>
+>> Cc: Jing Zhang<renyu.zj@linux.alibaba.com>
+>> Cc: John Garry<john.g.garry@oracle.com>
+> 
+> Reviewed-by: John Garry <john.g.garry@oracle.com>
+> 
+> But does pmu-events/arch/arm64/hisilicon/hip08/metrics.json need to be
+> fixed up as well?
 
-diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
-new file mode 100755
-index 000000000000..98cc3356a04a
---- /dev/null
-+++ b/tools/perf/tests/shell/stat+std_output.sh
-@@ -0,0 +1,108 @@
-+#!/bin/bash
-+# perf stat STD output linter
-+# SPDX-License-Identifier: GPL-2.0
-+# Tests various perf stat STD output commands for
-+# default event and metricgroup
-+
-+set -e
-+
-+. $(dirname $0)/lib/stat_output.sh
-+
-+stat_output=$(mktemp /tmp/__perf_test.stat_output.std.XXXXX)
-+
-+event_name=(cpu-clock task-clock context-switches cpu-migrations page-faults cycles instructions branches branch-misses stalled-cycles-frontend stalled-cycles-backend)
-+event_metric=("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "GHz" "insn per cycle" "/sec" "of all branches" "frontend cycles idle" "backend cycles idle")
-+
-+metricgroup_name=(TopdownL1 TopdownL2)
-+
-+cleanup() {
-+  rm -f "${stat_output}"
-+
-+  trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+  cleanup
-+  exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+function commachecker()
-+{
-+	local -i cnt=0
-+	local prefix=1
-+
-+	case "$1"
-+	in "--interval")	prefix=2
-+	;; "--per-thread")	prefix=2
-+	;; "--system-wide-no-aggr")	prefix=2
-+	;; "--per-core")	prefix=3
-+	;; "--per-socket")	prefix=3
-+	;; "--per-node")	prefix=3
-+	;; "--per-die")		prefix=3
-+	;; "--per-cache")	prefix=3
-+	esac
-+
-+	while read line
-+	do
-+		# Ignore initial "started on" comment.
-+		x=${line:0:1}
-+		[ "$x" = "#" ] && continue
-+		# Ignore initial blank line.
-+		[ "$line" = "" ] && continue
-+		# Ignore "Performance counter stats"
-+		x=${line:0:25}
-+		[ "$x" = "Performance counter stats" ] && continue
-+		# Ignore "seconds time elapsed" and break
-+		[[ "$line" == *"time elapsed"* ]] && break
-+
-+		main_body=$(echo $line | cut -d' ' -f$prefix-)
-+		x=${main_body%#*}
-+		# Check default metricgroup
-+		y=$(echo $x | tr -d ' ')
-+		[ "$y" = "" ] && continue
-+		for i in "${!metricgroup_name[@]}"; do
-+			[[ "$y" == *"${metricgroup_name[$i]}"* ]] && break
-+		done
-+		[[ "$y" == *"${metricgroup_name[$i]}"* ]] && continue
-+
-+		# Check default event
-+		for i in "${!event_name[@]}"; do
-+			[[ "$x" == *"${event_name[$i]}"* ]] && break
-+		done
-+
-+		[[ ! "$x" == *"${event_name[$i]}"* ]] && {
-+			echo "Unknown event name in $line" 1>&2
-+			exit 1;
-+		}
-+
-+		# Check event metric if it exists
-+		[[ ! "$main_body" == *"#"* ]] && continue
-+		[[ ! "$main_body" == *"${event_metric[$i]}"* ]] && {
-+			echo "wrong event metric. expected ${event_metric[$i]} in $line" 1>&2
-+			exit 1;
-+		}
-+	done < "${stat_output}"
-+	return 0
-+}
-+
-+perf_cmd="-o ${stat_output}"
-+
-+skip_test=$(check_for_topology)
-+check_no_args "STD" "$perf_cmd"
-+check_system_wide "STD" "$perf_cmd"
-+check_interval "STD" "$perf_cmd"
-+check_per_thread "STD" "$perf_cmd"
-+check_per_node "STD" "$perf_cmd"
-+if [ $skip_test -ne 1 ]
-+then
-+	check_system_wide_no_aggr "STD" "$perf_cmd"
-+	check_per_core "STD" "$perf_cmd"
-+	check_per_cache_instance "STD" "$perf_cmd"
-+	check_per_die "STD" "$perf_cmd"
-+	check_per_socket "STD" "$perf_cmd"
-+else
-+	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
-+fi
-+cleanup
-+exit 0
--- 
-2.35.1
+The patch has been added in V4. Please take a look.
 
+https://lore.kernel.org/lkml/20230616031420.3751973-6-kan.liang@linux.intel.com/
+
+Thanks,
+Kan
