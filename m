@@ -2,208 +2,264 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA05EB64DB
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 16:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A88EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 16:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232984AbjFPQsb (ORCPT
+        id S1346021AbjFPQzn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jun 2023 12:48:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35510 "EHLO
+        Fri, 16 Jun 2023 12:55:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231772AbjFPQs1 (ORCPT
+        with ESMTP id S1345858AbjFPQzY (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jun 2023 12:48:27 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D311B35AB
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jun 2023 09:48:24 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-9829a5ae978so133743866b.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jun 2023 09:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1686934102; x=1689526102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tr5g+LR86poa7vi9trOMIJcQmYHg1BLUYh+fDHbbZ4k=;
-        b=gdulUeToKKpVEpcSvYuIK4kORyt/ecm3UcLIZaVUPjcDHKn8Bz7lzYgX86FW4O3T5w
-         KxXjD3aLdG+kRvibvT64ttKNNW4IwZalWAQ3kfjFc3p9yigKYlaG5bZTS57fKyUdxF2s
-         iHs8aBSBqCKsgtAvgVEft79ZFvXsA3UzdvZ74=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686934102; x=1689526102;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Tr5g+LR86poa7vi9trOMIJcQmYHg1BLUYh+fDHbbZ4k=;
-        b=QRm75E/vadrKPebXbAGQY7p0XaT2TQzuq4SEOH2qjPOVSlQmQ+EfwTdEtESt0dMaow
-         +Ki02bUbI8cZTNHuYLqElz5nHswHoy50PU1MZIBZaMx9eVxoRNnTUxD5rpj7TB+bdcVh
-         tLrr2f90jOWy45XdHddtX3hUNXK6q/Z01ENErxwx2SPRKShPiWEGVq2StquT8T8OV/pZ
-         VJTuKYfiOIMW/3mhtRZGVS+uVlTjBjJIdEV/spRM8auwfe0eVOrbiNVYPREz1imOES3u
-         L1Rw6vprhQ+2Bbk6k4MISXkEOP4ik8sAP+rxvFlLzsiPygZg7NkamtvKM048sJqcYOFx
-         kI+A==
-X-Gm-Message-State: AC+VfDzQHian25h++vm62iCfFhvO4U2b9tayjVLsnURdY4DSewzFkmvk
-        +6bP9YBFsrv6uHBHCOXD4swFrjA9gOQWNGam8GruXS0w
-X-Google-Smtp-Source: ACHHUZ45gI362JAMRZGNRiEecmC3EJLV5y/aYlh8fD06vTcFwXrEpTtmyrCBWFz6CLLnLJvWtMe8JA==
-X-Received: by 2002:a17:906:b14:b0:982:735d:43df with SMTP id u20-20020a1709060b1400b00982735d43dfmr1797809ejg.29.1686934101801;
-        Fri, 16 Jun 2023 09:48:21 -0700 (PDT)
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com. [209.85.208.51])
-        by smtp.gmail.com with ESMTPSA id bl5-20020a170906c24500b00982b8cd7a44sm2064046ejb.139.2023.06.16.09.48.19
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Jun 2023 09:48:19 -0700 (PDT)
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-514ad92d1e3so79a12.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jun 2023 09:48:19 -0700 (PDT)
-X-Received: by 2002:a50:999d:0:b0:516:6453:1b76 with SMTP id
- m29-20020a50999d000000b0051664531b76mr240103edb.5.1686934098700; Fri, 16 Jun
- 2023 09:48:18 -0700 (PDT)
+        Fri, 16 Jun 2023 12:55:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A34193A8B
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jun 2023 09:53:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E273A63ED2
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Jun 2023 16:53:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16FB9C433C9;
+        Fri, 16 Jun 2023 16:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686934426;
+        bh=XvBpna82y0GFIfOAvSrQGhbdoiRai/co75T76+RzAbA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=gHxDl4OVmVqxr0yUP3f0o5tp+hc037SdE9uR1zBfvZRgiMqXbU8rruqYDFHdAcpy0
+         SxqKylxhoUHXu+DgCZDCnqz3YgQGLSnP1yEPJYXHMoR6e1vj8j3V3WWSNw33pmv24R
+         L3GRX0Wo4t7p+Y4Fh6EKBplUTcxURsrv8w1t4xnfFkJa8Y/SnI8JGyWgP8X/nr5/To
+         8UemWAOwEFqSm3/4a30MeZ4GfVXxB7mytL0wAKOMV+0Hfi4wnG2/iqQfvUuAXNM430
+         OtAwVrW+2wXgKkx5j2NB66PZuvxoL3nXt/otSKmqaHufGUhm5/YBXoJ9LRyhsQpRbb
+         07v17dYJm7uxQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0DF3140692; Fri, 16 Jun 2023 13:53:42 -0300 (-03)
+Date:   Fri, 16 Jun 2023 13:53:41 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        "linux-perf-use." <linux-perf-users@vger.kernel.org>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        James Clark <james.clark@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        John Garry <john.g.garry@oracle.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: Hybrid PMU issues on aarch64. was: Re: perf test failures in
+ linux-next on s390
+Message-ID: <ZIyTlR+jJ27YKPVx@kernel.org>
+References: <d5319870-7569-c353-1777-31ee090f8da8@linux.ibm.com>
+ <CAP-5=fU+0VXckQiq3E8yqaySNZ+-DDZahEd1OY0uKPWnfFsafg@mail.gmail.com>
+ <e7f0930a-a9fc-d768-a472-bd9af6fafdf5@linux.ibm.com>
+ <CAP-5=fWjqJH0h607cVb1T7pRxDeq4cZBz5TECMajpnkvVNWHEQ@mail.gmail.com>
+ <a19a30b0-8f16-5871-6856-503eadf56e3c@linux.ibm.com>
+ <ZIshkbmQR7oOFiHu@kernel.org>
+ <CAP-5=fVYy6jMd9Nw7iqqsm_G-qW__Lo8kFeCocJ0W2no4XTbpg@mail.gmail.com>
+ <ZIxza13x+AwApbQb@kernel.org>
+ <ZIx1Y9mWc13huQt2@kernel.org>
+ <CAP-5=fVpU6Bm1REcANEu2qsE5eQH2VOx2uz+X0VSoH76r_d7uQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230616150618.6073-1-pmladek@suse.com> <20230616150618.6073-5-pmladek@suse.com>
-In-Reply-To: <20230616150618.6073-5-pmladek@suse.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 16 Jun 2023 09:48:06 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U=ox4ApMbDL7v=ivNF6x=UyG=dd4MU_Dt0rppNCEwCpw@mail.gmail.com>
-Message-ID: <CAD=FV=U=ox4ApMbDL7v=ivNF6x=UyG=dd4MU_Dt0rppNCEwCpw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/6] watchdog/hardlockup: Make HAVE_NMI_WATCHDOG sparc64-specific
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        sparclinux@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVpU6Bm1REcANEu2qsE5eQH2VOx2uz+X0VSoH76r_d7uQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi,
+Em Fri, Jun 16, 2023 at 09:28:12AM -0700, Ian Rogers escreveu:
+> On Fri, Jun 16, 2023 at 7:44 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > Em Fri, Jun 16, 2023 at 11:36:27AM -0300, Arnaldo Carvalho de Melo escreveu:
+> > > > > I noticed this on an arm64 board:
+> > >
+> > > > > acme@roc-rk3399-pc:~/git/perf-tools-next$ perf stat -e cycles:u,instructions:u ls
+> > > > > COPYING  CREDITS  Documentation  Kbuild  Kconfig  LICENSES  MAINTAINERS  Makefile  README  arch  block  certs  crypto  drivers  fs  include  init  io_uring  ipc  kernel  lib  mm  net  perf.data  rust  samples  scripts  security  sound  tools  usr  virt
+> > >
+> > > > >  Performance counter stats for 'ls':
+> > >
+> > > > >    <not supported>      armv8_cortex_a72/cycles:u/
+> > > > >    <not supported>      armv8_cortex_a53/cycles:u/
+> > > > >    <not supported>      armv8_cortex_a72/instructions:u/
+> > > > >    <not supported>      armv8_cortex_a53/instructions:u/
+> > >
+> > > > I tested on a raspberry pi and perf-tools-next is working there. I
+> > > > suspect the issue here is the heterogeneous PMU. The cycles event is
+> > > > converted into a perf_event_attr with type 0 and config 0. When there
+> > > > are heterogeneous PMUs then we try to use the extended type to say we
+> > > > want armv8_cortex_a72 and armv8_cortex_a53 cycles events. Let's say
+> > > > the type number of armv8_cortex_a72 and armv8_cortex_a53 PMUs are 9
+> > > > and 10 respectively. With heterogeneous encodings the type in the
+> > >
+> > > The numbers are 8 and 7, PERF_TYPE_HW (thus zero, thus not printed):
+> > >
+> > > root@roc-rk3399-pc:~# perf stat -vv -e cycles sleep 1
+> > > Using CPUID 0x00000000410fd080
+> > > Control descriptor is not initialized
+> > > ------------------------------------------------------------
+> > > perf_event_attr:
+> > >   size                             136
+> > >   config                           0x800000000
+> > > ------------------------------------------------------------
+> > > sys_perf_event_open: pid 13885  cpu -1  group_fd -1  flags 0x8
+> > > sys_perf_event_open failed, error -2
+> > > Warning:
+> > > cycles event is not supported by the kernel.
+> > > ------------------------------------------------------------
+> > > perf_event_attr:
+> > >   size                             136
+> > >   config                           0x700000000
+> > > ------------------------------------------------------------
+> > > sys_perf_event_open: pid 13885  cpu -1  group_fd -1  flags 0x8
+> > > sys_perf_event_open failed, error -2
+> > > Warning:
+> > > cycles event is not supported by the kernel.
+> > > failed to read counter cycles
+> > > failed to read counter cycles
+> > >
+> > >  Performance counter stats for 'sleep 1':
+> > >
+> > >    <not supported>      armv8_cortex_a72/cycles/
+> > >    <not supported>      armv8_cortex_a53/cycles/
+> > >
+> > >        1.011406938 seconds time elapsed
+> > >
+> > >        0.000000000 seconds user
+> > >        0.010886000 seconds sys
+> > >
+> > >
+> > > root@roc-rk3399-pc:~#
+> > >
+> > > > perf_event_attr remains as 0 and the config becomes 9 << 32 and 10 <<
+> > > > 32. I suspect your kernel is seeing the extended type information and
+> > > > not handling it, hence the error.
+> > >
+> > > looks this is the case indeed
+> > >
+> > > > We add in the extended type for hardware and legacy cache events in
+> > > > the parse events code:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n435
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n1239
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n1478
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/parse-events.c?h=perf-tools-next#n1511
+> > > >
+> > > > The addition of the extended type happens if
+> > > > perf_pmus__supports_extended_type() returns true, its implementation
+> > > > is:
+> > > > https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/pmus.c?h=perf-tools-next#n480
+> > > > bool perf_pmus__supports_extended_type(void)
+> > > > {
+> > > >   return perf_pmus__num_core_pmus() > 1;
+> > > > }
+> > > >
+> > > > Previously on heterogeneous ARM the extended type wouldn't be encoded
+> > > > and I believe the event was opened on the PMU of the current CPU only.
+> > >
+> > > I think that is the case, haven't checked so far tho.
+> > >
+> > > > This is a bug because you will not count events on all PMUs. We can
+> > > > make perf_pmus__supports_extended_type return false on ARM which
+> > > > should bring back the previous behavior - or do some kind of dynamic
+> > >
+> > > simplest first step, trying it.
+> >
+> > Spot on:
+> >
+> > acme@roc-rk3399-pc:~/git/perf-tools-next$ perf stat ls
+> > COPYING  CREDITS  Documentation  Kbuild  Kconfig  LICENSES  MAINTAINERS  Makefile  README  arch  block  certs  crypto  drivers  fs  include  init  io_uring  ipc  kernel  lib  mm  net  rust  samples  scripts  security  sound  tools  usr  virt
+> >
+> >  Performance counter stats for 'ls':
+> >
+> >               9.01 msec task-clock:u                     #    0.401 CPUs utilized
+> >                  0      context-switches:u               #    0.000 /sec
+> >                  0      cpu-migrations:u                 #    0.000 /sec
+> >                 84      page-faults:u                    #    9.320 K/sec
+> >            1188641      cycles:u                         #    0.132 GHz
+> >             601132      instructions:u                   #    0.51  insn per cycle
+> >              64768      branches:u                       #    7.186 M/sec
+> >              11680      branch-misses:u                  #   18.03% of all branches
+> >
+> >        0.022502514 seconds time elapsed
+> >
+> >        0.000000000 seconds user
+> >        0.022946000 seconds sys
+> >
+> >
+> > acme@roc-rk3399-pc:~/git/perf-tools-next$
+> > acme@roc-rk3399-pc:~/git/perf-tools-next$ perf record ls
+> > COPYING  CREDITS  Documentation  Kbuild  Kconfig  LICENSES  MAINTAINERS  Makefile  README  arch  block  certs  crypto  drivers  fs  include  init  io_uring  ipc  kernel  lib  mm  net  perf.data  rust  samples  scripts  security  sound  tools  usr  virt
+> > [ perf record: Woken up 1 times to write data ]
+> > [ perf record: Captured and wrote 0.003 MB perf.data (18 samples) ]
+> > acme@roc-rk3399-pc:~/git/perf-tools-next$ perf evlist
+> > cycles:Pu
+> > dummy:HGu
+> > acme@roc-rk3399-pc:~/git/perf-tools-next$ ldd ~/bin/perf | grep asan
+> >         libasan.so.6 => /lib/aarch64-linux-gnu/libasan.so.6 (0x0000ffffa5a00000)
+> > acme@roc-rk3399-pc:~/git/perf-tools-next$
+> >
+> > With the following patch. Do you want to submit it or may I add it as is
+> > using an edited discussion in this thread as the commit log message?
+> >
+> > Thanks!
+> >
+> > - Arnaldo
+> 
+> Hi Arnaldo,
+> 
+> presumably with the #ifdef you just get 1 PMU - shame. I think rather
+> than do an #ifdef we can do something like call is_event_supported:
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/perf/util/print-events.c?h=perf-tools-next#n232
+> so:
+> bool perf_pmus__supports_extended_type(void)
+>   struct perf_pmu *pmu = NULL;
+>   if (perf_pmus__num_core_pmus() <= 1)
+>      return false;
+>   while((pmu = perf_pmus__scan_core(pmu) != NULL) {
+>     return is_event_supported(PERF_TYPE_HARDWARE,
+> PERF_COUNT_HW_CPU_CYCLES | ((__u64)pmu->type << PERF_PMU_TYPE_SHIFT);
+>  }
+> return false;
+> }
+> We probably don't want to do this for each call of
+> perf_pmus__supports_extended_type so you could use a static and
+> pthread_once, etc.
+> 
+> This would mean if this regression is introduced elsewhere than ARM it
+> will self heal. It will also mean that when ARM support extended types
+> in the kernel, they will get the normal heterogeneous behavior.
 
-On Fri, Jun 16, 2023 at 8:07=E2=80=AFAM Petr Mladek <pmladek@suse.com> wrot=
-e:
->
-> There are several hardlockup detector implementations and several Kconfig
-> values which allow selection and build of the preferred one.
->
-> CONFIG_HARDLOCKUP_DETECTOR was introduced by the commit 23637d477c1f53acb
-> ("lockup_detector: Introduce CONFIG_HARDLOCKUP_DETECTOR") in v2.6.36.
-> It was a preparation step for introducing the new generic perf hardlockup
-> detector.
->
-> The existing arch-specific variants did not support the to-be-created
-> generic build configurations, sysctl interface, etc. This distinction
-> was made explicit by the commit 4a7863cc2eb5f98 ("x86, nmi_watchdog:
-> Remove ARCH_HAS_NMI_WATCHDOG and rely on CONFIG_HARDLOCKUP_DETECTOR")
-> in v2.6.38.
->
-> CONFIG_HAVE_NMI_WATCHDOG was introduced by the commit d314d74c695f967e105
-> ("nmi watchdog: do not use cpp symbol in Kconfig") in v3.4-rc1. It replac=
-ed
-> the above mentioned ARCH_HAS_NMI_WATCHDOG. At that time, it was still use=
-d
-> by three architectures, namely blackfin, mn10300, and sparc.
->
-> The support for blackfin and mn10300 architectures has been completely
-> dropped some time ago. And sparc is the only architecture with the histor=
-ic
-> NMI watchdog at the moment.
->
-> And the old sparc implementation is really special. It is always built on
-> sparc64. It used to be always enabled until the commit 7a5c8b57cec93196b
-> ("sparc: implement watchdog_nmi_enable and watchdog_nmi_disable") added
-> in v4.10-rc1.
->
-> There are only few locations where the sparc64 NMI watchdog interacts
-> with the generic hardlockup detectors code:
->
->   + implements arch_touch_nmi_watchdog() which is called from the generic
->     touch_nmi_watchdog()
->
->   + implements watchdog_hardlockup_enable()/disable() to support
->     /proc/sys/kernel/nmi_watchdog
->
->   + is always preferred over other generic watchdogs, see
->     CONFIG_HARDLOCKUP_DETECTOR
->
->   + includes asm/nmi.h into linux/nmi.h because some sparc-specific
->     functions are needed in sparc-specific code which includes
->     only linux/nmi.h.
->
-> The situation became more complicated after the commit 05a4a95279311c3
-> ("kernel/watchdog: split up config options") and commit 2104180a53698df5
-> ("powerpc/64s: implement arch-specific hardlockup watchdog") in v4.13-rc1=
-.
-> They introduced HAVE_HARDLOCKUP_DETECTOR_ARCH. It was used for powerpc
-> specific hardlockup detector. It was compatible with the perf one
-> regarding the general boot, sysctl, and programming interfaces.
->
-> HAVE_HARDLOCKUP_DETECTOR_ARCH was defined as a superset of
-> HAVE_NMI_WATCHDOG. It made some sense because all arch-specific
-> detectors had some common requirements, namely:
->
->   + implemented arch_touch_nmi_watchdog()
->   + included asm/nmi.h into linux/nmi.h
->   + defined the default value for /proc/sys/kernel/nmi_watchdog
->
-> But it actually has made things pretty complicated when the generic
-> buddy hardlockup detector was added. Before the generic perf detector
-> was newer supported together with an arch-specific one. But the buddy
-> detector could work on any SMP system. It means that an architecture
-> could support both the arch-specific and buddy detector.
->
-> As a result, there are few tricky dependencies. For example,
-> CONFIG_HARDLOCKUP_DETECTOR depends on:
->
->   ((HAVE_HARDLOCKUP_DETECTOR_PERF || HAVE_HARDLOCKUP_DETECTOR_BUDDY) && !=
-HAVE_NMI_WATCHDOG) || HAVE_HARDLOCKUP_DETECTOR_ARCH
->
-> The problem is that the very special sparc implementation is defined as:
->
->   HAVE_NMI_WATCHDOG && !HAVE_HARDLOCKUP_DETECTOR_ARCH
->
-> Another problem is that the meaning of HAVE_NMI_WATCHDOG is far from clea=
-r
-> without reading understanding the history.
->
-> Make the logic less tricky and more self-explanatory by making
-> HAVE_NMI_WATCHDOG specific for the sparc64 implementation. And rename it =
-to
-> HAVE_HARDLOCKUP_DETECTOR_SPARC64.
->
-> Note that HARDLOCKUP_DETECTOR_PREFER_BUDDY, HARDLOCKUP_DETECTOR_PERF,
-> and HARDLOCKUP_DETECTOR_BUDDY may conflict only with
-> HAVE_HARDLOCKUP_DETECTOR_ARCH. They depend on HARDLOCKUP_DETECTOR
-> and it is not longer enabled when HAVE_NMI_WATCHDOG is set.
->
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
->
-> watchdog/sparc64: Rename HAVE_NMI_WATCHDOG to HAVE_HARDLOCKUP_WATCHDOG_SP=
-ARC64
->
-> The configuration variable HAVE_NMI_WATCHDOG has a generic name but
-> it is selected only for SPARC64.
->
-> It should _not_ be used in general because it is not integrated with
-> the other hardlockup detectors. Namely, it does not support the hardlocku=
-p
-> specific command line parameters and systcl interface. Instead, it is
-> enabled/disabled together with the softlockup detector by the global
-> "watchdog" sysctl.
->
-> Rename it to HAVE_HARDLOCKUP_WATCHDOG_SPARC64 to make the special
-> behavior more clear.
->
-> Also the variable is set only on sparc64. Move the definition
-> from arch/Kconfig to arch/sparc/Kconfig.debug.
->
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
+That looks better, I'll try it when I get back to my office.
 
-I think you goofed up when squashing the patches. You've now got a
-second patch subject after your first Signed-off-by and then a second
-Signed-off-by... I assume everything after the first Signed-off-by
-should be dropped?
+- Arnaldo
+ 
+> Thanks,
+> Ian
+> 
+> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+> > index a2032c1b7644..9af961105a64 100644
+> > --- a/tools/perf/util/pmus.c
+> > +++ b/tools/perf/util/pmus.c
+> > @@ -494,7 +494,13 @@ int perf_pmus__num_core_pmus(void)
+> >
+> >  bool perf_pmus__supports_extended_type(void)
+> >  {
+> > +#if defined(__aarch64__)
+> > +       // We can't use the extended type information where the PMU number
+> > +       // is encoded in the upper perf_event_attr::type bits. (<< 32).
+> > +       return false;
+> > +#else
+> >         return perf_pmus__num_core_pmus() > 1;
+> > +#endif
+> >  }
+> >
+> >  struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
 
-Other than that:
+-- 
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+- Arnaldo
