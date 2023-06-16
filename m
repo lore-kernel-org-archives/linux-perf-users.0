@@ -2,296 +2,188 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFF4EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 13:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EF0EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 16 Jun 2023 13:48:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245644AbjFPNjq (ORCPT
+        id S231782AbjFPNso (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 16 Jun 2023 09:39:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39750 "EHLO
+        Fri, 16 Jun 2023 09:48:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235474AbjFPNjq (ORCPT
+        with ESMTP id S1344976AbjFPNsj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 16 Jun 2023 09:39:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0F572D76;
-        Fri, 16 Jun 2023 06:39:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 533C86188D;
-        Fri, 16 Jun 2023 13:39:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47633C433C8;
-        Fri, 16 Jun 2023 13:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686922782;
-        bh=Zt0IZN6SCBdn9W8tcc9qM5XUL6H9pxirTzOJnGeEAPg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GLgrXwKlr5BZDqbxxLQGZHi44EAb5S3JPoD6kkBpQTLQuTXbIAWu9MWOSzuafmf/d
-         04O4XgJyS8+sXjo0ylrcpUFoxsDrjit2wUUG6EuP7d+5IQMBJnh0+01eEMiUbi0WYL
-         DFF4+tlsgzYManMqyGd3YPS/V7HV4ztwTebo/5l+RNzcYRVnJNgDGHDCJD8aIssuA1
-         RFK+9CUtN3Bj3vzr+dAQVwfXwFUO3cNIdplbq8IsTfnDca0P5aak9YmJc1x/9ABkvm
-         CsPjYXePG7LjCichHhDGI/hon2cpWeo2Gg3DHi/NHWaM2PomP+EK8tSfKostEPFJiU
-         +Neb62q/auEqw==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A7C8140692; Fri, 16 Jun 2023 10:39:39 -0300 (-03)
-Date:   Fri, 16 Jun 2023 10:39:39 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Ian Rogers <irogers@google.com>, mingo@redhat.com,
-        peterz@infradead.org, namhyung@kernel.org, jolsa@kernel.org,
-        adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        eranian@google.com, ahmad.yasin@intel.com
-Subject: Re: [PATCH V4 0/5] New metricgroup output in perf stat default mode
-Message-ID: <ZIxmG1fCRDwn6mHw@kernel.org>
+        Fri, 16 Jun 2023 09:48:39 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E8893A92;
+        Fri, 16 Jun 2023 06:48:34 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35GCip8O004492;
+        Fri, 16 Jun 2023 13:48:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=i8eZLcMqRhNuAfctc4M3C5eIlS9stGSKnPtUFnxUqCo=;
+ b=lA2HeOTrW0eQFAQ+QpaHPSUWnA2QMizmeelWMJNVvw1M8hZ4l5JMHYpAjthocMUV+DVT
+ DK6bSp3Ov6/e3+yiu3nvm2+FxsQtzJsGT0Mh0CH61/HKHUk0cVtmw8BQOIWptMdFx85Z
+ fkCG3jE8IybTNHYCTNaWrWdMG/tLG/xQb19Tv7Rj+/Q3CVwDsIu9NA8oiuRsE5KhDU4l
+ 6KKBW/db5qorBwnwQHi2P8gzHxkuUgvFSrJ+MUcu4T90W34iSX/9vk+eiLK6uEdSu3IW
+ lbr23+0exHuPd/t4i+tKmwwCgkQ4Ch5TUA8YTUSk0azVnCeQdn+7hPJ3b+MJPUGlS9AU XA== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3r4fs24an8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Jun 2023 13:48:17 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35GCIcdG040511;
+        Fri, 16 Jun 2023 13:48:16 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2045.outbound.protection.outlook.com [104.47.51.45])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3r4fm7yg45-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 16 Jun 2023 13:48:16 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UkHMcA9tsMdKm7YPXMPmGOvhKb+YsUD4HpsuHR66iogLlksfCL/cAwEuyuibm8GU1Cq4vZ4oSRP2TfxjnsyLEmgg1TbrDlLj2oayavYWB6UZVaFTee6r2HXjCgEGxQ/anz8n5jkkyWTocmrB/VLfRLfSF0HvwRvMaUaBJr1yvE4qGhytJ9ug9dVBcYpwdwWsNwRmIiEmHqKbeCGJ/9y1i/RtFTFTYecfB9wBOGniS9SFYwK6heidYRsAltw2B1YvbUwHwAtobcc6XK2yMKbXQ2KqDrKsR567HdSWZ24JJ4AsYXN3jpkpaowj7+pCgzuk+Vpp8avFEpDTjIl+wo0XZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i8eZLcMqRhNuAfctc4M3C5eIlS9stGSKnPtUFnxUqCo=;
+ b=MHpYJpaAGoT/ckvu5PCYdJrrHRzN5ubNo35D5YAVZJTUg/Ad6wXS5kVp8GQZXDn9gYhMcoClR2xgl9uO7HyFvMkBlN3uRAo91A2FT31ONWEj1NJmAmAMI4opIoHyHE/LhSZnjJiIsdiH1goPQZpfM92LMOvvK2bovTA5rFZNeOMHOOB1MLOTVjCX0Kens9BHBOzd159pPQdSJPuzgiGa8YeedV3EzwYDlmiYNILhhl1DZSNg15sM0tucD7xaZ5HXPrYGnz6mddtaiLoCgRYx/snT2FBTn+zB9tI5j0ZIRTMOk/nKeyQ7yOjxUUqSEzikGPgZfwg4eH/XpshsemxmSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i8eZLcMqRhNuAfctc4M3C5eIlS9stGSKnPtUFnxUqCo=;
+ b=mcbJJKPgGmLtKcURerSh9w5AkXESbufl7tLHQ5+zEIxBlURUEocmY4gZnAYypGEOnuH/ZQimTBisGQJU4uukQyGak+bHF3+r3bXCH4B4zVW10l0YisPEjOMjGFxrmcnmFU1hdvjE9DyJjZJW4N35WcxTWYIIhL4GCP0Qu8poA8M=
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com (2603:10b6:5:212::20)
+ by PH0PR10MB4422.namprd10.prod.outlook.com (2603:10b6:510:38::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.29; Fri, 16 Jun
+ 2023 13:48:14 +0000
+Received: from DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::e38:5b81:b87f:c1eb]) by DM6PR10MB4313.namprd10.prod.outlook.com
+ ([fe80::e38:5b81:b87f:c1eb%7]) with mapi id 15.20.6500.026; Fri, 16 Jun 2023
+ 13:48:14 +0000
+Message-ID: <d92494e1-37e2-36d6-6edd-a2f1093f63b9@oracle.com>
+Date:   Fri, 16 Jun 2023 14:48:08 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH V4 5/5] perf vendor events arm64: Add default tags for
+ Hisi hip08 L1 metrics
+To:     kan.liang@linux.intel.com, acme@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, irogers@google.com, namhyung@kernel.org,
+        jolsa@kernel.org, adrian.hunter@intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     ak@linux.intel.com, eranian@google.com, ahmad.yasin@intel.com
 References: <20230616031420.3751973-1-kan.liang@linux.intel.com>
- <CAP-5=fWdeRUBoy3BOrrduzAy9EPiipiK9M5-d+f1po61MDNSsQ@mail.gmail.com>
- <4802536a-b2ae-d90b-7beb-49abd4db43fe@linux.intel.com>
+ <20230616031420.3751973-6-kan.liang@linux.intel.com>
+Content-Language: en-US
+From:   John Garry <john.g.garry@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20230616031420.3751973-6-kan.liang@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0504.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1ab::23) To DM6PR10MB4313.namprd10.prod.outlook.com
+ (2603:10b6:5:212::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4802536a-b2ae-d90b-7beb-49abd4db43fe@linux.intel.com>
-X-Url:  http://acmel.wordpress.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR10MB4313:EE_|PH0PR10MB4422:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6f77cc27-8953-4a5f-bc53-08db6e7054a6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Hp/gV+MHoa8/1ULOK20eVzY26j8T2N+brYcVM617cqP9++diRTiuFv0eURNU0RsFWqrRVv3ZQi0u0JV7FMvj0R9wxgjJBoACy9oMmKbcpJc3UO+SWY7uj8pd8Wk8g/DGwUmXnDKQ0+c495EE5nsdUNvyEH2me0yAB68P82x6F6bAy4+yd0MPNoJrf0e9TOdIzWdpwpCPfhRFshpsVi5muSYLcYq8gd2VRZAZrdTspPUBQYUPEjt5003qMxNNhYIfePJxXshZNM8TMik940MnwqhFu0rMyltRGMEd3REGfRw+RtCrNXsN9brfsRLMY8+YkBF0Dxbi1bW2gV4DRiXbluikUTiBlv1tbLil3zDOQyeHNacySYTuMHBeGr3O6WCKgVBi/vFN+S9LKEyg00pW5Pmq74HXembYbBHhimZn5mviHW/HadMNRW5Clo73bnjJMNAWdG7aUPX/XjB9EhWjv9is9GhGX3+Ps/2sW/SmfKQ77rA/aWMwKJlZ3JTQJQO5YZXwz9me6KdUHSJ9dHKFyLxHTwE1f7ftO7kvYbGHFMWWJUZVHy6Prf2m3p3EgYi9hT47bxczDQIrbN2xB5apNaOMjrXufDqhUkOM4uEDKO0rmL4T3HupbWihpBeIWLxvi/uzagyIjrfDSy+LH1+1bGvl8PTNU2doHHrkjh4XD0s=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR10MB4313.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(396003)(136003)(346002)(39860400002)(376002)(451199021)(53546011)(6512007)(6506007)(26005)(66946007)(4326008)(316002)(66476007)(66556008)(2616005)(31686004)(186003)(36916002)(6486002)(6666004)(921005)(478600001)(38100700002)(7416002)(8676002)(8936002)(5660300002)(86362001)(558084003)(31696002)(41300700001)(2906002)(36756003)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aWdqNnF0b3BQQ0h1T21kZE4rTnA1MFVzcGRwbS9lWlJFRWsrVCtFM1dYR2xM?=
+ =?utf-8?B?em5hQmZZR3o1cWc5NkYzNXVENnBPMDBiZ2ZWRkZ5NzJEelQwVnR3Y0cyTE81?=
+ =?utf-8?B?MlpwMFVCUW9GVC9tZEFYa01hbklaVFFtRHh0cXJjbENFVWZyT3MvQjVZUEZ2?=
+ =?utf-8?B?Tm03QjZjTm9nYWpwTlc2YUlTYlRkQkNwd1c0dlJOc0dnZzNUUTR3KzhHN1J1?=
+ =?utf-8?B?WHJwZzdwVFZVT2lFV1h2TnhnVHJRRVhWclVrK2FudWk2cTR6MFdDeWljZUQ0?=
+ =?utf-8?B?OGllSmhzNkpiRWdBU2M2Mk9WcWtuTFM0eDRMM2R2WUV6WVZvcHJ0aFdETlVC?=
+ =?utf-8?B?Q21DTWYyUGRTSnRRVFRYeDA5WTJVV1dqMGNvell3MEF1K3BKK2pTL1JZVnpj?=
+ =?utf-8?B?NlJPOUJ6ZEtUanltemV6dXNQQ2pLNEZXckxLVEg1T0ZuQ1pJWUlwRGZOTWZa?=
+ =?utf-8?B?RGgxVzBOUi9JOHB2cTEreEl5d21qTzJsbVMxc2xlOVBIbG5BdWNVMWU5Q2JY?=
+ =?utf-8?B?Z2V5YmhhZXprZndCOFZLa0JKc1kvKzcycExBdExwdnRQdTB0MFRRVXNvWHJs?=
+ =?utf-8?B?UlRjNG9FSG1BclBsKzc0ZklQZHpPZm11VDkzNUx6K2xTaFN6bVMvZkdqQnVP?=
+ =?utf-8?B?ZFIzaTY1ODdsUUJaNGxiTDlBcDRTMmtXMTlNQm9RcXFFZkRMK1plUE4wVDVo?=
+ =?utf-8?B?VEpPK0drUTBJdTM3WFE5ay9Kc0lJSXlZNmJ3MURBRTlqNmhFUG1SL1hFak80?=
+ =?utf-8?B?VG5Ybk81eE1Kb3Nia09nS2FVTmJiUjd1NXpZN1FSMFZnakRvdHBDdStFNjha?=
+ =?utf-8?B?SGh5ZExrZm4wQmI3cjNmZ1RzalJod3BxQlI0SkhldGhLNVJyMkhQb3RJTVlS?=
+ =?utf-8?B?T0swMTdNYndMU3JRSzJVT1NZcGpWOVZYQ3pIa0ZvcDdTVjNWZDVxcmRBNTM0?=
+ =?utf-8?B?WHdDbHBWYVlkR096VUsrclFIU1FvY1VWeXBVb2U0bmttS0RVYThHbUhtMito?=
+ =?utf-8?B?YXhLQ1grc0hlaFBwZ1JrbHFydjk0QUVoeVQ5SVhmWkEyVmdiNFRsSXFmdU0v?=
+ =?utf-8?B?T3VWTDdKaUpRRElHSkN5R3B0cldpdHJQeUhYT1AyRkovU1oxU2FyckJzRkVy?=
+ =?utf-8?B?Mi9RYnZESE1ZbUtqZmU1QlVNaTRWcW9oK2l4amlTMjFPc3RHQlp6eS9tVUxX?=
+ =?utf-8?B?cUl4cUZkdURneHk0ZGpSVzlKVERnZUMyNmc1NHVOTndPTlJ2OVJGODFzUnpG?=
+ =?utf-8?B?cERTVkE2UDNBcElYd21icXNsOHNsZC9QVnJ6bXNSMDdSeDdUTFRiam5CUHNl?=
+ =?utf-8?B?S1M0WjduMmR4RW1xRkE0Rmt2dkVYd0ptU0ZqaDNFc1UvcS9EV0I5Nzk1aW9Q?=
+ =?utf-8?B?eVovNm1mMEord1JTNTlBZVo1TU1XRGJCQXpvdWNzSEQwYUdMWmpja1Rwdm4v?=
+ =?utf-8?B?SS9wTjhHeHZhU25yZnFnSGRBYlBZbEYvZXJGOFRibndtVkJIb05aS0FNR3d5?=
+ =?utf-8?B?aGlGc2xpTmtSSTRaZ2hSTTFzYWNlNVdROFRERXIxaHRJTjB6L0dac21KK1pH?=
+ =?utf-8?B?R3ZCNnVBby90M0ZIZGQ5ZXhIMk5YNEg1dVl2RE9YOU1nckxwcFczK2pDOWRR?=
+ =?utf-8?B?ekhYeUlzeDMvTDNma2l6U2s3SzlOYSttbWhENDJJSXpOWHFQOEFVL1RVUDhY?=
+ =?utf-8?B?TFlJaVExdE5yUjVGbnUwM1NMbkZHYkt4NFJRU3RMYy82eWc1bTVOWlBwdTJW?=
+ =?utf-8?B?b2FUaXYvNTU4T3RiWTJmVTVHMTJsK25VdGJSMEdCZ3R4d1N1VXkwWVJpV29E?=
+ =?utf-8?B?V3J1K29PRVFVWGFDbmM1NnQyVW1DWnJIaEdsb3hwTTRnUFpUb0RJL2g4aU5m?=
+ =?utf-8?B?UmdiYTJWeGdyMllveHUwNGxhTEYwTXZuT00zNlRmZTRZN2ZEYXl4ZDMyVnBn?=
+ =?utf-8?B?MmJkNEFFRkJObkh6U1NPaXdaVWZSazNwcDJiMUN5WlROZFB4Y2UzclN4VWk5?=
+ =?utf-8?B?enF2eHVqbU0yV05lYStwendleXZLNk1naHhWMTAvTzkwK2dsTjZyNXNqamVL?=
+ =?utf-8?B?ekhDSFVFQTNpY09aNDlDZUgrYU9qSExXNkFkNVBxUzVmMDl1VG1ZM3o1Q1hm?=
+ =?utf-8?Q?c6Vxm554K2h2W5TkcNQsUHVVj?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?d0VEOWptbW9yUWRWSlA4anc1ZjcwSG96bWZiRm1lU3NIcHBuRHNBWThld3ZO?=
+ =?utf-8?B?U3l1MFdjd2ZueitrUVl6eXJhMXY5OVhmdHUrcUd3UU45TGRia3o2ZVZQTWtN?=
+ =?utf-8?B?ZHJFNzMxSGRWcXhNbDBaU1ZQYUZjSVZHWmxQUzQvSWdlYlh0WTFZa3kzNkV5?=
+ =?utf-8?B?eld3d094Z1VGRDYrcklaOEdQdXUzcWVsOEh4emhWbzJmeWlSWjdTL3lOdWpn?=
+ =?utf-8?B?dDdNSE5hQ3YyMmIycnpnYmtybkI1LzZCMGRlZU84Y2Y0NC9MR1hLK1RRNzE0?=
+ =?utf-8?B?VHJRVjA1RElpbzJSaTdPbkZ3amNtbnZoY1hRNHN0NERGTWFsSmk3ekZBeS9a?=
+ =?utf-8?B?UmxZNTcxVE02VTNqc1cwZFlOV2JDK2tBcXFHeFZ4UXNWdFNZblJ5NHB6ejNi?=
+ =?utf-8?B?SzZZSmZpUzc2VFhYS0l5UkhDQ1h3MVNJWWNvZXhiZDIxRU1LOUFkZDFQRDdw?=
+ =?utf-8?B?TlhjTHk5MnkxNytJOXlhLy9XU0xGR1U5bUJQZlRZRDg5b1VmWXN5WEFkRlZU?=
+ =?utf-8?B?UmQ2R1lLRGdQSUFGT0dYRmdqcUlGazUvV1dodGNIVXRXZlY4eEg1S2t3Q1Zp?=
+ =?utf-8?B?TmVmRWtKVVNOZHoxMkNueWYxUTlldWlaUWhOaWt3UWdYRGZlM3ZxdWFaMEg4?=
+ =?utf-8?B?d2hYS3BpTHdNM3ZyT0tRaWt3bmJSemRYdjF1Z1lYTFJiemVMNlY1MjFoMktL?=
+ =?utf-8?B?WUtWS3dxZzVFNUYyQi9EMjhuRGMzVC9KSkVJekZxNlVxaXFSRUV5aExIRTNX?=
+ =?utf-8?B?QXd6OHoyN0RCaEJuQmltM1JMemtyeE5vUTg4NDlzQ2pnd3ZUY0hKSUNYWHZ4?=
+ =?utf-8?B?M050MXloSmJzY0haSHF1ZEVreG1xNFd6QU5vbHF5MEp3bFNrZ203dFk2Ykkw?=
+ =?utf-8?B?WHMrN0lZS2w2UmVDNVY4bS9SSUt4aG0zN2lmM1grWGhNSUloeGtXZkRySDNG?=
+ =?utf-8?B?bDR5aGdXLzUvNXU4NzZaTDBhRDRHWHhrTGlSYnNYWVZ4NFlJdzNVTFREdG11?=
+ =?utf-8?B?TWlmd3ZaZi9TN2lzbjFncktIL08xRFBVN3R1QzN5TjNLdmlFK1dybkk1SHhF?=
+ =?utf-8?B?TjFBY0pPVHBTeGRtN0NvZ3lnUXdTU0pzMmF3MnZNaTVmUW1Hdm41MDZkZGpD?=
+ =?utf-8?B?WW0xZC9kMlZDNTQyUmNOSk5lbFdzQlc2cVF3NlcvVjRhZHBTUFpEb29ZQjR2?=
+ =?utf-8?B?S20zYnFkUG5lY0pwcVVDT21lY3lFK2wwLzBxQXREU2ZyL1gzLzZqVjRWdHFT?=
+ =?utf-8?B?TU5UN3c1S3VLMWY4NWtHZXJ2cmJsM1ZOTnUxMGJkODFNb3VYUT09?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6f77cc27-8953-4a5f-bc53-08db6e7054a6
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR10MB4313.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2023 13:48:14.1308
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 51POcw8hnUxhG/8vEMRqiug2jmSj77MD3kyTx559UzKPP9JLPcVVvzEzyP2xT7YaFLeSMq9Rin4S5RukCfcb8A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4422
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-16_08,2023-06-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 mlxscore=0 phishscore=0 spamscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306160124
+X-Proofpoint-GUID: DrImtSe-i-cW-aBPRzUicznaNn3zQaJJ
+X-Proofpoint-ORIG-GUID: DrImtSe-i-cW-aBPRzUicznaNn3zQaJJ
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Em Fri, Jun 16, 2023 at 09:26:26AM -0400, Liang, Kan escreveu:
+On 16/06/2023 04:14, kan.liang@linux.intel.com wrote:
+> From: Kan Liang<kan.liang@linux.intel.com>
 > 
+> Add the default tags for Hisi hip08 as well.
 > 
-> On 2023-06-16 1:59 a.m., Ian Rogers wrote:
-> > On Thu, Jun 15, 2023 at 8:14 PM <kan.liang@linux.intel.com> wrote:
-> >>
-> >> From: Kan Liang <kan.liang@linux.intel.com>
-> >>
-> >> Changes since V3:
-> >> - Move the full name (PMU + metricgroup name) generation from the metric
-> >>   code to the output code. (Ian)
-> >> - Add default tags for Hisi hip08 L1 metrics (John)
-> >> - Some patches have been merged. Drop them from the V4.
-> >>
-> >> Changes since V2:
-> >> - Fixes memory leak (Ian)
-> >>   (Ian, I cannot reproduce the memory leak on all my machines. Please
-> >>    check whether the fix works on your side. Thanks.)
-> >> - Add Reviewed-by tags for several patches.
-> >>
-> >> Changes since V1:
-> >> - Remove EVSEL_EVENT_MASK and use the __evsel__match which is suggested
-> >>   by Ian.
-> >> - Support TopdownL1 on both e-core and p-core of ADL in the default
-> >>   mode. (Ian)
-> >> - Have separate patches for the modifications of metricgroup and output.
-> >>   (Ian)
-> >> - Does 2nd sort for the Default metricgroup. Remove the logic of
-> >>   changing the associated metric event. (Ian)
-> >> - Move all the metric related code to stat-shadow (Ian)
-> >> - Move the commong functions between stat+csv_output and stat+std_output
-> >>   to the lib directory (Ian)
-> >>
-> >> In the default mode, the current output of the metricgroup include both
-> >> events and metrics, which is not necessary and makes the output hard to
-> >> read. Also, different ARCHs (even different generations of the ARCH) may
-> >> have a different output format because of the different events in a
-> >> metrics.
-> >>
-> >> The patch proposes a new output format which only outputting the value
-> >> of each metric and the metricgroup name. It can brings a clean and
-> >> consistent output format among ARCHs and generations.
-> >>
-> >> The patches 1-2 introduce the new metricgroup output.
-> >>
-> >> The patches 3-4 improve the tests to cover the default mode.
-> >>
-> >> The patch 5 update the event list for Hisi hip08.
-> >>
-> >> Here are some examples for the new output.
-> >>
-> >> STD output:
-> >>
-> >> On SPR
-> >>
-> >> perf stat -a sleep 1
-> >>
-> >>  Performance counter stats for 'system wide':
-> >>
-> >>         226,054.13 msec cpu-clock                        #  224.588 CPUs utilized
-> >>                932      context-switches                 #    4.123 /sec
-> >>                224      cpu-migrations                   #    0.991 /sec
-> >>                 76      page-faults                      #    0.336 /sec
-> >>         45,940,682      cycles                           #    0.000 GHz
-> >>         36,676,047      instructions                     #    0.80  insn per cycle
-> >>          7,044,516      branches                         #   31.163 K/sec
-> >>             62,169      branch-misses                    #    0.88% of all branches
-> >>                         TopdownL1                 #     68.7 %  tma_backend_bound
-> >>                                                   #      3.1 %  tma_bad_speculation
-> >>                                                   #     13.0 %  tma_frontend_bound
-> >>                                                   #     15.2 %  tma_retiring
-> >>                         TopdownL2                 #      2.7 %  tma_branch_mispredicts
-> >>                                                   #     19.6 %  tma_core_bound
-> >>                                                   #      4.8 %  tma_fetch_bandwidth
-> >>                                                   #      8.3 %  tma_fetch_latency
-> >>                                                   #      2.9 %  tma_heavy_operations
-> >>                                                   #     12.3 %  tma_light_operations
-> >>                                                   #      0.4 %  tma_machine_clears
-> >>                                                   #     49.1 %  tma_memory_bound
-> >>
-> >>        1.006529767 seconds time elapsed
-> >>
-> >> perf stat -a sleep 1
-> >>
-> >>  Performance counter stats for 'system wide':
-> >>
-> >>          32,127.99 msec cpu-clock                        #   31.992 CPUs utilized
-> >>                240      context-switches                 #    7.470 /sec
-> >>                 32      cpu-migrations                   #    0.996 /sec
-> >>                 74      page-faults                      #    2.303 /sec
-> >>          6,313,960      cpu_core/cycles/                 #    0.000 GHz
-> >>        257,711,907      cpu_atom/cycles/                 #    0.008 GHz                         (54.18%)
-> >>          4,477,162      cpu_core/instructions/           #    0.71  insn per cycle
-> >>         37,721,481      cpu_atom/instructions/           #    5.97  insn per cycle              (63.33%)
-> >>            809,747      cpu_core/branches/               #   25.204 K/sec
-> >>          6,621,226      cpu_atom/branches/               #  206.089 K/sec                       (63.32%)
-> >>             39,667      cpu_core/branch-misses/          #    4.90% of all branches
-> >>          1,032,146      cpu_atom/branch-misses/          #  127.47% of all branches             (63.33%)
-> >>              TopdownL1 (cpu_core)                 #      nan %  tma_backend_bound
-> >>                                                   #      0.0 %  tma_bad_speculation
-> >>                                                   #      nan %  tma_frontend_bound
-> >>                                                   #      nan %  tma_retiring
-> >>              TopdownL1 (cpu_atom)                 #     13.6 %  tma_bad_speculation      (63.36%)
-> >>                                                   #     41.1 %  tma_frontend_bound       (63.54%)
-> >>                                                   #     39.2 %  tma_backend_bound
-> >>                                                   #     39.2 %  tma_backend_bound_aux    (63.93%)
-> >>                                                   #      5.4 %  tma_retiring             (64.15%)
-> >>
-> >>        1.004244114 seconds time elapsed
-> >>
-> >> JSON output
-> >>
-> >> on SPR
-> >>
-> >> perf stat --json -a sleep 1
-> >> {"counter-value" : "225904.823297", "unit" : "msec", "event" : "cpu-clock", "event-runtime" : 225904323425, "pcnt-running" : 100.00, "metric-value" : "224.456872", "metric-unit" : "CPUs utilized"}
-> >> {"counter-value" : "986.000000", "unit" : "", "event" : "context-switches", "event-runtime" : 225904108985, "pcnt-running" : 100.00, "metric-value" : "4.364670", "metric-unit" : "/sec"}
-> >> {"counter-value" : "224.000000", "unit" : "", "event" : "cpu-migrations", "event-runtime" : 225904016141, "pcnt-running" : 100.00, "metric-value" : "0.991568", "metric-unit" : "/sec"}
-> >> {"counter-value" : "76.000000", "unit" : "", "event" : "page-faults", "event-runtime" : 225903913270, "pcnt-running" : 100.00, "metric-value" : "0.336425", "metric-unit" : "/sec"}
-> >> {"counter-value" : "48433482.000000", "unit" : "", "event" : "cycles", "event-runtime" : 225903792732, "pcnt-running" : 100.00, "metric-value" : "0.000214", "metric-unit" : "GHz"}
-> >> {"counter-value" : "38620409.000000", "unit" : "", "event" : "instructions", "event-runtime" : 225903657830, "pcnt-running" : 100.00, "metric-value" : "0.797391", "metric-unit" : "insn per cycle"}
-> >> {"counter-value" : "7369473.000000", "unit" : "", "event" : "branches", "event-runtime" : 225903464328, "pcnt-running" : 100.00, "metric-value" : "32.622026", "metric-unit" : "K/sec"}
-> >> {"counter-value" : "54747.000000", "unit" : "", "event" : "branch-misses", "event-runtime" : 225903234523, "pcnt-running" : 100.00, "metric-value" : "0.742889", "metric-unit" : "of all branches"}
-> >> {"event-runtime" : 225902840555, "pcnt-running" : 100.00, "metricgroup" : "TopdownL1"}
-> >> {"metric-value" : "69.950631", "metric-unit" : "%  tma_backend_bound"}
-> >> {"metric-value" : "2.771783", "metric-unit" : "%  tma_bad_speculation"}
-> >> {"metric-value" : "12.026074", "metric-unit" : "%  tma_frontend_bound"}
-> >> {"metric-value" : "15.251513", "metric-unit" : "%  tma_retiring"}
-> >> {"event-runtime" : 225902840555, "pcnt-running" : 100.00, "metricgroup" : "TopdownL2"}
-> >> {"metric-value" : "2.351757", "metric-unit" : "%  tma_branch_mispredicts"}
-> >> {"metric-value" : "19.729771", "metric-unit" : "%  tma_core_bound"}
-> >> {"metric-value" : "4.555207", "metric-unit" : "%  tma_fetch_bandwidth"}
-> >> {"metric-value" : "7.470867", "metric-unit" : "%  tma_fetch_latency"}
-> >> {"metric-value" : "2.938808", "metric-unit" : "%  tma_heavy_operations"}
-> >> {"metric-value" : "12.312705", "metric-unit" : "%  tma_light_operations"}
-> >> {"metric-value" : "0.420026", "metric-unit" : "%  tma_machine_clears"}
-> >> {"metric-value" : "50.220860", "metric-unit" : "%  tma_memory_bound"}
-> >>
-> >> On hybrid
-> >>
-> >> perf stat --json -a sleep 1
-> >> {"counter-value" : "32131.530625", "unit" : "msec", "event" : "cpu-clock", "event-runtime" : 32131536951, "pcnt-running" : 100.00, "metric-value" : "31.992642", "metric-unit" : "CPUs utilized"}
-> >> {"counter-value" : "328.000000", "unit" : "", "event" : "context-switches", "event-runtime" : 32131525778, "pcnt-running" : 100.00, "metric-value" : "10.208042", "metric-unit" : "/sec"}
-> >> {"counter-value" : "32.000000", "unit" : "", "event" : "cpu-migrations", "event-runtime" : 32131515104, "pcnt-running" : 100.00, "metric-value" : "0.995906", "metric-unit" : "/sec"}
-> >> {"counter-value" : "353.000000", "unit" : "", "event" : "page-faults", "event-runtime" : 32131501396, "pcnt-running" : 100.00, "metric-value" : "10.986094", "metric-unit" : "/sec"}
-> >> {"counter-value" : "18685492.000000", "unit" : "", "event" : "cpu_core/cycles/", "event-runtime" : 16061585292, "pcnt-running" : 100.00, "metric-value" : "0.000582", "metric-unit" : "GHz"}
-> >> {"counter-value" : "255620352.000000", "unit" : "", "event" : "cpu_atom/cycles/", "event-runtime" : 8690268422, "pcnt-running" : 54.00, "metric-value" : "0.007955", "metric-unit" : "GHz"}
-> >> {"counter-value" : "15489913.000000", "unit" : "", "event" : "cpu_core/instructions/", "event-runtime" : 16061582200, "pcnt-running" : 100.00, "metric-value" : "0.828981", "metric-unit" : "insn per cycle"}
-> >> {"counter-value" : "38790161.000000", "unit" : "", "event" : "cpu_atom/instructions/", "event-runtime" : 10163133324, "pcnt-running" : 63.00, "metric-value" : "2.075951", "metric-unit" : "insn per cycle"}
-> >> {"counter-value" : "2908031.000000", "unit" : "", "event" : "cpu_core/branches/", "event-runtime" : 16061563416, "pcnt-running" : 100.00, "metric-value" : "90.503967", "metric-unit" : "K/sec"}
-> >> {"counter-value" : "6814948.000000", "unit" : "", "event" : "cpu_atom/branches/", "event-runtime" : 10161711336, "pcnt-running" : 63.00, "metric-value" : "212.095343", "metric-unit" : "K/sec"}
-> >> {"counter-value" : "97638.000000", "unit" : "", "event" : "cpu_core/branch-misses/", "event-runtime" : 16061535261, "pcnt-running" : 100.00, "metric-value" : "3.357530", "metric-unit" : "of all branches"}
-> >> {"counter-value" : "1017066.000000", "unit" : "", "event" : "cpu_atom/branch-misses/", "event-runtime" : 10159971797, "pcnt-running" : 63.00, "metric-value" : "34.974386", "metric-unit" : "of all branches"}
-> >> {"event-runtime" : 16061513607, "pcnt-running" : 100.00, "metricgroup" : "TopdownL1 (cpu_core)"}
-> >> {"metric-value" : "nan", "metric-unit" : "%  tma_backend_bound"}
-> >> {"metric-value" : "0.000000", "metric-unit" : "%  tma_bad_speculation"}
-> >> {"metric-value" : "nan", "metric-unit" : "%  tma_frontend_bound"}
-> >> {"metric-value" : "nan", "metric-unit" : "%  tma_retiring"}
-> >> {"event-runtime" : 10157398501, "pcnt-running" : 63.00, "metricgroup" : "TopdownL1 (cpu_atom)"}
-> >> {"metric-value" : "13.719821", "metric-unit" : "%  tma_bad_speculation"}
-> >> {"event-runtime" : 10178698656, "pcnt-running" : 63.00, "metric-value" : "41.016738", "metric-unit" : "%  tma_frontend_bound"}
-> >> {"event-runtime" : 10240582902, "pcnt-running" : 63.00, "metric-value" : "39.327764", "metric-unit" : "%  tma_backend_bound"}
-> >> {"metric-value" : "39.327764", "metric-unit" : "%  tma_backend_bound_aux"}
-> >> {"event-runtime" : 10284284920, "pcnt-running" : 64.00, "metric-value" : "5.374638", "metric-unit" : "%  tma_retiring"}
-> >>
-> >> CSV output
-> >>
-> >> On SPR
-> >>
-> >> perf stat -x, -a sleep 1
-> >> 225851.20,msec,cpu-clock,225850700108,100.00,224.431,CPUs utilized
-> >> 976,,context-switches,225850504803,100.00,4.321,/sec
-> >> 224,,cpu-migrations,225850410336,100.00,0.992,/sec
-> >> 76,,page-faults,225850304155,100.00,0.337,/sec
-> >> 52288305,,cycles,225850188531,100.00,0.000,GHz
-> >> 37977214,,instructions,225850071251,100.00,0.73,insn per cycle
-> >> 7299859,,branches,225849890722,100.00,32.322,K/sec
-> >> 51102,,branch-misses,225849672536,100.00,0.70,of all branches
-> >> ,225849327050,100.00,,,,TopdownL1
-> >> ,,,,,70.1,%  tma_backend_bound
-> >> ,,,,,2.7,%  tma_bad_speculation
-> >> ,,,,,12.5,%  tma_frontend_bound
-> >> ,,,,,14.6,%  tma_retiring
-> >> ,225849327050,100.00,,,,TopdownL2
-> >> ,,,,,2.3,%  tma_branch_mispredicts
-> >> ,,,,,19.6,%  tma_core_bound
-> >> ,,,,,4.6,%  tma_fetch_bandwidth
-> >> ,,,,,7.9,%  tma_fetch_latency
-> >> ,,,,,2.9,%  tma_heavy_operations
-> >> ,,,,,11.7,%  tma_light_operations
-> >> ,,,,,0.5,%  tma_machine_clears
-> >> ,,,,,50.5,%  tma_memory_bound
-> >>
-> >> On Hybrid
-> >>
-> >> perf stat -x, -a sleep 1
-> >> 32139.34,msec,cpu-clock,32139351409,100.00,32.001,CPUs utilized
-> >> 225,,context-switches,32139342672,100.00,7.001,/sec
-> >> 32,,cpu-migrations,32139337772,100.00,0.996,/sec
-> >> 72,,page-faults,32139328384,100.00,2.240,/sec
-> >> 6766433,,cpu_core/cycles/,16067551558,100.00,0.000,GHz
-> >> 256500230,,cpu_atom/cycles/,8695757391,54.00,0.008,GHz
-> >> 4688595,,cpu_core/instructions/,16067558976,100.00,0.69,insn per cycle
-> >> 37487490,,cpu_atom/instructions/,10165193856,63.00,5.54,insn per cycle
-> >> 845211,,cpu_core/branches/,16067540225,100.00,26.298,K/sec
-> >> 6571193,,cpu_atom/branches/,10155940853,63.00,204.459,K/sec
-> >> 41359,,cpu_core/branch-misses/,16067516493,100.00,4.89,of all branches
-> >> 1020231,,cpu_atom/branch-misses/,10159363620,63.00,120.71,of all branches
-> >> ,16067494476,100.00,,,,TopdownL1 (cpu_core)
-> >> ,,,,,,%  tma_backend_bound
-> >> ,,,,,0.0,%  tma_bad_speculation
-> >> ,,,,,,%  tma_frontend_bound
-> >> ,,,,,,%  tma_retiring
-> >> ,10160989992,63.00,,,,TopdownL1 (cpu_atom)
-> >> ,,,,,13.8,%  tma_bad_speculation
-> >> ,10188319019,63.00,,,41.3,%  tma_frontend_bound
-> >> ,10258326591,63.00,,,38.6,%  tma_backend_bound
-> >> ,,,,,38.6,%  tma_backend_bound_aux
-> >> ,10282689488,64.00,,,5.4,%  tma_retiring
-> >>
-> >> Kan Liang (5):
-> >>   perf metrics: Sort the Default metricgroup
-> >>   perf stat: New metricgroup output for the default mode
-> >>   perf test: Move all the check functions of stat csv output to lib
-> >>   perf test: Add test case for the standard perf stat output
-> >>   perf vendor events arm64: Add default tags for Hisi hip08 L1 metrics
-> > 
-> > Just to be clear, I'm happy with this to be submitted having put
-> > reviewed/acked-by on it.
-> > 
-> 
-> Thanks Ian. Appreciate all your feedback and comments.
+> Signed-off-by: Kan Liang<kan.liang@linux.intel.com>
+> Cc: John Garry<john.g.garry@oracle.com>
 
-Applied,
-
-- Arnaldo
+Reviewed-by: John Garry <john.g.garry@oracle.com>
