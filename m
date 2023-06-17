@@ -2,218 +2,169 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DAAEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Jun 2023 12:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A2AEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Jun 2023 18:45:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346375AbjFQMPf (ORCPT
+        id S234404AbjFQSpo (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Jun 2023 08:15:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46752 "EHLO
+        Sat, 17 Jun 2023 14:45:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345984AbjFQMOr (ORCPT
+        with ESMTP id S234202AbjFQSpm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Jun 2023 08:14:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D804326A2
-        for <linux-perf-users@vger.kernel.org>; Sat, 17 Jun 2023 05:13:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687003988;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MKaOCCzXJedIVdLsu0rWphyHTQRA+RfNYbfx/yO3kzQ=;
-        b=ClVKjvJNnXNOFegc5/E+t8/AcqrfzqTejZfj1ha3vaTBTtOJT4CBui3Gg7XYaoiI9NUB8q
-        BdZH+IMn74ZLmNxqjlwG8jK5rpZe1u90mjVuVq35TSDSoS5xfksMMorynQ8ULDp6M2VBbC
-        lg7Z8E/1k0iPJltgvWqWFD3frtGRWgo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-557-0frgcycTO9ec3FXSZq0ViQ-1; Sat, 17 Jun 2023 08:13:03 -0400
-X-MC-Unique: 0frgcycTO9ec3FXSZq0ViQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 687B780006E;
-        Sat, 17 Jun 2023 12:13:02 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 422AD1415102;
-        Sat, 17 Jun 2023 12:12:59 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        David Ahern <dsahern@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        dccp@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-x25@vger.kernel.org,
-        mptcp@lists.linux.dev, rds-devel@oss.oracle.com,
-        tipc-discussion@lists.sourceforge.net,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH net-next v2 17/17] net: Kill MSG_SENDPAGE_NOTLAST
-Date:   Sat, 17 Jun 2023 13:11:46 +0100
-Message-ID: <20230617121146.716077-18-dhowells@redhat.com>
-In-Reply-To: <20230617121146.716077-1-dhowells@redhat.com>
-References: <20230617121146.716077-1-dhowells@redhat.com>
+        Sat, 17 Jun 2023 14:45:42 -0400
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EBB41FF6;
+        Sat, 17 Jun 2023 11:45:09 -0700 (PDT)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-5169f614977so2736462a12.3;
+        Sat, 17 Jun 2023 11:45:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687027506; x=1689619506;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZAnFthHZjL8KszDLjcc1on4TtpcboEwPmZRXv600XOs=;
+        b=qlSxYMZbH2VejBAg3fxxdWmCijwt4af/sMxHpKLuTsEZ2CzySaPUdycM+vMTSp9Rkw
+         5SP7RlSnzWRCo3ql6JwUK2P0P/vp/2dnfNklJ01z7wzhQRfit48P9+trKQrksnH2Ciod
+         8oHM2lLkf/9oDqyXg8aQl8FHeaSL5X67t7SMCONCAvdjhESTyYqHXs5TTYBVvoJtTr0r
+         H+PfCUwya3C5FtjdPJEgdi3rq5YH8B4ZTzO8F5U05JbmyyM8gabZAXIu1Fy1I7AkI5vl
+         ge9dQqQYPL31yrUpoZO/72QP6FcplJXFBbbiIFnhMfsLi8yIVI5BWoECaYOAlOvZrXs5
+         JSBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687027506; x=1689619506;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZAnFthHZjL8KszDLjcc1on4TtpcboEwPmZRXv600XOs=;
+        b=U0X/ag5CxdTwwPAd3t2u9FTT6uAWZFfZaG3aan3+oSrDCO3Ww7F+yOUhb8y+wt2+t4
+         DvZ+rKt6LhVyZkOQW5STDyqTaSD7Iay/6wtTBblNSqJ0lJ6H4tOy9NoTUN1EshKQO4XS
+         hZbk32sUUfJ/J2OSMT838BCpihUW86+3pniIiFLMhFmMp3nu9s8bwBQix6uZ14xKG3IW
+         +ylg8SeCazQk/glf2dzqNWFWIYiNXQIBd57juLetBdAaTDMH/OlBTbWobMAAa0pBr8HP
+         tuPRQZDPpM7r7GxsDFDaXchIbHXS9nYbCQ1TCoo2I/S41AMsqd7qwQzetCRdxswpqMo2
+         +J+A==
+X-Gm-Message-State: AC+VfDzWMc/lOmhYALUxFDzFXe7v2Dqxl8JQtTsYCH86IUFMAmsyZuIV
+        z77ofe/LzLCs1oHm9J5h1ek=
+X-Google-Smtp-Source: ACHHUZ5VaJD+0bgwGCExPVPKzl3nxZ+awIA3XIsTb4l6yjSh2s/EwHOY21QcPixxHX6akhtEijHYKg==
+X-Received: by 2002:a17:907:360e:b0:96a:4ea0:a1e7 with SMTP id bk14-20020a170907360e00b0096a4ea0a1e7mr5501038ejc.50.1687027505612;
+        Sat, 17 Jun 2023 11:45:05 -0700 (PDT)
+Received: from krava ([83.240.63.131])
+        by smtp.gmail.com with ESMTPSA id sb23-20020a170906edd700b00983cb4bd8f4sm2748541ejb.119.2023.06.17.11.45.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 17 Jun 2023 11:45:05 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Sat, 17 Jun 2023 20:45:02 +0200
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH 2/2] perf stat: Show average value on multiple runs
+Message-ID: <ZI3/LphHu0tP6pib@krava>
+References: <20230616073211.1057936-1-namhyung@kernel.org>
+ <20230616073211.1057936-2-namhyung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230616073211.1057936-2-namhyung@kernel.org>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Now that ->sendpage() has been removed, MSG_SENDPAGE_NOTLAST can be cleaned
-up.  Things were converted to use MSG_MORE instead, but the protocol
-sendpage stubs still convert MSG_SENDPAGE_NOTLAST to MSG_MORE, which is now
-unnecessary.
+On Fri, Jun 16, 2023 at 12:32:11AM -0700, Namhyung Kim wrote:
+> When -r option is used, perf stat runs the command multiple times and
+> update stats in the evsel->stats.res_stats for global aggregation.  But
+> the value is never used and the value it prints at the end is just the
+> value from the last run.  I think we should print the average number of
+> multiple runs.
+> 
+> Add evlist__copy_res_stats() to update the aggr counter (for display)
+> using the values in the evsel->stats.res_stats.
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: bpf@vger.kernel.org
-cc: dccp@vger.kernel.org
-cc: linux-afs@lists.infradead.org
-cc: linux-arm-msm@vger.kernel.org
-cc: linux-can@vger.kernel.org
-cc: linux-crypto@vger.kernel.org
-cc: linux-doc@vger.kernel.org
-cc: linux-hams@vger.kernel.org
-cc: linux-perf-users@vger.kernel.org
-cc: linux-rdma@vger.kernel.org
-cc: linux-sctp@vger.kernel.org
-cc: linux-wpan@vger.kernel.org
-cc: linux-x25@vger.kernel.org
-cc: mptcp@lists.linux.dev
-cc: netdev@vger.kernel.org
-cc: rds-devel@oss.oracle.com
-cc: tipc-discussion@lists.sourceforge.net
-cc: virtualization@lists.linux-foundation.org
----
- include/linux/socket.h                         | 4 +---
- net/ipv4/tcp_bpf.c                             | 4 +++-
- net/tls/tls_device.c                           | 3 +--
- net/tls/tls_main.c                             | 2 +-
- net/tls/tls_sw.c                               | 2 +-
- tools/perf/trace/beauty/include/linux/socket.h | 1 -
- tools/perf/trace/beauty/msg_flags.c            | 3 ---
- 7 files changed, 7 insertions(+), 12 deletions(-)
+this is the 'real' fix right? I thought this was the way it worked before
 
-diff --git a/include/linux/socket.h b/include/linux/socket.h
-index 58204700018a..39b74d83c7c4 100644
---- a/include/linux/socket.h
-+++ b/include/linux/socket.h
-@@ -319,7 +319,6 @@ struct ucred {
- #define MSG_MORE	0x8000	/* Sender will send more */
- #define MSG_WAITFORONE	0x10000	/* recvmmsg(): block until 1+ packets avail */
- #define MSG_SENDPAGE_NOPOLICY 0x10000 /* sendpage() internal : do no apply policy */
--#define MSG_SENDPAGE_NOTLAST 0x20000 /* sendpage() internal : not the last page */
- #define MSG_BATCH	0x40000 /* sendmmsg(): more messages coming */
- #define MSG_EOF         MSG_FIN
- #define MSG_NO_SHARED_FRAGS 0x80000 /* sendpage() internal : page frags are not shared */
-@@ -341,8 +340,7 @@ struct ucred {
- 
- /* Flags to be cleared on entry by sendmsg and sendmmsg syscalls */
- #define MSG_INTERNAL_SENDMSG_FLAGS \
--	(MSG_SPLICE_PAGES | MSG_SENDPAGE_NOPOLICY | MSG_SENDPAGE_NOTLAST | \
--	 MSG_SENDPAGE_DECRYPTED)
-+	(MSG_SPLICE_PAGES | MSG_SENDPAGE_NOPOLICY | MSG_SENDPAGE_DECRYPTED)
- 
- /* Setsockoptions(2) level. Thanks to BSD these must match IPPROTO_xxx */
- #define SOL_IP		0
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 870c1cde4010..8f535e436ea3 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -90,7 +90,9 @@ static int tcp_bpf_push(struct sock *sk, struct sk_msg *msg, u32 apply_bytes,
- {
- 	bool apply = apply_bytes;
- 	struct scatterlist *sge;
--	struct msghdr msghdr = { .msg_flags = flags | MSG_SPLICE_PAGES, };
-+	struct msghdr msghdr = {
-+		.msg_flags = flags | MSG_SPLICE_PAGES | MSG_MORE,
-+	};
- 	struct page *page;
- 	int size, ret = 0;
- 	u32 off;
-diff --git a/net/tls/tls_device.c b/net/tls/tls_device.c
-index 840ee06f1708..2021fe557e50 100644
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -441,8 +441,7 @@ static int tls_push_data(struct sock *sk,
- 	long timeo;
- 
- 	if (flags &
--	    ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_SENDPAGE_NOTLAST |
--	      MSG_SPLICE_PAGES))
-+	    ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL | MSG_SPLICE_PAGES))
- 		return -EOPNOTSUPP;
- 
- 	if (unlikely(sk->sk_err))
-diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
-index d5ed4d47b16e..b6896126bb92 100644
---- a/net/tls/tls_main.c
-+++ b/net/tls/tls_main.c
-@@ -127,7 +127,7 @@ int tls_push_sg(struct sock *sk,
- {
- 	struct bio_vec bvec;
- 	struct msghdr msg = {
--		.msg_flags = MSG_SENDPAGE_NOTLAST | MSG_SPLICE_PAGES | flags,
-+		.msg_flags = MSG_SPLICE_PAGES | flags,
- 	};
- 	int ret = 0;
- 	struct page *p;
-diff --git a/net/tls/tls_sw.c b/net/tls/tls_sw.c
-index 9b3aa89a4292..53f944e6d8ef 100644
---- a/net/tls/tls_sw.c
-+++ b/net/tls/tls_sw.c
-@@ -1194,7 +1194,7 @@ int tls_sw_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
- 
- 	if (msg->msg_flags & ~(MSG_MORE | MSG_DONTWAIT | MSG_NOSIGNAL |
- 			       MSG_CMSG_COMPAT | MSG_SPLICE_PAGES |
--			       MSG_SENDPAGE_NOTLAST | MSG_SENDPAGE_NOPOLICY))
-+			       MSG_SENDPAGE_NOPOLICY))
- 		return -EOPNOTSUPP;
- 
- 	ret = mutex_lock_interruptible(&tls_ctx->tx_lock);
-diff --git a/tools/perf/trace/beauty/include/linux/socket.h b/tools/perf/trace/beauty/include/linux/socket.h
-index 13c3a237b9c9..3bef212a24d7 100644
---- a/tools/perf/trace/beauty/include/linux/socket.h
-+++ b/tools/perf/trace/beauty/include/linux/socket.h
-@@ -318,7 +318,6 @@ struct ucred {
- #define MSG_MORE	0x8000	/* Sender will send more */
- #define MSG_WAITFORONE	0x10000	/* recvmmsg(): block until 1+ packets avail */
- #define MSG_SENDPAGE_NOPOLICY 0x10000 /* sendpage() internal : do no apply policy */
--#define MSG_SENDPAGE_NOTLAST 0x20000 /* sendpage() internal : not the last page */
- #define MSG_BATCH	0x40000 /* sendmmsg(): more messages coming */
- #define MSG_EOF         MSG_FIN
- #define MSG_NO_SHARED_FRAGS 0x80000 /* sendpage() internal : page frags are not shared */
-diff --git a/tools/perf/trace/beauty/msg_flags.c b/tools/perf/trace/beauty/msg_flags.c
-index ea68db08b8e7..b5b580e5a77e 100644
---- a/tools/perf/trace/beauty/msg_flags.c
-+++ b/tools/perf/trace/beauty/msg_flags.c
-@@ -8,9 +8,6 @@
- #ifndef MSG_WAITFORONE
- #define MSG_WAITFORONE		   0x10000
- #endif
--#ifndef MSG_SENDPAGE_NOTLAST
--#define MSG_SENDPAGE_NOTLAST	   0x20000
--#endif
- #ifndef MSG_FASTOPEN
- #define MSG_FASTOPEN		0x20000000
- #endif
+anyway works nicely now, would be nice to add some tests for this,
+but not sure how bad it'd be ;-)
 
+Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
+
+thanks,
+jirka
+
+> ---
+>  tools/perf/builtin-stat.c |  5 ++++-
+>  tools/perf/util/stat.c    | 22 ++++++++++++++++++++++
+>  tools/perf/util/stat.h    |  1 +
+>  3 files changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index e549862f90f0..42f84975a4d5 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2829,8 +2829,11 @@ int cmd_stat(int argc, const char **argv)
+>  		}
+>  	}
+>  
+> -	if (!forever && status != -1 && (!interval || stat_config.summary))
+> +	if (!forever && status != -1 && (!interval || stat_config.summary)) {
+> +		if (stat_config.run_count > 1)
+> +			evlist__copy_res_stats(&stat_config, evsel_list);
+>  		print_counters(NULL, argc, argv);
+> +	}
+>  
+>  	evlist__finalize_ctlfd(evsel_list);
+>  
+> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
+> index 0f7b8a8cdea6..967e583392c7 100644
+> --- a/tools/perf/util/stat.c
+> +++ b/tools/perf/util/stat.c
+> @@ -264,6 +264,28 @@ void evlist__copy_prev_raw_counts(struct evlist *evlist)
+>  		evsel__copy_prev_raw_counts(evsel);
+>  }
+>  
+> +static void evsel__copy_res_stats(struct evsel *evsel)
+> +{
+> +	struct perf_stat_evsel *ps = evsel->stats;
+> +
+> +	/*
+> +	 * For GLOBAL aggregation mode, it updates the counts for each run
+> +	 * in the evsel->stats.res_stats.  See perf_stat_process_counter().
+> +	 */
+> +	*ps->aggr[0].counts.values = avg_stats(&ps->res_stats);
+> +}
+> +
+> +void evlist__copy_res_stats(struct perf_stat_config *config, struct evlist *evlist)
+> +{
+> +	struct evsel *evsel;
+> +
+> +	if (config->aggr_mode != AGGR_GLOBAL)
+> +		return;
+> +
+> +	evlist__for_each_entry(evlist, evsel)
+> +		evsel__copy_res_stats(evsel);
+> +}
+> +
+>  static size_t pkg_id_hash(long __key, void *ctx __maybe_unused)
+>  {
+>  	uint64_t *key = (uint64_t *) __key;
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index 7abff7cbb5a1..1cbc26b587ba 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -182,6 +182,7 @@ void evlist__save_aggr_prev_raw_counts(struct evlist *evlist);
+>  
+>  int evlist__alloc_aggr_stats(struct evlist *evlist, int nr_aggr);
+>  void evlist__reset_aggr_stats(struct evlist *evlist);
+> +void evlist__copy_res_stats(struct perf_stat_config *config, struct evlist *evlist);
+>  
+>  int perf_stat_process_counter(struct perf_stat_config *config,
+>  			      struct evsel *counter);
+> -- 
+> 2.41.0.162.gfafddb0af9-goog
+> 
