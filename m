@@ -2,111 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FA2EB64DB
-	for <linux-perf-users@archiver.kernel.org>; Sat, 17 Jun 2023 18:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72F50EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Sun, 18 Jun 2023 09:28:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237169AbjFQSpp (ORCPT
+        id S229476AbjFRJ2Q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sat, 17 Jun 2023 14:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52060 "EHLO
+        Sun, 18 Jun 2023 05:28:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233183AbjFQSpn (ORCPT
+        with ESMTP id S229453AbjFRJ2Q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sat, 17 Jun 2023 14:45:43 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36B11BDB;
-        Sat, 17 Jun 2023 11:45:14 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-987f7045f9aso84647666b.1;
-        Sat, 17 Jun 2023 11:45:14 -0700 (PDT)
+        Sun, 18 Jun 2023 05:28:16 -0400
+Received: from mail-io1-xd31.google.com (mail-io1-xd31.google.com [IPv6:2607:f8b0:4864:20::d31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AC7210D2
+        for <linux-perf-users@vger.kernel.org>; Sun, 18 Jun 2023 02:28:15 -0700 (PDT)
+Received: by mail-io1-xd31.google.com with SMTP id ca18e2360f4ac-77e2f2ad553so49155739f.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 18 Jun 2023 02:28:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687027513; x=1689619513;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rBIHidYzagcBorCRFxDokfJI4XA6sU8pkIH1nUUMU0Y=;
-        b=HUf39rwR50ou925XInqr0u3J252Q3ZY02hS1ZL0MRgfJquyMteUqsJX19qpd7I9jcX
-         smKoRW/DeKoWQKlnYekz2Trwbvg3Gh2nd8bBmdiaPtBDHc53hwHHMuOB6I/HNFxbZ32w
-         +ev20cs8sItxvLjvF/dVzb5Jyem91Hf1DxVUz7PRk3wmwlCOVHhHzKC8ge+YmxPAQ6K/
-         A8ZzbmJhAKNN930XD4NdfK4QTa0nEHZDulFi0Ixja1c+WQL1tYDrAeNEUhGzC0IUUdPt
-         F/MbU54UIpR/MsGyhw3tycreZSIPtd86/G5GRvxOciCPwTwZn0Ca/Q6T2UznRb6CEgTQ
-         FwsA==
+        d=linaro.org; s=google; t=1687080494; x=1689672494;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EuXqpMyFDJYC4ZJBWArLuhSdut0CoLr8yYbP5MX9A2U=;
+        b=urlyPw0IJdY3qyjOy5cg0GyjxRtyHWCOeZFH05Ca3RsIXJS1t2PJp1GOUSLxHrZr+8
+         LxtuLAM2mCoZzCgzp1MrPdPwcD7enWhsqmZDi0UnRzaqdFgcaLGwjfyAXJyLQmegKlAG
+         nfzIP0+X/JTpKzEsQIUu1FclRtq7yTCE2gk+mfpNNcNuv/NsVJ+ksLDLpweFWL/4pGCj
+         Nr+GpmX35tj+lQa8eSO2kYvLtdGuGCKBVDcLwilX6uE8SxYDUK0HUx0Uu0Y3R2bxrovU
+         EYTcUWNwtoVYqRzrq6JHXsjV/Ke53saobofmQcndEa2aClIUVcICUND4NzAGS8OZd+9v
+         ZozQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687027513; x=1689619513;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rBIHidYzagcBorCRFxDokfJI4XA6sU8pkIH1nUUMU0Y=;
-        b=GJwl4fMf1iD4CikayhGJVOjlD5speEN4j6Y6gpVccTU8tREsv5282LVIjwmlJPNbKP
-         oxogceMRXyxGHURGP/CLATgB7taPFN0vyCckduDFIhv2SyV424qw5XsiIjC9u1hWz0YL
-         YWTHraBDqDrCmSrxwbf7PatpjhSD0q3wQHWkTvk/R3rCLUJRNrF5FMv4n4vP29PtDRXw
-         M+0XjkqciFhyAdiawbKI7m2E+iTq5/BanqSkbceHs9sLEesHY5YecKlEs+gWU6tw6F3X
-         FOjjHRKD87hwqNwe3ZKAW3x6+ytEbrdq35EA1ZabOiWSglqx3u8J+bneQ4Qiokt2ExV/
-         rRSg==
-X-Gm-Message-State: AC+VfDzkjn3HnUvrZSgStd1g6VM6mkSi8+1OjESv3gGAGSj4Kxulyd4T
-        ZlN4hwWxLubGzMy+rNrsoHo=
-X-Google-Smtp-Source: ACHHUZ7ufP10Rl2kPsTUXuu1X53t6gywyhazJr7lslV6KFmfKz8uS4tz+Y6IyBSEKogHK22WJHteNA==
-X-Received: by 2002:a17:907:6d23:b0:988:6491:98e3 with SMTP id sa35-20020a1709076d2300b00988649198e3mr331554ejc.68.1687027512953;
-        Sat, 17 Jun 2023 11:45:12 -0700 (PDT)
-Received: from krava ([83.240.63.131])
-        by smtp.gmail.com with ESMTPSA id f25-20020a1709062c5900b0098866a94f14sm116441ejh.125.2023.06.17.11.45.12
+        d=1e100.net; s=20221208; t=1687080494; x=1689672494;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EuXqpMyFDJYC4ZJBWArLuhSdut0CoLr8yYbP5MX9A2U=;
+        b=CbwzfGOAyG56F7c66T6TtotYMYI+yMxiBxKF0CO6G/L0ittp6YxBpp0905/QpLNRY3
+         6rR/WO51dgiC8onXdblhdFjyluNkptTzh7Q7tsEhHBk3GjT9rg2rEP3YOnniMpFnMPhL
+         ARXxABDyBW+fbXyqSJgF+cPZmb292p4WO0QMiVewCxaz6chgBfjf8BU2FyuWabafYLD2
+         3F/rBQUx+m/jTfcdbd+ULTRqTvkEi3R5RZvsGS0mcJUoa/sm8m8FAkjM4zDe5s4yDhV7
+         UT7huTSvSk8/Oq72tGOQge3PcgpSrF18dEUNFTKZq8MPGUQDDBGIvC12DkDq13fEbt3C
+         PsUQ==
+X-Gm-Message-State: AC+VfDxZROoSrZx1GzQMKzb9D/PrMao3lG5mATvIkNzK05hWCEICUXcR
+        V4d/8DN1PW+vmgyAtN+loMVOLA==
+X-Google-Smtp-Source: ACHHUZ6T+8yfudkOXZ8hVfgZjRUK2IF/GD7A3Cja7Lhrpf21sVPO7/42evqEdiKIlkUUXTvApBetRg==
+X-Received: by 2002:a6b:f102:0:b0:763:b459:a701 with SMTP id e2-20020a6bf102000000b00763b459a701mr6417433iog.1.1687080494364;
+        Sun, 18 Jun 2023 02:28:14 -0700 (PDT)
+Received: from leoy-huanghe.lan ([107.151.177.132])
+        by smtp.gmail.com with ESMTPSA id s2-20020aa78282000000b0065017055caasm15926482pfm.210.2023.06.18.02.28.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Jun 2023 11:45:12 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Sat, 17 Jun 2023 20:45:10 +0200
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Sun, 18 Jun 2023 02:28:13 -0700 (PDT)
+Date:   Sun, 18 Jun 2023 17:28:06 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     =?utf-8?B?6JSh5rKF5L+h?= <fissure2010@gmail.com>
+Cc:     James Clark <james.clark@arm.com>,
         linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH 1/2] perf stat: Reset aggr stats for each run
-Message-ID: <ZI3/Nmch0ufFJ7Dp@krava>
-References: <20230616073211.1057936-1-namhyung@kernel.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Subject: Re: Some questions about using the perf tool in ARM-SPE
+Message-ID: <20230618092806.GA245455@leoy-huanghe.lan>
+References: <CALDTKqiVNLHM8b21T-zikuNvhfE0N_-kEinpZGSRjSO-04R96w@mail.gmail.com>
+ <874963e2-f97e-b463-1351-b00640b0f67b@arm.com>
+ <CALDTKqg01+xJ2xu218c_QH2PbX9wdhYOiJfDieCXL5PHWV-6FQ@mail.gmail.com>
+ <77773641-26e5-a754-63cf-e7d3443e11fc@arm.com>
+ <CALDTKqgek3Bicxkvnq3BQnSaS2keQG6UK8S6_0oJn26r0D00MA@mail.gmail.com>
+ <20230614012102.GJ217089@leoy-huanghe.lan>
+ <CALDTKqgz6=WFs=bMvnFkKv5kt5OP5wtUqQ2uekVbumCxNqeRXw@mail.gmail.com>
+ <CALDTKqiy7h+SiCsUhpgFNzUoYUPdq3e8EpAEbDgcH3ePbGOV3w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230616073211.1057936-1-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALDTKqiy7h+SiCsUhpgFNzUoYUPdq3e8EpAEbDgcH3ePbGOV3w@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 12:32:10AM -0700, Namhyung Kim wrote:
-> When it runs multiple times with -r option, it missed to reset the
-> aggregation counters and the values were added up.  The aggregation
-> count has the values to be printed in the end.  It should reset the
-> counters at the beginning of each run.  But the current code does that
-> only when -I/--interval-print option is given.
+On Wed, Jun 14, 2023 at 02:08:36PM +0800, 蔡沅信 wrote:
+> "Fix mail to text modeFix mail to text mode"
 > 
-> Fixes: 91f85f98da7a ("perf stat: Display event stats using aggr counts")
-> Reported-by: Jiri Olsa <jolsa@kernel.org>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/builtin-stat.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index c87c6897edc9..e549862f90f0 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -725,6 +725,8 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
->  			all_counters_use_bpf = false;
->  	}
->  
-> +	evlist__reset_aggr_stats(evsel_list);
-> +
+> Hi,
+> How do I add NUME nodes (or CPU topology) to the kernel config?
 
-would it be better to call this below before read_counters call,
-together with the other counts setup calls?
+Below configurations are enabled in my testing kernel:
 
-jirka
+root@leoy-huangpu:/home/leoy# zcat /proc/config.gz | grep NUMA
+CONFIG_ARCH_SUPPORTS_NUMA_BALANCING=y
+CONFIG_NUMA_BALANCING=y
+CONFIG_NUMA_BALANCING_DEFAULT_ENABLED=y
+CONFIG_NUMA=y
+CONFIG_ACPI_NUMA=y
+CONFIG_NUMA_KEEP_MEMINFO=y
+CONFIG_USE_PERCPU_NUMA_NODE_ID=y
+CONFIG_GENERIC_ARCH_NUMA=y
+CONFIG_OF_NUMA=y
+CONFIG_DMA_PERNUMA_CMA=y
 
->  	evlist__for_each_cpu(evlist_cpu_itr, evsel_list, affinity) {
->  		counter = evlist_cpu_itr.evsel;
->  
-> -- 
-> 2.41.0.162.gfafddb0af9-goog
-> 
+> After I modified arm-spe.c. Snoop is working but Locked&Blocked&Local
+> INSTR Latency their results are always No&N/A&0
+
+I cannot understand this ... What's you have modified for arm-spe.c?
+
+If you don't share more complete perf log then it would be difficult to
+understand and locate issue.
+
+> I merged 3 Cluter into one and have been able to record the whole system.
+> user_shell:/sys/bus/event_source/devices/arm_spe_0 # cat cpumask
+> 0-7
+
+This seems to me fine to me.
+
+> On the c2c side:
+> user_shel:/data/local/tmp # ./perf c2c report -vvv
+> coalesce sort   fields: offset,iaddr
+> coalesce resort fields: offset,tot_peer
+> coalesce output fields:
+> cl_num_empty,percent_rmt_peer,percent_lcl_peer,percent_stores_l1hit,percent_stores_l1miss,percent_stores_na,offset,offset_node,dcacheline_count,iaddr,mean_rmt_peer,mean_lcl_peer,mean_load,tot_recs,cpucnt,symbol,dso,cl_srcline,node
+> Failed setup nodes
+
+Before diving into "perf c2c" tool, please use "perf script" tool to
+decode the perf data file and check if you have captured any SPE trace
+data, and it's good to dump header info.  This would be useful to
+analyze the issie.
+
+$ ./perf script --header -I
+
+> On the other hand, the perf I use is statically compiled with the
+> aarch64 cross-compiler. I can't open all the features
+
+This would be fine.  At my side, I built perf statically on x86_64
+machine with the command:
+
+$ make LDFLAGS=-static NO_LIBELF=1 NO_JVMTI=1  VF=1 DEBUG=1 NO_LIBTRACEEVENT=1
+
+And then I copied the perf binary on my Arm64 machine, it works pretty
+well for Arm SPE.
+
+Thanks,
+Leo
