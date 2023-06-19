@@ -2,129 +2,175 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31959EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 07:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3D1EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 07:58:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230147AbjFSHQd (ORCPT
+        id S230030AbjFSH6p (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jun 2023 03:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57480 "EHLO
+        Mon, 19 Jun 2023 03:58:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229657AbjFSHQc (ORCPT
+        with ESMTP id S229462AbjFSH6n (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Jun 2023 03:16:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63E30E4
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jun 2023 00:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687158945;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kpOKy137UOdxxz61biF46fSeY49E4HdHA4JMVS1NKBg=;
-        b=CqNbvB94vKBv9LvquVD9X8MYNznUk67XgDomLB7NNkTFIgqcwaOF52mvm6dG9XqKhtfL1e
-        t4hU0dzBDR7FtT8XjUNCy3Y2wZpA+E6TcEx+15bC0ksMhK5x8X6Oar+c7jqOofnsSXBRe+
-        38a9TBKL+rqObrFDS3YQ2OyAW9Wwcsk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-487-VU_7nSh9NQW2iMr7elRSkw-1; Mon, 19 Jun 2023 03:15:42 -0400
-X-MC-Unique: VU_7nSh9NQW2iMr7elRSkw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 60B44185A7AF;
-        Mon, 19 Jun 2023 07:15:41 +0000 (UTC)
-Received: from samus.usersys.redhat.com (unknown [10.43.17.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A934E492C1B;
-        Mon, 19 Jun 2023 07:15:39 +0000 (UTC)
-Date:   Mon, 19 Jun 2023 09:15:37 +0200
-From:   Artem Savkov <asavkov@redhat.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] perf tools: annotation browser from c2c tui
-Message-ID: <20230619071537.GA153131@samus.usersys.redhat.com>
-References: <20230608084407.140323-1-asavkov@redhat.com>
- <CAM9d7cgvtuqMeQx8ehLCLw_Ur9Ju-VzDrakzFJxnxvFjdsWk_g@mail.gmail.com>
- <20230609083731.GA168559@samus.usersys.redhat.com>
- <ZIoJK66ZrKZblkJN@kernel.org>
+        Mon, 19 Jun 2023 03:58:43 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D179E6B;
+        Mon, 19 Jun 2023 00:58:37 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35J7nrvK004275;
+        Mon, 19 Jun 2023 07:58:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=UVc7QTQJZ7JDsfewiDrvsuhEYLKOviG1uZkcmVBxAyA=;
+ b=LDBy2qT3oIqeSXDZDGDRkfXRa7VXD6bEM5FWDMyooSE+EMzRS6DdjyiTzrUjweoQg7Pl
+ qnV4ubTecMzCYX9sHvJZh+wEdabQ7nS6JJYI8Ljs524oTxqRqul+PJ5Zjcu8wpDib5/4
+ 5uFmLRAyUgAfzOULt3f7rIRsCd8Tlzt6k+gouvg4Onhp15Ninn8+YJ8WrxPht4RJlYit
+ 5XTZj0q7rYsvMzNDd3cGhJyi7/ykEs1JvJMNaFqYGix4+gptEuoye6kdWyL0fsi7WWr9
+ Fz9Rj0vgZAxjlpaB9fIcavz92hfIQGl/KcFWzRd13PwxhNMJzqhxrVfkuL1SnnfgqQKc bg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rajyfg6b3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Jun 2023 07:58:34 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35J7oSNa005932;
+        Mon, 19 Jun 2023 07:58:34 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rajyfg6ac-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Jun 2023 07:58:34 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35J5pqKn015738;
+        Mon, 19 Jun 2023 07:58:32 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3r943e0x83-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 19 Jun 2023 07:58:31 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35J7wSSB57540958
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 19 Jun 2023 07:58:28 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6AEDA2004F;
+        Mon, 19 Jun 2023 07:58:28 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA9442004B;
+        Mon, 19 Jun 2023 07:58:27 +0000 (GMT)
+Received: from [9.171.51.54] (unknown [9.171.51.54])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 19 Jun 2023 07:58:27 +0000 (GMT)
+Message-ID: <b938709c-fc80-4801-e70f-5ee70a1ae1bd@linux.ibm.com>
+Date:   Mon, 19 Jun 2023 09:58:27 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] perf test: fix failing test cases on linux-next for s390
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        irogers@google.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
+        svens@linux.ibm.com, gor@linux.ibm.com
+References: <20230616081437.1932003-1-tmricht@linux.ibm.com>
+ <ZIxf7A1jPiDUUdDt@kernel.org>
+Content-Language: en-US
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <ZIxf7A1jPiDUUdDt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZIoJK66ZrKZblkJN@kernel.org>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: kJ_5xs5yVd8zLCUFf5TAGHQcU_8jHl2i
+X-Proofpoint-ORIG-GUID: vO5Npx_Kp1hLPPXoH4xP7YANEPTDhO86
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-19_05,2023-06-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306190068
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 03:38:35PM -0300, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jun 09, 2023 at 10:37:31AM +0200, Artem Savkov escreveu:
-> > On Thu, Jun 08, 2023 at 02:09:06PM -0700, Namhyung Kim wrote:
-> > > Hello,
-> > > 
-> > > On Thu, Jun 8, 2023 at 1:44 AM Artem Savkov <asavkov@redhat.com> wrote:
-> > > >
-> > > > These patches add ability to start annotation browser from c2c report
-> > > > tui. The idea comes from Arnaldo's "Profiling Data Structures" talk [1].
-> > > 
-> > > I was thinking about how it works and realized that it didn't collect
-> > > samples by symbol.  Then I'm not sure if the result is meaningful.
-> > > I think it'd show a random symbol that touched the cache line
-> > > first.  The same cache line can be accessed from other locations
-> > > but it cannot know where they are.
-> > > 
-> > > Also different instructions in a function (symbol) would access a
-> > > different cache line.  The annotate output just shows any memory
-> > > access.  So it might be good to check the instruction at the point
-> > > but others should not be considered related.
-> > > 
-> > > Hmm.. I suspect even the same instruction will hit the different
-> > > cache lines at different times.  Then probably the annotation
-> > > won't work well in terms of correlating cache lines.
-> > 
-> > The annotation hotkey is only added to the cacheline detailed view where
-> > we do have symbol instruction information. The idea is to give the user
-> > ability to quickly jump to source code/disassembly directly from c2c
-> > TUI.
-> > 
-> > The hit percentages in annotation view don't make much sense in this
-> > case though, so maybe it is better to use dummy evsel so that none are
-> > shown.
+On 6/16/23 15:13, Arnaldo Carvalho de Melo wrote:
+> Em Fri, Jun 16, 2023 at 10:14:37AM +0200, Thomas Richter escreveu:
+>> In linux-next tree the many test cases fail on s390x when running the
+>> perf test suite, sometime the perf tool dumps core.
+>>
+>> Output before:
+>>   6.1: Test event parsing                               : FAILED!
+>>  10.3: Parsing of PMU event table metrics               : FAILED!
+>>  10.4: Parsing of PMU event table metrics with fake PMUs: FAILED!
+>>  17: Setup struct perf_event_attr                       : FAILED!
+>>  24: Number of exit events of a simple workload         : FAILED!
+>>  26: Object code reading                                : FAILED!
+>>  28: Use a dummy software event to keep tracking        : FAILED!
+>>  35: Track with sched_switch                            : FAILED!
+>>  42.3: BPF prologue generation                          : FAILED!
+>>  66: Parse and process metrics                          : FAILED!
+>>  68: Event expansion for cgroups                        : FAILED!
+>>  69.2: Perf time to TSC                                 : FAILED!
+>>  74: build id cache operations                          : FAILED!
+>>  86: Zstd perf.data compression/decompression           : FAILED!
+>>  87: perf record tests                                  : FAILED!
+>> 106: Test java symbol                                   : FAILED!
+>>
+>> The reason for all these failure is a missing PMU. On s390x
+>> the PMU is named cpum_cf which is not detected as core PMU.
+>> A similar patch was added before, see
+>> commit 9bacbced0e32 ("perf list: Add s390 support for detailed PMU event description")
+>> which got lost during the recent reworks. Add it again.
+>>
+>> Output after:
+>>  10.2: PMU event map aliases                            : FAILED!
+>>  42.3: BPF prologue generation                          : FAILED!
+>>
+>> Most test cases now work and there is not core dump anymore.
 > 
-> Yes, the point is just to reuse the source browser, if there is no
-> annotation data applicable, don't use any.
+> So you're not fixing 'perf test', that is just what detects the problem,
+> the part being fixed is the PMU code, so I'm rewriting the patch subject
+> to:
+> 
+> [PATCH] perf pmu: Fix core PMU detection on s/390
+> 
+> Have you bisected the problem to the first patch where this problem
+> appears?
+> 
+> - Arnaldo
+
+Thanks for picking this patch, I noticed it is already in linux-next tree.
+
+No I did not do the bisect. That first patch info came from Ian Rogers.
+
+>  
+>> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+>> Cc: Ian Rogers <irogers@google.com>
+>> ---
+>>  tools/perf/util/pmu.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>> index fe64ad292d36..6142e4710a2f 100644
+>> --- a/tools/perf/util/pmu.c
+>> +++ b/tools/perf/util/pmu.c
+>> @@ -1419,7 +1419,7 @@ void perf_pmu__del_formats(struct list_head *formats)
+>>  
+>>  bool is_pmu_core(const char *name)
+>>  {
+>> -	return !strcmp(name, "cpu") || is_sysfs_pmu_core(name);
+>> +	return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") || is_sysfs_pmu_core(name);
+>>  }
+>>  
+>>  bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
+>> -- 
+>> 2.39.2
+>>
 > 
 
-Ok, should be as easy as the following diff. I'll include it in v3 if
-there si more feedback.
-
----
-
-diff --git b/tools/perf/builtin-c2c.c a/tools/perf/builtin-c2c.c
-index dce8604837aec..c856ce7a50740 100644
---- b/tools/perf/builtin-c2c.c
-+++ a/tools/perf/builtin-c2c.c
-@@ -2701,7 +2701,11 @@ static int perf_c2c__browse_cacheline(struct hist_entry *he)
-
-                switch (key) {
-                case 'a':
--                       do_annotate(browser, evlist__first(c2c.evlist));
-+                       /*
-+                        * We don't need percentage info so use 'dummy:HG'
-+                        * evsel which is last in evlist.
-+                        */
-+                       do_annotate(browser, evlist__last(c2c.evlist));
-                        break;
-                case 's':
-                        c2c.symbol_full = !c2c.symbol_full;
+-- 
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
