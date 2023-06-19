@@ -2,178 +2,213 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEC4EB64DB
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 08:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0082AEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 09:08:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230382AbjFSI7f (ORCPT
+        id S230190AbjFSJIQ (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jun 2023 04:59:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58486 "EHLO
+        Mon, 19 Jun 2023 05:08:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230215AbjFSI7U (ORCPT
+        with ESMTP id S229865AbjFSJIO (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Jun 2023 04:59:20 -0400
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E42D83;
-        Mon, 19 Jun 2023 01:59:17 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0VlTKQLc_1687165151;
-Received: from 30.221.149.0(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VlTKQLc_1687165151)
-          by smtp.aliyun-inc.com;
-          Mon, 19 Jun 2023 16:59:12 +0800
-Message-ID: <a6e1114c-b37c-6999-0668-039aa495db84@linux.alibaba.com>
-Date:   Mon, 19 Jun 2023 16:59:08 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: [PATCH v3 2/7] perf metric: Event "Compat" value supports
- matching multiple identifiers
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1685438374-33287-3-git-send-email-renyu.zj@linux.alibaba.com>
- <c1d8ee9b-4839-1011-4dad-c4777d8f8224@oracle.com>
- <452e724b-2a2c-52fd-274b-60db7a7f730e@linux.alibaba.com>
- <c4b2fca8-602d-9c76-90a7-3eafd92da8bc@oracle.com>
- <76fcb062-61a8-5f90-b39d-b5fb6da35652@linux.alibaba.com>
- <5f38ef6c-8c50-5df9-19dd-c3c9fe590452@oracle.com>
- <e4be7189-a1ba-7758-bff3-e7b8d8ff1419@linux.alibaba.com>
- <892f57c7-8ce2-634c-26f3-4d4ab8b2f2ce@oracle.com>
- <079d7920-2030-2e00-a833-5ec6d450f7dc@oracle.com>
- <552eebae-76bb-a2fe-ccdc-11e8a01717da@linux.alibaba.com>
- <045a49c9-b9ae-bf0e-c4be-858d905bcc55@oracle.com>
- <7c765e0f-ca76-d212-0496-f9c56369e389@linux.alibaba.com>
- <d1ab4947-6bdf-2b9c-5b26-52c572611ca6@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <d1ab4947-6bdf-2b9c-5b26-52c572611ca6@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 19 Jun 2023 05:08:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC29983;
+        Mon, 19 Jun 2023 02:08:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 88FEE60B42;
+        Mon, 19 Jun 2023 09:08:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E905FC433C0;
+        Mon, 19 Jun 2023 09:08:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687165692;
+        bh=nYsHo1/mi4nz30DXQPx6lDr0nZvhK16CBTfpaRXnRxk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Srpb+UyywToj320m2gcEVqI4Og5699S8nuj9wG4+vKPutI/bwB+33aPjD5l+j+WIs
+         jeNMfIVxAaJa7iytiM9Y4utgjePdlMoyRSDIArmZVbH3KKyRBHBFPwlYM21q/80nc1
+         p+kxeCA90QhwsLXDQGSHJ1TltK5D8wBzV+Wf/cfLOxumBxj/a26BHL/wx9ql9z/wMC
+         diTtQkDv19OSmYdbqfXRqrtYwOvui6i4c6CIuPIf1/tjdtYERui6ZrZ/+GVBqQ8YhA
+         foPM/yVd38Phy2MX4GQVOalNcbHiOXk36t15iw8c9odDEGxaaPB1ej3Pgf10Lyv4na
+         bZhCqIXJszoVQ==
+Received: from [82.3.55.74] (helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1qBArp-006SIh-AE;
+        Mon, 19 Jun 2023 10:08:09 +0100
+Date:   Mon, 19 Jun 2023 10:08:07 +0100
+Message-ID: <87wmzzq0p4.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        kernel test robot <lkp@intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, mark.rutland@arm.com, llvm@lists.linux.dev,
+        oe-kbuild-all@lists.linux.dev, Mark Brown <broonie@kernel.org>,
+        James Clark <james.clark@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V12 05/10] arm64/perf: Add branch stack support in ARMV8 PMU
+In-Reply-To: <f624966d-5973-0aed-bd73-29ef0530e5ce@arm.com>
+References: <20230615133239.442736-6-anshuman.khandual@arm.com>
+        <202306160706.Uei5XDoi-lkp@intel.com>
+        <883f2a20-fe20-4d43-86cf-7847d59e2169@arm.com>
+        <ZIwpma4SAJ/ZUyh5@arm.com>
+        <f624966d-5973-0aed-bd73-29ef0530e5ce@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 82.3.55.74
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, catalin.marinas@arm.com, lkp@intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, mark.rutland@arm.com, llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
+On Mon, 19 Jun 2023 06:45:07 +0100,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+>=20
+>=20
+>=20
+> On 6/16/23 14:51, Catalin Marinas wrote:
+> > On Fri, Jun 16, 2023 at 06:57:52AM +0530, Anshuman Khandual wrote:
+> >> On 6/16/23 05:12, kernel test robot wrote:
+> >>> kernel test robot noticed the following build errors:
+> >>>
+> >>> [auto build test ERROR on arm64/for-next/core]
+> >>> [also build test ERROR on tip/perf/core acme/perf/core linus/master v=
+6.4-rc6 next-20230615]
+> >>> [If your patch is applied to the wrong git tree, kindly drop us a not=
+e.
+> >>> And when submitting patch, we suggest to use '--base' as documented in
+> >>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> >>>
+> >>> url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khand=
+ual/drivers-perf-arm_pmu-Add-new-sched_task-callback/20230615-223352
+> >>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.g=
+it for-next/core
+> >>> patch link:    https://lore.kernel.org/r/20230615133239.442736-6-ansh=
+uman.khandual%40arm.com
+> >>> patch subject: [PATCH V12 05/10] arm64/perf: Add branch stack support=
+ in ARMV8 PMU
+> >>> config: arm-randconfig-r004-20230615 (https://download.01.org/0day-ci=
+/archive/20230616/202306160706.Uei5XDoi-lkp@intel.com/config)
+> >>> compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.=
+git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
+> >>> reproduce (this is a W=3D1 build):
+> >>>         mkdir -p ~/bin
+> >>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master=
+/sbin/make.cross -O ~/bin/make.cross
+> >>>         chmod +x ~/bin/make.cross
+> >>>         # install arm cross compiling tool for clang build
+> >>>         # apt-get install binutils-arm-linux-gnueabi
+> >>>         git remote add arm64 https://git.kernel.org/pub/scm/linux/ker=
+nel/git/arm64/linux.git
+> >>>         git fetch arm64 for-next/core
+> >>>         git checkout arm64/for-next/core
+> >>>         b4 shazam https://lore.kernel.org/r/20230615133239.442736-6-a=
+nshuman.khandual@arm.com
+> >>>         # save the config file
+> >>>         mkdir build_dir && cp config build_dir/.config
+> >>>         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang ~/bin/mak=
+e.cross W=3D1 O=3Dbuild_dir ARCH=3Darm olddefconfig
+> >>>         COMPILER_INSTALL_PATH=3D$HOME/0day COMPILER=3Dclang ~/bin/mak=
+e.cross W=3D1 O=3Dbuild_dir ARCH=3Darm SHELL=3D/bin/bash drivers/perf/
+> >>
+> >> I am unable to reproduce this on mainline 6.4-rc6 via default cross co=
+mpiler
+> >> on a W=3D1 build. Looking at all other problems reported on the file, =
+it seems
+> >> something is not right here. Reported build problems around these call=
+backs,
+> >> i.e armv8pmu_branch_XXXX() do not make sense as they are available via=
+ config
+> >> CONFIG_PERF_EVENTS which is also enabled along with CONFIG_ARM_PMUV3 i=
+n this
+> >> test config.
+> >=20
+> > Have you tried applying this series on top of the arm64 for-next/core
+> > branch? That's what the robot it testing (in the absence of a --base
+> > option when generating the patches).
+>=20
+> Right, it turned out to be a build problem on arm (32 bit) platform inste=
+ad.
+> After arm_pmuv3.c moved into common ./drivers/perf from ./arch/arm64/kern=
+el/,
+> it can no longer access arch/arm64/include/asm/perf_event.h defined funct=
+ions
+> without breaking arm (32) bit. The following code block needs to be moved=
+ out
+> from arch/arm64/include/asm/perf_event.h into include/linux/perf/arm_pmuv=
+3.h
+> (which is preferred as all call sites are inside drivers/perf/arm_pmuv3.c=
+) or
+> may be arm_pmu.h (which is one step higher in the abstraction).
 
+No, that's the wrong approach. The 32bit backend must have its own
+stubs for the stuff it implements or not.
 
-在 2023/6/19 下午3:07, John Garry 写道:
-> On 19/06/2023 03:58, Jing Zhang wrote:
->>> +++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metrics.json
->>> @@ -0,0 +1,74 @@
->>> +[
->>> +    {
->>> +        "MetricName": "slc_miss_rate",
->>> +        "BriefDescription": "The system level cache miss rate include.",
->>> +        "MetricGroup": "arm_cmn",
->>> +        "MetricExpr": "hnf_cache_miss / hnf_slc_sf_cache_access",
->>>
->>> So this expression uses event aliases hnf_cache_miss and hnf_slc_sf_cache_access - where are they defined in a JSON?
->>>
->> Hi John,
->>
->> I defined the aliases for these events in the JSON file during the RFC version. However, I later removed the alias
->> definitions for these events in subsequent versions due to the possibility of non-uniqueness and difficulty in defining
->> their EventCode. But this does not affect their usage in metrics. In other words, metrics can use the aliases without
->> defining event aliases in the JSON file.
-> 
-> Really? So how can we resolve the event aliases when we try to run the metric?
-> 
-> Please verify running these metrics with 'perf stat', like 'perf stat -v -M slc_miss_rate'
-> 
-
-Ok, it shows:
-#./perf stat -v -M slc_miss_rate sleep 1
-
-metric expr hnf_cache_miss / hnf_slc_sf_cache_access for slc_miss_rate
-found event duration_time
-found event hnf_slc_sf_cache_access
-found event hnf_cache_miss
-Parsing metric events '{hnf_slc_sf_cache_access/metric-id=hnf_slc_sf_cache_access/,hnf_cache_miss/metric-id=hnf_cache_miss/}:W,duration_time'
-hnf_slc_sf_cache_access -> arm_cmn_0/type=0x5,eventid=0x2/
-hnf_slc_sf_cache_access -> arm_cmn_1/type=0x5,eventid=0x2/
-hnf_cache_miss -> arm_cmn_0/type=0x5,eventid=0x1/
-hnf_cache_miss -> arm_cmn_1/type=0x5,eventid=0x1/
-Control descriptor is not initialized
-hnf_slc_sf_cache_access: 127615 1001344900 1001344900
-hnf_cache_miss: 36829 1001344900 1001344900
-hnf_slc_sf_cache_access: 131526 1001343540 1001343540
-hnf_cache_miss: 40587 1001343540 1001343540
-duration_time: 1001381687 1001381687 1001381687
-
- Performance counter stats for 'system wide':
-
-           259,141      hnf_slc_sf_cache_access   #     29.9 %  slc_miss_rate
-            77,416      hnf_cache_miss
-     1,001,381,687 ns   duration_time
-
-       1.001381687 seconds time elapsed
-
-
-
-#./perf list
-...
- arm_cmn_0/hnf_cache_miss/                          [Kernel PMU event]
- arm_cmn_0/hnf_slc_sf_cache_access/                 [Kernel PMU event]
-...
- arm_cmn_1/hnf_cache_miss/                          [Kernel PMU event]
- arm_cmn_1/hnf_slc_sf_cache_access/                 [Kernel PMU event]
-...
-
->>
->> In the past, I always thought that the function of the alias was to explain the meaning of these events in the perf list.
->> Or maybe I'm missing something?
-> 
-> Event aliases do give the ability to describe the event in perf list. But we can also run them for 'perf stat', like:
-> 
-> ./perf list uncore
-> List of pre-defined events (to be used in -e or -M):
-> 
->   uncore_cbox_0/clockticks/                          [Kernel PMU event]
->   uncore_cbox_1/clockticks/                          [Kernel PMU event]
->   uncore_imc/data_reads/                             [Kernel PMU event]
->   uncore_imc/data_writes/                            [Kernel PMU event]
->   uncore_imc/gt_requests/                            [Kernel PMU event]
->   uncore_imc/ia_requests/                            [Kernel PMU event]
->   uncore_imc/io_requests/                            [Kernel PMU event]
-> 
-> uncore cache:
->   unc_cbo_cache_lookup.any_es
->        [L3 Lookup any request that access cache and found line in E or S-state. Unit: uncore_cbox]
-> ...
-> 
-> sudo ./perf stat -v -e unc_cbo_cache_lookup.any_es
-> Using CPUID GenuineIntel-6-3D-4
-> unc_cbo_cache_lookup.any_es -> uncore_cbox_0/event=0x34,umask=0x86/
-> unc_cbo_cache_lookup.any_es -> uncore_cbox_1/event=0x34,umask=0x86/
-> Control descriptor is not initialized
-> ^Cunc_cbo_cache_lookup.any_es: 14361103 1853372468 1853372468
-> unc_cbo_cache_lookup.any_es: 14322188 1853360415 1853360415
-> 
->  Performance counter stats for 'system wide':
-> 
->         14,361,103      unc_cbo_cache_lookup.any_es
->         14,322,188      unc_cbo_cache_lookup.any_es
-> 
->        1.853388227 seconds time elapsed
-> 
-
-Ok, thanks. If I use events without a prefix, such as perf stat -e clockticks sleep 1, will this also work?
+Just add something like the patch below, and please *test* that a
+32bit VM using PMUv3 doesn't have any regression.
 
 Thanks,
-Jing
+
+	M.
+
+=46rom 017362ca518e6d6ac3262514d1f7f27e73232799 Mon Sep 17 00:00:00 2001
+From: Marc Zyngier <maz@kernel.org>
+Date: Mon, 19 Jun 2023 10:05:52 +0100
+Subject: [PATCH] 32bit hack
+
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ arch/arm/include/asm/arm_pmuv3.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/arm_pm=
+uv3.h
+index f4db3e75d75f..c4bcb7a18267 100644
+--- a/arch/arm/include/asm/arm_pmuv3.h
++++ b/arch/arm/include/asm/arm_pmuv3.h
+@@ -244,4 +244,22 @@ static inline bool is_pmuv3p5(int pmuver)
+ 	return pmuver >=3D ARMV8_PMU_DFR_VER_V3P5;
+ }
+=20
++/* BRBE stubs */
++static inline void armv8pmu_branch_enable(struct perf_event *event) { }
++static inline void armv8pmu_branch_disable(struct perf_event *event) { }
++static inline void armv8pmu_branch_read(struct pmu_hw_events * cpuc,
++					struct perf_event *event) { }
++static inline void armv8pmu_branch_save(struct arm_pmu *armpmu, void *ctx)=
+ {}
++static inline void armv8pmu_branch_reset(void) {}
++static inline bool armv8pmu_branch_attr_valid(struct perf_event *event)
++{
++	return false;
++}
++static inline void armv8pmu_branch_probe(struct arm_pmu *armpmu) {}
++static inline int armv8pmu_task_ctx_cache_alloc(struct arm_pmu *armpmu)
++{
++	return 0;
++}
++static inline void armv8pmu_task_ctx_cache_free(struct arm_pmu *armpmu) {}
++
+ #endif
+--=20
+2.39.2
 
 
-> 
-> Thanks,
-> John
+--=20
+Without deviation from the norm, progress is not possible.
