@@ -2,166 +2,107 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1B9EB64D9
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 12:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7063EEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 12:48:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229654AbjFSMGX (ORCPT
+        id S229772AbjFSMsx (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jun 2023 08:06:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38810 "EHLO
+        Mon, 19 Jun 2023 08:48:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjFSMGT (ORCPT
+        with ESMTP id S229989AbjFSMsp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Jun 2023 08:06:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E6F134
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Jun 2023 05:05:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1687176342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=flv0m9IzvhIUpKnDIyrInh56vnSxXK9hbzXv0isFig8=;
-        b=hnUetV29Dp1W/zpW3Yl5j5V1qiOL0PuvKfWbjW+/Y45dheY3YfE6x8eHoT5F07QrrWvRzQ
-        DaXdCLnO8Xwe9tvzxtXtpL9O0n4sLRvf/sqR1KkR/qQea5tAFRpiDS2oUKIznpFUcPs5Og
-        nWTlCXczkf/fPF88j/9jiSNVeRUj9TA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-98-6kJ1RmfDPwCBOHGN8dJYCQ-1; Mon, 19 Jun 2023 08:05:40 -0400
-X-MC-Unique: 6kJ1RmfDPwCBOHGN8dJYCQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7FC9A1C06EC1;
-        Mon, 19 Jun 2023 12:05:38 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 88C75C1603B;
-        Mon, 19 Jun 2023 12:05:34 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <648f36d02fe6e_33cfbc2944f@willemb.c.googlers.com.notmuch>
-References: <648f36d02fe6e_33cfbc2944f@willemb.c.googlers.com.notmuch> <20230617121146.716077-1-dhowells@redhat.com> <20230617121146.716077-18-dhowells@redhat.com>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     dhowells@redhat.com, netdev@vger.kernel.org,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        David Ahern <dsahern@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        dccp@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-x25@vger.kernel.org,
-        mptcp@lists.linux.dev, rds-devel@oss.oracle.com,
-        tipc-discussion@lists.sourceforge.net,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH net-next v2 17/17] net: Kill MSG_SENDPAGE_NOTLAST
+        Mon, 19 Jun 2023 08:48:45 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 604FA113;
+        Mon, 19 Jun 2023 05:48:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687178924; x=1718714924;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dBCyE2sw+S1qIRqycQBeE/+cUqHyEnIowfaY4Rl2/B0=;
+  b=W8W6wXBpispPfRc95eyOgWsA+yJS225Jh80qFMIFvWk+kmcDgx+mc/XP
+   xDdHCBth5F2vvVx7cIYYPdi+tYxQq8o0VF4F+FLXZoLX4SZylYe1LnxxN
+   JVSYgEiFgSwt52gKOWZibn5hKRJvGVElbZbdomUdMtPuYwDeKR7J91fsE
+   w10KDlTLM0+mWRipDvYwvBd9OXlqyl59wOfXVZOBuj1uugOzYs4eTEyns
+   TediK9Co8MZy7VUg2Exzz8DbHiibUGhuacTJeHsR5t7CfiSVvveY/3Moj
+   x3Fe5okhQb3FpfHfurReJb7Q7bTs7db2wjVnovGUn3Bqyf5I7OkNvH4LR
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="349342761"
+X-IronPort-AV: E=Sophos;i="6.00,254,1681196400"; 
+   d="scan'208";a="349342761"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2023 05:48:43 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="837857967"
+X-IronPort-AV: E=Sophos;i="6.00,254,1681196400"; 
+   d="scan'208";a="837857967"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.61.10])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2023 05:48:39 -0700
+Message-ID: <e4d4af5c-8714-aac3-517b-dda1fb5b5b37@intel.com>
+Date:   Mon, 19 Jun 2023 15:48:35 +0300
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <784657.1687176327.1@warthog.procyon.org.uk>
-Date:   Mon, 19 Jun 2023 13:05:27 +0100
-Message-ID: <784658.1687176327@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.12.0
+Subject: Re: [PATCH] tools: Optimize the variable with 0 as the return value
+Content-Language: en-US
+To:     Li Dong <lidong@vivo.com>, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Steinar H. Gunderson" <sesse@google.com>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-perf-users@vger.kernel.org>,
+        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
+        <linux-kernel@vger.kernel.org>
+Cc:     opensource.kernel@vivo.com
+References: <20230619112047.1966-1-lidong@vivo.com>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20230619112047.1966-1-lidong@vivo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
+On 19/06/23 14:20, Li Dong wrote:
+> The variable ret is not used, replacing ret with 0 as the return value
 
-> Is it intentional to add MSG_MORE here in this patch?
+What kernel does that apply to?
+
 > 
-> I do see that patch 3 removes this branch:
-
-Yeah.  I think I may have tcp_bpf a bit wrong with regard to handling
-MSG_MORE.
-
-How about the attached version of tcp_bpf_push()?
-
-I wonder if it's save to move the setting of MSG_SENDPAGE_NOPOLICY out of the
-loop as I've done here.  The caller holds the socket lock.
-
-Also, I'm not sure whether to take account of apply/apply_bytes when setting
-MSG_MORE mid-message, or whether to just go on whether we've reached
-sge->length yet.  (I'm not sure exactly how tcp_bpf works).
-
-David
----
-
-static int tcp_bpf_push(struct sock *sk, struct sk_msg *msg, u32 apply_bytes,
-			int flags, bool uncharge)
-{
-	bool apply = apply_bytes;
-	struct scatterlist *sge;
-	struct page *page;
-	int size, ret = 0;
-	u32 off;
-
-	flags |= MSG_SPLICE_PAGES;
-	if (tls_sw_has_ctx_tx(sk))
-		msghdr.msg_flags |= MSG_SENDPAGE_NOPOLICY;
-
-	while (1) {
-		struct msghdr msghdr = {};
-		struct bio_vec bvec;
-
-		sge = sk_msg_elem(msg, msg->sg.start);
-		size = (apply && apply_bytes < sge->length) ?
-			apply_bytes : sge->length;
-		off  = sge->offset;
-		page = sg_page(sge);
-
-		tcp_rate_check_app_limited(sk);
-retry:
-		msghdr.msg_flags = flags;
-
-		/* Determine if we need to set MSG_MORE. */
-		if (!(msghdr.msg_flags & MSG_MORE)) {
-			if (apply && size < apply_bytes)
-				msghdr.msg_flags |= MSG_MORE;
-			else if (!apply && size < sge->length &&
-				 msg->sg.start != msg->sg.end)
-				msghdr.msg_flags |= MSG_MORE;
-		}
-
-		bvec_set_page(&bvec, page, size, off);
-		iov_iter_bvec(&msghdr.msg_iter, ITER_SOURCE, &bvec, 1, size);
-		ret = tcp_sendmsg_locked(sk, &msghdr, size);
-		if (ret <= 0)
-			return ret;
-
-		if (apply)
-			apply_bytes -= ret;
-		msg->sg.size -= ret;
-		sge->offset += ret;
-		sge->length -= ret;
-		if (uncharge)
-			sk_mem_uncharge(sk, ret);
-		if (ret != size) {
-			size -= ret;
-			off  += ret;
-			goto retry;
-		}
-		if (!sge->length) {
-			put_page(page);
-			sk_msg_iter_next(msg, start);
-			sg_init_table(sge, 1);
-			if (msg->sg.start == msg->sg.end)
-				break;
-		}
-		if (apply && !apply_bytes)
-			break;
-	}
-
-	return 0;
-}
+> Signed-off-by: Li Dong <lidong@vivo.com>
+> ---
+>  tools/perf/util/intel-pt.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index dbf0bc71a63b..a40017458185 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -3398,7 +3398,6 @@ static int intel_pt_text_poke(struct intel_pt *pt, union perf_event *event)
+>  	struct machine *machine = pt->machine;
+>  	struct intel_pt_cache_entry *e;
+>  	u64 offset;
+> -	int ret = 0;
+>  
+>  	addr_location__init(&al);
+>  	if (!event->text_poke.new_len)
+> @@ -3439,7 +3438,7 @@ static int intel_pt_text_poke(struct intel_pt *pt, union perf_event *event)
+>  	}
+>  out:
+>  	addr_location__exit(&al);
+> -	return ret;
+> +	return 0;
+>  }
+>  
+>  static int intel_pt_process_event(struct perf_session *session,
 
