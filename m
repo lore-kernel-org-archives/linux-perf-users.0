@@ -2,165 +2,96 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91755EB64DB
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 20:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17847EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 23:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230319AbjFSUA6 convert rfc822-to-8bit (ORCPT
+        id S229671AbjFSXng (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jun 2023 16:00:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53330 "EHLO
+        Mon, 19 Jun 2023 19:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230047AbjFSUA6 (ORCPT
+        with ESMTP id S229670AbjFSXne (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Jun 2023 16:00:58 -0400
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08B9211B;
-        Mon, 19 Jun 2023 13:00:57 -0700 (PDT)
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-77faf29bdf1so3062139f.0;
-        Mon, 19 Jun 2023 13:00:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687204856; x=1689796856;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oAro3jK74ZfeFA/3l4ku7dA8uGjjLqikZaPjW5cbOLU=;
-        b=UixJu0g88riVMvh9HxXm1IYrElyfTFzetzrmzmwMxUTnsMPXmHngZXqjJxIfvV1bC/
-         J6rLCizeF/xGn+LjVJKKov4rNCp7l+pKUt1wqwUhnR/CZHbv7RywXd2V47I5QadQvZp1
-         cA/03hbDTTlspwnIgQHBthM9+mEm5vK41Uj3psjCrFt9lBg5mbjeoqNw6/mG32FWdcCR
-         trw68znXN+x6ovL9FmzkgcpcD/aa/b8vieYv0xRwaMeiYiK2rpyoD7sanYlJrg9z+97p
-         2FvUZttDIB4jRfdyP9FSRyjIgYWRuh7NbhDhO3DjYZXTq57J24janmoIc2jG1kpATDAb
-         pJRg==
-X-Gm-Message-State: AC+VfDwqZUl7u0b5pgw2rLKHHD+eWQiICbUwlByn4guzRrEJZpmJU3KZ
-        2ssfKs6HxkyLO0flF29MxRxXO/3nrLQszmjFhug=
-X-Google-Smtp-Source: ACHHUZ649rDadfHFKvadKsAGu1EgChZHTrdUJKeQPOXVbKwuS6BAoecEYuasLpzTWUZQwi4HeupmKkTlNtT131fD6i4=
-X-Received: by 2002:a5e:c814:0:b0:777:abbb:2b6a with SMTP id
- y20-20020a5ec814000000b00777abbb2b6amr10152871iol.19.1687204856062; Mon, 19
- Jun 2023 13:00:56 -0700 (PDT)
+        Mon, 19 Jun 2023 19:43:34 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D504A186;
+        Mon, 19 Jun 2023 16:43:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687218213; x=1718754213;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2IydA7aDSW7WAlkvgWIB7B8MuolrT6i4fpDMP7/KzxQ=;
+  b=Ou8khvC0mKcie3XfRCeAvE+vLIfcT9X74jf+zmIyB6SgoyFaa/0JqQzW
+   PMK4fZgKQRXFhNmnT4zgg+xLlMaPx4uGl8+jYzXeESePiQiOrVGhSyTGJ
+   rrmmm6P+jKFurl7nWDceTlhnIbTHAt2ucNuJwFDsHwCAvdiQMxbz8YqIx
+   RUMmozqOhiaCeXXV8YVAr1YV9bn2Lig939B5wWa29lrtQQ7K6BhoYCoxe
+   QdYOI2Aha+KMa32TBdko7GrFzXkFbKqBIypSYQYuOL5Uqe9CLRrUWIEeN
+   xOZ8eZDzKHQy9ccXZspL2b6CRDESUfLkXPjJ1jr++VwsdGHs8t0QWOW+U
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="340071423"
+X-IronPort-AV: E=Sophos;i="6.00,255,1681196400"; 
+   d="scan'208";a="340071423"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2023 16:43:33 -0700
+X-IronPort-AV: E=McAfee;i="6600,9927,10746"; a="747789680"
+X-IronPort-AV: E=Sophos;i="6.00,255,1681196400"; 
+   d="scan'208";a="747789680"
+Received: from unknown (HELO fred..) ([172.25.112.68])
+  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2023 16:43:31 -0700
+From:   Xin Li <xin3.li@intel.com>
+To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        iommu@lists.linux.dev, linux-hyperv@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, steve.wahl@hpe.com,
+        mike.travis@hpe.com, dimitri.sivanich@hpe.com,
+        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
+        joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
+        robin.murphy@arm.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, peterz@infradead.org, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, xin3.li@intel.com, seanjc@google.com,
+        jiangshanlai@gmail.com, jgg@ziepe.ca, yangtiezhu@loongson.cn
+Subject: [PATCH 0/3] Do IRQ move cleanup with a timer instead of an IPI
+Date:   Mon, 19 Jun 2023 16:16:08 -0700
+Message-Id: <20230619231611.2230-1-xin3.li@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230616073211.1057936-1-namhyung@kernel.org> <20230616073211.1057936-2-namhyung@kernel.org>
- <ZI3/LphHu0tP6pib@krava>
-In-Reply-To: <ZI3/LphHu0tP6pib@krava>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Mon, 19 Jun 2023 13:00:44 -0700
-Message-ID: <CAM9d7cgEJ=0Y_Y42gN0RN95YXZPzWfXmeLKuNYqJeSWFMbQ5fA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf stat: Show average value on multiple runs
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Sat, Jun 17, 2023 at 11:45 AM Jiri Olsa <olsajiri@gmail.com> wrote:
->
-> On Fri, Jun 16, 2023 at 12:32:11AM -0700, Namhyung Kim wrote:
-> > When -r option is used, perf stat runs the command multiple times and
-> > update stats in the evsel->stats.res_stats for global aggregation.  But
-> > the value is never used and the value it prints at the end is just the
-> > value from the last run.  I think we should print the average number of
-> > multiple runs.
-> >
-> > Add evlist__copy_res_stats() to update the aggr counter (for display)
-> > using the values in the evsel->stats.res_stats.
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
->
-> this is the 'real' fix right? I thought this was the way it worked before
+No point to waste a vector for cleaning up the leftovers of a moved
+interrupt. Aside of that this must be the lowest priority of all vectors
+which makes FRED systems utilizing vectors 0x10-0x1f more complicated
+than necessary.
 
-It worked like the patch 1/2 before.
+Schedule a timer instead.
 
->
-> anyway works nicely now, would be nice to add some tests for this,
-> but not sure how bad it'd be ;-)
+Thomas Gleixner (2):
+  x86/vector: Rename send_cleanup_vector() to vector_schedule_cleanup()
+  x86/vector: Replace IRQ_MOVE_CLEANUP_VECTOR with a timer callback
 
-Maybe we can parse the raw counter output from the -v option and
-calculate the average then compare.
+Xin Li (1):
+  tools: Get rid of IRQ_MOVE_CLEANUP_VECTOR from tools
 
->
-> Acked/Tested-by: Jiri Olsa <jolsa@kernel.org>
+ arch/x86/include/asm/hw_irq.h                 |   4 +-
+ arch/x86/include/asm/idtentry.h               |   1 -
+ arch/x86/include/asm/irq_vectors.h            |   7 --
+ arch/x86/kernel/apic/vector.c                 | 109 ++++++++++++++----
+ arch/x86/kernel/idt.c                         |   1 -
+ arch/x86/platform/uv/uv_irq.c                 |   2 +-
+ drivers/iommu/amd/iommu.c                     |   2 +-
+ drivers/iommu/hyperv-iommu.c                  |   4 +-
+ drivers/iommu/intel/irq_remapping.c           |   2 +-
+ tools/arch/x86/include/asm/irq_vectors.h      |   7 --
+ .../beauty/tracepoints/x86_irq_vectors.sh     |   2 +-
+ 11 files changed, 92 insertions(+), 49 deletions(-)
 
-Thanks,
-Namhyung
+-- 
+2.34.1
 
-
->
-> > ---
-> >  tools/perf/builtin-stat.c |  5 ++++-
-> >  tools/perf/util/stat.c    | 22 ++++++++++++++++++++++
-> >  tools/perf/util/stat.h    |  1 +
-> >  3 files changed, 27 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> > index e549862f90f0..42f84975a4d5 100644
-> > --- a/tools/perf/builtin-stat.c
-> > +++ b/tools/perf/builtin-stat.c
-> > @@ -2829,8 +2829,11 @@ int cmd_stat(int argc, const char **argv)
-> >               }
-> >       }
-> >
-> > -     if (!forever && status != -1 && (!interval || stat_config.summary))
-> > +     if (!forever && status != -1 && (!interval || stat_config.summary)) {
-> > +             if (stat_config.run_count > 1)
-> > +                     evlist__copy_res_stats(&stat_config, evsel_list);
-> >               print_counters(NULL, argc, argv);
-> > +     }
-> >
-> >       evlist__finalize_ctlfd(evsel_list);
-> >
-> > diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> > index 0f7b8a8cdea6..967e583392c7 100644
-> > --- a/tools/perf/util/stat.c
-> > +++ b/tools/perf/util/stat.c
-> > @@ -264,6 +264,28 @@ void evlist__copy_prev_raw_counts(struct evlist *evlist)
-> >               evsel__copy_prev_raw_counts(evsel);
-> >  }
-> >
-> > +static void evsel__copy_res_stats(struct evsel *evsel)
-> > +{
-> > +     struct perf_stat_evsel *ps = evsel->stats;
-> > +
-> > +     /*
-> > +      * For GLOBAL aggregation mode, it updates the counts for each run
-> > +      * in the evsel->stats.res_stats.  See perf_stat_process_counter().
-> > +      */
-> > +     *ps->aggr[0].counts.values = avg_stats(&ps->res_stats);
-> > +}
-> > +
-> > +void evlist__copy_res_stats(struct perf_stat_config *config, struct evlist *evlist)
-> > +{
-> > +     struct evsel *evsel;
-> > +
-> > +     if (config->aggr_mode != AGGR_GLOBAL)
-> > +             return;
-> > +
-> > +     evlist__for_each_entry(evlist, evsel)
-> > +             evsel__copy_res_stats(evsel);
-> > +}
-> > +
-> >  static size_t pkg_id_hash(long __key, void *ctx __maybe_unused)
-> >  {
-> >       uint64_t *key = (uint64_t *) __key;
-> > diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
-> > index 7abff7cbb5a1..1cbc26b587ba 100644
-> > --- a/tools/perf/util/stat.h
-> > +++ b/tools/perf/util/stat.h
-> > @@ -182,6 +182,7 @@ void evlist__save_aggr_prev_raw_counts(struct evlist *evlist);
-> >
-> >  int evlist__alloc_aggr_stats(struct evlist *evlist, int nr_aggr);
-> >  void evlist__reset_aggr_stats(struct evlist *evlist);
-> > +void evlist__copy_res_stats(struct perf_stat_config *config, struct evlist *evlist);
-> >
-> >  int perf_stat_process_counter(struct perf_stat_config *config,
-> >                             struct evsel *counter);
-> > --
-> > 2.41.0.162.gfafddb0af9-goog
-> >
