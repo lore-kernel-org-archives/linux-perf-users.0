@@ -2,148 +2,178 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D63EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 08:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEC4EB64DB
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 08:59:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230262AbjFSIVY (ORCPT
+        id S230382AbjFSI7f (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jun 2023 04:21:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58556 "EHLO
+        Mon, 19 Jun 2023 04:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230243AbjFSIVN (ORCPT
+        with ESMTP id S230215AbjFSI7U (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Jun 2023 04:21:13 -0400
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2095.outbound.protection.outlook.com [40.107.117.95])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A42A9E7A;
-        Mon, 19 Jun 2023 01:21:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ds2eje9/6mfayRqPKze0wOP+0GmRPxbjwYLHgPMEgvkm1jpjk5+vO4VRB5/0RPMweRzRu0gP+SKXLMZnNz+qcRjuNlmWnI4L68BsOxkpk5INxZStkrSW9h4usSrt9VQ0Wo+Y2NZ1dFGgCK8VlAAgwT47wn3PEju4Hdo/jxDtABwD20Y8+JaBkBvwU/sAVVewBSaiT5u7PGpoRD9FljXhv7eobQrho7Ix+DyzLsBadOvsQzj7tAiyRqzO3ldfdyuYArnZ126cb/u6DEv/RxoPvRi8CD3vh4Vr/wW32Qpt3reu7DuG9jq7oH5lItvFwNHqvHpsRC9Dwm62pzOJxFMD9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dxr2j1r7ClnjuyNGavJzDFLpVnujmCNeTe2yKqNjr08=;
- b=Jyd5JL1wmFXJLFnhN/k+ngmMFEm6y5RZo+slf5WB8axmY6YRYAJgiiqe+f8Rq4NwweSjk12/Y8hz5hVBtIwJ0rv/lcd9ABiNbctaznEWT4essR0E4srxiComz3FeT5Gg4+FTs9z/Yw4iKYLmd26PxHOHgAICm4y3yT3ceWiAlxkR01aovgYhYphdmyedOTWCNAjqqEIKTmDNzj6Mm++aDWJ3r51/5/rVsR6LdE/zgZU3+xmifali+xVzJDnTegJo42JtrM9IcL7scMRx022iz8eeoq2mZ3jK5Az/11gv71gBfSHZEf6myu1OaiuvUPwMy60WNsubMUbE3U4wjfjpfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
- dkim=pass header.d=vivo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dxr2j1r7ClnjuyNGavJzDFLpVnujmCNeTe2yKqNjr08=;
- b=X0AX52VTfuM2LmEuTn8B9qaNKt8kUf4GofPySI3xge+CoSzohNlE2W5PvXFWTlVl+dSgpCOIVmRsD7dbYkm4w5NaPNDxcJuTVqK1lcW9chrYSIQXGkONTP9kx4fgUjCqUqRowiYrzCSXG3E0bU9m64c4xeGym+Yu8FmmMLZjcnSMr0AZPMRaFAAXt40J7j/I8HaI56QA3+H75KfvTfL2L0FtbGN092jXGbFxRFCaGLeKDAkwm+vNOj24531v4AkTsQeEVDrhkKov8p+enhXIyPmN25ouFNVpdrSf7ieZb9xewSOFJ9VfrMv7BnQ1NrCCKHnGJuiUO3fgekMXfiWuvw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vivo.com;
-Received: from SEZPR06MB5022.apcprd06.prod.outlook.com (2603:1096:101:48::5)
- by SG2PR06MB5010.apcprd06.prod.outlook.com (2603:1096:4:1b5::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.35; Mon, 19 Jun
- 2023 08:20:56 +0000
-Received: from SEZPR06MB5022.apcprd06.prod.outlook.com
- ([fe80::37cd:b3a2:1fee:705c]) by SEZPR06MB5022.apcprd06.prod.outlook.com
- ([fe80::37cd:b3a2:1fee:705c%6]) with mapi id 15.20.6500.031; Mon, 19 Jun 2023
- 08:20:56 +0000
-From:   Li Dong <lidong@vivo.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mon, 19 Jun 2023 04:59:20 -0400
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E42D83;
+        Mon, 19 Jun 2023 01:59:17 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046056;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0VlTKQLc_1687165151;
+Received: from 30.221.149.0(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VlTKQLc_1687165151)
+          by smtp.aliyun-inc.com;
+          Mon, 19 Jun 2023 16:59:12 +0800
+Message-ID: <a6e1114c-b37c-6999-0668-039aa495db84@linux.alibaba.com>
+Date:   Mon, 19 Jun 2023 16:59:08 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.2
+Subject: Re: [PATCH v3 2/7] perf metric: Event "Compat" value supports
+ matching multiple identifiers
+To:     John Garry <john.g.garry@oracle.com>,
+        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Cc:     James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
         Mark Rutland <mark.rutland@arm.com>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS
-        SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Cc:     opensource.kernel@vivo.com, lidong@vivo.com
-Subject: [PATCH] tools: Fix incorrect calculation of object size by sizeof
-Date:   Mon, 19 Jun 2023 16:20:10 +0800
-Message-Id: <20230619082036.410-1-lidong@vivo.com>
-X-Mailer: git-send-email 2.31.1.windows.1
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <1685438374-33287-3-git-send-email-renyu.zj@linux.alibaba.com>
+ <c1d8ee9b-4839-1011-4dad-c4777d8f8224@oracle.com>
+ <452e724b-2a2c-52fd-274b-60db7a7f730e@linux.alibaba.com>
+ <c4b2fca8-602d-9c76-90a7-3eafd92da8bc@oracle.com>
+ <76fcb062-61a8-5f90-b39d-b5fb6da35652@linux.alibaba.com>
+ <5f38ef6c-8c50-5df9-19dd-c3c9fe590452@oracle.com>
+ <e4be7189-a1ba-7758-bff3-e7b8d8ff1419@linux.alibaba.com>
+ <892f57c7-8ce2-634c-26f3-4d4ab8b2f2ce@oracle.com>
+ <079d7920-2030-2e00-a833-5ec6d450f7dc@oracle.com>
+ <552eebae-76bb-a2fe-ccdc-11e8a01717da@linux.alibaba.com>
+ <045a49c9-b9ae-bf0e-c4be-858d905bcc55@oracle.com>
+ <7c765e0f-ca76-d212-0496-f9c56369e389@linux.alibaba.com>
+ <d1ab4947-6bdf-2b9c-5b26-52c572611ca6@oracle.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <d1ab4947-6bdf-2b9c-5b26-52c572611ca6@oracle.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: TYXPR01CA0055.jpnprd01.prod.outlook.com
- (2603:1096:403:a::25) To SEZPR06MB5022.apcprd06.prod.outlook.com
- (2603:1096:101:48::5)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SEZPR06MB5022:EE_|SG2PR06MB5010:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7511fc28-7b1d-4b0c-8db9-08db709e1aa6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: u/+O7X8LZiOjdknsrTlw1rxk9V0BPlCdwrWtwmnc7raHYpWm+pCk0i7V0eq6Zkh7W5/cX7SnSOJwzR7Ja/gYJqMZ7GaC0q0bp0NMZMBcKD8/JLFjswo41oOWAc/UnMxz93qQwYQfAD+4zJsDQ1yrOSXmZV8/Y2Ax8HSQSRRrjOfns1Rqr08o5g/t4qwdDqS/ViVy6W/EmAO3nhGSYri0dXLhyNCVGSkSdMohiBBXmztfKcIJ7gTgo1QH797f4X64aMEOApFwURVVe8Wefcq9jldmH4cwOgfujtMq+Tziy9qqUIe7R3VwfI2AEx1ldg6+85IyqtrWeFJ1qw96NF6UwKffPPFB+2XBmpiHh6htIDdMmxrEt0EgQGhBQmYjKD3Ytfo3+qzsC6OsAUk29mmjHhCF5MyotbVzbeXyZ+leL8jEk+foGDuyALoxxHGo+Caq0fO2sIsqTc6+Y7q1TjeiZJGveSfAA0ZLSN3In1LDaYWMG6w9k6ufgtL4LTermi5DfwedmSpC1/xIinLE1kdGcNeX4i4YRfcUv+mfMDdE16SjxZNAfywcCIVCAm3HpQdhEsf3xgja63DenKdehenDNDVi5Z+yKPW8nG3/DSTUgkXTh6wRaz9kHIs/LQiWzDQlmxJYC88IJsV7vtOW/JI1NA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5022.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(451199021)(38350700002)(38100700002)(921005)(36756003)(86362001)(52116002)(6666004)(6486002)(26005)(1076003)(6512007)(6506007)(107886003)(186003)(8936002)(8676002)(5660300002)(7416002)(478600001)(110136005)(316002)(41300700001)(66946007)(4326008)(66556008)(66476007)(2906002)(83380400001)(2616005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?je4YmDguM6ZAGZXRABvQF/vmEcPPebhfabl0x5DB6MBhrKKFk4X3gloBr/L0?=
- =?us-ascii?Q?VcBCp6epYszNJAZxtrJzfXo1V2mohXOc2NrPVDBJEjXPUEihCloEJ1okhnwE?=
- =?us-ascii?Q?ohBKRY68mejfI2NaKRdBGKeW7IL/aeDINGMntYUh3NCRtnRh+UaCsmV7D094?=
- =?us-ascii?Q?z0xdORupBSP1RDO/mfekNlIcEf2BRe6nYeXlwPAOu8ynoFfIWm53tnigIkMW?=
- =?us-ascii?Q?NWjq/yyqDrNuLB2QojGjk1hazDWQgy5+oYHwa8pf8ItnRrmhaFSNGBr8ZoK7?=
- =?us-ascii?Q?jq+GqZ0zsoewcvFLatFUUyNPyVdzGXZMO8lQCylK4XW4rQEW/crbX6vMaGwv?=
- =?us-ascii?Q?IYHyRYK+Woz4FFZYNMf4yUUJW76SpGC4Z0lunN1OHx2hzeWQr2etJSXmA5Vm?=
- =?us-ascii?Q?hBpGlXsVjdWm6X3evR8Xz+KtDuFigF1lwKQX6QH32j/rzssXpzRlwsRcfepS?=
- =?us-ascii?Q?X1TSMHRrLIZiWlW3ZqR3bp9V0C3Rqp8iNO+p7eykMVb3ZQ6n4PXcfJf01TN1?=
- =?us-ascii?Q?f+iZl9vm2BLL3j1iTtEw8Ds++htcrS733+8qzQDl2WgJmgUHtOoMd5t7s7aR?=
- =?us-ascii?Q?QFHmEB9zcu5XQOdfTfzTqpy0VXNCm41Us7XBXrC+hBm2BZlYHCdWQNSrcK97?=
- =?us-ascii?Q?hafNkIiLRWVzTG+RQSkKIQhQUgId5sLO5tUnVXM9PzWiNzPqmI11gatqG0iV?=
- =?us-ascii?Q?kBiT85m0OkQTmzXQwXhsUn6+lew0/Xx1DL1zlEujG1e2GTpy8BnFWiwosNMr?=
- =?us-ascii?Q?DyNnD7NCrr7EG0Aa9naWvT51gPMtXOx4AONqXxylHOFvBpBO0y401TKJU0CF?=
- =?us-ascii?Q?FPfxk3HjxK9kSLIyGRT4B3DPpsGERC3nzpm8Y7etAI4u8nMlnUwnn4sZM4jr?=
- =?us-ascii?Q?US7u7kvgtNQPMP+EAOPoTbiiYmqUyvXFnHFAtvrnjpqqNTI/vfIVxVza5E0x?=
- =?us-ascii?Q?+9oar7Pl07gmsjHxS0OP2p5KuBbw6IdzBFX/iTw0HVv/ZSBxJvDLL+iBwMM6?=
- =?us-ascii?Q?VpjND1+GENcv9mVYVqd6/c5B8uLSxulRAiidX3JqYS4dP7/6Yo/u8pYjmqx0?=
- =?us-ascii?Q?GfEackiJEMDZrGyhzXNLoHGLupK0hisUhI48F3X6DqdZM6f9JCC3LsuTnWk4?=
- =?us-ascii?Q?Cwwn3XapW8GHwinjAuW1EvoneWrywu8K6/42rl009Xhg0tIloiAbstTwEhBk?=
- =?us-ascii?Q?EBM6oJCthHPP7SXxECU3TeTajE9VK6H8iKF8HxZj1rJ+fpISYr127BecIY0u?=
- =?us-ascii?Q?+r7+JPCcPs7jxNNsKLqVsaoV1FgixlKpKMOi21BVWkd2lpjWY2xjwuGrp0K2?=
- =?us-ascii?Q?zLuIX48Wg/Y57RVWzeQfDIb4dlS34BxCqcbFyrLK9HuJQx5TFotzif0qrWiV?=
- =?us-ascii?Q?bu/US5lKC0RxIZJCl+iprXqVBuNbx4JGqkrIW+PhPf2N5hqzoRYSlMrqkU4q?=
- =?us-ascii?Q?MBF9dLRMxZtaxVPYVa3gjPPoCHnxGQWhFLn6RV3+SQLhCCYqlLWrfW/20nkE?=
- =?us-ascii?Q?7xse0fs6ukbLrZ05GVwUWVk0v/f4zByOMrO8lGh+ij8FNx4yBg53TA4E0CIh?=
- =?us-ascii?Q?kL/EwLLBedr1nt6/I1AY0BLXHvOqf2QUEWHcL+79?=
-X-OriginatorOrg: vivo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7511fc28-7b1d-4b0c-8db9-08db709e1aa6
-X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5022.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2023 08:20:56.1268
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: D1u30Z9TD0TQyfxoVosFRnbyI4fQuQ1xszAwgYtWJ7Sxn5ssEZRtlY/emUI2VEAb6QjdlmgfKcuGjU1MzLsnAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5010
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-What we need to calculate is the size of the object, not the size of the
-pointer.
 
-Signed-off-by: Li Dong <lidong@vivo.com>
----
- tools/perf/util/scripting-engines/trace-event-python.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 59063ec98619..25fcd6630a4d 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -771,12 +771,12 @@ static void set_regs_in_dict(PyObject *dict,
- 	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
- 	char *bf = malloc(size);
- 
--	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, sizeof(bf));
-+	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, size);
- 
- 	pydict_set_item_string_decref(dict, "iregs",
- 			_PyUnicode_FromString(bf));
- 
--	regs_map(&sample->user_regs, attr->sample_regs_user, arch, bf, sizeof(bf));
-+	regs_map(&sample->user_regs, attr->sample_regs_user, arch, bf, size);
- 
- 	pydict_set_item_string_decref(dict, "uregs",
- 			_PyUnicode_FromString(bf));
--- 
-2.31.1.windows.1
+在 2023/6/19 下午3:07, John Garry 写道:
+> On 19/06/2023 03:58, Jing Zhang wrote:
+>>> +++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metrics.json
+>>> @@ -0,0 +1,74 @@
+>>> +[
+>>> +    {
+>>> +        "MetricName": "slc_miss_rate",
+>>> +        "BriefDescription": "The system level cache miss rate include.",
+>>> +        "MetricGroup": "arm_cmn",
+>>> +        "MetricExpr": "hnf_cache_miss / hnf_slc_sf_cache_access",
+>>>
+>>> So this expression uses event aliases hnf_cache_miss and hnf_slc_sf_cache_access - where are they defined in a JSON?
+>>>
+>> Hi John,
+>>
+>> I defined the aliases for these events in the JSON file during the RFC version. However, I later removed the alias
+>> definitions for these events in subsequent versions due to the possibility of non-uniqueness and difficulty in defining
+>> their EventCode. But this does not affect their usage in metrics. In other words, metrics can use the aliases without
+>> defining event aliases in the JSON file.
+> 
+> Really? So how can we resolve the event aliases when we try to run the metric?
+> 
+> Please verify running these metrics with 'perf stat', like 'perf stat -v -M slc_miss_rate'
+> 
 
+Ok, it shows:
+#./perf stat -v -M slc_miss_rate sleep 1
+
+metric expr hnf_cache_miss / hnf_slc_sf_cache_access for slc_miss_rate
+found event duration_time
+found event hnf_slc_sf_cache_access
+found event hnf_cache_miss
+Parsing metric events '{hnf_slc_sf_cache_access/metric-id=hnf_slc_sf_cache_access/,hnf_cache_miss/metric-id=hnf_cache_miss/}:W,duration_time'
+hnf_slc_sf_cache_access -> arm_cmn_0/type=0x5,eventid=0x2/
+hnf_slc_sf_cache_access -> arm_cmn_1/type=0x5,eventid=0x2/
+hnf_cache_miss -> arm_cmn_0/type=0x5,eventid=0x1/
+hnf_cache_miss -> arm_cmn_1/type=0x5,eventid=0x1/
+Control descriptor is not initialized
+hnf_slc_sf_cache_access: 127615 1001344900 1001344900
+hnf_cache_miss: 36829 1001344900 1001344900
+hnf_slc_sf_cache_access: 131526 1001343540 1001343540
+hnf_cache_miss: 40587 1001343540 1001343540
+duration_time: 1001381687 1001381687 1001381687
+
+ Performance counter stats for 'system wide':
+
+           259,141      hnf_slc_sf_cache_access   #     29.9 %  slc_miss_rate
+            77,416      hnf_cache_miss
+     1,001,381,687 ns   duration_time
+
+       1.001381687 seconds time elapsed
+
+
+
+#./perf list
+...
+ arm_cmn_0/hnf_cache_miss/                          [Kernel PMU event]
+ arm_cmn_0/hnf_slc_sf_cache_access/                 [Kernel PMU event]
+...
+ arm_cmn_1/hnf_cache_miss/                          [Kernel PMU event]
+ arm_cmn_1/hnf_slc_sf_cache_access/                 [Kernel PMU event]
+...
+
+>>
+>> In the past, I always thought that the function of the alias was to explain the meaning of these events in the perf list.
+>> Or maybe I'm missing something?
+> 
+> Event aliases do give the ability to describe the event in perf list. But we can also run them for 'perf stat', like:
+> 
+> ./perf list uncore
+> List of pre-defined events (to be used in -e or -M):
+> 
+>   uncore_cbox_0/clockticks/                          [Kernel PMU event]
+>   uncore_cbox_1/clockticks/                          [Kernel PMU event]
+>   uncore_imc/data_reads/                             [Kernel PMU event]
+>   uncore_imc/data_writes/                            [Kernel PMU event]
+>   uncore_imc/gt_requests/                            [Kernel PMU event]
+>   uncore_imc/ia_requests/                            [Kernel PMU event]
+>   uncore_imc/io_requests/                            [Kernel PMU event]
+> 
+> uncore cache:
+>   unc_cbo_cache_lookup.any_es
+>        [L3 Lookup any request that access cache and found line in E or S-state. Unit: uncore_cbox]
+> ...
+> 
+> sudo ./perf stat -v -e unc_cbo_cache_lookup.any_es
+> Using CPUID GenuineIntel-6-3D-4
+> unc_cbo_cache_lookup.any_es -> uncore_cbox_0/event=0x34,umask=0x86/
+> unc_cbo_cache_lookup.any_es -> uncore_cbox_1/event=0x34,umask=0x86/
+> Control descriptor is not initialized
+> ^Cunc_cbo_cache_lookup.any_es: 14361103 1853372468 1853372468
+> unc_cbo_cache_lookup.any_es: 14322188 1853360415 1853360415
+> 
+>  Performance counter stats for 'system wide':
+> 
+>         14,361,103      unc_cbo_cache_lookup.any_es
+>         14,322,188      unc_cbo_cache_lookup.any_es
+> 
+>        1.853388227 seconds time elapsed
+> 
+
+Ok, thanks. If I use events without a prefix, such as perf stat -e clockticks sleep 1, will this also work?
+
+Thanks,
+Jing
+
+
+> 
+> Thanks,
+> John
