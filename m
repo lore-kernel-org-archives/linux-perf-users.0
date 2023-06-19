@@ -2,175 +2,148 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F3D1EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 07:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D63EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 08:21:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230030AbjFSH6p (ORCPT
+        id S230262AbjFSIVY (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Mon, 19 Jun 2023 03:58:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44348 "EHLO
+        Mon, 19 Jun 2023 04:21:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbjFSH6n (ORCPT
+        with ESMTP id S230243AbjFSIVN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Mon, 19 Jun 2023 03:58:43 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D179E6B;
-        Mon, 19 Jun 2023 00:58:37 -0700 (PDT)
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35J7nrvK004275;
-        Mon, 19 Jun 2023 07:58:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=UVc7QTQJZ7JDsfewiDrvsuhEYLKOviG1uZkcmVBxAyA=;
- b=LDBy2qT3oIqeSXDZDGDRkfXRa7VXD6bEM5FWDMyooSE+EMzRS6DdjyiTzrUjweoQg7Pl
- qnV4ubTecMzCYX9sHvJZh+wEdabQ7nS6JJYI8Ljs524oTxqRqul+PJ5Zjcu8wpDib5/4
- 5uFmLRAyUgAfzOULt3f7rIRsCd8Tlzt6k+gouvg4Onhp15Ninn8+YJ8WrxPht4RJlYit
- 5XTZj0q7rYsvMzNDd3cGhJyi7/ykEs1JvJMNaFqYGix4+gptEuoye6kdWyL0fsi7WWr9
- Fz9Rj0vgZAxjlpaB9fIcavz92hfIQGl/KcFWzRd13PwxhNMJzqhxrVfkuL1SnnfgqQKc bg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rajyfg6b3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Jun 2023 07:58:34 +0000
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35J7oSNa005932;
-        Mon, 19 Jun 2023 07:58:34 GMT
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rajyfg6ac-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Jun 2023 07:58:34 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35J5pqKn015738;
-        Mon, 19 Jun 2023 07:58:32 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3r943e0x83-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 19 Jun 2023 07:58:31 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35J7wSSB57540958
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 19 Jun 2023 07:58:28 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6AEDA2004F;
-        Mon, 19 Jun 2023 07:58:28 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA9442004B;
-        Mon, 19 Jun 2023 07:58:27 +0000 (GMT)
-Received: from [9.171.51.54] (unknown [9.171.51.54])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 19 Jun 2023 07:58:27 +0000 (GMT)
-Message-ID: <b938709c-fc80-4801-e70f-5ee70a1ae1bd@linux.ibm.com>
-Date:   Mon, 19 Jun 2023 09:58:27 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] perf test: fix failing test cases on linux-next for s390
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        irogers@google.com, sumanthk@linux.ibm.com, hca@linux.ibm.com,
-        svens@linux.ibm.com, gor@linux.ibm.com
-References: <20230616081437.1932003-1-tmricht@linux.ibm.com>
- <ZIxf7A1jPiDUUdDt@kernel.org>
-Content-Language: en-US
-From:   Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <ZIxf7A1jPiDUUdDt@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+        Mon, 19 Jun 2023 04:21:13 -0400
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2095.outbound.protection.outlook.com [40.107.117.95])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A42A9E7A;
+        Mon, 19 Jun 2023 01:21:03 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ds2eje9/6mfayRqPKze0wOP+0GmRPxbjwYLHgPMEgvkm1jpjk5+vO4VRB5/0RPMweRzRu0gP+SKXLMZnNz+qcRjuNlmWnI4L68BsOxkpk5INxZStkrSW9h4usSrt9VQ0Wo+Y2NZ1dFGgCK8VlAAgwT47wn3PEju4Hdo/jxDtABwD20Y8+JaBkBvwU/sAVVewBSaiT5u7PGpoRD9FljXhv7eobQrho7Ix+DyzLsBadOvsQzj7tAiyRqzO3ldfdyuYArnZ126cb/u6DEv/RxoPvRi8CD3vh4Vr/wW32Qpt3reu7DuG9jq7oH5lItvFwNHqvHpsRC9Dwm62pzOJxFMD9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dxr2j1r7ClnjuyNGavJzDFLpVnujmCNeTe2yKqNjr08=;
+ b=Jyd5JL1wmFXJLFnhN/k+ngmMFEm6y5RZo+slf5WB8axmY6YRYAJgiiqe+f8Rq4NwweSjk12/Y8hz5hVBtIwJ0rv/lcd9ABiNbctaznEWT4essR0E4srxiComz3FeT5Gg4+FTs9z/Yw4iKYLmd26PxHOHgAICm4y3yT3ceWiAlxkR01aovgYhYphdmyedOTWCNAjqqEIKTmDNzj6Mm++aDWJ3r51/5/rVsR6LdE/zgZU3+xmifali+xVzJDnTegJo42JtrM9IcL7scMRx022iz8eeoq2mZ3jK5Az/11gv71gBfSHZEf6myu1OaiuvUPwMy60WNsubMUbE3U4wjfjpfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vivo.com; dmarc=pass action=none header.from=vivo.com;
+ dkim=pass header.d=vivo.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vivo.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dxr2j1r7ClnjuyNGavJzDFLpVnujmCNeTe2yKqNjr08=;
+ b=X0AX52VTfuM2LmEuTn8B9qaNKt8kUf4GofPySI3xge+CoSzohNlE2W5PvXFWTlVl+dSgpCOIVmRsD7dbYkm4w5NaPNDxcJuTVqK1lcW9chrYSIQXGkONTP9kx4fgUjCqUqRowiYrzCSXG3E0bU9m64c4xeGym+Yu8FmmMLZjcnSMr0AZPMRaFAAXt40J7j/I8HaI56QA3+H75KfvTfL2L0FtbGN092jXGbFxRFCaGLeKDAkwm+vNOj24531v4AkTsQeEVDrhkKov8p+enhXIyPmN25ouFNVpdrSf7ieZb9xewSOFJ9VfrMv7BnQ1NrCCKHnGJuiUO3fgekMXfiWuvw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vivo.com;
+Received: from SEZPR06MB5022.apcprd06.prod.outlook.com (2603:1096:101:48::5)
+ by SG2PR06MB5010.apcprd06.prod.outlook.com (2603:1096:4:1b5::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.35; Mon, 19 Jun
+ 2023 08:20:56 +0000
+Received: from SEZPR06MB5022.apcprd06.prod.outlook.com
+ ([fe80::37cd:b3a2:1fee:705c]) by SEZPR06MB5022.apcprd06.prod.outlook.com
+ ([fe80::37cd:b3a2:1fee:705c%6]) with mapi id 15.20.6500.031; Mon, 19 Jun 2023
+ 08:20:56 +0000
+From:   Li Dong <lidong@vivo.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS
+        SUBSYSTEM),
+        linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
+Cc:     opensource.kernel@vivo.com, lidong@vivo.com
+Subject: [PATCH] tools: Fix incorrect calculation of object size by sizeof
+Date:   Mon, 19 Jun 2023 16:20:10 +0800
+Message-Id: <20230619082036.410-1-lidong@vivo.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: kJ_5xs5yVd8zLCUFf5TAGHQcU_8jHl2i
-X-Proofpoint-ORIG-GUID: vO5Npx_Kp1hLPPXoH4xP7YANEPTDhO86
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-19_05,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 spamscore=0 lowpriorityscore=0 phishscore=0 malwarescore=0
- bulkscore=0 adultscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2306190068
+Content-Type: text/plain
+X-ClientProxiedBy: TYXPR01CA0055.jpnprd01.prod.outlook.com
+ (2603:1096:403:a::25) To SEZPR06MB5022.apcprd06.prod.outlook.com
+ (2603:1096:101:48::5)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SEZPR06MB5022:EE_|SG2PR06MB5010:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7511fc28-7b1d-4b0c-8db9-08db709e1aa6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: u/+O7X8LZiOjdknsrTlw1rxk9V0BPlCdwrWtwmnc7raHYpWm+pCk0i7V0eq6Zkh7W5/cX7SnSOJwzR7Ja/gYJqMZ7GaC0q0bp0NMZMBcKD8/JLFjswo41oOWAc/UnMxz93qQwYQfAD+4zJsDQ1yrOSXmZV8/Y2Ax8HSQSRRrjOfns1Rqr08o5g/t4qwdDqS/ViVy6W/EmAO3nhGSYri0dXLhyNCVGSkSdMohiBBXmztfKcIJ7gTgo1QH797f4X64aMEOApFwURVVe8Wefcq9jldmH4cwOgfujtMq+Tziy9qqUIe7R3VwfI2AEx1ldg6+85IyqtrWeFJ1qw96NF6UwKffPPFB+2XBmpiHh6htIDdMmxrEt0EgQGhBQmYjKD3Ytfo3+qzsC6OsAUk29mmjHhCF5MyotbVzbeXyZ+leL8jEk+foGDuyALoxxHGo+Caq0fO2sIsqTc6+Y7q1TjeiZJGveSfAA0ZLSN3In1LDaYWMG6w9k6ufgtL4LTermi5DfwedmSpC1/xIinLE1kdGcNeX4i4YRfcUv+mfMDdE16SjxZNAfywcCIVCAm3HpQdhEsf3xgja63DenKdehenDNDVi5Z+yKPW8nG3/DSTUgkXTh6wRaz9kHIs/LQiWzDQlmxJYC88IJsV7vtOW/JI1NA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEZPR06MB5022.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(376002)(366004)(39860400002)(396003)(346002)(451199021)(38350700002)(38100700002)(921005)(36756003)(86362001)(52116002)(6666004)(6486002)(26005)(1076003)(6512007)(6506007)(107886003)(186003)(8936002)(8676002)(5660300002)(7416002)(478600001)(110136005)(316002)(41300700001)(66946007)(4326008)(66556008)(66476007)(2906002)(83380400001)(2616005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?je4YmDguM6ZAGZXRABvQF/vmEcPPebhfabl0x5DB6MBhrKKFk4X3gloBr/L0?=
+ =?us-ascii?Q?VcBCp6epYszNJAZxtrJzfXo1V2mohXOc2NrPVDBJEjXPUEihCloEJ1okhnwE?=
+ =?us-ascii?Q?ohBKRY68mejfI2NaKRdBGKeW7IL/aeDINGMntYUh3NCRtnRh+UaCsmV7D094?=
+ =?us-ascii?Q?z0xdORupBSP1RDO/mfekNlIcEf2BRe6nYeXlwPAOu8ynoFfIWm53tnigIkMW?=
+ =?us-ascii?Q?NWjq/yyqDrNuLB2QojGjk1hazDWQgy5+oYHwa8pf8ItnRrmhaFSNGBr8ZoK7?=
+ =?us-ascii?Q?jq+GqZ0zsoewcvFLatFUUyNPyVdzGXZMO8lQCylK4XW4rQEW/crbX6vMaGwv?=
+ =?us-ascii?Q?IYHyRYK+Woz4FFZYNMf4yUUJW76SpGC4Z0lunN1OHx2hzeWQr2etJSXmA5Vm?=
+ =?us-ascii?Q?hBpGlXsVjdWm6X3evR8Xz+KtDuFigF1lwKQX6QH32j/rzssXpzRlwsRcfepS?=
+ =?us-ascii?Q?X1TSMHRrLIZiWlW3ZqR3bp9V0C3Rqp8iNO+p7eykMVb3ZQ6n4PXcfJf01TN1?=
+ =?us-ascii?Q?f+iZl9vm2BLL3j1iTtEw8Ds++htcrS733+8qzQDl2WgJmgUHtOoMd5t7s7aR?=
+ =?us-ascii?Q?QFHmEB9zcu5XQOdfTfzTqpy0VXNCm41Us7XBXrC+hBm2BZlYHCdWQNSrcK97?=
+ =?us-ascii?Q?hafNkIiLRWVzTG+RQSkKIQhQUgId5sLO5tUnVXM9PzWiNzPqmI11gatqG0iV?=
+ =?us-ascii?Q?kBiT85m0OkQTmzXQwXhsUn6+lew0/Xx1DL1zlEujG1e2GTpy8BnFWiwosNMr?=
+ =?us-ascii?Q?DyNnD7NCrr7EG0Aa9naWvT51gPMtXOx4AONqXxylHOFvBpBO0y401TKJU0CF?=
+ =?us-ascii?Q?FPfxk3HjxK9kSLIyGRT4B3DPpsGERC3nzpm8Y7etAI4u8nMlnUwnn4sZM4jr?=
+ =?us-ascii?Q?US7u7kvgtNQPMP+EAOPoTbiiYmqUyvXFnHFAtvrnjpqqNTI/vfIVxVza5E0x?=
+ =?us-ascii?Q?+9oar7Pl07gmsjHxS0OP2p5KuBbw6IdzBFX/iTw0HVv/ZSBxJvDLL+iBwMM6?=
+ =?us-ascii?Q?VpjND1+GENcv9mVYVqd6/c5B8uLSxulRAiidX3JqYS4dP7/6Yo/u8pYjmqx0?=
+ =?us-ascii?Q?GfEackiJEMDZrGyhzXNLoHGLupK0hisUhI48F3X6DqdZM6f9JCC3LsuTnWk4?=
+ =?us-ascii?Q?Cwwn3XapW8GHwinjAuW1EvoneWrywu8K6/42rl009Xhg0tIloiAbstTwEhBk?=
+ =?us-ascii?Q?EBM6oJCthHPP7SXxECU3TeTajE9VK6H8iKF8HxZj1rJ+fpISYr127BecIY0u?=
+ =?us-ascii?Q?+r7+JPCcPs7jxNNsKLqVsaoV1FgixlKpKMOi21BVWkd2lpjWY2xjwuGrp0K2?=
+ =?us-ascii?Q?zLuIX48Wg/Y57RVWzeQfDIb4dlS34BxCqcbFyrLK9HuJQx5TFotzif0qrWiV?=
+ =?us-ascii?Q?bu/US5lKC0RxIZJCl+iprXqVBuNbx4JGqkrIW+PhPf2N5hqzoRYSlMrqkU4q?=
+ =?us-ascii?Q?MBF9dLRMxZtaxVPYVa3gjPPoCHnxGQWhFLn6RV3+SQLhCCYqlLWrfW/20nkE?=
+ =?us-ascii?Q?7xse0fs6ukbLrZ05GVwUWVk0v/f4zByOMrO8lGh+ij8FNx4yBg53TA4E0CIh?=
+ =?us-ascii?Q?kL/EwLLBedr1nt6/I1AY0BLXHvOqf2QUEWHcL+79?=
+X-OriginatorOrg: vivo.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7511fc28-7b1d-4b0c-8db9-08db709e1aa6
+X-MS-Exchange-CrossTenant-AuthSource: SEZPR06MB5022.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2023 08:20:56.1268
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 923e42dc-48d5-4cbe-b582-1a797a6412ed
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D1u30Z9TD0TQyfxoVosFRnbyI4fQuQ1xszAwgYtWJ7Sxn5ssEZRtlY/emUI2VEAb6QjdlmgfKcuGjU1MzLsnAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5010
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 6/16/23 15:13, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Jun 16, 2023 at 10:14:37AM +0200, Thomas Richter escreveu:
->> In linux-next tree the many test cases fail on s390x when running the
->> perf test suite, sometime the perf tool dumps core.
->>
->> Output before:
->>   6.1: Test event parsing                               : FAILED!
->>  10.3: Parsing of PMU event table metrics               : FAILED!
->>  10.4: Parsing of PMU event table metrics with fake PMUs: FAILED!
->>  17: Setup struct perf_event_attr                       : FAILED!
->>  24: Number of exit events of a simple workload         : FAILED!
->>  26: Object code reading                                : FAILED!
->>  28: Use a dummy software event to keep tracking        : FAILED!
->>  35: Track with sched_switch                            : FAILED!
->>  42.3: BPF prologue generation                          : FAILED!
->>  66: Parse and process metrics                          : FAILED!
->>  68: Event expansion for cgroups                        : FAILED!
->>  69.2: Perf time to TSC                                 : FAILED!
->>  74: build id cache operations                          : FAILED!
->>  86: Zstd perf.data compression/decompression           : FAILED!
->>  87: perf record tests                                  : FAILED!
->> 106: Test java symbol                                   : FAILED!
->>
->> The reason for all these failure is a missing PMU. On s390x
->> the PMU is named cpum_cf which is not detected as core PMU.
->> A similar patch was added before, see
->> commit 9bacbced0e32 ("perf list: Add s390 support for detailed PMU event description")
->> which got lost during the recent reworks. Add it again.
->>
->> Output after:
->>  10.2: PMU event map aliases                            : FAILED!
->>  42.3: BPF prologue generation                          : FAILED!
->>
->> Most test cases now work and there is not core dump anymore.
-> 
-> So you're not fixing 'perf test', that is just what detects the problem,
-> the part being fixed is the PMU code, so I'm rewriting the patch subject
-> to:
-> 
-> [PATCH] perf pmu: Fix core PMU detection on s/390
-> 
-> Have you bisected the problem to the first patch where this problem
-> appears?
-> 
-> - Arnaldo
+What we need to calculate is the size of the object, not the size of the
+pointer.
 
-Thanks for picking this patch, I noticed it is already in linux-next tree.
+Signed-off-by: Li Dong <lidong@vivo.com>
+---
+ tools/perf/util/scripting-engines/trace-event-python.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-No I did not do the bisect. That first patch info came from Ian Rogers.
-
->  
->> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
->> Cc: Ian Rogers <irogers@google.com>
->> ---
->>  tools/perf/util/pmu.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->> index fe64ad292d36..6142e4710a2f 100644
->> --- a/tools/perf/util/pmu.c
->> +++ b/tools/perf/util/pmu.c
->> @@ -1419,7 +1419,7 @@ void perf_pmu__del_formats(struct list_head *formats)
->>  
->>  bool is_pmu_core(const char *name)
->>  {
->> -	return !strcmp(name, "cpu") || is_sysfs_pmu_core(name);
->> +	return !strcmp(name, "cpu") || !strcmp(name, "cpum_cf") || is_sysfs_pmu_core(name);
->>  }
->>  
->>  bool perf_pmu__supports_legacy_cache(const struct perf_pmu *pmu)
->> -- 
->> 2.39.2
->>
-> 
-
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 59063ec98619..25fcd6630a4d 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -771,12 +771,12 @@ static void set_regs_in_dict(PyObject *dict,
+ 	int size = __sw_hweight64(attr->sample_regs_intr) * 28;
+ 	char *bf = malloc(size);
+ 
+-	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, sizeof(bf));
++	regs_map(&sample->intr_regs, attr->sample_regs_intr, arch, bf, size);
+ 
+ 	pydict_set_item_string_decref(dict, "iregs",
+ 			_PyUnicode_FromString(bf));
+ 
+-	regs_map(&sample->user_regs, attr->sample_regs_user, arch, bf, sizeof(bf));
++	regs_map(&sample->user_regs, attr->sample_regs_user, arch, bf, size);
+ 
+ 	pydict_set_item_string_decref(dict, "uregs",
+ 			_PyUnicode_FromString(bf));
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-Vorsitzender des Aufsichtsrats: Gregor Pillen
-Geschäftsführung: David Faller
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+2.31.1.windows.1
 
