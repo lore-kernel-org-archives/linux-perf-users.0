@@ -2,112 +2,165 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A58EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 02:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA8ADEB64D9
+	for <linux-perf-users@archiver.kernel.org>; Mon, 19 Jun 2023 04:21:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbjFSC6Q (ORCPT
+        id S229623AbjFSEVz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Sun, 18 Jun 2023 22:58:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55206 "EHLO
+        Mon, 19 Jun 2023 00:21:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbjFSC6P (ORCPT
+        with ESMTP id S229485AbjFSEVy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Sun, 18 Jun 2023 22:58:15 -0400
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24EE11B5;
-        Sun, 18 Jun 2023 19:58:13 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0VlO.Bk3_1687143483;
-Received: from 30.221.149.0(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0VlO.Bk3_1687143483)
-          by smtp.aliyun-inc.com;
-          Mon, 19 Jun 2023 10:58:09 +0800
-Message-ID: <7c765e0f-ca76-d212-0496-f9c56369e389@linux.alibaba.com>
-Date:   Mon, 19 Jun 2023 10:58:01 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: [PATCH v3 2/7] perf metric: Event "Compat" value supports
- matching multiple identifiers
-To:     John Garry <john.g.garry@oracle.com>,
-        Ian Rogers <irogers@google.com>, Will Deacon <will@kernel.org>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mon, 19 Jun 2023 00:21:54 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2076.outbound.protection.outlook.com [40.107.93.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B75DCE44;
+        Sun, 18 Jun 2023 21:21:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iyXJOjqMMxYgs68m0SFuxYnhHIlM7dFnTYhipGlyutl7CNOPRFqept8bXUBPr4hf2Gn3FCppdBF79vzHs7xYdTGAXNHKqBlG1K8YL8kA/Knu9dh/KbMBtwBr9WfObJ6MR0JUCDsfXPyz8BAQN7bGjnIjA0sk7wwj0qUCh89/IKL0E6mnXIxLBOuVN9AoOm06y0bPvB15kw9k6AhCBKsJEl/KYdpoSlkQwXXpxVlKepvXV9bb3kuIB7Hj4LCff+Z0Z82mCN7D+tqib1UtFj6ypTlbnHq25MWWBwT2hlKPYp5Y2MkD+mTH9rZ4Wy0As/xZeIKfWYLKsg90rHl9OZvxlw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=h0G2FLEMzicQ0h85pfBe8+RyuGn/v1utywPffaqOyUg=;
+ b=YquQfAucEFqr/1QQ9Arfud7gxwL/IqJjAfY4Vx6dd04w3X9LRvSDKDsoB4V33Q+EF5QZNDfDxAGcjDqcaCcU8IJo9wN24d7dN6Gsn0M3pqLJuaWAOM7jxxyM6dRy5loGCa4xOPe/J2K/k0t9JGJ9og7kaKQPfa/4o5SBX/VWvePlGKIEXvUdEC89OYUluNsrUz4WZIZG/bTZ4fwAhfFyLsiZz/fgqk7k9sP0/qcYhVhImM7y5vZvc0WBq7yQIewTaKM4oVFKSyV+4lVxW+ZTr0ZytRpcLE4bbHiza1mcv+Iea7MoD7AWg+agkX+zxJEMfaUZ70Ikno0zIuwWWDJgww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=h0G2FLEMzicQ0h85pfBe8+RyuGn/v1utywPffaqOyUg=;
+ b=H/nFDlSA7k11ZIGNZP1vG2CfGdkrjA1RJ69td9TkeIwYRgG8oR5rV3Ij+nPBS6xzw2Du3croadVev3AMddwfh7ojj3FtVT7rPQAhjcapyzBzotpOdpyOE94EccrnIKyEU+G8GoUPpCNSrT1QJ55JTtPkkBoBndxbqEhfG3GORoI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by IA0PR12MB8895.namprd12.prod.outlook.com (2603:10b6:208:491::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.36; Mon, 19 Jun
+ 2023 04:21:49 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::b4a6:94bb:6895:645]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::b4a6:94bb:6895:645%4]) with mapi id 15.20.6500.031; Mon, 19 Jun 2023
+ 04:21:49 +0000
+Message-ID: <93574312-f467-04af-92af-5b5476043977@amd.com>
+Date:   Mon, 19 Jun 2023 09:50:40 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3 1/3] perf test: Add metric value validation test
+To:     "Wang, Weilin" <weilin.wang@intel.com>
+Cc:     Kan Liang <kan.liang@linux.intel.com>,
+        "Alt, Samantha" <samantha.alt@intel.com>,
+        "Taylor, Perry" <perry.taylor@intel.com>,
+        "Biggers, Caleb" <caleb.biggers@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>
-References: <1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com>
- <1685438374-33287-3-git-send-email-renyu.zj@linux.alibaba.com>
- <c1d8ee9b-4839-1011-4dad-c4777d8f8224@oracle.com>
- <452e724b-2a2c-52fd-274b-60db7a7f730e@linux.alibaba.com>
- <c4b2fca8-602d-9c76-90a7-3eafd92da8bc@oracle.com>
- <76fcb062-61a8-5f90-b39d-b5fb6da35652@linux.alibaba.com>
- <5f38ef6c-8c50-5df9-19dd-c3c9fe590452@oracle.com>
- <e4be7189-a1ba-7758-bff3-e7b8d8ff1419@linux.alibaba.com>
- <892f57c7-8ce2-634c-26f3-4d4ab8b2f2ce@oracle.com>
- <079d7920-2030-2e00-a833-5ec6d450f7dc@oracle.com>
- <552eebae-76bb-a2fe-ccdc-11e8a01717da@linux.alibaba.com>
- <045a49c9-b9ae-bf0e-c4be-858d905bcc55@oracle.com>
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-In-Reply-To: <045a49c9-b9ae-bf0e-c4be-858d905bcc55@oracle.com>
+        "Hunter, Adrian" <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Ravi Bangoria <ravi.bangoria@amd.com>
+References: <CAP-5=fVixzBLLiWnim8x6qcDOKH7uVfEWojTCP_H531Fhy7j-g@mail.gmail.com>
+ <20230614203824.2895333-1-weilin.wang@intel.com>
+ <20230614203824.2895333-2-weilin.wang@intel.com>
+ <bc18bc42-3df8-30c9-10ff-8a4ba3d3d9f6@amd.com>
+ <CO6PR11MB56353207BBD7BDA6C530EBDEEE5EA@CO6PR11MB5635.namprd11.prod.outlook.com>
+Content-Language: en-US
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <CO6PR11MB56353207BBD7BDA6C530EBDEEE5EA@CO6PR11MB5635.namprd11.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0174.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:de::15) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|IA0PR12MB8895:EE_
+X-MS-Office365-Filtering-Correlation-Id: f28ee2e4-08d4-4121-933e-08db707cb341
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: d6OxX5LBLXZdr9Bk56bQbIF/wfklr8fqbdvP6tdgckS5tDCvB/1oONEe/n6yLap1yRmAqg71xAOvXkxqq7zkAj1YmJ0CES19RMap9V1VniTWxWVzwQNgMTLEYj0vxAwRYcSOpKL7qEC8bxbL1A24ocGtOYMqS9tPLzLg7R6rVaW1DJ0S/whDhWG7GVvYQWW5zT7hoVNaolE65xcawBZEo/09iQp1dLsM6BS9smCZkl61K4aHNSJDnRXgiHzF4u+euTeU2IH6ZFVHH/oXAwBAvFEIOTbpflZnie/hdtXL886UDthAqyyUrBJ3kpL6xlJY7+b6DTVYm5iH3QY9LkcxCPD9Tcs6s3cBBKA1yRvpHgsV/HWwrckstJ5UajoZHdaNH0GjLX0l9Mm15j6nDaaU5HHEh7gctnOb1Gf11rGqdFCuSxl0uwb5uRBWDUNobxb9qfWb2UKdmM9AmkQ9BMnnHsjhf37v6LCBSnGb7ugwLWZ7d+GqbMRYvHY7HlObfLzUP6QQJmNFgU0s8oz45k1AR4NN46QH0PhbzYn3cSFH5oz08NQsSo9MyNKRbWqstZsY7xICE6U7x7MeNrZKEJlYRlnFiOSYZhQFaa/RH7X2GaorUwjw90nPND66g8YYSgwQKiNeQRahoyfFrNw4OueMHg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(39860400002)(366004)(376002)(136003)(451199021)(186003)(8676002)(8936002)(66946007)(66556008)(66476007)(5660300002)(54906003)(4326008)(6666004)(6486002)(316002)(38100700002)(478600001)(41300700001)(36756003)(26005)(6512007)(6506007)(6916009)(7416002)(86362001)(31696002)(83380400001)(31686004)(44832011)(2906002)(2616005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Wk5rOWkrVnBMM2lURHZ0Y0p6UVh2b212dDB3cUU3RFBkY1Z1YmpHb1BrUGpu?=
+ =?utf-8?B?MHFaRVlzRkRrL3lZQ3dEdlByaVZVK0FTWE1LWFpkQ2wrYVl6THRoYkVUL01o?=
+ =?utf-8?B?NWYwRnJRQmlIdmc4V2M1aUpPbnVyTEVDTzhUODhwbjBMcVI1RW8zTzJkS1BD?=
+ =?utf-8?B?TXdtNEtQUnkyV2pmajdCTTdLc0xrMjUweHdGaFZ0bE1RNUdXKy9iUGJBcXVN?=
+ =?utf-8?B?Q29XU0pyS2pUdnYzMXRUMklNV1dsUDZzalJPdEhGbEJaTkh2UkRxd2hralpz?=
+ =?utf-8?B?WVExU241enZneFg5VkpZR3NOa0hJcUZZcFNOSDJJRFlFZWxscUIrcUZpOThn?=
+ =?utf-8?B?TkJSWmRKYi90b0lFN2xqaXFRZ3ZmRi9FOUhIWWFSek5LU255YjBQbWFyYnVK?=
+ =?utf-8?B?aHJUYW5UZG53RkwyMmMzbG5zaEsrdi9sQXlvQ1FST2tubkJvUkNTRndDSmRD?=
+ =?utf-8?B?UnFoamRLS3Y0UGgvcHB5dnljNlN0R0dwYWFCNVFMWXJ1TjlqODdlSTZYc3Yw?=
+ =?utf-8?B?SGJzTkk2NEFNVWdkUlE5NkNldC9iVUlpTmxRWmVqSkRES3lObHl6NHJKdzc2?=
+ =?utf-8?B?TTA1c1ViQWYzVlJrVWZDdy8rR1BlRDJ5blFRM0xYZVJtdlQ4bWJ5b1dnRmpQ?=
+ =?utf-8?B?YWQrUjExR3JLaUVhMTJ1b0UzL1pkSCtFRUE0aUtjdk4rVVo2UWtJTlQ4RWpx?=
+ =?utf-8?B?TWZMZU1MWmRyQmltWDBZY3I1WWRYMStBMEFvSGpXcDhZTXFFZTlsVXZJUmFO?=
+ =?utf-8?B?TVpweTY1K0lmWkJYNjVCeVo0eXppNzZhRWkyLzNhVVU0SlJKQnlYNmVmQ25E?=
+ =?utf-8?B?UFIzYmd0MHVMR2JqOFNQdEd4Nmxxb2hhbUQvMkdZazZNZHYyR3UyL0dmV1RD?=
+ =?utf-8?B?emxEMWljWTIzSFBENkZWbUxOaEc1Zm9LelE4L1NSYmFhYURvOUYyWXhZSWFa?=
+ =?utf-8?B?anlIdjdJWlp6MklsM3lkM0xOWHRTUGRVT1d2QmpGak8rU0UweTIrZmh3RlVy?=
+ =?utf-8?B?RG10SEowdzFTbEM3ZnNMQzRTdnBQZzdhSXorOFJ2SXF6ZDM5UnRQcVEwZlFU?=
+ =?utf-8?B?SmpxZXJCY1Q0U3hqNVk3T3ozamJLdThudUhvOVNXTW1CYU5BclZTWm1RaFVD?=
+ =?utf-8?B?TTMvZHEzYmpuR3hRSzJEMTVUSjBvM0VYM0xZcEREeDhoc1lNRDR1VkNZZlhx?=
+ =?utf-8?B?MjVzRU9UV0JBZWhIYTZqcVVpRXI5Q2p3azlnQkVveEx3c1RHVGdYS2tXTUZk?=
+ =?utf-8?B?ODQ2b09vVElqRUdwc3lyS2JBbms0RFk1UWhjTGphSU84cWU3QnA2QmtLTGFL?=
+ =?utf-8?B?eW9TalB6UWp5SThsRFAxR25lbHFHODhqN0NpNHZ6OVlOVldSUmhtMmxxOUs5?=
+ =?utf-8?B?NDZvTXplR2dSalZjVjJqK1NGejNPVysybXFob095T1FkdDdxdHZMc09uYXNJ?=
+ =?utf-8?B?UThqcVBLVjExb29xR2U1Z3g1SzFvalprajVWZTZJZng0M1UwVTI2Y1AzVTNQ?=
+ =?utf-8?B?cFp5WjRyQnhyZmQrQS85bGEvS3NxTDMzL1RUcmpaK0xmeTZlZ3lnWkFqaHFV?=
+ =?utf-8?B?c3BUYXZWcWdzU01rZW9meVFNeTV6bkttYW5HckJyVWdvL2ZOQWFxb1JhQ1hw?=
+ =?utf-8?B?Wld4Z3psYVRRS3VycnR3YWM2THVtem5mV1Nsb3JVTlI5N2o3aitnZVNyTnZm?=
+ =?utf-8?B?dTZQbnpod091bE0wTlU1c3RhcE1qVHp4ZE9tWTA3MzhhdzVabHpTL1ZRYkRP?=
+ =?utf-8?B?akUrbkJPbWFEWkNtTHBBMnR5WnpncVpmd1J5UEp6Tktaejl4SUY4bmUvVjFH?=
+ =?utf-8?B?a2oyaE96UGNpbkdGbE9tTFFoTElXV0NuWkY4M0g2aDVEUHQ1c21JTDZsZlI4?=
+ =?utf-8?B?MWpVSjBRODNWME0xeFIyM1YrOGN4eGIrdDRLdndRSllCc3dWK2xTSEhXUWMy?=
+ =?utf-8?B?ZGh5ZG15YnhwbkpBVVRyandKQUFLZm9RN1hZMjl4eWYrcTlWYVpaZEkyZU90?=
+ =?utf-8?B?MFNCb2JENENrcmgrSmM2RmZ1aktFc1d0R05zcTNldjFxQ25BWnkwcWwvdS9O?=
+ =?utf-8?B?cmlnakxBMTZLVWZiQW5rQ3dsMm5YTmc1em51K2p4WTBEYjl1a3pZSXduR3dS?=
+ =?utf-8?Q?Yns++M6Ot5m/9HqH63PHedmx2?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f28ee2e4-08d4-4121-933e-08db707cb341
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2023 04:21:49.2227
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iGwckIyxfoWbczu+mmy9f3/sutdbi56y59NBPWtqSOZ0melqjylBaRNDizyZcROxnfaIsTAH7N3bscCW/41Q7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8895
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-在 2023/6/16 下午7:41, John Garry 写道:
-> On 15/06/2023 03:18, Jing Zhang wrote:
->>>>>> Unit is the format of the event_source device name. We should match based on that as well as compat. I need to check the code again to understand how that is done... it has changed a good bit in 3 years.
->>>>>>
->>>>> This situation only happens on uncore metric. I happened to write wrong Unit, but the metric still matches.
->>>>>
->>>> I'm just double checking this now. I think any possible fix should be easy enough for current code but may be tricky for backport with lots of metric code changes.
->>> I also have code to re-work sys event metric support such that we don't require "compat" or "Unit" values for a metric when the metric is described in terms of event aliases. That code is 2 years old, so may take a bit of time to rebase. I'll look to do that now.
->>>
->> Sounds good!
+>>> +grep -q Intel /proc/cpuinfo || (echo Skipping non-Intel; exit 2)
+>>
+>> This check doesn't seem to be working. On my Zen3 AMD machine:
 > 
-> BTW, I am just looking at your cmn JSONs in this series, and we have something like this:
-> 
-> index 0000000..e70ac1a
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/arm/cmn/sys/metrics.json
-> @@ -0,0 +1,74 @@
-> +[
-> +    {
-> +        "MetricName": "slc_miss_rate",
-> +        "BriefDescription": "The system level cache miss rate include.",
-> +        "MetricGroup": "arm_cmn",
-> +        "MetricExpr": "hnf_cache_miss / hnf_slc_sf_cache_access",
-> 
-> So this expression uses event aliases hnf_cache_miss and hnf_slc_sf_cache_access - where are they defined in a JSON?
-> 
+> Thanks for reporting this! I've update this search to "GenuineIntel" in v4 to help solve this issue. 
+> Please check it out. 
 
-Hi John,
+I'm sorry. I should have been more elaborative.
 
-I defined the aliases for these events in the JSON file during the RFC version. However, I later removed the alias
-definitions for these events in subsequent versions due to the possibility of non-uniqueness and difficulty in defining
-their EventCode. But this does not affect their usage in metrics. In other words, metrics can use the aliases without
-defining event aliases in the JSON file.
+What I mean was () in bash creates a sub shell and thus exits from
+the sub shell. I think what you need is {}. Ex:
 
-In the past, I always thought that the function of the alias was to explain the meaning of these events in the perf list.
-Or maybe I'm missing something?
+  grep -q Intel /proc/cpuinfo || { echo Skipping non-Intel; exit 2; }
+
+
+>>   test child finished with 0
+>>   ---- end ----
+>>   perf metrics value validation: Ok
+>>
+>> I haven't yet investigated whether it's genuine or false positive.
+>>
+> Base on this final report, it validated some basic rules like the 12 metrics for positive value test and 2 metrics for single metric value checks. 
+> The test script grabs metrics supported on the platform and generates validation rules that only include metrics in the supported list. 
+> Therefore, it is not surprising that the check passes on your system. 
+
+Got it.
 
 Thanks,
-Jing
-
-> I could not see them. If they are not needed, then I may be missing something...
-> 
-> Thanks,
-> John
-> 
-> 
+Ravi
