@@ -2,44 +2,44 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0782FEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 17:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96712EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 17:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230346AbjFTRAj (ORCPT
+        id S229961AbjFTRAn (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 13:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45280 "EHLO
+        Tue, 20 Jun 2023 13:00:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229983AbjFTRAh (ORCPT
+        with ESMTP id S230515AbjFTRAl (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 13:00:37 -0400
+        Tue, 20 Jun 2023 13:00:41 -0400
 Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C3791728;
-        Tue, 20 Jun 2023 10:00:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 531C31731;
+        Tue, 20 Jun 2023 10:00:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687280433; x=1718816433;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OBAerPf67KJbNEHvyQM2OXQEr7NY+xfC/oeSx78gcuk=;
-  b=BV6gw48xtQLDByDJQvesnMXYcss3oJZll9TSoejfFWMZhx7RfphWxTq8
-   meQzhHYaUQsOKf8MKhaSh3K3YzSEf9xplkL50ECQOTcLrFU96po+s7hoI
-   G0YuXkgG0o28uyAwwGHrrYhr/wJzlNqoCVv9rPmdgyacq4TZEmkhmMlBq
-   ZSZ8lbk3Co6CBbUY4RP9EUz8GgjOhxv9KnWLQmnfyE/XO2BveOlPexZ4N
-   y2QoF/qOf7LWI7DZEASYjoc5VHDd5Uwlpzhzo76rXm4L28PwPRxg/InBC
-   /HLoCiKSV/yECMmth2B6WIDaIP0ZaS/ccJZMgbSdTwiKM9me/gvfBTyPE
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="359929599"
+  t=1687280437; x=1718816437;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=k5j1Yn2V9lz4sCs0dVmB92SlhzxFJ8oMSsBzj0DJzm4=;
+  b=VaWO+QTW18dgDO76kjXjksOIKC4Co+83BDHy7w5apZdfPuXcCeCqxia1
+   iY/lTVMUOfRaa7NitgeutHMDoozB3CH9hzuY8azklJikymCOao4g9OmOt
+   Lh3uWcVn2Wvn5/zIY3e9JbBvAHXyyEHX3Etr1QNi2j5hK2zc8t/ukh5Sa
+   ZRXSPPA8qiXFucyY1WvfMp/kkHoSqpmZRmKpa5qrxmI24A2aOlZy1Bq7l
+   cmAQN+CKQBTiwBBksXKM3W7lzvc00Aa5g7/OJc4fpCiRuoJ1aOpOoZAk/
+   qQPTc4qQ+UgU/f3JZZiPC8rZMfKZqezFn252UEAglysXSALEge+2n7b86
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="359929632"
 X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="359929599"
+   d="scan'208";a="359929632"
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 10:00:32 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 10:00:34 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="888314320"
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="888314364"
 X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="888314320"
+   d="scan'208";a="888314364"
 Received: from a0cec87da3f2.jf.intel.com (HELO worker-node-1.jf.intel.com) ([10.165.55.163])
-  by orsmga005.jf.intel.com with ESMTP; 20 Jun 2023 10:00:32 -0700
+  by orsmga005.jf.intel.com with ESMTP; 20 Jun 2023 10:00:34 -0700
 From:   Weilin Wang <weilin.wang@intel.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -54,39 +54,142 @@ Cc:     Weilin Wang <weilin.wang@intel.com>,
         Samantha Alt <samantha.alt@intel.com>,
         Perry Taylor <perry.taylor@intel.com>,
         Caleb Biggers <caleb.biggers@intel.com>, ravi.bangoria@amd.com
-Subject: [PATCH v5 0/3] Add metric value validation test
-Date:   Tue, 20 Jun 2023 10:00:24 -0700
-Message-Id: <20230620170027.1861012-1-weilin.wang@intel.com>
+Subject: [PATCH v5 2/3] perf test: Add skip list for metrics known would fail
+Date:   Tue, 20 Jun 2023 10:00:26 -0700
+Message-Id: <20230620170027.1861012-3-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230620170027.1861012-1-weilin.wang@intel.com>
+References: <20230620170027.1861012-1-weilin.wang@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This is the fifth version of metric value validation tests.
+Add skip list for metrics known would fail because some of the metrics are
+very likely to fail due to multiplexing or other errors. So add all of the
+flaky tests into the skip list.
 
-We made the following changes from v4 to v5:
- - Update "()" to "{}" to avoid creating sub shell and successfully skip test on non-Intel
- platform. [Ravi]
+Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+---
+ .../tests/shell/lib/perf_metric_validation.py | 31 ++++++++++++++++---
+ .../lib/perf_metric_validation_rules.json     | 11 +++++++
+ 2 files changed, 38 insertions(+), 4 deletions(-)
 
-v4: https://lore.kernel.org/lkml/20230618172820.751560-1-weilin.wang@intel.com/
-
-Weilin Wang (3):
-  perf test: Add metric value validation test
-  perf test: Add skip list for metrics known would fail
-  perf test: Rerun failed metrics with longer workload
-
- .../tests/shell/lib/perf_metric_validation.py | 574 ++++++++++++++++++
- .../lib/perf_metric_validation_rules.json     | 398 ++++++++++++
- tools/perf/tests/shell/stat_metrics_values.sh |  30 +
- 3 files changed, 1002 insertions(+)
- create mode 100644 tools/perf/tests/shell/lib/perf_metric_validation.py
- create mode 100644 tools/perf/tests/shell/lib/perf_metric_validation_rules.json
- create mode 100755 tools/perf/tests/shell/stat_metrics_values.sh
-
-
-base-commit: 7cdda6998ee55140e64894e25048df7157344fc9
+diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
+index 81bd2bf38b67..3c3a9b4f8b82 100644
+--- a/tools/perf/tests/shell/lib/perf_metric_validation.py
++++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
+@@ -12,7 +12,7 @@ class Validator:
+         self.reportfname = reportfname
+         self.rules = None
+         self.collectlist=metrics
+-        self.metrics = set()
++        self.metrics = set(metrics)
+         self.tolerance = t
+ 
+         self.workloads = [x for x in workload.split(",") if x]
+@@ -148,6 +148,7 @@ class Validator:
+                 self.errlist.append("Metric '%s' is not collected"%(name))
+             elif val < 0:
+                 negmetric.add("{0}(={1:.4f})".format(name, val))
++                self.collectlist[0].append(name)
+             else:
+                 pcnt += 1
+             tcnt += 1
+@@ -266,6 +267,7 @@ class Validator:
+                 passcnt += 1
+             else:
+                 faillist.append({'MetricName':m['Name'], 'CollectedValue':result})
++                self.collectlist[0].append(m['Name'])
+ 
+         self.totalcnt += totalcnt
+         self.passedcnt += passcnt
+@@ -348,7 +350,7 @@ class Validator:
+             if rule["TestType"] == "RelationshipTest":
+                 metrics = [m["Name"] for m in rule["Metrics"]]
+                 if not any(m not in collectlist[0] for m in metrics):
+-                    collectlist[rule["RuleIndex"]] = set(metrics)
++                    collectlist[rule["RuleIndex"]] = [",".join(list(set(metrics)))]
+ 
+         for idx, metrics in collectlist.items():
+             if idx == 0: wl = "sleep 0.5".split()
+@@ -356,9 +358,12 @@ class Validator:
+             for metric in metrics:
+                 command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
+                 command.extend(wl)
++                print(" ".join(command))
+                 cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
+                 data = [x+'}' for x in cmd.stderr.split('}\n') if x]
+                 self.convert(data, idx)
++        self.collectlist = dict()
++        self.collectlist[0] = list()
+     # End of Collector and Converter
+ 
+     # Start of Rule Generator
+@@ -386,6 +391,20 @@ class Validator:
+ 
+         return
+ 
++    def remove_unsupported_rules(self, rules, skiplist: set = None):
++        for m in skiplist:
++            self.metrics.discard(m)
++        new_rules = []
++        for rule in rules:
++            add_rule = True
++            for m in rule["Metrics"]:
++                if m["Name"] not in self.metrics:
++                    add_rule = False
++                    break
++            if add_rule:
++                new_rules.append(rule)
++        return new_rules
++
+     def create_rules(self):
+         """
+         Create full rules which includes:
+@@ -394,7 +413,10 @@ class Validator:
+ 
+         Reindex all the rules to avoid repeated RuleIndex
+         """
+-        self.rules = self.read_json(self.rulefname)['RelationshipRules']
++        data = self.read_json(self.rulefname)
++        rules = data['RelationshipRules']
++        skiplist = set(data['SkipList'])
++        self.rules = self.remove_unsupported_rules(rules, skiplist)
+         pctgrule = {'RuleIndex':0,
+                     'TestType':'SingleMetricTest',
+                     'RangeLower':'0',
+@@ -453,7 +475,8 @@ class Validator:
+ 
+         The final report is written into a JSON file.
+         '''
+-        self.parse_perf_metrics()
++        if not self.collectlist:
++            self.parse_perf_metrics()
+         self.create_rules()
+         for i in range(0, len(self.workloads)):
+             self._init_data()
+diff --git a/tools/perf/tests/shell/lib/perf_metric_validation_rules.json b/tools/perf/tests/shell/lib/perf_metric_validation_rules.json
+index debaa910da9f..eb6f59e018b7 100644
+--- a/tools/perf/tests/shell/lib/perf_metric_validation_rules.json
++++ b/tools/perf/tests/shell/lib/perf_metric_validation_rules.json
+@@ -1,4 +1,15 @@
+ {
++    "SkipList": [
++        "tsx_aborted_cycles",
++        "tsx_transactional_cycles",
++        "C2_Pkg_Residency",
++        "C6_Pkg_Residency",
++        "C1_Core_Residency",
++        "C6_Core_Residency",
++        "tma_false_sharing",
++        "tma_remote_cache",
++        "tma_contested_accesses"
++    ],
+     "RelationshipRules": [
+         {
+             "RuleIndex": 1,
 -- 
 2.39.1
 
