@@ -2,47 +2,47 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2309EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 22:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73817EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 22:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229684AbjFTWPo convert rfc822-to-8bit (ORCPT
+        id S229527AbjFTWSt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 18:15:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38180 "EHLO
+        Tue, 20 Jun 2023 18:18:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbjFTWPn (ORCPT
+        with ESMTP id S229448AbjFTWSs (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 18:15:43 -0400
+        Tue, 20 Jun 2023 18:18:48 -0400
 Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F748E7E;
-        Tue, 20 Jun 2023 15:15:42 -0700 (PDT)
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-77de67139ccso240477239f.0;
-        Tue, 20 Jun 2023 15:15:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DD751726;
+        Tue, 20 Jun 2023 15:18:47 -0700 (PDT)
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-77e23d463deso203480039f.3;
+        Tue, 20 Jun 2023 15:18:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687299342; x=1689891342;
+        d=1e100.net; s=20221208; t=1687299526; x=1689891526;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rY6PVpR7o3TFuP4JziuKWXeauOK+7yv/dqaW2WujMlQ=;
-        b=RVFTB68I0OCD+ik9HykqtOdbTVBU7rlfJPsS/QNMhBE36xS84JALBMrOtHJYp6US86
-         GgWB2NS5U+N29t5d4HeeNMbNcUxzamAHwaqJ/33yjTkoD02t5Dv5g/om0DjCfMLGtzs8
-         +XvDG+EYy2GmJN7bV10x4Hk3N4n6h0k4W8g9dbdTPWoCaSrq5br8WKHx315l8gIGYgrE
-         TQzAd/+Q6ggaVmUPbQolI0cCWd0zQBry5BjlWDsnFn/YXdnFJwxoxOr4pAIVoEZblUbz
-         d/ijjt7f4fVDuBICRmO5OZq8xfWmmQd4NBikSPcIb1rWLhLGAn62fdD6wI5IfgCjIFWl
-         90Xg==
-X-Gm-Message-State: AC+VfDzjAW0/cOyOEGM6AK1VQ0advMl3L+bk1n6mV8qRLclVa/z1zy2c
-        F7qc8ilLrG3NVBLlQsNLIttLusQ8CbkcJyxJ2c4=
-X-Google-Smtp-Source: ACHHUZ6ziGrl9UymvMjiNr+y7FEEsmOAbX3YI/mMsoMzNZugV0E9oDvPANZk09oH8Iexocth05lLNZG2rXbkM1w8uxI=
-X-Received: by 2002:a5e:dd08:0:b0:76c:595a:6b5f with SMTP id
- t8-20020a5edd08000000b0076c595a6b5fmr9023687iop.20.1687299341696; Tue, 20 Jun
- 2023 15:15:41 -0700 (PDT)
+        bh=0zU9oditqspBm1in6CgnKM4WptZyPw+wRg04LkY52Ak=;
+        b=FND2K8NHopYxnbd3CjB/qgIYMiS+gqgcbnLprYoa5P/Vpk5QXmidgWwmTOQIG1X4TY
+         i1laEUX8X3PCWfnIIDqMkkCvibIOn6Rm9Fw3pnjtV7jrr5fizItVC9wfTYslTpRK+Eic
+         GALAFjRYWO63YM6qF+QSHZpckqSVZKpTIkON5j1dxnlOlAOwHJ25WjaTbe6QWcfUqQbb
+         eu8Hnp9Q/XkFIoQ3we846Voq3cf52bC4CfhA3cg7ZRnZ0eyYVNgG2f1j/VpBCmgUsp50
+         dlYhGJzqGXW2hHCMSkp0531DygTcuOwxiQsXYBh2krOotGYtFbUEOvXbSCksDNrZpnuB
+         iStA==
+X-Gm-Message-State: AC+VfDwcV/BpP0C30cnF35hIKJ+xWSHykWt+QmdDm8Gg2kL2sv8NqXLg
+        gkWEgw4fyaRT7OUEqZrb14zESaBlBz71zRnNz1SU5U1R
+X-Google-Smtp-Source: ACHHUZ5KHNRxlnd4tVpLBj3zIz/8I/VFNF9pdFFQdqaY9wvmBAjwxD1W5qTE5xjcGG4JZmmg9Hn4wVVif3Knr8vOu5Q=
+X-Received: by 2002:a6b:660a:0:b0:777:84d7:8e77 with SMTP id
+ a10-20020a6b660a000000b0077784d78e77mr12880154ioc.14.1687299526450; Tue, 20
+ Jun 2023 15:18:46 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230615040715.2064350-1-irogers@google.com>
-In-Reply-To: <20230615040715.2064350-1-irogers@google.com>
+References: <20230615040715.2064350-1-irogers@google.com> <20230615040715.2064350-2-irogers@google.com>
+In-Reply-To: <20230615040715.2064350-2-irogers@google.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 20 Jun 2023 15:15:30 -0700
-Message-ID: <CAM9d7cigCUz4i-t2rHaz9Ch0oWxjYWmvnVB73uV1cm+47DtpXw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] perf sharded_mutex: Introduce sharded_mutex
+Date:   Tue, 20 Jun 2023 15:18:35 -0700
+Message-ID: <CAM9d7ciLCMfvzcv9U_VGFeXBqbmz9kA5P-QCuE85TwstqoV5ag@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf annotation: Switch lock from a mutex to a sharded_mutex
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -65,11 +65,17 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 On Wed, Jun 14, 2023 at 9:07 PM Ian Rogers <irogers@google.com> wrote:
 >
-> Per object mutexes may come with significant memory cost while a
-> global mutex can suffer from unnecessary contention. A sharded mutex
-> is a compromise where objects are hashed and then a particular mutex
-> for the hash of the object used. Contention can be controlled by the
-> number of shards.
+> Remove the "struct mutex lock" variable from annotation that is
+> allocated per symbol. This removes in the region of 40 bytes per
+> symbol allocation. Use a sharded mutex where the number of shards is
+> set to the number of CPUs. Assuming good hashing of the annotation
+> (done based on the pointer), this means in order to contend there
+> needs to be more threads than CPUs, which is not currently true in any
+> perf command. Were contention an issue it is straightforward to
+> increase the number of shards in the mutex.
+>
+> On my Debian/glibc based machine, this reduces the size of struct
+> annotation from 136 bytes to 96 bytes, or nearly 30%.
 >
 > Signed-off-by: Ian Rogers <irogers@google.com>
 
@@ -78,103 +84,265 @@ Acked-by: Namhyung Kim <namhyung@kernel.org>
 Thanks,
 Namhyung
 
->
-> v2. Use hashmap.h's hash_bits in case of contention from alignment of
->     objects.
 > ---
->  tools/perf/util/Build           |  1 +
->  tools/perf/util/sharded_mutex.c | 33 +++++++++++++++++++++++++++++++++
->  tools/perf/util/sharded_mutex.h | 29 +++++++++++++++++++++++++++++
->  3 files changed, 63 insertions(+)
->  create mode 100644 tools/perf/util/sharded_mutex.c
->  create mode 100644 tools/perf/util/sharded_mutex.h
+>  tools/perf/builtin-top.c          | 14 +++----
+>  tools/perf/ui/browsers/annotate.c | 10 ++---
+>  tools/perf/util/annotate.c        | 66 ++++++++++++++++++++++++++-----
+>  tools/perf/util/annotate.h        | 11 ++++--
+>  4 files changed, 77 insertions(+), 24 deletions(-)
 >
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index ff2fd1a36bb8..96f4ea1d45c5 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -145,6 +145,7 @@ perf-y += mem2node.o
->  perf-y += clockid.o
->  perf-y += list_sort.o
->  perf-y += mutex.o
-> +perf-y += sharded_mutex.o
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index c363c04e16df..1baa2acb3ced 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -137,10 +137,10 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
+>         }
 >
->  perf-$(CONFIG_LIBBPF) += bpf-loader.o
->  perf-$(CONFIG_LIBBPF) += bpf_map.o
-> diff --git a/tools/perf/util/sharded_mutex.c b/tools/perf/util/sharded_mutex.c
-> new file mode 100644
-> index 000000000000..e11e8d0945a7
-> --- /dev/null
-> +++ b/tools/perf/util/sharded_mutex.c
-> @@ -0,0 +1,33 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "sharded_mutex.h"
+>         notes = symbol__annotation(sym);
+> -       mutex_lock(&notes->lock);
+> +       annotation__lock(notes);
+>
+>         if (!symbol__hists(sym, top->evlist->core.nr_entries)) {
+> -               mutex_unlock(&notes->lock);
+> +               annotation__unlock(notes);
+>                 pr_err("Not enough memory for annotating '%s' symbol!\n",
+>                        sym->name);
+>                 sleep(1);
+> @@ -156,7 +156,7 @@ static int perf_top__parse_source(struct perf_top *top, struct hist_entry *he)
+>                 pr_err("Couldn't annotate %s: %s\n", sym->name, msg);
+>         }
+>
+> -       mutex_unlock(&notes->lock);
+> +       annotation__unlock(notes);
+>         return err;
+>  }
+>
+> @@ -211,12 +211,12 @@ static void perf_top__record_precise_ip(struct perf_top *top,
+>
+>         notes = symbol__annotation(sym);
+>
+> -       if (!mutex_trylock(&notes->lock))
+> +       if (!annotation__trylock(notes))
+>                 return;
+>
+>         err = hist_entry__inc_addr_samples(he, sample, evsel, ip);
+>
+> -       mutex_unlock(&notes->lock);
+> +       annotation__unlock(notes);
+>
+>         if (unlikely(err)) {
+>                 /*
+> @@ -253,7 +253,7 @@ static void perf_top__show_details(struct perf_top *top)
+>         symbol = he->ms.sym;
+>         notes = symbol__annotation(symbol);
+>
+> -       mutex_lock(&notes->lock);
+> +       annotation__lock(notes);
+>
+>         symbol__calc_percent(symbol, evsel);
+>
+> @@ -274,7 +274,7 @@ static void perf_top__show_details(struct perf_top *top)
+>         if (more != 0)
+>                 printf("%d lines not displayed, maybe increase display entries [e]\n", more);
+>  out_unlock:
+> -       mutex_unlock(&notes->lock);
+> +       annotation__unlock(notes);
+>  }
+>
+>  static void perf_top__resort_hists(struct perf_top *t)
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
+> index 70bad42b807b..ccdb2cd11fbf 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
+> @@ -314,7 +314,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
+>
+>         browser->entries = RB_ROOT;
+>
+> -       mutex_lock(&notes->lock);
+> +       annotation__lock(notes);
+>
+>         symbol__calc_percent(sym, evsel);
+>
+> @@ -343,7 +343,7 @@ static void annotate_browser__calc_percent(struct annotate_browser *browser,
+>                 }
+>                 disasm_rb_tree__insert(browser, &pos->al);
+>         }
+> -       mutex_unlock(&notes->lock);
+> +       annotation__unlock(notes);
+>
+>         browser->curr_hot = rb_last(&browser->entries);
+>  }
+> @@ -470,10 +470,10 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+>         }
+>
+>         notes = symbol__annotation(dl->ops.target.sym);
+> -       mutex_lock(&notes->lock);
+> +       annotation__lock(notes);
+>
+>         if (!symbol__hists(dl->ops.target.sym, evsel->evlist->core.nr_entries)) {
+> -               mutex_unlock(&notes->lock);
+> +               annotation__unlock(notes);
+>                 ui__warning("Not enough memory for annotating '%s' symbol!\n",
+>                             dl->ops.target.sym->name);
+>                 return true;
+> @@ -482,7 +482,7 @@ static bool annotate_browser__callq(struct annotate_browser *browser,
+>         target_ms.maps = ms->maps;
+>         target_ms.map = ms->map;
+>         target_ms.sym = dl->ops.target.sym;
+> -       mutex_unlock(&notes->lock);
+> +       annotation__unlock(notes);
+>         symbol__tui_annotate(&target_ms, evsel, hbt, browser->opts);
+>         sym_title(ms->sym, ms->map, title, sizeof(title), browser->opts->percent_type);
+>         ui_browser__show_title(&browser->b, title);
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index cdd1924a4418..7cae73bb7353 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -32,6 +32,7 @@
+>  #include "block-range.h"
+>  #include "string2.h"
+>  #include "util/event.h"
+> +#include "util/sharded_mutex.h"
+>  #include "arch/common.h"
+>  #include "namespaces.h"
+>  #include <regex.h>
+> @@ -856,7 +857,7 @@ void symbol__annotate_zero_histograms(struct symbol *sym)
+>  {
+>         struct annotation *notes = symbol__annotation(sym);
+>
+> -       mutex_lock(&notes->lock);
+> +       annotation__lock(notes);
+>         if (notes->src != NULL) {
+>                 memset(notes->src->histograms, 0,
+>                        notes->src->nr_histograms * notes->src->sizeof_sym_hist);
+> @@ -864,7 +865,7 @@ void symbol__annotate_zero_histograms(struct symbol *sym)
+>                         memset(notes->src->cycles_hist, 0,
+>                                 symbol__size(sym) * sizeof(struct cyc_hist));
+>         }
+> -       mutex_unlock(&notes->lock);
+> +       annotation__unlock(notes);
+>  }
+>
+>  static int __symbol__account_cycles(struct cyc_hist *ch,
+> @@ -1121,7 +1122,7 @@ void annotation__compute_ipc(struct annotation *notes, size_t size)
+>         notes->hit_insn = 0;
+>         notes->cover_insn = 0;
+>
+> -       mutex_lock(&notes->lock);
+> +       annotation__lock(notes);
+>         for (offset = size - 1; offset >= 0; --offset) {
+>                 struct cyc_hist *ch;
+>
+> @@ -1140,7 +1141,7 @@ void annotation__compute_ipc(struct annotation *notes, size_t size)
+>                         notes->have_cycles = true;
+>                 }
+>         }
+> -       mutex_unlock(&notes->lock);
+> +       annotation__unlock(notes);
+>  }
+>
+>  int addr_map_symbol__inc_samples(struct addr_map_symbol *ams, struct perf_sample *sample,
+> @@ -1291,17 +1292,64 @@ int disasm_line__scnprintf(struct disasm_line *dl, char *bf, size_t size, bool r
+>         return ins__scnprintf(&dl->ins, bf, size, &dl->ops, max_ins_name);
+>  }
+>
+> -void annotation__init(struct annotation *notes)
+> +void annotation__exit(struct annotation *notes)
+>  {
+> -       mutex_init(&notes->lock);
+> +       annotated_source__delete(notes->src);
+>  }
+>
+> -void annotation__exit(struct annotation *notes)
+> +static struct sharded_mutex *sharded_mutex;
 > +
-> +#include <stdlib.h>
+> +static void annotation__init_sharded_mutex(void)
+>  {
+> -       annotated_source__delete(notes->src);
+> -       mutex_destroy(&notes->lock);
+> +       /* As many mutexes as there are CPUs. */
+> +       sharded_mutex = sharded_mutex__new(cpu__max_present_cpu().cpu);
+> +}
 > +
-> +struct sharded_mutex *sharded_mutex__new(size_t num_shards)
+> +static size_t annotation__hash(const struct annotation *notes)
 > +{
-> +       struct sharded_mutex *result;
-> +       size_t size;
-> +       unsigned int bits;
+> +       return (size_t)notes;
+>  }
+>
+> +static struct mutex *annotation__get_mutex(const struct annotation *notes)
+> +{
+> +       static pthread_once_t once = PTHREAD_ONCE_INIT;
 > +
-> +       for (bits = 0; ((size_t)1 << bits) < num_shards; bits++)
-> +               ;
-> +
-> +       size = sizeof(*result) + sizeof(struct mutex) * (1 << bits);
-> +       result = malloc(size);
-> +       if (!result)
+> +       pthread_once(&once, annotation__init_sharded_mutex);
+> +       if (!sharded_mutex)
 > +               return NULL;
 > +
-> +       result->cap_bits = bits;
-> +       for (size_t i = 0; i < ((size_t)1 << bits); i++)
-> +               mutex_init(&result->mutexes[i]);
-> +
-> +       return result;
+> +       return sharded_mutex__get_mutex(sharded_mutex, annotation__hash(notes));
 > +}
 > +
-> +void sharded_mutex__delete(struct sharded_mutex *sm)
+> +void annotation__lock(struct annotation *notes)
+> +       NO_THREAD_SAFETY_ANALYSIS
 > +{
-> +       for (size_t i = 0; i < ((size_t)1 << sm->cap_bits); i++)
-> +               mutex_destroy(&sm->mutexes[i]);
+> +       struct mutex *mutex = annotation__get_mutex(notes);
 > +
-> +       free(sm);
+> +       if (mutex)
+> +               mutex_lock(mutex);
 > +}
-> diff --git a/tools/perf/util/sharded_mutex.h b/tools/perf/util/sharded_mutex.h
-> new file mode 100644
-> index 000000000000..7325e969eee3
-> --- /dev/null
-> +++ b/tools/perf/util/sharded_mutex.h
-> @@ -0,0 +1,29 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef PERF_SHARDED_MUTEX_H
-> +#define PERF_SHARDED_MUTEX_H
 > +
-> +#include "mutex.h"
-> +#include "hashmap.h"
-> +
-> +/*
-> + * In a situation where a lock is needed per object, having a mutex can be
-> + * relatively memory expensive (40 bytes on x86-64). If the object can be
-> + * constantly hashed, a sharded mutex is an alternative global pool of mutexes
-> + * where the mutex is looked up from a hash value. This can lead to collisions
-> + * if the number of shards isn't large enough.
-> + */
-> +struct sharded_mutex {
-> +       /* mutexes array is 1<<cap_bits in size. */
-> +       unsigned int cap_bits;
-> +       struct mutex mutexes[];
-> +};
-> +
-> +struct sharded_mutex *sharded_mutex__new(size_t num_shards);
-> +void sharded_mutex__delete(struct sharded_mutex *sm);
-> +
-> +static inline struct mutex *sharded_mutex__get_mutex(struct sharded_mutex *sm, size_t hash)
+> +void annotation__unlock(struct annotation *notes)
+> +       NO_THREAD_SAFETY_ANALYSIS
 > +{
-> +       return &sm->mutexes[hash_bits(hash, sm->cap_bits)];
+> +       struct mutex *mutex = annotation__get_mutex(notes);
+> +
+> +       if (mutex)
+> +               mutex_unlock(mutex);
 > +}
 > +
-> +#endif  /* PERF_SHARDED_MUTEX_H */
+> +bool annotation__trylock(struct annotation *notes)
+> +{
+> +       struct mutex *mutex = annotation__get_mutex(notes);
+> +
+> +       if (!mutex)
+> +               return false;
+> +
+> +       return mutex_trylock(mutex);
+> +}
+> +
+> +
+>  static void annotation_line__add(struct annotation_line *al, struct list_head *head)
+>  {
+>         list_add_tail(&al->node, head);
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index 1c6335b8333a..962780559176 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+> @@ -271,8 +271,7 @@ struct annotated_source {
+>         struct sym_hist    *histograms;
+>  };
+>
+> -struct annotation {
+> -       struct mutex lock;
+> +struct LOCKABLE annotation {
+>         u64                     max_coverage;
+>         u64                     start;
+>         u64                     hit_cycles;
+> @@ -298,9 +297,15 @@ struct annotation {
+>         struct annotated_source *src;
+>  };
+>
+> -void annotation__init(struct annotation *notes);
+> +static inline void annotation__init(struct annotation *notes __maybe_unused)
+> +{
+> +}
+>  void annotation__exit(struct annotation *notes);
+>
+> +void annotation__lock(struct annotation *notes) EXCLUSIVE_LOCK_FUNCTION(*notes);
+> +void annotation__unlock(struct annotation *notes) UNLOCK_FUNCTION(*notes);
+> +bool annotation__trylock(struct annotation *notes) EXCLUSIVE_TRYLOCK_FUNCTION(true, *notes);
+> +
+>  static inline int annotation__cycles_width(struct annotation *notes)
+>  {
+>         if (notes->have_cycles && notes->options->show_minmax_cycle)
 > --
 > 2.41.0.162.gfafddb0af9-goog
 >
