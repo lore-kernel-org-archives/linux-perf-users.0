@@ -2,190 +2,322 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D76EB64DC
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 17:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4438DEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 18:42:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229887AbjFTRee (ORCPT
+        id S230083AbjFTSml convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 13:34:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35978 "EHLO
+        Tue, 20 Jun 2023 14:42:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229673AbjFTRed (ORCPT
+        with ESMTP id S229876AbjFTSmk (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 13:34:33 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 253CDA3;
-        Tue, 20 Jun 2023 10:34:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687282471; x=1718818471;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=e2o1S+sKExaEXn1ZV6nZyxSHhqPdkcT93L/bOk9KogA=;
-  b=URwFkDqfh5Vtd6EazEHpcrHPgPFbH5pCU1ksYzmr31vKHsk3rjZeR4NN
-   4AEwUm/BW7mg5dWWxUYOvXVW907/6DNICz6eGG8pGiZm8mxduWI/QgFGI
-   Er6M0zGtMpTX3ddoS7iIQ9Xy/J3+jKaRqyp4bd9xkqyCf3Lyb2Y8SEaJe
-   HOSRVCHV3ZTnvdhLvqgrD5v+3QNPC/B7R60OxewITl5A61msbiiZ3XAF9
-   ooRa2ZNNkPREVq0sgsoUHCwMFhlwR6bYTY72ExEUtuXBpD+frqvNJjKDR
-   glqDJ3us9KUuBJk1g8dwFL8S6kErBAUBTr7gtOTNICG0cYqMpQzjeEJb/
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="363354165"
-X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="363354165"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 10:33:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="804029333"
-X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="804029333"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Jun 2023 10:33:53 -0700
-Received: from orsmsx602.amr.corp.intel.com (10.22.229.15) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 20 Jun 2023 10:33:48 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx602.amr.corp.intel.com (10.22.229.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Tue, 20 Jun 2023 10:33:48 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.172)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Tue, 20 Jun 2023 10:33:48 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W8Xi/B4+mSZypBZDUU2ND9NUA8xFB2dPIiVLbClahsBvHsHqIeaW+OqI+raPNKPOA3RoVI1YsfHT0vj5TlE7d6XejR+9Xd2NJKuUJHWdzvzfvYaO/vDLy6WmtQEEeo2fxWkdtR3loKwfjMoUWn24Mi5g/Sr5zIi+pH+V9huoDNR/iFw9fkvGVp4gpJpttHn4I5Jt2yKx0pqH8/K5Igd7BCx5pdULR6LgenPLgXeaHoZoaZW7WxwQK9cqEVWR076ucdtZ1Cvk7bLe3qxU7vPpsSa1+5ke/ngd1cpbZClpjZlhnMwIY9na5dsiw0wskZABgznOw9hTjVkteecoFUO5Yg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DOfcSklZ8fCYfzrEQ0oEPLp8HM5G+qt6AmeF2jigd0U=;
- b=LrTzBe1YqCKAYTBl2vQ5g/4D81ZLmCAVbHLK15gYuyF9a7atvWzMjhbKtl/Gx/QiFERk9/IHkouV37SVbTKUnK+X0eVy5s/q41NKfxqwStyMZupAyVUw3q4Ik6b16OsEvKbmYvZwOos3ufsuQwzZjxCKMX20drdKeu6ma5S5PLK8BmEtEJqjVL/avWpje//XdxmfRh/DjcBBF4zG9uuKre45+ZcF/ZIRxdz84UA4OfA3OktxWSUjq+K9MxDrXxTcuLZzSdSyz6UMxqNa/oHAKMF1d8PlPLzgeZfaxNtiVrcruiHjwuOBWmocgALWsSb1BZbljuFADxUx6MRmSvEshg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22)
- by DS0PR11MB7579.namprd11.prod.outlook.com (2603:10b6:8:14d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.37; Tue, 20 Jun
- 2023 17:33:45 +0000
-Received: from SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::c016:653d:c037:44fc]) by SA1PR11MB6734.namprd11.prod.outlook.com
- ([fe80::c016:653d:c037:44fc%7]) with mapi id 15.20.6500.036; Tue, 20 Jun 2023
- 17:33:46 +0000
-From:   "Li, Xin3" <xin3.li@intel.com>
-To:     Steve Wahl <steve.wahl@hpe.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "Sivanich, Dimitri" <dimitri.sivanich@hpe.com>,
-        "Anderson, Russ" <russ.anderson@hpe.com>,
-        "dvhart@infradead.org" <dvhart@infradead.org>,
-        "andy@infradead.org" <andy@infradead.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "kys@microsoft.com" <kys@microsoft.com>,
-        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "Cui, Dexuan" <decui@microsoft.com>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "jolsa@kernel.org" <jolsa@kernel.org>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "irogers@google.com" <irogers@google.com>,
-        "Hunter, Adrian" <adrian.hunter@intel.com>,
-        "Christopherson,, Sean" <seanjc@google.com>,
-        "jiangshanlai@gmail.com" <jiangshanlai@gmail.com>,
-        "jgg@ziepe.ca" <jgg@ziepe.ca>,
-        "yangtiezhu@loongson.cn" <yangtiezhu@loongson.cn>
-Subject: RE: [PATCH 1/3] x86/vector: Rename send_cleanup_vector() to
- vector_schedule_cleanup()
-Thread-Topic: [PATCH 1/3] x86/vector: Rename send_cleanup_vector() to
- vector_schedule_cleanup()
-Thread-Index: AQHZowfeI8fQPreObE+J5qFxBiqZxK+T4jSAgAASHOA=
-Date:   Tue, 20 Jun 2023 17:33:46 +0000
-Message-ID: <SA1PR11MB67341EFA507898919165D050A85CA@SA1PR11MB6734.namprd11.prod.outlook.com>
-References: <20230619231611.2230-1-xin3.li@intel.com>
- <20230619231611.2230-2-xin3.li@intel.com>
- <ZJHTYUrKA/mclxRZ@swahl-home.5wahls.com>
-In-Reply-To: <ZJHTYUrKA/mclxRZ@swahl-home.5wahls.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR11MB6734:EE_|DS0PR11MB7579:EE_
-x-ms-office365-filtering-correlation-id: 61878690-0f31-402c-5f08-08db71b48053
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FPZ71XkbcShJck3mfxEt7T6d10xJkI0PkwU8SgXUJdisA4kNMXlpO+8qkTx0/4kI5ZUZQDNUkinoZ0ZLv9wToixRVT0NGN5ITFOL3u25N8xpR6YW1GRI4vn3A8TjKxHrPgc19fmA4/H386/Jz/2TIbDucV0aDs4lQZWNUaYpV+nF0hkOtNWnYHiIpJioyvmBOw4XAxLifXoPwYWH3e2fqMKlEm7EZeVCNmfkKvWExffifiYuu2z/8OHyrAvGGZpG6XJLBQabwS1sdrdL+u6U/JCgWM0ALVl25VpnpXlO8Vo3RrtfcqhsKDM5bVTr8/5cELEeKUAoQLXtFIUo+FiySKBZjarlANXLIMmB04rQltmo8Wp7IE9Ou2f+Qjz0YRNVwbWd+RhU5JrGyjhzbdojXCFSRmXKoYg6b2WpoPRbu4QNWxAAO/U+z5CR7v8b03e3cs5LUVdUF455DlKtKX9RILrO5bbK/EwSYNveQneHvOpkR6oPvW88zrN6gSamVJNRV06X+ASWyBP7ZCdvlyR+gHZxf86aznDB3UoInkH8f3my25QMZyj7xMv5Je55nYUvt61dz7P1uU2wP7XiMFnUQMtNCFQFAovW2QMJzChviplXTyqz3YHGuSztyxChT2Rg
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6734.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(366004)(396003)(346002)(376002)(136003)(451199021)(478600001)(26005)(7696005)(71200400001)(54906003)(6506007)(9686003)(2906002)(186003)(52536014)(7416002)(5660300002)(7406005)(33656002)(558084003)(38100700002)(122000001)(55016003)(4326008)(66946007)(316002)(296002)(82960400001)(76116006)(86362001)(8676002)(41300700001)(8936002)(6916009)(64756008)(66446008)(66476007)(38070700005)(66556008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?eE2nZo9FtuqFW83TLZYybhWTz1veaeVrSjlgwvJwXJGufkjFOgyxqCiIgpz8?=
- =?us-ascii?Q?XDinYgO6sZYXkTPgfpRLw7o5F5mbjVIGH2ZI3pCJF8sf0KmH1/ietIPoEVTF?=
- =?us-ascii?Q?688bhHszyjotwJ9OKccupqfQlOQl8lArVWoCDaxz43TSLHJtBN+iu1RQBn0y?=
- =?us-ascii?Q?KGRkyD5/s5kfaFmzHY/10y3IE09pwxlkohI+IeB8ozRr4a1GBnfSkN963Alz?=
- =?us-ascii?Q?dn6kf9lovKKcUZPBfcHAdhWPcwCXpixeJBsVizLN43g9uweGJVb/36uFGnsL?=
- =?us-ascii?Q?aSQvnbD2b4gKkXyvTpC1RWY51P7KA04DS3ycFW+GMs2loYXiWMluXDaOVWd1?=
- =?us-ascii?Q?16LWMaGSqciSu+ODflDhqT/+QtsCfWGJFOvG5dSiOQhG2Hc5yByP6OfuONCG?=
- =?us-ascii?Q?mtTU8QVk41YK9B9axQ4xGWpN0kVkJPFhbBDzvBdx588AAj/dOJRP1ypg6ODR?=
- =?us-ascii?Q?fqR1eAWuPoNdkG+CP2K6M3gQRjlw4Oc+vm9ptXszTcipd62/4gubWP0dInD6?=
- =?us-ascii?Q?RzEhplfCRnlcOYNDWGyb76Hweh8NMbKBM8HXuRcZbpTTC0b464VbUMYb0tVF?=
- =?us-ascii?Q?LSZCI7Zwzz10GyMLwo/gNkC1gUZjkYzg70iDFqJLjVoNcCS+3hQKXrel1GNp?=
- =?us-ascii?Q?T646gqUEgw2/3zNsDjaZ+QR4Ujlr0attbMIZuECHdo2ki3ztmSOB2p5iLj1i?=
- =?us-ascii?Q?gaSQAgECZvZelv8JM/kq5DXaBUgCGjZFTCVAl8XT3pPEFWgQ/IjAbe3WjJzx?=
- =?us-ascii?Q?lDLW5L48/Y+pWLR86KyKR1A6ct8Hu3xii+vJ3HjCmXNdw0aBJlZEZZLdw21v?=
- =?us-ascii?Q?A6Gye9ZX/demXX2691rJ+9q1STKVrPZ6/M4q0c/ahezfpUI6JlDVCvpww91O?=
- =?us-ascii?Q?omtfZ45C5Yja0wFz7YpHnwtG98nlZ8C/V2vc3SzlZrI77VQaN91XQudF7i/x?=
- =?us-ascii?Q?RpITm24mUXnhj9jhahFGFArTGhlzXob6x3gZhmdK3WKdNs9UGJR6eCIbShPd?=
- =?us-ascii?Q?egHp2pnptEb3kvi8E7JcEseEbxYMpXbdkVuRvY5oNnWaVmq3pjKE+9c5yZm0?=
- =?us-ascii?Q?xmbJVNXQlAceP6bxEo4um0x+OcMayhLJpQCgh1OhNMRY3648DwbZk8wAfHym?=
- =?us-ascii?Q?4LubcKADKO1yAF13mOXq6ZkAVvKOSC3vXqliwS0/K1eY7gnbvmrrr87Omkoj?=
- =?us-ascii?Q?Cfj9nwcteObMcT+AhlVWMXKXxpMYc7P16lPxwPbHe6BHFFhBgYuHLYwh7N2Y?=
- =?us-ascii?Q?cth8XqStP+cPNvuDSve+PY94zzbytaEEGSWLdh89nctXkx9UMS7Exf5iPBN3?=
- =?us-ascii?Q?fO5bIw0lmh4sZGfLdLr4MmBUrJLUP2pu0E1F7B1o0P+vdoePElQ6PDnwErqD?=
- =?us-ascii?Q?Rgj5ORX8zV/cSKTynMfefubidGHd0ao/1NA5ZWHX7n5W0bTzgIDsB8KQxyRb?=
- =?us-ascii?Q?L9GAGJhZ/QwYYKpVsI2RnnZqs6jw/LYYe0fjhE6y5jueyYdAJsVWpoEe9fSf?=
- =?us-ascii?Q?AL3iVciHzyIQiUQKaTNoo+P285TEZJuGhbWcafvLgvsAZeK2XERgx+9W7ddF?=
- =?us-ascii?Q?CJQyDT09NrrJwmzSZvc=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 20 Jun 2023 14:42:40 -0400
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31986DC;
+        Tue, 20 Jun 2023 11:42:39 -0700 (PDT)
+Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-77e457319a6so72913239f.1;
+        Tue, 20 Jun 2023 11:42:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687286558; x=1689878558;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sCtMr8ijFx2CrFh9ZGovTyfqeQbUmmEvN/2Rn9Z2qpQ=;
+        b=Is5zqw8te+z6zLolRfjtZeG56es4WN4izEWadogetXeF0tVUgOeDJpF35BxPDifggy
+         Yyc5Myj3wZ6UGsGeZEI/WT2Zq1EN1HkK5FiiGV8qw/TKeS7Hzhe8eARs9qpjIcsh8jEc
+         MNh30GO2KlTI6C/b21SzJT+I9XNyfvf2/doXtHEHxXitBfgB0NvhiMWLE6plE8Xf+9t6
+         BBnvTXDFWSiXHvx3cGI8TyIFTPghir3GuUnsL1kJUSjjrS1TJPUie5fOW4uvkDsr4ByV
+         rKonPPR05RYQ3QSL8mxxHVGBOQK63VjWNoKUQrTcjKAOx7/3vn1j9KsDH/Dct28GlArq
+         Hi5g==
+X-Gm-Message-State: AC+VfDzZ2tvwjZWPKh2+qNAK56NjqvUBfJUDtT9BtxTOogKeKgd/eikc
+        NNjrAirxxKeLhH8zB+PkAyjC+mvQDVK1uiD9yJrt9oei
+X-Google-Smtp-Source: ACHHUZ5UypJ0++pBV6Hqw8rqiWPP/lwWp2zQMiRMqtjM8mucthRU+AAM+/bTiYec3dtoQpaSXydIJ2YfK6X/YRv3cxA=
+X-Received: by 2002:a6b:fd07:0:b0:777:ce47:6c5a with SMTP id
+ c7-20020a6bfd07000000b00777ce476c5amr9165132ioi.21.1687286557979; Tue, 20 Jun
+ 2023 11:42:37 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6734.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61878690-0f31-402c-5f08-08db71b48053
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2023 17:33:46.3504
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: u1a0BEx7Ms6D8cbaQvL3AYv49ILGWzIVqN3TOPB0V8Wk3cpNVKKbXDPZFU1y9ZAcV6qlKCgoWScDnpUD9u6+vA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7579
-X-OriginatorOrg: intel.com
+References: <20230620132025.105563-1-wangrui@loongson.cn>
+In-Reply-To: <20230620132025.105563-1-wangrui@loongson.cn>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 20 Jun 2023 11:42:26 -0700
+Message-ID: <CAM9d7chjhFNjDMADJTTz5TNgCCuyPzy8VCDvZxw5K5girfWu1A@mail.gmail.com>
+Subject: Re: [PATCH] perf annotate: Fix instruction association and parsing
+ for LoongArch
+To:     WANG Rui <wangrui@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        loongarch@lists.linux.dev, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-> Reviewed-by: Steve Wahl <steve.wahl@hpe.com>
+Hello,
 
-Thanks, will add your RB to this patch in the next iteration.
+On Tue, Jun 20, 2023 at 6:21 AM WANG Rui <wangrui@loongson.cn> wrote:
+>
+> In the perf annotate view for LoongArch, there is no arrowed line
+> pointing to the target from the branch instruction. This issue is
+> caused by incorrect instruction association and parsing.
+>
+> $ perf record alloc-6276705c94ad1398 # rust benchmark
+> $ perf report
+>
+>   0.28 │       ori        $a1, $zero, 0x63
+>        │       move       $a2, $zero
+>  10.55 │       addi.d     $a3, $a2, 1(0x1)
+>        │       sltu       $a4, $a3, $s7
+>   9.53 │       masknez    $a4, $s7, $a4
+>        │       sub.d      $a3, $a3, $a4
+>  12.12 │       st.d       $a1, $fp, 24(0x18)
+>        │       st.d       $a3, $fp, 16(0x10)
+>  16.29 │       slli.d     $a2, $a2, 0x2
+>        │       ldx.w      $a2, $s8, $a2
+>  12.77 │       st.w       $a2, $sp, 724(0x2d4)
+>        │       st.w       $s0, $sp, 720(0x2d0)
+>   7.03 │       addi.d     $a2, $sp, 720(0x2d0)
+>        │       addi.d     $a1, $a1, -1(0xfff)
+>  12.03 │       move       $a2, $a3
+>        │     → bne        $a1, $s3, -52(0x3ffcc)  # 82ce8 <test::bench::Bencher::iter+0x3f4>
+>   2.50 │       addi.d     $a0, $a0, 1(0x1)
+>
+> This patch fixes instruction association issues, such as associating
+> branch instructions with jump_ops instead of call_ops, and corrects
+> false instruction matches. It also implements branch instruction parsing
+> specifically for LoongArch. With this patch, we will be able to see the
+> arrowed line.
+>
+>   0.79 │3ec:   ori        $a1, $zero, 0x63
+>        │       move       $a2, $zero
+>  10.32 │3f4:┌─→addi.d     $a3, $a2, 1(0x1)
+>        │    │  sltu       $a4, $a3, $s7
+>  10.44 │    │  masknez    $a4, $s7, $a4
+>        │    │  sub.d      $a3, $a3, $a4
+>  14.17 │    │  st.d       $a1, $fp, 24(0x18)
+>        │    │  st.d       $a3, $fp, 16(0x10)
+>  13.15 │    │  slli.d     $a2, $a2, 0x2
+>        │    │  ldx.w      $a2, $s8, $a2
+>  11.00 │    │  st.w       $a2, $sp, 724(0x2d4)
+>        │    │  st.w       $s0, $sp, 720(0x2d0)
+>   8.00 │    │  addi.d     $a2, $sp, 720(0x2d0)
+>        │    │  addi.d     $a1, $a1, -1(0xfff)
+>  11.99 │    │  move       $a2, $a3
+>        │    └──bne        $a1, $s3, 3f4
+>   3.17 │       addi.d     $a0, $a0, 1(0x1)
+>
+> Signed-off-by: WANG Rui <wangrui@loongson.cn>
 
-  Xin
+Just a nitpick.  Otherwise looks good.
+
+> ---
+>  .../arch/loongarch/annotate/instructions.c    | 116 ++++++++++++++++--
+>  tools/perf/arch/s390/annotate/instructions.c  |   3 -
+>  tools/perf/util/annotate.c                    |   8 +-
+>  3 files changed, 109 insertions(+), 18 deletions(-)
+>
+> diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
+> index ab21bf122135..98e19c5366ac 100644
+> --- a/tools/perf/arch/loongarch/annotate/instructions.c
+> +++ b/tools/perf/arch/loongarch/annotate/instructions.c
+> @@ -5,25 +5,115 @@
+>   * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+>   */
+>
+> +static int loongarch_call__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms)
+> +{
+> +       char *c, *endptr, *tok, *name;
+> +       struct map *map = ms->map;
+> +       struct addr_map_symbol target = {
+> +               .ms = { .map = map, },
+
+Looking here...
+
+> +       };
+> +
+> +       c = strchr(ops->raw, '#');
+> +       if (c++ == NULL)
+> +               return -1;
+> +
+> +       ops->target.addr = strtoull(c, &endptr, 16);
+> +
+> +       name = strchr(endptr, '<');
+> +       name++;
+> +
+> +       if (arch->objdump.skip_functions_char &&
+> +           strchr(name, arch->objdump.skip_functions_char))
+> +               return -1;
+> +
+> +       tok = strchr(name, '>');
+> +       if (tok == NULL)
+> +               return -1;
+> +
+> +       *tok = '\0';
+> +       ops->target.name = strdup(name);
+> +       *tok = '>';
+> +
+> +       if (ops->target.name == NULL)
+> +               return -1;
+> +
+> +       target.addr = map__objdump_2mem(map, ops->target.addr);
+> +
+> +       if (maps__find_ams(ms->maps, &target) == 0 &&
+> +           map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
+
+So the target.ms.map is 'map', right?  Then we can reduce the line.
+
+
+> +               ops->target.sym = target.ms.sym;
+> +
+> +       return 0;
+> +}
+> +
+> +static struct ins_ops loongarch_call_ops = {
+> +       .parse     = loongarch_call__parse,
+> +       .scnprintf = call__scnprintf,
+> +};
+> +
+> +static int loongarch_jump__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms)
+> +{
+> +       struct map *map = ms->map;
+> +       struct symbol *sym = ms->sym;
+> +       struct addr_map_symbol target = {
+> +               .ms = { .map = map, },
+> +       };
+> +       const char *c = strchr(ops->raw, '#');
+> +       u64 start, end;
+> +
+> +       ops->raw_comment = strchr(ops->raw, arch->objdump.comment_char);
+> +       ops->raw_func_start = strchr(ops->raw, '<');
+> +
+> +       if (ops->raw_func_start && c > ops->raw_func_start)
+> +               c = NULL;
+> +
+> +       if (c++ != NULL)
+> +               ops->target.addr = strtoull(c, NULL, 16);
+> +       else
+> +               ops->target.addr = strtoull(ops->raw, NULL, 16);
+> +
+> +       target.addr = map__objdump_2mem(map, ops->target.addr);
+> +       start = map__unmap_ip(map, sym->start);
+> +       end = map__unmap_ip(map, sym->end);
+> +
+> +       ops->target.outside = target.addr < start || target.addr > end;
+> +
+> +       if (maps__find_ams(ms->maps, &target) == 0 &&
+> +           map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
+
+Ditto.
+
+Thanks,
+Namhyung
+
+
+> +               ops->target.sym = target.ms.sym;
+> +
+> +       if (!ops->target.outside) {
+> +               ops->target.offset = target.addr - start;
+> +               ops->target.offset_avail = true;
+> +       } else {
+> +               ops->target.offset_avail = false;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static struct ins_ops loongarch_jump_ops = {
+> +       .parse     = loongarch_jump__parse,
+> +       .scnprintf = jump__scnprintf,
+> +};
+> +
+>  static
+>  struct ins_ops *loongarch__associate_ins_ops(struct arch *arch, const char *name)
+>  {
+>         struct ins_ops *ops = NULL;
+>
+> -       if (!strncmp(name, "beqz", 4) ||
+> -           !strncmp(name, "bnez", 4) ||
+> -           !strncmp(name, "beq", 3) ||
+> -           !strncmp(name, "bne", 3) ||
+> -           !strncmp(name, "blt", 3) ||
+> -           !strncmp(name, "bge", 3) ||
+> -           !strncmp(name, "bltu", 4) ||
+> -           !strncmp(name, "bgeu", 4) ||
+> -           !strncmp(name, "bl", 2))
+> -               ops = &call_ops;
+> -       else if (!strncmp(name, "jirl", 4))
+> +       if (!strcmp(name, "bl"))
+> +               ops = &loongarch_call_ops;
+> +       else if (!strcmp(name, "jirl"))
+>                 ops = &ret_ops;
+> -       else if (name[0] == 'b')
+> -               ops = &jump_ops;
+> +       else if (!strcmp(name, "b") ||
+> +                !strncmp(name, "beq", 3) ||
+> +                !strncmp(name, "bne", 3) ||
+> +                !strncmp(name, "blt", 3) ||
+> +                !strncmp(name, "bge", 3) ||
+> +                !strncmp(name, "bltu", 4) ||
+> +                !strncmp(name, "bgeu", 4))
+> +               ops = &loongarch_jump_ops;
+>         else
+>                 return NULL;
+>
+> diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+> index de925b0e35ce..da5aa3e1f04c 100644
+> --- a/tools/perf/arch/s390/annotate/instructions.c
+> +++ b/tools/perf/arch/s390/annotate/instructions.c
+> @@ -45,9 +45,6 @@ static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
+>         return 0;
+>  }
+>
+> -static int call__scnprintf(struct ins *ins, char *bf, size_t size,
+> -                          struct ins_operands *ops, int max_ins_name);
+> -
+>  static struct ins_ops s390_call_ops = {
+>         .parse     = s390_call__parse,
+>         .scnprintf = call__scnprintf,
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index cdd1924a4418..ad40adbd8895 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -61,6 +61,10 @@ static regex_t        file_lineno;
+>  static struct ins_ops *ins__find(struct arch *arch, const char *name);
+>  static void ins__sort(struct arch *arch);
+>  static int disasm_line__parse(char *line, const char **namep, char **rawp);
+> +static int call__scnprintf(struct ins *ins, char *bf, size_t size,
+> +                         struct ins_operands *ops, int max_ins_name);
+> +static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
+> +                         struct ins_operands *ops, int max_ins_name);
+>
+>  struct arch {
+>         const char      *name;
+> @@ -323,7 +327,7 @@ static struct ins_ops call_ops = {
+>
+>  bool ins__is_call(const struct ins *ins)
+>  {
+> -       return ins->ops == &call_ops || ins->ops == &s390_call_ops;
+> +       return ins->ops == &call_ops || ins->ops == &s390_call_ops || ins->ops == &loongarch_call_ops;
+>  }
+>
+>  /*
+> @@ -464,7 +468,7 @@ static struct ins_ops jump_ops = {
+>
+>  bool ins__is_jump(const struct ins *ins)
+>  {
+> -       return ins->ops == &jump_ops;
+> +       return ins->ops == &jump_ops || ins->ops == &loongarch_jump_ops;
+>  }
+>
+>  static int comment__symbol(char *raw, char *comment, u64 *addrp, char **namep)
+> --
+> 2.41.0
+>
