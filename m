@@ -2,94 +2,91 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23390EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 22:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAD6EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 22:50:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbjFTWmk convert rfc822-to-8bit (ORCPT
+        id S229556AbjFTWuk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 18:42:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45782 "EHLO
+        Tue, 20 Jun 2023 18:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbjFTWmj (ORCPT
+        with ESMTP id S229538AbjFTWuj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 18:42:39 -0400
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C918E10F1;
-        Tue, 20 Jun 2023 15:42:38 -0700 (PDT)
-Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-77e2f2ad553so186846539f.2;
-        Tue, 20 Jun 2023 15:42:38 -0700 (PDT)
+        Tue, 20 Jun 2023 18:50:39 -0400
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30CDD10F1;
+        Tue, 20 Jun 2023 15:50:39 -0700 (PDT)
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-77e3ba2fbbfso127793539f.1;
+        Tue, 20 Jun 2023 15:50:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687300958; x=1689892958;
+        d=1e100.net; s=20221208; t=1687301438; x=1689893438;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4H5CggCHHSoUjV0wAgcwF61+kh3EMGwOfr9WqhDgAN8=;
-        b=jXJB3fMXET2zf6FgYvvZXi8Fa3/AHMg1TY17V3PFihX3EkuwSiLnnzl8ZW2uSVDCc9
-         4wmpitQs9jFBP3bAfGIzDshWLl4CX1rMFTdlzXuwO6CG6/XsdCU2DVPjdmCq0gcszg7r
-         3QYY01IRfz/3Bf+CKoDBFb38DWWfZTK2aLYKXaGN8Q6QmnOZhLimUdEV2VB9EyXfJr81
-         YI4yqaljMpUUv6pyybGdkd9NmwzO83mjV30XJTjnW3SF3Nk116s0/7Rh8WfBul7L0RKL
-         3sWAcmXB6Cd3JE3Wjk666IVPEDkEPo0QDlBquYimh1c09y3C7VsQKkvLmNxmejscB7Of
-         5jSQ==
-X-Gm-Message-State: AC+VfDwf+qO+L1jKwJG8U6EhjiU6wZ3eNEG84kW9uXUKozvJMUyPqQsB
-        kmsVOneLGGBacrqOx+JAlNZya4jQf5cEXxTaRjE=
-X-Google-Smtp-Source: ACHHUZ7NR3d1W0rG8kIMdNaawU+eMWi73gH5JrW5qsaJ96o9I8k0237Wfjudf9f5N0nkQ7bpp64Pggw3rnfudF+p02g=
-X-Received: by 2002:a5e:c012:0:b0:77a:c741:b73d with SMTP id
- u18-20020a5ec012000000b0077ac741b73dmr14703953iol.3.1687300958019; Tue, 20
- Jun 2023 15:42:38 -0700 (PDT)
+        bh=lmW8lXIaP8PwEo3dSA48LLiV2xfz+uHaKuQPPpRKTPE=;
+        b=ZZ7H8LAS7uaOB0/TtE6kHnwZfDKDmk9TTGCj9C57dCyzAcl8E44HFXSacFfsF2OXWr
+         EeDRWwyFH5R6+mVro9ON5cKU9TiS4K4g7wKmcnR7bF+Dijtamf0C7sFY3e456amEPC37
+         W9EJ785nXeCSj22iY8Si7is2ilmOnMbp8+DCvGCcEAeb+pSitK0B9LRTicuQHvFDSV2V
+         gq4/8UXn09QXLXCYFKk401lZNVBxbrusIPN9ToFAjRSjpAWWS8illp7tHZf9N+boUYk3
+         Y0JGsaQ0JBCTEUI8UfrvoJTa2t87Hm/Fo4pWgkPT6YiqVKCIdxO1o87UGUZcCni7tVKh
+         2rYw==
+X-Gm-Message-State: AC+VfDwcJZlhJTFrcA2MBpG7u3knp9WrNGXPlwY8ym5fEcp7yztF+8Cl
+        gXepKBiqaVfTzRnouHGJt7SDsSHzVPhcvI9pp8/0vjyU
+X-Google-Smtp-Source: ACHHUZ4anAk43NhBtl2TgAB7Q2c6dBrGPEX3igWbtzYnc3AywzQ8UqLeAW1Sul2ClLHi+Uo1Zbo8C1niYk4voog61N4=
+X-Received: by 2002:a5e:db05:0:b0:778:82d1:39a3 with SMTP id
+ q5-20020a5edb05000000b0077882d139a3mr12741055iop.13.1687301438410; Tue, 20
+ Jun 2023 15:50:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230619082036.410-1-lidong@vivo.com> <CAM9d7chHMH-uJryUVBYZ6emrGLVH8Huc5frDz4YqG7TU29G-6A@mail.gmail.com>
- <CA+JHD93f_c8OJf4Kg68C_Xo=_rcO669G0QJ_mjL78upLmUwfoA@mail.gmail.com>
-In-Reply-To: <CA+JHD93f_c8OJf4Kg68C_Xo=_rcO669G0QJ_mjL78upLmUwfoA@mail.gmail.com>
+References: <20230614080937.54937-1-luojianhong@cdjrlc.com> <2c733a91717eae93119ba2226420fd8f@208suo.com>
+In-Reply-To: <2c733a91717eae93119ba2226420fd8f@208suo.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 20 Jun 2023 15:42:26 -0700
-Message-ID: <CAM9d7cj-t-jko=7mBb_dLrXFCC7s03W0Jz7jrO4nZkWZKeJAAA@mail.gmail.com>
-Subject: Re: [PATCH] tools: Fix incorrect calculation of object size by sizeof
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Li Dong <lidong@vivo.com>, Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-perf-users@vger.kernel.org>,
-        "open list:PERFORMANCE EVENTS SUBSYSTEM" 
-        <linux-kernel@vger.kernel.org>, opensource.kernel@vivo.com
+Date:   Tue, 20 Jun 2023 15:50:26 -0700
+Message-ID: <CAM9d7chMMQcnV+hTwyEDbcQrO0ELtQTnhQ5bZptF6g_k+m0mAg@mail.gmail.com>
+Subject: Re: [PATCH] perf parse-events: Remove unneeded semicolon
+To:     baomingtong001@208suo.com
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Arnaldo,
+Hello,
 
-On Tue, Jun 20, 2023 at 3:06 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
+On Wed, Jun 14, 2023 at 1:13 AM <baomingtong001@208suo.com> wrote:
 >
+> ./tools/perf/util/parse-events.c:1466:2-3: Unneeded semicolon
 >
+> Signed-off-by: Mingtong Bao <baomingtong001@208suo.com>
+> ---
+>   tools/perf/util/parse-events.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> On Tue, Jun 20, 2023, 3:19 PM Namhyung Kim <namhyung@kernel.org> wrote:
->>
->> Hello,
->>
->> On Mon, Jun 19, 2023 at 1:21 AM Li Dong <lidong@vivo.com> wrote:
->> >
->> > What we need to calculate is the size of the object, not the size of the
->> > pointer.
->> >
->> > Signed-off-by: Li Dong <lidong@vivo.com>
->>
->> Since this problem was introduced in the current dev cycle and not in the
->> mainline yet, I think we can skip the Fixes tag.
->>
->> Acked-by: Namhyung Kim <namhyung@kernel.org>
->
->
-> I think we should have it anyway, if not for the stable guys to pick it up, for documentation sake :-)
+> diff --git a/tools/perf/util/parse-events.c
+> b/tools/perf/util/parse-events.c
+> index 629f7bd9fd59..42f84f61fabc 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1463,7 +1463,7 @@ static int __parse_events_add_numeric(struct
+> parse_events_state *parse_state,
+>       if (extended_type && (type == PERF_TYPE_HARDWARE || type ==
+> PERF_TYPE_HW_CACHE)) {
 
-Ok, I'll add that.  Thanks for the reply while on your vacation. :)
+The format is broken, please fix your mail client not fix wrap long lines.
+This time I fixed it manually, but you need to update your config.
 
 Thanks,
 Namhyung
+
+
+>           assert(perf_pmus__supports_extended_type());
+>           attr.config |= (u64)extended_type << PERF_PMU_TYPE_SHIFT;
+> -    };
+> +    }
+>
+>       if (head_config) {
+>           if (config_attr(&attr, head_config, parse_state->error,
