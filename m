@@ -2,135 +2,305 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3511CC0015E
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 12:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E5D4EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 13:23:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232115AbjFTM7X (ORCPT
+        id S232982AbjFTNXf (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 08:59:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40500 "EHLO
+        Tue, 20 Jun 2023 09:23:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231211AbjFTM7W (ORCPT
+        with ESMTP id S232912AbjFTNXV (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 08:59:22 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAF2810FF;
-        Tue, 20 Jun 2023 05:59:20 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-7624e8ceef7so346133885a.2;
-        Tue, 20 Jun 2023 05:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687265960; x=1689857960;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4RvNVFujZzQ9FH/nRDQhxgK8HOnuVe0ilksjI7/FigQ=;
-        b=V7CBqsvwa7HO9941Gx9rU48fbSNnkTARJq3hU0s4FJKqNq7uyQJvuWMi48BFYirjd9
-         Z+CSYTenkWtjPExrbuK55Lr4LajYIvMVcZS1i2H4hkmnnVf92/3eU5+256AdSIU7TTh1
-         xwVepNxy0+wSCXEIn2FLnq5fwolgWObqyrXGJD4a4dArZIDrRTCCQbOXeliLMdRNukOE
-         bfBqEL3D5v18ty2Fda4DTUDINVko/+/f9bRuKWlc9As/MXSXKCsqRSAvjLHgGSN+PYBz
-         OhKP930iRzIK8HICV0ZdtEG/GKM89Wb5av0m6K808diQPwrVMMP/ZUSrK2PjzRbzzuKs
-         Xiqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687265960; x=1689857960;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4RvNVFujZzQ9FH/nRDQhxgK8HOnuVe0ilksjI7/FigQ=;
-        b=TXgc61V4R/4/uHY2QZsPXgAX2Rf37It/aP8tEzZXkexa1Utxq2r8RE3sBLePmzTuoD
-         Dg/24MZVRUWEeB9qLSuWh9TxnBk3C9xAbLBjodnoCNHP4jSZs14NOCFeN5e5O5/OJJyU
-         9GE1yCOApc5CfQJxBmFnXVMD61xCjgHWd9RJT1do3WkwFPH0npMZTU3gKqWofrJdDGgu
-         qXndaATjAJrGxzyM2onxl5nsbdIT81r60FXCvnzC0rq/1EPneitwbOnIpJbj3rrubQw5
-         xJcJHr54Exltplonli1SVVhaeuevVfouQJAGylb1lVkNVADLArf5jY1csDryORRiJq3/
-         w1pg==
-X-Gm-Message-State: AC+VfDw+AvcpB+kzcrU2tO8dary8v4OzIEJ2EVlGXjUryXMHJcwWKhEV
-        ljMDIV+uw0uRJ28AUUbBK2o=
-X-Google-Smtp-Source: ACHHUZ5DO7ilI0HCjRl4Lbeq4UH3F7W+AS3gn0PcL1py6Hb93MUCpM1EgmXOFtEL5TVj5cEqHyVw6w==
-X-Received: by 2002:a05:6214:1306:b0:628:2e08:78b7 with SMTP id pn6-20020a056214130600b006282e0878b7mr5517848qvb.31.1687265959785;
-        Tue, 20 Jun 2023 05:59:19 -0700 (PDT)
-Received: from localhost (172.174.245.35.bc.googleusercontent.com. [35.245.174.172])
-        by smtp.gmail.com with ESMTPSA id m17-20020a0cf191000000b00631ecb1052esm1216204qvl.74.2023.06.20.05.59.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 05:59:19 -0700 (PDT)
-Date:   Tue, 20 Jun 2023 08:59:18 -0400
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To:     David Howells <dhowells@redhat.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     dhowells@redhat.com, netdev@vger.kernel.org,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        David Ahern <dsahern@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        dccp@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-x25@vger.kernel.org,
-        mptcp@lists.linux.dev, rds-devel@oss.oracle.com,
-        tipc-discussion@lists.sourceforge.net,
-        virtualization@lists.linux-foundation.org
-Message-ID: <6491a2a6f1488_3bcfec294d7@willemb.c.googlers.com.notmuch>
-In-Reply-To: <784658.1687176327@warthog.procyon.org.uk>
-References: <648f36d02fe6e_33cfbc2944f@willemb.c.googlers.com.notmuch>
- <20230617121146.716077-1-dhowells@redhat.com>
- <20230617121146.716077-18-dhowells@redhat.com>
- <784658.1687176327@warthog.procyon.org.uk>
-Subject: Re: [PATCH net-next v2 17/17] net: Kill MSG_SENDPAGE_NOTLAST
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+        Tue, 20 Jun 2023 09:23:21 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 320A82122;
+        Tue, 20 Jun 2023 06:22:34 -0700 (PDT)
+Received: from loongson.cn (unknown [117.81.87.34])
+        by gateway (Coremail) with SMTP id _____8Ax3erKp5Fk7TcHAA--.14748S3;
+        Tue, 20 Jun 2023 21:21:14 +0800 (CST)
+Received: from localhost.localdomain (unknown [117.81.87.34])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxB93Dp5FkawgAAA--.139S2;
+        Tue, 20 Jun 2023 21:21:12 +0800 (CST)
+From:   WANG Rui <wangrui@loongson.cn>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Huacai Chen <chenhuacai@loongson.cn>
+Cc:     loongarch@lists.linux.dev, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn, WANG Rui <wangrui@loongson.cn>
+Subject: [PATCH] perf annotate: Fix instruction association and parsing for LoongArch
+Date:   Tue, 20 Jun 2023 21:20:25 +0800
+Message-ID: <20230620132025.105563-1-wangrui@loongson.cn>
+X-Mailer: git-send-email 2.41.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8BxB93Dp5FkawgAAA--.139S2
+X-CM-SenderInfo: pzdqw2txl6z05rqj20fqof0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxtFyxAw45JF45Cw4DAry8CrX_yoW3XF1rpa
+        y7Z345Jr4rXrWru3ZrtF4j9w13Grs3GrWqqayrtasaya1Iqryxt3W8JFWayFyrG345Wr4j
+        qFnYvr1jkF4UJabCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+        Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+        Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwI
+        xGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
+        JVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
+        vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
+        x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
+        xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
+        wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j0mhrUUUUU=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-David Howells wrote:
-> Willem de Bruijn <willemdebruijn.kernel@gmail.com> wrote:
-> 
-> > Is it intentional to add MSG_MORE here in this patch?
-> > 
-> > I do see that patch 3 removes this branch:
-> 
-> Yeah.  I think I may have tcp_bpf a bit wrong with regard to handling
-> MSG_MORE.
-> 
-> How about the attached version of tcp_bpf_push()?
-> 
-> I wonder if it's save to move the setting of MSG_SENDPAGE_NOPOLICY out of the
-> loop as I've done here.  The caller holds the socket lock.
-> 
-> Also, I'm not sure whether to take account of apply/apply_bytes when setting
-> MSG_MORE mid-message, or whether to just go on whether we've reached
-> sge->length yet.  (I'm not sure exactly how tcp_bpf works).
+In the perf annotate view for LoongArch, there is no arrowed line
+pointing to the target from the branch instruction. This issue is
+caused by incorrect instruction association and parsing.
 
-I'm not very familiar with it either.
+$ perf record alloc-6276705c94ad1398 # rust benchmark
+$ perf report
 
-Instead of inferring whether MSG_MORE is safe to set, as below, sufficient to
-rely on the caller to pass it when appropriate?
+  0.28 │       ori        $a1, $zero, 0x63
+       │       move       $a2, $zero
+ 10.55 │       addi.d     $a3, $a2, 1(0x1)
+       │       sltu       $a4, $a3, $s7
+  9.53 │       masknez    $a4, $s7, $a4
+       │       sub.d      $a3, $a3, $a4
+ 12.12 │       st.d       $a1, $fp, 24(0x18)
+       │       st.d       $a3, $fp, 16(0x10)
+ 16.29 │       slli.d     $a2, $a2, 0x2
+       │       ldx.w      $a2, $s8, $a2
+ 12.77 │       st.w       $a2, $sp, 724(0x2d4)
+       │       st.w       $s0, $sp, 720(0x2d0)
+  7.03 │       addi.d     $a2, $sp, 720(0x2d0)
+       │       addi.d     $a1, $a1, -1(0xfff)
+ 12.03 │       move       $a2, $a3
+       │     → bne        $a1, $s3, -52(0x3ffcc)  # 82ce8 <test::bench::Bencher::iter+0x3f4>
+  2.50 │       addi.d     $a0, $a0, 1(0x1)
 
-size = min(apply_bytes, sge->length). I doubt that size < apply_bytes is
-ever intended.
+This patch fixes instruction association issues, such as associating
+branch instructions with jump_ops instead of call_ops, and corrects
+false instruction matches. It also implements branch instruction parsing
+specifically for LoongArch. With this patch, we will be able to see the
+arrowed line.
 
-And instead of this former branch
+  0.79 │3ec:   ori        $a1, $zero, 0x63
+       │       move       $a2, $zero
+ 10.32 │3f4:┌─→addi.d     $a3, $a2, 1(0x1)
+       │    │  sltu       $a4, $a3, $s7
+ 10.44 │    │  masknez    $a4, $s7, $a4
+       │    │  sub.d      $a3, $a3, $a4
+ 14.17 │    │  st.d       $a1, $fp, 24(0x18)
+       │    │  st.d       $a3, $fp, 16(0x10)
+ 13.15 │    │  slli.d     $a2, $a2, 0x2
+       │    │  ldx.w      $a2, $s8, $a2
+ 11.00 │    │  st.w       $a2, $sp, 724(0x2d4)
+       │    │  st.w       $s0, $sp, 720(0x2d0)
+  8.00 │    │  addi.d     $a2, $sp, 720(0x2d0)
+       │    │  addi.d     $a1, $a1, -1(0xfff)
+ 11.99 │    │  move       $a2, $a3
+       │    └──bne        $a1, $s3, 3f4
+  3.17 │       addi.d     $a0, $a0, 1(0x1)
 
-                if (flags & MSG_SENDPAGE_NOTLAST)
-                        msghdr.msg_flags |= MSG_MORE;
+Signed-off-by: WANG Rui <wangrui@loongson.cn>
+---
+ .../arch/loongarch/annotate/instructions.c    | 116 ++++++++++++++++--
+ tools/perf/arch/s390/annotate/instructions.c  |   3 -
+ tools/perf/util/annotate.c                    |   8 +-
+ 3 files changed, 109 insertions(+), 18 deletions(-)
 
-update any caller to pass MSG_MORE instead of MSG_SENDPAGE_NOTLAST, if not yet
-done so.
+diff --git a/tools/perf/arch/loongarch/annotate/instructions.c b/tools/perf/arch/loongarch/annotate/instructions.c
+index ab21bf122135..98e19c5366ac 100644
+--- a/tools/perf/arch/loongarch/annotate/instructions.c
++++ b/tools/perf/arch/loongarch/annotate/instructions.c
+@@ -5,25 +5,115 @@
+  * Copyright (C) 2020-2023 Loongson Technology Corporation Limited
+  */
+ 
++static int loongarch_call__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms)
++{
++	char *c, *endptr, *tok, *name;
++	struct map *map = ms->map;
++	struct addr_map_symbol target = {
++		.ms = { .map = map, },
++	};
++
++	c = strchr(ops->raw, '#');
++	if (c++ == NULL)
++		return -1;
++
++	ops->target.addr = strtoull(c, &endptr, 16);
++
++	name = strchr(endptr, '<');
++	name++;
++
++	if (arch->objdump.skip_functions_char &&
++	    strchr(name, arch->objdump.skip_functions_char))
++		return -1;
++
++	tok = strchr(name, '>');
++	if (tok == NULL)
++		return -1;
++
++	*tok = '\0';
++	ops->target.name = strdup(name);
++	*tok = '>';
++
++	if (ops->target.name == NULL)
++		return -1;
++
++	target.addr = map__objdump_2mem(map, ops->target.addr);
++
++	if (maps__find_ams(ms->maps, &target) == 0 &&
++	    map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
++		ops->target.sym = target.ms.sym;
++
++	return 0;
++}
++
++static struct ins_ops loongarch_call_ops = {
++	.parse	   = loongarch_call__parse,
++	.scnprintf = call__scnprintf,
++};
++
++static int loongarch_jump__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms)
++{
++	struct map *map = ms->map;
++	struct symbol *sym = ms->sym;
++	struct addr_map_symbol target = {
++		.ms = { .map = map, },
++	};
++	const char *c = strchr(ops->raw, '#');
++	u64 start, end;
++
++	ops->raw_comment = strchr(ops->raw, arch->objdump.comment_char);
++	ops->raw_func_start = strchr(ops->raw, '<');
++
++	if (ops->raw_func_start && c > ops->raw_func_start)
++		c = NULL;
++
++	if (c++ != NULL)
++		ops->target.addr = strtoull(c, NULL, 16);
++	else
++		ops->target.addr = strtoull(ops->raw, NULL, 16);
++
++	target.addr = map__objdump_2mem(map, ops->target.addr);
++	start = map__unmap_ip(map, sym->start);
++	end = map__unmap_ip(map, sym->end);
++
++	ops->target.outside = target.addr < start || target.addr > end;
++
++	if (maps__find_ams(ms->maps, &target) == 0 &&
++	    map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
++		ops->target.sym = target.ms.sym;
++
++	if (!ops->target.outside) {
++		ops->target.offset = target.addr - start;
++		ops->target.offset_avail = true;
++	} else {
++		ops->target.offset_avail = false;
++	}
++
++	return 0;
++}
++
++static struct ins_ops loongarch_jump_ops = {
++	.parse	   = loongarch_jump__parse,
++	.scnprintf = jump__scnprintf,
++};
++
+ static
+ struct ins_ops *loongarch__associate_ins_ops(struct arch *arch, const char *name)
+ {
+ 	struct ins_ops *ops = NULL;
+ 
+-	if (!strncmp(name, "beqz", 4) ||
+-	    !strncmp(name, "bnez", 4) ||
+-	    !strncmp(name, "beq", 3) ||
+-	    !strncmp(name, "bne", 3) ||
+-	    !strncmp(name, "blt", 3) ||
+-	    !strncmp(name, "bge", 3) ||
+-	    !strncmp(name, "bltu", 4) ||
+-	    !strncmp(name, "bgeu", 4) ||
+-	    !strncmp(name, "bl", 2))
+-		ops = &call_ops;
+-	else if (!strncmp(name, "jirl", 4))
++	if (!strcmp(name, "bl"))
++		ops = &loongarch_call_ops;
++	else if (!strcmp(name, "jirl"))
+ 		ops = &ret_ops;
+-	else if (name[0] == 'b')
+-		ops = &jump_ops;
++	else if (!strcmp(name, "b") ||
++		 !strncmp(name, "beq", 3) ||
++		 !strncmp(name, "bne", 3) ||
++		 !strncmp(name, "blt", 3) ||
++		 !strncmp(name, "bge", 3) ||
++		 !strncmp(name, "bltu", 4) ||
++		 !strncmp(name, "bgeu", 4))
++		ops = &loongarch_jump_ops;
+ 	else
+ 		return NULL;
+ 
+diff --git a/tools/perf/arch/s390/annotate/instructions.c b/tools/perf/arch/s390/annotate/instructions.c
+index de925b0e35ce..da5aa3e1f04c 100644
+--- a/tools/perf/arch/s390/annotate/instructions.c
++++ b/tools/perf/arch/s390/annotate/instructions.c
+@@ -45,9 +45,6 @@ static int s390_call__parse(struct arch *arch, struct ins_operands *ops,
+ 	return 0;
+ }
+ 
+-static int call__scnprintf(struct ins *ins, char *bf, size_t size,
+-			   struct ins_operands *ops, int max_ins_name);
+-
+ static struct ins_ops s390_call_ops = {
+ 	.parse	   = s390_call__parse,
+ 	.scnprintf = call__scnprintf,
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index cdd1924a4418..ad40adbd8895 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -61,6 +61,10 @@ static regex_t	 file_lineno;
+ static struct ins_ops *ins__find(struct arch *arch, const char *name);
+ static void ins__sort(struct arch *arch);
+ static int disasm_line__parse(char *line, const char **namep, char **rawp);
++static int call__scnprintf(struct ins *ins, char *bf, size_t size,
++			  struct ins_operands *ops, int max_ins_name);
++static int jump__scnprintf(struct ins *ins, char *bf, size_t size,
++			  struct ins_operands *ops, int max_ins_name);
+ 
+ struct arch {
+ 	const char	*name;
+@@ -323,7 +327,7 @@ static struct ins_ops call_ops = {
+ 
+ bool ins__is_call(const struct ins *ins)
+ {
+-	return ins->ops == &call_ops || ins->ops == &s390_call_ops;
++	return ins->ops == &call_ops || ins->ops == &s390_call_ops || ins->ops == &loongarch_call_ops;
+ }
+ 
+ /*
+@@ -464,7 +468,7 @@ static struct ins_ops jump_ops = {
+ 
+ bool ins__is_jump(const struct ins *ins)
+ {
+-	return ins->ops == &jump_ops;
++	return ins->ops == &jump_ops || ins->ops == &loongarch_jump_ops;
+ }
+ 
+ static int comment__symbol(char *raw, char *comment, u64 *addrp, char **namep)
+-- 
+2.41.0
 
-> 		msghdr.msg_flags = flags;
-> 
-> 		/* Determine if we need to set MSG_MORE. */
-> 		if (!(msghdr.msg_flags & MSG_MORE)) {
-> 			if (apply && size < apply_bytes)
-> 				msghdr.msg_flags |= MSG_MORE;
-> 			else if (!apply && size < sge->length &&
-> 				 msg->sg.start != msg->sg.end)
-> 				msghdr.msg_flags |= MSG_MORE;
-> 		}
