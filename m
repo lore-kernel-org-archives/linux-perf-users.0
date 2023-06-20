@@ -2,131 +2,147 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBF6EB64DB
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 20:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8493CEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 20:32:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbjFTUTI (ORCPT
+        id S229650AbjFTUcn convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 16:19:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
+        Tue, 20 Jun 2023 16:32:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230269AbjFTUSo (ORCPT
+        with ESMTP id S229478AbjFTUcm (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 16:18:44 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2742C1BE2;
-        Tue, 20 Jun 2023 13:18:24 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-25e8545ea28so3967855a91.0;
-        Tue, 20 Jun 2023 13:18:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687292303; x=1689884303;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7i2JmSY9J3aXJvNYPDUup2Ul0DqDLcLtP/gbsQnodQE=;
-        b=W8W+BdRt47e/1zKvDQJQnbDBHt7693qHLovnUIQ4uE5CXmd9dMCfnD2MGkzow/fKZB
-         oX826Ny5CGbeXF7gc3uzhRp6pX+oi6bdQV+8+Tc67ZQIXRHBunU+rxV9uf7n7rdGnoi3
-         pine2IzdUCi28NsDa+D1A0HeMv5EtmmGzCcdrH69IiyU58mOGhQntPVmOFuV4Dwh082I
-         XXEoNlyXPNrIfs/d842vRHoCEMeoLhbJaPAUciK+hIZF3ZcihjdrswIHe/QKSihZzVvJ
-         3MAxxBrr66S3SmDW3ifM25R53thQ4Y+Zhhjbe3x7ftfBIN3loCKIEYC080Fd0+Vz9v/a
-         NnWA==
+        Tue, 20 Jun 2023 16:32:42 -0400
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B45CF1;
+        Tue, 20 Jun 2023 13:32:42 -0700 (PDT)
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-77e357f8faeso135969639f.3;
+        Tue, 20 Jun 2023 13:32:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687292303; x=1689884303;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=7i2JmSY9J3aXJvNYPDUup2Ul0DqDLcLtP/gbsQnodQE=;
-        b=Bt8B27D5PoUsSNaBZzBklVXUP30kVfoMesUHXiOIUo8Ninb+oxRgP2SxqAfUe7gxkV
-         2vnNTt4sBx+hHYISoDsJ9491bL4dZSjDSZtEb7UNQ7TY5U9Wt47yIbqSYrj0SuHnyA6o
-         d1WsGmgSB67vM2jjMOHdCmqgoK3JDIwUz7OeveEgUKeiNihcBcFSDuMc83oGAc49Enal
-         uPTh+HgsVbtw+0x5/AsHtzlNWqkAVAwGIuQ0YrOG7bTiCoe3u9Wg80Vtf8T9f3Pnkkf7
-         8JW0HXL8G+gdOd5lrjAe8OSEHFwlecw9LHQevpjUD+4DiKU5dOeTXW8CiI1Q1CnlJ0qL
-         xunA==
-X-Gm-Message-State: AC+VfDzSjnwCBz1S/fmMcQDCGfZP8gUN2zI6DIbFRXeuguesND24idLr
-        xACXaUDKSjB8XkFxgrVWfrO3d7Z6bSg=
-X-Google-Smtp-Source: ACHHUZ4ZhJTLvcJ3h8h4oNTVB5V4MUma8P4fNHtwJNoPl0Mu/nkXDWfVFvNfLys/9A92/L8b89D22A==
-X-Received: by 2002:a17:90a:35b:b0:259:bf40:b571 with SMTP id 27-20020a17090a035b00b00259bf40b571mr13450471pjf.45.1687292303485;
-        Tue, 20 Jun 2023 13:18:23 -0700 (PDT)
-Received: from bangji.hsd1.ca.comcast.net ([2601:647:6700:7f00:2824:dc1c:af73:dbd8])
-        by smtp.gmail.com with ESMTPSA id 27-20020a17090a01db00b0025c23bb7fdasm8191774pjd.16.2023.06.20.13.18.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 13:18:23 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Cc:     Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 3/3] perf machine: Include data symbols in the kernel map
-Date:   Tue, 20 Jun 2023 13:18:18 -0700
-Message-ID: <20230620201818.1670753-3-namhyung@kernel.org>
-X-Mailer: git-send-email 2.41.0.185.g7c58973941-goog
-In-Reply-To: <20230620201818.1670753-1-namhyung@kernel.org>
-References: <20230620201818.1670753-1-namhyung@kernel.org>
+        d=1e100.net; s=20221208; t=1687293161; x=1689885161;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wClhCQSLHlxJ7x+g/i0PKTHL3zUR+fkbCyijRsJiFko=;
+        b=NoojAPysl/2kNz37HmtNkdcRJerSffJsUYJUDrB9DlG5Ir9ESDyLr/3T+JSCEwAom7
+         WdZgjJFhdIKtcuQO9xkLt+afqUo6JISJ8AcK61lCz3ybPQg3bkQMR/+bgXSRTBRhYtHD
+         S+lO6Fc/6nVKtDhRTWBL6byqn+OFjkD+JIzLAwL+lf3c/d6MZZRnelZNiHgP0GsAJ4P6
+         scce7TahZHTWiXkuo4JAJ0sz+kOdkHJ1wfJm0vyngdJje0VYN1JrARYknBzZg9LbSYSk
+         WFIEowZfUR2sMRzbxAHcBlFPrgGFZg2ARZz8tLy0sQPdSaP/H1Dr/vx63IRMJ760yaSN
+         eeTA==
+X-Gm-Message-State: AC+VfDyNM0cPD+g1WvxoVswm3Wpp/sqqfpig20dvfz8HRfWcyXn591kp
+        hpYLJJYtyGorG+5Cuoc+1Dj8SggEy1dCeOrx0xM=
+X-Google-Smtp-Source: ACHHUZ4jDamatlr+DCWZd9B2Mh8oDMdheAGX0lUtgp5PIy/+aKcbRPV1h0OwfT9MclKi/MH/cMeM6gALpIKP9YPSuzA=
+X-Received: by 2002:a6b:5905:0:b0:77e:2883:13f3 with SMTP id
+ n5-20020a6b5905000000b0077e288313f3mr11895581iob.14.1687293161237; Tue, 20
+ Jun 2023 13:32:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230616024515.80814-1-yangjihong1@huawei.com>
+In-Reply-To: <20230616024515.80814-1-yangjihong1@huawei.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 20 Jun 2023 13:32:29 -0700
+Message-ID: <CAM9d7chJtidBnLYd27Us6aW5tJKbi_n_kHj=6SRUTbTiowwi5w@mail.gmail.com>
+Subject: Re: [PATCH] perf parse: Add missing newline to pr_debug message in evsel__compute_group_pmu_name()
+To:     Yang Jihong <yangjihong1@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-When perf record -d is used, it needs data mmaps to symbolize global data.
-But it missed to collect kernel data maps so it cannot symbolize them.
-Instead of having a separate map, just increase the kernel map size to
-include the data section.
+Hello,
 
-Probably we can have a separate kernel map for data, but the current
-code assumes a single kernel map.  So it'd require more changes in other
-places and looks error-prone.  I decided not to go that way for now.
+On Thu, Jun 15, 2023 at 7:47 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>
+> The newline is missing for pr_debug message in
+> evsel__compute_group_pmu_name(), fix it.
+>
+> Before:
+>
+>   # perf --debug verbose=2 record -e cpu-clock true
+>   <SNIP>
+>   No PMU found for 'cycles:u'No PMU found for 'instructions:u'------------------------------------------------------------
+>   perf_event_attr:
+>     type                             1
+>     size                             136
+>     { sample_period, sample_freq }   4000
+>     sample_type                      IP|TID|TIME|PERIOD
+>     read_format                      ID|LOST
+>     disabled                         1
+>     inherit                          1
+>     mmap                             1
+>     comm                             1
+>     freq                             1
+>     enable_on_exec                   1
+>     task                             1
+>     sample_id_all                    1
+>     exclude_guest                    1
+>     mmap2                            1
+>     comm_exec                        1
+>     ksymbol                          1
+>     bpf_event                        1
+>   ------------------------------------------------------------
+>   <SNIP>
+>
+> After:
+>
+>   # perf --debug verbose=2 record -e cpu-clock true
+>   <SNIP>
+>   No PMU found for 'cycles:u'
+>   No PMU found for 'instructions:u'
+>   ------------------------------------------------------------
+>   perf_event_attr:
+>     type                             1
+>     size                             136
+>     { sample_period, sample_freq }   4000
+>     sample_type                      IP|TID|TIME|PERIOD
+>     read_format                      ID|LOST
+>     disabled                         1
+>     inherit                          1
+>     mmap                             1
+>     comm                             1
+>     freq                             1
+>     enable_on_exec                   1
+>     task                             1
+>     sample_id_all                    1
+>     exclude_guest                    1
+>     mmap2                            1
+>     comm_exec                        1
+>     ksymbol                          1
+>     bpf_event                        1
+>   ------------------------------------------------------------
+>   <SNIP>
+>
+> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 
-Also it seems the kernel module size already includes the data section.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-For example, my system has the following.
+Thanks,
+Namhyung
 
-  $ grep -e _stext -e _etext -e _edata /proc/kallsyms
-  ffffffff99800000 T _stext
-  ffffffff9a601ac8 T _etext
-  ffffffff9b446a00 D _edata
 
-Size of the text section is (0x9a601ac8 - 0x99800000 = 0xe01ac8) and
-size of the data section is (0x9b446a00 - 0x99800000 = 0x1c46a00).
-
-Before:
-  $ perf record -d true
-
-  $ perf report -D | grep MMAP | head -1
-  0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0xe01ac8) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
-                                                               ^^^^^^^^
-                                                                 here
-After:
-  $ perf report -D | grep MMAP | head -1
-  0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0x1c46a00) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
-                                                               ^^^^^^^^^
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/machine.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index ddc0a2130caf..e93a66f6e0b3 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1218,7 +1218,10 @@ static int machine__get_running_kernel_start(struct machine *machine,
- 
- 	*start = addr;
- 
--	err = kallsyms__get_function_start(filename, "_etext", &addr);
-+	if (machine->has_data_mmap)
-+		err = kallsyms__get_symbol_start(filename, "_edata", &addr);
-+	else
-+		err = kallsyms__get_function_start(filename, "_etext", &addr);
- 	if (!err)
- 		*end = addr;
- 
--- 
-2.41.0.185.g7c58973941-goog
-
+> ---
+>  tools/perf/util/parse-events.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+> index 2d36cadf35ec..bc7274641f34 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -2036,7 +2036,7 @@ static int evsel__compute_group_pmu_name(struct evsel *evsel,
+>                 pmu = perf_pmus__scan_core(NULL);
+>         }
+>         if (!pmu) {
+> -               pr_debug("No PMU found for '%s'", evsel__name(evsel));
+> +               pr_debug("No PMU found for '%s'\n", evsel__name(evsel));
+>                 return -EINVAL;
+>         }
+>         group_pmu_name = pmu->name;
+> --
+> 2.30.GIT
+>
