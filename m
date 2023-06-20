@@ -2,54 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C681EB64D8
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 20:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBF6EB64DB
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 20:19:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230089AbjFTUTF (ORCPT
+        id S229784AbjFTUTI (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 16:19:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55832 "EHLO
+        Tue, 20 Jun 2023 16:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230270AbjFTUSo (ORCPT
+        with ESMTP id S230269AbjFTUSo (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
         Tue, 20 Jun 2023 16:18:44 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 139351BD1;
-        Tue, 20 Jun 2023 13:18:22 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id 98e67ed59e1d1-25edb50c3acso2853412a91.1;
-        Tue, 20 Jun 2023 13:18:22 -0700 (PDT)
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2742C1BE2;
+        Tue, 20 Jun 2023 13:18:24 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id 98e67ed59e1d1-25e8545ea28so3967855a91.0;
+        Tue, 20 Jun 2023 13:18:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687292301; x=1689884301;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=pqVZ+yJ0tuR0/Xa4/mt71IlpN1AZgNtJ4C3nrUuBuoc=;
-        b=QwlgXK20+sNDmTiVystCzoccyU/n8dUHDNtuFGDLv2rdPzZFL0Go6eVyLb7pV9BBKp
-         vzJ9BAgsyXlXd6SX5FL288SJoXin2fzISWH1j3xXt8Ul89zhxzoPzHtcfwzCRox5DXwF
-         6n6Q/orn88LCpdezK2vckhKAYTQwjZo+Oktfxzoh65WlCRIueLMsib0UvwSGGUAXgLQp
-         /wGWvFQUHlOUrZF0/zpY/tjnvqfnQ2GzNhQm4y266w25SmWTPdrRFqQ2MCfpI8PZZhtI
-         6KVOjo+lQDY9ue59Wht0u9Zo0v9kD+VvAQFOHdO9QcXnDbaalld5f3CrhfJONkBxJvX3
-         WcIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687292301; x=1689884301;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1687292303; x=1689884303;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pqVZ+yJ0tuR0/Xa4/mt71IlpN1AZgNtJ4C3nrUuBuoc=;
-        b=DI+MhgPVBvtN4MwY9EeQCMEkdndN50HsIK6vnFlxArtvR96KwRurLXyII0ZUuMraZA
-         hOlWRNsa+xNF+79Y4RQX875utf16DgwGxiI06nk2KsQP3yjwR6XOZIkcQn6bdk2rXQRw
-         68pX5pHG/8Nr33XzkzJ3BgUTp0S7Z0fHjxtU7RbkQvYGNwf2BBZE4icLofEgjdQebzUe
-         ghiA7vWaQ/c8imRniFUoOUBcK/AL5/dmTnCM5z8r0vQZizRsEjI1idIvmbnN1TqSykhT
-         Ey8GqCykTpvnEXXX5JrPNltZppoprGg7a8wPw/VKxyE4cEul9X6c5XjusQZLj3rTx7RO
-         uNbw==
-X-Gm-Message-State: AC+VfDzAGGPCDQT6hmxwgPmewrLrXG+WLVcHUc4I19kSSCkaevN1zsYt
-        k7UPOSodv3USEfPHdGRMYS8=
-X-Google-Smtp-Source: ACHHUZ6fBJSQ8Q1Q4C+YKoJwU9MWhh0/r5U6XGQghQ4ps2sKzIjL+PDnshWFK7HVCSU8hdDtesM8Ag==
-X-Received: by 2002:a17:90b:a46:b0:25c:2a5d:e06b with SMTP id gw6-20020a17090b0a4600b0025c2a5de06bmr13736156pjb.2.1687292301105;
-        Tue, 20 Jun 2023 13:18:21 -0700 (PDT)
+        bh=7i2JmSY9J3aXJvNYPDUup2Ul0DqDLcLtP/gbsQnodQE=;
+        b=W8W+BdRt47e/1zKvDQJQnbDBHt7693qHLovnUIQ4uE5CXmd9dMCfnD2MGkzow/fKZB
+         oX826Ny5CGbeXF7gc3uzhRp6pX+oi6bdQV+8+Tc67ZQIXRHBunU+rxV9uf7n7rdGnoi3
+         pine2IzdUCi28NsDa+D1A0HeMv5EtmmGzCcdrH69IiyU58mOGhQntPVmOFuV4Dwh082I
+         XXEoNlyXPNrIfs/d842vRHoCEMeoLhbJaPAUciK+hIZF3ZcihjdrswIHe/QKSihZzVvJ
+         3MAxxBrr66S3SmDW3ifM25R53thQ4Y+Zhhjbe3x7ftfBIN3loCKIEYC080Fd0+Vz9v/a
+         NnWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687292303; x=1689884303;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7i2JmSY9J3aXJvNYPDUup2Ul0DqDLcLtP/gbsQnodQE=;
+        b=Bt8B27D5PoUsSNaBZzBklVXUP30kVfoMesUHXiOIUo8Ninb+oxRgP2SxqAfUe7gxkV
+         2vnNTt4sBx+hHYISoDsJ9491bL4dZSjDSZtEb7UNQ7TY5U9Wt47yIbqSYrj0SuHnyA6o
+         d1WsGmgSB67vM2jjMOHdCmqgoK3JDIwUz7OeveEgUKeiNihcBcFSDuMc83oGAc49Enal
+         uPTh+HgsVbtw+0x5/AsHtzlNWqkAVAwGIuQ0YrOG7bTiCoe3u9Wg80Vtf8T9f3Pnkkf7
+         8JW0HXL8G+gdOd5lrjAe8OSEHFwlecw9LHQevpjUD+4DiKU5dOeTXW8CiI1Q1CnlJ0qL
+         xunA==
+X-Gm-Message-State: AC+VfDzSjnwCBz1S/fmMcQDCGfZP8gUN2zI6DIbFRXeuguesND24idLr
+        xACXaUDKSjB8XkFxgrVWfrO3d7Z6bSg=
+X-Google-Smtp-Source: ACHHUZ4ZhJTLvcJ3h8h4oNTVB5V4MUma8P4fNHtwJNoPl0Mu/nkXDWfVFvNfLys/9A92/L8b89D22A==
+X-Received: by 2002:a17:90a:35b:b0:259:bf40:b571 with SMTP id 27-20020a17090a035b00b00259bf40b571mr13450471pjf.45.1687292303485;
+        Tue, 20 Jun 2023 13:18:23 -0700 (PDT)
 Received: from bangji.hsd1.ca.comcast.net ([2601:647:6700:7f00:2824:dc1c:af73:dbd8])
-        by smtp.gmail.com with ESMTPSA id 27-20020a17090a01db00b0025c23bb7fdasm8191774pjd.16.2023.06.20.13.18.19
+        by smtp.gmail.com with ESMTPSA id 27-20020a17090a01db00b0025c23bb7fdasm8191774pjd.16.2023.06.20.13.18.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 13:18:20 -0700 (PDT)
+        Tue, 20 Jun 2023 13:18:23 -0700 (PDT)
 Sender: Namhyung Kim <namhyung@gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -60,208 +61,72 @@ Cc:     Ian Rogers <irogers@google.com>,
         Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-perf-users@vger.kernel.org
-Subject: [PATCH 1/3] perf machine: Add machine->has_data_mmap field
-Date:   Tue, 20 Jun 2023 13:18:16 -0700
-Message-ID: <20230620201818.1670753-1-namhyung@kernel.org>
+Subject: [PATCH 3/3] perf machine: Include data symbols in the kernel map
+Date:   Tue, 20 Jun 2023 13:18:18 -0700
+Message-ID: <20230620201818.1670753-3-namhyung@kernel.org>
 X-Mailer: git-send-email 2.41.0.185.g7c58973941-goog
+In-Reply-To: <20230620201818.1670753-1-namhyung@kernel.org>
+References: <20230620201818.1670753-1-namhyung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-So that it can indicate the it needs to collect data mappings.  This is
-needed especially for kernel maps.
+When perf record -d is used, it needs data mmaps to symbolize global data.
+But it missed to collect kernel data maps so it cannot symbolize them.
+Instead of having a separate map, just increase the kernel map size to
+include the data section.
 
-At first, I just wanted to add it to struct machines only and to use the
-machine->machines to check the value.  But it turned out that some of
-machine didn't belong to any machines (eg. some test codes), so I just
-copied the value to individual struct machine.
+Probably we can have a separate kernel map for data, but the current
+code assumes a single kernel map.  So it'd require more changes in other
+places and looks error-prone.  I decided not to go that way for now.
+
+Also it seems the kernel module size already includes the data section.
+
+For example, my system has the following.
+
+  $ grep -e _stext -e _etext -e _edata /proc/kallsyms
+  ffffffff99800000 T _stext
+  ffffffff9a601ac8 T _etext
+  ffffffff9b446a00 D _edata
+
+Size of the text section is (0x9a601ac8 - 0x99800000 = 0xe01ac8) and
+size of the data section is (0x9b446a00 - 0x99800000 = 0x1c46a00).
+
+Before:
+  $ perf record -d true
+
+  $ perf report -D | grep MMAP | head -1
+  0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0xe01ac8) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
+                                                               ^^^^^^^^
+                                                                 here
+After:
+  $ perf report -D | grep MMAP | head -1
+  0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0x1c46a00) @ 0xffffffff99800000]: x [kernel.kallsyms]_text
+                                                               ^^^^^^^^^
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-inject.c         |  2 +-
- tools/perf/builtin-record.c         |  2 +-
- tools/perf/tests/vmlinux-kallsyms.c |  4 ++--
- tools/perf/util/machine.c           | 12 +++++++-----
- tools/perf/util/machine.h           | 10 ++++++++--
- tools/perf/util/session.c           |  4 ++--
- tools/perf/util/session.h           |  4 ++--
- 7 files changed, 23 insertions(+), 15 deletions(-)
+ tools/perf/util/machine.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index c8cf2fdd9cff..481adaa97a68 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2325,7 +2325,7 @@ int cmd_inject(int argc, const char **argv)
- 	}
- 
- 	inject.session = __perf_session__new(&data, repipe,
--					     output_fd(&inject),
-+					     output_fd(&inject), false,
- 					     &inject.tool);
- 	if (IS_ERR(inject.session)) {
- 		ret = PTR_ERR(inject.session);
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index aec18db7ff23..b4d0154dcb18 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2373,7 +2373,7 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		signal(SIGUSR2, SIG_IGN);
- 	}
- 
--	session = perf_session__new(data, tool);
-+	session = __perf_session__new(data, false, -1, rec->opts.sample_address, tool);
- 	if (IS_ERR(session)) {
- 		pr_err("Perf session creation failed.\n");
- 		return PTR_ERR(session);
-diff --git a/tools/perf/tests/vmlinux-kallsyms.c b/tools/perf/tests/vmlinux-kallsyms.c
-index 1078a93b01aa..1f1ba3ae88aa 100644
---- a/tools/perf/tests/vmlinux-kallsyms.c
-+++ b/tools/perf/tests/vmlinux-kallsyms.c
-@@ -131,8 +131,8 @@ static int test__vmlinux_matches_kallsyms(struct test_suite *test __maybe_unused
- 	 * Init the machines that will hold kernel, modules obtained from
- 	 * both vmlinux + .ko files and from /proc/kallsyms split by modules.
- 	 */
--	machine__init(&kallsyms, "", HOST_KERNEL_ID);
--	machine__init(&vmlinux, "", HOST_KERNEL_ID);
-+	machine__init(&kallsyms, "", HOST_KERNEL_ID, false);
-+	machine__init(&vmlinux, "", HOST_KERNEL_ID, false);
- 
- 	maps = machine__kernel_maps(&vmlinux);
- 
 diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 4e62843d51b7..ddc0a2130caf 100644
+index ddc0a2130caf..e93a66f6e0b3 100644
 --- a/tools/perf/util/machine.c
 +++ b/tools/perf/util/machine.c
-@@ -110,7 +110,7 @@ static void thread__set_guest_comm(struct thread *thread, pid_t pid)
- 	thread__set_comm(thread, comm, 0);
- }
+@@ -1218,7 +1218,10 @@ static int machine__get_running_kernel_start(struct machine *machine,
  
--int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
-+int machine__init(struct machine *machine, const char *root_dir, pid_t pid, bool has_data_mmap)
- {
- 	int err = -ENOMEM;
+ 	*start = addr;
  
-@@ -128,6 +128,7 @@ int machine__init(struct machine *machine, const char *root_dir, pid_t pid)
- 	machine->env = NULL;
+-	err = kallsyms__get_function_start(filename, "_etext", &addr);
++	if (machine->has_data_mmap)
++		err = kallsyms__get_symbol_start(filename, "_edata", &addr);
++	else
++		err = kallsyms__get_function_start(filename, "_etext", &addr);
+ 	if (!err)
+ 		*end = addr;
  
- 	machine->pid = pid;
-+	machine->has_data_mmap = has_data_mmap;
- 
- 	machine->id_hdr_size = 0;
- 	machine->kptr_restrict_warned = false;
-@@ -170,7 +171,7 @@ struct machine *machine__new_host(void)
- 	struct machine *machine = malloc(sizeof(*machine));
- 
- 	if (machine != NULL) {
--		machine__init(machine, "", HOST_KERNEL_ID);
-+		machine__init(machine, "", HOST_KERNEL_ID, false);
- 
- 		if (machine__create_kernel_maps(machine) < 0)
- 			goto out_delete;
-@@ -272,10 +273,11 @@ void machine__delete(struct machine *machine)
- 	}
- }
- 
--void machines__init(struct machines *machines)
-+void __machines__init(struct machines *machines, bool have_data_mmap)
- {
--	machine__init(&machines->host, "", HOST_KERNEL_ID);
-+	machine__init(&machines->host, "", HOST_KERNEL_ID, have_data_mmap);
- 	machines->guests = RB_ROOT_CACHED;
-+	machines->have_data_mmaps = have_data_mmap;
- }
- 
- void machines__exit(struct machines *machines)
-@@ -295,7 +297,7 @@ struct machine *machines__add(struct machines *machines, pid_t pid,
- 	if (machine == NULL)
- 		return NULL;
- 
--	if (machine__init(machine, root_dir, pid) != 0) {
-+	if (machine__init(machine, root_dir, pid, machines->have_data_mmaps) != 0) {
- 		free(machine);
- 		return NULL;
- 	}
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index d034ecaf89c1..f54e5c888a99 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -46,6 +46,7 @@ struct machine {
- 	bool		  comm_exec;
- 	bool		  kptr_restrict_warned;
- 	bool		  single_address_space;
-+	bool		  has_data_mmap;
- 	char		  *root_dir;
- 	char		  *mmap_name;
- 	char		  *kallsyms_filename;
-@@ -160,9 +161,14 @@ typedef void (*machine__process_t)(struct machine *machine, void *data);
- struct machines {
- 	struct machine host;
- 	struct rb_root_cached guests;
-+	bool have_data_mmaps;
- };
- 
--void machines__init(struct machines *machines);
-+void __machines__init(struct machines *machines, bool data_mmap);
-+static inline void machines__init(struct machines *machines)
-+{
-+	__machines__init(machines, false);
-+}
- void machines__exit(struct machines *machines);
- 
- void machines__process_guests(struct machines *machines,
-@@ -181,7 +187,7 @@ void machines__set_comm_exec(struct machines *machines, bool comm_exec);
- 
- struct machine *machine__new_host(void);
- struct machine *machine__new_kallsyms(void);
--int machine__init(struct machine *machine, const char *root_dir, pid_t pid);
-+int machine__init(struct machine *machine, const char *root_dir, pid_t pid, bool has_data_mmap);
- void machine__exit(struct machine *machine);
- void machine__delete_threads(struct machine *machine);
- void machine__delete(struct machine *machine);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 00d18c74c090..e09a02ec8f28 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -191,7 +191,7 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
- }
- 
- struct perf_session *__perf_session__new(struct perf_data *data,
--					 bool repipe, int repipe_fd,
-+					 bool repipe, int repipe_fd, bool data_mmap,
- 					 struct perf_tool *tool)
- {
- 	int ret = -ENOMEM;
-@@ -205,7 +205,7 @@ struct perf_session *__perf_session__new(struct perf_data *data,
- 	session->decomp_data.zstd_decomp = &session->zstd_data;
- 	session->active_decomp = &session->decomp_data;
- 	INIT_LIST_HEAD(&session->auxtrace_index);
--	machines__init(&session->machines);
-+	__machines__init(&session->machines, data_mmap);
- 	ordered_events__init(&session->ordered_events,
- 			     ordered_events__deliver_event, NULL);
- 
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index ee3715e8563b..465610e81e95 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -64,13 +64,13 @@ struct decomp {
- struct perf_tool;
- 
- struct perf_session *__perf_session__new(struct perf_data *data,
--					 bool repipe, int repipe_fd,
-+					 bool repipe, int repipe_fd, bool data_mmap,
- 					 struct perf_tool *tool);
- 
- static inline struct perf_session *perf_session__new(struct perf_data *data,
- 						     struct perf_tool *tool)
- {
--	return __perf_session__new(data, false, -1, tool);
-+	return __perf_session__new(data, false, -1, false, tool);
- }
- 
- void perf_session__delete(struct perf_session *session);
 -- 
 2.41.0.185.g7c58973941-goog
 
