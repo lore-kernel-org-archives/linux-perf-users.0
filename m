@@ -2,343 +2,210 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76722EB64DB
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 17:00:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 046FFEB64D8
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 17:30:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231346AbjFTRAr (ORCPT
+        id S229990AbjFTRaw (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 13:00:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45332 "EHLO
+        Tue, 20 Jun 2023 13:30:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230032AbjFTRAm (ORCPT
+        with ESMTP id S229959AbjFTRau (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 13:00:42 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFA501729;
-        Tue, 20 Jun 2023 10:00:37 -0700 (PDT)
+        Tue, 20 Jun 2023 13:30:50 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8BB011D;
+        Tue, 20 Jun 2023 10:30:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687280437; x=1718816437;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=lx6VvDMUnfTWmZ+SOzq2AS5ZcPMg85xEXw9RWTbNa68=;
-  b=nkI+akmsZeCCvR3r7lgK6t2TxqVMmh35ywL9zTJS7uRAaq2MrpQYaL13
-   MqIgAhxdc/7MAElZTGGph1MsBSwbmakdkZbB4ouFg0LhZZNVHYizd0N0X
-   ftaSYPE1NZY9RCKkrx2IHWV20o9n+J97wgd19VeC7y+T6MpJ6fZnvuQWq
-   RP513vG4IxdhH7IHoPASHeDrsA2SEwFUpvrMKOGnPxwiqwS3ep0+XO3/d
-   7XFbsG1YNZuE17ptbRJt5FwQ2bOz/DWxIj9XX8lQT1RERzwWGecVLG24N
-   jsWDUydVtzinKCk+Uac8Qpo6qMatWokfPy99Qqe/+dC5Vg8San3uRu0EN
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="359929653"
+  t=1687282248; x=1718818248;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=OoZkmnlV/5ablpWKumO2GD3ZFTk1XPCsrsup5hogK9o=;
+  b=nhjAdtq/4t10QlB2KHzqrsE1/aZyeBSJrrHVXVqjEsimTDLp2D5sBxhC
+   kLm5Xs19v89G6U37slha2p5pwTcm/PzNPTKyrVRDDvOzHdyZQ8l1/4NkQ
+   okGRd/hSrMIEc0jiQtEY+b9F6JHWt9RduiOiv2SvIwFHun2Oqng5lS1bf
+   sHNc1piTcYucSsuCSD2ZvOS4xF0JA2Pbq4PxbA9gNk+B05MCzRhl1g8bj
+   /nWpcvTu6s/mdX6qeSe6Miu/bY0B9vimc+ysln6voNEeZxhmvVo6fdDqi
+   EqUSyenppifCFnG/pbxW/JCBbARAQ9p4GNr69+BHYhh+5++lm+gryHiX9
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="339546408"
 X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="359929653"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 10:00:35 -0700
+   d="scan'208";a="339546408"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 10:30:47 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="888314370"
+X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="779524007"
 X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="888314370"
-Received: from a0cec87da3f2.jf.intel.com (HELO worker-node-1.jf.intel.com) ([10.165.55.163])
-  by orsmga005.jf.intel.com with ESMTP; 20 Jun 2023 10:00:35 -0700
-From:   Weilin Wang <weilin.wang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Weilin Wang <weilin.wang@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Samantha Alt <samantha.alt@intel.com>,
-        Perry Taylor <perry.taylor@intel.com>,
-        Caleb Biggers <caleb.biggers@intel.com>, ravi.bangoria@amd.com
-Subject: [PATCH v5 3/3] perf test: Rerun failed metrics with longer workload
-Date:   Tue, 20 Jun 2023 10:00:27 -0700
-Message-Id: <20230620170027.1861012-4-weilin.wang@intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230620170027.1861012-1-weilin.wang@intel.com>
-References: <20230620170027.1861012-1-weilin.wang@intel.com>
+   d="scan'208";a="779524007"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga008.fm.intel.com with ESMTP; 20 Jun 2023 10:30:45 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 20 Jun 2023 10:30:44 -0700
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Tue, 20 Jun 2023 10:30:44 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23 via Frontend Transport; Tue, 20 Jun 2023 10:30:44 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.23; Tue, 20 Jun 2023 10:30:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WfWznzpH79MOPFC7zPa07jGto0MI1rhjbr1Vfj3sW1Owe36ZtbJlEklUS0DXPkzr5Nki6wND+dgOBaoHuuDlAzHGTBk1E4Gx4DWX+5JfZz4jS92wmqDmLaSahPB8uAR8jOtAN2TZ5huNqPThZKiP34Hy6OwHpuQvVscQI/2zEzHTOeAJYYfV2yiymgeYU0sacWAkKZCKcxKFEHpmftSn4Taqb4ziyF3BRinDV8mVEqSETraTi+sUpp/CCv7uTLU6tsuQRLBvvYJQPtMisZCbwsTyufTd9MRrI43At13xWztpTPhrfhMNtrwDcjvdT8pzlvwc6/n3vwyMSLwpk4Irtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vr+IR/mhkyV28Q0cFDMkKOoXLKKcOBhlhXv+mJ8evos=;
+ b=AE5Xu6n0umMTet37s0MmtJnIv0QzbGoCv3bGtirtIvP5JvZxv5fgCviZov/BIcIEm1/wAnRSxNLXKCKYsua9fW4BJyUAJ940aEyjb5Y4dkXELMILxiv1aKyCWO/SSBZMRqt2NBaDxppmVE9JlGumkaMBrDL2JhDakfmLExTMM+x0C+5d9fCfscvnr7qtThP3CC8n64Tn1wVEYZ7SJeGjWgyntanwSYshSyTAbwEfZpvLz5dWdYw2u9MGuHuZ6BZtG85DB37DNHwGlN28/20OKFV9FXXfGwulnEA7vnV1xqQIIxBk4pBCcG2z1lV1OIaB6xA5cYu3TIadvHyUt9jgcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from SA1PR11MB6734.namprd11.prod.outlook.com (2603:10b6:806:25d::22)
+ by SA1PR11MB8596.namprd11.prod.outlook.com (2603:10b6:806:3b5::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.37; Tue, 20 Jun
+ 2023 17:30:42 +0000
+Received: from SA1PR11MB6734.namprd11.prod.outlook.com
+ ([fe80::c016:653d:c037:44fc]) by SA1PR11MB6734.namprd11.prod.outlook.com
+ ([fe80::c016:653d:c037:44fc%7]) with mapi id 15.20.6500.036; Tue, 20 Jun 2023
+ 17:30:42 +0000
+From:   "Li, Xin3" <xin3.li@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "steve.wahl@hpe.com" <steve.wahl@hpe.com>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>,
+        "Sivanich, Dimitri" <dimitri.sivanich@hpe.com>,
+        "Anderson, Russ" <russ.anderson@hpe.com>,
+        "dvhart@infradead.org" <dvhart@infradead.org>,
+        "andy@infradead.org" <andy@infradead.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "suravee.suthikulpanit@amd.com" <suravee.suthikulpanit@amd.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "kys@microsoft.com" <kys@microsoft.com>,
+        "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "Cui, Dexuan" <decui@microsoft.com>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "alexander.shishkin@linux.intel.com" 
+        <alexander.shishkin@linux.intel.com>,
+        "jolsa@kernel.org" <jolsa@kernel.org>,
+        "namhyung@kernel.org" <namhyung@kernel.org>,
+        "irogers@google.com" <irogers@google.com>,
+        "Hunter, Adrian" <adrian.hunter@intel.com>,
+        "Christopherson,, Sean" <seanjc@google.com>,
+        "jiangshanlai@gmail.com" <jiangshanlai@gmail.com>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>,
+        "yangtiezhu@loongson.cn" <yangtiezhu@loongson.cn>
+Subject: RE: [PATCH 2/3] x86/vector: Replace IRQ_MOVE_CLEANUP_VECTOR with a
+ timer callback
+Thread-Topic: [PATCH 2/3] x86/vector: Replace IRQ_MOVE_CLEANUP_VECTOR with a
+ timer callback
+Thread-Index: AQHZowfgzs/ltzhQV02KS6H0RArmlq+TXriAgACUhrA=
+Date:   Tue, 20 Jun 2023 17:30:41 +0000
+Message-ID: <SA1PR11MB6734113E845FC51ED01CE4CBA85CA@SA1PR11MB6734.namprd11.prod.outlook.com>
+References: <20230619231611.2230-1-xin3.li@intel.com>
+ <20230619231611.2230-3-xin3.li@intel.com> <87h6r2pm1a.ffs@tglx>
+In-Reply-To: <87h6r2pm1a.ffs@tglx>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR11MB6734:EE_|SA1PR11MB8596:EE_
+x-ms-office365-filtering-correlation-id: d6a34217-4f0b-467c-aad7-08db71b4125f
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BGaDjZqsoSfrji0onD9hTUTnVdHhFHstNHhFifg8AR6maHu9gGEg1/lxg+bocG1s/a3fUBjJvDl5ZsZVQc3cXT8/Im3cgg2czG2v+dRwMvG0iqUBhGI9HThvOBCPZVmmuXh5+HD83yVVpGsgufUGPDWs49FCSDnPvM969TQDIcL8h4xzBx42w7khHcPTp/7b7HJpPRR8szljZe44sHgDsg7u8LmvIHHxnNbmZLskelrl0da9ML6aLS7LeGj/MaweP6VMe6HnxvJrvzRb5C4ZaAjLJSyDlC+5pryP4+cyfEM+MAGs5fmALjWnSbW4Hlx6JoLU1f9iANL5P1mF/wJsBXhvlUQ96UQUou6jWQtyFG61vT/r+uxxCo6lWQGUv8JRu92MzXN19LAqA1qrozxOzPjz+tM/mt1HrtsL9tlDKvcMvd0AvOMbZ2qSsm7ZeZA0n/D/67DOAzefMG170qypUQ8me7SeaVt2kMHpYsRKQm4sxvvgeEmmIDXoMNTvo5ix3KNDf0NLwK5hHLoNy9ejx8bXCcZ4JjKbhBGRHcjnWW5wxFwrhLOdWw+bYirqCMMKzlLVmHvBkwPrAYweT67NBAETwHPvPfkob73rMa2TmSskyv6QVIGNhEnxpVUdvzqx
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6734.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(376002)(366004)(346002)(396003)(136003)(451199021)(4326008)(71200400001)(54906003)(478600001)(110136005)(7696005)(76116006)(6506007)(9686003)(186003)(55016003)(26005)(4744005)(2906002)(8676002)(41300700001)(38070700005)(64756008)(66946007)(66446008)(66556008)(66476007)(8936002)(316002)(7406005)(5660300002)(7416002)(52536014)(33656002)(38100700002)(83380400001)(86362001)(122000001)(82960400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?N11wu+DVgoFHIBNf7A4Twi4A6I8JO8j2T1uQhJrc02CGiP67ZdvM0vkgrwfB?=
+ =?us-ascii?Q?deyLqHEJVMvZseWM654OR6QI2b9wJU+F5RnvtgoCGRF1SsxaKp5CoY6eKlqf?=
+ =?us-ascii?Q?lvD2iueidNAGwTQekVAGTUe37hE94toXVTppaQg6/h4NTrxUUtzJHpGE2hte?=
+ =?us-ascii?Q?q3QASOslW6VaAZFvd1/4mMtj3khBWS/xiHGYzWVayaSdqORZDdJYFFjqKCMP?=
+ =?us-ascii?Q?Qsy9eRr1rtIIJ92KvzCZ8iqka7C02OvhvcQtA15TTsSNTnn2WlGwhzaNbVqj?=
+ =?us-ascii?Q?O1gvL5IH33+TccBfvkJE4LzI67tqLPNRZIwdz9wetcWRNcDRXZ5PKm85wgXH?=
+ =?us-ascii?Q?rKV9dx0WG0F/kx0GH9m9ulzcdkDA4zKabJVa4Sp+JIABK5lqcPPqa1dm6rTK?=
+ =?us-ascii?Q?9jkUvU2hX6y/jGS+HngM2vWhQmxOS5gC5acZPFZ9gJsLw2GHQGumE7EO1Xga?=
+ =?us-ascii?Q?CfPVDMCi336+dpvq+LELVHjnYl82pbVF5uUFSYBLB9XwSWMMJUciis+ZLhLP?=
+ =?us-ascii?Q?Rvp8wsD/sHmNvDPlbByJAPiUJyv5fMCAoEJzQFUyQH4omzhEv94NPHIzo0br?=
+ =?us-ascii?Q?bagd/6ssrriCbEiQtziQGnXkLPKlZudUUCkgxa71nJhRR/dF0ekvcfDtVQAm?=
+ =?us-ascii?Q?/icaBzhcbo7vI8+JG5BPTVMPioN2ExivuiKfZJt2sQdT04tOKo+Fk5uKr8FV?=
+ =?us-ascii?Q?iubPwA50PcgpnRvtoNFCUPIirgbjkazOTtpG/bInKhlEkodPdRX7WXAg9XqN?=
+ =?us-ascii?Q?ccNRsSP1AK76RnjH5wxkvig6e90/oJKjYduZCZWYtq/07ZWLGJQJYQPlSBfe?=
+ =?us-ascii?Q?tc9nNhW1WSTEISWHIlcqzgjkS1fM/0r8MqWbycftv9bzLXpBiYWxhUqljxfX?=
+ =?us-ascii?Q?WJsHMYPOz2Z3rBSmplY4Ty+gNZE5suPtJHg+lpb2aUmIA8N05NJwwohTTob1?=
+ =?us-ascii?Q?BGYA7XwKbIz2HcMA4JYlXg9rXoLzqzsOZtjCtiFoRbNhMAeCmy1d8kM9Iabp?=
+ =?us-ascii?Q?kE48gILJeTou7wUnrPcfmMAnhY/tOjqt02nfTO8Co+n+osrTDAoZSJwddizv?=
+ =?us-ascii?Q?OMReWKCHqGpAfnEMkbF38Puw0uG9HQnWzhsMHtNf/3mq3x+42yIIh4cHmcdU?=
+ =?us-ascii?Q?ZCYOd+jOuDi7/hkYKzvjL+YODtDXGP3ohT4JAg23snu0y+ABs+lVfsVS9GeE?=
+ =?us-ascii?Q?D4vvouV83W1jAuVwjZVpxv+9NDoowYCrOUYgpOvlPP8r3Rofun1xF9+ikgyA?=
+ =?us-ascii?Q?3rAJmqFaX8CdDlG/OOwVWCBqPhOKeqzdiz84jAgE/GphcSgFYZ8KhQPoDnEC?=
+ =?us-ascii?Q?MEDYjw+xzQooHdPoG4sZDijSvH7sdeQTuvdYEkAJARwf5YlUHz0z7lkD/2v5?=
+ =?us-ascii?Q?xrDkZfo2SWzxYKIgSVkBvQCOikTPY59bowp8F5FAEJdJsgXPnethIaC6gyoa?=
+ =?us-ascii?Q?X+/SAsZc8kewVGWNYMummgT8kFYCKsiQK3vMmH0/embWSXw0D/dqHLQ/p8b4?=
+ =?us-ascii?Q?ST/HcvWwvmx0m7O5pv/r/xgjJSfeDCFPjAyet73YQqv1U0FxiO9oNg3r4ELD?=
+ =?us-ascii?Q?X0zfWsEASXkZ3koUtOE=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6734.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d6a34217-4f0b-467c-aad7-08db71b4125f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2023 17:30:41.8937
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HJcn+6q2INcm1EO8cRvu3spOAlL07ysrY8JsYiwjA+nJJRjlbC+JR5jzluKcAit4Jn7LGnGDCx587z5POJkKZg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8596
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Rerun failed metrics with longer workload to avoid false failure because
-sometimes metric value test fails when running in very short amount of
-time. Skip rerun if equal to or more than 20 metrics fail.
+> > +/*
+> > + * Called with vector_lock held
+> > + */
+>=20
+> Such a comment is patently bad.
+>=20
+> > +static void __vector_cleanup(struct vector_cleanup *cl, bool
+> > +check_irr)
+> >  {
+>         ....
+>=20
+>         lockdep_assert_held(&vector_lock);
+>=20
+> Documents the requirement clearly _and_ catches any caller which does not=
+ hold
+> the lock when lockdep is enabled.
 
-Signed-off-by: Weilin Wang <weilin.wang@intel.com>
----
- .../tests/shell/lib/perf_metric_validation.py | 129 +++++++++++-------
- 1 file changed, 83 insertions(+), 46 deletions(-)
+Peter Z gave the same comment, I will address in the next iteration.
 
-diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools/perf/tests/shell/lib/perf_metric_validation.py
-index 3c3a9b4f8b82..50a34a9cc040 100644
---- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-+++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-@@ -11,8 +11,9 @@ class Validator:
-         self.rulefname = rulefname
-         self.reportfname = reportfname
-         self.rules = None
--        self.collectlist=metrics
--        self.metrics = set(metrics)
-+        self.collectlist:str = metrics
-+        self.metrics = self.__set_metrics(metrics)
-+        self.skiplist = set()
-         self.tolerance = t
- 
-         self.workloads = [x for x in workload.split(",") if x]
-@@ -41,6 +42,12 @@ class Validator:
-         self.debug = debug
-         self.fullrulefname = fullrulefname
- 
-+    def __set_metrics(self, metrics=''):
-+        if metrics != '':
-+            return set(metrics.split(","))
-+        else:
-+            return set()
-+
-     def read_json(self, filename: str) -> dict:
-         try:
-             with open(Path(filename).resolve(), "r") as f:
-@@ -113,7 +120,7 @@ class Validator:
-         All future test(s) on this metric will fail.
- 
-         @param name: name of the metric
--        @returns: list with value found in self.results; list is empty when not value found.
-+        @returns: list with value found in self.results; list is empty when value is not found.
-         """
-         results = []
-         data = self.results[ridx] if ridx in self.results else self.results[0]
-@@ -123,7 +130,6 @@ class Validator:
-             elif name.replace('.', '1').isdigit():
-                 results.append(float(name))
-             else:
--                self.errlist.append("Metric '%s' is not collected or the value format is incorrect"%(name))
-                 self.ignoremetrics.add(name)
-         return results
- 
-@@ -138,27 +144,32 @@ class Validator:
-         Failure: when metric value is negative or not provided.
-         Metrics with negative value will be added into the self.failtests['PositiveValueTest'] and self.ignoremetrics.
-         """
--        negmetric = set()
--        missmetric = set()
-+        negmetric = dict()
-         pcnt = 0
-         tcnt = 0
-+        rerun = list()
-         for name, val in self.get_results().items():
--            if val is None or val == '':
--                missmetric.add(name)
--                self.errlist.append("Metric '%s' is not collected"%(name))
--            elif val < 0:
--                negmetric.add("{0}(={1:.4f})".format(name, val))
--                self.collectlist[0].append(name)
-+            if val < 0:
-+                negmetric[name] = val
-+                rerun.append(name)
-             else:
-                 pcnt += 1
-             tcnt += 1
-+        if len(rerun) > 0 and len(rerun) < 20:
-+            second_results = dict()
-+            self.second_test(rerun, second_results)
-+            for name, val in second_results.items():
-+                if name not in negmetric: continue
-+                if val >= 0:
-+                    del negmetric[name]
-+                    pcnt += 1
- 
-         self.failtests['PositiveValueTest']['Total Tests'] = tcnt
-         self.failtests['PositiveValueTest']['Passed Tests'] = pcnt
--        if len(negmetric) or len(missmetric)> 0:
--            self.ignoremetrics.update(negmetric)
--            self.ignoremetrics.update(missmetric)
--            self.failtests['PositiveValueTest']['Failed Tests'].append({'NegativeValue':list(negmetric), 'MissingValue':list(missmetric)})
-+        if len(negmetric.keys()):
-+            self.ignoremetrics.update(negmetric.keys())
-+            negmessage = ["{0}(={1:.4f})".format(name, val) for name, val in negmetric.items()]
-+            self.failtests['PositiveValueTest']['Failed Tests'].append({'NegativeValue': negmessage})
- 
-         return
- 
-@@ -259,21 +270,36 @@ class Validator:
-         metrics = rule['Metrics']
-         passcnt = 0
-         totalcnt = 0
--        faillist = []
-+        faillist = list()
-+        failures = dict()
-+        rerun = list()
-         for m in metrics:
-             totalcnt += 1
-             result = self.get_value(m['Name'])
--            if len(result) > 0 and self.check_bound(result[0], lbv, ubv, t):
-+            if len(result) > 0 and self.check_bound(result[0], lbv, ubv, t) or m['Name'] in self.skiplist:
-                 passcnt += 1
-             else:
--                faillist.append({'MetricName':m['Name'], 'CollectedValue':result})
--                self.collectlist[0].append(m['Name'])
-+                failures[m['Name']] = result
-+                rerun.append(m['Name'])
-+
-+        if len(rerun) > 0 and len(rerun) < 20:
-+            second_results = dict()
-+            self.second_test(rerun, second_results)
-+            for name, val in second_results.items():
-+                if name not in failures: continue
-+                if self.check_bound(val, lbv, ubv, t):
-+                    passcnt += 1
-+                    del failures[name]
-+                else:
-+                    failures[name] = val
-+                    self.results[0][name] = val
- 
-         self.totalcnt += totalcnt
-         self.passedcnt += passcnt
-         self.failtests['SingleMetricTest']['Total Tests'] += totalcnt
-         self.failtests['SingleMetricTest']['Passed Tests'] += passcnt
--        if len(faillist) != 0:
-+        if len(failures.keys()) != 0:
-+            faillist = [{'MetricName':name, 'CollectedValue':val} for name, val in failures.items()]
-             self.failtests['SingleMetricTest']['Failed Tests'].append({'RuleIndex':rule['RuleIndex'],
-                                                                        'RangeLower': rule['RangeLower'],
-                                                                        'RangeUpper': rule['RangeUpper'],
-@@ -316,7 +342,7 @@ class Validator:
-         return True
- 
-     # Start of Collector and Converter
--    def convert(self, data: list, idx: int):
-+    def convert(self, data: list, metricvalues:dict):
-         """
-         Convert collected metric data from the -j output to dict of {metric_name:value}.
-         """
-@@ -326,20 +352,29 @@ class Validator:
-                 if "metric-unit" in result and result["metric-unit"] != "(null)" and result["metric-unit"] != "":
-                     name = result["metric-unit"].split("  ")[1] if len(result["metric-unit"].split("  ")) > 1 \
-                         else result["metric-unit"]
--                    if idx not in self.results: self.results[idx] = dict()
--                    self.results[idx][name.lower()] = float(result["metric-value"])
-+                    metricvalues[name.lower()] = float(result["metric-value"])
-             except ValueError as error:
-                 continue
-         return
- 
--    def collect_perf(self, data_file: str, workload: str):
-+    def _run_perf(self, metric, workload: str):
-+        tool = 'perf'
-+        command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
-+        wl = workload.split()
-+        command.extend(wl)
-+        print(" ".join(command))
-+        cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
-+        data = [x+'}' for x in cmd.stderr.split('}\n') if x]
-+        return data
-+
-+
-+    def collect_perf(self, workload: str):
-         """
-         Collect metric data with "perf stat -M" on given workload with -a and -j.
-         """
-         self.results = dict()
--        tool = 'perf'
-         print(f"Starting perf collection")
--        print(f"Workload: {workload}")
-+        print(f"Long workload: {workload}")
-         collectlist = dict()
-         if self.collectlist != "":
-             collectlist[0] = {x for x in self.collectlist.split(",")}
-@@ -353,17 +388,20 @@ class Validator:
-                     collectlist[rule["RuleIndex"]] = [",".join(list(set(metrics)))]
- 
-         for idx, metrics in collectlist.items():
--            if idx == 0: wl = "sleep 0.5".split()
--            else: wl = workload.split()
-+            if idx == 0: wl = "true"
-+            else: wl = workload
-             for metric in metrics:
--                command = [tool, 'stat', '-j', '-M', f"{metric}", "-a"]
--                command.extend(wl)
--                print(" ".join(command))
--                cmd = subprocess.run(command, stderr=subprocess.PIPE, encoding='utf-8')
--                data = [x+'}' for x in cmd.stderr.split('}\n') if x]
--                self.convert(data, idx)
--        self.collectlist = dict()
--        self.collectlist[0] = list()
-+                data = self._run_perf(metric, wl)
-+                if idx not in self.results: self.results[idx] = dict()
-+                self.convert(data, self.results[idx])
-+        return
-+
-+    def second_test(self, collectlist, second_results):
-+        workload = self.workloads[self.wlidx]
-+        for metric in collectlist:
-+            data = self._run_perf(metric, workload)
-+            self.convert(data, second_results)
-+
-     # End of Collector and Converter
- 
-     # Start of Rule Generator
-@@ -381,7 +419,7 @@ class Validator:
-                 if 'MetricName' not in m:
-                     print("Warning: no metric name")
-                     continue
--                name = m['MetricName']
-+                name = m['MetricName'].lower()
-                 self.metrics.add(name)
-                 if 'ScaleUnit' in m and (m['ScaleUnit'] == '1%' or m['ScaleUnit'] == '100%'):
-                     self.pctgmetrics.add(name.lower())
-@@ -391,14 +429,12 @@ class Validator:
- 
-         return
- 
--    def remove_unsupported_rules(self, rules, skiplist: set = None):
--        for m in skiplist:
--            self.metrics.discard(m)
-+    def remove_unsupported_rules(self, rules):
-         new_rules = []
-         for rule in rules:
-             add_rule = True
-             for m in rule["Metrics"]:
--                if m["Name"] not in self.metrics:
-+                if m["Name"] in self.skiplist or m["Name"] not in self.metrics:
-                     add_rule = False
-                     break
-             if add_rule:
-@@ -415,15 +451,15 @@ class Validator:
-         """
-         data = self.read_json(self.rulefname)
-         rules = data['RelationshipRules']
--        skiplist = set(data['SkipList'])
--        self.rules = self.remove_unsupported_rules(rules, skiplist)
-+        self.skiplist = set([name.lower() for name in data['SkipList']])
-+        self.rules = self.remove_unsupported_rules(rules)
-         pctgrule = {'RuleIndex':0,
-                     'TestType':'SingleMetricTest',
-                     'RangeLower':'0',
-                     'RangeUpper': '100',
-                     'ErrorThreshold': self.tolerance,
-                     'Description':'Metrics in percent unit have value with in [0, 100]',
--                    'Metrics': [{'Name': m} for m in self.pctgmetrics]}
-+                    'Metrics': [{'Name': m.lower()} for m in self.pctgmetrics]}
-         self.rules.append(pctgrule)
- 
-         # Re-index all rules to avoid repeated RuleIndex
-@@ -479,8 +515,9 @@ class Validator:
-             self.parse_perf_metrics()
-         self.create_rules()
-         for i in range(0, len(self.workloads)):
-+            self.wlidx = i
-             self._init_data()
--            self.collect_perf(self.datafname, self.workloads[i])
-+            self.collect_perf(self.workloads[i])
-             # Run positive value test
-             self.pos_val_test()
-             for r in self.rules:
--- 
-2.39.1
-
+Thanks!
+  Xin
