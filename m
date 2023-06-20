@@ -2,108 +2,143 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD09EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 18:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00076EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 19:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229930AbjFTStt (ORCPT
+        id S230340AbjFTTE4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 14:49:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40322 "EHLO
+        Tue, 20 Jun 2023 15:04:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjFTSts (ORCPT
+        with ESMTP id S230344AbjFTTEp (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 14:49:48 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D12FA10D2;
-        Tue, 20 Jun 2023 11:49:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687286987; x=1718822987;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=2VTUK7nm4L86J0ChS5nWzO/TEZA/KQ39NLw+1gGs1S8=;
-  b=Uk1yLA447flbE+FWUm+30E2UmM6nWDEMdKv4psn9G7huv6hU2fuZ/Xh5
-   UnbJyIGa1NKxs5Hv22LaSDob4eQwX8DJj9AcqT+/JffK0wimXgrBMp7bS
-   jGt2HcGMx/53iLjFFv7BIcmW1XFXFaiYNdijTphLM2pFx07Cj9kXjLo16
-   PbAhWXLn2kLnul6xofzwQfEjOppBV5IWgZE8950sM95yufEkxaOJ0AZH/
-   /bYXaIu3EyjbD0lqn0MBPF3KDJCfQHTvKgnlT/hB5Ky0s6RDrsz/JNHch
-   vhd2LixVwyRwtyZtuDrSnsLUWodM11TdWAyeQnD2DGa6PLASlTfxeelfk
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="389287361"
-X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="389287361"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 11:49:24 -0700
-X-IronPort-AV: E=McAfee;i="6600,9927,10747"; a="748247051"
-X-IronPort-AV: E=Sophos;i="6.00,257,1681196400"; 
-   d="scan'208";a="748247051"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.252.61.49])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2023 11:49:19 -0700
-Message-ID: <f5b4e1e4-9966-c22a-1628-b3df37523841@intel.com>
-Date:   Tue, 20 Jun 2023 21:49:14 +0300
+        Tue, 20 Jun 2023 15:04:45 -0400
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB0494;
+        Tue, 20 Jun 2023 12:04:44 -0700 (PDT)
+Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-77e364a9a87so146973239f.3;
+        Tue, 20 Jun 2023 12:04:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687287883; x=1689879883;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qRkodGX0aqajT2WrVBIl/TXSiJnu1TTBK12nUg6B4M4=;
+        b=jVyGD6Ue5vV8/LOpz4SbS/AwB4gf0VIqOOug5o5GXqm+eBvuhz6IkDMGKsMrQSe2Kh
+         8fuIVD79R3xBCghr+BXioEzlZVltUINJ8x+T0sjPY/xqev3M5jI318pFtO3pf+T+m5Ui
+         JsEqxeDX6BBbLAU08XKVGUftAl1x82XC9T4gjMJyIB0IZJcuNbJi4FeXt1vsBhIYEvQe
+         6wijGwA86YAgDqKjKg8tiqziWkG2/yNP0DKTGzlLucihqfUu9LKREPcg3PLoO8G/biPs
+         +mtqMKLuVeCRB+TlQL3XVhiCSNhmlGY3Uoo+SXCWVCaWaSQ1toP4yIDsCwCdVMQvYfgq
+         WkDA==
+X-Gm-Message-State: AC+VfDy4vW/+W0j1JDKOP0t1ySDj4+A2uaCcaL1xMSHUCbxkLQGw0vti
+        mnYpkNZ8B1l7DL77rV4pQGBvh7kT0eoaTq7wIAA=
+X-Google-Smtp-Source: ACHHUZ5dnlrfdyRHtp6eHjOUTrC6h1aftRAXpdjUTAQrvx9KDxH+XgxKDVdIo+zFgJ+Cr97RDtLu80N8qByWL8A+6IM=
+X-Received: by 2002:a6b:f102:0:b0:763:b459:a701 with SMTP id
+ e2-20020a6bf102000000b00763b459a701mr14493358iog.1.1687287883261; Tue, 20 Jun
+ 2023 12:04:43 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.12.0
-Subject: Re: [PATCH 0/2] perf/core: deliver PERF_RECORD_COMM and
- PERF_RECORD_MMAP side-band events to all online cpus
-Content-Language: en-US
-To:     Yang Jihong <yangjihong1@huawei.com>, peterz@infradead.org,
-        mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230620155515.101222-1-yangjihong1@huawei.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20230620155515.101222-1-yangjihong1@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
+In-Reply-To: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 20 Jun 2023 12:04:31 -0700
+Message-ID: <CAM9d7cj3v58m8NcsEK4sYsk_dbQDAq71hYo7DV=xaQa_rZyPYg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] Add JSON metrics for Yitian710 DDR
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        John Garry <john.g.garry@oracle.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Ian Rogers <irogers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On 20/06/23 18:55, Yang Jihong wrote:
-> Tasks are migrated between cores due to scheduling.
-> If perf samples specified CPUs, PERF_RECORD_COMM and PERF_RECORD_MMAP
-> events need be deliver to all cores to avoids the problem that the comm
-> and symbols cannot be parsed due to task migration to the target core.
-> 
-> The specific scenarios are as follows:
-> 
->          CPU0                                 CPU1
->   perf record -C 0 start
->                               taskA starts to be created and executed
->                                 -> PERF_RECORD_COMM and PERF_RECORD_MMAP
->                                    events only deliver to CPU1
->                               ......
->                                 |
->                           migrate to CPU0
->                                 |
->   Running on CPU0    <----------/
->   ...
-> 
->   perf record -C 0 stop
-> 
-> Now perf samples the PC of taskA. However, perf does not record the
-> PERF_RECORD_COMM and PERF_RECORD_COMM events of taskA.
-> Therefore, the comm and symbols of taskA cannot be parsed.
+Hello,
 
-perf record deals with this for PERF_RECORD_TEXT_POKE, by opening
-the corresponding "dummy" event on each CPU irrespective of whether
-the main events are on selected CPUs.  Refer
-evlist__add_dummy_on_all_cpus().
+On Tue, Jun 20, 2023 at 12:17 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+>
+> Hi all,
+>
+> I add an identifier sysfs file for the yitian710 SoC DDR to allow
+> userspace to identify the specific implementation of the device,
+> so that the perf tool can match the corresponding uncore events and
+> metrics through the identifier. Then added yitian710 SoC DDR
+> metrics and events alias.
+>
+> Change since v3:
+> - Split the CMN and ali_drw patches. This patchset only contains
+>   ali_drw PMU related patches. The CMN metric related patches will
+>   be in another patchset.
+> - Link: https://lore.kernel.org/all/1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com/
+>
+> $perf list:
+> ...
+> ali_drw:
+>   chi_rxdat
+>        [A packet at CHI RXDAT interface (write data). Unit: ali_drw]
+>   chi_rxrsp
+>        [A packet at CHI RXRSP interface. Unit: ali_drw]
+>   chi_txdat
+>        [A packet at CHI TXDAT interface (read data). Unit: ali_drw]
+>   chi_txreq
+>        [A packet at CHI TXREQ interface (request). Unit: ali_drw]
+>   cycle
+>        [The ddr cycle. Unit: ali_drw]
+> ...
+> ali_drw:
+>   ddr_read_bandwidth.all
+>        [The ddr read bandwidth(MB/s). Unit: ali_drw ]
+>   ddr_write_bandwidth.all
+>        [The ddr write bandwidth(MB/s). Unit: ali_drw ]
+> ...
+>
+> $perf stat -M ddr_read_bandwidth.all ./test
+>
+> Performance counter stats for 'system wide':
+>
+>             38,150      hif_rd        #  2.4 MB/s  ddr_read_bandwidth.all
+>      1,000,957,941 ns   duration_time
+>
+>        1.000957941 seconds time elapsed
+>
+> Jing Zhang (4):
+>   driver/perf: Add identifier sysfs file for Yitian 710 DDR
+>   perf jevents: Add support for Yitian 710 DDR PMU aliasing
+>   perf vendor events: Add JSON metrics for Yitian 710 DDR
+>   docs: perf: Update metric usage for Alibaba's T-Head PMU driver
 
-So this could be handled by perf record.
+So patch 1 is for the kernel, and patch 2-4 depend on it, right?
 
-> 
-> Yang Jihong (2):
->   perf/core: perf_iterate_sb_cpu() supports to receive side-band events
->     for all oneline cpus
->   perf/core: deliver PERF_RECORD_COMM and PERF_RECORD_MMAP side-band
->     events to all online cpus
-> 
->  kernel/events/core.c | 58 +++++++++++++++++++++++++++++++-------------
->  1 file changed, 41 insertions(+), 17 deletions(-)
-> 
+I'm curious why the first patch is needed, presumably the PMU
+should have 'ali_drw' in the name already.  Do we use substring
+match for the compat name in the JSON metric?
 
+Thanks,
+Namhyung
+
+>
+>  Documentation/admin-guide/perf/alibaba_pmu.rst     |   5 +
+>  drivers/perf/alibaba_uncore_drw_pmu.c              |  27 ++
+>  .../arm64/freescale/yitian710/sys/ali_drw.json     | 373 +++++++++++++++++++++
+>  .../arm64/freescale/yitian710/sys/metrics.json     |  20 ++
+>  tools/perf/pmu-events/jevents.py                   |   1 +
+>  5 files changed, 426 insertions(+)
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/ali_drw.json
+>  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json
+>
+> --
+> 1.8.3.1
+>
