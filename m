@@ -2,78 +2,129 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0003EC001DF
-	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 07:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFCBEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Tue, 20 Jun 2023 07:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231265AbjFTHM4 (ORCPT
+        id S231145AbjFTHVh (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 03:12:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56556 "EHLO
+        Tue, 20 Jun 2023 03:21:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231215AbjFTHMz (ORCPT
+        with ESMTP id S229758AbjFTHVg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 03:12:55 -0400
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D691E7;
-        Tue, 20 Jun 2023 00:12:53 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0Vlamlc3_1687245167;
-Received: from srmbuffer011165236051.sqa.net(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vlamlc3_1687245167)
-          by smtp.aliyun-inc.com;
-          Tue, 20 Jun 2023 15:12:48 +0800
-From:   Jing Zhang <renyu.zj@linux.alibaba.com>
-To:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        John Garry <john.g.garry@oracle.com>,
-        Shuai Xue <xueshuai@linux.alibaba.com>,
-        Ian Rogers <irogers@google.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        James Clark <james.clark@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
-        Zhuo Song <zhuo.song@linux.alibaba.com>,
-        Jing Zhang <renyu.zj@linux.alibaba.com>
-Subject: [PATCH v4 4/4] docs: perf: Update metric usage for Alibaba's T-Head PMU driver
-Date:   Tue, 20 Jun 2023 15:12:36 +0800
-Message-Id: <1687245156-61215-5-git-send-email-renyu.zj@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
-References: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
+        Tue, 20 Jun 2023 03:21:36 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71A26E7;
+        Tue, 20 Jun 2023 00:21:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uYLeKz7CtPLIuBievrQxgmZUSwGBkqjnNayiyMmgK3M=; b=jcPw1aVbWJ4FXuugKXEX0kTRZj
+        RffNTyB0eEcsVpSmqG2B7rIhT84FlDdB3ule03g1AfNUBsjktvGUbFT4736H3oNVkkKcSH7f8uO7Y
+        w1DBjsmNPR3i7AG+nMWNDuDcNokDha6GNQDsG7VkYzlJ10XXIygkXWKGf83NwQ1JMHQdjl3WgUtZg
+        C5NeDJLZbNqrsPwhtay5wpS3zswXL22SgbyZjwu1JHS+rmXDSx4wrZddK9Jk3Q/hw6R+ezpGc+ZFv
+        CtGNfTUPowA7O9w5Gosgrw5k3fWeIvXSi7PA+CeXifr+kVyBf54oE59kOZ1HMQQOYX46Xk/bhJmw7
+        SMGsgLFA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qBVfV-00Fxtf-2Q;
+        Tue, 20 Jun 2023 07:20:50 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C789A30020B;
+        Tue, 20 Jun 2023 09:20:47 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4AF2F21440F48; Tue, 20 Jun 2023 09:20:47 +0200 (CEST)
+Date:   Tue, 20 Jun 2023 09:20:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Xin Li <xin3.li@intel.com>
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        iommu@lists.linux.dev, linux-hyperv@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, steve.wahl@hpe.com,
+        mike.travis@hpe.com, dimitri.sivanich@hpe.com,
+        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
+        joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
+        robin.murphy@arm.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+        seanjc@google.com, jiangshanlai@gmail.com, jgg@ziepe.ca,
+        yangtiezhu@loongson.cn
+Subject: Re: [PATCH 2/3] x86/vector: Replace IRQ_MOVE_CLEANUP_VECTOR with a
+ timer callback
+Message-ID: <20230620072047.GS4253@hirez.programming.kicks-ass.net>
+References: <20230619231611.2230-1-xin3.li@intel.com>
+ <20230619231611.2230-3-xin3.li@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230619231611.2230-3-xin3.li@intel.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Alibaba's T-Head ali_drw PMU supports DDR bandwidth metrics. Update
-its usage in the documentation.
+On Mon, Jun 19, 2023 at 04:16:10PM -0700, Xin Li wrote:
 
-Signed-off-by: Jing Zhang <renyu.zj@linux.alibaba.com>
-Acked-by: Ian Rogers <irogers@google.com>
----
- Documentation/admin-guide/perf/alibaba_pmu.rst | 5 +++++
- 1 file changed, 5 insertions(+)
+> +/*
+> + * Called with vector_lock held
+> + */
 
-diff --git a/Documentation/admin-guide/perf/alibaba_pmu.rst b/Documentation/admin-guide/perf/alibaba_pmu.rst
-index 11de998..7d84002 100644
---- a/Documentation/admin-guide/perf/alibaba_pmu.rst
-+++ b/Documentation/admin-guide/perf/alibaba_pmu.rst
-@@ -88,6 +88,11 @@ data bandwidth::
-     -e ali_drw_27080/hif_rmw/ \
-     -e ali_drw_27080/cycle/ -- sleep 10
- 
-+Example usage of counting all memory read/write bandwidth by metric::
-+
-+  perf stat -M ddr_read_bandwidth.all -- sleep 10
-+  perf stat -M ddr_write_bandwidth.all -- sleep 10
-+
- The average DRAM bandwidth can be calculated as follows:
- 
- - Read Bandwidth =  perf_hif_rd * DDRC_WIDTH * DDRC_Freq / DDRC_Cycle
--- 
-1.8.3.1
+Instead of comments like that, I tend to add a lockdep_assert*()
+statement to the same effect. Which unlike comment actually validate the
+claim and since it's code it tends to not go stale like comments do.
 
+> +static void __vector_cleanup(struct vector_cleanup *cl, bool check_irr)
+>  {
+>  	struct apic_chip_data *apicd;
+>  	struct hlist_node *tmp;
+> +	bool rearm = false;
+
+	lockdep_assert_held(&vector_lock);
+
+> +	hlist_for_each_entry_safe(apicd, tmp, &cl->head, clist) {
+>  		unsigned int irr, vector = apicd->prev_vector;
+>  
+>  		/*
+>  		 * Paranoia: Check if the vector that needs to be cleaned
+> +		 * up is registered at the APICs IRR. That's clearly a
+> +		 * hardware issue if the vector arrived on the old target
+> +		 * _after_ interrupts were disabled above. Keep @apicd
+> +		 * on the list and schedule the timer again to give the CPU
+> +		 * a chance to handle the pending interrupt.
+> +		 *
+> +		 * Do not check IRR when called from lapic_offline(), because
+> +		 * fixup_irqs() was just called to scan IRR for set bits and
+> +		 * forward them to new destination CPUs via IPIs.
+>  		 */
+> +		irr = check_irr ? apic_read(APIC_IRR + (vector / 32 * 0x10)) : 0;
+>  		if (irr & (1U << (vector % 32))) {
+> +			pr_warn_once("Moved interrupt pending in old target APIC %u\n", apicd->irq);
+> +			rearm = true;
+>  			continue;
+>  		}
+>  		free_moved_vector(apicd);
+>  	}
+>  
+> +	/*
+> +	 * Must happen under vector_lock to make the timer_pending() check
+> +	 * in __vector_schedule_cleanup() race free against the rearm here.
+> +	 */
+> +	if (rearm)
+> +		mod_timer(&cl->timer, jiffies + 1);
+> +}
+> +
+> +static void vector_cleanup_callback(struct timer_list *tmr)
+> +{
+> +	struct vector_cleanup *cl = container_of(tmr, typeof(*cl), timer);
+> +
+> +	/* Prevent vectors vanishing under us */
+> +	raw_spin_lock_irq(&vector_lock);
+> +	__vector_cleanup(cl, true);
+> +	raw_spin_unlock_irq(&vector_lock);
+>  }
