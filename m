@@ -2,172 +2,109 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7835DEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 18:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90EDEEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 19:35:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230502AbjFUSnr (ORCPT
+        id S230125AbjFUTfr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 14:43:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
+        Wed, 21 Jun 2023 15:35:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231256AbjFUSnq (ORCPT
+        with ESMTP id S230129AbjFUTfj (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 14:43:46 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97AD61B4
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 11:43:45 -0700 (PDT)
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35LISFsZ003550;
-        Wed, 21 Jun 2023 18:43:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=+pC+l0tVA8Whlpv+QpYxLtQdys13EVz05hYg5BH1rMY=;
- b=juxGTMRq+m0jRNPUJp9dLK6UkhbeT9L0kMp5WDSo+RzK46TLXW161qwchaJppB2yaM8T
- xnIgC0d+tc/yBKN6TfutAwYftwOiL5fWfecUlOmIUQYTOtJj7m4LsZFE07ubHDfRI58g
- CYKDvzmugz5lOmtgBuEsnz9MkwwXWqAFTPRRD/rZ5xZAchxh4e+RM+2aJ4RQpFMvD893
- qYczWbinQUW1cellZlDoHhAMTBnsMtrT1qQA5wHpQUwuODu3pS2+E8dlGQ2eROZCpir3
- 5BxXUQpV6KIi2W5NifL7ykx2IktYoHaViA2BXQzbHyXernK+i9RSVSRx4WwUcMAEtbJs bw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rc6gtgcxv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jun 2023 18:43:15 +0000
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35LIfknj025617;
-        Wed, 21 Jun 2023 18:43:15 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rc6gtgcwr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jun 2023 18:43:14 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35L3OLgT009702;
-        Wed, 21 Jun 2023 18:43:12 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3r94f5317s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jun 2023 18:43:12 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35LIh8Wn12780192
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Jun 2023 18:43:09 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCC7B20040;
-        Wed, 21 Jun 2023 18:43:08 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 539A72004B;
-        Wed, 21 Jun 2023 18:43:06 +0000 (GMT)
-Received: from [9.43.103.191] (unknown [9.43.103.191])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 21 Jun 2023 18:43:06 +0000 (GMT)
-Message-ID: <ee0bd9de-c2c7-010f-5a4d-40e07ded8a3e@linux.ibm.com>
-Date:   Thu, 22 Jun 2023 00:13:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 15/17] perf tests task_analyzer: fix bad substitution
- ${$1}
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Hagen Paul Pfeifer <hagen@jauu.net>,
-        Petar Gligoric <petar.gligoric@rohde-schwarz.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
-        irogers@google.com, ravi.bangoria@amd.com, john.g.garry@oracle.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
- <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com>
- <ZIjMWUk/axKfMCM4@kernel.org>
- <CAM9d7cjrpaNk0UC22ntBSP+LzQwT2YAHwQ2o3z1aayAZNQ329g@mail.gmail.com>
- <5ab5cc25-03b0-ef7f-3dc0-be1b59a4147d@linux.ibm.com>
- <CAM9d7cgcETpnNgvgJ8a966bwc0phQuVMwABHzA8APk6Z9Er=OQ@mail.gmail.com>
-Content-Language: en-IN, en-US
-From:   Aditya Gupta <adityag@linux.ibm.com>
-In-Reply-To: <CAM9d7cgcETpnNgvgJ8a966bwc0phQuVMwABHzA8APk6Z9Er=OQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: qLUSCoUZZDCVSwlQ9gu_0Xixz3s5nGf1
-X-Proofpoint-GUID: pmHnR0uV1xKMVx8S0l7dMyzi94kRNPmH
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Wed, 21 Jun 2023 15:35:39 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7473610F2;
+        Wed, 21 Jun 2023 12:35:34 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-668709767b1so2954305b3a.2;
+        Wed, 21 Jun 2023 12:35:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687376134; x=1689968134;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8vUyZ7pvZFvTax/yPxI3TKMDV88xCJbdm/hiSAJgg4Q=;
+        b=fLWnNmx0Qan8RyeQSDp5zcYGGw8zVNhJKZ5TSpDffkOiCJeoz5sfZ4T4rrWZQhqZlL
+         QmgLFhJitHhAl51lY2YVycXWXz0WO/hLtBhUh+DRyEHOP+8xb1ubT7/A3Uh6Yzui52Kr
+         bqZ8gPL6DP2pt7ioZ1z1pS2N+RbP/PdL6C52jnQGMHlp477KYFp0wroDOQaQTK2Rly/6
+         k58sXwoMJzMyZpHmYg6g5BkUV1fBB2BMaWJWhuYRm1BJ2EmR+XJ7ux5vG6pKyHN2ExEG
+         Vh4b6EoF0/wDZJwi3HF/fsIioSSNyNXcgLerj1Z5kEdF5iiHlmMhhdGXq/O2NchdWmy9
+         hMuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687376134; x=1689968134;
+        h=content-disposition:mime-version:message-id:subject:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8vUyZ7pvZFvTax/yPxI3TKMDV88xCJbdm/hiSAJgg4Q=;
+        b=a5czkz+4NUkO8ELe073Mt0ikFFWPfkCCdlZOQfSOphkthgs8Ljg0SUx7X9/4VXo66Z
+         ypvYC7gC1vZB2GfrWZcj1IG/vaWgr7j2rowUL8QsPB0PSBI+Y86Ps1EbyTqJtf6wWKAm
+         7YokFfhhewj3/2MhngN2I1KQyzu0D0Htx22znB0GL3O1/KL+xQoaTZ87odcC8hlnkOW6
+         jyiplJ1ndzsIumXXRCMy4mxxGZUoXiA80L4RQlyKB8nImCkd0Ni+SIJQjRg2HC+E6lyY
+         XIKxgUVj8DczBMozijDtCKaHDxAYeLJz/4Jks+i5P1T/+I1ySczCrXzG21jVmTCCc4qR
+         fX4w==
+X-Gm-Message-State: AC+VfDwpcJKsnoY1LaMviNvUcCwCf3Ig6AP2+xyFqQOGJksEicFLGRDh
+        gy7N5jdLqZa1hS22PHzedyw=
+X-Google-Smtp-Source: ACHHUZ4vTCPCH0BMswHA5OsFi5Lf1cOYHsNeV8rtBxn0aEe0bfHaosv11xHdB9A5cJZiDeg1TZqo+Q==
+X-Received: by 2002:a05:6a00:1483:b0:65d:d5cd:6f17 with SMTP id v3-20020a056a00148300b0065dd5cd6f17mr18077523pfu.24.1687376133736;
+        Wed, 21 Jun 2023 12:35:33 -0700 (PDT)
+Received: from yoga ([2400:1f00:13:6258:556c:aad7:2240:7612])
+        by smtp.gmail.com with ESMTPSA id j25-20020a62e919000000b00662610cf7a8sm3333028pfh.172.2023.06.21.12.35.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Jun 2023 12:35:33 -0700 (PDT)
+Date:   Thu, 22 Jun 2023 01:05:26 +0530
+From:   Anup Sharma <anupnewsmail@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Anup Sharma <anupnewsmail@gmail.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/9] Add support for Firefox's gecko profile format
+Message-ID: <cover.1687375189.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-21_10,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 mlxscore=0 malwarescore=0 bulkscore=0 spamscore=0
- impostorscore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=999
- phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2305260000 definitions=main-2306210155
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Namhyung,
+This patch series adds support for Firefox's gecko profile format.
+The format is documented here [1]
 
-On 21/06/23 20:53, Namhyung Kim wrote:
-> Hello Aditya,
->
-> On Wed, Jun 21, 2023 at 3:05 AM Aditya Gupta <adityag@linux.ibm.com> wrote:
->> Hello Namhyung,
->>
->> On 21/06/23 06:18, Namhyung Kim wrote:
->>> ...
->>>
->>> $ sudo ./perf test -v task
->>> 114: perf script task-analyzer tests                                 :
->>> --- start ---
->>> test child forked, pid 1771042
->>> Please specify a valid report script(see 'perf script -l' for listing)
->>> FAIL: "invocation of perf command failed" Error message: ""
->>> FAIL: "test_basic" Error message: "Failed to find required string:'Comm'."
->>> Please specify a valid report script(see 'perf script -l' for listing)
->>> FAIL: "invocation of perf command failed" Error message: ""
->>> FAIL: "test_ns_rename" Error message: "Failed to find required string:'Comm'."
->>> ...
->>> test child finished with -1
->>> ---- end ----
->>> perf script task-analyzer tests: FAILED!
->> Can you please check if your environment has libtraceevent devel
->> libraries (or did you compile with `make NO_LIBTRACEEVENT=1`) ? When
->> libtraceevent support is not there, perf record fails and so perf.data
->> doesn't contain the strings it's searching for and hence those errors
->>
->> The error you mentioned has been mentioned and fixed in patch 17/17 of
->> this series.
-> Thanks for your reply but It has libtraceevent.  Also, shouldn't it
-> skip if it's not?
->
-> Thanks,
-> Namhyung
+The series adds a new python script that can be used to convert the 
+perf script to gecko profile format. To use this script, use the
+following commands: 
 
-The skipping is handled in the 17th patch in this series, and 
-considering that patch has also been applied, it will skip the tests if 
-perf wasn't built with proper libtraceevent support.
+perf record 
+perf script -F +pid > perf_data.txt
+python3 firefox-gecko-converter.py > gecko_profile.json
 
-Back to the error, Sorry but I tested again on my system and am unable to reproduce the issue you are seeing when built with libtraceevent support.
+Also dont forget to change the chown of the output file to the user[2].
 
-This is what I did:
+[1] https://github.com/firefox-devtools/profiler/blob/main/docs-developer/gecko-profile-format.md
+[2] https://bugzilla.mozilla.org/show_bug.cgi?id=1823421
 
-0. git clone --depth=1 https://github.com/torvalds/linux
-0. cd linux/tools/perf
-0. git am patch_15/17.patch
+Anup Sharma (9):
+  scripts: python: Add check for correct perf script format
+  scripts: python: implement add sample function and return it
+  scripts: python: Introduce thread sample processing in
+    convertPerfScriptProfile
+  scripts: python: Implement parsing of input data in
+    convertPerfScriptProfile
+  scripts: python: implement function for thread creation
+  scripts: python: implement get or create stack function
+  scripts: python: implement get or create frame function
+  scripts: python: Finalize convertPerfScriptProfile and return profile
+    data
+  scripts: python: Add temporary main function for testing purposes
 
-> I applied ONLY this patch (15/17) of this series, to a fresh linux tree
+ .../scripts/python/firefox-gecko-converter.py | 249 ++++++++++++++++++
+ 1 file changed, 249 insertions(+)
+ create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
 
-1. dnf install libtraceevent-devel
-2. make clean && make
-3. sudo ./perf test -v "perf script task-analyzer tests"       # Working fine, tests passed
-
-4. dnf remove libtraceevent-devel
-5. make clean && make                                          # There will also be a warning during build: "libtraceevent is missing limiting functionality"
-6. sudo ./perf test -v "perf script task-analyzer tests"       # Fails with the error you posted, which was the case till now, it's skipped when the 17th patch is also applied and perf built without libtraceevent support
-
-The error in the second case (without proper libtraceevent support) is expected, as it was the case till now, that is fixed by the 17th patch, try applying that also and build perf with `make NO_LIBTRACEEVENT=1`, it will skip then.
-
-Can you guide me with the steps to reproduce the error ?
-
-Sidenote: Just in case, please ensure you are running the perf as root here as `perf record -e sched:sched_switch -a -- sleep 1` requires root, which has been used in `prepare_perf_data`
-
-Thanks,
-- Aditya
+-- 
+2.34.1
 
