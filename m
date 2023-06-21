@@ -2,152 +2,160 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C57EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 03:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7C4EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 04:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229527AbjFUD2R (ORCPT
+        id S229783AbjFUEZH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 23:28:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36682 "EHLO
+        Wed, 21 Jun 2023 00:25:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbjFUD17 (ORCPT
+        with ESMTP id S229585AbjFUEZG (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 23:27:59 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 540B1E2;
-        Tue, 20 Jun 2023 20:27:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UF7EJ2XBx/zUjz3xCRwncg/2VTTctQ7glvEWUdgq/5IP50V4K5P5w38Xxkki2IqZv/CAbrdxQqLg4WUaYRHbB5dd1ELHPAt8s/u0vJrGqmW1fdRoF0Btbg9+lnCuZmwIPxDL4y+rZvNaaHY1/tPJyf7T8ZKD5vkJDDQWVTxe5usvDpdRi8R96FfU3OUmNQsHimj2cfCqVPsfzAi7W3XKiJzYPmsHLvsuXiP5ZiSRy5O6iKOTiPnkb6viLySF5XvEMAHF/PWBiqYV0eDHeiNmvfRWvfZrtyAihGtPy1BsRaaMs0AdmlvYHJwbm/nyBpmJ3VJwdlwBZcfoL45GVcRopA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=93JzRU7h40yVcscxnx7AZa3UkokfcajfYwyJv01haiM=;
- b=KTrYjm1BNY4nF9J/GfAAf05pnJO7n4J+HeN0zzIOn2PBsH1+XIZPRxi+QUidlbbzuSglBFIq+t0+7h7VI5VOYgFvjUO3w1mDD1i07HbDLvU9rZFRwC+7GAt+DD/MnkCF7+fIdmzp12kA7WLeOkhwcriynMylsaKNrY5/m69qgj30vzI2eJHWqiYbF0ZBc4Rhyg4w+jTJ3KvFyebsvHWiTfDQ4wcinRaHqI+UUcIxo/pE0V9kM4NJrLkp30mPkAmIVnR6WPb5rz3QsThMlrZDz/Dsl89dFFULLbVVU5aCU0bRzWKyvexWBCxrr+/CzxIe/nk1VzEjd/MYvM8ouJY6mA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=93JzRU7h40yVcscxnx7AZa3UkokfcajfYwyJv01haiM=;
- b=Kd6ZbrsXCyyoa2HSJjLKHET89HBSsza8UaOPoEro3D59zPa/SJWYYim5x8AVmiZgVtKMZH/Vf8hMBc9y+LcxyCcvi+W2TB8QvynqdOlFRXfkHuH9w+3gQPHe6hd8AxT6o5JAt14ifjNpmdp4W3R1yo5YlmOH1SHTbfobEQcNz5I=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by DM6PR12MB4547.namprd12.prod.outlook.com (2603:10b6:5:2a9::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.21; Wed, 21 Jun
- 2023 03:27:55 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::b4a6:94bb:6895:645]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::b4a6:94bb:6895:645%4]) with mapi id 15.20.6500.036; Wed, 21 Jun 2023
- 03:27:55 +0000
-Message-ID: <3b0abd4a-6450-c282-65ff-ec0c7df67b03@amd.com>
-Date:   Wed, 21 Jun 2023 08:57:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] perf/amd: Prevent grouping of IBS events
-To:     Ian Rogers <irogers@google.com>
-Cc:     peterz@infradead.org, acme@kernel.org, jolsa@kernel.org,
-        namhyung@kernel.org, bp@alien8.de, x86@kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sandipan.das@amd.com, ananth.narayan@amd.com,
-        santosh.shukla@amd.com, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20230620091603.269-1-ravi.bangoria@amd.com>
- <CAP-5=fXS726wY1taYEYXDz3YZ4ZwxcL+nhh_yNM7rwamMd8mWg@mail.gmail.com>
-Content-Language: en-US
-From:   Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <CAP-5=fXS726wY1taYEYXDz3YZ4ZwxcL+nhh_yNM7rwamMd8mWg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0177.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:26::32) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+        Wed, 21 Jun 2023 00:25:06 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ACF11738
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jun 2023 21:25:05 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2b46cad2fd9so54338611fa.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jun 2023 21:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1687321503; x=1689913503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LuEAiEqFzxQqtssF/XyIsWFBa1XFMPGQrF0jyK8eg4s=;
+        b=XXpqOWb76gFbvNHhpsISUXf41NyGxTGOgD+JApzu1tOt1Ekny/Au85wYwds7Uubgu8
+         ydGBnJMW7KUk1G00lw29oWp/1fVcgHrGPiVHc74p95m8qW3E+DOvCsAHYU56WRlldZoG
+         TJCqBMgFueyBOpq4TVo8LehsCBwNZQFu4mfpyiBpc3BitrVcUX9+zJr2FTbiBFL0eidM
+         5BDvYZ+KdwVKznHkHNWmrHae9zbuSCxdrds+VTb1dEqovVZHzAZ7QF/FrLVPBjMqq1pz
+         ho1Zo2+BXtftckfSK1xZah07L5YhK3odnfF/1XKuvAfcRVnYZTi2LwqYJOuO93RMf8iC
+         05Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687321503; x=1689913503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LuEAiEqFzxQqtssF/XyIsWFBa1XFMPGQrF0jyK8eg4s=;
+        b=UhbLDfUCQbqaCCn0JKSA2CZzyS/kP4okqIPjf4j5+K3EyJkf3rVkhgRkia9S7umprq
+         x1yObEi3gMU3UNdnLwXvuuSVMTCmXxmQ6VrBNO5qZrDjDCsV5mvjpqcgPNqr6sFpOUjB
+         xA6yPrCOGLuNrClORDENKpm+b8oLCxg/D0N7QNjWoLLSPTqYtWhpFMXk83IULEK2pdZs
+         CEnrtrCVUMJarMbPgN+AGo0gPNr4DkDxC4FYdlGep2qbumMUcdyQGK/HR8OuQin52ahl
+         f7VAVzQM+i3M9A+QWTCmC57HqHSGDUd0ozDqcU+ICTVIAbE31uh4cQ3vegBAStDAasO1
+         fmMw==
+X-Gm-Message-State: AC+VfDyONdE8rYa2FATS4U4QGoPcFITJY37L4Y4WP5hYXhH/XfF7PaOL
+        cHsLVKUu7+0EVcHs+A7Iw8OulGio5osDAiSsuXoNNg==
+X-Google-Smtp-Source: ACHHUZ5e35l6LnX7XodTQBDPnk2bkYC/RZKniEMCiLxMYVECDyKqRYf9BNAs3JuKORFJ64C9YqrbJoQzdffkcu3SbgM=
+X-Received: by 2002:a2e:7d09:0:b0:2b4:74a7:9606 with SMTP id
+ y9-20020a2e7d09000000b002b474a79606mr4726742ljc.46.1687321503290; Tue, 20 Jun
+ 2023 21:25:03 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DM6PR12MB4547:EE_
-X-MS-Office365-Filtering-Correlation-Id: bb55c8d7-c879-4a4a-74c8-08db72078056
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qgDDK+no+eu891FMal7z0KJn5g7pVPxLOBoHZSeAIrlSM+CXUwJpFA1tEbrzOhfjRkzTnMoFdE1shC5AccDGXPdFSnj8ZEDtd9HZ7i69yMwQnhUdjxtXgfFcBBkNSqeGnt3bdbP1a/6bDC+rQPBZqLLJ67RAHJznHtTYayobs5OfJEZPTFw+fVtNRIY29Jn+LztHCvlobjeJq0HQGtpWl2LzNIWY2StUc7oM093sWT8m77JSryxI2sJJkuVWlY/N99YKnAKzxmbp8nyLCsqyzHb1upZWybywsD6Z5YjkcM6A54lfEwT3KofrfIn97DIaFXv49OUNkws6M6H/u+EspAw5PLZVcHs5Ob/y2+Fty2A01v5aXimxLjfBDEgwNTz+W1f5+SFMq6zM+0sUyErxCpklb7/5ovwmYrzsUX9WiGVLlWpbYjwBFZ0KPaWpEfiNNvDt2OPzf3seM2rQR7SoaBppp3SjWIsgmAsh9PDs8MokGlSA5hY3pmRcevtjjsRZOCokuopd8ATVeyCTqXyBJpqO4Y06ZvvsNknNtrfb3XLjXHjMQifZVSIZNwbV5M2+3U4+Prex03cqzkT+tHZmFElADjI/2FLtdMnfU90zrb30LoEzo8dtfknBC/W5qV4Pyz9uioYAIqPjYCV8A/Ay9Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(136003)(396003)(366004)(39860400002)(451199021)(478600001)(6486002)(6666004)(83380400001)(2616005)(6506007)(6512007)(4744005)(26005)(2906002)(186003)(36756003)(53546011)(5660300002)(44832011)(66476007)(316002)(38100700002)(31696002)(4326008)(66946007)(41300700001)(8676002)(8936002)(6916009)(66556008)(86362001)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dGNhUEU4cnJtRTZoRXlTVWQ2SFQ4SkcxRFZOYnduZXVvVG4yRFhTa2tvN0h1?=
- =?utf-8?B?cVQxcitoVWc4R3BSK3RMRllDbE14WWQwL0luQjBuUE05UFcxY0VuYk9wQUNm?=
- =?utf-8?B?Mk9qZFN1MEtEZmUvSk1nZFFNTVhqMkNOY1VBWW5vUjE3QzF3aGRrQjN3QklP?=
- =?utf-8?B?LzhVV21POCtldDJXcWFURmpSQ3hPZ0NiLzVUQWVIaDN4TXIrckpXRXY4MHdB?=
- =?utf-8?B?b3RRb2hSN09HYlEvTjl5T3JQdDVIQUtXckFtOHdEMlh2OVo2WmVOVDJEVDY5?=
- =?utf-8?B?dWhoalUwRWduaG00ckY5aDNrZnJRS1hvQU9nV0RCaWltYThFNUMrWS9DcTdl?=
- =?utf-8?B?SkJyNmQ3bWlMczlIN08wek5wT2tDaTRSMHpBeTNsdVNKazFLc0Z2emhsekZ2?=
- =?utf-8?B?M0hpUVk0bWtIbHJVeTlzMkgwMmFPYXpacXNpbTIyUlB6N1JuZGUrbUNvZzZs?=
- =?utf-8?B?UlFmYytzTFhQK1NTdFhUM002dDQvcVBVcUR1NXErQXFmQTZIZFpqRDNvQnhT?=
- =?utf-8?B?Z005OUJUeE45U2l0L3ArWHkzOG9HWGVpVGVtcmdZK0ZhS0hKQjB0Qno0Sncy?=
- =?utf-8?B?Qk1ucUZ0cWMrU2tGOHhLeUxFK1orSlpSWWRHV0lEdE5JQmJEUlRZeDQwaEF5?=
- =?utf-8?B?SWU1VDNtZEhwQ0lVejlzcU1QY3BIN0pydVJqeFNTTWNBYjhjZjRWMmtCYjNo?=
- =?utf-8?B?dFpQZkFsZEswdkJvM1FobHdpbHpSaVVtS0g0bDdkY3NKTHVLWE5rNytvWDBu?=
- =?utf-8?B?Qk1HSU1yS09DZXZiaTVydFo4bkpwNmJSdHZqM3gzM04yTFpRbVlTZUVkMjZS?=
- =?utf-8?B?aUFhYzZWVDZLUzgwSk1TTE11Q3VyQnhwR1RkLzBaU2FMWHdGMDM3ZWRFZlhm?=
- =?utf-8?B?ZGQweEVSamRNU25JMm1SYm0xRjlTNVoxWllpN2dmRllkVDh3TmVpUjBjWDRr?=
- =?utf-8?B?TVlhWGlQTWlVZVlTS21OTzJFTVByQmNObEhhMmdERktnTTB2SVVaYzVEU2R2?=
- =?utf-8?B?akMybm1YWlN5UVI0MktIcDZ3d1Fwd2JaTkxxMzg3Sm83SDBFSCs1N0wwZTht?=
- =?utf-8?B?WWhRenBIVWJWV2VzU1VScmoxeUlGM3E4Qk1BU0ZnSUZ1VytTczFvTmtwTkRB?=
- =?utf-8?B?TjlBcmFFNEpCVVdtOUhtaXBrclJUQnFoc0tWR3ByOS9GKzVOaURONkdlZ3BX?=
- =?utf-8?B?dFE0V0Yrb2ovT0JzQ1o1bVlyM3M5NDI5azNkSlhNOWh1c1dwTDJZVFFzOTJx?=
- =?utf-8?B?ZTdTQzRwaHlWWGhXU0FnUGFJMW5vL2NHZzlPbjVRakRVNTlNS25FbEJqbDRS?=
- =?utf-8?B?OVFQSmUvVTJjZ3F4bVR5OFVKVm1xaDYwRGFCMVpFSUNNU1hmRDVyRDI0MGR0?=
- =?utf-8?B?R2YxQS8zUTBRUDVscVp5NlNZUnFTNkYzSWpySEVZK3hxR0ZSRmtjUTZGdjRy?=
- =?utf-8?B?Qm1INnVTYjVaYm5jMWdOdnBTU3BtZE5OQ3dDWFNudW5qcUh2ZG92WkZWL2NT?=
- =?utf-8?B?Ymg4SnVhNjB2V3JlcVZXSFY2VnE0d2J5cmg0Z1F4ZFZ2VWI2VzBaank2eGNX?=
- =?utf-8?B?SFFtR3kyNzQyS0hNUUIvU0FLMkxpZDNFQXVYYVU2R2N0aUl0OTJ1WGZ4Z1ND?=
- =?utf-8?B?QVAvdWt2VXI5MVZzcW0xc0VVVGN2UDRCdnd3S2NvR29NTCs0aXRaV1NiWGtY?=
- =?utf-8?B?WDRmeTJQaDZyYTlZWXNSeHphMEwzTFFtNUdtYWpQVzdJbGk1WWpqOEU0WUkv?=
- =?utf-8?B?ejFsbWFoNTQ0STVyTG16Y2VtaFRwd0N3b3M4N3lEa09BVGREWEFYV0M3UEtP?=
- =?utf-8?B?M0tKayt5VG5VRHJPcFhRVC8zbkJHZlFzTGRuQ1hYWGFBL2FYNFQrK0Q0eCsz?=
- =?utf-8?B?TnJqd0Y4bVl4M0tWYnBtQ2hlZXdiUzR4NXRURGhqR1BiUVhqdXR3Szl3TVRk?=
- =?utf-8?B?TEZ0Q2RpeGZsbWI0OWxWazJnRVR2L3ZnUEF1UkpPSENKYXlQaHdubnNqMkFa?=
- =?utf-8?B?UHFnWWUrQ3pTSTlsd3ZBR1QxNzdMaHdhUWpKb2xhL3N6Y3B0azhINlprTjVi?=
- =?utf-8?B?NmdSYVd6SU1SaHVpMVNNVlVUaUQvUlNTMm94LzBUMFJuQmkrWS90Vm5GdEVk?=
- =?utf-8?Q?Mu0/gF6Mul+t3N18xYd1pCzAP?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bb55c8d7-c879-4a4a-74c8-08db72078056
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2023 03:27:54.9896
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CC1ppnMO9Yid+eqdkhTAI7mhPn9M8BRgkI9lK0v469auBBZZk9LbdQBmOU6csOJnfbmVpP12fqpFl8AkLg536A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4547
+References: <20230602094841.1225-1-eric.lin@sifive.com>
+In-Reply-To: <20230602094841.1225-1-eric.lin@sifive.com>
+From:   Eric Lin <eric.lin@sifive.com>
+Date:   Wed, 21 Jun 2023 12:24:52 +0800
+Message-ID: <CAPqJEFpamQSbCcD0QJ16u7ctRf1=NYihod6gdZJfxFpE0YUVHQ@mail.gmail.com>
+Subject: Re: [PATCH] perf/core: Add pmu stop before unthrottling to prevent WARNING
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, palmer@dabbelt.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, eranian@google.com
+Cc:     greentime.hu@sifive.com, vincent.chen@sifive.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ian,
+CC: Stephane Eranian
 
-On 20-Jun-23 10:14 PM, Ian Rogers wrote:
-> On Tue, Jun 20, 2023 at 2:16 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
->>
->> IBS PMUs can have only one event active at any point in time. Restrict
->> grouping of multiple IBS events.
-> 
-> Thanks Ravi,
-> 
-> can you provide an example/test for this? Should this be a weak group issue?
-
-Before:
-  $ sudo ./perf record -e "{ibs_op//,ibs_op//}" -C 0
-  ^C[ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.540 MB perf.data (531 samples) ]
-
-After:
-  $ sudo ./perf record -e "{ibs_op//,ibs_op//}" -C 0
-  Error:
-  AMD IBS may only be available in system-wide/per-cpu mode.
-  Try using -a, or -C and workload affinity
-
-The error message is stale and misleading. I have a patch to fix it.
-I'll post it separately.
-
-Thanks,
-Ravi
+On Fri, Jun 2, 2023 at 5:49=E2=80=AFPM Eric Lin <eric.lin@sifive.com> wrote=
+:
+>
+> Currently, during the perf sampling, if the perf interrupt takes too long=
+,
+> perf framework will lower the perf_event_max_sample_rate. This will limit
+> the number of samples per timer tick (max_samples_per_tick) and set hwc->=
+interrupts
+> to MAX_INTERRUPTS within the __perf_event_account_interrupt() function.
+>
+> Afterward, the perf framework will unthrottle the event in the timer inte=
+rrupt
+> handler, which triggers the driver's *_pmu_start() function. Most of the =
+driver's
+> *_pmu_start() functions will check the event->hw.state to determine wheth=
+er this
+> event has stopped. If the event has not stopped, a WARN_ON_ONCE() warning
+> will be triggered as shown below:
+>
+> [ 2110.224723] ------------[ cut here ]------------
+> [ 2110.224851] WARNING: CPU: 0 PID: 240 at drivers/perf/riscv_pmu.c:184 r=
+iscv_pmu_start+0x7c/0x8e
+> [ 2110.225242] Modules linked in:
+> [ 2110.225380] CPU: 0 PID: 240 Comm: ls Not tainted 6.4-rc4-g19d0788e9ef2=
+ #1
+> [ 2110.225574] Hardware name: SiFive (DT)
+> [ 2110.225657] epc : riscv_pmu_start+0x7c/0x8e
+> [ 2110.225834]  ra : riscv_pmu_start+0x28/0x8e
+> [ 2110.225998] epc : ffffffff80aef864 ra : ffffffff80aef810 sp : ffff8f80=
+004db6f0
+> [ 2110.226135]  gp : ffffffff81c83750 tp : ffffaf80069f9bc0 t0 : ffff8f80=
+004db6c0
+> [ 2110.226245]  t1 : 0000000000000000 t2 : 000000000000001f s0 : ffff8f80=
+004db720
+> [ 2110.226367]  s1 : ffffaf8008ca1068 a0 : 0000ffffffffffff a1 : 00000000=
+00000000
+> [ 2110.226488]  a2 : 0000000000000001 a3 : 0000000000000870 a4 : 00000000=
+00000000
+> [ 2110.226605]  a5 : 0000000000000000 a6 : 0000000000000840 a7 : 00000000=
+00000030
+> [ 2110.226721]  s2 : 0000000000000000 s3 : ffffaf8005165800 s4 : ffffaf80=
+0424da00
+> [ 2110.226838]  s5 : ffffffffffffffff s6 : ffffffff81cc7590 s7 : 00000000=
+00000000
+> [ 2110.226955]  s8 : 0000000000000006 s9 : 0000000000000001 s10: ffffaf80=
+7efbc340
+> [ 2110.227064]  s11: ffffaf807efbbf00 t3 : ffffaf8006a16028 t4 : 00000000=
+dbfbb796
+> [ 2110.227180]  t5 : 0000000700000000 t6 : ffffaf8005269870
+> [ 2110.227277] status: 0000000200000100 badaddr: 0000000000000000 cause: =
+0000000000000003
+> [ 2110.227407] [<ffffffff80aef864>] riscv_pmu_start+0x7c/0x8e
+> [ 2110.227622] [<ffffffff80185b56>] perf_adjust_freq_unthr_context+0x15e/=
+0x174
+> [ 2110.227961] [<ffffffff80188642>] perf_event_task_tick+0x88/0x9c
+> [ 2110.228235] [<ffffffff800626a8>] scheduler_tick+0xfe/0x27c
+> [ 2110.228463] [<ffffffff800b5640>] update_process_times+0x9a/0xba
+> [ 2110.228690] [<ffffffff800c5bd4>] tick_sched_handle+0x32/0x66
+> [ 2110.229007] [<ffffffff800c5e0c>] tick_sched_timer+0x64/0xb0
+> [ 2110.229253] [<ffffffff800b5e50>] __hrtimer_run_queues+0x156/0x2f4
+> [ 2110.229446] [<ffffffff800b6bdc>] hrtimer_interrupt+0xe2/0x1fe
+> [ 2110.229637] [<ffffffff80acc9e8>] riscv_timer_interrupt+0x38/0x42
+> [ 2110.229984] [<ffffffff80090a16>] handle_percpu_devid_irq+0x90/0x1d2
+> [ 2110.230162] [<ffffffff8008a9f4>] generic_handle_domain_irq+0x28/0x36
+>
+> To prevent this warning, we should call the driver's *_pmu_stop() functio=
+n before unthrottling
+>
+> Signed-off-by: Eric Lin <eric.lin@sifive.com>
+> ---
+>  kernel/events/core.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index db016e418931..098c875abe88 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -4128,6 +4128,7 @@ perf_adjust_freq_unthr_context(struct perf_event_co=
+ntext *ctx, bool unthrottle)
+>
+>                 if (hwc->interrupts =3D=3D MAX_INTERRUPTS) {
+>                         hwc->interrupts =3D 0;
+> +                       event->pmu->stop(event, 0);
+>                         perf_log_throttle(event, 1);
+>                         event->pmu->start(event, 0);
+>                 }
+> --
+> 2.17.1
+>
