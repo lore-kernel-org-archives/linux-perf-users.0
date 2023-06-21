@@ -2,171 +2,146 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46186EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 06:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997B3EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 06:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbjFUGSc (ORCPT
+        id S229990AbjFUGY1 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 02:18:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54378 "EHLO
+        Wed, 21 Jun 2023 02:24:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230173AbjFUGSS (ORCPT
+        with ESMTP id S229813AbjFUGYZ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 02:18:18 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC5010F9
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jun 2023 23:18:17 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id d75a77b69052e-3ff242aae7aso97611cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jun 2023 23:18:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687328296; x=1689920296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EY6Ne/SM4st5svkq+5PmFR9ym99PQO1FPMB+O80q/9k=;
-        b=jJgJ8TEwkTcJjg1WjlUR9s8k6xuroY0T6d/deXtuR6rtpQms6eSvNiZYzdonANiUvl
-         rtVLnv81nzNCVa4awgoAIxNR6WGcCzRae03XOEGQWufDl+YimvOSKnD6KTyqvZpqEgrR
-         9k7bestW22knqvyeQe2LdOiQVRnDba3Lff5fGdys9NnvWhGrxUZ2FzgJ4Fg52lxWP+Zj
-         87+9lorjspaapO563tVLV2xa13yHzMOq36qt1CEiYqqQI7dqNZkx/1R063gewZf9gZ/e
-         mQwlcDu8WkksEmnyZ4CPgtCrYWbzWG5xpHpY8Beza9mx2MQ+L67Gic8xKZvVIUUzs/jc
-         UcQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687328296; x=1689920296;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EY6Ne/SM4st5svkq+5PmFR9ym99PQO1FPMB+O80q/9k=;
-        b=LplnY8W5YrXF/7///sSApM7/9JTVMzGVHIwCaAdj3cTZln1amYpaDsHS2TVzAnA/LE
-         NKE5GSHifyYpfDH/h/yIahRA9d/DQXbxl1oD12Ou0v6u3IkjyecArPI7NwURbl+tb+Ii
-         4yMv0g/oiYqXHvwFHnk/rpFvDJ1q08iP5fFkPAYTF04WJBMtP+O7hV3Mz42LqfXEQKjj
-         Wa7VgtQkc/Y6x+wcfvCQNyNUdJ3z653Z3H557DHVuwC8nfpDBW8vugbAStcgIpmFYDX3
-         1Jc/bjgeisegxqv5cWAZKju0t0H/7EYauxT7FgVdxbjh+1U3UhTdG+rphw04olpNFRkl
-         iIJg==
-X-Gm-Message-State: AC+VfDwZOaBLgTbsBPHLqNenjEqbDp92L4Z0CdIrkWyzjcqS4MZaUIEu
-        ztKzoUyUbXA/q92RPcIXrbuDS+0+unvjITBUxgUJpg==
-X-Google-Smtp-Source: ACHHUZ5Si2f5rcozpuv/IX3egthC3n6xTOPCLu1mauqLlDSD8RTu21u5MDhWkbFZ/yCBTJdUKEE7iLebzq6xzpeI364=
-X-Received: by 2002:a05:622a:14c7:b0:3f8:8c06:c53b with SMTP id
- u7-20020a05622a14c700b003f88c06c53bmr1388016qtx.0.1687328296083; Tue, 20 Jun
- 2023 23:18:16 -0700 (PDT)
+        Wed, 21 Jun 2023 02:24:25 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2078.outbound.protection.outlook.com [40.107.243.78])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF7A510D;
+        Tue, 20 Jun 2023 23:24:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E2fdRd8vlZShAdd9Cd6zhczOqiWbmR8SlhDgRhqsiHrW/3nFqAPJjBfUvvRiG4BbkQLl1qQ5BNtmQZKkqdiXTJ67LRK6/B2iwAHiTWBuTdOWVvos0Ii6F7DR8IOduKzlKQyxENR7H0Af3CCRzwF6CoUWJdWsVWXNJNZJwKB8G+k1qUc/TUOetol4oxo/+pbUeua6WEL99yKhoRBSUkoHmGTrrslBDQGXhW2Gn2pRexYFbiw0NApJnIa4udij7wGyhOHl+Vp9/dDJ0eM5cFHAUYfhwdjfN9derqMmfgl1GY30341NU76TqUkrugcbxxU2bEr7HySSF6H5Uq7kGiVZtw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9ZCdxOHeFsGY/FOe6Ubi+ys0VU+5rjw6+PC6S7RAuMI=;
+ b=LxdMc+AVi3a6pjrMHdhZVDKQ/GMY5zeONvS5R1BZrM8IRQhqUupdH040DFDtf6wvxnklir96xEe09d+RykzFbawLuySseneLFCHCBTZKOtkZQ2pQ7h2sTReCAVZRoyPhTIRjTcW9bidfUh7WdfBrnaEDMz8Ulc/9UoET7g0a2SqpjjHHQhOwe++/E3qgNEJOH4gB8y5n0AirxkFhWftudKKdJ47GLWxXqE8NZ5z87sBOTdUldhAg12Py6xZkzsmoGE/j9tuR+oAIaSw8HYIJyt6HtqZ82hG77IAGFqk27Uvf1VhgrT5nymUByjdA+2AI+zAgp+jRS/m9+TUREdq61w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9ZCdxOHeFsGY/FOe6Ubi+ys0VU+5rjw6+PC6S7RAuMI=;
+ b=Jjk985qX+4mjf125tvQlRVqMQkVAU2TNFQjX8zbrL2pM7x60mvOzSRm2GE6Wk0QwN/N14mx2BXhoq6fxuS8sa8QyKny7QWyENtau9WwjjqiSdVgiqTa1lpgK/w0lx6bWru2KElKsEWFnb1od5NJ1LRpeFv0W8BSAMEg0wkH+/ZE=
+Received: from DM6PR06CA0007.namprd06.prod.outlook.com (2603:10b6:5:120::20)
+ by MN2PR12MB4045.namprd12.prod.outlook.com (2603:10b6:208:1d6::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6521.21; Wed, 21 Jun
+ 2023 06:24:21 +0000
+Received: from CY4PEPF0000EE35.namprd05.prod.outlook.com
+ (2603:10b6:5:120:cafe::fe) by DM6PR06CA0007.outlook.office365.com
+ (2603:10b6:5:120::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.37 via Frontend
+ Transport; Wed, 21 Jun 2023 06:24:21 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000EE35.mail.protection.outlook.com (10.167.242.41) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6521.17 via Frontend Transport; Wed, 21 Jun 2023 06:24:20 +0000
+Received: from BLR-5CG113396H.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 21 Jun
+ 2023 01:24:15 -0500
+From:   Ravi Bangoria <ravi.bangoria@amd.com>
+To:     <acme@kernel.org>
+CC:     <ravi.bangoria@amd.com>, <peterz@infradead.org>,
+        <irogers@google.com>, <jolsa@kernel.org>, <namhyung@kernel.org>,
+        <adrian.hunter@intel.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sandipan.das@amd.com>,
+        <ananth.narayan@amd.com>, <santosh.shukla@amd.com>
+Subject: [PATCH] perf evsel amd: Fix IBS error message
+Date:   Wed, 21 Jun 2023 11:53:59 +0530
+Message-ID: <20230621062359.201-1-ravi.bangoria@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <3b0abd4a-6450-c282-65ff-ec0c7df67b03@amd.com>
+References: <3b0abd4a-6450-c282-65ff-ec0c7df67b03@amd.com>
 MIME-Version: 1.0
-References: <20230602094841.1225-1-eric.lin@sifive.com> <CAPqJEFpamQSbCcD0QJ16u7ctRf1=NYihod6gdZJfxFpE0YUVHQ@mail.gmail.com>
-In-Reply-To: <CAPqJEFpamQSbCcD0QJ16u7ctRf1=NYihod6gdZJfxFpE0YUVHQ@mail.gmail.com>
-From:   Stephane Eranian <eranian@google.com>
-Date:   Tue, 20 Jun 2023 23:18:05 -0700
-Message-ID: <CABPqkBRyqsMnNbokBKepkWq1DtzfB0npXySGbKS1T3nQTwmaAw@mail.gmail.com>
-Subject: Re: [PATCH] perf/core: Add pmu stop before unthrottling to prevent WARNING
-To:     Eric Lin <eric.lin@sifive.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, palmer@dabbelt.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, greentime.hu@sifive.com,
-        vincent.chen@sifive.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE35:EE_|MN2PR12MB4045:EE_
+X-MS-Office365-Filtering-Correlation-Id: b28738cd-6f85-4352-38d8-08db72202647
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: gcRg2PfJ0cH7GBz3QrPXqMkSgFXUkIIIQKes/Ni7kmRO/25kqojv63Mio04Yzxxbi+OEJKwmUS3NcHKxYzEXeAKheKgPfRaAJSDP4g52BCe9nUUb7BKFRDN8rey2CFVY5rBUz78HGzAlYZkaiXcgWrWsXwokCPGIrAzc7+SXT7X7uS5/Y/siUn4/d9Yl0EgaxtHa/tDxpLZ4wcZZ7qgIU1Aws8DKOgc3z+7gmJzKgotEqrSU4/YmZ9/4A5gkzvZMs0nWyRM9iFaGi5DTgLinOq2CEUwZESKObiyuvZGvms9AJ13T8YoZrNf1f9z5U9VjZMa+wjtXgSMqGdtJhnPFpb+jjq3z1yMSq7H52ytUW6pVTTBnwR9O2zdxYw5hsOz/Ud/wZZv0QLf6gQJP6DWu2y+S4k+8lZ/RcCfZsmXdV/FkuADwBH6Cf7MjeF1jZDBUNNHu6EY1XUXr2a5jer7Vk0t1kr4rsLx0qrK8X4Vqx9t0kLsOnXIVAWTCWBYFSUEJ77rJpWgdwPkLnm/ZLIDtSx4o8ON8tQ8cOoaeqSvJIc0ZyKUgZ7KT6GZFjIXXAMmmp73Gib0EFgvz0a6htwCCOIVYkvZLrHo8WUQ66q6Lg+b0JnPNqcuJEuSmreqbOm5jxcGyqcYHkuqzbMNoAXyVK/yt6oiqiz5DiL6qFazNp7BfJgNdj2uXFXhtsDO6qZr7alFhEr74QiM8Zl3k3+QLOD4qLfd0YJRQo3vN1ufVXgMOfJZ4sRwTbyZyJalBwJWploilAB5MxkvIN+0Ng8SzJg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(136003)(396003)(376002)(451199021)(36840700001)(40470700004)(46966006)(81166007)(40480700001)(82740400003)(36756003)(356005)(82310400005)(86362001)(40460700003)(4326008)(316002)(44832011)(6916009)(26005)(1076003)(186003)(966005)(5660300002)(54906003)(8936002)(70586007)(16526019)(426003)(7696005)(6666004)(41300700001)(336012)(15650500001)(2906002)(36860700001)(47076005)(8676002)(478600001)(2616005)(83380400001)(70206006)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2023 06:24:20.8685
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b28738cd-6f85-4352-38d8-08db72202647
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CY4PEPF0000EE35.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4045
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 9:25=E2=80=AFPM Eric Lin <eric.lin@sifive.com> wrot=
-e:
->
-> CC: Stephane Eranian
->
-> On Fri, Jun 2, 2023 at 5:49=E2=80=AFPM Eric Lin <eric.lin@sifive.com> wro=
-te:
-> >
-> > Currently, during the perf sampling, if the perf interrupt takes too lo=
-ng,
-> > perf framework will lower the perf_event_max_sample_rate. This will lim=
-it
-> > the number of samples per timer tick (max_samples_per_tick) and set hwc=
-->interrupts
-> > to MAX_INTERRUPTS within the __perf_event_account_interrupt() function.
-> >
-> > Afterward, the perf framework will unthrottle the event in the timer in=
-terrupt
-> > handler, which triggers the driver's *_pmu_start() function. Most of th=
-e driver's
-> > *_pmu_start() functions will check the event->hw.state to determine whe=
-ther this
-> > event has stopped. If the event has not stopped, a WARN_ON_ONCE() warni=
-ng
-> > will be triggered as shown below:
-> >
-> > [ 2110.224723] ------------[ cut here ]------------
-> > [ 2110.224851] WARNING: CPU: 0 PID: 240 at drivers/perf/riscv_pmu.c:184=
- riscv_pmu_start+0x7c/0x8e
-> > [ 2110.225242] Modules linked in:
-> > [ 2110.225380] CPU: 0 PID: 240 Comm: ls Not tainted 6.4-rc4-g19d0788e9e=
-f2 #1
-> > [ 2110.225574] Hardware name: SiFive (DT)
-> > [ 2110.225657] epc : riscv_pmu_start+0x7c/0x8e
-> > [ 2110.225834]  ra : riscv_pmu_start+0x28/0x8e
-> > [ 2110.225998] epc : ffffffff80aef864 ra : ffffffff80aef810 sp : ffff8f=
-80004db6f0
-> > [ 2110.226135]  gp : ffffffff81c83750 tp : ffffaf80069f9bc0 t0 : ffff8f=
-80004db6c0
-> > [ 2110.226245]  t1 : 0000000000000000 t2 : 000000000000001f s0 : ffff8f=
-80004db720
-> > [ 2110.226367]  s1 : ffffaf8008ca1068 a0 : 0000ffffffffffff a1 : 000000=
-0000000000
-> > [ 2110.226488]  a2 : 0000000000000001 a3 : 0000000000000870 a4 : 000000=
-0000000000
-> > [ 2110.226605]  a5 : 0000000000000000 a6 : 0000000000000840 a7 : 000000=
-0000000030
-> > [ 2110.226721]  s2 : 0000000000000000 s3 : ffffaf8005165800 s4 : ffffaf=
-800424da00
-> > [ 2110.226838]  s5 : ffffffffffffffff s6 : ffffffff81cc7590 s7 : 000000=
-0000000000
-> > [ 2110.226955]  s8 : 0000000000000006 s9 : 0000000000000001 s10: ffffaf=
-807efbc340
-> > [ 2110.227064]  s11: ffffaf807efbbf00 t3 : ffffaf8006a16028 t4 : 000000=
-00dbfbb796
-> > [ 2110.227180]  t5 : 0000000700000000 t6 : ffffaf8005269870
-> > [ 2110.227277] status: 0000000200000100 badaddr: 0000000000000000 cause=
-: 0000000000000003
-> > [ 2110.227407] [<ffffffff80aef864>] riscv_pmu_start+0x7c/0x8e
-> > [ 2110.227622] [<ffffffff80185b56>] perf_adjust_freq_unthr_context+0x15=
-e/0x174
-> > [ 2110.227961] [<ffffffff80188642>] perf_event_task_tick+0x88/0x9c
-> > [ 2110.228235] [<ffffffff800626a8>] scheduler_tick+0xfe/0x27c
-> > [ 2110.228463] [<ffffffff800b5640>] update_process_times+0x9a/0xba
-> > [ 2110.228690] [<ffffffff800c5bd4>] tick_sched_handle+0x32/0x66
-> > [ 2110.229007] [<ffffffff800c5e0c>] tick_sched_timer+0x64/0xb0
-> > [ 2110.229253] [<ffffffff800b5e50>] __hrtimer_run_queues+0x156/0x2f4
-> > [ 2110.229446] [<ffffffff800b6bdc>] hrtimer_interrupt+0xe2/0x1fe
-> > [ 2110.229637] [<ffffffff80acc9e8>] riscv_timer_interrupt+0x38/0x42
-> > [ 2110.229984] [<ffffffff80090a16>] handle_percpu_devid_irq+0x90/0x1d2
-> > [ 2110.230162] [<ffffffff8008a9f4>] generic_handle_domain_irq+0x28/0x36
-> >
-> > To prevent this warning, we should call the driver's *_pmu_stop() funct=
-ion before unthrottling
-> >
-> > Signed-off-by: Eric Lin <eric.lin@sifive.com>
-> > ---
-> >  kernel/events/core.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index db016e418931..098c875abe88 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -4128,6 +4128,7 @@ perf_adjust_freq_unthr_context(struct perf_event_=
-context *ctx, bool unthrottle)
-> >
-> >                 if (hwc->interrupts =3D=3D MAX_INTERRUPTS) {
-> >                         hwc->interrupts =3D 0;
-> > +                       event->pmu->stop(event, 0);
+AMD IBS can do per-process profiling[1] and is no longer restricted to
+per-cpu or systemwide only. Remove stale error message.
 
-But how could the event have been stopped with a call to pmu->stop()
-during throttling?
+Before:
+  $ sudo ./perf record -e "{ibs_op//,ibs_op//}" -C 0
+  Error:
+  AMD IBS may only be available in system-wide/per-cpu mode.
+  Try using -a, or -C and workload affinity
 
->
-> >                         perf_log_throttle(event, 1);
-> >                         event->pmu->start(event, 0);
-> >                 }
-> > --
-> > 2.17.1
-> >
+After:
+  $ sudo ./perf record -e "{ibs_op//,ibs_op//}" -C 0
+  Error:
+  The sys_perf_event_open() syscall returned with 22 (Invalid
+  argument) for event (ibs_op//).
+  /bin/dmesg | grep -i perf may provide additional information.
+
+[1] https://git.kernel.org/torvalds/c/30093056f7b2
+
+Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+---
+ tools/perf/util/evsel.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 356c07f03be6..65b0b70830f0 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -3092,14 +3092,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
+ 			return scnprintf(msg, size,
+ 	"Invalid event (%s) in per-thread mode, enable system wide with '-a'.",
+ 					evsel__name(evsel));
+-		if (is_amd(arch, cpuid)) {
+-			if (is_amd_ibs(evsel)) {
+-				if (evsel->core.attr.exclude_kernel)
+-					return scnprintf(msg, size,
++		if (is_amd(arch, cpuid) && is_amd_ibs(evsel)) {
++			if (evsel->core.attr.exclude_kernel) {
++				return scnprintf(msg, size,
+ 	"AMD IBS can't exclude kernel events.  Try running at a higher privilege level.");
+-				if (!evsel->core.system_wide)
+-					return scnprintf(msg, size,
+-	"AMD IBS may only be available in system-wide/per-cpu mode.  Try using -a, or -C and workload affinity");
+ 			}
+ 		}
+ 
+-- 
+2.41.0
+
