@@ -2,117 +2,119 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5525AEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 00:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A93EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 00:48:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbjFUAOt convert rfc822-to-8bit (ORCPT
+        id S229624AbjFUAsU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 20:14:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42766 "EHLO
+        Tue, 20 Jun 2023 20:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229602AbjFUAOs (ORCPT
+        with ESMTP id S229570AbjFUAsT (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 20:14:48 -0400
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A4BA1728;
-        Tue, 20 Jun 2023 17:14:48 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-be49e41a3d6so4001721276.1;
-        Tue, 20 Jun 2023 17:14:48 -0700 (PDT)
+        Tue, 20 Jun 2023 20:48:19 -0400
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50EBE10CE
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jun 2023 17:48:18 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-bb3a77abd7bso5364863276.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jun 2023 17:48:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687306487; x=1689898487;
+        d=1e100.net; s=20221208; t=1687308497; x=1689900497;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rdaemvy4g+Ow1TCPlIj5575MvTTVkMVKcieHGjAGxiQ=;
-        b=gnoPwNjJCuQ03JYVjTXmhrFpkO5Vs6U5NH8OzuWlmDLQfxQJtfkpq9Rn2Sc9TaR31C
-         zsG0g16fbSaAkQKXGaKnPK04t2kRGqC0i/Uf/hnb3mGB+vR+HP3uIxVfcNfGiNc9a0b8
-         hEQOj4wnwfCD+qcKwYRkcs7aeJmchsEKTRjQ2ekmr9y+NDGZqHIW1ElQi8H0F2mpou7y
-         ukUm/dRH68eLdTFYo6AiV6Fj8VG4+l51a+BcI6wIncKIiI4ij55H8tvT9u4mQdWy7flB
-         2IySouyn6mu+QqiF7XiCANgbO9dv7ykdW+lRbiv/CVJMwYnsLLgD1JzqTF/pjMYvnE0j
-         J+BQ==
-X-Gm-Message-State: AC+VfDy7USqRa4XbRxBQ8NcdY8okOjAFrLxCUTDp39SenBRXCAAhKTjb
-        9BytcWzVn4yyhBGhpw8S4diTF5QAg3yOjMzEnNVf9W+V
-X-Google-Smtp-Source: ACHHUZ7FJc5uQkKWVzSJpK94FSSY3e/H3R3f17lt1f7kIG9M9ORtS1gGKg03JDx9EHnCR4dzXX3SpCaOAZPxNMxX1r8=
-X-Received: by 2002:a25:9289:0:b0:bc3:cc17:6250 with SMTP id
- y9-20020a259289000000b00bc3cc176250mr4068812ybl.1.1687306487063; Tue, 20 Jun
- 2023 17:14:47 -0700 (PDT)
+        bh=XivSQCtjI3r7uuieVa+Um6KFwyIb4sUtx6fC8E3IjV0=;
+        b=OjOVROiUHYlNSs/CDgEdFLKgGTzT+t8q02DyUvc1aXR7692CwPemRmqhXXyQZ2tiFK
+         H/GIl8zBwy5Jorwckm/Pgf75TLEONhpaxFuiT2M2ImZXPkU+iHWmXx3KLcjHNZ5RxMy0
+         2GwyUc8tkEcwqZqveimdJXW6nPu98aVu1+tQPCfXa0mea3K0y0vyS5vsXzVql38UpkX5
+         8cIRrdvXLoDyN4e0gkN6zBWnPKjy/j4oCti2MxRB/nFBxFtzD9oiAAHlTNzaR8mX8mRs
+         QY9Kx0swaqXxBx6bL3xK6W128SMk/DHqnJfi8whFsjlLidrhLMOCKdSxFK8tzNcPVxRg
+         MuhA==
+X-Gm-Message-State: AC+VfDyGO0Q8mVVGm12xFfM655vEeIOskRT8hVLoBdDim6r2is00Vfmd
+        jSa0KUDcGcJHQmt+Hz23STsYNsalzKJ7i3u4pc8=
+X-Google-Smtp-Source: ACHHUZ5ZouLvNwZVP8+Ju4aUatcm1UED7wvrspHS+TPdT8Wp667J4oEVN3NqdwNZE26GHRi8eCaEBQuujEDrhIEO4kI=
+X-Received: by 2002:a25:5f4d:0:b0:bcb:caf8:7aae with SMTP id
+ h13-20020a255f4d000000b00bcbcaf87aaemr10348976ybm.44.1687308497348; Tue, 20
+ Jun 2023 17:48:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230615200843.2459645-1-irogers@google.com> <CAM9d7cg2RbasQLHVzhBjJbpLnx7Sf79PQQuNTdWRuH+mbp9Y5A@mail.gmail.com>
- <CAP-5=fW5ET9S=bOA2RX0YNds+V-B5VUeYC_AB-bFr9DHKKnvjQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fW5ET9S=bOA2RX0YNds+V-B5VUeYC_AB-bFr9DHKKnvjQ@mail.gmail.com>
+References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
+ <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com> <ZIjMWUk/axKfMCM4@kernel.org>
+In-Reply-To: <ZIjMWUk/axKfMCM4@kernel.org>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 20 Jun 2023 17:14:35 -0700
-Message-ID: <CAM9d7chMS5b=CUSAZS7g8-GO09sf578nx6yUJH7_niqwux8jYw@mail.gmail.com>
-Subject: Re: [PATCH v1] perf symbol: Remove symbol_name_rb_node
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Carsten Haitzler <carsten.haitzler@arm.com>,
-        Changbin Du <changbin.du@huawei.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jason Wang <wangborong@cdjrlc.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 20 Jun 2023 17:48:05 -0700
+Message-ID: <CAM9d7cjrpaNk0UC22ntBSP+LzQwT2YAHwQ2o3z1aayAZNQ329g@mail.gmail.com>
+Subject: Re: [PATCH 15/17] perf tests task_analyzer: fix bad substitution ${$1}
+To:     Hagen Paul Pfeifer <hagen@jauu.net>,
+        Petar Gligoric <petar.gligoric@rohde-schwarz.com>,
+        Aditya Gupta <adityag@linux.ibm.com>
+Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
+        irogers@google.com, ravi.bangoria@amd.com, john.g.garry@oracle.com,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 3:55 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Tue, Jun 20, 2023 at 2:01 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > Hi Ian,
-> >
-> > On Thu, Jun 15, 2023 at 1:08 PM Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > Most perf commands want to sort symbols by name and this is done via
-> > > an invasive rbtree that on 64-bit systems costs 24 bytes. Sorting the
-> > > symbols in a DSO by name is optional and not done by default, however,
-> > > if sorting is requested the 24 bytes is allocated for every
-> > > symbol.
-> > >
-> > > This change removes the rbtree and uses a sorted array of symbol
-> > > pointers instead (costing 8 bytes per symbol). As the array is created
-> > > on demand then there are further memory savings. The complexity of
-> > > sorting the array and using the rbtree are the same.
-> >
-> > Nice, I like the savings and lazy allocation.
-> >
-> > >
-> > > To support going to the next symbol, the index of the current symbol
-> > > needs to be passed around as a pair with the current symbol. This
-> > > requires some API changes.
-> >
-> > But I'm not sure if we need the index for the normal use cases.
-> > IIUC only one place to require it: map__for_each_symbol_by_name.
-> > Maybe we can have a separate API for it?
-> >
-> > In general, I'd like to split the commit to have on-demand part and
-> > array changes separately.
->
-> Thanks Namhyung! The current code is on-demand but the space for the
-> rbnode must be reserved in the symbol_name_rb_node. We could on-demand
-> resize symbols, but I don't think it makes sense.
+Hello,
 
-Ok, but I think we can split the symbol_conf changes at least.
-
+On Tue, Jun 13, 2023 at 1:06 PM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
-> If the worry is the patch set size, maybe as you suggest, we keep
-> find_symbol_by_name to not take the optional index output parameter
-> and introduce a find_symbol_by_name_idx function that takes a required
-> index parameter. If that's good I'll send a v2.
+> Em Tue, Jun 13, 2023 at 10:11:43PM +0530, Athira Rajeev escreveu:
+> > From: Aditya Gupta <adityag@linux.ibm.com>
+> >
+> > ${$1} gives bad substitution error on sh, bash, and zsh. This seems like
+> > a typo, and this patch modifies it to $1, since that is what it's usage
+> > looks like from wherever `check_exec_0` is called.
+>
+> Nicely spotted!
+>
+> Please add the people that last touched the problem to the cc list,
+> specially when it fixes a bug.
+>
+> Thanks for adding a Fixes tag, that helps the stable@kernel.org guys to
+> get this propagated to supported kernel releases.
+>
+> I've added the test author to the CC list in this message.
+>
+> thanks!
+>
+> - Arnaldo
+>
+> > This issue due to ${$1} caused all function calls to give error in
+> > `find_str_or_fail` line, and so no test runs completely. But
+> > 'perf test "perf script task-analyzer tests"' wrongly reports
+> > that tests passed with the status OK, which is wrong considering
+> > the tests didn't even run completely
+> >
+> > Fixes: e8478b84d6ba ("perf test: add new task-analyzer tests")
+> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> > Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> > Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+> > ---
 
-Right, the patch size is a concern.  But IIUC the find-by-name API
-has two different use cases.  So better splitting them for clarity.
+I'm seeing a different error even after this fix.
+Can you please take a look?
 
 Thanks,
 Namhyung
+
+
+$ sudo ./perf test -v task
+114: perf script task-analyzer tests                                 :
+--- start ---
+test child forked, pid 1771042
+Please specify a valid report script(see 'perf script -l' for listing)
+FAIL: "invocation of perf command failed" Error message: ""
+FAIL: "test_basic" Error message: "Failed to find required string:'Comm'."
+Please specify a valid report script(see 'perf script -l' for listing)
+FAIL: "invocation of perf command failed" Error message: ""
+FAIL: "test_ns_rename" Error message: "Failed to find required string:'Comm'."
+...
+test child finished with -1
+---- end ----
+perf script task-analyzer tests: FAILED!
