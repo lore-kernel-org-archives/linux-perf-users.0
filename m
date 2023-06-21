@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209BDEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 19:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEE5EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 19:42:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbjFUTk7 (ORCPT
+        id S229994AbjFUTl7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 15:40:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37384 "EHLO
+        Wed, 21 Jun 2023 15:41:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229677AbjFUTk6 (ORCPT
+        with ESMTP id S229913AbjFUTl7 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 15:40:58 -0400
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C486F10F2;
-        Wed, 21 Jun 2023 12:40:57 -0700 (PDT)
-Received: by mail-ot1-x330.google.com with SMTP id 46e09a7af769-6b5853a140cso2955398a34.2;
-        Wed, 21 Jun 2023 12:40:57 -0700 (PDT)
+        Wed, 21 Jun 2023 15:41:59 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52EE81733;
+        Wed, 21 Jun 2023 12:41:57 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b52864b701so48363325ad.3;
+        Wed, 21 Jun 2023 12:41:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687376457; x=1689968457;
+        d=gmail.com; s=20221208; t=1687376517; x=1689968517;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s6fzDc08vVPZzlFC9nTdHH7skPWJt+F7WIyjmhwelB8=;
-        b=o9YaNWhP84f6bgxDYS3eKfvgDpWCQISxWH1ZNUz6gEJ9JTNtPNhStfAaNEkWoJAuVI
-         VjDv1f7/7kbBkEwPgfpLslKslOnNxkoNj/qAwp4aZ7pFcxliZ8Z0WRg8IRiUZLa0dQMA
-         f7sXdniO/by9pHXMQY1LICC2J7WRSQpYLlPf/z4lCya0ushy/zO+yBPX1Zgo2ddm+0yA
-         oC4nUiJhrtBLA+39llzcPkS5juc4mgs+3SO3T0sq2WSsATSV6aoKHEe2ufv/7b5l/59I
-         /wR+21Cbu6/AXi7Px4u0zq52udxHPGts+BK79XXwyUXV3Hns0v/pF3hO8xpdFaT5lW6/
-         q1FA==
+        bh=8EOjusGezgUEDaoouw0ul4hE6YXmt391w2kXuFkLv/E=;
+        b=l3fqFnRFxZnqbhQOOMFmGaKdbzianAEuvAsWRZi2xnf6kpwmW78uMK7SYQcz99HQOV
+         G3JNbW1/SBgFXl5woRvHfbAOoxkKBBN5jtrA/w+txXRJ0eMvzTaiEFW7+56aE16nw/1G
+         s7Qk5O8kTFut6rh5YhzhfJ9s9E3aiTfh/fqM9BzN5gUIyCyCGH/F32pCDXurmmfoZjNZ
+         g7eEx4SgM/ddPfqtEKf52CnX2n86nq7Bkos+k66rWmigk2Mda+rspj5t+oXayTFY0fBm
+         B4zVoG5rYTZxf4OBmuCrOXZ8Ec+PGkyUgwTECUUv/AVKz8f4jYUDhZXXp0qy3aOJbB9D
+         9RGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687376457; x=1689968457;
+        d=1e100.net; s=20221208; t=1687376517; x=1689968517;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s6fzDc08vVPZzlFC9nTdHH7skPWJt+F7WIyjmhwelB8=;
-        b=h6maqWUXqRarT9Fg5zOny8B0qRVAGoDS8hTeLcMHc6a5UNd6ob36+9mByAG/P6uO77
-         lT90C4BHdTzIzaUpYATAQUNvD4i1gmDss7UxTHYb4tvvHGz7iUnVN2V8KYr9Vv5BdTMO
-         rctlsF06Lay+b9/fpWp1Zx2/utnaoIT+GOsUw6V0he0GjUK5324aXe0VVmSZ7CsbOnlP
-         /W90rhL+mlhAGkGbDWE3C3zJOuSoviv+INmrloYHc0f7FM7BDfMRzFW2yJGdC4cP6Njf
-         12fFPpjm3dJ08X3ZpXHdGWOhq+4QtgT2KIzHZNVHR+4gU6dKRt6wHxcafyTi3+/IU7aG
-         g/Tw==
-X-Gm-Message-State: AC+VfDyHd9MxWELjuGGTTWGGCjy8q0yapvtOV/FQpsTFlNw5Fhr+lSlJ
-        JXuz2KqlrVmNCUIJCseTKPc=
-X-Google-Smtp-Source: ACHHUZ5v8fJJe/3SfN1+J65oY7NO0euJvdyFcCsON0i8S62Mc+vZy99GBz0EMzt0KE2ju7x93h+BWQ==
-X-Received: by 2002:a05:6830:10d6:b0:6b5:8de5:a02c with SMTP id z22-20020a05683010d600b006b58de5a02cmr6145285oto.6.1687376456926;
-        Wed, 21 Jun 2023 12:40:56 -0700 (PDT)
+        bh=8EOjusGezgUEDaoouw0ul4hE6YXmt391w2kXuFkLv/E=;
+        b=RHvFTfI0oR6fyC4lg9WSgYg+xP6ysJaWsKiH5JBtNlnZy1unN9AgF22xW8FSlqP8xM
+         CwAebp2KRg0gJ5dMTYYJHiN3SSJjBrvHFhDkqeBCQieVmmOIA6yeOd9GmLInyuFzvJDY
+         1DYzExnnMkDvUB5+M9lQNFnthIci9KG7JsonkUJz14+mZ73GxoCvKZ5DMG1B0ycCcoS4
+         xzolBFuNBZgKF7N6maVLcfboqeVHf53sNxVR64Weiku6wmtDG8c1nDmtBVs7U4ml7vJL
+         lomsuicRmZ/rvHWvY0Ap9j7z2GD7WDlw2WhfOeX3WgOhS/U/Eb99lHAU3n3/bcbhc5sx
+         jr9A==
+X-Gm-Message-State: AC+VfDwku36HeQ6y3/mzljz+X+JqJZ2ruPnTmcv7Rz75euVSie26lXcY
+        QCSiReAK2WLEnLsKr94V68s=
+X-Google-Smtp-Source: ACHHUZ5lbjS2yji51QQw2AqUU4zvpeVZrjVQzZsWH7OScLOZWinv5Wiylwwt33cJWwGei7hS2UuPVQ==
+X-Received: by 2002:a17:902:a3c7:b0:1b5:361:cefe with SMTP id q7-20020a170902a3c700b001b50361cefemr14038204plb.52.1687376516573;
+        Wed, 21 Jun 2023 12:41:56 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:6258:556c:aad7:2240:7612])
-        by smtp.gmail.com with ESMTPSA id c9-20020a631c49000000b0054fa8539681sm3457291pgm.34.2023.06.21.12.40.52
+        by smtp.gmail.com with ESMTPSA id u13-20020a170902a60d00b001ae0a4b1d3fsm3883794plq.153.2023.06.21.12.41.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jun 2023 12:40:56 -0700 (PDT)
-Date:   Thu, 22 Jun 2023 01:10:48 +0530
+        Wed, 21 Jun 2023 12:41:55 -0700 (PDT)
+Date:   Thu, 22 Jun 2023 01:11:48 +0530
 From:   Anup Sharma <anupnewsmail@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -63,9 +63,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Anup Sharma <anupnewsmail@gmail.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] scripts: python: Introduce thread sample processing in
+Subject: [PATCH 4/9] scripts: python: Implement parsing of input data in
  convertPerfScriptProfile
-Message-ID: <42ba5416982056273960f182e8a79fd998639bcd.1687375189.git.anupnewsmail@gmail.com>
+Message-ID: <3772bce9068962f2a4c57672e919ebdf30edbc5c.1687375189.git.anupnewsmail@gmail.com>
 References: <cover.1687375189.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -75,34 +75,111 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The _addThreadSample function is responsible for adding a sample to a specific
-thread. It takes the process ID (pid), thread ID (tid), thread name, timestamp
-(time_stamp), and stack as parameters. It first checks if the thread exists in
-the threadMap dictionary. If not, it creates a new thread using the _createtread
-function and assigns it to the threadMap. Finally, it calls the 'addSample' method
-of the thread, passing the thread name, stack, and timestamp.
+The lines variable is created by splitting the profile string into individual
+lines. It allows for iterating over each line for processing.
+
+The line is considered the start of a sample. It is matched against a regular
+expression pattern to extract relevant information such as before_time_stamp,
+time_stamp, threadNamePidAndTidMatch, threadName, pid, and tid.
+
+The stack frames of the current sample are then parsed in a nested loop.
+Each stackFrameLine is matched against a regular expression pattern to
+extract rawFunc and mod information.
+
+Also fixed few checkpatch warnings.
 
 Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
 ---
- tools/perf/scripts/python/firefox-gecko-converter.py | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../scripts/python/firefox-gecko-converter.py | 62 ++++++++++++++++++-
+ 1 file changed, 60 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-index 2817d4a96269..0ff70c0349c8 100644
+index 0ff70c0349c8..e5bc7a11c3e6 100644
 --- a/tools/perf/scripts/python/firefox-gecko-converter.py
 +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-@@ -46,3 +46,11 @@ def convertPerfScriptProfile(profile):
-             "addSample": addSample,
-             "finish": finish
-         }
+@@ -1,4 +1,5 @@
+ #!/usr/bin/env python3
++# SPDX-License-Identifier: GPL-2.0
+ import re
+ import sys
+ import json
+@@ -14,13 +15,13 @@ def isPerfScriptFormat(profile):
+     firstLine = profile[:profile.index('\n')]
+     return bool(re.match(r'^\S.*?\s+(?:\d+/)?\d+\s+(?:\d+\d+\s+)?[\d.]+:', firstLine))
+ 
+-def convertPerfScriptProfile(profile): 
++def convertPerfScriptProfile(profile):
+ 
+         def addSample(threadName, stackArray, time):
+             nonlocal name
+             if name != threadName:
+                 name = threadName
+-            # TODO: 
++            # TODO:
+             # get_or_create_stack will create a new stack if it doesn't exist, or return the existing stack if it does.
+             # get_or_create_frame will create a new frame if it doesn't exist, or return the existing frame if it does.
+             stack = reduce(lambda prefix, stackFrame: get_or_create_stack(get_or_create_frame(stackFrame), prefix), stackArray, None)
+@@ -54,3 +55,60 @@ def convertPerfScriptProfile(profile):
+             thread = _createtread(threadName, pid, tid)
+             threadMap[tid] = thread
+         thread['addSample'](threadName, stack, time_stamp)
 +
-+    threadMap = dict()
-+    def _addThreadSample(pid, tid, threadName, time_stamp, stack):
-+        thread = threadMap.get(tid)
-+        if not thread:
-+            thread = _createtread(threadName, pid, tid)
-+            threadMap[tid] = thread
-+        thread['addSample'](threadName, stack, time_stamp)
++    lines = profile.split('\n')
++
++    line_index = 0
++    startTime = 0
++    while line_index < len(lines):
++        line = lines[line_index]
++        line_index += 1
++    # perf script --header outputs header lines beginning with #
++        if line == '' or line.startswith('#'):
++            continue
++
++        sample_start_line = line
++
++        sample_start_match = re.match(r'^(.*)\s+([\d.]+):', sample_start_line)
++        if not sample_start_match:
++            print(f'Could not parse line as the start of a sample in the "perf script" profile format: "{sample_start_line}"')
++            continue
++
++        before_time_stamp = sample_start_match[1]
++        time_stamp = float(sample_start_match[2]) * 1000
++        threadNamePidAndTidMatch = re.match(r'^(.*)\s+(?:(\d+)\/)?(\d+)\b', before_time_stamp)
++
++        if not threadNamePidAndTidMatch:
++            print('Could not parse line as the start of a sample in the "perf script" profile format: "%s"' % sampleStartLine)
++            continue
++        threadName = threadNamePidAndTidMatch[1].strip()
++        pid = int(threadNamePidAndTidMatch[2] or 0)
++        tid = int(threadNamePidAndTidMatch[3] or 0)
++        if startTime == 0:
++            startTime = time_stamp
++        # Parse the stack frames of the current sample in a nested loop.
++        stack = []
++        while line_index < len(lines):
++            stackFrameLine = lines[line_index]
++            line_index += 1
++            if stackFrameLine.strip() == '':
++                # Sample ends.
++                break
++            stackFrameMatch = re.match(r'^\s*(\w+)\s*(.+) \(([^)]*)\)', stackFrameLine)
++            if stackFrameMatch:
++                rawFunc = stackFrameMatch[2]
++                mod = stackFrameMatch[3]
++                rawFunc = re.sub(r'\+0x[\da-f]+$', '', rawFunc)
++
++            if rawFunc.startswith('('):
++                continue # skip process names
++
++            if mod:
++                # If we have a module name, provide it.
++                # The code processing the profile will search for
++                # "functionName (in libraryName)" using a regexp,
++                # and automatically create the library information.
++                rawFunc += f' (in {mod})'
++
++            stack.append(rawFunc)
++
 -- 
 2.34.1
 
