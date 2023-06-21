@@ -2,150 +2,145 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06A8EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 11:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98146EB64DD
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 11:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229969AbjFULO2 (ORCPT
+        id S231418AbjFUL6q (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 07:14:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42108 "EHLO
+        Wed, 21 Jun 2023 07:58:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231946AbjFULN7 (ORCPT
+        with ESMTP id S231442AbjFUL6p (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 07:13:59 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73997186
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 04:13:57 -0700 (PDT)
-Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35L9rHCW003360;
-        Wed, 21 Jun 2023 10:04:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=bRoaHU7Y8TUZDgNDHB8mOxxotjhlKXci2UxYKeDo+Mk=;
- b=GbCG+SY5rnf6SV6i4/MWEX2p7c+fZeByGrfocmbSEzvxG2/6QheTt+01ePnbJiKA4eqx
- Jh0FwI/5Vsto8FdgUL/+wjeiU9/7k3Ay6BSwQ7qY2HkAFsdG/XrtvNKBIQC2y50uA3dS
- 7vWwgYNRbpbLtQTLbxbvR5E8O1bEeEa21vW58lapfK8H2+L6uUhRmNKgTRu7rxYSwfAb
- yJnITZN8bsSAuWR1Kb4T3lyw7hKSflVOxQCn1SU8duVY8B8dPylqA4LkG/M7CIZW4+nm
- H7RgCOnmxSCSqacYk1y5erAMe3/GL/GsniuzcA59loR9L+fEyOwGT8/Ca0vqQ3T10Vj0 UQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbxyb0b7d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jun 2023 10:04:57 +0000
-Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35LA0K4V002145;
-        Wed, 21 Jun 2023 10:04:51 GMT
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbxyb0ap6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jun 2023 10:04:51 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35L9YsNv013852;
-        Wed, 21 Jun 2023 10:03:52 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-        by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3r94f52114-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jun 2023 10:03:51 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35LA3mXm45679262
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Jun 2023 10:03:48 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 611B72004F;
-        Wed, 21 Jun 2023 10:03:48 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B2C0D20040;
-        Wed, 21 Jun 2023 10:03:45 +0000 (GMT)
-Received: from [9.109.199.72] (unknown [9.109.199.72])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 21 Jun 2023 10:03:45 +0000 (GMT)
-Message-ID: <5ab5cc25-03b0-ef7f-3dc0-be1b59a4147d@linux.ibm.com>
-Date:   Wed, 21 Jun 2023 15:33:44 +0530
+        Wed, 21 Jun 2023 07:58:45 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DAAB1703;
+        Wed, 21 Jun 2023 04:58:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=kl6nUkWuWRJmNI9AJnTnKYdYaqy5k7lvmEkgCwhBU2Y=; b=iBd7t2e4KtP1yDrPCNpHpNxGZt
+        oV1d+5sNoJjk7V8slb3vOPXe163K5GQmlw/Hsc4JLGye1z6NOy9y+rwashq7ENtu+UNVBaVxTQPhr
+        xvgFvhSEhFTRKBc5ivvnCF22WzSijIuypa5Wy6FEyEcMEDNGPjeg3+K2Ev1fxcm7mfEpdHqztz6r3
+        NQCk1FxIIzO7MfUywTjdujiN1SvxB82Em9eAAmRANCEgd6xiMlfikcOdLDXlLfZwlmKGuj+AJFf4a
+        ep6Y8AwETUyGkIzv23ZxfOdvK0jeuyRl+wwBXU6UhrLPFUj/f9BGBIdnG83bZUwIOQumJB4h1wTK8
+        +TCgpIow==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qBwTV-00HQ3X-1Y;
+        Wed, 21 Jun 2023 11:58:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 237223002A9;
+        Wed, 21 Jun 2023 13:58:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0421220825AF9; Wed, 21 Jun 2023 13:58:11 +0200 (CEST)
+Date:   Wed, 21 Jun 2023 13:58:11 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     Eric Lin <eric.lin@sifive.com>, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, palmer@dabbelt.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, greentime.hu@sifive.com,
+        vincent.chen@sifive.com
+Subject: Re: [PATCH] perf/core: Add pmu stop before unthrottling to prevent
+ WARNING
+Message-ID: <20230621115811.GD2053369@hirez.programming.kicks-ass.net>
+References: <20230602094841.1225-1-eric.lin@sifive.com>
+ <CAPqJEFpamQSbCcD0QJ16u7ctRf1=NYihod6gdZJfxFpE0YUVHQ@mail.gmail.com>
+ <CABPqkBRyqsMnNbokBKepkWq1DtzfB0npXySGbKS1T3nQTwmaAw@mail.gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 15/17] perf tests task_analyzer: fix bad substitution
- ${$1}
-Content-Language: en-IN, en-US
-To:     Namhyung Kim <namhyung@kernel.org>,
-        Hagen Paul Pfeifer <hagen@jauu.net>,
-        Petar Gligoric <petar.gligoric@rohde-schwarz.com>
-Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
-        irogers@google.com, ravi.bangoria@amd.com, john.g.garry@oracle.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
- <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com>
- <ZIjMWUk/axKfMCM4@kernel.org>
- <CAM9d7cjrpaNk0UC22ntBSP+LzQwT2YAHwQ2o3z1aayAZNQ329g@mail.gmail.com>
-From:   Aditya Gupta <adityag@linux.ibm.com>
-In-Reply-To: <CAM9d7cjrpaNk0UC22ntBSP+LzQwT2YAHwQ2o3z1aayAZNQ329g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 1M-PIDgXKA9ugTZgLekZCyU_4c4be2C6
-X-Proofpoint-GUID: zOEZARp_GAq-xb5Kt5c5bgRiG4bpaQAX
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-06-21_07,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
- clxscore=1011 phishscore=0 bulkscore=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2305260000 definitions=main-2306210085
+In-Reply-To: <CABPqkBRyqsMnNbokBKepkWq1DtzfB0npXySGbKS1T3nQTwmaAw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Namhyung,
+On Tue, Jun 20, 2023 at 11:18:05PM -0700, Stephane Eranian wrote:
+> On Tue, Jun 20, 2023 at 9:25 PM Eric Lin <eric.lin@sifive.com> wrote:
+> >
+> > CC: Stephane Eranian
+> >
+> > On Fri, Jun 2, 2023 at 5:49 PM Eric Lin <eric.lin@sifive.com> wrote:
+> > >
+> > > Currently, during the perf sampling, if the perf interrupt takes too long,
+> > > perf framework will lower the perf_event_max_sample_rate. This will limit
+> > > the number of samples per timer tick (max_samples_per_tick) and set hwc->interrupts
+> > > to MAX_INTERRUPTS within the __perf_event_account_interrupt() function.
+> > >
+> > > Afterward, the perf framework will unthrottle the event in the timer interrupt
+> > > handler, which triggers the driver's *_pmu_start() function. Most of the driver's
+> > > *_pmu_start() functions will check the event->hw.state to determine whether this
+> > > event has stopped. If the event has not stopped, a WARN_ON_ONCE() warning
+> > > will be triggered as shown below:
+> > >
+> > > [ 2110.224723] ------------[ cut here ]------------
+> > > [ 2110.224851] WARNING: CPU: 0 PID: 240 at drivers/perf/riscv_pmu.c:184 riscv_pmu_start+0x7c/0x8e
+> > > [ 2110.225242] Modules linked in:
+> > > [ 2110.225380] CPU: 0 PID: 240 Comm: ls Not tainted 6.4-rc4-g19d0788e9ef2 #1
+> > > [ 2110.225574] Hardware name: SiFive (DT)
+> > > [ 2110.225657] epc : riscv_pmu_start+0x7c/0x8e
+> > > [ 2110.225834]  ra : riscv_pmu_start+0x28/0x8e
+> > > [ 2110.225998] epc : ffffffff80aef864 ra : ffffffff80aef810 sp : ffff8f80004db6f0
+> > > [ 2110.226135]  gp : ffffffff81c83750 tp : ffffaf80069f9bc0 t0 : ffff8f80004db6c0
+> > > [ 2110.226245]  t1 : 0000000000000000 t2 : 000000000000001f s0 : ffff8f80004db720
+> > > [ 2110.226367]  s1 : ffffaf8008ca1068 a0 : 0000ffffffffffff a1 : 0000000000000000
+> > > [ 2110.226488]  a2 : 0000000000000001 a3 : 0000000000000870 a4 : 0000000000000000
+> > > [ 2110.226605]  a5 : 0000000000000000 a6 : 0000000000000840 a7 : 0000000000000030
+> > > [ 2110.226721]  s2 : 0000000000000000 s3 : ffffaf8005165800 s4 : ffffaf800424da00
+> > > [ 2110.226838]  s5 : ffffffffffffffff s6 : ffffffff81cc7590 s7 : 0000000000000000
+> > > [ 2110.226955]  s8 : 0000000000000006 s9 : 0000000000000001 s10: ffffaf807efbc340
+> > > [ 2110.227064]  s11: ffffaf807efbbf00 t3 : ffffaf8006a16028 t4 : 00000000dbfbb796
+> > > [ 2110.227180]  t5 : 0000000700000000 t6 : ffffaf8005269870
+> > > [ 2110.227277] status: 0000000200000100 badaddr: 0000000000000000 cause: 0000000000000003
+> > > [ 2110.227407] [<ffffffff80aef864>] riscv_pmu_start+0x7c/0x8e
+> > > [ 2110.227622] [<ffffffff80185b56>] perf_adjust_freq_unthr_context+0x15e/0x174
+> > > [ 2110.227961] [<ffffffff80188642>] perf_event_task_tick+0x88/0x9c
+> > > [ 2110.228235] [<ffffffff800626a8>] scheduler_tick+0xfe/0x27c
+> > > [ 2110.228463] [<ffffffff800b5640>] update_process_times+0x9a/0xba
+> > > [ 2110.228690] [<ffffffff800c5bd4>] tick_sched_handle+0x32/0x66
+> > > [ 2110.229007] [<ffffffff800c5e0c>] tick_sched_timer+0x64/0xb0
+> > > [ 2110.229253] [<ffffffff800b5e50>] __hrtimer_run_queues+0x156/0x2f4
+> > > [ 2110.229446] [<ffffffff800b6bdc>] hrtimer_interrupt+0xe2/0x1fe
+> > > [ 2110.229637] [<ffffffff80acc9e8>] riscv_timer_interrupt+0x38/0x42
+> > > [ 2110.229984] [<ffffffff80090a16>] handle_percpu_devid_irq+0x90/0x1d2
+> > > [ 2110.230162] [<ffffffff8008a9f4>] generic_handle_domain_irq+0x28/0x36
+> > >
+> > > To prevent this warning, we should call the driver's *_pmu_stop() function before unthrottling
+> > >
+> > > Signed-off-by: Eric Lin <eric.lin@sifive.com>
+> > > ---
+> > >  kernel/events/core.c | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > index db016e418931..098c875abe88 100644
+> > > --- a/kernel/events/core.c
+> > > +++ b/kernel/events/core.c
+> > > @@ -4128,6 +4128,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+> > >
+> > >                 if (hwc->interrupts == MAX_INTERRUPTS) {
+> > >                         hwc->interrupts = 0;
+> > > +                       event->pmu->stop(event, 0);
+> 
+> But how could the event have been stopped with a call to pmu->stop()
+> during throttling?
 
-On 21/06/23 06:18, Namhyung Kim wrote:
-> Hello,
->
-> On Tue, Jun 13, 2023 at 1:06 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
->> Em Tue, Jun 13, 2023 at 10:11:43PM +0530, Athira Rajeev escreveu:
->>> This issue due to ${$1} caused all function calls to give error in
->>> `find_str_or_fail` line, and so no test runs completely. But
->>> 'perf test "perf script task-analyzer tests"' wrongly reports
->>> that tests passed with the status OK, which is wrong considering
->>> the tests didn't even run completely
->>>
->>> Fixes: e8478b84d6ba ("perf test: add new task-analyzer tests")
->>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->>> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
->>> ---
-> I'm seeing a different error even after this fix.
-> Can you please take a look?
->
-> Thanks,
-> Namhyung
->
->
-> $ sudo ./perf test -v task
-> 114: perf script task-analyzer tests                                 :
-> --- start ---
-> test child forked, pid 1771042
-> Please specify a valid report script(see 'perf script -l' for listing)
-> FAIL: "invocation of perf command failed" Error message: ""
-> FAIL: "test_basic" Error message: "Failed to find required string:'Comm'."
-> Please specify a valid report script(see 'perf script -l' for listing)
-> FAIL: "invocation of perf command failed" Error message: ""
-> FAIL: "test_ns_rename" Error message: "Failed to find required string:'Comm'."
-> ...
-> test child finished with -1
-> ---- end ----
-> perf script task-analyzer tests: FAILED!
-Can you please check if your environment has libtraceevent devel 
-libraries (or did you compile with `make NO_LIBTRACEEVENT=1`) ? When 
-libtraceevent support is not there, perf record fails and so perf.data 
-doesn't contain the strings it's searching for and hence those errors
+Yeah, Changelog fails to explain how we got to the faulty state -- and
+without that we can't judge if the proposed solution actually fixes the
+problem or not.
 
-The error you mentioned has been mentioned and fixed in patch 17/17 of 
-this series.
-
-Thanks
-- Aditya
+> >
+> > >                         perf_log_throttle(event, 1);
+> > >                         event->pmu->start(event, 0);
+> > >                 }
+> > > --
+> > > 2.17.1
+> > >
