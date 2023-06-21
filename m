@@ -2,119 +2,154 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A93EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 00:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 091ACEB64DB
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 03:08:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229624AbjFUAsU convert rfc822-to-8bit (ORCPT
+        id S230046AbjFUDIr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Tue, 20 Jun 2023 20:48:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52038 "EHLO
+        Tue, 20 Jun 2023 23:08:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229570AbjFUAsT (ORCPT
+        with ESMTP id S230012AbjFUDIn (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Tue, 20 Jun 2023 20:48:19 -0400
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50EBE10CE
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jun 2023 17:48:18 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-bb3a77abd7bso5364863276.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Jun 2023 17:48:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687308497; x=1689900497;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XivSQCtjI3r7uuieVa+Um6KFwyIb4sUtx6fC8E3IjV0=;
-        b=OjOVROiUHYlNSs/CDgEdFLKgGTzT+t8q02DyUvc1aXR7692CwPemRmqhXXyQZ2tiFK
-         H/GIl8zBwy5Jorwckm/Pgf75TLEONhpaxFuiT2M2ImZXPkU+iHWmXx3KLcjHNZ5RxMy0
-         2GwyUc8tkEcwqZqveimdJXW6nPu98aVu1+tQPCfXa0mea3K0y0vyS5vsXzVql38UpkX5
-         8cIRrdvXLoDyN4e0gkN6zBWnPKjy/j4oCti2MxRB/nFBxFtzD9oiAAHlTNzaR8mX8mRs
-         QY9Kx0swaqXxBx6bL3xK6W128SMk/DHqnJfi8whFsjlLidrhLMOCKdSxFK8tzNcPVxRg
-         MuhA==
-X-Gm-Message-State: AC+VfDyGO0Q8mVVGm12xFfM655vEeIOskRT8hVLoBdDim6r2is00Vfmd
-        jSa0KUDcGcJHQmt+Hz23STsYNsalzKJ7i3u4pc8=
-X-Google-Smtp-Source: ACHHUZ5ZouLvNwZVP8+Ju4aUatcm1UED7wvrspHS+TPdT8Wp667J4oEVN3NqdwNZE26GHRi8eCaEBQuujEDrhIEO4kI=
-X-Received: by 2002:a25:5f4d:0:b0:bcb:caf8:7aae with SMTP id
- h13-20020a255f4d000000b00bcbcaf87aaemr10348976ybm.44.1687308497348; Tue, 20
- Jun 2023 17:48:17 -0700 (PDT)
+        Tue, 20 Jun 2023 23:08:43 -0400
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72B511703;
+        Tue, 20 Jun 2023 20:08:40 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=renyu.zj@linux.alibaba.com;NM=1;PH=DS;RN=20;SR=0;TI=SMTPD_---0Vle8pmP_1687316914;
+Received: from 30.221.149.25(mailfrom:renyu.zj@linux.alibaba.com fp:SMTPD_---0Vle8pmP_1687316914)
+          by smtp.aliyun-inc.com;
+          Wed, 21 Jun 2023 11:08:35 +0800
+Message-ID: <a5486c58-32b6-2d5e-e623-d7844c51474c@linux.alibaba.com>
+Date:   Wed, 21 Jun 2023 11:08:31 +0800
 MIME-Version: 1.0
-References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
- <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com> <ZIjMWUk/axKfMCM4@kernel.org>
-In-Reply-To: <ZIjMWUk/axKfMCM4@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 20 Jun 2023 17:48:05 -0700
-Message-ID: <CAM9d7cjrpaNk0UC22ntBSP+LzQwT2YAHwQ2o3z1aayAZNQ329g@mail.gmail.com>
-Subject: Re: [PATCH 15/17] perf tests task_analyzer: fix bad substitution ${$1}
-To:     Hagen Paul Pfeifer <hagen@jauu.net>,
-        Petar Gligoric <petar.gligoric@rohde-schwarz.com>,
-        Aditya Gupta <adityag@linux.ibm.com>
-Cc:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
-        irogers@google.com, ravi.bangoria@amd.com, john.g.garry@oracle.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.2
+Subject: Re: [PATCH v4 0/4] Add JSON metrics for Yitian710 DDR
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        John Garry <john.g.garry@oracle.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Ian Rogers <irogers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
+References: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAM9d7cj3v58m8NcsEK4sYsk_dbQDAq71hYo7DV=xaQa_rZyPYg@mail.gmail.com>
+From:   Jing Zhang <renyu.zj@linux.alibaba.com>
+In-Reply-To: <CAM9d7cj3v58m8NcsEK4sYsk_dbQDAq71hYo7DV=xaQa_rZyPYg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello,
 
-On Tue, Jun 13, 2023 at 1:06 PM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> Em Tue, Jun 13, 2023 at 10:11:43PM +0530, Athira Rajeev escreveu:
-> > From: Aditya Gupta <adityag@linux.ibm.com>
-> >
-> > ${$1} gives bad substitution error on sh, bash, and zsh. This seems like
-> > a typo, and this patch modifies it to $1, since that is what it's usage
-> > looks like from wherever `check_exec_0` is called.
->
-> Nicely spotted!
->
-> Please add the people that last touched the problem to the cc list,
-> specially when it fixes a bug.
->
-> Thanks for adding a Fixes tag, that helps the stable@kernel.org guys to
-> get this propagated to supported kernel releases.
->
-> I've added the test author to the CC list in this message.
->
-> thanks!
->
-> - Arnaldo
->
-> > This issue due to ${$1} caused all function calls to give error in
-> > `find_str_or_fail` line, and so no test runs completely. But
-> > 'perf test "perf script task-analyzer tests"' wrongly reports
-> > that tests passed with the status OK, which is wrong considering
-> > the tests didn't even run completely
-> >
-> > Fixes: e8478b84d6ba ("perf test: add new task-analyzer tests")
-> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> > Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> > Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> > ---
 
-I'm seeing a different error even after this fix.
-Can you please take a look?
+在 2023/6/21 上午3:04, Namhyung Kim 写道:
+> Hello,
+> 
+> On Tue, Jun 20, 2023 at 12:17 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+>>
+>> Hi all,
+>>
+>> I add an identifier sysfs file for the yitian710 SoC DDR to allow
+>> userspace to identify the specific implementation of the device,
+>> so that the perf tool can match the corresponding uncore events and
+>> metrics through the identifier. Then added yitian710 SoC DDR
+>> metrics and events alias.
+>>
+>> Change since v3:
+>> - Split the CMN and ali_drw patches. This patchset only contains
+>>   ali_drw PMU related patches. The CMN metric related patches will
+>>   be in another patchset.
+>> - Link: https://lore.kernel.org/all/1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com/
+>>
+>> $perf list:
+>> ...
+>> ali_drw:
+>>   chi_rxdat
+>>        [A packet at CHI RXDAT interface (write data). Unit: ali_drw]
+>>   chi_rxrsp
+>>        [A packet at CHI RXRSP interface. Unit: ali_drw]
+>>   chi_txdat
+>>        [A packet at CHI TXDAT interface (read data). Unit: ali_drw]
+>>   chi_txreq
+>>        [A packet at CHI TXREQ interface (request). Unit: ali_drw]
+>>   cycle
+>>        [The ddr cycle. Unit: ali_drw]
+>> ...
+>> ali_drw:
+>>   ddr_read_bandwidth.all
+>>        [The ddr read bandwidth(MB/s). Unit: ali_drw ]
+>>   ddr_write_bandwidth.all
+>>        [The ddr write bandwidth(MB/s). Unit: ali_drw ]
+>> ...
+>>
+>> $perf stat -M ddr_read_bandwidth.all ./test
+>>
+>> Performance counter stats for 'system wide':
+>>
+>>             38,150      hif_rd        #  2.4 MB/s  ddr_read_bandwidth.all
+>>      1,000,957,941 ns   duration_time
+>>
+>>        1.000957941 seconds time elapsed
+>>
+>> Jing Zhang (4):
+>>   driver/perf: Add identifier sysfs file for Yitian 710 DDR
+>>   perf jevents: Add support for Yitian 710 DDR PMU aliasing
+>>   perf vendor events: Add JSON metrics for Yitian 710 DDR
+>>   docs: perf: Update metric usage for Alibaba's T-Head PMU driver
+> 
+> So patch 1 is for the kernel, and patch 2-4 depend on it, right?
+> 
+
+Hi Namhyung,
+
+Yes, patch 2-4 depend on patch 1.
+
+> I'm curious why the first patch is needed, presumably the PMU
+> should have 'ali_drw' in the name already.  Do we use substring
+> match for the compat name in the JSON metric?
+> 
+
+The main purpose of patch 1 is to add an identifier so that the Compat
+field can match the corresponding event when defining aliases or metrics
+for events.
+
+For example, "Unit" can match "ali_drw" in the name and different SoCs may
+be able to match ali_drw, but they may have different events, and even if
+the events are the same, the meanings may be different. Therefore, the
+Compat field is needed to match the Identifier to confirm which type and
+revision of PMU the current SoC has. Therefore, both "Unit" and "Compat"
+need to be matched at the same time. Although it seems that ali_drw is
+redundantly matched currently, it is meaningful for future expansion.
 
 Thanks,
-Namhyung
+Jing
 
-
-$ sudo ./perf test -v task
-114: perf script task-analyzer tests                                 :
---- start ---
-test child forked, pid 1771042
-Please specify a valid report script(see 'perf script -l' for listing)
-FAIL: "invocation of perf command failed" Error message: ""
-FAIL: "test_basic" Error message: "Failed to find required string:'Comm'."
-Please specify a valid report script(see 'perf script -l' for listing)
-FAIL: "invocation of perf command failed" Error message: ""
-FAIL: "test_ns_rename" Error message: "Failed to find required string:'Comm'."
-...
-test child finished with -1
----- end ----
-perf script task-analyzer tests: FAILED!
+> Thanks,
+> Namhyung
+> 
+>>
+>>  Documentation/admin-guide/perf/alibaba_pmu.rst     |   5 +
+>>  drivers/perf/alibaba_uncore_drw_pmu.c              |  27 ++
+>>  .../arm64/freescale/yitian710/sys/ali_drw.json     | 373 +++++++++++++++++++++
+>>  .../arm64/freescale/yitian710/sys/metrics.json     |  20 ++
+>>  tools/perf/pmu-events/jevents.py                   |   1 +
+>>  5 files changed, 426 insertions(+)
+>>  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/ali_drw.json
+>>  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/yitian710/sys/metrics.json
+>>
+>> --
+>> 1.8.3.1
+>>
