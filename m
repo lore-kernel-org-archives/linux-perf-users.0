@@ -2,95 +2,142 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A500EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 04:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254B3EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 04:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229650AbjFUEgj (ORCPT
+        id S230050AbjFUEyT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 00:36:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52556 "EHLO
+        Wed, 21 Jun 2023 00:54:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjFUEgi (ORCPT
+        with ESMTP id S229448AbjFUEyS (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 00:36:38 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 16DCA171C;
-        Tue, 20 Jun 2023 21:36:36 -0700 (PDT)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8CxZPBPfpJkpwAAAA--.10S3;
-        Wed, 21 Jun 2023 12:36:31 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx33fqZ5JkIOoAAA--.446S3;
-        Wed, 21 Jun 2023 11:00:59 +0800 (CST)
-Subject: Re: [PATCH v2] perf symbol: Add LoongArch case in get_plt_sizes()
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <1684835873-15956-1-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H4Es7qs54zr_hNPwn5MfgeLiKr3sgoTUP5iNj3JrH-1Uw@mail.gmail.com>
- <7a085947-9011-ebc9-a97d-7a62c755a978@loongson.cn>
-Cc:     Huacai Chen <chenhuacai@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Wed, 21 Jun 2023 00:54:18 -0400
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2110E171C;
+        Tue, 20 Jun 2023 21:54:17 -0700 (PDT)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-763a3032893so240705685a.2;
+        Tue, 20 Jun 2023 21:54:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687323256; x=1689915256;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y1TnxLY/k2SYoAsqYAm+lbkNiBoCiFdnAyxoiLnGFx0=;
+        b=LiEYyBV0C0ddsPG/XuycofIIu9eqr1OkPXqbte+loUyomhIsbmlRncsQWTUDmDIsm8
+         i2Ta14NMso2AgBDe6bqo6zXIk8SwCN73AdxB54K7VrXpJ0AhLgSTG1h2qZSlsF7YOr2S
+         3Q5UEQljONqQZkdt47ZIybYA1FL8WwjF5Ld3HYswjM9NVUyeGpv2BDmG190piDNjXU1Y
+         cKjIbcvGyHu0GHAo6K8v+5b5511u9eMwhH/HV0L7Ge+pxeEh14FU0IUYlPktG4wfY2Gu
+         GQFRAN6jUHkJi7OaUO9gdLGB2NG6XPtbVIbwj/Y6zbxfEXAvrA7LTOO1nYRFro7zvXVh
+         xB1w==
+X-Gm-Message-State: AC+VfDwU/8gDXpTXwdbPpVfGr81tqGL8li+XjkZ1kq7bzrksO/LqScIr
+        LT/BtkUUc+EtR3r0Jq1nJCTRIisTmuJA7XCB1Cz1BT3gF5M=
+X-Google-Smtp-Source: ACHHUZ5DhIUGLzwFq+zSDS5e7IzVZs5JDEr2gT/RxErAcTo+wJW+RCeZiQiMgo659bOC3zkMI8kMSXuM+411RiSz6PY=
+X-Received: by 2002:a05:620a:450d:b0:762:3d10:dc5f with SMTP id
+ t13-20020a05620a450d00b007623d10dc5fmr17058907qkp.58.1687323256155; Tue, 20
+ Jun 2023 21:54:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230620132025.105563-1-wangrui@loongson.cn> <CAM9d7chjhFNjDMADJTTz5TNgCCuyPzy8VCDvZxw5K5girfWu1A@mail.gmail.com>
+ <CAHirt9hDc-22AKrRZEEUW9LUa3hjmnEVrYDNyWCx4kkWU4WzXA@mail.gmail.com>
+In-Reply-To: <CAHirt9hDc-22AKrRZEEUW9LUa3hjmnEVrYDNyWCx4kkWU4WzXA@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Tue, 20 Jun 2023 21:54:04 -0700
+Message-ID: <CAM9d7cgkV3CZ_2xAp+v62hpfutAB+RpsnvGa2u09P4C0Fm5ULw@mail.gmail.com>
+Subject: Re: [PATCH] perf annotate: Fix instruction association and parsing
+ for LoongArch
+To:     WANG Rui <wangrui@loongson.cn>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        loongson-kernel@lists.loongnix.cn
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <1c3c95c7-54e9-a65a-2f63-3a16af0fc2bf@loongson.cn>
-Date:   Wed, 21 Jun 2023 11:00:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <7a085947-9011-ebc9-a97d-7a62c755a978@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Bx33fqZ5JkIOoAAA--.446S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7KY7
-        ZEXasCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29K
-        BjDU0xBIdaVrnRJUUUm0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26c
-        xKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vE
-        j48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxV
-        AFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVCY1x02
-        67AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2
-        jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-        AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxAqzxv262kKe7AKxVWUtVW8ZwCF54CYxVCY
-        1x0262kKe7AKxVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUtV
-        W8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
-        1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6x
-        IIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
-        x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvj
-        DU0xZFpf9x07jOdb8UUUUU=
+        Jiri Olsa <jolsa@kernel.org>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        loongarch@lists.linux.dev, Tiezhu Yang <yangtiezhu@loongson.cn>,
+        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-
-
-On 06/08/2023 03:01 PM, Tiezhu Yang wrote:
-> Hi Arnaldo,
+On Tue, Jun 20, 2023 at 9:37 PM WANG Rui <wangrui@loongson.cn> wrote:
 >
-> On 05/23/2023 06:26 PM, Huacai Chen wrote:
->> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
->>
->> On Tue, May 23, 2023 at 5:57 PM Tiezhu Yang <yangtiezhu@loongson.cn>
->> wrote:
->>>
->>> We can see the following definitions in bfd/elfnn-loongarch.c:
-
-...
-
+> Hello Namhyung,
 >
-> Are you OK with this change?
-> Could you please pick it up in your tree?
+> On Wed, Jun 21, 2023 at 2:42 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > +static int loongarch_call__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms)
+> > > +{
+> > > +       char *c, *endptr, *tok, *name;
+> > > +       struct map *map = ms->map;
+> > > +       struct addr_map_symbol target = {
+> > > +               .ms = { .map = map, },
+> >
+> > Looking here...
+> >
+> > > +       };
+> > > +
+> > > +       c = strchr(ops->raw, '#');
+> > > +       if (c++ == NULL)
+> > > +               return -1;
+> > > +
+> > > +       ops->target.addr = strtoull(c, &endptr, 16);
+> > > +
+> > > +       name = strchr(endptr, '<');
+> > > +       name++;
+> > > +
+> > > +       if (arch->objdump.skip_functions_char &&
+> > > +           strchr(name, arch->objdump.skip_functions_char))
+> > > +               return -1;
+> > > +
+> > > +       tok = strchr(name, '>');
+> > > +       if (tok == NULL)
+> > > +               return -1;
+> > > +
+> > > +       *tok = '\0';
+> > > +       ops->target.name = strdup(name);
+> > > +       *tok = '>';
+> > > +
+> > > +       if (ops->target.name == NULL)
+> > > +               return -1;
+> > > +
+> > > +       target.addr = map__objdump_2mem(map, ops->target.addr);
+> > > +
+> > > +       if (maps__find_ams(ms->maps, &target) == 0 &&
+> > > +           map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
+> >
+> > So the target.ms.map is 'map', right?  Then we can reduce the line.
+>
+> toos/perf/util/maps.c:
+>
+> > int maps__find_ams(struct maps *maps, struct addr_map_symbol *ams)
+> > {
+> >     if (ams->addr < map__start(ams->ms.map) || ams->addr >= map__end(ams->ms.map)) {
+> >         if (maps == NULL)
+> >             return -1;
+> >         ams->ms.map = maps__find(maps, ams->addr);
+>
+> Is it possible that `target.ms.map` might be reassigned within the
+> `maps_find_ams` function in this case?
 
-Ping. What is the status of this patch? Any more comments?
-Is there a chance to merge it for this coming merge window?
+Ah, ok.  Missed that part.  It can change if the target is from a
+different library.
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
-Tiezhu
+Namhyung
 
+>
+> >         if (ams->ms.map == NULL)
+> >             return -1;
+> >     }
+> >
+> >     ams->al_addr = map__map_ip(ams->ms.map, ams->addr);
+> >     ams->ms.sym = map__find_symbol(ams->ms.map, ams->al_addr);
+> >
+> >     return ams->ms.sym ? 0 : -1;
+> > }
+
+>
