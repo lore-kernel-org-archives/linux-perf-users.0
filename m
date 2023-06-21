@@ -2,129 +2,140 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E0CEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 23:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FB3EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 23:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229726AbjFUXhN (ORCPT
+        id S229673AbjFUXua (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 19:37:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60404 "EHLO
+        Wed, 21 Jun 2023 19:50:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229595AbjFUXhN (ORCPT
+        with ESMTP id S229504AbjFUXu2 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 19:37:13 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66A0BE42
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 16:37:11 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6687096c6ddso2620487b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 16:37:11 -0700 (PDT)
+        Wed, 21 Jun 2023 19:50:28 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9741B10C1
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 16:50:27 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-988e6fc41ccso428560266b.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 16:50:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20221208.gappssmtp.com; s=20221208; t=1687390631; x=1689982631;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LviLme9+lgOUUr9nBLWzIIut7py+TszGrdRA5x2MLw4=;
-        b=SRyBK+yXuStGTaQoKiMa6SdpdRAjVO1vzCexqILiXgxFArocs7JGb6OIEP2oHHgwGp
-         Wtj+XBft+r/OgiawqDMfDaFciwhGd6hWCLd5mBR7xdjVuuY0bs/dDZ/zP0YiSsEv2qyg
-         JDJerwkTSFfeolNwA50bpeajGz/5aYYcBuMvNEdLeV1SiiCn1lvzLV8Qbhqcr9jfQvbU
-         yclePpz6cSpAfInKAjGUUQLzAc5qigx0DoMHjhZ8eN/ykgTxGoj4fc+C4um9NeWgMlHf
-         SBa8PnaExaa0KtKJB/Mn3uJA6kCjw9WZJqSgmC383N9phI5yqplFC56ZMJE20a5OkYNV
-         vRZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687390631; x=1689982631;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1687391425; x=1689983425;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LviLme9+lgOUUr9nBLWzIIut7py+TszGrdRA5x2MLw4=;
-        b=TeU1GT6gH8Hjay62//pPXOkrjRXq+uRPfRudZOMOO3J7zKF+Ykft1xqqEfoW+QMOPV
-         klgusvfJdVufCRAlOQaSi6Ugvs3M2Y/zB9xvqqKBMkM2nkk7HnWToJQm99fxawJAT2F5
-         91YwBAOheA023z6P4yYi7NbBsSo4/TeuLEU5eXeaZG3h3L/dttxiFdQqZEsK+vu6abVr
-         zmph6irmdeBSdW5Nm7AYtQHqZ3J1+JfC2kC6takRmnZQQDxgUmYW7LjazVpYC+UL/Mga
-         scRky39//+lqwgNNrAQX2ACrPkP/rnn90+vXSie5w7DB7bIakTlh3kzTqjt5rouxz250
-         WJyw==
-X-Gm-Message-State: AC+VfDxZ3t5UwhAMbTnjxjK4ECarvazOa8w3CuZTUZ18ktv/+7Iw/TBV
-        1CkhxPXqrdImt5rxcagJVmPsFQ==
-X-Google-Smtp-Source: ACHHUZ7CM2aeTFo7hwLz+bGNEMYFQlMCEfUHBJMJQWjk2y2P70n0MdfO1gwLnC0WcHlGXINZ9OQvgQ==
-X-Received: by 2002:a05:6a20:1596:b0:10b:e54f:1c00 with SMTP id h22-20020a056a20159600b0010be54f1c00mr13663409pzj.57.1687390630512;
-        Wed, 21 Jun 2023 16:37:10 -0700 (PDT)
-Received: from localhost ([50.221.140.188])
-        by smtp.gmail.com with ESMTPSA id n10-20020a170902e54a00b001b061dcdb6bsm4020245plf.28.2023.06.21.16.37.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jun 2023 16:37:09 -0700 (PDT)
-Date:   Wed, 21 Jun 2023 16:37:09 -0700 (PDT)
-X-Google-Original-Date: Wed, 21 Jun 2023 16:36:18 PDT (-0700)
-Subject:     Re: [PATCH v2 00/10] riscv: Allow userspace to directly access perf counters
-In-Reply-To: <20230512085321.13259-1-alexghiti@rivosinc.com>
-CC:     corbet@lwn.net, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        namhyung@kernel.org, irogers@google.com,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, atishp@atishpatra.org, anup@brainfault.org,
-        Will Deacon <will@kernel.org>, robh@kernel.org,
-        ajones@ventanamicro.com, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, alexghiti@rivosinc.com
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     alexghiti@rivosinc.com
-Message-ID: <mhng-5074ab93-a879-4b1c-8f39-0f59b7e0f4f4@palmer-ri-x1c9a>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        bh=NhYNZ0vxtpjuX5s0wcMa09N91qzj3byTq4ke4NqIBlc=;
+        b=HZDteg5s2Vpl4Dj3x2y2xDB5nI/Qbe7Mj8TIWbglj/Afe2Df8ThS6myu4ctAr7BySI
+         lN6IEuMEfPC2jekn2PiCOzacJ5o3hhPY0TVfjYc90WW++TO4fcWk3jVeIIqDxZW+Ag+v
+         3gWB4WdyMMmHkHwc3FuCxBT4mKHgXUkDjtvgA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687391425; x=1689983425;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NhYNZ0vxtpjuX5s0wcMa09N91qzj3byTq4ke4NqIBlc=;
+        b=A62pz2wue7dS4KqjEWTlKbUO44WduiYxTCGlLACZnnGgYj6nU8W1GIVb3hkAGPcJQD
+         js0d4HR5cQIeOr2XzkAa+2Sio+TSpi0UqAptWSaHBveyaE1L4ZI5rJWyK9t5dPhtl2J7
+         6g7EN/JcQ0Mb1UijhxqDTKIUFYjjar7hIJE0Be3MA+dke8/c8RJiCX3DDU+dVDA3kspx
+         MJN4NO9qZ2ejpF+9lfJtbwWUY3UzY00axKyTo8AMiqJj2ilpU2mryIUwoP6lnUR86Jwy
+         r/ASaa05mK7vrPXoYB9g18lWdvB/vPWC/YcDhA+yNDllCRf3/XlK0x9gxALFrQ094K7c
+         y1aQ==
+X-Gm-Message-State: AC+VfDwR6oEkIHVXqdIaLRcgXeLstjSIO3LeSfzsDpVc8oDj9rAj39ih
+        azoV9qAsFmmNy3xIztPZIWiF0zH7ZSPqrAgypmYq8PfL
+X-Google-Smtp-Source: ACHHUZ5HkpEKBM4S/Qk3F7ExUwRSgBdrcSWZ8rQkqSmx1DPD5aEsa4lRm9aic1gcrJbdvAMRqjwJhQ==
+X-Received: by 2002:a17:907:60d4:b0:988:a986:b11c with SMTP id hv20-20020a17090760d400b00988a986b11cmr8145622ejc.29.1687391425215;
+        Wed, 21 Jun 2023 16:50:25 -0700 (PDT)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id qu21-20020a170907111500b00982cfe1fe5dsm3672658ejb.65.2023.06.21.16.50.24
+        for <linux-perf-users@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Jun 2023 16:50:25 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-516500163b2so730a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 16:50:24 -0700 (PDT)
+X-Received: by 2002:a50:c35e:0:b0:519:7d2:e256 with SMTP id
+ q30-20020a50c35e000000b0051907d2e256mr4978edb.0.1687391424164; Wed, 21 Jun
+ 2023 16:50:24 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230616150618.6073-1-pmladek@suse.com> <20230616150618.6073-7-pmladek@suse.com>
+ <871qi5otdh.fsf@mail.lhotse>
+In-Reply-To: <871qi5otdh.fsf@mail.lhotse>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 21 Jun 2023 16:50:12 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XgC0JkjMZjx0z-gt0iXp-UJr87nutB9xWKhB6qMzWWNg@mail.gmail.com>
+Message-ID: <CAD=FV=XgC0JkjMZjx0z-gt0iXp-UJr87nutB9xWKhB6qMzWWNg@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] watchdog/hardlockup: Define HARDLOCKUP_DETECTOR_ARCH
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        sparclinux@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, 12 May 2023 01:53:11 PDT (-0700), alexghiti@rivosinc.com wrote:
-> riscv used to allow direct access to cycle/time/instret counters,
-> bypassing the perf framework, this patchset intends to allow the user to
-> mmap any counter when accessed through perf. But we can't break the
-> existing behaviour so we introduce a sysctl perf_user_access like arm64
-> does, which defaults to the legacy mode described above.
->
-> *Note* that there are still ongoing discussions around which mode should
-> be the default mode with distro people.
->
-> base-commit-tag: v6.3
->
-> Changes in v2:
-> - Split into smaller patches, way better!
-> - Add RB from Conor
-> - Simplify the way we checked riscv architecture
-> - Fix race mmap and other thread running on other cpus
-> - Use hwc when available
-> - Set all userspace access flags in event_init, too cumbersome to handle sysctl changes
-> - Fix arch_perf_update_userpage for pmu other than riscv-pmu by renaming pmu driver
-> - Fixed kernel test robot build error
-> - Fixed documentation (Andrew and Bagas)
-> - perf testsuite passes mmap tests in all 3 modes
->
-> Alexandre Ghiti (10):
->   perf: Fix wrong comment about default event_idx
->   include: riscv: Fix wrong include guard in riscv_pmu.h
->   riscv: Make legacy counter enum match the HW numbering
->   drivers: perf: Rename riscv pmu driver
->   riscv: Prepare for user-space perf event mmap support
->   drivers: perf: Implement perf event mmap support in the legacy backend
->   drivers: perf: Implement perf event mmap support in the SBI backend
->   Documentation: admin-guide: Add riscv sysctl_perf_user_access
->   tools: lib: perf: Implement riscv mmap support
->   perf: tests: Adapt mmap-basic.c for riscv
->
->  Documentation/admin-guide/sysctl/kernel.rst |  24 ++-
->  arch/riscv/kernel/Makefile                  |   2 +-
->  arch/riscv/kernel/perf_event.c              |  74 ++++++++
->  drivers/perf/riscv_pmu.c                    |  41 ++++
->  drivers/perf/riscv_pmu_legacy.c             |  37 +++-
->  drivers/perf/riscv_pmu_sbi.c                | 196 +++++++++++++++++++-
->  include/linux/perf/riscv_pmu.h              |  10 +-
->  include/linux/perf_event.h                  |   3 +-
->  tools/lib/perf/mmap.c                       |  65 +++++++
->  tools/perf/tests/mmap-basic.c               |   4 +-
->  10 files changed, 435 insertions(+), 21 deletions(-)
->  create mode 100644 arch/riscv/kernel/perf_event.c
+Hi,
 
-It looks like there's a handful of outstanding review comments, so I'm 
-going to mark this as changes requested in patchwork -- sorry if I 
-missed a v3.
+On Wed, Jun 21, 2023 at 6:08=E2=80=AFAM Michael Ellerman <mpe@ellerman.id.a=
+u> wrote:
+>
+> Petr Mladek <pmladek@suse.com> writes:
+> > The HAVE_ prefix means that the code could be enabled. Add another
+> > variable for HAVE_HARDLOCKUP_DETECTOR_ARCH without this prefix.
+> > It will be set when it should be built. It will make it compatible
+> > with the other hardlockup detectors.
+> >
+> > The change allows to clean up dependencies of PPC_WATCHDOG
+> > and HAVE_HARDLOCKUP_DETECTOR_PERF definitions for powerpc.
+> >
+> > As a result HAVE_HARDLOCKUP_DETECTOR_PERF has the same dependencies
+> > on arm, x86, powerpc architectures.
+> >
+> > Signed-off-by: Petr Mladek <pmladek@suse.com>
+> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > ---
+> >  arch/powerpc/Kconfig | 5 ++---
+> >  include/linux/nmi.h  | 2 +-
+> >  lib/Kconfig.debug    | 9 +++++++++
+> >  3 files changed, 12 insertions(+), 4 deletions(-)
+>
+> Something in this patch is breaking the powerpc g5_defconfig, I don't
+> immediately see what though.
+>
+> ../arch/powerpc/kernel/stacktrace.c: In function =E2=80=98handle_backtrac=
+e_ipi=E2=80=99:
+> ../arch/powerpc/kernel/stacktrace.c:171:9: error: implicit declaration of=
+ function =E2=80=98nmi_cpu_backtrace=E2=80=99 [-Werror=3Dimplicit-function-=
+declaration]
+>   171 |         nmi_cpu_backtrace(regs);
+>       |         ^~~~~~~~~~~~~~~~~
+> ../arch/powerpc/kernel/stacktrace.c: In function =E2=80=98arch_trigger_cp=
+umask_backtrace=E2=80=99:
+> ../arch/powerpc/kernel/stacktrace.c:226:9: error: implicit declaration of=
+ function =E2=80=98nmi_trigger_cpumask_backtrace=E2=80=99; did you mean =E2=
+=80=98arch_trigger_cpumask_backtrace=E2=80=99? [-Werror=3Dimplicit-function=
+-declaration]
+>   226 |         nmi_trigger_cpumask_backtrace(mask, exclude_self, raise_b=
+acktrace_ipi);
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>       |         arch_trigger_cpumask_backtrace
+> cc1: all warnings being treated as errors
+
+Yeah, I can reproduce that.
+
+The problem is that before ${SUBJECT} patch "include/linux/nmi.h"
+would include <asm/nmi.h>. Now it won't.
+
+There are a ton of different ways to fix this, but I think the one
+that makes sense is to be consistent with other architectures and move
+the "arch_trigger_cpumask_backtrace" definitions to asm/irq.h.
+
+https://lore.kernel.org/r/20230621164809.1.Ice67126857506712559078e7de26d32=
+d26e64631@changeid
+
+-Doug
