@@ -2,55 +2,55 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958FFEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 19:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A817EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 19:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230513AbjFUThY (ORCPT
+        id S229504AbjFUTkK (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 15:37:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35302 "EHLO
+        Wed, 21 Jun 2023 15:40:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231145AbjFUThU (ORCPT
+        with ESMTP id S229542AbjFUTkI (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 15:37:20 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD4121992;
-        Wed, 21 Jun 2023 12:37:14 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b5465a79cdso28158575ad.3;
-        Wed, 21 Jun 2023 12:37:14 -0700 (PDT)
+        Wed, 21 Jun 2023 15:40:08 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD761171C;
+        Wed, 21 Jun 2023 12:40:07 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-666ecf9a0ceso3383602b3a.2;
+        Wed, 21 Jun 2023 12:40:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687376234; x=1689968234;
+        d=gmail.com; s=20221208; t=1687376407; x=1689968407;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wysmKxTjA5POXPuSnL3ZWdPlXIDrR3joMPak2RW+D1M=;
-        b=S07+kLCUT/SwJ5u1DA+bkwXwy97NCQpkedZxhO8+z6Wq8+W6n5xNfqYhJNk24Dtx2J
-         dsZxb94BkFneFYNQTcJrx8e3lpkdZnE1tJk7lz0V00qnMvjNIHqsPDTZbhqhTz6jHwvO
-         6zjxgjTnw/hw9pNYqi6jVBHgBPAjDkE30MLk8M06RDHtHJa4nxy0YJn5kUvO35SLeyT8
-         zy1l6SfvqEVmjFVNjvRL/Mr0Ot5X1KwelKNhaHVqD36RmV561WGqqqenu8/0Ran/6sRe
-         Xlp8JlZCoyOMC3ds4twYoRWsqJkF0S9kPLKsYbVG52nnv76D7niK19XtvLp/MrLrzw6O
-         9m4Q==
+        bh=pZjCGZDhKpXUGSqDazPCwNKoB5sel2LSB5kjV5qg9hw=;
+        b=hSz94Aifn14AVAIYgF5iOoW8O9wlFY3sDdn24bNFUxZ3IY3QI9JvwGSZYXI14w6sc3
+         YF7rY1EzXKlv5p5oEqA0h6BdxSAbJPLLx4MHOiG/sdHW7YJ83NX/jXW2C4hhGet80cNz
+         kidZdoUCnLA9ezjdiyep3GzL0pecbQDP/nXa3+azfB1cBB65qWOGEMH1znuJO8apC/TB
+         9j/MVQjydoci7Tqo6h0pbMi91ckJPnuxu5zamPfKeetEsCTCPoz5MtgT7v1hCdnKxFHQ
+         sg10NEhE04yytTis968A7OWOX0MalBCsg507wAshXChkShni3b7JZ+QUdcB1crJnWdOs
+         lq4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687376234; x=1689968234;
+        d=1e100.net; s=20221208; t=1687376407; x=1689968407;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wysmKxTjA5POXPuSnL3ZWdPlXIDrR3joMPak2RW+D1M=;
-        b=Qw9zjJPq7bIfEC1mR7TQtVVIb7vCsL/kWdwCB3rhWUgEsRkQP405SMK2pIwbcwlxYi
-         p5Kgq7pIqYUqi2K4igh6HXqFt9IXKTipAB13Q0yu9fAhsKtEiQJqAHjaPV+2pwp1gEbD
-         wFb8ZqPxTyu0ZWOryfLlWln5GGCn9XXSndZbfOjSnS1i3uZLmOQ4TpJGt0VYFN+TipZb
-         dfaVSQVyXUCF9/qVjX3jLawxt3rOT2C7qPRfi7huTSSfJ+Y4i1oJs5fvvitfcWUn3sN/
-         xlTY1iiA7ucUA93pAMpeuWFX/CyR8XVvzY5rxAYRdNBbBvqqrwgGOs54dSx1zrDVhx39
-         SA4w==
-X-Gm-Message-State: AC+VfDx9w7XVG2rEP+V6pSdeGmmLHiUd7WwVH2YRiDgnjSueYVyxE1ku
-        XbXgjAfFiEuXSPkismqhwHs=
-X-Google-Smtp-Source: ACHHUZ69TGI7UgaMNHlz30M9h5OSeOZkCCWPBquKQ2Y9Gao9+QHOyGF1n9se2Rl8repP0FTskygALQ==
-X-Received: by 2002:a17:902:f551:b0:1b5:4f50:f1e0 with SMTP id h17-20020a170902f55100b001b54f50f1e0mr11017305plf.29.1687376234097;
-        Wed, 21 Jun 2023 12:37:14 -0700 (PDT)
+        bh=pZjCGZDhKpXUGSqDazPCwNKoB5sel2LSB5kjV5qg9hw=;
+        b=Y+4AuBgj3rGFazQ8jx3biPQMFv7jPLz/A+aIzkTRebiTSeE5UL4vB41L5iGG+Y1ZZb
+         hHbrn9jGF2/ZwdB4p29CUH5bENhzwFbOHZvE95xAp2AUPFdmq2a0fm/Wnh69CxCKt8Qa
+         EqWl6L4ij+ysbIa6IuNx5Qz85esejCYz225wtRg3bkPFD2B2Sr+YWsB69u3FMiiuWeIY
+         pDE4wC3siK69pPdZGNk+RARp1xnQS1yRg3REt4PMYoTVLHM1Pu57PP7I6/19xJCHboNb
+         hip0gT/gArGMqqXd0BAoEoEyxAbnxxRnnBoYMgwIWvq/iGVp3wadQVoAmuO9yduGLq43
+         WyQA==
+X-Gm-Message-State: AC+VfDw+Yzgz6tJ9wu6oyalBXJtCDFizQwIL7xcRPHmNg2dHy1fKBS7i
+        jxkxV4QezYnsRmgBwZ1Y9Ek=
+X-Google-Smtp-Source: ACHHUZ7iTsUHJjPKx60L97N/5zwVvocem2AFCJg82V3aKOYyAr6+WE8FgMwSi8V+EGANZnX1Vng+pA==
+X-Received: by 2002:a05:6a00:a94:b0:666:8403:9f4 with SMTP id b20-20020a056a000a9400b00666840309f4mr17338320pfl.16.1687376407143;
+        Wed, 21 Jun 2023 12:40:07 -0700 (PDT)
 Received: from yoga ([2400:1f00:13:6258:556c:aad7:2240:7612])
-        by smtp.gmail.com with ESMTPSA id jl17-20020a170903135100b001b39f8dc06fsm3862326plb.152.2023.06.21.12.37.09
+        by smtp.gmail.com with ESMTPSA id a20-20020aa780d4000000b0064d47cd117esm3265030pfn.39.2023.06.21.12.40.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jun 2023 12:37:13 -0700 (PDT)
-Date:   Thu, 22 Jun 2023 01:07:05 +0530
+        Wed, 21 Jun 2023 12:40:06 -0700 (PDT)
+Date:   Thu, 22 Jun 2023 01:09:59 +0530
 From:   Anup Sharma <anupnewsmail@gmail.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -63,8 +63,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Anup Sharma <anupnewsmail@gmail.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/9] scripts: python: Add check for correct perf script format
-Message-ID: <c43a51b4895b5b0b40f8c526d6e5e92b9d646a62.1687375189.git.anupnewsmail@gmail.com>
+Subject: [PATCH 2/9] scripts: python: implement add sample function and
+ return finish function
+Message-ID: <4ded5c271261644c472562f31994830b6a0aefe1.1687375189.git.anupnewsmail@gmail.com>
 References: <cover.1687375189.git.anupnewsmail@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -74,37 +75,68 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The isPerfScriptFormat function, validates the format of a perf script.
-The function checks if the given input meets specific criteria to
-determine if it is a valid perf script output.
+The main convertPerfScriptProfile function returns a dictionary with
+references to the addSample and finish functions, allowing external
+code to utilize them for profile conversion. This function has few
+more functions which will be added.
+
+The addSample function appends a new entry to the 'samples' data structure.
+It takes the thread name, stack array, and time as input parameters.
+If the thread name differs from the current name, it updates the name.
+The function utilizes the get_or_create_stack and get_or_create_frame
+methods to construct the stack structure. Finally, it adds the stack,
+time, and responsiveness values to the 'data' list within 'samples'.
+
+The finish function generates a dictionary containing various profile information
+such as 'tid', 'pid', 'name', 'markers', 'samples', 'frameTable', 'stackTable',
+'stringTable', 'registerTime', 'unregisterTime', and 'processType'.
 
 Signed-off-by: Anup Sharma <anupnewsmail@gmail.com>
 ---
- .../scripts/python/firefox-gecko-converter.py     | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 tools/perf/scripts/python/firefox-gecko-converter.py
+ .../scripts/python/firefox-gecko-converter.py | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
 diff --git a/tools/perf/scripts/python/firefox-gecko-converter.py b/tools/perf/scripts/python/firefox-gecko-converter.py
-new file mode 100644
-index 000000000000..73a431d0c7d1
---- /dev/null
+index 73a431d0c7d1..2817d4a96269 100644
+--- a/tools/perf/scripts/python/firefox-gecko-converter.py
 +++ b/tools/perf/scripts/python/firefox-gecko-converter.py
-@@ -0,0 +1,15 @@
-+#!/usr/bin/env python3
-+import re
-+import sys
-+import json
-+from functools import reduce
+@@ -13,3 +13,36 @@ def isPerfScriptFormat(profile):
+ 
+     firstLine = profile[:profile.index('\n')]
+     return bool(re.match(r'^\S.*?\s+(?:\d+/)?\d+\s+(?:\d+\d+\s+)?[\d.]+:', firstLine))
 +
-+def isPerfScriptFormat(profile):
-+    if profile.startswith('# ========\n'):
-+        return True
++def convertPerfScriptProfile(profile): 
 +
-+    if profile.startswith('{'):
-+        return False
++        def addSample(threadName, stackArray, time):
++            nonlocal name
++            if name != threadName:
++                name = threadName
++            # TODO: 
++            # get_or_create_stack will create a new stack if it doesn't exist, or return the existing stack if it does.
++            # get_or_create_frame will create a new frame if it doesn't exist, or return the existing frame if it does.
++            stack = reduce(lambda prefix, stackFrame: get_or_create_stack(get_or_create_frame(stackFrame), prefix), stackArray, None)
++            responsiveness = 0
++            samples['data'].append([stack, time, responsiveness])
 +
-+    firstLine = profile[:profile.index('\n')]
-+    return bool(re.match(r'^\S.*?\s+(?:\d+/)?\d+\s+(?:\d+\d+\s+)?[\d.]+:', firstLine))
++        def finish():
++            return {
++                "tid": tid,
++                "pid": pid,
++                "name": name,
++                "markers": markers,
++                "samples": samples,
++                "frameTable": frameTable,
++                "stackTable": stackTable,
++                "stringTable": stringTable,
++                "registerTime": 0,
++                "unregisterTime": None,
++                "processType": 'default'
++            }
++
++        return {
++            "addSample": addSample,
++            "finish": finish
++        }
 -- 
 2.34.1
 
