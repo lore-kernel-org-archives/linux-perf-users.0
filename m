@@ -2,85 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B36CAEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 17:24:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F169DEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 17:25:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229960AbjFURYc convert rfc822-to-8bit (ORCPT
+        id S229852AbjFURZh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 13:24:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33104 "EHLO
+        Wed, 21 Jun 2023 13:25:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjFURYc (ORCPT
+        with ESMTP id S230051AbjFURZg (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 13:24:32 -0400
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36295E2;
-        Wed, 21 Jun 2023 10:24:31 -0700 (PDT)
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-bb15165ba06so4907620276.2;
-        Wed, 21 Jun 2023 10:24:31 -0700 (PDT)
+        Wed, 21 Jun 2023 13:25:36 -0400
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C247BE2;
+        Wed, 21 Jun 2023 10:25:35 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-bc476bf5239so6185688276.2;
+        Wed, 21 Jun 2023 10:25:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687368270; x=1689960270;
+        d=1e100.net; s=20221208; t=1687368335; x=1689960335;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4okefCgqaBFfWVHjEtGss5H94GBXCxgg538PEPA+JVw=;
-        b=EswNHvQZ4lZPop38prfc/hfZhcXG7bXP21n2M8fuRJioOzRhKupp83k0zGX/1RqdxO
-         0nG03+HdWne64kP9bmSR8zN25x3Ow+05QGQNXRvzp6SEgJygvbHmxcJVwAxf1tznVWpK
-         6ZyJuAEuNag5MdSztRC8k36vQPzFBPmwtuLRo0Gorijy18h7cpbj28R+N/x91LUkQ3xF
-         UyZ6e08ozmmVHevVmRS4QPsOAeMQVKzLXE+kVefUBTOeFxG44P3b3hfFdsQ5z6DD6fbC
-         trqTeFeHNe7Sss8GzMQNrYUiH9C8UCo68d/HxlLUIKDgtih7o0hiPRvaFPWdjpx+ilPK
-         rJkg==
-X-Gm-Message-State: AC+VfDyJNk4UjL8KxdrUSWK0IzKcUy8rttXhAC1E980a2uWF3fspvaFO
-        E6w3UoAK0hHHkXOeVPtbRrMnp49ygfaM3m0lf4M=
-X-Google-Smtp-Source: ACHHUZ7AAztT7wDg04CQ2nKnfAWMa1pnmSlip+Vrhoyf2jr1HYgNLDOjZbq4X91IiHV6bhFIlToNI63sxAm9XYfkFoM=
-X-Received: by 2002:a25:583:0:b0:bc8:5eff:9767 with SMTP id
- 125-20020a250583000000b00bc85eff9767mr6075869ybf.33.1687368270308; Wed, 21
- Jun 2023 10:24:30 -0700 (PDT)
+        bh=wHngUWEw5u2Fdtltkm2omRysHcLxgGd8tyhOPSzH7GI=;
+        b=TLtfrodA02NeRi7DRsIqtdOhr7e6s2gQ1DI2X334tQDQkmqvmzWzaXR0xurjqf8OlC
+         cy0o376GeGwFrD7hHzRX3L2XhkwU34CDOLvteOl/Qodlyj1NEbVM9j9WDP9vapeUlqaW
+         Osgd0q2w1mUCbIMrrL3TCnM62WnWn17IuwzGgXwKQvLg9LpadBxTB5rtfNMr0KewOyqt
+         Dwgg/iCpIxxNdWnYphPpZQ8mbP5uIqGcM5w17s0DJ8yhWRHplZyJg4jINB/QSW7HepBF
+         jWmoujz59hYawT3Gbz+ZRCR36uSimXAkJop0Nys/pJV/VfJDUbCm3uTFNDn9V1KP7UZv
+         lOog==
+X-Gm-Message-State: AC+VfDypWWnuOksgjrty+wFzCL0OnIn9btjkUYXp4V0nRhlV22ahuuqX
+        X8TjVPfjhoIA2H9AcV7WrOdYANaU6nEDTLI5jk8=
+X-Google-Smtp-Source: ACHHUZ42gBnZwcJ2JB3Hatg/ioXumzAd1h5q54bfVQRzjfSHFUV+wbxLhGDpZEIIYsBThRgg4IN/loC3ZSipCGu8QN8=
+X-Received: by 2002:a5b:906:0:b0:ba7:54ab:d676 with SMTP id
+ a6-20020a5b0906000000b00ba754abd676mr12497981ybq.63.1687368334881; Wed, 21
+ Jun 2023 10:25:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230614080937.54937-1-luojianhong@cdjrlc.com>
- <2c733a91717eae93119ba2226420fd8f@208suo.com> <CAM9d7chMMQcnV+hTwyEDbcQrO0ELtQTnhQ5bZptF6g_k+m0mAg@mail.gmail.com>
-In-Reply-To: <CAM9d7chMMQcnV+hTwyEDbcQrO0ELtQTnhQ5bZptF6g_k+m0mAg@mail.gmail.com>
+References: <20230616024515.80814-1-yangjihong1@huawei.com> <CAM9d7chJtidBnLYd27Us6aW5tJKbi_n_kHj=6SRUTbTiowwi5w@mail.gmail.com>
+In-Reply-To: <CAM9d7chJtidBnLYd27Us6aW5tJKbi_n_kHj=6SRUTbTiowwi5w@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 21 Jun 2023 10:24:19 -0700
-Message-ID: <CAM9d7cjZQa531P8gn03QErYLx79yQ_9axtMTLdx9jEcRpLNoqQ@mail.gmail.com>
-Subject: Re: [PATCH] perf parse-events: Remove unneeded semicolon
-To:     baomingtong001@208suo.com
+Date:   Wed, 21 Jun 2023 10:25:23 -0700
+Message-ID: <CAM9d7cit095kueUKgo+bq7hakam3DoTOs7sB5SGKXMEpiRViDg@mail.gmail.com>
+Subject: Re: [PATCH] perf parse: Add missing newline to pr_debug message in evsel__compute_group_pmu_name()
+To:     Yang Jihong <yangjihong1@huawei.com>
 Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
         mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
         jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-        kan.liang@linux.intel.com, zhengjun.xing@linux.intel.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+        kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 3:50 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, Jun 20, 2023 at 1:32 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
 > Hello,
 >
-> On Wed, Jun 14, 2023 at 1:13 AM <baomingtong001@208suo.com> wrote:
+> On Thu, Jun 15, 2023 at 7:47 PM Yang Jihong <yangjihong1@huawei.com> wrote:
 > >
-> > ./tools/perf/util/parse-events.c:1466:2-3: Unneeded semicolon
+> > The newline is missing for pr_debug message in
+> > evsel__compute_group_pmu_name(), fix it.
 > >
-> > Signed-off-by: Mingtong Bao <baomingtong001@208suo.com>
-> > ---
-> >   tools/perf/util/parse-events.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > Before:
 > >
-> > diff --git a/tools/perf/util/parse-events.c
-> > b/tools/perf/util/parse-events.c
-> > index 629f7bd9fd59..42f84f61fabc 100644
-> > --- a/tools/perf/util/parse-events.c
-> > +++ b/tools/perf/util/parse-events.c
-> > @@ -1463,7 +1463,7 @@ static int __parse_events_add_numeric(struct
-> > parse_events_state *parse_state,
-> >       if (extended_type && (type == PERF_TYPE_HARDWARE || type ==
-> > PERF_TYPE_HW_CACHE)) {
+> >   # perf --debug verbose=2 record -e cpu-clock true
+> >   <SNIP>
+> >   No PMU found for 'cycles:u'No PMU found for 'instructions:u'------------------------------------------------------------
+> >   perf_event_attr:
+> >     type                             1
+> >     size                             136
+> >     { sample_period, sample_freq }   4000
+> >     sample_type                      IP|TID|TIME|PERIOD
+> >     read_format                      ID|LOST
+> >     disabled                         1
+> >     inherit                          1
+> >     mmap                             1
+> >     comm                             1
+> >     freq                             1
+> >     enable_on_exec                   1
+> >     task                             1
+> >     sample_id_all                    1
+> >     exclude_guest                    1
+> >     mmap2                            1
+> >     comm_exec                        1
+> >     ksymbol                          1
+> >     bpf_event                        1
+> >   ------------------------------------------------------------
+> >   <SNIP>
+> >
+> > After:
+> >
+> >   # perf --debug verbose=2 record -e cpu-clock true
+> >   <SNIP>
+> >   No PMU found for 'cycles:u'
+> >   No PMU found for 'instructions:u'
+> >   ------------------------------------------------------------
+> >   perf_event_attr:
+> >     type                             1
+> >     size                             136
+> >     { sample_period, sample_freq }   4000
+> >     sample_type                      IP|TID|TIME|PERIOD
+> >     read_format                      ID|LOST
+> >     disabled                         1
+> >     inherit                          1
+> >     mmap                             1
+> >     comm                             1
+> >     freq                             1
+> >     enable_on_exec                   1
+> >     task                             1
+> >     sample_id_all                    1
+> >     exclude_guest                    1
+> >     mmap2                            1
+> >     comm_exec                        1
+> >     ksymbol                          1
+> >     bpf_event                        1
+> >   ------------------------------------------------------------
+> >   <SNIP>
+> >
+> > Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
 >
-> The format is broken, please fix your mail client not fix wrap long lines.
-> This time I fixed it manually, but you need to update your config.
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-Also there were other whitespace breakages, but applied to
-perf-tools-next anyway, thanks!
+Applied to perf-tools-next, thanks!
