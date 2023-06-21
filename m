@@ -2,116 +2,104 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66D2EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 17:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C976EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 17:41:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbjFUR3M convert rfc822-to-8bit (ORCPT
+        id S231416AbjFURk7 (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 13:29:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36158 "EHLO
+        Wed, 21 Jun 2023 13:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbjFUR3M (ORCPT
+        with ESMTP id S231398AbjFURkz (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 13:29:12 -0400
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D1EE2;
-        Wed, 21 Jun 2023 10:29:11 -0700 (PDT)
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-bb2ffa1e235so5942527276.0;
-        Wed, 21 Jun 2023 10:29:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687368550; x=1689960550;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sHKJ5E4QyaneB9JDT8DwEZgyuTNCEA7MDDSg1wRoMEI=;
-        b=EF02C/IqTEdWvGevmILr5zJtLS27nm5s3cGXmsx1zeBnWpqby5fXoDRb8UVWZNwR5N
-         L9B54+su2lQ2ojI7er/qQ585bbS3DGpIpZV92qZQztUInbcuDnSPMhNMtqT9EcAvSkxW
-         agok7YmSnYMTHSQEznQjaPok1nniOHgGWGy9FFBPipCajH5BAiII3oK0iiXlJZ4ARPXy
-         Yp7422E0F2teNauvOIjQqo2TpeAMOJQg643iRtPcQb6Pds241VBPEI69iwMPelEU7XZO
-         zIWwhv2SqejzNY4PDrCMw29J+OLixJMkheStNOfWsFj19JuaYqUbP1ii0FvDlpkb52YJ
-         szOg==
-X-Gm-Message-State: AC+VfDzCeDmrvDYASfsptTK4WluQ2OibL5Xt51JyZ3y3UlK+ENH+gEX3
-        PxYV2X4DpAIlAt9gchi6dzO/By47VpvBYm6qO64=
-X-Google-Smtp-Source: ACHHUZ7hMGvTxVYM7j06iuh48J3sQevUoI3xiFZJa4qO0+XgMX1X2u/VYFsp7hO0BhArpajGcDMuvE2Xa8xasyBdtao=
-X-Received: by 2002:a25:b1a3:0:b0:bca:531d:dcde with SMTP id
- h35-20020a25b1a3000000b00bca531ddcdemr11934138ybj.30.1687368550410; Wed, 21
- Jun 2023 10:29:10 -0700 (PDT)
+        Wed, 21 Jun 2023 13:40:55 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4791BD4;
+        Wed, 21 Jun 2023 10:40:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687369249; x=1718905249;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+Ay13nCNIILT6crueQ5vPOUj5FPygFq/XDGj0VzeZVw=;
+  b=DT1js8EpueFC8CNKweJ9DyYXQtpaPz0nyzoiU1a8k0BUqRxmEgFFdt61
+   L34fyBHbw1ODPmHAMck+0lEuC3iZ12b7YjlmRUn+Pi1qdBxmJQ8cdkv5K
+   JJwUhMNsFLphKZEAGAsciy+5aO+uQh8rt+mvXpdGep6yNhHc1js/u2sAS
+   3Zes4YWC3M5sZlH66W+mYxk+vJuJpQH06ujdMIyqBC1yyJlGlw8wK2CaJ
+   Yt4cD0UhaJAAYhfb/H0QeSX0oJFDkJF5Sj+JDhNiVnKdYIOQLk4TNk7pq
+   /bpGQsxOMm/vGNgLKSF1+API//dsDTkc4JYcPdjZj7SyrSoppUVnq3t7g
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="359120619"
+X-IronPort-AV: E=Sophos;i="6.00,261,1681196400"; 
+   d="scan'208";a="359120619"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 10:40:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="717746113"
+X-IronPort-AV: E=Sophos;i="6.00,261,1681196400"; 
+   d="scan'208";a="717746113"
+Received: from unknown (HELO fred..) ([172.25.112.68])
+  by fmsmga007.fm.intel.com with ESMTP; 21 Jun 2023 10:40:32 -0700
+From:   Xin Li <xin3.li@intel.com>
+To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        iommu@lists.linux.dev, linux-hyperv@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, x86@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, steve.wahl@hpe.com,
+        mike.travis@hpe.com, dimitri.sivanich@hpe.com,
+        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
+        joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
+        robin.murphy@arm.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, dwmw2@infradead.org,
+        baolu.lu@linux.intel.com, peterz@infradead.org, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
+        adrian.hunter@intel.com, xin3.li@intel.com, seanjc@google.com,
+        jiangshanlai@gmail.com, jgg@ziepe.ca, yangtiezhu@loongson.cn
+Subject: [PATCH v2 0/3] Do IRQ move cleanup with a timer instead of an IPI
+Date:   Wed, 21 Jun 2023 10:12:45 -0700
+Message-Id: <20230621171248.6805-1-xin3.li@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <20230620132025.105563-1-wangrui@loongson.cn>
-In-Reply-To: <20230620132025.105563-1-wangrui@loongson.cn>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 21 Jun 2023 10:28:59 -0700
-Message-ID: <CAM9d7cgpm+Uz4JOh9vW60OQkCOjpbNvrrDy-KefALVak1EXQxQ@mail.gmail.com>
-Subject: Re: [PATCH] perf annotate: Fix instruction association and parsing
- for LoongArch
-To:     WANG Rui <wangrui@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        loongarch@lists.linux.dev, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 6:21 AM WANG Rui <wangrui@loongson.cn> wrote:
->
-> In the perf annotate view for LoongArch, there is no arrowed line
-> pointing to the target from the branch instruction. This issue is
-> caused by incorrect instruction association and parsing.
->
-> $ perf record alloc-6276705c94ad1398 # rust benchmark
-> $ perf report
->
->   0.28 │       ori        $a1, $zero, 0x63
->        │       move       $a2, $zero
->  10.55 │       addi.d     $a3, $a2, 1(0x1)
->        │       sltu       $a4, $a3, $s7
->   9.53 │       masknez    $a4, $s7, $a4
->        │       sub.d      $a3, $a3, $a4
->  12.12 │       st.d       $a1, $fp, 24(0x18)
->        │       st.d       $a3, $fp, 16(0x10)
->  16.29 │       slli.d     $a2, $a2, 0x2
->        │       ldx.w      $a2, $s8, $a2
->  12.77 │       st.w       $a2, $sp, 724(0x2d4)
->        │       st.w       $s0, $sp, 720(0x2d0)
->   7.03 │       addi.d     $a2, $sp, 720(0x2d0)
->        │       addi.d     $a1, $a1, -1(0xfff)
->  12.03 │       move       $a2, $a3
->        │     → bne        $a1, $s3, -52(0x3ffcc)  # 82ce8 <test::bench::Bencher::iter+0x3f4>
->   2.50 │       addi.d     $a0, $a0, 1(0x1)
->
-> This patch fixes instruction association issues, such as associating
-> branch instructions with jump_ops instead of call_ops, and corrects
-> false instruction matches. It also implements branch instruction parsing
-> specifically for LoongArch. With this patch, we will be able to see the
-> arrowed line.
->
->   0.79 │3ec:   ori        $a1, $zero, 0x63
->        │       move       $a2, $zero
->  10.32 │3f4:┌─→addi.d     $a3, $a2, 1(0x1)
->        │    │  sltu       $a4, $a3, $s7
->  10.44 │    │  masknez    $a4, $s7, $a4
->        │    │  sub.d      $a3, $a3, $a4
->  14.17 │    │  st.d       $a1, $fp, 24(0x18)
->        │    │  st.d       $a3, $fp, 16(0x10)
->  13.15 │    │  slli.d     $a2, $a2, 0x2
->        │    │  ldx.w      $a2, $s8, $a2
->  11.00 │    │  st.w       $a2, $sp, 724(0x2d4)
->        │    │  st.w       $s0, $sp, 720(0x2d0)
->   8.00 │    │  addi.d     $a2, $sp, 720(0x2d0)
->        │    │  addi.d     $a1, $a1, -1(0xfff)
->  11.99 │    │  move       $a2, $a3
->        │    └──bne        $a1, $s3, 3f4
->   3.17 │       addi.d     $a0, $a0, 1(0x1)
->
-> Signed-off-by: WANG Rui <wangrui@loongson.cn>
+No point to waste a vector for cleaning up the leftovers of a moved
+interrupt. Aside of that this must be the lowest priority of all vectors
+which makes FRED systems utilizing vectors 0x10-0x1f more complicated
+than necessary.
 
-Applied to perf-tools-next, thanks!
+Schedule a timer instead.
+
+
+Changes since v1:
+* Add a lockdep_assert_held() statement to get rid of a bad comment
+  that claims __vector_cleanup() needs to be called with vector_lock
+  held. (Peter Zijlstra).
+
+
+Thomas Gleixner (2):
+  x86/vector: Rename send_cleanup_vector() to vector_schedule_cleanup()
+  x86/vector: Replace IRQ_MOVE_CLEANUP_VECTOR with a timer callback
+
+Xin Li (1):
+  tools: Get rid of IRQ_MOVE_CLEANUP_VECTOR from tools
+
+ arch/x86/include/asm/hw_irq.h                 |   4 +-
+ arch/x86/include/asm/idtentry.h               |   1 -
+ arch/x86/include/asm/irq_vectors.h            |   7 --
+ arch/x86/kernel/apic/vector.c                 | 106 ++++++++++++++----
+ arch/x86/kernel/idt.c                         |   1 -
+ arch/x86/platform/uv/uv_irq.c                 |   2 +-
+ drivers/iommu/amd/iommu.c                     |   2 +-
+ drivers/iommu/hyperv-iommu.c                  |   4 +-
+ drivers/iommu/intel/irq_remapping.c           |   2 +-
+ tools/arch/x86/include/asm/irq_vectors.h      |   7 --
+ .../beauty/tracepoints/x86_irq_vectors.sh     |   2 +-
+ 11 files changed, 90 insertions(+), 48 deletions(-)
+
+-- 
+2.34.1
+
