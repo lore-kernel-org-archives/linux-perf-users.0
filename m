@@ -2,176 +2,165 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5215EEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 07:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4360EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 08:30:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229893AbjFUHFt (ORCPT
+        id S229854AbjFUIat (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 03:05:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49928 "EHLO
+        Wed, 21 Jun 2023 04:30:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjFUHFs (ORCPT
+        with ESMTP id S229940AbjFUIar (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 03:05:48 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2339D10F2
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 00:05:47 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3f9d619103dso69341cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 00:05:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687331146; x=1689923146;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZktZvE6CmrHUz1ssJd1p162ua5sspAxocYA1dsl2HlE=;
-        b=OI23/Zi+bAK9oRtR+sK0XMD+Lom5nzB568E0Utzw3/F7f12Dy2slqGj3FgMzaa+Yx6
-         LQiWSP04Pwrktrj3EdYIuM96bQVnyqVXwwZ69UeS3KGey2dRJ+qp3P34oBJECcpS4NfK
-         jpMkN1tZj6FfeMYHhk8wYC6jHQuMOyyRnK0wjnPYTpN9b59X8Cwtg2AnUMHmoAEfS45t
-         VnsnDjqo1HlVAy2054+utOCxLaGdotwreT+pO83xebITJPoRDJcA4seIY2CHJk8O36xo
-         AkLup66FHk4QuP1BX81RCxB6zFBdiFNlOhek3IMEjyr095iFaS+YGBzLu58n12aaa/T0
-         m//w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687331146; x=1689923146;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZktZvE6CmrHUz1ssJd1p162ua5sspAxocYA1dsl2HlE=;
-        b=atN4e8m6bWWhm+cw79Q9y4BUfYnJLm4B1jqXAYY9fAtCyBZYQcxM28+MBzMvB7rY76
-         eSta/v/SaCOWJZ1qTKlDSsZoPMXKsLkaSOEKYIjThWgXQ/LlyGIXKDaot9W+AeLmzFDw
-         j7NPzEYibwPrwtj5JeElVeY5aaOqzQ+Yl+SMKXEoVMEcKTyw9XGun254GQ5mv1whZAGx
-         7kDoZ1bTiHkgEYFitvG9G5pfLQoZ2VoldtzBow8Se9EOW6jLt6E+9lLv3qLllManIAaQ
-         Drdc1jEuAQxsjarc9syPY6buz8D5KUO5jVReR6q5lfuA3E2MMDj2RG8eTMAogaCL+Kwh
-         KPOg==
-X-Gm-Message-State: AC+VfDxwBGB4Z+dtyMH0JmlzofXT1e3oE2jabuMViIIcuRS3AL145wvO
-        //dG4bGnhrJxksBKVYkyViymGR8HsEndT6Rsf2amGg==
-X-Google-Smtp-Source: ACHHUZ54puR5sOF9TlbEM+A5KYavFEiNVRKvWQ2zTVuD4DgNpmGqLh8EF2PVJsA9d05Dy7lGQJMch4FTGme9ACSY3ao=
-X-Received: by 2002:a05:622a:8c:b0:3f7:ffc8:2f6f with SMTP id
- o12-20020a05622a008c00b003f7ffc82f6fmr1382541qtw.28.1687331146141; Wed, 21
- Jun 2023 00:05:46 -0700 (PDT)
+        Wed, 21 Jun 2023 04:30:47 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8742E1710
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 01:30:46 -0700 (PDT)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35L8H1ar026697;
+        Wed, 21 Jun 2023 08:30:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=ZDQLsb8BEWRYzVeTmcqVrjmHeKSTjv1ohcrasF0hy+k=;
+ b=hqwATilbW/EBrwikZrSiNeTrkOon7htd3Ln6YMVrrtF6/aDYkUlX31LTkN5BsZ/QevnR
+ 3N3jD/oVuOBRo787bU6Jt2HAisqYgHOy53ePjtWr8Sqte6M2gA/ISgbxLwxIbIrtjn/2
+ 1oQWKVqpdp+1aB2JrivUTmkcrKlroivLaajYUiPoPyubsYfZFbk0PphWPM7UEenxTF4b
+ q2jw3ivdJHaG93vaak/NrG9qsJ88ojgOs7Ts4CTtYyvaxhGlYMD3hKdBx7gfa4js9CKg
+ Oj2Twtpp80gz8UvIhUSzj5dMLL7kExwNtt9T2rdzXSoyPwJmB8ljcAHPfIyIR5oh4aRu dQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbwj908qg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Jun 2023 08:30:36 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35L8Jvko005636;
+        Wed, 21 Jun 2023 08:30:35 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbwj908nt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Jun 2023 08:30:35 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35L0ndLu010614;
+        Wed, 21 Jun 2023 08:30:33 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3r943e2msa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Jun 2023 08:30:33 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35L8UTE816581280
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Jun 2023 08:30:29 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7E27C2004B;
+        Wed, 21 Jun 2023 08:30:29 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89F2220043;
+        Wed, 21 Jun 2023 08:30:26 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.109.215.188])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Jun 2023 08:30:26 +0000 (GMT)
+From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        namhyung@kernel.org, ravi.bangoria@amd.com, john.g.garry@oracle.com
+Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+        kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: [PATCH 00/22] tools/perf: Fix shellcheck coding/formatting issues of perf tool shell scripts
+Date:   Wed, 21 Jun 2023 13:59:59 +0530
+Message-Id: <20230621083021.71203-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: bB6XlXujfsJ5j7woIEDyT8CvRz2-sJ7M
+X-Proofpoint-GUID: 6Wl15pRmLOSD6AUUZ3YabIhIlQIGyIBO
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-References: <20230525220927.3544192-1-namhyung@kernel.org>
-In-Reply-To: <20230525220927.3544192-1-namhyung@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 21 Jun 2023 00:05:34 -0700
-Message-ID: <CAP-5=fWOji8vCQfO-y4HnmFk2k+F70BtGHTjCg6XyORNfYNcww@mail.gmail.com>
-Subject: Re: [PATCH] tools lib subcmd: Show parent options in help
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-21_05,2023-06-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 adultscore=0 spamscore=0 suspectscore=0 clxscore=1015
+ mlxscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2305260000 definitions=main-2306210067
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, May 25, 2023 at 3:09=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> I've just realized that help message in a subcommand didn't show one
-> in the parent command.  Since the option parser understands the parent,
-> display code should do the same.  For example, `perf ftrace latency -h`
-> should show options in the `perf ftrace` command too.
->
-> Before:
->
->   $ perf ftrace latency -h
->
->    Usage: perf ftrace [<options>] [<command>]
->       or: perf ftrace [<options>] -- [<command>] [<options>]
->       or: perf ftrace {trace|latency} [<options>] [<command>]
->       or: perf ftrace {trace|latency} [<options>] -- [<command>] [<option=
-s>]
->
->       -b, --use-bpf         Use BPF to measure function latency
->       -n, --use-nsec        Use nano-second histogram
->       -T, --trace-funcs <func>
->                             Show latency of given function
->
-> After:
->
->   $ perf ftrace latency -h
->
->    Usage: perf ftrace [<options>] [<command>]
->       or: perf ftrace [<options>] -- [<command>] [<options>]
->       or: perf ftrace {trace|latency} [<options>] [<command>]
->       or: perf ftrace {trace|latency} [<options>] -- [<command>] [<option=
-s>]
->
->       -a, --all-cpus        System-wide collection from all CPUs
->       -b, --use-bpf         Use BPF to measure function latency
->       -C, --cpu <cpu>       List of cpus to monitor
->       -n, --use-nsec        Use nano-second histogram
->       -p, --pid <pid>       Trace on existing process id
->       -T, --trace-funcs <func>
->                             Show latency of given function
->       -v, --verbose         Be more verbose
->           --tid <tid>       Trace on existing thread id (exclusive to --p=
-id)
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/lib/subcmd/parse-options.c | 26 ++++++++++++++++++--------
->  1 file changed, 18 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-op=
-tions.c
-> index 9fa75943f2ed..41de97671c72 100644
-> --- a/tools/lib/subcmd/parse-options.c
-> +++ b/tools/lib/subcmd/parse-options.c
-> @@ -806,18 +806,28 @@ static int option__cmp(const void *va, const void *=
-vb)
->
->  static struct option *options__order(const struct option *opts)
->  {
-> -       int nr_opts =3D 0, nr_group =3D 0, len;
-> -       const struct option *o =3D opts;
-> -       struct option *opt, *ordered, *group;
-> +       int nr_opts =3D 0, nr_group =3D 0, nr_parent =3D 0, len;
-> +       const struct option *o, *p =3D opts;
-> +       struct option *opt, *ordered =3D NULL, *group;
->
-> -       for (o =3D opts; o->type !=3D OPTION_END; o++)
-> +retry:
+Patchset covers a set of fixes for coding/formatting issues observed while
+running shellcheck tool on the perf shell scripts.
 
-Why use "goto retry" and not compute the size with the parent upfront?
+This cleanup is a pre-requisite to include a build option for shellcheck
+discussed here: https://www.spinics.net/lists/linux-perf-users/msg25553.html
+First set of patches were posted here:
+https://lore.kernel.org/linux-perf-users/53B7D823-1570-4289-A632-2205EE2B522C@linux.vnet.ibm.com/T/#t
 
-> +       for (o =3D p; o->type !=3D OPTION_END; o++)
->                 ++nr_opts;
->
-> -       len =3D sizeof(*o) * (nr_opts + 1);
-> -       ordered =3D malloc(len);
-> -       if (!ordered)
-> +       len =3D sizeof(*o) * (nr_opts + !o->parent);
+This patchset covers remaining set of shell scripts which needs
+fix. Patch 1 is resubmission of patch 6 from the initial series.
+Patch 15, 16 and 22 touches code from tools/perf/trace/beauty.
+Other patches are fixes for scripts from tools/perf/tests.
 
-It'd be nice to comment on why the "!o->parent" here.
+Akanksha J N (1):
+  tools/perf/tests: Fix shellcheck warnings for
+    trace+probe_vfs_getname.sh
 
-Thanks,
-Ian
+Athira Rajeev (11):
+  tools/perf/tests: fix test_arm_spe_fork.sh signal case issues
+  tools/perf/tests: Fix unused variable references in
+    stat+csv_summary.sh testcase
+  tools/perf/tests: fix shellcheck warning for
+    test_perf_data_converter_json.sh testcase
+  tools/perf/tests: Fix shellcheck issue for stat_bpf_counters.sh
+    testcase
+  tools/perf/tests: Fix shellcheck issues in
+    tests/shell/stat+shadow_stat.sh tetscase
+  tools/perf/tests: Fix shellcheck warnings for
+    thread_loop_check_tid_10.sh
+  tools/perf/tests: Fix shellcheck warnings for unroll_loop_thread_10.sh
+  tools/perf/tests: Fix shellcheck warnings for lib/probe_vfs_getname.sh
+  tools/perf/tests: Fix the shellcheck wanrings in lib/waiting.sh
+  tools/perf/trace: Fix x86_arch_prctl.sh to address shellcheck warnings
+  tools/perf/arch/x86: Fix syscalltbl.sh to address shellcheck warnings
 
-> +       group =3D realloc(ordered, len);
-> +       if (!group)
->                 goto out;
-> -       memcpy(ordered, opts, len);
-> +       ordered =3D group;
-> +       memcpy(&ordered[nr_parent], p, sizeof(*o) * (nr_opts - nr_parent)=
-);
-> +
-> +       if (o->parent) {
-> +               p =3D o->parent;
-> +               nr_parent =3D nr_opts;
-> +               goto retry;
-> +       }
-> +       /* copy the last OPTION_END */
-> +       memcpy(&ordered[nr_opts], o, sizeof(*o));
->
->         /* sort each option group individually */
->         for (opt =3D group =3D ordered; opt->type !=3D OPTION_END; opt++)=
- {
-> --
-> 2.41.0.rc0.172.g3f132b7071-goog
->
+Kajol Jain (10):
+  tools/perf/tests: Fix shellcheck warning for probe_vfs_getname.sh
+    testcase
+  tools/perf/tests: Fix shellcheck warning for record_offcpu.sh testcase
+  tools/perf/tests: Fix shellcheck issue for lock_contention.sh testcase
+  tools/perf/tests: Fix shellcheck issue for stat_bpf_counters_cgrp.sh
+    testcase
+  tools/perf/tests: Fix shellcheck warning for asm_pure_loop.sh shell
+    script
+  tools/perf/tests: Fix shellcheck warning for memcpy_thread_16k_10.sh
+    shell script
+  tools/perf/tests: Fix shellcheck warning for coresight.sh shell script
+  tools/perf/tests: Fix shellcheck warning for probe.sh shell script
+  tools/perf/trace: Fix shellcheck issue for arch_errno_names.sh script
+  tools/perf: Fix shellcheck issue for check-headers.sh script
+
+ .../arch/x86/entry/syscalls/syscalltbl.sh     |  2 +-
+ tools/perf/check-headers.sh                   |  6 ++--
+ .../tests/shell/coresight/asm_pure_loop.sh    |  2 +-
+ .../shell/coresight/memcpy_thread_16k_10.sh   |  2 +-
+ .../coresight/thread_loop_check_tid_10.sh     |  2 +-
+ .../shell/coresight/unroll_loop_thread_10.sh  |  2 +-
+ tools/perf/tests/shell/lib/coresight.sh       |  3 +-
+ tools/perf/tests/shell/lib/probe.sh           |  1 +
+ .../perf/tests/shell/lib/probe_vfs_getname.sh |  5 ++--
+ tools/perf/tests/shell/lib/waiting.sh         |  1 +
+ tools/perf/tests/shell/lock_contention.sh     | 12 ++++----
+ tools/perf/tests/shell/probe_vfs_getname.sh   |  4 +--
+ tools/perf/tests/shell/record_offcpu.sh       |  6 ++--
+ tools/perf/tests/shell/stat+csv_summary.sh    |  4 +--
+ tools/perf/tests/shell/stat+shadow_stat.sh    |  4 +--
+ tools/perf/tests/shell/stat_bpf_counters.sh   |  4 +--
+ .../tests/shell/stat_bpf_counters_cgrp.sh     | 28 ++++++++-----------
+ tools/perf/tests/shell/test_arm_spe_fork.sh   |  2 +-
+ .../shell/test_perf_data_converter_json.sh    |  2 +-
+ .../tests/shell/trace+probe_vfs_getname.sh    |  6 ++--
+ tools/perf/trace/beauty/arch_errno_names.sh   | 15 ++++------
+ tools/perf/trace/beauty/x86_arch_prctl.sh     |  6 ++--
+ 22 files changed, 58 insertions(+), 61 deletions(-)
+
+-- 
+2.39.1
+
