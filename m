@@ -2,50 +2,51 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589DCEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 22:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0494BEB64D7
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 22:50:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbjFUWe5 convert rfc822-to-8bit (ORCPT
+        id S229694AbjFUWux convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 18:34:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42962 "EHLO
+        Wed, 21 Jun 2023 18:50:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjFUWe5 (ORCPT
+        with ESMTP id S229692AbjFUWuw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 18:34:57 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D27A4211F;
-        Wed, 21 Jun 2023 15:34:25 -0700 (PDT)
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-3f9dd2fabe2so53586241cf.3;
-        Wed, 21 Jun 2023 15:34:25 -0700 (PDT)
+        Wed, 21 Jun 2023 18:50:52 -0400
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E4AB19AC;
+        Wed, 21 Jun 2023 15:50:51 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-bacf685150cso6183087276.3;
+        Wed, 21 Jun 2023 15:50:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687386845; x=1689978845;
+        d=1e100.net; s=20221208; t=1687387850; x=1689979850;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lRd90z8fVQ5qpNwaOR11CKaR1UJ7gK5rX/z4Tbk7UDY=;
-        b=dJE3rUUaQfKuYLxZiQM2Bpl4IZMIAXzV69AiEt+eRnvksBgsnEOXEiFlk0ZvM+KOEI
-         k4JRQ2yzP3bz4GRtuMcyDkJpS8API38xPP/1Ia2HjRED2niWMJBVC01FjJot79fQ3iqo
-         FQ+GuV7QDv2fibicmp/VIOi6e6j7fb8QsB1RJn7/jmJ48/K5ay/bKp2jYZTe5tlrBX4E
-         ElO18ndWKted7nd2aGl3E/30ONUSH9I6zQpj+27zgVJosSk4oiP2xxue0z2Shxxluncw
-         4kh9Bo1JMbg0xaB08FNX+YIoGzcjQ2qLeTem7YGdYvs+d2pKL2niN49OZTrEmG6SWkJW
-         7Ojw==
-X-Gm-Message-State: AC+VfDw5RF9W/dU96Iel85WdBZ1HB+3sXnpfwzp8uXHuvqG3NF49XqeJ
-        hvcULppNhVIUm1Jzey7W3rMCMHAD9UvKC1z7LYU=
-X-Google-Smtp-Source: ACHHUZ54v5kArKZsw9c7Td8SAowZC+Z8B2vhqA2VbELytJBQcIWMamMCAMaOVLVHmHjDrGF0wSnD3jf8U517E4kHFjU=
-X-Received: by 2002:ac8:5f48:0:b0:3f4:8612:6d84 with SMTP id
- y8-20020ac85f48000000b003f486126d84mr19919267qta.60.1687386844860; Wed, 21
- Jun 2023 15:34:04 -0700 (PDT)
+        bh=KsE/Ooc2RHtLpohHbtgmDcmRrH4GT0O29WSs7/97Xfs=;
+        b=LCiQR0PHA10KOKMjllJDfnPPIAC83TKttGm0qq01X6odMBbifqTp0cQPqA5H0HxrWc
+         uO82KH54WBoJ7WwswxG/jLfbljW9fMntYk2UOhOrzJw1eaoGMHUj7DOmrbqsBwA65D8O
+         mog7nYBFAAplZAGAul88pD3Y03O+rg5ZIis1qUhlnghQc63bMi1sEkg/TGV5xkJCKwIC
+         yicqwsscJZyVf9UjoY2PxAZUKlMG/NcVladE3JLEUfczAAnqC4LRgMIBfKbU9MfmVSqi
+         +bf/SdBftiOIuJrEUklBLe/FTLrZnITGr2FRuW5nzJMyTJ0EAi+i2HNilLNGYFx/XGkI
+         17XA==
+X-Gm-Message-State: AC+VfDw63udBnk8No/ejQ2Gp+vKie8oP9oAdmqXUDB/4s64J1abK/tV9
+        SKncdFGNVuDjLKDwl/sBinbZ9CqFmPlYqFc7B8E=
+X-Google-Smtp-Source: ACHHUZ7v7KOOcJh6FGf9nJQfq9AbeOm/JjShFd1JdRBHoWR7Hkr4nNUMf1LwNayfi2F2QXiJjOCcwGWhsBAZzc8avmA=
+X-Received: by 2002:a25:3795:0:b0:bd4:3839:8b55 with SMTP id
+ e143-20020a253795000000b00bd438398b55mr13175295yba.64.1687387850424; Wed, 21
+ Jun 2023 15:50:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <3b0abd4a-6450-c282-65ff-ec0c7df67b03@amd.com> <20230621062359.201-1-ravi.bangoria@amd.com>
-In-Reply-To: <20230621062359.201-1-ravi.bangoria@amd.com>
+References: <20230620091603.269-1-ravi.bangoria@amd.com> <CAP-5=fXS726wY1taYEYXDz3YZ4ZwxcL+nhh_yNM7rwamMd8mWg@mail.gmail.com>
+ <3b0abd4a-6450-c282-65ff-ec0c7df67b03@amd.com>
+In-Reply-To: <3b0abd4a-6450-c282-65ff-ec0c7df67b03@amd.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 21 Jun 2023 15:33:53 -0700
-Message-ID: <CAM9d7chbpiSJ6eSu9_Gs7aLZZb58gtHsvH9tsE-U4eM1eyDvKQ@mail.gmail.com>
-Subject: Re: [PATCH] perf evsel amd: Fix IBS error message
+Date:   Wed, 21 Jun 2023 15:50:39 -0700
+Message-ID: <CAM9d7chNA44HxRYOHLxtBP_7azivrE_MxdKos1gUO3KxnbK_Dw@mail.gmail.com>
+Subject: Re: [PATCH] perf/amd: Prevent grouping of IBS events
 To:     Ravi Bangoria <ravi.bangoria@amd.com>
-Cc:     acme@kernel.org, peterz@infradead.org, irogers@google.com,
-        jolsa@kernel.org, adrian.hunter@intel.com,
+Cc:     Ian Rogers <irogers@google.com>, peterz@infradead.org,
+        acme@kernel.org, jolsa@kernel.org, bp@alien8.de, x86@kernel.org,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
         sandipan.das@amd.com, ananth.narayan@amd.com,
         santosh.shukla@amd.com
@@ -55,70 +56,35 @@ Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hi Ravi,
-
-On Tue, Jun 20, 2023 at 11:24 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+On Tue, Jun 20, 2023 at 8:28 PM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
 >
-> AMD IBS can do per-process profiling[1] and is no longer restricted to
-> per-cpu or systemwide only. Remove stale error message.
+> Hi Ian,
+>
+> On 20-Jun-23 10:14 PM, Ian Rogers wrote:
+> > On Tue, Jun 20, 2023 at 2:16 AM Ravi Bangoria <ravi.bangoria@amd.com> wrote:
+> >>
+> >> IBS PMUs can have only one event active at any point in time. Restrict
+> >> grouping of multiple IBS events.
+> >
+> > Thanks Ravi,
+> >
+> > can you provide an example/test for this? Should this be a weak group issue?
 >
 > Before:
 >   $ sudo ./perf record -e "{ibs_op//,ibs_op//}" -C 0
->   Error:
->   AMD IBS may only be available in system-wide/per-cpu mode.
->   Try using -a, or -C and workload affinity
-
-It was strange that the -C option was given already.
-
+>   ^C[ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.540 MB perf.data (531 samples) ]
 >
 > After:
 >   $ sudo ./perf record -e "{ibs_op//,ibs_op//}" -C 0
 >   Error:
->   The sys_perf_event_open() syscall returned with 22 (Invalid
->   argument) for event (ibs_op//).
->   /bin/dmesg | grep -i perf may provide additional information.
-
-It can run newer perf tools on an old kernel but the old error
-message seems to be invalid anyway.  So I'm ok with removing it.
-
+>   AMD IBS may only be available in system-wide/per-cpu mode.
+>   Try using -a, or -C and workload affinity
 >
-> [1] https://git.kernel.org/torvalds/c/30093056f7b2
->
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  tools/perf/util/evsel.c | 10 +++-------
->  1 file changed, 3 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 356c07f03be6..65b0b70830f0 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -3092,14 +3092,10 @@ int evsel__open_strerror(struct evsel *evsel, struct target *target,
->                         return scnprintf(msg, size,
->         "Invalid event (%s) in per-thread mode, enable system wide with '-a'.",
->                                         evsel__name(evsel));
-> -               if (is_amd(arch, cpuid)) {
-> -                       if (is_amd_ibs(evsel)) {
-> -                               if (evsel->core.attr.exclude_kernel)
-> -                                       return scnprintf(msg, size,
-> +               if (is_amd(arch, cpuid) && is_amd_ibs(evsel)) {
-> +                       if (evsel->core.attr.exclude_kernel) {
-> +                               return scnprintf(msg, size,
->         "AMD IBS can't exclude kernel events.  Try running at a higher privilege level.");
+> The error message is stale and misleading. I have a patch to fix it.
+> I'll post it separately.
 
-I'm not sure if it's enough.  The IBS PMUs have CAP_NO_EXCLUDE then
-it can't exclude user events too, right?
+I'm just curious if ibs_fetch and ibs_op can be grouped together.
 
 Thanks,
 Namhyung
-
-
-> -                               if (!evsel->core.system_wide)
-> -                                       return scnprintf(msg, size,
-> -       "AMD IBS may only be available in system-wide/per-cpu mode.  Try using -a, or -C and workload affinity");
->                         }
->                 }
->
-> --
-> 2.41.0
->
