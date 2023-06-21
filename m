@@ -2,136 +2,121 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63BEEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 08:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6717EEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 08:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231201AbjFUIcC (ORCPT
+        id S231534AbjFUIcq (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 04:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59066 "EHLO
+        Wed, 21 Jun 2023 04:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229999AbjFUIb7 (ORCPT
+        with ESMTP id S231532AbjFUIci (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 04:31:59 -0400
+        Wed, 21 Jun 2023 04:32:38 -0400
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1D95172C
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 01:31:58 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35L88lD5021683;
-        Wed, 21 Jun 2023 08:31:49 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3DD819B7
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 01:32:30 -0700 (PDT)
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35L8IhAU022477;
+        Wed, 21 Jun 2023 08:32:21 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=0RAZ/xAOIMIMhkPoItLq4MY2xitZZLBQgBz9A4BhXrM=;
- b=XyvyR4KtQerHshG5qpxpZHv4ySqzLE57A2IFW57yTxFCuQOdmIrZ1A9VR4rTx3+LH8i3
- 4sIY6VqfriMp0QpI+CI1sCNYJT/uB3Fao0q+4obdl/TjbTQ2wCgTqpjirHnNpLjdK7tP
- D+dz50P5erdSlMhhwTtsNW9DfDIwaZHfdnR7F6JNhh9AS1AFZWekFsSS4DxjJSglUixf
- VcpqkofM+1cNyS8LS/YRnfyJnTLqn/ZeXt36D8qu6eUQPhDV8LNN8hlNUhdERut3AX4k
- dG9UbyMt/8zdLFZ7rUc6NFK0FHFkTVAnu6mDn5tyNvD7LM0SvKSKoV7JvgU1L4gMTOwZ oQ== 
+ bh=OVb/c5nupYBaMxga70856XznookPj+6ta4HAEtVkPbk=;
+ b=VhC4jjtW0eFV8vCd7Uh4aptsiRH42aG4UkpmMaVy2Hr+HfWex/L64N3rXGZc8lsEWqw2
+ Co05J351vg5/aPTaK6qhtZpWNU8gGxR/aDDZetuo4BKaVYIVYxeQD6B8oCWkbvoJCE6l
+ YoqiEfNZy4vw5KcgmNUGyKKzE8fyIe15BUXf/gAJLhwBGubJPIWi0X+AbU4FFZ3OL/cW
+ qlSH6s/kSw7b/NhOl+4cYGK383S10z6jsWrxp4OHMf2PcuoNXKIkejLNZsxYyudicIlT
+ xkQddmuOjvtPdZHtiFBV7lXG2FPahZ3tvdsTYKjETR64eT0SBjUDAhLf2xx1H1nohDk6 3w== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbvpbspsb-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbwk787pu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jun 2023 08:31:49 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35L89lSd029862;
-        Wed, 21 Jun 2023 08:31:48 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbvpbsprk-1
+        Wed, 21 Jun 2023 08:32:21 +0000
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35L8NKSu004198;
+        Wed, 21 Jun 2023 08:32:21 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rbwk787p4-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jun 2023 08:31:48 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35L2SdGn012944;
-        Wed, 21 Jun 2023 08:31:46 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3r94f59yyu-1
+        Wed, 21 Jun 2023 08:32:21 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35L5SGeO004427;
+        Wed, 21 Jun 2023 08:32:19 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3r943e202q-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 21 Jun 2023 08:31:46 +0000
+        Wed, 21 Jun 2023 08:32:18 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35L8VhFH15008386
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35L8WFZO29950674
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 21 Jun 2023 08:31:43 GMT
+        Wed, 21 Jun 2023 08:32:15 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0ED692004D;
-        Wed, 21 Jun 2023 08:31:43 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 84BC420043;
+        Wed, 21 Jun 2023 08:32:15 +0000 (GMT)
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5DE8520049;
-        Wed, 21 Jun 2023 08:31:39 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id BDF3420040;
+        Wed, 21 Jun 2023 08:32:11 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.109.215.188])
         by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 21 Jun 2023 08:31:39 +0000 (GMT)
+        Wed, 21 Jun 2023 08:32:11 +0000 (GMT)
 From:   Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
         namhyung@kernel.org, ravi.bangoria@amd.com, john.g.garry@oracle.com
 Cc:     linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
         kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH 19/22] tools/perf/tests: Fix shellcheck warnings for lib/probe_vfs_getname.sh
-Date:   Wed, 21 Jun 2023 14:00:18 +0530
-Message-Id: <20230621083021.71203-20-atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH 22/22] tools/perf/arch/x86: Fix syscalltbl.sh to address shellcheck warnings
+Date:   Wed, 21 Jun 2023 14:00:21 +0530
+Message-Id: <20230621083021.71203-23-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20230621083021.71203-1-atrajeev@linux.vnet.ibm.com>
 References: <20230621083021.71203-1-atrajeev@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 30OcXG-bFPyJADAskdmj8h_cT0MAGtCU
-X-Proofpoint-GUID: Z3MmcYZsEDCuVQWTH-oEk8RnkDsmLqp6
+X-Proofpoint-ORIG-GUID: 3zXAax6z2fDYavpU-d0OZq3A5w0DjRLa
+X-Proofpoint-GUID: hmKOEOoJtoXpcd2HMfbtmnrSsco5rSMg
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-06-21_05,2023-06-16_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 priorityscore=1501 malwarescore=0 spamscore=0 suspectscore=0
- phishscore=0 adultscore=0 impostorscore=0 clxscore=1015 lowpriorityscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0
+ priorityscore=1501 clxscore=1015 mlxlogscore=999 adultscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
  definitions=main-2306210067
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Running shellcheck on probe_vfs_getname fails with below
-warning:
+Running shellcheck on syscalltbl.sh generates below warning:
 
-   In ./tools/perf/tests/shell/lib/probe_vfs_getname.sh line 1:
-   # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
-   ^-- SC2148 (error): Tips depend on target shell and yours is unknown. Add a shebang or a 'shell' directive.
+   In ./tools/perf/arch/x86/entry/syscalls/syscalltbl.sh line 27:
+   while read nr abi name entry compat; do
+                 ^-^ SC2034 (warning): abi appears unused. Verify use (or export if used externally).
+                                ^----^ SC2034 (warning): compat appears unused. Verify use (or export if used externally).
 
-   In ./tools/perf/tests/shell/lib/probe_vfs_getname.sh line 14:
-   	   local verbose=$1
-           ^-----------^ SC3043 (warning): In POSIX sh, 'local' is undefined.
-
-Fix this:
-  - by adding shebang in the beginning of the file and
-  - rename variable verbose to "add_probe_verbose" after removing
-    local
+These variables are intentioanlly unused since they
+are needed to parse through the output. Use "_" as a
+prefix for these throw away variables.
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- tools/perf/tests/shell/lib/probe_vfs_getname.sh | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/arch/x86/entry/syscalls/syscalltbl.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index 60c5e34f90c4..bf4c1fb71c4b 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -1,3 +1,4 @@
-+#!/bin/sh
- # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
+diff --git a/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh b/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh
+index fa526a993845..59d7914ed6bb 100755
+--- a/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh
++++ b/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh
+@@ -24,7 +24,7 @@ sorted_table=$(mktemp /tmp/syscalltbl.XXXXXX)
+ grep '^[0-9]' "$in" | sort -n > $sorted_table
  
- perf probe -l 2>&1 | grep -q probe:vfs_getname
-@@ -10,11 +11,11 @@ cleanup_probe_vfs_getname() {
- }
- 
- add_probe_vfs_getname() {
--	local verbose=$1
-+	add_probe_verbose=$1
- 	if [ $had_vfs_getname -eq 1 ] ; then
- 		line=$(perf probe -L getname_flags 2>&1 | grep -E 'result.*=.*filename;' | sed -r 's/[[:space:]]+([[:digit:]]+)[[:space:]]+result->uptr.*/\1/')
- 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
--		perf probe $verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
-+		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
- 	fi
- }
- 
+ max_nr=0
+-while read nr abi name entry compat; do
++while read nr _abi name entry _compat; do
+     if [ $nr -ge 512 ] ; then # discard compat sycalls
+         break
+     fi
 -- 
 2.39.1
 
