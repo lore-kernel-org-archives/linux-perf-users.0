@@ -2,142 +2,158 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254B3EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 04:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E6B6EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 05:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230050AbjFUEyT convert rfc822-to-8bit (ORCPT
+        id S230072AbjFUFBB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 00:54:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33820 "EHLO
+        Wed, 21 Jun 2023 01:01:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjFUEyS (ORCPT
+        with ESMTP id S229521AbjFUFBA (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 00:54:18 -0400
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2110E171C;
-        Tue, 20 Jun 2023 21:54:17 -0700 (PDT)
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-763a3032893so240705685a.2;
-        Tue, 20 Jun 2023 21:54:17 -0700 (PDT)
+        Wed, 21 Jun 2023 01:01:00 -0400
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78E5F171C;
+        Tue, 20 Jun 2023 22:00:59 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-bdd069e96b5so5299190276.2;
+        Tue, 20 Jun 2023 22:00:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687323256; x=1689915256;
+        d=1e100.net; s=20221208; t=1687323658; x=1689915658;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=y1TnxLY/k2SYoAsqYAm+lbkNiBoCiFdnAyxoiLnGFx0=;
-        b=LiEYyBV0C0ddsPG/XuycofIIu9eqr1OkPXqbte+loUyomhIsbmlRncsQWTUDmDIsm8
-         i2Ta14NMso2AgBDe6bqo6zXIk8SwCN73AdxB54K7VrXpJ0AhLgSTG1h2qZSlsF7YOr2S
-         3Q5UEQljONqQZkdt47ZIybYA1FL8WwjF5Ld3HYswjM9NVUyeGpv2BDmG190piDNjXU1Y
-         cKjIbcvGyHu0GHAo6K8v+5b5511u9eMwhH/HV0L7Ge+pxeEh14FU0IUYlPktG4wfY2Gu
-         GQFRAN6jUHkJi7OaUO9gdLGB2NG6XPtbVIbwj/Y6zbxfEXAvrA7LTOO1nYRFro7zvXVh
-         xB1w==
-X-Gm-Message-State: AC+VfDwU/8gDXpTXwdbPpVfGr81tqGL8li+XjkZ1kq7bzrksO/LqScIr
-        LT/BtkUUc+EtR3r0Jq1nJCTRIisTmuJA7XCB1Cz1BT3gF5M=
-X-Google-Smtp-Source: ACHHUZ5DhIUGLzwFq+zSDS5e7IzVZs5JDEr2gT/RxErAcTo+wJW+RCeZiQiMgo659bOC3zkMI8kMSXuM+411RiSz6PY=
-X-Received: by 2002:a05:620a:450d:b0:762:3d10:dc5f with SMTP id
- t13-20020a05620a450d00b007623d10dc5fmr17058907qkp.58.1687323256155; Tue, 20
- Jun 2023 21:54:16 -0700 (PDT)
+        bh=SvLN9PtbiTUSbSQsnuGVxECcHq53WHbsUowdBzLPKG8=;
+        b=FNMAHxMCFkEFZfzU5JDK2zaM0M8wHhqj/O530lVerxkQQLUY2g/ITanX7fNjfy1MRb
+         huOgqEpTZDNvqPTpyeFMKDL8FePykzGmE4bOvj9/4vJ4x8ALQchBhvespu0IDBYwtBUQ
+         qaU4WE/JCpoo6LyKmTF5vsS+h34et5Yr9ra333zViUC/Sddalmqk4UI33ph2wBn4MTs/
+         a8rGBzgkqkcd6fI7WUUHMNndsNod7nqjvbIRAEDEYcc+cbNC/AAKcvqO5PAg4GPo3kpC
+         OZRYh5th27YYlBaELjBNYfkpEEohJd3T+dwB0/hYYBsk6ice+12uolImvvzHoQlTECNK
+         lcKQ==
+X-Gm-Message-State: AC+VfDzua82hrk/1N1P0l6QI9/ndB9lB2JMlWP5ZVK7ocbYvtOuVeCMR
+        BpYEgHss6sHRyUcWOx41pzoI9Zax+sGPNZRNQog=
+X-Google-Smtp-Source: ACHHUZ6x1N5ygWt4onDzX+OKuKUYvDVOM3m+S18jMK/OK0OU/hrMkFIXwOK9Jx/xBy30YTzzwLWD3VgMyv6/N7Eb9UM=
+X-Received: by 2002:a25:b195:0:b0:b8e:cb88:1b69 with SMTP id
+ h21-20020a25b195000000b00b8ecb881b69mr11344555ybj.34.1687323658551; Tue, 20
+ Jun 2023 22:00:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230620132025.105563-1-wangrui@loongson.cn> <CAM9d7chjhFNjDMADJTTz5TNgCCuyPzy8VCDvZxw5K5girfWu1A@mail.gmail.com>
- <CAHirt9hDc-22AKrRZEEUW9LUa3hjmnEVrYDNyWCx4kkWU4WzXA@mail.gmail.com>
-In-Reply-To: <CAHirt9hDc-22AKrRZEEUW9LUa3hjmnEVrYDNyWCx4kkWU4WzXA@mail.gmail.com>
+References: <1687245156-61215-1-git-send-email-renyu.zj@linux.alibaba.com>
+ <CAM9d7cj3v58m8NcsEK4sYsk_dbQDAq71hYo7DV=xaQa_rZyPYg@mail.gmail.com> <a5486c58-32b6-2d5e-e623-d7844c51474c@linux.alibaba.com>
+In-Reply-To: <a5486c58-32b6-2d5e-e623-d7844c51474c@linux.alibaba.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Tue, 20 Jun 2023 21:54:04 -0700
-Message-ID: <CAM9d7cgkV3CZ_2xAp+v62hpfutAB+RpsnvGa2u09P4C0Fm5ULw@mail.gmail.com>
-Subject: Re: [PATCH] perf annotate: Fix instruction association and parsing
- for LoongArch
-To:     WANG Rui <wangrui@loongson.cn>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+Date:   Tue, 20 Jun 2023 22:00:46 -0700
+Message-ID: <CAM9d7chxMpUUouHsVTEvVEy8RyZ6tNzYbVD=a0Toao=n6cau-w@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] Add JSON metrics for Yitian710 DDR
+To:     Jing Zhang <renyu.zj@linux.alibaba.com>
+Cc:     Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        John Garry <john.g.garry@oracle.com>,
+        Shuai Xue <xueshuai@linux.alibaba.com>,
+        Ian Rogers <irogers@google.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        James Clark <james.clark@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Ilkka Koskinen <ilkka@os.amperecomputing.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        loongarch@lists.linux.dev, Tiezhu Yang <yangtiezhu@loongson.cn>,
-        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, loongson-kernel@lists.loongnix.cn
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org,
+        Zhuo Song <zhuo.song@linux.alibaba.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 9:37 PM WANG Rui <wangrui@loongson.cn> wrote:
+On Tue, Jun 20, 2023 at 8:08 PM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
 >
-> Hello Namhyung,
 >
-> On Wed, Jun 21, 2023 at 2:42 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > > +static int loongarch_call__parse(struct arch *arch, struct ins_operands *ops, struct map_symbol *ms)
-> > > +{
-> > > +       char *c, *endptr, *tok, *name;
-> > > +       struct map *map = ms->map;
-> > > +       struct addr_map_symbol target = {
-> > > +               .ms = { .map = map, },
+>
+> 在 2023/6/21 上午3:04, Namhyung Kim 写道:
+> > Hello,
 > >
-> > Looking here...
+> > On Tue, Jun 20, 2023 at 12:17 AM Jing Zhang <renyu.zj@linux.alibaba.com> wrote:
+> >>
+> >> Hi all,
+> >>
+> >> I add an identifier sysfs file for the yitian710 SoC DDR to allow
+> >> userspace to identify the specific implementation of the device,
+> >> so that the perf tool can match the corresponding uncore events and
+> >> metrics through the identifier. Then added yitian710 SoC DDR
+> >> metrics and events alias.
+> >>
+> >> Change since v3:
+> >> - Split the CMN and ali_drw patches. This patchset only contains
+> >>   ali_drw PMU related patches. The CMN metric related patches will
+> >>   be in another patchset.
+> >> - Link: https://lore.kernel.org/all/1685438374-33287-1-git-send-email-renyu.zj@linux.alibaba.com/
+> >>
+> >> $perf list:
+> >> ...
+> >> ali_drw:
+> >>   chi_rxdat
+> >>        [A packet at CHI RXDAT interface (write data). Unit: ali_drw]
+> >>   chi_rxrsp
+> >>        [A packet at CHI RXRSP interface. Unit: ali_drw]
+> >>   chi_txdat
+> >>        [A packet at CHI TXDAT interface (read data). Unit: ali_drw]
+> >>   chi_txreq
+> >>        [A packet at CHI TXREQ interface (request). Unit: ali_drw]
+> >>   cycle
+> >>        [The ddr cycle. Unit: ali_drw]
+> >> ...
+> >> ali_drw:
+> >>   ddr_read_bandwidth.all
+> >>        [The ddr read bandwidth(MB/s). Unit: ali_drw ]
+> >>   ddr_write_bandwidth.all
+> >>        [The ddr write bandwidth(MB/s). Unit: ali_drw ]
+> >> ...
+> >>
+> >> $perf stat -M ddr_read_bandwidth.all ./test
+> >>
+> >> Performance counter stats for 'system wide':
+> >>
+> >>             38,150      hif_rd        #  2.4 MB/s  ddr_read_bandwidth.all
+> >>      1,000,957,941 ns   duration_time
+> >>
+> >>        1.000957941 seconds time elapsed
+> >>
+> >> Jing Zhang (4):
+> >>   driver/perf: Add identifier sysfs file for Yitian 710 DDR
+> >>   perf jevents: Add support for Yitian 710 DDR PMU aliasing
+> >>   perf vendor events: Add JSON metrics for Yitian 710 DDR
+> >>   docs: perf: Update metric usage for Alibaba's T-Head PMU driver
 > >
-> > > +       };
-> > > +
-> > > +       c = strchr(ops->raw, '#');
-> > > +       if (c++ == NULL)
-> > > +               return -1;
-> > > +
-> > > +       ops->target.addr = strtoull(c, &endptr, 16);
-> > > +
-> > > +       name = strchr(endptr, '<');
-> > > +       name++;
-> > > +
-> > > +       if (arch->objdump.skip_functions_char &&
-> > > +           strchr(name, arch->objdump.skip_functions_char))
-> > > +               return -1;
-> > > +
-> > > +       tok = strchr(name, '>');
-> > > +       if (tok == NULL)
-> > > +               return -1;
-> > > +
-> > > +       *tok = '\0';
-> > > +       ops->target.name = strdup(name);
-> > > +       *tok = '>';
-> > > +
-> > > +       if (ops->target.name == NULL)
-> > > +               return -1;
-> > > +
-> > > +       target.addr = map__objdump_2mem(map, ops->target.addr);
-> > > +
-> > > +       if (maps__find_ams(ms->maps, &target) == 0 &&
-> > > +           map__rip_2objdump(target.ms.map, map__map_ip(target.ms.map, target.addr)) == ops->target.addr)
+> > So patch 1 is for the kernel, and patch 2-4 depend on it, right?
 > >
-> > So the target.ms.map is 'map', right?  Then we can reduce the line.
 >
-> toos/perf/util/maps.c:
+> Hi Namhyung,
 >
-> > int maps__find_ams(struct maps *maps, struct addr_map_symbol *ams)
-> > {
-> >     if (ams->addr < map__start(ams->ms.map) || ams->addr >= map__end(ams->ms.map)) {
-> >         if (maps == NULL)
-> >             return -1;
-> >         ams->ms.map = maps__find(maps, ams->addr);
+> Yes, patch 2-4 depend on patch 1.
 >
-> Is it possible that `target.ms.map` might be reassigned within the
-> `maps_find_ams` function in this case?
+> > I'm curious why the first patch is needed, presumably the PMU
+> > should have 'ali_drw' in the name already.  Do we use substring
+> > match for the compat name in the JSON metric?
+> >
+>
+> The main purpose of patch 1 is to add an identifier so that the Compat
+> field can match the corresponding event when defining aliases or metrics
+> for events.
+>
+> For example, "Unit" can match "ali_drw" in the name and different SoCs may
+> be able to match ali_drw, but they may have different events, and even if
+> the events are the same, the meanings may be different. Therefore, the
+> Compat field is needed to match the Identifier to confirm which type and
+> revision of PMU the current SoC has. Therefore, both "Unit" and "Compat"
+> need to be matched at the same time. Although it seems that ali_drw is
+> redundantly matched currently, it is meaningful for future expansion.
 
-Ah, ok.  Missed that part.  It can change if the target is from a
-different library.
+I see, thanks for the explanation.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I think you need to route the kernel patch differently.  I can apply the tools
+part once the kernel patch gets Acks from others.
 
 Thanks,
 Namhyung
-
->
-> >         if (ams->ms.map == NULL)
-> >             return -1;
-> >     }
-> >
-> >     ams->al_addr = map__map_ip(ams->ms.map, ams->addr);
-> >     ams->ms.sym = map__find_symbol(ams->ms.map, ams->al_addr);
-> >
-> >     return ams->ms.sym ? 0 : -1;
-> > }
-
->
