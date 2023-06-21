@@ -2,111 +2,172 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774AAEB64DD
-	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 17:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7835DEB64D8
+	for <linux-perf-users@archiver.kernel.org>; Wed, 21 Jun 2023 18:43:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231609AbjFURlV (ORCPT
+        id S230502AbjFUSnr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 13:41:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43994 "EHLO
+        Wed, 21 Jun 2023 14:43:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231394AbjFURk6 (ORCPT
+        with ESMTP id S231256AbjFUSnq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 13:40:58 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23C61FC1;
-        Wed, 21 Jun 2023 10:40:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687369253; x=1718905253;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=93F5iXdL1aFe8xiqIFZhy89J/IUrk/GxSpjv1QQ9jI0=;
-  b=Z8qbCf8Z0LxVmME6ohW86Wh8NsnHGkbYvcMSipFRogEjfIR6GnerUzKa
-   lMUZuJIDnhIPx4UF09M/N4LzVsM10pOJ5soGT4Nak1umU3j811iukXEB8
-   wAWCIepUOkl2esu+QpcqgARRUNzwklP2cITfLKY6jCDmEwzkrmPseNaHz
-   ta5HvlO5w/vDFSWVJcPd9BwkwIvbVI+mrI+jQqEY2g0dAX3H6icHEdFsO
-   ld1jiD1uq38YWVLe+sIW9J52OwhZd6s2yWRUuJLBRCd2J6aBjAA0jh+IB
-   CaFGOGSFsB828Nrq9YypxRxoFkHXVo5A+qYoJFnBnfdgqCrjO/FUE1Aju
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="359120683"
-X-IronPort-AV: E=Sophos;i="6.00,261,1681196400"; 
-   d="scan'208";a="359120683"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2023 10:40:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10748"; a="717746145"
-X-IronPort-AV: E=Sophos;i="6.00,261,1681196400"; 
-   d="scan'208";a="717746145"
-Received: from unknown (HELO fred..) ([172.25.112.68])
-  by fmsmga007.fm.intel.com with ESMTP; 21 Jun 2023 10:40:36 -0700
-From:   Xin Li <xin3.li@intel.com>
-To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        iommu@lists.linux.dev, linux-hyperv@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, x86@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, steve.wahl@hpe.com,
-        mike.travis@hpe.com, dimitri.sivanich@hpe.com,
-        russ.anderson@hpe.com, dvhart@infradead.org, andy@infradead.org,
-        joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
-        robin.murphy@arm.com, kys@microsoft.com, haiyangz@microsoft.com,
-        wei.liu@kernel.org, decui@microsoft.com, dwmw2@infradead.org,
-        baolu.lu@linux.intel.com, peterz@infradead.org, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@kernel.org, namhyung@kernel.org, irogers@google.com,
-        adrian.hunter@intel.com, xin3.li@intel.com, seanjc@google.com,
-        jiangshanlai@gmail.com, jgg@ziepe.ca, yangtiezhu@loongson.cn
-Subject: [PATCH v2 3/3] tools: Get rid of IRQ_MOVE_CLEANUP_VECTOR from tools
-Date:   Wed, 21 Jun 2023 10:12:48 -0700
-Message-Id: <20230621171248.6805-4-xin3.li@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230621171248.6805-1-xin3.li@intel.com>
-References: <20230621171248.6805-1-xin3.li@intel.com>
-MIME-Version: 1.0
+        Wed, 21 Jun 2023 14:43:46 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97AD61B4
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 11:43:45 -0700 (PDT)
+Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35LISFsZ003550;
+        Wed, 21 Jun 2023 18:43:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=+pC+l0tVA8Whlpv+QpYxLtQdys13EVz05hYg5BH1rMY=;
+ b=juxGTMRq+m0jRNPUJp9dLK6UkhbeT9L0kMp5WDSo+RzK46TLXW161qwchaJppB2yaM8T
+ xnIgC0d+tc/yBKN6TfutAwYftwOiL5fWfecUlOmIUQYTOtJj7m4LsZFE07ubHDfRI58g
+ CYKDvzmugz5lOmtgBuEsnz9MkwwXWqAFTPRRD/rZ5xZAchxh4e+RM+2aJ4RQpFMvD893
+ qYczWbinQUW1cellZlDoHhAMTBnsMtrT1qQA5wHpQUwuODu3pS2+E8dlGQ2eROZCpir3
+ 5BxXUQpV6KIi2W5NifL7ykx2IktYoHaViA2BXQzbHyXernK+i9RSVSRx4WwUcMAEtbJs bw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rc6gtgcxv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Jun 2023 18:43:15 +0000
+Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35LIfknj025617;
+        Wed, 21 Jun 2023 18:43:15 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rc6gtgcwr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Jun 2023 18:43:14 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35L3OLgT009702;
+        Wed, 21 Jun 2023 18:43:12 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3r94f5317s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 21 Jun 2023 18:43:12 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35LIh8Wn12780192
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Jun 2023 18:43:09 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DCC7B20040;
+        Wed, 21 Jun 2023 18:43:08 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 539A72004B;
+        Wed, 21 Jun 2023 18:43:06 +0000 (GMT)
+Received: from [9.43.103.191] (unknown [9.43.103.191])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Jun 2023 18:43:06 +0000 (GMT)
+Message-ID: <ee0bd9de-c2c7-010f-5a4d-40e07ded8a3e@linux.ibm.com>
+Date:   Thu, 22 Jun 2023 00:13:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH 15/17] perf tests task_analyzer: fix bad substitution
+ ${$1}
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Hagen Paul Pfeifer <hagen@jauu.net>,
+        Petar Gligoric <petar.gligoric@rohde-schwarz.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
+        irogers@google.com, ravi.bangoria@amd.com, john.g.garry@oracle.com,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
+ <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com>
+ <ZIjMWUk/axKfMCM4@kernel.org>
+ <CAM9d7cjrpaNk0UC22ntBSP+LzQwT2YAHwQ2o3z1aayAZNQ329g@mail.gmail.com>
+ <5ab5cc25-03b0-ef7f-3dc0-be1b59a4147d@linux.ibm.com>
+ <CAM9d7cgcETpnNgvgJ8a966bwc0phQuVMwABHzA8APk6Z9Er=OQ@mail.gmail.com>
+Content-Language: en-IN, en-US
+From:   Aditya Gupta <adityag@linux.ibm.com>
+In-Reply-To: <CAM9d7cgcETpnNgvgJ8a966bwc0phQuVMwABHzA8APk6Z9Er=OQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: qLUSCoUZZDCVSwlQ9gu_0Xixz3s5nGf1
+X-Proofpoint-GUID: pmHnR0uV1xKMVx8S0l7dMyzi94kRNPmH
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-21_10,2023-06-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 malwarescore=0 bulkscore=0 spamscore=0
+ impostorscore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2305260000 definitions=main-2306210155
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Get rid of IRQ_MOVE_CLEANUP_VECTOR from tools.
+Hello Namhyung,
 
-Signed-off-by: Xin Li <xin3.li@intel.com>
----
- tools/arch/x86/include/asm/irq_vectors.h               | 7 -------
- tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh | 2 +-
- 2 files changed, 1 insertion(+), 8 deletions(-)
+On 21/06/23 20:53, Namhyung Kim wrote:
+> Hello Aditya,
+>
+> On Wed, Jun 21, 2023 at 3:05 AM Aditya Gupta <adityag@linux.ibm.com> wrote:
+>> Hello Namhyung,
+>>
+>> On 21/06/23 06:18, Namhyung Kim wrote:
+>>> ...
+>>>
+>>> $ sudo ./perf test -v task
+>>> 114: perf script task-analyzer tests                                 :
+>>> --- start ---
+>>> test child forked, pid 1771042
+>>> Please specify a valid report script(see 'perf script -l' for listing)
+>>> FAIL: "invocation of perf command failed" Error message: ""
+>>> FAIL: "test_basic" Error message: "Failed to find required string:'Comm'."
+>>> Please specify a valid report script(see 'perf script -l' for listing)
+>>> FAIL: "invocation of perf command failed" Error message: ""
+>>> FAIL: "test_ns_rename" Error message: "Failed to find required string:'Comm'."
+>>> ...
+>>> test child finished with -1
+>>> ---- end ----
+>>> perf script task-analyzer tests: FAILED!
+>> Can you please check if your environment has libtraceevent devel
+>> libraries (or did you compile with `make NO_LIBTRACEEVENT=1`) ? When
+>> libtraceevent support is not there, perf record fails and so perf.data
+>> doesn't contain the strings it's searching for and hence those errors
+>>
+>> The error you mentioned has been mentioned and fixed in patch 17/17 of
+>> this series.
+> Thanks for your reply but It has libtraceevent.  Also, shouldn't it
+> skip if it's not?
+>
+> Thanks,
+> Namhyung
 
-diff --git a/tools/arch/x86/include/asm/irq_vectors.h b/tools/arch/x86/include/asm/irq_vectors.h
-index 43dcb9284208..3a19904c2db6 100644
---- a/tools/arch/x86/include/asm/irq_vectors.h
-+++ b/tools/arch/x86/include/asm/irq_vectors.h
-@@ -35,13 +35,6 @@
-  */
- #define FIRST_EXTERNAL_VECTOR		0x20
- 
--/*
-- * Reserve the lowest usable vector (and hence lowest priority)  0x20 for
-- * triggering cleanup after irq migration. 0x21-0x2f will still be used
-- * for device interrupts.
-- */
--#define IRQ_MOVE_CLEANUP_VECTOR		FIRST_EXTERNAL_VECTOR
--
- #define IA32_SYSCALL_VECTOR		0x80
- 
- /*
-diff --git a/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh b/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-index eed9ce0fcbe6..87dc68c7de0c 100755
---- a/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-+++ b/tools/perf/trace/beauty/tracepoints/x86_irq_vectors.sh
-@@ -12,7 +12,7 @@ x86_irq_vectors=${arch_x86_header_dir}/irq_vectors.h
- 
- # FIRST_EXTERNAL_VECTOR is not that useful, find what is its number
- # and then replace whatever is using it and that is useful, which at
--# the time of writing of this script was: IRQ_MOVE_CLEANUP_VECTOR.
-+# the time of writing of this script was: 0x20.
- 
- first_external_regex='^#define[[:space:]]+FIRST_EXTERNAL_VECTOR[[:space:]]+(0x[[:xdigit:]]+)$'
- first_external_vector=$(grep -E ${first_external_regex} ${x86_irq_vectors} | sed -r "s/${first_external_regex}/\1/g")
--- 
-2.34.1
+The skipping is handled in the 17th patch in this series, and 
+considering that patch has also been applied, it will skip the tests if 
+perf wasn't built with proper libtraceevent support.
+
+Back to the error, Sorry but I tested again on my system and am unable to reproduce the issue you are seeing when built with libtraceevent support.
+
+This is what I did:
+
+0. git clone --depth=1 https://github.com/torvalds/linux
+0. cd linux/tools/perf
+0. git am patch_15/17.patch
+
+> I applied ONLY this patch (15/17) of this series, to a fresh linux tree
+
+1. dnf install libtraceevent-devel
+2. make clean && make
+3. sudo ./perf test -v "perf script task-analyzer tests"       # Working fine, tests passed
+
+4. dnf remove libtraceevent-devel
+5. make clean && make                                          # There will also be a warning during build: "libtraceevent is missing limiting functionality"
+6. sudo ./perf test -v "perf script task-analyzer tests"       # Fails with the error you posted, which was the case till now, it's skipped when the 17th patch is also applied and perf built without libtraceevent support
+
+The error in the second case (without proper libtraceevent support) is expected, as it was the case till now, that is fixed by the 17th patch, try applying that also and build perf with `make NO_LIBTRACEEVENT=1`, it will skip then.
+
+Can you guide me with the steps to reproduce the error ?
+
+Sidenote: Just in case, please ensure you are running the perf as root here as `perf record -e sched:sched_switch -a -- sleep 1` requires root, which has been used in `prepare_perf_data`
+
+Thanks,
+- Aditya
 
