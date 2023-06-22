@@ -2,48 +2,60 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF0DEEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 03:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 202ABEB64D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 04:28:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229969AbjFVDwQ convert rfc822-to-8bit (ORCPT
+        id S229472AbjFVE2a (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 23:52:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55960 "EHLO
+        Thu, 22 Jun 2023 00:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229993AbjFVDwL (ORCPT
+        with ESMTP id S230315AbjFVE23 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 23:52:11 -0400
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB9661BD4;
-        Wed, 21 Jun 2023 20:52:07 -0700 (PDT)
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-3f866383b25so58258111cf.2;
-        Wed, 21 Jun 2023 20:52:07 -0700 (PDT)
+        Thu, 22 Jun 2023 00:28:29 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB5FE57
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 21:28:27 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-40079620a83so101251cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 21:28:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1687408107; x=1690000107;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yYPH2WyrIzcETLuSO9SQRYjdko7/fZ6dC4eczqzPL1I=;
+        b=TEwuqj7PZA05t9ftRqQIMyya/kh9LQ3+waawCxi+KYK6CqQ3UqqL74xcBf31a2YHch
+         grePcwCzLRMRhTfPWpfOLhlvNnjRPrGFG+HxuKwzjkiNAZhSeBZlRlMgr3qOBffGWiko
+         29BlxaQ7hEu8iVG9H+bJ/pt4XkNQYrAKUHGwxVuuw6JyfqcqVAuB+h5x4xmZTXHxQXsp
+         LTCVa4Kalz8H2P07VeRE3HAL2JV+voYE4pGEREkFQBnhh3nQxMNJXCs5QZXkGEw16Vhf
+         6WmF/jw6hU34lt6OkQqJZRcd5R2ULq4aKHxO38Iha4Ozio+ikSm/1cbQW/4hCp3p64uh
+         9Wfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687405927; x=1689997927;
+        d=1e100.net; s=20221208; t=1687408107; x=1690000107;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sJIEGRogedDSySy/in7S1jLWRFNMM5lAJSXnknF9fS4=;
-        b=B/WXWJkZyrmOOm8kI6eEfmuzcdf+lPuOiv5Q/o3oqPqFMjICltDNeJIdejaIJL+c3p
-         Ied9A1e/88A9piAJPYDkmQ6UkowgS3HBn3TGaNwl/6hbBKCjXobCeFCjpo9P4zC83GVW
-         QNmGQn3IlOq8Ppm/9MPK/aNkqNKQYVdiytwAwYZBHXOzQt93YWrDA7tqmZV3jWGjfvMk
-         dGft8NeWMPWwE+XqN6AXNr0AlAfu6OIAmNgksc8og1Atn6OrTisGjdaXdqq5Ii2TNx6z
-         L92kor/G5xErr3GaiSQSg8jKbzUkbVdB3FS0kAXNyFNkBKfly61/qQPTJr64JoOJVIMd
-         EWjA==
-X-Gm-Message-State: AC+VfDxsYUyxm8ucSsa5FndTzV8NlFQ2RHBE/G2ONlwjEgbtgC/e0hc4
-        FBxLmSylZDIQsd62cidKhOJowM4Wl+GFxlFHOf4=
-X-Google-Smtp-Source: ACHHUZ5aWT1ag0gDE0MRudTVEeeQRT7TbV84nEWMFV/slc5G62552tQDb4KKUuNbDVs1GznhYS8pi/YxLsOuNEfsQnE=
-X-Received: by 2002:a05:622a:391:b0:3f6:ba9d:50fc with SMTP id
- j17-20020a05622a039100b003f6ba9d50fcmr22093554qtx.31.1687405926784; Wed, 21
- Jun 2023 20:52:06 -0700 (PDT)
+        bh=yYPH2WyrIzcETLuSO9SQRYjdko7/fZ6dC4eczqzPL1I=;
+        b=lSfJwde584ChZ5YVBwhjJ/GBZa8uMOm1EUud935Yo6EpYN3HaMBcfn23cX5KAgjjGV
+         HN4bi+KVwr9X07rKlszOhzJrWnq7VzhC68zIhvSXZyejraLZYx16ZykmeUUpBh9Hn/8L
+         rIFBG58Lf03PakAtaHGPjdijxXflZELK9F+I1nzV6CQlwuI05MjS80f4LudAG2VZ0YQr
+         kAc/1UJQRTlUCWJkJPlvriTbX1Be6HsqBieJa6bH+EeAu76zjvPZzfwYchE0Az/Ja09A
+         5Q4V2Ok6PliVnwzRQbdE8SjMTgXMtn8KS4iHzzOfor9PAHT/cALPh10S+B22hVxmJ3fH
+         DqLQ==
+X-Gm-Message-State: AC+VfDzV7HJLGPHsQxKnxJzEPLotUUSX8lK6REsY+QktPVGXAaUmNhE+
+        OUi0jHZSpdfY5YsZcie4ufHNq1XPMDAmJNwmAfROJQ==
+X-Google-Smtp-Source: ACHHUZ5lzGs4uLskl2mh03JyO0IhyZ8IjKD6J4YBmH5FYd7n3kIrLO5bjc/3/RsM90YVDuZjbzT/EbEZqUQ8WIeAigY=
+X-Received: by 2002:ac8:5911:0:b0:3fd:ad1b:4e8a with SMTP id
+ 17-20020ac85911000000b003fdad1b4e8amr1874956qty.22.1687408106689; Wed, 21 Jun
+ 2023 21:28:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230621063749.3358430-1-irogers@google.com> <20230621063749.3358430-2-irogers@google.com>
-In-Reply-To: <20230621063749.3358430-2-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 21 Jun 2023 20:51:55 -0700
-Message-ID: <CAM9d7cjAiwXHAO71cjEWjBzDeau5FOMo4QNzfugSFRXy1o0oyw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf symbol_conf: Remove now unused sort_by_name
-To:     Ian Rogers <irogers@google.com>
+References: <20230621063749.3358430-1-irogers@google.com> <CAM9d7cg-r7Nw807egNFVRBgEXwgBV=A2pVEb+MBS4gvFgnNynQ@mail.gmail.com>
+In-Reply-To: <CAM9d7cg-r7Nw807egNFVRBgEXwgBV=A2pVEb+MBS4gvFgnNynQ@mail.gmail.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 21 Jun 2023 21:28:14 -0700
+Message-ID: <CAP-5=fVBbXoGuNeaYADA1RgY4wfSN8CgAJVEBjmOQGZ=-OiOAQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf symbol: Remove symbol_name_rb_node
+To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -60,117 +72,66 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Jason Wang <wangborong@cdjrlc.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 11:37 PM Ian Rogers <irogers@google.com> wrote:
+On Wed, Jun 21, 2023 at 8:51=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> Previously used to specify symbol_name_rb_node was in use.
+> Hi Ian,
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/builtin-kallsyms.c   | 1 -
->  tools/perf/builtin-lock.c       | 2 --
->  tools/perf/builtin-report.c     | 1 -
->  tools/perf/tests/builtin-test.c | 1 -
->  tools/perf/util/probe-event.c   | 1 -
->  tools/perf/util/symbol_conf.h   | 1 -
->  6 files changed, 7 deletions(-)
+> On Tue, Jun 20, 2023 at 11:37=E2=80=AFPM Ian Rogers <irogers@google.com> =
+wrote:
+> >
+> > Most perf commands want to sort symbols by name and this is done via
+> > an invasive rbtree that on 64-bit systems costs 24 bytes. Sorting the
+> > symbols in a DSO by name is optional and not done by default, however,
+> > if sorting is requested the 24 bytes is allocated for every
+> > symbol.
+> >
+> > This change removes the rbtree and uses a sorted array of symbol
+> > pointers instead (costing 8 bytes per symbol). As the array is created
+> > on demand then there are further memory savings. The complexity of
+> > sorting the array and using the rbtree are the same.
+> >
+> > To support going to the next symbol, the index of the current symbol
+> > needs to be passed around as a pair with the current symbol. This
+> > requires some API changes.
+> >
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> >
+> > v2. map__find_symbol_by_name_idx so that map__find_symbol_by_name
+> >     doesn't need an optional parameter. Separate out
+> >     symbol_conf.sort_by_name removal.
+> > ---
 >
-> diff --git a/tools/perf/builtin-kallsyms.c b/tools/perf/builtin-kallsyms.c
-> index 3751df744577..7f75c5b73f26 100644
-> --- a/tools/perf/builtin-kallsyms.c
-> +++ b/tools/perf/builtin-kallsyms.c
-> @@ -62,7 +62,6 @@ int cmd_kallsyms(int argc, const char **argv)
->         if (argc < 1)
->                 usage_with_options(kallsyms_usage, options);
+> [SNIP]
+> >  void dso__sort_by_name(struct dso *dso)
+> >  {
+> > -       dso__set_sorted_by_name(dso);
+> > -       return symbols__sort_by_name(&dso->symbol_names, &dso->symbols)=
+;
+> > +       mutex_lock(&dso->lock);
+> > +       if (!dso__sorted_by_name(dso)) {
+> > +               size_t len;
+> > +
+> > +               dso->symbol_names =3D symbols__sort_by_name(&dso->symbo=
+ls, &len);
+> > +               if (dso->symbol_names) {
+> > +                       dso->symbol_names_len =3D len;
+> > +                       dso__set_sorted_by_name(dso);
+> > +               }
+> > +       }
+> > +       mutex_unlock(&dso->lock);
 >
-> -       symbol_conf.sort_by_name = true;
->         symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
->         if (symbol__init(NULL) < 0)
->                 return -1;
-> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
-> index 8b505e1e5002..da36ace66d68 100644
-> --- a/tools/perf/builtin-lock.c
-> +++ b/tools/perf/builtin-lock.c
-> @@ -1774,7 +1774,6 @@ static int __cmd_report(bool display_info)
->         }
->
->         /* for lock function check */
-> -       symbol_conf.sort_by_name = true;
+> I think this part deserves a separate commit.
 
-The comment also can go away.
-
-
->         symbol_conf.allow_aliases = true;
->         symbol__init(&session->header.env);
->
-> @@ -1904,7 +1903,6 @@ static int __cmd_contention(int argc, const char **argv)
->                 con.save_callstack = true;
->
->         /* for lock function check */
-> -       symbol_conf.sort_by_name = true;
-
-Ditto.
+Using the mutex or the use of sorted_by_name?
 
 Thanks,
-Namhyung
+Ian
 
-
-
->         symbol_conf.allow_aliases = true;
->         symbol__init(&session->header.env);
->
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index a31a23af5547..dcedfe00f04d 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -1676,7 +1676,6 @@ int cmd_report(int argc, const char **argv)
->                          * See symbol__browser_index.
->                          */
->                         symbol_conf.priv_size += sizeof(u32);
-> -                       symbol_conf.sort_by_name = true;
->                 }
->                 annotation_config__init(&report.annotation_opts);
->         }
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index aa44fdc84763..1f6557ce3b0a 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -542,7 +542,6 @@ int cmd_test(int argc, const char **argv)
->                 return run_workload(workload, argc, argv);
->
->         symbol_conf.priv_size = sizeof(int);
-> -       symbol_conf.sort_by_name = true;
->         symbol_conf.try_vmlinux_path = true;
->
->         if (symbol__init(NULL) < 0)
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> index 277cb8f84cbc..16822a8a540f 100644
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-> @@ -74,7 +74,6 @@ int init_probe_symbol_maps(bool user_only)
->  {
->         int ret;
->
-> -       symbol_conf.sort_by_name = true;
->         symbol_conf.allow_aliases = true;
->         ret = symbol__init(NULL);
->         if (ret < 0) {
-> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> index f26f81eb8252..0b589570d1d0 100644
-> --- a/tools/perf/util/symbol_conf.h
-> +++ b/tools/perf/util/symbol_conf.h
-> @@ -18,7 +18,6 @@ struct symbol_conf {
->                         show_kernel_path,
->                         use_modules,
->                         allow_aliases,
-> -                       sort_by_name,
->                         show_nr_samples,
->                         show_total_period,
->                         use_callchain,
-> --
-> 2.41.0.162.gfafddb0af9-goog
->
+> Thanks,
+> Namhyung
