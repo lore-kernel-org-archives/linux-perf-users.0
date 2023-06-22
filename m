@@ -2,58 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D1EEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 05:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE7AEB64D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 05:03:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbjFVFBW (ORCPT
+        id S229873AbjFVFDr (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 01:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48516 "EHLO
+        Thu, 22 Jun 2023 01:03:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbjFVFBV (ORCPT
+        with ESMTP id S229836AbjFVFDq (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 01:01:21 -0400
+        Thu, 22 Jun 2023 01:03:46 -0400
 Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7F1AE9
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 22:01:20 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-57003dac4a8so5894637b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 22:01:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F1219AB
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 22:03:43 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-56ff7b4feefso82041887b3.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 22:03:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687410080; x=1690002080;
+        d=google.com; s=20221208; t=1687410223; x=1690002223;
         h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Iwkvo3drwBmCh3irzLZqUQdw68f0F8NzA1rA0HnILRE=;
-        b=zaZl9DCNtcP6svk/wI5eStzXTHQciXwiZSVitJsx8zfw/LvHcUcq209/c/SA4v73mP
-         zcE1AkwIb3XjVt/3scpYaDBPbdEMDMlDNY0iTx9tcctm4vcceaaHYRuJ/0PrPrViAUcj
-         ShwinelMgXO0LAY9rHTqMpl+ImtsrycwSftaxNeznHJGd+koILLNEKslOYDyAko1S9ws
-         Vh/Xt/2/WJQU7scGUa63nHgcQCwcWaKPk9wFgwQVGQAaDkyUOXwxx+XbHryv44cVIyr+
-         2f54gonBeorCAsDrqfrtDGwN/dl8N78ictJP59xPn6/wmbF1sBOf/akDUOZZCne68e3f
-         sv3w==
+        bh=spv5JzGX0x2pdpbwI62L09F+Wjxn2xvZVuWvy7YCIkU=;
+        b=LISeiRIj6P7nrA+78HIRlISXa4ibsF+GotQXpGl79GZoIyPJp8hbftO/ygQ0BppZyB
+         QbsSQ4KI4LKxcZldYEW9izqASAter51qBd+n2g1YKoIh+JC1MPdZkUAg2eSyPPKhazpl
+         lVtZtIpsupaJhHg6H7z1FHtpXJkFRAT7ZzkUJMIV8v7wPhOTMSrpdqNrtT0jeZ+1PlmB
+         TOCCZJD2fdB1ESonsOFtZL+Q92+OxU8i8zsQ4dPBNYZdq05I3CK4sOOaOJc7lfou+S7n
+         6LDoJJoUJL8vas8K54og9aS/pB3zAGzRQFFOaaRgk2Gjp1hJEPhH1+RWH9nZ0ygzhqXP
+         SHKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687410080; x=1690002080;
+        d=1e100.net; s=20221208; t=1687410223; x=1690002223;
         h=to:from:subject:mime-version:message-id:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Iwkvo3drwBmCh3irzLZqUQdw68f0F8NzA1rA0HnILRE=;
-        b=bTYO1kQkfaMgGbdKDUYy02NZ1m5ur1ZHGNk+wdFUwza1sP8hfMPEpWM2kh+Z3kTvSY
-         a4vWgTjFOAQQ8lTbxc6hRWf0eFzj+Lh8j2cvZE5tfYK4Y1ridyYJs58HzZ3IfhVwrcjo
-         JOOaH4z93uniulODC1iXhGtBtKUwd1tM1dBLLz7DUBmL2Qd9SdmH0xiizkUjjYJLnIB+
-         yjYLnV5OM4TopanaZOiTO/HX5BQzg4jWt+kszVIw4/oPlOfYjVOOKDgBFm9TrrLw3Jcg
-         ds/4z94JNG+kEt6xurqibP/aKC2FYyn6pwUaTg+EzurCSnW4RZNOMUQItx0TqA89R4P4
-         G2sg==
-X-Gm-Message-State: AC+VfDxY2Tq5jRPKp3iRGv4s1QWss5VCQpOecHWFMAZaeS5nOF4pOVxI
-        mosDOHscrvaXoghaKnJBUOFn26vWVzl2
-X-Google-Smtp-Source: ACHHUZ6V42Ju8DgyqLJJ/41hsH9tR7ZTZd0Vw6T1aay7/Xp8KL5Voyhfc5kxAIJ9bAjPKeZw7d81BC/lSW+i
+        bh=spv5JzGX0x2pdpbwI62L09F+Wjxn2xvZVuWvy7YCIkU=;
+        b=VwygFVEX0NidKTaMHRJF0VFgeMs6qjeuY0XWw3SfhaWN6Pb4W81X3lXtFz3u9c2kRW
+         HzhiNonLGFCszSzmF7JkwHH8g93LfexxEyKl//GZT/6vDfycpxhNrFWm6j2CxwG6z1UM
+         rXfAuFh4WPOKwqMQXN+189+/IjZOL4gOgTiscImAo35MCar52HnvF2caeBJJt8A4dp9P
+         ziIPaEJQlHJIvqZmt6uGi0L6l4Rk9oFPuUiflm6xJX0mWT+uUeFoEd+1eyFVbGAQorGl
+         5v21CFZi7SidPaAI1iQUeB/1GfvrSbmDBpPpGmu9W/G+Phqc+YtOJrUGsG69ngN1DEDe
+         Burg==
+X-Gm-Message-State: AC+VfDyeKPYKE4UKAHTOuYSXo6K2C4s4IqkHrFW/TZnVK8lFG5KPBgLp
+        rbb/ZPfPh5zV5pn6LlttF4IGCXgauYGT
+X-Google-Smtp-Source: ACHHUZ4LtLU6w6fQcZZvEtx63x7//kzm0nGZLwidksdLSY3S3wgCZJp+gvwjnIKdbH1kB87WlleFlPtTNFKE
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:91f3:1da5:6427:50d6])
- (user=irogers job=sendgmr) by 2002:a25:238e:0:b0:c01:e0f8:5ae with SMTP id
- j136-20020a25238e000000b00c01e0f805aemr413447ybj.4.1687410079873; Wed, 21 Jun
- 2023 22:01:19 -0700 (PDT)
-Date:   Wed, 21 Jun 2023 22:01:16 -0700
-Message-Id: <20230622050116.3732814-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a81:ad17:0:b0:555:cd45:bc3a with SMTP id
+ l23-20020a81ad17000000b00555cd45bc3amr7364418ywh.9.1687410223077; Wed, 21 Jun
+ 2023 22:03:43 -0700 (PDT)
+Date:   Wed, 21 Jun 2023 22:03:28 -0700
+Message-Id: <20230622050330.3733114-1-irogers@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 1/3] perf unwind: Fix map reference counts
+Subject: [PATCH v1 1/2] perf pmus: Add notion of default PMU for JSON events
 From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+To:     Thomas Richter <tmricht@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -62,60 +63,150 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The result of thread__find_map is the map in the passed in
-addr_location. Calling addr_location__exit puts that map and so copies
-need to do a map__get. Add in the corresponding map__puts.
+JSON events created in pmu-events.c by jevents.py may not specify a
+PMU they are associated with, in which case it is implied that it is
+the first core PMU. Care is needed to select this for regular 'cpu',
+s390 'cpum_cf' and ARMs many names as at the point the name is first
+needed the core PMUs list hasn't been initialized. Add a helper in
+perf_pmus to create this value, in the worst case by scanning sysfs.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/unwind-libunwind-local.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ tools/perf/util/pmu.c  | 35 ++++++++++++++++-------------------
+ tools/perf/util/pmus.c | 31 +++++++++++++++++++++++++++++++
+ tools/perf/util/pmus.h |  1 +
+ 3 files changed, 48 insertions(+), 19 deletions(-)
 
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 36bf5100bad2..9cb82d7c7dc7 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -419,7 +419,8 @@ static struct map *find_map(unw_word_t ip, struct unwind_info *ui)
- 	struct map *ret;
- 
- 	addr_location__init(&al);
--	ret = thread__find_map(ui->thread, PERF_RECORD_MISC_USER, ip, &al);
-+	thread__find_map(ui->thread, PERF_RECORD_MISC_USER, ip, &al);
-+	ret = map__get(al.map);
- 	addr_location__exit(&al);
- 	return ret;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 6142e4710a2f..963c12f910c5 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -741,9 +741,11 @@ static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
  }
-@@ -476,11 +477,11 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
  
- 		memset(&di, 0, sizeof(di));
- 		if (dwarf_find_debug_frame(0, &di, ip, base, symfile, start, map__end(map)))
--			return dwarf_search_unwind_table(as, ip, &di, pi,
--							 need_unwind_info, arg);
-+			ret = dwarf_search_unwind_table(as, ip, &di, pi,
-+							need_unwind_info, arg);
- 	}
- #endif
+ struct pmu_add_cpu_aliases_map_data {
++	/* List being added to. */
+ 	struct list_head *head;
+-	const char *name;
+-	const char *cpu_name;
++	/* If a pmu_event lacks a given PMU the default used. */
++	char *default_pmu_name;
++	/* The PMU that we're searching for events for. */
+ 	struct perf_pmu *pmu;
+ };
+ 
+@@ -752,37 +754,32 @@ static int pmu_add_cpu_aliases_map_callback(const struct pmu_event *pe,
+ 					void *vdata)
+ {
+ 	struct pmu_add_cpu_aliases_map_data *data = vdata;
+-	const char *pname = pe->pmu ? pe->pmu : data->cpu_name;
++	const char *pname = pe->pmu ?: data->default_pmu_name;
+ 
+-	if (data->pmu->is_uncore && pmu_uncore_alias_match(pname, data->name))
+-		goto new_alias;
 -
-+	map__put(map);
- 	return ret;
- }
- 
-@@ -539,7 +540,7 @@ static int access_dso_mem(struct unwind_info *ui, unw_word_t addr,
- 
- 	size = dso__data_read_addr(dso, map, ui->machine,
- 				   addr, (u8 *) data, sizeof(*data));
+-	if (strcmp(pname, data->name))
+-		return 0;
 -
-+	map__put(map);
- 	return !(size == sizeof(*data));
+-new_alias:
+-	/* need type casts to override 'const' */
+-	__perf_pmu__new_alias(data->head, -1, (char *)pe->name, (char *)pe->desc,
+-			      (char *)pe->event, pe);
++	if (!strcmp(pname, data->pmu->name) ||
++	    (data->pmu->is_uncore && pmu_uncore_alias_match(pname, data->pmu->name))) {
++		/* need type casts to override 'const' */
++		__perf_pmu__new_alias(data->head, -1, (char *)pe->name, (char *)pe->desc,
++				      (char *)pe->event, pe);
++	}
+ 	return 0;
  }
  
+ /*
+- * From the pmu_events_map, find the table of PMU events that corresponds
+- * to the current running CPU. Then, add all PMU events from that table
+- * as aliases.
++ * From the pmu_events_table, find the events that correspond to the given
++ * PMU and add them to the list 'head'.
+  */
+ void pmu_add_cpu_aliases_table(struct list_head *head, struct perf_pmu *pmu,
+-			       const struct pmu_events_table *table)
++			const struct pmu_events_table *table)
+ {
+ 	struct pmu_add_cpu_aliases_map_data data = {
+ 		.head = head,
+-		.name = pmu->name,
+-		.cpu_name = is_sysfs_pmu_core(pmu->name) ? pmu->name : "cpu",
++		.default_pmu_name = perf_pmus__default_pmu_name(),
+ 		.pmu = pmu,
+ 	};
+ 
+ 	pmu_events_table_for_each_event(table, pmu_add_cpu_aliases_map_callback, &data);
++	free(data.default_pmu_name);
+ }
+ 
+ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index d891d72c824e..80797e1b862f 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -524,6 +524,37 @@ bool perf_pmus__supports_extended_type(void)
+ 	return perf_pmus__do_support_extended_type;
+ }
+ 
++char *perf_pmus__default_pmu_name(void)
++{
++	int fd;
++	DIR *dir;
++	struct dirent *dent;
++	char *result = NULL;
++
++	if (!list_empty(&core_pmus))
++		return strdup(list_first_entry(&core_pmus, struct perf_pmu, list)->name);
++
++	fd = perf_pmu__event_source_devices_fd();
++	if (fd < 0)
++		return strdup("cpu");
++
++	dir = fdopendir(fd);
++	if (!dir)
++		return strdup("cpu");
++
++	while ((dent = readdir(dir))) {
++		if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, ".."))
++			continue;
++		if (is_pmu_core(dent->d_name)) {
++			result = strdup(dent->d_name);
++			break;
++		}
++	}
++
++	closedir(dir);
++	return result ?: strdup("cpu");
++}
++
+ struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
+ {
+ 	struct perf_pmu *pmu = evsel->pmu;
+diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
+index d02ffea5d3a4..a21464432d0f 100644
+--- a/tools/perf/util/pmus.h
++++ b/tools/perf/util/pmus.h
+@@ -20,5 +20,6 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+ bool perf_pmus__have_event(const char *pname, const char *name);
+ int perf_pmus__num_core_pmus(void);
+ bool perf_pmus__supports_extended_type(void);
++char *perf_pmus__default_pmu_name(void);
+ 
+ #endif /* __PMUS_H */
 -- 
 2.41.0.162.gfafddb0af9-goog
 
