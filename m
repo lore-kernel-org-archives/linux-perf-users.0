@@ -2,128 +2,115 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25D8EB64DB
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 05:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC987EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 05:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbjFVFDs (ORCPT
+        id S229853AbjFVFJd (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 01:03:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49392 "EHLO
+        Thu, 22 Jun 2023 01:09:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbjFVFDq (ORCPT
+        with ESMTP id S229806AbjFVFJb (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 01:03:46 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17B1E199D
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 22:03:46 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-bd5b8a9d82cso7798640276.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 22:03:46 -0700 (PDT)
+        Thu, 22 Jun 2023 01:09:31 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08ABE4B
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 22:09:30 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-33d928a268eso208285ab.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 22:09:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687410225; x=1690002225;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=x8Rsb54/MYGUaB2iRhrucGZnS8r6HVo39FnjfvBr1XU=;
-        b=GpRUf2G0Kjjc8MioX56rzakjdiz2XaTj+A/amagDGFOs4eS0bJAORFDFntoapgIt9K
-         AG9Q/X7yigaaRwdGjSNTjAD9vPnnSxMGLlrDwOfydk+lxX43+Guai4OsLplPRJ882O6D
-         hHm5Nyacar5+Hrp3AlLhQxZZgk7HvmvdUlUp7jO5mnkcrpvZjGChdxImGgdCsRWG/8L+
-         a/+D/g91D+Ogsp4+zYrQ9Ybr4jFz+2mH3f50sHqjcJyRTvzOgkHFOtKloGIXG63IWMdm
-         UrJnTgT+980It2KL1Jz0B0WyhMN8wzB4eUtrzBWh2Z7n3RAjVYS5xFeDb8ZdUpotebjH
-         0WAQ==
+        d=google.com; s=20221208; t=1687410570; x=1690002570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S0dL3Hxcf7SMSp3QLMpn96zaMHkKvz5OHPG1qIUrXmo=;
+        b=CGi6bEp+PCHMvcmBDevkqa3SfqJjezP3cXbQmLJ8wtnth6qVt+hC02o5hmeGW4qVTr
+         AnbkseKKim3xVlm5r+fzrSyqMNL7m1+w/8G5rtAzz22trvi2F21gAPasw6wbKZIVT4re
+         NhQZ+aG/tpDy1r9NawG7NNDxxi15uR4b5qKwc+j/NMH3Q3yvsImZ80hhDKk15aKcT7O8
+         wJ130MVHSa730l9sIuG3aWT95JpkDuLwVrUtmzgFsJAETB1jEu113PV/9nW2ZQX6jIc2
+         2fMYHEVouB5SEviqJS9SuCLuReNm//EUQXqbReA3qRCmjUDN5pZ6heoBfHXnOxXIdGGF
+         VYDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687410225; x=1690002225;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=x8Rsb54/MYGUaB2iRhrucGZnS8r6HVo39FnjfvBr1XU=;
-        b=GN2Cf5nWP2HZ4T/nrOHJgUV4f74iI8KMr/HdeA/5cdsgqmb7Pl2fI86fmr1FD7YvsI
-         eL+DapNIP8N5n2QfSwVx5PbmXyorqejep0Y9FPOHUlB3PTepGCs1oR8FzzZsBoNBo5Wj
-         3IEFKPbdUydL4b4r+eqC+ihoxiwuRI0Ba7OqynutWzWUzFxHK3Wdk49eQMpGEf26XU+A
-         XruEP5fkfk77+iPK6ER0Tg/U2wOTYlx5mATR0NyEXG5xKVNcxKfljI3WuzFVWJ4yUSxU
-         R5IcM3uwsuyXQKd2ahBSwcXa5gO/00X2LAg98dNhdllpdO3K4ISjgE8DOMkU9R8WiT5Q
-         xecg==
-X-Gm-Message-State: AC+VfDxXR5paaD3x23E2uTpcg/bu6z1uv1aFfdbjCaAyVww9lEENb0T6
-        nQZkm/7kgoNWs2OQf9iSrc1oNy+V3ZPg
-X-Google-Smtp-Source: ACHHUZ7ARfJoVAEvnUkQb8tQpVCFdx+usSVxdKSOM+7ibrCp77WpcmrZhsekCA+OnSG5YZJ3g4/sqKxl+fRn
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:91f3:1da5:6427:50d6])
- (user=irogers job=sendgmr) by 2002:a25:7346:0:b0:bfe:9259:8f1d with SMTP id
- o67-20020a257346000000b00bfe92598f1dmr2318249ybc.6.1687410225349; Wed, 21 Jun
- 2023 22:03:45 -0700 (PDT)
-Date:   Wed, 21 Jun 2023 22:03:29 -0700
-In-Reply-To: <20230622050330.3733114-1-irogers@google.com>
-Message-Id: <20230622050330.3733114-2-irogers@google.com>
-Mime-Version: 1.0
-References: <20230622050330.3733114-1-irogers@google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 2/2] perf pmu: Remove a hard coded cpu PMU assumption
+        d=1e100.net; s=20221208; t=1687410570; x=1690002570;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S0dL3Hxcf7SMSp3QLMpn96zaMHkKvz5OHPG1qIUrXmo=;
+        b=Qi2zGia165exRcz+w+zg8wJfGIn/HqJGNKWGXOxyRXvSMWpkg+lMpuK19NQwvtZakR
+         kwNeCMnV8bVWsoQtOOyEia847RGu72jQYKjQ3pkPMEn7JXq8S+hzgjpYU777qnLxn84C
+         7DhXL8xCae3K8XXYz3XV3er6H+UP1z3Mw4DyO3SiJNOtTHoAIyIgr0EfamOtATSSRdnI
+         UZs/QjddDOf3DCyNFNtQBW2VRPuW3y7BhXLT9uzWeCMRmgasZP87M5tk5ZI/PET3TB0S
+         kMrGoN8Opc7zQOsc48Z/Gl/o38zMqY+iDhOEeuWUxD4pCDTv2IkUv2AqynE6A1yFhmNs
+         Oohg==
+X-Gm-Message-State: AC+VfDwEwIKg7twLpmfyke4orXSLsa2dkb9goquN5P7zb08BszIfZYX5
+        kEv32SUvbzhV8FOX8/N2iPe4k2Eoht5agVTFZFs+bw==
+X-Google-Smtp-Source: ACHHUZ756lU944VW1uzjoMgYCXf03qwkVa2Fu6R0OMIVdXPPTzPkbXuCX8xG+RYFJK2KXWv3tLMZdl0UPbMowXRGg44=
+X-Received: by 2002:a05:6e02:1c84:b0:335:62cc:3972 with SMTP id
+ w4-20020a056e021c8400b0033562cc3972mr804600ill.19.1687410569961; Wed, 21 Jun
+ 2023 22:09:29 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230620091603.269-1-ravi.bangoria@amd.com> <CAP-5=fXS726wY1taYEYXDz3YZ4ZwxcL+nhh_yNM7rwamMd8mWg@mail.gmail.com>
+ <3b0abd4a-6450-c282-65ff-ec0c7df67b03@amd.com>
+In-Reply-To: <3b0abd4a-6450-c282-65ff-ec0c7df67b03@amd.com>
 From:   Ian Rogers <irogers@google.com>
-To:     Thomas Richter <tmricht@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 21 Jun 2023 22:09:18 -0700
+Message-ID: <CAP-5=fXfTDY9-uDq2BR2QmTP=-1=4RKRK=dvKmz5CF+oXgz+Eg@mail.gmail.com>
+Subject: Re: [PATCH] perf/amd: Prevent grouping of IBS events
+To:     Ravi Bangoria <ravi.bangoria@amd.com>
+Cc:     peterz@infradead.org, acme@kernel.org, jolsa@kernel.org,
+        namhyung@kernel.org, bp@alien8.de, x86@kernel.org,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sandipan.das@amd.com, ananth.narayan@amd.com,
+        santosh.shukla@amd.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The property of "cpu" when it has no cpu map is true on S390 with the
-PMU cpum_cf. Rather than maintain a list of such PMUs, reuse the
-is_core test result from the caller.
+On Tue, Jun 20, 2023 at 8:27=E2=80=AFPM Ravi Bangoria <ravi.bangoria@amd.co=
+m> wrote:
+>
+> Hi Ian,
+>
+> On 20-Jun-23 10:14 PM, Ian Rogers wrote:
+> > On Tue, Jun 20, 2023 at 2:16=E2=80=AFAM Ravi Bangoria <ravi.bangoria@am=
+d.com> wrote:
+> >>
+> >> IBS PMUs can have only one event active at any point in time. Restrict
+> >> grouping of multiple IBS events.
+> >
+> > Thanks Ravi,
+> >
+> > can you provide an example/test for this? Should this be a weak group i=
+ssue?
+>
+> Before:
+>   $ sudo ./perf record -e "{ibs_op//,ibs_op//}" -C 0
+>   ^C[ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.540 MB perf.data (531 samples) ]
+>
+> After:
+>   $ sudo ./perf record -e "{ibs_op//,ibs_op//}" -C 0
+>   Error:
+>   AMD IBS may only be available in system-wide/per-cpu mode.
+>   Try using -a, or -C and workload affinity
+>
+> The error message is stale and misleading. I have a patch to fix it.
+> I'll post it separately.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Thanks Ravi, so this is a workaround for a PMU driver bug where the
+perf_event_open should have failed for the sibling event?
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 963c12f910c5..64fa568a5426 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -551,7 +551,7 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
-  * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
-  * may have a "cpus" file.
-  */
--static struct perf_cpu_map *pmu_cpumask(int dirfd, const char *name)
-+static struct perf_cpu_map *pmu_cpumask(int dirfd, const char *name, bool is_core)
- {
- 	struct perf_cpu_map *cpus;
- 	const char *templates[] = {
-@@ -575,7 +575,8 @@ static struct perf_cpu_map *pmu_cpumask(int dirfd, const char *name)
- 			return cpus;
- 	}
- 
--	return !strcmp(name, "cpu") ? perf_cpu_map__get(cpu_map__online()) : NULL;
-+	/* Nothing found, for core PMUs assume this means all CPUs. */
-+	return is_core ? perf_cpu_map__get(cpu_map__online()) : NULL;
- }
- 
- static bool pmu_is_uncore(int dirfd, const char *name)
-@@ -886,7 +887,8 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
- 	if (!pmu)
- 		return NULL;
- 
--	pmu->cpus = pmu_cpumask(dirfd, name);
-+	pmu->is_core = is_pmu_core(name);
-+	pmu->cpus = pmu_cpumask(dirfd, name, pmu->is_core);
- 	pmu->name = strdup(name);
- 	if (!pmu->name)
- 		goto err;
-@@ -903,7 +905,6 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
- 	}
- 
- 	pmu->type = type;
--	pmu->is_core = is_pmu_core(name);
- 	pmu->is_uncore = pmu_is_uncore(dirfd, name);
- 	if (pmu->is_uncore)
- 		pmu->id = pmu_id(name);
--- 
-2.41.0.162.gfafddb0af9-goog
+The behavior is somewhat reminiscent of arch_evsel__must_be_in_group:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/arch/x86/util/evsel.c?h=3Dperf-tools-next#n41
 
+Normally software events would be valid in the group, should the code
+ignore these?
+
+Thanks,
+Ian
+
+> Thanks,
+> Ravi
