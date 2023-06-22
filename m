@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFBEEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 17:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B406EB64DA
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 17:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230230AbjFVR1R (ORCPT
+        id S231417AbjFVRwH (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 13:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57980 "EHLO
+        Thu, 22 Jun 2023 13:52:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbjFVR1Q (ORCPT
+        with ESMTP id S231463AbjFVRwC (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 13:27:16 -0400
-Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D39DD2
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 10:27:15 -0700 (PDT)
-Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3fde9bfb3c8so15201cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 10:27:15 -0700 (PDT)
+        Thu, 22 Jun 2023 13:52:02 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD06E2119
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 10:51:59 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-40079b6fc56so17101cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 10:51:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687454834; x=1690046834;
+        d=google.com; s=20221208; t=1687456319; x=1690048319;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zpAAA1t2APTPIL6TPZrRweRbUpiJB6pmgpDTWMvn/FY=;
-        b=ajJCaXRDlhuKvi0JuMH0jHQN9zU/adnA6jpAoXryuU5WQ214eidnG1B3qIMV5EtJW+
-         j3NWJdZbfDzrgST1YaxpZUKbRk1uDtMOvViaJsWHZ3rw6xEK4p4iXjludjzYnLVvuZls
-         PzLDL+uOR+s/2UaCqngW3Mc8rB9JtOoIQbZcaO5R2SarOhdGFSAYx5jM7sLKuqgAfC78
-         MEDwG1CpgHBm/54DeSGOygxeog9oztqbe5uhxqDKZrnXZvN9EBADBEbujbs2n+ykCH5s
-         c4rAcgjn6rHl1g176cAu+0vmWM7cK0jO3Vi5EfjngEaaxsGpd4Ewfri0PlPDYt9SvSEp
-         o91w==
+        bh=Ifv1YUPmw1rjpLUO+8aVeXi33WHx57kQP10Eiyc8BEA=;
+        b=pGzyPDsoR6Nbo7+IzntkkjGoXkt81sNnpQwcP3ovN6BKmelaTC1JjasVAivbsJHzaE
+         C+aZurEqMUzrl0bXKj12AifXNNgcsl+LiltItThomF+er0kfWKRuFtaGRbj5AznKHq9a
+         2W6rcyhOz1E4wUjUZhVoPemF4VvcSwBnJrpDF6J7tUX6GPONK2k36ghPfCeFs6er5YrE
+         1w3KA0T96jOu9XktG6kdRT6EV98M+F2TmnVhjfowpUP4GNDCBQgwSAsKa03fDOAu8fbo
+         Pyq2bvBvdaKXoUVwgTylOO0ZK8fqV4zwLbGQTbrlsJv62t5H3YXrXCUycjsQRxdCHGkr
+         cu5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687454834; x=1690046834;
+        d=1e100.net; s=20221208; t=1687456319; x=1690048319;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zpAAA1t2APTPIL6TPZrRweRbUpiJB6pmgpDTWMvn/FY=;
-        b=NVy47/+aq5i02rZ2DxVe7Kqb/+hmi6r7I4rlRfBIaLz/vNnUWeY8tPnQXW6c5DiBXL
-         fCbwj7XEzo+FrvTEGHBdV6XZxJHWTQHTeySCHETXge1keSYHtp9FtZ4dIYFlIV5D53G5
-         Y0S9mGS+ZaKuV1ivmtq1oWd7+MY96R/rMXicSpcaT8ZgWiPuPvNqeHXefBpkdoaYYSMb
-         rhmEMpJf7PhVY0vPpBJDmCSwmfqzpbc3xZzgisWxqT7/NvcXBeX2rI8sCxk50EJsvCKy
-         TLWhmmuJ7xov4B1lwxYBWDtZYsvgfYk+Pn22jT8QwsFHJjd32ALtswiqtX2M0XVKSPyu
-         s9Sw==
-X-Gm-Message-State: AC+VfDxkvTxUO2jCaatoc4K1niqNFVq8EeM+WuITiBa8m0rD1JNvcDAy
-        3plsqF4MUE9WsRTq9X7vpcKgWACEsn57QLVTi8PWxQ==
-X-Google-Smtp-Source: ACHHUZ7xXJVU1iaVQHNWBcjIROUN8XBx6twf/NQXOFch3Z0Pg9XmNAKotuHXqSCRwZCmUiFWOYZ3pyng/357JWNd2Hs=
-X-Received: by 2002:a05:622a:85:b0:3f8:5b2:aeed with SMTP id
- o5-20020a05622a008500b003f805b2aeedmr1600635qtw.21.1687454834160; Thu, 22 Jun
- 2023 10:27:14 -0700 (PDT)
+        bh=Ifv1YUPmw1rjpLUO+8aVeXi33WHx57kQP10Eiyc8BEA=;
+        b=iv4rklYCrH6cbPWHjKIMn0iCpnJudvik5aLHBuyglx2MODx3mVTxvQtf11NcIFLq0z
+         jhKua7N22o5FHIlIVtMcnDl9yMVIqt+rCW9rE7Eb+OxAGI5m3eDfoNhKoUgftjGw+sd6
+         ZP0eXIw3D0wCG3oNGLRwK21Mjz8KgYePdQekZVtn6x9FXZ7WKkRaSuH5jvTEvqTW2h4T
+         41m97WukDHAoTYvaqbkELNlWnNUKn7v6EGBRGjLMhUYHMKJ9OK6AYZC7EVNrsb72AkuL
+         OKiuMyZ9eoI5gRln6GDJx1FKoeFrmV0tHGboLNU+ZkG3rTPmu9tk0vIh8i9dLeD04DwK
+         C2yw==
+X-Gm-Message-State: AC+VfDwvOlDnWxDwuPLIZvRwf/ph02TUtqhJiwzKANYsJI/z8aDAaAzk
+        9NR1hDvvvTp8LAtg/GzJ6F0XwXECtBX6wDa+lb6ZxA==
+X-Google-Smtp-Source: ACHHUZ71FvU230Se7n3GVJjL4GWx8zZOuTGUI5jfFA0uvZhPg6EGRRNpWDeLiJfUVTmaj8xi9mhdtTj2G86YUV9Sq3o=
+X-Received: by 2002:a05:622a:1212:b0:3ef:302c:319e with SMTP id
+ y18-20020a05622a121200b003ef302c319emr986668qtx.8.1687456318813; Thu, 22 Jun
+ 2023 10:51:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230620201818.1670753-1-namhyung@kernel.org> <20230620201818.1670753-3-namhyung@kernel.org>
-In-Reply-To: <20230620201818.1670753-3-namhyung@kernel.org>
+References: <20230622055832.83476-1-namhyung@kernel.org>
+In-Reply-To: <20230622055832.83476-1-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 22 Jun 2023 10:27:02 -0700
-Message-ID: <CAP-5=fWvxMyzbY6gg7R-TzWNpbRcUKHpxoyJq-04c84CzkW4Cw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] perf machine: Include data symbols in the kernel map
+Date:   Thu, 22 Jun 2023 10:51:47 -0700
+Message-ID: <CAP-5=fULkA2G7xWVH9okqEmYMFW_HhjFvtkoxid0YLngBZP4Dg@mail.gmail.com>
+Subject: Re: [PATCH] perf test: Remove x permission from lib/stat_output.sh
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
@@ -62,58 +62,43 @@ Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
+        linux-perf-users@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 1:18=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Wed, Jun 21, 2023 at 10:58=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> When perf record -d is used, it needs data mmaps to symbolize global data=
-.
-> But it missed to collect kernel data maps so it cannot symbolize them.
-> Instead of having a separate map, just increase the kernel map size to
-> include the data section.
+> The commit fc51fc87b1b8 factored out the helper functions to a library
+> but the new file had execute permission.  Due to the way it detects
+> the shell test scripts, it showed up in the perf test list unexpectedly.
 >
-> Probably we can have a separate kernel map for data, but the current
-> code assumes a single kernel map.  So it'd require more changes in other
-> places and looks error-prone.  I decided not to go that way for now.
+>   $ ./perf test list 2>&1 | grep 86
+>    76: x86 bp modify
+>    77: x86 Sample parsing
+>    78: x86 hybrid
+>    86:                        <---- (here)
 >
-> Also it seems the kernel module size already includes the data section.
+>   $ ./perf test -v 86
+>    86:                                                                 :
+>   --- start ---
+>   test child forked, pid 1932207
+>   test child finished with 0
+>   ---- end ----
+>   : Ok
 >
-> For example, my system has the following.
+> As it's a collection of library functions, it should not run as is.
+> Let's remove the execute permission.
 >
->   $ grep -e _stext -e _etext -e _edata /proc/kallsyms
->   ffffffff99800000 T _stext
->   ffffffff9a601ac8 T _etext
->   ffffffff9b446a00 D _edata
->
-> Size of the text section is (0x9a601ac8 - 0x99800000 =3D 0xe01ac8) and
-> size of the data section is (0x9b446a00 - 0x99800000 =3D 0x1c46a00).
->
-> Before:
->   $ perf record -d true
->
->   $ perf report -D | grep MMAP | head -1
->   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0xe01ac8) =
-@ 0xffffffff99800000]: x [kernel.kallsyms]_text
->                                                                ^^^^^^^^
->                                                                  here
-
-nit: should the ^^^ be under 0xe01ac8?
-
-> After:
->   $ perf report -D | grep MMAP | head -1
->   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0x1c46a00)=
- @ 0xffffffff99800000]: x [kernel.kallsyms]_text
->                                                                ^^^^^^^^^
-
-nit: and here under 0x1c46a00 ?
-
->
+> Fixes: fc51fc87b1b8 ("perf test: Move all the check functions of stat CSV=
+ output to lib")
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Andi Kleen <ak@linux.intel.com>
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
 Acked-by: Ian Rogers <irogers@google.com>
@@ -122,28 +107,14 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/machine.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  tools/perf/tests/shell/lib/stat_output.sh | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  mode change 100755 =3D> 100644 tools/perf/tests/shell/lib/stat_output.sh
 >
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index ddc0a2130caf..e93a66f6e0b3 100644
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -1218,7 +1218,10 @@ static int machine__get_running_kernel_start(struc=
-t machine *machine,
->
->         *start =3D addr;
->
-> -       err =3D kallsyms__get_function_start(filename, "_etext", &addr);
-> +       if (machine->has_data_mmap)
-> +               err =3D kallsyms__get_symbol_start(filename, "_edata", &a=
-ddr);
-> +       else
-> +               err =3D kallsyms__get_function_start(filename, "_etext", =
-&addr);
->         if (!err)
->                 *end =3D addr;
->
+> diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests=
+/shell/lib/stat_output.sh
+> old mode 100755
+> new mode 100644
 > --
-> 2.41.0.185.g7c58973941-goog
+> 2.41.0.162.gfafddb0af9-goog
 >
