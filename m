@@ -2,106 +2,608 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3177DEB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 15:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F406C001DB
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 15:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231340AbjFVPKD (ORCPT
+        id S231172AbjFVPcL (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 11:10:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46660 "EHLO
+        Thu, 22 Jun 2023 11:32:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230512AbjFVPKB (ORCPT
+        with ESMTP id S232037AbjFVPbx (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 11:10:01 -0400
-Received: from wout2-smtp.messagingengine.com (wout2-smtp.messagingengine.com [64.147.123.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A280A2;
-        Thu, 22 Jun 2023 08:10:00 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id 7B1773200258;
-        Thu, 22 Jun 2023 11:09:56 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Thu, 22 Jun 2023 11:09:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1687446596; x=1687532996; bh=UF
-        Ik7GqKMTQQbMewPZ3JZd1cKUV2IvhZU7QLYY4nLQk=; b=VqXzuiAnU40BIyTBrS
-        9/SRN8hrv7scO6zI3Wgs3SMHosS7t3TIJr1SBen8U4HVEj75R1HMftaR11UagFuI
-        dQDwOO6WznyWPpjHfiZA/qhgUCvAGQy5BbZaxLT8/yzptS5v9ubV79kwpAGGxQuM
-        DE1SwgGx2/ZH4LHcTmR8+ATYG4+1ChyqonunUcwENZ8WIemWrIms+PVug0q2eEMY
-        TSR/0Lv+VsDmf75Ax2ZUYJHD9iEFh1NOs/D996wZlKS3iocCzmdyaCf0ugaZ8754
-        mkrP5Erd8AZHVvjwPj+SwlMzINCbTf+N7Ax13yVW7pywBRzZV7toq41p/Zg6HRml
-        8+aA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm2; t=1687446596; x=1687532996; bh=UFIk7GqKMTQQb
-        MewPZ3JZd1cKUV2IvhZU7QLYY4nLQk=; b=GDkxVJy0ljSrkyo6YnDKY4pFJLdfF
-        2IiwBq716JjjpA1//mgjXXP5rcXOZixDJgoknebyqw1EqT2D2QU8dP8YL2NcTi1O
-        IcPYk8faxiG7shlcm1dGUo/6sDJPCw3Xx0CSF1UrFWPh0CpWGKFhWKa1eSkHxUvZ
-        hQKxsPVNrue7m49ASD49SHR8b6Ycrxepba23aSdmT5JPYAnwwLCp85qf4tpFV9QC
-        s7uZrWeg6Rcr0aeiWooXqJ01AnWywTF72j+hj2YO3Lel+WKAuW51T7GBsJGC4tEX
-        zBWePkKQBus17YZIOFzKmp68jsxY9m/bGzWsIxe3JfxKnYUSnioOb56VA==
-X-ME-Sender: <xms:QmSUZLkPh6E0UqDs8VS6ZyRN4qZgBuUFafXc6Are0ycgDlrH6NDVqg>
-    <xme:QmSUZO0DJFPef8z4dg0gEklyqcQOteSgU8sjn_ihzdZQGYc5BSSDYBjdql0sceTKV
-    t-Mz_Lh8TLjXlZnyUY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeeguddgkeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:QmSUZBryuN3fCOL33LL87iiMJqMuPdQ374jsU4AyA3x_IUnaAeTNqw>
-    <xmx:QmSUZDndHZJxE8ISniqoZMrjyBRb3ilM9dINXYaxUJ00LFwhgi62PA>
-    <xmx:QmSUZJ0rSKbadaLwaeA2sIbRM2gI4zZSyduBaxYgvlWuucs5KccdXw>
-    <xmx:RGSUZGlj-v19qlVP4kskwEzbSFARUROY_1DQ0zqqUTkr7VMXuaT54Q>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 7DFC4B60089; Thu, 22 Jun 2023 11:09:54 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
-Mime-Version: 1.0
-Message-Id: <1412dbaf-56f4-418b-85ea-681b1c44cc26@app.fastmail.com>
-In-Reply-To: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1687443219-11946-1-git-send-email-yangtiezhu@loongson.cn>
-Date:   Thu, 22 Jun 2023 17:09:34 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Tiezhu Yang" <yangtiezhu@loongson.cn>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        linux-riscv@lists.infradead.org, loongarch@lists.linux.dev,
-        Linux-Arch <linux-arch@vger.kernel.org>, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v3 0/2] Unify uapi bitsperlong.h
-Content-Type: text/plain
+        Thu, 22 Jun 2023 11:31:53 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8A5F2D70
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 08:30:43 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-4007b5bafceso86521cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 08:30:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1687447834; x=1690039834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ykb6tGYsLf52sEsIzXohhQa59q8CS4ySXQqXvfY9ndE=;
+        b=2U+3/ISVgb6VyaZZ/sLwfTsxQ4xT2zhRsWC3wWQUCAhFywm7RlCxM8CIHUaOw8gn2f
+         KftrN6rl91PouLAtFzRQiQ9iq62/U40KyuQ+8+G7o8xCx/zer953NbLspjsC0kNmtf/h
+         s0U7KDBDtmBJyD9z80LOV0tcvYzcZ6b5hAL3khrf8eOvLwwEismbOtKDU09MNLFGONDd
+         vb0Fjl+wBl7VEGGuntDuzG5k6CVwGn7ZWf8JHfSp7SEXIahmlBMkrOzIvYnpxmL5IF2z
+         /U9n/0daGzv5aOqU57LC94o6rrsMDaiKVKYgtJYgi141PIqyuosA7o3hW+xZS6MgPTy5
+         nOew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687447834; x=1690039834;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ykb6tGYsLf52sEsIzXohhQa59q8CS4ySXQqXvfY9ndE=;
+        b=DyTST+KOJzOEi1LHPduhnC5VVZaXEkk4WRJ4oAbC8CiWa05LinnFkGH2x1LvLi7CrR
+         S2WxucrKBNoYUqK25WTe2fF5+zPMWECSv8wSDDzGCZOHE2ShzMz9J4eTlnHn5nRHaTPY
+         lrbrnbTxSEPARH5wGqQvznrtubSaRXRZsqPy7JkL3C0Sn9jtDMMnp28VbIMTxkxInFif
+         DgAFno+drXteTUUWfCg3aDl2YA8uU+pjSMBq6ISWD4hekVHr8rLssViZ1a5uon2Y+E+z
+         jU4uvSWOk/IntK8CYlnDbgZk0NN5AnmHAq3EZDCoRcOCsj2squ+gx4wVTx8iebUK/IJr
+         QDug==
+X-Gm-Message-State: AC+VfDzVw5KevVv5dMge6PjJY7u3+rwGFY3DG+7JHLgqEiyC8P//It2l
+        dFnU2pyvmpTVMOAcI5Bttw5tgwEk9pXhs5PipYZPrg==
+X-Google-Smtp-Source: ACHHUZ4d64w+qjHx4Nawr9TEFIWsEMvHyE8a0ngQdINGUbhmDtia/85g6cgqTnJEVFOOxruNL2JdcSAOs5pL1jHNLYs=
+X-Received: by 2002:a05:622a:1016:b0:3f9:ad2e:4801 with SMTP id
+ d22-20020a05622a101600b003f9ad2e4801mr1213951qte.17.1687447834159; Thu, 22
+ Jun 2023 08:30:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230608053844.2872345-1-namhyung@kernel.org>
+In-Reply-To: <20230608053844.2872345-1-namhyung@kernel.org>
+From:   Ian Rogers <irogers@google.com>
+Date:   Thu, 22 Jun 2023 08:30:22 -0700
+Message-ID: <CAP-5=fU_mPu4NdHaWnnKK_-yFZCEUf_Xta2+We-qta7LaDHRFA@mail.gmail.com>
+Subject: Re: [PATCH] perf lock contention: Add -x option for CSV style output
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+        Hao Luo <haoluo@google.com>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 22, 2023, at 16:13, Tiezhu Yang wrote:
-> v3:
->   -- Check the definition of __BITS_PER_LONG first at
->      the beginning of uapi/asm-generic/bitsperlong.h
+On Wed, Jun 7, 2023 at 10:38=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
-> v2:
->   -- Check __CHAR_BIT__ and __SIZEOF_LONG__ rather than
->      __aarch64__, __riscv, __loongarch__, thanks Ruoyao
->   -- Update the code comment and commit message
+> Sometimes we want to process the output by external programs.  Let's add
+> the -x option to specify the field separator like perf stat.
 >
-> v1:
->   -- Rebase on 6.4-rc6
->   -- Only unify uapi bitsperlong.h for arm64, riscv and loongarch
->   -- Remove uapi bitsperlong.h of hexagon and microblaze in a new patch
+>   $ sudo ./perf lock con -ab -x, sleep 1
+>   # output: contended, total wait, max wait, avg wait, type, caller
+>   19, 194232, 21415, 10222, spinlock, process_one_work+0x1f0
+>   15, 162748, 23843, 10849, rwsem:R, do_user_addr_fault+0x40e
+>   4, 86740, 23415, 21685, rwlock:R, ep_poll_callback+0x2d
+>   1, 84281, 84281, 84281, mutex, iwl_mvm_async_handlers_wk+0x135
+>   8, 67608, 27404, 8451, spinlock, __queue_work+0x174
+>   3, 58616, 31125, 19538, rwsem:W, do_mprotect_pkey+0xff
+>   3, 52953, 21172, 17651, rwlock:W, do_epoll_wait+0x248
+>   2, 30324, 19704, 15162, rwsem:R, do_madvise+0x3ad
+>   1, 24619, 24619, 24619, spinlock, rcu_core+0xd4
 >
-> Here is the RFC patch:
-> https://lore.kernel.org/linux-arch/1683615903-10862-1-git-send-email-yangtiezhu@loongson.cn/
+> The first line is a comment that shows the output format.  Each line is
+> separated by the given string ("," in this case).  The time is printed
+> in nsec without the unit so that it can be parsed easily.
+>
+> The characters can be used in the output like (":", "+" and ".") are not
+> allowed for the -x option.
+>
+>   $ ./perf lock con -x:
+>   Cannot use the separator that is already used
+>
+>    Usage: perf lock contention [<options>]
+>
+>       -x, --field-separator <separator>
+>                             print result in CSV format with custom separa=
+tor
+>
+> The stacktraces are printed in the same line separated by ":".  The
+> header is updated to show the stacktrace.  Also the debug output is
+> added at the end as a comment.
+>
+>   $ sudo ./perf lock con -abv -x, -F wait_total sleep 1
+>   Looking at the vmlinux_path (8 entries long)
+>   symsrc__init: cannot get elf header.
+>   Using /proc/kcore for kernel data
+>   Using /proc/kallsyms for symbols
+>   # output: total wait, type, caller, stacktrace
+>   37134, spinlock, rcu_core+0xd4, 0xffffffff9d0401e4 _raw_spin_lock_irqsa=
+ve+0x44: 0xffffffff9c738114 rcu_core+0xd4: ...
+>   21213, spinlock, raw_spin_rq_lock_nested+0x1b, 0xffffffff9d0407c0 _raw_=
+spin_lock+0x30: 0xffffffff9c6d9cfb raw_spin_rq_lock_nested+0x1b: ...
+>   20506, rwlock:W, ep_done_scan+0x2d, 0xffffffff9c9bc4dd ep_done_scan+0x2=
+d: 0xffffffff9c9bd5f1 do_epoll_wait+0x6d1: ...
+>   18044, rwlock:R, ep_poll_callback+0x2d, 0xffffffff9d040555 _raw_read_lo=
+ck_irqsave+0x45: 0xffffffff9c9bc81d ep_poll_callback+0x2d: ...
+>   17890, rwlock:W, do_epoll_wait+0x47b, 0xffffffff9c9bd39b do_epoll_wait+=
+0x47b: 0xffffffff9c9be9ef __x64_sys_epoll_wait+0x6d1: ...
+>   12114, spinlock, futex_wait_queue+0x60, 0xffffffff9d0407c0 _raw_spin_lo=
+ck+0x30: 0xffffffff9d037cae __schedule+0xbe: ...
+>   # debug: total=3D7, bad=3D0, bad_task=3D0, bad_stack=3D0, bad_time=3D0,=
+ bad_data=3D0
+>
+> Also note that some field (like lock symbols) can be empty.
+>
+>   $ sudo ./perf lock con -abl -x, -E 10 sleep 1
+>   # output: contended, total wait, max wait, avg wait, address, symbol, t=
+ype
+>   6, 275025, 61764, 45837, ffff9dcc9f7d60d0, , spinlock
+>   18, 87716, 11196, 4873, ffff9dc540059000, , spinlock
+>   2, 6472, 5499, 3236, ffff9dcc7f730e00, rq_lock, spinlock
+>   3, 4429, 2341, 1476, ffff9dcc7f7b0e00, rq_lock, spinlock
+>   3, 3974, 1635, 1324, ffff9dcc7f7f0e00, rq_lock, spinlock
+>   4, 3290, 1326, 822, ffff9dc5f4e2cde0, , rwlock
+>   3, 2894, 1023, 964, ffffffff9e0d7700, rcu_state, spinlock
+>   1, 2567, 2567, 2567, ffff9dcc7f6b0e00, rq_lock, spinlock
+>   4, 1259, 596, 314, ffff9dc69c2adde0, , rwlock
+>   1, 934, 934, 934, ffff9dcc7f670e00, rq_lock, spinlock
+>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-I've applied these to the asm-generic tree now
+Acked-by: Ian Rogers <irogers@google.com>
+
+I think this would benefit from:
+1) an output file option, so that debug messages and the lie don't
+break the CSV formatting,
+2) a test :-)
 
 Thanks,
+Ian
 
-   Arnd
+> ---
+>  tools/perf/Documentation/perf-lock.txt |   5 +
+>  tools/perf/builtin-lock.c              | 303 +++++++++++++++++++------
+>  2 files changed, 241 insertions(+), 67 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-lock.txt b/tools/perf/Document=
+ation/perf-lock.txt
+> index 6e5ba3cd2b72..d1efcbe7a470 100644
+> --- a/tools/perf/Documentation/perf-lock.txt
+> +++ b/tools/perf/Documentation/perf-lock.txt
+> @@ -200,6 +200,11 @@ CONTENTION OPTIONS
+>         Note that it matches the substring so 'rq' would match both 'raw_=
+spin_rq_lock'
+>         and 'irq_enter_rcu'.
+>
+> +-x::
+> +--field-separator=3D<SEP>::
+> +       Show results using a CSV-style output to make it easy to import d=
+irectly
+> +       into spreadsheets. Columns are separated by the string specified =
+in SEP.
+> +
+>
+>  SEE ALSO
+>  --------
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index fc8356bd6e3a..52c87cc3d224 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -225,6 +225,12 @@ static void lock_stat_key_print_time(unsigned long l=
+ong nsec, int len)
+>                 { 0, NULL },
+>         };
+>
+> +       /* for CSV output */
+> +       if (len =3D=3D 0) {
+> +               pr_info("%llu", nsec);
+> +               return;
+> +       }
+> +
+>         for (int i =3D 0; table[i].unit; i++) {
+>                 if (nsec < table[i].base)
+>                         continue;
+> @@ -1623,11 +1629,179 @@ static void sort_contention_result(void)
+>         sort_result();
+>  }
+>
+> -static void print_bpf_events(int total, struct lock_contention_fails *fa=
+ils)
+> +static void print_header_stdio(void)
+> +{
+> +       struct lock_key *key;
+> +
+> +       list_for_each_entry(key, &lock_keys, list)
+> +               pr_info("%*s ", key->len, key->header);
+> +
+> +       switch (aggr_mode) {
+> +       case LOCK_AGGR_TASK:
+> +               pr_info("  %10s   %s\n\n", "pid",
+> +                       show_lock_owner ? "owner" : "comm");
+> +               break;
+> +       case LOCK_AGGR_CALLER:
+> +               pr_info("  %10s   %s\n\n", "type", "caller");
+> +               break;
+> +       case LOCK_AGGR_ADDR:
+> +               pr_info("  %16s   %s\n\n", "address", "symbol");
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +}
+> +
+> +static void print_header_csv(const char *sep)
+> +{
+> +       struct lock_key *key;
+> +
+> +       pr_info("# output: ");
+> +       list_for_each_entry(key, &lock_keys, list)
+> +               pr_info("%s%s ", key->header, sep);
+> +
+> +       switch (aggr_mode) {
+> +       case LOCK_AGGR_TASK:
+> +               pr_info("%s%s %s\n", "pid", sep,
+> +                       show_lock_owner ? "owner" : "comm");
+> +               break;
+> +       case LOCK_AGGR_CALLER:
+> +               pr_info("%s%s %s", "type", sep, "caller");
+> +               if (verbose > 0)
+> +                       pr_info("%s %s", sep, "stacktrace");
+> +               pr_info("\n");
+> +               break;
+> +       case LOCK_AGGR_ADDR:
+> +               pr_info("%s%s %s%s %s\n", "address", sep, "symbol", sep, =
+"type");
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +}
+> +
+> +static void print_header(void)
+> +{
+> +       if (!quiet) {
+> +               if (symbol_conf.field_sep)
+> +                       print_header_csv(symbol_conf.field_sep);
+> +               else
+> +                       print_header_stdio();
+> +       }
+> +}
+> +
+> +static void print_lock_stat_stdio(struct lock_contention *con, struct lo=
+ck_stat *st)
+> +{
+> +       struct lock_key *key;
+> +       struct thread *t;
+> +       int pid;
+> +
+> +       list_for_each_entry(key, &lock_keys, list) {
+> +               key->print(key, st);
+> +               pr_info(" ");
+> +       }
+> +
+> +       switch (aggr_mode) {
+> +       case LOCK_AGGR_CALLER:
+> +               pr_info("  %10s   %s\n", get_type_str(st->flags), st->nam=
+e);
+> +               break;
+> +       case LOCK_AGGR_TASK:
+> +               pid =3D st->addr;
+> +               t =3D perf_session__findnew(session, pid);
+> +               pr_info("  %10d   %s\n",
+> +                       pid, pid =3D=3D -1 ? "Unknown" : thread__comm_str=
+(t));
+> +               break;
+> +       case LOCK_AGGR_ADDR:
+> +               pr_info("  %016llx   %s (%s)\n", (unsigned long long)st->=
+addr,
+> +                       st->name, get_type_name(st->flags));
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +
+> +       if (aggr_mode =3D=3D LOCK_AGGR_CALLER && verbose > 0) {
+> +               struct map *kmap;
+> +               struct symbol *sym;
+> +               char buf[128];
+> +               u64 ip;
+> +
+> +               for (int i =3D 0; i < max_stack_depth; i++) {
+> +                       if (!st->callstack || !st->callstack[i])
+> +                               break;
+> +
+> +                       ip =3D st->callstack[i];
+> +                       sym =3D machine__find_kernel_symbol(con->machine,=
+ ip, &kmap);
+> +                       get_symbol_name_offset(kmap, sym, ip, buf, sizeof=
+(buf));
+> +                       pr_info("\t\t\t%#lx  %s\n", (unsigned long)ip, bu=
+f);
+> +               }
+> +       }
+> +}
+> +
+> +static void print_lock_stat_csv(struct lock_contention *con, struct lock=
+_stat *st,
+> +                               const char *sep)
+> +{
+> +       struct lock_key *key;
+> +       struct thread *t;
+> +       int pid;
+> +
+> +       list_for_each_entry(key, &lock_keys, list) {
+> +               key->print(key, st);
+> +               pr_info("%s ", sep);
+> +       }
+> +
+> +       switch (aggr_mode) {
+> +       case LOCK_AGGR_CALLER:
+> +               pr_info("%s%s %s", get_type_str(st->flags), sep, st->name=
+);
+> +               if (verbose <=3D 0)
+> +                       pr_info("\n");
+> +               break;
+> +       case LOCK_AGGR_TASK:
+> +               pid =3D st->addr;
+> +               t =3D perf_session__findnew(session, pid);
+> +               pr_info("%d%s %s\n", pid, sep, pid =3D=3D -1 ? "Unknown" =
+: thread__comm_str(t));
+> +               break;
+> +       case LOCK_AGGR_ADDR:
+> +               pr_info("%llx%s %s%s %s\n", (unsigned long long)st->addr,=
+ sep,
+> +                       st->name, sep, get_type_name(st->flags));
+> +               break;
+> +       default:
+> +               break;
+> +       }
+> +
+> +       if (aggr_mode =3D=3D LOCK_AGGR_CALLER && verbose > 0) {
+> +               struct map *kmap;
+> +               struct symbol *sym;
+> +               char buf[128];
+> +               u64 ip;
+> +
+> +               for (int i =3D 0; i < max_stack_depth; i++) {
+> +                       if (!st->callstack || !st->callstack[i])
+> +                               break;
+> +
+> +                       ip =3D st->callstack[i];
+> +                       sym =3D machine__find_kernel_symbol(con->machine,=
+ ip, &kmap);
+> +                       get_symbol_name_offset(kmap, sym, ip, buf, sizeof=
+(buf));
+> +                       pr_info("%s %#lx %s", i ? ":" : sep, (unsigned lo=
+ng) ip, buf);
+> +               }
+> +               pr_info("\n");
+> +       }
+> +}
+> +
+> +static void print_lock_stat(struct lock_contention *con, struct lock_sta=
+t *st)
+> +{
+> +       if (symbol_conf.field_sep)
+> +               print_lock_stat_csv(con, st, symbol_conf.field_sep);
+> +       else
+> +               print_lock_stat_stdio(con, st);
+> +}
+> +
+> +static void print_footer_stdio(int total, int bad, struct lock_contentio=
+n_fails *fails)
+>  {
+>         /* Output for debug, this have to be removed */
+>         int broken =3D fails->task + fails->stack + fails->time + fails->=
+data;
+>
+> +       if (!use_bpf)
+> +               print_bad_events(bad, total);
+> +
+>         if (quiet || total =3D=3D 0 || (broken =3D=3D 0 && verbose <=3D 0=
+))
+>                 return;
+>
+> @@ -1643,38 +1817,53 @@ static void print_bpf_events(int total, struct lo=
+ck_contention_fails *fails)
+>         pr_info(" %10s: %d\n", "data", fails->data);
+>  }
+>
+> +static void print_footer_csv(int total, int bad, struct lock_contention_=
+fails *fails,
+> +                            const char *sep)
+> +{
+> +       /* Output for debug, this have to be removed */
+> +       if (use_bpf)
+> +               bad =3D fails->task + fails->stack + fails->time + fails-=
+>data;
+> +
+> +       if (quiet || total =3D=3D 0 || (bad =3D=3D 0 && verbose <=3D 0))
+> +               return;
+> +
+> +       total +=3D bad;
+> +       pr_info("# debug: total=3D%d%s bad=3D%d", total, sep, bad);
+> +
+> +       if (use_bpf) {
+> +               pr_info("%s bad_%s=3D%d", sep, "task", fails->task);
+> +               pr_info("%s bad_%s=3D%d", sep, "stack", fails->stack);
+> +               pr_info("%s bad_%s=3D%d", sep, "time", fails->time);
+> +               pr_info("%s bad_%s=3D%d", sep, "data", fails->data);
+> +       } else {
+> +               int i;
+> +               const char *name[4] =3D { "acquire", "acquired", "contend=
+ed", "release" };
+> +
+> +               for (i =3D 0; i < BROKEN_MAX; i++)
+> +                       pr_info("%s bad_%s=3D%d", sep, name[i], bad_hist[=
+i]);
+> +       }
+> +       pr_info("\n");
+> +}
+> +
+> +static void print_footer(int total, int bad, struct lock_contention_fail=
+s *fails)
+> +{
+> +       if (symbol_conf.field_sep)
+> +               print_footer_csv(total, bad, fails, symbol_conf.field_sep=
+);
+> +       else
+> +               print_footer_stdio(total, bad, fails);
+> +}
+> +
+>  static void print_contention_result(struct lock_contention *con)
+>  {
+>         struct lock_stat *st;
+> -       struct lock_key *key;
+>         int bad, total, printed;
+>
+> -       if (!quiet) {
+> -               list_for_each_entry(key, &lock_keys, list)
+> -                       pr_info("%*s ", key->len, key->header);
+> -
+> -               switch (aggr_mode) {
+> -               case LOCK_AGGR_TASK:
+> -                       pr_info("  %10s   %s\n\n", "pid",
+> -                               show_lock_owner ? "owner" : "comm");
+> -                       break;
+> -               case LOCK_AGGR_CALLER:
+> -                       pr_info("  %10s   %s\n\n", "type", "caller");
+> -                       break;
+> -               case LOCK_AGGR_ADDR:
+> -                       pr_info("  %16s   %s\n\n", "address", "symbol");
+> -                       break;
+> -               default:
+> -                       break;
+> -               }
+> -       }
+> +       if (!quiet)
+> +               print_header();
+>
+>         bad =3D total =3D printed =3D 0;
+>
+>         while ((st =3D pop_from_result())) {
+> -               struct thread *t;
+> -               int pid;
+> -
+>                 total +=3D use_bpf ? st->nr_contended : 1;
+>                 if (st->broken)
+>                         bad++;
+> @@ -1682,45 +1871,7 @@ static void print_contention_result(struct lock_co=
+ntention *con)
+>                 if (!st->wait_time_total)
+>                         continue;
+>
+> -               list_for_each_entry(key, &lock_keys, list) {
+> -                       key->print(key, st);
+> -                       pr_info(" ");
+> -               }
+> -
+> -               switch (aggr_mode) {
+> -               case LOCK_AGGR_CALLER:
+> -                       pr_info("  %10s   %s\n", get_type_str(st->flags),=
+ st->name);
+> -                       break;
+> -               case LOCK_AGGR_TASK:
+> -                       pid =3D st->addr;
+> -                       t =3D perf_session__findnew(session, pid);
+> -                       pr_info("  %10d   %s\n",
+> -                               pid, pid =3D=3D -1 ? "Unknown" : thread__=
+comm_str(t));
+> -                       break;
+> -               case LOCK_AGGR_ADDR:
+> -                       pr_info("  %016llx   %s (%s)\n", (unsigned long l=
+ong)st->addr,
+> -                               st->name, get_type_name(st->flags));
+> -                       break;
+> -               default:
+> -                       break;
+> -               }
+> -
+> -               if (aggr_mode =3D=3D LOCK_AGGR_CALLER && verbose > 0) {
+> -                       struct map *kmap;
+> -                       struct symbol *sym;
+> -                       char buf[128];
+> -                       u64 ip;
+> -
+> -                       for (int i =3D 0; i < max_stack_depth; i++) {
+> -                               if (!st->callstack || !st->callstack[i])
+> -                                       break;
+> -
+> -                               ip =3D st->callstack[i];
+> -                               sym =3D machine__find_kernel_symbol(con->=
+machine, ip, &kmap);
+> -                               get_symbol_name_offset(kmap, sym, ip, buf=
+, sizeof(buf));
+> -                               pr_info("\t\t\t%#lx  %s\n", (unsigned lon=
+g)ip, buf);
+> -                       }
+> -               }
+> +               print_lock_stat(con, st);
+>
+>                 if (++printed >=3D print_nr_entries)
+>                         break;
+> @@ -1737,10 +1888,7 @@ static void print_contention_result(struct lock_co=
+ntention *con)
+>         /* some entries are collected but hidden by the callstack filter =
+*/
+>         total +=3D con->nr_filtered;
+>
+> -       if (use_bpf)
+> -               print_bpf_events(total, &con->fails);
+> -       else
+> -               print_bad_events(bad, total);
+> +       print_footer(total, bad, &con->fails);
+>  }
+>
+>  static bool force;
+> @@ -1846,6 +1994,16 @@ static int check_lock_contention_options(const str=
+uct option *options,
+>                 return -1;
+>         }
+>
+> +       if (symbol_conf.field_sep) {
+> +               if (strstr(symbol_conf.field_sep, ":") || /* part of type=
+ flags */
+> +                   strstr(symbol_conf.field_sep, "+") || /* part of call=
+er offset */
+> +                   strstr(symbol_conf.field_sep, ".")) { /* can be in a =
+symbol name */
+> +                       pr_err("Cannot use the separator that is already =
+used\n");
+> +                       parse_options_usage(usage, options, "x", 1);
+> +                       return -1;
+> +               }
+> +       }
+> +
+>         if (show_lock_owner)
+>                 show_thread_stats =3D true;
+>
+> @@ -1963,6 +2121,15 @@ static int __cmd_contention(int argc, const char *=
+*argv)
+>         if (select_key(true))
+>                 goto out_delete;
+>
+> +       if (symbol_conf.field_sep) {
+> +               int i;
+> +               struct lock_key *keys =3D contention_keys;
+> +
+> +               /* do not align output in CSV format */
+> +               for (i =3D 0; keys[i].name; i++)
+> +                       keys[i].len =3D 0;
+> +       }
+> +
+>         if (use_bpf) {
+>                 lock_contention_start();
+>                 if (argc)
+> @@ -2331,6 +2498,8 @@ int cmd_lock(int argc, const char **argv)
+>         OPT_CALLBACK('S', "callstack-filter", NULL, "NAMES",
+>                      "Filter specific function in the callstack", parse_c=
+all_stack),
+>         OPT_BOOLEAN('o', "lock-owner", &show_lock_owner, "show lock owner=
+s instead of waiters"),
+> +       OPT_STRING_NOEMPTY('x', "field-separator", &symbol_conf.field_sep=
+, "separator",
+> +                  "print result in CSV format with custom separator"),
+>         OPT_PARENT(lock_options)
+>         };
+>
+> --
+> 2.41.0.rc0.172.g3f132b7071-goog
+>
