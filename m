@@ -2,171 +2,164 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CC2CEB64D8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 06:56:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA90EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 08:38:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231282AbjFVG4W (ORCPT
+        id S229544AbjFVIiR (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 02:56:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56754 "EHLO
+        Thu, 22 Jun 2023 04:38:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230463AbjFVGzu (ORCPT
+        with ESMTP id S229504AbjFVIiQ (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 02:55:50 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 49FF12119;
-        Wed, 21 Jun 2023 23:55:16 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A1A71063;
-        Wed, 21 Jun 2023 23:55:45 -0700 (PDT)
-Received: from a077893.blr.arm.com (unknown [10.162.40.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A3ACB3F59C;
-        Wed, 21 Jun 2023 23:54:56 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-        Suzuki Poulose <suzuki.poulose@arm.com>,
+        Thu, 22 Jun 2023 04:38:16 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D18A310F4;
+        Thu, 22 Jun 2023 01:38:15 -0700 (PDT)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35M8GtHL017113;
+        Thu, 22 Jun 2023 08:37:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=IdBmjBd+d+wipgVHMjHdZuz/Q2bcPY1vZInPBSwjan8=;
+ b=P4OUVdrGwddumfa3+4B43ZMolycnNWHfHx7EIytH9BLnKT6B6g5LLGwWQ8R2cSrwQqUh
+ aJK5JvIVWUsrtOEU+gm2PDNOhnxduR02tM7A3sIDKxLd3wRf47y023QYm9twuokea0W2
+ I2E2ukG1woZwz5jvMnpvguHVqrM2L7+9gEB/5w3zircvsDdSqFSB4S+Is/qoauR74HpU
+ 2QjZKTQN0XKBVBDo1SVZapcSyOcTZhaOhGB5rnhUSULFNZr2wdaXay6/zqL8UdeKF1UQ
+ A1mZhlXBZRzCDOziiQvMQWKZKAHTXVs6cEf3uCAQ+FUMg1wLeS507Rml2XeJBXtzAt94 gw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rcjb3s4w8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Jun 2023 08:37:48 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35M8HYZS019453;
+        Thu, 22 Jun 2023 08:37:24 GMT
+Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3rcjb3s338-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Jun 2023 08:37:24 +0000
+Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
+        by ppma05fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 35M4l6ju007666;
+        Thu, 22 Jun 2023 08:35:59 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3r94f52h7v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 22 Jun 2023 08:35:59 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 35M8Zv5e46661956
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Jun 2023 08:35:57 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C5AA200B0;
+        Thu, 22 Jun 2023 08:35:57 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C44BE200B1;
+        Thu, 22 Jun 2023 08:35:56 +0000 (GMT)
+Received: from [9.152.212.165] (unknown [9.152.212.165])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 22 Jun 2023 08:35:56 +0000 (GMT)
+Message-ID: <6c6dc916-7a1a-f5da-a975-af2701a6fb65@linux.ibm.com>
+Date:   Thu, 22 Jun 2023 10:35:56 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v1 2/2] perf pmu: Remove a hard coded cpu PMU assumption
+Content-Language: en-US
+To:     Ian Rogers <irogers@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH V13 10/10] arm64/perf: Implement branch records save on PMU IRQ
-Date:   Thu, 22 Jun 2023 12:23:51 +0530
-Message-Id: <20230622065351.1092893-11-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230622065351.1092893-1-anshuman.khandual@arm.com>
-References: <20230622065351.1092893-1-anshuman.khandual@arm.com>
-MIME-Version: 1.0
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Ravi Bangoria <ravi.bangoria@amd.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230622050330.3733114-1-irogers@google.com>
+ <20230622050330.3733114-2-irogers@google.com>
+From:   Thomas Richter <tmricht@linux.ibm.com>
+Organization: IBM
+In-Reply-To: <20230622050330.3733114-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: RRrUpgmXwJzNN0s6u1DMJdTF18OjoytI
+X-Proofpoint-GUID: MaSCIiYK1ZjjD7eZAqQ4kd88rW1m0tPM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-22_05,2023-06-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 phishscore=0 mlxlogscore=999 clxscore=1011 impostorscore=0
+ mlxscore=0 suspectscore=0 spamscore=0 adultscore=0 lowpriorityscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306220070
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-This modifies armv8pmu_branch_read() to concatenate live entries along with
-task context stored entries and then process the resultant buffer to create
-perf branch entry array for perf_sample_data. It follows the same principle
-like task sched out.
+On 6/22/23 07:03, Ian Rogers wrote:
+> The property of "cpu" when it has no cpu map is true on S390 with the
+> PMU cpum_cf. Rather than maintain a list of such PMUs, reuse the
+> is_core test result from the caller.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/pmu.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 963c12f910c5..64fa568a5426 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -551,7 +551,7 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
+>   * Uncore PMUs have a "cpumask" file under sysfs. CPU PMUs (e.g. on arm/arm64)
+>   * may have a "cpus" file.
+>   */
+> -static struct perf_cpu_map *pmu_cpumask(int dirfd, const char *name)
+> +static struct perf_cpu_map *pmu_cpumask(int dirfd, const char *name, bool is_core)
+>  {
+>  	struct perf_cpu_map *cpus;
+>  	const char *templates[] = {
+> @@ -575,7 +575,8 @@ static struct perf_cpu_map *pmu_cpumask(int dirfd, const char *name)
+>  			return cpus;
+>  	}
+>  
+> -	return !strcmp(name, "cpu") ? perf_cpu_map__get(cpu_map__online()) : NULL;
+> +	/* Nothing found, for core PMUs assume this means all CPUs. */
+> +	return is_core ? perf_cpu_map__get(cpu_map__online()) : NULL;
+>  }
+>  
+>  static bool pmu_is_uncore(int dirfd, const char *name)
+> @@ -886,7 +887,8 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+>  	if (!pmu)
+>  		return NULL;
+>  
+> -	pmu->cpus = pmu_cpumask(dirfd, name);
+> +	pmu->is_core = is_pmu_core(name);
+> +	pmu->cpus = pmu_cpumask(dirfd, name, pmu->is_core);
+>  	pmu->name = strdup(name);
+>  	if (!pmu->name)
+>  		goto err;
+> @@ -903,7 +905,6 @@ struct perf_pmu *perf_pmu__lookup(struct list_head *pmus, int dirfd, const char
+>  	}
+>  
+>  	pmu->type = type;
+> -	pmu->is_core = is_pmu_core(name);
+>  	pmu->is_uncore = pmu_is_uncore(dirfd, name);
+>  	if (pmu->is_uncore)
+>  		pmu->id = pmu_id(name);
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Tested-by: James Clark <james.clark@arm.com>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- drivers/perf/arm_brbe.c | 69 +++++++++++++++++++----------------------
- 1 file changed, 32 insertions(+), 37 deletions(-)
+Looks good to me, for both patches:
 
-diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-index 2177632befa6..cb765aaf1b52 100644
---- a/drivers/perf/arm_brbe.c
-+++ b/drivers/perf/arm_brbe.c
-@@ -647,41 +647,44 @@ void armv8pmu_branch_reset(void)
- 	isb();
- }
- 
--static bool capture_branch_entry(struct pmu_hw_events *cpuc,
--				 struct perf_event *event, int idx)
-+static void brbe_regset_branch_entries(struct pmu_hw_events *cpuc, struct perf_event *event,
-+				       struct brbe_regset *regset, int idx)
- {
- 	struct perf_branch_entry *entry = &cpuc->branches->branch_entries[idx];
--	u64 brbinf = get_brbinf_reg(idx);
--
--	/*
--	 * There are no valid entries anymore on the buffer.
--	 * Abort the branch record processing to save some
--	 * cycles and also reduce the capture/process load
--	 * for the user space as well.
--	 */
--	if (brbe_invalid(brbinf))
--		return false;
-+	u64 brbinf = regset[idx].brbinf;
- 
- 	perf_clear_branch_entry_bitfields(entry);
- 	if (brbe_record_is_complete(brbinf)) {
--		entry->from = get_brbsrc_reg(idx);
--		entry->to = get_brbtgt_reg(idx);
-+		entry->from = regset[idx].brbsrc;
-+		entry->to = regset[idx].brbtgt;
- 	} else if (brbe_record_is_source_only(brbinf)) {
--		entry->from = get_brbsrc_reg(idx);
-+		entry->from = regset[idx].brbsrc;
- 		entry->to = 0;
- 	} else if (brbe_record_is_target_only(brbinf)) {
- 		entry->from = 0;
--		entry->to = get_brbtgt_reg(idx);
-+		entry->to = regset[idx].brbtgt;
- 	}
- 	capture_brbe_flags(entry, event, brbinf);
--	return true;
-+}
-+
-+static void process_branch_entries(struct pmu_hw_events *cpuc, struct perf_event *event,
-+				   struct brbe_regset *regset, int nr_regset)
-+{
-+	int idx;
-+
-+	for (idx = 0; idx < nr_regset; idx++)
-+		brbe_regset_branch_entries(cpuc, event, regset, idx);
-+
-+	cpuc->branches->branch_stack.nr = nr_regset;
-+	cpuc->branches->branch_stack.hw_idx = -1ULL;
- }
- 
- void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
- {
--	int nr_hw_entries = brbe_get_numrec(cpuc->percpu_pmu->reg_brbidr);
-+	struct arm64_perf_task_context *task_ctx = event->pmu_ctx->task_ctx_data;
-+	struct brbe_regset live[BRBE_MAX_ENTRIES];
-+	int nr_live, nr_store, nr_hw_entries;
- 	u64 brbfcr, brbcr;
--	int idx = 0;
- 
- 	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
- 	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
-@@ -693,25 +696,17 @@ void armv8pmu_branch_read(struct pmu_hw_events *cpuc, struct perf_event *event)
- 	write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
- 	isb();
- 
--	/* Loop through bank 0 */
--	select_brbe_bank(BRBE_BANK_IDX_0);
--	while (idx < nr_hw_entries && idx <= BRBE_BANK0_IDX_MAX) {
--		if (!capture_branch_entry(cpuc, event, idx))
--			goto skip_bank_1;
--		idx++;
--	}
--
--	/* Loop through bank 1 */
--	select_brbe_bank(BRBE_BANK_IDX_1);
--	while (idx < nr_hw_entries && idx <= BRBE_BANK1_IDX_MAX) {
--		if (!capture_branch_entry(cpuc, event, idx))
--			break;
--		idx++;
-+	nr_hw_entries = brbe_get_numrec(cpuc->percpu_pmu->reg_brbidr);
-+	nr_live = capture_brbe_regset(live, nr_hw_entries);
-+	if (event->ctx->task) {
-+		nr_store = task_ctx->nr_brbe_records;
-+		nr_store = stitch_stored_live_entries(task_ctx->store, live, nr_store,
-+						      nr_live, nr_hw_entries);
-+		process_branch_entries(cpuc, event, task_ctx->store, nr_store);
-+		task_ctx->nr_brbe_records = 0;
-+	} else {
-+		process_branch_entries(cpuc, event, live, nr_live);
- 	}
--
--skip_bank_1:
--	cpuc->branches->branch_stack.nr = idx;
--	cpuc->branches->branch_stack.hw_idx = -1ULL;
- 	process_branch_aborts(cpuc);
- 
- 	/* Unpause the buffer */
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
 -- 
-2.25.1
+Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
+--
+Vorsitzender des Aufsichtsrats: Gregor Pillen
+Geschäftsführung: David Faller
+Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
 
