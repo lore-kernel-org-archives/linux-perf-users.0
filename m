@@ -2,139 +2,151 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0B3EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 21:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A37EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 22:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229978AbjFVVtV convert rfc822-to-8bit (ORCPT
+        id S229643AbjFVWFO (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 17:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43414 "EHLO
+        Thu, 22 Jun 2023 18:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229972AbjFVVtU (ORCPT
+        with ESMTP id S229564AbjFVWFN (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 17:49:20 -0400
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BAC61FEF;
-        Thu, 22 Jun 2023 14:49:19 -0700 (PDT)
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-bc40d4145feso7106322276.1;
-        Thu, 22 Jun 2023 14:49:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687470559; x=1690062559;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q3O7vHNH1CH0WOmympzRGlXkSOKdbKkxR1VXAbXylCc=;
-        b=fIm/pUDgNKZEG+YMoJ6i/f+tHN9R/2A0/3ig7+p/PBh1cxgJF6ocy8qU+bmKWZxE8k
-         OSU9YxutFq2vTTC81WSyYtYchT7o3apJAkBy/txvObS53XXO8y0Qln+1uAfaH6rM2vNO
-         PRfdXt4HQb4tcVUZk1jDCjPpUEy5rzl1klaFTgNwUOfWLKf0TpxAZpmbzb6fod9IDwY2
-         5/OcA6P+AIuhJTpQ8uKe4ECyRqocOti2anKnExQHMiaVIIkybzUBaiC3dtN8vLyFnwrN
-         k2uiRi0vvvwQV+DD3zAxqdELdRe5ETZQ78cT2dUMhcsDKXYHLw2WQXfOQkkaksE115M/
-         fXXg==
-X-Gm-Message-State: AC+VfDxotFkA98IGqTVferCFMclkxbOlP6/9hzHCDzCUriSKuolUknDB
-        gInbrzmI3zGcFlk7QIlEmqN2kb78jtOZ1xXZrrU=
-X-Google-Smtp-Source: ACHHUZ4AzIou+U/Upi4lRxNM9TxiX8CgxmWd9MaK+LjRwNUoCPoVXK/JO1xVK+HrsxHUcUZPJxddrl0y9OOR+B91nyM=
-X-Received: by 2002:a25:ab52:0:b0:ba5:ee5a:f41c with SMTP id
- u76-20020a25ab52000000b00ba5ee5af41cmr16292593ybi.1.1687470558611; Thu, 22
- Jun 2023 14:49:18 -0700 (PDT)
+        Thu, 22 Jun 2023 18:05:13 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7DBF1BE1;
+        Thu, 22 Jun 2023 15:05:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+ s=s31663417; t=1687471481; x=1688076281; i=georgmueller@gmx.net;
+ bh=Duee4IHsvqsOZrFYxTThyaj1WAdJHZ0zDPuyT5Olkbw=;
+ h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+ b=EKAcIDj3DALBZ6ughPPBIgctYVu3rqtN9xDZc5c39CQZ3Q6PlZv7diyWWKQn2qJhOe/zmvF
+ d4E5uu1q4og+iJ+7Uxj10fQCogczGmoAbul6oahYM4AAIG/qM1ONh93H3UKc1dWdwW/VhtD8B
+ k/HYgHKX55v3eGVLfRWV1LJJQAWrFfXaRRIqolkQ0nl1FH1+d9y16WKROvQ+C2RLVYf9T+X2O
+ gHxVhHIptb3YPpLFcSgF/55wgMQZvrOjOjydofnzq++n/DL3QhwgP7CQ5S15w5n6kVm8PPQs8
+ XaizzTgbxkgWouSc5c5k7UiXPeUyXycQGYR9/FoZSsS0WoLL1dFA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.15.55] ([109.104.53.29]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N8obG-1pyYFq3UZS-015n5L; Fri, 23
+ Jun 2023 00:04:40 +0200
+Message-ID: <ae2b7129-a651-1066-0400-d16998ca250d@gmx.net>
+Date:   Fri, 23 Jun 2023 00:04:38 +0200
 MIME-Version: 1.0
-References: <20230622050330.3733114-1-irogers@google.com>
-In-Reply-To: <20230622050330.3733114-1-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 22 Jun 2023 14:49:06 -0700
-Message-ID: <CAM9d7cjWYG4NgMPFUVC0q-u0GGekrvqpw8jU2o4KfiWqFC8x6g@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf pmus: Add notion of default PMU for JSON events
-To:     Ian Rogers <irogers@google.com>
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH] perf probe: read DWARF files from the correct CU
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        James Clark <james.clark@arm.com>,
-        Ravi Bangoria <ravi.bangoria@amd.com>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     regressions@lists.linux.dev,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+References: <20230615200147.664346-3-georgmueller@gmx.net>
+From:   =?UTF-8?Q?Georg_M=c3=bcller?= <georgmueller@gmx.net>
+In-Reply-To: <20230615200147.664346-3-georgmueller@gmx.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:CGzNQA5VKVg8/XNmIu8EvM5cgqaAQMV8CHz0wbKjkk2KM5vx08Z
+ gwpdv+WpRTMxgAXYJNWOsJgUPNgpn6rOzaXctEj7sEZCuus3yOuaN/zivjcRHB2RpB8F9/h
+ ZAtbHzfDv6MGtvs0Z4IPexWrE5+X18flr2+cY2g+6a2HaJqbqcnNoGwne3RW1dvHl3+c6Lo
+ tPX11XlrimG9eO7PXUyJA==
+UI-OutboundReport: notjunk:1;M01:P0:pt4aDP4iPyE=;k666ZWdw+6F94Sr4d3fbsbj/jee
+ WlfQHA5S9WU/ymkmaGWXMO4b+Xe4bh7+x61dgl3jPdD+L3oRmGZbRpRx68/+EjudNOGV5t7Hv
+ JaBvRrEoXL/HZcSVKl598ChkYwfUwa2H/PkDXVwVQHaCr8IEekLMrIh+5bJTxe18QcH0krenW
+ UNidUmFpOyivLfC5KSqsnjGJLheV6haiI1p7eYR/UjB/gFOufG1bJxUxe9tUJoDzmI1Oo6jZ1
+ FL6fN1+rcNRe3izOXP952WdwsJOqHtBlPOK45AFFk+dlFuBfudTa+1TVBAP4TOUoRWCIgoNCH
+ pmn2ful/Sqm3oWk72BOLWBLWiJkDvYQhDyAfusbWyY8Osrzl/y6HMND17t/gSWBZUrZp3R5NI
+ ubPJmLZlquKjoDvfKSaQIz53VSy64NkDNrZ/YNIFcqKpsXQWRkTybgwRAw2l/Rt/F8cfsTsDZ
+ Z2xOLXIs4I7MzI3h/+ak18GZ9iuQwBcXIqbwQCdnWGGC/8Ndi+BLZI2YGjRgYrDF5FQkydJ9j
+ nHzhkbyxroWFIR1NrxjX1guLbh8DVetFtoYzA1Ckvs4rVZ4QlyIaHcPTK159bO3qpVqZNBZ7T
+ T7zLgVVgk9AtgtnMBpl9BYd1CEqCGtN2Uo9m56kqsYOtmaxudwq0tzoAEFvkle9W8VxHGk46D
+ stwyYDXjQjpbUM3Qmd/JAD8oDt9j1OR2Xcl21wBkRcaVFXOKPWtDpSFWB3FHUBYPmBoHm582U
+ dMfSK8aJiiZUJI/iUpNzOLK9phq9ElWDkKUssDeIJkKSnbsklf1j4Q0JQZcH4bUUuvOktrXxq
+ JcTwnSAO4tzdVainsMt3KdlEnHXzWskoOkb7UuJvq1WsQFCLFgUwikEet1EoJhAnGs7+Ufii/
+ KxsW/KF3iz2Fwvool7n1JuE6RzApD0UcGsJ1hVk/SbSsPwZWunLfNFCyfxwia8IsI3oh2P0gg
+ X+SOg0i4uT/ZU/a2khkjbBqNsYE=
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 10:03 PM Ian Rogers <irogers@google.com> wrote:
+
+Hi,
+
+Am 15.06.23 um 22:01 schrieb Georg M=C3=BCller:
+> After switching from dwarf_decl_file() to die_get_decl_file(), it is not
+> possible to add probes for certain functions of certain binaries:
 >
-> JSON events created in pmu-events.c by jevents.py may not specify a
-> PMU they are associated with, in which case it is implied that it is
-> the first core PMU. Care is needed to select this for regular 'cpu',
-> s390 'cpum_cf' and ARMs many names as at the point the name is first
-> needed the core PMUs list hasn't been initialized. Add a helper in
-> perf_pmus to create this value, in the worst case by scanning sysfs.
+>   $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+>   A function DIE doesn't have decl_line. Maybe broken DWARF?
+>   A function DIE doesn't have decl_line. Maybe broken DWARF?
+>   Probe point 'match_unit_removed' not found.
+>      Error: Failed to add events.
 >
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> The problem is that die_get_decl_file() uses the wrong CU to search for
+> the file. elfutils commit e1db5cdc9f has some good explanation for this:
+>
+>      dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_fil=
+e
+>      attribute. This means the attribute might come from a different DIE
+>      in a different CU. If so, we need to use the CU associated with the
+>      attribute, not the original DIE, to resolve the file name.
+>
+> This patch uses the same source of information as elfutils: use attribut=
+e
+> DW_AT_decl_file and use this CU to search for the file.
+>
+> Fixes: dc9a5d2ccd5c ("perf probe: Fix to get declared file name from cla=
+ng DWARF5")
+> Signed-off-by: Georg M=C3=BCller <georgmueller@gmx.net>
+> Link: https://lore.kernel.org/r/5a00d5a5-7be7-ef8a-4044-9a16249fff25@gmx=
+.net/
 > ---
-
-[SNIP]
-> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> index d891d72c824e..80797e1b862f 100644
-> --- a/tools/perf/util/pmus.c
-> +++ b/tools/perf/util/pmus.c
-> @@ -524,6 +524,37 @@ bool perf_pmus__supports_extended_type(void)
->         return perf_pmus__do_support_extended_type;
->  }
+>   tools/perf/util/dwarf-aux.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> +char *perf_pmus__default_pmu_name(void)
-> +{
-> +       int fd;
-> +       DIR *dir;
-> +       struct dirent *dent;
-> +       char *result = NULL;
-> +
-> +       if (!list_empty(&core_pmus))
-> +               return strdup(list_first_entry(&core_pmus, struct perf_pmu, list)->name);
-> +
-> +       fd = perf_pmu__event_source_devices_fd();
-> +       if (fd < 0)
-> +               return strdup("cpu");
-> +
-> +       dir = fdopendir(fd);
-> +       if (!dir)
-> +               return strdup("cpu");
-
-close(fd) ?
-
-Thanks,
-Namhyung
-
-
-> +
-> +       while ((dent = readdir(dir))) {
-> +               if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, ".."))
-> +                       continue;
-> +               if (is_pmu_core(dent->d_name)) {
-> +                       result = strdup(dent->d_name);
-> +                       break;
-> +               }
-> +       }
-> +
-> +       closedir(dir);
-> +       return result ?: strdup("cpu");
-> +}
-> +
->  struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
->  {
->         struct perf_pmu *pmu = evsel->pmu;
-> diff --git a/tools/perf/util/pmus.h b/tools/perf/util/pmus.h
-> index d02ffea5d3a4..a21464432d0f 100644
-> --- a/tools/perf/util/pmus.h
-> +++ b/tools/perf/util/pmus.h
-> @@ -20,5 +20,6 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
->  bool perf_pmus__have_event(const char *pname, const char *name);
->  int perf_pmus__num_core_pmus(void);
->  bool perf_pmus__supports_extended_type(void);
-> +char *perf_pmus__default_pmu_name(void);
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index b07414409771..137b3ed9897b 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -478,8 +478,10 @@ static const char *die_get_file_name(Dwarf_Die *dw_=
+die, int idx)
+>   {
+>   	Dwarf_Die cu_die;
+>   	Dwarf_Files *files;
+> +	Dwarf_Attribute attr_mem;
 >
->  #endif /* __PMUS_H */
+> -	if (idx < 0 || !dwarf_diecu(dw_die, &cu_die, NULL, NULL) ||
+> +	if (idx < 0 || !dwarf_attr_integrate(dw_die, DW_AT_decl_file, &attr_me=
+m) ||
+> +	    !dwarf_cu_die(attr_mem.cu, &cu_die, NULL, NULL, NULL, NULL, NULL, =
+NULL) ||
+>   	    dwarf_getsrcfiles(&cu_die, &files, NULL) !=3D 0)
+>   		return NULL;
+>
 > --
-> 2.41.0.162.gfafddb0af9-goog
+> 2.41.0
 >
+
+
+Just a question regarding the patch:
+Should I also add a testcase to show the issue or is this enough? It can b=
+e
+reproduced quite simple with two .c files and one .h file, the same test a=
+s the
+one added in elfutils with commit e1db5cdc9f, compiled with the same three=
+ steps
+as in the comment of the shell script, but without "-flto":
+
+https://sourceware.org/git/?p=3Delfutils.git;a=3Dcommitdiff;h=3De1db5cdc9f=
+230f8de4df1a0f38dca69b283ee57a
+
+Best regards,
+Georg
