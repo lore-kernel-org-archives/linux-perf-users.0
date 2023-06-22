@@ -2,53 +2,50 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F0FAEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 01:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E18EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 02:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229544AbjFVBws (ORCPT
+        id S229854AbjFVCHy (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Wed, 21 Jun 2023 21:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57566 "EHLO
+        Wed, 21 Jun 2023 22:07:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230131AbjFVBwr (ORCPT
+        with ESMTP id S230308AbjFVCHw (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Wed, 21 Jun 2023 21:52:47 -0400
+        Wed, 21 Jun 2023 22:07:52 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2C64F1728;
-        Wed, 21 Jun 2023 18:52:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CD9471BFF;
+        Wed, 21 Jun 2023 19:07:42 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9257A1063;
-        Wed, 21 Jun 2023 18:53:29 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 694EE1063;
+        Wed, 21 Jun 2023 19:08:26 -0700 (PDT)
 Received: from [10.162.40.20] (unknown [10.162.40.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 491493F64C;
-        Wed, 21 Jun 2023 18:52:40 -0700 (PDT)
-Message-ID: <6302d09f-0332-b8dc-cb91-8958a9bb9713@arm.com>
-Date:   Thu, 22 Jun 2023 07:22:37 +0530
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 356A33F64C;
+        Wed, 21 Jun 2023 19:07:37 -0700 (PDT)
+Message-ID: <4dc97e9f-e103-9120-373d-8f4f472e8332@arm.com>
+Date:   Thu, 22 Jun 2023 07:37:35 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH V12 05/10] arm64/perf: Add branch stack support in ARMV8
- PMU
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        kernel test robot <lkp@intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, mark.rutland@arm.com, llvm@lists.linux.dev,
-        oe-kbuild-all@lists.linux.dev, Mark Brown <broonie@kernel.org>,
+Subject: Re: [PATCH V12 08/10] arm64/perf: Add struct brbe_regset helper
+ functions
+Content-Language: en-US
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, catalin.marinas@arm.com,
+        Mark Brown <broonie@kernel.org>,
         James Clark <james.clark@arm.com>,
-        Rob Herring <robh@kernel.org>,
+        Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
         Suzuki Poulose <suzuki.poulose@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-perf-users@vger.kernel.org
-References: <20230615133239.442736-6-anshuman.khandual@arm.com>
- <202306160706.Uei5XDoi-lkp@intel.com>
- <883f2a20-fe20-4d43-86cf-7847d59e2169@arm.com> <ZIwpma4SAJ/ZUyh5@arm.com>
- <f624966d-5973-0aed-bd73-29ef0530e5ce@arm.com> <87wmzzq0p4.wl-maz@kernel.org>
-Content-Language: en-US
+References: <20230615133239.442736-1-anshuman.khandual@arm.com>
+ <20230615133239.442736-9-anshuman.khandual@arm.com>
+ <ZJL346ZgQRcHNA7E@FVFF77S0Q05N>
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <87wmzzq0p4.wl-maz@kernel.org>
+In-Reply-To: <ZJL346ZgQRcHNA7E@FVFF77S0Q05N>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -57,119 +54,88 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 
 
 
-On 6/19/23 14:38, Marc Zyngier wrote:
-> On Mon, 19 Jun 2023 06:45:07 +0100,
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+On 6/21/23 18:45, Mark Rutland wrote:
+> Hi Anshuman,
+> 
+> Thanks, this is looking much better; I just a have a couple of minor comments.
+> 
+> With those fixed up:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> 
+> Mark.
+> 
+> On Thu, Jun 15, 2023 at 07:02:37PM +0530, Anshuman Khandual wrote:
+>> The primary abstraction level for fetching branch records from BRBE HW has
+>> been changed as 'struct brbe_regset', which contains storage for all three
+>> BRBE registers i.e BRBSRC, BRBTGT, BRBINF. Whether branch record processing
+>> happens in the task sched out path, or in the PMU IRQ handling path, these
+>> registers need to be extracted from the HW. Afterwards both live and stored
+>> sets need to be stitched together to create final branch records set. This
+>> adds required helper functions for such operations.
 >>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Tested-by: James Clark <james.clark@arm.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  drivers/perf/arm_brbe.c | 127 ++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 127 insertions(+)
 >>
->>
->> On 6/16/23 14:51, Catalin Marinas wrote:
->>> On Fri, Jun 16, 2023 at 06:57:52AM +0530, Anshuman Khandual wrote:
->>>> On 6/16/23 05:12, kernel test robot wrote:
->>>>> kernel test robot noticed the following build errors:
->>>>>
->>>>> [auto build test ERROR on arm64/for-next/core]
->>>>> [also build test ERROR on tip/perf/core acme/perf/core linus/master v6.4-rc6 next-20230615]
->>>>> [If your patch is applied to the wrong git tree, kindly drop us a note.
->>>>> And when submitting patch, we suggest to use '--base' as documented in
->>>>> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->>>>>
->>>>> url:    https://github.com/intel-lab-lkp/linux/commits/Anshuman-Khandual/drivers-perf-arm_pmu-Add-new-sched_task-callback/20230615-223352
->>>>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-next/core
->>>>> patch link:    https://lore.kernel.org/r/20230615133239.442736-6-anshuman.khandual%40arm.com
->>>>> patch subject: [PATCH V12 05/10] arm64/perf: Add branch stack support in ARMV8 PMU
->>>>> config: arm-randconfig-r004-20230615 (https://download.01.org/0day-ci/archive/20230616/202306160706.Uei5XDoi-lkp@intel.com/config)
->>>>> compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
->>>>> reproduce (this is a W=1 build):
->>>>>         mkdir -p ~/bin
->>>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>>>>         chmod +x ~/bin/make.cross
->>>>>         # install arm cross compiling tool for clang build
->>>>>         # apt-get install binutils-arm-linux-gnueabi
->>>>>         git remote add arm64 https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
->>>>>         git fetch arm64 for-next/core
->>>>>         git checkout arm64/for-next/core
->>>>>         b4 shazam https://lore.kernel.org/r/20230615133239.442736-6-anshuman.khandual@arm.com
->>>>>         # save the config file
->>>>>         mkdir build_dir && cp config build_dir/.config
->>>>>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=arm olddefconfig
->>>>>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/perf/
->>>>
->>>> I am unable to reproduce this on mainline 6.4-rc6 via default cross compiler
->>>> on a W=1 build. Looking at all other problems reported on the file, it seems
->>>> something is not right here. Reported build problems around these callbacks,
->>>> i.e armv8pmu_branch_XXXX() do not make sense as they are available via config
->>>> CONFIG_PERF_EVENTS which is also enabled along with CONFIG_ARM_PMUV3 in this
->>>> test config.
->>>
->>> Have you tried applying this series on top of the arm64 for-next/core
->>> branch? That's what the robot it testing (in the absence of a --base
->>> option when generating the patches).
->>
->> Right, it turned out to be a build problem on arm (32 bit) platform instead.
->> After arm_pmuv3.c moved into common ./drivers/perf from ./arch/arm64/kernel/,
->> it can no longer access arch/arm64/include/asm/perf_event.h defined functions
->> without breaking arm (32) bit. The following code block needs to be moved out
->> from arch/arm64/include/asm/perf_event.h into include/linux/perf/arm_pmuv3.h
->> (which is preferred as all call sites are inside drivers/perf/arm_pmuv3.c) or
->> may be arm_pmu.h (which is one step higher in the abstraction).
+>> diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+>> index 4729cb49282b..f6693699fade 100644
+>> --- a/drivers/perf/arm_brbe.c
+>> +++ b/drivers/perf/arm_brbe.c
+>> @@ -44,6 +44,133 @@ static void select_brbe_bank(int bank)
+>>  	isb();
+>>  }
+>>  
+>> +static bool __read_brbe_regset(struct brbe_regset *entry, int idx)
+>> +{
+>> +	entry->brbinf = get_brbinf_reg(idx);
+>> +
+>> +	/*
+>> +	 * There are no valid entries anymore on the buffer.
+>> +	 * Abort the branch record processing to save some
+>> +	 * cycles and also reduce the capture/process load
+>> +	 * for the user space as well.
+>> +	 */
 > 
-> No, that's the wrong approach. The 32bit backend must have its own
-> stubs for the stuff it implements or not.
+> This comment refers to the process of handling multiple entries, though it's
+> only handling one entry, and I don't think we need to mention saving cycles here.
+> 
+> Could we please delete this comment entirely? The comment above
+> capture_brbe_regset() already explains that we read until the first invalid
+> entry.
 
-Okay.
-
+Sure, will drop the comment.
 
 > 
-> Just add something like the patch below, and please *test* that a
-> 32bit VM using PMUv3 doesn't have any regression.
-
-Sure.
-
+>> +	if (brbe_invalid(entry->brbinf))
+>> +		return false;
+>> +
+>> +	entry->brbsrc = get_brbsrc_reg(idx);
+>> +	entry->brbtgt = get_brbtgt_reg(idx);
+>> +	return true;
+>> +}
+>> +
+>> +/*
+>> + * This scans over BRBE register banks and captures individual branch records
+>> + * [BRBSRC, BRBTGT, BRBINF] into a pre-allocated 'struct brbe_regset' buffer,
+>> + * until an invalid one gets encountered. The caller for this function needs
+>> + * to ensure BRBE is an appropriate state before the records can be captured.
+>> + */
 > 
-> Thanks,
+> Could we simplify this to:
 > 
-> 	M.
-> 
->>From 017362ca518e6d6ac3262514d1f7f27e73232799 Mon Sep 17 00:00:00 2001
-> From: Marc Zyngier <maz@kernel.org>
-> Date: Mon, 19 Jun 2023 10:05:52 +0100
-> Subject: [PATCH] 32bit hack
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->  arch/arm/include/asm/arm_pmuv3.h | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/arm_pmuv3.h
-> index f4db3e75d75f..c4bcb7a18267 100644
-> --- a/arch/arm/include/asm/arm_pmuv3.h
-> +++ b/arch/arm/include/asm/arm_pmuv3.h
-> @@ -244,4 +244,22 @@ static inline bool is_pmuv3p5(int pmuver)
->  	return pmuver >= ARMV8_PMU_DFR_VER_V3P5;
->  }
->  
-> +/* BRBE stubs */
+> /*
+>  * Read all BRBE entries in HW until the first invalid entry.
+>  *
+>  * The caller must ensure that the BRBE is not concurrently modifying these
+>  * entries.
+>  */
 
-These stubs also need to be wrapped around with #ifdef CONFIG_PERF_EVENTS
-
-> +static inline void armv8pmu_branch_enable(struct perf_event *event) { }
-> +static inline void armv8pmu_branch_disable(struct perf_event *event) { }
-> +static inline void armv8pmu_branch_read(struct pmu_hw_events * cpuc,
-> +					struct perf_event *event) { }
-> +static inline void armv8pmu_branch_save(struct arm_pmu *armpmu, void *ctx) {}
-> +static inline void armv8pmu_branch_reset(void) {}
-> +static inline bool armv8pmu_branch_attr_valid(struct perf_event *event)
-> +{
-> +	return false;
-> +}
-> +static inline void armv8pmu_branch_probe(struct arm_pmu *armpmu) {}
-> +static inline int armv8pmu_task_ctx_cache_alloc(struct arm_pmu *armpmu)
-> +{
-> +	return 0;
-> +}
-> +static inline void armv8pmu_task_ctx_cache_free(struct arm_pmu *armpmu) {}
-> +
->  #endif
-
-Sure, will make all the necessary changes.
+Okay, will change the comment as suggested.
