@@ -2,120 +2,126 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1B1EB64D8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 05:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422D2EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 05:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230163AbjFVFLC (ORCPT
+        id S230229AbjFVFV1 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 01:11:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52010 "EHLO
+        Thu, 22 Jun 2023 01:21:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230295AbjFVFKk (ORCPT
+        with ESMTP id S229921AbjFVFV0 (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 01:10:40 -0400
-Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79D3F1BCA
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 22:10:33 -0700 (PDT)
-Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-56942442eb0so82425937b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 22:10:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687410632; x=1690002632;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Iwkvo3drwBmCh3irzLZqUQdw68f0F8NzA1rA0HnILRE=;
-        b=DhKdtVPrmYHxiqjIKCbVGRxMjbXrvSQn+TCrG60I5aPx7c7YMFttQxbOAnjuiNvSKt
-         ZBZ64IyZ6mpIB4RKj4p4a89tn8PJjxXPagqSybROjPUgGS0esLOwOEWVfi3U41BZrUKg
-         Pr0ZYPWUaLrEeNgzVXC6UNOtI8+cFJKyDveKgVvWtzn4RxbD+CF1FbKnoaa58+ROWh5L
-         InT4O4Bzo/yyWR3xkWxHPIoW/V3Jthf6X6MVMpCrFl8rTr/mtKpGB1bQvA7GIbYr1b8q
-         B6eVEqekcxhU4dSVNyP3JbV8XRuhEhyfgwc6OEFURVr9h49gl+/Bh0Peos6QsbUGeJbs
-         ov5Q==
+        Thu, 22 Jun 2023 01:21:26 -0400
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A90EE9;
+        Wed, 21 Jun 2023 22:21:24 -0700 (PDT)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-570282233ceso59821637b3.1;
+        Wed, 21 Jun 2023 22:21:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687410632; x=1690002632;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Iwkvo3drwBmCh3irzLZqUQdw68f0F8NzA1rA0HnILRE=;
-        b=UqukwD5qsS+38dbZYL4fjJFE1Aq5exwRRCfCmqgItvL1yD6VMP5Kq4PDK+nxIZFBnZ
-         uWRDMfC6mlGaPtvZMorcGPg/+OkMB5dAnC9uDvqbDhQxK+ok7k0rTeaFlpvd4mJ2agVG
-         P2OvivIa/iqLZZ2OinSvEf3rHtktrPZtaXqnrEdk5JIyzzszfNeb8lEOPFaF6/6deZ3F
-         uPsWUV4rlgTp2zdRtY7Tl0oaD9df0pRfGjy6V8ypcElj9Z5nV3E9CnxZ6GPDd9TRgsOW
-         uqLjBON3fcQhlj0hLgsSjPBhRETvxxeB3LxXMMWjtizjWQte5nPcq37SzfbBUIlBn4mt
-         6A/Q==
-X-Gm-Message-State: AC+VfDxE+kqp4yUd6lH1lqf0rgSFqviMtITYPy4x39igB6l3FuLHVPz8
-        OqrSmPjiOtO8kBFHrLX6ElO0bX3f9ZAO
-X-Google-Smtp-Source: ACHHUZ5T7atXtGkQMSxCdZ4xuhdT4/Ifw+IX69REESlIEt/eN1LK8ciV7SNPoINgMMdPTtphocXQrxUgq6WM
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:91f3:1da5:6427:50d6])
- (user=irogers job=sendgmr) by 2002:a05:690c:70e:b0:573:4ed9:c69a with SMTP id
- bs14-20020a05690c070e00b005734ed9c69amr3818009ywb.10.1687410632774; Wed, 21
- Jun 2023 22:10:32 -0700 (PDT)
-Date:   Wed, 21 Jun 2023 22:10:29 -0700
-Message-Id: <20230622051029.3733815-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Subject: [PATCH v1 1/1] perf unwind: Fix map reference counts
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
+        d=1e100.net; s=20221208; t=1687411283; x=1690003283;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rR044SSxl+eWg+1CcC42Rlvbeb6U3eDYtmxpB+2refo=;
+        b=Vz/ss28OWVFefWWyZy9KFIXb8GtIkSr5BByeyTImni5Wk2G0kq/9PvtTOz//dDm1Pg
+         kT2rCVJago1CqTaY+nKf8ey7ae3kW0UgPY25otg2FkoIa+Y33c3tWX9k1OLwFXoTv0ce
+         p28uIZ0wZmSa8o1q36OAN0s/YwkRwuGKJR/Kv4LpIM8elLpdFldXbM86bPYJLQbaZrxR
+         IoVLdqPMS8HT/ZwQCRko2vk2fYTsFCnHXuv9ZeQkSKf8x6IutaDOj9aSBxsOu825t8Hy
+         pehVDGuim/+ZxBpMUXQ1RcRuz+iB2sOlYxM/UFZO9gwEfeLc2DiLhxcQucfueR0jQHES
+         gguA==
+X-Gm-Message-State: AC+VfDw5v7I0HwMnCQd/lNKlwVjBpX/Xuy/rEahGbRfw6jm8btMmvoPi
+        PiMK8cIl664He+eMBDclUbCCOsN/LTQIZRxdbP0=
+X-Google-Smtp-Source: ACHHUZ6bk0+MENj7s8Ifi8SwBQnayePFnImewkbVOuCy/I88WBv01pXwvMgVrR5yp/wF8yWxTOI55WUoNtruvrJ943s=
+X-Received: by 2002:a25:df48:0:b0:be6:2ac8:f84b with SMTP id
+ w69-20020a25df48000000b00be62ac8f84bmr10889261ybg.44.1687411283451; Wed, 21
+ Jun 2023 22:21:23 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230621063749.3358430-1-irogers@google.com> <CAM9d7cg-r7Nw807egNFVRBgEXwgBV=A2pVEb+MBS4gvFgnNynQ@mail.gmail.com>
+ <CAP-5=fVBbXoGuNeaYADA1RgY4wfSN8CgAJVEBjmOQGZ=-OiOAQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fVBbXoGuNeaYADA1RgY4wfSN8CgAJVEBjmOQGZ=-OiOAQ@mail.gmail.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 21 Jun 2023 22:21:12 -0700
+Message-ID: <CAM9d7cixNAgxU58YNLHOpdZzDqk1t_ypOCQKEyo8+chFHd1HrQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf symbol: Remove symbol_name_rb_node
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Carsten Haitzler <carsten.haitzler@arm.com>,
+        Changbin Du <changbin.du@huawei.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jason Wang <wangborong@cdjrlc.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The result of thread__find_map is the map in the passed in
-addr_location. Calling addr_location__exit puts that map and so copies
-need to do a map__get. Add in the corresponding map__puts.
+On Wed, Jun 21, 2023 at 9:28 PM Ian Rogers <irogers@google.com> wrote:
+>
+> On Wed, Jun 21, 2023 at 8:51 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Tue, Jun 20, 2023 at 11:37 PM Ian Rogers <irogers@google.com> wrote:
+> > >
+> > > Most perf commands want to sort symbols by name and this is done via
+> > > an invasive rbtree that on 64-bit systems costs 24 bytes. Sorting the
+> > > symbols in a DSO by name is optional and not done by default, however,
+> > > if sorting is requested the 24 bytes is allocated for every
+> > > symbol.
+> > >
+> > > This change removes the rbtree and uses a sorted array of symbol
+> > > pointers instead (costing 8 bytes per symbol). As the array is created
+> > > on demand then there are further memory savings. The complexity of
+> > > sorting the array and using the rbtree are the same.
+> > >
+> > > To support going to the next symbol, the index of the current symbol
+> > > needs to be passed around as a pair with the current symbol. This
+> > > requires some API changes.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > >
+> > > v2. map__find_symbol_by_name_idx so that map__find_symbol_by_name
+> > >     doesn't need an optional parameter. Separate out
+> > >     symbol_conf.sort_by_name removal.
+> > > ---
+> >
+> > [SNIP]
+> > >  void dso__sort_by_name(struct dso *dso)
+> > >  {
+> > > -       dso__set_sorted_by_name(dso);
+> > > -       return symbols__sort_by_name(&dso->symbol_names, &dso->symbols);
+> > > +       mutex_lock(&dso->lock);
+> > > +       if (!dso__sorted_by_name(dso)) {
+> > > +               size_t len;
+> > > +
+> > > +               dso->symbol_names = symbols__sort_by_name(&dso->symbols, &len);
+> > > +               if (dso->symbol_names) {
+> > > +                       dso->symbol_names_len = len;
+> > > +                       dso__set_sorted_by_name(dso);
+> > > +               }
+> > > +       }
+> > > +       mutex_unlock(&dso->lock);
+> >
+> > I think this part deserves a separate commit.
+>
+> Using the mutex or the use of sorted_by_name?
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/unwind-libunwind-local.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+For the mutex originally, but might be better to split further. :)
 
-diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-index 36bf5100bad2..9cb82d7c7dc7 100644
---- a/tools/perf/util/unwind-libunwind-local.c
-+++ b/tools/perf/util/unwind-libunwind-local.c
-@@ -419,7 +419,8 @@ static struct map *find_map(unw_word_t ip, struct unwind_info *ui)
- 	struct map *ret;
- 
- 	addr_location__init(&al);
--	ret = thread__find_map(ui->thread, PERF_RECORD_MISC_USER, ip, &al);
-+	thread__find_map(ui->thread, PERF_RECORD_MISC_USER, ip, &al);
-+	ret = map__get(al.map);
- 	addr_location__exit(&al);
- 	return ret;
- }
-@@ -476,11 +477,11 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
- 
- 		memset(&di, 0, sizeof(di));
- 		if (dwarf_find_debug_frame(0, &di, ip, base, symfile, start, map__end(map)))
--			return dwarf_search_unwind_table(as, ip, &di, pi,
--							 need_unwind_info, arg);
-+			ret = dwarf_search_unwind_table(as, ip, &di, pi,
-+							need_unwind_info, arg);
- 	}
- #endif
--
-+	map__put(map);
- 	return ret;
- }
- 
-@@ -539,7 +540,7 @@ static int access_dso_mem(struct unwind_info *ui, unw_word_t addr,
- 
- 	size = dso__data_read_addr(dso, map, ui->machine,
- 				   addr, (u8 *) data, sizeof(*data));
--
-+	map__put(map);
- 	return !(size == sizeof(*data));
- }
- 
--- 
-2.41.0.162.gfafddb0af9-goog
+And now it grabs the mutex unconditionally, I think
+we can check the condition without the mutex first
+and again with the mutex if not sorted.
 
+Thanks,
+Namhyung
