@@ -2,108 +2,130 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0F6EB64D8
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 05:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82FB1EB64D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 06:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229874AbjFVF6i (ORCPT
+        id S229966AbjFVGKz (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 01:58:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37746 "EHLO
+        Thu, 22 Jun 2023 02:10:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229776AbjFVF6h (ORCPT
+        with ESMTP id S229866AbjFVGKy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 01:58:37 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BD92EA;
-        Wed, 21 Jun 2023 22:58:36 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-341c81d71f6so29579425ab.0;
-        Wed, 21 Jun 2023 22:58:36 -0700 (PDT)
+        Thu, 22 Jun 2023 02:10:54 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2982EEA
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 23:10:53 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-40079b6fc56so106311cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Jun 2023 23:10:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687413515; x=1690005515;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=6LgDdsVWxwuIcdGWkXM+//E7h6q+sL/ftkkHRO/sno0=;
-        b=d5XoRu21YNy2Tz7y9D8qfodXjHbHjPINszK1ZfNE0peIL9eYeTiIbubpZ56jtzGw3T
-         +Hty8mSDnuslgGvyVH32WLlQ/F7daHeVADWwvEB+LO5DLWeJERZVY0h/Jku8eARL2hdz
-         nb1UXVqbl7qoRhJW076ed2FQ1pld8LaLjGu+Ke4rZHCC9DzNcb60kGwrg4RM1zHAEMbk
-         LRvfZbN7QwbM9z8mw23ahBy1+X1h7yOkrm+2T1vDm3rNRR6AePPB+gs/rjykywx6YosF
-         GaguGalfzFzKTWqqhYYQhn7l0n2a38Dx0VVNQzTUYOdjOmKvdic/uwuPQ9Z28JIqeqgo
-         NfUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687413515; x=1690005515;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1687414252; x=1690006252;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6LgDdsVWxwuIcdGWkXM+//E7h6q+sL/ftkkHRO/sno0=;
-        b=MB//zwVjWdZRndIOLodaJkinaXXYUomNvgTZ6APtVp61l4HXNdk3XU55lxVyXxfpN6
-         gMe1p7Bcq46YeBLoAzjluo4KAmZ1Zgv5grQ2OB7/Dj4FmgAk+RusnM40dg5M8xah0H0e
-         hTjm8eXe8Ct1x52RsyBcvBkPpR7eiYdoxjPLBcLQiISxjG57gw9x0aUgJjaQNf+SBjdL
-         YR6YeB8rchDEhul8ZgktH2eSFVBUlaRZlkyJkMLQ9dG4E8icvRYL2gGcPCAvZfOY3PJ7
-         58kQXlEvUh1vvsM9Vjwv0jAuOQfezyqIQpHZmW3B5yGJN42sbhf7U09e3FuByj0Ud+ZU
-         paiA==
-X-Gm-Message-State: AC+VfDxEJqOdIWQ1YeGu2mCmmbWBMop6m3CMjm/dV0NngZzm/K5jUd3S
-        9htKaajizd7q96W5qdda0DM=
-X-Google-Smtp-Source: ACHHUZ789G4G84oxl5HwGSknm9yhTAsw0RzfQx88pkLl+3Itw3SttMaLnRYxkk+2J363iWmHZ+f4VQ==
-X-Received: by 2002:a92:c081:0:b0:340:9132:f99 with SMTP id h1-20020a92c081000000b0034091320f99mr16765919ile.22.1687413515652;
-        Wed, 21 Jun 2023 22:58:35 -0700 (PDT)
-Received: from moohyul.svl.corp.google.com ([2620:15c:2a3:200:ad24:b28c:6f03:5b78])
-        by smtp.gmail.com with ESMTPSA id b25-20020aa78719000000b0063b8d21be5asm3903607pfo.147.2023.06.21.22.58.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Jun 2023 22:58:35 -0700 (PDT)
-Sender: Namhyung Kim <namhyung@gmail.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH] perf test: Remove x permission from lib/stat_output.sh
-Date:   Wed, 21 Jun 2023 22:58:32 -0700
-Message-ID: <20230622055832.83476-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+        bh=HYE9CLgVFQtQm8opYgdm6U7/H5rXIkw4SGgWMqIYMIM=;
+        b=ip1H0KdmMFuPHihoBZbV7B1Abp73bcPGtQXZ6+CJELnHoTeZ5BdhLp0tDKG9V8sOjT
+         a8AoZ9o93WzeNjglJWkTlaCpz5ApE0hN/fMFHmZLF7l+CPbVZCRny5kBNezVZp+v+8b0
+         S6CpiRP0Tsm30XDAc7urBYRqMohqE0CpeClvMlcobDdqp3iDllg5mjIlBtZWztvYg3L4
+         2PthPEu1KbqucLF0vJyYoDvvkmI3Mg9jIiiQbtk2PtoVH+WtO0ipOtFYKjEqHw6Nz/Rd
+         +ZN9wY94ulMa/bSKlLtGW/BpPicfVrdYna9tqa28OlXK3nQrsis9l6l/YMySUQ1MNmmM
+         s5gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687414252; x=1690006252;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HYE9CLgVFQtQm8opYgdm6U7/H5rXIkw4SGgWMqIYMIM=;
+        b=TefjZqV2OIJiwRUh7ktlRo5VHq16DVD6nGp+ZWWvTvTu6vpsnsbeQFX+7xDW+WoP9O
+         ffm6d3pQSzMDO/64qz8LmA8SERy4NxZcA1cHGVZHdlec39xWyjMnDAQmTg31JPiSWgph
+         /w1sFKSRma1LmHgIx/0JqOEE/VNprZQu5RNvbyo0KochPs0UTee0d8yNS328EDmqqBrg
+         kPFnwHy/6kuUd718VokJwUvqgh4wt10BzC1N5tuWUfHkdo9VpiffU94FN8bQtWRjgsyR
+         xZptZGt2Y1SZUjB46dEuSU1TD2/4NUDTSkKBcLFg4fFD7NSFojJuq1Ie01RhFjkp1+DE
+         Yb4A==
+X-Gm-Message-State: AC+VfDymJ01Lr7wD9W+wBWobxnxPFFlcqK6NnRNzhdZJjBSxQDARvJJq
+        WwWYscxvAAD2FQXheiwDtNH/6saoOyeEmbbx2sj86oFXvfkkMqQxCRxVgA==
+X-Google-Smtp-Source: ACHHUZ6yfCSlxw2Wh4CLROnlJRDpIZhEdEJ50amQbK8JFiamxCjMXQHXdz1MqFL8J10j7oOyig3qX0OhLLg4SMoznb4=
+X-Received: by 2002:ac8:5989:0:b0:3e8:684b:195d with SMTP id
+ e9-20020ac85989000000b003e8684b195dmr850369qte.10.1687414252084; Wed, 21 Jun
+ 2023 23:10:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <ZJOmXU/41HMzanM9@tassilo>
+In-Reply-To: <ZJOmXU/41HMzanM9@tassilo>
+From:   Ian Rogers <irogers@google.com>
+Date:   Wed, 21 Jun 2023 23:10:30 -0700
+Message-ID: <CAP-5=fWZAcXcE3CP-V7t=gSehO-AacHJWhjHjtA5nCd5B2-n1A@mail.gmail.com>
+Subject: Re: Perf stat regression from d15480a3d67
+To:     Andi Kleen <ak@linux.intel.com>
+Cc:     namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-The commit fc51fc87b1b8 factored out the helper functions to a library
-but the new file had execute permission.  Due to the way it detects
-the shell test scripts, it showed up in the perf test list unexpectedly.
+On Wed, Jun 21, 2023 at 6:39=E2=80=AFPM Andi Kleen <ak@linux.intel.com> wro=
+te:
+>
+> Hi Namhyung,
+>
+> I have a tool (toplev in pmu-tools) that parses the perf stat output
+> for generated command lines. It expects that the output contains the
+> events in the same order as specified with -e.
+>
+> Unfortunately this broke for uncore events.
+> I bisected it down to the following commit.
+>
+> I believe just arbitrarily hiding events will break any tool that parses
+> the perf stat output and expect the input order.
+>
+> Can the original problem be fixed without hiding events?
 
-  $ ./perf test list 2>&1 | grep 86
-   76: x86 bp modify
-   77: x86 Sample parsing
-   78: x86 hybrid
-   86:                        <---- (here)
+Hi Andi,
 
-  $ ./perf test -v 86
-   86:                                                                 :
-  --- start ---
-  test child forked, pid 1932207
-  test child finished with 0
-  ---- end ----
-  : Ok
+Can you provide an example that is breaking?
 
-As it's a collection of library functions, it should not run as is.
-Let's remove the execute permission.
+Wrt event order, cases like:
+```
+$ sudo perf stat -e '{data_read,data_write}' -a --no-merge sleep 1
 
-Fixes: fc51fc87b1b8 ("perf test: Move all the check functions of stat CSV output to lib")
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/lib/stat_output.sh | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- mode change 100755 => 100644 tools/perf/tests/shell/lib/stat_output.sh
+Performance counter stats for 'system wide':
 
-diff --git a/tools/perf/tests/shell/lib/stat_output.sh b/tools/perf/tests/shell/lib/stat_output.sh
-old mode 100755
-new mode 100644
--- 
-2.41.0.162.gfafddb0af9-goog
+         1,960.81 MiB  data_read [uncore_imc_free_running_1]
+           438.48 MiB  data_write [uncore_imc_free_running_1]
+         1,961.85 MiB  data_read [uncore_imc_free_running_0]
+           438.79 MiB  data_write [uncore_imc_free_running_0]
 
+      1.001127356 seconds time elapsed
+```
+Reorder events so that the PMUs match (ie the -e order would 2x
+data_read followed by 2x data_write). This covers more cases now so
+that perf metric (aka topdown) events aren't broken when coming out of
+metrics:
+https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/tree/tools/p=
+erf/util/parse-events.c?h=3Dperf-tools-next#n2139
+
+Given the original commit message there seems little point to give the
+0 counts, but perhaps it is something that could be done on the more
+tool oriented CSV and JSON output formats.
+
+Thanks,
+Ian
+
+> Thanks,
+>
+> -Andi
+>
+> commit dd15480a3d67b9cf04a1f6f5d60f1c0dc018e22f
+> Author: Namhyung Kim <namhyung@kernel.org>
+> Date:   Wed Jan 25 11:24:31 2023 -0800
+>
+>     perf stat: Hide invalid uncore event output for aggr mode
+>
+>     The current display code for perf stat iterates given cpus and build =
+the
+>     aggr map to collect the event data for the aggregation mode.
+>
+>
+>
+>
