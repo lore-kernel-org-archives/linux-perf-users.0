@@ -2,149 +2,84 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A28DBEB64DC
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 21:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D405BEB64DC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 21:35:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230091AbjFVVdU convert rfc822-to-8bit (ORCPT
+        id S231243AbjFVVfz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 17:33:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39332 "EHLO
+        Thu, 22 Jun 2023 17:35:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231393AbjFVVdT (ORCPT
+        with ESMTP id S230397AbjFVVfy (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 17:33:19 -0400
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936791FF6
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 14:33:14 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-bb3a77abd7bso7383867276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 14:33:14 -0700 (PDT)
+        Thu, 22 Jun 2023 17:35:54 -0400
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4EA31BFA;
+        Thu, 22 Jun 2023 14:35:53 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-bd0a359ca35so6131154276.3;
+        Thu, 22 Jun 2023 14:35:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687469593; x=1690061593;
+        d=1e100.net; s=20221208; t=1687469753; x=1690061753;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SNlPBraAb0ddYlZ5jLanYEj5hG5ppMWiPaAkJlDVGoo=;
-        b=Q77f4DmhqYZ9ziUAl3VV3hsm1LwDCl6r9NEhcQxWo//4K43nqAuUkmjFBt7EWXZHf3
-         wvdfRar72Y/J4aUYBZA4rPhS6bniiC7UhkTuy0zrw1ggf+iDK+WwKig3P7Jnr6r+3Wve
-         DKmeLJ/stiOquJRcy8EttCx7YQsVgUZCf7d2YblhLNDRjoa1p4ifOgjTpGGClPCtMZqP
-         3A8ZaA8h936o/FFErDXvb0uBtE1xZh5bHz/VTMOV05pBbUVr+aph+pSc97dN3kM6ciZ0
-         +TDtaPoDQ+ZHF1kS1w3lhcpX7/7f1w6v/VxSPtg7WvMHyiEg7OUY+VJLCNDbaiHlVebd
-         JrSQ==
-X-Gm-Message-State: AC+VfDzZC2OGXxshrjFh322MtBb+tCZYiFkRVb+vULSr9i9Y1LslKa1Y
-        t7vuu9lNrdI4ZqGlBfNnbFjhMyaGuADZXOuyrtA=
-X-Google-Smtp-Source: ACHHUZ7ahP08mnJ+Pi0ywwdKgRpTuottvev/vWGMxKQ6Mn3ROdJWIjWu36O2obVi65pWifmkIbtWlVGZ96tjwWogEjk=
-X-Received: by 2002:a0d:d485:0:b0:56d:541b:a02e with SMTP id
- w127-20020a0dd485000000b0056d541ba02emr19452926ywd.1.1687469593617; Thu, 22
- Jun 2023 14:33:13 -0700 (PDT)
+        bh=Ly5bOU0Q1ozj3v75g6rZQFU8W9SZnQQ902G0DTBvlTE=;
+        b=cVGxt3CK4KSWt3jPjNPmtnf/h2hDs54PCU1u4oAdXWIZl2eOrbSGSHmbll0K5OY73U
+         Nzu+GjNvSSXMNyBAO0iexCgQNcsNX9e2qGpiikY9ULtY3pWMH1rHLepToY2M9FncmSl9
+         2WcGJZrYoJC2n5kxq9IKqUU372ynDNknEpf7HKZKNeJ/aKrSpvg+8jV+JKTE29PoWEHL
+         aPA9gsxw0vNER1TAYhtRJGEJDaxxW1JdYJDlH4sxwLQ9PERiCs9pw1tTQL94sb+3uhMh
+         +2EjP5TQT0GHlEg7yQlhPeRVndLiGbksgemjGSvmJNyP0vZ+dDxDcnnzdQ+B1FKft5EW
+         BI+A==
+X-Gm-Message-State: AC+VfDzJVdSNcitiLV6063McQRF625oxJdGbSXZ28qF5XZGR2cz3be9I
+        aiJ5SY6c+9dnDnryQgoFsCcjo0d/hBmw/cZ6yFycyOoN
+X-Google-Smtp-Source: ACHHUZ66wrVnAFkgxodls7dYze0SB9vVxDK8/wLAIHDdhuiyC7mq7XMxV5nA4fjFVlfYa2TDl7W7dUgF1wEGHxre4Lw=
+X-Received: by 2002:a25:748b:0:b0:bce:782:d617 with SMTP id
+ p133-20020a25748b000000b00bce0782d617mr11964929ybc.56.1687469752765; Thu, 22
+ Jun 2023 14:35:52 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230613164145.50488-1-atrajeev@linux.vnet.ibm.com>
- <20230613164145.50488-16-atrajeev@linux.vnet.ibm.com> <ZIjMWUk/axKfMCM4@kernel.org>
- <CAM9d7cjrpaNk0UC22ntBSP+LzQwT2YAHwQ2o3z1aayAZNQ329g@mail.gmail.com>
- <5ab5cc25-03b0-ef7f-3dc0-be1b59a4147d@linux.ibm.com> <CAM9d7cgcETpnNgvgJ8a966bwc0phQuVMwABHzA8APk6Z9Er=OQ@mail.gmail.com>
- <ee0bd9de-c2c7-010f-5a4d-40e07ded8a3e@linux.ibm.com>
-In-Reply-To: <ee0bd9de-c2c7-010f-5a4d-40e07ded8a3e@linux.ibm.com>
+References: <20230620170027.1861012-1-weilin.wang@intel.com> <CAM9d7cichi8QpVFjCDUf8e5aJEuZg1JPHtMBEs_FSNtsm8VoeA@mail.gmail.com>
+In-Reply-To: <CAM9d7cichi8QpVFjCDUf8e5aJEuZg1JPHtMBEs_FSNtsm8VoeA@mail.gmail.com>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 22 Jun 2023 14:33:01 -0700
-Message-ID: <CAM9d7cgopOAyL0QgHs+x_O9A6v020Jyaju+EOv8ymS_cg1Sarg@mail.gmail.com>
-Subject: Re: [PATCH 15/17] perf tests task_analyzer: fix bad substitution ${$1}
-To:     Aditya Gupta <adityag@linux.ibm.com>
-Cc:     Hagen Paul Pfeifer <hagen@jauu.net>,
-        Petar Gligoric <petar.gligoric@rohde-schwarz.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
-        irogers@google.com, ravi.bangoria@amd.com, john.g.garry@oracle.com,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
+Date:   Thu, 22 Jun 2023 14:35:41 -0700
+Message-ID: <CAM9d7chBM_z=vNKsLFTLVevXgd8=ZfS_XSX=999+jitrTJodTA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] Add metric value validation test
+To:     Weilin Wang <weilin.wang@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Samantha Alt <samantha.alt@intel.com>,
+        Perry Taylor <perry.taylor@intel.com>,
+        Caleb Biggers <caleb.biggers@intel.com>, ravi.bangoria@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-Hello Aditya,
-
-On Wed, Jun 21, 2023 at 11:43 AM Aditya Gupta <adityag@linux.ibm.com> wrote:
+On Wed, Jun 21, 2023 at 5:08 PM Namhyung Kim <namhyung@kernel.org> wrote:
 >
-> Hello Namhyung,
+> Hello,
 >
-> On 21/06/23 20:53, Namhyung Kim wrote:
-> > Hello Aditya,
+> On Tue, Jun 20, 2023 at 10:00 AM Weilin Wang <weilin.wang@intel.com> wrote:
 > >
-> > On Wed, Jun 21, 2023 at 3:05 AM Aditya Gupta <adityag@linux.ibm.com> wrote:
-> >> Hello Namhyung,
-> >>
-> >> On 21/06/23 06:18, Namhyung Kim wrote:
-> >>> ...
-> >>>
-> >>> $ sudo ./perf test -v task
-> >>> 114: perf script task-analyzer tests                                 :
-> >>> --- start ---
-> >>> test child forked, pid 1771042
-> >>> Please specify a valid report script(see 'perf script -l' for listing)
-> >>> FAIL: "invocation of perf command failed" Error message: ""
-> >>> FAIL: "test_basic" Error message: "Failed to find required string:'Comm'."
-> >>> Please specify a valid report script(see 'perf script -l' for listing)
-> >>> FAIL: "invocation of perf command failed" Error message: ""
-> >>> FAIL: "test_ns_rename" Error message: "Failed to find required string:'Comm'."
-> >>> ...
-> >>> test child finished with -1
-> >>> ---- end ----
-> >>> perf script task-analyzer tests: FAILED!
-> >> Can you please check if your environment has libtraceevent devel
-> >> libraries (or did you compile with `make NO_LIBTRACEEVENT=1`) ? When
-> >> libtraceevent support is not there, perf record fails and so perf.data
-> >> doesn't contain the strings it's searching for and hence those errors
-> >>
-> >> The error you mentioned has been mentioned and fixed in patch 17/17 of
-> >> this series.
-> > Thanks for your reply but It has libtraceevent.  Also, shouldn't it
-> > skip if it's not?
+> > This is the fifth version of metric value validation tests.
 > >
-> > Thanks,
-> > Namhyung
+> > We made the following changes from v4 to v5:
+> >  - Update "()" to "{}" to avoid creating sub shell and successfully skip test on non-Intel
+> >  platform. [Ravi]
+> >
+> > v4: https://lore.kernel.org/lkml/20230618172820.751560-1-weilin.wang@intel.com/
+> >
+> > Weilin Wang (3):
+> >   perf test: Add metric value validation test
+> >   perf test: Add skip list for metrics known would fail
+> >   perf test: Rerun failed metrics with longer workload
 >
-> The skipping is handled in the 17th patch in this series, and
-> considering that patch has also been applied, it will skip the tests if
-> perf wasn't built with proper libtraceevent support.
+> Tested-by: Namhyung Kim <namhyung@kernel.org>
 
-Right, I tested it with the whole series applied.
-It skipped to run when I disable libtraceevent build.
-
->
-> Back to the error, Sorry but I tested again on my system and am unable to reproduce the issue you are seeing when built with libtraceevent support.
->
-> This is what I did:
->
-> 0. git clone --depth=1 https://github.com/torvalds/linux
-> 0. cd linux/tools/perf
-> 0. git am patch_15/17.patch
->
-> > I applied ONLY this patch (15/17) of this series, to a fresh linux tree
->
-> 1. dnf install libtraceevent-devel
-> 2. make clean && make
-> 3. sudo ./perf test -v "perf script task-analyzer tests"       # Working fine, tests passed
->
-> 4. dnf remove libtraceevent-devel
-> 5. make clean && make                                          # There will also be a warning during build: "libtraceevent is missing limiting functionality"
-> 6. sudo ./perf test -v "perf script task-analyzer tests"       # Fails with the error you posted, which was the case till now, it's skipped when the 17th patch is also applied and perf built without libtraceevent support
->
-> The error in the second case (without proper libtraceevent support) is expected, as it was the case till now, that is fixed by the 17th patch, try applying that also and build perf with `make NO_LIBTRACEEVENT=1`, it will skip then.
->
-> Can you guide me with the steps to reproduce the error ?
-
-You can try the perf-tools-next branch in the perf/perft-tools-next.git repo.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
-
-  $ make clean all
-  $ sudo ./perf test -v task
-
->
-> Sidenote: Just in case, please ensure you are running the perf as root here as `perf record -e sched:sched_switch -a -- sleep 1` requires root, which has been used in `prepare_perf_data`
-
-Sure, I ran the perf test as root.
-
-Thanks,
-Namhyung
+Applied to perf-tools-next, thanks!
