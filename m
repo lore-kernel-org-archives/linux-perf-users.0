@@ -2,59 +2,59 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DC4EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 17:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BFBEEB64D8
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 17:27:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229960AbjFVRXr (ORCPT
+        id S230230AbjFVR1R (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 13:23:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54862 "EHLO
+        Thu, 22 Jun 2023 13:27:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229891AbjFVRXr (ORCPT
+        with ESMTP id S229873AbjFVR1Q (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 13:23:47 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BC28199B
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 10:23:45 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-4007b5bafceso10731cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 10:23:45 -0700 (PDT)
+        Thu, 22 Jun 2023 13:27:16 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D39DD2
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 10:27:15 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-3fde9bfb3c8so15201cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Jun 2023 10:27:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687454625; x=1690046625;
+        d=google.com; s=20221208; t=1687454834; x=1690046834;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sImtbMqQzYkGHBNkAlqgrtpNozbS6ZDGSsAbNBKF2yg=;
-        b=eh9P8uUt+ICiKU9A0APy2oJnRdiuwyxogTclThwgYDu5AoJTAXk173jyuveZx1raFb
-         6UBXVvXrRi7azA+Btw14tntZUfWD/spOwwuLrRPbt6CtvHG/i5bV5OdQm6Rv0RwRsC6I
-         op6M2wFYdRRASeG3sGLsJ6UfyOGVOOBylx0O1GDYkuwEbBOI/ubejP6t0F7lrbjR9Xs9
-         +EkQozqY97NM5XYTPnYRT/uSmCNv3AH6kDKaDGYgXJGbS8aV1fuE9tgnBccg69Dgvdk1
-         HmiO3JjSjc1dfeN5i3QKgvMvnMNM+Syfwja9kL8uf4TlP9kfsP6hcf7CvhgFA9w7JCVE
-         hZug==
+        bh=zpAAA1t2APTPIL6TPZrRweRbUpiJB6pmgpDTWMvn/FY=;
+        b=ajJCaXRDlhuKvi0JuMH0jHQN9zU/adnA6jpAoXryuU5WQ214eidnG1B3qIMV5EtJW+
+         j3NWJdZbfDzrgST1YaxpZUKbRk1uDtMOvViaJsWHZ3rw6xEK4p4iXjludjzYnLVvuZls
+         PzLDL+uOR+s/2UaCqngW3Mc8rB9JtOoIQbZcaO5R2SarOhdGFSAYx5jM7sLKuqgAfC78
+         MEDwG1CpgHBm/54DeSGOygxeog9oztqbe5uhxqDKZrnXZvN9EBADBEbujbs2n+ykCH5s
+         c4rAcgjn6rHl1g176cAu+0vmWM7cK0jO3Vi5EfjngEaaxsGpd4Ewfri0PlPDYt9SvSEp
+         o91w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687454625; x=1690046625;
+        d=1e100.net; s=20221208; t=1687454834; x=1690046834;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sImtbMqQzYkGHBNkAlqgrtpNozbS6ZDGSsAbNBKF2yg=;
-        b=aMw8cFtOF6ovBD4SgeYv0EWbHlPlaKexooTlrGjZOLZ3tdkVFXHmuepWyH1+Vj+Lx9
-         gRdIZOyGINqDpQzmlDMVrU4dDBNlfRGIzoPHpPVuevUzKoI1YBeihaFSGMt/3TnOSR7N
-         hX+xwxKPEZAOdL7xn+teeG5RmEuDjCS82jnrK/HifUpU2X6hF2LBzIHqRATweRqiL4Xs
-         7aWweFrYSKiisUgVbEWKVe0EqJZoWxZQ9JNiQ+bG1ULChyZRrIxUohElKsPpmBrZ3o1z
-         Wyk37xrcbghfA3/opIZhhqLpWf1SgyBiXPbP1FBhiGWfvPB2Za+zmb6luxavBR4U3oju
-         SCKA==
-X-Gm-Message-State: AC+VfDyg+0JkYnh15F2X5twZJHnt1zKf/4hAgKnGQY4DM7AZILk1CvrX
-        j3dADAckbOUBw3FUOvlwE8GyUQdFxusAcCUBOH8+qA==
-X-Google-Smtp-Source: ACHHUZ6wf4wGlU0ZWkgcTSKAhQkhaUGGzLzZITiplhOIsXLw84MbXX9lbdRwraQMhTE9VRKP9kiR/D/peGAY5RrqJDs=
+        bh=zpAAA1t2APTPIL6TPZrRweRbUpiJB6pmgpDTWMvn/FY=;
+        b=NVy47/+aq5i02rZ2DxVe7Kqb/+hmi6r7I4rlRfBIaLz/vNnUWeY8tPnQXW6c5DiBXL
+         fCbwj7XEzo+FrvTEGHBdV6XZxJHWTQHTeySCHETXge1keSYHtp9FtZ4dIYFlIV5D53G5
+         Y0S9mGS+ZaKuV1ivmtq1oWd7+MY96R/rMXicSpcaT8ZgWiPuPvNqeHXefBpkdoaYYSMb
+         rhmEMpJf7PhVY0vPpBJDmCSwmfqzpbc3xZzgisWxqT7/NvcXBeX2rI8sCxk50EJsvCKy
+         TLWhmmuJ7xov4B1lwxYBWDtZYsvgfYk+Pn22jT8QwsFHJjd32ALtswiqtX2M0XVKSPyu
+         s9Sw==
+X-Gm-Message-State: AC+VfDxkvTxUO2jCaatoc4K1niqNFVq8EeM+WuITiBa8m0rD1JNvcDAy
+        3plsqF4MUE9WsRTq9X7vpcKgWACEsn57QLVTi8PWxQ==
+X-Google-Smtp-Source: ACHHUZ7xXJVU1iaVQHNWBcjIROUN8XBx6twf/NQXOFch3Z0Pg9XmNAKotuHXqSCRwZCmUiFWOYZ3pyng/357JWNd2Hs=
 X-Received: by 2002:a05:622a:85:b0:3f8:5b2:aeed with SMTP id
- o5-20020a05622a008500b003f805b2aeedmr1599600qtw.21.1687454624879; Thu, 22 Jun
- 2023 10:23:44 -0700 (PDT)
+ o5-20020a05622a008500b003f805b2aeedmr1600635qtw.21.1687454834160; Thu, 22 Jun
+ 2023 10:27:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230620201818.1670753-1-namhyung@kernel.org> <20230620201818.1670753-2-namhyung@kernel.org>
-In-Reply-To: <20230620201818.1670753-2-namhyung@kernel.org>
+References: <20230620201818.1670753-1-namhyung@kernel.org> <20230620201818.1670753-3-namhyung@kernel.org>
+In-Reply-To: <20230620201818.1670753-3-namhyung@kernel.org>
 From:   Ian Rogers <irogers@google.com>
-Date:   Thu, 22 Jun 2023 10:23:33 -0700
-Message-ID: <CAP-5=fWrVh=RDEhise-gSzBfrfno8v8pyMw3QpBxio2j7QN3pA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] perf tools: Add kallsyms__get_symbol_start()
+Date:   Thu, 22 Jun 2023 10:27:02 -0700
+Message-ID: <CAP-5=fWvxMyzbY6gg7R-TzWNpbRcUKHpxoyJq-04c84CzkW4Cw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] perf machine: Include data symbols in the kernel map
 To:     Namhyung Kim <namhyung@kernel.org>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Jiri Olsa <jolsa@kernel.org>,
@@ -72,9 +72,47 @@ X-Mailing-List: linux-perf-users@vger.kernel.org
 On Tue, Jun 20, 2023 at 1:18=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> The kallsyms__get_symbol_start() to get any symbol address from
-> kallsyms.  The existing kallsyms__get_function_start() only allows text
-> symbols so create this to allow data symbols too.
+> When perf record -d is used, it needs data mmaps to symbolize global data=
+.
+> But it missed to collect kernel data maps so it cannot symbolize them.
+> Instead of having a separate map, just increase the kernel map size to
+> include the data section.
+>
+> Probably we can have a separate kernel map for data, but the current
+> code assumes a single kernel map.  So it'd require more changes in other
+> places and looks error-prone.  I decided not to go that way for now.
+>
+> Also it seems the kernel module size already includes the data section.
+>
+> For example, my system has the following.
+>
+>   $ grep -e _stext -e _etext -e _edata /proc/kallsyms
+>   ffffffff99800000 T _stext
+>   ffffffff9a601ac8 T _etext
+>   ffffffff9b446a00 D _edata
+>
+> Size of the text section is (0x9a601ac8 - 0x99800000 =3D 0xe01ac8) and
+> size of the data section is (0x9b446a00 - 0x99800000 =3D 0x1c46a00).
+>
+> Before:
+>   $ perf record -d true
+>
+>   $ perf report -D | grep MMAP | head -1
+>   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0xe01ac8) =
+@ 0xffffffff99800000]: x [kernel.kallsyms]_text
+>                                                                ^^^^^^^^
+>                                                                  here
+
+nit: should the ^^^ be under 0xe01ac8?
+
+> After:
+>   $ perf report -D | grep MMAP | head -1
+>   0 0 0x460 [0x60]: PERF_RECORD_MMAP -1/0: [0xffffffff99800000(0x1c46a00)=
+ @ 0xffffffff99800000]: x [kernel.kallsyms]_text
+>                                                                ^^^^^^^^^
+
+nit: and here under 0x1c46a00 ?
+
 >
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
@@ -84,80 +122,27 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/util/event.c | 30 +++++++++++++++++++++++++++---
->  tools/perf/util/event.h |  2 ++
->  2 files changed, 29 insertions(+), 3 deletions(-)
+>  tools/perf/util/machine.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-> index 3860b0c74829..6fdda0eb3854 100644
-> --- a/tools/perf/util/event.c
-> +++ b/tools/perf/util/event.c
-> @@ -93,8 +93,8 @@ struct process_symbol_args {
->         u64        start;
->  };
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index ddc0a2130caf..e93a66f6e0b3 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -1218,7 +1218,10 @@ static int machine__get_running_kernel_start(struc=
+t machine *machine,
 >
-> -static int find_symbol_cb(void *arg, const char *name, char type,
-> -                         u64 start)
-> +static int find_func_symbol_cb(void *arg, const char *name, char type,
-> +                              u64 start)
->  {
->         struct process_symbol_args *args =3D arg;
+>         *start =3D addr;
 >
-> @@ -110,12 +110,36 @@ static int find_symbol_cb(void *arg, const char *na=
-me, char type,
->         return 1;
->  }
->
-> +static int find_any_symbol_cb(void *arg, const char *name,
-> +                             char type __maybe_unused, u64 start)
-> +{
-> +       struct process_symbol_args *args =3D arg;
-> +
-> +       if (strcmp(name, args->name))
-> +               return 0;
-> +
-> +       args->start =3D start;
-> +       return 1;
-> +}
-> +
->  int kallsyms__get_function_start(const char *kallsyms_filename,
->                                  const char *symbol_name, u64 *addr)
->  {
->         struct process_symbol_args args =3D { .name =3D symbol_name, };
->
-> -       if (kallsyms__parse(kallsyms_filename, &args, find_symbol_cb) <=
-=3D 0)
-> +       if (kallsyms__parse(kallsyms_filename, &args, find_func_symbol_cb=
-) <=3D 0)
-> +               return -1;
-> +
-> +       *addr =3D args.start;
-> +       return 0;
-> +}
-> +
-> +int kallsyms__get_symbol_start(const char *kallsyms_filename,
-> +                              const char *symbol_name, u64 *addr)
-> +{
-> +       struct process_symbol_args args =3D { .name =3D symbol_name, };
-> +
-> +       if (kallsyms__parse(kallsyms_filename, &args, find_any_symbol_cb)=
- <=3D 0)
->                 return -1;
->
->         *addr =3D args.start;
-> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-> index de20e01c9d72..d8bcee2e9b93 100644
-> --- a/tools/perf/util/event.h
-> +++ b/tools/perf/util/event.h
-> @@ -360,6 +360,8 @@ size_t perf_event__fprintf(union perf_event *event, s=
-truct machine *machine, FIL
->
->  int kallsyms__get_function_start(const char *kallsyms_filename,
->                                  const char *symbol_name, u64 *addr);
-> +int kallsyms__get_symbol_start(const char *kallsyms_filename,
-> +                              const char *symbol_name, u64 *addr);
->
->  void event_attr_init(struct perf_event_attr *attr);
+> -       err =3D kallsyms__get_function_start(filename, "_etext", &addr);
+> +       if (machine->has_data_mmap)
+> +               err =3D kallsyms__get_symbol_start(filename, "_edata", &a=
+ddr);
+> +       else
+> +               err =3D kallsyms__get_function_start(filename, "_etext", =
+&addr);
+>         if (!err)
+>                 *end =3D addr;
 >
 > --
 > 2.41.0.185.g7c58973941-goog
