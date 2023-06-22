@@ -2,171 +2,94 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B004EB64DA
-	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 22:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C20EB64DC
+	for <linux-perf-users@archiver.kernel.org>; Thu, 22 Jun 2023 22:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229685AbjFVW2p convert rfc822-to-8bit (ORCPT
+        id S229873AbjFVWeN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Thu, 22 Jun 2023 18:28:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51600 "EHLO
+        Thu, 22 Jun 2023 18:34:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229673AbjFVW2o (ORCPT
+        with ESMTP id S229657AbjFVWeL (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Thu, 22 Jun 2023 18:28:44 -0400
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28B9B195;
-        Thu, 22 Jun 2023 15:28:43 -0700 (PDT)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-bc476bf5239so7519434276.2;
-        Thu, 22 Jun 2023 15:28:43 -0700 (PDT)
+        Thu, 22 Jun 2023 18:34:11 -0400
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761DB26AB;
+        Thu, 22 Jun 2023 15:34:00 -0700 (PDT)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-bc9782291f5so1638276.1;
+        Thu, 22 Jun 2023 15:34:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687472922; x=1690064922;
+        d=1e100.net; s=20221208; t=1687473239; x=1690065239;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1cguTASJCALnnEHz7EV9F2VapKWryIEdNJ4Yyp61gRQ=;
-        b=aa/aybTHtSDC94rPyiFQVVG4g63TieaKlAEqRK7mbTO7q7FjhxqERsB7Z7OSVaJiBE
-         0RKWISZcUy4HogggUjxV1rMq1b3BRVyZVOhkXZBFRmb2NfOsB49Odlegd+iuhRl3x1Rb
-         XEpsIFxvegZs7CsR+noOqnBJLwpL1dhwIVKyDSkWracjyxFg5zGaH0y/ioJJaazcKNSF
-         Uk5YCTIjZ3v1gz0muTmk/jM/sIoyX2/8d8hfQ4KNKO8y7CV+u4zLqxHx019/AHEJPYNR
-         dayjOWNSqHSCzPFhAykKBfLgic2/6Ajs5NY0oSqfRXhCTq/LnDTsRLlTHkhaKaLpvnTv
-         cuCQ==
-X-Gm-Message-State: AC+VfDwEhM+EHuRQellWmuxIkFiVD2EuTsCAtg8ufaBFyXI9S9rI5kes
-        YW7R1Y/wBNDLmzx5Nq8tbVkmjbAZpRaEJkPYvJMQolyA
-X-Google-Smtp-Source: ACHHUZ5GWW5lAJ4cmwZVv8aQHTph7SzHLlfBoxcM/6d6k0Odbz2CcQ6GCCdD6mBc4KxGmnuK5Hq5JKiR+SHZ19yHQI4=
-X-Received: by 2002:a5b:906:0:b0:ba7:54ab:d676 with SMTP id
- a6-20020a5b0906000000b00ba754abd676mr15682550ybq.63.1687472922187; Thu, 22
- Jun 2023 15:28:42 -0700 (PDT)
+        bh=1l4aMFEdO0xpytk7dXv95q+X9YwG7wxeJ0FzYDYOHe0=;
+        b=ZWh4bOTzTIFFa7Jb8X484hkOzvOkRt9zQYifnrVd91nxilGaeD+DTZm2BTURugz45N
+         1R/+5RItYwd8dbv54xZIkGp2nydzcDNlQuxICsVrosr9JNBO1RDPaE+Qy9LsEyXJuKyc
+         TovEVtVIVYegIV0jIHKQX7rOLz242FngWL1okKHd+fSlnZBOELu0MJOkw4AJ4IGkGzUI
+         WeObyTvsSo8sozKeUXUPHikNo4TLIhfHWjLVNFvcxVoA9mVkyW1UFl35t0lizm+MyGIF
+         p9RsUZc/nlksCGiBBVxOoFvZXZy8eU680Tgs13cIbecm5Dm6b9XOiscN8jSAFfXvxlds
+         lYVg==
+X-Gm-Message-State: AC+VfDxjmt6rai8zag2ooeXG5pBcCqETzUJHGEj9Eb4hgoM3SEXG72Zi
+        14F21T8VOZzcWNlDa03B6KKB7uGXcZm19RVL2bM=
+X-Google-Smtp-Source: ACHHUZ7wmp5ZlK/YD8jhbJ0ww5BHVrS9AY0ql6wbq5yfg0IOLxbxiiLJkiV8HYnKE2uNGnX7pDx8tJxhcKTRsSI7eS4=
+X-Received: by 2002:a25:abcb:0:b0:bc1:dfa5:83a4 with SMTP id
+ v69-20020a25abcb000000b00bc1dfa583a4mr17891317ybi.13.1687473239508; Thu, 22
+ Jun 2023 15:33:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230525220927.3544192-1-namhyung@kernel.org> <CAP-5=fWOji8vCQfO-y4HnmFk2k+F70BtGHTjCg6XyORNfYNcww@mail.gmail.com>
-In-Reply-To: <CAP-5=fWOji8vCQfO-y4HnmFk2k+F70BtGHTjCg6XyORNfYNcww@mail.gmail.com>
+References: <1684835873-15956-1-git-send-email-yangtiezhu@loongson.cn>
+ <CAAhV-H4Es7qs54zr_hNPwn5MfgeLiKr3sgoTUP5iNj3JrH-1Uw@mail.gmail.com>
+ <7a085947-9011-ebc9-a97d-7a62c755a978@loongson.cn> <1c3c95c7-54e9-a65a-2f63-3a16af0fc2bf@loongson.cn>
+In-Reply-To: <1c3c95c7-54e9-a65a-2f63-3a16af0fc2bf@loongson.cn>
 From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 22 Jun 2023 15:28:31 -0700
-Message-ID: <CAM9d7cgnOzVV7ww-+4N_mccgn9r_xYX1LeExgxDOo0x5NG=Zqw@mail.gmail.com>
-Subject: Re: [PATCH] tools lib subcmd: Show parent options in help
-To:     Ian Rogers <irogers@google.com>
+Date:   Thu, 22 Jun 2023 15:33:48 -0700
+Message-ID: <CAM9d7cj8mk_jAmK5KYrAJW248Nc1UY=_yD5BRBM+8aC+BaRBTw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf symbol: Add LoongArch case in get_plt_sizes()
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+        Huacai Chen <chenhuacai@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Leo Yan <leo.yan@linaro.org>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        loongson-kernel@lists.loongnix.cn
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 12:05 AM Ian Rogers <irogers@google.com> wrote:
->
-> On Thu, May 25, 2023 at 3:09 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > I've just realized that help message in a subcommand didn't show one
-> > in the parent command.  Since the option parser understands the parent,
-> > display code should do the same.  For example, `perf ftrace latency -h`
-> > should show options in the `perf ftrace` command too.
-> >
-> > Before:
-> >
-> >   $ perf ftrace latency -h
-> >
-> >    Usage: perf ftrace [<options>] [<command>]
-> >       or: perf ftrace [<options>] -- [<command>] [<options>]
-> >       or: perf ftrace {trace|latency} [<options>] [<command>]
-> >       or: perf ftrace {trace|latency} [<options>] -- [<command>] [<options>]
-> >
-> >       -b, --use-bpf         Use BPF to measure function latency
-> >       -n, --use-nsec        Use nano-second histogram
-> >       -T, --trace-funcs <func>
-> >                             Show latency of given function
-> >
-> > After:
-> >
-> >   $ perf ftrace latency -h
-> >
-> >    Usage: perf ftrace [<options>] [<command>]
-> >       or: perf ftrace [<options>] -- [<command>] [<options>]
-> >       or: perf ftrace {trace|latency} [<options>] [<command>]
-> >       or: perf ftrace {trace|latency} [<options>] -- [<command>] [<options>]
-> >
-> >       -a, --all-cpus        System-wide collection from all CPUs
-> >       -b, --use-bpf         Use BPF to measure function latency
-> >       -C, --cpu <cpu>       List of cpus to monitor
-> >       -n, --use-nsec        Use nano-second histogram
-> >       -p, --pid <pid>       Trace on existing process id
-> >       -T, --trace-funcs <func>
-> >                             Show latency of given function
-> >       -v, --verbose         Be more verbose
-> >           --tid <tid>       Trace on existing thread id (exclusive to --pid)
-> >
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/lib/subcmd/parse-options.c | 26 ++++++++++++++++++--------
-> >  1 file changed, 18 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
-> > index 9fa75943f2ed..41de97671c72 100644
-> > --- a/tools/lib/subcmd/parse-options.c
-> > +++ b/tools/lib/subcmd/parse-options.c
-> > @@ -806,18 +806,28 @@ static int option__cmp(const void *va, const void *vb)
-> >
-> >  static struct option *options__order(const struct option *opts)
-> >  {
-> > -       int nr_opts = 0, nr_group = 0, len;
-> > -       const struct option *o = opts;
-> > -       struct option *opt, *ordered, *group;
-> > +       int nr_opts = 0, nr_group = 0, nr_parent = 0, len;
-> > +       const struct option *o, *p = opts;
-> > +       struct option *opt, *ordered = NULL, *group;
-> >
-> > -       for (o = opts; o->type != OPTION_END; o++)
-> > +retry:
->
-> Why use "goto retry" and not compute the size with the parent upfront?
+Hello,
 
-No specific reason, just followed the same pattern as in
-parse_{short,long}_opt(). :)
-
+On Tue, Jun 20, 2023 at 9:36 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >
-> > +       for (o = p; o->type != OPTION_END; o++)
-> >                 ++nr_opts;
+>
+>
+> On 06/08/2023 03:01 PM, Tiezhu Yang wrote:
+> > Hi Arnaldo,
 > >
-> > -       len = sizeof(*o) * (nr_opts + 1);
-> > -       ordered = malloc(len);
-> > -       if (!ordered)
-> > +       len = sizeof(*o) * (nr_opts + !o->parent);
+> > On 05/23/2023 06:26 PM, Huacai Chen wrote:
+> >> Acked-by: Huacai Chen <chenhuacai@loongson.cn>
+> >>
+> >> On Tue, May 23, 2023 at 5:57 PM Tiezhu Yang <yangtiezhu@loongson.cn>
+> >> wrote:
+> >>>
+> >>> We can see the following definitions in bfd/elfnn-loongarch.c:
 >
-> It'd be nice to comment on why the "!o->parent" here.
+> ...
+>
+> >
+> > Are you OK with this change?
+> > Could you please pick it up in your tree?
+>
+> Ping. What is the status of this patch? Any more comments?
+> Is there a chance to merge it for this coming merge window?
 
-What about this?
-
-/* It needs a terminating NULL entry when there's no parent */
+Sorry for the late reply,  I'll apply it to the perf-tools-next tree.
 
 Thanks,
 Namhyung
-
-
->
-> Thanks,
-> Ian
->
-> > +       group = realloc(ordered, len);
-> > +       if (!group)
-> >                 goto out;
-> > -       memcpy(ordered, opts, len);
-> > +       ordered = group;
-> > +       memcpy(&ordered[nr_parent], p, sizeof(*o) * (nr_opts - nr_parent));
-> > +
-> > +       if (o->parent) {
-> > +               p = o->parent;
-> > +               nr_parent = nr_opts;
-> > +               goto retry;
-> > +       }
-> > +       /* copy the last OPTION_END */
-> > +       memcpy(&ordered[nr_opts], o, sizeof(*o));
-> >
-> >         /* sort each option group individually */
-> >         for (opt = group = ordered; opt->type != OPTION_END; opt++) {
-> > --
-> > 2.41.0.rc0.172.g3f132b7071-goog
-> >
