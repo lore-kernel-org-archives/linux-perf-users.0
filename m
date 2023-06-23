@@ -2,235 +2,175 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B7BEB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 23:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F03EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 23:41:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229779AbjFWXYI (ORCPT
+        id S231477AbjFWXlN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 19:24:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51230 "EHLO
+        Fri, 23 Jun 2023 19:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbjFWXYH (ORCPT
+        with ESMTP id S230010AbjFWXlM (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 19:24:07 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B9F21AC
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 16:24:06 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-4007b5bafceso50591cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 16:24:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687562645; x=1690154645;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ic9YiLELZWIcxjCuVy1CB9Zy7BGKTgexGt2dQ+9B2fo=;
-        b=lzDczzlnHnkSoDJG9jVkbnTvvH8+J0IVoHO0F0ZJzsHVZECA7R+Hy0J4tykPCTsmVo
-         MrRpaaQx6I3Hx1DQTpXgxvlsPHEChY2bI2XXNoKm8Iqxde5VwjZfZTkSUuOfMAgblBsS
-         17zutBzIWbdohR2Gruie30ydIYFnl6r4HzPu64kVx/Z/a4sLL/Kxg649ceos14o7y179
-         31tNxWCM8tyC4xi3mz4i+p3GpQ7aV9Sp6kflX8gD7+kUQrH9yXpBewGCILx/1zmOmtIX
-         ouO4m0OBOI1dPuuCP/kxfcajeRJJT2g6adpnVrPCLKx97Weq77G5jgKTUoMCTD8Ho9xu
-         MRDg==
+        Fri, 23 Jun 2023 19:41:12 -0400
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA14A2699
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 16:41:10 -0700 (PDT)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-bacf685150cso981694276.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Jun 2023 16:41:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687562645; x=1690154645;
+        d=1e100.net; s=20221208; t=1687563670; x=1690155670;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ic9YiLELZWIcxjCuVy1CB9Zy7BGKTgexGt2dQ+9B2fo=;
-        b=XAcizfw+HKtEacuaI+o3xtqeJq+YkH7AaZe5TIpHCRgq1xthqU5pOMvtyVtDPQ1cmf
-         4dEeQiJ+5Ptk36uk+arKLbz5cE7Neo/eKhAUr5bfVY/xwKgmUhF6TZU0Wmt/hGPBBsGW
-         b7fA1fQ8G6rJ1M9259xZpxD1tmsR6mIDvvkQnj4Uw06XPAEEElRIMyJsVB8MPO7pjUDc
-         qO3m0NSSj2F/NQ8IwuTMzcBPiTBe1YOnu2G0eMOJziPwYDTjF5WB1x2ehPJm0BNli3Gh
-         tlJzdljC7y7Bw7M5vdyOptMn9jEQKff+0v3EMYg34cpNa5Pi3RHf/ftOv5ylJ9725Llk
-         H+/Q==
-X-Gm-Message-State: AC+VfDwA2zPQQRG4H7jcC9BCbUA0bdQdNOMmI4UMwEhmTlJHqMgd4KNS
-        5DJeO2ZFajusp4SHDwNoLd5IJ4CvpKZXZvs2pZ/HAA==
-X-Google-Smtp-Source: ACHHUZ6sGiQ4XkLpRSm+PKUcIUBs3JG+12D5xlhs6yteJrmR4SKqeWGsIG3MtU8kqOfvaB3CnqHIY8Y7h1Slf0NoBA4=
-X-Received: by 2002:a05:622a:1a87:b0:3f8:3065:7fc5 with SMTP id
- s7-20020a05622a1a8700b003f830657fc5mr44444qtc.1.1687562645387; Fri, 23 Jun
- 2023 16:24:05 -0700 (PDT)
+        bh=qtQbddG1H64F3aPrbEnH+Y3DELwzZ1ltdWOcLHRFOEE=;
+        b=FfN0X6hlbzwdcIeqCdghhKazicjyZh93hEo5gDtDr/7bjubdBZgHybqroMiiC2VYxz
+         yRk3gohTFK9Mc/KuUN/mQ+eB9blJ14NgYyhqvgyezb0aXwtM+tODs1f6JBRAY1MswnAL
+         0Eh5xo8FPav+L3fzojYHWMDE4i6LvhO2X3+j93Y88sMfbC9cO5Wp/RHt1nbxs2MJlsCd
+         dS2/6WHxsqqXGgOC6HzduD6RV5nJGCjr26ZCI37Z8cDtEDzeKfBDk7B+os+sv7JMSQKM
+         jF9Qn5/8RCvMzPibsZNa3nXCLHZbc9vSdwIuTkHHkUfVd7tvTpcGCSU4oMMnhuErlX7+
+         fAlw==
+X-Gm-Message-State: AC+VfDzVUnOXzW6NNZ5d3mnuR2XbGHscAW5f/fZD1P1SlyIvbPH7AM0Y
+        KYDg7IHQC/voRjD8dsn8uam5hWQ1xUgLq6JjvKM=
+X-Google-Smtp-Source: ACHHUZ6ezoNJi7hfr0fqJFKxqMLm+TxDihoiReWtwdkozqCi1mEuYpX1dSwa22PY69DvC0gvJyAIOf285BKnmX0YvQo=
+X-Received: by 2002:a25:b21e:0:b0:bc5:affa:fedb with SMTP id
+ i30-20020a25b21e000000b00bc5affafedbmr17862375ybj.41.1687563669805; Fri, 23
+ Jun 2023 16:41:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230623230139.985594-1-namhyung@kernel.org> <20230623230139.985594-2-namhyung@kernel.org>
-In-Reply-To: <20230623230139.985594-2-namhyung@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Fri, 23 Jun 2023 16:23:53 -0700
-Message-ID: <CAP-5=fXUfdmEKDF7JW7bTx+=WMWa79mBM5BxX6OhpTUjanh8xQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf test: Skip metrics w/o event name in stat STD
- output linter
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        Kan Liang <kan.liang@linux.intel.com>
+References: <20230621083021.71203-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20230621083021.71203-1-atrajeev@linux.vnet.ibm.com>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Fri, 23 Jun 2023 16:40:58 -0700
+Message-ID: <CAM9d7cj_7SBXtCuP66xra0R4ygNt851A6f20s6BtfyXCzZJrtQ@mail.gmail.com>
+Subject: Re: [PATCH 00/22] tools/perf: Fix shellcheck coding/formatting issues
+ of perf tool shell scripts
+To:     Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        ravi.bangoria@amd.com, john.g.garry@oracle.com,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Fri, Jun 23, 2023 at 4:01=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> This test checks if the output of perf stat to match event names and
-> metrics.  So it wants the output lines to have both event name and
-> metric.  Otherwise it should skip the line.
->
-> On AMD machines, the instruction event has two metrics and they are print=
-ed
-> in separate lines.  It makes the line without event name like below:
->
->   # perf stat -a sleep 1
->
->    Performance counter stats for 'system wide':
->
->            64,383.34 msec cpu-clock                  #   64.048 CPUs util=
-ized
->               14,526      context-switches           #  225.617 /sec
->                  112      cpu-migrations             #    1.740 /sec
->                  190      page-faults                #    2.951 /sec
->          807,558,652      cycles                     #    0.013 GHz      =
-                   (83.30%)
->           69,809,799      stalled-cycles-frontend    #    8.64% frontend =
-cycles idle        (83.30%)
->          196,983,266      stalled-cycles-backend     #   24.39% backend c=
-ycles idle         (83.30%)
->          424,876,008      instructions               #    0.53  insn per =
-cycle
->  (here) --->                                  #    0.46  stalled cycles p=
-er insn     (83.30%)
->           97,788,321      branches                   #    1.519 M/sec    =
-                   (83.34%)
->            4,147,377      branch-misses              #    4.24% of all br=
-anches             (83.46%)
->
->          1.005241409 seconds time elapsed
->
-> Also modern Intel machines have TopDown metrics which also don't have
-> event names.
->
->   # perf stat -a sleep 1
->
->    Performance counter stats for 'system wide':
->
->             8,015.39 msec cpu-clock                        #    7.996 CPU=
-s utilized
->                5,823      context-switches                 #  726.477 /se=
-c
->                  189      cpu-migrations                   #   23.580 /se=
-c
->                  139      page-faults                      #   17.342 /se=
-c
->          435,139,308      cycles                           #    0.054 GHz
->          193,891,345      instructions                     #    0.45  ins=
-n per cycle
->           42,773,028      branches                         #    5.336 M/s=
-ec
->            2,298,113      branch-misses                    #    5.37% of =
-all branches
->                           TopdownL1                 #     25.5 %  tma_bac=
-kend_bound
->               /-->                                  #      7.9 %  tma_bad=
-_speculation
->     (here) --+                                      #     55.7 %  tma_fro=
-ntend_bound
->               \-->                                  #     10.9 %  tma_ret=
-iring
->
->          1.002395924 seconds time elapsed
->
-> There is a check to skip TopdownL1 and TopdownL2 specifically but it
-> does not cover every affected lines.
->
-> So there is another check to skip the line if it has nothing on the left
-> side of # sign.  Well.. it seems ok but that's not enough too.
->
-> When aggregation mode (like --per-socket or --per-thread) is used, it
-> adds some prefix (e.g. CPU socket, task name and PID) in the output
-> line.  So the test code ignores them to normalize result.
->
-> A problem can happen for per-thread mode when task name contains one or
-> more spaces.  It'd only ignore the first part of the task name, and it
-> thinks there's something more in the line so it would not skip.
->
->   # perf stat -a --perf-thread sleep 1
->   ...
->             perf-21276                  #     70.2 %  tma_backend_bound
->             perf-21276                  #      3.9 %  tma_bad_speculation
->             perf-21276                  #     10.5 %  tma_frontend_bound
->             perf-21276                  #     15.3 %  tma_retiring
->             ^^^^^^^^^^
->             (ignored)
->
->          my task-21328                  #     70.2 %  tma_backend_bound
->          my task-21328                  #      3.9 %  tma_bad_speculation
->          my task-21328                  #     10.5 %  tma_frontend_bound
->          my task-21328                  #     15.3 %  tma_retiring
->          ^^
->      (ignored)
->
-> So I think it should look at the metric names instead.  Add skip_metric
-> to hold the list of names to skip.  It would contain 'stalled cycles per
-> insn' and metrics started by 'tma_'.
->
-> Fixes: 99a04a48f225 ("perf test: Add test case for the standard 'perf sta=
-t' output")
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Hello,
 
-Acked-by: Ian Rogers <irogers@google.com>
+On Wed, Jun 21, 2023 at 1:30 AM Athira Rajeev
+<atrajeev@linux.vnet.ibm.com> wrote:
+>
+> Patchset covers a set of fixes for coding/formatting issues observed while
+> running shellcheck tool on the perf shell scripts.
+>
+> This cleanup is a pre-requisite to include a build option for shellcheck
+> discussed here: https://www.spinics.net/lists/linux-perf-users/msg25553.html
+> First set of patches were posted here:
+> https://lore.kernel.org/linux-perf-users/53B7D823-1570-4289-A632-2205EE2B522C@linux.vnet.ibm.com/T/#t
+>
+> This patchset covers remaining set of shell scripts which needs
+> fix. Patch 1 is resubmission of patch 6 from the initial series.
+> Patch 15, 16 and 22 touches code from tools/perf/trace/beauty.
+> Other patches are fixes for scripts from tools/perf/tests.
+
+Thanks for this work.  But it seems there are some issues
+even after applying this series.
+
+  $ for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do
+  > shellcheck $F; done | grep -c -e '(info)' -e '(warning)'
+  29
+
+  $ for F in $(find tests/shell/ -perm -o=x -name '*.sh'); do
+  > shellcheck $F; done | grep ^In
+  In tests/shell/pipe_test.sh line 10:
+  In tests/shell/pipe_test.sh line 15:
+  In tests/shell/pipe_test.sh line 20:
+  In tests/shell/pipe_test.sh line 21:
+  In tests/shell/pipe_test.sh line 26:
+  In tests/shell/pipe_test.sh line 27:
+  In tests/shell/pipe_test.sh line 33:
+  In tests/shell/record+zstd_comp_decomp.sh line 16:
+  In tests/shell/record+zstd_comp_decomp.sh line 22:
+  In tests/shell/record+zstd_comp_decomp.sh line 27:
+  In tests/shell/record+zstd_comp_decomp.sh line 28:
+  In tests/shell/record+zstd_comp_decomp.sh line 29:
+  In tests/shell/record+zstd_comp_decomp.sh line 30:
+  In tests/shell/record+zstd_comp_decomp.sh line 36:
+  In tests/shell/coresight/thread_loop_check_tid_2.sh line 8:
+  In tests/shell/coresight/thread_loop_check_tid_2.sh line 11:
+  In tests/shell/coresight/thread_loop_check_tid_2.sh line 14:
+
+Also unfortunately there's some update in the shell tests.
+Please rebase onto the perf-tools-next.
 
 Thanks,
-Ian
+Namhyung
 
-> ---
->  tools/perf/tests/shell/stat+std_output.sh | 16 ++++++++--------
->  1 file changed, 8 insertions(+), 8 deletions(-)
+
 >
-> diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests=
-/shell/stat+std_output.sh
-> index 1f70aab45184..f972b31fa0c2 100755
-> --- a/tools/perf/tests/shell/stat+std_output.sh
-> +++ b/tools/perf/tests/shell/stat+std_output.sh
-> @@ -12,8 +12,7 @@ stat_output=3D$(mktemp /tmp/__perf_test.stat_output.std=
-.XXXXX)
+> Akanksha J N (1):
+>   tools/perf/tests: Fix shellcheck warnings for
+>     trace+probe_vfs_getname.sh
 >
->  event_name=3D(cpu-clock task-clock context-switches cpu-migrations page-=
-faults stalled-cycles-frontend stalled-cycles-backend cycles instructions b=
-ranches branch-misses)
->  event_metric=3D("CPUs utilized" "CPUs utilized" "/sec" "/sec" "/sec" "fr=
-ontend cycles idle" "backend cycles idle" "GHz" "insn per cycle" "/sec" "of=
- all branches")
-> -
-> -metricgroup_name=3D(TopdownL1 TopdownL2)
-> +skip_metric=3D("stalled cycles per insn" "tma_")
+> Athira Rajeev (11):
+>   tools/perf/tests: fix test_arm_spe_fork.sh signal case issues
+>   tools/perf/tests: Fix unused variable references in
+>     stat+csv_summary.sh testcase
+>   tools/perf/tests: fix shellcheck warning for
+>     test_perf_data_converter_json.sh testcase
+>   tools/perf/tests: Fix shellcheck issue for stat_bpf_counters.sh
+>     testcase
+>   tools/perf/tests: Fix shellcheck issues in
+>     tests/shell/stat+shadow_stat.sh tetscase
+>   tools/perf/tests: Fix shellcheck warnings for
+>     thread_loop_check_tid_10.sh
+>   tools/perf/tests: Fix shellcheck warnings for unroll_loop_thread_10.sh
+>   tools/perf/tests: Fix shellcheck warnings for lib/probe_vfs_getname.sh
+>   tools/perf/tests: Fix the shellcheck wanrings in lib/waiting.sh
+>   tools/perf/trace: Fix x86_arch_prctl.sh to address shellcheck warnings
+>   tools/perf/arch/x86: Fix syscalltbl.sh to address shellcheck warnings
 >
->  cleanup() {
->    rm -f "${stat_output}"
-> @@ -58,13 +57,14 @@ function commachecker()
+> Kajol Jain (10):
+>   tools/perf/tests: Fix shellcheck warning for probe_vfs_getname.sh
+>     testcase
+>   tools/perf/tests: Fix shellcheck warning for record_offcpu.sh testcase
+>   tools/perf/tests: Fix shellcheck issue for lock_contention.sh testcase
+>   tools/perf/tests: Fix shellcheck issue for stat_bpf_counters_cgrp.sh
+>     testcase
+>   tools/perf/tests: Fix shellcheck warning for asm_pure_loop.sh shell
+>     script
+>   tools/perf/tests: Fix shellcheck warning for memcpy_thread_16k_10.sh
+>     shell script
+>   tools/perf/tests: Fix shellcheck warning for coresight.sh shell script
+>   tools/perf/tests: Fix shellcheck warning for probe.sh shell script
+>   tools/perf/trace: Fix shellcheck issue for arch_errno_names.sh script
+>   tools/perf: Fix shellcheck issue for check-headers.sh script
 >
->                 main_body=3D$(echo $line | cut -d' ' -f$prefix-)
->                 x=3D${main_body%#*}
-> -               # Check default metricgroup
-> -               y=3D$(echo $x | tr -d ' ')
-> -               [ "$y" =3D "" ] && continue
-> -               for i in "${!metricgroup_name[@]}"; do
-> -                       [[ "$y" =3D=3D *"${metricgroup_name[$i]}"* ]] && =
-break
-> +               [ "$x" =3D "" ] && continue
-> +
-> +               # Skip metrics without event name
-> +               y=3D${main_body#*#}
-> +               for i in "${!skip_metric[@]}"; do
-> +                       [[ "$y" =3D=3D *"${skip_metric[$i]}"* ]] && break
->                 done
-> -               [[ "$y" =3D=3D *"${metricgroup_name[$i]}"* ]] && continue
-> +               [[ "$y" =3D=3D *"${skip_metric[$i]}"* ]] && continue
+>  .../arch/x86/entry/syscalls/syscalltbl.sh     |  2 +-
+>  tools/perf/check-headers.sh                   |  6 ++--
+>  .../tests/shell/coresight/asm_pure_loop.sh    |  2 +-
+>  .../shell/coresight/memcpy_thread_16k_10.sh   |  2 +-
+>  .../coresight/thread_loop_check_tid_10.sh     |  2 +-
+>  .../shell/coresight/unroll_loop_thread_10.sh  |  2 +-
+>  tools/perf/tests/shell/lib/coresight.sh       |  3 +-
+>  tools/perf/tests/shell/lib/probe.sh           |  1 +
+>  .../perf/tests/shell/lib/probe_vfs_getname.sh |  5 ++--
+>  tools/perf/tests/shell/lib/waiting.sh         |  1 +
+>  tools/perf/tests/shell/lock_contention.sh     | 12 ++++----
+>  tools/perf/tests/shell/probe_vfs_getname.sh   |  4 +--
+>  tools/perf/tests/shell/record_offcpu.sh       |  6 ++--
+>  tools/perf/tests/shell/stat+csv_summary.sh    |  4 +--
+>  tools/perf/tests/shell/stat+shadow_stat.sh    |  4 +--
+>  tools/perf/tests/shell/stat_bpf_counters.sh   |  4 +--
+>  .../tests/shell/stat_bpf_counters_cgrp.sh     | 28 ++++++++-----------
+>  tools/perf/tests/shell/test_arm_spe_fork.sh   |  2 +-
+>  .../shell/test_perf_data_converter_json.sh    |  2 +-
+>  .../tests/shell/trace+probe_vfs_getname.sh    |  6 ++--
+>  tools/perf/trace/beauty/arch_errno_names.sh   | 15 ++++------
+>  tools/perf/trace/beauty/x86_arch_prctl.sh     |  6 ++--
+>  22 files changed, 58 insertions(+), 61 deletions(-)
 >
->                 # Check default event
->                 for i in "${!event_name[@]}"; do
 > --
-> 2.41.0.162.gfafddb0af9-goog
+> 2.39.1
 >
