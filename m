@@ -2,141 +2,93 @@ Return-Path: <linux-perf-users-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2E7EB64D7
-	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 05:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566C4EB64D7
+	for <linux-perf-users@archiver.kernel.org>; Fri, 23 Jun 2023 05:27:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229830AbjFWFCQ convert rfc822-to-8bit (ORCPT
+        id S231137AbjFWF1T (ORCPT
         <rfc822;linux-perf-users@archiver.kernel.org>);
-        Fri, 23 Jun 2023 01:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52440 "EHLO
+        Fri, 23 Jun 2023 01:27:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229673AbjFWFCP (ORCPT
+        with ESMTP id S230050AbjFWF1S (ORCPT
         <rfc822;linux-perf-users@vger.kernel.org>);
-        Fri, 23 Jun 2023 01:02:15 -0400
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC37E4B;
-        Thu, 22 Jun 2023 22:02:12 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-bfe6ea01ff5so211427276.3;
-        Thu, 22 Jun 2023 22:02:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687496532; x=1690088532;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0lbYvnRG7m7BdPVBK4RGAv7DA18uMbVSHdxUyBaBHkc=;
-        b=eKMEtxuG++jUx3UjilDm/wbGYewuEPxhmOauXLayCsxA2gVmoZx0Z7KnWTu7Afwyqo
-         B3IryYuZcQt2ZXIa6TltkpM0zkQVK1vaoByWhP52cFk5EhqdBNgm3Fv1X2qTtm0f2dXB
-         BeF1cz3zuSlPk8gnH3u/SkB6hM2gxwKTr5XwIXoKi3NXFdC0fqdAoHoV1d/dIOdXqJfi
-         IBqQJ8SlC+PB+hWECIxVkQmn/Ksa4qIL1jYhUtorGwVUvwkyKoMQMrn9AEI/Z7KUmZcu
-         v2+K9BcE6tG/ROqsKiIKGXuRFrR1BBlJ5sxoteyP/RMw1Vv/H3uaz3AoDtdeYMim7M2p
-         svZA==
-X-Gm-Message-State: AC+VfDzvicyzbaK9IeRgerBS5/WaYqf7vDTSEQ8UhNmRevrCbA09mvUA
-        pqjkPytxmYU0vXDMwKlGZ2YfXq75U4gx1yppQ3g=
-X-Google-Smtp-Source: ACHHUZ6Jvx1MXttMGAHUtbiTSGNCYk5AuiSj+eSNJj2TOLtRAYIMaxfyU8aVJiX8LxbQN8O2IlW2DwyLtz4Md0o0eI0=
-X-Received: by 2002:a25:5f4d:0:b0:bcb:caf8:7aae with SMTP id
- h13-20020a255f4d000000b00bcbcaf87aaemr16378378ybm.44.1687496531735; Thu, 22
- Jun 2023 22:02:11 -0700 (PDT)
+        Fri, 23 Jun 2023 01:27:18 -0400
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8089A1FF7;
+        Thu, 22 Jun 2023 22:27:16 -0700 (PDT)
+Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.53])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4QnQj372FRz1GF2P;
+        Fri, 23 Jun 2023 13:27:03 +0800 (CST)
+Received: from [10.67.111.205] (10.67.111.205) by
+ kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Fri, 23 Jun 2023 13:27:12 +0800
+Subject: Re: [PATCH RESEND v4 1/4] perf trace-event-info: Add
+ tracepoint_id_to_name() helper
+To:     Namhyung Kim <namhyung@kernel.org>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <jolsa@kernel.org>, <irogers@google.com>,
+        <adrian.hunter@intel.com>, <anshuman.khandual@arm.com>,
+        <jesussanp@google.com>, <linux-perf-users@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230613033946.103515-1-yangjihong1@huawei.com>
+ <20230613033946.103515-2-yangjihong1@huawei.com>
+ <CAM9d7cjyVgJiVT4Lf+qGd+d2es6NcoN3H42onpN_t4Ed0JHgig@mail.gmail.com>
+From:   Yang Jihong <yangjihong1@huawei.com>
+Message-ID: <f1a428a5-add2-1c1e-df32-78ee4a1cbe7c@huawei.com>
+Date:   Fri, 23 Jun 2023 13:27:12 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.1
 MIME-Version: 1.0
-References: <20230623043107.4077510-1-irogers@google.com>
-In-Reply-To: <20230623043107.4077510-1-irogers@google.com>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Thu, 22 Jun 2023 22:01:59 -0700
-Message-ID: <CAM9d7cj_TAQb5phBmo1R5OSS-DGQimszqb8PhQqoFYjw6sRgaA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf unwind: Fix map reference counts
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ivan Babrou <ivan@cloudflare.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <CAM9d7cjyVgJiVT4Lf+qGd+d2es6NcoN3H42onpN_t4Ed0JHgig@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.111.205]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600003.china.huawei.com (7.193.23.202)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-perf-users.vger.kernel.org>
 X-Mailing-List: linux-perf-users@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 9:31 PM Ian Rogers <irogers@google.com> wrote:
->
-> The result of thread__find_map is the map in the passed in
-> addr_location. Calling addr_location__exit puts that map and so copies
-> need to do a map__get. Add in the corresponding map__puts.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Hello,
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+On 2023/6/21 6:35, Namhyung Kim wrote:
+> Hello,
+> 
+> On Mon, Jun 12, 2023 at 8:41 PM Yang Jihong <yangjihong1@huawei.com> wrote:
+>>
+>> Add tracepoint_id_to_name() helper to search for the trace events directory
+>> by given event id and return the corresponding tracepoint.
+>>
+>> Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
+>> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+>> ---
+>>   tools/perf/util/trace-event-info.c | 11 +++++++++++
+>>   tools/perf/util/trace-event.h      |  6 ++++++
+>>   2 files changed, 17 insertions(+)
+>>
+>> diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
+>> index c24b3a15e319..a7901f4a6654 100644
+>> --- a/tools/perf/util/trace-event-info.c
+>> +++ b/tools/perf/util/trace-event-info.c
+>> @@ -466,6 +466,17 @@ static struct tracepoint_path *tracepoint_id_to_path(u64 config)
+>>          return NULL;
+>>   }
+>>
+>> +char *tracepoint_id_to_name(u64 config)
+>> +{
+>> +       struct tracepoint_path *path = tracepoint_id_to_path(config);
+>> +       char *buf = NULL;
+>> +
+>> +       if (path && asprintf(&buf, "%s:%s", path->system, path->name) > 0)
+>> +               return buf;
+> 
+> I think we need to call put_tracepoints_path() before return.
+
+Yes, here need to free tracepoints path, will fix in next version.
 
 Thanks,
-Namhyung
-
-
->
-> v2. Add missing map__put when dso is missing.
-> ---
->  tools/perf/util/unwind-libunwind-local.c | 19 ++++++++++++-------
->  1 file changed, 12 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
-> index 36bf5100bad2..ebfde537b99b 100644
-> --- a/tools/perf/util/unwind-libunwind-local.c
-> +++ b/tools/perf/util/unwind-libunwind-local.c
-> @@ -419,7 +419,8 @@ static struct map *find_map(unw_word_t ip, struct unwind_info *ui)
->         struct map *ret;
->
->         addr_location__init(&al);
-> -       ret = thread__find_map(ui->thread, PERF_RECORD_MISC_USER, ip, &al);
-> +       thread__find_map(ui->thread, PERF_RECORD_MISC_USER, ip, &al);
-> +       ret = map__get(al.map);
->         addr_location__exit(&al);
->         return ret;
->  }
-> @@ -440,8 +441,10 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
->                 return -EINVAL;
->
->         dso = map__dso(map);
-> -       if (!dso)
-> +       if (!dso) {
-> +               map__put(map);
->                 return -EINVAL;
-> +       }
->
->         pr_debug("unwind: find_proc_info dso %s\n", dso->name);
->
-> @@ -476,11 +479,11 @@ find_proc_info(unw_addr_space_t as, unw_word_t ip, unw_proc_info_t *pi,
->
->                 memset(&di, 0, sizeof(di));
->                 if (dwarf_find_debug_frame(0, &di, ip, base, symfile, start, map__end(map)))
-> -                       return dwarf_search_unwind_table(as, ip, &di, pi,
-> -                                                        need_unwind_info, arg);
-> +                       ret = dwarf_search_unwind_table(as, ip, &di, pi,
-> +                                                       need_unwind_info, arg);
->         }
->  #endif
-> -
-> +       map__put(map);
->         return ret;
->  }
->
-> @@ -534,12 +537,14 @@ static int access_dso_mem(struct unwind_info *ui, unw_word_t addr,
->
->         dso = map__dso(map);
->
-> -       if (!dso)
-> +       if (!dso) {
-> +               map__put(map);
->                 return -1;
-> +       }
->
->         size = dso__data_read_addr(dso, map, ui->machine,
->                                    addr, (u8 *) data, sizeof(*data));
-> -
-> +       map__put(map);
->         return !(size == sizeof(*data));
->  }
->
-> --
-> 2.41.0.162.gfafddb0af9-goog
->
+Yang
